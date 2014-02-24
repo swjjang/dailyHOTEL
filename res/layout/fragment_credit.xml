@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="1"
+    android:background="@color/dh_gray96">
+    
+    
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.05"/>
+    
+    <TextView
+	     android:layout_width="match_parent"
+	     android:layout_height="0dp"
+	     android:layout_weight="0.1"
+	     android:textColor="@color/dh_dark_gray_blue"
+	     android:textSize="20dp"
+	     android:gravity="center_vertical|center"
+	     android:text="현재 적립금" />
+        
+    
+    <TextView
+        android:id="@+id/tv_credit_money"
+        android:layout_weight="0.1" 
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:textColor="@color/dh_dark_gray_blue"
+        android:textSize="20dp"
+        android:gravity="center_vertical|center"
+        android:text="￦0" />
+    
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.05"/>
+    
+    <View
+        android:layout_height="1dp"
+        android:layout_width="match_parent"
+        android:background="@color/dh_dark_gray_blue"/>
+    
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.05"/>
+    
+    <TextView 
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.2"
+        android:gravity="center|center_vertical"
+        android:textSize="15dp"
+        android:textColor="@color/dh_dark_gray_blue"
+        android:text="친구가 회원가입 할 때 내 추천코드를 넣으면\n친구는 5,000원 선물받고!\n친구가 처음 결제하면 나도 5,000원 선물받고!"/>
+    
+    <TextView
+        android:id="@+id/tv_credit_recommender_code"
+        android:layout_weight="0.1" 
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:textColor="@color/dh_dark_gray_blue"
+        android:textSize="20dp"
+        android:gravity="center_vertical|center" 
+        android:text="추천코드 : 0000"/>
+    
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.05"/>
+    
+    <View
+        android:layout_height="1dp"
+        android:layout_width="match_parent"
+        android:background="@color/dh_dark_gray_blue"/>
+    
+     <TextView
+        android:layout_weight="0.05" 
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:textColor="@color/dh_dark_gray_blue"
+        android:textSize="15dp"
+        android:gravity="center_vertical" />
+    
+    <Button
+        android:id="@+id/btn_credit_invite_frd"
+        android:layout_weight="0.1" 
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+		android:layout_marginLeft="20dp"
+		android:layout_marginRight="20dp"
+        android:textSize="15dp"
+        android:gravity="center_vertical|center"
+        android:background="@drawable/dh_btn_kakao"
+        android:textColor="@color/black"
+        android:text="카카오 친구 초대하기" />
+    
+</LinearLayout>

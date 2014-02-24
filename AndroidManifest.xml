@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.twoheart.dailyhotel"
+    android:versionCode="18"
+    android:versionName="1.1.8" >
+
+    <uses-sdk
+        android:minSdkVersion="9"
+        android:targetSdkVersion="9" />
+
+    <!-- GCM 관련 퍼미션 -->
+    <permission
+        android:name="com.twoheart.dailyhotel.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.twoheart.dailyhotel.permission.C2D_MESSAGE" />
+    <!-- GCM 받기 -->
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <!-- GCM을 받으려면 구글 계정 필요 -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <!-- 메시지 받을 때 wake up 하기 위해 -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="false" />
+
+    <permission
+        android:name="com.twoheart.dailyhotel.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature" >
+    </permission>
+
+    <uses-permission android:name="com.twoheart.dailyhotel.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+
+    <application
+        android:name="kr.co.kcp.android.payment.standard.KcpApplication"
+        android:allowBackup="true"
+        android:hardwareAccelerated="true"
+        android:icon="@drawable/dh_ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/DH_Theme" >
+        <activity
+            android:name="com.twoheart.dailyhotel.SplashActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.twoheart.dailyhotel.MainActivity"
+            android:screenOrientation="portrait" >
+            <intent-filter
+                android:icon="@drawable/dh_ic_no"
+                android:label="" >
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.twoheart.dailyhotel.hotel.HotelTabActivity"
+            android:icon="@drawable/dh_ic_no"
+            android:label=""
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.twoheart.dailyhotel.hotel.ImageDetailActivity"
+            android:icon="@drawable/dh_ic_no"
+            android:label=""
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" />
+        <activity
+            android:name="com.twoheart.dailyhotel.hotel.GMapActivity"
+            android:icon="@drawable/dh_ic_no"
+            android:label=""
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.twoheart.dailyhotel.hotel.FooterActivity"
+            android:icon="@drawable/dh_ic_no"
+            android:label=""
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.twoheart.dailyhotel.booking.BookingTabActivity"
+            android:icon="@drawable/dh_ic_no"
+            android:label=""
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.twoheart.dailyhotel.setting.IntroductionActivity"
+            android:icon="@drawable/dh_ic_no"
+            android:label=""
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.twoheart.dailyhotel.setting.NoticeActivity"
+            android:icon="@drawable/dh_ic_no"
+            android:label=""
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.twoheart.dailyhotel.setting.HelpActivity"
+            android:icon="@drawable/dh_ic_no"
+            android:label=""
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.twoheart.dailyhotel.setting.LoginActivity"
+            android:icon="@drawable/dh_ic_no"
+            android:label=""
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.twoheart.dailyhotel.setting.SignupActivity"
+            android:icon="@drawable/dh_ic_no"
+            android:label=""
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.twoheart.dailyhotel.setting.ForgotPwdActivity"
+            android:icon="@drawable/dh_ic_no"
+            android:label=""
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.twoheart.dailyhotel.setting.AgreementActivity"
+            android:icon="@drawable/dh_ic_no"
+            android:label=""
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.twoheart.dailyhotel.setting.PersonalInfoActivity"
+            android:icon="@drawable/dh_ic_no"
+            android:label=""
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.twoheart.dailyhotel.setting.VersionActivity"
+            android:icon="@drawable/dh_ic_no"
+            android:label=""
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.twoheart.dailyhotel.payment.HotelPaymentActivity"
+            android:icon="@drawable/dh_ic_no"
+            android:label=""
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.twoheart.dailyhotel.payment.PaymentActivity"
+            android:icon="@drawable/dh_ic_no"
+            android:label=""
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="kr.co.kcp.android.payment.standard.ResultRcvActivity"
+            android:icon="@drawable/dh_ic_no"
+            android:label="" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="dailyHOTEL" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.twoheart.dailyhotel.PushDialogActivity"
+            android:icon="@drawable/dh_ic_no"
+            android:label=""
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyACc8hv-TecbnEBvl8Z758hBMP1ssqo4gQ" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <!-- GCM 리시버 -->
+        <receiver
+            android:name="com.google.android.gcm.GCMBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
+                <category android:name="com.twoheart.dailyhotel" /> <!-- 젤리빈 부터는 category 빼도 된다 -->
+            </intent-filter>
+        </receiver>
+        <!-- GCM 리시버에서 돌리는 서비스 -->
+        <service android:name="com.twoheart.dailyhotel.GCMIntentService" /> <!-- 서비스명 변경하면 안됨 -->
+        <receiver
+            android:name="com.twoheart.dailyhotel.common.AlarmReceive"
+            android:process=":remote" />
+        
+        <!-- Used for Google Play Store Campaign Measurement-->
+        <!-- 
+	<service android:name="com.google.analytics.tracking.android.CampaignTrackingService" />
+	<receiver android:name="com.google.analytics.tracking.android.CampaignTrackingReceiver" android:exported="true">
+	  <intent-filter>
+	    <action android:name="com.android.vending.INSTALL_REFERRER" />
+	  </intent-filter>
+	</receiver>
+	 -->
+
+        <activity
+            android:name="com.twoheart.dailyhotel.hotel.EventWebActivity"
+            android:label="@string/title_activity_event_web"
+            android:theme="@android:style/Theme.NoTitleBar" >
+            
+        </activity>
+    </application>
+
+</manifest>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white">
+    
+   	<LinearLayout 
+   	    android:layout_height="48dp"
+   	    android:layout_width="match_parent"
+   	    android:background="@color/white">
+   	    
+   	    <TextView 
+   	        android:layout_height="match_parent"
+   	        android:layout_width="match_parent"
+   	        android:gravity="center|center_vertical"
+   	        android:textSize="18dp"
+   	        android:textColor="@color/dh_dark_gray_blue"
+   	        android:text="지역"/>
+   	    
+   	</LinearLayout>
+   	
+   	<View 
+   	    android:layout_height="1px"
+   	    android:layout_width="match_parent"
+   	    android:background="@color/dh_gray50"/>
+    
+    <ListView 
+        android:id="@+id/listview_region"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:cacheColorHint="#00000000"
+        android:fadingEdge="none"
+        android:scrollbars="vertical">
+        
+    </ListView>
+
+</LinearLayout>

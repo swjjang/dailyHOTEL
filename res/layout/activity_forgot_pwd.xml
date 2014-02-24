@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="10dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:background="@color/dh_gray96">
+    
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:paddingLeft="10dp"
+        android:textColor="@color/dh_dark_gray_blue"
+        android:textSize="15dp"
+        android:text="가입한 Email로 비밀번호 변경 메일이 발송됩니다"/>
+    
+    <EditText 
+        android:id="@+id/et_forgot_pwd"
+        android:layout_marginTop="10dp"
+        android:layout_height="50dp"
+        android:layout_width="match_parent"
+        android:paddingLeft="10dp"
+        android:background="@drawable/edit_text_holo_light"
+        android:maxLength="50"
+        android:textColorHint="@color/dh_gray50"
+        android:singleLine="true"
+        android:imeActionId="@+id/btn_forgot_pwd"
+        android:hint="*Email"/>
+    
+    <Button 
+        android:id="@+id/btn_forgot_pwd"
+        android:layout_height="50dp"
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="10dp"
+        android:background="@drawable/dh_btn_pink"
+        android:textColor="@color/white"
+        android:text="비밀번호 찾기"/>
+
+</LinearLayout>

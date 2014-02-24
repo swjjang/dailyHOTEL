@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="dh_theme_color">#FF7A7A</color>
+    <color name="dh_dark_gray_blue">#474754</color>
+    <color name="dh_gray50">#808080</color>
+    <color name="dh_gray96">#F5F5F5</color>
+</resources>	

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:weightSum="1"
+    android:background="@color/dh_gray96">
+    
+    <LinearLayout 
+        android:layout_weight="0.1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+        
+    </LinearLayout>
+    
+    <ImageView 
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.4"
+        android:src="@drawable/dh_logo_square"
+        android:scaleType="fitCenter"/>
+    
+    <LinearLayout 
+        android:layout_weight="0.15"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal">
+		
+        <TextView 
+	        android:layout_width="0dp"
+	        android:layout_height="match_parent"
+	        android:layout_weight="0.4"
+	        android:gravity="right|center_vertical"
+	        android:paddingRight="20dp"
+	        android:textColor="@color/dh_dark_gray_blue"
+	        android:textSize="20sp"
+	        android:text="현재 버전"/>
+        
+    	<TextView 
+	        android:id="@+id/tv_version_cur"
+	        android:layout_width="0dp"
+	        android:layout_height="match_parent"
+	        android:layout_weight="0.6"
+	        android:gravity="left|center_vertical"
+	        android:paddingLeft="20dp"
+	        android:textSize="40sp"
+	        android:textColor="@color/dh_dark_gray_blue"
+	        android:text="v1. 0. 0"/>
+    </LinearLayout>
+    
+    <LinearLayout 
+        android:layout_weight="0.15"
+        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:orientation="horizontal">
+	    
+	    <TextView 
+	        android:layout_width="0dp"
+	        android:layout_height="match_parent"
+	        android:layout_weight="0.4"
+	        android:gravity="right|center_vertical"
+	        android:paddingRight="20dp"
+	        android:textSize="20sp"
+	        android:textColor="@color/dh_theme_color"
+	        android:text="최신 버전"/>
+	    <TextView
+	        android:id="@+id/tv_version_new" 
+	        android:layout_width="0dp"
+	        android:layout_height="match_parent"
+	        android:layout_weight="0.6"
+	        android:paddingLeft="20dp"
+	        android:textSize="40sp"
+	        android:gravity="left|center_vertical"
+	        android:textColor="@color/dh_theme_color"
+	        android:text="v1. 0. 0"/>
+    </LinearLayout>
+        
+     <LinearLayout 
+         android:layout_weight="0.1"
+         android:layout_width="match_parent"
+         android:layout_height="0dp"
+         android:layout_margin="10dp">
+      		<Button 
+	          android:id="@+id/btn_version_update"
+	          android:layout_width="match_parent"
+	          android:layout_height="match_parent"
+	          android:gravity="center"
+	          android:textColor="@color/white"
+	          android:background="@drawable/dh_btn_pink"
+	          android:text="최신 버전 업데이트 하기"/>
+     </LinearLayout>
+     
+
+</LinearLayout>
