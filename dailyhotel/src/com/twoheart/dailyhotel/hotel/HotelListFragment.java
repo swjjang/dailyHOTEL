@@ -22,15 +22,20 @@ import java.util.Iterator;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -40,10 +45,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.GoogleAnalytics;
 import com.google.analytics.tracking.android.Tracker;
@@ -58,7 +59,7 @@ import com.twoheart.dailyhotel.asynctask.onCompleteListener;
 import com.twoheart.dailyhotel.booking.BookingListFragment;
 import com.twoheart.dailyhotel.utils.LoadingDialog;
 
-public class HotelListFragment extends SherlockFragment implements OnItemClickListener{
+public class HotelListFragment extends Fragment implements OnItemClickListener{
 	
 	private final static String TAG = "HotelListFragment";
 	
@@ -348,6 +349,7 @@ public class HotelListFragment extends SherlockFragment implements OnItemClickLi
 		new GeneralHttpTask(clickTimerListener, view.getContext()).execute(REST_URL + TIME);
 	}
 	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		

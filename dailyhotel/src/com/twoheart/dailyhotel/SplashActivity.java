@@ -39,7 +39,7 @@ public class SplashActivity extends Activity {
 	
 	private static final String CAMPAIGN_SOURCE_PARAM = "utm_source";
 	
-	private ImageView iv_loading;
+//	private ImageView iv_loading;
 	private boolean isNewVersion;
 	
 	private Tracker mGaTracker;
@@ -75,10 +75,10 @@ public class SplashActivity extends Activity {
 		mGaTracker = mGaInstance.getTracker("UA-43721645-1");
 		
 		// loading image
-		iv_loading = (ImageView) findViewById(R.id.iv_splash_spinner);
+//		iv_loading = (ImageView) findViewById(R.id.iv_splash_spinner);
 		Animation rotation = AnimationUtils.loadAnimation(this, R.anim.rotate);
 		rotation.setRepeatCount(Animation.INFINITE);
-		iv_loading.startAnimation(rotation);
+//		iv_loading.startAnimation(rotation);
 		
 		
 		// sleep 2 second
@@ -310,7 +310,7 @@ public class SplashActivity extends Activity {
 		// start main
 		Intent intent = new Intent(SplashActivity.this, MainActivity.class);
 		startActivity(intent);
-		iv_loading.clearAnimation();
+//		iv_loading.clearAnimation();
 		finish();
 	}
 	

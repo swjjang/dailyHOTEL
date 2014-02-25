@@ -34,12 +34,11 @@
         android:gravity="center"
         android:orientation="horizontal">
 
-         <ImageView 
+         <ProgressBar 
              android:id="@+id/iv_splash_spinner"
              android:layout_width="20dp"
              android:layout_height="20dp"
-             android:scaleType="fitXY"
-             android:src="@drawable/abs__spinner_48_inner_holo"/>
+             android:scaleType="fitXY" />
          
          <TextView 
 	        android:layout_width="wrap_content"

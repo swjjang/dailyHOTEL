@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.setting;
 
-import static com.twoheart.dailyhotel.AppConstants.*;
+import static com.twoheart.dailyhotel.AppConstants.HELP;
+import static com.twoheart.dailyhotel.AppConstants.REST_URL;
 
 import java.util.ArrayList;
 
@@ -10,19 +11,20 @@ import org.json.JSONObject;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.asynctask.GeneralHttpTask;
 import com.twoheart.dailyhotel.asynctask.onCompleteListener;
 import com.twoheart.dailyhotel.utils.LoadingDialog;
 
-public class HelpActivity extends SherlockFragmentActivity{
+public class HelpActivity extends ActionBarActivity {
 	
 	private static final String TAG = "HelpActivity";
 	
@@ -107,13 +109,13 @@ public class HelpActivity extends SherlockFragmentActivity{
 		super.onBackPressed();
 	};
 	
-	public boolean onMenuItemSelected(int featureId, com.actionbarsherlock.view.MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			onBackPressed();
 			return true;
 		}
-		return super.onMenuItemSelected(featureId, item);
+		return super.onOptionsItemSelected(item);
 	};
 	
 		

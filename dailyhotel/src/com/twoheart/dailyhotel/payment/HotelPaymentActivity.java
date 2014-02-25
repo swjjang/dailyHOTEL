@@ -32,15 +32,15 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.GoogleAnalytics;
 import com.google.analytics.tracking.android.Tracker;
@@ -51,7 +51,7 @@ import com.twoheart.dailyhotel.asynctask.onCompleteListener;
 import com.twoheart.dailyhotel.utils.LoadingDialog;
 import com.twoheart.dailyhotel.utils.Switch;
 
-public class HotelPaymentActivity extends SherlockFragmentActivity implements OnClickListener{
+public class HotelPaymentActivity extends ActionBarActivity implements OnClickListener{
 	
 	private static final String TAG = "HotelPaymentActivity";
 	
@@ -206,13 +206,13 @@ public class HotelPaymentActivity extends SherlockFragmentActivity implements On
 	}
 	
 	@Override
-	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			onBackPressed();
 			return true;
 		}
-		return super.onMenuItemSelected(featureId, item);
+		return super.onOptionsItemSelected(item);
 	}
 	
 	@Override

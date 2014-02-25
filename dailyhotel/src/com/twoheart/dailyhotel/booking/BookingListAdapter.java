@@ -2,14 +2,14 @@ package com.twoheart.dailyhotel.booking;
 
 import java.util.ArrayList;
 
-import com.twoheart.dailyhotel.R;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import com.twoheart.dailyhotel.R;
 
 public class BookingListAdapter extends ArrayAdapter<BookingListElement>{
 	

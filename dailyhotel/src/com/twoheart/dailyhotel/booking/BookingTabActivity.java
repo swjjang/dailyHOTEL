@@ -1,24 +1,19 @@
 package com.twoheart.dailyhotel.booking;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
-import com.twoheart.dailyhotel.MainActivity;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v7.app.ActionBarActivity;
+import android.text.Html;
+import android.util.Log;
+import android.view.MenuItem;
+
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.common.view.ViewPagerCustom;
 import com.viewpagerindicator.TabPageIndicator;
 
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.text.Html;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-public class BookingTabActivity extends SherlockFragmentActivity{
+public class BookingTabActivity extends ActionBarActivity {
 
 	private final static String TAG ="BookingTabActivity";
 	
@@ -63,12 +58,12 @@ public class BookingTabActivity extends SherlockFragmentActivity{
 	}
 	
 	@Override
-	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			onBackPressed();
 			return true;
 		}
-		return super.onMenuItemSelected(featureId, item);
+		return super.onOptionsItemSelected(item);
 	}
 }

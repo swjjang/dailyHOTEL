@@ -3,14 +3,14 @@ package com.twoheart.dailyhotel.setting;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
 import android.util.Log;
+import android.view.MenuItem;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
 import com.twoheart.dailyhotel.R;
 
-public class AgreementActivity extends SherlockFragmentActivity{
+public class AgreementActivity extends ActionBarActivity {
 	
 	private static final String TAG = "AgreementActivity";
 	
@@ -43,12 +43,12 @@ public class AgreementActivity extends SherlockFragmentActivity{
 	}
 	
 	@Override
-	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			onBackPressed();
 			return true;
 		}
-		return super.onMenuItemSelected(featureId, item);
+		return super.onOptionsItemSelected(item);
 	}
 }

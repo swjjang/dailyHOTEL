@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.setting;
 
-import static com.twoheart.dailyhotel.AppConstants.*;
+import static com.twoheart.dailyhotel.AppConstants.NOTICE;
+import static com.twoheart.dailyhotel.AppConstants.REST_URL;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,15 +12,14 @@ import org.json.JSONObject;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
 import android.util.Log;
-import android.view.View;
+import android.view.MenuItem;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.GoogleAnalytics;
 import com.google.analytics.tracking.android.Tracker;
@@ -28,7 +28,7 @@ import com.twoheart.dailyhotel.asynctask.GeneralHttpTask;
 import com.twoheart.dailyhotel.asynctask.onCompleteListener;
 import com.twoheart.dailyhotel.utils.LoadingDialog;
 
-public class NoticeActivity extends SherlockFragmentActivity{
+public class NoticeActivity extends ActionBarActivity {
 	
 	private static final String TAG = "NoticeActivity";
 	
@@ -120,13 +120,13 @@ public class NoticeActivity extends SherlockFragmentActivity{
 	}
 	
 	@Override
-	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			onBackPressed();
 			return true;
 		}
-		return super.onMenuItemSelected(featureId, item);
+		return super.onOptionsItemSelected(item);
 	}
 	
 	protected onCompleteListener noticeListener = new onCompleteListener() {

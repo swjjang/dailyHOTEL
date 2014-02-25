@@ -1,6 +1,8 @@
 package com.twoheart.dailyhotel.setting;
 
-import static com.twoheart.dailyhotel.AppConstants.*;
+import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_MAX_VERSION_CODE;
+import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_MAX_VERSION_NAME;
+import static com.twoheart.dailyhotel.AppConstants.SHARED_PREFERENCES_NAME;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,20 +11,19 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
 import com.twoheart.dailyhotel.R;
 
 
-public class VersionActivity extends SherlockFragmentActivity implements OnClickListener{
+public class VersionActivity extends ActionBarActivity implements OnClickListener{
 	
 	private static final String TAG = "VersionActivity";
 	
@@ -122,12 +123,12 @@ public class VersionActivity extends SherlockFragmentActivity implements OnClick
 	}
 	
 	@Override
-	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			onBackPressed();
 			return true;
 		}
-		return super.onMenuItemSelected(featureId, item);
+		return super.onOptionsItemSelected(item);
 	}
 }

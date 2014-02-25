@@ -1,7 +1,7 @@
 package com.twoheart.dailyhotel.setting;
 
-import static com.twoheart.dailyhotel.AppConstants.*;
-import java.util.ArrayList;
+import static com.twoheart.dailyhotel.AppConstants.REST_URL;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -10,9 +10,11 @@ import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
@@ -22,15 +24,12 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.asynctask.GeneralHttpTask;
-import com.twoheart.dailyhotel.asynctask.ParameterElement;
 import com.twoheart.dailyhotel.asynctask.onCompleteListener;
 import com.twoheart.dailyhotel.utils.LoadingDialog;
 
-public class ForgotPwdActivity extends SherlockFragmentActivity implements OnClickListener{
+public class ForgotPwdActivity extends ActionBarActivity implements OnClickListener{
 	
 	private static final String TAG = "ForgotPwdActivity";
 	
@@ -116,13 +115,13 @@ public class ForgotPwdActivity extends SherlockFragmentActivity implements OnCli
 	}
 	
 	@Override
-	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			onBackPressed();
 			return true;
 		}
-		return super.onMenuItemSelected(featureId, item);
+		return super.onOptionsItemSelected(item);
 	}
 	
 	protected onCompleteListener forgotListener = new onCompleteListener() {

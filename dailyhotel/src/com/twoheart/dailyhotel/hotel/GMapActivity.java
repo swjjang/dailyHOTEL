@@ -1,15 +1,18 @@
 package com.twoheart.dailyhotel.hotel;
 
-import static com.twoheart.dailyhotel.AppConstants.*;
+import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_HOTEL_LAT;
+import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_HOTEL_LNG;
+import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_HOTEL_NAME;
+import static com.twoheart.dailyhotel.AppConstants.SHARED_PREFERENCES_NAME;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.MenuItem;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -18,7 +21,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.twoheart.dailyhotel.R;
 
-public class GMapActivity extends SherlockFragmentActivity{
+public class GMapActivity extends ActionBarActivity {
 	
 	private static final String TAG = "GMapActivity";
 	
@@ -78,13 +81,13 @@ public class GMapActivity extends SherlockFragmentActivity{
 	}
 	
 	@Override
-	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			onBackPressed();
 			return true;
 		}
-		return super.onMenuItemSelected(featureId, item);
+		return super.onOptionsItemSelected(item);
 	}
 	
 	

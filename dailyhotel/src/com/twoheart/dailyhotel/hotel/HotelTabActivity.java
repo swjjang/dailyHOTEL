@@ -1,31 +1,32 @@
 package com.twoheart.dailyhotel.hotel;
 
-import static com.twoheart.dailyhotel.AppConstants.*;
-
+import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_HOTEL_DAY;
+import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_HOTEL_IDX;
+import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_HOTEL_MONTH;
+import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_HOTEL_NAME;
+import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_HOTEL_YEAR;
+import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_IS_LOGIN;
+import static com.twoheart.dailyhotel.AppConstants.SHARED_PREFERENCES_NAME;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.text.Html;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.asynctask.GeneralHttpTask;
-import com.twoheart.dailyhotel.asynctask.onCompleteListener;
 import com.twoheart.dailyhotel.common.view.ViewPagerCustom;
 import com.twoheart.dailyhotel.payment.HotelPaymentActivity;
 import com.twoheart.dailyhotel.setting.LoginActivity;
 import com.viewpagerindicator.TabPageIndicator;
 
-public class HotelTabActivity extends SherlockFragmentActivity implements OnClickListener{
+public class HotelTabActivity extends ActionBarActivity implements OnClickListener{
 	
 	private static final String TAG = "HotelTabActivity";
 	
@@ -116,13 +117,13 @@ public class HotelTabActivity extends SherlockFragmentActivity implements OnClic
 	}
 	
 	@Override
-	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			onBackPressed();
 			return true;
 		}
-		return super.onMenuItemSelected(featureId, item);
+		return super.onOptionsItemSelected(item);
 	}
 	
 	@Override

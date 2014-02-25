@@ -5,6 +5,7 @@ import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_SELECTED_MENU;
 import static com.twoheart.dailyhotel.AppConstants.SHARED_PREFERENCES_NAME;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,14 +13,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.twoheart.dailyhotel.booking.BookingListFragment;
 import com.twoheart.dailyhotel.credit.CreditFragment;
 import com.twoheart.dailyhotel.credit.NoLoginFragment;
 import com.twoheart.dailyhotel.hotel.HotelListFragment;
 import com.twoheart.dailyhotel.utils.CNetStatus;
 
-public class ErrorFragment extends SherlockFragment implements OnClickListener{
+public class ErrorFragment extends Fragment implements OnClickListener{
 	
 	private View view;
 	

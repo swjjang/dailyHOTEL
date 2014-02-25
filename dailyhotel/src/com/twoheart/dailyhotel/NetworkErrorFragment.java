@@ -1,13 +1,12 @@
 package com.twoheart.dailyhotel;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.actionbarsherlock.app.SherlockFragment;
-
-public class NetworkErrorFragment extends SherlockFragment{
+public class NetworkErrorFragment extends Fragment {
 	
 	private static final String TAG = "NetworkErrorFragment";
 	

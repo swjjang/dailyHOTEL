@@ -1,6 +1,12 @@
 package com.twoheart.dailyhotel.setting;
 
-import static com.twoheart.dailyhotel.AppConstants.*;
+import static com.twoheart.dailyhotel.AppConstants.LOGIN;
+import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_AUTO_LOGIN;
+import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_IS_LOGIN;
+import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_USER_ID;
+import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_USER_PWD;
+import static com.twoheart.dailyhotel.AppConstants.REST_URL;
+import static com.twoheart.dailyhotel.AppConstants.SHARED_PREFERENCES_NAME;
 
 import java.util.ArrayList;
 
@@ -13,9 +19,11 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
@@ -26,18 +34,14 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
-import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.asynctask.GeneralHttpTask;
 import com.twoheart.dailyhotel.asynctask.ParameterElement;
 import com.twoheart.dailyhotel.asynctask.onCompleteListener;
-import com.twoheart.dailyhotel.credit.CreditFragment;
 import com.twoheart.dailyhotel.utils.Crypto;
 import com.twoheart.dailyhotel.utils.LoadingDialog;
 
-public class LoginActivity extends SherlockFragmentActivity implements OnClickListener{
+public class LoginActivity extends ActionBarActivity implements OnClickListener{
 	
 	private static final String TAG = "LoginActivity";
 	
@@ -225,13 +229,13 @@ public class LoginActivity extends SherlockFragmentActivity implements OnClickLi
 	}
 	
 	@Override
-	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			onBackPressed();
 			return true;
 		}
-		return super.onMenuItemSelected(featureId, item);
+		return super.onOptionsItemSelected(item);
 	}
 	
 	protected onCompleteListener loginListener = new onCompleteListener() {

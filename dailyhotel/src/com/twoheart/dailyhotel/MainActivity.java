@@ -2,21 +2,21 @@ package com.twoheart.dailyhotel;
 
 import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_SELECTED_MENU;
 import static com.twoheart.dailyhotel.AppConstants.SHARED_PREFERENCES_NAME;
+import android.annotation.TargetApi;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.twoheart.dailyhotel.hotel.HotelListFragment;
 
-public class MainActivity extends BaseActivity implements ActionBar.OnNavigationListener {
+public class MainActivity extends BaseActivity {
 
 	private static final String TAG = "MainActivity";
 	
@@ -82,12 +82,8 @@ public class MainActivity extends BaseActivity implements ActionBar.OnNavigation
 		getSupportActionBar().setTitle("   " + str);
 	}
 	
-    @Override
-    public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-    	return false;
-    }
-    
-    @Override
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
     	
     	if(isMenuItem) {
@@ -103,7 +99,7 @@ public class MainActivity extends BaseActivity implements ActionBar.OnNavigation
     }
     
     @Override
-    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
     	switch (item.getItemId()) {
 		case android.R.id.home:
 //			toggle();
@@ -113,7 +109,7 @@ public class MainActivity extends BaseActivity implements ActionBar.OnNavigation
 		case 2:
 			return false;
 		}
-    	return super.onMenuItemSelected(featureId, item);
+    	return super.onOptionsItemSelected(item);
     }
     
     @Override
