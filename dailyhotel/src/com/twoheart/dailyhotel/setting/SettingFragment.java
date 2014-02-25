@@ -1,7 +1,10 @@
 package com.twoheart.dailyhotel.setting;
 
-import static com.twoheart.dailyhotel.AppConstants.*;
-
+import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_AUTO_LOGIN;
+import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_IS_LOGIN;
+import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_USER_ID;
+import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_USER_PWD;
+import static com.twoheart.dailyhotel.AppConstants.SHARED_PREFERENCES_NAME;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,7 +20,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 
@@ -57,7 +59,7 @@ public class SettingFragment extends Fragment implements OnClickListener{
 		activity.addMenuItem("dummy");
 		
 		// sliding setting
-		activity.getSlidingMenu().setMode(SlidingMenu.LEFT);
+//		activity.getSlidingMenu().setMode(SlidingMenu.LEFT);
 		
 		
 		loadResource();

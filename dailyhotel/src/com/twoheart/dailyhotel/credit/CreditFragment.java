@@ -1,6 +1,16 @@
 package com.twoheart.dailyhotel.credit;
 
-import static com.twoheart.dailyhotel.AppConstants.*;
+import static com.twoheart.dailyhotel.AppConstants.BONUS_ALL;
+import static com.twoheart.dailyhotel.AppConstants.LOGIN;
+import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_AUTO_LOGIN;
+import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_IS_LOGIN;
+import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_USER_ID;
+import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_USER_PWD;
+import static com.twoheart.dailyhotel.AppConstants.REST_URL;
+import static com.twoheart.dailyhotel.AppConstants.SAVED_MONEY;
+import static com.twoheart.dailyhotel.AppConstants.SHARED_PREFERENCES_NAME;
+import static com.twoheart.dailyhotel.AppConstants.USERINFO;
+import static com.twoheart.dailyhotel.AppConstants.USER_ALIVE;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -10,20 +20,6 @@ import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import com.google.analytics.tracking.android.Fields;
-import com.google.analytics.tracking.android.GoogleAnalytics;
-import com.google.analytics.tracking.android.Tracker;
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
-import com.twoheart.dailyhotel.DailyMenuFragment;
-import com.twoheart.dailyhotel.ErrorFragment;
-import com.twoheart.dailyhotel.MainActivity;
-import com.twoheart.dailyhotel.NetworkErrorFragment;
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.asynctask.GeneralHttpTask;
-import com.twoheart.dailyhotel.asynctask.ParameterElement;
-import com.twoheart.dailyhotel.asynctask.onCompleteListener;
-import com.twoheart.dailyhotel.utils.LoadingDialog;
 
 import android.app.AlertDialog;
 import android.content.SharedPreferences;
@@ -36,10 +32,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.webkit.CookieManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.GoogleAnalytics;
+import com.google.analytics.tracking.android.Tracker;
+import com.twoheart.dailyhotel.ErrorFragment;
+import com.twoheart.dailyhotel.MainActivity;
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.asynctask.GeneralHttpTask;
+import com.twoheart.dailyhotel.asynctask.ParameterElement;
+import com.twoheart.dailyhotel.asynctask.onCompleteListener;
+import com.twoheart.dailyhotel.utils.LoadingDialog;
 
 public class CreditFragment extends Fragment implements OnClickListener{
 	
@@ -86,7 +92,7 @@ public class CreditFragment extends Fragment implements OnClickListener{
 		activity.addMenuItem("적립내역");
 		
 		// Right Sliding setting
-		activity.getSlidingMenu().setMode(SlidingMenu.LEFT_RIGHT);
+//		activity.getSlidingMenu().setMode(SlidingMenu.LEFT_RIGHT);
 		
 		LoadingDialog.showLoading(view.getContext());
 		new GeneralHttpTask(sessionListener, view.getContext()).execute(REST_URL + USER_ALIVE);

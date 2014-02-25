@@ -1,9 +1,10 @@
 package com.twoheart.dailyhotel;
 
-import static com.twoheart.dailyhotel.AppConstants.*;
+import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_IS_LOGIN;
+import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_SELECTED_MENU;
+import static com.twoheart.dailyhotel.AppConstants.SHARED_PREFERENCES_NAME;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,7 +13,6 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.twoheart.dailyhotel.booking.BookingListFragment;
 import com.twoheart.dailyhotel.credit.CreditFragment;
 import com.twoheart.dailyhotel.credit.NoLoginFragment;
@@ -39,7 +39,7 @@ public class ErrorFragment extends SherlockFragment implements OnClickListener{
 		activity.addMenuItem("dummy");
 		
 		// sliding setting
-		activity.getSlidingMenu().setMode(SlidingMenu.LEFT);
+//		activity.getSlidingMenu().setMode(SlidingMenu.LEFT);
 		
 		loadResource();
 		

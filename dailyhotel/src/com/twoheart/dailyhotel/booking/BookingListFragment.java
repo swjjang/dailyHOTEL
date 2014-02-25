@@ -1,7 +1,19 @@
 package com.twoheart.dailyhotel.booking;
 
 
-import static com.twoheart.dailyhotel.AppConstants.*;
+import static com.twoheart.dailyhotel.AppConstants.LOGIN;
+import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_AUTO_LOGIN;
+import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_HOTEL_DAY;
+import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_HOTEL_IDX;
+import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_HOTEL_MONTH;
+import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_HOTEL_YEAR;
+import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_IS_LOGIN;
+import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_USER_ID;
+import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_USER_PWD;
+import static com.twoheart.dailyhotel.AppConstants.RESERVE;
+import static com.twoheart.dailyhotel.AppConstants.REST_URL;
+import static com.twoheart.dailyhotel.AppConstants.SHARED_PREFERENCES_NAME;
+import static com.twoheart.dailyhotel.AppConstants.USER_ALIVE;
 
 import java.util.ArrayList;
 
@@ -19,21 +31,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.twoheart.dailyhotel.ErrorFragment;
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.asynctask.GeneralHttpTask;
 import com.twoheart.dailyhotel.asynctask.ParameterElement;
 import com.twoheart.dailyhotel.asynctask.onCompleteListener;
-import com.twoheart.dailyhotel.credit.CreditFragment;
 import com.twoheart.dailyhotel.setting.SignupActivity;
 import com.twoheart.dailyhotel.utils.LoadingDialog;
 
@@ -67,7 +77,7 @@ public class BookingListFragment extends Fragment implements OnItemClickListener
 		activity.addMenuItem("dummy");
 		
 		// sliding setting
-		activity.getSlidingMenu().setMode(SlidingMenu.LEFT);
+//		activity.getSlidingMenu().setMode(SlidingMenu.LEFT);
 		
 		if(checkLogin()) {		// 로그인 상태
 			LoadingDialog.showLoading(view.getContext());

@@ -1,6 +1,8 @@
 package com.twoheart.dailyhotel.hotel;
 
-import static com.twoheart.dailyhotel.AppConstants.*;
+import static com.twoheart.dailyhotel.AppConstants.REST_URL;
+import static com.twoheart.dailyhotel.AppConstants.SALE_TIME;
+import static com.twoheart.dailyhotel.AppConstants.TIME;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -8,18 +10,6 @@ import java.util.Date;
 import java.util.HashMap;
 
 import org.json.JSONObject;
-
-import com.google.analytics.tracking.android.Fields;
-import com.google.analytics.tracking.android.GoogleAnalytics;
-import com.google.analytics.tracking.android.Tracker;
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
-import com.twoheart.dailyhotel.ErrorFragment;
-import com.twoheart.dailyhotel.MainActivity;
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.asynctask.GeneralHttpTask;
-import com.twoheart.dailyhotel.asynctask.onCompleteListener;
-import com.twoheart.dailyhotel.common.AlarmReceive;
-import com.twoheart.dailyhotel.utils.LoadingDialog;
 
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -40,6 +30,17 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.GoogleAnalytics;
+import com.google.analytics.tracking.android.Tracker;
+import com.twoheart.dailyhotel.ErrorFragment;
+import com.twoheart.dailyhotel.MainActivity;
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.asynctask.GeneralHttpTask;
+import com.twoheart.dailyhotel.asynctask.onCompleteListener;
+import com.twoheart.dailyhotel.common.AlarmReceive;
+import com.twoheart.dailyhotel.utils.LoadingDialog;
 
 public class WaitTimerFragment extends Fragment implements OnClickListener{
 	
@@ -88,7 +89,7 @@ public class WaitTimerFragment extends Fragment implements OnClickListener{
 		activity.hideMenuItem();
 		
 		// sliding setting
-		activity.getSlidingMenu().setMode(SlidingMenu.LEFT);
+//		activity.getSlidingMenu().setMode(SlidingMenu.LEFT);
 		
 		loadResource();
 		

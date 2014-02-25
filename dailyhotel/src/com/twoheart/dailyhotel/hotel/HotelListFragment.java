@@ -1,15 +1,15 @@
 package com.twoheart.dailyhotel.hotel;
 
-import static com.twoheart.dailyhotel.AppConstants.*;
+import static com.twoheart.dailyhotel.AppConstants.HOTEL;
 import static com.twoheart.dailyhotel.AppConstants.LOCATION_LIST;
 import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_REGION_DEFALUT;
 import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_REGION_SELECT;
 import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_SELECTED_MENU;
 import static com.twoheart.dailyhotel.AppConstants.REST_URL;
+import static com.twoheart.dailyhotel.AppConstants.SALE_TIME;
 import static com.twoheart.dailyhotel.AppConstants.SHARED_PREFERENCES_NAME;
 import static com.twoheart.dailyhotel.AppConstants.TIME;
 
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -50,7 +50,6 @@ import com.google.analytics.tracking.android.Tracker;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.twoheart.dailyhotel.ErrorFragment;
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
@@ -113,10 +112,10 @@ public class HotelListFragment extends SherlockFragment implements OnItemClickLi
 		activity.addMenuItem("Áö¿ª");
 		
 		// Right Sliding setting
-		activity.getSlidingMenu().setMode(SlidingMenu.LEFT_RIGHT);
-		activity.getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-		activity.getSlidingMenu().setSecondaryMenu(R.layout.menu_frame_right);
-		activity.getSlidingMenu().setSecondaryShadowDrawable(R.drawable.shadow_right);
+//		activity.getSlidingMenu().setMode(SlidingMenu.LEFT_RIGHT);
+//		activity.getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+//		activity.getSlidingMenu().setSecondaryMenu(R.layout.menu_frame_right);
+//		activity.getSlidingMenu().setSecondaryShadowDrawable(R.drawable.shadow_right);
 		
 		getCalendar();
 		
@@ -302,14 +301,14 @@ public class HotelListFragment extends SherlockFragment implements OnItemClickLi
 	public void setRegionList() {
 		Bundle argument = new Bundle();
 		argument.putStringArrayList("regionList", regionList);
-		RegionListFragment fragment =  new RegionListFragment();
-		fragment.setArguments(argument);
-		MainActivity activity = (MainActivity) view.getContext();
-		FragmentTransaction t = activity.getSupportFragmentManager().beginTransaction();
-		activity.getSupportFragmentManager()
-		.beginTransaction()
-		.replace(R.id.menu_frame_right, fragment)
-		.commitAllowingStateLoss();
+//		RegionListFragment fragment =  new RegionListFragment();
+//		fragment.setArguments(argument);
+//		MainActivity activity = (MainActivity) view.getContext();
+//		FragmentTransaction t = activity.getSupportFragmentManager().beginTransaction();
+//		activity.getSupportFragmentManager()
+//		.beginTransaction()
+//		.replace(R.id.menu_frame_right, fragment)
+//		.commitAllowingStateLoss();
 	}
 	
 	// sold out ¹ØÀ¸·Î

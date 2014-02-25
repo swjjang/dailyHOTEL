@@ -7,20 +7,13 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.Html;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.OnCloseListener;
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.OnClosedListener;
 import com.twoheart.dailyhotel.hotel.HotelListFragment;
 
 public class MainActivity extends BaseActivity implements ActionBar.OnNavigationListener {
@@ -113,10 +106,10 @@ public class MainActivity extends BaseActivity implements ActionBar.OnNavigation
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
     	switch (item.getItemId()) {
 		case android.R.id.home:
-			toggle();
+//			toggle();
 			return true;
 		case 1:
-			getSlidingMenu().showSecondaryMenu();
+//			getSlidingMenu().showSecondaryMenu();
 		case 2:
 			return false;
 		}
@@ -147,8 +140,10 @@ public class MainActivity extends BaseActivity implements ActionBar.OnNavigation
  		.beginTransaction()
  		.replace(R.id.content_frame, fragment)
  		.commitAllowingStateLoss();
- 		getSlidingMenu().showContent();
+// 		getSlidingMenu().showContent();
  	}
+ 	
+ 	//TODO: BACK 버튼 눌림 이벤트 발생 시 사이드 바 토글 기능 제거
  	
  	@Override
  	public boolean onKeyUp(int keyCode, KeyEvent event) {
@@ -161,14 +156,14 @@ public class MainActivity extends BaseActivity implements ActionBar.OnNavigation
  	@Override
  	public boolean onKeyDown(int keyCode, KeyEvent event) {
  		if(keyCode == KeyEvent.KEYCODE_BACK) {
- 			if(getSlidingMenu().isMenuShowing()) {
- 				if(getSlidingMenu().isSecondaryMenuShowing())
- 					toggle();
- 				else
- 					finish();
- 			}
-			else
-				showMenu();
+// 			if(getSlidingMenu().isMenuShowing()) {
+// 				if(getSlidingMenu().isSecondaryMenuShowing())
+// 					toggle();
+// 				else
+// 					finish();
+// 			}
+//			else
+//				showMenu();
 			return false;
  		} else
  			return super.onKeyDown(keyCode, event);
