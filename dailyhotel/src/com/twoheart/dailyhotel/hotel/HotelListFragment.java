@@ -369,7 +369,7 @@ public class HotelListFragment extends Fragment implements OnItemClickListener{
 				ed.commit();
 				
 				MainActivity activity = (MainActivity) view.getContext();
-				activity.changeMenu();
+//				activity.changeMenu();
 				
 				Fragment fragment = new BookingListFragment();
 		        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();

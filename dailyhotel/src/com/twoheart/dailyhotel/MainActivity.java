@@ -67,7 +67,6 @@ public class MainActivity extends BaseActivity {
 		ed.commit();
 		
 		HotelListFragment hotelListFrag = new HotelListFragment();
-		setContentView(R.layout.content_frame);
 		getSupportFragmentManager()
 		.beginTransaction()
 		.replace(R.id.content_frame, hotelListFrag)
@@ -128,15 +127,6 @@ public class MainActivity extends BaseActivity {
     	supportInvalidateOptionsMenu();
     }
     
-    // 선택된 menu에 맞게 Fragment 변경
- 	// MenuFragment에서 호출됨
- 	public void switchContent(Fragment fragment) {
- 		content = fragment;
- 		getSupportFragmentManager()
- 		.beginTransaction()
- 		.replace(R.id.content_frame, fragment)
- 		.commitAllowingStateLoss();
-// 		getSlidingMenu().showContent();
- 	}
+    
  	
 }
