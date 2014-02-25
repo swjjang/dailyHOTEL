@@ -397,9 +397,9 @@ public class HotelListFragment extends SherlockFragment implements OnItemClickLi
 				JSONObject obj = new JSONObject(result);
 				String open = obj.getString("open");
 				String close = obj.getString("close");
-				
-				openTime = (Long.parseLong(open.substring(0, 2)) * 60 * 60) + (Long.parseLong(open.substring(2, 4)) * 60);
-				closeTime = (Long.parseLong(close.substring(0, 2)) * 60 * 60) + (Long.parseLong(close.substring(2, 4)) * 60);
+			
+				openTime = (Long.parseLong(open.substring(0, 2)) * 60 * 60) + (Long.parseLong(open.substring(3, 5)) * 60);
+				closeTime = (Long.parseLong(close.substring(0, 2)) * 60 * 60) + (Long.parseLong(close.substring(3, 5)) * 60);
 				
 				new GeneralHttpTask(timerListener, view.getContext()).execute(REST_URL + TIME);
 			} catch (Exception e) {
