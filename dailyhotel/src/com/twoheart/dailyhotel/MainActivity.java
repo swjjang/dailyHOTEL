@@ -143,29 +143,4 @@ public class MainActivity extends BaseActivity implements ActionBar.OnNavigation
 // 		getSlidingMenu().showContent();
  	}
  	
- 	//TODO: BACK 버튼 눌림 이벤트 발생 시 사이드 바 토글 기능 제거
- 	
- 	@Override
- 	public boolean onKeyUp(int keyCode, KeyEvent event) {
- 		if(keyCode == KeyEvent.KEYCODE_BACK) {
-			return false;
-		}
- 		return super.onKeyUp(keyCode, event);
- 	}
- 	
- 	@Override
- 	public boolean onKeyDown(int keyCode, KeyEvent event) {
- 		if(keyCode == KeyEvent.KEYCODE_BACK) {
-// 			if(getSlidingMenu().isMenuShowing()) {
-// 				if(getSlidingMenu().isSecondaryMenuShowing())
-// 					toggle();
-// 				else
-// 					finish();
-// 			}
-//			else
-//				showMenu();
-			return false;
- 		} else
- 			return super.onKeyDown(keyCode, event);
- 	}
 }
