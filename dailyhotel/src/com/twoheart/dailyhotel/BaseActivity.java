@@ -6,14 +6,13 @@ import static com.twoheart.dailyhotel.AppConstants.SHARED_PREFERENCES_NAME;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,6 +39,7 @@ public class BaseActivity extends ActionBarActivity implements
 	private static final String DRAWER_MENU_CREDIT = "적립금";
 	private static final String DRAWER_MENU_SETTING = "설정";
 
+	public ActionBar actionBar;
 	private List<DrawerMenu> mMenuImages;
 	private DrawerLayout mDrawerLayout;
 	private DrawerMenuListAdapter drawerMenuListAdapter;
@@ -63,6 +63,8 @@ public class BaseActivity extends ActionBarActivity implements
 	@Override
 	public void setContentView(int layoutResID) {
 		super.setContentView(layoutResID);
+		
+		actionBar = getSupportActionBar();
 
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
@@ -109,9 +111,9 @@ public class BaseActivity extends ActionBarActivity implements
 		mDrawerList.setAdapter(drawerMenuListAdapter);
 		// Set the list's click listener
 		mDrawerList.setOnItemClickListener(this);
-
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setHomeButtonEnabled(true);
+		
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setHomeButtonEnabled(true);
 	}
 
 	@Override

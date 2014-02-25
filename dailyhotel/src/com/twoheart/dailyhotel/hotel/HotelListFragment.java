@@ -30,6 +30,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -189,6 +190,15 @@ public class HotelListFragment extends Fragment implements OnItemClickListener{
 				activity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
 			}
 		});
+		
+//		((MainActivity) getActivity()).actionBar..setOnClickListener(new OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				lv.smoothScrollToPosition(0);
+//				
+//			}
+//		});
 	}
 	
 	public void parseJson(String str) {
