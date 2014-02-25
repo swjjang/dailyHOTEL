@@ -90,7 +90,7 @@ public class HotelTabMapFragment extends Fragment implements OnMapClickListener{
 			LatLng address = new LatLng(lat,lng);
 			CameraPosition cp = new CameraPosition.Builder().target((address )).zoom(15).build();
 			googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
-			googleMap.setMyLocationEnabled(true);
+			googleMap.setMyLocationEnabled(false);
 		}
 	}
 
