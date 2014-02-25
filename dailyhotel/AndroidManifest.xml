@@ -6,7 +6,7 @@
 
     <uses-sdk
         android:minSdkVersion="9"
-        android:targetSdkVersion="9" />
+        android:targetSdkVersion="17" />
 
     <!-- GCM 관련 퍼미션 -->
     <permission
