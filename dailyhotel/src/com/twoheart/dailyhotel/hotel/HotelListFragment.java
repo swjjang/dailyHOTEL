@@ -185,6 +185,7 @@ public class HotelListFragment extends Fragment implements OnItemClickListener, 
 		LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE );
 		View footer = inflater.inflate(R.layout.footer_hotel_list, null);
 		lv.addFooterView(footer);
+		lv.setFastScrollEnabled(true);     
 		Button btn_footer = (Button) view.findViewById(R.id.btn_footer);
 		btn_footer.setOnClickListener(new OnClickListener() {
 			
