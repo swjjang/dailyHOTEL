@@ -41,11 +41,11 @@ public class MainActivity extends BaseActivity {
 //		ActionBar.LayoutParams params = new ActionBar.LayoutParams(
 //	            ActionBar.LayoutParams.MATCH_PARENT,
 //	            ActionBar.LayoutParams.MATCH_PARENT, Gravity.CENTER);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+//		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 //		getSupportActionBar().setDisplayShowTitleEnabled(false);
-		getSupportActionBar().setDisplayShowHomeEnabled(true);
-		getSupportActionBar().setIcon(R.drawable.dh_ic_menu);
-//		getSupportActionBar().setCustomView(R.layout.actionbar_background);
+//		getSupportActionBar().setDisplayShowHomeEnabled(true);
+//		getSupportActionBar().setIcon(R.drawable.dh_ic_menu);
+//		getSupportActionBar().setCustomView(R.drawable.dh_actionbar_background);
 		
 		
 		// actionbar background color setting
@@ -94,26 +94,7 @@ public class MainActivity extends BaseActivity {
 	    		setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     		}
     	}
-    	return true;
-    }
-    
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-    	switch (item.getItemId()) {
-		case android.R.id.home:
-//			toggle();
-			return true;
-		case 1:
-//			getSlidingMenu().showSecondaryMenu();
-		case 2:
-			return false;
-		}
-    	return super.onOptionsItemSelected(item);
-    }
-    
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-    		super.onSaveInstanceState(outState);
+    		return true;
     }
     
     public void addMenuItem(String str) {
