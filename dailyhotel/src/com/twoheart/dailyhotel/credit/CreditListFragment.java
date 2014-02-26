@@ -2,15 +2,15 @@ package com.twoheart.dailyhotel.credit;
 
 import java.util.ArrayList;
 
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.hotel.HotelTabInfoFragment;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
+
+import com.twoheart.dailyhotel.R;
 
 public class CreditListFragment extends Fragment{
 	
@@ -37,6 +37,7 @@ public class CreditListFragment extends Fragment{
 	
 	public void setListView() {
 		listView = (ListView) view.findViewById(R.id.listview_credit);
+		listView.setEmptyView((TextView) view.findViewById(R.id.empty_listview_credit));
 		adapter = new CreditListAdapter(view.getContext(), R.layout.list_row_credit, creditList);
 		listView.setAdapter(adapter);
 	}

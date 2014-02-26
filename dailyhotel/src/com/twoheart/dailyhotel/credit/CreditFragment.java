@@ -26,7 +26,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,13 +46,14 @@ import com.twoheart.dailyhotel.asynctask.ParameterElement;
 import com.twoheart.dailyhotel.asynctask.onCompleteListener;
 import com.twoheart.dailyhotel.utils.LoadingDialog;
 
-public class CreditFragment extends Fragment implements OnClickListener{
+public class CreditFragment extends Fragment implements OnClickListener {
 	
 	private static final String TAG = "CreditFragment";
 	
 	private View view;
 	private Button btn_invite;
 	private TextView tv_bonus, tv_recommender_code;
+	private Button btnCredit;
 	private String code;
 	
 	private ArrayList<CreditListElement> list;
@@ -88,8 +88,8 @@ public class CreditFragment extends Fragment implements OnClickListener{
 		// ActionBar Setting
 		MainActivity activity = (MainActivity)view.getContext();
 		activity.changeTitle("적립금");
-		activity.hideMenuItem();
-		activity.addMenuItem("적립내역");
+//		activity.hideMenuItem();
+//		activity.addMenuItem("적립내역");
 		
 		// Right Sliding setting
 //		activity.getSlidingMenu().setMode(SlidingMenu.LEFT_RIGHT);
@@ -102,12 +102,15 @@ public class CreditFragment extends Fragment implements OnClickListener{
 	
 	public void loadResource() {
 		btn_invite = (Button) view.findViewById(R.id.btn_credit_invite_frd);
+		btnCredit = (Button) view.findViewById(R.id.btn_credit);
 		tv_recommender_code = (TextView) view.findViewById(R.id.tv_credit_recommender_code);
 		btn_invite.setOnClickListener(this);
+		btnCredit.setOnClickListener(this);
 	}
 	
 	@Override
 	public void onClick(View v) {
+		
 		if(v.getId() == btn_invite.getId()) {
 			try {
 //						sendUrlLink(v);
@@ -115,6 +118,18 @@ public class CreditFragment extends Fragment implements OnClickListener{
 			} catch (Exception e) {
 				Log.d(TAG, "kakao link error " + e.toString());
 			}
+			
+		} else if (v.getId() == btnCredit.getId()) {
+			MainActivity activity = (MainActivity) view.getContext();
+			
+			Fragment creditListFragment = CreditListFragment.newInstance(list);
+			
+			activity.getSupportFragmentManager().beginTransaction()
+			.add(R.id.content_frame, creditListFragment)
+			.addToBackStack(null)
+			.commitAllowingStateLoss();
+			
+//			activity.switchContent(CreditListFragment.newInstance(list));
 			
 		}
 	}
@@ -203,12 +218,12 @@ public class CreditFragment extends Fragment implements OnClickListener{
 	}
 	
 	public void setCreditList() {
-		MainActivity activity = (MainActivity) view.getContext();
-		FragmentTransaction t = activity.getSupportFragmentManager().beginTransaction();
-		activity.getSupportFragmentManager()
-		.beginTransaction()
-		.replace(R.id.menu_frame_right, CreditListFragment.newInstance(list))
-		.commitAllowingStateLoss();
+//		MainActivity activity = (MainActivity) view.getContext();
+//		FragmentTransaction t = activity.getSupportFragmentManager().beginTransaction();
+//		activity.getSupportFragmentManager()
+//		.beginTransaction()
+//		.replace(R.id.menu_frame_right, CreditListFragment.newInstance(list))
+//		.commitAllowingStateLoss();
 	}
 	
 	//session check
