@@ -191,14 +191,6 @@ public class HotelListFragment extends Fragment implements OnItemClickListener{
 			}
 		});
 		
-//		((MainActivity) getActivity()).actionBar.getThemedContext().getsetOnClickListener(new OnClickListener() {
-//			
-//			@Override
-//			public void onClick(View v) {
-//				lv.smoothScrollToPosition(0);
-//				
-//			}
-//		});
 	}
 	
 	public void parseJson(String str) {
