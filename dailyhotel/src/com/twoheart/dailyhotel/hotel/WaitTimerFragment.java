@@ -272,7 +272,7 @@ public class WaitTimerFragment extends Fragment implements OnClickListener{
 				
 				new GeneralHttpTask(timeListener, view.getContext()).execute(REST_URL + TIME);
 			} catch (Exception e) {
-				Log.d(TAG, "JSON Parsing Error : " + e.toString());
+				e.printStackTrace();
 				LoadingDialog.hideLoading();
 				Toast.makeText(view.getContext(), "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.", Toast.LENGTH_SHORT).show();
 			}
