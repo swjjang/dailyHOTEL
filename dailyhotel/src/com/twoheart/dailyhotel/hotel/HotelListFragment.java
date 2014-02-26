@@ -191,7 +191,7 @@ public class HotelListFragment extends Fragment implements OnItemClickListener{
 			}
 		});
 		
-//		((MainActivity) getActivity()).actionBar..setOnClickListener(new OnClickListener() {
+//		((MainActivity) getActivity()).actionBar.getThemedContext().getsetOnClickListener(new OnClickListener() {
 //			
 //			@Override
 //			public void onClick(View v) {
@@ -245,7 +245,7 @@ public class HotelListFragment extends Fragment implements OnItemClickListener{
 			new GeneralHttpTask(regionListListener, view.getContext()).execute(REST_URL + LOCATION_LIST);
 			
 		} catch (Exception e) {
-			Log.d(TAG, "JSON Parsing Error : " + e.toString());
+			e.printStackTrace();
 			LoadingDialog.hideLoading();
 			Toast.makeText(view.getContext(), "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.", Toast.LENGTH_SHORT).show();
 		}
@@ -266,7 +266,7 @@ public class HotelListFragment extends Fragment implements OnItemClickListener{
 			setRegionList();
 			
 		} catch (Exception e) {
-			Log.d(TAG, "parseRegionJson " + e.toString());
+			e.printStackTrace();
 			Toast.makeText(view.getContext(), "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.", Toast.LENGTH_SHORT).show();
 		}
 	}
@@ -414,7 +414,7 @@ public class HotelListFragment extends Fragment implements OnItemClickListener{
 				
 				new GeneralHttpTask(timerListener, view.getContext()).execute(REST_URL + TIME);
 			} catch (Exception e) {
-				Log.d(TAG, "JSON Parsing Error : " + e.toString());
+				e.printStackTrace();
 				LoadingDialog.hideLoading();
 				Toast.makeText(view.getContext(), "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.", Toast.LENGTH_SHORT).show();
 			}
