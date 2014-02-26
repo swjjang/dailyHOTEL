@@ -161,6 +161,7 @@ public class BaseActivity extends ActionBarActivity implements
 	}
 
 	private void switchFragment(Fragment fragment) {
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		switchContent(fragment);
 	}
 

@@ -3,12 +3,14 @@ package com.twoheart.dailyhotel.hotel;
 import static com.twoheart.dailyhotel.AppConstants.HOTEL;
 import static com.twoheart.dailyhotel.AppConstants.LOCATION_LIST;
 import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_REGION_DEFALUT;
+import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_REGION_INDEX;
 import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_REGION_SELECT;
 import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_SELECTED_MENU;
 import static com.twoheart.dailyhotel.AppConstants.REST_URL;
 import static com.twoheart.dailyhotel.AppConstants.SALE_TIME;
 import static com.twoheart.dailyhotel.AppConstants.SHARED_PREFERENCES_NAME;
 import static com.twoheart.dailyhotel.AppConstants.TIME;
+import static com.twoheart.dailyhotel.AppConstants.clickState;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,6 +25,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -31,6 +34,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBar.OnNavigationListener;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,6 +46,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -52,6 +57,7 @@ import com.google.analytics.tracking.android.Tracker;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.twoheart.dailyhotel.AppConstants;
 import com.twoheart.dailyhotel.ErrorFragment;
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
@@ -60,7 +66,7 @@ import com.twoheart.dailyhotel.asynctask.onCompleteListener;
 import com.twoheart.dailyhotel.booking.BookingListFragment;
 import com.twoheart.dailyhotel.utils.LoadingDialog;
 
-public class HotelListFragment extends Fragment implements OnItemClickListener{
+public class HotelListFragment extends Fragment implements OnItemClickListener, OnNavigationListener{
 	
 	private final static String TAG = "HotelListFragment";
 	
@@ -109,10 +115,10 @@ public class HotelListFragment extends Fragment implements OnItemClickListener{
 		mGaTracker = mGaInstance.getTracker("UA-43721645-1");
 		
 		// Actionbar setting
-		MainActivity activity = (MainActivity)view.getContext();
-		activity.hideMenuItem();
-		activity.addMenuItem("지역");
-		
+//		MainActivity activity = (MainActivity)view.getContext();
+//		activity.hideMenuItem();
+//		activity.addMenuItem("지역");
+//		
 		// Right Sliding setting
 //		activity.getSlidingMenu().setMode(SlidingMenu.LEFT_RIGHT);
 //		activity.getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
@@ -283,7 +289,7 @@ public class HotelListFragment extends Fragment implements OnItemClickListener{
 //		else 
 //			result = true;
 		
-		Log.d("aaaaaaaaaaaaa", curTime + "   " + openTime + "   " + closeTime);
+		Log.d(TAG, curTime + "   " + openTime + "   " + closeTime);
 		// true 면 호텔판매시간 아님
 		if( (openTime < curTime) && (curTime < closeTime)) {
 			result = false;
@@ -302,8 +308,21 @@ public class HotelListFragment extends Fragment implements OnItemClickListener{
 	}
 	
 	public void setRegionList() {
-		Bundle argument = new Bundle();
-		argument.putStringArrayList("regionList", regionList);
+		
+		ActionBar actionBar = ((MainActivity) getActivity()).actionBar;
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		
+		ArrayAdapter<String> regionListAdapter = new ArrayAdapter<String>(getActivity(), 
+				android.R.layout.simple_list_item_1, android.R.id.text1, regionList);
+		
+		actionBar.setListNavigationCallbacks(regionListAdapter, this);
+		
+		prefs = view.getContext().getSharedPreferences(SHARED_PREFERENCES_NAME, 0);
+		int selectedRegionIndex = prefs.getInt(PREFERENCE_REGION_INDEX, 0);
+		actionBar.setSelectedNavigationItem(selectedRegionIndex);
+		
+//		Log.d(TAG, "setRegionList() called.");
+		
 //		RegionListFragment fragment =  new RegionListFragment();
 //		fragment.setArguments(argument);
 //		MainActivity activity = (MainActivity) view.getContext();
@@ -370,9 +389,6 @@ public class HotelListFragment extends Fragment implements OnItemClickListener{
 				ed.putString(PREFERENCE_SELECTED_MENU, "booking");
 				ed.commit();
 				
-				MainActivity activity = (MainActivity) view.getContext();
-//				activity.changeMenu();
-				
 				Fragment fragment = new BookingListFragment();
 		        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
 		        ft.replace(R.id.content_frame, fragment);
@@ -437,16 +453,17 @@ public class HotelListFragment extends Fragment implements OnItemClickListener{
 				String select = prefs.getString(PREFERENCE_REGION_SELECT, null);
 				if(select == null) {	// 지역 선택 하기전 DEFAULT
 					String region = prefs.getString(PREFERENCE_REGION_DEFALUT, "서울");
-					activity.changeTitle(region);
+					activity.changeTitle("");
 					region = region.replace(" ", "%20");
 					region = region.replace("|", "%7C");
 					new GeneralHttpTask(hotelListListener, view.getContext()).execute(REST_URL+ HOTEL + region + "/near/0/0/0/1000/" + currentYear + "/" + currentMon + "/" + currentDay);
 				} else {		// 지역 선택시
-					activity.changeTitle(select);
+					activity.changeTitle("");
 					select = select.replace(" ", "%20");
 					select = select.replace("|", "%7C");
 					new GeneralHttpTask(hotelListListener, view.getContext()).execute(REST_URL+ HOTEL + select + "/near/0/0/0/1000/" + currentYear + "/" + currentMon + "/" + currentDay);
 				}
+				
 			}
 		}
 	};
@@ -533,13 +550,14 @@ public class HotelListFragment extends Fragment implements OnItemClickListener{
 			} else {
 				prefs = view.getContext().getSharedPreferences(SHARED_PREFERENCES_NAME, 0);
 				String select = prefs.getString(PREFERENCE_REGION_SELECT, null);
-				
 				if(select == null) {	// 지역 선택 하기전 DEFAULT
 					String region = prefs.getString(PREFERENCE_REGION_DEFALUT, "서울");
+					activity.changeTitle("");
 					region = region.replace(" ", "%20");
 					region = region.replace("|", "%7C");
 					new GeneralHttpTask(refreshListListener, view.getContext()).execute(REST_URL+ HOTEL + region + "/near/0/0/0/1000/" + currentYear + "/" + currentMon + "/" + currentDay);
 				} else {		// 지역 선택시
+					activity.changeTitle("");
 					select = select.replace(" ", "%20");
 					select = select.replace("|", "%7C");
 					new GeneralHttpTask(refreshListListener, view.getContext()).execute(REST_URL+ HOTEL + select + "/near/0/0/0/1000/" + currentYear + "/" + currentMon + "/" + currentDay);
@@ -583,6 +601,33 @@ public class HotelListFragment extends Fragment implements OnItemClickListener{
 			}
 		}
 	};
+	
+	@Override
+	public boolean onNavigationItemSelected(int position, long id) {
+		
+		Log.d(TAG, regionList.get(position) + " " + Long.toString(id));
+		
+		prefs = view.getContext().getSharedPreferences(SHARED_PREFERENCES_NAME, 0);
+		int oldPosition = prefs.getInt(PREFERENCE_REGION_INDEX, 0);
+		
+		if (position != oldPosition) {
+			SharedPreferences.Editor ed = prefs.edit();
+			
+			ed.putString(PREFERENCE_REGION_SELECT, regionList.get(position));
+			ed.putInt(PREFERENCE_REGION_INDEX, position);
+			ed.commit();
+			
+			String select = prefs.getString(PREFERENCE_REGION_SELECT, null);
+			select = select.replace(" ", "%20");
+			select = select.replace("|", "%7C");
+			
+//			((MainActivity) getActivity()).actionBar.setSelectedNavigationItem(position);
+			LoadingDialog.showLoading(getActivity());
+			new GeneralHttpTask(hotelListListener, view.getContext()).execute(REST_URL+ HOTEL + select + "/near/0/0/0/1000/" + currentYear + "/" + currentMon + "/" + currentDay);
+		}
+		
+		return true;
+	}
 	
 	
 }

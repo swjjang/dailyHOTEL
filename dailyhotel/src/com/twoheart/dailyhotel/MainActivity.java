@@ -78,7 +78,7 @@ public class MainActivity extends BaseActivity {
 	}
 	
 	public void changeTitle(String str) {
-		getSupportActionBar().setTitle("   " + str);
+		getSupportActionBar().setTitle(str);
 	}
 	
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -113,18 +113,18 @@ public class MainActivity extends BaseActivity {
     
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-    	super.onSaveInstanceState(outState);
+    		super.onSaveInstanceState(outState);
     }
     
     public void addMenuItem(String str) {
-    	isMenuItem = true;
-    	itemStr = str;
-    	supportInvalidateOptionsMenu();
+	    	isMenuItem = true;
+	    	itemStr = str;
+	    	supportInvalidateOptionsMenu();
     }
     
     public void hideMenuItem() {
-    	isMenuItem = false;
-    	supportInvalidateOptionsMenu();
+	    	isMenuItem = false;
+	    	supportInvalidateOptionsMenu();
     }
     
     
