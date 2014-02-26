@@ -1,6 +1,6 @@
 package com.twoheart.dailyhotel;
 
-import static com.twoheart.dailyhotel.AppConstants.*;
+import static com.twoheart.dailyhotel.util.AppConstants.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.google.android.gcm.GCMBaseIntentService;
-import com.twoheart.dailyhotel.SplashActivity;
+import com.twoheart.dailyhotel.activity.SplashActivity;
 
 public class GCMIntentService extends GCMBaseIntentService{
 	private final static String TAG = "GCMIntentService";

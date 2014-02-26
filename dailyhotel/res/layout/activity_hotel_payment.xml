@@ -76,7 +76,7 @@
             android:gravity="center_vertical"
             android:text="적립금 사용"/>
         
-        <com.twoheart.dailyhotel.utils.Switch
+        <com.twoheart.dailyhotel.view.Switch
             android:layout_width="wrap_content"
 		    android:layout_height="match_parent"
 		    android:layout_alignParentRight="true"
@@ -87,7 +87,7 @@
 		    app:textLeft="사용안함"
 		    app:textRight="사용"
 		    android:id="@+id/btn_on_off">
-	    </com.twoheart.dailyhotel.utils.Switch>
+	    </com.twoheart.dailyhotel.view.Switch>
 	    
         
     </RelativeLayout>

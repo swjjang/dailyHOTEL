@@ -1,7 +1,7 @@
 package com.twoheart.dailyhotel;
 
-import static com.twoheart.dailyhotel.AppConstants.PREFERENCE_SELECTED_MENU;
-import static com.twoheart.dailyhotel.AppConstants.SHARED_PREFERENCES_NAME;
+import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_SELECTED_MENU;
+import static com.twoheart.dailyhotel.util.AppConstants.SHARED_PREFERENCES_NAME;
 import android.annotation.TargetApi;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -14,7 +14,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.twoheart.dailyhotel.hotel.HotelListFragment;
+import com.twoheart.dailyhotel.fragment.HotelListFragment;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 public class MainActivity extends BaseActivity {
 
@@ -25,7 +26,7 @@ public class MainActivity extends BaseActivity {
 	private boolean isMenuItem = false;
 	private String itemStr = null;
 	
-	private TextView	title;
+	private TextView	 title;
 	
 	private SharedPreferences prefs;
 	
