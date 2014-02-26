@@ -219,8 +219,11 @@ public class SplashActivity extends Activity {
 				alert.show();
 			}
 			
+		} catch (UnsupportedOperationException e) {
+			Toast.makeText(this, "구글 플레이 서비스를 이용할 수 있는 기기이어야 합니다.", Toast.LENGTH_LONG).show();
+			finish();
 		} catch (Exception e) {
-			Log.d(TAG, e.toString());
+			e.printStackTrace();
 		}
 	}
 	
