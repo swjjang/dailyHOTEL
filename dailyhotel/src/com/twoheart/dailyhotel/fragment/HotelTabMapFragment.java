@@ -119,14 +119,13 @@ public class HotelTabMapFragment extends Fragment implements OnMapClickListener{
 			tv_address.setText(address);
 			
 			ImageView grade = (ImageView) view.findViewById(R.id.iv_hotel_tab_map_grade);
-			//grade
-			if(cat.equals("biz")) {
+			if(cat.equals("5")) {
 				grade.setImageResource(R.drawable.dh_grademark_biz);
-			} else if(cat.equals("boutique")) {
+			} else if(cat.equals("2")) {
 				grade.setImageResource(R.drawable.dh_grademark_boutique);
-			} else if(cat.equals("residence")) {
+			} else if(cat.equals("3")) {
 				grade.setImageResource(R.drawable.dh_grademark_residence);
-			} else if(cat.equals("special")) {
+			} else {
 				grade.setImageResource(R.drawable.dh_grademark_special);
 			}
 			
