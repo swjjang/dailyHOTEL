@@ -95,47 +95,47 @@
             android:label=""
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.twoheart.dailyhotel.setting.IntroductionActivity"
+            android:name="com.twoheart.dailyhotel.activity.IntroductionActivity"
             android:icon="@drawable/dh_ic_no"
             android:label=""
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.twoheart.dailyhotel.setting.NoticeActivity"
+            android:name="com.twoheart.dailyhotel.activity.NoticeActivity"
             android:icon="@drawable/dh_ic_no"
             android:label=""
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.twoheart.dailyhotel.setting.HelpActivity"
+            android:name="com.twoheart.dailyhotel.activity.HelpActivity"
             android:icon="@drawable/dh_ic_no"
             android:label=""
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.twoheart.dailyhotel.setting.LoginActivity"
+            android:name="com.twoheart.dailyhotel.activity.LoginActivity"
             android:icon="@drawable/dh_ic_no"
             android:label=""
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.twoheart.dailyhotel.setting.SignupActivity"
+            android:name="com.twoheart.dailyhotel.activity.SignupActivity"
             android:icon="@drawable/dh_ic_no"
             android:label=""
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.twoheart.dailyhotel.setting.ForgotPwdActivity"
+            android:name="com.twoheart.dailyhotel.activity.ForgotPwdActivity"
             android:icon="@drawable/dh_ic_no"
             android:label=""
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.twoheart.dailyhotel.setting.AgreementActivity"
+            android:name="com.twoheart.dailyhotel.activity.AgreementActivity"
             android:icon="@drawable/dh_ic_no"
             android:label=""
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.twoheart.dailyhotel.setting.PersonalInfoActivity"
+            android:name="com.twoheart.dailyhotel.activity.PersonalInfoActivity"
             android:icon="@drawable/dh_ic_no"
             android:label=""
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.twoheart.dailyhotel.setting.VersionActivity"
+            android:name="com.twoheart.dailyhotel.activity.VersionActivity"
             android:icon="@drawable/dh_ic_no"
             android:label=""
             android:screenOrientation="portrait" />
