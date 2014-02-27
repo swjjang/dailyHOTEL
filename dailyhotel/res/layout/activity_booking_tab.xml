@@ -11,7 +11,7 @@
         android:layout_height="0dp"
         android:layout_width="match_parent" />
     
-    <com.twoheart.dailyhotel.common.view.ViewPagerCustom
+    <com.twoheart.dailyhotel.view.HotelViewPager
         android:id="@+id/booking_pager"
         android:layout_width="fill_parent"
         android:layout_height="0dp"

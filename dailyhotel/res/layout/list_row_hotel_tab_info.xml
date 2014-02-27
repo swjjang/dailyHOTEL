@@ -16,7 +16,8 @@
     <LinearLayout 
         android:id="@+id/layout_hotel_tab_info_content_list"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"/>
+        android:layout_width="match_parent"
+        android:orientation="vertical"/>
 
     
     

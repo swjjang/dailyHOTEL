@@ -85,11 +85,6 @@
             android:label=""
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.twoheart.dailyhotel.hotel.FooterActivity"
-            android:icon="@drawable/dh_ic_no"
-            android:label=""
-            android:screenOrientation="portrait" />
-        <activity
             android:name="com.twoheart.dailyhotel.activity.BookingTabActivity"
             android:icon="@drawable/dh_ic_no"
             android:label=""

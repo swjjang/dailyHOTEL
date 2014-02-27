@@ -10,7 +10,6 @@ import static com.twoheart.dailyhotel.util.AppConstants.REST_URL;
 import static com.twoheart.dailyhotel.util.AppConstants.SALE_TIME;
 import static com.twoheart.dailyhotel.util.AppConstants.SHARED_PREFERENCES_NAME;
 import static com.twoheart.dailyhotel.util.AppConstants.TIME;
-import static com.twoheart.dailyhotel.util.AppConstants.clickState;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,7 +24,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -49,6 +47,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.google.analytics.tracking.android.Fields;
@@ -187,7 +186,9 @@ public class HotelListFragment extends Fragment implements OnItemClickListener, 
 		LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE );
 		View footer = inflater.inflate(R.layout.footer_hotel_list, null);
 		lv.addFooterView(footer);
-		lv.setFastScrollEnabled(true);     
+		lv.setFastScrollEnabled(true);
+		lv.setScrollBarStyle(ScrollView.SCROLLBARS_OUTSIDE_OVERLAY);
+		
 		Button btn_footer = (Button) view.findViewById(R.id.btn_footer);
 		btn_footer.setOnClickListener(new OnClickListener() {
 			
