@@ -273,6 +273,8 @@ public class HotelListFragment extends Fragment implements OnItemClickListener, 
 	}
 
 	public boolean checkTimer(String str) {
+		
+		if (AppConstants.DEBUG) return false;
 		boolean result = false;
 		
 		Date now = new Date(Long.parseLong(str.trim()));
@@ -306,8 +308,6 @@ public class HotelListFragment extends Fragment implements OnItemClickListener, 
 		}
 		
 		return result;
-		// Open anytime...
-//		return false;
 	}
 	
 	public void setRegionList() {

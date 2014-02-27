@@ -1,6 +1,9 @@
 package com.twoheart.dailyhotel.util;
 
 public class AppConstants {
+	
+	 public static final boolean DEBUG = false;
+	
 	// url list19
 	public static String REST_URL = "http://dailyhotel.kr/goodnight/";
 	public static String LOGIN = "user/login/mobile";
