@@ -20,6 +20,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
@@ -34,8 +36,10 @@ public class ImageLoader {
     Handler handler=new Handler();//handler to display images in UI thread
     private ProgressBar pb;
     private boolean isProgress = false;
+    private Context context;
     
     public ImageLoader(Context context){
+    		this.context = context;
         fileCache=new FileCache(context);
         executorService=Executors.newFixedThreadPool(5);
     }
@@ -46,8 +50,11 @@ public class ImageLoader {
     {
         imageViews.put(imageView, url);
         Bitmap bitmap=memoryCache.get(url);
-        if(bitmap!=null)
+        if(bitmap!=null) {
+        		imageView.startAnimation(AnimationUtils.loadAnimation(context, R.anim.fadein));
             imageView.setImageBitmap(bitmap);
+            
+        }
         else
         {
             queuePhoto(url, imageView);
@@ -61,8 +68,11 @@ public class ImageLoader {
         Bitmap bitmap=memoryCache.get(url);
         this.pb = pb;
         this.isProgress = true;
-        if(bitmap!=null)
+        if(bitmap!=null) {
+        		imageView.startAnimation(AnimationUtils.loadAnimation(context, R.anim.fadein));
             imageView.setImageBitmap(bitmap);
+            
+        }
         else
         {
             queuePhoto(url, imageView);

@@ -8,23 +8,24 @@ import java.util.List;
 
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.R.drawable;
-import com.twoheart.dailyhotel.R.id;
-import com.twoheart.dailyhotel.R.layout;
 import com.twoheart.dailyhotel.adapter.DrawerMenuListAdapter;
 import com.twoheart.dailyhotel.fragment.BookingListFragment;
 import com.twoheart.dailyhotel.fragment.CreditFragment;
@@ -52,11 +53,13 @@ public class BaseActivity extends ActionBarActivity implements
 
 	private SharedPreferences prefs;
 	private Fragment content;
-	
+
 	private DrawerMenu menuHotel;
 	private DrawerMenu menuBooking;
 	private DrawerMenu menuCredit;
 	private DrawerMenu menuSetting;
+
+	public static Typeface mTypeface;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +70,6 @@ public class BaseActivity extends ActionBarActivity implements
 	@Override
 	public void setContentView(int layoutResID) {
 		super.setContentView(layoutResID);
-		
 		actionBar = getSupportActionBar();
 
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -92,9 +94,9 @@ public class BaseActivity extends ActionBarActivity implements
 		// Set the drawer toggle as the DrawerListener
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
-		
-		menuHotel = new DrawerMenu(DRAWER_MENU_HOTEL,
-				R.drawable.dh_menu_hotel, R.drawable.dh_menu_select);
+
+		menuHotel = new DrawerMenu(DRAWER_MENU_HOTEL, R.drawable.dh_menu_hotel,
+				R.drawable.dh_menu_select);
 		menuBooking = new DrawerMenu(DRAWER_MENU_BOOKING,
 				R.drawable.dh_menu_booking, 0);
 		menuCredit = new DrawerMenu(DRAWER_MENU_CREDIT,
@@ -115,7 +117,8 @@ public class BaseActivity extends ActionBarActivity implements
 		mDrawerList.setAdapter(drawerMenuListAdapter);
 		// Set the list's click listener
 		mDrawerList.setOnItemClickListener(this);
-		
+
+		actionBar.setIcon(R.drawable.img_ic_menu);
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setHomeButtonEnabled(true);
 	}
@@ -126,7 +129,7 @@ public class BaseActivity extends ActionBarActivity implements
 
 		Fragment newContent = null;
 		SharedPreferences.Editor ed = prefs.edit();
-		
+
 		disableAllButtons();
 		mMenuImages.get(position).setBackground(R.drawable.dh_menu_select);
 		drawerMenuListAdapter.notifyDataSetChanged();
@@ -157,10 +160,25 @@ public class BaseActivity extends ActionBarActivity implements
 		switchFragment(newContent);
 		mDrawerLayout.closeDrawer(mDrawerList);
 	}
-	
+
 	private void disableAllButtons() {
-		for (int i=0; i<mMenuImages.size(); i++) {
+		for (int i = 0; i < mMenuImages.size(); i++) {
 			mMenuImages.get(i).setBackground(0);
+		}
+	}
+	
+	public void setGlobalFont(ViewGroup root) {
+		if (BaseActivity.mTypeface == null)
+			BaseActivity.mTypeface = Typeface.createFromAsset(getAssets(),
+					"NanumBarunGothic.ttf.mp3");
+
+		int childCnt = root.getChildCount();
+		for (int i = 0; i < childCnt; i++) {
+			View v = root.getChildAt(i);
+			Log.d(TAG, v.toString());
+			if (v instanceof TextView) {
+				((TextView) v).setTypeface(mTypeface);
+			}
 		}
 	}
 

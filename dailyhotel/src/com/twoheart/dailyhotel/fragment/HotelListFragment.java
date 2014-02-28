@@ -27,6 +27,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -45,9 +46,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.analytics.tracking.android.Fields;
@@ -65,6 +66,7 @@ import com.twoheart.dailyhotel.obj.Hotel;
 import com.twoheart.dailyhotel.util.AppConstants;
 import com.twoheart.dailyhotel.util.network.GeneralHttpTask;
 import com.twoheart.dailyhotel.util.network.OnCompleteListener;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
 public class HotelListFragment extends Fragment implements OnItemClickListener, OnNavigationListener{
@@ -184,12 +186,11 @@ public class HotelListFragment extends Fragment implements OnItemClickListener, 
 		// footer Ãß°¡
 		final ListView lv = listView.getRefreshableView();
 		LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE );
-		View footer = inflater.inflate(R.layout.footer_hotel_list, null);
-		lv.addFooterView(footer);
+		View header = inflater.inflate(R.layout.header_hotel_list, null);
+		lv.addHeaderView(header);
 		lv.setFastScrollEnabled(true);
-		lv.setScrollBarStyle(ScrollView.SCROLLBARS_OUTSIDE_OVERLAY);
 		
-		Button btn_footer = (Button) view.findViewById(R.id.btn_footer);
+		ImageButton btn_footer = (ImageButton) view.findViewById(R.id.btn_footer);
 		btn_footer.setOnClickListener(new OnClickListener() {
 			
 			@Override

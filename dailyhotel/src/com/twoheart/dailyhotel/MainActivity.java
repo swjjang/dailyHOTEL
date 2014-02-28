@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.fragment.HotelListFragment;
@@ -72,6 +73,15 @@ public class MainActivity extends BaseActivity {
 		.beginTransaction()
 		.replace(R.id.content_frame, hotelListFrag)
 		.commit();
+		
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		setGlobalFont((ViewGroup) this.getWindow().getDecorView().findViewById(
+				android.R.id.content));
+		
 	}
     
 	public void loadResource() {

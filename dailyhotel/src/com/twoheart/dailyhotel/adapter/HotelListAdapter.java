@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.obj.Hotel;
 import com.twoheart.dailyhotel.util.ImageLoader;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -51,66 +53,76 @@ public class HotelListAdapter extends ArrayAdapter<Hotel>{
 		
 		if(element != null) {
 			ImageView img = (ImageView) v.findViewById(R.id.iv_hotel_row_img);
-			Animation fadeInAnimation = AnimationUtils.loadAnimation(context, R.anim.fadein);
-			//Now Set your animation
-			img.startAnimation(fadeInAnimation );
 			
-			TextView label = (TextView) v.findViewById(R.id.tv_hotel_row_label);
+//			TextView label = (TextView) v.findViewById(R.id.tv_hotel_row_label);
 			TextView name = (TextView) v.findViewById(R.id.tv_hotel_row_name);
 			TextView price = (TextView) v.findViewById(R.id.tv_hotel_row_price);
 			TextView discount = (TextView) v.findViewById(R.id.tv_hotel_row_discount);
 			TextView sold_out = (TextView) v.findViewById(R.id.tv_hotel_row_soldout);
 			TextView address = (TextView) v.findViewById(R.id.tv_hotel_row_address);
 			
-			address.setText(element.getAddress());
-			name.setText(element.getName());
+			ImageView gradeBackground = (ImageView) v.findViewById(R.id.iv_hotel_row_grade);
+			TextView gradeText = (TextView) v.findViewById(R.id.tv_hotel_row_grade);
+			
 			DecimalFormat comma = new DecimalFormat("###,##0");
 			String strPrice = comma.format(Integer.parseInt(element.getPrice()));
 			String strDiscount = comma.format(Integer.parseInt(element.getDiscount()));
-			price.setText("￦" + strPrice);
+			
+			address.setText(element.getAddress());
+			name.setText(element.getName());
+			price.setText(strPrice + "원");
 			price.setPaintFlags(price.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-			discount.setText("￦" + strDiscount);
+			discount.setText(strDiscount + "원");
+			
+			name.setShadowLayer(2, 0, 2, android.R.color.black);
+			price.setShadowLayer(2, 0, 2, android.R.color.black);
+			discount.setShadowLayer(2, 0, 2, android.R.color.black);
+			address.setShadowLayer(2, 0, 2, android.R.color.black);
+			
+//			name.setTypeface(BaseActivity.mTypeface);
+//			price.setTypeface(BaseActivity.mTypeface);
+//			discount.setTypeface(BaseActivity.mTypeface);
+//			address.setTypeface(BaseActivity.mTypeface);
 			
 			
-			ImageView grade = (ImageView) v.findViewById(R.id.iv_hotel_row_grade);
 			//grade
 			if(items.get(position).getCat().equals("biz")) {
-				grade.setImageResource(R.drawable.dh_grademark_biz);
+//				grade.setImageResource(R.drawable.dh_grademark_biz);
+				gradeBackground.setBackgroundColor(Color.parseColor("#055870"));
+				gradeText.setText("비지니스");
+				
 			} else if(items.get(position).getCat().equals("boutique")) {
-				grade.setImageResource(R.drawable.dh_grademark_boutique);
+//				grade.setImageResource(R.drawable.dh_grademark_boutique);
+				gradeBackground.setBackgroundColor(Color.parseColor("#9f2d58"));
+				gradeText.setText("부띠끄");
+				
 			} else if(items.get(position).getCat().equals("residence")) {
-				grade.setImageResource(R.drawable.dh_grademark_residence);
-			} else if(items.get(position).getCat().equals("special")) {
-				grade.setImageResource(R.drawable.dh_grademark_special);
-			} else if(items.get(position).getCat().equals("hostel")) {
-				grade.setImageResource(R.drawable.dh_grademark_special);
-			} else if(items.get(position).getCat().equals("grade1")) {
-				grade.setImageResource(R.drawable.dh_grademark_special);
-			} else if(items.get(position).getCat().equals("grade2")) {
-				grade.setImageResource(R.drawable.dh_grademark_special);
-			} else if(items.get(position).getCat().equals("grade3")) {
-				grade.setImageResource(R.drawable.dh_grademark_special);
+//				grade.setImageResource(R.drawable.dh_grademark_residence);
+				gradeBackground.setBackgroundColor(Color.parseColor("#407f67"));
+				gradeText.setText("레지던스");
+				
 			} else if(items.get(position).getCat().equals("resort")) {
-				grade.setImageResource(R.drawable.dh_grademark_special);
-			} else if(items.get(position).getCat().equals("pension")) {
-				grade.setImageResource(R.drawable.dh_grademark_special);
-			} else if(items.get(position).getCat().equals("condo ")) {
-				grade.setImageResource(R.drawable.dh_grademark_special);
+//				grade.setImageResource(R.drawable.dh_grademark_residence);
+				gradeBackground.setBackgroundColor(Color.parseColor("#cf8d14"));
+				gradeText.setText("리조트");
+				
+			} else {
+//				grade.setImageResource(R.drawable.dh_grademark_special);
+				gradeBackground.setBackgroundColor(Color.parseColor("#ab380a"));
+				gradeText.setText("특급");
 			}
 			
 			if(!items.get(position).getImg().equals("default"))
 				imageLoader.DisplayImage(items.get(position).getImg(), img);
-			else
-				img.setImageResource(R.drawable.dh_no_image);
 			
 			// 객실이 1~2 개일때 label 표시
 			int avail_cnt = items.get(position).getAvali_cnt();
-			if(avail_cnt > 0 && avail_cnt < 3) {
-				label.setText(avail_cnt + " 객실 남음");
-				label.setVisibility(View.VISIBLE);
-			} 
-			else
-				label.setVisibility(View.GONE);
+//			if(avail_cnt > 0 && avail_cnt < 3) {
+//				label.setText(avail_cnt + " 객실 남음");
+//				label.setVisibility(View.VISIBLE);
+//			} 
+//			else
+//				label.setVisibility(View.GONE);
 			
 			// SOLD OUT 표시
 			if(avail_cnt == 0)
