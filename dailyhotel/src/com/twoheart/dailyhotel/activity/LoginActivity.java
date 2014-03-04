@@ -7,12 +7,15 @@ import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_USER_ID;
 import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_USER_PWD;
 import static com.twoheart.dailyhotel.util.AppConstants.REST_URL;
 import static com.twoheart.dailyhotel.util.AppConstants.SHARED_PREFERENCES_NAME;
+import static com.twoheart.dailyhotel.util.AppConstants.SIGNUP;
+import static com.twoheart.dailyhotel.util.AppConstants.LOGIN_FACEBOOK;
 
 import java.util.ArrayList;
 
 import org.json.JSONObject;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,6 +23,7 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -34,6 +38,12 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
+import com.facebook.Request;
+import com.facebook.Response;
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.model.GraphUser;
+import com.facebook.widget.LoginButton;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.obj.Parameter;
 import com.twoheart.dailyhotel.util.Crypto;
@@ -55,6 +65,7 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener{
 	private CheckBox cb_auto;
 	private Button btn_login;
 	private TextView tv_signup, tv_forgot;
+	private LoginButton facebookLogin;
 	
 	private SharedPreferences prefs;
 	
@@ -87,11 +98,12 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener{
 		tv_signup = (TextView) findViewById(R.id.tv_login_signup);
 		tv_forgot = (TextView) findViewById(R.id.tv_login_forgot);
 		btn_login = (Button)	 findViewById(R.id.btn_login);
-		
+		facebookLogin = (LoginButton) findViewById(R.id.authButton);
 		
 		tv_signup.setOnClickListener(this);
 		tv_forgot.setOnClickListener(this);
 		btn_login.setOnClickListener(this);
+		facebookLogin.setOnClickListener(this);
 		
 		et_pwd.setId(EditorInfo.IME_ACTION_DONE);
 		et_pwd.setOnEditorActionListener(new OnEditorActionListener() {
@@ -106,6 +118,57 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener{
 				return false;
 			}
 		});
+		
+	}
+	
+//	private Session.StatusCallback callback = new Session.StatusCallback() {
+//	    @Override
+//	    public void call(Session session, SessionState state, Exception exception) {
+//	        onSessionStateChange(session, state, exception);
+//	    }
+//	};
+//	
+	private void onSessionStateChange(Session session, SessionState state, Exception exception) {
+	    if (state.isOpened()) {
+	        Log.i(TAG, "Facebook Login");
+	        makeMeRequest(session);
+	        
+	    } else if (state.isClosed()) {
+	        Log.i(TAG, "Facebook Logout");
+	    }
+	}
+	
+	private void makeMeRequest(final Session session) {
+		
+		Request request = Request.newMeRequest(session, new Request.GraphUserCallback() {
+			
+			@Override
+			public void onCompleted(GraphUser user, Response response) {
+				if (session == Session.getActiveSession()) {
+					if (user != null) {
+						
+						TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+						String phoneNumber = telephonyManager.getLine1Number();
+						
+						ArrayList<Parameter> paramList = new ArrayList<Parameter>();
+						paramList.add(new Parameter("email", null));
+						paramList.add(new Parameter("pw", null));
+						paramList.add(new Parameter("name", user.getName()));
+						paramList.add(new Parameter("phone", phoneNumber));
+						paramList.add(new Parameter("device", telephonyManager.getDeviceId()));
+						paramList.add(new Parameter("accessToken", user.getId()));
+						
+						new GeneralHttpTask(snsListener, paramList, getApplicationContext()).execute(REST_URL + LOGIN_FACEBOOK);
+					}
+				}
+				if (response.getError() != null) {
+					
+					
+				}
+			}
+		});
+		
+		request.executeAsync();
 	}
 	
 	@Override
@@ -132,6 +195,23 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener{
 			
 			LoadingDialog.showLoading(this);
 			new GeneralHttpTask(loginListener, params, getApplicationContext()).execute(REST_URL + LOGIN);
+		} else if ( v.getId() == facebookLogin.getId()) {
+			if (Session.getActiveSession() == null) {
+				Session.openActiveSession(this, true,
+						new Session.StatusCallback() {
+
+							// callback when session changes state
+							@Override
+							public void call(Session session,
+									SessionState state, Exception exception) {
+								onSessionStateChange(session, state, exception);
+							}
+						});
+			} else {
+				Session.getActiveSession().closeAndClearTokenInformation();
+				Session.setActiveSession(null);
+			}
+			
 		}
 	}
 	
@@ -150,14 +230,16 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener{
 	}
 	
 	public void parseJson(String str) {
+		JSONObject obj = null;
+		
 		try{
-			JSONObject obj = new JSONObject(str);
+			obj = new JSONObject(str);
 			String msg = null;
 			
 			if ( obj.getString("login").equals("true") ) {
 				
 				Log.d(TAG, "로그인 성공");
-				Toast.makeText(getApplicationContext(), "로그인 되었습니다.", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), "로그인되었습니다.", Toast.LENGTH_SHORT).show();
 				LoadingDialog.hideLoading();
 				commitLogin();
 				
@@ -170,7 +252,7 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener{
 					alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
 					    @Override
 					    public void onClick(DialogInterface dialog, int which) {
-					    	dialog.dismiss();     //닫기
+					    		dialog.dismiss();     //닫기
 					    }
 					});
 					alert.setMessage(msg);
@@ -180,11 +262,15 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener{
 			}
 			
 		} catch (Exception e) {
-			Log.d(TAG, e.toString());
+			e.printStackTrace();
+			Log.e(TAG, obj.toString());
+			
 			LoadingDialog.hideLoading();
 			Toast.makeText(getApplicationContext(), "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.", Toast.LENGTH_SHORT).show();
 		}
 	}
+	
+	
 	
 	public void commitLogin() {
 
@@ -211,6 +297,7 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener{
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+		Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
 		
 		if(requestCode == LOGIN_ACTIVITY) {
 			if(resultCode == RESULT_OK) {
@@ -239,6 +326,21 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener{
 	}
 	
 	protected OnCompleteListener loginListener = new OnCompleteListener() {
+		
+		@Override
+		public void onTaskFailed() {
+			Log.d("TAG", "loginListener onTaskFailed");
+			Toast.makeText(getApplicationContext(), "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.", Toast.LENGTH_SHORT).show();
+			LoadingDialog.hideLoading();
+		}
+		
+		@Override
+		public void onTaskComplete(String result) {
+			parseJson(result);
+		}
+	};
+	
+	protected OnCompleteListener snsListener = new OnCompleteListener() {
 		
 		@Override
 		public void onTaskFailed() {

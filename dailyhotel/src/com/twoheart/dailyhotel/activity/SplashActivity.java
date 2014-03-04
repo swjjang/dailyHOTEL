@@ -195,7 +195,7 @@ public class SplashActivity extends Activity {
 			int min_version = Integer.parseInt(prefs.getString(PREFERENCE_MIN_VERSION_NAME, null).replace(".", ""));
 			int current_version = Integer.parseInt(this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName.replace(".", ""));
 			
-			if( (max_version >= current_version) && (current_version >= min_version) ) { 				// 置重 version
+			if( (current_version >= max_version) && (current_version >= min_version) ) { 				// 置重 version
 				
 				checkAutoLogin();
 

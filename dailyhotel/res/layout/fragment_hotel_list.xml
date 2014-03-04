@@ -2,17 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#ECECEC">
-    
-    <com.handmark.pulltorefresh.library.PullToRefreshListView
+    android:background="#ECECEC"
+    android:orientation="vertical" >
+
+    <com.nolanlawson.supersaiyan.widget.SuperSaiyanScrollView
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <com.handmark.pulltorefresh.library.PullToRefreshListView
             android:id="@+id/listview_hotel_list"
-            android:layout_height="match_parent"
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:cacheColorHint="#00000000"
-            android:divider="@null"
-            android:fadingEdge="none"
-            android:scrollbars="vertical">
-     </com.handmark.pulltorefresh.library.PullToRefreshListView>
-	     
+            android:divider="@null" >
+        </com.handmark.pulltorefresh.library.PullToRefreshListView>
+    </com.nolanlawson.supersaiyan.widget.SuperSaiyanScrollView>
+
 </LinearLayout>

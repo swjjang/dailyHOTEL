@@ -2,21 +2,29 @@ package com.twoheart.dailyhotel;
 
 import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_SELECTED_MENU;
 import static com.twoheart.dailyhotel.util.AppConstants.SHARED_PREFERENCES_NAME;
+
+import java.security.MessageDigest;
+
 import android.annotation.TargetApi;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.fragment.HotelListFragment;
+import com.twoheart.dailyhotel.util.AppConstants;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
+import com.twoheart.dailyhotel.util.ui.CloseOnBackPressed;
 
 public class MainActivity extends BaseActivity {
 
@@ -30,6 +38,7 @@ public class MainActivity extends BaseActivity {
 	private TextView	 title;
 	
 	private SharedPreferences prefs;
+	private CloseOnBackPressed backButtonHandler;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -74,16 +83,25 @@ public class MainActivity extends BaseActivity {
 		.replace(R.id.content_frame, hotelListFrag)
 		.commit();
 		
-	}
-	
-	@Override
-	protected void onResume() {
-		super.onResume();
-		setGlobalFont((ViewGroup) this.getWindow().getDecorView().findViewById(
-				android.R.id.content));
+		if (AppConstants.DEBUG) {
+			
+			try {
+				PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
+				for (Signature signature : info.signatures) {
+					MessageDigest md = MessageDigest.getInstance("SHA");
+					md.update(signature.toByteArray());
+					Log.d("KeyHash: getPackageName()" + getPackageName(), Base64.encodeToString(md.digest(), Base64.DEFAULT));
+				} 
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
+		backButtonHandler = new CloseOnBackPressed(this);
 		
 	}
-    
+	
 	public void loadResource() {
 		title = (TextView) findViewById(R.id.tv_actionbar_title);
 	}
@@ -119,6 +137,11 @@ public class MainActivity extends BaseActivity {
 	    	supportInvalidateOptionsMenu();
     }
     
-    
+    @Override
+    public void finish() {
+	    	if (backButtonHandler.onBackPressed())
+				super.finish();
+    	
+    }
  	
 }

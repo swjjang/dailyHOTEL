@@ -39,10 +39,12 @@ public class BaseActivity extends ActionBarActivity implements
 
 	private final static String TAG = "BaseActivity";
 
-	private static final String DRAWER_MENU_HOTEL = "호텔예약";
-	private static final String DRAWER_MENU_BOOKING = "예약확인";
-	private static final String DRAWER_MENU_CREDIT = "적립금";
-	private static final String DRAWER_MENU_SETTING = "설정";
+	private static final String DRAWER_MENU_SECTION_RESERVATION = "예약";
+	private static final String DRAWER_MENU_ENTRY_HOTEL = "오늘의 호텔";
+	private static final String DRAWER_MENU_ENTRY_BOOKING = "예약확인";
+	private static final String DRAWER_MENU_SECTION_ACCOUNT = "계정";
+	private static final String DRAWER_MENU_ENTRY_CREDIT = "적립금";
+	private static final String DRAWER_MENU_ENTRY_SETTING = "설정";
 
 	public ActionBar actionBar;
 	private List<DrawerMenu> mMenuImages;
@@ -59,7 +61,8 @@ public class BaseActivity extends ActionBarActivity implements
 	private DrawerMenu menuCredit;
 	private DrawerMenu menuSetting;
 
-	public static Typeface mTypeface;
+	public static Typeface mTypefaceCommon;
+	public static Typeface mTypefaceBold;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +73,9 @@ public class BaseActivity extends ActionBarActivity implements
 	@Override
 	public void setContentView(int layoutResID) {
 		super.setContentView(layoutResID);
+		setGlobalFont((ViewGroup) this.getWindow().getDecorView().findViewById(
+				android.R.id.content));
+
 		actionBar = getSupportActionBar();
 
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -95,23 +101,26 @@ public class BaseActivity extends ActionBarActivity implements
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
-		menuHotel = new DrawerMenu(DRAWER_MENU_HOTEL, R.drawable.dh_menu_hotel,
-				R.drawable.dh_menu_select);
-		menuBooking = new DrawerMenu(DRAWER_MENU_BOOKING,
-				R.drawable.dh_menu_booking, 0);
-		menuCredit = new DrawerMenu(DRAWER_MENU_CREDIT,
-				R.drawable.dh_menu_credit, 0);
-		menuSetting = new DrawerMenu(DRAWER_MENU_SETTING,
-				R.drawable.dh_menu_setting, 0);
+		menuHotel = new DrawerMenu(DRAWER_MENU_ENTRY_HOTEL, 
+				R.drawable.selector_drawermenu_todayshotel, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
+		menuBooking = new DrawerMenu(DRAWER_MENU_ENTRY_BOOKING,
+				R.drawable.selector_drawermenu_reservation, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
+		menuCredit = new DrawerMenu(DRAWER_MENU_ENTRY_CREDIT,
+				R.drawable.selector_drawermenu_saving, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
+		menuSetting = new DrawerMenu(DRAWER_MENU_ENTRY_SETTING,
+				R.drawable.selector_drawermenu_setting, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
 
 		mMenuImages = new ArrayList<DrawerMenu>();
+		mMenuImages.add(new DrawerMenu(DrawerMenu.DRAWER_MENU_LIST_TYPE_LOGO));
+		mMenuImages.add(new DrawerMenu(DRAWER_MENU_SECTION_RESERVATION, DrawerMenu.DRAWER_MENU_LIST_TYPE_SECTION));
 		mMenuImages.add(menuHotel);
 		mMenuImages.add(menuBooking);
+		mMenuImages.add(new DrawerMenu(DRAWER_MENU_SECTION_ACCOUNT, DrawerMenu.DRAWER_MENU_LIST_TYPE_SECTION));
 		mMenuImages.add(menuCredit);
 		mMenuImages.add(menuSetting);
 
 		drawerMenuListAdapter = new DrawerMenuListAdapter(this,
-				R.layout.drawer_list_item, mMenuImages);
+				R.layout.drawer_list_item_entry, mMenuImages);
 
 		// Set the adapter for the list view
 		mDrawerList.setAdapter(drawerMenuListAdapter);
@@ -126,25 +135,25 @@ public class BaseActivity extends ActionBarActivity implements
 	@Override
 	public void onItemClick(AdapterView<?> adapterView, View view,
 			int position, long id) {
-
+                                                                                              
 		Fragment newContent = null;
 		SharedPreferences.Editor ed = prefs.edit();
 
 		disableAllButtons();
-		mMenuImages.get(position).setBackground(R.drawable.dh_menu_select);
+		mDrawerList.setSelection(position);
 		drawerMenuListAdapter.notifyDataSetChanged();
 
 		switch (((DrawerMenu) (adapterView.getAdapter().getItem(position)))
 				.getIcon()) {
-		case R.drawable.dh_menu_hotel:
+		case R.drawable.selector_drawermenu_todayshotel:
 			newContent = new HotelListFragment();
 			break;
 
-		case R.drawable.dh_menu_booking:
+		case R.drawable.selector_drawermenu_reservation:
 			newContent = new BookingListFragment();
 			break;
 
-		case R.drawable.dh_menu_credit:
+		case R.drawable.selector_drawermenu_saving:
 			if (checkLogin()) // 로그인상태
 				newContent = new CreditFragment();
 			else
@@ -152,32 +161,37 @@ public class BaseActivity extends ActionBarActivity implements
 				newContent = new NoLoginFragment();
 			break;
 
-		case R.drawable.dh_menu_setting:
+		case R.drawable.selector_drawermenu_setting:
 			newContent = new SettingFragment();
 			break;
 		}
 
-		switchFragment(newContent);
+		if (newContent != null)
+			switchFragment(newContent);
 		mDrawerLayout.closeDrawer(mDrawerList);
 	}
 
 	private void disableAllButtons() {
-		for (int i = 0; i < mMenuImages.size(); i++) {
-			mMenuImages.get(i).setBackground(0);
-		}
+//		for (int i = 0; i < mMenuImages.size(); i++) {
+//			mMenuImages.get(i).setBackground(0);
+//		}
 	}
 	
 	public void setGlobalFont(ViewGroup root) {
-		if (BaseActivity.mTypeface == null)
-			BaseActivity.mTypeface = Typeface.createFromAsset(getAssets(),
+		if (BaseActivity.mTypefaceCommon == null) {
+			BaseActivity.mTypefaceCommon = Typeface.createFromAsset(getAssets(),
 					"NanumBarunGothic.ttf.mp3");
+			
+			BaseActivity.mTypefaceBold = Typeface.createFromAsset(getAssets(),
+					"NanumBarunGothicBold.ttf.mp3");
+		}
 
 		int childCnt = root.getChildCount();
 		for (int i = 0; i < childCnt; i++) {
 			View v = root.getChildAt(i);
 			Log.d(TAG, v.toString());
 			if (v instanceof TextView) {
-				((TextView) v).setTypeface(mTypeface);
+				((TextView) v).setTypeface(mTypefaceCommon);
 			}
 		}
 	}

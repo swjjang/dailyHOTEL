@@ -69,5 +69,6 @@ Facebook : http://facebook.com/dailyhotel
 보존 이유 : 통신비밀보호법\n
 보존 기간 : 3개월\n</string>
     <string name="title_activity_event_web">EventWebActivity</string>
+    <string name="app_id">268888829950610</string>
 
 </resources>

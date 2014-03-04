@@ -3,11 +3,6 @@ package com.twoheart.dailyhotel.adapter;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.obj.Hotel;
-import com.twoheart.dailyhotel.util.ImageLoader;
-import com.twoheart.dailyhotel.util.ui.BaseActivity;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -15,11 +10,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.obj.Hotel;
+import com.twoheart.dailyhotel.util.ImageLoader;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 public class HotelListAdapter extends ArrayAdapter<Hotel>{
 	
@@ -50,6 +49,10 @@ public class HotelListAdapter extends ArrayAdapter<Hotel>{
 		}
 		
 		Hotel element = items.get(position);
+		Log.d("HotelListAdapter", element.getAddress() + " " + element.getAvali_cnt() + " " 
+		+ element.getCat() + " " + element.getDiscount() + " " + element.getIdx() + " " +
+				element.getImg() + " " + element.getName() + " " + element.getPrice() + " " + element.getSeq());
+		
 		
 		if(element != null) {
 			ImageView img = (ImageView) v.findViewById(R.id.iv_hotel_row_img);
@@ -61,12 +64,17 @@ public class HotelListAdapter extends ArrayAdapter<Hotel>{
 			TextView sold_out = (TextView) v.findViewById(R.id.tv_hotel_row_soldout);
 			TextView address = (TextView) v.findViewById(R.id.tv_hotel_row_address);
 			
-			ImageView gradeBackground = (ImageView) v.findViewById(R.id.iv_hotel_row_grade);
+			FrameLayout gradeBackground = (FrameLayout) v.findViewById(R.id.fl_hotel_row_grade);
 			TextView gradeText = (TextView) v.findViewById(R.id.tv_hotel_row_grade);
 			
 			DecimalFormat comma = new DecimalFormat("###,##0");
 			String strPrice = comma.format(Integer.parseInt(element.getPrice()));
 			String strDiscount = comma.format(Integer.parseInt(element.getDiscount()));
+			
+//			element.setAddress(element.getAddress().replace("I", ", ")); // i
+//			element.setAddress(element.getAddress().replace("|", ", ")); // pipe
+//			element.setAddress(element.getAddress().replace("ㅣ", ", ")); // ㅣ
+//			element.setAddress(element.getAddress().replace("l", ", ")); // l
 			
 			address.setText(element.getAddress());
 			name.setText(element.getName());
@@ -74,16 +82,17 @@ public class HotelListAdapter extends ArrayAdapter<Hotel>{
 			price.setPaintFlags(price.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 			discount.setText(strDiscount + "원");
 			
+			name.setSelected(true); 	//Android TextView marquee bug
+			
 			name.setShadowLayer(2, 0, 2, android.R.color.black);
 			price.setShadowLayer(2, 0, 2, android.R.color.black);
 			discount.setShadowLayer(2, 0, 2, android.R.color.black);
 			address.setShadowLayer(2, 0, 2, android.R.color.black);
 			
-//			name.setTypeface(BaseActivity.mTypeface);
-//			price.setTypeface(BaseActivity.mTypeface);
-//			discount.setTypeface(BaseActivity.mTypeface);
-//			address.setTypeface(BaseActivity.mTypeface);
-			
+			name.setTypeface(BaseActivity.mTypefaceBold);
+			discount.setTypeface(BaseActivity.mTypefaceBold);
+			price.setTypeface(BaseActivity.mTypefaceCommon);
+			address.setTypeface(BaseActivity.mTypefaceCommon);
 			
 			//grade
 			if(items.get(position).getCat().equals("biz")) {
@@ -112,8 +121,10 @@ public class HotelListAdapter extends ArrayAdapter<Hotel>{
 				gradeText.setText("특급");
 			}
 			
-			if(!items.get(position).getImg().equals("default"))
-				imageLoader.DisplayImage(items.get(position).getImg(), img);
+			if(!element.getImg().equals("default")) {
+				imageLoader.DisplayImage(element.getImg(), img);
+				Log.d("img_path", element.getImg());
+			}
 			
 			// 객실이 1~2 개일때 label 표시
 			int avail_cnt = items.get(position).getAvali_cnt();

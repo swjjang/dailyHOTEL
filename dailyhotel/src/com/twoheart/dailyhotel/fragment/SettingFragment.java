@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.Session;
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.HelpActivity;
@@ -160,6 +161,15 @@ public class SettingFragment extends Fragment implements OnClickListener{
 						Toast.makeText(getActivity(), "로그아웃 되었습니다", Toast.LENGTH_SHORT).show();
 						login.setText("로그인");
 						isLogin = false;
+						
+						if (Session.getActiveSession() != null)
+							if (Session.getActiveSession()
+									.isOpened()) {
+								Session.getActiveSession()
+										.closeAndClearTokenInformation();
+								Session.setActiveSession(null);
+							}
+						
 				    }
 				}).setNegativeButton("취소",
 				new DialogInterface.OnClickListener() {

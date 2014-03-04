@@ -2,10 +2,11 @@ package com.twoheart.dailyhotel.util;
 
 public class AppConstants {
 	
-	 public static final boolean DEBUG = false;
+	 public static final boolean DEBUG = true;
 	
 	// url list19
-	public static String REST_URL = "http://dailyhotel.kr/goodnight/";
+//	public static String REST_URL = "http://dailyhotel.kr/goodnight/";
+	public static String REST_URL = "http://dailyhotel.cafe24.com/goodnight/";
 	public static String LOGIN = "user/login/mobile";
 	public static String LOGOUT = "user/logout";
 	public static String LOCATION_LIST = "site/get";
@@ -30,6 +31,7 @@ public class AppConstants {
 	public static String BONUS_VAILD = "user/session/bonus/vaild";
 	public static String TIME = "time";
 	public static String SALE_TIME = "common/sale_time";
+	public static String LOGIN_FACEBOOK = "user/login/sns/facebook";
 	
 	// Preference
 	public static String SHARED_PREFERENCES_NAME = "GOOD_NIGHT";

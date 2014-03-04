@@ -2,9 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="240dp"
-    android:paddingTop="1.75dp"
+    android:background="@color/dh_gray96"
     android:paddingBottom="1.75dp"
-    android:background="@color/dh_gray96" >
+    android:paddingTop="1.75dp" >
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -17,19 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="240dp"
             android:adjustViewBounds="true"
-            android:src="@drawable/img_placeholder"
-            android:scaleType="fitXY" />
-
-        <TextView
-            android:id="@+id/tv_hotel_row_soldout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#AF000000"
-            android:gravity="center_vertical|center"
-            android:text="SOLD OUT"
-            android:textColor="@color/white"
-            android:textSize="40dp"
-            android:visibility="gone" />
+            android:scaleType="fitXY"
+            android:src="@drawable/img_placeholder" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -40,72 +29,78 @@
                 android:id="@+id/rl_hotel_upper"
                 android:layout_width="match_parent"
                 android:layout_height="160dp" >
-
             </RelativeLayout>
 
             <!-- board -->
 
-            <LinearLayout
-                android:id="@+id/ll_hotel_under"
+            <RelativeLayout
+                android:id="@+id/rl_hotel_under"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/dh_hotel_gradient"
                 android:orientation="vertical"
-                android:padding="13dp"
-                android:weightSum="1" >
+                android:padding="13dp" >
 
-                <LinearLayout
+                <RelativeLayout
+                    android:id="@+id/ll_hotel_under_upper"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="0.5"
-                    android:orientation="horizontal"
-                    android:weightSum="1" >
-                    
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="6dp"
+                    android:orientation="horizontal" >
+
                     <FrameLayout
-                        android:layout_gravity="center"
-                        android:layout_marginRight="6dp"
-                        android:layout_width="50dp"
-                        android:layout_height="20dp">
-                        <ImageView
-	                        android:id="@+id/iv_hotel_row_grade"
-	                        android:layout_width="match_parent"
-	                        android:layout_height="match_parent" />
-                        
+                        android:id="@+id/fl_hotel_row_grade"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:paddingBottom="3dp"
+                        android:paddingLeft="5.5dp"
+                        android:paddingRight="5.5dp"
+                        android:paddingTop="3dp" >
+
                         <TextView
-	                        android:id="@+id/tv_hotel_row_grade"
-	                        android:layout_width="match_parent"
-	                        android:layout_height="match_parent"
-	                        android:gravity="center"
-	                        android:singleLine="true"
-	                        android:textColor="@android:color/white"
-	                        android:textSize="11.5dp" />
+                            android:id="@+id/tv_hotel_row_grade"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:singleLine="true"
+                            android:text="특급"
+                            android:textColor="@android:color/white"
+                            android:textSize="11.5dp" />
                     </FrameLayout>
 
                     <TextView
                         android:id="@+id/tv_hotel_row_name"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.65"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@+id/fl_hotel_row_grade"
+                        android:layout_toLeftOf="@+id/tv_hotel_row_discount"
+                        android:layout_marginLeft="6dp"
+                        android:ellipsize="marquee"
+                        android:freezesText="true"
                         android:gravity="center_vertical"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:scrollHorizontally="true"
                         android:singleLine="true"
+                        android:text="퍼시픽 호텔"
                         android:textColor="@android:color/white"
                         android:textSize="18dp" />
 
                     <TextView
+                        android:layout_alignParentRight="true"
                         android:id="@+id/tv_hotel_row_discount"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.35"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:gravity="center_vertical|right"
                         android:text="79,000원"
                         android:textColor="@android:color/white"
                         android:textSize="19dp" />
-                </LinearLayout>
+                </RelativeLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="0.5"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ll_hotel_under_upper"
                     android:orientation="horizontal" >
 
                     <TextView
@@ -115,6 +110,7 @@
                         android:layout_weight="0.65"
                         android:gravity="center_vertical"
                         android:singleLine="true"
+                        android:text="중구, 명동역 도보 1분"
                         android:textColor="@color/dh_gray50"
                         android:textSize="13.5dp" />
 
@@ -128,8 +124,19 @@
                         android:textColor="@color/dh_gray50"
                         android:textSize="13.5dp" />
                 </LinearLayout>
-            </LinearLayout>
+            </RelativeLayout>
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_hotel_row_soldout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#AF000000"
+            android:gravity="center_vertical|center"
+            android:text="SOLD OUT"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="40dp"
+            android:visibility="gone" />
     </FrameLayout>
 
 </LinearLayout>
