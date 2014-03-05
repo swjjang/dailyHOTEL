@@ -49,11 +49,14 @@ public class DrawerMenuListAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 
 		DrawerMenu item = list.get(position);
-
-		if (item.gettype() == DrawerMenu.DRAWER_MENU_LIST_TYPE_LOGO) {
+		
+		switch (item.gettype()) {
+		case DrawerMenu.DRAWER_MENU_LIST_TYPE_LOGO :
 			convertView = inflater.inflate(R.layout.drawer_list_item_logo,
 					null);
-		} else if (item.gettype() == DrawerMenu.DRAWER_MENU_LIST_TYPE_SECTION) {
+			break;
+			
+		case DrawerMenu.DRAWER_MENU_LIST_TYPE_SECTION :
 			convertView = inflater.inflate(R.layout.drawer_list_item_section,
 					null);
 			
@@ -61,17 +64,22 @@ public class DrawerMenuListAdapter extends BaseAdapter {
 					.findViewById(R.id.drawerMenuItemTitle);
 
 			drawerMenuItemTitle.setText(item.getTitle());
-		} else if (item.gettype() == DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY) {
+			
+			break;
+			
+		case DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY :
 			convertView = inflater.inflate(R.layout.drawer_list_item_entry,
 					null);
 
 			ImageView drawerMenuItemIcon = (ImageView) convertView
 					.findViewById(R.id.drawerMenuItemIcon);
-			TextView drawerMenuItemTitle = (TextView) convertView
+			TextView drawerMenuItemText = (TextView) convertView
 					.findViewById(R.id.drawerMenuItemTitle);
 
 			drawerMenuItemIcon.setImageResource(item.getIcon());
-			drawerMenuItemTitle.setText(item.getTitle());
+			drawerMenuItemText.setText(item.getTitle());
+			
+			break;
 		}
 
 		return convertView;
