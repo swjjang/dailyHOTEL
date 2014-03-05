@@ -79,8 +79,7 @@
             android:name="com.twoheart.dailyhotel.activity.ImageDetailActivity"
             android:icon="@drawable/dh_ic_no"
             android:label=""
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar" />
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.twoheart.dailyhotel.activity.GMapActivity"
             android:icon="@drawable/dh_ic_no"
@@ -145,8 +144,7 @@
             android:name="com.twoheart.dailyhotel.activity.PaymentActivity"
             android:icon="@drawable/dh_ic_no"
             android:label=""
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar" >
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
@@ -168,8 +166,7 @@
             android:name="com.twoheart.dailyhotel.activity.PushDialogActivity"
             android:icon="@drawable/dh_ic_no"
             android:label=""
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar" >
+            android:screenOrientation="portrait" >
         </activity>
 
         <meta-data

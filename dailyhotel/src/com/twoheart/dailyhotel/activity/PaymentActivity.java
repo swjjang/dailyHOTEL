@@ -8,6 +8,7 @@ import kr.co.kcp.util.PackageState;
 
 import org.apache.http.util.EncodingUtils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -18,6 +19,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -45,6 +47,7 @@ public class PaymentActivity extends Activity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_payment);
 		
 		Intent intent = getIntent();
@@ -73,6 +76,7 @@ public class PaymentActivity extends Activity{
 	}
 	
 	
+	@SuppressLint("JavascriptInterface")
 	public void loadResource(){
 		webView = (WebView) findViewById(R.id.webview);
 		
