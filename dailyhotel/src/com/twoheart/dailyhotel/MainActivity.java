@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.twoheart.dailyhotel.fragment.HotelListFragment;
 import com.twoheart.dailyhotel.util.AppConstants;
@@ -72,6 +73,8 @@ public class MainActivity extends BaseActivity {
 		loadResource();
 		
 		// 맨 처음은 호텔리스트
+		mDrawerList.setItemChecked(mMenuImages.indexOf(menuHotel), true);
+		
 		prefs = getSharedPreferences(SHARED_PREFERENCES_NAME, 0);
 		SharedPreferences.Editor ed = prefs.edit();
 		ed.putString(PREFERENCE_SELECTED_MENU, "hotel");

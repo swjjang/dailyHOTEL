@@ -24,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.adapter.DrawerMenuListAdapter;
@@ -47,19 +48,19 @@ public class BaseActivity extends ActionBarActivity implements
 	private static final String DRAWER_MENU_ENTRY_SETTING = "¼³Á¤";
 
 	public ActionBar actionBar;
-	private List<DrawerMenu> mMenuImages;
-	private DrawerLayout mDrawerLayout;
-	private DrawerMenuListAdapter drawerMenuListAdapter;
-	private ListView mDrawerList;
-	private ActionBarDrawerToggle mDrawerToggle;
+	protected List<DrawerMenu> mMenuImages;
+	protected DrawerLayout mDrawerLayout;
+	protected DrawerMenuListAdapter drawerMenuListAdapter;
+	protected ListView mDrawerList;
+	protected ActionBarDrawerToggle mDrawerToggle;
 
-	private SharedPreferences prefs;
-	private Fragment content;
+	protected SharedPreferences prefs;
+	protected Fragment content;
 
-	private DrawerMenu menuHotel;
-	private DrawerMenu menuBooking;
-	private DrawerMenu menuCredit;
-	private DrawerMenu menuSetting;
+	protected DrawerMenu menuHotel;
+	protected DrawerMenu menuBooking;
+	protected DrawerMenu menuCredit;
+	protected DrawerMenu menuSetting;
 
 	public static Typeface mTypefaceCommon;
 	public static Typeface mTypefaceBold;
@@ -130,6 +131,7 @@ public class BaseActivity extends ActionBarActivity implements
 		actionBar.setIcon(R.drawable.img_ic_menu);
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setHomeButtonEnabled(true);
+		
 	}
 
 	@Override
@@ -137,11 +139,6 @@ public class BaseActivity extends ActionBarActivity implements
 			int position, long id) {
                                                                                               
 		Fragment newContent = null;
-		SharedPreferences.Editor ed = prefs.edit();
-
-		disableAllButtons();
-		mDrawerList.setSelection(position);
-		drawerMenuListAdapter.notifyDataSetChanged();
 
 		switch (((DrawerMenu) (adapterView.getAdapter().getItem(position)))
 				.getIcon()) {
@@ -166,17 +163,14 @@ public class BaseActivity extends ActionBarActivity implements
 			break;
 		}
 
-		if (newContent != null)
+		if (newContent != null) {
+			mDrawerList.setSelection(position);
 			switchFragment(newContent);
-		mDrawerLayout.closeDrawer(mDrawerList);
+			mDrawerLayout.closeDrawer(mDrawerList);
+		}
+		
 	}
 
-	private void disableAllButtons() {
-//		for (int i = 0; i < mMenuImages.size(); i++) {
-//			mMenuImages.get(i).setBackground(0);
-//		}
-	}
-	
 	public void setGlobalFont(ViewGroup root) {
 		if (BaseActivity.mTypefaceCommon == null) {
 			BaseActivity.mTypefaceCommon = Typeface.createFromAsset(getAssets(),
