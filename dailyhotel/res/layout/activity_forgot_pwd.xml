@@ -40,7 +40,8 @@
         android:layout_width="match_parent"
         android:layout_marginTop="62dp"
         android:paddingLeft="10dp"
-        android:background="@drawable/dh_btn_pink"
+        android:background="#ff7a7a"
+        android:textSize="19dp"
         android:textColor="@color/white"
         android:text="비밀번호 찾기"/>
 
