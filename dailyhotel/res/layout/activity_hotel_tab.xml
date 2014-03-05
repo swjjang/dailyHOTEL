@@ -29,8 +29,8 @@
 	        android:layout_width="match_parent"
 	        android:layout_height="match_parent"
 	        android:textColor="@color/white"
-	        android:background="@drawable/dh_btn_pink"
-	        android:text="예약진행"/>
+	        android:background="@drawable/shape_button_background"
+	        android:text="예약하기"/>
         
         
         <Button 

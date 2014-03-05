@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,6 +33,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -95,22 +97,22 @@ public class HotelTabBookingFragment extends Fragment implements OnTouchListener
 		tv_price = (TextView) view.findViewById(R.id.tv_hotel_tab_booking_price);
 		tv_discount = (TextView) view.findViewById(R.id.tv_hotel_tab_booking_discount);
 		
-		iv_lowest = (ImageView) view.findViewById(R.id.iv_hotel_tab_booking_lowest);
-		iv_lowest.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				AlertDialog.Builder alert = new AlertDialog.Builder(view.getContext());
-				alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-				    @Override
-				    public void onClick(DialogInterface dialog, int which) {
-				    	dialog.dismiss();     //닫기
-				    }
-				});
-				alert.setMessage("다른 곳을 통해 더 저렴한 가격으로 숙박하셨을 경우 그 차액의 두 배를 보상해드립니다.");
-				alert.show();
-			}
-		});
+//		iv_lowest = (ImageView) view.findViewById(R.id.iv_hotel_tab_booking_lowest);
+//		iv_lowest.setOnClickListener(new OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				AlertDialog.Builder alert = new AlertDialog.Builder(view.getContext());
+//				alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+//				    @Override
+//				    public void onClick(DialogInterface dialog, int which) {
+//				    	dialog.dismiss();     //닫기
+//				    }
+//				});
+//				alert.setMessage("다른 곳을 통해 더 저렴한 가격으로 숙박하셨을 경우 그 차액의 두 배를 보상해드립니다.");
+//				alert.show();
+//			}
+//		});
 	}
 	
 	public void parseJson(String str) {
@@ -126,22 +128,44 @@ public class HotelTabBookingFragment extends Fragment implements OnTouchListener
 			
 			tv_name.setText(detailObj.getString("hotel_name"));
 			tv_address.setText(detailObj.getString("address"));
-			tv_discount.setText("￦" + strDiscount);
-			tv_price.setText("￦" + strPrice);
+			tv_discount.setText(strDiscount + "원");
+			tv_price.setText(strPrice + "원");
 			tv_price.setPaintFlags(tv_price.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 			
 			//grade
 			String cat = detailObj.getString("cat");
-			ImageView grade = (ImageView) view.findViewById(R.id.iv_hotel_tab_booking_grade);
+			FrameLayout gradeBackground = (FrameLayout) view.findViewById(R.id.fl_hotel_row_grade);
+			TextView gradeText = (TextView) view.findViewById(R.id.tv_hotel_row_grade);
 			
-			if(cat.equals("5")) {
-				grade.setImageResource(R.drawable.dh_grademark_biz);
-			} else if(cat.equals("2")) {
-				grade.setImageResource(R.drawable.dh_grademark_boutique);
-			} else if(cat.equals("3")) {
-				grade.setImageResource(R.drawable.dh_grademark_residence);
+//			if(cat.equals("5")) {
+//				grade.setImageResource(R.drawable.dh_grademark_biz);
+//			} else if(cat.equals("2")) {
+//				grade.setImageResource(R.drawable.dh_grademark_boutique);
+//			} else if(cat.equals("3")) {
+//				grade.setImageResource(R.drawable.dh_grademark_residence);
+//			} else {
+//				grade.setImageResource(R.drawable.dh_grademark_special);
+//			}
+			
+			if(cat.equals("biz")) {
+				gradeBackground.setBackgroundColor(Color.parseColor("#055870"));
+				gradeText.setText("비지니스");
+				
+			} else if(cat.equals("boutique")) {
+				gradeBackground.setBackgroundColor(Color.parseColor("#9f2d58"));
+				gradeText.setText("부띠끄");
+				
+			} else if(cat.equals("residence")) {
+				gradeBackground.setBackgroundColor(Color.parseColor("#407f67"));
+				gradeText.setText("레지던스");
+				
+			} else if(cat.equals("resort")) {
+				gradeBackground.setBackgroundColor(Color.parseColor("#cf8d14"));
+				gradeText.setText("리조트");
+				
 			} else {
-				grade.setImageResource(R.drawable.dh_grademark_special);
+				gradeBackground.setBackgroundColor(Color.parseColor("#ab380a"));
+				gradeText.setText("특급");
 			}
 			
 			JSONArray imgArr = detailObj.getJSONArray("img");
