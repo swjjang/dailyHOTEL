@@ -35,7 +35,7 @@ public class HotelListAdapter extends ArrayAdapter<Hotel>{
 		this.resourceId = resourceId;
 		this.items = items;
 		this.imageLoader = new ImageLoader(context);
-		this.inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		this.inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 	
 	
