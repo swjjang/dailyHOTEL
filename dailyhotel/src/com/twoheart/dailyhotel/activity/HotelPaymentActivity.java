@@ -45,9 +45,9 @@ import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.GoogleAnalytics;
 import com.google.analytics.tracking.android.Tracker;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.obj.Parameter;
 import com.twoheart.dailyhotel.util.network.GeneralHttpTask;
 import com.twoheart.dailyhotel.util.network.OnCompleteListener;
+import com.twoheart.dailyhotel.util.network.Parameter;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 import com.twoheart.dailyhotel.view.Switch;
 

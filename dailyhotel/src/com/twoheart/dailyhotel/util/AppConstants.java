@@ -5,8 +5,8 @@ public class AppConstants {
 	 public static final boolean DEBUG = true;
 	
 	// url list19
-//	public static String REST_URL = "http://dailyhotel.kr/goodnight/";
-	public static String REST_URL = "http://dailyhotel.cafe24.com/goodnight/";
+	public static String REST_URL = "http://dailyhotel.kr/goodnight/";
+//	public static String REST_URL = "http://dailyhotel.cafe24.com/goodnight/";
 	public static String LOGIN = "user/login/mobile";
 	public static String LOGOUT = "user/logout";
 	public static String LOCATION_LIST = "site/get";

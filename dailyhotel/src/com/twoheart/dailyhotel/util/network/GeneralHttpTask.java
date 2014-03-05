@@ -11,7 +11,6 @@ import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
-import com.twoheart.dailyhotel.obj.Parameter;
 
 public class GeneralHttpTask extends AsyncTask<String, Void, String>{
 

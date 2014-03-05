@@ -45,10 +45,10 @@ import com.facebook.SessionState;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.obj.Parameter;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.network.GeneralHttpTask;
 import com.twoheart.dailyhotel.util.network.OnCompleteListener;
+import com.twoheart.dailyhotel.util.network.Parameter;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
 public class LoginActivity extends ActionBarActivity implements OnClickListener{

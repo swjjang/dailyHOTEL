@@ -44,9 +44,9 @@ import com.twoheart.dailyhotel.activity.BookingTabActivity;
 import com.twoheart.dailyhotel.activity.SignupActivity;
 import com.twoheart.dailyhotel.adapter.BookingListAdapter;
 import com.twoheart.dailyhotel.obj.Booking;
-import com.twoheart.dailyhotel.obj.Parameter;
 import com.twoheart.dailyhotel.util.network.GeneralHttpTask;
 import com.twoheart.dailyhotel.util.network.OnCompleteListener;
+import com.twoheart.dailyhotel.util.network.Parameter;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
 public class BookingListFragment extends Fragment implements OnItemClickListener, OnClickListener{

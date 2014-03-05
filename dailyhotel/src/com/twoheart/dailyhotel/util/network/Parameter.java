@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.obj;
+package com.twoheart.dailyhotel.util.network;
 
 public class Parameter {
 	private String name;

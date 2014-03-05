@@ -41,10 +41,10 @@ import com.google.analytics.tracking.android.Tracker;
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.obj.Credit;
-import com.twoheart.dailyhotel.obj.Parameter;
 import com.twoheart.dailyhotel.util.KakaoLink;
 import com.twoheart.dailyhotel.util.network.GeneralHttpTask;
 import com.twoheart.dailyhotel.util.network.OnCompleteListener;
+import com.twoheart.dailyhotel.util.network.Parameter;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
 public class CreditFragment extends Fragment implements OnClickListener {
