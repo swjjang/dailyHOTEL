@@ -48,6 +48,7 @@ import com.twoheart.dailyhotel.util.network.GeneralHttpTask;
 import com.twoheart.dailyhotel.util.network.OnCompleteListener;
 import com.twoheart.dailyhotel.util.network.Parameter;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
+import com.twoheart.dailyhotel.util.ui.NoActionBarException;
 
 public class BookingListFragment extends Fragment implements OnItemClickListener, OnClickListener{
 	
@@ -74,7 +75,11 @@ public class BookingListFragment extends Fragment implements OnItemClickListener
 		
 		// ActionBar Setting
 		MainActivity activity = (MainActivity)view.getContext();
-		activity.changeTitle("예약확인");
+		try {
+			activity.changeTitle("예약확인");
+		} catch (NoActionBarException e) {
+			e.printStackTrace();
+		}
 		activity.hideMenuItem();
 		activity.addMenuItem("dummy");
 		

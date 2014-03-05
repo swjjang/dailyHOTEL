@@ -30,31 +30,18 @@ public class ErrorFragment extends Fragment implements OnClickListener{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		
+		((MainActivity) getActivity()).setActionBar(false);
+		
 		view = inflater.inflate(R.layout.fragment_error, null);
-		
-		// ActionBar Setting
-		MainActivity activity = (MainActivity)view.getContext();
-		activity.changeTitle("");
-		activity.hideMenuItem();
-		activity.addMenuItem("dummy");
-		
-		// sliding setting
-//		activity.getSlidingMenu().setMode(SlidingMenu.LEFT);
-		
-		loadResource();
-		
-		return view;
-	}
-	
-	public void loadResource() {
 		btn_error = (Button) view.findViewById(R.id.btn_error);
 		btn_error.setOnClickListener(this);
+		
+		return view;
 	}
 	
 	@Override
 	public void onClick(View v) {
 		if(v.getId() == btn_error.getId()) {
-			
 			
 			// network 연결이 안되있으면
 			if(!checkNetwork()) {

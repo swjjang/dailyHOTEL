@@ -4,6 +4,7 @@ import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.activity.SignupActivity;
+import com.twoheart.dailyhotel.util.ui.NoActionBarException;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,7 +30,11 @@ public class NoLoginFragment extends Fragment implements OnClickListener{
 		
 		// ActionBar Setting
 		MainActivity activity = (MainActivity)view.getContext();
-		activity.changeTitle("로그인 하세요");
+		try {
+			activity.changeTitle("로그인 하세요");
+		} catch (NoActionBarException e) {
+			e.printStackTrace();
+		}
 		activity.hideMenuItem();
 		activity.addMenuItem("dummy");
 		

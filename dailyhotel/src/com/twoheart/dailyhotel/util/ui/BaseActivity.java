@@ -1,14 +1,15 @@
 package com.twoheart.dailyhotel.util.ui;
 
-import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_IS_LOGIN;
 import static com.twoheart.dailyhotel.util.AppConstants.SHARED_PREFERENCES_NAME;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
@@ -20,23 +21,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.adapter.DrawerMenuListAdapter;
-import com.twoheart.dailyhotel.fragment.BookingListFragment;
-import com.twoheart.dailyhotel.fragment.CreditFragment;
-import com.twoheart.dailyhotel.fragment.HotelListFragment;
-import com.twoheart.dailyhotel.fragment.NoLoginFragment;
-import com.twoheart.dailyhotel.fragment.SettingFragment;
 import com.twoheart.dailyhotel.obj.DrawerMenu;
 
-public class BaseActivity extends ActionBarActivity implements
-		OnItemClickListener {
+public class BaseActivity extends ActionBarActivity {
 
 	private final static String TAG = "BaseActivity";
 
@@ -61,6 +54,9 @@ public class BaseActivity extends ActionBarActivity implements
 	protected DrawerMenu menuBooking;
 	protected DrawerMenu menuCredit;
 	protected DrawerMenu menuSetting;
+	
+	private boolean isMenuItem = false;
+	private String itemStr = null;
 
 	public static Typeface mTypefaceCommon;
 	public static Typeface mTypefaceBold;
@@ -68,17 +64,37 @@ public class BaseActivity extends ActionBarActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		prefs = getSharedPreferences(SHARED_PREFERENCES_NAME, 0);
+		prefs = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
 	}
-
-	@Override
-	public void setContentView(int layoutResID) {
-		super.setContentView(layoutResID);
-		setGlobalFont((ViewGroup) this.getWindow().getDecorView().findViewById(
-				android.R.id.content));
-
+	
+	public void setActionBar(boolean isShowTitle) {
 		actionBar = getSupportActionBar();
-
+		
+		try {
+			actionBar.setBackgroundDrawable(Drawable.createFromXml(getResources(),
+					getResources().getXml(R.drawable.dh_actionbar_background)));
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		actionBar.setDisplayShowTitleEnabled(isShowTitle);
+		if (isShowTitle)
+			actionBar.setIcon(R.drawable.img_ic_menu);
+		
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setHomeButtonEnabled(true);
+	}
+	
+	public void changeTitle(String str) throws NoActionBarException {
+		
+		if (actionBar == null)
+			throw new NoActionBarException(actionBar);
+		else 
+			actionBar.setTitle(str);
+		
+	}
+	
+	public void setNavigationDrawer(OnItemClickListener listener) {
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
 				R.drawable.ic_drawer, 0, 0) {
@@ -126,50 +142,29 @@ public class BaseActivity extends ActionBarActivity implements
 		// Set the adapter for the list view
 		mDrawerList.setAdapter(drawerMenuListAdapter);
 		// Set the list's click listener
-		mDrawerList.setOnItemClickListener(this);
+		mDrawerList.setOnItemClickListener(listener);
 
-		actionBar.setIcon(R.drawable.img_ic_menu);
-		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setHomeButtonEnabled(true);
+		setActionBar(true);
 		
 	}
-
-	@Override
-	public void onItemClick(AdapterView<?> adapterView, View view,
-			int position, long id) {
-                                                                                              
-		Fragment newContent = null;
-
-		switch (((DrawerMenu) (adapterView.getAdapter().getItem(position)))
-				.getIcon()) {
-		case R.drawable.selector_drawermenu_todayshotel:
-			newContent = new HotelListFragment();
-			break;
-
-		case R.drawable.selector_drawermenu_reservation:
-			newContent = new BookingListFragment();
-			break;
-
-		case R.drawable.selector_drawermenu_saving:
-			if (checkLogin()) // 로그인상태
-				newContent = new CreditFragment();
-			else
-				// 로그아웃 상태
-				newContent = new NoLoginFragment();
-			break;
-
-		case R.drawable.selector_drawermenu_setting:
-			newContent = new SettingFragment();
-			break;
-		}
-
-		if (newContent != null) {
-			mDrawerList.setSelection(position);
-			switchFragment(newContent);
-			mDrawerLayout.closeDrawer(mDrawerList);
-		}
-		
+	
+	public void addMenuItem(String str) {
+		isMenuItem = true;
+		itemStr = str;
+		supportInvalidateOptionsMenu();
 	}
+
+	public void hideMenuItem() {
+		isMenuItem = false;
+		supportInvalidateOptionsMenu();
+	}
+	
+//	@Override
+//	public void setContentView(int layoutResID) {
+//		super.setContentView(layoutResID);
+//		setGlobalFont((ViewGroup) this.getWindow().getDecorView().findViewById(
+//				android.R.id.content));
+//	}
 
 	public void setGlobalFont(ViewGroup root) {
 		if (BaseActivity.mTypefaceCommon == null) {
@@ -190,26 +185,20 @@ public class BaseActivity extends ActionBarActivity implements
 		}
 	}
 
-	private void switchFragment(Fragment fragment) {
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-		switchContent(fragment);
-	}
-
-	private boolean checkLogin() {
-		return prefs.getBoolean(PREFERENCE_IS_LOGIN, false);
-	}
-
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
-		// Sync the toggle state after onRestoreInstanceState has occurred.
-		mDrawerToggle.syncState();
+		
+		if (mDrawerToggle != null)
+			mDrawerToggle.syncState();
 	}
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-		mDrawerToggle.onConfigurationChanged(newConfig);
+		
+		if (mDrawerToggle != null)
+			mDrawerToggle.onConfigurationChanged(newConfig);
 	}
 
 	@Override
@@ -230,44 +219,5 @@ public class BaseActivity extends ActionBarActivity implements
 		// view
 		return super.onPrepareOptionsMenu(menu);
 	}
-
-	// 선택된 menu에 맞게 Fragment 변경
-	// MenuFragment에서 호출됨
-	public void switchContent(Fragment fragment) {
-		content = fragment;
-		getSupportFragmentManager().beginTransaction()
-				.replace(R.id.content_frame, fragment)
-				.commitAllowingStateLoss();
-		// getSlidingMenu().showContent();
-	}
-
-	// @Override
-	// public void onCreate(Bundle savedInstanceState) {
-	// super.onCreate(savedInstanceState);
-	//
-	// setBehindContentView(R.layout.menu_frame_left);
-
-	// if (savedInstanceState == null) {
-	// FragmentTransaction t =
-	// this.getSupportFragmentManager().beginTransaction();
-	// dm_fragment = new DailyMenuFragment();
-	// getSupportFragmentManager()
-	// .beginTransaction()
-	// .replace(R.id.menu_frame_left, dm_fragment)
-	// .commit();
-	// } else {
-	// dm_fragment =
-	// (DailyMenuFragment)this.getSupportFragmentManager().findFragmentById(R.id.menu_frame_left);
-	// }
-
-	// customize the SlidingMenu
-	// SlidingMenu sm = getSlidingMenu();
-	// sm.setShadowWidthRes(R.dimen.shadow_width);
-	// sm.setShadowDrawable(R.drawable.shadow);
-	// sm.setBehindOffsetRes(R.dimen.slidingmenu_offset_left);
-	// sm.setFadeDegree(0.35f);
-	// sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-
-	// }
 
 }

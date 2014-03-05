@@ -28,6 +28,7 @@ import com.twoheart.dailyhotel.activity.IntroductionActivity;
 import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.activity.NoticeActivity;
 import com.twoheart.dailyhotel.activity.VersionActivity;
+import com.twoheart.dailyhotel.util.ui.NoActionBarException;
 
 public class SettingFragment extends Fragment implements OnClickListener{
 
@@ -60,7 +61,11 @@ public class SettingFragment extends Fragment implements OnClickListener{
 		
 		// ActionBar Setting
 		MainActivity activity = (MainActivity)view.getContext();
-		activity.changeTitle("설정");
+		try {
+			activity.changeTitle("설정");
+		} catch (NoActionBarException e) {
+			e.printStackTrace();
+		}
 		activity.hideMenuItem();
 		activity.addMenuItem("dummy");
 		

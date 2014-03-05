@@ -41,6 +41,7 @@ import com.twoheart.dailyhotel.activity.EventWebActivity;
 import com.twoheart.dailyhotel.util.network.GeneralHttpTask;
 import com.twoheart.dailyhotel.util.network.OnCompleteListener;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
+import com.twoheart.dailyhotel.util.ui.NoActionBarException;
 
 public class WaitTimerFragment extends Fragment implements OnClickListener{
 	
@@ -85,7 +86,11 @@ public class WaitTimerFragment extends Fragment implements OnClickListener{
 		
 		// ActionBar Setting
 		MainActivity activity = (MainActivity)view.getContext();
-		activity.changeTitle(" ");
+		try {
+			activity.changeTitle(" ");
+		} catch (NoActionBarException e) {
+			e.printStackTrace();
+		}
 		activity.hideMenuItem();
 		
 		// sliding setting

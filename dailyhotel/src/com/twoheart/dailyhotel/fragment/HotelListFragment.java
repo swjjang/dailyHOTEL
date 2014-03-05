@@ -66,6 +66,7 @@ import com.twoheart.dailyhotel.util.AppConstants;
 import com.twoheart.dailyhotel.util.network.GeneralHttpTask;
 import com.twoheart.dailyhotel.util.network.OnCompleteListener;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
+import com.twoheart.dailyhotel.util.ui.NoActionBarException;
 
 public class HotelListFragment extends Fragment implements OnItemClickListener,
 		OnNavigationListener {
@@ -541,7 +542,11 @@ public class HotelListFragment extends Fragment implements OnItemClickListener,
 				if (select == null) { // 지역 선택 하기전 DEFAULT
 					String region = prefs.getString(PREFERENCE_REGION_DEFALUT,
 							"서울");
-					activity.changeTitle("");
+					try {
+						activity.changeTitle("");
+					} catch (NoActionBarException e) {
+						e.printStackTrace();
+					}
 					region = region.replace(" ", "%20");
 					region = region.replace("|", "%7C");
 					new GeneralHttpTask(hotelListListener, view.getContext())
@@ -549,7 +554,11 @@ public class HotelListFragment extends Fragment implements OnItemClickListener,
 									+ "/near/0/0/0/1000/" + currentYear + "/"
 									+ currentMon + "/" + currentDay);
 				} else { // 지역 선택시
-					activity.changeTitle("");
+					try {
+						activity.changeTitle("");
+					} catch (NoActionBarException e) {
+						e.printStackTrace();
+					}
 					select = select.replace(" ", "%20");
 					select = select.replace("|", "%7C");
 					new GeneralHttpTask(hotelListListener, view.getContext())
@@ -656,7 +665,11 @@ public class HotelListFragment extends Fragment implements OnItemClickListener,
 				if (select == null) { // 지역 선택 하기전 DEFAULT
 					String region = prefs.getString(PREFERENCE_REGION_DEFALUT,
 							"서울");
-					activity.changeTitle("");
+					try {
+						activity.changeTitle("");
+					} catch (NoActionBarException e) {
+						e.printStackTrace();
+					}
 					region = region.replace(" ", "%20");
 					region = region.replace("|", "%7C");
 					new GeneralHttpTask(refreshListListener, view.getContext())
@@ -664,7 +677,11 @@ public class HotelListFragment extends Fragment implements OnItemClickListener,
 									+ "/near/0/0/0/1000/" + currentYear + "/"
 									+ currentMon + "/" + currentDay);
 				} else { // 지역 선택시
-					activity.changeTitle("");
+					try {
+						activity.changeTitle("");
+					} catch (NoActionBarException e) {
+						e.printStackTrace();
+					}
 					select = select.replace(" ", "%20");
 					select = select.replace("|", "%7C");
 					new GeneralHttpTask(refreshListListener, view.getContext())

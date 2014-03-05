@@ -46,6 +46,7 @@ import com.twoheart.dailyhotel.util.network.GeneralHttpTask;
 import com.twoheart.dailyhotel.util.network.OnCompleteListener;
 import com.twoheart.dailyhotel.util.network.Parameter;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
+import com.twoheart.dailyhotel.util.ui.NoActionBarException;
 
 public class CreditFragment extends Fragment implements OnClickListener {
 	
@@ -88,7 +89,11 @@ public class CreditFragment extends Fragment implements OnClickListener {
 
 		// ActionBar Setting
 		MainActivity activity = (MainActivity)view.getContext();
-		activity.changeTitle("적립금");
+		try {
+			activity.changeTitle("적립금");
+		} catch (NoActionBarException e) {
+			e.printStackTrace();
+		}
 //		activity.hideMenuItem();
 //		activity.addMenuItem("적립내역");
 		
