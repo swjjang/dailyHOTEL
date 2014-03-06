@@ -57,7 +57,6 @@ public class HotelTabBookingFragment extends Fragment implements OnTouchListener
 	private ArrayList<String> urlList;
 	
 	private TextView tv_name, tv_address, tv_price, tv_discount;
-	
 	private ImageView iv_lowest;
 	
 	// sliding img
@@ -147,6 +146,7 @@ public class HotelTabBookingFragment extends Fragment implements OnTouchListener
 //				grade.setImageResource(R.drawable.dh_grademark_special);
 //			}
 			
+			//grade
 			if(cat.equals("biz")) {
 				gradeBackground.setBackgroundColor(Color.parseColor("#055870"));
 				gradeText.setText("비지니스");
@@ -167,7 +167,7 @@ public class HotelTabBookingFragment extends Fragment implements OnTouchListener
 				gradeBackground.setBackgroundColor(Color.parseColor("#ab380a"));
 				gradeText.setText("특급");
 			}
-			
+
 			JSONArray imgArr = detailObj.getJSONArray("img");
 			urlList = new ArrayList<String>();
 			

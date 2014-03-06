@@ -57,15 +57,15 @@ public class PaymentActivity extends Activity{
 		String bonus = intent.getStringExtra("credit");
 		
 		if(!isBonus) {
-			url =  REST_URL + PAYMENT + booking_idx + "?unique=" + GCMRegistrar.getRegistrationId(this);
+			url =  REST_URL + PAYMENT + booking_idx;
 			Log.d("url", url);
 		}
 		else {
 			if(isFullBonus) {
-				url = REST_URL + PAYMENT_DISCOUNT + booking_idx + "?unique=" + GCMRegistrar.getRegistrationId(this);// + "/" + bonus;
+				url = REST_URL + PAYMENT_DISCOUNT + booking_idx;// + "/" + bonus;
 				Log.d("url", url);
 			} else {
-				url = REST_URL + PAYMENT_DISCOUNT + booking_idx+ "/" + bonus + "?unique=" + GCMRegistrar.getRegistrationId(this);
+				url = REST_URL + PAYMENT_DISCOUNT + booking_idx+ "/" + bonus;
 				Log.d("url", url);
 			}
 		}

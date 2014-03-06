@@ -14,7 +14,7 @@
 	        android:layout_height="wrap_content"
 	        android:layout_width="wrap_content"
 	        android:textColor="@color/dh_dark_gray_blue"
-	        android:text="\u2713"/>
+	        android:text="-"/>
 	    
 	    <TextView 
 	       	android:id="@+id/tv_hotel_tab_info_content"

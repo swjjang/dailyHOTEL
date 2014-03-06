@@ -151,9 +151,11 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener{
 						String phoneNumber = telephonyManager.getLine1Number();
 						
 						ArrayList<Parameter> paramList = new ArrayList<Parameter>();
+						//TODO: 이메일 파라미터 처리
 						paramList.add(new Parameter("email", null));
 						paramList.add(new Parameter("pw", null));
 						paramList.add(new Parameter("name", user.getName()));
+						Log.d(TAG, user.getName());
 						paramList.add(new Parameter("phone", phoneNumber));
 						paramList.add(new Parameter("device", telephonyManager.getDeviceId()));
 						paramList.add(new Parameter("accessToken", user.getId()));
@@ -162,7 +164,11 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener{
 					}
 				}
 				if (response.getError() != null) {
-					
+					 if (Session.getActiveSession() != null)
+						 if (Session.getActiveSession().isOpened()) {
+							 Session.getActiveSession().closeAndClearTokenInformation();
+					 		 Session.setActiveSession(null);
+						 }
 					
 				}
 			}
@@ -263,7 +269,7 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener{
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			Log.e(TAG, obj.toString());
+//			Log.e(TAG, obj.toString());
 			
 			LoadingDialog.hideLoading();
 			Toast.makeText(getApplicationContext(), "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.", Toast.LENGTH_SHORT).show();
@@ -290,6 +296,12 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener{
 		ed.putBoolean(PREFERENCE_IS_LOGIN, true);
 		ed.commit();
 		
+		if (Session.getActiveSession() != null)
+			 if (Session.getActiveSession().isOpened()) {
+				 Session.getActiveSession().closeAndClearTokenInformation();
+		 		 Session.setActiveSession(null);
+			 }
+		
 		setResult(RESULT_OK);
 		finish();
 	}
@@ -297,13 +309,14 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener{
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
 		
 		if(requestCode == LOGIN_ACTIVITY) {
 			if(resultCode == RESULT_OK) {
 				setResult(RESULT_OK);
 				finish();
 			}
+		} else {
+			Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
 		}
 		
 	}

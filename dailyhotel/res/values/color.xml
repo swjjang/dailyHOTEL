@@ -6,4 +6,5 @@
     <color name="dh_dark_gray_blue">#474754</color>
     <color name="dh_gray50">#cecece</color>
     <color name="dh_gray96">#F5F5F5</color>
+    <color name="activity_background">#fdfdfd</color>
 </resources>	
