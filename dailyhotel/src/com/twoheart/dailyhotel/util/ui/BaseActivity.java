@@ -89,8 +89,10 @@ public class BaseActivity extends ActionBarActivity {
 		
 		if (actionBar == null)
 			throw new NoActionBarException(actionBar);
-		else 
+		else  {
+			actionBar.setDisplayShowTitleEnabled(true);
 			actionBar.setTitle(str);
+		}
 		
 	}
 	
