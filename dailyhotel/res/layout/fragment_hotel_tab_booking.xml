@@ -80,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/fl_hotel_row_grade"
                 android:gravity="center_vertical"
-                android:text="호텔 더 디자이너스 종로"
+                android:text=""
                 android:textColor="@color/dh_dark_gray_blue"
                 android:textSize="18dp" />
         </RelativeLayout>
@@ -129,7 +129,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical|right"
                 android:textColor="#5c5c5c"
-                android:text="221,000원"
+                android:text=""
                 android:textSize="13dp" />
 
             <LinearLayout
@@ -152,7 +152,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical|right"
-                    android:text="73,000원"
+                    android:text=""
                     android:textColor="#5c5c5c"
                     android:textSize="22dp" />
             </LinearLayout>
