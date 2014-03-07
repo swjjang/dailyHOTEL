@@ -19,12 +19,14 @@ import com.twoheart.dailyhotel.util.network.OnCompleteListener;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -118,15 +120,27 @@ public class HotelTabMapFragment extends Fragment implements OnMapClickListener{
 			tv_name.setText(name);
 			tv_address.setText(address);
 			
-			ImageView grade = (ImageView) view.findViewById(R.id.iv_hotel_tab_map_grade);
-			if(cat.equals("5")) {
-				grade.setImageResource(R.drawable.dh_grademark_biz);
-			} else if(cat.equals("2")) {
-				grade.setImageResource(R.drawable.dh_grademark_boutique);
-			} else if(cat.equals("3")) {
-				grade.setImageResource(R.drawable.dh_grademark_residence);
+			FrameLayout gradeBackground = (FrameLayout) view.findViewById(R.id.fl_hotel_row_grade);
+			TextView gradeText = (TextView) view.findViewById(R.id.tv_hotel_row_grade);
+			if(cat.equals("biz")) {
+				gradeBackground.setBackgroundColor(Color.parseColor("#055870"));
+				gradeText.setText("비지니스");
+				
+			} else if(cat.equals("boutique")) {
+				gradeBackground.setBackgroundColor(Color.parseColor("#9f2d58"));
+				gradeText.setText("부띠끄");
+				
+			} else if(cat.equals("residence")) {
+				gradeBackground.setBackgroundColor(Color.parseColor("#407f67"));
+				gradeText.setText("레지던스");
+				
+			} else if(cat.equals("resort")) {
+				gradeBackground.setBackgroundColor(Color.parseColor("#cf8d14"));
+				gradeText.setText("리조트");
+				
 			} else {
-				grade.setImageResource(R.drawable.dh_grademark_special);
+				gradeBackground.setBackgroundColor(Color.parseColor("#ab380a"));
+				gradeText.setText("특급");
 			}
 			
 			addMarker(mapObj.getDouble("lat"), mapObj.getDouble("lng"), name);

@@ -88,32 +88,42 @@ public class HotelTabInfoFragment extends Fragment{
 			}
 			
 		} catch (Exception e) {
+			e.printStackTrace();
 			Log.d(TAG, "TagDataParser" + "->" + e.toString());
 			Toast.makeText(view.getContext(), "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.", Toast.LENGTH_SHORT).show();
 		}
 	}
 	
 	public void addView(String subject, ArrayList<String> contentList) {
+		
 		LayoutInflater inflater = (LayoutInflater)view.getContext().getSystemService(view.getContext().LAYOUT_INFLATER_SERVICE);
-		View layout_view = inflater.inflate(R.layout.list_row_hotel_tab_info, layout, false);
+		LinearLayout layout_view = (LinearLayout) inflater.inflate(R.layout.list_row_hotel_tab_info, layout, false);
+		
 		TextView tv_subject = (TextView) layout_view.findViewById(R.id.tv_hotel_tab_info_subject);
+		tv_subject.setText(subject);
+		
+		LinearLayout content_view = (LinearLayout) layout_view.findViewById(R.id.layout_hotel_tab_info_content);
+		LinearLayout content_listview = (LinearLayout) layout_view.findViewById(R.id.layout_hotel_tab_info_content_list);
 		
 		for(int i=0; i<contentList.size(); i++) {
-			View rowLayout = inflater.inflate(R.layout.list_row_hotel_tab_info_content, (LinearLayout)layout_view, false);
+			LinearLayout rowLayout = (LinearLayout) inflater.inflate(R.layout.list_row_hotel_tab_info_content, layout_view, false);
 			TextView tv_content = (TextView) rowLayout.findViewById(R.id.tv_hotel_tab_info_content);
 			tv_content.setText(contentList.get(i));
-			((LinearLayout)layout_view).addView(rowLayout);
+			content_listview.addView(rowLayout);
+			
+//			layout_view.addView(rowLayout);
 		}
+		
+//		content_view.addView(content_listview);
+//		layout_view.addView(content_view);
+		layout.addView(layout_view);
 		
 		View line = new View(view.getContext());
 		line.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, DhManager.getPixels(1, view.getContext())));
 //		line.setPadding(0, DhManager.getPixels(1, view.getContext()), 0, 0);
 		line.setBackgroundResource(R.color.dh_gray50);
-		
-		tv_subject.setText(subject);
-		
-		layout.addView(layout_view);
 		layout.addView(line);
+		
 	}
 	
 	protected OnCompleteListener infoListener = new OnCompleteListener() {

@@ -2,13 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:orientation="horizontal"
+    android:paddingBottom="19dp"
+    android:paddingLeft="11.5dp"
+    android:paddingTop="40dp" >
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingTop="40dp"
-        android:paddingLeft="11.5dp" >
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
 
         <FrameLayout
             android:layout_width="wrap_content"
@@ -29,22 +30,30 @@
                 android:text="1"
                 android:textColor="@android:color/white" />
         </FrameLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_hotel_tab_info_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
 
         <TextView
             android:id="@+id/tv_hotel_tab_info_subject"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="12.5dp"
             android:gravity="center_vertical"
             android:paddingLeft="15dp"
             android:textColor="@color/dh_dark_gray_blue"
             android:textSize="20dp" />
-    </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/layout_hotel_tab_info_content_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        <LinearLayout
+            android:id="@+id/layout_hotel_tab_info_content_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>
