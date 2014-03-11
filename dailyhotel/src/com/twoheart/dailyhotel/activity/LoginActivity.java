@@ -234,7 +234,7 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener{
 			
 			if ( obj.getString("login").equals("true") ) {
 				
-				if (obj.getString("msg") != null)
+				if(obj.length() > 1)
 					et_pwd.setText(obj.getString("msg"));
 				
 				Log.d(TAG, "로그인 성공");
