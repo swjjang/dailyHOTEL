@@ -45,6 +45,7 @@ import com.facebook.SessionState;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.AppConstants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.network.GeneralHttpTask;
 import com.twoheart.dailyhotel.util.network.OnCompleteListener;
@@ -233,6 +234,9 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener{
 			
 			if ( obj.getString("login").equals("true") ) {
 				
+				if (obj.getString("msg") != null)
+					et_pwd.setText(obj.getString("msg"));
+				
 				Log.d(TAG, "로그인 성공");
 				Toast.makeText(getApplicationContext(), "로그인되었습니다.", Toast.LENGTH_SHORT).show();
 				LoadingDialog.hideLoading();
@@ -278,6 +282,11 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener{
 			ed.putString(PREFERENCE_USER_ID, et_id.getText().toString());
 			ed.putString(PREFERENCE_USER_PWD, Crypto.encrypt(et_pwd.getText().toString()).replace("\n", ""));
 			ed.commit();
+			
+			if (AppConstants.DEBUG) {
+				Log.d("ID", et_id.getText().toString());
+				Log.d("PW", et_pwd.getText().toString());
+			}
 		} 
 		
 		// 로그인 상태 저장
