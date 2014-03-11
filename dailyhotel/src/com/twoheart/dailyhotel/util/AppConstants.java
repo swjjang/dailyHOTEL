@@ -6,7 +6,7 @@ public class AppConstants {
 	
 	// url list19
 //	public static String REST_URL = "http://dailyhotel.kr/goodnight/";
-	public static String REST_URL = "http://dailyhotel.cafe24.com/goodnight/";
+	public static String REST_URL = "http://1.234.22.96/goodnight/";
 	public static String LOGIN = "user/login/mobile";
 	public static String LOGOUT = "user/logout";
 	public static String LOCATION_LIST = "site/get";

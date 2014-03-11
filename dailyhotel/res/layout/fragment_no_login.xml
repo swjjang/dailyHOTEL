@@ -1,83 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingLeft="20dp"
-    android:paddingRight="20dp"
-    android:background="@color/dh_gray96" >
-    
-    <TextView 
-        android:layout_weight="0.2"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-		android:gravity="center_vertical"
-        android:textSize="30dp"
-        android:textColor="@color/dh_dark_gray_blue"
-        android:text="좋은 건 나눠야죠!"/>
-    
-    <TextView 
-        android:layout_weight="0.1"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:gravity="center_vertical"
-        android:textSize="15dp"
-        android:textColor="@color/dh_dark_gray_blue"
-       	android:text="1. 친구가 회원가입 할 때 내 '추천인 코드'를 넣으면"/>
-    
-    <TextView 
-        android:layout_weight="0.1"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:gravity="center_vertical"
-        android:textSize="15dp"
-        android:textColor="@color/dh_dark_gray_blue"
-        android:text="2. 친구도 5,000원을 받고"/>
-    
-    <TextView 
-        android:layout_weight="0.1"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:gravity="center_vertical"
-        android:textSize="15dp"
-        android:textColor="@color/dh_dark_gray_blue"
-        android:text="3. 친구가 처음 결제하면 나도 5,000원 받고!"/>
-    
-    <TextView 
-        android:layout_weight="0.1"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:gravity="center_vertical"
-        android:textSize="15dp"
-        android:textColor="@color/dh_dark_gray_blue"
-        android:text="4. 데일리 호텔을 이미 알고 있었다는 사실에 기뻐하기"/>
-    
-    <TextView 
-        android:layout_weight="0.1"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"/>
-    <Button 
-        android:id="@+id/btn_no_login_login"
-        android:layout_weight="0.1"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@drawable/dh_btn_pink"
-        android:textColor="@color/white"
-        android:text="기존 회원 로그인"/>
-    
-    <Button 
-        android:id="@+id/btn_no_login_signup"
-        android:layout_weight="0.1"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/dh_btn_pink"
-        android:textColor="@color/white"
-        android:text="회원 가입하고 친구 초대하기"/>
-    
-    <TextView 
-        android:layout_weight="0.1"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"/>
+    android:background="@color/dh_gray96"
+    android:orientation="vertical" >
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="70dp"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:text="좋은 건 나눠야죠!"
+            android:textColor="#5c5c5c"
+            android:textSize="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="친구가 회원가입 할 때 내 &apos;추천인 코드&apos;를 넣으면"
+            android:textColor="#7f7f7f"
+            android:textSize="15dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="친구도 5,000원을 받고"
+            android:textColor="#7f7f7f"
+            android:textSize="15dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="친구가 처음 결제하면 나도 5,000원 받고!"
+            android:textColor="#7f7f7f"
+            android:textSize="15dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:gravity="center"
+            android:text="데일리 호텔을 이미 알고 있었다는 사실에 기뻐하기"
+            android:textColor="#7f7f7f"
+            android:textSize="15dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/btn_no_login_login"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/shape_button_background"
+            android:text="기존 회원 로그인"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/btn_no_login_signup"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/shape_button_background"
+            android:text="회원 가입하고 친구 초대하기"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+</RelativeLayout>

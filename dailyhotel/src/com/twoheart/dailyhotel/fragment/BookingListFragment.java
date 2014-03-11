@@ -36,6 +36,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.MainActivity;
@@ -94,7 +95,7 @@ public class BookingListFragment extends Fragment implements OnItemClickListener
 			listView = (ListView) view.findViewById(R.id.listview_booking);
 			listView.setVisibility(View.GONE);
 			
-			LinearLayout layout = (LinearLayout) view.findViewById(R.id.layout_booking_empty);
+			RelativeLayout layout = (RelativeLayout) view.findViewById(R.id.layout_booking_empty);
 			layout.setVisibility(View.VISIBLE);
 			btn_signup = (Button) view.findViewById(R.id.btn_booking_empty_signup);
 			btn_signup.setOnClickListener(this);
@@ -135,6 +136,7 @@ public class BookingListFragment extends Fragment implements OnItemClickListener
 	public void parseReservJson(String str) {
 		
 		str.trim();
+		
 		if(str.indexOf("none") >= 0) {			// 예약이 없는경우
 			listView = (ListView) view.findViewById(R.id.listview_booking);
 			listView.setVisibility(View.GONE);
@@ -169,6 +171,7 @@ public class BookingListFragment extends Fragment implements OnItemClickListener
 				Toast.makeText(view.getContext(), "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.", Toast.LENGTH_SHORT).show();
 			}
 		}
+		
 	}
 	
 	public void setListView() {
@@ -186,8 +189,8 @@ public class BookingListFragment extends Fragment implements OnItemClickListener
 			@Override
 			public void onClick(View v) {
 				Intent marketLaunch = new Intent(Intent.ACTION_VIEW); 
-		    	marketLaunch.setData(Uri.parse("market://details?id=com.twoheart.dailyhotel")); 
-		    	startActivity(marketLaunch);
+			    	marketLaunch.setData(Uri.parse("market://details?id=com.twoheart.dailyhotel")); 
+			    	startActivity(marketLaunch);
 			}
 		});
 		

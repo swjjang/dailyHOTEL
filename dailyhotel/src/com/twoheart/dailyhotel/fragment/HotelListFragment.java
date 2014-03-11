@@ -134,17 +134,22 @@ public class HotelListFragment extends Fragment implements OnItemClickListener,
 		// LoadingDialog.showLoading(view.getContext());
 		// new GeneralHttpTask(timerListener,
 		// view.getContext()).execute(REST_URL + TIME);
+		
+		LoadingDialog.showLoading(view.getContext());
+		
+		new GeneralHttpTask(saleTimeListener, view.getContext())
+		.execute(REST_URL + SALE_TIME);
 
 		return view;
 	}
 
 	@Override
 	public void onResume() {
-		LoadingDialog.showLoading(view.getContext());
+//		LoadingDialog.showLoading(view.getContext());
 		// new GeneralHttpTask(timerListener,
 		// view.getContext()).execute(REST_URL + TIME);
-		new GeneralHttpTask(saleTimeListener, view.getContext())
-				.execute(REST_URL + SALE_TIME);
+//		new GeneralHttpTask(saleTimeListener, view.getContext())
+//				.execute(REST_URL + SALE_TIME);
 		super.onResume();
 	}
 

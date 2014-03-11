@@ -1,11 +1,11 @@
 package kr.co.kcp.android.payment.standard;
 
 import kr.co.kcp.android.payment.standard.KcpApplication;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-
 public class ResultRcvActivity extends Activity
 {
 

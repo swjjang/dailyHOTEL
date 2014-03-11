@@ -2,132 +2,188 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:weightSum="3"
-    android:background="@color/dh_gray96">
+    android:background="#fdfdfd"
+    android:orientation="vertical" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:background="@drawable/shape_section_activity_background"
+        android:orientation="horizontal"
+        android:paddingBottom="9dp"
+        android:paddingLeft="13dp"
+        android:paddingTop="20dp" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="적립금"
+            android:textColor="#969696"
+            android:textSize="12.5dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:gravity="center"
         android:orientation="vertical" >
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center" >
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp" >
+
+            <ImageView
+                android:id="@+id/iv_credit_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/img_ic_coin" />
 
             <TextView
                 android:id="@+id/tv_credit"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical|center"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="12dp"
+                android:layout_toRightOf="@+id/iv_credit_icon"
                 android:text="현재 적립금"
                 android:textColor="@color/dh_dark_gray_blue"
-                android:textSize="20dp" />
+                android:textSize="15dp" />
 
-            <TextView
-                android:id="@+id/tv_credit_money"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:layout_below="@+id/tv_credit"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical|center"
-                android:text="￦0"
-                android:textColor="@color/dh_dark_gray_blue"
-                android:textSize="20dp" />
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:gravity="right"
+                android:clickable="true"
+                android:orientation="vertical" >
 
-            <Button
-                android:id="@+id/btn_credit"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:layout_below="@+id/tv_credit_money"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/dh_btn_pink"
-                android:text="적립금 내역 확인"
-                android:textSize="15sp"
-                android:textColor="@color/white" />
+                <TextView
+                    android:id="@+id/tv_credit_money"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="￦0"
+                    android:textColor="@color/dh_dark_gray_blue"
+                    android:textSize="16.5dp" />
+
+                <TextView
+                    android:id="@+id/tv_credit_history"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:layout_toRightOf="@+id/iv_credit_icon"
+                    android:text="적립금내역 보기"
+                    android:textColor="@color/dh_dark_gray_blue"
+                    android:textSize="13.5dp" />
+            </LinearLayout>
         </RelativeLayout>
-
     </LinearLayout>
 
-    <View
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/dh_dark_gray_blue" />
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_section_activity_background"
+        android:orientation="horizontal"
+        android:paddingBottom="9dp"
+        android:paddingLeft="13dp"
+        android:paddingTop="20dp" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="추천코드"
+            android:textColor="#969696"
+            android:textSize="12.5dp" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:gravity="center"
         android:orientation="vertical" >
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center" >
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp" >
+
+            <ImageView
+                android:id="@+id/iv_code_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/img_ic_code" />
 
             <TextView
-                android:id="@+id/tv_credit_recommender"
-                android:paddingTop="20dp"
-                android:paddingBottom="20dp"
-                android:layout_width="match_parent"
+                android:id="@+id/tv_recommender"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center|center_vertical"
-                android:text="친구가 회원가입 할 때 내 추천코드를 넣으면\n친구는 5,000원 선물받고!\n친구가 처음 결제하면 나도 5,000원 선물받고!"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="12dp"
+                android:layout_toRightOf="@+id/iv_code_icon"
+                android:text="나의 추천코드"
                 android:textColor="@color/dh_dark_gray_blue"
                 android:textSize="15dp" />
 
             <TextView
                 android:id="@+id/tv_credit_recommender_code"
-                android:paddingTop="20dp"
-                android:paddingBottom="20dp"
-                android:layout_below="@+id/tv_credit_recommender"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical|center"
-                android:text="추천코드 : 0000"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:gravity="right"
+                android:text="0000"
                 android:textColor="@color/dh_dark_gray_blue"
-                android:textSize="20dp" />
-        </RelativeLayout>
+                android:textSize="16.5dp" />
 
+        </RelativeLayout>
     </LinearLayout>
 
-    <View
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/dh_dark_gray_blue" />
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingRight="10dp"
+        android:gravity="right" >
+
+        <TextView
+            android:id="@+id/tv_credit_recommender"
+            android:background="@drawable/shape_section_code_background"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="친구가 회원가입 할 때 내 추천코드를 넣으면\n친구는 5,000원 선물받고!\n친구가 처음 결제하면 나도 5,000원 선물받고!"
+            android:textColor="#7f7f7f"
+            android:textSize="13.5dp" />
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:gravity="bottom"
         android:orientation="vertical" >
 
-        <RelativeLayout
+        <Button
+            android:id="@+id/btn_credit_invite_frd"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-            <Button
-                android:id="@+id/btn_credit_invite_frd"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="20dp"
-                android:background="@drawable/dh_btn_kakao"
-                android:gravity="center_vertical|center"
-                android:text="카카오 친구 초대하기"
-                android:textColor="@color/black"
-                android:textSize="15dp" />
-
-        </RelativeLayout>
-
+            android:layout_height="wrap_content"
+            android:layout_margin="22.5dp"
+            android:background="@drawable/shape_button_kakao"
+            android:gravity="center_vertical|center"
+            android:text="카카오톡 친구 초대"
+            android:textColor="@color/black"
+            android:textSize="15dp" />
     </LinearLayout>
-    
+
 </LinearLayout>

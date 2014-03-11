@@ -38,6 +38,7 @@ public class HotelTabInfoFragment extends Fragment{
 	private LinearLayout layout;
 	
 	private SharedPreferences prefs;
+	private int infoViewCount = 1;
 	
 	public static HotelTabInfoFragment newInstance() {
 		HotelTabInfoFragment fragment = new HotelTabInfoFragment();
@@ -65,6 +66,7 @@ public class HotelTabInfoFragment extends Fragment{
 	
 	public void loadResource() {
 		layout = (LinearLayout) view.findViewById(R.id.layout_hotel_tab_info);
+		
 	}
 	
 	private void parseJson(String str) {
@@ -99,7 +101,10 @@ public class HotelTabInfoFragment extends Fragment{
 		LayoutInflater inflater = (LayoutInflater)view.getContext().getSystemService(view.getContext().LAYOUT_INFLATER_SERVICE);
 		LinearLayout layout_view = (LinearLayout) inflater.inflate(R.layout.list_row_hotel_tab_info, layout, false);
 		
+		TextView tvInfoNumber = (TextView) layout_view.findViewById(R.id.tv_list_row_hotel_tab_info_number);
 		TextView tv_subject = (TextView) layout_view.findViewById(R.id.tv_hotel_tab_info_subject);
+		
+		tvInfoNumber.setText(Integer.toString(infoViewCount++));
 		tv_subject.setText(subject);
 		
 		LinearLayout content_view = (LinearLayout) layout_view.findViewById(R.id.layout_hotel_tab_info_content);

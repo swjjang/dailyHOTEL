@@ -56,7 +56,7 @@ public class CreditFragment extends Fragment implements OnClickListener {
 	private View view;
 	private Button btn_invite;
 	private TextView tv_bonus, tv_recommender_code;
-	private Button btnCredit;
+	private TextView tvCredit;
 	private String code;
 	
 	private ArrayList<Credit> list;
@@ -109,10 +109,10 @@ public class CreditFragment extends Fragment implements OnClickListener {
 	
 	public void loadResource() {
 		btn_invite = (Button) view.findViewById(R.id.btn_credit_invite_frd);
-		btnCredit = (Button) view.findViewById(R.id.btn_credit);
+		tvCredit = (TextView) view.findViewById(R.id.tv_credit_history);
 		tv_recommender_code = (TextView) view.findViewById(R.id.tv_credit_recommender_code);
 		btn_invite.setOnClickListener(this);
-		btnCredit.setOnClickListener(this);
+		tvCredit.setOnClickListener(this);
 	}
 	
 	@Override
@@ -126,7 +126,7 @@ public class CreditFragment extends Fragment implements OnClickListener {
 				Log.d(TAG, "kakao link error " + e.toString());
 			}
 			
-		} else if (v.getId() == btnCredit.getId()) {
+		} else if (v.getId() == tvCredit.getId()) {
 			MainActivity activity = (MainActivity) view.getContext();
 			
 			Fragment creditListFragment = CreditListFragment.newInstance(list);
@@ -188,7 +188,7 @@ public class CreditFragment extends Fragment implements OnClickListener {
 		try {
 			JSONObject obj = new JSONObject(str);
 			code = obj.getString("rndnum");
-			tv_recommender_code.setText("추천인 코드 : " + obj.getString("rndnum"));
+			tv_recommender_code.setText(obj.getString("rndnum"));
 			
 			new GeneralHttpTask(listListener, view.getContext()).execute(REST_URL + BONUS_ALL);
 			

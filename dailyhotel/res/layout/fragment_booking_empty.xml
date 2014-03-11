@@ -1,66 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/dh_gray96"
-    android:weightSum="1"
-    android:orientation="vertical" >
-    
-    <TextView 
-        android:layout_weight="0.2"
+    android:layout_height="match_parent" >
+
+    <ImageView
+        android:id="@+id/iv_booking_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:src="@drawable/img_ic_empty" />
+
+    <TextView
+        android:id="@+id/tv_booking_empty_desc"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/iv_booking_empty"
         android:gravity="center|center_vertical"
-        android:textSize="30dp"
-        android:textColor="@color/dh_dark_gray_blue"
-        android:text="예약된 호텔이 없습니다!">
-     </TextView>
-     
-    <TextView 
-        android:layout_weight="0.2"
+        android:layout_marginBottom="30dp"
+        android:textColor="#7f7f7f"
+        android:text="오늘은 멋진 호텔에서\n하루를 보내는게 어때요?"
+        android:textSize="16.5dp" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/tv_booking_empty_title"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/tv_booking_empty_desc"
+        android:layout_marginBottom="10dp"
         android:gravity="center|center_vertical"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:textSize="15dp"
-        android:textColor="@color/dh_dark_gray_blue"
-        android:text="오늘은 멋진 호텔에서 하루를 \n보내는게 어때요?">
-     </TextView>
-    
-    <LinearLayout 
-        android:layout_weight="0.3"
-        android:layout_width="match_parent"
-        android:layout_height="0dp">
-        
-        <ImageView 
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/dh_logo_nothing"/>
-        
-    </LinearLayout>
-	
-    <LinearLayout 
-        android:layout_weight="0.1"
-        android:layout_width="match_parent"
-        android:layout_height="0dp">
-    </LinearLayout>
-    
-    <Button 
+        android:text="예약된 호텔이 없습니다!"
+        android:textColor="#5c5c5c"
+        android:textSize="20dp" >
+    </TextView>
+
+    <Button
         android:id="@+id/btn_booking_empty_signup"
-        android:layout_weight="0.1"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@drawable/dh_btn_pink"
-        android:textColor="@color/white"
-        android:text="10초만에 무료 회원가입"/>
-    
-     <LinearLayout 
-        android:layout_weight="0.1"
-        android:layout_width="match_parent"
-        android:layout_height="0dp">
-    </LinearLayout>
-        
-</LinearLayout>
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="10dp"
+        android:background="@drawable/shape_button_background"
+        android:text="10초만에 무료 회원가입"
+        android:textColor="@color/white" />
+
+</RelativeLayout>

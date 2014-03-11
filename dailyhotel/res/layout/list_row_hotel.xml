@@ -21,6 +21,7 @@
             android:src="@drawable/img_placeholder" />
 
         <LinearLayout
+            android:id="@+id/ll_hotel_row_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical" >
@@ -37,26 +38,24 @@
                 android:id="@+id/rl_hotel_under"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/dh_hotel_gradient"
+                android:gravity="bottom"
                 android:orientation="vertical"
-                android:padding="13dp" >
+                android:padding="13dp">
 
                 <RelativeLayout
                     android:id="@+id/ll_hotel_under_upper"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="6dp"
                     android:orientation="horizontal" >
 
                     <FrameLayout
                         android:id="@+id/fl_hotel_row_grade"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
                         android:layout_alignParentLeft="true"
-                        android:paddingBottom="3dp"
                         android:paddingLeft="5.5dp"
-                        android:paddingRight="5.5dp"
-                        android:paddingTop="3dp" >
+                        android:paddingRight="5.5dp" >
 
                         <TextView
                             android:id="@+id/tv_hotel_row_grade"
@@ -94,7 +93,7 @@
                         android:gravity="center_vertical|right"
                         android:text="79,000원"
                         android:textColor="@android:color/white"
-                        android:textSize="19dp" />
+                        android:textSize="18dp" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -108,7 +107,7 @@
                         android:layout_alignParentLeft="true"
                         android:layout_toLeftOf="@+id/tv_hotel_row_price"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:singleLine="true"
                         android:text="중구, 명동역 도보 1분"
@@ -119,7 +118,7 @@
                         android:id="@+id/tv_hotel_row_price"
                         android:layout_alignParentRight="true"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:gravity="center_vertical|right"
                         android:text="320,000원"
                         android:textColor="@color/dh_gray50"

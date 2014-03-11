@@ -51,16 +51,16 @@
         <RelativeLayout
             android:id="@+id/rl_hotel_upper"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true" >
 
             <FrameLayout
                 android:id="@+id/fl_hotel_row_grade"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingBottom="3dp"
+                android:layout_centerVertical="true"
                 android:paddingLeft="5.5dp"
-                android:paddingRight="5.5dp"
-                android:paddingTop="3dp" >
+                android:paddingRight="5.5dp">
 
                 <TextView
                     android:id="@+id/tv_hotel_row_grade"
@@ -75,6 +75,7 @@
 
             <TextView
                 android:id="@+id/tv_hotel_tab_booking_name"
+                android:layout_centerVertical="true"
                 android:layout_marginLeft="5.5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

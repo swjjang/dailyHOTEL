@@ -137,6 +137,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.twoheart.dailyhotel.activity.HotelPaymentActivity"
+            android:windowSoftInputMode="stateHidden"
             android:icon="@drawable/dh_ic_no"
             android:label=""
             android:screenOrientation="portrait" />

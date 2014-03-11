@@ -1,16 +1,16 @@
 package com.twoheart.dailyhotel.activity;
 
 import static com.twoheart.dailyhotel.util.AppConstants.LOGIN;
+import static com.twoheart.dailyhotel.util.AppConstants.LOGIN_FACEBOOK;
 import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_AUTO_LOGIN;
 import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_IS_LOGIN;
 import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_USER_ID;
 import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_USER_PWD;
 import static com.twoheart.dailyhotel.util.AppConstants.REST_URL;
 import static com.twoheart.dailyhotel.util.AppConstants.SHARED_PREFERENCES_NAME;
-import static com.twoheart.dailyhotel.util.AppConstants.SIGNUP;
-import static com.twoheart.dailyhotel.util.AppConstants.LOGIN_FACEBOOK;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.json.JSONObject;
 
@@ -112,7 +112,7 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener{
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 				switch(actionId) {
                 case EditorInfo.IME_ACTION_DONE:
-                	btn_login.performClick();
+                		btn_login.performClick();
                     break;
                 }
 				return false;
@@ -121,16 +121,22 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener{
 		
 	}
 	
-//	private Session.StatusCallback callback = new Session.StatusCallback() {
-//	    @Override
-//	    public void call(Session session, SessionState state, Exception exception) {
-//	        onSessionStateChange(session, state, exception);
-//	    }
-//	};
-//	
+	private Session.StatusCallback statusCallback = new Session.StatusCallback() {
+	    @Override
+	    public void call(Session session, SessionState state, Exception exception) {
+	        onSessionStateChange(session, state, exception);
+	        
+	        if (exception != null)
+	        		exception.printStackTrace();
+	    }
+	};
+	
 	private void onSessionStateChange(Session session, SessionState state, Exception exception) {
 	    if (state.isOpened()) {
 	        Log.i(TAG, "Facebook Login");
+	        session.requestNewReadPermissions(new Session
+				      .NewPermissionsRequest(LoginActivity.this, Arrays.asList("email")));
+				    
 	        makeMeRequest(session);
 	        
 	    } else if (state.isClosed()) {
@@ -151,26 +157,23 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener{
 						String phoneNumber = telephonyManager.getLine1Number();
 						
 						ArrayList<Parameter> paramList = new ArrayList<Parameter>();
-						//TODO: 이메일 파라미터 처리
-						paramList.add(new Parameter("email", null));
+						paramList.add(new Parameter("email", user.getProperty("email").toString()));
 						paramList.add(new Parameter("pw", null));
 						paramList.add(new Parameter("name", user.getName()));
-						Log.d(TAG, user.getName());
+//						Log.d(TAG, user.getName());
 						paramList.add(new Parameter("phone", phoneNumber));
 						paramList.add(new Parameter("device", telephonyManager.getDeviceId()));
 						paramList.add(new Parameter("accessToken", user.getId()));
 						
+						et_id.setText(user.getId());
+						//TODO: 패스워드는 서버로부터 임의로 생성된 값을 받도록 한다.
+						
 						new GeneralHttpTask(snsListener, paramList, getApplicationContext()).execute(REST_URL + LOGIN_FACEBOOK);
 					}
 				}
-				if (response.getError() != null) {
-					 if (Session.getActiveSession() != null)
-						 if (Session.getActiveSession().isOpened()) {
-							 Session.getActiveSession().closeAndClearTokenInformation();
-					 		 Session.setActiveSession(null);
-						 }
-					
-				}
+				
+				Session.getActiveSession().closeAndClearTokenInformation();
+		 		Session.setActiveSession(null);
 			}
 		});
 		
@@ -202,22 +205,8 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener{
 			LoadingDialog.showLoading(this);
 			new GeneralHttpTask(loginListener, params, getApplicationContext()).execute(REST_URL + LOGIN);
 		} else if ( v.getId() == facebookLogin.getId()) {
-			if (Session.getActiveSession() == null) {
-				Session.openActiveSession(this, true,
-						new Session.StatusCallback() {
-
-							// callback when session changes state
-							@Override
-							public void call(Session session,
-									SessionState state, Exception exception) {
-								onSessionStateChange(session, state, exception);
-							}
-						});
-			} else {
-				Session.getActiveSession().closeAndClearTokenInformation();
-				Session.setActiveSession(null);
-			}
 			
+			Session.openActiveSession(this, true, statusCallback);			
 		}
 	}
 	
@@ -295,12 +284,6 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener{
 		SharedPreferences.Editor ed = prefs.edit();
 		ed.putBoolean(PREFERENCE_IS_LOGIN, true);
 		ed.commit();
-		
-		if (Session.getActiveSession() != null)
-			 if (Session.getActiveSession().isOpened()) {
-				 Session.getActiveSession().closeAndClearTokenInformation();
-		 		 Session.setActiveSession(null);
-			 }
 		
 		setResult(RESULT_OK);
 		finish();
