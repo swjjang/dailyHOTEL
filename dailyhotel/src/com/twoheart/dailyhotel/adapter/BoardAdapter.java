@@ -92,15 +92,11 @@ public class BoardAdapter extends BaseExpandableListAdapter{
 		}
 		
 		TextView tv_subject = (TextView)v.findViewById(R.id.tv_board_subject);
-		ImageView iv_arrow = (ImageView) v.findViewById(R.id.iv_board_arrow);
+		TextView tv_regdate = (TextView)v.findViewById(R.id.tv_board_regdate);
+		tv_subject.setText((String) getGroup(groupPosition));
+		tv_regdate.setText(list.get(groupPosition).regdate);
 		
-		tv_subject.setText(Html.fromHtml(getGroup(groupPosition) + " <font color='#FF7A7A'>" + list.get(groupPosition).regdate + "</font>"));
-		if(groupClickState[groupPosition]) {
-			iv_arrow.setImageResource(R.drawable.dh_arrow_open);
-		} else {
-			iv_arrow.setImageResource(R.drawable.dh_arrow_close);
-		}
-			
+		tv_subject.setSelected(true);
 		return v;
 	}
 
