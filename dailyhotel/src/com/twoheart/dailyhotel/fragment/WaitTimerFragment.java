@@ -52,7 +52,7 @@ public class WaitTimerFragment extends Fragment implements OnClickListener{
 	private Handler handler;
 	private TextView timer, main, sub;
 	private ImageView hotel;
-	private Button btn_alram, btn_applyEvent;
+	private Button btn_alram;
 	
 	private long waitTime;
 	private long curTime;
@@ -102,16 +102,16 @@ public class WaitTimerFragment extends Fragment implements OnClickListener{
 //		new GeneralHttpTask(timeListener, view.getContext()).execute(REST_URL + TIME);
 		new GeneralHttpTask(saleTimeListener, view.getContext()).execute(REST_URL + SALE_TIME);
 		
-		btn_applyEvent.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Intent i = new Intent(view.getContext(), EventWebActivity.class);
-				MainActivity activity = (MainActivity) view.getContext();
-				activity.startActivity(i);
-				activity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
-			}
-		});
+//		btn_applyEvent.setOnClickListener(new OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				Intent i = new Intent(view.getContext(), EventWebActivity.class);
+//				MainActivity activity = (MainActivity) view.getContext();
+//				activity.startActivity(i);
+//				activity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
+//			}
+//		});
 		
 		return view;
 	}
@@ -122,9 +122,9 @@ public class WaitTimerFragment extends Fragment implements OnClickListener{
 		sub = (TextView) view.findViewById(R.id.tv_wait_timer_sub);
 		hotel = (ImageView) view.findViewById(R.id.iv_wait_timer_hotel);
 		btn_alram = (Button) view.findViewById(R.id.btn_wait_timer_alram);
-		btn_applyEvent = (Button) view.findViewById(R.id.btn_apply_event);
+//		btn_applyEvent = (Button) view.findViewById(R.id.btn_apply_event);
 		btn_alram.setOnClickListener(this);
-		btn_applyEvent.setOnClickListener(this);
+//		btn_applyEvent.setOnClickListener(this);
 	}
 	
 	@Override
