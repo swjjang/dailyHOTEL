@@ -70,7 +70,7 @@
             android:id="@+id/btn_login"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@drawable/dh_btn_pink"
+            android:background="@drawable/shape_button_background"
             android:text="로그인"
             android:textColor="@color/white" />
     </LinearLayout>

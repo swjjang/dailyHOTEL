@@ -19,7 +19,7 @@
         android:singleLine="true"
         android:background="@drawable/edit_text_holo_light"
         android:textColorHint="@color/dh_gray50"
-        android:hint="*휴대폰 번호 ( '-' 제외)"/>
+        android:hint="휴대폰 번호 ( '-' 제외)"/>
     
     <EditText 
         android:id="@+id/et_signup_email"
@@ -32,7 +32,7 @@
         android:maxLength="50"
         android:background="@drawable/edit_text_holo_light"
         android:textColorHint="@color/dh_gray50"
-        android:hint="*Email"/>
+        android:hint="Email"/>
     
     <EditText 
         android:id="@+id/et_signup_name"
@@ -45,7 +45,7 @@
         android:maxLength="20"
         android:background="@drawable/edit_text_holo_light"
         android:textColorHint="@color/dh_gray50"
-        android:hint="*이름 (체크인시 사용)"/>
+        android:hint="이름 (체크인시 사용)"/>
     
     <EditText 
         android:id="@+id/et_signup_pwd"
@@ -58,7 +58,7 @@
         android:maxLength="20"
         android:background="@drawable/edit_text_holo_light"
         android:textColorHint="@color/dh_gray50"
-        android:hint="*비밀번호 (4자이상)"/>
+        android:hint="비밀번호 (4자이상)"/>
     
     <EditText 
         android:id="@+id/et_signup_recommender"
@@ -70,7 +70,7 @@
         android:maxLength="10"
         android:background="@drawable/edit_text_holo_light"
         android:textColorHint="@color/dh_gray50"
-        android:hint="추천인 Code (선택사항)"/>
+        android:hint="&lt;선택&gt; 추천인 코드"/>
 	
     <Button 
         android:id="@+id/btn_signup"
@@ -79,9 +79,9 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:gravity="center|center_vertical"
-        android:background="@drawable/dh_btn_pink"
+        android:background="@drawable/shape_button_background"
         android:textColor="@color/white"
-        android:text="약관 동의하고 회원가입"/>
+        android:text="회원가입"/>
     
     <LinearLayout 
             android:layout_width="fill_parent"
@@ -96,7 +96,7 @@
 	            android:layout_height="fill_parent"
 	            android:layout_weight="0.5"
 	            android:gravity="center"
-	            android:textColor="#FF7A7A"
+	            android:textColor="#7f7f7f"
 	            android:text="이용약관"/>
             
             <TextView
@@ -105,7 +105,7 @@
 	            android:layout_height="fill_parent"
 	            android:layout_weight="0.5"
 	            android:gravity="center"
-	            android:textColor="#FF7A7A"
+	            android:textColor="#7f7f7f"
 	            android:text="개인정보 취급방침"/>
             
         </LinearLayout>
