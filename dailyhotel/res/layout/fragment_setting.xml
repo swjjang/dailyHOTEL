@@ -1,209 +1,209 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:orientation="vertical">
+    android:orientation="vertical" >
 
-	<LinearLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:orientation="vertical" 
-	    android:paddingTop="10dp"
-	    android:paddingLeft="15dp"
-	    android:paddingRight="15dp"
-	    android:background="@color/dh_gray96"
-	    android:weightSum="1">
-    
-    
-	    <!-- 고객센터 -->
-	    <TextView 
-	        android:layout_height="20dp"
-	        android:layout_width="match_parent"
-	        android:textColor="@color/dh_dark_gray_blue"
-	        android:textSize="15dp"
-	        android:text="고객센터"/>
-	    
-	    <View 
-	        android:layout_height="2dp"
-	        android:layout_width="match_parent"
-	        android:background="@color/dh_dark_gray_blue"/>
-	    
-	    <TextView 
-	        android:id="@+id/tv_setting_call"
-	        android:layout_height="50dp"
-	        android:layout_width="match_parent"
-	        android:textColor="@color/dh_dark_gray_blue"
-	        android:gravity="center_vertical"
-	        android:paddingLeft="15dp"
-	        android:textSize="22dp"
-	        android:text="전화예약 &amp; 문의"/>
-	    
-	    <View 
-	        android:layout_height="1dp"
-	        android:layout_width="match_parent"
-	        android:layout_marginLeft="10dp"
-	        android:background="@color/dh_gray50"/>
-	    
-	    <TextView 
-	        android:id="@+id/tv_setting_mail"
-	        android:layout_height="50dp"
-	        android:layout_width="match_parent"
-	        android:textColor="@color/dh_dark_gray_blue"
-	        android:gravity="center_vertical"
-	        android:paddingLeft="15dp"
-	        android:textSize="22dp"
-	        android:text="의견 메일 보내기"/>
-	    
-	    <View 
-	        android:layout_height="1dp"
-	        android:layout_width="match_parent"
-	        android:layout_marginLeft="10dp"
-	        android:background="@color/dh_gray50"/>
-	    
-	    <TextView 
-	        android:id="@+id/tv_setting_notice"
-	        android:layout_height="50dp"
-	        android:layout_width="match_parent"
-	        android:textColor="@color/dh_dark_gray_blue"
-	        android:gravity="center_vertical"
-	        android:paddingLeft="15dp"
-	        android:textSize="22dp"
-	        android:text="공지사항"/>
-	    
-	    <View 
-	        android:layout_height="1dp"
-	        android:layout_width="match_parent"
-	        android:layout_marginLeft="10dp"
-	        android:background="@color/dh_gray50"/>
-	    
-	    <TextView 
-	        android:id="@+id/tv_setting_help"
-	        android:layout_height="50dp"
-	        android:layout_width="match_parent"
-	        android:textColor="@color/dh_dark_gray_blue"
-	        android:gravity="center_vertical"
-	        android:paddingLeft="15dp"
-	        android:textSize="22dp"
-	        android:text="자주 묻는 질문"/>
-	    
-	    <View 
-	        android:layout_height="1dp"
-	        android:layout_width="match_parent"
-	        android:layout_marginLeft="10dp"
-	        android:background="@color/dh_gray50"/>
-	
-	    <!-- 소개 -->
-	    <TextView 
-	        android:layout_height="20dp"
-	        android:layout_width="match_parent"
-	        android:layout_marginTop="10dp"
-	        android:textColor="@color/dh_dark_gray_blue"
-	        android:textSize="15dp"
-	        android:text="소개"/>
-	    
-	    <View 
-	        android:layout_height="2dp"
-	        android:layout_width="match_parent"
-	        android:background="@color/dh_dark_gray_blue"/>
-	    
-	    <TextView 
-	        android:id="@+id/tv_setting_introduction"
-	        android:layout_height="50dp"
-	        android:layout_width="match_parent"
-	        android:textColor="@color/dh_dark_gray_blue"
-	        android:gravity="center_vertical"
-	        android:paddingLeft="15dp"
-	        android:textSize="22dp"
-	        android:text="데일리호텔이란?"/>
-	    
-	    <View 
-	        android:layout_height="1dp"
-	        android:layout_width="match_parent"
-	        android:layout_marginLeft="10dp"
-	        android:background="@color/dh_gray50"/>
-	   
-	       
-	    <!-- 앱 -->
-	    <TextView 
-	        android:layout_height="20dp"
-	        android:layout_width="match_parent"
-	        android:layout_marginTop="10dp"
-	        android:textColor="@color/dh_dark_gray_blue"
-	        android:textSize="15dp"
-	        android:text="앱"/>
-	    
-	    <View 
-	        android:layout_height="2dp"
-	        android:layout_width="match_parent"
-	        android:background="@color/dh_dark_gray_blue"/>
-	    
-	    
-	    <LinearLayout 
-	        android:id="@+id/ll_setting_version"
-	        android:layout_width="match_parent"
-	        android:layout_height="50dp"
-	        android:paddingLeft="10dp"
-	        android:orientation="horizontal">
-			
-	         <TextView
-	            android:layout_weight="0.7" 
-		        android:layout_height="match_parent"
-		        android:layout_width="0dp"
-		        android:textColor="@color/dh_dark_gray_blue"
-		        android:gravity="left|center_vertical"
-		        android:textSize="22dp"
-		        android:text="버전정보"/>
-	        
-	        <TextView
-	            android:id="@+id/tv_setting_version" 
-	            android:layout_weight="0.3"
-	            android:layout_width="0dp"
-	            android:layout_height="match_parent"
-	            android:gravity="right|center_vertical"
-	            android:textSize="22dp"
-	            android:textColor="@color/dh_gray50"/>
-	        
-	    </LinearLayout>
-	    
-	   
-	    
-	    <View 
-	        android:layout_height="1dp"
-	        android:layout_width="match_parent"
-	        android:layout_marginLeft="10dp"
-	        android:background="@color/dh_gray50"/>
-	    
-	    <!-- 계정 -->
-	    <TextView 
-	        android:layout_height="20dp"
-	        android:layout_width="match_parent"
-	        android:layout_marginTop="10dp"
-	        android:textColor="@color/dh_dark_gray_blue"
-	        android:textSize="15dp"
-	        android:text="계정"/>
-	    
-	    <View 
-	        android:layout_height="2dp"
-	        android:layout_width="match_parent"
-	        android:background="@color/dh_dark_gray_blue"/>
-	    
-	    <TextView 
-	        android:id="@+id/tv_setting_login"
-	        android:layout_height="50dp"
-	        android:layout_width="match_parent"
-	        android:textColor="@color/dh_dark_gray_blue"
-	        android:gravity="center_vertical"
-	        android:paddingLeft="15dp"
-	        android:textSize="22dp"
-	        android:text="로그인"/>
-	    
-	    <View 
-	        android:layout_height="1dp"
-	        android:layout_width="match_parent"
-	        android:layout_marginLeft="10dp"
-	        android:background="@color/dh_gray50"/>
-	    
-	</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#fdfdfd"
+        android:orientation="vertical"
+        android:weightSum="1" >
+
+        <!-- 고객센터 -->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:text="고객센터"
+            android:textColor="@color/dh_dark_gray_blue"
+            android:textSize="13.5dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#8c8c8c" />
+
+        <TextView
+            android:id="@+id/tv_setting_call"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="17dp"
+            android:text="전화예약 &amp; 문의"
+            android:textColor="@color/dh_dark_gray_blue"
+            android:textSize="16.5dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="10dp"
+            android:background="#dcdcdc" />
+
+        <TextView
+            android:id="@+id/tv_setting_mail"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="17dp"
+            android:text="의견 메일 보내기"
+            android:textColor="@color/dh_dark_gray_blue"
+            android:textSize="16.5dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="10dp"
+            android:background="#dcdcdc" />
+
+        <TextView
+            android:id="@+id/tv_setting_notice"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="17dp"
+            android:text="공지사항"
+            android:textColor="@color/dh_dark_gray_blue"
+            android:textSize="16.5dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="10dp"
+            android:background="#dcdcdc" />
+
+        <TextView
+            android:id="@+id/tv_setting_help"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="17dp"
+            android:text="자주 묻는 질문"
+            android:textColor="@color/dh_dark_gray_blue"
+            android:textSize="16.5dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="10dp"
+            android:background="#dcdcdc" />
+
+        <!-- 소개 -->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:text="소개"
+            android:textColor="@color/dh_dark_gray_blue"
+            android:textSize="13.5dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#8c8c8c" />
+
+        <TextView
+            android:id="@+id/tv_setting_introduction"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="17dp"
+            android:text="데일리호텔이란?"
+            android:textColor="@color/dh_dark_gray_blue"
+            android:textSize="16.5dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="10dp"
+            android:background="#dcdcdc" />
+
+        <!-- 앱 -->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:text="앱"
+            android:textColor="@color/dh_dark_gray_blue"
+            android:textSize="13.5dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#8c8c8c" />
+
+        <LinearLayout
+            android:id="@+id/ll_setting_version"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:paddingLeft="17dp" >
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.7"
+                android:gravity="left|center_vertical"
+                android:text="버전정보"
+                android:textColor="@color/dh_dark_gray_blue"
+                android:textSize="16.5dp" />
+
+            <TextView
+                android:id="@+id/tv_setting_version"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:paddingRight="17dp"
+                android:layout_weight="0.3"
+                android:gravity="right|center_vertical"
+                android:textColor="@color/dh_gray50"
+                android:textSize="16.5dp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="10dp"
+            android:background="#dcdcdc" />
+
+        <!-- 계정 -->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:text="계정"
+            android:textColor="@color/dh_dark_gray_blue"
+            android:textSize="13.5dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#8c8c8c" />
+
+        <TextView
+            android:id="@+id/tv_setting_login"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="17dp"
+            android:text="로그인"
+            android:textColor="@color/dh_dark_gray_blue"
+            android:textSize="16.5dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="10dp"
+            android:background="#dcdcdc" />
+    </LinearLayout>
+
 </ScrollView>
