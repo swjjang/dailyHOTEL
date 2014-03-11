@@ -163,9 +163,15 @@ public class HotelTabBookingFragment extends Fragment implements OnTouchListener
 				gradeBackground.setBackgroundColor(Color.parseColor("#cf8d14"));
 				gradeText.setText("리조트");
 				
-			} else {
-				gradeBackground.setBackgroundColor(Color.parseColor("#ab380a"));
+			} else if (cat.equals("special")) {
+				gradeBackground.setBackgroundColor(Color
+						.parseColor("#ab380a"));
 				gradeText.setText("특급");
+			
+			} else {
+				gradeBackground.setBackgroundColor(Color
+						.parseColor("#808080"));
+				gradeText.setText("미정");
 			}
 
 			JSONArray imgArr = detailObj.getJSONArray("img");

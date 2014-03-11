@@ -134,13 +134,15 @@ public class HotelTabMapFragment extends Fragment implements OnMapClickListener{
 				gradeBackground.setBackgroundColor(Color.parseColor("#407f67"));
 				gradeText.setText("레지던스");
 				
-			} else if(cat.equals("resort")) {
-				gradeBackground.setBackgroundColor(Color.parseColor("#cf8d14"));
-				gradeText.setText("리조트");
-				
-			} else {
-				gradeBackground.setBackgroundColor(Color.parseColor("#ab380a"));
+			} else if (cat.equals("special")) {
+				gradeBackground.setBackgroundColor(Color
+						.parseColor("#ab380a"));
 				gradeText.setText("특급");
+			
+			} else {
+				gradeBackground.setBackgroundColor(Color
+						.parseColor("#808080"));
+				gradeText.setText("미정");
 			}
 			
 			addMarker(mapObj.getDouble("lat"), mapObj.getDouble("lng"), name);

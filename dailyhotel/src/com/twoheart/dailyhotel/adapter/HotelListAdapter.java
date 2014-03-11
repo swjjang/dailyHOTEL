@@ -154,10 +154,15 @@ public class HotelListAdapter extends ArrayAdapter<Hotel> {
 					.parseColor("#cf8d14"));
 			viewHolder.gradeText.setText("리조트");
 
-		} else {
+		} else if (element.getCat().equals("special")) {
 			viewHolder.gradeBackground.setBackgroundColor(Color
 					.parseColor("#ab380a"));
 			viewHolder.gradeText.setText("특급");
+		
+		} else {
+			viewHolder.gradeBackground.setBackgroundColor(Color
+					.parseColor("#808080"));
+			viewHolder.gradeText.setText("미정");
 		}
 
 		if (!element.getImg().equals("default")) {
