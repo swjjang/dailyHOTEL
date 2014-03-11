@@ -177,30 +177,7 @@ public class HotelListFragment extends Fragment implements OnItemClickListener,
 		
 		listView = (PullToRefreshListView) view
 				.findViewById(R.id.listview_hotel_list);
-		adapter = new HotelListAdapter(view.getContext(),
-				R.layout.list_row_hotel, items);
-		listView.setOnItemClickListener(this);
-		listView.setAdapter(adapter);
-		listView.setOnRefreshListener(new OnRefreshListener<ListView>() {
-
-			// listview 끌어서 새로고침
-			@Override
-			public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-				String label = DateUtils.formatDateTime(view.getContext(),
-						System.currentTimeMillis(), DateUtils.FORMAT_SHOW_TIME
-								| DateUtils.FORMAT_SHOW_DATE
-								| DateUtils.FORMAT_ABBREV_ALL);
-
-				// Update the LastUpdatedLabel
-				refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
-
-				new GeneralHttpTask(refreshTimerListener, view.getContext())
-						.execute(REST_URL + TIME);
-
-			}
-		});
-
-		// footer 추가
+		
 		final ListView lv = listView.getRefreshableView();
 		lv.setId(android.R.id.list);
 		
@@ -231,6 +208,32 @@ public class HotelListFragment extends Fragment implements OnItemClickListener,
 						R.anim.hold);
 			}
 		});
+		
+		adapter = new HotelListAdapter(view.getContext(),
+				R.layout.list_row_hotel, items);
+		listView.setOnItemClickListener(this);
+		listView.setAdapter(adapter);
+		listView.setOnRefreshListener(new OnRefreshListener<ListView>() {
+
+			// listview 끌어서 새로고침
+			@Override
+			public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+				String label = DateUtils.formatDateTime(view.getContext(),
+						System.currentTimeMillis(), DateUtils.FORMAT_SHOW_TIME
+								| DateUtils.FORMAT_SHOW_DATE
+								| DateUtils.FORMAT_ABBREV_ALL);
+
+				// Update the LastUpdatedLabel
+				refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
+
+				new GeneralHttpTask(refreshTimerListener, view.getContext())
+						.execute(REST_URL + TIME);
+
+			}
+		});
+
+		// footer 추가
+		
 
 	}
 
