@@ -172,21 +172,14 @@ public class HotelListFragment extends Fragment implements OnItemClickListener,
 	}
 
 	public void setListView() {
-		SuperSaiyanScrollView superSaiyanScrollView = 
-			    (SuperSaiyanScrollView) view.findViewById(R.id.scroll);
-		
 		listView = (PullToRefreshListView) view
 				.findViewById(R.id.listview_hotel_list);
 		
 		final ListView lv = listView.getRefreshableView();
-		lv.setId(android.R.id.list);
-		
 		LayoutInflater inflater = (LayoutInflater) view.getContext()
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View header = inflater.inflate(R.layout.header_hotel_list, null);
 		lv.addHeaderView(header);
-		
-		lv.setFastScrollEnabled(true);
 //		customizeFastScrollerOfListView(lv);
 		
 //		try {
@@ -550,11 +543,7 @@ public class HotelListFragment extends Fragment implements OnItemClickListener,
 				if (select == null) { // 지역 선택 하기전 DEFAULT
 					String region = prefs.getString(PREFERENCE_REGION_DEFALUT,
 							"서울");
-					try {
-						activity.changeTitle("");
-					} catch (NoActionBarException e) {
-						e.printStackTrace();
-					}
+					activity.setActionBar("");
 					region = region.replace(" ", "%20");
 					region = region.replace("|", "%7C");
 					new GeneralHttpTask(hotelListListener, view.getContext())
@@ -562,11 +551,7 @@ public class HotelListFragment extends Fragment implements OnItemClickListener,
 									+ "/near/0/0/0/1000/" + currentYear + "/"
 									+ currentMon + "/" + currentDay);
 				} else { // 지역 선택시
-					try {
-						activity.changeTitle("");
-					} catch (NoActionBarException e) {
-						e.printStackTrace();
-					}
+					activity.setActionBar("");
 					select = select.replace(" ", "%20");
 					select = select.replace("|", "%7C");
 					new GeneralHttpTask(hotelListListener, view.getContext())
@@ -673,11 +658,7 @@ public class HotelListFragment extends Fragment implements OnItemClickListener,
 				if (select == null) { // 지역 선택 하기전 DEFAULT
 					String region = prefs.getString(PREFERENCE_REGION_DEFALUT,
 							"서울");
-					try {
-						activity.changeTitle("");
-					} catch (NoActionBarException e) {
-						e.printStackTrace();
-					}
+					activity.setActionBar("");
 					region = region.replace(" ", "%20");
 					region = region.replace("|", "%7C");
 					new GeneralHttpTask(refreshListListener, view.getContext())
@@ -685,11 +666,7 @@ public class HotelListFragment extends Fragment implements OnItemClickListener,
 									+ "/near/0/0/0/1000/" + currentYear + "/"
 									+ currentMon + "/" + currentDay);
 				} else { // 지역 선택시
-					try {
-						activity.changeTitle("");
-					} catch (NoActionBarException e) {
-						e.printStackTrace();
-					}
+					activity.setActionBar("");
 					select = select.replace(" ", "%20");
 					select = select.replace("|", "%7C");
 					new GeneralHttpTask(refreshListListener, view.getContext())
@@ -743,8 +720,6 @@ public class HotelListFragment extends Fragment implements OnItemClickListener,
 	@Override
 	public boolean onNavigationItemSelected(int position, long id) {
 
-		Log.d(TAG, regionList.get(position) + " " + Long.toString(id));
-
 		prefs = view.getContext().getSharedPreferences(SHARED_PREFERENCES_NAME,
 				0);
 		int oldPosition = prefs.getInt(PREFERENCE_REGION_INDEX, 0);
@@ -759,6 +734,9 @@ public class HotelListFragment extends Fragment implements OnItemClickListener,
 			String select = prefs.getString(PREFERENCE_REGION_SELECT, null);
 			select = select.replace(" ", "%20");
 			select = select.replace("|", "%7C");
+			
+			MainActivity activity = (MainActivity) view.getContext();
+			activity.mDrawerLayout.closeDrawer(activity.mDrawerList);
 
 			// ((MainActivity)
 			// getActivity()).actionBar.setSelectedNavigationItem(position);

@@ -30,11 +30,7 @@ public class NoLoginFragment extends Fragment implements OnClickListener{
 		
 		// ActionBar Setting
 		MainActivity activity = (MainActivity)view.getContext();
-		try {
-			activity.changeTitle("로그인 하세요");
-		} catch (NoActionBarException e) {
-			e.printStackTrace();
-		}
+		activity.setActionBar("로그인하세요");
 		activity.hideMenuItem();
 		activity.addMenuItem("dummy");
 		

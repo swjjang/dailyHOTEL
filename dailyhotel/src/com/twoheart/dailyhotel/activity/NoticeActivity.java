@@ -28,9 +28,10 @@ import com.twoheart.dailyhotel.adapter.BoardAdapter;
 import com.twoheart.dailyhotel.obj.Board;
 import com.twoheart.dailyhotel.util.network.GeneralHttpTask;
 import com.twoheart.dailyhotel.util.network.OnCompleteListener;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
-public class NoticeActivity extends ActionBarActivity {
+public class NoticeActivity extends BaseActivity {
 	
 	private static final String TAG = "NoticeActivity";
 	
@@ -55,26 +56,12 @@ public class NoticeActivity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		setActionBar("공지사항");
 		setContentView(R.layout.activity_board);
 		
 		// Google analytics
 		mGaInstance = GoogleAnalytics.getInstance(this);
 		mGaTracker = mGaInstance.getTracker("UA-43721645-1");
-
-		// set Title
-		setTitle(Html.fromHtml("<font color='#050505'>공지사항</font>"));
-		// back arrow
-		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-		getSupportActionBar().setIcon(R.drawable.dh_ic_menu_back);
-		Drawable myDrawable;
-		Resources res = getResources();
-		try {
-		   myDrawable = Drawable.createFromXml(res, res.getXml(R.drawable.dh_actionbar_background));
-		   getSupportActionBar().setBackgroundDrawable(myDrawable);
-		} catch (Exception ex) {
-		   Log.e("Error", "Exception loading drawable"); 
-		}
 		
 		LoadingDialog.showLoading(this);
 		new GeneralHttpTask(noticeListener, getApplicationContext()).execute(REST_URL + NOTICE);

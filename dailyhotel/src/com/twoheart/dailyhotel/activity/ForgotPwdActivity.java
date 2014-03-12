@@ -27,9 +27,10 @@ import android.widget.Toast;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.network.GeneralHttpTask;
 import com.twoheart.dailyhotel.util.network.OnCompleteListener;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
-public class ForgotPwdActivity extends ActionBarActivity implements OnClickListener{
+public class ForgotPwdActivity extends BaseActivity implements OnClickListener{
 	
 	private static final String TAG = "ForgotPwdActivity";
 	
@@ -39,24 +40,11 @@ public class ForgotPwdActivity extends ActionBarActivity implements OnClickListe
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+		setActionBar("비밀번호 찾기");
 		setContentView(R.layout.activity_forgot_pwd);
 		
 		loadResource();
 		
-		// setTitle
-		setTitle(Html.fromHtml("<font color='#050505'>비밀번호 찾기</font>"));
-		// back arrow
-		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-		getSupportActionBar().setIcon(R.drawable.dh_ic_menu_back);
-		Drawable myDrawable;
-		Resources res = getResources();
-		try {
-		   myDrawable = Drawable.createFromXml(res, res.getXml(R.drawable.dh_actionbar_background));
-		   getSupportActionBar().setBackgroundDrawable(myDrawable);
-		} catch (Exception ex) {
-		   Log.e(TAG, "Exception loading drawable"); 
-		}
 	}
 	
 	public void loadResource() {

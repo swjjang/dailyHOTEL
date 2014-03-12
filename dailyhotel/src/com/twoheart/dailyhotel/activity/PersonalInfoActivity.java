@@ -9,29 +9,18 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
-public class PersonalInfoActivity extends ActionBarActivity {
+public class PersonalInfoActivity extends BaseActivity {
 	
 	private static final String TAG = "PersonalInfoActivity";
 	
 	@Override
 	protected void onCreate(Bundle arg0) {
 		super.onCreate(arg0);
+		setActionBar("개인정보취급방침");
 		setContentView(R.layout.activity_personal_info);
 		
-		// setTitle
-		setTitle(Html.fromHtml("<font color='#050505'>개인정보 취급방침</font>"));
-		// back arrow
-		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-		getSupportActionBar().setIcon(R.drawable.dh_ic_menu_back);
-		Drawable myDrawable;
-		Resources res = getResources();
-		try {
-		   myDrawable = Drawable.createFromXml(res, res.getXml(R.drawable.dh_ic_home_72));
-		   getSupportActionBar().setBackgroundDrawable(myDrawable);
-		} catch (Exception ex) {
-		   Log.e(TAG, "Exception loading drawable"); 
-		}
 	}
 	
 	@Override

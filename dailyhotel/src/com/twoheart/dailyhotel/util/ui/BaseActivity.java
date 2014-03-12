@@ -42,9 +42,9 @@ public class BaseActivity extends ActionBarActivity {
 
 	public ActionBar actionBar;
 	protected List<DrawerMenu> mMenuImages;
-	protected DrawerLayout mDrawerLayout;
+	public DrawerLayout mDrawerLayout;
 	protected DrawerMenuListAdapter drawerMenuListAdapter;
-	protected ListView mDrawerList;
+	public ListView mDrawerList;
 	protected ActionBarDrawerToggle mDrawerToggle;
 
 	protected SharedPreferences prefs;
@@ -67,7 +67,7 @@ public class BaseActivity extends ActionBarActivity {
 		prefs = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
 	}
 	
-	public void setActionBar(boolean isShowTitle) {
+	public void setActionBar(String title) {
 		actionBar = getSupportActionBar();
 		
 		try {
@@ -77,23 +77,13 @@ public class BaseActivity extends ActionBarActivity {
 			ex.printStackTrace();
 		}
 		
-		actionBar.setDisplayShowTitleEnabled(isShowTitle);
-		if (isShowTitle)
-			actionBar.setIcon(R.drawable.img_ic_menu);
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+		
+		actionBar.setIcon(R.drawable.img_ic_menu);
+		actionBar.setTitle(title);
 		
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setHomeButtonEnabled(true);
-	}
-	
-	public void changeTitle(String str) throws NoActionBarException {
-		
-		if (actionBar == null)
-			throw new NoActionBarException(actionBar);
-		else  {
-			actionBar.setDisplayShowTitleEnabled(true);
-			actionBar.setTitle(str);
-		}
-		
 	}
 	
 	public void setNavigationDrawer(OnItemClickListener listener) {
@@ -146,7 +136,7 @@ public class BaseActivity extends ActionBarActivity {
 		// Set the list's click listener
 		mDrawerList.setOnItemClickListener(listener);
 
-		setActionBar(true);
+		setActionBar("");
 		
 	}
 	

@@ -9,30 +9,18 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
-public class AgreementActivity extends ActionBarActivity {
+public class AgreementActivity extends BaseActivity {
 	
 	private static final String TAG = "AgreementActivity";
 	
 	@Override
 	protected void onCreate(Bundle arg0) {
 		super.onCreate(arg0);
+		setActionBar("이용약관");
 		setContentView(R.layout.activity_agreement);
 		
-		
-		// setTitle
-		setTitle(Html.fromHtml("<font color='#050505'>이용약관</font>"));
-		// back arrow
-		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-		getSupportActionBar().setIcon(R.drawable.dh_ic_menu_back);
-		Drawable myDrawable;
-		Resources res = getResources();
-		try {
-		   myDrawable = Drawable.createFromXml(res, res.getXml(R.drawable.dh_actionbar_background));
-		   getSupportActionBar().setBackgroundDrawable(myDrawable);
-		} catch (Exception ex) {
-		   Log.e(TAG, "Exception loading drawable"); 
-		}
 	}
 	
 	@Override

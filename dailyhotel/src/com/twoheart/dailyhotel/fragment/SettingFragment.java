@@ -38,6 +38,7 @@ public class SettingFragment extends Fragment implements OnClickListener{
 	private TextView help;
 	private TextView mail;
 	private TextView login;
+	private TextView email;
 	private TextView call;
 	private TextView introduction;
 	private TextView cur_version;
@@ -61,11 +62,7 @@ public class SettingFragment extends Fragment implements OnClickListener{
 		
 		// ActionBar Setting
 		MainActivity activity = (MainActivity)view.getContext();
-		try {
-			activity.changeTitle("설정");
-		} catch (NoActionBarException e) {
-			e.printStackTrace();
-		}
+		activity.setActionBar("설정");
 		activity.hideMenuItem();
 		activity.addMenuItem("dummy");
 		
@@ -86,6 +83,7 @@ public class SettingFragment extends Fragment implements OnClickListener{
 		help = (TextView) view.findViewById(R.id.tv_setting_help);
 		mail = (TextView) view.findViewById(R.id.tv_setting_mail);
 		login = (TextView) view.findViewById(R.id.tv_setting_login);
+		email = (TextView) view.findViewById(R.id.tv_setting_email);
 		call = (TextView) view.findViewById(R.id.tv_setting_call);
 		introduction = (TextView) view.findViewById(R.id.tv_setting_introduction);
 		
@@ -94,6 +92,7 @@ public class SettingFragment extends Fragment implements OnClickListener{
 		help.setOnClickListener(this);
 		mail.setOnClickListener(this);
 		login.setOnClickListener(this);
+		email.setOnClickListener(this);
 		call.setOnClickListener(this);
 		introduction.setOnClickListener(this);
 		
@@ -108,10 +107,13 @@ public class SettingFragment extends Fragment implements OnClickListener{
 		prefs = view.getContext().getSharedPreferences(SHARED_PREFERENCES_NAME, 0);
 		isLogin =  prefs.getBoolean(PREFERENCE_IS_LOGIN, false);
 		
-		if(isLogin)
+		if(isLogin) {
 			login.setText("로그아웃");
-		else
+			email.setText(prefs.getString(PREFERENCE_USER_ID, ""));
+		} else {
 			login.setText("로그인");
+			email.setText("");
+		}
 	}
 	
 	@Override
@@ -143,8 +145,8 @@ public class SettingFragment extends Fragment implements OnClickListener{
 			Intent intent = new Intent(Intent.ACTION_SEND);
 			intent.setType("message/rfc822");
 			intent.putExtra(Intent.EXTRA_EMAIL, new String[] {"help@dailyhotel.co.kr"});
-			intent.putExtra(Intent.EXTRA_SUBJECT, "Subject of email");
-			intent.putExtra(Intent.EXTRA_TEXT, "Body of email");
+			intent.putExtra(Intent.EXTRA_SUBJECT, "데일리 호텔에 문의합니다");
+			intent.putExtra(Intent.EXTRA_TEXT, "데일리 호텔 안드로이드 어플리케이션에 관한 문의입니다.");
 			startActivity(intent.createChooser(intent, "작업을 수행할 때 수행할 애플리케이션"));
 			
 		}	else if(v.getId() == login.getId()) {
@@ -163,9 +165,9 @@ public class SettingFragment extends Fragment implements OnClickListener{
 						ed.putString(PREFERENCE_USER_ID, null);
 						ed.putString(PREFERENCE_USER_PWD, null);
 						ed.commit();
-						Toast.makeText(getActivity(), "로그아웃 되었습니다", Toast.LENGTH_SHORT).show();
-						login.setText("로그인");
+						Toast.makeText(getActivity(), "로그아웃되었습니다", Toast.LENGTH_SHORT).show();
 						isLogin = false;
+						checkLogin();
 						
 						if (Session.getActiveSession() != null)
 							if (Session.getActiveSession()

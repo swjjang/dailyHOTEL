@@ -50,9 +50,10 @@ import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.network.GeneralHttpTask;
 import com.twoheart.dailyhotel.util.network.OnCompleteListener;
 import com.twoheart.dailyhotel.util.network.Parameter;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
-public class LoginActivity extends ActionBarActivity implements OnClickListener{
+public class LoginActivity extends BaseActivity implements OnClickListener{
 	
 	private static final String TAG = "LoginActivity";
 	
@@ -73,22 +74,9 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+		setActionBar("로그인");
 		setContentView(R.layout.activity_login);
 		loadResource();
-		
-		setTitle(Html.fromHtml("<font color='#050505'>로그인</font>"));
-		// back arrow
-		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-		getSupportActionBar().setIcon(R.drawable.dh_ic_menu_back);
-		Drawable myDrawable;
-		Resources res = getResources();
-		try {
-		   myDrawable = Drawable.createFromXml(res, res.getXml(R.drawable.dh_actionbar_background));
-		   getSupportActionBar().setBackgroundDrawable(myDrawable);
-		} catch (Exception ex) {
-		   Log.e(TAG, "Exception loading drawable"); 
-		}
 		
 	}
 	
@@ -105,6 +93,7 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener{
 		tv_forgot.setOnClickListener(this);
 		btn_login.setOnClickListener(this);
 		facebookLogin.setOnClickListener(this);
+		facebookLogin.setVisibility(View.GONE);
 		
 		et_pwd.setId(EditorInfo.IME_ACTION_DONE);
 		et_pwd.setOnEditorActionListener(new OnEditorActionListener() {

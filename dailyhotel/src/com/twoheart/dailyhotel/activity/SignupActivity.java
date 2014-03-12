@@ -42,9 +42,10 @@ import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.network.GeneralHttpTask;
 import com.twoheart.dailyhotel.util.network.OnCompleteListener;
 import com.twoheart.dailyhotel.util.network.Parameter;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
-public class SignupActivity extends ActionBarActivity implements OnClickListener{
+public class SignupActivity extends BaseActivity implements OnClickListener{
 	
 	private static final String TAG = "SignupActivity";
 	private final static int SETTING_FRAGMENT = 1;
@@ -75,25 +76,12 @@ public class SignupActivity extends ActionBarActivity implements OnClickListener
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+		setActionBar("회원가입");
 		setContentView(R.layout.activity_signup);
-		setTitle(Html.fromHtml("<font color='#050505'>회원가입</font>"));
 		
 		// Google analytics
 		mGaInstance = GoogleAnalytics.getInstance(this);
 		mGaTracker = mGaInstance.getTracker("UA-43721645-1");
-		
-		// back arrow
-		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-		getSupportActionBar().setIcon(R.drawable.dh_ic_menu_back);
-		Drawable myDrawable;
-		Resources res = getResources();
-		try {
-		   myDrawable = Drawable.createFromXml(res, res.getXml(R.drawable.dh_actionbar_background));
-		   getSupportActionBar().setBackgroundDrawable(myDrawable);
-		} catch (Exception ex) {
-		   Log.e(TAG, "Exception loading drawable"); 
-		}
 		
 		loadResource();
 		getPhoneNumber();

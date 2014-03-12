@@ -76,11 +76,7 @@ public class BookingListFragment extends Fragment implements OnItemClickListener
 		
 		// ActionBar Setting
 		MainActivity activity = (MainActivity)view.getContext();
-		try {
-			activity.changeTitle("예약확인");
-		} catch (NoActionBarException e) {
-			e.printStackTrace();
-		}
+		activity.setActionBar("예약확인");
 		activity.hideMenuItem();
 		activity.addMenuItem("dummy");
 		
@@ -141,7 +137,7 @@ public class BookingListFragment extends Fragment implements OnItemClickListener
 			listView = (ListView) view.findViewById(R.id.listview_booking);
 			listView.setVisibility(View.GONE);
 			
-			LinearLayout layout = (LinearLayout) view.findViewById(R.id.layout_booking_empty);
+			RelativeLayout layout = (RelativeLayout) view.findViewById(R.id.layout_booking_empty);
 			layout.setVisibility(View.VISIBLE);
 			
 			btn_signup = (Button) view.findViewById(R.id.btn_booking_empty_signup);
@@ -180,19 +176,19 @@ public class BookingListFragment extends Fragment implements OnItemClickListener
 		listView.setOnItemClickListener(this);
 		
 		// footer 추가
-		LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE );
-		View footer = inflater.inflate(R.layout.footer_booking_list, null, false);
-		listView.addFooterView(footer);
-		Button btn_review = (Button) view.findViewById(R.id.btn_footer_booking_review);
-		btn_review.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Intent marketLaunch = new Intent(Intent.ACTION_VIEW); 
-			    	marketLaunch.setData(Uri.parse("market://details?id=com.twoheart.dailyhotel")); 
-			    	startActivity(marketLaunch);
-			}
-		});
+//		LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE );
+//		View footer = inflater.inflate(R.layout.footer_booking_list, null, false);
+//		listView.addFooterView(footer);
+//		Button btn_review = (Button) view.findViewById(R.id.btn_footer_booking_review);
+//		btn_review.setOnClickListener(new OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				Intent marketLaunch = new Intent(Intent.ACTION_VIEW); 
+//			    	marketLaunch.setData(Uri.parse("market://details?id=com.twoheart.dailyhotel")); 
+//			    	startActivity(marketLaunch);
+//			}
+//		});
 		
 		listView.setAdapter(adapter);
 	}

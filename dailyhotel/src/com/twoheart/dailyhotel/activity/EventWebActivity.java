@@ -7,10 +7,11 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.view.Menu;
 import android.view.Window;
+import android.view.WindowManager;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -21,7 +22,7 @@ import com.google.analytics.tracking.android.Tracker;
 import com.twoheart.dailyhotel.R;
 
 
-public class EventWebActivity extends ActionBarActivity {
+public class EventWebActivity extends Activity {
 
 	private WebView webview;
 	
@@ -39,10 +40,15 @@ public class EventWebActivity extends ActionBarActivity {
 		mGaTracker.send(hitParameters);
 	}
 	
+	@JavascriptInterface
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD){
+	        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+	    }
+		
 		setContentView(R.layout.activity_event_web);
 		
 		// Google analytics
@@ -113,13 +119,6 @@ public class EventWebActivity extends ActionBarActivity {
 		    };
 		});
 
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.event_web, menu);
-		return true;
 	}
 
 	@Override

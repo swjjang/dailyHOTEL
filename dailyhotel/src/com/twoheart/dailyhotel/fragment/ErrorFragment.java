@@ -30,7 +30,7 @@ public class ErrorFragment extends Fragment implements OnClickListener{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		
-		((MainActivity) getActivity()).setActionBar(false);
+		((MainActivity) getActivity()).setActionBar("dailyHOTEL");
 		
 		view = inflater.inflate(R.layout.fragment_error, null);
 		btn_error = (Button) view.findViewById(R.id.btn_error);

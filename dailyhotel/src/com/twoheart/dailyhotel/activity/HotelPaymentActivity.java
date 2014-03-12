@@ -37,11 +37,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,10 +56,10 @@ import com.twoheart.dailyhotel.util.network.OnCompleteListener;
 import com.twoheart.dailyhotel.util.network.Parameter;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
-import com.twoheart.dailyhotel.view.Switch;
 
 public class HotelPaymentActivity extends BaseActivity implements
-		OnClickListener, OnCheckedChangeListener {
+		OnClickListener, OnCheckedChangeListener,
+		android.widget.CompoundButton.OnCheckedChangeListener {
 
 	private static final String TAG = "HotelPaymentActivity";
 
@@ -129,7 +131,7 @@ public class HotelPaymentActivity extends BaseActivity implements
 		day = prefs.getString(PREFERENCE_HOTEL_DAY, null);
 
 		setContentView(R.layout.activity_hotel_payment);
-		setActionBar(false);
+		setActionBar(hotel_name);
 		// setTitle(hotel_name);
 
 		loadResource();
@@ -171,7 +173,9 @@ public class HotelPaymentActivity extends BaseActivity implements
 
 		rgPaymentMethod.setOnCheckedChangeListener(this);
 		btn_payment.setOnClickListener(this);
-		btn_on_off.setOnClickListener(this);
+		btn_on_off.setOnCheckedChangeListener(this);
+
+		rbPaymentCard.setChecked(true);
 	}
 
 	public void dialog(String str) {
@@ -221,24 +225,25 @@ public class HotelPaymentActivity extends BaseActivity implements
 
 				// ArrayList<Parameter> paramList = new ArrayList<Parameter>();
 				//
-				
+
 				if (llReserverInfoEditable.getVisibility() == View.VISIBLE) {
 
 					email = etReserverEmail.getText().toString();
 					phone = etReserverNumber.getText().toString();
 					name = etReserverName.getText().toString();
-					
-					if (!isEmptyTextField(new String[] {email, phone, name})) {
-						Toast.makeText(getApplicationContext(), "예약자와 연락처, 이메일을 모두 입력해주십시요.",  Toast.LENGTH_LONG).show();
-						return ;
+
+					if (!isEmptyTextField(new String[] { email, phone, name })) {
+						Toast.makeText(getApplicationContext(),
+								"예약자와 연락처, 이메일을 모두 입력해주십시요.", Toast.LENGTH_LONG)
+								.show();
+						return;
 					}
-					
+
 				} else if (llReserverInfoLabel.getVisibility() == View.VISIBLE) {
-					
+
 					email = tvReserverEmail.getText().toString();
 					phone = tvReserverNumber.getText().toString();
 					name = tvReserverName.getText().toString();
-					
 
 				}
 
@@ -248,52 +253,18 @@ public class HotelPaymentActivity extends BaseActivity implements
 
 			Log.v("Pay", "click payment button");
 
-		} else if (v.getId() == btn_on_off.getId()) {
-			if (isBonus) { // 사용안함으로 변경
-
-				tv_credit.setText("￦0");
-				DecimalFormat comma = new DecimalFormat("###,##0");
-				String str = comma.format(Integer.parseInt(original_price));
-				tv_price.setText("￦" + str);
-				isBonus = false;
-				isFullBonus = false;
-
-			} else { // 사용함으로 변경
-				DecimalFormat comma = new DecimalFormat("###,##0");
-
-				String price;
-				String creditStr = comma.format(Integer.parseInt(credit));
-
-				if (Integer.parseInt(original_price) <= Integer
-						.parseInt(credit)) {
-					creditStr = original_price;
-					price = "0";
-					isFullBonus = true;
-				} else {
-					price = Integer
-							.toString((Integer.parseInt(original_price) - Integer
-									.parseInt(credit)));
-					isFullBonus = false;
-				}
-
-				tv_credit.setText("-￦" + creditStr);
-				price = comma.format(Integer.parseInt(price));
-				tv_price.setText("￦" + price);
-				isBonus = true;
-
-			}
 		}
 	}
-	
+
 	private boolean isEmptyTextField(String... value) {
-		
-		for (int i=0; i<value.length; i++) {
+
+		for (int i = 0; i < value.length; i++) {
 			if (value[i] == null || value[i].equals(""))
 				return false;
 		}
-		
+
 		return true;
-		
+
 	}
 
 	@Override
@@ -450,7 +421,7 @@ public class HotelPaymentActivity extends BaseActivity implements
 
 				isPayment = false;
 				LoadingDialog.hideLoading();
-				
+
 				finish();
 			}
 		} catch (Exception e) {
@@ -666,7 +637,7 @@ public class HotelPaymentActivity extends BaseActivity implements
 
 			} else if (result.equals("dead")) { // session dead
 				// 재로그인
-				
+
 				// parameter setting
 				ArrayList<Parameter> paramList = new ArrayList<Parameter>();
 				paramList.add(new Parameter("email", prefs.getString(
@@ -890,5 +861,53 @@ public class HotelPaymentActivity extends BaseActivity implements
 
 		}
 
+	}
+
+	@Override
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		if (buttonView.getId() == btn_on_off.getId()) {
+			Log.d("isChecked", Boolean.toString(isChecked));
+			isBonus = isChecked;
+			Log.d("isBonus", Boolean.toString(isBonus));
+			if (!isBonus) { // 사용안함으로 변경
+
+				tv_credit.setText("￦0");
+				DecimalFormat comma = new DecimalFormat("###,##0");
+				String str = comma.format(Integer.parseInt(original_price));
+				tv_price.setText("￦" + str);
+				isBonus = false;
+				isFullBonus = false;
+				
+				btn_on_off.setThumbResource(R.drawable.switch_thumb_holo_light);
+				btn_on_off.setTextColor(android.R.color.white);
+				
+			} else { // 사용함으로 변경
+				DecimalFormat comma = new DecimalFormat("###,##0");
+
+				String price;
+				String creditStr = comma.format(Integer.parseInt(credit));
+
+				if (Integer.parseInt(original_price) <= Integer
+						.parseInt(credit)) {
+					creditStr = original_price;
+					price = "0";
+					isFullBonus = true;
+				} else {
+					price = Integer
+							.toString((Integer.parseInt(original_price) - Integer
+									.parseInt(credit)));
+					isFullBonus = false;
+				}
+
+				tv_credit.setText("-￦" + creditStr);
+				price = comma.format(Integer.parseInt(price));
+				tv_price.setText("￦" + price);
+				isBonus = true;
+				
+				btn_on_off.setThumbResource(R.drawable.switch_thumb_activated_holo_light);
+				btn_on_off.setTextColor(android.R.color.white);
+				
+			}
+		}
 	}
 }

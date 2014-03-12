@@ -69,7 +69,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal" >
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp" >
 
                     <TextView
                         android:layout_width="0dp"
@@ -154,7 +155,6 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="0.7"
                                 android:gravity="right|center_vertical"
-                                android:text="값이 없습니다"
                                 android:textColor="@color/dh_dark_gray_blue"
                                 android:textSize="15dp" />
                         </LinearLayout>
@@ -162,7 +162,8 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal" >
+                            android:orientation="horizontal"
+                            android:layout_marginTop="10dp" >
 
                             <TextView
                                 android:layout_width="0dp"
@@ -179,7 +180,6 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="0.7"
                                 android:gravity="right|center_vertical"
-                                android:text="값이 없습니다"
                                 android:textColor="@color/dh_dark_gray_blue"
                                 android:textSize="15dp" />
                         </LinearLayout>
@@ -187,7 +187,8 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal" >
+                            android:orientation="horizontal"
+                            android:layout_marginTop="10dp" >
 
                             <TextView
                                 android:layout_width="0dp"
@@ -204,7 +205,6 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="0.7"
                                 android:gravity="right|center_vertical"
-                                android:text="값이 없습니다"
                                 android:textColor="@color/dh_dark_gray_blue"
                                 android:textSize="15dp" />
                         </LinearLayout>
@@ -336,35 +336,31 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="1" >
+                        android:orientation="horizontal" >
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentLeft="true"
-                            android:gravity="center_vertical"
+                            android:layout_centerVertical="true"
                             android:text="적립금 사용"
                             android:textColor="@color/dh_dark_gray_blue"
                             android:textSize="15dp" />
 
-                        <com.twoheart.dailyhotel.view.Switch
+                        <Switch
                             android:id="@+id/btn_on_off"
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
-                            android:gravity="center_vertical"
-                            android:textSize="15dp"
-                            app:isChecked="true"
-                            app:textLeft=""
-                            app:textRight="" >
-                        </com.twoheart.dailyhotel.view.Switch>
+                            android:textSize="15dp" >
+                        </Switch>
                     </RelativeLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal" >
+                        android:orientation="horizontal"
+                        android:paddingTop="10dp" >
 
                         <TextView
                             android:layout_width="0dp"
@@ -389,7 +385,8 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal" >
+                        android:orientation="horizontal"
+                        android:paddingTop="10dp" >
 
                         <TextView
                             android:layout_width="0dp"
@@ -419,9 +416,9 @@
                 android:layout_marginLeft="15dp"
                 android:background="@drawable/shape_section_payment_background"
                 android:orientation="horizontal"
-                android:paddingBottom="16dp"
+                android:paddingBottom="10dp"
                 android:paddingRight="15dp"
-                android:paddingTop="16dp" >
+                android:paddingTop="10dp" >
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -455,16 +452,19 @@
                 android:orientation="horizontal" >
 
                 <RadioButton
-                    android:id="@+id/rb_payment_account"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="무통장 입금" />
-
-                <RadioButton
                     android:id="@+id/rb_payment_card"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:button="@drawable/btn_radio_holo_light"
                     android:text="신용카드" />
+                
+                <RadioButton
+                    android:id="@+id/rb_payment_account"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@drawable/btn_radio_holo_light"
+                    android:text="무통장 입금" />
             </RadioGroup>
         </RelativeLayout>
 
@@ -472,6 +472,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:layout_marginTop="40dp"
             android:padding="12dp" >
 
             <TextView
@@ -479,6 +480,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
                 android:text="당일 예약 특성 상 취소 및 환불이 불가합니다." />
 
             <Button

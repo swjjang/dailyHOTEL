@@ -86,11 +86,7 @@ public class WaitTimerFragment extends Fragment implements OnClickListener{
 		
 		// ActionBar Setting
 		MainActivity activity = (MainActivity)view.getContext();
-		try {
-			activity.changeTitle(" ");
-		} catch (NoActionBarException e) {
-			e.printStackTrace();
-		}
+		activity.setActionBar("dailyHOTEL");
 		activity.hideMenuItem();
 		
 		// sliding setting

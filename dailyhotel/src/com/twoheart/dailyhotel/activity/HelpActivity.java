@@ -24,9 +24,10 @@ import com.twoheart.dailyhotel.adapter.BoardAdapter;
 import com.twoheart.dailyhotel.obj.Board;
 import com.twoheart.dailyhotel.util.network.GeneralHttpTask;
 import com.twoheart.dailyhotel.util.network.OnCompleteListener;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
-public class HelpActivity extends ActionBarActivity {
+public class HelpActivity extends BaseActivity {
 	
 	private static final String TAG = "HelpActivity";
 	
@@ -37,21 +38,8 @@ public class HelpActivity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setActionBar("자주 묻는 질문");
 		setContentView(R.layout.activity_board);
-		
-		// setTitle
-		setTitle(Html.fromHtml("<font color='#050505'>자주 묻는 질문</font>"));
-		// back arrow
-		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-		getSupportActionBar().setIcon(R.drawable.dh_ic_menu_back);
-		Drawable myDrawable;
-		Resources res = getResources();
-		try {
-		   myDrawable = Drawable.createFromXml(res, res.getXml(R.drawable.dh_actionbar_background));
-		   getSupportActionBar().setBackgroundDrawable(myDrawable);
-		} catch (Exception ex) {
-		   Log.e(TAG, "Exception loading drawable"); 
-		}
 		
 		LoadingDialog.showLoading(this);
 		new GeneralHttpTask(helpListener, getApplicationContext()).execute(REST_URL + HELP);

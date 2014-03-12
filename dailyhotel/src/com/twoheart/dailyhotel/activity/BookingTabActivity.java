@@ -11,10 +11,11 @@ import android.view.MenuItem;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.adapter.BookingAdapter;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.view.HotelViewPager;
 import com.viewpagerindicator.TabPageIndicator;
 
-public class BookingTabActivity extends ActionBarActivity {
+public class BookingTabActivity extends BaseActivity {
 
 	private final static String TAG ="BookingTabActivity";
 	
@@ -24,6 +25,7 @@ public class BookingTabActivity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setActionBar("예약확인");
 		setContentView(R.layout.activity_booking_tab);
 		loadResource();
 		
@@ -32,19 +34,6 @@ public class BookingTabActivity extends ActionBarActivity {
 		pager.setAdapter(adapter);
 		indicator.setViewPager(pager);
 		
-		// setTitle
-		setTitle(Html.fromHtml("<font color='#050505'>예약확인</font>"));
-		// back arrow
-		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-		getSupportActionBar().setIcon(R.drawable.dh_ic_menu_back);
-		Drawable myDrawable;
-		Resources res = getResources();
-		try {
-		   myDrawable = Drawable.createFromXml(res, res.getXml(R.drawable.dh_actionbar_background));
-		   getSupportActionBar().setBackgroundDrawable(myDrawable);
-		} catch (Exception ex) {
-		   Log.e(TAG, "Exception loading drawable"); 
-		}
 	}
 	
 	public void loadResource() {

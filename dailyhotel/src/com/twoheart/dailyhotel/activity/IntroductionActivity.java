@@ -9,29 +9,17 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
-public class IntroductionActivity extends ActionBarActivity {
+public class IntroductionActivity extends BaseActivity {
 	
 	private static final String TAG = "IntroductionActivity";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setActionBar("데일리호텔이란?");
 		setContentView(R.layout.activity_introduction);
-		
-		// setTitle
-		setTitle(Html.fromHtml("<font color='#050505'>데일리호텔이란?</font>"));
-		// back arrow
-		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-		getSupportActionBar().setIcon(R.drawable.dh_ic_menu_back);
-		Drawable myDrawable;
-		Resources res = getResources();
-		try {
-		   myDrawable = Drawable.createFromXml(res, res.getXml(R.drawable.dh_actionbar_background));
-		   getSupportActionBar().setBackgroundDrawable(myDrawable);
-		} catch (Exception ex) {
-		   Log.e(TAG, "Exception loading drawable"); 
-		}
 		
 	}
 	

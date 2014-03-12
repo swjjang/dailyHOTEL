@@ -54,6 +54,7 @@
         <activity
             android:name="com.twoheart.dailyhotel.activity.SplashActivity"
             android:label="@string/app_name"
+            android:theme="@android:style/Theme.NoTitleBar"
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -205,7 +206,8 @@
 
         <activity
             android:name="com.twoheart.dailyhotel.activity.EventWebActivity"
-            android:label="@string/title_activity_event_web" >
+            android:screenOrientation="portrait"
+            android:label="" >
             
         </activity>
         

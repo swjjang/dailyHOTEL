@@ -20,8 +20,9 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
-public class GMapActivity extends ActionBarActivity {
+public class GMapActivity extends BaseActivity {
 	
 	private static final String TAG = "GMapActivity";
 	
@@ -31,22 +32,8 @@ public class GMapActivity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+		setActionBar("");
 		setContentView(R.layout.activity_gmap);
-		
-		setTitle("");
-		
-		// back arrow
-		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-		getSupportActionBar().setIcon(R.drawable.dh_ic_menu_back);
-		Drawable myDrawable;
-		Resources res = getResources();
-		try {
-		   myDrawable = Drawable.createFromXml(res, res.getXml(R.drawable.dh_actionbar_background));
-		   getSupportActionBar().setBackgroundDrawable(myDrawable);
-		} catch (Exception ex) {
-		   Log.e(TAG, "Exception loading drawable"); 
-		}
 		
 		new Handler().postDelayed(new Runnable() {
 			

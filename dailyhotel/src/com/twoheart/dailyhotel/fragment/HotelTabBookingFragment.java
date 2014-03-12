@@ -43,6 +43,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.adapter.ImageViewAdapter;
 import com.twoheart.dailyhotel.util.network.GeneralHttpTask;
 import com.twoheart.dailyhotel.util.network.OnCompleteListener;
+import com.twoheart.dailyhotel.util.ui.NoActionBarException;
 import com.viewpagerindicator.CirclePageIndicator;
 import com.viewpagerindicator.PageIndicator;
 
@@ -126,7 +127,9 @@ public class HotelTabBookingFragment extends Fragment implements OnTouchListener
 			String strPrice = comma.format(Integer.parseInt(detailObj.getString("price")));
 			
 			tv_name.setText(detailObj.getString("hotel_name"));
+			tv_name.setSelected(true);
 			tv_address.setText(detailObj.getString("address"));
+			tv_address.setSelected(true);
 			tv_discount.setText(strDiscount + "¿ø");
 			tv_price.setText(strPrice + "¿ø");
 			tv_price.setPaintFlags(tv_price.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);

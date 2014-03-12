@@ -90,11 +90,7 @@ public class CreditFragment extends Fragment implements OnClickListener {
 
 		// ActionBar Setting
 		MainActivity activity = (MainActivity)view.getContext();
-		try {
-			activity.changeTitle("적립금");
-		} catch (NoActionBarException e) {
-			e.printStackTrace();
-		}
+		activity.setActionBar("적립금");
 //		activity.hideMenuItem();
 //		activity.addMenuItem("적립내역");
 		

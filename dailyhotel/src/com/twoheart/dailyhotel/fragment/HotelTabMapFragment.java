@@ -118,7 +118,9 @@ public class HotelTabMapFragment extends Fragment implements OnMapClickListener{
 			ed.commit();
 			
 			tv_name.setText(name);
+			tv_name.setSelected(true);
 			tv_address.setText(address);
+			tv_address.setSelected(true);
 			
 			FrameLayout gradeBackground = (FrameLayout) view.findViewById(R.id.fl_hotel_row_grade);
 			TextView gradeText = (TextView) view.findViewById(R.id.tv_hotel_row_grade);
