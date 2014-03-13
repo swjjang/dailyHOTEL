@@ -144,7 +144,7 @@ public class BookingListFragment extends Fragment implements OnItemClickListener
 			btn_signup.setVisibility(View.INVISIBLE);
 			
 		} else {		// 예약이 있는 경우
-			items = new ArrayList<Booking>();
+ 			items = new ArrayList<Booking>();
 			
 			try {
 				JSONObject obj = new JSONObject(str);
