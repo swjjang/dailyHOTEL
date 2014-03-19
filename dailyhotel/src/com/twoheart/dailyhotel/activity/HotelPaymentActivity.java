@@ -1,24 +1,5 @@
 package com.twoheart.dailyhotel.activity;
 
-import static com.twoheart.dailyhotel.util.AppConstants.CHECKIN;
-import static com.twoheart.dailyhotel.util.AppConstants.DETAIL;
-import static com.twoheart.dailyhotel.util.AppConstants.LOGIN;
-import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_AUTO_LOGIN;
-import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_HOTEL_DAY;
-import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_HOTEL_IDX;
-import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_HOTEL_MONTH;
-import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_HOTEL_NAME;
-import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_HOTEL_YEAR;
-import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_IS_LOGIN;
-import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_USER_ID;
-import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_USER_PWD;
-import static com.twoheart.dailyhotel.util.AppConstants.RESERVE;
-import static com.twoheart.dailyhotel.util.AppConstants.REST_URL;
-import static com.twoheart.dailyhotel.util.AppConstants.SAVED_MONEY;
-import static com.twoheart.dailyhotel.util.AppConstants.SHARED_PREFERENCES_NAME;
-import static com.twoheart.dailyhotel.util.AppConstants.USERINFO;
-import static com.twoheart.dailyhotel.util.AppConstants.USER_ALIVE;
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -122,27 +103,27 @@ public class HotelPaymentActivity extends BaseActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		prefs = getSharedPreferences(SHARED_PREFERENCES_NAME, 0);
-
-		hotel_idx = prefs.getString(PREFERENCE_HOTEL_IDX, null);
-		hotel_name = prefs.getString(PREFERENCE_HOTEL_NAME, null);
-		year = prefs.getString(PREFERENCE_HOTEL_YEAR, null);
-		month = prefs.getString(PREFERENCE_HOTEL_MONTH, null);
-		day = prefs.getString(PREFERENCE_HOTEL_DAY, null);
-
-		setContentView(R.layout.activity_hotel_payment);
-		setActionBar(hotel_name);
-		// setTitle(hotel_name);
-
-		loadResource();
-
-		// Google analytics
-		mGaInstance = GoogleAnalytics.getInstance(this);
-		mGaTracker = mGaInstance.getTracker("UA-43721645-1");
-
-		LoadingDialog.showLoading(this);
-		new GeneralHttpTask(sessionListener, getApplicationContext())
-				.execute(REST_URL + USER_ALIVE);
+//		prefs = getSharedPreferences(SHARED_PREFERENCES_NAME, 0);
+//
+//		hotel_idx = prefs.getString(PREFERENCE_HOTEL_IDX, null);
+//		hotel_name = prefs.getString(PREFERENCE_HOTEL_NAME, null);
+//		year = prefs.getString(PREFERENCE_HOTEL_YEAR, null);
+//		month = prefs.getString(PREFERENCE_HOTEL_MONTH, null);
+//		day = prefs.getString(PREFERENCE_HOTEL_DAY, null);
+//
+//		setContentView(R.layout.activity_hotel_payment);
+//		setActionBar(hotel_name);
+//		// setTitle(hotel_name);
+//
+//		loadResource();
+//
+//		// Google analytics
+//		mGaInstance = GoogleAnalytics.getInstance(this);
+//		mGaTracker = mGaInstance.getTracker("UA-43721645-1");
+//
+//		LoadingDialog.showLoading(this);
+//		new GeneralHttpTask(sessionListener, getApplicationContext())
+//				.execute(REST_URL + USER_ALIVE);
 	}
 
 	public void loadResource() {
@@ -247,8 +228,8 @@ public class HotelPaymentActivity extends BaseActivity implements
 
 				}
 
-				new GeneralHttpTask(sessionListener, getApplicationContext())
-						.execute(REST_URL + USER_ALIVE);
+//				new GeneralHttpTask(sessionListener, getApplicationContext())
+//						.execute(REST_URL + USER_ALIVE);
 			}
 
 			Log.v("Pay", "click payment button");
@@ -320,9 +301,9 @@ public class HotelPaymentActivity extends BaseActivity implements
 				} else if (result.equals("PAYMENT_COMPLETE")) {
 					// new ReLoginTask(getApplicationContext()).execute();
 					LoadingDialog.showLoading(this);
-					new GeneralHttpTask(postSessionListener,
-							getApplicationContext()).execute(REST_URL
-							+ USER_ALIVE);
+//					new GeneralHttpTask(postSessionListener,
+//							getApplicationContext()).execute(REST_URL
+//							+ USER_ALIVE);
 					Log.d(TAG, "PAYMENT_COMPLETE");
 				} else if (result.equals("NOT_AVAILABLE")) {
 					dialog("먼저 온 손님이 예약 중입니다.\n잠시 후 다시 시도해주세요.");
@@ -392,9 +373,9 @@ public class HotelPaymentActivity extends BaseActivity implements
 		credit = str.trim();
 
 		// checkin out data 받아옴
-		new GeneralHttpTask(detailListener, getApplicationContext())
-				.execute(REST_URL + DETAIL + hotel_idx + "/" + year + "/"
-						+ month + "/" + day);
+//		new GeneralHttpTask(detailListener, getApplicationContext())
+//				.execute(REST_URL + DETAIL + hotel_idx + "/" + year + "/"
+//						+ month + "/" + day);
 	}
 
 	public void parseLoginJson(String str) {
@@ -402,25 +383,25 @@ public class HotelPaymentActivity extends BaseActivity implements
 			JSONObject obj = new JSONObject(str);
 			if (obj.getString("login").equals("true")) {
 				// 로그인 성공
-				if (isPayment)
-					new GeneralHttpTask(preCntListener, getApplicationContext())
-							.execute(REST_URL + RESERVE);
-				else
+//				if (isPayment)
+//					new GeneralHttpTask(preCntListener, getApplicationContext())
+//							.execute(REST_URL + RESERVE);
+//				else
 					// credit 요청
-					new GeneralHttpTask(creditListener, getApplicationContext())
-							.execute(REST_URL + SAVED_MONEY);
+//					new GeneralHttpTask(creditListener, getApplicationContext())
+//							.execute(REST_URL + SAVED_MONEY);
 			} else {
 				// 로그인 실패
 				// 메세지 출력하고 activity 종료
-				Toast.makeText(getApplicationContext(), "로그인이 필요합니다",
-						Toast.LENGTH_SHORT).show();
-				SharedPreferences.Editor ed = prefs.edit();
-				ed.putBoolean(PREFERENCE_AUTO_LOGIN, false);
-				ed.putBoolean(PREFERENCE_IS_LOGIN, false);
-				ed.commit();
-
-				isPayment = false;
-				LoadingDialog.hideLoading();
+//				Toast.makeText(getApplicationContext(), "로그인이 필요합니다",
+//						Toast.LENGTH_SHORT).show();
+//				SharedPreferences.Editor ed = prefs.edit();
+//				ed.putBoolean(PREFERENCE_AUTO_LOGIN, false);
+//				ed.putBoolean(PREFERENCE_IS_LOGIN, false);
+//				ed.commit();
+//
+//				isPayment = false;
+//				LoadingDialog.hideLoading();
 
 				finish();
 			}
@@ -447,8 +428,8 @@ public class HotelPaymentActivity extends BaseActivity implements
 					+ " " + out[3] + "시");
 
 			// TODO: parseUserInfoJson(); userInfoListener
-			new GeneralHttpTask(userInfoListener, getApplicationContext())
-					.execute(REST_URL + USERINFO);
+//			new GeneralHttpTask(userInfoListener, getApplicationContext())
+//					.execute(REST_URL + USERINFO);
 
 		} catch (Exception e) {
 			Log.d("parseCheckinJson", "TagDataParser" + "->" + e.toString());
@@ -479,8 +460,8 @@ public class HotelPaymentActivity extends BaseActivity implements
 				btn_on_off.performClick();
 			}
 
-			new GeneralHttpTask(checkinListener, getApplicationContext())
-					.execute(REST_URL + CHECKIN + booking_idx);
+//			new GeneralHttpTask(checkinListener, getApplicationContext())
+//					.execute(REST_URL + CHECKIN + booking_idx);
 
 		} catch (Exception e) {
 			Log.d("parseDetailJson", "TagDataParser" + "->" + e.toString());
@@ -540,8 +521,8 @@ public class HotelPaymentActivity extends BaseActivity implements
 			JSONObject obj = new JSONObject(str);
 			if (obj.getString("login").equals("true")) {
 				// 로그인 성공
-				new GeneralHttpTask(postCntListener, getApplicationContext())
-						.execute(REST_URL + RESERVE);
+//				new GeneralHttpTask(postCntListener, getApplicationContext())
+//						.execute(REST_URL + RESERVE);
 			} else {
 				// 로그인 실패
 				// 메세지 출력하고 activity 종료
@@ -549,8 +530,8 @@ public class HotelPaymentActivity extends BaseActivity implements
 				Toast.makeText(getApplicationContext(), "로그인이 필요합니다",
 						Toast.LENGTH_SHORT).show();
 				SharedPreferences.Editor ed = prefs.edit();
-				ed.putBoolean(PREFERENCE_AUTO_LOGIN, false);
-				ed.putBoolean(PREFERENCE_IS_LOGIN, false);
+//				ed.putBoolean(PREFERENCE_AUTO_LOGIN, false);
+//				ed.putBoolean(PREFERENCE_IS_LOGIN, false);
 				ed.commit();
 			}
 		} catch (Exception e) {
@@ -627,27 +608,27 @@ public class HotelPaymentActivity extends BaseActivity implements
 			result = result.trim();
 			if (result.equals("alive")) { // session alive
 
-				if (isPayment)
-					new GeneralHttpTask(preCntListener, getApplicationContext())
-							.execute(REST_URL + RESERVE);
-				else
+//				if (isPayment)
+//					new GeneralHttpTask(preCntListener, getApplicationContext())
+//							.execute(REST_URL + RESERVE);
+//				else
 					// credit 요청
-					new GeneralHttpTask(creditListener, getApplicationContext())
-							.execute(REST_URL + SAVED_MONEY);
+//					new GeneralHttpTask(creditListener, getApplicationContext())
+//							.execute(REST_URL + SAVED_MONEY);
 
 			} else if (result.equals("dead")) { // session dead
 				// 재로그인
 
 				// parameter setting
-				ArrayList<Parameter> paramList = new ArrayList<Parameter>();
-				paramList.add(new Parameter("email", prefs.getString(
-						PREFERENCE_USER_ID, "")));
-				paramList.add(new Parameter("pw", prefs.getString(
-						PREFERENCE_USER_PWD, "")));
+//				ArrayList<Parameter> paramList = new ArrayList<Parameter>();
+//				paramList.add(new Parameter("email", prefs.getString(
+//						PREFERENCE_USER_ID, "")));
+//				paramList.add(new Parameter("pw", prefs.getString(
+//						PREFERENCE_USER_PWD, "")));
 
 				// 로그인 요청
-				new GeneralHttpTask(loginListener, paramList,
-						getApplicationContext()).execute(REST_URL + LOGIN);
+//				new GeneralHttpTask(loginListener, paramList,
+//						getApplicationContext()).execute(REST_URL + LOGIN);
 
 			} else {
 				LoadingDialog.hideLoading();
@@ -802,22 +783,22 @@ public class HotelPaymentActivity extends BaseActivity implements
 		public void onTaskComplete(String result) {
 			result = result.trim();
 			if (result.equals("alive")) { // session alive
-				new GeneralHttpTask(postCntListener, getApplicationContext())
-						.execute(REST_URL + RESERVE);
+//				new GeneralHttpTask(postCntListener, getApplicationContext())
+//						.execute(REST_URL + RESERVE);
 
 			} else if (result.equals("dead")) { // session dead
 				// 재로그인
 
-				// parameter setting
-				ArrayList<Parameter> paramList = new ArrayList<Parameter>();
-				paramList.add(new Parameter("email", prefs.getString(
-						PREFERENCE_USER_ID, "")));
-				paramList.add(new Parameter("pw", prefs.getString(
-						PREFERENCE_USER_PWD, "")));
-
-				// 로그인 요청
-				new GeneralHttpTask(postLoginListener, paramList,
-						getApplicationContext()).execute(REST_URL + LOGIN);
+//				// parameter setting
+//				ArrayList<Parameter> paramList = new ArrayList<Parameter>();
+//				paramList.add(new Parameter("email", prefs.getString(
+//						PREFERENCE_USER_ID, "")));
+//				paramList.add(new Parameter("pw", prefs.getString(
+//						PREFERENCE_USER_PWD, "")));
+//
+//				// 로그인 요청
+//				new GeneralHttpTask(postLoginListener, paramList,
+//						getApplicationContext()).execute(REST_URL + LOGIN);
 
 			} else {
 				LoadingDialog.hideLoading();

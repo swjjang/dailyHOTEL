@@ -1,8 +1,6 @@
 package com.twoheart.dailyhotel.util.network;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import static com.twoheart.dailyhotel.util.AppConstants.REST_URL;
 
 import org.apache.http.cookie.Cookie;
 
@@ -73,7 +71,7 @@ public class GeneralHttpTask extends AsyncTask<String, Void, String>{
 			if(cookie != null) {
 				String cookieString = cookie.getName() + "=" + cookie.getValue();
 		        Log.e("cookieString", cookieString);
-		        cookieManager.setCookie(REST_URL, cookieString);
+//		        cookieManager.setCookie(REST_URL, cookieString);
 		        CookieSyncManager.getInstance().sync();
 			}
 			listener.onTaskComplete(result);

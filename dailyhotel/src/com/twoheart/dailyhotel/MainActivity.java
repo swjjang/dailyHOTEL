@@ -1,22 +1,22 @@
 package com.twoheart.dailyhotel;
 
-import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_IS_LOGIN;
-import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_SELECTED_MENU;
-import static com.twoheart.dailyhotel.util.AppConstants.SHARED_PREFERENCES_NAME;
-
 import java.security.MessageDigest;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
-import android.annotation.TargetApi;
+import org.json.JSONObject;
+
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
@@ -24,61 +24,112 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.TextView;
+import android.widget.ListView;
 
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.VolleyError;
+import com.twoheart.dailyhotel.adapter.DrawerMenuListAdapter;
 import com.twoheart.dailyhotel.fragment.BookingListFragment;
 import com.twoheart.dailyhotel.fragment.CreditFragment;
 import com.twoheart.dailyhotel.fragment.HotelListFragment;
-import com.twoheart.dailyhotel.fragment.NoLoginFragment;
 import com.twoheart.dailyhotel.fragment.SettingFragment;
 import com.twoheart.dailyhotel.obj.DrawerMenu;
-import com.twoheart.dailyhotel.util.AppConstants;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.network.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.util.network.DailyHotelResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
-import com.twoheart.dailyhotel.util.ui.CloseOnBackPressed;
 
-public class MainActivity extends BaseActivity implements OnItemClickListener {
+public class MainActivity extends BaseActivity implements OnItemClickListener,
+		Constants {
 
 	private static final String TAG = "MainActivity";
 
-	private Fragment content;
-	private TextView title;
+	private static final String DRAWER_MENU_SECTION_RESERVATION = "예약";
+	private static final String DRAWER_MENU_ENTRY_HOTEL = "오늘의 호텔";
+	private static final String DRAWER_MENU_ENTRY_BOOKING = "예약확인";
+	private static final String DRAWER_MENU_SECTION_ACCOUNT = "계정";
+	private static final String DRAWER_MENU_ENTRY_CREDIT = "적립금";
+	private static final String DRAWER_MENU_ENTRY_SETTING = "설정";
 
-	private SharedPreferences prefs;
-	private CloseOnBackPressed backButtonHandler;
+	public static final int INDEX_HOTEL_LIST_FRAGMENT = 0;
+	public static final int INDEX_BOOKING_LIST_FRAGMENT = 1;
+	public static final int INDEX_CREDIT_FRAGMENT = 2;
+	public static final int INDEX_SETTING_FRAGMENT = 3;
+
+	private DrawerMenuListAdapter mDrawerMenuListAdapter;
+	protected List<DrawerMenu> mMenuImages;
+	protected List<Fragment> mFragments = new LinkedList<Fragment>();
+
+	public DrawerLayout drawerLayout;
+	public ListView drawerList;
+	public ActionBarDrawerToggle drawerToggle;
+	private FragmentManager mFragmentManager;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		setContentView(R.layout.activity_main);
 		setNavigationDrawer(this);
-		
-		title = (TextView) findViewById(R.id.tv_actionbar_title);
-		backButtonHandler = new CloseOnBackPressed(this);
+
+		mFragmentManager = getSupportFragmentManager();
 
 		// 맨 처음은 호텔리스트
-		showHomeFragment();
+		drawerList.setItemChecked(mMenuImages.indexOf(mMenuHotelListFragment),
+				true);
+		replaceFragment(getFragment(INDEX_HOTEL_LIST_FRAGMENT));
 
-		if (AppConstants.DEBUG) {
-			printPackageKeyHash();
+		if (DEBUG) {
+			printPackageHashKey();
 		}
 
 	}
-	
-	public void showHomeFragment() {
-		mDrawerList.setItemChecked(mMenuImages.indexOf(menuHotel), true);
 
-		prefs = getSharedPreferences(SHARED_PREFERENCES_NAME, 0);
-		SharedPreferences.Editor ed = prefs.edit();
-		ed.putString(PREFERENCE_SELECTED_MENU, "hotel");
-		ed.commit();
+	public Fragment getFragment(int index) {
 
-		HotelListFragment hotelListFrag = new HotelListFragment();
-		getSupportFragmentManager().beginTransaction()
-				.replace(R.id.content_frame, hotelListFrag).commit();
-		
+		Fragment newFragment = null;
+
+		try {
+			newFragment = mFragments.get(index);
+		} catch (IndexOutOfBoundsException e) {
+
+			switch (index) {
+			case INDEX_HOTEL_LIST_FRAGMENT:
+				newFragment = new HotelListFragment();
+				break;
+			case INDEX_BOOKING_LIST_FRAGMENT:
+				newFragment = new BookingListFragment();
+				break;
+			case INDEX_CREDIT_FRAGMENT:
+				newFragment = new CreditFragment();
+				break;
+			case INDEX_SETTING_FRAGMENT:
+				newFragment = new SettingFragment();
+				break;
+			}
+		}
+
+		return newFragment;
+
+	}
+
+	public void replaceFragment(Fragment fragment) {
+		mFragmentManager.beginTransaction()
+				.replace(R.id.content_frame, fragment).commitAllowingStateLoss();
+
+	}
+
+	public void addFragment(Fragment fragment) {
+		mFragmentManager.beginTransaction().add(R.id.content_frame, fragment)
+				.addToBackStack(null).commitAllowingStateLoss();
 	}
 	
-	public void printPackageKeyHash() {
+	public void removeFragment(Fragment fragment) {
+		mFragmentManager.beginTransaction()
+				.remove(fragment).commitAllowingStateLoss();
+	}
+
+	public void printPackageHashKey() {
 		try {
 			PackageInfo info = getPackageManager().getPackageInfo(
 					getPackageName(), PackageManager.GET_SIGNATURES);
@@ -97,62 +148,132 @@ public class MainActivity extends BaseActivity implements OnItemClickListener {
 	public void onItemClick(AdapterView<?> adapterView, View view,
 			int position, long id) {
 
-		Fragment newContent = null;
+		int selectedMenuIconId = ((DrawerMenu) (adapterView.getAdapter()
+				.getItem(position))).getIcon();
+		drawerList.setSelection(position);
 
-		switch (((DrawerMenu) (adapterView.getAdapter().getItem(position)))
-				.getIcon()) {
+		switch (selectedMenuIconId) {
 		case R.drawable.selector_drawermenu_todayshotel:
-			newContent = new HotelListFragment();
+			replaceFragment(getFragment(INDEX_HOTEL_LIST_FRAGMENT));
 			break;
 
 		case R.drawable.selector_drawermenu_reservation:
-			newContent = new BookingListFragment();
+			replaceFragment(getFragment(INDEX_BOOKING_LIST_FRAGMENT));
 			break;
 
 		case R.drawable.selector_drawermenu_saving:
-			if (checkLogin()) // 로그인상태
-				newContent = new CreditFragment();
-			else
-				// 로그아웃 상태
-				newContent = new NoLoginFragment();
+			// if (isAliveUser()) // 로그인상태
+			// replaceFragment(getFragment(INDEX_CREDIT_FRAGMENT));
+			// else
+			// // 로그아웃 상태
+			// replaceFragment(new NoLoginFragment());
+			replaceFragment(getFragment(INDEX_CREDIT_FRAGMENT));
 			break;
 
 		case R.drawable.selector_drawermenu_setting:
-			newContent = new SettingFragment();
+			replaceFragment(getFragment(INDEX_SETTING_FRAGMENT));
 			break;
 		}
 
-		if (newContent != null) {
-			mDrawerList.setSelection(position);
-			switchFragment(newContent);
-			mDrawerLayout.closeDrawer(mDrawerList);
-		}
+		drawerLayout.closeDrawer(drawerList);
 
 	}
 
-	private boolean checkLogin() {
-		return prefs.getBoolean(PREFERENCE_IS_LOGIN, false);
-	}
+	// public boolean isAliveUser() {
+	// RequestQueue queue = VolleyHttpClient.getRequestQueue();
+	//
+	// queue.add(new DailyHotelRequest(Method.GET, new
+	// StringBuilder(URL_DAILYHOTEL_SERVER).
+	// append(URL_WEBAPI_USER_ALIVE).toString(), null, this, this));
+	//
+	// return false;
+	// }
 
-	private void switchFragment(Fragment fragment) {
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-		switchContent(fragment);
-	}
+	public void setNavigationDrawer(OnItemClickListener listener) {
+		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
+				R.drawable.ic_drawer, 0, 0) {
 
-	// 선택된 menu에 맞게 Fragment 변경
-	// MenuFragment에서 호출됨
-	public void switchContent(Fragment fragment) {
-		content = fragment;
-		getSupportFragmentManager().beginTransaction()
-				.replace(R.id.content_frame, fragment)
-				.commitAllowingStateLoss();
+			public void onDrawerClosed(View view) {
+				super.onDrawerClosed(view);
+				supportInvalidateOptionsMenu();
+			}
+
+			public void onDrawerOpened(View drawerView) {
+				super.onDrawerOpened(drawerView);
+				supportInvalidateOptionsMenu();
+			}
+		};
+
+		drawerLayout.setDrawerListener(drawerToggle);
+		drawerList = (ListView) findViewById(R.id.left_drawer);
+
+		mMenuHotelListFragment = new DrawerMenu(DRAWER_MENU_ENTRY_HOTEL,
+				R.drawable.selector_drawermenu_todayshotel,
+				DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
+		mMenuBookingListFragment = new DrawerMenu(DRAWER_MENU_ENTRY_BOOKING,
+				R.drawable.selector_drawermenu_reservation,
+				DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
+		mMenuCreditFragment = new DrawerMenu(DRAWER_MENU_ENTRY_CREDIT,
+				R.drawable.selector_drawermenu_saving,
+				DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
+		mMenuSettingFragment = new DrawerMenu(DRAWER_MENU_ENTRY_SETTING,
+				R.drawable.selector_drawermenu_setting,
+				DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
+
+		mMenuImages = new ArrayList<DrawerMenu>();
+		mMenuImages.add(new DrawerMenu(DrawerMenu.DRAWER_MENU_LIST_TYPE_LOGO));
+		mMenuImages.add(new DrawerMenu(DRAWER_MENU_SECTION_RESERVATION,
+				DrawerMenu.DRAWER_MENU_LIST_TYPE_SECTION));
+		mMenuImages.add(mMenuHotelListFragment);
+		mMenuImages.add(mMenuBookingListFragment);
+		mMenuImages.add(new DrawerMenu(DRAWER_MENU_SECTION_ACCOUNT,
+				DrawerMenu.DRAWER_MENU_LIST_TYPE_SECTION));
+		mMenuImages.add(mMenuCreditFragment);
+		mMenuImages.add(mMenuSettingFragment);
+
+		mDrawerMenuListAdapter = new DrawerMenuListAdapter(this,
+				R.layout.drawer_list_item_entry, mMenuImages);
+
+		drawerList.setAdapter(mDrawerMenuListAdapter);
+		drawerList.setOnItemClickListener(listener);
+
 	}
 
 	@Override
-	public void finish() {
-		if (backButtonHandler.onBackPressed())
-			super.finish();
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
 
+		if (drawerToggle != null)
+			drawerToggle.syncState();
 	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+
+		if (drawerToggle != null)
+			drawerToggle.onConfigurationChanged(newConfig);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (drawerToggle.onOptionsItemSelected(item)) {
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		return super.onPrepareOptionsMenu(menu);
+	}
+
+	// @Override
+	// public void finish() {
+	// if (backButtonHandler.onBackPressed())
+	// super.finish();
+	//
+	// }
 
 }

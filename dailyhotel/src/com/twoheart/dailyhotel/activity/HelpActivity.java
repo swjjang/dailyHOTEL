@@ -1,18 +1,11 @@
 package com.twoheart.dailyhotel.activity;
 
-import static com.twoheart.dailyhotel.util.AppConstants.HELP;
-import static com.twoheart.dailyhotel.util.AppConstants.REST_URL;
-
 import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ExpandableListView;
@@ -22,7 +15,6 @@ import android.widget.Toast;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.adapter.BoardAdapter;
 import com.twoheart.dailyhotel.obj.Board;
-import com.twoheart.dailyhotel.util.network.GeneralHttpTask;
 import com.twoheart.dailyhotel.util.network.OnCompleteListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
@@ -42,7 +34,7 @@ public class HelpActivity extends BaseActivity {
 		setContentView(R.layout.activity_board);
 		
 		LoadingDialog.showLoading(this);
-		new GeneralHttpTask(helpListener, getApplicationContext()).execute(REST_URL + HELP);
+//		new GeneralHttpTask(helpListener, getApplicationContext()).execute(REST_URL + HELP);
 		
 	}
 	

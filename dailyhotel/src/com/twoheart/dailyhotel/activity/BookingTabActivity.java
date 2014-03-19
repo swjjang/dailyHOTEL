@@ -12,7 +12,7 @@ import android.view.MenuItem;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.adapter.BookingAdapter;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
-import com.twoheart.dailyhotel.view.HotelViewPager;
+import com.twoheart.dailyhotel.widget.HotelViewPager;
 import com.viewpagerindicator.TabPageIndicator;
 
 public class BookingTabActivity extends BaseActivity {

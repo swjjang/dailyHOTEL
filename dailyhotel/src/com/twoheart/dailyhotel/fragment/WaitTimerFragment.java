@@ -1,13 +1,8 @@
 package com.twoheart.dailyhotel.fragment;
 
-import static com.twoheart.dailyhotel.util.AppConstants.REST_URL;
-import static com.twoheart.dailyhotel.util.AppConstants.SALE_TIME;
-import static com.twoheart.dailyhotel.util.AppConstants.TIME;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 
 import org.json.JSONObject;
 
@@ -27,281 +22,128 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.analytics.tracking.android.Fields;
-import com.google.analytics.tracking.android.GoogleAnalytics;
-import com.google.analytics.tracking.android.Tracker;
+import com.android.volley.RequestQueue;
 import com.twoheart.dailyhotel.AlarmBroadcastReceiver;
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.activity.EventWebActivity;
-import com.twoheart.dailyhotel.util.network.GeneralHttpTask;
+import com.twoheart.dailyhotel.obj.SaleTime;
 import com.twoheart.dailyhotel.util.network.OnCompleteListener;
+import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
-import com.twoheart.dailyhotel.util.ui.NoActionBarException;
 
-public class WaitTimerFragment extends Fragment implements OnClickListener{
-	
+public class WaitTimerFragment extends Fragment implements OnClickListener {
+
 	private final static String TAG = "WaitTimerFragment";
-	
-	private View view;
-	
-	private Handler handler;
-	private TextView timer, main, sub;
-	private ImageView hotel;
-	private Button btn_alram;
-	
-	private long waitTime;
-	private long curTime;
-	private long openTime;
-	private long closeTime;
-	
-	private boolean isAlarm;
-	
-	private Tracker mGaTracker;
-	private GoogleAnalytics mGaInstance;
-	
-	// Jason | Google analytics
-	@Override
-	public void onStart() {
-		super.onStart();
-		HashMap<String, String> hitParameters = new HashMap<String, String>();
-		hitParameters.put(Fields.HIT_TYPE, "appview");
-		hitParameters.put(Fields.SCREEN_NAME, "Hotel View");
-		
-		mGaTracker.send(hitParameters);
+
+	private MainActivity mHostActivity;
+
+	private Handler mHandler;
+	private TextView tvTimer;
+	private Button btnNotify;
+
+	private SaleTime mSaleTime;
+	private boolean isEnableNotify;
+
+	public WaitTimerFragment() {
+		super();
 	}
-	
+
+	public WaitTimerFragment(SaleTime saleTime) {
+		super();
+		mSaleTime = saleTime;
+
+	}
+
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+
+		View view = inflater.inflate(R.layout.fragment_wait_timer, null);
+		mHostActivity = (MainActivity) getActivity();
 		
-		view = inflater.inflate(R.layout.fragment_wait_timer, null);
+		tvTimer = (TextView) view.findViewById(R.id.tv_timer);
+		btnNotify = (Button) view.findViewById(R.id.btn_wait_timer_alram);
+		btnNotify.setOnClickListener(this);
 		
-		// Google analytics
-		mGaInstance = GoogleAnalytics.getInstance(view.getContext());
-		mGaTracker = mGaInstance.getTracker("UA-43721645-1");
-		
-		// ActionBar Setting
-		MainActivity activity = (MainActivity)view.getContext();
-		activity.setActionBar("dailyHOTEL");
-		activity.hideMenuItem();
-		
-		// sliding setting
-//		activity.getSlidingMenu().setMode(SlidingMenu.LEFT);
-		
-		loadResource();
-		
-		LoadingDialog.showLoading(view.getContext());
-//		new GeneralHttpTask(timeListener, view.getContext()).execute(REST_URL + TIME);
-		new GeneralHttpTask(saleTimeListener, view.getContext()).execute(REST_URL + SALE_TIME);
-		
-//		btn_applyEvent.setOnClickListener(new OnClickListener() {
-//			
-//			@Override
-//			public void onClick(View v) {
-//				Intent i = new Intent(view.getContext(), EventWebActivity.class);
-//				MainActivity activity = (MainActivity) view.getContext();
-//				activity.startActivity(i);
-//				activity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
-//			}
-//		});
-		
+		mHostActivity.setActionBar("dailyHOTEL");
+		setTimer();
+
 		return view;
 	}
-	
-	public void loadResource() {
-		timer = (TextView) view.findViewById(R.id.tv_timer);
-		main = (TextView) view.findViewById(R.id.tv_wait_timer_main);
-		sub = (TextView) view.findViewById(R.id.tv_wait_timer_sub);
-		hotel = (ImageView) view.findViewById(R.id.iv_wait_timer_hotel);
-		btn_alram = (Button) view.findViewById(R.id.btn_wait_timer_alram);
-//		btn_applyEvent = (Button) view.findViewById(R.id.btn_apply_event);
-		btn_alram.setOnClickListener(this);
-//		btn_applyEvent.setOnClickListener(this);
-	}
-	
+
 	@Override
 	public void onClick(View v) {
-		if(isAlarm) {	 // 알람해제
-			
-			Log.d(TAG, "Cancle Alram");
-			isAlarm = false;
-			
-			btn_alram.setText("알람 등록");
-			
-			AlarmManager alarmManager = (AlarmManager)view.getContext().getSystemService(Context.ALARM_SERVICE);
-			Intent intent = new Intent(view.getContext(), AlarmBroadcastReceiver.class);
-			PendingIntent pender =PendingIntent.getBroadcast(view.getContext(), 0, intent, 0);
+		if (v.getId() == btnNotify.getId()) {
+			isEnableNotify = !isEnableNotify;
+			setNotify(isEnableNotify);
+		}
+	}
+
+	private void setNotify(boolean enable) {
+		if (enable) {
+			btnNotify.setText("알람 끄기");
+
+			AlarmManager alarmManager = (AlarmManager) mHostActivity
+					.getSystemService(Context.ALARM_SERVICE);
+			Intent intent = new Intent(mHostActivity,
+					AlarmBroadcastReceiver.class);
+			PendingIntent pender = PendingIntent.getBroadcast(mHostActivity, 0,
+					intent, 0);
+			alarmManager.set(AlarmManager.RTC_WAKEUP,
+					mSaleTime.getOpenTime(), pender);
+
+			Toast.makeText(mHostActivity, "알람이 등록 되었습니다", Toast.LENGTH_SHORT).show();
+
+		} else {
+			btnNotify.setText("알람 켜기");
+
+			AlarmManager alarmManager = (AlarmManager) mHostActivity
+					.getSystemService(Context.ALARM_SERVICE);
+			Intent intent = new Intent(mHostActivity,
+					AlarmBroadcastReceiver.class);
+			PendingIntent pender = PendingIntent.getBroadcast(mHostActivity, 0,
+					intent, 0);
 			alarmManager.cancel(pender);
 			
-			AlertDialog.Builder alert = new AlertDialog.Builder(view.getContext());
-			alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-			    @Override
-			    public void onClick(DialogInterface dialog, int which) {
-			    	dialog.dismiss();     //닫기
-			    }
-			});
-			alert.setMessage("알람이 취소 되었습니다");
-			alert.show();
-			
-			
-		} else {		// 알람등록
-			Log.d(TAG, "Set Alram");
-			isAlarm = true;
-			
-			btn_alram.setText("알람 끄기");
-			
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTimeInMillis(System.currentTimeMillis());
-			calendar.add(Calendar.SECOND, (int) waitTime);
-			
-			AlarmManager alarmManager = (AlarmManager)view.getContext().getSystemService(Context.ALARM_SERVICE);
-			Intent intent = new Intent(view.getContext(), AlarmBroadcastReceiver.class);
-			PendingIntent pender =PendingIntent.getBroadcast(view.getContext(), 0, intent, 0);
-			alarmManager.set(AlarmManager.RTC_WAKEUP , calendar.getTimeInMillis(), pender);
-			
-			AlertDialog.Builder alert = new AlertDialog.Builder(view.getContext());
-			alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-			    @Override
-			    public void onClick(DialogInterface dialog, int which) {
-			    	dialog.dismiss();     //닫기
-			    }
-			});
-			alert.setMessage("알람이 등록 되었습니다");
-			alert.show();
+			Toast.makeText(mHostActivity, "알람이 취소 되었습니다", Toast.LENGTH_SHORT).show();
+
 		}
-			
+
 	}
-	
-	public boolean checkTimer(String str) {
-		boolean result = false;
-		
-		Date now = new Date(Long.parseLong(str.trim()));
-		SimpleDateFormat format = new SimpleDateFormat("HHmmss");
-		String time = format.format(now);
-		long hour = Integer.parseInt(time.substring(0, 2));
-		long min = Integer.parseInt(time.substring(2,4));
-		long sec = Integer.parseInt(time.substring(4,6));
-		
-		long curTime = (hour * 60 * 60 ) + (min * 60) + sec;
-		
-		// true 면 호텔판매시간 아님
-		if( (openTime < curTime) && (curTime < closeTime))
-			result = false;
-		else if( (curTime < closeTime)  && (closeTime < openTime))
-			result = false;
-		else {
-			waitTime = openTime - curTime;
-			result = true;
-		}
-		
-		return result;
-		// Open anytime...
-//		return false;
-	}
-	
-	public void setTimer() {
-		handler = new Handler() {
+
+	private void setTimer() {
+		mHandler = new Handler() {
 			public void handleMessage(Message msg) {
-				waitTime--;
-				
-				if(waitTime < 0) {
-					handler.removeMessages(0);
-					MainActivity activity = (MainActivity) view.getContext();
-					activity.switchContent(new HotelListFragment());
+				long currentTime = mSaleTime.getCurrentTime();
+				mSaleTime.setCurrentTime(Long.toString(++currentTime));
+
+				if (mSaleTime.getCurrentTime() == mSaleTime.getOpenTime()) {
+					mHandler.removeMessages(0);
+					mHostActivity.replaceFragment(mHostActivity.getFragment(mHostActivity.INDEX_HOTEL_LIST_FRAGMENT));
 				} else {
 					
-					String waitHour = Long.toString(waitTime / (60 * 60));
-					String waitMin = Long.toString((waitTime % (60 * 60)) / 60);
-					String waitSecond = Long.toString((waitTime % (60 * 60)) % 60);
+					long remainingTime = mSaleTime.getOpenTime() - currentTime;
 					
-					if(Integer.parseInt(waitHour) < 10 )
-						waitHour = "0" + waitHour;
-					if(Integer.parseInt(waitMin) < 10 )
-						waitMin = "0" + waitMin;
-					if(Integer.parseInt(waitSecond) < 10 )
-						waitSecond = "0" + waitSecond;
+					tvTimer.setText(new SimpleDateFormat("HH:mm:ss", SaleTime.locale).format(remainingTime));
+					tvTimer.invalidate();
 					
-					this.sendEmptyMessageDelayed(0, 1000);
-					timer.setText(waitHour + " : " +waitMin + " : " + waitSecond);
-					timer.invalidate();
+					this.sendEmptyMessageDelayed(0, 1);
 				}
 			}
 		};
-		
-		handler.sendEmptyMessage(1);
-		
+
+		mHandler.sendEmptyMessageDelayed(0, 1);
+
 	}
-	
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		if(handler != null)
-			handler.removeMessages(0);
+		if (mHandler != null)
+			mHandler.removeMessages(0);
 	}
-	
-//	@Override
-//	public void onStop() {
-//		super.onStop();
-//		if(handler!= null)
-//			handler.removeMessages(0);
-//	}
-	
-	protected OnCompleteListener saleTimeListener = new OnCompleteListener() {
-		
-		@Override
-		public void onTaskFailed() {
-			Log.d(TAG, "saleTimeListener onTaskFailed");
-			LoadingDialog.hideLoading();
-			Toast.makeText(view.getContext(), "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.", Toast.LENGTH_SHORT).show();
-			MainActivity activity = (MainActivity) view.getContext();
-			activity.switchContent(new ErrorFragment());
-		}
-		
-		@Override
-		public void onTaskComplete(String result) {
-			try {
-				JSONObject obj = new JSONObject(result);
-				String open = obj.getString("open");
-				String close = obj.getString("close");
-				
-				openTime = (Long.parseLong(open.substring(0, 2)) * 60 * 60) + (Long.parseLong(open.substring(3, 5)) * 60);
-				closeTime = (Long.parseLong(close.substring(0, 2)) * 60 * 60) + (Long.parseLong(close.substring(3, 5)) * 60);
-				
-				new GeneralHttpTask(timeListener, view.getContext()).execute(REST_URL + TIME);
-			} catch (Exception e) {
-				e.printStackTrace();
-				LoadingDialog.hideLoading();
-				Toast.makeText(view.getContext(), "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.", Toast.LENGTH_SHORT).show();
-			}
-		}
-	};
-	
-	
-	
-	protected OnCompleteListener timeListener = new OnCompleteListener() {
-		
-		@Override
-		public void onTaskFailed() {
-			Log.d(TAG, "onTaskFailed");
-			LoadingDialog.hideLoading();
-			Toast.makeText(view.getContext(), "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.", Toast.LENGTH_SHORT).show();
-		}
-		
-		@Override
-		public void onTaskComplete(String result) {
-			LoadingDialog.hideLoading();
-			
-			if(checkTimer(result)) {
-				setTimer();
-			} else {
-				MainActivity activity = (MainActivity) view.getContext();
-				Fragment fragment = new HotelListFragment();
-				activity.switchContent(fragment);
-			}
-		}
-	};
+
 }

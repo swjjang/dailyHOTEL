@@ -1,10 +1,5 @@
 package com.twoheart.dailyhotel.activity;
 
-import static com.twoheart.dailyhotel.util.AppConstants.PAYMENT;
-import static com.twoheart.dailyhotel.util.AppConstants.PAYMENT_DISCOUNT;
-import static com.twoheart.dailyhotel.util.AppConstants.REST_URL;
-
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +9,6 @@ import kr.co.kcp.util.PackageState;
 
 import org.apache.http.util.EncodingUtils;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -24,7 +18,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Window;
 import android.webkit.JavascriptInterface;
@@ -33,7 +26,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.AppConstants;
+import com.twoheart.dailyhotel.util.Constants;
 
 //import com.google.android.gcm.GCMRegistrar;
 public class PaymentActivity extends Activity {
@@ -72,19 +65,19 @@ public class PaymentActivity extends Activity {
 		phone = intent.getStringExtra("phone");
 		name = intent.getStringExtra("name");
 		
-		if (!isBonus) {
-			url = REST_URL + PAYMENT + booking_idx;
-			Log.d("url", url);
-		} else {
-			if (isFullBonus) {
-				url = REST_URL + PAYMENT_DISCOUNT + booking_idx;// + "/" +
-																// bonus;
-				Log.d("url", url);
-			} else {
-				url = REST_URL + PAYMENT_DISCOUNT + booking_idx + "/" + bonus;
-				Log.d("url", url);
-			}
-		}
+//		if (!isBonus) {
+//			url = REST_URL + PAYMENT + booking_idx;
+//			Log.d("url", url);
+//		} else {
+//			if (isFullBonus) {
+//				url = REST_URL + PAYMENT_DISCOUNT + booking_idx;// + "/" +
+//																// bonus;
+//				Log.d("url", url);
+//			} else {
+//				url = REST_URL + PAYMENT_DISCOUNT + booking_idx + "/" + bonus;
+//				Log.d("url", url);
+//			}
+//		}
 		
 //		url = "http://1.234.22.96/goodnight/nulltest.jsp";
 		
@@ -148,18 +141,18 @@ public class PaymentActivity extends Activity {
 		for (int i=0; i<resultList.size(); i++) {
 			sizeOfResult[i] = resultList.get(i).length;
 			
-			if (AppConstants.DEBUG)
+			if (Constants.DEBUG)
 				Log.d("sizeOfResult", Integer.toString(sizeOfResult[i]));
 		}
 		
 		for (int i=0; i<sizeOfResult.length; i++) {
 			size += sizeOfResult[i];
 			
-			if (AppConstants.DEBUG)
+			if (Constants.DEBUG)
 				Log.d("size", Integer.toString(size));
 		}
 		
-		if (AppConstants.DEBUG)
+		if (Constants.DEBUG)
 			Log.d("final size", Integer.toString(size));
 			
 		byte[] result = new byte[size];

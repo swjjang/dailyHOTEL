@@ -1,17 +1,11 @@
 package com.twoheart.dailyhotel.activity;
 
-import static com.twoheart.dailyhotel.util.AppConstants.REST_URL;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.text.Html;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -25,7 +19,6 @@ import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.network.GeneralHttpTask;
 import com.twoheart.dailyhotel.util.network.OnCompleteListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
@@ -85,7 +78,7 @@ public class ForgotPwdActivity extends BaseActivity implements OnClickListener{
 			
 			LoadingDialog.showLoading(this);
 			
-			new GeneralHttpTask(forgotListener, getApplicationContext()).execute(REST_URL + "user/sendpw/" + strEmail + "/trim");
+//			new GeneralHttpTask(forgotListener, getApplicationContext()).execute(REST_URL + "user/sendpw/" + strEmail + "/trim");
 		}
 	}
 	

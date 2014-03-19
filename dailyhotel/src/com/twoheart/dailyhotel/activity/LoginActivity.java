@@ -1,14 +1,5 @@
 package com.twoheart.dailyhotel.activity;
 
-import static com.twoheart.dailyhotel.util.AppConstants.LOGIN;
-import static com.twoheart.dailyhotel.util.AppConstants.LOGIN_FACEBOOK;
-import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_AUTO_LOGIN;
-import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_IS_LOGIN;
-import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_USER_ID;
-import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_USER_PWD;
-import static com.twoheart.dailyhotel.util.AppConstants.REST_URL;
-import static com.twoheart.dailyhotel.util.AppConstants.SHARED_PREFERENCES_NAME;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -19,12 +10,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.telephony.TelephonyManager;
-import android.text.Html;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -45,9 +32,7 @@ import com.facebook.SessionState;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.AppConstants;
 import com.twoheart.dailyhotel.util.Crypto;
-import com.twoheart.dailyhotel.util.network.GeneralHttpTask;
 import com.twoheart.dailyhotel.util.network.OnCompleteListener;
 import com.twoheart.dailyhotel.util.network.Parameter;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
@@ -158,7 +143,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener{
 						et_id.setText(user.getId());
 						//TODO: 패스워드는 서버로부터 임의로 생성된 값을 받도록 한다.
 						
-						new GeneralHttpTask(snsListener, paramList, getApplicationContext()).execute(REST_URL + LOGIN_FACEBOOK);
+//						new GeneralHttpTask(snsListener, paramList, getApplicationContext()).execute(REST_URL + LOGIN_FACEBOOK);
 					}
 				}
 				
@@ -193,7 +178,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener{
 			params.add(new Parameter("pw", md5));
 			
 			LoadingDialog.showLoading(this);
-			new GeneralHttpTask(loginListener, params, getApplicationContext()).execute(REST_URL + LOGIN);
+//			new GeneralHttpTask(loginListener, params, getApplicationContext()).execute(REST_URL + LOGIN);
 		} else if ( v.getId() == facebookLogin.getId()) {
 			
 			Session.openActiveSession(this, true, statusCallback);			
@@ -262,29 +247,29 @@ public class LoginActivity extends BaseActivity implements OnClickListener{
 	
 	public void commitLogin() {
 
-		prefs = getSharedPreferences(SHARED_PREFERENCES_NAME, 0);
-		
-		// 자동 로그인 체크시
-		if(cb_auto.isChecked()) {
-			SharedPreferences.Editor ed = prefs.edit();
-			ed.putBoolean(PREFERENCE_AUTO_LOGIN, true);
-			ed.putString(PREFERENCE_USER_ID, et_id.getText().toString());
-			ed.putString(PREFERENCE_USER_PWD, Crypto.encrypt(et_pwd.getText().toString()).replace("\n", ""));
-			ed.commit();
-			
-			if (AppConstants.DEBUG) {
-				Log.d("ID", et_id.getText().toString());
-				Log.d("PW", et_pwd.getText().toString());
-			}
-		} 
-		
-		// 로그인 상태 저장
-		SharedPreferences.Editor ed = prefs.edit();
-		ed.putBoolean(PREFERENCE_IS_LOGIN, true);
-		ed.commit();
-		
-		setResult(RESULT_OK);
-		finish();
+//		prefs = getSharedPreferences(SHARED_PREFERENCES_NAME, 0);
+//		
+//		// 자동 로그인 체크시
+//		if(cb_auto.isChecked()) {
+//			SharedPreferences.Editor ed = prefs.edit();
+//			ed.putBoolean(PREFERENCE_AUTO_LOGIN, true);
+//			ed.putString(PREFERENCE_USER_ID, et_id.getText().toString());
+//			ed.putString(PREFERENCE_USER_PWD, Crypto.encrypt(et_pwd.getText().toString()).replace("\n", ""));
+//			ed.commit();
+//			
+//			if (Constants.DEBUG) {
+//				Log.d("ID", et_id.getText().toString());
+//				Log.d("PW", et_pwd.getText().toString());
+//			}
+//		} 
+//		
+//		// 로그인 상태 저장
+//		SharedPreferences.Editor ed = prefs.edit();
+//		ed.putBoolean(PREFERENCE_IS_LOGIN, true);
+//		ed.commit();
+//		
+//		setResult(RESULT_OK);
+//		finish();
 	}
 	
 	@Override

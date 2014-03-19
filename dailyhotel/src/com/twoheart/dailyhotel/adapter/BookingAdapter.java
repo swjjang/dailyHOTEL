@@ -10,7 +10,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 public class BookingAdapter extends FragmentPagerAdapter{
 	
-	
 	public BookingAdapter(FragmentManager fm) {
 		super(fm);
 	}
@@ -18,8 +17,9 @@ public class BookingAdapter extends FragmentPagerAdapter{
 	@Override
 	public Fragment getItem(int position) {
 		if (position == 0)	return BookingTabBookingFragment.newInstance();
-		else if (position == 1)	return HotelTabInfoFragment.newInstance();
-		else return HotelTabMapFragment.newInstance();
+//		else if (position == 1)	return HotelTabInfoFragment.newInstance();
+//		else return HotelTabMapFragment.newInstance();
+		return null;
 	}
 	
 	@Override

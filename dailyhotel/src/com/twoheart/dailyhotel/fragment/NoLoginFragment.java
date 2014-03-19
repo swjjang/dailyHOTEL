@@ -31,8 +31,6 @@ public class NoLoginFragment extends Fragment implements OnClickListener{
 		// ActionBar Setting
 		MainActivity activity = (MainActivity)view.getContext();
 		activity.setActionBar("로그인하세요");
-		activity.hideMenuItem();
-		activity.addMenuItem("dummy");
 		
 		loadResource();
 		
@@ -72,7 +70,7 @@ public class NoLoginFragment extends Fragment implements OnClickListener{
 		if(requestCode == NOLOGIN_FRAGMENT) {
 			if(resultCode == getActivity().RESULT_OK) {
 				MainActivity activity = (MainActivity) view.getContext();
-				activity.switchContent(new CreditFragment());
+//				activity.switchContent(new CreditFragment());
 			}
 		}
 	}

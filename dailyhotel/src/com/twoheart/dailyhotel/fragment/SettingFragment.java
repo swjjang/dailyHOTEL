@@ -1,10 +1,5 @@
 package com.twoheart.dailyhotel.fragment;
 
-import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_AUTO_LOGIN;
-import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_IS_LOGIN;
-import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_USER_ID;
-import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_USER_PWD;
-import static com.twoheart.dailyhotel.util.AppConstants.SHARED_PREFERENCES_NAME;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,7 +13,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.Session;
 import com.twoheart.dailyhotel.MainActivity;
@@ -28,7 +22,6 @@ import com.twoheart.dailyhotel.activity.IntroductionActivity;
 import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.activity.NoticeActivity;
 import com.twoheart.dailyhotel.activity.VersionActivity;
-import com.twoheart.dailyhotel.util.ui.NoActionBarException;
 
 public class SettingFragment extends Fragment implements OnClickListener{
 
@@ -51,7 +44,7 @@ public class SettingFragment extends Fragment implements OnClickListener{
 	@Override
 	public void onResume() {
 		super.onResume();
-		checkLogin();
+//		checkLogin();
 	}
 	
 	@Override
@@ -63,15 +56,13 @@ public class SettingFragment extends Fragment implements OnClickListener{
 		// ActionBar Setting
 		MainActivity activity = (MainActivity)view.getContext();
 		activity.setActionBar("설정");
-		activity.hideMenuItem();
-		activity.addMenuItem("dummy");
 		
 		// sliding setting
 //		activity.getSlidingMenu().setMode(SlidingMenu.LEFT);
 		
 		
 		loadResource();
-		checkLogin();
+//		checkLogin();
 		
 		return view;
 	}
@@ -103,18 +94,18 @@ public class SettingFragment extends Fragment implements OnClickListener{
 		}
 	}
 	
-	public void checkLogin() {
-		prefs = view.getContext().getSharedPreferences(SHARED_PREFERENCES_NAME, 0);
-		isLogin =  prefs.getBoolean(PREFERENCE_IS_LOGIN, false);
-		
-		if(isLogin) {
-			login.setText("로그아웃");
-			email.setText(prefs.getString(PREFERENCE_USER_ID, ""));
-		} else {
-			login.setText("로그인");
-			email.setText("");
-		}
-	}
+//	public void checkLogin() {
+//		prefs = view.getContext().getSharedPreferences(SHARED_PREFERENCES_NAME, 0);
+//		isLogin =  prefs.getBoolean(PREFERENCE_IS_LOGIN, false);
+//		
+//		if(isLogin) {
+//			login.setText("로그아웃");
+//			email.setText(prefs.getString(PREFERENCE_USER_ID, ""));
+//		} else {
+//			login.setText("로그인");
+//			email.setText("");
+//		}
+//	}
 	
 	@Override
 	public void onClick(View v) {
@@ -158,16 +149,16 @@ public class SettingFragment extends Fragment implements OnClickListener{
 				    @Override
 				    public void onClick(DialogInterface dialog, int which) {
 				        // 'YES'
-				    	prefs = getActivity().getSharedPreferences(SHARED_PREFERENCES_NAME, 0);
-						SharedPreferences.Editor ed = prefs.edit();
-						ed.putBoolean(PREFERENCE_IS_LOGIN, false);
-						ed.putBoolean(PREFERENCE_AUTO_LOGIN, false);
-						ed.putString(PREFERENCE_USER_ID, null);
-						ed.putString(PREFERENCE_USER_PWD, null);
-						ed.commit();
-						Toast.makeText(getActivity(), "로그아웃되었습니다", Toast.LENGTH_SHORT).show();
-						isLogin = false;
-						checkLogin();
+//				    	prefs = getActivity().getSharedPreferences(SHARED_PREFERENCES_NAME, 0);
+//						SharedPreferences.Editor ed = prefs.edit();
+//						ed.putBoolean(PREFERENCE_IS_LOGIN, false);
+//						ed.putBoolean(PREFERENCE_AUTO_LOGIN, false);
+//						ed.putString(PREFERENCE_USER_ID, null);
+//						ed.putString(PREFERENCE_USER_PWD, null);
+//						ed.commit();
+//						Toast.makeText(getActivity(), "로그아웃되었습니다", Toast.LENGTH_SHORT).show();
+//						isLogin = false;
+//						checkLogin();
 						
 						if (Session.getActiveSession() != null)
 							if (Session.getActiveSession()

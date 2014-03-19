@@ -3,4 +3,5 @@
     <issue id="JavascriptInterface" severity="ignore" />
     <issue id="NewApi" severity="ignore" />
     <issue id="ResourceAsColor" severity="ignore" />
+    <issue id="ValidFragment" severity="ignore" />
 </lint>

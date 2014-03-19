@@ -1,14 +1,5 @@
 package com.twoheart.dailyhotel.activity;
 
-import static com.twoheart.dailyhotel.util.AppConstants.LOGIN;
-import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_AUTO_LOGIN;
-import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_IS_LOGIN;
-import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_USER_ID;
-import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_USER_PWD;
-import static com.twoheart.dailyhotel.util.AppConstants.REST_URL;
-import static com.twoheart.dailyhotel.util.AppConstants.SHARED_PREFERENCES_NAME;
-import static com.twoheart.dailyhotel.util.AppConstants.SIGNUP;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
@@ -19,12 +10,8 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.telephony.TelephonyManager;
-import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -173,13 +160,13 @@ public class SignupActivity extends BaseActivity implements OnClickListener{
 			
 			// 추천인 코드 입력 여부에 따른 요청
 			if(recommender.trim().equals("")) {	
-				new GeneralHttpTask(singupListener,paramList, getApplicationContext()).execute(REST_URL + SIGNUP);
+//				new GeneralHttpTask(singupListener,paramList, getApplicationContext()).execute(REST_URL + SIGNUP);
 			}
 			else
 			{
 //				new GeneralHttpTask(recommenderListener, getApplicationContext()).execute(REST_URL + RECOMMEND + "/" + recommender);
 				paramList.add(new Parameter("recommender", recommender));
-				new GeneralHttpTask(singupListener,paramList, getApplicationContext()).execute(REST_URL + SIGNUP);
+//				new GeneralHttpTask(singupListener,paramList, getApplicationContext()).execute(REST_URL + SIGNUP);
 			}
 			// Jason Park | End
 		} else if(v.getId() == tv_agreement.getId()) {	// 이용약관
@@ -213,7 +200,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener{
 			TelephonyManager tManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
 			paramList.add(new Parameter("device",tManager.getDeviceId()));
 			paramList.add(new Parameter("recommender",str));
-			new GeneralHttpTask(singupListener,paramList, getApplicationContext()).execute(REST_URL + SIGNUP);
+//			new GeneralHttpTask(singupListener,paramList, getApplicationContext()).execute(REST_URL + SIGNUP);
 		}
 		
 	}
@@ -235,7 +222,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener{
 				ArrayList<Parameter> params = new ArrayList<Parameter>(); 
 				params.add(new Parameter("email", et_email.getText().toString()));
 				params.add(new Parameter("pw", Crypto.encrypt(et_pwd.getText().toString()).replace("\n", "")));
-				new GeneralHttpTask(loginListener, params, getApplicationContext()).execute(REST_URL + LOGIN);
+//				new GeneralHttpTask(loginListener, params, getApplicationContext()).execute(REST_URL + LOGIN);
 				
 			} else {
 				LoadingDialog.hideLoading();
@@ -279,15 +266,15 @@ public class SignupActivity extends BaseActivity implements OnClickListener{
 	}
 	
 	public void commitLogin() {
-		prefs = getSharedPreferences(SHARED_PREFERENCES_NAME, 0);
-		SharedPreferences.Editor ed = prefs.edit();
-		ed.putBoolean(PREFERENCE_AUTO_LOGIN, true);
-		ed.putString(PREFERENCE_USER_ID, et_email.getText().toString());
-		ed.putString(PREFERENCE_USER_PWD, Crypto.encrypt(et_pwd.getText().toString()).replace("\n", ""));
-		ed.putBoolean(PREFERENCE_IS_LOGIN, true);
-		ed.commit();
-		
-		setResult(RESULT_OK);
+//		prefs = getSharedPreferences(SHARED_PREFERENCES_NAME, 0);
+//		SharedPreferences.Editor ed = prefs.edit();
+//		ed.putBoolean(PREFERENCE_AUTO_LOGIN, true);
+//		ed.putString(PREFERENCE_USER_ID, et_email.getText().toString());
+//		ed.putString(PREFERENCE_USER_PWD, Crypto.encrypt(et_pwd.getText().toString()).replace("\n", ""));
+//		ed.putBoolean(PREFERENCE_IS_LOGIN, true);
+//		ed.commit();
+//		
+//		setResult(RESULT_OK);
 		onBackPressed();
 	}
 

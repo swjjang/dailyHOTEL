@@ -1,44 +1,21 @@
 package com.twoheart.dailyhotel.fragment;
 
-import static com.twoheart.dailyhotel.util.AppConstants.HOTEL;
-import static com.twoheart.dailyhotel.util.AppConstants.LOCATION_LIST;
-import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_REGION_DEFALUT;
-import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_REGION_INDEX;
-import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_REGION_SELECT;
-import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_SELECTED_MENU;
-import static com.twoheart.dailyhotel.util.AppConstants.REST_URL;
-import static com.twoheart.dailyhotel.util.AppConstants.SALE_TIME;
-import static com.twoheart.dailyhotel.util.AppConstants.SHARED_PREFERENCES_NAME;
-import static com.twoheart.dailyhotel.util.AppConstants.TIME;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBar.OnNavigationListener;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -49,704 +26,379 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.analytics.tracking.android.Fields;
-import com.google.analytics.tracking.android.GoogleAnalytics;
-import com.google.analytics.tracking.android.Tracker;
+import com.android.volley.Request.Method;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.VolleyError;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import com.nolanlawson.supersaiyan.widget.SuperSaiyanScrollView;
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.EventWebActivity;
 import com.twoheart.dailyhotel.activity.HotelTabActivity;
 import com.twoheart.dailyhotel.adapter.HotelListAdapter;
 import com.twoheart.dailyhotel.obj.Hotel;
-import com.twoheart.dailyhotel.util.AppConstants;
-import com.twoheart.dailyhotel.util.network.GeneralHttpTask;
-import com.twoheart.dailyhotel.util.network.OnCompleteListener;
+import com.twoheart.dailyhotel.obj.SaleTime;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Log;
+import com.twoheart.dailyhotel.util.network.DailyHotelJsonArrayResponseListener;
+import com.twoheart.dailyhotel.util.network.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.util.network.DailyHotelResponseListener;
+import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
+import com.twoheart.dailyhotel.util.network.vo.DailyHotelJsonArrayRequest;
+import com.twoheart.dailyhotel.util.network.vo.DailyHotelJsonRequest;
+import com.twoheart.dailyhotel.util.network.vo.DailyHotelRequest;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
-import com.twoheart.dailyhotel.util.ui.NoActionBarException;
 
-public class HotelListFragment extends Fragment implements OnItemClickListener,
-		OnNavigationListener {
+public class HotelListFragment extends Fragment implements Constants,
+		OnItemClickListener, OnNavigationListener,
+		DailyHotelJsonArrayResponseListener, DailyHotelJsonResponseListener,
+		DailyHotelResponseListener, ErrorListener {
 
 	private final static String TAG = "HotelListFragment";
 
-	private final static int HOTEL_LIST_FRAGMENT = 1;
-
-	private ArrayList<Hotel> items;
-	private PullToRefreshListView listView;
-	private HotelListAdapter adapter;
-
-	private View view;
-
-	private String currentYear;
-	private String currentMon;
-	private String currentDay;
-
-	private int selectedPosition;
-
-	private ArrayList<String> regionList;
-
-	private SharedPreferences prefs;
-
-	private Tracker mGaTracker;
-	private GoogleAnalytics mGaInstance;
-
-	private long openTime;
-	private long closeTime;
-
-	// Jason | Google analytics
-	@Override
-	public void onStart() {
-		super.onStart();
-		HashMap<String, String> hitParameters = new HashMap<String, String>();
-		hitParameters.put(Fields.HIT_TYPE, "appview");
-		hitParameters.put(Fields.SCREEN_NAME, "Hotel View");
-
-		mGaTracker.send(hitParameters);
-	}
+	private MainActivity mHostActivity;
+	private RequestQueue mQueue;
+	
+	private PullToRefreshListView mPullToRefreshListView;
+	private HotelListAdapter mHotelListAdapter;
+	private List<Hotel> mHotelList;
+	private List<String> mRegionList;
+	private SaleTime mDailyHotelSaleTime;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		view = inflater.inflate(R.layout.fragment_hotel_list, null);
-
-		// Google analytics
-		mGaInstance = GoogleAnalytics.getInstance(view.getContext());
-		mGaTracker = mGaInstance.getTracker("UA-43721645-1");
-
-		// Actionbar setting
-		// MainActivity activity = (MainActivity)view.getContext();
-		// activity.hideMenuItem();
-		// activity.addMenuItem("지역");
-		//
-		// Right Sliding setting
-		// activity.getSlidingMenu().setMode(SlidingMenu.LEFT_RIGHT);
-		// activity.getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-		// activity.getSlidingMenu().setSecondaryMenu(R.layout.menu_frame_right);
-		// activity.getSlidingMenu().setSecondaryShadowDrawable(R.drawable.shadow_right);
-
-		getCalendar();
-
-		// LoadingDialog.showLoading(view.getContext());
-		// new GeneralHttpTask(timerListener,
-		// view.getContext()).execute(REST_URL + TIME);
-		
-		LoadingDialog.showLoading(view.getContext());
-		
-		new GeneralHttpTask(saleTimeListener, view.getContext())
-		.execute(REST_URL + SALE_TIME);
-
-		return view;
-	}
-
-	@Override
-	public void onResume() {
-//		LoadingDialog.showLoading(view.getContext());
-		// new GeneralHttpTask(timerListener,
-		// view.getContext()).execute(REST_URL + TIME);
-//		new GeneralHttpTask(saleTimeListener, view.getContext())
-//				.execute(REST_URL + SALE_TIME);
-		super.onResume();
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
-	}
-
-	// get current calendar
-	public void getCalendar() {
-		Calendar c = Calendar.getInstance();
-		currentYear = Integer.toString(c.get(Calendar.YEAR));
-		currentYear = currentYear.substring(2, 4);
-		currentMon = Integer.toString(c.get(Calendar.MONTH) + 1);
-		if ((c.get(Calendar.MONTH) + 1) < 10)
-			currentMon = "0" + currentMon;
-		currentDay = Integer.toString(c.get(Calendar.DAY_OF_MONTH));
-		if (c.get(Calendar.DAY_OF_MONTH) < 10)
-			currentDay = "0" + currentDay;
-	}
-
-	public void setListView() {
-		listView = (PullToRefreshListView) view
+		View view = inflater.inflate(R.layout.fragment_hotel_list, container, false);
+		mQueue = VolleyHttpClient.getRequestQueue();
+		mDailyHotelSaleTime = new SaleTime();
+		mHostActivity = (MainActivity) getActivity();
+		mPullToRefreshListView = (PullToRefreshListView) view
 				.findViewById(R.id.listview_hotel_list);
-		
-		final ListView lv = listView.getRefreshableView();
-		LayoutInflater inflater = (LayoutInflater) view.getContext()
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View header = inflater.inflate(R.layout.header_hotel_list, null);
-		lv.addHeaderView(header);
-//		customizeFastScrollerOfListView(lv);
-		
-//		try {
-//			lv.setFastScrollEnabled(true);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
 
-		ImageButton btn_footer = (ImageButton) view
+		ListView hotelListView = mPullToRefreshListView.getRefreshableView();
+		View listViewHeader = inflater.inflate(R.layout.header_hotel_list, null);
+		hotelListView.addHeaderView(listViewHeader);
+
+		ImageButton btnListViewHeader = (ImageButton) view
 				.findViewById(R.id.btn_footer);
-		btn_footer.setOnClickListener(new OnClickListener() {
+		btnListViewHeader.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				Intent i = new Intent(view.getContext(), EventWebActivity.class);
-				MainActivity activity = (MainActivity) view.getContext();
-				activity.startActivity(i);
-				activity.overridePendingTransition(R.anim.slide_in_bottom,
+				Intent i = new Intent(mHostActivity, EventWebActivity.class);
+				mHostActivity.startActivity(i);
+				mHostActivity.overridePendingTransition(R.anim.slide_in_bottom,
 						R.anim.hold);
 			}
 		});
+
+		return view;
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
 		
-		adapter = new HotelListAdapter(view.getContext(),
-				R.layout.list_row_hotel, items);
-		listView.setOnItemClickListener(this);
-		listView.setAdapter(adapter);
-		listView.setOnRefreshListener(new OnRefreshListener<ListView>() {
+		LoadingDialog.showLoading(mHostActivity);
 
-			// listview 끌어서 새로고침
-			@Override
-			public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-				String label = DateUtils.formatDateTime(view.getContext(),
-						System.currentTimeMillis(), DateUtils.FORMAT_SHOW_TIME
-								| DateUtils.FORMAT_SHOW_DATE
-								| DateUtils.FORMAT_ABBREV_ALL);
-
-				// Update the LastUpdatedLabel
-				refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
-
-				new GeneralHttpTask(refreshTimerListener, view.getContext())
-						.execute(REST_URL + TIME);
-
-			}
-		});
-
-		// footer 추가
-		
-
+		// 현재 서버 시간을 가져온다
+		mQueue.add(new DailyHotelRequest(Method.GET, new StringBuilder(
+				URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_TIME).toString(),
+				null, HotelListFragment.this, HotelListFragment.this));
 	}
 
-//	private void customizeFastScrollerOfListView(ListView listView) {
-//
-//		try {
-//			
-//			Class<?> clazz = Class.forName("android.widget.FastScroller");
-//			Constructor<?> constructor = clazz.getConstructor(
-//					AbsListView.class);
-//			Object newFastScroller = constructor.newInstance(listView);
-//			
-//			Field padding = clazz.getDeclaredField("mPreviewPadding");
-//			padding.setAccessible(true);
-//			
-//			int oldPadding = padding.getInt(newFastScroller);
-//			Log.d(TAG, Integer.toString(oldPadding));
-//			
-//			padding.set(newFastScroller, 24);
-//			int newPadding = padding.getInt(newFastScroller);
-//			Log.d(TAG, Integer.toString(newPadding));
-//			
-//			padding.setAccessible(false);
-//			
-//			
-//			Field orgFastScroller = AbsListView.class.getDeclaredField("mFastScroller");
-//	        orgFastScroller.setAccessible(true);
-//	        orgFastScroller.set(listView, newFastScroller);
-//	        
-//	        orgFastScroller.setAccessible(false);
-//
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//
-//	}
-
-	public void parseJson(String str) {
-		if (listView == null) {
-			setListView();
-		}
-		items.clear();
-
-		try {
-			JSONObject json = new JSONObject(str);
-			JSONArray hotelArr = json.getJSONArray("hotels");
-
-			for (int i = 0; i < hotelArr.length(); i++) {
-				JSONObject obj = hotelArr.getJSONObject(i);
-
-				String name = obj.getString("name");
-				String price = obj.getString("price");
-				String discount = obj.getString("discount");
-				String address = obj.getString("addr_summary");
-				String cat = obj.getString("cat");
-				int idx = obj.getInt("idx");
-				int avail_cnt = obj.getInt("avail_room_count");
-				int seq = obj.getInt("seq");
-
-				JSONArray arr = obj.getJSONArray("img");
-				String img = "default";
-				if (arr.length() != 0) {
-					JSONObject arrObj = arr.getJSONObject(0);
-					img = arrObj.getString("path");
-				}
-				items.add(new Hotel(img, name, price, discount, address, idx,
-						avail_cnt, seq, cat));
-			}
-
-			listSort();
-			listHide();
-
-			// listview notify
-			adapter = new HotelListAdapter(view.getContext(),
-					R.layout.list_row_hotel, items);
-			adapter.notifyDataSetChanged();
-			listView.setAdapter(adapter);
-			listView.invalidate();
-
-			// get region list
-			new GeneralHttpTask(regionListListener, view.getContext())
-					.execute(REST_URL + LOCATION_LIST);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			LoadingDialog.hideLoading();
-			Toast.makeText(view.getContext(),
-					"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-					Toast.LENGTH_SHORT).show();
-		}
-	}
-
-	public void parseRegionJson(String str) {
-		try {
-
-			regionList = new ArrayList<String>();
-
-			JSONArray arr = new JSONArray(str);
-			for (int i = 0; i < arr.length(); i++) {
-				JSONObject obj = arr.getJSONObject(i);
-				String name = obj.getString("name");
-				regionList.add(name);
-			}
-
-			setRegionList();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			Toast.makeText(view.getContext(),
-					"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-					Toast.LENGTH_SHORT).show();
-		}
-	}
-
-	public boolean checkTimer(String str) {
-
-		if (AppConstants.DEBUG)
-			return false;
-		boolean result = false;
-
-		Date now = new Date(Long.parseLong(str.trim()));
-		SimpleDateFormat format = new SimpleDateFormat("HHmmss");
-		String time = format.format(now);
-		long hour = Integer.parseInt(time.substring(0, 2));
-		long min = Integer.parseInt(time.substring(2, 4));
-		long sec = Integer.parseInt(time.substring(4, 6));
-
-		long curTime = (hour * 60 * 60) + (min * 60) + sec;
-		// long targetTime = 11 * 60 * 60;
-
-		// long waitTime = openTime - curTime;
-
-		// if(waitTime < 0)
-		// result = false;
-		// else
-		// result = true;
-
-		Log.d(TAG, curTime + "   " + openTime + "   " + closeTime);
-		// true 면 호텔판매시간 아님
-		if ((openTime < curTime) && (curTime < closeTime)) {
-			result = false;
-		}
-
-		else if ((curTime < closeTime) && (closeTime < openTime)) {
-			result = false;
-		} else {
-			result = true;
-		}
-
-		return result;
-	}
-
-	public void setRegionList() {
-
-		ActionBar actionBar = ((MainActivity) getActivity()).actionBar;
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-
-		ArrayAdapter<String> regionListAdapter = new ArrayAdapter<String>(
-				getActivity(), android.R.layout.simple_list_item_1,
-				android.R.id.text1, regionList);
-
-		actionBar.setListNavigationCallbacks(regionListAdapter, this);
-
-		prefs = view.getContext().getSharedPreferences(SHARED_PREFERENCES_NAME,
-				0);
-		int selectedRegionIndex = prefs.getInt(PREFERENCE_REGION_INDEX, 0);
-		actionBar.setSelectedNavigationItem(selectedRegionIndex);
-
-		// Log.d(TAG, "setRegionList() called.");
-
-		// RegionListFragment fragment = new RegionListFragment();
-		// fragment.setArguments(argument);
-		// MainActivity activity = (MainActivity) view.getContext();
-		// FragmentTransaction t =
-		// activity.getSupportFragmentManager().beginTransaction();
-		// activity.getSupportFragmentManager()
-		// .beginTransaction()
-		// .replace(R.id.menu_frame_right, fragment)
-		// .commitAllowingStateLoss();
-	}
-
-	// sold out 밑으로
-	public void listSort() {
-		// for(int i=0; i < items.size(); i++) {
-		// if(items.get(i).getAvali_cnt() <= 0 ) {
-		// items.get(i).setSeq(items.get(i).getSeq() * 100);
-		// }
-		// }
-		Comparator<Hotel> comparator = new Comparator<Hotel>() {
-			public int compare(Hotel o1, Hotel o2) {
-				// 숫자정렬
-				return Integer.parseInt(o1.getSeq() + "")
-						- Integer.parseInt(o2.getSeq() + "");
-			}
-		};
-		Collections.sort(items, comparator);
-	}
-
-	// 음수제거 (숨김기능)
-	public void listHide() {
-		for (Iterator<Hotel> iterator = items.iterator(); iterator.hasNext();) {
-			Hotel element = iterator.next();
-			if (element.getSeq() < 0) {
-				iterator.remove();
-			}
-		}
-	}
+	
 
 	// 호텔 클릭시
 	@Override
 	public void onItemClick(AdapterView<?> parentView, View childView,
 			int position, long id) {
 
-		selectedPosition = position - 2;
+		int selectedPosition = position - 2;
+		Hotel selectedHotel = mHotelList.get(selectedPosition);
+		
+		Intent i = new Intent(mHostActivity, HotelTabActivity.class);
+		i.putExtra(NAME_INTENT_EXTRA_DATA_HOTEL, selectedHotel);
+		i.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mDailyHotelSaleTime);
 
-		LoadingDialog.showLoading(view.getContext());
-		new GeneralHttpTask(clickTimerListener, view.getContext())
-				.execute(REST_URL + TIME);
-	}
-
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
-		menu.add("지역").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		inflater.inflate(R.menu.main, menu);
+		startActivityForResult(i, CODE_REQUEST_ACTIVITY_MAIN);
+		
 	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-		if (requestCode == HOTEL_LIST_FRAGMENT) {
-			if (resultCode == getActivity().RESULT_OK) {
-
-				prefs = view.getContext().getSharedPreferences(
-						SHARED_PREFERENCES_NAME, 0);
-				SharedPreferences.Editor ed = prefs.edit();
-				ed.putString(PREFERENCE_SELECTED_MENU, "booking");
-				ed.commit();
-
-				Fragment fragment = new BookingListFragment();
-				FragmentTransaction ft = getActivity()
-						.getSupportFragmentManager().beginTransaction();
-				ft.replace(R.id.content_frame, fragment);
-				ft.commitAllowingStateLoss();
+		if (requestCode == CODE_REQUEST_ACTIVITY_MAIN) {
+			if (resultCode == CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS) {
+				mHostActivity.replaceFragment(mHostActivity.getFragment(mHostActivity.INDEX_BOOKING_LIST_FRAGMENT));
 			}
 		}
 
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
-	protected OnCompleteListener saleTimeListener = new OnCompleteListener() {
-
-		@Override
-		public void onTaskFailed() {
-			Log.d(TAG, "saleTimeListener onTaskFailed");
-			LoadingDialog.hideLoading();
-			Toast.makeText(view.getContext(),
-					"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-					Toast.LENGTH_SHORT).show();
-			MainActivity activity = (MainActivity) view.getContext();
-			activity.switchContent(new ErrorFragment());
-		}
-
-		@Override
-		public void onTaskComplete(String result) {
-			try {
-				JSONObject obj = new JSONObject(result);
-				String open = obj.getString("open");
-				String close = obj.getString("close");
-
-				openTime = (Long.parseLong(open.substring(0, 2)) * 60 * 60)
-						+ (Long.parseLong(open.substring(3, 5)) * 60);
-				closeTime = (Long.parseLong(close.substring(0, 2)) * 60 * 60)
-						+ (Long.parseLong(close.substring(3, 5)) * 60);
-
-				new GeneralHttpTask(timerListener, view.getContext())
-						.execute(REST_URL + TIME);
-			} catch (Exception e) {
-				e.printStackTrace();
-				LoadingDialog.hideLoading();
-				Toast.makeText(view.getContext(),
-						"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-						Toast.LENGTH_SHORT).show();
-			}
-		}
-	};
-
-	protected OnCompleteListener timerListener = new OnCompleteListener() {
-
-		@Override
-		public void onTaskFailed() {
-			Log.d(TAG, "onTaskFailed");
-			LoadingDialog.hideLoading();
-			Toast.makeText(view.getContext(),
-					"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-					Toast.LENGTH_SHORT).show();
-			MainActivity activity = (MainActivity) view.getContext();
-			activity.switchContent(new ErrorFragment());
-		}
-
-		@Override
-		public void onTaskComplete(String result) {
-
-			MainActivity activity = (MainActivity) view.getContext();
-
-			if (checkTimer(result)) {
-				LoadingDialog.hideLoading();
-				activity.switchContent(new WaitTimerFragment());
-			} else {
-				prefs = view.getContext().getSharedPreferences(
-						SHARED_PREFERENCES_NAME, 0);
-				String select = prefs.getString(PREFERENCE_REGION_SELECT, null);
-				if (select == null) { // 지역 선택 하기전 DEFAULT
-					String region = prefs.getString(PREFERENCE_REGION_DEFALUT,
-							"서울");
-					activity.setActionBar("");
-					region = region.replace(" ", "%20");
-					region = region.replace("|", "%7C");
-					new GeneralHttpTask(hotelListListener, view.getContext())
-							.execute(REST_URL + HOTEL + region
-									+ "/near/0/0/0/1000/" + currentYear + "/"
-									+ currentMon + "/" + currentDay);
-				} else { // 지역 선택시
-					activity.setActionBar("");
-					select = select.replace(" ", "%20");
-					select = select.replace("|", "%7C");
-					new GeneralHttpTask(hotelListListener, view.getContext())
-							.execute(REST_URL + HOTEL + select
-									+ "/near/0/0/0/1000/" + currentYear + "/"
-									+ currentMon + "/" + currentDay);
-				}
-
-			}
-		}
-	};
-
-	// hotel list callback
-	protected OnCompleteListener hotelListListener = new OnCompleteListener() {
-
-		@Override
-		public void onTaskFailed() {
-			Log.d(TAG, "onTaskFailed");
-			LoadingDialog.hideLoading();
-			Toast.makeText(view.getContext(),
-					"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-					Toast.LENGTH_SHORT).show();
-			MainActivity activity = (MainActivity) view.getContext();
-			activity.switchContent(new ErrorFragment());
-		}
-
-		@Override
-		public void onTaskComplete(String result) {
-			// list 초기화
-			items = new ArrayList<Hotel>();
-			parseJson(result);
-		}
-	};
-
-	// refresh list callback
-	protected OnCompleteListener refreshListListener = new OnCompleteListener() {
-
-		@Override
-		public void onTaskFailed() {
-			Log.d(TAG, "onTaskFailed");
-			LoadingDialog.hideLoading();
-			Toast.makeText(view.getContext(),
-					"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-					Toast.LENGTH_SHORT).show();
-			((PullToRefreshListView) listView).onRefreshComplete();
-			MainActivity activity = (MainActivity) view.getContext();
-			activity.switchContent(new ErrorFragment());
-		}
-
-		@Override
-		public void onTaskComplete(String result) {
-			((PullToRefreshListView) listView).onRefreshComplete();
-			items = new ArrayList<Hotel>();
-			parseJson(result);
-		}
-	};
-
-	protected OnCompleteListener regionListListener = new OnCompleteListener() {
-
-		@Override
-		public void onTaskFailed() {
-			Log.d(TAG, "onTaskFailed");
-			LoadingDialog.hideLoading();
-			Toast.makeText(view.getContext(),
-					"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-					Toast.LENGTH_SHORT).show();
-			MainActivity activity = (MainActivity) view.getContext();
-			activity.switchContent(new ErrorFragment());
-		}
-
-		@Override
-		public void onTaskComplete(String result) {
-			parseRegionJson(result);
-			LoadingDialog.hideLoading();
-		}
-	};
-
-	protected OnCompleteListener refreshTimerListener = new OnCompleteListener() {
-
-		@Override
-		public void onTaskFailed() {
-			Log.d(TAG, "onTaskFailed");
-			Toast.makeText(view.getContext(),
-					"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-					Toast.LENGTH_SHORT).show();
-			((PullToRefreshListView) listView).onRefreshComplete();
-			MainActivity activity = (MainActivity) view.getContext();
-			activity.switchContent(new ErrorFragment());
-		}
-
-		@Override
-		public void onTaskComplete(String result) {
-
-			MainActivity activity = (MainActivity) view.getContext();
-
-			if (checkTimer(result)) {
-				LoadingDialog.hideLoading();
-				activity.switchContent(new WaitTimerFragment());
-
-			} else {
-				prefs = view.getContext().getSharedPreferences(
-						SHARED_PREFERENCES_NAME, 0);
-				String select = prefs.getString(PREFERENCE_REGION_SELECT, null);
-				if (select == null) { // 지역 선택 하기전 DEFAULT
-					String region = prefs.getString(PREFERENCE_REGION_DEFALUT,
-							"서울");
-					activity.setActionBar("");
-					region = region.replace(" ", "%20");
-					region = region.replace("|", "%7C");
-					new GeneralHttpTask(refreshListListener, view.getContext())
-							.execute(REST_URL + HOTEL + region
-									+ "/near/0/0/0/1000/" + currentYear + "/"
-									+ currentMon + "/" + currentDay);
-				} else { // 지역 선택시
-					activity.setActionBar("");
-					select = select.replace(" ", "%20");
-					select = select.replace("|", "%7C");
-					new GeneralHttpTask(refreshListListener, view.getContext())
-							.execute(REST_URL + HOTEL + select
-									+ "/near/0/0/0/1000/" + currentYear + "/"
-									+ currentMon + "/" + currentDay);
-				}
-			}
-		}
-	};
-
-	protected OnCompleteListener clickTimerListener = new OnCompleteListener() {
-
-		@Override
-		public void onTaskFailed() {
-			Log.d(TAG, "onTaskFailed");
-			LoadingDialog.hideLoading();
-			Toast.makeText(view.getContext(),
-					"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-					Toast.LENGTH_SHORT).show();
-			MainActivity activity = (MainActivity) view.getContext();
-			activity.switchContent(new ErrorFragment());
-		}
-
-		@Override
-		public void onTaskComplete(String result) {
-			MainActivity activity = (MainActivity) view.getContext();
-
-			if (checkTimer(result)) {
-				LoadingDialog.hideLoading();
-				activity.switchContent(new WaitTimerFragment());
-
-			} else {
-
-				LoadingDialog.hideLoading();
-
-				Intent i = new Intent(view.getContext(), HotelTabActivity.class);
-				i.putExtra("hotel_name", items.get(selectedPosition).getName());
-				i.putExtra("hotel_idx", items.get(selectedPosition).getIdx());
-				i.putExtra("available_cnt", items.get(selectedPosition)
-						.getAvali_cnt());
-				i.putExtra("year", currentYear);
-				i.putExtra("month", currentMon);
-				i.putExtra("day", currentDay);
-
-				startActivityForResult(i, HOTEL_LIST_FRAGMENT);
-			}
-		}
-	};
-
 	@Override
 	public boolean onNavigationItemSelected(int position, long id) {
-
-		prefs = view.getContext().getSharedPreferences(SHARED_PREFERENCES_NAME,
-				0);
-		int oldPosition = prefs.getInt(PREFERENCE_REGION_INDEX, 0);
-
-		if (position != oldPosition) {
-			SharedPreferences.Editor ed = prefs.edit();
-
-			ed.putString(PREFERENCE_REGION_SELECT, regionList.get(position));
-			ed.putInt(PREFERENCE_REGION_INDEX, position);
-			ed.commit();
-
-			String select = prefs.getString(PREFERENCE_REGION_SELECT, null);
-			select = select.replace(" ", "%20");
-			select = select.replace("|", "%7C");
-			
-			MainActivity activity = (MainActivity) view.getContext();
-			activity.mDrawerLayout.closeDrawer(activity.mDrawerList);
-
-			// ((MainActivity)
-			// getActivity()).actionBar.setSelectedNavigationItem(position);
-			LoadingDialog.showLoading(getActivity());
-			new GeneralHttpTask(hotelListListener, view.getContext())
-					.execute(REST_URL + HOTEL + select + "/near/0/0/0/1000/"
-							+ currentYear + "/" + currentMon + "/" + currentDay);
-		}
-
+		LoadingDialog.showLoading(mHostActivity);
+		fetchHotelList(position);
 		return true;
 	}
+	
+	private void fetchHotelList(int position) {
+		mHostActivity.drawerLayout.closeDrawer(mHostActivity.drawerList);
 
+		String selectedRegion = mRegionList.get(position);
+		
+		SharedPreferences.Editor editor = mHostActivity.sharedPreference.edit();
+		editor.putString(KEY_PREFERENCE_REGION_SELECT, selectedRegion);
+		editor.putInt(KEY_PREFERENCE_REGION_INDEX, position);
+		editor.commit();
+		
+		selectedRegion = selectedRegion.replace(" ", "%20");
+		selectedRegion = selectedRegion.replace("|", "%7C");
+		
+		String url = new StringBuilder(
+				URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL)
+				.append(selectedRegion).append("/near/0/0/0/1000/")
+				.append(mDailyHotelSaleTime.getCurrentYear()).append("/")
+				.append(mDailyHotelSaleTime.getCurrentMonth()).append("/")
+				.append(mDailyHotelSaleTime.getCurrentDay()).toString();
+		
+		Log.d(TAG, url);
+
+		// 호텔 리스트를 가져온다
+		mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null,
+				HotelListFragment.this, HotelListFragment.this));
+		
+	}
+
+	@Override
+	public void onErrorResponse(VolleyError error) {
+		if (DEBUG)
+			error.printStackTrace();
+
+		mHostActivity.addFragment(new ErrorFragment());
+		LoadingDialog.hideLoading();
+	}
+
+	@Override
+	public void onResponse(String url, JSONObject response) {
+		if (url.contains(URL_WEBAPI_APP_SALE_TIME)) {
+
+			try {
+				String open = response.getString("open");
+				String close = response.getString("close");
+
+				mDailyHotelSaleTime.setOpenTime(open);
+				mDailyHotelSaleTime.setCloseTime(close);
+
+				if (!mDailyHotelSaleTime.isSaleTime()) {
+					mHostActivity.replaceFragment(new WaitTimerFragment(mDailyHotelSaleTime));
+					LoadingDialog.hideLoading();
+				} else {
+					// 지역 리스트를 가져온다
+					mQueue.add(new DailyHotelJsonArrayRequest(Method.GET,
+							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+									URL_WEBAPI_SITE_LOCATION_LIST).toString(),
+							null, HotelListFragment.this,
+							HotelListFragment.this));
+				}
+				
+			} catch (Exception e) {
+				if (DEBUG)
+					e.printStackTrace();
+
+				LoadingDialog.hideLoading();
+				mHostActivity.addFragment(new ErrorFragment());
+				
+			}
+
+		} else if (url.contains(URL_WEBAPI_HOTEL)) {
+
+			try {
+				mHotelList = new ArrayList<Hotel>();
+				JSONArray hotelArr = response.getJSONArray("hotels");
+
+				for (int i = 0; i < hotelArr.length(); i++) {
+					JSONObject obj = hotelArr.getJSONObject(i);
+
+					Hotel newHotel = new Hotel();
+					
+					String name = obj.getString("name");
+					String price = obj.getString("price");
+					String discount = obj.getString("discount");
+					String address = obj.getString("addr_summary");
+					String category = obj.getString("cat");
+					int idx = obj.getInt("idx");
+					int available = obj.getInt("avail_room_count");
+					int seq = obj.getInt("seq");
+
+					JSONArray arr = obj.getJSONArray("img");
+					String image = "default";
+					if (arr.length() != 0) {
+						JSONObject arrObj = arr.getJSONObject(0);
+						image = arrObj.getString("path");
+					}
+					
+					newHotel.setName(name);
+					newHotel.setPrice(price);
+					newHotel.setDiscount(discount);
+					newHotel.setAddress(address);
+					newHotel.setCat(category);
+					newHotel.setIdx(idx);
+					newHotel.setAvali_cnt(available);
+					newHotel.setSeq(seq);
+					newHotel.setImg(image);
+					
+					if (seq >= 0) {	// 숨김호텔이 아니라면 추가. (음수일 경우 숨김호텔.)
+						
+						if (available <= 0)	// SOLD OUT 된 항목은 밑으로.
+							available *= 100;
+						
+						mHotelList.add(newHotel);	// 추가. 
+						
+						// seq 값에 따른 리스트 정렬
+						Comparator<Hotel> comparator = new Comparator<Hotel>() {
+							public int compare(Hotel o1, Hotel o2) {
+								// 숫자정렬
+								return Integer.parseInt(o1.getSeq() + "")
+										- Integer.parseInt(o2.getSeq() + "");
+							}
+						};
+						
+						Collections.sort(mHotelList, comparator);
+						
+					}
+					
+				}
+
+				mHotelListAdapter = new HotelListAdapter(mHostActivity,
+						R.layout.list_row_hotel, mHotelList);
+				mPullToRefreshListView.setAdapter(mHotelListAdapter);
+				mPullToRefreshListView.setOnItemClickListener(this);
+				mPullToRefreshListView
+						.setOnRefreshListener(new OnRefreshListener<ListView>() {
+
+							// listview 끌어서 새로고침
+							@Override
+							public void onRefresh(
+									PullToRefreshBase<ListView> refreshView) {
+								String label = DateUtils.formatDateTime(
+										mHostActivity, System.currentTimeMillis(),
+										DateUtils.FORMAT_SHOW_TIME
+												| DateUtils.FORMAT_SHOW_DATE
+												| DateUtils.FORMAT_ABBREV_ALL);
+
+								// Update the LastUpdatedLabel
+								refreshView.getLoadingLayoutProxy()
+										.setLastUpdatedLabel(label);
+
+								fetchHotelList(
+										mHostActivity.actionBar.getSelectedNavigationIndex());
+
+							}
+						});
+
+			} catch (Exception e) {
+				if (DEBUG)
+					e.printStackTrace();
+
+				Toast.makeText(mHostActivity,
+						"네트워크 상태를 확인해주세요", Toast.LENGTH_LONG).show();
+			} finally {
+				LoadingDialog.hideLoading();
+				mPullToRefreshListView.onRefreshComplete();
+			}
+		}
+
+	}
+	
+	@Override
+	public void onResponse(String url, JSONArray response) {
+		if (url.contains(URL_WEBAPI_SITE_LOCATION_LIST)) {
+			try {
+				mRegionList = new ArrayList<String>();
+
+				JSONArray arr = response;
+				for (int i = 0; i < arr.length(); i++) {
+					JSONObject obj = arr.getJSONObject(i);
+					String name = obj.getString("name");
+					mRegionList.add(name);
+				}
+
+				mHostActivity.setActionBar("");
+				mHostActivity.actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+
+				ArrayAdapter<String> regionListAdapter = new ArrayAdapter<String>(
+						mHostActivity, android.R.layout.simple_list_item_1,
+						android.R.id.text1, mRegionList);
+
+				mHostActivity.actionBar.setListNavigationCallbacks(regionListAdapter, this);
+				mHostActivity.actionBar.setSelectedNavigationItem(mHostActivity
+						.sharedPreference.getInt(KEY_PREFERENCE_REGION_INDEX, 0));
+
+			} catch (Exception e) {
+				if (DEBUG)
+					e.printStackTrace();
+
+				LoadingDialog.hideLoading();
+				mHostActivity.addFragment(new ErrorFragment());
+			}
+		}
+	}
+
+	@Override
+	public void onResponse(String url, String response) {
+		if (url.contains(URL_WEBAPI_APP_TIME)) {
+			Log.d(TAG, response.toString());
+			mDailyHotelSaleTime.setCurrentTime(response
+					.toString());
+			
+			// 오픈, 클로즈 타임을 가져온다
+			mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(
+					URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_SALE_TIME)
+					.toString(), null, HotelListFragment.this,
+					HotelListFragment.this));
+			
+		} 
+	}
+	
+	// private void customizeFastScrollerOfListView(ListView listView) {
+		//
+		// try {
+		//
+		// Class<?> clazz = Class.forName("android.widget.FastScroller");
+		// Constructor<?> constructor = clazz.getConstructor(
+		// AbsListView.class);
+		// Object newFastScroller = constructor.newInstance(listView);
+		//
+		// Field padding = clazz.getDeclaredField("mPreviewPadding");
+		// padding.setAccessible(true);
+		//
+		// int oldPadding = padding.getInt(newFastScroller);
+		// Log.d(TAG, Integer.toString(oldPadding));
+		//
+		// padding.set(newFastScroller, 24);
+		// int newPadding = padding.getInt(newFastScroller);
+		// Log.d(TAG, Integer.toString(newPadding));
+		//
+		// padding.setAccessible(false);
+		//
+		//
+		// Field orgFastScroller =
+		// AbsListView.class.getDeclaredField("mFastScroller");
+		// orgFastScroller.setAccessible(true);
+		// orgFastScroller.set(listView, newFastScroller);
+		//
+		// orgFastScroller.setAccessible(false);
+		//
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// }
+		//
+		// }
+	
 }

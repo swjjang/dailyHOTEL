@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.view;
+package com.twoheart.dailyhotel.widget;
 
 import java.util.ArrayList;
 import java.util.List;
