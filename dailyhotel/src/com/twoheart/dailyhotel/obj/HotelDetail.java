@@ -15,6 +15,7 @@ public class HotelDetail implements Parcelable {
 	private double mLongitude;
 	private Map<String, List<String>> mSpecification = new HashMap<String, List<String>>();
 	private List<String> mImageUrl = new ArrayList<String>();
+	private int mSaleIdx;
 	
 	public HotelDetail() {
 	}
@@ -30,15 +31,17 @@ public class HotelDetail implements Parcelable {
 		dest.writeDouble(mLongitude);
 		dest.writeMap(mSpecification);
 		dest.writeList(mImageUrl);
+		dest.writeInt(mSaleIdx);
 
 	}
 	
 	private void readFromParcel(Parcel in) {
-		in.readValue(Hotel.class.getClassLoader());
+		mHotel = (Hotel) in.readValue(Hotel.class.getClassLoader());
 		mLatitude = in.readDouble();
 		mLongitude = in.readDouble();
 		in.readMap(mSpecification, Map.class.getClassLoader());
 		in.readList(mImageUrl, List.class.getClassLoader());
+		mSaleIdx = in.readInt();
 	}
 	
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
@@ -89,7 +92,13 @@ public class HotelDetail implements Parcelable {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-	
-	
+
+	public int getSaleIdx() {
+		return mSaleIdx;
+	}
+
+	public void setSaleIdx(int saleIdx) {
+		this.mSaleIdx = saleIdx;
+	}
 
 }

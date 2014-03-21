@@ -1,7 +1,9 @@
 package com.twoheart.dailyhotel.activity;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.json.JSONObject;
 
@@ -12,7 +14,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,6 +26,10 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
+import com.android.volley.Request.Method;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.VolleyError;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
@@ -32,268 +37,231 @@ import com.facebook.SessionState;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
-import com.twoheart.dailyhotel.util.network.OnCompleteListener;
-import com.twoheart.dailyhotel.util.network.Parameter;
+import com.twoheart.dailyhotel.util.Log;
+import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
+import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
-public class LoginActivity extends BaseActivity implements OnClickListener{
-	
+public class LoginActivity extends BaseActivity implements Constants,
+		OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
+
 	private static final String TAG = "LoginActivity";
-	
-	private final static int SETTING_FRAGMENT = 1;
-	private final static int NOLOGIN_FRAGMENT = 2;
-	private final static int BOOKING_FRAGMENT = 3;
-	private final static int HOTEL_TAB_FRAGMENT = 4;
-	private final static int LOGIN_ACTIVITY = 5;
-	
-	private EditText et_id, et_pwd;
-	private CheckBox cb_auto;
-	private Button btn_login;
-	private TextView tv_signup, tv_forgot;
+
+	private RequestQueue mQueue;
+
+	private EditText etId, etPwd;
+	private CheckBox cbxAutoLogin;
+	private Button btnLogin;
+	private TextView tvSignUp, tvForgotPwd;
 	private LoginButton facebookLogin;
-	
-	private SharedPreferences prefs;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setActionBar("로그인");
 		setContentView(R.layout.activity_login);
-		loadResource();
-		
-	}
-	
-	public void loadResource() {
-		et_id = (EditText) findViewById(R.id.et_login_id);
-		et_pwd = (EditText) findViewById(R.id.et_login_pwd);
-		cb_auto = (CheckBox) findViewById(R.id.cb_login_auto);
-		tv_signup = (TextView) findViewById(R.id.tv_login_signup);
-		tv_forgot = (TextView) findViewById(R.id.tv_login_forgot);
-		btn_login = (Button)	 findViewById(R.id.btn_login);
+
+		mQueue = VolleyHttpClient.getRequestQueue();
+
+		etId = (EditText) findViewById(R.id.et_login_id);
+		etPwd = (EditText) findViewById(R.id.et_login_pwd);
+		cbxAutoLogin = (CheckBox) findViewById(R.id.cb_login_auto);
+		tvSignUp = (TextView) findViewById(R.id.tv_login_signup);
+		tvForgotPwd = (TextView) findViewById(R.id.tv_login_forgot);
+		btnLogin = (Button) findViewById(R.id.btn_login);
 		facebookLogin = (LoginButton) findViewById(R.id.authButton);
-		
-		tv_signup.setOnClickListener(this);
-		tv_forgot.setOnClickListener(this);
-		btn_login.setOnClickListener(this);
+
+		tvSignUp.setOnClickListener(this);
+		tvForgotPwd.setOnClickListener(this);
+		btnLogin.setOnClickListener(this);
 		facebookLogin.setOnClickListener(this);
 		facebookLogin.setVisibility(View.GONE);
-		
-		et_pwd.setId(EditorInfo.IME_ACTION_DONE);
-		et_pwd.setOnEditorActionListener(new OnEditorActionListener() {
-			
+
+		etPwd.setId(EditorInfo.IME_ACTION_DONE);
+		etPwd.setOnEditorActionListener(new OnEditorActionListener() {
+
 			@Override
-			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-				switch(actionId) {
-                case EditorInfo.IME_ACTION_DONE:
-                		btn_login.performClick();
-                    break;
-                }
+			public boolean onEditorAction(TextView v, int actionId,
+					KeyEvent event) {
+				switch (actionId) {
+				case EditorInfo.IME_ACTION_DONE:
+					btnLogin.performClick();
+					break;
+				}
 				return false;
 			}
 		});
-		
+
 	}
-	
+
 	private Session.StatusCallback statusCallback = new Session.StatusCallback() {
-	    @Override
-	    public void call(Session session, SessionState state, Exception exception) {
-	        onSessionStateChange(session, state, exception);
-	        
-	        if (exception != null)
-	        		exception.printStackTrace();
-	    }
+		@Override
+		public void call(Session session, SessionState state,
+				Exception exception) {
+			onSessionStateChange(session, state, exception);
+
+			if (exception != null)
+				exception.printStackTrace();
+		}
 	};
-	
-	private void onSessionStateChange(Session session, SessionState state, Exception exception) {
-	    if (state.isOpened()) {
-	        Log.i(TAG, "Facebook Login");
-	        session.requestNewReadPermissions(new Session
-				      .NewPermissionsRequest(LoginActivity.this, Arrays.asList("email")));
-				    
-	        makeMeRequest(session);
-	        
-	    } else if (state.isClosed()) {
-	        Log.i(TAG, "Facebook Logout");
-	    }
-	}
-	
-	private void makeMeRequest(final Session session) {
-		
-		Request request = Request.newMeRequest(session, new Request.GraphUserCallback() {
-			
-			@Override
-			public void onCompleted(GraphUser user, Response response) {
-				if (session == Session.getActiveSession()) {
-					if (user != null) {
-						
-						TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
-						String phoneNumber = telephonyManager.getLine1Number();
-						
-						ArrayList<Parameter> paramList = new ArrayList<Parameter>();
-						paramList.add(new Parameter("email", user.getProperty("email").toString()));
-						paramList.add(new Parameter("pw", null));
-						paramList.add(new Parameter("name", user.getName()));
-//						Log.d(TAG, user.getName());
-						paramList.add(new Parameter("phone", phoneNumber));
-						paramList.add(new Parameter("device", telephonyManager.getDeviceId()));
-						paramList.add(new Parameter("accessToken", user.getId()));
-						
-						et_id.setText(user.getId());
-						//TODO: 패스워드는 서버로부터 임의로 생성된 값을 받도록 한다.
-						
-//						new GeneralHttpTask(snsListener, paramList, getApplicationContext()).execute(REST_URL + LOGIN_FACEBOOK);
-					}
-				}
-				
-				Session.getActiveSession().closeAndClearTokenInformation();
-		 		Session.setActiveSession(null);
-			}
-		});
-		
-		request.executeAsync();
-	}
-	
-	@Override
-	public void onClick(View v) {
-		if( v.getId() == tv_forgot.getId()) {	// 비밀번호 찾기
-			Intent i = new Intent(this, ForgotPwdActivity.class);
-			startActivity(i);
-			overridePendingTransition(R.anim.slide_in_right,R.anim.hold);
-			
-		} else if( v.getId() == tv_signup.getId()) {  // 회원가입
-			Intent i = new Intent(this, SignupActivity.class);
-			startActivityForResult(i, LOGIN_ACTIVITY);
-			overridePendingTransition(R.anim.slide_in_right,R.anim.hold);
-			
-		} else if( v.getId() == btn_login.getId()) {	//로그인
-			if(!checkBlank())
-				return;
-			
-			String md5 = md5 = Crypto.encrypt(et_pwd.getText().toString()).replace("\n", "");
-			
-			ArrayList<Parameter> params = new ArrayList<Parameter>(); 
-			params.add(new Parameter("email", et_id.getText().toString()));
-			params.add(new Parameter("pw", md5));
-			
-			LoadingDialog.showLoading(this);
-//			new GeneralHttpTask(loginListener, params, getApplicationContext()).execute(REST_URL + LOGIN);
-		} else if ( v.getId() == facebookLogin.getId()) {
-			
-			Session.openActiveSession(this, true, statusCallback);			
+
+	private void onSessionStateChange(Session session, SessionState state,
+			Exception exception) {
+		if (state.isOpened()) {
+			Log.d(TAG, "Facebook Login");
+			session.requestNewReadPermissions(new Session.NewPermissionsRequest(
+					LoginActivity.this, Arrays.asList("email")));
+
+			makeMeRequest(session);
+
+		} else if (state.isClosed()) {
+			Log.d(TAG, "Facebook Logout");
 		}
 	}
-	
-	public boolean checkBlank() {
-		if (et_id.getText().toString().trim().length() == 0) {
+
+	private void makeMeRequest(final Session session) {
+
+		Request request = Request.newMeRequest(session,
+				new Request.GraphUserCallback() {
+
+					@Override
+					public void onCompleted(GraphUser user, Response response) {
+						if (session == Session.getActiveSession()) {
+							if (user != null) {
+
+								TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext()
+										.getSystemService(
+												Context.TELEPHONY_SERVICE);
+								String phoneNumber = telephonyManager
+										.getLine1Number();
+
+								Map<String, String> loginParams = new HashMap<String, String>();
+								loginParams.put("email",
+										user.getProperty("email").toString());
+								loginParams.put("pw", null);
+								loginParams.put("name", user.getName());
+								loginParams.put("phone", phoneNumber);
+								loginParams.put("device",
+										telephonyManager.getDeviceId());
+								loginParams.put("accessToken", user.getId());
+
+								etId.setText(user.getId());
+								// TODO: 패스워드는 서버로부터 임의로 생성된 값을 받도록 한다.
+
+								LoadingDialog.showLoading(LoginActivity.this);
+
+								mQueue.add(new DailyHotelJsonRequest(
+										Method.POST, new StringBuilder(
+												URL_DAILYHOTEL_SERVER).append(
+												URL_WEBAPI_USER_LOGIN_FACEBOOK)
+												.toString(), loginParams,
+										LoginActivity.this, LoginActivity.this));
+							}
+						}
+
+						Session.getActiveSession()
+								.closeAndClearTokenInformation();
+						Session.setActiveSession(null);
+					}
+				});
+
+		request.executeAsync();
+	}
+
+	@Override
+	public void onClick(View v) {
+		if (v.getId() == tvForgotPwd.getId()) { // 비밀번호 찾기
+			Intent i = new Intent(this, ForgotPwdActivity.class);
+			startActivity(i);
+			overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
+		} else if (v.getId() == tvSignUp.getId()) { // 회원가입
+			Intent i = new Intent(this, SignupActivity.class);
+			startActivityForResult(i, CODE_REQUEST_ACTIVITY_LOGIN);
+			overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
+		} else if (v.getId() == btnLogin.getId()) { // 로그인
+			if (!isBlankFields())
+				return;
+
+			String md5 = Crypto.encrypt(etPwd.getText().toString()).replace(
+					"\n", "");
+
+			Map<String, String> loginParams = new LinkedHashMap<String, String>();
+			loginParams.put("email", etId.getText().toString());
+			loginParams.put("pw", md5);
+			
+			LoadingDialog.showLoading(this);
+
+			mQueue.add(new DailyHotelJsonRequest(Method.POST,
+					new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+							URL_WEBAPI_USER_LOGIN).toString(), loginParams,
+					this, this));
+
+		} else if (v.getId() == facebookLogin.getId()) {
+
+			Session.openActiveSession(this, true, statusCallback);
+		}
+	}
+
+	public boolean isBlankFields() {
+		if (etId.getText().toString().trim().length() == 0) {
 			Toast.makeText(this, "아이디를 입력해주세요", Toast.LENGTH_SHORT).show();
 			return false;
 		}
-		
-		if (et_pwd.getText().toString().trim().length() == 0) {
+
+		if (etPwd.getText().toString().trim().length() == 0) {
 			Toast.makeText(this, "비밀번호를 입력해주세요", Toast.LENGTH_SHORT).show();
 			return false;
 		}
-		
+
 		return true;
 	}
-	
-	public void parseJson(String str) {
-		JSONObject obj = null;
-		
-		try{
-			obj = new JSONObject(str);
-			String msg = null;
-			
-			if ( obj.getString("login").equals("true") ) {
-				
-				if(obj.length() > 1)
-					et_pwd.setText(obj.getString("msg"));
-				
-				Log.d(TAG, "로그인 성공");
-				Toast.makeText(getApplicationContext(), "로그인되었습니다.", Toast.LENGTH_SHORT).show();
-				LoadingDialog.hideLoading();
-				commitLogin();
-				
-			} else {
-				// 로그인 실패
-				// 실패 msg 출력
-				if(obj.length() > 1)  {
-					msg = obj.getString("msg");
-					AlertDialog.Builder alert = new AlertDialog.Builder(this);
-					alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-					    @Override
-					    public void onClick(DialogInterface dialog, int which) {
-					    		dialog.dismiss();     //닫기
-					    }
-					});
-					alert.setMessage(msg);
-					alert.show();
-				}
-				LoadingDialog.hideLoading();
-			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-//			Log.e(TAG, obj.toString());
-			
-			LoadingDialog.hideLoading();
-			Toast.makeText(getApplicationContext(), "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.", Toast.LENGTH_SHORT).show();
-		}
-	}
-	
-	
-	
-	public void commitLogin() {
 
-//		prefs = getSharedPreferences(SHARED_PREFERENCES_NAME, 0);
-//		
-//		// 자동 로그인 체크시
-//		if(cb_auto.isChecked()) {
-//			SharedPreferences.Editor ed = prefs.edit();
-//			ed.putBoolean(PREFERENCE_AUTO_LOGIN, true);
-//			ed.putString(PREFERENCE_USER_ID, et_id.getText().toString());
-//			ed.putString(PREFERENCE_USER_PWD, Crypto.encrypt(et_pwd.getText().toString()).replace("\n", ""));
-//			ed.commit();
-//			
-//			if (Constants.DEBUG) {
-//				Log.d("ID", et_id.getText().toString());
-//				Log.d("PW", et_pwd.getText().toString());
-//			}
-//		} 
-//		
-//		// 로그인 상태 저장
-//		SharedPreferences.Editor ed = prefs.edit();
-//		ed.putBoolean(PREFERENCE_IS_LOGIN, true);
-//		ed.commit();
-//		
-//		setResult(RESULT_OK);
-//		finish();
+	public void storeLoginInfo() {
+
+		// 자동 로그인 체크시
+		if (cbxAutoLogin.isChecked()) {
+			String id = etId.getText().toString();
+			String pwd = Crypto.encrypt(etPwd.getText().toString()).replace(
+					"\n", "");
+
+			SharedPreferences.Editor ed = sharedPreference.edit();
+			ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, true);
+			ed.putString(KEY_PREFERENCE_USER_ID, id);
+			ed.putString(KEY_PREFERENCE_USER_PWD, pwd);
+			ed.commit();
+		}
+
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		
-		if(requestCode == LOGIN_ACTIVITY) {
-			if(resultCode == RESULT_OK) {
+
+		if (requestCode == CODE_REQUEST_ACTIVITY_LOGIN) {
+			if (resultCode == RESULT_OK) {
 				setResult(RESULT_OK);
 				finish();
 			}
 		} else {
-			Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
+			Session.getActiveSession().onActivityResult(this, requestCode,
+					resultCode, data);
 		}
-		
+
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		finish();
 		overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
 		super.onBackPressed();
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -303,36 +271,68 @@ public class LoginActivity extends BaseActivity implements OnClickListener{
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
-	protected OnCompleteListener loginListener = new OnCompleteListener() {
-		
-		@Override
-		public void onTaskFailed() {
-			Log.d("TAG", "loginListener onTaskFailed");
-			Toast.makeText(getApplicationContext(), "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.", Toast.LENGTH_SHORT).show();
-			LoadingDialog.hideLoading();
+
+	@Override
+	public void onErrorResponse(VolleyError error) {
+		if (DEBUG)
+			error.printStackTrace();
+
+		Toast.makeText(this, "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
+				Toast.LENGTH_SHORT).show();
+		LoadingDialog.hideLoading();
+
+	}
+
+	@Override
+	public void onResponse(String url, JSONObject response) {
+		if (url.contains(URL_WEBAPI_USER_LOGIN)) {
+			JSONObject obj = response;
+
+			try {
+				String msg = null;
+
+				if (obj.getString("login").equals("true")) {
+
+					if (obj.length() > 1)
+						etPwd.setText(obj.getString("msg"));
+
+					Log.d(TAG, "로그인 성공");
+					Toast.makeText(getApplicationContext(), "로그인되었습니다",
+							Toast.LENGTH_SHORT).show();
+					LoadingDialog.hideLoading();
+					storeLoginInfo();
+
+					setResult(RESULT_OK);
+					finish();
+
+				} else {
+					// 로그인 실패
+					// 실패 msg 출력
+					if (obj.length() > 1) {
+						msg = obj.getString("msg");
+						AlertDialog.Builder alert = new AlertDialog.Builder(
+								this);
+						alert.setPositiveButton("확인",
+								new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+										dialog.dismiss(); // 닫기
+									}
+								});
+						alert.setMessage(msg);
+						alert.show();
+					}
+					LoadingDialog.hideLoading();
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+
+				LoadingDialog.hideLoading();
+				Toast.makeText(this, "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
+						Toast.LENGTH_SHORT).show();
+			}
 		}
-		
-		@Override
-		public void onTaskComplete(String result) {
-			parseJson(result);
-		}
-	};
-	
-	protected OnCompleteListener snsListener = new OnCompleteListener() {
-		
-		@Override
-		public void onTaskFailed() {
-			Log.d("TAG", "loginListener onTaskFailed");
-			Toast.makeText(getApplicationContext(), "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.", Toast.LENGTH_SHORT).show();
-			LoadingDialog.hideLoading();
-		}
-		
-		@Override
-		public void onTaskComplete(String result) {
-			parseJson(result);
-		}
-	};
-	
-	
+	}
 }

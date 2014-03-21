@@ -12,13 +12,14 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.HotelTabActivity;
+import com.twoheart.dailyhotel.activity.TabActivity;
 import com.twoheart.dailyhotel.obj.HotelDetail;
 
-public class HotelTabInfoFragment extends Fragment {
+public class TabInfoFragment extends Fragment {
 
 	private static final String TAG = "HotelTabInfoFragment";
 
-	private HotelTabActivity mHostActivity;
+	private TabActivity mHostActivity;
 	private HotelDetail mHotelDetail;
 	private LinearLayout layout;
 
@@ -29,7 +30,7 @@ public class HotelTabInfoFragment extends Fragment {
 			Bundle savedInstanceState) {
 
 		View view = inflater.inflate(R.layout.fragment_hotel_tab_info, null);
-		mHostActivity = (HotelTabActivity) getActivity();
+		mHostActivity = (TabActivity) getActivity();
 		mHotelDetail = mHostActivity.hotelDetail;
 
 		layout = (LinearLayout) view.findViewById(R.id.layout_hotel_tab_info);

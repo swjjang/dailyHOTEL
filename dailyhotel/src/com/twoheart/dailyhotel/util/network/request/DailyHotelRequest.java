@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.util.network.vo;
+package com.twoheart.dailyhotel.util.network.request;
 
 import java.util.Map;
 
@@ -7,8 +7,8 @@ import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.StringRequest;
-import com.twoheart.dailyhotel.util.network.DailyHotelResponseListener;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
+import com.twoheart.dailyhotel.util.network.response.DailyHotelResponseListener;
 
 public class DailyHotelRequest extends StringRequest {
 

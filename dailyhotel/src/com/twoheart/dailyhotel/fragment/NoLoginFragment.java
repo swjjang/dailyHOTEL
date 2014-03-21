@@ -1,11 +1,5 @@
 package com.twoheart.dailyhotel.fragment;
 
-import com.twoheart.dailyhotel.MainActivity;
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.activity.LoginActivity;
-import com.twoheart.dailyhotel.activity.SignupActivity;
-import com.twoheart.dailyhotel.util.ui.NoActionBarException;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,62 +9,57 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-public class NoLoginFragment extends Fragment implements OnClickListener{
+import com.twoheart.dailyhotel.MainActivity;
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.activity.LoginActivity;
+import com.twoheart.dailyhotel.activity.SignupActivity;
+import com.twoheart.dailyhotel.util.Constants;
+
+public class NoLoginFragment extends Fragment implements OnClickListener, Constants {
 	private final static String TAG = "NoLoginFragment";
-	private final static int NOLOGIN_FRAGMENT = 2;
 	
-	private View view;
-	private Button btn_login, btn_signup;
+	private MainActivity mHostActivity;
+	private Button btnLogin, btnSignup;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		view = inflater.inflate(R.layout.fragment_no_login, null);
+		View view = inflater.inflate(R.layout.fragment_no_login, null);
+		mHostActivity = (MainActivity) getActivity();
 		
-		// ActionBar Setting
-		MainActivity activity = (MainActivity)view.getContext();
-		activity.setActionBar("로그인하세요");
+		mHostActivity.setActionBar("로그인하세요");
 		
-		loadResource();
-		
+		btnLogin = (Button) view.findViewById(R.id.btn_no_login_login);
+		btnSignup = (Button) view.findViewById(R.id.btn_no_login_signup);
+		btnLogin.setOnClickListener(this);
+		btnSignup.setOnClickListener(this);
 		
 		return view;
 	}
 	
-	public void loadResource() {
-		btn_login = (Button) view.findViewById(R.id.btn_no_login_login);
-		btn_signup = (Button) view.findViewById(R.id.btn_no_login_signup);
-		btn_login.setOnClickListener(this);
-		btn_signup.setOnClickListener(this);
-	}
-	
 	@Override
 	public void onClick(View v) {
-		if (v.getId() == btn_login.getId()) {
-			Intent i = new Intent(view.getContext(), LoginActivity.class);
-			MainActivity activity = (MainActivity) view.getContext();
-			startActivityForResult(i, NOLOGIN_FRAGMENT);
-			activity.overridePendingTransition(R.anim.slide_in_right,R.anim.hold);
+		if (v.getId() == btnLogin.getId()) {
+			Intent i = new Intent(mHostActivity, LoginActivity.class);
+			startActivityForResult(i, CODE_REQUEST_FRAGMENT_NOLOGIN);
+			mHostActivity.overridePendingTransition(R.anim.slide_in_right,R.anim.hold);
 			
-		} else if(v.getId() == btn_signup.getId()) {
-			Intent i = new Intent(view.getContext(), SignupActivity.class);
-			MainActivity activity = (MainActivity) view.getContext();
-			startActivityForResult(i, NOLOGIN_FRAGMENT);
-			activity.overridePendingTransition(R.anim.slide_in_right,R.anim.hold);
+		} else if(v.getId() == btnSignup.getId()) {
+			Intent i = new Intent(mHostActivity, SignupActivity.class);
+			startActivityForResult(i, CODE_REQUEST_FRAGMENT_NOLOGIN);
+			mHostActivity.overridePendingTransition(R.anim.slide_in_right,R.anim.hold);
 		}
 	}
-	
 	
 	// 로그인하고 돌아왔을때 fragment switch
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		
-		if(requestCode == NOLOGIN_FRAGMENT) {
+		if(requestCode == CODE_REQUEST_FRAGMENT_NOLOGIN) {
 			if(resultCode == getActivity().RESULT_OK) {
-				MainActivity activity = (MainActivity) view.getContext();
-//				activity.switchContent(new CreditFragment());
+				mHostActivity.replaceFragment(mHostActivity.getFragment(mHostActivity.INDEX_CREDIT_FRAGMENT));
 			}
 		}
 	}

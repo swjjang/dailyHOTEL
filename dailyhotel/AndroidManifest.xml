@@ -88,7 +88,7 @@
             android:label=""
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.twoheart.dailyhotel.activity.IntroductionActivity"
+            android:name="com.twoheart.dailyhotel.activity.AboutActivity"
             android:icon="@drawable/dh_ic_no"
             android:label=""
             android:screenOrientation="portrait" />
@@ -98,7 +98,7 @@
             android:label=""
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.twoheart.dailyhotel.activity.HelpActivity"
+            android:name="com.twoheart.dailyhotel.activity.FAQActivity"
             android:icon="@drawable/dh_ic_no"
             android:label=""
             android:screenOrientation="portrait" />
@@ -118,12 +118,12 @@
             android:label=""
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.twoheart.dailyhotel.activity.AgreementActivity"
+            android:name="com.twoheart.dailyhotel.activity.TermActivity"
             android:icon="@drawable/dh_ic_no"
             android:label=""
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.twoheart.dailyhotel.activity.PersonalInfoActivity"
+            android:name="com.twoheart.dailyhotel.activity.PrivacyActivity"
             android:icon="@drawable/dh_ic_no"
             android:label=""
             android:screenOrientation="portrait" />

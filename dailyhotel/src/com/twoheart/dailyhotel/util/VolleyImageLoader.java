@@ -15,7 +15,6 @@ public class VolleyImageLoader {
 	
 	public static void init(Context context) {
 
-		VolleyHttpClient.init(context);
 		sRequestQueue = VolleyHttpClient.getRequestQueue();
 		
         int memClass = ((ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE))

@@ -5,9 +5,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.json.JSONObject;
-
-import android.content.SharedPreferences;
+import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -19,24 +17,23 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.VolleyError;
-import com.twoheart.dailyhotel.adapter.DrawerMenuListAdapter;
 import com.twoheart.dailyhotel.fragment.BookingListFragment;
 import com.twoheart.dailyhotel.fragment.CreditFragment;
 import com.twoheart.dailyhotel.fragment.HotelListFragment;
 import com.twoheart.dailyhotel.fragment.SettingFragment;
-import com.twoheart.dailyhotel.obj.DrawerMenu;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.network.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.network.DailyHotelResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 public class MainActivity extends BaseActivity implements OnItemClickListener,
@@ -64,6 +61,12 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 	public ListView drawerList;
 	public ActionBarDrawerToggle drawerToggle;
 	private FragmentManager mFragmentManager;
+	protected Fragment mFragment;
+
+	protected DrawerMenu mMenuHotelListFragment;
+	protected DrawerMenu mMenuBookingListFragment;
+	protected DrawerMenu mMenuCreditFragment;
+	protected DrawerMenu mMenuSettingFragment;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -115,7 +118,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 
 	public void replaceFragment(Fragment fragment) {
 		mFragmentManager.beginTransaction()
-				.replace(R.id.content_frame, fragment).commitAllowingStateLoss();
+				.replace(R.id.content_frame, fragment)
+				.commitAllowingStateLoss();
 
 	}
 
@@ -123,10 +127,10 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 		mFragmentManager.beginTransaction().add(R.id.content_frame, fragment)
 				.addToBackStack(null).commitAllowingStateLoss();
 	}
-	
+
 	public void removeFragment(Fragment fragment) {
-		mFragmentManager.beginTransaction()
-				.remove(fragment).commitAllowingStateLoss();
+		mFragmentManager.beginTransaction().remove(fragment)
+				.commitAllowingStateLoss();
 	}
 
 	public void printPackageHashKey() {
@@ -275,5 +279,131 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 	// super.finish();
 	//
 	// }
+
+	private class DrawerMenu {
+
+		public static final int DRAWER_MENU_LIST_TYPE_LOGO = 0;
+		public static final int DRAWER_MENU_LIST_TYPE_SECTION = 1;
+		public static final int DRAWER_MENU_LIST_TYPE_ENTRY = 2;
+
+		private String title;
+		private int icon;
+		private int type;
+
+		public DrawerMenu(int type) {
+			super();
+			this.type = type;
+		}
+
+		public DrawerMenu(String title, int type) {
+			super();
+			this.title = title;
+			this.type = type;
+		}
+
+		public DrawerMenu(String title, int icon, int type) {
+			super();
+			this.title = title;
+			this.icon = icon;
+			this.type = type;
+		}
+
+		public int gettype() {
+			return type;
+		}
+
+		public void settype(int type) {
+			this.type = type;
+		}
+
+		public String getTitle() {
+			return title;
+		}
+
+		public void setTitle(String title) {
+			this.title = title;
+		}
+
+		public int getIcon() {
+			return icon;
+		}
+
+		public void setIcon(int icon) {
+			this.icon = icon;
+		}
+
+	}
+
+	private class DrawerMenuListAdapter extends BaseAdapter {
+
+		private List<DrawerMenu> list;
+		private LayoutInflater inflater;
+		private Context context;
+		private int layout;
+
+		public DrawerMenuListAdapter(Context context, int layout,
+				List<DrawerMenu> list) {
+			this.context = context;
+			this.layout = layout;
+			this.inflater = (LayoutInflater) this.context
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			this.list = list;
+		}
+
+		@Override
+		public int getCount() {
+			return list.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			return list.get(position);
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+
+			DrawerMenu item = list.get(position);
+
+			switch (item.gettype()) {
+			case DrawerMenu.DRAWER_MENU_LIST_TYPE_LOGO:
+				convertView = inflater.inflate(R.layout.drawer_list_item_logo,
+						null);
+				break;
+
+			case DrawerMenu.DRAWER_MENU_LIST_TYPE_SECTION:
+				convertView = inflater.inflate(
+						R.layout.drawer_list_item_section, null);
+
+				TextView drawerMenuItemTitle = (TextView) convertView
+						.findViewById(R.id.drawerMenuItemTitle);
+
+				drawerMenuItemTitle.setText(item.getTitle());
+
+				break;
+
+			case DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY:
+				convertView = inflater.inflate(R.layout.drawer_list_item_entry,
+						null);
+
+				ImageView drawerMenuItemIcon = (ImageView) convertView
+						.findViewById(R.id.drawerMenuItemIcon);
+				TextView drawerMenuItemText = (TextView) convertView
+						.findViewById(R.id.drawerMenuItemTitle);
+
+				drawerMenuItemIcon.setImageResource(item.getIcon());
+				drawerMenuItemText.setText(item.getTitle());
+
+				break;
+			}
+
+			return convertView;
+		}
+	}
 
 }

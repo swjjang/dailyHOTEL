@@ -9,16 +9,16 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-public class WordLineBreakTextView extends TextView {
+public class LineBreakByWordTextView extends TextView {
 	private int mAvailableWidth = 0;
 	private Paint mPaint;
 	private List<String> mCutStr = new ArrayList<String>();
 
-	public WordLineBreakTextView(Context context) {
+	public LineBreakByWordTextView(Context context) {
 		super(context);
 	}
 
-	public WordLineBreakTextView(Context context, AttributeSet attrs) {
+	public LineBreakByWordTextView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
 

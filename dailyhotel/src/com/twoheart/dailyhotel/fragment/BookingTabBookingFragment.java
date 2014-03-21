@@ -1,261 +1,205 @@
 package com.twoheart.dailyhotel.fragment;
 
 import java.util.HashMap;
+import java.util.Map;
 
-import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.analytics.tracking.android.Fields;
-import com.google.analytics.tracking.android.GoogleAnalytics;
-import com.google.analytics.tracking.android.Tracker;
+import com.android.volley.Request.Method;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.network.OnCompleteListener;
+import com.twoheart.dailyhotel.activity.BookingTabActivity;
+import com.twoheart.dailyhotel.activity.LoginActivity;
+import com.twoheart.dailyhotel.obj.HotelDetail;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
+import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.util.network.response.DailyHotelResponseListener;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
-public class BookingTabBookingFragment extends Fragment{
+public class BookingTabBookingFragment extends Fragment implements Constants,
+		ErrorListener, DailyHotelJsonResponseListener,
+		DailyHotelResponseListener {
 
 	private static final String TAG = "BookingTabBookingFragment";
-	
-	private View view;
-	
-	private String booking_idx;
-	
-	
-	private TextView tv_user_name, tv_hotel_name, tv_address;
-	private TextView tv_checkin, tv_checkout;
-	private SharedPreferences prefs;
-	
-	private Tracker mGaTracker;
-	private GoogleAnalytics mGaInstance;
-	
-	public static BookingTabBookingFragment newInstance() {
-		BookingTabBookingFragment fragment = new BookingTabBookingFragment();
-		return fragment;
-	}
-	
-	// Jason | Google analytics
-	@Override
-	public void onStart() {
-		super.onStart();
-		HashMap<String, String> hitParameters = new HashMap<String, String>();
-		hitParameters.put(Fields.HIT_TYPE, "appview");
-		hitParameters.put(Fields.SCREEN_NAME, "Booking View");
-		
-		mGaTracker.send(hitParameters);
-	}
-	
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		
-		view = inflater.inflate(R.layout.fragment_booking_tab_booking, null);
-		loadResource();
-		
-		// Google analytics
-		mGaInstance = GoogleAnalytics.getInstance(view.getContext());
-		mGaTracker = mGaInstance.getTracker("UA-43721645-1");
 
-//		new GeneralHttpTask(sessionListener, view.getContext()).execute(REST_URL + USER_ALIVE);
+	private BookingTabActivity mHostActivity;
+	private RequestQueue mQueue;
+
+	private TextView tvCustomerName, tvHotelName, tvAddress;
+	private TextView tvCheckIn, tvCheckOut;
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+
+		View view = inflater.inflate(R.layout.fragment_booking_tab_booking,
+				null);
+		mHostActivity = (BookingTabActivity) getActivity();
+		mQueue = VolleyHttpClient.getRequestQueue();
+
+		tvCustomerName = (TextView) view
+				.findViewById(R.id.tv_booking_tab_user_name);
+		tvHotelName = (TextView) view
+				.findViewById(R.id.tv_booking_tab_hotel_name);
+		tvAddress = (TextView) view.findViewById(R.id.tv_booking_tab_address);
+		tvCheckIn = (TextView) view.findViewById(R.id.tv_booking_tab_checkin);
+		tvCheckOut = (TextView) view.findViewById(R.id.tv_booking_tab_checkout);
 		
+		tvHotelName.setText(mHostActivity.hotelDetail.getHotel().getName());
+		tvAddress.setText(mHostActivity.hotelDetail.getHotel().getAddress());
+		
+		LoadingDialog.showLoading(mHostActivity);
+
+		mQueue.add(new DailyHotelRequest(Method.GET,
+				new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+						URL_WEBAPI_USER_ALIVE).toString(), null, this, this));
+
 		return view;
 	}
-	
-	public void loadResource() {
-		tv_user_name = (TextView) view.findViewById(R.id.tv_booking_tab_user_name);
-		tv_hotel_name = (TextView) view.findViewById(R.id.tv_booking_tab_hotel_name);
-		tv_address= (TextView) view.findViewById(R.id.tv_booking_tab_address);
-		tv_checkin = (TextView) view.findViewById(R.id.tv_booking_tab_checkin);
-		tv_checkout = (TextView) view.findViewById(R.id.tv_booking_tab_checkout);
-	}
-	
-	public void parseLoginJson(String str) {
-		try {
-			JSONObject obj = new JSONObject(str);
-			if ( obj.getString("login").equals("true") ) {
-//				new GeneralHttpTask(userInfoListener, view.getContext()).execute(REST_URL + USERINFO);
-				
-			} else {
-				// 로그인 실패
-//				Toast.makeText(view.getContext(), "로그인이 필요합니다", Toast.LENGTH_SHORT).show();
-//				SharedPreferences.Editor ed = prefs.edit();
-//				ed.putBoolean(PREFERENCE_AUTO_LOGIN, false);
-//				ed.putBoolean(PREFERENCE_IS_LOGIN, false);
-//				ed.commit();
-				
-				Toast.makeText(view.getContext(), "다시 로그인 해주세요", Toast.LENGTH_SHORT).show();
-			}
-		} catch (Exception e) {
-			Log.d(TAG, "parseLoginJson " +  e.toString());
-			Toast.makeText(view.getContext(), "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.", Toast.LENGTH_SHORT).show();
-		}
-	}
-	
-	public void parseCheckinJson(String str) {
-		try {
-			JSONObject obj = new JSONObject(str);
-			String checkin = obj.getString("checkin");
-			String checkout = obj.getString("checkout");
-			
-			String in[] = checkin.split("-");
-			tv_checkin.setText("20" + in[0] + "년 " + in[1] + "월 " + in[2] + "일 " + in[3] + "시");
-			String out[] = checkout.split("-");
-			tv_checkout.setText("20" + out[0] + "년 " + out[1] + "월 " + out[2] + "일 " + out[3] + "시");
-			
-		} catch (Exception e) {
-			Log.d("parseCheckinJson", "TagDataParser" + "->" + e.toString());
-			Toast.makeText(view.getContext(), "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.", Toast.LENGTH_SHORT).show();
-		}
-	}
-	
-	
-	public void parseJson(String str) {
-		
-		try {
-			JSONObject obj = new JSONObject(str);
-			JSONArray bookingArr = obj.getJSONArray("detail");
-			JSONObject detailObj =  bookingArr.getJSONObject(0);
-			
-			tv_hotel_name.setText(detailObj.getString("hotel_name"));
-			tv_address.setText(detailObj.getString("address"));
-			
-			booking_idx = Integer.toString(detailObj.getInt("idx"));
-			
-//			String cat = detailObj.getString("cat");
-//			ImageView grade = (ImageView) view.findViewById(R.id.iv_booking_tab_grade);
-//			
-//			if(cat.equals("biz")) {
-//				grade.setImageResource(R.drawable.dh_grademark_biz);
-//			} else if(cat.equals("boutique")) {
-//				grade.setImageResource(R.drawable.dh_grademark_boutique);
-//			} else if(cat.equals("residence")) {
-//				grade.setImageResource(R.drawable.dh_grademark_residence);
-//			} else if(cat.equals("special")) {
-//				grade.setImageResource(R.drawable.dh_grademark_special);
-//			}
-			
-//			new GeneralHttpTask(checkinListener, view.getContext()).execute(REST_URL + CHECKIN + booking_idx);
-						
-		} catch (Exception e) {
-			Log.d(TAG, e.toString());
-			Toast.makeText(view.getContext(), "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.", Toast.LENGTH_SHORT).show();
-		}
-	}
-	
-	//session check
-	protected OnCompleteListener sessionListener = new OnCompleteListener() {
-		
-		@Override
-		public void onTaskFailed() {
-			Log.d(TAG, "sessionListener onTAskFailed");
-			LoadingDialog.hideLoading();
-			Toast.makeText(view.getContext(), "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.", Toast.LENGTH_SHORT).show();
-		}
-		
-		@Override
-		public void onTaskComplete(String result) {
-			result = result.trim();
-			if(result.equals("alive")) {		// session alive
-				// 예약 list  요청
-//				new GeneralHttpTask(userInfoListener, view.getContext()).execute(REST_URL + USERINFO);
-				
-			} else if(result.equals("dead")){		// session dead
-				// 재로그인
-				
-//				// parameter setting
-//				ArrayList<Parameter> paramList = new ArrayList<Parameter>();
-//				paramList.add(new Parameter("email", prefs.getString(PREFERENCE_USER_ID, "")));
-//				paramList.add(new Parameter("pw", prefs.getString(PREFERENCE_USER_PWD, "")));
-//				
-//				// 로그인 요청
-//				new GeneralHttpTask(loginListener, paramList, view.getContext()).execute(REST_URL + LOGIN);
-				
-			} else {
-				Toast.makeText(view.getContext(), "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.", Toast.LENGTH_SHORT).show();
-			}
-		}
-	};
 
-	
-	protected OnCompleteListener loginListener = new OnCompleteListener() {
-		
-		@Override
-		public void onTaskFailed() {
-			Log.d(TAG, "loginListener onTAskFailed");
-			Toast.makeText(view.getContext(), "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.", Toast.LENGTH_SHORT).show();
-		}
-		
-		@Override
-		public void onTaskComplete(String result) {
-			parseLoginJson(result);
-		}
-	};
-	
-	protected OnCompleteListener userInfoListener = new OnCompleteListener() {
-		
-		@Override
-		public void onTaskFailed() {
-			Log.d("TAG", "userInfoListener onTaskFailed");
-			Toast.makeText(view.getContext(), "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.", Toast.LENGTH_SHORT).show();
-		}
-		
-		@Override
-		public void onTaskComplete(String result) {
+	@Override
+	public void onResponse(String url, JSONObject response) {
+		if (url.contains(URL_WEBAPI_USER_LOGIN)) {
 			try {
-				JSONObject obj =  new JSONObject(result);
+				if (!response.getString("login").equals("true")) {
+					// 로그인 실패
+					// data 초기화
+					SharedPreferences.Editor ed = mHostActivity.sharedPreference
+							.edit();
+					ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
+					ed.putString(KEY_PREFERENCE_USER_ID, null);
+					ed.putString(KEY_PREFERENCE_USER_PWD, null);
+					ed.commit();
+					
+					Toast.makeText(mHostActivity,
+							"로그인에 실패했습니다",
+							Toast.LENGTH_SHORT).show();
+					
+				}
+			} catch (JSONException e) {
+				if (DEBUG)
+					e.printStackTrace();
+
+				LoadingDialog.hideLoading();
+				Toast.makeText(mHostActivity,
+						"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
+						Toast.LENGTH_SHORT).show();
+			}
+
+		} else if (url.contains(URL_WEBAPI_USER_INFO)) {
+			try {
+				JSONObject obj = response;
 				String name = obj.getString("name");
-				tv_user_name.setText(name + " 님" );
-//				
-//				prefs = getActivity().getSharedPreferences(SHARED_PREFERENCES_NAME, 0);
-//				String hotel_idx = prefs.getString(PREFERENCE_HOTEL_IDX, null);
-//				String year = prefs.getString(PREFERENCE_HOTEL_YEAR, null);
-//				String month = prefs.getString(PREFERENCE_HOTEL_MONTH, null);
-//				String day = prefs.getString(PREFERENCE_HOTEL_DAY, null);
-//
-//				new GeneralHttpTask(bookingListener, view.getContext()).execute(REST_URL + DETAIL + hotel_idx + "/" + year + "/" + month + "/" + day);
+				tvCustomerName.setText(name + " 님");
 				
+				// 체크인 정보 요청.
+				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(
+						URL_DAILYHOTEL_SERVER).append(
+						URL_WEBAPI_RESERVE_CHECKIN).append(mHostActivity.hotelDetail.getSaleIdx()).toString(), null, this,
+						this));
+
 			} catch (Exception e) {
-				Log.d("userInfoListener", e.toString());
-				Toast.makeText(view.getContext(), "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.", Toast.LENGTH_SHORT).show();
+				if (DEBUG)
+					e.printStackTrace();
+
+				LoadingDialog.hideLoading();
+				Toast.makeText(mHostActivity,
+						"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
+						Toast.LENGTH_SHORT).show();
+			}
+
+		} else if (url.contains(URL_WEBAPI_RESERVE_CHECKIN)) {
+			try {
+				JSONObject obj = response;
+				String checkin = obj.getString("checkin");
+				String checkout = obj.getString("checkout");
+
+				String in[] = checkin.split("-");
+				tvCheckIn.setText("20" + in[0] + "년 " + in[1] + "월 " + in[2]
+						+ "일 " + in[3] + "시");
+				String out[] = checkout.split("-");
+				tvCheckOut.setText("20" + out[0] + "년 " + out[1] + "월 "
+						+ out[2] + "일 " + out[3] + "시");
+
+			} catch (Exception e) {
+				if (DEBUG)
+					e.printStackTrace();
+				
+				Toast.makeText(mHostActivity,
+						"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
+						Toast.LENGTH_SHORT).show();
+			} finally {
+				LoadingDialog.hideLoading();
 			}
 		}
-	};
-	
-	protected OnCompleteListener bookingListener = new OnCompleteListener() {
-		
-		@Override
-		public void onTaskFailed() {
-			Log.d("TAG", "bookingListener onTaskFailed");
-			Toast.makeText(view.getContext(), "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.", Toast.LENGTH_SHORT).show();
+
+	}
+
+	@Override
+	public void onErrorResponse(VolleyError error) {
+		if (DEBUG)
+			error.printStackTrace();
+
+		Toast.makeText(mHostActivity, "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
+				Toast.LENGTH_SHORT).show();
+		LoadingDialog.hideLoading();
+	}
+
+	@Override
+	public void onResponse(String url, String response) {
+		if (url.contains(URL_WEBAPI_USER_ALIVE)) {
+			String result = response.trim();
+			if (result.equals("alive")) { // session alive
+				// 사용자 정보 요청.
+				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(
+						URL_DAILYHOTEL_SERVER).append(
+						URL_WEBAPI_USER_INFO).toString(), null, this,
+						this));
+
+			} else if (result.equals("dead")) { // session dead
+
+				// 재로그인
+				if (mHostActivity.sharedPreference.getBoolean(
+						KEY_PREFERENCE_AUTO_LOGIN, false)) {
+					Map<String, String> loginParams = new HashMap<String, String>();
+					loginParams.put("email", mHostActivity.sharedPreference
+							.getString(KEY_PREFERENCE_USER_ID, null));
+					loginParams.put("pw", mHostActivity.sharedPreference
+							.getString(KEY_PREFERENCE_USER_PWD, null));
+
+					mQueue.add(new DailyHotelJsonRequest(Method.POST,
+							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+									URL_WEBAPI_USER_LOGIN).toString(),
+							loginParams, this, this));
+				} else {
+					startActivity(new Intent(mHostActivity, LoginActivity.class));
+				}
+
+			} else {
+				LoadingDialog.hideLoading();
+				Toast.makeText(mHostActivity,
+						"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
+						Toast.LENGTH_SHORT).show();
+			}
+
 		}
-		
-		@Override
-		public void onTaskComplete(String result) {
-			parseJson(result);
-		}
-	};
-	
-	protected OnCompleteListener checkinListener = new OnCompleteListener() {
-		
-		@Override
-		public void onTaskFailed() {
-			Log.d("TAG", "bookingListener onTaskFailed");
-			Toast.makeText(view.getContext(), "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.", Toast.LENGTH_SHORT).show();
-			
-		}
-		
-		@Override
-		public void onTaskComplete(String result) {
-			parseCheckinJson(result);
-		}
-	};
-	
+	}
+
 }

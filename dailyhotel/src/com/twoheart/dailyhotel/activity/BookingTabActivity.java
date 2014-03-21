@@ -1,52 +1,48 @@
 package com.twoheart.dailyhotel.activity;
 
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v7.app.ActionBarActivity;
-import android.text.Html;
-import android.util.Log;
 import android.view.MenuItem;
 
+import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.adapter.BookingAdapter;
-import com.twoheart.dailyhotel.util.ui.BaseActivity;
+import com.twoheart.dailyhotel.fragment.BookingTabBookingFragment;
+import com.twoheart.dailyhotel.fragment.TabInfoFragment;
+import com.twoheart.dailyhotel.fragment.TabMapFragment;
+import com.twoheart.dailyhotel.util.Log;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
+import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 import com.twoheart.dailyhotel.widget.HotelViewPager;
 import com.viewpagerindicator.TabPageIndicator;
 
-public class BookingTabActivity extends BaseActivity {
+public class BookingTabActivity extends TabActivity {
 
-	private final static String TAG ="BookingTabActivity";
-	
-	private HotelViewPager pager;
-	private TabPageIndicator indicator;
-	
+	private final static String TAG = "BookingTabActivity";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setActionBar("예약확인");
 		setContentView(R.layout.activity_booking_tab);
-		loadResource();
-		
-		FragmentPagerAdapter adapter = new BookingAdapter(getSupportFragmentManager());
-		pager.setOffscreenPageLimit(3);
-		pager.setAdapter(adapter);
-		indicator.setViewPager(pager);
-		
+
+		mViewPager = (HotelViewPager) findViewById(R.id.booking_pager);
+		mIndicator = (TabPageIndicator) findViewById(R.id.booking_indicator);
+
+		setTabPage();
+		String[] date = booking.getSday().split("-");
+
+		String url = new StringBuilder(URL_DAILYHOTEL_SERVER)
+				.append(URL_WEBAPI_HOTEL_DETAIL).append(booking.getHotel_idx())
+				.append("/").append(date[0]).append("/").append(date[1])
+				.append("/").append(date[2]).toString();
+
+		Log.d(TAG, url);
+
+		LoadingDialog.showLoading(this);
+		// 호텔 정보를 가져온다.
+		mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null, this, this));
+
 	}
-	
-	public void loadResource() {
-		pager = (HotelViewPager) findViewById(R.id.booking_pager);
-		indicator = (TabPageIndicator) findViewById(R.id.booking_indicator);
-	}
-	
-	@Override
-	public void onBackPressed() {
-		finish();
-		super.onBackPressed();
-	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -55,5 +51,22 @@ public class BookingTabActivity extends BaseActivity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	protected void loadFragments() {
+		
+		// TODO: BaseFragment 만들어서 통합적으로 관리할 것.
+		mFragments.add(new BookingTabBookingFragment());
+		mFragments.add(new TabInfoFragment());
+		mFragments.add(new TabMapFragment());
+
+		mTitles.add("예약");
+		mTitles.add("정보");
+		mTitles.add("지도");
+
+		mAdapter.notifyDataSetChanged();
+		mIndicator.notifyDataSetChanged();
+
 	}
 }

@@ -2,13 +2,15 @@ package com.twoheart.dailyhotel.activity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
@@ -17,10 +19,8 @@ public class VersionActivity extends BaseActivity implements OnClickListener {
 
 	private static final String TAG = "VersionActivity";
 
-	private TextView tv_cur, tv_new;
-	private Button btn_update;
-
-	private SharedPreferences prefs;
+	private TextView tvCurrentVersion, tvNewVersion;
+	private Button btnUpdate;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -28,28 +28,25 @@ public class VersionActivity extends BaseActivity implements OnClickListener {
 		setActionBar("버전정보");
 		setContentView(R.layout.activity_version);
 
-		loadResource();
+		tvCurrentVersion = (TextView) findViewById(R.id.tv_version_cur);
+		tvNewVersion = (TextView) findViewById(R.id.tv_version_new);
+		btnUpdate = (Button) findViewById(R.id.btn_version_update);
+		btnUpdate.setOnClickListener(this);
+		
 		getVersionInfo();
 
 	}
 
-	public void loadResource() {
-		tv_cur = (TextView) findViewById(R.id.tv_version_cur);
-		tv_new = (TextView) findViewById(R.id.tv_version_new);
-		btn_update = (Button) findViewById(R.id.btn_version_update);
-		btn_update.setOnClickListener(this);
-	}
-
 	public void getVersionInfo() {
 		try {
-//			prefs = getSharedPreferences(SHARED_PREFERENCES_NAME, 0);
-//			tv_cur.setText("v"
-//					+ getPackageManager().getPackageInfo(this.getPackageName(),
-//							0).versionName);
-//			tv_new.setText("v"
-//					+ prefs.getString(PREFERENCE_MAX_VERSION_NAME, "1.0.0"));
+			tvCurrentVersion.setText("v"
+					+ getPackageManager().getPackageInfo(this.getPackageName(),
+							0).versionName);
+			tvNewVersion.setText("v"
+					+ sharedPreference.getString(KEY_PREFERENCE_MAX_VERSION_NAME, "1.0.0"));
 		} catch (Exception e) {
-			e.toString();
+			if (DEBUG)
+				e.printStackTrace();
 		}
 
 	}
@@ -57,28 +54,28 @@ public class VersionActivity extends BaseActivity implements OnClickListener {
 	// Jason Park | Case of max version is equal to current version...
 	@Override
 	public void onClick(View v) {
-// 		if (v.getId() == btn_update.getId()) {
-//			try {
-//				int max_version = Integer.parseInt(prefs.getString(PREFERENCE_MAX_VERSION_NAME, null).replace(".", ""));
-//				int current_version = Integer.parseInt(this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName.replace(".", ""));
-//
-//				if (max_version == current_version) {
-//					Toast.makeText(getApplicationContext(), "이미 최신버전입니다.", Toast.LENGTH_LONG).show();
-//				} else {
-//					Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
-//					// Play Store
-//					marketLaunch
-//							.setData(Uri
-//									.parse("market://details?id=com.twoheart.dailyhotel"));
-//					// T Store
-//					// marketLaunch.setData(Uri.parse("http://tsto.re/0000412421"));
-//					startActivity(marketLaunch);
-//				}
-//
-//			} catch (Exception e) {
-//				e.toString();
-//			}
-//		}
+ 		if (v.getId() == btnUpdate.getId()) {
+			try {
+				int maxVersion = Integer.parseInt(sharedPreference.getString(KEY_PREFERENCE_MAX_VERSION_NAME, null).replace(".", ""));
+				int currentVersion = Integer.parseInt(this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName.replace(".", ""));
+
+				if (maxVersion == currentVersion) {
+					Toast.makeText(getApplicationContext(), "이미 최신버전입니다.", Toast.LENGTH_LONG).show();
+				} else {
+					Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+					// Play Store
+					marketLaunch
+							.setData(Uri
+									.parse("market://details?id=com.twoheart.dailyhotel"));
+					// T Store
+					// marketLaunch.setData(Uri.parse("http://tsto.re/0000412421"));
+					startActivity(marketLaunch);
+				}
+
+			} catch (Exception e) {
+				e.toString();
+			}
+		}
 	}
 
 	// Jason Park

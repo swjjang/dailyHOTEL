@@ -11,7 +11,7 @@ import android.view.MenuItem;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
-public class AgreementActivity extends BaseActivity {
+public class TermActivity extends BaseActivity {
 	
 	private static final String TAG = "AgreementActivity";
 	

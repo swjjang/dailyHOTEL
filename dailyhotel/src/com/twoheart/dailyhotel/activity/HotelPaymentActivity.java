@@ -1,19 +1,14 @@
 package com.twoheart.dailyhotel.activity;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,29 +23,36 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.analytics.tracking.android.Fields;
-import com.google.analytics.tracking.android.GoogleAnalytics;
-import com.google.analytics.tracking.android.Tracker;
+import com.android.volley.Request.Method;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.network.GeneralHttpTask;
-import com.twoheart.dailyhotel.util.network.OnCompleteListener;
-import com.twoheart.dailyhotel.util.network.Parameter;
+import com.twoheart.dailyhotel.obj.Credit;
+import com.twoheart.dailyhotel.obj.Customer;
+import com.twoheart.dailyhotel.obj.HotelDetail;
+import com.twoheart.dailyhotel.obj.Pay;
+import com.twoheart.dailyhotel.util.Log;
+import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
+import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.util.network.response.DailyHotelResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
 public class HotelPaymentActivity extends BaseActivity implements
-		OnClickListener, OnCheckedChangeListener,
+		DailyHotelResponseListener, DailyHotelJsonResponseListener,
+		ErrorListener, OnClickListener, OnCheckedChangeListener,
 		android.widget.CompoundButton.OnCheckedChangeListener {
 
 	private static final String TAG = "HotelPaymentActivity";
 
-	private static final int HOTEL_PAYMENT_ACTIVITY = 1;
+	private RequestQueue mQueue;
 
-	private TextView tv_checkin, tv_checkout, tv_original_price, tv_credit,
-			tv_price;
-	private Button btn_payment;
-	private Switch btn_on_off;
-
+	private TextView tvCheckIn, tvCheckOut, tvOriginalPrice, tvCredit, tvPrice;
+	private Button btnPay;
+	private Switch swCredit;
 	private TextView tvReserverName, tvReserverNumber, tvReserverEmail;
 	private LinearLayout llReserverInfoLabel, llReserverInfoEditable;
 	private EditText etReserverName, etReserverNumber, etReserverEmail;
@@ -58,82 +60,30 @@ public class HotelPaymentActivity extends BaseActivity implements
 	private RadioButton rbPaymentAccount, rbPaymentCard;
 	private TextView tvPaymentInformation;
 
-	private Boolean isBonus = false; // 적립금 사용
-	private Boolean isFullBonus = false; // 모든 금액을 적립금으로 할때
-
-	private String hotel_name;
-	private String year;
-	private String month;
-	private String day;
-	private String hotel_idx;
-	private String booking_idx;
-
-	private String email;
-	private String name;
-	private String phone;
-
-	private String credit;
-	private String original_price;
-
-	private String reserverName;
-	private String reserverNumber;
-	private String reserverEmail;
-
-	private boolean isPayment = false; // 결제 버튼 누르면 true, session listener 재사용위해
-
-	private int reservCnt; // 결제 전과 결제후 cnt 비교를 통해 다시 한번 결제된지 검증
-
-	private SharedPreferences prefs;
-
-	private Tracker mGaTracker;
-	private GoogleAnalytics mGaInstance;
-
-	// Jason | Google analytics
-	@Override
-	public void onStart() {
-		super.onStart();
-		HashMap<String, String> hitParameters = new HashMap<String, String>();
-		hitParameters.put(Fields.HIT_TYPE, "appview");
-		hitParameters.put(Fields.SCREEN_NAME, "Payment View");
-
-		mGaTracker.send(hitParameters);
-	}
+	private Pay mPay;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_hotel_payment);
 
-//		prefs = getSharedPreferences(SHARED_PREFERENCES_NAME, 0);
-//
-//		hotel_idx = prefs.getString(PREFERENCE_HOTEL_IDX, null);
-//		hotel_name = prefs.getString(PREFERENCE_HOTEL_NAME, null);
-//		year = prefs.getString(PREFERENCE_HOTEL_YEAR, null);
-//		month = prefs.getString(PREFERENCE_HOTEL_MONTH, null);
-//		day = prefs.getString(PREFERENCE_HOTEL_DAY, null);
-//
-//		setContentView(R.layout.activity_hotel_payment);
-//		setActionBar(hotel_name);
-//		// setTitle(hotel_name);
-//
-//		loadResource();
-//
-//		// Google analytics
-//		mGaInstance = GoogleAnalytics.getInstance(this);
-//		mGaTracker = mGaInstance.getTracker("UA-43721645-1");
-//
-//		LoadingDialog.showLoading(this);
-//		new GeneralHttpTask(sessionListener, getApplicationContext())
-//				.execute(REST_URL + USER_ALIVE);
-	}
+		mPay = new Pay();
+		Bundle bundle = getIntent().getExtras();
+		if (bundle != null) {
+			mPay.setHotelDetail((HotelDetail) bundle
+					.getParcelable(NAME_INTENT_EXTRA_DATA_HOTELDETAIL));
+		}
 
-	public void loadResource() {
-		tv_checkin = (TextView) findViewById(R.id.tv_hotel_payment_checkin);
-		tv_checkout = (TextView) findViewById(R.id.tv_hotel_payment_checkout);
-		tv_original_price = (TextView) findViewById(R.id.tv_hotel_payment_original_price);
-		tv_credit = (TextView) findViewById(R.id.tv_hotel_payment_credit);
-		tv_price = (TextView) findViewById(R.id.tv_hotel_payment_price);
-		btn_payment = (Button) findViewById(R.id.btn_hotel_payment);
-		btn_on_off = (Switch) findViewById(R.id.btn_on_off);
+		mQueue = VolleyHttpClient.getRequestQueue();
+		setActionBar(mPay.getHotelDetail().getHotel().getName());
+
+		tvCheckIn = (TextView) findViewById(R.id.tv_hotel_payment_checkin);
+		tvCheckOut = (TextView) findViewById(R.id.tv_hotel_payment_checkout);
+		tvOriginalPrice = (TextView) findViewById(R.id.tv_hotel_payment_original_price);
+		tvCredit = (TextView) findViewById(R.id.tv_hotel_payment_credit);
+		tvPrice = (TextView) findViewById(R.id.tv_hotel_payment_price);
+		btnPay = (Button) findViewById(R.id.btn_hotel_payment);
+		swCredit = (Switch) findViewById(R.id.btn_on_off);
 
 		tvReserverName = (TextView) findViewById(R.id.tv_hotel_payment_reserver_name);
 		tvReserverNumber = (TextView) findViewById(R.id.tv_hotel_payment_reserver_number);
@@ -153,10 +103,38 @@ public class HotelPaymentActivity extends BaseActivity implements
 		tvPaymentInformation = (TextView) findViewById(R.id.tv_payment_information);
 
 		rgPaymentMethod.setOnCheckedChangeListener(this);
-		btn_payment.setOnClickListener(this);
-		btn_on_off.setOnCheckedChangeListener(this);
+		btnPay.setOnClickListener(this);
+		swCredit.setOnCheckedChangeListener(this);
 
 		rbPaymentCard.setChecked(true);
+		
+		LoadingDialog.showLoading(this);
+
+		mQueue.add(new DailyHotelRequest(Method.GET,
+				new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+						URL_WEBAPI_USER_ALIVE).toString(), null, this, this));
+	}
+	
+	private void updatePayPrice(boolean applyCredit) {
+		
+		int originalPrice = Integer.parseInt(mPay.getHotelDetail().getHotel().getDiscount().replaceAll(",", ""));
+		int credit = Integer.parseInt(mPay.getCredit().getBonus());
+		
+		DecimalFormat comma = new DecimalFormat("###,##0");
+		tvOriginalPrice.setText("￦"
+				+ comma.format(originalPrice));
+		
+		if (applyCredit) {
+			mPay.setPayPrice(originalPrice - credit);
+			
+		} else {
+			mPay.setPayPrice(originalPrice);
+			
+		}
+		
+		tvPrice.setText("￦"
+				+ comma.format(mPay.getPayPrice()));
+		
 	}
 
 	public void dialog(String str) {
@@ -173,10 +151,10 @@ public class HotelPaymentActivity extends BaseActivity implements
 
 	@Override
 	public void onClick(View v) {
-		if (v.getId() == btn_payment.getId()) {
+		if (v.getId() == btnPay.getId()) {
 
 			if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentAccount
-					.getId()) {
+					.getId()) {	// 무통장 입금을 선택했을 경우
 				AlertDialog.Builder alert = new AlertDialog.Builder(this);
 				alert.setPositiveButton("전화",
 						new DialogInterface.OnClickListener() {
@@ -201,19 +179,16 @@ public class HotelPaymentActivity extends BaseActivity implements
 				alert.show();
 
 			} else if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentCard
-					.getId()) {
-				isPayment = true;
-
-				// ArrayList<Parameter> paramList = new ArrayList<Parameter>();
-				//
+					.getId()) {	//신용카드를 선택했을 경우
 
 				if (llReserverInfoEditable.getVisibility() == View.VISIBLE) {
 
-					email = etReserverEmail.getText().toString();
-					phone = etReserverNumber.getText().toString();
-					name = etReserverName.getText().toString();
+					mPay.getCustomer().setEmail(etReserverEmail.getText().toString());
+					mPay.getCustomer().setPhone(etReserverNumber.getText().toString());
+					mPay.getCustomer().setName(etReserverName.getText().toString());
 
-					if (!isEmptyTextField(new String[] { email, phone, name })) {
+					if (!isEmptyTextField(new String[] { mPay.getCustomer().getEmail(), 
+							mPay.getCustomer().getPhone(), mPay.getCustomer().getName() })) {
 						Toast.makeText(getApplicationContext(),
 								"예약자와 연락처, 이메일을 모두 입력해주십시요.", Toast.LENGTH_LONG)
 								.show();
@@ -222,18 +197,17 @@ public class HotelPaymentActivity extends BaseActivity implements
 
 				} else if (llReserverInfoLabel.getVisibility() == View.VISIBLE) {
 
-					email = tvReserverEmail.getText().toString();
-					phone = tvReserverNumber.getText().toString();
-					name = tvReserverName.getText().toString();
+					mPay.getCustomer().setEmail(tvReserverEmail.getText().toString());
+					mPay.getCustomer().setPhone(tvReserverNumber.getText().toString());
+					mPay.getCustomer().setName(tvReserverName.getText().toString());
 
 				}
+				
+				Intent intent = new Intent(this, PaymentActivity.class);
+				intent.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
+				startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PAYMENT);
 
-//				new GeneralHttpTask(sessionListener, getApplicationContext())
-//						.execute(REST_URL + USER_ALIVE);
 			}
-
-			Log.v("Pay", "click payment button");
-
 		}
 	}
 
@@ -266,487 +240,15 @@ public class HotelPaymentActivity extends BaseActivity implements
 	}
 
 	@Override
-	protected void onActivityResult(int p_requestCode, int p_resultCode,
-			Intent p_intentActivity) {
-
-		if (p_requestCode == HOTEL_PAYMENT_ACTIVITY) {
-			if (p_resultCode == RESULT_OK) {
-				String result = p_intentActivity
-						.getStringExtra("ActivityResult");
-				if (result.equals("SUCCESS")) {
-					// dialog("결제가 정상적으로 이루어 졌습니다");
-
-					Log.d(TAG, "SUCCESS");
-
-					AlertDialog.Builder alert = new AlertDialog.Builder(
-							HotelPaymentActivity.this);
-					alert.setPositiveButton("확인",
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which) {
-									dialog.dismiss(); // 닫기
-									setResult(RESULT_OK);
-									finish();
-								}
-							});
-					alert.setMessage("결제가 정상적으로 이루어 졌습니다");
-					alert.show();
-				} else if (result.equals("INVALID_SESSION")) {
-					// dialog("세션연결이 종료 되었습니다. 다시 시도해 주세요");
-					Log.d(TAG, "INVALID_SESSION");
-				} else if (result.equals("SOLD_OUT")) {
-					dialog("모든 객실이 판매되었습니다.\n다음에 이용해주세요.");
-					Log.d(TAG, "SOLD_OUT");
-				} else if (result.equals("PAYMENT_COMPLETE")) {
-					// new ReLoginTask(getApplicationContext()).execute();
-					LoadingDialog.showLoading(this);
-//					new GeneralHttpTask(postSessionListener,
-//							getApplicationContext()).execute(REST_URL
-//							+ USER_ALIVE);
-					Log.d(TAG, "PAYMENT_COMPLETE");
-				} else if (result.equals("NOT_AVAILABLE")) {
-					dialog("먼저 온 손님이 예약 중입니다.\n잠시 후 다시 시도해주세요.");
-					Log.d(TAG, "NOT_AVAILABLE");
-				} else if (result.equals("NETWORK_ERROR")) {
-					dialog("네트워크 연결을 확인해 주세요");
-					Log.d(TAG, "NETWORK_ERROR");
-				} else if (result.equals("INVALID_DATE")) {
-					Log.d(TAG, "INVALID_DATE");
-				}
-
-				Log.d("result", result);
-				Log.i("HotelReservation", PaymentActivity.ACTIVITY_RESULT);
-
-			} else {
-				Log.i(TAG, "결과 알수 없음 (취소 또는 오류 발생)");
-			}
-		}
-
-		super.onActivityResult(p_requestCode, p_resultCode, p_intentActivity);
-	}
-
-	public void parseUserInfoJson(String str) {
-		try {
-			JSONObject obj = new JSONObject(str);
-			reserverName = obj.getString("name");
-			reserverNumber = obj.getString("phone");
-			reserverEmail = obj.getString("email");
-
-			if ((!reserverName.equals("")) && (!reserverNumber.equals(""))
-					&& (!reserverEmail.equals(""))) {
-				llReserverInfoLabel.setVisibility(View.VISIBLE);
-				llReserverInfoEditable.setVisibility(View.GONE);
-				etReserverName.setVisibility(View.GONE);
-				etReserverNumber.setVisibility(View.GONE);
-				etReserverEmail.setVisibility(View.GONE);
-
-				tvReserverName.setText(reserverName);
-				tvReserverNumber.setText(reserverNumber);
-				tvReserverEmail.setText(reserverEmail);
-
-			} else {
-				llReserverInfoEditable.setVisibility(View.VISIBLE);
-				llReserverInfoLabel.setVisibility(View.GONE);
-
-				if (reserverName != null)
-					etReserverName.setText(reserverName);
-				if (reserverNumber != null)
-					etReserverNumber.setText(reserverNumber);
-				if (reserverEmail != null)
-					etReserverEmail.setText(reserverEmail);
-
-			}
-
-			LoadingDialog.hideLoading();
-
-		} catch (Exception e) {
-			Log.d(TAG, "parseUserInfoJson " + e.toString());
-			LoadingDialog.hideLoading();
-			Toast.makeText(getApplicationContext(),
-					"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-					Toast.LENGTH_SHORT).show();
-		}
-	}
-
-	public void parseCreditJson(String str) {
-		credit = str.trim();
-
-		// checkin out data 받아옴
-//		new GeneralHttpTask(detailListener, getApplicationContext())
-//				.execute(REST_URL + DETAIL + hotel_idx + "/" + year + "/"
-//						+ month + "/" + day);
-	}
-
-	public void parseLoginJson(String str) {
-		try {
-			JSONObject obj = new JSONObject(str);
-			if (obj.getString("login").equals("true")) {
-				// 로그인 성공
-//				if (isPayment)
-//					new GeneralHttpTask(preCntListener, getApplicationContext())
-//							.execute(REST_URL + RESERVE);
-//				else
-					// credit 요청
-//					new GeneralHttpTask(creditListener, getApplicationContext())
-//							.execute(REST_URL + SAVED_MONEY);
-			} else {
-				// 로그인 실패
-				// 메세지 출력하고 activity 종료
-//				Toast.makeText(getApplicationContext(), "로그인이 필요합니다",
-//						Toast.LENGTH_SHORT).show();
-//				SharedPreferences.Editor ed = prefs.edit();
-//				ed.putBoolean(PREFERENCE_AUTO_LOGIN, false);
-//				ed.putBoolean(PREFERENCE_IS_LOGIN, false);
-//				ed.commit();
-//
-//				isPayment = false;
-//				LoadingDialog.hideLoading();
-
-				finish();
-			}
-		} catch (Exception e) {
-			Log.d(TAG, "parseLoginJson " + e.toString());
-			LoadingDialog.hideLoading();
-			Toast.makeText(getApplicationContext(),
-					"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-					Toast.LENGTH_SHORT).show();
-		}
-	}
-
-	public void parseCheckinJson(String str) {
-		try {
-			JSONObject obj = new JSONObject(str);
-			String checkin = obj.getString("checkin");
-			String checkout = obj.getString("checkout");
-
-			String in[] = checkin.split("-");
-			tv_checkin.setText("20" + in[0] + ". " + in[1] + ". " + in[2] + " "
-					+ in[3] + "시");
-			String out[] = checkout.split("-");
-			tv_checkout.setText("20" + out[0] + ". " + out[1] + ". " + out[2]
-					+ " " + out[3] + "시");
-
-			// TODO: parseUserInfoJson(); userInfoListener
-//			new GeneralHttpTask(userInfoListener, getApplicationContext())
-//					.execute(REST_URL + USERINFO);
-
-		} catch (Exception e) {
-			Log.d("parseCheckinJson", "TagDataParser" + "->" + e.toString());
-			Toast.makeText(getApplicationContext(),
-					"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-					Toast.LENGTH_SHORT).show();
-			LoadingDialog.hideLoading();
-		}
-	}
-
-	public void parseDetailJson(String str) {
-		try {
-			JSONObject obj = new JSONObject(str);
-			JSONArray detailArr = obj.getJSONArray("detail");
-			JSONObject detailObj = detailArr.getJSONObject(0);
-
-			original_price = Integer.toString(detailObj.getInt("discount"));
-
-			DecimalFormat comma = new DecimalFormat("###,##0");
-			tv_price.setText("￦"
-					+ comma.format(Integer.parseInt(original_price)));
-			tv_original_price.setText("￦"
-					+ comma.format(Integer.parseInt(original_price)));
-			booking_idx = Integer.toString(detailObj.getInt("idx"));
-
-			// 적립금 있을면 button 눌러짐
-			if (Integer.parseInt(credit) > 0) {
-				btn_on_off.performClick();
-			}
-
-//			new GeneralHttpTask(checkinListener, getApplicationContext())
-//					.execute(REST_URL + CHECKIN + booking_idx);
-
-		} catch (Exception e) {
-			Log.d("parseDetailJson", "TagDataParser" + "->" + e.toString());
-			Toast.makeText(getApplicationContext(),
-					"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-					Toast.LENGTH_SHORT).show();
-			LoadingDialog.hideLoading();
-		}
-	}
-
-	public void parsePreCntJson(String str) {
-		str.trim();
-		if (str.indexOf("none") >= 0) {
-			reservCnt = 0;
-
-			Intent i = new Intent(this, PaymentActivity.class);
-			i.putExtra("isBonus", isBonus);
-			i.putExtra("isFullBonus", isFullBonus);
-			i.putExtra("credit", credit);
-			i.putExtra("booking_idx", booking_idx);
-			i.putExtra("email", email);
-			i.putExtra("name", name);
-			i.putExtra("phone", phone);
-			startActivityForResult(i, 1);
-
-		} else {
-			try {
-				JSONObject obj = new JSONObject(str);
-				JSONArray rsvArr = obj.getJSONArray("rsv");
-
-				reservCnt = rsvArr.length();
-
-				Intent i = new Intent(this, PaymentActivity.class);
-				i.putExtra("isBonus", isBonus);
-				i.putExtra("isFullBonus", isFullBonus);
-				i.putExtra("credit", credit);
-				i.putExtra("booking_idx", booking_idx);
-				i.putExtra("email", email);
-				i.putExtra("name", name);
-				i.putExtra("phone", phone);
-				startActivityForResult(i, 1);
-
-			} catch (Exception e) {
-				Log.d(TAG, "parsePreCntJson " + e.toString());
-				Toast.makeText(getApplicationContext(),
-						"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-						Toast.LENGTH_SHORT).show();
-			}
-		}
-
-		Log.d("reservCnt", "reservCnt = " + Integer.toString(reservCnt));
-		isPayment = false;
-	}
-
-	public void parsePostLogin(String str) {
-		try {
-			JSONObject obj = new JSONObject(str);
-			if (obj.getString("login").equals("true")) {
-				// 로그인 성공
-//				new GeneralHttpTask(postCntListener, getApplicationContext())
-//						.execute(REST_URL + RESERVE);
-			} else {
-				// 로그인 실패
-				// 메세지 출력하고 activity 종료
-				LoadingDialog.hideLoading();
-				Toast.makeText(getApplicationContext(), "로그인이 필요합니다",
-						Toast.LENGTH_SHORT).show();
-				SharedPreferences.Editor ed = prefs.edit();
-//				ed.putBoolean(PREFERENCE_AUTO_LOGIN, false);
-//				ed.putBoolean(PREFERENCE_IS_LOGIN, false);
-				ed.commit();
-			}
-		} catch (Exception e) {
-			Log.d(TAG, "parseLoginJson " + e.toString());
-			LoadingDialog.hideLoading();
-			Toast.makeText(getApplicationContext(),
-					"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-					Toast.LENGTH_SHORT).show();
-		}
-	}
-
-	public boolean compareReservCnt(String str) {
-		str.trim();
-
-		int resultCnt = 0;
-
-		if (str.indexOf("none") >= 0) {
-			resultCnt = 0;
-
-		} else {
-			try {
-				JSONObject obj = new JSONObject(str);
-				JSONArray rsvArr = obj.getJSONArray("rsv");
-				resultCnt = rsvArr.length();
-
-			} catch (Exception e) {
-				Log.d(TAG, "parsePostJson " + e.toString());
-				Toast.makeText(getApplicationContext(),
-						"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-						Toast.LENGTH_SHORT).show();
-			}
-		}
-
-		Log.d("compare reservCnt", "resultCnt = " + Integer.toString(resultCnt)
-				+ " reservCnt = " + Integer.toString(reservCnt));
-
-		if (resultCnt > reservCnt)
-			return true;
-		else
-			return false;
-	}
-
-	protected OnCompleteListener userInfoListener = new OnCompleteListener() {
-
-		@Override
-		public void onTaskFailed() {
-			Log.d(TAG, "creditListener onTAskFailed");
-			LoadingDialog.hideLoading();
-			Toast.makeText(getApplicationContext(),
-					"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-					Toast.LENGTH_SHORT).show();
-		}
-
-		@Override
-		public void onTaskComplete(String result) {
-			parseUserInfoJson(result);
-		}
-	};
-
-	protected OnCompleteListener sessionListener = new OnCompleteListener() {
-
-		@Override
-		public void onTaskFailed() {
-			Log.d(TAG, "sessionListener onTAskFailed");
-			LoadingDialog.hideLoading();
-			Toast.makeText(getApplicationContext(),
-					"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-					Toast.LENGTH_SHORT).show();
-			finish();
-		}
-
-		@Override
-		public void onTaskComplete(String result) {
-			result = result.trim();
-			if (result.equals("alive")) { // session alive
-
-//				if (isPayment)
-//					new GeneralHttpTask(preCntListener, getApplicationContext())
-//							.execute(REST_URL + RESERVE);
-//				else
-					// credit 요청
-//					new GeneralHttpTask(creditListener, getApplicationContext())
-//							.execute(REST_URL + SAVED_MONEY);
-
-			} else if (result.equals("dead")) { // session dead
-				// 재로그인
-
-				// parameter setting
-//				ArrayList<Parameter> paramList = new ArrayList<Parameter>();
-//				paramList.add(new Parameter("email", prefs.getString(
-//						PREFERENCE_USER_ID, "")));
-//				paramList.add(new Parameter("pw", prefs.getString(
-//						PREFERENCE_USER_PWD, "")));
-
-				// 로그인 요청
-//				new GeneralHttpTask(loginListener, paramList,
-//						getApplicationContext()).execute(REST_URL + LOGIN);
-
-			} else {
-				LoadingDialog.hideLoading();
-				Toast.makeText(getApplicationContext(),
-						"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-						Toast.LENGTH_SHORT).show();
-			}
-		}
-	};
-
-	protected OnCompleteListener loginListener = new OnCompleteListener() {
-
-		@Override
-		public void onTaskFailed() {
-			Log.d(TAG, "loginListener onTAskFailed");
-			LoadingDialog.hideLoading();
-			Toast.makeText(getApplicationContext(),
-					"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-					Toast.LENGTH_SHORT).show();
-			finish();
-		}
-
-		@Override
-		public void onTaskComplete(String result) {
-			parseLoginJson(result);
-		}
-	};
-
-	protected OnCompleteListener creditListener = new OnCompleteListener() {
-
-		@Override
-		public void onTaskFailed() {
-			Log.d(TAG, "creditListener onTAskFailed");
-			LoadingDialog.hideLoading();
-			Toast.makeText(getApplicationContext(),
-					"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-					Toast.LENGTH_SHORT).show();
-			finish();
-		}
-
-		@Override
-		public void onTaskComplete(String result) {
-			parseCreditJson(result);
-		}
-	};
-
-	protected OnCompleteListener checkinListener = new OnCompleteListener() {
-
-		@Override
-		public void onTaskFailed() {
-			Log.d(TAG, "creditListener onTAskFailed");
-			LoadingDialog.hideLoading();
-			Toast.makeText(getApplicationContext(),
-					"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-					Toast.LENGTH_SHORT).show();
-			finish();
-		}
-
-		@Override
-		public void onTaskComplete(String result) {
-			parseCheckinJson(result);
-		}
-	};
-
-	protected OnCompleteListener detailListener = new OnCompleteListener() {
-
-		@Override
-		public void onTaskFailed() {
-			Log.d(TAG, "creditListener onTAskFailed");
-			LoadingDialog.hideLoading();
-			Toast.makeText(getApplicationContext(),
-					"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-					Toast.LENGTH_SHORT).show();
-			finish();
-		}
-
-		@Override
-		public void onTaskComplete(String result) {
-			parseDetailJson(result);
-		}
-	};
-
-	protected OnCompleteListener preCntListener = new OnCompleteListener() {
-
-		@Override
-		public void onTaskFailed() {
-			Log.d(TAG, "preCntListener onTAskFailed");
-			LoadingDialog.hideLoading();
-			Toast.makeText(getApplicationContext(),
-					"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-					Toast.LENGTH_SHORT).show();
-			finish();
-		}
-
-		@Override
-		public void onTaskComplete(String result) {
-			parsePreCntJson(result);
-		}
-	};
-
-	protected OnCompleteListener postCntListener = new OnCompleteListener() {
-
-		@Override
-		public void onTaskFailed() {
-			Log.d(TAG, "postCntListener onTAskFailed");
-			LoadingDialog.hideLoading();
-			Toast.makeText(getApplicationContext(),
-					"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-					Toast.LENGTH_SHORT).show();
-			finish();
-		}
-
-		@Override
-		public void onTaskComplete(String result) {
-
-			LoadingDialog.hideLoading();
-
-			if (compareReservCnt(result)) {
+	protected void onActivityResult(int requestCode, int resultCode,
+			Intent intent) {
+		super.onActivityResult(requestCode, resultCode, intent);
+
+		if (requestCode == CODE_REQUEST_ACTIVITY_PAYMENT) {
+			Log.d(TAG, Integer.toString(resultCode));
+			
+			switch (resultCode) {
+			case CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS :
 				AlertDialog.Builder alert = new AlertDialog.Builder(
 						HotelPaymentActivity.this);
 				alert.setPositiveButton("확인",
@@ -761,71 +263,45 @@ public class HotelPaymentActivity extends BaseActivity implements
 						});
 				alert.setMessage("결제가 정상적으로 이루어 졌습니다");
 				alert.show();
-			} else {
-				dialog("결제 오류 : 관리자에게 문의하세요");
+				
+				break;
+			case CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION :
+				break;
+			case CODE_RESULT_ACTIVITY_PAYMENT_SOLD_OUT :
+				dialog("모든 객실이 판매되었습니다.\n다음에 이용해주세요.");
+				
+				break;
+			case CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE :
+//				LoadingDialog.showLoading(this);
+				
+				break;
+			case CODE_RESULT_ACTIVITY_PAYMENT_INVALID_DATE :
+				break;
+				
+			case CODE_RESULT_ACTIVITY_PAYMENT_NOT_AVAILABLE :
+				dialog("먼저 온 손님이 예약 중입니다.\n잠시 후 다시 시도해주세요.");
+				break;
+				
+			case CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR :
+				dialog("네트워크 오류가 발생했습니다. 네트워크 연결을 확인해주세요.");
+				break;
+				
+			case CODE_RESULT_ACTIVITY_PAYMENT_FAIL :
+				dialog("알 수 없는 오류가 발생했습니다. 문의해주시기 바랍니다.");
+				break;
+			
 			}
-		}
-	};
-
-	protected OnCompleteListener postSessionListener = new OnCompleteListener() {
-
-		@Override
-		public void onTaskFailed() {
-			Log.d(TAG, "postSessionListener onTAskFailed");
-			LoadingDialog.hideLoading();
-			Toast.makeText(getApplicationContext(),
-					"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-					Toast.LENGTH_SHORT).show();
-			finish();
+		} else if (requestCode == CODE_REQUEST_ACTIVITY_LOGIN) {
+			if (resultCode != RESULT_OK)
+				finish();				// 로그인되지 않았다면 취소하기 위해 액티비티 종료.
+			else
+				mQueue.add(new DailyHotelRequest(Method.GET,
+						new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+								URL_WEBAPI_USER_ALIVE).toString(), null, this, this));
 		}
 
-		@Override
-		public void onTaskComplete(String result) {
-			result = result.trim();
-			if (result.equals("alive")) { // session alive
-//				new GeneralHttpTask(postCntListener, getApplicationContext())
-//						.execute(REST_URL + RESERVE);
-
-			} else if (result.equals("dead")) { // session dead
-				// 재로그인
-
-//				// parameter setting
-//				ArrayList<Parameter> paramList = new ArrayList<Parameter>();
-//				paramList.add(new Parameter("email", prefs.getString(
-//						PREFERENCE_USER_ID, "")));
-//				paramList.add(new Parameter("pw", prefs.getString(
-//						PREFERENCE_USER_PWD, "")));
-//
-//				// 로그인 요청
-//				new GeneralHttpTask(postLoginListener, paramList,
-//						getApplicationContext()).execute(REST_URL + LOGIN);
-
-			} else {
-				LoadingDialog.hideLoading();
-				Toast.makeText(getApplicationContext(),
-						"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-						Toast.LENGTH_SHORT).show();
-			}
-		}
-	};
-
-	protected OnCompleteListener postLoginListener = new OnCompleteListener() {
-
-		@Override
-		public void onTaskFailed() {
-			Log.d(TAG, "postLoginListener onTAskFailed");
-			LoadingDialog.hideLoading();
-			Toast.makeText(getApplicationContext(),
-					"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-					Toast.LENGTH_SHORT).show();
-			finish();
-		}
-
-		@Override
-		public void onTaskComplete(String result) {
-			parsePostLogin(result);
-		}
-	};
+		
+	}
 
 	@Override
 	public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -846,49 +322,160 @@ public class HotelPaymentActivity extends BaseActivity implements
 
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-		if (buttonView.getId() == btn_on_off.getId()) {
-			Log.d("isChecked", Boolean.toString(isChecked));
-			isBonus = isChecked;
-			Log.d("isBonus", Boolean.toString(isBonus));
-			if (!isBonus) { // 사용안함으로 변경
+		if (buttonView.getId() == swCredit.getId()) {
+			if (!isChecked) { // 사용안함으로 변경
+				swCredit.setThumbResource(R.drawable.switch_thumb_holo_light);
+				swCredit.setTextColor(android.R.color.white);
 
-				tv_credit.setText("￦0");
-				DecimalFormat comma = new DecimalFormat("###,##0");
-				String str = comma.format(Integer.parseInt(original_price));
-				tv_price.setText("￦" + str);
-				isBonus = false;
-				isFullBonus = false;
-				
-				btn_on_off.setThumbResource(R.drawable.switch_thumb_holo_light);
-				btn_on_off.setTextColor(android.R.color.white);
-				
 			} else { // 사용함으로 변경
-				DecimalFormat comma = new DecimalFormat("###,##0");
+				swCredit.setThumbResource(R.drawable.switch_thumb_activated_holo_light);
+				swCredit.setTextColor(android.R.color.white);
 
-				String price;
-				String creditStr = comma.format(Integer.parseInt(credit));
+			}
+			
+			mPay.setSaleCredit(isChecked);
+			updatePayPrice(isChecked);
+		}
+	}
 
-				if (Integer.parseInt(original_price) <= Integer
-						.parseInt(credit)) {
-					creditStr = original_price;
-					price = "0";
-					isFullBonus = true;
+	@Override
+	public void onErrorResponse(VolleyError error) {
+		if (DEBUG)
+			error.printStackTrace();
+
+		Toast.makeText(this, "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
+				Toast.LENGTH_SHORT).show();
+		LoadingDialog.hideLoading();
+
+	}
+
+	@Override
+	public void onResponse(String url, JSONObject response) {
+		if (url.contains(URL_WEBAPI_USER_INFO)) {
+			try {
+				JSONObject obj = response;
+
+				mPay.setCustomer(new Customer());
+				mPay.getCustomer().setEmail(obj.getString("email"));
+				mPay.getCustomer().setName(obj.getString("name"));
+				mPay.getCustomer().setPhone(obj.getString("phone"));
+				
+				if ((!mPay.getCustomer().getEmail().equals("")) && (!mPay.getCustomer().getName().equals(""))
+						&& (!mPay.getCustomer().getPhone().equals(""))) {
+					llReserverInfoLabel.setVisibility(View.VISIBLE);
+					llReserverInfoEditable.setVisibility(View.GONE);
+					etReserverName.setVisibility(View.GONE);
+					etReserverNumber.setVisibility(View.GONE);
+					etReserverEmail.setVisibility(View.GONE);
+
+					tvReserverName.setText(mPay.getCustomer().getName());
+					tvReserverNumber.setText(mPay.getCustomer().getPhone());
+					tvReserverEmail.setText(mPay.getCustomer().getEmail());
+
 				} else {
-					price = Integer
-							.toString((Integer.parseInt(original_price) - Integer
-									.parseInt(credit)));
-					isFullBonus = false;
+					llReserverInfoEditable.setVisibility(View.VISIBLE);
+					llReserverInfoLabel.setVisibility(View.GONE);
+
+					if (mPay.getCustomer().getName() != null)
+						etReserverName.setText(mPay.getCustomer().getName());
+					if (mPay.getCustomer().getPhone() != null)
+						etReserverNumber.setText(mPay.getCustomer().getPhone());
+					if (mPay.getCustomer().getEmail() != null)
+						etReserverEmail.setText(mPay.getCustomer().getEmail());
+
 				}
 
-				tv_credit.setText("-￦" + creditStr);
-				price = comma.format(Integer.parseInt(price));
-				tv_price.setText("￦" + price);
-				isBonus = true;
+				// 체크인 정보 요청
+				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(
+						URL_DAILYHOTEL_SERVER)
+						.append(URL_WEBAPI_RESERVE_CHECKIN).append(mPay.getHotelDetail().getSaleIdx()).toString(), null,
+						this, this));
+
+			} catch (Exception e) {
+				if (DEBUG)
+					e.printStackTrace();
+
+				LoadingDialog.hideLoading();
+				Toast.makeText(this, "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
+						Toast.LENGTH_SHORT).show();
+			}
+		} else if (url.contains(URL_WEBAPI_RESERVE_CHECKIN)) {
+			try {
+				JSONObject obj = response;
+				String checkin = obj.getString("checkin");
+				String checkout = obj.getString("checkout");
+
+				String in[] = checkin.split("-");
+				tvCheckIn.setText("20" + in[0] + "년 " + in[1] + "월 " + in[2]
+						+ "일 " + in[3] + "시");
+				String out[] = checkout.split("-");
+				tvCheckOut.setText("20" + out[0] + "년 " + out[1] + "월 "
+						+ out[2] + "일 " + out[3] + "시");
+
+			} catch (Exception e) {
+				if (DEBUG)
+					e.printStackTrace();
 				
-				btn_on_off.setThumbResource(R.drawable.switch_thumb_activated_holo_light);
-				btn_on_off.setTextColor(android.R.color.white);
-				
+				Toast.makeText(this,
+						"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
+						Toast.LENGTH_SHORT).show();
+			} finally {
+				LoadingDialog.hideLoading();
 			}
 		}
+	}
+
+	@Override
+	public void onResponse(String url, String response) {
+		if (url.contains(URL_WEBAPI_USER_ALIVE)) {
+			String result = response.trim();
+			if (result.equals("alive")) { // session alive
+				// credit 요청
+				mQueue.add(new DailyHotelRequest(Method.GET, new StringBuilder(
+						URL_DAILYHOTEL_SERVER).append(
+						URL_WEBAPI_RESERVE_SAVED_MONEY).toString(), null, this,
+						this));
+
+			} else if (result.equals("dead")) { // session dead
+				LoadingDialog.hideLoading();
+				startActivityForResult(new Intent(this, LoginActivity.class), CODE_REQUEST_ACTIVITY_LOGIN);
+
+			} else {
+				LoadingDialog.hideLoading();
+				Toast.makeText(this, "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
+						Toast.LENGTH_SHORT).show();
+			}
+
+		} else if (url.contains(URL_WEBAPI_RESERVE_SAVED_MONEY)) {
+			try {
+
+				DecimalFormat comma = new DecimalFormat("###,##0");
+				String str = comma.format(Integer.parseInt(response.trim()));
+				mPay.setCredit(new Credit(null, str, null));
+				
+				tvCredit.setText(new StringBuilder(mPay.getCredit().getBonus()).append("원"));
+				
+				swCredit.performClick();
+				// 적립금이 없다면 한 번 더 누름 이벤트를 불러 switch를 끈다
+				if (Integer.parseInt(mPay.getCredit().getBonus()) == 0) {
+					swCredit.performClick();
+				}
+				
+				// 사용자 정보 요청.
+				mQueue.add(new DailyHotelJsonRequest(Method.GET,
+						new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+								URL_WEBAPI_USER_INFO).toString(), null, this,
+						this));
+
+			} catch (Exception e) {
+				if (DEBUG)
+					e.printStackTrace();
+
+				LoadingDialog.hideLoading();
+				Toast.makeText(this, "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
+						Toast.LENGTH_SHORT).show();
+			}
+		}
+
 	}
 }

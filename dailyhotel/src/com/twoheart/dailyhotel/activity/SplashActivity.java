@@ -24,12 +24,13 @@ import com.twoheart.dailyhotel.GCMIntentService;
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.R.layout;
+import com.twoheart.dailyhotel.fragment.CreditFragment;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Log;
-import com.twoheart.dailyhotel.util.network.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.network.DailyHotelResponseListener;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.util.network.vo.DailyHotelJsonRequest;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
+import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.util.network.response.DailyHotelResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 public class SplashActivity extends BaseActivity implements Constants,
@@ -37,6 +38,8 @@ public class SplashActivity extends BaseActivity implements Constants,
 
 	private static final String TAG = "SplashActivity";
 	private static final String appPlayStoreUrl = "market://details?id=com.twoheart.dailyhotel";
+	
+	private RequestQueue mQueue;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,19 +59,19 @@ public class SplashActivity extends BaseActivity implements Constants,
 					GCMIntentService.registerToken(getApplicationContext());
 				}
 
-				RequestQueue queue = VolleyHttpClient.getRequestQueue();
+				mQueue = VolleyHttpClient.getRequestQueue();
 				
 				if (sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false)) {
 					Map<String, String> loginParams = new HashMap<String, String>();
 					loginParams.put("email", sharedPreference.getString(KEY_PREFERENCE_USER_ID, null));
 					loginParams.put("pw", sharedPreference.getString(KEY_PREFERENCE_USER_PWD, null));
 	
-					queue.add(new DailyHotelJsonRequest(Method.POST, 
+					mQueue.add(new DailyHotelJsonRequest(Method.POST, 
 							new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(),
 							loginParams, SplashActivity.this, SplashActivity.this));
 				}
 				
-				queue.add(new DailyHotelJsonRequest(Method.GET, 
+				mQueue.add(new DailyHotelJsonRequest(Method.GET, 
 						new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_VERSION).toString(),
 						null, SplashActivity.this, SplashActivity.this));
 				
@@ -88,7 +91,7 @@ public class SplashActivity extends BaseActivity implements Constants,
 		if (url.contains(URL_WEBAPI_USER_LOGIN)) {
 			
 			try {
-				if (!response.getString("login").equals("true")) {
+				if (!response.getBoolean("login")) {
 					// 로그인 실패
 					// data 초기화
 					SharedPreferences.Editor ed = sharedPreference.edit();
@@ -97,6 +100,12 @@ public class SplashActivity extends BaseActivity implements Constants,
 					ed.putString(KEY_PREFERENCE_USER_PWD, null);
 					ed.commit();
 
+				} else {
+					// 사용자 정보 요청.
+					mQueue.add(new DailyHotelJsonRequest(Method.GET,
+							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+									 URL_WEBAPI_USER_INFO).toString(), null,
+							this, this));
 				}
 			} catch (JSONException e) {
 				if (DEBUG)
@@ -115,8 +124,12 @@ public class SplashActivity extends BaseActivity implements Constants,
 				
 			
 			try {
-				int maxVersion = Integer.parseInt(response.getString("play_max").replace(".", ""));
-				int minVersion = Integer.parseInt(response.getString("play_min").replace(".", ""));
+				SharedPreferences.Editor editor = sharedPreference.edit();
+				editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME, response.getString("play_max"));
+				editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME, response.getString("play_min"));
+				editor.commit();
+				
+				int minVersion = Integer.parseInt(sharedPreference.getString(KEY_PREFERENCE_MIN_VERSION_NAME, null).replace(".", ""));
 				int currentVersion = Integer.parseInt(this.getPackageManager()
 						.getPackageInfo(this.getPackageName(), 0).versionName
 						.replace(".", ""));

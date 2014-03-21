@@ -14,14 +14,14 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class BoardAdapter extends BaseExpandableListAdapter{
+public class BoardListAdapter extends BaseExpandableListAdapter{
 	private ArrayList<Board> list = null;
 	private LayoutInflater inflater = null;
 	private Boolean groupClickState[]; 
 	private int position;
 	
 	
-	public BoardAdapter(Context context, ArrayList<Board> list) {
+	public BoardListAdapter(Context context, ArrayList<Board> list) {
 		super();
 		this.inflater = LayoutInflater.from(context);
 		this.list = list;

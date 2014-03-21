@@ -11,25 +11,24 @@ import android.view.MenuItem;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
-public class PersonalInfoActivity extends BaseActivity {
+public class AboutActivity extends BaseActivity {
 	
-	private static final String TAG = "PersonalInfoActivity";
+	private static final String TAG = "AboutActivity";
 	
 	@Override
-	protected void onCreate(Bundle arg0) {
-		super.onCreate(arg0);
-		setActionBar("개인정보취급방침");
-		setContentView(R.layout.activity_personal_info);
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setActionBar("데일리호텔이란?");
+		setContentView(R.layout.activity_introduction);
 		
 	}
 	
 	@Override
-	public void onBackPressed() {
-		finish();
+	public void finish() {
+		super.finish();
 		overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
-		super.onBackPressed();
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -39,4 +38,5 @@ public class PersonalInfoActivity extends BaseActivity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
 }

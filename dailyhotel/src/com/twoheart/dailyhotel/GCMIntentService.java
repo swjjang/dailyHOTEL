@@ -19,7 +19,7 @@ import com.google.android.gcm.GCMRegistrar;
 import com.twoheart.dailyhotel.activity.SplashActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.util.network.vo.DailyHotelJsonRequest;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 
 public class GCMIntentService extends GCMBaseIntentService implements Constants {
 

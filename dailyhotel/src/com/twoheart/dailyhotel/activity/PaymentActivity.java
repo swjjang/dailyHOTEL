@@ -26,91 +26,70 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.obj.HotelDetail;
+import com.twoheart.dailyhotel.obj.Pay;
 import com.twoheart.dailyhotel.util.Constants;
 
-//import com.google.android.gcm.GCMRegistrar;
-public class PaymentActivity extends Activity {
+public class PaymentActivity extends Activity implements Constants {
 
-	public static final String ACTIVITY_RESULT = "ActivityResult";
 	public static final int PROGRESS_STAT_NOT_START = 1;
 	public static final int PROGRESS_STAT_IN = 2;
 	public static final int PROGRESS_DONE = 3;
 	public static String CARD_CD = "";
 	public static String QUOTA = "";
-	public WebView webView;
-	private final Handler handler = new Handler();
 	public int m_nStat = PROGRESS_STAT_NOT_START;
-
-	String url;
-	byte[] postData;
-//	String postData;
 	
-	private String email;
-	private String phone;
-	private String name;
+	private WebView webView;
+	private final Handler handler = new Handler();
+	
+	private Pay mPay;
 
+	@JavascriptInterface
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_payment);
+		
+		Bundle bundle = getIntent().getExtras();
+		if (bundle != null) {
+			mPay = (Pay) bundle
+					.getParcelable(NAME_INTENT_EXTRA_DATA_PAY);
+		}
+		
+		webView = (WebView) findViewById(R.id.webview);
 
-		Intent intent = getIntent();
-		String booking_idx = intent.getStringExtra("booking_idx");
-		boolean isBonus = intent.getBooleanExtra("isBonus", false);
-		boolean isFullBonus = intent.getBooleanExtra("isFullBonus", false);
-		String bonus = intent.getStringExtra("credit");
+		webView.getSettings().setSavePassword(false);
+		webView.getSettings().setJavaScriptEnabled(true);
+		webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+		webView.addJavascriptInterface(new KCPPayBridge(), "KCPPayApp");
+		// 하나SK 카드 선택시 User가 선택한 기본 정보를 가지고 오기위해 사용
+		webView.addJavascriptInterface(new KCPPayCardInfoBridge(),
+				"KCPPayCardInfo");
+		webView.addJavascriptInterface(new JavaScriptExtention(), "android");
+
+		webView.setWebChromeClient(new WebChromeClient());
+		webView.setWebViewClient(new mWebViewClient());
+//		 webView.getSettings().setPluginState(PluginState.ON);
 		
-		email = intent.getStringExtra("email");
-		phone = intent.getStringExtra("phone");
-		name = intent.getStringExtra("name");
+		String[] postParameterKey = new String[] { "email", "name", "phone" };
+		String[] postParameterValue = new String[] { mPay.getCustomer().getEmail(), 
+				mPay.getCustomer().getName(), mPay.getCustomer().getPhone() };
 		
-//		if (!isBonus) {
-//			url = REST_URL + PAYMENT + booking_idx;
-//			Log.d("url", url);
-//		} else {
-//			if (isFullBonus) {
-//				url = REST_URL + PAYMENT_DISCOUNT + booking_idx;// + "/" +
-//																// bonus;
-//				Log.d("url", url);
-//			} else {
-//				url = REST_URL + PAYMENT_DISCOUNT + booking_idx + "/" + bonus;
-//				Log.d("url", url);
-//			}
-//		}
+		String url = new StringBuilder(URL_DAILYHOTEL_SERVER)
+				.append(URL_WEBAPI_RESERVE_PAYMENT)
+				.append(mPay.getHotelDetail().getSaleIdx()).toString();
 		
-//		url = "http://1.234.22.96/goodnight/nulltest.jsp";
+		if (mPay.isSaleCredit()) {
+			url = new StringBuilder(URL_DAILYHOTEL_SERVER)
+			.append(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)
+			.append(mPay.getHotelDetail().getSaleIdx()).append("/")
+			.append(mPay.getCredit().getBonus()).toString();
+			
+		}
 		
-//		postData = "AppUrl=dailyHOTEL://card_pay";
+		webView.postUrl(url, parsePostParameter(postParameterKey, postParameterValue));
 		
-		String[] postDataKey = new String[] { "email", "name", "phone" };
-		String[] postDataValue = new String[] { email, name, phone };
-//		
-		postData = parsePostParameter(postDataKey, postDataValue);
-		
-//		byte[] postDataKcp = new String("AppUrl=dailyHOTEL://card_pay").getBytes();
-//		
-//		StringBuilder postDataParameterStr = new StringBuilder();
-//		
-//		for (int i=0; i<postDataKey.length; i++) {
-//			
-////			if (postDataParameter.length() != 0) {
-////				postDataParameter.append("&");
-////			}
-//			postDataParameterStr.append("&");
-//			postDataParameterStr.append(postDataKey[i]);
-//			postDataParameterStr.append("=");
-//			postDataParameterStr.append(postDataValue[i]);
-//			
-//		}
-//		
-//		byte[] postDataParameter = postDataParameterStr.toString().getBytes();
-//		
-//		postData = new byte[postDataKcp.length + postDataParameter.length];
-//		System.arraycopy(postDataKcp, 0, postData, 0, postDataKcp.length);
-//		System.arraycopy(postDataParameter, 0, postData, postDataKcp.length, postDataParameter.length);
-		
-		loadResource();
 	}
 	
 	private byte[] parsePostParameter(String[] key, String[] value) {
@@ -169,35 +148,13 @@ public class PaymentActivity extends Activity {
 		
 		return result;
 	}
+
 	@JavascriptInterface
-	public void loadResource() {
-		webView = (WebView) findViewById(R.id.webview);
-
-		webView.getSettings().setSavePassword(false);
-		webView.getSettings().setJavaScriptEnabled(true);
-		webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
-		webView.addJavascriptInterface(new KCPPayBridge(), "KCPPayApp");
-		// 하나SK 카드 선택시 User가 선택한 기본 정보를 가지고 오기위해 사용
-		webView.addJavascriptInterface(new KCPPayCardInfoBridge(),
-				"KCPPayCardInfo");
-		webView.addJavascriptInterface(new JavaScriptExtention(), "android");
-
-		webView.setWebChromeClient(new WebChromeClient());
-		webView.setWebViewClient(new mWebViewClient());
-//		 webView.getSettings().setPluginState(PluginState.ON);
-		
-		Log.d("test", new String(postData));
-		
-		webView.postUrl(url, postData);
-//		webView.postUrl(url, EncodingUtils.getBytes(postData, "BASE64"));
-	}
-
 	private boolean url_scheme_intent(String url) {
 		Log.d(KcpApplication.m_strLogTag,
 				"[PayDemoActivity] called__test - url=[" + url + "]");
 
 		Uri uri = Uri.parse(url);
-		Log.d("urllllllllll", uri.toString());
 		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 
 		try {
@@ -210,6 +167,8 @@ public class PaymentActivity extends Activity {
 	}
 
 	private class mWebViewClient extends WebViewClient {
+		
+		@JavascriptInterface
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
 			Log.d(KcpApplication.m_strLogTag,
@@ -243,15 +202,14 @@ public class PaymentActivity extends Activity {
 			return true;
 		}
 
+		@JavascriptInterface
 		// error 처리
 		@Override
 		public void onReceivedError(WebView view, int errorCode,
 				String description, String failingUrl) {
 			super.onReceivedError(view, errorCode, description, failingUrl);
 			webView.loadUrl("about:blank");
-			Intent intent = new Intent();
-			intent.putExtra(ACTIVITY_RESULT, "NEWORK_ERROR");
-			setResult(RESULT_OK, intent);
+			setResult(CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR);
 			finish();
 		}
 	}
@@ -278,6 +236,7 @@ public class PaymentActivity extends Activity {
 			});
 		}
 
+		@JavascriptInterface
 		private void alertToNext() {
 			AlertDialog.Builder dlgBuilder = new AlertDialog.Builder(
 					PaymentActivity.this);
@@ -461,6 +420,7 @@ public class PaymentActivity extends Activity {
 		}
 	}
 
+	@JavascriptInterface
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		Log.d(KcpApplication.m_strLogTag,
@@ -499,15 +459,16 @@ public class PaymentActivity extends Activity {
 	}
 
 	public void finishActivity(String p_strFinishMsg) {
-		Intent intent = new Intent();
+		
+		int resultCode = RESULT_CANCELED;
 
 		if (p_strFinishMsg != null) {
-			intent.putExtra(ACTIVITY_RESULT, p_strFinishMsg);
-			setResult(RESULT_OK, intent);
-		} else {
-			setResult(RESULT_CANCELED);
+			if (p_strFinishMsg.equals("NOT_AVAILABLE")) {
+				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_NOT_AVAILABLE;
+			}
 		}
-
+		
+		setResult(resultCode);
 		finish();
 	}
 
@@ -518,24 +479,22 @@ public class PaymentActivity extends Activity {
 
 		@JavascriptInterface
 		public void feed(final String msg) {
-			Intent intent = new Intent();
+			
+			int resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
 
 			if (msg.equals("SUCCESS")) {
-				intent.putExtra(ACTIVITY_RESULT, "SUCCESS");
-				setResult(RESULT_OK, intent);
+				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS;
 			} else if (msg.equals("INVALID_SESSION")) {
-				intent.putExtra(ACTIVITY_RESULT, "INVALID_SESSION");
-				setResult(RESULT_OK, intent);
+				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION;
 			} else if (msg.equals("SOLD_OUT")) {
-				intent.putExtra(ACTIVITY_RESULT, "SOLD_OUT");
-				setResult(RESULT_OK, intent);
+				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_SOLD_OUT;
 			} else if (msg.equals("PAYMENT_COMPLETE")) {
-				intent.putExtra(ACTIVITY_RESULT, "PAYMENT_COMPLETE");
-				setResult(RESULT_OK, intent);
+				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE;
 			} else if (msg.equals("INVALID_DATE")) {
-				intent.putExtra(ACTIVITY_RESULT, "INVALID_DATE");
-				setResult(RESULT_OK, intent);
+				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_INVALID_DATE;
 			}
+			
+			setResult(resultCode);
 			finish();
 		}
 	}

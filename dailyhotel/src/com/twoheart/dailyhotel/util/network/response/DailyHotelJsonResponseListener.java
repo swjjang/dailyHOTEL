@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.util.network;
+package com.twoheart.dailyhotel.util.network.response;
 
 import org.json.JSONObject;
 

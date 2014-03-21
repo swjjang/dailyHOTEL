@@ -20,13 +20,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.GMapActivity;
 import com.twoheart.dailyhotel.activity.HotelTabActivity;
+import com.twoheart.dailyhotel.activity.TabActivity;
 import com.twoheart.dailyhotel.obj.HotelDetail;
 
-public class HotelTabMapFragment extends Fragment implements OnMapClickListener {
+public class TabMapFragment extends Fragment implements OnMapClickListener {
 
 	private static final String TAG = "HotelTabMapFragment";
 
-	private HotelTabActivity mHostActivity;
+	private TabActivity mHostActivity;
 	private HotelDetail mHotelDetail;
 
 	private SupportMapFragment mMapFragment;
@@ -40,7 +41,7 @@ public class HotelTabMapFragment extends Fragment implements OnMapClickListener 
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 
-		mHostActivity = (HotelTabActivity) getActivity();
+		mHostActivity = (TabActivity) getActivity();
 		mHotelDetail = mHostActivity.hotelDetail;
 
 		View view = inflater.inflate(R.layout.fragment_hotel_tab_map,
@@ -101,7 +102,9 @@ public class HotelTabMapFragment extends Fragment implements OnMapClickListener 
 		mMapFragment = (SupportMapFragment) mHostActivity
 				.getSupportFragmentManager().findFragmentById(R.id.frag_map);
 		googleMap = mMapFragment.getMap();
-		googleMap.setOnMapClickListener(this);
+		
+		if (googleMap != null)
+			googleMap.setOnMapClickListener(this);
 
 		addMarker(mHotelDetail.getLatitude(), mHotelDetail.getLongitude(),
 				mHotelDetail.getHotel().getName());

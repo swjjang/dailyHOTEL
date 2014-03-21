@@ -42,13 +42,13 @@ import com.twoheart.dailyhotel.obj.Hotel;
 import com.twoheart.dailyhotel.obj.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Log;
-import com.twoheart.dailyhotel.util.network.DailyHotelJsonArrayResponseListener;
-import com.twoheart.dailyhotel.util.network.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.network.DailyHotelResponseListener;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.util.network.vo.DailyHotelJsonArrayRequest;
-import com.twoheart.dailyhotel.util.network.vo.DailyHotelJsonRequest;
-import com.twoheart.dailyhotel.util.network.vo.DailyHotelRequest;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonArrayRequest;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
+import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonArrayResponseListener;
+import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.util.network.response.DailyHotelResponseListener;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
 public class HotelListFragment extends Fragment implements Constants,
@@ -365,40 +365,4 @@ public class HotelListFragment extends Fragment implements Constants,
 			
 		} 
 	}
-	
-	// private void customizeFastScrollerOfListView(ListView listView) {
-		//
-		// try {
-		//
-		// Class<?> clazz = Class.forName("android.widget.FastScroller");
-		// Constructor<?> constructor = clazz.getConstructor(
-		// AbsListView.class);
-		// Object newFastScroller = constructor.newInstance(listView);
-		//
-		// Field padding = clazz.getDeclaredField("mPreviewPadding");
-		// padding.setAccessible(true);
-		//
-		// int oldPadding = padding.getInt(newFastScroller);
-		// Log.d(TAG, Integer.toString(oldPadding));
-		//
-		// padding.set(newFastScroller, 24);
-		// int newPadding = padding.getInt(newFastScroller);
-		// Log.d(TAG, Integer.toString(newPadding));
-		//
-		// padding.setAccessible(false);
-		//
-		//
-		// Field orgFastScroller =
-		// AbsListView.class.getDeclaredField("mFastScroller");
-		// orgFastScroller.setAccessible(true);
-		// orgFastScroller.set(listView, newFastScroller);
-		//
-		// orgFastScroller.setAccessible(false);
-		//
-		// } catch (Exception e) {
-		// e.printStackTrace();
-		// }
-		//
-		// }
-	
 }

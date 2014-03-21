@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ExpandableListView;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
@@ -26,41 +25,37 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListe
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
-public class NoticeActivity extends BaseActivity implements
+public class FAQActivity extends BaseActivity implements
 		DailyHotelJsonResponseListener, ErrorListener {
 
-	private static final String TAG = "NoticeActivity";
+	private static final String TAG = "HelpActivity";
 
 	private RequestQueue mQueue;
-
 	private ArrayList<Board> mList;
 	private ExpandableListView mListView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setActionBar("공지사항");
+		setActionBar("자주 묻는 질문");
 		setContentView(R.layout.activity_board);
-
 		mQueue = VolleyHttpClient.getRequestQueue();
 
 		mListView = (ExpandableListView) findViewById(R.id.expandable_list_board);
-
 		LoadingDialog.showLoading(this);
+
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(
-				URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_BOARD_NOTICE)
-				.toString(), null, this, this));
+				URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_BOARD_FAQ).toString(),
+				null, this, this));
 
 	}
-
-	@Override
+	
 	public void onBackPressed() {
 		finish();
 		overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
 		super.onBackPressed();
-	}
+	};
 
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
@@ -70,20 +65,9 @@ public class NoticeActivity extends BaseActivity implements
 		return super.onOptionsItemSelected(item);
 	}
 
-
-	@Override
-	public void onErrorResponse(VolleyError error) {
-		if (DEBUG)
-			error.printStackTrace();
-
-		Toast.makeText(this, "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-				Toast.LENGTH_SHORT).show();
-		LoadingDialog.hideLoading();
-	}
-
 	@Override
 	public void onResponse(String url, JSONObject response) {
-		if (url.contains(URL_WEBAPI_BOARD_NOTICE)) {
+		if (url.contains(URL_WEBAPI_BOARD_FAQ)) {
 			mList = new ArrayList<Board>();
 
 			try {
@@ -112,6 +96,17 @@ public class NoticeActivity extends BaseActivity implements
 				LoadingDialog.hideLoading();
 			}
 		}
-		
 	}
+
+	@Override
+	public void onErrorResponse(VolleyError error) {
+		if (DEBUG)
+			error.printStackTrace();
+
+		Toast.makeText(this, "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
+				Toast.LENGTH_SHORT).show();
+		LoadingDialog.hideLoading();
+
+	};
+
 }
