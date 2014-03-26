@@ -1,14 +1,13 @@
 package com.twoheart.dailyhotel.fragment;
 
-import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_AUTO_LOGIN;
-import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_IS_LOGIN;
-import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_USER_ID;
-import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_USER_PWD;
-import static com.twoheart.dailyhotel.util.AppConstants.SHARED_PREFERENCES_NAME;
+import org.json.JSONObject;
+
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,193 +15,269 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.webkit.CookieSyncManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request.Method;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.VolleyError;
 import com.facebook.Session;
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.activity.HelpActivity;
-import com.twoheart.dailyhotel.activity.IntroductionActivity;
+import com.twoheart.dailyhotel.activity.AboutActivity;
+import com.twoheart.dailyhotel.activity.FAQActivity;
 import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.activity.NoticeActivity;
 import com.twoheart.dailyhotel.activity.VersionActivity;
-import com.twoheart.dailyhotel.util.ui.NoActionBarException;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
+import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 
-public class SettingFragment extends Fragment implements OnClickListener{
+public class SettingFragment extends Fragment implements Constants,
+		DailyHotelStringResponseListener, DailyHotelJsonResponseListener,
+		ErrorListener, OnClickListener {
 
-	private View view;
-	
-	private TextView notice;
-	private TextView help;
-	private TextView mail;
-	private TextView login;
-	private TextView email;
-	private TextView call;
-	private TextView introduction;
-	private TextView cur_version;
-	private LinearLayout version;
-	
-	private boolean isLogin = false;	 // login 상태
-	
-	private SharedPreferences prefs;
-	
-	@Override
-	public void onResume() {
-		super.onResume();
-		checkLogin();
-	}
-	
+	private MainActivity mHostActivity;
+
+	private RequestQueue mQueue;
+
+	private TextView tvNotice, tvHelp, tvMail, tvLogin, tvEmail, tvCall,
+			tvAbout, tvVersion;
+	private LinearLayout llVersion;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		
-		view = inflater.inflate(R.layout.fragment_setting, null);
-		
+
+		View view = inflater.inflate(R.layout.fragment_setting, null);
+
 		// ActionBar Setting
-		MainActivity activity = (MainActivity)view.getContext();
-		activity.setActionBar("설정");
-		activity.hideMenuItem();
-		activity.addMenuItem("dummy");
-		
-		// sliding setting
-//		activity.getSlidingMenu().setMode(SlidingMenu.LEFT);
-		
-		
-		loadResource();
-		checkLogin();
-		
+		mHostActivity = (MainActivity) getActivity();
+		mQueue = VolleyHttpClient.getRequestQueue();
+
+		tvNotice = (TextView) view.findViewById(R.id.tv_setting_notice);
+		tvVersion = (TextView) view.findViewById(R.id.tv_setting_version);
+		llVersion = (LinearLayout) view.findViewById(R.id.ll_setting_version);
+		tvHelp = (TextView) view.findViewById(R.id.tv_setting_help);
+		tvMail = (TextView) view.findViewById(R.id.tv_setting_mail);
+		tvLogin = (TextView) view.findViewById(R.id.tv_setting_login);
+		tvEmail = (TextView) view.findViewById(R.id.tv_setting_email);
+		tvCall = (TextView) view.findViewById(R.id.tv_setting_call);
+		tvAbout = (TextView) view.findViewById(R.id.tv_setting_introduction);
+
+		tvNotice.setOnClickListener(this);
+		llVersion.setOnClickListener(this);
+		tvHelp.setOnClickListener(this);
+		tvMail.setOnClickListener(this);
+		tvLogin.setOnClickListener(this);
+		tvEmail.setOnClickListener(this);
+		tvCall.setOnClickListener(this);
+		tvAbout.setOnClickListener(this);
+
+		try {
+			String currentVersion = mHostActivity.getPackageManager()
+					.getPackageInfo(mHostActivity.getPackageName(), 0).versionName;
+
+			tvVersion.setText(currentVersion);
+		} catch (NameNotFoundException e) {
+			e.printStackTrace();
+		}
+
 		return view;
 	}
-	
-	public void loadResource() {
-		notice = (TextView) view.findViewById(R.id.tv_setting_notice);
-		cur_version = (TextView) view.findViewById(R.id.tv_setting_version);
-		version = (LinearLayout) view.findViewById(R.id.ll_setting_version);
-		help = (TextView) view.findViewById(R.id.tv_setting_help);
-		mail = (TextView) view.findViewById(R.id.tv_setting_mail);
-		login = (TextView) view.findViewById(R.id.tv_setting_login);
-		email = (TextView) view.findViewById(R.id.tv_setting_email);
-		call = (TextView) view.findViewById(R.id.tv_setting_call);
-		introduction = (TextView) view.findViewById(R.id.tv_setting_introduction);
+
+	@Override
+	public void onResume() {
+		super.onResume();
 		
-		notice.setOnClickListener(this);
-		version.setOnClickListener(this);
-		help.setOnClickListener(this);
-		mail.setOnClickListener(this);
-		login.setOnClickListener(this);
-		email.setOnClickListener(this);
-		call.setOnClickListener(this);
-		introduction.setOnClickListener(this);
+		mHostActivity.setActionBar("설정");
 		
-		try {
-			cur_version.setText(getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName);
-		} catch(Exception e) {
-			e.toString();
-		}
+		mQueue.add(new DailyHotelStringRequest(Method.GET,
+				new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+						URL_WEBAPI_USER_ALIVE).toString(), null, this, this));
 	}
-	
-	public void checkLogin() {
-		prefs = view.getContext().getSharedPreferences(SHARED_PREFERENCES_NAME, 0);
-		isLogin =  prefs.getBoolean(PREFERENCE_IS_LOGIN, false);
-		
-		if(isLogin) {
-			login.setText("로그아웃");
-			email.setText(prefs.getString(PREFERENCE_USER_ID, ""));
-		} else {
-			login.setText("로그인");
-			email.setText("");
+
+	@Override
+	public void onClick(View v) {
+
+		if (v.getId() == tvNotice.getId()) {
+			Intent i = new Intent(mHostActivity, NoticeActivity.class);
+			startActivity(i);
+			mHostActivity.overridePendingTransition(R.anim.slide_in_right,
+					R.anim.hold);
+
+		} else if (v.getId() == llVersion.getId()) {
+
+			Intent i = new Intent(mHostActivity, VersionActivity.class);
+			startActivity(i);
+			mHostActivity.overridePendingTransition(R.anim.slide_in_right,
+					R.anim.hold);
+
+		} else if (v.getId() == tvHelp.getId()) {
+
+			Intent i = new Intent(mHostActivity, FAQActivity.class);
+			startActivity(i);
+			mHostActivity.overridePendingTransition(R.anim.slide_in_right,
+					R.anim.hold);
+
+		} else if (v.getId() == tvMail.getId()) {
+
+			Intent intent = new Intent(Intent.ACTION_SEND);
+			intent.setType("message/rfc822");
+			intent.putExtra(Intent.EXTRA_EMAIL,
+					new String[] { "help@dailyhotel.co.kr" });
+			intent.putExtra(Intent.EXTRA_SUBJECT, "데일리 호텔에 문의합니다");
+			intent.putExtra(Intent.EXTRA_TEXT, "데일리 호텔 안드로이드 어플리케이션에 관한 문의입니다.");
+			startActivity(intent.createChooser(intent, "작업을 수행할 때 수행할 애플리케이션"));
+
+		} else if (v.getId() == tvLogin.getId()) {
+
+			if (tvLogin.getText().equals("로그아웃")) { // 로그인 되어 있는 상태
+				AlertDialog.Builder alert_confirm = new AlertDialog.Builder(
+						mHostActivity);
+				alert_confirm
+						.setMessage("로그아웃 하시겠습니까?")
+						.setCancelable(false)
+						.setPositiveButton("로그아웃",
+								new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+
+										mQueue.add(new DailyHotelStringRequest(
+												Method.GET,
+												new StringBuilder(
+														URL_DAILYHOTEL_SERVER)
+														.append(URL_WEBAPI_USER_LOGOUT)
+														.toString(), null,
+												SettingFragment.this,
+												SettingFragment.this));
+
+										SharedPreferences.Editor ed = mHostActivity.sharedPreference
+												.edit();
+										ed.putBoolean(
+												KEY_PREFERENCE_AUTO_LOGIN,
+												false);
+										ed.putString(KEY_PREFERENCE_USER_ID,
+												null);
+										ed.putString(KEY_PREFERENCE_USER_PWD,
+												null);
+										ed.commit();
+
+										VolleyHttpClient.cookie = null;
+										VolleyHttpClient.cookieManager
+												.removeAllCookie();
+										CookieSyncManager.getInstance().startSync();
+										CookieSyncManager.getInstance().stopSync();
+
+										tvLogin.setText("로그인");
+										tvEmail.setText("");
+
+										Toast.makeText(mHostActivity,
+												"로그아웃되었습니다", Toast.LENGTH_SHORT)
+												.show();
+
+										if (Session.getActiveSession() != null)
+											if (Session.getActiveSession()
+													.isOpened()) {
+												Session.getActiveSession()
+														.closeAndClearTokenInformation();
+												Session.setActiveSession(null);
+											}
+
+									}
+								})
+						.setNegativeButton("취소",
+								new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+										return;
+									}
+								});
+				AlertDialog alert = alert_confirm.create();
+				alert.show();
+
+			} else { // 로그아웃 상태
+				Intent i = new Intent(mHostActivity, LoginActivity.class);
+				startActivityForResult(i, CODE_REQUEST_ACTIVITY_LOGIN);
+				mHostActivity.overridePendingTransition(R.anim.slide_in_right,
+						R.anim.hold);
+			}
+
+		} else if (v.getId() == tvCall.getId()) {
+			Intent i = new Intent(Intent.ACTION_DIAL,
+					Uri.parse(new StringBuilder("tel:").append(DAILYHOTEL_PHONE_NUMBER).toString()));
+			startActivity(i);
+		} else if (v.getId() == tvAbout.getId()) {
+			Intent i = new Intent(mHostActivity, AboutActivity.class);
+			startActivity(i);
+			mHostActivity.overridePendingTransition(R.anim.slide_in_right,
+					R.anim.hold);
 		}
 	}
 	
 	@Override
-	public void onClick(View v) {
+	public void onActivityResult(int requestCode, int resultCode,
+			Intent intent) {
+		super.onActivityResult(requestCode, resultCode, intent);
 		
-		if(v.getId() == notice.getId()) {
-			
-			Intent i = new Intent(v.getContext(), NoticeActivity.class);
-			MainActivity activity = (MainActivity) view.getContext();
-			activity.startActivity(i);
-			activity.overridePendingTransition(R.anim.slide_in_right,R.anim.hold);
-			
-		}	else if(v.getId() == version.getId()) {
-			
-			Intent i = new Intent(v.getContext(), VersionActivity.class);
-			MainActivity activity = (MainActivity) view.getContext();
-			activity.startActivity(i);
-			activity.overridePendingTransition(R.anim.slide_in_right,R.anim.hold);
-			
-		}	else if(v.getId() == help.getId()) {
-			
-			Intent i = new Intent(v.getContext(), HelpActivity.class);
-			MainActivity activity = (MainActivity) view.getContext();
-			activity.startActivity(i);
-			activity.overridePendingTransition(R.anim.slide_in_right,R.anim.hold);
-			
-		}	else if(v.getId() == mail.getId()) {
-			
-			Intent intent = new Intent(Intent.ACTION_SEND);
-			intent.setType("message/rfc822");
-			intent.putExtra(Intent.EXTRA_EMAIL, new String[] {"help@dailyhotel.co.kr"});
-			intent.putExtra(Intent.EXTRA_SUBJECT, "데일리 호텔에 문의합니다");
-			intent.putExtra(Intent.EXTRA_TEXT, "데일리 호텔 안드로이드 어플리케이션에 관한 문의입니다.");
-			startActivity(intent.createChooser(intent, "작업을 수행할 때 수행할 애플리케이션"));
-			
-		}	else if(v.getId() == login.getId()) {
-			
-			if(isLogin) {		// 로그인 되어 있는 상태
-				AlertDialog.Builder alert_confirm = new AlertDialog.Builder(view.getContext());
-				alert_confirm.setMessage("로그아웃 하시겠습니까?").setCancelable(false).setPositiveButton("로그아웃",
-				new DialogInterface.OnClickListener() {
-				    @Override
-				    public void onClick(DialogInterface dialog, int which) {
-				        // 'YES'
-				    	prefs = getActivity().getSharedPreferences(SHARED_PREFERENCES_NAME, 0);
-						SharedPreferences.Editor ed = prefs.edit();
-						ed.putBoolean(PREFERENCE_IS_LOGIN, false);
-						ed.putBoolean(PREFERENCE_AUTO_LOGIN, false);
-						ed.putString(PREFERENCE_USER_ID, null);
-						ed.putString(PREFERENCE_USER_PWD, null);
-						ed.commit();
-						Toast.makeText(getActivity(), "로그아웃되었습니다", Toast.LENGTH_SHORT).show();
-						isLogin = false;
-						checkLogin();
-						
-						if (Session.getActiveSession() != null)
-							if (Session.getActiveSession()
-									.isOpened()) {
-								Session.getActiveSession()
-										.closeAndClearTokenInformation();
-								Session.setActiveSession(null);
-							}
-						
-				    }
-				}).setNegativeButton("취소",
-				new DialogInterface.OnClickListener() {
-				    @Override
-				    public void onClick(DialogInterface dialog, int which) {
-				    return;
-				    }
-				});
-				AlertDialog alert = alert_confirm.create();
-				alert.show();
-				
-			} else {	// 로그아웃 상태
-				Intent i = new Intent(v.getContext(), LoginActivity.class);
-				MainActivity activity = (MainActivity) view.getContext();
-				activity.startActivity(i);
-				activity.overridePendingTransition(R.anim.slide_in_right,R.anim.hold);
+		if (requestCode == CODE_REQUEST_ACTIVITY_LOGIN) {
+			if (resultCode == Activity.RESULT_OK) {
+				mHostActivity.selectMenuDrawer(mHostActivity.menuHotelListFragment);
 			}
-			
-		}	else if(v.getId() == call.getId()) {
-			Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:070-4028-9331"));
-	    	startActivity(i);
-		}	else if(v.getId() == introduction.getId())	{
-			Intent i = new Intent(view.getContext(), IntroductionActivity.class);
-			MainActivity activity = (MainActivity) view.getContext();
-			activity.startActivity(i);
-			activity.overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
 		}
+	}
+
+	@Override
+	public void onErrorResponse(VolleyError error) {
+		if (DEBUG)
+			error.printStackTrace();
+		
+		Toast.makeText(mHostActivity, "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
+				Toast.LENGTH_SHORT).show();
+
+	}
+
+	@Override
+	public void onResponse(String url, String response) {
+		if (url.contains(URL_WEBAPI_USER_ALIVE)) {
+			String result = response.trim();
+
+			if (result.equals("alive")) { // session alive
+				// 사용자 정보 요청.
+				mQueue.add(new DailyHotelJsonRequest(Method.GET,
+						new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+								URL_WEBAPI_USER_INFO).toString(), null, this,
+						this));
+
+			}
+		}
+	}
+
+	@Override
+	public void onResponse(String url, JSONObject response) {
+		if (url.contains(URL_WEBAPI_USER_INFO)) {
+			try {
+				JSONObject obj = response;
+				tvEmail.setText(obj.getString("email"));
+				tvLogin.setText("로그아웃");
+
+			} catch (Exception e) {
+				if (DEBUG)
+					e.printStackTrace();
+
+				tvLogin.setText("로그인");
+				tvEmail.setText("");
+			}
+
+		}
+
 	}
 }

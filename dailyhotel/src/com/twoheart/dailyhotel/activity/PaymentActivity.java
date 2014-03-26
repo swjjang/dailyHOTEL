@@ -1,123 +1,111 @@
 package com.twoheart.dailyhotel.activity;
 
-import static com.twoheart.dailyhotel.util.AppConstants.PAYMENT;
-import static com.twoheart.dailyhotel.util.AppConstants.PAYMENT_DISCOUNT;
-import static com.twoheart.dailyhotel.util.AppConstants.REST_URL;
-
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import kr.co.kcp.android.payment.standard.KcpApplication;
+import kr.co.kcp.android.payment.standard.ResultRcvActivity;
 import kr.co.kcp.util.PackageState;
 
 import org.apache.http.util.EncodingUtils;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Window;
+import android.webkit.CookieSyncManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.AppConstants;
+import com.twoheart.dailyhotel.obj.Pay;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
-//import com.google.android.gcm.GCMRegistrar;
-public class PaymentActivity extends Activity {
+public class PaymentActivity extends Activity implements Constants {
 
-	public static final String ACTIVITY_RESULT = "ActivityResult";
 	public static final int PROGRESS_STAT_NOT_START = 1;
 	public static final int PROGRESS_STAT_IN = 2;
 	public static final int PROGRESS_DONE = 3;
 	public static String CARD_CD = "";
 	public static String QUOTA = "";
-	public WebView webView;
-	private final Handler handler = new Handler();
 	public int m_nStat = PROGRESS_STAT_NOT_START;
-
-	String url;
-	byte[] postData;
-//	String postData;
 	
-	private String email;
-	private String phone;
-	private String name;
+	private WebView webView;
+	private final Handler handler = new Handler();
+	
+	private Pay mPay;
 
+	@JavascriptInterface
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_payment);
-
-		Intent intent = getIntent();
-		String booking_idx = intent.getStringExtra("booking_idx");
-		boolean isBonus = intent.getBooleanExtra("isBonus", false);
-		boolean isFullBonus = intent.getBooleanExtra("isFullBonus", false);
-		String bonus = intent.getStringExtra("credit");
 		
-		email = intent.getStringExtra("email");
-		phone = intent.getStringExtra("phone");
-		name = intent.getStringExtra("name");
-		
-		if (!isBonus) {
-			url = REST_URL + PAYMENT + booking_idx;
-			Log.d("url", url);
-		} else {
-			if (isFullBonus) {
-				url = REST_URL + PAYMENT_DISCOUNT + booking_idx;// + "/" +
-																// bonus;
-				Log.d("url", url);
-			} else {
-				url = REST_URL + PAYMENT_DISCOUNT + booking_idx + "/" + bonus;
-				Log.d("url", url);
-			}
+		Bundle bundle = getIntent().getExtras();
+		if (bundle != null) {
+			mPay = (Pay) bundle
+					.getParcelable(NAME_INTENT_EXTRA_DATA_PAY);
 		}
 		
-//		url = "http://1.234.22.96/goodnight/nulltest.jsp";
+		webView = (WebView) findViewById(R.id.webView);
+
+		webView.getSettings().setSavePassword(false);
+		webView.getSettings().setJavaScriptEnabled(true);
+		webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+		webView.addJavascriptInterface(new KCPPayBridge(), "KCPPayApp");
+		// 하나SK 카드 선택시 User가 선택한 기본 정보를 가지고 오기위해 사용
+		webView.addJavascriptInterface(new KCPPayCardInfoBridge(),
+				"KCPPayCardInfo");
+		webView.addJavascriptInterface(new JavaScriptExtention(), "android");
+
+		webView.setWebChromeClient(new WebChromeClient());
+		webView.setWebViewClient(new mWebViewClient());
+//		 webView.getSettings().setPluginState(PluginState.ON);
 		
-//		postData = "AppUrl=dailyHOTEL://card_pay";
+	}
+	
+	@Override
+	protected void onPause() {
+		CookieSyncManager.getInstance().stopSync();
+		super.onPause();
 		
-		String[] postDataKey = new String[] { "email", "name", "phone" };
-		String[] postDataValue = new String[] { email, name, phone };
-//		
-		postData = parsePostParameter(postDataKey, postDataValue);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		CookieSyncManager.getInstance().startSync();
 		
-//		byte[] postDataKcp = new String("AppUrl=dailyHOTEL://card_pay").getBytes();
-//		
-//		StringBuilder postDataParameterStr = new StringBuilder();
-//		
-//		for (int i=0; i<postDataKey.length; i++) {
-//			
-////			if (postDataParameter.length() != 0) {
-////				postDataParameter.append("&");
-////			}
-//			postDataParameterStr.append("&");
-//			postDataParameterStr.append(postDataKey[i]);
-//			postDataParameterStr.append("=");
-//			postDataParameterStr.append(postDataValue[i]);
-//			
-//		}
-//		
-//		byte[] postDataParameter = postDataParameterStr.toString().getBytes();
-//		
-//		postData = new byte[postDataKcp.length + postDataParameter.length];
-//		System.arraycopy(postDataKcp, 0, postData, 0, postDataKcp.length);
-//		System.arraycopy(postDataParameter, 0, postData, postDataKcp.length, postDataParameter.length);
+		String[] postParameterKey = new String[] { "email", "name", "phone", "accessToken" };
+		String[] postParameterValue = new String[] { mPay.getCustomer().getEmail(), 
+				mPay.getCustomer().getName(), mPay.getCustomer().getPhone(), mPay.getCustomer().getAccessToken() };
 		
-		loadResource();
+		String url = new StringBuilder(URL_DAILYHOTEL_SERVER)
+				.append(URL_WEBAPI_RESERVE_PAYMENT)
+				.append(mPay.getHotelDetail().getSaleIdx()).toString();
+		
+		if (mPay.isSaleCredit()) {
+			url = new StringBuilder(URL_DAILYHOTEL_SERVER)
+			.append(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)
+			.append(mPay.getHotelDetail().getSaleIdx()).append("/")
+			.append(mPay.getCredit().getBonus()).toString();
+			
+		}
+		
+		webView.postUrl(url, parsePostParameter(postParameterKey, postParameterValue));
+		
 	}
 	
 	private byte[] parsePostParameter(String[] key, String[] value) {
@@ -148,18 +136,18 @@ public class PaymentActivity extends Activity {
 		for (int i=0; i<resultList.size(); i++) {
 			sizeOfResult[i] = resultList.get(i).length;
 			
-			if (AppConstants.DEBUG)
+			if (Constants.DEBUG)
 				Log.d("sizeOfResult", Integer.toString(sizeOfResult[i]));
 		}
 		
 		for (int i=0; i<sizeOfResult.length; i++) {
 			size += sizeOfResult[i];
 			
-			if (AppConstants.DEBUG)
+			if (Constants.DEBUG)
 				Log.d("size", Integer.toString(size));
 		}
 		
-		if (AppConstants.DEBUG)
+		if (Constants.DEBUG)
 			Log.d("final size", Integer.toString(size));
 			
 		byte[] result = new byte[size];
@@ -176,35 +164,13 @@ public class PaymentActivity extends Activity {
 		
 		return result;
 	}
+
 	@JavascriptInterface
-	public void loadResource() {
-		webView = (WebView) findViewById(R.id.webview);
-
-		webView.getSettings().setSavePassword(false);
-		webView.getSettings().setJavaScriptEnabled(true);
-		webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
-		webView.addJavascriptInterface(new KCPPayBridge(), "KCPPayApp");
-		// 하나SK 카드 선택시 User가 선택한 기본 정보를 가지고 오기위해 사용
-		webView.addJavascriptInterface(new KCPPayCardInfoBridge(),
-				"KCPPayCardInfo");
-		webView.addJavascriptInterface(new JavaScriptExtention(), "android");
-
-		webView.setWebChromeClient(new WebChromeClient());
-		webView.setWebViewClient(new mWebViewClient());
-//		 webView.getSettings().setPluginState(PluginState.ON);
-		
-		Log.d("test", new String(postData));
-		
-		webView.postUrl(url, postData);
-//		webView.postUrl(url, EncodingUtils.getBytes(postData, "BASE64"));
-	}
-
 	private boolean url_scheme_intent(String url) {
-		Log.d(KcpApplication.m_strLogTag,
+		Log.d(ResultRcvActivity.m_strLogTag,
 				"[PayDemoActivity] called__test - url=[" + url + "]");
 
 		Uri uri = Uri.parse(url);
-		Log.d("urllllllllll", uri.toString());
 		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 
 		try {
@@ -217,9 +183,11 @@ public class PaymentActivity extends Activity {
 	}
 
 	private class mWebViewClient extends WebViewClient {
+		
+		@JavascriptInterface
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
-			Log.d(KcpApplication.m_strLogTag,
+			Log.d(ResultRcvActivity.m_strLogTag,
 					"[PayDemoActivity] called__shouldOverrideUrlLoading - url=["
 							+ url + "]");
 
@@ -250,17 +218,32 @@ public class PaymentActivity extends Activity {
 			return true;
 		}
 
+		@JavascriptInterface
 		// error 처리
 		@Override
 		public void onReceivedError(WebView view, int errorCode,
 				String description, String failingUrl) {
 			super.onReceivedError(view, errorCode, description, failingUrl);
 			webView.loadUrl("about:blank");
-			Intent intent = new Intent();
-			intent.putExtra(ACTIVITY_RESULT, "NEWORK_ERROR");
-			setResult(RESULT_OK, intent);
+			setResult(CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR);
 			finish();
 		}
+
+		@Override
+		public void onPageFinished(WebView view, String url) {
+			super.onPageFinished(view, url);
+			
+			LoadingDialog.hideLoading();
+		}
+
+		@Override
+		public void onPageStarted(WebView view, String url, Bitmap favicon) {
+			super.onPageStarted(view, url, favicon);
+			
+			LoadingDialog.showLoading(PaymentActivity.this);
+		}
+		
+		
 	}
 
 	// 하나SK 카드 선택시 User가 선택한 기본 정보를 가지고 오기위해 사용
@@ -269,7 +252,7 @@ public class PaymentActivity extends Activity {
 		public void getCardInfo(final String card_cd, final String quota) {
 			handler.post(new Runnable() {
 				public void run() {
-					Log.d(KcpApplication.m_strLogTag,
+					Log.d(ResultRcvActivity.m_strLogTag,
 							"[PayDemoActivity] KCPPayCardInfoBridge=["
 									+ card_cd + ", " + quota + "]");
 
@@ -285,6 +268,7 @@ public class PaymentActivity extends Activity {
 			});
 		}
 
+		@JavascriptInterface
 		private void alertToNext() {
 			AlertDialog.Builder dlgBuilder = new AlertDialog.Builder(
 					PaymentActivity.this);
@@ -359,60 +343,58 @@ public class PaymentActivity extends Activity {
 	protected void onRestart() {
 		super.onResume();
 
-		Log.d(KcpApplication.m_strLogTag,
+		Log.d(ResultRcvActivity.m_strLogTag,
 				"[PayDemoActivity] called__onResume + INPROGRESS=[" + m_nStat
 						+ "]");
 
-		KcpApplication myApp = (KcpApplication) getApplication();
-
 		// 하나 SK 모듈로 결제 이후 해당 카드 정보를 가지고 오기위해 사용
-		if (myApp.m_uriResult != null) {
-			if (myApp.m_uriResult.getQueryParameter("realPan") != null
-					&& myApp.m_uriResult.getQueryParameter("cavv") != null
-					&& myApp.m_uriResult.getQueryParameter("xid") != null
-					&& myApp.m_uriResult.getQueryParameter("eci") != null) {
-				Log.d(KcpApplication.m_strLogTag,
+		if (ResultRcvActivity.m_uriResult != null) {
+			if (ResultRcvActivity.m_uriResult.getQueryParameter("realPan") != null
+					&& ResultRcvActivity.m_uriResult.getQueryParameter("cavv") != null
+					&& ResultRcvActivity.m_uriResult.getQueryParameter("xid") != null
+					&& ResultRcvActivity.m_uriResult.getQueryParameter("eci") != null) {
+				Log.d(ResultRcvActivity.m_strLogTag,
 						"[PayDemoActivity] HANA SK Result = javascript:hanaSK('"
-								+ myApp.m_uriResult
+								+ ResultRcvActivity.m_uriResult
 										.getQueryParameter("realPan") + "', '"
-								+ myApp.m_uriResult.getQueryParameter("cavv")
+								+ ResultRcvActivity.m_uriResult.getQueryParameter("cavv")
 								+ "', '"
-								+ myApp.m_uriResult.getQueryParameter("xid")
+								+ ResultRcvActivity.m_uriResult.getQueryParameter("xid")
 								+ "', '"
-								+ myApp.m_uriResult.getQueryParameter("eci")
+								+ ResultRcvActivity.m_uriResult.getQueryParameter("eci")
 								+ "', '" + CARD_CD + "', '" + QUOTA + "');");
 
 				// 하나 SK 모듈로 인증 이후 승인을 하기위해 결제 함수를 호출 (주문자 페이지)
 				webView.loadUrl("javascript:hanaSK('"
-						+ myApp.m_uriResult.getQueryParameter("realPan")
-						+ "', '" + myApp.m_uriResult.getQueryParameter("cavv")
-						+ "', '" + myApp.m_uriResult.getQueryParameter("xid")
-						+ "', '" + myApp.m_uriResult.getQueryParameter("eci")
+						+ ResultRcvActivity.m_uriResult.getQueryParameter("realPan")
+						+ "', '" + ResultRcvActivity.m_uriResult.getQueryParameter("cavv")
+						+ "', '" + ResultRcvActivity.m_uriResult.getQueryParameter("xid")
+						+ "', '" + ResultRcvActivity.m_uriResult.getQueryParameter("eci")
 						+ "', '" + CARD_CD + "', '" + QUOTA + "');");
 			}
 
-			if ((myApp.m_uriResult.getQueryParameter("res_cd") == null ? ""
-					: myApp.m_uriResult.getQueryParameter("res_cd"))
+			if ((ResultRcvActivity.m_uriResult.getQueryParameter("res_cd") == null ? ""
+					: ResultRcvActivity.m_uriResult.getQueryParameter("res_cd"))
 					.equals("999")) {
-				Log.d(KcpApplication.m_strLogTag,
+				Log.d(ResultRcvActivity.m_strLogTag,
 						"[PayDemoActivity] HANA SK Result = cancel");
 
 				m_nStat = 9;
 			}
 
-			if ((myApp.m_uriResult.getQueryParameter("isp_res_cd") == null ? ""
-					: myApp.m_uriResult.getQueryParameter("isp_res_cd"))
+			if ((ResultRcvActivity.m_uriResult.getQueryParameter("isp_res_cd") == null ? ""
+					: ResultRcvActivity.m_uriResult.getQueryParameter("isp_res_cd"))
 					.equals("0000")) {
-				Log.d(KcpApplication.m_strLogTag,
+				Log.d(ResultRcvActivity.m_strLogTag,
 						"[PayDemoActivity] ISP Result = 0000");
 
 				webView.loadUrl("http://pggw.kcp.co.kr/lds/smart_phone_linux_jsp/sample/card/samrt_res.jsp?result=OK&a="
-						+ myApp.m_uriResult.getQueryParameter("a"));
+						+ ResultRcvActivity.m_uriResult.getQueryParameter("a"));
 				// webView.loadUrl(
 				// "https://pggw.kcp.co.kr/app.do?ActionResult=app&approval_key="
 				// + strApprovalKey );
 			} else {
-				Log.d(KcpApplication.m_strLogTag,
+				Log.d(ResultRcvActivity.m_strLogTag,
 						"[PayDemoActivity] ISP Result = cancel");
 			}
 		}
@@ -421,17 +403,16 @@ public class PaymentActivity extends Activity {
 			checkFrom();
 		}
 
-		myApp.m_uriResult = null;
+		ResultRcvActivity.m_uriResult = null;
 	}
 
 	@JavascriptInterface
 	public void checkFrom() {
 		try {
-			KcpApplication myApp = (KcpApplication) getApplication();
 
-			if (myApp.m_uriResult != null) {
+			if (ResultRcvActivity.m_uriResult != null) {
 				m_nStat = PROGRESS_DONE;
-				String strResultInfo = myApp.m_uriResult
+				String strResultInfo = ResultRcvActivity.m_uriResult
 						.getQueryParameter("approval_key");
 
 				if (strResultInfo == null || strResultInfo.length() <= 4)
@@ -440,7 +421,7 @@ public class PaymentActivity extends Activity {
 				String strResCD = strResultInfo.substring(strResultInfo
 						.length() - 4);
 
-				Log.d(KcpApplication.m_strLogTag, "[PayDemoActivity] result=["
+				Log.d(ResultRcvActivity.m_strLogTag, "[PayDemoActivity] result=["
 						+ strResultInfo + "]+" + "res_cd=[" + strResCD + "]");
 
 				if (strResCD.equals("0000") == true) {
@@ -450,7 +431,7 @@ public class PaymentActivity extends Activity {
 					strApprovalKey = strResultInfo.substring(0,
 							strResultInfo.length() - 4);
 
-					Log.d(KcpApplication.m_strLogTag,
+					Log.d(ResultRcvActivity.m_strLogTag,
 							"[PayDemoActivity] approval_key=[" + strApprovalKey
 									+ "]");
 
@@ -468,9 +449,10 @@ public class PaymentActivity extends Activity {
 		}
 	}
 
+	@JavascriptInterface
 	@Override
 	protected Dialog onCreateDialog(int id) {
-		Log.d(KcpApplication.m_strLogTag,
+		Log.d(ResultRcvActivity.m_strLogTag,
 				"[PayDemoActivity] called__onCreateDialog - id=[" + id + "]");
 
 		super.onCreateDialog(id);
@@ -506,15 +488,16 @@ public class PaymentActivity extends Activity {
 	}
 
 	public void finishActivity(String p_strFinishMsg) {
-		Intent intent = new Intent();
+		
+		int resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
 
 		if (p_strFinishMsg != null) {
-			intent.putExtra(ACTIVITY_RESULT, p_strFinishMsg);
-			setResult(RESULT_OK, intent);
-		} else {
-			setResult(RESULT_CANCELED);
+			if (p_strFinishMsg.equals("NOT_AVAILABLE")) {
+				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_NOT_AVAILABLE;
+			}
 		}
-
+		
+		setResult(resultCode);
 		finish();
 	}
 
@@ -525,24 +508,22 @@ public class PaymentActivity extends Activity {
 
 		@JavascriptInterface
 		public void feed(final String msg) {
-			Intent intent = new Intent();
+			
+			int resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
 
 			if (msg.equals("SUCCESS")) {
-				intent.putExtra(ACTIVITY_RESULT, "SUCCESS");
-				setResult(RESULT_OK, intent);
+				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS;
 			} else if (msg.equals("INVALID_SESSION")) {
-				intent.putExtra(ACTIVITY_RESULT, "INVALID_SESSION");
-				setResult(RESULT_OK, intent);
+				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION;
 			} else if (msg.equals("SOLD_OUT")) {
-				intent.putExtra(ACTIVITY_RESULT, "SOLD_OUT");
-				setResult(RESULT_OK, intent);
+				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_SOLD_OUT;
 			} else if (msg.equals("PAYMENT_COMPLETE")) {
-				intent.putExtra(ACTIVITY_RESULT, "PAYMENT_COMPLETE");
-				setResult(RESULT_OK, intent);
+				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE;
 			} else if (msg.equals("INVALID_DATE")) {
-				intent.putExtra(ACTIVITY_RESULT, "INVALID_DATE");
-				setResult(RESULT_OK, intent);
+				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_INVALID_DATE;
 			}
+			
+			setResult(resultCode);
 			finish();
 		}
 	}
@@ -568,4 +549,5 @@ public class PaymentActivity extends Activity {
 		AlertDialog alert = alertDialog.create();
 		alert.show();
 	}
+	
 }

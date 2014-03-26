@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.adapter;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.obj.Credit;
@@ -15,16 +16,15 @@ import android.widget.TextView;
 
 public class CreditListAdapter extends ArrayAdapter<Credit>{
 	
-	private ArrayList<Credit> items;
-	private Context context;
-	private int resourceId;
+	private List<Credit> mItems;
+	private Context mContext;
+	private int mResourceId;
 	
-	
-	public CreditListAdapter(Context context, int resourceId, ArrayList<Credit> items) {
-		super(context, resourceId, items);
-		this.items = items;
-		this.context = context;
-		this.resourceId = resourceId;
+	public CreditListAdapter(Context context, int resourceId, List<Credit> mCreditList) {
+		super(context, resourceId, mCreditList);
+		this.mItems = mCreditList;
+		this.mContext = context;
+		this.mResourceId = resourceId;
 	}
 	
 	@Override
@@ -32,12 +32,12 @@ public class CreditListAdapter extends ArrayAdapter<Credit>{
 		View v = convertView;
 		
 		if(v == null	) {
-			LayoutInflater vi = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			v = vi.inflate(resourceId, null);
+			LayoutInflater vi = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			v = vi.inflate(mResourceId, null);
 			v.setTag(position);
 		}
 		
-		Credit element = items.get(position);
+		Credit element = mItems.get(position);
 		
 		if(element != null) {
 			TextView bonus = (TextView) v.findViewById(R.id.list_row_credit_bonus);
@@ -46,7 +46,6 @@ public class CreditListAdapter extends ArrayAdapter<Credit>{
 			
 			DecimalFormat comma = new DecimalFormat("###,##0");
 			String strBonus = comma.format(Integer.parseInt(element.getBonus()));
-			
 			
 			bonus.setText("£Ü" + strBonus);
 			content.setText(element.getContent());

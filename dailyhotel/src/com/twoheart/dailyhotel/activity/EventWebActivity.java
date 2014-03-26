@@ -1,7 +1,5 @@
 package com.twoheart.dailyhotel.activity;
 
-import java.util.HashMap;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -17,114 +15,46 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.google.analytics.tracking.android.Fields;
-import com.google.analytics.tracking.android.GoogleAnalytics;
-import com.google.analytics.tracking.android.Tracker;
+import com.google.analytics.tracking.android.MapBuilder;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ui.WebViewActivity;
 
+public class EventWebActivity extends WebViewActivity {
 
-public class EventWebActivity extends Activity {
+	private static final String TAG = "EventWebActivity";
+	private static final String URL_WEBAPI_EVENT = "http://event.dailyhotel.co.kr";
 
-	private WebView webview;
-	
-	private Tracker mGaTracker;
-	private GoogleAnalytics mGaInstance;
-	
-	// Jason | Google analytics
-	@Override
-	public void onStart() {
-		super.onStart();
-		HashMap<String, String> hitParameters = new HashMap<String, String>();
-		hitParameters.put(Fields.HIT_TYPE, "appview");
-		hitParameters.put(Fields.SCREEN_NAME, "Event View");
-		
-		mGaTracker.send(hitParameters);
-	}
-	
 	@JavascriptInterface
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD){
-	        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-	    }
-		
-		setContentView(R.layout.activity_event_web);
-		
-		// Google analytics
-		mGaInstance = GoogleAnalytics.getInstance(this);
-		mGaTracker = mGaInstance.getTracker("UA-43721645-1");
-		
-		// Jason
-		webview = (WebView) findViewById(R.id.webviewForEvent);
-		webview.getSettings().setJavaScriptEnabled(true);
-		webview.getSettings().setSupportZoom(false);
-		
-		webview.loadUrl("http://event.dailyhotel.co.kr");
+		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD) {
+			getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+					WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		}
 
-		/* If you print customized html, refer next.
-		String customHtml = "<html><a href=https://play.google.com/store/apps/details?id=com.twoheart.dailyhotel>Apply event</a></html>";
-		webview.loadData(customHtml, "text/html", "UTF-8");
-		*/
-		// URL parsing
-		this.webview.setWebViewClient(new WebViewClient() {
-		    @Override
-		    public boolean shouldOverrideUrlLoading(WebView view, String url) {
-		    	if (url.equals("event://"))
-		    	{
-		    		finish();
-		    		overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
-		    		
-		    		Uri uri = Uri.parse("market://details?id=com.twoheart.dailyhotel");
-		    		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-		    		startActivity(intent);
-		    	}
-		    	else if (url.equals("event://tstore"))
-		    	{
-		    		finish();
-		    		overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
-		    		
-		    		Uri uri = Uri.parse("http://tsto.re/0000412421");
-		    		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-		    		startActivity(intent);
-		    	}
-		    	else
-		    	{
-		    		view.loadUrl(url);
-		    	}
-		    	return true;
-		    }
-		});
-		
-		// For Javascript alert
-		this.webview.setWebChromeClient(new WebChromeClient() {
-		    @Override
-		    public boolean onJsAlert(WebView view, String url, String message, final android.webkit.JsResult result)
-		    {
-		        new AlertDialog.Builder(view.getContext())
-		            .setTitle("¾Ë¸²")
-		            .setMessage(message)
-		            .setPositiveButton(android.R.string.ok,
-		                    new AlertDialog.OnClickListener()
-		                    {
-		                        public void onClick(DialogInterface dialog, int which)
-		                        {
-		                            result.confirm();
-		                        }
-		                    })
-		            .setCancelable(false)
-		            .create()
-		            .show();
-		        return true;
-		    };
-		});
+		DailyHotel.getGaTracker().set(Fields.SCREEN_NAME, TAG);
+
+		setContentView(R.layout.activity_event_web);
+		setWebView(URL_WEBAPI_EVENT);
 
 	}
 
 	@Override
-	public void onBackPressed() {
-		finish();
-		overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
-		super.onBackPressed();
+	protected void onStart() {
+		super.onStart();
+
+		DailyHotel.getGaTracker().send(MapBuilder.createAppView().build());
 	}
+	
+	@Override
+	public void finish() {
+		super.finish();
+		overridePendingTransition(R.anim.hold, R.anim.slide_out_to_bottom);
+		
+	}
+
 }

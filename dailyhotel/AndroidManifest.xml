@@ -4,8 +4,6 @@
     android:versionCode="18"
     android:versionName="1.1.8" >
     
-    
-
     <uses-sdk
         android:minSdkVersion="9"
         android:targetSdkVersion="19" />
@@ -45,115 +43,80 @@
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
     <application
-        android:name="kr.co.kcp.android.payment.standard.KcpApplication"
+        android:name="com.twoheart.dailyhotel.DailyHotel"
         android:allowBackup="true"
-        android:hardwareAccelerated="true"
-        android:icon="@drawable/dh_ic_launcher"
+        android:icon="@drawable/img_ic_appicon"
         android:label="@string/app_name"
         android:theme="@style/DH_Theme" >
         <activity
-            android:name="com.twoheart.dailyhotel.activity.SplashActivity"
+            android:name="com.twoheart.dailyhotel.MainActivity"
             android:label="@string/app_name"
-            android:theme="@android:style/Theme.NoTitleBar"
+            android:icon="@drawable/img_ic_appicon"
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+                
             </intent-filter>
         </activity>
         <activity
-            android:name="com.twoheart.dailyhotel.MainActivity"
+            android:name="com.twoheart.dailyhotel.activity.SplashActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:screenOrientation="portrait" >
-            <intent-filter
-                android:icon="@drawable/dh_ic_no"
-                android:label="" >
-            </intent-filter>
         </activity>
         <activity
             android:name="com.twoheart.dailyhotel.activity.HotelTabActivity"
-            android:icon="@drawable/dh_ic_no"
-            android:label=""
             android:screenOrientation="portrait" />
         <activity
             android:name="com.twoheart.dailyhotel.activity.ImageDetailActivity"
-            android:icon="@drawable/dh_ic_no"
-            android:label=""
             android:screenOrientation="portrait" />
         <activity
             android:name="com.twoheart.dailyhotel.activity.GMapActivity"
-            android:icon="@drawable/dh_ic_no"
-            android:label=""
             android:screenOrientation="portrait" />
         <activity
             android:name="com.twoheart.dailyhotel.activity.BookingTabActivity"
-            android:icon="@drawable/dh_ic_no"
-            android:label=""
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.twoheart.dailyhotel.activity.IntroductionActivity"
-            android:icon="@drawable/dh_ic_no"
-            android:label=""
+            android:name="com.twoheart.dailyhotel.activity.AboutActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.twoheart.dailyhotel.activity.NoticeActivity"
-            android:icon="@drawable/dh_ic_no"
-            android:label=""
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.twoheart.dailyhotel.activity.HelpActivity"
-            android:icon="@drawable/dh_ic_no"
-            android:label=""
+            android:name="com.twoheart.dailyhotel.activity.FAQActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.twoheart.dailyhotel.activity.LoginActivity"
-            android:icon="@drawable/dh_ic_no"
-            android:label=""
             android:screenOrientation="portrait" />
         <activity
             android:name="com.twoheart.dailyhotel.activity.SignupActivity"
-            android:icon="@drawable/dh_ic_no"
-            android:label=""
             android:screenOrientation="portrait" />
         <activity
             android:name="com.twoheart.dailyhotel.activity.ForgotPwdActivity"
-            android:icon="@drawable/dh_ic_no"
-            android:label=""
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.twoheart.dailyhotel.activity.AgreementActivity"
-            android:icon="@drawable/dh_ic_no"
-            android:label=""
+            android:name="com.twoheart.dailyhotel.activity.TermActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.twoheart.dailyhotel.activity.PersonalInfoActivity"
-            android:icon="@drawable/dh_ic_no"
-            android:label=""
+            android:name="com.twoheart.dailyhotel.activity.PrivacyActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.twoheart.dailyhotel.activity.VersionActivity"
-            android:icon="@drawable/dh_ic_no"
-            android:label=""
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.twoheart.dailyhotel.activity.HotelPaymentActivity"
+            android:name="com.twoheart.dailyhotel.activity.BookingActivity"
             android:windowSoftInputMode="stateHidden"
-            android:icon="@drawable/dh_ic_no"
-            android:label=""
             android:screenOrientation="portrait" />
         <activity
             android:name="com.twoheart.dailyhotel.activity.PaymentActivity"
-            android:icon="@drawable/dh_ic_no"
-            android:label=""
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
         <activity
-            android:name="kr.co.kcp.android.payment.standard.ResultRcvActivity"
-            android:icon="@drawable/dh_ic_no"
-            android:label="" >
+            android:name="kr.co.kcp.android.payment.standard.ResultRcvActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -165,8 +128,6 @@
         </activity>
         <activity
             android:name="com.twoheart.dailyhotel.activity.PushDialogActivity"
-            android:icon="@drawable/dh_ic_no"
-            android:label=""
             android:screenOrientation="portrait" >
         </activity>
 
@@ -206,8 +167,7 @@
 
         <activity
             android:name="com.twoheart.dailyhotel.activity.EventWebActivity"
-            android:screenOrientation="portrait"
-            android:label="" >
+            android:screenOrientation="portrait" >
             
         </activity>
         

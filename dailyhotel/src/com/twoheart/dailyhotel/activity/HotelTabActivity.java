@@ -1,133 +1,108 @@
 package com.twoheart.dailyhotel.activity;
 
-import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_HOTEL_DAY;
-import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_HOTEL_IDX;
-import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_HOTEL_MONTH;
-import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_HOTEL_NAME;
-import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_HOTEL_YEAR;
-import static com.twoheart.dailyhotel.util.AppConstants.PREFERENCE_IS_LOGIN;
-import static com.twoheart.dailyhotel.util.AppConstants.SHARED_PREFERENCES_NAME;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
+import com.android.volley.Request.Method;
+import com.android.volley.Response.ErrorListener;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.adapter.HotelTabAdapter;
-import com.twoheart.dailyhotel.util.ui.BaseActivity;
-import com.twoheart.dailyhotel.util.ui.NoActionBarException;
-import com.twoheart.dailyhotel.view.HotelViewPager;
+import com.twoheart.dailyhotel.fragment.HotelTabBookingFragment;
+import com.twoheart.dailyhotel.fragment.TabInfoFragment;
+import com.twoheart.dailyhotel.fragment.TabMapFragment;
+import com.twoheart.dailyhotel.util.Log;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
+import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.util.ui.LoadingDialog;
+import com.twoheart.dailyhotel.widget.HotelViewPager;
 import com.viewpagerindicator.TabPageIndicator;
 
-public class HotelTabActivity extends BaseActivity implements OnClickListener {
+public class HotelTabActivity extends TabActivity implements OnClickListener,
+		DailyHotelJsonResponseListener, ErrorListener {
 
 	private static final String TAG = "HotelTabActivity";
-
-	private static final int HOTEL_TAB_ACTIVITY = 1;
-
-	private HotelViewPager pager;
-	private TabPageIndicator indicator;
-
-	private Button tv_soldout;
-	private Button btn_booking;
+	private Button btnSoldOut;
+	private Button btnBooking;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_hotel_tab);
 
-		pager = (HotelViewPager) findViewById(R.id.pager);
-		indicator = (TabPageIndicator) findViewById(R.id.indicator);
+		mViewPager = (HotelViewPager) findViewById(R.id.pager);
+		mIndicator = (TabPageIndicator) findViewById(R.id.indicator);
+		btnSoldOut = (Button) findViewById(R.id.tv_hotel_tab_soldout);
+		btnBooking = (Button) findViewById(R.id.btn_hotel_tab_booking);
+		btnBooking.setOnClickListener(this);
 
-		tv_soldout = (Button) findViewById(R.id.tv_hotel_tab_soldout);
-		btn_booking = (Button) findViewById(R.id.btn_hotel_tab_booking);
-		btn_booking.setOnClickListener(this);
-
-		// 선택된 호텔의 name, idx, avail_cnt 받음
-		Intent intent = getIntent();
+		setTabPage();
+		setActionBar(hotelDetail.getHotel().getName());
 
 		// 호텔 sold out시
-		if (intent.getIntExtra("available_cnt", 0) == 0) {
-			btn_booking.setVisibility(View.GONE);
-			tv_soldout.setVisibility(View.VISIBLE);
+		if (hotelDetail.getHotel().getAvali_cnt() == 0) {
+			btnBooking.setVisibility(View.GONE);
+			btnSoldOut.setVisibility(View.VISIBLE);
 		}
 
-		SharedPreferences.Editor ed = prefs.edit();
-		ed.putString(PREFERENCE_HOTEL_IDX,
-				Integer.toString(intent.getIntExtra("hotel_idx", 0)));
-		ed.putString(PREFERENCE_HOTEL_NAME, intent.getStringExtra("hotel_name"));
-		ed.putString(PREFERENCE_HOTEL_YEAR, intent.getStringExtra("year"));
-		ed.putString(PREFERENCE_HOTEL_MONTH, intent.getStringExtra("month"));
-		ed.putString(PREFERENCE_HOTEL_DAY, intent.getStringExtra("day"));
-		ed.commit();
-		
-		setActionBar(prefs.getString(PREFERENCE_HOTEL_NAME, ""));
+		String url = new StringBuilder(URL_DAILYHOTEL_SERVER)
+				.append(URL_WEBAPI_HOTEL_DETAIL)
+				.append(hotelDetail.getHotel().getIdx()).append("/")
+				.append(mSaleTime.getCurrentYear()).append("/")
+				.append(mSaleTime.getCurrentMonth()).append("/")
+				.append(mSaleTime.getCurrentDay()).toString();
 
-		// create viewpager
-		FragmentPagerAdapter adapter = new HotelTabAdapter(
-				getSupportFragmentManager());
-		pager.setOffscreenPageLimit(3);
-		pager.setAdapter(adapter);
+		Log.d(TAG, url);
 
-		indicator.setViewPager(pager);
-	}
+		LoadingDialog.showLoading(this);
+		// 호텔 정보를 가져온다.
+		mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null, this, this));
 
-	public void parseJson(String str) {
-		FragmentPagerAdapter adapter = new HotelTabAdapter(
-				getSupportFragmentManager());
-		pager.setOffscreenPageLimit(3);
-		pager.setAdapter(adapter);
-		indicator.setViewPager(pager);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			onBackPressed();
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
 	public void onClick(View v) {
-		if (v.getId() == btn_booking.getId()) {
-
-			if (checkLogin()) {
-				Intent i = new Intent(this, HotelPaymentActivity.class);
-				startActivityForResult(i, HOTEL_TAB_ACTIVITY);
-				overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-			} else {
-
-				Intent i = new Intent(this, LoginActivity.class);
-				startActivity(i);
-				overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-			}
+		if (v.getId() == btnBooking.getId()) { // TODO: 로그인/로그아웃 상태를
+												// HotelPaymentActivity에서 관리하도록
+												// 이전할 것.
+			Intent i = new Intent(this, BookingActivity.class);
+			i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELDETAIL, hotelDetail);
+			startActivityForResult(i, CODE_REQUEST_ACTIVITY_PAYMENT);
+			overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
 		}
-	}
-
-	public boolean checkLogin() {
-		return prefs.getBoolean(PREFERENCE_IS_LOGIN, false);
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-		if (requestCode == HOTEL_TAB_ACTIVITY) {
+		if (requestCode == CODE_REQUEST_ACTIVITY_PAYMENT) {
+			setResult(resultCode);
+			
 			if (resultCode == RESULT_OK) {
 				setResult(RESULT_OK);
 				finish();
 			}
 		}
+
 		super.onActivityResult(requestCode, resultCode, data);
 	}
+
+	@Override
+	protected void loadFragments() {
+
+		// TODO: BaseFragment 만들어서 통합적으로 관리할 것.
+		mFragments.add(new HotelTabBookingFragment());
+		mFragments.add(new TabInfoFragment());
+		mFragments.add(new TabMapFragment());
+
+		mTitles.add("예약");
+		mTitles.add("정보");
+		mTitles.add("지도");
+
+		mAdapter.notifyDataSetChanged();
+		mIndicator.notifyDataSetChanged();
+
+	}
+
 }
