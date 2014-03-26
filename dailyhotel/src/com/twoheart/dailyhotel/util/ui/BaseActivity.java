@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
+import android.webkit.CookieSyncManager;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
@@ -42,14 +43,20 @@ public class BaseActivity extends ActionBarActivity implements Constants {
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setHomeButtonEnabled(true);
 	}
-	
+
 	@Override
-	public void onBackPressed() {
-		finish();
-		overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
-		super.onBackPressed();
+	protected void onPause() {
+		CookieSyncManager.getInstance().stopSync();
+		super.onPause();
+		
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		CookieSyncManager.getInstance().startSync();
+	}
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -59,6 +66,7 @@ public class BaseActivity extends ActionBarActivity implements Constants {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
 	
 //	@Override
 //	public void setContentView(int layoutResID) {

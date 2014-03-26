@@ -17,6 +17,7 @@ import android.content.Context;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.Volley;
@@ -26,6 +27,8 @@ import com.twoheart.dailyhotel.util.Constants;
 public class VolleyHttpClient implements Constants {
 
 	private static final String KEY_DAILYHOTEL_COOKIE = "JSESSIONID";
+
+	public static final int TIME_OUT = 10 * 1000;
 
 	public static Cookie cookie;
 	public static CookieManager cookieManager;
@@ -52,8 +55,8 @@ public class VolleyHttpClient implements Constants {
 				sHttpClient));
 		// sRequestQueue = Volley.newRequestQueue(sContext);
 
-		CookieSyncManager.createInstance(sContext);
 		cookieManager = CookieManager.getInstance();
+		CookieSyncManager.createInstance(sContext);
 		CookieSyncManager.getInstance().startSync();
 
 	}
@@ -107,11 +110,12 @@ public class VolleyHttpClient implements Constants {
 
 						cookieManager.setCookie(URL_DAILYHOTEL_SERVER,
 								cookieString.toString());
-						
+
 						CookieSyncManager.getInstance().sync();
 					}
 				}
 			}
 		}
 	}
+
 }

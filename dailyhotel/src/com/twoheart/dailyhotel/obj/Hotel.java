@@ -16,6 +16,7 @@ public class Hotel implements Parcelable {
 	private int idx;
 	private int avali_cnt;
 	private int seq;
+	private String bedType;
 
 	public Hotel() {
 		super();
@@ -26,7 +27,7 @@ public class Hotel implements Parcelable {
 	}
 
 	public Hotel(String img, String name, String price, String discount,
-			String address, String cat, int idx, int avali_cnt, int seq) {
+			String address, String cat, int idx, int avali_cnt, int seq, String bedType) {
 		this.img = img;
 		this.name = name;
 		this.price = price;
@@ -36,6 +37,7 @@ public class Hotel implements Parcelable {
 		this.idx = idx;
 		this.avali_cnt = avali_cnt;
 		this.seq = seq;
+		this.bedType = bedType;
 		
 	}
 	
@@ -50,6 +52,7 @@ public class Hotel implements Parcelable {
 		dest.writeInt(idx);
 		dest.writeInt(avali_cnt);
 		dest.writeInt(seq);
+		dest.writeString(bedType);
 
 	}
 	
@@ -63,6 +66,7 @@ public class Hotel implements Parcelable {
 		this.idx = in.readInt();
 		this.avali_cnt = in.readInt();
 		this.seq = in.readInt();
+		this.bedType = in.readString();
 	}
 	
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
@@ -153,6 +157,14 @@ public class Hotel implements Parcelable {
 	public int describeContents() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	public String getBedType() {
+		return bedType;
+	}
+
+	public void setBedType(String bedType) {
+		this.bedType = bedType;
 	}
 
 	

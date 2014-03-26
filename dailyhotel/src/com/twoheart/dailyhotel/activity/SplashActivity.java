@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Window;
+import android.webkit.CookieSyncManager;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
@@ -30,7 +31,7 @@ import com.twoheart.dailyhotel.util.Log;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.network.response.DailyHotelResponseListener;
+import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 public class SplashActivity extends BaseActivity implements Constants,
@@ -47,36 +48,46 @@ public class SplashActivity extends BaseActivity implements Constants,
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_splash);
 		
-		VolleyHttpClient.init(getApplicationContext());
+		if (!sharedPreference.getBoolean(KEY_PREFERENCE_GCM, false)) {
+			GCMIntentService.unregisterToken(getApplicationContext());
+			GCMIntentService.registerToken(getApplicationContext());
+		}
 
+		mQueue = VolleyHttpClient.getRequestQueue();
+		
+		VolleyHttpClient.cookie = null;
+		VolleyHttpClient.cookieManager
+				.removeAllCookie();
+		
+		if (sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false)) {
+			
+			String id = sharedPreference.getString(KEY_PREFERENCE_USER_ID, null);
+			String accessToken = sharedPreference.getString(KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
+			String pw = sharedPreference.getString(KEY_PREFERENCE_USER_PWD, null);
+			
+			Map<String, String> loginParams = new HashMap<String, String>();
+			
+			if (accessToken != null) {
+				loginParams.put("accessToken", sharedPreference.getString(KEY_PREFERENCE_USER_ACCESS_TOKEN, null));
+			} else {
+				loginParams.put("email", sharedPreference.getString(KEY_PREFERENCE_USER_ID, null));
+			}
+			
+			loginParams.put("pw", pw);
+			
+			mQueue.add(new DailyHotelJsonRequest(Method.POST, 
+					new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(),
+					loginParams, SplashActivity.this, SplashActivity.this));
+		}
+		
+		mQueue.add(new DailyHotelJsonRequest(Method.GET, 
+				new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_VERSION).toString(),
+				null, SplashActivity.this, SplashActivity.this));
+		
 		// sleep 2 second
 		Handler h = new Handler();
 		h.postDelayed(new Runnable() {
 			public void run() {
-				
-				if (!sharedPreference.getBoolean(KEY_PREFERENCE_GCM, false)) {
-					GCMIntentService.unregisterToken(getApplicationContext());
-					GCMIntentService.registerToken(getApplicationContext());
-				}
-
-				mQueue = VolleyHttpClient.getRequestQueue();
-				
-				if (sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false)) {
-					Map<String, String> loginParams = new HashMap<String, String>();
-					loginParams.put("email", sharedPreference.getString(KEY_PREFERENCE_USER_ID, null));
-					loginParams.put("pw", sharedPreference.getString(KEY_PREFERENCE_USER_PWD, null));
-	
-					mQueue.add(new DailyHotelJsonRequest(Method.POST, 
-							new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(),
-							loginParams, SplashActivity.this, SplashActivity.this));
-				}
-				
-				mQueue.add(new DailyHotelJsonRequest(Method.GET, 
-						new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_VERSION).toString(),
-						null, SplashActivity.this, SplashActivity.this));
-				
-				// start main
-				startActivity(new Intent(SplashActivity.this, MainActivity.class));
 				finish();
 
 			}
@@ -153,20 +164,11 @@ public class SplashActivity extends BaseActivity implements Constants,
 											startActivity(marketLaunch);
 											finish();
 										}
-									})
-							.setNegativeButton("취소",
-									new DialogInterface.OnClickListener() {
-										@Override
-										public void onClick(DialogInterface dialog,
-												int which) {
-											finish();
-											return;
-										}
 									});
 					AlertDialog alert = alertDialog.create();
 					alert.show();
 				}
-
+				
 			} catch (UnsupportedOperationException e) {
 				Toast.makeText(this, "구글 플레이 서비스를 이용할 수 있는 기기이어야 합니다.",
 						Toast.LENGTH_LONG).show();
@@ -185,6 +187,11 @@ public class SplashActivity extends BaseActivity implements Constants,
 		Toast.makeText(getApplicationContext(), "네트워크 상태를 확인해주세요",
 				Toast.LENGTH_LONG).show();
 		finish();
+	}
+
+	@Override
+	public void onBackPressed() {
+		return;
 	}
 
 }

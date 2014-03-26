@@ -24,13 +24,13 @@ import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
-import com.twoheart.dailyhotel.util.network.response.DailyHotelResponseListener;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
+import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
 public class ForgotPwdActivity extends BaseActivity implements Constants,
-		DailyHotelResponseListener, ErrorListener, OnClickListener {
+		DailyHotelStringResponseListener, ErrorListener, OnClickListener {
 
 	private static final String TAG = "ForgotPwdActivity";
 
@@ -79,7 +79,9 @@ public class ForgotPwdActivity extends BaseActivity implements Constants,
 				Toast.makeText(this, "이메일 주소를 입력해주세요", Toast.LENGTH_SHORT)
 						.show();
 				return;
-			} else if (!isValidEmail(strEmail)) {
+			} 
+			
+			else if (!isValidEmail(strEmail)) {
 				Toast.makeText(this, "올바른 이메일 형식을 입력해주세요.", Toast.LENGTH_SHORT)
 						.show();
 				return;
@@ -87,7 +89,7 @@ public class ForgotPwdActivity extends BaseActivity implements Constants,
 
 			LoadingDialog.showLoading(this);
 
-			mQueue.add(new DailyHotelRequest(Method.GET, new StringBuilder(
+			mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(
 					URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_FORGOTPWD)
 					.append(strEmail).append("/trim").toString(), null, this,
 					this));
@@ -102,27 +104,16 @@ public class ForgotPwdActivity extends BaseActivity implements Constants,
 	}
 
 	@Override
-	public void onBackPressed() {
-		finish();
+	public void finish() {
+		super.finish();
 		overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
-		super.onBackPressed();
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			onBackPressed();
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
 	public void onResponse(String url, String response) {
 		if (url.contains(URL_WEBAPI_USER_FORGOTPWD)) {
 
-			if (response.equals("done")) {
+			if (response.trim().equals("done")) {
 				LoadingDialog.hideLoading();
 				AlertDialog.Builder alert = new AlertDialog.Builder(
 						ForgotPwdActivity.this);

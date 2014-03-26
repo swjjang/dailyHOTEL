@@ -22,6 +22,7 @@ public class VolleyImageLoader {
         // Use 1/8th of the available memory for this memory cache.
         int cacheSize = 1024 * 1024 * memClass / 8;
         sImageLoader = new ImageLoader(sRequestQueue, new BitmapLruCache(cacheSize));
+        sImageLoader.setBatchedResponseDelay(0);
     }
 	
 	public static ImageLoader getImageLoader() {

@@ -28,14 +28,14 @@ import com.twoheart.dailyhotel.obj.HotelDetail;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
-import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.network.response.DailyHotelResponseListener;
+import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
 public class BookingTabBookingFragment extends Fragment implements Constants,
 		ErrorListener, DailyHotelJsonResponseListener,
-		DailyHotelResponseListener {
+		DailyHotelStringResponseListener {
 
 	private static final String TAG = "BookingTabBookingFragment";
 
@@ -67,7 +67,7 @@ public class BookingTabBookingFragment extends Fragment implements Constants,
 		
 		LoadingDialog.showLoading(mHostActivity);
 
-		mQueue.add(new DailyHotelRequest(Method.GET,
+		mQueue.add(new DailyHotelStringRequest(Method.GET,
 				new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 						URL_WEBAPI_USER_ALIVE).toString(), null, this, this));
 

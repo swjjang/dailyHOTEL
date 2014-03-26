@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -29,12 +30,14 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.twoheart.dailyhotel.activity.SplashActivity;
 import com.twoheart.dailyhotel.fragment.BookingListFragment;
 import com.twoheart.dailyhotel.fragment.CreditFragment;
 import com.twoheart.dailyhotel.fragment.HotelListFragment;
 import com.twoheart.dailyhotel.fragment.SettingFragment;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
+import com.twoheart.dailyhotel.util.ui.CloseOnBackPressed;
 
 public class MainActivity extends BaseActivity implements OnItemClickListener,
 		Constants {
@@ -63,14 +66,19 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 	private FragmentManager mFragmentManager;
 	protected Fragment mFragment;
 
-	protected DrawerMenu mMenuHotelListFragment;
-	protected DrawerMenu mMenuBookingListFragment;
-	protected DrawerMenu mMenuCreditFragment;
-	protected DrawerMenu mMenuSettingFragment;
+	public DrawerMenu menuHotelListFragment;
+	public DrawerMenu menuBookingListFragment;
+	public DrawerMenu menuCreditFragment;
+	public DrawerMenu menuSettingFragment;
+	
+	private CloseOnBackPressed backButtonHandler;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		startActivityForResult(new Intent(this, SplashActivity.class), CODE_REQUEST_ACTIVITY_SPLASH);
+		
 		super.onCreate(savedInstanceState);
+		backButtonHandler = new CloseOnBackPressed(this);
 
 		setContentView(R.layout.activity_main);
 		setNavigationDrawer(this);
@@ -78,14 +86,31 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 		mFragmentManager = getSupportFragmentManager();
 
 		// 맨 처음은 호텔리스트
-		drawerList.setItemChecked(mMenuImages.indexOf(mMenuHotelListFragment),
-				true);
-		replaceFragment(getFragment(INDEX_HOTEL_LIST_FRAGMENT));
+		selectMenuDrawer(menuHotelListFragment);
 
 		if (DEBUG) {
 			printPackageHashKey();
 		}
 
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if (requestCode == CODE_REQUEST_ACTIVITY_SPLASH) {
+			if (resultCode == CODE_RESULT_ACTIVITY_SPLASH_NEW_EVENT) {
+//				((HotelListFragment) getFragment(INDEX_HOTEL_LIST_FRAGMENT)).notifyNewEvent();
+			}
+		}
+
+		
+	}
+	
+	public void selectMenuDrawer(DrawerMenu selectedMenu) {
+		drawerList.performItemClick(drawerList.getAdapter().getView(mMenuImages.indexOf(selectedMenu), null, null), 
+				mMenuImages.indexOf(selectedMenu), mDrawerMenuListAdapter.getItemId(mMenuImages.indexOf(selectedMenu)));
+		
 	}
 
 	public Fragment getFragment(int index) {
@@ -151,6 +176,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 	@Override
 	public void onItemClick(AdapterView<?> adapterView, View view,
 			int position, long id) {
+		drawerLayout.closeDrawer(drawerList);
 
 		int selectedMenuIconId = ((DrawerMenu) (adapterView.getAdapter()
 				.getItem(position))).getIcon();
@@ -166,11 +192,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 			break;
 
 		case R.drawable.selector_drawermenu_saving:
-			// if (isAliveUser()) // 로그인상태
-			// replaceFragment(getFragment(INDEX_CREDIT_FRAGMENT));
-			// else
-			// // 로그아웃 상태
-			// replaceFragment(new NoLoginFragment());
 			replaceFragment(getFragment(INDEX_CREDIT_FRAGMENT));
 			break;
 
@@ -178,8 +199,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 			replaceFragment(getFragment(INDEX_SETTING_FRAGMENT));
 			break;
 		}
-
-		drawerLayout.closeDrawer(drawerList);
 
 	}
 
@@ -212,16 +231,16 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 		drawerLayout.setDrawerListener(drawerToggle);
 		drawerList = (ListView) findViewById(R.id.left_drawer);
 
-		mMenuHotelListFragment = new DrawerMenu(DRAWER_MENU_ENTRY_HOTEL,
+		menuHotelListFragment = new DrawerMenu(DRAWER_MENU_ENTRY_HOTEL,
 				R.drawable.selector_drawermenu_todayshotel,
 				DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
-		mMenuBookingListFragment = new DrawerMenu(DRAWER_MENU_ENTRY_BOOKING,
+		menuBookingListFragment = new DrawerMenu(DRAWER_MENU_ENTRY_BOOKING,
 				R.drawable.selector_drawermenu_reservation,
 				DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
-		mMenuCreditFragment = new DrawerMenu(DRAWER_MENU_ENTRY_CREDIT,
+		menuCreditFragment = new DrawerMenu(DRAWER_MENU_ENTRY_CREDIT,
 				R.drawable.selector_drawermenu_saving,
 				DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
-		mMenuSettingFragment = new DrawerMenu(DRAWER_MENU_ENTRY_SETTING,
+		menuSettingFragment = new DrawerMenu(DRAWER_MENU_ENTRY_SETTING,
 				R.drawable.selector_drawermenu_setting,
 				DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
 
@@ -229,15 +248,15 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 		mMenuImages.add(new DrawerMenu(DrawerMenu.DRAWER_MENU_LIST_TYPE_LOGO));
 		mMenuImages.add(new DrawerMenu(DRAWER_MENU_SECTION_RESERVATION,
 				DrawerMenu.DRAWER_MENU_LIST_TYPE_SECTION));
-		mMenuImages.add(mMenuHotelListFragment);
-		mMenuImages.add(mMenuBookingListFragment);
+		mMenuImages.add(menuHotelListFragment);
+		mMenuImages.add(menuBookingListFragment);
 		mMenuImages.add(new DrawerMenu(DRAWER_MENU_SECTION_ACCOUNT,
 				DrawerMenu.DRAWER_MENU_LIST_TYPE_SECTION));
-		mMenuImages.add(mMenuCreditFragment);
-		mMenuImages.add(mMenuSettingFragment);
+		mMenuImages.add(menuCreditFragment);
+		mMenuImages.add(menuSettingFragment);
 
 		mDrawerMenuListAdapter = new DrawerMenuListAdapter(this,
-				R.layout.drawer_list_item_entry, mMenuImages);
+				R.layout.list_row_drawer_entry, mMenuImages);
 
 		drawerList.setAdapter(mDrawerMenuListAdapter);
 		drawerList.setOnItemClickListener(listener);
@@ -273,12 +292,12 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 		return super.onPrepareOptionsMenu(menu);
 	}
 
-	// @Override
-	// public void finish() {
-	// if (backButtonHandler.onBackPressed())
-	// super.finish();
-	//
-	// }
+	 @Override
+	 public void finish() {
+	 if (backButtonHandler.onBackPressed())
+	 super.finish();
+	
+	 }
 
 	private class DrawerMenu {
 
@@ -372,13 +391,13 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 
 			switch (item.gettype()) {
 			case DrawerMenu.DRAWER_MENU_LIST_TYPE_LOGO:
-				convertView = inflater.inflate(R.layout.drawer_list_item_logo,
+				convertView = inflater.inflate(R.layout.list_row_drawer_logo,
 						null);
 				break;
 
 			case DrawerMenu.DRAWER_MENU_LIST_TYPE_SECTION:
 				convertView = inflater.inflate(
-						R.layout.drawer_list_item_section, null);
+						R.layout.list_row_drawer_section, null);
 
 				TextView drawerMenuItemTitle = (TextView) convertView
 						.findViewById(R.id.drawerMenuItemTitle);
@@ -388,7 +407,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 				break;
 
 			case DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY:
-				convertView = inflater.inflate(R.layout.drawer_list_item_entry,
+				convertView = inflater.inflate(R.layout.list_row_drawer_entry,
 						null);
 
 				ImageView drawerMenuItemIcon = (ImageView) convertView

@@ -92,19 +92,8 @@ public class VersionActivity extends BaseActivity implements OnClickListener {
 	}
 
 	@Override
-	public void onBackPressed() {
-		finish();
+	public void finish() {
+		super.finish();
 		overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
-		super.onBackPressed();
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			onBackPressed();
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
 	}
 }

@@ -17,6 +17,7 @@ public class CloseOnBackPressed {
 	public boolean onBackPressed() {
 		
 		if (System.currentTimeMillis() <= backPressedTime + 2000) {
+			toast.cancel();
 			return true;
 		}
 		
@@ -28,7 +29,7 @@ public class CloseOnBackPressed {
 	}
 	
 	private void showGuide() {
-		toast = Toast.makeText(activity, "\'뒤로\' 버튼을 한 번 더 누르시면 종료합니다.", Toast.LENGTH_LONG);
+		toast = Toast.makeText(activity, "\'뒤로\' 버튼을 한 번 더 누르시면 종료합니다.", Toast.LENGTH_SHORT);
 		toast.show();
 	}
 

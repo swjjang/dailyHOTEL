@@ -17,6 +17,9 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.facebook.widget.WebDialog.OnCompleteListener;
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.MapBuilder;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.adapter.BoardListAdapter;
 import com.twoheart.dailyhotel.obj.Board;
@@ -41,6 +44,7 @@ public class NoticeActivity extends BaseActivity implements
 		super.onCreate(savedInstanceState);
 		setActionBar("공지사항");
 		setContentView(R.layout.activity_board);
+		DailyHotel.getGaTracker().set(Fields.SCREEN_NAME, TAG);
 
 		mQueue = VolleyHttpClient.getRequestQueue();
 
@@ -52,24 +56,20 @@ public class NoticeActivity extends BaseActivity implements
 				.toString(), null, this, this));
 
 	}
+	
 
 	@Override
-	public void onBackPressed() {
-		finish();
+	protected void onStart() {
+		super.onStart();
+		
+		DailyHotel.getGaTracker().send(MapBuilder.createAppView().build());
+	}
+
+	@Override
+	public void finish() {
+		super.finish();
 		overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
-		super.onBackPressed();
 	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			onBackPressed();
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-
 
 	@Override
 	public void onErrorResponse(VolleyError error) {

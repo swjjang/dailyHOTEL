@@ -1,6 +1,5 @@
 package com.twoheart.dailyhotel.activity;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -15,7 +14,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
@@ -59,6 +57,12 @@ public class LoginActivity extends BaseActivity implements Constants,
 	private TextView tvSignUp, tvForgotPwd;
 	private LoginButton facebookLogin;
 
+	private Map<String, String> loginParams;
+	private Map<String, String> snsSignupParams;
+
+	public Session fbSession;
+	public static final String appId = "268888829950610";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -79,7 +83,6 @@ public class LoginActivity extends BaseActivity implements Constants,
 		tvForgotPwd.setOnClickListener(this);
 		btnLogin.setOnClickListener(this);
 		facebookLogin.setOnClickListener(this);
-		facebookLogin.setVisibility(View.GONE);
 
 		etPwd.setId(EditorInfo.IME_ACTION_DONE);
 		etPwd.setOnEditorActionListener(new OnEditorActionListener() {
@@ -98,31 +101,6 @@ public class LoginActivity extends BaseActivity implements Constants,
 
 	}
 
-	private Session.StatusCallback statusCallback = new Session.StatusCallback() {
-		@Override
-		public void call(Session session, SessionState state,
-				Exception exception) {
-			onSessionStateChange(session, state, exception);
-
-			if (exception != null)
-				exception.printStackTrace();
-		}
-	};
-
-	private void onSessionStateChange(Session session, SessionState state,
-			Exception exception) {
-		if (state.isOpened()) {
-			Log.d(TAG, "Facebook Login");
-			session.requestNewReadPermissions(new Session.NewPermissionsRequest(
-					LoginActivity.this, Arrays.asList("email")));
-
-			makeMeRequest(session);
-
-		} else if (state.isClosed()) {
-			Log.d(TAG, "Facebook Logout");
-		}
-	}
-
 	private void makeMeRequest(final Session session) {
 
 		Request request = Request.newMeRequest(session,
@@ -130,46 +108,60 @@ public class LoginActivity extends BaseActivity implements Constants,
 
 					@Override
 					public void onCompleted(GraphUser user, Response response) {
-						if (session == Session.getActiveSession()) {
-							if (user != null) {
 
-								TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext()
-										.getSystemService(
-												Context.TELEPHONY_SERVICE);
-								String phoneNumber = telephonyManager
-										.getLine1Number();
+						if (user != null) {
+							TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext()
+									.getSystemService(Context.TELEPHONY_SERVICE);
 
-								Map<String, String> loginParams = new HashMap<String, String>();
-								loginParams.put("email",
-										user.getProperty("email").toString());
-								loginParams.put("pw", null);
-								loginParams.put("name", user.getName());
-								loginParams.put("phone", phoneNumber);
-								loginParams.put("device",
-										telephonyManager.getDeviceId());
-								loginParams.put("accessToken", user.getId());
+							String userEmail = user.getProperty("email")
+									.toString();
+							String userId = user.getId();
+							String encryptedId = Crypto.encrypt(userId)
+									.replace("\n", "");
+							String userName = user.getName();
+//							String phoneNumber = telephonyManager
+//									.getLine1Number();
+							String deviceId = telephonyManager.getDeviceId();
 
-								etId.setText(user.getId());
-								// TODO: 패스워드는 서버로부터 임의로 생성된 값을 받도록 한다.
+							snsSignupParams = new HashMap<String, String>();
+							loginParams = new HashMap<String, String>();
 
-								LoadingDialog.showLoading(LoginActivity.this);
+							if (userEmail != null)
+								snsSignupParams.put("email", userEmail);
 
-								mQueue.add(new DailyHotelJsonRequest(
-										Method.POST, new StringBuilder(
-												URL_DAILYHOTEL_SERVER).append(
-												URL_WEBAPI_USER_LOGIN_FACEBOOK)
-												.toString(), loginParams,
-										LoginActivity.this, LoginActivity.this));
+							if (userId != null) {
+								snsSignupParams.put("accessToken", userId);
+								loginParams.put("accessToken", userId);
 							}
-						}
 
-						Session.getActiveSession()
-								.closeAndClearTokenInformation();
-						Session.setActiveSession(null);
+							if (encryptedId != null) {
+								snsSignupParams.put("pw", userId); // 회원가입
+																	// 시엔 서버
+																	// 사이드에서
+																	// 암호화
+								loginParams.put("pw", encryptedId);
+							}
+
+							if (userName != null)
+								snsSignupParams.put("name", userName);
+
+//							if (phoneNumber != null)
+//								snsSignupParams.put("phone", phoneNumber);
+
+							if (deviceId != null)
+								snsSignupParams.put("device", deviceId);
+
+ 							mQueue.add(new DailyHotelJsonRequest(Method.POST,
+									new StringBuilder(URL_DAILYHOTEL_SERVER)
+											.append(URL_WEBAPI_USER_LOGIN)
+											.toString(), loginParams,
+									LoginActivity.this, LoginActivity.this));
+						}
 					}
 				});
 
 		request.executeAsync();
+
 	}
 
 	@Override
@@ -181,7 +173,7 @@ public class LoginActivity extends BaseActivity implements Constants,
 
 		} else if (v.getId() == tvSignUp.getId()) { // 회원가입
 			Intent i = new Intent(this, SignupActivity.class);
-			startActivityForResult(i, CODE_REQUEST_ACTIVITY_LOGIN);
+			startActivityForResult(i, CODE_REQEUST_ACTIVITY_SIGNUP);
 			overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
 
 		} else if (v.getId() == btnLogin.getId()) { // 로그인
@@ -191,10 +183,10 @@ public class LoginActivity extends BaseActivity implements Constants,
 			String md5 = Crypto.encrypt(etPwd.getText().toString()).replace(
 					"\n", "");
 
-			Map<String, String> loginParams = new LinkedHashMap<String, String>();
+			loginParams = new LinkedHashMap<String, String>();
 			loginParams.put("email", etId.getText().toString());
 			loginParams.put("pw", md5);
-			
+
 			LoadingDialog.showLoading(this);
 
 			mQueue.add(new DailyHotelJsonRequest(Method.POST,
@@ -203,10 +195,36 @@ public class LoginActivity extends BaseActivity implements Constants,
 					this, this));
 
 		} else if (v.getId() == facebookLogin.getId()) {
+			LoadingDialog.showLoading(this);
 
-			Session.openActiveSession(this, true, statusCallback);
+			fbSession = new Session.Builder(this).setApplicationId(appId)
+					.build();
+
+			Session.OpenRequest or = new Session.OpenRequest(this);
+			or.setPermissions("email");
+			or.setCallback(statusCallback);
+
+			fbSession.openForRead(or);
+			Session.setActiveSession(fbSession);
 		}
 	}
+
+	private Session.StatusCallback statusCallback = new Session.StatusCallback() {
+
+		@Override
+		public void call(Session session, SessionState state,
+				Exception exception) {
+
+			if (state.isOpened()) {
+				makeMeRequest(session);
+			} else if (state.isClosed()) {
+				LoadingDialog.hideLoading();
+				fbSession.closeAndClearTokenInformation();
+			}
+
+		}
+
+	};
 
 	public boolean isBlankFields() {
 		if (etId.getText().toString().trim().length() == 0) {
@@ -226,13 +244,19 @@ public class LoginActivity extends BaseActivity implements Constants,
 
 		// 자동 로그인 체크시
 		if (cbxAutoLogin.isChecked()) {
-			String id = etId.getText().toString();
-			String pwd = Crypto.encrypt(etPwd.getText().toString()).replace(
-					"\n", "");
+			String id = loginParams.get("email");
+			String pwd = loginParams.get("pw");
+			String accessToken = loginParams.get("accessToken");
 
 			SharedPreferences.Editor ed = sharedPreference.edit();
 			ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, true);
-			ed.putString(KEY_PREFERENCE_USER_ID, id);
+
+			if (accessToken != null) {
+				ed.putString(KEY_PREFERENCE_USER_ACCESS_TOKEN, accessToken);
+			} else {
+				ed.putString(KEY_PREFERENCE_USER_ID, id);
+			}
+
 			ed.putString(KEY_PREFERENCE_USER_PWD, pwd);
 			ed.commit();
 		}
@@ -243,33 +267,22 @@ public class LoginActivity extends BaseActivity implements Constants,
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (requestCode == CODE_REQUEST_ACTIVITY_LOGIN) {
+		if (requestCode == CODE_REQEUST_ACTIVITY_SIGNUP) {
 			if (resultCode == RESULT_OK) {
 				setResult(RESULT_OK);
 				finish();
 			}
 		} else {
-			Session.getActiveSession().onActivityResult(this, requestCode,
-					resultCode, data);
+			fbSession.onActivityResult(this, requestCode, resultCode, data);
+
 		}
 
 	}
 
 	@Override
-	public void onBackPressed() {
-		finish();
+	public void finish() {
+		super.finish();
 		overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
-		super.onBackPressed();
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			onBackPressed();
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
@@ -291,14 +304,13 @@ public class LoginActivity extends BaseActivity implements Constants,
 			try {
 				String msg = null;
 
-				if (obj.getString("login").equals("true")) {
+				if (obj.getBoolean("login")) {
 
-					if (obj.length() > 1)
-						etPwd.setText(obj.getString("msg"));
+					// if (obj.length() > 1)
+					// etPwd.setText(obj.getString("msg"));
 
 					Log.d(TAG, "로그인 성공");
-					Toast.makeText(getApplicationContext(), "로그인되었습니다",
-							Toast.LENGTH_SHORT).show();
+					Toast.makeText(this, "로그인되었습니다", Toast.LENGTH_SHORT).show();
 					LoadingDialog.hideLoading();
 					storeLoginInfo();
 
@@ -306,9 +318,26 @@ public class LoginActivity extends BaseActivity implements Constants,
 					finish();
 
 				} else {
+
+					if (loginParams.containsKey("accessToken")) { // SNS 로그인인데
+																	// 실패했을 경우
+
+						cbxAutoLogin.setChecked(true); // 회원가입의 경우 기본으로 자동 로그인인
+														// 정책 상.
+
+						mQueue.add(new DailyHotelJsonRequest(Method.POST,
+								new StringBuilder(URL_DAILYHOTEL_SERVER)
+										.append(URL_WEBAPI_USER_SIGNUP)
+										.toString(), snsSignupParams, this,
+								this));
+
+					}
+
 					// 로그인 실패
 					// 실패 msg 출력
-					if (obj.length() > 1) {
+					else if (obj.length() > 1) {
+						LoadingDialog.hideLoading();
+
 						msg = obj.getString("msg");
 						AlertDialog.Builder alert = new AlertDialog.Builder(
 								this);
@@ -323,11 +352,37 @@ public class LoginActivity extends BaseActivity implements Constants,
 						alert.setMessage(msg);
 						alert.show();
 					}
-					LoadingDialog.hideLoading();
+
 				}
 
 			} catch (Exception e) {
 				e.printStackTrace();
+
+				LoadingDialog.hideLoading();
+				Toast.makeText(this, "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
+						Toast.LENGTH_SHORT).show();
+			}
+		} else if (url.contains(URL_WEBAPI_USER_SIGNUP)) {
+			try {
+				JSONObject obj = response;
+
+				String result = obj.getString("join");
+				String msg = null;
+
+				if (result.equals("true")) { // 회원가입에 성공하면 이제 로그인 절차
+
+					mQueue.add(new DailyHotelJsonRequest(Method.POST,
+							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+									URL_WEBAPI_USER_LOGIN).toString(),
+							loginParams, LoginActivity.this, LoginActivity.this));
+				} else {
+					loginParams.clear();
+					Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+				}
+
+			} catch (Exception e) {
+				if (DEBUG)
+					e.printStackTrace();
 
 				LoadingDialog.hideLoading();
 				Toast.makeText(this, "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",

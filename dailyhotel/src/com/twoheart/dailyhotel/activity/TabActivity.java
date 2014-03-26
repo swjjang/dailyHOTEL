@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.activity;
+ package com.twoheart.dailyhotel.activity;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -129,6 +130,7 @@ public abstract class TabActivity extends BaseActivity implements
 			hotelBasic.setDiscount(strDiscount);
 			hotelBasic.setPrice(strPrice);
 			hotelBasic.setCat(detailObj.getString("cat"));
+//			hotelBasic.setBedType(detailObj.getString("bed_type"));
 			
 			hotelDetail.setHotel(hotelBasic);
 
@@ -173,7 +175,7 @@ public abstract class TabActivity extends BaseActivity implements
 			
 			int saleIdx = detailObj.getInt("idx");
 			hotelDetail.setSaleIdx(saleIdx);
-
+			
 			LoadingDialog.hideLoading();
 			loadFragments();
 
@@ -191,11 +193,12 @@ public abstract class TabActivity extends BaseActivity implements
 		if (DEBUG)
 			error.printStackTrace();
 
-		Toast.makeText(this, "네트워크 상태를 확인해주세요", Toast.LENGTH_LONG).show();
 		LoadingDialog.hideLoading();
+		Toast.makeText(this, "네트워크 상태를 확인해주세요", Toast.LENGTH_LONG).show();
+		finish();
 
 	}
 	
 	protected abstract void loadFragments();
-
+	
 }

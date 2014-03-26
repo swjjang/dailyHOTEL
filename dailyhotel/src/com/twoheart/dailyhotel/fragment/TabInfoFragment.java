@@ -2,16 +2,19 @@ package com.twoheart.dailyhotel.fragment;
 
 import java.util.List;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.activity.HotelTabActivity;
 import com.twoheart.dailyhotel.activity.TabActivity;
 import com.twoheart.dailyhotel.obj.HotelDetail;
 
@@ -36,8 +39,7 @@ public class TabInfoFragment extends Fragment {
 		layout = (LinearLayout) view.findViewById(R.id.layout_hotel_tab_info);
 
 		for (String key : mHotelDetail.getSpecification().keySet()) {
-			addView(view, key, mHotelDetail.getSpecification()
-					.get(key));
+			addView(view, key, mHotelDetail.getSpecification().get(key));
 		}
 
 		return view;
@@ -46,7 +48,7 @@ public class TabInfoFragment extends Fragment {
 	private void addView(View view, String subject, List<String> contentList) {
 
 		LayoutInflater inflater = (LayoutInflater) view.getContext()
-				.getSystemService(view.getContext().LAYOUT_INFLATER_SERVICE);
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		LinearLayout layout_view = (LinearLayout) inflater.inflate(
 				R.layout.list_row_hotel_tab_info, layout, false);
 
@@ -80,13 +82,19 @@ public class TabInfoFragment extends Fragment {
 		layout.addView(layout_view);
 
 		View line = new View(view.getContext());
-		// line.setLayoutParams(new
-		// LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,
-		// DhManager.getPixels(1, view.getContext())));
-		// line.setPadding(0, DhManager.getPixels(1, view.getContext()), 0, 0);
+		line.setLayoutParams(new LinearLayout.LayoutParams(
+				LayoutParams.MATCH_PARENT, getPixels(1, view.getContext())));
+		line.setPadding(0, getPixels(1, view.getContext()), 0, 0);
 		line.setBackgroundResource(R.color.dh_gray50);
 		layout.addView(line);
 
+	}
+
+	public int getPixels(int dipValue, Context context) {
+		Resources r = context.getResources();
+		int px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+				dipValue, r.getDisplayMetrics());
+		return px;
 	}
 
 }

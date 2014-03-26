@@ -21,6 +21,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,31 +30,38 @@ import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.MapBuilder;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.LoginActivity;
+import com.twoheart.dailyhotel.activity.SignupActivity;
 import com.twoheart.dailyhotel.obj.Credit;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.KakaoLink;
 import com.twoheart.dailyhotel.util.Log;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
-import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.network.response.DailyHotelResponseListener;
+import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
 
 public class CreditFragment extends Fragment implements Constants,
 		OnClickListener, ErrorListener, DailyHotelJsonResponseListener,
-		DailyHotelResponseListener {
+		DailyHotelStringResponseListener {
 
+	
 	private static final String TAG = "CreditFragment";
 
 	private MainActivity mHostActivity;
 	private RequestQueue mQueue;
 
-	private Button btnInvite;
+	private RelativeLayout rlCreditNotLoggedIn;
+	private LinearLayout llCreditLoggedIn;
+	private Button btnInvite, btnLogin, btnSignup;
 	private TextView tvBonus, tvRecommenderCode;
 	private TextView tvCredit;
 	private String mRecommendCode;
@@ -66,25 +75,46 @@ public class CreditFragment extends Fragment implements Constants,
 		mHostActivity = (MainActivity) getActivity();
 		mQueue = VolleyHttpClient.getRequestQueue();
 
-		// ActionBar Setting
-		mHostActivity.setActionBar("적립금");
+		rlCreditNotLoggedIn = (RelativeLayout) view.findViewById(R.id.rl_credit_not_logged_in);
+		llCreditLoggedIn = (LinearLayout) view.findViewById(R.id.ll_credit_logged_in);
 
 		btnInvite = (Button) view.findViewById(R.id.btn_credit_invite_frd);
 		tvCredit = (TextView) view.findViewById(R.id.tv_credit_history);
 		tvRecommenderCode = (TextView) view
 				.findViewById(R.id.tv_credit_recommender_code);
 		tvBonus = (TextView) view.findViewById(R.id.tv_credit_money);
+		btnLogin = (Button) view.findViewById(R.id.btn_no_login_login);
+		btnSignup = (Button) view.findViewById(R.id.btn_no_login_signup);
+		btnLogin.setOnClickListener(this);
+		btnSignup.setOnClickListener(this);
 		btnInvite.setOnClickListener(this);
 		tvCredit.setOnClickListener(this);
+		
+		DailyHotel.getGaTracker().set(Fields.SCREEN_NAME, TAG);
 
+		return view;
+	}
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		
+		DailyHotel.getGaTracker().send(MapBuilder.createAppView().build());
+	}
+
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		// ActionBar Setting
+		mHostActivity.setActionBar("적립금");
+				
 		LoadingDialog.showLoading(mHostActivity);
 
-		mQueue.add(new DailyHotelRequest(Method.GET,
+		mQueue.add(new DailyHotelStringRequest(Method.GET,
 				new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 						URL_WEBAPI_USER_ALIVE).toString(), null,
 				CreditFragment.this, CreditFragment.this));
-
-		return view;
 	}
 
 	@Override
@@ -101,7 +131,17 @@ public class CreditFragment extends Fragment implements Constants,
 		} else if (v.getId() == tvCredit.getId()) {
 			mHostActivity.addFragment(new CreditListFragment(mCreditList));
 
+		} else if (v.getId() == btnLogin.getId()) {
+			Intent i = new Intent(mHostActivity, LoginActivity.class);
+			startActivity(i);
+			mHostActivity.overridePendingTransition(R.anim.slide_in_right,R.anim.hold);
+			
+		} else if(v.getId() == btnSignup.getId()) {
+			Intent i = new Intent(mHostActivity, SignupActivity.class);
+			startActivity(i);
+			mHostActivity.overridePendingTransition(R.anim.slide_in_right,R.anim.hold);
 		}
+
 	}
 
 	public void sendUrlLink(View v) throws NameNotFoundException {
@@ -206,6 +246,18 @@ public class CreditFragment extends Fragment implements Constants,
 				.setTitle(R.string.app_name).setMessage(message)
 				.setPositiveButton(android.R.string.ok, null).create().show();
 	}
+	
+	private void loadLoginProcess(boolean loginSuccess) {
+		if (loginSuccess) {
+			rlCreditNotLoggedIn.setVisibility(View.GONE);
+			llCreditLoggedIn.setVisibility(View.VISIBLE);
+			
+		} else {
+			rlCreditNotLoggedIn.setVisibility(View.VISIBLE);
+			llCreditLoggedIn.setVisibility(View.GONE);
+			
+		}
+	}
 
 	@Override
 	public void onResponse(String url, JSONObject response) {
@@ -220,11 +272,12 @@ public class CreditFragment extends Fragment implements Constants,
 					ed.putString(KEY_PREFERENCE_USER_PWD, null);
 					ed.commit();
 					
-					mHostActivity.replaceFragment(new NoLoginFragment());
-
+					LoadingDialog.hideLoading();
+					loadLoginProcess(false);
+					
 				} else {
 					// credit 요청
-					mQueue.add(new DailyHotelRequest(Method.GET,
+					mQueue.add(new DailyHotelStringRequest(Method.GET,
 							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 									URL_WEBAPI_RESERVE_SAVED_MONEY).toString(), null,
 							CreditFragment.this, CreditFragment.this));
@@ -276,6 +329,8 @@ public class CreditFragment extends Fragment implements Constants,
 
 					mCreditList.add(new Credit(content, bonus, expires));
 				}
+				
+				loadLoginProcess(true);
 
 			} catch (Exception e) {
 				if (DEBUG)
@@ -306,7 +361,7 @@ public class CreditFragment extends Fragment implements Constants,
 			String result = response.trim();
 			if (result.equals("alive")) { // session alive
 				// credit 요청
-				mQueue.add(new DailyHotelRequest(Method.GET,
+				mQueue.add(new DailyHotelStringRequest(Method.GET,
 						new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 								URL_WEBAPI_RESERVE_SAVED_MONEY).toString(), null,
 						CreditFragment.this, CreditFragment.this));
@@ -326,10 +381,8 @@ public class CreditFragment extends Fragment implements Constants,
 									URL_WEBAPI_USER_LOGIN).toString(), loginParams,
 							CreditFragment.this, CreditFragment.this));
 				} else {
-					mHostActivity.replaceFragment(new NoLoginFragment());
 					LoadingDialog.hideLoading();
-					
-					startActivity(new Intent(mHostActivity, LoginActivity.class));
+					loadLoginProcess(false);
 				}
 
 			} else {

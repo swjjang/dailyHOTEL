@@ -8,6 +8,7 @@ public class Customer implements Parcelable {
 	private String mEmail;
 	private String mName;
 	private String mPhone;
+	private String mAccessToken;
 	
 	public Customer() {
 	}
@@ -21,12 +22,14 @@ public class Customer implements Parcelable {
 		dest.writeString(mEmail);
 		dest.writeString(mName);
 		dest.writeString(mPhone);
+		dest.writeString(mAccessToken);
 	}
 	
 	private void readFromParcel(Parcel in) {
 		mEmail = in.readString();
 		mName = in.readString();
 		mPhone = in.readString();
+		mAccessToken = in.readString();
 	}
 	
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
@@ -64,6 +67,14 @@ public class Customer implements Parcelable {
 	public int describeContents() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	public String getAccessToken() {
+		return mAccessToken;
+	}
+
+	public void setAccessToken(String accessToken) {
+		this.mAccessToken = accessToken;
 	}
 
 }

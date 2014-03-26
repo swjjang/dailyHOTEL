@@ -1,10 +1,8 @@
 package com.twoheart.dailyhotel.fragment;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -33,17 +31,16 @@ import com.twoheart.dailyhotel.activity.AboutActivity;
 import com.twoheart.dailyhotel.activity.FAQActivity;
 import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.activity.NoticeActivity;
-import com.twoheart.dailyhotel.activity.SplashActivity;
 import com.twoheart.dailyhotel.activity.VersionActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
-import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.network.response.DailyHotelResponseListener;
+import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 
 public class SettingFragment extends Fragment implements Constants,
-		DailyHotelResponseListener, DailyHotelJsonResponseListener,
+		DailyHotelStringResponseListener, DailyHotelJsonResponseListener,
 		ErrorListener, OnClickListener {
 
 	private MainActivity mHostActivity;
@@ -62,7 +59,6 @@ public class SettingFragment extends Fragment implements Constants,
 
 		// ActionBar Setting
 		mHostActivity = (MainActivity) getActivity();
-		mHostActivity.setActionBar("설정");
 		mQueue = VolleyHttpClient.getRequestQueue();
 
 		tvNotice = (TextView) view.findViewById(R.id.tv_setting_notice);
@@ -99,7 +95,10 @@ public class SettingFragment extends Fragment implements Constants,
 	@Override
 	public void onResume() {
 		super.onResume();
-		mQueue.add(new DailyHotelRequest(Method.GET,
+		
+		mHostActivity.setActionBar("설정");
+		
+		mQueue.add(new DailyHotelStringRequest(Method.GET,
 				new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 						URL_WEBAPI_USER_ALIVE).toString(), null, this, this));
 	}
@@ -108,22 +107,22 @@ public class SettingFragment extends Fragment implements Constants,
 	public void onClick(View v) {
 
 		if (v.getId() == tvNotice.getId()) {
-			Intent i = new Intent(v.getContext(), NoticeActivity.class);
-			mHostActivity.startActivity(i);
+			Intent i = new Intent(mHostActivity, NoticeActivity.class);
+			startActivity(i);
 			mHostActivity.overridePendingTransition(R.anim.slide_in_right,
 					R.anim.hold);
 
 		} else if (v.getId() == llVersion.getId()) {
 
-			Intent i = new Intent(v.getContext(), VersionActivity.class);
-			mHostActivity.startActivity(i);
+			Intent i = new Intent(mHostActivity, VersionActivity.class);
+			startActivity(i);
 			mHostActivity.overridePendingTransition(R.anim.slide_in_right,
 					R.anim.hold);
 
 		} else if (v.getId() == tvHelp.getId()) {
 
-			Intent i = new Intent(v.getContext(), FAQActivity.class);
-			mHostActivity.startActivity(i);
+			Intent i = new Intent(mHostActivity, FAQActivity.class);
+			startActivity(i);
 			mHostActivity.overridePendingTransition(R.anim.slide_in_right,
 					R.anim.hold);
 
@@ -150,12 +149,16 @@ public class SettingFragment extends Fragment implements Constants,
 									@Override
 									public void onClick(DialogInterface dialog,
 											int which) {
-										
-										mQueue.add(new DailyHotelRequest(Method.GET,
-												new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-														URL_WEBAPI_USER_LOGOUT).toString(), null,
-														SettingFragment.this, SettingFragment.this));
-										
+
+										mQueue.add(new DailyHotelStringRequest(
+												Method.GET,
+												new StringBuilder(
+														URL_DAILYHOTEL_SERVER)
+														.append(URL_WEBAPI_USER_LOGOUT)
+														.toString(), null,
+												SettingFragment.this,
+												SettingFragment.this));
+
 										SharedPreferences.Editor ed = mHostActivity.sharedPreference
 												.edit();
 										ed.putBoolean(
@@ -166,14 +169,17 @@ public class SettingFragment extends Fragment implements Constants,
 										ed.putString(KEY_PREFERENCE_USER_PWD,
 												null);
 										ed.commit();
-										
+
 										VolleyHttpClient.cookie = null;
-										VolleyHttpClient.cookieManager.removeAllCookie();
-										
+										VolleyHttpClient.cookieManager
+												.removeAllCookie();
+										CookieSyncManager.getInstance().startSync();
+										CookieSyncManager.getInstance().stopSync();
+
 										tvLogin.setText("로그인");
 										tvEmail.setText("");
-										
-										Toast.makeText(getActivity(),
+
+										Toast.makeText(mHostActivity,
 												"로그아웃되었습니다", Toast.LENGTH_SHORT)
 												.show();
 
@@ -199,21 +205,33 @@ public class SettingFragment extends Fragment implements Constants,
 				alert.show();
 
 			} else { // 로그아웃 상태
-				Intent i = new Intent(v.getContext(), LoginActivity.class);
-				mHostActivity.startActivity(i);
+				Intent i = new Intent(mHostActivity, LoginActivity.class);
+				startActivityForResult(i, CODE_REQUEST_ACTIVITY_LOGIN);
 				mHostActivity.overridePendingTransition(R.anim.slide_in_right,
 						R.anim.hold);
 			}
 
 		} else if (v.getId() == tvCall.getId()) {
 			Intent i = new Intent(Intent.ACTION_DIAL,
-					Uri.parse("tel:070-4028-9331"));
+					Uri.parse(new StringBuilder("tel:").append(DAILYHOTEL_PHONE_NUMBER).toString()));
 			startActivity(i);
 		} else if (v.getId() == tvAbout.getId()) {
 			Intent i = new Intent(mHostActivity, AboutActivity.class);
-			mHostActivity.startActivity(i);
+			startActivity(i);
 			mHostActivity.overridePendingTransition(R.anim.slide_in_right,
 					R.anim.hold);
+		}
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode,
+			Intent intent) {
+		super.onActivityResult(requestCode, resultCode, intent);
+		
+		if (requestCode == CODE_REQUEST_ACTIVITY_LOGIN) {
+			if (resultCode == Activity.RESULT_OK) {
+				mHostActivity.selectMenuDrawer(mHostActivity.menuHotelListFragment);
+			}
 		}
 	}
 
@@ -221,6 +239,9 @@ public class SettingFragment extends Fragment implements Constants,
 	public void onErrorResponse(VolleyError error) {
 		if (DEBUG)
 			error.printStackTrace();
+		
+		Toast.makeText(mHostActivity, "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
+				Toast.LENGTH_SHORT).show();
 
 	}
 
@@ -228,7 +249,7 @@ public class SettingFragment extends Fragment implements Constants,
 	public void onResponse(String url, String response) {
 		if (url.contains(URL_WEBAPI_USER_ALIVE)) {
 			String result = response.trim();
-			
+
 			if (result.equals("alive")) { // session alive
 				// 사용자 정보 요청.
 				mQueue.add(new DailyHotelJsonRequest(Method.GET,
@@ -251,7 +272,7 @@ public class SettingFragment extends Fragment implements Constants,
 			} catch (Exception e) {
 				if (DEBUG)
 					e.printStackTrace();
-				
+
 				tvLogin.setText("로그인");
 				tvEmail.setText("");
 			}

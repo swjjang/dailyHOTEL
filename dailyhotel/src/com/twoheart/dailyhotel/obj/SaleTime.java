@@ -18,8 +18,8 @@ public class SaleTime implements Constants, Parcelable {
 	private Date mCurrentTime;
 
 	public static final Locale locale = Locale.KOREA;
-	private final Calendar calendar = Calendar.getInstance();
-	private final SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd HH:mm:ss", locale);
+	private static final Calendar calendar = Calendar.getInstance();
+	private static final SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd HH:mm:ss", locale);
 	
 	public SaleTime() {
 		super();
@@ -39,10 +39,7 @@ public class SaleTime implements Constants, Parcelable {
 		
 	}
 
-	private String attachCurrentDate(String time) {
-		String currentYear = getCurrentYear();
-		String currentMonth = getCurrentMonth();
-		String currentDay = getCurrentDay();
+	public static String attachCurrentDate(String currentYear, String currentMonth, String currentDay, String time) {
 		
 		return new StringBuilder(currentYear)
 		.append("-").append(currentMonth)
@@ -50,11 +47,19 @@ public class SaleTime implements Constants, Parcelable {
 		.append(" ").append(time).toString();
 		
 	}
+	
+	public static Date stringToDate(String string) throws ParseException {
+		return format.parse(string);
+	}
+	
+	public static String dateToString(Date date) throws ParseException {
+		return format.format(date);
+	}
 
 	public void setOpenTime(String openTime) {
 		try {
-			String currentTime = attachCurrentDate(openTime);
-			this.mOpenTime = format.parse(currentTime);
+			String currentTime = attachCurrentDate(getCurrentYear(), getCurrentMonth(), getCurrentDay(), openTime);
+			this.mOpenTime = stringToDate(currentTime);
 		} catch (ParseException e) {
 			if (DEBUG)
 				e.printStackTrace();
@@ -63,7 +68,7 @@ public class SaleTime implements Constants, Parcelable {
 
 	public void setCloseTime(String closeTime) {
 		try {
-			this.mCloseTime = format.parse(attachCurrentDate(closeTime));
+			this.mCloseTime = stringToDate(attachCurrentDate(getCurrentYear(), getCurrentMonth(), getCurrentDay(), closeTime));
 		} catch (ParseException e) {
 			if (DEBUG)
 				e.printStackTrace();
@@ -72,12 +77,16 @@ public class SaleTime implements Constants, Parcelable {
 	
 	public void setCurrentTime(String currentTime) {
 		try {
-			this.mCurrentTime = format.parse(format.format(new Date(Long.parseLong(currentTime))));
+			this.mCurrentTime = stringToDate(dateToString(new Date(Long.parseLong(currentTime))));
 			calendar.setTime(mCurrentTime);
+		} catch (NumberFormatException e) {
+			if (DEBUG)
+				e.printStackTrace();
 		} catch (ParseException e) {
 			if (DEBUG)
 				e.printStackTrace();
 		}
+		
 	}
 	
 	public String getCurrentMonth() {

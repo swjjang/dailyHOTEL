@@ -2,53 +2,47 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="1"
+    android:background="#fdfdfd"
     android:orientation="vertical"
-    android:background="@color/dh_gray96">
-    
+    android:weightSum="1" >
+
     <com.viewpagerindicator.TabPageIndicator
         android:id="@+id/indicator"
-        android:layout_weight="0.1"
+        android:background="#f4f4f4"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_width="match_parent"/>
-    
+        android:layout_weight="0.1" />
+
     <com.twoheart.dailyhotel.widget.HotelViewPager
         android:id="@+id/pager"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.8"/>
-    
-    <RelativeLayout 
-        android:layout_weight="0.1"
-        android:layout_width="match_parent"	
+        android:layout_weight="0.8" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_margin="10dp">
-        
-        <Button 
-	        android:id="@+id/btn_hotel_tab_booking"
-	        android:layout_width="match_parent"
-	        android:layout_height="match_parent"
-	        android:textColor="@color/white"
-	        android:background="@drawable/shape_button_background"
-	        android:text="예약하기"/>
-        
-        
-        <Button 
-            android:padding="0dp"
+        android:layout_margin="10dp"
+        android:layout_weight="0.1" >
+
+        <Button
+            android:id="@+id/btn_hotel_tab_booking"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/shape_button_background"
+            android:text="예약하기"
+            android:textColor="@color/white" />
+
+        <Button
             android:id="@+id/tv_hotel_tab_soldout"
-			android:layout_height="match_parent"
-			android:layout_width="match_parent"
-			android:layout_alignParentBottom="true"
-			android:layout_alignParentRight="true"
-			android:visibility="gone"
-			android:gravity="center_vertical|center"
-			android:background="@drawable/dh_btn_soldout"/>
-		
-        
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/dh_btn_soldout"
+            android:gravity="center_vertical|center"
+            android:padding="0dp"
+            android:visibility="gone" />
     </RelativeLayout>
-    
-    
-    
-    
 
 </LinearLayout>

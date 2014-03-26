@@ -36,7 +36,7 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 		btnSoldOut = (Button) findViewById(R.id.tv_hotel_tab_soldout);
 		btnBooking = (Button) findViewById(R.id.btn_hotel_tab_booking);
 		btnBooking.setOnClickListener(this);
-		
+
 		setTabPage();
 		setActionBar(hotelDetail.getHotel().getName());
 
@@ -54,7 +54,7 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 				.append(mSaleTime.getCurrentDay()).toString();
 
 		Log.d(TAG, url);
-		
+
 		LoadingDialog.showLoading(this);
 		// 호텔 정보를 가져온다.
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null, this, this));
@@ -66,9 +66,9 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 		if (v.getId() == btnBooking.getId()) { // TODO: 로그인/로그아웃 상태를
 												// HotelPaymentActivity에서 관리하도록
 												// 이전할 것.
-			Intent i = new Intent(this, HotelPaymentActivity.class);
+			Intent i = new Intent(this, BookingActivity.class);
 			i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELDETAIL, hotelDetail);
-			startActivityForResult(i, CODE_REQUEST_ACTIVITY_HOTELTAB);
+			startActivityForResult(i, CODE_REQUEST_ACTIVITY_PAYMENT);
 			overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
 		}
 	}
@@ -76,18 +76,21 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-		if (requestCode == CODE_REQUEST_ACTIVITY_HOTELTAB) {
-			if (resultCode == CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS) {
-				setResult(CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS);
+		if (requestCode == CODE_REQUEST_ACTIVITY_PAYMENT) {
+			setResult(resultCode);
+			
+			if (resultCode == RESULT_OK) {
+				setResult(RESULT_OK);
 				finish();
 			}
 		}
+
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 	@Override
 	protected void loadFragments() {
-		
+
 		// TODO: BaseFragment 만들어서 통합적으로 관리할 것.
 		mFragments.add(new HotelTabBookingFragment());
 		mFragments.add(new TabInfoFragment());
@@ -96,7 +99,7 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 		mTitles.add("예약");
 		mTitles.add("정보");
 		mTitles.add("지도");
-		
+
 		mAdapter.notifyDataSetChanged();
 		mIndicator.notifyDataSetChanged();
 

@@ -1,11 +1,6 @@
 package com.twoheart.dailyhotel.activity;
 
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.text.Html;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.twoheart.dailyhotel.R;
@@ -19,7 +14,7 @@ public class AboutActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setActionBar("데일리호텔이란?");
-		setContentView(R.layout.activity_introduction);
+		setContentView(R.layout.activity_about);
 		
 	}
 	

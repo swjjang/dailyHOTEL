@@ -29,6 +29,9 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.facebook.widget.WebDialog.OnCompleteListener;
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.MapBuilder;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BookingTabActivity;
@@ -39,14 +42,14 @@ import com.twoheart.dailyhotel.obj.Booking;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
-import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.network.response.DailyHotelResponseListener;
+import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
 public class BookingListFragment extends Fragment implements Constants,
 		OnItemClickListener, OnClickListener, DailyHotelJsonResponseListener,
-		DailyHotelResponseListener, ErrorListener {
+		DailyHotelStringResponseListener, ErrorListener {
 
 	private static final String TAG = "BookingListFragment";
 
@@ -68,28 +71,41 @@ public class BookingListFragment extends Fragment implements Constants,
 		mHostActivity = (MainActivity) getActivity();
 		mQueue = VolleyHttpClient.getRequestQueue();
 
-		mHostActivity.setActionBar("예약확인");
-
 		mListView = (ListView) view.findViewById(R.id.listview_booking);
 		mEmptyLayout = (RelativeLayout) view
 				.findViewById(R.id.layout_booking_empty);
 		btnSignUp = (Button) view.findViewById(R.id.btn_booking_empty_signup);
 		btnSignUp.setOnClickListener(this);
+		
+		DailyHotel.getGaTracker().set(Fields.SCREEN_NAME, TAG);
+
+		return view;
+	}
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		DailyHotel.getGaTracker().send(MapBuilder.createAppView().build());
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		mHostActivity.setActionBar("예약확인");
 
 		LoadingDialog.showLoading(mHostActivity);
-		mQueue.add(new DailyHotelRequest(Method.GET,
+
+		mQueue.add(new DailyHotelStringRequest(Method.GET,
 				new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 						URL_WEBAPI_USER_ALIVE).toString(), null,
 				BookingListFragment.this, BookingListFragment.this));
-
-		return view;
 	}
 
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == btnSignUp.getId()) {
 			Intent i = new Intent(mHostActivity, SignupActivity.class);
-			
+
 			startActivity(i);
 			mHostActivity.overridePendingTransition(R.anim.slide_in_right,
 					R.anim.hold);
@@ -111,7 +127,7 @@ public class BookingListFragment extends Fragment implements Constants,
 			String result = response.trim();
 			if (result.equals("alive")) { // session alive
 				// 예약 목록 요청.
-				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(
+				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(
 						URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_MINE)
 						.toString(), null, BookingListFragment.this,
 						BookingListFragment.this));
@@ -136,13 +152,12 @@ public class BookingListFragment extends Fragment implements Constants,
 					mListView.setVisibility(View.GONE);
 					mEmptyLayout.setVisibility(View.VISIBLE);
 				} else {
-					
+
 					LoadingDialog.hideLoading();
-					
+
 					mListView.setVisibility(View.GONE);
 					mEmptyLayout.setVisibility(View.VISIBLE);
 
-					startActivity(new Intent(mHostActivity, LoginActivity.class));
 				}
 
 			} else {
@@ -155,6 +170,50 @@ public class BookingListFragment extends Fragment implements Constants,
 						Toast.LENGTH_SHORT).show();
 			}
 
+		} else if (url.contains(URL_WEBAPI_RESERVE_MINE)) {
+			if (!response.trim().equals("none")) {
+				mItems = new ArrayList<Booking>();
+
+				try {
+					JSONObject obj = new JSONObject(response);
+					JSONArray rsvArr = obj.getJSONArray("rsv");
+
+					for (int i = 0; i < rsvArr.length(); i++) {
+						JSONObject rsvObj = rsvArr.getJSONObject(i);
+						String sday = rsvObj.getString("sday");
+						String hotel_idx = rsvObj.getString("hotel_idx");
+						String hotel_name = rsvObj.getString("hotel_name");
+
+						mItems.add(new Booking(sday, hotel_idx, hotel_name));
+					}
+
+					mAdapter = new BookingListAdapter(mHostActivity,
+							R.layout.list_row_booking, mItems);
+					mListView.setOnItemClickListener(this);
+
+					mListView.setAdapter(mAdapter);
+
+				} catch (Exception e) {
+					mListView.setVisibility(View.GONE);
+					mEmptyLayout.setVisibility(View.VISIBLE);
+					btnSignUp.setVisibility(View.INVISIBLE);
+					
+					if (DEBUG)
+						e.printStackTrace();
+
+					Toast.makeText(mHostActivity,
+							"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
+							Toast.LENGTH_LONG).show();
+				} finally {
+					LoadingDialog.hideLoading();
+				}
+			} else {
+				LoadingDialog.hideLoading();
+				
+				mListView.setVisibility(View.GONE);
+				mEmptyLayout.setVisibility(View.VISIBLE);
+				btnSignUp.setVisibility(View.INVISIBLE);
+			}
 		}
 
 	}
@@ -187,43 +246,7 @@ public class BookingListFragment extends Fragment implements Constants,
 				mListView.setVisibility(View.GONE);
 				mEmptyLayout.setVisibility(View.VISIBLE);
 				btnSignUp.setVisibility(View.INVISIBLE);
-				
-			}
-		} else if (url.contains(URL_WEBAPI_RESERVE_MINE)) {
-			mItems = new ArrayList<Booking>();
 
-			try {
-				JSONObject obj = response;
-				JSONArray rsvArr = obj.getJSONArray("rsv");
-
-				for (int i = 0; i < rsvArr.length(); i++) {
-					JSONObject rsvObj = rsvArr.getJSONObject(i);
-					String sday = rsvObj.getString("sday");
-					String hotel_idx = rsvObj.getString("hotel_idx");
-					String hotel_name = rsvObj.getString("hotel_name");
-
-					mItems.add(new Booking(sday, hotel_idx, hotel_name));
-				}
-
-				mAdapter = new BookingListAdapter(mHostActivity,
-						R.layout.list_row_booking, mItems);
-				mListView.setOnItemClickListener(this);
-
-				mListView.setAdapter(mAdapter);
-
-			} catch (Exception e) {
-				mListView.setVisibility(View.GONE);
-				mEmptyLayout.setVisibility(View.VISIBLE);
-				btnSignUp.setVisibility(View.INVISIBLE);
-
-				if (DEBUG)
-					e.printStackTrace();
-
-				Toast.makeText(mHostActivity,
-						"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-						Toast.LENGTH_LONG).show();
-			} finally {
-				LoadingDialog.hideLoading();
 			}
 		}
 

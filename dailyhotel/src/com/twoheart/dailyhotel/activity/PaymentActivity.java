@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import kr.co.kcp.android.payment.standard.KcpApplication;
+import kr.co.kcp.android.payment.standard.ResultRcvActivity;
 import kr.co.kcp.util.PackageState;
 
 import org.apache.http.util.EncodingUtils;
@@ -15,20 +15,22 @@ import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Window;
+import android.webkit.CookieSyncManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.obj.HotelDetail;
 import com.twoheart.dailyhotel.obj.Pay;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
 public class PaymentActivity extends Activity implements Constants {
 
@@ -57,7 +59,7 @@ public class PaymentActivity extends Activity implements Constants {
 					.getParcelable(NAME_INTENT_EXTRA_DATA_PAY);
 		}
 		
-		webView = (WebView) findViewById(R.id.webview);
+		webView = (WebView) findViewById(R.id.webView);
 
 		webView.getSettings().setSavePassword(false);
 		webView.getSettings().setJavaScriptEnabled(true);
@@ -72,9 +74,23 @@ public class PaymentActivity extends Activity implements Constants {
 		webView.setWebViewClient(new mWebViewClient());
 //		 webView.getSettings().setPluginState(PluginState.ON);
 		
-		String[] postParameterKey = new String[] { "email", "name", "phone" };
+	}
+	
+	@Override
+	protected void onPause() {
+		CookieSyncManager.getInstance().stopSync();
+		super.onPause();
+		
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		CookieSyncManager.getInstance().startSync();
+		
+		String[] postParameterKey = new String[] { "email", "name", "phone", "accessToken" };
 		String[] postParameterValue = new String[] { mPay.getCustomer().getEmail(), 
-				mPay.getCustomer().getName(), mPay.getCustomer().getPhone() };
+				mPay.getCustomer().getName(), mPay.getCustomer().getPhone(), mPay.getCustomer().getAccessToken() };
 		
 		String url = new StringBuilder(URL_DAILYHOTEL_SERVER)
 				.append(URL_WEBAPI_RESERVE_PAYMENT)
@@ -151,7 +167,7 @@ public class PaymentActivity extends Activity implements Constants {
 
 	@JavascriptInterface
 	private boolean url_scheme_intent(String url) {
-		Log.d(KcpApplication.m_strLogTag,
+		Log.d(ResultRcvActivity.m_strLogTag,
 				"[PayDemoActivity] called__test - url=[" + url + "]");
 
 		Uri uri = Uri.parse(url);
@@ -171,7 +187,7 @@ public class PaymentActivity extends Activity implements Constants {
 		@JavascriptInterface
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
-			Log.d(KcpApplication.m_strLogTag,
+			Log.d(ResultRcvActivity.m_strLogTag,
 					"[PayDemoActivity] called__shouldOverrideUrlLoading - url=["
 							+ url + "]");
 
@@ -212,6 +228,22 @@ public class PaymentActivity extends Activity implements Constants {
 			setResult(CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR);
 			finish();
 		}
+
+		@Override
+		public void onPageFinished(WebView view, String url) {
+			super.onPageFinished(view, url);
+			
+			LoadingDialog.hideLoading();
+		}
+
+		@Override
+		public void onPageStarted(WebView view, String url, Bitmap favicon) {
+			super.onPageStarted(view, url, favicon);
+			
+			LoadingDialog.showLoading(PaymentActivity.this);
+		}
+		
+		
 	}
 
 	// 하나SK 카드 선택시 User가 선택한 기본 정보를 가지고 오기위해 사용
@@ -220,7 +252,7 @@ public class PaymentActivity extends Activity implements Constants {
 		public void getCardInfo(final String card_cd, final String quota) {
 			handler.post(new Runnable() {
 				public void run() {
-					Log.d(KcpApplication.m_strLogTag,
+					Log.d(ResultRcvActivity.m_strLogTag,
 							"[PayDemoActivity] KCPPayCardInfoBridge=["
 									+ card_cd + ", " + quota + "]");
 
@@ -311,60 +343,58 @@ public class PaymentActivity extends Activity implements Constants {
 	protected void onRestart() {
 		super.onResume();
 
-		Log.d(KcpApplication.m_strLogTag,
+		Log.d(ResultRcvActivity.m_strLogTag,
 				"[PayDemoActivity] called__onResume + INPROGRESS=[" + m_nStat
 						+ "]");
 
-		KcpApplication myApp = (KcpApplication) getApplication();
-
 		// 하나 SK 모듈로 결제 이후 해당 카드 정보를 가지고 오기위해 사용
-		if (myApp.m_uriResult != null) {
-			if (myApp.m_uriResult.getQueryParameter("realPan") != null
-					&& myApp.m_uriResult.getQueryParameter("cavv") != null
-					&& myApp.m_uriResult.getQueryParameter("xid") != null
-					&& myApp.m_uriResult.getQueryParameter("eci") != null) {
-				Log.d(KcpApplication.m_strLogTag,
+		if (ResultRcvActivity.m_uriResult != null) {
+			if (ResultRcvActivity.m_uriResult.getQueryParameter("realPan") != null
+					&& ResultRcvActivity.m_uriResult.getQueryParameter("cavv") != null
+					&& ResultRcvActivity.m_uriResult.getQueryParameter("xid") != null
+					&& ResultRcvActivity.m_uriResult.getQueryParameter("eci") != null) {
+				Log.d(ResultRcvActivity.m_strLogTag,
 						"[PayDemoActivity] HANA SK Result = javascript:hanaSK('"
-								+ myApp.m_uriResult
+								+ ResultRcvActivity.m_uriResult
 										.getQueryParameter("realPan") + "', '"
-								+ myApp.m_uriResult.getQueryParameter("cavv")
+								+ ResultRcvActivity.m_uriResult.getQueryParameter("cavv")
 								+ "', '"
-								+ myApp.m_uriResult.getQueryParameter("xid")
+								+ ResultRcvActivity.m_uriResult.getQueryParameter("xid")
 								+ "', '"
-								+ myApp.m_uriResult.getQueryParameter("eci")
+								+ ResultRcvActivity.m_uriResult.getQueryParameter("eci")
 								+ "', '" + CARD_CD + "', '" + QUOTA + "');");
 
 				// 하나 SK 모듈로 인증 이후 승인을 하기위해 결제 함수를 호출 (주문자 페이지)
 				webView.loadUrl("javascript:hanaSK('"
-						+ myApp.m_uriResult.getQueryParameter("realPan")
-						+ "', '" + myApp.m_uriResult.getQueryParameter("cavv")
-						+ "', '" + myApp.m_uriResult.getQueryParameter("xid")
-						+ "', '" + myApp.m_uriResult.getQueryParameter("eci")
+						+ ResultRcvActivity.m_uriResult.getQueryParameter("realPan")
+						+ "', '" + ResultRcvActivity.m_uriResult.getQueryParameter("cavv")
+						+ "', '" + ResultRcvActivity.m_uriResult.getQueryParameter("xid")
+						+ "', '" + ResultRcvActivity.m_uriResult.getQueryParameter("eci")
 						+ "', '" + CARD_CD + "', '" + QUOTA + "');");
 			}
 
-			if ((myApp.m_uriResult.getQueryParameter("res_cd") == null ? ""
-					: myApp.m_uriResult.getQueryParameter("res_cd"))
+			if ((ResultRcvActivity.m_uriResult.getQueryParameter("res_cd") == null ? ""
+					: ResultRcvActivity.m_uriResult.getQueryParameter("res_cd"))
 					.equals("999")) {
-				Log.d(KcpApplication.m_strLogTag,
+				Log.d(ResultRcvActivity.m_strLogTag,
 						"[PayDemoActivity] HANA SK Result = cancel");
 
 				m_nStat = 9;
 			}
 
-			if ((myApp.m_uriResult.getQueryParameter("isp_res_cd") == null ? ""
-					: myApp.m_uriResult.getQueryParameter("isp_res_cd"))
+			if ((ResultRcvActivity.m_uriResult.getQueryParameter("isp_res_cd") == null ? ""
+					: ResultRcvActivity.m_uriResult.getQueryParameter("isp_res_cd"))
 					.equals("0000")) {
-				Log.d(KcpApplication.m_strLogTag,
+				Log.d(ResultRcvActivity.m_strLogTag,
 						"[PayDemoActivity] ISP Result = 0000");
 
 				webView.loadUrl("http://pggw.kcp.co.kr/lds/smart_phone_linux_jsp/sample/card/samrt_res.jsp?result=OK&a="
-						+ myApp.m_uriResult.getQueryParameter("a"));
+						+ ResultRcvActivity.m_uriResult.getQueryParameter("a"));
 				// webView.loadUrl(
 				// "https://pggw.kcp.co.kr/app.do?ActionResult=app&approval_key="
 				// + strApprovalKey );
 			} else {
-				Log.d(KcpApplication.m_strLogTag,
+				Log.d(ResultRcvActivity.m_strLogTag,
 						"[PayDemoActivity] ISP Result = cancel");
 			}
 		}
@@ -373,17 +403,16 @@ public class PaymentActivity extends Activity implements Constants {
 			checkFrom();
 		}
 
-		myApp.m_uriResult = null;
+		ResultRcvActivity.m_uriResult = null;
 	}
 
 	@JavascriptInterface
 	public void checkFrom() {
 		try {
-			KcpApplication myApp = (KcpApplication) getApplication();
 
-			if (myApp.m_uriResult != null) {
+			if (ResultRcvActivity.m_uriResult != null) {
 				m_nStat = PROGRESS_DONE;
-				String strResultInfo = myApp.m_uriResult
+				String strResultInfo = ResultRcvActivity.m_uriResult
 						.getQueryParameter("approval_key");
 
 				if (strResultInfo == null || strResultInfo.length() <= 4)
@@ -392,7 +421,7 @@ public class PaymentActivity extends Activity implements Constants {
 				String strResCD = strResultInfo.substring(strResultInfo
 						.length() - 4);
 
-				Log.d(KcpApplication.m_strLogTag, "[PayDemoActivity] result=["
+				Log.d(ResultRcvActivity.m_strLogTag, "[PayDemoActivity] result=["
 						+ strResultInfo + "]+" + "res_cd=[" + strResCD + "]");
 
 				if (strResCD.equals("0000") == true) {
@@ -402,7 +431,7 @@ public class PaymentActivity extends Activity implements Constants {
 					strApprovalKey = strResultInfo.substring(0,
 							strResultInfo.length() - 4);
 
-					Log.d(KcpApplication.m_strLogTag,
+					Log.d(ResultRcvActivity.m_strLogTag,
 							"[PayDemoActivity] approval_key=[" + strApprovalKey
 									+ "]");
 
@@ -423,7 +452,7 @@ public class PaymentActivity extends Activity implements Constants {
 	@JavascriptInterface
 	@Override
 	protected Dialog onCreateDialog(int id) {
-		Log.d(KcpApplication.m_strLogTag,
+		Log.d(ResultRcvActivity.m_strLogTag,
 				"[PayDemoActivity] called__onCreateDialog - id=[" + id + "]");
 
 		super.onCreateDialog(id);
@@ -460,7 +489,7 @@ public class PaymentActivity extends Activity implements Constants {
 
 	public void finishActivity(String p_strFinishMsg) {
 		
-		int resultCode = RESULT_CANCELED;
+		int resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
 
 		if (p_strFinishMsg != null) {
 			if (p_strFinishMsg.equals("NOT_AVAILABLE")) {
@@ -520,4 +549,5 @@ public class PaymentActivity extends Activity implements Constants {
 		AlertDialog alert = alertDialog.create();
 		alert.show();
 	}
+	
 }

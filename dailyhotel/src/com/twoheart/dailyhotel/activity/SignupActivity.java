@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -25,18 +26,21 @@ import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.MapBuilder;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
-import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.network.response.DailyHotelResponseListener;
+import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
 public class SignupActivity extends BaseActivity implements OnClickListener,
-		DailyHotelJsonResponseListener, DailyHotelResponseListener,
+		DailyHotelJsonResponseListener, DailyHotelStringResponseListener,
 		ErrorListener {
 
 	private static final String TAG = "SignupActivity";
@@ -46,12 +50,15 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 	private EditText etEmail, etName, etPhone, etPwd, etRecommender;
 	private TextView tvTerm, tvPrivacy;
 	private Button btnSignUp;
+	
+	private Map<String, String> signupParams;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setActionBar("회원가입");
 		setContentView(R.layout.activity_signup);
+		DailyHotel.getGaTracker().set(Fields.SCREEN_NAME, TAG);
 
 		mQueue = VolleyHttpClient.getRequestQueue();
 
@@ -71,6 +78,15 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 		getPhoneNumber();
 
 	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		
+		DailyHotel.getGaTracker().send(MapBuilder.createAppView().build());
+	}
+
+
 
 	public void getPhoneNumber() {
 		TelephonyManager telManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
@@ -136,27 +152,27 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 			}
 			LoadingDialog.showLoading(this);
 			
-			Map<String, String> joinParams = new HashMap<String, String>();
-			joinParams.put("email", etEmail.getText().toString());
-			joinParams.put("pw", etPwd.getText().toString());
-			joinParams.put("name", etName.getText().toString());
-			joinParams.put("phone", etPhone.getText().toString());
+			signupParams = new HashMap<String, String>();
+			signupParams.put("email", etEmail.getText().toString());
+			signupParams.put("pw", etPwd.getText().toString());
+			signupParams.put("name", etName.getText().toString());
+			signupParams.put("phone", etPhone.getText().toString());
 			TelephonyManager tManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-			joinParams.put("device", tManager.getDeviceId());
+			signupParams.put("device", tManager.getDeviceId());
 
 			String recommender = etRecommender.getText().toString();
 			
 			// 추천인 코드 입력 여부에 따른 요청
 			if (!recommender.trim().equals("")) {
 				
-				mQueue.add(new DailyHotelRequest(Method.GET, new StringBuilder(
+				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(
 						URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER)
 						.append(recommender).toString(), null, this, this));
 
 			} else {
 				mQueue.add(new DailyHotelJsonRequest(Method.POST,
 						new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-								URL_WEBAPI_USER_SIGNUP).toString(), joinParams,
+								URL_WEBAPI_USER_SIGNUP).toString(), signupParams,
 						this, this));
 			}
 
@@ -191,20 +207,9 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 	}
 
 	@Override
-	public void onBackPressed() {
-		finish();
+	public void finish() {
+		super.finish();
 		overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
-		super.onBackPressed();
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			onBackPressed();
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
@@ -231,23 +236,21 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 					msg = obj.getString("msg");
 
 				if (result.equals("true")) {
-					Toast.makeText(getApplicationContext(), "회원가입이 완료되었습니다.",
-							Toast.LENGTH_SHORT).show();
-
-					// 자동 로그인
+					
 					Map<String, String> loginParams = new HashMap<String, String>();
-					loginParams.put("email", etEmail.getText()
-							.toString());
-					loginParams.put("pw", Crypto.encrypt(
-							etPwd.getText().toString()).replace("\n", ""));
-
-					mQueue.add(new DailyHotelJsonRequest(Method.POST,
-							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-									URL_WEBAPI_USER_LOGIN).toString(), loginParams,
+					loginParams.put("email", signupParams.get("email"));
+					loginParams.put("pw", Crypto.encrypt(signupParams.get("pw")).replace(
+							"\n", ""));
+					
+					mQueue.add(new DailyHotelJsonRequest(
+							Method.POST, new StringBuilder(
+									URL_DAILYHOTEL_SERVER).append(
+									URL_WEBAPI_USER_LOGIN)
+									.toString(), loginParams,
 							this, this));
-
+					
 				} else {
-					LoadingDialog.hideLoading();
+					
 					Toast.makeText(this, msg,
 							Toast.LENGTH_SHORT).show();
 				}
@@ -262,38 +265,22 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 						Toast.LENGTH_SHORT).show();
 			}
 		} else if (url.contains(URL_WEBAPI_USER_LOGIN)) {
+			
 			try {
-				JSONObject obj = response;
-				String msg = null;
-
-				if (obj.getString("login").equals("true")) {
-
-					Log.d(TAG, "로그인 성공");
+				if (response.getBoolean("login")) {
 					LoadingDialog.hideLoading();
-					Toast.makeText(getApplicationContext(), "로그인되었습니다",
+					
+					Toast.makeText(this, "회원가입이 완료되었습니다.",
 							Toast.LENGTH_SHORT).show();
+					
+					setResult(RESULT_OK);
 					storeLoginInfo();
-
-				} else {
-					// 로그인 실패
-					// 실패 msg 출력
-					if (obj.length() > 1)
-						msg = obj.getString("msg");
-					LoadingDialog.hideLoading();
-					Toast.makeText(getApplicationContext(), msg,
-							Toast.LENGTH_SHORT).show();
-					onBackPressed();
 				}
-
-			} catch (Exception e) {
+			} catch (JSONException e) {
 				if (DEBUG)
 					e.printStackTrace();
-				
-				LoadingDialog.hideLoading();
-				Toast.makeText(this,
-						"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-						Toast.LENGTH_SHORT).show();
-			}
+			} 
+			
 		}
 	}
 

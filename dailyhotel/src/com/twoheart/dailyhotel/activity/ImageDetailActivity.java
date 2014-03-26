@@ -2,23 +2,19 @@ package com.twoheart.dailyhotel.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.Window;
-import android.widget.Button;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.ImageDetailFragment;
-import com.twoheart.dailyhotel.fragment.ImageViewFragment;
 import com.twoheart.dailyhotel.obj.HotelDetail;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.viewpagerindicator.CirclePageIndicator;
 import com.viewpagerindicator.PageIndicator;
 
-public class ImageDetailActivity extends FragmentActivity implements Constants {
+public class ImageDetailActivity extends BaseActivity implements Constants {
 
 	private static final String TAG = "ImageDetailActivity";
 	
