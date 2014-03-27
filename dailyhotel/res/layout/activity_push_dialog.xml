@@ -20,7 +20,7 @@
                android:layout_width="40dp"
                android:layout_height="40dp"
                android:layout_margin="10dp"
-               android:background="@drawable/dh_ic_home_72"/>
+               android:background="@drawable/img_ic_appicon"/>
            
            <LinearLayout 
                android:layout_height="40dp"
@@ -58,7 +58,7 @@
                android:textColor="@color/white"
                android:text="보기"
                android:layout_margin="10dp"
-               android:background="@drawable/dh_btn_pink"/>
+               android:background="@drawable/shape_button_background"/>
            
            <Button
                android:id="@+id/tv_push_cancle" 
@@ -67,7 +67,7 @@
                android:layout_margin="10dp"
                android:textColor="@color/white"
                android:text="닫기"
-               android:background="@drawable/dh_btn_pink"/>
+               android:background="@drawable/shape_button_background"/>
            
        </LinearLayout>
        

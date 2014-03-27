@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.fragment;
+package com.twoheart.dailyhotel;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -32,8 +32,6 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
-import com.twoheart.dailyhotel.DailyHotel;
-import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.activity.SignupActivity;
@@ -60,8 +58,8 @@ public class CreditFragment extends Fragment implements Constants,
 	private RequestQueue mQueue;
 
 	private RelativeLayout rlCreditNotLoggedIn;
-	private LinearLayout llCreditLoggedIn;
-	private Button btnInvite, btnLogin, btnSignup;
+	private LinearLayout llCreditLoggedIn, btnInvite;
+	private Button btnLogin, btnSignup;
 	private TextView tvBonus, tvRecommenderCode;
 	private TextView tvCredit;
 	private String mRecommendCode;
@@ -78,7 +76,7 @@ public class CreditFragment extends Fragment implements Constants,
 		rlCreditNotLoggedIn = (RelativeLayout) view.findViewById(R.id.rl_credit_not_logged_in);
 		llCreditLoggedIn = (LinearLayout) view.findViewById(R.id.ll_credit_logged_in);
 
-		btnInvite = (Button) view.findViewById(R.id.btn_credit_invite_frd);
+		btnInvite = (LinearLayout) view.findViewById(R.id.btn_credit_invite_frd);
 		tvCredit = (TextView) view.findViewById(R.id.tv_credit_history);
 		tvRecommenderCode = (TextView) view
 				.findViewById(R.id.tv_credit_recommender_code);
@@ -351,7 +349,7 @@ public class CreditFragment extends Fragment implements Constants,
 		if (DEBUG)
 			error.printStackTrace();
 
-		mHostActivity.addFragment(new ErrorFragment());
+		mHostActivity.replaceFragment(new ErrorFragment());
 		LoadingDialog.hideLoading();
 	}
 

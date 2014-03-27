@@ -2,14 +2,9 @@ package com.twoheart.dailyhotel;
 
 import java.util.List;
 
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.activity.PushDialogActivity;
-import com.twoheart.dailyhotel.activity.SplashActivity;
-
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningAppProcessInfo;
-import android.app.ActivityManager.RunningTaskInfo;
 import android.app.KeyguardManager;
 import android.app.KeyguardManager.KeyguardLock;
 import android.app.Notification;
@@ -19,7 +14,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.PowerManager;
-import android.util.Log;
+
+import com.twoheart.dailyhotel.activity.PushDialogActivity;
+import com.twoheart.dailyhotel.activity.SplashActivity;
+import com.twoheart.dailyhotel.util.Log;
 
 public class AlarmBroadcastReceiver extends BroadcastReceiver{
 	
@@ -27,10 +25,11 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver{
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
+		Log.d("Alarm", "onReceive");
+		
 		String title = "dailyHOTEL";
 		String msg = "오늘의 호텔이 도착했습니다.\n지금 데일리호텔에서 확인하세요!";
 		String ticker = "오늘의 호텔이 도착했습니다!.";
-
 		
 		PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
 		boolean isScreenOn = pm.isScreenOn();
@@ -91,10 +90,10 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver{
 		NotificationManager notificationManager = (NotificationManager)context.getSystemService(Activity.NOTIFICATION_SERVICE);
 		
 		Notification notification = new Notification();
-		notification.icon = R.drawable.dh_ic_home_72;
+		notification.icon = R.drawable.img_ic_appicon;
 		notification.tickerText = ticker;
 		notification.when = System.currentTimeMillis();
-		notification.vibrate = new long[] { 500, 100, 500, 100 };
+		notification.vibrate = new long[] { 5000, 1000, 5000, 1000 };
 		notification.flags = Notification.FLAG_AUTO_CANCEL;
 		notification.setLatestEventInfo(context, title, msg, pendingIntent);
 		notificationManager.notify(0, notification);

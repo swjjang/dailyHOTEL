@@ -27,8 +27,8 @@ import android.widget.TextView;
 
 public class PushDialogActivity extends Activity implements OnClickListener{
 	
-	private TextView tv_ok;
-	private TextView tv_cancle;
+	private TextView tvOkButton;
+	private TextView tvCancelButton;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,33 +36,29 @@ public class PushDialogActivity extends Activity implements OnClickListener{
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_push_dialog);
 		
-		loadResource();
+		tvOkButton = (TextView) findViewById(R.id.tv_push_ok);
+		tvCancelButton = (TextView) findViewById(R.id.tv_push_cancle);
+		tvOkButton.setOnClickListener(this);
+		tvCancelButton.setOnClickListener(this);
 		
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
 		        | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
 		        | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
 		        | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 		
-		Handler handler = new Handler() {
-			public void handleMessage(Message msg) {
-				super.handleMessage(msg);
-				finish();
-			}
-		};
-		
-		handler.sendEmptyMessageDelayed(0, 5000);
-	}
-	
-	public void loadResource() {
-		tv_ok = (TextView) findViewById(R.id.tv_push_ok);
-		tv_cancle = (TextView) findViewById(R.id.tv_push_cancle);
-		tv_ok.setOnClickListener(this);
-		tv_cancle.setOnClickListener(this);
+//		Handler handler = new Handler() {
+//			public void handleMessage(Message msg) {
+//				super.handleMessage(msg);
+//				finish();
+//			}
+//		};
+//		
+//		handler.sendEmptyMessageDelayed(0, 5000);
 	}
 	
 	@Override
 	public void onClick(View v) {
-		if(v.getId() == tv_ok.getId()) {
+		if(v.getId() == tvOkButton.getId()) {
 			
 			boolean isRunning = false;
 			
@@ -100,7 +96,7 @@ public class PushDialogActivity extends Activity implements OnClickListener{
 			startActivity(intent);
 			finish();
 			
-		} else if(v.getId() == tv_cancle.getId()) {
+		} else if(v.getId() == tvCancelButton.getId()) {
 			finish();
 		}
 	}

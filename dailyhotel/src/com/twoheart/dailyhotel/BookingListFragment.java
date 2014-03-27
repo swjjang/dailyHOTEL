@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.fragment;
+package com.twoheart.dailyhotel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,8 +31,6 @@ import com.android.volley.VolleyError;
 import com.facebook.widget.WebDialog.OnCompleteListener;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
-import com.twoheart.dailyhotel.DailyHotel;
-import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BookingTabActivity;
 import com.twoheart.dailyhotel.activity.LoginActivity;
@@ -76,12 +74,12 @@ public class BookingListFragment extends Fragment implements Constants,
 				.findViewById(R.id.layout_booking_empty);
 		btnSignUp = (Button) view.findViewById(R.id.btn_booking_empty_signup);
 		btnSignUp.setOnClickListener(this);
-		
+
 		DailyHotel.getGaTracker().set(Fields.SCREEN_NAME, TAG);
 
 		return view;
 	}
-	
+
 	@Override
 	public void onStart() {
 		super.onStart();
@@ -127,21 +125,38 @@ public class BookingListFragment extends Fragment implements Constants,
 			String result = response.trim();
 			if (result.equals("alive")) { // session alive
 				// 예약 목록 요청.
-				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(
-						URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_MINE)
-						.toString(), null, BookingListFragment.this,
-						BookingListFragment.this));
+				mQueue.add(new DailyHotelStringRequest(Method.GET,
+						new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+								URL_WEBAPI_RESERVE_MINE).toString(), null,
+						BookingListFragment.this, BookingListFragment.this));
 
 			} else if (result.equals("dead")) { // session dead
 
 				// 재로그인
 				if (mHostActivity.sharedPreference.getBoolean(
 						KEY_PREFERENCE_AUTO_LOGIN, false)) {
+					String id = mHostActivity.sharedPreference.getString(
+							KEY_PREFERENCE_USER_ID, null);
+					String accessToken = mHostActivity.sharedPreference
+							.getString(KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
+					String pw = mHostActivity.sharedPreference.getString(
+							KEY_PREFERENCE_USER_PWD, null);
+
 					Map<String, String> loginParams = new HashMap<String, String>();
-					loginParams.put("email", mHostActivity.sharedPreference
-							.getString(KEY_PREFERENCE_USER_ID, null));
-					loginParams.put("pw", mHostActivity.sharedPreference
-							.getString(KEY_PREFERENCE_USER_PWD, null));
+
+					if (accessToken != null) {
+						loginParams
+								.put("accessToken",
+										mHostActivity.sharedPreference
+												.getString(
+														KEY_PREFERENCE_USER_ACCESS_TOKEN,
+														null));
+					} else {
+						loginParams.put("email", mHostActivity.sharedPreference
+								.getString(KEY_PREFERENCE_USER_ID, null));
+					}
+
+					loginParams.put("pw", pw);
 
 					mQueue.add(new DailyHotelJsonRequest(Method.POST,
 							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
@@ -197,7 +212,7 @@ public class BookingListFragment extends Fragment implements Constants,
 					mListView.setVisibility(View.GONE);
 					mEmptyLayout.setVisibility(View.VISIBLE);
 					btnSignUp.setVisibility(View.INVISIBLE);
-					
+
 					if (DEBUG)
 						e.printStackTrace();
 
@@ -209,7 +224,7 @@ public class BookingListFragment extends Fragment implements Constants,
 				}
 			} else {
 				LoadingDialog.hideLoading();
-				
+
 				mListView.setVisibility(View.GONE);
 				mEmptyLayout.setVisibility(View.VISIBLE);
 				btnSignUp.setVisibility(View.INVISIBLE);
@@ -257,7 +272,7 @@ public class BookingListFragment extends Fragment implements Constants,
 		if (DEBUG)
 			error.printStackTrace();
 
-		mHostActivity.addFragment(new ErrorFragment());
+		mHostActivity.replaceFragment(new ErrorFragment());
 		LoadingDialog.hideLoading();
 
 	}

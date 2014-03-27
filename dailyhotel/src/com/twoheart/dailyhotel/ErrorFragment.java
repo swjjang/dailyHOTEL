@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.fragment;
+package com.twoheart.dailyhotel;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 
@@ -42,7 +41,8 @@ public class ErrorFragment extends Fragment implements OnClickListener {
 						Toast.LENGTH_SHORT).show();
 				return;
 			} else {
-				mHostActivity.removeFragment(this);
+				int index = mHostActivity.indexLastFragment;
+				mHostActivity.replaceFragment(mHostActivity.getFragment(index));
 				
 			}
 

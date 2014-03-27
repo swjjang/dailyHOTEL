@@ -31,10 +31,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.activity.SplashActivity;
-import com.twoheart.dailyhotel.fragment.BookingListFragment;
-import com.twoheart.dailyhotel.fragment.CreditFragment;
-import com.twoheart.dailyhotel.fragment.HotelListFragment;
-import com.twoheart.dailyhotel.fragment.SettingFragment;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.CloseOnBackPressed;
@@ -59,6 +55,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 	private DrawerMenuListAdapter mDrawerMenuListAdapter;
 	protected List<DrawerMenu> mMenuImages;
 	protected List<Fragment> mFragments = new LinkedList<Fragment>();
+	
+	public int indexLastFragment;
 
 	public DrawerLayout drawerLayout;
 	public ListView drawerList;
@@ -76,14 +74,14 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		startActivityForResult(new Intent(this, SplashActivity.class), CODE_REQUEST_ACTIVITY_SPLASH);
-		
 		super.onCreate(savedInstanceState);
-		backButtonHandler = new CloseOnBackPressed(this);
-
+		
+		setTheme(R.style.DH_Theme);
 		setContentView(R.layout.activity_main);
 		setNavigationDrawer(this);
 
 		mFragmentManager = getSupportFragmentManager();
+		backButtonHandler = new CloseOnBackPressed(this);
 
 		// 맨 처음은 호텔리스트
 		selectMenuDrawer(menuHotelListFragment);
@@ -185,18 +183,22 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 		switch (selectedMenuIconId) {
 		case R.drawable.selector_drawermenu_todayshotel:
 			replaceFragment(getFragment(INDEX_HOTEL_LIST_FRAGMENT));
+			indexLastFragment = INDEX_HOTEL_LIST_FRAGMENT;
 			break;
 
 		case R.drawable.selector_drawermenu_reservation:
 			replaceFragment(getFragment(INDEX_BOOKING_LIST_FRAGMENT));
+			indexLastFragment = INDEX_BOOKING_LIST_FRAGMENT;
 			break;
 
 		case R.drawable.selector_drawermenu_saving:
 			replaceFragment(getFragment(INDEX_CREDIT_FRAGMENT));
+			indexLastFragment = INDEX_CREDIT_FRAGMENT;
 			break;
 
 		case R.drawable.selector_drawermenu_setting:
 			replaceFragment(getFragment(INDEX_SETTING_FRAGMENT));
+			indexLastFragment = INDEX_SETTING_FRAGMENT;
 			break;
 		}
 

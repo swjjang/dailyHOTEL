@@ -68,33 +68,6 @@ public class HotelTabBookingFragment extends Fragment implements
 		tvPrice.setPaintFlags(tvPrice.getPaintFlags()
 				| Paint.STRIKE_THRU_TEXT_FLAG);
 
-		String category = mHotelDetail.getHotel().getCat();
-
-		if (mHotelDetail.getHotel().getCat().equals("biz")) {
-			gradeBackground.setBackgroundColor(Color.parseColor("#055870"));
-			gradeText.setText("비지니스");
-
-		} else if (category.equals("boutique")) {
-			gradeBackground.setBackgroundColor(Color.parseColor("#9f2d58"));
-			gradeText.setText("부띠끄");
-
-		} else if (category.equals("residence")) {
-			gradeBackground.setBackgroundColor(Color.parseColor("#407f67"));
-			gradeText.setText("레지던스");
-
-		} else if (category.equals("resort")) {
-			gradeBackground.setBackgroundColor(Color.parseColor("#cf8d14"));
-			gradeText.setText("리조트");
-
-		} else if (category.equals("special")) {
-			gradeBackground.setBackgroundColor(Color.parseColor("#ab380a"));
-			gradeText.setText("특급");
-
-		} else {
-			gradeBackground.setBackgroundColor(Color.parseColor("#808080"));
-			gradeText.setText("미정");
-		}
-
 		mAdapter = new FragmentPagerAdapter(mHostActivity.getSupportFragmentManager()) {
 			
 			@Override

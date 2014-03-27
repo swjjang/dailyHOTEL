@@ -54,49 +54,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
 
-                <FrameLayout
-                    android:id="@+id/fl_hotel_row_grade"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:paddingLeft="5.5dp"
-                    android:paddingRight="5.5dp" >
-
-                    <TextView
-                        android:id="@+id/tv_hotel_row_grade"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:singleLine="true"
-                        android:text="특급"
-                        android:textColor="@android:color/white"
-                        android:textSize="11.5dp" />
-                </FrameLayout>
-
-                <TextView
-                    android:id="@+id/tv_hotel_tab_booking_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="5.5dp"
-                    android:layout_toRightOf="@+id/fl_hotel_row_grade"
-                    android:ellipsize="marquee"
-                    android:freezesText="true"
-                    android:gravity="center_vertical"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    android:scrollHorizontally="true"
-                    android:singleLine="true"
-                    android:textColor="@color/dh_dark_gray_blue"
-                    android:textSize="18dp" />
-            </RelativeLayout>
-
-            <LinearLayout
-                android:id="@+id/ll_hotel_under"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/rl_hotel_upper"
-                android:orientation="vertical" >
-
                 <TextView
                     android:id="@+id/tv_hotel_tab_booking_address"
                     android:layout_width="match_parent"
@@ -108,6 +65,30 @@
                     android:singleLine="true"
                     android:textColor="#7f7f7f"
                     android:textSize="15dp" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_hotel_under"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/rl_hotel_upper"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/tv_hotel_tab_booking_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5.5dp"
+                    android:ellipsize="marquee"
+                    android:freezesText="true"
+                    android:gravity="center_vertical"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:textColor="@color/dh_dark_gray_blue"
+                    android:textSize="18dp" />
+
             </LinearLayout>
         </RelativeLayout>
 

@@ -51,6 +51,7 @@
         <activity
             android:name="com.twoheart.dailyhotel.MainActivity"
             android:label="@string/app_name"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:icon="@drawable/img_ic_appicon"
             android:screenOrientation="portrait" >
             <intent-filter>

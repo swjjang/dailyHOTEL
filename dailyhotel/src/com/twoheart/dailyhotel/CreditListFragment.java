@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.fragment;
+package com.twoheart.dailyhotel;
 
 import java.util.List;
 

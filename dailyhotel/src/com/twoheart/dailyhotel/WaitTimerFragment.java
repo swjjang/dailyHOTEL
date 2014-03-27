@@ -1,11 +1,10 @@
-package com.twoheart.dailyhotel.fragment;
+package com.twoheart.dailyhotel;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 import java.util.TimeZone;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -22,12 +21,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.twoheart.dailyhotel.AlarmBroadcastReceiver;
-import com.twoheart.dailyhotel.MainActivity;
-import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.obj.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
 
+@SuppressLint("ValidFragment")
 public class WaitTimerFragment extends Fragment implements OnClickListener, Constants {
 
 	private final static String TAG = "WaitTimerFragment";
@@ -38,6 +35,9 @@ public class WaitTimerFragment extends Fragment implements OnClickListener, Cons
 	private TextView tvTimer;
 	private Button btnNotify;
 
+	private AlarmManager alarmManager;
+	private PendingIntent pender;
+	private Intent intent;
 	private SaleTime mSaleTime;
 	private boolean isEnableNotify;
 
@@ -48,7 +48,6 @@ public class WaitTimerFragment extends Fragment implements OnClickListener, Cons
 	}
 
 	public WaitTimerFragment(SaleTime saleTime) {
-		super();
 		mSaleTime = saleTime;
 
 	}
@@ -59,6 +58,12 @@ public class WaitTimerFragment extends Fragment implements OnClickListener, Cons
 
 		View view = inflater.inflate(R.layout.fragment_wait_timer, null);
 		mHostActivity = (MainActivity) getActivity();
+		alarmManager = (AlarmManager) mHostActivity.getApplicationContext()
+				.getSystemService(Context.ALARM_SERVICE);
+		intent = new Intent(mHostActivity.getApplicationContext(),
+				AlarmBroadcastReceiver.class);
+		pender = PendingIntent.getBroadcast(mHostActivity.getApplicationContext(), 0,
+				intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 		tvTimer = (TextView) view.findViewById(R.id.tv_timer);
 		btnNotify = (Button) view.findViewById(R.id.btn_wait_timer_alram);
@@ -81,31 +86,17 @@ public class WaitTimerFragment extends Fragment implements OnClickListener, Cons
 	private void setNotify(boolean enable) {
 		if (enable) {
 			btnNotify.setText("알람 끄기");
-
-			AlarmManager alarmManager = (AlarmManager) mHostActivity
-					.getSystemService(Context.ALARM_SERVICE);
-			Intent intent = new Intent(mHostActivity,
-					AlarmBroadcastReceiver.class);
-			PendingIntent pender = PendingIntent.getBroadcast(mHostActivity, 0,
-					intent, 0);
 			alarmManager.set(AlarmManager.RTC_WAKEUP, mSaleTime.getOpenTime(),
 					pender);
 
-			Toast.makeText(mHostActivity, "알람이 등록 되었습니다", Toast.LENGTH_SHORT)
+			Toast.makeText(mHostActivity, "알람이 등록되었습니다", Toast.LENGTH_SHORT)
 					.show();
 
 		} else {
 			btnNotify.setText("알람 켜기");
-
-			AlarmManager alarmManager = (AlarmManager) mHostActivity
-					.getSystemService(Context.ALARM_SERVICE);
-			Intent intent = new Intent(mHostActivity,
-					AlarmBroadcastReceiver.class);
-			PendingIntent pender = PendingIntent.getBroadcast(mHostActivity, 0,
-					intent, 0);
 			alarmManager.cancel(pender);
 
-			Toast.makeText(mHostActivity, "알람이 취소 되었습니다", Toast.LENGTH_SHORT)
+			Toast.makeText(mHostActivity, "알람이 취소되었습니다", Toast.LENGTH_SHORT)
 					.show();
 
 		}
@@ -121,22 +112,21 @@ public class WaitTimerFragment extends Fragment implements OnClickListener, Cons
 				
 				Date dailyOpenDate = new Date(mSaleTime.getOpenTime());
 				
-				if (currentSystemDate.getTime() == dailyOpenDate.getTime()) {
-					mHandler.removeMessages(0);
-					mHostActivity
-							.replaceFragment(mHostActivity
-									.getFragment(mHostActivity.INDEX_HOTEL_LIST_FRAGMENT));
-				} else {
-
-					remainingTime = dailyOpenDate.getTime()
-							- currentSystemDate.getTime();
-					
+				remainingTime = dailyOpenDate.getTime() - currentSystemDate.getTime();
+				
+				if (remainingTime > 0) {
 					SimpleDateFormat displayTimeFormat = new SimpleDateFormat("HH:mm:ss");
 					displayTimeFormat.setTimeZone(TimeZone.getTimeZone("KST"));
 
 					tvTimer.setText(displayTimeFormat.format(remainingTime));
 					
 					this.sendEmptyMessageDelayed(0, 1);
+					
+				} else {
+					mHandler.removeMessages(0);
+					mHostActivity
+							.replaceFragment(mHostActivity
+									.getFragment(mHostActivity.INDEX_HOTEL_LIST_FRAGMENT));
 					
 				}
 
@@ -150,9 +140,10 @@ public class WaitTimerFragment extends Fragment implements OnClickListener, Cons
 
 	@Override
 	public void onDestroy() {
-		super.onDestroy();
 		if (mHandler != null)
 			mHandler.removeMessages(0);
+		
+		super.onDestroy();
 	}
 
 }

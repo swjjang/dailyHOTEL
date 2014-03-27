@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.fragment;
+package com.twoheart.dailyhotel;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,8 +36,6 @@ import com.google.analytics.tracking.android.MapBuilder;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import com.twoheart.dailyhotel.DailyHotel;
-import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.EventWebActivity;
 import com.twoheart.dailyhotel.activity.HotelTabActivity;
@@ -225,7 +223,7 @@ public class HotelListFragment extends ListFragment implements Constants,
 		if (DEBUG)
 			error.printStackTrace();
 
-		mHostActivity.addFragment(new ErrorFragment());
+		mHostActivity.replaceFragment(new ErrorFragment());
 		LoadingDialog.hideLoading();
 	}
 
@@ -236,8 +234,10 @@ public class HotelListFragment extends ListFragment implements Constants,
 			try {
 				String open = response.getString("open");
 				String close = response.getString("close");
-
-				mDailyHotelSaleTime.setOpenTime(open);
+				
+				// TODO: 오픈 클로즈 타임 테스트 중
+//				mDailyHotelSaleTime.setOpenTime(open);
+				mDailyHotelSaleTime.setOpenTime("10:30:00");
 				mDailyHotelSaleTime.setCloseTime(close);
 
 				if (!mDailyHotelSaleTime.isSaleTime()) {
@@ -258,7 +258,7 @@ public class HotelListFragment extends ListFragment implements Constants,
 					e.printStackTrace();
 
 				LoadingDialog.hideLoading();
-				mHostActivity.addFragment(new ErrorFragment());
+				mHostActivity.replaceFragment(new ErrorFragment());
 
 			}
 
@@ -406,7 +406,7 @@ public class HotelListFragment extends ListFragment implements Constants,
 					e.printStackTrace();
 
 				LoadingDialog.hideLoading();
-				mHostActivity.addFragment(new ErrorFragment());
+				mHostActivity.replaceFragment(new ErrorFragment());
 			}
 		}
 	}
@@ -414,8 +414,8 @@ public class HotelListFragment extends ListFragment implements Constants,
 	@Override
 	public void onResponse(String url, String response) {
 		if (url.contains(URL_WEBAPI_APP_TIME)) {
-			Log.d(TAG, response.toString());
-			mDailyHotelSaleTime.setCurrentTime(response.toString());
+			Log.d(TAG, response);
+			mDailyHotelSaleTime.setCurrentTime(response);
 
 			// 오픈, 클로즈 타임을 가져온다
 			mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(
