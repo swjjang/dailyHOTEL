@@ -34,9 +34,7 @@ public class HotelTabBookingFragment extends Fragment implements
 	private ViewPager mViewPager;
 	private CirclePageIndicator mIndicator;
 
-	private FrameLayout gradeBackground;
-	private TextView gradeText;
-	private TextView tvName, tvAddress, tvPrice, tvDiscount;
+	private TextView tvBedType, tvAddress, tvPrice, tvDiscount;
 
 	private Handler mHandler;
 	private int mCurrentPage = 0;
@@ -49,18 +47,14 @@ public class HotelTabBookingFragment extends Fragment implements
 		mHostActivity = (HotelTabActivity) getActivity();
 		mHotelDetail = mHostActivity.hotelDetail;
 
-		tvName = (TextView) view.findViewById(R.id.tv_hotel_tab_booking_name);
+		tvBedType = (TextView) view.findViewById(R.id.tv_hotel_tab_booking_bed_type);
 		tvAddress = (TextView) view
 				.findViewById(R.id.tv_hotel_tab_booking_address);
 		tvPrice = (TextView) view.findViewById(R.id.tv_hotel_tab_booking_price);
 		tvDiscount = (TextView) view
 				.findViewById(R.id.tv_hotel_tab_booking_discount);
-		gradeBackground = (FrameLayout) view
-				.findViewById(R.id.fl_hotel_row_grade);
-		gradeText = (TextView) view.findViewById(R.id.tv_hotel_row_grade);
 
-		tvName.setText(mHostActivity.hotelDetail.getHotel().getName());
-		tvName.setSelected(true);
+		tvBedType.setText(mHostActivity.hotelDetail.getHotel().getBedType());
 		tvAddress.setText(mHostActivity.hotelDetail.getHotel().getAddress());
 		tvAddress.setSelected(true);
 		tvDiscount.setText(mHotelDetail.getHotel().getDiscount() + "¿ø");

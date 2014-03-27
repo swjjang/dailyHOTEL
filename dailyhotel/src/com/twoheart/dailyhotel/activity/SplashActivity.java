@@ -68,9 +68,9 @@ public class SplashActivity extends BaseActivity implements Constants,
 			Map<String, String> loginParams = new HashMap<String, String>();
 			
 			if (accessToken != null) {
-				loginParams.put("accessToken", sharedPreference.getString(KEY_PREFERENCE_USER_ACCESS_TOKEN, null));
+				loginParams.put("accessToken", accessToken);
 			} else {
-				loginParams.put("email", sharedPreference.getString(KEY_PREFERENCE_USER_ID, null));
+				loginParams.put("email", id);
 			}
 			
 			loginParams.put("pw", pw);

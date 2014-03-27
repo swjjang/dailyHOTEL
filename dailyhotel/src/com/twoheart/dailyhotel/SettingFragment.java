@@ -37,6 +37,7 @@ import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
+import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
 public class SettingFragment extends Fragment implements Constants,
 		DailyHotelStringResponseListener, DailyHotelJsonResponseListener,
@@ -96,6 +97,8 @@ public class SettingFragment extends Fragment implements Constants,
 		super.onResume();
 		
 		mHostActivity.setActionBar("설정");
+		
+		LoadingDialog.showLoading(mHostActivity);
 		
 		mQueue.add(new DailyHotelStringRequest(Method.GET,
 				new StringBuilder(URL_DAILYHOTEL_SERVER).append(
@@ -239,6 +242,7 @@ public class SettingFragment extends Fragment implements Constants,
 		if (DEBUG)
 			error.printStackTrace();
 		
+		LoadingDialog.hideLoading();
 		Toast.makeText(mHostActivity, "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
 				Toast.LENGTH_SHORT).show();
 
@@ -256,7 +260,8 @@ public class SettingFragment extends Fragment implements Constants,
 								URL_WEBAPI_USER_INFO).toString(), null, this,
 						this));
 
-			}
+			} else
+				LoadingDialog.hideLoading();
 		}
 	}
 
@@ -267,6 +272,8 @@ public class SettingFragment extends Fragment implements Constants,
 				JSONObject obj = response;
 				tvEmail.setText(obj.getString("email"));
 				tvLogin.setText("로그아웃");
+				
+				LoadingDialog.hideLoading();
 
 			} catch (Exception e) {
 				if (DEBUG)

@@ -130,7 +130,7 @@ public abstract class TabActivity extends BaseActivity implements
 			hotelBasic.setDiscount(strDiscount);
 			hotelBasic.setPrice(strPrice);
 			hotelBasic.setCat(detailObj.getString("cat"));
-//			hotelBasic.setBedType(detailObj.getString("bed_type"));
+			hotelBasic.setBedType(detailObj.getString("bed_type"));
 			
 			hotelDetail.setHotel(hotelBasic);
 

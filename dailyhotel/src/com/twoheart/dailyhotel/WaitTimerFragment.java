@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.PowerManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 
 import com.twoheart.dailyhotel.obj.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.WakeLock;
 
 @SuppressLint("ValidFragment")
 public class WaitTimerFragment extends Fragment implements OnClickListener, Constants {
@@ -86,7 +88,7 @@ public class WaitTimerFragment extends Fragment implements OnClickListener, Cons
 	private void setNotify(boolean enable) {
 		if (enable) {
 			btnNotify.setText("알람 끄기");
-			alarmManager.set(AlarmManager.RTC_WAKEUP, mSaleTime.getOpenTime(),
+			alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + remainingTime,
 					pender);
 
 			Toast.makeText(mHostActivity, "알람이 등록되었습니다", Toast.LENGTH_SHORT)
@@ -104,15 +106,16 @@ public class WaitTimerFragment extends Fragment implements OnClickListener, Cons
 	}
 
 	private void setTimer() {
+		
+		Date currentDate = new Date(mSaleTime.getCurrentTime());
+		Date dailyOpenDate = new Date(mSaleTime.getOpenTime());
+		
+		remainingTime = dailyOpenDate.getTime() - currentDate.getTime();
+		WakeLock.acquireWakeLock(mHostActivity.getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
+		
 		mHandler = new Handler() {
 			public void handleMessage(Message msg) {
-				
-				Date currentSystemDate = new Date(System
-						.currentTimeMillis());
-				
-				Date dailyOpenDate = new Date(mSaleTime.getOpenTime());
-				
-				remainingTime = dailyOpenDate.getTime() - currentSystemDate.getTime();
+				remainingTime -= 1000;
 				
 				if (remainingTime > 0) {
 					SimpleDateFormat displayTimeFormat = new SimpleDateFormat("HH:mm:ss");
@@ -120,10 +123,12 @@ public class WaitTimerFragment extends Fragment implements OnClickListener, Cons
 
 					tvTimer.setText(displayTimeFormat.format(remainingTime));
 					
-					this.sendEmptyMessageDelayed(0, 1);
+					this.sendEmptyMessageDelayed(0, 1000);
 					
 				} else {
 					mHandler.removeMessages(0);
+					WakeLock.releaseWakeLock();
+					
 					mHostActivity
 							.replaceFragment(mHostActivity
 									.getFragment(mHostActivity.INDEX_HOTEL_LIST_FRAGMENT));
@@ -134,14 +139,16 @@ public class WaitTimerFragment extends Fragment implements OnClickListener, Cons
 			}
 		};
 
-		mHandler.sendEmptyMessageDelayed(0, 1);
+		mHandler.sendEmptyMessageDelayed(0, 1000);
 
 	}
 
 	@Override
 	public void onDestroy() {
-		if (mHandler != null)
+		if (mHandler != null) {
 			mHandler.removeMessages(0);
+			WakeLock.releaseWakeLock();	
+		}
 		
 		super.onDestroy();
 	}

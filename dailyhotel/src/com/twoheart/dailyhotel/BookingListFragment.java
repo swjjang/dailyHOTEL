@@ -147,13 +147,9 @@ public class BookingListFragment extends Fragment implements Constants,
 					if (accessToken != null) {
 						loginParams
 								.put("accessToken",
-										mHostActivity.sharedPreference
-												.getString(
-														KEY_PREFERENCE_USER_ACCESS_TOKEN,
-														null));
+										accessToken);
 					} else {
-						loginParams.put("email", mHostActivity.sharedPreference
-								.getString(KEY_PREFERENCE_USER_ID, null));
+						loginParams.put("email", id);
 					}
 
 					loginParams.put("pw", pw);

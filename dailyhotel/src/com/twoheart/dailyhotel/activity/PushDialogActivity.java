@@ -6,6 +6,7 @@ import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.R.id;
 import com.twoheart.dailyhotel.R.layout;
+import com.twoheart.dailyhotel.util.WakeLock;
 
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -46,6 +47,8 @@ public class PushDialogActivity extends Activity implements OnClickListener{
 		        | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
 		        | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 		
+		WakeLock.releaseWakeLock();
+		
 //		Handler handler = new Handler() {
 //			public void handleMessage(Message msg) {
 //				super.handleMessage(msg);
@@ -59,39 +62,9 @@ public class PushDialogActivity extends Activity implements OnClickListener{
 	@Override
 	public void onClick(View v) {
 		if(v.getId() == tvOkButton.getId()) {
-			
-			boolean isRunning = false;
-			
-			ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-			List<RunningAppProcessInfo> proceses = am.getRunningAppProcesses();
-			
 			Intent intent = new Intent();
-			intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT 
-				                | Intent.FLAG_ACTIVITY_CLEAR_TOP 
-				                | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-			
-			for(RunningAppProcessInfo process : proceses) {
-				if(process.importance == RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
-					if(process.processName.equals("com.twoheart.dailyhotel")) {
-						
-						intent.setClass(this, MainActivity.class);
-						
-						isRunning = true;
-						
-						break;
-					} 
-					
-				} else if(process.processName.equals("com.twoheart.dailyhotel")) {
-					intent.setClass(this, MainActivity.class);					
-					isRunning = true;
-					
-					break;
-				}
-			}
-			
-			if(!isRunning) {
-				intent.setClass(this, MainActivity.class);
-			}
+			intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+			intent.setClass(this, MainActivity.class);
 			
 			startActivity(intent);
 			finish();
