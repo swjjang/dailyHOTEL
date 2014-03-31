@@ -23,7 +23,7 @@ public abstract class DailyHotelRequest<T> extends Request<T> {
 	private DailyHotelRequest(int method, String url, ErrorListener listener) {
 		super(method, url, listener);
 		setRetryPolicy(new DefaultRetryPolicy(VolleyHttpClient.TIME_OUT,
-				DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+				VolleyHttpClient.MAX_RETRY,
 				DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 	}
 

@@ -29,6 +29,7 @@ public class VolleyHttpClient implements Constants {
 	private static final String KEY_DAILYHOTEL_COOKIE = "JSESSIONID";
 
 	public static final int TIME_OUT = 10 * 1000;
+	public static final int MAX_RETRY = 2;
 
 	public static Cookie cookie;
 	public static CookieManager cookieManager;

@@ -21,6 +21,7 @@ public interface Constants {
 	public static final String URL_WEBAPI_USER_SIGNUP = "user/join";
 	public static final String URL_WEBAPI_USER_ALIVE = "user/alive";
 	public static final String URL_WEBAPI_USER_FORGOTPWD = "user/sendpw/";
+	public static final String URL_WEBAPI_USER_FINDRND = "user/findrnd/";
 	
 	// DailyHOTEL Reservation Controller WebAPI URL
 	public static final String URL_WEBAPI_RESERVE_PAYMENT = "reserv/session/req/";
@@ -74,6 +75,7 @@ public interface Constants {
 	public static final String NAME_INTENT_EXTRA_DATA_SALETIME = "saletime";
 	public static final String NAME_INTENT_EXTRA_DATA_BOOKING = "booking";
 	public static final String NAME_INTENT_EXTRA_DATA_PAY = "pay";
+	public static final String NAME_INTENT_EXTRA_DATA_SELECTED_IMAGE_URL = "sel_image_url";
 	
 	public static final int CODE_REQUEST_ACTIVITY_HOTELTAB = 1;
 	public static final int CODE_REQUEST_FRAGMENT_BOOKINGLIST = 3;

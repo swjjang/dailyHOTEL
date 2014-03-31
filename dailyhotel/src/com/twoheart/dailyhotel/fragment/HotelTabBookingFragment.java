@@ -1,6 +1,5 @@
 package com.twoheart.dailyhotel.fragment;
 
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,7 +12,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
@@ -43,16 +41,22 @@ public class HotelTabBookingFragment extends Fragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.fragment_hotel_tab_booking, null);
+		View view = inflater.inflate(R.layout.fragment_hotel_tab_booking, container,
+				false);
 		mHostActivity = (HotelTabActivity) getActivity();
 		mHotelDetail = mHostActivity.hotelDetail;
 
-		tvBedType = (TextView) view.findViewById(R.id.tv_hotel_tab_booking_bed_type);
+		tvBedType = (TextView) view
+				.findViewById(R.id.tv_hotel_tab_booking_bed_type);
 		tvAddress = (TextView) view
 				.findViewById(R.id.tv_hotel_tab_booking_address);
 		tvPrice = (TextView) view.findViewById(R.id.tv_hotel_tab_booking_price);
 		tvDiscount = (TextView) view
 				.findViewById(R.id.tv_hotel_tab_booking_discount);
+		mViewPager = (ViewPager) view
+				.findViewById(R.id.vp_hotel_tab_booking_img);
+		mIndicator = (CirclePageIndicator) view
+				.findViewById(R.id.cp_hotel_tab_booking_indicator);
 
 		tvBedType.setText(mHostActivity.hotelDetail.getHotel().getBedType());
 		tvAddress.setText(mHostActivity.hotelDetail.getHotel().getAddress());
@@ -61,30 +65,27 @@ public class HotelTabBookingFragment extends Fragment implements
 		tvPrice.setText(mHotelDetail.getHotel().getPrice() + "¿ø");
 		tvPrice.setPaintFlags(tvPrice.getPaintFlags()
 				| Paint.STRIKE_THRU_TEXT_FLAG);
+		
+		mAdapter = new FragmentPagerAdapter(this.getChildFragmentManager()) {
 
-		mAdapter = new FragmentPagerAdapter(mHostActivity.getSupportFragmentManager()) {
-			
 			@Override
 			public Fragment getItem(int position) {
-				return new ImageViewFragment(mHotelDetail.getImageUrl().get(position), mHostActivity, mHotelDetail);
+				return ImageViewFragment.newInstance(mHotelDetail.getImageUrl()
+						.get(position), mHotelDetail);
 			}
-			
+
 			@Override
 			public int getCount() {
 				return mHotelDetail.getImageUrl().size();
 			}
 			
-		}; 
+		};
 		
-		mViewPager = (ViewPager) view
-				.findViewById(R.id.vp_hotel_tab_booking_img);
 		mViewPager.setAdapter(mAdapter);
 		mViewPager.setOnTouchListener(this);
-		mIndicator = (CirclePageIndicator) view
-				.findViewById(R.id.cp_hotel_tab_booking_indicator);
 		mIndicator.setViewPager(mViewPager);
 		mIndicator.setSnap(true);
-
+		
 		mHandler = new Handler() {
 			public void handleMessage(Message msg) {
 
@@ -123,7 +124,8 @@ public class HotelTabBookingFragment extends Fragment implements
 				break;
 
 			case MotionEvent.ACTION_UP:
-				mHandler.sendEmptyMessageDelayed(0, DURATION_HOTEL_IMAGE_SHOW * 2);
+				mHandler.sendEmptyMessageDelayed(0,
+						DURATION_HOTEL_IMAGE_SHOW * 2);
 			default:
 				break;
 			}
@@ -131,5 +133,5 @@ public class HotelTabBookingFragment extends Fragment implements
 
 		return false;
 	}
-
+	
 }

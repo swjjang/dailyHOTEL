@@ -13,6 +13,7 @@ import com.google.analytics.tracking.android.GAServiceManager;
 import com.google.analytics.tracking.android.GoogleAnalytics;
 import com.google.analytics.tracking.android.Logger.LogLevel;
 import com.google.analytics.tracking.android.Tracker;
+import com.twoheart.dailyhotel.util.VolleyImageLoader;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 
 public class DailyHotel extends Application {
@@ -107,6 +108,7 @@ public class DailyHotel extends Application {
 
 	private void initializeVolley() {
 		VolleyHttpClient.init(this);
+		VolleyImageLoader.init(this);
 
 	}
 

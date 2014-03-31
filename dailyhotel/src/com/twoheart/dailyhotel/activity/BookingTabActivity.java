@@ -9,6 +9,7 @@ import com.twoheart.dailyhotel.fragment.BookingTabBookingFragment;
 import com.twoheart.dailyhotel.fragment.TabInfoFragment;
 import com.twoheart.dailyhotel.fragment.TabMapFragment;
 import com.twoheart.dailyhotel.util.Log;
+import com.twoheart.dailyhotel.util.TabActivity;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 import com.twoheart.dailyhotel.widget.HotelViewPager;
@@ -27,7 +28,6 @@ public class BookingTabActivity extends TabActivity {
 		mViewPager = (HotelViewPager) findViewById(R.id.booking_pager);
 		mIndicator = (TabPageIndicator) findViewById(R.id.booking_indicator);
 
-		setTabPage();
 		String[] date = booking.getSday().split("-");
 
 		String url = new StringBuilder(URL_DAILYHOTEL_SERVER)

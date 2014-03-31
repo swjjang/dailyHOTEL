@@ -356,12 +356,13 @@
                             android:textColor="@drawable/selector_textview_textcolor"
                             android:textSize="15dp" />
 
-                        <CheckBox
+                        <Switch
                             android:id="@+id/btn_on_off"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
-                            android:textSize="15dp" />
+                            android:textSize="15dp" >
+                        </Switch>
                     </RelativeLayout>
 
                     <LinearLayout

@@ -21,7 +21,7 @@ public class ErrorFragment extends Fragment implements OnClickListener {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.fragment_error, null);
+		View view = inflater.inflate(R.layout.fragment_error, container, false);
 		mHostActivity = (MainActivity) getActivity();
 		mHostActivity.setActionBar("dailyHOTEL");
 
@@ -43,6 +43,7 @@ public class ErrorFragment extends Fragment implements OnClickListener {
 			} else {
 				int index = mHostActivity.indexLastFragment;
 				mHostActivity.replaceFragment(mHostActivity.getFragment(index));
+//				mHostActivity.removeFragment(this);
 				
 			}
 

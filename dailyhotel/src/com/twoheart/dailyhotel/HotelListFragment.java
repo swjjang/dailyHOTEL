@@ -240,7 +240,7 @@ public class HotelListFragment extends ListFragment implements Constants,
 				mDailyHotelSaleTime.setCloseTime(close);
 
 				if (!mDailyHotelSaleTime.isSaleTime()) {
-					mHostActivity.replaceFragment(new WaitTimerFragment(
+					mHostActivity.replaceFragment(WaitTimerFragment.newInstance(
 							mDailyHotelSaleTime));
 					LoadingDialog.hideLoading();
 				} else {

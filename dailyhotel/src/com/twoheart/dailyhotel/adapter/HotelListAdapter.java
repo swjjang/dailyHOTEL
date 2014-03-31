@@ -46,7 +46,6 @@ public class HotelListAdapter extends ArrayAdapter<Hotel> {
 		this.inflater = (LayoutInflater) this.context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		
-		VolleyImageLoader.init(this.context);
 		this.imageLoader = VolleyImageLoader.getImageLoader();
 	}
 

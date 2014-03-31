@@ -13,6 +13,7 @@ import com.twoheart.dailyhotel.fragment.HotelTabBookingFragment;
 import com.twoheart.dailyhotel.fragment.TabInfoFragment;
 import com.twoheart.dailyhotel.fragment.TabMapFragment;
 import com.twoheart.dailyhotel.util.Log;
+import com.twoheart.dailyhotel.util.TabActivity;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
@@ -37,7 +38,6 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 		btnBooking = (Button) findViewById(R.id.btn_hotel_tab_booking);
 		btnBooking.setOnClickListener(this);
 
-		setTabPage();
 		setActionBar(hotelDetail.getHotel().getName());
 
 		// 호텔 sold out시
@@ -60,7 +60,7 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null, this, this));
 
 	}
-
+	
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == btnBooking.getId()) { // TODO: 로그인/로그아웃 상태를

@@ -21,7 +21,8 @@ public class ImageDetailActivity extends BaseActivity implements Constants {
 	private HotelDetail mHotelDetail;
 	private FragmentPagerAdapter mAdapter;
 	private ViewPager mPager;
-	private PageIndicator mIndicator;
+	private CirclePageIndicator mIndicator;
+	private String mSelectedImageUrl;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,13 +34,17 @@ public class ImageDetailActivity extends BaseActivity implements Constants {
 		if (bundle != null) {
 			mHotelDetail = (HotelDetail) bundle
 					.getParcelable(NAME_INTENT_EXTRA_DATA_HOTELDETAIL);
+			mSelectedImageUrl = bundle.getString(NAME_INTENT_EXTRA_DATA_SELECTED_IMAGE_URL);
 		}
+		
+		mPager = (ViewPager) findViewById(R.id.imagedetail_pager);
+		mIndicator = (CirclePageIndicator) findViewById(R.id.imagedetail_indicator);
 		
 		mAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
 			
 			@Override
 			public Fragment getItem(int position) {
-				return new ImageDetailFragment(mHotelDetail.getImageUrl().get(position), ImageDetailActivity.this);
+				return ImageDetailFragment.newInstance(mHotelDetail.getImageUrl().get(position));
 			}
 			
 			@Override
@@ -49,13 +54,22 @@ public class ImageDetailActivity extends BaseActivity implements Constants {
 			
 		}; 
 		
-		mPager = (ViewPager) findViewById(R.id.imagedetail_pager);
 		mPager.setAdapter(mAdapter);
-		CirclePageIndicator indicator = (CirclePageIndicator) findViewById(R.id.imagedetail_indicator);
-		this.mIndicator = indicator;
-		indicator.setViewPager(mPager);
-		indicator.setSnap(true);
+		mIndicator.setViewPager(mPager);
+		mIndicator.setSnap(true);
+		mPager.setCurrentItem(findSelectedImage(mSelectedImageUrl));
 		
+		
+	}
+	
+	private int findSelectedImage(String imageUrl) {
+		for (int i=0; i<mHotelDetail.getImageUrl().size(); i++) {
+			if (mHotelDetail.getImageUrl().get(i).equals(imageUrl)) {
+				return i;
+			}
+		}
+		
+		return 0;
 	}
 	
 }

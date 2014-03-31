@@ -65,7 +65,7 @@ public class BookingListFragment extends Fragment implements Constants,
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.fragment_booking_list, null);
+		View view = inflater.inflate(R.layout.fragment_booking_list, container, false);
 		mHostActivity = (MainActivity) getActivity();
 		mQueue = VolleyHttpClient.getRequestQueue();
 

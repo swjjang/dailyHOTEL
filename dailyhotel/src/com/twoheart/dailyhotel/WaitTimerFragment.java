@@ -26,10 +26,11 @@ import com.twoheart.dailyhotel.obj.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.WakeLock;
 
-@SuppressLint("ValidFragment")
 public class WaitTimerFragment extends Fragment implements OnClickListener, Constants {
 
 	private final static String TAG = "WaitTimerFragment";
+	private final static String KEY_BUNDLE_ARGUMENTS_SALETIME = "saletime";
+	private static boolean isEnabledNotify = false;
 
 	private MainActivity mHostActivity;
 
@@ -41,25 +42,27 @@ public class WaitTimerFragment extends Fragment implements OnClickListener, Cons
 	private PendingIntent pender;
 	private Intent intent;
 	private SaleTime mSaleTime;
-	private boolean isEnableNotify;
-
 	private long remainingTime;
-
-	public WaitTimerFragment() {
-		super();
-	}
-
-	public WaitTimerFragment(SaleTime saleTime) {
-		mSaleTime = saleTime;
-
+	
+	public static WaitTimerFragment newInstance(SaleTime saleTime) {
+		
+		WaitTimerFragment newFragment = new WaitTimerFragment();
+		
+		Bundle arguments = new Bundle();
+		arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_SALETIME, saleTime);
+		
+		newFragment.setArguments(arguments);
+		
+		return newFragment;
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.fragment_wait_timer, null);
+		View view = inflater.inflate(R.layout.fragment_wait_timer, container, false);
 		mHostActivity = (MainActivity) getActivity();
+		mSaleTime = (SaleTime) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_SALETIME);
 		alarmManager = (AlarmManager) mHostActivity.getApplicationContext()
 				.getSystemService(Context.ALARM_SERVICE);
 		intent = new Intent(mHostActivity.getApplicationContext(),
@@ -72,36 +75,50 @@ public class WaitTimerFragment extends Fragment implements OnClickListener, Cons
 		btnNotify.setOnClickListener(this);
 
 		mHostActivity.setActionBar("dailyHOTEL");
-		setTimer();
 
 		return view;
 	}
-
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		
+		setTimer();
+		setNotify(isEnabledNotify);
+	}
+	
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == btnNotify.getId()) {
-			isEnableNotify = !isEnableNotify;
-			setNotify(isEnableNotify);
+			setNotify(!isEnabledNotify);
 		}
 	}
 
 	private void setNotify(boolean enable) {
 		if (enable) {
 			btnNotify.setText("알람 끄기");
-			alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + remainingTime,
-					pender);
 
-			Toast.makeText(mHostActivity, "알람이 등록되었습니다", Toast.LENGTH_SHORT)
-					.show();
+			if (enable != isEnabledNotify) {
+				alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + remainingTime,
+						pender);
+				
+				Toast.makeText(mHostActivity, "알람이 등록되었습니다", Toast.LENGTH_SHORT)
+						.show();
+			}
 
 		} else {
 			btnNotify.setText("알람 켜기");
-			alarmManager.cancel(pender);
 
-			Toast.makeText(mHostActivity, "알람이 취소되었습니다", Toast.LENGTH_SHORT)
-					.show();
+			if (enable != isEnabledNotify) {
+				alarmManager.cancel(pender);
+				
+				Toast.makeText(mHostActivity, "알람이 취소되었습니다", Toast.LENGTH_SHORT)
+						.show();
+			}
 
 		}
+		
+		isEnabledNotify = enable;
 
 	}
 

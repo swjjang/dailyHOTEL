@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -52,35 +54,40 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 	public static final int INDEX_CREDIT_FRAGMENT = 2;
 	public static final int INDEX_SETTING_FRAGMENT = 3;
 
+	public static final String KEY_HOTEL_LIST_FRAGMENT = "hotel_list";
+	public static final String KEY_BOOKING_LIST_FRAGMENT = "booking_list";
+	public static final String KEY_CREDIT_FRAGMENT = "credit";
+	public static final String KEY_SEETING_FRAGMENT = "setting";
+
 	private DrawerMenuListAdapter mDrawerMenuListAdapter;
 	protected List<DrawerMenu> mMenuImages;
 	protected List<Fragment> mFragments = new LinkedList<Fragment>();
-	
+
 	public int indexLastFragment;
 
 	public DrawerLayout drawerLayout;
 	public ListView drawerList;
 	public ActionBarDrawerToggle drawerToggle;
-	private FragmentManager mFragmentManager;
-	protected Fragment mFragment;
+	protected FragmentManager fragmentManager;
 
 	public DrawerMenu menuHotelListFragment;
 	public DrawerMenu menuBookingListFragment;
 	public DrawerMenu menuCreditFragment;
 	public DrawerMenu menuSettingFragment;
-	
+
 	private CloseOnBackPressed backButtonHandler;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		startActivityForResult(new Intent(this, SplashActivity.class), CODE_REQUEST_ACTIVITY_SPLASH);
+		startActivityForResult(new Intent(this, SplashActivity.class),
+				CODE_REQUEST_ACTIVITY_SPLASH);
 		super.onCreate(savedInstanceState);
-		
+
 		setTheme(R.style.DH_Theme);
 		setContentView(R.layout.activity_main);
 		setNavigationDrawer(this);
 
-		mFragmentManager = getSupportFragmentManager();
+		fragmentManager = getSupportFragmentManager();
 		backButtonHandler = new CloseOnBackPressed(this);
 
 		// 맨 처음은 호텔리스트
@@ -91,28 +98,28 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 		}
 
 	}
-	
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (requestCode == CODE_REQUEST_ACTIVITY_SPLASH) {
 			if (resultCode == CODE_RESULT_ACTIVITY_SPLASH_NEW_EVENT) {
-//				((HotelListFragment) getFragment(INDEX_HOTEL_LIST_FRAGMENT)).notifyNewEvent();
+				// ((HotelListFragment)
+				// getFragment(INDEX_HOTEL_LIST_FRAGMENT)).notifyNewEvent();
 			}
 		}
-
-		
 	}
-	
+
 	public void selectMenuDrawer(DrawerMenu selectedMenu) {
-		drawerList.performItemClick(drawerList.getAdapter().getView(mMenuImages.indexOf(selectedMenu), null, null), 
-				mMenuImages.indexOf(selectedMenu), mDrawerMenuListAdapter.getItemId(mMenuImages.indexOf(selectedMenu)));
-		
+		drawerList.performItemClick(
+				drawerList.getAdapter().getView(
+						mMenuImages.indexOf(selectedMenu), null, null),
+				mMenuImages.indexOf(selectedMenu), mDrawerMenuListAdapter
+						.getItemId(mMenuImages.indexOf(selectedMenu)));
 	}
 
 	public Fragment getFragment(int index) {
-
 		Fragment newFragment = null;
 
 		try {
@@ -140,19 +147,33 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 	}
 
 	public void replaceFragment(Fragment fragment) {
-		mFragmentManager.beginTransaction()
+		clearFragmentBackStack();
+		
+		fragmentManager.beginTransaction()
 				.replace(R.id.content_frame, fragment)
 				.commitAllowingStateLoss();
-
 	}
 
 	public void addFragment(Fragment fragment) {
-		mFragmentManager.beginTransaction().add(R.id.content_frame, fragment)
-				.addToBackStack(null).commitAllowingStateLoss();
+		fragmentManager
+				.beginTransaction()
+				.setCustomAnimations(R.anim.slide_in_right,
+						R.anim.slide_out_right, R.anim.slide_in_right,
+						R.anim.slide_out_right)
+				.add(R.id.content_frame, fragment)
+				.addToBackStack(null)
+				.commit();
+	}
+	
+	private void clearFragmentBackStack() {
+		for (int i=0; i<fragmentManager.getBackStackEntryCount(); ++i)
+			fragmentManager.popBackStack();
+		
 	}
 
+	@Deprecated
 	public void removeFragment(Fragment fragment) {
-		mFragmentManager.beginTransaction().remove(fragment)
+		fragmentManager.beginTransaction().remove(fragment)
 				.commitAllowingStateLoss();
 	}
 
@@ -182,37 +203,25 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 
 		switch (selectedMenuIconId) {
 		case R.drawable.selector_drawermenu_todayshotel:
-			replaceFragment(getFragment(INDEX_HOTEL_LIST_FRAGMENT));
 			indexLastFragment = INDEX_HOTEL_LIST_FRAGMENT;
 			break;
 
 		case R.drawable.selector_drawermenu_reservation:
-			replaceFragment(getFragment(INDEX_BOOKING_LIST_FRAGMENT));
 			indexLastFragment = INDEX_BOOKING_LIST_FRAGMENT;
 			break;
 
 		case R.drawable.selector_drawermenu_saving:
-			replaceFragment(getFragment(INDEX_CREDIT_FRAGMENT));
 			indexLastFragment = INDEX_CREDIT_FRAGMENT;
 			break;
 
 		case R.drawable.selector_drawermenu_setting:
-			replaceFragment(getFragment(INDEX_SETTING_FRAGMENT));
 			indexLastFragment = INDEX_SETTING_FRAGMENT;
 			break;
 		}
 
-	}
+		replaceFragment(getFragment(indexLastFragment));
 
-	// public boolean isAliveUser() {
-	// RequestQueue queue = VolleyHttpClient.getRequestQueue();
-	//
-	// queue.add(new DailyHotelRequest(Method.GET, new
-	// StringBuilder(URL_DAILYHOTEL_SERVER).
-	// append(URL_WEBAPI_USER_ALIVE).toString(), null, this, this));
-	//
-	// return false;
-	// }
+	}
 
 	public void setNavigationDrawer(OnItemClickListener listener) {
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -294,12 +303,12 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 		return super.onPrepareOptionsMenu(menu);
 	}
 
-	 @Override
-	 public void finish() {
-	 if (backButtonHandler.onBackPressed())
-	 super.finish();
-	
-	 }
+	@Override
+	public void finish() {
+		if (backButtonHandler.onBackPressed())
+			super.finish();
+
+	}
 
 	private class DrawerMenu {
 

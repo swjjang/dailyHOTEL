@@ -40,7 +40,7 @@ import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
 public class SignupActivity extends BaseActivity implements OnClickListener,
-		DailyHotelJsonResponseListener, DailyHotelStringResponseListener,
+		DailyHotelJsonResponseListener,
 		ErrorListener {
 
 	private static final String TAG = "SignupActivity";
@@ -159,23 +159,16 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 			signupParams.put("phone", etPhone.getText().toString());
 			TelephonyManager tManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 			signupParams.put("device", tManager.getDeviceId());
-
-			String recommender = etRecommender.getText().toString();
 			
-			// 추천인 코드 입력 여부에 따른 요청
-			if (!recommender.trim().equals("")) {
-				
-				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(
-						URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER)
-						.append(recommender).toString(), null, this, this));
-
-			} else {
-				mQueue.add(new DailyHotelJsonRequest(Method.POST,
-						new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-								URL_WEBAPI_USER_SIGNUP).toString(), signupParams,
-						this, this));
-			}
-
+			String recommender = etRecommender.getText().toString().trim();
+			if (!recommender.equals(""))				// 추천인 코드를 입력했을 경우 추천인 파라미터 추가
+				signupParams.put("recommender", recommender);
+			
+			mQueue.add(new DailyHotelJsonRequest(Method.POST,
+					new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+							URL_WEBAPI_USER_SIGNUP).toString(), signupParams,
+					this, this));
+			
 		} else if (v.getId() == tvTerm.getId()) { // 이용약관
 
 			Intent i = new Intent(this, TermActivity.class);
@@ -250,7 +243,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 							this, this));
 					
 				} else {
-					
+					LoadingDialog.hideLoading();
 					Toast.makeText(this, msg,
 							Toast.LENGTH_SHORT).show();
 				}
@@ -273,45 +266,13 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 					Toast.makeText(this, "회원가입이 완료되었습니다.",
 							Toast.LENGTH_SHORT).show();
 					
-					setResult(RESULT_OK);
 					storeLoginInfo();
+					finish();
 				}
 			} catch (JSONException e) {
 				if (DEBUG)
 					e.printStackTrace();
 			} 
-			
 		}
-	}
-
-	@Override
-	public void onResponse(String url, String response) {
-		if (url.contains(URL_WEBAPI_USER
-				+ etRecommender.getText().toString().trim())) {
-			String str = response.trim();
-
-			if (str.equals("-1")) {
-				LoadingDialog.hideLoading();
-				Toast.makeText(this, "존재하지 않는 추천인 CODE 입니다",
-						Toast.LENGTH_SHORT).show();
-			} else { // 정상적인 추천인 CODE
-				Map<String, String> joinParams = new HashMap<String, String>();
-				joinParams.put("email", etEmail.getText().toString());
-				joinParams.put("pw", etPwd.getText().toString());
-				joinParams.put("name", etName.getText().toString());
-				joinParams.put("phone", etPhone.getText().toString());
-				TelephonyManager tManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-				joinParams.put("device", tManager.getDeviceId());
-				String recommender = etRecommender.getText().toString();
-				joinParams.put("recommender", recommender);
-				
-				mQueue.add(new DailyHotelJsonRequest(Method.POST,
-						new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-								URL_WEBAPI_USER_SIGNUP).toString(), joinParams,
-						this, this));
-
-			}
-		}
-
 	}
 }

@@ -20,8 +20,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.GMapActivity;
 import com.twoheart.dailyhotel.activity.HotelTabActivity;
-import com.twoheart.dailyhotel.activity.TabActivity;
 import com.twoheart.dailyhotel.obj.HotelDetail;
+import com.twoheart.dailyhotel.util.TabActivity;
 
 public class TabMapFragment extends Fragment implements OnMapClickListener {
 

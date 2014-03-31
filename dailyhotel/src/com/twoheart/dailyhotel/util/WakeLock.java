@@ -12,7 +12,7 @@ public class WakeLock {
 				.getSystemService(Context.POWER_SERVICE);
 		wakeLock = pm.newWakeLock(level, context.getClass()
 				.getName());
-
+		
 		if (wakeLock != null) {
 			wakeLock.acquire();
 

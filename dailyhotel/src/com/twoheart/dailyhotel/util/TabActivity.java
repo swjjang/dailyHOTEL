@@ -1,4 +1,4 @@
- package com.twoheart.dailyhotel.activity;
+ package com.twoheart.dailyhotel.util;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -35,7 +35,6 @@ import com.twoheart.dailyhotel.obj.Booking;
 import com.twoheart.dailyhotel.obj.Hotel;
 import com.twoheart.dailyhotel.obj.HotelDetail;
 import com.twoheart.dailyhotel.obj.SaleTime;
-import com.twoheart.dailyhotel.util.Log;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
@@ -83,30 +82,6 @@ public abstract class TabActivity extends BaseActivity implements
 
 	}
 	
-	protected void setTabPage() {
-		mAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
-
-			@Override
-			public Fragment getItem(int position) {
-				return mFragments.get(position);
-			}
-
-			@Override
-			public CharSequence getPageTitle(int position) {
-				return mTitles.get(position);
-			}
-
-			@Override
-			public int getCount() {
-				return mFragments.size();
-			}
-		};
-
-		mViewPager.setOffscreenPageLimit(mAdapter.getCount());
-		mViewPager.setAdapter(mAdapter);
-		mIndicator.setViewPager(mViewPager);
-	}
-
 	@Override
 	public void onResponse(String url, JSONObject response) {
 		try {
@@ -200,5 +175,32 @@ public abstract class TabActivity extends BaseActivity implements
 	}
 	
 	protected abstract void loadFragments();
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		mAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
+
+			@Override
+			public Fragment getItem(int position) {
+				return mFragments.get(position);
+			}
+
+			@Override
+			public CharSequence getPageTitle(int position) {
+				return mTitles.get(position);
+			}
+
+			@Override
+			public int getCount() {
+				return mFragments.size();
+			}
+		};
+
+		mViewPager.setOffscreenPageLimit(mAdapter.getCount() + 2);
+		mViewPager.setAdapter(mAdapter);
+		mIndicator.setViewPager(mViewPager);
+	}
 	
 }

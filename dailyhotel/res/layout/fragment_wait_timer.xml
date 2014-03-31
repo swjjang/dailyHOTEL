@@ -58,7 +58,6 @@
                 android:id="@+id/tv_timer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="00:00:00"
                 android:textColor="@color/dh_dark_gray_blue"
                 android:textSize="45dp" />
         </LinearLayout>

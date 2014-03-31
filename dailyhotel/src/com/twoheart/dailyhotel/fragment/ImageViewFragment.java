@@ -1,6 +1,6 @@
 package com.twoheart.dailyhotel.fragment;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,24 +19,38 @@ import com.twoheart.dailyhotel.util.VolleyImageLoader;
 import com.twoheart.dailyhotel.widget.FadeInNetworkImageView;
 
 public class ImageViewFragment extends Fragment implements OnClickListener, Constants {
+	
+	private static final String KEY_BUNDLE_ARGUMENTS_HOTELDETAIL = "hoteldetail";
+	private static final String KEY_BUNDLE_ARGUMENTS_IMAGEURL = "image_url";
 
 	private HotelDetail mHotelDetail;
 	private String mImageUrl;
 	private ImageLoader mImageLoader;
 	private FadeInNetworkImageView mImageView;
 	private ProgressBar mProgressBar;
-	private Context mContext;
-
-	public ImageViewFragment(String imageUrl, Context context, HotelDetail hotelDetail) {
-		mContext = context;
+	private Activity mHostActivity;
+	
+	public static ImageViewFragment newInstance(String imageUrl, HotelDetail hotelDetail) {
 		
-		VolleyImageLoader.init(mContext);
-		mImageUrl = imageUrl;
+		ImageViewFragment newFragment = new ImageViewFragment();
+		Bundle arguments = new Bundle();
+		arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_HOTELDETAIL, hotelDetail);
+		arguments.putString(KEY_BUNDLE_ARGUMENTS_IMAGEURL, imageUrl);
+		newFragment.setArguments(arguments);
 		
-		mHotelDetail = hotelDetail;
-		
+		return newFragment;
 	}
-
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		
+		mHostActivity = getActivity();
+		mImageLoader = VolleyImageLoader.getImageLoader();
+		mHotelDetail = (HotelDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_HOTELDETAIL);
+		mImageUrl = getArguments().getString(KEY_BUNDLE_ARGUMENTS_IMAGEURL);
+	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -45,20 +59,21 @@ public class ImageViewFragment extends Fragment implements OnClickListener, Cons
 				false);
 		mImageView = (FadeInNetworkImageView) view.findViewById(R.id.iv_image_view);
 		mProgressBar = (ProgressBar) view.findViewById(R.id.pb_image_view);
-		mImageLoader = VolleyImageLoader.getImageLoader();
-		mImageView.setImageUrl(mImageUrl, mImageLoader, mProgressBar);
-
+		
 		mImageView.setOnClickListener(this);
-
+		mImageView.setImageUrl(mImageUrl, mImageLoader, mProgressBar);
+		
 		return view;
 	}
 
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == mImageView.getId()) {
-			Intent i = new Intent(mContext, ImageDetailActivity.class);
+			Intent i = new Intent(mHostActivity, ImageDetailActivity.class);
 			i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELDETAIL, mHotelDetail);
+			i.putExtra(NAME_INTENT_EXTRA_DATA_SELECTED_IMAGE_URL, mImageUrl);
 			startActivity(i);
 		}
 	}
+
 }

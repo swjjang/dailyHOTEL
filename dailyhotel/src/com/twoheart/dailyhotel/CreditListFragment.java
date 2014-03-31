@@ -1,8 +1,10 @@
 package com.twoheart.dailyhotel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,26 +12,42 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.adapter.CreditListAdapter;
 import com.twoheart.dailyhotel.obj.Credit;
 
 public class CreditListFragment extends Fragment{
 	
+	private static final String KEY_BUNDLE_ARGUMENTS_CREDITLIST = "credit_list";
+	
 	private ListView mListView;
 	private CreditListAdapter mAdapter;
 	private List<Credit> mCreditList;
 	
-	public CreditListFragment(List<Credit> creditList) {
-		mCreditList = creditList;
+	public static CreditListFragment newInstance(List<Credit> creditList) {
 		
+		CreditListFragment newFragment = new CreditListFragment();
+		
+		Bundle arguments = new Bundle();
+		arguments.putParcelableArrayList(KEY_BUNDLE_ARGUMENTS_CREDITLIST, (ArrayList<Credit>) creditList);
+		
+		newFragment.setArguments(arguments);
+		
+		return newFragment;
+		
+	}
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		
+		mCreditList = getArguments().getParcelableArrayList(KEY_BUNDLE_ARGUMENTS_CREDITLIST);
 	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		
-		View view = inflater.inflate(R.layout.fragment_credit_list, null);
+		View view = inflater.inflate(R.layout.fragment_credit_list, container, false);
 
 		mListView = (ListView) view.findViewById(R.id.listview_credit);
 		mListView.setEmptyView((TextView) view.findViewById(R.id.empty_listview_credit));
@@ -38,5 +56,5 @@ public class CreditListFragment extends Fragment{
 		
 		return view;
 	}
-	
+
 }

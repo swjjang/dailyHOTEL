@@ -31,6 +31,8 @@ public class DailyHotelStringRequest extends DailyHotelRequest<String> {
 	
 	@Override
     protected Response<String> parseNetworkResponse(NetworkResponse response) {
+		VolleyHttpClient.setSessionCookie();
+		
         String parsed;
         try {
             parsed = new String(response.data, HttpHeaderParser.parseCharset(response.headers));

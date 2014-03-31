@@ -67,7 +67,7 @@ public class CreditFragment extends Fragment implements Constants,
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.fragment_credit, null);
+		View view = inflater.inflate(R.layout.fragment_credit, container, false);
 		mHostActivity = (MainActivity) getActivity();
 		mQueue = VolleyHttpClient.getRequestQueue();
 
@@ -127,17 +127,7 @@ public class CreditFragment extends Fragment implements Constants,
 			}
 
 		} else if (v.getId() == tvCredit.getId()) {
-
-			mHostActivity.getSupportFragmentManager()
-					.beginTransaction()
-					.setCustomAnimations(R.anim.slide_in_right,
-							R.anim.slide_out_right, R.anim.slide_in_right,
-							R.anim.slide_out_right)
-					.add(R.id.content_frame,
-							new CreditListFragment(mCreditList))
-					.addToBackStack(null).commit();
-
-//			mHostActivity.addFragment(new CreditListFragment(mCreditList));
+			mHostActivity.addFragment(CreditListFragment.newInstance(mCreditList));
 
 		} else if (v.getId() == btnLogin.getId()) {
 			Intent i = new Intent(mHostActivity, LoginActivity.class);
