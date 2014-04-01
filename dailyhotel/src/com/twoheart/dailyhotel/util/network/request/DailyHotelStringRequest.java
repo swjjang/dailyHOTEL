@@ -26,7 +26,8 @@ public class DailyHotelStringRequest extends DailyHotelRequest<String> {
 
 	@Override
 	protected void deliverResponse(String response) {
-		mListener.onResponse(getUrl(), response);
+		if (mListener != null)
+			mListener.onResponse(getUrl(), response);
 	}
 	
 	@Override

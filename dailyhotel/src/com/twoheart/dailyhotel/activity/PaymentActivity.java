@@ -60,19 +60,6 @@ public class PaymentActivity extends Activity implements Constants {
 		}
 		
 		webView = (WebView) findViewById(R.id.webView);
-
-		webView.getSettings().setSavePassword(false);
-		webView.getSettings().setJavaScriptEnabled(true);
-		webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
-		webView.addJavascriptInterface(new KCPPayBridge(), "KCPPayApp");
-		// 하나SK 카드 선택시 User가 선택한 기본 정보를 가지고 오기위해 사용
-		webView.addJavascriptInterface(new KCPPayCardInfoBridge(),
-				"KCPPayCardInfo");
-		webView.addJavascriptInterface(new JavaScriptExtention(), "android");
-
-		webView.setWebChromeClient(new WebChromeClient());
-		webView.setWebViewClient(new mWebViewClient());
-//		 webView.getSettings().setPluginState(PluginState.ON);
 		
 	}
 	
@@ -87,6 +74,17 @@ public class PaymentActivity extends Activity implements Constants {
 	protected void onResume() {
 		super.onResume();
 		CookieSyncManager.getInstance().startSync();
+		
+		webView.getSettings().setSavePassword(false);
+		webView.getSettings().setJavaScriptEnabled(true);
+		webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+		webView.addJavascriptInterface(new KCPPayBridge(), "KCPPayApp");
+		// 하나SK 카드 선택시 User가 선택한 기본 정보를 가지고 오기위해 사용
+		webView.addJavascriptInterface(new KCPPayCardInfoBridge(),
+				"KCPPayCardInfo");
+		webView.addJavascriptInterface(new JavaScriptExtention(), "android");
+		webView.setWebChromeClient(new WebChromeClient());
+		webView.setWebViewClient(new mWebViewClient());
 		
 		String[] postParameterKey = new String[] { "email", "name", "phone", "accessToken" };
 		String[] postParameterValue = new String[] { mPay.getCustomer().getEmail(), 
@@ -341,7 +339,7 @@ public class PaymentActivity extends Activity implements Constants {
 	@JavascriptInterface
 	@Override
 	protected void onRestart() {
-		super.onResume();
+		super.onRestart();
 
 		Log.d(ResultRcvActivity.m_strLogTag,
 				"[PayDemoActivity] called__onResume + INPROGRESS=[" + m_nStat

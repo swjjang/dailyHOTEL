@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.obj.Credit;
+import com.twoheart.dailyhotel.util.GlobalFont;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -52,6 +53,7 @@ public class CreditListAdapter extends ArrayAdapter<Credit>{
 			expires.setText("유효기간\n" + "[" + element.getExpires() + "]");
 		}
 		
+		GlobalFont.apply((ViewGroup) v); 
 		return v;
 	}
 	

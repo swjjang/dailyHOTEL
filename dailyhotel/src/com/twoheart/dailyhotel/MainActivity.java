@@ -5,9 +5,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -31,14 +29,24 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.Request.Method;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.activity.SplashActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.GlobalFont;
+import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.CloseOnBackPressed;
+import com.twoheart.dailyhotel.util.ui.LoadingDialog;
+import com.twoheart.dailyhotel.util.ui.OnLoadCompleteListener;
 
 public class MainActivity extends BaseActivity implements OnItemClickListener,
-		Constants {
+		Constants, ErrorListener, OnLoadCompleteListener {
 
 	private static final String TAG = "MainActivity";
 
@@ -74,6 +82,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 	public DrawerMenu menuBookingListFragment;
 	public DrawerMenu menuCreditFragment;
 	public DrawerMenu menuSettingFragment;
+	
+	private RequestQueue mQueue;
 
 	private CloseOnBackPressed backButtonHandler;
 
@@ -87,6 +97,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 		setContentView(R.layout.activity_main);
 		setNavigationDrawer(this);
 
+		mQueue = VolleyHttpClient.getRequestQueue();
 		fragmentManager = getSupportFragmentManager();
 		backButtonHandler = new CloseOnBackPressed(this);
 
@@ -118,7 +129,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 				mMenuImages.indexOf(selectedMenu), mDrawerMenuListAdapter
 						.getItemId(mMenuImages.indexOf(selectedMenu)));
 	}
-
+	
 	public Fragment getFragment(int index) {
 		Fragment newFragment = null;
 
@@ -152,6 +163,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 		fragmentManager.beginTransaction()
 				.replace(R.id.content_frame, fragment)
 				.commitAllowingStateLoss();
+		
 	}
 
 	public void addFragment(Fragment fragment) {
@@ -163,6 +175,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 				.add(R.id.content_frame, fragment)
 				.addToBackStack(null)
 				.commit();
+		
 	}
 	
 	private void clearFragmentBackStack() {
@@ -199,7 +212,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 
 		int selectedMenuIconId = ((DrawerMenu) (adapterView.getAdapter()
 				.getItem(position))).getIcon();
-		drawerList.setSelection(position);
 
 		switch (selectedMenuIconId) {
 		case R.drawable.selector_drawermenu_todayshotel:
@@ -309,7 +321,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 			super.finish();
 
 	}
-
+	
 	private class DrawerMenu {
 
 		public static final int DRAWER_MENU_LIST_TYPE_LOGO = 0;
@@ -434,6 +446,47 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 
 			return convertView;
 		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		
+		// 쿠키 만료를 위한 서버에 로그아웃 리퀘스트
+		mQueue.add(new DailyHotelStringRequest(
+				Method.GET,
+				new StringBuilder(
+						URL_DAILYHOTEL_SERVER)
+						.append(URL_WEBAPI_USER_LOGOUT)
+						.toString(), null,
+				null,
+				null));
+		
+		VolleyHttpClient.destroyCookie();
+		
+		super.onDestroy();
+	}
+	
+	@Override
+	public void onLoadComplete(Fragment fragment, boolean isSucceed) {
+		if (!isSucceed) {
+			replaceFragment(new ErrorFragment());
+			Toast.makeText(this, "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
+					Toast.LENGTH_SHORT).show();
+		}
+		
+		LoadingDialog.hideLoading();
+		
+		if (fragment != null)
+			GlobalFont.apply((ViewGroup) fragment.getView().getRootView());
+			
+	}
+
+	@Override
+	public void onErrorResponse(VolleyError error) {
+		if (DEBUG)
+			error.printStackTrace();
+		
+		onLoadComplete(null, false);
 	}
 
 }

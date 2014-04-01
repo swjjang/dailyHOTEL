@@ -1,21 +1,19 @@
 package com.twoheart.dailyhotel.obj;
 
-import java.util.Date;
-
 import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Hotel implements Parcelable {
 	
-	private String img;
+	private String image;
 	private String name;
 	private String price;
 	private String discount;
 	private String address;
-	private String cat;
+	private String category;
 	private int idx;
-	private int avali_cnt;
-	private int seq;
+	private int availableRoom;
+	private int sequence;
 	private String bedType;
 
 	public Hotel() {
@@ -26,46 +24,46 @@ public class Hotel implements Parcelable {
 		readFromParcel(in);
 	}
 
-	public Hotel(String img, String name, String price, String discount,
-			String address, String cat, int idx, int avali_cnt, int seq, String bedType) {
-		this.img = img;
+	public Hotel(String image, String name, String price, String discount,
+			String address, String category, int idx, int availableRoom, int sequence, String bedType) {
+		this.image = image;
 		this.name = name;
 		this.price = price;
 		this.discount = discount;
 		this.address = address;
-		this.cat = cat;
+		this.category = category;
 		this.idx = idx;
-		this.avali_cnt = avali_cnt;
-		this.seq = seq;
+		this.availableRoom = availableRoom;
+		this.sequence = sequence;
 		this.bedType = bedType;
 		
 	}
 	
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(img);
+		dest.writeString(image);
 		dest.writeString(name);
 		dest.writeString(price);
 		dest.writeString(discount);
 		dest.writeString(address);
-		dest.writeString(cat);
+		dest.writeString(category);
 		dest.writeInt(idx);
-		dest.writeInt(avali_cnt);
-		dest.writeInt(seq);
+		dest.writeInt(availableRoom);
+		dest.writeInt(sequence);
 		dest.writeString(bedType);
 
 	}
 	
 	private void readFromParcel(Parcel in) {
-		this.img = in.readString();
+		this.image = in.readString();
 		this.name = in.readString();
 		this.price = in.readString();
 		this.discount = in.readString();
 		this.address = in.readString();
-		this.cat = in.readString();
+		this.category = in.readString();
 		this.idx = in.readInt();
-		this.avali_cnt = in.readInt();
-		this.seq = in.readInt();
+		this.availableRoom = in.readInt();
+		this.sequence = in.readInt();
 		this.bedType = in.readString();
 	}
 	
@@ -81,20 +79,20 @@ public class Hotel implements Parcelable {
 
 	};
 
-	public String getCat() {
-		return cat;
+	public String getCategory() {
+		return category;
 	}
 
-	public void setCat(String cat) {
-		this.cat = cat;
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
-	public String getImg() {
-		return img;
+	public String getImage() {
+		return image;
 	}
 
-	public void setImg(String img) {
-		this.img = img;
+	public void setImage(String image) {
+		this.image = image;
 	}
 
 	public String getName() {
@@ -137,20 +135,20 @@ public class Hotel implements Parcelable {
 		this.idx = idx;
 	}
 
-	public int getAvali_cnt() {
-		return avali_cnt;
+	public int getAvailableRoom() {
+		return availableRoom;
 	}
 
-	public void setAvali_cnt(int avali_cnt) {
-		this.avali_cnt = avali_cnt;
+	public void setAvailableRoom(int availableRoom) {
+		this.availableRoom = availableRoom;
 	}
 
-	public int getSeq() {
-		return seq;
+	public int getSequence() {
+		return sequence;
 	}
 
-	public void setSeq(int seq) {
-		this.seq = seq;
+	public void setSequence(int sequence) {
+		this.sequence = sequence;
 	}
 
 	@Override

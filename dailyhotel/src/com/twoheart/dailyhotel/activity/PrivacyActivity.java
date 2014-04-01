@@ -14,8 +14,15 @@ public class PrivacyActivity extends WebViewActivity {
 		super.onCreate(savedInstanceState);
 		setActionBar("개인정보취급방침");
 		setContentView(R.layout.activity_term);
-		setWebView(URL_WEB_PRIVACY);
 		
 	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		setWebView(URL_WEB_PRIVACY);
+	}
+	
+	
 	
 }

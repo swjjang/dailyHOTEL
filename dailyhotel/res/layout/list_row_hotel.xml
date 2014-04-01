@@ -81,7 +81,6 @@
                         android:marqueeRepeatLimit="marquee_forever"
                         android:scrollHorizontally="true"
                         android:singleLine="true"
-                        android:text="퍼시픽 호텔"
                         android:textColor="@android:color/white"
                         android:textSize="18dp" />
 
@@ -91,7 +90,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical|right"
-                        android:text="79,000원"
                         android:textColor="@android:color/white"
                         android:textSize="18dp" />
                 </RelativeLayout>
@@ -110,7 +108,6 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:singleLine="true"
-                        android:text="중구, 명동역 도보 1분"
                         android:textColor="@color/dh_gray50"
                         android:textSize="13.5dp" />
 
@@ -120,7 +117,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical|right"
-                        android:text="320,000원"
                         android:textColor="@color/dh_gray50"
                         android:textSize="13.5dp" />
                 </RelativeLayout>

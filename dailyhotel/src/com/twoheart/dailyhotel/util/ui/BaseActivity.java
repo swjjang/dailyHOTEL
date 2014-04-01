@@ -7,10 +7,12 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.webkit.CookieSyncManager;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.GlobalFont;
 
 public class BaseActivity extends ActionBarActivity implements Constants {
 
@@ -19,10 +21,19 @@ public class BaseActivity extends ActionBarActivity implements Constants {
 	public ActionBar actionBar;
 	public SharedPreferences sharedPreference;
 	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		sharedPreference = getSharedPreferences(NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
+		
+	}
+	
+	@Override
+	public void setContentView(int layoutResID) {
+		super.setContentView(layoutResID);
+		
+		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
 	}
 	
 	public void setActionBar(String title) {
@@ -43,7 +54,7 @@ public class BaseActivity extends ActionBarActivity implements Constants {
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setHomeButtonEnabled(true);
 	}
-
+	
 	@Override
 	protected void onPause() {
 		CookieSyncManager.getInstance().stopSync();

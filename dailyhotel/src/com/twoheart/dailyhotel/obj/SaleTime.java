@@ -85,7 +85,7 @@ public class SaleTime implements Constants, Parcelable {
 	}
 	
 	public String getCurrentDay() {
-		return Integer.toString(calendar.get(Calendar.DAY_OF_MONTH));
+		return new SimpleDateFormat("dd").format(mCurrentTime);
 	}
 	
 	public String getCurrentYear() {

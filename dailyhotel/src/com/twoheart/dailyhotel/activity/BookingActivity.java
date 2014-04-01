@@ -1,13 +1,18 @@
 package com.twoheart.dailyhotel.activity;
 
 import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,6 +21,7 @@ import android.telephony.TelephonyManager;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.webkit.CookieSyncManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -48,17 +54,17 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseLis
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
+@SuppressLint({ "NewApi", "ResourceAsColor" })
 public class BookingActivity extends BaseActivity implements
 		DailyHotelStringResponseListener, DailyHotelJsonResponseListener,
 		ErrorListener, OnClickListener, OnCheckedChangeListener,
 		android.widget.CompoundButton.OnCheckedChangeListener {
 
 	private static final String TAG = "HotelPaymentActivity";
-	private static final int LOADING_DELAY = 1000;
-
 	private RequestQueue mQueue;
 
-	private TextView tvCheckIn, tvCheckOut, tvOriginalPriceValue, tvCreditValue, tvOriginalPrice, tvCredit, tvPrice;
+	private TextView tvCheckIn, tvCheckOut, tvOriginalPriceValue,
+			tvCreditValue, tvOriginalPrice, tvCredit, tvPrice;
 	private Button btnPay;
 	private Switch swCredit;
 	private TextView tvReserverName, tvReserverNumber, tvReserverEmail;
@@ -119,18 +125,26 @@ public class BookingActivity extends BaseActivity implements
 
 		rbPaymentCard.setChecked(true);
 
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
 		LoadingDialog.showLoading(this);
 
-		mQueue.add(new DailyHotelStringRequest(Method.GET,
-				new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-						URL_WEBAPI_USER_ALIVE).toString(), null, this, this));
+		// credit 요청
+		mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(
+				URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_SAVED_MONEY)
+				.toString(), null, this, this));
 	}
 
 	private void updatePayPrice(boolean applyCredit) {
 
 		int originalPrice = Integer.parseInt(mPay.getHotelDetail().getHotel()
 				.getDiscount().replaceAll(",", ""));
-		int credit = Integer.parseInt(mPay.getCredit().getBonus().replaceAll(",", ""));
+		int credit = Integer.parseInt(mPay.getCredit().getBonus()
+				.replaceAll(",", ""));
 
 		DecimalFormat comma = new DecimalFormat("###,##0");
 		tvOriginalPriceValue.setText("￦" + comma.format(originalPrice));
@@ -165,15 +179,18 @@ public class BookingActivity extends BaseActivity implements
 
 			if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentAccount
 					.getId()) { // 무통장 입금을 선택했을 경우
-				
+
 				AlertDialog.Builder alert = new AlertDialog.Builder(this);
 				alert.setPositiveButton("전화",
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								Intent i = new Intent(Intent.ACTION_DIAL, Uri
-										.parse(new StringBuilder("tel:").append(DAILYHOTEL_PHONE_NUMBER).toString()));
+								Intent i = new Intent(
+										Intent.ACTION_DIAL,
+										Uri.parse(new StringBuilder("tel:")
+												.append(DAILYHOTEL_PHONE_NUMBER)
+												.toString()));
 								startActivity(i);
 							}
 						});
@@ -191,7 +208,7 @@ public class BookingActivity extends BaseActivity implements
 
 			} else if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentCard
 					.getId()) { // 신용카드를 선택했을 경우
-				
+
 				if (llReserverInfoEditable.getVisibility() == View.VISIBLE) {
 
 					mPay.getCustomer().setEmail(
@@ -205,9 +222,8 @@ public class BookingActivity extends BaseActivity implements
 							mPay.getCustomer().getEmail(),
 							mPay.getCustomer().getPhone(),
 							mPay.getCustomer().getName() })) {
-						Toast.makeText(this,
-								"예약자와 연락처, 이메일을 모두 입력해주십시요.", Toast.LENGTH_LONG)
-								.show();
+						Toast.makeText(this, "예약자와 연락처, 이메일을 모두 입력해주십시요.",
+								Toast.LENGTH_LONG).show();
 						return;
 					}
 
@@ -233,19 +249,20 @@ public class BookingActivity extends BaseActivity implements
 	private boolean isEmptyTextField(String... fieldText) {
 
 		for (int i = 0; i < fieldText.length; i++) {
-			if (fieldText[i] == null || fieldText[i].equals("") || fieldText[i].equals("null"))
+			if (fieldText[i] == null || fieldText[i].equals("")
+					|| fieldText[i].equals("null"))
 				return true;
 		}
 
 		return false;
 
 	}
-	
+
 	@Override
 	public void finish() {
 		super.finish();
 		overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
-		
+
 	}
 
 	@Override
@@ -285,20 +302,42 @@ public class BookingActivity extends BaseActivity implements
 				dialog("네트워크 오류가 발생했습니다. 네트워크 연결을 확인해주세요.");
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION:
+				if (sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN,
+						false)) {
+
+					String id = sharedPreference.getString(
+							KEY_PREFERENCE_USER_ID, null);
+					String accessToken = sharedPreference.getString(
+							KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
+					String pw = sharedPreference.getString(
+							KEY_PREFERENCE_USER_PWD, null);
+
+					Map<String, String> loginParams = new HashMap<String, String>();
+
+					if (accessToken != null) {
+						loginParams.put("accessToken", accessToken);
+					} else {
+						loginParams.put("email", id);
+					}
+
+					loginParams.put("pw", pw);
+
+					mQueue.add(new DailyHotelJsonRequest(Method.POST,
+							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+									URL_WEBAPI_USER_LOGIN).toString(),
+							loginParams, this, this));
+				} else {
+					Toast.makeText(this, "다시 로그인해주세요", Toast.LENGTH_SHORT)
+							.show();
+				}
+
+				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_INVALID_DATE:
 			case CODE_RESULT_ACTIVITY_PAYMENT_FAIL:
 				dialog("알 수 없는 오류가 발생했습니다. 문의해주시기 바랍니다.");
 				break;
 			}
-		} else if (requestCode == CODE_REQUEST_ACTIVITY_LOGIN) {
-			if (resultCode != RESULT_OK)
-				finish(); // 로그인되지 않았다면 취소하기 위해 액티비티 종료.
-			else
-				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(
-						URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE)
-						.toString(), null, this, this));
 		}
-
 	}
 
 	@Override
@@ -326,7 +365,7 @@ public class BookingActivity extends BaseActivity implements
 			if (!isChecked) { // 사용안함으로 변경
 				swCredit.setThumbResource(R.drawable.switch_thumb_holo_light);
 				swCredit.setTextColor(android.R.color.white);
-				
+
 				tvOriginalPrice.setEnabled(false);
 				tvCredit.setEnabled(false);
 				tvOriginalPriceValue.setEnabled(false);
@@ -335,7 +374,7 @@ public class BookingActivity extends BaseActivity implements
 			} else { // 사용함으로 변경
 				swCredit.setThumbResource(R.drawable.switch_thumb_activated_holo_light);
 				swCredit.setTextColor(android.R.color.white);
-				
+
 				tvOriginalPrice.setEnabled(true);
 				tvCredit.setEnabled(true);
 				tvOriginalPriceValue.setEnabled(true);
@@ -369,7 +408,7 @@ public class BookingActivity extends BaseActivity implements
 				mPay.getCustomer().setName(obj.getString("name"));
 				mPay.getCustomer().setPhone(obj.getString("phone"));
 				mPay.getCustomer().setAccessToken(obj.getString("accessToken"));
-				
+
 				if (!isEmptyTextField(new String[] {
 						mPay.getCustomer().getEmail(),
 						mPay.getCustomer().getPhone(),
@@ -390,18 +429,17 @@ public class BookingActivity extends BaseActivity implements
 
 					if (!isEmptyTextField(mPay.getCustomer().getName()))
 						etReserverName.setText(mPay.getCustomer().getName());
-					
-					
+
 					if (!isEmptyTextField(mPay.getCustomer().getPhone()))
 						etReserverNumber.setText(mPay.getCustomer().getPhone());
 					else {
 						TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext()
 								.getSystemService(Context.TELEPHONY_SERVICE);
-						
-						etReserverNumber.setText(telephonyManager.getLine1Number());
+
+						etReserverNumber.setText(telephonyManager
+								.getLine1Number());
 					}
-					
-					
+
 					if (!isEmptyTextField(mPay.getCustomer().getEmail()))
 						etReserverEmail.setText(mPay.getCustomer().getEmail());
 
@@ -433,7 +471,7 @@ public class BookingActivity extends BaseActivity implements
 				String out[] = checkout.split("-");
 				tvCheckOut.setText("20" + out[0] + "년 " + out[1] + "월 "
 						+ out[2] + "일 " + out[3] + "시");
-				
+
 				LoadingDialog.hideLoading();
 
 			} catch (Exception e) {
@@ -443,56 +481,38 @@ public class BookingActivity extends BaseActivity implements
 				Toast.makeText(this, "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
 						Toast.LENGTH_SHORT).show();
 			}
-		}
-	}
+		} else if (url.contains(URL_WEBAPI_USER_LOGIN)) { // INVALID_SESSION 오류의
+															// 경우 재로그인 후 다시시도한다
 
-	private void loadLoginProcess() {
-		Toast.makeText(this, " 로그인이 필요합니다", Toast.LENGTH_LONG).show();
+			try {
+				if (response.getBoolean("login")) {
+					CookieSyncManager.getInstance().sync();
 
-		Handler handler = new Handler();
-		handler.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				startActivityForResult(new Intent(BookingActivity.this,
-						LoginActivity.class), CODE_REQUEST_ACTIVITY_LOGIN);
-				overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-				
-				LoadingDialog.hideLoading();
+					Intent intent = new Intent(this, PaymentActivity.class);
+					intent.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
+					startActivityForResult(intent,
+							CODE_REQUEST_ACTIVITY_PAYMENT);
+
+				}
+			} catch (JSONException e) {
+				if (DEBUG)
+					e.printStackTrace();
 			}
-		}, LOADING_DELAY);
-		
-		
 
+		}
 	}
 
 	@Override
 	public void onResponse(String url, String response) {
-		if (url.contains(URL_WEBAPI_USER_ALIVE)) {
-			String result = response.trim();
-			if (result.equals("alive")) { // session alive
-				// credit 요청
-				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(
-						URL_DAILYHOTEL_SERVER).append(
-						URL_WEBAPI_RESERVE_SAVED_MONEY).toString(), null, this,
-						this));
-
-			} else if (result.equals("dead")) { // session dead
-				loadLoginProcess();
-
-			} else {
-				Toast.makeText(this, "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-						Toast.LENGTH_SHORT).show();
-			}
-
-		} else if (url.contains(URL_WEBAPI_RESERVE_SAVED_MONEY)) {
+		if (url.contains(URL_WEBAPI_RESERVE_SAVED_MONEY)) {
 			try {
 				String bonus = response.trim().replaceAll(",", "");
 				mPay.setCredit(new Credit(null, bonus, null));
-				
+
 				DecimalFormat comma = new DecimalFormat("###,##0");
-				String str = comma.format(Integer.parseInt(mPay.getCredit().getBonus()));
-				tvCreditValue.setText(new StringBuilder(str)
-						.append("원"));
+				String str = comma.format(Integer.parseInt(mPay.getCredit()
+						.getBonus()));
+				tvCreditValue.setText(new StringBuilder(str).append("원"));
 
 				swCredit.performClick();
 				// 적립금이 없다면 한 번 더 누름 이벤트를 불러 switch를 끈다
@@ -520,7 +540,7 @@ public class BookingActivity extends BaseActivity implements
 	@Override
 	protected void onStart() {
 		super.onStart();
-		
+
 		DailyHotel.getGaTracker().send(MapBuilder.createAppView().build());
 	}
 }

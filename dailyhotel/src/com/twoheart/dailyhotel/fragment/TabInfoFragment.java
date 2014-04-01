@@ -5,7 +5,6 @@ import java.util.List;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,8 +16,9 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.obj.HotelDetail;
 import com.twoheart.dailyhotel.util.TabActivity;
+import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
-public class TabInfoFragment extends Fragment {
+public class TabInfoFragment extends BaseFragment {
 
 	private static final String TAG = "HotelTabInfoFragment";
 

@@ -17,6 +17,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.webkit.CookieSyncManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -217,13 +218,15 @@ public class LoginActivity extends BaseActivity implements Constants,
 
 			if (state.isOpened()) {
 				makeMeRequest(session);
+				
 			} else if (state.isClosed()) {
 				LoadingDialog.hideLoading();
 				fbSession.closeAndClearTokenInformation();
+				
+				if (exception != null)
+					Toast.makeText(LoginActivity.this, "¿À·ù: " + exception.getMessage(), Toast.LENGTH_LONG).show();
 			}
-
 		}
-
 	};
 
 	public boolean isBlankFields() {
@@ -305,6 +308,7 @@ public class LoginActivity extends BaseActivity implements Constants,
 				String msg = null;
 
 				if (obj.getBoolean("login")) {
+					CookieSyncManager.getInstance().sync();
 
 					// if (obj.length() > 1)
 					// etPwd.setText(obj.getString("msg"));

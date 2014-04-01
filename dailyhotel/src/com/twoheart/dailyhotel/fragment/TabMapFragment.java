@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.fragment;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,11 +18,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.GMapActivity;
-import com.twoheart.dailyhotel.activity.HotelTabActivity;
 import com.twoheart.dailyhotel.obj.HotelDetail;
 import com.twoheart.dailyhotel.util.TabActivity;
+import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
-public class TabMapFragment extends Fragment implements OnMapClickListener {
+public class TabMapFragment extends BaseFragment implements OnMapClickListener {
 
 	private static final String TAG = "HotelTabMapFragment";
 
@@ -59,9 +58,10 @@ public class TabMapFragment extends Fragment implements OnMapClickListener {
 				.findViewById(R.id.fl_hotel_row_grade);
 		gradeText = (TextView) view.findViewById(R.id.tv_hotel_row_grade);
 
-		String category = mHotelDetail.getHotel().getCat();
+		String category = mHotelDetail.getHotel().getCategory();
 
-		if (mHotelDetail.getHotel().getCat().equals("biz")) {
+		if (category.equals("biz") | category.equals("hostel") | category.equals("grade1") | 
+				category.equals("grade2") | category.equals("grade3")) {
 			gradeBackground.setBackgroundColor(Color.parseColor("#055870"));
 			gradeText.setText("비지니스");
 
@@ -73,7 +73,7 @@ public class TabMapFragment extends Fragment implements OnMapClickListener {
 			gradeBackground.setBackgroundColor(Color.parseColor("#407f67"));
 			gradeText.setText("레지던스");
 
-		} else if (category.equals("resort")) {
+		} else if (category.equals("resort") | category.equals("pension") | category.equals("condo")) {
 			gradeBackground.setBackgroundColor(Color.parseColor("#cf8d14"));
 			gradeText.setText("리조트");
 
@@ -85,7 +85,7 @@ public class TabMapFragment extends Fragment implements OnMapClickListener {
 			gradeBackground.setBackgroundColor(Color.parseColor("#808080"));
 			gradeText.setText("미정");
 		}
-
+		
 		return view;
 	}
 

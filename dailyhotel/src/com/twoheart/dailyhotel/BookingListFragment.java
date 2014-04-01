@@ -43,11 +43,12 @@ import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
+import com.twoheart.dailyhotel.util.ui.BaseFragment;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
-public class BookingListFragment extends Fragment implements Constants,
+public class BookingListFragment extends BaseFragment implements Constants,
 		OnItemClickListener, OnClickListener, DailyHotelJsonResponseListener,
-		DailyHotelStringResponseListener, ErrorListener {
+		DailyHotelStringResponseListener {
 
 	private static final String TAG = "BookingListFragment";
 
@@ -96,7 +97,7 @@ public class BookingListFragment extends Fragment implements Constants,
 		mQueue.add(new DailyHotelStringRequest(Method.GET,
 				new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 						URL_WEBAPI_USER_ALIVE).toString(), null,
-				BookingListFragment.this, BookingListFragment.this));
+				BookingListFragment.this, mHostActivity));
 	}
 
 	@Override
@@ -128,7 +129,7 @@ public class BookingListFragment extends Fragment implements Constants,
 				mQueue.add(new DailyHotelStringRequest(Method.GET,
 						new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 								URL_WEBAPI_RESERVE_MINE).toString(), null,
-						BookingListFragment.this, BookingListFragment.this));
+						BookingListFragment.this, mHostActivity));
 
 			} else if (result.equals("dead")) { // session dead
 
@@ -158,13 +159,13 @@ public class BookingListFragment extends Fragment implements Constants,
 							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 									URL_WEBAPI_USER_LOGIN).toString(),
 							loginParams, BookingListFragment.this,
-							BookingListFragment.this));
+							mHostActivity));
 
 					mListView.setVisibility(View.GONE);
 					mEmptyLayout.setVisibility(View.VISIBLE);
 				} else {
 
-					LoadingDialog.hideLoading();
+					mListener.onLoadComplete(this, true);
 
 					mListView.setVisibility(View.GONE);
 					mEmptyLayout.setVisibility(View.VISIBLE);
@@ -175,10 +176,7 @@ public class BookingListFragment extends Fragment implements Constants,
 				mListView.setVisibility(View.GONE);
 				mEmptyLayout.setVisibility(View.VISIBLE);
 
-				LoadingDialog.hideLoading();
-				Toast.makeText(mHostActivity,
-						"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-						Toast.LENGTH_SHORT).show();
+				mListener.onLoadComplete(this, false);
 			}
 
 		} else if (url.contains(URL_WEBAPI_RESERVE_MINE)) {
@@ -201,8 +199,9 @@ public class BookingListFragment extends Fragment implements Constants,
 					mAdapter = new BookingListAdapter(mHostActivity,
 							R.layout.list_row_booking, mItems);
 					mListView.setOnItemClickListener(this);
-
 					mListView.setAdapter(mAdapter);
+					
+					mListener.onLoadComplete(this, true);
 
 				} catch (Exception e) {
 					mListView.setVisibility(View.GONE);
@@ -212,14 +211,10 @@ public class BookingListFragment extends Fragment implements Constants,
 					if (DEBUG)
 						e.printStackTrace();
 
-					Toast.makeText(mHostActivity,
-							"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-							Toast.LENGTH_LONG).show();
-				} finally {
-					LoadingDialog.hideLoading();
+					mListener.onLoadComplete(this, false);
 				}
 			} else {
-				LoadingDialog.hideLoading();
+				mListener.onLoadComplete(this, true);
 
 				mListView.setVisibility(View.GONE);
 				mEmptyLayout.setVisibility(View.VISIBLE);
@@ -248,12 +243,10 @@ public class BookingListFragment extends Fragment implements Constants,
 				if (DEBUG)
 					e.printStackTrace();
 
-				LoadingDialog.hideLoading();
-				Toast.makeText(mHostActivity,
-						"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-						Toast.LENGTH_SHORT).show();
+				mListener.onLoadComplete(this, false);
 			} finally {
-				LoadingDialog.hideLoading();
+				mListener.onLoadComplete(this, true);
+				
 				mListView.setVisibility(View.GONE);
 				mEmptyLayout.setVisibility(View.VISIBLE);
 				btnSignUp.setVisibility(View.INVISIBLE);
@@ -262,15 +255,4 @@ public class BookingListFragment extends Fragment implements Constants,
 		}
 
 	}
-
-	@Override
-	public void onErrorResponse(VolleyError error) {
-		if (DEBUG)
-			error.printStackTrace();
-
-		mHostActivity.replaceFragment(new ErrorFragment());
-		LoadingDialog.hideLoading();
-
-	}
-
 }

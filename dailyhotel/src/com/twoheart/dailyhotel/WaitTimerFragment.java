@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -13,7 +12,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,8 +23,9 @@ import android.widget.Toast;
 import com.twoheart.dailyhotel.obj.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.WakeLock;
+import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
-public class WaitTimerFragment extends Fragment implements OnClickListener, Constants {
+public class WaitTimerFragment extends BaseFragment implements OnClickListener, Constants {
 
 	private final static String TAG = "WaitTimerFragment";
 	private final static String KEY_BUNDLE_ARGUMENTS_SALETIME = "saletime";
@@ -128,6 +127,8 @@ public class WaitTimerFragment extends Fragment implements OnClickListener, Cons
 		Date dailyOpenDate = new Date(mSaleTime.getOpenTime());
 		
 		remainingTime = dailyOpenDate.getTime() - currentDate.getTime();
+		printCurrentRemaingTime(remainingTime);
+		
 		WakeLock.acquireWakeLock(mHostActivity.getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
 		
 		mHandler = new Handler() {
@@ -135,11 +136,7 @@ public class WaitTimerFragment extends Fragment implements OnClickListener, Cons
 				remainingTime -= 1000;
 				
 				if (remainingTime > 0) {
-					SimpleDateFormat displayTimeFormat = new SimpleDateFormat("HH:mm:ss");
-					displayTimeFormat.setTimeZone(TimeZone.getTimeZone("KST"));
-
-					tvTimer.setText(displayTimeFormat.format(remainingTime));
-					
+					printCurrentRemaingTime(remainingTime);
 					this.sendEmptyMessageDelayed(0, 1000);
 					
 				} else {
@@ -158,6 +155,14 @@ public class WaitTimerFragment extends Fragment implements OnClickListener, Cons
 
 		mHandler.sendEmptyMessageDelayed(0, 1000);
 
+	}
+	
+	private void printCurrentRemaingTime(long remainingTime) {
+		SimpleDateFormat displayTimeFormat = new SimpleDateFormat("HH:mm:ss");
+		displayTimeFormat.setTimeZone(TimeZone.getTimeZone("KST"));
+
+		tvTimer.setText(displayTimeFormat.format(remainingTime));
+		
 	}
 
 	@Override

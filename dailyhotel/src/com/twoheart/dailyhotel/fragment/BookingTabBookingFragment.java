@@ -9,11 +9,9 @@ import org.json.JSONObject;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,17 +22,17 @@ import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BookingTabActivity;
 import com.twoheart.dailyhotel.activity.LoginActivity;
-import com.twoheart.dailyhotel.obj.HotelDetail;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
+import com.twoheart.dailyhotel.util.ui.BaseFragment;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
-public class BookingTabBookingFragment extends Fragment implements Constants,
-		ErrorListener, DailyHotelJsonResponseListener,
+public class BookingTabBookingFragment extends BaseFragment implements Constants,
+		DailyHotelJsonResponseListener,
 		DailyHotelStringResponseListener {
 
 	private static final String TAG = "BookingTabBookingFragment";
@@ -42,7 +40,7 @@ public class BookingTabBookingFragment extends Fragment implements Constants,
 	private BookingTabActivity mHostActivity;
 	private RequestQueue mQueue;
 
-	private TextView tvCustomerName, tvHotelName, tvAddress;
+	private TextView tvCustomerPhone, tvCustomerName, tvHotelName, tvAddress;
 	private TextView tvCheckIn, tvCheckOut;
 
 	@Override
@@ -56,11 +54,20 @@ public class BookingTabBookingFragment extends Fragment implements Constants,
 
 		tvCustomerName = (TextView) view
 				.findViewById(R.id.tv_booking_tab_user_name);
+		tvCustomerPhone = (TextView) view.findViewById(R.id.tv_booking_tab_user_phone);
 		tvHotelName = (TextView) view
 				.findViewById(R.id.tv_booking_tab_hotel_name);
 		tvAddress = (TextView) view.findViewById(R.id.tv_booking_tab_address);
 		tvCheckIn = (TextView) view.findViewById(R.id.tv_booking_tab_checkin);
 		tvCheckOut = (TextView) view.findViewById(R.id.tv_booking_tab_checkout);
+		
+		// Android Marquee bug...
+		tvCustomerName.setSelected(true);
+		tvCustomerPhone.setSelected(true);
+		tvHotelName.setSelected(true);
+		tvAddress.setSelected(true);
+		tvCheckIn.setSelected(true);
+		tvCheckOut.setSelected(true);
 		
 		tvHotelName.setText(mHostActivity.hotelDetail.getHotel().getName());
 		tvAddress.setText(mHostActivity.hotelDetail.getHotel().getAddress());
@@ -69,7 +76,7 @@ public class BookingTabBookingFragment extends Fragment implements Constants,
 
 		mQueue.add(new DailyHotelStringRequest(Method.GET,
 				new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-						URL_WEBAPI_USER_ALIVE).toString(), null, this, this));
+						URL_WEBAPI_USER_ALIVE).toString(), null, this, mHostActivity));
 
 		return view;
 	}
@@ -91,38 +98,35 @@ public class BookingTabBookingFragment extends Fragment implements Constants,
 					Toast.makeText(mHostActivity,
 							"로그인에 실패했습니다",
 							Toast.LENGTH_SHORT).show();
+					mListener.onLoadComplete(this, true);
 					
 				}
 			} catch (JSONException e) {
 				if (DEBUG)
 					e.printStackTrace();
 
-				LoadingDialog.hideLoading();
-				Toast.makeText(mHostActivity,
-						"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-						Toast.LENGTH_SHORT).show();
+				mListener.onLoadComplete(this, false);
 			}
 
 		} else if (url.contains(URL_WEBAPI_USER_INFO)) {
 			try {
 				JSONObject obj = response;
 				String name = obj.getString("name");
-				tvCustomerName.setText(name + " 님");
+				String phone = obj.getString("phone");
+				tvCustomerName.setText(name);
+				tvCustomerPhone.setText(phone);
 				
 				// 체크인 정보 요청.
 				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(
 						URL_DAILYHOTEL_SERVER).append(
 						URL_WEBAPI_RESERVE_CHECKIN).append(mHostActivity.hotelDetail.getSaleIdx()).toString(), null, this,
-						this));
+						mHostActivity));
 
 			} catch (Exception e) {
 				if (DEBUG)
 					e.printStackTrace();
 
-				LoadingDialog.hideLoading();
-				Toast.makeText(mHostActivity,
-						"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-						Toast.LENGTH_SHORT).show();
+				mListener.onLoadComplete(this, false);
 			}
 
 		} else if (url.contains(URL_WEBAPI_RESERVE_CHECKIN)) {
@@ -137,29 +141,17 @@ public class BookingTabBookingFragment extends Fragment implements Constants,
 				String out[] = checkout.split("-");
 				tvCheckOut.setText("20" + out[0] + "년 " + out[1] + "월 "
 						+ out[2] + "일 " + out[3] + "시");
+				
+				mListener.onLoadComplete(this, true);
 
 			} catch (Exception e) {
 				if (DEBUG)
 					e.printStackTrace();
 				
-				Toast.makeText(mHostActivity,
-						"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-						Toast.LENGTH_SHORT).show();
-			} finally {
-				LoadingDialog.hideLoading();
+				mListener.onLoadComplete(this, false);
 			}
 		}
 
-	}
-
-	@Override
-	public void onErrorResponse(VolleyError error) {
-		if (DEBUG)
-			error.printStackTrace();
-
-		Toast.makeText(mHostActivity, "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-				Toast.LENGTH_SHORT).show();
-		LoadingDialog.hideLoading();
 	}
 
 	@Override
@@ -171,7 +163,7 @@ public class BookingTabBookingFragment extends Fragment implements Constants,
 				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(
 						URL_DAILYHOTEL_SERVER).append(
 						URL_WEBAPI_USER_INFO).toString(), null, this,
-						this));
+						mHostActivity));
 
 			} else if (result.equals("dead")) { // session dead
 
@@ -187,16 +179,13 @@ public class BookingTabBookingFragment extends Fragment implements Constants,
 					mQueue.add(new DailyHotelJsonRequest(Method.POST,
 							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 									URL_WEBAPI_USER_LOGIN).toString(),
-							loginParams, this, this));
+							loginParams, this, mHostActivity));
 				} else {
 					startActivity(new Intent(mHostActivity, LoginActivity.class));
 				}
 
 			} else {
-				LoadingDialog.hideLoading();
-				Toast.makeText(mHostActivity,
-						"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-						Toast.LENGTH_SHORT).show();
+				mListener.onLoadComplete(this, false);
 			}
 
 		}

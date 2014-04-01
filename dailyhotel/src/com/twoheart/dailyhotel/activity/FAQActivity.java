@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
@@ -19,6 +20,7 @@ import com.facebook.widget.WebDialog.OnCompleteListener;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.adapter.BoardListAdapter;
 import com.twoheart.dailyhotel.obj.Board;
+import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
@@ -42,14 +44,20 @@ public class FAQActivity extends BaseActivity implements
 		mQueue = VolleyHttpClient.getRequestQueue();
 
 		mListView = (ExpandableListView) findViewById(R.id.expandable_list_board);
+
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
 		LoadingDialog.showLoading(this);
 
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(
 				URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_BOARD_FAQ).toString(),
 				null, this, this));
-
 	}
-	
+
 	@Override
 	public void finish() {
 		super.finish();

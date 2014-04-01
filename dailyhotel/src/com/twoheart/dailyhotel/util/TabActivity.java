@@ -2,7 +2,6 @@
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,40 +10,30 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.fragment.HotelTabBookingFragment;
-import com.twoheart.dailyhotel.fragment.TabInfoFragment;
-import com.twoheart.dailyhotel.fragment.TabMapFragment;
 import com.twoheart.dailyhotel.obj.Booking;
 import com.twoheart.dailyhotel.obj.Hotel;
 import com.twoheart.dailyhotel.obj.HotelDetail;
 import com.twoheart.dailyhotel.obj.SaleTime;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
+import com.twoheart.dailyhotel.util.ui.OnLoadCompleteListener;
 import com.twoheart.dailyhotel.widget.HotelViewPager;
 import com.viewpagerindicator.TabPageIndicator;
 
 public abstract class TabActivity extends BaseActivity implements
-		DailyHotelJsonResponseListener, ErrorListener {
+		DailyHotelJsonResponseListener, ErrorListener, OnLoadCompleteListener {
 
 	private static final String TAG = "TabActivity";
 
@@ -82,6 +71,36 @@ public abstract class TabActivity extends BaseActivity implements
 
 	}
 	
+	protected abstract void onPostSetCookie();
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		onPostSetCookie();
+		
+		mAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
+
+			@Override
+			public Fragment getItem(int position) {
+				return mFragments.get(position);
+			}
+
+			@Override
+			public CharSequence getPageTitle(int position) {
+				return mTitles.get(position);
+			}
+
+			@Override
+			public int getCount() {
+				return mFragments.size();
+			}
+		};
+
+		mViewPager.setOffscreenPageLimit(mAdapter.getCount() + 2);
+		mViewPager.setAdapter(mAdapter);
+		mIndicator.setViewPager(mViewPager);
+	}
+
 	@Override
 	public void onResponse(String url, JSONObject response) {
 		try {
@@ -104,7 +123,7 @@ public abstract class TabActivity extends BaseActivity implements
 			hotelBasic.setName(detailObj.getString("hotel_name"));
 			hotelBasic.setDiscount(strDiscount);
 			hotelBasic.setPrice(strPrice);
-			hotelBasic.setCat(detailObj.getString("cat"));
+			hotelBasic.setCategory(detailObj.getString("cat"));
 			hotelBasic.setBedType(detailObj.getString("bed_type"));
 			
 			hotelDetail.setHotel(hotelBasic);
@@ -151,8 +170,10 @@ public abstract class TabActivity extends BaseActivity implements
 			int saleIdx = detailObj.getInt("idx");
 			hotelDetail.setSaleIdx(saleIdx);
 			
-			LoadingDialog.hideLoading();
+			mFragments.clear();
 			loadFragments();
+			
+			LoadingDialog.hideLoading();
 
 		} catch (Exception e) {
 			if (DEBUG)
@@ -163,44 +184,36 @@ public abstract class TabActivity extends BaseActivity implements
 
 	}
 
+	protected void loadFragments() {
+		mTitles.add("예약");
+		mTitles.add("정보");
+		mTitles.add("지도");
+
+		mAdapter.notifyDataSetChanged();
+		mIndicator.notifyDataSetChanged();
+		
+		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
+	}
+	
+	@Override
+	public void onLoadComplete(Fragment fragment, boolean isSucceed) {
+		if (!isSucceed) {
+			Toast.makeText(this, "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
+					Toast.LENGTH_SHORT).show();
+		}
+		
+		if (fragment != null)
+			GlobalFont.apply((ViewGroup) fragment.getView().getRootView());
+		
+		LoadingDialog.hideLoading();
+			
+	}
+
 	@Override
 	public void onErrorResponse(VolleyError error) {
 		if (DEBUG)
 			error.printStackTrace();
-
-		LoadingDialog.hideLoading();
-		Toast.makeText(this, "네트워크 상태를 확인해주세요", Toast.LENGTH_LONG).show();
 		finish();
-
-	}
-	
-	protected abstract void loadFragments();
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		
-		mAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
-
-			@Override
-			public Fragment getItem(int position) {
-				return mFragments.get(position);
-			}
-
-			@Override
-			public CharSequence getPageTitle(int position) {
-				return mTitles.get(position);
-			}
-
-			@Override
-			public int getCount() {
-				return mFragments.size();
-			}
-		};
-
-		mViewPager.setOffscreenPageLimit(mAdapter.getCount() + 2);
-		mViewPager.setAdapter(mAdapter);
-		mIndicator.setViewPager(mViewPager);
 	}
 	
 }

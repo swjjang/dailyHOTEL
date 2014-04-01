@@ -15,8 +15,13 @@ public class TermActivity extends WebViewActivity {
 		super.onCreate(savedInstanceState);
 		setActionBar("이용약관");
 		setContentView(R.layout.activity_term);
-		setWebView(URL_WEB_TERMS);
 		
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		setWebView(URL_WEB_TERMS);
 	}
 	
 	

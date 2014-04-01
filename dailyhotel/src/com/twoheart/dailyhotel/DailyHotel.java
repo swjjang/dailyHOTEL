@@ -4,9 +4,8 @@ import java.lang.Thread.UncaughtExceptionHandler;
 
 import android.app.Application;
 import android.content.SharedPreferences;
-import android.net.Uri;
+import android.graphics.Typeface;
 import android.preference.PreferenceManager;
-import android.webkit.CookieSyncManager;
 
 import com.google.analytics.tracking.android.ExceptionReporter;
 import com.google.analytics.tracking.android.GAServiceManager;
@@ -18,6 +17,7 @@ import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 
 public class DailyHotel extends Application {
 	
+	private static Typeface mTypeface;
 	private static GoogleAnalytics mGa;
 	private static Tracker mTracker;
 
@@ -42,6 +42,7 @@ public class DailyHotel extends Application {
 		
 		initializeVolley();
 		initializeGa();
+		initializeFont();
 
 	}
 
@@ -110,6 +111,14 @@ public class DailyHotel extends Application {
 		VolleyHttpClient.init(this);
 		VolleyImageLoader.init(this);
 
+	}
+	
+	private void initializeFont() {
+		mTypeface = Typeface.createFromAsset(getAssets(), "NanumBarunGothic.ttf.mp3");
+	}
+
+	public static Typeface getTypeface() {
+		return mTypeface;
 	}
 
 }

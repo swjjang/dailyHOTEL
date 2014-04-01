@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +12,9 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.adapter.CreditListAdapter;
 import com.twoheart.dailyhotel.obj.Credit;
+import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
-public class CreditListFragment extends Fragment{
+public class CreditListFragment extends BaseFragment {
 	
 	private static final String KEY_BUNDLE_ARGUMENTS_CREDITLIST = "credit_list";
 	

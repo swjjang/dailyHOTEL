@@ -28,6 +28,10 @@ public class BookingTabActivity extends TabActivity {
 		mViewPager = (HotelViewPager) findViewById(R.id.booking_pager);
 		mIndicator = (TabPageIndicator) findViewById(R.id.booking_indicator);
 
+	}
+	
+	@Override
+	protected void onPostSetCookie() {
 		String[] date = booking.getSday().split("-");
 
 		String url = new StringBuilder(URL_DAILYHOTEL_SERVER)
@@ -36,11 +40,10 @@ public class BookingTabActivity extends TabActivity {
 				.append("/").append(date[2]).toString();
 
 		Log.d(TAG, url);
-
+		
 		LoadingDialog.showLoading(this);
 		// 호텔 정보를 가져온다.
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null, this, this));
-
 	}
 
 	@Override
@@ -51,12 +54,9 @@ public class BookingTabActivity extends TabActivity {
 		mFragments.add(new TabInfoFragment());
 		mFragments.add(new TabMapFragment());
 
-		mTitles.add("예약");
-		mTitles.add("정보");
-		mTitles.add("지도");
-
-		mAdapter.notifyDataSetChanged();
-		mIndicator.notifyDataSetChanged();
+		super.loadFragments();
 
 	}
+
+	
 }

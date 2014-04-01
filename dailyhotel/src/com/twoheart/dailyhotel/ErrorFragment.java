@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -9,10 +8,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
+import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
-public class ErrorFragment extends Fragment implements OnClickListener {
+public class ErrorFragment extends BaseFragment implements OnClickListener {
 
 	private MainActivity mHostActivity;
 	private Button btnRetry;

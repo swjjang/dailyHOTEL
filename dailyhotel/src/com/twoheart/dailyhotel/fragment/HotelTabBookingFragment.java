@@ -17,9 +17,10 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.HotelTabActivity;
 import com.twoheart.dailyhotel.obj.HotelDetail;
+import com.twoheart.dailyhotel.util.ui.BaseFragment;
 import com.viewpagerindicator.CirclePageIndicator;
 
-public class HotelTabBookingFragment extends Fragment implements
+public class HotelTabBookingFragment extends BaseFragment implements
 		OnTouchListener {
 
 	private static final String TAG = "HotelTabBookingFragment";

@@ -1,9 +1,7 @@
 package com.twoheart.dailyhotel.activity;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.MenuItem;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -16,14 +14,12 @@ import com.twoheart.dailyhotel.util.ui.BaseActivity;
 public class GMapActivity extends BaseActivity {
 	
 	private static final String TAG = "GMapActivity";
-	
 	private GoogleMap googleMap;
-	private SharedPreferences prefs;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setActionBar("");
+		setActionBar("지도 확대");
 		setContentView(R.layout.activity_gmap);
 		
 		new Handler().postDelayed(new Runnable() {

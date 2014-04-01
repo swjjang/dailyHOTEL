@@ -10,12 +10,10 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.webkit.CookieSyncManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,7 +23,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.facebook.Session;
-import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.AboutActivity;
 import com.twoheart.dailyhotel.activity.FAQActivity;
 import com.twoheart.dailyhotel.activity.LoginActivity;
@@ -37,14 +34,14 @@ import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
+import com.twoheart.dailyhotel.util.ui.BaseFragment;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
-public class SettingFragment extends Fragment implements Constants,
+public class SettingFragment extends BaseFragment implements Constants,
 		DailyHotelStringResponseListener, DailyHotelJsonResponseListener,
-		ErrorListener, OnClickListener {
+		OnClickListener {
 
 	private MainActivity mHostActivity;
-
 	private RequestQueue mQueue;
 
 	private TextView tvNotice, tvHelp, tvMail, tvLogin, tvEmail, tvCall,
@@ -102,7 +99,7 @@ public class SettingFragment extends Fragment implements Constants,
 		
 		mQueue.add(new DailyHotelStringRequest(Method.GET,
 				new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-						URL_WEBAPI_USER_ALIVE).toString(), null, this, this));
+						URL_WEBAPI_USER_ALIVE).toString(), null, this, mHostActivity));
 	}
 
 	@Override
@@ -134,9 +131,9 @@ public class SettingFragment extends Fragment implements Constants,
 			intent.setType("message/rfc822");
 			intent.putExtra(Intent.EXTRA_EMAIL,
 					new String[] { "help@dailyhotel.co.kr" });
-			intent.putExtra(Intent.EXTRA_SUBJECT, "데일리 호텔에 문의합니다");
-			intent.putExtra(Intent.EXTRA_TEXT, "데일리 호텔 안드로이드 어플리케이션에 관한 문의입니다.");
-			startActivity(intent.createChooser(intent, "작업을 수행할 때 수행할 애플리케이션"));
+			intent.putExtra(Intent.EXTRA_SUBJECT, "데일리호텔에 문의합니다");
+			intent.putExtra(Intent.EXTRA_TEXT, "데일리호텔의 안드로이드 어플리케이션에 관한 문의입니다.");
+			startActivity(Intent.createChooser(intent, "이메일 어플리케이션 선택"));
 
 		} else if (v.getId() == tvLogin.getId()) {
 
@@ -159,7 +156,7 @@ public class SettingFragment extends Fragment implements Constants,
 														.append(URL_WEBAPI_USER_LOGOUT)
 														.toString(), null,
 												SettingFragment.this,
-												SettingFragment.this));
+												mHostActivity));
 
 										SharedPreferences.Editor ed = mHostActivity.sharedPreference
 												.edit();
@@ -172,11 +169,7 @@ public class SettingFragment extends Fragment implements Constants,
 												null);
 										ed.commit();
 
-										VolleyHttpClient.cookie = null;
-										VolleyHttpClient.cookieManager
-												.removeAllCookie();
-										CookieSyncManager.getInstance().startSync();
-										CookieSyncManager.getInstance().stopSync();
+										VolleyHttpClient.destroyCookie();
 
 										tvLogin.setText("로그인");
 										tvEmail.setText("");
@@ -238,17 +231,6 @@ public class SettingFragment extends Fragment implements Constants,
 	}
 
 	@Override
-	public void onErrorResponse(VolleyError error) {
-		if (DEBUG)
-			error.printStackTrace();
-		
-		LoadingDialog.hideLoading();
-		Toast.makeText(mHostActivity, "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-				Toast.LENGTH_SHORT).show();
-
-	}
-
-	@Override
 	public void onResponse(String url, String response) {
 		if (url.contains(URL_WEBAPI_USER_ALIVE)) {
 			String result = response.trim();
@@ -258,10 +240,10 @@ public class SettingFragment extends Fragment implements Constants,
 				mQueue.add(new DailyHotelJsonRequest(Method.GET,
 						new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 								URL_WEBAPI_USER_INFO).toString(), null, this,
-						this));
+						mHostActivity));
 
 			} else
-				LoadingDialog.hideLoading();
+				mListener.onLoadComplete(this, true);
 		}
 	}
 
@@ -273,7 +255,7 @@ public class SettingFragment extends Fragment implements Constants,
 				tvEmail.setText(obj.getString("email"));
 				tvLogin.setText("로그아웃");
 				
-				LoadingDialog.hideLoading();
+				mListener.onLoadComplete(this, true);
 
 			} catch (Exception e) {
 				if (DEBUG)

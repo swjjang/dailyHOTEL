@@ -39,8 +39,13 @@ public class EventWebActivity extends WebViewActivity {
 		DailyHotel.getGaTracker().set(Fields.SCREEN_NAME, TAG);
 
 		setContentView(R.layout.activity_event_web);
-		setWebView(URL_WEBAPI_EVENT);
 
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		setWebView(URL_WEBAPI_EVENT);
 	}
 
 	@Override

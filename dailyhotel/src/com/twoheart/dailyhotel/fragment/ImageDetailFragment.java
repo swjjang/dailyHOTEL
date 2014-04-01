@@ -14,7 +14,7 @@ import com.twoheart.dailyhotel.util.VolleyImageLoader;
 import com.twoheart.dailyhotel.widget.FadeInNetworkImageView;
 
 
-public class ImageDetailFragment extends Fragment{
+public class ImageDetailFragment extends Fragment {
 	
 	private static final String KEY_BUNDLE_ARGUMENTS_IMAGEURL = "image_url";
 	

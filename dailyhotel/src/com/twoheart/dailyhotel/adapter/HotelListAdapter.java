@@ -22,9 +22,12 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.obj.Hotel;
+import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.VolleyImageLoader;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.widget.FadeInNetworkImageView;
 
 public class HotelListAdapter extends ArrayAdapter<Hotel> {
@@ -106,10 +109,15 @@ public class HotelListAdapter extends ArrayAdapter<Hotel> {
 
 		viewHolder.name.setSelected(true); // Android TextView marquee bug
 
-		viewHolder.name.setShadowLayer(2, 0, 2, android.R.color.black);
-		viewHolder.price.setShadowLayer(2, 0, 2, android.R.color.black);
-		viewHolder.discount.setShadowLayer(2, 0, 2, android.R.color.black);
-		viewHolder.address.setShadowLayer(2, 0, 2, android.R.color.black);
+		viewHolder.name.setShadowLayer(2, 1, 2, android.R.color.black);
+		viewHolder.price.setShadowLayer(2, 1, 2, android.R.color.black);
+		viewHolder.discount.setShadowLayer(2, 1, 2, android.R.color.black);
+		viewHolder.address.setShadowLayer(2, 1, 2, android.R.color.black);
+		
+//		viewHolder.name.setTypeface(DailyHotel.getTypeface());
+//		viewHolder.price.setTypeface(DailyHotel.getTypeface());
+//		viewHolder.discount.setTypeface(DailyHotel.getTypeface());
+//		viewHolder.address.setTypeface(DailyHotel.getTypeface());
 		
 		final int colors[] = { Color.parseColor("#ED000000"), Color.parseColor("#E8000000"), 
 				Color.parseColor("#E2000000"), Color.parseColor("#66000000"), Color.parseColor("#00000000") };
@@ -137,27 +145,29 @@ public class HotelListAdapter extends ArrayAdapter<Hotel> {
 //		viewHolder.address.setTypeface(BaseActivity.mTypefaceCommon);
 
 		// grade
-		if (element.getCat().equals("biz")) {
+		if (element.getCategory().equals("biz") | element.getCategory().equals("hostel") | element.getCategory().equals("grade1") | 
+				element.getCategory().equals("grade2") | element.getCategory().equals("grade3")) {
 			viewHolder.gradeBackground.setBackgroundColor(Color
 					.parseColor("#055870"));
 			viewHolder.gradeText.setText("비지니스");
 
-		} else if (element.getCat().equals("boutique")) {
+		} else if (element.getCategory().equals("boutique")) {
 			viewHolder.gradeBackground.setBackgroundColor(Color
 					.parseColor("#9f2d58"));
 			viewHolder.gradeText.setText("부띠끄");
 
-		} else if (element.getCat().equals("residence")) {
+		} else if (element.getCategory().equals("residence")) {
 			viewHolder.gradeBackground.setBackgroundColor(Color
 					.parseColor("#407f67"));
 			viewHolder.gradeText.setText("레지던스");
 
-		} else if (element.getCat().equals("resort")) {
+		} else if (element.getCategory().equals("resort") | element.getCategory().equals("pension") 
+				| element.getCategory().equals("condo")) {
 			viewHolder.gradeBackground.setBackgroundColor(Color
 					.parseColor("#cf8d14"));
 			viewHolder.gradeText.setText("리조트");
 
-		} else if (element.getCat().equals("special")) {
+		} else if (element.getCategory().equals("special")) {
 			viewHolder.gradeBackground.setBackgroundColor(Color
 					.parseColor("#ab380a"));
 			viewHolder.gradeText.setText("특급");
@@ -167,15 +177,18 @@ public class HotelListAdapter extends ArrayAdapter<Hotel> {
 					.parseColor("#808080"));
 			viewHolder.gradeText.setText("미정");
 		}
+		
+//		viewHolder.gradeText.setTypeface(DailyHotel.getTypeface());
+		GlobalFont.apply((ViewGroup) convertView); 
 
-		if (!element.getImg().equals("default")) {
+		if (!element.getImage().equals("default")) {
 			viewHolder.img.setDefaultImageResId(R.drawable.img_placeholder);
 			viewHolder.img.setErrorImageResId(R.drawable.img_placeholder);
-			viewHolder.img.setImageUrl(element.getImg(), imageLoader);
+			viewHolder.img.setImageUrl(element.getImage(), imageLoader);
 		}
 
 		// 객실이 1~2 개일때 label 표시
-		int avail_cnt = element.getAvali_cnt();
+		int avail_cnt = element.getAvailableRoom();
 		// if(avail_cnt > 0 && avail_cnt < 3) {
 		// label.setText(avail_cnt + " 객실 남음");
 		// label.setVisibility(View.VISIBLE);

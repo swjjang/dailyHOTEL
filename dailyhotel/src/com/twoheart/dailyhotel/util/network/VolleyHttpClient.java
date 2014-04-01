@@ -28,7 +28,7 @@ public class VolleyHttpClient implements Constants {
 
 	private static final String KEY_DAILYHOTEL_COOKIE = "JSESSIONID";
 
-	public static final int TIME_OUT = 10 * 1000;
+	public static final int TIME_OUT = 5000;
 	public static final int MAX_RETRY = 2;
 
 	public static Cookie cookie;
@@ -36,10 +36,6 @@ public class VolleyHttpClient implements Constants {
 	private static RequestQueue sRequestQueue;
 	private static Context sContext;
 	private static HttpClient sHttpClient;
-
-	private VolleyHttpClient() {
-
-	}
 
 	public static void init(Context context) {
 
@@ -56,9 +52,8 @@ public class VolleyHttpClient implements Constants {
 				sHttpClient));
 		// sRequestQueue = Volley.newRequestQueue(sContext);
 
-		cookieManager = CookieManager.getInstance();
 		CookieSyncManager.createInstance(sContext);
-		CookieSyncManager.getInstance().startSync();
+		cookieManager = CookieManager.getInstance();
 
 	}
 
@@ -117,6 +112,13 @@ public class VolleyHttpClient implements Constants {
 				}
 			}
 		}
+	}
+	
+	public static void destroyCookie() {
+		VolleyHttpClient.cookieManager
+				.removeAllCookie();
+		VolleyHttpClient.cookie = null;
+		CookieSyncManager.getInstance().sync();
 	}
 
 }

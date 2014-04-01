@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -23,6 +24,7 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.adapter.BoardListAdapter;
 import com.twoheart.dailyhotel.obj.Board;
+import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
@@ -50,13 +52,17 @@ public class NoticeActivity extends BaseActivity implements
 
 		mListView = (ExpandableListView) findViewById(R.id.expandable_list_board);
 
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
 		LoadingDialog.showLoading(this);
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(
 				URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_BOARD_NOTICE)
 				.toString(), null, this, this));
-
 	}
-	
 
 	@Override
 	protected void onStart() {
@@ -112,6 +118,5 @@ public class NoticeActivity extends BaseActivity implements
 				LoadingDialog.hideLoading();
 			}
 		}
-		
 	}
 }

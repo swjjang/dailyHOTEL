@@ -12,7 +12,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBar.OnNavigationListener;
 import android.view.LayoutInflater;
@@ -25,18 +24,14 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.VolleyError;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.EventWebActivity;
 import com.twoheart.dailyhotel.activity.HotelTabActivity;
 import com.twoheart.dailyhotel.adapter.HotelListAdapter;
@@ -51,12 +46,13 @@ import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonArrayResponseListener;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
+import com.twoheart.dailyhotel.util.ui.BaseFragment;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
-public class HotelListFragment extends ListFragment implements Constants,
+public class HotelListFragment extends BaseFragment implements Constants,
 		OnItemClickListener, OnNavigationListener,
 		DailyHotelJsonArrayResponseListener, DailyHotelJsonResponseListener,
-		DailyHotelStringResponseListener, ErrorListener {
+		DailyHotelStringResponseListener {
 
 	private final static String TAG = "HotelListFragment";
 
@@ -128,7 +124,7 @@ public class HotelListFragment extends ListFragment implements Constants,
 			mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(
 					URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_TIME)
 					.toString(), null, HotelListFragment.this,
-					HotelListFragment.this));
+					mHostActivity));
 		}
 	}
 
@@ -214,17 +210,8 @@ public class HotelListFragment extends ListFragment implements Constants,
 
 		// 호텔 리스트를 가져온다
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null,
-				HotelListFragment.this, HotelListFragment.this));
+				HotelListFragment.this, mHostActivity));
 
-	}
-
-	@Override
-	public void onErrorResponse(VolleyError error) {
-		if (DEBUG)
-			error.printStackTrace();
-
-		mHostActivity.replaceFragment(new ErrorFragment());
-		LoadingDialog.hideLoading();
 	}
 
 	@Override
@@ -242,23 +229,21 @@ public class HotelListFragment extends ListFragment implements Constants,
 				if (!mDailyHotelSaleTime.isSaleTime()) {
 					mHostActivity.replaceFragment(WaitTimerFragment.newInstance(
 							mDailyHotelSaleTime));
-					LoadingDialog.hideLoading();
+					mListener.onLoadComplete(this, true);
 				} else {
 					// 지역 리스트를 가져온다
 					mQueue.add(new DailyHotelJsonArrayRequest(Method.GET,
 							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 									URL_WEBAPI_SITE_LOCATION_LIST).toString(),
 							null, HotelListFragment.this,
-							HotelListFragment.this));
+							mHostActivity));
 				}
 
 			} catch (Exception e) {
 				if (DEBUG)
 					e.printStackTrace();
 
-				LoadingDialog.hideLoading();
-				mHostActivity.replaceFragment(new ErrorFragment());
-
+				mListener.onLoadComplete(this, false);
 			}
 
 		} else if (url.contains(URL_WEBAPI_HOTEL)) {
@@ -292,11 +277,11 @@ public class HotelListFragment extends ListFragment implements Constants,
 					newHotel.setPrice(price);
 					newHotel.setDiscount(discount);
 					newHotel.setAddress(address);
-					newHotel.setCat(category);
+					newHotel.setCategory(category);
 					newHotel.setIdx(idx);
-					newHotel.setAvali_cnt(available);
-					newHotel.setSeq(seq);
-					newHotel.setImg(image);
+					newHotel.setAvailableRoom(available);
+					newHotel.setSequence(seq);
+					newHotel.setImage(image);
 
 					if (seq >= 0) { // 숨김호텔이 아니라면 추가. (음수일 경우 숨김호텔.)
 
@@ -309,8 +294,8 @@ public class HotelListFragment extends ListFragment implements Constants,
 						Comparator<Hotel> comparator = new Comparator<Hotel>() {
 							public int compare(Hotel o1, Hotel o2) {
 								// 숫자정렬
-								return Integer.parseInt(o1.getSeq() + "")
-										- Integer.parseInt(o2.getSeq() + "");
+								return Integer.parseInt(o1.getSequence() + "")
+										- Integer.parseInt(o2.getSequence() + "");
 							}
 						};
 
@@ -338,21 +323,21 @@ public class HotelListFragment extends ListFragment implements Constants,
 							}
 						});
 				
+				mPullToRefreshListView.onRefreshComplete();
+				mRefreshHotelList = true;
+				
 				// 새로운 이벤트 확인을 위해 버전 API 호출
 				mQueue.add(new DailyHotelJsonRequest(Method.GET, 
 						new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_VERSION).toString(),
-						null, this, this));
+						null, this, mHostActivity));
+				
+				mListener.onLoadComplete(this, true);
 
 			} catch (Exception e) {
 				if (DEBUG)
 					e.printStackTrace();
 
-				Toast.makeText(mHostActivity, "네트워크 상태를 확인해주세요",
-						Toast.LENGTH_LONG).show();
-			} finally {
-				LoadingDialog.hideLoading();
-				mPullToRefreshListView.onRefreshComplete();
-				mRefreshHotelList = true;
+				mListener.onLoadComplete(this, false);
 			}
 		} else if (url.contains(URL_WEBAPI_APP_VERSION)) {
 			try {
@@ -366,8 +351,7 @@ public class HotelListFragment extends ListFragment implements Constants,
 				if (DEBUG)
 					e.printStackTrace();
 
-				Toast.makeText(mHostActivity, "네트워크 상태를 확인해주세요",
-						Toast.LENGTH_LONG).show();
+				mListener.onLoadComplete(this, false);
 			}
 		}
 
@@ -404,8 +388,7 @@ public class HotelListFragment extends ListFragment implements Constants,
 				if (DEBUG)
 					e.printStackTrace();
 
-				LoadingDialog.hideLoading();
-				mHostActivity.replaceFragment(new ErrorFragment());
+				mListener.onLoadComplete(this, false);
 			}
 		}
 	}
@@ -420,7 +403,7 @@ public class HotelListFragment extends ListFragment implements Constants,
 			mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(
 					URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_SALE_TIME)
 					.toString(), null, HotelListFragment.this,
-					HotelListFragment.this));
+					mHostActivity));
 
 		}
 	}

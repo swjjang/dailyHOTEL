@@ -15,7 +15,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -32,7 +31,6 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
-import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.activity.SignupActivity;
 import com.twoheart.dailyhotel.obj.Credit;
@@ -44,10 +42,11 @@ import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
+import com.twoheart.dailyhotel.util.ui.BaseFragment;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
-public class CreditFragment extends Fragment implements Constants,
-		OnClickListener, ErrorListener, DailyHotelJsonResponseListener,
+public class CreditFragment extends BaseFragment implements Constants,
+		OnClickListener, DailyHotelJsonResponseListener,
 		DailyHotelStringResponseListener {
 
 	private static final String TAG = "CreditFragment";
@@ -112,7 +111,7 @@ public class CreditFragment extends Fragment implements Constants,
 		mQueue.add(new DailyHotelStringRequest(Method.GET,
 				new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 						URL_WEBAPI_USER_ALIVE).toString(), null,
-				CreditFragment.this, CreditFragment.this));
+				this, mHostActivity));
 	}
 
 	@Override
@@ -268,7 +267,7 @@ public class CreditFragment extends Fragment implements Constants,
 					ed.putString(KEY_PREFERENCE_USER_PWD, null);
 					ed.commit();
 
-					LoadingDialog.hideLoading();
+					mListener.onLoadComplete(this, true);
 					loadLoginProcess(false);
 
 				} else {
@@ -276,17 +275,14 @@ public class CreditFragment extends Fragment implements Constants,
 					mQueue.add(new DailyHotelStringRequest(Method.GET,
 							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 									URL_WEBAPI_RESERVE_SAVED_MONEY).toString(),
-							null, CreditFragment.this, CreditFragment.this));
+							null, this, mHostActivity));
 
 				}
 			} catch (JSONException e) {
 				if (DEBUG)
 					e.printStackTrace();
 
-				LoadingDialog.hideLoading();
-				Toast.makeText(mHostActivity,
-						"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-						Toast.LENGTH_SHORT).show();
+				mListener.onLoadComplete(this, false);
 			}
 
 		} else if (url.contains(URL_WEBAPI_USER_INFO)) {
@@ -299,16 +295,13 @@ public class CreditFragment extends Fragment implements Constants,
 				mQueue.add(new DailyHotelJsonRequest(Method.GET,
 						new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 								URL_WEBAPI_USER_BONUS_ALL).toString(), null,
-						CreditFragment.this, CreditFragment.this));
+						this, mHostActivity));
 
 			} catch (Exception e) {
 				if (DEBUG)
 					e.printStackTrace();
 
-				LoadingDialog.hideLoading();
-				Toast.makeText(mHostActivity,
-						"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-						Toast.LENGTH_SHORT).show();
+				mListener.onLoadComplete(this, false);
 			}
 
 		} else if (url.contains(URL_WEBAPI_USER_BONUS_ALL)) {
@@ -327,28 +320,16 @@ public class CreditFragment extends Fragment implements Constants,
 				}
 
 				loadLoginProcess(true);
+				mListener.onLoadComplete(this, true);
 
 			} catch (Exception e) {
 				if (DEBUG)
 					e.printStackTrace();
 
-				Toast.makeText(mHostActivity,
-						"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-						Toast.LENGTH_SHORT).show();
-			} finally {
-				LoadingDialog.hideLoading();
+				mListener.onLoadComplete(this, false);
 			}
 		}
 
-	}
-
-	@Override
-	public void onErrorResponse(VolleyError error) {
-		if (DEBUG)
-			error.printStackTrace();
-
-		mHostActivity.replaceFragment(new ErrorFragment());
-		LoadingDialog.hideLoading();
 	}
 
 	@Override
@@ -360,7 +341,7 @@ public class CreditFragment extends Fragment implements Constants,
 				mQueue.add(new DailyHotelStringRequest(Method.GET,
 						new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 								URL_WEBAPI_RESERVE_SAVED_MONEY).toString(),
-						null, CreditFragment.this, CreditFragment.this));
+						null, this, mHostActivity));
 
 			} else if (result.equals("dead")) { // session dead
 
@@ -387,18 +368,15 @@ public class CreditFragment extends Fragment implements Constants,
 					mQueue.add(new DailyHotelJsonRequest(Method.POST,
 							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 									URL_WEBAPI_USER_LOGIN).toString(),
-							loginParams, CreditFragment.this,
-							CreditFragment.this));
+							loginParams, this,
+							mHostActivity));
 				} else {
-					LoadingDialog.hideLoading();
+					mListener.onLoadComplete(this, true);
 					loadLoginProcess(false);
 				}
 
 			} else {
-				LoadingDialog.hideLoading();
-				Toast.makeText(mHostActivity,
-						"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-						Toast.LENGTH_SHORT).show();
+				mListener.onLoadComplete(this, false);
 			}
 
 		} else if (url.contains(URL_WEBAPI_RESERVE_SAVED_MONEY)) {
@@ -412,16 +390,13 @@ public class CreditFragment extends Fragment implements Constants,
 				mQueue.add(new DailyHotelJsonRequest(Method.GET,
 						new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 								URL_WEBAPI_USER_INFO).toString(), null,
-						CreditFragment.this, CreditFragment.this));
+						this, mHostActivity));
 
 			} catch (Exception e) {
 				if (DEBUG)
 					e.printStackTrace();
 
-				LoadingDialog.hideLoading();
-				Toast.makeText(mHostActivity,
-						"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-						Toast.LENGTH_SHORT).show();
+				mListener.onLoadComplete(this, false);
 			}
 		}
 	}
