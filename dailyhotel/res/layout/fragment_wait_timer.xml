@@ -9,9 +9,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_margin="20dp"
-        android:background="@drawable/shape_button_background"
+        android:background="@drawable/shape_button_common_background"
         android:text="알람 켜기"
-        android:textColor="@color/white" />
+        android:textColor="@android:color/white" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -58,7 +58,7 @@
                 android:id="@+id/tv_timer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/dh_dark_gray_blue"
+                android:textColor="@color/textView_textColor_main"
                 android:textSize="45dp" />
         </LinearLayout>
     </LinearLayout>

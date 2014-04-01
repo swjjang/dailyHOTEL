@@ -18,7 +18,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/shape_section_activity_background"
+                android:background="@drawable/shape_section_background"
                 android:orientation="horizontal"
                 android:paddingBottom="9dp"
                 android:paddingLeft="13dp"
@@ -101,7 +101,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/shape_section_activity_background"
+                android:background="@drawable/shape_section_background"
                 android:orientation="horizontal"
                 android:paddingBottom="9dp"
                 android:paddingLeft="13dp"
@@ -313,7 +313,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/shape_section_activity_background"
+                android:background="@drawable/shape_section_background"
                 android:orientation="horizontal"
                 android:paddingBottom="9dp"
                 android:paddingLeft="13dp"
@@ -424,7 +424,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
-                android:background="@drawable/shape_section_payment_background"
+                android:background="@drawable/shape_section_background"
                 android:orientation="horizontal"
                 android:paddingBottom="10dp"
                 android:paddingRight="15dp"
@@ -497,10 +497,10 @@
                 android:id="@+id/btn_hotel_payment"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:background="@drawable/shape_button_background"
+                android:background="@drawable/shape_button_common_background"
                 android:gravity="center"
                 android:text="결제하기"
-                android:textColor="@color/white" />
+                android:textColor="@android:color/white" />
         </LinearLayout>
     </LinearLayout>
 

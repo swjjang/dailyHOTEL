@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fdfdfd"
     android:orientation="vertical" >
 
     <FrameLayout
@@ -68,7 +67,7 @@
                     android:scrollHorizontally="true"
                     android:singleLine="true"
                     android:text=""
-                    android:textColor="@color/dh_dark_gray_blue"
+                    android:textColor="@color/textView_textColor_main"
                     android:textSize="18dp" />
             </RelativeLayout>
 
@@ -88,7 +87,7 @@
                     android:marqueeRepeatLimit="marquee_forever"
                     android:scrollHorizontally="true"
                     android:singleLine="true"
-                    android:textColor="#7f7f7f"
+                    android:textColor="@color/textView_textColor_sub"
                     android:textSize="15dp" />
             </LinearLayout>
         </RelativeLayout>

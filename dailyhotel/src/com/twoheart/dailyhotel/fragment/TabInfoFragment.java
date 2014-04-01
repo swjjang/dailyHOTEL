@@ -86,7 +86,7 @@ public class TabInfoFragment extends BaseFragment {
 		line.setLayoutParams(new LinearLayout.LayoutParams(
 				LayoutParams.MATCH_PARENT, getPixels(1, view.getContext())));
 		line.setPadding(0, getPixels(1, view.getContext()), 0, 0);
-		line.setBackgroundResource(R.color.dh_gray50);
+		line.setBackgroundResource(R.color.common_borer);
 		layout.addView(line);
 
 	}

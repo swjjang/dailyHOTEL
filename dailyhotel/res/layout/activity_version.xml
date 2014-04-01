@@ -74,9 +74,9 @@
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_margin="20dp"
-        android:background="@drawable/shape_button_background"
+        android:background="@drawable/shape_button_common_background"
         android:gravity="center"
         android:text="최신 버전 업데이트 하기"
-        android:textColor="@color/white" />
+        android:textColor="@android:color/white" />
 
 </RelativeLayout>

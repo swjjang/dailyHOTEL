@@ -5,8 +5,7 @@
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
     android:weightSum="1"
-    android:orientation="vertical"
-    android:background="@color/dh_gray96">
+    android:orientation="vertical" >
     
     <EditText 
         android:id="@+id/et_signup_phone"
@@ -18,7 +17,7 @@
         android:inputType="phone"
         android:singleLine="true"
         android:background="@drawable/edit_text_holo_light"
-        android:textColorHint="@color/dh_gray50"
+        android:textColorHint="@color/textView_textColor_disabled"
         android:hint="휴대폰 번호 ( '-' 제외)"/>
     
     <EditText 
@@ -31,7 +30,7 @@
         android:singleLine="true"
         android:maxLength="50"
         android:background="@drawable/edit_text_holo_light"
-        android:textColorHint="@color/dh_gray50"
+        android:textColorHint="@color/textView_textColor_disabled"
         android:hint="Email"/>
     
     <EditText 
@@ -44,7 +43,7 @@
         android:singleLine="true"
         android:maxLength="20"
         android:background="@drawable/edit_text_holo_light"
-        android:textColorHint="@color/dh_gray50"
+        android:textColorHint="@color/textView_textColor_disabled"
         android:hint="이름 (체크인시 사용)"/>
     
     <EditText 
@@ -57,7 +56,7 @@
         android:singleLine="true"
         android:maxLength="20"
         android:background="@drawable/edit_text_holo_light"
-        android:textColorHint="@color/dh_gray50"
+        android:textColorHint="@color/textView_textColor_disabled"
         android:hint="비밀번호 (4자이상)"/>
     
     <EditText 
@@ -69,7 +68,7 @@
         android:singleLine="true"
         android:maxLength="10"
         android:background="@drawable/edit_text_holo_light"
-        android:textColorHint="@color/dh_gray50"
+        android:textColorHint="@color/textView_textColor_disabled"
         android:hint="&lt;선택&gt; 추천인 코드"/>
 	
     <Button 
@@ -79,8 +78,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:gravity="center|center_vertical"
-        android:background="@drawable/shape_button_background"
-        android:textColor="@color/white"
+        android:background="@drawable/shape_button_common_background"
+        android:textColor="@android:color/white"
         android:text="회원가입"/>
     
     <LinearLayout 

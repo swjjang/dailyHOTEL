@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/shape_section_drawermenu_background"
+    android:background="@drawable/shape_section_background"
     android:gravity="center_vertical"
     android:orientation="horizontal" >
 
@@ -13,7 +13,7 @@
         android:layout_margin="11dp"
         android:gravity="left|center_vertical"
         android:text="예약"
-        android:textColor="#969696"
+        android:textColor="@color/textView_textColor_section"
         android:textSize="14dp" />
 
 </LinearLayout>

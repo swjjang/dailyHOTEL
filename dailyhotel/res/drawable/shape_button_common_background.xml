@@ -3,7 +3,7 @@
     		android:shape="rectangle" >
     		
     <solid
-        android:color="#ff7a7a" />
+        android:color="@color/button_background" />
 
     <corners
         android:topRightRadius="5dp"
