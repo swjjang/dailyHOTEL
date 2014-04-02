@@ -1,8 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#fdfdfd" >
+    android:layout_height="match_parent" >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -33,7 +32,7 @@
                     android:layout_marginLeft="10dp"
                     android:gravity="center|center_vertical"
                     android:text="Delivering HOTELs…"
-                    android:textColor="@color/dh_dark_gray_blue"
+                    android:textColor="@color/textView_textColor_main"
                     android:textSize="15dp" />
 
                 <ProgressBar
@@ -53,6 +52,6 @@
         android:layout_centerHorizontal="true"
         android:layout_margin="20dp"
         android:text="11시에 시작되는 놀라운 할인 호텔"
-        android:textColor="@color/dh_dark_gray_blue" />
+        android:textColor="@color/textView_textColor_main" />
 
 </RelativeLayout>

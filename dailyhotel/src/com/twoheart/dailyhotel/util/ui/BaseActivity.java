@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.util.ui;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -40,8 +41,8 @@ public class BaseActivity extends ActionBarActivity implements Constants {
 		actionBar = getSupportActionBar();
 		
 		try {
-			actionBar.setBackgroundDrawable(Drawable.createFromXml(getResources(),
-					getResources().getXml(R.drawable.dh_actionbar_background)));
+			actionBar.setBackgroundDrawable(new ColorDrawable(getResources().
+					getColor(android.R.color.white)));
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dh_gray96"
     android:orientation="vertical"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
@@ -25,7 +24,7 @@
             android:maxLength="50"
             android:paddingLeft="10dp"
             android:singleLine="true"
-            android:textColorHint="@color/dh_gray50" >
+            android:textColorHint="@color/textView_textColor_disabled" >
 
             <requestFocus />
         </EditText>
@@ -43,7 +42,7 @@
             android:maxLength="20"
             android:paddingLeft="10dp"
             android:singleLine="true"
-            android:textColorHint="@color/dh_gray50" />
+            android:textColorHint="@color/textView_textColor_disabled" />
     </LinearLayout>
 
     <LinearLayout
@@ -58,7 +57,7 @@
             android:layout_height="50dp"
             android:checked="true"
             android:text="자동로그인"
-            android:textColor="@color/dh_dark_gray_blue" />
+            android:textColor="@color/textView_textColor_main" />
     </LinearLayout>
 
     <LinearLayout
@@ -70,9 +69,9 @@
             android:id="@+id/btn_login"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@drawable/shape_button_background"
+            android:background="@drawable/shape_button_common_background"
             android:text="로그인"
-            android:textColor="@color/white" />
+            android:textColor="@android:color/white" />
     </LinearLayout>
 
     <LinearLayout

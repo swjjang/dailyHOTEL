@@ -6,11 +6,13 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
@@ -21,6 +23,7 @@ import android.webkit.CookieSyncManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -45,6 +48,7 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListe
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
+@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class LoginActivity extends BaseActivity implements Constants,
 		OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 
@@ -53,7 +57,7 @@ public class LoginActivity extends BaseActivity implements Constants,
 	private RequestQueue mQueue;
 
 	private EditText etId, etPwd;
-	private CheckBox cbxAutoLogin;
+	private Switch cbxAutoLogin;
 	private Button btnLogin;
 	private TextView tvSignUp, tvForgotPwd;
 	private LoginButton facebookLogin;
@@ -74,7 +78,7 @@ public class LoginActivity extends BaseActivity implements Constants,
 
 		etId = (EditText) findViewById(R.id.et_login_id);
 		etPwd = (EditText) findViewById(R.id.et_login_pwd);
-		cbxAutoLogin = (CheckBox) findViewById(R.id.cb_login_auto);
+		cbxAutoLogin = (Switch) findViewById(R.id.cb_login_auto);
 		tvSignUp = (TextView) findViewById(R.id.tv_login_signup);
 		tvForgotPwd = (TextView) findViewById(R.id.tv_login_forgot);
 		btnLogin = (Button) findViewById(R.id.btn_login);

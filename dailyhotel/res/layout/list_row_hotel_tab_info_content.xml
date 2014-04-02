@@ -14,7 +14,7 @@
 	    <TextView 
 	        android:layout_height="wrap_content"
 	        android:layout_width="wrap_content"
-	        android:textColor="@color/dh_dark_gray_blue"
+	        android:textColor="@color/textView_textColor_main"
 	        android:text="-"/>
 	    
 	    <TextView 
@@ -23,7 +23,7 @@
 	        android:layout_width="wrap_content"
 	        android:paddingLeft="5dp"
 	        android:paddingBottom="2dp"
-	        android:textColor="@color/dh_dark_gray_blue"
+	        android:textColor="@color/textView_textColor_sub"
 	        android:text="전 객 실 50인치 FULL HD LCD TV 설치"/>
     	</LinearLayout>
     

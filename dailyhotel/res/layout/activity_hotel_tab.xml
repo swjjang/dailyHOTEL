@@ -29,9 +29,9 @@
             android:id="@+id/btn_hotel_tab_booking"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/shape_button_background"
+            android:background="@drawable/shape_button_common_background"
             android:text="예약하기"
-            android:textColor="@color/white" />
+            android:textColor="@android:color/white" />
 
         <Button
             android:id="@+id/tv_hotel_tab_soldout"

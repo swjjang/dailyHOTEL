@@ -5,8 +5,7 @@
     android:orientation="vertical"
     android:paddingTop="10dp"
     android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:background="#fdfdfd">
+    android:paddingRight="10dp" >
 
     <EditText
         android:id="@+id/et_forgot_pwd"
@@ -20,7 +19,7 @@
         android:maxLength="50"
         android:paddingLeft="10dp"
         android:singleLine="true"
-        android:textColorHint="@color/dh_gray50" >
+        android:textColorHint="@color/textView_textColor_sub" >
 
         <requestFocus />
     </EditText>
@@ -40,9 +39,9 @@
         android:layout_width="match_parent"
         android:layout_marginTop="62dp"
         android:paddingLeft="10dp"
-        android:background="@drawable/shape_button_background"
+        android:background="@drawable/shape_button_common_background"
         android:textSize="19dp"
-        android:textColor="@color/white"
+        android:textColor="@android:color/white"
         android:text="비밀번호 찾기"/>
 
 </LinearLayout>
