@@ -99,7 +99,7 @@ public class LoginActivity extends BaseActivity implements Constants,
 				return false;
 			}
 		});
-
+		
 	}
 
 	private void makeMeRequest(final Session session) {
@@ -157,6 +157,9 @@ public class LoginActivity extends BaseActivity implements Constants,
 											.append(URL_WEBAPI_USER_LOGIN)
 											.toString(), loginParams,
 									LoginActivity.this, LoginActivity.this));
+ 							
+ 							fbSession.closeAndClearTokenInformation();
+ 							
 						}
 					}
 				});
@@ -224,7 +227,8 @@ public class LoginActivity extends BaseActivity implements Constants,
 				fbSession.closeAndClearTokenInformation();
 				
 				if (exception != null)
-					Toast.makeText(LoginActivity.this, "오류: " + exception.getMessage(), Toast.LENGTH_LONG).show();
+					if (DEBUG)
+						Toast.makeText(LoginActivity.this, "오류: " + exception.getMessage(), Toast.LENGTH_LONG).show();
 			}
 		}
 	};
