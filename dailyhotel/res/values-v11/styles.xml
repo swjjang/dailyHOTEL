@@ -20,15 +20,15 @@
         <item name="actionMenuTextAppearance">@style/actionbarMenuTextAppearance</item>
         <item name="android:actionMenuTextAppearance">@style/actionbarMenuTextAppearance</item>
         <item name="actionBarItemBackground">@drawable/item_background_holo_light</item>
-        <item name="actionBarItemBackground">@drawable/item_background_holo_light</item>
+        <item name="android:actionDropDownStyle">@style/ActionBarDropDownListViewDH_Theme</item>
     </style>
     
     <style name="TransDialog">
 	    <item name="android:windowFrame">@null</item>
 	    <item name="android:windowIsFloating">true</item>
 	    <item name="android:windowContentOverlay">@null</item>
-	    <item name="android:windowAnimationStyle">@+android:style/Animation.Dialog</item>
-	    <item name="android:windowBackground">@+android:color/transparent</item>
+	    <item name="android:windowAnimationStyle">@style/TransDialog.Animations</item>
+	    <item name="android:windowBackground">@android:color/transparent</item>
 	    <item name="android:windowNoTitle">true</item>
 	</style>
     

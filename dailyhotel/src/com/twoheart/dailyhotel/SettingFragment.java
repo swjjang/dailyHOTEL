@@ -149,7 +149,7 @@ public class SettingFragment extends BaseFragment implements Constants,
 									public void onClick(DialogInterface dialog,
 											int which) {
 
-										mQueue.add(new DailyHotelStringRequest(
+										mQueue.add(new DailyHotelJsonRequest(
 												Method.GET,
 												new StringBuilder(
 														URL_DAILYHOTEL_SERVER)

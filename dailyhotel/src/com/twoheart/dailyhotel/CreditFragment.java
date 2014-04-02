@@ -271,6 +271,8 @@ public class CreditFragment extends BaseFragment implements Constants,
 					loadLoginProcess(false);
 
 				} else {
+					VolleyHttpClient.createCookie();
+					
 					// credit ฟไรป
 					mQueue.add(new DailyHotelStringRequest(Method.GET,
 							new StringBuilder(URL_DAILYHOTEL_SERVER).append(

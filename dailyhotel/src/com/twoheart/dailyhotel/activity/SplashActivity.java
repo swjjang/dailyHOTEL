@@ -117,6 +117,7 @@ public class SplashActivity extends BaseActivity implements Constants,
 					ed.commit();
 
 				} else {
+					VolleyHttpClient.createCookie();
 					// 사용자 정보 요청.
 					mQueue.add(new DailyHotelJsonRequest(Method.GET,
 							new StringBuilder(URL_DAILYHOTEL_SERVER).append(

@@ -26,7 +26,7 @@ public class TabInfoFragment extends BaseFragment {
 	private HotelDetail mHotelDetail;
 	private LinearLayout layout;
 
-	private int infoViewCount = 1;
+	private int infoViewCount;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,6 +39,7 @@ public class TabInfoFragment extends BaseFragment {
 
 		layout = (LinearLayout) view.findViewById(R.id.layout_hotel_tab_info);
 
+		infoViewCount = 1;
 		for (String key : mHotelDetail.getSpecification().keySet()) {
 			addView(view, key, mHotelDetail.getSpecification().get(key));
 		}

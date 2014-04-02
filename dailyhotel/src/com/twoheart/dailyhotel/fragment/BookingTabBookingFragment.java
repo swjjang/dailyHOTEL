@@ -100,7 +100,8 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 							Toast.LENGTH_SHORT).show();
 					mListener.onLoadComplete(this, true);
 					
-				}
+				} else
+					VolleyHttpClient.createCookie();
 			} catch (JSONException e) {
 				if (DEBUG)
 					e.printStackTrace();

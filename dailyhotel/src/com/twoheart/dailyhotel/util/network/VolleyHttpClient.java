@@ -17,12 +17,12 @@ import android.content.Context;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.Volley;
 import com.twoheart.dailyhotel.util.AvailableNetwork;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Log;
 
 public class VolleyHttpClient implements Constants {
 
@@ -32,7 +32,6 @@ public class VolleyHttpClient implements Constants {
 	public static final int MAX_RETRY = 2;
 
 	public static Cookie cookie;
-	public static CookieManager cookieManager;
 	private static RequestQueue sRequestQueue;
 	private static Context sContext;
 	private static HttpClient sHttpClient;
@@ -51,10 +50,7 @@ public class VolleyHttpClient implements Constants {
 		sRequestQueue = Volley.newRequestQueue(sContext, new HttpClientStack(
 				sHttpClient));
 		// sRequestQueue = Volley.newRequestQueue(sContext);
-
-		CookieSyncManager.createInstance(sContext);
-		cookieManager = CookieManager.getInstance();
-
+		
 	}
 
 	public static RequestQueue getRequestQueue() {
@@ -88,7 +84,11 @@ public class VolleyHttpClient implements Constants {
 	}
 
 	// 서버 response로부터 cookie를 가져와 기억함.
-	public static void setSessionCookie() {
+	// 로그인 요청 후 성공적으로 응답을 받았을 경우 반드시 이 메서드를 사용해야 함.
+	public static void createCookie() {
+		
+		if (CookieManager.getInstance().getCookie(URL_DAILYHOTEL_SERVER) != null)
+			Log.e("Common: " + CookieManager.getInstance().getCookie(URL_DAILYHOTEL_SERVER));
 
 		List<Cookie> cookies = ((DefaultHttpClient) sHttpClient)
 				.getCookieStore().getCookies();
@@ -103,9 +103,11 @@ public class VolleyHttpClient implements Constants {
 						StringBuilder cookieString = new StringBuilder();
 						cookieString.append(cookie.getName()).append("=")
 								.append(cookie.getValue());
-
-						cookieManager.setCookie(URL_DAILYHOTEL_SERVER,
+						
+						CookieManager.getInstance().setCookie(URL_DAILYHOTEL_SERVER,
 								cookieString.toString());
+						
+						Log.e("Init: " + cookieString.toString());
 
 						CookieSyncManager.getInstance().sync();
 					}
@@ -114,10 +116,11 @@ public class VolleyHttpClient implements Constants {
 		}
 	}
 	
+	// 로그아웃 시 반드시 이 메서드를 사용해야 함.
 	public static void destroyCookie() {
-		VolleyHttpClient.cookieManager
-				.removeAllCookie();
 		VolleyHttpClient.cookie = null;
+		CookieManager.getInstance()
+				.removeAllCookie();
 		CookieSyncManager.getInstance().sync();
 	}
 

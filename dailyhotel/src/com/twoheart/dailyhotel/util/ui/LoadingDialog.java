@@ -11,7 +11,7 @@ import com.twoheart.dailyhotel.R;
 
 public class LoadingDialog {
 
-	private static final int LOADING_DELAY = 1000;
+	private static final int LOADING_DELAY = 600;
 	private static final int DISMISS_DELAY = 100;
 	private static Dialog loadingDialog = null;
 

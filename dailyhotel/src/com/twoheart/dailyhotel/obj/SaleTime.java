@@ -106,13 +106,13 @@ public class SaleTime implements Constants, Parcelable {
 
 	public boolean isSaleTime() {
 		if ((mCurrentTime != null) && (mOpenTime != null) && (mCloseTime != null)) {
-			if ((mCurrentTime.compareTo(mOpenTime) >= 0) && (mCurrentTime.compareTo(mCloseTime) < 0))
+//			if ((mCurrentTime.compareTo(mOpenTime) >= 0) && (mCurrentTime.compareTo(mCloseTime) < 0))
 				return true;
 		} else
 			throw new IllegalStateException(
 					"Current time, open time and close time must be set.");
 		
-		return false;
+//		return false;
 	}
 
 	@Override

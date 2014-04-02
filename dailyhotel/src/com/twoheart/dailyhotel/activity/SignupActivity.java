@@ -261,6 +261,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 			
 			try {
 				if (response.getBoolean("login")) {
+					VolleyHttpClient.createCookie();
 					LoadingDialog.hideLoading();
 					
 					Toast.makeText(this, "회원가입이 완료되었습니다.",

@@ -20,7 +20,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -35,6 +34,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.twoheart.dailyhotel.activity.EventWebActivity;
 import com.twoheart.dailyhotel.activity.HotelTabActivity;
 import com.twoheart.dailyhotel.adapter.HotelListAdapter;
+import com.twoheart.dailyhotel.adapter.RegionListAdapter;
 import com.twoheart.dailyhotel.obj.Hotel;
 import com.twoheart.dailyhotel.obj.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
@@ -374,9 +374,8 @@ public class HotelListFragment extends BaseFragment implements Constants,
 				mHostActivity.actionBar
 						.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
-				ArrayAdapter<String> regionListAdapter = new ArrayAdapter<String>(
-						mHostActivity, android.R.layout.simple_list_item_1,
-						android.R.id.text1, mRegionList);
+				RegionListAdapter regionListAdapter = new RegionListAdapter(
+						mHostActivity, mRegionList);
 
 				mHostActivity.actionBar.setListNavigationCallbacks(
 						regionListAdapter, this);

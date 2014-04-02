@@ -21,15 +21,21 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Window;
+import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
+import com.android.volley.Request.Method;
+import com.android.volley.RequestQueue;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.obj.Pay;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
 public class PaymentActivity extends Activity implements Constants {
@@ -60,6 +66,7 @@ public class PaymentActivity extends Activity implements Constants {
 		}
 		
 		webView = (WebView) findViewById(R.id.webView);
+		CookieManager.getInstance().setAcceptCookie(true);
 		
 	}
 	
@@ -85,6 +92,11 @@ public class PaymentActivity extends Activity implements Constants {
 		webView.addJavascriptInterface(new JavaScriptExtention(), "android");
 		webView.setWebChromeClient(new WebChromeClient());
 		webView.setWebViewClient(new mWebViewClient());
+		
+		if (mPay == null) {
+			Toast.makeText(this, "결제 정보를 가져올 수 없습니다.", Toast.LENGTH_SHORT).show();
+			finish();
+		}
 		
 		String[] postParameterKey = new String[] { "email", "name", "phone", "accessToken" };
 		String[] postParameterValue = new String[] { mPay.getCustomer().getEmail(), 
@@ -492,6 +504,8 @@ public class PaymentActivity extends Activity implements Constants {
 		if (p_strFinishMsg != null) {
 			if (p_strFinishMsg.equals("NOT_AVAILABLE")) {
 				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_NOT_AVAILABLE;
+			} else if (p_strFinishMsg.contains("취소")) {
+				resultCode = RESULT_CANCELED;
 			}
 		}
 		

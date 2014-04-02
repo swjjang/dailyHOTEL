@@ -31,12 +31,12 @@ public class DailyHotelJsonArrayRequest extends DailyHotelRequest<JSONArray> {
 
 	@Override
 	protected void deliverResponse(JSONArray response) {
-		mListener.onResponse(getUrl(), response);
+		if (mListener != null)
+			mListener.onResponse(getUrl(), response);
 	}
 
 	@Override
 	protected Response<JSONArray> parseNetworkResponse(NetworkResponse response) {
-		VolleyHttpClient.setSessionCookie();
 		try {
 			String jsonString = new String(response.data,
 					HttpHeaderParser.parseCharset(response.headers));

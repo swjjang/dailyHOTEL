@@ -61,58 +61,6 @@ public class WebViewActivity extends BaseActivity implements
 
 	}
 
-	private byte[] parsePostParameter(String[] key, String[] value) {
-
-		List<byte[]> resultList = new ArrayList<byte[]>();
-		HashMap<String, byte[]> postParameters = new HashMap<String, byte[]>();
-
-		if (key.length != value.length)
-			throw new IllegalArgumentException(
-					"The length of the key arguments and "
-							+ "the length of the value arguments must be same.");
-
-		for (int i = 0; i < key.length; i++)
-			postParameters.put(key[i],
-					EncodingUtils.getBytes(value[i], "BASE64"));
-
-		for (int i = 0; i < postParameters.size(); i++) {
-
-			if (resultList.size() != 0)
-				resultList.add("&".getBytes());
-
-			resultList.add(key[i].getBytes());
-			resultList.add("=".getBytes());
-			resultList.add(postParameters.get(key[i]));
-		}
-
-		int size = 0;
-		int[] sizeOfResult = new int[resultList.size()];
-
-		for (int i = 0; i < resultList.size(); i++) {
-			sizeOfResult[i] = resultList.get(i).length;
-
-		}
-
-		for (int i = 0; i < sizeOfResult.length; i++) {
-			size += sizeOfResult[i];
-
-		}
-
-		byte[] result = new byte[size];
-
-		int currentSize = 0;
-		for (int i = 0; i < resultList.size(); i++) {
-
-			System.arraycopy(resultList.get(i), 0, result, currentSize,
-					resultList.get(i).length);
-
-			currentSize += resultList.get(i).length;
-
-		}
-
-		return result;
-	}
-
 	public class DailyHotelWebViewClient extends WebViewClient {
 
 		@JavascriptInterface

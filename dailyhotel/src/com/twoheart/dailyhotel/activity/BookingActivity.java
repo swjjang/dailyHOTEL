@@ -130,7 +130,6 @@ public class BookingActivity extends BaseActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-
 		LoadingDialog.showLoading(this);
 
 		// credit 요청
@@ -235,12 +234,10 @@ public class BookingActivity extends BaseActivity implements
 							tvReserverNumber.getText().toString());
 					mPay.getCustomer().setName(
 							tvReserverName.getText().toString());
-
+					
 				}
 
-				Intent intent = new Intent(this, PaymentActivity.class);
-				intent.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
-				startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PAYMENT);
+				moveToPayStep();
 
 			}
 		}
@@ -256,6 +253,50 @@ public class BookingActivity extends BaseActivity implements
 
 		return false;
 
+	}
+	
+	private void moveToPayStep() {
+		Intent intent = new Intent(this, PaymentActivity.class);
+		intent.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
+		startActivityForResult(intent,
+				CODE_REQUEST_ACTIVITY_PAYMENT);
+		
+	}
+	
+	private void moveToLoginProcess() {
+		if (sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN,
+				false)) {
+
+			String id = sharedPreference.getString(
+					KEY_PREFERENCE_USER_ID, null);
+			String accessToken = sharedPreference.getString(
+					KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
+			String pw = sharedPreference.getString(
+					KEY_PREFERENCE_USER_PWD, null);
+
+			Map<String, String> loginParams = new HashMap<String, String>();
+
+			if (accessToken != null) {
+				loginParams.put("accessToken", accessToken);
+			} else {
+				loginParams.put("email", id);
+			}
+
+			loginParams.put("pw", pw);
+
+			mQueue.add(new DailyHotelJsonRequest(Method.POST,
+					new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+							URL_WEBAPI_USER_LOGIN).toString(),
+					loginParams, this, this));
+		} else {
+			Toast.makeText(this, "다시 로그인해주세요", Toast.LENGTH_SHORT)
+					.show();
+			
+			startActivityForResult(new Intent(this, LoginActivity.class),
+					CODE_REQUEST_ACTIVITY_LOGIN);
+			overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+		}
+		
 	}
 
 	@Override
@@ -302,41 +343,28 @@ public class BookingActivity extends BaseActivity implements
 				dialog("네트워크 오류가 발생했습니다. 네트워크 연결을 확인해주세요.");
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION:
-				if (sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN,
-						false)) {
-
-					String id = sharedPreference.getString(
-							KEY_PREFERENCE_USER_ID, null);
-					String accessToken = sharedPreference.getString(
-							KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
-					String pw = sharedPreference.getString(
-							KEY_PREFERENCE_USER_PWD, null);
-
-					Map<String, String> loginParams = new HashMap<String, String>();
-
-					if (accessToken != null) {
-						loginParams.put("accessToken", accessToken);
-					} else {
-						loginParams.put("email", id);
-					}
-
-					loginParams.put("pw", pw);
-
-					mQueue.add(new DailyHotelJsonRequest(Method.POST,
-							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-									URL_WEBAPI_USER_LOGIN).toString(),
-							loginParams, this, this));
-				} else {
-					Toast.makeText(this, "다시 로그인해주세요", Toast.LENGTH_SHORT)
-							.show();
-				}
-
+				LoadingDialog.showLoading(this);
+				
+				// 쿠키 만료를 위한 서버에 로그아웃 리퀘스트
+				mQueue.add(new DailyHotelJsonRequest(
+						Method.GET,
+						new StringBuilder(
+								URL_DAILYHOTEL_SERVER)
+								.append(URL_WEBAPI_USER_LOGOUT)
+								.toString(), null,
+						this,
+						this));
+				
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_INVALID_DATE:
 			case CODE_RESULT_ACTIVITY_PAYMENT_FAIL:
 				dialog("알 수 없는 오류가 발생했습니다. 문의해주시기 바랍니다.");
 				break;
 			}
+		} else if (requestCode == CODE_REQUEST_ACTIVITY_LOGIN) {
+			if (resultCode == RESULT_OK)
+				moveToPayStep();	
+			
 		}
 	}
 
@@ -391,7 +419,7 @@ public class BookingActivity extends BaseActivity implements
 	public void onErrorResponse(VolleyError error) {
 		if (DEBUG)
 			error.printStackTrace();
-
+		
 		Toast.makeText(this, "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
 				Toast.LENGTH_SHORT).show();
 
@@ -483,22 +511,46 @@ public class BookingActivity extends BaseActivity implements
 			}
 		} else if (url.contains(URL_WEBAPI_USER_LOGIN)) { // INVALID_SESSION 오류의
 															// 경우 재로그인 후 다시시도한다
+			LoadingDialog.hideLoading();
 
 			try {
 				if (response.getBoolean("login")) {
-					CookieSyncManager.getInstance().sync();
+					VolleyHttpClient.createCookie();
+					moveToPayStep();
 
-					Intent intent = new Intent(this, PaymentActivity.class);
-					intent.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
-					startActivityForResult(intent,
-							CODE_REQUEST_ACTIVITY_PAYMENT);
-
+				} else {
+					// 실패 시 재시도
+					moveToLoginProcess();
+					
 				}
 			} catch (JSONException e) {
 				if (DEBUG)
 					e.printStackTrace();
 			}
 
+		} else if (url.contains(URL_WEBAPI_USER_LOGOUT)) {
+			try {
+				if (response.getBoolean("msg")) {
+					VolleyHttpClient.destroyCookie();
+					moveToLoginProcess();
+
+				} else {
+					// 실패 시 재시도
+					mQueue.add(new DailyHotelJsonRequest(
+							Method.GET,
+							new StringBuilder(
+									URL_DAILYHOTEL_SERVER)
+									.append(URL_WEBAPI_USER_LOGOUT)
+									.toString(), null,
+							this,
+							this));
+					
+				}
+			} catch (JSONException e) {
+				if (DEBUG)
+					e.printStackTrace();
+			}
+			
 		}
 	}
 

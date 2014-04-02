@@ -12,7 +12,7 @@ public interface Constants {
 	// DailyHOTEL User Controller WebAPI URL
 	public static final String URL_WEBAPI_USER = "user/";
 	public static final String URL_WEBAPI_USER_LOGIN = "user/login/mobile";
-	public static final String URL_WEBAPI_USER_LOGOUT = "user/logout";
+	public static final String URL_WEBAPI_USER_LOGOUT = "user/logout/mobile";
 	public static final String URL_WEBAPI_USER_INFO = "user/session/myinfo";
 	public static final String URL_WEBAPI_USER_BONUS_ALL = "user/session/bonus/all";
 	public static final String URL_WEBAPI_USER_BONUS_VAILD = "user/session/bonus/vaild";

@@ -21,7 +21,6 @@ public class BoardListAdapter extends BaseExpandableListAdapter{
 	private Boolean groupClickState[]; 
 	private int position;
 	
-	
 	public BoardListAdapter(Context context, ArrayList<Board> list) {
 		super();
 		this.inflater = LayoutInflater.from(context);
@@ -31,7 +30,6 @@ public class BoardListAdapter extends BaseExpandableListAdapter{
 			groupClickState[i] = false;
 		}
 	}
-
 
 	@Override
 	public String getChild(int groupPosition, int childPosition) {

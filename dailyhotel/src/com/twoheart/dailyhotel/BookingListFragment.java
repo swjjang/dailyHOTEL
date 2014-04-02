@@ -238,6 +238,8 @@ public class BookingListFragment extends BaseFragment implements Constants,
 					ed.putString(KEY_PREFERENCE_USER_PWD, null);
 					ed.commit();
 
+				} else {
+					VolleyHttpClient.createCookie();
 				}
 			} catch (JSONException e) {
 				if (DEBUG)

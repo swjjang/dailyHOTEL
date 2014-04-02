@@ -23,6 +23,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
@@ -39,7 +41,7 @@ import com.twoheart.dailyhotel.activity.SplashActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.CloseOnBackPressed;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
@@ -89,6 +91,10 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		CookieSyncManager.createInstance(this);
+		if (CookieManager.getInstance().getCookie(URL_DAILYHOTEL_SERVER) != null)
+			VolleyHttpClient.destroyCookie();
+		
 		startActivityForResult(new Intent(this, SplashActivity.class),
 				CODE_REQUEST_ACTIVITY_SPLASH);
 		super.onCreate(savedInstanceState);
@@ -452,7 +458,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 	protected void onDestroy() {
 		
 		// 쿠키 만료를 위한 서버에 로그아웃 리퀘스트
-		mQueue.add(new DailyHotelStringRequest(
+		mQueue.add(new DailyHotelJsonRequest(
 				Method.GET,
 				new StringBuilder(
 						URL_DAILYHOTEL_SERVER)

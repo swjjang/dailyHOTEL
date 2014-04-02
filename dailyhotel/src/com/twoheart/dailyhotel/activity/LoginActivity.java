@@ -316,8 +316,7 @@ public class LoginActivity extends BaseActivity implements Constants,
 				String msg = null;
 
 				if (obj.getBoolean("login")) {
-					CookieSyncManager.getInstance().sync();
-
+					VolleyHttpClient.createCookie();
 					// if (obj.length() > 1)
 					// etPwd.setText(obj.getString("msg"));
 

@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- Generated with http://android-holo-colors.com -->
     <!--
@@ -19,6 +19,7 @@
         <item name="actionMenuTextColor">@color/dh_theme_color</item>
         <item name="actionMenuTextAppearance">@style/actionbarMenuTextAppearance</item>
         <item name="actionBarItemBackground">@drawable/item_background_holo_light</item>
+        <item name="actionDropDownStyle">@style/ActionBarDropDownListViewDH_Theme</item>
     </style>
 
     <!-- Application theme. -->
@@ -30,8 +31,7 @@
         <item name="android:windowFrame">@null</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowAnimationStyle">@+android:style/Animation.Dialog</item>
-        <item name="android:windowBackground">@+android:color/transparent</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowAnimationStyle">@style/TransDialog.Animations</item>
     </style>
@@ -78,6 +78,11 @@
     <style name="ListViewDH_Theme" parent="android:Widget.ListView">
         <item name="android:listSelector">@drawable/list_selector_holo_light</item>
     </style>
+    
+    <style name="ActionBarDropDownListViewDH_Theme" parent="@style/Widget.AppCompat.Light.Spinner.DropDown.ActionBar">
+        <item name="android:background">@drawable/spinner_background</item>
+        <item name="android:dropDownSelector">@drawable/selectable_background</item>
+    </style>
 
     <style name="ListViewDH_Theme.White" parent="android:Widget.ListView.White">
         <item name="android:listSelector">@drawable/list_selector_holo_light</item>
@@ -104,9 +109,9 @@
     <style name="actionbarMenuTextAppearance">
         <item name="android:textSize">18dp</item>
     </style>
-
+    
     <style name="Theme.AppCompat.Light.NoActionBar" parent="AppTheme">
         <item name="android:windowNoTitle">true</item>
     </style>
-
+    
 </resources>

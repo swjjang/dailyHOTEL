@@ -2,19 +2,16 @@ package com.twoheart.dailyhotel.util.network.request;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
-import java.util.Set;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.twoheart.dailyhotel.util.Log;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 
@@ -32,12 +29,20 @@ public class DailyHotelJsonRequest extends DailyHotelRequest<JSONObject> {
 
 	@Override
 	protected void deliverResponse(JSONObject response) {
-		mListener.onResponse(getUrl(), response);
+		if (mListener != null)
+			mListener.onResponse(getUrl(), response);
 	}
 
 	@Override
 	protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
-		VolleyHttpClient.setSessionCookie();
+		
+		String parsed;
+        try {
+            parsed = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+        } catch (UnsupportedEncodingException e) {
+            parsed = new String(response.data);
+        }
+		
 		try {
 			String jsonString = new String(response.data,
 					HttpHeaderParser.parseCharset(response.headers));
@@ -46,6 +51,7 @@ public class DailyHotelJsonRequest extends DailyHotelRequest<JSONObject> {
 		} catch (UnsupportedEncodingException e) {
 			return Response.error(new ParseError(e));
 		} catch (JSONException je) {
+			Log.e(parsed);
 			return Response.error(new ParseError(je));
 		}
 	}
