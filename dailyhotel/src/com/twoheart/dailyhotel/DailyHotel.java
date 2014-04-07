@@ -110,7 +110,7 @@ public class DailyHotel extends Application {
 
 	private void initializeVolley() {
 		VolleyHttpClient.init(this);
-		VolleyImageLoader.init(this);
+		VolleyImageLoader.init();
 
 	}
 	

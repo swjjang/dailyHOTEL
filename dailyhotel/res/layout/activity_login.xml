@@ -20,7 +20,7 @@
             android:background="@drawable/edit_text_holo_light"
             android:ems="10"
             android:hint="Email"
-            android:inputType="text"
+            android:inputType="textEmailAddress"
             android:maxLength="50"
             android:paddingLeft="10dp"
             android:singleLine="true"

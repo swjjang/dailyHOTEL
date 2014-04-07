@@ -23,13 +23,11 @@ import kr.co.kcp.util.PackageState;
 
 import org.apache.http.util.EncodingUtils;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -38,8 +36,6 @@ import android.view.Window;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.JavascriptInterface;
-import android.webkit.JsPromptResult;
-import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -48,9 +44,9 @@ import android.widget.Toast;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Pay;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ui.LoadingDialog;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
-public class PaymentActivity extends Activity implements Constants {
+public class PaymentActivity extends BaseActivity implements Constants {
 
 	public static final int PROGRESS_STAT_NOT_START = 1;
 	public static final int PROGRESS_STAT_IN = 2;
@@ -67,7 +63,7 @@ public class PaymentActivity extends Activity implements Constants {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		setActionBarHide();
 		setContentView(R.layout.activity_payment);
 		
 		Bundle bundle = getIntent().getExtras();
@@ -113,20 +109,6 @@ public class PaymentActivity extends Activity implements Constants {
 		}
 		
 		webView.postUrl(url, parsePostParameter(postParameterKey, postParameterValue));
-		
-	}
-	
-	@Override
-	protected void onPause() {
-		CookieSyncManager.getInstance().stopSync();
-		super.onPause();
-		
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		CookieSyncManager.getInstance().startSync();
 		
 	}
 	

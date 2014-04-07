@@ -1,27 +1,18 @@
 package com.twoheart.dailyhotel.util;
 
-import android.app.ActivityManager;
-import android.content.Context;
-
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.Volley;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 
 public class VolleyImageLoader {
 
-	private static Context sContext;
 	private static RequestQueue sRequestQueue;
 	private static ImageLoader sImageLoader;
 	
-	public static void init(Context context) {
+	public static void init() {
 		sRequestQueue = VolleyHttpClient.getRequestQueue();
 
-		int memClass = ((ActivityManager) context
-				.getSystemService(Context.ACTIVITY_SERVICE))
-				.getMemoryClass();
-		// Use 1/8th of the available memory for this memory cache.
-		int cacheSize = 1024 * 1024 * memClass / 8;
+		int cacheSize = (int) (Runtime.getRuntime().maxMemory() / 4);
 		sImageLoader = new ImageLoader(sRequestQueue, new BitmapLruCache(
 				cacheSize));
 		sImageLoader.setBatchedResponseDelay(0);
@@ -33,7 +24,7 @@ public class VolleyImageLoader {
 			return sImageLoader;
 			
 		} else 
-			init(sContext);
+			init();
 			return sImageLoader;
 
 	}

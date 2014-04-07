@@ -28,9 +28,7 @@ public class ImageDetailActivity extends BaseActivity implements Constants {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
-			getSupportActionBar().hide();
+		setActionBarHide();
 		setContentView(R.layout.activity_image_detail);
 		
 		Bundle bundle = getIntent().getExtras();

@@ -15,11 +15,13 @@ package com.twoheart.dailyhotel.util.ui;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.webkit.CookieSyncManager;
 
 import com.twoheart.dailyhotel.R;
@@ -32,7 +34,7 @@ public class BaseActivity extends ActionBarActivity implements Constants {
 
 	public ActionBar actionBar;
 	public SharedPreferences sharedPreference;
-	
+	public CookieSyncManager cookieSyncManager;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,9 +66,18 @@ public class BaseActivity extends ActionBarActivity implements Constants {
 		actionBar.setHomeButtonEnabled(true);
 	}
 	
+	public void setActionBarHide() {
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
+			getSupportActionBar();
+		
+	}
+	
 	@Override
 	protected void onPause() {
-		CookieSyncManager.getInstance().stopSync();
+		if (cookieSyncManager != null)
+			cookieSyncManager.stopSync();
+		
 		super.onPause();
 		
 	}
@@ -74,7 +85,9 @@ public class BaseActivity extends ActionBarActivity implements Constants {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		CookieSyncManager.getInstance().startSync();
+		
+		if (cookieSyncManager != null)
+			cookieSyncManager.startSync();
 	}
 	
 	@Override
