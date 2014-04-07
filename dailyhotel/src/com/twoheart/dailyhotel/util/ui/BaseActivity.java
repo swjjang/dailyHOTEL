@@ -5,6 +5,9 @@
  * 
  * ActionBarCompat 라이브러리의 ActionBarActivity를 상속받는 A
  * ctivity로서 어플리케이션에서 사용되는 Activity들의 UI를 기본적으로 구
+ * 성하는데 필요한 API 메서드들을 제공한다. 뿐만 아니라, CookieSyncMana
+ * ger의 인스턴스를 관리하기도 하며, 어플리케이션의 SharedPreference를
+ * 관리하기도 한다.
  *
  * @since 2014-02-24
  * @version 1
@@ -99,32 +102,5 @@ public class BaseActivity extends ActionBarActivity implements Constants {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
-	
-//	@Override
-//	public void setContentView(int layoutResID) {
-//		super.setContentView(layoutResID);
-//		setGlobalFont((ViewGroup) this.getWindow().getDecorView().findViewById(
-//				android.R.id.content));
-//	}
-
-//	public void setGlobalFont(ViewGroup root) {
-//		if (BaseActivity.mTypefaceCommon == null) {
-//			BaseActivity.mTypefaceCommon = Typeface.createFromAsset(getAssets(),
-//					"NanumBarunGothic.ttf.mp3");
-//			
-//			BaseActivity.mTypefaceBold = Typeface.createFromAsset(getAssets(),
-//					"NanumBarunGothicBold.ttf.mp3");
-//		}
-//
-//		int childCnt = root.getChildCount();
-//		for (int i = 0; i < childCnt; i++) {
-//			View v = root.getChildAt(i);
-//			Log.d(TAG, v.toString());
-//			if (v instanceof TextView) {
-//				((TextView) v).setTypeface(mTypefaceCommon);
-//			}
-//		}
-//	}
 
 }

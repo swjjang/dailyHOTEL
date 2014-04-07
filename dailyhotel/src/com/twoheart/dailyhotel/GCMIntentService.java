@@ -108,7 +108,7 @@ public class GCMIntentService extends GCMBaseIntentService implements Constants 
 								| Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 
 		Notification notification = new Notification();
-		notification.icon = R.drawable.dh_ic_home_72;
+		notification.icon = R.drawable.img_ic_menu;
 		notification.tickerText = ticker;
 		notification.when = System.currentTimeMillis();
 		notification.vibrate = new long[] { 500, 100, 500, 100 };

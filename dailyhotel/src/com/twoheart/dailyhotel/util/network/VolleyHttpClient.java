@@ -99,8 +99,8 @@ public class VolleyHttpClient implements Constants {
 	// 로그인 요청 후 성공적으로 응답을 받았을 경우 반드시 이 메서드를 사용해야 함.
 	public static void createCookie() {
 		
-		if (CookieManager.getInstance().getCookie(URL_DAILYHOTEL_SERVER) != null)
-			Log.e("Common: " + CookieManager.getInstance().getCookie(URL_DAILYHOTEL_SERVER));
+//		if (CookieManager.getInstance().getCookie(URL_DAILYHOTEL_SERVER) != null)
+//			Log.e("Common: " + CookieManager.getInstance().getCookie(URL_DAILYHOTEL_SERVER));
 
 		List<Cookie> cookies = ((DefaultHttpClient) sHttpClient)
 				.getCookieStore().getCookies();
@@ -119,7 +119,7 @@ public class VolleyHttpClient implements Constants {
 						CookieManager.getInstance().setCookie(cookie.getDomain(),
 								cookieString.toString());
 						
-						Log.e("Init: " + cookieString.toString());
+//						Log.e("Init: " + cookieString.toString());
 
 						CookieSyncManager.getInstance().sync();
 					}

@@ -1,14 +1,21 @@
+/**
+ * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
+ *
+ * WebViewActivity
+ * 
+ * WebView를 사용하는 Activity를 위한 부모 클래스이다. 일괄적인 WebV
+ * iew의 설정을 위해 설계된 클래스이다.
+ *
+ * @since 2014-02-24
+ * @version 1
+ * @author Mike Han(mike@dailyhotel.co.kr)
+ */
 package com.twoheart.dailyhotel.util.ui;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import org.apache.http.util.EncodingUtils;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -23,9 +30,6 @@ import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 
-/**
- * Created by manjonghan on 2014. 2. 14..
- */
 public class WebViewActivity extends BaseActivity implements
 		OnLongClickListener {
 
@@ -68,28 +72,27 @@ public class WebViewActivity extends BaseActivity implements
 			if (url.equals("event://")) {
 				finish();
 				overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
+				browseToExternalBrowser(URL_STORE_GOOGLE_DAILYHOTEL);
 
-				Uri uri = Uri.parse(URL_STORE_GOOGLE_DAILYHOTEL);
-				Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-				startActivity(intent);
-				
 			} else if (url.equals("event://tstore")) {
 				finish();
 				overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
+				browseToExternalBrowser(URL_STORE_T_DAILYHOTEL);
 
-				Uri uri = Uri.parse(URL_STORE_T_DAILYHOTEL);
-				Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-				startActivity(intent);
-				
 			} else if (url.contains("facebook.com") | url.contains("naver.com")) {
-				Uri uri = Uri.parse(url);
-				Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-				startActivity(intent);
-				
+				browseToExternalBrowser(url);
+
 			} else {
 				view.loadUrl(url);
 			}
 			return true;
+		}
+		
+		private void browseToExternalBrowser(String url) {
+			Uri uri = Uri.parse(url);
+			Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+			startActivity(intent);
+			
 		}
 
 		@JavascriptInterface
@@ -136,12 +139,12 @@ public class WebViewActivity extends BaseActivity implements
 	public boolean onLongClick(View v) {
 		return true;
 	}
-	
+
 	@Override
 	public void finish() {
 		super.finish();
 		overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
-		
+
 	}
 
 	@Override

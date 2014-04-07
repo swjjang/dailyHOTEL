@@ -68,7 +68,7 @@ public class VersionActivity extends BaseActivity implements OnClickListener {
 							.setData(Uri
 									.parse(URL_STORE_GOOGLE_DAILYHOTEL));
 					// T Store
-					// marketLaunch.setData(Uri.parse("http://tsto.re/0000412421"));
+//					 marketLaunch.setData(Uri.parse(URL_STORE_T_DAILYHOTEL));
 					startActivity(marketLaunch);
 				}
 

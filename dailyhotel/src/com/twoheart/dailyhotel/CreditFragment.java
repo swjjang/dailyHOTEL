@@ -186,7 +186,7 @@ public class CreditFragment extends BaseFragment implements Constants,
 		// Play Store
 		metaInfoAndroid.put("installurl", "http://kakaolink.dailyhotel.co.kr");
 		// T Store
-		// metaInfoAndroid.put("installurl", "http://tsto.re/0000412421");
+//		 metaInfoAndroid.put("installurl", URL_STORE_T_DAILYHOTEL);
 		metaInfoAndroid.put("executeurl", "kakaoLinkTest://starActivity");
 
 		// If application is support ios platform.

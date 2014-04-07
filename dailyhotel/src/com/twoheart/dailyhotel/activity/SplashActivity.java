@@ -173,6 +173,10 @@ public class SplashActivity extends BaseActivity implements Constants,
 													Intent.ACTION_VIEW);
 											marketLaunch.setData(Uri
 													.parse(URL_STORE_GOOGLE_DAILYHOTEL));
+//											Intent marketLaunch = new Intent(
+//													Intent.ACTION_VIEW);
+//											marketLaunch.setData(Uri
+//													.parse(URL_STORE_T_DAILYHOTEL));
 											startActivity(marketLaunch);
 											finish();
 										}

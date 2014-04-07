@@ -17,10 +17,10 @@ package com.twoheart.dailyhotel.util;
 public interface Constants {
 
 	// 디버그 빌드인지를 결정하는 플래그 상수이다. 디버그 빌드일 경우 로그를 출력한다.
-	public static final boolean DEBUG = true;
+	public static final boolean DEBUG = false;
 	
 	// 회사 대표번호를 정의한 상수이다.
-	public static final String PHONE_NUMBER_DAILYHOTEL = "070-4028-9331";
+	public static final String PHONE_NUMBER_DAILYHOTEL = "1800-9120";
 	
 	// 웹서버 호스트를 정의한 상수이다.
 	 public static String URL_DAILYHOTEL_SERVER = "http://dailyhotel.kr/goodnight/";
@@ -104,11 +104,11 @@ public interface Constants {
 	
 	// Android Activity의 Request Code들이다.
 	public static final int CODE_REQUEST_ACTIVITY_HOTELTAB = 1;
-	public static final int CODE_REQUEST_FRAGMENT_BOOKINGLIST = 3;
-	public static final int CODE_REQUEST_ACTIVITY_LOGIN = 4;
-	public static final int CODE_REQUEST_ACTIVITY_PAYMENT = 5;
-	public static final int CODE_REQUEST_ACTIVITY_SPLASH = 6;
-	public static final int CODE_REQEUST_ACTIVITY_SIGNUP = 7;
+	public static final int CODE_REQUEST_FRAGMENT_BOOKINGLIST = 2;
+	public static final int CODE_REQUEST_ACTIVITY_LOGIN = 3;
+	public static final int CODE_REQUEST_ACTIVITY_PAYMENT = 4;
+	public static final int CODE_REQUEST_ACTIVITY_SPLASH = 5;
+	public static final int CODE_REQEUST_ACTIVITY_SIGNUP = 6;
 	
 	// Android Activity의 Result Code들이다.
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_FAIL = 100;
