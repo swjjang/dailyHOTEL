@@ -1,3 +1,17 @@
+/**
+ * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
+ *
+ * MainActivity (메인화면)
+ * 
+ * 어플리케이션의 주 화면으로서 최초 실행 시 보여지는 화면이다. 이 화면은 어플리케이션
+ * 최초 실행 시 SplashActivity를 먼저 띄우며, 대부분의 어플리케이션 초기화 작업을 
+ * SplashActivity에게 넘긴다. 그러나, 일부 초기화 작업도 수행하며, 로그인 세션관리와
+ * 네비게이션 메뉴를 표시하는 일을 하는 화면이다.
+ *
+ * @since 2014-02-24
+ * @version 1
+ * @author Mike Han(mike@dailyhotel.co.kr)
+ */
 package com.twoheart.dailyhotel;
 
 import java.security.MessageDigest;
@@ -84,24 +98,29 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 	public DrawerMenu menuBookingListFragment;
 	public DrawerMenu menuCreditFragment;
 	public DrawerMenu menuSettingFragment;
-	
+
 	private RequestQueue mQueue;
 
 	private CloseOnBackPressed backButtonHandler;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		
+		// 쿠키 동기화를 초기화한다. 로그인, 로그아웃 세션 쿠키는 MainActivity의 생명주기와 동기화한다.
 		CookieSyncManager.createInstance(this);
+		
+		// 이전의 비정상 종료에 의한 만료된 쿠키들이 있을 수 있으므로, SplashActivity에서 자동 로그인을
+		// 처리하기 이전에 미리 이미 저장되어 있는 쿠키들을 정리한다.
 		if (CookieManager.getInstance().getCookie(URL_DAILYHOTEL_SERVER) != null)
 			VolleyHttpClient.destroyCookie();
-		
+
 		startActivityForResult(new Intent(this, SplashActivity.class),
 				CODE_REQUEST_ACTIVITY_SPLASH);
-		super.onCreate(savedInstanceState);
 
 		setTheme(R.style.AppTheme);
 		setContentView(R.layout.activity_main);
-		setNavigationDrawer(this);
+		setNavigationDrawer();
 
 		mQueue = VolleyHttpClient.getRequestQueue();
 		fragmentManager = getSupportFragmentManager();
@@ -121,9 +140,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (requestCode == CODE_REQUEST_ACTIVITY_SPLASH) {
-			if (resultCode == CODE_RESULT_ACTIVITY_SPLASH_NEW_EVENT) {
-				// ((HotelListFragment)
-				// getFragment(INDEX_HOTEL_LIST_FRAGMENT)).notifyNewEvent();
+			if (resultCode != RESULT_OK) {
+				super.finish();
 			}
 		}
 	}
@@ -135,7 +153,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 				mMenuImages.indexOf(selectedMenu), mDrawerMenuListAdapter
 						.getItemId(mMenuImages.indexOf(selectedMenu)));
 	}
-	
+
 	public Fragment getFragment(int index) {
 		Fragment newFragment = null;
 
@@ -165,11 +183,11 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 
 	public void replaceFragment(Fragment fragment) {
 		clearFragmentBackStack();
-		
+
 		fragmentManager.beginTransaction()
 				.replace(R.id.content_frame, fragment)
 				.commitAllowingStateLoss();
-		
+
 	}
 
 	public void addFragment(Fragment fragment) {
@@ -178,16 +196,15 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 				.setCustomAnimations(R.anim.slide_in_right,
 						R.anim.slide_out_right, R.anim.slide_in_right,
 						R.anim.slide_out_right)
-				.add(R.id.content_frame, fragment)
-				.addToBackStack(null)
+				.add(R.id.content_frame, fragment).addToBackStack(null)
 				.commit();
-		
+
 	}
-	
+
 	private void clearFragmentBackStack() {
-		for (int i=0; i<fragmentManager.getBackStackEntryCount(); ++i)
+		for (int i = 0; i < fragmentManager.getBackStackEntryCount(); ++i)
 			fragmentManager.popBackStack();
-		
+
 	}
 
 	@Deprecated
@@ -214,7 +231,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 	@Override
 	public void onItemClick(AdapterView<?> adapterView, View view,
 			int position, long id) {
-		drawerLayout.closeDrawer(drawerList);
 
 		int selectedMenuIconId = ((DrawerMenu) (adapterView.getAdapter()
 				.getItem(position))).getIcon();
@@ -237,11 +253,12 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 			break;
 		}
 
+		drawerLayout.closeDrawer(drawerList);
 		replaceFragment(getFragment(indexLastFragment));
 
 	}
 
-	public void setNavigationDrawer(OnItemClickListener listener) {
+	public void setNavigationDrawer() {
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
 				R.drawable.ic_drawer, 0, 0) {
@@ -288,7 +305,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 				R.layout.list_row_drawer_entry, mMenuImages);
 
 		drawerList.setAdapter(mDrawerMenuListAdapter);
-		drawerList.setOnItemClickListener(listener);
+		drawerList.setOnItemClickListener(this);
 
 	}
 
@@ -298,6 +315,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 
 		if (drawerToggle != null)
 			drawerToggle.syncState();
+
 	}
 
 	@Override
@@ -327,7 +345,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 			super.finish();
 
 	}
-	
+
 	private class DrawerMenu {
 
 		public static final int DRAWER_MENU_LIST_TYPE_LOGO = 0;
@@ -356,11 +374,11 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 			this.type = type;
 		}
 
-		public int gettype() {
+		public int getType() {
 			return type;
 		}
 
-		public void settype(int type) {
+		public void setType(int type) {
 			this.type = type;
 		}
 
@@ -414,11 +432,16 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 		}
 
 		@Override
+		public boolean isEnabled(int position) {
+			return (list.get(position).getType() == DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY) ? true : false;
+		}
+
+		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 
 			DrawerMenu item = list.get(position);
 
-			switch (item.gettype()) {
+			switch (item.getType()) {
 			case DrawerMenu.DRAWER_MENU_LIST_TYPE_LOGO:
 				convertView = inflater.inflate(R.layout.list_row_drawer_logo,
 						null);
@@ -432,7 +455,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 						.findViewById(R.id.drawerMenuItemTitle);
 
 				drawerMenuItemTitle.setText(item.getTitle());
-
 				break;
 
 			case DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY:
@@ -456,22 +478,17 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 
 	@Override
 	protected void onDestroy() {
-		
+
 		// 쿠키 만료를 위한 서버에 로그아웃 리퀘스트
-		mQueue.add(new DailyHotelJsonRequest(
-				Method.GET,
-				new StringBuilder(
-						URL_DAILYHOTEL_SERVER)
-						.append(URL_WEBAPI_USER_LOGOUT)
-						.toString(), null,
-				null,
-				null));
-		
+		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(
+				URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGOUT)
+				.toString(), null, null, null));
+
 		VolleyHttpClient.destroyCookie();
-		
+
 		super.onDestroy();
 	}
-	
+
 	@Override
 	public void onLoadComplete(Fragment fragment, boolean isSucceed) {
 		if (!isSucceed) {
@@ -479,19 +496,20 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 			Toast.makeText(this, "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
 					Toast.LENGTH_SHORT).show();
 		}
-		
+
 		LoadingDialog.hideLoading();
-		
+
 		if (fragment != null)
-			GlobalFont.apply((ViewGroup) fragment.getView().getRootView());
-			
+			if (fragment.getView() != null)
+				GlobalFont.apply((ViewGroup) fragment.getView().getRootView());
+
 	}
 
 	@Override
 	public void onErrorResponse(VolleyError error) {
 		if (DEBUG)
 			error.printStackTrace();
-		
+
 		onLoadComplete(null, false);
 	}
 

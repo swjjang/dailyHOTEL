@@ -11,12 +11,12 @@ import com.twoheart.dailyhotel.R;
 
 public class LoadingDialog {
 
-	private static final int LOADING_DELAY = 600;
-	private static final int DISMISS_DELAY = 100;
+	private static final int LOADING_DELAY = 100;
 	private static Dialog loadingDialog = null;
 
-	public static void showLoading(final Activity activity) {
+	public static synchronized void showLoading(final Activity activity) {
 		if (loadingDialog == null) {
+
 			loadingDialog = new Dialog(activity, R.style.TransDialog);
 			ProgressBar pb = new ProgressBar(activity);
 			LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT,
@@ -28,38 +28,33 @@ public class LoadingDialog {
 
 						@Override
 						public void onCancel(DialogInterface dialog) {
-							Handler handler = new Handler();
-							handler.postDelayed(new Runnable() {
-
-								@Override
-								public void run() {
-									activity.onBackPressed();
-
-								}
-							}, DISMISS_DELAY);
-
 							hideLoading();
+							activity.onBackPressed();
+
 						}
 					});
+
+			Handler handler = new Handler();
+			handler.postDelayed(new Runnable() {
+
+				@Override
+				public void run() {
+
+					if (loadingDialog != null) {
+						loadingDialog.show();
+					}
+
+				}
+			}, LOADING_DELAY);
+		} else {
+			hideLoading();
+			showLoading(activity);
 		}
-
-		Handler handler = new Handler();
-		handler.postDelayed(new Runnable() {
-
-			@Override
-			public void run() {
-				if (loadingDialog != null)
-					loadingDialog.show();
-
-			}
-		}, LOADING_DELAY);
-
 	}
 
 	public static void hideLoading() {
 		if (loadingDialog != null) {
-			if (loadingDialog.isShowing())
-				loadingDialog.dismiss();
+			loadingDialog.dismiss();
 			loadingDialog = null;
 		}
 	}

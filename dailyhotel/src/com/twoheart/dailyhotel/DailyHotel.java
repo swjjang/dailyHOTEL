@@ -18,6 +18,7 @@ import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 public class DailyHotel extends Application {
 	
 	private static Typeface mTypeface;
+	private static Typeface mBoldTypeface;
 	private static GoogleAnalytics mGa;
 	private static Tracker mTracker;
 
@@ -115,10 +116,14 @@ public class DailyHotel extends Application {
 	
 	private void initializeFont() {
 		mTypeface = Typeface.createFromAsset(getAssets(), "NanumBarunGothic.ttf.mp3");
+		mBoldTypeface = Typeface.createFromAsset(getAssets(), "NanumBarunGothicBold.ttf.mp3");
 	}
 
 	public static Typeface getTypeface() {
 		return mTypeface;
 	}
 
+	public static Typeface getBoldTypeface() {
+		return mBoldTypeface;
+	}
 }

@@ -1,13 +1,30 @@
+/**
+ * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
+ *
+ * Constants (어플리케이션 전역 상수)
+ * 
+ * 어플리케이션에서 사용되는 전역 상수들을 정리해놓은 인터페이스이다. 어플리
+ * 케이션에서 사용되는 전역 상수들은 거의 고정된 값들이며 여러 부분에서 일
+ * 률적으로 사용되므로 상수로서 선언됐다. 이 인터페이스는 각 클래스에서 상속
+ * 받아서 바로 사용될 수 있다.
+ *
+ * @since 2014-02-24
+ * @version 1
+ * @author Mike Han(mike@dailyhotel.co.kr)
+ */
 package com.twoheart.dailyhotel.util;
 
 public interface Constants {
 
+	// 디버그 빌드인지를 결정하는 플래그 상수이다. 디버그 빌드일 경우 로그를 출력한다.
 	public static final boolean DEBUG = true;
-
-	public static final String DAILYHOTEL_PHONE_NUMBER = "1800-1225";
 	
-//	 public static String URL_DAILYHOTEL_SERVER = "http://dailyhotel.kr/goodnight/";
-	public static final String URL_DAILYHOTEL_SERVER = "http://dailyhotel.cafe24.com/goodnight/";
+	// 회사 대표번호를 정의한 상수이다.
+	public static final String PHONE_NUMBER_DAILYHOTEL = "070-4028-9331";
+	
+	// 웹서버 호스트를 정의한 상수이다.
+	 public static String URL_DAILYHOTEL_SERVER = "http://dailyhotel.kr/goodnight/";
+//	public static final String URL_DAILYHOTEL_SERVER = "http://dailyhotel.cafe24.com/goodnight/";
 	
 	// DailyHOTEL User Controller WebAPI URL
 	public static final String URL_WEBAPI_USER = "user/";
@@ -48,6 +65,13 @@ public interface Constants {
 	// DailyHOTEL Site Controller WebAPI URL
 	public static final String URL_WEBAPI_SITE_LOCATION_LIST = "site/get";
 	
+	public static final String URL_STORE_GOOGLE_DAILYHOTEL = "market://details?id=com.twoheart.dailyhotel";
+	public static final String URL_STORE_T_DAILYHOTEL = "http://tsto.re/0000412421";
+	
+	public static final String URL_WEB_PRIVACY = "http://policies.dailyhotel.co.kr/privacy/";
+	public static final String URL_WEB_TERMS = "http://policies.dailyhotel.co.kr/terms/";
+	public static final String URL_WEB_ABOUT = "http://policies.dailyhotel.co.kr/about/";
+	
 	// Preference
 	public static final String NAME_DAILYHOTEL_SHARED_PREFERENCE = "GOOD_NIGHT";
 
@@ -70,6 +94,7 @@ public interface Constants {
 	public static final String KEY_PREFERENCE_REGION_DEFALUT = "REGION_DEFALUT";
 	public static final String KEY_PREFERENCE_REGION_INDEX = "REGION_INDEX";
 
+	// Android 컴포넌트 간에 데이터를 주고받을 때 사용되는 인텐트 이름(키)을 정의한 상수이다.
 	public static final String NAME_INTENT_EXTRA_DATA_HOTEL = "hotel";
 	public static final String NAME_INTENT_EXTRA_DATA_HOTELDETAIL = "hoteldetail";
 	public static final String NAME_INTENT_EXTRA_DATA_SALETIME = "saletime";
@@ -77,6 +102,7 @@ public interface Constants {
 	public static final String NAME_INTENT_EXTRA_DATA_PAY = "pay";
 	public static final String NAME_INTENT_EXTRA_DATA_SELECTED_IMAGE_URL = "sel_image_url";
 	
+	// Android Activity의 Request Code들이다.
 	public static final int CODE_REQUEST_ACTIVITY_HOTELTAB = 1;
 	public static final int CODE_REQUEST_FRAGMENT_BOOKINGLIST = 3;
 	public static final int CODE_REQUEST_ACTIVITY_LOGIN = 4;
@@ -84,20 +110,15 @@ public interface Constants {
 	public static final int CODE_REQUEST_ACTIVITY_SPLASH = 6;
 	public static final int CODE_REQEUST_ACTIVITY_SIGNUP = 7;
 	
-	public static final int CODE_RESULT_ACTIVITY_PAYMENT_FAIL = 7;
-	public static final int CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS = 8;
-	public static final int CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION = 9;
-	public static final int CODE_RESULT_ACTIVITY_PAYMENT_SOLD_OUT = 10;
-	public static final int CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE = 11;
-	public static final int CODE_RESULT_ACTIVITY_PAYMENT_INVALID_DATE = 12;
-	public static final int CODE_RESULT_ACTIVITY_PAYMENT_NOT_AVAILABLE = 13;
-	public static final int CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR = 14;
-	public static final int CODE_RESULT_ACTIVITY_SPLASH_NEW_EVENT = 15;
-	
-	public static final String URL_STORE_GOOGLE_DAILYHOTEL = "market://details?id=com.twoheart.dailyhotel";
-	public static final String URL_STORE_T_DAILYHOTEL = "http://tsto.re/0000412421";
-	
-	public static final String URL_WEB_PRIVACY = "http://policies.dailyhotel.co.kr/privacy/";
-	public static final String URL_WEB_TERMS = "http://policies.dailyhotel.co.kr/terms/";
+	// Android Activity의 Result Code들이다.
+	public static final int CODE_RESULT_ACTIVITY_PAYMENT_FAIL = 100;
+	public static final int CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS = 101;
+	public static final int CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION = 102;
+	public static final int CODE_RESULT_ACTIVITY_PAYMENT_SOLD_OUT = 103;
+	public static final int CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE = 104;
+	public static final int CODE_RESULT_ACTIVITY_PAYMENT_INVALID_DATE = 105;
+	public static final int CODE_RESULT_ACTIVITY_PAYMENT_NOT_AVAILABLE = 106;
+	public static final int CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR = 107;
+	public static final int CODE_RESULT_ACTIVITY_SPLASH_NEW_EVENT = 108;
 	
 }

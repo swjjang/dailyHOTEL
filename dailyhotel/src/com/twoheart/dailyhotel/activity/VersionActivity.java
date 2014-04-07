@@ -60,13 +60,13 @@ public class VersionActivity extends BaseActivity implements OnClickListener {
 				int currentVersion = Integer.parseInt(this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName.replace(".", ""));
 
 				if (maxVersion == currentVersion) {
-					Toast.makeText(getApplicationContext(), "이미 최신버전입니다.", Toast.LENGTH_LONG).show();
+					Toast.makeText(this, "이미 최신버전입니다.", Toast.LENGTH_LONG).show();
 				} else {
 					Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
 					// Play Store
 					marketLaunch
 							.setData(Uri
-									.parse("market://details?id=com.twoheart.dailyhotel"));
+									.parse(URL_STORE_GOOGLE_DAILYHOTEL));
 					// T Store
 					// marketLaunch.setData(Uri.parse("http://tsto.re/0000412421"));
 					startActivity(marketLaunch);

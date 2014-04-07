@@ -1,3 +1,17 @@
+/**
+ * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
+ *
+ * PaymentActivity (결제화면)
+ * 
+ * 웹서버에서 이용하는 KCP 결제 모듈을 이용하는 화면이다. WebView를 이용
+ * 해서 KCP 결제를 진행하는 웹서버 API에 POST 방식으로 요청한다. 요청 시
+ * 요청 파라미터에 사용자 정보를 담는다. 이는 서버 사이드에서 Facbook 계정
+ * 임인지를 확인하기 위해서이다.
+ *
+ * @since 2014-02-24
+ * @version 1
+ * @author Mike Han(mike@dailyhotel.co.kr)
+ */
 package com.twoheart.dailyhotel.activity;
 
 import java.util.ArrayList;
@@ -24,18 +38,16 @@ import android.view.Window;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.JavascriptInterface;
+import android.webkit.JsPromptResult;
+import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-import com.android.volley.Request.Method;
-import com.android.volley.RequestQueue;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.obj.Pay;
+import com.twoheart.dailyhotel.model.Pay;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
 public class PaymentActivity extends Activity implements Constants {
@@ -52,7 +64,6 @@ public class PaymentActivity extends Activity implements Constants {
 	
 	private Pay mPay;
 
-	@JavascriptInterface
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -65,23 +76,10 @@ public class PaymentActivity extends Activity implements Constants {
 					.getParcelable(NAME_INTENT_EXTRA_DATA_PAY);
 		}
 		
-		webView = (WebView) findViewById(R.id.webView);
 		CookieManager.getInstance().setAcceptCookie(true);
+		CookieSyncManager.getInstance().sync();
 		
-	}
-	
-	@Override
-	protected void onPause() {
-		CookieSyncManager.getInstance().stopSync();
-		super.onPause();
-		
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		CookieSyncManager.getInstance().startSync();
-		
+		webView = (WebView) findViewById(R.id.webView);
 		webView.getSettings().setSavePassword(false);
 		webView.getSettings().setJavaScriptEnabled(true);
 		webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
@@ -118,6 +116,20 @@ public class PaymentActivity extends Activity implements Constants {
 		
 	}
 	
+	@Override
+	protected void onPause() {
+		CookieSyncManager.getInstance().stopSync();
+		super.onPause();
+		
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		CookieSyncManager.getInstance().startSync();
+		
+	}
+	
 	private byte[] parsePostParameter(String[] key, String[] value) {
 		
 		List<byte[]> resultList = new ArrayList<byte[]>();
@@ -146,20 +158,13 @@ public class PaymentActivity extends Activity implements Constants {
 		for (int i=0; i<resultList.size(); i++) {
 			sizeOfResult[i] = resultList.get(i).length;
 			
-			if (Constants.DEBUG)
-				Log.d("sizeOfResult", Integer.toString(sizeOfResult[i]));
 		}
 		
 		for (int i=0; i<sizeOfResult.length; i++) {
 			size += sizeOfResult[i];
 			
-			if (Constants.DEBUG)
-				Log.d("size", Integer.toString(size));
 		}
 		
-		if (Constants.DEBUG)
-			Log.d("final size", Integer.toString(size));
-			
 		byte[] result = new byte[size];
 		
 		int currentSize = 0;
@@ -191,10 +196,53 @@ public class PaymentActivity extends Activity implements Constants {
 
 		return true;
 	}
+	
+//	private class mWebChromeClient extends WebChromeClient {
+//
+//		@Override
+//		public boolean onJsAlert(WebView view, String url, String message,
+//				JsResult result) {
+//			LoadingDialog.hideLoading();
+//			return super.onJsAlert(view, url, message, result);
+//		}
+//
+//		@Override
+//		public boolean onJsBeforeUnload(WebView view, String url,
+//				String message, JsResult result) {
+//			LoadingDialog.hideLoading();
+//			return super.onJsBeforeUnload(view, url, message, result);
+//		}
+//
+//		@Override
+//		public boolean onJsConfirm(WebView view, String url, String message,
+//				JsResult result) {
+//			LoadingDialog.hideLoading();
+//			return super.onJsConfirm(view, url, message, result);
+//		}
+//
+//		@Override
+//		public boolean onJsPrompt(WebView view, String url, String message,
+//				String defaultValue, JsPromptResult result) {
+//			LoadingDialog.hideLoading();
+//			return super.onJsPrompt(view, url, message, defaultValue, result);
+//		}
+//
+//		@Override
+//		public void onProgressChanged(WebView view, int newProgress) {
+//			super.onProgressChanged(view, newProgress);
+//			
+//			if (newProgress < 100)
+//				LoadingDialog.showLoading(PaymentActivity.this);
+//			else
+//				LoadingDialog.hideLoading();
+//				
+//		}
+//		
+//		
+//	}
 
 	private class mWebViewClient extends WebViewClient {
 		
-		@JavascriptInterface
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
 			Log.d(ResultRcvActivity.m_strLogTag,
@@ -228,7 +276,6 @@ public class PaymentActivity extends Activity implements Constants {
 			return true;
 		}
 
-		@JavascriptInterface
 		// error 처리
 		@Override
 		public void onReceivedError(WebView view, int errorCode,
@@ -238,21 +285,20 @@ public class PaymentActivity extends Activity implements Constants {
 			setResult(CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR);
 			finish();
 		}
-
-		@Override
-		public void onPageFinished(WebView view, String url) {
-			super.onPageFinished(view, url);
-			
-			LoadingDialog.hideLoading();
-		}
-
-		@Override
-		public void onPageStarted(WebView view, String url, Bitmap favicon) {
-			super.onPageStarted(view, url, favicon);
-			
-			LoadingDialog.showLoading(PaymentActivity.this);
-		}
 		
+//		@Override
+//		public void onPageStarted(WebView view, String url, Bitmap favicon) {
+//			super.onPageStarted(view, url, favicon);
+//			LoadingDialog.showLoading(PaymentActivity.this);
+//		}
+//
+//
+//		@Override
+//		public void onPageFinished(WebView view, String url) {
+//			super.onPageFinished(view, url);
+//			LoadingDialog.hideLoading();
+//		}
+
 		
 	}
 
@@ -305,7 +351,6 @@ public class PaymentActivity extends Activity implements Constants {
 					new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							// TODO Auto-generated method stub
 							dialog.dismiss();
 						}
 					});
@@ -348,7 +393,6 @@ public class PaymentActivity extends Activity implements Constants {
 		}
 	}
 
-	@JavascriptInterface
 	@Override
 	protected void onRestart() {
 		super.onRestart();
@@ -458,9 +502,9 @@ public class PaymentActivity extends Activity implements Constants {
 		} finally {
 		}
 	}
-
-	@JavascriptInterface
+	
 	@Override
+	@JavascriptInterface
 	protected Dialog onCreateDialog(int id) {
 		Log.d(ResultRcvActivity.m_strLogTag,
 				"[PayDemoActivity] called__onCreateDialog - id=[" + id + "]");
@@ -477,9 +521,7 @@ public class PaymentActivity extends Activity implements Constants {
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						// TODO Auto-generated method stub
 						dialog.dismiss();
-
 						finishActivity("사용자 취소");
 					}
 				});
@@ -487,7 +529,6 @@ public class PaymentActivity extends Activity implements Constants {
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						// TODO Auto-generated method stub
 						dialog.dismiss();
 					}
 				});
@@ -497,6 +538,7 @@ public class PaymentActivity extends Activity implements Constants {
 		return alertDlg;
 	}
 
+	@JavascriptInterface
 	public void finishActivity(String p_strFinishMsg) {
 		
 		int resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;

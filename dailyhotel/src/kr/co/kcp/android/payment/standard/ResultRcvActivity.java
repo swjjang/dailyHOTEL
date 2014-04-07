@@ -19,8 +19,6 @@ public class ResultRcvActivity extends Activity {
 				"[ResultRcvActivity] called__onCreate");
 
 		super.onCreate(savedInstanceState);
-
-		// TODO Auto-generated method stub
 		Intent myIntent = getIntent();
 
 		Log.d(m_strLogTag, "[ResultRcvActivity] launch_uri=["

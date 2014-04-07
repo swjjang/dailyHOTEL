@@ -1,5 +1,18 @@
+/**
+ * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
+ *
+ * LoginActivity (로그인화면)
+ * 
+ * 사용자 계정 로그인을 담당하는 화면이다. 사용자로부터 아이디와 패스워드를
+ * 입력받으며, 이를 로그인을 하는 웹서버 API를 이용한다. 
+ *
+ * @since 2014-02-24
+ * @version 1
+ * @author Mike Han(mike@dailyhotel.co.kr)
+ */
 package com.twoheart.dailyhotel.activity;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -19,11 +32,8 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
-import android.webkit.CookieSyncManager;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -41,12 +51,13 @@ import com.facebook.widget.LoginButton;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
-import com.twoheart.dailyhotel.util.Log;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
+
+import de.ankri.views.Switch;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class LoginActivity extends BaseActivity implements Constants,
@@ -88,7 +99,7 @@ public class LoginActivity extends BaseActivity implements Constants,
 		tvForgotPwd.setOnClickListener(this);
 		btnLogin.setOnClickListener(this);
 		facebookLogin.setOnClickListener(this);
-
+		
 		etPwd.setId(EditorInfo.IME_ACTION_DONE);
 		etPwd.setOnEditorActionListener(new OnEditorActionListener() {
 
@@ -209,7 +220,7 @@ public class LoginActivity extends BaseActivity implements Constants,
 					.build();
 
 			Session.OpenRequest or = new Session.OpenRequest(this);
-			or.setPermissions("email");
+			or.setPermissions(Arrays.asList("email", "basic_info"));
 			or.setCallback(statusCallback);
 
 			fbSession.openForRead(or);
@@ -264,8 +275,10 @@ public class LoginActivity extends BaseActivity implements Constants,
 
 			if (accessToken != null) {
 				ed.putString(KEY_PREFERENCE_USER_ACCESS_TOKEN, accessToken);
+				ed.putString(KEY_PREFERENCE_USER_ID, null);
 			} else {
 				ed.putString(KEY_PREFERENCE_USER_ID, id);
+				ed.putString(KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
 			}
 
 			ed.putString(KEY_PREFERENCE_USER_PWD, pwd);
@@ -320,12 +333,12 @@ public class LoginActivity extends BaseActivity implements Constants,
 					// if (obj.length() > 1)
 					// etPwd.setText(obj.getString("msg"));
 
-					Log.d(TAG, "로그인 성공");
 					Toast.makeText(this, "로그인되었습니다", Toast.LENGTH_SHORT).show();
-					LoadingDialog.hideLoading();
 					storeLoginInfo();
 
 					setResult(RESULT_OK);
+					
+					LoadingDialog.hideLoading();
 					finish();
 
 				} else {

@@ -1,3 +1,18 @@
+/**
+ * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
+ *
+ * SplashActivity (로딩화면)
+ * 
+ * 어플리케이션 처음 시작 시 나타나는 화면이며, 이는 MainActivity에 의해서
+ * 호출된다. SplashActivity는 어플리케이션 처음 실행 시 가장 먼저 나타나는
+ * 화면이나 어플리케이션의 주 화면은 아니므로 MainActivity가 처음 실행됐을 시
+ * 호출된다. SplashActivity는 어플리케이션이 최신 버전인지 확인하며, 자동
+ * 로그인이 필요한 경우 수행하는 일을 한다.
+ *
+ * @since 2014-02-24
+ * @version 1
+ * @author Mike Han(mike@dailyhotel.co.kr)
+ */
 package com.twoheart.dailyhotel.activity;
 
 import java.util.HashMap;
@@ -11,6 +26,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Window;
@@ -38,14 +54,14 @@ public class SplashActivity extends BaseActivity implements Constants,
 		DailyHotelJsonResponseListener, ErrorListener {
 
 	private static final String TAG = "SplashActivity";
-	private static final String appPlayStoreUrl = "market://details?id=com.twoheart.dailyhotel";
-
 	private RequestQueue mQueue;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
+			getSupportActionBar().hide();
 		setContentView(R.layout.activity_splash);
 
 		mQueue = VolleyHttpClient.getRequestQueue();
@@ -83,27 +99,17 @@ public class SplashActivity extends BaseActivity implements Constants,
 			mQueue.add(new DailyHotelJsonRequest(Method.POST,
 					new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 							URL_WEBAPI_USER_LOGIN).toString(), loginParams,
-					SplashActivity.this, SplashActivity.this));
+					this, this));
 		}
 
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(
 				URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_VERSION)
-				.toString(), null, SplashActivity.this, SplashActivity.this));
+				.toString(), null, this, this));
 
-		// sleep 2 second
-		Handler h = new Handler();
-		h.postDelayed(new Runnable() {
-			public void run() {
-				finish();
-
-			}
-		}, 2000);
 	}
 
 	@Override
 	public void onResponse(String url, JSONObject response) {
-		Log.d(TAG, url);
-
 		if (url.contains(URL_WEBAPI_USER_LOGIN)) {
 
 			try {
@@ -118,11 +124,7 @@ public class SplashActivity extends BaseActivity implements Constants,
 
 				} else {
 					VolleyHttpClient.createCookie();
-					// 사용자 정보 요청.
-					mQueue.add(new DailyHotelJsonRequest(Method.GET,
-							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-									URL_WEBAPI_USER_INFO).toString(), null,
-							this, this));
+					
 				}
 			} catch (JSONException e) {
 				if (DEBUG)
@@ -172,13 +174,23 @@ public class SplashActivity extends BaseActivity implements Constants,
 											Intent marketLaunch = new Intent(
 													Intent.ACTION_VIEW);
 											marketLaunch.setData(Uri
-													.parse(appPlayStoreUrl));
+													.parse(URL_STORE_GOOGLE_DAILYHOTEL));
 											startActivity(marketLaunch);
 											finish();
 										}
 									});
 					AlertDialog alert = alertDialog.create();
 					alert.show();
+				} else {
+					// sleep 2 second
+					Handler h = new Handler();
+					h.postDelayed(new Runnable() {
+						public void run() {
+							setResult(RESULT_OK);
+							finish();
+
+						}
+					}, 2000);
 				}
 
 			} catch (UnsupportedOperationException e) {

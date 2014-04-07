@@ -19,7 +19,8 @@
         <item name="actionMenuTextColor">@color/dh_theme_color</item>
         <item name="actionMenuTextAppearance">@style/actionbarMenuTextAppearance</item>
         <item name="actionBarItemBackground">@drawable/item_background_holo_light</item>
-        <item name="actionDropDownStyle">@style/ActionBarDropDownListViewDH_Theme</item>
+        <item name="actionDropDownStyle">@style/DropDownListViewDH_Theme.ActionBar</item>
+        <item name="dropDownListViewStyle">@style/DropDownDH_Theme.ActionBar</item>
     </style>
 
     <!-- Application theme. -->
@@ -58,7 +59,7 @@
     <style name="SpinnerDropDownItemDH_Theme" parent="android:Widget.DropDownItem.Spinner">
         <item name="android:checkMark">@drawable/btn_radio_holo_light</item>
     </style>
-
+    
     <style name="TabDH_Theme" parent="Widget.TabPageIndicator">
         <item name="android:paddingLeft">32dp</item>
         <item name="android:paddingRight">32dp</item>
@@ -76,36 +77,26 @@
     </style>
 
     <style name="ListViewDH_Theme" parent="android:Widget.ListView">
-        <item name="android:listSelector">@drawable/list_selector_holo_light</item>
+        <item name="android:listSelector">@android:color/transparent</item>
     </style>
     
-    <style name="ActionBarDropDownListViewDH_Theme" parent="@style/Widget.AppCompat.Light.Spinner.DropDown.ActionBar">
+    <style name="DropDownListViewDH_Theme.ActionBar" parent="@style/Widget.AppCompat.Light.Spinner.DropDown.ActionBar">
         <item name="android:background">@drawable/spinner_background</item>
         <item name="android:dropDownSelector">@drawable/selectable_background</item>
     </style>
+    
+    <style name="DropDownDH_Theme.ActionBar" parent="@style/Widget.AppCompat.Light.ListView.DropDown">
+    		<item name="android:listSelector">@drawable/selectable_background</item>
+	</style>
 
     <style name="ListViewDH_Theme.White" parent="android:Widget.ListView.White">
-        <item name="android:listSelector">@drawable/list_selector_holo_light</item>
+        <item name="android:listSelector">@android:color/transparent</item>
     </style>
 
     <style name="SpinnerItemDH_Theme" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
         <item name="android:textColor">#000000</item>
     </style>
     
-    <style name="switch_dark">
-        <item name="@attr/colorChecked">#FFFFFF</item>
-        <item name="@attr/colorUnChecked">#808080</item>
-        <item name="@attr/backgroundDrawable">@drawable/switch_bg_holo_dark</item>
-        <item name="@attr/switchDrawable">@drawable/switch_thumb_activated_holo_dark</item>
-    </style>
-
-    <style name="switch_light">
-        <item name="@attr/colorChecked">#FFFFFF</item>
-        <item name="@attr/colorUnChecked">#181818</item>
-        <item name="@attr/backgroundDrawable">@drawable/switch_bg_holo_light</item>
-        <item name="@attr/switchDrawable">@drawable/switch_thumb_activated_dh</item>
-    </style>
-
     <style name="actionbarMenuTextAppearance">
         <item name="android:textSize">18dp</item>
     </style>

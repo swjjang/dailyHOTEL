@@ -20,8 +20,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.twoheart.dailyhotel.obj.SaleTime;
+import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.WakeLock;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
@@ -74,13 +75,14 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 		btnNotify.setOnClickListener(this);
 
 		mHostActivity.setActionBar("dailyHOTEL");
-
+		
 		return view;
 	}
 	
 	@Override
 	public void onResume() {
 		super.onResume();
+		GlobalFont.apply((ViewGroup) getView().getRootView());
 		
 		setTimer();
 		setNotify(isEnabledNotify);

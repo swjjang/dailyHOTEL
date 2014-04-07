@@ -43,7 +43,6 @@ public class WebViewActivity extends BaseActivity implements
 
 	@JavascriptInterface
 	protected void setWebView(String url) {
-
 		webChromeClient = new DailyHotelWebChromeClient();
 		webViewClient = new DailyHotelWebViewClient();
 		webView = (WebView) findViewById(R.id.webView);
@@ -73,6 +72,7 @@ public class WebViewActivity extends BaseActivity implements
 				Uri uri = Uri.parse(URL_STORE_GOOGLE_DAILYHOTEL);
 				Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 				startActivity(intent);
+				
 			} else if (url.equals("event://tstore")) {
 				finish();
 				overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
@@ -80,6 +80,12 @@ public class WebViewActivity extends BaseActivity implements
 				Uri uri = Uri.parse(URL_STORE_T_DAILYHOTEL);
 				Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 				startActivity(intent);
+				
+			} else if (url.contains("facebook.com") | url.contains("naver.com")) {
+				Uri uri = Uri.parse(url);
+				Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+				startActivity(intent);
+				
 			} else {
 				view.loadUrl(url);
 			}

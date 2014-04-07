@@ -51,7 +51,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_margin="20dp"
-        android:text="11시에 시작되는 놀라운 할인 호텔"
+        android:text="누구나 즐기는 호텔 라이프"
         android:textColor="@color/textView_textColor_main" />
 
 </RelativeLayout>

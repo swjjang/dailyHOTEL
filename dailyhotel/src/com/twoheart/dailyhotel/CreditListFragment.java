@@ -11,7 +11,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.adapter.CreditListAdapter;
-import com.twoheart.dailyhotel.obj.Credit;
+import com.twoheart.dailyhotel.model.Credit;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
 public class CreditListFragment extends BaseFragment {

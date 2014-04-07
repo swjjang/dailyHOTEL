@@ -3,7 +3,7 @@ package com.twoheart.dailyhotel.adapter;
 import java.util.ArrayList;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.obj.Board;
+import com.twoheart.dailyhotel.model.Board;
 import com.twoheart.dailyhotel.util.GlobalFont;
 
 import android.content.Context;
@@ -88,7 +88,7 @@ public class BoardListAdapter extends BaseExpandableListAdapter{
 	@Override
 	public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
 		View v = convertView;
-		if ( v == null) {
+		if (v == null) {
 			v = inflater.inflate(R.layout.list_row_board_group, parent, false);
 		}
 		
@@ -96,8 +96,6 @@ public class BoardListAdapter extends BaseExpandableListAdapter{
 		TextView tv_regdate = (TextView)v.findViewById(R.id.tv_board_regdate);
 		tv_subject.setText((String) getGroup(groupPosition));
 		tv_regdate.setText(list.get(groupPosition).regdate);
-		
-		tv_subject.setSelected(true);
 		
 		GlobalFont.apply((ViewGroup) v); 
 		return v;

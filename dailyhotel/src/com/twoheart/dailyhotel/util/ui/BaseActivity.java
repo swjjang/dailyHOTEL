@@ -1,9 +1,20 @@
+/**
+ * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
+ *
+ * BaseActivity
+ * 
+ * ActionBarCompat 라이브러리의 ActionBarActivity를 상속받는 A
+ * ctivity로서 어플리케이션에서 사용되는 Activity들의 UI를 기본적으로 구
+ *
+ * @since 2014-02-24
+ * @version 1
+ * @author Mike Han(mike@dailyhotel.co.kr)
+ */
 package com.twoheart.dailyhotel.util.ui;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -40,14 +51,11 @@ public class BaseActivity extends ActionBarActivity implements Constants {
 	public void setActionBar(String title) {
 		actionBar = getSupportActionBar();
 		
-		try {
-			actionBar.setBackgroundDrawable(new ColorDrawable(getResources().
-					getColor(android.R.color.white)));
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+		actionBar.setBackgroundDrawable(new ColorDrawable(getResources().
+				getColor(android.R.color.white)));
 		
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+		actionBar.setDisplayShowTitleEnabled(true);
 		
 		actionBar.setIcon(R.drawable.img_ic_menu);
 		actionBar.setTitle(title);

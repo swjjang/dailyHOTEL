@@ -10,6 +10,7 @@ import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 
 public class VolleyImageLoader {
 
+	private static Context sContext;
 	private static RequestQueue sRequestQueue;
 	private static ImageLoader sImageLoader;
 	
@@ -32,7 +33,8 @@ public class VolleyImageLoader {
 			return sImageLoader;
 			
 		} else 
-			throw new IllegalStateException("ImageLoader is not initialized.");
+			init(sContext);
+			return sImageLoader;
 
 	}
 

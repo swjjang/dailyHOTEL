@@ -1,13 +1,14 @@
 package com.twoheart.dailyhotel.util.ui;
 
-import com.twoheart.dailyhotel.util.GlobalFont;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.ViewGroup;
 
-public abstract class BaseFragment extends Fragment {
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.GlobalFont;
+
+public abstract class BaseFragment extends Fragment implements Constants {
 	protected OnLoadCompleteListener mListener;
 
 	@Override

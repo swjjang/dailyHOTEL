@@ -33,7 +33,7 @@ import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.activity.SignupActivity;
-import com.twoheart.dailyhotel.obj.Credit;
+import com.twoheart.dailyhotel.model.Credit;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.KakaoLink;
 import com.twoheart.dailyhotel.util.Log;

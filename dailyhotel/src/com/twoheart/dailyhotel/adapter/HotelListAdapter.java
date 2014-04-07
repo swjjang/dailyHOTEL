@@ -24,7 +24,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.obj.Hotel;
+import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.VolleyImageLoader;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
@@ -114,11 +114,6 @@ public class HotelListAdapter extends ArrayAdapter<Hotel> {
 		viewHolder.discount.setShadowLayer(2, 1, 2, android.R.color.black);
 		viewHolder.address.setShadowLayer(2, 1, 2, android.R.color.black);
 		
-//		viewHolder.name.setTypeface(DailyHotel.getTypeface());
-//		viewHolder.price.setTypeface(DailyHotel.getTypeface());
-//		viewHolder.discount.setTypeface(DailyHotel.getTypeface());
-//		viewHolder.address.setTypeface(DailyHotel.getTypeface());
-		
 		final int colors[] = { Color.parseColor("#ED000000"), Color.parseColor("#E8000000"), 
 				Color.parseColor("#E2000000"), Color.parseColor("#66000000"), Color.parseColor("#00000000") };
 		final float positions[] = { 0.0f, 0.01f, 0.02f, 0.17f, 0.38f };
@@ -138,11 +133,6 @@ public class HotelListAdapter extends ArrayAdapter<Hotel> {
 		
 		p.setShaderFactory(sf);
 		viewHolder.llHotelRowContent.setBackgroundDrawable(p);
-
-//		viewHolder.name.setTypeface(BaseActivity.mTypefaceBold);
-//		viewHolder.discount.setTypeface(BaseActivity.mTypefaceBold);
-//		viewHolder.price.setTypeface(BaseActivity.mTypefaceCommon);
-//		viewHolder.address.setTypeface(BaseActivity.mTypefaceCommon);
 
 		// grade
 		if (element.getCategory().equals("biz") | element.getCategory().equals("hostel") | element.getCategory().equals("grade1") | 
@@ -178,8 +168,9 @@ public class HotelListAdapter extends ArrayAdapter<Hotel> {
 			viewHolder.gradeText.setText("πÃ¡§");
 		}
 		
-//		viewHolder.gradeText.setTypeface(DailyHotel.getTypeface());
-		GlobalFont.apply((ViewGroup) convertView); 
+		GlobalFont.apply((ViewGroup) convertView);
+		viewHolder.name.setTypeface(DailyHotel.getBoldTypeface());
+		viewHolder.discount.setTypeface(DailyHotel.getBoldTypeface());
 
 		if (!element.getImage().equals("default")) {
 			viewHolder.img.setDefaultImageResId(R.drawable.img_placeholder);

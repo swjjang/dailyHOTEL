@@ -202,7 +202,6 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.4"
                 android:gravity="left|center_vertical"
-                android:text="로그인"
                 android:textColor="@color/textView_textColor_main"
                 android:textSize="16.5dp" />
 

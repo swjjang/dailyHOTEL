@@ -17,8 +17,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.activity.GMapActivity;
-import com.twoheart.dailyhotel.obj.HotelDetail;
+import com.twoheart.dailyhotel.activity.ZoomMapActivity;
+import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.util.TabActivity;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
@@ -90,8 +90,9 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener {
 	}
 
 	@Override
-	public void onMapClick(LatLng arg0) {
-		Intent i = new Intent(mHostActivity, GMapActivity.class);
+	public void onMapClick(LatLng latLng) {
+		Intent i = new Intent(mHostActivity, ZoomMapActivity.class);
+		i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELDETAIL, mHotelDetail);
 		startActivity(i);
 	}
 
@@ -103,8 +104,10 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener {
 				.getSupportFragmentManager().findFragmentById(R.id.frag_map);
 		googleMap = mMapFragment.getMap();
 		
-		if (googleMap != null)
+		if (googleMap != null) {
 			googleMap.setOnMapClickListener(this);
+			googleMap.setMyLocationEnabled(false);	
+		}
 
 		addMarker(mHotelDetail.getLatitude(), mHotelDetail.getLongitude(),
 				mHotelDetail.getHotel().getName());
@@ -128,7 +131,6 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener {
 			CameraPosition cp = new CameraPosition.Builder().target((address))
 					.zoom(15).build();
 			googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
-			googleMap.setMyLocationEnabled(false);
 		}
 	}
 }

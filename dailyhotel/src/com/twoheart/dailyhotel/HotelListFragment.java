@@ -35,8 +35,8 @@ import com.twoheart.dailyhotel.activity.EventWebActivity;
 import com.twoheart.dailyhotel.activity.HotelTabActivity;
 import com.twoheart.dailyhotel.adapter.HotelListAdapter;
 import com.twoheart.dailyhotel.adapter.RegionListAdapter;
-import com.twoheart.dailyhotel.obj.Hotel;
-import com.twoheart.dailyhotel.obj.SaleTime;
+import com.twoheart.dailyhotel.model.Hotel;
+import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Log;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
@@ -78,10 +78,11 @@ public class HotelListFragment extends BaseFragment implements Constants,
 		mQueue = VolleyHttpClient.getRequestQueue();
 		mDailyHotelSaleTime = new SaleTime();
 		mRefreshHotelList = true;
-		mHostActivity = (MainActivity) getActivity();
 		mPullToRefreshListView = (PullToRefreshListView) view
 				.findViewById(R.id.listview_hotel_list);
-
+		mHostActivity = (MainActivity) getActivity();
+		mHostActivity.setActionBar("¿À´ÃÀÇ È£ÅÚ");
+		
 		ListView hotelListView = mPullToRefreshListView.getRefreshableView();
 		View listViewHeader = inflater
 				.inflate(R.layout.header_hotel_list, null);
@@ -223,7 +224,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 				String close = response.getString("close");
 				
 				mDailyHotelSaleTime.setOpenTime(open);
-//				mDailyHotelSaleTime.setOpenTime("16:44:00");
+//				mDailyHotelSaleTime.setOpenTime("16:06:00");
 				mDailyHotelSaleTime.setCloseTime(close);
 
 				if (!mDailyHotelSaleTime.isSaleTime()) {
@@ -370,7 +371,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 					mRegionList.add(name);
 				}
 
-				mHostActivity.setActionBar("");
+				mHostActivity.actionBar.setDisplayShowTitleEnabled(false);
 				mHostActivity.actionBar
 						.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 

@@ -10,7 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.obj.Booking;
+import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.util.GlobalFont;
 
 public class BookingListAdapter extends ArrayAdapter<Booking>{

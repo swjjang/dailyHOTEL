@@ -8,6 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:background="@drawable/gradient_window_background"
         android:visibility="gone" >
 
         <LinearLayout
@@ -86,7 +87,6 @@
         android:id="@+id/ll_credit_logged_in"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#fdfdfd"
         android:orientation="vertical"
         android:visibility="gone" >
 
@@ -119,6 +119,8 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp" >
 
@@ -200,6 +202,8 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp" >
 
@@ -234,11 +238,17 @@
                     android:textSize="16.5dp" />
             </RelativeLayout>
         </LinearLayout>
+        
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginBottom="10dp"
+            android:background="#dcdcdc" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:gravity="right"
             android:paddingRight="10dp" >
 
@@ -254,17 +264,13 @@
         </RelativeLayout>
 
         <LinearLayout
+            android:layout_gravity="bottom"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="bottom"
+            android:layout_height="match_parent"
+            android:gravity="bottom|center"
             android:orientation="vertical" >
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-
-                <LinearLayout
+            
+            <LinearLayout
                     android:id="@+id/btn_credit_invite_frd"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
@@ -299,7 +305,7 @@
 <!--                     android:text="카카오톡 친구 초대" -->
 <!--                     android:textColor="@color/black" -->
 <!--                     android:textSize="15dp" /> -->
-            </FrameLayout>
+
         </LinearLayout>
     </LinearLayout>
 

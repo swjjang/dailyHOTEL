@@ -51,10 +51,13 @@
         android:gravity="right"
         android:orientation="vertical" >
 
-        <CheckBox
+        <de.ankri.views.Switch
             android:id="@+id/cb_login_auto"
+            android:paddingTop="15dp"
+            android:paddingBottom="20dp"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
             android:checked="true"
             android:text="자동로그인"
             android:textColor="@color/textView_textColor_main" />

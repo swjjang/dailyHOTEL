@@ -1,3 +1,15 @@
+/**
+ * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
+ *
+ * VolleyHttpClient
+ * 
+ * 네트워크 이미지 처리 및 네트워크 처리 작업을 담당하는 외부 라이브러리 Vol
+ * ley를 네트워크 처리 작업을 목적으로 사용하기 위해 설정하는 유틸 클래스이다. 
+ *
+ * @since 2014-02-24
+ * @version 1
+ * @author Mike Han(mike@dailyhotel.co.kr)
+ */
 package com.twoheart.dailyhotel.util.network;
 
 import java.util.List;
@@ -57,8 +69,8 @@ public class VolleyHttpClient implements Constants {
 		if (sRequestQueue != null) {
 			return sRequestQueue;
 		} else {
-			throw new IllegalStateException("RequestQueue is not initialized.");
-
+			init(sContext);
+			return sRequestQueue;
 		}
 	}
 
@@ -104,7 +116,7 @@ public class VolleyHttpClient implements Constants {
 						cookieString.append(cookie.getName()).append("=")
 								.append(cookie.getValue());
 						
-						CookieManager.getInstance().setCookie(URL_DAILYHOTEL_SERVER,
+						CookieManager.getInstance().setCookie(cookie.getDomain(),
 								cookieString.toString());
 						
 						Log.e("Init: " + cookieString.toString());

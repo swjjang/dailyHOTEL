@@ -75,7 +75,7 @@
             android:name="com.twoheart.dailyhotel.activity.ImageDetailActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.twoheart.dailyhotel.activity.GMapActivity"
+            android:name="com.twoheart.dailyhotel.activity.ZoomMapActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.twoheart.dailyhotel.activity.BookingTabActivity"

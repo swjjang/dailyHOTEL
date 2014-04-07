@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_window_background" >
 
     <ListView
         android:id="@+id/listview_booking"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:cacheColorHint="#00000000"
         android:divider="@null"
         android:fadingEdge="none"
         android:scrollbars="vertical" />
@@ -54,7 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_alignParentBottom="true"
-            android:layout_margin="10dp"
+            android:layout_margin="22.5dp"
             android:background="@drawable/shape_button_common_background"
             android:text="10초만에 무료 회원가입"
             android:textColor="@android:color/white" />

@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.Paint;
+import android.support.v7.appcompat.R;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -15,8 +16,7 @@ import com.twoheart.dailyhotel.util.GlobalFont;
 public class RegionListAdapter extends ArrayAdapter<String> {
 	
 	public RegionListAdapter(Context context, List<String> regionList) {
-		super(context, android.R.layout.simple_list_item_1,
-				android.R.id.text1, regionList);
+		super(context, R.layout.support_simple_spinner_dropdown_item, regionList);
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.HideReturnsTransformationMethod;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -117,9 +118,10 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 	@Override
 	public void onResponse(String url, String response) {
 		if (url.contains(URL_WEBAPI_USER_ALIVE)) {
+			LoadingDialog.hideLoading();
+			
 			String result = response.trim();
 			if (result.equals("alive")) { // session alive
-				
 				Intent i = new Intent(this, BookingActivity.class);
 				i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELDETAIL, hotelDetail);
 				startActivityForResult(i, CODE_REQUEST_ACTIVITY_PAYMENT);
@@ -137,7 +139,6 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 	}
 
 	private void loadLoginProcess() {
-		LoadingDialog.hideLoading();
 		Toast.makeText(this, " 로그인이 필요합니다", Toast.LENGTH_LONG).show();
 
 		startActivityForResult(new Intent(this, LoginActivity.class),

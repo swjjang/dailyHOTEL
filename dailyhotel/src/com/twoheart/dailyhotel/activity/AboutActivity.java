@@ -5,8 +5,9 @@ import android.view.MenuItem;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
+import com.twoheart.dailyhotel.util.ui.WebViewActivity;
 
-public class AboutActivity extends BaseActivity {
+public class AboutActivity extends WebViewActivity {
 	
 	private static final String TAG = "AboutActivity";
 	
@@ -17,21 +18,11 @@ public class AboutActivity extends BaseActivity {
 		setContentView(R.layout.activity_about);
 		
 	}
-	
-	@Override
-	public void finish() {
-		super.finish();
-		overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
-	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			onBackPressed();
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
+	protected void onResume() {
+		super.onResume();
+		setWebView(URL_WEB_ABOUT);
 	}
 	
 }

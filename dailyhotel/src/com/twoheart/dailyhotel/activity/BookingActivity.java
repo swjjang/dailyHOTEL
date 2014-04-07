@@ -12,16 +12,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.telephony.TelephonyManager;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.webkit.CookieSyncManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -29,7 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
-import android.widget.Switch;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,10 +36,10 @@ import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.obj.Credit;
-import com.twoheart.dailyhotel.obj.Customer;
-import com.twoheart.dailyhotel.obj.HotelDetail;
-import com.twoheart.dailyhotel.obj.Pay;
+import com.twoheart.dailyhotel.model.Credit;
+import com.twoheart.dailyhotel.model.Customer;
+import com.twoheart.dailyhotel.model.HotelDetail;
+import com.twoheart.dailyhotel.model.Pay;
 import com.twoheart.dailyhotel.util.Log;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -53,6 +48,8 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListe
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
+
+import de.ankri.views.Switch;
 
 @SuppressLint({ "NewApi", "ResourceAsColor" })
 public class BookingActivity extends BaseActivity implements
@@ -63,6 +60,7 @@ public class BookingActivity extends BaseActivity implements
 	private static final String TAG = "HotelPaymentActivity";
 	private RequestQueue mQueue;
 
+	private ScrollView svBooking;
 	private TextView tvCheckIn, tvCheckOut, tvOriginalPriceValue,
 			tvCreditValue, tvOriginalPrice, tvCredit, tvPrice;
 	private Button btnPay;
@@ -92,6 +90,8 @@ public class BookingActivity extends BaseActivity implements
 		mQueue = VolleyHttpClient.getRequestQueue();
 		setActionBar(mPay.getHotelDetail().getHotel().getName());
 
+		svBooking = (ScrollView) findViewById(R.id.sv_booking);
+		
 		tvCheckIn = (TextView) findViewById(R.id.tv_hotel_payment_checkin);
 		tvCheckOut = (TextView) findViewById(R.id.tv_hotel_payment_checkout);
 		tvOriginalPrice = (TextView) findViewById(R.id.tv_hotel_payment_original_price);
@@ -118,6 +118,9 @@ public class BookingActivity extends BaseActivity implements
 		rbPaymentCard = (RadioButton) findViewById(R.id.rb_payment_card);
 
 		tvPaymentInformation = (TextView) findViewById(R.id.tv_payment_information);
+		
+		rbPaymentAccount.setOnClickListener(this);
+		rbPaymentCard.setOnClickListener(this);
 
 		rgPaymentMethod.setOnCheckedChangeListener(this);
 		btnPay.setOnClickListener(this);
@@ -130,6 +133,9 @@ public class BookingActivity extends BaseActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
+		// 적립금 스위치 초기화
+		swCredit.setChecked(false);
+		
 		LoadingDialog.showLoading(this);
 
 		// credit 요청
@@ -188,7 +194,7 @@ public class BookingActivity extends BaseActivity implements
 								Intent i = new Intent(
 										Intent.ACTION_DIAL,
 										Uri.parse(new StringBuilder("tel:")
-												.append(DAILYHOTEL_PHONE_NUMBER)
+												.append(PHONE_NUMBER_DAILYHOTEL)
 												.toString()));
 								startActivity(i);
 							}
@@ -240,6 +246,9 @@ public class BookingActivity extends BaseActivity implements
 				moveToPayStep();
 
 			}
+		} else if (v.getId() == rbPaymentAccount.getId() | v.getId() == rbPaymentCard.getId()) {
+			svBooking.fullScroll(View.FOCUS_DOWN);
+			
 		}
 	}
 
@@ -289,6 +298,7 @@ public class BookingActivity extends BaseActivity implements
 							URL_WEBAPI_USER_LOGIN).toString(),
 					loginParams, this, this));
 		} else {
+			LoadingDialog.hideLoading();
 			Toast.makeText(this, "다시 로그인해주세요", Toast.LENGTH_SHORT)
 					.show();
 			
@@ -343,18 +353,17 @@ public class BookingActivity extends BaseActivity implements
 				dialog("네트워크 오류가 발생했습니다. 네트워크 연결을 확인해주세요.");
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION:
-				LoadingDialog.showLoading(this);
-				
-				// 쿠키 만료를 위한 서버에 로그아웃 리퀘스트
-				mQueue.add(new DailyHotelJsonRequest(
-						Method.GET,
-						new StringBuilder(
-								URL_DAILYHOTEL_SERVER)
-								.append(URL_WEBAPI_USER_LOGOUT)
-								.toString(), null,
-						this,
-						this));
-				
+//				LoadingDialog.showLoading(this);
+//				
+//				// 쿠키 만료를 위한 서버에 로그아웃 리퀘스트
+//				mQueue.add(new DailyHotelJsonRequest(
+//						Method.GET,
+//						new StringBuilder(
+//								URL_DAILYHOTEL_SERVER)
+//								.append(URL_WEBAPI_USER_LOGOUT)
+//								.toString(), null,
+//						this,
+//						this));
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_INVALID_DATE:
 			case CODE_RESULT_ACTIVITY_PAYMENT_FAIL:
@@ -391,18 +400,12 @@ public class BookingActivity extends BaseActivity implements
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		if (buttonView.getId() == swCredit.getId()) {
 			if (!isChecked) { // 사용안함으로 변경
-				swCredit.setThumbResource(R.drawable.switch_thumb_holo_light);
-				swCredit.setTextColor(android.R.color.white);
-
 				tvOriginalPrice.setEnabled(false);
 				tvCredit.setEnabled(false);
 				tvOriginalPriceValue.setEnabled(false);
 				tvCreditValue.setEnabled(false);
 
 			} else { // 사용함으로 변경
-				swCredit.setThumbResource(R.drawable.switch_thumb_activated_holo_light);
-				swCredit.setTextColor(android.R.color.white);
-
 				tvOriginalPrice.setEnabled(true);
 				tvCredit.setEnabled(true);
 				tvOriginalPriceValue.setEnabled(true);
@@ -511,10 +514,9 @@ public class BookingActivity extends BaseActivity implements
 			}
 		} else if (url.contains(URL_WEBAPI_USER_LOGIN)) { // INVALID_SESSION 오류의
 															// 경우 재로그인 후 다시시도한다
-			LoadingDialog.hideLoading();
-
 			try {
 				if (response.getBoolean("login")) {
+					LoadingDialog.hideLoading();
 					VolleyHttpClient.createCookie();
 					moveToPayStep();
 
@@ -566,10 +568,10 @@ public class BookingActivity extends BaseActivity implements
 						.getBonus()));
 				tvCreditValue.setText(new StringBuilder(str).append("원"));
 
-				swCredit.performClick();
+				swCredit.toggle();
 				// 적립금이 없다면 한 번 더 누름 이벤트를 불러 switch를 끈다
 				if (Integer.parseInt(mPay.getCredit().getBonus()) == 0) {
-					swCredit.performClick();
+					swCredit.toggle();
 				}
 
 				// 사용자 정보 요청.

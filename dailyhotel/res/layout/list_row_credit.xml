@@ -32,7 +32,7 @@
             android:layout_height="0dp"
             android:layout_weight="0.5"
             android:gravity="center_vertical|center"
-            android:textColor="@color/textView_textColor_sub"
+            android:textColor="@color/textView_textColor_main"
             android:textSize="12dp" />
 
         <com.twoheart.dailyhotel.widget.LineBreakByWordTextView
@@ -41,7 +41,7 @@
             android:layout_height="0dp"
             android:layout_weight="0.5"
             android:padding="5dp"
-            android:textColor="@color/textView_textColor_main"
+            android:textColor="@color/textView_textColor_sub"
             android:textSize="12dp" />
     </LinearLayout>
 

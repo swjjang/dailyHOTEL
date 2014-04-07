@@ -22,7 +22,8 @@
         <item name="android:actionMenuTextAppearance">@style/actionbarMenuTextAppearance</item>
         <item name="actionBarItemBackground">@drawable/item_background_holo_light</item>
         <item name="android:actionBarItemBackground">@drawable/item_background_holo_light</item>
-        <item name="android:actionDropDownStyle">@style/ActionBarDropDownListViewDH_Theme</item>
+        <item name="android:actionDropDownStyle">@style/DropDownListViewDH_Theme.ActionBar</item>
+        <item name="android:dropDownListViewStyle">@style/DropDownDH_Theme.ActionBar</item>
     </style>
 
 </resources>

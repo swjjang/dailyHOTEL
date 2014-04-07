@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res/com.twoheart.dailyhotel"
+    android:id="@+id/sv_booking"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" >
 
@@ -356,12 +357,11 @@
                             android:textColor="@drawable/selector_textview_textcolor"
                             android:textSize="15dp" />
 
-                        <CheckBox
+                        <de.ankri.views.Switch
                             android:id="@+id/btn_on_off"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:textSize="15dp" />
+                            android:layout_alignParentRight="true" />
                     </RelativeLayout>
 
                     <LinearLayout
@@ -424,7 +424,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
-                android:background="@drawable/shape_section_background"
+                android:background="@drawable/shape_section_border"
                 android:orientation="horizontal"
                 android:paddingBottom="10dp"
                 android:paddingRight="15dp"

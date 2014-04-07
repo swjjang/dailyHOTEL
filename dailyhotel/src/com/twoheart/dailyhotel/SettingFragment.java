@@ -157,6 +157,7 @@ public class SettingFragment extends BaseFragment implements Constants,
 														.toString(), null,
 												SettingFragment.this,
 												mHostActivity));
+										VolleyHttpClient.destroyCookie();
 
 										SharedPreferences.Editor ed = mHostActivity.sharedPreference
 												.edit();
@@ -169,10 +170,7 @@ public class SettingFragment extends BaseFragment implements Constants,
 												null);
 										ed.commit();
 
-										VolleyHttpClient.destroyCookie();
-
-										tvLogin.setText("로그인");
-										tvEmail.setText("");
+										invalidateLoginButton(false, "");
 
 										Toast.makeText(mHostActivity,
 												"로그아웃되었습니다", Toast.LENGTH_SHORT)
@@ -208,7 +206,7 @@ public class SettingFragment extends BaseFragment implements Constants,
 
 		} else if (v.getId() == tvCall.getId()) {
 			Intent i = new Intent(Intent.ACTION_DIAL,
-					Uri.parse(new StringBuilder("tel:").append(DAILYHOTEL_PHONE_NUMBER).toString()));
+					Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
 			startActivity(i);
 		} else if (v.getId() == tvAbout.getId()) {
 			Intent i = new Intent(mHostActivity, AboutActivity.class);
@@ -229,6 +227,18 @@ public class SettingFragment extends BaseFragment implements Constants,
 			}
 		}
 	}
+	
+	private void invalidateLoginButton(boolean login, String email) {
+		tvEmail.setText(email);
+		
+		if (login) {
+			tvLogin.setText("로그아웃");
+			
+		} else {
+			tvLogin.setText("로그인");
+		}
+		
+	}
 
 	@Override
 	public void onResponse(String url, String response) {
@@ -242,8 +252,10 @@ public class SettingFragment extends BaseFragment implements Constants,
 								URL_WEBAPI_USER_INFO).toString(), null, this,
 						mHostActivity));
 
-			} else
+			} else {
+				invalidateLoginButton(false, "");
 				mListener.onLoadComplete(this, true);
+			}
 		}
 	}
 
@@ -252,8 +264,7 @@ public class SettingFragment extends BaseFragment implements Constants,
 		if (url.contains(URL_WEBAPI_USER_INFO)) {
 			try {
 				JSONObject obj = response;
-				tvEmail.setText(obj.getString("email"));
-				tvLogin.setText("로그아웃");
+				invalidateLoginButton(true, obj.getString("email"));
 				
 				mListener.onLoadComplete(this, true);
 
@@ -261,8 +272,7 @@ public class SettingFragment extends BaseFragment implements Constants,
 				if (DEBUG)
 					e.printStackTrace();
 
-				tvLogin.setText("로그인");
-				tvEmail.setText("");
+				invalidateLoginButton(true, "");
 			}
 
 		}

@@ -20,10 +20,10 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.obj.Booking;
-import com.twoheart.dailyhotel.obj.Hotel;
-import com.twoheart.dailyhotel.obj.HotelDetail;
-import com.twoheart.dailyhotel.obj.SaleTime;
+import com.twoheart.dailyhotel.model.Booking;
+import com.twoheart.dailyhotel.model.Hotel;
+import com.twoheart.dailyhotel.model.HotelDetail;
+import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
@@ -203,7 +203,8 @@ public abstract class TabActivity extends BaseActivity implements
 		}
 		
 		if (fragment != null)
-			GlobalFont.apply((ViewGroup) fragment.getView().getRootView());
+			if (fragment.getView() != null)
+				GlobalFont.apply((ViewGroup) fragment.getView().getRootView());
 		
 		LoadingDialog.hideLoading();
 			
