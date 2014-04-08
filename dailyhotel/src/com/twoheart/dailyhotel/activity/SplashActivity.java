@@ -146,6 +146,17 @@ public class SplashActivity extends BaseActivity implements Constants,
 						response.getString("play_max"));
 				editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME,
 						response.getString("play_min"));
+				
+//				editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME,
+//						response.getString("tstore_max"));
+//				editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME,
+//						response.getString("tstore_min"));
+				
+//				editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME,
+//						response.getString("nstore_max"));
+//				editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME,
+//						response.getString("nstore_min"));
+				
 				editor.commit();
 
 				int minVersion = Integer
@@ -173,8 +184,6 @@ public class SplashActivity extends BaseActivity implements Constants,
 													Intent.ACTION_VIEW);
 											marketLaunch.setData(Uri
 													.parse(URL_STORE_GOOGLE_DAILYHOTEL));
-//											Intent marketLaunch = new Intent(
-//													Intent.ACTION_VIEW);
 //											marketLaunch.setData(Uri
 //													.parse(URL_STORE_T_DAILYHOTEL));
 											startActivity(marketLaunch);

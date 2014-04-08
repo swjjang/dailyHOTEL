@@ -128,15 +128,15 @@ public class LoginActivity extends BaseActivity implements Constants,
 						if (user != null) {
 							TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext()
 									.getSystemService(Context.TELEPHONY_SERVICE);
-
-							String userEmail = user.getProperty("email")
-									.toString();
+							
+							String userEmail = null;
+							if (user.getProperty("email") != null)
+								userEmail = user.getProperty("email").toString();
+								
 							String userId = user.getId();
 							String encryptedId = Crypto.encrypt(userId)
 									.replace("\n", "");
 							String userName = user.getName();
-//							String phoneNumber = telephonyManager
-//									.getLine1Number();
 							String deviceId = telephonyManager.getDeviceId();
 
 							snsSignupParams = new HashMap<String, String>();
@@ -161,9 +161,6 @@ public class LoginActivity extends BaseActivity implements Constants,
 							if (userName != null)
 								snsSignupParams.put("name", userName);
 
-//							if (phoneNumber != null)
-//								snsSignupParams.put("phone", phoneNumber);
-
 							if (deviceId != null)
 								snsSignupParams.put("device", deviceId);
 
@@ -173,13 +170,12 @@ public class LoginActivity extends BaseActivity implements Constants,
 											.toString(), loginParams,
 									LoginActivity.this, LoginActivity.this));
  							
- 							fbSession.closeAndClearTokenInformation();
- 							
 						}
 					}
 				});
 
 		request.executeAsync();
+		fbSession.closeAndClearTokenInformation();
 
 	}
 
@@ -238,12 +234,16 @@ public class LoginActivity extends BaseActivity implements Constants,
 				makeMeRequest(session);
 				
 			} else if (state.isClosed()) {
-				LoadingDialog.hideLoading();
 				fbSession.closeAndClearTokenInformation();
 				
-				if (exception != null)
+				if (exception != null) {
 					if (DEBUG)
 						Toast.makeText(LoginActivity.this, "¿À·ù: " + exception.getMessage(), Toast.LENGTH_LONG).show();
+				
+					if (exception.getMessage().contains("cancel"))
+						LoadingDialog.hideLoading();
+					
+				}
 			}
 		}
 	};

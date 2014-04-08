@@ -64,9 +64,7 @@ public class VersionActivity extends BaseActivity implements OnClickListener {
 				} else {
 					Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
 					// Play Store
-					marketLaunch
-							.setData(Uri
-									.parse(URL_STORE_GOOGLE_DAILYHOTEL));
+					marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_DAILYHOTEL));
 					// T Store
 //					 marketLaunch.setData(Uri.parse(URL_STORE_T_DAILYHOTEL));
 					startActivity(marketLaunch);
