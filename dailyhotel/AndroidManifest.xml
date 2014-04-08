@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.twoheart.dailyhotel"
-    android:versionCode="19"
-    android:versionName="1.1.9" >
+    android:versionCode="20"
+    android:versionName="1.2.0" >
     
     <uses-sdk
         android:minSdkVersion="9"
@@ -178,33 +178,5 @@
         
         <activity android:name="com.facebook.LoginActivity" />
     </application>
-    
-    <!-- 태블릿을 제외한 크기의 디바이스들만 지원 -->
-    <compatible-screens>
-        <screen
-            android:screenDensity="ldpi"
-            android:screenSize="small" />
-        <screen
-            android:screenDensity="mdpi"
-            android:screenSize="small" />
-        <screen
-            android:screenDensity="hdpi"
-            android:screenSize="small" />
-        <screen
-            android:screenDensity="xhdpi"
-            android:screenSize="small" />
-        <screen
-            android:screenDensity="ldpi"
-            android:screenSize="normal" />
-        <screen
-            android:screenDensity="mdpi"
-            android:screenSize="normal" />
-        <screen
-            android:screenDensity="hdpi"
-            android:screenSize="normal" />
-        <screen
-            android:screenDensity="xhdpi"
-            android:screenSize="normal" />
-    </compatible-screens>
 
 </manifest>
