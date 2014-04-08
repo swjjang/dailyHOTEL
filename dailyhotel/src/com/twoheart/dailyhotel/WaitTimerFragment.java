@@ -35,7 +35,7 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 	private MainActivity mHostActivity;
 
 	private Handler mHandler;
-	private TextView tvTimer;
+	private TextView tvTimer, tvTitle;
 	private Button btnNotify;
 
 	private AlarmManager alarmManager;
@@ -71,10 +71,12 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 				intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 		tvTimer = (TextView) view.findViewById(R.id.tv_timer);
+		tvTitle = (TextView) view.findViewById(R.id.tv_wait_timer_main);
 		btnNotify = (Button) view.findViewById(R.id.btn_wait_timer_alram);
 		btnNotify.setOnClickListener(this);
 
 		mHostActivity.setActionBar("dailyHOTEL");
+		tvTitle.setText(new SimpleDateFormat("aa HH").format(mSaleTime.getOpenTime()) + "시 오늘의 호텔이 공개됩니다.");
 		
 		return view;
 	}
