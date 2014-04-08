@@ -1,17 +1,7 @@
 package com.twoheart.dailyhotel;
 
-import static com.twoheart.dailyhotel.AppConstants.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
+import java.util.HashMap;
+import java.util.Map;
 
 import android.app.Activity;
 import android.app.Notification;
@@ -22,22 +12,36 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.android.volley.Request.Method;
+import com.android.volley.RequestQueue;
 import com.google.android.gcm.GCMBaseIntentService;
-import com.twoheart.dailyhotel.SplashActivity;
+import com.google.android.gcm.GCMRegistrar;
+import com.twoheart.dailyhotel.activity.SplashActivity;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 
-public class GCMIntentService extends GCMBaseIntentService{
+public class GCMIntentService extends GCMBaseIntentService implements Constants {
+
 	private final static String TAG = "GCMIntentService";
 	public final static String SENDER_ID = "288636757896";
-	
-	private SharedPreferences prefs;
-	
-	public GCMIntentService(){
+
+	private SharedPreferences mSharedPreference;
+
+	public GCMIntentService() {
 		super(SENDER_ID);
+		
+	}
+	
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		mSharedPreference = getSharedPreferences(NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
 	}
 
 	@Override
 	protected void onError(Context arg0, String arg1) {
-		
+
 	}
 
 	@Override
@@ -50,55 +54,61 @@ public class GCMIntentService extends GCMBaseIntentService{
 
 	@Override
 	protected void onRegistered(Context context, String regId) {
-		Log.i(TAG, "onRegistered " +  regId);
+		
+		boolean result = false;
+		
+		if (DEBUG)
+			Log.i(TAG, "onRegistered " + regId);
 		
 		try {
+			
+			RequestQueue queue = VolleyHttpClient.getRequestQueue();
+			
 			// DB 전송
-			HttpClient client = new DefaultHttpClient();
-			String postUrl = REST_URL + DEVICE + "/append";
-			HttpPost post = new HttpPost(postUrl);
-		
-			List params = new ArrayList<NameValuePair>();
-			params.add(new BasicNameValuePair("device", regId));
+			Map<String, String> gcmParams = new HashMap<String, String>();
+			gcmParams.put("device", regId);
 			
-			UrlEncodedFormEntity ent = new UrlEncodedFormEntity(params, HTTP.UTF_8);
-			post.setEntity(ent);
-			client.execute(post);
+			queue.add(new DailyHotelJsonRequest(Method.POST, 
+					new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_DEVICE).append("/append").toString(),
+					gcmParams, null, null));
 			
-			prefs = getSharedPreferences(SHARED_PREFERENCES_NAME, 0);
-			SharedPreferences.Editor ed = prefs.edit();
-			ed.putBoolean(PREFERENCE_GCM, true);
-			ed.commit();
-			
+			result = true;
+
 		} catch (Exception e) {
-			Log.e(TAG, "error");
+			if (DEBUG)
+				e.printStackTrace();
 			
-			prefs = getSharedPreferences(SHARED_PREFERENCES_NAME, 0);
-			SharedPreferences.Editor ed = prefs.edit();
-			ed.putBoolean(PREFERENCE_GCM, false);
+		} finally {
+			SharedPreferences.Editor ed = mSharedPreference.edit();
+			ed.putBoolean(KEY_PREFERENCE_GCM, result);
 			ed.commit();
+			
 		}
 	}
 
 	@Override
 	protected void onUnregistered(Context context, String regId) {
-		Log.i(TAG, "onUnregistered " +  regId);
+		if (DEBUG)
+			Log.i(TAG, "onUnregistered " + regId);
 	}
-	
+
 	private void showMessage(Context context, Intent intent) {
 		String title = "dailyHOTEL";
 		String msg = intent.getStringExtra("msg");
 		String ticker = "dailyHOTEL New Message";
-		
-		NotificationManager notificationManager = (NotificationManager)context.getSystemService(Activity.NOTIFICATION_SERVICE);
+
+		NotificationManager notificationManager = (NotificationManager) context
+				.getSystemService(Activity.NOTIFICATION_SERVICE);
 
 		// 해당 어플을 실행하는 이벤트를 하고싶을 때 아래 주석을 풀어주세요
-		PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, new Intent(context, SplashActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK 
-                | Intent.FLAG_ACTIVITY_CLEAR_TOP 
-                | Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+		PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
+				new Intent(context, SplashActivity.class)
+						.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+								| Intent.FLAG_ACTIVITY_CLEAR_TOP
+								| Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 
 		Notification notification = new Notification();
-		notification.icon = R.drawable.dh_ic_home_72;
+		notification.icon = R.drawable.img_ic_menu;
 		notification.tickerText = ticker;
 		notification.when = System.currentTimeMillis();
 		notification.vibrate = new long[] { 500, 100, 500, 100 };
@@ -107,7 +117,36 @@ public class GCMIntentService extends GCMBaseIntentService{
 
 		notificationManager.notify(0, notification);
 	}
-	
-	
-	
+
+	public static void registerToken(Context context) {
+
+		// 디바이스 GCM 사용 가능한지 확인
+		GCMRegistrar.checkDevice(context);
+		// 매니페스트 설정이 올바른지 확인
+		GCMRegistrar.checkManifest(context);
+
+		// registration ID（디바이스 토큰) 취득하고 등록되지 않은 경우 GCM에 등록
+		final String regId = GCMRegistrar.getRegistrationId(context);
+		if (regId.equals("")) {
+			GCMRegistrar.register(context, SENDER_ID);
+			GCMRegistrar.setRegisteredOnServer(context, true);
+			Log.v("TAG", "registered GCM");
+		} else {
+			if (GCMRegistrar.isRegisteredOnServer(context)) {
+				Log.v("TAG", "Already registered");
+				Log.v("TAG", regId);
+			} else {
+				GCMRegistrar.register(context, SENDER_ID);
+				GCMRegistrar.setRegisteredOnServer(context, true);
+				Log.v("TAG", "registered GCM");
+			}
+		}
+	}
+
+	public static void unregisterToken(Context context) {
+		if (GCMRegistrar.isRegistered(context)) {
+			GCMRegistrar.unregister(context);
+		}
+	}
+
 }

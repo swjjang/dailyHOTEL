@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" 
-    android:weightSum="1"
-    android:background="@color/dh_gray96">
+    android:weightSum="1" >
     
     <LinearLayout 
         android:layout_weight="0.2"
@@ -13,7 +12,7 @@
     </LinearLayout>
     
     <LinearLayout 
-        android:layout_weight="0.3"
+        android:layout_weight="0.4"
         android:layout_width="match_parent"
         android:layout_height="0dp">
         
@@ -36,7 +35,7 @@
         android:layout_height="0dp"
         android:gravity="center_vertical|center"
         android:textSize="20dp"
-        android:textColor="@color/dh_dark_gray_blue"
+        android:textColor="@color/textView_textColor_main"
         android:text="네트워크 연결이 끊어졌습니다"/>
     
     
@@ -51,10 +50,9 @@
         android:layout_weight="0.1"
         android:layout_height="0dp"
         android:layout_width="match_parent"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@drawable/dh_btn_pink"
+        android:layout_margin="10dp"
+        android:background="@drawable/shape_button_common_background"
         android:text="연결 재시도"
-        android:textColor="@color/white"/>
+        android:textColor="@android:color/white"/>
 
 </LinearLayout>

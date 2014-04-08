@@ -9,9 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:groupIndicator="@null"
-        android:divider="@color/dh_gray50"
+        android:divider="@color/common_borer"
         android:fadingEdge="none"
-        android:dividerHeight="1px"
-        android:background="@color/dh_gray96"/>
+        android:dividerHeight="1px" />
     
 </LinearLayout>

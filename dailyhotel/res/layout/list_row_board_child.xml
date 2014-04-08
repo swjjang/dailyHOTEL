@@ -7,10 +7,11 @@
     android:paddingRight="20dp"
     android:paddingBottom="10dp"
     android:orientation="vertical"
-    android:background="@color/white">
+    android:background="#fdfdfd">
     <TextView 
         android:id="@+id/tv_board_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/dh_dark_gray_blue"/>
+        android:textColor="#7f7f7f"
+        android:textSize="15dp"/>
 </LinearLayout>

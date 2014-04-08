@@ -8,13 +8,14 @@
 	        android:layout_width="match_parent"
 		    android:layout_height="match_parent"
 		    android:paddingLeft="15dp"
+		    android:paddingRight="15dp"
 		    android:orientation="horizontal" >
 	    
 	    <TextView 
 	        android:layout_height="wrap_content"
 	        android:layout_width="wrap_content"
-	        android:textColor="@color/dh_dark_gray_blue"
-	        android:text="\u2713"/>
+	        android:textColor="@color/textView_textColor_main"
+	        android:text="-"/>
 	    
 	    <TextView 
 	       	android:id="@+id/tv_hotel_tab_info_content"
@@ -22,7 +23,7 @@
 	        android:layout_width="wrap_content"
 	        android:paddingLeft="5dp"
 	        android:paddingBottom="2dp"
-	        android:textColor="@color/dh_dark_gray_blue"
+	        android:textColor="@color/textView_textColor_sub"
 	        android:text="전 객 실 50인치 FULL HD LCD TV 설치"/>
     	</LinearLayout>
     

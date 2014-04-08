@@ -2,16 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" 
-    android:background="@color/dh_gray96">
+    android:orientation="vertical">
     
     <com.viewpagerindicator.TabPageIndicator
         android:id="@+id/booking_indicator"
+        android:background="#f4f4f4"
         android:layout_weight="0.1"
         android:layout_height="0dp"
         android:layout_width="match_parent" />
     
-    <com.twoheart.dailyhotel.common.view.ViewPagerCustom
+    <com.twoheart.dailyhotel.widget.HotelViewPager
         android:id="@+id/booking_pager"
         android:layout_width="fill_parent"
         android:layout_height="0dp"

@@ -1,87 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" 
-    android:weightSum="1"
-    android:background="@color/dh_gray96">
-    
-    <TextView
-        android:id="@+id/tv_wait_timer_main"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.17"
-        android:gravity="center|center_vertical"
-        android:text="조금만 더\n기다려주세요"
-        android:textColor="@color/dh_dark_gray_blue"
-        android:textSize="25dp" >
+    android:background="@drawable/gradient_window_background" >
 
-     </TextView>
-     
-    <TextView 
-        android:id="@+id/tv_wait_timer_sub"
-        android:layout_weight="0.17"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:gravity="center|center_vertical"
-        android:textSize="15dp"
-        android:textColor="@color/dh_dark_gray_blue"
-        android:text="놀라운 가격으로 당신을 찾아갈\n호텔이 기다리고 있어요.\n오전 11시 오늘의 호텔이 공개됩니다.">
-     </TextView>
-    
-    <LinearLayout 
-        android:layout_weight="0.3"
-        android:layout_width="match_parent"
-        android:layout_height="0dp">
-        
-        <ImageView 
-            android:id="@+id/iv_wait_timer_hotel"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/dh_logo_closed"/>
-    </LinearLayout>
-    
-    <LinearLayout 
-        android:layout_weight="0.15"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        android:weightSum="3">
-        
-        <TextView 
-            android:id="@+id/tv_timer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center|center_vertical"
-    		android:textColor="@color/dh_dark_gray_blue"
-            android:textSize="40dp"/>
-        
-   	</LinearLayout>
-   	
-    <Button 
+    <Button
         android:id="@+id/btn_wait_timer_alram"
-        android:layout_weight="0.1"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:textColor="@color/white"
-        android:text="알림 받기"
-        android:background="@drawable/dh_btn_pink"/>
-    
-    <Button 
-        android:id="@+id/btn_apply_event"
-        android:layout_weight="0.1"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="20dp"
+        android:background="@drawable/shape_button_common_background"
+        android:text="알람 켜기"
+        android:textColor="@android:color/white" />
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:textColor="@color/white"
-        android:text="이벤트 참여하기"
-        android:background="@drawable/dh_btn_pink"/>
-   	
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:layout_above="@+id/btn_wait_timer_alram"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="50dp"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/tv_wait_timer_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="오전 11시 오늘의 호텔이 공개됩니다."
+            android:textColor="#5c5c5c"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/tv_wait_timer_sub"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="놀라운 가격으로 당신을 찾아갈\n호텔이 기다리고 있어요."
+            android:textColor="#7f7f7f"
+            android:textSize="15dp" />
+
+        <ImageView
+            android:id="@+id/iv_wait_timer_hotel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/img_ic_waiting" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/tv_timer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/textView_textColor_main"
+                android:textSize="45dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>
