@@ -144,16 +144,17 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 					this.sendEmptyMessageDelayed(0, 1000);
 					
 				} else {
-					mHandler.removeMessages(0);
+					this.removeMessages(0);
 					WakeLock.releaseWakeLock();
 					
-					mHostActivity
-							.replaceFragment(mHostActivity
-									.getFragment(mHostActivity.INDEX_HOTEL_LIST_FRAGMENT));
-					
+					if (mHostActivity != null) {
+	 					mHostActivity
+								.replaceFragment(mHostActivity
+										.getFragment(mHostActivity.INDEX_HOTEL_LIST_FRAGMENT));
+						
+						mHostActivity = null;
+					}
 				}
-
-				
 			}
 		};
 

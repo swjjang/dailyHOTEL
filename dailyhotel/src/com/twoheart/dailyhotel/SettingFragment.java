@@ -264,7 +264,12 @@ public class SettingFragment extends BaseFragment implements Constants,
 		if (url.contains(URL_WEBAPI_USER_INFO)) {
 			try {
 				JSONObject obj = response;
-				invalidateLoginButton(true, obj.getString("email"));
+				String userEmail = obj.getString("email");
+				
+				if ((userEmail != null) && !(userEmail.equals("")) && !(userEmail.equals("null")))
+					invalidateLoginButton(true, userEmail);
+				else
+					invalidateLoginButton(true, "");
 				
 				mListener.onLoadComplete(this, true);
 

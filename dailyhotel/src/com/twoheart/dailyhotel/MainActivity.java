@@ -220,7 +220,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 			for (Signature signature : info.signatures) {
 				MessageDigest md = MessageDigest.getInstance("SHA");
 				md.update(signature.toByteArray());
-				Log.d("KeyHash: getPackageName()" + getPackageName(),
+				Log.e("KeyHash: getPackageName()" + getPackageName(),
 						Base64.encodeToString(md.digest(), Base64.DEFAULT));
 			}
 		} catch (Exception e) {
