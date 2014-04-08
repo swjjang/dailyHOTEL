@@ -27,7 +27,6 @@
             android:id="@+id/tv_wait_timer_main"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="오전 11시 오늘의 호텔이 공개됩니다."
             android:textColor="#5c5c5c"
             android:textSize="20dp" />
 
