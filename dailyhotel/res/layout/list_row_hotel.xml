@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:gradeview="http://schemas.android.com/apk/res/com.twoheart.dailyhotel.widget.HotelGradeView"
     android:layout_width="match_parent"
     android:layout_height="240dp"
     android:paddingBottom="1.75dp"
@@ -39,7 +40,7 @@
                 android:layout_height="match_parent"
                 android:gravity="bottom"
                 android:orientation="vertical"
-                android:padding="13dp">
+                android:padding="13dp" >
 
                 <RelativeLayout
                     android:id="@+id/ll_hotel_under_upper"
@@ -47,33 +48,40 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal" >
 
-                    <FrameLayout
-                        android:id="@+id/fl_hotel_row_grade"
+                    <!-- <FrameLayout -->
+                    <!-- android:id="@+id/fl_hotel_row_grade" -->
+                    <!-- android:layout_width="wrap_content" -->
+                    <!-- android:layout_height="wrap_content" -->
+                    <!-- android:layout_centerVertical="true" -->
+                    <!-- android:layout_alignParentLeft="true" > -->
+
+
+                    <!-- <TextView -->
+                    <!-- android:id="@+id/tv_hotel_row_grade" -->
+                    <!-- android:layout_width="wrap_content" -->
+                    <!-- android:layout_height="wrap_content" -->
+                    <!-- android:gravity="center" -->
+                    <!-- android:singleLine="true" -->
+                    <!-- android:text="특급" -->
+                    <!-- android:textColor="@android:color/white" -->
+                    <!-- android:textSize="11.5dp" /> -->
+                    <!-- </FrameLayout> -->
+
+                    <com.twoheart.dailyhotel.widget.HotelGradeView
+                        android:id="@+id/hv_hotel_grade"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
                         android:layout_alignParentLeft="true"
-                        android:paddingLeft="5.5dp"
-                        android:paddingRight="5.5dp" >
-
-                        <TextView
-                            android:id="@+id/tv_hotel_row_grade"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:singleLine="true"
-                            android:text="특급"
-                            android:textColor="@android:color/white"
-                            android:textSize="11.5dp" />
-                    </FrameLayout>
+                        android:layout_centerVertical="true" >
+                    </com.twoheart.dailyhotel.widget.HotelGradeView>
 
                     <TextView
                         android:id="@+id/tv_hotel_row_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_toRightOf="@+id/fl_hotel_row_grade"
-                        android:layout_toLeftOf="@+id/tv_hotel_row_discount"
                         android:layout_marginLeft="6dp"
+                        android:layout_toLeftOf="@+id/tv_hotel_row_discount"
+                        android:layout_toRightOf="@+id/hv_hotel_grade"
                         android:ellipsize="marquee"
                         android:freezesText="true"
                         android:gravity="center_vertical"
@@ -84,10 +92,10 @@
                         android:textSize="18dp" />
 
                     <TextView
-                        android:layout_alignParentRight="true"
                         android:id="@+id/tv_hotel_row_discount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
                         android:gravity="center_vertical|right"
                         android:textColor="@android:color/white"
                         android:textSize="18dp" />
@@ -101,10 +109,10 @@
 
                     <TextView
                         android:id="@+id/tv_hotel_row_address"
-                        android:layout_alignParentLeft="true"
-                        android:layout_toLeftOf="@+id/tv_hotel_row_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_toLeftOf="@+id/tv_hotel_row_price"
                         android:gravity="center_vertical"
                         android:singleLine="true"
                         android:textColor="#cecece"
@@ -112,9 +120,9 @@
 
                     <TextView
                         android:id="@+id/tv_hotel_row_price"
-                        android:layout_alignParentRight="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
                         android:gravity="center_vertical|right"
                         android:textColor="#cecece"
                         android:textSize="13.5dp" />

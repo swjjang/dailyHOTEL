@@ -2,8 +2,7 @@
 
     <!--
         Base application theme for API 11+. This theme completely replaces
-        AppBaseTheme from res/values/styles.xml on API 11+ devices.
-    -->
+        AppBaseTheme from res/values/styles.xml on API 11+ devices.    -->
     <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light">
         <item name="android:editTextStyle">@style/EditTextDH_Theme</item>
         <item name="android:checkboxStyle">@style/CheckBoxDH_Theme</item>
@@ -13,24 +12,13 @@
         <item name="android:listViewStyle">@style/ListViewDH_Theme</item>
         <item name="android:listViewWhiteStyle">@style/ListViewDH_Theme.White</item>
         <item name="android:spinnerItemStyle">@style/SpinnerItemDH_Theme</item>
-        <item name="vpiTabPageIndicatorStyle">@style/TabDH_Theme</item>
-        <item name="switchStyle">@style/switch_light</item>
-        <item name="actionMenuTextColor">@color/dh_theme_color</item>
         <item name="android:actionMenuTextColor">@color/dh_theme_color</item>
-        <item name="actionMenuTextAppearance">@style/actionbarMenuTextAppearance</item>
         <item name="android:actionMenuTextAppearance">@style/actionbarMenuTextAppearance</item>
-        <item name="actionBarItemBackground">@drawable/item_background_holo_light</item>
         <item name="android:actionDropDownStyle">@style/DropDownListViewDH_Theme.ActionBar</item>
         <item name="android:dropDownListViewStyle">@style/DropDownDH_Theme.ActionBar</item>
-    </style>
-
-    <style name="TransDialog">
-        <item name="android:windowFrame">@null</item>
-        <item name="android:windowIsFloating">true</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowAnimationStyle">@style/TransDialog.Animations</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowNoTitle">true</item>
+        <item name="actionBarItemBackground">@drawable/item_background_holo_light</item>
+        <item name="vpiTabPageIndicatorStyle">@style/TabDH_Theme</item>
+        <item name="switchStyle">@style/switch_light</item>
     </style>
 
 </resources>

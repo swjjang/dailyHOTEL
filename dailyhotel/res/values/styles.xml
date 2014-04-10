@@ -3,8 +3,7 @@
     <!-- Generated with http://android-holo-colors.com -->
     <!--
         Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
-    -->
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.    -->
     <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light">
         <item name="android:editTextStyle">@style/EditTextDH_Theme</item>
         <item name="android:checkboxStyle">@style/CheckBoxDH_Theme</item>

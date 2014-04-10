@@ -22,6 +22,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -71,10 +72,19 @@ public class BaseActivity extends ActionBarActivity implements Constants {
 	
 	public void setActionBarHide() {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
-			getSupportActionBar();
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+			getSupportActionBar().hide();
 		
 	}
+	
+	// 메뉴 버튼을 막아버림.
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	    if ( keyCode == KeyEvent.KEYCODE_MENU ) {
+	        return true;
+	    }
+	    return super.onKeyDown(keyCode, event);
+	}   
 	
 	@Override
 	protected void onPause() {

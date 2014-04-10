@@ -42,6 +42,8 @@ import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
+import com.facebook.FacebookAuthorizationException;
+import com.facebook.FacebookOperationCanceledException;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
@@ -115,8 +117,11 @@ public class LoginActivity extends BaseActivity implements Constants,
 			}
 		});
 		
+		if (Session.getActiveSession() != null)
+			Session.getActiveSession().closeAndClearTokenInformation();
+		
 	}
-
+	
 	private void makeMeRequest(final Session session) {
 
 		Request request = Request.newMeRequest(session,
@@ -130,8 +135,14 @@ public class LoginActivity extends BaseActivity implements Constants,
 									.getSystemService(Context.TELEPHONY_SERVICE);
 							
 							String userEmail = null;
-							if (user.getProperty("email") != null)
-								userEmail = user.getProperty("email").toString();
+							
+							try {
+								if (user.getProperty("email") != null)
+									userEmail = user.getProperty("email").toString();
+							} catch (Exception e) {
+								if (DEBUG)
+									e.printStackTrace();
+							}
 								
 							String userId = user.getId();
 							String encryptedId = Crypto.encrypt(userId)
@@ -170,12 +181,16 @@ public class LoginActivity extends BaseActivity implements Constants,
 											.toString(), loginParams,
 									LoginActivity.this, LoginActivity.this));
  							
+ 							fbSession.closeAndClearTokenInformation();
+ 							
 						}
 					}
+					
+					
 				});
 
+		LoadingDialog.showLoading(LoginActivity.this);
 		request.executeAsync();
-		fbSession.closeAndClearTokenInformation();
 
 	}
 
@@ -234,17 +249,16 @@ public class LoginActivity extends BaseActivity implements Constants,
 				makeMeRequest(session);
 				
 			} else if (state.isClosed()) {
-				fbSession.closeAndClearTokenInformation();
+				session.closeAndClearTokenInformation();
 				
-				if (exception != null) {
-					if (DEBUG)
-						Toast.makeText(LoginActivity.this, "오류: " + exception.getMessage(), Toast.LENGTH_LONG).show();
-				
-					if (exception.getMessage().contains("cancel"))
-						LoadingDialog.hideLoading();
-					
-				}
 			}
+			
+			// 사용자 취소 시
+			if (exception instanceof FacebookOperationCanceledException 
+					|| exception instanceof FacebookAuthorizationException) {
+				LoadingDialog.hideLoading();
+
+		    }
 		}
 	};
 

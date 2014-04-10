@@ -23,13 +23,10 @@ import android.widget.ProgressBar;
 import com.twoheart.dailyhotel.R;
 
 public class LoadingDialog {
-
-	private static final int LOADING_DELAY = 100;
 	private static Dialog loadingDialog = null;
 
 	public static synchronized void showLoading(final Activity activity) {
 		if (loadingDialog == null) {
-
 			loadingDialog = new Dialog(activity, R.style.TransDialog);
 			ProgressBar pb = new ProgressBar(activity);
 			LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT,
@@ -46,19 +43,8 @@ public class LoadingDialog {
 
 						}
 					});
+			loadingDialog.show();
 
-			Handler handler = new Handler();
-			handler.postDelayed(new Runnable() {
-
-				@Override
-				public void run() {
-
-					if (loadingDialog != null) {
-						loadingDialog.show();
-					}
-
-				}
-			}, LOADING_DELAY);
 		} else {
 			hideLoading();
 			showLoading(activity);

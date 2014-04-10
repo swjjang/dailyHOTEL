@@ -9,6 +9,7 @@ import android.util.Log;
 public class ResultRcvActivity extends Activity {
 	
 	public static Uri m_uriResult;
+	public static boolean b_type      = false;
 
 	public static final String m_strLogTag = "PaySample";
 	public static final String s_strLogTag = "PayACNTSample";
