@@ -8,15 +8,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import com.android.volley.toolbox.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.ImageDetailActivity;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.VolleyImageLoader;
-import com.twoheart.dailyhotel.widget.FadeInNetworkImageView;
+import com.twoheart.dailyhotel.util.ui.ProgressImageLoading;
 
 public class ImageViewFragment extends Fragment implements OnClickListener, Constants {
 	
@@ -26,7 +26,7 @@ public class ImageViewFragment extends Fragment implements OnClickListener, Cons
 	private HotelDetail mHotelDetail;
 	private String mImageUrl;
 	private ImageLoader mImageLoader;
-	private FadeInNetworkImageView mImageView;
+	private ImageView mImageView;
 	private ProgressBar mProgressBar;
 	private Activity mHostActivity;
 	
@@ -46,7 +46,7 @@ public class ImageViewFragment extends Fragment implements OnClickListener, Cons
 		super.onCreate(savedInstanceState);
 		
 		mHostActivity = getActivity();
-		mImageLoader = VolleyImageLoader.getImageLoader();
+		mImageLoader = ImageLoader.getInstance();
 		mHotelDetail = (HotelDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_HOTELDETAIL);
 		mImageUrl = getArguments().getString(KEY_BUNDLE_ARGUMENTS_IMAGEURL);
 	}
@@ -57,11 +57,11 @@ public class ImageViewFragment extends Fragment implements OnClickListener, Cons
 
 		View view = inflater.inflate(R.layout.fragment_image_view, container,
 				false);
-		mImageView = (FadeInNetworkImageView) view.findViewById(R.id.iv_image_view);
+		mImageView = (ImageView) view.findViewById(R.id.iv_image_view);
 		mProgressBar = (ProgressBar) view.findViewById(R.id.pb_image_view);
 		
 		mImageView.setOnClickListener(this);
-		mImageView.setImageUrl(mImageUrl, mImageLoader, mProgressBar);
+		mImageLoader.displayImage(mImageUrl, mImageView, new ProgressImageLoading(mProgressBar));
 		
 		return view;
 	}

@@ -15,20 +15,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.util.GlobalFont;
-import com.twoheart.dailyhotel.util.VolleyImageLoader;
-import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
-import com.twoheart.dailyhotel.widget.FadeInNetworkImageView;
 import com.twoheart.dailyhotel.widget.HotelGradeView;
 
 public class HotelListAdapter extends ArrayAdapter<Hotel> {
@@ -50,7 +46,7 @@ public class HotelListAdapter extends ArrayAdapter<Hotel> {
 		this.inflater = (LayoutInflater) this.context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		
-		this.imageLoader = VolleyImageLoader.getImageLoader();
+		this.imageLoader = ImageLoader.getInstance();
 	}
 
 	@Override
@@ -63,7 +59,7 @@ public class HotelListAdapter extends ArrayAdapter<Hotel> {
 
 			viewHolder = new HotelListViewHolder();
 			viewHolder.llHotelRowContent = (LinearLayout) convertView.findViewById(R.id.ll_hotel_row_content);
-			viewHolder.img = (FadeInNetworkImageView) convertView
+			viewHolder.img = (ImageView) convertView
 					.findViewById(R.id.iv_hotel_row_img);
 			viewHolder.name = (TextView) convertView
 					.findViewById(R.id.tv_hotel_row_name);
@@ -144,9 +140,7 @@ public class HotelListAdapter extends ArrayAdapter<Hotel> {
 		viewHolder.discount.setTypeface(DailyHotel.getBoldTypeface());
 
 		if (!element.getImage().equals("default")) {
-			viewHolder.img.setDefaultImageResId(R.drawable.img_placeholder);
-			viewHolder.img.setErrorImageResId(R.drawable.img_placeholder);
-			viewHolder.img.setImageUrl(element.getImage(), imageLoader);
+			imageLoader.displayImage(element.getImage(), viewHolder.img);
 		}
 
 		// 객실이 1~2 개일때 label 표시
@@ -175,7 +169,7 @@ public class HotelListAdapter extends ArrayAdapter<Hotel> {
 
 	private class HotelListViewHolder {
 		LinearLayout llHotelRowContent;
-		FadeInNetworkImageView img;
+		ImageView img;
 		TextView name;
 		TextView price;
 		TextView discount;
