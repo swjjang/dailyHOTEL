@@ -233,7 +233,6 @@ public class SettingFragment extends BaseFragment implements Constants,
 		
 		if (login) {
 			tvLogin.setText("로그아웃");
-			
 		} else {
 			tvLogin.setText("로그인");
 		}

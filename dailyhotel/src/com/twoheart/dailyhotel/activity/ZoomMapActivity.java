@@ -53,11 +53,4 @@ public class ZoomMapActivity extends BaseActivity {
 		}
 	}
 	
-	@Override
-	public void finish() {
-		super.finish();
-		overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
-	}
-	
-	
 }

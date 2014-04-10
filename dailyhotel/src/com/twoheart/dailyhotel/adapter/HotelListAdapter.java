@@ -29,6 +29,7 @@ import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.VolleyImageLoader;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.widget.FadeInNetworkImageView;
+import com.twoheart.dailyhotel.widget.HotelGradeView;
 
 public class HotelListAdapter extends ArrayAdapter<Hotel> {
 
@@ -74,10 +75,11 @@ public class HotelListAdapter extends ArrayAdapter<Hotel> {
 					.findViewById(R.id.tv_hotel_row_soldout);
 			viewHolder.address = (TextView) convertView
 					.findViewById(R.id.tv_hotel_row_address);
-			viewHolder.gradeBackground = (FrameLayout) convertView
-					.findViewById(R.id.fl_hotel_row_grade);
-			viewHolder.gradeText = (TextView) convertView
-					.findViewById(R.id.tv_hotel_row_grade);
+//			viewHolder.gradeBackground = (FrameLayout) convertView
+//					.findViewById(R.id.fl_hotel_row_grade);
+//			viewHolder.gradeText = (TextView) convertView
+//					.findViewById(R.id.tv_hotel_row_grade);
+			viewHolder.grade = (HotelGradeView) convertView.findViewById(R.id.hv_hotel_grade);
 			viewHolder.rlHotelUnder = (RelativeLayout) convertView
 					.findViewById(R.id.rl_hotel_under);
 
@@ -135,38 +137,7 @@ public class HotelListAdapter extends ArrayAdapter<Hotel> {
 		viewHolder.llHotelRowContent.setBackgroundDrawable(p);
 
 		// grade
-		if (element.getCategory().equals("biz") | element.getCategory().equals("hostel") | element.getCategory().equals("grade1") | 
-				element.getCategory().equals("grade2") | element.getCategory().equals("grade3")) {
-			viewHolder.gradeBackground.setBackgroundColor(Color
-					.parseColor("#055870"));
-			viewHolder.gradeText.setText("비지니스");
-
-		} else if (element.getCategory().equals("boutique")) {
-			viewHolder.gradeBackground.setBackgroundColor(Color
-					.parseColor("#9f2d58"));
-			viewHolder.gradeText.setText("부띠끄");
-
-		} else if (element.getCategory().equals("residence")) {
-			viewHolder.gradeBackground.setBackgroundColor(Color
-					.parseColor("#407f67"));
-			viewHolder.gradeText.setText("레지던스");
-
-		} else if (element.getCategory().equals("resort") | element.getCategory().equals("pension") 
-				| element.getCategory().equals("condo")) {
-			viewHolder.gradeBackground.setBackgroundColor(Color
-					.parseColor("#cf8d14"));
-			viewHolder.gradeText.setText("리조트");
-
-		} else if (element.getCategory().equals("special")) {
-			viewHolder.gradeBackground.setBackgroundColor(Color
-					.parseColor("#ab380a"));
-			viewHolder.gradeText.setText("특급");
-		
-		} else {
-			viewHolder.gradeBackground.setBackgroundColor(Color
-					.parseColor("#808080"));
-			viewHolder.gradeText.setText("미정");
-		}
+		viewHolder.grade.setHotelGradeCode(element.getCategory());
 		
 		GlobalFont.apply((ViewGroup) convertView);
 		viewHolder.name.setTypeface(DailyHotel.getBoldTypeface());
@@ -210,8 +181,9 @@ public class HotelListAdapter extends ArrayAdapter<Hotel> {
 		TextView discount;
 		TextView sold_out;
 		TextView address;
-		FrameLayout gradeBackground;
-		TextView gradeText;
+//		FrameLayout gradeBackground;
+//		TextView gradeText;
+		HotelGradeView grade;
 		RelativeLayout rlHotelUnder;
 	}
 }

@@ -17,14 +17,14 @@ package com.twoheart.dailyhotel.util;
 public interface Constants {
 
 	// 디버그 빌드인지를 결정하는 플래그 상수이다. 디버그 빌드일 경우 로그를 출력한다.
-	public static final boolean DEBUG = false;
+	public static final boolean DEBUG = true;
 	
 	// 회사 대표번호를 정의한 상수이다.
 	public static final String PHONE_NUMBER_DAILYHOTEL = "1800-9120";
 	
 	// 웹서버 호스트를 정의한 상수이다.
-	 public static String URL_DAILYHOTEL_SERVER = "http://dailyhotel.kr/goodnight/";
-//	public static final String URL_DAILYHOTEL_SERVER = "http://dailyhotel.cafe24.com/goodnight/";
+//	 public static String URL_DAILYHOTEL_SERVER = "http://dailyhotel.kr/goodnight/";
+	public static final String URL_DAILYHOTEL_SERVER = "http://dailyhotel.cafe24.com/goodnight/";
 	
 	// DailyHOTEL User Controller WebAPI URL
 	public static final String URL_WEBAPI_USER = "user/";

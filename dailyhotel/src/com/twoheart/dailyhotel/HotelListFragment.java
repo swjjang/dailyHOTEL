@@ -224,7 +224,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 				String close = response.getString("close");
 				
 				mDailyHotelSaleTime.setOpenTime(open);
-//				mDailyHotelSaleTime.setOpenTime("16:06:00");
+//				mDailyHotelSaleTime.setOpenTime("09:00:00");
 				mDailyHotelSaleTime.setCloseTime(close);
 
 				if (!mDailyHotelSaleTime.isSaleTime()) {

@@ -78,26 +78,30 @@ public abstract class TabActivity extends BaseActivity implements
 		super.onResume();
 		onPostSetCookie();
 		
-		mAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
-
-			@Override
-			public Fragment getItem(int position) {
-				return mFragments.get(position);
-			}
-
-			@Override
-			public CharSequence getPageTitle(int position) {
-				return mTitles.get(position);
-			}
-
-			@Override
-			public int getCount() {
-				return mFragments.size();
-			}
-		};
-
-		mViewPager.setOffscreenPageLimit(mAdapter.getCount() + 2);
-		mViewPager.setAdapter(mAdapter);
+		if (mAdapter == null) {
+			mAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
+	
+				@Override
+				public Fragment getItem(int position) {
+					return mFragments.get(position);
+				}
+	
+				@Override
+				public CharSequence getPageTitle(int position) {
+					return mTitles.get(position);
+				}
+	
+				@Override
+				public int getCount() {
+					return mFragments.size();
+				}
+			};
+	
+			mViewPager.setOffscreenPageLimit(mAdapter.getCount() + 2);
+			mViewPager.setAdapter(mAdapter);
+		} else {
+			mAdapter.notifyDataSetChanged();
+		}
 		mIndicator.setViewPager(mViewPager);
 	}
 

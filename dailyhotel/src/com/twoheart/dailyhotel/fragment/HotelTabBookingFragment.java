@@ -14,11 +14,11 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.HotelTabActivity;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
+import com.twoheart.dailyhotel.widget.HotelViewPager;
 import com.viewpagerindicator.CirclePageIndicator;
 
 public class HotelTabBookingFragment extends BaseFragment implements
@@ -31,7 +31,7 @@ public class HotelTabBookingFragment extends BaseFragment implements
 	private HotelDetail mHotelDetail;
 
 	private FragmentPagerAdapter mAdapter;
-	private ViewPager mViewPager;
+	private HotelViewPager mViewPager;
 	private CirclePageIndicator mIndicator;
 
 	private TextView tvBedType, tvAddress, tvPrice, tvDiscount;
@@ -55,7 +55,7 @@ public class HotelTabBookingFragment extends BaseFragment implements
 		tvPrice = (TextView) view.findViewById(R.id.tv_hotel_tab_booking_price);
 		tvDiscount = (TextView) view
 				.findViewById(R.id.tv_hotel_tab_booking_discount);
-		mViewPager = (ViewPager) view
+		mViewPager = (HotelViewPager) view
 				.findViewById(R.id.vp_hotel_tab_booking_img);
 		mIndicator = (CirclePageIndicator) view
 				.findViewById(R.id.cp_hotel_tab_booking_indicator);
@@ -68,7 +68,7 @@ public class HotelTabBookingFragment extends BaseFragment implements
 		tvPrice.setPaintFlags(tvPrice.getPaintFlags()
 				| Paint.STRIKE_THRU_TEXT_FLAG);
 		
-		mAdapter = new FragmentPagerAdapter(this.getChildFragmentManager()) {
+		mAdapter = new FragmentPagerAdapter(getChildFragmentManager()) {
 
 			@Override
 			public Fragment getItem(int position) {

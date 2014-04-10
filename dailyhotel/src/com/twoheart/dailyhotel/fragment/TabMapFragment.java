@@ -21,6 +21,7 @@ import com.twoheart.dailyhotel.activity.ZoomMapActivity;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.util.TabActivity;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
+import com.twoheart.dailyhotel.widget.HotelGradeView;
 
 public class TabMapFragment extends BaseFragment implements OnMapClickListener {
 
@@ -32,8 +33,7 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener {
 	private SupportMapFragment mMapFragment;
 	private GoogleMap googleMap;
 	private TextView tvName, tvAddress;
-	private FrameLayout gradeBackground;
-	private TextView gradeText;
+	private HotelGradeView hvGrade;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,38 +54,14 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener {
 		tvAddress.setText(mHostActivity.hotelDetail.getHotel().getAddress());
 		tvAddress.setSelected(true);
 
-		gradeBackground = (FrameLayout) view
-				.findViewById(R.id.fl_hotel_row_grade);
-		gradeText = (TextView) view.findViewById(R.id.tv_hotel_row_grade);
+		hvGrade = (HotelGradeView) view.findViewById(R.id.hv_hotel_grade);
+//		gradeBackground = (FrameLayout) view
+//				.findViewById(R.id.fl_hotel_row_grade);
+//		gradeText = (TextView) view.findViewById(R.id.tv_hotel_row_grade);
 
 		String category = mHotelDetail.getHotel().getCategory();
+		hvGrade.setHotelGradeCode(category);
 
-		if (category.equals("biz") | category.equals("hostel") | category.equals("grade1") | 
-				category.equals("grade2") | category.equals("grade3")) {
-			gradeBackground.setBackgroundColor(Color.parseColor("#055870"));
-			gradeText.setText("비지니스");
-
-		} else if (category.equals("boutique")) {
-			gradeBackground.setBackgroundColor(Color.parseColor("#9f2d58"));
-			gradeText.setText("부띠끄");
-
-		} else if (category.equals("residence")) {
-			gradeBackground.setBackgroundColor(Color.parseColor("#407f67"));
-			gradeText.setText("레지던스");
-
-		} else if (category.equals("resort") | category.equals("pension") | category.equals("condo")) {
-			gradeBackground.setBackgroundColor(Color.parseColor("#cf8d14"));
-			gradeText.setText("리조트");
-
-		} else if (category.equals("special")) {
-			gradeBackground.setBackgroundColor(Color.parseColor("#ab380a"));
-			gradeText.setText("특급");
-
-		} else {
-			gradeBackground.setBackgroundColor(Color.parseColor("#808080"));
-			gradeText.setText("미정");
-		}
-		
 		return view;
 	}
 

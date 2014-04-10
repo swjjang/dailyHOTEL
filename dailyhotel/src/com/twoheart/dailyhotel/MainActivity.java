@@ -32,6 +32,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Base64;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -106,10 +107,10 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		// 쿠키 동기화를 초기화한다. 로그인, 로그아웃 세션 쿠키는 MainActivity의 생명주기와 동기화한다.
 		cookieSyncManager = CookieSyncManager.createInstance(this);
-		
+
 		// 이전의 비정상 종료에 의한 만료된 쿠키들이 있을 수 있으므로, SplashActivity에서 자동 로그인을
 		// 처리하기 이전에 미리 이미 저장되어 있는 쿠키들을 정리한다.
 		if (CookieManager.getInstance().getCookie(URL_DAILYHOTEL_SERVER) != null)
@@ -340,6 +341,20 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 	}
 
 	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_MENU) {
+			if (!drawerLayout.isDrawerOpen(drawerList)) {
+				drawerLayout.openDrawer(drawerList);
+				return true;
+			} else {
+				drawerLayout.closeDrawer(drawerList);
+			}
+
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+
+	@Override
 	public void finish() {
 		if (backButtonHandler.onBackPressed())
 			super.finish();
@@ -433,7 +448,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 
 		@Override
 		public boolean isEnabled(int position) {
-			return (list.get(position).getType() == DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY) ? true : false;
+			return (list.get(position).getType() == DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY) ? true
+					: false;
 		}
 
 		@Override
