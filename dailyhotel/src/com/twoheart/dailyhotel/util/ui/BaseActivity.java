@@ -99,8 +99,15 @@ public class BaseActivity extends ActionBarActivity implements Constants {
 	protected void onResume() {
 		super.onResume();
 		
-		if (cookieSyncManager != null)
-			cookieSyncManager.startSync();
+		try {
+			if (cookieSyncManager != null)
+				cookieSyncManager.startSync();
+		} catch (Exception e) {
+			if (DEBUG)
+				e.printStackTrace();
+			
+			
+		}
 	}
 	
 	@Override

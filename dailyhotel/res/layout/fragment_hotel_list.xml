@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:ptr="http://schemas.android.com/apk/res-auto" 
+    xmlns:ptr="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ECECEC"
     android:orientation="vertical" >
 
-    <com.handmark.pulltorefresh.library.PullToRefreshListView
-        android:id="@+id/listview_hotel_list"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:cacheColorHint="#00000000"
-        ptr:ptrAnimationStyle="flip"
-        android:divider="@null" >
-    </com.handmark.pulltorefresh.library.PullToRefreshListView>
+        android:layout_height="match_parent" >
+
+        <ListView
+            android:id="@+id/listview_hotel_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:cacheColorHint="#00000000"
+            android:divider="@null" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>

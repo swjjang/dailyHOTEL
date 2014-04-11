@@ -37,6 +37,7 @@ import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.twoheart.dailyhotel.CreditFragment;
 import com.twoheart.dailyhotel.GCMIntentService;
 import com.twoheart.dailyhotel.MainActivity;
@@ -59,6 +60,13 @@ public class SplashActivity extends BaseActivity implements Constants,
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			setTheme(R.style.AppTheme_Translucent);
+			
+			SystemBarTintManager tintManager = new SystemBarTintManager(this);
+			tintManager.setStatusBarTintEnabled(true);
+		}
+		
 		setActionBarHide();
 		setContentView(R.layout.activity_splash);
 

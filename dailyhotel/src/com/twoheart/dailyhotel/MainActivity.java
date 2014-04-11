@@ -25,6 +25,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
@@ -52,6 +53,7 @@ import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.twoheart.dailyhotel.activity.SplashActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.GlobalFont;
@@ -119,7 +121,16 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 		startActivityForResult(new Intent(this, SplashActivity.class),
 				CODE_REQUEST_ACTIVITY_SPLASH);
 
-		setTheme(R.style.AppTheme);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			setTheme(R.style.AppTheme_Translucent);
+			
+			SystemBarTintManager tintManager = new SystemBarTintManager(this);
+			tintManager.setStatusBarTintEnabled(true);
+			
+		} else {
+			setTheme(R.style.AppTheme);	
+		}
+		
 		setContentView(R.layout.activity_main);
 		setNavigationDrawer();
 

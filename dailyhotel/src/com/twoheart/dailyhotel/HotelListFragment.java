@@ -12,6 +12,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBar.OnNavigationListener;
 import android.view.LayoutInflater;
@@ -28,9 +30,6 @@ import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.twoheart.dailyhotel.activity.EventWebActivity;
 import com.twoheart.dailyhotel.activity.HotelTabActivity;
 import com.twoheart.dailyhotel.adapter.HotelListAdapter;
@@ -52,14 +51,15 @@ import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 public class HotelListFragment extends BaseFragment implements Constants,
 		OnItemClickListener, OnNavigationListener,
 		DailyHotelJsonArrayResponseListener, DailyHotelJsonResponseListener,
-		DailyHotelStringResponseListener {
+		DailyHotelStringResponseListener, OnRefreshListener {
 
 	private final static String TAG = "HotelListFragment";
 
 	private MainActivity mHostActivity;
 	private RequestQueue mQueue;
-
-	private PullToRefreshListView mPullToRefreshListView;
+	
+	private ListView mHotelListView;
+	private SwipeRefreshLayout mSwipeRefreshLayout;
 	private HotelListAdapter mHotelListAdapter;
 	private List<Hotel> mHotelList;
 	private List<String> mRegionList;
@@ -78,15 +78,15 @@ public class HotelListFragment extends BaseFragment implements Constants,
 		mQueue = VolleyHttpClient.getRequestQueue();
 		mDailyHotelSaleTime = new SaleTime();
 		mRefreshHotelList = true;
-		mPullToRefreshListView = (PullToRefreshListView) view
+		mHotelListView = (ListView) view
 				.findViewById(R.id.listview_hotel_list);
+		mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
 		mHostActivity = (MainActivity) getActivity();
 		mHostActivity.setActionBar("오늘의 호텔");
 		
-		ListView hotelListView = mPullToRefreshListView.getRefreshableView();
 		View listViewHeader = inflater
 				.inflate(R.layout.header_hotel_list, null);
-		hotelListView.addHeaderView(listViewHeader);
+		mHotelListView.addHeaderView(listViewHeader);
 
 		ivNewEvent = (ImageView) view.findViewById(R.id.iv_new_event);
 		btnListViewHeader = (Button) view.findViewById(R.id.btn_footer);
@@ -100,7 +100,10 @@ public class HotelListFragment extends BaseFragment implements Constants,
 						R.anim.hold);
 			}
 		});
-
+		mSwipeRefreshLayout.setOnRefreshListener(this);
+		mSwipeRefreshLayout.setColorScheme(R.color.dh_theme_color, android.R.color.transparent, 
+				R.color.dh_theme_color, android.R.color.transparent);
+		
 		DailyHotel.getGaTracker().set(Fields.SCREEN_NAME, TAG);
 
 		return view;
@@ -145,7 +148,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 	@Override
 	public void onItemClick(AdapterView<?> parentView, View childView,
 			int position, long id) {
-		int selectedPosition = position - 2;
+		int selectedPosition = position - 1;
 
 		Hotel selectedHotel = mHotelList.get(selectedPosition);
 
@@ -308,23 +311,10 @@ public class HotelListFragment extends BaseFragment implements Constants,
 
 				mHotelListAdapter = new HotelListAdapter(mHostActivity,
 						R.layout.list_row_hotel, mHotelList);
-				mPullToRefreshListView.setAdapter(mHotelListAdapter);
-				mPullToRefreshListView.setOnItemClickListener(this);
-				mPullToRefreshListView
-						.setOnRefreshListener(new OnRefreshListener<ListView>() {
-
-							// listview 끌어서 새로고침
-							@Override
-							public void onRefresh(
-									PullToRefreshBase<ListView> refreshView) {
-
-								fetchHotelList(mHostActivity.actionBar
-										.getSelectedNavigationIndex());
-
-							}
-						});
+				mHotelListView.setAdapter(mHotelListAdapter);
+				mHotelListView.setOnItemClickListener(this);
+				mSwipeRefreshLayout.setRefreshing(false);
 				
-				mPullToRefreshListView.onRefreshComplete();
 				mRefreshHotelList = true;
 				
 				// 새로운 이벤트 확인을 위해 버전 API 호출
@@ -406,6 +396,12 @@ public class HotelListFragment extends BaseFragment implements Constants,
 					mHostActivity));
 
 		}
+	}
+
+	@Override
+	public void onRefresh() {
+		fetchHotelList(mHostActivity.actionBar
+				.getSelectedNavigationIndex());
 	}
 
 }

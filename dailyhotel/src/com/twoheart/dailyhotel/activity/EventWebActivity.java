@@ -58,7 +58,7 @@ public class EventWebActivity extends WebViewActivity {
 	@Override
 	public void finish() {
 		super.finish();
-		overridePendingTransition(R.anim.hold, R.anim.slide_out_to_bottom);
+		overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
 		
 	}
 
