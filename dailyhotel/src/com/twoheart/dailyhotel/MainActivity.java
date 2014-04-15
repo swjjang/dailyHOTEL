@@ -25,7 +25,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -40,6 +39,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.widget.AdapterView;
@@ -224,12 +225,19 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 		
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			if (!(fragment instanceof HotelListFragment)) {
-				mContentFrame.setPadding(mContentFrame.getPaddingLeft(), mContentFrame.getPaddingTop(),
-						mContentFrame.getPaddingRight(), config.getNavigationBarHeight());
+				WindowManager.LayoutParams attrs = getWindow()
+                        .getAttributes();
+                attrs.flags &= (~WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+                getWindow().setAttributes(attrs);
 				
 			} else {
 				mContentFrame.setPadding(mContentFrame.getPaddingLeft(), mContentFrame.getPaddingTop(),
 						mContentFrame.getPaddingRight(), 0);
+				
+				Window w = getWindow();
+                w.setFlags(
+                        WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION,
+                        WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 			}
 		}
 
