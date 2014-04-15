@@ -14,6 +14,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -87,7 +88,7 @@ public class CreditFragment extends BaseFragment implements Constants,
 		btnSignup.setOnClickListener(this);
 		btnInvite.setOnClickListener(this);
 		tvCredit.setOnClickListener(this);
-
+		
 		DailyHotel.getGaTracker().set(Fields.SCREEN_NAME, TAG);
 
 		return view;

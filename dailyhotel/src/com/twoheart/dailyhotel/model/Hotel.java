@@ -15,6 +15,7 @@ public class Hotel implements Parcelable {
 	private int availableRoom;
 	private int sequence;
 	private String bedType;
+	private String detailRegion;
 
 	public Hotel() {
 		super();
@@ -163,6 +164,14 @@ public class Hotel implements Parcelable {
 
 	public void setBedType(String bedType) {
 		this.bedType = bedType;
+	}
+
+	public String getDetailRegion() {
+		return detailRegion;
+	}
+
+	public void setDetailRegion(String detailRegion) {
+		this.detailRegion = detailRegion;
 	}
 
 	

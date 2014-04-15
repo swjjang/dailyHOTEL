@@ -3,7 +3,9 @@ package com.twoheart.dailyhotel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -24,12 +26,12 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
 
 import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
+import com.hb.views.PinnedSectionListView;
 import com.twoheart.dailyhotel.activity.EventWebActivity;
 import com.twoheart.dailyhotel.activity.HotelTabActivity;
 import com.twoheart.dailyhotel.adapter.HotelListAdapter;
@@ -46,6 +48,7 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonArrayResponse
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
+import com.twoheart.dailyhotel.util.ui.HotelList;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
 public class HotelListFragment extends BaseFragment implements Constants,
@@ -58,11 +61,13 @@ public class HotelListFragment extends BaseFragment implements Constants,
 	private MainActivity mHostActivity;
 	private RequestQueue mQueue;
 	
-	private ListView mHotelListView;
+	private PinnedSectionListView mHotelListView;
 	private SwipeRefreshLayout mSwipeRefreshLayout;
 	private HotelListAdapter mHotelListAdapter;
+	private List<HotelList> mHotelListViewList;
 	private List<Hotel> mHotelList;
 	private List<String> mRegionList;
+	private Map<String, List<String>> mRegionDetailList;
 	private SaleTime mDailyHotelSaleTime;
 	private Button btnListViewHeader;
 	private ImageView ivNewEvent;
@@ -78,7 +83,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 		mQueue = VolleyHttpClient.getRequestQueue();
 		mDailyHotelSaleTime = new SaleTime();
 		mRefreshHotelList = true;
-		mHotelListView = (ListView) view
+		mHotelListView = (PinnedSectionListView) view
 				.findViewById(R.id.listview_hotel_list);
 		mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
 		mHostActivity = (MainActivity) getActivity();
@@ -101,8 +106,40 @@ public class HotelListFragment extends BaseFragment implements Constants,
 			}
 		});
 		mSwipeRefreshLayout.setOnRefreshListener(this);
-		mSwipeRefreshLayout.setColorScheme(R.color.dh_theme_color, android.R.color.transparent, 
-				R.color.dh_theme_color, android.R.color.transparent);
+		mSwipeRefreshLayout.setColorScheme(R.color.dh_theme_color, android.R.color.holo_red_light, 
+				android.R.color.holo_red_dark, android.R.color.transparent);
+		
+//		ViewTreeObserver vto = mSwipeRefreshLayout.getViewTreeObserver();
+//		vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//			
+//			@Override
+//			public void onGlobalLayout() {
+//				final DisplayMetrics metrics = getResources().getDisplayMetrics();
+//				Float mDistanceToTriggerSync = Math.min(((View) mSwipeRefreshLayout.getParent()).getHeight() * 0.7f,
+//						150 * metrics.density);
+//				
+//				try {
+//					
+//					Field field = SwipeRefreshLayout.class.getDeclaredField("mDistanceToTriggerSync");
+//					field.setAccessible(true);
+//					field.setFloat(mSwipeRefreshLayout, mDistanceToTriggerSync);
+//					
+//				} catch (Exception e) {
+//					if (DEBUG)
+//						e.printStackTrace();
+//				}
+//				
+//				ViewTreeObserver obs = mSwipeRefreshLayout.getViewTreeObserver();
+//				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+//					obs.removeOnGlobalLayoutListener(this);
+//					
+//				} else
+//					obs.removeGlobalOnLayoutListener(this);
+//				
+//			}
+//		});
+		
+		mHotelListView.setShadowVisible(false);
 		
 		DailyHotel.getGaTracker().set(Fields.SCREEN_NAME, TAG);
 
@@ -150,13 +187,15 @@ public class HotelListFragment extends BaseFragment implements Constants,
 			int position, long id) {
 		int selectedPosition = position - 1;
 
-		Hotel selectedHotel = mHotelList.get(selectedPosition);
-
-		Intent i = new Intent(mHostActivity, HotelTabActivity.class);
-		i.putExtra(NAME_INTENT_EXTRA_DATA_HOTEL, selectedHotel);
-		i.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mDailyHotelSaleTime);
-
-		startActivityForResult(i, CODE_REQUEST_ACTIVITY_HOTELTAB);
+		HotelList selectedItem = mHotelListViewList.get(selectedPosition);
+		
+		if (selectedItem.getType() == HotelList.TYPE_ENTRY) {
+			Intent i = new Intent(mHostActivity, HotelTabActivity.class);
+			i.putExtra(NAME_INTENT_EXTRA_DATA_HOTEL, selectedItem.getItem());
+			i.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mDailyHotelSaleTime);
+	
+			startActivityForResult(i, CODE_REQUEST_ACTIVITY_HOTELTAB);
+		}
 
 	}
 
@@ -269,6 +308,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 					int idx = obj.getInt("idx");
 					int available = obj.getInt("avail_room_count");
 					int seq = obj.getInt("seq");
+					String detailRegion = obj.getString("site2_name");
 
 					JSONArray arr = obj.getJSONArray("img");
 					String image = "default";
@@ -286,6 +326,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 					newHotel.setAvailableRoom(available);
 					newHotel.setSequence(seq);
 					newHotel.setImage(image);
+					newHotel.setDetailRegion(detailRegion);
 
 					if (seq >= 0) { // 숨김호텔이 아니라면 추가. (음수일 경우 숨김호텔.)
 
@@ -308,12 +349,33 @@ public class HotelListFragment extends BaseFragment implements Constants,
 					}
 
 				}
+				
+				mHotelListViewList = new ArrayList<HotelList>();
+				List<String> selectedRegionDetail = mRegionDetailList.get(mRegionList.get(mHostActivity.actionBar
+						.getSelectedNavigationIndex()));
+				
+				for (int i = 0; i < selectedRegionDetail.size(); i++) {
+					String region = selectedRegionDetail.get(i);
+					HotelList section = new HotelList(region);
+					mHotelListViewList.add(section);
+
+					int count = 0;
+					for (int j = 0; j < mHotelList.size(); j++) {
+						Hotel hotel = mHotelList.get(j);
+						if (hotel.getDetailRegion().equals(region)) {
+							mHotelListViewList.add(new HotelList(hotel));
+							count++;
+						}
+					}
+					
+					if (count == 0)
+						mHotelListViewList.remove(section);
+				}
 
 				mHotelListAdapter = new HotelListAdapter(mHostActivity,
-						R.layout.list_row_hotel, mHotelList);
+						R.layout.list_row_hotel, mHotelListViewList);
 				mHotelListView.setAdapter(mHotelListAdapter);
 				mHotelListView.setOnItemClickListener(this);
-				mSwipeRefreshLayout.setRefreshing(false);
 				
 				mRefreshHotelList = true;
 				
@@ -323,6 +385,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 						null, this, mHostActivity));
 				
 				mListener.onLoadComplete(this, true);
+				mSwipeRefreshLayout.setRefreshing(false);		// Refresh 완료
 
 			} catch (Exception e) {
 				if (DEBUG)
@@ -353,14 +416,25 @@ public class HotelListFragment extends BaseFragment implements Constants,
 		if (url.contains(URL_WEBAPI_SITE_LOCATION_LIST)) {
 			try {
 				mRegionList = new ArrayList<String>();
+				mRegionDetailList = new LinkedHashMap<String, List<String>>();
 
 				JSONArray arr = response;
 				for (int i = 0; i < arr.length(); i++) {
 					JSONObject obj = arr.getJSONObject(i);
 					String name = obj.getString("name");
 					mRegionList.add(name);
+					
+					// 세부지역 추가
+					List<String> nameDetailList = new ArrayList<String>();
+					JSONArray arrDetail = obj.getJSONArray("child");
+					for (int j=0; j<arrDetail.length(); j++) {
+						String nameDetail = arrDetail.getString(j);
+						nameDetailList.add(nameDetail);
+						
+					}
+					mRegionDetailList.put(name, nameDetailList);
 				}
-
+				
 				mHostActivity.actionBar.setDisplayShowTitleEnabled(false);
 				mHostActivity.actionBar
 						.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);

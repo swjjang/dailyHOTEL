@@ -40,6 +40,7 @@ import com.android.volley.VolleyError;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.twoheart.dailyhotel.CreditFragment;
 import com.twoheart.dailyhotel.GCMIntentService;
+import com.twoheart.dailyhotel.HotelListFragment;
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.R.layout;
@@ -62,13 +63,13 @@ public class SplashActivity extends BaseActivity implements Constants,
 		super.onCreate(savedInstanceState);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			setTheme(R.style.AppTheme_Translucent);
-			
-			SystemBarTintManager tintManager = new SystemBarTintManager(this);
-			tintManager.setStatusBarTintEnabled(true);
 		}
 		
 		setActionBarHide();
 		setContentView(R.layout.activity_splash);
+		
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+		}
 
 		mQueue = VolleyHttpClient.getRequestQueue();
 

@@ -25,6 +25,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -44,6 +45,7 @@ import android.webkit.CookieSyncManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -54,6 +56,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
+import com.readystatesoftware.systembartint.SystemBarTintManager.SystemBarConfig;
 import com.twoheart.dailyhotel.activity.SplashActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.GlobalFont;
@@ -96,6 +99,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 	public ListView drawerList;
 	public ActionBarDrawerToggle drawerToggle;
 	protected FragmentManager fragmentManager;
+	private FrameLayout mContentFrame;
 
 	public DrawerMenu menuHotelListFragment;
 	public DrawerMenu menuBookingListFragment;
@@ -105,6 +109,9 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 	private RequestQueue mQueue;
 
 	private CloseOnBackPressed backButtonHandler;
+	
+	private SystemBarTintManager tintManager;
+	private SystemBarConfig config;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -124,8 +131,12 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			setTheme(R.style.AppTheme_Translucent);
 			
-			SystemBarTintManager tintManager = new SystemBarTintManager(this);
+			tintManager = new SystemBarTintManager(this);
+			config = tintManager.getConfig();
+			
 			tintManager.setStatusBarTintEnabled(true);
+			int actionBarColor = getResources().getColor(android.R.color.white);
+			tintManager.setStatusBarTintColor(actionBarColor);
 			
 		} else {
 			setTheme(R.style.AppTheme);	
@@ -133,7 +144,18 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 		
 		setContentView(R.layout.activity_main);
 		setNavigationDrawer();
-
+		
+		mContentFrame = (FrameLayout) findViewById(R.id.content_frame);
+		
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			mContentFrame.setPadding(mContentFrame.getPaddingLeft(), config.getStatusBarHeight() + config.getActionBarHeight(),
+					mContentFrame.getPaddingRight(), mContentFrame.getPaddingBottom());
+			
+			drawerList.setPadding(drawerList.getPaddingLeft(), config.getStatusBarHeight() + config.getActionBarHeight(),
+					drawerList.getPaddingRight(), drawerList.getPaddingBottom());
+			
+		}
+		
 		mQueue = VolleyHttpClient.getRequestQueue();
 		fragmentManager = getSupportFragmentManager();
 		backButtonHandler = new CloseOnBackPressed(this);
@@ -197,8 +219,19 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 		clearFragmentBackStack();
 
 		fragmentManager.beginTransaction()
-				.replace(R.id.content_frame, fragment)
+				.replace(mContentFrame.getId(), fragment)
 				.commitAllowingStateLoss();
+		
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			if (!(fragment instanceof HotelListFragment)) {
+				mContentFrame.setPadding(mContentFrame.getPaddingLeft(), mContentFrame.getPaddingTop(),
+						mContentFrame.getPaddingRight(), config.getNavigationBarHeight());
+				
+			} else {
+				mContentFrame.setPadding(mContentFrame.getPaddingLeft(), mContentFrame.getPaddingTop(),
+						mContentFrame.getPaddingRight(), 0);
+			}
+		}
 
 	}
 
@@ -318,7 +351,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 
 		drawerList.setAdapter(mDrawerMenuListAdapter);
 		drawerList.setOnItemClickListener(this);
-
 	}
 
 	@Override

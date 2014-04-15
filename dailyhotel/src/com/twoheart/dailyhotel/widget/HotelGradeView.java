@@ -108,6 +108,7 @@ public class HotelGradeView extends FrameLayout {
 		mHotelGradeName = hotelGradeName;
 		tvHotelGradeName.setText(mHotelGradeName);
 		tvHotelGradeName.invalidate();
+		invalidate();
 	}
 	
 	private void setHotelGradeColor(String hotelGradeColor) {

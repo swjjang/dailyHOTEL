@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -85,7 +86,7 @@ public class SettingFragment extends BaseFragment implements Constants,
 		} catch (NameNotFoundException e) {
 			e.printStackTrace();
 		}
-
+		
 		return view;
 	}
 
@@ -233,8 +234,10 @@ public class SettingFragment extends BaseFragment implements Constants,
 		
 		if (login) {
 			tvLogin.setText("로그아웃");
+			tvEmail.setVisibility(View.VISIBLE);
 		} else {
 			tvLogin.setText("로그인");
+			tvEmail.setVisibility(View.GONE);
 		}
 		
 	}
