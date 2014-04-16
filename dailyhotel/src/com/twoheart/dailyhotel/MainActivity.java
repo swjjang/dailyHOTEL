@@ -112,7 +112,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 	private CloseOnBackPressed backButtonHandler;
 	
 	private SystemBarTintManager tintManager;
-	private SystemBarConfig config;
+	public SystemBarConfig config;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

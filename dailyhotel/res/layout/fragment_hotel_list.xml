@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:ptr="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ECECEC"
     android:orientation="vertical" >
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_container"
+    <uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout
+        xmlns:ptr="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/ptr_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
@@ -17,6 +17,6 @@
             android:layout_height="match_parent"
             android:cacheColorHint="#00000000"
             android:divider="@null" />
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout>
 
 </LinearLayout>

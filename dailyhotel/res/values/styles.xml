@@ -25,6 +25,8 @@
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
         <item name="android:windowBackground">@color/activity_background</item>
+        <item name="ptrHeaderBackground">@android:color/white</item>
+        <item name="ptrProgressBarColor">@color/dh_theme_color</item>
     </style>
 
     <style name="TransDialog">

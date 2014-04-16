@@ -10,7 +10,7 @@
         android:id="@+id/hotelListRegionName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="11dp"
+        android:layout_margin="5dp"
         android:gravity="left|center_vertical"
         android:textColor="@android:color/white"
         android:textSize="14dp" />
