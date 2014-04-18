@@ -269,6 +269,7 @@ public class BookingActivity extends BaseActivity implements
 		intent.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
 		startActivityForResult(intent,
 				CODE_REQUEST_ACTIVITY_PAYMENT);
+		overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
 		
 	}
 	

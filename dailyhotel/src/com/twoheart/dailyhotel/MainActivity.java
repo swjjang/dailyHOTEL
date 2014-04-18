@@ -147,7 +147,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 		setNavigationDrawer();
 		
 		mContentFrame = (FrameLayout) findViewById(R.id.content_frame);
-		
+            
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			mContentFrame.setPadding(mContentFrame.getPaddingLeft(), config.getStatusBarHeight() + config.getActionBarHeight(),
 					mContentFrame.getPaddingRight(), mContentFrame.getPaddingBottom());

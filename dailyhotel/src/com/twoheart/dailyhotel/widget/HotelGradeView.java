@@ -36,7 +36,7 @@ public class HotelGradeView extends FrameLayout {
 	
 	private void init() {
 		
-		setPadding(dpToPx(5.5), 0, dpToPx(5.5), 0);
+		setPadding(dpToPx(5.5), 2, dpToPx(5.5), 1);
 		tvHotelGradeName = new TextView(mContext);
 		
 		FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
@@ -52,7 +52,7 @@ public class HotelGradeView extends FrameLayout {
 	}
 	
 	private int dpToPx(double dp) {
-		float scale = getResources().getDisplayMetrics().density;
+		float scale = getResources().getDisplayMetrics().density; 
 		return (int) (dp * scale + 0.5f);
 		
 	}

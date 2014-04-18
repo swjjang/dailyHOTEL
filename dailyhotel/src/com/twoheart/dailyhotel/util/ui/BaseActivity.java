@@ -76,7 +76,7 @@ public class BaseActivity extends ActionBarActivity implements Constants {
 			getSupportActionBar().hide();
 		
 	}
-	
+	  
 	// 메뉴 버튼을 막아버림.
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {

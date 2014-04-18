@@ -766,6 +766,13 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		setResult(resultCode);
 		finish();
 	}
+	
+	@Override
+	public void finish() {
+		super.finish();
+		overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+
+	}
 
 	private class JavaScriptExtention {
 
