@@ -91,7 +91,7 @@
                         android:singleLine="true"
                         android:shadowColor="#7F000000"
                         android:shadowDx="0"
-                        android:shadowDy="3"
+                        android:shadowDy="2"
                         android:shadowRadius="0.01"
                         android:textColor="@android:color/white"
                         android:textSize="18dp" />
@@ -106,7 +106,7 @@
                         android:textColor="@android:color/white"
                         android:shadowColor="#7F000000"
                         android:shadowDx="0"
-                        android:shadowDy="3"
+                        android:shadowDy="2"
                         android:shadowRadius="0.01"
                         android:textSize="18dp" />
                 </RelativeLayout>
@@ -115,6 +115,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/ll_hotel_under_upper"
+                    android:paddingTop="5dp"
                     android:orientation="horizontal" >
 
                     <TextView
@@ -128,7 +129,7 @@
                         android:textColor="#cecece"
                         android:shadowColor="#7F000000"
                         android:shadowDx="0"
-                        android:shadowDy="3"
+                        android:shadowDy="2"
                         android:shadowRadius="0.01"
                         android:textSize="13.5dp" />
 
@@ -141,7 +142,7 @@
                         android:textColor="#cecece"
                         android:shadowColor="#7F000000"
                         android:shadowDx="0"
-                        android:shadowDy="3"
+                        android:shadowDy="2"
                         android:shadowRadius="0.01"
                         android:textSize="13.5dp" />
                 </RelativeLayout>

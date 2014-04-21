@@ -464,7 +464,10 @@ public class HotelListFragment extends BaseFragment implements Constants,
 				JSONArray arr = response;
 				for (int i = 0; i < arr.length(); i++) {
 					JSONObject obj = arr.getJSONObject(i);
-					String name = obj.getString("name");
+					String name = new String();
+					StringBuilder nameWithWhiteSpace = new StringBuilder(name);
+					name = nameWithWhiteSpace.append("    ").append(obj.getString("name")).
+					append("     ").toString();
 					mRegionList.add(name);
 					
 					// 세부지역 추가

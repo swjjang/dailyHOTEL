@@ -40,7 +40,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelList> implements
 
 	public HotelListAdapter(Context context, int resourceId,
 			List<HotelList> hotelList) {
-		super(context, resourceId, hotelList);
+		super(context, resourceId, hotelList);	
 
 		this.context = context;
 		this.resourceId = resourceId;
