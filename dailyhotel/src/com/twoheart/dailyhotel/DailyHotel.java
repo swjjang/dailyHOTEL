@@ -129,6 +129,7 @@ public class DailyHotel extends Application {
 			.build();
 		
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
+			.threadPoolSize(15)
 			.memoryCache(new LruMemoryCache((int) Runtime.getRuntime().maxMemory() / 4))
 			.defaultDisplayImageOptions(option)
 			.build();

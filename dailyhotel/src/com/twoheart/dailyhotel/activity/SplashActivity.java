@@ -210,7 +210,7 @@ public class SplashActivity extends BaseActivity implements Constants,
 							finish();
 
 						}
-					}, 2000);
+					}, 1200);
 				}
 
 			} catch (UnsupportedOperationException e) {

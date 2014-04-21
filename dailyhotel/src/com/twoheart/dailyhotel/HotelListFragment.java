@@ -399,13 +399,20 @@ public class HotelListFragment extends BaseFragment implements Constants,
 						mHotelListViewList.remove(section);
 				}
 				
-				mHotelListViewList.add(new HotelList("기타"));
+				int count = 0;
+				HotelList others = new HotelList("기타");
+				
+				mHotelListViewList.add(others);
 				for (int i = 0; i < mHotelList.size(); i++) {
 					Hotel hotel = mHotelList.get(i);
 					if (hotel.getDetailRegion().equals("null")) {
 						mHotelListViewList.add(new HotelList(hotel));
+						count++;
 					}
 				}
+				
+				if (count == 0)
+					mHotelListViewList.remove(others);
 
 				mHotelListAdapter = new HotelListAdapter(mHostActivity,
 						R.layout.list_row_hotel, mHotelListViewList);

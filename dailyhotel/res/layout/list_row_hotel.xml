@@ -3,8 +3,7 @@
     xmlns:gradeview="http://schemas.android.com/apk/res/com.twoheart.dailyhotel.widget.HotelGradeView"
     android:layout_width="match_parent"
     android:layout_height="240dp"
-    android:paddingBottom="1.75dp"
-    android:paddingTop="1.75dp" >
+    android:paddingBottom="3.5dp" >
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -90,6 +89,10 @@
                         android:marqueeRepeatLimit="marquee_forever"
                         android:scrollHorizontally="true"
                         android:singleLine="true"
+                        android:shadowColor="#7F000000"
+                        android:shadowDx="0"
+                        android:shadowDy="3"
+                        android:shadowRadius="0.01"
                         android:textColor="@android:color/white"
                         android:textSize="18dp" />
 
@@ -101,6 +104,10 @@
                         android:layout_centerVertical="true"
                         android:gravity="center_vertical|right"
                         android:textColor="@android:color/white"
+                        android:shadowColor="#7F000000"
+                        android:shadowDx="0"
+                        android:shadowDy="3"
+                        android:shadowRadius="0.01"
                         android:textSize="18dp" />
                 </RelativeLayout>
 
@@ -119,6 +126,10 @@
                         android:gravity="center_vertical"
                         android:singleLine="true"
                         android:textColor="#cecece"
+                        android:shadowColor="#7F000000"
+                        android:shadowDx="0"
+                        android:shadowDy="3"
+                        android:shadowRadius="0.01"
                         android:textSize="13.5dp" />
 
                     <TextView
@@ -128,6 +139,10 @@
                         android:layout_alignParentRight="true"
                         android:gravity="center_vertical|right"
                         android:textColor="#cecece"
+                        android:shadowColor="#7F000000"
+                        android:shadowDx="0"
+                        android:shadowDy="3"
+                        android:shadowRadius="0.01"
                         android:textSize="13.5dp" />
                 </RelativeLayout>
             </RelativeLayout>

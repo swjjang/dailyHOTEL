@@ -26,6 +26,7 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.util.GlobalFont;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.ui.HotelList;
 import com.twoheart.dailyhotel.widget.HotelGradeView;
 
@@ -129,10 +130,14 @@ public class HotelListAdapter extends ArrayAdapter<HotelList> implements
 
 			viewHolder.name.setSelected(true); // Android TextView marquee bug
 
-			viewHolder.name.setShadowLayer(2, 1, 2, android.R.color.black);
-			viewHolder.price.setShadowLayer(2, 1, 2, android.R.color.black);
-			viewHolder.discount.setShadowLayer(2, 1, 2, android.R.color.black);
-			viewHolder.address.setShadowLayer(2, 1, 2, android.R.color.black);
+//			viewHolder.name.setShadowLayer(Util.dpToPx(getContext(), 1), Util.dpToPx(getContext(), 6),
+//					Util.dpToPx(getContext(), 6), android.R.color.black);
+//			viewHolder.price.setShadowLayer(Util.dpToPx(getContext(), 1), Util.dpToPx(getContext(), 6),
+//					Util.dpToPx(getContext(), 6), android.R.color.black);
+//			viewHolder.discount.setShadowLayer(Util.dpToPx(getContext(), 1), Util.dpToPx(getContext(), 6),
+//					Util.dpToPx(getContext(), 6), android.R.color.black);
+//			viewHolder.address.setShadowLayer(Util.dpToPx(getContext(), 1), Util.dpToPx(getContext(), 6),
+//					Util.dpToPx(getContext(), 6), android.R.color.black);
 
 			final int colors[] = { Color.parseColor("#ED000000"),
 					Color.parseColor("#E8000000"),

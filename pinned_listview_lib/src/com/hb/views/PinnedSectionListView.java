@@ -203,6 +203,7 @@ public class PinnedSectionListView extends ListView {
 								Color.parseColor("#50a0a0a0"),
 								Color.parseColor("#00a0a0a0") });
 				mShadowHeight = (int) (8 * getResources().getDisplayMetrics().density);
+//				mPinnedSection.view.setBackgroundColor(Color.parseColor("#80000000"));
 			}
 		} else {
 			if (mShadowDrawable != null) {
@@ -260,12 +261,14 @@ public class PinnedSectionListView extends ListView {
 
 		// store pinned shadow
 		mPinnedSection = pinnedShadow;
+		
 	}
 
 	/** Destroy shadow wrapper for currently pinned view */
 	void destroyPinnedShadow() {
 		if (mPinnedSection != null) {
 			// keep shadow for being recycled later
+			mPinnedSection.view.setBackgroundColor(Color.BLACK);
 			mRecycleSection = mPinnedSection;
 			mPinnedSection = null;
 		}
@@ -291,6 +294,11 @@ public class PinnedSectionListView extends ListView {
 		if (mPinnedSection == null) { // create shadow, if empty
 			createPinnedShadow(sectionPosition);
 		}
+		
+		if (sectionPosition == firstVisibleItem)
+			mPinnedSection.view.setBackgroundColor(Color.BLACK);
+		else
+			mPinnedSection.view.setBackgroundColor(Color.parseColor("#cc000000"));
 
 		// align shadow according to next section position, if needed
 		int nextPosition = sectionPosition + 1;

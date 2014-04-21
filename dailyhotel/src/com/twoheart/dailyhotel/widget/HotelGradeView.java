@@ -7,6 +7,8 @@ import android.view.Gravity;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.twoheart.dailyhotel.util.Util;
+
 public class HotelGradeView extends FrameLayout {
 	
 	private Context mContext;
@@ -36,7 +38,7 @@ public class HotelGradeView extends FrameLayout {
 	
 	private void init() {
 		
-		setPadding(dpToPx(5.5), 2, dpToPx(5.5), 1);
+		setPadding(Util.dpToPx(mContext, 5.5), 2, Util.dpToPx(mContext, 5.5), 1);
 		tvHotelGradeName = new TextView(mContext);
 		
 		FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
@@ -51,12 +53,6 @@ public class HotelGradeView extends FrameLayout {
 		
 	}
 	
-	private int dpToPx(double dp) {
-		float scale = getResources().getDisplayMetrics().density; 
-		return (int) (dp * scale + 0.5f);
-		
-	}
-
 	public void setHotelGradeCode(String hotelGradeCode) {
 		mHotelGradeCode = hotelGradeCode;
 		
