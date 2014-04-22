@@ -3,8 +3,7 @@
     xmlns:gradeview="http://schemas.android.com/apk/res/com.twoheart.dailyhotel.widget.HotelGradeView"
     android:layout_width="match_parent"
     android:layout_height="240dp"
-    android:paddingBottom="1.75dp"
-    android:paddingTop="1.75dp" >
+    android:paddingBottom="3.5dp" >
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -12,7 +11,7 @@
 
         <!-- img -->
 
-        <com.twoheart.dailyhotel.widget.FadeInNetworkImageView
+        <ImageView
             android:id="@+id/iv_hotel_row_img"
             android:layout_width="match_parent"
             android:layout_height="240dp"
@@ -77,17 +76,23 @@
 
                     <TextView
                         android:id="@+id/tv_hotel_row_name"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="6dp"
+                        android:paddingLeft="6dp"
+                        android:paddingRight="3dp"
                         android:layout_toLeftOf="@+id/tv_hotel_row_discount"
                         android:layout_toRightOf="@+id/hv_hotel_grade"
                         android:ellipsize="marquee"
                         android:freezesText="true"
                         android:gravity="center_vertical"
+                        android:layout_centerVertical="true"
                         android:marqueeRepeatLimit="marquee_forever"
                         android:scrollHorizontally="true"
                         android:singleLine="true"
+                        android:shadowColor="#7F000000"
+                        android:shadowDx="0"
+                        android:shadowDy="2"
+                        android:shadowRadius="0.01"
                         android:textColor="@android:color/white"
                         android:textSize="18dp" />
 
@@ -96,8 +101,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
                         android:gravity="center_vertical|right"
                         android:textColor="@android:color/white"
+                        android:shadowColor="#7F000000"
+                        android:shadowDx="0"
+                        android:shadowDy="2"
+                        android:shadowRadius="0.01"
                         android:textSize="18dp" />
                 </RelativeLayout>
 
@@ -105,6 +115,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/ll_hotel_under_upper"
+                    android:paddingTop="5dp"
                     android:orientation="horizontal" >
 
                     <TextView
@@ -116,6 +127,10 @@
                         android:gravity="center_vertical"
                         android:singleLine="true"
                         android:textColor="#cecece"
+                        android:shadowColor="#7F000000"
+                        android:shadowDx="0"
+                        android:shadowDy="2"
+                        android:shadowRadius="0.01"
                         android:textSize="13.5dp" />
 
                     <TextView
@@ -125,6 +140,10 @@
                         android:layout_alignParentRight="true"
                         android:gravity="center_vertical|right"
                         android:textColor="#cecece"
+                        android:shadowColor="#7F000000"
+                        android:shadowDx="0"
+                        android:shadowDy="2"
+                        android:shadowRadius="0.01"
                         android:textSize="13.5dp" />
                 </RelativeLayout>
             </RelativeLayout>

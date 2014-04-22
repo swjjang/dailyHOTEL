@@ -28,9 +28,15 @@ public class GlobalFont {
 
 			if (child instanceof TextView) {
 				TextView fontTextView = ((TextView) child);
-				fontTextView.setTypeface(DailyHotel.getTypeface());
+				
 				fontTextView.setPaintFlags(((TextView) child).getPaintFlags()
 						| Paint.SUBPIXEL_TEXT_FLAG);
+				
+				if (fontTextView.getTypeface() != null)
+					if (fontTextView.getTypeface().equals(DailyHotel.getBoldTypeface()))
+					continue;
+				
+				fontTextView.setTypeface(DailyHotel.getTypeface());
 				fontTextView.invalidate();
 			} else if (child instanceof ViewGroup)
 				apply((ViewGroup) child);

@@ -51,7 +51,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:text="위치"
+                    android:text="주소"
                     android:textColor="#7f7f7f"
                     android:textSize="15dp" />
 
@@ -69,7 +69,7 @@
                     android:singleLine="true"
                     android:text="경기도 안양시 관양동 1455-1"
                     android:textColor="#5c5c5c"
-                    android:textSize="18dp" />
+                    android:textSize="16dp" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -103,7 +103,7 @@
                     android:singleLine="true"
                     android:text="더블싱글룸"
                     android:textColor="#5c5c5c"
-                    android:textSize="18dp" />
+                    android:textSize="16dp" />
             </RelativeLayout>
         </RelativeLayout>
 
@@ -149,7 +149,7 @@
                 android:singleLine="true"
                 android:text="73,000원 "
                 android:textColor="#ff7a7a"
-                android:textSize="19dp"
+                android:textSize="16dp"
                 android:textStyle="bold" />
 
             <TextView

@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.util.TabActivity;
@@ -48,6 +49,13 @@ public class TabInfoFragment extends BaseFragment {
 	}
 
 	private void addView(View view, String subject, List<String> contentList) {
+		
+		View line = new View(view.getContext());
+		line.setLayoutParams(new LinearLayout.LayoutParams(
+				LayoutParams.MATCH_PARENT, getPixels(1, view.getContext())));
+		line.setPadding(0, getPixels(1, view.getContext()), 0, 0);
+		line.setBackgroundResource(R.color.common_borer);
+		layout.addView(line);
 
 		LayoutInflater inflater = (LayoutInflater) view.getContext()
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -61,6 +69,7 @@ public class TabInfoFragment extends BaseFragment {
 
 		tvInfoNumber.setText(Integer.toString(infoViewCount++));
 		tv_subject.setText(subject);
+		tv_subject.setTypeface(DailyHotel.getBoldTypeface());
 
 		LinearLayout content_view = (LinearLayout) layout_view
 				.findViewById(R.id.layout_hotel_tab_info_content);
@@ -82,13 +91,6 @@ public class TabInfoFragment extends BaseFragment {
 		// content_view.addView(content_listview);
 		// layout_view.addView(content_view);
 		layout.addView(layout_view);
-
-		View line = new View(view.getContext());
-		line.setLayoutParams(new LinearLayout.LayoutParams(
-				LayoutParams.MATCH_PARENT, getPixels(1, view.getContext())));
-		line.setPadding(0, getPixels(1, view.getContext()), 0, 0);
-		line.setBackgroundResource(R.color.common_borer);
-		layout.addView(line);
 
 	}
 

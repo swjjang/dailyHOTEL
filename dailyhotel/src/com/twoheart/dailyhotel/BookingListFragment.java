@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -75,10 +76,23 @@ public class BookingListFragment extends BaseFragment implements Constants,
 				.findViewById(R.id.layout_booking_empty);
 		btnSignUp = (Button) view.findViewById(R.id.btn_booking_empty_signup);
 		btnSignUp.setOnClickListener(this);
-
+		
 		DailyHotel.getGaTracker().set(Fields.SCREEN_NAME, TAG);
 
 		return view;
+	}
+	
+	private void showLoggedInView(boolean login) {
+		if (login) {
+			
+			
+		} else {
+			
+			
+		}
+		
+		
+		
 	}
 
 	@Override

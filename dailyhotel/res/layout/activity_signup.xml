@@ -9,70 +9,74 @@
         android:id="@+id/et_signup_phone"
         android:paddingLeft="10dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:maxLength="20"
         android:inputType="phone"
         android:singleLine="true"
         android:background="@drawable/edit_text_holo_light"
         android:textColorHint="@color/textView_textColor_disabled"
-        android:hint="휴대폰 번호 ( '-' 제외)"/>
+        android:hint="[필수] 휴대폰 번호 ( '-' 제외)"/>
     
     <EditText 
         android:id="@+id/et_signup_email"
         android:paddingLeft="10dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
         android:inputType="textEmailAddress"
         android:singleLine="true"
         android:maxLength="50"
         android:background="@drawable/edit_text_holo_light"
         android:textColorHint="@color/textView_textColor_disabled"
-        android:hint="Email"/>
+        android:hint="[필수] 이메일"/>
     
     <EditText 
         android:id="@+id/et_signup_name"
         android:paddingLeft="10dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
         android:inputType="text"
         android:singleLine="true"
         android:maxLength="20"
         android:background="@drawable/edit_text_holo_light"
         android:textColorHint="@color/textView_textColor_disabled"
-        android:hint="이름 (체크인시 사용)"/>
+        android:hint="[필수] 이름 (체크인시 사용)"/>
     
     <EditText 
         android:id="@+id/et_signup_pwd"
         android:paddingLeft="10dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
         android:inputType="textPassword"
         android:singleLine="true"
         android:maxLength="20"
         android:background="@drawable/edit_text_holo_light"
         android:textColorHint="@color/textView_textColor_disabled"
-        android:hint="비밀번호 (4자이상)"/>
+        android:hint="[필수] 비밀번호 (4자이상)"/>
     
     <EditText 
         android:id="@+id/et_signup_recommender"
         android:paddingLeft="10dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
         android:singleLine="true"
         android:maxLength="10"
         android:background="@drawable/edit_text_holo_light"
         android:textColorHint="@color/textView_textColor_disabled"
-        android:hint="&lt;선택&gt; 추천인 코드"/>
+        android:hint="[선택] 추천인 코드"/>
 	
     <Button 
         android:id="@+id/btn_signup"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:gravity="center|center_vertical"
         android:background="@drawable/shape_button_common_background"
         android:textColor="@android:color/white"
-        android:text="회원가입"/>
+        android:text="약관 동의하고 회원가입"/>
     
     <LinearLayout 
             android:layout_width="match_parent"

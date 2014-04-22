@@ -4,6 +4,7 @@ import java.lang.Thread.UncaughtExceptionHandler;
 
 import android.app.Application;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.preference.PreferenceManager;
 
@@ -12,7 +13,16 @@ import com.google.analytics.tracking.android.GAServiceManager;
 import com.google.analytics.tracking.android.GoogleAnalytics;
 import com.google.analytics.tracking.android.Logger.LogLevel;
 import com.google.analytics.tracking.android.Tracker;
-import com.twoheart.dailyhotel.util.VolleyImageLoader;
+import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
+import com.nostra13.universalimageloader.cache.memory.impl.FIFOLimitedMemoryCache;
+import com.nostra13.universalimageloader.cache.memory.impl.LRULimitedMemoryCache;
+import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 
 public class DailyHotel extends Application {
@@ -42,6 +52,7 @@ public class DailyHotel extends Application {
 		super.onCreate();
 		
 		initializeVolley();
+		initializeUIL();
 		initializeGa();
 		initializeFont();
 
@@ -110,8 +121,30 @@ public class DailyHotel extends Application {
 
 	private void initializeVolley() {
 		VolleyHttpClient.init(this);
-		VolleyImageLoader.init();
 
+	}
+	
+	private void initializeUIL() {
+		
+		DisplayImageOptions option = new DisplayImageOptions.Builder()
+			.cacheInMemory(true)
+			.showImageOnLoading(R.drawable.img_placeholder)
+			.showImageForEmptyUri(R.drawable.img_placeholder)
+			.showImageOnFail(R.drawable.img_placeholder)
+			.displayer(new FadeInBitmapDisplayer(500))
+			.bitmapConfig(Bitmap.Config.RGB_565)
+			.imageScaleType(ImageScaleType.IN_SAMPLE_INT)
+			.build();
+		
+		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
+			.tasksProcessingOrder(QueueProcessingType.LIFO) 
+			.memoryCache(new FIFOLimitedMemoryCache((int) Runtime.getRuntime().maxMemory() / 4))
+			.defaultDisplayImageOptions(option)
+			.build();
+		
+		ImageLoader.getInstance().init(config);
+		
+		
 	}
 	
 	private void initializeFont() {

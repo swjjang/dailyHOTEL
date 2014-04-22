@@ -46,9 +46,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="12.5dp"
             android:gravity="center_vertical"
-            android:paddingLeft="15dp"
-            android:textColor="@color/textView_textColor_main"
-            android:textSize="20dp" />
+            android:paddingLeft="11dp"
+            android:textColor="@color/textView_textColor_main"/>
 
         <LinearLayout
             android:id="@+id/layout_hotel_tab_info_content_list"

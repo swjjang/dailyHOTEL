@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +27,7 @@ public class ErrorFragment extends BaseFragment implements OnClickListener {
 
 		btnRetry = (Button) view.findViewById(R.id.btn_error);
 		btnRetry.setOnClickListener(this);
-
+		
 		return view;
 	}
 

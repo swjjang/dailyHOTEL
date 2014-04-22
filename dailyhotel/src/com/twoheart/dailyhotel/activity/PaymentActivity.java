@@ -16,6 +16,7 @@ package com.twoheart.dailyhotel.activity;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -32,7 +33,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.JavascriptInterface;
@@ -44,6 +44,7 @@ import android.widget.Toast;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Pay;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Log;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 public class PaymentActivity extends BaseActivity implements Constants {
@@ -97,13 +98,20 @@ public class PaymentActivity extends BaseActivity implements Constants {
 					.show();
 			finish();
 		}
-
-		String[] postParameterKey = new String[] { "email", "name", "phone",
-				"accessToken" };
-		String[] postParameterValue = new String[] {
-				mPay.getCustomer().getEmail(), mPay.getCustomer().getName(),
-				mPay.getCustomer().getPhone(),
-				mPay.getCustomer().getAccessToken() };
+		
+		String userAccessToken = mPay.getCustomer().getAccessToken();
+		
+		ArrayList<String> postParameterKey = new ArrayList<String>(Arrays.asList("email", "name", "phone"));
+		ArrayList<String> postParameterValue = new ArrayList<String>(Arrays.asList(mPay.getCustomer().getEmail(),
+				mPay.getCustomer().getName(),
+				mPay.getCustomer().getPhone()));
+		
+		if ((userAccessToken != null)) {
+			if ((userAccessToken.equals("")) || !(userAccessToken.equals("null"))) {
+				postParameterKey.add("accessToken");
+				postParameterValue.add(userAccessToken);
+			}
+		}
 
 		String url = new StringBuilder(URL_DAILYHOTEL_SERVER)
 				.append(URL_WEBAPI_RESERVE_PAYMENT)
@@ -118,7 +126,8 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		}
 
 		webView.postUrl(url,
-				parsePostParameter(postParameterKey, postParameterValue));
+				parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]),
+						postParameterValue.toArray(new String[postParameterValue.size()])));
 
 	}
 
@@ -756,6 +765,13 @@ public class PaymentActivity extends BaseActivity implements Constants {
 
 		setResult(resultCode);
 		finish();
+	}
+	
+	@Override
+	public void finish() {
+		super.finish();
+		overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+
 	}
 
 	private class JavaScriptExtention {

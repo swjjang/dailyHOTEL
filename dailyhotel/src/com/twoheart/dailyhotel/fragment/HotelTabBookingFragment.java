@@ -14,6 +14,7 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.HotelTabActivity;
 import com.twoheart.dailyhotel.model.HotelDetail;
@@ -104,6 +105,14 @@ public class HotelTabBookingFragment extends BaseFragment implements
 		mHandler.sendEmptyMessageDelayed(0, DURATION_HOTEL_IMAGE_SHOW);
 
 		return view;
+	}
+	
+	@Override
+	public void onResume(){
+		super.onResume();
+		tvDiscount.setTypeface(DailyHotel.getBoldTypeface());
+		tvDiscount.invalidate();
+		
 	}
 	
 	@Override

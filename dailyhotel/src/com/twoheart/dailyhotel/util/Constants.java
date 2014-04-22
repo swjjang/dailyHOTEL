@@ -23,8 +23,8 @@ public interface Constants {
 	public static final String PHONE_NUMBER_DAILYHOTEL = "1800-9120";
 	
 	// 웹서버 호스트를 정의한 상수이다.
-//	 public static String URL_DAILYHOTEL_SERVER = "http://dailyhotel.kr/goodnight/";
-	public static final String URL_DAILYHOTEL_SERVER = "http://dailyhotel.cafe24.com/goodnight/";
+	 public static String URL_DAILYHOTEL_SERVER = "http://dailyhotel.kr/goodnight/";
+//	public static final String URL_DAILYHOTEL_SERVER = "http://dailyhotel.cafe24.com/goodnight/";
 	
 	// DailyHOTEL User Controller WebAPI URL
 	public static final String URL_WEBAPI_USER = "user/";

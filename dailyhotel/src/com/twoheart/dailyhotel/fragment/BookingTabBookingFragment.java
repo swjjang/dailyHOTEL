@@ -40,7 +40,7 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 	private BookingTabActivity mHostActivity;
 	private RequestQueue mQueue;
 
-	private TextView tvCustomerPhone, tvCustomerName, tvHotelName, tvAddress;
+	private TextView tvCustomerName, tvBedtype, tvHotelName, tvAddress;
 	private TextView tvCheckIn, tvCheckOut;
 
 	@Override
@@ -54,23 +54,24 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 
 		tvCustomerName = (TextView) view
 				.findViewById(R.id.tv_booking_tab_user_name);
-		tvCustomerPhone = (TextView) view.findViewById(R.id.tv_booking_tab_user_phone);
 		tvHotelName = (TextView) view
 				.findViewById(R.id.tv_booking_tab_hotel_name);
 		tvAddress = (TextView) view.findViewById(R.id.tv_booking_tab_address);
+		tvBedtype = (TextView) view.findViewById(R.id.tv_booking_tab_bedtype);
 		tvCheckIn = (TextView) view.findViewById(R.id.tv_booking_tab_checkin);
 		tvCheckOut = (TextView) view.findViewById(R.id.tv_booking_tab_checkout);
 		
 		// Android Marquee bug...
 		tvCustomerName.setSelected(true);
-		tvCustomerPhone.setSelected(true);
 		tvHotelName.setSelected(true);
 		tvAddress.setSelected(true);
+		tvBedtype.setSelected(true);
 		tvCheckIn.setSelected(true);
 		tvCheckOut.setSelected(true);
 		
 		tvHotelName.setText(mHostActivity.hotelDetail.getHotel().getName());
 		tvAddress.setText(mHostActivity.hotelDetail.getHotel().getAddress());
+		tvBedtype.setText(mHostActivity.hotelDetail.getHotel().getBedType());
 		
 		LoadingDialog.showLoading(mHostActivity);
 
@@ -115,7 +116,6 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 				String name = obj.getString("name");
 				String phone = obj.getString("phone");
 				tvCustomerName.setText(name);
-				tvCustomerPhone.setText(phone);
 				
 				// 체크인 정보 요청.
 				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(

@@ -76,7 +76,7 @@ public class BaseActivity extends ActionBarActivity implements Constants {
 			getSupportActionBar().hide();
 		
 	}
-	
+	  
 	// 메뉴 버튼을 막아버림.
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -99,8 +99,15 @@ public class BaseActivity extends ActionBarActivity implements Constants {
 	protected void onResume() {
 		super.onResume();
 		
-		if (cookieSyncManager != null)
-			cookieSyncManager.startSync();
+		try {
+			if (cookieSyncManager != null)
+				cookieSyncManager.startSync();
+		} catch (Exception e) {
+			if (DEBUG)
+				e.printStackTrace();
+			
+			
+		}
 	}
 	
 	@Override
