@@ -1,3 +1,15 @@
+/**
+ * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
+ *
+ * ErrorFragment (오류 화면)
+ * 
+ * 네트워크 문제 등 오류가 발생했을 시 보여지는 화면이다. 이 화면은 메인 화
+ * 면 단위(MainActivity)에서 사용되는 작은 화면 단위(Fragment)이다.
+ *
+ * @since 2014-02-24
+ * @version 1
+ * @author Mike Han(mike@dailyhotel.co.kr)
+ */
 package com.twoheart.dailyhotel;
 
 import android.os.Build;

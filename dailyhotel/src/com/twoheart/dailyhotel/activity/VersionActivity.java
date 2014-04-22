@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 public class VersionActivity extends BaseActivity implements OnClickListener {
@@ -63,8 +64,9 @@ public class VersionActivity extends BaseActivity implements OnClickListener {
 					Toast.makeText(this, "이미 최신버전입니다.", Toast.LENGTH_LONG).show();
 				} else {
 					Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+					marketLaunch.setData(Uri.parse(Util.storeReleaseAddress()));
 					// Play Store
-					marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_DAILYHOTEL));
+//					marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_DAILYHOTEL));
 					// T Store
 //					 marketLaunch.setData(Uri.parse(URL_STORE_T_DAILYHOTEL));
 					startActivity(marketLaunch);

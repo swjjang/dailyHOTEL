@@ -29,27 +29,20 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.Window;
-import android.webkit.CookieSyncManager;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
-import com.readystatesoftware.systembartint.SystemBarTintManager;
-import com.twoheart.dailyhotel.CreditFragment;
 import com.twoheart.dailyhotel.GCMIntentService;
-import com.twoheart.dailyhotel.HotelListFragment;
-import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.R.layout;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Log;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 public class SplashActivity extends BaseActivity implements Constants,
@@ -151,20 +144,25 @@ public class SplashActivity extends BaseActivity implements Constants,
 
 			try {
 				SharedPreferences.Editor editor = sharedPreference.edit();
-				editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME,
-						response.getString("play_max"));
-				editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME,
-						response.getString("play_min"));
 				
-//				editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME,
-//						response.getString("tstore_max"));
-//				editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME,
-//						response.getString("tstore_min"));
-				
-//				editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME,
-//						response.getString("nstore_max"));
-//				editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME,
-//						response.getString("nstore_min"));
+				if (IS_GOOGLE_RELEASE) {
+					editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME,
+							response.getString("play_max"));
+					editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME,
+							response.getString("play_min"));
+					
+				} else {
+					editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME,
+							response.getString("tstore_max"));
+					editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME,
+							response.getString("tstore_min"));
+					
+//					editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME,
+//							response.getString("nstore_max"));
+//					editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME,
+//							response.getString("nstore_min"));
+					
+				}
 				
 				editor.commit();
 
@@ -192,7 +190,7 @@ public class SplashActivity extends BaseActivity implements Constants,
 											Intent marketLaunch = new Intent(
 													Intent.ACTION_VIEW);
 											marketLaunch.setData(Uri
-													.parse(URL_STORE_GOOGLE_DAILYHOTEL));
+													.parse(Util.storeReleaseAddress()));
 //											marketLaunch.setData(Uri
 //													.parse(URL_STORE_T_DAILYHOTEL));
 											startActivity(marketLaunch);
@@ -228,7 +226,7 @@ public class SplashActivity extends BaseActivity implements Constants,
 	public void onErrorResponse(VolleyError error) {
 		if (DEBUG)
 			error.printStackTrace();
-		Toast.makeText(getApplicationContext(), "네트워크 상태를 확인해주세요",
+		Toast.makeText(this, "네트워크 상태를 확인해주세요",
 				Toast.LENGTH_LONG).show();
 		finish();
 	}

@@ -134,7 +134,6 @@ public class Switch extends CompoundButton
 		Resources res = getResources();
 		mTextPaint.density = res.getDisplayMetrics().density;
 
-		// TODO resolve error
 		// mTextPaint.setCompatibilityScaling(res.getCompatibilityInfo().applicationScale);
 
 		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.Switch, defStyle, 0);
@@ -162,7 +161,6 @@ public class Switch extends CompoundButton
 		refreshDrawableState();
 		setChecked(isChecked());
 
-		// TODO I don't know why, but in order for the OnCheckedChangeListener to work this switch has to have an OnClickListener
 		this.setOnClickListener(new View.OnClickListener()
 		{
 
@@ -523,7 +521,6 @@ public class Switch extends CompoundButton
 		}
 	}
 
-	// TODO add onPopulateAccessibilityEvent(AccessibilityEvent event)
 	// @Override
 	// public void onPopulateAccessibilityEvent(AccessibilityEvent event)
 	// {
@@ -677,7 +674,6 @@ public class Switch extends CompoundButton
 
 	private void animateThumbToCheckedState(boolean newCheckedState)
 	{
-		// TODO animate!
 		// float targetPos = newCheckedState ? 0 : getThumbScrollRange();
 		// mThumbPosition = targetPos;
 		setChecked(newCheckedState);
@@ -844,7 +840,6 @@ public class Switch extends CompoundButton
 		return super.verifyDrawable(who) || who == mThumbDrawable || who == mTrackDrawable;
 	}
 
-	// TODO check if even necessary?!
 	// @Override
 	// public void jumpDrawablesToCurrentState()
 	// {
@@ -853,7 +848,6 @@ public class Switch extends CompoundButton
 	// mTrackDrawable.jumpToCurrentState();
 	// }
 
-	// TODO onInitializeAccessibilityEvent(AccessibilityEvent event)
 	// @Override
 	// public void onInitializeAccessibilityEvent(AccessibilityEvent event)
 	// {
@@ -861,7 +855,6 @@ public class Switch extends CompoundButton
 	// event.setClassName(MySwitch.class.getName());
 	// }
 
-	// TODO onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo info)
 	// @Override
 	// public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo info)
 	// {

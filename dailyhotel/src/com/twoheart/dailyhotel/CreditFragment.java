@@ -1,3 +1,16 @@
+/**
+ * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
+ *
+ * CreditFragment (적립금 화면)
+ * 
+ * 로그인 여부에 따라 적립금을 안내하는 화면이다. 적립금을 표시하며 카카오톡
+ * 친구 초대 버튼이 있다. 세부 내역을 따로 표시해주는 버튼을 가지고 있어 
+ * 해당 화면을 띄워주기도 한다.
+ *
+ * @since 2014-02-24
+ * @version 1
+ * @author Mike Han(mike@dailyhotel.co.kr)
+ */
 package com.twoheart.dailyhotel;
 
 import java.text.DecimalFormat;
@@ -14,7 +27,6 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,12 +36,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.VolleyError;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.twoheart.dailyhotel.activity.LoginActivity;
@@ -38,6 +47,7 @@ import com.twoheart.dailyhotel.model.Credit;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.KakaoLink;
 import com.twoheart.dailyhotel.util.Log;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
@@ -184,8 +194,9 @@ public class CreditFragment extends BaseFragment implements Constants,
 		Map<String, String> metaInfoAndroid = new Hashtable<String, String>(1);
 		metaInfoAndroid.put("os", "android");
 		metaInfoAndroid.put("devicetype", "phone");
+		metaInfoAndroid.put("installurl", Util.storeReleaseAddress("http://kakaolink.dailyhotel.co.kr"));
 		// Play Store
-		metaInfoAndroid.put("installurl", "http://kakaolink.dailyhotel.co.kr");
+//		metaInfoAndroid.put("installurl", "http://kakaolink.dailyhotel.co.kr");
 		// T Store
 //		 metaInfoAndroid.put("installurl", URL_STORE_T_DAILYHOTEL);
 		metaInfoAndroid.put("executeurl", "kakaoLinkTest://starActivity");

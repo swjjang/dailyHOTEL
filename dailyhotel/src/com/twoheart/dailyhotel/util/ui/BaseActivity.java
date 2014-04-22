@@ -54,6 +54,12 @@ public class BaseActivity extends ActionBarActivity implements Constants {
 		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
 	}
 	
+	/**
+	 * setActionBar(String title)
+	 * 액션바 설정 메소드
+	 * 
+	 * @param title
+	 */
 	public void setActionBar(String title) {
 		actionBar = getSupportActionBar();
 		
@@ -70,6 +76,11 @@ public class BaseActivity extends ActionBarActivity implements Constants {
 		actionBar.setHomeButtonEnabled(true);
 	}
 	
+	/**
+	 * setActionBarHide()
+	 * 액션바를 숨겨주는 메소드
+	 * 
+	 */
 	public void setActionBarHide() {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)

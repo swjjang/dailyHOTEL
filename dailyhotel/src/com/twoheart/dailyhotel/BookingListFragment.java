@@ -1,3 +1,14 @@
+/**
+ * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
+ *
+ * BookingListFragment (예약 확인 화면)
+ * 
+ * 예약된 목록들을 보여주는 화면이다.
+ *
+ * @since 2014-02-24
+ * @version 1
+ * @author Mike Han(mike@dailyhotel.co.kr)
+ */
 package com.twoheart.dailyhotel;
 
 import java.util.ArrayList;
@@ -82,19 +93,6 @@ public class BookingListFragment extends BaseFragment implements Constants,
 		return view;
 	}
 	
-	private void showLoggedInView(boolean login) {
-		if (login) {
-			
-			
-		} else {
-			
-			
-		}
-		
-		
-		
-	}
-
 	@Override
 	public void onStart() {
 		super.onStart();

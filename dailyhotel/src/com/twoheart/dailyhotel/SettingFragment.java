@@ -1,3 +1,16 @@
+/**
+ * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
+ *
+ * SettingFragment (설정 화면)
+ * 
+ * 어플리케이션의 설정 화면이다. 뷰는 리스트뷰처럼 보이나 리스트뷰처럼 보이도록
+ * 구성된 화면일 뿐이다. 이 화면에서 현재 로그인 상태를 가져오기 위해 네트워
+ * 크 작업을 하기도 한다.
+ *
+ * @since 2014-02-24
+ * @version 1
+ * @author Mike Han(mike@dailyhotel.co.kr)
+ */
 package com.twoheart.dailyhotel;
 
 import org.json.JSONObject;

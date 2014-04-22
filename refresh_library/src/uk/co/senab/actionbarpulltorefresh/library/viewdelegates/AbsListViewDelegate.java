@@ -21,9 +21,6 @@ import android.os.Build;
 import android.view.View;
 import android.widget.AbsListView;
 
-/**
- * FIXME
- */
 public class AbsListViewDelegate implements ViewDelegate {
 
     public static final Class[] SUPPORTED_VIEW_CLASSES =  { AbsListView.class };
