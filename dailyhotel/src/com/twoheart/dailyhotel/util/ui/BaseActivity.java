@@ -38,7 +38,7 @@ public class BaseActivity extends ActionBarActivity implements Constants {
 
 	public ActionBar actionBar;
 	public SharedPreferences sharedPreference;
-	public CookieSyncManager cookieSyncManager;
+	public static CookieSyncManager cookieSyncManager;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -110,13 +110,19 @@ public class BaseActivity extends ActionBarActivity implements Constants {
 	protected void onResume() {
 		super.onResume();
 		
-		try {
-			if (cookieSyncManager != null)
-				cookieSyncManager.startSync();
-		} catch (Exception e) {
-			if (DEBUG)
-				e.printStackTrace();
+		if (cookieSyncManager != null)
+			cookieSyncManager.startSync();
+		else {
 			
+			try {
+				cookieSyncManager = CookieSyncManager.getInstance();
+			} catch (Exception e) {
+				if (DEBUG)
+					e.printStackTrace();
+				
+				cookieSyncManager = CookieSyncManager.createInstance(getApplicationContext());
+				
+			}
 			
 		}
 	}

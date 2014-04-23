@@ -158,7 +158,6 @@ public class DailyHotel extends Application {
 		
 		ImageLoader.getInstance().init(config);
 		
-		
 	}
 	
 	private void initializeFont() {

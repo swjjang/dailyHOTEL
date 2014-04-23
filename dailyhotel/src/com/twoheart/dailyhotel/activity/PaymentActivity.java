@@ -72,8 +72,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			mPay = (Pay) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_PAY);
 		}
 
-		CookieManager.getInstance().setAcceptCookie(true);
-		CookieSyncManager.getInstance().sync();
+		cookieSyncManager.sync();
 
 		webView = (WebView) findViewById(R.id.webView);
 		webView.getSettings().setSavePassword(false);

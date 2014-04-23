@@ -115,6 +115,7 @@ public class VolleyHttpClient implements Constants {
 						StringBuilder cookieString = new StringBuilder();
 						cookieString.append(cookie.getName()).append("=")
 								.append(cookie.getValue());
+						CookieManager.getInstance().setAcceptCookie(true);
 						
 						CookieManager.getInstance().setCookie(cookie.getDomain(),
 								cookieString.toString());

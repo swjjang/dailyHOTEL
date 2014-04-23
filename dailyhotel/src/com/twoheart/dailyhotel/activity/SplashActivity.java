@@ -61,9 +61,6 @@ public class SplashActivity extends BaseActivity implements Constants,
 		setActionBarHide();
 		setContentView(R.layout.activity_splash);
 		
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-		}
-
 		mQueue = VolleyHttpClient.getRequestQueue();
 
 	}
@@ -136,13 +133,6 @@ public class SplashActivity extends BaseActivity implements Constants,
 			// response.getString("new_event"));
 
 			try {
-				Log.d(TAG, response.getString("play_min"));
-			} catch (JSONException e) {
-				if (DEBUG)
-					e.printStackTrace();
-			}
-
-			try {
 				SharedPreferences.Editor editor = sharedPreference.edit();
 				
 				if (IS_GOOGLE_RELEASE) {
@@ -211,10 +201,6 @@ public class SplashActivity extends BaseActivity implements Constants,
 					}, 1200);
 				}
 
-			} catch (UnsupportedOperationException e) {
-				Toast.makeText(this, "구글 플레이 서비스를 이용할 수 있는 기기이어야 합니다.",
-						Toast.LENGTH_LONG).show();
-				finish();
 			} catch (Exception e) {
 				if (DEBUG)
 					e.printStackTrace();

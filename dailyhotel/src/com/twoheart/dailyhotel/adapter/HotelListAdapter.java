@@ -26,7 +26,6 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.util.GlobalFont;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.ui.HotelList;
 import com.twoheart.dailyhotel.widget.HotelGradeView;
 
@@ -59,14 +58,22 @@ public class HotelListAdapter extends ArrayAdapter<HotelList> implements
 
 		switch (item.getType()) {
 		case HotelList.TYPE_SECTION:
-
-			convertView = inflater.inflate(R.layout.list_row_hotel_section,
-					parent, false);
-
-			TextView regionDetailName = (TextView) convertView
-					.findViewById(R.id.hotelListRegionName);
-			regionDetailName.setText(item.getCategory());
+			HeaderListViewHolder headerViewHolder = null;
 			
+			if (convertView != null) {
+				if (convertView.getTag() != null)
+					if (convertView.getTag() instanceof HeaderListViewHolder)
+						headerViewHolder = (HeaderListViewHolder) convertView.getTag();
+				
+			} else {
+				convertView = inflater.inflate(R.layout.list_row_hotel_section, parent, false);
+				headerViewHolder = new HeaderListViewHolder();
+				headerViewHolder.regionDetailName = (TextView) convertView
+						.findViewById(R.id.hotelListRegionName);
+				convertView.setTag(headerViewHolder);
+			}
+
+			headerViewHolder.regionDetailName.setText(item.getCategory());
 			GlobalFont.apply((ViewGroup) convertView);
 
 			break;
@@ -74,8 +81,12 @@ public class HotelListAdapter extends ArrayAdapter<HotelList> implements
 
 			Hotel element = item.getItem();
 			HotelListViewHolder viewHolder = null;
-
-//			if (convertView == null) {
+			
+			if (convertView != null) {
+				if (convertView.getTag() != null)
+					if (convertView.getTag() instanceof HotelListViewHolder)
+						viewHolder = (HotelListViewHolder) convertView.getTag();
+			} else {
 				convertView = inflater.inflate(resourceId, parent, false);
 
 				viewHolder = new HotelListViewHolder();
@@ -97,18 +108,12 @@ public class HotelListAdapter extends ArrayAdapter<HotelList> implements
 				// .findViewById(R.id.fl_hotel_row_grade);
 				// viewHolder.gradeText = (TextView) convertView
 				// .findViewById(R.id.tv_hotel_row_grade);
-				viewHolder.grade = (HotelGradeView) convertView
-						.findViewById(R.id.hv_hotel_grade);
-				viewHolder.rlHotelUnder = (RelativeLayout) convertView
-						.findViewById(R.id.rl_hotel_under);
+				viewHolder.grade = (HotelGradeView) convertView.findViewById(R.id.hv_hotel_grade);
 
-//				convertView.setTag(viewHolder);
-//
-//			} else {
-//				viewHolder = (HotelListViewHolder) convertView.getTag();
-//
-//			}
-
+				convertView.setTag(viewHolder);
+				
+			}
+			
 			DecimalFormat comma = new DecimalFormat("###,##0");
 			String strPrice = comma
 					.format(Integer.parseInt(element.getPrice()));
@@ -162,7 +167,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelList> implements
 
 			// grade
 			viewHolder.grade.setHotelGradeCode(element.getCategory());
-
+			
 			GlobalFont.apply((ViewGroup) convertView);
 			viewHolder.name.setTypeface(DailyHotel.getBoldTypeface());
 			viewHolder.discount.setTypeface(DailyHotel.getBoldTypeface());
@@ -206,10 +211,13 @@ public class HotelListAdapter extends ArrayAdapter<HotelList> implements
 		TextView discount;
 		TextView sold_out;
 		TextView address;
+		HotelGradeView grade;
 		// FrameLayout gradeBackground;
 		// TextView gradeText;
-		HotelGradeView grade;
-		RelativeLayout rlHotelUnder;
+	}
+	
+	private class HeaderListViewHolder {
+		TextView regionDetailName;
 	}
 
 	@Override
