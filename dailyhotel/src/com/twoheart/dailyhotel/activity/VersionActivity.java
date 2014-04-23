@@ -52,17 +52,14 @@ public class VersionActivity extends BaseActivity implements OnClickListener {
 
 	}
 
-	// Jason Park | Case of max version is equal to current version...
 	@Override
 	public void onClick(View v) {
  		if (v.getId() == btnUpdate.getId()) {
 			try {
-				int maxVersion = Integer.parseInt(sharedPreference.getString(KEY_PREFERENCE_MAX_VERSION_NAME, null).replace(".", ""));
+				int maxVersion = Integer.parseInt(sharedPreference.getString(KEY_PREFERENCE_MAX_VERSION_NAME, "1.0.0").replace(".", ""));
 				int currentVersion = Integer.parseInt(this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName.replace(".", ""));
 
-				if (maxVersion == currentVersion) {
-					Toast.makeText(this, "이미 최신버전입니다.", Toast.LENGTH_LONG).show();
-				} else {
+				if (maxVersion > currentVersion) {
 					Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
 					marketLaunch.setData(Uri.parse(Util.storeReleaseAddress()));
 					// Play Store
@@ -70,10 +67,13 @@ public class VersionActivity extends BaseActivity implements OnClickListener {
 					// T Store
 //					 marketLaunch.setData(Uri.parse(URL_STORE_T_DAILYHOTEL));
 					startActivity(marketLaunch);
+				} else {
+					Toast.makeText(this, "이미 최신버전입니다.", Toast.LENGTH_LONG).show();
 				}
 
 			} catch (Exception e) {
-				e.toString();
+				if (DEBUG)
+					e.toString();
 			}
 		}
 	}

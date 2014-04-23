@@ -30,12 +30,13 @@ import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
 import android.webkit.JavascriptInterface;
+import android.webkit.JsPromptResult;
+import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -64,7 +65,8 @@ public class PaymentActivity extends BaseActivity implements Constants {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setActionBarHide();
+		setActionBarProgressBar();
+		setActionBar("결제하기");
 		setContentView(R.layout.activity_payment);
 
 		Bundle bundle = getIntent().getExtras();
@@ -89,7 +91,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 																				// 기능
 																				// 추가
 		webView.addJavascriptInterface(new JavaScriptExtention(), "android");
-		webView.setWebChromeClient(new WebChromeClient());
+		webView.setWebChromeClient(new mWebChromeClient());
 		webView.setWebViewClient(new mWebViewClient());
 
 		if (mPay == null) {
@@ -320,49 +322,48 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		return true;
 	}
 
-	// private class mWebChromeClient extends WebChromeClient {
-	//
-	// @Override
-	// public boolean onJsAlert(WebView view, String url, String message,
-	// JsResult result) {
-	// LoadingDialog.hideLoading();
-	// return super.onJsAlert(view, url, message, result);
-	// }
-	//
-	// @Override
-	// public boolean onJsBeforeUnload(WebView view, String url,
-	// String message, JsResult result) {
-	// LoadingDialog.hideLoading();
-	// return super.onJsBeforeUnload(view, url, message, result);
-	// }
-	//
-	// @Override
-	// public boolean onJsConfirm(WebView view, String url, String message,
-	// JsResult result) {
-	// LoadingDialog.hideLoading();
-	// return super.onJsConfirm(view, url, message, result);
-	// }
-	//
-	// @Override
-	// public boolean onJsPrompt(WebView view, String url, String message,
-	// String defaultValue, JsPromptResult result) {
-	// LoadingDialog.hideLoading();
-	// return super.onJsPrompt(view, url, message, defaultValue, result);
-	// }
-	//
-	// @Override
-	// public void onProgressChanged(WebView view, int newProgress) {
-	// super.onProgressChanged(view, newProgress);
-	//
-	// if (newProgress < 100)
-	// LoadingDialog.showLoading(PaymentActivity.this);
-	// else
-	// LoadingDialog.hideLoading();
-	//
-	// }
-	//
-	//
-	// }
+	private class mWebChromeClient extends WebChromeClient {
+
+		@Override
+		public boolean onJsAlert(WebView view, String url, String message,
+				JsResult result) {
+			setProgressBarIndeterminateVisibility(false);
+			return super.onJsAlert(view, url, message, result);
+		}
+
+		@Override
+		public boolean onJsBeforeUnload(WebView view, String url,
+				String message, JsResult result) {
+			setProgressBarIndeterminateVisibility(false);
+			return super.onJsBeforeUnload(view, url, message, result);
+		}
+
+		@Override
+		public boolean onJsConfirm(WebView view, String url, String message,
+				JsResult result) {
+			setProgressBarIndeterminateVisibility(false);
+			return super.onJsConfirm(view, url, message, result);
+		}
+
+		@Override
+		public boolean onJsPrompt(WebView view, String url, String message,
+				String defaultValue, JsPromptResult result) {
+			setProgressBarIndeterminateVisibility(false);
+			return super.onJsPrompt(view, url, message, defaultValue, result);
+		}
+
+		@Override
+		public void onProgressChanged(WebView view, int newProgress) {
+			super.onProgressChanged(view, newProgress);
+
+			if (newProgress < 100)
+				setProgressBarIndeterminateVisibility(true);
+			else
+				setProgressBarIndeterminateVisibility(false);
+
+		}
+
+	}
 
 	private class mWebViewClient extends WebViewClient {
 
@@ -407,18 +408,17 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			finish();
 		}
 
-		// @Override
-		// public void onPageStarted(WebView view, String url, Bitmap favicon) {
-		// super.onPageStarted(view, url, favicon);
-		// LoadingDialog.showLoading(PaymentActivity.this);
-		// }
-		//
-		//
-		// @Override
-		// public void onPageFinished(WebView view, String url) {
-		// super.onPageFinished(view, url);
-		// LoadingDialog.hideLoading();
-		// }
+		@Override
+		public void onPageStarted(WebView view, String url, Bitmap favicon) {
+			super.onPageStarted(view, url, favicon);
+			setProgressBarIndeterminateVisibility(true);
+		}
+
+		@Override
+		public void onPageFinished(WebView view, String url) {
+			super.onPageFinished(view, url);
+			setProgressBarIndeterminateVisibility(false);
+		}
 
 	}
 

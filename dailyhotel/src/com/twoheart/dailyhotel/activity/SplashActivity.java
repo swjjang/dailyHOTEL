@@ -23,6 +23,7 @@ import org.json.JSONObject;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -38,7 +39,6 @@ import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.GCMIntentService;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.Log;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -156,15 +156,70 @@ public class SplashActivity extends BaseActivity implements Constants,
 				
 				editor.commit();
 
+				int maxVersion = Integer.
+						parseInt(sharedPreference.getString(
+								KEY_PREFERENCE_MAX_VERSION_NAME, "1.0.0").replace(
+								".", ""));
 				int minVersion = Integer
 						.parseInt(sharedPreference.getString(
-								KEY_PREFERENCE_MIN_VERSION_NAME, null).replace(
+								KEY_PREFERENCE_MIN_VERSION_NAME, "1.0.0").replace(
 								".", ""));
 				int currentVersion = Integer.parseInt(this.getPackageManager()
 						.getPackageInfo(this.getPackageName(), 0).versionName
 						.replace(".", ""));
-
-				if (minVersion > currentVersion) { // 강제 업데이트
+				int skipMaxVersion = Integer
+						.parseInt(sharedPreference.getString(
+								KEY_PREFERENCE_SKIP_MAX_VERSION, "1.0.0").replace(
+								".", ""));
+				
+				if (maxVersion > currentVersion) {
+					if (skipMaxVersion != maxVersion) {
+						AlertDialog.Builder alertDialog = new AlertDialog.Builder(
+								SplashActivity.this);
+						alertDialog
+								.setTitle("공지")
+								.setMessage("지금 업그레이드하여 가장 멋진 데일리호텔 앱을 다운받으세요")
+								.setCancelable(true)
+								.setOnCancelListener(new OnCancelListener() {
+									
+									@Override
+									public void onCancel(DialogInterface dialog) {
+										SharedPreferences.Editor editor = sharedPreference.edit();
+										editor.putString(KEY_PREFERENCE_SKIP_MAX_VERSION,
+												sharedPreference.getString(
+														KEY_PREFERENCE_MAX_VERSION_NAME, "1.0.0"));
+										
+										editor.commit();
+										showMainActivity();
+									}
+								})
+								.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+											@Override
+											public void onClick(
+													DialogInterface dialog,
+													int which) {
+												dialog.cancel();
+											}
+										})
+								.setPositiveButton("업데이트",
+										new DialogInterface.OnClickListener() {
+											@Override
+											public void onClick(
+													DialogInterface dialog,
+													int which) {
+												Intent marketLaunch = new Intent(
+														Intent.ACTION_VIEW);
+												marketLaunch.setData(Uri
+														.parse(Util.storeReleaseAddress()));
+//												marketLaunch.setData(Uri
+//														.parse(URL_STORE_T_DAILYHOTEL));
+												startActivity(marketLaunch);
+											}
+										});
+						AlertDialog alert = alertDialog.create();
+						alert.show();
+					}
+				} else if (minVersion > currentVersion) { // 강제 업데이트
 					AlertDialog.Builder alertDialog = new AlertDialog.Builder(
 							SplashActivity.this);
 					alertDialog
@@ -190,15 +245,7 @@ public class SplashActivity extends BaseActivity implements Constants,
 					AlertDialog alert = alertDialog.create();
 					alert.show();
 				} else {
-					// sleep 2 second
-					Handler h = new Handler();
-					h.postDelayed(new Runnable() {
-						public void run() {
-							setResult(RESULT_OK);
-							finish();
-
-						}
-					}, 1200);
+					showMainActivity();
 				}
 
 			} catch (Exception e) {
@@ -206,6 +253,18 @@ public class SplashActivity extends BaseActivity implements Constants,
 					e.printStackTrace();
 			}
 		}
+	}
+	
+	private void showMainActivity() {
+		// sleep 2 second
+		Handler h = new Handler();
+		h.postDelayed(new Runnable() {
+			public void run() {
+				setResult(RESULT_OK);
+				finish();
+
+			}
+		}, 1200);
 	}
 
 	@Override

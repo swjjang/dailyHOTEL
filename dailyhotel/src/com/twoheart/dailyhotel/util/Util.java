@@ -1,6 +1,12 @@
 package com.twoheart.dailyhotel.util;
 
+import com.twoheart.dailyhotel.activity.SplashActivity;
+
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 
 public class Util implements Constants {
 	
@@ -24,4 +30,5 @@ public class Util implements Constants {
 			return newUrl;
 		}
 	}
+	
 }

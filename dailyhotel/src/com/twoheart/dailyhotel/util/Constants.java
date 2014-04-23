@@ -14,13 +14,15 @@
  */
 package com.twoheart.dailyhotel.util;
 
+import com.twoheart.dailyhotel.BuildConfig;
+
 public interface Constants {
 
 	// 디버그 빌드 여부
-	public static final boolean DEBUG = true;
+	public static final boolean DEBUG = BuildConfig.DEBUG;
 	
 	// 플레이 스토어용 릴리즈 여부
-	public static boolean IS_GOOGLE_RELEASE = false;
+	public static boolean IS_GOOGLE_RELEASE = true;
 	
 	// 웹서버 호스트 
 	public static final String URL_DAILYHOTEL_SERVER = "http://dailyhotel.kr/goodnight/";		// 서비스 서버
@@ -91,6 +93,7 @@ public interface Constants {
 	public static final String KEY_PREFERENCE_CURRENT_VERSION_NAME = "CURRENT_VERSION_NAME";
 	public static final String KEY_PREFERENCE_MIN_VERSION_NAME = "MIN_VERSION_NAME";
 	public static final String KEY_PREFERENCE_MAX_VERSION_NAME = "MAX_VERSION_NAME";
+	public static final String KEY_PREFERENCE_SKIP_MAX_VERSION = "SKIP_MAX_VERSION";
 	
 	// region
 	public static final String KEY_PREFERENCE_REGION_SELECT = "REGION_SELECT";

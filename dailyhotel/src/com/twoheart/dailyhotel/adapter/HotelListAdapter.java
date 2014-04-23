@@ -17,19 +17,18 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.hb.views.PinnedSectionListView.PinnedSectionListAdapter;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.util.GlobalFont;
-import com.twoheart.dailyhotel.util.ui.HotelList;
+import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
 import com.twoheart.dailyhotel.widget.HotelGradeView;
+import com.twoheart.dailyhotel.widget.PinnedSectionListView.PinnedSectionListAdapter;
 
-public class HotelListAdapter extends ArrayAdapter<HotelList> implements
+public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 		PinnedSectionListAdapter {
 
 	private Context context;
@@ -38,7 +37,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelList> implements
 	private LayoutInflater inflater;
 
 	public HotelListAdapter(Context context, int resourceId,
-			List<HotelList> hotelList) {
+			List<HotelListViewItem> hotelList) {
 		super(context, resourceId, hotelList);	
 
 		this.context = context;
@@ -54,10 +53,10 @@ public class HotelListAdapter extends ArrayAdapter<HotelList> implements
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
-		HotelList item = getItem(position);
+		HotelListViewItem item = getItem(position);
 
 		switch (item.getType()) {
-		case HotelList.TYPE_SECTION:
+		case HotelListViewItem.TYPE_SECTION:
 			HeaderListViewHolder headerViewHolder = null;
 			
 			if (convertView != null) {
@@ -77,7 +76,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelList> implements
 			GlobalFont.apply((ViewGroup) convertView);
 
 			break;
-		case HotelList.TYPE_ENTRY:
+		case HotelListViewItem.TYPE_ENTRY:
 
 			Hotel element = item.getItem();
 			HotelListViewHolder viewHolder = null;
@@ -222,7 +221,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelList> implements
 
 	@Override
 	public boolean isItemViewTypePinned(int viewType) {
-		return viewType == HotelList.TYPE_SECTION;
+		return viewType == HotelListViewItem.TYPE_SECTION;
 	}
 
 	@Override

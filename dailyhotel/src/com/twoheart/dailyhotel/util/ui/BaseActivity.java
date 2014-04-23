@@ -45,6 +45,16 @@ public class BaseActivity extends ActionBarActivity implements Constants {
 		super.onCreate(savedInstanceState);
 		sharedPreference = getSharedPreferences(NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
 		
+		try {
+			cookieSyncManager = CookieSyncManager.getInstance();
+		} catch (Exception e) {
+			if (DEBUG)
+				e.printStackTrace();
+			
+			cookieSyncManager = CookieSyncManager.createInstance(getApplicationContext());
+			
+		}
+		
 	}
 	
 	@Override
@@ -76,15 +86,18 @@ public class BaseActivity extends ActionBarActivity implements Constants {
 		actionBar.setHomeButtonEnabled(true);
 	}
 	
+	public void setActionBarProgressBar() {
+		supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+		
+	}
+	
 	/**
 	 * setActionBarHide()
 	 * 액션바를 숨겨주는 메소드
 	 * 
 	 */
 	public void setActionBarHide() {
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-			getSupportActionBar().hide();
+		supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
 		
 	}
 	  

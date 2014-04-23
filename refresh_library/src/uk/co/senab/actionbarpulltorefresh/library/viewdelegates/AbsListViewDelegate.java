@@ -21,6 +21,7 @@ import android.os.Build;
 import android.view.View;
 import android.widget.AbsListView;
 
+@TargetApi(Build.VERSION_CODES.DONUT)
 public class AbsListViewDelegate implements ViewDelegate {
 
     public static final Class[] SUPPORTED_VIEW_CLASSES =  { AbsListView.class };

@@ -148,6 +148,7 @@ public class DailyHotel extends Application {
 			.displayer(new FadeInBitmapDisplayer(500))
 			.bitmapConfig(Bitmap.Config.RGB_565)
 			.imageScaleType(ImageScaleType.IN_SAMPLE_INT)
+			.delayBeforeLoading(0)
 			.build();
 		
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
