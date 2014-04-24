@@ -1,3 +1,17 @@
+/**
+ * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
+ *
+ * DailyHotel
+ * 
+ * Android의 Application을 상속받은 서브 클래스로서 어플리케이션의 가장
+ * 기본이 되는 클래스이다. 이 클래스에서는 어플리케이션에서 전역적으로 사용되
+ * 는 GoogleAnalytics와 폰트, Volley, Universal Image Loder를
+ * 초기화하는 작업을 생성될 시(onCreate)에 수행한다.
+ *
+ * @since 2014-02-24
+ * @version 1
+ * @author Mike Han(mike@dailyhotel.co.kr)
+ */
 package com.twoheart.dailyhotel;
 
 import java.lang.Thread.UncaughtExceptionHandler;
@@ -23,6 +37,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.twoheart.dailyhotel.util.VolleyImageLoader;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 
 public class DailyHotel extends Application {
@@ -52,7 +67,8 @@ public class DailyHotel extends Application {
 		super.onCreate();
 		
 		initializeVolley();
-		initializeUIL();
+//		initializeUIL();
+		initializeVolleyImageLoader();
 		initializeGa();
 		initializeFont();
 
@@ -134,6 +150,7 @@ public class DailyHotel extends Application {
 			.displayer(new FadeInBitmapDisplayer(500))
 			.bitmapConfig(Bitmap.Config.RGB_565)
 			.imageScaleType(ImageScaleType.IN_SAMPLE_INT)
+			.delayBeforeLoading(0)
 			.build();
 		
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
@@ -144,6 +161,10 @@ public class DailyHotel extends Application {
 		
 		ImageLoader.getInstance().init(config);
 		
+	}
+	
+	private void initializeVolleyImageLoader() {
+		VolleyImageLoader.init();
 		
 	}
 	

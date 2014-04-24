@@ -1,3 +1,17 @@
+/**
+ * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
+ *
+ * WaitTimerFragment (오픈 대기 타이머 화면)
+ * 
+ * 영업 시작 시간 전에 보이는 화면이다. 타이머와 함께 안내 멘트가 있는 화면
+ * 으로서 영업 시간을 카운트하며 영업 시간을 알린다. 타이머의 경우 Handler
+ * 를 사용했으며, 서버로부터 영업 시작 시간과 현재 시간을 얻어온다. 그런 후
+ * 현재 시간으로부터 1초씩 세어 영업 시간까지인지를 판단토록 한다.
+ *
+ * @since 2014-02-24
+ * @version 1
+ * @author Mike Han(mike@dailyhotel.co.kr)
+ */
 package com.twoheart.dailyhotel;
 
 import java.text.SimpleDateFormat;
@@ -34,7 +48,7 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 
 	private MainActivity mHostActivity;
 
-	private Handler mHandler;
+	private Handler mHandler;	// TODO: static으로 선언하여 인스턴스가 중복되는 일이 없도록 한다.
 	private TextView tvTimer, tvTitle;
 	private Button btnNotify;
 

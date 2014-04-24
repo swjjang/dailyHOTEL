@@ -19,9 +19,6 @@ package uk.co.senab.actionbarpulltorefresh.library.viewdelegates;
 import android.view.View;
 import android.widget.ScrollView;
 
-/**
- * FIXME
- */
 public class ScrollYDelegate implements ViewDelegate {
 
     public static final Class[] SUPPORTED_VIEW_CLASSES =  { ScrollView.class };

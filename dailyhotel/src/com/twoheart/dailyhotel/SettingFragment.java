@@ -1,3 +1,16 @@
+/**
+ * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
+ *
+ * SettingFragment (설정 화면)
+ * 
+ * 어플리케이션의 설정 화면이다. 뷰는 리스트뷰처럼 보이나 리스트뷰처럼 보이도록
+ * 구성된 화면일 뿐이다. 이 화면에서 현재 로그인 상태를 가져오기 위해 네트워
+ * 크 작업을 하기도 한다.
+ *
+ * @since 2014-02-24
+ * @version 1
+ * @author Mike Han(mike@dailyhotel.co.kr)
+ */
 package com.twoheart.dailyhotel;
 
 import org.json.JSONObject;
@@ -47,7 +60,7 @@ public class SettingFragment extends BaseFragment implements Constants,
 
 	private TextView tvNotice, tvHelp, tvMail, tvLogin, tvEmail, tvCall,
 			tvAbout, tvVersion;
-	private LinearLayout llVersion;
+	private LinearLayout llVersion, llLogin;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,6 +77,7 @@ public class SettingFragment extends BaseFragment implements Constants,
 		llVersion = (LinearLayout) view.findViewById(R.id.ll_setting_version);
 		tvHelp = (TextView) view.findViewById(R.id.tv_setting_help);
 		tvMail = (TextView) view.findViewById(R.id.tv_setting_mail);
+		llLogin = (LinearLayout) view.findViewById(R.id.ll_setting_login);
 		tvLogin = (TextView) view.findViewById(R.id.tv_setting_login);
 		tvEmail = (TextView) view.findViewById(R.id.tv_setting_email);
 		tvCall = (TextView) view.findViewById(R.id.tv_setting_call);
@@ -73,8 +87,9 @@ public class SettingFragment extends BaseFragment implements Constants,
 		llVersion.setOnClickListener(this);
 		tvHelp.setOnClickListener(this);
 		tvMail.setOnClickListener(this);
-		tvLogin.setOnClickListener(this);
-		tvEmail.setOnClickListener(this);
+		llLogin.setOnClickListener(this);
+//		tvLogin.setOnClickListener(this);
+//		tvEmail.setOnClickListener(this);
 		tvCall.setOnClickListener(this);
 		tvAbout.setOnClickListener(this);
 
@@ -136,7 +151,7 @@ public class SettingFragment extends BaseFragment implements Constants,
 			intent.putExtra(Intent.EXTRA_TEXT, "데일리호텔의 안드로이드 어플리케이션에 관한 문의입니다.");
 			startActivity(Intent.createChooser(intent, "이메일 어플리케이션 선택"));
 
-		} else if (v.getId() == tvLogin.getId()) {
+		} else if (v.getId() == llLogin.getId()) {
 
 			if (tvLogin.getText().equals("로그아웃")) { // 로그인 되어 있는 상태
 				AlertDialog.Builder alert_confirm = new AlertDialog.Builder(

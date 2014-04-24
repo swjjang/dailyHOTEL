@@ -104,6 +104,7 @@ public class SaleTime implements Constants, Parcelable {
 		return mCloseTime.getTime();
 	}
 
+	// TimeControl: 시간 조정
 	public boolean isSaleTime() {
 		if ((mCurrentTime != null) && (mOpenTime != null) && (mCloseTime != null)) {
 			if ((mCurrentTime.compareTo(mOpenTime) >= 0) && (mCurrentTime.compareTo(mCloseTime) < 0))
@@ -117,7 +118,6 @@ public class SaleTime implements Constants, Parcelable {
 
 	@Override
 	public int describeContents() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

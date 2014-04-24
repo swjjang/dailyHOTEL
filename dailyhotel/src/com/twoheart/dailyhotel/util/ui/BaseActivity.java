@@ -38,12 +38,22 @@ public class BaseActivity extends ActionBarActivity implements Constants {
 
 	public ActionBar actionBar;
 	public SharedPreferences sharedPreference;
-	public CookieSyncManager cookieSyncManager;
+	public static CookieSyncManager cookieSyncManager;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		sharedPreference = getSharedPreferences(NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
+		
+		try {
+			cookieSyncManager = CookieSyncManager.getInstance();
+		} catch (Exception e) {
+			if (DEBUG)
+				e.printStackTrace();
+			
+			cookieSyncManager = CookieSyncManager.createInstance(getApplicationContext());
+			
+		}
 		
 	}
 	
@@ -54,6 +64,12 @@ public class BaseActivity extends ActionBarActivity implements Constants {
 		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
 	}
 	
+	/**
+	 * setActionBar(String title)
+	 * 액션바 설정 메소드
+	 * 
+	 * @param title
+	 */
 	public void setActionBar(String title) {
 		actionBar = getSupportActionBar();
 		
@@ -70,10 +86,18 @@ public class BaseActivity extends ActionBarActivity implements Constants {
 		actionBar.setHomeButtonEnabled(true);
 	}
 	
+	public void setActionBarProgressBar() {
+		supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+		
+	}
+	
+	/**
+	 * setActionBarHide()
+	 * 액션바를 숨겨주는 메소드
+	 * 
+	 */
 	public void setActionBarHide() {
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-			getSupportActionBar().hide();
+		supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
 		
 	}
 	  
@@ -99,13 +123,19 @@ public class BaseActivity extends ActionBarActivity implements Constants {
 	protected void onResume() {
 		super.onResume();
 		
-		try {
-			if (cookieSyncManager != null)
-				cookieSyncManager.startSync();
-		} catch (Exception e) {
-			if (DEBUG)
-				e.printStackTrace();
+		if (cookieSyncManager != null)
+			cookieSyncManager.startSync();
+		else {
 			
+			try {
+				cookieSyncManager = CookieSyncManager.getInstance();
+			} catch (Exception e) {
+				if (DEBUG)
+					e.printStackTrace();
+				
+				cookieSyncManager = CookieSyncManager.createInstance(getApplicationContext());
+				
+			}
 			
 		}
 	}

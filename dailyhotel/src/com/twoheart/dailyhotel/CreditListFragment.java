@@ -1,3 +1,14 @@
+/**
+ * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
+ *
+ * CreditListFragment (적립금 내역 화면)
+ * 
+ * 적립금 내역 리스트를 보여주는 화면이다.
+ *
+ * @since 2014-02-24
+ * @version 1
+ * @author Mike Han(mike@dailyhotel.co.kr)
+ */
 package com.twoheart.dailyhotel;
 
 import java.util.ArrayList;

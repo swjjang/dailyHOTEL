@@ -37,12 +37,7 @@ public class HotelGradeView extends FrameLayout {
 	}
 	
 	private void init() {
-		
-		setPadding(Util.dpToPx(mContext, 5.5), 2, Util.dpToPx(mContext, 5.5), 1);
 		tvHotelGradeName = new TextView(mContext);
-		
-		FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
-				FrameLayout.LayoutParams.MATCH_PARENT);
 		
 		tvHotelGradeName.setTextColor(getResources().getColor(android.R.color.white));
 		tvHotelGradeName.setTextSize((float) 11.5);
@@ -50,6 +45,8 @@ public class HotelGradeView extends FrameLayout {
 		tvHotelGradeName.setSingleLine(true);
 		
 		addView(tvHotelGradeName);
+		
+		setPadding(Util.dpToPx(mContext, 5.5), 2, Util.dpToPx(mContext, 5.5), 1);
 		
 	}
 	
@@ -104,13 +101,14 @@ public class HotelGradeView extends FrameLayout {
 		mHotelGradeName = hotelGradeName;
 		tvHotelGradeName.setText(mHotelGradeName);
 		tvHotelGradeName.invalidate();
-		invalidate();
+		requestLayout();
+		
 	}
 	
 	private void setHotelGradeColor(String hotelGradeColor) {
 		mHotelGradeColor = Color.parseColor(hotelGradeColor);
 		setBackgroundColor(mHotelGradeColor);
-		invalidate();
+		requestLayout();
 	}
 	
 	

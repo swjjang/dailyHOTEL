@@ -30,11 +30,7 @@ public class EventWebActivity extends WebViewActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD) {
-			getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-					WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		}
+		setActionBarHide();
 
 		DailyHotel.getGaTracker().set(Fields.SCREEN_NAME, TAG);
 

@@ -48,8 +48,7 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListe
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
-
-import de.ankri.views.Switch;
+import com.twoheart.dailyhotel.widget.Switch;
 
 @SuppressLint({ "NewApi", "ResourceAsColor" })
 public class BookingActivity extends BaseActivity implements

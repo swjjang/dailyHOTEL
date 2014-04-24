@@ -23,33 +23,26 @@ import org.json.JSONObject;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.Window;
-import android.webkit.CookieSyncManager;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
-import com.readystatesoftware.systembartint.SystemBarTintManager;
-import com.twoheart.dailyhotel.CreditFragment;
 import com.twoheart.dailyhotel.GCMIntentService;
-import com.twoheart.dailyhotel.HotelListFragment;
-import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.R.layout;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.Log;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 public class SplashActivity extends BaseActivity implements Constants,
@@ -68,9 +61,6 @@ public class SplashActivity extends BaseActivity implements Constants,
 		setActionBarHide();
 		setContentView(R.layout.activity_splash);
 		
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-		}
-
 		mQueue = VolleyHttpClient.getRequestQueue();
 
 	}
@@ -143,40 +133,93 @@ public class SplashActivity extends BaseActivity implements Constants,
 			// response.getString("new_event"));
 
 			try {
-				Log.d(TAG, response.getString("play_min"));
-			} catch (JSONException e) {
-				if (DEBUG)
-					e.printStackTrace();
-			}
-
-			try {
 				SharedPreferences.Editor editor = sharedPreference.edit();
-				editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME,
-						response.getString("play_max"));
-				editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME,
-						response.getString("play_min"));
 				
-//				editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME,
-//						response.getString("tstore_max"));
-//				editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME,
-//						response.getString("tstore_min"));
-				
-//				editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME,
-//						response.getString("nstore_max"));
-//				editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME,
-//						response.getString("nstore_min"));
+				if (IS_GOOGLE_RELEASE) {
+					editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME,
+							response.getString("play_max"));
+					editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME,
+							response.getString("play_min"));
+					
+				} else {
+					editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME,
+							response.getString("tstore_max"));
+					editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME,
+							response.getString("tstore_min"));
+					
+//					editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME,
+//							response.getString("nstore_max"));
+//					editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME,
+//							response.getString("nstore_min"));
+					
+				}
 				
 				editor.commit();
 
+				int maxVersion = Integer.
+						parseInt(sharedPreference.getString(
+								KEY_PREFERENCE_MAX_VERSION_NAME, "1.0.0").replace(
+								".", ""));
 				int minVersion = Integer
 						.parseInt(sharedPreference.getString(
-								KEY_PREFERENCE_MIN_VERSION_NAME, null).replace(
+								KEY_PREFERENCE_MIN_VERSION_NAME, "1.0.0").replace(
 								".", ""));
 				int currentVersion = Integer.parseInt(this.getPackageManager()
 						.getPackageInfo(this.getPackageName(), 0).versionName
 						.replace(".", ""));
-
-				if (minVersion > currentVersion) { // 강제 업데이트
+				int skipMaxVersion = Integer
+						.parseInt(sharedPreference.getString(
+								KEY_PREFERENCE_SKIP_MAX_VERSION, "1.0.0").replace(
+								".", ""));
+				
+				if (maxVersion > currentVersion) {
+					if (skipMaxVersion != maxVersion) {
+						AlertDialog.Builder alertDialog = new AlertDialog.Builder(
+								SplashActivity.this);
+						alertDialog
+								.setTitle("공지")
+								.setMessage("지금 업그레이드하여 가장 멋진 데일리호텔 앱을 다운받으세요")
+								.setCancelable(true)
+								.setOnCancelListener(new OnCancelListener() {
+									
+									@Override
+									public void onCancel(DialogInterface dialog) {
+										SharedPreferences.Editor editor = sharedPreference.edit();
+										editor.putString(KEY_PREFERENCE_SKIP_MAX_VERSION,
+												sharedPreference.getString(
+														KEY_PREFERENCE_MAX_VERSION_NAME, "1.0.0"));
+										
+										editor.commit();
+										showMainActivity();
+									}
+								})
+								.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+											@Override
+											public void onClick(
+													DialogInterface dialog,
+													int which) {
+												dialog.cancel();
+											}
+										})
+								.setPositiveButton("업데이트",
+										new DialogInterface.OnClickListener() {
+											@Override
+											public void onClick(
+													DialogInterface dialog,
+													int which) {
+												Intent marketLaunch = new Intent(
+														Intent.ACTION_VIEW);
+												marketLaunch.setData(Uri
+														.parse(Util.storeReleaseAddress()));
+//												marketLaunch.setData(Uri
+//														.parse(URL_STORE_T_DAILYHOTEL));
+												startActivity(marketLaunch);
+											}
+										});
+						AlertDialog alert = alertDialog.create();
+						alert.show();
+					}
+				} else if (minVersion > currentVersion) { // 강제 업데이트
 					AlertDialog.Builder alertDialog = new AlertDialog.Builder(
 							SplashActivity.this);
 					alertDialog
@@ -192,7 +235,7 @@ public class SplashActivity extends BaseActivity implements Constants,
 											Intent marketLaunch = new Intent(
 													Intent.ACTION_VIEW);
 											marketLaunch.setData(Uri
-													.parse(URL_STORE_GOOGLE_DAILYHOTEL));
+													.parse(Util.storeReleaseAddress()));
 //											marketLaunch.setData(Uri
 //													.parse(URL_STORE_T_DAILYHOTEL));
 											startActivity(marketLaunch);
@@ -202,33 +245,33 @@ public class SplashActivity extends BaseActivity implements Constants,
 					AlertDialog alert = alertDialog.create();
 					alert.show();
 				} else {
-					// sleep 2 second
-					Handler h = new Handler();
-					h.postDelayed(new Runnable() {
-						public void run() {
-							setResult(RESULT_OK);
-							finish();
-
-						}
-					}, 1200);
+					showMainActivity();
 				}
 
-			} catch (UnsupportedOperationException e) {
-				Toast.makeText(this, "구글 플레이 서비스를 이용할 수 있는 기기이어야 합니다.",
-						Toast.LENGTH_LONG).show();
-				finish();
 			} catch (Exception e) {
 				if (DEBUG)
 					e.printStackTrace();
 			}
 		}
 	}
+	
+	private void showMainActivity() {
+		// sleep 2 second
+		Handler h = new Handler();
+		h.postDelayed(new Runnable() {
+			public void run() {
+				setResult(RESULT_OK);
+				finish();
+
+			}
+		}, 1200);
+	}
 
 	@Override
 	public void onErrorResponse(VolleyError error) {
 		if (DEBUG)
 			error.printStackTrace();
-		Toast.makeText(getApplicationContext(), "네트워크 상태를 확인해주세요",
+		Toast.makeText(this, "네트워크 상태를 확인해주세요",
 				Toast.LENGTH_LONG).show();
 		finish();
 	}

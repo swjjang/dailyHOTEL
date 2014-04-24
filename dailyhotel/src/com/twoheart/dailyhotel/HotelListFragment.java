@@ -1,3 +1,18 @@
+/**
+ * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
+ *
+ * HotelListFragment (호텔 목록 화면)
+ * 
+ * 어플리케이션의 가장 주가 되는 화면으로서 호텔들의 목록을 보여주는 화면이다.
+ * 호텔 리스트는 따로 커스텀되어 구성되어 있으며, 액션바의 네비게이션을 이용
+ * 하여 큰 지역을 분리하고 리스트뷰 헤더를 이용하여 세부 지역을 나누어 표시
+ * 한다. 리스트뷰의 맨 첫 아이템은 이벤트 참여하기 버튼이 있으며, 이 버튼은
+ * 서버의 이벤트 API에 따라 NEW 아이콘을 붙여주기도 한다.
+ *
+ * @since 2014-02-24
+ * @version 1
+ * @author Mike Han(mike@dailyhotel.co.kr)
+ */
 package com.twoheart.dailyhotel;
 
 import java.util.ArrayList;
@@ -37,7 +52,6 @@ import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
-import com.hb.views.PinnedSectionListView;
 import com.twoheart.dailyhotel.activity.EventWebActivity;
 import com.twoheart.dailyhotel.activity.HotelTabActivity;
 import com.twoheart.dailyhotel.adapter.HotelListAdapter;
@@ -54,8 +68,9 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonArrayResponse
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
-import com.twoheart.dailyhotel.util.ui.HotelList;
+import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
+import com.twoheart.dailyhotel.widget.PinnedSectionListView;
 
 public class HotelListFragment extends BaseFragment implements Constants,
 		OnItemClickListener, OnNavigationListener,
@@ -70,7 +85,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 	private PinnedSectionListView mHotelListView;
 	private PullToRefreshLayout mPullToRefreshLayout;
 	private HotelListAdapter mHotelListAdapter;
-	private List<HotelList> mHotelListViewList;
+	private List<HotelListViewItem> mHotelListViewList;
 	private List<Hotel> mHotelList;
 	private List<String> mRegionList;
 	private Map<String, List<String>> mRegionDetailList;
@@ -214,9 +229,9 @@ public class HotelListFragment extends BaseFragment implements Constants,
 			int position, long id) {
 		int selectedPosition = position - 1;
 
-		HotelList selectedItem = mHotelListViewList.get(selectedPosition);
+		HotelListViewItem selectedItem = mHotelListViewList.get(selectedPosition);
 		
-		if (selectedItem.getType() == HotelList.TYPE_ENTRY) {
+		if (selectedItem.getType() == HotelListViewItem.TYPE_ENTRY) {
 			Intent i = new Intent(mHostActivity, HotelTabActivity.class);
 			i.putExtra(NAME_INTENT_EXTRA_DATA_HOTEL, selectedItem.getItem());
 			i.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mDailyHotelSaleTime);
@@ -377,20 +392,20 @@ public class HotelListFragment extends BaseFragment implements Constants,
 
 				}
 				
-				mHotelListViewList = new ArrayList<HotelList>();
+				mHotelListViewList = new ArrayList<HotelListViewItem>();
 				List<String> selectedRegionDetail = mRegionDetailList.get(mRegionList.get(mHostActivity.actionBar
 						.getSelectedNavigationIndex()));
 				
 				for (int i = 0; i < selectedRegionDetail.size(); i++) {
 					String region = selectedRegionDetail.get(i);
-					HotelList section = new HotelList(region);
+					HotelListViewItem section = new HotelListViewItem(region);
 					mHotelListViewList.add(section);
 
 					int count = 0;
 					for (int j = 0; j < mHotelList.size(); j++) {
 						Hotel hotel = mHotelList.get(j);
 						if (hotel.getDetailRegion().equals(region)) {
-							mHotelListViewList.add(new HotelList(hotel));
+							mHotelListViewList.add(new HotelListViewItem(hotel));
 							count++;
 						}
 					}
@@ -400,13 +415,13 @@ public class HotelListFragment extends BaseFragment implements Constants,
 				}
 				
 				int count = 0;
-				HotelList others = new HotelList("기타");
+				HotelListViewItem others = new HotelListViewItem("기타");
 				
 				mHotelListViewList.add(others);
 				for (int i = 0; i < mHotelList.size(); i++) {
 					Hotel hotel = mHotelList.get(i);
 					if (hotel.getDetailRegion().equals("null")) {
-						mHotelListViewList.add(new HotelList(hotel));
+						mHotelListViewList.add(new HotelListViewItem(hotel));
 						count++;
 					}
 				}

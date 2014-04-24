@@ -11,7 +11,7 @@
 
         <!-- img -->
 
-        <ImageView
+        <com.twoheart.dailyhotel.widget.FadeInNetworkImageView
             android:id="@+id/iv_hotel_row_img"
             android:layout_width="match_parent"
             android:layout_height="240dp"
@@ -71,8 +71,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true" >
-                    </com.twoheart.dailyhotel.widget.HotelGradeView>
+                        android:layout_centerVertical="true" />
 
                     <TextView
                         android:id="@+id/tv_hotel_row_name"

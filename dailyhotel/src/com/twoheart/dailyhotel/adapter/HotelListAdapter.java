@@ -17,20 +17,20 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.hb.views.PinnedSectionListView.PinnedSectionListAdapter;
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.android.volley.toolbox.ImageLoader;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.util.GlobalFont;
-import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.ui.HotelList;
+import com.twoheart.dailyhotel.util.VolleyImageLoader;
+import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
+import com.twoheart.dailyhotel.widget.FadeInNetworkImageView;
 import com.twoheart.dailyhotel.widget.HotelGradeView;
+import com.twoheart.dailyhotel.widget.PinnedSectionListView.PinnedSectionListAdapter;
 
-public class HotelListAdapter extends ArrayAdapter<HotelList> implements
+public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 		PinnedSectionListAdapter {
 
 	private Context context;
@@ -39,7 +39,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelList> implements
 	private LayoutInflater inflater;
 
 	public HotelListAdapter(Context context, int resourceId,
-			List<HotelList> hotelList) {
+			List<HotelListViewItem> hotelList) {
 		super(context, resourceId, hotelList);	
 
 		this.context = context;
@@ -48,40 +48,54 @@ public class HotelListAdapter extends ArrayAdapter<HotelList> implements
 		this.inflater = (LayoutInflater) this.context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		this.imageLoader = ImageLoader.getInstance();
-
+//		this.imageLoader = ImageLoader.getInstance();
+		this.imageLoader = VolleyImageLoader.getImageLoader();
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
-		HotelList item = getItem(position);
+		HotelListViewItem item = getItem(position);
 
 		switch (item.getType()) {
-		case HotelList.TYPE_SECTION:
-
-			convertView = inflater.inflate(R.layout.list_row_hotel_section,
-					parent, false);
-
-			TextView regionDetailName = (TextView) convertView
-					.findViewById(R.id.hotelListRegionName);
-			regionDetailName.setText(item.getCategory());
+		case HotelListViewItem.TYPE_SECTION:
+			HeaderListViewHolder headerViewHolder = null;
 			
+			if (convertView != null) {
+				if (convertView.getTag() != null)
+					if (convertView.getTag() instanceof HeaderListViewHolder)
+						headerViewHolder = (HeaderListViewHolder) convertView.getTag();
+				
+			} else {
+				convertView = inflater.inflate(R.layout.list_row_hotel_section, parent, false);
+				headerViewHolder = new HeaderListViewHolder();
+				headerViewHolder.regionDetailName = (TextView) convertView
+						.findViewById(R.id.hotelListRegionName);
+				convertView.setTag(headerViewHolder);
+			}
+
+			headerViewHolder.regionDetailName.setText(item.getCategory());
 			GlobalFont.apply((ViewGroup) convertView);
 
 			break;
-		case HotelList.TYPE_ENTRY:
+		case HotelListViewItem.TYPE_ENTRY:
 
 			Hotel element = item.getItem();
 			HotelListViewHolder viewHolder = null;
-
-//			if (convertView == null) {
+			
+			if (convertView != null) {
+				if (convertView.getTag() != null)
+					if (convertView.getTag() instanceof HotelListViewHolder)
+						viewHolder = (HotelListViewHolder) convertView.getTag();
+			} else {
 				convertView = inflater.inflate(resourceId, parent, false);
 
 				viewHolder = new HotelListViewHolder();
 				viewHolder.llHotelRowContent = (LinearLayout) convertView
 						.findViewById(R.id.ll_hotel_row_content);
-				viewHolder.img = (ImageView) convertView
+//				viewHolder.img = (ImageView) convertView
+//						.findViewById(R.id.iv_hotel_row_img);
+				viewHolder.img = (FadeInNetworkImageView) convertView
 						.findViewById(R.id.iv_hotel_row_img);
 				viewHolder.name = (TextView) convertView
 						.findViewById(R.id.tv_hotel_row_name);
@@ -97,18 +111,12 @@ public class HotelListAdapter extends ArrayAdapter<HotelList> implements
 				// .findViewById(R.id.fl_hotel_row_grade);
 				// viewHolder.gradeText = (TextView) convertView
 				// .findViewById(R.id.tv_hotel_row_grade);
-				viewHolder.grade = (HotelGradeView) convertView
-						.findViewById(R.id.hv_hotel_grade);
-				viewHolder.rlHotelUnder = (RelativeLayout) convertView
-						.findViewById(R.id.rl_hotel_under);
+				viewHolder.grade = (HotelGradeView) convertView.findViewById(R.id.hv_hotel_grade);
 
-//				convertView.setTag(viewHolder);
-//
-//			} else {
-//				viewHolder = (HotelListViewHolder) convertView.getTag();
-//
-//			}
-
+				convertView.setTag(viewHolder);
+				
+			}
+			
 			DecimalFormat comma = new DecimalFormat("###,##0");
 			String strPrice = comma
 					.format(Integer.parseInt(element.getPrice()));
@@ -162,13 +170,17 @@ public class HotelListAdapter extends ArrayAdapter<HotelList> implements
 
 			// grade
 			viewHolder.grade.setHotelGradeCode(element.getCategory());
-
+			
 			GlobalFont.apply((ViewGroup) convertView);
 			viewHolder.name.setTypeface(DailyHotel.getBoldTypeface());
 			viewHolder.discount.setTypeface(DailyHotel.getBoldTypeface());
 
 			if (!element.getImage().equals("default")) {
-				imageLoader.displayImage(element.getImage(), viewHolder.img);
+//				imageLoader.displayImage(element.getImage(), viewHolder.img);
+				viewHolder.img.setDefaultImageResId(R.drawable.img_placeholder);
+				viewHolder.img.setErrorImageResId(R.drawable.img_placeholder);
+				viewHolder.img.setImageUrl(element.getImage(), imageLoader);
+				
 			}
 
 			// 객실이 1~2 개일때 label 표시
@@ -200,21 +212,25 @@ public class HotelListAdapter extends ArrayAdapter<HotelList> implements
 
 	private class HotelListViewHolder {
 		LinearLayout llHotelRowContent;
-		ImageView img;
+//		ImageView img;
+		FadeInNetworkImageView img;
 		TextView name;
 		TextView price;
 		TextView discount;
 		TextView sold_out;
 		TextView address;
+		HotelGradeView grade;
 		// FrameLayout gradeBackground;
 		// TextView gradeText;
-		HotelGradeView grade;
-		RelativeLayout rlHotelUnder;
+	}
+	
+	private class HeaderListViewHolder {
+		TextView regionDetailName;
 	}
 
 	@Override
 	public boolean isItemViewTypePinned(int viewType) {
-		return viewType == HotelList.TYPE_SECTION;
+		return viewType == HotelListViewItem.TYPE_SECTION;
 	}
 
 	@Override

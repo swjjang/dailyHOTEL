@@ -9,9 +9,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.android.volley.toolbox.ImageLoader;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.VolleyImageLoader;
 import com.twoheart.dailyhotel.util.ui.ProgressImageLoading;
+import com.twoheart.dailyhotel.widget.FadeInNetworkImageView;
 
 
 public class ImageDetailFragment extends Fragment {
@@ -20,7 +22,7 @@ public class ImageDetailFragment extends Fragment {
 	
 	private String mImageUrl;
 	private ImageLoader mImageLoader;
-	private ImageView mImageView;
+	private FadeInNetworkImageView mImageView;
 	private ProgressBar mProgressBar;
 	private Activity mHostActivity;
 	
@@ -39,7 +41,8 @@ public class ImageDetailFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		
 		mHostActivity = getActivity();
-		mImageLoader = ImageLoader.getInstance();
+//		mImageLoader = com.nostra13.universalimageloader.core.ImageLoader.getInstance();
+		mImageLoader = VolleyImageLoader.getImageLoader();
 		mImageUrl = getArguments().getString(KEY_BUNDLE_ARGUMENTS_IMAGEURL);
 	}
 	
@@ -50,10 +53,11 @@ public class ImageDetailFragment extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_image_detail, container,
 				false);
 		
-		mImageView = (ImageView) view.findViewById(R.id.iv_image_detail);
+		mImageView = (FadeInNetworkImageView) view.findViewById(R.id.iv_image_detail);
 		mProgressBar = (ProgressBar) view.findViewById(R.id.pb_image_detail);
 
-		mImageLoader.displayImage(mImageUrl, mImageView, new ProgressImageLoading(mProgressBar));
+		mImageView.setImageUrl(mImageUrl, mImageLoader, mProgressBar);
+//		mImageLoader.displayImage(mImageUrl, mImageView, new ProgressImageLoading(mProgressBar));
 
 		return view;
 	}

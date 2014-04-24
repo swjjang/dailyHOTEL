@@ -43,9 +43,6 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable;
 import uk.co.senab.actionbarpulltorefresh.library.sdk.Compat;
 
-/**
- * Default Header Transformer.
- */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class DefaultHeaderTransformer extends HeaderTransformer {
 
@@ -104,7 +101,6 @@ public class DefaultHeaderTransformer extends HeaderTransformer {
         // Apply any custom ProgressBar colors and corner radius
         applyProgressBarSettings();
 
-        // FIXME: I do not like this call here
         onReset();
     }
 

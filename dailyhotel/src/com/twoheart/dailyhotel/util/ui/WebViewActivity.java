@@ -40,8 +40,8 @@ public class WebViewActivity extends BaseActivity implements
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		requestWindowFeature(Window.FEATURE_PROGRESS);
 		super.onCreate(savedInstanceState);
+		supportRequestWindowFeature(Window.FEATURE_PROGRESS);
 
 	}
 

@@ -45,15 +45,13 @@ public class LoadingDialog {
 					});
 			loadingDialog.show();
 
-		} else {
-			hideLoading();
-			showLoading(activity);
 		}
 	}
 
 	public static void hideLoading() {
 		if (loadingDialog != null) {
-			loadingDialog.dismiss();
+			if (loadingDialog.isShowing())
+				loadingDialog.dismiss();
 			loadingDialog = null;
 		}
 	}
