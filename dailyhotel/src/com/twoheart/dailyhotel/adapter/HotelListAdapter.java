@@ -19,12 +19,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.android.volley.toolbox.ImageLoader;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.util.GlobalFont;
+import com.twoheart.dailyhotel.util.VolleyImageLoader;
 import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
+import com.twoheart.dailyhotel.widget.FadeInNetworkImageView;
 import com.twoheart.dailyhotel.widget.HotelGradeView;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView.PinnedSectionListAdapter;
 
@@ -46,8 +48,8 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 		this.inflater = (LayoutInflater) this.context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		this.imageLoader = ImageLoader.getInstance();
-
+//		this.imageLoader = ImageLoader.getInstance();
+		this.imageLoader = VolleyImageLoader.getImageLoader();
 	}
 
 	@Override
@@ -91,7 +93,9 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 				viewHolder = new HotelListViewHolder();
 				viewHolder.llHotelRowContent = (LinearLayout) convertView
 						.findViewById(R.id.ll_hotel_row_content);
-				viewHolder.img = (ImageView) convertView
+//				viewHolder.img = (ImageView) convertView
+//						.findViewById(R.id.iv_hotel_row_img);
+				viewHolder.img = (FadeInNetworkImageView) convertView
 						.findViewById(R.id.iv_hotel_row_img);
 				viewHolder.name = (TextView) convertView
 						.findViewById(R.id.tv_hotel_row_name);
@@ -172,7 +176,11 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 			viewHolder.discount.setTypeface(DailyHotel.getBoldTypeface());
 
 			if (!element.getImage().equals("default")) {
-				imageLoader.displayImage(element.getImage(), viewHolder.img);
+//				imageLoader.displayImage(element.getImage(), viewHolder.img);
+				viewHolder.img.setDefaultImageResId(R.drawable.img_placeholder);
+				viewHolder.img.setErrorImageResId(R.drawable.img_placeholder);
+				viewHolder.img.setImageUrl(element.getImage(), imageLoader);
+				
 			}
 
 			// 객실이 1~2 개일때 label 표시
@@ -204,7 +212,8 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 
 	private class HotelListViewHolder {
 		LinearLayout llHotelRowContent;
-		ImageView img;
+//		ImageView img;
+		FadeInNetworkImageView img;
 		TextView name;
 		TextView price;
 		TextView discount;

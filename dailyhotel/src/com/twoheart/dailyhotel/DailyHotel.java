@@ -37,6 +37,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.twoheart.dailyhotel.util.VolleyImageLoader;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 
 public class DailyHotel extends Application {
@@ -66,7 +67,8 @@ public class DailyHotel extends Application {
 		super.onCreate();
 		
 		initializeVolley();
-		initializeUIL();
+//		initializeUIL();
+		initializeVolleyImageLoader();
 		initializeGa();
 		initializeFont();
 
@@ -158,6 +160,11 @@ public class DailyHotel extends Application {
 			.build();
 		
 		ImageLoader.getInstance().init(config);
+		
+	}
+	
+	private void initializeVolleyImageLoader() {
+		VolleyImageLoader.init();
 		
 	}
 	
