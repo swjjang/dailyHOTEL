@@ -68,7 +68,7 @@ public class DailyHotel extends Application {
 		
 		initializeVolley();
 //		initializeUIL();
-		initializeVolleyImageLoader();
+//		initializeVolleyImageLoader();
 		initializeGa();
 		initializeFont();
 

@@ -11,7 +11,7 @@
 
         <!-- img -->
 
-        <com.twoheart.dailyhotel.widget.FadeInNetworkImageView
+        <ImageView
             android:id="@+id/iv_hotel_row_img"
             android:layout_width="match_parent"
             android:layout_height="240dp"

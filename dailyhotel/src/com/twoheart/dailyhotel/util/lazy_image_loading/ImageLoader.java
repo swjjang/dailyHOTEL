@@ -1,10 +1,12 @@
-package com.twoheart.dailyhotel.util;
+package com.twoheart.dailyhotel.util.lazy_image_loading;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Collections;
@@ -16,22 +18,32 @@ import java.util.concurrent.Executors;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.TransitionDrawable;
 import android.os.Handler;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.Util;
 
-public class LazyImageLoader {
+public class ImageLoader {
     
-    LazyMemoryCache memoryCache=new LazyMemoryCache();
-//    FileCache fileCache;
+	Context context;
+    MemoryCache memoryCache=new MemoryCache();
+    FileCache fileCache;
     private Map<ImageView, String> imageViews=Collections.synchronizedMap(new WeakHashMap<ImageView, String>());
     ExecutorService executorService;
     Handler handler=new Handler();//handler to display images in UI thread
+    ProgressBar progressBar;
     
-    public LazyImageLoader(Context context){
-//        fileCache=new FileCache(context);
+    public ImageLoader(Context context){
+        fileCache=new FileCache(context);
         executorService=Executors.newFixedThreadPool(5);
+        this.context = context;
     }
     
     final int stub_id=R.drawable.img_placeholder;
@@ -39,15 +51,30 @@ public class LazyImageLoader {
     {
         imageViews.put(imageView, url);
         Bitmap bitmap=memoryCache.get(url);
-        if(bitmap!=null)
-            imageView.setImageBitmap(bitmap);
+        if(bitmap!=null) {
+        	 	TransitionDrawable td = new TransitionDrawable(new Drawable[]{
+                     new ColorDrawable(android.R.color.transparent),
+                     new BitmapDrawable(context.getResources(), bitmap)
+             });
+      
+        	 	imageView.setImageDrawable(td);
+            td.startTransition(250);
+             
+//            imageView.setImageBitmap(bitmap);
+        }
         else
         {
             queuePhoto(url, imageView);
             imageView.setImageResource(stub_id);
         }
     }
-        
+    
+    public void DisplayImage(String url, ImageView imageView, ProgressBar progressBar)
+    {
+       this.progressBar = progressBar;
+       DisplayImage(url, imageView);
+    }
+    
     private void queuePhoto(String url, ImageView imageView)
     {
         PhotoToLoad p=new PhotoToLoad(url, imageView);
@@ -56,12 +83,12 @@ public class LazyImageLoader {
     
     private Bitmap getBitmap(String url) 
     {
-//        File f=fileCache.getFile(url);
+        File f=fileCache.getFile(url);
         
         //from SD cache
-//        Bitmap b = decodeFile(f);
-//        if(b!=null)
-//            return b;
+        Bitmap b = decodeFile(f);
+        if(b!=null)
+            return b;
         
         //from web
         try {
@@ -72,12 +99,11 @@ public class LazyImageLoader {
             conn.setReadTimeout(30000);
             conn.setInstanceFollowRedirects(true);
             InputStream is=conn.getInputStream();
-//            OutputStream os = new FileOutputStream(f);
-//            Util.CopyStream(is, os);
-//            os.close();
+            OutputStream os = new FileOutputStream(f);
+            Util.CopyStream(is, os);
+            os.close();
             conn.disconnect();
-//            bitmap = decodeFile(f);
-            bitmap = decodeInputstream(is);
+            bitmap = decodeFile(f);
             return bitmap;
         } catch (Throwable ex){
            ex.printStackTrace();
@@ -92,64 +118,29 @@ public class LazyImageLoader {
         try {
             //decode image size
             BitmapFactory.Options o = new BitmapFactory.Options();
-            o.inJustDecodeBounds = true;
+//            o.inJustDecodeBounds = true;
             FileInputStream stream1=new FileInputStream(f);
-            BitmapFactory.decodeStream(stream1,null,o);
+            Bitmap bitmap=BitmapFactory.decodeStream(stream1,null,o);
             stream1.close();
             
             //Find the correct scale value. It should be the power of 2.
-            final int REQUIRED_SIZE=70;
-            int width_tmp=o.outWidth, height_tmp=o.outHeight;
-            int scale=1;
-            while(true){
-                if(width_tmp/2<REQUIRED_SIZE || height_tmp/2<REQUIRED_SIZE)
-                    break;
-                width_tmp/=2;
-                height_tmp/=2;
-                scale*=2;
-            }
+//            final int REQUIRED_SIZE=100;
+//            int width_tmp=o.outWidth, height_tmp=o.outHeight;
+//            int scale=1;
+//            while(true){
+//                if(width_tmp/2<REQUIRED_SIZE || height_tmp/2<REQUIRED_SIZE)
+//                    break;
+//                width_tmp/=2;
+//                height_tmp/=2;
+//                scale*=2;
+//            }
             
             //decode with inSampleSize
-            BitmapFactory.Options o2 = new BitmapFactory.Options();
-            o2.inSampleSize=scale;
-            FileInputStream stream2=new FileInputStream(f);
-            Bitmap bitmap=BitmapFactory.decodeStream(stream2, null, o2);
-            stream2.close();
-            return bitmap;
-        } catch (FileNotFoundException e) {
-        } 
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-    
-    private Bitmap decodeInputstream(InputStream in){
-        try {
-            //decode image size
-            BitmapFactory.Options o = new BitmapFactory.Options();
-            o.inJustDecodeBounds = true;
-            BitmapFactory.decodeStream(in,null,o);
-            in.close();
-            
-            //Find the correct scale value. It should be the power of 2.
-            final int REQUIRED_SIZE=70;
-            int width_tmp=o.outWidth, height_tmp=o.outHeight;
-            int scale=1;
-            while(true){
-                if(width_tmp/2<REQUIRED_SIZE || height_tmp/2<REQUIRED_SIZE)
-                    break;
-                width_tmp/=2;
-                height_tmp/=2;
-                scale*=2;
-            }
-            
-            //decode with inSampleSize
-            BitmapFactory.Options o2 = new BitmapFactory.Options();
-            o2.inSampleSize=scale;
-            InputStream in2 = in;
-            Bitmap bitmap=BitmapFactory.decodeStream(in2, null, o2);
-            in2.close();
+//            BitmapFactory.Options o2 = new BitmapFactory.Options();
+////            o2.inSampleSize=scale;
+//            FileInputStream stream2=new FileInputStream(f);
+//            Bitmap bitmap=BitmapFactory.decodeStream(stream2, null, o2);
+//            stream2.close();
             return bitmap;
         } catch (FileNotFoundException e) {
         } 
@@ -210,8 +201,22 @@ public class LazyImageLoader {
         {
             if(imageViewReused(photoToLoad))
                 return;
-            if(bitmap!=null)
-                photoToLoad.imageView.setImageBitmap(bitmap);
+            if(bitmap!=null) {
+            	
+            	TransitionDrawable td = new TransitionDrawable(new Drawable[]{
+                        new ColorDrawable(android.R.color.transparent),
+                        new BitmapDrawable(context.getResources(), bitmap)
+                });
+         
+            	photoToLoad.imageView.setImageDrawable(td);
+               td.startTransition(250);
+               
+               if (progressBar != null)
+            	   	progressBar.setVisibility(View.GONE);
+               
+//                photoToLoad.imageView.setImageBitmap(bitmap);
+                
+            }
             else
                 photoToLoad.imageView.setImageResource(stub_id);
         }
@@ -219,7 +224,7 @@ public class LazyImageLoader {
 
     public void clearCache() {
         memoryCache.clear();
-//        fileCache.clear();
+        fileCache.clear();
     }
 
 }

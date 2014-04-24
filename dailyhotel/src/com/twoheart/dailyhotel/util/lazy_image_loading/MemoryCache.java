@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.util;
+package com.twoheart.dailyhotel.util.lazy_image_loading;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 import android.graphics.Bitmap;
 import android.util.Log;
 
-public class LazyMemoryCache {
+public class MemoryCache {
 
     private static final String TAG = "MemoryCache";
     private Map<String, Bitmap> cache=Collections.synchronizedMap(
@@ -17,7 +17,7 @@ public class LazyMemoryCache {
     private long size=0;//current allocated size
     private long limit=1000000;//max memory in bytes
 
-    public LazyMemoryCache(){
+    public MemoryCache(){
         //use 25% of available heap size
         setLimit(Runtime.getRuntime().maxMemory()/4);
     }
