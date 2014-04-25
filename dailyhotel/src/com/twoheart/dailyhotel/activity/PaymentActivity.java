@@ -74,8 +74,6 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			mPay = (Pay) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_PAY);
 		}
 
-		cookieSyncManager.sync();
-
 		webView = (WebView) findViewById(R.id.webView);
 		webView.getSettings().setSavePassword(false);
 		webView.getSettings().setAppCacheEnabled(true);
@@ -327,28 +325,28 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		@Override
 		public boolean onJsAlert(WebView view, String url, String message,
 				JsResult result) {
-			setProgressBarIndeterminateVisibility(false);
+			setSupportProgressBarIndeterminateVisibility(false);
 			return super.onJsAlert(view, url, message, result);
 		}
 
 		@Override
 		public boolean onJsBeforeUnload(WebView view, String url,
 				String message, JsResult result) {
-			setProgressBarIndeterminateVisibility(false);
+			setSupportProgressBarIndeterminateVisibility(false);
 			return super.onJsBeforeUnload(view, url, message, result);
 		}
 
 		@Override
 		public boolean onJsConfirm(WebView view, String url, String message,
 				JsResult result) {
-			setProgressBarIndeterminateVisibility(false);
+			setSupportProgressBarIndeterminateVisibility(false);
 			return super.onJsConfirm(view, url, message, result);
 		}
 
 		@Override
 		public boolean onJsPrompt(WebView view, String url, String message,
 				String defaultValue, JsPromptResult result) {
-			setProgressBarIndeterminateVisibility(false);
+			setSupportProgressBarIndeterminateVisibility(false);
 			return super.onJsPrompt(view, url, message, defaultValue, result);
 		}
 
@@ -357,9 +355,9 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			super.onProgressChanged(view, newProgress);
 
 			if (newProgress < 100)
-				setProgressBarIndeterminateVisibility(true);
+				setSupportProgressBarIndeterminateVisibility(true);
 			else
-				setProgressBarIndeterminateVisibility(false);
+				setSupportProgressBarIndeterminateVisibility(false);
 
 		}
 
@@ -411,13 +409,14 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		@Override
 		public void onPageStarted(WebView view, String url, Bitmap favicon) {
 			super.onPageStarted(view, url, favicon);
-			setProgressBarIndeterminateVisibility(true);
+			setSupportProgressBarIndeterminateVisibility(true);
 		}
 
 		@Override
 		public void onPageFinished(WebView view, String url) {
 			super.onPageFinished(view, url);
-			setProgressBarIndeterminateVisibility(false);
+			cookieSyncManager.sync();
+			setSupportProgressBarIndeterminateVisibility(false);
 		}
 
 	}

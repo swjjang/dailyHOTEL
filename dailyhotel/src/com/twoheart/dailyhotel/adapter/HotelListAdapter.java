@@ -19,14 +19,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.ImageLoader;
+import com.androidquery.AQuery;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.util.GlobalFont;
-import com.twoheart.dailyhotel.util.VolleyImageLoader;
+import com.twoheart.dailyhotel.util.lazy_image_loading.ImageLoader;
 import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
-import com.twoheart.dailyhotel.widget.FadeInNetworkImageView;
 import com.twoheart.dailyhotel.widget.HotelGradeView;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView.PinnedSectionListAdapter;
 
@@ -35,7 +34,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 
 	private Context context;
 	private int resourceId;
-	private ImageLoader imageLoader;
+//	private ImageLoader imageLoader;
 	private LayoutInflater inflater;
 
 	public HotelListAdapter(Context context, int resourceId,
@@ -49,7 +48,8 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 //		this.imageLoader = ImageLoader.getInstance();
-		this.imageLoader = VolleyImageLoader.getImageLoader();
+//		this.imageLoader = VolleyImageLoader.getImageLoader();
+//		this.imageLoader = new ImageLoader(context);
 	}
 
 	@Override
@@ -95,7 +95,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 						.findViewById(R.id.ll_hotel_row_content);
 //				viewHolder.img = (ImageView) convertView
 //						.findViewById(R.id.iv_hotel_row_img);
-				viewHolder.img = (FadeInNetworkImageView) convertView
+				viewHolder.img = (ImageView) convertView
 						.findViewById(R.id.iv_hotel_row_img);
 				viewHolder.name = (TextView) convertView
 						.findViewById(R.id.tv_hotel_row_name);
@@ -177,11 +177,25 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 
 			if (!element.getImage().equals("default")) {
 //				imageLoader.displayImage(element.getImage(), viewHolder.img);
-				viewHolder.img.setDefaultImageResId(R.drawable.img_placeholder);
-				viewHolder.img.setErrorImageResId(R.drawable.img_placeholder);
-				viewHolder.img.setImageUrl(element.getImage(), imageLoader);
 				
+//				viewHolder.img.setDefaultImageResId(R.drawable.img_placeholder);
+//				viewHolder.img.setErrorImageResId(R.drawable.img_placeholder);
+//				viewHolder.img.setImageUrl(element.getImage(), imageLoader);
+				
+//				imageLoader.DisplayImage(element.getImage(), viewHolder.img);
+				
+//				Picasso.with(context)
+//		        .load(element.getImage())
+//		        .placeholder(R.drawable.img_placeholder)
+//		        .error(R.drawable.img_placeholder)
+//		        .into(viewHolder.img);
+				
+				AQuery aq = new AQuery(convertView);
+                aq.id(viewHolder.img).image(element.getImage(), true, true, 0, R.drawable.img_placeholder, null,
+                		AQuery.FADE_IN_NETWORK);
 			}
+			
+			
 
 			// 객실이 1~2 개일때 label 표시
 			int avail_cnt = element.getAvailableRoom();
@@ -213,7 +227,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 	private class HotelListViewHolder {
 		LinearLayout llHotelRowContent;
 //		ImageView img;
-		FadeInNetworkImageView img;
+		ImageView img;
 		TextView name;
 		TextView price;
 		TextView discount;
