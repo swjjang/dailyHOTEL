@@ -17,6 +17,7 @@
             android:layout_height="240dp"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
+            android:background="@drawable/img_placeholder"
             android:src="@drawable/img_placeholder" />
 
         <LinearLayout

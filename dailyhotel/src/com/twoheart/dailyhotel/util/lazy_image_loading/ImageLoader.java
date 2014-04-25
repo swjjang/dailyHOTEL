@@ -52,15 +52,15 @@ public class ImageLoader {
         imageViews.put(imageView, url);
         Bitmap bitmap=memoryCache.get(url);
         if(bitmap!=null) {
-        	 	TransitionDrawable td = new TransitionDrawable(new Drawable[]{
-                     new ColorDrawable(android.R.color.transparent),
-                     new BitmapDrawable(context.getResources(), bitmap)
-             });
-      
-        	 	imageView.setImageDrawable(td);
-            td.startTransition(250);
+//        	 	TransitionDrawable td = new TransitionDrawable(new Drawable[]{
+//                     new ColorDrawable(android.R.color.transparent),
+//                     new BitmapDrawable(context.getResources(), bitmap)
+//             });
+//      
+//        	 	imageView.setImageDrawable(td);
+//            td.startTransition(250);
              
-//            imageView.setImageBitmap(bitmap);
+            imageView.setImageBitmap(bitmap);
         }
         else
         {

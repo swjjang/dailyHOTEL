@@ -19,14 +19,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.androidquery.AQuery;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.util.GlobalFont;
-import com.twoheart.dailyhotel.util.VolleyImageLoader;
 import com.twoheart.dailyhotel.util.lazy_image_loading.ImageLoader;
 import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
-import com.twoheart.dailyhotel.widget.FadeInNetworkImageView;
 import com.twoheart.dailyhotel.widget.HotelGradeView;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView.PinnedSectionListAdapter;
 
@@ -35,7 +34,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 
 	private Context context;
 	private int resourceId;
-	private ImageLoader imageLoader;
+//	private ImageLoader imageLoader;
 	private LayoutInflater inflater;
 
 	public HotelListAdapter(Context context, int resourceId,
@@ -50,7 +49,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 
 //		this.imageLoader = ImageLoader.getInstance();
 //		this.imageLoader = VolleyImageLoader.getImageLoader();
-		this.imageLoader = new ImageLoader(context);
+//		this.imageLoader = new ImageLoader(context);
 	}
 
 	@Override
@@ -183,9 +182,20 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 //				viewHolder.img.setErrorImageResId(R.drawable.img_placeholder);
 //				viewHolder.img.setImageUrl(element.getImage(), imageLoader);
 				
-				imageLoader.DisplayImage(element.getImage(), viewHolder.img);
+//				imageLoader.DisplayImage(element.getImage(), viewHolder.img);
 				
+//				Picasso.with(context)
+//		        .load(element.getImage())
+//		        .placeholder(R.drawable.img_placeholder)
+//		        .error(R.drawable.img_placeholder)
+//		        .into(viewHolder.img);
+				
+				AQuery aq = new AQuery(convertView);
+                aq.id(viewHolder.img).image(element.getImage(), true, true, 0, R.drawable.img_placeholder, null,
+                		AQuery.FADE_IN_NETWORK);
 			}
+			
+			
 
 			// 객실이 1~2 개일때 label 표시
 			int avail_cnt = element.getAvailableRoom();
