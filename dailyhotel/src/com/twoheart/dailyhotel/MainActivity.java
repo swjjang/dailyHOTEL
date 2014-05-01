@@ -35,7 +35,6 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,26 +49,20 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request.Method;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.VolleyError;
+import com.androidquery.util.AQUtility;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.readystatesoftware.systembartint.SystemBarTintManager.SystemBarConfig;
 import com.twoheart.dailyhotel.activity.SplashActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.CloseOnBackPressed;
-import com.twoheart.dailyhotel.util.ui.LoadingDialog;
-import com.twoheart.dailyhotel.util.ui.OnLoadCompleteListener;
 
 public class MainActivity extends BaseActivity implements OnItemClickListener,
-		Constants, ErrorListener, OnLoadCompleteListener {
+		Constants {
 
 	private static final String TAG = "MainActivity";
 
@@ -92,7 +85,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 
 	private DrawerMenuListAdapter mDrawerMenuListAdapter;
 	protected List<DrawerMenu> mMenuImages;
-	protected List<Fragment> mFragments = new LinkedList<Fragment>();
+	protected List<Fragment> mFragments;
 
 	public int indexLastFragment;
 
@@ -107,8 +100,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 	public DrawerMenu menuCreditFragment;
 	public DrawerMenu menuSettingFragment;
 
-	private RequestQueue mQueue;
-
 	private CloseOnBackPressed backButtonHandler;
 	
 	private SystemBarTintManager tintManager;
@@ -119,7 +110,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 		super.onCreate(savedInstanceState);
 
 		// 쿠키 동기화를 초기화한다. 로그인, 로그아웃 세션 쿠키는 MainActivity의 생명주기와 동기화한다.
-		cookieSyncManager = CookieSyncManager.createInstance(getApplicationContext());
+		CookieSyncManager.createInstance(getApplicationContext());
 
 		// 이전의 비정상 종료에 의한 만료된 쿠키들이 있을 수 있으므로, SplashActivity에서 자동 로그인을
 		// 처리하기 이전에 미리 이미 저장되어 있는 쿠키들을 정리한다.
@@ -157,7 +148,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 			
 		}
 		
-		mQueue = VolleyHttpClient.getRequestQueue();
 		fragmentManager = getSupportFragmentManager();
 		backButtonHandler = new CloseOnBackPressed(this);
 
@@ -180,7 +170,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 			}
 		}
 	}
-
+	
 	public void selectMenuDrawer(DrawerMenu selectedMenu) {
 		drawerList.performItemClick(
 				drawerList.getAdapter().getView(
@@ -188,28 +178,32 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 				mMenuImages.indexOf(selectedMenu), mDrawerMenuListAdapter
 						.getItemId(mMenuImages.indexOf(selectedMenu)));
 	}
+	
+	private void initializeFragments() {
+		if (mFragments != null)
+			mFragments.clear();
+		else
+			mFragments = new LinkedList<Fragment>();
+		
+		mFragments.add(new HotelListFragment());
+		mFragments.add(new BookingListFragment());
+		mFragments.add(new CreditFragment());
+		mFragments.add(new SettingFragment());
+		
+	}
 
 	public Fragment getFragment(int index) {
 		Fragment newFragment = null;
 
 		try {
 			newFragment = mFragments.get(index);
-		} catch (IndexOutOfBoundsException e) {
-
-			switch (index) {
-			case INDEX_HOTEL_LIST_FRAGMENT:
-				newFragment = new HotelListFragment();
-				break;
-			case INDEX_BOOKING_LIST_FRAGMENT:
-				newFragment = new BookingListFragment();
-				break;
-			case INDEX_CREDIT_FRAGMENT:
-				newFragment = new CreditFragment();
-				break;
-			case INDEX_SETTING_FRAGMENT:
-				newFragment = new SettingFragment();
-				break;
-			}
+			
+		} catch (Exception e) {
+//			onError(e);
+			
+			initializeFragments();
+			newFragment = getFragment(index);
+			
 		}
 
 		return newFragment;
@@ -217,28 +211,33 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 	}
 
 	public void replaceFragment(Fragment fragment) {
-		clearFragmentBackStack();
-
-		fragmentManager.beginTransaction()
-				.replace(mContentFrame.getId(), fragment)
-				.commitAllowingStateLoss();
-		
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-			if (!(fragment instanceof HotelListFragment)) {
-				WindowManager.LayoutParams attrs = getWindow()
-                        .getAttributes();
-                attrs.flags &= (~WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-                getWindow().setAttributes(attrs);
-				
-			} else {
-				mContentFrame.setPadding(mContentFrame.getPaddingLeft(), mContentFrame.getPaddingTop(),
-						mContentFrame.getPaddingRight(), 0);
-				
-				Window w = getWindow();
-                w.setFlags(
-                        WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION,
-                        WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+		try {
+			clearFragmentBackStack();
+			
+			fragmentManager.beginTransaction()
+					.replace(mContentFrame.getId(), fragment)
+					.commitAllowingStateLoss();
+			
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+				if (!(fragment instanceof HotelListFragment)) {
+					WindowManager.LayoutParams attrs = getWindow()
+	                        .getAttributes();
+	                attrs.flags &= (~WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+	                getWindow().setAttributes(attrs);
+					
+				} else {
+					mContentFrame.setPadding(mContentFrame.getPaddingLeft(), mContentFrame.getPaddingTop(),
+							mContentFrame.getPaddingRight(), 0);
+					
+					Window w = getWindow();
+	                w.setFlags(
+	                        WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION,
+	                        WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+				}
 			}
+		} catch (IllegalStateException e) {
+			onError(e);
+			
 		}
 
 	}
@@ -277,7 +276,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 						Base64.encodeToString(md.digest(), Base64.DEFAULT));
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			onError(e);
 		}
 	}
 
@@ -306,8 +305,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 			break;
 		}
 
-		drawerLayout.closeDrawer(drawerList);
 		replaceFragment(getFragment(indexLastFragment));
+		drawerLayout.closeDrawer(drawerList);
 
 	}
 
@@ -384,11 +383,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		return super.onPrepareOptionsMenu(menu);
 	}
 
 	@Override
@@ -552,32 +546,16 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 				.toString(), null, null, null));
 
 		VolleyHttpClient.destroyCookie();
-
+		
+		AQUtility.cleanCacheAsync(getApplicationContext());
+		
 		super.onDestroy();
 	}
-
+	
 	@Override
-	public void onLoadComplete(Fragment fragment, boolean isSucceed) {
-		if (!isSucceed) {
-			replaceFragment(new ErrorFragment());
-			Toast.makeText(this, "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-					Toast.LENGTH_SHORT).show();
-		}
-
-		LoadingDialog.hideLoading();
-
-		if (fragment != null)
-			if (fragment.getView() != null)
-				GlobalFont.apply((ViewGroup) fragment.getView().getRootView());
-
-	}
-
-	@Override
-	public void onErrorResponse(VolleyError error) {
-		if (DEBUG)
-			error.printStackTrace();
-
-		onLoadComplete(null, false);
+	public void onError() {
+		super.onError();
+		replaceFragment(new ErrorFragment());
 	}
 
 }

@@ -66,8 +66,6 @@ public class LoginActivity extends BaseActivity implements Constants,
 
 	private static final String TAG = "LoginActivity";
 
-	private RequestQueue mQueue;
-
 	private EditText etId, etPwd;
 	private Switch cbxAutoLogin;
 	private Button btnLogin;
@@ -85,8 +83,6 @@ public class LoginActivity extends BaseActivity implements Constants,
 		super.onCreate(savedInstanceState);
 		setActionBar("로그인");
 		setContentView(R.layout.activity_login);
-
-		mQueue = VolleyHttpClient.getRequestQueue();
 
 		etId = (EditText) findViewById(R.id.et_login_id);
 		etPwd = (EditText) findViewById(R.id.et_login_pwd);
@@ -188,7 +184,7 @@ public class LoginActivity extends BaseActivity implements Constants,
 					
 				});
 
-		LoadingDialog.showLoading(LoginActivity.this);
+		lockUI();
 		request.executeAsync();
 
 	}
@@ -216,16 +212,14 @@ public class LoginActivity extends BaseActivity implements Constants,
 			loginParams.put("email", etId.getText().toString());
 			loginParams.put("pw", md5);
 
-			LoadingDialog.showLoading(this);
-
+			lockUI();
 			mQueue.add(new DailyHotelJsonRequest(Method.POST,
 					new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 							URL_WEBAPI_USER_LOGIN).toString(), loginParams,
 					this, this));
 
 		} else if (v.getId() == facebookLogin.getId()) {
-			LoadingDialog.showLoading(this);
-
+			lockUI();
 			fbSession = new Session.Builder(this).setApplicationId(appId)
 					.build();
 
@@ -255,20 +249,19 @@ public class LoginActivity extends BaseActivity implements Constants,
 			// 사용자 취소 시
 			if (exception instanceof FacebookOperationCanceledException 
 					|| exception instanceof FacebookAuthorizationException) {
-				LoadingDialog.hideLoading();
-
+				unLockUI();
 		    }
 		}
 	};
 
 	public boolean isBlankFields() {
 		if (etId.getText().toString().trim().length() == 0) {
-			Toast.makeText(this, "아이디를 입력해주세요", Toast.LENGTH_SHORT).show();
+			showToast("아이디를 입력해주세요", Toast.LENGTH_SHORT, true);
 			return false;
 		}
 
 		if (etPwd.getText().toString().trim().length() == 0) {
-			Toast.makeText(this, "비밀번호를 입력해주세요", Toast.LENGTH_SHORT).show();
+			showToast("비밀번호를 입력해주세요", Toast.LENGTH_SHORT, true);
 			return false;
 		}
 
@@ -323,17 +316,6 @@ public class LoginActivity extends BaseActivity implements Constants,
 	}
 
 	@Override
-	public void onErrorResponse(VolleyError error) {
-		if (DEBUG)
-			error.printStackTrace();
-
-		Toast.makeText(this, "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-				Toast.LENGTH_SHORT).show();
-		LoadingDialog.hideLoading();
-
-	}
-
-	@Override
 	public void onResponse(String url, JSONObject response) {
 		if (url.contains(URL_WEBAPI_USER_LOGIN)) {
 			JSONObject obj = response;
@@ -345,13 +327,13 @@ public class LoginActivity extends BaseActivity implements Constants,
 					VolleyHttpClient.createCookie();
 					// if (obj.length() > 1)
 					// etPwd.setText(obj.getString("msg"));
-
-					Toast.makeText(this, "로그인되었습니다", Toast.LENGTH_SHORT).show();
+					
+					showToast("로그인되었습니다", Toast.LENGTH_SHORT, true);
 					storeLoginInfo();
 
 					setResult(RESULT_OK);
 					
-					LoadingDialog.hideLoading();
+					unLockUI();
 					finish();
 
 				} else {
@@ -373,7 +355,7 @@ public class LoginActivity extends BaseActivity implements Constants,
 					// 로그인 실패
 					// 실패 msg 출력
 					else if (obj.length() > 1) {
-						LoadingDialog.hideLoading();
+						unLockUI();
 
 						msg = obj.getString("msg");
 						AlertDialog.Builder alert = new AlertDialog.Builder(
@@ -393,11 +375,7 @@ public class LoginActivity extends BaseActivity implements Constants,
 				}
 
 			} catch (Exception e) {
-				e.printStackTrace();
-
-				LoadingDialog.hideLoading();
-				Toast.makeText(this, "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-						Toast.LENGTH_SHORT).show();
+				onError(e);
 			}
 		} else if (url.contains(URL_WEBAPI_USER_SIGNUP)) {
 			try {
@@ -413,17 +391,14 @@ public class LoginActivity extends BaseActivity implements Constants,
 									URL_WEBAPI_USER_LOGIN).toString(),
 							loginParams, LoginActivity.this, LoginActivity.this));
 				} else {
+					unLockUI();
 					loginParams.clear();
-					Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+					
+					showToast(msg, Toast.LENGTH_SHORT, true);
 				}
 
 			} catch (Exception e) {
-				if (DEBUG)
-					e.printStackTrace();
-
-				LoadingDialog.hideLoading();
-				Toast.makeText(this, "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-						Toast.LENGTH_SHORT).show();
+				onError(e);
 			}
 		}
 	}

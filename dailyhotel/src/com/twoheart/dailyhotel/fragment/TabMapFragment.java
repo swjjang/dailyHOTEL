@@ -26,22 +26,38 @@ import com.twoheart.dailyhotel.widget.HotelGradeView;
 public class TabMapFragment extends BaseFragment implements OnMapClickListener {
 
 	private static final String TAG = "HotelTabMapFragment";
-
-	private TabActivity mHostActivity;
+	private static final String KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL = "hotel_detail";
+	
 	private HotelDetail mHotelDetail;
-
 	private SupportMapFragment mMapFragment;
 	private GoogleMap googleMap;
 	private TextView tvName, tvAddress;
 	private HotelGradeView hvGrade;
+	
+	public static TabMapFragment newInstance(HotelDetail hotelDetail) {
+		
+		TabMapFragment newFragment = new TabMapFragment();
+		Bundle arguments = new Bundle();
+		
+		arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL, hotelDetail);
+		newFragment.setArguments(arguments);
+		newFragment.setTitle("Áöµµ");
+		
+		return newFragment;
+		
+	}
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		mHotelDetail = (HotelDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL);
+		
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-
-		mHostActivity = (TabActivity) getActivity();
-		mHotelDetail = mHostActivity.hotelDetail;
 
 		View view = inflater.inflate(R.layout.fragment_hotel_tab_map,
 				container, false);
@@ -49,9 +65,9 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener {
 		tvName = (TextView) view.findViewById(R.id.tv_hotel_tab_map_name);
 		tvAddress = (TextView) view.findViewById(R.id.tv_hotel_tab_map_address);
 
-		tvName.setText(mHostActivity.hotelDetail.getHotel().getName());
+		tvName.setText(mHotelDetail.getHotel().getName());
 		tvName.setSelected(true);
-		tvAddress.setText(mHostActivity.hotelDetail.getHotel().getAddress());
+		tvAddress.setText(mHotelDetail.getHotel().getAddress());
 		tvAddress.setSelected(true);
 
 		hvGrade = (HotelGradeView) view.findViewById(R.id.hv_hotel_grade);

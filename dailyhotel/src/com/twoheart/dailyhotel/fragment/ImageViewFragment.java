@@ -1,9 +1,7 @@
 package com.twoheart.dailyhotel.fragment;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,8 +14,9 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.ImageDetailActivity;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
-public class ImageViewFragment extends Fragment implements OnClickListener, Constants {
+public class ImageViewFragment extends BaseFragment implements OnClickListener, Constants {
 	
 	private static final String KEY_BUNDLE_ARGUMENTS_HOTELDETAIL = "hoteldetail";
 	private static final String KEY_BUNDLE_ARGUMENTS_IMAGEURL = "image_url";
@@ -28,12 +27,12 @@ public class ImageViewFragment extends Fragment implements OnClickListener, Cons
 	private AQuery mAq;
 	private ImageView mImageView;
 	private ProgressBar mProgressBar;
-	private Activity mHostActivity;
 	
 	public static ImageViewFragment newInstance(String imageUrl, HotelDetail hotelDetail) {
 		
 		ImageViewFragment newFragment = new ImageViewFragment();
 		Bundle arguments = new Bundle();
+		
 		arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_HOTELDETAIL, hotelDetail);
 		arguments.putString(KEY_BUNDLE_ARGUMENTS_IMAGEURL, imageUrl);
 		newFragment.setArguments(arguments);
@@ -45,11 +44,9 @@ public class ImageViewFragment extends Fragment implements OnClickListener, Cons
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		mHostActivity = getActivity();
 //		mImageLoader = ImageLoader.getInstance();
 //		mImageLoader = VolleyImageLoader.getImageLoader();
 //		mImageLoader = new ImageLoader(mHostActivity);
-		mAq = new AQuery(mHostActivity);
 		mHotelDetail = (HotelDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_HOTELDETAIL);
 		mImageUrl = getArguments().getString(KEY_BUNDLE_ARGUMENTS_IMAGEURL);
 	}
@@ -68,6 +65,7 @@ public class ImageViewFragment extends Fragment implements OnClickListener, Cons
 //		mImageLoader.displayImage(mImageUrl, mImageView, new ProgressImageLoading(mProgressBar));
 //		mImageView.setImageUrl(mImageUrl, mImageLoader, mProgressBar);
 //		mImageLoader.DisplayImage(mImageUrl, mImageView, mProgressBar);
+		mAq = new AQuery(mHostActivity, view);
 		mAq.id(mImageView).progress(mProgressBar).image(mImageUrl, true, true, 0, R.drawable.img_placeholder, null,
         		AQuery.FADE_IN_NETWORK);
 		

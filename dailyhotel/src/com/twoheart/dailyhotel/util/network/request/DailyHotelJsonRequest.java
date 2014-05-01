@@ -14,6 +14,7 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.twoheart.dailyhotel.util.Log;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.util.ui.OnLoadListener;
 
 public class DailyHotelJsonRequest extends DailyHotelRequest<JSONObject> {
 

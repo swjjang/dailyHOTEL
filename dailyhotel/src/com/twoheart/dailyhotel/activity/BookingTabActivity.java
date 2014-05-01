@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.activity;
 
 import android.os.Bundle;
-import android.view.MenuItem;
 
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
@@ -11,7 +10,6 @@ import com.twoheart.dailyhotel.fragment.TabMapFragment;
 import com.twoheart.dailyhotel.util.Log;
 import com.twoheart.dailyhotel.util.TabActivity;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
-import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 import com.twoheart.dailyhotel.widget.HotelViewPager;
 import com.viewpagerindicator.TabPageIndicator;
 
@@ -41,19 +39,14 @@ public class BookingTabActivity extends TabActivity {
 
 		Log.d(TAG, url);
 		
-		LoadingDialog.showLoading(this);
+		lockUI();
 		// 호텔 정보를 가져온다.
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null, this, this));
 	}
 
 	@Override
 	protected void loadFragments() {
-		
-		// TODO: BaseFragment 만들어서 통합적으로 관리할 것.
-		mFragments.add(new BookingTabBookingFragment());
-		mFragments.add(new TabInfoFragment());
-		mFragments.add(new TabMapFragment());
-
+		mFragments.add(BookingTabBookingFragment.newInstance(hotelDetail));
 		super.loadFragments();
 
 	}

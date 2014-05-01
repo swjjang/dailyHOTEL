@@ -25,7 +25,7 @@ import com.twoheart.dailyhotel.widget.HotelViewPager;
 import com.viewpagerindicator.TabPageIndicator;
 
 public class HotelTabActivity extends TabActivity implements OnClickListener,
-		DailyHotelJsonResponseListener, ErrorListener,
+		DailyHotelJsonResponseListener,
 		DailyHotelStringResponseListener {
 
 	private static final String TAG = "HotelTabActivity";
@@ -64,7 +64,7 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 
 		Log.d(TAG, url);
 
-		LoadingDialog.showLoading(this);
+		lockUI();
 		// 호텔 정보를 가져온다.
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null, this, this));
 	}
@@ -73,8 +73,7 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 	public void onClick(View v) {
 		if (v.getId() == btnBooking.getId()) {
 
-			LoadingDialog.showLoading(this);
-
+			lockUI();
 			mQueue.add(new DailyHotelStringRequest(Method.GET,
 					new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 							URL_WEBAPI_USER_ALIVE).toString(), null, this, this));
@@ -107,10 +106,7 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 	protected void loadFragments() {
 
 		// TODO: BaseFragment 만들어서 통합적으로 관리할 것.
-		mFragments.add(new HotelTabBookingFragment());
-		mFragments.add(new TabInfoFragment());
-		mFragments.add(new TabMapFragment());
-
+		mFragments.add(HotelTabBookingFragment.newInstance(hotelDetail));
 		super.loadFragments();
 
 	}
@@ -118,7 +114,7 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 	@Override
 	public void onResponse(String url, String response) {
 		if (url.contains(URL_WEBAPI_USER_ALIVE)) {
-			LoadingDialog.hideLoading();
+			unLockUI();
 			
 			String result = response.trim();
 			if (result.equals("alive")) { // session alive
@@ -131,15 +127,14 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 				loadLoginProcess();
 
 			} else {
-				Toast.makeText(this, "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-						Toast.LENGTH_SHORT).show();
+				onError();
 			}
 
 		}
 	}
 
 	private void loadLoginProcess() {
-		Toast.makeText(this, " 로그인이 필요합니다", Toast.LENGTH_LONG).show();
+		showToast("로그인이 필요합니다", Toast.LENGTH_LONG, false);
 
 		startActivityForResult(new Intent(this, LoginActivity.class),
 				CODE_REQUEST_ACTIVITY_LOGIN);

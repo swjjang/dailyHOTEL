@@ -4,14 +4,6 @@
         Base application theme for API 11+. This theme completely replaces
         AppBaseTheme from res/values/styles.xml on API 11+ devices.    -->
     <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light">
-        <item name="android:editTextStyle">@style/EditTextDH_Theme</item>
-        <item name="android:checkboxStyle">@style/CheckBoxDH_Theme</item>
-        <item name="android:spinnerStyle">@style/SpinnerDH_Theme</item>
-        <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItemDH_Theme</item>
-        <item name="android:progressBarStyleHorizontal">@style/ProgressBarDH_Theme</item>
-        <item name="android:listViewStyle">@style/ListViewDH_Theme</item>
-        <item name="android:listViewWhiteStyle">@style/ListViewDH_Theme.White</item>
-        <item name="android:spinnerItemStyle">@style/SpinnerItemDH_Theme</item>
         <item name="android:actionMenuTextColor">@color/dh_theme_color</item>
         <item name="android:actionMenuTextAppearance">@style/actionbarMenuTextAppearance</item>
         <item name="android:actionDropDownStyle">@style/DropDownListViewDH_Theme.ActionBar</item>
@@ -19,6 +11,12 @@
         <item name="actionBarItemBackground">@drawable/item_background_holo_light</item>
         <item name="vpiTabPageIndicatorStyle">@style/TabDH_Theme</item>
         <item name="switchStyle">@style/switch_light</item>
+        <item name="android:ratingBarStyle">@style/RatingBarDH</item>
     </style>
+    
+    <style name="RatingBarDH" parent="android:Widget.Holo.Light.RatingBar">
+      <item name="android:progressDrawable">@drawable/dh_ratingbar_full_holo_light</item>
+      <item name="android:indeterminateDrawable">@drawable/dh_ratingbar_full_holo_light</item>
+  	</style>
 
 </resources>

@@ -24,9 +24,21 @@ public class ZoomMapActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+		supportRequestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
 		setActionBar("지도 확대");
-//		actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#00FFFFFF")));
+		actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#CCFFFFFF")));
+		
+//		View view = Util.getActionBarView(this);
+//        view.setDrawingCacheEnabled(true);
+//        view.measure(MeasureSpec.makeMeasureSpec(view.getLayoutParams().width, MeasureSpec.EXACTLY), 
+//                MeasureSpec.makeMeasureSpec(view.getLayoutParams().height, MeasureSpec.EXACTLY));
+//        view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight()); 
+//        view.buildDrawingCache();
+//        Bitmap actionBarBackground = view.getDrawingCache();
+//        
+//        actionBar.setBackgroundDrawable(new BitmapDrawable(getResources(), Blur.fastblur(this, actionBarBackground, 10)));
+//        view.setDrawingCacheEnabled(false);
+		
 		setContentView(R.layout.activity_zoom_map);
 		
 		Bundle bundle = getIntent().getExtras();

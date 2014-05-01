@@ -90,21 +90,29 @@
                         android:textColor="#969696"
                         android:textSize="12.5dp" />
 
-                    <ImageView
+                    <LinearLayout
+                        android:id="@+id/ll_profile_edit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_toLeftOf="@+id/tv_profile_edit"
-                        android:adjustViewBounds="true"
-                        android:src="@drawable/img_ic_edit" />
+                        android:layout_alignParentRight="true" >
+	                    <ImageView
+	                        android:layout_width="wrap_content"
+	                        android:layout_height="wrap_content"
+	                        android:layout_toLeftOf="@+id/tv_profile_edit"
+	                        android:adjustViewBounds="true"
+	                        android:layout_gravity="center_vertical"
+	                        android:src="@drawable/img_ic_edit" />
+	
+	                    <TextView
+	                        android:id="@+id/tv_profile_edit"
+	                        android:layout_width="wrap_content"
+	                        android:layout_height="wrap_content"
+	                        android:text="수정"
+	                       	android:layout_gravity="center_vertical"
+	                        android:textColor="@color/dh_theme_color"
+	                        android:textSize="12.5dp" />
+                    </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/tv_profile_edit"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:text="수정"
-                        android:textColor="@color/dh_theme_color"
-                        android:textSize="12.5dp" />
                 </RelativeLayout>
 
             </LinearLayout>
@@ -205,6 +213,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="0.7"
                                 android:gravity="right|center_vertical"
+                                android:hint="이름을 입력해주세요"
                                 android:inputType="text"
                                 android:maxLength="20"
                                 android:singleLine="true"
@@ -232,6 +241,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="0.7"
                                 android:gravity="right|center_vertical"
+                                android:hint="연락처를 입력해주세요"
                                 android:inputType="phone"
                                 android:maxLength="20"
                                 android:singleLine="true"

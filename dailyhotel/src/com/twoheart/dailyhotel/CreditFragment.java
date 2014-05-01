@@ -38,7 +38,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request.Method;
-import com.android.volley.RequestQueue;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.twoheart.dailyhotel.activity.LoginActivity;
@@ -54,16 +53,12 @@ import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
-import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
 public class CreditFragment extends BaseFragment implements Constants,
 		OnClickListener, DailyHotelJsonResponseListener,
 		DailyHotelStringResponseListener {
 
 	private static final String TAG = "CreditFragment";
-
-	private MainActivity mHostActivity;
-	private RequestQueue mQueue;
 
 	private RelativeLayout rlCreditNotLoggedIn;
 	private LinearLayout llCreditLoggedIn, btnInvite;
@@ -78,8 +73,6 @@ public class CreditFragment extends BaseFragment implements Constants,
 			Bundle savedInstanceState) {
 
 		View view = inflater.inflate(R.layout.fragment_credit, container, false);
-		mHostActivity = (MainActivity) getActivity();
-		mQueue = VolleyHttpClient.getRequestQueue();
 
 		rlCreditNotLoggedIn = (RelativeLayout) view
 				.findViewById(R.id.rl_credit_not_logged_in);
@@ -117,8 +110,7 @@ public class CreditFragment extends BaseFragment implements Constants,
 		// ActionBar Setting
 		mHostActivity.setActionBar("적립금");
 
-		LoadingDialog.showLoading(mHostActivity);
-
+		lockUI();
 		mQueue.add(new DailyHotelStringRequest(Method.GET,
 				new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 						URL_WEBAPI_USER_ALIVE).toString(), null,
@@ -137,7 +129,7 @@ public class CreditFragment extends BaseFragment implements Constants,
 			}
 
 		} else if (v.getId() == tvCredit.getId()) {
-			mHostActivity.addFragment(CreditListFragment.newInstance(mCreditList));
+			((MainActivity) mHostActivity).addFragment(CreditListFragment.newInstance(mCreditList));
 
 		} else if (v.getId() == btnLogin.getId()) {
 			Intent i = new Intent(mHostActivity, LoginActivity.class);
@@ -279,7 +271,7 @@ public class CreditFragment extends BaseFragment implements Constants,
 					ed.putString(KEY_PREFERENCE_USER_PWD, null);
 					ed.commit();
 
-					mListener.onLoadComplete(this, true);
+					unLockUI();
 					loadLoginProcess(false);
 
 				} else {
@@ -293,10 +285,7 @@ public class CreditFragment extends BaseFragment implements Constants,
 
 				}
 			} catch (JSONException e) {
-				if (DEBUG)
-					e.printStackTrace();
-
-				mListener.onLoadComplete(this, false);
+				onError(e);
 			}
 
 		} else if (url.contains(URL_WEBAPI_USER_INFO)) {
@@ -312,10 +301,7 @@ public class CreditFragment extends BaseFragment implements Constants,
 						this, mHostActivity));
 
 			} catch (Exception e) {
-				if (DEBUG)
-					e.printStackTrace();
-
-				mListener.onLoadComplete(this, false);
+				onError(e);
 			}
 
 		} else if (url.contains(URL_WEBAPI_USER_BONUS_ALL)) {
@@ -334,13 +320,10 @@ public class CreditFragment extends BaseFragment implements Constants,
 				}
 
 				loadLoginProcess(true);
-				mListener.onLoadComplete(this, true);
+				unLockUI();
 
 			} catch (Exception e) {
-				if (DEBUG)
-					e.printStackTrace();
-
-				mListener.onLoadComplete(this, false);
+				onError(e);
 			}
 		}
 
@@ -385,17 +368,16 @@ public class CreditFragment extends BaseFragment implements Constants,
 							loginParams, this,
 							mHostActivity));
 				} else {
-					mListener.onLoadComplete(this, true);
+					unLockUI();
 					loadLoginProcess(false);
 				}
 
 			} else {
-				mListener.onLoadComplete(this, false);
+				onError();
 			}
 
 		} else if (url.contains(URL_WEBAPI_RESERVE_SAVED_MONEY)) {
 			try {
-
 				DecimalFormat comma = new DecimalFormat("###,##0");
 				String str = comma.format(Integer.parseInt(response.trim()));
 				tvBonus.setText(new StringBuilder(str).append("원"));
@@ -407,10 +389,7 @@ public class CreditFragment extends BaseFragment implements Constants,
 						this, mHostActivity));
 
 			} catch (Exception e) {
-				if (DEBUG)
-					e.printStackTrace();
-
-				mListener.onLoadComplete(this, false);
+				onError(e);
 			}
 		}
 	}

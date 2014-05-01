@@ -22,15 +22,13 @@ import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.preference.PreferenceManager;
 
+import com.androidquery.callback.BitmapAjaxCallback;
 import com.google.analytics.tracking.android.ExceptionReporter;
 import com.google.analytics.tracking.android.GAServiceManager;
 import com.google.analytics.tracking.android.GoogleAnalytics;
 import com.google.analytics.tracking.android.Logger.LogLevel;
 import com.google.analytics.tracking.android.Tracker;
-import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.memory.impl.FIFOLimitedMemoryCache;
-import com.nostra13.universalimageloader.cache.memory.impl.LRULimitedMemoryCache;
-import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -180,4 +178,10 @@ public class DailyHotel extends Application {
 	public static Typeface getBoldTypeface() {
 		return mBoldTypeface;
 	}
+	
+	@Override
+    public void onLowMemory(){
+		super.onLowMemory();
+        BitmapAjaxCallback.clearCache();
+    }
 }

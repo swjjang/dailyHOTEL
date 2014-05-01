@@ -5,6 +5,18 @@
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.    -->
     <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light">
+        <item name="vpiTabPageIndicatorStyle">@style/TabDH_Theme</item>
+        <item name="switchStyle">@style/switch_light</item>
+        <item name="actionMenuTextColor">@color/dh_theme_color</item>
+        <item name="actionMenuTextAppearance">@style/actionbarMenuTextAppearance</item>
+        <item name="actionBarItemBackground">@drawable/item_background_holo_light</item>
+        <item name="actionDropDownStyle">@style/DropDownListViewDH_Theme.ActionBar</item>
+        <item name="dropDownListViewStyle">@style/DropDownDH_Theme.ActionBar</item>
+        <item name="android:ratingBarStyle">@style/RatingBarDH</item>
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
         <item name="android:editTextStyle">@style/EditTextDH_Theme</item>
         <item name="android:checkboxStyle">@style/CheckBoxDH_Theme</item>
         <item name="android:spinnerStyle">@style/SpinnerDH_Theme</item>
@@ -13,17 +25,7 @@
         <item name="android:listViewStyle">@style/ListViewDH_Theme</item>
         <item name="android:listViewWhiteStyle">@style/ListViewDH_Theme.White</item>
         <item name="android:spinnerItemStyle">@style/SpinnerItemDH_Theme</item>
-        <item name="vpiTabPageIndicatorStyle">@style/TabDH_Theme</item>
-        <item name="switchStyle">@style/switch_light</item>
-        <item name="actionMenuTextColor">@color/dh_theme_color</item>
-        <item name="actionMenuTextAppearance">@style/actionbarMenuTextAppearance</item>
-        <item name="actionBarItemBackground">@drawable/item_background_holo_light</item>
-        <item name="actionDropDownStyle">@style/DropDownListViewDH_Theme.ActionBar</item>
-        <item name="dropDownListViewStyle">@style/DropDownDH_Theme.ActionBar</item>
-    </style>
-
-    <!-- Application theme. -->
-    <style name="AppTheme" parent="AppBaseTheme">
+        
         <item name="android:windowBackground">@color/activity_background</item>
         <item name="ptrHeaderBackground">@android:color/white</item>
         <item name="ptrProgressBarColor">@color/dh_theme_color</item>
@@ -124,5 +126,10 @@
         <item name="textColorLink">?android:attr/textColorLink</item>
         <item name="textSize">16sp</item>
     </style>
+    
+    <style name="RatingBarDH" parent="android:Widget.RatingBar">
+      <item name="android:progressDrawable">@drawable/dh_ratingbar_full_holo_light</item>
+      <item name="android:indeterminateDrawable">@drawable/dh_ratingbar_full_holo_light</item>
+  	</style>
     
 </resources>

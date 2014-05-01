@@ -16,6 +16,7 @@
 
 package com.twoheart.dailyhotel.widget;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.graphics.Canvas;
@@ -24,6 +25,7 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.GradientDrawable.Orientation;
+import android.os.Build;
 import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -36,7 +38,6 @@ import android.widget.HeaderViewListAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SectionIndexer;
-
 import com.twoheart.dailyhotel.BuildConfig;
 
 /**
@@ -275,6 +276,7 @@ public class PinnedSectionListView extends ListView {
 	}
 
 	/** Makes sure we have an actual pinned shadow for given position. */
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	void ensureShadowForPosition(int sectionPosition, int firstVisibleItem,
 			int visibleItemCount) {
 		if (visibleItemCount < 2) { // no need for creating shadow at all, we
@@ -296,9 +298,9 @@ public class PinnedSectionListView extends ListView {
 		}
 		
 		if (sectionPosition == firstVisibleItem)
-			mPinnedSection.view.setBackgroundColor(Color.BLACK);
+			mPinnedSection.view.getBackground().setAlpha(255);
 		else
-			mPinnedSection.view.setBackgroundColor(Color.parseColor("#cc000000"));
+			mPinnedSection.view.getBackground().setAlpha(190);
 
 		// align shadow according to next section position, if needed
 		int nextPosition = sectionPosition + 1;

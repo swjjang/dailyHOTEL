@@ -16,6 +16,7 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonArrayResponseListener;
+import com.twoheart.dailyhotel.util.ui.OnLoadListener;
 
 public class DailyHotelJsonArrayRequest extends DailyHotelRequest<JSONArray> {
 

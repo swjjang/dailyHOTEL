@@ -16,7 +16,7 @@
 	    android:id="@+id/iv_new_event"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-	    android:layout_marginLeft="70dp"
+	    android:layout_marginLeft="65dp"
 	    android:layout_gravity="center_vertical"
 	    android:adjustViewBounds="true"
 	    android:visibility="gone"

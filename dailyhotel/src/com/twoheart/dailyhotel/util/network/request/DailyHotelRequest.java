@@ -8,15 +8,18 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
+import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
+import com.twoheart.dailyhotel.util.ui.OnLoadListener;
 
 public abstract class DailyHotelRequest<T> extends Request<T> {
 
 	private Map<String, String> mParameters;
 	
-	public DailyHotelRequest(int method, String url, Map<String, String> parameters, ErrorListener listener) {
-		this(method, url, listener);
-		this.mParameters = parameters;
+	public DailyHotelRequest(int method, String url, Map<String, String> parameters,
+								ErrorListener errorListener) {
+		this(method, url, errorListener);
+		mParameters = parameters;
 		
 	}
 
@@ -25,6 +28,10 @@ public abstract class DailyHotelRequest<T> extends Request<T> {
 		setRetryPolicy(new DefaultRetryPolicy(VolleyHttpClient.TIME_OUT,
 				VolleyHttpClient.MAX_RETRY,
 				DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+		setTag(listener);
+		
+		if (!VolleyHttpClient.isAvailableNetwork())
+			cancel();
 	}
 
 	@Override
@@ -32,7 +39,7 @@ public abstract class DailyHotelRequest<T> extends Request<T> {
 
 	@Override
 	protected abstract void deliverResponse(T response);
-
+	
 	@Override
 	protected Map<String, String> getParams() {
 		return mParameters;

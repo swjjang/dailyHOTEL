@@ -18,45 +18,63 @@ package com.twoheart.dailyhotel.util.ui;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.webkit.CookieSyncManager;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.VolleyError;
+import com.twoheart.dailyhotel.ErrorFragment;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.GlobalFont;
+import com.twoheart.dailyhotel.util.Log;
+import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
 
-public class BaseActivity extends ActionBarActivity implements Constants {
+public class BaseActivity extends ActionBarActivity implements Constants, OnLoadListener, ErrorListener {
 
 	private final static String TAG = "BaseActivity";
 
 	public ActionBar actionBar;
 	public SharedPreferences sharedPreference;
-	public static CookieSyncManager cookieSyncManager;
+	
+	protected RequestQueue mQueue;
+	protected Toast mToast;
+	
+	private LoadingDialog mLockUI;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		sharedPreference = getSharedPreferences(NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
-		
-		try {
-			cookieSyncManager = CookieSyncManager.getInstance();
-		} catch (Exception e) {
-			if (DEBUG)
-				e.printStackTrace();
-			
-			cookieSyncManager = CookieSyncManager.createInstance(getApplicationContext());
-			
-		}
+		mQueue = VolleyHttpClient.getRequestQueue();
+		mLockUI = new LoadingDialog(this);
 		
 	}
 	
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		
+		if (mQueue != null)
+			mQueue.cancelAll(new RequestQueue.RequestFilter() {
+			    @Override
+		        public boolean apply(Request<?> request) {
+		            return true;
+		        }
+		    });
+	}
+
 	@Override
 	public void setContentView(int layoutResID) {
 		super.setContentView(layoutResID);
@@ -65,7 +83,6 @@ public class BaseActivity extends ActionBarActivity implements Constants {
 	}
 	
 	/**
-	 * setActionBar(String title)
 	 * 액션바 설정 메소드
 	 * 
 	 * @param title
@@ -92,7 +109,6 @@ public class BaseActivity extends ActionBarActivity implements Constants {
 	}
 	
 	/**
-	 * setActionBarHide()
 	 * 액션바를 숨겨주는 메소드
 	 * 
 	 */
@@ -112,8 +128,18 @@ public class BaseActivity extends ActionBarActivity implements Constants {
 	
 	@Override
 	protected void onPause() {
-		if (cookieSyncManager != null)
-			cookieSyncManager.stopSync();
+		
+		if (mToast != null)
+			mToast.cancel();
+		
+		try {
+			CookieSyncManager.getInstance().stopSync();
+			
+		} catch (Exception e) {
+			CookieSyncManager.createInstance(getApplicationContext());
+			CookieSyncManager.getInstance().stopSync();
+			
+		}
 		
 		super.onPause();
 		
@@ -123,21 +149,35 @@ public class BaseActivity extends ActionBarActivity implements Constants {
 	protected void onResume() {
 		super.onResume();
 		
-		if (cookieSyncManager != null)
-			cookieSyncManager.startSync();
-		else {
+		try {
+			CookieSyncManager.getInstance().startSync();
 			
-			try {
-				cookieSyncManager = CookieSyncManager.getInstance();
-			} catch (Exception e) {
-				if (DEBUG)
-					e.printStackTrace();
-				
-				cookieSyncManager = CookieSyncManager.createInstance(getApplicationContext());
-				
-			}
+		} catch (Exception e) {
+			CookieSyncManager.createInstance(getApplicationContext());
+			CookieSyncManager.getInstance().startSync();
 			
 		}
+		
+	}
+	
+	@Override
+	protected void onStop() {
+		if (mQueue != null)
+			mQueue.cancelAll(new RequestQueue.RequestFilter() {
+			    @Override
+		        public boolean apply(Request<?> request) {
+			    		DailyHotelRequest<?> dailyHotelRequest = (DailyHotelRequest<?>) request;
+			    		
+			    		if (dailyHotelRequest != null && dailyHotelRequest.getTag() != null)
+			    			if (dailyHotelRequest.getTag().equals(this)) {
+			    				return true;
+			    			}
+			    				
+		            return false;
+		        }
+		    });
+		
+		super.onStop();
 	}
 	
 	@Override
@@ -150,4 +190,53 @@ public class BaseActivity extends ActionBarActivity implements Constants {
 		return super.onOptionsItemSelected(item);
 	}
 
+	@Override
+	public void lockUI() {
+		mLockUI.show();
+	}
+
+	@Override
+	public void unLockUI() {
+		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
+		mLockUI.hide();
+		
+	}
+
+	@Override
+	protected void onDestroy() {
+		mLockUI.hide();
+		super.onDestroy();
+	}
+
+	@Override
+	public void onErrorResponse(VolleyError error) {
+		if (DEBUG) {
+			error.printStackTrace();
+		}
+		
+		onError();
+	}
+	
+	protected void onError(Exception error) {
+		if (DEBUG) {
+			error.printStackTrace();
+		}
+		
+		onError();
+	}
+	
+	protected void onError() {
+		showToast("인터넷 연결 상태가 불안정합니다.\n인터넷 연결을 확인하신 뒤 다시 시도해주세요.", Toast.LENGTH_LONG, false);
+	}
+	
+	protected void showToast(String message, int length, boolean isAttachToActivity) {
+		if (isAttachToActivity) {
+			mToast = Toast.makeText(getApplicationContext(), message, length);
+			mToast.show();
+			
+		} else {
+			Toast.makeText(getApplicationContext(), message, length).show();
+			
+		}
+	}
 }

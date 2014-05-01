@@ -21,10 +21,7 @@ import org.json.JSONObject;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,18 +31,11 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.android.volley.Request.Method;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.VolleyError;
-import com.facebook.widget.WebDialog.OnCompleteListener;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
-import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BookingTabActivity;
-import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.activity.SignupActivity;
 import com.twoheart.dailyhotel.adapter.BookingListAdapter;
 import com.twoheart.dailyhotel.model.Booking;
@@ -64,9 +54,6 @@ public class BookingListFragment extends BaseFragment implements Constants,
 
 	private static final String TAG = "BookingListFragment";
 
-	private MainActivity mHostActivity;
-	private RequestQueue mQueue;
-
 	private ArrayList<Booking> mItems;
 	private BookingListAdapter mAdapter;
 
@@ -77,10 +64,7 @@ public class BookingListFragment extends BaseFragment implements Constants,
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-
 		View view = inflater.inflate(R.layout.fragment_booking_list, container, false);
-		mHostActivity = (MainActivity) getActivity();
-		mQueue = VolleyHttpClient.getRequestQueue();
 
 		mListView = (ListView) view.findViewById(R.id.listview_booking);
 		mEmptyLayout = (RelativeLayout) view
@@ -104,8 +88,7 @@ public class BookingListFragment extends BaseFragment implements Constants,
 		super.onResume();
 		mHostActivity.setActionBar("예약확인");
 
-		LoadingDialog.showLoading(mHostActivity);
-
+		lockUI();
 		mQueue.add(new DailyHotelStringRequest(Method.GET,
 				new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 						URL_WEBAPI_USER_ALIVE).toString(), null,
@@ -176,8 +159,7 @@ public class BookingListFragment extends BaseFragment implements Constants,
 					mListView.setVisibility(View.GONE);
 					mEmptyLayout.setVisibility(View.VISIBLE);
 				} else {
-
-					mListener.onLoadComplete(this, true);
+					unLockUI();
 
 					mListView.setVisibility(View.GONE);
 					mEmptyLayout.setVisibility(View.VISIBLE);
@@ -188,7 +170,8 @@ public class BookingListFragment extends BaseFragment implements Constants,
 				mListView.setVisibility(View.GONE);
 				mEmptyLayout.setVisibility(View.VISIBLE);
 
-				mListener.onLoadComplete(this, false);
+				onError();
+				unLockUI();
 			}
 
 		} else if (url.contains(URL_WEBAPI_RESERVE_MINE)) {
@@ -213,20 +196,18 @@ public class BookingListFragment extends BaseFragment implements Constants,
 					mListView.setOnItemClickListener(this);
 					mListView.setAdapter(mAdapter);
 					
-					mListener.onLoadComplete(this, true);
+					unLockUI();
 
 				} catch (Exception e) {
 					mListView.setVisibility(View.GONE);
 					mEmptyLayout.setVisibility(View.VISIBLE);
 					btnSignUp.setVisibility(View.INVISIBLE);
 
-					if (DEBUG)
-						e.printStackTrace();
-
-					mListener.onLoadComplete(this, false);
+					onError(e);
+					unLockUI();
 				}
 			} else {
-				mListener.onLoadComplete(this, true);
+				unLockUI();
 
 				mListView.setVisibility(View.GONE);
 				mEmptyLayout.setVisibility(View.VISIBLE);
@@ -254,12 +235,9 @@ public class BookingListFragment extends BaseFragment implements Constants,
 					VolleyHttpClient.createCookie();
 				}
 			} catch (JSONException e) {
-				if (DEBUG)
-					e.printStackTrace();
-
-				mListener.onLoadComplete(this, false);
+				onError(e);
 			} finally {
-				mListener.onLoadComplete(this, true);
+				unLockUI();
 				
 				mListView.setVisibility(View.GONE);
 				mEmptyLayout.setVisibility(View.VISIBLE);

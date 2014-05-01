@@ -16,10 +16,16 @@
 
 package uk.co.senab.actionbarpulltorefresh.library;
 
+import java.util.WeakHashMap;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.HeaderViewListener;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.ViewDelegate;
+import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.os.Build;
@@ -32,16 +38,12 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
-import java.util.WeakHashMap;
-
-import uk.co.senab.actionbarpulltorefresh.library.listeners.HeaderViewListener;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
-import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.ViewDelegate;
-
 public class PullToRefreshAttacher {
 
     private static final boolean DEBUG = false;
     private static final String LOG_TAG = "PullToRefreshAttacher";
+    
+    private static final String STATUS_BAR_HEIGHT_RES_NAME = "status_bar_height";
 
     /* Member Variables */
 
@@ -72,7 +74,8 @@ public class PullToRefreshAttacher {
     private final int[] mViewLocationResult = new int[2];
     private final Rect mRect = new Rect();
 
-    protected PullToRefreshAttacher(Activity activity, Options options) {
+    @TargetApi(Build.VERSION_CODES.CUPCAKE)
+	protected PullToRefreshAttacher(Activity activity, Options options) {
         if (activity == null) {
             throw new IllegalArgumentException("activity cannot be null");
         }
@@ -480,7 +483,8 @@ public class PullToRefreshAttacher {
 
     protected EnvironmentDelegate createDefaultEnvironmentDelegate() {
         return new EnvironmentDelegate() {
-            @Override
+            @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+			@Override
             public Context getContextForInflater(Activity activity) {
                 Context context = null;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
@@ -588,11 +592,24 @@ public class PullToRefreshAttacher {
         }
         return mIsDestroyed;
     }
+    
+    private int getInternalDimensionSize(Resources res, String key) {
+        int result = 0;
+        int resourceId = res.getIdentifier(key, "dimen", "android");
+        if (resourceId > 0) {
+            result = res.getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
 
-    protected void addHeaderViewToActivity(View headerView) {
+    @TargetApi(Build.VERSION_CODES.CUPCAKE)
+	protected void addHeaderViewToActivity(View headerView) {
         // Get the Display Rect of the Decor View
         mActivity.getWindow().getDecorView().getWindowVisibleDisplayFrame(mRect);
-
+        
+        Resources res = mActivity.getResources();
+        int statusBarHeight = getInternalDimensionSize(res, STATUS_BAR_HEIGHT_RES_NAME);
+        
         // Honour the requested layout params
         int width = WindowManager.LayoutParams.MATCH_PARENT;
         int height = WindowManager.LayoutParams.WRAP_CONTENT;
@@ -608,7 +625,7 @@ public class PullToRefreshAttacher {
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 PixelFormat.TRANSLUCENT);
         wlp.x = 0;
-        wlp.y = mRect.top;
+        wlp.y = statusBarHeight;
         wlp.gravity = Gravity.TOP;
 
         // Workaround for Issue #182
@@ -616,10 +633,14 @@ public class PullToRefreshAttacher {
         mActivity.getWindowManager().addView(headerView, wlp);
     }
 
-    protected void updateHeaderViewPosition(View headerView) {
+    @TargetApi(Build.VERSION_CODES.CUPCAKE)
+	protected void updateHeaderViewPosition(View headerView) {
         // Refresh the Display Rect of the Decor View
         mActivity.getWindow().getDecorView().getWindowVisibleDisplayFrame(mRect);
-
+        
+        Resources res = mActivity.getResources();
+        int statusBarHeight = getInternalDimensionSize(res, STATUS_BAR_HEIGHT_RES_NAME);
+        
         WindowManager.LayoutParams wlp = null;
         if (headerView.getLayoutParams() instanceof WindowManager.LayoutParams) {
             wlp = (WindowManager.LayoutParams) headerView.getLayoutParams();
@@ -628,7 +649,7 @@ public class PullToRefreshAttacher {
         }
 
         if (wlp != null && wlp.y != mRect.top) {
-            wlp.y = mRect.top;
+            wlp.y = statusBarHeight;
             mActivity.getWindowManager().updateViewLayout(headerView, wlp);
         }
     }

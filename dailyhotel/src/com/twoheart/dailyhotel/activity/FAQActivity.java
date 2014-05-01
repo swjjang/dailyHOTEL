@@ -28,11 +28,10 @@ import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
 public class FAQActivity extends BaseActivity implements
-		DailyHotelJsonResponseListener, ErrorListener {
+		DailyHotelJsonResponseListener {
 
 	private static final String TAG = "HelpActivity";
 
-	private RequestQueue mQueue;
 	private ArrayList<Board> mList;
 	private ExpandableListView mListView;
 
@@ -41,7 +40,6 @@ public class FAQActivity extends BaseActivity implements
 		super.onCreate(savedInstanceState);
 		setActionBar("자주 묻는 질문");
 		setContentView(R.layout.activity_board);
-		mQueue = VolleyHttpClient.getRequestQueue();
 
 		mListView = (ExpandableListView) findViewById(R.id.expandable_list_board);
 
@@ -50,9 +48,8 @@ public class FAQActivity extends BaseActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
-		LoadingDialog.showLoading(this);
 
+		lockUI();
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(
 				URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_BOARD_FAQ).toString(),
 				null, this, this));
@@ -85,27 +82,10 @@ public class FAQActivity extends BaseActivity implements
 				
 				mListView.setAdapter(new BoardListAdapter(this, mList));
 			} catch (Exception e) {
-				if (DEBUG)
-					e.printStackTrace();
-				
-				Toast.makeText(this,
-						"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-						Toast.LENGTH_SHORT).show();
+				onError(e);
 			} finally {
-				LoadingDialog.hideLoading();
+				unLockUI();
 			}
 		}
 	}
-
-	@Override
-	public void onErrorResponse(VolleyError error) {
-		if (DEBUG)
-			error.printStackTrace();
-
-		Toast.makeText(this, "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-				Toast.LENGTH_SHORT).show();
-		LoadingDialog.hideLoading();
-
-	};
-
 }

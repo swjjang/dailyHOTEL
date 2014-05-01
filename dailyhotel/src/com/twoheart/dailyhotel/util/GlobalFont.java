@@ -34,7 +34,7 @@ public class GlobalFont {
 				
 				if (fontTextView.getTypeface() != null)
 					if (fontTextView.getTypeface().equals(DailyHotel.getBoldTypeface()))
-					continue;
+						continue;
 				
 				fontTextView.setTypeface(DailyHotel.getTypeface());
 				fontTextView.invalidate();

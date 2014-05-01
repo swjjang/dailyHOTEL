@@ -24,7 +24,6 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.util.GlobalFont;
-import com.twoheart.dailyhotel.util.lazy_image_loading.ImageLoader;
 import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
 import com.twoheart.dailyhotel.widget.HotelGradeView;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView.PinnedSectionListAdapter;
@@ -117,6 +116,8 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 				
 			}
 			
+//			HotelGradeView grade = (HotelGradeView) convertView.findViewById(R.id.hv_hotel_grade);
+			
 			DecimalFormat comma = new DecimalFormat("###,##0");
 			String strPrice = comma
 					.format(Integer.parseInt(element.getPrice()));
@@ -191,7 +192,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 //		        .into(viewHolder.img);
 				
 				AQuery aq = new AQuery(convertView);
-                aq.id(viewHolder.img).image(element.getImage(), true, true, 0, R.drawable.img_placeholder, null,
+				aq.id(viewHolder.img).image(element.getImage(), true, true, viewHolder.img.getWidth(), R.drawable.img_placeholder, null,
                 		AQuery.FADE_IN_NETWORK);
 			}
 			

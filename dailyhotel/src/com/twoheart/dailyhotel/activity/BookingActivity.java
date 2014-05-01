@@ -29,7 +29,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.google.analytics.tracking.android.Fields;
@@ -52,12 +51,10 @@ import com.twoheart.dailyhotel.widget.Switch;
 
 @SuppressLint({ "NewApi", "ResourceAsColor" })
 public class BookingActivity extends BaseActivity implements
-		DailyHotelStringResponseListener, DailyHotelJsonResponseListener,
-		ErrorListener, OnClickListener, OnCheckedChangeListener,
+		DailyHotelStringResponseListener, DailyHotelJsonResponseListener, OnClickListener, OnCheckedChangeListener,
 		android.widget.CompoundButton.OnCheckedChangeListener {
 
 	private static final String TAG = "HotelPaymentActivity";
-	private RequestQueue mQueue;
 
 	private ScrollView svBooking;
 	private TextView tvCheckIn, tvCheckOut, tvOriginalPriceValue,
@@ -86,7 +83,6 @@ public class BookingActivity extends BaseActivity implements
 					.getParcelable(NAME_INTENT_EXTRA_DATA_HOTELDETAIL));
 		}
 
-		mQueue = VolleyHttpClient.getRequestQueue();
 		setActionBar(mPay.getHotelDetail().getHotel().getName());
 
 		svBooking = (ScrollView) findViewById(R.id.sv_booking);
@@ -135,8 +131,7 @@ public class BookingActivity extends BaseActivity implements
 		// 적립금 스위치 초기화
 		swCredit.setChecked(false);
 		
-		LoadingDialog.showLoading(this);
-
+		lockUI();
 		// credit 요청
 		mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(
 				URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_SAVED_MONEY)
@@ -226,8 +221,9 @@ public class BookingActivity extends BaseActivity implements
 							mPay.getCustomer().getEmail(),
 							mPay.getCustomer().getPhone(),
 							mPay.getCustomer().getName() })) {
-						Toast.makeText(this, "예약자와 연락처, 이메일을 모두 입력해주십시요.",
-								Toast.LENGTH_LONG).show();
+						
+						showToast("예약자와 연락처, 이메일을 모두 입력해주십시요.", Toast.LENGTH_LONG, true);
+						
 						return;
 					}
 
@@ -298,9 +294,9 @@ public class BookingActivity extends BaseActivity implements
 							URL_WEBAPI_USER_LOGIN).toString(),
 					loginParams, this, this));
 		} else {
-			LoadingDialog.hideLoading();
-			Toast.makeText(this, "다시 로그인해주세요", Toast.LENGTH_SHORT)
-					.show();
+			unLockUI();
+			
+			showToast("다시 로그인해주세요", Toast.LENGTH_LONG, false);
 			
 			startActivityForResult(new Intent(this, LoginActivity.class),
 					CODE_REQUEST_ACTIVITY_LOGIN);
@@ -353,6 +349,7 @@ public class BookingActivity extends BaseActivity implements
 				dialog("네트워크 오류가 발생했습니다. 네트워크 연결을 확인해주세요.");
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION:
+				VolleyHttpClient.createCookie();		// 쿠키를 다시 생성 시도
 //				LoadingDialog.showLoading(this);
 //				
 //				// 쿠키 만료를 위한 서버에 로그아웃 리퀘스트
@@ -419,16 +416,6 @@ public class BookingActivity extends BaseActivity implements
 	}
 
 	@Override
-	public void onErrorResponse(VolleyError error) {
-		if (DEBUG)
-			error.printStackTrace();
-		
-		Toast.makeText(this, "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-				Toast.LENGTH_SHORT).show();
-
-	}
-
-	@Override
 	public void onResponse(String url, JSONObject response) {
 		if (url.contains(URL_WEBAPI_USER_INFO)) {
 			try {
@@ -484,11 +471,7 @@ public class BookingActivity extends BaseActivity implements
 								.toString(), null, this, this));
 
 			} catch (Exception e) {
-				if (DEBUG)
-					e.printStackTrace();
-
-				Toast.makeText(this, "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-						Toast.LENGTH_SHORT).show();
+				onError(e);
 			}
 		} else if (url.contains(URL_WEBAPI_RESERVE_CHECKIN)) {
 			try {
@@ -503,20 +486,15 @@ public class BookingActivity extends BaseActivity implements
 				tvCheckOut.setText("20" + out[0] + "년 " + out[1] + "월 "
 						+ out[2] + "일 " + out[3] + "시");
 
-				LoadingDialog.hideLoading();
-
+				unLockUI();
 			} catch (Exception e) {
-				if (DEBUG)
-					e.printStackTrace();
-
-				Toast.makeText(this, "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-						Toast.LENGTH_SHORT).show();
+				onError(e);
 			}
 		} else if (url.contains(URL_WEBAPI_USER_LOGIN)) { // INVALID_SESSION 오류의
 															// 경우 재로그인 후 다시시도한다
 			try {
 				if (response.getBoolean("login")) {
-					LoadingDialog.hideLoading();
+					unLockUI();
 					VolleyHttpClient.createCookie();
 					moveToPayStep();
 
@@ -526,8 +504,7 @@ public class BookingActivity extends BaseActivity implements
 					
 				}
 			} catch (JSONException e) {
-				if (DEBUG)
-					e.printStackTrace();
+				onError(e);
 			}
 
 		} else if (url.contains(URL_WEBAPI_USER_LOGOUT)) {
@@ -549,8 +526,7 @@ public class BookingActivity extends BaseActivity implements
 					
 				}
 			} catch (JSONException e) {
-				if (DEBUG)
-					e.printStackTrace();
+				onError(e);
 			}
 			
 		}
@@ -581,11 +557,7 @@ public class BookingActivity extends BaseActivity implements
 						this));
 
 			} catch (Exception e) {
-				if (DEBUG)
-					e.printStackTrace();
-
-				Toast.makeText(this, "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-						Toast.LENGTH_SHORT).show();
+				onError(e);
 			}
 		}
 
