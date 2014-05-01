@@ -32,12 +32,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.webkit.CookieSyncManager;
 import android.webkit.JavascriptInterface;
-import android.webkit.JsPromptResult;
-import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -328,12 +327,12 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		public void onProgressChanged(WebView view, int newProgress) {
 			super.onProgressChanged(view, newProgress);
 			
-			if (newProgress != 100)
-				setActionBarProgressBar(true);
-			else
-				setActionBarProgressBar(false);
-			
-
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+				if (newProgress != 100)
+					setActionBarProgressBar(true);
+				else
+					setActionBarProgressBar(false);
+			}
 		}
 		
 		void setActionBarProgressBar(boolean show) {
@@ -390,14 +389,16 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		@Override
 		public void onPageStarted(WebView view, String url, Bitmap favicon) {
 			super.onPageStarted(view, url, favicon);
-			setSupportProgressBarIndeterminateVisibility(true);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+				setSupportProgressBarIndeterminateVisibility(true);
 		}
 
 		@Override
 		public void onPageFinished(WebView view, String url) {
 			super.onPageFinished(view, url);
 			CookieSyncManager.getInstance().sync();
-			setSupportProgressBarIndeterminateVisibility(false);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+				setSupportProgressBarIndeterminateVisibility(false);
 		}
 
 	}

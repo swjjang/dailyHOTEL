@@ -108,7 +108,6 @@ public class VolleyHttpClient implements Constants {
 			for (int i = 0; i < cookies.size(); i++) {
 				Cookie newCookie = cookies.get(i);
 				if (newCookie.getName().equals(KEY_DAILYHOTEL_COOKIE)) {
-					destroyCookie();
 					
 					StringBuilder cookieString = new StringBuilder();
 					cookieString.append(newCookie.getName()).append("=")

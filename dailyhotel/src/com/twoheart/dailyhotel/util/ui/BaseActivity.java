@@ -18,10 +18,10 @@ package com.twoheart.dailyhotel.util.ui;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.ViewGroup;
@@ -33,11 +33,9 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
-import com.twoheart.dailyhotel.ErrorFragment;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.GlobalFont;
-import com.twoheart.dailyhotel.util.Log;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
 
@@ -104,8 +102,10 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	}
 	
 	public void setActionBarProgressBar() {
-		supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-		
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+			supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+			setSupportProgressBarIndeterminate(true);
+		}
 	}
 	
 	/**
@@ -114,6 +114,8 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	 */
 	public void setActionBarHide() {
 		supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+			getSupportActionBar().hide();
 		
 	}
 	  
