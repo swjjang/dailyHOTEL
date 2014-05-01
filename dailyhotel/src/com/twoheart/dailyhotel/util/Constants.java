@@ -25,8 +25,8 @@ public interface Constants {
 	public static final boolean IS_GOOGLE_RELEASE = true;
 	
 	// 웹서버 호스트 
-	public static final String URL_DAILYHOTEL_SERVER = "http://dailyhotel.kr/goodnight/";				// 서비스 서버
-//	public static final String URL_DAILYHOTEL_SERVER = "http://dailyhotel.cafe24.com/goodnight/";		// 개발 서버
+//	public static final String URL_DAILYHOTEL_SERVER = "http://dailyhotel.kr/goodnight/";				// 서비스 서버
+	public static final String URL_DAILYHOTEL_SERVER = "http://dailyhotel.cafe24.com/goodnight/";		// 개발 서버
 	 
 	// 회사 대표번호
 	public static final String PHONE_NUMBER_DAILYHOTEL = "1800-9120";
@@ -44,6 +44,7 @@ public interface Constants {
 	public static final String URL_WEBAPI_USER_ALIVE = "user/alive";
 	public static final String URL_WEBAPI_USER_FORGOTPWD = "user/sendpw/";
 	public static final String URL_WEBAPI_USER_FINDRND = "user/findrnd/";
+	public static final String URL_WEBAPI_USER_UPDATE = "user/update";
 	
 	// DailyHOTEL Reservation Controller WebAPI URL
 	public static final String URL_WEBAPI_RESERVE_PAYMENT = "reserv/session/req/";

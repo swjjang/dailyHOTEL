@@ -237,7 +237,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 					
 				} else {
 					unLockUI();
-					showToast(msg, Toast.LENGTH_SHORT, true);
+					showToast(msg, Toast.LENGTH_LONG, true);
 				}
 
 			} catch (Exception e) {

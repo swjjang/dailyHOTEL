@@ -394,7 +394,7 @@ public class LoginActivity extends BaseActivity implements Constants,
 					unLockUI();
 					loginParams.clear();
 					
-					showToast(msg, Toast.LENGTH_SHORT, true);
+					showToast(msg, Toast.LENGTH_LONG, true);
 				}
 
 			} catch (Exception e) {

@@ -1,5 +1,8 @@
 package com.twoheart.dailyhotel.activity;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.json.JSONObject;
 
 import android.app.AlertDialog;
@@ -10,7 +13,6 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -19,17 +21,14 @@ import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.VolleyError;
 import com.androidquery.AQuery;
 import com.facebook.Session;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
-import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
 public class ProfileActivity extends BaseActivity implements
 		DailyHotelJsonResponseListener, OnClickListener {
@@ -109,6 +108,16 @@ public class ProfileActivity extends BaseActivity implements
 				mInputMethodManager.hideSoftInputFromWindow(
 						mAq.id(R.id.et_profile_name).getEditText()
 								.getWindowToken(), 0);
+				
+				Map<String, String> updateParams = new HashMap<String, String>();
+				updateParams.put("name", mAq.id(R.id.et_profile_name).getText().toString());
+				updateParams.put("phone", mAq.id(R.id.et_profile_phone).getText().toString());
+				
+				lockUI();
+				mQueue.add(new DailyHotelJsonRequest(Method.POST,
+						new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+								URL_WEBAPI_USER_UPDATE).toString(), updateParams,
+						this, this));
 
 			}
 
@@ -186,6 +195,27 @@ public class ProfileActivity extends BaseActivity implements
 				mAq.id(R.id.et_profile_phone).text(userPhone);
 
 				unLockUI();
+			} catch (Exception e) {
+				onError(e);
+			}
+		} else if (url.contains(URL_WEBAPI_USER_UPDATE)) {
+			try {
+				JSONObject obj = response;
+
+				String result = obj.getString("success");
+				String msg = null;
+
+				if (obj.length() > 1)
+					msg = obj.getString("msg");
+
+				if (result.equals("true")) {
+					unLockUI();
+					showToast("성공적으로 변경되었습니다", Toast.LENGTH_SHORT, true);
+				} else {
+					unLockUI();
+					showToast(msg, Toast.LENGTH_LONG, true);
+				}
+
 			} catch (Exception e) {
 				onError(e);
 			}
