@@ -89,14 +89,14 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 		mHostActivity.setActionBar("dailyHOTEL");
 		tvTitle.setText(new SimpleDateFormat("aa H").format(mSaleTime.getOpenTime()) + "시 오늘의 호텔이 공개됩니다.");
 		
+		setTimer();
+		
 		return view;
 	}
 	
 	@Override
 	public void onResume() {
 		super.onResume();
-
-		setTimer();
 		setNotify(isEnabledNotify);
 	}
 	
