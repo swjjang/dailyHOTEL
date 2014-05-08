@@ -742,8 +742,10 @@ public class PaymentActivity extends BaseActivity implements Constants {
 				resultCode = RESULT_CANCELED;
 			}
 		}
+		Intent payData = new Intent();
+		payData.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
 
-		setResult(resultCode);
+		setResult(resultCode, payData);
 		finish();
 	}
 	
@@ -776,7 +778,10 @@ public class PaymentActivity extends BaseActivity implements Constants {
 				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_INVALID_DATE;
 			}
 
-			setResult(resultCode);
+			Intent payData = new Intent();
+			payData.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
+
+			setResult(resultCode, payData);
 			finish();
 		}
 	}

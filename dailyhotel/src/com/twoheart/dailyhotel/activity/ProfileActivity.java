@@ -79,12 +79,7 @@ public class ProfileActivity extends BaseActivity implements
 	@Override
 	public void onResume() {
 		super.onResume();
-
-		lockUI();
-		// 사용자 정보 요청.
-		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(
-				URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(),
-				null, this, this));
+		updateTextField();
 
 	}
 	
@@ -176,6 +171,14 @@ public class ProfileActivity extends BaseActivity implements
 
 		}
 	}
+	
+	private void updateTextField() {
+		lockUI();
+		// 사용자 정보 요청.
+		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(
+				URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(),
+				null, this, this));
+	}
 
 	@Override
 	public void onResponse(String url, JSONObject response) {
@@ -211,6 +214,7 @@ public class ProfileActivity extends BaseActivity implements
 				if (result.equals("true")) {
 					unLockUI();
 					showToast("성공적으로 변경되었습니다", Toast.LENGTH_SHORT, true);
+					updateTextField();
 				} else {
 					unLockUI();
 					showToast(msg, Toast.LENGTH_LONG, true);

@@ -12,6 +12,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
@@ -207,37 +208,40 @@ public class BookingActivity extends BaseActivity implements
 
 			} else if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentCard
 					.getId()) { // 신용카드를 선택했을 경우
+				
+				Customer buyer = mPay.getCustomer();
 
 				if (llReserverInfoEditable.getVisibility() == View.VISIBLE) {
 
-					mPay.getCustomer().setEmail(
+					buyer.setEmail(
 							etReserverEmail.getText().toString());
-					mPay.getCustomer().setPhone(
+					buyer.setPhone(
 							etReserverNumber.getText().toString());
-					mPay.getCustomer().setName(
+					buyer.setName(
 							etReserverName.getText().toString());
 
 					if (isEmptyTextField(new String[] {
-							mPay.getCustomer().getEmail(),
-							mPay.getCustomer().getPhone(),
-							mPay.getCustomer().getName() })) {
+							buyer.getEmail(),
+							buyer.getPhone(),
+							buyer.getName() })) {
 						
 						showToast("예약자와 연락처, 이메일을 모두 입력해주십시요.", Toast.LENGTH_LONG, true);
 						
 						return;
 					}
-
+					
 				} else if (llReserverInfoLabel.getVisibility() == View.VISIBLE) {
 
-					mPay.getCustomer().setEmail(
+					buyer.setEmail(
 							tvReserverEmail.getText().toString());
-					mPay.getCustomer().setPhone(
+					buyer.setPhone(
 							tvReserverNumber.getText().toString());
-					mPay.getCustomer().setName(
+					buyer.setName(
 							tvReserverName.getText().toString());
 					
 				}
 
+				mPay.setCustomer(buyer);
 				moveToPayStep();
 
 			}
@@ -295,7 +299,6 @@ public class BookingActivity extends BaseActivity implements
 					loginParams, this, this));
 		} else {
 			unLockUI();
-			
 			showToast("다시 로그인해주세요", Toast.LENGTH_LONG, false);
 			
 			startActivityForResult(new Intent(this, LoginActivity.class),
@@ -323,6 +326,18 @@ public class BookingActivity extends BaseActivity implements
 			switch (resultCode) {
 			case CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE:
 			case CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS:
+				if (intent != null) {
+					if (intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAY) != null) {
+						Pay payData = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAY);
+
+						Editor editor = sharedPreference.edit();
+						editor.putString(KEY_PREFERENCE_HOTEL_NAME, payData.getHotelDetail().getHotel().getName());
+						editor.putInt(KEY_PREFERENCE_HOTEL_SALE_IDX, payData.getHotelDetail().getSaleIdx());
+						editor.putString(KEY_PREFERENCE_HOTEL_CHECKOUT, payData.getCheckOut());
+						editor.commit();
+					}
+				}
+				
 				AlertDialog.Builder alert = new AlertDialog.Builder(
 						BookingActivity.this);
 				alert.setPositiveButton("확인",
@@ -335,7 +350,7 @@ public class BookingActivity extends BaseActivity implements
 								finish();
 							}
 						});
-				alert.setMessage("결제가 정상적으로 이루어 졌습니다");
+				alert.setMessage("결제가 정상적으로 이루어졌습니다");
 				alert.show();
 
 				break;
@@ -346,7 +361,7 @@ public class BookingActivity extends BaseActivity implements
 				dialog("먼저 온 손님이 예약 중입니다.\n잠시 후 다시 시도해주세요.");
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR:
-				dialog("네트워크 오류가 발생했습니다. 네트워크 연결을 확인해주세요.");
+				dialog("네트워크 오류가 발생했습니다.\n네트워크 연결을 확인해주세요.");
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION:
 				VolleyHttpClient.createCookie();		// 쿠키를 다시 생성 시도
@@ -364,13 +379,12 @@ public class BookingActivity extends BaseActivity implements
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_INVALID_DATE:
 			case CODE_RESULT_ACTIVITY_PAYMENT_FAIL:
-				dialog("알 수 없는 오류가 발생했습니다. 문의해주시기 바랍니다.");
+				dialog("알 수 없는 오류가 발생했습니다.\n문의해주시기 바랍니다.");
 				break;
 			}
 		} else if (requestCode == CODE_REQUEST_ACTIVITY_LOGIN) {
 			if (resultCode == RESULT_OK)
 				moveToPayStep();	
-			
 		}
 	}
 
@@ -420,36 +434,39 @@ public class BookingActivity extends BaseActivity implements
 		if (url.contains(URL_WEBAPI_USER_INFO)) {
 			try {
 				JSONObject obj = response;
-
-				mPay.setCustomer(new Customer());
-				mPay.getCustomer().setEmail(obj.getString("email"));
-				mPay.getCustomer().setName(obj.getString("name"));
-				mPay.getCustomer().setPhone(obj.getString("phone"));
-				mPay.getCustomer().setAccessToken(obj.getString("accessToken"));
+				
+				Customer buyer = new Customer();
+				buyer.setEmail(obj.getString("email"));
+				buyer.setName(obj.getString("name"));
+				buyer.setPhone(obj.getString("phone"));
+				buyer.setAccessToken(obj.getString("accessToken"));
+				
+				mPay.setCustomer(buyer);
+				buyer = mPay.getCustomer();
 
 				if (!isEmptyTextField(new String[] {
-						mPay.getCustomer().getEmail(),
-						mPay.getCustomer().getPhone(),
-						mPay.getCustomer().getName() })) {
+						buyer.getEmail(),
+						buyer.getPhone(),
+						buyer.getName() })) {
 					llReserverInfoLabel.setVisibility(View.VISIBLE);
 					llReserverInfoEditable.setVisibility(View.GONE);
 					etReserverName.setVisibility(View.GONE);
 					etReserverNumber.setVisibility(View.GONE);
 					etReserverEmail.setVisibility(View.GONE);
 
-					tvReserverName.setText(mPay.getCustomer().getName());
-					tvReserverNumber.setText(mPay.getCustomer().getPhone());
-					tvReserverEmail.setText(mPay.getCustomer().getEmail());
+					tvReserverName.setText(buyer.getName());
+					tvReserverNumber.setText(buyer.getPhone());
+					tvReserverEmail.setText(buyer.getEmail());
 
 				} else {
 					llReserverInfoEditable.setVisibility(View.VISIBLE);
 					llReserverInfoLabel.setVisibility(View.GONE);
 
-					if (!isEmptyTextField(mPay.getCustomer().getName()))
-						etReserverName.setText(mPay.getCustomer().getName());
+					if (!isEmptyTextField(buyer.getName()))
+						etReserverName.setText(buyer.getName());
 
-					if (!isEmptyTextField(mPay.getCustomer().getPhone()))
-						etReserverNumber.setText(mPay.getCustomer().getPhone());
+					if (!isEmptyTextField(buyer.getPhone()))
+						etReserverNumber.setText(buyer.getPhone());
 					else {
 						TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext()
 								.getSystemService(Context.TELEPHONY_SERVICE);
@@ -458,8 +475,8 @@ public class BookingActivity extends BaseActivity implements
 								.getLine1Number());
 					}
 
-					if (!isEmptyTextField(mPay.getCustomer().getEmail()))
-						etReserverEmail.setText(mPay.getCustomer().getEmail());
+					if (!isEmptyTextField(buyer.getEmail()))
+						etReserverEmail.setText(buyer.getEmail());
 
 				}
 
@@ -478,6 +495,7 @@ public class BookingActivity extends BaseActivity implements
 				JSONObject obj = response;
 				String checkin = obj.getString("checkin");
 				String checkout = obj.getString("checkout");
+				mPay.setCheckOut(checkout);
 
 				String in[] = checkin.split("-");
 				tvCheckIn.setText("20" + in[0] + "년 " + in[1] + "월 " + in[2]

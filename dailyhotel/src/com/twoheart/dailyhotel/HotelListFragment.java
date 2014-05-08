@@ -49,20 +49,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.android.volley.Request.Method;
-import com.android.volley.RequestQueue;
-import com.androidquery.AQuery;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.twoheart.dailyhotel.activity.EventWebActivity;
 import com.twoheart.dailyhotel.activity.HotelTabActivity;
 import com.twoheart.dailyhotel.adapter.HotelListAdapter;
 import com.twoheart.dailyhotel.adapter.RegionListAdapter;
-import com.twoheart.dailyhotel.fragment.RatingHotelFragment;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Log;
-import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonArrayRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
@@ -71,7 +67,6 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListe
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
-import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView;
 
 public class HotelListFragment extends BaseFragment implements Constants,
@@ -207,11 +202,6 @@ public class HotelListFragment extends BaseFragment implements Constants,
 					.toString(), null, HotelListFragment.this,
 					mHostActivity));
 		}
-		
-		// TODO 지울 것. 테스트 코드
-//		RatingHotelFragment dialog = RatingHotelFragment.newInstance(null);
-//		dialog.show(getChildFragmentManager(), "test");
-		
 	}
 
 	@Override
@@ -246,18 +236,14 @@ public class HotelListFragment extends BaseFragment implements Constants,
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
 		if (requestCode == CODE_REQUEST_ACTIVITY_HOTELTAB) {
 			mRefreshHotelList = false;
 			
 			if (resultCode == Activity.RESULT_OK) {
-				((MainActivity) mHostActivity)
-						.replaceFragment(((MainActivity) mHostActivity)
-								.getFragment(MainActivity.INDEX_BOOKING_LIST_FRAGMENT));
-				
+				((MainActivity) mHostActivity).selectMenuDrawer(((MainActivity) mHostActivity).menuBookingListFragment);
 			}
 		}
-
+		
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 

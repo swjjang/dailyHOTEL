@@ -52,6 +52,7 @@ public interface Constants {
 	public static final String URL_WEBAPI_RESERVE_MINE = "reserv/mine";
 	public static final String URL_WEBAPI_RESERVE_SAVED_MONEY = "reserv/bonus";
 	public static final String URL_WEBAPI_RESERVE_CHECKIN = "reserv/checkinout/";
+	public static final String URL_WEBAPI_RESERVE_REVIEW = "reserv/review/";
 	
 	// DailyHOTEL App Management Controller WebAPI URL
 	public static final String URL_WEBAPI_APP_VERSION = "common/ver_dual";
@@ -100,6 +101,15 @@ public interface Constants {
 	public static final String KEY_PREFERENCE_REGION_SELECT = "REGION_SELECT";
 	public static final String KEY_PREFERENCE_REGION_DEFALUT = "REGION_DEFALUT";
 	public static final String KEY_PREFERENCE_REGION_INDEX = "REGION_INDEX";
+	
+	public static final String KEY_PREFERENCE_SHOW_GUIDE = "SHOW_GUIDE";
+	
+	public static final String KEY_PREFERENCE_HOTEL_NAME = "HOTEL_NAME";
+	public static final String KEY_PREFERENCE_HOTEL_SALE_IDX = "HOTEL_SALE_IDX";
+	public static final String KEY_PREFERENCE_HOTEL_CHECKOUT = "HOTEL_CHECKOUT";
+	public static final String VALUE_PREFERENCE_HOTEL_NAME_DEFAULT = "none";
+	public static final int VALUE_PREFERENCE_HOTEL_SALE_IDX_DEFAULT = 1;
+	public static final String VALUE_PREFERENCE_HOTEL_CHECKOUT_DEFAULT = "14-04-30-20";
 
 	// Android 컴포넌트 간에 데이터를 주고받을 때 사용되는 인텐트 이름(키)을 정의한 상수이다.
 	public static final String NAME_INTENT_EXTRA_DATA_HOTEL = "hotel";
@@ -116,6 +126,7 @@ public interface Constants {
 	public static final int CODE_REQUEST_ACTIVITY_PAYMENT = 4;
 	public static final int CODE_REQUEST_ACTIVITY_SPLASH = 5;
 	public static final int CODE_REQEUST_ACTIVITY_SIGNUP = 6;
+	public static final int CODE_REQUEST_ACTIVITY_BOOKING = 7;
 	
 	// Android Activity의 Result Code들이다.
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_FAIL = 100;

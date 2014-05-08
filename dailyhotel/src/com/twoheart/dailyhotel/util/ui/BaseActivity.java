@@ -219,7 +219,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 		onError();
 	}
 	
-	protected void onError(Exception error) {
+	public void onError(Exception error) {
 		if (DEBUG) {
 			error.printStackTrace();
 		}
@@ -227,11 +227,11 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 		onError();
 	}
 	
-	protected void onError() {
+	public void onError() {
 		showToast("인터넷 연결 상태가 불안정합니다.\n인터넷 연결을 확인하신 뒤 다시 시도해주세요.", Toast.LENGTH_LONG, false);
 	}
 	
-	protected void showToast(String message, int length, boolean isAttachToActivity) {
+	public void showToast(String message, int length, boolean isAttachToActivity) {
 		if (isAttachToActivity) {
 			mToast = Toast.makeText(getApplicationContext(), message, length);
 			mToast.show();

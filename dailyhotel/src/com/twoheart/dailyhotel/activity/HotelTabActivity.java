@@ -1,26 +1,23 @@
 package com.twoheart.dailyhotel.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.text.method.HideReturnsTransformationMethod;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
-import com.android.volley.Response.ErrorListener;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.HotelTabBookingFragment;
-import com.twoheart.dailyhotel.fragment.TabInfoFragment;
-import com.twoheart.dailyhotel.fragment.TabMapFragment;
+import com.twoheart.dailyhotel.model.Pay;
 import com.twoheart.dailyhotel.util.Log;
 import com.twoheart.dailyhotel.util.TabActivity;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
-import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 import com.twoheart.dailyhotel.widget.HotelViewPager;
 import com.viewpagerindicator.TabPageIndicator;
 
@@ -84,11 +81,10 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-		if (requestCode == CODE_REQUEST_ACTIVITY_PAYMENT) {
+		if (requestCode == CODE_REQUEST_ACTIVITY_BOOKING) {
 			setResult(resultCode);
 
 			if (resultCode == RESULT_OK) {
-				setResult(RESULT_OK);
 				finish();
 			}
 		} else if (requestCode == CODE_REQUEST_ACTIVITY_LOGIN) {
@@ -104,8 +100,6 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 
 	@Override
 	protected void loadFragments() {
-
-		// TODO: BaseFragment 만들어서 통합적으로 관리할 것.
 		mFragments.add(HotelTabBookingFragment.newInstance(hotelDetail));
 		super.loadFragments();
 
@@ -120,7 +114,7 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 			if (result.equals("alive")) { // session alive
 				Intent i = new Intent(this, BookingActivity.class);
 				i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELDETAIL, hotelDetail);
-				startActivityForResult(i, CODE_REQUEST_ACTIVITY_PAYMENT);
+				startActivityForResult(i, CODE_REQUEST_ACTIVITY_BOOKING);
 				overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
 
 			} else if (result.equals("dead")) { // session dead

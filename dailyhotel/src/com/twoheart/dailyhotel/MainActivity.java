@@ -15,10 +15,14 @@
 package com.twoheart.dailyhotel;
 
 import java.security.MessageDigest;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -55,7 +59,12 @@ import com.androidquery.util.AQUtility;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.readystatesoftware.systembartint.SystemBarTintManager.SystemBarConfig;
 import com.twoheart.dailyhotel.activity.SplashActivity;
+import com.twoheart.dailyhotel.fragment.RatingHotelFragment;
+import com.twoheart.dailyhotel.model.Hotel;
+import com.twoheart.dailyhotel.model.HotelDetail;
+import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
@@ -83,6 +92,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 	public static final String KEY_CREDIT_FRAGMENT = "credit";
 	public static final String KEY_SEETING_FRAGMENT = "setting";
 
+	private static final String TAG_FRAGMENT_RATING_HOTEL = "rating_hotel";
+
 	private DrawerMenuListAdapter mDrawerMenuListAdapter;
 	protected List<DrawerMenu> mMenuImages;
 	protected List<Fragment> mFragments;
@@ -101,7 +112,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 	public DrawerMenu menuSettingFragment;
 
 	private CloseOnBackPressed backButtonHandler;
-	
+
 	private SystemBarTintManager tintManager;
 	public SystemBarConfig config;
 
@@ -122,32 +133,39 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			setTheme(R.style.AppTheme_Translucent);
-			
+
 			tintManager = new SystemBarTintManager(this);
 			config = tintManager.getConfig();
-			
+
 			tintManager.setStatusBarTintEnabled(true);
 			int actionBarColor = getResources().getColor(android.R.color.white);
 			tintManager.setStatusBarTintColor(actionBarColor);
-			
+
 		} else {
-			setTheme(R.style.AppTheme);	
+			setTheme(R.style.AppTheme);
 		}
-		
+
 		setContentView(R.layout.activity_main);
 		setNavigationDrawer();
-		
+
 		mContentFrame = (FrameLayout) findViewById(R.id.content_frame);
-            
+
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-			mContentFrame.setPadding(mContentFrame.getPaddingLeft(), config.getStatusBarHeight() + config.getActionBarHeight(),
-					mContentFrame.getPaddingRight(), mContentFrame.getPaddingBottom());
-			
-			drawerList.setPadding(drawerList.getPaddingLeft(), config.getStatusBarHeight() + config.getActionBarHeight(),
-					drawerList.getPaddingRight(), drawerList.getPaddingBottom());
-			
+			mContentFrame.setPadding(mContentFrame.getPaddingLeft(),
+					config.getStatusBarHeight() + config.getActionBarHeight(),
+					mContentFrame.getPaddingRight(),
+					mContentFrame.getPaddingBottom());
+
+			drawerList
+					.setPadding(
+							drawerList.getPaddingLeft(),
+							config.getStatusBarHeight()
+									+ config.getActionBarHeight(),
+							drawerList.getPaddingRight(),
+							drawerList.getPaddingBottom());
+
 		}
-		
+
 		fragmentManager = getSupportFragmentManager();
 		backButtonHandler = new CloseOnBackPressed(this);
 
@@ -161,16 +179,67 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 	}
 
 	@Override
+	protected void onStart() {
+		super.onStart();
+
+		
+	}
+
+	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (requestCode == CODE_REQUEST_ACTIVITY_SPLASH) {
 			if (resultCode != RESULT_OK) {
 				super.finish();
+			} else {
+				try {
+					String purchasedHotelName = sharedPreference.getString(
+							KEY_PREFERENCE_HOTEL_NAME,
+							VALUE_PREFERENCE_HOTEL_NAME_DEFAULT);
+					int purchasedHotelSaleIdx = sharedPreference.getInt(
+							KEY_PREFERENCE_HOTEL_SALE_IDX,
+							VALUE_PREFERENCE_HOTEL_SALE_IDX_DEFAULT);
+					String purchasedHotelCheckOut = sharedPreference.getString(
+							KEY_PREFERENCE_HOTEL_CHECKOUT,
+							VALUE_PREFERENCE_HOTEL_CHECKOUT_DEFAULT);
+
+					Date today = new Date();
+					Date checkOut = SaleTime.stringToDate(Util
+							.dailyHotelTimeConvert(purchasedHotelCheckOut));
+
+					if (!purchasedHotelName.equals(VALUE_PREFERENCE_HOTEL_NAME_DEFAULT)) {
+						if (today.compareTo(checkOut) >= 0) {
+							Calendar calendar = Calendar.getInstance();
+							calendar.setTime(checkOut);
+							calendar.add(Calendar.DATE, 7);
+							Date deadLineDay = calendar.getTime();
+							
+							if (today.compareTo(deadLineDay) < 0) {
+								Hotel purchasedHotel = new Hotel();
+								purchasedHotel.setName(purchasedHotelName);
+			
+								HotelDetail purchasedHotelInformation = new HotelDetail();
+								purchasedHotelInformation.setHotel(purchasedHotel);
+								purchasedHotelInformation.setSaleIdx(purchasedHotelSaleIdx);
+			
+								RatingHotelFragment dialog = RatingHotelFragment
+										.newInstance(purchasedHotelInformation);
+								dialog.show(fragmentManager, TAG_FRAGMENT_RATING_HOTEL);
+							} else {
+								RatingHotelFragment dialog = RatingHotelFragment
+										.newInstance(null);
+								dialog.destroyRatingHotelFlag();
+							}
+						}
+					}
+				} catch (Exception e) {
+					onError(e);
+				}
 			}
 		}
 	}
-	
+
 	public void selectMenuDrawer(DrawerMenu selectedMenu) {
 		drawerList.performItemClick(
 				drawerList.getAdapter().getView(
@@ -178,18 +247,18 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 				mMenuImages.indexOf(selectedMenu), mDrawerMenuListAdapter
 						.getItemId(mMenuImages.indexOf(selectedMenu)));
 	}
-	
+
 	private void initializeFragments() {
 		if (mFragments != null)
 			mFragments.clear();
 		else
 			mFragments = new LinkedList<Fragment>();
-		
+
 		mFragments.add(new HotelListFragment());
 		mFragments.add(new BookingListFragment());
 		mFragments.add(new CreditFragment());
 		mFragments.add(new SettingFragment());
-		
+
 	}
 
 	public Fragment getFragment(int index) {
@@ -197,13 +266,13 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 
 		try {
 			newFragment = mFragments.get(index);
-			
+
 		} catch (Exception e) {
-//			onError(e);
-			
+			// onError(e);
+
 			initializeFragments();
 			newFragment = getFragment(index);
-			
+
 		}
 
 		return newFragment;
@@ -213,31 +282,32 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 	public void replaceFragment(Fragment fragment) {
 		try {
 			clearFragmentBackStack();
-			
+
 			fragmentManager.beginTransaction()
 					.replace(mContentFrame.getId(), fragment)
 					.commitAllowingStateLoss();
-			
+
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 				if (!(fragment instanceof HotelListFragment)) {
 					WindowManager.LayoutParams attrs = getWindow()
-	                        .getAttributes();
-	                attrs.flags &= (~WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-	                getWindow().setAttributes(attrs);
-					
+							.getAttributes();
+					attrs.flags &= (~WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+					getWindow().setAttributes(attrs);
+
 				} else {
-					mContentFrame.setPadding(mContentFrame.getPaddingLeft(), mContentFrame.getPaddingTop(),
+					mContentFrame.setPadding(mContentFrame.getPaddingLeft(),
+							mContentFrame.getPaddingTop(),
 							mContentFrame.getPaddingRight(), 0);
-					
+
 					Window w = getWindow();
-	                w.setFlags(
-	                        WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION,
-	                        WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+					w.setFlags(
+							WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION,
+							WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 				}
 			}
 		} catch (IllegalStateException e) {
 			onError(e);
-			
+
 		}
 
 	}
@@ -546,12 +616,12 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 				.toString(), null, null, null));
 
 		VolleyHttpClient.destroyCookie();
-		
+
 		AQUtility.cleanCacheAsync(getApplicationContext());
-		
+
 		super.onDestroy();
 	}
-	
+
 	@Override
 	public void onError() {
 		super.onError();

@@ -53,5 +53,23 @@ public class Util implements Constants {
 	    int resId = activity.getResources().getIdentifier("action_bar_container", "id", "android");
 	    return v.findViewById(resId);
 	}
+	
+	public static String dailyHotelTimeConvert(String dailyHotelTime) {
+		final int positionOfDashPreviousHour = 8;	// yy-MM-dd-hh¿Ãπ«∑Œ
+		String correctTime = null;
+		
+		char checkOut[] = dailyHotelTime.toCharArray();
+		StringBuilder parsedCheckOutTime = new StringBuilder();
+		for (int i=0; i<checkOut.length; i++) {
+			if (i == positionOfDashPreviousHour)
+				parsedCheckOutTime.append(" ");
+			else
+				parsedCheckOutTime.append(checkOut[i]);
+		}
+		parsedCheckOutTime.append(":00:00");
+		correctTime = parsedCheckOutTime.toString();
+		
+		return correctTime;
+	}
 
 }

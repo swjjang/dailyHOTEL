@@ -46,7 +46,7 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 	private final static String KEY_BUNDLE_ARGUMENTS_SALETIME = "saletime";
 	private static boolean isEnabledNotify = false;
 
-	private static Handler sHandler;	// TODO: static으로 선언하여 인스턴스가 중복되는 일이 없도록 한다.
+	private static Handler sHandler;
 	private TextView tvTimer, tvTitle;
 	private Button btnNotify;
 
