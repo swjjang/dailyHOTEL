@@ -33,7 +33,7 @@ public class BoardListAdapter extends BaseExpandableListAdapter{
 
 	@Override
 	public String getChild(int groupPosition, int childPosition) {
-		return list.get(groupPosition).content;
+		return list.get(groupPosition).getContent();
 	}
 
 
@@ -95,7 +95,7 @@ public class BoardListAdapter extends BaseExpandableListAdapter{
 		TextView tv_subject = (TextView)v.findViewById(R.id.tv_board_subject);
 		TextView tv_regdate = (TextView)v.findViewById(R.id.tv_board_regdate);
 		tv_subject.setText((String) getGroup(groupPosition));
-		tv_regdate.setText(list.get(groupPosition).regdate);
+		tv_regdate.setText(list.get(groupPosition).getRegdate());
 		
 		GlobalFont.apply((ViewGroup) v); 
 		return v;

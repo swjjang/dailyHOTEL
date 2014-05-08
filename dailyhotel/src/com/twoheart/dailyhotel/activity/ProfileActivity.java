@@ -11,11 +11,15 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -24,7 +28,6 @@ import com.android.volley.Request.Method;
 import com.androidquery.AQuery;
 import com.facebook.Session;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
@@ -49,6 +52,7 @@ public class ProfileActivity extends BaseActivity implements
 
 		mAq = new AQuery(this);
 		mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		setupUI(findViewById(android.R.id.content));
 
 		mAq.id(R.id.ll_profile_edit).clicked(this);
 		mAq.id(R.id.btn_profile_logout).clicked(this);
@@ -66,14 +70,6 @@ public class ProfileActivity extends BaseActivity implements
 						return true;
 					}
 				});
-		
-//		Animation fadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_in);
-//		Animation fadeOutAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_out);
-//		
-//		mAq.id(R.id.ll_profile_info_label).getView().startAnimation(fadeInAnimation);
-//		mAq.id(R.id.ll_profile_info_editable).getView().startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_in));
-		
-		
 	}
 
 	@Override
@@ -81,6 +77,51 @@ public class ProfileActivity extends BaseActivity implements
 		super.onResume();
 		updateTextField();
 
+	}
+	
+	@Override
+	public void onBackPressed() {
+		if (mAq.id(R.id.tv_profile_edit).getText().equals("완료"))
+			mAq.id(R.id.ll_profile_edit).click();
+		else
+			super.onBackPressed();
+		
+	}
+	
+	public void setupUI(View view) {
+	    //Set up touch listener for non-text box views to hide keyboard.
+	    if(!(view instanceof EditText)) {
+	        view.setOnTouchListener(new OnTouchListener() {
+	            public boolean onTouch(View v, MotionEvent event) {
+	            		if (mAq.id(R.id.tv_profile_edit).getText().equals("완료"))
+	            			mAq.id(R.id.ll_profile_edit).click();
+	                return false;
+	            }
+
+	        });
+	    }
+
+	    //If a layout container, iterate over children and seed recursion.
+	    if (view instanceof ViewGroup) {
+	        for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+	            View innerView = ((ViewGroup) view).getChildAt(i);
+	            setupUI(innerView);
+	        }
+	    }
+	}
+	
+	private void toggleKeyboard(boolean show) {
+		if (show) {
+			mAq.id(R.id.et_profile_name).getEditText().requestFocus(); 
+			mInputMethodManager.showSoftInput(mAq.id(R.id.et_profile_name).getEditText()
+					, InputMethodManager.SHOW_FORCED);
+			
+		} else {
+			mInputMethodManager.hideSoftInputFromWindow(
+					mAq.id(R.id.et_profile_name).getEditText()
+							.getWindowToken(), 0);
+			
+		}
 	}
 	
 	@Override
@@ -92,7 +133,7 @@ public class ProfileActivity extends BaseActivity implements
 				mAq.id(R.id.ll_profile_info_editable).getView().startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_in));
 				mAq.id(R.id.tv_profile_edit).text("완료");
 
-				mAq.id(R.id.et_profile_name).getEditText().requestFocus();
+				toggleKeyboard(true);
 
 			} else if (mAq.id(R.id.tv_profile_edit).getText().equals("완료")) {
 				mAq.id(R.id.ll_profile_info_editable).visibility(View.GONE);
@@ -100,9 +141,7 @@ public class ProfileActivity extends BaseActivity implements
 				mAq.id(R.id.ll_profile_info_label).getView().startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_in));
 				mAq.id(R.id.tv_profile_edit).text("수정");
 
-				mInputMethodManager.hideSoftInputFromWindow(
-						mAq.id(R.id.et_profile_name).getEditText()
-								.getWindowToken(), 0);
+				toggleKeyboard(false);
 				
 				Map<String, String> updateParams = new HashMap<String, String>();
 				updateParams.put("name", mAq.id(R.id.et_profile_name).getText().toString());

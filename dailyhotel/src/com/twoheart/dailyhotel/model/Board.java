@@ -1,9 +1,10 @@
 package com.twoheart.dailyhotel.model;
 
 public class Board {
-	public String subject;
-	public String content;
-	public String regdate;
+	
+	private String subject;
+	private String content;
+	private String regdate;
 	
 	public Board(String subject, String content, String regdate) {
 		this.subject = subject;

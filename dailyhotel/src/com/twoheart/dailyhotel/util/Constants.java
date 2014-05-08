@@ -99,7 +99,6 @@ public interface Constants {
 	
 	// region
 	public static final String KEY_PREFERENCE_REGION_SELECT = "REGION_SELECT";
-	public static final String KEY_PREFERENCE_REGION_DEFALUT = "REGION_DEFALUT";
 	public static final String KEY_PREFERENCE_REGION_INDEX = "REGION_INDEX";
 	
 	public static final String KEY_PREFERENCE_SHOW_GUIDE = "SHOW_GUIDE";
