@@ -194,12 +194,12 @@ public class LoginActivity extends BaseActivity implements Constants,
 		if (v.getId() == tvForgotPwd.getId()) { // 비밀번호 찾기
 			Intent i = new Intent(this, ForgotPwdActivity.class);
 			startActivity(i);
-			overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
 		} else if (v.getId() == tvSignUp.getId()) { // 회원가입
 			Intent i = new Intent(this, SignupActivity.class);
 			startActivityForResult(i, CODE_REQEUST_ACTIVITY_SIGNUP);
-			overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
 		} else if (v.getId() == btnLogin.getId()) { // 로그인
 			if (!isBlankFields())
@@ -312,7 +312,7 @@ public class LoginActivity extends BaseActivity implements Constants,
 	@Override
 	public void finish() {
 		super.finish();
-		overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+		overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
 	}
 
 	@Override

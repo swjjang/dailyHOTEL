@@ -1,16 +1,13 @@
 package com.twoheart.dailyhotel.util.network.request;
 
 import java.util.Map;
-import java.util.Set;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
-import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.util.ui.OnLoadListener;
 
 public abstract class DailyHotelRequest<T> extends Request<T> {
 

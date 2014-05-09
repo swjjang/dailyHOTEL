@@ -134,14 +134,12 @@ public class CreditFragment extends BaseFragment implements Constants,
 		} else if (v.getId() == btnLogin.getId()) {
 			Intent i = new Intent(mHostActivity, LoginActivity.class);
 			startActivity(i);
-			mHostActivity.overridePendingTransition(R.anim.slide_in_right,
-					R.anim.hold);
+			mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
 		} else if (v.getId() == btnSignup.getId()) {
 			Intent i = new Intent(mHostActivity, SignupActivity.class);
 			startActivity(i);
-			mHostActivity.overridePendingTransition(R.anim.slide_in_right,
-					R.anim.hold);
+			mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 		}
 
 	}

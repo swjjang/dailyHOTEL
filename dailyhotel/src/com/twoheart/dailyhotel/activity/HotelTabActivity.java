@@ -115,7 +115,7 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 				Intent i = new Intent(this, BookingActivity.class);
 				i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELDETAIL, hotelDetail);
 				startActivityForResult(i, CODE_REQUEST_ACTIVITY_BOOKING);
-				overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+				overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
 			} else if (result.equals("dead")) { // session dead
 				loadLoginProcess();
@@ -132,7 +132,7 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 
 		startActivityForResult(new Intent(this, LoginActivity.class),
 				CODE_REQUEST_ACTIVITY_LOGIN);
-		overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
 	}
 

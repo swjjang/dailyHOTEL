@@ -64,6 +64,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	public void onBackPressed() {
 		super.onBackPressed();
 		
+		// RequestQueue에 등록된 모든 Request들을 취소한다.
 		if (mQueue != null)
 			mQueue.cancelAll(new RequestQueue.RequestFilter() {
 			    @Override
@@ -81,9 +82,9 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	}
 	
 	/**
-	 * 액션바 설정 메소드
+	 * 액션바를 설정하는 메서드로서, 어플리케이션 액션바 테마를 설정하고 제목을 지정한다.
 	 * 
-	 * @param title
+	 * @param title 액션바에 표시할 화면의 제목을 받는다.
 	 */
 	public void setActionBar(String title) {
 		actionBar = getSupportActionBar();
@@ -101,6 +102,9 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 		actionBar.setHomeButtonEnabled(true);
 	}
 	
+	/**
+	 * 액션바에 ProgressBar를 표시할 수 있도록 셋팅한다.
+	 */
 	public void setActionBarProgressBar() {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 			supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
@@ -109,7 +113,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	}
 	
 	/**
-	 * 액션바를 숨겨주는 메소드
+	 * 액션바를 숨기도록 셋팅한다.
 	 * 
 	 */
 	public void setActionBarHide() {
@@ -131,6 +135,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	@Override
 	protected void onPause() {
 		
+		// 현재 Activity에 의존적인 Toast를 제거한다.
 		if (mToast != null)
 			mToast.cancel();
 		
@@ -164,6 +169,8 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	
 	@Override
 	protected void onStop() {
+		
+		// 현재 Activity에 등록된 Request를 취소한다. 
 		if (mQueue != null)
 			mQueue.cancelAll(new RequestQueue.RequestFilter() {
 			    @Override
@@ -192,11 +199,17 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 		return super.onOptionsItemSelected(item);
 	}
 
+	/**
+	 * LoadingDialog를 띄워 로딩 중임을 나타내어 사용자가 UI를 사용할 수 없도록 한다.
+	 */
 	@Override
 	public void lockUI() {
 		mLockUI.show();
 	}
 
+	/**
+	 * 로딩이 완료되어 LoadingDialog를 제거하고 전역 폰트를 설정한다.
+	 */
 	@Override
 	public void unLockUI() {
 		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
@@ -227,10 +240,21 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 		onError();
 	}
 	
+	/**
+	 * Error 발생 시 분기되는 메서드
+	 */
 	public void onError() {
 		showToast("인터넷 연결 상태가 불안정합니다.\n인터넷 연결을 확인하신 뒤 다시 시도해주세요.", Toast.LENGTH_LONG, false);
 	}
 	
+	/**
+	 * Toast를 쉽게 표시해주는 메서드로서, 참조 Context로는 ApplicationContext를 사용한다. 
+	 * 삼성 단말기에서 삼성 테마를 사용하기 위함이다.
+	 * 
+	 * @param message Toast에 표시할 내용
+	 * @param length Toast가 표시되는 시간. Toast.LENGTH_SHORT, Toast.LENGTH_LONG
+	 * @param isAttachToActivity	현재 Activity가 종료되면 Toast도 제거할지를 결정한다
+	 */
 	public void showToast(String message, int length, boolean isAttachToActivity) {
 		if (isAttachToActivity) {
 			mToast = Toast.makeText(getApplicationContext(), message, length);

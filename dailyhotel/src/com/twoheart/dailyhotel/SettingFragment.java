@@ -123,20 +123,17 @@ public class SettingFragment extends BaseFragment implements Constants,
 		if (v.getId() == tvNotice.getId()) {
 			Intent i = new Intent(mHostActivity, NoticeActivity.class);
 			startActivity(i);
-			mHostActivity.overridePendingTransition(R.anim.slide_in_right,
-					R.anim.hold);
+			mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
 		} else if (v.getId() == llVersion.getId()) {
 			Intent i = new Intent(mHostActivity, VersionActivity.class);
 			startActivity(i);
-			mHostActivity.overridePendingTransition(R.anim.slide_in_right,
-					R.anim.hold);
+			mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
 		} else if (v.getId() == tvHelp.getId()) {
 			Intent i = new Intent(mHostActivity, FAQActivity.class);
 			startActivity(i);
-			mHostActivity.overridePendingTransition(R.anim.slide_in_right,
-					R.anim.hold);
+			mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
 		} else if (v.getId() == tvMail.getId()) {
 			Intent intent = new Intent(Intent.ACTION_SEND);
@@ -151,14 +148,12 @@ public class SettingFragment extends BaseFragment implements Constants,
 			if (tvLogin.getText().equals("프로필")) { // 로그인 되어 있는 상태
 				Intent i = new Intent(mHostActivity, ProfileActivity.class);
 				startActivity(i);
-				mHostActivity.overridePendingTransition(R.anim.slide_in_right,
-						R.anim.hold);
+				mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
 			} else { // 로그아웃 상태
 				Intent i = new Intent(mHostActivity, LoginActivity.class);
 				startActivityForResult(i, CODE_REQUEST_ACTIVITY_LOGIN);
-				mHostActivity.overridePendingTransition(R.anim.slide_in_right,
-						R.anim.hold);
+				mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 			}
 
 		} else if (v.getId() == tvCall.getId()) {
@@ -168,8 +163,7 @@ public class SettingFragment extends BaseFragment implements Constants,
 		} else if (v.getId() == tvAbout.getId()) {
 			Intent i = new Intent(mHostActivity, AboutActivity.class);
 			startActivity(i);
-			mHostActivity.overridePendingTransition(R.anim.slide_in_right,
-					R.anim.hold);
+			mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 		}
 	}
 	

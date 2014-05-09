@@ -96,29 +96,33 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 
 	private static final String TAG_FRAGMENT_RATING_HOTEL = "rating_hotel";
 
-	private DrawerMenuListAdapter mDrawerMenuListAdapter;
-	protected List<DrawerMenu> mMenuImages;
-	protected List<Fragment> mFragments;
-
-	public int indexLastFragment;
-
-	public DrawerLayout drawerLayout;
 	public ListView drawerList;
+	public DrawerLayout drawerLayout;
 	public RelativeLayout leftDrawer;
-	public ActionBarDrawerToggle drawerToggle;
-	protected FragmentManager fragmentManager;
 	private FrameLayout mContentFrame;
 	private LinearLayout btnEvent;
-
+	
+	public ActionBarDrawerToggle drawerToggle;
+	protected FragmentManager fragmentManager;
+	protected List<DrawerMenu> mMenuImages;
+	protected List<Fragment> mFragments;
+	private DrawerMenuListAdapter mDrawerMenuListAdapter;
+	
+	// 마지막으로 머물렀던 Fragment의 index
+	public int indexLastFragment;	// Error Fragment에서 다시 돌아올 때 필요.
+	
+	// SystemBarTintManager
+	private SystemBarTintManager tintManager;
+	public SystemBarConfig config;
+	
+	// DrawerMenu 객체들
 	public DrawerMenu menuHotelListFragment;
 	public DrawerMenu menuBookingListFragment;
 	public DrawerMenu menuCreditFragment;
 	public DrawerMenu menuSettingFragment;
 
+	// Back 버튼을 두 번 눌러 핸들러 멤버 변수
 	private CloseOnBackPressed backButtonHandler;
-
-	private SystemBarTintManager tintManager;
-	public SystemBarConfig config;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -132,12 +136,14 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 		if (CookieManager.getInstance().getCookie(URL_DAILYHOTEL_SERVER) != null)
 			VolleyHttpClient.destroyCookie();
 
-		startActivityForResult(new Intent(this, SplashActivity.class),
-				CODE_REQUEST_ACTIVITY_SPLASH);
+		// 스플래시 화면을 띄운다
+		startActivityForResult(new Intent(this, SplashActivity.class), CODE_REQUEST_ACTIVITY_SPLASH);
 
+		// Anroid 4.4 이상에서 Android StatusBar와 Android NavigationBar를 Translucent하게 해주는 API를 사용하도록 한다.
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			setTheme(R.style.AppTheme_Translucent);
 
+			// SystemBarTintManager는 3rd Party 라이브러리로 StatusBar와 NavigationBar와 관련된 API를 쉽게 변경할 수 있도록 해준다.
 			tintManager = new SystemBarTintManager(this);
 			config = tintManager.getConfig();
 
@@ -154,6 +160,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 
 		mContentFrame = (FrameLayout) findViewById(R.id.content_frame);
 
+		// Android 4.4 이상에서 Android StatusBar와 Android NavigationBar를 Translucent하게 
+		// 할 경우 여백 계산이 필요한 케이스가 발생하므로 해당 케이스에 대해 예외 처리한다.
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			mContentFrame.setPadding(mContentFrame.getPaddingLeft(),
 					config.getStatusBarHeight() + config.getActionBarHeight(),
@@ -176,6 +184,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 		// 맨 처음은 호텔리스트
 		selectMenuDrawer(menuHotelListFragment);
 
+		// Facebook SDK를 관리하기 위한 패키지 Hash 값 표시
 		if (DEBUG) {
 			printPackageHashKey();
 		}
@@ -187,17 +196,18 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 
 		if (requestCode == CODE_REQUEST_ACTIVITY_SPLASH) {
 			switch (resultCode) {
-			case RESULT_OK :
+			case RESULT_OK :		// 스플래시 화면이 정상적으로 종료되었을 경우
 				break;
-			case CODE_RESULT_ACTIVITY_SPLASH_NEW_EVENT :
+			case CODE_RESULT_ACTIVITY_SPLASH_NEW_EVENT :		// 스플래시가 정상적으로 종료되었는데 새로운 이벤트 알림이 있는 경우
 				ImageView ivNewEvent = (ImageView) findViewById(R.id.iv_new_event);
 				ivNewEvent.setVisibility(View.VISIBLE);
 				break;
-			default :
-				super.finish();
-				return;
+			default :		// 스플래시가 비정상적으로 종료되었을 경우
+				super.finish();		// 어플리케이션(메인 화면)을 종료해버린다
+				return;				// 메서드를 빠져나간다 - 호텔 평가를 수행하지 않음.
 			}
 			
+			// 호텔평가
 			try {
 				String purchasedHotelName = sharedPreference.getString(
 						KEY_PREFERENCE_HOTEL_NAME,
@@ -217,7 +227,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 					if (today.compareTo(checkOut) >= 0) {
 						Calendar calendar = Calendar.getInstance();
 						calendar.setTime(checkOut);
-						calendar.add(Calendar.DATE, 7);
+						calendar.add(Calendar.DATE, DAYS_DISPLAY_RATING_HOTEL_DIALOG);
 						Date deadLineDay = calendar.getTime();
 						
 						if (today.compareTo(deadLineDay) < 0) {
@@ -244,6 +254,10 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 		}
 	}
 
+	/**
+	 * 네비게이션 드로워에서 메뉴를 선택하는 효과를 내주는 메서드
+	 * @param selectedMenu DrawerMenu 객체를 받는다.
+	 */
 	public void selectMenuDrawer(DrawerMenu selectedMenu) {
 		drawerList.performItemClick(
 				drawerList.getAdapter().getView(
@@ -265,6 +279,11 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 
 	}
 
+	/**
+	 * 네비게이션 드로워 메뉴에서 선택할 수 있는 Fragment를 반환하는 메서드이다.
+	 * @param index Fragment 리스트에 해당하는 index를 받는다.
+	 * @return 요청한 index에 해당하는 Fragment를 반환한다.
+	 */
 	public Fragment getFragment(int index) {
 		Fragment newFragment = null;
 
@@ -283,6 +302,10 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 
 	}
 
+	/**
+	 * Fragment 컨테이너에서 해당 Fragment로 변경하여 표시한다.
+	 * @param fragment Fragment 리스트에 보관된 Fragement들을 받는 것이 좋다.
+	 */
 	public void replaceFragment(Fragment fragment) {
 		try {
 			clearFragmentBackStack();
@@ -291,6 +314,10 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 					.replace(mContentFrame.getId(), fragment)
 					.commitAllowingStateLoss();
 
+			// Android 4.4 이상일 경우 Android StatusBar와 Android NavigationBar를 모두 Translucent하는데
+			// 우리 어플리케이션에서는 HotelListFragment에서만 Android NavigationBar를 Translucent하게 하였다.
+			// 그래서 다른 Fragment들에서는 네비게이션 드로워가 차지하는 공간에 있어서 차이가 발생하게 되는데 해당 이슈를
+			// 해결하기 위한 부분이 이 부분이다.
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 				if (fragment instanceof HotelListFragment) {
 					mContentFrame.setPadding(mContentFrame.getPaddingLeft(),
@@ -326,6 +353,10 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 
 	}
 
+	/**
+	 * Fragment 컨테이너에서 해당 Fragement를 쌓아올린다.
+	 * @param fragment Fragment 리스트에 보관된 Fragment들을 받는 것이 좋다.
+	 */
 	public void addFragment(Fragment fragment) {
 		fragmentManager
 				.beginTransaction()
@@ -337,6 +368,9 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 
 	}
 
+	/**
+	 * Fragment 컨테이너의 표시되는 Fragment를 변경할 때 Fragment 컨테이너에 적재된 Fragment들을 정리한다.
+	 */
 	private void clearFragmentBackStack() {
 		for (int i = 0; i < fragmentManager.getBackStackEntryCount(); ++i)
 			fragmentManager.popBackStack();
@@ -394,6 +428,9 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 
 	}
 
+	/**
+	 * 네비게이션 드로워를 셋팅하는 메서드
+	 */
 	public void setNavigationDrawer() {
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		leftDrawer = (RelativeLayout) findViewById(R.id.drawer);
@@ -437,10 +474,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 				DrawerMenu.DRAWER_MENU_LIST_TYPE_SECTION));
 		mMenuImages.add(menuCreditFragment);
 		mMenuImages.add(menuSettingFragment);
-		
-//		View listViewHeader = LayoutInflater.from(this)
-//				.inflate(R.layout.header_hotel_list, null);
-//		drawerList.addFooterView(listViewHeader);
 		
 		btnEvent = (LinearLayout) findViewById(R.id.btn_footer);
 		TextView tvParticipateInEvent = (TextView) findViewById(R.id.tv_participate_event);
@@ -656,6 +689,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 
 		VolleyHttpClient.destroyCookie();
 
+		// AQuery의 캐시들을 정리한다.
 		AQUtility.cleanCacheAsync(getApplicationContext());
 
 		super.onDestroy();
@@ -664,6 +698,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 	@Override
 	public void onError() {
 		super.onError();
+		
+		// Error Fragment를 표시한다.
 		replaceFragment(new ErrorFragment());
 	}
 

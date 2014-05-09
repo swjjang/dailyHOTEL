@@ -177,13 +177,13 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 
 			Intent i = new Intent(this, TermActivity.class);
 			startActivity(i);
-			overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
 		} else if (v.getId() == tvPrivacy.getId()) { // 개인정보 취급
 
 			Intent i = new Intent(this, PrivacyActivity.class);
 			startActivity(i);
-			overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
 		}
 	}
@@ -206,7 +206,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 	@Override
 	public void finish() {
 		super.finish();
-		overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+		overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
 	}
 
 	@Override

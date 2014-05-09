@@ -64,13 +64,19 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:paddingTop="40dp" >
+                
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:text="지난 번 이용하신"
+                    android:textSize="16.5dp" />
 
                 <TextView
-                    android:id="@+id/tv_rating_hotel_question"
+                    android:id="@+id/tv_rating_hotel_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="지난 번 이용하신 "
                     android:textSize="16.5dp" />
 
                 <TextView

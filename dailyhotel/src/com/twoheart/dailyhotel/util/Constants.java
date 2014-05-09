@@ -30,6 +30,9 @@ public interface Constants {
 	 
 	// 회사 대표번호
 	public static final String PHONE_NUMBER_DAILYHOTEL = "1800-9120";
+	
+	// 호텔 평가를 표시할 최대 날짜
+	public static final int DAYS_DISPLAY_RATING_HOTEL_DIALOG = 7;
 
 	// DailyHOTEL User Controller WebAPI URL
 	public static final String URL_WEBAPI_USER = "user/";

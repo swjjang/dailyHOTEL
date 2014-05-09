@@ -752,7 +752,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 	@Override
 	public void finish() {
 		super.finish();
-		overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+		overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
 
 	}
 

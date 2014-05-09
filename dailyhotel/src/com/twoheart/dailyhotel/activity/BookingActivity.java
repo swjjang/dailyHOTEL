@@ -268,7 +268,7 @@ public class BookingActivity extends BaseActivity implements
 		intent.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
 		startActivityForResult(intent,
 				CODE_REQUEST_ACTIVITY_PAYMENT);
-		overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 		
 	}
 	
@@ -303,7 +303,7 @@ public class BookingActivity extends BaseActivity implements
 			
 			startActivityForResult(new Intent(this, LoginActivity.class),
 					CODE_REQUEST_ACTIVITY_LOGIN);
-			overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 		}
 		
 	}
@@ -311,7 +311,7 @@ public class BookingActivity extends BaseActivity implements
 	@Override
 	public void finish() {
 		super.finish();
-		overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+		overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
 
 	}
 

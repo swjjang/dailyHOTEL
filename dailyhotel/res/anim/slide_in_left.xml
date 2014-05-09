@@ -3,9 +3,9 @@
     
     <translate
         android:duration="300"
-        android:fromXDelta="100%"
+        android:fromXDelta="0%"
         android:fromYDelta="0%"
-        android:toXDelta="0%"
+        android:toXDelta="-20%"
         android:toYDelta="0%"
-        android:zAdjustment="top" />
+        android:zAdjustment="bottom" />
 </set>

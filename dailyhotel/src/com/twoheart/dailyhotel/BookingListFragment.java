@@ -101,8 +101,7 @@ public class BookingListFragment extends BaseFragment implements Constants,
 			Intent i = new Intent(mHostActivity, SignupActivity.class);
 
 			startActivity(i);
-			mHostActivity.overridePendingTransition(R.anim.slide_in_right,
-					R.anim.hold);
+			mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 		}
 	}
 

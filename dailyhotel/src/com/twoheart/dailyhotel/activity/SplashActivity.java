@@ -53,6 +53,8 @@ public class SplashActivity extends BaseActivity implements Constants,
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		// Anroid 4.4 이상에서 Android StatusBar와 Android NavigationBar를 Translucent하게 해주는 API를 사용하도록 한다.
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			setTheme(R.style.AppTheme_Translucent);
 		}
@@ -263,13 +265,19 @@ public class SplashActivity extends BaseActivity implements Constants,
 				finish();
 
 			}
-		}, 1200);
+		}, 1000);
 	}
 
 	@Override
 	public void onErrorResponse(VolleyError error) {
 		super.onErrorResponse(error);
 		finish();
+	}
+	
+	@Override
+	public void finish() {
+		super.finish();
+		overridePendingTransition(R.anim.hold, R.anim.fade_out);
 	}
 
 //	@Override

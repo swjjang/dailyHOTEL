@@ -56,7 +56,7 @@ public class RatingHotelFragment extends DialogFragment implements
 	
 	private ImageView ivBtnClose;
 	private Button btnRecommend, btnCancel;
-	private TextView tvQuestion;
+	private TextView tvHotelName;
 
 	public static RatingHotelFragment newInstance(HotelDetail hotelDetail) {
 
@@ -100,7 +100,7 @@ public class RatingHotelFragment extends DialogFragment implements
 		View view = inflater.inflate(R.layout.fragment_dialog_rating_hotel,
 				parent, false);
 		
-		tvQuestion = (TextView) view.findViewById(R.id.tv_rating_hotel_question);
+		tvHotelName = (TextView) view.findViewById(R.id.tv_rating_hotel_name);
 		ivBtnClose = (ImageView) view.findViewById(R.id.btn_dialog_rating_hotel_close);
 		btnRecommend = (Button) view.findViewById(R.id.btn_rating_hotel_recommend);
 		btnCancel = (Button) view.findViewById(R.id.btn_rating_hotel_cancel);
@@ -108,10 +108,12 @@ public class RatingHotelFragment extends DialogFragment implements
 		StringBuilder hotelNameWithColon = new StringBuilder("'");
 		hotelNameWithColon.append(mHotelDetail.getHotel().getName()).append("'");
 		
-		SpannableString hotelName = new SpannableString(hotelNameWithColon.toString());
-		hotelName.setSpan(new CustomTypefaceSpan("", DailyHotel.getBoldTypeface()), 0, hotelName.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
-		tvQuestion.append(hotelName);
+//		SpannableString hotelName = new SpannableString(hotelNameWithColon.toString());
+//		hotelName.setSpan(new CustomTypefaceSpan("", DailyHotel.getBoldTypeface()), 0, hotelName.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+//		tvQuestion.append(hotelName);
+		tvHotelName.setText(hotelNameWithColon);
 		
+		tvHotelName.setTypeface(DailyHotel.getBoldTypeface());
 		btnRecommend.setTypeface(DailyHotel.getBoldTypeface());
 		btnCancel.setTypeface(DailyHotel.getBoldTypeface());
 		
