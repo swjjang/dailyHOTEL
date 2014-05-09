@@ -108,6 +108,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 	public ActionBarDrawerToggle drawerToggle;
 	protected FragmentManager fragmentManager;
 	private FrameLayout mContentFrame;
+	private LinearLayout btnEvent;
 
 	public DrawerMenu menuHotelListFragment;
 	public DrawerMenu menuBookingListFragment;
@@ -291,13 +292,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 					.commitAllowingStateLoss();
 
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-				if (!(fragment instanceof HotelListFragment)) {
-					WindowManager.LayoutParams attrs = getWindow()
-							.getAttributes();
-					attrs.flags &= (~WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-					getWindow().setAttributes(attrs);
-
-				} else {
+				if (fragment instanceof HotelListFragment) {
 					mContentFrame.setPadding(mContentFrame.getPaddingLeft(),
 							mContentFrame.getPaddingTop(),
 							mContentFrame.getPaddingRight(), 0);
@@ -306,6 +301,22 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 					w.setFlags(
 							WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION,
 							WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+					
+					RelativeLayout.LayoutParams btnEventLayoutParams = (RelativeLayout.LayoutParams) btnEvent.getLayoutParams();
+					btnEventLayoutParams.bottomMargin = config.getNavigationBarHeight();
+					btnEvent.setLayoutParams(btnEventLayoutParams);
+
+
+				} else {
+					WindowManager.LayoutParams attrs = getWindow()
+							.getAttributes();
+					attrs.flags &= (~WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+					getWindow().setAttributes(attrs);
+					
+					RelativeLayout.LayoutParams btnEventLayoutParams = (RelativeLayout.LayoutParams) btnEvent.getLayoutParams();
+					btnEventLayoutParams.bottomMargin = 0;
+					btnEvent.setLayoutParams(btnEventLayoutParams);
+
 				}
 			}
 		} catch (IllegalStateException e) {
@@ -431,7 +442,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 //				.inflate(R.layout.header_hotel_list, null);
 //		drawerList.addFooterView(listViewHeader);
 		
-		LinearLayout btnEvent = (LinearLayout) findViewById(R.id.btn_footer);
+		btnEvent = (LinearLayout) findViewById(R.id.btn_footer);
 		TextView tvParticipateInEvent = (TextView) findViewById(R.id.tv_participate_event);
 		tvParticipateInEvent.setTypeface(DailyHotel.getBoldTypeface());
 		btnEvent.setOnClickListener(new OnClickListener() {
