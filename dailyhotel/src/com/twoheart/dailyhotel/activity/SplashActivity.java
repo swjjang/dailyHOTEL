@@ -167,6 +167,7 @@ public class SplashActivity extends BaseActivity implements Constants,
 						.parseInt(sharedPreference.getString(
 								KEY_PREFERENCE_SKIP_MAX_VERSION, "1.0.0").replace(
 								".", ""));
+				final int newEventFlag = Integer.parseInt(response.getString("new_event"));
 				
 				if ((maxVersion > currentVersion) && (skipMaxVersion != maxVersion)) {
 					AlertDialog.Builder alertDialog = new AlertDialog.Builder(
@@ -185,7 +186,7 @@ public class SplashActivity extends BaseActivity implements Constants,
 													KEY_PREFERENCE_MAX_VERSION_NAME, "1.0.0"));
 									
 									editor.commit();
-									showMainActivity();
+									showMainActivity(newEventFlag);
 								}
 							})
 							.setNegativeButton("√Îº“", new DialogInterface.OnClickListener() {
@@ -239,7 +240,7 @@ public class SplashActivity extends BaseActivity implements Constants,
 					AlertDialog alert = alertDialog.create();
 					alert.show();
 				} else {
-					showMainActivity();
+					showMainActivity(newEventFlag);
 				}
 
 			} catch (Exception e) {
@@ -249,12 +250,16 @@ public class SplashActivity extends BaseActivity implements Constants,
 		}
 	}
 	
-	private void showMainActivity() {
+	private void showMainActivity(final int newEventFlag) {
 		// sleep 2 second
 		Handler h = new Handler();
 		h.postDelayed(new Runnable() {
 			public void run() {
-				setResult(RESULT_OK);
+				if (newEventFlag == 1)
+					setResult(CODE_RESULT_ACTIVITY_SPLASH_NEW_EVENT);
+				else
+					setResult(RESULT_OK);
+				
 				finish();
 
 			}

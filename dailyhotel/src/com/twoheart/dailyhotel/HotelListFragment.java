@@ -106,9 +106,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 		
 //		mHotelListView.setEmptyView(view.findViewById(R.id.tv_empty_view));
 		
-		View listViewHeader = inflater
-				.inflate(R.layout.header_hotel_list, null);
-		mHotelListView.addHeaderView(listViewHeader);
+		
 		
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			View listViewFooter = inflater
@@ -119,19 +117,6 @@ public class HotelListFragment extends BaseFragment implements Constants,
 			
 			mHotelListView.addFooterView(listViewFooter);
 		}
-
-		ivNewEvent = (ImageView) view.findViewById(R.id.iv_new_event);
-		btnListViewHeader = (Button) view.findViewById(R.id.btn_footer);
-		btnListViewHeader.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				Intent i = new Intent(mHostActivity, EventWebActivity.class);
-				mHostActivity.startActivity(i);
-				mHostActivity.overridePendingTransition(R.anim.slide_in_bottom,
-						R.anim.hold);
-			}
-		});
 		
 		// Now find the PullToRefreshLayout and set it up
         ActionBarPullToRefresh.from(mHostActivity)
@@ -220,7 +205,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 	@Override
 	public void onItemClick(AdapterView<?> parentView, View childView,
 			int position, long id) {
-		int selectedPosition = position - 1;
+		int selectedPosition = position;
 
 		HotelListViewItem selectedItem = mHotelListViewList.get(selectedPosition);
 		
@@ -256,7 +241,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 	}
 
 	private void fetchHotelList(int position) {
-		((MainActivity) mHostActivity).drawerLayout.closeDrawer(((MainActivity) mHostActivity).drawerList);
+		((MainActivity) mHostActivity).drawerLayout.closeDrawer(((MainActivity) mHostActivity).leftDrawer);
 
 		String selectedRegion = mRegionList.get(position);
 
@@ -357,7 +342,6 @@ public class HotelListFragment extends BaseFragment implements Constants,
 					newHotel.setDetailRegion(detailRegion);
 
 					if (seq >= 0) { // 숨김호텔이 아니라면 추가. (음수일 경우 숨김호텔.)
-
 						if (available <= 0) // SOLD OUT 된 항목은 밑으로.
 							available *= 100;
 
@@ -373,9 +357,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 						};
 
 						Collections.sort(mHotelList, comparator);
-
 					}
-
 				}
 				
 				mHotelListViewList = new ArrayList<HotelListViewItem>();

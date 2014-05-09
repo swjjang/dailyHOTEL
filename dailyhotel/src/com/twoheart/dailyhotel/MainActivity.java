@@ -15,14 +15,12 @@
 package com.twoheart.dailyhotel;
 
 import java.security.MessageDigest;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -41,6 +39,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
@@ -51,13 +50,16 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request.Method;
 import com.androidquery.util.AQUtility;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.readystatesoftware.systembartint.SystemBarTintManager.SystemBarConfig;
+import com.twoheart.dailyhotel.activity.EventWebActivity;
 import com.twoheart.dailyhotel.activity.SplashActivity;
 import com.twoheart.dailyhotel.fragment.RatingHotelFragment;
 import com.twoheart.dailyhotel.model.Hotel;
@@ -102,6 +104,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 
 	public DrawerLayout drawerLayout;
 	public ListView drawerList;
+	public RelativeLayout leftDrawer;
 	public ActionBarDrawerToggle drawerToggle;
 	protected FragmentManager fragmentManager;
 	private FrameLayout mContentFrame;
@@ -175,14 +178,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 		if (DEBUG) {
 			printPackageHashKey();
 		}
-
-	}
-
-	@Override
-	protected void onStart() {
-		super.onStart();
-
-		
 	}
 
 	@Override
@@ -190,52 +185,60 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (requestCode == CODE_REQUEST_ACTIVITY_SPLASH) {
-			if (resultCode != RESULT_OK) {
+			switch (resultCode) {
+			case RESULT_OK :
+				break;
+			case CODE_RESULT_ACTIVITY_SPLASH_NEW_EVENT :
+				ImageView ivNewEvent = (ImageView) findViewById(R.id.iv_new_event);
+				ivNewEvent.setVisibility(View.VISIBLE);
+				break;
+			default :
 				super.finish();
-			} else {
-				try {
-					String purchasedHotelName = sharedPreference.getString(
-							KEY_PREFERENCE_HOTEL_NAME,
-							VALUE_PREFERENCE_HOTEL_NAME_DEFAULT);
-					int purchasedHotelSaleIdx = sharedPreference.getInt(
-							KEY_PREFERENCE_HOTEL_SALE_IDX,
-							VALUE_PREFERENCE_HOTEL_SALE_IDX_DEFAULT);
-					String purchasedHotelCheckOut = sharedPreference.getString(
-							KEY_PREFERENCE_HOTEL_CHECKOUT,
-							VALUE_PREFERENCE_HOTEL_CHECKOUT_DEFAULT);
-
-					Date today = new Date();
-					Date checkOut = SaleTime.stringToDate(Util
-							.dailyHotelTimeConvert(purchasedHotelCheckOut));
-
-					if (!purchasedHotelName.equals(VALUE_PREFERENCE_HOTEL_NAME_DEFAULT)) {
-						if (today.compareTo(checkOut) >= 0) {
-							Calendar calendar = Calendar.getInstance();
-							calendar.setTime(checkOut);
-							calendar.add(Calendar.DATE, 7);
-							Date deadLineDay = calendar.getTime();
-							
-							if (today.compareTo(deadLineDay) < 0) {
-								Hotel purchasedHotel = new Hotel();
-								purchasedHotel.setName(purchasedHotelName);
+				return;
+			}
 			
-								HotelDetail purchasedHotelInformation = new HotelDetail();
-								purchasedHotelInformation.setHotel(purchasedHotel);
-								purchasedHotelInformation.setSaleIdx(purchasedHotelSaleIdx);
-			
-								RatingHotelFragment dialog = RatingHotelFragment
-										.newInstance(purchasedHotelInformation);
-								dialog.show(fragmentManager, TAG_FRAGMENT_RATING_HOTEL);
-							} else {
-								RatingHotelFragment dialog = RatingHotelFragment
-										.newInstance(null);
-								dialog.destroyRatingHotelFlag();
-							}
+			try {
+				String purchasedHotelName = sharedPreference.getString(
+						KEY_PREFERENCE_HOTEL_NAME,
+						VALUE_PREFERENCE_HOTEL_NAME_DEFAULT);
+				int purchasedHotelSaleIdx = sharedPreference.getInt(
+						KEY_PREFERENCE_HOTEL_SALE_IDX,
+						VALUE_PREFERENCE_HOTEL_SALE_IDX_DEFAULT);
+				String purchasedHotelCheckOut = sharedPreference.getString(
+						KEY_PREFERENCE_HOTEL_CHECKOUT,
+						VALUE_PREFERENCE_HOTEL_CHECKOUT_DEFAULT);
+
+				Date today = new Date();
+				Date checkOut = SaleTime.stringToDate(Util
+						.dailyHotelTimeConvert(purchasedHotelCheckOut));
+
+				if (!purchasedHotelName.equals(VALUE_PREFERENCE_HOTEL_NAME_DEFAULT)) {
+					if (today.compareTo(checkOut) >= 0) {
+						Calendar calendar = Calendar.getInstance();
+						calendar.setTime(checkOut);
+						calendar.add(Calendar.DATE, 7);
+						Date deadLineDay = calendar.getTime();
+						
+						if (today.compareTo(deadLineDay) < 0) {
+							Hotel purchasedHotel = new Hotel();
+							purchasedHotel.setName(purchasedHotelName);
+		
+							HotelDetail purchasedHotelInformation = new HotelDetail();
+							purchasedHotelInformation.setHotel(purchasedHotel);
+							purchasedHotelInformation.setSaleIdx(purchasedHotelSaleIdx);
+		
+							RatingHotelFragment dialog = RatingHotelFragment
+									.newInstance(purchasedHotelInformation);
+							dialog.show(fragmentManager, TAG_FRAGMENT_RATING_HOTEL);
+						} else {
+							RatingHotelFragment dialog = RatingHotelFragment
+									.newInstance(null);
+							dialog.destroyRatingHotelFlag();
 						}
 					}
-				} catch (Exception e) {
-					onError(e);
 				}
+			} catch (Exception e) {
+				onError(e);
 			}
 		}
 	}
@@ -376,12 +379,13 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 		}
 
 		replaceFragment(getFragment(indexLastFragment));
-		drawerLayout.closeDrawer(drawerList);
+		drawerLayout.closeDrawer(leftDrawer);
 
 	}
 
 	public void setNavigationDrawer() {
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		leftDrawer = (RelativeLayout) findViewById(R.id.drawer);
 		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
 				R.drawable.ic_drawer, 0, 0) {
 
@@ -397,7 +401,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 		};
 
 		drawerLayout.setDrawerListener(drawerToggle);
-		drawerList = (ListView) findViewById(R.id.left_drawer);
+		drawerList = (ListView) findViewById(R.id.drawer_list);
 
 		menuHotelListFragment = new DrawerMenu(DRAWER_MENU_ENTRY_HOTEL,
 				R.drawable.selector_drawermenu_todayshotel,
@@ -422,12 +426,33 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 				DrawerMenu.DRAWER_MENU_LIST_TYPE_SECTION));
 		mMenuImages.add(menuCreditFragment);
 		mMenuImages.add(menuSettingFragment);
+		
+//		View listViewHeader = LayoutInflater.from(this)
+//				.inflate(R.layout.header_hotel_list, null);
+//		drawerList.addFooterView(listViewHeader);
+		
+		LinearLayout btnEvent = (LinearLayout) findViewById(R.id.btn_footer);
+		TextView tvParticipateInEvent = (TextView) findViewById(R.id.tv_participate_event);
+		tvParticipateInEvent.setTypeface(DailyHotel.getBoldTypeface());
+		btnEvent.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				drawerLayout.closeDrawer(leftDrawer);
+				Intent i = new Intent(MainActivity.this, EventWebActivity.class);
+				startActivity(i);
+				overridePendingTransition(R.anim.slide_in_bottom,
+						R.anim.hold);
+			}
+		});
+		
 
 		mDrawerMenuListAdapter = new DrawerMenuListAdapter(this,
 				R.layout.list_row_drawer_entry, mMenuImages);
 
 		drawerList.setAdapter(mDrawerMenuListAdapter);
 		drawerList.setOnItemClickListener(this);
+		
 	}
 
 	@Override
@@ -458,15 +483,18 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_MENU) {
-			if (!drawerLayout.isDrawerOpen(drawerList)) {
-				drawerLayout.openDrawer(drawerList);
-				return true;
-			} else {
-				drawerLayout.closeDrawer(drawerList);
-			}
-
+			toggleDrawer();
+			return true;
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+	
+	public void toggleDrawer() {
+		if (!drawerLayout.isDrawerOpen(leftDrawer)) {
+			drawerLayout.openDrawer(leftDrawer);
+		} else {
+			drawerLayout.closeDrawer(leftDrawer);
+		}
 	}
 
 	@Override
