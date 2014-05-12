@@ -129,6 +129,10 @@
             android:name="com.twoheart.dailyhotel.activity.ProfileActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
+          <activity
+            android:name="com.twoheart.dailyhotel.IntroActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.twoheart.dailyhotel.activity.PaymentActivity"
             android:launchMode="singleTop"

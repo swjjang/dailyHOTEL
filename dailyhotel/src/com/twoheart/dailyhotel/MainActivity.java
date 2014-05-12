@@ -207,6 +207,11 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 				return;				// 메서드를 빠져나간다 - 호텔 평가를 수행하지 않음.
 			}
 			
+			boolean showGuide = sharedPreference.getBoolean(KEY_PREFERENCE_SHOW_GUIDE, true);
+			if (showGuide) {
+				startActivity(new Intent(this, IntroActivity.class));
+			}
+			
 			// 호텔평가
 			try {
 				String purchasedHotelName = sharedPreference.getString(

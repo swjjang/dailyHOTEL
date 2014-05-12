@@ -211,22 +211,23 @@ public class RatingHotelFragment extends DialogFragment implements
 				JSONObject obj = response;
 
 				String result = obj.getString("success");
-				String msg = null;
+//				String msg = null;
 
-				if (obj.length() > 1)
-					msg = obj.getString("msg");
+//				if (obj.length() > 1)
+//					msg = obj.getString("msg");
 
 				if (result.equals("true")) {
 					unLockUI();
-					showToast("좋은 의견 감사합니다", Toast.LENGTH_LONG, true);
+					
 				} else {
 					unLockUI();
-					showToast(msg, Toast.LENGTH_LONG, true);
+//					showToast(msg, Toast.LENGTH_LONG, true);
 				}
 
 			} catch (Exception e) {
 				onError(e);
 			} finally {
+				showToast("좋은 의견 감사합니다", Toast.LENGTH_LONG, true);
 				dismiss();
 			}
 		}

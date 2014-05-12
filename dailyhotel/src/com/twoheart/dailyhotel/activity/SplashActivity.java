@@ -49,6 +49,10 @@ public class SplashActivity extends BaseActivity implements Constants,
 		DailyHotelJsonResponseListener, ErrorListener {
 
 	private static final String TAG = "SplashActivity";
+	
+	private static final int VALUE_WEB_API_RESPONSE_NEW_EVENT_NOTIFY = 1;
+	private static final int VALUE_WEB_API_RESPONSE_NEW_EVENT_NONE = 0;
+	private static final int DURING_SPLASH_ACTIVITY_SHOW = 1000;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -257,15 +261,15 @@ public class SplashActivity extends BaseActivity implements Constants,
 		Handler h = new Handler();
 		h.postDelayed(new Runnable() {
 			public void run() {
-				if (newEventFlag == 1)
+				if (newEventFlag == VALUE_WEB_API_RESPONSE_NEW_EVENT_NOTIFY)
 					setResult(CODE_RESULT_ACTIVITY_SPLASH_NEW_EVENT);
-				else
+				else if (newEventFlag == VALUE_WEB_API_RESPONSE_NEW_EVENT_NONE)
 					setResult(RESULT_OK);
 				
 				finish();
 
 			}
-		}, 1000);
+		}, DURING_SPLASH_ACTIVITY_SHOW);
 	}
 
 	@Override
