@@ -78,59 +78,69 @@ public class ProfileActivity extends BaseActivity implements
 		updateTextField();
 
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		if (mAq.id(R.id.tv_profile_edit).getText().equals("완료"))
 			mAq.id(R.id.ll_profile_edit).click();
 		else
 			super.onBackPressed();
-		
+
 	}
-	
+
 	public void setupUI(View view) {
-	    //Set up touch listener for non-text box views to hide keyboard.
-	    if(!(view instanceof EditText)) {
-	        view.setOnTouchListener(new OnTouchListener() {
-	            public boolean onTouch(View v, MotionEvent event) {
-	            		if (mAq.id(R.id.tv_profile_edit).getText().equals("완료"))
-	            			mAq.id(R.id.ll_profile_edit).click();
-	                return false;
-	            }
 
-	        });
-	    }
+		if ((view.getId() == R.id.ll_profile_edit))
+			return;
 
-	    //If a layout container, iterate over children and seed recursion.
-	    if (view instanceof ViewGroup) {
-	        for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
-	            View innerView = ((ViewGroup) view).getChildAt(i);
-	            setupUI(innerView);
-	        }
-	    }
-	}
-	
-	private void toggleKeyboard(boolean show) {
-		if (show) {
-			mAq.id(R.id.et_profile_name).getEditText().requestFocus(); 
-			mInputMethodManager.showSoftInput(mAq.id(R.id.et_profile_name).getEditText()
-					, InputMethodManager.SHOW_FORCED);
-			
-		} else {
-			mInputMethodManager.hideSoftInputFromWindow(
-					mAq.id(R.id.et_profile_name).getEditText()
-							.getWindowToken(), 0);
-			
+		// Set up touch listener for non-text box views to hide keyboard.
+		if (!(view instanceof EditText)) {
+			view.setOnTouchListener(new OnTouchListener() {
+				public boolean onTouch(View v, MotionEvent event) {
+					if (mAq.id(R.id.tv_profile_edit).getText().equals("완료")) {
+						mAq.id(R.id.ll_profile_edit).click();
+						return true;
+					}
+					return false;
+				}
+
+			});
+		}
+
+		// If a layout container, iterate over children and seed recursion.
+		if (view instanceof ViewGroup) {
+			for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+				View innerView = ((ViewGroup) view).getChildAt(i);
+				setupUI(innerView);
+			}
 		}
 	}
-	
+
+	private void toggleKeyboard(boolean show) {
+		if (show) {
+			mAq.id(R.id.et_profile_name).getEditText().requestFocus();
+			mInputMethodManager.showSoftInput(mAq.id(R.id.et_profile_name)
+					.getEditText(), InputMethodManager.SHOW_FORCED);
+
+		} else {
+			mInputMethodManager
+					.hideSoftInputFromWindow(mAq.id(R.id.et_profile_name)
+							.getEditText().getWindowToken(), 0);
+
+		}
+	}
+
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == R.id.ll_profile_edit) {
 			if (mAq.id(R.id.tv_profile_edit).getText().equals("수정")) {
 				mAq.id(R.id.ll_profile_info_label).visibility(View.GONE);
 				mAq.id(R.id.ll_profile_info_editable).visibility(View.VISIBLE);
-				mAq.id(R.id.ll_profile_info_editable).getView().startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_in));
+				mAq.id(R.id.ll_profile_info_editable)
+						.getView()
+						.startAnimation(
+								AnimationUtils.loadAnimation(this,
+										R.anim.fade_in));
 				mAq.id(R.id.tv_profile_edit).text("완료");
 
 				toggleKeyboard(true);
@@ -138,20 +148,26 @@ public class ProfileActivity extends BaseActivity implements
 			} else if (mAq.id(R.id.tv_profile_edit).getText().equals("완료")) {
 				mAq.id(R.id.ll_profile_info_editable).visibility(View.GONE);
 				mAq.id(R.id.ll_profile_info_label).visibility(View.VISIBLE);
-				mAq.id(R.id.ll_profile_info_label).getView().startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_in));
+				mAq.id(R.id.ll_profile_info_label)
+						.getView()
+						.startAnimation(
+								AnimationUtils.loadAnimation(this,
+										R.anim.fade_in));
 				mAq.id(R.id.tv_profile_edit).text("수정");
 
 				toggleKeyboard(false);
-				
+
 				Map<String, String> updateParams = new HashMap<String, String>();
-				updateParams.put("name", mAq.id(R.id.et_profile_name).getText().toString());
-				updateParams.put("phone", mAq.id(R.id.et_profile_phone).getText().toString());
-				
+				updateParams.put("name", mAq.id(R.id.et_profile_name).getText()
+						.toString());
+				updateParams.put("phone", mAq.id(R.id.et_profile_phone)
+						.getText().toString());
+
 				lockUI();
 				mQueue.add(new DailyHotelJsonRequest(Method.POST,
 						new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-								URL_WEBAPI_USER_UPDATE).toString(), updateParams,
-						this, this));
+								URL_WEBAPI_USER_UPDATE).toString(),
+						updateParams, this, this));
 
 			}
 
@@ -191,8 +207,9 @@ public class ProfileActivity extends BaseActivity implements
 													.closeAndClearTokenInformation();
 											Session.setActiveSession(null);
 										}
-									
-									showToast("로그아웃되었습니다", Toast.LENGTH_SHORT, true);
+
+									showToast("로그아웃되었습니다", Toast.LENGTH_SHORT,
+											true);
 									finish();
 
 								}
@@ -210,7 +227,7 @@ public class ProfileActivity extends BaseActivity implements
 
 		}
 	}
-	
+
 	private void updateTextField() {
 		lockUI();
 		// 사용자 정보 요청.

@@ -85,7 +85,6 @@ public class HotelListFragment extends BaseFragment implements Constants,
 	private Map<String, List<String>> mRegionDetailList;
 	private SaleTime mDailyHotelSaleTime;
 	private LinearLayout llListViewFooter;
-	private Button btnListViewHeader;
 	private ImageView ivNewEvent;
 
 	private boolean mRefreshHotelList;
