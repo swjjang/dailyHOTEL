@@ -13,24 +13,24 @@
  */
 package com.twoheart.dailyhotel.util.ui;
 
-import android.app.Activity;
 import android.widget.Toast;
+
+import com.twoheart.dailyhotel.MainActivity;
 
 public class CloseOnBackPressed {
 	
 	private long backPressedTime = 0;
-	private Toast toast;
-	private Activity activity;
+	private MainActivity mActivity;
 	
-	public CloseOnBackPressed(Activity activity) {
-		this.activity = activity;
+	public CloseOnBackPressed(MainActivity activity) {
+		mActivity = activity;
 		
 	}
 	
 	public boolean onBackPressed() {
 		
 		if (System.currentTimeMillis() <= backPressedTime + 2000) {
-			toast.cancel();
+			mActivity.mToast.cancel();
 			return true;
 		}
 		
@@ -42,8 +42,8 @@ public class CloseOnBackPressed {
 	}
 	
 	private void showGuide() {
-		toast = Toast.makeText(activity, "\'뒤로\' 버튼을 한 번 더 누르시면 종료합니다.", Toast.LENGTH_SHORT);
-		toast.show();
+		mActivity.showToast("\'뒤로\' 버튼을 한 번 더 누르시면 앱이 종료됩니다", Toast.LENGTH_SHORT, true);
+		
 	}
 
 }

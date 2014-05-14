@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +10,9 @@ import android.widget.ProgressBar;
 
 import com.androidquery.AQuery;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.lazy_image_loading.ImageLoader;
+import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
-
-public class ImageDetailFragment extends Fragment {
+public class ImageDetailFragment extends BaseFragment {
 	
 	private static final String KEY_BUNDLE_ARGUMENTS_IMAGEURL = "image_url";
 	
@@ -23,7 +21,6 @@ public class ImageDetailFragment extends Fragment {
 	private AQuery mAq;
 	private ImageView mImageView;
 	private ProgressBar mProgressBar;
-	private Activity mHostActivity;
 	
 	public static ImageDetailFragment newInstance(String imageUrl) {
 		ImageDetailFragment newFragment = new ImageDetailFragment();
@@ -39,11 +36,9 @@ public class ImageDetailFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		mHostActivity = getActivity();
 //		mImageLoader = com.nostra13.universalimageloader.core.ImageLoader.getInstance();
 //		mImageLoader = VolleyImageLoader.getImageLoader();
 //		mImageLoader = new ImageLoader(mHostActivity);
-		mAq = new AQuery(mHostActivity);
 		mImageUrl = getArguments().getString(KEY_BUNDLE_ARGUMENTS_IMAGEURL);
 	}
 	
@@ -60,6 +55,7 @@ public class ImageDetailFragment extends Fragment {
 //		mImageView.setImageUrl(mImageUrl, mImageLoader, mProgressBar);
 //		mImageLoader.displayImage(mImageUrl, mImageView, new ProgressImageLoading(mProgressBar));
 //		mImageLoader.DisplayImage(mImageUrl, mImageView, mProgressBar);
+		mAq = new AQuery(mHostActivity, view);
 		mAq.id(mImageView).progress(mProgressBar).image(mImageUrl, true, true, 0, R.drawable.img_placeholder, null,
         		AQuery.FADE_IN);
 

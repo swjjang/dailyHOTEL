@@ -43,7 +43,6 @@ public class VolleyHttpClient implements Constants {
 	public static final int TIME_OUT = 5000;
 	public static final int MAX_RETRY = 2;
 
-	public static Cookie cookie;
 	private static RequestQueue sRequestQueue;
 	private static Context sContext;
 	private static HttpClient sHttpClient;
@@ -73,7 +72,7 @@ public class VolleyHttpClient implements Constants {
 			return sRequestQueue;
 		}
 	}
-
+	
 	public static Boolean isAvailableNetwork() {
 		boolean result = false;
 
@@ -109,21 +108,18 @@ public class VolleyHttpClient implements Constants {
 			for (int i = 0; i < cookies.size(); i++) {
 				Cookie newCookie = cookies.get(i);
 				if (newCookie.getName().equals(KEY_DAILYHOTEL_COOKIE)) {
-					if (cookie == null) {
-						cookie = newCookie;
+					
+					StringBuilder cookieString = new StringBuilder();
+					cookieString.append(newCookie.getName()).append("=")
+							.append(newCookie.getValue());
+					CookieManager.getInstance().setAcceptCookie(true);
+					
+					CookieManager.getInstance().setCookie(newCookie.getDomain(),
+							cookieString.toString());
+					
+//					Log.e("Init: " + cookieString.toString());
 
-						StringBuilder cookieString = new StringBuilder();
-						cookieString.append(cookie.getName()).append("=")
-								.append(cookie.getValue());
-						CookieManager.getInstance().setAcceptCookie(true);
-						
-						CookieManager.getInstance().setCookie(cookie.getDomain(),
-								cookieString.toString());
-						
-//						Log.e("Init: " + cookieString.toString());
-
-						CookieSyncManager.getInstance().sync();
-					}
+					CookieSyncManager.getInstance().sync();
 				}
 			}
 		}
@@ -131,7 +127,6 @@ public class VolleyHttpClient implements Constants {
 	
 	// 로그아웃 시 반드시 이 메서드를 사용해야 함.
 	public static void destroyCookie() {
-		VolleyHttpClient.cookie = null;
 		CookieManager.getInstance()
 				.removeAllCookie();
 		CookieSyncManager.getInstance().sync();

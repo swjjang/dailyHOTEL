@@ -16,6 +16,8 @@ package com.twoheart.dailyhotel;
 
 import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,9 +37,9 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
@@ -48,28 +50,30 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request.Method;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.VolleyError;
+import com.androidquery.util.AQUtility;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.readystatesoftware.systembartint.SystemBarTintManager.SystemBarConfig;
+import com.twoheart.dailyhotel.activity.EventWebActivity;
 import com.twoheart.dailyhotel.activity.SplashActivity;
+import com.twoheart.dailyhotel.fragment.RatingHotelFragment;
+import com.twoheart.dailyhotel.model.Hotel;
+import com.twoheart.dailyhotel.model.HotelDetail;
+import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.GlobalFont;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.CloseOnBackPressed;
-import com.twoheart.dailyhotel.util.ui.LoadingDialog;
-import com.twoheart.dailyhotel.util.ui.OnLoadCompleteListener;
 
 public class MainActivity extends BaseActivity implements OnItemClickListener,
-		Constants, ErrorListener, OnLoadCompleteListener {
+		Constants {
 
 	private static final String TAG = "MainActivity";
 
@@ -90,84 +94,100 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 	public static final String KEY_CREDIT_FRAGMENT = "credit";
 	public static final String KEY_SEETING_FRAGMENT = "setting";
 
-	private DrawerMenuListAdapter mDrawerMenuListAdapter;
-	protected List<DrawerMenu> mMenuImages;
-	protected List<Fragment> mFragments = new LinkedList<Fragment>();
+	private static final String TAG_FRAGMENT_RATING_HOTEL = "rating_hotel";
 
-	public int indexLastFragment;
-
-	public DrawerLayout drawerLayout;
 	public ListView drawerList;
+	public DrawerLayout drawerLayout;
+	public RelativeLayout leftDrawer;
+	private FrameLayout mContentFrame;
+	private LinearLayout btnEvent;
+	
 	public ActionBarDrawerToggle drawerToggle;
 	protected FragmentManager fragmentManager;
-	private FrameLayout mContentFrame;
-
+	protected List<DrawerMenu> mMenuImages;
+	protected List<Fragment> mFragments;
+	private DrawerMenuListAdapter mDrawerMenuListAdapter;
+	
+	// 마지막으로 머물렀던 Fragment의 index
+	public int indexLastFragment;	// Error Fragment에서 다시 돌아올 때 필요.
+	
+	// SystemBarTintManager
+	private SystemBarTintManager tintManager;
+	public SystemBarConfig config;
+	
+	// DrawerMenu 객체들
 	public DrawerMenu menuHotelListFragment;
 	public DrawerMenu menuBookingListFragment;
 	public DrawerMenu menuCreditFragment;
 	public DrawerMenu menuSettingFragment;
 
-	private RequestQueue mQueue;
-
+	// Back 버튼을 두 번 눌러 핸들러 멤버 변수
 	private CloseOnBackPressed backButtonHandler;
-	
-	private SystemBarTintManager tintManager;
-	public SystemBarConfig config;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		// 쿠키 동기화를 초기화한다. 로그인, 로그아웃 세션 쿠키는 MainActivity의 생명주기와 동기화한다.
-		cookieSyncManager = CookieSyncManager.createInstance(getApplicationContext());
+		CookieSyncManager.createInstance(getApplicationContext());
 
 		// 이전의 비정상 종료에 의한 만료된 쿠키들이 있을 수 있으므로, SplashActivity에서 자동 로그인을
 		// 처리하기 이전에 미리 이미 저장되어 있는 쿠키들을 정리한다.
 		if (CookieManager.getInstance().getCookie(URL_DAILYHOTEL_SERVER) != null)
 			VolleyHttpClient.destroyCookie();
 
-		startActivityForResult(new Intent(this, SplashActivity.class),
-				CODE_REQUEST_ACTIVITY_SPLASH);
+		// 스플래시 화면을 띄운다
+		startActivityForResult(new Intent(this, SplashActivity.class), CODE_REQUEST_ACTIVITY_SPLASH);
 
+		// Anroid 4.4 이상에서 Android StatusBar와 Android NavigationBar를 Translucent하게 해주는 API를 사용하도록 한다.
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			setTheme(R.style.AppTheme_Translucent);
-			
+
+			// SystemBarTintManager는 3rd Party 라이브러리로 StatusBar와 NavigationBar와 관련된 API를 쉽게 변경할 수 있도록 해준다.
 			tintManager = new SystemBarTintManager(this);
 			config = tintManager.getConfig();
-			
+
 			tintManager.setStatusBarTintEnabled(true);
 			int actionBarColor = getResources().getColor(android.R.color.white);
 			tintManager.setStatusBarTintColor(actionBarColor);
-			
+
 		} else {
-			setTheme(R.style.AppTheme);	
+			setTheme(R.style.AppTheme);
 		}
-		
+
 		setContentView(R.layout.activity_main);
 		setNavigationDrawer();
-		
+
 		mContentFrame = (FrameLayout) findViewById(R.id.content_frame);
-            
+
+		// Android 4.4 이상에서 Android StatusBar와 Android NavigationBar를 Translucent하게 
+		// 할 경우 여백 계산이 필요한 케이스가 발생하므로 해당 케이스에 대해 예외 처리한다.
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-			mContentFrame.setPadding(mContentFrame.getPaddingLeft(), config.getStatusBarHeight() + config.getActionBarHeight(),
-					mContentFrame.getPaddingRight(), mContentFrame.getPaddingBottom());
-			
-			drawerList.setPadding(drawerList.getPaddingLeft(), config.getStatusBarHeight() + config.getActionBarHeight(),
-					drawerList.getPaddingRight(), drawerList.getPaddingBottom());
-			
+			mContentFrame.setPadding(mContentFrame.getPaddingLeft(),
+					config.getStatusBarHeight() + config.getActionBarHeight(),
+					mContentFrame.getPaddingRight(),
+					mContentFrame.getPaddingBottom());
+
+			drawerList
+					.setPadding(
+							drawerList.getPaddingLeft(),
+							config.getStatusBarHeight()
+									+ config.getActionBarHeight(),
+							drawerList.getPaddingRight(),
+							drawerList.getPaddingBottom());
+
 		}
-		
-		mQueue = VolleyHttpClient.getRequestQueue();
+
 		fragmentManager = getSupportFragmentManager();
 		backButtonHandler = new CloseOnBackPressed(this);
 
 		// 맨 처음은 호텔리스트
 		selectMenuDrawer(menuHotelListFragment);
 
+		// Facebook SDK를 관리하기 위한 패키지 Hash 값 표시
 		if (DEBUG) {
 			printPackageHashKey();
 		}
-
 	}
 
 	@Override
@@ -175,12 +195,74 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (requestCode == CODE_REQUEST_ACTIVITY_SPLASH) {
-			if (resultCode != RESULT_OK) {
-				super.finish();
+			switch (resultCode) {
+			case RESULT_OK :		// 스플래시 화면이 정상적으로 종료되었을 경우
+				break;
+			case CODE_RESULT_ACTIVITY_SPLASH_NEW_EVENT :		// 스플래시가 정상적으로 종료되었는데 새로운 이벤트 알림이 있는 경우
+				ImageView ivNewEvent = (ImageView) findViewById(R.id.iv_new_event);
+				ivNewEvent.setVisibility(View.VISIBLE);
+				break;
+			default :		// 스플래시가 비정상적으로 종료되었을 경우
+				super.finish();		// 어플리케이션(메인 화면)을 종료해버린다
+				return;				// 메서드를 빠져나간다 - 호텔 평가를 수행하지 않음.
+			}
+			
+			boolean showGuide = sharedPreference.getBoolean(KEY_PREFERENCE_SHOW_GUIDE, true);
+			if (showGuide) {
+				startActivity(new Intent(this, IntroActivity.class));
+			}
+			
+			// 호텔평가
+			try {
+				String purchasedHotelName = sharedPreference.getString(
+						KEY_PREFERENCE_HOTEL_NAME,
+						VALUE_PREFERENCE_HOTEL_NAME_DEFAULT);
+				int purchasedHotelSaleIdx = sharedPreference.getInt(
+						KEY_PREFERENCE_HOTEL_SALE_IDX,
+						VALUE_PREFERENCE_HOTEL_SALE_IDX_DEFAULT);
+				String purchasedHotelCheckOut = sharedPreference.getString(
+						KEY_PREFERENCE_HOTEL_CHECKOUT,
+						VALUE_PREFERENCE_HOTEL_CHECKOUT_DEFAULT);
+
+				Date today = new Date();
+				Date checkOut = SaleTime.stringToDate(Util
+						.dailyHotelTimeConvert(purchasedHotelCheckOut));
+
+				if (!purchasedHotelName.equals(VALUE_PREFERENCE_HOTEL_NAME_DEFAULT)) {
+					if (today.compareTo(checkOut) >= 0) {
+						Calendar calendar = Calendar.getInstance();
+						calendar.setTime(checkOut);
+						calendar.add(Calendar.DATE, DAYS_DISPLAY_RATING_HOTEL_DIALOG);
+						Date deadLineDay = calendar.getTime();
+						
+						if (today.compareTo(deadLineDay) < 0) {
+							Hotel purchasedHotel = new Hotel();
+							purchasedHotel.setName(purchasedHotelName);
+		
+							HotelDetail purchasedHotelInformation = new HotelDetail();
+							purchasedHotelInformation.setHotel(purchasedHotel);
+							purchasedHotelInformation.setSaleIdx(purchasedHotelSaleIdx);
+		
+							RatingHotelFragment dialog = RatingHotelFragment
+									.newInstance(purchasedHotelInformation);
+							dialog.show(fragmentManager, TAG_FRAGMENT_RATING_HOTEL);
+						} else {
+							RatingHotelFragment dialog = RatingHotelFragment
+									.newInstance(null);
+							dialog.destroyRatingHotelFlag();
+						}
+					}
+				}
+			} catch (Exception e) {
+				onError(e);
 			}
 		}
 	}
 
+	/**
+	 * 네비게이션 드로워에서 메뉴를 선택하는 효과를 내주는 메서드
+	 * @param selectedMenu DrawerMenu 객체를 받는다.
+	 */
 	public void selectMenuDrawer(DrawerMenu selectedMenu) {
 		drawerList.performItemClick(
 				drawerList.getAdapter().getView(
@@ -189,60 +271,97 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 						.getItemId(mMenuImages.indexOf(selectedMenu)));
 	}
 
+	private void initializeFragments() {
+		if (mFragments != null)
+			mFragments.clear();
+		else
+			mFragments = new LinkedList<Fragment>();
+
+		mFragments.add(new HotelListFragment());
+		mFragments.add(new BookingListFragment());
+		mFragments.add(new CreditFragment());
+		mFragments.add(new SettingFragment());
+
+	}
+
+	/**
+	 * 네비게이션 드로워 메뉴에서 선택할 수 있는 Fragment를 반환하는 메서드이다.
+	 * @param index Fragment 리스트에 해당하는 index를 받는다.
+	 * @return 요청한 index에 해당하는 Fragment를 반환한다.
+	 */
 	public Fragment getFragment(int index) {
 		Fragment newFragment = null;
 
 		try {
 			newFragment = mFragments.get(index);
-		} catch (IndexOutOfBoundsException e) {
 
-			switch (index) {
-			case INDEX_HOTEL_LIST_FRAGMENT:
-				newFragment = new HotelListFragment();
-				break;
-			case INDEX_BOOKING_LIST_FRAGMENT:
-				newFragment = new BookingListFragment();
-				break;
-			case INDEX_CREDIT_FRAGMENT:
-				newFragment = new CreditFragment();
-				break;
-			case INDEX_SETTING_FRAGMENT:
-				newFragment = new SettingFragment();
-				break;
-			}
+		} catch (Exception e) {
+			// onError(e);
+
+			initializeFragments();
+			newFragment = getFragment(index);
+
 		}
 
 		return newFragment;
 
 	}
 
+	/**
+	 * Fragment 컨테이너에서 해당 Fragment로 변경하여 표시한다.
+	 * @param fragment Fragment 리스트에 보관된 Fragement들을 받는 것이 좋다.
+	 */
 	public void replaceFragment(Fragment fragment) {
-		clearFragmentBackStack();
+		try {
+			clearFragmentBackStack();
 
-		fragmentManager.beginTransaction()
-				.replace(mContentFrame.getId(), fragment)
-				.commitAllowingStateLoss();
-		
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-			if (!(fragment instanceof HotelListFragment)) {
-				WindowManager.LayoutParams attrs = getWindow()
-                        .getAttributes();
-                attrs.flags &= (~WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-                getWindow().setAttributes(attrs);
-				
-			} else {
-				mContentFrame.setPadding(mContentFrame.getPaddingLeft(), mContentFrame.getPaddingTop(),
-						mContentFrame.getPaddingRight(), 0);
-				
-				Window w = getWindow();
-                w.setFlags(
-                        WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION,
-                        WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+			fragmentManager.beginTransaction()
+					.replace(mContentFrame.getId(), fragment)
+					.commitAllowingStateLoss();
+
+			// Android 4.4 이상일 경우 Android StatusBar와 Android NavigationBar를 모두 Translucent하는데
+			// 우리 어플리케이션에서는 HotelListFragment에서만 Android NavigationBar를 Translucent하게 하였다.
+			// 그래서 다른 Fragment들에서는 네비게이션 드로워가 차지하는 공간에 있어서 차이가 발생하게 되는데 해당 이슈를
+			// 해결하기 위한 부분이 이 부분이다.
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+				if (fragment instanceof HotelListFragment) {
+					mContentFrame.setPadding(mContentFrame.getPaddingLeft(),
+							mContentFrame.getPaddingTop(),
+							mContentFrame.getPaddingRight(), 0);
+
+					Window w = getWindow();
+					w.setFlags(
+							WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION,
+							WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+					
+					RelativeLayout.LayoutParams btnEventLayoutParams = (RelativeLayout.LayoutParams) btnEvent.getLayoutParams();
+					btnEventLayoutParams.bottomMargin = config.getNavigationBarHeight();
+					btnEvent.setLayoutParams(btnEventLayoutParams);
+
+
+				} else {
+					WindowManager.LayoutParams attrs = getWindow()
+							.getAttributes();
+					attrs.flags &= (~WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+					getWindow().setAttributes(attrs);
+					
+					RelativeLayout.LayoutParams btnEventLayoutParams = (RelativeLayout.LayoutParams) btnEvent.getLayoutParams();
+					btnEventLayoutParams.bottomMargin = 0;
+					btnEvent.setLayoutParams(btnEventLayoutParams);
+
+				}
 			}
+		} catch (IllegalStateException e) {
+			onError(e);
+
 		}
 
 	}
 
+	/**
+	 * Fragment 컨테이너에서 해당 Fragement를 쌓아올린다.
+	 * @param fragment Fragment 리스트에 보관된 Fragment들을 받는 것이 좋다.
+	 */
 	public void addFragment(Fragment fragment) {
 		fragmentManager
 				.beginTransaction()
@@ -254,6 +373,9 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 
 	}
 
+	/**
+	 * Fragment 컨테이너의 표시되는 Fragment를 변경할 때 Fragment 컨테이너에 적재된 Fragment들을 정리한다.
+	 */
 	private void clearFragmentBackStack() {
 		for (int i = 0; i < fragmentManager.getBackStackEntryCount(); ++i)
 			fragmentManager.popBackStack();
@@ -277,7 +399,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 						Base64.encodeToString(md.digest(), Base64.DEFAULT));
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			onError(e);
 		}
 	}
 
@@ -306,13 +428,17 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 			break;
 		}
 
-		drawerLayout.closeDrawer(drawerList);
 		replaceFragment(getFragment(indexLastFragment));
+		drawerLayout.closeDrawer(leftDrawer);
 
 	}
 
+	/**
+	 * 네비게이션 드로워를 셋팅하는 메서드
+	 */
 	public void setNavigationDrawer() {
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		leftDrawer = (RelativeLayout) findViewById(R.id.drawer);
 		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
 				R.drawable.ic_drawer, 0, 0) {
 
@@ -328,7 +454,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 		};
 
 		drawerLayout.setDrawerListener(drawerToggle);
-		drawerList = (ListView) findViewById(R.id.left_drawer);
+		drawerList = (ListView) findViewById(R.id.drawer_list);
 
 		menuHotelListFragment = new DrawerMenu(DRAWER_MENU_ENTRY_HOTEL,
 				R.drawable.selector_drawermenu_todayshotel,
@@ -353,12 +479,29 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 				DrawerMenu.DRAWER_MENU_LIST_TYPE_SECTION));
 		mMenuImages.add(menuCreditFragment);
 		mMenuImages.add(menuSettingFragment);
+		
+		btnEvent = (LinearLayout) findViewById(R.id.btn_footer);
+		TextView tvParticipateInEvent = (TextView) findViewById(R.id.tv_participate_event);
+		tvParticipateInEvent.setTypeface(DailyHotel.getBoldTypeface());
+		btnEvent.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				drawerLayout.closeDrawer(leftDrawer);
+				Intent i = new Intent(MainActivity.this, EventWebActivity.class);
+				startActivity(i);
+				overridePendingTransition(R.anim.slide_in_bottom,
+						R.anim.hold);
+			}
+		});
+		
 
 		mDrawerMenuListAdapter = new DrawerMenuListAdapter(this,
 				R.layout.list_row_drawer_entry, mMenuImages);
 
 		drawerList.setAdapter(mDrawerMenuListAdapter);
 		drawerList.setOnItemClickListener(this);
+		
 	}
 
 	@Override
@@ -387,22 +530,20 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 	}
 
 	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		return super.onPrepareOptionsMenu(menu);
-	}
-
-	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_MENU) {
-			if (!drawerLayout.isDrawerOpen(drawerList)) {
-				drawerLayout.openDrawer(drawerList);
-				return true;
-			} else {
-				drawerLayout.closeDrawer(drawerList);
-			}
-
+			toggleDrawer();
+			return true;
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+	
+	public void toggleDrawer() {
+		if (!drawerLayout.isDrawerOpen(leftDrawer)) {
+			drawerLayout.openDrawer(leftDrawer);
+		} else {
+			drawerLayout.closeDrawer(leftDrawer);
+		}
 	}
 
 	@Override
@@ -553,31 +694,18 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 
 		VolleyHttpClient.destroyCookie();
 
+		// AQuery의 캐시들을 정리한다.
+		AQUtility.cleanCacheAsync(getApplicationContext());
+
 		super.onDestroy();
 	}
 
 	@Override
-	public void onLoadComplete(Fragment fragment, boolean isSucceed) {
-		if (!isSucceed) {
-			replaceFragment(new ErrorFragment());
-			Toast.makeText(this, "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-					Toast.LENGTH_SHORT).show();
-		}
-
-		LoadingDialog.hideLoading();
-
-		if (fragment != null)
-			if (fragment.getView() != null)
-				GlobalFont.apply((ViewGroup) fragment.getView().getRootView());
-
-	}
-
-	@Override
-	public void onErrorResponse(VolleyError error) {
-		if (DEBUG)
-			error.printStackTrace();
-
-		onLoadComplete(null, false);
+	public void onError() {
+		super.onError();
+		
+		// Error Fragment를 표시한다.
+		replaceFragment(new ErrorFragment());
 	}
 
 }

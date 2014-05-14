@@ -32,11 +32,9 @@ import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
 public class NoticeActivity extends BaseActivity implements
-		DailyHotelJsonResponseListener, ErrorListener {
+		DailyHotelJsonResponseListener {
 
 	private static final String TAG = "NoticeActivity";
-
-	private RequestQueue mQueue;
 
 	private ArrayList<Board> mList;
 	private ExpandableListView mListView;
@@ -48,8 +46,6 @@ public class NoticeActivity extends BaseActivity implements
 		setContentView(R.layout.activity_board);
 		DailyHotel.getGaTracker().set(Fields.SCREEN_NAME, TAG);
 
-		mQueue = VolleyHttpClient.getRequestQueue();
-
 		mListView = (ExpandableListView) findViewById(R.id.expandable_list_board);
 
 	}
@@ -58,7 +54,7 @@ public class NoticeActivity extends BaseActivity implements
 	protected void onResume() {
 		super.onResume();
 		
-		LoadingDialog.showLoading(this);
+		lockUI();
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(
 				URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_BOARD_NOTICE)
 				.toString(), null, this, this));
@@ -74,17 +70,7 @@ public class NoticeActivity extends BaseActivity implements
 	@Override
 	public void finish() {
 		super.finish();
-		overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
-	}
-
-	@Override
-	public void onErrorResponse(VolleyError error) {
-		if (DEBUG)
-			error.printStackTrace();
-
-		Toast.makeText(this, "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-				Toast.LENGTH_SHORT).show();
-		LoadingDialog.hideLoading();
+		overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
 	}
 
 	@Override
@@ -108,14 +94,9 @@ public class NoticeActivity extends BaseActivity implements
 				
 				mListView.setAdapter(new BoardListAdapter(this, mList));
 			} catch (Exception e) {
-				if (DEBUG)
-					e.printStackTrace();
-				
-				Toast.makeText(this,
-						"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-						Toast.LENGTH_SHORT).show();
+				onError(e);
 			} finally {
-				LoadingDialog.hideLoading();
+				unLockUI();
 			}
 		}
 	}

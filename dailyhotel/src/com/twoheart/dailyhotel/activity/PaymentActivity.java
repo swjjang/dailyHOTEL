@@ -32,11 +32,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.webkit.CookieSyncManager;
 import android.webkit.JavascriptInterface;
-import android.webkit.JsPromptResult;
-import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -93,8 +93,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		webView.setWebViewClient(new mWebViewClient());
 
 		if (mPay == null) {
-			Toast.makeText(this, "결제 정보를 가져올 수 없습니다.", Toast.LENGTH_SHORT)
-					.show();
+			showToast("결제 정보를 가져올 수 없습니다.", Toast.LENGTH_SHORT, false);
 			finish();
 		}
 		
@@ -284,8 +283,8 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			if (url.startsWith("mpocket.online.ansimclick")) {
 				if (!new PackageState(this)
 						.getPackageDownloadInstallState("kr.co.samsungcard.mpocket")) {
-					Toast.makeText(this, "어플을 설치 후 다시 시도해 주세요.",
-							Toast.LENGTH_LONG).show();
+					
+					showToast("해당 어플을 설치 후 다시 시도해 주세요.", Toast.LENGTH_LONG, false);
 
 					startActivity(new Intent(
 							Intent.ACTION_VIEW,
@@ -321,46 +320,27 @@ public class PaymentActivity extends BaseActivity implements Constants {
 	}
 
 	private class mWebChromeClient extends WebChromeClient {
-
-		@Override
-		public boolean onJsAlert(WebView view, String url, String message,
-				JsResult result) {
-			setSupportProgressBarIndeterminateVisibility(false);
-			return super.onJsAlert(view, url, message, result);
-		}
-
-		@Override
-		public boolean onJsBeforeUnload(WebView view, String url,
-				String message, JsResult result) {
-			setSupportProgressBarIndeterminateVisibility(false);
-			return super.onJsBeforeUnload(view, url, message, result);
-		}
-
-		@Override
-		public boolean onJsConfirm(WebView view, String url, String message,
-				JsResult result) {
-			setSupportProgressBarIndeterminateVisibility(false);
-			return super.onJsConfirm(view, url, message, result);
-		}
-
-		@Override
-		public boolean onJsPrompt(WebView view, String url, String message,
-				String defaultValue, JsPromptResult result) {
-			setSupportProgressBarIndeterminateVisibility(false);
-			return super.onJsPrompt(view, url, message, defaultValue, result);
-		}
+		
+		boolean isActionBarProgressBarShowing = false;
 
 		@Override
 		public void onProgressChanged(WebView view, int newProgress) {
 			super.onProgressChanged(view, newProgress);
-
-			if (newProgress < 100)
-				setSupportProgressBarIndeterminateVisibility(true);
-			else
-				setSupportProgressBarIndeterminateVisibility(false);
-
+			
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+				if (newProgress != 100)
+					setActionBarProgressBar(true);
+				else
+					setActionBarProgressBar(false);
+			}
 		}
-
+		
+		void setActionBarProgressBar(boolean show) {
+			if (show != isActionBarProgressBarShowing) {
+				setSupportProgressBarIndeterminateVisibility(show);
+				isActionBarProgressBarShowing = show;	
+			}
+		}
 	}
 
 	private class mWebViewClient extends WebViewClient {
@@ -409,14 +389,16 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		@Override
 		public void onPageStarted(WebView view, String url, Bitmap favicon) {
 			super.onPageStarted(view, url, favicon);
-			setSupportProgressBarIndeterminateVisibility(true);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+				setSupportProgressBarIndeterminateVisibility(true);
 		}
 
 		@Override
 		public void onPageFinished(WebView view, String url) {
 			super.onPageFinished(view, url);
-			cookieSyncManager.sync();
-			setSupportProgressBarIndeterminateVisibility(false);
+			CookieSyncManager.getInstance().sync();
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+				setSupportProgressBarIndeterminateVisibility(false);
 		}
 
 	}
@@ -489,9 +471,9 @@ public class PaymentActivity extends BaseActivity implements Constants {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							dialog.dismiss();
+							
+							showToast("결제를 취소하셨습니다", Toast.LENGTH_SHORT, false);
 
-							Toast.makeText(PaymentActivity.this,
-									"결제를 취소 하셨습니다.", Toast.LENGTH_SHORT).show();
 						}
 					});
 
@@ -760,15 +742,17 @@ public class PaymentActivity extends BaseActivity implements Constants {
 				resultCode = RESULT_CANCELED;
 			}
 		}
+		Intent payData = new Intent();
+		payData.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
 
-		setResult(resultCode);
+		setResult(resultCode, payData);
 		finish();
 	}
 	
 	@Override
 	public void finish() {
 		super.finish();
-		overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+		overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
 
 	}
 
@@ -794,7 +778,10 @@ public class PaymentActivity extends BaseActivity implements Constants {
 				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_INVALID_DATE;
 			}
 
-			setResult(resultCode);
+			Intent payData = new Intent();
+			payData.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
+
+			setResult(resultCode, payData);
 			finish();
 		}
 	}

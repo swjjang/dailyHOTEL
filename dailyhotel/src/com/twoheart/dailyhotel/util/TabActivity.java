@@ -14,12 +14,10 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.VolleyError;
-import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.fragment.TabInfoFragment;
+import com.twoheart.dailyhotel.fragment.TabMapFragment;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.HotelDetail;
@@ -27,13 +25,12 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
-import com.twoheart.dailyhotel.util.ui.LoadingDialog;
-import com.twoheart.dailyhotel.util.ui.OnLoadCompleteListener;
+import com.twoheart.dailyhotel.util.ui.BaseFragment;
 import com.twoheart.dailyhotel.widget.HotelViewPager;
 import com.viewpagerindicator.TabPageIndicator;
 
 public abstract class TabActivity extends BaseActivity implements
-		DailyHotelJsonResponseListener, ErrorListener, OnLoadCompleteListener {
+		DailyHotelJsonResponseListener {
 
 	private static final String TAG = "TabActivity";
 
@@ -42,8 +39,7 @@ public abstract class TabActivity extends BaseActivity implements
 	protected SaleTime mSaleTime;
 	protected RequestQueue mQueue;
 
-	protected List<Fragment> mFragments = new LinkedList<Fragment>();
-	protected List<String> mTitles = new LinkedList<String>();
+	protected List<BaseFragment> mFragments;
 
 	protected FragmentPagerAdapter mAdapter;
 	protected HotelViewPager mViewPager;
@@ -52,8 +48,8 @@ public abstract class TabActivity extends BaseActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_hotel_tab);
 		
+		mFragments = new LinkedList<BaseFragment>();
 		hotelDetail = new HotelDetail();
 		booking = new Booking();
 		mSaleTime = new SaleTime();
@@ -68,7 +64,7 @@ public abstract class TabActivity extends BaseActivity implements
 		}
 
 		mQueue = VolleyHttpClient.getRequestQueue();
-
+		
 	}
 	
 	protected abstract void onPostSetCookie();
@@ -88,7 +84,7 @@ public abstract class TabActivity extends BaseActivity implements
 	
 				@Override
 				public CharSequence getPageTitle(int position) {
-					return mTitles.get(position);
+					return mFragments.get(position).getTitle();
 				}
 	
 				@Override
@@ -177,48 +173,21 @@ public abstract class TabActivity extends BaseActivity implements
 			mFragments.clear();
 			loadFragments();
 			
-			LoadingDialog.hideLoading();
+			unLockUI();
 
 		} catch (Exception e) {
-			if (DEBUG)
-				e.printStackTrace();
-
-			Toast.makeText(this, "네트워크 상태를 확인해주세요", Toast.LENGTH_SHORT).show();
+			onError(e);
 		}
 
 	}
 
 	protected void loadFragments() {
-		mTitles.add("예약");
-		mTitles.add("정보");
-		mTitles.add("지도");
-
+		mFragments.add(TabInfoFragment.newInstance(hotelDetail));
+		mFragments.add(TabMapFragment.newInstance(hotelDetail));
+		
 		mAdapter.notifyDataSetChanged();
 		mIndicator.notifyDataSetChanged();
 		
 		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
 	}
-	
-	@Override
-	public void onLoadComplete(Fragment fragment, boolean isSucceed) {
-		if (!isSucceed) {
-			Toast.makeText(this, "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-					Toast.LENGTH_SHORT).show();
-		}
-		
-		if (fragment != null)
-			if (fragment.getView() != null)
-				GlobalFont.apply((ViewGroup) fragment.getView().getRootView());
-		
-		LoadingDialog.hideLoading();
-			
-	}
-
-	@Override
-	public void onErrorResponse(VolleyError error) {
-		if (DEBUG)
-			error.printStackTrace();
-		finish();
-	}
-	
 }

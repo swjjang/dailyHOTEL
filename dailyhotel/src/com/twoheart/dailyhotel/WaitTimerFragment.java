@@ -46,9 +46,7 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 	private final static String KEY_BUNDLE_ARGUMENTS_SALETIME = "saletime";
 	private static boolean isEnabledNotify = false;
 
-	private MainActivity mHostActivity;
-
-	private Handler mHandler;	// TODO: static으로 선언하여 인스턴스가 중복되는 일이 없도록 한다.
+	private static Handler sHandler;
 	private TextView tvTimer, tvTitle;
 	private Button btnNotify;
 
@@ -75,7 +73,6 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 			Bundle savedInstanceState) {
 
 		View view = inflater.inflate(R.layout.fragment_wait_timer, container, false);
-		mHostActivity = (MainActivity) getActivity();
 		mSaleTime = (SaleTime) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_SALETIME);
 		alarmManager = (AlarmManager) mHostActivity.getApplicationContext()
 				.getSystemService(Context.ALARM_SERVICE);
@@ -92,15 +89,14 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 		mHostActivity.setActionBar("dailyHOTEL");
 		tvTitle.setText(new SimpleDateFormat("aa H").format(mSaleTime.getOpenTime()) + "시 오늘의 호텔이 공개됩니다.");
 		
+		setTimer();
+		
 		return view;
 	}
 	
 	@Override
 	public void onResume() {
 		super.onResume();
-		GlobalFont.apply((ViewGroup) getView().getRootView());
-		
-		setTimer();
 		setNotify(isEnabledNotify);
 	}
 	
@@ -119,8 +115,7 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 				alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + remainingTime,
 						pender);
 				
-				Toast.makeText(mHostActivity, "알람이 등록되었습니다", Toast.LENGTH_SHORT)
-						.show();
+				showToast("알람이 설정되었습니다", Toast.LENGTH_SHORT, true);
 			}
 
 		} else {
@@ -129,8 +124,7 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 			if (enable != isEnabledNotify) {
 				alarmManager.cancel(pender);
 				
-				Toast.makeText(mHostActivity, "알람이 취소되었습니다", Toast.LENGTH_SHORT)
-						.show();
+				showToast("알람이 취소되었습니다", Toast.LENGTH_SHORT, true);
 			}
 
 		}
@@ -149,7 +143,7 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 		
 		WakeLock.acquireWakeLock(mHostActivity.getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
 		
-		mHandler = new Handler() {
+		sHandler = new Handler() {
 			public void handleMessage(Message msg) {
 				remainingTime -= 1000;
 				
@@ -162,9 +156,9 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 					WakeLock.releaseWakeLock();
 					
 					if (mHostActivity != null) {
-	 					mHostActivity
-								.replaceFragment(mHostActivity
-										.getFragment(mHostActivity.INDEX_HOTEL_LIST_FRAGMENT));
+	 					((MainActivity) mHostActivity)
+								.replaceFragment(((MainActivity) mHostActivity)
+										.getFragment(MainActivity.INDEX_HOTEL_LIST_FRAGMENT));
 						
 						mHostActivity = null;
 					}
@@ -172,7 +166,7 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 			}
 		};
 
-		mHandler.sendEmptyMessageDelayed(0, 1000);
+		sHandler.sendEmptyMessageDelayed(0, 1000);
 
 	}
 	
@@ -186,8 +180,8 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 
 	@Override
 	public void onDestroy() {
-		if (mHandler != null) {
-			mHandler.removeMessages(0);
+		if (sHandler != null) {
+			sHandler.removeMessages(0);
 			WakeLock.releaseWakeLock();	
 		}
 		

@@ -46,8 +46,7 @@ public class VersionActivity extends BaseActivity implements OnClickListener {
 			tvNewVersion.setText("v"
 					+ sharedPreference.getString(KEY_PREFERENCE_MAX_VERSION_NAME, "1.0.0"));
 		} catch (Exception e) {
-			if (DEBUG)
-				e.printStackTrace();
+			onError(e);
 		}
 
 	}
@@ -68,12 +67,11 @@ public class VersionActivity extends BaseActivity implements OnClickListener {
 //					 marketLaunch.setData(Uri.parse(URL_STORE_T_DAILYHOTEL));
 					startActivity(marketLaunch);
 				} else {
-					Toast.makeText(this, "이미 최신버전입니다.", Toast.LENGTH_LONG).show();
+					showToast("이미 최신버전입니다", Toast.LENGTH_SHORT, true);
 				}
 
 			} catch (Exception e) {
-				if (DEBUG)
-					e.toString();
+				onError(e);
 			}
 		}
 	}
@@ -94,6 +92,6 @@ public class VersionActivity extends BaseActivity implements OnClickListener {
 	@Override
 	public void finish() {
 		super.finish();
-		overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+		overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
 	}
 }

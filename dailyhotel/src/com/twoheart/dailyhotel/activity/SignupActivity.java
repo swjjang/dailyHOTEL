@@ -52,12 +52,9 @@ import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
 public class SignupActivity extends BaseActivity implements OnClickListener,
-		DailyHotelJsonResponseListener,
-		ErrorListener {
+		DailyHotelJsonResponseListener {
 
 	private static final String TAG = "SignupActivity";
-
-	private RequestQueue mQueue;
 
 	private EditText etEmail, etName, etPhone, etPwd, etRecommender;
 	private TextView tvTerm, tvPrivacy;
@@ -71,8 +68,6 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 		setActionBar("회원가입");
 		setContentView(R.layout.activity_signup);
 		DailyHotel.getGaTracker().set(Fields.SCREEN_NAME, TAG);
-
-		mQueue = VolleyHttpClient.getRequestQueue();
 
 		etPwd = (EditText) findViewById(R.id.et_signup_pwd);
 		etEmail = (EditText) findViewById(R.id.et_signup_email);
@@ -145,24 +140,21 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 
 			// 필수 입력 check
 			if (!checkInput()) {
-				Toast.makeText(getApplicationContext(), "필수 입력사항은 모두 입력해주세요",
-						Toast.LENGTH_SHORT).show();
+				showToast("필수 입력사항은 모두 입력해주세요", Toast.LENGTH_SHORT, true);
 				return;
 			}
 
 			// email check
 			if (!isValidEmail(etEmail.getText().toString())) {
-				Toast.makeText(this, "올바른 이메일 주소를 입력해주세요.", Toast.LENGTH_SHORT)
-						.show();
+				showToast("올바른 이메일 주소를 입력해주세요", Toast.LENGTH_SHORT, true);
 				return;
 			}
 
 			if (etPwd.length() < 4) {
-				Toast.makeText(this, "비밀번호를 4자 이상 입력해주세요.", Toast.LENGTH_SHORT)
-						.show();
+				showToast("비밀번호를 4자 이상 입력해주세요", Toast.LENGTH_SHORT, true);
 				return;
 			}
-			LoadingDialog.showLoading(this);
+			lockUI();
 			
 			signupParams = new HashMap<String, String>();
 			signupParams.put("email", etEmail.getText().toString());
@@ -185,13 +177,13 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 
 			Intent i = new Intent(this, TermActivity.class);
 			startActivity(i);
-			overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
 		} else if (v.getId() == tvPrivacy.getId()) { // 개인정보 취급
 
 			Intent i = new Intent(this, PrivacyActivity.class);
 			startActivity(i);
-			overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
 		}
 	}
@@ -214,18 +206,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 	@Override
 	public void finish() {
 		super.finish();
-		overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
-	}
-
-	@Override
-	public void onErrorResponse(VolleyError error) {
-		if (DEBUG)
-			error.printStackTrace();
-
-		Toast.makeText(this, "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-				Toast.LENGTH_SHORT).show();
-		LoadingDialog.hideLoading();
-
+		overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
 	}
 
 	@Override
@@ -255,36 +236,26 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 							this, this));
 					
 				} else {
-					LoadingDialog.hideLoading();
-					Toast.makeText(this, msg,
-							Toast.LENGTH_SHORT).show();
+					unLockUI();
+					showToast(msg, Toast.LENGTH_LONG, true);
 				}
 
 			} catch (Exception e) {
-				if (DEBUG)
-					e.printStackTrace();
-				
-				LoadingDialog.hideLoading();
-				Toast.makeText(this,
-						"네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-						Toast.LENGTH_SHORT).show();
+				onError(e);
 			}
 		} else if (url.contains(URL_WEBAPI_USER_LOGIN)) {
 			
 			try {
 				if (response.getBoolean("login")) {
 					VolleyHttpClient.createCookie();
-					LoadingDialog.hideLoading();
-					
-					Toast.makeText(this, "회원가입이 완료되었습니다.",
-							Toast.LENGTH_SHORT).show();
+					unLockUI();
+					showToast("회원가입이 완료되었습니다", Toast.LENGTH_LONG, false);
 					
 					storeLoginInfo();
 					finish();
 				}
 			} catch (JSONException e) {
-				if (DEBUG)
-					e.printStackTrace();
+				onError(e);
 			} 
 		}
 	}

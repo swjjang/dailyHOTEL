@@ -15,7 +15,7 @@
         android:singleLine="true"
         android:background="@drawable/edit_text_holo_light"
         android:textColorHint="@color/textView_textColor_disabled"
-        android:hint="[필수] 휴대폰 번호 ( '-' 제외)"/>
+        android:hint="[필수] 휴대폰 번호 ('-' 제외)"/>
     
     <EditText 
         android:id="@+id/et_signup_email"

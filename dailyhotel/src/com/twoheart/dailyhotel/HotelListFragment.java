@@ -49,7 +49,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.android.volley.Request.Method;
-import com.android.volley.RequestQueue;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.twoheart.dailyhotel.activity.EventWebActivity;
@@ -60,7 +59,6 @@ import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Log;
-import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonArrayRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
@@ -69,7 +67,6 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListe
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
-import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView;
 
 public class HotelListFragment extends BaseFragment implements Constants,
@@ -79,9 +76,6 @@ public class HotelListFragment extends BaseFragment implements Constants,
 
 	private final static String TAG = "HotelListFragment";
 
-	private MainActivity mHostActivity;
-	private RequestQueue mQueue;
-	
 	private PinnedSectionListView mHotelListView;
 	private PullToRefreshLayout mPullToRefreshLayout;
 	private HotelListAdapter mHotelListAdapter;
@@ -91,7 +85,6 @@ public class HotelListFragment extends BaseFragment implements Constants,
 	private Map<String, List<String>> mRegionDetailList;
 	private SaleTime mDailyHotelSaleTime;
 	private LinearLayout llListViewFooter;
-	private Button btnListViewHeader;
 	private ImageView ivNewEvent;
 
 	private boolean mRefreshHotelList;
@@ -102,42 +95,27 @@ public class HotelListFragment extends BaseFragment implements Constants,
 
 		View view = inflater.inflate(R.layout.fragment_hotel_list, container,
 				false);
-		mQueue = VolleyHttpClient.getRequestQueue();
 		mDailyHotelSaleTime = new SaleTime();
 		mRefreshHotelList = true;
 		mHotelListView = (PinnedSectionListView) view
 				.findViewById(R.id.listview_hotel_list);
 		mPullToRefreshLayout = (PullToRefreshLayout) view
 				.findViewById(R.id.ptr_layout);
-		mHostActivity = (MainActivity) getActivity();
 		mHostActivity.setActionBar("오늘의 호텔");
 		
-		View listViewHeader = inflater
-				.inflate(R.layout.header_hotel_list, null);
-		mHotelListView.addHeaderView(listViewHeader);
+//		mHotelListView.setEmptyView(view.findViewById(R.id.tv_empty_view));
+		
+		
 		
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			View listViewFooter = inflater
 					.inflate(R.layout.footer_hotel_list, null);
 			llListViewFooter = (LinearLayout) listViewFooter.findViewById(R.id.ll_hotel_list_footer);
 			llListViewFooter.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT,
-					mHostActivity.config.getNavigationBarHeight()));
+					((MainActivity) mHostActivity).config.getNavigationBarHeight()));
 			
 			mHotelListView.addFooterView(listViewFooter);
 		}
-
-		ivNewEvent = (ImageView) view.findViewById(R.id.iv_new_event);
-		btnListViewHeader = (Button) view.findViewById(R.id.btn_footer);
-		btnListViewHeader.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				Intent i = new Intent(mHostActivity, EventWebActivity.class);
-				mHostActivity.startActivity(i);
-				mHostActivity.overridePendingTransition(R.anim.slide_in_bottom,
-						R.anim.hold);
-			}
-		});
 		
 		// Now find the PullToRefreshLayout and set it up
         ActionBarPullToRefresh.from(mHostActivity)
@@ -201,8 +179,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 		super.onResume();
 		
 		if (mRefreshHotelList) {
-			LoadingDialog.showLoading(mHostActivity);
-
+			lockUI();
 			// 현재 서버 시간을 가져온다
 			mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(
 					URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_TIME)
@@ -227,7 +204,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 	@Override
 	public void onItemClick(AdapterView<?> parentView, View childView,
 			int position, long id) {
-		int selectedPosition = position - 1;
+		int selectedPosition = position;
 
 		HotelListViewItem selectedItem = mHotelListViewList.get(selectedPosition);
 		
@@ -243,31 +220,27 @@ public class HotelListFragment extends BaseFragment implements Constants,
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
 		if (requestCode == CODE_REQUEST_ACTIVITY_HOTELTAB) {
 			mRefreshHotelList = false;
 			
 			if (resultCode == Activity.RESULT_OK) {
-				mHostActivity
-						.replaceFragment(mHostActivity
-								.getFragment(mHostActivity.INDEX_BOOKING_LIST_FRAGMENT));
-				
+				((MainActivity) mHostActivity).selectMenuDrawer(((MainActivity) mHostActivity).menuBookingListFragment);
 			}
 		}
-
+		
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 	@Override
 	public boolean onNavigationItemSelected(int position, long id) {
-		LoadingDialog.showLoading(mHostActivity);
+		lockUI();
 		fetchHotelList(position);
 
 		return true;
 	}
 
 	private void fetchHotelList(int position) {
-		mHostActivity.drawerLayout.closeDrawer(mHostActivity.drawerList);
+		((MainActivity) mHostActivity).drawerLayout.closeDrawer(((MainActivity) mHostActivity).leftDrawer);
 
 		String selectedRegion = mRegionList.get(position);
 
@@ -308,13 +281,13 @@ public class HotelListFragment extends BaseFragment implements Constants,
 				String close = response.getString("close");
 				
 				mDailyHotelSaleTime.setOpenTime(open);
-//				mDailyHotelSaleTime.setOpenTime("09:00:00");
+//				mDailyHotelSaleTime.setOpenTime("14:29:00");
 				mDailyHotelSaleTime.setCloseTime(close);
 
 				if (!mDailyHotelSaleTime.isSaleTime()) {
-					mHostActivity.replaceFragment(WaitTimerFragment.newInstance(
+					((MainActivity) mHostActivity).replaceFragment(WaitTimerFragment.newInstance(
 							mDailyHotelSaleTime));
-					mListener.onLoadComplete(this, true);
+					unLockUI();
 				} else {
 					// 지역 리스트를 가져온다
 					mQueue.add(new DailyHotelJsonArrayRequest(Method.GET,
@@ -325,10 +298,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 				}
 
 			} catch (Exception e) {
-				if (DEBUG)
-					e.printStackTrace();
-
-				mListener.onLoadComplete(this, false);
+				onError(e);
 			}
 
 		} else if (url.contains(URL_WEBAPI_HOTEL)) {
@@ -371,7 +341,6 @@ public class HotelListFragment extends BaseFragment implements Constants,
 					newHotel.setDetailRegion(detailRegion);
 
 					if (seq >= 0) { // 숨김호텔이 아니라면 추가. (음수일 경우 숨김호텔.)
-
 						if (available <= 0) // SOLD OUT 된 항목은 밑으로.
 							available *= 100;
 
@@ -387,9 +356,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 						};
 
 						Collections.sort(mHotelList, comparator);
-
 					}
-
 				}
 				
 				mHotelListViewList = new ArrayList<HotelListViewItem>();
@@ -441,15 +408,12 @@ public class HotelListFragment extends BaseFragment implements Constants,
 						new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_VERSION).toString(),
 						null, this, mHostActivity));
 				
-				mListener.onLoadComplete(this, true);
+				unLockUI();
 				 // Notify PullToRefreshLayout that the refresh has finished
                 mPullToRefreshLayout.setRefreshComplete();
 
 			} catch (Exception e) {
-				if (DEBUG)
-					e.printStackTrace();
-
-				mListener.onLoadComplete(this, false);
+				onError(e);
 			}
 		} else if (url.contains(URL_WEBAPI_APP_VERSION)) {
 			try {
@@ -460,10 +424,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 					
 				}
 			} catch (Exception e) {
-				if (DEBUG)
-					e.printStackTrace();
-
-				mListener.onLoadComplete(this, false);
+				onError(e);
 			}
 		}
 
@@ -510,10 +471,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 								.getInt(KEY_PREFERENCE_REGION_INDEX, 0));
 
 			} catch (Exception e) {
-				if (DEBUG)
-					e.printStackTrace();
-
-				mListener.onLoadComplete(this, false);
+				onError(e);
 			}
 		}
 	}
@@ -538,5 +496,5 @@ public class HotelListFragment extends BaseFragment implements Constants,
 		fetchHotelList(mHostActivity.actionBar
 				.getSelectedNavigationIndex());
 	}
-
+	
 }

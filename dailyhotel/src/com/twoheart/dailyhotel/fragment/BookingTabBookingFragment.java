@@ -16,12 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.activity.BookingTabActivity;
 import com.twoheart.dailyhotel.activity.LoginActivity;
+import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -29,19 +26,36 @@ import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
-import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
 public class BookingTabBookingFragment extends BaseFragment implements Constants,
 		DailyHotelJsonResponseListener,
 		DailyHotelStringResponseListener {
 
 	private static final String TAG = "BookingTabBookingFragment";
-
-	private BookingTabActivity mHostActivity;
-	private RequestQueue mQueue;
+	private static final String KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL = "hotel_detail";
 
 	private TextView tvCustomerName, tvBedtype, tvHotelName, tvAddress;
 	private TextView tvCheckIn, tvCheckOut;
+	private HotelDetail mHotelDetail;
+
+	public static BookingTabBookingFragment newInstance(HotelDetail hotelDetail) {
+		BookingTabBookingFragment newFragment = new BookingTabBookingFragment();
+		Bundle arguments = new Bundle();
+		
+		arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL, hotelDetail);
+		newFragment.setArguments(arguments);
+		newFragment.setTitle("예약");
+		
+		return newFragment;
+		
+	}
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		mHotelDetail = (HotelDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL);
+		
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,9 +63,6 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 
 		View view = inflater.inflate(R.layout.fragment_booking_tab_booking, container,
 				false);
-		mHostActivity = (BookingTabActivity) getActivity();
-		mQueue = VolleyHttpClient.getRequestQueue();
-
 		tvCustomerName = (TextView) view
 				.findViewById(R.id.tv_booking_tab_user_name);
 		tvHotelName = (TextView) view
@@ -69,12 +80,11 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 		tvCheckIn.setSelected(true);
 		tvCheckOut.setSelected(true);
 		
-		tvHotelName.setText(mHostActivity.hotelDetail.getHotel().getName());
-		tvAddress.setText(mHostActivity.hotelDetail.getHotel().getAddress());
-		tvBedtype.setText(mHostActivity.hotelDetail.getHotel().getBedType());
+		tvHotelName.setText(mHotelDetail.getHotel().getName());
+		tvAddress.setText(mHotelDetail.getHotel().getAddress());
+		tvBedtype.setText(mHotelDetail.getHotel().getBedType());
 		
-		LoadingDialog.showLoading(mHostActivity);
-
+		lockUI();
 		mQueue.add(new DailyHotelStringRequest(Method.GET,
 				new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 						URL_WEBAPI_USER_ALIVE).toString(), null, this, mHostActivity));
@@ -96,18 +106,14 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 					ed.putString(KEY_PREFERENCE_USER_PWD, null);
 					ed.commit();
 					
-					Toast.makeText(mHostActivity,
-							"로그인에 실패했습니다",
-							Toast.LENGTH_SHORT).show();
-					mListener.onLoadComplete(this, true);
-					
+					unLockUI();
+					showToast("로그인에 실패했습니다", Toast.LENGTH_SHORT, true);
 				} else
 					VolleyHttpClient.createCookie();
+				
 			} catch (JSONException e) {
-				if (DEBUG)
-					e.printStackTrace();
-
-				mListener.onLoadComplete(this, false);
+				onError(e);
+				unLockUI();
 			}
 
 		} else if (url.contains(URL_WEBAPI_USER_INFO)) {
@@ -120,14 +126,12 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 				// 체크인 정보 요청.
 				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(
 						URL_DAILYHOTEL_SERVER).append(
-						URL_WEBAPI_RESERVE_CHECKIN).append(mHostActivity.hotelDetail.getSaleIdx()).toString(), null, this,
+						URL_WEBAPI_RESERVE_CHECKIN).append(mHotelDetail.getSaleIdx()).toString(), null, this,
 						mHostActivity));
 
 			} catch (Exception e) {
-				if (DEBUG)
-					e.printStackTrace();
-
-				mListener.onLoadComplete(this, false);
+				onError(e);
+				unLockUI();
 			}
 
 		} else if (url.contains(URL_WEBAPI_RESERVE_CHECKIN)) {
@@ -143,13 +147,11 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 				tvCheckOut.setText("20" + out[0] + "년 " + out[1] + "월 "
 						+ out[2] + "일 " + out[3] + "시");
 				
-				mListener.onLoadComplete(this, true);
+				unLockUI();
 
 			} catch (Exception e) {
-				if (DEBUG)
-					e.printStackTrace();
-				
-				mListener.onLoadComplete(this, false);
+				onError(e);
+				unLockUI();
 			}
 		}
 
@@ -186,7 +188,7 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 				}
 
 			} else {
-				mListener.onLoadComplete(this, false);
+				unLockUI();
 			}
 
 		}

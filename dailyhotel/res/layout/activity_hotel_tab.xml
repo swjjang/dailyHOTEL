@@ -1,29 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fdfdfd"
-    android:orientation="vertical"
-    android:weightSum="1" >
+    android:background="#fdfdfd" >
 
     <com.viewpagerindicator.TabPageIndicator
         android:id="@+id/indicator"
-        android:background="#f4f4f4"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.1" />
-
-    <com.twoheart.dailyhotel.widget.HotelViewPager
-        android:id="@+id/pager"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.8" />
-
+        android:layout_height="48dp"
+        android:layout_alignParentTop="true"
+        android:background="#f4f4f4" />
+    
     <RelativeLayout
+        android:id="@+id/rl_hotel_tab_buttons"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_margin="10dp"
-        android:layout_weight="0.1" >
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="10dp" >
 
         <Button
             android:id="@+id/btn_hotel_tab_booking"
@@ -45,4 +38,16 @@
             android:visibility="gone" />
     </RelativeLayout>
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/indicator"
+        android:layout_above="@+id/rl_hotel_tab_buttons" >
+
+        <com.twoheart.dailyhotel.widget.HotelViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+</RelativeLayout>

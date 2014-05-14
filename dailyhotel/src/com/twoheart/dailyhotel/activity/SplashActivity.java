@@ -49,22 +49,26 @@ public class SplashActivity extends BaseActivity implements Constants,
 		DailyHotelJsonResponseListener, ErrorListener {
 
 	private static final String TAG = "SplashActivity";
-	private RequestQueue mQueue;
+
+	private static final int VALUE_WEB_API_RESPONSE_NEW_EVENT_NOTIFY = 1;
+	private static final int VALUE_WEB_API_RESPONSE_NEW_EVENT_NONE = 0;
+	private static final int DURING_SPLASH_ACTIVITY_SHOW = 1000;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		// Anroid 4.4 이상에서 Android StatusBar와 Android NavigationBar를
+		// Translucent하게 해주는 API를 사용하도록 한다.
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			setTheme(R.style.AppTheme_Translucent);
 		}
-		
+
 		setActionBarHide();
 		setContentView(R.layout.activity_splash);
-		
-		mQueue = VolleyHttpClient.getRequestQueue();
 
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -121,11 +125,10 @@ public class SplashActivity extends BaseActivity implements Constants,
 
 				} else {
 					VolleyHttpClient.createCookie();
-					
 				}
+
 			} catch (JSONException e) {
-				if (DEBUG)
-					e.printStackTrace();
+				onError(e);
 			}
 
 		} else if (url.contains(URL_WEBAPI_APP_VERSION)) {
@@ -134,92 +137,44 @@ public class SplashActivity extends BaseActivity implements Constants,
 
 			try {
 				SharedPreferences.Editor editor = sharedPreference.edit();
-				
+
 				if (IS_GOOGLE_RELEASE) {
 					editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME,
 							response.getString("play_max"));
 					editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME,
 							response.getString("play_min"));
-					
+
 				} else {
 					editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME,
 							response.getString("tstore_max"));
 					editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME,
 							response.getString("tstore_min"));
-					
-//					editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME,
-//							response.getString("nstore_max"));
-//					editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME,
-//							response.getString("nstore_min"));
-					
+
+					// editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME,
+					// response.getString("nstore_max"));
+					// editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME,
+					// response.getString("nstore_min"));
+
 				}
-				
+
 				editor.commit();
 
-				int maxVersion = Integer.
-						parseInt(sharedPreference.getString(
-								KEY_PREFERENCE_MAX_VERSION_NAME, "1.0.0").replace(
-								".", ""));
-				int minVersion = Integer
-						.parseInt(sharedPreference.getString(
-								KEY_PREFERENCE_MIN_VERSION_NAME, "1.0.0").replace(
-								".", ""));
+				int maxVersion = Integer.parseInt(sharedPreference.getString(
+						KEY_PREFERENCE_MAX_VERSION_NAME, "1.0.0").replace(".",
+						""));
+				int minVersion = Integer.parseInt(sharedPreference.getString(
+						KEY_PREFERENCE_MIN_VERSION_NAME, "1.0.0").replace(".",
+						""));
 				int currentVersion = Integer.parseInt(this.getPackageManager()
 						.getPackageInfo(this.getPackageName(), 0).versionName
 						.replace(".", ""));
-				int skipMaxVersion = Integer
-						.parseInt(sharedPreference.getString(
-								KEY_PREFERENCE_SKIP_MAX_VERSION, "1.0.0").replace(
-								".", ""));
-				
-				if (maxVersion > currentVersion) {
-					if (skipMaxVersion != maxVersion) {
-						AlertDialog.Builder alertDialog = new AlertDialog.Builder(
-								SplashActivity.this);
-						alertDialog
-								.setTitle("공지")
-								.setMessage("지금 업그레이드하여 가장 멋진 데일리호텔 앱을 다운받으세요")
-								.setCancelable(true)
-								.setOnCancelListener(new OnCancelListener() {
-									
-									@Override
-									public void onCancel(DialogInterface dialog) {
-										SharedPreferences.Editor editor = sharedPreference.edit();
-										editor.putString(KEY_PREFERENCE_SKIP_MAX_VERSION,
-												sharedPreference.getString(
-														KEY_PREFERENCE_MAX_VERSION_NAME, "1.0.0"));
-										
-										editor.commit();
-										showMainActivity();
-									}
-								})
-								.setNegativeButton("취소", new DialogInterface.OnClickListener() {
-											@Override
-											public void onClick(
-													DialogInterface dialog,
-													int which) {
-												dialog.cancel();
-											}
-										})
-								.setPositiveButton("업데이트",
-										new DialogInterface.OnClickListener() {
-											@Override
-											public void onClick(
-													DialogInterface dialog,
-													int which) {
-												Intent marketLaunch = new Intent(
-														Intent.ACTION_VIEW);
-												marketLaunch.setData(Uri
-														.parse(Util.storeReleaseAddress()));
-//												marketLaunch.setData(Uri
-//														.parse(URL_STORE_T_DAILYHOTEL));
-												startActivity(marketLaunch);
-											}
-										});
-						AlertDialog alert = alertDialog.create();
-						alert.show();
-					}
-				} else if (minVersion > currentVersion) { // 강제 업데이트
+				int skipMaxVersion = Integer.parseInt(sharedPreference
+						.getString(KEY_PREFERENCE_SKIP_MAX_VERSION, "1.0.0")
+						.replace(".", ""));
+				final int newEventFlag = Integer.parseInt(response
+						.getString("new_event"));
+
+				if (minVersion > currentVersion) { // 강제 업데이트
 					AlertDialog.Builder alertDialog = new AlertDialog.Builder(
 							SplashActivity.this);
 					alertDialog
@@ -234,51 +189,109 @@ public class SplashActivity extends BaseActivity implements Constants,
 												int which) {
 											Intent marketLaunch = new Intent(
 													Intent.ACTION_VIEW);
-											marketLaunch.setData(Uri
-													.parse(Util.storeReleaseAddress()));
-//											marketLaunch.setData(Uri
-//													.parse(URL_STORE_T_DAILYHOTEL));
+											marketLaunch.setData(Uri.parse(Util
+													.storeReleaseAddress()));
+											// marketLaunch.setData(Uri
+											// .parse(URL_STORE_T_DAILYHOTEL));
 											startActivity(marketLaunch);
 											finish();
 										}
 									});
 					AlertDialog alert = alertDialog.create();
 					alert.show();
+				} else if ((maxVersion > currentVersion)
+						&& (skipMaxVersion != maxVersion)) {
+					AlertDialog.Builder alertDialog = new AlertDialog.Builder(
+							SplashActivity.this);
+					alertDialog
+							.setTitle("공지")
+							.setMessage("지금 업그레이드하여 가장 멋진 데일리호텔 앱을 다운받으세요")
+							.setCancelable(true)
+							.setOnCancelListener(new OnCancelListener() {
+
+								@Override
+								public void onCancel(DialogInterface dialog) {
+									SharedPreferences.Editor editor = sharedPreference
+											.edit();
+									editor.putString(
+											KEY_PREFERENCE_SKIP_MAX_VERSION,
+											sharedPreference
+													.getString(
+															KEY_PREFERENCE_MAX_VERSION_NAME,
+															"1.0.0"));
+
+									editor.commit();
+									showMainActivity(newEventFlag);
+								}
+							})
+							.setNegativeButton("취소",
+									new DialogInterface.OnClickListener() {
+										@Override
+										public void onClick(
+												DialogInterface dialog,
+												int which) {
+											dialog.cancel();
+										}
+									})
+							.setPositiveButton("업데이트",
+									new DialogInterface.OnClickListener() {
+										@Override
+										public void onClick(
+												DialogInterface dialog,
+												int which) {
+											Intent marketLaunch = new Intent(
+													Intent.ACTION_VIEW);
+											marketLaunch.setData(Uri.parse(Util
+													.storeReleaseAddress()));
+											// marketLaunch.setData(Uri
+											// .parse(URL_STORE_T_DAILYHOTEL));
+											startActivity(marketLaunch);
+										}
+									});
+					AlertDialog alert = alertDialog.create();
+					alert.show();
 				} else {
-					showMainActivity();
+					showMainActivity(newEventFlag);
 				}
 
 			} catch (Exception e) {
-				if (DEBUG)
-					e.printStackTrace();
+				onError(e);
+
 			}
 		}
 	}
-	
-	private void showMainActivity() {
+
+	private void showMainActivity(final int newEventFlag) {
 		// sleep 2 second
 		Handler h = new Handler();
 		h.postDelayed(new Runnable() {
 			public void run() {
-				setResult(RESULT_OK);
+				if (newEventFlag == VALUE_WEB_API_RESPONSE_NEW_EVENT_NOTIFY)
+					setResult(CODE_RESULT_ACTIVITY_SPLASH_NEW_EVENT);
+				else if (newEventFlag == VALUE_WEB_API_RESPONSE_NEW_EVENT_NONE)
+					setResult(RESULT_OK);
+
 				finish();
 
 			}
-		}, 1200);
+		}, DURING_SPLASH_ACTIVITY_SHOW);
 	}
 
 	@Override
 	public void onErrorResponse(VolleyError error) {
-		if (DEBUG)
-			error.printStackTrace();
-		Toast.makeText(this, "네트워크 상태를 확인해주세요",
-				Toast.LENGTH_LONG).show();
+		super.onErrorResponse(error);
 		finish();
 	}
 
 	@Override
-	public void onBackPressed() {
-		return;
+	public void finish() {
+		super.finish();
+		overridePendingTransition(R.anim.hold, R.anim.fade_out);
 	}
-	
+
+	// @Override
+	// public void onBackPressed() {
+	// return;
+	// }
+
 }

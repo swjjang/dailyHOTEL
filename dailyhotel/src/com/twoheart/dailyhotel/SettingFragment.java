@@ -41,6 +41,7 @@ import com.twoheart.dailyhotel.activity.AboutActivity;
 import com.twoheart.dailyhotel.activity.FAQActivity;
 import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.activity.NoticeActivity;
+import com.twoheart.dailyhotel.activity.ProfileActivity;
 import com.twoheart.dailyhotel.activity.VersionActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
@@ -99,7 +100,7 @@ public class SettingFragment extends BaseFragment implements Constants,
 
 			tvVersion.setText(currentVersion);
 		} catch (NameNotFoundException e) {
-			e.printStackTrace();
+			onError(e);
 		}
 		
 		return view;
@@ -108,11 +109,9 @@ public class SettingFragment extends BaseFragment implements Constants,
 	@Override
 	public void onResume() {
 		super.onResume();
-		
 		mHostActivity.setActionBar("설정");
 		
-		LoadingDialog.showLoading(mHostActivity);
-		
+		lockUI();
 		mQueue.add(new DailyHotelStringRequest(Method.GET,
 				new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 						URL_WEBAPI_USER_ALIVE).toString(), null, this, mHostActivity));
@@ -124,25 +123,19 @@ public class SettingFragment extends BaseFragment implements Constants,
 		if (v.getId() == tvNotice.getId()) {
 			Intent i = new Intent(mHostActivity, NoticeActivity.class);
 			startActivity(i);
-			mHostActivity.overridePendingTransition(R.anim.slide_in_right,
-					R.anim.hold);
+			mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
 		} else if (v.getId() == llVersion.getId()) {
-
 			Intent i = new Intent(mHostActivity, VersionActivity.class);
 			startActivity(i);
-			mHostActivity.overridePendingTransition(R.anim.slide_in_right,
-					R.anim.hold);
+			mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
 		} else if (v.getId() == tvHelp.getId()) {
-
 			Intent i = new Intent(mHostActivity, FAQActivity.class);
 			startActivity(i);
-			mHostActivity.overridePendingTransition(R.anim.slide_in_right,
-					R.anim.hold);
+			mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
 		} else if (v.getId() == tvMail.getId()) {
-
 			Intent intent = new Intent(Intent.ACTION_SEND);
 			intent.setType("message/rfc822");
 			intent.putExtra(Intent.EXTRA_EMAIL,
@@ -152,72 +145,15 @@ public class SettingFragment extends BaseFragment implements Constants,
 			startActivity(Intent.createChooser(intent, "이메일 어플리케이션 선택"));
 
 		} else if (v.getId() == llLogin.getId()) {
-
-			if (tvLogin.getText().equals("로그아웃")) { // 로그인 되어 있는 상태
-				AlertDialog.Builder alert_confirm = new AlertDialog.Builder(
-						mHostActivity);
-				alert_confirm
-						.setMessage("로그아웃 하시겠습니까?")
-						.setCancelable(false)
-						.setPositiveButton("로그아웃",
-								new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog,
-											int which) {
-
-										mQueue.add(new DailyHotelJsonRequest(
-												Method.GET,
-												new StringBuilder(
-														URL_DAILYHOTEL_SERVER)
-														.append(URL_WEBAPI_USER_LOGOUT)
-														.toString(), null,
-												SettingFragment.this,
-												mHostActivity));
-										VolleyHttpClient.destroyCookie();
-
-										SharedPreferences.Editor ed = mHostActivity.sharedPreference
-												.edit();
-										ed.putBoolean(
-												KEY_PREFERENCE_AUTO_LOGIN,
-												false);
-										ed.putString(KEY_PREFERENCE_USER_ID,
-												null);
-										ed.putString(KEY_PREFERENCE_USER_PWD,
-												null);
-										ed.commit();
-
-										invalidateLoginButton(false, "");
-
-										Toast.makeText(mHostActivity,
-												"로그아웃되었습니다", Toast.LENGTH_SHORT)
-												.show();
-
-										if (Session.getActiveSession() != null)
-											if (Session.getActiveSession()
-													.isOpened()) {
-												Session.getActiveSession()
-														.closeAndClearTokenInformation();
-												Session.setActiveSession(null);
-											}
-
-									}
-								})
-						.setNegativeButton("취소",
-								new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog,
-											int which) {
-										return;
-									}
-								});
-				AlertDialog alert = alert_confirm.create();
-				alert.show();
+			if (tvLogin.getText().equals("프로필")) { // 로그인 되어 있는 상태
+				Intent i = new Intent(mHostActivity, ProfileActivity.class);
+				startActivity(i);
+				mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
 			} else { // 로그아웃 상태
 				Intent i = new Intent(mHostActivity, LoginActivity.class);
 				startActivityForResult(i, CODE_REQUEST_ACTIVITY_LOGIN);
-				mHostActivity.overridePendingTransition(R.anim.slide_in_right,
-						R.anim.hold);
+				mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 			}
 
 		} else if (v.getId() == tvCall.getId()) {
@@ -227,8 +163,7 @@ public class SettingFragment extends BaseFragment implements Constants,
 		} else if (v.getId() == tvAbout.getId()) {
 			Intent i = new Intent(mHostActivity, AboutActivity.class);
 			startActivity(i);
-			mHostActivity.overridePendingTransition(R.anim.slide_in_right,
-					R.anim.hold);
+			mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 		}
 	}
 	
@@ -248,7 +183,7 @@ public class SettingFragment extends BaseFragment implements Constants,
 		tvEmail.setText(email);
 		
 		if (login) {
-			tvLogin.setText("로그아웃");
+			tvLogin.setText("프로필");
 			tvEmail.setVisibility(View.VISIBLE);
 		} else {
 			tvLogin.setText("로그인");
@@ -271,7 +206,7 @@ public class SettingFragment extends BaseFragment implements Constants,
 
 			} else {
 				invalidateLoginButton(false, "");
-				mListener.onLoadComplete(this, true);
+				unLockUI();
 			}
 		}
 	}
@@ -288,12 +223,10 @@ public class SettingFragment extends BaseFragment implements Constants,
 				else
 					invalidateLoginButton(true, "");
 				
-				mListener.onLoadComplete(this, true);
+				unLockUI();
 
 			} catch (Exception e) {
-				if (DEBUG)
-					e.printStackTrace();
-
+				onError(e);
 				invalidateLoginButton(true, "");
 			}
 

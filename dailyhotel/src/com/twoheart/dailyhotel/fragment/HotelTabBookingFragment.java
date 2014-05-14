@@ -27,18 +27,36 @@ public class HotelTabBookingFragment extends BaseFragment implements
 
 	private static final String TAG = "HotelTabBookingFragment";
 	private static final int DURATION_HOTEL_IMAGE_SHOW = 2000;
+	private static final String KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL = "hotel_detail";
 
-	private HotelTabActivity mHostActivity;
 	private HotelDetail mHotelDetail;
-
 	private FragmentPagerAdapter mAdapter;
 	private HotelViewPager mViewPager;
 	private CirclePageIndicator mIndicator;
-
 	private TextView tvBedType, tvAddress, tvPrice, tvDiscount;
 
 	private Handler mHandler;
 	private int mCurrentPage = 0;
+	
+	public static HotelTabBookingFragment newInstance(HotelDetail hotelDetail) {
+		
+		HotelTabBookingFragment newFragment = new HotelTabBookingFragment();
+		Bundle arguments = new Bundle();
+		
+		arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL, hotelDetail);
+		newFragment.setArguments(arguments);
+		newFragment.setTitle("예약");
+		
+		return newFragment;
+		
+	}
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		mHotelDetail = (HotelDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL);
+		
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,8 +64,6 @@ public class HotelTabBookingFragment extends BaseFragment implements
 
 		View view = inflater.inflate(R.layout.fragment_hotel_tab_booking, container,
 				false);
-		mHostActivity = (HotelTabActivity) getActivity();
-		mHotelDetail = mHostActivity.hotelDetail;
 
 		tvBedType = (TextView) view
 				.findViewById(R.id.tv_hotel_tab_booking_bed_type);
@@ -61,30 +77,35 @@ public class HotelTabBookingFragment extends BaseFragment implements
 		mIndicator = (CirclePageIndicator) view
 				.findViewById(R.id.cp_hotel_tab_booking_indicator);
 
-		tvBedType.setText(mHostActivity.hotelDetail.getHotel().getBedType());
-		tvAddress.setText(mHostActivity.hotelDetail.getHotel().getAddress());
+		tvBedType.setText(mHotelDetail.getHotel().getBedType());
+		tvAddress.setText(mHotelDetail.getHotel().getAddress());
 		tvAddress.setSelected(true);
 		tvDiscount.setText(mHotelDetail.getHotel().getDiscount() + "원");
 		tvPrice.setText(mHotelDetail.getHotel().getPrice() + "원");
 		tvPrice.setPaintFlags(tvPrice.getPaintFlags()
 				| Paint.STRIKE_THRU_TEXT_FLAG);
 		
-		mAdapter = new FragmentPagerAdapter(getChildFragmentManager()) {
+		if (mAdapter == null) {
+			mAdapter = new FragmentPagerAdapter(getChildFragmentManager()) {
 
-			@Override
-			public Fragment getItem(int position) {
-				return ImageViewFragment.newInstance(mHotelDetail.getImageUrl()
-						.get(position), mHotelDetail);
-			}
+				@Override
+				public Fragment getItem(int position) {
+					return ImageViewFragment.newInstance(mHotelDetail.getImageUrl()
+							.get(position), mHotelDetail);
+				}
 
-			@Override
-			public int getCount() {
-				return mHotelDetail.getImageUrl().size();
-			}
+				@Override
+				public int getCount() {
+					return mHotelDetail.getImageUrl().size();
+				}
+				
+			};
 			
-		};
+			mViewPager.setAdapter(mAdapter);
+		} else {
+			mAdapter.notifyDataSetChanged();
+		}
 		
-		mViewPager.setAdapter(mAdapter);
 		mViewPager.setOnTouchListener(this);
 		mIndicator.setViewPager(mViewPager);
 		mIndicator.setSnap(true);
@@ -111,7 +132,6 @@ public class HotelTabBookingFragment extends BaseFragment implements
 	public void onResume(){
 		super.onResume();
 		tvDiscount.setTypeface(DailyHotel.getBoldTypeface());
-		tvDiscount.invalidate();
 		
 	}
 	

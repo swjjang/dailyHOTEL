@@ -30,11 +30,9 @@ import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
 public class ForgotPwdActivity extends BaseActivity implements Constants,
-		DailyHotelStringResponseListener, ErrorListener, OnClickListener {
+		DailyHotelStringResponseListener, OnClickListener {
 
 	private static final String TAG = "ForgotPwdActivity";
-
-	private RequestQueue mQueue;
 
 	private Button btnForgot;
 	private EditText etForgot;
@@ -44,8 +42,6 @@ public class ForgotPwdActivity extends BaseActivity implements Constants,
 		super.onCreate(savedInstanceState);
 		setActionBar("비밀번호 찾기");
 		setContentView(R.layout.activity_forgot_pwd);
-
-		mQueue = VolleyHttpClient.getRequestQueue();
 
 		etForgot = (EditText) findViewById(R.id.et_forgot_pwd);
 		btnForgot = (Button) findViewById(R.id.btn_forgot_pwd);
@@ -76,19 +72,16 @@ public class ForgotPwdActivity extends BaseActivity implements Constants,
 			String strEmail = etForgot.getText().toString();
 
 			if (strEmail.equals("")) {
-				Toast.makeText(this, "이메일 주소를 입력해주세요", Toast.LENGTH_SHORT)
-						.show();
+				showToast("이메일 주소를 입력해주세요", Toast.LENGTH_SHORT, true);
 				return;
 			} 
 			
 			else if (!isValidEmail(strEmail)) {
-				Toast.makeText(this, "올바른 이메일 형식을 입력해주세요.", Toast.LENGTH_SHORT)
-						.show();
+				showToast("올바른 이메일 형식을 입력해주세요.", Toast.LENGTH_SHORT, true);
 				return;
 			}
 
-			LoadingDialog.showLoading(this);
-
+			lockUI();
 			mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(
 					URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_FORGOTPWD)
 					.append(strEmail).append("/trim").toString(), null, this,
@@ -106,7 +99,7 @@ public class ForgotPwdActivity extends BaseActivity implements Constants,
 	@Override
 	public void finish() {
 		super.finish();
-		overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+		overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
 	}
 
 	@Override
@@ -114,7 +107,7 @@ public class ForgotPwdActivity extends BaseActivity implements Constants,
 		if (url.contains(URL_WEBAPI_USER_FORGOTPWD)) {
 
 			if (response.trim().equals("done")) {
-				LoadingDialog.hideLoading();
+				unLockUI();
 				AlertDialog.Builder alert = new AlertDialog.Builder(
 						ForgotPwdActivity.this);
 				alert.setPositiveButton("확인",
@@ -133,16 +126,5 @@ public class ForgotPwdActivity extends BaseActivity implements Constants,
 				alert.show();
 			}
 		}
-	}
-
-	@Override
-	public void onErrorResponse(VolleyError error) {
-		if (DEBUG)
-			error.printStackTrace();
-
-		LoadingDialog.hideLoading();
-		Toast.makeText(this, "네트워크 상태가 좋지 않습니다.\n네트워크 연결을 다시 확인해주세요.",
-				Toast.LENGTH_SHORT).show();
-
 	}
 }

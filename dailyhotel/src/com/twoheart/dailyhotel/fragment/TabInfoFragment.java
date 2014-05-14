@@ -22,22 +22,39 @@ import com.twoheart.dailyhotel.util.ui.BaseFragment;
 public class TabInfoFragment extends BaseFragment {
 
 	private static final String TAG = "HotelTabInfoFragment";
+	private static final String KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL = "hotel_detail";
 
-	private TabActivity mHostActivity;
 	private HotelDetail mHotelDetail;
 	private LinearLayout layout;
 
 	private int infoViewCount;
-
+	
+	public static TabInfoFragment newInstance(HotelDetail hotelDetail) {
+		
+		TabInfoFragment newFragment = new TabInfoFragment();
+		Bundle arguments = new Bundle();
+		
+		arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL, hotelDetail);
+		newFragment.setArguments(arguments);
+		newFragment.setTitle("Á¤º¸");
+		
+		return newFragment;
+		
+	}
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		mHotelDetail = (HotelDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL);
+		
+	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
 		View view = inflater.inflate(R.layout.fragment_hotel_tab_info, container,
 				false);
-		mHostActivity = (TabActivity) getActivity();
-		mHotelDetail = mHostActivity.hotelDetail;
-
 		layout = (LinearLayout) view.findViewById(R.id.layout_hotel_tab_info);
 
 		infoViewCount = 1;

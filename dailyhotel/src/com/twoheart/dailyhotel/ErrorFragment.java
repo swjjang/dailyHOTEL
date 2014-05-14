@@ -12,7 +12,6 @@
  */
 package com.twoheart.dailyhotel;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +25,6 @@ import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
 public class ErrorFragment extends BaseFragment implements OnClickListener {
 
-	private MainActivity mHostActivity;
 	private Button btnRetry;
 
 	@Override
@@ -34,7 +32,6 @@ public class ErrorFragment extends BaseFragment implements OnClickListener {
 			Bundle savedInstanceState) {
 
 		View view = inflater.inflate(R.layout.fragment_error, container, false);
-		mHostActivity = (MainActivity) getActivity();
 		mHostActivity.setActionBar("dailyHOTEL");
 
 		btnRetry = (Button) view.findViewById(R.id.btn_error);
@@ -49,12 +46,11 @@ public class ErrorFragment extends BaseFragment implements OnClickListener {
 
 			// network 연결이 안되있으면
 			if (!VolleyHttpClient.isAvailableNetwork()) {
-				Toast.makeText(mHostActivity, "네트워크 상태를 확인해 주세요",
-						Toast.LENGTH_SHORT).show();
+				showToast("와이파이 또는 데이터 네트워크의 연결 상태를 확인해주세요", Toast.LENGTH_SHORT, true);
 				return;
 			} else {
-				int index = mHostActivity.indexLastFragment;
-				mHostActivity.replaceFragment(mHostActivity.getFragment(index));
+				int index = ((MainActivity) mHostActivity).indexLastFragment;
+				((MainActivity) mHostActivity).replaceFragment(((MainActivity) mHostActivity).getFragment(index));
 //				mHostActivity.removeFragment(this);
 				
 			}

@@ -49,4 +49,5 @@ public class AvailableNetwork {
 
 		return nNetType;
 	}
+	
 }

@@ -5,9 +5,9 @@ import android.os.Parcelable;
 
 public class Booking implements Parcelable {
 	
-	String sday;
-	String hotel_idx;
-	String hotel_name;
+	private String sday;
+	private String hotel_idx;
+	private String hotel_name;
 	
 	public Booking() {
 	}

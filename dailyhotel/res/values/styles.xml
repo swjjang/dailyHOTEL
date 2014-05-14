@@ -3,8 +3,22 @@
     <!-- Generated with http://android-holo-colors.com -->
     <!--
         Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.    -->
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
     <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light">
+        
+        <item name="actionMenuTextColor">@color/dh_theme_color</item>
+        <item name="actionMenuTextAppearance">@style/actionbarMenuTextAppearance</item>
+        <item name="actionBarItemBackground">@drawable/item_background_holo_light</item>
+        <item name="actionDropDownStyle">@style/DropDownListViewDH_Theme.ActionBar</item>
+        <item name="dropDownListViewStyle">@style/DropDownDH_Theme.ActionBar</item>
+        <item name="android:ratingBarStyle">@style/RatingBarDH</item>
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+        <item name="vpiTabPageIndicatorStyle">@style/TabDH_Theme</item>
+        <item name="switchStyle">@style/switch_light</item>
         <item name="android:editTextStyle">@style/EditTextDH_Theme</item>
         <item name="android:checkboxStyle">@style/CheckBoxDH_Theme</item>
         <item name="android:spinnerStyle">@style/SpinnerDH_Theme</item>
@@ -13,17 +27,6 @@
         <item name="android:listViewStyle">@style/ListViewDH_Theme</item>
         <item name="android:listViewWhiteStyle">@style/ListViewDH_Theme.White</item>
         <item name="android:spinnerItemStyle">@style/SpinnerItemDH_Theme</item>
-        <item name="vpiTabPageIndicatorStyle">@style/TabDH_Theme</item>
-        <item name="switchStyle">@style/switch_light</item>
-        <item name="actionMenuTextColor">@color/dh_theme_color</item>
-        <item name="actionMenuTextAppearance">@style/actionbarMenuTextAppearance</item>
-        <item name="actionBarItemBackground">@drawable/item_background_holo_light</item>
-        <item name="actionDropDownStyle">@style/DropDownListViewDH_Theme.ActionBar</item>
-        <item name="dropDownListViewStyle">@style/DropDownDH_Theme.ActionBar</item>
-    </style>
-
-    <!-- Application theme. -->
-    <style name="AppTheme" parent="AppBaseTheme">
         <item name="android:windowBackground">@color/activity_background</item>
         <item name="ptrHeaderBackground">@android:color/white</item>
         <item name="ptrProgressBarColor">@color/dh_theme_color</item>
@@ -60,7 +63,7 @@
     <style name="SpinnerDropDownItemDH_Theme" parent="android:Widget.DropDownItem.Spinner">
         <item name="android:checkMark">@drawable/btn_radio_holo_light</item>
     </style>
-    
+
     <style name="TabDH_Theme" parent="Widget.TabPageIndicator">
         <item name="android:paddingLeft">32dp</item>
         <item name="android:paddingRight">32dp</item>
@@ -80,15 +83,15 @@
     <style name="ListViewDH_Theme" parent="android:Widget.ListView">
         <item name="android:listSelector">@android:color/transparent</item>
     </style>
-    
+
     <style name="DropDownListViewDH_Theme.ActionBar" parent="@style/Widget.AppCompat.Light.Spinner.DropDown.ActionBar">
         <item name="android:background">@drawable/spinner_background</item>
         <item name="android:dropDownSelector">@drawable/selectable_background</item>
     </style>
-    
+
     <style name="DropDownDH_Theme.ActionBar" parent="@style/Widget.AppCompat.Light.ListView.DropDown">
-    		<item name="android:listSelector">@drawable/selectable_background</item>
-	</style>
+        <item name="android:listSelector">@drawable/selectable_background</item>
+    </style>
 
     <style name="ListViewDH_Theme.White" parent="android:Widget.ListView.White">
         <item name="android:listSelector">@android:color/transparent</item>
@@ -97,15 +100,15 @@
     <style name="SpinnerItemDH_Theme" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
         <item name="android:textColor">#000000</item>
     </style>
-    
+
     <style name="actionbarMenuTextAppearance">
         <item name="android:textSize">18dp</item>
     </style>
-    
+
     <style name="Theme.AppCompat.Light.NoActionBar" parent="AppTheme">
         <item name="android:windowNoTitle">true</item>
     </style>
-    
+
     <style name="switch_light">
         <item name="track">@drawable/switch_track_holo_light</item>
         <item name="thumb">@drawable/switch_inner_holo_light</item>
@@ -124,5 +127,10 @@
         <item name="textColorLink">?android:attr/textColorLink</item>
         <item name="textSize">16sp</item>
     </style>
-    
+
+    <style name="RatingBarDH" parent="android:Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/dh_ratingbar_full_holo_light</item>
+        <item name="android:indeterminateDrawable">@drawable/dh_ratingbar_full_holo_light</item>
+    </style>
+
 </resources>
