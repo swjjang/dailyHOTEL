@@ -22,7 +22,7 @@ public interface Constants {
 	public static final boolean DEBUG = BuildConfig.DEBUG;
 	
 	// 플레이 스토어용 릴리즈 여부
-	public static final boolean IS_GOOGLE_RELEASE = false;
+	public static final boolean IS_GOOGLE_RELEASE = true;
 	
 	// 웹서버 호스트 
 	public static final String URL_DAILYHOTEL_SERVER = "http://dailyhotel.kr/goodnight/";				// 서비스 서버
@@ -42,7 +42,6 @@ public interface Constants {
 	public static final String URL_WEBAPI_USER_BONUS_ALL = "user/session/bonus/all";
 	public static final String URL_WEBAPI_USER_BONUS_VAILD = "user/session/bonus/vaild";
 	public static final String URL_WEBAPI_USER_LOGIN_FACEBOOK = "user/login/sns/facebook";
-	public static final String URL_WEBAPI_USER_DEVICE = "user/device";
 	public static final String URL_WEBAPI_USER_SIGNUP = "user/join";
 	public static final String URL_WEBAPI_USER_ALIVE = "user/alive";
 	public static final String URL_WEBAPI_USER_FORGOTPWD = "user/sendpw/";
@@ -85,7 +84,6 @@ public interface Constants {
 	// Preference
 	public static final String NAME_DAILYHOTEL_SHARED_PREFERENCE = "GOOD_NIGHT";
 
-	public static final String KEY_PREFERENCE_GCM = "GCM";
 	public static final String KEY_PREFERENCE_RESENT_CNT = "RESENT_CNT";
 
 	// user info

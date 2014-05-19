@@ -1,7 +1,15 @@
 package com.twoheart.dailyhotel.activity;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import android.content.Intent;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -11,7 +19,9 @@ import android.widget.Toast;
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.HotelTabBookingFragment;
-import com.twoheart.dailyhotel.model.Pay;
+import com.twoheart.dailyhotel.model.Hotel;
+import com.twoheart.dailyhotel.model.HotelDetail;
+import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Log;
 import com.twoheart.dailyhotel.util.TabActivity;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -26,12 +36,25 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 		DailyHotelStringResponseListener {
 
 	private static final String TAG = "HotelTabActivity";
+	
+	protected SaleTime mSaleTime;
+	
 	private Button btnSoldOut;
 	private Button btnBooking;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		hotelDetail = new HotelDetail();
+		mSaleTime = new SaleTime();
+		Bundle bundle = getIntent().getExtras();
+		if (bundle != null) {
+			hotelDetail.setHotel((Hotel) bundle
+					.getParcelable(NAME_INTENT_EXTRA_DATA_HOTEL));
+			mSaleTime = bundle.getParcelable(NAME_INTENT_EXTRA_DATA_SALETIME);
+		}
+		
 		setContentView(R.layout.activity_hotel_tab);
 
 		mViewPager = (HotelViewPager) findViewById(R.id.pager);
@@ -136,4 +159,84 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 
 	}
 
+	@Override
+	public void onResponse(String url, JSONObject response) {
+		if (url.contains(URL_WEBAPI_HOTEL_DETAIL)) {
+			try {
+				JSONObject obj = response;
+				JSONArray bookingArr = obj.getJSONArray("detail");
+				JSONObject detailObj = bookingArr.getJSONObject(0);
+
+				DecimalFormat comma = new DecimalFormat("###,##0");
+				String strDiscount = comma.format(Integer.parseInt(detailObj
+						.getString("discount")));
+				String strPrice = comma.format(Integer.parseInt(detailObj
+						.getString("price")));
+				
+				if (hotelDetail.getHotel() == null)
+					 hotelDetail.setHotel(new Hotel());
+				
+				Hotel hotelBasic = hotelDetail.getHotel();
+
+				hotelBasic.setAddress(detailObj.getString("address"));
+				hotelBasic.setName(detailObj.getString("hotel_name"));
+				hotelBasic.setDiscount(strDiscount);
+				hotelBasic.setPrice(strPrice);
+				hotelBasic.setCategory(detailObj.getString("cat"));
+				hotelBasic.setBedType(detailObj.getString("bed_type"));
+				
+				hotelDetail.setHotel(hotelBasic);
+
+				JSONArray imgArr = detailObj.getJSONArray("img");
+				List<String> imageList = new ArrayList<String>();
+
+				for (int i = 0; i < imgArr.length(); i++) {
+					if (i == 0)
+						continue;
+					JSONObject imgObj = imgArr.getJSONObject(i);
+					imageList.add(imgObj.getString("path"));
+				}
+
+				hotelDetail.setImageUrl(imageList);
+
+				JSONArray specArr = obj.getJSONArray("spec");
+				Map<String, List<String>> contentList = new LinkedHashMap<String, List<String>>();
+				for (int i = 0; i < specArr.length(); i++) {
+
+					JSONObject specObj = specArr.getJSONObject(i);
+					String key = specObj.getString("key");
+					JSONArray valueArr = specObj.getJSONArray("value");
+
+					List<String> valueList = new ArrayList<String>();
+
+					for (int j = 0; j < valueArr.length(); j++) {
+						JSONObject valueObj = valueArr.getJSONObject(j);
+						String value = valueObj.getString("value");
+						valueList.add(value);
+					}
+
+					contentList.put(key, valueList);
+
+				}
+				hotelDetail.setSpecification(contentList);
+
+				double latitude = detailObj.getDouble("lat");
+				double longitude = detailObj.getDouble("lng");
+
+				hotelDetail.setLatitude(latitude);
+				hotelDetail.setLongitude(longitude);
+				
+				int saleIdx = detailObj.getInt("idx");
+				hotelDetail.setSaleIdx(saleIdx);
+				
+				mFragments.clear();
+				loadFragments();
+				
+				unLockUI();
+
+			} catch (Exception e) {
+				onError(e);
+			}
+		}
+	}
 }

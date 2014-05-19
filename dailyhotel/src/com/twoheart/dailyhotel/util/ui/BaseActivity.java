@@ -256,6 +256,9 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	 * @param isAttachToActivity	현재 Activity가 종료되면 Toast도 제거할지를 결정한다
 	 */
 	public void showToast(String message, int length, boolean isAttachToActivity) {
+		if (mToast != null)
+			mToast.cancel();
+		
 		if (isAttachToActivity) {
 			mToast = Toast.makeText(getApplicationContext(), message, length);
 			mToast.show();

@@ -8,6 +8,7 @@ public class Booking implements Parcelable {
 	private String sday;
 	private String hotel_idx;
 	private String hotel_name;
+	private String bedType;
 	
 	public Booking() {
 	}
@@ -21,6 +22,7 @@ public class Booking implements Parcelable {
 		dest.writeString(sday);
 		dest.writeString(hotel_idx);
 		dest.writeString(hotel_name);
+		dest.writeString(bedType);
 
 	}
 	
@@ -28,6 +30,7 @@ public class Booking implements Parcelable {
 		sday = in.readString();
 		hotel_idx = in.readString();
 		hotel_name = in.readString();
+		bedType = in.readString();
 	}
 	
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
@@ -42,10 +45,12 @@ public class Booking implements Parcelable {
 
 	};
 	
-	public Booking(String sday, String hotel_idx, String hotel_name) {
+	public Booking(String sday, String hotel_idx, String hotel_name, String bedType) {
 		this.sday = sday;
 		this.hotel_idx = hotel_idx;
 		this.hotel_name = hotel_name;
+		this.bedType = bedType;
+		
 	}
 
 	public String getSday() {
@@ -71,7 +76,15 @@ public class Booking implements Parcelable {
 	public void setHotel_name(String hotel_name) {
 		this.hotel_name = hotel_name;
 	}
+	
+	public String getBedType() {
+		return bedType;
+	}
 
+	public void setBedType(String bedType) {
+		this.bedType = bedType;
+	}
+	
 	@Override
 	public int describeContents() {
 		return 0;
