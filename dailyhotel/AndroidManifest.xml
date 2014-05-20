@@ -1,23 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.twoheart.dailyhotel"
-    android:versionCode="28"
-    android:versionName="1.2.8" >
+    android:versionCode="29"
+    android:versionName="1.2.9" >
     
     <uses-sdk
         android:minSdkVersion="9"
         android:targetSdkVersion="19" />
 
-    <!-- GCM 관련 퍼미션 -->
-    <permission
-        android:name="com.twoheart.dailyhotel.permission.C2D_MESSAGE"
-        android:protectionLevel="signature" />
-
-    <uses-permission android:name="com.twoheart.dailyhotel.permission.C2D_MESSAGE" />
-    <!-- GCM 받기 -->
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-    <!-- GCM을 받으려면 구글 계정 필요 -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <!-- 메시지 받을 때 wake up 하기 위해 -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
@@ -164,19 +154,6 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <!-- GCM 리시버 -->
-        <receiver
-            android:name="com.google.android.gcm.GCMBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND" >
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
-
-                <category android:name="com.twoheart.dailyhotel" /> <!-- 젤리빈 부터는 category 빼도 된다 -->
-            </intent-filter>
-        </receiver>
-        <!-- GCM 리시버에서 돌리는 서비스 -->
-        <service android:name="com.twoheart.dailyhotel.GCMIntentService" /> <!-- 서비스명 변경하면 안됨 -->
         <receiver
             android:name="com.twoheart.dailyhotel.AlarmBroadcastReceiver"
             android:process=":remote" />

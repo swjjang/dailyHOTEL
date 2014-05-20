@@ -46,7 +46,6 @@ import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
-import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
 public class BookingListFragment extends BaseFragment implements Constants,
 		OnItemClickListener, OnClickListener, DailyHotelJsonResponseListener,
@@ -186,8 +185,9 @@ public class BookingListFragment extends BaseFragment implements Constants,
 						String sday = rsvObj.getString("sday");
 						String hotel_idx = rsvObj.getString("hotel_idx");
 						String hotel_name = rsvObj.getString("hotel_name");
+						String bedType = rsvObj.getString("bed_type");
 
-						mItems.add(new Booking(sday, hotel_idx, hotel_name));
+						mItems.add(new Booking(sday, hotel_idx, hotel_name, bedType));
 					}
 
 					mAdapter = new BookingListAdapter(mHostActivity,
@@ -244,6 +244,5 @@ public class BookingListFragment extends BaseFragment implements Constants,
 
 			}
 		}
-
 	}
 }

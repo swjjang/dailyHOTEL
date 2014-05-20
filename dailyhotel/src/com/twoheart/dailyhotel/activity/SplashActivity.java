@@ -30,13 +30,10 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.widget.Toast;
 
 import com.android.volley.Request.Method;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
-import com.twoheart.dailyhotel.GCMIntentService;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
@@ -72,11 +69,6 @@ public class SplashActivity extends BaseActivity implements Constants,
 	@Override
 	protected void onResume() {
 		super.onResume();
-
-		if (!sharedPreference.getBoolean(KEY_PREFERENCE_GCM, false)) {
-			GCMIntentService.unregisterToken(getApplicationContext());
-			GCMIntentService.registerToken(getApplicationContext());
-		}
 
 		if (sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false)) {
 

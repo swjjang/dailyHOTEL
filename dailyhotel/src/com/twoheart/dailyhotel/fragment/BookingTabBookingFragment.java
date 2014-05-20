@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.LoginActivity;
+import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
@@ -33,16 +34,21 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 
 	private static final String TAG = "BookingTabBookingFragment";
 	private static final String KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL = "hotel_detail";
+	private static final String KEY_BUNDLE_ARGUMENTS_BOOKING = "booking";
 
 	private TextView tvCustomerName, tvBedtype, tvHotelName, tvAddress;
 	private TextView tvCheckIn, tvCheckOut;
+	
+	private Booking mBooking;
 	private HotelDetail mHotelDetail;
 
-	public static BookingTabBookingFragment newInstance(HotelDetail hotelDetail) {
+	public static BookingTabBookingFragment newInstance(HotelDetail hotelDetail, Booking booking) {
 		BookingTabBookingFragment newFragment = new BookingTabBookingFragment();
-		Bundle arguments = new Bundle();
 		
+		Bundle arguments = new Bundle();
 		arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL, hotelDetail);
+		arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_BOOKING, booking);
+		
 		newFragment.setArguments(arguments);
 		newFragment.setTitle("¿¹¾à");
 		
@@ -54,7 +60,7 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mHotelDetail = (HotelDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL);
-		
+		mBooking = (Booking) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_BOOKING);
 	}
 
 	@Override
@@ -80,9 +86,9 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 		tvCheckIn.setSelected(true);
 		tvCheckOut.setSelected(true);
 		
-		tvHotelName.setText(mHotelDetail.getHotel().getName());
+		tvHotelName.setText(mBooking.getHotel_name());
 		tvAddress.setText(mHotelDetail.getHotel().getAddress());
-		tvBedtype.setText(mHotelDetail.getHotel().getBedType());
+		tvBedtype.setText(mBooking.getBedType());
 		
 		lockUI();
 		mQueue.add(new DailyHotelStringRequest(Method.GET,
