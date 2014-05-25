@@ -792,13 +792,13 @@ public class PaymentActivity extends BaseActivity implements Constants {
 				PaymentActivity.this);
 		alertDialog.setTitle("결제알림").setMessage("결제를 취소하시겠습니까?")
 				.setCancelable(false)
-				.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+				.setPositiveButton("예", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						finish();
 					}
 				})
-				.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+				.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						return;
