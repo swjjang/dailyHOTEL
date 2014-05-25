@@ -21,6 +21,9 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -69,10 +72,13 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
+import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.CloseOnBackPressed;
 
-public class MainActivity extends BaseActivity implements OnItemClickListener,
+public class MainActivity extends BaseActivity implements DailyHotelStringResponseListener, DailyHotelJsonResponseListener, OnItemClickListener,
 		Constants {
 
 	private static final String TAG = "MainActivity";
@@ -212,53 +218,86 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
 				startActivity(new Intent(this, IntroActivity.class));
 			}
 			
-			// 호텔평가
+			// 호텔평가를 위한 현재 로그인 여부 체크
+			mQueue.add(new DailyHotelStringRequest(Method.GET,
+					new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+							URL_WEBAPI_USER_ALIVE).toString(), null, this, this));
+		}
+	}
+	
+	@Override
+	public void onResponse(String url, String response) {
+		if (url.contains(URL_WEBAPI_USER_ALIVE)) {
+			String result = response.trim();
+
+			if (result.equals("alive")) { // session alive
+				// 호텔 평가를 위한 사용자 정보 조회
+				mQueue.add(new DailyHotelJsonRequest(Method.GET,
+						new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+								URL_WEBAPI_USER_INFO).toString(), null, this,
+						this));
+
+			}
+		}
+	}
+	
+	@Override
+	public void onResponse(String url, JSONObject response) {
+		if (url.contains(URL_WEBAPI_USER_INFO)) {
 			try {
-				String purchasedHotelName = sharedPreference.getString(
-						KEY_PREFERENCE_HOTEL_NAME,
-						VALUE_PREFERENCE_HOTEL_NAME_DEFAULT);
-				int purchasedHotelSaleIdx = sharedPreference.getInt(
-						KEY_PREFERENCE_HOTEL_SALE_IDX,
-						VALUE_PREFERENCE_HOTEL_SALE_IDX_DEFAULT);
-				String purchasedHotelCheckOut = sharedPreference.getString(
-						KEY_PREFERENCE_HOTEL_CHECKOUT,
-						VALUE_PREFERENCE_HOTEL_CHECKOUT_DEFAULT);
+				String loginUserIdx = response.getString("idx");
+				String buyerIdx = sharedPreference.getString(KEY_PREFERENCE_USER_IDX, null);
+				
+				if (buyerIdx != null) {
+					if (loginUserIdx.equals(buyerIdx)) {
+						String purchasedHotelName = sharedPreference.getString(
+								KEY_PREFERENCE_HOTEL_NAME,
+								VALUE_PREFERENCE_HOTEL_NAME_DEFAULT);
+						int purchasedHotelSaleIdx = sharedPreference.getInt(
+								KEY_PREFERENCE_HOTEL_SALE_IDX,
+								VALUE_PREFERENCE_HOTEL_SALE_IDX_DEFAULT);
+						String purchasedHotelCheckOut = sharedPreference.getString(
+								KEY_PREFERENCE_HOTEL_CHECKOUT,
+								VALUE_PREFERENCE_HOTEL_CHECKOUT_DEFAULT);
 
-				Date today = new Date();
-				Date checkOut = SaleTime.stringToDate(Util
-						.dailyHotelTimeConvert(purchasedHotelCheckOut));
+						Date today = new Date();
+						Date checkOut = SaleTime.stringToDate(Util
+								.dailyHotelTimeConvert(purchasedHotelCheckOut));
 
-				if (!purchasedHotelName.equals(VALUE_PREFERENCE_HOTEL_NAME_DEFAULT)) {
-					if (today.compareTo(checkOut) >= 0) {
-						Calendar calendar = Calendar.getInstance();
-						calendar.setTime(checkOut);
-						calendar.add(Calendar.DATE, DAYS_DISPLAY_RATING_HOTEL_DIALOG);
-						Date deadLineDay = calendar.getTime();
-						
-						if (today.compareTo(deadLineDay) < 0) {
-							Hotel purchasedHotel = new Hotel();
-							purchasedHotel.setName(purchasedHotelName);
-		
-							HotelDetail purchasedHotelInformation = new HotelDetail();
-							purchasedHotelInformation.setHotel(purchasedHotel);
-							purchasedHotelInformation.setSaleIdx(purchasedHotelSaleIdx);
-		
-							RatingHotelFragment dialog = RatingHotelFragment
-									.newInstance(purchasedHotelInformation);
-							dialog.show(fragmentManager, TAG_FRAGMENT_RATING_HOTEL);
-						} else {
-							RatingHotelFragment dialog = RatingHotelFragment
-									.newInstance(null);
-							dialog.destroyRatingHotelFlag();
+						if (!purchasedHotelName.equals(VALUE_PREFERENCE_HOTEL_NAME_DEFAULT)) {
+							if (today.compareTo(checkOut) >= 0) {
+								Calendar calendar = Calendar.getInstance();
+								calendar.setTime(checkOut);
+								calendar.add(Calendar.DATE, DAYS_DISPLAY_RATING_HOTEL_DIALOG);
+								Date deadLineDay = calendar.getTime();
+								
+								if (today.compareTo(deadLineDay) < 0) {
+									Hotel purchasedHotel = new Hotel();
+									purchasedHotel.setName(purchasedHotelName);
+				
+									HotelDetail purchasedHotelInformation = new HotelDetail();
+									purchasedHotelInformation.setHotel(purchasedHotel);
+									purchasedHotelInformation.setSaleIdx(purchasedHotelSaleIdx);
+				
+									RatingHotelFragment dialog = RatingHotelFragment
+											.newInstance(purchasedHotelInformation);
+									dialog.show(fragmentManager, TAG_FRAGMENT_RATING_HOTEL);
+								} else {
+									RatingHotelFragment dialog = RatingHotelFragment
+											.newInstance(null);
+									dialog.destroyRatingHotelFlag();
+								}
+							}
 						}
 					}
 				}
+				
 			} catch (Exception e) {
 				onError(e);
 			}
 		}
 	}
-
+	
 	/**
 	 * 네비게이션 드로워에서 메뉴를 선택하는 효과를 내주는 메서드
 	 * @param selectedMenu DrawerMenu 객체를 받는다.

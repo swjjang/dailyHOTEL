@@ -110,6 +110,7 @@ public interface Constants {
 	public static final String VALUE_PREFERENCE_HOTEL_NAME_DEFAULT = "none";
 	public static final int VALUE_PREFERENCE_HOTEL_SALE_IDX_DEFAULT = 1;
 	public static final String VALUE_PREFERENCE_HOTEL_CHECKOUT_DEFAULT = "14-04-30-20";
+	public static final String KEY_PREFERENCE_USER_IDX = "USER_IDX";
 
 	// Android 컴포넌트 간에 데이터를 주고받을 때 사용되는 인텐트 이름(키)을 정의한 상수이다.
 	public static final String NAME_INTENT_EXTRA_DATA_HOTEL = "hotel";

@@ -334,6 +334,7 @@ public class BookingActivity extends BaseActivity implements
 						editor.putString(KEY_PREFERENCE_HOTEL_NAME, payData.getHotelDetail().getHotel().getName());
 						editor.putInt(KEY_PREFERENCE_HOTEL_SALE_IDX, payData.getHotelDetail().getSaleIdx());
 						editor.putString(KEY_PREFERENCE_HOTEL_CHECKOUT, payData.getCheckOut());
+						editor.putString(KEY_PREFERENCE_USER_IDX, payData.getCustomer().getUserIdx());
 						editor.commit();
 					}
 				}
@@ -440,6 +441,7 @@ public class BookingActivity extends BaseActivity implements
 				buyer.setName(obj.getString("name"));
 				buyer.setPhone(obj.getString("phone"));
 				buyer.setAccessToken(obj.getString("accessToken"));
+				buyer.setUserIdx(obj.getString("idx"));
 				
 				mPay.setCustomer(buyer);
 				buyer = mPay.getCustomer();
