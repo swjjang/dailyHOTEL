@@ -36,7 +36,7 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 	private static final String KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL = "hotel_detail";
 	private static final String KEY_BUNDLE_ARGUMENTS_BOOKING = "booking";
 
-	private TextView tvCustomerName, tvBedtype, tvHotelName, tvAddress;
+	private TextView tvCustomerName, tvCustomerPhone, tvBedtype, tvHotelName, tvAddress;
 	private TextView tvCheckIn, tvCheckOut;
 	
 	private Booking mBooking;
@@ -71,6 +71,7 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 				false);
 		tvCustomerName = (TextView) view
 				.findViewById(R.id.tv_booking_tab_user_name);
+		tvCustomerPhone = (TextView) view.findViewById(R.id.tv_booking_tab_user_phone);
 		tvHotelName = (TextView) view
 				.findViewById(R.id.tv_booking_tab_hotel_name);
 		tvAddress = (TextView) view.findViewById(R.id.tv_booking_tab_address);
@@ -80,6 +81,7 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 		
 		// Android Marquee bug...
 		tvCustomerName.setSelected(true);
+		tvCustomerPhone.setSelected(true);
 		tvHotelName.setSelected(true);
 		tvAddress.setSelected(true);
 		tvBedtype.setSelected(true);
@@ -128,6 +130,7 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 				String name = obj.getString("name");
 				String phone = obj.getString("phone");
 				tvCustomerName.setText(name);
+				tvCustomerPhone.setText(phone);
 				
 				// 체크인 정보 요청.
 				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(
