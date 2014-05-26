@@ -166,17 +166,16 @@ public class RatingHotelFragment extends DialogFragment implements
 		super.onDestroyView();
 	}
 	
-	//TODO: 릴리즈 시 반드시 해제해야 함.
 	public void destroyRatingHotelFlag() {
-//		SharedPreferences sharedPreference = mHostActivity.getSharedPreferences(NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
-//		Editor editor = sharedPreference.edit();
-//		
-//		editor.putString(KEY_PREFERENCE_HOTEL_NAME, VALUE_PREFERENCE_HOTEL_NAME_DEFAULT);
-//		editor.putInt(KEY_PREFERENCE_HOTEL_SALE_IDX, VALUE_PREFERENCE_HOTEL_SALE_IDX_DEFAULT);
-//		editor.putString(KEY_PREFERENCE_HOTEL_CHECKOUT, VALUE_PREFERENCE_HOTEL_CHECKOUT_DEFAULT);
-//		editor.remove(KEY_PREFERENCE_USER_IDX);
-//		
-//		editor.commit();
+		SharedPreferences sharedPreference = mHostActivity.getSharedPreferences(NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
+		Editor editor = sharedPreference.edit();
+		
+		editor.putString(KEY_PREFERENCE_HOTEL_NAME, VALUE_PREFERENCE_HOTEL_NAME_DEFAULT);
+		editor.putInt(KEY_PREFERENCE_HOTEL_SALE_IDX, VALUE_PREFERENCE_HOTEL_SALE_IDX_DEFAULT);
+		editor.putString(KEY_PREFERENCE_HOTEL_CHECKOUT, VALUE_PREFERENCE_HOTEL_CHECKOUT_DEFAULT);
+		editor.remove(KEY_PREFERENCE_USER_IDX);
+		
+		editor.commit();
 		
 	}
 
