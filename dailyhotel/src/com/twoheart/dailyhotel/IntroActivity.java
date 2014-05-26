@@ -149,4 +149,10 @@ public class IntroActivity extends BaseActivity implements OnClickListener, OnPa
 		edit.commit();
 	}
 	
+	@Override
+	public void finish() {
+		super.finish();
+		overridePendingTransition(R.anim.hold, R.anim.fade_out);
+	}
+	
 }
