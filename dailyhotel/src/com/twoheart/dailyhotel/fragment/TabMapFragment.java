@@ -1,7 +1,9 @@
 package com.twoheart.dailyhotel.fragment;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,7 +59,6 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		super.onCreateView(inflater, container, savedInstanceState);
 
 		View view = inflater.inflate(R.layout.fragment_hotel_tab_map,
 				container, false);
@@ -106,14 +107,28 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener {
 
 	}
 
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
 	@Override
 	public void onDestroyView() {
-		if (!mHostActivity.isFinishing())
-			mHostActivity.getSupportFragmentManager().beginTransaction()
+		try {
+			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+				if (!mHostActivity.isFinishing())
+					mHostActivity.getSupportFragmentManager().beginTransaction()
+							.remove(mMapFragment).commitAllowingStateLoss();
+			} else {
+				if (!mHostActivity.isDestroyed())
+					mHostActivity.getSupportFragmentManager().beginTransaction()
 					.remove(mMapFragment).commitAllowingStateLoss();
+				
+			}
+		
+		} catch (IllegalStateException e) {
+			onError(e);
+		}
+		
 		super.onDestroyView();
 	}
-
+	
 	// 마커 추가
 	public void addMarker(Double lat, Double lng, String hotel_name) {
 		if (googleMap != null) {
