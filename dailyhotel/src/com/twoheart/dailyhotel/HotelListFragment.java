@@ -44,9 +44,9 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.android.volley.Request.Method;
 import com.google.analytics.tracking.android.Fields;
@@ -58,6 +58,7 @@ import com.twoheart.dailyhotel.adapter.RegionListAdapter;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.Log;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonArrayRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -86,6 +87,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 	private SaleTime mDailyHotelSaleTime;
 	private LinearLayout llListViewFooter;
 	private ImageView ivNewEvent;
+	private LinearLayout btnListViewHeader;
 
 	private boolean mRefreshHotelList;
 
@@ -105,8 +107,6 @@ public class HotelListFragment extends BaseFragment implements Constants,
 		
 //		mHotelListView.setEmptyView(view.findViewById(R.id.tv_empty_view));
 		
-		
-		
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			View listViewFooter = inflater
 					.inflate(R.layout.footer_hotel_list, null);
@@ -116,6 +116,24 @@ public class HotelListFragment extends BaseFragment implements Constants,
 			
 			mHotelListView.addFooterView(listViewFooter);
 		}
+		
+		View listViewHeader = inflater
+				.inflate(R.layout.header_hotel_list, null);
+		mHotelListView.addHeaderView(listViewHeader);
+		
+		ivNewEvent = (ImageView) view.findViewById(R.id.iv_new_event);
+		btnListViewHeader = (LinearLayout) view.findViewById(R.id.btn_footer);
+		GlobalFont.apply(btnListViewHeader);
+		btnListViewHeader.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(mHostActivity, EventWebActivity.class);
+				mHostActivity.startActivity(i);
+				mHostActivity.overridePendingTransition(R.anim.slide_in_bottom,
+						R.anim.hold);
+			}
+		});
 		
 		// Now find the PullToRefreshLayout and set it up
         ActionBarPullToRefresh.from(mHostActivity)
@@ -204,7 +222,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 	@Override
 	public void onItemClick(AdapterView<?> parentView, View childView,
 			int position, long id) {
-		int selectedPosition = position;
+		int selectedPosition = position - 1;
 
 		HotelListViewItem selectedItem = mHotelListViewList.get(selectedPosition);
 		
@@ -240,7 +258,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 	}
 
 	private void fetchHotelList(int position) {
-		((MainActivity) mHostActivity).drawerLayout.closeDrawer(((MainActivity) mHostActivity).leftDrawer);
+		((MainActivity) mHostActivity).drawerLayout.closeDrawer(((MainActivity) mHostActivity).drawerList);
 
 		String selectedRegion = mRegionList.get(position);
 

@@ -366,17 +366,6 @@ public class BookingActivity extends BaseActivity implements
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION:
 				VolleyHttpClient.createCookie();		// 쿠키를 다시 생성 시도
-//				LoadingDialog.showLoading(this);
-//				
-//				// 쿠키 만료를 위한 서버에 로그아웃 리퀘스트
-//				mQueue.add(new DailyHotelJsonRequest(
-//						Method.GET,
-//						new StringBuilder(
-//								URL_DAILYHOTEL_SERVER)
-//								.append(URL_WEBAPI_USER_LOGOUT)
-//								.toString(), null,
-//						this,
-//						this));
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_INVALID_DATE:
 			case CODE_RESULT_ACTIVITY_PAYMENT_FAIL:
@@ -526,29 +515,6 @@ public class BookingActivity extends BaseActivity implements
 			} catch (JSONException e) {
 				onError(e);
 			}
-
-		} else if (url.contains(URL_WEBAPI_USER_LOGOUT)) {
-			try {
-				if (response.getBoolean("msg")) {
-					VolleyHttpClient.destroyCookie();
-					moveToLoginProcess();
-
-				} else {
-					// 실패 시 재시도
-					mQueue.add(new DailyHotelJsonRequest(
-							Method.GET,
-							new StringBuilder(
-									URL_DAILYHOTEL_SERVER)
-									.append(URL_WEBAPI_USER_LOGOUT)
-									.toString(), null,
-							this,
-							this));
-					
-				}
-			} catch (JSONException e) {
-				onError(e);
-			}
-			
 		}
 	}
 

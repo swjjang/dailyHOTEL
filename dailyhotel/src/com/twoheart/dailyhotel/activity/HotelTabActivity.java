@@ -2,14 +2,17 @@ package com.twoheart.dailyhotel.activity;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -24,6 +27,7 @@ import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Log;
 import com.twoheart.dailyhotel.util.TabActivity;
+import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
@@ -141,7 +145,23 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 				overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
 			} else if (result.equals("dead")) { // session dead
-				loadLoginProcess();
+				
+				// 재로그인
+				if (sharedPreference.getBoolean(
+						KEY_PREFERENCE_AUTO_LOGIN, false)) {
+					Map<String, String> loginParams = new HashMap<String, String>();
+					loginParams.put("email", sharedPreference
+							.getString(KEY_PREFERENCE_USER_ID, null));
+					loginParams.put("pw", sharedPreference
+							.getString(KEY_PREFERENCE_USER_PWD, null));
+
+					mQueue.add(new DailyHotelJsonRequest(Method.POST,
+							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+									URL_WEBAPI_USER_LOGIN).toString(),
+							loginParams, this, this));
+				} else {
+					loadLoginProcess();
+				}
 
 			} else {
 				onError();
@@ -236,6 +256,28 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 
 			} catch (Exception e) {
 				onError(e);
+			}
+		} else if (url.contains(URL_WEBAPI_USER_LOGIN)) {
+			try {
+				if (!response.getString("login").equals("true")) {
+					// 로그인 실패
+					// data 초기화
+					SharedPreferences.Editor ed = sharedPreference
+							.edit();
+					ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
+					ed.putString(KEY_PREFERENCE_USER_ID, null);
+					ed.putString(KEY_PREFERENCE_USER_PWD, null);
+					ed.commit();
+					
+					unLockUI();
+					loadLoginProcess();
+					
+				} else
+					VolleyHttpClient.createCookie();
+				
+			} catch (JSONException e) {
+				onError(e);
+				unLockUI();
 			}
 		}
 	}

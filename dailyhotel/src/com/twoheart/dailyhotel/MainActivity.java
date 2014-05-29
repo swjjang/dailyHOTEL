@@ -104,9 +104,7 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 
 	public ListView drawerList;
 	public DrawerLayout drawerLayout;
-	public RelativeLayout leftDrawer;
 	private FrameLayout mContentFrame;
-	private LinearLayout btnEvent;
 	
 	public ActionBarDrawerToggle drawerToggle;
 	protected FragmentManager fragmentManager;
@@ -205,8 +203,6 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 			case RESULT_OK :		// 스플래시 화면이 정상적으로 종료되었을 경우
 				break;
 			case CODE_RESULT_ACTIVITY_SPLASH_NEW_EVENT :		// 스플래시가 정상적으로 종료되었는데 새로운 이벤트 알림이 있는 경우
-				ImageView ivNewEvent = (ImageView) findViewById(R.id.iv_new_event);
-				ivNewEvent.setVisibility(View.VISIBLE);
 				break;
 			default :		// 스플래시가 비정상적으로 종료되었을 경우
 				super.finish();		// 어플리케이션(메인 화면)을 종료해버린다
@@ -372,21 +368,12 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 					w.setFlags(
 							WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION,
 							WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-					
-					RelativeLayout.LayoutParams btnEventLayoutParams = (RelativeLayout.LayoutParams) btnEvent.getLayoutParams();
-					btnEventLayoutParams.bottomMargin = config.getNavigationBarHeight();
-					btnEvent.setLayoutParams(btnEventLayoutParams);
-
 
 				} else {
 					WindowManager.LayoutParams attrs = getWindow()
 							.getAttributes();
 					attrs.flags &= (~WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 					getWindow().setAttributes(attrs);
-					
-					RelativeLayout.LayoutParams btnEventLayoutParams = (RelativeLayout.LayoutParams) btnEvent.getLayoutParams();
-					btnEventLayoutParams.bottomMargin = 0;
-					btnEvent.setLayoutParams(btnEventLayoutParams);
 
 				}
 			}
@@ -468,7 +455,7 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 		}
 
 		replaceFragment(getFragment(indexLastFragment));
-		drawerLayout.closeDrawer(leftDrawer);
+		drawerLayout.closeDrawer(drawerList);
 
 	}
 
@@ -477,7 +464,6 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 	 */
 	public void setNavigationDrawer() {
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		leftDrawer = (RelativeLayout) findViewById(R.id.drawer);
 		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
 				R.drawable.ic_drawer, 0, 0) {
 
@@ -493,7 +479,7 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 		};
 
 		drawerLayout.setDrawerListener(drawerToggle);
-		drawerList = (ListView) findViewById(R.id.drawer_list);
+		drawerList = (ListView) findViewById(R.id.left_drawer);
 
 		menuHotelListFragment = new DrawerMenu(DRAWER_MENU_ENTRY_HOTEL,
 				R.drawable.selector_drawermenu_todayshotel,
@@ -519,22 +505,6 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 		mMenuImages.add(menuCreditFragment);
 		mMenuImages.add(menuSettingFragment);
 		
-		btnEvent = (LinearLayout) findViewById(R.id.btn_footer);
-		TextView tvParticipateInEvent = (TextView) findViewById(R.id.tv_participate_event);
-		tvParticipateInEvent.setTypeface(DailyHotel.getBoldTypeface());
-		btnEvent.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				drawerLayout.closeDrawer(leftDrawer);
-				Intent i = new Intent(MainActivity.this, EventWebActivity.class);
-				startActivity(i);
-				overridePendingTransition(R.anim.slide_in_bottom,
-						R.anim.hold);
-			}
-		});
-		
-
 		mDrawerMenuListAdapter = new DrawerMenuListAdapter(this,
 				R.layout.list_row_drawer_entry, mMenuImages);
 
@@ -578,10 +548,10 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 	}
 	
 	public void toggleDrawer() {
-		if (!drawerLayout.isDrawerOpen(leftDrawer)) {
-			drawerLayout.openDrawer(leftDrawer);
+		if (!drawerLayout.isDrawerOpen(drawerList)) {
+			drawerLayout.openDrawer(drawerList);
 		} else {
-			drawerLayout.closeDrawer(leftDrawer);
+			drawerLayout.closeDrawer(drawerList);
 		}
 	}
 
