@@ -272,8 +272,14 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 					unLockUI();
 					loadLoginProcess();
 					
-				} else
+				} else {
 					VolleyHttpClient.createCookie();
+					
+					mQueue.add(new DailyHotelStringRequest(Method.GET,
+							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+									URL_WEBAPI_USER_ALIVE).toString(), null, this, this));
+					
+				}
 				
 			} catch (JSONException e) {
 				onError(e);
