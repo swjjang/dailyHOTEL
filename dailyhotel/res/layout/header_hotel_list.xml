@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/img_btn_event"
         android:gravity="center"
+        android:layout_gravity="center"
         android:orientation="horizontal"
         android:padding="10dp" >
 
