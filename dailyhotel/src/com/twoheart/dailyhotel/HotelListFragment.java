@@ -228,6 +228,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 		
 		if (selectedItem.getType() == HotelListViewItem.TYPE_ENTRY) {
 			Intent i = new Intent(mHostActivity, HotelTabActivity.class);
+			
 			i.putExtra(NAME_INTENT_EXTRA_DATA_HOTEL, selectedItem.getItem());
 			i.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mDailyHotelSaleTime);
 	

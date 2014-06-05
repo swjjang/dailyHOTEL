@@ -165,6 +165,8 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 			
 		}
 		
+		com.facebook.AppEventsLogger.activateApp(this, getResources().getString(R.string.app_id));
+		
 	}
 	
 	@Override

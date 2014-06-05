@@ -76,7 +76,6 @@ public class LoginActivity extends BaseActivity implements Constants,
 	private Map<String, String> snsSignupParams;
 
 	public Session fbSession;
-	public static final String appId = "268888829950610";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -220,7 +219,7 @@ public class LoginActivity extends BaseActivity implements Constants,
 
 		} else if (v.getId() == facebookLogin.getId()) {
 			lockUI();
-			fbSession = new Session.Builder(this).setApplicationId(appId)
+			fbSession = new Session.Builder(this).setApplicationId(getResources().getString(R.string.app_id))
 					.build();
 
 			Session.OpenRequest or = new Session.OpenRequest(this);
