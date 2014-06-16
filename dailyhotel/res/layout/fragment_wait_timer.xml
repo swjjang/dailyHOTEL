@@ -7,7 +7,7 @@
     <Button
         android:id="@+id/btn_wait_timer_alram"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_margin="20dp"
         android:background="@drawable/shape_button_common_background"
