@@ -18,6 +18,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
+import org.json.JSONObject;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -31,16 +33,22 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request.Method;
+import com.twoheart.dailyhotel.activity.EventWebActivity;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.WakeLock;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
+import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
-public class WaitTimerFragment extends BaseFragment implements OnClickListener, Constants {
+public class WaitTimerFragment extends BaseFragment implements OnClickListener, Constants, DailyHotelJsonResponseListener {
 
 	private final static String TAG = "WaitTimerFragment";
 	private final static String KEY_BUNDLE_ARGUMENTS_SALETIME = "saletime";
@@ -55,6 +63,8 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 	private Intent intent;
 	private SaleTime mSaleTime;
 	private long remainingTime;
+	private ImageView ivNewEvent;
+	private LinearLayout btnEvent;
 	
 	public static WaitTimerFragment newInstance(SaleTime saleTime) {
 		
@@ -85,6 +95,10 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 		tvTitle = (TextView) view.findViewById(R.id.tv_wait_timer_main);
 		btnNotify = (Button) view.findViewById(R.id.btn_wait_timer_alram);
 		btnNotify.setOnClickListener(this);
+		
+		ivNewEvent = (ImageView) view.findViewById(R.id.iv_new_event);
+		btnEvent = (LinearLayout) view.findViewById(R.id.btn_event);
+		btnEvent.setOnClickListener(this);
 
 		mHostActivity.setActionBar("dailyHOTEL");
 		tvTitle.setText(new SimpleDateFormat("aa H").format(mSaleTime.getOpenTime()) + "시 오늘의 호텔이 공개됩니다.");
@@ -98,12 +112,22 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 	public void onResume() {
 		super.onResume();
 		setNotify(isEnabledNotify);
+		
+		// 새로운 이벤트 확인을 위해 버전 API 호출
+		mQueue.add(new DailyHotelJsonRequest(Method.GET, 
+				new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_VERSION).toString(),
+				null, this, mHostActivity));
 	}
 	
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == btnNotify.getId()) {
 			setNotify(!isEnabledNotify);
+		} else if (v.getId() == btnEvent.getId()) {
+			Intent i = new Intent(mHostActivity, EventWebActivity.class);
+			mHostActivity.startActivity(i);
+			mHostActivity.overridePendingTransition(R.anim.slide_in_bottom,
+					R.anim.hold);
 		}
 	}
 
@@ -186,6 +210,22 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 		}
 		
 		super.onDestroy();
+	}
+
+	@Override
+	public void onResponse(String url, JSONObject response) {
+		if (url.contains(URL_WEBAPI_APP_VERSION)) {
+			try {
+				if (response.getString("new_event").equals("1")) {
+					
+					if (ivNewEvent != null)
+						ivNewEvent.setVisibility(View.VISIBLE);
+					
+				}
+			} catch (Exception e) {
+				onError(e);
+			}
+		}
 	}
 
 }

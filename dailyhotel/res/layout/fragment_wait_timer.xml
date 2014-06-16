@@ -4,22 +4,56 @@
     android:layout_height="match_parent"
     android:background="@drawable/gradient_window_background" >
 
+    <LinearLayout
+        android:id="@+id/btn_event"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center"
+        android:background="@drawable/img_btn_event"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp" >
+
+        <ImageView
+            android:id="@+id/iv_new_event"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:background="#0000"
+            android:clickable="false"
+            android:src="@drawable/img_newevent"
+            android:visibility="gone" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:text="이벤트 참여하기"
+            android:textColor="#fff"
+            android:textSize="21dp" />
+    </LinearLayout>
+
     <Button
         android:id="@+id/btn_wait_timer_alram"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
-        android:layout_margin="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/shape_button_common_background"
         android:text="알람 켜기"
         android:textColor="@android:color/white" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_above="@+id/btn_wait_timer_alram"
         android:layout_alignParentLeft="true"
-        android:layout_marginTop="50dp"
+        android:layout_below="@+id/btn_event"
         android:gravity="center"
         android:orientation="vertical" >
 
@@ -32,9 +66,9 @@
 
         <TextView
             android:id="@+id/tv_wait_timer_sub"
-            android:layout_marginTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:gravity="center"
             android:text="놀라운 가격으로 당신을 찾아갈\n호텔이 기다리고 있어요."
             android:textColor="#7f7f7f"
