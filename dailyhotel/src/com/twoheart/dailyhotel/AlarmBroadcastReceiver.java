@@ -18,6 +18,7 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver{
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
+		WaitTimerFragment.isEnabledNotify = false;
 		
 		String title = "dailyHOTEL";
 		String msg = "오늘의 호텔이 도착했습니다.\n지금 데일리호텔에서 확인하세요!";

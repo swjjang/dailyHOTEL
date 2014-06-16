@@ -52,7 +52,7 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 
 	private final static String TAG = "WaitTimerFragment";
 	private final static String KEY_BUNDLE_ARGUMENTS_SALETIME = "saletime";
-	private static boolean isEnabledNotify = false;
+	public static boolean isEnabledNotify;
 
 	private static Handler sHandler;
 	private TextView tvTimer, tvTitle;
@@ -103,6 +103,7 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 		mHostActivity.setActionBar("dailyHOTEL");
 		tvTitle.setText(new SimpleDateFormat("aa H").format(mSaleTime.getOpenTime()) + "시 오늘의 호텔이 공개됩니다.");
 		
+		isEnabledNotify = false;
 		setTimer();
 		
 		return view;
