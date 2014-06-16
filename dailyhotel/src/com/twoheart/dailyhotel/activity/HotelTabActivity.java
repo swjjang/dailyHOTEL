@@ -149,11 +149,22 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 				// 재로그인
 				if (sharedPreference.getBoolean(
 						KEY_PREFERENCE_AUTO_LOGIN, false)) {
+					String id = sharedPreference.getString(
+							KEY_PREFERENCE_USER_ID, null);
+					String accessToken = sharedPreference.getString(
+							KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
+					String pw = sharedPreference.getString(
+							KEY_PREFERENCE_USER_PWD, null);
+
 					Map<String, String> loginParams = new HashMap<String, String>();
-					loginParams.put("email", sharedPreference
-							.getString(KEY_PREFERENCE_USER_ID, null));
-					loginParams.put("pw", sharedPreference
-							.getString(KEY_PREFERENCE_USER_PWD, null));
+
+					if (accessToken != null) {
+						loginParams.put("accessToken", accessToken);
+					} else {
+						loginParams.put("email", id);
+					}
+
+					loginParams.put("pw", pw);
 
 					mQueue.add(new DailyHotelJsonRequest(Method.POST,
 							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
@@ -265,6 +276,7 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 					SharedPreferences.Editor ed = sharedPreference
 							.edit();
 					ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
+					ed.putString(KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
 					ed.putString(KEY_PREFERENCE_USER_ID, null);
 					ed.putString(KEY_PREFERENCE_USER_PWD, null);
 					ed.commit();
