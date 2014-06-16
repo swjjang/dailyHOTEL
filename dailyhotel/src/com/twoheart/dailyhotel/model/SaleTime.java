@@ -107,13 +107,22 @@ public class SaleTime implements Constants, Parcelable {
 	// TimeControl: 시간 조정
 	public boolean isSaleTime() {
 		if ((mCurrentTime != null) && (mOpenTime != null) && (mCloseTime != null)) {
-			if ((mCurrentTime.compareTo(mOpenTime) >= 0) && (mCurrentTime.compareTo(mCloseTime) < 0))
-				return true;
+			if (mCloseTime.compareTo(mOpenTime) > 0) {
+				if ((mCurrentTime.compareTo(mOpenTime) >= 0) && (mCurrentTime.compareTo(mCloseTime) < 0))
+					return true;
+				else
+					return false;
+				
+			} else {
+				if ((mCurrentTime.compareTo(mCloseTime) >= 0) && (mCurrentTime.compareTo(mOpenTime) < 0))
+					return false;
+				else
+					return true;
+			}
+			
 		} else
 			throw new IllegalStateException(
 					"Current time, open time and close time must be set.");
-		
-		return false;
 	}
 
 	@Override
