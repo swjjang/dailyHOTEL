@@ -122,7 +122,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 		mHotelListView.addHeaderView(listViewHeader);
 		
 		ivNewEvent = (ImageView) view.findViewById(R.id.iv_new_event);
-		btnListViewHeader = (LinearLayout) view.findViewById(R.id.btn_footer);
+		btnListViewHeader = (LinearLayout) view.findViewById(R.id.btn_footer); // 수정요망 footer -> header
 		GlobalFont.apply(btnListViewHeader);
 		btnListViewHeader.setOnClickListener(new OnClickListener() {
 
@@ -222,6 +222,10 @@ public class HotelListFragment extends BaseFragment implements Constants,
 	@Override
 	public void onItemClick(AdapterView<?> parentView, View childView,
 			int position, long id) {
+		if (position == 0) { // 7.2 G2 버전에서 호텔리스트에서 이벤트 칸을 클릭할 경우 튕기는 현상을 막기 위함. why? 헤더뷰인데도 아이템 클릭 리스너가 들어감.
+			return; 
+		}
+		
 		int selectedPosition = position - 1;
 
 		HotelListViewItem selectedItem = mHotelListViewList.get(selectedPosition);

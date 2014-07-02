@@ -14,13 +14,13 @@ import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 
 public abstract class BaseFragment extends Fragment implements Constants, OnLoadListener, ErrorListener {
-	
+
 	protected BaseActivity mHostActivity;
 	protected RequestQueue mQueue;
 	protected Toast mToast;
-	
+
 	private String title;
-	
+
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -43,48 +43,48 @@ public abstract class BaseFragment extends Fragment implements Constants, OnLoad
 	public void onPause() {
 		if (mToast != null)
 			mToast.cancel();
-		
+
 		super.onPause();
 	}
-	
+
 	public void showToast(String message, int length, boolean isAttachToFragment) {
 		if (isAttachToFragment) {
 			mToast = Toast.makeText(mHostActivity.getApplicationContext(), message, length);
 			mToast.show();
-			
+
 		} else {
 			Toast.makeText(mHostActivity.getApplicationContext(), message, length).show();
-			
+
 		}
 	}
-	
+
 	public void onError(Exception error) {
 		mHostActivity.onError(error);
 	}
-	
+
 	public void onError() {
 		mHostActivity.onError();
 	}
-	
+
 	@Override
 	public void onErrorResponse(VolleyError error) {
 		mHostActivity.onErrorResponse(error);
 	}
-	
+
 	@Override
 	public void lockUI() {
 		mHostActivity.lockUI();
 	}
-	
+
 	@Override
 	public void unLockUI() {
 		mHostActivity.unLockUI();
 	}
-	
+
 	public String getTitle() {
 		return title;
 	}
-	
+
 	public void setTitle(String title) {
 		this.title = title;
 	}

@@ -165,7 +165,8 @@ public class SplashActivity extends BaseActivity implements Constants,
 						.replace(".", ""));
 				final int newEventFlag = Integer.parseInt(response
 						.getString("new_event"));
-
+				android.util.Log.e("minVesion / curVersion",
+						minVersion + " / " + currentVersion);
 				if (minVersion > currentVersion) { // 강제 업데이트
 					AlertDialog.Builder alertDialog = new AlertDialog.Builder(
 							SplashActivity.this);
