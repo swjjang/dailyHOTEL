@@ -24,6 +24,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.webkit.CookieSyncManager;
@@ -269,5 +270,12 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 			Toast.makeText(getApplicationContext(), message, length).show();
 			
 		}
+	}
+	/**
+	 * 버튼 난타를 방지하기 위한 메서드, 버튼의 클릭 가능 여부를 반대로 변경.
+	 * @param v 타겟 뷰
+	 */
+	protected void chgClickable(View v) {
+		v.setClickable(!v.isClickable());
 	}
 }

@@ -96,7 +96,7 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == btnBooking.getId()) {
-
+			chgClickable(btnBooking); // 7.2 난타 방지
 			lockUI();
 			mQueue.add(new DailyHotelStringRequest(Method.GET,
 					new StringBuilder(URL_DAILYHOTEL_SERVER).append(
@@ -107,7 +107,7 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
+		chgClickable(btnBooking); // 7.2 난타 방지
 		if (requestCode == CODE_REQUEST_ACTIVITY_BOOKING) {
 			setResult(resultCode);
 
@@ -182,12 +182,14 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 	}
 
 	private void loadLoginProcess() {
+		android.util.Log.e(TAG,"Login Activity Load");
 		showToast("로그인이 필요합니다", Toast.LENGTH_LONG, false);
-
-		startActivityForResult(new Intent(this, LoginActivity.class),
+		Intent i = new Intent(this, LoginActivity.class);
+		i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP); // 7.2 S2에서 예약버튼 난타할 경우 여러개의 엑티비티가 생성되는것을 막음
+		startActivityForResult(i,
 				CODE_REQUEST_ACTIVITY_LOGIN);
+		
 		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-
 	}
 
 	@Override
