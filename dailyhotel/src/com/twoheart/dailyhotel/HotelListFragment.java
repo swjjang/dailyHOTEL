@@ -231,6 +231,8 @@ public class HotelListFragment extends BaseFragment implements Constants,
 		HotelListViewItem selectedItem = mHotelListViewList.get(selectedPosition);
 		
 		if (selectedItem.getType() == HotelListViewItem.TYPE_ENTRY) {
+			mHotelListAdapter.getImgCache().evictAll(); // lru cache ºñ¿ì±â.
+			
 			Intent i = new Intent(mHostActivity, HotelTabActivity.class);
 			
 			i.putExtra(NAME_INTENT_EXTRA_DATA_HOTEL, selectedItem.getItem());

@@ -1,16 +1,22 @@
 package com.twoheart.dailyhotel.adapter;
 
 import java.text.DecimalFormat;
+import java.util.HashMap;
 import java.util.List;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Shader;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.PaintDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
+import android.os.AsyncTask;
+import android.support.v4.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +26,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.androidquery.AQuery;
+import com.androidquery.callback.AjaxStatus;
+import com.androidquery.callback.BitmapAjaxCallback;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Hotel;
@@ -35,11 +43,13 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 	private int resourceId;
 //	private ImageLoader imageLoader;
 	private LayoutInflater inflater;
+	private LruCache<Integer, Bitmap> imgCache;
 
 	public HotelListAdapter(Context context, int resourceId,
 			List<HotelListViewItem> hotelList) {
 		super(context, resourceId, hotelList);	
 
+		this.imgCache = new LruCache<Integer, Bitmap>(1024); // 임의의값 1kb
 		this.context = context;
 		this.resourceId = resourceId;
 
@@ -52,7 +62,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(final int position, View convertView, ViewGroup parent) {
 
 		HotelListViewItem item = getItem(position);
 
@@ -175,28 +185,26 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 			GlobalFont.apply((ViewGroup) convertView);
 			viewHolder.name.setTypeface(DailyHotel.getBoldTypeface());
 			viewHolder.discount.setTypeface(DailyHotel.getBoldTypeface());
-
-			if (!element.getImage().equals("default")) {
-//				imageLoader.displayImage(element.getImage(), viewHolder.img);
+			
+			AQuery aq = new AQuery(convertView);
+			Bitmap cachedImg = getImgCache().get(position);
+			
+			if (cachedImg == null) {
 				
-//				viewHolder.img.setDefaultImageResId(R.drawable.img_placeholder);
-//				viewHolder.img.setErrorImageResId(R.drawable.img_placeholder);
-//				viewHolder.img.setImageUrl(element.getImage(), imageLoader);
+				BitmapAjaxCallback cb = new BitmapAjaxCallback(){ // 이미지 캐싱
+					@Override
+					protected void callback(String url, ImageView iv,
+							Bitmap bm, AjaxStatus status) {
+						getImgCache().put(position, bm);
+						super.callback(url, iv, bm, status);
+					}
+				};
+				cb.url(element.getImage()).animation(AQuery.FADE_IN);
+				aq.id(viewHolder.img).image(cb);
 				
-//				imageLoader.DisplayImage(element.getImage(), viewHolder.img);
-				
-//				Picasso.with(context)
-//		        .load(element.getImage())
-//		        .placeholder(R.drawable.img_placeholder)
-//		        .error(R.drawable.img_placeholder)
-//		        .into(viewHolder.img);
-				
-				AQuery aq = new AQuery(convertView);
-				aq.id(viewHolder.img).image(element.getImage(), true, true, viewHolder.img.getWidth(), R.drawable.img_placeholder, null,
-                		AQuery.FADE_IN_NETWORK);
+			} else { 
+				aq.id(viewHolder.img).image(cachedImg);
 			}
-			
-			
 
 			// 객실이 1~2 개일때 label 표시
 			int avail_cnt = element.getAvailableRoom();
@@ -256,6 +264,10 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 	@Override
 	public int getItemViewType(int position) {
 		return getItem(position).getType();
+	}
+
+	public LruCache<Integer, Bitmap> getImgCache() {
+		return imgCache;
 	}
 
 }
