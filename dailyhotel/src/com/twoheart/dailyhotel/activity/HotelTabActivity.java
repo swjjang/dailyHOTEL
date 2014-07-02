@@ -96,7 +96,7 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == btnBooking.getId()) {
-			chgClickable(btnBooking); // 7.2 난타 방지
+			chgClickable(btnBooking, false); // 7.2 난타 방지
 			lockUI();
 			mQueue.add(new DailyHotelStringRequest(Method.GET,
 					new StringBuilder(URL_DAILYHOTEL_SERVER).append(
@@ -107,7 +107,7 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		chgClickable(btnBooking); // 7.2 난타 방지
+		chgClickable(btnBooking, true); // 7.2 난타 방지
 		if (requestCode == CODE_REQUEST_ACTIVITY_BOOKING) {
 			setResult(resultCode);
 

@@ -119,7 +119,6 @@ public class SettingFragment extends BaseFragment implements Constants,
 
 	@Override
 	public void onClick(View v) {
-
 		if (v.getId() == tvNotice.getId()) {
 			Intent i = new Intent(mHostActivity, NoticeActivity.class);
 			startActivity(i);
@@ -151,6 +150,7 @@ public class SettingFragment extends BaseFragment implements Constants,
 				mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
 			} else { // 로그아웃 상태
+				chgClickable(llLogin);
 				Intent i = new Intent(mHostActivity, LoginActivity.class);
 				startActivityForResult(i, CODE_REQUEST_ACTIVITY_LOGIN);
 				mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
@@ -173,6 +173,7 @@ public class SettingFragment extends BaseFragment implements Constants,
 		super.onActivityResult(requestCode, resultCode, intent);
 		
 		if (requestCode == CODE_REQUEST_ACTIVITY_LOGIN) {
+			chgClickable(llLogin);
 			if (resultCode == Activity.RESULT_OK) {
 				mHostActivity.selectMenuDrawer(mHostActivity.menuHotelListFragment);
 			}
