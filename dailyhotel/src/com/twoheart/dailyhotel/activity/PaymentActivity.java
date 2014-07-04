@@ -76,7 +76,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 
 		webView = (WebView) findViewById(R.id.webView);
 		webView.getSettings().setSavePassword(false);
-		webView.getSettings().setAppCacheEnabled(true);
+		webView.getSettings().setAppCacheEnabled(false); // 7.4 캐시 정책 비활성화.
 		webView.getSettings().setJavaScriptEnabled(true);
 		webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
 		webView.addJavascriptInterface(new KCPPayBridge(), "KCPPayApp");
@@ -764,7 +764,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		@JavascriptInterface
 		public void feed(final String msg) {
 
-			int resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
+			int resultCode = 0;
 
 			if (msg.equals("SUCCESS")) {
 				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS;
@@ -776,6 +776,8 @@ public class PaymentActivity extends BaseActivity implements Constants {
 				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE;
 			} else if (msg.equals("INVALID_DATE")) {
 				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_INVALID_DATE;
+			} else {
+				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
 			}
 
 			Intent payData = new Intent();
