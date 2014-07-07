@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.androidquery.AQuery;
@@ -96,10 +97,8 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 				convertView = inflater.inflate(resourceId, parent, false);
 
 				viewHolder = new HotelListViewHolder();
-				viewHolder.llHotelRowContent = (LinearLayout) convertView
+				viewHolder.llHotelRowContent = (RelativeLayout) convertView
 						.findViewById(R.id.ll_hotel_row_content);
-//				viewHolder.img = (ImageView) convertView
-//						.findViewById(R.id.iv_hotel_row_img);
 				viewHolder.img = (ImageView) convertView
 						.findViewById(R.id.iv_hotel_row_img);
 				viewHolder.name = (TextView) convertView
@@ -185,9 +184,9 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 			AQuery aq = new AQuery(convertView);
 			Bitmap cachedImg = getImgCache().get(position);
 			
-			if (cachedImg == null) {
+			if (cachedImg == null) { // 힛인 밸류가 없다면 이미지를 불러온 후 캐시에 세이브
 				
-				BitmapAjaxCallback cb = new BitmapAjaxCallback(){ // 이미지 캐싱
+				BitmapAjaxCallback cb = new BitmapAjaxCallback(){
 					@Override
 					protected void callback(String url, ImageView iv,
 							Bitmap bm, AjaxStatus status) {
@@ -230,7 +229,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 	}
 
 	private class HotelListViewHolder {
-		LinearLayout llHotelRowContent;
+		RelativeLayout llHotelRowContent;
 //		ImageView img;
 		ImageView img;
 		TextView name;

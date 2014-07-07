@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:gradeview="http://schemas.android.com/apk/res/com.twoheart.dailyhotel.widget.HotelGradeView"
     android:layout_width="match_parent"
     android:layout_height="240dp"
@@ -20,14 +20,15 @@
             android:background="@drawable/img_placeholder"
             android:src="@drawable/img_placeholder" />
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/ll_hotel_row_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical" >
+             >
 
             <RelativeLayout
                 android:id="@+id/rl_hotel_upper"
+                android:layout_alignParentTop="true"
                 android:layout_width="match_parent"
                 android:layout_height="160dp" >
             </RelativeLayout>
@@ -36,6 +37,7 @@
 
             <RelativeLayout
                 android:id="@+id/rl_hotel_under"
+                android:layout_below="@id/rl_hotel_upper"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="bottom"
@@ -147,7 +149,7 @@
                         android:textSize="13.5dp" />
                 </RelativeLayout>
             </RelativeLayout>
-        </LinearLayout>
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/tv_hotel_row_soldout"
@@ -161,4 +163,4 @@
             android:visibility="gone" />
     </FrameLayout>
 
-</LinearLayout>
+</RelativeLayout>
