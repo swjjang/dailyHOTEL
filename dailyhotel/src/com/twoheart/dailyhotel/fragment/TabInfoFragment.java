@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.HotelDetail;
-import com.twoheart.dailyhotel.util.TabActivity;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
 public class TabInfoFragment extends BaseFragment {

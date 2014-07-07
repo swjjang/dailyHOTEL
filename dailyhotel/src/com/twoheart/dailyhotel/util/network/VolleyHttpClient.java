@@ -34,7 +34,6 @@ import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.Volley;
 import com.twoheart.dailyhotel.util.AvailableNetwork;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.Log;
 
 public class VolleyHttpClient implements Constants {
 

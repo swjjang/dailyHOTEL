@@ -2,17 +2,12 @@ package com.twoheart.dailyhotel.util.network.request;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
-import java.util.Set;
 
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.toolbox.HttpHeaderParser;
-import com.android.volley.toolbox.StringRequest;
-import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
-import com.twoheart.dailyhotel.util.ui.OnLoadListener;
 
 public class DailyHotelStringRequest extends DailyHotelRequest<String> {
 

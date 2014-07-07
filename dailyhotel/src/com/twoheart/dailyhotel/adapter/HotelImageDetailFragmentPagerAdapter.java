@@ -1,13 +1,10 @@
 package com.twoheart.dailyhotel.adapter;
 
-import javax.crypto.spec.PSource;
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.twoheart.dailyhotel.fragment.ImageDetailFragment;
-import com.twoheart.dailyhotel.fragment.ImageViewFragment;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.viewpagerindicator.Loopable;
 

@@ -6,26 +6,15 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.view.MenuItem;
-import android.view.ViewGroup;
 import android.widget.ExpandableListView;
-import android.widget.Toast;
 
 import com.android.volley.Request.Method;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.VolleyError;
-import com.facebook.widget.WebDialog.OnCompleteListener;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.adapter.BoardListAdapter;
 import com.twoheart.dailyhotel.model.Board;
-import com.twoheart.dailyhotel.util.GlobalFont;
-import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
-import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 
 public class FAQActivity extends BaseActivity implements
 		DailyHotelJsonResponseListener {

@@ -4,10 +4,6 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,12 +13,10 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.activity.HotelTabActivity;
 import com.twoheart.dailyhotel.adapter.HotelImageFragmentPagerAdapter;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 import com.twoheart.dailyhotel.widget.HotelViewPager;
-import com.viewpagerindicator.CirclePageIndicator;
 import com.viewpagerindicator.LoopCirclePageIndicator;
 
 public class HotelTabBookingFragment extends BaseFragment implements
@@ -96,7 +90,7 @@ public class HotelTabBookingFragment extends BaseFragment implements
 		}
 		
 		mViewPager.setOnTouchListener(this);
-		mViewPager.setCurrentItem(mHotelDetail.getImageUrl().size() * 10000); // 페이지를 큰 수의 배수로 설정하여 루핑을 하게 함 
+		mViewPager.setCurrentItem((mHotelDetail.getImageUrl().size() * 10000)); // 페이지를 큰 수의 배수로 설정하여 루핑을 하게 함 
 		mIndicator.setViewPager(mViewPager);
 		mIndicator.setSnap(true);
 		
@@ -119,7 +113,17 @@ public class HotelTabBookingFragment extends BaseFragment implements
 	public void onResume(){
 		super.onResume();
 		tvDiscount.setTypeface(DailyHotel.getBoldTypeface());
-		
+		if (mHandler != null) { 
+			mHandler.sendEmptyMessageDelayed(0, DURATION_HOTEL_IMAGE_SHOW);
+		}
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		if (mHandler != null) { 
+			mHandler.removeMessages(0);
+		}
 	}
 	
 	@Override

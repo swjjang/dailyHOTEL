@@ -1,30 +1,17 @@
 package com.twoheart.dailyhotel.activity;
 
-import java.util.List;
-
-import com.twoheart.dailyhotel.MainActivity;
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.R.id;
-import com.twoheart.dailyhotel.R.layout;
-import com.twoheart.dailyhotel.util.WakeLock;
-
 import android.app.Activity;
-import android.app.ActivityManager;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.ActivityManager.RunningAppProcessInfo;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.os.PowerManager;
-import android.view.View.OnClickListener;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+
+import com.twoheart.dailyhotel.MainActivity;
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.WakeLock;
 
 public class PushDialogActivity extends Activity implements OnClickListener{
 	

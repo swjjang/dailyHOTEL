@@ -1,29 +1,16 @@
  package com.twoheart.dailyhotel.util;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.view.ViewGroup;
 
-import com.android.volley.RequestQueue;
 import com.twoheart.dailyhotel.fragment.TabInfoFragment;
 import com.twoheart.dailyhotel.fragment.TabMapFragment;
-import com.twoheart.dailyhotel.model.Booking;
-import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.HotelDetail;
-import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 import com.twoheart.dailyhotel.widget.HotelViewPager;

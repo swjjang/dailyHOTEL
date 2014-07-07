@@ -1,21 +1,17 @@
 package com.twoheart.dailyhotel.adapter;
 
 import java.text.DecimalFormat;
-import java.util.HashMap;
 import java.util.List;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Shader;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.PaintDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
-import android.os.AsyncTask;
 import android.support.v4.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;

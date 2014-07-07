@@ -11,7 +11,6 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.DailyHotel;
-import com.twoheart.dailyhotel.util.GlobalFont;
 
 public class RegionListAdapter extends ArrayAdapter<String> {
 	

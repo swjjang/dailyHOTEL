@@ -42,7 +42,6 @@ import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.activity.EventWebActivity;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.WakeLock;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
