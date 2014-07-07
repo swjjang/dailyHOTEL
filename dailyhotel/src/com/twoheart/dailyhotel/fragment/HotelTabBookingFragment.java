@@ -20,7 +20,7 @@ import com.twoheart.dailyhotel.widget.HotelViewPager;
 import com.viewpagerindicator.LoopCirclePageIndicator;
 
 public class HotelTabBookingFragment extends BaseFragment implements
-		OnTouchListener {
+OnTouchListener {
 
 	private static final String TAG = "HotelTabBookingFragment";
 	private static final int DURATION_HOTEL_IMAGE_SHOW = 2000;
@@ -34,25 +34,25 @@ public class HotelTabBookingFragment extends BaseFragment implements
 
 	private Handler mHandler;
 	private int mCurrentPage = 0;
-	
+
 	public static HotelTabBookingFragment newInstance(HotelDetail hotelDetail) {
-		
+
 		HotelTabBookingFragment newFragment = new HotelTabBookingFragment();
 		Bundle arguments = new Bundle();
-		
+
 		arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL, hotelDetail);
 		newFragment.setArguments(arguments);
 		newFragment.setTitle("예약");
-		
+
 		return newFragment;
-		
+
 	}
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mHotelDetail = (HotelDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL);
-		
+
 	}
 
 	@Override
@@ -81,19 +81,19 @@ public class HotelTabBookingFragment extends BaseFragment implements
 		tvPrice.setText(mHotelDetail.getHotel().getPrice() + "원");
 		tvPrice.setPaintFlags(tvPrice.getPaintFlags()
 				| Paint.STRIKE_THRU_TEXT_FLAG);
-		
+
 		if (mAdapter == null) {
 			mAdapter = new HotelImageFragmentPagerAdapter(getChildFragmentManager(), mHotelDetail);
 			mViewPager.setAdapter(mAdapter);
 		} else {
 			mAdapter.notifyDataSetChanged();
 		}
-		
+
 		mViewPager.setOnTouchListener(this);
 		mViewPager.setCurrentItem((mHotelDetail.getImageUrl().size() * 10000)); // 페이지를 큰 수의 배수로 설정하여 루핑을 하게 함 
 		mIndicator.setViewPager(mViewPager);
 		mIndicator.setSnap(true);
-		
+
 		mCurrentPage = mHotelDetail.getImageUrl().size();
 		mHandler = new Handler() {
 			public void handleMessage(Message msg) {
@@ -108,7 +108,7 @@ public class HotelTabBookingFragment extends BaseFragment implements
 
 		return view;
 	}
-	
+
 	@Override
 	public void onResume(){
 		super.onResume();
@@ -117,7 +117,7 @@ public class HotelTabBookingFragment extends BaseFragment implements
 			mHandler.sendEmptyMessageDelayed(0, DURATION_HOTEL_IMAGE_SHOW);
 		}
 	}
-	
+
 	@Override
 	public void onPause() {
 		super.onPause();
@@ -125,7 +125,7 @@ public class HotelTabBookingFragment extends BaseFragment implements
 			mHandler.removeMessages(0);
 		}
 	}
-	
+
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
@@ -155,5 +155,5 @@ public class HotelTabBookingFragment extends BaseFragment implements
 
 		return false;
 	}
-	
+
 }

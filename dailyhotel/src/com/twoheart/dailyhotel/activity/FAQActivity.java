@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import android.os.Bundle;
 import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnGroupExpandListener;
 
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
@@ -31,7 +32,16 @@ public class FAQActivity extends BaseActivity implements
 		setContentView(R.layout.activity_board);
 
 		mListView = (ExpandableListView) findViewById(R.id.expandable_list_board);
-
+		mListView.setOnGroupExpandListener(new OnGroupExpandListener() { // expand only one
+			private int mExpandedChildPos = -1;
+			@Override
+			public void onGroupExpand(int groupPosition) {
+				if(mExpandedChildPos != -1 && groupPosition != mExpandedChildPos) {
+					mListView.collapseGroup(mExpandedChildPos);
+				}
+				mExpandedChildPos = groupPosition;
+			}
+		});
 	}
 	
 	@Override
