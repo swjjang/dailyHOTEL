@@ -46,7 +46,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 			List<HotelListViewItem> hotelList) {
 		super(context, resourceId, hotelList);	
 
-		this.imgCache = new LruCache<Integer, Bitmap>(1024); // 임의의값 1kb
+		this.imgCache = new LruCache<Integer, Bitmap>(4 * 1024 * 1024); // 4 Mib
 		this.context = context;
 		this.resourceId = resourceId;
 

@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/logo"
                 android:layout_toRightOf="@+id/logo"
-                android:text="호텔 평가"
+                android:text="호텔 만족도 조사"
                 android:textColor="@color/dh_theme_color"
                 android:textSize="13.5dp" />
         </RelativeLayout>
@@ -83,7 +83,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
-                    android:text="다른 분들에게 추천하시겠습니까?"
+                    android:text="은 어떠셨나요?"
                     android:textSize="16.5dp" />
 
             </LinearLayout>
@@ -98,7 +98,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@drawable/selector_background_btn_rating_hotel"
-                    android:text="추천함"
+                    android:text="만족함"
                     android:textColor="@drawable/selector_textcolor_btn_rating_hotel"
                     android:textSize="17dp" />
 
@@ -108,7 +108,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@drawable/selector_background_btn_rating_hotel"
-                    android:text="추천안함"
+                    android:text="만족안함"
                     android:textColor="@drawable/selector_textcolor_btn_rating_hotel"
                     android:textSize="17dp" />
             </LinearLayout>
