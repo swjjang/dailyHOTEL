@@ -17,7 +17,7 @@
             android:layout_height="wrap_content" >
         </com.twoheart.dailyhotel.widget.HotelViewPager>
 
-        <com.viewpagerindicator.CirclePageIndicator
+        <com.viewpagerindicator.LoopCirclePageIndicator
             android:id="@+id/cp_hotel_tab_booking_indicator"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

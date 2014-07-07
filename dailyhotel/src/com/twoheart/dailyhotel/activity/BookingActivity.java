@@ -371,6 +371,9 @@ public class BookingActivity extends BaseActivity implements
 			case CODE_RESULT_ACTIVITY_PAYMENT_FAIL:
 				dialog("알 수 없는 오류가 발생했습니다.\n문의해주시기 바랍니다.");
 				break;
+			case CODE_RESULT_ACTIVITY_PAYMENT_CANCEL:
+				dialog("결제가 취소되었습니다.");
+				break;
 			}
 		} else if (requestCode == CODE_REQUEST_ACTIVITY_LOGIN) {
 			if (resultCode == RESULT_OK)

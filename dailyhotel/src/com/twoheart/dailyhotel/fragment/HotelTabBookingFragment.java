@@ -7,6 +7,7 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,10 +18,12 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.HotelTabActivity;
+import com.twoheart.dailyhotel.adapter.HotelImageFragmentPagerAdapter;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 import com.twoheart.dailyhotel.widget.HotelViewPager;
 import com.viewpagerindicator.CirclePageIndicator;
+import com.viewpagerindicator.LoopCirclePageIndicator;
 
 public class HotelTabBookingFragment extends BaseFragment implements
 		OnTouchListener {
@@ -30,9 +33,9 @@ public class HotelTabBookingFragment extends BaseFragment implements
 	private static final String KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL = "hotel_detail";
 
 	private HotelDetail mHotelDetail;
-	private FragmentPagerAdapter mAdapter;
+	private HotelImageFragmentPagerAdapter mAdapter;
 	private HotelViewPager mViewPager;
-	private CirclePageIndicator mIndicator;
+	private LoopCirclePageIndicator mIndicator;
 	private TextView tvBedType, tvAddress, tvPrice, tvDiscount;
 
 	private Handler mHandler;
@@ -74,7 +77,7 @@ public class HotelTabBookingFragment extends BaseFragment implements
 				.findViewById(R.id.tv_hotel_tab_booking_discount);
 		mViewPager = (HotelViewPager) view
 				.findViewById(R.id.vp_hotel_tab_booking_img);
-		mIndicator = (CirclePageIndicator) view
+		mIndicator = (LoopCirclePageIndicator) view
 				.findViewById(R.id.cp_hotel_tab_booking_indicator);
 
 		tvBedType.setText(mHotelDetail.getHotel().getBedType());
@@ -86,38 +89,22 @@ public class HotelTabBookingFragment extends BaseFragment implements
 				| Paint.STRIKE_THRU_TEXT_FLAG);
 		
 		if (mAdapter == null) {
-			mAdapter = new FragmentPagerAdapter(getChildFragmentManager()) {
-
-				@Override
-				public Fragment getItem(int position) {
-					return ImageViewFragment.newInstance(mHotelDetail.getImageUrl()
-							.get(position), mHotelDetail);
-				}
-
-				@Override
-				public int getCount() {
-					return mHotelDetail.getImageUrl().size();
-				}
-				
-			};
-			
+			mAdapter = new HotelImageFragmentPagerAdapter(getChildFragmentManager(), mHotelDetail);
 			mViewPager.setAdapter(mAdapter);
 		} else {
 			mAdapter.notifyDataSetChanged();
 		}
 		
 		mViewPager.setOnTouchListener(this);
+		mViewPager.setCurrentItem(mHotelDetail.getImageUrl().size() * 10000); // 페이지를 큰 수의 배수로 설정하여 루핑을 하게 함 
 		mIndicator.setViewPager(mViewPager);
 		mIndicator.setSnap(true);
 		
+		mCurrentPage = mHotelDetail.getImageUrl().size();
 		mHandler = new Handler() {
 			public void handleMessage(Message msg) {
-
 				mCurrentPage = mViewPager.getCurrentItem();
 				mCurrentPage++;
-				if (mCurrentPage == mHotelDetail.getImageUrl().size()) {
-					mCurrentPage = 0;
-				}
 				mViewPager.setCurrentItem(mCurrentPage, true);
 				this.sendEmptyMessageDelayed(0, DURATION_HOTEL_IMAGE_SHOW);
 			}

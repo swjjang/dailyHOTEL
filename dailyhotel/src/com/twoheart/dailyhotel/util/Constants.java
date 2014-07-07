@@ -29,7 +29,7 @@ public interface Constants {
 //	public static final String URL_DAILYHOTEL_SERVER = "http://dailyhotel.cafe24.com/goodnight/";		// 개발 서버
 //	public static final String URL_DAILYHOTEL_SERVER = "http://was1.dailyhotel.kr/goodnight/";					// new 개발 서버
 //	public static final String URL_DAILYHOTEL_SERVER = "http://1.234.83.117/goodnight/";							// new 개발 서버
-	
+//	public static final String URL_DAILYHOTEL_SERVER = "http://1.234.22.96/goodnight/"; // new 개발 7.6
 	// 회사 대표번호
 	public static final String PHONE_NUMBER_DAILYHOTEL = "1800-9120";
 	
@@ -141,5 +141,6 @@ public interface Constants {
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_NOT_AVAILABLE = 106;
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR = 107;
 	public static final int CODE_RESULT_ACTIVITY_SPLASH_NEW_EVENT = 108;
+	public static final int CODE_RESULT_ACTIVITY_PAYMENT_CANCEL = 109;
 	
 }
