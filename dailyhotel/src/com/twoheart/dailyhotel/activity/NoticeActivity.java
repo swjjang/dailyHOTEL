@@ -44,9 +44,9 @@ public class NoticeActivity extends BaseActivity implements
 					mListView.collapseGroup(mExpandedChildPos);
 				}
 				mExpandedChildPos = groupPosition;
+				mListView.setSelectionFromTop(mExpandedChildPos, 0);
 			}
 		});
-
 	}
 	
 	@Override

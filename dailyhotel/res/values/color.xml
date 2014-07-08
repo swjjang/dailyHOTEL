@@ -12,4 +12,5 @@
     <color name="button_background">#FF7A7A</color>
     <color name="dh_theme_color">#FF7A7A</color>
     <color name="activity_background">#fdfdfd</color>
+    <color name="real_red">#ff0000</color>
 </resources>	

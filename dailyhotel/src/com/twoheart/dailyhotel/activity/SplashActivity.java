@@ -22,6 +22,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
@@ -31,15 +33,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Handler.Callback;
 import android.provider.Settings;
-import android.widget.Toast;
 
 import com.android.volley.Request.Method;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.fragment.NetworkErrorFragment;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
@@ -57,7 +56,9 @@ DailyHotelJsonResponseListener, ErrorListener {
 	private static final int DURING_SPLASH_ACTIVITY_SHOW = 1000;
 	private boolean isDialogShown = false;
 
-	private NetworkErrorFragment netWorkErrorDialog;
+	private Dialog alertDlg;
+
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -80,36 +81,43 @@ DailyHotelJsonResponseListener, ErrorListener {
 		super.onResume();
 		if (!VolleyHttpClient.isAvailableNetwork()) {
 
-			if (netWorkErrorDialog == null) {
+			if(alertDlg == null) {
 				
-				Callback settingCallback = new Callback() {
+				Builder builder = new AlertDialog.Builder(
+						SplashActivity.this);
 
+				builder.setTitle("확인");
+				builder
+				.setMessage("네트워크 연결이 불안정합니다.\n재시도 혹은 와이파이 설정을 확인해주세요.");
+				builder.setCancelable(false);
+				builder.setPositiveButton("재시도",
+						new DialogInterface.OnClickListener() {
 					@Override
-					public boolean handleMessage(Message msg) {
-						startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-						netWorkErrorDialog.dismiss();
-						return true;
-					}
-				};
-				
-				Callback retryCallback = new Callback() {
-
-					@Override
-					public boolean handleMessage(Message msg) {
+					public void onClick(DialogInterface dialog, int which) {
 						if (VolleyHttpClient.isAvailableNetwork()) {
-							netWorkErrorDialog.dismiss();
 							moveToLoginStep();
+						} else {
+							new Handler().postDelayed(new Runnable() {
+								@Override
+								public void run() {
+									alertDlg.show();									
+								}
+							}, 100);
 						}
-						return true;
 					}
-				};
-
-				netWorkErrorDialog = NetworkErrorFragment.getInstance(settingCallback,retryCallback);
+				});
+				builder.setNegativeButton("설정",
+						new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+						dialog.dismiss();
+					}
+				});
+				alertDlg = builder.create();
 			}
 			
-			if (!netWorkErrorDialog.isVisible()) {
-				netWorkErrorDialog.show(getSupportFragmentManager(), "FromSplashActivity");
-			}
+			alertDlg.show();
 
 		} else {
 			moveToLoginStep();
