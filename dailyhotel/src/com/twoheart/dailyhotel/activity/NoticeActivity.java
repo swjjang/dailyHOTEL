@@ -44,7 +44,7 @@ public class NoticeActivity extends BaseActivity implements
 					mListView.collapseGroup(mExpandedChildPos);
 				}
 				mExpandedChildPos = groupPosition;
-				mListView.setSelectionFromTop(mExpandedChildPos, 0);
+				mListView.setSelectionFromTop(mExpandedChildPos, 0); // 클릭한 그룹뷰를 탑으로 두기 위하여 이동.
 			}
 		});
 	}
