@@ -103,9 +103,14 @@ public class VolleyHttpClient implements Constants {
 		List<Cookie> cookies = ((DefaultHttpClient) sHttpClient)
 				.getCookieStore().getCookies();
 
+		android.util.Log.e("cookies?",cookies.size()+"");
+		
 		if (cookies != null) {
 			for (int i = 0; i < cookies.size(); i++) {
 				Cookie newCookie = cookies.get(i);
+				
+				android.util.Log.e("FOR i = "+ i +" / " + newCookie.toString(),"true");
+				
 				if (newCookie.getName().equals(KEY_DAILYHOTEL_COOKIE)) {
 					
 					StringBuilder cookieString = new StringBuilder();
@@ -116,7 +121,7 @@ public class VolleyHttpClient implements Constants {
 					CookieManager.getInstance().setCookie(newCookie.getDomain(),
 							cookieString.toString());
 					
-//					Log.e("Init: " + cookieString.toString());
+					android.util.Log.e("Init: "+newCookie.getDomain()  , cookieString.toString());
 
 					CookieSyncManager.getInstance().sync();
 				}

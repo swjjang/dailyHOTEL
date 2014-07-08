@@ -30,11 +30,16 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
+import android.os.Handler.Callback;
+import android.provider.Settings;
+import android.widget.Toast;
 
 import com.android.volley.Request.Method;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.fragment.NetworkErrorFragment;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
@@ -43,13 +48,16 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListe
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 public class SplashActivity extends BaseActivity implements Constants,
-		DailyHotelJsonResponseListener, ErrorListener {
+DailyHotelJsonResponseListener, ErrorListener {
 
 	private static final String TAG = "SplashActivity";
 
 	private static final int VALUE_WEB_API_RESPONSE_NEW_EVENT_NOTIFY = 1;
 	private static final int VALUE_WEB_API_RESPONSE_NEW_EVENT_NONE = 0;
 	private static final int DURING_SPLASH_ACTIVITY_SHOW = 1000;
+	private boolean isDialogShown = false;
+
+	private NetworkErrorFragment netWorkErrorDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,12 +72,52 @@ public class SplashActivity extends BaseActivity implements Constants,
 		setActionBarHide();
 		setContentView(R.layout.activity_splash);
 
+
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
+		if (!VolleyHttpClient.isAvailableNetwork()) {
 
+			if (netWorkErrorDialog == null) {
+				
+				Callback settingCallback = new Callback() {
+
+					@Override
+					public boolean handleMessage(Message msg) {
+						startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+						netWorkErrorDialog.dismiss();
+						return true;
+					}
+				};
+				
+				Callback retryCallback = new Callback() {
+
+					@Override
+					public boolean handleMessage(Message msg) {
+						if (VolleyHttpClient.isAvailableNetwork()) {
+							netWorkErrorDialog.dismiss();
+							moveToLoginStep();
+						}
+						return true;
+					}
+				};
+
+				netWorkErrorDialog = NetworkErrorFragment.getInstance(settingCallback,retryCallback);
+			}
+			
+			if (!netWorkErrorDialog.isVisible()) {
+				netWorkErrorDialog.show(getSupportFragmentManager(), "FromSplashActivity");
+			}
+
+		} else {
+			moveToLoginStep();
+		}
+
+	}
+
+	private void moveToLoginStep() {
 		if (sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false)) {
 
 			String id = sharedPreference
@@ -92,13 +140,12 @@ public class SplashActivity extends BaseActivity implements Constants,
 			mQueue.add(new DailyHotelJsonRequest(Method.POST,
 					new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 							URL_WEBAPI_USER_LOGIN).toString(), loginParams,
-					this, this));
+							this, this));
 		}
 
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(
 				URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_VERSION)
 				.toString(), null, this, this));
-
 	}
 
 	@Override
@@ -153,10 +200,10 @@ public class SplashActivity extends BaseActivity implements Constants,
 
 				int maxVersion = Integer.parseInt(sharedPreference.getString(
 						KEY_PREFERENCE_MAX_VERSION_NAME, "1.0.0").replace(".",
-						""));
+								""));
 				int minVersion = Integer.parseInt(sharedPreference.getString(
 						KEY_PREFERENCE_MIN_VERSION_NAME, "1.0.0").replace(".",
-						""));
+								""));
 				int currentVersion = Integer.parseInt(this.getPackageManager()
 						.getPackageInfo(this.getPackageName(), 0).versionName
 						.replace(".", ""));
@@ -171,25 +218,25 @@ public class SplashActivity extends BaseActivity implements Constants,
 					AlertDialog.Builder alertDialog = new AlertDialog.Builder(
 							SplashActivity.this);
 					alertDialog
-							.setTitle("공지")
-							.setMessage("dailyHOTEL의 새로운 버전이 출시되었습니다. 업데이트해주세요")
-							.setCancelable(false)
-							.setPositiveButton("업데이트",
-									new DialogInterface.OnClickListener() {
-										@Override
-										public void onClick(
-												DialogInterface dialog,
-												int which) {
-											Intent marketLaunch = new Intent(
-													Intent.ACTION_VIEW);
-											marketLaunch.setData(Uri.parse(Util
-													.storeReleaseAddress()));
-											// marketLaunch.setData(Uri
-											// .parse(URL_STORE_T_DAILYHOTEL));
-											startActivity(marketLaunch);
-											finish();
-										}
-									});
+					.setTitle("공지")
+					.setMessage("dailyHOTEL의 새로운 버전이 출시되었습니다. 업데이트해주세요")
+					.setCancelable(false)
+					.setPositiveButton("업데이트",
+							new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(
+								DialogInterface dialog,
+								int which) {
+							Intent marketLaunch = new Intent(
+									Intent.ACTION_VIEW);
+							marketLaunch.setData(Uri.parse(Util
+									.storeReleaseAddress()));
+							// marketLaunch.setData(Uri
+							// .parse(URL_STORE_T_DAILYHOTEL));
+							startActivity(marketLaunch);
+							finish();
+						}
+					});
 					AlertDialog alert = alertDialog.create();
 					alert.show();
 				} else if ((maxVersion > currentVersion)
@@ -197,50 +244,50 @@ public class SplashActivity extends BaseActivity implements Constants,
 					AlertDialog.Builder alertDialog = new AlertDialog.Builder(
 							SplashActivity.this);
 					alertDialog
-							.setTitle("공지")
-							.setMessage("지금 업그레이드하여 가장 멋진 데일리호텔 앱을 다운받으세요")
-							.setCancelable(true)
-							.setOnCancelListener(new OnCancelListener() {
+					.setTitle("공지")
+					.setMessage("지금 업그레이드하여 가장 멋진 데일리호텔 앱을 다운받으세요")
+					.setCancelable(true)
+					.setOnCancelListener(new OnCancelListener() {
 
-								@Override
-								public void onCancel(DialogInterface dialog) {
-									SharedPreferences.Editor editor = sharedPreference
-											.edit();
-									editor.putString(
-											KEY_PREFERENCE_SKIP_MAX_VERSION,
-											sharedPreference
-													.getString(
-															KEY_PREFERENCE_MAX_VERSION_NAME,
-															"1.0.0"));
+						@Override
+						public void onCancel(DialogInterface dialog) {
+							SharedPreferences.Editor editor = sharedPreference
+									.edit();
+							editor.putString(
+									KEY_PREFERENCE_SKIP_MAX_VERSION,
+									sharedPreference
+									.getString(
+											KEY_PREFERENCE_MAX_VERSION_NAME,
+											"1.0.0"));
 
-									editor.commit();
-									showMainActivity(newEventFlag);
-								}
-							})
-							.setNegativeButton("취소",
-									new DialogInterface.OnClickListener() {
-										@Override
-										public void onClick(
-												DialogInterface dialog,
-												int which) {
-											dialog.cancel();
-										}
-									})
-							.setPositiveButton("업데이트",
-									new DialogInterface.OnClickListener() {
-										@Override
-										public void onClick(
-												DialogInterface dialog,
-												int which) {
-											Intent marketLaunch = new Intent(
-													Intent.ACTION_VIEW);
-											marketLaunch.setData(Uri.parse(Util
-													.storeReleaseAddress()));
-											// marketLaunch.setData(Uri
-											// .parse(URL_STORE_T_DAILYHOTEL));
-											startActivity(marketLaunch);
-										}
-									});
+							editor.commit();
+							showMainActivity(newEventFlag);
+						}
+					})
+					.setNegativeButton("취소",
+							new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(
+								DialogInterface dialog,
+								int which) {
+							dialog.cancel();
+						}
+					})
+					.setPositiveButton("업데이트",
+							new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(
+								DialogInterface dialog,
+								int which) {
+							Intent marketLaunch = new Intent(
+									Intent.ACTION_VIEW);
+							marketLaunch.setData(Uri.parse(Util
+									.storeReleaseAddress()));
+							// marketLaunch.setData(Uri
+							// .parse(URL_STORE_T_DAILYHOTEL));
+							startActivity(marketLaunch);
+						}
+					});
 					AlertDialog alert = alertDialog.create();
 					alert.show();
 				} else {

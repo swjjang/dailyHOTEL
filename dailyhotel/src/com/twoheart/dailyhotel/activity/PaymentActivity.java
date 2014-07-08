@@ -786,7 +786,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			} else if (msg.equals("INVALID_DATE")) {
 				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_INVALID_DATE;
 			} else if (msg.equals("PAYMENT_CANCEL")) {
-				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_CANCEL;
+				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_CANCELED;
 			} else {
 				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
 			}

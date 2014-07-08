@@ -15,6 +15,9 @@
  */
 package com.twoheart.dailyhotel.util.ui;
 
+import android.accounts.NetworkErrorException;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
@@ -35,6 +38,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.fragment.NetworkErrorFragment;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
@@ -159,11 +163,9 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 		
 		try {
 			CookieSyncManager.getInstance().startSync();
-			
 		} catch (Exception e) {
 			CookieSyncManager.createInstance(getApplicationContext());
 			CookieSyncManager.getInstance().startSync();
-			
 		}
 		
 		com.facebook.AppEventsLogger.activateApp(this, getResources().getString(R.string.app_id));
@@ -247,6 +249,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	 * Error 발생 시 분기되는 메서드
 	 */
 	public void onError() {
+		// 잘못된 멘트, 모든 에러가 이쪽으로 빠지게됨. 변경 필요.
 		showToast("인터넷 연결 상태가 불안정합니다.\n인터넷 연결을 확인하신 뒤 다시 시도해주세요.", Toast.LENGTH_LONG, false);
 	}
 	

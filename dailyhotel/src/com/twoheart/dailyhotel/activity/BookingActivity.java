@@ -356,19 +356,21 @@ public class BookingActivity extends BaseActivity implements
 				dialog("모든 객실이 판매되었습니다.\n다음에 이용해주세요.");
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_NOT_AVAILABLE:
-				dialog("먼저 온 손님이 예약 중입니다.\n잠시 후 다시 시도해주세요.");
+				dialog("다른 손님이 예약 중입니다.\n잠시 후 이용해주세요.");
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR:
 				dialog("네트워크 오류가 발생했습니다.\n네트워크 연결을 확인해주세요.");
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION:
-				VolleyHttpClient.createCookie();		// 쿠키를 다시 생성 시도
+				VolleyHttpClient.createCookie();	// 쿠키를 다시 생성 시도
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_INVALID_DATE:
+				dialog("판매가 마감되었습니다.");
+				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_FAIL:
 				dialog("알 수 없는 오류가 발생했습니다.\n문의해주시기 바랍니다.");
 				break;
-			case CODE_RESULT_ACTIVITY_PAYMENT_CANCEL:
+			case CODE_RESULT_ACTIVITY_PAYMENT_CANCELED:
 				dialog("결제가 취소되었습니다.");
 				break;
 			}

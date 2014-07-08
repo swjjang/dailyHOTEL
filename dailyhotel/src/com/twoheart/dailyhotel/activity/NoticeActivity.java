@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import android.os.Bundle;
 import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnGroupExpandListener;
 
 import com.android.volley.Request.Method;
 import com.google.analytics.tracking.android.Fields;
@@ -35,6 +36,16 @@ public class NoticeActivity extends BaseActivity implements
 		DailyHotel.getGaTracker().set(Fields.SCREEN_NAME, TAG);
 
 		mListView = (ExpandableListView) findViewById(R.id.expandable_list_board);
+		mListView.setOnGroupExpandListener(new OnGroupExpandListener() {
+			private int mExpandedChildPos = -1;
+			@Override
+			public void onGroupExpand(int groupPosition) {
+				if(mExpandedChildPos != -1 && groupPosition != mExpandedChildPos) {
+					mListView.collapseGroup(mExpandedChildPos);
+				}
+				mExpandedChildPos = groupPosition;
+			}
+		});
 
 	}
 	
