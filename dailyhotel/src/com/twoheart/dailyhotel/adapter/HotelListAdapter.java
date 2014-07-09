@@ -34,44 +34,51 @@ import com.twoheart.dailyhotel.widget.HotelGradeView;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView.PinnedSectionListAdapter;
 
 public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
-		PinnedSectionListAdapter {
+PinnedSectionListAdapter {
 
 	private Context context;
 	private int resourceId;
-//	private ImageLoader imageLoader;
+	//	private ImageLoader imageLoader;
 	private LayoutInflater inflater;
 	private LruCache<Integer, Bitmap> imgCache;
 
 	public HotelListAdapter(Context context, int resourceId,
 			List<HotelListViewItem> hotelList) {
 		super(context, resourceId, hotelList);	
-
-		this.imgCache = new LruCache<Integer, Bitmap>(4 * 1024 * 1024); // 4 Mib
+		final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+		final int cacheSize = maxMemory / 8;
+		this.imgCache = new LruCache<Integer, Bitmap>(cacheSize){
+			@Override
+			protected int sizeOf(Integer key, Bitmap value) {
+				return value.getRowBytes() * value.getHeight() / 1024;
+			}
+		}; // 최대 가용 메모리의 1/8 
 		this.context = context;
 		this.resourceId = resourceId;
 
 		this.inflater = (LayoutInflater) this.context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-//		this.imageLoader = ImageLoader.getInstance();
-//		this.imageLoader = VolleyImageLoader.getImageLoader();
-//		this.imageLoader = new ImageLoader(context);
+		//		this.imageLoader = ImageLoader.getInstance();
+		//		this.imageLoader = VolleyImageLoader.getImageLoader();
+		//		this.imageLoader = new ImageLoader(context);
 	}
 
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
 
 		HotelListViewItem item = getItem(position);
+		android.util.Log.e("instantiate Item / imgCache : ",position+" / "+imgCache.size());
 
 		switch (item.getType()) {
 		case HotelListViewItem.TYPE_SECTION:
 			HeaderListViewHolder headerViewHolder = null;
-			
+
 			if (convertView != null) {
 				if (convertView.getTag() != null)
 					if (convertView.getTag() instanceof HeaderListViewHolder)
 						headerViewHolder = (HeaderListViewHolder) convertView.getTag();
-				
+
 			} else {
 				convertView = inflater.inflate(R.layout.list_row_hotel_section, parent, false);
 				headerViewHolder = new HeaderListViewHolder();
@@ -88,7 +95,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 
 			Hotel element = item.getItem();
 			HotelListViewHolder viewHolder = null;
-			
+
 			if (convertView != null) {
 				if (convertView.getTag() != null)
 					if (convertView.getTag() instanceof HotelListViewHolder)
@@ -118,11 +125,11 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 				viewHolder.grade = (HotelGradeView) convertView.findViewById(R.id.hv_hotel_grade);
 
 				convertView.setTag(viewHolder);
-				
+
 			}
-			
-//			HotelGradeView grade = (HotelGradeView) convertView.findViewById(R.id.hv_hotel_grade);
-			
+
+			//			HotelGradeView grade = (HotelGradeView) convertView.findViewById(R.id.hv_hotel_grade);
+
 			DecimalFormat comma = new DecimalFormat("###,##0");
 			String strPrice = comma
 					.format(Integer.parseInt(element.getPrice()));
@@ -144,14 +151,14 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 
 			viewHolder.name.setSelected(true); // Android TextView marquee bug
 
-//			viewHolder.name.setShadowLayer(Util.dpToPx(getContext(), 1), Util.dpToPx(getContext(), 6),
-//					Util.dpToPx(getContext(), 6), android.R.color.black);
-//			viewHolder.price.setShadowLayer(Util.dpToPx(getContext(), 1), Util.dpToPx(getContext(), 6),
-//					Util.dpToPx(getContext(), 6), android.R.color.black);
-//			viewHolder.discount.setShadowLayer(Util.dpToPx(getContext(), 1), Util.dpToPx(getContext(), 6),
-//					Util.dpToPx(getContext(), 6), android.R.color.black);
-//			viewHolder.address.setShadowLayer(Util.dpToPx(getContext(), 1), Util.dpToPx(getContext(), 6),
-//					Util.dpToPx(getContext(), 6), android.R.color.black);
+			//			viewHolder.name.setShadowLayer(Util.dpToPx(getContext(), 1), Util.dpToPx(getContext(), 6),
+			//					Util.dpToPx(getContext(), 6), android.R.color.black);
+			//			viewHolder.price.setShadowLayer(Util.dpToPx(getContext(), 1), Util.dpToPx(getContext(), 6),
+			//					Util.dpToPx(getContext(), 6), android.R.color.black);
+			//			viewHolder.discount.setShadowLayer(Util.dpToPx(getContext(), 1), Util.dpToPx(getContext(), 6),
+			//					Util.dpToPx(getContext(), 6), android.R.color.black);
+			//			viewHolder.address.setShadowLayer(Util.dpToPx(getContext(), 1), Util.dpToPx(getContext(), 6),
+			//					Util.dpToPx(getContext(), 6), android.R.color.black);
 
 			final int colors[] = { Color.parseColor("#ED000000"),
 					Color.parseColor("#E8000000"),
@@ -176,16 +183,15 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 
 			// grade
 			viewHolder.grade.setHotelGradeCode(element.getCategory());
-			
+
 			GlobalFont.apply((ViewGroup) convertView);
 			viewHolder.name.setTypeface(DailyHotel.getBoldTypeface());
 			viewHolder.discount.setTypeface(DailyHotel.getBoldTypeface());
-			
+
 			AQuery aq = new AQuery(convertView);
 			Bitmap cachedImg = getImgCache().get(position);
-			
+
 			if (cachedImg == null) { // 힛인 밸류가 없다면 이미지를 불러온 후 캐시에 세이브
-				
 				BitmapAjaxCallback cb = new BitmapAjaxCallback(){
 					@Override
 					protected void callback(String url, ImageView iv,
@@ -196,9 +202,10 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 				};
 				cb.url(element.getImage()).animation(AQuery.FADE_IN);
 				aq.id(viewHolder.img).image(cb);
-				
+
 			} else { 
 				aq.id(viewHolder.img).image(cachedImg);
+				//				cachedImg.recycle();
 			}
 
 			// 객실이 1~2 개일때 label 표시
@@ -228,9 +235,10 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 		return convertView;
 	}
 
+
 	private class HotelListViewHolder {
 		RelativeLayout llHotelRowContent;
-//		ImageView img;
+		//		ImageView img;
 		ImageView img;
 		TextView name;
 		TextView price;
@@ -241,7 +249,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 		// FrameLayout gradeBackground;
 		// TextView gradeText;
 	}
-	
+
 	private class HeaderListViewHolder {
 		TextView regionDetailName;
 	}

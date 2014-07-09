@@ -56,6 +56,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 	public static String CARD_CD = "";
 	public static String QUOTA = "";
 	public int m_nStat = PROGRESS_STAT_NOT_START;
+	String wayToPay;
 
 	private WebView webView;
 	private final Handler handler = new Handler();
@@ -72,6 +73,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		Bundle bundle = getIntent().getExtras();
 		if (bundle != null) {
 			mPay = (Pay) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_PAY);
+			wayToPay = (String) bundle.getString("wayToPay");
 		}
 
 		webView = (WebView) findViewById(R.id.webView);
@@ -96,7 +98,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			showToast("결제 정보를 가져올 수 없습니다.", Toast.LENGTH_SHORT, false);
 			finish();
 		}
-		
+
 		String userAccessToken = mPay.getCustomer().getAccessToken();
 
 		ArrayList<String> postParameterKey = new ArrayList<String>(Arrays.asList("email", "name", "phone"));
@@ -110,6 +112,12 @@ public class PaymentActivity extends BaseActivity implements Constants {
 				postParameterValue.add(userAccessToken);
 			}
 		}
+
+		if (wayToPay != null) {
+			postParameterKey.add("pay_type");
+			postParameterValue.add(wayToPay);
+		}
+
 
 		String url = new StringBuilder(URL_DAILYHOTEL_SERVER)
 		.append(URL_WEBAPI_RESERVE_PAYMENT)
@@ -126,10 +134,24 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		webView.postUrl(url,
 				parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]),
 						postParameterValue.toArray(new String[postParameterValue.size()])));
+//		android.util.Log.e("url",url);
+//		android.util.Log.e("accessToken",userAccessToken);
 
 	}
 
 	private byte[] parsePostParameter(String[] key, String[] value) {
+		
+		String keys="";
+		String values = "";
+		for(String k : key) {
+			keys+= (k+" ");
+		}
+		for(String v : value) {
+			values+= (v+" ");
+		}
+		
+		android.util.Log.e("keys",keys);
+		android.util.Log.e("vals",values);
 
 		List<byte[]> resultList = new ArrayList<byte[]>();
 		HashMap<String, byte[]> postParameters = new HashMap<String, byte[]>();
@@ -260,10 +282,10 @@ public class PaymentActivity extends BaseActivity implements Constants {
 				}
 			}
 		}
-		
+
 		// 기존 방식
 		else {
-			
+
 			if ( url.startsWith( "ispmobile" ) ) { // 7.4 ISP 모듈 연동 테스트
 				if( !new PackageState(this).getPackageDownloadInstallState( "kvp.jjy.MispAndroid" ) ) { 
 					startActivity( new Intent(
@@ -272,7 +294,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 					view.goBack();
 					return true; 
 				} 
-				
+
 			}
 			/*  else if ( url.startsWith( "paypin" ) ) { if(
 			 * !new PackageState( this ).getPackageDownloadInstallState(

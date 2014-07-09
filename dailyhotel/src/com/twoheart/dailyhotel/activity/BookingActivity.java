@@ -68,6 +68,8 @@ public class BookingActivity extends BaseActivity implements
 
 	private Pay mPay;
 
+	private String wayToPay;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -174,37 +176,37 @@ public class BookingActivity extends BaseActivity implements
 	public void onClick(View v) {
 		if (v.getId() == btnPay.getId()) {
 
-			if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentAccount
-					.getId()) { // 무통장 입금을 선택했을 경우
-
-				AlertDialog.Builder alert = new AlertDialog.Builder(this);
-				alert.setPositiveButton("전화",
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								Intent i = new Intent(
-										Intent.ACTION_DIAL,
-										Uri.parse(new StringBuilder("tel:")
-												.append(PHONE_NUMBER_DAILYHOTEL)
-												.toString()));
-								startActivity(i);
-							}
-						});
-				alert.setNegativeButton("취소",
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								dialog.dismiss(); // 닫기
-							}
-						});
-
-				alert.setMessage("무통장 입금은 전화 통화를 통해 진행됩니다. 입금 순서에 따라 예약되며, 예약 확정 후 문자가 도착합니다.");
-				alert.show();
-
-			} else if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentCard
-					.getId()) { // 신용카드를 선택했을 경우
+//			if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentAccount
+//					.getId()) { // 무통장 입금을 선택했을 경우
+//
+//				AlertDialog.Builder alert = new AlertDialog.Builder(this);
+//				alert.setPositiveButton("전화",
+//						new DialogInterface.OnClickListener() {
+//							@Override
+//							public void onClick(DialogInterface dialog,
+//									int which) {
+//								Intent i = new Intent(
+//										Intent.ACTION_DIAL,
+//										Uri.parse(new StringBuilder("tel:")
+//												.append(PHONE_NUMBER_DAILYHOTEL)
+//												.toString()));
+//								startActivity(i);
+//							}
+//						});
+//				alert.setNegativeButton("취소",
+//						new DialogInterface.OnClickListener() {
+//							@Override
+//							public void onClick(DialogInterface dialog,
+//									int which) {
+//								dialog.dismiss(); // 닫기
+//							}
+//						});
+//
+//				alert.setMessage("무통장 입금은 전화 통화를 통해 진행됩니다. 입금 순서에 따라 예약되며, 예약 확정 후 문자가 도착합니다.");
+//				alert.show();
+//
+//			} else if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentCard
+//					.getId()) { // 신용카드를 선택했을 경우
 				
 				Customer buyer = mPay.getCustomer();
 
@@ -241,7 +243,7 @@ public class BookingActivity extends BaseActivity implements
 				mPay.setCustomer(buyer);
 				moveToPayStep();
 
-			}
+//			}
 		} else if (v.getId() == rbPaymentAccount.getId() | v.getId() == rbPaymentCard.getId()) {
 			svBooking.fullScroll(View.FOCUS_DOWN);
 			
@@ -263,6 +265,9 @@ public class BookingActivity extends BaseActivity implements
 	private void moveToPayStep() {
 		Intent intent = new Intent(this, PaymentActivity.class);
 		intent.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
+		intent.putExtra("wayToPay", wayToPay);
+		
+
 		startActivityForResult(intent,
 				CODE_REQUEST_ACTIVITY_PAYMENT);
 		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
@@ -385,13 +390,15 @@ public class BookingActivity extends BaseActivity implements
 		if (group.getId() == rgPaymentMethod.getId()) {
 
 			if (checkedId == rbPaymentAccount.getId()) {
-				btnPay.setText("전화로 문의하기");
-				tvPaymentInformation
-						.setText("계좌정보: 206037-04-005094 | 국민은행 | (주)데일리");
+				wayToPay = "BANK";
+//				btnPay.setText("전화로 문의하기");
+//				tvPaymentInformation
+//						.setText("계좌정보: 206037-04-005094 | 국민은행 | (주)데일리");
 
 			} else if (checkedId == rbPaymentCard.getId()) {
-				btnPay.setText("결제하기");
-				tvPaymentInformation.setText("당일 예약 특성 상 취소 및 환불이 불가합니다.");
+				wayToPay = null;
+//				btnPay.setText("결제하기");
+//				tvPaymentInformation.setText("당일 예약 특성 상 취소 및 환불이 불가합니다.");
 
 			}
 
