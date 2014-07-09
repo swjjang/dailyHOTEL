@@ -31,6 +31,7 @@ import android.content.pm.Signature;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -452,8 +453,14 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 			indexLastFragment = INDEX_SETTING_FRAGMENT;
 			break;
 		}
-
-		replaceFragment(getFragment(indexLastFragment));
+		new Handler().postDelayed(new Runnable() {
+			
+			@Override
+			public void run() {
+				replaceFragment(getFragment(indexLastFragment));		
+			}
+		}, 200); // 드로어 레이아웃이 닫히는데 애니메이션이 부하가 큼. 프래그먼트 전환까지 추가한다면 닫힐때 버벅거리는 현상이 발생. 따라서 0.2초 지연하여 자연스러운 애니메이션을 보여줌.
+		
 		drawerLayout.closeDrawer(drawerList);
 
 	}

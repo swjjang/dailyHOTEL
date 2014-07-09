@@ -114,7 +114,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		}
 
 		if (wayToPay != null) {
-			postParameterKey.add("pay_type");
+			postParameterKey.add("payType");
 			postParameterValue.add(wayToPay);
 		}
 
@@ -375,7 +375,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
-			android.util.Log.e("PAYMENT_ACTIVITY / URL",url);
+			android.util.Log.e("URL",url);
 
 			Log.d(ResultRcvActivity.m_strLogTag,
 					"[PayDemoActivity] called__shouldOverrideUrlLoading - url=["
