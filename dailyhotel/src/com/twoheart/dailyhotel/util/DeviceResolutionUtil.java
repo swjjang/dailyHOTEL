@@ -22,9 +22,6 @@ public class DeviceResolutionUtil {
 		DisplayMetrics displayMetrics = new DisplayMetrics();
 		act.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 		
-		int deviceWidth = displayMetrics.widthPixels;
-		int deviceHeight = displayMetrics.heightPixels;
-		
 		HashMap<Integer,Integer> hm = new HashMap<Integer, Integer>();
 		hm.put(KEY_WIDTH, displayMetrics.widthPixels);
 		hm.put(KEY_HEIGHT, displayMetrics.heightPixels);

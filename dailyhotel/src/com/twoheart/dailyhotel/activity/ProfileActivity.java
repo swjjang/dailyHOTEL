@@ -34,7 +34,7 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListe
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 public class ProfileActivity extends BaseActivity implements
-		DailyHotelJsonResponseListener, OnClickListener {
+DailyHotelJsonResponseListener, OnClickListener {
 
 	// private TextView tvEmail, tvName, tvPhone, tvProfileEdit;
 	// private EditText etEmail, etName, etPhone;
@@ -43,6 +43,8 @@ public class ProfileActivity extends BaseActivity implements
 
 	private AQuery mAq;
 	private InputMethodManager mInputMethodManager;
+	private String prevName;
+	private String prevPh;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -58,18 +60,18 @@ public class ProfileActivity extends BaseActivity implements
 		mAq.id(R.id.btn_profile_logout).clicked(this);
 
 		mAq.id(R.id.et_profile_phone).getEditText()
-				.setOnEditorActionListener(new OnEditorActionListener() {
-					@Override
-					public boolean onEditorAction(TextView v, int actionId,
-							KeyEvent event) {
-						switch (actionId) {
-						case EditorInfo.IME_ACTION_DONE:
-							mAq.id(R.id.ll_profile_edit).click();
-							break;
-						}
-						return true;
-					}
-				});
+		.setOnEditorActionListener(new OnEditorActionListener() {
+			@Override
+			public boolean onEditorAction(TextView v, int actionId,
+					KeyEvent event) {
+				switch (actionId) {
+				case EditorInfo.IME_ACTION_DONE:
+					mAq.id(R.id.ll_profile_edit).click();
+					break;
+				}
+				return true;
+			}
+		});
 	}
 
 	@Override
@@ -81,10 +83,24 @@ public class ProfileActivity extends BaseActivity implements
 
 	@Override
 	public void onBackPressed() {
-		if (mAq.id(R.id.tv_profile_edit).getText().equals("완료"))
-			mAq.id(R.id.ll_profile_edit).click();
-		else
+		if (mAq.id(R.id.tv_profile_edit).getText().equals("완료")) {
+
+			mAq.id(R.id.ll_profile_info_editable).visibility(View.GONE);
+			mAq.id(R.id.ll_profile_info_label).visibility(View.VISIBLE);
+			mAq.id(R.id.ll_profile_info_label)
+				.getView()
+				.startAnimation(
+						AnimationUtils.loadAnimation(this,
+								R.anim.fade_in));
+			mAq.id(R.id.tv_profile_edit).text("수정");
+
+			mAq.id(R.id.et_profile_name).text(prevName);
+			mAq.id(R.id.et_profile_phone).text(prevPh);
+			
+			toggleKeyboard(false);
+		} else {
 			super.onBackPressed();
+		}
 
 	}
 
@@ -124,8 +140,8 @@ public class ProfileActivity extends BaseActivity implements
 
 		} else {
 			mInputMethodManager
-					.hideSoftInputFromWindow(mAq.id(R.id.et_profile_name)
-							.getEditText().getWindowToken(), 0);
+			.hideSoftInputFromWindow(mAq.id(R.id.et_profile_name)
+					.getEditText().getWindowToken(), 0);
 
 		}
 	}
@@ -137,10 +153,10 @@ public class ProfileActivity extends BaseActivity implements
 				mAq.id(R.id.ll_profile_info_label).visibility(View.GONE);
 				mAq.id(R.id.ll_profile_info_editable).visibility(View.VISIBLE);
 				mAq.id(R.id.ll_profile_info_editable)
-						.getView()
-						.startAnimation(
-								AnimationUtils.loadAnimation(this,
-										R.anim.fade_in));
+				.getView()
+				.startAnimation(
+						AnimationUtils.loadAnimation(this,
+								R.anim.fade_in));
 				mAq.id(R.id.tv_profile_edit).text("완료");
 
 				toggleKeyboard(true);
@@ -149,79 +165,88 @@ public class ProfileActivity extends BaseActivity implements
 				mAq.id(R.id.ll_profile_info_editable).visibility(View.GONE);
 				mAq.id(R.id.ll_profile_info_label).visibility(View.VISIBLE);
 				mAq.id(R.id.ll_profile_info_label)
-						.getView()
-						.startAnimation(
-								AnimationUtils.loadAnimation(this,
-										R.anim.fade_in));
+				.getView()
+				.startAnimation(
+						AnimationUtils.loadAnimation(this,
+								R.anim.fade_in));
 				mAq.id(R.id.tv_profile_edit).text("수정");
 
 				toggleKeyboard(false);
 
-				Map<String, String> updateParams = new HashMap<String, String>();
-				updateParams.put("name", mAq.id(R.id.et_profile_name).getText()
-						.toString());
-				updateParams.put("phone", mAq.id(R.id.et_profile_phone)
-						.getText().toString());
+				String name = mAq.id(R.id.et_profile_name).getText()
+						.toString();
+				String phone = mAq.id(R.id.et_profile_phone).getText()
+						.toString();
 
-				lockUI();
-				mQueue.add(new DailyHotelJsonRequest(Method.POST,
-						new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-								URL_WEBAPI_USER_UPDATE).toString(),
-						updateParams, this, this));
+				if (name.equals(prevName) && phone.equals(prevPh)) {
+					showToast("변경된 사항이 없습니다.", Toast.LENGTH_LONG, false);
+				} else {
+					Map<String, String> updateParams = new HashMap<String, String>();
+					updateParams.put("name", mAq.id(R.id.et_profile_name).getText()
+							.toString());
+					updateParams.put("phone", mAq.id(R.id.et_profile_phone)
+							.getText().toString());
+
+					lockUI();
+					mQueue.add(new DailyHotelJsonRequest(Method.POST,
+							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+									URL_WEBAPI_USER_UPDATE).toString(),
+									updateParams, this, this));
+				}
 
 			}
 
 		} else if (v.getId() == R.id.btn_profile_logout) {
 			AlertDialog.Builder alert_confirm = new AlertDialog.Builder(this);
 			alert_confirm
-					.setMessage("로그아웃하시겠습니까?")
-					.setCancelable(false)
-					.setPositiveButton("로그아웃",
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which) {
+			.setMessage("로그아웃하시겠습니까?")
+			.setCancelable(false)
+			.setPositiveButton("로그아웃",
+					new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog,
+						int which) {
 
-									mQueue.add(new DailyHotelJsonRequest(
-											Method.GET,
-											new StringBuilder(
-													URL_DAILYHOTEL_SERVER)
-													.append(URL_WEBAPI_USER_LOGOUT)
-													.toString(), null,
-											ProfileActivity.this,
-											ProfileActivity.this));
-									VolleyHttpClient.destroyCookie();
+					mQueue.add(new DailyHotelJsonRequest(
+							Method.GET,
+							new StringBuilder(
+									URL_DAILYHOTEL_SERVER)
+							.append(URL_WEBAPI_USER_LOGOUT)
+							.toString(), null,
+							ProfileActivity.this,
+							ProfileActivity.this));
+					VolleyHttpClient.destroyCookie();
 
-									SharedPreferences.Editor ed = sharedPreference
-											.edit();
-									ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN,
-											false);
-									ed.putString(KEY_PREFERENCE_USER_ID, null);
-									ed.putString(KEY_PREFERENCE_USER_PWD, null);
-									ed.commit();
+					SharedPreferences.Editor ed = sharedPreference
+							.edit();
+					ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN,
+							false);
+					ed.putString(KEY_PREFERENCE_USER_ID, null);
+					ed.putString(KEY_PREFERENCE_USER_PWD, null);
+					ed.commit();
 
-									if (Session.getActiveSession() != null)
-										if (Session.getActiveSession()
-												.isOpened()) {
-											Session.getActiveSession()
-													.closeAndClearTokenInformation();
-											Session.setActiveSession(null);
-										}
+					if (Session.getActiveSession() != null)
+						if (Session.getActiveSession()
+								.isOpened()) {
+							Session.getActiveSession()
+							.closeAndClearTokenInformation();
+							Session.setActiveSession(null);
+						}
 
-									showToast("로그아웃되었습니다", Toast.LENGTH_SHORT,
-											true);
-									finish();
+					showToast("로그아웃되었습니다", Toast.LENGTH_SHORT,
+							true);
+					finish();
 
-								}
-							})
-					.setNegativeButton("취소",
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which) {
-									return;
-								}
-							});
+				}
+			})
+			.setNegativeButton("취소",
+					new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog,
+						int which) {
+					return;
+				}
+			});
 			AlertDialog alert = alert_confirm.create();
 			alert.show();
 
@@ -245,6 +270,9 @@ public class ProfileActivity extends BaseActivity implements
 				String userEmail = obj.getString("email");
 				String userName = obj.getString("name");
 				String userPhone = obj.getString("phone");
+
+				prevName = userName;
+				prevPh = userPhone;
 
 				mAq.id(R.id.tv_profile_email).text(userEmail);
 				mAq.id(R.id.tv_profile_name).text(userName);

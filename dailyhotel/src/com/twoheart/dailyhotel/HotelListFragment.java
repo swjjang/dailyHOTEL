@@ -487,10 +487,10 @@ public class HotelListFragment extends BaseFragment implements Constants,
 				mHostActivity.actionBar.setDisplayShowTitleEnabled(false);
 				
 				
-				//test part
-				for (int i=0;i<50;i++) {
-					mRegionList.add("test"+i);
-				}
+//				//test part
+//				for (int i=0;i<50;i++) {
+//					mRegionList.add("test"+i);
+//				}
 				
 				
 				mHostActivity.actionBar
