@@ -33,6 +33,7 @@ import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.AbsListViewDeleg
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -484,9 +485,16 @@ public class HotelListFragment extends BaseFragment implements Constants,
 				}
 				
 				mHostActivity.actionBar.setDisplayShowTitleEnabled(false);
+				
+				
+				//test part
+				for (int i=0;i<50;i++) {
+					mRegionList.add("test"+i);
+				}
+				
+				
 				mHostActivity.actionBar
 						.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-
 				RegionListAdapter regionListAdapter = new RegionListAdapter(
 						mHostActivity, mRegionList);
 

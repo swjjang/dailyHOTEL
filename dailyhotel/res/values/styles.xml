@@ -6,8 +6,10 @@
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
     <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light">
-        
-        <item name="android:windowContentOverlay">@color/real_red</item>
+        <!-- 
+        	android:windowContentOverlay 스타일은 현재 안드로이드 4.3에서 버그가 발견되어 적용되지 않는 문제 발생.
+        	따라서 안드로이드 4.3 커널을 이용하는 유저들은 액션바에 바텀 섀도우가 빠진채로 레이아웃 형성.
+         -->
         <item name="actionMenuTextColor">@color/dh_theme_color</item>
         <item name="actionMenuTextAppearance">@style/actionbarMenuTextAppearance</item>
         <item name="actionBarItemBackground">@drawable/item_background_holo_light</item>
