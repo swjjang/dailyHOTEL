@@ -31,7 +31,7 @@ public class NoticeActivity extends BaseActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setActionBar("공지사항");
+		setActionBar(R.string.actionbar_title_notice_activity);
 		setContentView(R.layout.activity_board);
 		DailyHotel.getGaTracker().set(Fields.SCREEN_NAME, TAG);
 

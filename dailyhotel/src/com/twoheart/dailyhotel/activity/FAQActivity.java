@@ -28,7 +28,7 @@ public class FAQActivity extends BaseActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setActionBar("자주 묻는 질문");
+		setActionBar(R.string.actionbar_title_faq_activity);
 		setContentView(R.layout.activity_board);
 
 		mListView = (ExpandableListView) findViewById(R.id.expandable_list_board);

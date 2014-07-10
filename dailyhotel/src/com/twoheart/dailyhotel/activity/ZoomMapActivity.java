@@ -25,7 +25,7 @@ public class ZoomMapActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		supportRequestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
-		setActionBar("지도 확대");
+		setActionBar(R.string.actionbar_title_zoom_map_activity);
 		actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#CCFFFFFF")));
 		
 //		View view = Util.getActionBarView(this);

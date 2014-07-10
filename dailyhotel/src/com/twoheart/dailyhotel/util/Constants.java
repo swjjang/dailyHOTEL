@@ -83,6 +83,16 @@ public interface Constants {
 	public static final String URL_WEB_TERMS = "http://policies.dailyhotel.co.kr/terms/";
 	public static final String URL_WEB_ABOUT = "http://policies.dailyhotel.co.kr/about/";
 	
+	// Payment App GoogleStore URL
+	public static final String URL_STORE_PAYMENT_ISP = "market://details?id=kvp.jjy.MispAndroid320";
+	public static final String URL_STORE_PAYMENT_KFTC = "market://details?id=com.kftc.bankpay.android&hl=ko";
+	public static final String URL_STORE_PAYMENT_MPOCKET = "market://details?id=kr.co.samsungcard.mpocket";
+	
+	// Payment App PackageName
+	public static final String PACKAGE_NAME_ISP = "kvp.jjy.MispAndroid";
+	public static final String PACKAGE_NAME_KFTC = "com.kftc.bankpay.android"; 
+	public static final String PACKAGE_NAME_MPOCKET = "kr.co.samsungcard.mpocket"; 
+	
 	// Preference
 	public static final String NAME_DAILYHOTEL_SHARED_PREFERENCE = "GOOD_NIGHT";
 

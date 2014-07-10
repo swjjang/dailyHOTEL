@@ -108,6 +108,11 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 		actionBar.setHomeButtonEnabled(true);
 	}
 	
+	public void setActionBar(int strId) {
+		setActionBar(getString(strId));
+	}
+	
+	
 	/**
 	 * 액션바에 ProgressBar를 표시할 수 있도록 셋팅한다.
 	 */
@@ -169,7 +174,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 			CookieSyncManager.getInstance().startSync();
 		}
 		
-		com.facebook.AppEventsLogger.activateApp(this, getResources().getString(R.string.app_id));
+		com.facebook.AppEventsLogger.activateApp(this, getString(R.string.app_id));
 		
 	}
 	

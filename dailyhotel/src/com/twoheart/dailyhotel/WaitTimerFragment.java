@@ -99,8 +99,8 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 		btnEvent = (LinearLayout) view.findViewById(R.id.btn_event);
 		btnEvent.setOnClickListener(this);
 
-		mHostActivity.setActionBar("dailyHOTEL");
-		tvTitle.setText(new SimpleDateFormat("aa H").format(mSaleTime.getOpenTime()) + "시 오늘의 호텔이 공개됩니다.");
+		mHostActivity.setActionBar(R.string.actionbar_title_wait_timer_frag);
+		tvTitle.setText(new SimpleDateFormat("aa H").format(mSaleTime.getOpenTime()) + getString(R.string.prefix_wait_timer_frag_todays_hotel_open));
 		
 		isEnabledNotify = false;
 		setTimer();

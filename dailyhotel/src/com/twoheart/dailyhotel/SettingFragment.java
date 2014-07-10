@@ -100,7 +100,7 @@ public class SettingFragment extends BaseFragment implements Constants,
 	@Override
 	public void onResume() {
 		super.onResume();
-		mHostActivity.setActionBar("설정");
+		mHostActivity.setActionBar(R.string.actionbar_title_setting_frag);
 		
 		lockUI();
 		mQueue.add(new DailyHotelStringRequest(Method.GET,
@@ -128,10 +128,10 @@ public class SettingFragment extends BaseFragment implements Constants,
 		} else if (v.getId() == tvMail.getId()) {
 			Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:help@dailyhotel.co.kr"));
 			
-			intent.putExtra(Intent.EXTRA_SUBJECT, "데일리호텔에 문의합니다");
-			intent.putExtra(Intent.EXTRA_TEXT, "데일리호텔의 안드로이드 어플리케이션에 관한 문의입니다.");
+			intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.mail_text_subject));
+			intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.mail_text_desc));
 			
-			startActivity(Intent.createChooser(intent, "이메일 어플리케이션 선택"));
+			startActivity(Intent.createChooser(intent, getString(R.string.mail_text_dialog_title)));
 		} else if (v.getId() == llLogin.getId()) {
 			if (tvLogin.getText().equals("프로필")) { // 로그인 되어 있는 상태
 				Intent i = new Intent(mHostActivity, ProfileActivity.class);

@@ -36,6 +36,7 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.DrawerLayout.DrawerListener;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
@@ -80,12 +81,12 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 
 	private static final String TAG = "MainActivity";
 
-	private static final String DRAWER_MENU_SECTION_RESERVATION = "예약";
-	private static final String DRAWER_MENU_ENTRY_HOTEL = "오늘의 호텔";
-	private static final String DRAWER_MENU_ENTRY_BOOKING = "예약확인";
-	private static final String DRAWER_MENU_SECTION_ACCOUNT = "계정";
-	private static final String DRAWER_MENU_ENTRY_CREDIT = "적립금";
-	private static final String DRAWER_MENU_ENTRY_SETTING = "설정";
+//	private static final String DRAWER_MENU_SECTION_RESERVATION = "예약";
+//	private static final String DRAWER_MENU_ENTRY_HOTEL = "오늘의 호텔";
+//	private static final String DRAWER_MENU_ENTRY_BOOKING = "예약확인";
+//	private static final String DRAWER_MENU_SECTION_ACCOUNT = "계정";
+//	private static final String DRAWER_MENU_ENTRY_CREDIT = "적립금";
+//	private static final String DRAWER_MENU_ENTRY_SETTING = "설정";
 
 	public static final int INDEX_HOTEL_LIST_FRAGMENT = 0;
 	public static final int INDEX_BOOKING_LIST_FRAGMENT = 1;
@@ -459,7 +460,7 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 			public void run() {
 				replaceFragment(getFragment(indexLastFragment));		
 			}
-		}, 200); // 드로어 레이아웃이 닫히는데 애니메이션이 부하가 큼. 프래그먼트 전환까지 추가한다면 닫힐때 버벅거리는 현상이 발생. 따라서 0.2초 지연하여 자연스러운 애니메이션을 보여줌.
+		}, 300); // 드로어 레이아웃이 닫히는데 애니메이션이 부하가 큼. 프래그먼트 전환까지 추가한다면 닫힐때 버벅거리는 현상이 발생. 따라서 0.3초 지연하여 자연스러운 애니메이션을 보여줌.
 		
 		drawerLayout.closeDrawer(drawerList);
 
@@ -487,26 +488,26 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 		drawerLayout.setDrawerListener(drawerToggle);
 		drawerList = (ListView) findViewById(R.id.left_drawer);
 
-		menuHotelListFragment = new DrawerMenu(DRAWER_MENU_ENTRY_HOTEL,
+		menuHotelListFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_todays_hotel),
 				R.drawable.selector_drawermenu_todayshotel,
 				DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
-		menuBookingListFragment = new DrawerMenu(DRAWER_MENU_ENTRY_BOOKING,
+		menuBookingListFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_chk_reservation),
 				R.drawable.selector_drawermenu_reservation,
 				DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
-		menuCreditFragment = new DrawerMenu(DRAWER_MENU_ENTRY_CREDIT,
+		menuCreditFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_credit),
 				R.drawable.selector_drawermenu_saving,
 				DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
-		menuSettingFragment = new DrawerMenu(DRAWER_MENU_ENTRY_SETTING,
+		menuSettingFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_setting),
 				R.drawable.selector_drawermenu_setting,
 				DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
 
 		mMenuImages = new ArrayList<DrawerMenu>();
 		mMenuImages.add(new DrawerMenu(DrawerMenu.DRAWER_MENU_LIST_TYPE_LOGO));
-		mMenuImages.add(new DrawerMenu(DRAWER_MENU_SECTION_RESERVATION,
+		mMenuImages.add(new DrawerMenu(getString(R.string.drawer_menu_pin_title_resrvation),
 				DrawerMenu.DRAWER_MENU_LIST_TYPE_SECTION));
 		mMenuImages.add(menuHotelListFragment);
 		mMenuImages.add(menuBookingListFragment);
-		mMenuImages.add(new DrawerMenu(DRAWER_MENU_SECTION_ACCOUNT,
+		mMenuImages.add(new DrawerMenu(getString(R.string.drawer_menu_pin_title_account),
 				DrawerMenu.DRAWER_MENU_LIST_TYPE_SECTION));
 		mMenuImages.add(menuCreditFragment);
 		mMenuImages.add(menuSettingFragment);

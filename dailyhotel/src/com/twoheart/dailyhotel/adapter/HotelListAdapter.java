@@ -68,7 +68,6 @@ PinnedSectionListAdapter {
 	public View getView(final int position, View convertView, ViewGroup parent) {
 
 		HotelListViewItem item = getItem(position);
-		android.util.Log.e("instantiate Item / imgCache : ",position+" / "+imgCache.size());
 
 		switch (item.getType()) {
 		case HotelListViewItem.TYPE_SECTION:

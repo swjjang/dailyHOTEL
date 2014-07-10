@@ -79,6 +79,10 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 		tvCheckIn = (TextView) view.findViewById(R.id.tv_booking_tab_checkin);
 		tvCheckOut = (TextView) view.findViewById(R.id.tv_booking_tab_checkout);
 		
+		tvHotelName.setText(mBooking.getHotel_name());
+		tvAddress.setText(mHotelDetail.getHotel().getAddress());
+		tvBedtype.setText(mBooking.getBedType());
+		
 		// Android Marquee bug...
 		tvCustomerName.setSelected(true);
 		tvCustomerPhone.setSelected(true);
@@ -87,10 +91,6 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 		tvBedtype.setSelected(true);
 		tvCheckIn.setSelected(true);
 		tvCheckOut.setSelected(true);
-		
-		tvHotelName.setText(mBooking.getHotel_name());
-		tvAddress.setText(mHotelDetail.getHotel().getAddress());
-		tvBedtype.setText(mBooking.getBedType());
 		
 		lockUI();
 		mQueue.add(new DailyHotelStringRequest(Method.GET,
@@ -115,7 +115,7 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 					ed.commit();
 					
 					unLockUI();
-					showToast("로그인에 실패했습니다", Toast.LENGTH_SHORT, true);
+					showToast(getString(R.string.toast_msg_failed_to_login), Toast.LENGTH_SHORT, true);
 				} else
 					VolleyHttpClient.createCookie();
 				

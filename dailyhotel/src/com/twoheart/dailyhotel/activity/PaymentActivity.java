@@ -67,7 +67,8 @@ public class PaymentActivity extends BaseActivity implements Constants {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setActionBarProgressBar();
-		setActionBar("결제하기");
+//		setActionBar(R.string.actionbar_title_payment_activity);
+		
 		setContentView(R.layout.activity_payment);
 
 		Bundle bundle = getIntent().getExtras();
@@ -95,7 +96,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		webView.setWebViewClient(new mWebViewClient());
 
 		if (mPay == null) {
-			showToast("결제 정보를 가져올 수 없습니다.", Toast.LENGTH_SHORT, false);
+			showToast(getString(R.string.toast_msg_failed_to_get_payment_info), Toast.LENGTH_SHORT, false);
 			finish();
 		}
 
@@ -287,15 +288,25 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		else {
 
 			if ( url.startsWith( "ispmobile" ) ) { // 7.4 ISP 모듈 연동 테스트
-				if( !new PackageState(this).getPackageDownloadInstallState( "kvp.jjy.MispAndroid" ) ) { 
+				if( !new PackageState(this).getPackageDownloadInstallState( PACKAGE_NAME_ISP ) ) { 
 					startActivity( new Intent(
 							Intent.ACTION_VIEW, 
-							Uri.parse("market://details?id=kvp.jjy.MispAndroid320")));
+							Uri.parse(URL_STORE_PAYMENT_ISP)));
 					view.goBack();
 					return true; 
 				} 
-
 			}
+			
+			if ( url.startsWith( "kftc-bankpay" ) ) { // 7.9 이니시스 모듈 연동 테스트
+				if( !new PackageState(this).getPackageDownloadInstallState( PACKAGE_NAME_KFTC ) ) { 
+					startActivity( new Intent(
+							Intent.ACTION_VIEW, 
+							Uri.parse(URL_STORE_PAYMENT_KFTC)));
+					view.goBack();
+					return true; 
+				} 
+			}
+			
 			/*  else if ( url.startsWith( "paypin" ) ) { if(
 			 * !new PackageState( this ).getPackageDownloadInstallState(
 			 * "com.skp.android.paypin" ) ) { if( !url_scheme_intent(
@@ -310,13 +321,13 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			// 실제 구현시 업체 구현 여부에 따라 삭제 처리 하시는것이 좋습니다.
 			if (url.startsWith("mpocket.online.ansimclick")) {
 				if (!new PackageState(this)
-				.getPackageDownloadInstallState("kr.co.samsungcard.mpocket")) {
+				.getPackageDownloadInstallState(PACKAGE_NAME_MPOCKET)) {
 
-					showToast("해당 어플을 설치 후 다시 시도해 주세요.", Toast.LENGTH_LONG, false);
+					showToast(getString(R.string.toast_msg_retry_payment_after_install_app), Toast.LENGTH_LONG, false);
 
 					startActivity(new Intent(
 							Intent.ACTION_VIEW,
-							Uri.parse("market://details?id=kr.co.samsungcard.mpocket")));
+							Uri.parse(URL_STORE_PAYMENT_MPOCKET)));
 
 					return true;
 				}
@@ -376,7 +387,8 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
 			android.util.Log.e("URL",url);
-
+			android.util.Log.e("URL?","");
+			
 			Log.d(ResultRcvActivity.m_strLogTag,
 					"[PayDemoActivity] called__shouldOverrideUrlLoading - url=["
 							+ url + "]");
@@ -474,7 +486,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 
 			dlgBuilder.setTitle("확인");
 			dlgBuilder
-			.setMessage("PayPin 어플리케이션이 설치되어 있지 않습니다. \n설치를 눌러 진행 해 주십시요.\n취소를 누르면 결제가 취소 됩니다.");
+			.setMessage(getString(R.string.dialog_msg_install_paypin));
 			dlgBuilder.setCancelable(false);
 			dlgBuilder.setPositiveButton("설치",
 					new DialogInterface.OnClickListener() {
@@ -503,7 +515,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 				public void onClick(DialogInterface dialog, int which) {
 					dialog.dismiss();
 
-					showToast("결제를 취소하셨습니다", Toast.LENGTH_SHORT, false);
+					showToast(getString(R.string.toast_msg_cancel_payment), Toast.LENGTH_SHORT, false);
 
 				}
 			});
@@ -541,7 +553,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 					PaymentActivity.this);
 			AlertDialog alertDlg;
 
-			dlgBuilder.setMessage("HANA SK 모듈이 설이 되어있지 않습니다.\n설치 하시겠습니까?");
+			dlgBuilder.setMessage(getString(R.string.dialog_msg_install_hana_sk));
 			dlgBuilder.setCancelable(false);
 			dlgBuilder.setPositiveButton("예",
 					new DialogInterface.OnClickListener() {
@@ -763,7 +775,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 
 	@JavascriptInterface
 	public void finishActivity(String p_strFinishMsg) {
-
+		
 		int resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
 
 		if (p_strFinishMsg != null) {
@@ -773,6 +785,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 				resultCode = RESULT_CANCELED;
 			}
 		}
+		
 		Intent payData = new Intent();
 		payData.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
 
@@ -807,7 +820,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE;
 			} else if (msg.equals("INVALID_DATE")) {
 				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_INVALID_DATE;
-			} else if (msg.equals("PAYMENT_CANCEL")) {
+			} else if (msg.equals("PAYMENT_CANCELED")) {
 				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_CANCELED;
 			} else {
 				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;

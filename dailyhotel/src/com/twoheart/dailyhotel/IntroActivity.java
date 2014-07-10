@@ -102,21 +102,20 @@ public class IntroActivity extends BaseActivity implements OnClickListener, OnPa
 		mGuideBackgrounds.add(R.drawable.img_bg_guide3);
 		mGuideBackgrounds.add(R.drawable.img_bg_guide4);
 		
-		mGuideTitles.add("당일 호텔 예약");
-		mGuideTitles.add("엄선된 호텔");
-		mGuideTitles.add("쉽고 빠른 결제");
-		mGuideTitles.add("놀라운 가격");
+		mGuideTitles.add(getString(R.string.guide_title_1));
+		mGuideTitles.add(getString(R.string.guide_title_2));
+		mGuideTitles.add(getString(R.string.guide_title_3));
+		mGuideTitles.add(getString(R.string.guide_title_4));
 		
-		mGuideDesces.add("사전 예약보다 편리하고 저렴하게\n오늘의 호텔을 예약하세요.");
-		mGuideDesces.add("고객 만족도와 할인율을 바탕으로,\n가장 매력적인 호텔만을 제시합니다.");
-		mGuideDesces.add("오전 9시에서 밤 12시까지\n30초만에 예약하고 바로 체크인하세요.");
-		mGuideDesces.add("오늘 남은 객실만을 판매하기에\n가장 저렴할 수 밖에 없습니다.\n\n그럼 오늘의 호텔을 만나볼까요?");
+		mGuideDesces.add(getString(R.string.guide_desc_1));
+		mGuideDesces.add(getString(R.string.guide_desc_2));
+		mGuideDesces.add(getString(R.string.guide_desc_3));
+		mGuideDesces.add(getString(R.string.guide_desc_4));
 		
 		mGuideImages.add(R.drawable.img_ic_guide_logo);
 		mGuideImages.add(R.drawable.img_ic_guide_curation);
 		mGuideImages.add(R.drawable.img_ic_guide_clock);
 		mGuideImages.add(R.drawable.img_ic_guide_surprise);
-		
 
 	}
 

@@ -85,7 +85,7 @@ public class BookingListFragment extends BaseFragment implements Constants,
 	@Override
 	public void onResume() {
 		super.onResume();
-		mHostActivity.setActionBar("예약확인");
+		mHostActivity.setActionBar(R.string.actionbar_title_booking_list_frag);
 
 		lockUI();
 		mQueue.add(new DailyHotelStringRequest(Method.GET,

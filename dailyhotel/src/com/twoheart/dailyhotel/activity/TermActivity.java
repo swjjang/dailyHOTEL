@@ -12,7 +12,7 @@ public class TermActivity extends WebViewActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setActionBar("이용약관");
+		setActionBar(R.string.actionbar_title_term_activity);
 		setContentView(R.layout.activity_term);
 		
 	}

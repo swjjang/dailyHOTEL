@@ -162,6 +162,7 @@ public class BookingActivity extends BaseActivity implements
 
 	public void dialog(String str) {
 		AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		alert.setTitle("결제알림");
 		alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -224,7 +225,7 @@ public class BookingActivity extends BaseActivity implements
 							buyer.getPhone(),
 							buyer.getName() })) {
 						
-						showToast("예약자와 연락처, 이메일을 모두 입력해주십시요.", Toast.LENGTH_LONG, true);
+						showToast(getString(R.string.toast_msg_input_booking_user_infos), Toast.LENGTH_LONG, true);
 						
 						return;
 					}
@@ -343,6 +344,7 @@ public class BookingActivity extends BaseActivity implements
 				
 				AlertDialog.Builder alert = new AlertDialog.Builder(
 						BookingActivity.this);
+				alert.setTitle("결제알림");
 				alert.setPositiveButton("확인",
 						new DialogInterface.OnClickListener() {
 							@Override

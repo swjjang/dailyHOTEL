@@ -2,5 +2,81 @@
 <resources>
     <string name="app_name">데일리호텔</string>
     <string name="app_id">268888829950610</string>
-
+    
+    <!-- IntroActivity Guide Ment -->
+    <string name="guide_title_1">당일 호텔 예약</string>
+    <string name="guide_title_2">엄선된 호텔</string>
+    <string name="guide_title_3">쉽고 빠른 결제</string>
+    <string name="guide_title_4">놀라운 가격</string>
+    
+    <string name="guide_desc_1">사전 예약보다 편리하고 저렴하게\n오늘의 호텔을 예약하세요.</string>
+    <string name="guide_desc_2">고객 만족도와 할인율을 바탕으로,\n가장 매력적인 호텔만을 제시합니다.</string>
+    <string name="guide_desc_3">오전 9시에서 밤 12시까지\n30초만에 예약하고 바로 체크인하세요.</string>
+    <string name="guide_desc_4">오늘 남은 객실만을 판매하기에\n가장 저렴할 수 밖에 없습니다.\n\n그럼 오늘의 호텔을 만나볼까요?</string>
+    
+    <!-- Actionbar Titles -->
+    <string name="actionbar_title_hotel_list_frag">오늘의 호텔</string>
+    <string name="actionbar_title_booking_list_frag">예약확인</string>
+    <string name="actionbar_title_credit_frag">적립금</string>
+    <string name="actionbar_title_setting_frag">설정</string>
+    
+    <string name="actionbar_title_error_frag">dailyHOTEL</string>
+    <string name="actionbar_title_wait_timer_frag">dailyHOTEL</string>
+    
+    <string name="actionbar_title_about_activity">데일리호텔이란?</string>
+    <string name="actionbar_title_booking_tab_activity">예약확인</string>
+    <string name="actionbar_title_faq_activity">자주 묻는 질문</string>
+    <string name="actionbar_title_forgot_pwd_activity">비밀번호 찾기</string>
+    <string name="actionbar_title_login_activity">로그인</string>
+    <string name="actionbar_title_notice_activity">공지사항</string>
+    <string name="actionbar_title_payment_activity">결제하기</string>
+    <string name="actionbar_title_privacy_activity">개인정보취급방침</string>
+    <string name="actionbar_title_profile_activity">프로필</string>
+    <string name="actionbar_title_signup_activity">회원가입</string>
+    <string name="actionbar_title_term_activity">이용약관</string>
+    <string name="actionbar_title_version_activity">버전정보</string>
+    <string name="actionbar_title_zoom_map_activity">지도 확대</string>
+    
+    <!-- Toast Messages -->
+    <string name="toast_msg_chk_network_status">와이파이 또는 데이터 네트워크의 연결 상태를 확인해주세요</string>
+    <string name="toast_msg_input_booking_user_infos">예약자와 연락처, 이메일을 모두 입력해주십시요</string>
+    <string name="toast_msg_input_email_address">이메일 주소를 입력해주세요</string>
+    <string name="toast_msg_wrong_email_address">올바른 이메일 형식을 입력해주세요</string>
+    <string name="toast_msg_please_login">로그인이 필요합니다</string>
+    <string name="toast_msg_failed_to_login">로그인에 실패했습니다</string>
+    <string name="toast_msg_failed_to_get_payment_info">결제 정보를 가져올 수 없습니다.</string>
+    <string name="toast_msg_retry_payment_after_install_app">해당 어플을 설치 후 다시 시도해 주세요.</string>
+    <string name="toast_msg_cancel_payment">결제를 취소하셨습니다</string>
+    <string name="toast_msg_profile_not_changed">변경된 사항이 없습니다.</string>
+    <string name="toast_msg_profile_success_to_change">성공적으로 변경되었습니다.</string>
+    <string name="toast_msg_logouted">로그아웃되었습니다.</string>
+    
+    <string name="toast_msg_please_input_id">아이디를 입력해주세요.</string>
+    <string name="toast_msg_please_input_passwd">비밀번호를 입력해주세요.</string>
+    <string name="toast_msg_please_input_required_infos">필수 입력사항은 모두 입력해주세요.</string>
+    <string name="toast_msg_please_input_password_more_than_4chars">필수 입력사항은 모두 입력해주세요.</string>
+    <string name="toast_msg_success_to_signup">회원가입이 완료되었습니다</string>
+    
+    
+    <!-- Dialog Messages -->
+    <string name="dialog_msg_sent_email">이메일이 발송되었습니다.</string>
+    <string name="dialog_msg_install_paypin">PayPin 어플리케이션이 설치되어 있지 않습니다. \n설치를 눌러 진행 해 주십시요.\n취소를 누르면 결제가 취소 됩니다.</string>
+    <string name="dialog_msg_install_hana_sk">HANA SK 모듈이 설치 되어있지 않습니다.\n설치 하시겠습니까?</string>
+    <string name="dialog_msg_chk_wanna_login">로그아웃하시겠습니까?</string>
+    
+    <!-- Main Drawer Menu Titles -->
+    <string name="drawer_menu_pin_title_resrvation">예약</string>
+    <string name="drawer_menu_item_title_todays_hotel">오늘의 호텔</string>
+    <string name="drawer_menu_item_title_chk_reservation">예약확인</string>
+    <string name="drawer_menu_pin_title_account">계정</string>
+    <string name="drawer_menu_item_title_credit">적립금</string>
+    <string name="drawer_menu_item_title_setting">설정</string>
+    
+    <!-- Mail Text -->
+    <string name="mail_text_dialog_title">이메일 어플리케이션 선택</string>
+    <string name="mail_text_subject">데일리호텔에 문의합니다</string>
+    <string name="mail_text_desc">데일리호텔의 안드로이드 어플리케이션에 관한 문의입니다.</string>
+    
+    <!-- Prefix Text -->
+    <string name="prefix_wait_timer_frag_todays_hotel_open">시 오늘의 호텔이 공개됩니다.</string>
 </resources>

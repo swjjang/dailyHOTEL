@@ -32,7 +32,7 @@ public class ErrorFragment extends BaseFragment implements OnClickListener {
 			Bundle savedInstanceState) {
 
 		View view = inflater.inflate(R.layout.fragment_error, container, false);
-		mHostActivity.setActionBar("dailyHOTEL");
+		mHostActivity.setActionBar(R.string.actionbar_title_error_frag);
 
 		btnRetry = (Button) view.findViewById(R.id.btn_error);
 		btnRetry.setOnClickListener(this);
@@ -46,7 +46,7 @@ public class ErrorFragment extends BaseFragment implements OnClickListener {
 
 			// network 연결이 안되있으면
 			if (!VolleyHttpClient.isAvailableNetwork()) {
-				showToast("와이파이 또는 데이터 네트워크의 연결 상태를 확인해주세요", Toast.LENGTH_SHORT, true);
+				showToast(getString(R.string.toast_msg_chk_network_status), Toast.LENGTH_SHORT, true);
 				return;
 			} else {
 				int index = ((MainActivity) mHostActivity).indexLastFragment;

@@ -183,7 +183,7 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 
 	private void loadLoginProcess() {
 		android.util.Log.e(TAG,"Login Activity Load");
-		showToast("로그인이 필요합니다", Toast.LENGTH_LONG, false);
+		showToast(getString(R.string.toast_msg_please_login), Toast.LENGTH_LONG, false);
 		Intent i = new Intent(this, LoginActivity.class);
 		i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP); // 7.2 S2에서 예약버튼 난타할 경우 여러개의 엑티비티가 생성되는것을 막음
 		startActivityForResult(i,

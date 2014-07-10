@@ -34,7 +34,7 @@ public class ForgotPwdActivity extends BaseActivity implements Constants,
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setActionBar("비밀번호 찾기");
+		setActionBar(R.string.actionbar_title_forgot_pwd_activity);
 		setContentView(R.layout.activity_forgot_pwd);
 
 		etForgot = (EditText) findViewById(R.id.et_forgot_pwd);
@@ -66,12 +66,12 @@ public class ForgotPwdActivity extends BaseActivity implements Constants,
 			String strEmail = etForgot.getText().toString();
 
 			if (strEmail.equals("")) {
-				showToast("이메일 주소를 입력해주세요", Toast.LENGTH_SHORT, true);
+				showToast(getString(R.string.toast_msg_input_email_address), Toast.LENGTH_SHORT, true);
 				return;
 			} 
 			
 			else if (!isValidEmail(strEmail)) {
-				showToast("올바른 이메일 형식을 입력해주세요.", Toast.LENGTH_SHORT, true);
+				showToast(getString(R.string.toast_msg_wrong_email_address), Toast.LENGTH_SHORT, true);
 				return;
 			}
 
@@ -104,6 +104,7 @@ public class ForgotPwdActivity extends BaseActivity implements Constants,
 				unLockUI();
 				AlertDialog.Builder alert = new AlertDialog.Builder(
 						ForgotPwdActivity.this);
+				
 				alert.setPositiveButton("확인",
 						new DialogInterface.OnClickListener() {
 							@Override
@@ -116,7 +117,7 @@ public class ForgotPwdActivity extends BaseActivity implements Constants,
 				// Jason | Clear input form
 				etForgot.setText("");
 
-				alert.setMessage("이메일이 발송되었습니다.");
+				alert.setMessage(getString(R.string.dialog_msg_sent_email));
 				alert.show();
 			}
 		}

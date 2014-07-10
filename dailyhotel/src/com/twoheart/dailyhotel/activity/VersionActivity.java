@@ -25,7 +25,7 @@ public class VersionActivity extends BaseActivity implements OnClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setActionBar("버전정보");
+		setActionBar(R.string.actionbar_title_version_activity);
 		setContentView(R.layout.activity_version);
 
 		tvCurrentVersion = (TextView) findViewById(R.id.tv_version_cur);

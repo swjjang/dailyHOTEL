@@ -78,30 +78,37 @@
                     android:layout_marginTop="10dp"
                     android:orientation="horizontal" >
 
-                    <ImageView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:adjustViewBounds="true"
-                        android:src="@drawable/img_ic_reservation_location" />
+                        android:layout_weight="0.3"
+                        android:orientation="horizontal" >
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:singleLine="true"
-                        android:text="위치"
-                        android:textColor="@drawable/selector_textview_textcolor"
-                        android:textSize="15dp" />
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:adjustViewBounds="true"
+                            android:src="@drawable/img_ic_reservation_location" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:singleLine="true"
+                            android:text="위치"
+                            android:textColor="@drawable/selector_textview_textcolor"
+                            android:textSize="15dp" />
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/tv_booking_tab_address"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.7"
                         android:ellipsize="marquee"
                         android:freezesText="true"
-                        android:gravity="right|center_vertical"
+                        android:gravity="left|center_vertical"
                         android:marqueeRepeatLimit="marquee_forever"
                         android:scrollHorizontally="true"
                         android:singleLine="true"
@@ -126,7 +133,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:singleLine="true"
                         android:text="베드타입"
                         android:textColor="@drawable/selector_textview_textcolor"
                         android:textSize="15dp" />
@@ -135,7 +141,7 @@
                         android:id="@+id/tv_booking_tab_bedtype"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.7"
+                        android:layout_weight="0.6"
                         android:ellipsize="marquee"
                         android:freezesText="true"
                         android:gravity="right|center_vertical"

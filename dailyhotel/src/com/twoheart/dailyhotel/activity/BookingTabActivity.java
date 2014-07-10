@@ -40,7 +40,7 @@ public class BookingTabActivity extends TabActivity implements DailyHotelJsonRes
 					.getParcelable(NAME_INTENT_EXTRA_DATA_BOOKING);
 		}
 		
-		setActionBar("예약확인");
+		setActionBar(R.string.actionbar_title_booking_tab_activity);
 		setContentView(R.layout.activity_booking_tab);
 
 		mViewPager = (HotelViewPager) findViewById(R.id.booking_pager);

@@ -12,7 +12,7 @@ public class PrivacyActivity extends WebViewActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setActionBar("개인정보취급방침");
+		setActionBar(R.string.actionbar_title_privacy_activity);
 		setContentView(R.layout.activity_term);
 		
 	}

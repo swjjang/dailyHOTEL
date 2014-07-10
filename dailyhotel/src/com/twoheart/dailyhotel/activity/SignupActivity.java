@@ -57,7 +57,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setActionBar("회원가입");
+		setActionBar(R.string.actionbar_title_signup_activity);
 		setContentView(R.layout.activity_signup);
 		DailyHotel.getGaTracker().set(Fields.SCREEN_NAME, TAG);
 
@@ -132,18 +132,18 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 
 			// 필수 입력 check
 			if (!checkInput()) {
-				showToast("필수 입력사항은 모두 입력해주세요", Toast.LENGTH_SHORT, true);
+				showToast(getString(R.string.toast_msg_please_input_required_infos), Toast.LENGTH_SHORT, true);
 				return;
 			}
 
 			// email check
 			if (!isValidEmail(etEmail.getText().toString())) {
-				showToast("올바른 이메일 주소를 입력해주세요", Toast.LENGTH_SHORT, true);
+				showToast(getString(R.string.toast_msg_wrong_email_address), Toast.LENGTH_SHORT, true);
 				return;
 			}
 
 			if (etPwd.length() < 4) {
-				showToast("비밀번호를 4자 이상 입력해주세요", Toast.LENGTH_SHORT, true);
+				showToast(getString(R.string.toast_msg_please_input_password_more_than_4chars), Toast.LENGTH_SHORT, true);
 				return;
 			}
 			lockUI();
@@ -241,7 +241,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 				if (response.getBoolean("login")) {
 					VolleyHttpClient.createCookie();
 					unLockUI();
-					showToast("회원가입이 완료되었습니다", Toast.LENGTH_LONG, false);
+					showToast(getString(R.string.toast_msg_success_to_signup), Toast.LENGTH_LONG, false);
 					
 					storeLoginInfo();
 					finish();

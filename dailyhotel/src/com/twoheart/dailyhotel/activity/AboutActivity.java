@@ -12,7 +12,7 @@ public class AboutActivity extends WebViewActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setActionBar("데일리호텔이란?");
+		setActionBar(R.string.actionbar_title_about_activity);
 		setContentView(R.layout.activity_about);
 		
 	}

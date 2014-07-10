@@ -80,7 +80,7 @@ public class LoginActivity extends BaseActivity implements Constants,
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setActionBar("로그인");
+		setActionBar(R.string.actionbar_title_login_activity);
 		setContentView(R.layout.activity_login);
 
 		etId = (EditText) findViewById(R.id.et_login_id);
@@ -219,7 +219,7 @@ public class LoginActivity extends BaseActivity implements Constants,
 
 		} else if (v.getId() == facebookLogin.getId()) {
 			lockUI();
-			fbSession = new Session.Builder(this).setApplicationId(getResources().getString(R.string.app_id))
+			fbSession = new Session.Builder(this).setApplicationId(getString(R.string.app_id))
 					.build();
 
 			Session.OpenRequest or = new Session.OpenRequest(this);
@@ -255,12 +255,12 @@ public class LoginActivity extends BaseActivity implements Constants,
 
 	public boolean isBlankFields() {
 		if (etId.getText().toString().trim().length() == 0) {
-			showToast("아이디를 입력해주세요", Toast.LENGTH_SHORT, true);
+			showToast(getString(R.string.toast_msg_please_input_id), Toast.LENGTH_SHORT, true);
 			return false;
 		}
 
 		if (etPwd.getText().toString().trim().length() == 0) {
-			showToast("비밀번호를 입력해주세요", Toast.LENGTH_SHORT, true);
+			showToast(getString(R.string.toast_msg_please_input_passwd), Toast.LENGTH_SHORT, true);
 			return false;
 		}
 

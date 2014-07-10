@@ -111,7 +111,7 @@ public class CreditFragment extends BaseFragment implements Constants,
 	public void onResume() {
 		super.onResume();
 		// ActionBar Setting
-		mHostActivity.setActionBar("Àû¸³±Ý");
+		mHostActivity.setActionBar(R.string.actionbar_title_credit_frag);
 
 		lockUI();
 		mQueue.add(new DailyHotelStringRequest(Method.GET,

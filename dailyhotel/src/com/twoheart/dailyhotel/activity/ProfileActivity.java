@@ -49,7 +49,7 @@ DailyHotelJsonResponseListener, OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setActionBar("프로필");
+		setActionBar(R.string.actionbar_title_profile_activity);
 		setContentView(R.layout.activity_profile);
 
 		mAq = new AQuery(this);
@@ -179,7 +179,7 @@ DailyHotelJsonResponseListener, OnClickListener {
 						.toString();
 
 				if (name.equals(prevName) && phone.equals(prevPh)) {
-					showToast("변경된 사항이 없습니다.", Toast.LENGTH_LONG, false);
+					showToast(getString(R.string.toast_msg_profile_not_changed), Toast.LENGTH_LONG, false);
 				} else {
 					Map<String, String> updateParams = new HashMap<String, String>();
 					updateParams.put("name", mAq.id(R.id.et_profile_name).getText()
@@ -199,7 +199,7 @@ DailyHotelJsonResponseListener, OnClickListener {
 		} else if (v.getId() == R.id.btn_profile_logout) {
 			AlertDialog.Builder alert_confirm = new AlertDialog.Builder(this);
 			alert_confirm
-			.setMessage("로그아웃하시겠습니까?")
+			.setMessage(getString(R.string.dialog_msg_chk_wanna_login))
 			.setCancelable(false)
 			.setPositiveButton("로그아웃",
 					new DialogInterface.OnClickListener() {
@@ -233,7 +233,7 @@ DailyHotelJsonResponseListener, OnClickListener {
 							Session.setActiveSession(null);
 						}
 
-					showToast("로그아웃되었습니다", Toast.LENGTH_SHORT,
+					showToast(getString(R.string.toast_msg_logouted), Toast.LENGTH_SHORT,
 							true);
 					finish();
 
@@ -297,7 +297,7 @@ DailyHotelJsonResponseListener, OnClickListener {
 
 				if (result.equals("true")) {
 					unLockUI();
-					showToast("성공적으로 변경되었습니다", Toast.LENGTH_SHORT, true);
+					showToast(getString(R.string.toast_msg_profile_success_to_change), Toast.LENGTH_SHORT, true);
 					updateTextField();
 				} else {
 					unLockUI();

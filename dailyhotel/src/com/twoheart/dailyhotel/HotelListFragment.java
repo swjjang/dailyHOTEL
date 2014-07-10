@@ -103,7 +103,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 				.findViewById(R.id.listview_hotel_list);
 		mPullToRefreshLayout = (PullToRefreshLayout) view
 				.findViewById(R.id.ptr_layout);
-		mHostActivity.setActionBar("오늘의 호텔");
+		mHostActivity.setActionBar(R.string.actionbar_title_hotel_list_frag);
 		
 //		mHotelListView.setEmptyView(view.findViewById(R.id.tv_empty_view));
 		
@@ -308,8 +308,6 @@ public class HotelListFragment extends BaseFragment implements Constants,
 				mDailyHotelSaleTime.setOpenTime(open);
 				mDailyHotelSaleTime.setCloseTime(close);
 				
-//				mDailyHotelSaleTime.setOpenTime("09:00:00");
-//				mDailyHotelSaleTime.setCloseTime("02:00:00");
 
 				if (!mDailyHotelSaleTime.isSaleTime()) {
 					((MainActivity) mHostActivity).replaceFragment(WaitTimerFragment.newInstance(
@@ -485,14 +483,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 				}
 				
 				mHostActivity.actionBar.setDisplayShowTitleEnabled(false);
-				
-				
-//				//test part
-//				for (int i=0;i<50;i++) {
-//					mRegionList.add("test"+i);
-//				}
-				
-				
+				// 호텔 프래그먼트 일때 액션바에 네비게이션 리스트 설치.
 				mHostActivity.actionBar
 						.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 				RegionListAdapter regionListAdapter = new RegionListAdapter(
