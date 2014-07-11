@@ -99,10 +99,7 @@ public class WebViewActivity extends BaseActivity implements
 		public void onReceivedError(WebView view, int errorCode,
 				String description, String failingUrl) {
 			super.onReceivedError(view, errorCode, description, failingUrl);
-			Toast.makeText(WebViewActivity.this,
-					"네트워크 상태가 원활하지 않습니다. 잠시 후 다시 시도해 주세요.", Toast.LENGTH_LONG)
-					.show();
-
+			showToast(getString(R.string.toast_msg_network_status_bad), Toast.LENGTH_LONG, false);
 			finish();
 
 		}

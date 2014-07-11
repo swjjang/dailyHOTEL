@@ -25,9 +25,12 @@ import kr.co.kcp.util.PackageState;
 
 import org.apache.http.util.EncodingUtils;
 
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningAppProcessInfo;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -62,6 +65,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 	private final Handler handler = new Handler();
 
 	private Pay mPay;
+	private boolean isModuleLoaded;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +96,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		// 기능
 		// 추가
 		webView.addJavascriptInterface(new JavaScriptExtention(), "android");
+
 		webView.setWebChromeClient(new mWebChromeClient());
 		webView.setWebViewClient(new mWebViewClient());
 
@@ -344,18 +349,43 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			// Toast.makeText(this, "해당 어플을 설치해 주세요.",
 			// Toast.LENGTH_LONG).show();
 			// }
-
+			
 			Uri uri = Uri.parse(url);
 			Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 
 			try {
-				startActivity(intent);
+				int requestCode = 0;
+				if (url.startsWith("kftc-bankpay")) {
+					requestCode = CODE_REQUEST_KFTC_BANKPAY;
+				} else if (url.startsWith("ispmobile")) {
+					requestCode = CODE_REQUEST_ISPMOBILE;
+				}
+				
+				startActivityForResult(intent, requestCode);
+				isModuleLoaded = true;
 			} catch (ActivityNotFoundException e) {
 				return true;
 			}
 		}
 
 		return true;
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode,
+			Intent intent) {
+		super.onActivityResult(requestCode, resultCode, intent);
+		
+		String scriptForSkip = "javascript:";
+		if (requestCode == CODE_REQUEST_ISPMOBILE) {
+			scriptForSkip+="submitIspAuthInfo('RUNSCHEME');"; // ISP 확인 버튼 콜
+			
+		} else if (requestCode == CODE_REQUEST_KFTC_BANKPAY) {
+			scriptForSkip+="returnUrltoMall();"; //KTFC 확인 버튼 콜
+		}
+		android.util.Log.e("QWE",scriptForSkip);
+		
+		webView.loadUrl(scriptForSkip);
 	}
 
 	private class mWebChromeClient extends WebChromeClient {
@@ -384,6 +414,19 @@ public class PaymentActivity extends BaseActivity implements Constants {
 
 	private class mWebViewClient extends WebViewClient {
 
+//		@Override
+//		public void onLoadResource(WebView view, String url) {
+//			// 자바스크립트를 콜 하여 페이지를 수정 가능. html 때려박는건 안되고 자바스크립트는 가능.
+//			
+//			
+//		}
+		
+		
+		
+		public mWebViewClient() {
+			// TODO Auto-generated constructor stub
+		}
+		
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
 			android.util.Log.e("URL",url);
@@ -442,6 +485,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			CookieSyncManager.getInstance().sync();
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 				setSupportProgressBarIndeterminateVisibility(false);
+			view.loadUrl("javascript:window.android.showHTML('</head>'+document.getElementsByTagName('html')[0].innerHTML+'</head>')");
 		}
 
 	}
@@ -615,7 +659,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			});
 		}
 	}
-
+	
 	@Override
 	protected void onRestart() {
 		super.onRestart();
@@ -804,10 +848,17 @@ public class PaymentActivity extends BaseActivity implements Constants {
 
 		JavaScriptExtention() {
 		}
+		@JavascriptInterface
+		public void showHTML(String html) {
+			for(int i=0;i<html.length()/100;i++) { 
+//				android.util.Log.e("HTML",html.substring(i*100,(i+1)*100));
+			}
+		}
+		
 
 		@JavascriptInterface
 		public void feed(final String msg) {
-
+			android.util.Log.e("FEED",msg);
 			int resultCode = 0;
 
 			if (msg.equals("SUCCESS")) {

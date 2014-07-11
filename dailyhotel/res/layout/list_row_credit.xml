@@ -7,7 +7,7 @@
 
     <TextView
         android:id="@+id/list_row_credit_bonus"
-        android:layout_weight="0.4"
+        android:layout_weight="0.25"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:gravity="center_vertical|center"
@@ -21,9 +21,12 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="0.6"
+        android:layout_weight="0.75"
         android:orientation="vertical"
-        android:padding="3dp"
+        android:paddingTop="5dp"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
+        android:paddingBottom="3dp"
         android:weightSum="1" >
 
         <TextView
@@ -40,7 +43,10 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.5"
-            android:padding="5dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="5dp"
+            android:layout_marginTop="-2dp"
             android:textColor="@color/textView_textColor_sub"
             android:textSize="12dp" />
     </LinearLayout>

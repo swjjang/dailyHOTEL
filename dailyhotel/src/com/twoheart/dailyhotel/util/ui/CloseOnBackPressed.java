@@ -16,6 +16,7 @@ package com.twoheart.dailyhotel.util.ui;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.MainActivity;
+import com.twoheart.dailyhotel.R;
 
 public class CloseOnBackPressed {
 	
@@ -42,7 +43,7 @@ public class CloseOnBackPressed {
 	}
 	
 	private void showGuide() {
-		mActivity.showToast("\'뒤로\' 버튼을 한 번 더 누르시면 앱이 종료됩니다", Toast.LENGTH_SHORT, true);
+		mActivity.showToast(mActivity.getString(R.string.toast_msg_backpressed), Toast.LENGTH_SHORT, true);
 		
 	}
 

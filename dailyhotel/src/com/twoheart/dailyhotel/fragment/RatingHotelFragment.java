@@ -226,7 +226,7 @@ public class RatingHotelFragment extends DialogFragment implements
 			} catch (Exception e) {
 				onError(e);
 			} finally {
-				showToast("좋은 의견 감사합니다", Toast.LENGTH_LONG, true);
+				showToast(getString(R.string.toast_msg_thanks_to_your_opinion), Toast.LENGTH_LONG, true);
 				dismiss();
 			}
 		}

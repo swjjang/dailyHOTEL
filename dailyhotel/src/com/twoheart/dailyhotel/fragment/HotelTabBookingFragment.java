@@ -77,8 +77,11 @@ OnTouchListener {
 		tvBedType.setText(mHotelDetail.getHotel().getBedType());
 		tvAddress.setText(mHotelDetail.getHotel().getAddress());
 		tvAddress.setSelected(true);
-		tvDiscount.setText(mHotelDetail.getHotel().getDiscount() + "¿ø");
-		tvPrice.setText(mHotelDetail.getHotel().getPrice() + "¿ø");
+		
+		String currency = getString(R.string.currency);
+		
+		tvDiscount.setText(mHotelDetail.getHotel().getDiscount() + currency);
+		tvPrice.setText(mHotelDetail.getHotel().getPrice() + currency);
 		tvPrice.setPaintFlags(tvPrice.getPaintFlags()
 				| Paint.STRIKE_THRU_TEXT_FLAG);
 

@@ -323,6 +323,8 @@ public class BookingActivity extends BaseActivity implements
 			Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
 
+		Log.d("ASDF", Integer.toString(resultCode));
+
 		if (requestCode == CODE_REQUEST_ACTIVITY_PAYMENT) {
 			Log.d(TAG, Integer.toString(resultCode));
 

@@ -66,7 +66,7 @@ public class VersionActivity extends BaseActivity implements OnClickListener {
 //					 marketLaunch.setData(Uri.parse(URL_STORE_T_DAILYHOTEL));
 					startActivity(marketLaunch);
 				} else {
-					showToast("이미 최신버전입니다", Toast.LENGTH_SHORT, true);
+					showToast(getString(R.string.toast_msg_already_latest_version), Toast.LENGTH_SHORT, true);
 				}
 
 			} catch (Exception e) {

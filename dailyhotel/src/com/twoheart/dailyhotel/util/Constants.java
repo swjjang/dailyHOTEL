@@ -140,6 +140,9 @@ public interface Constants {
 	public static final int CODE_REQUEST_ACTIVITY_SPLASH = 5;
 	public static final int CODE_REQEUST_ACTIVITY_SIGNUP = 6;
 	public static final int CODE_REQUEST_ACTIVITY_BOOKING = 7;
+
+	public static final int CODE_REQUEST_ISPMOBILE = 8;
+	public static final int CODE_REQUEST_KFTC_BANKPAY = 9;
 	
 	// Android Activity의 Result Code들이다.
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_FAIL = 100;
