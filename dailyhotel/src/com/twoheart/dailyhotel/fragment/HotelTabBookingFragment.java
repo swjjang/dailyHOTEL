@@ -23,7 +23,7 @@ public class HotelTabBookingFragment extends BaseFragment implements
 OnTouchListener {
 
 	private static final String TAG = "HotelTabBookingFragment";
-	private static final int DURATION_HOTEL_IMAGE_SHOW = 2000;
+	private static final int DURATION_HOTEL_IMAGE_SHOW = 4000;
 	private static final String KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL = "hotel_detail";
 
 	private HotelDetail mHotelDetail;
@@ -117,6 +117,7 @@ OnTouchListener {
 		super.onResume();
 		tvDiscount.setTypeface(DailyHotel.getBoldTypeface());
 		if (mHandler != null) { 
+			mHandler.removeMessages(0);
 			mHandler.sendEmptyMessageDelayed(0, DURATION_HOTEL_IMAGE_SHOW);
 		}
 	}
@@ -149,8 +150,9 @@ OnTouchListener {
 				break;
 
 			case MotionEvent.ACTION_UP:
+				mHandler.removeMessages(0);
 				mHandler.sendEmptyMessageDelayed(0,
-						DURATION_HOTEL_IMAGE_SHOW * 2);
+						DURATION_HOTEL_IMAGE_SHOW);
 			default:
 				break;
 			}

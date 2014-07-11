@@ -16,6 +16,7 @@ package com.twoheart.dailyhotel;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
@@ -25,6 +26,7 @@ import com.androidquery.callback.BitmapAjaxCallback;
 import com.google.analytics.tracking.android.ExceptionReporter;
 import com.google.analytics.tracking.android.GAServiceManager;
 import com.google.analytics.tracking.android.GoogleAnalytics;
+import com.google.analytics.tracking.android.MapBuilder;
 import com.google.analytics.tracking.android.Logger.LogLevel;
 import com.google.analytics.tracking.android.Tracker;
 import com.twoheart.dailyhotel.util.VolleyImageLoader;
@@ -149,8 +151,9 @@ public class DailyHotel extends Application {
 	}
 	
 	@Override
-    public void onLowMemory(){
+    public void onLowMemory() {
 		super.onLowMemory();
         BitmapAjaxCallback.clearCache();
     }
+	
 }

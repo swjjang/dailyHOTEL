@@ -180,6 +180,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 		mHotelListView.setShadowVisible(false);
 		
 		DailyHotel.getGaTracker().set(Fields.SCREEN_NAME, TAG);
+//		DailyHotel.getGaTracker().
 
 		return view;
 	}
