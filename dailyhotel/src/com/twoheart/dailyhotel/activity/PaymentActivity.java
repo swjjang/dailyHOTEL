@@ -49,6 +49,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Pay;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Log;
+import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 public class PaymentActivity extends BaseActivity implements Constants {
@@ -304,6 +305,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			
 			if ( url.startsWith( "kftc-bankpay" ) ) { // 7.9 이니시스 모듈 연동 테스트
 				if( !new PackageState(this).getPackageDownloadInstallState( PACKAGE_NAME_KFTC ) ) { 
+					android.util.Log.e("ass","!!");
 					startActivity( new Intent(
 							Intent.ACTION_VIEW, 
 							Uri.parse(URL_STORE_PAYMENT_KFTC)));
@@ -467,6 +469,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		public void onReceivedError(WebView view, int errorCode,
 				String description, String failingUrl) {
 			super.onReceivedError(view, errorCode, description, failingUrl);
+			
 			webView.loadUrl("about:blank");
 			setResult(CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR);
 			finish();

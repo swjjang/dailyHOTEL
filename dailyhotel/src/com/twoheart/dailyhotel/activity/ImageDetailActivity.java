@@ -34,6 +34,7 @@ public class ImageDetailActivity extends BaseActivity implements Constants {
 		}
 
 		mPager = (ViewPager) findViewById(R.id.imagedetail_pager);
+		mPager.setOffscreenPageLimit(8);
 		mIndicator = (LoopCirclePageIndicator) findViewById(R.id.imagedetail_indicator);
 		
 		mAdapter = new HotelImageDetailFragmentPagerAdapter(getSupportFragmentManager(), mHotelDetail);
