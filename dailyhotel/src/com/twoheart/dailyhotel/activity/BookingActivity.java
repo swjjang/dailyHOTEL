@@ -359,6 +359,7 @@ public class BookingActivity extends BaseActivity implements
 						});
 				alert.setMessage("결제가 정상적으로 이루어졌습니다");
 				alert.show();
+				
 
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_SOLD_OUT:
