@@ -327,7 +327,7 @@ public class LoginActivity extends BaseActivity implements Constants,
 					// if (obj.length() > 1)
 					// etPwd.setText(obj.getString("msg"));
 					
-					showToast("로그인되었습니다", Toast.LENGTH_SHORT, true);
+					showToast(getString(R.string.toast_msg_logoined), Toast.LENGTH_SHORT, true);
 					storeLoginInfo();
 
 					setResult(RESULT_OK);

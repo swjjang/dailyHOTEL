@@ -153,7 +153,7 @@ public class CreditFragment extends BaseFragment implements Constants,
 
 		// check, intent is available.
 		if (!kakaoLink.isAvailableIntent()) {
-			alert("카카오톡이 설치되어 있지 않습니다.");
+			alert(getString(R.string.dialog_msg_not_installed_kakaotalk));
 			return;
 		}
 
@@ -168,13 +168,12 @@ public class CreditFragment extends BaseFragment implements Constants,
 		 */
 		kakaoLink.openKakaoLink(
 				mHostActivity,
-				"http://dailyhotel.kr",
-				"좋은 어플 추천해 드려요~\n" + "오늘 남은 객실만 최대 70% 할인하는 데일리호텔이에요."
-						+ "추천인코드 : " + mRecommendCode + "을 입력하면 5,000원 바로 할인!",
+				getString(R.string.homepage),
+				getString(R.string.kakaolink_msg_prefix) + mRecommendCode + getString(R.string.kakaolink_msg_suffix),
 				mHostActivity.getPackageName(),
 				mHostActivity.getPackageManager().getPackageInfo(
 						mHostActivity.getPackageName(), 0).versionName,
-				"데일리호텔", "UTF-8");
+				getString(R.string.app_name), "UTF-8");
 	}
 
 	/**
@@ -231,8 +230,7 @@ public class CreditFragment extends BaseFragment implements Constants,
 		kakaoLink.openKakaoAppLink(
 				mHostActivity,
 				"http://link.kakao.com/?test-android-app",
-				"좋은 어플 추천해 드려요~\n" + "오늘 남은 객실만 최대 70% 할인하는 데일리호텔이에요.\n"
-						+ "추천인코드 : " + mRecommendCode + "을 입력하면 5,000원 바로 할인!",
+				getString(R.string.kakaolink_msg_prefix) + mRecommendCode + getString(R.string.kakaolink_msg_suffix),
 				mHostActivity.getPackageName(),
 				mHostActivity.getPackageManager().getPackageInfo(
 						mHostActivity.getPackageName(), 0).versionName,

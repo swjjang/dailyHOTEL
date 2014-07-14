@@ -63,12 +63,13 @@ public class GaManager extends Application implements Constants{
 						GA_COMMERCE_DEFAULT_CURRENCY_CODE
 						).build()
 				);
+		
 		tracker.send(MapBuilder.
 				createEvent(
-						"Purchase", 
-						"PurchaseComplete", 
-						"Purchase", 
-						1L).build());
+						GA_PURCHASE_EVENT_CATEGORY, 
+						GA_PURCHASE_EVENT_ACTION, 
+						GA_PURCHASE_EVENT_LABEL, 
+						GA_PURCHASE_EVENT_VALUE).build());
 	}
 
 	/**
@@ -77,9 +78,9 @@ public class GaManager extends Application implements Constants{
 	public void signupComplete() {
 		tracker.send(MapBuilder.
 				createEvent(
-						"Signup", 
-						"SignupComplete", 
-						"SignupComplete", 
-						1L).build());
+						GA_SIGNUP_EVENT_CATEGORY, 
+						GA_SIGNUP_EVENT_ACTION, 
+						GA_SIGNUP_EVENT_LABEL, 
+						GA_SIGNUP_EVENT_VALUE).build());
 	}
 }

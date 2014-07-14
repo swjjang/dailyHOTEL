@@ -49,7 +49,7 @@ public class CreditListAdapter extends ArrayAdapter<Credit>{
 			
 			bonus.setText("￦" + strBonus);
 			content.setText(element.getContent());
-			expires.setText("유효기간" + ", " + element.getExpires() + "");
+			expires.setText(mContext.getString(R.string.prefix_expire_time) + ", " + element.getExpires() + "");
 		}
 		
 		GlobalFont.apply((ViewGroup) v); 

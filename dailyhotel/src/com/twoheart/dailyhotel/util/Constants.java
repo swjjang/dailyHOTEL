@@ -171,7 +171,8 @@ public interface Constants {
 
 	// Key used to store a user's tracking preferences in SharedPreferences.
 	public static final String TRACKING_PREF_KEY = "trackingPreference";
-
+	
+	// GA E-Commerce Constants
 	public static final String GA_COMMERCE_DEFAULT_AFFILIATION = "DailyHOTEL";
 	public static final Double GA_COMMERCE_DEFAULT_TAX = 0d;
 	public static final Double GA_COMMERCE_DEFAULT_SHIPPING = 0d;
@@ -179,6 +180,15 @@ public interface Constants {
 	public static final String GA_COMMERCE_DEFAULT_SKU = "1";
 	public static final Long GA_COMMERCE_DEFAULT_QUANTITY = 1L;
 
-
+	// GA Event Constants
+	public static final String GA_SIGNUP_EVENT_CATEGORY = "Signup";
+	public static final String GA_SIGNUP_EVENT_ACTION = "SignupComplete";
+	public static final String GA_SIGNUP_EVENT_LABEL = "SignupComplete";
+	public static final Long GA_SIGNUP_EVENT_VALUE = 1L;
+	
+	public static final String GA_PURCHASE_EVENT_CATEGORY = "Purchase";
+	public static final String GA_PURCHASE_EVENT_ACTION = "PurchaseComplete";
+	public static final String GA_PURCHASE_EVENT_LABEL = "PurchaseComplete";
+	public static final Long GA_PURCHASE_EVENT_VALUE = 1L;
 
 }

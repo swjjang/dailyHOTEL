@@ -7,6 +7,7 @@ import android.view.Gravity;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Util;
 
 public class HotelGradeView extends FrameLayout {
@@ -51,44 +52,62 @@ public class HotelGradeView extends FrameLayout {
 		
 		if (mHotelGradeCode.equals("biz") | mHotelGradeCode.equals("hostel") | mHotelGradeCode.equals("grade1") | 
 				mHotelGradeCode.equals("grade2") | mHotelGradeCode.equals("grade3")) {
-			setHotelGradeColor("#055870");
+			setHotelGradeColor(getContext().
+					getResources().getColor(R.color.grade_hotel));
 			
 			if (mHotelGradeCode.equals("biz"))
-				setHotelGradeName("비지니스");
+				setHotelGradeName(getContext().
+						getString(R.string.grade_biz));
 			else if (mHotelGradeCode.equals("hostel"))
-				setHotelGradeName("호스텔");
+				setHotelGradeName(getContext().
+						getString(R.string.grade_hostel));
 			else if (mHotelGradeCode.equals("grade1"))
-				setHotelGradeName("1급");
+				setHotelGradeName(getContext().
+						getString(R.string.grade_1));
 			else if (mHotelGradeCode.equals("grade2"))
-				setHotelGradeName("2급");
+				setHotelGradeName(getContext().
+						getString(R.string.grade_2));
 			else if (mHotelGradeCode.equals("grade3"))
-				setHotelGradeName("3급");
+				setHotelGradeName(getContext().
+						getString(R.string.grade_3));
 
 		} else if (mHotelGradeCode.equals("boutique")) {
-			setHotelGradeColor("#9f2d58");
-			setHotelGradeName("부띠끄");
+			setHotelGradeColor(getContext().
+					getResources().getColor(R.color.grade_boutique));
+			setHotelGradeName(getContext().
+					getString(R.string.grade_boutique));
 
 		} else if (mHotelGradeCode.equals("residence")) {
-			setHotelGradeColor("#407f67");
-			setHotelGradeName("레지던스");
+			setHotelGradeColor(getContext().
+					getResources().getColor(R.color.grade_residence));
+			setHotelGradeName(getContext().
+					getString(R.string.grade_residence));
 
 		} else if (mHotelGradeCode.equals("resort") | mHotelGradeCode.equals("pension") | mHotelGradeCode.equals("condo")) {
-			setHotelGradeColor("#cf8d14");
+			setHotelGradeColor(getContext().
+					getResources().getColor(R.color.grade_resort_pension_condo));
 			
 			if (mHotelGradeCode.equals("resort"))
-				setHotelGradeName("리조트");
+				setHotelGradeName(getContext().
+						getString(R.string.grade_resort));
 			else if (mHotelGradeCode.equals("pension"))
-				setHotelGradeName("펜션");
+				setHotelGradeName(getContext().
+						getString(R.string.grade_pension));
 			else if (mHotelGradeCode.equals("condo"))
-				setHotelGradeName("콘도");
+				setHotelGradeName(getContext().
+						getString(R.string.grade_condo));
 
 		} else if (mHotelGradeCode.equals("special")) {
-			setHotelGradeColor("#ab380a");
-			setHotelGradeName("특급");
+			setHotelGradeColor(getContext().
+					getResources().getColor(R.color.grade_special));
+			setHotelGradeName(getContext().
+					getString(R.string.grade_special));
 
 		} else {
-			setHotelGradeColor("#808080");
-			setHotelGradeName("미정");
+			setHotelGradeColor(getContext().
+					getResources().getColor(R.color.grade_not_yet));
+			setHotelGradeName(getContext().
+					getString(R.string.grade_not_yet));
 		}
 		
 	}
@@ -102,6 +121,11 @@ public class HotelGradeView extends FrameLayout {
 	
 	private void setHotelGradeColor(String hotelGradeColor) {
 		mHotelGradeColor = Color.parseColor(hotelGradeColor);
+		setBackgroundColor(mHotelGradeColor);
+	}
+	
+	private void setHotelGradeColor(int parsedColor) {
+		mHotelGradeColor = parsedColor;
 		setBackgroundColor(mHotelGradeColor);
 	}
 	

@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Basic Infos -->
     <string name="app_name">데일리호텔</string>
     <string name="app_id">268888829950610</string>
-    
+    <string name="homepage">http://dailyhotel.kr</string>
+    <string name="contact_us">help@dailyhotel.co.kr</string>
     <string name="currency">원</string>
     
+    <!-- Hotel Grade -->
     <string name="grade_special">특급</string>
     <string name="grade_1">1급</string>
     <string name="grade_2">2급</string>
@@ -20,7 +23,6 @@
     <string name="grade_condo">콘도</string>
     
     <string name="grade_not_yet">미정</string>
-    
     
     <!-- IntroActivity Guide Ment -->
     <string name="guide_title_1">당일 호텔 예약</string>
@@ -70,6 +72,7 @@
     <string name="toast_msg_profile_not_changed">변경된 사항이 없습니다.</string>
     <string name="toast_msg_profile_success_to_change">성공적으로 변경되었습니다.</string>
     <string name="toast_msg_logouted">로그아웃되었습니다.</string>
+    <string name="toast_msg_logoined">로그인되었습니다.</string>
     
     <string name="toast_msg_please_input_id">아이디를 입력해주세요.</string>
     <string name="toast_msg_please_input_passwd">비밀번호를 입력해주세요.</string>
@@ -82,10 +85,24 @@
     <string name="toast_msg_backpressed">\'뒤로\' 버튼을 한 번 더 누르시면 앱이 종료됩니다</string>
     
     <!-- Dialog Messages -->
+    
+    <string name="dialog_title_notice">공지</string>
+    
     <string name="dialog_msg_sent_email">이메일이 발송되었습니다.</string>
     <string name="dialog_msg_install_paypin">PayPin 어플리케이션이 설치되어 있지 않습니다. \n설치를 눌러 진행 해 주십시요.\n취소를 누르면 결제가 취소 됩니다.</string>
     <string name="dialog_msg_install_hana_sk">HANA SK 모듈이 설치 되어있지 않습니다.\n설치 하시겠습니까?</string>
     <string name="dialog_msg_chk_wanna_login">로그아웃하시겠습니까?</string>
+    <string name="dialog_msg_not_installed_kakaotalk"></string>
+    <string name="dialog_msg_network_unstable_retry_or_set_wifi">네트워크 연결이 불안정합니다.\n재시도 혹은 와이파이 설정을 확인해주세요.</string>
+    <string name="dialog_msg_please_update_new_version">dailyHOTEL의 새로운 버전이 출시되었습니다. 업데이트해주세요</string>
+    <string name="dialog_msg_update_now">지금 업그레이드하여 가장 멋진 데일리호텔 앱을 다운받으세요</string>
+    
+    <string name="dialog_btn_text_update">업데이트</string>
+    <string name="dialog_btn_text_complete">완료</string>
+    <string name="dialog_btn_text_confirm">확인</string>
+    <string name="dialog_btn_text_cancel">취소</string>
+    <string name="dialog_btn_text_retry">재시도</string>
+    <string name="dialog_btn_text_setting">설정</string>
     
     <!-- Main Drawer Menu Titles -->
     <string name="drawer_menu_pin_title_resrvation">예약</string>
@@ -102,4 +119,15 @@
     
     <!-- Prefix Text -->
     <string name="prefix_wait_timer_frag_todays_hotel_open">시 오늘의 호텔이 공개됩니다.</string>
+    <string name="prefix_expire_time">유효기간</string>
+    
+    <!-- KaKaoLink Message-->
+    <string name="kakaolink_msg_prefix">좋은 어플 추천해 드려요~\n오늘 남은 객실만 최대 70% 할인하는 데일리호텔이에요.추천인코드 : </string>
+    <string name="kakaolink_msg_suffix">을 입력하면 5,000원 바로 할인!</string>
+    
+    <!-- Alarm Message -->
+    <string name="alarm_title">dailyHOTEL</string>
+    <string name="alarm_msg">오늘의 호텔이 도착했습니다.\n지금 데일리호텔에서 확인하세요!</string>
+    <string name="alarm_ticker">오늘의 호텔이 도착했습니다!</string>
+    
 </resources>

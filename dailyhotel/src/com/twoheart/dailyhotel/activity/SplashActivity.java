@@ -88,7 +88,7 @@ DailyHotelJsonResponseListener, ErrorListener {
 
 				builder.setTitle("확인");
 				builder
-				.setMessage("네트워크 연결이 불안정합니다.\n재시도 혹은 와이파이 설정을 확인해주세요.");
+				.setMessage(getString(R.string.dialog_msg_network_unstable_retry_or_set_wifi));
 				builder.setCancelable(false);
 				builder.setPositiveButton("재시도",
 						new DialogInterface.OnClickListener() {
@@ -226,8 +226,8 @@ DailyHotelJsonResponseListener, ErrorListener {
 					AlertDialog.Builder alertDialog = new AlertDialog.Builder(
 							SplashActivity.this);
 					alertDialog
-					.setTitle("공지")
-					.setMessage("dailyHOTEL의 새로운 버전이 출시되었습니다. 업데이트해주세요")
+					.setTitle(getString(R.string.dialog_title_notice))
+					.setMessage(getString(R.string.dialog_msg_please_update_new_version)) 
 					.setCancelable(false)
 					.setPositiveButton("업데이트",
 							new DialogInterface.OnClickListener() {
@@ -252,8 +252,8 @@ DailyHotelJsonResponseListener, ErrorListener {
 					AlertDialog.Builder alertDialog = new AlertDialog.Builder(
 							SplashActivity.this);
 					alertDialog
-					.setTitle("공지")
-					.setMessage("지금 업그레이드하여 가장 멋진 데일리호텔 앱을 다운받으세요")
+					.setTitle(getString(R.string.dialog_title_notice))
+					.setMessage(getString(R.string.dialog_msg_update_now))
 					.setCancelable(true)
 					.setOnCancelListener(new OnCancelListener() {
 

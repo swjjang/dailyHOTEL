@@ -37,7 +37,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.view.View.OnLongClickListener;
-import android.view.Window;
 import android.webkit.CookieSyncManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
@@ -71,8 +70,6 @@ public class PaymentActivity extends BaseActivity implements Constants {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setActionBarProgressBar();
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		//		setActionBar(R.string.actionbar_title_payment_activity);
 
 		setContentView(R.layout.activity_payment);
 
@@ -149,8 +146,6 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		webView.postUrl(url,
 				parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]),
 						postParameterValue.toArray(new String[postParameterValue.size()])));
-		//		android.util.Log.e("url",url);
-		//		android.util.Log.e("accessToken",userAccessToken);
 
 	}
 
@@ -392,8 +387,6 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		} else if (requestCode == CODE_REQUEST_KFTC_BANKPAY) {
 			scriptForSkip+="returnUrltoMall();"; //KTFC 확인 버튼 콜
 		}
-		//		android.util.Log.e("QWE",scriptForSkip);
-
 		webView.loadUrl(scriptForSkip);
 	}
 
@@ -422,15 +415,6 @@ public class PaymentActivity extends BaseActivity implements Constants {
 	}
 
 	private class mWebViewClient extends WebViewClient {
-
-		//		@Override
-		//		public void onLoadResource(WebView view, String url) {
-		//			// 자바스크립트를 콜 하여 페이지를 수정 가능. html 때려박는건 안되고 자바스크립트는 가능.
-		//			
-		//			
-		//		}
-
-
 
 		public mWebViewClient() {
 			// TODO Auto-generated constructor stub
@@ -487,35 +471,14 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			super.onPageStarted(view, url, favicon);
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 				setSupportProgressBarIndeterminateVisibility(true);
-			android.util.Log.e(url,"?");
-//			if (url.equals("https://drmobile.inicis.com/smart/move_pay_svc.php")){
-//				android.util.Log.e("url!",url);
-
-//				String script = "javascript:alert(document.getElementsByClassName('prevBtn').value);";
-//				String script = "javascript:function on_cancel(){alert('Testing!!!');}()";
-//				view.loadUrl(script);
-//			}
-
-			//			showToast(url, 1, false);
 		}
 
 		@Override
 		public void onPageFinished(WebView view, String url) {
 			super.onPageFinished(view, url);
 			CookieSyncManager.getInstance().sync();
-			android.util.Log.e("?bbb",url);
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 				setSupportProgressBarIndeterminateVisibility(false);
-
-//			if (url.equals("https://drmobile.inicis.com/smart/move_pay_svc.php")){
-//				android.util.Log.e("CHECKPOINT",url);
-
-				//				String script = "javascript:document.getElementByClassName('prevBtn').onclick=alert('q');";
-//				String script = "javascript:function on_cancel(){alert('Testing!!!');}()";
-//				view.loadUrl(script);
-//			}
-
-			//			view.loadUrl("javascript:window.android.showHTML('</head>'+document.getElementsByTagName('html')[0].innerHTML+'</head>')");
 		}
 
 	}
@@ -887,7 +850,6 @@ public class PaymentActivity extends BaseActivity implements Constants {
 
 		@JavascriptInterface
 		public void feed(final String msg) {
-			android.util.Log.e("FEED",msg);
 			int resultCode = 0;
 
 			if (msg.equals("SUCCESS")) {

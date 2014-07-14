@@ -13,4 +13,12 @@
     <color name="dh_theme_color">#FF7A7A</color>
     <color name="activity_background">#fdfdfd</color>
     <color name="real_red">#ff0000</color>
+    
+    <color name="grade_hotel">#055870</color>
+    <color name="grade_boutique">#9f2d58</color>
+    <color name="grade_residence">#407f67</color>
+    <color name="grade_resort_pension_condo">#cf8d14</color>
+    <color name="grade_special">#ab380a</color>
+    <color name="grade_not_yet">#808080</color>
+
 </resources>	

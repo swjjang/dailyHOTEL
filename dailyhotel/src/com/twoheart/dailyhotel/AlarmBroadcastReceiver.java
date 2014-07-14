@@ -20,9 +20,9 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver{
 	public void onReceive(Context context, Intent intent) {
 		WaitTimerFragment.isEnabledNotify = false;
 		
-		String title = "dailyHOTEL";
-		String msg = "오늘의 호텔이 도착했습니다.\n지금 데일리호텔에서 확인하세요!";
-		String ticker = "오늘의 호텔이 도착했습니다!";
+		String title = context.getString(R.string.alarm_title);
+		String msg = context.getString(R.string.alarm_msg);
+		String ticker = context.getString(R.string.alarm_ticker);
 		
 		PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
 		boolean isScreenOn = pm.isScreenOn();
