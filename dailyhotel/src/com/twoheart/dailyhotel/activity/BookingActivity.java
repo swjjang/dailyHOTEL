@@ -38,6 +38,7 @@ import com.twoheart.dailyhotel.model.Credit;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.model.Pay;
+import com.twoheart.dailyhotel.util.GaManager;
 import com.twoheart.dailyhotel.util.Log;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -323,8 +324,6 @@ public class BookingActivity extends BaseActivity implements
 			Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
 
-		Log.d("ASDF", Integer.toString(resultCode));
-
 		if (requestCode == CODE_REQUEST_ACTIVITY_PAYMENT) {
 			Log.d(TAG, Integer.toString(resultCode));
 
@@ -360,6 +359,13 @@ public class BookingActivity extends BaseActivity implements
 				alert.setMessage("결제가 정상적으로 이루어졌습니다");
 				alert.show();
 				
+				GaManager.getInstance(getApplicationContext()).
+						purchaseComplete(
+								Integer.toString(mPay.getHotelDetail().getSaleIdx()), 
+								mPay.getHotelDetail().getHotel().getName(), 
+								mPay.getHotelDetail().getHotel().getCategory(), 
+								(double) mPay.getPayPrice()
+								);
 
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_SOLD_OUT:

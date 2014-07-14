@@ -107,8 +107,6 @@ OnTouchListener {
 			}
 		};
 
-//		mHandler.sendEmptyMessageDelayed(0, DURATION_HOTEL_IMAGE_SHOW);
-
 		return view;
 	}
 

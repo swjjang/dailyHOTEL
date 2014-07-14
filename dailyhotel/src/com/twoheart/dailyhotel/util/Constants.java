@@ -14,25 +14,26 @@
  */
 package com.twoheart.dailyhotel.util;
 
+import com.google.analytics.tracking.android.Logger.LogLevel;
 import com.twoheart.dailyhotel.BuildConfig;
 
 public interface Constants {
 
 	// 디버그 빌드 여부
 	public static final boolean DEBUG = BuildConfig.DEBUG;
-	
+
 	// 플레이 스토어용 릴리즈 여부
 	public static final boolean IS_GOOGLE_RELEASE = true;
-	
+
 	// 웹서버 호스트 
-//	public static final String URL_DAILYHOTEL_SERVER = "http://dailyhotel.kr/goodnight/";				// 서비스 서버
-//	public static final String URL_DAILYHOTEL_SERVER = "http://dailyhotel.cafe24.com/goodnight/";		// 개발 서버
-//	public static final String URL_DAILYHOTEL_SERVER = "http://was1.dailyhotel.kr/goodnight/";					// new 개발 서버
-//	public static final String URL_DAILYHOTEL_SERVER = "http://1.234.83.117/goodnight/";							// new 개발 서버
-	public static final String URL_DAILYHOTEL_SERVER = "http://1.234.22.96/goodnight/"; // new 개발 7.6
+	//	public static final String URL_DAILYHOTEL_SERVER = "http://dailyhotel.kr/goodnight/";				// 서비스 서버
+//		public static final String URL_DAILYHOTEL_SERVER = "http://dailyhotel.cafe24.com/goodnight/";		// 개발 서버
+	//	public static final String URL_DAILYHOTEL_SERVER = "http://was1.dailyhotel.kr/goodnight/";					// new 개발 서버
+	//	public static final String URL_DAILYHOTEL_SERVER = "http://1.234.83.117/goodnight/";							// new 개발 서버
+		public static final String URL_DAILYHOTEL_SERVER = "http://1.234.22.96/goodnight/"; // new 개발 7.6
 	// 회사 대표번호
 	public static final String PHONE_NUMBER_DAILYHOTEL = "1800-9120";
-	
+
 	// 호텔 평가를 표시할 최대 날짜
 	public static final int DAYS_DISPLAY_RATING_HOTEL_DIALOG = 7;
 
@@ -49,7 +50,7 @@ public interface Constants {
 	public static final String URL_WEBAPI_USER_FORGOTPWD = "user/sendpw/";
 	public static final String URL_WEBAPI_USER_FINDRND = "user/findrnd/";
 	public static final String URL_WEBAPI_USER_UPDATE = "user/update";
-	
+
 	// DailyHOTEL Reservation Controller WebAPI URL
 	public static final String URL_WEBAPI_RESERVE_PAYMENT = "reserv/session/req/";
 	public static final String URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT = "reserv/session/bonus/";
@@ -57,42 +58,42 @@ public interface Constants {
 	public static final String URL_WEBAPI_RESERVE_SAVED_MONEY = "reserv/bonus";
 	public static final String URL_WEBAPI_RESERVE_CHECKIN = "reserv/checkinout/";
 	public static final String URL_WEBAPI_RESERVE_REVIEW = "reserv/review/";
-	
+
 	// DailyHOTEL App Management Controller WebAPI URL
 	public static final String URL_WEBAPI_APP_VERSION = "common/ver_dual";
 	public static final String URL_WEBAPI_APP_LEGAL = "common/regal";
 	public static final String URL_WEBAPI_APP_TIME = "time";
 	public static final String URL_WEBAPI_APP_SALE_TIME = "common/sale_time";
-	
+
 	// DailyHOTEL Hotel Controller WebAPI URL
 	public static final String URL_WEBAPI_HOTEL = "hotel/";
 	public static final String URL_WEBAPI_HOTEL_DETAIL = "hotel/detail/";
 	public static final String URL_WEBAPI_HOTEL_MAP = "hotel/all";
-	
+
 	// DailyHOTEL Board Controller WebAPI URL
 	public static final String URL_WEBAPI_BOARD_FAQ = "board/json/faq";
 	public static final String URL_WEBAPI_BOARD_NOTICE = "board/json/notice";
-	
+
 	// DailyHOTEL Site Controller WebAPI URL
 	public static final String URL_WEBAPI_SITE_LOCATION_LIST = "site/get";
-	
+
 	public static final String URL_STORE_GOOGLE_DAILYHOTEL = "market://details?id=com.twoheart.dailyhotel";
 	public static final String URL_STORE_T_DAILYHOTEL = "http://tsto.re/0000412421";
-	
+
 	public static final String URL_WEB_PRIVACY = "http://policies.dailyhotel.co.kr/privacy/";
 	public static final String URL_WEB_TERMS = "http://policies.dailyhotel.co.kr/terms/";
 	public static final String URL_WEB_ABOUT = "http://policies.dailyhotel.co.kr/about/";
-	
+
 	// Payment App GoogleStore URL
 	public static final String URL_STORE_PAYMENT_ISP = "market://details?id=kvp.jjy.MispAndroid320";
 	public static final String URL_STORE_PAYMENT_KFTC = "market://details?id=com.kftc.bankpay.android&hl=ko";
 	public static final String URL_STORE_PAYMENT_MPOCKET = "market://details?id=kr.co.samsungcard.mpocket";
-	
+
 	// Payment App PackageName
 	public static final String PACKAGE_NAME_ISP = "kvp.jjy.MispAndroid";
 	public static final String PACKAGE_NAME_KFTC = "com.kftc.bankpay.android"; 
 	public static final String PACKAGE_NAME_MPOCKET = "kr.co.samsungcard.mpocket"; 
-	
+
 	// Preference
 	public static final String NAME_DAILYHOTEL_SHARED_PREFERENCE = "GOOD_NIGHT";
 
@@ -109,13 +110,13 @@ public interface Constants {
 	public static final String KEY_PREFERENCE_MIN_VERSION_NAME = "MIN_VERSION_NAME";
 	public static final String KEY_PREFERENCE_MAX_VERSION_NAME = "MAX_VERSION_NAME";
 	public static final String KEY_PREFERENCE_SKIP_MAX_VERSION = "SKIP_MAX_VERSION";
-	
+
 	// region
 	public static final String KEY_PREFERENCE_REGION_SELECT = "REGION_SELECT";
 	public static final String KEY_PREFERENCE_REGION_INDEX = "REGION_INDEX";
-	
+
 	public static final String KEY_PREFERENCE_SHOW_GUIDE = "SHOW_GUIDE";
-	
+
 	public static final String KEY_PREFERENCE_HOTEL_NAME = "HOTEL_NAME";
 	public static final String KEY_PREFERENCE_HOTEL_SALE_IDX = "HOTEL_SALE_IDX";
 	public static final String KEY_PREFERENCE_HOTEL_CHECKOUT = "HOTEL_CHECKOUT";
@@ -131,7 +132,7 @@ public interface Constants {
 	public static final String NAME_INTENT_EXTRA_DATA_BOOKING = "booking";
 	public static final String NAME_INTENT_EXTRA_DATA_PAY = "pay";
 	public static final String NAME_INTENT_EXTRA_DATA_SELECTED_IMAGE_URL = "sel_image_url";
-	
+
 	// Android Activity의 Request Code들이다.
 	public static final int CODE_REQUEST_ACTIVITY_HOTELTAB = 1;
 	public static final int CODE_REQUEST_FRAGMENT_BOOKINGLIST = 2;
@@ -143,7 +144,7 @@ public interface Constants {
 
 	public static final int CODE_REQUEST_ISPMOBILE = 8;
 	public static final int CODE_REQUEST_KFTC_BANKPAY = 9;
-	
+
 	// Android Activity의 Result Code들이다.
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_FAIL = 100;
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS = 101;
@@ -155,5 +156,29 @@ public interface Constants {
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR = 107;
 	public static final int CODE_RESULT_ACTIVITY_SPLASH_NEW_EVENT = 108;
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_CANCELED = 109;
-	
+
+	// Android Google Analytics 정보들.
+	public static final String GA_PROPERTY_ID = "UA-43721645-1";
+
+	// Dispatch period in seconds.
+	public static final int GA_DISPATCH_PERIOD = 30;
+
+	// Prevent hits from being sent to reports, i.e. during testing.
+	public static final boolean GA_IS_DRY_RUN = false;
+
+	// GA Logger verbosity.
+	public static final LogLevel GA_LOG_VERBOSITY = LogLevel.INFO;
+
+	// Key used to store a user's tracking preferences in SharedPreferences.
+	public static final String TRACKING_PREF_KEY = "trackingPreference";
+
+	public static final String GA_COMMERCE_DEFAULT_AFFILIATION = "DailyHOTEL";
+	public static final Double GA_COMMERCE_DEFAULT_TAX = 0d;
+	public static final Double GA_COMMERCE_DEFAULT_SHIPPING = 0d;
+	public static final String GA_COMMERCE_DEFAULT_CURRENCY_CODE = "KRW";
+	public static final String GA_COMMERCE_DEFAULT_SKU = "1";
+	public static final Long GA_COMMERCE_DEFAULT_QUANTITY = 1L;
+
+
+
 }

@@ -67,6 +67,7 @@ import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.GaManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -129,6 +130,10 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+//		GaManager gm = GaManager.getInstance(getApplicationContext());
+//		gm.signupComplete();
+//		gm.purchaseComplete("JUNHO_TEST", "JUNHO_NAME", "JUNHO_CATEGORY", 90000d);
 
 		// 쿠키 동기화를 초기화한다. 로그인, 로그아웃 세션 쿠키는 MainActivity의 생명주기와 동기화한다.
 		CookieSyncManager.createInstance(getApplicationContext());

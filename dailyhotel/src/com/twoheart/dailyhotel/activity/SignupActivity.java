@@ -38,6 +38,7 @@ import com.google.analytics.tracking.android.MapBuilder;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Crypto;
+import com.twoheart.dailyhotel.util.GaManager;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
@@ -226,7 +227,8 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 									URL_WEBAPI_USER_LOGIN)
 									.toString(), loginParams,
 							this, this));
-					
+					// 여기서 회원가입 성공 애널래틱스 콜
+					GaManager.getInstance(getApplicationContext()).signupComplete();
 				} else {
 					unLockUI();
 					showToast(msg, Toast.LENGTH_LONG, true);

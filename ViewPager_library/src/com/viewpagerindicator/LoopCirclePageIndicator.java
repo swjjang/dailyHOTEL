@@ -420,6 +420,8 @@ public class LoopCirclePageIndicator extends View implements PageIndicator {
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+    	if(((Loopable)mViewPager.getAdapter()).getRealCount() == 0)
+    		return;
         mCurrentPage = position % ((Loopable)mViewPager.getAdapter()).getRealCount();
         mPageOffset = positionOffset;
         invalidate();

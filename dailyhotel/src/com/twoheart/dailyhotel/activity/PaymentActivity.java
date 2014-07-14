@@ -25,12 +25,9 @@ import kr.co.kcp.util.PackageState;
 
 import org.apache.http.util.EncodingUtils;
 
-import android.app.ActivityManager;
-import android.app.ActivityManager.RunningAppProcessInfo;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -38,6 +35,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
+import android.view.View.OnLongClickListener;
+import android.view.Window;
 import android.webkit.CookieSyncManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
@@ -49,7 +49,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Pay;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Log;
-import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 public class PaymentActivity extends BaseActivity implements Constants {
@@ -72,9 +71,11 @@ public class PaymentActivity extends BaseActivity implements Constants {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setActionBarProgressBar();
-//		setActionBar(R.string.actionbar_title_payment_activity);
-		
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		//		setActionBar(R.string.actionbar_title_payment_activity);
+
 		setContentView(R.layout.activity_payment);
+
 
 		Bundle bundle = getIntent().getExtras();
 		if (bundle != null) {
@@ -101,6 +102,13 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		webView.setWebChromeClient(new mWebChromeClient());
 		webView.setWebViewClient(new mWebViewClient());
 
+		webView.setOnLongClickListener(new OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View v) {
+				return true;
+			}
+		}); // 롱클릭 에러 방지.
+		
 		if (mPay == null) {
 			showToast(getString(R.string.toast_msg_failed_to_get_payment_info), Toast.LENGTH_SHORT, false);
 			finish();
@@ -141,13 +149,13 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		webView.postUrl(url,
 				parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]),
 						postParameterValue.toArray(new String[postParameterValue.size()])));
-//		android.util.Log.e("url",url);
-//		android.util.Log.e("accessToken",userAccessToken);
+		//		android.util.Log.e("url",url);
+		//		android.util.Log.e("accessToken",userAccessToken);
 
 	}
 
 	private byte[] parsePostParameter(String[] key, String[] value) {
-		
+
 		String keys="";
 		String values = "";
 		for(String k : key) {
@@ -156,7 +164,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		for(String v : value) {
 			values+= (v+" ");
 		}
-		
+
 		android.util.Log.e("keys",keys);
 		android.util.Log.e("vals",values);
 
@@ -302,10 +310,9 @@ public class PaymentActivity extends BaseActivity implements Constants {
 					return true; 
 				} 
 			}
-			
+
 			if ( url.startsWith( "kftc-bankpay" ) ) { // 7.9 이니시스 모듈 연동 테스트
 				if( !new PackageState(this).getPackageDownloadInstallState( PACKAGE_NAME_KFTC ) ) { 
-					android.util.Log.e("ass","!!");
 					startActivity( new Intent(
 							Intent.ACTION_VIEW, 
 							Uri.parse(URL_STORE_PAYMENT_KFTC)));
@@ -313,7 +320,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 					return true; 
 				} 
 			}
-			
+
 			/*  else if ( url.startsWith( "paypin" ) ) { if(
 			 * !new PackageState( this ).getPackageDownloadInstallState(
 			 * "com.skp.android.paypin" ) ) { if( !url_scheme_intent(
@@ -351,7 +358,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			// Toast.makeText(this, "해당 어플을 설치해 주세요.",
 			// Toast.LENGTH_LONG).show();
 			// }
-			
+
 			Uri uri = Uri.parse(url);
 			Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 
@@ -362,7 +369,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 				} else if (url.startsWith("ispmobile")) {
 					requestCode = CODE_REQUEST_ISPMOBILE;
 				}
-				
+
 				startActivityForResult(intent, requestCode);
 				isModuleLoaded = true;
 			} catch (ActivityNotFoundException e) {
@@ -372,21 +379,21 @@ public class PaymentActivity extends BaseActivity implements Constants {
 
 		return true;
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode,
 			Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
-		
+
 		String scriptForSkip = "javascript:";
 		if (requestCode == CODE_REQUEST_ISPMOBILE) {
 			scriptForSkip+="submitIspAuthInfo('RUNSCHEME');"; // ISP 확인 버튼 콜
-			
+
 		} else if (requestCode == CODE_REQUEST_KFTC_BANKPAY) {
 			scriptForSkip+="returnUrltoMall();"; //KTFC 확인 버튼 콜
 		}
-		android.util.Log.e("QWE",scriptForSkip);
-		
+		//		android.util.Log.e("QWE",scriptForSkip);
+
 		webView.loadUrl(scriptForSkip);
 	}
 
@@ -416,24 +423,24 @@ public class PaymentActivity extends BaseActivity implements Constants {
 
 	private class mWebViewClient extends WebViewClient {
 
-//		@Override
-//		public void onLoadResource(WebView view, String url) {
-//			// 자바스크립트를 콜 하여 페이지를 수정 가능. html 때려박는건 안되고 자바스크립트는 가능.
-//			
-//			
-//		}
-		
-		
-		
+		//		@Override
+		//		public void onLoadResource(WebView view, String url) {
+		//			// 자바스크립트를 콜 하여 페이지를 수정 가능. html 때려박는건 안되고 자바스크립트는 가능.
+		//			
+		//			
+		//		}
+
+
+
 		public mWebViewClient() {
 			// TODO Auto-generated constructor stub
 		}
-		
+
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
 			android.util.Log.e("URL",url);
 			android.util.Log.e("URL?","");
-			
+
 			Log.d(ResultRcvActivity.m_strLogTag,
 					"[PayDemoActivity] called__shouldOverrideUrlLoading - url=["
 							+ url + "]");
@@ -469,7 +476,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		public void onReceivedError(WebView view, int errorCode,
 				String description, String failingUrl) {
 			super.onReceivedError(view, errorCode, description, failingUrl);
-			
+
 			webView.loadUrl("about:blank");
 			setResult(CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR);
 			finish();
@@ -480,15 +487,35 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			super.onPageStarted(view, url, favicon);
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 				setSupportProgressBarIndeterminateVisibility(true);
+			android.util.Log.e(url,"?");
+//			if (url.equals("https://drmobile.inicis.com/smart/move_pay_svc.php")){
+//				android.util.Log.e("url!",url);
+
+//				String script = "javascript:alert(document.getElementsByClassName('prevBtn').value);";
+//				String script = "javascript:function on_cancel(){alert('Testing!!!');}()";
+//				view.loadUrl(script);
+//			}
+
+			//			showToast(url, 1, false);
 		}
 
 		@Override
 		public void onPageFinished(WebView view, String url) {
 			super.onPageFinished(view, url);
 			CookieSyncManager.getInstance().sync();
+			android.util.Log.e("?bbb",url);
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 				setSupportProgressBarIndeterminateVisibility(false);
-			view.loadUrl("javascript:window.android.showHTML('</head>'+document.getElementsByTagName('html')[0].innerHTML+'</head>')");
+
+//			if (url.equals("https://drmobile.inicis.com/smart/move_pay_svc.php")){
+//				android.util.Log.e("CHECKPOINT",url);
+
+				//				String script = "javascript:document.getElementByClassName('prevBtn').onclick=alert('q');";
+//				String script = "javascript:function on_cancel(){alert('Testing!!!');}()";
+//				view.loadUrl(script);
+//			}
+
+			//			view.loadUrl("javascript:window.android.showHTML('</head>'+document.getElementsByTagName('html')[0].innerHTML+'</head>')");
 		}
 
 	}
@@ -662,7 +689,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			});
 		}
 	}
-	
+
 	@Override
 	protected void onRestart() {
 		super.onRestart();
@@ -822,7 +849,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 
 	@JavascriptInterface
 	public void finishActivity(String p_strFinishMsg) {
-		
+
 		int resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
 
 		if (p_strFinishMsg != null) {
@@ -832,7 +859,6 @@ public class PaymentActivity extends BaseActivity implements Constants {
 				resultCode = RESULT_CANCELED;
 			}
 		}
-		
 		Intent payData = new Intent();
 		payData.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
 
@@ -854,10 +880,10 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		@JavascriptInterface
 		public void showHTML(String html) {
 			for(int i=0;i<html.length()/100;i++) { 
-//				android.util.Log.e("HTML",html.substring(i*100,(i+1)*100));
+				android.util.Log.e("HTML",html.substring(i*100,(i+1)*100));
 			}
 		}
-		
+
 
 		@JavascriptInterface
 		public void feed(final String msg) {
@@ -909,5 +935,5 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		AlertDialog alert = alertDialog.create();
 		alert.show();
 	}
-
+	
 }

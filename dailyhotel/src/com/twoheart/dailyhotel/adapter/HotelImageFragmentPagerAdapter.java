@@ -32,6 +32,8 @@ public class HotelImageFragmentPagerAdapter extends FragmentPagerAdapter impleme
 
 	@Override
 	public int getCount() {
+		if(mHotelDetail.getImageUrl().size() == 0)
+			return 0;
 		return Integer.MAX_VALUE; // 루프를 위하여 뷰페이지를 여러개 만듬.
 	}
 

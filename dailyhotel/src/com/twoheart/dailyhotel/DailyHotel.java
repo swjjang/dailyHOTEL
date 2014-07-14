@@ -16,7 +16,6 @@ package com.twoheart.dailyhotel;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 
-import android.app.Activity;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
@@ -26,33 +25,17 @@ import com.androidquery.callback.BitmapAjaxCallback;
 import com.google.analytics.tracking.android.ExceptionReporter;
 import com.google.analytics.tracking.android.GAServiceManager;
 import com.google.analytics.tracking.android.GoogleAnalytics;
-import com.google.analytics.tracking.android.MapBuilder;
-import com.google.analytics.tracking.android.Logger.LogLevel;
 import com.google.analytics.tracking.android.Tracker;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.VolleyImageLoader;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 
-public class DailyHotel extends Application {
+public class DailyHotel extends Application implements Constants{
 	
 	private static Typeface mTypeface;
 	private static Typeface mBoldTypeface;
 	private static GoogleAnalytics mGa;
 	private static Tracker mTracker;
-
-	// Placeholder property ID.
-	private static final String GA_PROPERTY_ID = "UA-43721645-1";
-
-	// Dispatch period in seconds.
-	private static final int GA_DISPATCH_PERIOD = 30;
-
-	// Prevent hits from being sent to reports, i.e. during testing.
-	private static final boolean GA_IS_DRY_RUN = false;
-
-	// GA Logger verbosity.
-	private static final LogLevel GA_LOG_VERBOSITY = LogLevel.INFO;
-
-	// Key used to store a user's tracking preferences in SharedPreferences.
-	private static final String TRACKING_PREF_KEY = "trackingPreference";
 
 	@Override
 	public void onCreate() {
