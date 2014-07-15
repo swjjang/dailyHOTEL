@@ -47,6 +47,7 @@ import com.facebook.FacebookOperationCanceledException;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
+import com.facebook.SessionLoginBehavior;
 import com.facebook.SessionState;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
@@ -223,6 +224,7 @@ public class LoginActivity extends BaseActivity implements Constants,
 					.build();
 
 			Session.OpenRequest or = new Session.OpenRequest(this);
+//			or.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO);
 			or.setPermissions(Arrays.asList("email", "basic_info"));
 			or.setCallback(statusCallback);
 

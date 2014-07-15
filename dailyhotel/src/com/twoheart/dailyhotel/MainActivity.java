@@ -78,16 +78,16 @@ import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.CloseOnBackPressed;
 
 public class MainActivity extends BaseActivity implements DailyHotelStringResponseListener, DailyHotelJsonResponseListener, OnItemClickListener,
-		Constants {
+Constants {
 
 	private static final String TAG = "MainActivity";
 
-//	private static final String DRAWER_MENU_SECTION_RESERVATION = "예약";
-//	private static final String DRAWER_MENU_ENTRY_HOTEL = "오늘의 호텔";
-//	private static final String DRAWER_MENU_ENTRY_BOOKING = "예약확인";
-//	private static final String DRAWER_MENU_SECTION_ACCOUNT = "계정";
-//	private static final String DRAWER_MENU_ENTRY_CREDIT = "적립금";
-//	private static final String DRAWER_MENU_ENTRY_SETTING = "설정";
+	//	private static final String DRAWER_MENU_SECTION_RESERVATION = "예약";
+	//	private static final String DRAWER_MENU_ENTRY_HOTEL = "오늘의 호텔";
+	//	private static final String DRAWER_MENU_ENTRY_BOOKING = "예약확인";
+	//	private static final String DRAWER_MENU_SECTION_ACCOUNT = "계정";
+	//	private static final String DRAWER_MENU_ENTRY_CREDIT = "적립금";
+	//	private static final String DRAWER_MENU_ENTRY_SETTING = "설정";
 
 	public static final int INDEX_HOTEL_LIST_FRAGMENT = 0;
 	public static final int INDEX_BOOKING_LIST_FRAGMENT = 1;
@@ -104,20 +104,20 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 	public ListView drawerList;
 	public DrawerLayout drawerLayout;
 	private FrameLayout mContentFrame;
-	
+
 	public ActionBarDrawerToggle drawerToggle;
 	protected FragmentManager fragmentManager;
 	protected List<DrawerMenu> mMenuImages;
 	protected List<Fragment> mFragments;
 	private DrawerMenuListAdapter mDrawerMenuListAdapter;
-	
+
 	// 마지막으로 머물렀던 Fragment의 index
 	public int indexLastFragment;	// Error Fragment에서 다시 돌아올 때 필요.
-	
+
 	// SystemBarTintManager
 	private SystemBarTintManager tintManager;
 	public SystemBarConfig config;
-	
+
 	// DrawerMenu 객체들
 	public DrawerMenu menuHotelListFragment;
 	public DrawerMenu menuBookingListFragment;
@@ -127,19 +127,20 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 	// Back 버튼을 두 번 눌러 핸들러 멤버 변수
 	private CloseOnBackPressed backButtonHandler;
 
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-//		GaManager gm = GaManager.getInstance(getApplicationContext());
-//		gm.signupComplete();
-//		gm.purchaseComplete("JUNHO_TEST", "JUNHO_NAME", "JUNHO_CATEGORY", 90000d);
+
+		//		GaManager gm = GaManager.getInstance(getApplicationContext());
+		//		gm.signupComplete();
+		//		gm.purchaseComplete("JUNHO_TEST", "JUNHO_NAME", "JUNHO_CATEGORY", 90000d);
 
 		// 쿠키 동기화를 초기화한다. 로그인, 로그아웃 세션 쿠키는 MainActivity의 생명주기와 동기화한다.
 		CookieSyncManager.createInstance(getApplicationContext());
-//		for(int i=0; i< CookieManager.getInstance().getCookie(URL_DAILYHOTEL_SERVER).length() ; i++){
-//			Log.e("COOOOK",CookieManager.getInstance().getCookie(URL_DAILYHOTEL_SERVER).toString());
-//		}
+		//		for(int i=0; i< CookieManager.getInstance().getCookie(URL_DAILYHOTEL_SERVER).length() ; i++){
+		//			Log.e("COOOOK",CookieManager.getInstance().getCookie(URL_DAILYHOTEL_SERVER).toString());
+		//		}
 
 		// 이전의 비정상 종료에 의한 만료된 쿠키들이 있을 수 있으므로, SplashActivity에서 자동 로그인을
 		// 처리하기 이전에 미리 이미 저장되어 있는 쿠키들을 정리한다.
@@ -179,12 +180,12 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 					mContentFrame.getPaddingBottom());
 
 			drawerList
-					.setPadding(
-							drawerList.getPaddingLeft(),
-							config.getStatusBarHeight()
-									+ config.getActionBarHeight(),
-							drawerList.getPaddingRight(),
-							drawerList.getPaddingBottom());
+			.setPadding(
+					drawerList.getPaddingLeft(),
+					config.getStatusBarHeight()
+					+ config.getActionBarHeight(),
+					drawerList.getPaddingRight(),
+					drawerList.getPaddingBottom());
 
 		}
 
@@ -214,19 +215,19 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 				super.finish();		// 어플리케이션(메인 화면)을 종료해버린다
 				return;				// 메서드를 빠져나간다 - 호텔 평가를 수행하지 않음.
 			}
-			
+
 			boolean showGuide = sharedPreference.getBoolean(KEY_PREFERENCE_SHOW_GUIDE, true);
 			if (showGuide) {
 				startActivity(new Intent(this, IntroActivity.class));
 			}
-			
+
 			// 호텔평가를 위한 현재 로그인 여부 체크
 			mQueue.add(new DailyHotelStringRequest(Method.GET,
 					new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 							URL_WEBAPI_USER_ALIVE).toString(), null, this, this));
 		}
 	}
-	
+
 	@Override
 	public void onResponse(String url, String response) {
 		if (url.contains(URL_WEBAPI_USER_ALIVE)) {
@@ -237,19 +238,19 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 				mQueue.add(new DailyHotelJsonRequest(Method.GET,
 						new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 								URL_WEBAPI_USER_INFO).toString(), null, this,
-						this));
+								this));
 
 			}
 		}
 	}
-	
+
 	@Override
 	public void onResponse(String url, JSONObject response) {
 		if (url.contains(URL_WEBAPI_USER_INFO)) {
 			try {
 				String loginUserIdx = response.getString("idx");
 				String buyerIdx = sharedPreference.getString(KEY_PREFERENCE_USER_IDX, null);
-				
+
 				if (buyerIdx != null) {
 					if (loginUserIdx.equals(buyerIdx)) {
 						String purchasedHotelName = sharedPreference.getString(
@@ -272,15 +273,15 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 								calendar.setTime(checkOut);
 								calendar.add(Calendar.DATE, DAYS_DISPLAY_RATING_HOTEL_DIALOG);
 								Date deadLineDay = calendar.getTime();
-								
+
 								if (today.compareTo(deadLineDay) < 0) {
 									Hotel purchasedHotel = new Hotel();
 									purchasedHotel.setName(purchasedHotelName);
-				
+
 									HotelDetail purchasedHotelInformation = new HotelDetail();
 									purchasedHotelInformation.setHotel(purchasedHotel);
 									purchasedHotelInformation.setSaleIdx(purchasedHotelSaleIdx);
-				
+
 									RatingHotelFragment dialog = RatingHotelFragment
 											.newInstance(purchasedHotelInformation);
 									dialog.show(fragmentManager, TAG_FRAGMENT_RATING_HOTEL);
@@ -293,13 +294,13 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 						}
 					}
 				}
-				
+
 			} catch (Exception e) {
 				onError(e);
 			}
 		}
 	}
-	
+
 	/**
 	 * 네비게이션 드로워에서 메뉴를 선택하는 효과를 내주는 메서드
 	 * @param selectedMenu DrawerMenu 객체를 받는다.
@@ -308,7 +309,7 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 		drawerList.performItemClick(
 				drawerList.getAdapter().getView(
 						mMenuImages.indexOf(selectedMenu), null, null),
-				mMenuImages.indexOf(selectedMenu), mDrawerMenuListAdapter
+						mMenuImages.indexOf(selectedMenu), mDrawerMenuListAdapter
 						.getItemId(mMenuImages.indexOf(selectedMenu)));
 	}
 
@@ -357,8 +358,8 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 			clearFragmentBackStack();
 
 			fragmentManager.beginTransaction()
-					.replace(mContentFrame.getId(), fragment)
-					.commitAllowingStateLoss();
+			.replace(mContentFrame.getId(), fragment)
+			.commitAllowingStateLoss();
 
 			// Android 4.4 이상일 경우 Android StatusBar와 Android NavigationBar를 모두 Translucent하는데
 			// 우리 어플리케이션에서는 HotelListFragment에서만 Android NavigationBar를 Translucent하게 하였다.
@@ -396,10 +397,10 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 	 */
 	public void addFragment(Fragment fragment) {
 		fragmentManager
-				.beginTransaction()
-				.setCustomAnimations(R.anim.slide_in_right,
-						R.anim.slide_out_right, R.anim.slide_in_right,
-						R.anim.slide_out_right)
+		.beginTransaction()
+		.setCustomAnimations(R.anim.slide_in_right,
+				R.anim.slide_out_right, R.anim.slide_in_right,
+				R.anim.slide_out_right)
 				.add(R.id.content_frame, fragment).addToBackStack(null)
 				.commit();
 
@@ -417,7 +418,7 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 	@Deprecated
 	public void removeFragment(Fragment fragment) {
 		fragmentManager.beginTransaction().remove(fragment)
-				.commitAllowingStateLoss();
+		.commitAllowingStateLoss();
 	}
 
 	public void printPackageHashKey() {
@@ -459,16 +460,19 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 			indexLastFragment = INDEX_SETTING_FRAGMENT;
 			break;
 		}
-		new Handler().postDelayed(new Runnable() {
-			
-			@Override
-			public void run() {
-				replaceFragment(getFragment(indexLastFragment));		
-			}
-		}, 300); // 드로어 레이아웃이 닫히는데 애니메이션이 부하가 큼. 프래그먼트 전환까지 추가한다면 닫힐때 버벅거리는 현상이 발생. 따라서 0.3초 지연하여 자연스러운 애니메이션을 보여줌.
-		
+		// 드로어 레이아웃이 닫히는데 애니메이션이 부하가 큼. 프래그먼트 전환까지 추가한다면 닫힐때 버벅거리는 현상이 발생. 따라서 0.3초 지연하여 자연스러운 애니메이션을 보여줌.
+		delayedReplace(indexLastFragment);
 		drawerLayout.closeDrawer(drawerList);
 
+	}
+	public void delayedReplace(final int index){
+		new Handler().postDelayed(new Runnable() {
+
+			@Override
+			public void run() {
+				replaceFragment(getFragment(index));		
+			}
+		}, 300);
 	}
 
 	/**
@@ -516,13 +520,13 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 				DrawerMenu.DRAWER_MENU_LIST_TYPE_SECTION));
 		mMenuImages.add(menuCreditFragment);
 		mMenuImages.add(menuSettingFragment);
-		
+
 		mDrawerMenuListAdapter = new DrawerMenuListAdapter(this,
 				R.layout.list_row_drawer_entry, mMenuImages);
 
 		drawerList.setAdapter(mDrawerMenuListAdapter);
 		drawerList.setOnItemClickListener(this);
-		
+
 	}
 
 	@Override
@@ -558,7 +562,7 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 		}
 		return super.onKeyDown(keyCode, event);
 	}
-	
+
 	public void toggleDrawer() {
 		if (!drawerLayout.isDrawerOpen(drawerList)) {
 			drawerLayout.openDrawer(drawerList);
@@ -569,8 +573,10 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 
 	@Override
 	public void finish() {
-		if (backButtonHandler.onBackPressed())
+
+		if (backButtonHandler.onBackPressed()) {
 			super.finish();
+		}
 
 	}
 
@@ -724,7 +730,7 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 	@Override
 	public void onError() {
 		super.onError();
-		
+
 		// Error Fragment를 표시한다.
 		replaceFragment(new ErrorFragment());
 	}

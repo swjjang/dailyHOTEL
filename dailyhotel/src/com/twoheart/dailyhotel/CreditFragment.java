@@ -210,7 +210,7 @@ public class CreditFragment extends BaseFragment implements Constants,
 
 		// check, intent is available.
 		if (!kakaoLink.isAvailableIntent()) {
-			alert("카카오톡이 설치되어 있지 않습니다.");
+			alert(getString(R.string.dialog_msg_not_installed_kakaotalk));
 			return;
 		}
 

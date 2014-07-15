@@ -92,7 +92,7 @@
     <string name="dialog_msg_install_paypin">PayPin 어플리케이션이 설치되어 있지 않습니다. \n설치를 눌러 진행 해 주십시요.\n취소를 누르면 결제가 취소 됩니다.</string>
     <string name="dialog_msg_install_hana_sk">HANA SK 모듈이 설치 되어있지 않습니다.\n설치 하시겠습니까?</string>
     <string name="dialog_msg_chk_wanna_login">로그아웃하시겠습니까?</string>
-    <string name="dialog_msg_not_installed_kakaotalk"></string>
+    <string name="dialog_msg_not_installed_kakaotalk">카카오톡이 설치되어 있지 않습니다.</string>
     <string name="dialog_msg_network_unstable_retry_or_set_wifi">네트워크 연결이 불안정합니다.\n재시도 혹은 와이파이 설정을 확인해주세요.</string>
     <string name="dialog_msg_please_update_new_version">dailyHOTEL의 새로운 버전이 출시되었습니다. 업데이트해주세요</string>
     <string name="dialog_msg_update_now">지금 업그레이드하여 가장 멋진 데일리호텔 앱을 다운받으세요</string>

@@ -245,4 +245,6 @@ public class BookingListFragment extends BaseFragment implements Constants,
 			}
 		}
 	}
+	
+	
 }
