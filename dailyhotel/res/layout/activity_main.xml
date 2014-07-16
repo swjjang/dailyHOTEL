@@ -15,7 +15,7 @@
         android:layout_gravity="start|center_vertical"
         android:background="@android:color/white"
         android:choiceMode="singleChoice"
-        android:divider="#f0f0f0"
+        android:divider="@color/leftdrawer_divider"
         android:dividerHeight="0.5dp"
         android:listSelector="@android:color/transparent" />
 

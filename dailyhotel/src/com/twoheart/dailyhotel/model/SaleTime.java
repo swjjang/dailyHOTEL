@@ -72,6 +72,7 @@ public class SaleTime implements Constants, Parcelable {
 		try {
 			
 			mCurrentTime = new Date(Long.parseLong(currentTime));
+			android.util.Log.e("mCurTime",mCurrentTime.toString());
 			calendar.setTime(mCurrentTime);
 			
 		} catch (NumberFormatException e) {

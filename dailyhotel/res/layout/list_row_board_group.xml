@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#f8f8f8"
+    android:background="@color/bg_board_group_item"
     android:minHeight="50dp"
     android:orientation="horizontal"
     android:gravity="center_vertical"
@@ -24,7 +24,7 @@
         android:scrollHorizontally="true"
         android:singleLine="true"
         android:textSize="16.5dp"
-        android:textColor="#5c5c5c" />
+        android:textColor="@color/textView_textColor_main" />
 
     <TextView
         android:id="@+id/tv_board_regdate"
@@ -33,6 +33,6 @@
         android:layout_below="@id/tv_board_subject"
         android:layout_marginTop="2dp"
         android:textSize="14.5dp"
-        android:textColor="#c6c6c6" />
+        android:textColor="@color/textView_textColor_reg_date" />
 
 </RelativeLayout>

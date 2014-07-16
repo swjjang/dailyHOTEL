@@ -44,12 +44,12 @@
             android:layout_height="1dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:background="#33000000" />
+            android:background="@color/rating_hotel_title_border" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#fafafa"
+            android:background="@color/section_background"
             android:gravity="center"
             android:orientation="vertical"
             android:paddingLeft="10dp"

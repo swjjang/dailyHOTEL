@@ -61,7 +61,7 @@
             android:id="@+id/tv_wait_timer_main"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#5c5c5c"
+            android:textColor="@color/textView_textColor_main"
             android:textSize="20dp" />
 
         <TextView
@@ -71,7 +71,7 @@
             android:layout_marginTop="10dp"
             android:gravity="center"
             android:text="놀라운 가격으로 당신을 찾아갈\n호텔이 기다리고 있어요."
-            android:textColor="#7f7f7f"
+            android:textColor="@color/textView_textColor_sub"
             android:textSize="15dp" />
 
         <ImageView

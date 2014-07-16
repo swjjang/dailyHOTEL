@@ -131,7 +131,7 @@ Constants {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		android.util.Log.e("QQ","WW");
 		//		GaManager gm = GaManager.getInstance(getApplicationContext());
 		//		gm.signupComplete();
 		//		gm.purchaseComplete("JUNHO_TEST", "JUNHO_NAME", "JUNHO_CATEGORY", 90000d);
@@ -166,9 +166,11 @@ Constants {
 			setTheme(R.style.AppTheme);
 		}
 
+		android.util.Log.e("QQ","WW");
 		setContentView(R.layout.activity_main);
 		setNavigationDrawer();
 
+		android.util.Log.e("QQ","WW");
 		mContentFrame = (FrameLayout) findViewById(R.id.content_frame);
 
 		// Android 4.4 이상에서 Android StatusBar와 Android NavigationBar를 Translucent하게 
@@ -199,6 +201,8 @@ Constants {
 		if (DEBUG) {
 			printPackageHashKey();
 		}
+
+		android.util.Log.e("QQ","WW");
 	}
 
 	@Override
@@ -460,14 +464,17 @@ Constants {
 			indexLastFragment = INDEX_SETTING_FRAGMENT;
 			break;
 		}
-		// 드로어 레이아웃이 닫히는데 애니메이션이 부하가 큼. 프래그먼트 전환까지 추가한다면 닫힐때 버벅거리는 현상이 발생. 따라서 0.3초 지연하여 자연스러운 애니메이션을 보여줌.
+		
 		delayedReplace(indexLastFragment);
 		drawerLayout.closeDrawer(drawerList);
 
 	}
+	/**
+	 * 드로어 레이아웃이 닫히는데 애니메이션이 부하가 큼. 프래그먼트 전환까지 추가한다면 닫힐때 버벅거리는 현상이 발생. 따라서 0.3초 지연하여 자연스러운 애니메이션을 보여줌.
+	 * @param index 프래그먼트 인덱스.
+	 */
 	public void delayedReplace(final int index){
 		new Handler().postDelayed(new Runnable() {
-
 			@Override
 			public void run() {
 				replaceFragment(getFragment(index));		

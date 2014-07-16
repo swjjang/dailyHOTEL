@@ -505,7 +505,10 @@ public class HotelListFragment extends BaseFragment implements Constants,
 	@Override
 	public void onResponse(String url, String response) {
 		if (url.contains(URL_WEBAPI_APP_TIME)) {
-			Log.d(TAG, response);
+//			android.util.Log.e(TAG, response);
+//			Long a= Long.parseLong(response);
+//			a+= 1000* 60 * 60 * 12;
+//			mDailyHotelSaleTime.setCurrentTime(a+"");
 			mDailyHotelSaleTime.setCurrentTime(response);
 
 			// 오픈, 클로즈 타임을 가져온다

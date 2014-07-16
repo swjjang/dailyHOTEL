@@ -25,7 +25,7 @@
                 android:layout_marginBottom="20dp"
                 android:gravity="center"
                 android:text="좋은 건 나눠야죠!"
-                android:textColor="#5c5c5c"
+                android:textColor="@color/textView_textColor_main"
                 android:textSize="20dp" />
 
             <TextView
@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="친구가 내 추천코드를 넣고 회원가입을 하면"
-                android:textColor="#7f7f7f"
+                android:textColor="@color/textView_textColor_sub"
                 android:textSize="15dp" />
 
             <TextView
@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="친구는 5,000원을 선물받고!"
-                android:textColor="#7f7f7f"
+                android:textColor="@color/textView_textColor_sub"
                 android:textSize="15dp" />
 
             <TextView
@@ -49,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="친구가 첫 결제를 하면 나도 5,000원 받고!"
-                android:textColor="#7f7f7f"
+                android:textColor="@color/textView_textColor_sub"
                 android:textSize="15dp" />
         </LinearLayout>
 
@@ -104,7 +104,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:text="적립금"
-                android:textColor="#969696"
+                android:textColor="@color/textView_textColor_section"
                 android:textSize="12.5dp" />
         </LinearLayout>
 
@@ -195,7 +195,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:text="추천코드"
-                android:textColor="#969696"
+                android:textColor="@color/textView_textColor_section"
                 android:textSize="12.5dp" />
         </LinearLayout>
 
@@ -252,7 +252,7 @@
             android:layout_height="1dp"
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="30dp"
-            android:background="#dcdcdc" />
+            android:background="@color/common_border" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -267,7 +267,7 @@
                 android:layout_marginTop="10dp"
                 android:gravity="right"
                 android:text="친구가 회원가입 할 때 내 추천코드를 넣으면\n친구는 5,000원 선물받고!\n친구가 처음 결제하면 나도 5,000원 선물받고!"
-                android:textColor="#7f7f7f"
+                android:textColor="@color/textView_textColor_sub"
                 android:textSize="13.5dp" />
         </RelativeLayout>
 

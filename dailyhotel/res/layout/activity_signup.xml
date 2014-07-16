@@ -91,7 +91,7 @@
 	            android:layout_height="fill_parent"
 	            android:layout_weight="0.5"
 	            android:gravity="center"
-	            android:textColor="#7f7f7f"
+	            android:textColor="@color/textView_textColor_sub"
 	            android:text="이용약관"/>
             
             <TextView
@@ -100,7 +100,7 @@
 	            android:layout_height="fill_parent"
 	            android:layout_weight="0.5"
 	            android:gravity="center"
-	            android:textColor="#7f7f7f"
+	            android:textColor="@color/textView_textColor_sub"
 	            android:text="개인정보 취급방침"/>
             
         </LinearLayout>

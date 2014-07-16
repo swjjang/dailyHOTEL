@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.activity;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -20,12 +21,14 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
+import com.twoheart.dailyhotel.HotelListFragment;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.HotelTabBookingFragment;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Log;
+import com.twoheart.dailyhotel.util.SaleCloseAlarmManager;
 import com.twoheart.dailyhotel.util.TabActivity;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -49,6 +52,7 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
 		
 		hotelDetail = new HotelDetail();
 		mSaleTime = new SaleTime();
@@ -74,7 +78,8 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 			btnBooking.setVisibility(View.GONE);
 			btnSoldOut.setVisibility(View.VISIBLE);
 		}
-
+		SaleCloseAlarmManager.getInstance(getApplicationContext()).setAlarm(Calendar.getInstance().getTimeInMillis());;
+//
 	}
 
 	@Override
@@ -139,6 +144,12 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 			
 			String result = response.trim();
 			if (result.equals("alive")) { // session alive
+				
+//				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(
+//						URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_SALE_TIME)
+//						.toString(), null, this,
+//						this));
+				
 				Intent i = new Intent(this, BookingActivity.class);
 				i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELDETAIL, hotelDetail);
 				startActivityForResult(i, CODE_REQUEST_ACTIVITY_BOOKING);
@@ -299,6 +310,8 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 				onError(e);
 				unLockUI();
 			}
+		} else if (url.contains(URL_WEBAPI_APP_SALE_TIME)) {
+			
 		}
 	}
 }

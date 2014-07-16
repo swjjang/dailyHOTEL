@@ -28,7 +28,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:text="로그인 계정"
-                    android:textColor="#969696"
+                    android:textColor="@color/textView_textColor_section"
                     android:textSize="12.5dp" />
             </LinearLayout>
 
@@ -87,7 +87,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:text="사용자 정보"
-                        android:textColor="#969696"
+                        android:textColor="@color/textView_textColor_section"
                         android:textSize="12.5dp" />
 
                     <LinearLayout

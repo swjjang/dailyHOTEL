@@ -19,6 +19,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.KeyEvent;
@@ -31,6 +32,7 @@ import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.RequestQueue.RequestFilter;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
@@ -50,6 +52,8 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	protected Toast mToast;
 	
 	private LoadingDialog mLockUI;
+
+	private RequestFilter cancelAllRequestFilter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,20 +62,22 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 		mQueue = VolleyHttpClient.getRequestQueue();
 		mLockUI = new LoadingDialog(this);
 		
+		cancelAllRequestFilter = new RequestQueue.RequestFilter() {
+		    @Override
+	        public boolean apply(Request<?> request) {
+	            return true;
+	        }
+	    };
+	    
 	}
 	
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
-		
+		showToast("TEST", 1, false);
 		// RequestQueue에 등록된 모든 Request들을 취소한다.
 		if (mQueue != null)
-			mQueue.cancelAll(new RequestQueue.RequestFilter() {
-			    @Override
-		        public boolean apply(Request<?> request) {
-		            return true;
-		        }
-		    });
+			mQueue.cancelAll(cancelAllRequestFilter);
 	}
 
 	@Override
@@ -212,6 +218,19 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	@Override
 	public void lockUI() {
 		mLockUI.show();
+		
+		// 만약 제한시간이 지났는데도 리퀘스트가 끝나지 않았다면 Error 발생.
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				if(mLockUI.isVisible()) {
+					mQueue.cancelAll(cancelAllRequestFilter);
+					unLockUI();
+					onError();
+				}
+			}
+		}, REQUEST_EXPIRE_JUDGE);
+		
 	}
 
 	/**

@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="#7F000000"
+            android:background="@color/bg_hotel_imgs_indicator"
             android:padding="10dp" />
     </RelativeLayout>
 
@@ -52,7 +52,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:text="주소"
-                    android:textColor="#7f7f7f"
+                    android:textColor="@color/textView_textColor_sub"
                     android:textSize="15dp" />
 
                 <TextView
@@ -68,7 +68,7 @@
                     android:scrollHorizontally="true"
                     android:singleLine="true"
                     android:text="경기도 안양시 관양동 1455-1"
-                    android:textColor="#5c5c5c"
+                    android:textColor="@color/textView_textColor_main"
                     android:textSize="16dp" />
             </RelativeLayout>
 
@@ -85,7 +85,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="베드타입"
-                    android:textColor="#7f7f7f"
+                    android:textColor="@color/textView_textColor_sub"
                     android:textSize="15dp" />
 
                 <TextView
@@ -102,7 +102,7 @@
                     android:scrollHorizontally="true"
                     android:singleLine="true"
                     android:text="더블싱글룸"
-                    android:textColor="#5c5c5c"
+                    android:textColor="@color/textView_textColor_main"
                     android:textSize="16dp" />
             </RelativeLayout>
         </RelativeLayout>
@@ -111,7 +111,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginLeft="10dp"
-            android:background="#dcdcdc" />
+            android:background="@color/common_border" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -133,7 +133,7 @@
                 android:scrollHorizontally="true"
                 android:singleLine="true"
                 android:text="가격(세금&amp;봉사료 포함)"
-                android:textColor="#7f7f7f"
+                android:textColor="@color/textView_textColor_sub"
                 android:textSize="15dp" />
 
             <TextView
@@ -148,7 +148,7 @@
                 android:scrollHorizontally="true"
                 android:singleLine="true"
                 android:text="73,000원 "
-                android:textColor="#ff7a7a"
+                android:textColor="@color/dh_theme_color"
                 android:textSize="16dp"
                 android:textStyle="bold" />
 
@@ -164,14 +164,14 @@
                 android:scrollHorizontally="true"
                 android:singleLine="true"
                 android:text="210,000원"
-                android:textColor="#5c5c5c"
+                android:textColor="@color/textView_textColor_main"
                 android:textSize="15dp" />
         </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#dcdcdc" />
+            android:background="@color/common_border" />
     </LinearLayout>
 
 </LinearLayout>

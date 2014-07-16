@@ -26,7 +26,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="#8c8c8c" />
+            android:background="@color/setting_fragment_section_border" />
 
         <TextView
             android:id="@+id/tv_setting_call"
@@ -58,7 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginLeft="10dp"
-            android:background="#dcdcdc" />
+            android:background="@color/common_border" />
 
         <TextView
             android:id="@+id/tv_setting_notice"
@@ -74,7 +74,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginLeft="10dp"
-            android:background="#dcdcdc" />
+            android:background="@color/common_border" />
 
         <TextView
             android:id="@+id/tv_setting_help"
@@ -90,7 +90,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginLeft="10dp"
-            android:background="#dcdcdc" />
+            android:background="@color/common_border" />
 
         <!-- 소개 -->
 
@@ -106,7 +106,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="#8c8c8c" />
+            android:background="@color/setting_fragment_section_border" />
 
         <TextView
             android:id="@+id/tv_setting_introduction"
@@ -122,7 +122,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginLeft="10dp"
-            android:background="#dcdcdc" />
+            android:background="@color/common_border" />
 
         <!-- 앱 -->
 
@@ -138,7 +138,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="#8c8c8c" />
+            android:background="@color/setting_fragment_section_border" />
 
         <LinearLayout
             android:id="@+id/ll_setting_version"
@@ -171,7 +171,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginLeft="10dp"
-            android:background="#dcdcdc" />
+            android:background="@color/common_border" />
 
         <!-- 계정 -->
 
@@ -187,7 +187,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="#8c8c8c" />
+            android:background="@color/setting_fragment_section_border" />
         
         <LinearLayout
             android:id="@+id/ll_setting_login"
@@ -221,7 +221,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginLeft="10dp"
-            android:background="#dcdcdc" />
+            android:background="@color/common_border" />
     </LinearLayout>
 
 </ScrollView>

@@ -40,6 +40,10 @@ public class LoadingDialog {
 			}
 		});
 	}
+	
+	public boolean isVisible() {
+		return mDialog.isShowing();
+	}
 
 	public void show() {
 		if (!mDialog.isShowing())

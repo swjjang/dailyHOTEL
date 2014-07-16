@@ -26,14 +26,15 @@ import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.provider.Settings;
+import android.view.KeyEvent;
 
 import com.android.volley.Request.Method;
 import com.android.volley.Response.ErrorListener;
@@ -114,6 +115,18 @@ DailyHotelJsonResponseListener, ErrorListener {
 						dialog.dismiss();
 					}
 				});
+				builder.setOnKeyListener(new OnKeyListener() {
+					@Override
+						public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+						if(keyCode == KeyEvent.KEYCODE_BACK){
+							dialog.dismiss();
+							finish();
+							return true;
+						}
+						return false;
+					}
+				});
+				
 				alertDlg = builder.create();
 			}
 			

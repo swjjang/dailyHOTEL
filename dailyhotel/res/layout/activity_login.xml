@@ -91,7 +91,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="비밀번호를 잊어버리셨어요?"
-            android:textColor="#7f7f7f"
+            android:textColor="@color/textView_textColor_sub"
             android:textSize="12dp" />
 
         <TextView
@@ -99,7 +99,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="|"
-            android:textColor="#7f7f7f"
+            android:textColor="@color/textView_textColor_sub"
             android:textSize="14.5dp" />
 
         <TextView
@@ -109,7 +109,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="회원가입"
-            android:textColor="#7f7f7f"
+            android:textColor="@color/textView_textColor_sub"
             android:textSize="12dp" />
     </LinearLayout>
 

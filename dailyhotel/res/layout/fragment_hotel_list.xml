@@ -23,7 +23,7 @@
             android:id="@+id/listview_hotel_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:cacheColorHint="#00000000"
+            android:cacheColorHint="@android:color/transparent"
             android:divider="@null" />
     </uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout>
     

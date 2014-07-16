@@ -1,18 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="dh_theme_color">#FF7A7A</color>
+  
+    <color name="actionbar_border">#7f7f7f</color>
+    
     <color name="drawermenu_border">#d6d6d6</color>
-    <color name="common_borer">#dcdcdc</color>
+    <color name="common_border">#dcdcdc</color>
     <color name="section_border">#ebebeb</color>
     <color name="section_background">#fafafa</color>
+    <color name="rating_hotel_title_border">#33000000</color>
+    <color name="setting_fragment_section_border">#8c8c8c</color>
+    
     <color name="textView_textColor_section">#969696</color>
     <color name="textView_textColor_main">#5c5c5c</color>
-    <color name="textView_textColor_sub">#7f7f7f</color>
+    <color name="textView_textColor_sub">#7f7f7f</color> 
     <color name="textView_textColor_disabled">#c6c6c6</color>
+    <color name="textView_textColor_reg_date">#c6c6c6</color>
+    <color name="textView_textColor_shadow">#7F000000</color>
+    <color name="textView_textColor_shadow_soldout">#AF000000</color>
+    
     <color name="tab_background">#f4f4f4</color>
     <color name="button_background">#FF7A7A</color>
-    <color name="dh_theme_color">#FF7A7A</color>
     <color name="activity_background">#fdfdfd</color>
-    <color name="real_red">#ff0000</color>
+    <color name="leftdrawer_divider">#f0f0f0</color>
+    
+    <color name="bg_hotel_imgs_indicator">#7F000000</color>
+    <color name="bg_board_group_item">#f8f8f8</color>
+    
+ 	<color name="vpi_fillcolor">#99000000</color>
+ 	<color name="vpi_pagecolor">#33000000</color>
     
     <color name="grade_hotel">#055870</color>
     <color name="grade_boutique">#9f2d58</color>

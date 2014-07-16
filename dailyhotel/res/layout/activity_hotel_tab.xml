@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_alignParentTop="true"
-        android:background="#f4f4f4" />
+        android:background="@color/tab_background" />
     
     <RelativeLayout
         android:id="@+id/rl_hotel_tab_buttons"

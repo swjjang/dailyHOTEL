@@ -48,6 +48,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Pay;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Log;
+import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 public class PaymentActivity extends BaseActivity implements Constants {
@@ -460,9 +461,13 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		public void onReceivedError(WebView view, int errorCode,
 				String description, String failingUrl) {
 			super.onReceivedError(view, errorCode, description, failingUrl);
-
+			android.util.Log.e("ErrorCode / Description / failingUrl",errorCode+" / "+description + " / " + failingUrl);
 			webView.loadUrl("about:blank");
-			setResult(CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR);
+			if(VolleyHttpClient.isAvailableNetwork()) {
+				setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);
+			} else{
+				setResult(CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR);
+			}
 			finish();
 		}
 

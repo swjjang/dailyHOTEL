@@ -2,7 +2,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
     <item>
         <shape>
-            <solid android:color="@color/common_borer" />
+            <solid android:color="@color/common_border" />
         </shape>
     </item>
     <item
