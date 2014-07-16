@@ -147,6 +147,7 @@ public interface Constants {
 
 	public static final int CODE_REQUEST_ISPMOBILE = 8;
 	public static final int CODE_REQUEST_KFTC_BANKPAY = 9;
+	public static final int RESULT_SALES_CLOSED = 10; // 예약을 하려 버튼을 눌렀는데 주문 시간이 지난경우.
 
 	// Android Activity의 Result Code들이다.
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_FAIL = 100;
@@ -154,7 +155,7 @@ public interface Constants {
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION = 102; // 
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_SOLD_OUT = 103; // 완판되었을때.
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE = 104;
-	public static final int CODE_RESULT_ACTIVITY_PAYMENT_INVALID_DATE = 105; // 새벽 2시를 넘었을때, 즉 주문 가능한 시간이 아닌시간에 주문하였을때
+	public static final int CODE_RESULT_ACTIVITY_PAYMENT_INVALID_DATE = 105; 
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_NOT_AVAILABLE = 106;
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR = 107;
 	public static final int CODE_RESULT_ACTIVITY_SPLASH_NEW_EVENT = 108;

@@ -21,14 +21,12 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
-import com.twoheart.dailyhotel.HotelListFragment;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.HotelTabBookingFragment;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Log;
-import com.twoheart.dailyhotel.util.SaleCloseAlarmManager;
 import com.twoheart.dailyhotel.util.TabActivity;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -39,21 +37,21 @@ import com.twoheart.dailyhotel.widget.HotelViewPager;
 import com.viewpagerindicator.TabPageIndicator;
 
 public class HotelTabActivity extends TabActivity implements OnClickListener,
-		DailyHotelJsonResponseListener,
-		DailyHotelStringResponseListener {
+DailyHotelJsonResponseListener,
+DailyHotelStringResponseListener {
 
 	private static final String TAG = "HotelTabActivity";
-	
+
 	protected SaleTime mSaleTime;
-	
+
 	private Button btnSoldOut;
 	private Button btnBooking;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		
+
+
 		hotelDetail = new HotelDetail();
 		mSaleTime = new SaleTime();
 		Bundle bundle = getIntent().getExtras();
@@ -62,7 +60,7 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 					.getParcelable(NAME_INTENT_EXTRA_DATA_HOTEL));
 			mSaleTime = bundle.getParcelable(NAME_INTENT_EXTRA_DATA_SALETIME);
 		}
-		
+
 		setContentView(R.layout.activity_hotel_tab);
 
 		mViewPager = (HotelViewPager) findViewById(R.id.pager);
@@ -78,18 +76,16 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 			btnBooking.setVisibility(View.GONE);
 			btnSoldOut.setVisibility(View.VISIBLE);
 		}
-		SaleCloseAlarmManager.getInstance(getApplicationContext()).setAlarm(Calendar.getInstance().getTimeInMillis());;
-//
 	}
 
 	@Override
 	protected void onPostSetCookie() {
 		String url = new StringBuilder(URL_DAILYHOTEL_SERVER)
-				.append(URL_WEBAPI_HOTEL_DETAIL)
-				.append(hotelDetail.getHotel().getIdx()).append("/")
-				.append(mSaleTime.getCurrentYear()).append("/")
-				.append(mSaleTime.getCurrentMonth()).append("/")
-				.append(mSaleTime.getCurrentDay()).toString();
+		.append(URL_WEBAPI_HOTEL_DETAIL)
+		.append(hotelDetail.getHotel().getIdx()).append("/")
+		.append(mSaleTime.getCurrentYear()).append("/")
+		.append(mSaleTime.getCurrentMonth()).append("/")
+		.append(mSaleTime.getCurrentDay()).toString();
 
 		Log.d(TAG, url);
 
@@ -116,16 +112,16 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 		if (requestCode == CODE_REQUEST_ACTIVITY_BOOKING) {
 			setResult(resultCode);
 
-			if (resultCode == RESULT_OK) {
+			if (resultCode == RESULT_OK || resultCode == RESULT_SALES_CLOSED) {
 				finish();
-			}
+			} 
 		} else if (requestCode == CODE_REQUEST_ACTIVITY_LOGIN) {
 			if (resultCode == RESULT_OK)
 				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(
 						URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE)
 						.toString(), null, this, this));
 		}
-
+		
 
 		super.onActivityResult(requestCode, resultCode, data);
 	}
@@ -141,22 +137,22 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 	public void onResponse(String url, String response) {
 		if (url.contains(URL_WEBAPI_USER_ALIVE)) {
 			unLockUI();
-			
+
 			String result = response.trim();
 			if (result.equals("alive")) { // session alive
-				
-//				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(
-//						URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_SALE_TIME)
-//						.toString(), null, this,
-//						this));
-				
+
+				//				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(
+				//						URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_SALE_TIME)
+				//						.toString(), null, this,
+				//						this));
+
 				Intent i = new Intent(this, BookingActivity.class);
 				i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELDETAIL, hotelDetail);
 				startActivityForResult(i, CODE_REQUEST_ACTIVITY_BOOKING);
 				overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
 			} else if (result.equals("dead")) { // session dead
-				
+
 				// 재로그인
 				if (sharedPreference.getBoolean(
 						KEY_PREFERENCE_AUTO_LOGIN, false)) {
@@ -180,7 +176,7 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 					mQueue.add(new DailyHotelJsonRequest(Method.POST,
 							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 									URL_WEBAPI_USER_LOGIN).toString(),
-							loginParams, this, this));
+									loginParams, this, this));
 				} else {
 					loadLoginProcess();
 				}
@@ -199,7 +195,7 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 		i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP); // 7.2 S2에서 예약버튼 난타할 경우 여러개의 엑티비티가 생성되는것을 막음
 		startActivityForResult(i,
 				CODE_REQUEST_ACTIVITY_LOGIN);
-		
+
 		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 	}
 
@@ -216,10 +212,10 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 						.getString("discount")));
 				String strPrice = comma.format(Integer.parseInt(detailObj
 						.getString("price")));
-				
+
 				if (hotelDetail.getHotel() == null)
-					 hotelDetail.setHotel(new Hotel());
-				
+					hotelDetail.setHotel(new Hotel());
+
 				Hotel hotelBasic = hotelDetail.getHotel();
 
 				hotelBasic.setAddress(detailObj.getString("address"));
@@ -228,7 +224,7 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 				hotelBasic.setPrice(strPrice);
 				hotelBasic.setCategory(detailObj.getString("cat"));
 				hotelBasic.setBedType(detailObj.getString("bed_type"));
-				
+
 				hotelDetail.setHotel(hotelBasic);
 
 				JSONArray imgArr = detailObj.getJSONArray("img");
@@ -269,13 +265,13 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 
 				hotelDetail.setLatitude(latitude);
 				hotelDetail.setLongitude(longitude);
-				
+
 				int saleIdx = detailObj.getInt("idx");
 				hotelDetail.setSaleIdx(saleIdx);
-				
+
 				mFragments.clear();
 				loadFragments();
-				
+
 				unLockUI();
 
 			} catch (Exception e) {
@@ -293,25 +289,26 @@ public class HotelTabActivity extends TabActivity implements OnClickListener,
 					ed.putString(KEY_PREFERENCE_USER_ID, null);
 					ed.putString(KEY_PREFERENCE_USER_PWD, null);
 					ed.commit();
-					
+
 					unLockUI();
 					loadLoginProcess();
-					
+
 				} else {
 					VolleyHttpClient.createCookie();
-					
+
 					mQueue.add(new DailyHotelStringRequest(Method.GET,
 							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 									URL_WEBAPI_USER_ALIVE).toString(), null, this, this));
-					
+
 				}
-				
+
 			} catch (JSONException e) {
 				onError(e);
 				unLockUI();
 			}
-		} else if (url.contains(URL_WEBAPI_APP_SALE_TIME)) {
-			
-		}
+		} 
+		//		else if (url.contains(URL_WEBAPI_APP_SALE_TIME)) {
+		//			
+		//		}
 	}
 }

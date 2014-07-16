@@ -31,6 +31,8 @@ import uk.co.senab.actionbarpulltorefresh.library.Options;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.AbsListViewDelegate;
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -309,7 +311,6 @@ public class HotelListFragment extends BaseFragment implements Constants,
 				mDailyHotelSaleTime.setOpenTime(open);
 				mDailyHotelSaleTime.setCloseTime(close);
 				
-
 				if (!mDailyHotelSaleTime.isSaleTime()) {
 					((MainActivity) mHostActivity).replaceFragment(WaitTimerFragment.newInstance(
 							mDailyHotelSaleTime));
@@ -505,10 +506,6 @@ public class HotelListFragment extends BaseFragment implements Constants,
 	@Override
 	public void onResponse(String url, String response) {
 		if (url.contains(URL_WEBAPI_APP_TIME)) {
-//			android.util.Log.e(TAG, response);
-//			Long a= Long.parseLong(response);
-//			a+= 1000* 60 * 60 * 12;
-//			mDailyHotelSaleTime.setCurrentTime(a+"");
 			mDailyHotelSaleTime.setCurrentTime(response);
 
 			// 오픈, 클로즈 타임을 가져온다
@@ -519,6 +516,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 
 		}
 	}
+
 
 	@Override
 	public void onRefreshStarted(View view) {

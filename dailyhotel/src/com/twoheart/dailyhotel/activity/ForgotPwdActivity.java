@@ -66,7 +66,7 @@ public class ForgotPwdActivity extends BaseActivity implements Constants,
 			String strEmail = etForgot.getText().toString();
 
 			if (strEmail.equals("")) {
-				showToast(getString(R.string.toast_msg_input_email_address), Toast.LENGTH_SHORT, true);
+				showToast(getString(R.string.toast_msg_please_input_email_address), Toast.LENGTH_SHORT, true);
 				return;
 			} 
 			

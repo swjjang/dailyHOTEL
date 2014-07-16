@@ -131,7 +131,6 @@ Constants {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		android.util.Log.e("QQ","WW");
 		//		GaManager gm = GaManager.getInstance(getApplicationContext());
 		//		gm.signupComplete();
 		//		gm.purchaseComplete("JUNHO_TEST", "JUNHO_NAME", "JUNHO_CATEGORY", 90000d);
@@ -166,11 +165,9 @@ Constants {
 			setTheme(R.style.AppTheme);
 		}
 
-		android.util.Log.e("QQ","WW");
 		setContentView(R.layout.activity_main);
 		setNavigationDrawer();
 
-		android.util.Log.e("QQ","WW");
 		mContentFrame = (FrameLayout) findViewById(R.id.content_frame);
 
 		// Android 4.4 이상에서 Android StatusBar와 Android NavigationBar를 Translucent하게 
@@ -202,7 +199,6 @@ Constants {
 			printPackageHashKey();
 		}
 
-		android.util.Log.e("QQ","WW");
 	}
 
 	@Override

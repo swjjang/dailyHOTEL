@@ -54,6 +54,10 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	private LoadingDialog mLockUI;
 
 	private RequestFilter cancelAllRequestFilter;
+
+	private Handler handler;
+
+	private Runnable networkCheckRunner;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,12 +73,23 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	        }
 	    };
 	    
+	    handler = new Handler();
+		networkCheckRunner = new Runnable() {
+			@Override
+			public void run() {
+				if(mLockUI.isVisible()) {
+					mQueue.cancelAll(cancelAllRequestFilter);
+					unLockUI();
+					onError();
+				}
+			}
+		};
+	    
 	}
 	
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
-		showToast("TEST", 1, false);
 		// RequestQueue에 등록된 모든 Request들을 취소한다.
 		if (mQueue != null)
 			mQueue.cancelAll(cancelAllRequestFilter);
@@ -218,18 +233,8 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	@Override
 	public void lockUI() {
 		mLockUI.show();
-		
 		// 만약 제한시간이 지났는데도 리퀘스트가 끝나지 않았다면 Error 발생.
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				if(mLockUI.isVisible()) {
-					mQueue.cancelAll(cancelAllRequestFilter);
-					unLockUI();
-					onError();
-				}
-			}
-		}, REQUEST_EXPIRE_JUDGE);
+		handler.postDelayed(networkCheckRunner, REQUEST_EXPIRE_JUDGE);
 		
 	}
 
@@ -240,6 +245,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	public void unLockUI() {
 		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
 		mLockUI.hide();
+		handler.removeCallbacks(networkCheckRunner);
 		
 	}
 

@@ -46,7 +46,7 @@ public class ErrorFragment extends BaseFragment implements OnClickListener {
 
 			// network 연결이 안되있으면
 			if (!VolleyHttpClient.isAvailableNetwork()) {
-				showToast(getString(R.string.toast_msg_chk_network_status), Toast.LENGTH_SHORT, true);
+				showToast(getString(R.string.toast_msg_please_chk_network_status), Toast.LENGTH_SHORT, true);
 				return;
 			} else {
 				int index = ((MainActivity) mHostActivity).indexLastFragment;
