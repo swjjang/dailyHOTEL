@@ -1,8 +1,12 @@
 package com.twoheart.dailyhotel.adapter;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.view.View;
 
 import com.twoheart.dailyhotel.fragment.ImageViewFragment;
 import com.twoheart.dailyhotel.model.HotelDetail;
@@ -12,20 +16,29 @@ public class HotelImageFragmentPagerAdapter extends FragmentPagerAdapter impleme
 
 	private HotelDetail mHotelDetail;
 	private int curPosReal;
-
+	private HashMap<String,ImageViewFragment> mPrevIvFrags;
+	
 	public HotelImageFragmentPagerAdapter(FragmentManager fm, 
 			HotelDetail mHotelDetail) {
 		super(fm);
 		this.mHotelDetail = mHotelDetail;
 		this.curPosReal = 0;
+		mPrevIvFrags = new HashMap<String, ImageViewFragment>();
 	}
 
 	@Override
 	public Fragment getItem(int position) {
 		position = getRealPos(position);
 		curPosReal = position;
-		ImageViewFragment item = ImageViewFragment.newInstance(mHotelDetail.getImageUrl()
-				.get(position), mHotelDetail);
+		
+		ImageViewFragment item = mPrevIvFrags.get(position);
+		
+		if (item == null) {
+			item = ImageViewFragment.newInstance(mHotelDetail.getImageUrl()
+					.get(position), mHotelDetail);
+			mPrevIvFrags.put(mHotelDetail.getImageUrl()
+					.get(position), item);
+		}
 		
 		return item;
 	}

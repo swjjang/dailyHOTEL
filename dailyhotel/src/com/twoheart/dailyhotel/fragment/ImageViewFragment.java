@@ -57,7 +57,6 @@ public class ImageViewFragment extends BaseFragment implements OnClickListener, 
 
 		View view = inflater.inflate(R.layout.fragment_image_view, container,
 				false);
-//		mImageView = (ImageView) view.findViewById(R.id.iv_image_view);
 		mImageView = (ImageView) view.findViewById(R.id.iv_image_view);
 		mProgressBar = (ProgressBar) view.findViewById(R.id.pb_image_view);
 		
