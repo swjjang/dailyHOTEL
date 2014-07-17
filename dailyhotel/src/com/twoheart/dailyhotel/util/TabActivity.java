@@ -30,7 +30,6 @@ public abstract class TabActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mFragments = new LinkedList<BaseFragment>();
-		
 	}
 	
 	protected abstract void onPostSetCookie();
