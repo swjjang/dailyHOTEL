@@ -196,42 +196,43 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 	public void onClick(View v) {
 		if (v.getId() == btnPay.getId()) {
 
-			//			if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentAccount
-			//					.getId()) { // 무통장 입금을 선택했을 경우
-			//
-			//				AlertDialog.Builder alert = new AlertDialog.Builder(this);
-			//				alert.setPositiveButton("전화",
-			//						new DialogInterface.OnClickListener() {
-			//							@Override
-			//							public void onClick(DialogInterface dialog,
-			//									int which) {
-			//								Intent i = new Intent(
-			//										Intent.ACTION_DIAL,
-			//										Uri.parse(new StringBuilder("tel:")
-			//												.append(PHONE_NUMBER_DAILYHOTEL)
-			//												.toString()));
-			//								startActivity(i);
-			//							}
-			//						});
-			//				alert.setNegativeButton("취소",
-			//						new DialogInterface.OnClickListener() {
-			//							@Override
-			//							public void onClick(DialogInterface dialog,
-			//									int which) {
-			//								dialog.dismiss(); // 닫기
-			//							}
-			//						});
-			//
-			//				alert.setMessage("무통장 입금은 전화 통화를 통해 진행됩니다. 입금 순서에 따라 예약되며, 예약 확정 후 문자가 도착합니다.");
-			//				alert.show();
-			//
-			//			} else if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentCard
-			//					.getId()) { // 신용카드를 선택했을 경우
-			lockUI();
-			mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(
-					URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_TIME)
-					.toString(), null, BookingActivity.this,
-					this));
+			if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentAccount
+					.getId()) { // 무통장 입금을 선택했을 경우
+
+				AlertDialog.Builder alert = new AlertDialog.Builder(this);
+				alert.setPositiveButton("전화",
+						new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog,
+							int which) {
+						Intent i = new Intent(
+								Intent.ACTION_DIAL,
+								Uri.parse(new StringBuilder("tel:")
+								.append(PHONE_NUMBER_DAILYHOTEL)
+								.toString()));
+						startActivity(i);
+					}
+				});
+				alert.setNegativeButton("취소",
+						new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog,
+							int which) {
+						dialog.dismiss(); // 닫기
+					}
+				});
+
+				alert.setMessage("무통장 입금은 전화 통화를 통해 진행됩니다. 입금 순서에 따라 예약되며, 예약 확정 후 문자가 도착합니다.");
+				alert.show();
+
+			} else if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentCard
+					.getId()) { // 신용카드를 선택했을 경우
+				lockUI();
+				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(
+						URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_TIME)
+						.toString(), null, BookingActivity.this,
+						this));
+			}
 
 		} else if (v.getId() == rbPaymentAccount.getId() | v.getId() == rbPaymentCard.getId()) {
 			svBooking.fullScroll(View.FOCUS_DOWN);
@@ -389,14 +390,14 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 
 			if (checkedId == rbPaymentAccount.getId()) {
 				wayToPay = "BANK";
-				//				btnPay.setText("전화로 문의하기");
-				//				tvPaymentInformation
-				//						.setText("계좌정보: 206037-04-005094 | 국민은행 | (주)데일리");
+				btnPay.setText("전화로 문의하기");
+				tvPaymentInformation
+				.setText("계좌정보: 206037-04-005094 | 국민은행 | (주)데일리");
 
 			} else if (checkedId == rbPaymentCard.getId()) {
 				wayToPay = null;
-				//				btnPay.setText("결제하기");
-				//				tvPaymentInformation.setText("당일 예약 특성 상 취소 및 환불이 불가합니다.");
+				btnPay.setText("결제하기");
+				tvPaymentInformation.setText("당일 예약 특성 상 취소 및 환불이 불가합니다.");
 
 			}
 

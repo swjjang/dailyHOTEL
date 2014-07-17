@@ -65,7 +65,6 @@ public class PaymentActivity extends BaseActivity implements Constants {
 	private final Handler handler = new Handler();
 
 	private Pay mPay;
-	private boolean isModuleLoaded;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +72,6 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		setActionBarProgressBar();
 
 		setContentView(R.layout.activity_payment);
-
 
 		Bundle bundle = getIntent().getExtras();
 		if (bundle != null) {
@@ -106,7 +104,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 				return true;
 			}
 		}); // 롱클릭 에러 방지.
-		
+
 		if (mPay == null) {
 			showToast(getString(R.string.toast_msg_failed_to_get_payment_info), Toast.LENGTH_SHORT, false);
 			finish();
@@ -151,18 +149,6 @@ public class PaymentActivity extends BaseActivity implements Constants {
 	}
 
 	private byte[] parsePostParameter(String[] key, String[] value) {
-
-		String keys="";
-		String values = "";
-		for(String k : key) {
-			keys+= (k+" ");
-		}
-		for(String v : value) {
-			values+= (v+" ");
-		}
-
-		android.util.Log.e("keys",keys);
-		android.util.Log.e("vals",values);
 
 		List<byte[]> resultList = new ArrayList<byte[]>();
 		HashMap<String, byte[]> postParameters = new HashMap<String, byte[]>();
@@ -305,9 +291,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 					view.goBack();
 					return true; 
 				} 
-			}
-
-			if ( url.startsWith( "kftc-bankpay" ) ) { // 7.9 이니시스 모듈 연동 테스트
+			} else if ( url.startsWith( "kftc-bankpay" ) ) { // 7.9 이니시스 모듈 연동 테스트
 				if( !new PackageState(this).getPackageDownloadInstallState( PACKAGE_NAME_KFTC ) ) { 
 					startActivity( new Intent(
 							Intent.ACTION_VIEW, 
@@ -315,8 +299,15 @@ public class PaymentActivity extends BaseActivity implements Constants {
 					view.goBack();
 					return true; 
 				} 
-			}
+			} else if (url.startsWith("mpocket.online.ansimclick")) {
+				if (!new PackageState(this).getPackageDownloadInstallState(PACKAGE_NAME_MPOCKET)) {
+					showToast(getString(R.string.toast_msg_retry_payment_after_install_app), Toast.LENGTH_LONG, false);
+					startActivity(new Intent(
+							Intent.ACTION_VIEW,
+							Uri.parse(URL_STORE_PAYMENT_MPOCKET)));
 
+					return true;
+				}
 			/*  else if ( url.startsWith( "paypin" ) ) { if(
 			 * !new PackageState( this ).getPackageDownloadInstallState(
 			 * "com.skp.android.paypin" ) ) { if( !url_scheme_intent(
@@ -326,39 +317,13 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			 * 
 			 * return true; } }
 			 */
-
-			// 삼성과 같은 경우 어플이 없을 경우 마켓으로 이동 할수 있도록 넣은 샘플 입니다.
-			// 실제 구현시 업체 구현 여부에 따라 삭제 처리 하시는것이 좋습니다.
-			if (url.startsWith("mpocket.online.ansimclick")) {
-				if (!new PackageState(this)
-				.getPackageDownloadInstallState(PACKAGE_NAME_MPOCKET)) {
-
-					showToast(getString(R.string.toast_msg_retry_payment_after_install_app), Toast.LENGTH_LONG, false);
-
-					startActivity(new Intent(
-							Intent.ACTION_VIEW,
-							Uri.parse(URL_STORE_PAYMENT_MPOCKET)));
-
-					return true;
-				}
 			}
-
-			// try
-			// {
-			// startActivity( new Intent( Intent.ACTION_VIEW, Uri.parse( url ) )
-			// );
-			// }
-			// catch(Exception e)
-			// {
-			// // 어플이 설치 안되어 있을경우 오류 발생. 해당 부분은 업체에 맞게 구현
-			// Toast.makeText(this, "해당 어플을 설치해 주세요.",
-			// Toast.LENGTH_LONG).show();
-			// }
-
-			Uri uri = Uri.parse(url);
-			Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-
+			
+			// 결제 모듈 실행.
 			try {
+				Uri uri = Uri.parse(url);
+				Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+				
 				int requestCode = 0;
 				if (url.startsWith("kftc-bankpay")) {
 					requestCode = CODE_REQUEST_KFTC_BANKPAY;
@@ -367,7 +332,6 @@ public class PaymentActivity extends BaseActivity implements Constants {
 				}
 
 				startActivityForResult(intent, requestCode);
-				isModuleLoaded = true;
 			} catch (ActivityNotFoundException e) {
 				return true;
 			}
@@ -384,7 +348,6 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		String scriptForSkip = "javascript:";
 		if (requestCode == CODE_REQUEST_ISPMOBILE) {
 			scriptForSkip+="submitIspAuthInfo('RUNSCHEME');"; // ISP 확인 버튼 콜
-
 		} else if (requestCode == CODE_REQUEST_KFTC_BANKPAY) {
 			scriptForSkip+="returnUrltoMall();"; //KTFC 확인 버튼 콜
 		}
@@ -418,14 +381,10 @@ public class PaymentActivity extends BaseActivity implements Constants {
 	private class mWebViewClient extends WebViewClient {
 
 		public mWebViewClient() {
-			// TODO Auto-generated constructor stub
 		}
 
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
-			android.util.Log.e("URL",url);
-			android.util.Log.e("URL?","");
-
 			Log.d(ResultRcvActivity.m_strLogTag,
 					"[PayDemoActivity] called__shouldOverrideUrlLoading - url=["
 							+ url + "]");
@@ -441,9 +400,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 						view.loadUrl(url);
 						return false;
 					}
-				}
-
-				else if (url.startsWith("mailto:")) {
+				} else if (url.startsWith("mailto:")) {
 					return false;
 				} else if (url.startsWith("tel:")) {
 					return false;
@@ -902,5 +859,5 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		AlertDialog alert = alertDialog.create();
 		alert.show();
 	}
-	
+
 }
