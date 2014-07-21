@@ -39,15 +39,12 @@ import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
-import com.android.volley.VolleyError;
 import com.facebook.FacebookAuthorizationException;
 import com.facebook.FacebookOperationCanceledException;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
-import com.facebook.SessionLoginBehavior;
 import com.facebook.SessionState;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
@@ -58,12 +55,11 @@ import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
-import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 import com.twoheart.dailyhotel.widget.Switch;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class LoginActivity extends BaseActivity implements Constants,
-		OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
+OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 
 	private static final String TAG = "LoginActivity";
 
@@ -96,7 +92,7 @@ public class LoginActivity extends BaseActivity implements Constants,
 		tvForgotPwd.setOnClickListener(this);
 		btnLogin.setOnClickListener(this);
 		facebookLogin.setOnClickListener(this);
-		
+
 		etPwd.setId(EditorInfo.IME_ACTION_DONE);
 		etPwd.setOnEditorActionListener(new OnEditorActionListener() {
 
@@ -111,78 +107,81 @@ public class LoginActivity extends BaseActivity implements Constants,
 				return false;
 			}
 		});
-		
+
 		if (Session.getActiveSession() != null)
 			Session.getActiveSession().closeAndClearTokenInformation();
-		
+
 	}
-	
+
 	private void makeMeRequest(final Session session) {
 
 		Request request = Request.newMeRequest(session,
 				new Request.GraphUserCallback() {
 
-					@Override
-					public void onCompleted(GraphUser user, Response response) {
+			@Override
+			public void onCompleted(GraphUser user, Response response) {
+				android.util.Log.e("Uer!!",user.toString());
+				android.util.Log.e("Response!!",response.toString());
+				if (user != null) {
+					TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext()
+							.getSystemService(Context.TELEPHONY_SERVICE);
 
-						if (user != null) {
-							TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext()
-									.getSystemService(Context.TELEPHONY_SERVICE);
-							
-							String userEmail = null;
-							
-							try {
-								if (user.getProperty("email") != null)
-									userEmail = user.getProperty("email").toString();
-							} catch (Exception e) {
-								if (DEBUG)
-									e.printStackTrace();
-							}
-								
-							String userId = user.getId();
-							String encryptedId = Crypto.encrypt(userId)
-									.replace("\n", "");
-							String userName = user.getName();
-							String deviceId = telephonyManager.getDeviceId();
+					String userEmail = null;
 
-							snsSignupParams = new HashMap<String, String>();
-							loginParams = new HashMap<String, String>();
-
-							if (userEmail != null)
-								snsSignupParams.put("email", userEmail);
-
-							if (userId != null) {
-								snsSignupParams.put("accessToken", userId);
-								loginParams.put("accessToken", userId);
-							}
-
-							if (encryptedId != null) {
-								snsSignupParams.put("pw", userId); // 회원가입
-																	// 시엔 서버
-																	// 사이드에서
-																	// 암호화
-								loginParams.put("pw", encryptedId);
-							}
-
-							if (userName != null)
-								snsSignupParams.put("name", userName);
-
-							if (deviceId != null)
-								snsSignupParams.put("device", deviceId);
-
- 							mQueue.add(new DailyHotelJsonRequest(Method.POST,
-									new StringBuilder(URL_DAILYHOTEL_SERVER)
-											.append(URL_WEBAPI_USER_LOGIN)
-											.toString(), loginParams,
-									LoginActivity.this, LoginActivity.this));
- 							
- 							fbSession.closeAndClearTokenInformation();
- 							
-						}
+					try {
+						if (user.getProperty("email") != null)
+							userEmail = user.getProperty("email").toString();
+					} catch (Exception e) {
+						if (DEBUG)
+							e.printStackTrace();
 					}
 					
+					String userId = user.getId();
+					String encryptedId = Crypto.encrypt(userId)
+							.replace("\n", "");
+					String userName = user.getName();
+					String deviceId = telephonyManager.getDeviceId();
+
+					snsSignupParams = new HashMap<String, String>();
+					loginParams = new HashMap<String, String>();
+
+					if (userEmail != null)
+						snsSignupParams.put("email", userEmail);
+
+					if (userId != null) {
+						snsSignupParams.put("accessToken", userId);
+						loginParams.put("accessToken", userId);
+					}
+
+					if (encryptedId != null) {
+						snsSignupParams.put("pw", userId); // 회원가입
+						// 시엔 서버
+						// 사이드에서
+						// 암호화
+						loginParams.put("pw", encryptedId);
+					}
+
+					if (userName != null)
+						snsSignupParams.put("name", userName);
+
+					if (deviceId != null)
+						snsSignupParams.put("device", deviceId);
 					
-				});
+					android.util.Log.e("snsSignupParams",snsSignupParams.toString());
+
+					mQueue.add(new DailyHotelJsonRequest(Method.POST,
+							new StringBuilder(URL_DAILYHOTEL_SERVER)
+					.append(URL_WEBAPI_USER_LOGIN)
+					.toString(), loginParams,
+					LoginActivity.this, LoginActivity.this));
+
+					fbSession.closeAndClearTokenInformation();
+					android.util.Log.e("FBSESSION","END");
+				}
+			}
+
+
+		});
 
 		lockUI();
 		request.executeAsync();
@@ -216,7 +215,7 @@ public class LoginActivity extends BaseActivity implements Constants,
 			mQueue.add(new DailyHotelJsonRequest(Method.POST,
 					new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 							URL_WEBAPI_USER_LOGIN).toString(), loginParams,
-					this, this));
+							this, this));
 
 		} else if (v.getId() == facebookLogin.getId()) {
 			lockUI();
@@ -224,7 +223,7 @@ public class LoginActivity extends BaseActivity implements Constants,
 					.build();
 
 			Session.OpenRequest or = new Session.OpenRequest(this); // 안드로이드 sdk를 사용하기 위해선 내 컴퓨터의 hash key를 페이스북 개발 설정페이지에서 추가하여야함.
-//			or.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO); // 앱 호출이 아닌 웹뷰를 강제로 호출함.
+			//			or.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO); // 앱 호출이 아닌 웹뷰를 강제로 호출함.
 			or.setPermissions(Arrays.asList("email", "basic_info"));
 			or.setCallback(statusCallback);
 
@@ -238,21 +237,23 @@ public class LoginActivity extends BaseActivity implements Constants,
 		@Override
 		public void call(Session session, SessionState state,
 				Exception exception) {
-
+//			android.util.Log.e("Status Callback",session.toString()+" / "+state+" / "+exception.toString());
 			if (state.isOpened()) {
 				makeMeRequest(session);
-				
+
 			} else if (state.isClosed()) {
 				session.closeAndClearTokenInformation();
-				
+
 			}
-			
+
 			// 사용자 취소 시
 			if (exception instanceof FacebookOperationCanceledException 
 					|| exception instanceof FacebookAuthorizationException) {
 				unLockUI();
-		    }
+			}
+
 		}
+
 	};
 
 	public boolean isBlankFields() {
@@ -320,7 +321,7 @@ public class LoginActivity extends BaseActivity implements Constants,
 	public void onResponse(String url, JSONObject response) {
 		if (url.contains(URL_WEBAPI_USER_LOGIN)) {
 			JSONObject obj = response;
-
+			android.util.Log.e(URL_WEBAPI_USER_LOGIN,obj.toString());
 			try {
 				String msg = null;
 
@@ -328,28 +329,28 @@ public class LoginActivity extends BaseActivity implements Constants,
 					VolleyHttpClient.createCookie();
 					// if (obj.length() > 1)
 					// etPwd.setText(obj.getString("msg"));
-					
+
 					showToast(getString(R.string.toast_msg_logoined), Toast.LENGTH_SHORT, true);
 					storeLoginInfo();
 
 					setResult(RESULT_OK);
-					
+
 					unLockUI();
 					finish();
 
 				} else {
 
 					if (loginParams.containsKey("accessToken")) { // SNS 로그인인데
-																	// 실패했을 경우
+						// 실패했을 경우
 
 						cbxAutoLogin.setChecked(true); // 회원가입의 경우 기본으로 자동 로그인인
-														// 정책 상.
-
+						// 정책 상.
+						android.util.Log.e("SNS LOGIN FAILED, CALL USER_SIGNUP",snsSignupParams.toString());
 						mQueue.add(new DailyHotelJsonRequest(Method.POST,
 								new StringBuilder(URL_DAILYHOTEL_SERVER)
-										.append(URL_WEBAPI_USER_SIGNUP)
-										.toString(), snsSignupParams, this,
-								this));
+						.append(URL_WEBAPI_USER_SIGNUP)
+						.toString(), snsSignupParams, this,
+						this));
 
 					}
 
@@ -363,12 +364,12 @@ public class LoginActivity extends BaseActivity implements Constants,
 								this);
 						alert.setPositiveButton("확인",
 								new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog,
-											int which) {
-										dialog.dismiss(); // 닫기
-									}
-								});
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								dialog.dismiss(); // 닫기
+							}
+						});
 						alert.setMessage(msg);
 						alert.show();
 					}
@@ -381,20 +382,21 @@ public class LoginActivity extends BaseActivity implements Constants,
 		} else if (url.contains(URL_WEBAPI_USER_SIGNUP)) {
 			try {
 				JSONObject obj = response;
+//				android.util.Log.e("SIGNUP!",obj.toString());
 
 				String result = obj.getString("join");
-				String msg = null;
+				String msg = obj.getString("msg");
 
 				if (result.equals("true")) { // 회원가입에 성공하면 이제 로그인 절차
 
 					mQueue.add(new DailyHotelJsonRequest(Method.POST,
 							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 									URL_WEBAPI_USER_LOGIN).toString(),
-							loginParams, LoginActivity.this, LoginActivity.this));
+									loginParams, LoginActivity.this, LoginActivity.this));
 				} else {
 					unLockUI();
 					loginParams.clear();
-					
+
 					showToast(msg, Toast.LENGTH_LONG, true);
 				}
 

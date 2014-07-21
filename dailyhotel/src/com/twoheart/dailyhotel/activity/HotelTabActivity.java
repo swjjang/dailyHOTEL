@@ -238,15 +238,14 @@ DailyHotelStringResponseListener {
 				}
 
 				hotelDetail.setImageUrl(imageList);
-
 				JSONArray specArr = obj.getJSONArray("spec");
 				Map<String, List<String>> contentList = new LinkedHashMap<String, List<String>>();
+
 				for (int i = 0; i < specArr.length(); i++) {
 
 					JSONObject specObj = specArr.getJSONObject(i);
 					String key = specObj.getString("key");
 					JSONArray valueArr = specObj.getJSONArray("value");
-
 					List<String> valueList = new ArrayList<String>();
 
 					for (int j = 0; j < valueArr.length(); j++) {
@@ -254,7 +253,6 @@ DailyHotelStringResponseListener {
 						String value = valueObj.getString("value");
 						valueList.add(value);
 					}
-
 					contentList.put(key, valueList);
 
 				}
@@ -275,6 +273,7 @@ DailyHotelStringResponseListener {
 				unLockUI();
 
 			} catch (Exception e) {
+				e.printStackTrace();
 				onError(e);
 			}
 		} else if (url.contains(URL_WEBAPI_USER_LOGIN)) {
@@ -303,6 +302,7 @@ DailyHotelStringResponseListener {
 				}
 
 			} catch (JSONException e) {
+
 				onError(e);
 				unLockUI();
 			}

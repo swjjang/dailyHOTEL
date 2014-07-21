@@ -209,12 +209,13 @@
                 android:id="@+id/tv_setting_email"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:paddingRight="17dp"
                 android:layout_weight="0.6"
-                android:singleLine="true"
                 android:gravity="right|center_vertical"
+                android:paddingRight="17dp"
+                android:singleLine="true"
                 android:textColor="@color/textView_textColor_sub"
                 android:textSize="16.5dp" />
+
         </LinearLayout>
 
         <View

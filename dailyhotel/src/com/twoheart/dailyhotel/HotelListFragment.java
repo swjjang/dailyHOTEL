@@ -336,7 +336,8 @@ public class HotelListFragment extends BaseFragment implements Constants,
 
 				for (int i = 0; i < hotelArr.length(); i++) {
 					JSONObject obj = hotelArr.getJSONObject(i);
-
+//					android.util.Log.e("hotelArr",obj.toString());
+					
 					Hotel newHotel = new Hotel();
 
 					String name = obj.getString("name");
@@ -348,7 +349,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 					int available = obj.getInt("avail_room_count");
 					int seq = obj.getInt("seq");
 					String detailRegion = obj.getString("site2_name");
-
+//					android.util.Log.e(name,seq+"");
 					JSONArray arr = obj.getJSONArray("img");
 					String image = "default";
 					if (arr.length() != 0) {
@@ -384,6 +385,8 @@ public class HotelListFragment extends BaseFragment implements Constants,
 
 						Collections.sort(mHotelList, comparator);
 					}
+//					for(int j=0;j<mHotelList.size();j++)
+//						android.util.Log.e("mHotelList",mHotelList.get(j).getName()+" / "+mHotelList.get(j).getSequence());
 				}
 				
 				mHotelListViewList = new ArrayList<HotelListViewItem>();
