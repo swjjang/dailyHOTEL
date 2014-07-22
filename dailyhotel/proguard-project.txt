@@ -19,10 +19,14 @@
 #   public *;
 #}
 
-#-keep class com.facebook.** {
-#   *;
-#}
-#
-#-keepclassmembers class * {
-#	@android.webkit.JavascriptInterface <methods>;
-#}
+-keep class com.facebook.** {
+   *;
+}
+
+-keep class com.twoheart.dailyhotel.activity
+
+-keepclassmembers class * {
+	@android.webkit.JavascriptInterface <methods>;
+}
+
+-keepattributes JavascriptInterface
