@@ -23,7 +23,7 @@ public interface Constants {
 	public static final boolean DEBUG = BuildConfig.DEBUG;
 
 	// 플레이 스토어용 릴리즈 여부
-	public static final boolean IS_GOOGLE_RELEASE = true;
+	public static final boolean IS_GOOGLE_RELEASE = false;
 
 	// 웹서버 호스트 
 		public static final String URL_DAILYHOTEL_SERVER = "http://dailyhotel.kr/goodnight/";				// 서비스 서버

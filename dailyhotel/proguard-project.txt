@@ -19,6 +19,10 @@
 #   public *;
 #}
 
--keep class com.facebook.** {
-   *;
-}
+#-keep class com.facebook.** {
+#   *;
+#}
+#
+#-keepclassmembers class * {
+#	@android.webkit.JavascriptInterface <methods>;
+#}

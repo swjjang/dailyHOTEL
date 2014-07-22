@@ -13,23 +13,29 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.SharedPreferences.Editor;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -50,6 +56,7 @@ import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.model.Pay;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.GaManager;
+import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.Log;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -65,6 +72,8 @@ DailyHotelStringResponseListener, DailyHotelJsonResponseListener, OnClickListene
 android.widget.CompoundButton.OnCheckedChangeListener {
 
 	private static final String TAG = "HotelPaymentActivity";
+	private static final int DIALOG_CONFIRM_PAYMENT_CARD = 0;
+	private static final int DIALOG_CONFIRM_PAYMENT_ACCOUNT = 1;
 
 	private ScrollView svBooking;
 	private TextView tvCheckIn, tvCheckOut, tvOriginalPriceValue,
@@ -195,49 +204,88 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == btnPay.getId()) {
-
+			Dialog dialog = null; 
+			
 			if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentAccount
 					.getId()) { // 무통장 입금을 선택했을 경우
-
-				AlertDialog.Builder alert = new AlertDialog.Builder(this);
-				alert.setPositiveButton("전화",
-						new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog,
-							int which) {
-						Intent i = new Intent(
-								Intent.ACTION_DIAL,
-								Uri.parse(new StringBuilder("tel:")
-								.append(PHONE_NUMBER_DAILYHOTEL)
-								.toString()));
-						startActivity(i);
-					}
-				});
-				alert.setNegativeButton("취소",
-						new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog,
-							int which) {
-						dialog.dismiss(); // 닫기
-					}
-				});
-
-				alert.setMessage("무통장 입금은 전화 통화를 통해 진행됩니다. 입금 순서에 따라 예약되며, 예약 확정 후 문자가 도착합니다.");
-				alert.show();
-
+				
+				dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_ACCOUNT);
 			} else if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentCard
 					.getId()) { // 신용카드를 선택했을 경우
-				lockUI();
-				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(
-						URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_TIME)
-						.toString(), null, BookingActivity.this,
-						this));
+				
+				dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_CARD);
 			}
-
+			dialog.show();
 		} else if (v.getId() == rbPaymentAccount.getId() | v.getId() == rbPaymentCard.getId()) {
 			svBooking.fullScroll(View.FOCUS_DOWN);
 
 		}
+	}
+
+	private Dialog getPaymentConfirmDialog(int type) {
+		final Dialog dialog = new Dialog(this);
+		
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+		
+		View view = LayoutInflater.from(this).inflate(R.layout.fragment_dialog_confirm_payment, null);
+		
+		TextView tvMsg = (TextView) view.findViewById(R.id.tv_confirm_payment_msg);
+		Button btnProceed = (Button) view.findViewById(R.id.btn_confirm_payment_proceed);
+		ImageView btnClose = (ImageView) view.findViewById(R.id.btn_confirm_payment_close);
+		
+		OnClickListener onClickProceed = null;
+		
+		if (type == DIALOG_CONFIRM_PAYMENT_CARD) {
+			
+			tvMsg.setText(getString(R.string.dialog_msg_payment_confirm_card));
+			btnProceed.setText(getString(R.string.dialog_btn_payment_confirm_card));
+			
+			onClickProceed = new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					
+					lockUI();
+					mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(
+							URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_TIME)
+							.toString(), null, BookingActivity.this,
+							BookingActivity.this));
+					dialog.dismiss();
+				}
+			};
+			
+		} else if (type == DIALOG_CONFIRM_PAYMENT_ACCOUNT) {
+			
+			tvMsg.setText(getString(R.string.dialog_msg_payment_confirm_account));
+			btnProceed.setText(getString(R.string.dialog_btn_payment_confirm_account));
+			
+			onClickProceed = new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					
+					Intent i = new Intent(
+							Intent.ACTION_DIAL,
+							Uri.parse(new StringBuilder("tel:")
+							.append(PHONE_NUMBER_DAILYHOTEL)
+							.toString()));
+					startActivity(i);
+					dialog.dismiss();
+				}
+			};
+		}
+		
+		btnClose.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+			}
+		});
+		btnProceed.setOnClickListener(onClickProceed);
+		
+ 		dialog.setContentView(view);
+		GlobalFont.apply((ViewGroup) view);
+		
+		return dialog;
 	}
 
 	private boolean isEmptyTextField(String... fieldText) {
@@ -256,7 +304,6 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		Intent intent = new Intent(this, PaymentActivity.class);
 		intent.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
 		intent.putExtra("wayToPay", wayToPay);
-
 
 		startActivityForResult(intent,
 				CODE_REQUEST_ACTIVITY_PAYMENT);

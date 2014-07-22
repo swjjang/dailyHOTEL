@@ -98,6 +98,12 @@
     <string name="dialog_msg_update_now">지금 업그레이드하여 가장 멋진 데일리호텔 앱을 다운받으세요</string>
     <string name="dialog_msg_sales_closed">오전 9시부터 오늘의 호텔이 공개됩니다.</string>
     
+    <string name="dialog_msg_payment_confirm_card">- 당일 예약 특성 상, 결제 완료 후\n<br>취소나 변경이 불가</br>합니다.\n\n- \'체크인 시 배정\'의 경우 더블,트윈 등의\n<br>베드 타입은 보장하지 않으며</br>\n2인이 투숙할 수 있는 객실로 배정됩니다.\n\n 위 사항에 동의하시면 아래의\n버튼을 눌러 결제를 진행해 주세요.</string>
+    <string name="dialog_msg_payment_confirm_account">계좌이체는 전화로 진행되며,\n- 예약하는 <br>호텔명</br>\n- <br>투숙객 성함</br>\n을 알려주시기 바랍니다.\n\n입금 순서에 따라 예약이 확정되며\n객실 마감 시 취소될 수 있습니다.\n\n입금확인은 실시간으로 진행되며\n예약 확정 후 문자가 발송됩니다.</string>
+    
+    <string name="dialog_btn_payment_confirm_card">동의하고 결제 진행</string>
+    <string name="dialog_btn_payment_confirm_account">전화로 예약하기</string>
+    
     <string name="dialog_btn_text_update">업데이트</string>
     <string name="dialog_btn_text_complete">완료</string>
     <string name="dialog_btn_text_confirm">확인</string>
@@ -130,5 +136,6 @@
     <string name="alarm_title">dailyHOTEL</string>
     <string name="alarm_msg">오늘의 호텔이 도착했습니다.\n지금 데일리호텔에서 확인하세요!</string>
     <string name="alarm_ticker">오늘의 호텔이 도착했습니다!</string>
+    
     
 </resources>

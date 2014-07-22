@@ -7,19 +7,25 @@ import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ui.WebViewActivity;
 
-public class EventWebActivity extends WebViewActivity {
+public class EventWebActivity extends WebViewActivity implements Constants{
 
 	private static final String TAG = "EventWebActivity";
-	private static final String URL_WEBAPI_EVENT = "http://event.dailyhotel.co.kr";
+	private String URL_WEBAPI_EVENT; //= "http://event.dailyhotel.co.kr";
 
 	@JavascriptInterface
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setActionBarHide();
-
+		
+		if (IS_GOOGLE_RELEASE) {
+			 URL_WEBAPI_EVENT = "http://event.dailyhotel.co.kr";
+		} else {
+			 URL_WEBAPI_EVENT = "http://eventts.dailyhotel.co.kr";
+		}
 		DailyHotel.getGaTracker().set(Fields.SCREEN_NAME, TAG);
 
 		setContentView(R.layout.activity_event_web);
