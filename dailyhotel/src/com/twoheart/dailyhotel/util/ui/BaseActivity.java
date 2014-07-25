@@ -78,6 +78,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 			@Override
 			public void run() {
 				if(mLockUI.isVisible()) {
+					android.util.Log.e("EXPIRED_UNLOCK","true");
 					mQueue.cancelAll(cancelAllRequestFilter);
 					unLockUI();
 					onError();
@@ -232,6 +233,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	 */
 	@Override
 	public void lockUI() {
+		android.util.Log.e("LOCKED","a");
 		mLockUI.show();
 		// 만약 제한시간이 지났는데도 리퀘스트가 끝나지 않았다면 Error 발생.
 		handler.postDelayed(networkCheckRunner, REQUEST_EXPIRE_JUDGE);
@@ -243,6 +245,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	 */
 	@Override
 	public void unLockUI() {
+		android.util.Log.e("UNLOCKED","a");
 		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
 		mLockUI.hide();
 		handler.removeCallbacks(networkCheckRunner);

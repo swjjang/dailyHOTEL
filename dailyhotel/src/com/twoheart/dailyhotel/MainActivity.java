@@ -303,6 +303,7 @@ Constants {
 	 * @param selectedMenu DrawerMenu °´Ã¼¸¦ ¹Þ´Â´Ù.
 	 */
 	public void selectMenuDrawer(DrawerMenu selectedMenu) {
+		android.util.Log.e("??","SELECT");
 		drawerList.performItemClick(
 				drawerList.getAdapter().getView(
 						mMenuImages.indexOf(selectedMenu), null, null),
@@ -352,6 +353,7 @@ Constants {
 	 */
 	public void replaceFragment(Fragment fragment) {
 		try {
+			android.util.Log.e("??","REPL");
 			clearFragmentBackStack();
 
 			fragmentManager.beginTransaction()
@@ -382,6 +384,7 @@ Constants {
 				}
 			}
 		} catch (IllegalStateException e) {
+			android.util.Log.e("??","¶ì¤¨¤¨");
 			onError(e);
 
 		}
@@ -436,7 +439,7 @@ Constants {
 	@Override
 	public void onItemClick(AdapterView<?> adapterView, View view,
 			int position, long id) {
-
+		android.util.Log.e("??","s!");
 		int selectedMenuIconId = ((DrawerMenu) (adapterView.getAdapter()
 				.getItem(position))).getIcon();
 

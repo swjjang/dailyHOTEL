@@ -74,11 +74,13 @@ public abstract class BaseFragment extends Fragment implements Constants, OnLoad
 
 	@Override
 	public void lockUI() {
+		android.util.Log.e("HOSTEDLOCKUI","q");
 		mHostActivity.lockUI();
 	}
 
 	@Override
 	public void unLockUI() {
+		android.util.Log.e("HOSTEDUNLOCKUI","q");
 		mHostActivity.unLockUI();
 	}
 

@@ -120,8 +120,6 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 
 			@Override
 			public void onCompleted(GraphUser user, Response response) {
-				android.util.Log.e("Uer!!",user.toString());
-				android.util.Log.e("Response!!",response.toString());
 				if (user != null) {
 					TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext()
 							.getSystemService(Context.TELEPHONY_SERVICE);
@@ -167,8 +165,6 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 					if (deviceId != null)
 						snsSignupParams.put("device", deviceId);
 					
-					android.util.Log.e("snsSignupParams",snsSignupParams.toString());
-
 					mQueue.add(new DailyHotelJsonRequest(Method.POST,
 							new StringBuilder(URL_DAILYHOTEL_SERVER)
 					.append(URL_WEBAPI_USER_LOGIN)
@@ -176,7 +172,6 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 					LoginActivity.this, LoginActivity.this));
 
 					fbSession.closeAndClearTokenInformation();
-					android.util.Log.e("FBSESSION","END");
 				}
 			}
 
@@ -237,7 +232,6 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 		@Override
 		public void call(Session session, SessionState state,
 				Exception exception) {
-//			android.util.Log.e("Status Callback",session.toString()+" / "+state+" / "+exception.toString());
 			if (state.isOpened()) {
 				makeMeRequest(session);
 
@@ -321,7 +315,6 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 	public void onResponse(String url, JSONObject response) {
 		if (url.contains(URL_WEBAPI_USER_LOGIN)) {
 			JSONObject obj = response;
-			android.util.Log.e(URL_WEBAPI_USER_LOGIN,obj.toString());
 			try {
 				String msg = null;
 
@@ -345,7 +338,6 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 
 						cbxAutoLogin.setChecked(true); // 회원가입의 경우 기본으로 자동 로그인인
 						// 정책 상.
-						android.util.Log.e("SNS LOGIN FAILED, CALL USER_SIGNUP",snsSignupParams.toString());
 						mQueue.add(new DailyHotelJsonRequest(Method.POST,
 								new StringBuilder(URL_DAILYHOTEL_SERVER)
 						.append(URL_WEBAPI_USER_SIGNUP)
@@ -382,7 +374,6 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 		} else if (url.contains(URL_WEBAPI_USER_SIGNUP)) {
 			try {
 				JSONObject obj = response;
-//				android.util.Log.e("SIGNUP!",obj.toString());
 
 				String result = obj.getString("join");
 				String msg = obj.getString("msg");

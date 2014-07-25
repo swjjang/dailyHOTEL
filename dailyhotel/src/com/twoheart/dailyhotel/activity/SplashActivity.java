@@ -172,7 +172,6 @@ DailyHotelJsonResponseListener, ErrorListener {
 	@Override
 	public void onResponse(String url, JSONObject response) {
 		if (url.contains(URL_WEBAPI_USER_LOGIN)) {
-
 			try {
 				if (!response.getBoolean("login")) {
 					// 로그인 실패

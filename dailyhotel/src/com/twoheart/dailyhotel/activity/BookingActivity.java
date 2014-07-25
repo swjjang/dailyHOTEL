@@ -1,10 +1,7 @@
 package com.twoheart.dailyhotel.activity;
 
 import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,24 +10,20 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.AlertDialog.Builder;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.DialogInterface.OnKeyListener;
 import android.content.SharedPreferences.Editor;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.provider.Settings;
 import android.telephony.TelephonyManager;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -48,7 +41,6 @@ import com.android.volley.Request.Method;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.twoheart.dailyhotel.DailyHotel;
-import com.twoheart.dailyhotel.HotelListFragment;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Credit;
 import com.twoheart.dailyhotel.model.Customer;
@@ -227,6 +219,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		
 		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+		dialog.setCanceledOnTouchOutside(false);
 		
 		View view = LayoutInflater.from(this).inflate(R.layout.fragment_dialog_confirm_payment, null);
 		
