@@ -189,7 +189,7 @@ Constants {
 		backButtonHandler = new CloseOnBackPressed(this);
 
 		// 맨 처음은 호텔리스트
-		selectMenuDrawer(menuHotelListFragment);
+//		selectMenuDrawer(menuHotelListFragment);
 
 		// Facebook SDK를 관리하기 위한 패키지 Hash 값 표시
 		if (DEBUG) {
@@ -215,14 +215,19 @@ Constants {
 
 			boolean showGuide = sharedPreference.getBoolean(KEY_PREFERENCE_SHOW_GUIDE, true);
 			if (showGuide) {
-				startActivity(new Intent(this, IntroActivity.class));
+				startActivityForResult(new Intent(this, IntroActivity.class), CODE_REQUEST_ACTIVITY_INTRO);
+			} else {
+				selectMenuDrawer(menuHotelListFragment);
 			}
 
 			// 호텔평가를 위한 현재 로그인 여부 체크
 			mQueue.add(new DailyHotelStringRequest(Method.GET,
 					new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 							URL_WEBAPI_USER_ALIVE).toString(), null, this, this));
+		} else if (requestCode == CODE_REQUEST_ACTIVITY_INTRO) {
+			selectMenuDrawer(menuHotelListFragment);
 		}
+		
 	}
 
 	@Override
@@ -295,6 +300,7 @@ Constants {
 			} catch (Exception e) {
 				onError(e);
 			}
+			unLockUI();
 		}
 	}
 
@@ -303,7 +309,6 @@ Constants {
 	 * @param selectedMenu DrawerMenu 객체를 받는다.
 	 */
 	public void selectMenuDrawer(DrawerMenu selectedMenu) {
-		android.util.Log.e("??","SELECT");
 		drawerList.performItemClick(
 				drawerList.getAdapter().getView(
 						mMenuImages.indexOf(selectedMenu), null, null),

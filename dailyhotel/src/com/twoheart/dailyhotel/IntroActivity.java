@@ -74,6 +74,7 @@ public class IntroActivity extends BaseActivity implements OnClickListener, OnPa
 		
 		llIntroStart.setOnClickListener(this);
 		tvSkip.setOnClickListener(this);
+
 	}
 	
 	@Override
