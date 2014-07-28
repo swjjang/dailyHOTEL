@@ -25,6 +25,9 @@ public interface Constants {
 	// 플레이 스토어용 릴리즈 여부
 	public static final boolean IS_GOOGLE_RELEASE = true;
 
+	// 항상 열리게 셋팅 여부
+	public static final boolean ALWAYS_OPEN = false;
+
 	// 웹서버 호스트 
 		public static final String URL_DAILYHOTEL_SERVER = "http://dailyhotel.kr/goodnight/";				// 서비스 서버
 //		public static final String URL_DAILYHOTEL_SERVER = "http://dailyhotel.cafe24.com/goodnight/";		// 개발 서버

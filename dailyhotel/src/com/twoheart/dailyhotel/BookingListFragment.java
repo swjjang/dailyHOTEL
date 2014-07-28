@@ -47,6 +47,11 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListe
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
+/**
+ * 예약한 호텔의 리스트들을 출력.
+ * @author jangjunho
+ *
+ */
 public class BookingListFragment extends BaseFragment implements Constants,
 		OnItemClickListener, OnClickListener, DailyHotelJsonResponseListener,
 		DailyHotelStringResponseListener {

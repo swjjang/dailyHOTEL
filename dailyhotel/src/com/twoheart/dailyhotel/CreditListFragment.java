@@ -25,6 +25,11 @@ import com.twoheart.dailyhotel.adapter.CreditListAdapter;
 import com.twoheart.dailyhotel.model.Credit;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
+/**
+ * 적립금 입출력 내역 확인.
+ * @author jangjunho
+ *
+ */
 public class CreditListFragment extends BaseFragment {
 	
 	private static final String KEY_BUNDLE_ARGUMENTS_CREDITLIST = "credit_list";

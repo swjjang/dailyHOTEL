@@ -14,6 +14,11 @@ import android.os.PowerManager;
 import com.twoheart.dailyhotel.activity.PushDialogActivity;
 import com.twoheart.dailyhotel.util.WakeLock;
 
+/**
+ * 판매가 종료된 시간일때 오픈 알람받기를 설정 한 경우 호출되는 브로드캐스트 리시버
+ * @author jangjunho
+ *
+ */
 public class AlarmBroadcastReceiver extends BroadcastReceiver{
 	
 	@Override
