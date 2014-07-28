@@ -11,9 +11,7 @@ public class AvailableNetwork {
 	private static AvailableNetwork current = null;
 
 	public static AvailableNetwork getInstance() {
-		if (current == null) {
-			current = new AvailableNetwork();
-		}
+		if (current == null) current = new AvailableNetwork();
 		return current;
 	}
 
@@ -41,11 +39,8 @@ public class AvailableNetwork {
 	public int getNetType(Context context) {
 		int nNetType = AvailableNetwork.NET_TYPE_NONE;
 
-		if (getWifiState(context)) {
-			nNetType = AvailableNetwork.NET_TYPE_WIFI;
-		} else if (get3GState(context)) {
-			nNetType = AvailableNetwork.NET_TYPE_3G;
-		}
+		if (getWifiState(context)) nNetType = AvailableNetwork.NET_TYPE_WIFI;
+		else if (get3GState(context)) nNetType = AvailableNetwork.NET_TYPE_3G;
 
 		return nNetType;
 	}

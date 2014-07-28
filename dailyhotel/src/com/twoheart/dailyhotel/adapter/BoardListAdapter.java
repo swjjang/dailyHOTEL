@@ -23,9 +23,7 @@ public class BoardListAdapter extends BaseExpandableListAdapter{
 		this.inflater = LayoutInflater.from(context);
 		this.list = list;
 		groupClickState = new Boolean[list.size()] ;
-		for(int i=0; i<groupClickState.length; i++) {
-			groupClickState[i] = false;
-		}
+		for(int i=0; i<groupClickState.length; i++) groupClickState[i] = false;
 	}
 
 	@Override
@@ -33,21 +31,17 @@ public class BoardListAdapter extends BaseExpandableListAdapter{
 		return list.get(groupPosition).getContent();
 	}
 
-
 	@Override
 	public long getChildId(int groupPosition, int childPosition) {
 		return childPosition;
 	}
-
 
 	@Override
 	public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
 		View v = convertView;
 		
-		if(v == null) {
-			v = inflater.inflate(R.layout.list_row_board_child, null);
-		}
+		if(v == null) v = inflater.inflate(R.layout.list_row_board_child, null);
 		
 		TextView tv_content = (TextView) v.findViewById(R.id.tv_board_content);
 		tv_content.setText(getChild(groupPosition, 0));
@@ -57,37 +51,30 @@ public class BoardListAdapter extends BaseExpandableListAdapter{
 		return v;
 	}
 
-
 	@Override
 	public int getChildrenCount(int groupPosition) {
 		return 1;
 	}
-
 
 	@Override
 	public Object getGroup(int groupPosition) {
 		return list.get(groupPosition).getSubject();
 	}
 
-
 	@Override
 	public int getGroupCount() {
 		return list.size();
 	}
-
 
 	@Override
 	public long getGroupId(int groupPosition) {
 		return groupPosition;
 	}
 
-
 	@Override
 	public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
 		View v = convertView;
-		if (v == null) {
-			v = inflater.inflate(R.layout.list_row_board_group, parent, false);
-		}
+		if (v == null) v = inflater.inflate(R.layout.list_row_board_group, parent, false);
 		
 		TextView tv_subject = (TextView)v.findViewById(R.id.tv_board_subject);
 		TextView tv_regdate = (TextView)v.findViewById(R.id.tv_board_regdate);
@@ -98,12 +85,10 @@ public class BoardListAdapter extends BaseExpandableListAdapter{
 		return v;
 	}
 
-
 	@Override
 	public boolean hasStableIds() {
 		return true;
 	}
-
 
 	@Override
 	public boolean isChildSelectable(int arg0, int arg1) {

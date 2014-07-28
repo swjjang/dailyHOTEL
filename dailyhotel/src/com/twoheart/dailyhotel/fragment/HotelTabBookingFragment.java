@@ -62,17 +62,12 @@ OnTouchListener {
 		View view = inflater.inflate(R.layout.fragment_hotel_tab_booking, container,
 				false);
 
-		tvBedType = (TextView) view
-				.findViewById(R.id.tv_hotel_tab_booking_bed_type);
-		tvAddress = (TextView) view
-				.findViewById(R.id.tv_hotel_tab_booking_address);
+		tvBedType = (TextView) view.findViewById(R.id.tv_hotel_tab_booking_bed_type);
+		tvAddress = (TextView) view.findViewById(R.id.tv_hotel_tab_booking_address);
 		tvPrice = (TextView) view.findViewById(R.id.tv_hotel_tab_booking_price);
-		tvDiscount = (TextView) view
-				.findViewById(R.id.tv_hotel_tab_booking_discount);
-		mViewPager = (HotelViewPager) view
-				.findViewById(R.id.vp_hotel_tab_booking_img);
-		mIndicator = (LoopCirclePageIndicator) view
-				.findViewById(R.id.cp_hotel_tab_booking_indicator);
+		tvDiscount = (TextView) view.findViewById(R.id.tv_hotel_tab_booking_discount);
+		mViewPager = (HotelViewPager) view.findViewById(R.id.vp_hotel_tab_booking_img);
+		mIndicator = (LoopCirclePageIndicator) view.findViewById(R.id.cp_hotel_tab_booking_indicator);
 
 		tvBedType.setText(mHotelDetail.getHotel().getBedType());
 		tvAddress.setText(mHotelDetail.getHotel().getAddress());
@@ -123,16 +118,13 @@ OnTouchListener {
 	@Override
 	public void onPause() {
 		super.onPause();
-		if (mHandler != null) { 
-			mHandler.removeMessages(0);
-		}
+		if (mHandler != null) mHandler.removeMessages(0);
 	}
 
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
-		if (mHandler != null)
-			mHandler.removeMessages(0);
+		if (mHandler != null) mHandler.removeMessages(0);
 	}
 
 	@Override

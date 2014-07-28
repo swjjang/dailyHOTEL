@@ -42,8 +42,6 @@ public class DailyHotel extends Application implements Constants{
 		super.onCreate();
 		
 		initializeVolley();
-//		initializeUIL();
-//		initializeVolleyImageLoader();
 		initializeGa();
 		initializeFont();
 
@@ -54,8 +52,7 @@ public class DailyHotel extends Application implements Constants{
 		mTracker = mGa.getTracker(GA_PROPERTY_ID);
 
 		// Set dispatch period.
-		GAServiceManager.getInstance().setLocalDispatchPeriod(
-				GA_DISPATCH_PERIOD);
+		GAServiceManager.getInstance().setLocalDispatchPeriod(GA_DISPATCH_PERIOD);
 
 		// Set dryRun flag.
 		mGa.setDryRun(GA_IS_DRY_RUN);

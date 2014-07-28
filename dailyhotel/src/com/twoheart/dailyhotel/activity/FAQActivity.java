@@ -33,13 +33,11 @@ public class FAQActivity extends BaseActivity implements
 
 		mListView = (ExpandableListView) findViewById(R.id.expandable_list_board);
 		mListView.setOnGroupExpandListener(new OnGroupExpandListener() { // expand only one
-			private int mExpandedChildPos = -1;
+			private int mPrevExpandedChildPos = -1;
 			@Override
 			public void onGroupExpand(int groupPosition) {
-				if(mExpandedChildPos != -1 && groupPosition != mExpandedChildPos) {
-					mListView.collapseGroup(mExpandedChildPos);
-				}
-				mExpandedChildPos = groupPosition;
+				if(mPrevExpandedChildPos != -1 && groupPosition != mPrevExpandedChildPos) mListView.collapseGroup(mPrevExpandedChildPos);
+				mPrevExpandedChildPos = groupPosition;
 			}
 		});
 	}

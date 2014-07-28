@@ -79,13 +79,6 @@ Constants {
 
 	private static final String TAG = "MainActivity";
 
-	//	private static final String DRAWER_MENU_SECTION_RESERVATION = "예약";
-	//	private static final String DRAWER_MENU_ENTRY_HOTEL = "오늘의 호텔";
-	//	private static final String DRAWER_MENU_ENTRY_BOOKING = "예약확인";
-	//	private static final String DRAWER_MENU_SECTION_ACCOUNT = "계정";
-	//	private static final String DRAWER_MENU_ENTRY_CREDIT = "적립금";
-	//	private static final String DRAWER_MENU_ENTRY_SETTING = "설정";
-
 	public static final int INDEX_HOTEL_LIST_FRAGMENT = 0;
 	public static final int INDEX_BOOKING_LIST_FRAGMENT = 1;
 	public static final int INDEX_CREDIT_FRAGMENT = 2;
@@ -128,15 +121,9 @@ Constants {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//		GaManager gm = GaManager.getInstance(getApplicationContext());
-		//		gm.signupComplete();
-		//		gm.purchaseComplete("JUNHO_TEST", "JUNHO_NAME", "JUNHO_CATEGORY", 90000d);
 
 		// 쿠키 동기화를 초기화한다. 로그인, 로그아웃 세션 쿠키는 MainActivity의 생명주기와 동기화한다.
 		CookieSyncManager.createInstance(getApplicationContext());
-		//		for(int i=0; i< CookieManager.getInstance().getCookie(URL_DAILYHOTEL_SERVER).length() ; i++){
-		//			Log.e("COOOOK",CookieManager.getInstance().getCookie(URL_DAILYHOTEL_SERVER).toString());
-		//		}
 
 		// 이전의 비정상 종료에 의한 만료된 쿠키들이 있을 수 있으므로, SplashActivity에서 자동 로그인을
 		// 처리하기 이전에 미리 이미 저장되어 있는 쿠키들을 정리한다.
@@ -188,13 +175,8 @@ Constants {
 		fragmentManager = getSupportFragmentManager();
 		backButtonHandler = new CloseOnBackPressed(this);
 
-		// 맨 처음은 호텔리스트
-//		selectMenuDrawer(menuHotelListFragment);
-
 		// Facebook SDK를 관리하기 위한 패키지 Hash 값 표시
-		if (DEBUG) {
-			printPackageHashKey();
-		}
+		if (DEBUG)  printPackageHashKey();
 
 	}
 
@@ -214,11 +196,8 @@ Constants {
 			}
 
 			boolean showGuide = sharedPreference.getBoolean(KEY_PREFERENCE_SHOW_GUIDE, true);
-			if (showGuide) {
-				startActivityForResult(new Intent(this, IntroActivity.class), CODE_REQUEST_ACTIVITY_INTRO);
-			} else {
-				selectMenuDrawer(menuHotelListFragment);
-			}
+			if (showGuide) startActivityForResult(new Intent(this, IntroActivity.class), CODE_REQUEST_ACTIVITY_INTRO);
+			else selectMenuDrawer(menuHotelListFragment);
 
 			// 호텔평가를 위한 현재 로그인 여부 체크
 			mQueue.add(new DailyHotelStringRequest(Method.GET,
@@ -317,10 +296,8 @@ Constants {
 	}
 
 	private void initializeFragments() {
-		if (mFragments != null)
-			mFragments.clear();
-		else
-			mFragments = new LinkedList<Fragment>();
+		if (mFragments != null) mFragments.clear();
+		else mFragments = new LinkedList<Fragment>();
 
 		mFragments.add(new HotelListFragment());
 		mFragments.add(new BookingListFragment());
@@ -341,8 +318,6 @@ Constants {
 			newFragment = mFragments.get(index);
 
 		} catch (Exception e) {
-			// onError(e);
-
 			initializeFragments();
 			newFragment = getFragment(index);
 
@@ -358,7 +333,6 @@ Constants {
 	 */
 	public void replaceFragment(Fragment fragment) {
 		try {
-			android.util.Log.e("??","REPL");
 			clearFragmentBackStack();
 
 			fragmentManager.beginTransaction()
@@ -389,7 +363,6 @@ Constants {
 				}
 			}
 		} catch (IllegalStateException e) {
-			android.util.Log.e("??","띠ㄸㄸ");
 			onError(e);
 
 		}
@@ -415,8 +388,9 @@ Constants {
 	 * Fragment 컨테이너의 표시되는 Fragment를 변경할 때 Fragment 컨테이너에 적재된 Fragment들을 정리한다.
 	 */
 	private void clearFragmentBackStack() {
-		for (int i = 0; i < fragmentManager.getBackStackEntryCount(); ++i)
+		for (int i = 0; i < fragmentManager.getBackStackEntryCount(); ++i) {
 			fragmentManager.popBackStack();
+		}
 
 	}
 
@@ -425,7 +399,10 @@ Constants {
 		fragmentManager.beginTransaction().remove(fragment)
 		.commitAllowingStateLoss();
 	}
-
+	
+	/**
+	 * 페이스북 SDK를 사용하기 위해선 개발하는 컴퓨터의 해시키를 페이스북 개발 콘솔에 등록 할 필요가 있음. 이에따라서 현재 컴퓨터의 해시키를 출력해주어 등록을 돕게함.
+	 */
 	public void printPackageHashKey() {
 		try {
 			PackageInfo info = getPackageManager().getPackageInfo(
@@ -444,7 +421,6 @@ Constants {
 	@Override
 	public void onItemClick(AdapterView<?> adapterView, View view,
 			int position, long id) {
-		android.util.Log.e("??","s!");
 		int selectedMenuIconId = ((DrawerMenu) (adapterView.getAdapter()
 				.getItem(position))).getIcon();
 
@@ -541,8 +517,7 @@ Constants {
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 
-		if (drawerToggle != null)
-			drawerToggle.syncState();
+		if (drawerToggle != null) drawerToggle.syncState();
 
 	}
 
@@ -550,16 +525,13 @@ Constants {
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 
-		if (drawerToggle != null)
-			drawerToggle.onConfigurationChanged(newConfig);
+		if (drawerToggle != null) drawerToggle.onConfigurationChanged(newConfig);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (drawerToggle.onOptionsItemSelected(item)) {
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
+		if (drawerToggle.onOptionsItemSelected(item))  return true;
+		else return super.onOptionsItemSelected(item);
 	}
 
 	@Override
@@ -567,25 +539,19 @@ Constants {
 		if (keyCode == KeyEvent.KEYCODE_MENU) {
 			toggleDrawer();
 			return true;
+		} else {
+			return super.onKeyDown(keyCode, event);
 		}
-		return super.onKeyDown(keyCode, event);
 	}
 
 	public void toggleDrawer() {
-		if (!drawerLayout.isDrawerOpen(drawerList)) {
-			drawerLayout.openDrawer(drawerList);
-		} else {
-			drawerLayout.closeDrawer(drawerList);
-		}
+		if (!drawerLayout.isDrawerOpen(drawerList)) drawerLayout.openDrawer(drawerList);
+		else drawerLayout.closeDrawer(drawerList);
 	}
 
 	@Override
 	public void finish() {
-
-		if (backButtonHandler.onBackPressed()) {
-			super.finish();
-		}
-
+		if (backButtonHandler.onBackPressed()) super.finish();
 	}
 
 	private class DrawerMenu {
@@ -675,8 +641,7 @@ Constants {
 
 		@Override
 		public boolean isEnabled(int position) {
-			return (list.get(position).getType() == DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY) ? true
-					: false;
+			return (list.get(position).getType() == DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY) ? true : false;
 		}
 
 		@Override
@@ -686,23 +651,19 @@ Constants {
 
 			switch (item.getType()) {
 			case DrawerMenu.DRAWER_MENU_LIST_TYPE_LOGO:
-				convertView = inflater.inflate(R.layout.list_row_drawer_logo,
-						null);
+				convertView = inflater.inflate(R.layout.list_row_drawer_logo, null);
 				break;
 
 			case DrawerMenu.DRAWER_MENU_LIST_TYPE_SECTION:
-				convertView = inflater.inflate(
-						R.layout.list_row_drawer_section, null);
+				convertView = inflater.inflate(R.layout.list_row_drawer_section, null);
 
-				TextView drawerMenuItemTitle = (TextView) convertView
-						.findViewById(R.id.drawerMenuItemTitle);
+				TextView drawerMenuItemTitle = (TextView) convertView.findViewById(R.id.drawerMenuItemTitle);
 
 				drawerMenuItemTitle.setText(item.getTitle());
 				break;
 
 			case DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY:
-				convertView = inflater.inflate(R.layout.list_row_drawer_entry,
-						null);
+				convertView = inflater.inflate(R.layout.list_row_drawer_entry, null);
 
 				ImageView drawerMenuItemIcon = (ImageView) convertView
 						.findViewById(R.id.drawerMenuItemIcon);

@@ -35,9 +35,5 @@ public class RegionListAdapter extends ArrayAdapter<String> {
 		
 		return view;
 	}
-	
-	
-	
-	
 
 }

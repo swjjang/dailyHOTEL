@@ -40,8 +40,7 @@ public class VersionActivity extends BaseActivity implements OnClickListener {
 	public void getVersionInfo() {
 		try {
 			tvCurrentVersion.setText("v"
-					+ getPackageManager().getPackageInfo(this.getPackageName(),
-							0).versionName);
+					+ getPackageManager().getPackageInfo(this.getPackageName(),0).versionName);
 			tvNewVersion.setText("v"
 					+ sharedPreference.getString(KEY_PREFERENCE_MAX_VERSION_NAME, "1.0.0"));
 		} catch (Exception e) {
@@ -60,10 +59,6 @@ public class VersionActivity extends BaseActivity implements OnClickListener {
 				if (maxVersion > currentVersion) {
 					Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
 					marketLaunch.setData(Uri.parse(Util.storeReleaseAddress()));
-					// Play Store
-//					marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_DAILYHOTEL));
-					// T Store
-//					 marketLaunch.setData(Uri.parse(URL_STORE_T_DAILYHOTEL));
 					startActivity(marketLaunch);
 				} else {
 					showToast(getString(R.string.toast_msg_already_latest_version), Toast.LENGTH_SHORT, true);
@@ -73,19 +68,6 @@ public class VersionActivity extends BaseActivity implements OnClickListener {
 				onError(e);
 			}
 		}
-	}
-
-	// Jason Park
-	public void showAlert(String str) {
-		AlertDialog.Builder alert = new AlertDialog.Builder(this);
-		alert.setPositiveButton("»Æ¿Œ", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.dismiss();
-			}
-		});
-		alert.setMessage(str);
-		alert.show();
 	}
 
 	@Override

@@ -134,8 +134,9 @@ public class IntroActivity extends BaseActivity implements OnClickListener, OnPa
 	public void onPageSelected(int position) {
 		if (position == (mGuideTitles.size() - 1)) {
 			llIntroStart.setVisibility(View.VISIBLE);
-			llIntroStart.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_in));
 			tvSkip.setVisibility(View.GONE);
+			
+			llIntroStart.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_in));
 			tvSkip.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_out));
 		} else {
 			llIntroStart.setVisibility(View.GONE);

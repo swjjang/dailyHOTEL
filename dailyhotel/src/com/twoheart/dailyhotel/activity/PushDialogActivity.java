@@ -35,15 +35,6 @@ public class PushDialogActivity extends Activity implements OnClickListener{
 		        | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 		
 		WakeLock.releaseWakeLock();
-		
-//		Handler handler = new Handler() {
-//			public void handleMessage(Message msg) {
-//				super.handleMessage(msg);
-//				finish();
-//			}
-//		};
-//		
-//		handler.sendEmptyMessageDelayed(0, 5000);
 	}
 	
 	@Override

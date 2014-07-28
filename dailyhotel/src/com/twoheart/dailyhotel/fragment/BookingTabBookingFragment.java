@@ -67,13 +67,10 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.fragment_booking_tab_booking, container,
-				false);
-		tvCustomerName = (TextView) view
-				.findViewById(R.id.tv_booking_tab_user_name);
+		View view = inflater.inflate(R.layout.fragment_booking_tab_booking, container, false);
+		tvCustomerName = (TextView) view.findViewById(R.id.tv_booking_tab_user_name);
 		tvCustomerPhone = (TextView) view.findViewById(R.id.tv_booking_tab_user_phone);
-		tvHotelName = (TextView) view
-				.findViewById(R.id.tv_booking_tab_hotel_name);
+		tvHotelName = (TextView) view.findViewById(R.id.tv_booking_tab_hotel_name);
 		tvAddress = (TextView) view.findViewById(R.id.tv_booking_tab_address);
 		tvBedtype = (TextView) view.findViewById(R.id.tv_booking_tab_bedtype);
 		tvCheckIn = (TextView) view.findViewById(R.id.tv_booking_tab_checkin);
@@ -150,11 +147,10 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 				String checkout = obj.getString("checkout");
 
 				String in[] = checkin.split("-");
-				tvCheckIn.setText("20" + in[0] + "년 " + in[1] + "월 " + in[2]
-						+ "일 " + in[3] + "시");
+				tvCheckIn.setText("20" + in[0] + "년 " + in[1] + "월 " + in[2] + "일 " + in[3] + "시");
+				
 				String out[] = checkout.split("-");
-				tvCheckOut.setText("20" + out[0] + "년 " + out[1] + "월 "
-						+ out[2] + "일 " + out[3] + "시");
+				tvCheckOut.setText("20" + out[0] + "년 " + out[1] + "월 "+ out[2] + "일 " + out[3] + "시");
 				
 				unLockUI();
 

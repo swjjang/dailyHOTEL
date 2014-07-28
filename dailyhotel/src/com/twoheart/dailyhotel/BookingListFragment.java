@@ -66,9 +66,9 @@ public class BookingListFragment extends BaseFragment implements Constants,
 		View view = inflater.inflate(R.layout.fragment_booking_list, container, false);
 
 		mListView = (ListView) view.findViewById(R.id.listview_booking);
-		mEmptyLayout = (RelativeLayout) view
-				.findViewById(R.id.layout_booking_empty);
+		mEmptyLayout = (RelativeLayout) view.findViewById(R.id.layout_booking_empty);
 		btnSignUp = (Button) view.findViewById(R.id.btn_booking_empty_signup);
+		
 		btnSignUp.setOnClickListener(this);
 		
 		DailyHotel.getGaTracker().set(Fields.SCREEN_NAME, TAG);
@@ -125,7 +125,6 @@ public class BookingListFragment extends BaseFragment implements Constants,
 						BookingListFragment.this, mHostActivity));
 
 			} else if (result.equals("dead")) { // session dead
-
 				// 재로그인
 				if (mHostActivity.sharedPreference.getBoolean(
 						KEY_PREFERENCE_AUTO_LOGIN, false)) {
@@ -138,13 +137,8 @@ public class BookingListFragment extends BaseFragment implements Constants,
 
 					Map<String, String> loginParams = new HashMap<String, String>();
 
-					if (accessToken != null) {
-						loginParams
-								.put("accessToken",
-										accessToken);
-					} else {
-						loginParams.put("email", id);
-					}
+					if (accessToken != null) loginParams.put("accessToken",accessToken);
+					else loginParams.put("email", id);
 
 					loginParams.put("pw", pw);
 
@@ -157,11 +151,10 @@ public class BookingListFragment extends BaseFragment implements Constants,
 					mListView.setVisibility(View.GONE);
 					mEmptyLayout.setVisibility(View.VISIBLE);
 				} else {
-					unLockUI();
-
 					mListView.setVisibility(View.GONE);
 					mEmptyLayout.setVisibility(View.VISIBLE);
-
+					
+					unLockUI();
 				}
 
 			} else {
@@ -206,11 +199,11 @@ public class BookingListFragment extends BaseFragment implements Constants,
 					unLockUI();
 				}
 			} else {
-				unLockUI();
-
 				mListView.setVisibility(View.GONE);
 				mEmptyLayout.setVisibility(View.VISIBLE);
 				btnSignUp.setVisibility(View.INVISIBLE);
+				
+				unLockUI();
 			}
 		}
 
@@ -236,12 +229,11 @@ public class BookingListFragment extends BaseFragment implements Constants,
 			} catch (JSONException e) {
 				onError(e);
 			} finally {
-				unLockUI();
-				
 				mListView.setVisibility(View.GONE);
 				mEmptyLayout.setVisibility(View.VISIBLE);
 				btnSignUp.setVisibility(View.INVISIBLE);
-
+				
+				unLockUI();
 			}
 		}
 	}

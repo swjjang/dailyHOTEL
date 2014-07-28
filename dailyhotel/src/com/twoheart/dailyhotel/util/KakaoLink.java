@@ -51,9 +51,7 @@ public class KakaoLink {
 	 * @return KakaoLink instance.
 	 */
 	public static KakaoLink getLink(Context context) {
-		if (kakaoLink != null)
-			return kakaoLink;
-
+		if (kakaoLink != null) return kakaoLink;
 		return new KakaoLink(context);
 	}
 
@@ -89,8 +87,7 @@ public class KakaoLink {
 			throw new IllegalArgumentException();
 
 		try {
-			if (KakaoLinkCharset.equals(Charset.forName(encoding)))
-				message = new String(message.getBytes(encoding), KakaoLinkEncoding);
+			if (KakaoLinkCharset.equals(Charset.forName(encoding))) message = new String(message.getBytes(encoding), KakaoLinkEncoding);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
@@ -132,8 +129,7 @@ public class KakaoLink {
 		}
 
 		try {
-			if (KakaoLinkCharset.equals(Charset.forName(encoding)))
-				message = new String(message.getBytes(encoding), KakaoLinkEncoding);
+			if (KakaoLinkCharset.equals(Charset.forName(encoding))) message = new String(message.getBytes(encoding), KakaoLinkEncoding);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
@@ -159,8 +155,8 @@ public class KakaoLink {
 		Uri kakaoLinkTestUri = Uri.parse(KakaoLinkURLBaseString);
 		Intent intent = new Intent(Intent.ACTION_SEND, kakaoLinkTestUri);
 		List<ResolveInfo> list = context.getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
-		if (list == null)
-			return false;
+		
+		if (list == null) return false;
 		return list.size() > 0;
 	}
 

@@ -42,8 +42,7 @@ public abstract class BaseFragment extends Fragment implements Constants, OnLoad
 
 	@Override
 	public void onPause() {
-		if (mToast != null)
-			mToast.cancel();
+		if (mToast != null) mToast.cancel();
 
 		super.onPause();
 	}
@@ -74,13 +73,11 @@ public abstract class BaseFragment extends Fragment implements Constants, OnLoad
 
 	@Override
 	public void lockUI() {
-		android.util.Log.e("FARG","LOCK_UI");
 		mHostActivity.lockUI();
 	}
 
 	@Override
 	public void unLockUI() {
-		android.util.Log.e("FARG","UN_LOCK_UI");
 		mHostActivity.unLockUI();
 	}
 

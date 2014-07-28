@@ -35,10 +35,7 @@ public class BookingTabActivity extends TabActivity implements DailyHotelJsonRes
 		hotelDetail = new HotelDetail();
 		booking = new Booking();
 		Bundle bundle = getIntent().getExtras();
-		if (bundle != null) {
-			booking = (Booking) bundle
-					.getParcelable(NAME_INTENT_EXTRA_DATA_BOOKING);
-		}
+		if (bundle != null) booking = (Booking) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_BOOKING);
 		
 		setActionBar(R.string.actionbar_title_booking_tab_activity);
 		setContentView(R.layout.activity_booking_tab);
@@ -68,7 +65,6 @@ public class BookingTabActivity extends TabActivity implements DailyHotelJsonRes
 	protected void loadFragments() {
 		mFragments.add(BookingTabBookingFragment.newInstance(hotelDetail, booking));
 		super.loadFragments();
-
 	}
 	
 	@Override
@@ -79,8 +75,7 @@ public class BookingTabActivity extends TabActivity implements DailyHotelJsonRes
 				JSONArray bookingArr = obj.getJSONArray("detail");
 				JSONObject detailObj = bookingArr.getJSONObject(0);
 				
-				if (hotelDetail.getHotel() == null)
-					 hotelDetail.setHotel(new Hotel());
+				if (hotelDetail.getHotel() == null) hotelDetail.setHotel(new Hotel());
 				
 				Hotel hotelBasic = hotelDetail.getHotel();
 				

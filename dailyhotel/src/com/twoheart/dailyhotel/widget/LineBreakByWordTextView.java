@@ -71,8 +71,7 @@ public class LineBreakByWordTextView extends TextView {
 		int parentHeight = MeasureSpec.getSize(heightMeasureSpec);
 		int height = setTextInfo(this.getText().toString(), parentWidth, parentHeight);
 		// 부모 높이가 0인경우 실제 그려줄 높이만큼 사이즈를 놀려줌...
-		if (parentHeight == 0)
-			parentHeight = height;
+		if (parentHeight == 0) parentHeight = height;
 		this.setMeasuredDimension(parentWidth, parentHeight);
 	}
 
@@ -85,8 +84,6 @@ public class LineBreakByWordTextView extends TextView {
 	@Override
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 		// 사이즈가 변경되었을때 다시 세팅(가로 사이즈만...)
-		if (w != oldw) {
-			setTextInfo(this.getText().toString(), w, h);
-		}
+		if (w != oldw) setTextInfo(this.getText().toString(), w, h);
 	}
 }

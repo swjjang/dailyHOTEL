@@ -88,6 +88,7 @@ public class CreditFragment extends BaseFragment implements Constants,
 		tvBonus = (TextView) view.findViewById(R.id.tv_credit_money);
 		btnLogin = (Button) view.findViewById(R.id.btn_no_login_login);
 		btnSignup = (Button) view.findViewById(R.id.btn_no_login_signup);
+		
 		btnLogin.setOnClickListener(this);
 		btnSignup.setOnClickListener(this);
 		btnInvite.setOnClickListener(this);
@@ -146,6 +147,12 @@ public class CreditFragment extends BaseFragment implements Constants,
 		}
 
 	}
+	
+	/**
+	 * 
+	 * @param v
+	 * @throws NameNotFoundException
+	 */
 
 	public void sendUrlLink(View v) throws NameNotFoundException {
 		// Recommended: Use application context for parameter.
@@ -157,15 +164,6 @@ public class CreditFragment extends BaseFragment implements Constants,
 			return;
 		}
 
-		/**
-		 * @param activity
-		 * @param url
-		 * @param message
-		 * @param appId
-		 * @param appVer
-		 * @param appName
-		 * @param encoding
-		 */
 		kakaoLink.openKakaoLink(
 				mHostActivity,
 				getString(R.string.homepage),
@@ -214,18 +212,6 @@ public class CreditFragment extends BaseFragment implements Constants,
 			return;
 		}
 
-		// String myId = prefs.getString(PREFERENCE_USER_ID, null);
-
-		/**
-		 * @param activity
-		 * @param url
-		 * @param message
-		 * @param appId
-		 * @param appVer
-		 * @param appName
-		 * @param encoding
-		 * @param metaInfoArray
-		 */
 
 		kakaoLink.openKakaoAppLink(
 				mHostActivity,

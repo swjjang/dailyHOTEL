@@ -64,7 +64,6 @@ DailyHotelJsonResponseListener, ErrorListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		// Anroid 4.4 이상에서 Android StatusBar와 Android NavigationBar를
 		// Translucent하게 해주는 API를 사용하도록 한다.
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -73,7 +72,6 @@ DailyHotelJsonResponseListener, ErrorListener {
 
 		setActionBarHide();
 		setContentView(R.layout.activity_splash);
-
 
 	}
 
@@ -84,12 +82,10 @@ DailyHotelJsonResponseListener, ErrorListener {
 
 			if(alertDlg == null) {
 				
-				Builder builder = new AlertDialog.Builder(
-						SplashActivity.this);
+				Builder builder = new AlertDialog.Builder(SplashActivity.this);
 
 				builder.setTitle("확인");
-				builder
-				.setMessage(getString(R.string.dialog_msg_network_unstable_retry_or_set_wifi));
+				builder.setMessage(getString(R.string.dialog_msg_network_unstable_retry_or_set_wifi));
 				builder.setCancelable(false);
 				builder.setPositiveButton("재시도",
 						new DialogInterface.OnClickListener() {
@@ -150,11 +146,8 @@ DailyHotelJsonResponseListener, ErrorListener {
 
 			Map<String, String> loginParams = new HashMap<String, String>();
 
-			if (accessToken != null) {
-				loginParams.put("accessToken", accessToken);
-			} else {
-				loginParams.put("email", id);
-			}
+			if (accessToken != null) loginParams.put("accessToken", accessToken);
+			else loginParams.put("email", id);
 
 			loginParams.put("pw", pw);
 
@@ -191,8 +184,6 @@ DailyHotelJsonResponseListener, ErrorListener {
 			}
 
 		} else if (url.contains(URL_WEBAPI_APP_VERSION)) {
-			// ed.putString(PREFERENCE_NEW_EVENT,
-			// response.getString("new_event"));
 
 			try {
 				SharedPreferences.Editor editor = sharedPreference.edit();
@@ -209,34 +200,24 @@ DailyHotelJsonResponseListener, ErrorListener {
 					editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME,
 							response.getString("tstore_min"));
 
-					// editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME,
-					// response.getString("nstore_max"));
-					// editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME,
-					// response.getString("nstore_min"));
 
 				}
 
 				editor.commit();
 
 				int maxVersion = Integer.parseInt(sharedPreference.getString(
-						KEY_PREFERENCE_MAX_VERSION_NAME, "1.0.0").replace(".",
-								""));
+						KEY_PREFERENCE_MAX_VERSION_NAME, "1.0.0").replace(".",""));
 				int minVersion = Integer.parseInt(sharedPreference.getString(
-						KEY_PREFERENCE_MIN_VERSION_NAME, "1.0.0").replace(".",
-								""));
+						KEY_PREFERENCE_MIN_VERSION_NAME, "1.0.0").replace(".",""));
 				int currentVersion = Integer.parseInt(this.getPackageManager()
-						.getPackageInfo(this.getPackageName(), 0).versionName
-						.replace(".", ""));
+						.getPackageInfo(this.getPackageName(), 0).versionName.replace(".", ""));
 				int skipMaxVersion = Integer.parseInt(sharedPreference
-						.getString(KEY_PREFERENCE_SKIP_MAX_VERSION, "1.0.0")
-						.replace(".", ""));
-				final int newEventFlag = Integer.parseInt(response
-						.getString("new_event"));
-				android.util.Log.e("minVesion / curVersion",
-						minVersion + " / " + currentVersion);
+						.getString(KEY_PREFERENCE_SKIP_MAX_VERSION, "1.0.0").replace(".", ""));
+				
+				final int newEventFlag = Integer.parseInt(response.getString("new_event"));
+				
 				if (minVersion > currentVersion) { // 강제 업데이트
-					AlertDialog.Builder alertDialog = new AlertDialog.Builder(
-							SplashActivity.this);
+					AlertDialog.Builder alertDialog = new AlertDialog.Builder(SplashActivity.this);
 					alertDialog
 					.setTitle(getString(R.string.dialog_title_notice))
 					.setMessage(getString(R.string.dialog_msg_please_update_new_version)) 
@@ -251,8 +232,6 @@ DailyHotelJsonResponseListener, ErrorListener {
 									Intent.ACTION_VIEW);
 							marketLaunch.setData(Uri.parse(Util
 									.storeReleaseAddress()));
-							// marketLaunch.setData(Uri
-							// .parse(URL_STORE_T_DAILYHOTEL));
 							startActivity(marketLaunch);
 							finish();
 						}
@@ -303,8 +282,6 @@ DailyHotelJsonResponseListener, ErrorListener {
 									Intent.ACTION_VIEW);
 							marketLaunch.setData(Uri.parse(Util
 									.storeReleaseAddress()));
-							// marketLaunch.setData(Uri
-							// .parse(URL_STORE_T_DAILYHOTEL));
 							startActivity(marketLaunch);
 						}
 					});

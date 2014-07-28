@@ -24,25 +24,18 @@ public class Util implements Constants {
 	}
 
 	public static String storeReleaseAddress() {
-		if (IS_GOOGLE_RELEASE) {
-			return URL_STORE_GOOGLE_DAILYHOTEL;
-		} else {
-			return URL_STORE_T_DAILYHOTEL;
-		}
+		if (IS_GOOGLE_RELEASE) return URL_STORE_GOOGLE_DAILYHOTEL;
+		else return URL_STORE_T_DAILYHOTEL;
 	}
 
 	public static String storeReleaseAddress(String newUrl) {
-		if (IS_GOOGLE_RELEASE) {
-			return URL_STORE_GOOGLE_DAILYHOTEL;
-		} else {
-			return newUrl;
-		}
+		if (IS_GOOGLE_RELEASE) return URL_STORE_GOOGLE_DAILYHOTEL;
+		else return newUrl;
+	
 	}
 
 	public static Bitmap drawableToBitmap(Drawable drawable) {
-		if (drawable instanceof BitmapDrawable) {
-			return ((BitmapDrawable) drawable).getBitmap();
-		}
+		if (drawable instanceof BitmapDrawable) return ((BitmapDrawable) drawable).getBitmap();
 
 		Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
 				drawable.getIntrinsicHeight(), Config.ARGB_8888);
@@ -67,10 +60,8 @@ public class Util implements Constants {
 		char checkOut[] = dailyHotelTime.toCharArray();
 		StringBuilder parsedCheckOutTime = new StringBuilder();
 		for (int i=0; i<checkOut.length; i++) {
-			if (i == positionOfDashPreviousHour)
-				parsedCheckOutTime.append(" ");
-			else
-				parsedCheckOutTime.append(checkOut[i]);
+			if (i == positionOfDashPreviousHour) parsedCheckOutTime.append(" ");
+			else parsedCheckOutTime.append(checkOut[i]);
 		}
 		parsedCheckOutTime.append(":00:00");
 		correctTime = parsedCheckOutTime.toString();

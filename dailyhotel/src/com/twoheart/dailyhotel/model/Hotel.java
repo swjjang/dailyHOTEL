@@ -173,6 +173,4 @@ public class Hotel implements Parcelable {
 		this.detailRegion = detailRegion;
 	}
 
-	
-
 }

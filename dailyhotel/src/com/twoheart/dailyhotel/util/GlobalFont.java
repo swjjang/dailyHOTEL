@@ -38,8 +38,9 @@ public class GlobalFont {
 				
 				fontTextView.setTypeface(DailyHotel.getTypeface());
 				fontTextView.invalidate();
-			} else if (child instanceof ViewGroup)
+			} else if (child instanceof ViewGroup) {
 				apply((ViewGroup) child);
+			}
 
 		}
 

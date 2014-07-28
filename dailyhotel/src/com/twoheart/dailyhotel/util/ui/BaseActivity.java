@@ -47,10 +47,10 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 
 	public ActionBar actionBar;
 	public SharedPreferences sharedPreference;
-	
+
 	protected RequestQueue mQueue;
 	protected Toast mToast;
-	
+
 	private LoadingDialog mLockUI;
 
 	private RequestFilter cancelAllRequestFilter;
@@ -58,36 +58,35 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	private Handler handler;
 
 	private Runnable networkCheckRunner;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		sharedPreference = getSharedPreferences(NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
 		mQueue = VolleyHttpClient.getRequestQueue();
 		mLockUI = new LoadingDialog(this);
-		
+
 		cancelAllRequestFilter = new RequestQueue.RequestFilter() {
-		    @Override
-	        public boolean apply(Request<?> request) {
-	            return true;
-	        }
-	    };
-	    
-	    handler = new Handler();
+			@Override
+			public boolean apply(Request<?> request) {
+				return true;
+			}
+		};
+
+		handler = new Handler();
 		networkCheckRunner = new Runnable() {
 			@Override
 			public void run() {
 				if(mLockUI.isVisible()) {
-					android.util.Log.e("EXPIRED_UNLOCK","true");
 					mQueue.cancelAll(cancelAllRequestFilter);
 					unLockUI();
 					onError();
 				}
 			}
 		};
-	    
+
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
@@ -99,10 +98,9 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	@Override
 	public void setContentView(int layoutResID) {
 		super.setContentView(layoutResID);
-		
 		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
 	}
-	
+
 	/**
 	 * 액션바를 설정하는 메서드로서, 어플리케이션 액션바 테마를 설정하고 제목을 지정한다.
 	 * 
@@ -110,27 +108,25 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	 */
 	public void setActionBar(String title) {
 		actionBar = getSupportActionBar();
-		
-//		int resType = DeviceResolutionUtil.getResolutionType(this);
-		
+
 		// bottom에 1px 구분선 추가된 흰 배경.
 		actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.actionbar_background));
-		
+
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		actionBar.setDisplayShowTitleEnabled(true);
-		
+
 		actionBar.setIcon(R.drawable.img_ic_menu);
 		actionBar.setTitle(title);
-		
+
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setHomeButtonEnabled(true);
 	}
-	
+
 	public void setActionBar(int strId) {
 		setActionBar(getString(strId));
 	}
-	
-	
+
+
 	/**
 	 * 액션바에 ProgressBar를 표시할 수 있도록 셋팅한다.
 	 */
@@ -140,84 +136,81 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 			setSupportProgressBarIndeterminate(true);
 		}
 	}
-	
+
 	/**
 	 * 액션바를 숨기도록 셋팅한다.
 	 * 
 	 */
 	public void setActionBarHide() {
 		supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-			getSupportActionBar().hide();
-		
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) getSupportActionBar().hide();
+
 	}
-	  
+
 	// 메뉴 버튼을 막아버림.
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-	    if ( keyCode == KeyEvent.KEYCODE_MENU ) {
-	        return true;
-	    }
-	    return super.onKeyDown(keyCode, event);
+		if ( keyCode == KeyEvent.KEYCODE_MENU ) return true;
+		return super.onKeyDown(keyCode, event);
 	}   
-	
+
 	@Override
 	protected void onPause() {
-		
+
 		// 현재 Activity에 의존적인 Toast를 제거한다.
-		if (mToast != null)
-			mToast.cancel();
-		
+		if (mToast != null) mToast.cancel();
+
 		try {
 			CookieSyncManager.getInstance().stopSync();
-			
+
 		} catch (Exception e) {
 			CookieSyncManager.createInstance(getApplicationContext());
 			CookieSyncManager.getInstance().stopSync();
-			
+
 		}
-		
+
 		super.onPause();
-		
+
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
+
 		try {
 			CookieSyncManager.getInstance().startSync();
 		} catch (Exception e) {
 			CookieSyncManager.createInstance(getApplicationContext());
 			CookieSyncManager.getInstance().startSync();
 		}
-		
+
 		com.facebook.AppEventsLogger.activateApp(this, getString(R.string.app_id));
-		
+
 	}
-	
+
 	@Override
 	protected void onStop() {
-		
+
 		// 현재 Activity에 등록된 Request를 취소한다. 
 		if (mQueue != null)
 			mQueue.cancelAll(new RequestQueue.RequestFilter() {
-			    @Override
-		        public boolean apply(Request<?> request) {
-			    		DailyHotelRequest<?> dailyHotelRequest = (DailyHotelRequest<?>) request;
-			    		
-			    		if (dailyHotelRequest != null && dailyHotelRequest.getTag() != null)
-			    			if (dailyHotelRequest.getTag().equals(this)) {
-			    				return true;
-			    			}
-			    				
-		            return false;
-		        }
-		    });
-		
+				@Override
+				public boolean apply(Request<?> request) {
+					DailyHotelRequest<?> dailyHotelRequest = (DailyHotelRequest<?>) request;
+
+					if (dailyHotelRequest != null && dailyHotelRequest.getTag() != null) {
+						if (dailyHotelRequest.getTag().equals(this)) {
+							return true;
+						}
+					}
+
+					return false;
+				}
+			});
+
 		super.onStop();
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -237,7 +230,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 		mLockUI.show();
 		// 만약 제한시간이 지났는데도 리퀘스트가 끝나지 않았다면 Error 발생.
 		handler.postDelayed(networkCheckRunner, REQUEST_EXPIRE_JUDGE);
-		
+
 	}
 
 	/**
@@ -245,11 +238,10 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	 */
 	@Override
 	public void unLockUI() {
-		android.util.Log.e("UNLOCKED","a");
 		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
 		mLockUI.hide();
 		handler.removeCallbacks(networkCheckRunner);
-		
+
 	}
 
 	@Override
@@ -260,21 +252,15 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 
 	@Override
 	public void onErrorResponse(VolleyError error) {
-		if (DEBUG) {
-			error.printStackTrace();
-		}
-		
+		if (DEBUG) error.printStackTrace();
 		onError();
 	}
-	
+
 	public void onError(Exception error) {
-		if (DEBUG) {
-			error.printStackTrace();
-		}
-		
+		if (DEBUG) error.printStackTrace();
 		onError();
 	}
-	
+
 	/**
 	 * Error 발생 시 분기되는 메서드
 	 */
@@ -282,7 +268,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 		// 잘못된 멘트, 모든 에러가 이쪽으로 빠지게됨. 변경 필요.
 		showToast("인터넷 연결 상태가 불안정합니다.\n인터넷 연결을 확인하신 뒤 다시 시도해주세요.", Toast.LENGTH_LONG, false);
 	}
-	
+
 	/**
 	 * Toast를 쉽게 표시해주는 메서드로서, 참조 Context로는 ApplicationContext를 사용한다. 
 	 * 삼성 단말기에서 삼성 테마를 사용하기 위함이다.
@@ -292,19 +278,18 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	 * @param isAttachToActivity	현재 Activity가 종료되면 Toast도 제거할지를 결정한다
 	 */
 	public void showToast(String message, int length, boolean isAttachToActivity) {
-		if (mToast != null)
-			mToast.cancel();
-		
+		if (mToast != null) mToast.cancel();
+
 		if (isAttachToActivity) {
 			mToast = Toast.makeText(getApplicationContext(), message, length);
 			mToast.show();
-			
+
 		} else {
 			Toast.makeText(getApplicationContext(), message, length).show();
-			
+
 		}
 	}
-	
+
 	/**
 	 * 버튼 난타를 방지하기 위한 메서드, 버튼의 클릭 가능 여부를 반대로 변경.
 	 * @param v 타겟 뷰
@@ -312,10 +297,10 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	protected void chgClickable(View v) {
 		v.setClickable(!v.isClickable());
 	}
-	
+
 
 	protected void chgClickable(View v, boolean isClickable) {
 		v.setClickable(isClickable);
 	}
-	
+
 }

@@ -38,7 +38,6 @@ PinnedSectionListAdapter {
 
 	private Context context;
 	private int resourceId;
-	//	private ImageLoader imageLoader;
 	private LayoutInflater inflater;
 	private LruCache<Integer, Bitmap> imgCache;
 
@@ -58,10 +57,6 @@ PinnedSectionListAdapter {
 
 		this.inflater = (LayoutInflater) this.context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-		//		this.imageLoader = ImageLoader.getInstance();
-		//		this.imageLoader = VolleyImageLoader.getImageLoader();
-		//		this.imageLoader = new ImageLoader(context);
 	}
 
 	@Override
@@ -103,43 +98,24 @@ PinnedSectionListAdapter {
 				convertView = inflater.inflate(resourceId, parent, false);
 
 				viewHolder = new HotelListViewHolder();
-				viewHolder.llHotelRowContent = (RelativeLayout) convertView
-						.findViewById(R.id.ll_hotel_row_content);
-				viewHolder.img = (ImageView) convertView
-						.findViewById(R.id.iv_hotel_row_img);
-				viewHolder.name = (TextView) convertView
-						.findViewById(R.id.tv_hotel_row_name);
-				viewHolder.price = (TextView) convertView
-						.findViewById(R.id.tv_hotel_row_price);
-				viewHolder.discount = (TextView) convertView
-						.findViewById(R.id.tv_hotel_row_discount);
-				viewHolder.sold_out = (TextView) convertView
-						.findViewById(R.id.tv_hotel_row_soldout);
-				viewHolder.address = (TextView) convertView
-						.findViewById(R.id.tv_hotel_row_address);
-				// viewHolder.gradeBackground = (FrameLayout) convertView
-				// .findViewById(R.id.fl_hotel_row_grade);
-				// viewHolder.gradeText = (TextView) convertView
-				// .findViewById(R.id.tv_hotel_row_grade);
+				viewHolder.llHotelRowContent = (RelativeLayout) convertView.findViewById(R.id.ll_hotel_row_content);
+				viewHolder.img = (ImageView) convertView.findViewById(R.id.iv_hotel_row_img);
+				viewHolder.name = (TextView) convertView.findViewById(R.id.tv_hotel_row_name);
+				viewHolder.price = (TextView) convertView.findViewById(R.id.tv_hotel_row_price);
+				viewHolder.discount = (TextView) convertView.findViewById(R.id.tv_hotel_row_discount);
+				viewHolder.sold_out = (TextView) convertView.findViewById(R.id.tv_hotel_row_soldout);
+				viewHolder.address = (TextView) convertView.findViewById(R.id.tv_hotel_row_address);
 				viewHolder.grade = (HotelGradeView) convertView.findViewById(R.id.hv_hotel_grade);
 
 				convertView.setTag(viewHolder);
 
 			}
 
-			//			HotelGradeView grade = (HotelGradeView) convertView.findViewById(R.id.hv_hotel_grade);
-
 			DecimalFormat comma = new DecimalFormat("###,##0");
 			String strPrice = comma
 					.format(Integer.parseInt(element.getPrice()));
 			String strDiscount = comma.format(Integer.parseInt(element
 					.getDiscount()));
-
-			// element.setAddress(element.getAddress().replace("I", ", ")); // i
-			// element.setAddress(element.getAddress().replace("|", ", ")); //
-			// pipe
-			// element.setAddress(element.getAddress().replace("คำ", ", ")); // คำ
-			// element.setAddress(element.getAddress().replace("l", ", ")); // l
 
 			viewHolder.address.setText(element.getAddress());
 			viewHolder.name.setText(element.getName());
@@ -152,15 +128,6 @@ PinnedSectionListAdapter {
 			viewHolder.discount.setText(strDiscount + currency);
 
 			viewHolder.name.setSelected(true); // Android TextView marquee bug
-
-			//			viewHolder.name.setShadowLayer(Util.dpToPx(getContext(), 1), Util.dpToPx(getContext(), 6),
-			//					Util.dpToPx(getContext(), 6), android.R.color.black);
-			//			viewHolder.price.setShadowLayer(Util.dpToPx(getContext(), 1), Util.dpToPx(getContext(), 6),
-			//					Util.dpToPx(getContext(), 6), android.R.color.black);
-			//			viewHolder.discount.setShadowLayer(Util.dpToPx(getContext(), 1), Util.dpToPx(getContext(), 6),
-			//					Util.dpToPx(getContext(), 6), android.R.color.black);
-			//			viewHolder.address.setShadowLayer(Util.dpToPx(getContext(), 1), Util.dpToPx(getContext(), 6),
-			//					Util.dpToPx(getContext(), 6), android.R.color.black);
 
 			final int colors[] = { Color.parseColor("#ED000000"),
 					Color.parseColor("#E8000000"),
@@ -240,7 +207,6 @@ PinnedSectionListAdapter {
 
 	private class HotelListViewHolder {
 		RelativeLayout llHotelRowContent;
-		//		ImageView img;
 		ImageView img;
 		TextView name;
 		TextView price;
@@ -248,8 +214,6 @@ PinnedSectionListAdapter {
 		TextView sold_out;
 		TextView address;
 		HotelGradeView grade;
-		// FrameLayout gradeBackground;
-		// TextView gradeText;
 	}
 
 	private class HeaderListViewHolder {

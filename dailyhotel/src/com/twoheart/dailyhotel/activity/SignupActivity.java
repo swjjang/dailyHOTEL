@@ -82,11 +82,8 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 	@Override
 	protected void onStart() {
 		super.onStart();
-		
 		DailyHotel.getGaTracker().send(MapBuilder.createAppView().build());
 	}
-
-
 
 	public void getPhoneNumber() {
 		TelephonyManager telManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
@@ -95,28 +92,21 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 	}
 
 	public boolean checkInput() {
-		if (etEmail.getText().toString().equals(""))
-			return false;
-		else if (etName.getText().toString().equals(""))
-			return false;
-		else if (etPhone.getText().toString().equals(""))
-			return false;
-		else if (etPwd.getText().toString().equals(""))
-			return false;
-		else
-			return true;
+		if (etEmail.getText().toString().equals("")) return false;
+		else if (etName.getText().toString().equals("")) return false;
+		else if (etPhone.getText().toString().equals("")) return false;
+		else if (etPwd.getText().toString().equals("")) return false;
+		else return true;
 	}
 
 	public boolean isValidEmail(String inputStr) {
-		Pattern p = Pattern
-				.compile("^[_a-zA-Z0-9-]+(.[_a-zA-Z0-9-]+)*@(?:\\w+\\.)+\\w+$");
+		Pattern p = Pattern.compile("^[_a-zA-Z0-9-]+(.[_a-zA-Z0-9-]+)*@(?:\\w+\\.)+\\w+$");
 		Matcher m = p.matcher(inputStr);
 		return m.matches();
 	}
 
 	public boolean isValidPhone(String inputStr) {
-		Pattern p = Pattern
-				.compile("^(01[0|1|6|7|8|9])(\\d{4}|\\d{3})(\\d{4})$");
+		Pattern p = Pattern.compile("^(01[0|1|6|7|8|9])(\\d{4}|\\d{3})(\\d{4})$");
 		Matcher m = p.matcher(inputStr);
 		return m.matches();
 	}
@@ -158,8 +148,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 			signupParams.put("device", tManager.getDeviceId());
 			
 			String recommender = etRecommender.getText().toString().trim();
-			if (!recommender.equals(""))				// 추천인 코드를 입력했을 경우 추천인 파라미터 추가
-				signupParams.put("recommender", recommender);
+			if (!recommender.equals(""))	signupParams.put("recommender", recommender);
 			
 			mQueue.add(new DailyHotelJsonRequest(Method.POST,
 					new StringBuilder(URL_DAILYHOTEL_SERVER).append(
@@ -184,8 +173,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 	public void storeLoginInfo() {
 
 		String id = etEmail.getText().toString();
-		String pwd = Crypto.encrypt(etPwd.getText().toString()).replace("\n",
-				"");
+		String pwd = Crypto.encrypt(etPwd.getText().toString()).replace("\n", "");
 
 		SharedPreferences.Editor ed = sharedPreference.edit();
 		ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, true);
@@ -211,8 +199,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 				String result = obj.getString("join");
 				String msg = null;
 
-				if (obj.length() > 1)
-					msg = obj.getString("msg");
+				if (obj.length() > 1) msg = obj.getString("msg");
 
 				if (result.equals("true")) {
 					

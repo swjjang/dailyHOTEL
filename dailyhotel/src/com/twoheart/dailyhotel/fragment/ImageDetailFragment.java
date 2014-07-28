@@ -34,10 +34,6 @@ public class ImageDetailFragment extends BaseFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-//		mImageLoader = com.nostra13.universalimageloader.core.ImageLoader.getInstance();
-//		mImageLoader = VolleyImageLoader.getImageLoader();
-//		mImageLoader = new ImageLoader(mHostActivity);
 		mImageUrl = getArguments().getString(KEY_BUNDLE_ARGUMENTS_IMAGEURL);
 	}
 	
@@ -51,9 +47,6 @@ public class ImageDetailFragment extends BaseFragment {
 		mImageView = (ImageView) view.findViewById(R.id.iv_image_detail);
 		mProgressBar = (ProgressBar) view.findViewById(R.id.pb_image_detail);
 
-//		mImageView.setImageUrl(mImageUrl, mImageLoader, mProgressBar);
-//		mImageLoader.displayImage(mImageUrl, mImageView, new ProgressImageLoading(mProgressBar));
-//		mImageLoader.DisplayImage(mImageUrl, mImageView, mProgressBar);
 		mAq = new AQuery(mHostActivity, view);
 		mAq.id(mImageView).progress(mProgressBar).image(mImageUrl, true, true, 0, R.drawable.img_placeholder, null,
         		AQuery.FADE_IN);

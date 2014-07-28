@@ -28,8 +28,7 @@ public class DailyHotelJsonRequest extends DailyHotelRequest<JSONObject> {
 
 	@Override
 	protected void deliverResponse(JSONObject response) {
-		if (mListener != null)
-			mListener.onResponse(getUrl(), response);
+		if (mListener != null) mListener.onResponse(getUrl(), response);
 	}
 
 	@Override

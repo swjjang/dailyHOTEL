@@ -83,8 +83,6 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 
 	private String wayToPay;
 
-	private Calendar accurateAppTime;
-
 	private SaleTime saleTime;
 
 	@Override
@@ -140,7 +138,6 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 
 		rbPaymentCard.setChecked(true);
 
-
 		saleTime = new SaleTime();
 
 	}
@@ -168,13 +165,8 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		DecimalFormat comma = new DecimalFormat("###,##0");
 		tvOriginalPriceValue.setText("￦" + comma.format(originalPrice));
 
-		if (applyCredit) {
-			mPay.setPayPrice(originalPrice - credit);
-
-		} else {
-			mPay.setPayPrice(originalPrice);
-
-		}
+		if (applyCredit) mPay.setPayPrice(originalPrice - credit);
+		else mPay.setPayPrice(originalPrice);
 
 		tvPrice.setText("￦" + comma.format(mPay.getPayPrice()));
 
@@ -207,12 +199,19 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				
 				dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_CARD);
 			}
+			
 			dialog.show();
+			
 		} else if (v.getId() == rbPaymentAccount.getId() | v.getId() == rbPaymentCard.getId()) {
 			svBooking.fullScroll(View.FOCUS_DOWN);
 
 		}
 	}
+	/**
+	 * 결제 수단에 알맞은 결제 동의 확인 다이얼로그를 만든다.
+	 * @param type CARD, ACCOUNT 두가지 타입 존재.
+	 * @return 타입에 맞는 결제 동의 다이얼로그 반환.
+	 */
 
 	private Dialog getPaymentConfirmDialog(int type) {
 		final Dialog dialog = new Dialog(this);
@@ -229,6 +228,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		
 		OnClickListener onClickProceed = null;
 		
+		// 카드 결제의 경우 확인 팝업 -> kcp 결제 웹뷰로 이동하도록함.
 		if (type == DIALOG_CONFIRM_PAYMENT_CARD) {
 			
 			tvMsg.setText(getString(R.string.dialog_msg_payment_confirm_card));
@@ -246,7 +246,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 					dialog.dismiss();
 				}
 			};
-			
+		  // 계좌이체의 경우 확인 팝업 -> 전화(데일리호텔 상담원)로 이동.
 		} else if (type == DIALOG_CONFIRM_PAYMENT_ACCOUNT) {
 			
 			tvMsg.setText(getString(R.string.dialog_msg_payment_confirm_account));
@@ -284,9 +284,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 	private boolean isEmptyTextField(String... fieldText) {
 
 		for (int i = 0; i < fieldText.length; i++) {
-			if (fieldText[i] == null || fieldText[i].equals("")
-					|| fieldText[i].equals("null"))
-				return true;
+			if (fieldText[i] == null || fieldText[i].equals("") || fieldText[i].equals("null")) return true;
 		}
 
 		return false;
@@ -317,11 +315,8 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 
 			Map<String, String> loginParams = new HashMap<String, String>();
 
-			if (accessToken != null) {
-				loginParams.put("accessToken", accessToken);
-			} else {
-				loginParams.put("email", id);
-			}
+			if (accessToken != null) loginParams.put("accessToken", accessToken);
+			else loginParams.put("email", id);
 
 			loginParams.put("pw", pw);
 
@@ -501,12 +496,11 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 					llReserverInfoEditable.setVisibility(View.VISIBLE);
 					llReserverInfoLabel.setVisibility(View.GONE);
 
-					if (!isEmptyTextField(buyer.getName()))
-						etReserverName.setText(buyer.getName());
+					if (!isEmptyTextField(buyer.getName())) etReserverName.setText(buyer.getName());
 
-					if (!isEmptyTextField(buyer.getPhone()))
+					if (!isEmptyTextField(buyer.getPhone())) {
 						etReserverNumber.setText(buyer.getPhone());
-					else {
+					} else {
 						TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext()
 								.getSystemService(Context.TELEPHONY_SERVICE);
 
@@ -514,8 +508,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 								.getLine1Number());
 					}
 
-					if (!isEmptyTextField(buyer.getEmail()))
-						etReserverEmail.setText(buyer.getEmail());
+					if (!isEmptyTextField(buyer.getEmail())) etReserverEmail.setText(buyer.getEmail());
 
 				}
 
@@ -537,11 +530,10 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				mPay.setCheckOut(checkout);
 
 				String in[] = checkin.split("-");
-				tvCheckIn.setText("20" + in[0] + "년 " + in[1] + "월 " + in[2]
-						+ "일 " + in[3] + "시");
+				tvCheckIn.setText("20" + in[0] + "년 " + in[1] + "월 " + in[2] + "일 " + in[3] + "시");
+				
 				String out[] = checkout.split("-");
-				tvCheckOut.setText("20" + out[0] + "년 " + out[1] + "월 "
-						+ out[2] + "일 " + out[3] + "시");
+				tvCheckOut.setText("20" + out[0] + "년 " + out[1] + "월 " + out[2] + "일 " + out[3] + "시");
 
 				unLockUI();
 			} catch (Exception e) {
@@ -580,12 +572,9 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 
 					if (llReserverInfoEditable.getVisibility() == View.VISIBLE) {
 
-						buyer.setEmail(
-								etReserverEmail.getText().toString());
-						buyer.setPhone(
-								etReserverNumber.getText().toString());
-						buyer.setName(
-								etReserverName.getText().toString());
+						buyer.setEmail(etReserverEmail.getText().toString());
+						buyer.setPhone(etReserverNumber.getText().toString());
+						buyer.setName(etReserverName.getText().toString());
 
 						if (isEmptyTextField(new String[] {
 								buyer.getEmail(),
@@ -599,12 +588,9 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 
 					} else if (llReserverInfoLabel.getVisibility() == View.VISIBLE) {
 
-						buyer.setEmail(
-								tvReserverEmail.getText().toString());
-						buyer.setPhone(
-								tvReserverNumber.getText().toString());
-						buyer.setName(
-								tvReserverName.getText().toString());
+						buyer.setEmail(tvReserverEmail.getText().toString());
+						buyer.setPhone(tvReserverNumber.getText().toString());
+						buyer.setName(tvReserverName.getText().toString());
 
 					}
 
@@ -649,8 +635,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				mPay.setCredit(new Credit(null, bonus, null));
 
 				DecimalFormat comma = new DecimalFormat("###,##0");
-				String str = comma.format(Integer.parseInt(mPay.getCredit()
-						.getBonus()));
+				String str = comma.format(Integer.parseInt(mPay.getCredit().getBonus()));
 				tvCreditValue.setText(new StringBuilder(str).append("원"));
 
 				swCredit.toggle();

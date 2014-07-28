@@ -20,13 +20,8 @@ public class VolleyImageLoader {
 	}
 
 	public static ImageLoader getImageLoader() {
-		if (sImageLoader != null) {
-			return sImageLoader;
-			
-		} else 
-			init();
-			return sImageLoader;
-
+		if (sImageLoader == null) init();
+		return sImageLoader;
 	}
 
 }

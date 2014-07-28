@@ -97,21 +97,19 @@ public class HotelListFragment extends BaseFragment implements Constants,
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.fragment_hotel_list, container,
-				false);
+		View view = inflater.inflate(R.layout.fragment_hotel_list, container, false);
+		
 		mDailyHotelSaleTime = new SaleTime();
 		mRefreshHotelList = true;
-		mHotelListView = (PinnedSectionListView) view
-				.findViewById(R.id.listview_hotel_list);
-		mPullToRefreshLayout = (PullToRefreshLayout) view
-				.findViewById(R.id.ptr_layout);
+		
+		mHotelListView = (PinnedSectionListView) view.findViewById(R.id.listview_hotel_list);
+		mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
+		
 		mHostActivity.setActionBar(R.string.actionbar_title_hotel_list_frag);
 		
-//		mHotelListView.setEmptyView(view.findViewById(R.id.tv_empty_view));
-		
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-			View listViewFooter = inflater
-					.inflate(R.layout.footer_hotel_list, null);
+			View listViewFooter = inflater.inflate(R.layout.footer_hotel_list, null);
+			
 			llListViewFooter = (LinearLayout) listViewFooter.findViewById(R.id.ll_hotel_list_footer);
 			llListViewFooter.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT,
 					((MainActivity) mHostActivity).config.getNavigationBarHeight()));
@@ -119,8 +117,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 			mHotelListView.addFooterView(listViewFooter);
 		}
 		
-		View listViewHeader = inflater
-				.inflate(R.layout.header_hotel_list, null);
+		View listViewHeader = inflater.inflate(R.layout.header_hotel_list, null);
 		mHotelListView.addHeaderView(listViewHeader);
 		
 		ivNewEvent = (ImageView) view.findViewById(R.id.iv_new_event);
@@ -132,22 +129,21 @@ public class HotelListFragment extends BaseFragment implements Constants,
 			public void onClick(View v) {
 				Intent i = new Intent(mHostActivity, EventWebActivity.class);
 				mHostActivity.startActivity(i);
-				mHostActivity.overridePendingTransition(R.anim.slide_in_bottom,
-						R.anim.hold);
+				mHostActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
 			}
 		});
 		
 		// Now find the PullToRefreshLayout and set it up
         ActionBarPullToRefresh.from(mHostActivity)
         			.options(Options.create()
-        					.scrollDistance(.3f)
-                        .headerTransformer(new AbcDefaultHeaderTransformer())
-                        .build())
-                .allChildrenArePullable()
-                .listener(this)
+        			.scrollDistance(.3f)
+                    .headerTransformer(new AbcDefaultHeaderTransformer())
+                    	.build())
+                    		.allChildrenArePullable()
+                    		.listener(this)
                 // Here we'll set a custom ViewDelegate
-                .useViewDelegate(AbsListView.class, new AbsListViewDelegate())
-                .setup(mPullToRefreshLayout);
+                    		.useViewDelegate(AbsListView.class, new AbsListViewDelegate())
+                			.setup(mPullToRefreshLayout);
 		
 //		ViewTreeObserver vto = mSwipeRefreshLayout.getViewTreeObserver();
 //		vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -182,7 +178,6 @@ public class HotelListFragment extends BaseFragment implements Constants,
 		mHotelListView.setShadowVisible(false);
 		
 		DailyHotel.getGaTracker().set(Fields.SCREEN_NAME, TAG);
-//		DailyHotel.getGaTracker().
 
 		return view;
 	}
@@ -211,12 +206,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 
 	@Override
 	public void onPause() {
-		
 		mRefreshHotelList = true;
-		// mPosition =
-		// mPullToRefreshListView.getRefreshableView().getFirstVisiblePosition();
-		// mScrollY = mPullToRefreshListView.getChildAt(0).getTop();
-
 		super.onPause();
 
 	}
@@ -225,9 +215,8 @@ public class HotelListFragment extends BaseFragment implements Constants,
 	@Override
 	public void onItemClick(AdapterView<?> parentView, View childView,
 			int position, long id) {
-		if (position == 0) { // 7.2 G2 버전에서 호텔리스트에서 이벤트 칸을 클릭할 경우 튕기는 현상을 막기 위함. why? 헤더뷰인데도 아이템 클릭 리스너가 들어감.
-			return; 
-		}
+		// 7.2 G2 버전에서 호텔리스트에서 이벤트 칸을 클릭할 경우 튕기는 현상을 막기 위함. why? 헤더뷰인데도 아이템 클릭 리스너가 들어감.
+		if (position == 0)  return; 
 		
 		int selectedPosition = position - 1;
 
@@ -267,6 +256,10 @@ public class HotelListFragment extends BaseFragment implements Constants,
 		return true;
 	}
 
+	/**
+	 * 호텔리스트를 보여준다.
+	 * @param position
+	 */
 	private void fetchHotelList(int position) {
 		((MainActivity) mHostActivity).drawerLayout.closeDrawer(((MainActivity) mHostActivity).drawerList);
 
@@ -336,7 +329,6 @@ public class HotelListFragment extends BaseFragment implements Constants,
 
 				for (int i = 0; i < hotelArr.length(); i++) {
 					JSONObject obj = hotelArr.getJSONObject(i);
-//					android.util.Log.e("hotelArr",obj.toString());
 					
 					Hotel newHotel = new Hotel();
 
@@ -349,7 +341,6 @@ public class HotelListFragment extends BaseFragment implements Constants,
 					int available = obj.getInt("avail_room_count");
 					int seq = obj.getInt("seq");
 					String detailRegion = obj.getString("site2_name");
-//					android.util.Log.e(name,seq+"");
 					JSONArray arr = obj.getJSONArray("img");
 					String image = "default";
 					if (arr.length() != 0) {
@@ -369,8 +360,8 @@ public class HotelListFragment extends BaseFragment implements Constants,
 					newHotel.setDetailRegion(detailRegion);
 
 					if (seq >= 0) { // 숨김호텔이 아니라면 추가. (음수일 경우 숨김호텔.)
-						if (available <= 0) // SOLD OUT 된 항목은 밑으로.
-							available *= 100;
+						// SOLD OUT 된 항목은 밑으로.
+						if (available <= 0) available *= 100;
 
 						mHotelList.add(newHotel); // 추가.
 
@@ -385,8 +376,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 
 						Collections.sort(mHotelList, comparator);
 					}
-//					for(int j=0;j<mHotelList.size();j++)
-//						android.util.Log.e("mHotelList",mHotelList.get(j).getName()+" / "+mHotelList.get(j).getSequence());
+					
 				}
 				
 				mHotelListViewList = new ArrayList<HotelListViewItem>();
@@ -407,8 +397,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 						}
 					}
 					
-					if (count == 0)
-						mHotelListViewList.remove(section);
+					if (count == 0) mHotelListViewList.remove(section);
 				}
 				
 				int count = 0;
@@ -423,8 +412,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 					}
 				}
 				
-				if (count == 0)
-					mHotelListViewList.remove(others);
+				if (count == 0) mHotelListViewList.remove(others);
 
 				mHotelListAdapter = new HotelListAdapter(mHostActivity,
 						R.layout.list_row_hotel, mHotelListViewList);
@@ -447,12 +435,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 			}
 		} else if (url.contains(URL_WEBAPI_APP_VERSION)) {
 			try {
-				if (response.getString("new_event").equals("1")) {
-					
-					if (ivNewEvent != null)
-						ivNewEvent.setVisibility(View.VISIBLE);
-					
-				}
+				if (response.getString("new_event").equals("1") && (ivNewEvent != null))  ivNewEvent.setVisibility(View.VISIBLE);
 			} catch (Exception e) {
 				onError(e);
 			}
@@ -523,8 +506,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 
 	@Override
 	public void onRefreshStarted(View view) {
-		fetchHotelList(mHostActivity.actionBar
-				.getSelectedNavigationIndex());
+		fetchHotelList(mHostActivity.actionBar.getSelectedNavigationIndex());
 	}
 	
 }

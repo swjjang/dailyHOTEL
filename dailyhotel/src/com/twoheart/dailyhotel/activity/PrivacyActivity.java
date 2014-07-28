@@ -23,6 +23,4 @@ public class PrivacyActivity extends WebViewActivity {
 		setWebView(URL_WEB_PRIVACY);
 	}
 	
-	
-	
 }

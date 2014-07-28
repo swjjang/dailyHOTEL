@@ -93,10 +93,10 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 		tvTimer = (TextView) view.findViewById(R.id.tv_timer);
 		tvTitle = (TextView) view.findViewById(R.id.tv_wait_timer_main);
 		btnNotify = (Button) view.findViewById(R.id.btn_wait_timer_alram);
-		btnNotify.setOnClickListener(this);
-		
 		ivNewEvent = (ImageView) view.findViewById(R.id.iv_new_event);
 		btnEvent = (LinearLayout) view.findViewById(R.id.btn_event);
+
+		btnNotify.setOnClickListener(this);
 		btnEvent.setOnClickListener(this);
 
 		mHostActivity.setActionBar(R.string.actionbar_title_wait_timer_frag);
@@ -136,8 +136,7 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 			btnNotify.setText("알람 끄기");
 
 			if (enable != isEnabledNotify) {
-				alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + remainingTime,
-						pender);
+				alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + remainingTime, pender);
 				
 				showToast("알람이 설정되었습니다", Toast.LENGTH_SHORT, true);
 			}
@@ -217,10 +216,7 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 		if (url.contains(URL_WEBAPI_APP_VERSION)) {
 			try {
 				if (response.getString("new_event").equals("1")) {
-					
-					if (ivNewEvent != null)
-						ivNewEvent.setVisibility(View.VISIBLE);
-					
+					if (ivNewEvent != null) ivNewEvent.setVisibility(View.VISIBLE);
 				}
 			} catch (Exception e) {
 				onError(e);

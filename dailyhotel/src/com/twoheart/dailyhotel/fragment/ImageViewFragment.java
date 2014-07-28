@@ -23,7 +23,6 @@ public class ImageViewFragment extends BaseFragment implements OnClickListener, 
 
 	private HotelDetail mHotelDetail;
 	private String mImageUrl;
-//	private ImageLoader mImageLoader;
 	private AQuery mAq;
 	private ImageView mImageView;
 	private ProgressBar mProgressBar;
@@ -43,10 +42,6 @@ public class ImageViewFragment extends BaseFragment implements OnClickListener, 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-//		mImageLoader = ImageLoader.getInstance();
-//		mImageLoader = VolleyImageLoader.getImageLoader();
-//		mImageLoader = new ImageLoader(mHostActivity);
 		mHotelDetail = (HotelDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_HOTELDETAIL);
 		mImageUrl = getArguments().getString(KEY_BUNDLE_ARGUMENTS_IMAGEURL);
 	}
@@ -55,8 +50,7 @@ public class ImageViewFragment extends BaseFragment implements OnClickListener, 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.fragment_image_view, container,
-				false);
+		View view = inflater.inflate(R.layout.fragment_image_view, container,false);
 		mImageView = (ImageView) view.findViewById(R.id.iv_image_view);
 		mProgressBar = (ProgressBar) view.findViewById(R.id.pb_image_view);
 		

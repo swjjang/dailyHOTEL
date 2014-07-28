@@ -27,8 +27,7 @@ public class DailyHotelJsonArrayRequest extends DailyHotelRequest<JSONArray> {
 
 	@Override
 	protected void deliverResponse(JSONArray response) {
-		if (mListener != null)
-			mListener.onResponse(getUrl(), response);
+		if (mListener != null) mListener.onResponse(getUrl(), response);
 	}
 
 	@Override

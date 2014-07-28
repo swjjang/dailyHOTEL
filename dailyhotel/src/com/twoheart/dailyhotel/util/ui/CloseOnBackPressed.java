@@ -44,7 +44,6 @@ public class CloseOnBackPressed {
 	
 	private void showGuide() {
 		mActivity.showToast(mActivity.getString(R.string.toast_msg_backpressed), Toast.LENGTH_SHORT, true);
-		
 	}
 
 }

@@ -21,11 +21,9 @@ public class EventWebActivity extends WebViewActivity implements Constants{
 		super.onCreate(savedInstanceState);
 		setActionBarHide();
 		
-		if (IS_GOOGLE_RELEASE) {
-			 URL_WEBAPI_EVENT = "http://event.dailyhotel.co.kr";
-		} else {
-			 URL_WEBAPI_EVENT = "http://eventts.dailyhotel.co.kr";
-		}
+		if (IS_GOOGLE_RELEASE) URL_WEBAPI_EVENT = "http://event.dailyhotel.co.kr";
+		else URL_WEBAPI_EVENT = "http://eventts.dailyhotel.co.kr";
+		
 		DailyHotel.getGaTracker().set(Fields.SCREEN_NAME, TAG);
 
 		setContentView(R.layout.activity_event_web);

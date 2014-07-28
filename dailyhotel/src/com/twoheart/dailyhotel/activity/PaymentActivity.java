@@ -94,6 +94,8 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		// 기능
 		// 추가
 		webView.addJavascriptInterface(new JavaScriptExtention(), "android");
+		
+		webView.addJavascriptInterface(new TeleditBridge(), "TeleditApp");
 
 		webView.setWebChromeClient(new mWebChromeClient());
 		webView.setWebViewClient(new mWebViewClient());
@@ -443,6 +445,32 @@ public class PaymentActivity extends BaseActivity implements Constants {
 				setSupportProgressBarIndeterminateVisibility(false);
 		}
 
+	}
+	/**
+	 * 다날 모바일 결제 관련 브릿지.
+	 * @author jangjunho
+	 *
+	 */
+	private class TeleditBridge {
+		/**
+		 * 
+		 * @param val 휴대폰 결제 완료 후 결과값.
+		 */
+		@JavascriptInterface
+		public void Result(final String val) {
+			android.util.Log.e("RES", val);
+			setResult(CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE);
+			finish();
+		}
+		
+		/**
+		 * web에서 닫기를 콜 했을때 호출.
+		 */
+		@JavascriptInterface
+		public void BestClose() {
+			setResult(CODE_RESULT_ACTIVITY_PAYMENT_CANCELED);
+			finish();
+		}
 	}
 
 	private class KCPPayPinReturn {

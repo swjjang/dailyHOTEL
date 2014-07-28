@@ -28,31 +28,16 @@ public class ZoomMapActivity extends BaseActivity {
 		setActionBar(R.string.actionbar_title_zoom_map_activity);
 		actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#CCFFFFFF")));
 		
-//		View view = Util.getActionBarView(this);
-//        view.setDrawingCacheEnabled(true);
-//        view.measure(MeasureSpec.makeMeasureSpec(view.getLayoutParams().width, MeasureSpec.EXACTLY), 
-//                MeasureSpec.makeMeasureSpec(view.getLayoutParams().height, MeasureSpec.EXACTLY));
-//        view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight()); 
-//        view.buildDrawingCache();
-//        Bitmap actionBarBackground = view.getDrawingCache();
-//        
-//        actionBar.setBackgroundDrawable(new BitmapDrawable(getResources(), Blur.fastblur(this, actionBarBackground, 10)));
-//        view.setDrawingCacheEnabled(false);
-		
 		setContentView(R.layout.activity_zoom_map);
 		
 		Bundle bundle = getIntent().getExtras();
-		if (bundle != null)
-			mHotelDetail = bundle.getParcelable(NAME_INTENT_EXTRA_DATA_HOTELDETAIL);
+		if (bundle != null) mHotelDetail = bundle.getParcelable(NAME_INTENT_EXTRA_DATA_HOTELDETAIL);
 		
 		googleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.frag_full_map)).getMap();
 		
-		if (googleMap != null) {
-			googleMap.setMyLocationEnabled(false);	
-		}
+		if (googleMap != null) googleMap.setMyLocationEnabled(false);	
 		
-		addMarker(mHotelDetail.getLatitude(), mHotelDetail.getLongitude(),
-				mHotelDetail.getHotel().getName());
+		addMarker(mHotelDetail.getLatitude(), mHotelDetail.getLongitude(), mHotelDetail.getHotel().getName());
 		
 	}
 	

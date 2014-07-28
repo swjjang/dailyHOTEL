@@ -46,12 +46,10 @@ public class LoadingDialog {
 	}
 
 	public void show() {
-		if (!mDialog.isShowing())
-			mDialog.show();
+		if (!mDialog.isShowing()) mDialog.show();
 	}
 
 	public void hide() {
-		if (mDialog.isShowing())
-			mDialog.dismiss();
+		if (mDialog.isShowing()) mDialog.dismiss();
 	}
 }

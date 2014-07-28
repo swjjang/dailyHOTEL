@@ -51,7 +51,6 @@ public class ErrorFragment extends BaseFragment implements OnClickListener {
 			} else {
 				int index = ((MainActivity) mHostActivity).indexLastFragment;
 				((MainActivity) mHostActivity).replaceFragment(((MainActivity) mHostActivity).getFragment(index));
-//				mHostActivity.removeFragment(this);
 				
 			}
 

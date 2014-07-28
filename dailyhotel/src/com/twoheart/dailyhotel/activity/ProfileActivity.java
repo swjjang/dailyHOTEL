@@ -149,7 +149,6 @@ DailyHotelJsonResponseListener, OnClickListener {
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == R.id.ll_profile_edit) {
-			android.util.Log.e("LLPROFILEEDIT","true");
 			if (mAq.id(R.id.tv_profile_edit).getText().equals("¼öÁ¤")) {
 				mAq.id(R.id.ll_profile_info_label).visibility(View.GONE);
 				mAq.id(R.id.ll_profile_info_editable).visibility(View.VISIBLE);

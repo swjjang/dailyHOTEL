@@ -47,9 +47,7 @@ public class ImageDetailActivity extends BaseActivity implements Constants {
 
 	private int findSelectedImage(String imageUrl) {
 		for (int i=0; i<mHotelDetail.getImageUrl().size(); i++) {
-			if (mHotelDetail.getImageUrl().get(i).equals(imageUrl)) {
-				return i;
-			}
+			if (mHotelDetail.getImageUrl().get(i).equals(imageUrl)) return i;
 		}
 		return 0;
 	}

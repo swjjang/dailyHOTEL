@@ -52,62 +52,36 @@ public class HotelGradeView extends FrameLayout {
 		
 		if (mHotelGradeCode.equals("biz") | mHotelGradeCode.equals("hostel") | mHotelGradeCode.equals("grade1") | 
 				mHotelGradeCode.equals("grade2") | mHotelGradeCode.equals("grade3")) {
-			setHotelGradeColor(getContext().
-					getResources().getColor(R.color.grade_hotel));
+			setHotelGradeColor(getContext().getResources().getColor(R.color.grade_hotel));
 			
-			if (mHotelGradeCode.equals("biz"))
-				setHotelGradeName(getContext().
-						getString(R.string.grade_biz));
-			else if (mHotelGradeCode.equals("hostel"))
-				setHotelGradeName(getContext().
-						getString(R.string.grade_hostel));
-			else if (mHotelGradeCode.equals("grade1"))
-				setHotelGradeName(getContext().
-						getString(R.string.grade_1));
-			else if (mHotelGradeCode.equals("grade2"))
-				setHotelGradeName(getContext().
-						getString(R.string.grade_2));
-			else if (mHotelGradeCode.equals("grade3"))
-				setHotelGradeName(getContext().
-						getString(R.string.grade_3));
+			if (mHotelGradeCode.equals("biz")) setHotelGradeName(getContext().getString(R.string.grade_biz));
+			else if (mHotelGradeCode.equals("hostel")) setHotelGradeName(getContext().getString(R.string.grade_hostel));
+			else if (mHotelGradeCode.equals("grade1")) setHotelGradeName(getContext().getString(R.string.grade_1));
+			else if (mHotelGradeCode.equals("grade2"))setHotelGradeName(getContext().getString(R.string.grade_2));
+			else if (mHotelGradeCode.equals("grade3"))setHotelGradeName(getContext().getString(R.string.grade_3));
 
 		} else if (mHotelGradeCode.equals("boutique")) {
-			setHotelGradeColor(getContext().
-					getResources().getColor(R.color.grade_boutique));
-			setHotelGradeName(getContext().
-					getString(R.string.grade_boutique));
+			setHotelGradeColor(getContext().getResources().getColor(R.color.grade_boutique));
+			setHotelGradeName(getContext().getString(R.string.grade_boutique));
 
 		} else if (mHotelGradeCode.equals("residence")) {
-			setHotelGradeColor(getContext().
-					getResources().getColor(R.color.grade_residence));
-			setHotelGradeName(getContext().
-					getString(R.string.grade_residence));
+			setHotelGradeColor(getContext().getResources().getColor(R.color.grade_residence));
+			setHotelGradeName(getContext().getString(R.string.grade_residence));
 
 		} else if (mHotelGradeCode.equals("resort") | mHotelGradeCode.equals("pension") | mHotelGradeCode.equals("condo")) {
-			setHotelGradeColor(getContext().
-					getResources().getColor(R.color.grade_resort_pension_condo));
+			setHotelGradeColor(getContext().getResources().getColor(R.color.grade_resort_pension_condo));
 			
-			if (mHotelGradeCode.equals("resort"))
-				setHotelGradeName(getContext().
-						getString(R.string.grade_resort));
-			else if (mHotelGradeCode.equals("pension"))
-				setHotelGradeName(getContext().
-						getString(R.string.grade_pension));
-			else if (mHotelGradeCode.equals("condo"))
-				setHotelGradeName(getContext().
-						getString(R.string.grade_condo));
+			if (mHotelGradeCode.equals("resort")) setHotelGradeName(getContext().getString(R.string.grade_resort));
+			else if (mHotelGradeCode.equals("pension")) setHotelGradeName(getContext().getString(R.string.grade_pension));
+			else if (mHotelGradeCode.equals("condo")) setHotelGradeName(getContext().getString(R.string.grade_condo));
 
 		} else if (mHotelGradeCode.equals("special")) {
-			setHotelGradeColor(getContext().
-					getResources().getColor(R.color.grade_special));
-			setHotelGradeName(getContext().
-					getString(R.string.grade_special));
+			setHotelGradeColor(getContext().getResources().getColor(R.color.grade_special));
+			setHotelGradeName(getContext().getString(R.string.grade_special));
 
 		} else {
-			setHotelGradeColor(getContext().
-					getResources().getColor(R.color.grade_not_yet));
-			setHotelGradeName(getContext().
-					getString(R.string.grade_not_yet));
+			setHotelGradeColor(getContext().getResources().getColor(R.color.grade_not_yet));
+			setHotelGradeName(getContext().getString(R.string.grade_not_yet));
 		}
 		
 	}
@@ -128,7 +102,5 @@ public class HotelGradeView extends FrameLayout {
 		mHotelGradeColor = parsedColor;
 		setBackgroundColor(mHotelGradeColor);
 	}
-	
-	
 
 }

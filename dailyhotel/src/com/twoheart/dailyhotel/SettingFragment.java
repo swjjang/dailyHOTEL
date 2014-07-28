@@ -80,8 +80,6 @@ public class SettingFragment extends BaseFragment implements Constants,
 		tvHelp.setOnClickListener(this);
 		tvMail.setOnClickListener(this);
 		llLogin.setOnClickListener(this);
-//		tvLogin.setOnClickListener(this);
-//		tvEmail.setOnClickListener(this);
 		tvCall.setOnClickListener(this);
 		tvAbout.setOnClickListener(this);
 
@@ -127,10 +125,8 @@ public class SettingFragment extends BaseFragment implements Constants,
 
 		} else if (v.getId() == tvMail.getId()) {
 			Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:help@dailyhotel.co.kr"));
-			
 			intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.mail_text_subject));
 			intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.mail_text_desc));
-			
 			startActivity(Intent.createChooser(intent, getString(R.string.mail_text_dialog_title)));
 		} else if (v.getId() == llLogin.getId()) {
 			if (tvLogin.getText().equals("프로필")) { // 로그인 되어 있는 상태
@@ -163,9 +159,7 @@ public class SettingFragment extends BaseFragment implements Constants,
 		
 		if (requestCode == CODE_REQUEST_ACTIVITY_LOGIN) {
 			chgClickable(llLogin);
-			if (resultCode == Activity.RESULT_OK) {
-				mHostActivity.selectMenuDrawer(mHostActivity.menuHotelListFragment);
-			}
+			if (resultCode == Activity.RESULT_OK) mHostActivity.selectMenuDrawer(mHostActivity.menuHotelListFragment);
 		}
 	}
 	
@@ -208,10 +202,8 @@ public class SettingFragment extends BaseFragment implements Constants,
 				JSONObject obj = response;
 				String userEmail = obj.getString("email");
 				
-				if ((userEmail != null) && !(userEmail.equals("")) && !(userEmail.equals("null")))
-					invalidateLoginButton(true, userEmail);
-				else
-					invalidateLoginButton(true, "");
+				if ((userEmail != null) && !(userEmail.equals("")) && !(userEmail.equals("null"))) invalidateLoginButton(true, userEmail);
+				else invalidateLoginButton(true, "");
 				
 				unLockUI();
 

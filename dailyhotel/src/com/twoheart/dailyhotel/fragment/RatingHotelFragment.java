@@ -90,13 +90,11 @@ public class RatingHotelFragment extends DialogFragment implements
 			Bundle savedInstanceState) {
 		if (getDialog() != null) {
 			getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-			getDialog().getWindow().setBackgroundDrawableResource(
-					android.R.color.transparent);
+			getDialog().getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 			getDialog().setCanceledOnTouchOutside(false);
 		}
 
-		View view = inflater.inflate(R.layout.fragment_dialog_rating_hotel,
-				parent, false);
+		View view = inflater.inflate(R.layout.fragment_dialog_rating_hotel,parent, false);
 		
 		tvHotelName = (TextView) view.findViewById(R.id.tv_rating_hotel_name);
 		ivBtnClose = (ImageView) view.findViewById(R.id.btn_dialog_rating_hotel_close);
@@ -106,9 +104,6 @@ public class RatingHotelFragment extends DialogFragment implements
 		StringBuilder hotelNameWithColon = new StringBuilder("'");
 		hotelNameWithColon.append(mHotelDetail.getHotel().getName()).append("'");
 		
-//		SpannableString hotelName = new SpannableString(hotelNameWithColon.toString());
-//		hotelName.setSpan(new CustomTypefaceSpan("", DailyHotel.getBoldTypeface()), 0, hotelName.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
-//		tvQuestion.append(hotelName);
 		tvHotelName.setText(hotelNameWithColon);
 		
 		tvHotelName.setTypeface(DailyHotel.getBoldTypeface());
@@ -181,13 +176,9 @@ public class RatingHotelFragment extends DialogFragment implements
 	public void onClick(View v) {
 		String reviewResult = null;
 		
-		if (v.getId() == btnRecommend.getId()) {
-			reviewResult = RECOMMEND_THIS_HOTEL;
-		} else if (v.getId() == btnCancel.getId()) {
-			reviewResult = NOT_RECOMMEND_THIS_HOTEL;
-		} else if (v.getId() == ivBtnClose.getId()) {
-			dismiss();
-		}
+		if (v.getId() == btnRecommend.getId()) reviewResult = RECOMMEND_THIS_HOTEL;
+		else if (v.getId() == btnCancel.getId()) reviewResult = NOT_RECOMMEND_THIS_HOTEL;
+		else if (v.getId() == ivBtnClose.getId()) dismiss();
 		
 		if (reviewResult != null) {
 			Map<String, String> reviewResultParams = new HashMap<String, String>();
@@ -208,20 +199,11 @@ public class RatingHotelFragment extends DialogFragment implements
 		if (url.contains(URL_WEBAPI_RESERVE_REVIEW)) {
 			try {
 				JSONObject obj = response;
-
 				String result = obj.getString("success");
-//				String msg = null;
 
-//				if (obj.length() > 1)
-//					msg = obj.getString("msg");
+				if (result.equals("true")) unLockUI();
+				else unLockUI();
 
-				if (result.equals("true")) {
-					unLockUI();
-					
-				} else {
-					unLockUI();
-//					showToast(msg, Toast.LENGTH_LONG, true);
-				}
 
 			} catch (Exception e) {
 				onError(e);

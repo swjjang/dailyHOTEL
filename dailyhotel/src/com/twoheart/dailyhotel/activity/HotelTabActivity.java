@@ -112,9 +112,7 @@ DailyHotelStringResponseListener {
 		if (requestCode == CODE_REQUEST_ACTIVITY_BOOKING) {
 			setResult(resultCode);
 
-			if (resultCode == RESULT_OK || resultCode == RESULT_SALES_CLOSED) {
-				finish();
-			} 
+			if (resultCode == RESULT_OK || resultCode == RESULT_SALES_CLOSED) finish();
 		} else if (requestCode == CODE_REQUEST_ACTIVITY_LOGIN) {
 			if (resultCode == RESULT_OK)
 				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(
@@ -165,11 +163,8 @@ DailyHotelStringResponseListener {
 
 					Map<String, String> loginParams = new HashMap<String, String>();
 
-					if (accessToken != null) {
-						loginParams.put("accessToken", accessToken);
-					} else {
-						loginParams.put("email", id);
-					}
+					if (accessToken != null) loginParams.put("accessToken", accessToken);
+					else loginParams.put("email", id);
 
 					loginParams.put("pw", pw);
 
@@ -189,7 +184,6 @@ DailyHotelStringResponseListener {
 	}
 
 	private void loadLoginProcess() {
-		android.util.Log.e(TAG,"Login Activity Load");
 		showToast(getString(R.string.toast_msg_please_login), Toast.LENGTH_LONG, false);
 		Intent i = new Intent(this, LoginActivity.class);
 		i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP); // 7.2 S2에서 예약버튼 난타할 경우 여러개의 엑티비티가 생성되는것을 막음

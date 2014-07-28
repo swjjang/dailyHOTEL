@@ -13,10 +13,8 @@ public class WakeLock {
 		wakeLock = pm.newWakeLock(level, context.getClass()
 				.getName());
 		
-		if (wakeLock != null) {
-			wakeLock.acquire();
+		if (wakeLock != null) wakeLock.acquire();
 
-		}
 	}
 
 	public static void releaseWakeLock() {

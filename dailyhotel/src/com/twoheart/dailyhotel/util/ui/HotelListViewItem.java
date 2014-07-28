@@ -14,13 +14,11 @@ public class HotelListViewItem {
 	public HotelListViewItem(Hotel hotel) {
 		this.type = TYPE_ENTRY;
 		item = hotel;
-
 	}
 
 	public HotelListViewItem(String region) {
 		this.type = TYPE_SECTION;
 		category = region;
-
 	}
 
 	public int getType() {

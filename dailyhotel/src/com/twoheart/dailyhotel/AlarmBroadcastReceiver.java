@@ -27,12 +27,13 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver{
 		PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
 		boolean isScreenOn = pm.isScreenOn();
 		
-		if(!isScreenOn) { // 스크린 꺼져있음
+		if (!isScreenOn) { // 스크린 꺼져있음
 			WakeLock.acquireWakeLock(context, PowerManager.FULL_WAKE_LOCK
 					| PowerManager.ACQUIRE_CAUSES_WAKEUP);	// PushDialogActivity에서 release 해줌.
 			KeyguardManager manager = (KeyguardManager)context.getSystemService(Activity.KEYGUARD_SERVICE);  
 			KeyguardLock lock = manager.newKeyguardLock(Context.KEYGUARD_SERVICE);  
 			lock.disableKeyguard();  
+			
 			Intent i = new Intent(context, PushDialogActivity.class);
 			i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | 
 					Intent.FLAG_ACTIVITY_CLEAR_TOP);

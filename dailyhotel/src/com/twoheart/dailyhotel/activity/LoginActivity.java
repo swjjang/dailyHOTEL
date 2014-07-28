@@ -143,8 +143,7 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 					snsSignupParams = new HashMap<String, String>();
 					loginParams = new HashMap<String, String>();
 
-					if (userEmail != null)
-						snsSignupParams.put("email", userEmail);
+					if (userEmail != null) snsSignupParams.put("email", userEmail);
 
 					if (userId != null) {
 						snsSignupParams.put("accessToken", userId);
@@ -159,11 +158,9 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 						loginParams.put("pw", encryptedId);
 					}
 
-					if (userName != null)
-						snsSignupParams.put("name", userName);
+					if (userName != null) snsSignupParams.put("name", userName);
 
-					if (deviceId != null)
-						snsSignupParams.put("device", deviceId);
+					if (deviceId != null) snsSignupParams.put("device", deviceId);
 					
 					mQueue.add(new DailyHotelJsonRequest(Method.POST,
 							new StringBuilder(URL_DAILYHOTEL_SERVER)
@@ -196,11 +193,9 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
 		} else if (v.getId() == btnLogin.getId()) { // 로그인
-			if (!isBlankFields())
-				return;
+			if (!isBlankFields()) return;
 
-			String md5 = Crypto.encrypt(etPwd.getText().toString()).replace(
-					"\n", "");
+			String md5 = Crypto.encrypt(etPwd.getText().toString()).replace("\n", "");
 
 			loginParams = new LinkedHashMap<String, String>();
 			loginParams.put("email", etId.getText().toString());
@@ -214,8 +209,7 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 
 		} else if (v.getId() == facebookLogin.getId()) {
 			lockUI();
-			fbSession = new Session.Builder(this).setApplicationId(getString(R.string.app_id))
-					.build();
+			fbSession = new Session.Builder(this).setApplicationId(getString(R.string.app_id)).build();
 
 			Session.OpenRequest or = new Session.OpenRequest(this); // 안드로이드 sdk를 사용하기 위해선 내 컴퓨터의 hash key를 페이스북 개발 설정페이지에서 추가하여야함.
 			//			or.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO); // 앱 호출이 아닌 웹뷰를 강제로 호출함.
@@ -232,13 +226,8 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 		@Override
 		public void call(Session session, SessionState state,
 				Exception exception) {
-			if (state.isOpened()) {
-				makeMeRequest(session);
-
-			} else if (state.isClosed()) {
-				session.closeAndClearTokenInformation();
-
-			}
+			if (state.isOpened()) makeMeRequest(session);
+			else if (state.isClosed()) session.closeAndClearTokenInformation();
 
 			// 사용자 취소 시
 			if (exception instanceof FacebookOperationCanceledException 
@@ -300,7 +289,6 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 			}
 		} else {
 			fbSession.onActivityResult(this, requestCode, resultCode, data);
-
 		}
 
 	}
@@ -320,8 +308,6 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 
 				if (obj.getBoolean("login")) {
 					VolleyHttpClient.createCookie();
-					// if (obj.length() > 1)
-					// etPwd.setText(obj.getString("msg"));
 
 					showToast(getString(R.string.toast_msg_logoined), Toast.LENGTH_SHORT, true);
 					storeLoginInfo();
