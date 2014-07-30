@@ -5399,11 +5399,14 @@ com.google.android.gms.common.SignInButton: void setColorScheme(int)
 com.google.android.gms.common.SignInButton: void setOnClickListener(android.view.View$OnClickListener)
 com.google.android.gms.common.SignInButton: void setEnabled(boolean)
 com.google.android.gms.common.api.Status
+com.google.android.gms.common.api.Status: com.google.android.gms.common.api.StatusCreator CREATOR
 com.google.android.gms.common.data.DataHolder
+com.google.android.gms.common.data.DataHolder: com.google.android.gms.common.data.DataHolderCreator CREATOR
 com.google.android.gms.common.images.ImageManager$ImageReceiver
 com.google.android.gms.common.images.WebImage
 com.google.android.gms.common.images.WebImage: android.os.Parcelable$Creator CREATOR
 com.google.android.gms.common.internal.safeparcel.SafeParcelable
+com.google.android.gms.common.internal.safeparcel.SafeParcelable: java.lang.String NULL
 com.google.android.gms.drive.Contents
 com.google.android.gms.drive.Contents: android.os.Parcelable$Creator CREATOR
 com.google.android.gms.drive.DriveId
@@ -5443,11 +5446,13 @@ com.google.android.gms.drive.metadata.internal.MetadataBundle: android.os.Parcel
 com.google.android.gms.drive.query.Query
 com.google.android.gms.drive.query.Query: android.os.Parcelable$Creator CREATOR
 com.google.android.gms.drive.query.internal.ComparisonFilter
+com.google.android.gms.drive.query.internal.ComparisonFilter: com.google.android.gms.drive.query.internal.a CREATOR
 com.google.android.gms.drive.query.internal.FieldOnlyFilter
 com.google.android.gms.drive.query.internal.FieldOnlyFilter: android.os.Parcelable$Creator CREATOR
 com.google.android.gms.drive.query.internal.FilterHolder
 com.google.android.gms.drive.query.internal.FilterHolder: android.os.Parcelable$Creator CREATOR
 com.google.android.gms.drive.query.internal.InFilter
+com.google.android.gms.drive.query.internal.InFilter: com.google.android.gms.drive.query.internal.e CREATOR
 com.google.android.gms.drive.query.internal.LogicalFilter
 com.google.android.gms.drive.query.internal.LogicalFilter: android.os.Parcelable$Creator CREATOR
 com.google.android.gms.drive.query.internal.NotFilter
@@ -5469,6 +5474,7 @@ com.google.android.gms.games.multiplayer.Participant
 com.google.android.gms.games.multiplayer.ParticipantEntity
 com.google.android.gms.games.multiplayer.ParticipantEntity: android.os.Parcelable$Creator CREATOR
 com.google.android.gms.games.multiplayer.ParticipantResult
+com.google.android.gms.games.multiplayer.ParticipantResult: com.google.android.gms.games.multiplayer.ParticipantResultCreator CREATOR
 com.google.android.gms.games.multiplayer.b
 com.google.android.gms.games.multiplayer.d
 com.google.android.gms.games.multiplayer.realtime.RealTimeMessage
@@ -5479,72 +5485,132 @@ com.google.android.gms.games.multiplayer.realtime.RoomEntity: android.os.Parcela
 com.google.android.gms.games.multiplayer.realtime.c
 com.google.android.gms.games.multiplayer.turnbased.TurnBasedMatch
 com.google.android.gms.games.multiplayer.turnbased.TurnBasedMatchEntity
+com.google.android.gms.games.multiplayer.turnbased.TurnBasedMatchEntity: com.google.android.gms.games.multiplayer.turnbased.TurnBasedMatchEntityCreator CREATOR
 com.google.android.gms.games.multiplayer.turnbased.a
 com.google.android.gms.internal.ai
+com.google.android.gms.internal.ai: com.google.android.gms.internal.aj CREATOR
 com.google.android.gms.internal.bj
+com.google.android.gms.internal.bj: com.google.android.gms.internal.bi CREATOR
 com.google.android.gms.internal.bm
+com.google.android.gms.internal.bm: com.google.android.gms.internal.bl CREATOR
 com.google.android.gms.internal.bz
+com.google.android.gms.internal.bz: com.google.android.gms.internal.ca CREATOR
 com.google.android.gms.internal.cb
+com.google.android.gms.internal.cb: com.google.android.gms.internal.cc CREATOR
 com.google.android.gms.internal.cu
+com.google.android.gms.internal.cu: com.google.android.gms.internal.cv CREATOR
 com.google.android.gms.internal.cw: void setContext(android.content.Context)
 com.google.android.gms.internal.dt$a
+com.google.android.gms.internal.dt$a: com.google.android.gms.internal.ef CREATOR
 com.google.android.gms.internal.dv
 com.google.android.gms.internal.el
+com.google.android.gms.internal.el: com.google.android.gms.internal.em CREATOR
 com.google.android.gms.internal.en
+com.google.android.gms.internal.en: com.google.android.gms.internal.eo CREATOR
 com.google.android.gms.internal.ep
+com.google.android.gms.internal.ep: com.google.android.gms.internal.eq CREATOR
 com.google.android.gms.internal.ep$a
+com.google.android.gms.internal.ep$a: com.google.android.gms.internal.er CREATOR
 com.google.android.gms.internal.es$a
+com.google.android.gms.internal.es$a: com.google.android.gms.internal.et CREATOR
 com.google.android.gms.internal.ev
+com.google.android.gms.internal.ev: com.google.android.gms.internal.ew CREATOR
 com.google.android.gms.internal.ev$a
+com.google.android.gms.internal.ev$a: com.google.android.gms.internal.ex CREATOR
 com.google.android.gms.internal.ev$b
+com.google.android.gms.internal.ev$b: com.google.android.gms.internal.eu CREATOR
 com.google.android.gms.internal.ey
+com.google.android.gms.internal.ey: com.google.android.gms.internal.ez CREATOR
 com.google.android.gms.internal.fm
 com.google.android.gms.internal.gh
+com.google.android.gms.internal.gh: com.google.android.gms.internal.gi CREATOR
 com.google.android.gms.internal.go
+com.google.android.gms.internal.go: com.google.android.gms.internal.gp CREATOR
 com.google.android.gms.internal.gt
+com.google.android.gms.internal.gt: com.google.android.gms.internal.gu CREATOR
 com.google.android.gms.internal.gv
+com.google.android.gms.internal.gv: com.google.android.gms.internal.gw CREATOR
 com.google.android.gms.internal.gx
+com.google.android.gms.internal.gx: com.google.android.gms.internal.gy CREATOR
 com.google.android.gms.internal.hb
+com.google.android.gms.internal.hb: com.google.android.gms.internal.hc CREATOR
 com.google.android.gms.internal.hd
+com.google.android.gms.internal.hd: com.google.android.gms.internal.he CREATOR
 com.google.android.gms.internal.hd$a
+com.google.android.gms.internal.hd$a: com.google.android.gms.internal.ha CREATOR
 com.google.android.gms.internal.hf
+com.google.android.gms.internal.hf: com.google.android.gms.internal.hg CREATOR
 com.google.android.gms.internal.hi
+com.google.android.gms.internal.hi: com.google.android.gms.internal.hj CREATOR
 com.google.android.gms.internal.hu
+com.google.android.gms.internal.hu: com.google.android.gms.internal.hw CREATOR
 com.google.android.gms.internal.ib
+com.google.android.gms.internal.ib: com.google.android.gms.internal.ic CREATOR
 com.google.android.gms.internal.id
+com.google.android.gms.internal.id: com.google.android.gms.internal.ie CREATOR
 com.google.android.gms.internal.ig
+com.google.android.gms.internal.ig: com.google.android.gms.internal.ih CREATOR
 com.google.android.gms.internal.ig$a
+com.google.android.gms.internal.ig$a: com.google.android.gms.internal.ii CREATOR
 com.google.android.gms.internal.ig$b
+com.google.android.gms.internal.ig$b: com.google.android.gms.internal.ij CREATOR
 com.google.android.gms.internal.ig$b$a
+com.google.android.gms.internal.ig$b$a: com.google.android.gms.internal.ik CREATOR
 com.google.android.gms.internal.ig$b$b
+com.google.android.gms.internal.ig$b$b: com.google.android.gms.internal.il CREATOR
 com.google.android.gms.internal.ig$c
+com.google.android.gms.internal.ig$c: com.google.android.gms.internal.im CREATOR
 com.google.android.gms.internal.ig$d
+com.google.android.gms.internal.ig$d: com.google.android.gms.internal.in CREATOR
 com.google.android.gms.internal.ig$f
+com.google.android.gms.internal.ig$f: com.google.android.gms.internal.io CREATOR
 com.google.android.gms.internal.ig$g
+com.google.android.gms.internal.ig$g: com.google.android.gms.internal.ip CREATOR
 com.google.android.gms.internal.ig$h
+com.google.android.gms.internal.ig$h: com.google.android.gms.internal.iq CREATOR
 com.google.android.gms.internal.v
+com.google.android.gms.internal.v: com.google.android.gms.internal.w CREATOR
 com.google.android.gms.internal.x
+com.google.android.gms.internal.x: com.google.android.gms.internal.y CREATOR
 com.google.android.gms.location.ActivityRecognitionResult
+com.google.android.gms.location.ActivityRecognitionResult: com.google.android.gms.location.ActivityRecognitionResultCreator CREATOR
 com.google.android.gms.location.DetectedActivity
+com.google.android.gms.location.DetectedActivity: com.google.android.gms.location.DetectedActivityCreator CREATOR
 com.google.android.gms.location.LocationRequest
+com.google.android.gms.location.LocationRequest: com.google.android.gms.location.LocationRequestCreator CREATOR
 com.google.android.gms.location.a
+com.google.android.gms.location.a: com.google.android.gms.location.b CREATOR
 com.google.android.gms.location.d
+com.google.android.gms.location.d: com.google.android.gms.location.e CREATOR
 com.google.android.gms.location.f
+com.google.android.gms.location.f: com.google.android.gms.location.g CREATOR
 com.google.android.gms.maps.GoogleMapOptions
+com.google.android.gms.maps.GoogleMapOptions: com.google.android.gms.maps.GoogleMapOptionsCreator CREATOR
 com.google.android.gms.maps.MapView: com.google.android.gms.maps.GoogleMap getMap()
 com.google.android.gms.maps.SupportMapFragment
 com.google.android.gms.maps.SupportMapFragment: SupportMapFragment()
 com.google.android.gms.maps.model.CameraPosition
+com.google.android.gms.maps.model.CameraPosition: com.google.android.gms.maps.model.CameraPositionCreator CREATOR
 com.google.android.gms.maps.model.CircleOptions
+com.google.android.gms.maps.model.CircleOptions: com.google.android.gms.maps.model.CircleOptionsCreator CREATOR
 com.google.android.gms.maps.model.GroundOverlayOptions
+com.google.android.gms.maps.model.GroundOverlayOptions: com.google.android.gms.maps.model.GroundOverlayOptionsCreator CREATOR
 com.google.android.gms.maps.model.LatLng
+com.google.android.gms.maps.model.LatLng: com.google.android.gms.maps.model.LatLngCreator CREATOR
 com.google.android.gms.maps.model.LatLngBounds
+com.google.android.gms.maps.model.LatLngBounds: com.google.android.gms.maps.model.LatLngBoundsCreator CREATOR
 com.google.android.gms.maps.model.MarkerOptions
+com.google.android.gms.maps.model.MarkerOptions: com.google.android.gms.maps.model.MarkerOptionsCreator CREATOR
 com.google.android.gms.maps.model.PolygonOptions
+com.google.android.gms.maps.model.PolygonOptions: com.google.android.gms.maps.model.PolygonOptionsCreator CREATOR
 com.google.android.gms.maps.model.PolylineOptions
+com.google.android.gms.maps.model.PolylineOptions: com.google.android.gms.maps.model.PolylineOptionsCreator CREATOR
 com.google.android.gms.maps.model.Tile
+com.google.android.gms.maps.model.Tile: com.google.android.gms.maps.model.TileCreator CREATOR
 com.google.android.gms.maps.model.TileOverlayOptions
+com.google.android.gms.maps.model.TileOverlayOptions: com.google.android.gms.maps.model.TileOverlayOptionsCreator CREATOR
 com.google.android.gms.maps.model.VisibleRegion
+com.google.android.gms.maps.model.VisibleRegion: com.google.android.gms.maps.model.VisibleRegionCreator CREATOR
 com.google.android.gms.plus.PlusOneButton: void setOnPlusOneClickListener(com.google.android.gms.plus.PlusOneButton$OnPlusOneClickListener)
 com.google.android.gms.plus.PlusOneButton: void setAnnotation(int)
 com.google.android.gms.plus.PlusOneButton: void setSize(int)
@@ -7313,6 +7379,8 @@ com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayCardInfoBridge: void aler
 com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayPinInfoBridge: void getPaypinInfo(java.lang.String)
 com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayPinInfoBridge: void paypinConfim()
 com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayPinReturn: java.lang.String getConfirm()
+com.twoheart.dailyhotel.activity.PaymentActivity$TeleditBridge: void Result(java.lang.String)
+com.twoheart.dailyhotel.activity.PaymentActivity$TeleditBridge: void BestClose()
 com.twoheart.dailyhotel.activity.PrivacyActivity
 com.twoheart.dailyhotel.activity.PrivacyActivity: PrivacyActivity()
 com.twoheart.dailyhotel.activity.ProfileActivity

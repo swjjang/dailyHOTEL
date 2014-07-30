@@ -120,6 +120,9 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 
 			@Override
 			public void onCompleted(GraphUser user, Response response) {
+				android.util.Log.e("MAKE_ME_REQUEST","res : "+ response.toString());
+				android.util.Log.e("MAKE_ME_REQUEST","user : "+ user.toString());
+				
 				if (user != null) {
 					TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext()
 							.getSystemService(Context.TELEPHONY_SERVICE);
@@ -127,8 +130,10 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 					String userEmail = null;
 
 					try {
-						if (user.getProperty("email") != null)
+						if (user.getProperty("email") != null) {
+							android.util.Log.e("Email",user.getProperty("email").toString());
 							userEmail = user.getProperty("email").toString();
+						}
 					} catch (Exception e) {
 						if (DEBUG)
 							e.printStackTrace();
@@ -161,6 +166,9 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 					if (userName != null) snsSignupParams.put("name", userName);
 
 					if (deviceId != null) snsSignupParams.put("device", deviceId);
+					
+
+					android.util.Log.e("MAKE_ME_REQUEST","put to queue : "+ loginParams.toString());
 					
 					mQueue.add(new DailyHotelJsonRequest(Method.POST,
 							new StringBuilder(URL_DAILYHOTEL_SERVER)
@@ -209,15 +217,20 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 
 		} else if (v.getId() == facebookLogin.getId()) {
 			lockUI();
+			android.util.Log.e("TRY_FACEBOOK_LOGIN","start");
 			fbSession = new Session.Builder(this).setApplicationId(getString(R.string.app_id)).build();
-
+			android.util.Log.e("TRY_FACEBOOK_LOGIN","made fb session");
 			Session.OpenRequest or = new Session.OpenRequest(this); // 안드로이드 sdk를 사용하기 위해선 내 컴퓨터의 hash key를 페이스북 개발 설정페이지에서 추가하여야함.
+			android.util.Log.e("TRY_FACEBOOK_LOGIN","open request");
 			//			or.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO); // 앱 호출이 아닌 웹뷰를 강제로 호출함.
 			or.setPermissions(Arrays.asList("email", "basic_info"));
 			or.setCallback(statusCallback);
 
 			fbSession.openForRead(or);
+
+			android.util.Log.e("TRY_FACEBOOK_LOGIN","open for read");
 			Session.setActiveSession(fbSession);
+			android.util.Log.e("TRY_FACEBOOK_LOGIN","setActiveSession");
 		}
 	}
 
@@ -226,6 +239,7 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 		@Override
 		public void call(Session session, SessionState state,
 				Exception exception) {
+			android.util.Log.e("FACEBOOK_LOGIN_CALLBACK","state : "+ state.toString());
 			if (state.isOpened()) makeMeRequest(session);
 			else if (state.isClosed()) session.closeAndClearTokenInformation();
 
@@ -301,6 +315,7 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 
 	@Override
 	public void onResponse(String url, JSONObject response) {
+		android.util.Log.e("FACEBOOK_RESPONSE",response.toString());
 		if (url.contains(URL_WEBAPI_USER_LOGIN)) {
 			JSONObject obj = response;
 			try {

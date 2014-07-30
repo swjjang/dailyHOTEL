@@ -3135,8 +3135,6 @@ com.google.android.gms.common.images.a:
     public void a(com.google.android.gms.common.images.ImageManager$OnImageLoadedListener)
     public void a(android.widget.ImageView)
     void r(android.content.Context)
-com.google.android.gms.common.internal.safeparcel.SafeParcelable:
-    public static final java.lang.String NULL
 com.google.android.gms.common.util.VisibleForTesting
 com.google.android.gms.drive.Contents:
     public android.os.ParcelFileDescriptor getParcelFileDescriptor()
@@ -5545,11 +5543,11 @@ com.twoheart.dailyhotel.BookingListFragment:
 com.twoheart.dailyhotel.BuildConfig
 com.twoheart.dailyhotel.CreditFragment:
     private static final java.lang.String TAG
-    152:177:public void sendUrlLink(android.view.View)
+    164:180:public void sendUrlLink(android.view.View)
 com.twoheart.dailyhotel.CreditListFragment:
     private static final java.lang.String KEY_BUNDLE_ARGUMENTS_CREDITLIST
 com.twoheart.dailyhotel.DailyHotel:
-    119:121:private void initializeVolleyImageLoader()
+    116:118:private void initializeVolleyImageLoader()
 com.twoheart.dailyhotel.HotelListFragment:
     private static final java.lang.String TAG
 com.twoheart.dailyhotel.MainActivity:
@@ -5563,15 +5561,15 @@ com.twoheart.dailyhotel.MainActivity:
     public static final java.lang.String KEY_CREDIT_FRAGMENT
     public static final java.lang.String KEY_SEETING_FRAGMENT
     private static final java.lang.String TAG_FRAGMENT_RATING_HOTEL
-    417:419:public void removeFragment(android.support.v4.app.Fragment)
-    423:434:public void printPackageHashKey()
+    399:401:public void removeFragment(android.support.v4.app.Fragment)
+    408:419:public void printPackageHashKey()
 com.twoheart.dailyhotel.MainActivity$DrawerMenu:
     public static final int DRAWER_MENU_LIST_TYPE_LOGO
     public static final int DRAWER_MENU_LIST_TYPE_SECTION
     public static final int DRAWER_MENU_LIST_TYPE_ENTRY
-    616:617:public void setType(int)
-    624:625:public void setTitle(java.lang.String)
-    632:633:public void setIcon(int)
+    590:591:public void setType(int)
+    598:599:public void setTitle(java.lang.String)
+    606:607:public void setIcon(int)
 com.twoheart.dailyhotel.Manifest
 com.twoheart.dailyhotel.Manifest$permission
 com.twoheart.dailyhotel.R:
@@ -5598,7 +5596,6 @@ com.twoheart.dailyhotel.activity.BookingActivity:
     private static final java.lang.String TAG
     private static final int DIALOG_CONFIRM_PAYMENT_CARD
     private static final int DIALOG_CONFIRM_PAYMENT_ACCOUNT
-    private java.util.Calendar accurateAppTime
 com.twoheart.dailyhotel.activity.BookingTabActivity:
     private static final java.lang.String TAG
 com.twoheart.dailyhotel.activity.EventWebActivity:
@@ -5623,8 +5620,8 @@ com.twoheart.dailyhotel.activity.PrivacyActivity:
     private static final java.lang.String TAG
 com.twoheart.dailyhotel.activity.SignupActivity:
     private static final java.lang.String TAG
-    119:121:public boolean isValidPhone(java.lang.String)
-    125:127:public boolean isVaildrecommend(java.lang.String)
+    109:111:public boolean isValidPhone(java.lang.String)
+    115:117:public boolean isVaildrecommend(java.lang.String)
 com.twoheart.dailyhotel.activity.SplashActivity:
     private static final java.lang.String TAG
     private static final int VALUE_WEB_API_RESPONSE_NEW_EVENT_NOTIFY
@@ -5634,8 +5631,6 @@ com.twoheart.dailyhotel.activity.TermActivity:
     private static final java.lang.String TAG
 com.twoheart.dailyhotel.activity.VersionActivity:
     private static final java.lang.String TAG
-    80:89:public void showAlert(java.lang.String)
-com.twoheart.dailyhotel.activity.VersionActivity$1
 com.twoheart.dailyhotel.activity.ZoomMapActivity:
     private static final java.lang.String TAG
 com.twoheart.dailyhotel.fragment.BookingTabBookingFragment:
@@ -5683,7 +5678,7 @@ com.twoheart.dailyhotel.model.Hotel:
     28:41:public Hotel(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,int,int,int,java.lang.String)
 com.twoheart.dailyhotel.model.SaleTime:
     49:49:public static java.lang.String dateToString(java.util.Date)
-    105:105:public java.lang.Long getCloseTime()
+    104:104:public java.lang.Long getCloseTime()
 com.twoheart.dailyhotel.util.AvailableNetwork:
     public static final int NET_TYPE_NONE
     public static final int NET_TYPE_WIFI
@@ -5692,6 +5687,7 @@ com.twoheart.dailyhotel.util.BitmapLruCache
 com.twoheart.dailyhotel.util.Constants:
     public static final boolean DEBUG
     public static final boolean IS_GOOGLE_RELEASE
+    public static final boolean ALWAYS_OPEN
     public static final java.lang.String URL_DAILYHOTEL_SERVER
     public static final java.lang.String PHONE_NUMBER_DAILYHOTEL
     public static final int REQUEST_EXPIRE_JUDGE
@@ -5768,6 +5764,7 @@ com.twoheart.dailyhotel.util.Constants:
     public static final int CODE_REQUEST_ACTIVITY_SPLASH
     public static final int CODE_REQEUST_ACTIVITY_SIGNUP
     public static final int CODE_REQUEST_ACTIVITY_BOOKING
+    public static final int CODE_REQUEST_ACTIVITY_INTRO
     public static final int CODE_REQUEST_ISPMOBILE
     public static final int CODE_REQUEST_KFTC_BANKPAY
     public static final int RESULT_SALES_CLOSED
@@ -5802,13 +5799,13 @@ com.twoheart.dailyhotel.util.DeviceResolutionUtil
 com.twoheart.dailyhotel.util.GlobalFont:
     23:23:public GlobalFont()
 com.twoheart.dailyhotel.util.KakaoLink:
-    88:109:public void openKakaoLink(android.app.Activity,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String)
+    86:106:public void openKakaoLink(android.app.Activity,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String)
 com.twoheart.dailyhotel.util.Log:
     3:3:public Log()
 com.twoheart.dailyhotel.util.Util:
     19:19:public Util()
-    43:53:public static android.graphics.Bitmap drawableToBitmap(android.graphics.drawable.Drawable)
-    57:60:public static android.view.View getActionBarView(android.app.Activity)
+    38:46:public static android.graphics.Bitmap drawableToBitmap(android.graphics.drawable.Drawable)
+    50:53:public static android.view.View getActionBarView(android.app.Activity)
 com.twoheart.dailyhotel.util.VolleyImageLoader
 com.twoheart.dailyhotel.util.WakeLock:
     6:6:public WakeLock()
@@ -5823,13 +5820,13 @@ com.twoheart.dailyhotel.util.network.request.DailyHotelRequest:
 com.twoheart.dailyhotel.util.ui.AllCapsTransformationMethod
 com.twoheart.dailyhotel.util.ui.BaseActivity:
     private static final java.lang.String TAG
-    310:311:protected void chgClickable(android.view.View)
+    298:299:protected void chgClickable(android.view.View)
 com.twoheart.dailyhotel.util.ui.HotelListViewItem:
     public static final int TYPE_SECTION
     public static final int TYPE_ENTRY
-    31:32:public void setType(int)
-    39:40:public void setItem(com.twoheart.dailyhotel.model.Hotel)
-    47:48:public void setCategory(java.lang.String)
+    29:30:public void setType(int)
+    37:38:public void setItem(com.twoheart.dailyhotel.model.Hotel)
+    45:46:public void setCategory(java.lang.String)
 com.twoheart.dailyhotel.util.ui.OnLoadListener
 com.twoheart.dailyhotel.util.ui.TransformationMethodCompat:
     public abstract void onFocusChanged(android.view.View,java.lang.CharSequence,boolean,int,android.graphics.Rect)
