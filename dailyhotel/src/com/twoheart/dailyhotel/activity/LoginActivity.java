@@ -239,15 +239,16 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 		@Override
 		public void call(Session session, SessionState state,
 				Exception exception) {
+			unLockUI(); // 페이스북 로그인화면시 lockui를 꺼야함.
 			android.util.Log.e("FACEBOOK_LOGIN_CALLBACK","state : "+ state.toString());
 			if (state.isOpened()) makeMeRequest(session);
 			else if (state.isClosed()) session.closeAndClearTokenInformation();
 
 			// 사용자 취소 시
-			if (exception instanceof FacebookOperationCanceledException 
-					|| exception instanceof FacebookAuthorizationException) {
-				unLockUI();
-			}
+//			if (exception instanceof FacebookOperationCanceledException 
+//					|| exception instanceof FacebookAuthorizationException) {
+//				unLockUI();
+//			}
 
 		}
 
