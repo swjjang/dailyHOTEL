@@ -14,6 +14,7 @@ import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.graphics.drawable.ColorDrawable;
@@ -186,8 +187,12 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 	}
 
 	@Override
-	public void onClick(View v) {
+	public void onClick(final View v) {
 		if (v.getId() == btnPay.getId()) {
+			
+			v.setClickable(false);
+			v.setEnabled(false);
+			
 			Dialog dialog = null; 
 			
 			if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentAccount
@@ -200,6 +205,13 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_CARD);
 			}
 			
+			dialog.setOnDismissListener(new OnDismissListener() {
+				@Override
+				public void onDismiss(DialogInterface dialog) {
+					v.setClickable(true);
+					v.setEnabled(true);
+				}
+			});
 			dialog.show();
 			
 		} else if (v.getId() == rbPaymentAccount.getId() | v.getId() == rbPaymentCard.getId()) {
