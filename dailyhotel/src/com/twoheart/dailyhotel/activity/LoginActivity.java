@@ -12,11 +12,24 @@
  */
 package com.twoheart.dailyhotel.activity;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
 
 import android.annotation.TargetApi;
@@ -25,8 +38,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
 import android.view.View;
@@ -170,16 +185,59 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 
 					android.util.Log.e("MAKE_ME_REQUEST","put to queue : "+ loginParams.toString());
 					
+					lockUI();
+					
 					mQueue.add(new DailyHotelJsonRequest(Method.POST,
 							new StringBuilder(URL_DAILYHOTEL_SERVER)
 					.append(URL_WEBAPI_USER_LOGIN)
 					.toString(), loginParams,
 					LoginActivity.this, LoginActivity.this));
-
+					
+//					final String uuid=userId;
+//					final String enid=encryptedId;
+//					new AsyncTask<Void, Void, Void>() {
+//
+//						@Override
+//						protected Void doInBackground(Void... no) {
+//
+//							HttpClient client = new DefaultHttpClient();
+//							
+//							String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString();
+//							HttpPost post = new HttpPost(url);
+//							
+//							List params = new ArrayList();
+//							
+//							params.add(new BasicNameValuePair("accessToken", uuid));
+//							params.add(new BasicNameValuePair("pw", enid));
+//							
+//							UrlEncodedFormEntity ent;
+//							try {
+//								ent = new UrlEncodedFormEntity(params,HTTP.UTF_8);
+//								post.setEntity(ent);
+//								HttpResponse responsePost = client.execute(post);
+//								HttpEntity resEntity = responsePost.getEntity();
+//								if(resEntity != null) android.util.Log.e("HTTPENTITY",resEntity.toString());
+//								
+//							} catch (UnsupportedEncodingException e) {
+//								// TODO Auto-generated catch block
+//								e.printStackTrace();
+//							} catch (ClientProtocolException e) {
+//								// TODO Auto-generated catch block
+//								e.printStackTrace();
+//							} catch (IOException e) {
+//								// TODO Auto-generated catch block
+//								e.printStackTrace();
+//							}
+//							
+//							
+//							return null;
+//						}
+//					}.execute();
+//					
+					
 					fbSession.closeAndClearTokenInformation();
 				}
 			}
-
 
 		});
 

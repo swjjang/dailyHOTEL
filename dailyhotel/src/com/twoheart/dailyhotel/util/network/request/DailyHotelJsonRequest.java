@@ -22,7 +22,11 @@ public class DailyHotelJsonRequest extends DailyHotelRequest<JSONObject> {
 			Map<String, String> parameters,
 			DailyHotelJsonResponseListener listener, ErrorListener errorListener) {
 		super(method, url, parameters, errorListener);
+		
+		
 		this.mListener = listener;
+		
+//		android.util.Log.e("PARAMS",parameters.toString());
 		
 	}
 

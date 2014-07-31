@@ -35,7 +35,7 @@ public class AvailableNetwork {
 				return true;
 		return false;
 	}
-
+	
 	public int getNetType(Context context) {
 		int nNetType = AvailableNetwork.NET_TYPE_NONE;
 

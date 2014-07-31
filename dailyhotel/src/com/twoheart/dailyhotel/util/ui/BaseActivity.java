@@ -64,6 +64,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 		super.onCreate(savedInstanceState);
 		sharedPreference = getSharedPreferences(NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
 		mQueue = VolleyHttpClient.getRequestQueue();
+		
 		mLockUI = new LoadingDialog(this);
 
 		cancelAllRequestFilter = new RequestQueue.RequestFilter() {

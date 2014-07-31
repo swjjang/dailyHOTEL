@@ -6,10 +6,12 @@ import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.Response.ErrorListener;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 
-public abstract class DailyHotelRequest<T> extends Request<T> {
+public abstract class DailyHotelRequest<T> extends Request<T> implements Constants {
 
 	private Map<String, String> mParameters;
 	
@@ -17,8 +19,10 @@ public abstract class DailyHotelRequest<T> extends Request<T> {
 								ErrorListener errorListener) {
 		this(method, url, errorListener);
 		mParameters = parameters;
-		
+//		android.util.Log.e("URL",url);
+		setRetryPolicy(new DefaultRetryPolicy(REQUEST_EXPIRE_JUDGE,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 	}
+	
 
 	private DailyHotelRequest(int method, String url, ErrorListener listener) {
 		super(method, url, listener);

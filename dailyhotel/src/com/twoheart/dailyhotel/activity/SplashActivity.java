@@ -34,6 +34,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+import android.provider.Settings.SettingNotFoundException;
 import android.view.KeyEvent;
 
 import com.android.volley.Request.Method;
@@ -78,13 +79,64 @@ DailyHotelJsonResponseListener, ErrorListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (!VolleyHttpClient.isAvailableNetwork()) {
+		// 비행기 모드
+		boolean isAirplainMode = Settings.System.getInt(getContentResolver(), Settings.System.AIRPLANE_MODE_ON, 0) == 1 ? true:false;
+		boolean isNetworkAvailable = VolleyHttpClient.isAvailableNetwork();
+		android.util.Log.e("STATUS",isAirplainMode + " / " + isNetworkAvailable);
+		
+		if(isAirplainMode && !isNetworkAvailable) {
+			Builder builder = new AlertDialog.Builder(SplashActivity.this);
+
+			builder.setTitle("잠시만요!");
+			builder.setMessage(getString(R.string.dialog_msg_network_please_off_airplain));
+			builder.setCancelable(false);
+			builder.setPositiveButton("확인",
+					new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					if (VolleyHttpClient.isAvailableNetwork()) {
+						moveToLoginStep();
+					} else {
+						new Handler().postDelayed(new Runnable() {
+							@Override
+							public void run() {
+								alertDlg.show();									
+							}
+						}, 100);
+					}
+				}
+			});
+			builder.setNegativeButton("설정",
+					new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+					dialog.dismiss();
+				}
+			});
+			builder.setOnKeyListener(new OnKeyListener() {
+				@Override
+					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+					if(keyCode == KeyEvent.KEYCODE_BACK){
+						dialog.dismiss();
+						finish();
+						return true;
+					}
+					return false;
+				}
+			});
+			
+			alertDlg = builder.create();
+			alertDlg.show();
+		}
+		
+		else if (!isAirplainMode && !isNetworkAvailable) {
 
 			if(alertDlg == null) {
 				
 				Builder builder = new AlertDialog.Builder(SplashActivity.this);
 
-				builder.setTitle("확인");
+				builder.setTitle("잠시만요!");
 				builder.setMessage(getString(R.string.dialog_msg_network_unstable_retry_or_set_wifi));
 				builder.setCancelable(false);
 				builder.setPositiveButton("재시도",

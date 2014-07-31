@@ -5820,7 +5820,7 @@ com.twoheart.dailyhotel.util.network.request.DailyHotelRequest:
 com.twoheart.dailyhotel.util.ui.AllCapsTransformationMethod
 com.twoheart.dailyhotel.util.ui.BaseActivity:
     private static final java.lang.String TAG
-    298:299:protected void chgClickable(android.view.View)
+    299:300:protected void chgClickable(android.view.View)
 com.twoheart.dailyhotel.util.ui.HotelListViewItem:
     public static final int TYPE_SECTION
     public static final int TYPE_ENTRY

@@ -59,8 +59,8 @@
     <string name="actionbar_title_zoom_map_activity">지도 확대</string>
     
     <!-- Toast Messages -->
-    <string name="toast_msg_network_status_bad">네트워크 상태가 원활하지 않습니다. 잠시 후 다시 시도해 주세요.</string>
-    <string name="toast_msg_please_chk_network_status">와이파이 또는 데이터 네트워크의 연결 상태를 확인해주세요</string>
+    <string name="toast_msg_network_status_bad">인터넷 연결을 할 수 없습니다.\n설정에서 확인해주세요.</string>
+    <string name="toast_msg_please_chk_network_status">인터넷 연결을 할 수 없습니다.\n설정에서 확인해주세요.</string>
     <string name="toast_msg_please_input_booking_user_infos">예약자와 연락처, 이메일을 모두 입력해주십시요</string>
     <string name="toast_msg_please_input_email_address">이메일 주소를 입력해주세요</string>
     <string name="toast_msg_wrong_email_address">올바른 이메일 형식을 입력해주세요</string>
@@ -93,7 +93,8 @@
     <string name="dialog_msg_install_hana_sk">HANA SK 모듈이 설치 되어있지 않습니다.\n설치 하시겠습니까?</string>
     <string name="dialog_msg_chk_wanna_login">로그아웃하시겠습니까?</string>
     <string name="dialog_msg_not_installed_kakaotalk">카카오톡이 설치되어 있지 않습니다.</string>
-    <string name="dialog_msg_network_unstable_retry_or_set_wifi">네트워크 연결이 불안정합니다.\n재시도 혹은 와이파이 설정을 확인해주세요.</string>
+    <string name="dialog_msg_network_please_off_airplain">에어플레인 모드를 끄거나 WIFI를 사용해주세요.</string>
+    <string name="dialog_msg_network_unstable_retry_or_set_wifi">인터넷 연결을 할 수 없습니다.\n재시도 혹은 와이파이 설정을 확인해주세요.</string>
     <string name="dialog_msg_please_update_new_version">dailyHOTEL의 새로운 버전이 출시되었습니다. 업데이트해주세요</string>
     <string name="dialog_msg_update_now">지금 업그레이드하여 가장 멋진 데일리호텔 앱을 다운받으세요</string>
     <string name="dialog_msg_sales_closed">오전 9시부터 오늘의 호텔이 공개됩니다.</string>
