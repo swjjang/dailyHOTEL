@@ -6850,6 +6850,7 @@ com.twoheart.dailyhotel.R$string: int dialog_btn_text_update
 com.twoheart.dailyhotel.R$string: int dialog_msg_chk_wanna_login
 com.twoheart.dailyhotel.R$string: int dialog_msg_install_hana_sk
 com.twoheart.dailyhotel.R$string: int dialog_msg_install_paypin
+com.twoheart.dailyhotel.R$string: int dialog_msg_network_please_off_airplain
 com.twoheart.dailyhotel.R$string: int dialog_msg_network_unstable_retry_or_set_wifi
 com.twoheart.dailyhotel.R$string: int dialog_msg_not_installed_kakaotalk
 com.twoheart.dailyhotel.R$string: int dialog_msg_payment_confirm_account

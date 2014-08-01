@@ -239,6 +239,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	 */
 	@Override
 	public void unLockUI() {
+		android.util.Log.e("UNLOCKED","B");
 		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
 		mLockUI.hide();
 		handler.removeCallbacks(networkCheckRunner);

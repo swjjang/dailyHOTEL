@@ -5586,7 +5586,7 @@ com.twoheart.dailyhotel.R$layout
 com.twoheart.dailyhotel.R$string
 com.twoheart.dailyhotel.R$style
 com.twoheart.dailyhotel.R$styleable:
-    3299:3299:public R$styleable()
+    3300:3300:public R$styleable()
 com.twoheart.dailyhotel.WaitTimerFragment:
     private static final java.lang.String TAG
     private static final java.lang.String KEY_BUNDLE_ARGUMENTS_SALETIME

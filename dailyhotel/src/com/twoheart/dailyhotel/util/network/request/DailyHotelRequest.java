@@ -19,8 +19,7 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
 								ErrorListener errorListener) {
 		this(method, url, errorListener);
 		mParameters = parameters;
-//		android.util.Log.e("URL",url);
-		setRetryPolicy(new DefaultRetryPolicy(REQUEST_EXPIRE_JUDGE,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+		setRetryPolicy(new DefaultRetryPolicy(REQUEST_EXPIRE_JUDGE, REQUEST_MAX_RETRY, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 	}
 	
 

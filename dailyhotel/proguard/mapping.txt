@@ -15334,29 +15334,42 @@ com.twoheart.dailyhotel.activity.SplashActivity$1 -> com.twoheart.dailyhotel.act
 com.twoheart.dailyhotel.activity.SplashActivity$1$1 -> com.twoheart.dailyhotel.activity.ao:
     com.twoheart.dailyhotel.activity.SplashActivity$1 this$1 -> a
     void run() -> run
-com.twoheart.dailyhotel.activity.SplashActivity$2 -> com.twoheart.dailyhotel.activity.ap:
+com.twoheart.dailyhotel.activity.SplashActivity$10 -> com.twoheart.dailyhotel.activity.ap:
     com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.twoheart.dailyhotel.activity.SplashActivity$3 -> com.twoheart.dailyhotel.activity.aq:
-    com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
-    boolean onKey(android.content.DialogInterface,int,android.view.KeyEvent) -> onKey
-com.twoheart.dailyhotel.activity.SplashActivity$4 -> com.twoheart.dailyhotel.activity.ar:
-    com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
-    void onClick(android.content.DialogInterface,int) -> onClick
-com.twoheart.dailyhotel.activity.SplashActivity$5 -> com.twoheart.dailyhotel.activity.as:
-    com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
-    int val$newEventFlag -> b
-    void onCancel(android.content.DialogInterface) -> onCancel
-com.twoheart.dailyhotel.activity.SplashActivity$6 -> com.twoheart.dailyhotel.activity.at:
-    com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
-    void onClick(android.content.DialogInterface,int) -> onClick
-com.twoheart.dailyhotel.activity.SplashActivity$7 -> com.twoheart.dailyhotel.activity.au:
-    com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
-    void onClick(android.content.DialogInterface,int) -> onClick
-com.twoheart.dailyhotel.activity.SplashActivity$8 -> com.twoheart.dailyhotel.activity.av:
+com.twoheart.dailyhotel.activity.SplashActivity$11 -> com.twoheart.dailyhotel.activity.aq:
     com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
     int val$newEventFlag -> b
     void run() -> run
+com.twoheart.dailyhotel.activity.SplashActivity$2 -> com.twoheart.dailyhotel.activity.ar:
+    com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.twoheart.dailyhotel.activity.SplashActivity$3 -> com.twoheart.dailyhotel.activity.as:
+    com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
+    boolean onKey(android.content.DialogInterface,int,android.view.KeyEvent) -> onKey
+com.twoheart.dailyhotel.activity.SplashActivity$4 -> com.twoheart.dailyhotel.activity.at:
+    com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+    com.twoheart.dailyhotel.activity.SplashActivity access$0(com.twoheart.dailyhotel.activity.SplashActivity$4) -> a
+com.twoheart.dailyhotel.activity.SplashActivity$4$1 -> com.twoheart.dailyhotel.activity.au:
+    com.twoheart.dailyhotel.activity.SplashActivity$4 this$1 -> a
+    void run() -> run
+com.twoheart.dailyhotel.activity.SplashActivity$5 -> com.twoheart.dailyhotel.activity.av:
+    com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.twoheart.dailyhotel.activity.SplashActivity$6 -> com.twoheart.dailyhotel.activity.aw:
+    com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
+    boolean onKey(android.content.DialogInterface,int,android.view.KeyEvent) -> onKey
+com.twoheart.dailyhotel.activity.SplashActivity$7 -> com.twoheart.dailyhotel.activity.ax:
+    com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.twoheart.dailyhotel.activity.SplashActivity$8 -> com.twoheart.dailyhotel.activity.ay:
+    com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
+    int val$newEventFlag -> b
+    void onCancel(android.content.DialogInterface) -> onCancel
+com.twoheart.dailyhotel.activity.SplashActivity$9 -> com.twoheart.dailyhotel.activity.az:
+    com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
 com.twoheart.dailyhotel.activity.TermActivity -> com.twoheart.dailyhotel.activity.TermActivity:
     void onCreate(android.os.Bundle) -> onCreate
     void onResume() -> onResume

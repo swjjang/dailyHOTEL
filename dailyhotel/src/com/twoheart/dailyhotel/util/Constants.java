@@ -40,6 +40,8 @@ public interface Constants {
 	
 	// uiLock을 띄우고 API를 콜하였는데 제한 시간 안에 리턴을 받지 못한경우. error 발생.
 	public static final int REQUEST_EXPIRE_JUDGE = 5000; 
+	// Volley의 최대 retry 횟수,  여기서 0은 리퀘스트를 리트라이 하지 않음을 말함.
+	public static final int REQUEST_MAX_RETRY = 0; 
 
 	// 호텔 평가를 표시할 최대 날짜
 	public static final int DAYS_DISPLAY_RATING_HOTEL_DIALOG = 7;

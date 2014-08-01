@@ -135,8 +135,6 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 
 			@Override
 			public void onCompleted(GraphUser user, Response response) {
-				android.util.Log.e("MAKE_ME_REQUEST","res : "+ response.toString());
-				android.util.Log.e("MAKE_ME_REQUEST","user : "+ user.toString());
 				
 				if (user != null) {
 					TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext()
@@ -146,7 +144,6 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 
 					try {
 						if (user.getProperty("email") != null) {
-							android.util.Log.e("Email",user.getProperty("email").toString());
 							userEmail = user.getProperty("email").toString();
 						}
 					} catch (Exception e) {
@@ -181,11 +178,9 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 					if (userName != null) snsSignupParams.put("name", userName);
 
 					if (deviceId != null) snsSignupParams.put("device", deviceId);
+					unLockUI(); // 페이스북 연결 종료 
 					
-
-					android.util.Log.e("MAKE_ME_REQUEST","put to queue : "+ loginParams.toString());
-					
-					lockUI();
+					lockUI(); // 서버와 연결 시작 
 					
 					mQueue.add(new DailyHotelJsonRequest(Method.POST,
 							new StringBuilder(URL_DAILYHOTEL_SERVER)
@@ -193,54 +188,13 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 					.toString(), loginParams,
 					LoginActivity.this, LoginActivity.this));
 					
-//					final String uuid=userId;
-//					final String enid=encryptedId;
-//					new AsyncTask<Void, Void, Void>() {
-//
-//						@Override
-//						protected Void doInBackground(Void... no) {
-//
-//							HttpClient client = new DefaultHttpClient();
-//							
-//							String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString();
-//							HttpPost post = new HttpPost(url);
-//							
-//							List params = new ArrayList();
-//							
-//							params.add(new BasicNameValuePair("accessToken", uuid));
-//							params.add(new BasicNameValuePair("pw", enid));
-//							
-//							UrlEncodedFormEntity ent;
-//							try {
-//								ent = new UrlEncodedFormEntity(params,HTTP.UTF_8);
-//								post.setEntity(ent);
-//								HttpResponse responsePost = client.execute(post);
-//								HttpEntity resEntity = responsePost.getEntity();
-//								if(resEntity != null) android.util.Log.e("HTTPENTITY",resEntity.toString());
-//								
-//							} catch (UnsupportedEncodingException e) {
-//								// TODO Auto-generated catch block
-//								e.printStackTrace();
-//							} catch (ClientProtocolException e) {
-//								// TODO Auto-generated catch block
-//								e.printStackTrace();
-//							} catch (IOException e) {
-//								// TODO Auto-generated catch block
-//								e.printStackTrace();
-//							}
-//							
-//							
-//							return null;
-//						}
-//					}.execute();
-//					
-					
 					fbSession.closeAndClearTokenInformation();
 				}
 			}
 
 		});
-
+		
+		// 페이스북 연결 시작
 		lockUI();
 		request.executeAsync();
 
@@ -266,29 +220,23 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 			loginParams = new LinkedHashMap<String, String>();
 			loginParams.put("email", etId.getText().toString());
 			loginParams.put("pw", md5);
-
 			lockUI();
+			
 			mQueue.add(new DailyHotelJsonRequest(Method.POST,
 					new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 							URL_WEBAPI_USER_LOGIN).toString(), loginParams,
 							this, this));
 
 		} else if (v.getId() == facebookLogin.getId()) {
-			lockUI();
-			android.util.Log.e("TRY_FACEBOOK_LOGIN","start");
 			fbSession = new Session.Builder(this).setApplicationId(getString(R.string.app_id)).build();
-			android.util.Log.e("TRY_FACEBOOK_LOGIN","made fb session");
 			Session.OpenRequest or = new Session.OpenRequest(this); // 안드로이드 sdk를 사용하기 위해선 내 컴퓨터의 hash key를 페이스북 개발 설정페이지에서 추가하여야함.
-			android.util.Log.e("TRY_FACEBOOK_LOGIN","open request");
 			//			or.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO); // 앱 호출이 아닌 웹뷰를 강제로 호출함.
 			or.setPermissions(Arrays.asList("email", "basic_info"));
 			or.setCallback(statusCallback);
 
 			fbSession.openForRead(or);
 
-			android.util.Log.e("TRY_FACEBOOK_LOGIN","open for read");
 			Session.setActiveSession(fbSession);
-			android.util.Log.e("TRY_FACEBOOK_LOGIN","setActiveSession");
 		}
 	}
 
@@ -297,8 +245,6 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 		@Override
 		public void call(Session session, SessionState state,
 				Exception exception) {
-			unLockUI(); // 페이스북 로그인화면시 lockui를 꺼야함.
-			android.util.Log.e("FACEBOOK_LOGIN_CALLBACK","state : "+ state.toString());
 			if (state.isOpened()) makeMeRequest(session);
 			else if (state.isClosed()) session.closeAndClearTokenInformation();
 
@@ -376,6 +322,9 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 	public void onResponse(String url, JSONObject response) {
 		android.util.Log.e("FACEBOOK_RESPONSE",response.toString());
 		if (url.contains(URL_WEBAPI_USER_LOGIN)) {
+			// 서버와 연결 종료
+			unLockUI();
+			
 			JSONObject obj = response;
 			try {
 				String msg = null;
@@ -387,15 +336,13 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 					storeLoginInfo();
 
 					setResult(RESULT_OK);
-
-					unLockUI();
 					finish();
 
 				} else {
 
 					if (loginParams.containsKey("accessToken")) { // SNS 로그인인데
-						// 실패했을 경우
-
+						// 실패했을 경우 회원가입 시도
+						lockUI();
 						cbxAutoLogin.setChecked(true); // 회원가입의 경우 기본으로 자동 로그인인
 						// 정책 상.
 						mQueue.add(new DailyHotelJsonRequest(Method.POST,
@@ -409,7 +356,6 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 					// 로그인 실패
 					// 실패 msg 출력
 					else if (obj.length() > 1) {
-						unLockUI();
 
 						msg = obj.getString("msg");
 						AlertDialog.Builder alert = new AlertDialog.Builder(
@@ -433,21 +379,21 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 			}
 		} else if (url.contains(URL_WEBAPI_USER_SIGNUP)) {
 			try {
+				unLockUI();
+				
 				JSONObject obj = response;
 
 				String result = obj.getString("join");
 				String msg = obj.getString("msg");
 
 				if (result.equals("true")) { // 회원가입에 성공하면 이제 로그인 절차
-
+					lockUI();
 					mQueue.add(new DailyHotelJsonRequest(Method.POST,
 							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 									URL_WEBAPI_USER_LOGIN).toString(),
 									loginParams, LoginActivity.this, LoginActivity.this));
 				} else {
-					unLockUI();
 					loginParams.clear();
-
 					showToast(msg, Toast.LENGTH_LONG, true);
 				}
 
