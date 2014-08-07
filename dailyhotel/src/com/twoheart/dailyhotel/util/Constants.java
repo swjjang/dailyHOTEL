@@ -28,18 +28,28 @@ public interface Constants {
 	// 항상 열리게 셋팅 여부
 	public static final boolean ALWAYS_OPEN = false;
 
+    public static final String GCM_PROJECT_NUMBER = "1025681158000";
+
 	// 웹서버 호스트 
-		public static final String URL_DAILYHOTEL_SERVER = "http://dailyhotel.kr/goodnight/";				// 서비스 서버
+//		public static final String URL_DAILYHOTEL_SERVER = "http://dailyhotel.kr/goodnight/";				// 서비스 서버
 //		public static final String URL_DAILYHOTEL_SERVER = "http://dev.dailyhotel.kr/goodnight/";				// 서비스 서버
 //		public static final String URL_DAILYHOTEL_SERVER = "http://dailyhotel.cafe24.com/goodnight/";		// 개발 서버
 	//	public static final String URL_DAILYHOTEL_SERVER = "http://was1.dailyhotel.kr/goodnight/";					// new 개발 서버
 	//	public static final String URL_DAILYHOTEL_SERVER = "http://1.234.83.117/goodnight/";							// new 개발 서버
-//		public static final String URL_DAILYHOTEL_SERVER = "http://1.234.22.96/goodnight/"; // new 개발 7.6
+		public static final String URL_DAILYHOTEL_SERVER = "http://1.234.22.96/goodnight/"; // new 개발 7.6
+		
+
+		public static final String URL_DAILYHOTEL_GCM_SERVER = "http://dailyhotel.kr/goodnight/";				// 서비스 서버
+		
 	// 회사 대표번호
 	public static final String PHONE_NUMBER_DAILYHOTEL = "1800-9120";
 	
 	// uiLock을 띄우고 API를 콜하였는데 제한 시간 안에 리턴을 받지 못한경우. error 발생.
 	public static final int REQUEST_EXPIRE_JUDGE = 5000; 
+
+	// 구글플레이 서비스 상태 확인 타임아웃
+    public static final int PLAY_SERVICES_RESOLUTION_REQUEST = 5000;
+    
 	// Volley의 최대 retry 횟수,  여기서 0은 리퀘스트를 리트라이 하지 않음을 말함.
 	public static final int REQUEST_MAX_RETRY = 0; 
 
@@ -64,6 +74,7 @@ public interface Constants {
 	public static final String URL_WEBAPI_RESERVE_PAYMENT = "reserv/session/req/";
 	public static final String URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT = "reserv/session/bonus/";
 	public static final String URL_WEBAPI_RESERVE_MINE = "reserv/mine";
+	public static final String URL_WEBAPI_RESERVE_MINE_DETAIL = "reserv/mine/detail";
 	public static final String URL_WEBAPI_RESERVE_SAVED_MONEY = "reserv/bonus";
 	public static final String URL_WEBAPI_RESERVE_CHECKIN = "reserv/checkinout/";
 	public static final String URL_WEBAPI_RESERVE_REVIEW = "reserv/review/";
@@ -97,6 +108,10 @@ public interface Constants {
 	public static final String URL_STORE_PAYMENT_ISP = "market://details?id=kvp.jjy.MispAndroid320";
 	public static final String URL_STORE_PAYMENT_KFTC = "market://details?id=com.kftc.bankpay.android&hl=ko";
 	public static final String URL_STORE_PAYMENT_MPOCKET = "market://details?id=kr.co.samsungcard.mpocket";
+	
+	// Gcm Server URL
+	public static final String URL_GCM_REGISTER = "user/push/register";
+//	public static final String URL_GCM_SEND_MSG = "push/sender.php";
 
 	// Payment App PackageName
 	public static final String PACKAGE_NAME_ISP = "kvp.jjy.MispAndroid";
@@ -113,6 +128,7 @@ public interface Constants {
 	public static final String KEY_PREFERENCE_USER_ID = "USER_ID";
 	public static final String KEY_PREFERENCE_USER_PWD = "USER_PWD";
 	public static final String KEY_PREFERENCE_USER_ACCESS_TOKEN = "USER_ACCESSTOKEN";
+    public static final String KEY_PREFERENCE_GCM_ID = "PUSH_ID";
 
 	// version
 	public static final String KEY_PREFERENCE_CURRENT_VERSION_NAME = "CURRENT_VERSION_NAME";
@@ -132,7 +148,8 @@ public interface Constants {
 	public static final String VALUE_PREFERENCE_HOTEL_NAME_DEFAULT = "none";
 	public static final int VALUE_PREFERENCE_HOTEL_SALE_IDX_DEFAULT = 1;
 	public static final String VALUE_PREFERENCE_HOTEL_CHECKOUT_DEFAULT = "14-04-30-20";
-	public static final String KEY_PREFERENCE_USER_IDX = "USER_IDX";
+	public static final String KEY_PREFERENCE_USER_IDX = "USER_IDX"; // 예약 성공했을때 사용함, 이름과 용도가 맞지 않음 -> 기존 코드
+	public static final String KEY_PREFERENCE_LOGIN_USER_IDX = "LOGIN_USER_IDX"; // GCM 등록을 위한 user idx 저장 
 
 	// Android 컴포넌트 간에 데이터를 주고받을 때 사용되는 인텐트 이름(키)을 정의한 상수이다.
 	public static final String NAME_INTENT_EXTRA_DATA_HOTEL = "hotel";
@@ -167,6 +184,8 @@ public interface Constants {
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR = 107;
 	public static final int CODE_RESULT_ACTIVITY_SPLASH_NEW_EVENT = 108;
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_CANCELED = 109;
+	
+	public static final int CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY = 110;
 
 	// Android Google Analytics 정보들.
 	public static final String GA_PROPERTY_ID = "UA-43721645-1";

@@ -14,28 +14,37 @@
  */
 package com.twoheart.dailyhotel;
 
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
+import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -54,11 +63,18 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request.Method;
+import com.android.volley.Response.ErrorListener;
 import com.androidquery.util.AQUtility;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.readystatesoftware.systembartint.SystemBarTintManager.SystemBarConfig;
+import com.twoheart.dailyhotel.activity.LoginActivity;
+import com.twoheart.dailyhotel.activity.PaymentWaitActivity;
 import com.twoheart.dailyhotel.activity.SplashActivity;
 import com.twoheart.dailyhotel.fragment.RatingHotelFragment;
 import com.twoheart.dailyhotel.model.Hotel;
@@ -117,6 +133,7 @@ Constants {
 	// Back 버튼을 두 번 눌러 핸들러 멤버 변수
 	private CloseOnBackPressed backButtonHandler;
 
+	protected HashMap<String, String> regPushParams;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -180,6 +197,7 @@ Constants {
 
 	}
 
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -206,7 +224,7 @@ Constants {
 		} else if (requestCode == CODE_REQUEST_ACTIVITY_INTRO) {
 			selectMenuDrawer(menuHotelListFragment);
 		}
-		
+
 	}
 
 	@Override
@@ -230,8 +248,26 @@ Constants {
 		if (url.contains(URL_WEBAPI_USER_INFO)) {
 			try {
 				String loginUserIdx = response.getString("idx");
+				
+//				Editor editor = sharedPreference.edit(); // GCM 등록을 위해서는  idx가 필요, 이에 따라 미리 저장해둠.
+//				editor.putString(KEY_PREFERENCE_LOGIN_USER_IDX, loginUserIdx);
+//				editor.apply();
+//				
+//				android.util.Log.e("idx?",sharedPreference.getString(KEY_PREFERENCE_LOGIN_USER_IDX, "?"));
+				
+				// GCM 등록 시도
+				String gcmId=getGcmId();
+				if (gcmId.isEmpty()) {
+					if (isGoogleServiceAvailable()) {
+						regGcmId(Integer.parseInt(loginUserIdx));
+					}
+				} else {
+					android.util.Log.e("gcmId",gcmId);
+				}
+				//
+				
+				
 				String buyerIdx = sharedPreference.getString(KEY_PREFERENCE_USER_IDX, null);
-
 				if (buyerIdx != null) {
 					if (loginUserIdx.equals(buyerIdx)) {
 						String purchasedHotelName = sharedPreference.getString(
@@ -254,7 +290,7 @@ Constants {
 								calendar.setTime(checkOut);
 								calendar.add(Calendar.DATE, DAYS_DISPLAY_RATING_HOTEL_DIALOG);
 								Date deadLineDay = calendar.getTime();
-
+								
 								if (today.compareTo(deadLineDay) < 0) {
 									Hotel purchasedHotel = new Hotel();
 									purchasedHotel.setName(purchasedHotelName);
@@ -280,9 +316,76 @@ Constants {
 				onError(e);
 			}
 			unLockUI();
+		} else if (url.contains(URL_GCM_REGISTER)) {
+			// 로그인 성공 - 유저 정보(인덱스) 가져오기 - 유저의 GCM키 등록 완료 한 경우 프리퍼런스에 키 등록후 종료
+			try {
+				if (response.getString("msg").equals("success")) {
+					Editor editor = sharedPreference.edit();
+					editor.putString(KEY_PREFERENCE_GCM_ID, regPushParams.get("pushId").toString());
+					editor.apply();
+					android.util.Log.e("STORED_GCM_ID", sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "NOAP"));
+				}
+				
+			} catch (Exception e) {
+				onError(e);
+			}
 		}
 	}
 
+	private String getGcmId() {
+		return sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "");
+	}
+	
+	private Boolean isGoogleServiceAvailable() {
+		int resCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+
+		if (resCode != ConnectionResult.SUCCESS) {
+			if (GooglePlayServicesUtil.isUserRecoverableError(resCode)) {
+				GooglePlayServicesUtil.getErrorDialog(resCode, this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
+			} else {
+				showToast("구글플레이 서비스가 이용가능 하지 않습니다.", Toast.LENGTH_LONG, false);
+				finish();
+			}
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	private void regGcmId(final int idx) {
+		new AsyncTask<Void, Void, String>() {
+
+			@Override
+			protected String doInBackground(Void... params) {
+				GoogleCloudMessaging instance = GoogleCloudMessaging.getInstance(MainActivity.this);
+				String regId = "";
+				try {
+					regId = instance.register(GCM_PROJECT_NUMBER);
+				} catch (IOException e) {e.printStackTrace();}
+
+				return regId;
+			}
+
+			@Override
+			protected void onPostExecute(String regId) {
+				// 이 값을 서버에 등록하기.
+				regPushParams = new HashMap<String, String>();
+
+				regPushParams.put("userIdx", idx+"");
+				regPushParams.put("pushId", regId);
+
+				android.util.Log.e("PUSH_ID", regId);
+				android.util.Log.e("GET_PUSH_DATA_FROM_GOOGLE",regPushParams.toString());
+
+				mQueue.add(new DailyHotelJsonRequest(Method.POST,
+						new StringBuilder(URL_DAILYHOTEL_SERVER)
+				.append(URL_GCM_REGISTER)
+				.toString(), regPushParams, MainActivity.this,
+				MainActivity.this));
+			}
+		}.execute();		
+	}
+	
 	/**
 	 * 네비게이션 드로워에서 메뉴를 선택하는 효과를 내주는 메서드
 	 * @param selectedMenu DrawerMenu 객체를 받는다.
@@ -399,7 +502,7 @@ Constants {
 		fragmentManager.beginTransaction().remove(fragment)
 		.commitAllowingStateLoss();
 	}
-	
+
 	/**
 	 * 페이스북 SDK를 사용하기 위해선 개발하는 컴퓨터의 해시키를 페이스북 개발 콘솔에 등록 할 필요가 있음. 이에따라서 현재 컴퓨터의 해시키를 출력해주어 등록을 돕게함.
 	 */
@@ -441,7 +544,7 @@ Constants {
 			indexLastFragment = INDEX_SETTING_FRAGMENT;
 			break;
 		}
-		
+
 		delayedReplace(indexLastFragment);
 		drawerLayout.closeDrawer(drawerList);
 

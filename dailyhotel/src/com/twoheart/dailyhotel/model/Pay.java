@@ -14,6 +14,7 @@ public class Pay implements Parcelable {
 	private int mPayPrice;
 	private boolean isSaleCredit;
 	private String mCheckOut;
+	private String payType;
 
 	public Pay() {
 	}
@@ -30,6 +31,7 @@ public class Pay implements Parcelable {
 		dest.writeInt(mPayPrice);
 		dest.writeByte((byte) (isSaleCredit ? 1 : 0));
 		dest.writeString(mCheckOut);
+		dest.writeString(getPayType());
 	}
 
 	private void readFromParcel(Parcel in) {
@@ -40,6 +42,7 @@ public class Pay implements Parcelable {
 		mPayPrice = in.readInt();
 		isSaleCredit = in.readByte() != 0;
 		mCheckOut = in.readString();
+		payType = in.readString();
 	}
 
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
@@ -102,9 +105,18 @@ public class Pay implements Parcelable {
 		mCheckOut = checkOut;
 	}
 
+	public String getPayType() {
+		return payType;
+	}
+
+	public void setPayType(String payType) {
+		this.payType = payType;
+	}
+
 	@Override
 	public int describeContents() {
 		return 0;
 	}
+
 
 }

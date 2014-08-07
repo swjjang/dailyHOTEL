@@ -9,6 +9,8 @@ public class Booking implements Parcelable {
 	private String hotel_idx;
 	private String hotel_name;
 	private String bedType;
+	private int payType;
+	private String tid;
 	
 	public Booking() {
 	}
@@ -23,7 +25,8 @@ public class Booking implements Parcelable {
 		dest.writeString(hotel_idx);
 		dest.writeString(hotel_name);
 		dest.writeString(bedType);
-
+		dest.writeInt(payType);
+		dest.writeString(tid);
 	}
 	
 	private void readFromParcel(Parcel in) {
@@ -31,6 +34,8 @@ public class Booking implements Parcelable {
 		hotel_idx = in.readString();
 		hotel_name = in.readString();
 		bedType = in.readString();
+		payType = in.readInt();
+		tid = in.readString();
 	}
 	
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
@@ -45,12 +50,13 @@ public class Booking implements Parcelable {
 
 	};
 	
-	public Booking(String sday, String hotel_idx, String hotel_name, String bedType) {
+	public Booking(String sday, String hotel_idx, String hotel_name, String bedType, int payType, String tid) {
 		this.sday = sday;
 		this.hotel_idx = hotel_idx;
 		this.hotel_name = hotel_name;
 		this.bedType = bedType;
-		
+		this.payType = payType;
+		this.tid = tid;
 	}
 
 	public String getSday() {
@@ -88,6 +94,22 @@ public class Booking implements Parcelable {
 	@Override
 	public int describeContents() {
 		return 0;
+	}
+
+	public int getPayType() {
+		return payType;
+	}
+
+	public void setPayType(int payType) {
+		this.payType = payType;
+	}
+
+	public String getTid() {
+		return tid;
+	}
+
+	public void setTid(String tid) {
+		this.tid = tid;
 	}
 	
 }

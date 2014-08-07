@@ -14632,22 +14632,23 @@ com.twoheart.dailyhotel.MainActivity -> com.twoheart.dailyhotel.MainActivity:
     void onResponse(java.lang.String,java.lang.String) -> a
     void onResponse(java.lang.String,org.json.JSONObject) -> a
     void selectMenuDrawer(com.twoheart.dailyhotel.MainActivity$DrawerMenu) -> a
-    void initializeFragments() -> m
+    void initializeFragments() -> r
     android.support.v4.app.Fragment getFragment(int) -> a
     void replaceFragment(android.support.v4.app.Fragment) -> b
     void addFragment(android.support.v4.app.Fragment) -> c
-    void clearFragmentBackStack() -> r
+    void clearFragmentBackStack() -> s
+    void printPackageHashKey() -> j
     void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
     void delayedReplace(int) -> b
-    void setNavigationDrawer() -> j
+    void setNavigationDrawer() -> k
     void onPostCreate(android.os.Bundle) -> onPostCreate
     void onConfigurationChanged(android.content.res.Configuration) -> onConfigurationChanged
     boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
     boolean onKeyDown(int,android.view.KeyEvent) -> onKeyDown
-    void toggleDrawer() -> k
+    void toggleDrawer() -> l
     void finish() -> finish
     void onDestroy() -> onDestroy
-    void onError() -> l
+    void onError() -> m
 com.twoheart.dailyhotel.MainActivity$1 -> com.twoheart.dailyhotel.j:
     com.twoheart.dailyhotel.MainActivity this$0 -> a
     int val$index -> b
@@ -15097,7 +15098,7 @@ com.twoheart.dailyhotel.activity.HotelTabActivity -> com.twoheart.dailyhotel.act
     void onActivityResult(int,int,android.content.Intent) -> onActivityResult
     void loadFragments() -> k
     void onResponse(java.lang.String,java.lang.String) -> a
-    void loadLoginProcess() -> m
+    void loadLoginProcess() -> l
     void onResponse(java.lang.String,org.json.JSONObject) -> a
 com.twoheart.dailyhotel.activity.ImageDetailActivity -> com.twoheart.dailyhotel.activity.ImageDetailActivity:
     com.twoheart.dailyhotel.model.HotelDetail mHotelDetail -> o
@@ -15311,7 +15312,7 @@ com.twoheart.dailyhotel.activity.SignupActivity -> com.twoheart.dailyhotel.activ
     boolean checkInput() -> k
     boolean isValidEmail(java.lang.String) -> b
     void onClick(android.view.View) -> onClick
-    void storeLoginInfo() -> m
+    void storeLoginInfo() -> l
     void finish() -> finish
     void onResponse(java.lang.String,org.json.JSONObject) -> a
 com.twoheart.dailyhotel.activity.SplashActivity -> com.twoheart.dailyhotel.activity.SplashActivity:
@@ -15903,7 +15904,7 @@ com.twoheart.dailyhotel.util.ui.BaseActivity -> com.twoheart.dailyhotel.util.b.a
     void onDestroy() -> onDestroy
     void onErrorResponse(com.android.volley.VolleyError) -> a
     void onError(java.lang.Exception) -> a
-    void onError() -> l
+    void onError() -> m
     void showToast(java.lang.String,int,boolean) -> a
     void chgClickable(android.view.View,boolean) -> a
     com.twoheart.dailyhotel.util.ui.LoadingDialog access$0(com.twoheart.dailyhotel.util.ui.BaseActivity) -> a

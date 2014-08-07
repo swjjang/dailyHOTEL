@@ -19,8 +19,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +38,7 @@ import com.android.volley.Request.Method;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.twoheart.dailyhotel.activity.BookingTabActivity;
+import com.twoheart.dailyhotel.activity.PaymentWaitActivity;
 import com.twoheart.dailyhotel.activity.SignupActivity;
 import com.twoheart.dailyhotel.adapter.BookingListAdapter;
 import com.twoheart.dailyhotel.model.Booking;
@@ -53,8 +56,8 @@ import com.twoheart.dailyhotel.util.ui.BaseFragment;
  *
  */
 public class BookingListFragment extends BaseFragment implements Constants,
-		OnItemClickListener, OnClickListener, DailyHotelJsonResponseListener,
-		DailyHotelStringResponseListener {
+OnItemClickListener, OnClickListener, DailyHotelJsonResponseListener,
+DailyHotelStringResponseListener {
 
 	private static final String TAG = "BookingListFragment";
 
@@ -73,14 +76,14 @@ public class BookingListFragment extends BaseFragment implements Constants,
 		mListView = (ListView) view.findViewById(R.id.listview_booking);
 		mEmptyLayout = (RelativeLayout) view.findViewById(R.id.layout_booking_empty);
 		btnSignUp = (Button) view.findViewById(R.id.btn_booking_empty_signup);
-		
+
 		btnSignUp.setOnClickListener(this);
-		
+
 		DailyHotel.getGaTracker().set(Fields.SCREEN_NAME, TAG);
 
 		return view;
 	}
-	
+
 	@Override
 	public void onStart() {
 		super.onStart();
@@ -96,7 +99,7 @@ public class BookingListFragment extends BaseFragment implements Constants,
 		mQueue.add(new DailyHotelStringRequest(Method.GET,
 				new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 						URL_WEBAPI_USER_ALIVE).toString(), null,
-				BookingListFragment.this, mHostActivity));
+						BookingListFragment.this, mHostActivity));
 	}
 
 	@Override
@@ -112,9 +115,15 @@ public class BookingListFragment extends BaseFragment implements Constants,
 	@Override
 	public void onItemClick(AdapterView<?> parentView, View childView,
 			int position, long id) {
-
-		Intent i = new Intent(mHostActivity, BookingTabActivity.class);
-		i.putExtra(NAME_INTENT_EXTRA_DATA_BOOKING, mItems.get(position));
+		Intent i = null;
+		Booking item = mItems.get(position);
+//		android.util.Log.e(item.getTid()+"",item.getPayType()+"");
+		if (item.getPayType() == 10 || item.getPayType() == 21) { // 카드결제 완료 || 가상계좌 완료
+			i = new Intent(mHostActivity, BookingTabActivity.class);
+		} else if (item.getPayType() == 20) { // 가상계좌 입금대기
+			i = new Intent(mHostActivity, PaymentWaitActivity.class);
+		} 
+		i.putExtra(NAME_INTENT_EXTRA_DATA_BOOKING, item);
 		startActivity(i);
 	}
 
@@ -127,7 +136,7 @@ public class BookingListFragment extends BaseFragment implements Constants,
 				mQueue.add(new DailyHotelStringRequest(Method.GET,
 						new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 								URL_WEBAPI_RESERVE_MINE).toString(), null,
-						BookingListFragment.this, mHostActivity));
+								BookingListFragment.this, mHostActivity));
 
 			} else if (result.equals("dead")) { // session dead
 				// 재로그인
@@ -150,15 +159,15 @@ public class BookingListFragment extends BaseFragment implements Constants,
 					mQueue.add(new DailyHotelJsonRequest(Method.POST,
 							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 									URL_WEBAPI_USER_LOGIN).toString(),
-							loginParams, BookingListFragment.this,
-							mHostActivity));
+									loginParams, BookingListFragment.this,
+									mHostActivity));
 
 					mListView.setVisibility(View.GONE);
 					mEmptyLayout.setVisibility(View.VISIBLE);
 				} else {
 					mListView.setVisibility(View.GONE);
 					mEmptyLayout.setVisibility(View.VISIBLE);
-					
+
 					unLockUI();
 				}
 
@@ -180,20 +189,37 @@ public class BookingListFragment extends BaseFragment implements Constants,
 
 					for (int i = 0; i < rsvArr.length(); i++) {
 						JSONObject rsvObj = rsvArr.getJSONObject(i);
-						String sday = rsvObj.getString("sday");
-						String hotel_idx = rsvObj.getString("hotel_idx");
-						String hotel_name = rsvObj.getString("hotel_name");
-						String bedType = rsvObj.getString("bed_type");
 
-						mItems.add(new Booking(sday, hotel_idx, hotel_name, bedType));
+						//kcpno (depre)
+						String hotel_name = rsvObj.getString("hotel_name");
+						//room_name (depre)
+						String sday = rsvObj.getString("sday");
+						//rsv_idx (dpre)
+						String hotel_idx = rsvObj.getString("hotel_idx");
+						String bedType = rsvObj.getString("bed_type");
+						int payType = rsvObj.getInt("pay_type");
+						String tid = rsvObj.getString("tid");
+
+						mItems.add(new Booking(sday, hotel_idx, hotel_name, bedType, payType, tid));
 					}
 
 					mAdapter = new BookingListAdapter(mHostActivity,
 							R.layout.list_row_booking, mItems);
 					mListView.setOnItemClickListener(this);
 					mListView.setAdapter(mAdapter);
-					
+
 					unLockUI();
+
+					// flag가 가상계좌 입금 대기에서 날아온경우 
+					SharedPreferences pref = getActivity().getSharedPreferences(NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
+					int flag = pref.getInt("flag", -1);
+					android.util.Log.e("WHAT??",flag+"");
+					if (flag == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY) {
+						mListView.performItemClick(null, 0, 0);
+						Editor editor = pref.edit();
+						editor.remove("flag");
+						editor.apply();
+					}
 
 				} catch (Exception e) {
 					mListView.setVisibility(View.GONE);
@@ -207,7 +233,7 @@ public class BookingListFragment extends BaseFragment implements Constants,
 				mListView.setVisibility(View.GONE);
 				mEmptyLayout.setVisibility(View.VISIBLE);
 				btnSignUp.setVisibility(View.INVISIBLE);
-				
+
 				unLockUI();
 			}
 		}
@@ -237,11 +263,11 @@ public class BookingListFragment extends BaseFragment implements Constants,
 				mListView.setVisibility(View.GONE);
 				mEmptyLayout.setVisibility(View.VISIBLE);
 				btnSignUp.setVisibility(View.INVISIBLE);
-				
+
 				unLockUI();
 			}
 		}
 	}
-	
-	
+
+
 }

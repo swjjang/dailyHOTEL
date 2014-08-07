@@ -23,6 +23,7 @@ import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -127,7 +128,6 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 		setActionBar(getString(strId));
 	}
 
-
 	/**
 	 * 액션바에 ProgressBar를 표시할 수 있도록 셋팅한다.
 	 */
@@ -227,7 +227,6 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	 */
 	@Override
 	public void lockUI() {
-		android.util.Log.e("LOCKED","a");
 		mLockUI.show();
 		// 만약 제한시간이 지났는데도 리퀘스트가 끝나지 않았다면 Error 발생.
 		handler.postDelayed(networkCheckRunner, REQUEST_EXPIRE_JUDGE);
@@ -239,7 +238,6 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	 */
 	@Override
 	public void unLockUI() {
-		android.util.Log.e("UNLOCKED","B");
 		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
 		mLockUI.hide();
 		handler.removeCallbacks(networkCheckRunner);

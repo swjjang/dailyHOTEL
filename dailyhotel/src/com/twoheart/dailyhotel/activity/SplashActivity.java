@@ -15,6 +15,7 @@
  */
 package com.twoheart.dailyhotel.activity;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,19 +28,25 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnKeyListener;
+import android.content.SharedPreferences.Editor;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
 import android.view.KeyEvent;
+import android.widget.Toast;
 
 import com.android.volley.Request.Method;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
@@ -59,6 +66,10 @@ DailyHotelJsonResponseListener, ErrorListener {
 	private boolean isDialogShown = false;
 
 	private Dialog alertDlg;
+
+	private GoogleCloudMessaging mGcm;
+
+	protected HashMap<String, String> regPushParams;
 
 
 
@@ -227,8 +238,10 @@ DailyHotelJsonResponseListener, ErrorListener {
 					ed.putString(KEY_PREFERENCE_USER_PWD, null);
 					ed.commit();
 
-				} else {
+				} else { 
+					// 로그인 성공
 					VolleyHttpClient.createCookie();
+					// 로그인에 성공하였으나 GCM을 등록하지 않은 유저의 경우 인덱스를 가져와 push_id를 업그레이드 하는 절차 시작.
 				}
 
 			} catch (JSONException e) {
@@ -251,7 +264,6 @@ DailyHotelJsonResponseListener, ErrorListener {
 							response.getString("tstore_max"));
 					editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME,
 							response.getString("tstore_min"));
-
 
 				}
 
@@ -347,9 +359,9 @@ DailyHotelJsonResponseListener, ErrorListener {
 				onError(e);
 
 			}
-		}
+		} 
 	}
-
+	
 	private void showMainActivity(final int newEventFlag) {
 		// sleep 2 second
 		Handler h = new Handler();

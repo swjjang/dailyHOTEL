@@ -33,9 +33,12 @@ import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.AbsListViewDeleg
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.res.Resources;
+import android.graphics.AvoidXfermode.Mode;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -237,13 +240,16 @@ public class HotelListFragment extends BaseFragment implements Constants,
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		
 		if (requestCode == CODE_REQUEST_ACTIVITY_HOTELTAB) {
 			mRefreshHotelList = false;
-			
 			if (resultCode == Activity.RESULT_OK) {
 				((MainActivity) mHostActivity).selectMenuDrawer(((MainActivity) mHostActivity).menuBookingListFragment);
+			} else if (resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY) {
+				((MainActivity) mHostActivity).selectMenuDrawer(((MainActivity) mHostActivity).menuBookingListFragment);
 			}
-		}
+			
+		} 
 		
 		super.onActivityResult(requestCode, resultCode, data);
 	}

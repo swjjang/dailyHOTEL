@@ -59,7 +59,6 @@ public class PaymentActivity extends BaseActivity implements Constants {
 	public static String CARD_CD = "";
 	public static String QUOTA = "";
 	public int m_nStat = PROGRESS_STAT_NOT_START;
-	String wayToPay;
 
 	private WebView webView;
 	private final Handler handler = new Handler();
@@ -74,10 +73,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		setContentView(R.layout.activity_payment);
 
 		Bundle bundle = getIntent().getExtras();
-		if (bundle != null) {
-			mPay = (Pay) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_PAY);
-			wayToPay = (String) bundle.getString("wayToPay");
-		}
+		if (bundle != null) mPay = (Pay) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_PAY);
 
 		webView = (WebView) findViewById(R.id.webView);
 		webView.getSettings().setSavePassword(false);
@@ -118,6 +114,14 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		ArrayList<String> postParameterValue = new ArrayList<String>(Arrays.asList(mPay.getCustomer().getEmail(),
 				mPay.getCustomer().getName(),
 				mPay.getCustomer().getPhone()));
+		android.util.Log.e("PAYTYPE",mPay.getPayType()+" ");
+		
+		if (mPay.getPayType() != null) {
+			android.util.Log.e("PAYTYPE2",mPay.getPayType()+" ");
+			postParameterKey.add("payType");
+			postParameterValue.add(mPay.getPayType());
+		}
+		
 
 		if ((userAccessToken != null)) {
 			if ((userAccessToken.equals("")) || !(userAccessToken.equals("null"))) {
@@ -125,12 +129,6 @@ public class PaymentActivity extends BaseActivity implements Constants {
 				postParameterValue.add(userAccessToken);
 			}
 		}
-
-		if (wayToPay != null) {
-			postParameterKey.add("payType");
-			postParameterValue.add(wayToPay);
-		}
-
 
 		String url = new StringBuilder(URL_DAILYHOTEL_SERVER)
 		.append(URL_WEBAPI_RESERVE_PAYMENT)
@@ -141,8 +139,11 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			.append(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)
 			.append(mPay.getHotelDetail().getSaleIdx()).append("/")
 			.append(mPay.getCredit().getBonus()).toString();
-
 		}
+		
+		android.util.Log.e("url!!!@", url);
+		android.util.Log.e("post key!!!@", postParameterKey.toString());
+		android.util.Log.e("post val!!!@", postParameterValue.toString());
 
 		webView.postUrl(url,
 				parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]),
@@ -319,7 +320,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			 * 
 			 * return true; } }
 			 */
-			}
+			} 
 			
 			// 결제 모듈 실행.
 			try {
@@ -854,6 +855,8 @@ public class PaymentActivity extends BaseActivity implements Constants {
 				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_INVALID_DATE;
 			} else if (msg.equals("PAYMENT_CANCELED")) {
 				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_CANCELED;
+			} else if (msg.equals("ACCOUNT_READY")) {
+				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY;
 			} else {
 				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
 			}

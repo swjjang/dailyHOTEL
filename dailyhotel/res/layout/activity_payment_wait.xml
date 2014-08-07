@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fdfdfd"
+    android:fillViewport="true"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="1" >
+
+        <TextView
+            android:id="@+id/tv_payment_wait_hotel_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_section_background"
+            android:gravity="center"
+            android:padding="15dp"
+            android:text="데일리 슈퍼 프리미어 호텔"
+            android:textColor="@color/textView_textColor_section"
+            android:textSize="16dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_section_background"
+                android:orientation="horizontal"
+                android:paddingBottom="9dp"
+                android:paddingLeft="13dp"
+                android:paddingTop="20dp" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="결제 정보 (가상계좌)"
+                    android:textColor="@color/textView_textColor_section"
+                    android:textSize="12.5dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="20dp"
+                android:paddingLeft="13dp"
+                android:paddingRight="15dp"
+                android:paddingTop="20dp" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal" >
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:orientation="horizontal" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:text="계좌번호"
+                            android:textColor="@color/textView_textColor_section"
+                            android:textSize="12.5dp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_payment_wait_account"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.7"
+                        android:ellipsize="marquee"
+                        android:freezesText="true"
+                        android:gravity="right|center_vertical"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:scrollHorizontally="true"
+                        android:singleLine="true"
+                        android:textColor="@drawable/selector_textview_textcolor"
+                        android:textSize="12.5dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal" >
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:orientation="horizontal" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:text="입금주명"
+                            android:textColor="@color/textView_textColor_section"
+                            android:textSize="12.5dp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_payment_wait_name"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.7"
+                        android:ellipsize="marquee"
+                        android:freezesText="true"
+                        android:gravity="right|center_vertical"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:scrollHorizontally="true"
+                        android:singleLine="true"
+                        android:textColor="@drawable/selector_textview_textcolor"
+                        android:textSize="12.5dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal" >
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:orientation="horizontal" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:text="금액"
+                            android:textColor="@color/textView_textColor_section"
+                            android:textSize="12.5dp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_payment_wait_price"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.7"
+                        android:ellipsize="marquee"
+                        android:freezesText="true"
+                        android:gravity="right|center_vertical"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:scrollHorizontally="true"
+                        android:singleLine="true"
+                        android:textColor="@drawable/selector_textview_textcolor"
+                        android:textSize="12.5dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal" >
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:orientation="horizontal" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:text="입금기한"
+                            android:textColor="@color/textView_textColor_section"
+                            android:textSize="12.5dp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_payment_wait_deadline"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.7"
+                        android:ellipsize="marquee"
+                        android:freezesText="true"
+                        android:gravity="right|center_vertical"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:scrollHorizontally="true"
+                        android:singleLine="true"
+                        android:textColor="@drawable/selector_textview_textcolor"
+                        android:textSize="12.5dp" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_section_background"
+                android:orientation="horizontal"
+                android:paddingBottom="9dp"
+                android:paddingLeft="13dp"
+                android:paddingTop="20dp" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="확인사항"
+                    android:textColor="@color/textView_textColor_section"
+                    android:textSize="12.5dp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_payment_wait_guide1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:padding="10dp"
+                android:textSize="12.5dp" 
+                android:text="입금 순서대로 예약이 확정되며,\n객실 예약이 조기에 마감될 수 있습니다.\n마감시 입금하신 계좌로 전액 환불됩니다." />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_section_background"
+                android:orientation="horizontal"
+                android:paddingBottom="9dp"
+                android:paddingLeft="13dp"
+                android:paddingTop="20dp" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="입금이 완료되면"
+                    android:textColor="@color/textView_textColor_section"
+                    android:textSize="12.5dp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_payment_wait_guide2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:padding="10dp"
+                android:text="10분이내에 예약완료 문자가 도착합니다."
+                android:textSize="12.5dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

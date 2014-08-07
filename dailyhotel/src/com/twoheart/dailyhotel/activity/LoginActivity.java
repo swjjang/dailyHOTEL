@@ -30,6 +30,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.TargetApi;
@@ -38,6 +39,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -63,6 +65,10 @@ import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
@@ -86,8 +92,11 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 
 	private Map<String, String> loginParams;
 	private Map<String, String> snsSignupParams;
+	private Map<String, String> regPushParams;
 
 	public Session fbSession;
+
+	private GoogleCloudMessaging mGcm;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -135,7 +144,7 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 
 			@Override
 			public void onCompleted(GraphUser user, Response response) {
-				
+
 				if (user != null) {
 					TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext()
 							.getSystemService(Context.TELEPHONY_SERVICE);
@@ -150,7 +159,7 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 						if (DEBUG)
 							e.printStackTrace();
 					}
-					
+
 					String userId = user.getId();
 					String encryptedId = Crypto.encrypt(userId)
 							.replace("\n", "");
@@ -179,21 +188,21 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 
 					if (deviceId != null) snsSignupParams.put("device", deviceId);
 					unLockUI(); // 페이스북 연결 종료 
-					
+
 					lockUI(); // 서버와 연결 시작 
-					
+
 					mQueue.add(new DailyHotelJsonRequest(Method.POST,
 							new StringBuilder(URL_DAILYHOTEL_SERVER)
 					.append(URL_WEBAPI_USER_LOGIN)
 					.toString(), loginParams,
 					LoginActivity.this, LoginActivity.this));
-					
+
 					fbSession.closeAndClearTokenInformation();
 				}
 			}
 
 		});
-		
+
 		// 페이스북 연결 시작
 		lockUI();
 		request.executeAsync();
@@ -221,7 +230,7 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 			loginParams.put("email", etId.getText().toString());
 			loginParams.put("pw", md5);
 			lockUI();
-			
+
 			mQueue.add(new DailyHotelJsonRequest(Method.POST,
 					new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 							URL_WEBAPI_USER_LOGIN).toString(), loginParams,
@@ -249,10 +258,10 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 			else if (state.isClosed()) session.closeAndClearTokenInformation();
 
 			// 사용자 취소 시
-//			if (exception instanceof FacebookOperationCanceledException 
-//					|| exception instanceof FacebookAuthorizationException) {
-//				unLockUI();
-//			}
+			//			if (exception instanceof FacebookOperationCanceledException 
+			//					|| exception instanceof FacebookAuthorizationException) {
+			//				unLockUI();
+			//			}
 
 		}
 
@@ -276,6 +285,7 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 
 		// 자동 로그인 체크시
 		if (cbxAutoLogin.isChecked()) {
+
 			String id = loginParams.get("email");
 			String pwd = loginParams.get("pw");
 			String accessToken = loginParams.get("accessToken");
@@ -324,7 +334,7 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 		if (url.contains(URL_WEBAPI_USER_LOGIN)) {
 			// 서버와 연결 종료
 			unLockUI();
-			
+
 			JSONObject obj = response;
 			try {
 				String msg = null;
@@ -334,9 +344,18 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 
 					showToast(getString(R.string.toast_msg_logoined), Toast.LENGTH_SHORT, true);
 					storeLoginInfo();
+					android.util.Log.e("GCMID?!",getGcmId());
 
-					setResult(RESULT_OK);
-					finish();
+					if (getGcmId().isEmpty()) {
+						// 로그인에 성공하였으나 GCM을 등록하지 않은 유저의 경우 인덱스를 가져와 push_id를 업그레이드 하는 절차 시작.
+						mQueue.add(new DailyHotelJsonRequest(Method.POST,
+								new StringBuilder(URL_DAILYHOTEL_SERVER)
+						.append(URL_WEBAPI_USER_INFO).toString(), null, this, this));
+					} else {
+						// 로그인에 성공 하였고 GCM또한 등록이 완료 된 경우 로그인 완료
+						setResult(RESULT_OK);
+						finish();
+					}
 
 				} else {
 
@@ -380,7 +399,7 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 		} else if (url.contains(URL_WEBAPI_USER_SIGNUP)) {
 			try {
 				unLockUI();
-				
+
 				JSONObject obj = response;
 
 				String result = obj.getString("join");
@@ -400,6 +419,90 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 			} catch (Exception e) {
 				onError(e);
 			}
+		} else if (url.contains(URL_WEBAPI_USER_INFO)) {
+			try {
+				// GCM 아이디를 등록한다.
+				if (isGoogleServiceAvailable()) {
+					mGcm = GoogleCloudMessaging.getInstance(this);
+					regGcmId(response.getInt("idx"));
+				}
+
+			} catch (Exception e) {
+				onError(e);
+			}
+		} else if (url.contains(URL_GCM_REGISTER)) {
+			// 로그인 성공 - 유저 정보(인덱스) 가져오기 - 유저의 GCM키 등록 완료 한 경우 프리퍼런스에 키 등록후 종료
+			android.util.Log.e("URL_GCM",response.toString());
+			try {
+				if (response.getString("msg").equals("success")) {
+					Editor editor = sharedPreference.edit();
+					editor.putString(KEY_PREFERENCE_GCM_ID, regPushParams.get("pushId").toString());
+					editor.apply();
+
+					android.util.Log.e("STORED_GCM_ID", sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "NOAP"));
+
+				}
+				
+				setResult(RESULT_OK);
+				finish();
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
 		}
+
+	}
+
+	private String getGcmId() {
+		return sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "");
+	}
+
+	private Boolean isGoogleServiceAvailable() {
+		int resCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+
+		if (resCode != ConnectionResult.SUCCESS) {
+			if (GooglePlayServicesUtil.isUserRecoverableError(resCode)) {
+				GooglePlayServicesUtil.getErrorDialog(resCode, this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
+			} else {
+				showToast("구글플레이 서비스가 이용가능 하지 않습니다.", Toast.LENGTH_LONG, false);
+				finish();
+			}
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	private void regGcmId(final int idx) {
+		new AsyncTask<Void, Void, String>() {
+
+			@Override
+			protected String doInBackground(Void... params) {
+				GoogleCloudMessaging instance = GoogleCloudMessaging.getInstance(LoginActivity.this);
+				String regId = "";
+				try {
+					regId = instance.register(GCM_PROJECT_NUMBER);
+				} catch (IOException e) {e.printStackTrace();}
+
+				return regId;
+			}
+
+			@Override
+			protected void onPostExecute(String regId) {
+				// 이 값을 서버에 등록하기.
+				regPushParams = new HashMap<String, String>();
+
+				regPushParams.put("userIdx", idx+"");
+				regPushParams.put("pushId", regId);
+
+				android.util.Log.e("PUSH_ID", regId);
+				android.util.Log.e("GET_PUSH_DATA_FROM_GOOGLE",regPushParams.toString());
+
+				mQueue.add(new DailyHotelJsonRequest(Method.POST,
+						new StringBuilder(URL_DAILYHOTEL_SERVER)
+				.append(URL_GCM_REGISTER)
+				.toString(), regPushParams, LoginActivity.this,
+				LoginActivity.this));
+			}
+		}.execute();		
 	}
 }

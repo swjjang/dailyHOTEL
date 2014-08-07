@@ -5562,7 +5562,6 @@ com.twoheart.dailyhotel.MainActivity:
     public static final java.lang.String KEY_SEETING_FRAGMENT
     private static final java.lang.String TAG_FRAGMENT_RATING_HOTEL
     399:401:public void removeFragment(android.support.v4.app.Fragment)
-    408:419:public void printPackageHashKey()
 com.twoheart.dailyhotel.MainActivity$DrawerMenu:
     public static final int DRAWER_MENU_LIST_TYPE_LOGO
     public static final int DRAWER_MENU_LIST_TYPE_SECTION
@@ -5691,6 +5690,7 @@ com.twoheart.dailyhotel.util.Constants:
     public static final java.lang.String URL_DAILYHOTEL_SERVER
     public static final java.lang.String PHONE_NUMBER_DAILYHOTEL
     public static final int REQUEST_EXPIRE_JUDGE
+    public static final int REQUEST_MAX_RETRY
     public static final int DAYS_DISPLAY_RATING_HOTEL_DIALOG
     public static final java.lang.String URL_WEBAPI_USER
     public static final java.lang.String URL_WEBAPI_USER_LOGIN
@@ -5820,7 +5820,7 @@ com.twoheart.dailyhotel.util.network.request.DailyHotelRequest:
 com.twoheart.dailyhotel.util.ui.AllCapsTransformationMethod
 com.twoheart.dailyhotel.util.ui.BaseActivity:
     private static final java.lang.String TAG
-    299:300:protected void chgClickable(android.view.View)
+    300:301:protected void chgClickable(android.view.View)
 com.twoheart.dailyhotel.util.ui.HotelListViewItem:
     public static final int TYPE_SECTION
     public static final int TYPE_ENTRY

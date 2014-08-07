@@ -14,6 +14,7 @@ import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
@@ -21,6 +22,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -81,8 +83,6 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 	private TextView tvPaymentInformation;
 
 	private Pay mPay;
-
-	private String wayToPay;
 
 	private SaleTime saleTime;
 
@@ -243,8 +243,12 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		// 카드 결제의 경우 확인 팝업 -> kcp 결제 웹뷰로 이동하도록함.
 		if (type == DIALOG_CONFIRM_PAYMENT_CARD) {
 			
-			tvMsg.setText(getString(R.string.dialog_msg_payment_confirm_card));
-			btnProceed.setText(getString(R.string.dialog_btn_payment_confirm_card));
+			tvMsg.setText(
+					Html.fromHtml(getString(R.string.dialog_msg_payment_confirm_card))
+					);
+			btnProceed.setText(
+					Html.fromHtml(getString(R.string.dialog_btn_payment_confirm_card))
+					);
 			
 			onClickProceed = new OnClickListener() {
 				@Override
@@ -261,19 +265,21 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		  // 계좌이체의 경우 확인 팝업 -> 전화(데일리호텔 상담원)로 이동.
 		} else if (type == DIALOG_CONFIRM_PAYMENT_ACCOUNT) {
 			
-			tvMsg.setText(getString(R.string.dialog_msg_payment_confirm_account));
-			btnProceed.setText(getString(R.string.dialog_btn_payment_confirm_account));
+			tvMsg.setText(
+					Html.fromHtml(getString(R.string.dialog_msg_payment_confirm_account))
+					);
+			btnProceed.setText(
+					Html.fromHtml(getString(R.string.dialog_btn_payment_confirm_account))
+					);
 			
 			onClickProceed = new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					
-					Intent i = new Intent(
-							Intent.ACTION_DIAL,
-							Uri.parse(new StringBuilder("tel:")
-							.append(PHONE_NUMBER_DAILYHOTEL)
-							.toString()));
-					startActivity(i);
+					lockUI();
+					mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(
+							URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_TIME)
+							.toString(), null, BookingActivity.this,
+							BookingActivity.this));
 					dialog.dismiss();
 				}
 			};
@@ -305,8 +311,8 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 
 	private void moveToPayStep() {
 		Intent intent = new Intent(this, PaymentActivity.class);
+		android.util.Log.e("LAST PAYTYPE",mPay.getPayType()+"");
 		intent.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
-		intent.putExtra("wayToPay", wayToPay);
 
 		startActivityForResult(intent,
 				CODE_REQUEST_ACTIVITY_PAYMENT);
@@ -424,6 +430,14 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 			case CODE_RESULT_ACTIVITY_PAYMENT_CANCELED:
 				dialog("결제가 취소되었습니다.");
 				break;
+			case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY:
+				// 예약 확인 리스트 프래그먼트에서 한번 더 들어가기 위한 플래그 설정
+				Editor editor = sharedPreference.edit();
+				editor.putInt("flag", CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
+				editor.apply();
+				
+				setResult(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
+				finish();
 			}
 		} else if (requestCode == CODE_REQUEST_ACTIVITY_LOGIN) {
 			if (resultCode == RESULT_OK)
@@ -436,17 +450,19 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		if (group.getId() == rgPaymentMethod.getId()) {
 
 			if (checkedId == rbPaymentAccount.getId()) {
-				wayToPay = "BANK";
-				btnPay.setText("전화로 문의하기");
-				tvPaymentInformation
-				.setText("계좌정보: 206037-04-005094 | 국민은행 | (주)데일리");
+				mPay.setPayType("VBANK");
+//				btnPay.setText("전화로 문의하기");
+//				tvPaymentInformation
+//				.setText("계좌정보: 206037-04-005094 | 국민은행 | (주)데일리");
 
 			} else if (checkedId == rbPaymentCard.getId()) {
-				wayToPay = null;
-				btnPay.setText("결제하기");
-				tvPaymentInformation.setText("당일 예약 특성 상 취소 및 환불이 불가합니다.");
-
+				mPay.setPayType(null);
+//				btnPay.setText("결제하기");
+//				tvPaymentInformation.setText("당일 예약 특성 상 취소 및 환불이 불가합니다.");
 			}
+			btnPay.setText("결제하기");
+			tvPaymentInformation.setText("당일 예약 특성 상 취소 및 환불이 불가합니다.");
+
 
 		}
 
