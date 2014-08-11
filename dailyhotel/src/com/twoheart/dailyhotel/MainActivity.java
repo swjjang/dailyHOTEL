@@ -215,7 +215,14 @@ Constants {
 
 			boolean showGuide = sharedPreference.getBoolean(KEY_PREFERENCE_SHOW_GUIDE, true);
 			if (showGuide) startActivityForResult(new Intent(this, IntroActivity.class), CODE_REQUEST_ACTIVITY_INTRO);
-			else selectMenuDrawer(menuHotelListFragment);
+			else {
+				// Intent가 Push로 부터 온경우
+				boolean isIntentFromPush = getIntent().getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_INTENT_FROM_PUSH, false);
+				android.util.Log.e("INTENT_FROM_PUSH",isIntentFromPush+"");
+				if(isIntentFromPush) selectMenuDrawer(menuBookingListFragment);
+				else selectMenuDrawer(menuHotelListFragment);
+//				selectMenuDrawer(menuHotelListFragment);
+			}
 
 			// 호텔평가를 위한 현재 로그인 여부 체크
 			mQueue.add(new DailyHotelStringRequest(Method.GET,
@@ -249,23 +256,13 @@ Constants {
 			try {
 				String loginUserIdx = response.getString("idx");
 				
-//				Editor editor = sharedPreference.edit(); // GCM 등록을 위해서는  idx가 필요, 이에 따라 미리 저장해둠.
-//				editor.putString(KEY_PREFERENCE_LOGIN_USER_IDX, loginUserIdx);
-//				editor.apply();
-//				
-//				android.util.Log.e("idx?",sharedPreference.getString(KEY_PREFERENCE_LOGIN_USER_IDX, "?"));
-				
 				// GCM 등록 시도
 				String gcmId=getGcmId();
 				if (gcmId.isEmpty()) {
 					if (isGoogleServiceAvailable()) {
 						regGcmId(Integer.parseInt(loginUserIdx));
 					}
-				} else {
-					android.util.Log.e("gcmId",gcmId);
 				}
-				//
-				
 				
 				String buyerIdx = sharedPreference.getString(KEY_PREFERENCE_USER_IDX, null);
 				if (buyerIdx != null) {
@@ -373,6 +370,7 @@ Constants {
 
 				regPushParams.put("userIdx", idx+"");
 				regPushParams.put("pushId", regId);
+				regPushParams.put("deviceType", "0");
 
 				android.util.Log.e("PUSH_ID", regId);
 				android.util.Log.e("GET_PUSH_DATA_FROM_GOOGLE",regPushParams.toString());

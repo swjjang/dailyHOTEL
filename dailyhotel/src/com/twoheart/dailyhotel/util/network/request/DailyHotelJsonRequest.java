@@ -26,8 +26,6 @@ public class DailyHotelJsonRequest extends DailyHotelRequest<JSONObject> {
 		
 		this.mListener = listener;
 		
-//		android.util.Log.e("PARAMS",parameters.toString());
-		
 	}
 
 	@Override

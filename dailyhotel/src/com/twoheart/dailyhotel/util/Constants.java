@@ -32,11 +32,11 @@ public interface Constants {
 
 	// 웹서버 호스트 
 //		public static final String URL_DAILYHOTEL_SERVER = "http://dailyhotel.kr/goodnight/";				// 서비스 서버
-//		public static final String URL_DAILYHOTEL_SERVER = "http://dev.dailyhotel.kr/goodnight/";				// 서비스 서버
+//		public static final String URL_DAILYHOTEL_SERVER = "http://dev.dailyhotel.kr/goodnight/";				// 개발 서버 데브서버
 //		public static final String URL_DAILYHOTEL_SERVER = "http://dailyhotel.cafe24.com/goodnight/";		// 개발 서버
 	//	public static final String URL_DAILYHOTEL_SERVER = "http://was1.dailyhotel.kr/goodnight/";					// new 개발 서버
 	//	public static final String URL_DAILYHOTEL_SERVER = "http://1.234.83.117/goodnight/";							// new 개발 서버
-		public static final String URL_DAILYHOTEL_SERVER = "http://1.234.22.96/goodnight/"; // new 개발 7.6
+		public static final String URL_DAILYHOTEL_SERVER = "http://1.234.22.96/goodnight/"; // new 개발 7.6 테라서버 
 		
 
 		public static final String URL_DAILYHOTEL_GCM_SERVER = "http://dailyhotel.kr/goodnight/";				// 서비스 서버
@@ -148,8 +148,9 @@ public interface Constants {
 	public static final String VALUE_PREFERENCE_HOTEL_NAME_DEFAULT = "none";
 	public static final int VALUE_PREFERENCE_HOTEL_SALE_IDX_DEFAULT = 1;
 	public static final String VALUE_PREFERENCE_HOTEL_CHECKOUT_DEFAULT = "14-04-30-20";
-	public static final String KEY_PREFERENCE_USER_IDX = "USER_IDX"; // 예약 성공했을때 사용함, 이름과 용도가 맞지 않음 -> 기존 코드
-	public static final String KEY_PREFERENCE_LOGIN_USER_IDX = "LOGIN_USER_IDX"; // GCM 등록을 위한 user idx 저장 
+	public static final String KEY_PREFERENCE_USER_IDX = "USER_IDX"; // 예약 성공했을때 예약 사용함, 이름과 용도가 맞지 않음 -> 기존 코드
+	
+	public static final String KEY_PREFERENCE_ACCOUNT_READY_FLAG = "ACCOUNT_READY_FLAG"; //
 
 	// Android 컴포넌트 간에 데이터를 주고받을 때 사용되는 인텐트 이름(키)을 정의한 상수이다.
 	public static final String NAME_INTENT_EXTRA_DATA_HOTEL = "hotel";
@@ -158,6 +159,8 @@ public interface Constants {
 	public static final String NAME_INTENT_EXTRA_DATA_BOOKING = "booking";
 	public static final String NAME_INTENT_EXTRA_DATA_PAY = "pay";
 	public static final String NAME_INTENT_EXTRA_DATA_SELECTED_IMAGE_URL = "sel_image_url";
+	public static final String NAME_INTENT_EXTRA_DATA_IS_INTENT_FROM_PUSH = "is_intent_from_push";
+	public static final String NAME_INTENT_EXTRA_DATA_PUSH_MSG = "push_msg";
 
 	// Android Activity의 Request Code들이다.
 	public static final int CODE_REQUEST_ACTIVITY_HOTELTAB = 1;
@@ -184,8 +187,8 @@ public interface Constants {
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR = 107;
 	public static final int CODE_RESULT_ACTIVITY_SPLASH_NEW_EVENT = 108;
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_CANCELED = 109;
-	
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY = 110;
+	public static final int CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_TIME_ERROR = 111;
 
 	// Android Google Analytics 정보들.
 	public static final String GA_PROPERTY_ID = "UA-43721645-1";

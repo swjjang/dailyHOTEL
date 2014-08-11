@@ -114,10 +114,8 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		ArrayList<String> postParameterValue = new ArrayList<String>(Arrays.asList(mPay.getCustomer().getEmail(),
 				mPay.getCustomer().getName(),
 				mPay.getCustomer().getPhone()));
-		android.util.Log.e("PAYTYPE",mPay.getPayType()+" ");
 		
 		if (mPay.getPayType() != null) {
-			android.util.Log.e("PAYTYPE2",mPay.getPayType()+" ");
 			postParameterKey.add("payType");
 			postParameterValue.add(mPay.getPayType());
 		}
@@ -141,10 +139,6 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			.append(mPay.getCredit().getBonus()).toString();
 		}
 		
-		android.util.Log.e("url!!!@", url);
-		android.util.Log.e("post key!!!@", postParameterKey.toString());
-		android.util.Log.e("post val!!!@", postParameterValue.toString());
-
 		webView.postUrl(url,
 				parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]),
 						postParameterValue.toArray(new String[postParameterValue.size()])));
@@ -831,6 +825,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 
 		JavaScriptExtention() {
 		}
+		// 웹뷰 소스를 보고 싶을때 주소에 이 자바스크립트 콜을 붙여서 보도록한다.
 		@JavascriptInterface
 		public void showHTML(String html) {
 			for(int i=0;i<html.length()/100;i++) { 
@@ -857,6 +852,8 @@ public class PaymentActivity extends BaseActivity implements Constants {
 				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_CANCELED;
 			} else if (msg.equals("ACCOUNT_READY")) {
 				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY;
+			} else if (msg.equals("ACCOUNT_TIME_ERROR")) {
+				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_TIME_ERROR;
 			} else {
 				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
 			}

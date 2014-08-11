@@ -111,7 +111,6 @@ DailyHotelStringResponseListener {
 		chgClickable(btnBooking, true); // 7.2 난타 방지
 		if (requestCode == CODE_REQUEST_ACTIVITY_BOOKING) {
 			setResult(resultCode);
-			android.util.Log.e("resultCode",resultCode+"");
 			if (resultCode == RESULT_OK || resultCode == RESULT_SALES_CLOSED || 
 					resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY) finish();
 		} else if (requestCode == CODE_REQUEST_ACTIVITY_LOGIN) {

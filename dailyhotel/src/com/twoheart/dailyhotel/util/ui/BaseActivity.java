@@ -278,15 +278,19 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	 * @param isAttachToActivity	현재 Activity가 종료되면 Toast도 제거할지를 결정한다
 	 */
 	public void showToast(String message, int length, boolean isAttachToActivity) {
-		if (mToast != null) mToast.cancel();
-
-		if (isAttachToActivity) {
-			mToast = Toast.makeText(getApplicationContext(), message, length);
-			mToast.show();
-
-		} else {
-			Toast.makeText(getApplicationContext(), message, length).show();
-
+		try {
+			if (mToast != null) mToast.cancel();
+	
+			if (isAttachToActivity) {
+				mToast = Toast.makeText(getApplicationContext(), message, length);
+				mToast.show();
+	
+			} else {
+				Toast.makeText(getApplicationContext(), message, length).show();
+	
+			}
+		} catch (Exception e) { // show Toast 도중 Stackoverflow가 자주 발생함. 이유를 알 수 없음. 이에따른 임시 방편 
+			
 		}
 	}
 

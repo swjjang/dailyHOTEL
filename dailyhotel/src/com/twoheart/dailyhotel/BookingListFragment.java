@@ -117,7 +117,6 @@ DailyHotelStringResponseListener {
 			int position, long id) {
 		Intent i = null;
 		Booking item = mItems.get(position);
-//		android.util.Log.e(item.getTid()+"",item.getPayType()+"");
 		if (item.getPayType() == 10 || item.getPayType() == 21) { // 카드결제 완료 || 가상계좌 완료
 			i = new Intent(mHostActivity, BookingTabActivity.class);
 		} else if (item.getPayType() == 20) { // 가상계좌 입금대기
@@ -212,12 +211,11 @@ DailyHotelStringResponseListener {
 
 					// flag가 가상계좌 입금 대기에서 날아온경우 
 					SharedPreferences pref = getActivity().getSharedPreferences(NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
-					int flag = pref.getInt("flag", -1);
-					android.util.Log.e("WHAT??",flag+"");
+					int flag = pref.getInt(KEY_PREFERENCE_ACCOUNT_READY_FLAG, -1);
 					if (flag == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY) {
 						mListView.performItemClick(null, 0, 0);
 						Editor editor = pref.edit();
-						editor.remove("flag");
+						editor.remove(KEY_PREFERENCE_ACCOUNT_READY_FLAG);
 						editor.apply();
 					}
 

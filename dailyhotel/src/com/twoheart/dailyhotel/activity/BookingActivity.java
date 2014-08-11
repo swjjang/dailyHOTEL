@@ -311,7 +311,6 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 
 	private void moveToPayStep() {
 		Intent intent = new Intent(this, PaymentActivity.class);
-		android.util.Log.e("LAST PAYTYPE",mPay.getPayType()+"");
 		intent.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
 
 		startActivityForResult(intent,
@@ -344,7 +343,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 							loginParams, this, this));
 		} else {
 			unLockUI();
-			showToast("다시 로그인해주세요", Toast.LENGTH_LONG, false);
+			showToast(getString(R.string.toast_msg_retry_login), Toast.LENGTH_LONG, false);
 
 			startActivityForResult(new Intent(this, LoginActivity.class),
 					CODE_REQUEST_ACTIVITY_LOGIN);
@@ -433,11 +432,15 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 			case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY:
 				// 예약 확인 리스트 프래그먼트에서 한번 더 들어가기 위한 플래그 설정
 				Editor editor = sharedPreference.edit();
-				editor.putInt("flag", CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
+				editor.putInt(KEY_PREFERENCE_ACCOUNT_READY_FLAG, CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
 				editor.apply();
 				
 				setResult(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
 				finish();
+				break;
+			case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_TIME_ERROR:
+				dialog("은행 점검 시간입니다(00:00 - 00:10)");
+				break;
 			}
 		} else if (requestCode == CODE_REQUEST_ACTIVITY_LOGIN) {
 			if (resultCode == RESULT_OK)

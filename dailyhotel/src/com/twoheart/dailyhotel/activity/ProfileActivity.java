@@ -223,6 +223,8 @@ DailyHotelJsonResponseListener, OnClickListener {
 							false);
 					ed.putString(KEY_PREFERENCE_USER_ID, null);
 					ed.putString(KEY_PREFERENCE_USER_PWD, null);
+					ed.putString(KEY_PREFERENCE_GCM_ID, null);
+					
 					ed.commit();
 
 					if (Session.getActiveSession() != null)

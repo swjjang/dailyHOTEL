@@ -192,23 +192,66 @@ android.support.v4.app.NavUtils:
     304:305:private NavUtils()
 android.support.v4.app.NavUtilsJB:
     23:23:NavUtilsJB()
-android.support.v4.app.NotificationCompat
-android.support.v4.app.NotificationCompat$Action
-android.support.v4.app.NotificationCompat$BigPictureStyle
-android.support.v4.app.NotificationCompat$BigTextStyle
-android.support.v4.app.NotificationCompat$Builder
-android.support.v4.app.NotificationCompat$InboxStyle
-android.support.v4.app.NotificationCompat$NotificationCompatImpl
-android.support.v4.app.NotificationCompat$NotificationCompatImplBase
-android.support.v4.app.NotificationCompat$NotificationCompatImplGingerbread
-android.support.v4.app.NotificationCompat$NotificationCompatImplHoneycomb
-android.support.v4.app.NotificationCompat$NotificationCompatImplIceCreamSandwich
-android.support.v4.app.NotificationCompat$NotificationCompatImplJellybean
-android.support.v4.app.NotificationCompat$Style
-android.support.v4.app.NotificationCompatGingerbread
-android.support.v4.app.NotificationCompatHoneycomb
-android.support.v4.app.NotificationCompatIceCreamSandwich
-android.support.v4.app.NotificationCompatJellybean
+android.support.v4.app.NotificationCompat:
+    public static final int FLAG_HIGH_PRIORITY
+    public static final int PRIORITY_DEFAULT
+    public static final int PRIORITY_LOW
+    public static final int PRIORITY_MIN
+    public static final int PRIORITY_HIGH
+    public static final int PRIORITY_MAX
+    34:836:public NotificationCompat()
+android.support.v4.app.NotificationCompat$Action:
+    841:845:public NotificationCompat$Action(int,java.lang.CharSequence,android.app.PendingIntent)
+android.support.v4.app.NotificationCompat$BigPictureStyle:
+    676:678:public NotificationCompat$BigPictureStyle(android.support.v4.app.NotificationCompat$Builder)
+    685:686:public android.support.v4.app.NotificationCompat$BigPictureStyle setBigContentTitle(java.lang.CharSequence)
+    693:695:public android.support.v4.app.NotificationCompat$BigPictureStyle setSummaryText(java.lang.CharSequence)
+    702:703:public android.support.v4.app.NotificationCompat$BigPictureStyle bigPicture(android.graphics.Bitmap)
+    710:712:public android.support.v4.app.NotificationCompat$BigPictureStyle bigLargeIcon(android.graphics.Bitmap)
+android.support.v4.app.NotificationCompat$BigTextStyle:
+    743:745:public NotificationCompat$BigTextStyle(android.support.v4.app.NotificationCompat$Builder)
+    752:753:public android.support.v4.app.NotificationCompat$BigTextStyle setBigContentTitle(java.lang.CharSequence)
+    760:762:public android.support.v4.app.NotificationCompat$BigTextStyle setSummaryText(java.lang.CharSequence)
+    770:771:public android.support.v4.app.NotificationCompat$BigTextStyle bigText(java.lang.CharSequence)
+android.support.v4.app.NotificationCompat$Builder:
+    248:249:public android.support.v4.app.NotificationCompat$Builder setWhen(long)
+    264:265:public android.support.v4.app.NotificationCompat$Builder setUsesChronometer(boolean)
+    291:293:public android.support.v4.app.NotificationCompat$Builder setSmallIcon(int,int)
+    322:323:public android.support.v4.app.NotificationCompat$Builder setSubText(java.lang.CharSequence)
+    332:333:public android.support.v4.app.NotificationCompat$Builder setNumber(int)
+    340:341:public android.support.v4.app.NotificationCompat$Builder setContentInfo(java.lang.CharSequence)
+    349:352:public android.support.v4.app.NotificationCompat$Builder setProgress(int,int,boolean)
+    359:360:public android.support.v4.app.NotificationCompat$Builder setContent(android.widget.RemoteViews)
+    384:385:public android.support.v4.app.NotificationCompat$Builder setDeleteIntent(android.app.PendingIntent)
+    402:404:public android.support.v4.app.NotificationCompat$Builder setFullScreenIntent(android.app.PendingIntent,boolean)
+    412:413:public android.support.v4.app.NotificationCompat$Builder setTicker(java.lang.CharSequence)
+    422:424:public android.support.v4.app.NotificationCompat$Builder setTicker(java.lang.CharSequence,android.widget.RemoteViews)
+    431:432:public android.support.v4.app.NotificationCompat$Builder setLargeIcon(android.graphics.Bitmap)
+    451:453:public android.support.v4.app.NotificationCompat$Builder setSound(android.net.Uri,int)
+    463:464:public android.support.v4.app.NotificationCompat$Builder setVibrate(long[])
+    473:479:public android.support.v4.app.NotificationCompat$Builder setLights(int,int,int)
+    494:495:public android.support.v4.app.NotificationCompat$Builder setOngoing(boolean)
+    503:504:public android.support.v4.app.NotificationCompat$Builder setOnlyAlertOnce(boolean)
+    529:533:public android.support.v4.app.NotificationCompat$Builder setDefaults(int)
+    556:557:public android.support.v4.app.NotificationCompat$Builder setPriority(int)
+    577:578:public android.support.v4.app.NotificationCompat$Builder addAction(int,java.lang.CharSequence,android.app.PendingIntent)
+    590:596:public android.support.v4.app.NotificationCompat$Builder setStyle(android.support.v4.app.NotificationCompat$Style)
+    604:604:public android.app.Notification getNotification()
+android.support.v4.app.NotificationCompat$InboxStyle:
+    805:807:public NotificationCompat$InboxStyle(android.support.v4.app.NotificationCompat$Builder)
+    814:815:public android.support.v4.app.NotificationCompat$InboxStyle setBigContentTitle(java.lang.CharSequence)
+    822:824:public android.support.v4.app.NotificationCompat$InboxStyle setSummaryText(java.lang.CharSequence)
+    831:832:public android.support.v4.app.NotificationCompat$InboxStyle addLine(java.lang.CharSequence)
+android.support.v4.app.NotificationCompat$Style:
+    android.support.v4.app.NotificationCompat$Builder mBuilder
+    631:637:public void setBuilder(android.support.v4.app.NotificationCompat$Builder)
+    640:644:public android.app.Notification build()
+android.support.v4.app.NotificationCompatGingerbread:
+    23:23:NotificationCompatGingerbread()
+android.support.v4.app.NotificationCompatHoneycomb:
+    25:25:NotificationCompatHoneycomb()
+android.support.v4.app.NotificationCompatIceCreamSandwich:
+    25:25:NotificationCompatIceCreamSandwich()
 android.support.v4.app.ServiceCompat
 android.support.v4.app.ShareCompat
 android.support.v4.app.ShareCompat$IntentBuilder
@@ -304,7 +347,8 @@ android.support.v4.content.ModernAsyncTask$AsyncTaskResult
 android.support.v4.content.ModernAsyncTask$InternalHandler
 android.support.v4.content.ModernAsyncTask$Status
 android.support.v4.content.ModernAsyncTask$WorkerRunnable
-android.support.v4.content.WakefulBroadcastReceiver
+android.support.v4.content.WakefulBroadcastReceiver:
+    private static final java.lang.String EXTRA_WAKE_LOCK_ID
 android.support.v4.content.pm.ActivityInfoCompat
 android.support.v4.database.DatabaseUtilsCompat
 android.support.v4.graphics.drawable.DrawableCompat
@@ -2981,11 +3025,8 @@ com.google.android.gms.common.GooglePlayServicesUtil:
     private GooglePlayServicesUtil()
     public static java.lang.String getErrorString(int)
     public static void m(android.content.Context)
-    public static android.app.Dialog getErrorDialog(int,android.app.Activity,int)
     public static android.app.PendingIntent getErrorPendingIntent(int,android.content.Context,int)
     public static android.app.Dialog getErrorDialog(int,android.app.Activity,int,android.content.DialogInterface$OnCancelListener)
-    public static android.app.Dialog a(int,android.app.Activity,int,android.content.DialogInterface$OnCancelListener,int)
-    public static boolean isUserRecoverableError(int)
     public static java.lang.String getOpenSourceSoftwareLicenseInfo(android.content.Context)
     public static android.content.res.Resources getRemoteResource(android.content.Context)
 com.google.android.gms.common.Scopes
@@ -3626,8 +3667,18 @@ com.google.android.gms.games.multiplayer.turnbased.a:
     public java.util.ArrayList getParticipantIds()
     public java.lang.String getParticipantId(java.lang.String)
     public com.google.android.gms.games.multiplayer.Participant getParticipant(java.lang.String)
-com.google.android.gms.gcm.GoogleCloudMessaging
-com.google.android.gms.gcm.GoogleCloudMessaging$1
+com.google.android.gms.gcm.GoogleCloudMessaging:
+    public static final java.lang.String ERROR_SERVICE_NOT_AVAILABLE
+    public static final java.lang.String ERROR_MAIN_THREAD
+    public static final java.lang.String MESSAGE_TYPE_DELETED
+    public static final java.lang.String MESSAGE_TYPE_MESSAGE
+    public static final java.lang.String MESSAGE_TYPE_SEND_ERROR
+    public void close()
+    public void send(java.lang.String,java.lang.String,android.os.Bundle)
+    public void send(java.lang.String,java.lang.String,long,android.os.Bundle)
+    public void unregister()
+    private void dz()
+    synchronized void dA()
 com.google.android.gms.internal.a
 com.google.android.gms.internal.aa
 com.google.android.gms.internal.ab
@@ -3899,7 +3950,6 @@ com.google.android.gms.internal.dt:
 com.google.android.gms.internal.dt$a:
     public dt$a(java.lang.String,java.util.Collection,int,java.lang.String)
     public java.lang.String bF()
-com.google.android.gms.internal.du
 com.google.android.gms.internal.dw
 com.google.android.gms.internal.dw$a
 com.google.android.gms.internal.dw$b
@@ -5548,6 +5598,8 @@ com.twoheart.dailyhotel.CreditListFragment:
     private static final java.lang.String KEY_BUNDLE_ARGUMENTS_CREDITLIST
 com.twoheart.dailyhotel.DailyHotel:
     116:118:private void initializeVolleyImageLoader()
+com.twoheart.dailyhotel.GcmIntentService:
+    public static final int NOTIFICATION_ID
 com.twoheart.dailyhotel.HotelListFragment:
     private static final java.lang.String TAG
 com.twoheart.dailyhotel.MainActivity:
@@ -5561,14 +5613,15 @@ com.twoheart.dailyhotel.MainActivity:
     public static final java.lang.String KEY_CREDIT_FRAGMENT
     public static final java.lang.String KEY_SEETING_FRAGMENT
     private static final java.lang.String TAG_FRAGMENT_RATING_HOTEL
-    399:401:public void removeFragment(android.support.v4.app.Fragment)
+    500:502:public void removeFragment(android.support.v4.app.Fragment)
+    509:520:public void printPackageHashKey()
 com.twoheart.dailyhotel.MainActivity$DrawerMenu:
     public static final int DRAWER_MENU_LIST_TYPE_LOGO
     public static final int DRAWER_MENU_LIST_TYPE_SECTION
     public static final int DRAWER_MENU_LIST_TYPE_ENTRY
-    590:591:public void setType(int)
-    598:599:public void setTitle(java.lang.String)
-    606:607:public void setIcon(int)
+    691:692:public void setType(int)
+    699:700:public void setTitle(java.lang.String)
+    707:708:public void setIcon(int)
 com.twoheart.dailyhotel.Manifest
 com.twoheart.dailyhotel.Manifest$permission
 com.twoheart.dailyhotel.R:
@@ -5582,10 +5635,11 @@ com.twoheart.dailyhotel.R$drawable
 com.twoheart.dailyhotel.R$id
 com.twoheart.dailyhotel.R$integer
 com.twoheart.dailyhotel.R$layout
+com.twoheart.dailyhotel.R$menu
 com.twoheart.dailyhotel.R$string
 com.twoheart.dailyhotel.R$style
 com.twoheart.dailyhotel.R$styleable:
-    3300:3300:public R$styleable()
+    3323:3323:public R$styleable()
 com.twoheart.dailyhotel.WaitTimerFragment:
     private static final java.lang.String TAG
     private static final java.lang.String KEY_BUNDLE_ARGUMENTS_SALETIME
@@ -5615,6 +5669,8 @@ com.twoheart.dailyhotel.activity.PaymentActivity:
     public static final int PROGRESS_STAT_NOT_START
     public static final int PROGRESS_STAT_IN
     public static final int PROGRESS_DONE
+com.twoheart.dailyhotel.activity.PaymentWaitActivity:
+    private static final java.lang.String TAG
 com.twoheart.dailyhotel.activity.PrivacyActivity:
     private static final java.lang.String TAG
 com.twoheart.dailyhotel.activity.SignupActivity:
@@ -5626,6 +5682,8 @@ com.twoheart.dailyhotel.activity.SplashActivity:
     private static final int VALUE_WEB_API_RESPONSE_NEW_EVENT_NOTIFY
     private static final int VALUE_WEB_API_RESPONSE_NEW_EVENT_NONE
     private static final int DURING_SPLASH_ACTIVITY_SHOW
+    private com.google.android.gms.gcm.GoogleCloudMessaging mGcm
+    protected java.util.HashMap regPushParams
 com.twoheart.dailyhotel.activity.TermActivity:
     private static final java.lang.String TAG
 com.twoheart.dailyhotel.activity.VersionActivity:
@@ -5665,10 +5723,12 @@ com.twoheart.dailyhotel.model.Board:
     28:29:public void setContent(java.lang.String)
     36:37:public void setRegdate(java.lang.String)
 com.twoheart.dailyhotel.model.Booking:
-    61:62:public void setSday(java.lang.String)
-    69:70:public void setHotel_idx(java.lang.String)
-    77:78:public void setHotel_name(java.lang.String)
-    85:86:public void setBedType(java.lang.String)
+    67:68:public void setSday(java.lang.String)
+    75:76:public void setHotel_idx(java.lang.String)
+    83:84:public void setHotel_name(java.lang.String)
+    91:92:public void setBedType(java.lang.String)
+    104:105:public void setPayType(int)
+    112:113:public void setTid(java.lang.String)
 com.twoheart.dailyhotel.model.Credit:
     53:54:public void setContent(java.lang.String)
     59:60:public void setBonus(java.lang.String)
@@ -5687,9 +5747,12 @@ com.twoheart.dailyhotel.util.Constants:
     public static final boolean DEBUG
     public static final boolean IS_GOOGLE_RELEASE
     public static final boolean ALWAYS_OPEN
+    public static final java.lang.String GCM_PROJECT_NUMBER
     public static final java.lang.String URL_DAILYHOTEL_SERVER
+    public static final java.lang.String URL_DAILYHOTEL_GCM_SERVER
     public static final java.lang.String PHONE_NUMBER_DAILYHOTEL
     public static final int REQUEST_EXPIRE_JUDGE
+    public static final int PLAY_SERVICES_RESOLUTION_REQUEST
     public static final int REQUEST_MAX_RETRY
     public static final int DAYS_DISPLAY_RATING_HOTEL_DIALOG
     public static final java.lang.String URL_WEBAPI_USER
@@ -5707,6 +5770,7 @@ com.twoheart.dailyhotel.util.Constants:
     public static final java.lang.String URL_WEBAPI_RESERVE_PAYMENT
     public static final java.lang.String URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT
     public static final java.lang.String URL_WEBAPI_RESERVE_MINE
+    public static final java.lang.String URL_WEBAPI_RESERVE_MINE_DETAIL
     public static final java.lang.String URL_WEBAPI_RESERVE_SAVED_MONEY
     public static final java.lang.String URL_WEBAPI_RESERVE_CHECKIN
     public static final java.lang.String URL_WEBAPI_RESERVE_REVIEW
@@ -5728,6 +5792,7 @@ com.twoheart.dailyhotel.util.Constants:
     public static final java.lang.String URL_STORE_PAYMENT_ISP
     public static final java.lang.String URL_STORE_PAYMENT_KFTC
     public static final java.lang.String URL_STORE_PAYMENT_MPOCKET
+    public static final java.lang.String URL_GCM_REGISTER
     public static final java.lang.String PACKAGE_NAME_ISP
     public static final java.lang.String PACKAGE_NAME_KFTC
     public static final java.lang.String PACKAGE_NAME_MPOCKET
@@ -5737,6 +5802,7 @@ com.twoheart.dailyhotel.util.Constants:
     public static final java.lang.String KEY_PREFERENCE_USER_ID
     public static final java.lang.String KEY_PREFERENCE_USER_PWD
     public static final java.lang.String KEY_PREFERENCE_USER_ACCESS_TOKEN
+    public static final java.lang.String KEY_PREFERENCE_GCM_ID
     public static final java.lang.String KEY_PREFERENCE_CURRENT_VERSION_NAME
     public static final java.lang.String KEY_PREFERENCE_MIN_VERSION_NAME
     public static final java.lang.String KEY_PREFERENCE_MAX_VERSION_NAME
@@ -5751,12 +5817,15 @@ com.twoheart.dailyhotel.util.Constants:
     public static final int VALUE_PREFERENCE_HOTEL_SALE_IDX_DEFAULT
     public static final java.lang.String VALUE_PREFERENCE_HOTEL_CHECKOUT_DEFAULT
     public static final java.lang.String KEY_PREFERENCE_USER_IDX
+    public static final java.lang.String KEY_PREFERENCE_ACCOUNT_READY_FLAG
     public static final java.lang.String NAME_INTENT_EXTRA_DATA_HOTEL
     public static final java.lang.String NAME_INTENT_EXTRA_DATA_HOTELDETAIL
     public static final java.lang.String NAME_INTENT_EXTRA_DATA_SALETIME
     public static final java.lang.String NAME_INTENT_EXTRA_DATA_BOOKING
     public static final java.lang.String NAME_INTENT_EXTRA_DATA_PAY
     public static final java.lang.String NAME_INTENT_EXTRA_DATA_SELECTED_IMAGE_URL
+    public static final java.lang.String NAME_INTENT_EXTRA_DATA_IS_INTENT_FROM_PUSH
+    public static final java.lang.String NAME_INTENT_EXTRA_DATA_PUSH_MSG
     public static final int CODE_REQUEST_ACTIVITY_HOTELTAB
     public static final int CODE_REQUEST_FRAGMENT_BOOKINGLIST
     public static final int CODE_REQUEST_ACTIVITY_LOGIN
@@ -5778,6 +5847,8 @@ com.twoheart.dailyhotel.util.Constants:
     public static final int CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR
     public static final int CODE_RESULT_ACTIVITY_SPLASH_NEW_EVENT
     public static final int CODE_RESULT_ACTIVITY_PAYMENT_CANCELED
+    public static final int CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY
+    public static final int CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_TIME_ERROR
     public static final java.lang.String GA_PROPERTY_ID
     public static final int GA_DISPATCH_PERIOD
     public static final boolean GA_IS_DRY_RUN
@@ -5820,7 +5891,7 @@ com.twoheart.dailyhotel.util.network.request.DailyHotelRequest:
 com.twoheart.dailyhotel.util.ui.AllCapsTransformationMethod
 com.twoheart.dailyhotel.util.ui.BaseActivity:
     private static final java.lang.String TAG
-    300:301:protected void chgClickable(android.view.View)
+    302:303:protected void chgClickable(android.view.View)
 com.twoheart.dailyhotel.util.ui.HotelListViewItem:
     public static final int TYPE_SECTION
     public static final int TYPE_ENTRY

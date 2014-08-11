@@ -341,18 +341,18 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 
 				if (obj.getBoolean("login")) {
 					VolleyHttpClient.createCookie();
-
-					showToast(getString(R.string.toast_msg_logoined), Toast.LENGTH_SHORT, true);
+					
 					storeLoginInfo();
-					android.util.Log.e("GCMID?!",getGcmId());
 
 					if (getGcmId().isEmpty()) {
 						// 로그인에 성공하였으나 GCM을 등록하지 않은 유저의 경우 인덱스를 가져와 push_id를 업그레이드 하는 절차 시작.
+						lockUI();
 						mQueue.add(new DailyHotelJsonRequest(Method.POST,
 								new StringBuilder(URL_DAILYHOTEL_SERVER)
 						.append(URL_WEBAPI_USER_INFO).toString(), null, this, this));
 					} else {
 						// 로그인에 성공 하였고 GCM또한 등록이 완료 된 경우 로그인 완료
+						showToast(getString(R.string.toast_msg_logoined), Toast.LENGTH_SHORT, true);
 						setResult(RESULT_OK);
 						finish();
 					}
@@ -420,6 +420,7 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 				onError(e);
 			}
 		} else if (url.contains(URL_WEBAPI_USER_INFO)) {
+			
 			try {
 				// GCM 아이디를 등록한다.
 				if (isGoogleServiceAvailable()) {
@@ -432,8 +433,8 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 			}
 		} else if (url.contains(URL_GCM_REGISTER)) {
 			// 로그인 성공 - 유저 정보(인덱스) 가져오기 - 유저의 GCM키 등록 완료 한 경우 프리퍼런스에 키 등록후 종료
-			android.util.Log.e("URL_GCM",response.toString());
 			try {
+				unLockUI();
 				if (response.getString("msg").equals("success")) {
 					Editor editor = sharedPreference.edit();
 					editor.putString(KEY_PREFERENCE_GCM_ID, regPushParams.get("pushId").toString());
@@ -443,6 +444,7 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 
 				}
 				
+				showToast(getString(R.string.toast_msg_logoined), Toast.LENGTH_SHORT, true);
 				setResult(RESULT_OK);
 				finish();
 			} catch (JSONException e) {
@@ -463,7 +465,7 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 			if (GooglePlayServicesUtil.isUserRecoverableError(resCode)) {
 				GooglePlayServicesUtil.getErrorDialog(resCode, this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
 			} else {
-				showToast("구글플레이 서비스가 이용가능 하지 않습니다.", Toast.LENGTH_LONG, false);
+				showToast(getString(R.string.toast_msg_is_not_available_google_service), Toast.LENGTH_LONG, false);
 				finish();
 			}
 			return false;
@@ -493,10 +495,8 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 
 				regPushParams.put("userIdx", idx+"");
 				regPushParams.put("pushId", regId);
-
-				android.util.Log.e("PUSH_ID", regId);
-				android.util.Log.e("GET_PUSH_DATA_FROM_GOOGLE",regPushParams.toString());
-
+				regPushParams.put("deviceType", "0");
+				
 				mQueue.add(new DailyHotelJsonRequest(Method.POST,
 						new StringBuilder(URL_DAILYHOTEL_SERVER)
 				.append(URL_GCM_REGISTER)

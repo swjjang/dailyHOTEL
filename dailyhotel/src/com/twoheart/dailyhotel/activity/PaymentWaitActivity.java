@@ -92,19 +92,18 @@ public class PaymentWaitActivity extends BaseActivity implements DailyHotelJsonR
 	public void onResponse(String url, JSONObject response) {
 
 		if (url.contains(URL_WEBAPI_RESERVE_MINE_DETAIL)) {
-
+			android.util.Log.e("response",response.toString());
 			try {
-				tvAccount.setText(response.getString("bank_name"));
+				tvAccount.setText(response.getString("bank_name") +", "+ response.getString("account_num"));
 				tvName.setText(response.getString("name"));
 
 				DecimalFormat comma = new DecimalFormat("###,##0");
 				tvPrice.setText(comma.format(response.getInt("amt"))+"원");
 				
-				Date date = new Date(response.getString("date"));
-				String time = response.getString("time");
-				String[] slice = time.split(":");
+				String[] dateSlice = response.getString("date").split("/");
+				String[] timeSlice = response.getString("time").split(":");
 				
-				tvDeadline.setText(date.getMonth()+"월 "+date.getDay()+"일 "+slice[0]+":"+slice[1]+"까지");
+				tvDeadline.setText(Integer.parseInt(dateSlice[1])+"월 "+Integer.parseInt(dateSlice[2])+"일 "+timeSlice[0]+":"+timeSlice[1]+"까지");
 
 				tvGuide1.setText(response.getString("msg1"));
 				tvGuide2.setText(response.getString("msg2"));

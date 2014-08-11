@@ -710,8 +710,79 @@ android.support.v4.app.NoSaveStateFrameLayout -> android.support.v4.app.az:
     android.view.ViewGroup wrap(android.view.View) -> a
     void dispatchSaveInstanceState(android.util.SparseArray) -> dispatchSaveInstanceState
     void dispatchRestoreInstanceState(android.util.SparseArray) -> dispatchRestoreInstanceState
-android.support.v4.app.SuperNotCalledException -> android.support.v4.app.ba:
-android.support.v4.app.TaskStackBuilder -> android.support.v4.app.bb:
+android.support.v4.app.NotificationCompat -> android.support.v4.app.ba:
+    android.support.v4.app.NotificationCompat$NotificationCompatImpl IMPL -> a
+    android.support.v4.app.NotificationCompat$NotificationCompatImpl access$000() -> a
+android.support.v4.app.NotificationCompat$Action -> android.support.v4.app.bb:
+    int icon -> a
+    java.lang.CharSequence title -> b
+    android.app.PendingIntent actionIntent -> c
+android.support.v4.app.NotificationCompat$BigPictureStyle -> android.support.v4.app.bc:
+    android.graphics.Bitmap mPicture -> a
+    android.graphics.Bitmap mBigLargeIcon -> b
+    boolean mBigLargeIconSet -> c
+android.support.v4.app.NotificationCompat$BigTextStyle -> android.support.v4.app.bd:
+    java.lang.CharSequence mBigText -> a
+android.support.v4.app.NotificationCompat$Builder -> android.support.v4.app.be:
+    android.content.Context mContext -> a
+    java.lang.CharSequence mContentTitle -> b
+    java.lang.CharSequence mContentText -> c
+    android.app.PendingIntent mContentIntent -> d
+    android.app.PendingIntent mFullScreenIntent -> e
+    android.widget.RemoteViews mTickerView -> f
+    android.graphics.Bitmap mLargeIcon -> g
+    java.lang.CharSequence mContentInfo -> h
+    int mNumber -> i
+    int mPriority -> j
+    boolean mUseChronometer -> k
+    android.support.v4.app.NotificationCompat$Style mStyle -> l
+    java.lang.CharSequence mSubText -> m
+    int mProgressMax -> n
+    int mProgress -> o
+    boolean mProgressIndeterminate -> p
+    java.util.ArrayList mActions -> q
+    android.app.Notification mNotification -> r
+    android.support.v4.app.NotificationCompat$Builder setSmallIcon(int) -> a
+    android.support.v4.app.NotificationCompat$Builder setContentTitle(java.lang.CharSequence) -> a
+    android.support.v4.app.NotificationCompat$Builder setContentText(java.lang.CharSequence) -> b
+    android.support.v4.app.NotificationCompat$Builder setContentIntent(android.app.PendingIntent) -> a
+    android.support.v4.app.NotificationCompat$Builder setSound(android.net.Uri) -> a
+    android.support.v4.app.NotificationCompat$Builder setAutoCancel(boolean) -> a
+    void setFlag(int,boolean) -> a
+    android.app.Notification build() -> a
+android.support.v4.app.NotificationCompat$InboxStyle -> android.support.v4.app.bf:
+    java.util.ArrayList mTexts -> a
+android.support.v4.app.NotificationCompat$NotificationCompatImpl -> android.support.v4.app.bg:
+    android.app.Notification build(android.support.v4.app.NotificationCompat$Builder) -> a
+android.support.v4.app.NotificationCompat$NotificationCompatImplBase -> android.support.v4.app.bh:
+    android.app.Notification build(android.support.v4.app.NotificationCompat$Builder) -> a
+android.support.v4.app.NotificationCompat$NotificationCompatImplGingerbread -> android.support.v4.app.bi:
+    android.app.Notification build(android.support.v4.app.NotificationCompat$Builder) -> a
+android.support.v4.app.NotificationCompat$NotificationCompatImplHoneycomb -> android.support.v4.app.bj:
+    android.app.Notification build(android.support.v4.app.NotificationCompat$Builder) -> a
+android.support.v4.app.NotificationCompat$NotificationCompatImplIceCreamSandwich -> android.support.v4.app.bk:
+    android.app.Notification build(android.support.v4.app.NotificationCompat$Builder) -> a
+android.support.v4.app.NotificationCompat$NotificationCompatImplJellybean -> android.support.v4.app.bl:
+    android.app.Notification build(android.support.v4.app.NotificationCompat$Builder) -> a
+android.support.v4.app.NotificationCompat$Style -> android.support.v4.app.bm:
+    java.lang.CharSequence mBigContentTitle -> d
+    java.lang.CharSequence mSummaryText -> e
+    boolean mSummaryTextSet -> f
+android.support.v4.app.NotificationCompatGingerbread -> android.support.v4.app.bn:
+    android.app.Notification add(android.app.Notification,android.content.Context,java.lang.CharSequence,java.lang.CharSequence,android.app.PendingIntent,android.app.PendingIntent) -> a
+android.support.v4.app.NotificationCompatHoneycomb -> android.support.v4.app.bo:
+    android.app.Notification add(android.content.Context,android.app.Notification,java.lang.CharSequence,java.lang.CharSequence,java.lang.CharSequence,android.widget.RemoteViews,int,android.app.PendingIntent,android.app.PendingIntent,android.graphics.Bitmap) -> a
+android.support.v4.app.NotificationCompatIceCreamSandwich -> android.support.v4.app.bp:
+    android.app.Notification add(android.content.Context,android.app.Notification,java.lang.CharSequence,java.lang.CharSequence,java.lang.CharSequence,android.widget.RemoteViews,int,android.app.PendingIntent,android.app.PendingIntent,android.graphics.Bitmap,int,int,boolean) -> a
+android.support.v4.app.NotificationCompatJellybean -> android.support.v4.app.bq:
+    android.app.Notification$Builder b -> a
+    void addAction(int,java.lang.CharSequence,android.app.PendingIntent) -> a
+    void addBigTextStyle(java.lang.CharSequence,boolean,java.lang.CharSequence,java.lang.CharSequence) -> a
+    void addBigPictureStyle(java.lang.CharSequence,boolean,java.lang.CharSequence,android.graphics.Bitmap,android.graphics.Bitmap,boolean) -> a
+    void addInboxStyle(java.lang.CharSequence,boolean,java.lang.CharSequence,java.util.ArrayList) -> a
+    android.app.Notification build() -> a
+android.support.v4.app.SuperNotCalledException -> android.support.v4.app.br:
+android.support.v4.app.TaskStackBuilder -> android.support.v4.app.bs:
     android.support.v4.app.TaskStackBuilder$TaskStackBuilderImpl IMPL -> a
     java.util.ArrayList mIntents -> b
     android.content.Context mSourceContext -> c
@@ -722,11 +793,11 @@ android.support.v4.app.TaskStackBuilder -> android.support.v4.app.bb:
     java.util.Iterator iterator() -> iterator
     void startActivities() -> a
     void startActivities(android.os.Bundle) -> a
-android.support.v4.app.TaskStackBuilder$SupportParentable -> android.support.v4.app.bc:
+android.support.v4.app.TaskStackBuilder$SupportParentable -> android.support.v4.app.bt:
     android.content.Intent getSupportParentActivityIntent() -> b
-android.support.v4.app.TaskStackBuilder$TaskStackBuilderImpl -> android.support.v4.app.bd:
-android.support.v4.app.TaskStackBuilder$TaskStackBuilderImplBase -> android.support.v4.app.be:
-android.support.v4.app.TaskStackBuilder$TaskStackBuilderImplHoneycomb -> android.support.v4.app.bf:
+android.support.v4.app.TaskStackBuilder$TaskStackBuilderImpl -> android.support.v4.app.bu:
+android.support.v4.app.TaskStackBuilder$TaskStackBuilderImplBase -> android.support.v4.app.bv:
+android.support.v4.app.TaskStackBuilder$TaskStackBuilderImplHoneycomb -> android.support.v4.app.bw:
 android.support.v4.content.ContextCompat -> android.support.v4.a.a:
     boolean startActivities(android.content.Context,android.content.Intent[],android.os.Bundle) -> a
 android.support.v4.content.ContextCompatHoneycomb -> android.support.v4.a.b:
@@ -806,6 +877,11 @@ android.support.v4.content.LocalBroadcastManager$ReceiverRecord -> android.suppo
     android.content.BroadcastReceiver receiver -> b
     boolean broadcasting -> c
     java.lang.String toString() -> toString
+android.support.v4.content.WakefulBroadcastReceiver -> android.support.v4.a.p:
+    android.util.SparseArray mActiveWakeLocks -> a
+    int mNextId -> b
+    android.content.ComponentName startWakefulService(android.content.Context,android.content.Intent) -> a
+    boolean completeWakefulIntent(android.content.Intent) -> a
 android.support.v4.internal.view.SupportMenu -> android.support.v4.b.a.a:
 android.support.v4.internal.view.SupportMenuItem -> android.support.v4.b.a.b:
     void setShowAsAction(int) -> setShowAsAction
@@ -10123,11 +10199,14 @@ com.google.android.gms.common.GooglePlayServicesUtil -> com.google.android.gms.c
     byte[] a(android.content.pm.PackageInfo,byte[][]) -> a
     android.content.Intent a(android.content.Context,int,int) -> a
     boolean y(int) -> a
-    int z(int) -> b
+    int z(int) -> c
     boolean bi() -> a
     boolean o(android.content.Context) -> d
     java.lang.String b(android.content.Context,int,int) -> b
     java.lang.String b(android.content.Context,int) -> a
+    android.app.Dialog getErrorDialog(int,android.app.Activity,int) -> a
+    android.app.Dialog a(int,android.app.Activity,int,android.content.DialogInterface$OnCancelListener,int) -> a
+    boolean isUserRecoverableError(int) -> b
     boolean a(android.content.res.Resources) -> a
     boolean b(android.content.res.Resources) -> b
     android.content.Context getRemoteContext(android.content.Context) -> b
@@ -11388,6 +11467,22 @@ com.google.android.gms.games.multiplayer.turnbased.a -> com.google.android.gms.g
     int describeContents() -> describeContents
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
     java.lang.Object freeze() -> a
+com.google.android.gms.gcm.GoogleCloudMessaging -> com.google.android.gms.b.a:
+    com.google.android.gms.gcm.GoogleCloudMessaging xf -> a
+    android.content.Context eh -> c
+    android.app.PendingIntent xg -> d
+    java.util.concurrent.BlockingQueue xh -> b
+    android.os.Handler xi -> e
+    android.os.Messenger xj -> f
+    com.google.android.gms.gcm.GoogleCloudMessaging getInstance(android.content.Context) -> a
+    void b(java.lang.String[]) -> c
+    java.lang.String register(java.lang.String[]) -> a
+    java.lang.String c(java.lang.String[]) -> b
+    java.lang.String getMessageType(android.content.Intent) -> a
+    void c(android.content.Intent) -> b
+com.google.android.gms.gcm.GoogleCloudMessaging$1 -> com.google.android.gms.b.b:
+    com.google.android.gms.gcm.GoogleCloudMessaging xk -> a
+    void handleMessage(android.os.Message) -> handleMessage
 com.google.android.gms.internal.ai -> com.google.android.gms.internal.ai:
     com.google.android.gms.internal.aj CREATOR -> CREATOR
     int versionCode -> a
@@ -11624,6 +11719,11 @@ com.google.android.gms.internal.dt$a -> com.google.android.gms.internal.dt$a:
     int describeContents() -> describeContents
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
     int getVersionCode() -> e
+com.google.android.gms.internal.du -> com.google.android.gms.internal.w:
+    android.app.Activity gs -> a
+    android.content.Intent mIntent -> b
+    int oZ -> c
+    void onClick(android.content.DialogInterface,int) -> onClick
 com.google.android.gms.internal.dv -> com.google.android.gms.internal.dv:
     java.lang.Object pa -> a
     java.lang.ClassLoader pb -> b
@@ -11634,7 +11734,7 @@ com.google.android.gms.internal.dv -> com.google.android.gms.internal.dv:
     boolean bN() -> x
     boolean P(java.lang.String) -> b
     boolean a(java.lang.Class) -> a
-com.google.android.gms.internal.dz -> com.google.android.gms.internal.w:
+com.google.android.gms.internal.dz -> com.google.android.gms.internal.y:
     android.net.Uri pK -> a
     android.net.Uri pL -> b
     android.content.Intent Q(java.lang.String) -> a
@@ -11642,23 +11742,23 @@ com.google.android.gms.internal.dz -> com.google.android.gms.internal.w:
     android.net.Uri R(java.lang.String) -> d
     android.content.Intent S(java.lang.String) -> b
     android.content.Intent T(java.lang.String) -> c
-com.google.android.gms.internal.ee -> com.google.android.gms.internal.y:
+com.google.android.gms.internal.ee -> com.google.android.gms.internal.z:
     boolean equal(java.lang.Object,java.lang.Object) -> a
     int hashCode(java.lang.Object[]) -> a
     com.google.android.gms.internal.ee$a e(java.lang.Object) -> a
-com.google.android.gms.internal.ee$1 -> com.google.android.gms.internal.z:
-com.google.android.gms.internal.ee$a -> com.google.android.gms.internal.aa:
+com.google.android.gms.internal.ee$1 -> com.google.android.gms.internal.aa:
+com.google.android.gms.internal.ee$a -> com.google.android.gms.internal.ab:
     java.util.List pN -> a
     java.lang.Object pO -> b
     com.google.android.gms.internal.ee$a a(java.lang.String,java.lang.Object) -> a
     java.lang.String toString() -> toString
-com.google.android.gms.internal.ef -> com.google.android.gms.internal.ab:
+com.google.android.gms.internal.ef -> com.google.android.gms.internal.ac:
     com.google.android.gms.internal.dt$a l(android.os.Parcel) -> a
     com.google.android.gms.internal.dt$a[] L(int) -> a
     void a(com.google.android.gms.internal.dt$a,android.os.Parcel,int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
-com.google.android.gms.internal.eg -> com.google.android.gms.internal.ac:
+com.google.android.gms.internal.eg -> com.google.android.gms.internal.ad:
     java.lang.Object f(java.lang.Object) -> a
     java.lang.String U(java.lang.String) -> a
     java.lang.Object b(java.lang.Object,java.lang.Object) -> a
@@ -11667,7 +11767,7 @@ com.google.android.gms.internal.eg -> com.google.android.gms.internal.ac:
     void b(boolean,java.lang.Object) -> b
     void a(boolean,java.lang.String,java.lang.Object[]) -> a
     void r(boolean) -> b
-com.google.android.gms.internal.ek -> com.google.android.gms.internal.ad:
+com.google.android.gms.internal.ek -> com.google.android.gms.internal.ae:
     java.util.LinkedHashMap pQ -> a
     int size -> b
     int pR -> c
@@ -11707,7 +11807,7 @@ com.google.android.gms.internal.el -> com.google.android.gms.internal.el:
     int hashCode() -> hashCode
     boolean equals(java.lang.Object) -> equals
     java.lang.String toString() -> toString
-com.google.android.gms.internal.em -> com.google.android.gms.internal.ae:
+com.google.android.gms.internal.em -> com.google.android.gms.internal.af:
     com.google.android.gms.internal.el p(android.os.Parcel) -> a
     com.google.android.gms.internal.el[] N(int) -> a
     void a(com.google.android.gms.internal.el,android.os.Parcel,int) -> a
@@ -11723,7 +11823,7 @@ com.google.android.gms.internal.en -> com.google.android.gms.internal.en:
     com.google.android.gms.internal.es$b cf() -> c
     int describeContents() -> describeContents
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
-com.google.android.gms.internal.eo -> com.google.android.gms.internal.af:
+com.google.android.gms.internal.eo -> com.google.android.gms.internal.ag:
     com.google.android.gms.internal.en q(android.os.Parcel) -> a
     com.google.android.gms.internal.en[] O(int) -> a
     void a(com.google.android.gms.internal.en,android.os.Parcel,int) -> a
@@ -11752,13 +11852,13 @@ com.google.android.gms.internal.ep$a -> com.google.android.gms.internal.ep$a:
     int qh -> c
     int describeContents() -> describeContents
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
-com.google.android.gms.internal.eq -> com.google.android.gms.internal.ag:
+com.google.android.gms.internal.eq -> com.google.android.gms.internal.ah:
     com.google.android.gms.internal.ep r(android.os.Parcel) -> a
     com.google.android.gms.internal.ep[] P(int) -> a
     void a(com.google.android.gms.internal.ep,android.os.Parcel,int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
-com.google.android.gms.internal.er -> com.google.android.gms.internal.ah:
+com.google.android.gms.internal.er -> com.google.android.gms.internal.aj:
     com.google.android.gms.internal.ep$a s(android.os.Parcel) -> a
     com.google.android.gms.internal.ep$a[] Q(int) -> a
     void a(com.google.android.gms.internal.ep$a,android.os.Parcel,int) -> a
@@ -11817,17 +11917,17 @@ com.google.android.gms.internal.es$a -> com.google.android.gms.internal.es$a:
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
     java.lang.String toString() -> toString
     com.google.android.gms.internal.es$b c(com.google.android.gms.internal.es$a) -> a
-com.google.android.gms.internal.es$b -> com.google.android.gms.internal.aj:
+com.google.android.gms.internal.es$b -> com.google.android.gms.internal.ak:
     int ch() -> c
     int ci() -> d
     java.lang.Object g(java.lang.Object) -> a
-com.google.android.gms.internal.et -> com.google.android.gms.internal.ak:
+com.google.android.gms.internal.et -> com.google.android.gms.internal.al:
     com.google.android.gms.internal.es$a t(android.os.Parcel) -> a
     com.google.android.gms.internal.es$a[] R(int) -> a
     void a(com.google.android.gms.internal.es$a,android.os.Parcel,int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
-com.google.android.gms.internal.eu -> com.google.android.gms.internal.al:
+com.google.android.gms.internal.eu -> com.google.android.gms.internal.am:
     com.google.android.gms.internal.ev$b u(android.os.Parcel) -> a
     com.google.android.gms.internal.ev$b[] S(int) -> a
     void a(com.google.android.gms.internal.ev$b,android.os.Parcel,int) -> a
@@ -11864,13 +11964,13 @@ com.google.android.gms.internal.ev$b -> com.google.android.gms.internal.ev$b:
     com.google.android.gms.internal.es$a qx -> c
     int describeContents() -> describeContents
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
-com.google.android.gms.internal.ew -> com.google.android.gms.internal.am:
+com.google.android.gms.internal.ew -> com.google.android.gms.internal.an:
     com.google.android.gms.internal.ev v(android.os.Parcel) -> a
     com.google.android.gms.internal.ev[] T(int) -> a
     void a(com.google.android.gms.internal.ev,android.os.Parcel,int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
-com.google.android.gms.internal.ex -> com.google.android.gms.internal.an:
+com.google.android.gms.internal.ex -> com.google.android.gms.internal.ao:
     com.google.android.gms.internal.ev$a w(android.os.Parcel) -> a
     com.google.android.gms.internal.ev$a[] U(int) -> a
     void a(com.google.android.gms.internal.ev$a,android.os.Parcel,int) -> a
@@ -11903,13 +12003,13 @@ com.google.android.gms.internal.ey -> com.google.android.gms.internal.ey:
     void b(java.lang.StringBuilder,com.google.android.gms.internal.es$a,java.util.ArrayList) -> a
     void a(java.lang.StringBuilder,int,java.lang.Object) -> a
     java.util.HashMap c(android.os.Bundle) -> a
-com.google.android.gms.internal.ez -> com.google.android.gms.internal.ao:
+com.google.android.gms.internal.ez -> com.google.android.gms.internal.ap:
     com.google.android.gms.internal.ey x(android.os.Parcel) -> a
     com.google.android.gms.internal.ey[] V(int) -> a
     void a(com.google.android.gms.internal.ey,android.os.Parcel,int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
-com.google.android.gms.internal.fa -> com.google.android.gms.internal.ap:
+com.google.android.gms.internal.fa -> com.google.android.gms.internal.aq:
     void a(java.lang.StringBuilder,java.lang.Object[]) -> a
     void a(java.lang.StringBuilder,int[]) -> a
     void a(java.lang.StringBuilder,long[]) -> a
@@ -11917,23 +12017,23 @@ com.google.android.gms.internal.fa -> com.google.android.gms.internal.ap:
     void a(java.lang.StringBuilder,double[]) -> a
     void a(java.lang.StringBuilder,boolean[]) -> a
     void a(java.lang.StringBuilder,java.lang.String[]) -> a
-com.google.android.gms.internal.fb -> com.google.android.gms.internal.aq:
+com.google.android.gms.internal.fb -> com.google.android.gms.internal.ar:
     java.lang.String b(byte[]) -> a
     java.lang.String c(byte[]) -> b
-com.google.android.gms.internal.fd -> com.google.android.gms.internal.ar:
+com.google.android.gms.internal.fd -> com.google.android.gms.internal.as:
     boolean W(int) -> a
-com.google.android.gms.internal.fe -> com.google.android.gms.internal.as:
+com.google.android.gms.internal.fe -> com.google.android.gms.internal.at:
     java.util.regex.Pattern qC -> a
     java.util.regex.Pattern qD -> b
     java.lang.String aa(java.lang.String) -> a
-com.google.android.gms.internal.ff -> com.google.android.gms.internal.at:
+com.google.android.gms.internal.ff -> com.google.android.gms.internal.au:
     void a(java.lang.StringBuilder,java.util.HashMap) -> a
-com.google.android.gms.internal.fg -> com.google.android.gms.internal.au:
+com.google.android.gms.internal.fg -> com.google.android.gms.internal.av:
     boolean cD() -> a
     boolean cF() -> b
     boolean cI() -> c
     boolean X(int) -> a
-com.google.android.gms.internal.fh -> com.google.android.gms.internal.av:
+com.google.android.gms.internal.fh -> com.google.android.gms.internal.aw:
     com.google.android.gms.drive.metadata.MetadataField rG -> a
     com.google.android.gms.drive.metadata.MetadataField TITLE -> b
     com.google.android.gms.drive.metadata.MetadataField MIME_TYPE -> c
@@ -11942,17 +12042,17 @@ com.google.android.gms.internal.fh -> com.google.android.gms.internal.av:
     com.google.android.gms.drive.metadata.MetadataField rH -> f
     com.google.android.gms.drive.metadata.MetadataField rI -> g
     com.google.android.gms.drive.metadata.CollectionMetadataField PARENTS -> h
-com.google.android.gms.internal.fh$1 -> com.google.android.gms.internal.aw:
-com.google.android.gms.internal.fi -> com.google.android.gms.internal.ax:
+com.google.android.gms.internal.fh$1 -> com.google.android.gms.internal.ax:
+com.google.android.gms.internal.fi -> com.google.android.gms.internal.ay:
     com.google.android.gms.drive.metadata.OrderedMetadataField rJ -> a
     com.google.android.gms.drive.metadata.OrderedMetadataField rK -> b
     com.google.android.gms.drive.metadata.OrderedMetadataField rL -> c
     com.google.android.gms.drive.metadata.OrderedMetadataField rM -> d
-com.google.android.gms.internal.fj -> com.google.android.gms.internal.ay:
+com.google.android.gms.internal.fj -> com.google.android.gms.internal.az:
     com.google.android.gms.internal.fj rN -> a
 com.google.android.gms.internal.fm -> com.google.android.gms.internal.fm:
     boolean c(java.lang.Integer) -> b
-com.google.android.gms.internal.gd -> com.google.android.gms.internal.az:
+com.google.android.gms.internal.gd -> com.google.android.gms.internal.ba:
     boolean isValid(int) -> a
 com.google.android.gms.internal.gh -> com.google.android.gms.internal.gh:
     int kg -> a
@@ -11974,7 +12074,7 @@ com.google.android.gms.internal.gh -> com.google.android.gms.internal.gh:
     int hashCode() -> hashCode
     boolean equals(java.lang.Object) -> equals
     java.lang.String toString() -> toString
-com.google.android.gms.internal.gi -> com.google.android.gms.internal.ba:
+com.google.android.gms.internal.gi -> com.google.android.gms.internal.bb:
     com.google.android.gms.internal.gh ah(android.os.Parcel) -> a
     com.google.android.gms.internal.gh[] aU(int) -> a
     void a(com.google.android.gms.internal.gh,android.os.Parcel,int) -> a
@@ -12012,14 +12112,14 @@ com.google.android.gms.internal.go -> com.google.android.gms.internal.go:
     java.lang.String toString() -> toString
     int hashCode() -> hashCode
     boolean equals(java.lang.Object) -> equals
-com.google.android.gms.internal.gp -> com.google.android.gms.internal.bb:
+com.google.android.gms.internal.gp -> com.google.android.gms.internal.bc:
     com.google.android.gms.internal.go ai(android.os.Parcel) -> a
     com.google.android.gms.internal.go[] aX(int) -> a
     void a(com.google.android.gms.internal.go,android.os.Parcel,int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
-com.google.android.gms.internal.gr -> com.google.android.gms.internal.bc:
-com.google.android.gms.internal.gs -> com.google.android.gms.internal.bd:
+com.google.android.gms.internal.gr -> com.google.android.gms.internal.bd:
+com.google.android.gms.internal.gs -> com.google.android.gms.internal.be:
 com.google.android.gms.internal.gt -> com.google.android.gms.internal.gt:
     com.google.android.gms.internal.gu CREATOR -> CREATOR
     int kg -> a
@@ -12038,7 +12138,7 @@ com.google.android.gms.internal.gt -> com.google.android.gms.internal.gt:
     boolean equals(java.lang.Object) -> equals
     int describeContents() -> describeContents
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
-com.google.android.gms.internal.gu -> com.google.android.gms.internal.be:
+com.google.android.gms.internal.gu -> com.google.android.gms.internal.bf:
     com.google.android.gms.internal.gt aj(android.os.Parcel) -> a
     com.google.android.gms.internal.gt[] aY(int) -> a
     void a(com.google.android.gms.internal.gt,android.os.Parcel,int) -> a
@@ -12056,7 +12156,7 @@ com.google.android.gms.internal.gv -> com.google.android.gms.internal.gv:
     boolean equals(java.lang.Object) -> equals
     int describeContents() -> describeContents
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
-com.google.android.gms.internal.gw -> com.google.android.gms.internal.bf:
+com.google.android.gms.internal.gw -> com.google.android.gms.internal.bg:
     com.google.android.gms.internal.gv ak(android.os.Parcel) -> a
     com.google.android.gms.internal.gv[] aZ(int) -> a
     void a(com.google.android.gms.internal.gv,android.os.Parcel,int) -> a
@@ -12197,16 +12297,16 @@ com.google.android.gms.internal.gx -> com.google.android.gms.internal.gx:
     java.lang.String toString() -> toString
     int describeContents() -> describeContents
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
-com.google.android.gms.internal.gy -> com.google.android.gms.internal.bg:
+com.google.android.gms.internal.gy -> com.google.android.gms.internal.bh:
     com.google.android.gms.internal.gx al(android.os.Parcel) -> a
     com.google.android.gms.internal.gx[] ba(int) -> a
     void a(com.google.android.gms.internal.gx,android.os.Parcel,int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
-com.google.android.gms.internal.h -> com.google.android.gms.internal.bh:
+com.google.android.gms.internal.h -> com.google.android.gms.internal.bi:
     com.google.android.gms.internal.d dN -> a
     void a(android.view.MotionEvent) -> a
-com.google.android.gms.internal.ha -> com.google.android.gms.internal.bi:
+com.google.android.gms.internal.ha -> com.google.android.gms.internal.bk:
     com.google.android.gms.internal.hd$a am(android.os.Parcel) -> a
     com.google.android.gms.internal.hd$a[] bb(int) -> a
     void a(com.google.android.gms.internal.hd$a,android.os.Parcel,int) -> a
@@ -12227,7 +12327,7 @@ com.google.android.gms.internal.hb -> com.google.android.gms.internal.hb:
     float[] dV() -> c
     int describeContents() -> describeContents
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
-com.google.android.gms.internal.hc -> com.google.android.gms.internal.bk:
+com.google.android.gms.internal.hc -> com.google.android.gms.internal.bl:
     com.google.android.gms.internal.hb an(android.os.Parcel) -> a
     com.google.android.gms.internal.hb[] bc(int) -> a
     void a(com.google.android.gms.internal.hb,android.os.Parcel,int) -> a
@@ -12288,7 +12388,7 @@ com.google.android.gms.internal.hd$a -> com.google.android.gms.internal.hd$a:
     boolean equals(java.lang.Object) -> equals
     int describeContents() -> describeContents
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
-com.google.android.gms.internal.hd$a$a -> com.google.android.gms.internal.bl:
+com.google.android.gms.internal.hd$a$a -> com.google.android.gms.internal.bn:
     java.lang.String Bc -> a
     java.lang.String mTag -> b
     java.lang.String Bd -> c
@@ -12296,7 +12396,7 @@ com.google.android.gms.internal.hd$a$a -> com.google.android.gms.internal.bl:
     com.google.android.gms.internal.hd$a$a as(java.lang.String) -> a
     com.google.android.gms.internal.hd$a$a bd(int) -> a
     com.google.android.gms.internal.hd$a ek() -> a
-com.google.android.gms.internal.he -> com.google.android.gms.internal.bn:
+com.google.android.gms.internal.he -> com.google.android.gms.internal.bo:
     com.google.android.gms.internal.hd ao(android.os.Parcel) -> a
     com.google.android.gms.internal.hd[] be(int) -> a
     void a(com.google.android.gms.internal.hd,android.os.Parcel,int) -> a
@@ -12315,13 +12415,13 @@ com.google.android.gms.internal.hf -> com.google.android.gms.internal.hf:
     boolean equals(java.lang.Object) -> equals
     int describeContents() -> describeContents
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
-com.google.android.gms.internal.hg -> com.google.android.gms.internal.bo:
+com.google.android.gms.internal.hg -> com.google.android.gms.internal.bp:
     com.google.android.gms.internal.hf ap(android.os.Parcel) -> a
     com.google.android.gms.internal.hf[] bf(int) -> a
     void a(com.google.android.gms.internal.hf,android.os.Parcel,int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
-com.google.android.gms.internal.hh -> com.google.android.gms.internal.bp:
+com.google.android.gms.internal.hh -> com.google.android.gms.internal.bq:
     int Bj -> a
     int Bk -> b
     java.lang.String Bl -> c
@@ -12338,7 +12438,7 @@ com.google.android.gms.internal.hi -> com.google.android.gms.internal.hi:
     boolean equals(java.lang.Object) -> equals
     int describeContents() -> describeContents
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
-com.google.android.gms.internal.hj -> com.google.android.gms.internal.bq:
+com.google.android.gms.internal.hj -> com.google.android.gms.internal.br:
     com.google.android.gms.internal.hi aq(android.os.Parcel) -> a
     com.google.android.gms.internal.hi[] bg(int) -> a
     void a(com.google.android.gms.internal.hi,android.os.Parcel,int) -> a
@@ -12369,7 +12469,7 @@ com.google.android.gms.internal.hu -> com.google.android.gms.internal.hu:
     boolean equals(java.lang.Object) -> equals
     int describeContents() -> describeContents
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
-com.google.android.gms.internal.hw -> com.google.android.gms.internal.br:
+com.google.android.gms.internal.hw -> com.google.android.gms.internal.bs:
     com.google.android.gms.internal.hu ar(android.os.Parcel) -> a
     com.google.android.gms.internal.hu[] bj(int) -> a
     void a(com.google.android.gms.internal.hu,android.os.Parcel,int) -> a
@@ -12501,7 +12601,7 @@ com.google.android.gms.internal.ib -> com.google.android.gms.internal.ib:
     int hashCode() -> hashCode
     boolean equals(java.lang.Object) -> equals
     java.lang.Object freeze() -> a
-com.google.android.gms.internal.ic -> com.google.android.gms.internal.bs:
+com.google.android.gms.internal.ic -> com.google.android.gms.internal.bt:
     com.google.android.gms.internal.ib as(android.os.Parcel) -> a
     com.google.android.gms.internal.ib[] bk(int) -> a
     void a(com.google.android.gms.internal.ib,android.os.Parcel,int) -> a
@@ -12535,7 +12635,7 @@ com.google.android.gms.internal.id -> com.google.android.gms.internal.id:
     int hashCode() -> hashCode
     boolean equals(java.lang.Object) -> equals
     java.lang.Object freeze() -> a
-com.google.android.gms.internal.ie -> com.google.android.gms.internal.bt:
+com.google.android.gms.internal.ie -> com.google.android.gms.internal.bu:
     com.google.android.gms.internal.id at(android.os.Parcel) -> a
     com.google.android.gms.internal.id[] bl(int) -> a
     void a(com.google.android.gms.internal.id,android.os.Parcel,int) -> a
@@ -12833,67 +12933,67 @@ com.google.android.gms.internal.ig$h -> com.google.android.gms.internal.ig$h:
     int hashCode() -> hashCode
     boolean equals(java.lang.Object) -> equals
     java.lang.Object freeze() -> a
-com.google.android.gms.internal.ih -> com.google.android.gms.internal.bu:
+com.google.android.gms.internal.ih -> com.google.android.gms.internal.bv:
     com.google.android.gms.internal.ig au(android.os.Parcel) -> a
     com.google.android.gms.internal.ig[] bm(int) -> a
     void a(com.google.android.gms.internal.ig,android.os.Parcel,int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
-com.google.android.gms.internal.ii -> com.google.android.gms.internal.bv:
+com.google.android.gms.internal.ii -> com.google.android.gms.internal.bw:
     com.google.android.gms.internal.ig$a av(android.os.Parcel) -> a
     com.google.android.gms.internal.ig$a[] bn(int) -> a
     void a(com.google.android.gms.internal.ig$a,android.os.Parcel,int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
-com.google.android.gms.internal.ij -> com.google.android.gms.internal.bw:
+com.google.android.gms.internal.ij -> com.google.android.gms.internal.bx:
     com.google.android.gms.internal.ig$b aw(android.os.Parcel) -> a
     com.google.android.gms.internal.ig$b[] bo(int) -> a
     void a(com.google.android.gms.internal.ig$b,android.os.Parcel,int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
-com.google.android.gms.internal.ik -> com.google.android.gms.internal.bx:
+com.google.android.gms.internal.ik -> com.google.android.gms.internal.by:
     com.google.android.gms.internal.ig$b$a ax(android.os.Parcel) -> a
     com.google.android.gms.internal.ig$b$a[] bp(int) -> a
     void a(com.google.android.gms.internal.ig$b$a,android.os.Parcel,int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
-com.google.android.gms.internal.il -> com.google.android.gms.internal.by:
+com.google.android.gms.internal.il -> com.google.android.gms.internal.ca:
     com.google.android.gms.internal.ig$b$b ay(android.os.Parcel) -> a
     com.google.android.gms.internal.ig$b$b[] bq(int) -> a
     void a(com.google.android.gms.internal.ig$b$b,android.os.Parcel,int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
-com.google.android.gms.internal.im -> com.google.android.gms.internal.ca:
+com.google.android.gms.internal.im -> com.google.android.gms.internal.cc:
     com.google.android.gms.internal.ig$c az(android.os.Parcel) -> a
     com.google.android.gms.internal.ig$c[] br(int) -> a
     void a(com.google.android.gms.internal.ig$c,android.os.Parcel,int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
-com.google.android.gms.internal.in -> com.google.android.gms.internal.cc:
+com.google.android.gms.internal.in -> com.google.android.gms.internal.cd:
     com.google.android.gms.internal.ig$d aA(android.os.Parcel) -> a
     com.google.android.gms.internal.ig$d[] bs(int) -> a
     void a(com.google.android.gms.internal.ig$d,android.os.Parcel,int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
-com.google.android.gms.internal.io -> com.google.android.gms.internal.cd:
+com.google.android.gms.internal.io -> com.google.android.gms.internal.ce:
     com.google.android.gms.internal.ig$f aB(android.os.Parcel) -> a
     com.google.android.gms.internal.ig$f[] bt(int) -> a
     void a(com.google.android.gms.internal.ig$f,android.os.Parcel,int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
-com.google.android.gms.internal.ip -> com.google.android.gms.internal.ce:
+com.google.android.gms.internal.ip -> com.google.android.gms.internal.cf:
     com.google.android.gms.internal.ig$g aC(android.os.Parcel) -> a
     com.google.android.gms.internal.ig$g[] bu(int) -> a
     void a(com.google.android.gms.internal.ig$g,android.os.Parcel,int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
-com.google.android.gms.internal.iq -> com.google.android.gms.internal.cf:
+com.google.android.gms.internal.iq -> com.google.android.gms.internal.cg:
     com.google.android.gms.internal.ig$h aD(android.os.Parcel) -> a
     com.google.android.gms.internal.ig$h[] bv(int) -> a
     void a(com.google.android.gms.internal.ig$h,android.os.Parcel,int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
-com.google.android.gms.internal.ix -> com.google.android.gms.internal.cg:
+com.google.android.gms.internal.ix -> com.google.android.gms.internal.ch:
     byte[] buffer -> a
     int Hw -> b
     int position -> c
@@ -12923,22 +13023,22 @@ com.google.android.gms.internal.ix -> com.google.android.gms.internal.cg:
     void r(long) -> c
     int s(long) -> d
     long t(long) -> e
-com.google.android.gms.internal.ix$a -> com.google.android.gms.internal.ch:
-com.google.android.gms.internal.iz -> com.google.android.gms.internal.ci:
+com.google.android.gms.internal.ix$a -> com.google.android.gms.internal.ci:
+com.google.android.gms.internal.iz -> com.google.android.gms.internal.cj:
     int rw -> f
     int cP() -> a
     void a(com.google.android.gms.internal.ix) -> a
     byte[] a(com.google.android.gms.internal.iz) -> a
     void a(com.google.android.gms.internal.iz,byte[],int,int) -> a
     java.lang.String toString() -> toString
-com.google.android.gms.internal.ja -> com.google.android.gms.internal.cj:
+com.google.android.gms.internal.ja -> com.google.android.gms.internal.ck:
     java.lang.String b(com.google.android.gms.internal.iz) -> a
     void a(java.lang.String,java.lang.Object,java.lang.StringBuffer,java.lang.StringBuffer) -> a
     java.lang.String aE(java.lang.String) -> a
     java.lang.String aF(java.lang.String) -> b
     java.lang.String aa(java.lang.String) -> c
     void a(byte[],java.lang.StringBuffer) -> a
-com.google.android.gms.internal.jb -> com.google.android.gms.internal.ck:
+com.google.android.gms.internal.jb -> com.google.android.gms.internal.cl:
     int Hx -> a
     int Hy -> b
     int Hz -> c
@@ -12952,7 +13052,7 @@ com.google.android.gms.internal.jb -> com.google.android.gms.internal.ck:
     byte[][] HH -> k
     byte[] HI -> l
     int g(int,int) -> a
-com.google.android.gms.internal.q -> com.google.android.gms.internal.cl:
+com.google.android.gms.internal.q -> com.google.android.gms.internal.cm:
 com.google.android.gms.internal.v -> com.google.android.gms.internal.v:
     com.google.android.gms.internal.w CREATOR -> CREATOR
     int versionCode -> a
@@ -12968,7 +13068,7 @@ com.google.android.gms.internal.v -> com.google.android.gms.internal.v:
     android.location.Location eE -> k
     int describeContents() -> describeContents
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
-com.google.android.gms.internal.w -> com.google.android.gms.internal.cm:
+com.google.android.gms.internal.w -> com.google.android.gms.internal.cn:
     com.google.android.gms.internal.v a(android.os.Parcel) -> a
     com.google.android.gms.internal.v[] b(int) -> a
     void a(com.google.android.gms.internal.v,android.os.Parcel,int) -> a
@@ -12986,7 +13086,7 @@ com.google.android.gms.internal.x -> com.google.android.gms.internal.x:
     com.google.android.gms.internal.x[] eH -> h
     int describeContents() -> describeContents
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
-com.google.android.gms.internal.y -> com.google.android.gms.internal.cn:
+com.google.android.gms.internal.y -> com.google.android.gms.internal.co:
     com.google.android.gms.internal.x b(android.os.Parcel) -> a
     com.google.android.gms.internal.x[] c(int) -> a
     void a(com.google.android.gms.internal.x,android.os.Parcel,int) -> a
@@ -14225,18 +14325,18 @@ com.google.android.gms.maps.model.j -> com.google.android.gms.maps.model.ab:
     void a(com.google.android.gms.maps.model.TileOverlayOptions,android.os.Parcel,int) -> a
 com.google.android.gms.maps.model.k -> com.google.android.gms.maps.model.ac:
     void a(com.google.android.gms.maps.model.VisibleRegion,android.os.Parcel,int) -> a
-com.google.android.gms.plus.model.moments.ItemScope -> com.google.android.gms.b.a.a.a:
-com.google.android.gms.plus.model.moments.Moment -> com.google.android.gms.b.a.a.b:
-com.google.android.gms.plus.model.people.Person -> com.google.android.gms.b.a.b.a:
-com.google.android.gms.plus.model.people.Person$AgeRange -> com.google.android.gms.b.a.b.b:
-com.google.android.gms.plus.model.people.Person$Cover -> com.google.android.gms.b.a.b.c:
-com.google.android.gms.plus.model.people.Person$Cover$CoverInfo -> com.google.android.gms.b.a.b.d:
-com.google.android.gms.plus.model.people.Person$Cover$CoverPhoto -> com.google.android.gms.b.a.b.e:
-com.google.android.gms.plus.model.people.Person$Image -> com.google.android.gms.b.a.b.f:
-com.google.android.gms.plus.model.people.Person$Name -> com.google.android.gms.b.a.b.g:
-com.google.android.gms.plus.model.people.Person$Organizations -> com.google.android.gms.b.a.b.h:
-com.google.android.gms.plus.model.people.Person$PlacesLived -> com.google.android.gms.b.a.b.i:
-com.google.android.gms.plus.model.people.Person$Urls -> com.google.android.gms.b.a.b.j:
+com.google.android.gms.plus.model.moments.ItemScope -> com.google.android.gms.c.a.a.a:
+com.google.android.gms.plus.model.moments.Moment -> com.google.android.gms.c.a.a.b:
+com.google.android.gms.plus.model.people.Person -> com.google.android.gms.c.a.b.a:
+com.google.android.gms.plus.model.people.Person$AgeRange -> com.google.android.gms.c.a.b.b:
+com.google.android.gms.plus.model.people.Person$Cover -> com.google.android.gms.c.a.b.c:
+com.google.android.gms.plus.model.people.Person$Cover$CoverInfo -> com.google.android.gms.c.a.b.d:
+com.google.android.gms.plus.model.people.Person$Cover$CoverPhoto -> com.google.android.gms.c.a.b.e:
+com.google.android.gms.plus.model.people.Person$Image -> com.google.android.gms.c.a.b.f:
+com.google.android.gms.plus.model.people.Person$Name -> com.google.android.gms.c.a.b.g:
+com.google.android.gms.plus.model.people.Person$Organizations -> com.google.android.gms.c.a.b.h:
+com.google.android.gms.plus.model.people.Person$PlacesLived -> com.google.android.gms.c.a.b.i:
+com.google.android.gms.plus.model.people.Person$Urls -> com.google.android.gms.c.a.b.j:
 com.google.android.gms.wallet.Address -> com.google.android.gms.wallet.Address:
     android.os.Parcelable$Creator CREATOR -> CREATOR
     int kg -> l
@@ -14549,6 +14649,13 @@ com.twoheart.dailyhotel.ErrorFragment -> com.twoheart.dailyhotel.e:
     android.widget.Button btnRetry -> a
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     void onClick(android.view.View) -> onClick
+com.twoheart.dailyhotel.GcmBroadcastReceiver -> com.twoheart.dailyhotel.GcmBroadcastReceiver:
+    void onReceive(android.content.Context,android.content.Intent) -> onReceive
+com.twoheart.dailyhotel.GcmIntentService -> com.twoheart.dailyhotel.GcmIntentService:
+    android.app.NotificationManager mNotificationManager -> a
+    void onHandleIntent(android.content.Intent) -> onHandleIntent
+    boolean isScreenOn(android.content.Context) -> a
+    void sendNotification(java.lang.String) -> a
 com.twoheart.dailyhotel.HotelListFragment -> com.twoheart.dailyhotel.f:
     com.twoheart.dailyhotel.widget.PinnedSectionListView mHotelListView -> a
     uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout mPullToRefreshLayout -> k
@@ -14613,51 +14720,62 @@ com.twoheart.dailyhotel.IntroActivity$1 -> com.twoheart.dailyhotel.i:
 com.twoheart.dailyhotel.MainActivity -> com.twoheart.dailyhotel.MainActivity:
     android.widget.ListView drawerList -> o
     android.support.v4.widget.DrawerLayout drawerLayout -> p
-    android.widget.FrameLayout mContentFrame -> E
+    android.widget.FrameLayout mContentFrame -> F
     android.support.v4.app.ActionBarDrawerToggle drawerToggle -> q
     android.support.v4.app.FragmentManager fragmentManager -> r
     java.util.List mMenuImages -> s
     java.util.List mFragments -> t
-    com.twoheart.dailyhotel.MainActivity$DrawerMenuListAdapter mDrawerMenuListAdapter -> F
+    com.twoheart.dailyhotel.MainActivity$DrawerMenuListAdapter mDrawerMenuListAdapter -> G
     int indexLastFragment -> u
-    com.readystatesoftware.systembartint.SystemBarTintManager tintManager -> G
+    com.readystatesoftware.systembartint.SystemBarTintManager tintManager -> H
     com.readystatesoftware.systembartint.SystemBarTintManager$SystemBarConfig config -> v
     com.twoheart.dailyhotel.MainActivity$DrawerMenu menuHotelListFragment -> w
     com.twoheart.dailyhotel.MainActivity$DrawerMenu menuBookingListFragment -> x
     com.twoheart.dailyhotel.MainActivity$DrawerMenu menuCreditFragment -> y
     com.twoheart.dailyhotel.MainActivity$DrawerMenu menuSettingFragment -> z
-    com.twoheart.dailyhotel.util.ui.CloseOnBackPressed backButtonHandler -> H
+    com.twoheart.dailyhotel.util.ui.CloseOnBackPressed backButtonHandler -> I
+    java.util.HashMap regPushParams -> A
     void onCreate(android.os.Bundle) -> onCreate
     void onActivityResult(int,int,android.content.Intent) -> onActivityResult
     void onResponse(java.lang.String,java.lang.String) -> a
     void onResponse(java.lang.String,org.json.JSONObject) -> a
+    java.lang.String getGcmId() -> m
+    java.lang.Boolean isGoogleServiceAvailable() -> r
+    void regGcmId(int) -> f
     void selectMenuDrawer(com.twoheart.dailyhotel.MainActivity$DrawerMenu) -> a
-    void initializeFragments() -> r
+    void initializeFragments() -> s
     android.support.v4.app.Fragment getFragment(int) -> a
     void replaceFragment(android.support.v4.app.Fragment) -> b
     void addFragment(android.support.v4.app.Fragment) -> c
-    void clearFragmentBackStack() -> s
-    void printPackageHashKey() -> j
+    void clearFragmentBackStack() -> t
     void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
     void delayedReplace(int) -> b
-    void setNavigationDrawer() -> k
+    void setNavigationDrawer() -> j
     void onPostCreate(android.os.Bundle) -> onPostCreate
     void onConfigurationChanged(android.content.res.Configuration) -> onConfigurationChanged
     boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
     boolean onKeyDown(int,android.view.KeyEvent) -> onKeyDown
-    void toggleDrawer() -> l
+    void toggleDrawer() -> k
     void finish() -> finish
     void onDestroy() -> onDestroy
-    void onError() -> m
+    void onError() -> l
+    com.android.volley.RequestQueue access$0(com.twoheart.dailyhotel.MainActivity) -> a
 com.twoheart.dailyhotel.MainActivity$1 -> com.twoheart.dailyhotel.j:
+    com.twoheart.dailyhotel.MainActivity this$0 -> a
+    int val$idx -> b
+    java.lang.String doInBackground(java.lang.Void[]) -> a
+    void onPostExecute(java.lang.String) -> a
+    void onPostExecute(java.lang.Object) -> onPostExecute
+    java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
+com.twoheart.dailyhotel.MainActivity$2 -> com.twoheart.dailyhotel.k:
     com.twoheart.dailyhotel.MainActivity this$0 -> a
     int val$index -> b
     void run() -> run
-com.twoheart.dailyhotel.MainActivity$2 -> com.twoheart.dailyhotel.k:
+com.twoheart.dailyhotel.MainActivity$3 -> com.twoheart.dailyhotel.l:
     com.twoheart.dailyhotel.MainActivity this$0 -> a
     void onDrawerClosed(android.view.View) -> b
     void onDrawerOpened(android.view.View) -> a
-com.twoheart.dailyhotel.MainActivity$DrawerMenu -> com.twoheart.dailyhotel.l:
+com.twoheart.dailyhotel.MainActivity$DrawerMenu -> com.twoheart.dailyhotel.m:
     java.lang.String title -> b
     int icon -> c
     int type -> d
@@ -14665,7 +14783,7 @@ com.twoheart.dailyhotel.MainActivity$DrawerMenu -> com.twoheart.dailyhotel.l:
     int getType() -> a
     java.lang.String getTitle() -> b
     int getIcon() -> c
-com.twoheart.dailyhotel.MainActivity$DrawerMenuListAdapter -> com.twoheart.dailyhotel.m:
+com.twoheart.dailyhotel.MainActivity$DrawerMenuListAdapter -> com.twoheart.dailyhotel.n:
     java.util.List list -> b
     android.view.LayoutInflater inflater -> c
     android.content.Context context -> d
@@ -14676,8 +14794,8 @@ com.twoheart.dailyhotel.MainActivity$DrawerMenuListAdapter -> com.twoheart.daily
     long getItemId(int) -> getItemId
     boolean isEnabled(int) -> isEnabled
     android.view.View getView(int,android.view.View,android.view.ViewGroup) -> getView
-com.twoheart.dailyhotel.R -> com.twoheart.dailyhotel.n:
-com.twoheart.dailyhotel.R$styleable -> com.twoheart.dailyhotel.o:
+com.twoheart.dailyhotel.R -> com.twoheart.dailyhotel.o:
+com.twoheart.dailyhotel.R$styleable -> com.twoheart.dailyhotel.p:
     int[] ActionBar -> ActionBar
     int ActionBar_background -> ActionBar_background
     int ActionBar_backgroundSplit -> ActionBar_backgroundSplit
@@ -14928,7 +15046,7 @@ com.twoheart.dailyhotel.R$styleable -> com.twoheart.dailyhotel.o:
     int[] com_facebook_profile_picture_view -> com_facebook_profile_picture_view
     int com_facebook_profile_picture_view_is_cropped -> com_facebook_profile_picture_view_is_cropped
     int com_facebook_profile_picture_view_preset_size -> com_facebook_profile_picture_view_preset_size
-com.twoheart.dailyhotel.SettingFragment -> com.twoheart.dailyhotel.p:
+com.twoheart.dailyhotel.SettingFragment -> com.twoheart.dailyhotel.q:
     com.twoheart.dailyhotel.MainActivity mHostActivity -> a
     com.android.volley.RequestQueue mQueue -> k
     android.widget.TextView tvNotice -> l
@@ -14948,7 +15066,7 @@ com.twoheart.dailyhotel.SettingFragment -> com.twoheart.dailyhotel.p:
     void invalidateLoginButton(boolean,java.lang.String) -> a
     void onResponse(java.lang.String,java.lang.String) -> a
     void onResponse(java.lang.String,org.json.JSONObject) -> a
-com.twoheart.dailyhotel.WaitTimerFragment -> com.twoheart.dailyhotel.q:
+com.twoheart.dailyhotel.WaitTimerFragment -> com.twoheart.dailyhotel.r:
     boolean isEnabledNotify -> a
     android.os.Handler sHandler -> k
     android.widget.TextView tvTimer -> l
@@ -14975,7 +15093,7 @@ com.twoheart.dailyhotel.WaitTimerFragment -> com.twoheart.dailyhotel.q:
     void access$2(com.twoheart.dailyhotel.WaitTimerFragment,long) -> b
     com.twoheart.dailyhotel.util.ui.BaseActivity access$3(com.twoheart.dailyhotel.WaitTimerFragment) -> b
     void access$4(com.twoheart.dailyhotel.WaitTimerFragment,com.twoheart.dailyhotel.util.ui.BaseActivity) -> a
-com.twoheart.dailyhotel.WaitTimerFragment$1 -> com.twoheart.dailyhotel.r:
+com.twoheart.dailyhotel.WaitTimerFragment$1 -> com.twoheart.dailyhotel.s:
     com.twoheart.dailyhotel.WaitTimerFragment this$0 -> a
     void handleMessage(android.os.Message) -> handleMessage
 com.twoheart.dailyhotel.activity.AboutActivity -> com.twoheart.dailyhotel.activity.AboutActivity:
@@ -14994,7 +15112,7 @@ com.twoheart.dailyhotel.activity.BookingActivity -> com.twoheart.dailyhotel.acti
     com.twoheart.dailyhotel.widget.Switch swCredit -> x
     android.widget.TextView tvReserverName -> y
     android.widget.TextView tvReserverNumber -> z
-    android.widget.TextView tvReserverEmail -> E
+    android.widget.TextView tvReserverEmail -> A
     android.widget.LinearLayout llReserverInfoLabel -> F
     android.widget.LinearLayout llReserverInfoEditable -> G
     android.widget.EditText etReserverName -> H
@@ -15005,8 +15123,7 @@ com.twoheart.dailyhotel.activity.BookingActivity -> com.twoheart.dailyhotel.acti
     android.widget.RadioButton rbPaymentCard -> M
     android.widget.TextView tvPaymentInformation -> N
     com.twoheart.dailyhotel.model.Pay mPay -> O
-    java.lang.String wayToPay -> P
-    com.twoheart.dailyhotel.model.SaleTime saleTime -> Q
+    com.twoheart.dailyhotel.model.SaleTime saleTime -> P
     void onCreate(android.os.Bundle) -> onCreate
     void onResume() -> onResume
     void updatePayPrice(boolean) -> d
@@ -15088,6 +15205,13 @@ com.twoheart.dailyhotel.activity.ForgotPwdActivity$1 -> com.twoheart.dailyhotel.
 com.twoheart.dailyhotel.activity.ForgotPwdActivity$2 -> com.twoheart.dailyhotel.activity.j:
     com.twoheart.dailyhotel.activity.ForgotPwdActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
+com.twoheart.dailyhotel.activity.GcmDialogActivity -> com.twoheart.dailyhotel.activity.GcmDialogActivity:
+    android.widget.Button btnOkButton -> a
+    android.widget.Button btnCancelButton -> h
+    android.widget.TextView tvMsg -> i
+    android.widget.TextView tvTitle -> j
+    void onCreate(android.os.Bundle) -> onCreate
+    void onClick(android.view.View) -> onClick
 com.twoheart.dailyhotel.activity.HotelTabActivity -> com.twoheart.dailyhotel.activity.HotelTabActivity:
     com.twoheart.dailyhotel.model.SaleTime mSaleTime -> o
     android.widget.Button btnSoldOut -> u
@@ -15098,7 +15222,7 @@ com.twoheart.dailyhotel.activity.HotelTabActivity -> com.twoheart.dailyhotel.act
     void onActivityResult(int,int,android.content.Intent) -> onActivityResult
     void loadFragments() -> k
     void onResponse(java.lang.String,java.lang.String) -> a
-    void loadLoginProcess() -> l
+    void loadLoginProcess() -> m
     void onResponse(java.lang.String,org.json.JSONObject) -> a
 com.twoheart.dailyhotel.activity.ImageDetailActivity -> com.twoheart.dailyhotel.activity.ImageDetailActivity:
     com.twoheart.dailyhotel.model.HotelDetail mHotelDetail -> o
@@ -15118,8 +15242,10 @@ com.twoheart.dailyhotel.activity.LoginActivity -> com.twoheart.dailyhotel.activi
     com.facebook.widget.LoginButton facebookLogin -> v
     java.util.Map loginParams -> w
     java.util.Map snsSignupParams -> x
+    java.util.Map regPushParams -> y
     com.facebook.Session fbSession -> o
-    com.facebook.Session$StatusCallback statusCallback -> y
+    com.google.android.gms.gcm.GoogleCloudMessaging mGcm -> z
+    com.facebook.Session$StatusCallback statusCallback -> A
     void onCreate(android.os.Bundle) -> onCreate
     void makeMeRequest(com.facebook.Session) -> a
     void onClick(android.view.View) -> onClick
@@ -15128,6 +15254,9 @@ com.twoheart.dailyhotel.activity.LoginActivity -> com.twoheart.dailyhotel.activi
     void onActivityResult(int,int,android.content.Intent) -> onActivityResult
     void finish() -> finish
     void onResponse(java.lang.String,org.json.JSONObject) -> a
+    java.lang.String getGcmId() -> m
+    java.lang.Boolean isGoogleServiceAvailable() -> r
+    void regGcmId(int) -> a
     void access$0(com.twoheart.dailyhotel.activity.LoginActivity,com.facebook.Session) -> a
     android.widget.Button access$1(com.twoheart.dailyhotel.activity.LoginActivity) -> a
     void access$2(com.twoheart.dailyhotel.activity.LoginActivity,java.util.Map) -> a
@@ -15135,6 +15264,8 @@ com.twoheart.dailyhotel.activity.LoginActivity -> com.twoheart.dailyhotel.activi
     java.util.Map access$4(com.twoheart.dailyhotel.activity.LoginActivity) -> b
     java.util.Map access$5(com.twoheart.dailyhotel.activity.LoginActivity) -> c
     com.android.volley.RequestQueue access$6(com.twoheart.dailyhotel.activity.LoginActivity) -> d
+    void access$7(com.twoheart.dailyhotel.activity.LoginActivity,java.util.Map) -> c
+    java.util.Map access$8(com.twoheart.dailyhotel.activity.LoginActivity) -> e
 com.twoheart.dailyhotel.activity.LoginActivity$1 -> com.twoheart.dailyhotel.activity.k:
     com.twoheart.dailyhotel.activity.LoginActivity this$0 -> a
     void call(com.facebook.Session,com.facebook.SessionState,java.lang.Exception) -> call
@@ -15147,6 +15278,13 @@ com.twoheart.dailyhotel.activity.LoginActivity$3 -> com.twoheart.dailyhotel.acti
 com.twoheart.dailyhotel.activity.LoginActivity$4 -> com.twoheart.dailyhotel.activity.n:
     com.twoheart.dailyhotel.activity.LoginActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
+com.twoheart.dailyhotel.activity.LoginActivity$5 -> com.twoheart.dailyhotel.activity.o:
+    com.twoheart.dailyhotel.activity.LoginActivity this$0 -> a
+    int val$idx -> b
+    java.lang.String doInBackground(java.lang.Void[]) -> a
+    void onPostExecute(java.lang.String) -> a
+    void onPostExecute(java.lang.Object) -> onPostExecute
+    java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
 com.twoheart.dailyhotel.activity.NoticeActivity -> com.twoheart.dailyhotel.activity.NoticeActivity:
     java.util.ArrayList mList -> o
     android.widget.ExpandableListView mListView -> p
@@ -15156,7 +15294,7 @@ com.twoheart.dailyhotel.activity.NoticeActivity -> com.twoheart.dailyhotel.activ
     void finish() -> finish
     void onResponse(java.lang.String,org.json.JSONObject) -> a
     android.widget.ExpandableListView access$0(com.twoheart.dailyhotel.activity.NoticeActivity) -> a
-com.twoheart.dailyhotel.activity.NoticeActivity$1 -> com.twoheart.dailyhotel.activity.o:
+com.twoheart.dailyhotel.activity.NoticeActivity$1 -> com.twoheart.dailyhotel.activity.p:
     int mExpandedChildPos -> b
     com.twoheart.dailyhotel.activity.NoticeActivity this$0 -> a
     void onGroupExpand(int) -> onGroupExpand
@@ -15164,10 +15302,9 @@ com.twoheart.dailyhotel.activity.PaymentActivity -> com.twoheart.dailyhotel.acti
     java.lang.String CARD_CD -> o
     java.lang.String QUOTA -> p
     int m_nStat -> q
-    java.lang.String wayToPay -> r
-    android.webkit.WebView webView -> s
-    android.os.Handler handler -> t
-    com.twoheart.dailyhotel.model.Pay mPay -> u
+    android.webkit.WebView webView -> r
+    android.os.Handler handler -> s
+    com.twoheart.dailyhotel.model.Pay mPay -> t
     void onCreate(android.os.Bundle) -> onCreate
     byte[] parsePostParameter(java.lang.String[],java.lang.String[]) -> a
     boolean url_scheme_intent(android.webkit.WebView,java.lang.String) -> url_scheme_intent
@@ -15182,84 +15319,97 @@ com.twoheart.dailyhotel.activity.PaymentActivity -> com.twoheart.dailyhotel.acti
     android.webkit.WebView access$1(com.twoheart.dailyhotel.activity.PaymentActivity) -> a
     android.os.Handler access$2(com.twoheart.dailyhotel.activity.PaymentActivity) -> b
     com.twoheart.dailyhotel.model.Pay access$3(com.twoheart.dailyhotel.activity.PaymentActivity) -> c
-com.twoheart.dailyhotel.activity.PaymentActivity$1 -> com.twoheart.dailyhotel.activity.p:
+com.twoheart.dailyhotel.activity.PaymentActivity$1 -> com.twoheart.dailyhotel.activity.q:
     com.twoheart.dailyhotel.activity.PaymentActivity this$0 -> a
     boolean onLongClick(android.view.View) -> onLongClick
-com.twoheart.dailyhotel.activity.PaymentActivity$2 -> com.twoheart.dailyhotel.activity.q:
+com.twoheart.dailyhotel.activity.PaymentActivity$2 -> com.twoheart.dailyhotel.activity.r:
     com.twoheart.dailyhotel.activity.PaymentActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.twoheart.dailyhotel.activity.PaymentActivity$3 -> com.twoheart.dailyhotel.activity.r:
+com.twoheart.dailyhotel.activity.PaymentActivity$3 -> com.twoheart.dailyhotel.activity.s:
     com.twoheart.dailyhotel.activity.PaymentActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.twoheart.dailyhotel.activity.PaymentActivity$4 -> com.twoheart.dailyhotel.activity.s:
+com.twoheart.dailyhotel.activity.PaymentActivity$4 -> com.twoheart.dailyhotel.activity.t:
     com.twoheart.dailyhotel.activity.PaymentActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.twoheart.dailyhotel.activity.PaymentActivity$5 -> com.twoheart.dailyhotel.activity.t:
+com.twoheart.dailyhotel.activity.PaymentActivity$5 -> com.twoheart.dailyhotel.activity.u:
     com.twoheart.dailyhotel.activity.PaymentActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.twoheart.dailyhotel.activity.PaymentActivity$JavaScriptExtention -> com.twoheart.dailyhotel.activity.u:
+com.twoheart.dailyhotel.activity.PaymentActivity$JavaScriptExtention -> com.twoheart.dailyhotel.activity.v:
     com.twoheart.dailyhotel.activity.PaymentActivity this$0 -> a
     void showHTML(java.lang.String) -> showHTML
     void feed(java.lang.String) -> feed
-com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayBridge -> com.twoheart.dailyhotel.activity.v:
+com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayBridge -> com.twoheart.dailyhotel.activity.w:
     com.twoheart.dailyhotel.activity.PaymentActivity this$0 -> a
     void launchMISP(java.lang.String) -> launchMISP
     com.twoheart.dailyhotel.activity.PaymentActivity access$1(com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayBridge) -> a
-com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayBridge$1 -> com.twoheart.dailyhotel.activity.w:
+com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayBridge$1 -> com.twoheart.dailyhotel.activity.x:
     com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayBridge this$1 -> a
     java.lang.String val$arg -> b
     void run() -> run
-com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayCardInfoBridge -> com.twoheart.dailyhotel.activity.x:
+com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayCardInfoBridge -> com.twoheart.dailyhotel.activity.y:
     com.twoheart.dailyhotel.activity.PaymentActivity this$0 -> a
     void getCardInfo(java.lang.String,java.lang.String) -> getCardInfo
     void alertToNext() -> alertToNext
     void access$0(com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayCardInfoBridge) -> a
     com.twoheart.dailyhotel.activity.PaymentActivity access$2(com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayCardInfoBridge) -> b
-com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayCardInfoBridge$1 -> com.twoheart.dailyhotel.activity.y:
+com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayCardInfoBridge$1 -> com.twoheart.dailyhotel.activity.z:
     com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayCardInfoBridge this$1 -> a
     java.lang.String val$card_cd -> b
     java.lang.String val$quota -> c
     void run() -> run
-com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayCardInfoBridge$2 -> com.twoheart.dailyhotel.activity.z:
+com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayCardInfoBridge$2 -> com.twoheart.dailyhotel.activity.aa:
     com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayCardInfoBridge this$1 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayCardInfoBridge$3 -> com.twoheart.dailyhotel.activity.aa:
+com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayCardInfoBridge$3 -> com.twoheart.dailyhotel.activity.ab:
     com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayCardInfoBridge this$1 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayPinInfoBridge -> com.twoheart.dailyhotel.activity.ab:
+com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayPinInfoBridge -> com.twoheart.dailyhotel.activity.ac:
     com.twoheart.dailyhotel.activity.PaymentActivity this$0 -> a
     void getPaypinInfo(java.lang.String) -> getPaypinInfo
     void paypinConfim() -> paypinConfim
     void access$0(com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayPinInfoBridge) -> a
     com.twoheart.dailyhotel.activity.PaymentActivity access$2(com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayPinInfoBridge) -> b
-com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayPinInfoBridge$1 -> com.twoheart.dailyhotel.activity.ac:
+com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayPinInfoBridge$1 -> com.twoheart.dailyhotel.activity.ad:
     com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayPinInfoBridge this$1 -> a
     java.lang.String val$url -> b
     void run() -> run
-com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayPinInfoBridge$2 -> com.twoheart.dailyhotel.activity.ad:
+com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayPinInfoBridge$2 -> com.twoheart.dailyhotel.activity.ae:
     com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayPinInfoBridge this$1 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayPinInfoBridge$3 -> com.twoheart.dailyhotel.activity.ae:
+com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayPinInfoBridge$3 -> com.twoheart.dailyhotel.activity.af:
     com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayPinInfoBridge this$1 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayPinReturn -> com.twoheart.dailyhotel.activity.af:
+com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayPinReturn -> com.twoheart.dailyhotel.activity.ag:
     com.twoheart.dailyhotel.activity.PaymentActivity this$0 -> a
     java.lang.String getConfirm() -> getConfirm
-com.twoheart.dailyhotel.activity.PaymentActivity$TeleditBridge -> com.twoheart.dailyhotel.activity.ag:
+com.twoheart.dailyhotel.activity.PaymentActivity$TeleditBridge -> com.twoheart.dailyhotel.activity.ah:
     com.twoheart.dailyhotel.activity.PaymentActivity this$0 -> a
     void Result(java.lang.String) -> Result
     void BestClose() -> BestClose
-com.twoheart.dailyhotel.activity.PaymentActivity$mWebChromeClient -> com.twoheart.dailyhotel.activity.ah:
+com.twoheart.dailyhotel.activity.PaymentActivity$mWebChromeClient -> com.twoheart.dailyhotel.activity.ai:
     boolean isActionBarProgressBarShowing -> a
     com.twoheart.dailyhotel.activity.PaymentActivity this$0 -> b
     void onProgressChanged(android.webkit.WebView,int) -> onProgressChanged
     void setActionBarProgressBar(boolean) -> a
-com.twoheart.dailyhotel.activity.PaymentActivity$mWebViewClient -> com.twoheart.dailyhotel.activity.ai:
+com.twoheart.dailyhotel.activity.PaymentActivity$mWebViewClient -> com.twoheart.dailyhotel.activity.aj:
     com.twoheart.dailyhotel.activity.PaymentActivity this$0 -> a
     boolean shouldOverrideUrlLoading(android.webkit.WebView,java.lang.String) -> shouldOverrideUrlLoading
     void onReceivedError(android.webkit.WebView,int,java.lang.String,java.lang.String) -> onReceivedError
     void onPageStarted(android.webkit.WebView,java.lang.String,android.graphics.Bitmap) -> onPageStarted
     void onPageFinished(android.webkit.WebView,java.lang.String) -> onPageFinished
+com.twoheart.dailyhotel.activity.PaymentWaitActivity -> com.twoheart.dailyhotel.activity.PaymentWaitActivity:
+    com.twoheart.dailyhotel.model.Booking booking -> o
+    android.widget.TextView tvHotelName -> p
+    android.widget.TextView tvAccount -> q
+    android.widget.TextView tvName -> r
+    android.widget.TextView tvPrice -> s
+    android.widget.TextView tvDeadline -> t
+    android.widget.TextView tvGuide1 -> u
+    android.widget.TextView tvGuide2 -> v
+    void onCreate(android.os.Bundle) -> onCreate
+    void onResponse(java.lang.String,org.json.JSONObject) -> a
+    boolean onPrepareOptionsMenu(android.view.Menu) -> onPrepareOptionsMenu
+    boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
 com.twoheart.dailyhotel.activity.PrivacyActivity -> com.twoheart.dailyhotel.activity.PrivacyActivity:
     void onCreate(android.os.Bundle) -> onCreate
     void onResume() -> onResume
@@ -15279,21 +15429,21 @@ com.twoheart.dailyhotel.activity.ProfileActivity -> com.twoheart.dailyhotel.acti
     void finish() -> finish
     com.androidquery.AQuery access$0(com.twoheart.dailyhotel.activity.ProfileActivity) -> a
     com.android.volley.RequestQueue access$1(com.twoheart.dailyhotel.activity.ProfileActivity) -> b
-com.twoheart.dailyhotel.activity.ProfileActivity$1 -> com.twoheart.dailyhotel.activity.aj:
+com.twoheart.dailyhotel.activity.ProfileActivity$1 -> com.twoheart.dailyhotel.activity.ak:
     com.twoheart.dailyhotel.activity.ProfileActivity this$0 -> a
     boolean onEditorAction(android.widget.TextView,int,android.view.KeyEvent) -> onEditorAction
-com.twoheart.dailyhotel.activity.ProfileActivity$2 -> com.twoheart.dailyhotel.activity.ak:
+com.twoheart.dailyhotel.activity.ProfileActivity$2 -> com.twoheart.dailyhotel.activity.al:
     com.twoheart.dailyhotel.activity.ProfileActivity this$0 -> a
     boolean onTouch(android.view.View,android.view.MotionEvent) -> onTouch
-com.twoheart.dailyhotel.activity.ProfileActivity$3 -> com.twoheart.dailyhotel.activity.al:
+com.twoheart.dailyhotel.activity.ProfileActivity$3 -> com.twoheart.dailyhotel.activity.am:
     com.twoheart.dailyhotel.activity.ProfileActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.twoheart.dailyhotel.activity.ProfileActivity$4 -> com.twoheart.dailyhotel.activity.am:
+com.twoheart.dailyhotel.activity.ProfileActivity$4 -> com.twoheart.dailyhotel.activity.an:
     com.twoheart.dailyhotel.activity.ProfileActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
 com.twoheart.dailyhotel.activity.PushDialogActivity -> com.twoheart.dailyhotel.activity.PushDialogActivity:
-    android.widget.TextView tvOkButton -> a
-    android.widget.TextView tvCancelButton -> b
+    android.widget.Button btnOkButton -> a
+    android.widget.Button btnCancelButton -> b
     void onCreate(android.os.Bundle) -> onCreate
     void onClick(android.view.View) -> onClick
 com.twoheart.dailyhotel.activity.SignupActivity -> com.twoheart.dailyhotel.activity.SignupActivity:
@@ -15312,7 +15462,7 @@ com.twoheart.dailyhotel.activity.SignupActivity -> com.twoheart.dailyhotel.activ
     boolean checkInput() -> k
     boolean isValidEmail(java.lang.String) -> b
     void onClick(android.view.View) -> onClick
-    void storeLoginInfo() -> l
+    void storeLoginInfo() -> m
     void finish() -> finish
     void onResponse(java.lang.String,org.json.JSONObject) -> a
 com.twoheart.dailyhotel.activity.SplashActivity -> com.twoheart.dailyhotel.activity.SplashActivity:
@@ -15328,47 +15478,47 @@ com.twoheart.dailyhotel.activity.SplashActivity -> com.twoheart.dailyhotel.activ
     void access$0(com.twoheart.dailyhotel.activity.SplashActivity) -> a
     android.app.Dialog access$1(com.twoheart.dailyhotel.activity.SplashActivity) -> b
     void access$2(com.twoheart.dailyhotel.activity.SplashActivity,int) -> a
-com.twoheart.dailyhotel.activity.SplashActivity$1 -> com.twoheart.dailyhotel.activity.an:
+com.twoheart.dailyhotel.activity.SplashActivity$1 -> com.twoheart.dailyhotel.activity.ao:
     com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
     com.twoheart.dailyhotel.activity.SplashActivity access$0(com.twoheart.dailyhotel.activity.SplashActivity$1) -> a
-com.twoheart.dailyhotel.activity.SplashActivity$1$1 -> com.twoheart.dailyhotel.activity.ao:
+com.twoheart.dailyhotel.activity.SplashActivity$1$1 -> com.twoheart.dailyhotel.activity.ap:
     com.twoheart.dailyhotel.activity.SplashActivity$1 this$1 -> a
     void run() -> run
-com.twoheart.dailyhotel.activity.SplashActivity$10 -> com.twoheart.dailyhotel.activity.ap:
+com.twoheart.dailyhotel.activity.SplashActivity$10 -> com.twoheart.dailyhotel.activity.aq:
     com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.twoheart.dailyhotel.activity.SplashActivity$11 -> com.twoheart.dailyhotel.activity.aq:
+com.twoheart.dailyhotel.activity.SplashActivity$11 -> com.twoheart.dailyhotel.activity.ar:
     com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
     int val$newEventFlag -> b
     void run() -> run
-com.twoheart.dailyhotel.activity.SplashActivity$2 -> com.twoheart.dailyhotel.activity.ar:
+com.twoheart.dailyhotel.activity.SplashActivity$2 -> com.twoheart.dailyhotel.activity.as:
     com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.twoheart.dailyhotel.activity.SplashActivity$3 -> com.twoheart.dailyhotel.activity.as:
+com.twoheart.dailyhotel.activity.SplashActivity$3 -> com.twoheart.dailyhotel.activity.at:
     com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
     boolean onKey(android.content.DialogInterface,int,android.view.KeyEvent) -> onKey
-com.twoheart.dailyhotel.activity.SplashActivity$4 -> com.twoheart.dailyhotel.activity.at:
+com.twoheart.dailyhotel.activity.SplashActivity$4 -> com.twoheart.dailyhotel.activity.au:
     com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
     com.twoheart.dailyhotel.activity.SplashActivity access$0(com.twoheart.dailyhotel.activity.SplashActivity$4) -> a
-com.twoheart.dailyhotel.activity.SplashActivity$4$1 -> com.twoheart.dailyhotel.activity.au:
+com.twoheart.dailyhotel.activity.SplashActivity$4$1 -> com.twoheart.dailyhotel.activity.av:
     com.twoheart.dailyhotel.activity.SplashActivity$4 this$1 -> a
     void run() -> run
-com.twoheart.dailyhotel.activity.SplashActivity$5 -> com.twoheart.dailyhotel.activity.av:
+com.twoheart.dailyhotel.activity.SplashActivity$5 -> com.twoheart.dailyhotel.activity.aw:
     com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.twoheart.dailyhotel.activity.SplashActivity$6 -> com.twoheart.dailyhotel.activity.aw:
+com.twoheart.dailyhotel.activity.SplashActivity$6 -> com.twoheart.dailyhotel.activity.ax:
     com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
     boolean onKey(android.content.DialogInterface,int,android.view.KeyEvent) -> onKey
-com.twoheart.dailyhotel.activity.SplashActivity$7 -> com.twoheart.dailyhotel.activity.ax:
+com.twoheart.dailyhotel.activity.SplashActivity$7 -> com.twoheart.dailyhotel.activity.ay:
     com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.twoheart.dailyhotel.activity.SplashActivity$8 -> com.twoheart.dailyhotel.activity.ay:
+com.twoheart.dailyhotel.activity.SplashActivity$8 -> com.twoheart.dailyhotel.activity.az:
     com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
     int val$newEventFlag -> b
     void onCancel(android.content.DialogInterface) -> onCancel
-com.twoheart.dailyhotel.activity.SplashActivity$9 -> com.twoheart.dailyhotel.activity.az:
+com.twoheart.dailyhotel.activity.SplashActivity$9 -> com.twoheart.dailyhotel.activity.ba:
     com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
 com.twoheart.dailyhotel.activity.TermActivity -> com.twoheart.dailyhotel.activity.TermActivity:
@@ -15594,6 +15744,8 @@ com.twoheart.dailyhotel.model.Booking -> com.twoheart.dailyhotel.model.Booking:
     java.lang.String hotel_idx -> b
     java.lang.String hotel_name -> c
     java.lang.String bedType -> d
+    int payType -> e
+    java.lang.String tid -> f
     android.os.Parcelable$Creator CREATOR -> CREATOR
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
     void readFromParcel(android.os.Parcel) -> a
@@ -15602,6 +15754,8 @@ com.twoheart.dailyhotel.model.Booking -> com.twoheart.dailyhotel.model.Booking:
     java.lang.String getHotel_name() -> c
     java.lang.String getBedType() -> d
     int describeContents() -> describeContents
+    int getPayType() -> e
+    java.lang.String getTid() -> f
 com.twoheart.dailyhotel.model.Booking$1 -> com.twoheart.dailyhotel.model.b:
     com.twoheart.dailyhotel.model.Booking createFromParcel(android.os.Parcel) -> a
     com.twoheart.dailyhotel.model.Booking[] newArray(int) -> a
@@ -15726,6 +15880,7 @@ com.twoheart.dailyhotel.model.Pay -> com.twoheart.dailyhotel.model.Pay:
     int mPayPrice -> d
     boolean isSaleCredit -> e
     java.lang.String mCheckOut -> f
+    java.lang.String payType -> g
     android.os.Parcelable$Creator CREATOR -> CREATOR
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
     void readFromParcel(android.os.Parcel) -> a
@@ -15741,6 +15896,8 @@ com.twoheart.dailyhotel.model.Pay -> com.twoheart.dailyhotel.model.Pay:
     void setSaleCredit(boolean) -> a
     java.lang.String getCheckOut() -> f
     void setCheckOut(java.lang.String) -> a
+    java.lang.String getPayType() -> g
+    void setPayType(java.lang.String) -> b
     int describeContents() -> describeContents
 com.twoheart.dailyhotel.model.Pay$1 -> com.twoheart.dailyhotel.model.g:
     com.twoheart.dailyhotel.model.Pay createFromParcel(android.os.Parcel) -> a
@@ -15879,10 +16036,10 @@ com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener -> 
 com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener -> com.twoheart.dailyhotel.util.a.b.c:
     void onResponse(java.lang.String,java.lang.String) -> a
 com.twoheart.dailyhotel.util.ui.BaseActivity -> com.twoheart.dailyhotel.util.b.a:
-    android.support.v7.app.ActionBar actionBar -> A
-    android.content.SharedPreferences sharedPreference -> B
-    com.android.volley.RequestQueue mQueue -> C
-    android.widget.Toast mToast -> D
+    android.support.v7.app.ActionBar actionBar -> B
+    android.content.SharedPreferences sharedPreference -> C
+    com.android.volley.RequestQueue mQueue -> D
+    android.widget.Toast mToast -> E
     com.twoheart.dailyhotel.util.ui.LoadingDialog mLockUI -> o
     com.android.volley.RequestQueue$RequestFilter cancelAllRequestFilter -> p
     android.os.Handler handler -> q
@@ -15904,7 +16061,7 @@ com.twoheart.dailyhotel.util.ui.BaseActivity -> com.twoheart.dailyhotel.util.b.a
     void onDestroy() -> onDestroy
     void onErrorResponse(com.android.volley.VolleyError) -> a
     void onError(java.lang.Exception) -> a
-    void onError() -> m
+    void onError() -> l
     void showToast(java.lang.String,int,boolean) -> a
     void chgClickable(android.view.View,boolean) -> a
     com.twoheart.dailyhotel.util.ui.LoadingDialog access$0(com.twoheart.dailyhotel.util.ui.BaseActivity) -> a
