@@ -15408,7 +15408,7 @@ com.twoheart.dailyhotel.activity.PaymentWaitActivity -> com.twoheart.dailyhotel.
     android.widget.TextView tvGuide2 -> v
     void onCreate(android.os.Bundle) -> onCreate
     void onResponse(java.lang.String,org.json.JSONObject) -> a
-    boolean onPrepareOptionsMenu(android.view.Menu) -> onPrepareOptionsMenu
+    boolean onCreateOptionsMenu(android.view.Menu) -> onCreateOptionsMenu
     boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
 com.twoheart.dailyhotel.activity.PrivacyActivity -> com.twoheart.dailyhotel.activity.PrivacyActivity:
     void onCreate(android.os.Bundle) -> onCreate

@@ -113,9 +113,9 @@ public class PaymentWaitActivity extends BaseActivity implements DailyHotelJsonR
 			}
 		}
 	}
-
+	
 	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
+	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.payment_wait_actions, menu);
 		return true;
 	}

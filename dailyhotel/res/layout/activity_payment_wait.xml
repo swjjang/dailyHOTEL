@@ -43,7 +43,7 @@
                     android:gravity="center_vertical"
                     android:text="결제 정보 (가상계좌)"
                     android:textColor="@color/textView_textColor_section"
-                    android:textSize="12.5dp" />
+                    android:textSize="15dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -73,7 +73,7 @@
                             android:singleLine="true"
                             android:text="계좌번호"
                             android:textColor="@color/textView_textColor_section"
-                            android:textSize="12.5dp" />
+                            android:textSize="15dp" />
                     </LinearLayout>
 
                     <TextView
@@ -88,7 +88,7 @@
                         android:scrollHorizontally="true"
                         android:singleLine="true"
                         android:textColor="@drawable/selector_textview_textcolor"
-                        android:textSize="12.5dp" />
+                        android:textSize="15dp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -109,7 +109,7 @@
                             android:singleLine="true"
                             android:text="입금주명"
                             android:textColor="@color/textView_textColor_section"
-                            android:textSize="12.5dp" />
+                            android:textSize="15dp" />
                     </LinearLayout>
 
                     <TextView
@@ -124,7 +124,7 @@
                         android:scrollHorizontally="true"
                         android:singleLine="true"
                         android:textColor="@drawable/selector_textview_textcolor"
-                        android:textSize="12.5dp" />
+                        android:textSize="15dp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -145,7 +145,7 @@
                             android:singleLine="true"
                             android:text="금액"
                             android:textColor="@color/textView_textColor_section"
-                            android:textSize="12.5dp" />
+                            android:textSize="15dp" />
                     </LinearLayout>
 
                     <TextView
@@ -160,7 +160,7 @@
                         android:scrollHorizontally="true"
                         android:singleLine="true"
                         android:textColor="@drawable/selector_textview_textcolor"
-                        android:textSize="12.5dp" />
+                        android:textSize="15dp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -181,7 +181,7 @@
                             android:singleLine="true"
                             android:text="입금기한"
                             android:textColor="@color/textView_textColor_section"
-                            android:textSize="12.5dp" />
+                            android:textSize="15dp" />
                     </LinearLayout>
 
                     <TextView
@@ -196,7 +196,7 @@
                         android:scrollHorizontally="true"
                         android:singleLine="true"
                         android:textColor="@drawable/selector_textview_textcolor"
-                        android:textSize="12.5dp" />
+                        android:textSize="15dp" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
@@ -221,7 +221,7 @@
                     android:gravity="center_vertical"
                     android:text="확인사항"
                     android:textColor="@color/textView_textColor_section"
-                    android:textSize="12.5dp" />
+                    android:textSize="15dp" />
             </LinearLayout>
 
             <TextView
@@ -230,7 +230,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:padding="10dp"
-                android:textSize="12.5dp" 
+                android:lineSpacingExtra="2dp"
+                android:textSize="15dp" 
                 android:text="입금 순서대로 예약이 확정되며,\n객실 예약이 조기에 마감될 수 있습니다.\n마감시 입금하신 계좌로 전액 환불됩니다." />
         </LinearLayout>
 
@@ -254,7 +255,7 @@
                     android:gravity="center_vertical"
                     android:text="입금이 완료되면"
                     android:textColor="@color/textView_textColor_section"
-                    android:textSize="12.5dp" />
+                    android:textSize="15dp" />
             </LinearLayout>
 
             <TextView
@@ -264,7 +265,7 @@
                 android:gravity="center_horizontal"
                 android:padding="10dp"
                 android:text="10분이내에 예약완료 문자가 도착합니다."
-                android:textSize="12.5dp" />
+                android:textSize="15dp" />
         </LinearLayout>
     </LinearLayout>
 

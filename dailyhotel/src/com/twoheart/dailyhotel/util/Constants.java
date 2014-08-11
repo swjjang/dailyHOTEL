@@ -23,7 +23,7 @@ public interface Constants {
 	public static final boolean DEBUG = BuildConfig.DEBUG;
 
 	// 플레이 스토어용 릴리즈 여부
-	public static final boolean IS_GOOGLE_RELEASE = true;
+	public static final boolean IS_GOOGLE_RELEASE = false;
 
 	// 항상 열리게 셋팅 여부
 	public static final boolean ALWAYS_OPEN = false;
@@ -31,12 +31,12 @@ public interface Constants {
     public static final String GCM_PROJECT_NUMBER = "1025681158000";
 
 	// 웹서버 호스트 
-//		public static final String URL_DAILYHOTEL_SERVER = "http://dailyhotel.kr/goodnight/";				// 서비스 서버
+		public static final String URL_DAILYHOTEL_SERVER = "http://dailyhotel.kr/goodnight/";				// 서비스 서버
 //		public static final String URL_DAILYHOTEL_SERVER = "http://dev.dailyhotel.kr/goodnight/";				// 개발 서버 데브서버
 //		public static final String URL_DAILYHOTEL_SERVER = "http://dailyhotel.cafe24.com/goodnight/";		// 개발 서버
 	//	public static final String URL_DAILYHOTEL_SERVER = "http://was1.dailyhotel.kr/goodnight/";					// new 개발 서버
 	//	public static final String URL_DAILYHOTEL_SERVER = "http://1.234.83.117/goodnight/";							// new 개발 서버
-		public static final String URL_DAILYHOTEL_SERVER = "http://1.234.22.96/goodnight/"; // new 개발 7.6 테라서버 
+//		public static final String URL_DAILYHOTEL_SERVER = "http://1.234.22.96/goodnight/"; // new 개발 7.6 테라서버 
 		
 
 		public static final String URL_DAILYHOTEL_GCM_SERVER = "http://dailyhotel.kr/goodnight/";				// 서비스 서버

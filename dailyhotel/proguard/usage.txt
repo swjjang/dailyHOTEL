@@ -5613,15 +5613,15 @@ com.twoheart.dailyhotel.MainActivity:
     public static final java.lang.String KEY_CREDIT_FRAGMENT
     public static final java.lang.String KEY_SEETING_FRAGMENT
     private static final java.lang.String TAG_FRAGMENT_RATING_HOTEL
-    500:502:public void removeFragment(android.support.v4.app.Fragment)
-    509:520:public void printPackageHashKey()
+    504:506:public void removeFragment(android.support.v4.app.Fragment)
+    513:524:public void printPackageHashKey()
 com.twoheart.dailyhotel.MainActivity$DrawerMenu:
     public static final int DRAWER_MENU_LIST_TYPE_LOGO
     public static final int DRAWER_MENU_LIST_TYPE_SECTION
     public static final int DRAWER_MENU_LIST_TYPE_ENTRY
-    691:692:public void setType(int)
-    699:700:public void setTitle(java.lang.String)
-    707:708:public void setIcon(int)
+    695:696:public void setType(int)
+    703:704:public void setTitle(java.lang.String)
+    711:712:public void setIcon(int)
 com.twoheart.dailyhotel.Manifest
 com.twoheart.dailyhotel.Manifest$permission
 com.twoheart.dailyhotel.R:

@@ -257,8 +257,10 @@ Constants {
 				String loginUserIdx = response.getString("idx");
 				
 				// GCM 등록 시도
+				
 				String gcmId=getGcmId();
 				if (gcmId.isEmpty()) {
+					Log.e("EMPTY","!!");
 					if (isGoogleServiceAvailable()) {
 						regGcmId(Integer.parseInt(loginUserIdx));
 					}
@@ -358,6 +360,8 @@ Constants {
 				String regId = "";
 				try {
 					regId = instance.register(GCM_PROJECT_NUMBER);
+
+					Log.e("EMPTY?",regId);
 				} catch (IOException e) {e.printStackTrace();}
 
 				return regId;

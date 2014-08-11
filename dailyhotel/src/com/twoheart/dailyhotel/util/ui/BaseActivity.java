@@ -290,7 +290,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	
 			}
 		} catch (Exception e) { // show Toast 도중 Stackoverflow가 자주 발생함. 이유를 알 수 없음. 이에따른 임시 방편 
-			
+			e.printStackTrace();
 		}
 	}
 
