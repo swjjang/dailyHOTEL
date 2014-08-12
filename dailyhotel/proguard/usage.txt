@@ -5613,15 +5613,15 @@ com.twoheart.dailyhotel.MainActivity:
     public static final java.lang.String KEY_CREDIT_FRAGMENT
     public static final java.lang.String KEY_SEETING_FRAGMENT
     private static final java.lang.String TAG_FRAGMENT_RATING_HOTEL
-    504:506:public void removeFragment(android.support.v4.app.Fragment)
-    513:524:public void printPackageHashKey()
+    499:501:public void removeFragment(android.support.v4.app.Fragment)
+    508:519:public void printPackageHashKey()
 com.twoheart.dailyhotel.MainActivity$DrawerMenu:
     public static final int DRAWER_MENU_LIST_TYPE_LOGO
     public static final int DRAWER_MENU_LIST_TYPE_SECTION
     public static final int DRAWER_MENU_LIST_TYPE_ENTRY
-    695:696:public void setType(int)
-    703:704:public void setTitle(java.lang.String)
-    711:712:public void setIcon(int)
+    690:691:public void setType(int)
+    698:699:public void setTitle(java.lang.String)
+    706:707:public void setIcon(int)
 com.twoheart.dailyhotel.Manifest
 com.twoheart.dailyhotel.Manifest$permission
 com.twoheart.dailyhotel.R:
@@ -5748,6 +5748,7 @@ com.twoheart.dailyhotel.util.Constants:
     public static final boolean IS_GOOGLE_RELEASE
     public static final boolean ALWAYS_OPEN
     public static final java.lang.String GCM_PROJECT_NUMBER
+    public static final java.lang.String GCM_DEVICE_TYPE_ANDROID
     public static final java.lang.String URL_DAILYHOTEL_SERVER
     public static final java.lang.String URL_DAILYHOTEL_GCM_SERVER
     public static final java.lang.String PHONE_NUMBER_DAILYHOTEL

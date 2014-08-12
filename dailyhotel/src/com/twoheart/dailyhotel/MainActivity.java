@@ -218,10 +218,9 @@ Constants {
 			else {
 				// Intent가 Push로 부터 온경우
 				boolean isIntentFromPush = getIntent().getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_INTENT_FROM_PUSH, false);
-				android.util.Log.e("INTENT_FROM_PUSH",isIntentFromPush+"");
+				if (isIntentFromPush) android.util.Log.e("INTENT FROM PUSH","TRUE");
 				if(isIntentFromPush) selectMenuDrawer(menuBookingListFragment);
 				else selectMenuDrawer(menuHotelListFragment);
-//				selectMenuDrawer(menuHotelListFragment);
 			}
 
 			// 호텔평가를 위한 현재 로그인 여부 체크
@@ -260,7 +259,6 @@ Constants {
 				
 				String gcmId=getGcmId();
 				if (gcmId.isEmpty()) {
-					Log.e("EMPTY","!!");
 					if (isGoogleServiceAvailable()) {
 						regGcmId(Integer.parseInt(loginUserIdx));
 					}
@@ -318,9 +316,9 @@ Constants {
 		} else if (url.contains(URL_GCM_REGISTER)) {
 			// 로그인 성공 - 유저 정보(인덱스) 가져오기 - 유저의 GCM키 등록 완료 한 경우 프리퍼런스에 키 등록후 종료
 			try {
-				if (response.getString("msg").equals("success")) {
+				if (response.getString("msg").equals("true")) {
 					Editor editor = sharedPreference.edit();
-					editor.putString(KEY_PREFERENCE_GCM_ID, regPushParams.get("pushId").toString());
+					editor.putString(KEY_PREFERENCE_GCM_ID, regPushParams.get("registration_id").toString());
 					editor.apply();
 					android.util.Log.e("STORED_GCM_ID", sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "NOAP"));
 				}
@@ -360,8 +358,6 @@ Constants {
 				String regId = "";
 				try {
 					regId = instance.register(GCM_PROJECT_NUMBER);
-
-					Log.e("EMPTY?",regId);
 				} catch (IOException e) {e.printStackTrace();}
 
 				return regId;
@@ -373,11 +369,10 @@ Constants {
 				regPushParams = new HashMap<String, String>();
 
 				regPushParams.put("userIdx", idx+"");
-				regPushParams.put("pushId", regId);
-				regPushParams.put("deviceType", "0");
+				regPushParams.put("registration_id", regId);
+				regPushParams.put("deviceType", GCM_DEVICE_TYPE_ANDROID);
 
-				android.util.Log.e("PUSH_ID", regId);
-				android.util.Log.e("GET_PUSH_DATA_FROM_GOOGLE",regPushParams.toString());
+				android.util.Log.e("params for register push id",regPushParams.toString());
 
 				mQueue.add(new DailyHotelJsonRequest(Method.POST,
 						new StringBuilder(URL_DAILYHOTEL_SERVER)

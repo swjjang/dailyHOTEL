@@ -20,7 +20,13 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 
-
+/**
+ * GCM 메시지가 올 경우 실제로 처리하는 클래스,
+ * 기본적으로 푸시 노티피케이션을 띄우
+ * 스크린이 꺼져있는 경우 추가적으로 다이얼로그를 띄우도록 
+ * @author jangjunho
+ *
+ */
 public class GcmIntentService extends IntentService implements Constants{
 
     public static final int NOTIFICATION_ID = 1;
@@ -46,7 +52,7 @@ public class GcmIntentService extends IntentService implements Constants{
         					| PowerManager.ACQUIRE_CAUSES_WAKEUP);	// PushDialogActivity에서 release 해줌.
         			KeyguardManager manager = (KeyguardManager)getSystemService(Activity.KEYGUARD_SERVICE);  
         			KeyguardLock lock = manager.newKeyguardLock(Context.KEYGUARD_SERVICE);  
-        			lock.disableKeyguard();  
+        			lock.disableKeyguard();  // 기존의 잠금화면을 disable
         			
         			Intent i = new Intent(this, GcmDialogActivity.class);
         			i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG, extras.getString("message"));
@@ -83,7 +89,7 @@ public class GcmIntentService extends IntentService implements Constants{
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.img_ic_appicon)
-                        .setContentTitle("데일리호텔")
+                        .setContentTitle(getString(R.string.app_name))
                         .setAutoCancel(true)
                         .setSound(uri)
                         .setContentText(msg);

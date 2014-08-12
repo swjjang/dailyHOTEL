@@ -15,6 +15,11 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.WakeLock;
 
+/**
+ * 화면이 OFF 상태일때 GCM 메시지를 받는 경우 카카오톡 처럼 푸시 다이얼로그가 팝업됨.
+ * @author jangjunho
+ *
+ */
 public class GcmDialogActivity extends Activity implements OnClickListener,Constants{
 	
 	private Button btnOkButton;
