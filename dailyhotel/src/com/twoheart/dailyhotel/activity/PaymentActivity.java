@@ -838,26 +838,17 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		public void feed(final String msg) {
 			int resultCode = 0;
 
-			if (msg.equals("SUCCESS")) {
-				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS;
-			} else if (msg.equals("INVALID_SESSION")) {
-				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION;
-			} else if (msg.equals("SOLD_OUT")) {
-				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_SOLD_OUT;
-			} else if (msg.equals("PAYMENT_COMPLETE")) {
-				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE;
-			} else if (msg.equals("INVALID_DATE")) {
-				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_INVALID_DATE;
-			} else if (msg.equals("PAYMENT_CANCELED")) {
-				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_CANCELED;
-			} else if (msg.equals("ACCOUNT_READY")) {
-				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY;
-			} else if (msg.equals("ACCOUNT_TIME_ERROR")) {
-				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_TIME_ERROR;
-			} else {
-				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
-			}
-
+			if (msg.equals("SUCCESS")) resultCode = CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS;
+			else if (msg.equals("INVALID_SESSION")) resultCode = CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION;
+			else if (msg.equals("SOLD_OUT")) resultCode = CODE_RESULT_ACTIVITY_PAYMENT_SOLD_OUT;
+			else if (msg.equals("PAYMENT_COMPLETE")) resultCode = CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE;
+			else if (msg.equals("INVALID_DATE")) resultCode = CODE_RESULT_ACTIVITY_PAYMENT_INVALID_DATE;
+			else if (msg.equals("PAYMENT_CANCELED")) resultCode = CODE_RESULT_ACTIVITY_PAYMENT_CANCELED;
+			else if (msg.equals("ACCOUNT_READY")) resultCode = CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY;
+			else if (msg.equals("ACCOUNT_TIME_ERROR")) resultCode = CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_TIME_ERROR;
+			else if (msg.equals("ACCOUNT_DUPLICATE")) resultCode = CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_DUPLICATE;
+			else resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
+			
 			Intent payData = new Intent();
 			payData.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
 

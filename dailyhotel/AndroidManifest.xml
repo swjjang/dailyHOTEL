@@ -8,6 +8,7 @@
         android:minSdkVersion="9"
         android:targetSdkVersion="19" />
 
+    <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -158,7 +159,13 @@
         </activity>
         
         <activity
-            android:name="com.twoheart.dailyhotel.activity.GcmDialogActivity"
+            android:name="com.twoheart.dailyhotel.activity.GcmLockDialogActivity"
+            android:screenOrientation="portrait" >
+        </activity> 
+        
+        <activity
+            android:name="com.twoheart.dailyhotel.activity.AccountCompleteDialogActivity"
+            android:theme="@style/TransDialog"
             android:screenOrientation="portrait" >
         </activity>
         

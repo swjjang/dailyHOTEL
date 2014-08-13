@@ -5750,7 +5750,6 @@ com.twoheart.dailyhotel.util.Constants:
     public static final java.lang.String GCM_PROJECT_NUMBER
     public static final java.lang.String GCM_DEVICE_TYPE_ANDROID
     public static final java.lang.String URL_DAILYHOTEL_SERVER
-    public static final java.lang.String URL_DAILYHOTEL_GCM_SERVER
     public static final java.lang.String PHONE_NUMBER_DAILYHOTEL
     public static final int REQUEST_EXPIRE_JUDGE
     public static final int PLAY_SERVICES_RESOLUTION_REQUEST
@@ -5838,6 +5837,7 @@ com.twoheart.dailyhotel.util.Constants:
     public static final int CODE_REQUEST_ISPMOBILE
     public static final int CODE_REQUEST_KFTC_BANKPAY
     public static final int RESULT_SALES_CLOSED
+    public static final int CODE_REQUEST_ACTIVITY_BOOKING_DETAIL
     public static final int CODE_RESULT_ACTIVITY_PAYMENT_FAIL
     public static final int CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS
     public static final int CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION
@@ -5850,6 +5850,10 @@ com.twoheart.dailyhotel.util.Constants:
     public static final int CODE_RESULT_ACTIVITY_PAYMENT_CANCELED
     public static final int CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY
     public static final int CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_TIME_ERROR
+    public static final int CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT
+    public static final int CODE_PAY_TYPE_CARD_COMPLETE
+    public static final int CODE_PAY_TYPE_ACCOUNT_WAIT
+    public static final int CODE_PAY_TYPE_ACCOUNT_COMPLETE
     public static final java.lang.String GA_PROPERTY_ID
     public static final int GA_DISPATCH_PERIOD
     public static final boolean GA_IS_DRY_RUN

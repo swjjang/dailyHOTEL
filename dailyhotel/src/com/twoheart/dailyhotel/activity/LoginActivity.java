@@ -434,9 +434,10 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 			// 로그인 성공 - 유저 정보(인덱스) 가져오기 - 유저의 GCM키 등록 완료 한 경우 프리퍼런스에 키 등록후 종료
 			try {
 				unLockUI();
-				if (response.getString("msg").equals("true")) {
+				android.util.Log.e("MSG?",response.toString());
+				if (response.getString("result").equals("true")) {
 					Editor editor = sharedPreference.edit();
-					editor.putString(KEY_PREFERENCE_GCM_ID, regPushParams.get("registration_id").toString());
+					editor.putString(KEY_PREFERENCE_GCM_ID, regPushParams.get("notification_id").toString());
 					editor.apply();
 
 					android.util.Log.e("STORED_GCM_ID", sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "NOAP"));
@@ -492,9 +493,9 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 				// 이 값을 서버에 등록하기.
 				regPushParams = new HashMap<String, String>();
 
-				regPushParams.put("userIdx", idx+"");
-				regPushParams.put("registration_id", regId);
-				regPushParams.put("deviceType", GCM_DEVICE_TYPE_ANDROID);
+				regPushParams.put("user_idx", idx+"");
+				regPushParams.put("notification_id", regId);
+				regPushParams.put("device_type", GCM_DEVICE_TYPE_ANDROID);
 				
 				android.util.Log.e("params for register push id",regPushParams.toString());
 				

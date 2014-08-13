@@ -298,13 +298,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	 * 버튼 난타를 방지하기 위한 메서드, 버튼의 클릭 가능 여부를 반대로 변경.
 	 * @param v 타겟 뷰
 	 */
-	protected void chgClickable(View v) {
-		v.setClickable(!v.isClickable());
-	}
-
-
-	protected void chgClickable(View v, boolean isClickable) {
-		v.setClickable(isClickable);
-	}
-
+	protected void chgClickable(View v) { v.setClickable(!v.isClickable()); }
+	protected void chgClickable(View v, boolean isClickable) { v.setClickable(isClickable); }
+	
 }

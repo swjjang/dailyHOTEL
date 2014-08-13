@@ -108,7 +108,8 @@ public interface Constants {
 	public static final String URL_STORE_PAYMENT_MPOCKET = "market://details?id=kr.co.samsungcard.mpocket";
 	
 	// Gcm Server URL
-	public static final String URL_GCM_REGISTER = "user/push/register";
+//	public static final String URL_GCM_REGISTER = "user/push/register";
+	public static final String URL_GCM_REGISTER = "user/notification/register";
 //	public static final String URL_GCM_SEND_MSG = "push/sender.php";
 
 	// Payment App PackageName
@@ -173,6 +174,8 @@ public interface Constants {
 	public static final int CODE_REQUEST_ISPMOBILE = 8;
 	public static final int CODE_REQUEST_KFTC_BANKPAY = 9;
 	public static final int RESULT_SALES_CLOSED = 10; // 예약을 하려 버튼을 눌렀는데 주문 시간이 지난경우.
+	
+	public static final int CODE_REQUEST_ACTIVITY_BOOKING_DETAIL = 11;
 
 	// Android Activity의 Result Code들이다.
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_FAIL = 100;
@@ -187,6 +190,13 @@ public interface Constants {
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_CANCELED = 109;
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY = 110;
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_TIME_ERROR = 111;
+	public static final int CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_DUPLICATE = 112;
+	
+	public static final int CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT = 201;
+	
+	public static final int CODE_PAY_TYPE_CARD_COMPLETE = 10;
+	public static final int CODE_PAY_TYPE_ACCOUNT_WAIT = 20;
+	public static final int CODE_PAY_TYPE_ACCOUNT_COMPLETE = 21;
 
 	// Android Google Analytics 정보들.
 	public static final String GA_PROPERTY_ID = "UA-43721645-1";

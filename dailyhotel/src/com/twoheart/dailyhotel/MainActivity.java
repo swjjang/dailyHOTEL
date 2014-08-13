@@ -218,8 +218,7 @@ Constants {
 			else {
 				// Intent가 Push로 부터 온경우
 				boolean isIntentFromPush = getIntent().getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_INTENT_FROM_PUSH, false);
-				if (isIntentFromPush) android.util.Log.e("INTENT FROM PUSH","TRUE");
-				if(isIntentFromPush) selectMenuDrawer(menuBookingListFragment);
+				if (isIntentFromPush) selectMenuDrawer(menuBookingListFragment);
 				else selectMenuDrawer(menuHotelListFragment);
 			}
 
@@ -253,20 +252,20 @@ Constants {
 	public void onResponse(String url, JSONObject response) {
 		if (url.contains(URL_WEBAPI_USER_INFO)) {
 			try {
-				String loginUserIdx = response.getString("idx");
+				String loginuser_idx = response.getString("idx");
 				
 				// GCM 등록 시도
 				
 				String gcmId=getGcmId();
 				if (gcmId.isEmpty()) {
 					if (isGoogleServiceAvailable()) {
-						regGcmId(Integer.parseInt(loginUserIdx));
+						regGcmId(Integer.parseInt(loginuser_idx));
 					}
 				}
 				
 				String buyerIdx = sharedPreference.getString(KEY_PREFERENCE_USER_IDX, null);
 				if (buyerIdx != null) {
-					if (loginUserIdx.equals(buyerIdx)) {
+					if (loginuser_idx.equals(buyerIdx)) {
 						String purchasedHotelName = sharedPreference.getString(
 								KEY_PREFERENCE_HOTEL_NAME,
 								VALUE_PREFERENCE_HOTEL_NAME_DEFAULT);
@@ -316,9 +315,9 @@ Constants {
 		} else if (url.contains(URL_GCM_REGISTER)) {
 			// 로그인 성공 - 유저 정보(인덱스) 가져오기 - 유저의 GCM키 등록 완료 한 경우 프리퍼런스에 키 등록후 종료
 			try {
-				if (response.getString("msg").equals("true")) {
+				if (response.getString("result").equals("true")) {
 					Editor editor = sharedPreference.edit();
-					editor.putString(KEY_PREFERENCE_GCM_ID, regPushParams.get("registration_id").toString());
+					editor.putString(KEY_PREFERENCE_GCM_ID, regPushParams.get("notification_id").toString());
 					editor.apply();
 					android.util.Log.e("STORED_GCM_ID", sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "NOAP"));
 				}
@@ -368,9 +367,9 @@ Constants {
 				// 이 값을 서버에 등록하기.
 				regPushParams = new HashMap<String, String>();
 
-				regPushParams.put("userIdx", idx+"");
-				regPushParams.put("registration_id", regId);
-				regPushParams.put("deviceType", GCM_DEVICE_TYPE_ANDROID);
+				regPushParams.put("user_idx", idx+"");
+				regPushParams.put("notification_id", regId);
+				regPushParams.put("device_type", GCM_DEVICE_TYPE_ANDROID);
 
 				android.util.Log.e("params for register push id",regPushParams.toString());
 

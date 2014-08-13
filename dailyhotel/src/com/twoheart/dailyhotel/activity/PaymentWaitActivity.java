@@ -85,29 +85,37 @@ public class PaymentWaitActivity extends BaseActivity implements DailyHotelJsonR
 		
 		lockUI();
 		
+		android.util.Log.e(TAG + " / URL",url);
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null, this, this));
 	}
 
 	@Override
 	public void onResponse(String url, JSONObject response) {
-
+		android.util.Log.e(TAG + " / RESPONSE", response.toString());
 		if (url.contains(URL_WEBAPI_RESERVE_MINE_DETAIL)) {
-			android.util.Log.e("response",response.toString());
 			try {
-				tvAccount.setText(response.getString("bank_name") +", "+ response.getString("account_num"));
-				tvName.setText(response.getString("name"));
+				if (!response.getBoolean("result")) {
+					Intent intent = new Intent();
+					intent.putExtra("msg", response.getString("msg"));
+					setResult(CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT, intent);
+					finish();
+				} else {
+					tvAccount.setText(response.getString("bank_name") +", "+ response.getString("account_num"));
+					tvName.setText(response.getString("name"));
 
-				DecimalFormat comma = new DecimalFormat("###,##0");
-				tvPrice.setText(comma.format(response.getInt("amt"))+"원");
-				
-				String[] dateSlice = response.getString("date").split("/");
-				String[] timeSlice = response.getString("time").split(":");
-				
-				tvDeadline.setText(Integer.parseInt(dateSlice[1])+"월 "+Integer.parseInt(dateSlice[2])+"일 "+timeSlice[0]+":"+timeSlice[1]+"까지");
+					DecimalFormat comma = new DecimalFormat("###,##0");
+					tvPrice.setText(comma.format(response.getInt("amt"))+"원");
+					
+					String[] dateSlice = response.getString("date").split("/");
+					String[] timeSlice = response.getString("time").split(":");
+					
+					tvDeadline.setText(Integer.parseInt(dateSlice[1])+"월 "+Integer.parseInt(dateSlice[2])+"일 "+timeSlice[0]+":"+timeSlice[1]+"까지");
 
-				tvGuide1.setText(response.getString("msg1"));
-				tvGuide2.setText(response.getString("msg2"));
-				unLockUI();
+					tvGuide1.setText(response.getString("msg1"));
+					tvGuide2.setText(response.getString("msg2"));
+					unLockUI();
+				}
+				
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}

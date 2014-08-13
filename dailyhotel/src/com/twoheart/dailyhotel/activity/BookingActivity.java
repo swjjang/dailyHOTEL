@@ -240,7 +240,6 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		
 		OnClickListener onClickProceed = null;
 		
-		// 카드 결제의 경우 확인 팝업 -> kcp 결제 웹뷰로 이동하도록함.
 		if (type == DIALOG_CONFIRM_PAYMENT_CARD) {
 			
 			tvMsg.setText(
@@ -262,7 +261,6 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 					dialog.dismiss();
 				}
 			};
-		  // 계좌이체의 경우 확인 팝업 -> 전화(데일리호텔 상담원)로 이동.
 		} else if (type == DIALOG_CONFIRM_PAYMENT_ACCOUNT) {
 			
 			tvMsg.setText(
@@ -439,7 +437,10 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				finish();
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_TIME_ERROR:
-				dialog("은행 점검 시간입니다(00:00 - 00:10)");
+				dialog("입금대기 시간이 초과되었습니다\n다시 시도해주세요.");
+				break;
+			case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_DUPLICATE:
+				dialog("이미 입금대기 중인 호텔입니다.");
 				break;
 			}
 		} else if (requestCode == CODE_REQUEST_ACTIVITY_LOGIN) {

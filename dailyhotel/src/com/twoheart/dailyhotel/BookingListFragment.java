@@ -19,7 +19,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -117,13 +119,37 @@ DailyHotelStringResponseListener {
 			int position, long id) {
 		Intent i = null;
 		Booking item = mItems.get(position);
-		if (item.getPayType() == 10 || item.getPayType() == 21) { // 카드결제 완료 || 가상계좌 완료
+		if (item.getPayType() == CODE_PAY_TYPE_CARD_COMPLETE || item.getPayType() == CODE_PAY_TYPE_ACCOUNT_COMPLETE) { // 카드결제 완료 || 가상계좌 완료
 			i = new Intent(mHostActivity, BookingTabActivity.class);
-		} else if (item.getPayType() == 20) { // 가상계좌 입금대기
+		} else if (item.getPayType() == CODE_PAY_TYPE_ACCOUNT_WAIT) { // 가상계좌 입금대기
 			i = new Intent(mHostActivity, PaymentWaitActivity.class);
 		} 
 		i.putExtra(NAME_INTENT_EXTRA_DATA_BOOKING, item);
-		startActivity(i);
+		startActivityForResult(i, CODE_REQUEST_ACTIVITY_BOOKING_DETAIL);
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == CODE_REQUEST_ACTIVITY_BOOKING_DETAIL) {
+			switch (resultCode) {
+				case CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT:
+					dialog(data.getStringExtra("msg"));
+					break;
+			}
+		}
+	}
+	
+	public void dialog(String str) {
+		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+		alert.setTitle("알림");
+		alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss(); // 닫기
+			}
+		});
+		alert.setMessage(str);
+		alert.show();
 	}
 
 	@Override
