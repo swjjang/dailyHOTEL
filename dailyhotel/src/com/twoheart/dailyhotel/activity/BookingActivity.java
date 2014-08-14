@@ -45,6 +45,7 @@ import android.widget.Toast;
 import com.android.volley.Request.Method;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
+import com.twoheart.dailyhotel.BookingListFragment;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Credit;
@@ -87,6 +88,10 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 	private Pay mPay;
 
 	private SaleTime saleTime;
+	private int mReqCode;
+	private int mResCode;
+	private Intent mResIntent;
+	protected String mAliveCallSource;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -191,22 +196,22 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 	@Override
 	public void onClick(final View v) {
 		if (v.getId() == btnPay.getId()) {
-			
+
 			v.setClickable(false);
 			v.setEnabled(false);
-			
+
 			Dialog dialog = null; 
-			
+
 			if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentAccount
 					.getId()) { // 무통장 입금을 선택했을 경우
-				
+
 				dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_ACCOUNT);
 			} else if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentCard
 					.getId()) { // 신용카드를 선택했을 경우
-				
+
 				dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_CARD);
 			}
-			
+
 			dialog.setOnDismissListener(new OnDismissListener() {
 				@Override
 				public void onDismiss(DialogInterface dialog) {
@@ -215,7 +220,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				}
 			});
 			dialog.show();
-			
+
 		} else if (v.getId() == rbPaymentAccount.getId() | v.getId() == rbPaymentCard.getId()) {
 			svBooking.fullScroll(View.FOCUS_DOWN);
 
@@ -229,62 +234,63 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 
 	private Dialog getPaymentConfirmDialog(int type) {
 		final Dialog dialog = new Dialog(this);
-		
+
 		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 		dialog.setCanceledOnTouchOutside(false);
-		
+
 		View view = LayoutInflater.from(this).inflate(R.layout.fragment_dialog_confirm_payment, null);
-		
+
 		TextView tvMsg = (TextView) view.findViewById(R.id.tv_confirm_payment_msg);
 		Button btnProceed = (Button) view.findViewById(R.id.btn_confirm_payment_proceed);
 		ImageView btnClose = (ImageView) view.findViewById(R.id.btn_confirm_payment_close);
-		
+
 		OnClickListener onClickProceed = null;
-		
+
 		if (type == DIALOG_CONFIRM_PAYMENT_CARD) {
-			
+
 			tvMsg.setText(
 					Html.fromHtml(getString(R.string.dialog_msg_payment_confirm_card))
 					);
 			btnProceed.setText(
 					Html.fromHtml(getString(R.string.dialog_btn_payment_confirm_card))
 					);
-			
+
 			onClickProceed = new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					
 					lockUI();
-					mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(
-							URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_TIME)
-							.toString(), null, BookingActivity.this,
-							BookingActivity.this));
+					mAliveCallSource = "PAYMENT"; 
+					mQueue.add(new DailyHotelStringRequest(Method.GET,
+							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+									URL_WEBAPI_USER_ALIVE).toString(), null,
+									BookingActivity.this, BookingActivity.this));
 					dialog.dismiss();
 				}
 			};
 		} else if (type == DIALOG_CONFIRM_PAYMENT_ACCOUNT) {
-			
+
 			tvMsg.setText(
 					Html.fromHtml(getString(R.string.dialog_msg_payment_confirm_account))
 					);
 			btnProceed.setText(
 					Html.fromHtml(getString(R.string.dialog_btn_payment_confirm_account))
 					);
-			
+
 			onClickProceed = new OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					lockUI();
-					mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(
-							URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_TIME)
-							.toString(), null, BookingActivity.this,
-							BookingActivity.this));
+					mAliveCallSource = "PAYMENT"; 
+					mQueue.add(new DailyHotelStringRequest(Method.GET,
+							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+									URL_WEBAPI_USER_ALIVE).toString(), null,
+									BookingActivity.this, BookingActivity.this));
 					dialog.dismiss();
 				}
 			};
 		}
-		
+
 		btnClose.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -292,10 +298,10 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 			}
 		});
 		btnProceed.setOnClickListener(onClickProceed);
-		
- 		dialog.setContentView(view);
+
+		dialog.setContentView(view);
 		GlobalFont.apply((ViewGroup) view);
-		
+
 		return dialog;
 	}
 
@@ -356,7 +362,6 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 	public void finish() {
 		super.finish();
 		overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
-
 	}
 
 	@Override
@@ -364,6 +369,20 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 			Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
 
+		mReqCode = requestCode;
+		mResCode = resultCode;
+		mResIntent = intent;
+
+		mAliveCallSource = "ACTIVITY_RESULT";
+		lockUI();
+		mQueue.add(new DailyHotelStringRequest(Method.GET,
+				new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+						URL_WEBAPI_USER_ALIVE).toString(), null,
+						BookingActivity.this, BookingActivity.this));
+
+	}
+
+	private void activityResulted(int requestCode, int resultCode, Intent intent) {
 		if (requestCode == CODE_REQUEST_ACTIVITY_PAYMENT) {
 			Log.d(TAG, Integer.toString(resultCode));
 
@@ -434,7 +453,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				Editor editor = sharedPreference.edit();
 				editor.putInt(KEY_PREFERENCE_ACCOUNT_READY_FLAG, CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
 				editor.apply();
-				
+
 				setResult(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
 				finish();
 				break;
@@ -457,18 +476,17 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 
 			if (checkedId == rbPaymentAccount.getId()) {
 				mPay.setPayType("VBANK");
-//				btnPay.setText("전화로 문의하기");
-//				tvPaymentInformation
-//				.setText("계좌정보: 206037-04-005094 | 국민은행 | (주)데일리");
+				//				btnPay.setText("전화로 문의하기");
+				//				tvPaymentInformation
+				//				.setText("계좌정보: 206037-04-005094 | 국민은행 | (주)데일리");
 
 			} else if (checkedId == rbPaymentCard.getId()) {
 				mPay.setPayType(null);
-//				btnPay.setText("결제하기");
-//				tvPaymentInformation.setText("당일 예약 특성 상 취소 및 환불이 불가합니다.");
+				//				btnPay.setText("결제하기");
+				//				tvPaymentInformation.setText("당일 예약 특성 상 취소 및 환불이 불가합니다.");
 			}
 			btnPay.setText("결제하기");
 			tvPaymentInformation.setText("당일 예약 특성 상 취소 및 환불이 불가합니다.");
-
 
 		}
 
@@ -565,7 +583,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 
 				String in[] = checkin.split("-");
 				tvCheckIn.setText("20" + in[0] + "년 " + in[1] + "월 " + in[2] + "일 " + in[3] + "시");
-				
+
 				String out[] = checkout.split("-");
 				tvCheckOut.setText("20" + out[0] + "년 " + out[1] + "월 " + out[2] + "일 " + out[3] + "시");
 
@@ -573,18 +591,15 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 			} catch (Exception e) {
 				onError(e);
 			}
-		} else if (url.contains(URL_WEBAPI_USER_LOGIN)) { // INVALID_SESSION 오류의
-			// 경우 재로그인 후 다시시도한다
+		} else if (url.contains(URL_WEBAPI_USER_LOGIN)) {
 			try {
 				if (response.getBoolean("login")) {
 					unLockUI();
 					VolleyHttpClient.createCookie();
-					moveToPayStep();
-
-				} else {
-					// 실패 시 재시도
-					moveToLoginProcess();
-
+					mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(
+							URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_TIME)
+							.toString(), null, BookingActivity.this,
+							BookingActivity.this));
 				}
 			} catch (JSONException e) {
 				onError(e);
@@ -694,6 +709,43 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 					URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_SALE_TIME)
 					.toString(), null, BookingActivity.this,
 					this));
+		} else if(url.contains(URL_WEBAPI_USER_ALIVE)) {
+			android.util.Log.e("USER_ALIVE / CALL_RESOURCE",response.toString()+" / "+mAliveCallSource);
+			unLockUI();
+			if (response.equals("alive")) {
+				if (mAliveCallSource.equals("PAYMENT")) {
+					mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(
+							URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_TIME)
+							.toString(), null, BookingActivity.this,
+							BookingActivity.this));
+				} else if(mAliveCallSource.equals("ACTIVITY_RESULT")) {
+					activityResulted(mReqCode, mResCode, mResIntent);	
+				}
+
+			} else {
+				if (sharedPreference.getBoolean(
+						KEY_PREFERENCE_AUTO_LOGIN, false)) {
+					String id = sharedPreference.getString(
+							KEY_PREFERENCE_USER_ID, null);
+					String accessToken = sharedPreference
+							.getString(KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
+					String pw = sharedPreference.getString(
+							KEY_PREFERENCE_USER_PWD, null);
+
+					Map<String, String> loginParams = new HashMap<String, String>();
+
+					if (accessToken != null) loginParams.put("accessToken",accessToken);
+					else loginParams.put("email", id);
+
+					loginParams.put("pw", pw);
+
+					mQueue.add(new DailyHotelJsonRequest(Method.POST,
+							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+									URL_WEBAPI_USER_LOGIN).toString(),
+									loginParams, BookingActivity.this,
+									BookingActivity.this));
+				}
+			}
 		}
 
 	}
@@ -703,7 +755,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		super.onStart();
 		DailyHotel.getGaTracker().send(MapBuilder.createAppView().build());
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.payment_wait_actions, menu);

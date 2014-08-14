@@ -6,7 +6,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.ui.WebViewActivity;
 
 public class AboutActivity extends WebViewActivity {
-	
 	private static final String TAG = "AboutActivity";
 	
 	@Override
@@ -14,7 +13,6 @@ public class AboutActivity extends WebViewActivity {
 		super.onCreate(savedInstanceState);
 		setActionBar(R.string.actionbar_title_about_activity);
 		setContentView(R.layout.activity_about);
-		
 	}
 
 	@Override
