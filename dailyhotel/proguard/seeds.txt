@@ -6483,6 +6483,7 @@ com.twoheart.dailyhotel.R$id: int indicator
 com.twoheart.dailyhotel.R$id: int inside
 com.twoheart.dailyhotel.R$id: int intro_indicator
 com.twoheart.dailyhotel.R$id: int intro_pager
+com.twoheart.dailyhotel.R$id: int iv_account_complete_dialog_close
 com.twoheart.dailyhotel.R$id: int iv_booking_empty
 com.twoheart.dailyhotel.R$id: int iv_code_icon
 com.twoheart.dailyhotel.R$id: int iv_credit_icon
@@ -6577,6 +6578,7 @@ com.twoheart.dailyhotel.R$id: int title
 com.twoheart.dailyhotel.R$id: int top
 com.twoheart.dailyhotel.R$id: int top_action_bar
 com.twoheart.dailyhotel.R$id: int triangle
+com.twoheart.dailyhotel.R$id: int tv_account_complete_dialog_msg
 com.twoheart.dailyhotel.R$id: int tv_board_content
 com.twoheart.dailyhotel.R$id: int tv_board_regdate
 com.twoheart.dailyhotel.R$id: int tv_board_subject
@@ -6703,6 +6705,7 @@ com.twoheart.dailyhotel.R$layout: int abc_search_dropdown_item_icons_2line
 com.twoheart.dailyhotel.R$layout: int abc_search_view
 com.twoheart.dailyhotel.R$layout: int abc_simple_decor
 com.twoheart.dailyhotel.R$layout: int activity_about
+com.twoheart.dailyhotel.R$layout: int activity_account_complete_dialog
 com.twoheart.dailyhotel.R$layout: int activity_board
 com.twoheart.dailyhotel.R$layout: int activity_booking
 com.twoheart.dailyhotel.R$layout: int activity_booking_tab
@@ -6718,7 +6721,7 @@ com.twoheart.dailyhotel.R$layout: int activity_payment_wait
 com.twoheart.dailyhotel.R$layout: int activity_privacy
 com.twoheart.dailyhotel.R$layout: int activity_profile
 com.twoheart.dailyhotel.R$layout: int activity_push_dialog
-com.twoheart.dailyhotel.R$layout: int activity_push_dialog_gcm
+com.twoheart.dailyhotel.R$layout: int activity_push_lock_dialog_gcm
 com.twoheart.dailyhotel.R$layout: int activity_signup
 com.twoheart.dailyhotel.R$layout: int activity_splash
 com.twoheart.dailyhotel.R$layout: int activity_term
@@ -7369,6 +7372,9 @@ com.twoheart.dailyhotel.R$styleable: int com_facebook_profile_picture_view_is_cr
 com.twoheart.dailyhotel.R$styleable: int com_facebook_profile_picture_view_preset_size
 com.twoheart.dailyhotel.activity.AboutActivity
 com.twoheart.dailyhotel.activity.AboutActivity: AboutActivity()
+com.twoheart.dailyhotel.activity.AccountCompleteDialogActivity
+com.twoheart.dailyhotel.activity.AccountCompleteDialogActivity: AccountCompleteDialogActivity()
+com.twoheart.dailyhotel.activity.AccountCompleteDialogActivity: void onClick(android.view.View)
 com.twoheart.dailyhotel.activity.BookingActivity
 com.twoheart.dailyhotel.activity.BookingActivity: BookingActivity()
 com.twoheart.dailyhotel.activity.BookingActivity: void onClick(android.view.View)
@@ -7382,9 +7388,9 @@ com.twoheart.dailyhotel.activity.FAQActivity: FAQActivity()
 com.twoheart.dailyhotel.activity.ForgotPwdActivity
 com.twoheart.dailyhotel.activity.ForgotPwdActivity: ForgotPwdActivity()
 com.twoheart.dailyhotel.activity.ForgotPwdActivity: void onClick(android.view.View)
-com.twoheart.dailyhotel.activity.GcmDialogActivity
-com.twoheart.dailyhotel.activity.GcmDialogActivity: GcmDialogActivity()
-com.twoheart.dailyhotel.activity.GcmDialogActivity: void onClick(android.view.View)
+com.twoheart.dailyhotel.activity.GcmLockDialogActivity
+com.twoheart.dailyhotel.activity.GcmLockDialogActivity: GcmLockDialogActivity()
+com.twoheart.dailyhotel.activity.GcmLockDialogActivity: void onClick(android.view.View)
 com.twoheart.dailyhotel.activity.HotelTabActivity
 com.twoheart.dailyhotel.activity.HotelTabActivity: HotelTabActivity()
 com.twoheart.dailyhotel.activity.HotelTabActivity: void onClick(android.view.View)

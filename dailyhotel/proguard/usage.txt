@@ -5613,15 +5613,15 @@ com.twoheart.dailyhotel.MainActivity:
     public static final java.lang.String KEY_CREDIT_FRAGMENT
     public static final java.lang.String KEY_SEETING_FRAGMENT
     private static final java.lang.String TAG_FRAGMENT_RATING_HOTEL
-    499:501:public void removeFragment(android.support.v4.app.Fragment)
-    508:519:public void printPackageHashKey()
+    498:500:public void removeFragment(android.support.v4.app.Fragment)
+    507:518:public void printPackageHashKey()
 com.twoheart.dailyhotel.MainActivity$DrawerMenu:
     public static final int DRAWER_MENU_LIST_TYPE_LOGO
     public static final int DRAWER_MENU_LIST_TYPE_SECTION
     public static final int DRAWER_MENU_LIST_TYPE_ENTRY
-    690:691:public void setType(int)
-    698:699:public void setTitle(java.lang.String)
-    706:707:public void setIcon(int)
+    689:690:public void setType(int)
+    697:698:public void setTitle(java.lang.String)
+    705:706:public void setIcon(int)
 com.twoheart.dailyhotel.Manifest
 com.twoheart.dailyhotel.Manifest$permission
 com.twoheart.dailyhotel.R:
@@ -5639,7 +5639,7 @@ com.twoheart.dailyhotel.R$menu
 com.twoheart.dailyhotel.R$string
 com.twoheart.dailyhotel.R$style
 com.twoheart.dailyhotel.R$styleable:
-    3323:3323:public R$styleable()
+    3326:3326:public R$styleable()
 com.twoheart.dailyhotel.WaitTimerFragment:
     private static final java.lang.String TAG
     private static final java.lang.String KEY_BUNDLE_ARGUMENTS_SALETIME
@@ -5850,6 +5850,7 @@ com.twoheart.dailyhotel.util.Constants:
     public static final int CODE_RESULT_ACTIVITY_PAYMENT_CANCELED
     public static final int CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY
     public static final int CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_TIME_ERROR
+    public static final int CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_DUPLICATE
     public static final int CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT
     public static final int CODE_PAY_TYPE_CARD_COMPLETE
     public static final int CODE_PAY_TYPE_ACCOUNT_WAIT
@@ -5896,7 +5897,7 @@ com.twoheart.dailyhotel.util.network.request.DailyHotelRequest:
 com.twoheart.dailyhotel.util.ui.AllCapsTransformationMethod
 com.twoheart.dailyhotel.util.ui.BaseActivity:
     private static final java.lang.String TAG
-    302:303:protected void chgClickable(android.view.View)
+    301:301:protected void chgClickable(android.view.View)
 com.twoheart.dailyhotel.util.ui.HotelListViewItem:
     public static final int TYPE_SECTION
     public static final int TYPE_ENTRY

@@ -14660,7 +14660,7 @@ com.twoheart.dailyhotel.GcmIntentService -> com.twoheart.dailyhotel.GcmIntentSer
     android.app.NotificationManager mNotificationManager -> a
     void onHandleIntent(android.content.Intent) -> onHandleIntent
     boolean isScreenOn(android.content.Context) -> a
-    void sendNotification(java.lang.String) -> a
+    void sendNotification(java.lang.String,java.lang.String) -> a
 com.twoheart.dailyhotel.HotelListFragment -> com.twoheart.dailyhotel.g:
     com.twoheart.dailyhotel.widget.PinnedSectionListView mHotelListView -> a
     uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout mPullToRefreshLayout -> k
@@ -15104,6 +15104,11 @@ com.twoheart.dailyhotel.WaitTimerFragment$1 -> com.twoheart.dailyhotel.t:
 com.twoheart.dailyhotel.activity.AboutActivity -> com.twoheart.dailyhotel.activity.AboutActivity:
     void onCreate(android.os.Bundle) -> onCreate
     void onResume() -> onResume
+com.twoheart.dailyhotel.activity.AccountCompleteDialogActivity -> com.twoheart.dailyhotel.activity.AccountCompleteDialogActivity:
+    android.widget.TextView tvMsg -> a
+    android.widget.ImageView btnClose -> b
+    void onCreate(android.os.Bundle) -> onCreate
+    void onClick(android.view.View) -> onClick
 com.twoheart.dailyhotel.activity.BookingActivity -> com.twoheart.dailyhotel.activity.BookingActivity:
     android.widget.ScrollView svBooking -> o
     android.widget.TextView tvCheckIn -> p
@@ -15210,7 +15215,7 @@ com.twoheart.dailyhotel.activity.ForgotPwdActivity$1 -> com.twoheart.dailyhotel.
 com.twoheart.dailyhotel.activity.ForgotPwdActivity$2 -> com.twoheart.dailyhotel.activity.j:
     com.twoheart.dailyhotel.activity.ForgotPwdActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.twoheart.dailyhotel.activity.GcmDialogActivity -> com.twoheart.dailyhotel.activity.GcmDialogActivity:
+com.twoheart.dailyhotel.activity.GcmLockDialogActivity -> com.twoheart.dailyhotel.activity.GcmLockDialogActivity:
     android.widget.Button btnOkButton -> a
     android.widget.Button btnCancelButton -> h
     android.widget.TextView tvMsg -> i
