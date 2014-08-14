@@ -44,6 +44,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import com.facebook.widget.WebDialog.FeedDialogBuilder;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Pay;
 import com.twoheart.dailyhotel.util.Constants;
@@ -139,6 +140,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			.append(mPay.getCredit().getBonus()).toString();
 		}
 		
+		android.util.Log.e("POST_URL",url);
 		webView.postUrl(url,
 				parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]),
 						postParameterValue.toArray(new String[postParameterValue.size()])));
@@ -201,6 +203,18 @@ public class PaymentActivity extends BaseActivity implements Constants {
 	private boolean url_scheme_intent(WebView view, String url) {
 		Log.d(ResultRcvActivity.m_strLogTag,
 				"[PayDemoActivity] called__test - url=[" + url + "]");
+
+//		android.util.Log.e("SHOULD_OVERRIDE",url+"");
+		
+//		if (url.contains("ACCOUNT_DUPLICATE")) 
+//		FeedDialogBuilder
+//		else resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
+//		
+//		Intent payData = new Intent();
+//		payData.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
+//
+//		setResult(resultCode, payData);
+//		finish();
 
 		// chrome 버젼 방식 : 2014.01 추가
 		if (url.startsWith("intent")) {
@@ -837,6 +851,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		@JavascriptInterface
 		public void feed(final String msg) {
 			int resultCode = 0;
+			android.util.Log.e("FEED",msg);
 
 			if (msg.equals("SUCCESS")) resultCode = CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS;
 			else if (msg.equals("INVALID_SESSION")) resultCode = CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION;
@@ -847,6 +862,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			else if (msg.equals("ACCOUNT_READY")) resultCode = CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY;
 			else if (msg.equals("ACCOUNT_TIME_ERROR")) resultCode = CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_TIME_ERROR;
 			else if (msg.equals("ACCOUNT_DUPLICATE")) resultCode = CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_DUPLICATE;
+			else if (msg.equals("NOT_AVAILABLE")) resultCode = CODE_RESULT_ACTIVITY_PAYMENT_NOT_AVAILABLE;
 			else resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
 			
 			Intent payData = new Intent();

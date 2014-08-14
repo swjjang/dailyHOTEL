@@ -24,6 +24,8 @@ import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -699,7 +701,28 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 	@Override
 	protected void onStart() {
 		super.onStart();
-
 		DailyHotel.getGaTracker().send(MapBuilder.createAppView().build());
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.payment_wait_actions, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch(item.getItemId()){
+		case R.id.action_call:
+			Intent i = new Intent(
+					Intent.ACTION_DIAL,
+					Uri.parse(new StringBuilder("tel:")
+					.append(PHONE_NUMBER_DAILYHOTEL)
+					.toString()));
+			startActivity(i);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 }

@@ -1,48 +1,23 @@
 package com.twoheart.dailyhotel.activity;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.format.Time;
-import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.fragment.BookingTabBookingFragment;
 import com.twoheart.dailyhotel.model.Booking;
-import com.twoheart.dailyhotel.model.Hotel;
-import com.twoheart.dailyhotel.model.HotelDetail;
-import com.twoheart.dailyhotel.util.GlobalFont;
-import com.twoheart.dailyhotel.util.Log;
-import com.twoheart.dailyhotel.util.TabActivity;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
-import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
-import com.twoheart.dailyhotel.widget.HotelViewPager;
-import com.viewpagerindicator.TabPageIndicator;
 
 public class PaymentWaitActivity extends BaseActivity implements DailyHotelJsonResponseListener {
 
@@ -142,8 +117,6 @@ public class PaymentWaitActivity extends BaseActivity implements DailyHotelJsonR
 		default:
 			return super.onOptionsItemSelected(item);
 		}
-
-
 	}
 
 }
