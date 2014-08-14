@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.activity;
 
 import java.text.DecimalFormat;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,7 +13,6 @@ import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
@@ -45,7 +43,6 @@ import android.widget.Toast;
 import com.android.volley.Request.Method;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
-import com.twoheart.dailyhotel.BookingListFragment;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Credit;
@@ -83,7 +80,6 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 	private EditText etReserverName, etReserverNumber, etReserverEmail;
 	private RadioGroup rgPaymentMethod;
 	private RadioButton rbPaymentAccount, rbPaymentCard;
-	private TextView tvPaymentInformation;
 
 	private Pay mPay;
 
@@ -135,7 +131,6 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		rbPaymentAccount = (RadioButton) findViewById(R.id.rb_payment_account);
 		rbPaymentCard = (RadioButton) findViewById(R.id.rb_payment_card);
 
-		tvPaymentInformation = (TextView) findViewById(R.id.tv_payment_information);
 
 		rbPaymentAccount.setOnClickListener(this);
 		rbPaymentCard.setOnClickListener(this);
@@ -473,23 +468,9 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 	@Override
 	public void onCheckedChanged(RadioGroup group, int checkedId) {
 		if (group.getId() == rgPaymentMethod.getId()) {
-
-			if (checkedId == rbPaymentAccount.getId()) {
-				mPay.setPayType("VBANK");
-				//				btnPay.setText("전화로 문의하기");
-				//				tvPaymentInformation
-				//				.setText("계좌정보: 206037-04-005094 | 국민은행 | (주)데일리");
-
-			} else if (checkedId == rbPaymentCard.getId()) {
-				mPay.setPayType(null);
-				//				btnPay.setText("결제하기");
-				//				tvPaymentInformation.setText("당일 예약 특성 상 취소 및 환불이 불가합니다.");
-			}
-			btnPay.setText("결제하기");
-			tvPaymentInformation.setText("당일 예약 특성 상 취소 및 환불이 불가합니다.");
-
+			if (checkedId == rbPaymentAccount.getId()) mPay.setPayType("VBANK");
+			else if (checkedId == rbPaymentCard.getId()) mPay.setPayType(null);
 		}
-
 	}
 
 	@Override
