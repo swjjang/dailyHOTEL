@@ -315,16 +315,27 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		android.util.Log.e("Sale credit / Pay Price ",mPay.isSaleCredit()+" / "+mPay.getPayPrice());
 		
 		if (mPay.isSaleCredit() && mPay.getPayPrice() == 0) {
+			Map<String, String> bonusParams = new HashMap<String, String>();
+			bonusParams.put("saleIdx", mPay.getHotelDetail().getSaleIdx()+"");
+			bonusParams.put("email", mPay.getCustomer().getEmail());
+			bonusParams.put("name", mPay.getCustomer().getName());
+			bonusParams.put("phone", mPay.getCustomer().getPhone());
+			bonusParams.put("accessToken", mPay.getCustomer().getAccessToken());
 			
+			lockUI();
+			mQueue.add(new DailyHotelJsonRequest(Method.POST,
+					new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+							URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT).append("/").
+							append(mPay.getHotelDetail().getSaleIdx()).toString(),
+							bonusParams, this, this));
+		} else {
+			Intent intent = new Intent(this, PaymentActivity.class);
+			intent.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
+	
+			startActivityForResult(intent,
+					CODE_REQUEST_ACTIVITY_PAYMENT);
+			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 		}
-		
-		
-		Intent intent = new Intent(this, PaymentActivity.class);
-		intent.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
-
-		startActivityForResult(intent,
-				CODE_REQUEST_ACTIVITY_PAYMENT);
-		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
 	}
 
@@ -661,6 +672,30 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				onError(e);
 			}
 
+		} else if (url.contains(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)) {
+			android.util.Log.e("DISCOUNT",response.toString());
+			unLockUI();
+			try {
+				if (response.getString("msg").equals("true")) {
+					AlertDialog.Builder alert = new AlertDialog.Builder(
+							BookingActivity.this);
+					alert.setTitle("결제알림");
+					alert.setPositiveButton("확인",
+							new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog,
+								int which) {
+							dialog.dismiss(); // 닫기
+							setResult(RESULT_OK);
+							finish();
+						}
+					});
+					alert.setMessage("결제가 정상적으로 이루어졌습니다");
+					alert.show();
+				}
+			} catch (JSONException e) {
+				onError(e);
+			}
 		}
 	}
 

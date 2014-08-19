@@ -247,6 +247,13 @@ public class HotelListFragment extends BaseFragment implements Constants,
 				((MainActivity) mHostActivity).selectMenuDrawer(((MainActivity) mHostActivity).menuBookingListFragment);
 			} else if (resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY) {
 				((MainActivity) mHostActivity).selectMenuDrawer(((MainActivity) mHostActivity).menuBookingListFragment);
+			} else {
+				
+				lockUI();
+				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(
+						URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_TIME)
+						.toString(), null, HotelListFragment.this,
+						mHostActivity));
 			}
 			
 		} 
@@ -267,6 +274,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 	 * @param position
 	 */
 	private void fetchHotelList(int position) {
+		android.util.Log.e("FETCHHOTEL LIST",position +"");
 		((MainActivity) mHostActivity).drawerLayout.closeDrawer(((MainActivity) mHostActivity).drawerList);
 
 		String selectedRegion = mRegionList.get(position);
@@ -488,7 +496,8 @@ public class HotelListFragment extends BaseFragment implements Constants,
 				mHostActivity.actionBar
 						.setSelectedNavigationItem(mHostActivity.sharedPreference
 								.getInt(KEY_PREFERENCE_REGION_INDEX, 0));
-
+				// 호텔 리프레시
+				fetchHotelList(mHostActivity.actionBar.getSelectedNavigationIndex());
 			} catch (Exception e) {
 				onError(e);
 			}
