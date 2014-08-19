@@ -496,7 +496,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 	public void onCheckedChanged(RadioGroup group, int checkedId) {
 		if (group.getId() == rgPaymentMethod.getId()) {
 			if (checkedId == rbPaymentAccount.getId()) mPay.setPayType("VBANK");
-			else if (checkedId == rbPaymentCard.getId()) mPay.setPayType(null);
+			else if (checkedId == rbPaymentCard.getId()) mPay.setPayType("CARD");
 		}
 	}
 

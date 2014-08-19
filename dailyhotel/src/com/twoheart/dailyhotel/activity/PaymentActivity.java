@@ -93,7 +93,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		// 기능
 		// 추가
 		webView.addJavascriptInterface(new JavaScriptExtention(), "android");
-		
+
 		webView.addJavascriptInterface(new TeleditBridge(), "TeleditApp");
 
 		webView.setWebChromeClient(new mWebChromeClient());
@@ -111,49 +111,67 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			finish();
 		}
 
-		String userAccessToken = mPay.getCustomer().getAccessToken();
-
-		ArrayList<String> postParameterKey = new ArrayList<String>(Arrays.asList("email", "name", "phone"));
-		ArrayList<String> postParameterValue = new ArrayList<String>(Arrays.asList(mPay.getCustomer().getEmail(),
-				mPay.getCustomer().getName(),
-				mPay.getCustomer().getPhone()));
+//		String userAccessToken = mPay.getCustomer().getAccessToken();
+//
 		
-		if (mPay.getPayType() != null) {
-			postParameterKey.add("payType");
-			postParameterValue.add(mPay.getPayType());
-		}
-		
+//
+//		if (mPay.getPayType() != null) {
+//			postParameterKey.add("payType");
+//			postParameterValue.add(mPay.getPayType());
+//		}
+//
+//
+//		if ((userAccessToken != null)) {
+//			if ((userAccessToken.equals("")) || !(userAccessToken.equals("null"))) {
+//				postParameterKey.add("accessToken");
+//				postParameterValue.add(userAccessToken);
+//			}
+//		}
 
-		if ((userAccessToken != null)) {
-			if ((userAccessToken.equals("")) || !(userAccessToken.equals("null"))) {
-				postParameterKey.add("accessToken");
-				postParameterValue.add(userAccessToken);
-			}
-		}
+		// 기존 포스트 API
+		//		String url = new StringBuilder(URL_DAILYHOTEL_SERVER)
+		//		.append(URL_WEBAPI_RESERVE_PAYMENT)
+		//		.append("/").append(mPay.getPayType())
+		//		.append(mPay.getHotelDetail().getSaleIdx()).toString();
+
 
 		String url = new StringBuilder(URL_DAILYHOTEL_SERVER)
 		.append(URL_WEBAPI_RESERVE_PAYMENT)
-		.append(mPay.getHotelDetail().getSaleIdx()).toString();
+		.append(mPay.getPayType()).append("/")
+		.append(mPay.getHotelDetail().getSaleIdx())
+		.toString();
 
-		if (mPay.isSaleCredit()) {
-			// 적립금으로만 결제하기
-			if (mPay.getPayPrice() == 0) {
-				url = new StringBuilder(URL_DAILYHOTEL_SERVER)
-				.append(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)
-				.append(mPay.getHotelDetail().getSaleIdx()).toString();
-			} else {
-				url = new StringBuilder(URL_DAILYHOTEL_SERVER)
-				.append(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)
-				.append(mPay.getHotelDetail().getSaleIdx()).append("/")
-				.append(mPay.getCredit().getBonus()).toString();
-			}
+		if (mPay.getPayPrice() == 0) {
+			// 적립금으로만 결제하기 포스트
+			url = new StringBuilder(URL_DAILYHOTEL_SERVER)
+			.append(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)
+			.append(mPay.getHotelDetail().getSaleIdx()).toString();
+			
+			ArrayList<String> postParameterKey = new ArrayList<String>(Arrays.asList("saleIdx", "email", "name", "phone","accessToken"));
+			ArrayList<String> postParameterValue = new ArrayList<String>(Arrays.asList(mPay.getHotelDetail().getSaleIdx()+"",
+					mPay.getCustomer().getEmail(),
+					mPay.getCustomer().getName(),
+					mPay.getCustomer().getPhone(),
+					mPay.getCustomer().getAccessToken()
+					));
+			
+			webView.postUrl(url,
+			parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]),
+					postParameterValue.toArray(new String[postParameterValue.size()])));
+			return;
+		} else if (mPay.isSaleCredit()) {
+			url = new StringBuilder(URL_DAILYHOTEL_SERVER)
+			.append(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)
+			.append(mPay.getHotelDetail().getSaleIdx()).append("/")
+			.append(mPay.getCredit().getBonus()).toString();
 		}
-		
-		android.util.Log.e("POST_URL",url);
-		
-		webView.postUrl(url,
-				parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]),
-						postParameterValue.toArray(new String[postParameterValue.size()])));
+
+		android.util.Log.e("GET_URL",url);
+		webView.loadUrl(url);
+
+//		webView.postUrl(url,
+//				parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]),
+//						postParameterValue.toArray(new String[postParameterValue.size()])));
 
 	}
 
@@ -214,17 +232,17 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		Log.d(ResultRcvActivity.m_strLogTag,
 				"[PayDemoActivity] called__test - url=[" + url + "]");
 
-//		android.util.Log.e("SHOULD_OVERRIDE",url+"");
-		
-//		if (url.contains("ACCOUNT_DUPLICATE")) 
-//		FeedDialogBuilder
-//		else resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
-//		
-//		Intent payData = new Intent();
-//		payData.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
-//
-//		setResult(resultCode, payData);
-//		finish();
+		//		android.util.Log.e("SHOULD_OVERRIDE",url+"");
+
+		//		if (url.contains("ACCOUNT_DUPLICATE")) 
+		//		FeedDialogBuilder
+		//		else resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
+		//		
+		//		Intent payData = new Intent();
+		//		payData.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
+		//
+		//		setResult(resultCode, payData);
+		//		finish();
 
 		// chrome 버젼 방식 : 2014.01 추가
 		if (url.startsWith("intent")) {
@@ -329,22 +347,22 @@ public class PaymentActivity extends BaseActivity implements Constants {
 
 					return true;
 				}
-			/*  else if ( url.startsWith( "paypin" ) ) { if(
-			 * !new PackageState( this ).getPackageDownloadInstallState(
-			 * "com.skp.android.paypin" ) ) { if( !url_scheme_intent(
-			 * "tstore://PRODUCT_VIEW/0000284061/0" ) ) { url_scheme_intent(
-			 * "market://details?id=com.skp.android.paypin&feature=search_result#?t=W251bGwsMSwxLDEsImNvbS5za3AuYW5kcm9pZC5wYXlwaW4iXQ.k"
-			 * ); }
-			 * 
-			 * return true; } }
-			 */
+				/*  else if ( url.startsWith( "paypin" ) ) { if(
+				 * !new PackageState( this ).getPackageDownloadInstallState(
+				 * "com.skp.android.paypin" ) ) { if( !url_scheme_intent(
+				 * "tstore://PRODUCT_VIEW/0000284061/0" ) ) { url_scheme_intent(
+				 * "market://details?id=com.skp.android.paypin&feature=search_result#?t=W251bGwsMSwxLDEsImNvbS5za3AuYW5kcm9pZC5wYXlwaW4iXQ.k"
+				 * ); }
+				 * 
+				 * return true; } }
+				 */
 			} 
-			
+
 			// 결제 모듈 실행.
 			try {
 				Uri uri = Uri.parse(url);
 				Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-				
+
 				int requestCode = 0;
 				if (url.startsWith("kftc-bankpay")) {
 					requestCode = CODE_REQUEST_KFTC_BANKPAY;
@@ -481,7 +499,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			setResult(CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE);
 			finish();
 		}
-		
+
 		/**
 		 * web에서 닫기를 콜 했을때 호출.
 		 */
@@ -875,7 +893,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			else if (msg.equals("NOT_AVAILABLE")) resultCode = CODE_RESULT_ACTIVITY_PAYMENT_NOT_AVAILABLE;
 			else if (msg.equals("PAYMENT_TIMEOVER")) resultCode = CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER;
 			else resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
-			
+
 			Intent payData = new Intent();
 			payData.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
 
