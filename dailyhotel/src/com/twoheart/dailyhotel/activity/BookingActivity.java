@@ -172,7 +172,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 			int payPrice = originalPrice - credit;
 			payPrice = payPrice < 0 ? 0 : payPrice;
 			mPay.setPayPrice(payPrice);
-			
+
 		}
 		else mPay.setPayPrice(originalPrice);
 
@@ -196,21 +196,48 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 	@Override
 	public void onClick(final View v) {
 		if (v.getId() == btnPay.getId()) {
-
-			v.setClickable(false);
-			v.setEnabled(false);
-
+//
 			Dialog dialog = null; 
 
-			if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentAccount
-					.getId()) { // 무통장 입금을 선택했을 경우
+			if (llReserverInfoEditable.getVisibility() == View.VISIBLE) {
+				Customer buyer = new Customer();
+				buyer.setEmail(etReserverEmail.getText().toString());
+				buyer.setPhone(etReserverNumber.getText().toString());
+				buyer.setName(etReserverName.getText().toString());
 
-				dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_ACCOUNT);
-			} else if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentCard
-					.getId()) { // 신용카드를 선택했을 경우
+				if (isEmptyTextField(new String[] {
+						buyer.getEmail(),
+						buyer.getPhone(),
+						buyer.getName() })) {
+					showToast(getString(R.string.toast_msg_please_input_booking_user_infos), Toast.LENGTH_LONG, true);
+					return;
+				} else {
+					Map<String, String> updateParams =new HashMap<String, String>();
+					updateParams.put("user_email", buyer.getEmail());
+					updateParams.put("user_name", buyer.getName());
+					updateParams.put("user_phone", buyer.getPhone());
+							
+					lockUI();
+					mQueue.add(new DailyHotelJsonRequest(Method.POST,
+					new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+							URL_WEBAPI_USER_UPDATE_FACEBOOK).toString(),
+							updateParams, this, this));
+					return;
+				}
 
-				dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_CARD);
+			} else {
+				if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentAccount
+						.getId()) { // 무통장 입금을 선택했을 경우
+
+					dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_ACCOUNT);
+				} else if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentCard
+						.getId()) { // 신용카드를 선택했을 경우
+
+					dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_CARD);
+				}
+
 			}
+
 
 			dialog.setOnDismissListener(new OnDismissListener() {
 				@Override
@@ -318,29 +345,29 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 	private void moveToPayStep() {
 
 		android.util.Log.e("Sale credit / Pay Price ",mPay.isSaleCredit()+" / "+mPay.getPayPrice());
-		
-//		if (mPay.isSaleCredit() && mPay.getPayPrice() <= 0) {
-//			Map<String, String> bonusParams = new HashMap<String, String>();
-//			bonusParams.put("saleIdx", mPay.getHotelDetail().getSaleIdx()+"");
-//			bonusParams.put("email", mPay.getCustomer().getEmail());
-//			bonusParams.put("name", mPay.getCustomer().getName());
-//			bonusParams.put("phone", mPay.getCustomer().getPhone());
-//			bonusParams.put("accessToken", mPay.getCustomer().getAccessToken());
-//			
-//			lockUI();
-//			mQueue.add(new DailyHotelJsonRequest(Method.POST,
-//					new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-//							URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT).append("/").
-//							append(mPay.getHotelDetail().getSaleIdx()).toString(),
-//							bonusParams, this, this));
-//		} else {
-			Intent intent = new Intent(this, PaymentActivity.class);
-			intent.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
-	
-			startActivityForResult(intent,
-					CODE_REQUEST_ACTIVITY_PAYMENT);
-			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-//		}
+
+		//		if (mPay.isSaleCredit() && mPay.getPayPrice() <= 0) {
+		//			Map<String, String> bonusParams = new HashMap<String, String>();
+		//			bonusParams.put("saleIdx", mPay.getHotelDetail().getSaleIdx()+"");
+		//			bonusParams.put("email", mPay.getCustomer().getEmail());
+		//			bonusParams.put("name", mPay.getCustomer().getName());
+		//			bonusParams.put("phone", mPay.getCustomer().getPhone());
+		//			bonusParams.put("accessToken", mPay.getCustomer().getAccessToken());
+		//			
+		//			lockUI();
+		//			mQueue.add(new DailyHotelJsonRequest(Method.POST,
+		//					new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+		//							URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT).append("/").
+		//							append(mPay.getHotelDetail().getSaleIdx()).toString(),
+		//							bonusParams, this, this));
+		//		} else {
+		Intent intent = new Intent(this, PaymentActivity.class);
+		intent.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
+
+		startActivityForResult(intent,
+				CODE_REQUEST_ACTIVITY_PAYMENT);
+		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+		//		}
 
 	}
 
@@ -626,24 +653,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				if( saleTime.isSaleTime() ) {
 
 					Customer buyer = mPay.getCustomer();
-
-					if (llReserverInfoEditable.getVisibility() == View.VISIBLE) {
-
-						buyer.setEmail(etReserverEmail.getText().toString());
-						buyer.setPhone(etReserverNumber.getText().toString());
-						buyer.setName(etReserverName.getText().toString());
-
-						if (isEmptyTextField(new String[] {
-								buyer.getEmail(),
-								buyer.getPhone(),
-								buyer.getName() })) {
-
-							showToast(getString(R.string.toast_msg_please_input_booking_user_infos), Toast.LENGTH_LONG, true);
-
-							return;
-						}
-
-					} else if (llReserverInfoLabel.getVisibility() == View.VISIBLE) {
+					if (llReserverInfoLabel.getVisibility() == View.VISIBLE) {
 
 						buyer.setEmail(tvReserverEmail.getText().toString());
 						buyer.setPhone(tvReserverNumber.getText().toString());
@@ -680,6 +690,28 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				onError(e);
 			}
 
+		} else if (url.contains(URL_WEBAPI_USER_UPDATE_FACEBOOK)) {
+			android.util.Log.e("UPDATE_FACEBOOK_RESULT",response.toString());
+			unLockUI();
+			try {
+				if(!response.getBoolean("result")) {
+					showToast(response.getString("message"), Toast.LENGTH_LONG, false);
+				} else {
+					llReserverInfoLabel.setVisibility(View.VISIBLE);
+					llReserverInfoEditable.setVisibility(View.GONE);
+					etReserverName.setVisibility(View.GONE);
+					etReserverNumber.setVisibility(View.GONE);
+					etReserverEmail.setVisibility(View.GONE);
+
+					tvReserverName.setText(etReserverName.getText().toString());
+					tvReserverNumber.setText(etReserverNumber.getText().toString());
+					tvReserverEmail.setText(etReserverEmail.getText().toString());
+					
+					btnPay.performClick();
+				}
+			} catch (JSONException e) {
+				onError(e);
+			}
 		}
 	}
 

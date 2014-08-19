@@ -64,6 +64,7 @@ public interface Constants {
 	public static final String URL_WEBAPI_USER_BONUS_ALL = "user/session/bonus/all";
 	public static final String URL_WEBAPI_USER_BONUS_VAILD = "user/session/bonus/vaild";
 	public static final String URL_WEBAPI_USER_LOGIN_FACEBOOK = "user/login/sns/facebook";
+	public static final String URL_WEBAPI_USER_UPDATE_FACEBOOK = "user/session/facebook/update";
 	public static final String URL_WEBAPI_USER_SIGNUP = "user/join";
 	public static final String URL_WEBAPI_USER_ALIVE = "user/alive";
 	public static final String URL_WEBAPI_USER_FORGOTPWD = "user/sendpw/";
