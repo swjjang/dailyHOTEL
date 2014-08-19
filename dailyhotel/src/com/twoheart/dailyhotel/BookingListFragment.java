@@ -37,10 +37,10 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import com.android.volley.Request.Method;
-import com.facebook.LoginActivity;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.twoheart.dailyhotel.activity.BookingTabActivity;
+import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.activity.PaymentWaitActivity;
 import com.twoheart.dailyhotel.activity.SignupActivity;
 import com.twoheart.dailyhotel.adapter.BookingListAdapter;
@@ -110,8 +110,6 @@ DailyHotelStringResponseListener {
 		if (v.getId() == btnLogin.getId()) {
 			android.util.Log.e("BtnLogin","true");
 			Intent i = new Intent(mHostActivity, LoginActivity.class);
-			startActivityForResult(i, CODE_REQUEST_ACTIVITY_LOGIN);
-
 			startActivity(i);
 			mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 		}

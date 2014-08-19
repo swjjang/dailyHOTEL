@@ -85,6 +85,7 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
 		setActionBar(R.string.actionbar_title_login_activity);
 		setContentView(R.layout.activity_login);
 
