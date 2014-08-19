@@ -15110,30 +15110,33 @@ com.twoheart.dailyhotel.activity.AccountCompleteDialogActivity -> com.twoheart.d
     void onCreate(android.os.Bundle) -> onCreate
     void onClick(android.view.View) -> onClick
 com.twoheart.dailyhotel.activity.BookingActivity -> com.twoheart.dailyhotel.activity.BookingActivity:
-    android.widget.ScrollView svBooking -> o
-    android.widget.TextView tvCheckIn -> p
-    android.widget.TextView tvCheckOut -> q
-    android.widget.TextView tvOriginalPriceValue -> r
-    android.widget.TextView tvCreditValue -> s
-    android.widget.TextView tvOriginalPrice -> t
-    android.widget.TextView tvCredit -> u
-    android.widget.TextView tvPrice -> v
-    android.widget.Button btnPay -> w
-    com.twoheart.dailyhotel.widget.Switch swCredit -> x
-    android.widget.TextView tvReserverName -> y
-    android.widget.TextView tvReserverNumber -> z
-    android.widget.TextView tvReserverEmail -> A
-    android.widget.LinearLayout llReserverInfoLabel -> F
-    android.widget.LinearLayout llReserverInfoEditable -> G
-    android.widget.EditText etReserverName -> H
-    android.widget.EditText etReserverNumber -> I
-    android.widget.EditText etReserverEmail -> J
-    android.widget.RadioGroup rgPaymentMethod -> K
-    android.widget.RadioButton rbPaymentAccount -> L
-    android.widget.RadioButton rbPaymentCard -> M
-    android.widget.TextView tvPaymentInformation -> N
+    android.widget.ScrollView svBooking -> p
+    android.widget.TextView tvCheckIn -> q
+    android.widget.TextView tvCheckOut -> r
+    android.widget.TextView tvOriginalPriceValue -> s
+    android.widget.TextView tvCreditValue -> t
+    android.widget.TextView tvOriginalPrice -> u
+    android.widget.TextView tvCredit -> v
+    android.widget.TextView tvPrice -> w
+    android.widget.Button btnPay -> x
+    com.twoheart.dailyhotel.widget.Switch swCredit -> y
+    android.widget.TextView tvReserverName -> z
+    android.widget.TextView tvReserverNumber -> A
+    android.widget.TextView tvReserverEmail -> F
+    android.widget.LinearLayout llReserverInfoLabel -> G
+    android.widget.LinearLayout llReserverInfoEditable -> H
+    android.widget.EditText etReserverName -> I
+    android.widget.EditText etReserverNumber -> J
+    android.widget.EditText etReserverEmail -> K
+    android.widget.RadioGroup rgPaymentMethod -> L
+    android.widget.RadioButton rbPaymentAccount -> M
+    android.widget.RadioButton rbPaymentCard -> N
     com.twoheart.dailyhotel.model.Pay mPay -> O
     com.twoheart.dailyhotel.model.SaleTime saleTime -> P
+    int mReqCode -> Q
+    int mResCode -> R
+    android.content.Intent mResIntent -> S
+    java.lang.String mAliveCallSource -> o
     void onCreate(android.os.Bundle) -> onCreate
     void onResume() -> onResume
     void updatePayPrice(boolean) -> d
@@ -15142,14 +15145,16 @@ com.twoheart.dailyhotel.activity.BookingActivity -> com.twoheart.dailyhotel.acti
     android.app.Dialog getPaymentConfirmDialog(int) -> a
     boolean isEmptyTextField(java.lang.String[]) -> a
     void moveToPayStep() -> j
-    void moveToLoginProcess() -> k
     void finish() -> finish
     void onActivityResult(int,int,android.content.Intent) -> onActivityResult
+    void activityResulted(int,int,android.content.Intent) -> a
     void onCheckedChanged(android.widget.RadioGroup,int) -> onCheckedChanged
     void onCheckedChanged(android.widget.CompoundButton,boolean) -> onCheckedChanged
     void onResponse(java.lang.String,org.json.JSONObject) -> a
     void onResponse(java.lang.String,java.lang.String) -> a
     void onStart() -> onStart
+    boolean onCreateOptionsMenu(android.view.Menu) -> onCreateOptionsMenu
+    boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
     com.android.volley.RequestQueue access$0(com.twoheart.dailyhotel.activity.BookingActivity) -> a
 com.twoheart.dailyhotel.activity.BookingActivity$1 -> com.twoheart.dailyhotel.activity.a:
     com.twoheart.dailyhotel.activity.BookingActivity this$0 -> a

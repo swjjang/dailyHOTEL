@@ -311,6 +311,14 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 	}
 
 	private void moveToPayStep() {
+
+		android.util.Log.e("Sale credit / Pay Price ",mPay.isSaleCredit()+" / "+mPay.getPayPrice());
+		
+		if (mPay.isSaleCredit() && mPay.getPayPrice() == 0) {
+			
+		}
+		
+		
 		Intent intent = new Intent(this, PaymentActivity.class);
 		intent.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
 

@@ -5639,7 +5639,7 @@ com.twoheart.dailyhotel.R$menu
 com.twoheart.dailyhotel.R$string
 com.twoheart.dailyhotel.R$style
 com.twoheart.dailyhotel.R$styleable:
-    3326:3326:public R$styleable()
+    3325:3325:public R$styleable()
 com.twoheart.dailyhotel.WaitTimerFragment:
     private static final java.lang.String TAG
     private static final java.lang.String KEY_BUNDLE_ARGUMENTS_SALETIME
@@ -5649,6 +5649,7 @@ com.twoheart.dailyhotel.activity.BookingActivity:
     private static final java.lang.String TAG
     private static final int DIALOG_CONFIRM_PAYMENT_CARD
     private static final int DIALOG_CONFIRM_PAYMENT_ACCOUNT
+    324:354:private void moveToLoginProcess()
 com.twoheart.dailyhotel.activity.BookingTabActivity:
     private static final java.lang.String TAG
 com.twoheart.dailyhotel.activity.EventWebActivity:

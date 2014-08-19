@@ -6632,7 +6632,6 @@ com.twoheart.dailyhotel.R$id: int tv_hotel_tab_soldout
 com.twoheart.dailyhotel.R$id: int tv_list_row_hotel_tab_info_number
 com.twoheart.dailyhotel.R$id: int tv_login_forgot
 com.twoheart.dailyhotel.R$id: int tv_login_signup
-com.twoheart.dailyhotel.R$id: int tv_payment_information
 com.twoheart.dailyhotel.R$id: int tv_payment_wait_account
 com.twoheart.dailyhotel.R$id: int tv_payment_wait_deadline
 com.twoheart.dailyhotel.R$id: int tv_payment_wait_guide1

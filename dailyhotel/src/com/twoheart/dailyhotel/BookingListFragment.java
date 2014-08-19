@@ -37,6 +37,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import com.android.volley.Request.Method;
+import com.facebook.LoginActivity;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.twoheart.dailyhotel.activity.BookingTabActivity;
@@ -68,7 +69,7 @@ DailyHotelStringResponseListener {
 
 	private RelativeLayout mEmptyLayout;
 	private ListView mListView;
-	private Button btnSignUp;
+	private Button btnLogin;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -77,9 +78,9 @@ DailyHotelStringResponseListener {
 
 		mListView = (ListView) view.findViewById(R.id.listview_booking);
 		mEmptyLayout = (RelativeLayout) view.findViewById(R.id.layout_booking_empty);
-		btnSignUp = (Button) view.findViewById(R.id.btn_booking_empty_signup);
+		btnLogin = (Button) view.findViewById(R.id.btn_booking_empty_login);
 
-		btnSignUp.setOnClickListener(this);
+		btnLogin.setOnClickListener(this);
 
 		DailyHotel.getGaTracker().set(Fields.SCREEN_NAME, TAG);
 
@@ -106,8 +107,10 @@ DailyHotelStringResponseListener {
 
 	@Override
 	public void onClick(View v) {
-		if (v.getId() == btnSignUp.getId()) {
-			Intent i = new Intent(mHostActivity, SignupActivity.class);
+		if (v.getId() == btnLogin.getId()) {
+			android.util.Log.e("BtnLogin","true");
+			Intent i = new Intent(mHostActivity, LoginActivity.class);
+			startActivityForResult(i, CODE_REQUEST_ACTIVITY_LOGIN);
 
 			startActivity(i);
 			mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
@@ -248,7 +251,7 @@ DailyHotelStringResponseListener {
 				} catch (Exception e) {
 					mListView.setVisibility(View.GONE);
 					mEmptyLayout.setVisibility(View.VISIBLE);
-					btnSignUp.setVisibility(View.INVISIBLE);
+					btnLogin.setVisibility(View.INVISIBLE);
 
 					onError(e);
 					unLockUI();
@@ -256,7 +259,7 @@ DailyHotelStringResponseListener {
 			} else {
 				mListView.setVisibility(View.GONE);
 				mEmptyLayout.setVisibility(View.VISIBLE);
-				btnSignUp.setVisibility(View.INVISIBLE);
+				btnLogin.setVisibility(View.INVISIBLE);
 
 				unLockUI();
 			}
@@ -286,7 +289,7 @@ DailyHotelStringResponseListener {
 			} finally {
 				mListView.setVisibility(View.GONE);
 				mEmptyLayout.setVisibility(View.VISIBLE);
-				btnSignUp.setVisibility(View.INVISIBLE);
+				btnLogin.setVisibility(View.INVISIBLE);
 
 				unLockUI();
 			}
