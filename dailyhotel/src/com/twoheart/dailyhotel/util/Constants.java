@@ -195,6 +195,7 @@ public interface Constants {
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY = 110;
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_TIME_ERROR = 111;
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_DUPLICATE = 112;
+	public static final int CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER = 113;
 	
 	public static final int CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT = 201;
 	

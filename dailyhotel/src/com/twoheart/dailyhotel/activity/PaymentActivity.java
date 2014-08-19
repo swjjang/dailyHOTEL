@@ -15,10 +15,12 @@
 package com.twoheart.dailyhotel.activity;
 
 import java.net.URISyntaxException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import kr.co.kcp.android.payment.standard.ResultRcvActivity;
 import kr.co.kcp.util.PackageState;
@@ -134,13 +136,20 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		.append(mPay.getHotelDetail().getSaleIdx()).toString();
 
 		if (mPay.isSaleCredit()) {
-			url = new StringBuilder(URL_DAILYHOTEL_SERVER)
-			.append(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)
-			.append(mPay.getHotelDetail().getSaleIdx()).append("/")
-			.append(mPay.getCredit().getBonus()).toString();
+			if (mPay.getPayPrice() == 0) {
+				url = new StringBuilder(URL_DAILYHOTEL_SERVER)
+				.append(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)
+				.append(mPay.getHotelDetail().getSaleIdx()).toString();
+			} else {
+				url = new StringBuilder(URL_DAILYHOTEL_SERVER)
+				.append(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)
+				.append(mPay.getHotelDetail().getSaleIdx()).append("/")
+				.append(mPay.getCredit().getBonus()).toString();
+			}
 		}
 		
 		android.util.Log.e("POST_URL",url);
+		
 		webView.postUrl(url,
 				parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]),
 						postParameterValue.toArray(new String[postParameterValue.size()])));
@@ -863,6 +872,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			else if (msg.equals("ACCOUNT_TIME_ERROR")) resultCode = CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_TIME_ERROR;
 			else if (msg.equals("ACCOUNT_DUPLICATE")) resultCode = CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_DUPLICATE;
 			else if (msg.equals("NOT_AVAILABLE")) resultCode = CODE_RESULT_ACTIVITY_PAYMENT_NOT_AVAILABLE;
+			else if (msg.equals("PAYMENT_TIMEOVER")) resultCode = CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER;
 			else resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
 			
 			Intent payData = new Intent();

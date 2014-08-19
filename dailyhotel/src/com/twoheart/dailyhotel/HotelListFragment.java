@@ -497,7 +497,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 						.setSelectedNavigationItem(mHostActivity.sharedPreference
 								.getInt(KEY_PREFERENCE_REGION_INDEX, 0));
 				// 호텔 리프레시
-				fetchHotelList(mHostActivity.actionBar.getSelectedNavigationIndex());
+//				fetchHotelList(mHostActivity.actionBar.getSelectedNavigationIndex());
 			} catch (Exception e) {
 				onError(e);
 			}
