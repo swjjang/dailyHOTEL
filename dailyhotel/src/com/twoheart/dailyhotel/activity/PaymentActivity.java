@@ -136,6 +136,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		.append(mPay.getHotelDetail().getSaleIdx()).toString();
 
 		if (mPay.isSaleCredit()) {
+			// 적립금으로만 결제하기
 			if (mPay.getPayPrice() == 0) {
 				url = new StringBuilder(URL_DAILYHOTEL_SERVER)
 				.append(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)
