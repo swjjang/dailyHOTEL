@@ -253,16 +253,16 @@ Constants {
 		if (url.contains(URL_WEBAPI_USER_INFO)) {
 			try {
 				String loginuser_idx = response.getString("idx");
-				
+
 				// GCM 등록 시도
-				
+
 				String gcmId=getGcmId();
 				if (gcmId.isEmpty()) {
 					if (isGoogleServiceAvailable()) {
 						regGcmId(Integer.parseInt(loginuser_idx));
 					}
 				}
-				
+
 				String buyerIdx = sharedPreference.getString(KEY_PREFERENCE_USER_IDX, null);
 				if (buyerIdx != null) {
 					if (loginuser_idx.equals(buyerIdx)) {
@@ -286,7 +286,7 @@ Constants {
 								calendar.setTime(checkOut);
 								calendar.add(Calendar.DATE, DAYS_DISPLAY_RATING_HOTEL_DIALOG);
 								Date deadLineDay = calendar.getTime();
-								
+
 								if (today.compareTo(deadLineDay) < 0) {
 									Hotel purchasedHotel = new Hotel();
 									purchasedHotel.setName(purchasedHotelName);
@@ -321,7 +321,7 @@ Constants {
 					editor.apply();
 					android.util.Log.e("STORED_GCM_ID", sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "NOAP"));
 				}
-				
+
 			} catch (Exception e) {
 				onError(e);
 			}
@@ -331,7 +331,7 @@ Constants {
 	private String getGcmId() {
 		return sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "");
 	}
-	
+
 	private Boolean isGoogleServiceAvailable() {
 		int resCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
 
@@ -347,7 +347,7 @@ Constants {
 			return true;
 		}
 	}
-	
+
 	private void regGcmId(final int idx) {
 		new AsyncTask<Void, Void, String>() {
 
@@ -381,7 +381,7 @@ Constants {
 			}
 		}.execute();		
 	}
-	
+
 	/**
 	 * 네비게이션 드로워에서 메뉴를 선택하는 효과를 내주는 메서드
 	 * @param selectedMenu DrawerMenu 객체를 받는다.
@@ -394,6 +394,11 @@ Constants {
 						.getItemId(mMenuImages.indexOf(selectedMenu)));
 	}
 
+	/**
+	 * 드로어 메뉴 클릭시 새로고침을 하는 기능을 위해서 동적으로 프래그먼트를 생성하므로
+	 * 미리 초기화 하는 해당 메서드는 필요가 없음.
+	 */
+	@Deprecated
 	private void initializeFragments() {
 		if (mFragments != null) mFragments.clear();
 		else mFragments = new LinkedList<Fragment>();
@@ -412,28 +417,13 @@ Constants {
 	 * => 기능 변경, 누를때마다 리프레시
 	 */
 	public Fragment getFragment(int index) {
-//		mFragments.add(new HotelListFragment());
-//		mFragments.add(new BookingListFragment());
-//		mFragments.add(new CreditFragment());
-//		mFragments.add(new SettingFragment());
-		
-//		Fragment newFragment = null;
 		switch (index) {
-			case 0: return new HotelListFragment();
-			case 1: return new BookingListFragment();
-			case 2: return new CreditFragment();
-			case 3: return new SettingFragment();
+		case 0: return new HotelListFragment();
+		case 1: return new BookingListFragment();
+		case 2: return new CreditFragment();
+		case 3: return new SettingFragment();
 		}
-//		try {
-//			newFragment = mFragments.get(index);
-//
-//		} catch (Exception e) {
-//			initializeFragments();
-//			newFragment = getFragment(index);
-//
-//		}
 		return null;
-//		return newFragment;
 
 	}
 
@@ -552,7 +542,7 @@ Constants {
 			break;
 		}
 
-//		android.util.Log.e("POS",position+"");
+		//		android.util.Log.e("POS",position+"");
 		delayedReplace(indexLastFragment);
 		drawerLayout.closeDrawer(drawerList);
 
