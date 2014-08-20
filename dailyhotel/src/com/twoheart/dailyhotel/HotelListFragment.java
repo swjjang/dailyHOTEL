@@ -96,6 +96,10 @@ public class HotelListFragment extends BaseFragment implements Constants,
 
 	private boolean mRefreshHotelList;
 
+	private int prevIndex;
+
+	private int prevTop;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -228,6 +232,10 @@ public class HotelListFragment extends BaseFragment implements Constants,
 		if (selectedItem.getType() == HotelListViewItem.TYPE_ENTRY) {
 			mHotelListAdapter.getImgCache().evictAll(); // 호텔 리스트아이템들의 image를 캐싱하는 lru cache 비우기.
 			
+			prevIndex = mHotelListView.getFirstVisiblePosition();
+			View v = mHotelListView.getChildAt(0);
+			prevTop = (v == null) ? 0 : v.getTop();
+			
 			Intent i = new Intent(mHostActivity, HotelTabActivity.class);
 			
 			i.putExtra(NAME_INTENT_EXTRA_DATA_HOTEL, selectedItem.getItem());
@@ -248,12 +256,12 @@ public class HotelListFragment extends BaseFragment implements Constants,
 			} else if (resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY) {
 				((MainActivity) mHostActivity).selectMenuDrawer(((MainActivity) mHostActivity).menuBookingListFragment);
 			} else {
-				
-				lockUI();
-				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(
-						URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_TIME)
-						.toString(), null, HotelListFragment.this,
-						mHostActivity));
+//				
+//				lockUI();
+//				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(
+//						URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_TIME)
+//						.toString(), null, HotelListFragment.this,
+//						mHostActivity));
 			}
 			
 		} 
@@ -498,6 +506,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 								.getInt(KEY_PREFERENCE_REGION_INDEX, 0));
 				// 호텔 리프레시
 //				fetchHotelList(mHostActivity.actionBar.getSelectedNavigationIndex());
+//				mHotelListView.setSelectionFromTop(prevIndex, prevTop);
 			} catch (Exception e) {
 				onError(e);
 			}

@@ -170,7 +170,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 
 		if (applyCredit) {
 			int payPrice = originalPrice - credit;
-			payPrice = payPrice < 0 ? 0 : payPrice;
+			payPrice = payPrice < 0 ? 0: payPrice;
 			mPay.setPayPrice(payPrice);
 
 		}
@@ -778,6 +778,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 					else loginParams.put("email", id);
 
 					loginParams.put("pw", pw);
+					android.util.Log.e("LOGIN PARAMS",loginParams.toString());
 
 					mQueue.add(new DailyHotelJsonRequest(Method.POST,
 							new StringBuilder(URL_DAILYHOTEL_SERVER).append(

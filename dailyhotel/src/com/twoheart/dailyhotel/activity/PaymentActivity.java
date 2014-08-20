@@ -162,6 +162,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		} else if (mPay.isSaleCredit()) {
 			url = new StringBuilder(URL_DAILYHOTEL_SERVER)
 			.append(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)
+			.append(mPay.getPayType()).append("/")
 			.append(mPay.getHotelDetail().getSaleIdx()).append("/")
 			.append(mPay.getCredit().getBonus()).toString();
 		}

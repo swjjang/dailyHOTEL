@@ -550,6 +550,7 @@ Constants {
 	 * @param index 프래그먼트 인덱스.
 	 */
 	public void delayedReplace(final int index){
+		android.util.Log.e("INDEXED",index+"");
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {

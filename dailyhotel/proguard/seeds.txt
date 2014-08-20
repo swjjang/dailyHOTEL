@@ -6389,7 +6389,7 @@ com.twoheart.dailyhotel.R$id: int beginning
 com.twoheart.dailyhotel.R$id: int booking_indicator
 com.twoheart.dailyhotel.R$id: int booking_pager
 com.twoheart.dailyhotel.R$id: int bottom
-com.twoheart.dailyhotel.R$id: int btn_booking_empty_signup
+com.twoheart.dailyhotel.R$id: int btn_booking_empty_login
 com.twoheart.dailyhotel.R$id: int btn_confirm_payment_close
 com.twoheart.dailyhotel.R$id: int btn_confirm_payment_proceed
 com.twoheart.dailyhotel.R$id: int btn_credit_invite_frd

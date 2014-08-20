@@ -14593,7 +14593,7 @@ com.twoheart.dailyhotel.BookingListFragment -> com.twoheart.dailyhotel.a:
     com.twoheart.dailyhotel.adapter.BookingListAdapter mAdapter -> k
     android.widget.RelativeLayout mEmptyLayout -> l
     android.widget.ListView mListView -> m
-    android.widget.Button btnSignUp -> n
+    android.widget.Button btnLogin -> n
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     void onStart() -> onStart
     void onResume() -> onResume

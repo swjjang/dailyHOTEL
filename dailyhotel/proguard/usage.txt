@@ -5619,9 +5619,9 @@ com.twoheart.dailyhotel.MainActivity$DrawerMenu:
     public static final int DRAWER_MENU_LIST_TYPE_LOGO
     public static final int DRAWER_MENU_LIST_TYPE_SECTION
     public static final int DRAWER_MENU_LIST_TYPE_ENTRY
-    689:690:public void setType(int)
-    697:698:public void setTitle(java.lang.String)
-    705:706:public void setIcon(int)
+    690:691:public void setType(int)
+    698:699:public void setTitle(java.lang.String)
+    706:707:public void setIcon(int)
 com.twoheart.dailyhotel.Manifest
 com.twoheart.dailyhotel.Manifest$permission
 com.twoheart.dailyhotel.R:
@@ -5649,7 +5649,7 @@ com.twoheart.dailyhotel.activity.BookingActivity:
     private static final java.lang.String TAG
     private static final int DIALOG_CONFIRM_PAYMENT_CARD
     private static final int DIALOG_CONFIRM_PAYMENT_ACCOUNT
-    324:354:private void moveToLoginProcess()
+    374:404:private void moveToLoginProcess()
 com.twoheart.dailyhotel.activity.BookingTabActivity:
     private static final java.lang.String TAG
 com.twoheart.dailyhotel.activity.EventWebActivity:
@@ -5763,6 +5763,7 @@ com.twoheart.dailyhotel.util.Constants:
     public static final java.lang.String URL_WEBAPI_USER_BONUS_ALL
     public static final java.lang.String URL_WEBAPI_USER_BONUS_VAILD
     public static final java.lang.String URL_WEBAPI_USER_LOGIN_FACEBOOK
+    public static final java.lang.String URL_WEBAPI_USER_UPDATE_FACEBOOK
     public static final java.lang.String URL_WEBAPI_USER_SIGNUP
     public static final java.lang.String URL_WEBAPI_USER_ALIVE
     public static final java.lang.String URL_WEBAPI_USER_FORGOTPWD
@@ -5852,6 +5853,7 @@ com.twoheart.dailyhotel.util.Constants:
     public static final int CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY
     public static final int CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_TIME_ERROR
     public static final int CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_DUPLICATE
+    public static final int CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER
     public static final int CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT
     public static final int CODE_PAY_TYPE_CARD_COMPLETE
     public static final int CODE_PAY_TYPE_ACCOUNT_WAIT
