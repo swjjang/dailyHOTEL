@@ -409,20 +409,31 @@ Constants {
 	 * 네비게이션 드로워 메뉴에서 선택할 수 있는 Fragment를 반환하는 메서드이다.
 	 * @param index Fragment 리스트에 해당하는 index를 받는다.
 	 * @return 요청한 index에 해당하는 Fragment를 반환한다.
+	 * => 기능 변경, 누를때마다 리프레시
 	 */
 	public Fragment getFragment(int index) {
-		Fragment newFragment = null;
-
-		try {
-			newFragment = mFragments.get(index);
-
-		} catch (Exception e) {
-			initializeFragments();
-			newFragment = getFragment(index);
-
+//		mFragments.add(new HotelListFragment());
+//		mFragments.add(new BookingListFragment());
+//		mFragments.add(new CreditFragment());
+//		mFragments.add(new SettingFragment());
+		
+//		Fragment newFragment = null;
+		switch (index) {
+			case 0: return new HotelListFragment();
+			case 1: return new BookingListFragment();
+			case 2: return new CreditFragment();
+			case 3: return new SettingFragment();
 		}
-
-		return newFragment;
+//		try {
+//			newFragment = mFragments.get(index);
+//
+//		} catch (Exception e) {
+//			initializeFragments();
+//			newFragment = getFragment(index);
+//
+//		}
+		return null;
+//		return newFragment;
 
 	}
 
@@ -541,6 +552,7 @@ Constants {
 			break;
 		}
 
+//		android.util.Log.e("POS",position+"");
 		delayedReplace(indexLastFragment);
 		drawerLayout.closeDrawer(drawerList);
 
