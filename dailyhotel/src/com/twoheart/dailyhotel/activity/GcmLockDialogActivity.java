@@ -26,7 +26,7 @@ public class GcmLockDialogActivity extends Activity implements OnClickListener,C
 	private Button btnCancelButton;
 	private TextView tvMsg;
 	private TextView tvTitle;
-	
+	//
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

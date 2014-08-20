@@ -33,6 +33,7 @@ public class AccountCompleteDialogActivity extends Activity implements OnClickLi
 		btnClose = (ImageView)findViewById(R.id.iv_account_complete_dialog_close);
 		btnClose.setOnClickListener(this);
 	}
+	//test
 
 	@Override
 	public void onClick(View v) { 
