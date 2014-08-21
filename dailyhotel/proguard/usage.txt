@@ -5613,15 +5613,17 @@ com.twoheart.dailyhotel.MainActivity:
     public static final java.lang.String KEY_CREDIT_FRAGMENT
     public static final java.lang.String KEY_SEETING_FRAGMENT
     private static final java.lang.String TAG_FRAGMENT_RATING_HOTEL
-    498:500:public void removeFragment(android.support.v4.app.Fragment)
-    507:518:public void printPackageHashKey()
+    protected java.util.List mFragments
+    404:412:private void initializeFragments()
+    500:502:public void removeFragment(android.support.v4.app.Fragment)
+    509:520:public void printPackageHashKey()
 com.twoheart.dailyhotel.MainActivity$DrawerMenu:
     public static final int DRAWER_MENU_LIST_TYPE_LOGO
     public static final int DRAWER_MENU_LIST_TYPE_SECTION
     public static final int DRAWER_MENU_LIST_TYPE_ENTRY
-    690:691:public void setType(int)
-    698:699:public void setTitle(java.lang.String)
-    706:707:public void setIcon(int)
+    693:694:public void setType(int)
+    701:702:public void setTitle(java.lang.String)
+    709:710:public void setIcon(int)
 com.twoheart.dailyhotel.Manifest
 com.twoheart.dailyhotel.Manifest$permission
 com.twoheart.dailyhotel.R:
@@ -5639,7 +5641,7 @@ com.twoheart.dailyhotel.R$menu
 com.twoheart.dailyhotel.R$string
 com.twoheart.dailyhotel.R$style
 com.twoheart.dailyhotel.R$styleable:
-    3325:3325:public R$styleable()
+    3329:3329:public R$styleable()
 com.twoheart.dailyhotel.WaitTimerFragment:
     private static final java.lang.String TAG
     private static final java.lang.String KEY_BUNDLE_ARGUMENTS_SALETIME
@@ -5649,7 +5651,7 @@ com.twoheart.dailyhotel.activity.BookingActivity:
     private static final java.lang.String TAG
     private static final int DIALOG_CONFIRM_PAYMENT_CARD
     private static final int DIALOG_CONFIRM_PAYMENT_ACCOUNT
-    374:404:private void moveToLoginProcess()
+    375:405:private void moveToLoginProcess()
 com.twoheart.dailyhotel.activity.BookingTabActivity:
     private static final java.lang.String TAG
 com.twoheart.dailyhotel.activity.EventWebActivity:

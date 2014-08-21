@@ -254,9 +254,10 @@ Constants {
 			try {
 				String loginuser_idx = response.getString("idx");
 
-				// GCM 등록 시도
 
 				String gcmId=getGcmId();
+				// GCM 등록 시도
+				android.util.Log.e("NOTE",gcmId);
 				if (gcmId.isEmpty()) {
 					if (isGoogleServiceAvailable()) {
 						regGcmId(Integer.parseInt(loginuser_idx));

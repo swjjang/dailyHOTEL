@@ -14674,6 +14674,8 @@ com.twoheart.dailyhotel.HotelListFragment -> com.twoheart.dailyhotel.g:
     android.widget.ImageView ivNewEvent -> s
     android.widget.LinearLayout btnListViewHeader -> t
     boolean mRefreshHotelList -> u
+    int prevIndex -> v
+    int prevTop -> w
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     void onStart() -> onStart
     void onResume() -> onResume
@@ -14725,21 +14727,20 @@ com.twoheart.dailyhotel.IntroActivity$1 -> com.twoheart.dailyhotel.j:
 com.twoheart.dailyhotel.MainActivity -> com.twoheart.dailyhotel.MainActivity:
     android.widget.ListView drawerList -> o
     android.support.v4.widget.DrawerLayout drawerLayout -> p
-    android.widget.FrameLayout mContentFrame -> F
+    android.widget.FrameLayout mContentFrame -> E
     android.support.v4.app.ActionBarDrawerToggle drawerToggle -> q
     android.support.v4.app.FragmentManager fragmentManager -> r
     java.util.List mMenuImages -> s
-    java.util.List mFragments -> t
-    com.twoheart.dailyhotel.MainActivity$DrawerMenuListAdapter mDrawerMenuListAdapter -> G
-    int indexLastFragment -> u
-    com.readystatesoftware.systembartint.SystemBarTintManager tintManager -> H
-    com.readystatesoftware.systembartint.SystemBarTintManager$SystemBarConfig config -> v
-    com.twoheart.dailyhotel.MainActivity$DrawerMenu menuHotelListFragment -> w
-    com.twoheart.dailyhotel.MainActivity$DrawerMenu menuBookingListFragment -> x
-    com.twoheart.dailyhotel.MainActivity$DrawerMenu menuCreditFragment -> y
-    com.twoheart.dailyhotel.MainActivity$DrawerMenu menuSettingFragment -> z
-    com.twoheart.dailyhotel.util.ui.CloseOnBackPressed backButtonHandler -> I
-    java.util.HashMap regPushParams -> A
+    com.twoheart.dailyhotel.MainActivity$DrawerMenuListAdapter mDrawerMenuListAdapter -> F
+    int indexLastFragment -> t
+    com.readystatesoftware.systembartint.SystemBarTintManager tintManager -> G
+    com.readystatesoftware.systembartint.SystemBarTintManager$SystemBarConfig config -> u
+    com.twoheart.dailyhotel.MainActivity$DrawerMenu menuHotelListFragment -> v
+    com.twoheart.dailyhotel.MainActivity$DrawerMenu menuBookingListFragment -> w
+    com.twoheart.dailyhotel.MainActivity$DrawerMenu menuCreditFragment -> x
+    com.twoheart.dailyhotel.MainActivity$DrawerMenu menuSettingFragment -> y
+    com.twoheart.dailyhotel.util.ui.CloseOnBackPressed backButtonHandler -> H
+    java.util.HashMap regPushParams -> z
     void onCreate(android.os.Bundle) -> onCreate
     void onActivityResult(int,int,android.content.Intent) -> onActivityResult
     void onResponse(java.lang.String,java.lang.String) -> a
@@ -14748,11 +14749,10 @@ com.twoheart.dailyhotel.MainActivity -> com.twoheart.dailyhotel.MainActivity:
     java.lang.Boolean isGoogleServiceAvailable() -> r
     void regGcmId(int) -> f
     void selectMenuDrawer(com.twoheart.dailyhotel.MainActivity$DrawerMenu) -> a
-    void initializeFragments() -> s
     android.support.v4.app.Fragment getFragment(int) -> a
     void replaceFragment(android.support.v4.app.Fragment) -> b
     void addFragment(android.support.v4.app.Fragment) -> c
-    void clearFragmentBackStack() -> t
+    void clearFragmentBackStack() -> s
     void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
     void delayedReplace(int) -> b
     void setNavigationDrawer() -> j
@@ -15121,7 +15121,7 @@ com.twoheart.dailyhotel.activity.BookingActivity -> com.twoheart.dailyhotel.acti
     android.widget.Button btnPay -> x
     com.twoheart.dailyhotel.widget.Switch swCredit -> y
     android.widget.TextView tvReserverName -> z
-    android.widget.TextView tvReserverNumber -> A
+    android.widget.TextView tvReserverNumber -> E
     android.widget.TextView tvReserverEmail -> F
     android.widget.LinearLayout llReserverInfoLabel -> G
     android.widget.LinearLayout llReserverInfoEditable -> H
@@ -15260,7 +15260,7 @@ com.twoheart.dailyhotel.activity.LoginActivity -> com.twoheart.dailyhotel.activi
     java.util.Map regPushParams -> y
     com.facebook.Session fbSession -> o
     com.google.android.gms.gcm.GoogleCloudMessaging mGcm -> z
-    com.facebook.Session$StatusCallback statusCallback -> A
+    com.facebook.Session$StatusCallback statusCallback -> E
     void onCreate(android.os.Bundle) -> onCreate
     void makeMeRequest(com.facebook.Session) -> a
     void onClick(android.view.View) -> onClick
@@ -15483,16 +15483,23 @@ com.twoheart.dailyhotel.activity.SignupActivity -> com.twoheart.dailyhotel.activ
 com.twoheart.dailyhotel.activity.SplashActivity -> com.twoheart.dailyhotel.activity.SplashActivity:
     boolean isDialogShown -> o
     android.app.Dialog alertDlg -> p
+    android.widget.ImageView ivCircle1 -> q
+    android.widget.ImageView ivCircle2 -> r
+    android.widget.ImageView ivCircle3 -> s
     void onCreate(android.os.Bundle) -> onCreate
     void onResume() -> onResume
-    void moveToLoginStep() -> j
+    void startSplashLoad() -> j
+    void moveToLoginStep() -> k
     void onResponse(java.lang.String,org.json.JSONObject) -> a
     void showMainActivity(int) -> a
     void onErrorResponse(com.android.volley.VolleyError) -> a
     void finish() -> finish
     void access$0(com.twoheart.dailyhotel.activity.SplashActivity) -> a
     android.app.Dialog access$1(com.twoheart.dailyhotel.activity.SplashActivity) -> b
-    void access$2(com.twoheart.dailyhotel.activity.SplashActivity,int) -> a
+    android.widget.ImageView access$2(com.twoheart.dailyhotel.activity.SplashActivity) -> c
+    android.widget.ImageView access$3(com.twoheart.dailyhotel.activity.SplashActivity) -> d
+    android.widget.ImageView access$4(com.twoheart.dailyhotel.activity.SplashActivity) -> e
+    void access$5(com.twoheart.dailyhotel.activity.SplashActivity,int) -> a
 com.twoheart.dailyhotel.activity.SplashActivity$1 -> com.twoheart.dailyhotel.activity.ao:
     com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
@@ -15506,36 +15513,48 @@ com.twoheart.dailyhotel.activity.SplashActivity$10 -> com.twoheart.dailyhotel.ac
 com.twoheart.dailyhotel.activity.SplashActivity$11 -> com.twoheart.dailyhotel.activity.ar:
     com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
     int val$newEventFlag -> b
-    void run() -> run
-com.twoheart.dailyhotel.activity.SplashActivity$2 -> com.twoheart.dailyhotel.activity.as:
+    void onCancel(android.content.DialogInterface) -> onCancel
+com.twoheart.dailyhotel.activity.SplashActivity$12 -> com.twoheart.dailyhotel.activity.as:
     com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.twoheart.dailyhotel.activity.SplashActivity$3 -> com.twoheart.dailyhotel.activity.at:
+com.twoheart.dailyhotel.activity.SplashActivity$13 -> com.twoheart.dailyhotel.activity.at:
+    com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.twoheart.dailyhotel.activity.SplashActivity$14 -> com.twoheart.dailyhotel.activity.au:
+    com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
+    int val$newEventFlag -> b
+    void run() -> run
+com.twoheart.dailyhotel.activity.SplashActivity$2 -> com.twoheart.dailyhotel.activity.av:
+    com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.twoheart.dailyhotel.activity.SplashActivity$3 -> com.twoheart.dailyhotel.activity.aw:
     com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
     boolean onKey(android.content.DialogInterface,int,android.view.KeyEvent) -> onKey
-com.twoheart.dailyhotel.activity.SplashActivity$4 -> com.twoheart.dailyhotel.activity.au:
+com.twoheart.dailyhotel.activity.SplashActivity$4 -> com.twoheart.dailyhotel.activity.ax:
     com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
     com.twoheart.dailyhotel.activity.SplashActivity access$0(com.twoheart.dailyhotel.activity.SplashActivity$4) -> a
-com.twoheart.dailyhotel.activity.SplashActivity$4$1 -> com.twoheart.dailyhotel.activity.av:
+com.twoheart.dailyhotel.activity.SplashActivity$4$1 -> com.twoheart.dailyhotel.activity.ay:
     com.twoheart.dailyhotel.activity.SplashActivity$4 this$1 -> a
     void run() -> run
-com.twoheart.dailyhotel.activity.SplashActivity$5 -> com.twoheart.dailyhotel.activity.aw:
+com.twoheart.dailyhotel.activity.SplashActivity$5 -> com.twoheart.dailyhotel.activity.az:
     com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.twoheart.dailyhotel.activity.SplashActivity$6 -> com.twoheart.dailyhotel.activity.ax:
+com.twoheart.dailyhotel.activity.SplashActivity$6 -> com.twoheart.dailyhotel.activity.ba:
     com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
     boolean onKey(android.content.DialogInterface,int,android.view.KeyEvent) -> onKey
-com.twoheart.dailyhotel.activity.SplashActivity$7 -> com.twoheart.dailyhotel.activity.ay:
+com.twoheart.dailyhotel.activity.SplashActivity$7 -> com.twoheart.dailyhotel.activity.bb:
     com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
-    void onClick(android.content.DialogInterface,int) -> onClick
-com.twoheart.dailyhotel.activity.SplashActivity$8 -> com.twoheart.dailyhotel.activity.az:
+    android.view.animation.Animation val$fade1 -> b
+    void run() -> run
+com.twoheart.dailyhotel.activity.SplashActivity$8 -> com.twoheart.dailyhotel.activity.bc:
     com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
-    int val$newEventFlag -> b
-    void onCancel(android.content.DialogInterface) -> onCancel
-com.twoheart.dailyhotel.activity.SplashActivity$9 -> com.twoheart.dailyhotel.activity.ba:
+    android.view.animation.Animation val$fade2 -> b
+    void run() -> run
+com.twoheart.dailyhotel.activity.SplashActivity$9 -> com.twoheart.dailyhotel.activity.bd:
     com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
-    void onClick(android.content.DialogInterface,int) -> onClick
+    android.view.animation.Animation val$fade3 -> b
+    void run() -> run
 com.twoheart.dailyhotel.activity.TermActivity -> com.twoheart.dailyhotel.activity.TermActivity:
     void onCreate(android.os.Bundle) -> onCreate
     void onResume() -> onResume
@@ -16051,10 +16070,10 @@ com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener -> 
 com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener -> com.twoheart.dailyhotel.util.a.b.c:
     void onResponse(java.lang.String,java.lang.String) -> a
 com.twoheart.dailyhotel.util.ui.BaseActivity -> com.twoheart.dailyhotel.util.b.a:
-    android.support.v7.app.ActionBar actionBar -> B
-    android.content.SharedPreferences sharedPreference -> C
-    com.android.volley.RequestQueue mQueue -> D
-    android.widget.Toast mToast -> E
+    android.support.v7.app.ActionBar actionBar -> A
+    android.content.SharedPreferences sharedPreference -> B
+    com.android.volley.RequestQueue mQueue -> C
+    android.widget.Toast mToast -> D
     com.twoheart.dailyhotel.util.ui.LoadingDialog mLockUI -> o
     com.android.volley.RequestQueue$RequestFilter cancelAllRequestFilter -> p
     android.os.Handler handler -> q

@@ -15,7 +15,6 @@
  */
 package com.twoheart.dailyhotel.activity;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,24 +27,22 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnKeyListener;
-import android.content.SharedPreferences.Editor;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import android.provider.Settings.SettingNotFoundException;
 import android.view.KeyEvent;
-import android.widget.Toast;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 
 import com.android.volley.Request.Method;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
@@ -71,6 +68,10 @@ DailyHotelJsonResponseListener, ErrorListener {
 
 	protected HashMap<String, String> regPushParams;
 
+	private ImageView ivCircle1;
+	private ImageView ivCircle2;
+	private ImageView ivCircle3;
+
 
 
 	@Override
@@ -84,7 +85,10 @@ DailyHotelJsonResponseListener, ErrorListener {
 
 		setActionBarHide();
 		setContentView(R.layout.activity_splash);
-
+		
+		ivCircle1 = (ImageView)findViewById(R.id.iv_splash_circle1);
+		ivCircle2 = (ImageView)findViewById(R.id.iv_splash_circle2);
+		ivCircle3 = (ImageView)findViewById(R.id.iv_splash_circle3);
 	}
 
 	@Override
@@ -94,6 +98,7 @@ DailyHotelJsonResponseListener, ErrorListener {
 		boolean isAirplainMode = Settings.System.getInt(getContentResolver(), Settings.System.AIRPLANE_MODE_ON, 0) == 1 ? true:false;
 		boolean isNetworkAvailable = VolleyHttpClient.isAvailableNetwork();
 		android.util.Log.e("STATUS",isAirplainMode + " / " + isNetworkAvailable);
+		startSplashLoad();
 		
 		if(isAirplainMode && !isNetworkAvailable) {
 			Builder builder = new AlertDialog.Builder(SplashActivity.this);
@@ -195,6 +200,35 @@ DailyHotelJsonResponseListener, ErrorListener {
 			moveToLoginStep();
 		}
 
+	}
+
+	private void startSplashLoad() {
+		final Animation fade1 = AnimationUtils.loadAnimation(this, R.anim.splash_load);
+		final Animation fade2 = AnimationUtils.loadAnimation(this, R.anim.splash_load);
+		final Animation fade3 = AnimationUtils.loadAnimation(this, R.anim.splash_load);
+		
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				ivCircle1.setVisibility(View.VISIBLE);
+				ivCircle1.startAnimation(fade1);
+			}
+		}, 250);
+		
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				ivCircle2.setVisibility(View.VISIBLE);
+				ivCircle2.startAnimation(fade2);
+			}
+		}, 500);
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				ivCircle3.setVisibility(View.VISIBLE);
+				ivCircle3.startAnimation(fade3);
+			}
+		}, 750);		
 	}
 
 	private void moveToLoginStep() {
@@ -371,7 +405,6 @@ DailyHotelJsonResponseListener, ErrorListener {
 					setResult(CODE_RESULT_ACTIVITY_SPLASH_NEW_EVENT);
 				else if (newEventFlag == VALUE_WEB_API_RESPONSE_NEW_EVENT_NONE)
 					setResult(RESULT_OK);
-
 				finish();
 
 			}
@@ -389,10 +422,5 @@ DailyHotelJsonResponseListener, ErrorListener {
 		super.finish();
 		overridePendingTransition(R.anim.hold, R.anim.fade_out);
 	}
-
-	// @Override
-	// public void onBackPressed() {
-	// return;
-	// }
 
 }

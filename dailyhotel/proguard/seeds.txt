@@ -5691,6 +5691,7 @@ com.twoheart.dailyhotel.R$anim: int slide_in_right
 com.twoheart.dailyhotel.R$anim: int slide_out_bottom
 com.twoheart.dailyhotel.R$anim: int slide_out_left
 com.twoheart.dailyhotel.R$anim: int slide_out_right
+com.twoheart.dailyhotel.R$anim: int splash_load
 com.twoheart.dailyhotel.R$attr: int actionBarDivider
 com.twoheart.dailyhotel.R$attr: int actionBarItemBackground
 com.twoheart.dailyhotel.R$attr: int actionBarSize
@@ -6342,6 +6343,7 @@ com.twoheart.dailyhotel.R$drawable: int spinner_default_holo_light
 com.twoheart.dailyhotel.R$drawable: int spinner_disabled_holo_light
 com.twoheart.dailyhotel.R$drawable: int spinner_focused_holo_light
 com.twoheart.dailyhotel.R$drawable: int spinner_pressed_holo_light
+com.twoheart.dailyhotel.R$drawable: int splash_circle
 com.twoheart.dailyhotel.R$drawable: int switch_bg_disabled_holo_light
 com.twoheart.dailyhotel.R$drawable: int switch_bg_focused_holo_light
 com.twoheart.dailyhotel.R$drawable: int switch_bg_holo_light
@@ -6493,7 +6495,9 @@ com.twoheart.dailyhotel.R$id: int iv_image_detail
 com.twoheart.dailyhotel.R$id: int iv_image_view
 com.twoheart.dailyhotel.R$id: int iv_list_row_hotel_tab_info_ribbon
 com.twoheart.dailyhotel.R$id: int iv_new_event
-com.twoheart.dailyhotel.R$id: int iv_splash_spinner
+com.twoheart.dailyhotel.R$id: int iv_splash_circle1
+com.twoheart.dailyhotel.R$id: int iv_splash_circle2
+com.twoheart.dailyhotel.R$id: int iv_splash_circle3
 com.twoheart.dailyhotel.R$id: int iv_start_arrow
 com.twoheart.dailyhotel.R$id: int iv_wait_timer_hotel
 com.twoheart.dailyhotel.R$id: int large

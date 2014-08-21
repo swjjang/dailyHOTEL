@@ -166,7 +166,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				.replaceAll(",", ""));
 
 		DecimalFormat comma = new DecimalFormat("###,##0");
-		tvOriginalPriceValue.setText("£Ü" + comma.format(originalPrice));
+		tvOriginalPriceValue.setText(comma.format(originalPrice)+"¿ø");
 
 		if (applyCredit) {
 			int payPrice = originalPrice - credit;
@@ -176,7 +176,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		}
 		else mPay.setPayPrice(originalPrice);
 
-		tvPrice.setText("£Ü" + comma.format(mPay.getPayPrice()));
+		tvPrice.setText(comma.format(mPay.getPayPrice())+"¿ø");
 
 	}
 
@@ -724,7 +724,12 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				mPay.setCredit(new Credit(null, bonus, null));
 
 				DecimalFormat comma = new DecimalFormat("###,##0");
-				String str = comma.format(Integer.parseInt(mPay.getCredit().getBonus()));
+				
+				int credit = Integer.parseInt(mPay.getCredit().getBonus());
+				int discount = Integer.parseInt(mPay.getHotelDetail().getHotel().getDiscount().replaceAll(",", ""));
+				if (credit >= discount) credit = discount;
+				
+				String str = comma.format(credit);
 				tvCreditValue.setText(new StringBuilder(str).append("¿ø"));
 
 				swCredit.toggle();
