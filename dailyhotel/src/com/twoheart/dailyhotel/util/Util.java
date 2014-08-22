@@ -24,14 +24,20 @@ public class Util implements Constants {
 	}
 
 	public static String storeReleaseAddress() {
-		if (IS_GOOGLE_RELEASE) return URL_STORE_GOOGLE_DAILYHOTEL;
-		else return URL_STORE_T_DAILYHOTEL;
+		if (RELEASE_STORE == Stores.PLAY_STORE || RELEASE_STORE == Stores.N_STORE) {
+			return URL_STORE_GOOGLE_DAILYHOTEL;
+		} else {
+			return URL_STORE_T_DAILYHOTEL;
+		}
 	}
 
 	public static String storeReleaseAddress(String newUrl) {
-		if (IS_GOOGLE_RELEASE) return URL_STORE_GOOGLE_DAILYHOTEL;
-		else return newUrl;
-	
+		
+		if (RELEASE_STORE == Stores.PLAY_STORE || RELEASE_STORE == Stores.N_STORE) {
+			return URL_STORE_GOOGLE_DAILYHOTEL;
+		} else {
+			return newUrl;
+		}
 	}
 
 	public static Bitmap drawableToBitmap(Drawable drawable) {

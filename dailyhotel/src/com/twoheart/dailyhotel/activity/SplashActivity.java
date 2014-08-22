@@ -85,7 +85,7 @@ DailyHotelJsonResponseListener, ErrorListener {
 
 		setActionBarHide();
 		setContentView(R.layout.activity_splash);
-		
+
 		ivCircle1 = (ImageView)findViewById(R.id.iv_splash_circle1);
 		ivCircle2 = (ImageView)findViewById(R.id.iv_splash_circle2);
 		ivCircle3 = (ImageView)findViewById(R.id.iv_splash_circle3);
@@ -99,7 +99,7 @@ DailyHotelJsonResponseListener, ErrorListener {
 		boolean isNetworkAvailable = VolleyHttpClient.isAvailableNetwork();
 		android.util.Log.e("STATUS",isAirplainMode + " / " + isNetworkAvailable);
 		startSplashLoad();
-		
+
 		if(isAirplainMode && !isNetworkAvailable) {
 			Builder builder = new AlertDialog.Builder(SplashActivity.this);
 
@@ -132,7 +132,7 @@ DailyHotelJsonResponseListener, ErrorListener {
 			});
 			builder.setOnKeyListener(new OnKeyListener() {
 				@Override
-					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+				public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
 					if(keyCode == KeyEvent.KEYCODE_BACK){
 						dialog.dismiss();
 						finish();
@@ -141,15 +141,15 @@ DailyHotelJsonResponseListener, ErrorListener {
 					return false;
 				}
 			});
-			
+
 			alertDlg = builder.create();
 			alertDlg.show();
 		}
-		
+
 		else if (!isAirplainMode && !isNetworkAvailable) {
 
 			if(alertDlg == null) {
-				
+
 				Builder builder = new AlertDialog.Builder(SplashActivity.this);
 
 				builder.setTitle("잠시만요!");
@@ -181,7 +181,7 @@ DailyHotelJsonResponseListener, ErrorListener {
 				});
 				builder.setOnKeyListener(new OnKeyListener() {
 					@Override
-						public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
 						if(keyCode == KeyEvent.KEYCODE_BACK){
 							dialog.dismiss();
 							finish();
@@ -190,10 +190,10 @@ DailyHotelJsonResponseListener, ErrorListener {
 						return false;
 					}
 				});
-				
+
 				alertDlg = builder.create();
 			}
-			
+
 			alertDlg.show();
 
 		} else {
@@ -206,7 +206,7 @@ DailyHotelJsonResponseListener, ErrorListener {
 		final Animation fade1 = AnimationUtils.loadAnimation(this, R.anim.splash_load);
 		final Animation fade2 = AnimationUtils.loadAnimation(this, R.anim.splash_load);
 		final Animation fade3 = AnimationUtils.loadAnimation(this, R.anim.splash_load);
-		
+
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -214,7 +214,7 @@ DailyHotelJsonResponseListener, ErrorListener {
 				ivCircle1.startAnimation(fade1);
 			}
 		}, 250);
-		
+
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -285,24 +285,35 @@ DailyHotelJsonResponseListener, ErrorListener {
 		} else if (url.contains(URL_WEBAPI_APP_VERSION)) {
 
 			try {
+				
+				android.util.Log.e("APP_VERSIONS", response.toString());
+				
 				SharedPreferences.Editor editor = sharedPreference.edit();
 
-				if (IS_GOOGLE_RELEASE) {
+				if (RELEASE_STORE == Stores.PLAY_STORE) {
+					android.util.Log.e("RELEASE_PLAY_STORE", "true");
+					
 					editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME,
 							response.getString("play_max"));
 					editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME,
 							response.getString("play_min"));
-
-				} else {
+				} else if (RELEASE_STORE == Stores.T_STORE) {
+					android.util.Log.e("RELEASE_T_STORE", "true");
+					
 					editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME,
 							response.getString("tstore_max"));
 					editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME,
 							response.getString("tstore_min"));
-
-				}
+				} else if (RELEASE_STORE == Stores.N_STORE) {
+					android.util.Log.e("RELEASE_N_STORE", "true");
+					editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME,
+							response.getString("nstore_max"));
+					editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME,
+							response.getString("nstore_min"));
+				} 
 
 				editor.commit();
-
+				
 				int maxVersion = Integer.parseInt(sharedPreference.getString(
 						KEY_PREFERENCE_MAX_VERSION_NAME, "1.0.0").replace(".",""));
 				int minVersion = Integer.parseInt(sharedPreference.getString(
@@ -311,9 +322,11 @@ DailyHotelJsonResponseListener, ErrorListener {
 						.getPackageInfo(this.getPackageName(), 0).versionName.replace(".", ""));
 				int skipMaxVersion = Integer.parseInt(sharedPreference
 						.getString(KEY_PREFERENCE_SKIP_MAX_VERSION, "1.0.0").replace(".", ""));
-				
+
 				final int newEventFlag = Integer.parseInt(response.getString("new_event"));
 				
+				android.util.Log.e("MIN / MAX / CUR / SKIP", minVersion+" / "+maxVersion+" / "+currentVersion+" / "+skipMaxVersion);
+
 				if (minVersion > currentVersion) { // 강제 업데이트
 					AlertDialog.Builder alertDialog = new AlertDialog.Builder(SplashActivity.this);
 					alertDialog
@@ -395,7 +408,7 @@ DailyHotelJsonResponseListener, ErrorListener {
 			}
 		} 
 	}
-	
+
 	private void showMainActivity(final int newEventFlag) {
 		// sleep 2 second
 		Handler h = new Handler();

@@ -22,8 +22,9 @@ public interface Constants {
 	// 디버그 빌드 여부
 	public static final boolean DEBUG = BuildConfig.DEBUG;
 
-	// 플레이 스토어용 릴리즈 여부
-	public static final boolean IS_GOOGLE_RELEASE = true;
+	// 스토어 선택.
+	enum Stores { PLAY_STORE, T_STORE, N_STORE };
+	public static final Stores RELEASE_STORE = Stores.N_STORE; 
 
 	// 항상 열리게 셋팅 여부
 	public static final boolean ALWAYS_OPEN = true;
@@ -33,13 +34,19 @@ public interface Constants {
 
 	// 웹서버 호스트 
 //		public static final String URL_DAILYHOTEL_SERVER = "http://dailyhotel.kr/goodnight/";				// 서비스 서버
+    	public static final String URL_DAILYHOTEL_SERVER = "http://restful.dailyhotel.kr/goodnight/"; //  서비스 서버 2
+    	
 //		public static final String URL_DAILYHOTEL_SERVER = "http://dev.dailyhotel.kr/goodnight/";				// 개발 서버 데브서버
+//		public static final String URL_DAILYHOTEL_SERVER = "http://1.234.22.96/goodnight/"; // new 개발 7.6 테라서버
+    	
+//    	public static final String URL_DAILYHOTEL_SERVER = "http://newinsik.cafe24.com/goodnight/"; // new 개발
 //		public static final String URL_DAILYHOTEL_SERVER = "http://dailyhotel.cafe24.com/goodnight/";		// 개발 서버
+    	
 //		public static final String URL_DAILYHOTEL_SERVER = "http://was1.dailyhotel.kr/goodnight/";					// new 개발 서버
 //		public static final String URL_DAILYHOTEL_SERVER = "http://1.234.83.117/goodnight/";							// new 개발 서버
-//		public static final String URL_DAILYHOTEL_SERVER = "http://1.234.22.96/goodnight/"; // new 개발 7.6 테라서버 
-//    	public static final String URL_DAILYHOTEL_SERVER = "http://newinsik.cafe24.com/goodnight/"; // new 개발  
-		public static final String URL_DAILYHOTEL_SERVER = "http://restful.dailyhotel.kr/goodnight/"; //  개발 서버?
+ 
+  
+		
 		//
 	// 회사 대표번호
 	public static final String PHONE_NUMBER_DAILYHOTEL = "1800-9120";
@@ -100,6 +107,7 @@ public interface Constants {
 
 	public static final String URL_STORE_GOOGLE_DAILYHOTEL = "market://details?id=com.twoheart.dailyhotel";
 	public static final String URL_STORE_T_DAILYHOTEL = "http://tsto.re/0000412421";
+	public static final String URL_STORE_N_DAILYHOTEL = "market://details?id=com.twoheart.dailyhotel";
 
 	public static final String URL_WEB_PRIVACY = "http://policies.dailyhotel.co.kr/privacy/";
 	public static final String URL_WEB_TERMS = "http://policies.dailyhotel.co.kr/terms/";
