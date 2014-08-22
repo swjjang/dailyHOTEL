@@ -95,6 +95,8 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		webView.addJavascriptInterface(new JavaScriptExtention(), "android");
 
 		webView.addJavascriptInterface(new TeleditBridge(), "TeleditApp");
+		
+		webView.addJavascriptInterface(new HtmlObserver(), "HtmlObserver");
 
 		webView.setWebChromeClient(new mWebChromeClient());
 		webView.setWebViewClient(new mWebViewClient());
@@ -110,30 +112,6 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			showToast(getString(R.string.toast_msg_failed_to_get_payment_info), Toast.LENGTH_SHORT, false);
 			finish();
 		}
-
-//		String userAccessToken = mPay.getCustomer().getAccessToken();
-//
-		
-//
-//		if (mPay.getPayType() != null) {
-//			postParameterKey.add("payType");
-//			postParameterValue.add(mPay.getPayType());
-//		}
-//
-//
-//		if ((userAccessToken != null)) {
-//			if ((userAccessToken.equals("")) || !(userAccessToken.equals("null"))) {
-//				postParameterKey.add("accessToken");
-//				postParameterValue.add(userAccessToken);
-//			}
-//		}
-
-		// 기존 포스트 API
-		//		String url = new StringBuilder(URL_DAILYHOTEL_SERVER)
-		//		.append(URL_WEBAPI_RESERVE_PAYMENT)
-		//		.append("/").append(mPay.getPayType())
-		//		.append(mPay.getHotelDetail().getSaleIdx()).toString();
-
 
 		String url = new StringBuilder(URL_DAILYHOTEL_SERVER)
 		.append(URL_WEBAPI_RESERVE_PAYMENT)
@@ -170,10 +148,6 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		android.util.Log.e("GET_URL",url);
 		webView.loadUrl(url);
 
-//		webView.postUrl(url,
-//				parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]),
-//						postParameterValue.toArray(new String[postParameterValue.size()])));
-
 	}
 
 	private byte[] parsePostParameter(String[] key, String[] value) {
@@ -186,9 +160,10 @@ public class PaymentActivity extends BaseActivity implements Constants {
 					"The length of the key arguments and "
 							+ "the length of the value arguments must be same.");
 
-		for (int i = 0; i < key.length; i++)
+		for (int i = 0; i < key.length; i++) {
 			postParameters.put(key[i],
 					EncodingUtils.getBytes(value[i], "BASE64"));
+		}
 
 		for (int i = 0; i < postParameters.size(); i++) {
 
@@ -232,18 +207,6 @@ public class PaymentActivity extends BaseActivity implements Constants {
 	private boolean url_scheme_intent(WebView view, String url) {
 		Log.d(ResultRcvActivity.m_strLogTag,
 				"[PayDemoActivity] called__test - url=[" + url + "]");
-
-		//		android.util.Log.e("SHOULD_OVERRIDE",url+"");
-
-		//		if (url.contains("ACCOUNT_DUPLICATE")) 
-		//		FeedDialogBuilder
-		//		else resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
-		//		
-		//		Intent payData = new Intent();
-		//		payData.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
-		//
-		//		setResult(resultCode, payData);
-		//		finish();
 
 		// chrome 버젼 방식 : 2014.01 추가
 		if (url.startsWith("intent")) {
@@ -348,15 +311,6 @@ public class PaymentActivity extends BaseActivity implements Constants {
 
 					return true;
 				}
-				/*  else if ( url.startsWith( "paypin" ) ) { if(
-				 * !new PackageState( this ).getPackageDownloadInstallState(
-				 * "com.skp.android.paypin" ) ) { if( !url_scheme_intent(
-				 * "tstore://PRODUCT_VIEW/0000284061/0" ) ) { url_scheme_intent(
-				 * "market://details?id=com.skp.android.paypin&feature=search_result#?t=W251bGwsMSwxLDEsImNvbS5za3AuYW5kcm9pZC5wYXlwaW4iXQ.k"
-				 * ); }
-				 * 
-				 * return true; } }
-				 */
 			} 
 
 			// 결제 모듈 실행.
@@ -478,6 +432,9 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		@Override
 		public void onPageFinished(WebView view, String url) {
 			super.onPageFinished(view, url);
+			view.loadUrl("javascript:window.HtmlObserver.showHTML" +
+                    "('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');");
+			
 			CookieSyncManager.getInstance().sync();
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 				setSupportProgressBarIndeterminateVisibility(false);
@@ -508,6 +465,13 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		public void BestClose() {
 			setResult(CODE_RESULT_ACTIVITY_PAYMENT_CANCELED);
 			finish();
+		}
+	}
+	
+	private class HtmlObserver {
+		@JavascriptInterface
+		public void showHTML(String html) {
+			android.util.Log.e("WEB_VIEW", html);
 		}
 	}
 
