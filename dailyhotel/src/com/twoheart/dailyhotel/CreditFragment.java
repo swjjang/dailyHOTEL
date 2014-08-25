@@ -45,9 +45,8 @@ import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.activity.SignupActivity;
 import com.twoheart.dailyhotel.model.Credit;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.KakaoLink;
+import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Log;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
@@ -131,8 +130,11 @@ public class CreditFragment extends BaseFragment implements Constants,
 
 		if (v.getId() == btnInvite.getId()) {
 			try {
-				// sendUrlLink(v);
-				sendAppData(v);
+				/**
+				 * TODO : KAKAO LINK API 교체
+				 */
+				String msg = getString(R.string.kakaolink_msg_prefix) + mRecommendCode + getString(R.string.kakaolink_msg_suffix);
+				KakaoLinkManager.getInstance(getActivity()).sendInviteMsgKakaoLink(msg);
 			} catch (Exception e) {
 				Log.d(TAG, "kakao link error " + e.toString());
 			}
@@ -151,81 +153,6 @@ public class CreditFragment extends BaseFragment implements Constants,
 			mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 		}
 
-	}
-	
-	/**
-	 * 
-	 * @param v
-	 * @throws NameNotFoundException
-	 */
-
-	public void sendUrlLink(View v) throws NameNotFoundException {
-		// Recommended: Use application context for parameter.
-		KakaoLink kakaoLink = KakaoLink.getLink(mHostActivity);
-
-		// check, intent is available.
-		if (!kakaoLink.isAvailableIntent()) {
-			alert(getString(R.string.dialog_msg_not_installed_kakaotalk));
-			return;
-		}
-
-		kakaoLink.openKakaoLink(
-				mHostActivity,
-				getString(R.string.homepage),
-				getString(R.string.kakaolink_msg_prefix) + mRecommendCode + getString(R.string.kakaolink_msg_suffix),
-				mHostActivity.getPackageName(),
-				mHostActivity.getPackageManager().getPackageInfo(
-						mHostActivity.getPackageName(), 0).versionName,
-				getString(R.string.app_name), "UTF-8");
-	}
-
-	/**
-	 * Send App data
-	 */
-	public void sendAppData(View v) throws NameNotFoundException {
-		ArrayList<Map<String, String>> metaInfoArray = new ArrayList<Map<String, String>>();
-
-		// If application is support Android platform.
-		Map<String, String> metaInfoAndroid = new Hashtable<String, String>(1);
-		metaInfoAndroid.put("os", "android");
-		metaInfoAndroid.put("devicetype", "phone");
-		metaInfoAndroid.put("installurl", Util.storeReleaseAddress("http://kakaolink.dailyhotel.co.kr"));
-		// Play Store
-//		metaInfoAndroid.put("installurl", "http://kakaolink.dailyhotel.co.kr");
-		// T Store
-//		 metaInfoAndroid.put("installurl", URL_STORE_T_DAILYHOTEL);
-		metaInfoAndroid.put("executeurl", "kakaoLinkTest://starActivity");
-
-		// If application is support ios platform.
-		Map<String, String> metaInfoIOS = new Hashtable<String, String>(1);
-		metaInfoIOS.put("os", "ios");
-		metaInfoIOS.put("devicetype", "phone");
-		metaInfoIOS.put("installurl", "http://kakaolink.dailyhotel.co.kr");
-		metaInfoIOS.put("executeurl", "kakaoLinkTest://starActivity");
-
-		// add to array
-		metaInfoArray.add(metaInfoAndroid);
-		metaInfoArray.add(metaInfoIOS);
-
-		// Recommended: Use application context for parameter.
-		KakaoLink kakaoLink = KakaoLink.getLink(mHostActivity
-				.getApplicationContext());
-
-		// check, intent is available.
-		if (!kakaoLink.isAvailableIntent()) {
-			alert(getString(R.string.dialog_msg_not_installed_kakaotalk));
-			return;
-		}
-
-
-		kakaoLink.openKakaoAppLink(
-				mHostActivity,
-				"http://link.kakao.com/?test-android-app",
-				getString(R.string.kakaolink_msg_prefix) + mRecommendCode + getString(R.string.kakaolink_msg_suffix),
-				mHostActivity.getPackageName(),
-				mHostActivity.getPackageManager().getPackageInfo(
-						mHostActivity.getPackageName(), 0).versionName,
-				"dailyHOTEL 초대 메시지", "UTF-8", metaInfoArray);
 	}
 
 	private void alert(String message) {

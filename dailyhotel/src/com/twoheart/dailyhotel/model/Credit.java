@@ -46,24 +46,14 @@ public class Credit implements Parcelable {
 		this.expires = expires;
 	}
 	
-	public String getContent() {
-		return content;
-	}
-	public void setContent(String content) {
-		this.content = content;
-	}
-	public String getBonus() {
-		return bonus;
-	}
-	public void setBonus(String bonus) {
-		this.bonus = bonus;
-	}
-	public String getExpires() {
-		return expires;
-	}
-	public void setExpires(String expires) {
-		this.expires = expires;
-	}
+	public String getContent() { return content; }
+	public void setContent(String content) { this.content = content; }
+	
+	public String getBonus() { return bonus; }
+	public void setBonus(String bonus) { this.bonus = bonus; }
+	
+	public String getExpires() { return expires; }
+	public void setExpires(String expires) { this.expires = expires; }
 
 	@Override
 	public int describeContents() {

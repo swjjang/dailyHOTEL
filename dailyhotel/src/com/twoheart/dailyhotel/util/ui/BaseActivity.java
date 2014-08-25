@@ -92,8 +92,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	public void onBackPressed() {
 		super.onBackPressed();
 		// RequestQueue에 등록된 모든 Request들을 취소한다.
-		if (mQueue != null)
-			mQueue.cancelAll(cancelAllRequestFilter);
+		if (mQueue != null) mQueue.cancelAll(cancelAllRequestFilter);
 	}
 
 	@Override

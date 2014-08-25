@@ -80,97 +80,40 @@ public class Hotel implements Parcelable {
 
 	};
 
-	public String getCategory() {
-		return category;
-	}
+	public String getCategory() { return category; }
+	public void setCategory(String category) { this.category = category; }
 
-	public void setCategory(String category) {
-		this.category = category;
-	}
+	public String getImage() { return image; }
+	public void setImage(String image) { this.image = image; }
 
-	public String getImage() {
-		return image;
-	}
+	public String getName() { return name; }
+	public void setName(String name) { this.name = name; }
 
-	public void setImage(String image) {
-		this.image = image;
-	}
+	public String getPrice() { return price; }
+	public void setPrice(String price) { this.price = price; }
 
-	public String getName() {
-		return name;
-	}
+	public String getDiscount() { return discount; }
+	public void setDiscount(String discount) { this.discount = discount; }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+	public String getAddress() { return address; }
+	public void setAddress(String address) { this.address = address; }
 
-	public String getPrice() {
-		return price;
-	}
+	public int getIdx() { return idx; }
+	public void setIdx(int idx) { this.idx = idx; }
 
-	public void setPrice(String price) {
-		this.price = price;
-	}
+	public int getAvailableRoom() { return availableRoom; }
+	public void setAvailableRoom(int availableRoom) { this.availableRoom = availableRoom; }
 
-	public String getDiscount() {
-		return discount;
-	}
+	public int getSequence() { return sequence; }
+	public void setSequence(int sequence) { this.sequence = sequence; }
 
-	public void setDiscount(String discount) {
-		this.discount = discount;
-	}
+	public String getBedType() { return bedType; }
+	public void setBedType(String bedType) { this.bedType = bedType; }
 
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	public int getIdx() {
-		return idx;
-	}
-
-	public void setIdx(int idx) {
-		this.idx = idx;
-	}
-
-	public int getAvailableRoom() {
-		return availableRoom;
-	}
-
-	public void setAvailableRoom(int availableRoom) {
-		this.availableRoom = availableRoom;
-	}
-
-	public int getSequence() {
-		return sequence;
-	}
-
-	public void setSequence(int sequence) {
-		this.sequence = sequence;
-	}
+	public String getDetailRegion() { return detailRegion; }
+	public void setDetailRegion(String detailRegion) { this.detailRegion = detailRegion; }
 
 	@Override
-	public int describeContents() {
-		return 0;
-	}
-
-	public String getBedType() {
-		return bedType;
-	}
-
-	public void setBedType(String bedType) {
-		this.bedType = bedType;
-	}
-
-	public String getDetailRegion() {
-		return detailRegion;
-	}
-
-	public void setDetailRegion(String detailRegion) {
-		this.detailRegion = detailRegion;
-	}
+	public int describeContents() { return 0; }
 
 }

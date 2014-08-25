@@ -56,57 +56,25 @@ public class HotelDetail implements Parcelable {
 
 	};
 	
-	public List<String> getImageUrl() {
-		return mImageUrl;
-	}
+	public List<String> getImageUrl() { return mImageUrl; }
+	public void setImageUrl(List<String> imageUrl) { this.mImageUrl = imageUrl; }
 	
-	public void setImageUrl(List<String> imageUrl) {
-		this.mImageUrl = imageUrl;
-	}
+	public Hotel getHotel() { return mHotel; }
+	public void setHotel(Hotel hotel) { this.mHotel = hotel; }
 	
-	public Hotel getHotel() {
-		return mHotel;
-	}
+	public double getLatitude() { return mLatitude; }
+	public void setLatitude(double latitude) { this.mLatitude = latitude; }
 	
-	public void setHotel(Hotel hotel) {
-		this.mHotel = hotel;
-	}
+	public double getLongitude() { return mLongitude; }
+	public void setLongitude(double longitude) { this.mLongitude = longitude; }
 	
-	public double getLatitude() {
-		return mLatitude;
-	}
-	
-	public void setLatitude(double latitude) {
-		this.mLatitude = latitude;
-	}
-	
-	public double getLongitude() {
-		return mLongitude;
-	}
-	
-	public void setLongitude(double longitude) {
-		this.mLongitude = longitude;
-	}
-	
-	public Map<String, List<String>> getSpecification() {
-		return mSpecification;
-	}
-	
-	public void setSpecification(Map<String, List<String>> specification) {
-		this.mSpecification = specification;
-	}
+	public Map<String, List<String>> getSpecification() { return mSpecification; }
+	public void setSpecification(Map<String, List<String>> specification) { this.mSpecification = specification; }
 
+	public int getSaleIdx() { return mSaleIdx; }
+	public void setSaleIdx(int saleIdx) { this.mSaleIdx = saleIdx; }
+	
 	@Override
-	public int describeContents() {
-		return 0;
-	}
-
-	public int getSaleIdx() {
-		return mSaleIdx;
-	}
-
-	public void setSaleIdx(int saleIdx) {
-		this.mSaleIdx = saleIdx;
-	}
+	public int describeContents() { return 0; }
 
 }

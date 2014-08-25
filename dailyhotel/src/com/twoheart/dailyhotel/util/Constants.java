@@ -182,11 +182,11 @@ public interface Constants {
 	public static final int CODE_REQUEST_ACTIVITY_BOOKING = 7;
 	public static final int CODE_REQUEST_ACTIVITY_INTRO = 8;
 
-	public static final int CODE_REQUEST_ISPMOBILE = 8;
-	public static final int CODE_REQUEST_KFTC_BANKPAY = 9;
-	public static final int RESULT_SALES_CLOSED = 10; // 예약을 하려 버튼을 눌렀는데 주문 시간이 지난경우.
+	public static final int CODE_REQUEST_ISPMOBILE = 9;
+	public static final int CODE_REQUEST_KFTC_BANKPAY = 10;
+	public static final int RESULT_SALES_CLOSED = 11; // 예약을 하려 버튼을 눌렀는데 주문 시간이 지난경우.
 	
-	public static final int CODE_REQUEST_ACTIVITY_BOOKING_DETAIL = 11;
+	public static final int CODE_REQUEST_ACTIVITY_BOOKING_DETAIL = 12;
 
 	// Android Activity의 Result Code들이다.
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_FAIL = 100;

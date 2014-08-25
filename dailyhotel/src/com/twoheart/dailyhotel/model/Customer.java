@@ -47,49 +47,22 @@ public class Customer implements Parcelable {
 
 	};
 
-	public String getEmail() {
-		return mEmail;
-	}
+	public String getEmail() { return mEmail; }
+	public void setEmail(String email) { this.mEmail = email; }
 
-	public void setEmail(String email) {
-		this.mEmail = email;
-	}
+	public String getName() { return mName; }
+	public void setName(String name) { this.mName = name; }
 
-	public String getName() {
-		return mName;
-	}
+	public String getPhone() { return mPhone; }
+	public void setPhone(String phone) { this.mPhone = phone; }
 
-	public void setName(String name) {
-		this.mName = name;
-	}
+	public String getUserIdx() { return mUserIdx; }
+	public void setUserIdx(String userIdx) { this.mUserIdx = userIdx; }
 
-	public String getPhone() {
-		return mPhone;
-	}
-
-	public void setPhone(String phone) {
-		this.mPhone = phone;
-	}
-
-	public String getUserIdx() {
-		return mUserIdx;
-	}
-
-	public void setUserIdx(String userIdx) {
-		this.mUserIdx = userIdx;
-	}
-
-	public String getAccessToken() {
-		return mAccessToken;
-	}
-
-	public void setAccessToken(String accessToken) {
-		this.mAccessToken = accessToken;
-	}
+	public String getAccessToken() { return mAccessToken; }
+	public void setAccessToken(String accessToken) { this.mAccessToken = accessToken; }
 
 	@Override
-	public int describeContents() {
-		return 0;
-	}
+	public int describeContents() { return 0; }
 
 }

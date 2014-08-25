@@ -16,12 +16,9 @@ public class Pay implements Parcelable {
 	private String mCheckOut;
 	private String payType;
 
-	public Pay() {
-	}
+	public Pay() {}
 
-	public Pay(Parcel in) {
-		readFromParcel(in);
-	}
+	public Pay(Parcel in) { readFromParcel(in); }
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
@@ -57,66 +54,28 @@ public class Pay implements Parcelable {
 
 	};
 
-	public HotelDetail getHotelDetail() {
-		return mHotelDetail;
-	}
+	public HotelDetail getHotelDetail() { return mHotelDetail; }
+	public void setHotelDetail(HotelDetail hotelDetail) { this.mHotelDetail = hotelDetail; }
 
-	public void setHotelDetail(HotelDetail hotelDetail) {
-		this.mHotelDetail = hotelDetail;
-	}
+	public Credit getCredit() { return mCredit; }
+	public void setCredit(Credit credit) { this.mCredit = credit; }
 
-	public Credit getCredit() {
-		return mCredit;
-	}
+	public Customer getCustomer() { return mCustomer; }
+	public void setCustomer(Customer customer) { this.mCustomer = customer; }
 
-	public void setCredit(Credit credit) {
-		this.mCredit = credit;
-	}
+	public int getPayPrice() { return mPayPrice; }
+	public void setPayPrice(int payPrice) { this.mPayPrice = payPrice; }
 
-	public Customer getCustomer() {
-		return mCustomer;
-	}
+	public boolean isSaleCredit() { return isSaleCredit; }
+	public void setSaleCredit(boolean isSaleCredit) { this.isSaleCredit = isSaleCredit; }
 
-	public void setCustomer(Customer customer) {
-		this.mCustomer = customer;
-	}
+	public String getCheckOut() { return mCheckOut; }
+	public void setCheckOut(String checkOut) { mCheckOut = checkOut; }
 
-	public int getPayPrice() {
-		return mPayPrice;
-	}
-
-	public void setPayPrice(int payPrice) {
-		this.mPayPrice = payPrice;
-	}
-
-	public boolean isSaleCredit() {
-		return isSaleCredit;
-	}
-
-	public void setSaleCredit(boolean isSaleCredit) {
-		this.isSaleCredit = isSaleCredit;
-	}
-
-	public String getCheckOut() {
-		return mCheckOut;
-	}
-
-	public void setCheckOut(String checkOut) {
-		mCheckOut = checkOut;
-	}
-
-	public String getPayType() {
-		return payType;
-	}
-
-	public void setPayType(String payType) {
-		this.payType = payType;
-	}
+	public String getPayType() { return payType; }
+	public void setPayType(String payType) { this.payType = payType; }
 
 	@Override
-	public int describeContents() {
-		return 0;
-	}
-
+	public int describeContents() { return 0; }
 
 }

@@ -23,7 +23,7 @@
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="com.twoheart.dailyhotel.permission.C2D_MESSAGE" />
-    
+
     <permission
         android:name="com.twoheart.dailyhotel.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" >
@@ -51,6 +51,12 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="@string/kakaolink_host"
+                    android:scheme="@string/kakao_scheme" />
             </intent-filter>
         </activity>
         <activity
@@ -131,7 +137,6 @@
             android:name="com.twoheart.dailyhotel.activity.PaymentWaitActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
-        
         <activity
             android:name="com.twoheart.dailyhotel.activity.PaymentActivity"
             android:launchMode="singleTop"
@@ -155,18 +160,15 @@
             android:name="com.twoheart.dailyhotel.activity.PushDialogActivity"
             android:screenOrientation="portrait" >
         </activity>
-        
         <activity
             android:name="com.twoheart.dailyhotel.activity.GcmLockDialogActivity"
             android:screenOrientation="portrait" >
-        </activity> 
-        
+        </activity>
         <activity
             android:name="com.twoheart.dailyhotel.activity.AccountCompleteDialogActivity"
-            android:theme="@style/TransDialog"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:theme="@style/TransDialog" >
         </activity>
-        
         <activity android:name="com.facebook.LoginActivity" />
 
         <meta-data
@@ -178,6 +180,9 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/app_id" />
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="@string/kakao_app_key" />
 
         <!-- Used for Google Play Store Campaign Measurement -->
         <service android:name="com.google.analytics.tracking.android.CampaignTrackingService" />

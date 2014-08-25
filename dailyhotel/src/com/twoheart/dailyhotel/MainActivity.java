@@ -539,7 +539,6 @@ Constants {
 			break;
 		}
 
-		//		android.util.Log.e("POS",position+"");
 		delayedReplace(indexLastFragment);
 		drawerLayout.closeDrawer(drawerList);
 
@@ -594,11 +593,13 @@ Constants {
 				DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
 
 		mMenuImages = new ArrayList<DrawerMenu>();
+		
 		mMenuImages.add(new DrawerMenu(DrawerMenu.DRAWER_MENU_LIST_TYPE_LOGO));
 		mMenuImages.add(new DrawerMenu(getString(R.string.drawer_menu_pin_title_resrvation),
 				DrawerMenu.DRAWER_MENU_LIST_TYPE_SECTION));
 		mMenuImages.add(menuHotelListFragment);
 		mMenuImages.add(menuBookingListFragment);
+		
 		mMenuImages.add(new DrawerMenu(getString(R.string.drawer_menu_pin_title_account),
 				DrawerMenu.DRAWER_MENU_LIST_TYPE_SECTION));
 		mMenuImages.add(menuCreditFragment);
@@ -681,29 +682,14 @@ Constants {
 			this.type = type;
 		}
 
-		public int getType() {
-			return type;
-		}
+		public int getType() { return type; }
+		public void setType(int type) { this.type = type; }
 
-		public void setType(int type) {
-			this.type = type;
-		}
+		public String getTitle() { return title; }
+		public void setTitle(String title) { this.title = title; }
 
-		public String getTitle() {
-			return title;
-		}
-
-		public void setTitle(String title) {
-			this.title = title;
-		}
-
-		public int getIcon() {
-			return icon;
-		}
-
-		public void setIcon(int icon) {
-			this.icon = icon;
-		}
+		public int getIcon() { return icon; }
+		public void setIcon(int icon) { this.icon = icon; }
 
 	}
 
@@ -724,19 +710,13 @@ Constants {
 		}
 
 		@Override
-		public int getCount() {
-			return list.size();
-		}
+		public int getCount() { return list.size(); }
 
 		@Override
-		public Object getItem(int position) {
-			return list.get(position);
-		}
+		public Object getItem(int position) { return list.get(position); }
 
 		@Override
-		public long getItemId(int position) {
-			return position;
-		}
+		public long getItemId(int position) { return position;}
 
 		@Override
 		public boolean isEnabled(int position) {
