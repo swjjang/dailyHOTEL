@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
@@ -102,23 +103,8 @@ public class ForgotPwdActivity extends BaseActivity implements Constants,
 
 			if (response.trim().equals("done")) {
 				unLockUI();
-				AlertDialog.Builder alert = new AlertDialog.Builder(
-						ForgotPwdActivity.this);
-				
-				alert.setPositiveButton("확인",
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								dialog.dismiss(); // 닫기
-							}
-						});
-
-				// Jason | Clear input form
+				SimpleAlertDialog.build(this, getString(R.string.dialog_msg_sent_email), "확인", null).show();
 				etForgot.setText("");
-
-				alert.setMessage(getString(R.string.dialog_msg_sent_email));
-				alert.show();
 			}
 		}
 	}

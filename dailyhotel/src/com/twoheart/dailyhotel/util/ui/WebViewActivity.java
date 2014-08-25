@@ -121,7 +121,7 @@ public class WebViewActivity extends BaseActivity implements
 										int which) {
 									result.confirm();
 								}
-							}).setCancelable(false).create().show();
+							}).setCancelable(false).show();
 			return true;
 		};
 

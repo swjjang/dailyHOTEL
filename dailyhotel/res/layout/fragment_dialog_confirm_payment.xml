@@ -68,7 +68,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:text="@string/dialog_msg_payment_confirm_card"
+                    android:text="@string/dialog_msg_payment_confirm"
                     android:textSize="13.5dp" />
             </LinearLayout>
 

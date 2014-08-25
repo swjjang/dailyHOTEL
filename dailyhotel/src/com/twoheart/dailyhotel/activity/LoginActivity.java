@@ -358,22 +358,8 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 					// 로그인 실패
 					// 실패 msg 출력
 					else if (obj.length() > 1) {
-
 						msg = obj.getString("msg");
 						SimpleAlertDialog.build(this, msg, "확인", null).show();
-//						SimpleAlertDialog.build(this, title, msg, positive, posListener)
-//						AlertDialog.Builder alert = new AlertDialog.Builder(
-//								this);
-//						alert.setPositiveButton("확인",
-//								new DialogInterface.OnClickListener() {
-//							@Override
-//							public void onClick(DialogInterface dialog,
-//									int which) {
-//								dialog.dismiss(); // 닫기
-//							}
-//						});
-//						alert.setMessage(msg);
-//						alert.show();
 					}
 
 				}

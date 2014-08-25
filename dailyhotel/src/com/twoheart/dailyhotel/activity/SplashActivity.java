@@ -15,6 +15,7 @@
  */
 package com.twoheart.dailyhotel.activity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,6 +27,7 @@ import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -46,6 +48,7 @@ import com.android.volley.VolleyError;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -68,11 +71,7 @@ DailyHotelJsonResponseListener, ErrorListener {
 
 	protected HashMap<String, String> regPushParams;
 
-	private ImageView ivCircle1;
-	private ImageView ivCircle2;
-	private ImageView ivCircle3;
-
-
+	private ArrayList<ImageView> ivCircles;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -86,9 +85,9 @@ DailyHotelJsonResponseListener, ErrorListener {
 		setActionBarHide();
 		setContentView(R.layout.activity_splash);
 
-		ivCircle1 = (ImageView)findViewById(R.id.iv_splash_circle1);
-		ivCircle2 = (ImageView)findViewById(R.id.iv_splash_circle2);
-		ivCircle3 = (ImageView)findViewById(R.id.iv_splash_circle3);
+		ivCircles = new ArrayList<ImageView>();
+		for (int i=0;i<3;i++) ivCircles.add((ImageView)findViewById(R.id.iv_splash_circle1 + i));
+		
 	}
 
 	@Override
@@ -101,13 +100,8 @@ DailyHotelJsonResponseListener, ErrorListener {
 		startSplashLoad();
 
 		if(isAirplainMode && !isNetworkAvailable) {
-			Builder builder = new AlertDialog.Builder(SplashActivity.this);
-
-			builder.setTitle("잠시만요!");
-			builder.setMessage(getString(R.string.dialog_msg_network_please_off_airplain));
-			builder.setCancelable(false);
-			builder.setPositiveButton("확인",
-					new DialogInterface.OnClickListener() {
+			
+			OnClickListener posListener = new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					if (VolleyHttpClient.isAvailableNetwork()) {
@@ -121,16 +115,17 @@ DailyHotelJsonResponseListener, ErrorListener {
 						}, 100);
 					}
 				}
-			});
-			builder.setNegativeButton("설정",
-					new DialogInterface.OnClickListener() {
+			};
+			
+			OnClickListener negaListener = new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
 					dialog.dismiss();
 				}
-			});
-			builder.setOnKeyListener(new OnKeyListener() {
+			};
+			
+			OnKeyListener keyListener = new OnKeyListener() {
 				@Override
 				public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
 					if(keyCode == KeyEvent.KEYCODE_BACK){
@@ -140,23 +135,17 @@ DailyHotelJsonResponseListener, ErrorListener {
 					}
 					return false;
 				}
-			});
-
-			alertDlg = builder.create();
-			alertDlg.show();
+			};
+			
+			SimpleAlertDialog.build(this, "잠시만요!", getString(R.string.dialog_msg_network_please_off_airplain),
+					"확인", "설정", posListener, negaListener).setOnKeyListener(keyListener).show();
 		}
 
 		else if (!isAirplainMode && !isNetworkAvailable) {
 
 			if(alertDlg == null) {
-
-				Builder builder = new AlertDialog.Builder(SplashActivity.this);
-
-				builder.setTitle("잠시만요!");
-				builder.setMessage(getString(R.string.dialog_msg_network_unstable_retry_or_set_wifi));
-				builder.setCancelable(false);
-				builder.setPositiveButton("재시도",
-						new DialogInterface.OnClickListener() {
+				
+				OnClickListener posListener = new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						if (VolleyHttpClient.isAvailableNetwork()) {
@@ -170,16 +159,17 @@ DailyHotelJsonResponseListener, ErrorListener {
 							}, 100);
 						}
 					}
-				});
-				builder.setNegativeButton("설정",
-						new DialogInterface.OnClickListener() {
+				};
+				
+				OnClickListener negaListener = new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
 						dialog.dismiss();
 					}
-				});
-				builder.setOnKeyListener(new OnKeyListener() {
+				};
+				
+				OnKeyListener keyListener = new OnKeyListener() {
 					@Override
 					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
 						if(keyCode == KeyEvent.KEYCODE_BACK){
@@ -189,9 +179,10 @@ DailyHotelJsonResponseListener, ErrorListener {
 						}
 						return false;
 					}
-				});
-
-				alertDlg = builder.create();
+				};
+				
+				alertDlg = SimpleAlertDialog.build(this, "잠시만요", getString(R.string.dialog_msg_network_unstable_retry_or_set_wifi),
+						"재시도", "설정", posListener, negaListener).setOnKeyListener(keyListener).create();
 			}
 
 			alertDlg.show();
@@ -203,32 +194,17 @@ DailyHotelJsonResponseListener, ErrorListener {
 	}
 
 	private void startSplashLoad() {
-		final Animation fade1 = AnimationUtils.loadAnimation(this, R.anim.splash_load);
-		final Animation fade2 = AnimationUtils.loadAnimation(this, R.anim.splash_load);
-		final Animation fade3 = AnimationUtils.loadAnimation(this, R.anim.splash_load);
-
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				ivCircle1.setVisibility(View.VISIBLE);
-				ivCircle1.startAnimation(fade1);
-			}
-		}, 250);
-
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				ivCircle2.setVisibility(View.VISIBLE);
-				ivCircle2.startAnimation(fade2);
-			}
-		}, 500);
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				ivCircle3.setVisibility(View.VISIBLE);
-				ivCircle3.startAnimation(fade3);
-			}
-		}, 750);		
+		
+		for (int i=0; i<3; i++){
+			final int idx = i;
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					ivCircles.get(idx).setVisibility(View.VISIBLE);
+					ivCircles.get(idx).startAnimation(AnimationUtils.loadAnimation(SplashActivity.this, R.anim.splash_load));
+				}
+			}, 250 * (i + 1));	
+		}
 	}
 
 	private void moveToLoginStep() {
@@ -328,13 +304,7 @@ DailyHotelJsonResponseListener, ErrorListener {
 				android.util.Log.e("MIN / MAX / CUR / SKIP", minVersion+" / "+maxVersion+" / "+currentVersion+" / "+skipMaxVersion);
 
 				if (minVersion > currentVersion) { // 강제 업데이트
-					AlertDialog.Builder alertDialog = new AlertDialog.Builder(SplashActivity.this);
-					alertDialog
-					.setTitle(getString(R.string.dialog_title_notice))
-					.setMessage(getString(R.string.dialog_msg_please_update_new_version)) 
-					.setCancelable(false)
-					.setPositiveButton("업데이트",
-							new DialogInterface.OnClickListener() {
+					OnClickListener posListener = new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(
 								DialogInterface dialog,
@@ -346,18 +316,28 @@ DailyHotelJsonResponseListener, ErrorListener {
 							startActivity(marketLaunch);
 							finish();
 						}
-					});
-					AlertDialog alert = alertDialog.create();
-					alert.show();
+					};
+					
+					SimpleAlertDialog.build(this, getString(R.string.dialog_title_notice),
+							getString(R.string.dialog_msg_please_update_new_version), "업데이트", posListener).show();
+					
 				} else if ((maxVersion > currentVersion)
 						&& (skipMaxVersion != maxVersion)) {
-					AlertDialog.Builder alertDialog = new AlertDialog.Builder(
-							SplashActivity.this);
-					alertDialog
-					.setTitle(getString(R.string.dialog_title_notice))
-					.setMessage(getString(R.string.dialog_msg_update_now))
-					.setCancelable(true)
-					.setOnCancelListener(new OnCancelListener() {
+					
+					OnClickListener posListener = new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(
+								DialogInterface dialog,
+								int which) {
+							Intent marketLaunch = new Intent(
+									Intent.ACTION_VIEW);
+							marketLaunch.setData(Uri.parse(Util
+									.storeReleaseAddress()));
+							startActivity(marketLaunch);
+						}
+					};
+					
+					OnCancelListener cancelListener = new OnCancelListener() {
 
 						@Override
 						public void onCancel(DialogInterface dialog) {
@@ -373,31 +353,12 @@ DailyHotelJsonResponseListener, ErrorListener {
 							editor.commit();
 							showMainActivity(newEventFlag);
 						}
-					})
-					.setNegativeButton("취소",
-							new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(
-								DialogInterface dialog,
-								int which) {
-							dialog.cancel();
-						}
-					})
-					.setPositiveButton("업데이트",
-							new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(
-								DialogInterface dialog,
-								int which) {
-							Intent marketLaunch = new Intent(
-									Intent.ACTION_VIEW);
-							marketLaunch.setData(Uri.parse(Util
-									.storeReleaseAddress()));
-							startActivity(marketLaunch);
-						}
-					});
-					AlertDialog alert = alertDialog.create();
-					alert.show();
+					};
+					
+					SimpleAlertDialog.build(this, getString(R.string.dialog_title_notice),
+							getString(R.string.dialog_msg_update_now), "업데이트", "취소", posListener, null)
+							.setOnCancelListener(cancelListener).show();
+					
 				} else {
 					showMainActivity(newEventFlag);
 				}
@@ -414,10 +375,8 @@ DailyHotelJsonResponseListener, ErrorListener {
 		Handler h = new Handler();
 		h.postDelayed(new Runnable() {
 			public void run() {
-				if (newEventFlag == VALUE_WEB_API_RESPONSE_NEW_EVENT_NOTIFY)
-					setResult(CODE_RESULT_ACTIVITY_SPLASH_NEW_EVENT);
-				else if (newEventFlag == VALUE_WEB_API_RESPONSE_NEW_EVENT_NONE)
-					setResult(RESULT_OK);
+				if (newEventFlag == VALUE_WEB_API_RESPONSE_NEW_EVENT_NOTIFY) setResult(CODE_RESULT_ACTIVITY_SPLASH_NEW_EVENT);
+				else if (newEventFlag == VALUE_WEB_API_RESPONSE_NEW_EVENT_NONE) setResult(RESULT_OK);
 				finish();
 
 			}

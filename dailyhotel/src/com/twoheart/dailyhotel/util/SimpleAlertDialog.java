@@ -17,6 +17,7 @@ public class SimpleAlertDialog {
 	}
 	
 	public static Builder build(Context context, String title, String msg, String positive, OnClickListener posListener) {
+		android.util.Log.e("msg",msg);
 		Builder alert = SimpleAlertDialog.build(context, msg, positive, posListener);
 		if (title != null && !title.isEmpty())  alert.setTitle(title);
 		return alert; 

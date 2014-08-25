@@ -99,11 +99,9 @@
     <string name="dialog_msg_update_now">지금 업그레이드하여 가장 멋진 데일리호텔 앱을 다운받으세요</string>
     <string name="dialog_msg_sales_closed">오전 9시부터 오늘의 호텔이 공개됩니다.</string>
     
-    <string name="dialog_msg_payment_confirm_card">당일 예약 특성 상, 결제 완료 후&lt;br/&gt;&lt;b&gt;취소나 변경이 불가&lt;/b&gt;합니다.&lt;br/&gt;&lt;br/&gt;\'체크인 시 배정\'의 경우 더블,트윈 등의&lt;br/&gt;&lt;b&gt;베드 타입은 보장하지 않으며&lt;/b&gt;&lt;br/&gt;2인이 투숙할 수 있는 객실로 배정됩니다.&lt;br/&gt;&lt;br/&gt; 위 사항에 동의하시면 아래의&lt;br/&gt;버튼을 눌러 결제를 진행해 주세요.</string>
-    <string name="dialog_msg_payment_confirm_account">당일 예약 특성 상, 결제 완료 후&lt;br/&gt;&lt;b&gt;취소나 변경이 불가&lt;/b&gt;합니다.&lt;br/&gt;&lt;br/&gt;\'체크인 시 배정\'의 경우 더블,트윈 등의&lt;br/&gt;&lt;b&gt;베드 타입은 보장하지 않으며&lt;/b&gt;&lt;br/&gt;2인이 투숙할 수 있는 객실로 배정됩니다.&lt;br/&gt;&lt;br/&gt; 위 사항에 동의하시면 아래의&lt;br/&gt;버튼을 눌러 결제를 진행해 주세요.</string>
+    <string name="dialog_msg_payment_confirm">당일 예약 특성 상, 결제 완료 후&lt;br/&gt;&lt;b&gt;취소나 변경이 불가&lt;/b&gt;합니다.&lt;br/&gt;&lt;br/&gt;\'체크인 시 배정\'의 경우 더블,트윈 등의&lt;br/&gt;&lt;b&gt;베드 타입은 보장하지 않으며&lt;/b&gt;&lt;br/&gt;2인이 투숙할 수 있는 객실로 배정됩니다.&lt;br/&gt;&lt;br/&gt; 위 사항에 동의하시면 아래의&lt;br/&gt;버튼을 눌러 결제를 진행해 주세요.</string>
     
-    <string name="dialog_btn_payment_confirm_card">동의하고 결제 진행</string>
-    <string name="dialog_btn_payment_confirm_account">동의하고 결제 진행</string>
+    <string name="dialog_btn_payment_confirm">동의하고 결제 진행</string>
     
     <string name="dialog_btn_text_update">업데이트</string>
     <string name="dialog_btn_text_complete">완료</string>

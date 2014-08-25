@@ -451,8 +451,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="right"
-            android:padding="15dp" >
+            android:gravity="center_horizontal"
+            >
 
             <RadioGroup
                 android:id="@+id/rg_payment_method"
@@ -467,6 +467,13 @@
                     android:layout_marginRight="10dp"
                     android:button="@drawable/btn_radio_holo_light"
                     android:text="신용카드" />
+                <RadioButton
+                    android:id="@+id/rb_payment_hp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:button="@drawable/btn_radio_holo_light"
+                    android:text="휴대폰" />
 
                 <RadioButton
                     android:id="@+id/rb_payment_account"

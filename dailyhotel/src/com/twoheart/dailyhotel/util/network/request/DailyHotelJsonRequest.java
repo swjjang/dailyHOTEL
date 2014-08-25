@@ -23,7 +23,6 @@ public class DailyHotelJsonRequest extends DailyHotelRequest<JSONObject> {
 			DailyHotelJsonResponseListener listener, ErrorListener errorListener) {
 		super(method, url, parameters, errorListener);
 		
-		
 		this.mListener = listener;
 		
 	}

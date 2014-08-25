@@ -26,7 +26,6 @@ import kr.co.kcp.util.PackageState;
 import org.apache.http.util.EncodingUtils;
 
 import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
@@ -300,11 +299,8 @@ public class PaymentActivity extends BaseActivity implements Constants {
 				Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 
 				int requestCode = 0;
-				if (url.startsWith("kftc-bankpay")) {
-					requestCode = CODE_REQUEST_KFTC_BANKPAY;
-				} else if (url.startsWith("ispmobile")) {
-					requestCode = CODE_REQUEST_ISPMOBILE;
-				}
+				if (url.startsWith("kftc-bankpay"))  requestCode = CODE_REQUEST_KFTC_BANKPAY;
+				else if (url.startsWith("ispmobile")) requestCode = CODE_REQUEST_ISPMOBILE;
 
 				startActivityForResult(intent, requestCode);
 			} catch (ActivityNotFoundException e) { return true; }
@@ -493,40 +489,6 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			
 			SimpleAlertDialog.build(PaymentActivity.this, "확인", getString(R.string.dialog_msg_install_paypin),
 					"설치", "취소", posListener, negaListener).show();
-			
-//			AlertDialog.Builder dlgBuilder = new AlertDialog.Builder(
-//					PaymentActivity.this);
-//			AlertDialog alertDlg;
-//
-//			dlgBuilder.setTitle("확인");
-//			dlgBuilder
-//			.setMessage(getString(R.string.dialog_msg_install_paypin));
-//			dlgBuilder.setCancelable(false);
-//			dlgBuilder.setPositiveButton("설치",
-//					new DialogInterface.OnClickListener() {
-//				@Override
-//				public void onClick(DialogInterface dialog, int which) {
-//					dialog.dismiss();
-//
-//					if ( !url_scheme_intent(null, "tstore://PRODUCT_VIEW/0000284061/0")) {
-//						url_scheme_intent(null,
-//								"market://details?id=com.skp.android.paypin&feature=search_result#?t=W251bGwsMSwxLDEsImNvbS5za3AuYW5kcm9pZC5wYXlwaW4iXQ.k");
-//					}
-//				}
-//			});
-//			dlgBuilder.setNegativeButton("취소",
-//					new DialogInterface.OnClickListener() {
-//				@Override
-//				public void onClick(DialogInterface dialog, int which) {
-//					dialog.dismiss();
-//
-//					showToast(getString(R.string.toast_msg_cancel_payment), Toast.LENGTH_SHORT, false);
-//
-//				}
-//			});
-//
-//			alertDlg = dlgBuilder.create();
-//			alertDlg.show();
 		}
 	}
 
@@ -569,37 +531,6 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			
 			SimpleAlertDialog.build(PaymentActivity.this, "알림", getString(R.string.dialog_msg_install_hana_sk), "예", "아니오",
 					posListener, null).show();
-//			AlertDialog.Builder dlgBuilder = new AlertDialog.Builder(
-//					PaymentActivity.this);
-//			AlertDialog alertDlg;
-//
-//			dlgBuilder.setMessage(getString(R.string.dialog_msg_install_hana_sk));
-//			dlgBuilder.setCancelable(false);
-//			dlgBuilder.setPositiveButton("예",
-//					new DialogInterface.OnClickListener() {
-//				@Override
-//				public void onClick(DialogInterface dialog, int which) {
-//					dialog.dismiss();
-//
-//					Intent intent = new Intent(
-//							Intent.ACTION_VIEW,
-//							Uri.parse("http://cert.hanaskcard.com/Ansim/HanaSKPay.apk"));
-//
-//					m_nStat = PROGRESS_STAT_IN;
-//
-//					startActivity(intent);
-//				}
-//			});
-//			dlgBuilder.setNegativeButton("아니오",
-//					new DialogInterface.OnClickListener() {
-//				@Override
-//				public void onClick(DialogInterface dialog, int which) {
-//					dialog.dismiss();
-//				}
-//			});
-//
-//			alertDlg = dlgBuilder.create();
-//			alertDlg.show();
 		}
 	}
 
@@ -747,8 +678,6 @@ public class PaymentActivity extends BaseActivity implements Constants {
 	@Override
 	@JavascriptInterface
 	protected Dialog onCreateDialog(int id) {
-		Log.d(ResultRcvActivity.m_strLogTag,
-				"[PayDemoActivity] called__onCreateDialog - id=[" + id + "]");
 
 		super.onCreateDialog(id);
 
@@ -762,29 +691,6 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		
 		AlertDialog alertDlg = SimpleAlertDialog.build(PaymentActivity.this, "취소", "결제가 진행중입니다.\n취소하시겠습니까?",
 				"예", "아니오", posListener , null).create();
-//		AlertDialog.Builder dlgBuilder = new AlertDialog.Builder(this);
-//		AlertDialog alertDlg;
-//
-//		dlgBuilder.setTitle("취소");
-//		dlgBuilder.setMessage("결제가 진행중입니다.\n취소하시겠습니까?");
-//		dlgBuilder.setCancelable(false);
-//		dlgBuilder.setPositiveButton("예",
-//				new DialogInterface.OnClickListener() {
-//			@Override
-//			public void onClick(DialogInterface dialog, int which) {
-//				dialog.dismiss();
-//				finishActivity("사용자 취소");
-//			}
-//		});
-//		dlgBuilder.setNegativeButton("아니오",
-//				new DialogInterface.OnClickListener() {
-//			@Override
-//			public void onClick(DialogInterface dialog, int which) {
-//				dialog.dismiss();
-//			}
-//		});
-//
-//		alertDlg = dlgBuilder.create();
 
 		return alertDlg;
 	}
@@ -853,25 +759,6 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		};
 		SimpleAlertDialog.build(PaymentActivity.this, "결제알림", "결제를 취소하시겠습니까?",
 				"예", "아니오", posListener , null).show();
-		
-//		AlertDialog.Builder alertDialog = new AlertDialog.Builder(
-//				PaymentActivity.this);
-//		alertDialog.setTitle("결제알림").setMessage("결제를 취소하시겠습니까?")
-//		.setCancelable(false)
-//		.setPositiveButton("예", new DialogInterface.OnClickListener() {
-//			@Override
-//			public void onClick(DialogInterface dialog, int which) {
-//				finish();
-//			}
-//		})
-//		.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
-//			@Override
-//			public void onClick(DialogInterface dialog, int which) {
-//				return;
-//			}
-//		});
-//		AlertDialog alert = alertDialog.create();
-//		alert.show();
 	}
 
 }

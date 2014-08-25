@@ -67,7 +67,8 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 
 	private static final String TAG = "HotelPaymentActivity";
 	private static final int DIALOG_CONFIRM_PAYMENT_CARD = 0;
-	private static final int DIALOG_CONFIRM_PAYMENT_ACCOUNT = 1;
+	private static final int DIALOG_CONFIRM_PAYMENT_HP = 1;
+	private static final int DIALOG_CONFIRM_PAYMENT_ACCOUNT = 2;
 
 	private ScrollView svBooking;
 	private TextView tvCheckIn, tvCheckOut, tvOriginalPriceValue,
@@ -78,7 +79,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 	private LinearLayout llReserverInfoLabel, llReserverInfoEditable;
 	private EditText etReserverName, etReserverNumber, etReserverEmail;
 	private RadioGroup rgPaymentMethod;
-	private RadioButton rbPaymentAccount, rbPaymentCard;
+	private RadioButton rbPaymentAccount, rbPaymentCard, rbPaymentHp;
 
 	private Pay mPay;
 
@@ -129,10 +130,12 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		rgPaymentMethod = (RadioGroup) findViewById(R.id.rg_payment_method);
 		rbPaymentAccount = (RadioButton) findViewById(R.id.rb_payment_account);
 		rbPaymentCard = (RadioButton) findViewById(R.id.rb_payment_card);
+		rbPaymentHp = (RadioButton) findViewById(R.id.rb_payment_hp);
 
 
 		rbPaymentAccount.setOnClickListener(this);
 		rbPaymentCard.setOnClickListener(this);
+		rbPaymentHp.setOnClickListener(this);
 
 		rgPaymentMethod.setOnCheckedChangeListener(this);
 		btnPay.setOnClickListener(this);
@@ -179,23 +182,10 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 
 	}
 
-//	public void dialog(String str) {
-//		AlertDialog.Builder alert = new AlertDialog.Builder(this);
-//		alert.setTitle("결제알림");
-//		alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-//			@Override
-//			public void onClick(DialogInterface dialog, int which) {
-//				dialog.dismiss(); // 닫기
-//			}
-//		});
-//		alert.setMessage(str);
-//		alert.show();
-//	}
-
 	@Override
 	public void onClick(final View v) {
 		if (v.getId() == btnPay.getId()) {
-//
+
 			Dialog dialog = null; 
 
 			if (llReserverInfoEditable.getVisibility() == View.VISIBLE) {
@@ -215,28 +205,31 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 					updateParams.put("user_email", buyer.getEmail());
 					updateParams.put("user_name", buyer.getName());
 					updateParams.put("user_phone", buyer.getPhone());
-							
+
 					lockUI();
 					mQueue.add(new DailyHotelJsonRequest(Method.POST,
-					new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-							URL_WEBAPI_USER_UPDATE_FACEBOOK).toString(),
-							updateParams, this, this));
+							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+									URL_WEBAPI_USER_UPDATE_FACEBOOK).toString(),
+									updateParams, this, this));
 					return;
 				}
 
 			} else {
-				if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentAccount
-						.getId()) { // 무통장 입금을 선택했을 경우
-
-					dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_ACCOUNT);
-				} else if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentCard
+				if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentCard
 						.getId()) { // 신용카드를 선택했을 경우
 
 					dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_CARD);
+				} else if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentHp
+						.getId()) { // 핸드폰을 선택했을 경우
+
+					dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_HP);
+				} else if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentAccount
+						.getId()) { // 가상계좌 입금을 선택했을 경우
+
+					dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_ACCOUNT);
 				}
 
 			}
-
 
 			dialog.setOnDismissListener(new OnDismissListener() {
 				@Override
@@ -273,26 +266,10 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 
 		OnClickListener onClickProceed = null;
 
-		
-		if (type == DIALOG_CONFIRM_PAYMENT_CARD) {
-
-			tvMsg.setText(
-					Html.fromHtml(getString(R.string.dialog_msg_payment_confirm_card))
-					);
-			btnProceed.setText(
-					Html.fromHtml(getString(R.string.dialog_btn_payment_confirm_card))
-					);
-			
-		} else if (type == DIALOG_CONFIRM_PAYMENT_ACCOUNT) {
-
-			tvMsg.setText(
-					Html.fromHtml(getString(R.string.dialog_msg_payment_confirm_account))
-					);
-			btnProceed.setText(
-					Html.fromHtml(getString(R.string.dialog_btn_payment_confirm_account))
-					);
-
-		}
+		tvMsg.setText(
+				Html.fromHtml(getString(R.string.dialog_msg_payment_confirm)));
+		btnProceed.setText(
+				Html.fromHtml(getString(R.string.dialog_btn_payment_confirm)));
 		
 		onClickProceed = new OnClickListener() {
 			@Override
@@ -306,7 +283,6 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				dialog.dismiss();
 			}
 		};
-		
 
 		btnClose.setOnClickListener(new OnClickListener() {
 			@Override
@@ -314,7 +290,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				dialog.dismiss();
 			}
 		});
-		
+
 		btnProceed.setOnClickListener(onClickProceed);
 
 		dialog.setContentView(view);
@@ -330,13 +306,12 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		}
 
 		return false;
-
 	}
 
 	private void moveToPayStep() {
 
 		android.util.Log.e("Sale credit / Pay Price ",mPay.isSaleCredit()+" / "+mPay.getPayPrice());
-		
+
 		Intent intent = new Intent(this, PaymentActivity.class);
 		intent.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
 		startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PAYMENT);
@@ -403,13 +378,12 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 	private void activityResulted(int requestCode, int resultCode, Intent intent) {
 		if (requestCode == CODE_REQUEST_ACTIVITY_PAYMENT) {
 			Log.d(TAG, Integer.toString(resultCode));
-			
+
 			String title = "결제알림";
 			String msg = "";
 			String posTitle = "확인";
 			android.content.DialogInterface.OnClickListener posListener = null;
-			
-			
+
 			switch (resultCode) {
 			case CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE:
 			case CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS:
@@ -425,7 +399,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 						editor.commit();
 					}
 				}
-				
+
 				GaManager.getInstance(getApplicationContext()).
 				purchaseComplete(
 						Integer.toString(mPay.getHotelDetail().getSaleIdx()), 
@@ -443,7 +417,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 						finish();
 					}
 				};
-				
+
 				msg = "결제가 정상적으로 이루어졌습니다";
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_SOLD_OUT:
@@ -485,10 +459,12 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 			case CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER:
 				msg = "결제 대기시간이 초과되었습니다.\n다시 시도해주세요.";
 				break;
+			default:
+				return;
 			}
-			
+
 			SimpleAlertDialog.build(this, title, msg, posTitle, posListener).show();
-			
+
 		} else if (requestCode == CODE_REQUEST_ACTIVITY_LOGIN) {
 			if (resultCode == RESULT_OK) moveToPayStep();	
 		}
@@ -497,8 +473,10 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 	@Override
 	public void onCheckedChanged(RadioGroup group, int checkedId) {
 		if (group.getId() == rgPaymentMethod.getId()) {
-			if (checkedId == rbPaymentAccount.getId()) mPay.setPayType("VBANK");
-			else if (checkedId == rbPaymentCard.getId()) mPay.setPayType("CARD");
+			if (checkedId == rbPaymentCard.getId()) mPay.setPayType("CARD");
+			else if (checkedId == rbPaymentHp.getId()) mPay.setPayType("PHONE_PAY");
+			else if (checkedId == rbPaymentAccount.getId()) mPay.setPayType("VBANK");
+
 		}
 	}
 
@@ -648,7 +626,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 							finish();
 						}
 					};
-					
+
 					SimpleAlertDialog.build(this, "알림", getString(R.string.dialog_msg_sales_closed), "확인", posListener).show();
 
 				}
@@ -673,7 +651,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 					tvReserverName.setText(etReserverName.getText().toString());
 					tvReserverNumber.setText(etReserverNumber.getText().toString());
 					tvReserverEmail.setText(etReserverEmail.getText().toString());
-					
+
 					btnPay.performClick();
 				}
 			} catch (JSONException e) {
@@ -691,11 +669,11 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				mPay.setCredit(new Credit(null, bonus, null));
 
 				DecimalFormat comma = new DecimalFormat("###,##0");
-				
+
 				int credit = Integer.parseInt(mPay.getCredit().getBonus());
 				int discount = Integer.parseInt(mPay.getHotelDetail().getHotel().getDiscount().replaceAll(",", ""));
 				if (credit >= discount) credit = discount;
-				
+
 				String str = comma.format(credit);
 				tvCreditValue.setText(new StringBuilder(str).append("원"));
 
@@ -753,7 +731,6 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 
 					if (accessToken != null) loginParams.put("accessToken",accessToken);
 					else loginParams.put("email", id);
-
 					loginParams.put("pw", pw);
 					android.util.Log.e("LOGIN PARAMS",loginParams.toString());
 

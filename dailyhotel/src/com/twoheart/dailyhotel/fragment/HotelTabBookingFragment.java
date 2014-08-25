@@ -23,6 +23,7 @@ public class HotelTabBookingFragment extends BaseFragment implements
 OnTouchListener {
 
 	private static final String TAG = "HotelTabBookingFragment";
+	
 	private static final int DURATION_HOTEL_IMAGE_SHOW = 4000;
 	private static final String KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL = "hotel_detail";
 
