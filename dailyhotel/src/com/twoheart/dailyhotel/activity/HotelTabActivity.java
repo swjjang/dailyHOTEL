@@ -11,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -25,7 +26,9 @@ import com.twoheart.dailyhotel.fragment.HotelTabBookingFragment;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Log;
+import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.TabActivity;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -203,6 +206,19 @@ DailyHotelStringResponseListener {
 
 				if (hotelDetail.getHotel() == null)
 					hotelDetail.setHotel(new Hotel());
+				
+				/**
+				 * TODO : TEST FOR HOTEL SHARE
+				 */
+//				android.content.DialogInterface.OnClickListener posListener = new android.content.DialogInterface.OnClickListener() {
+//					
+//					@Override
+//					public void onClick(DialogInterface dialog, int which) {
+//						KakaoLinkManager.getInstance(HotelTabActivity.this).shareHotelInfo(hotelDetail);						
+//					}
+//
+//				};
+//				SimpleAlertDialog.build(this, "호텔 정보를 공유합니다.", "공유", posListener).show();
 
 				Hotel hotelBasic = hotelDetail.getHotel();
 

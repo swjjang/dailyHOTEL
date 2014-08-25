@@ -414,7 +414,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 							int which) {
 						dialog.dismiss(); // ´Ý±â
 						setResult(RESULT_OK);
-						finish();
+						BookingActivity.this.finish();
 					}
 				};
 
