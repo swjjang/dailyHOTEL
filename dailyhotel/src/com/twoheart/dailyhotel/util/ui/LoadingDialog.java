@@ -16,7 +16,6 @@ package com.twoheart.dailyhotel.util.ui;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.view.ViewGroup.LayoutParams;
-import android.view.WindowManager;
 import android.widget.ProgressBar;
 
 import com.twoheart.dailyhotel.R;

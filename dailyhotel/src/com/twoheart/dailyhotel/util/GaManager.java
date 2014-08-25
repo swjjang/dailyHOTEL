@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.util;
 import android.app.Application;
 import android.content.Context;
 
-import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.GoogleAnalytics;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.google.analytics.tracking.android.Tracker;

@@ -15,12 +15,10 @@
 package com.twoheart.dailyhotel.activity;
 
 import java.net.URISyntaxException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import kr.co.kcp.android.payment.standard.ResultRcvActivity;
 import kr.co.kcp.util.PackageState;
@@ -28,9 +26,11 @@ import kr.co.kcp.util.PackageState;
 import org.apache.http.util.EncodingUtils;
 
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -46,11 +46,11 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-import com.facebook.widget.WebDialog.FeedDialogBuilder;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Pay;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Log;
+import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
@@ -134,8 +134,8 @@ public class PaymentActivity extends BaseActivity implements Constants {
 					));
 			
 			webView.postUrl(url,
-			parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]),
-					postParameterValue.toArray(new String[postParameterValue.size()])));
+				parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]),
+						postParameterValue.toArray(new String[postParameterValue.size()])));
 			return;
 		} else if (mPay.isSaleCredit()) {
 			url = new StringBuilder(URL_DAILYHOTEL_SERVER)
@@ -161,14 +161,12 @@ public class PaymentActivity extends BaseActivity implements Constants {
 							+ "the length of the value arguments must be same.");
 
 		for (int i = 0; i < key.length; i++) {
-			postParameters.put(key[i],
-					EncodingUtils.getBytes(value[i], "BASE64"));
+			postParameters.put(key[i], EncodingUtils.getBytes(value[i], "BASE64"));
 		}
 
 		for (int i = 0; i < postParameters.size(); i++) {
 
-			if (resultList.size() != 0)
-				resultList.add("&".getBytes());
+			if (resultList.size() != 0) resultList.add("&".getBytes());
 
 			resultList.add(key[i].getBytes());
 			resultList.add("=".getBytes());
@@ -178,15 +176,8 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		int size = 0;
 		int[] sizeOfResult = new int[resultList.size()];
 
-		for (int i = 0; i < resultList.size(); i++) {
-			sizeOfResult[i] = resultList.get(i).length;
-
-		}
-
-		for (int i = 0; i < sizeOfResult.length; i++) {
-			size += sizeOfResult[i];
-
-		}
+		for (int i = 0; i < resultList.size(); i++) sizeOfResult[i] = resultList.get(i).length;
+		for (int i = 0; i < sizeOfResult.length; i++) size += sizeOfResult[i];
 
 		byte[] result = new byte[size];
 
@@ -195,9 +186,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 
 			System.arraycopy(resultList.get(i), 0, result, currentSize,
 					resultList.get(i).length);
-
 			currentSize += resultList.get(i).length;
-
 		}
 
 		return result;
@@ -264,7 +253,6 @@ public class PaymentActivity extends BaseActivity implements Constants {
 						startActivity(new Intent(Intent.ACTION_VIEW,
 								Uri.parse("market://search?q=pname:"
 										+ packagename)));
-
 						return true;
 					}
 				}
@@ -288,27 +276,20 @@ public class PaymentActivity extends BaseActivity implements Constants {
 
 			if ( url.startsWith( "ispmobile" ) ) { // 7.4 ISP 모듈 연동 테스트
 				if( !new PackageState(this).getPackageDownloadInstallState( PACKAGE_NAME_ISP ) ) { 
-					startActivity( new Intent(
-							Intent.ACTION_VIEW, 
-							Uri.parse(URL_STORE_PAYMENT_ISP)));
+					startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_PAYMENT_ISP)));
 					view.goBack();
 					return true; 
 				} 
 			} else if ( url.startsWith( "kftc-bankpay" ) ) { // 7.9 이니시스 모듈 연동 테스트
 				if( !new PackageState(this).getPackageDownloadInstallState( PACKAGE_NAME_KFTC ) ) { 
-					startActivity( new Intent(
-							Intent.ACTION_VIEW, 
-							Uri.parse(URL_STORE_PAYMENT_KFTC)));
+					startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_PAYMENT_KFTC)));
 					view.goBack();
 					return true; 
 				} 
 			} else if (url.startsWith("mpocket.online.ansimclick")) {
 				if (!new PackageState(this).getPackageDownloadInstallState(PACKAGE_NAME_MPOCKET)) {
 					showToast(getString(R.string.toast_msg_retry_payment_after_install_app), Toast.LENGTH_LONG, false);
-					startActivity(new Intent(
-							Intent.ACTION_VIEW,
-							Uri.parse(URL_STORE_PAYMENT_MPOCKET)));
-
+					startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_PAYMENT_MPOCKET)));
 					return true;
 				}
 			} 
@@ -326,9 +307,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 				}
 
 				startActivityForResult(intent, requestCode);
-			} catch (ActivityNotFoundException e) {
-				return true;
-			}
+			} catch (ActivityNotFoundException e) { return true; }
 		}
 
 		return true;
@@ -340,11 +319,8 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		super.onActivityResult(requestCode, resultCode, intent);
 
 		String scriptForSkip = "javascript:";
-		if (requestCode == CODE_REQUEST_ISPMOBILE) {
-			scriptForSkip+="submitIspAuthInfo('RUNSCHEME');"; // ISP 확인 버튼 콜
-		} else if (requestCode == CODE_REQUEST_KFTC_BANKPAY) {
-			scriptForSkip+="returnUrltoMall();"; //KTFC 확인 버튼 콜
-		}
+		if (requestCode == CODE_REQUEST_ISPMOBILE) scriptForSkip+="submitIspAuthInfo('RUNSCHEME');"; // ISP 확인 버튼 콜
+		else if (requestCode == CODE_REQUEST_KFTC_BANKPAY) scriptForSkip+="returnUrltoMall();"; //KTFC 확인 버튼 콜
 		webView.loadUrl(scriptForSkip);
 	}
 
@@ -357,10 +333,8 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			super.onProgressChanged(view, newProgress);
 
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-				if (newProgress != 100)
-					setActionBarProgressBar(true);
-				else
-					setActionBarProgressBar(false);
+				if (newProgress != 100) setActionBarProgressBar(true);
+				else setActionBarProgressBar(false);
 			}
 		}
 
@@ -373,9 +347,6 @@ public class PaymentActivity extends BaseActivity implements Constants {
 	}
 
 	private class mWebViewClient extends WebViewClient {
-
-		public mWebViewClient() {
-		}
 
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -414,11 +385,8 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			super.onReceivedError(view, errorCode, description, failingUrl);
 			android.util.Log.e("ErrorCode / Description / failingUrl",errorCode+" / "+description + " / " + failingUrl);
 			webView.loadUrl("about:blank");
-			if(VolleyHttpClient.isAvailableNetwork()) {
-				setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);
-			} else{
-				setResult(CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR);
-			}
+			if(VolleyHttpClient.isAvailableNetwork()) setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);
+			else setResult(CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR);
 			finish();
 		}
 
@@ -470,9 +438,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 	
 	private class HtmlObserver {
 		@JavascriptInterface
-		public void showHTML(String html) {
-			android.util.Log.e("WEB_VIEW", html);
-		}
+		public void showHTML(String html) { android.util.Log.e("WEB_VIEW", html); }
 	}
 
 	private class KCPPayPinReturn {
@@ -480,7 +446,6 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		public String getConfirm() {
 			if (ResultRcvActivity.b_type) {
 				ResultRcvActivity.b_type = false;
-
 				return "true";
 			} else {
 				return "false";
@@ -498,59 +463,70 @@ public class PaymentActivity extends BaseActivity implements Constants {
 
 					PackageState ps = new PackageState(PaymentActivity.this);
 
-					if (!ps.getPackageAllInstallState("com.skp.android.paypin")) {
-						paypinConfim();
-					} else {
-						url_scheme_intent(null, url);
-					}
+					if (!ps.getPackageAllInstallState("com.skp.android.paypin")) paypinConfim();
+					else url_scheme_intent(null, url);
 				}
 			});
 		}
 
 		@JavascriptInterface
 		private void paypinConfim() {
-			AlertDialog.Builder dlgBuilder = new AlertDialog.Builder(
-					PaymentActivity.this);
-			AlertDialog alertDlg;
-
-			dlgBuilder.setTitle("확인");
-			dlgBuilder
-			.setMessage(getString(R.string.dialog_msg_install_paypin));
-			dlgBuilder.setCancelable(false);
-			dlgBuilder.setPositiveButton("설치",
-					new DialogInterface.OnClickListener() {
+			OnClickListener posListener = new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					dialog.dismiss();
 
-					if (
-							// url_scheme_intent(
-							// "https://play.google.com/store/apps/details?id=com.skp.android.paypin&feature=nav_result#?t=W10."
-							// );
-							// url_scheme_intent(
-							// "market://details?id=com.skp.android.paypin&feature=nav_result#?t=W10."
-							// );
-							!url_scheme_intent(null,
-									"tstore://PRODUCT_VIEW/0000284061/0")) {
-						url_scheme_intent(
-								null,
+					if ( !url_scheme_intent(null, "tstore://PRODUCT_VIEW/0000284061/0")) {
+						url_scheme_intent(null,
 								"market://details?id=com.skp.android.paypin&feature=search_result#?t=W251bGwsMSwxLDEsImNvbS5za3AuYW5kcm9pZC5wYXlwaW4iXQ.k");
 					}
 				}
-			});
-			dlgBuilder.setNegativeButton("취소",
-					new DialogInterface.OnClickListener() {
+			};
+			
+			OnClickListener negaListener = new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					dialog.dismiss();
-
 					showToast(getString(R.string.toast_msg_cancel_payment), Toast.LENGTH_SHORT, false);
-
 				}
-			});
-
-			alertDlg = dlgBuilder.create();
-			alertDlg.show();
+			};
+			
+			SimpleAlertDialog.build(PaymentActivity.this, "확인", getString(R.string.dialog_msg_install_paypin),
+					"설치", "취소", posListener, negaListener).show();
+			
+//			AlertDialog.Builder dlgBuilder = new AlertDialog.Builder(
+//					PaymentActivity.this);
+//			AlertDialog alertDlg;
+//
+//			dlgBuilder.setTitle("확인");
+//			dlgBuilder
+//			.setMessage(getString(R.string.dialog_msg_install_paypin));
+//			dlgBuilder.setCancelable(false);
+//			dlgBuilder.setPositiveButton("설치",
+//					new DialogInterface.OnClickListener() {
+//				@Override
+//				public void onClick(DialogInterface dialog, int which) {
+//					dialog.dismiss();
+//
+//					if ( !url_scheme_intent(null, "tstore://PRODUCT_VIEW/0000284061/0")) {
+//						url_scheme_intent(null,
+//								"market://details?id=com.skp.android.paypin&feature=search_result#?t=W251bGwsMSwxLDEsImNvbS5za3AuYW5kcm9pZC5wYXlwaW4iXQ.k");
+//					}
+//				}
+//			});
+//			dlgBuilder.setNegativeButton("취소",
+//					new DialogInterface.OnClickListener() {
+//				@Override
+//				public void onClick(DialogInterface dialog, int which) {
+//					dialog.dismiss();
+//
+//					showToast(getString(R.string.toast_msg_cancel_payment), Toast.LENGTH_SHORT, false);
+//
+//				}
+//			});
+//
+//			alertDlg = dlgBuilder.create();
+//			alertDlg.show();
 		}
 	}
 
@@ -569,23 +545,14 @@ public class PaymentActivity extends BaseActivity implements Constants {
 
 					PackageState ps = new PackageState(PaymentActivity.this);
 
-					if (!ps.getPackageDownloadInstallState("com.skt.at")) {
-						alertToNext();
-					}
+					if (!ps.getPackageDownloadInstallState("com.skt.at")) alertToNext();
 				}
 			});
 		}
 
 		@JavascriptInterface
 		private void alertToNext() {
-			AlertDialog.Builder dlgBuilder = new AlertDialog.Builder(
-					PaymentActivity.this);
-			AlertDialog alertDlg;
-
-			dlgBuilder.setMessage(getString(R.string.dialog_msg_install_hana_sk));
-			dlgBuilder.setCancelable(false);
-			dlgBuilder.setPositiveButton("예",
-					new DialogInterface.OnClickListener() {
+			OnClickListener posListener = new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					dialog.dismiss();
@@ -598,17 +565,41 @@ public class PaymentActivity extends BaseActivity implements Constants {
 
 					startActivity(intent);
 				}
-			});
-			dlgBuilder.setNegativeButton("아니오",
-					new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					dialog.dismiss();
-				}
-			});
-
-			alertDlg = dlgBuilder.create();
-			alertDlg.show();
+			};
+			
+			SimpleAlertDialog.build(PaymentActivity.this, "알림", getString(R.string.dialog_msg_install_hana_sk), "예", "아니오",
+					posListener, null).show();
+//			AlertDialog.Builder dlgBuilder = new AlertDialog.Builder(
+//					PaymentActivity.this);
+//			AlertDialog alertDlg;
+//
+//			dlgBuilder.setMessage(getString(R.string.dialog_msg_install_hana_sk));
+//			dlgBuilder.setCancelable(false);
+//			dlgBuilder.setPositiveButton("예",
+//					new DialogInterface.OnClickListener() {
+//				@Override
+//				public void onClick(DialogInterface dialog, int which) {
+//					dialog.dismiss();
+//
+//					Intent intent = new Intent(
+//							Intent.ACTION_VIEW,
+//							Uri.parse("http://cert.hanaskcard.com/Ansim/HanaSKPay.apk"));
+//
+//					m_nStat = PROGRESS_STAT_IN;
+//
+//					startActivity(intent);
+//				}
+//			});
+//			dlgBuilder.setNegativeButton("아니오",
+//					new DialogInterface.OnClickListener() {
+//				@Override
+//				public void onClick(DialogInterface dialog, int which) {
+//					dialog.dismiss();
+//				}
+//			});
+//
+//			alertDlg = dlgBuilder.create();
+//			alertDlg.show();
 		}
 	}
 
@@ -625,17 +616,11 @@ public class PaymentActivity extends BaseActivity implements Constants {
 
 					argUrl = arg;
 
-					if (!arg.equals("Install")) {
-						if (!ps.getPackageDownloadInstallState("kvp.jjy.MispAndroid")) {
-							argUrl = "Install";
-						}
-					}
+					if (!arg.equals("Install") && !ps.getPackageDownloadInstallState("kvp.jjy.MispAndroid")) argUrl = "Install";
 
-					strUrl = (argUrl.equals("Install") == true) ? "market://details?id=kvp.jjy.MispAndroid320" // "http://mobile.vpay.co.kr/jsp/MISP/andown.jsp"
-							: argUrl;
+					strUrl = (argUrl.equals("Install") == true) ? "market://details?id=kvp.jjy.MispAndroid320" : argUrl;
 
-					Intent intent = new Intent(Intent.ACTION_VIEW, Uri
-							.parse(strUrl));
+					Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(strUrl));
 
 					m_nStat = PROGRESS_STAT_IN;
 					Log.d("m_nStat", Integer.toString(m_nStat));
@@ -707,19 +692,13 @@ public class PaymentActivity extends BaseActivity implements Constants {
 
 				webView.loadUrl("http://pggw.kcp.co.kr/lds/smart_phone_linux_jsp/sample/card/samrt_res.jsp?result=OK&a="
 						+ ResultRcvActivity.m_uriResult.getQueryParameter("a"));
-				// webView.loadUrl(
-				// "https://pggw.kcp.co.kr/app.do?ActionResult=app&approval_key="
-				// + strApprovalKey );
 			} else {
 				Log.d(ResultRcvActivity.m_strLogTag,
 						"[PayDemoActivity] ISP Result = cancel");
 			}
 		}
 
-		if (m_nStat == PROGRESS_STAT_IN) {
-			checkFrom();
-		}
-
+		if (m_nStat == PROGRESS_STAT_IN) checkFrom();
 		ResultRcvActivity.m_uriResult = null;
 	}
 
@@ -762,9 +741,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 					finishActivity("ISP 결제 기타 오류");
 				}
 			}
-		} catch (Exception e) {
-		} finally {
-		}
+		} catch (Exception e) { e.printStackTrace(); } 
 	}
 
 	@Override
@@ -775,29 +752,39 @@ public class PaymentActivity extends BaseActivity implements Constants {
 
 		super.onCreateDialog(id);
 
-		AlertDialog.Builder dlgBuilder = new AlertDialog.Builder(this);
-		AlertDialog alertDlg;
-
-		dlgBuilder.setTitle("취소");
-		dlgBuilder.setMessage("결제가 진행중입니다.\n취소하시겠습니까?");
-		dlgBuilder.setCancelable(false);
-		dlgBuilder.setPositiveButton("예",
-				new DialogInterface.OnClickListener() {
+		OnClickListener posListener = new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();
 				finishActivity("사용자 취소");
 			}
-		});
-		dlgBuilder.setNegativeButton("아니오",
-				new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.dismiss();
-			}
-		});
-
-		alertDlg = dlgBuilder.create();
+		};
+		
+		AlertDialog alertDlg = SimpleAlertDialog.build(PaymentActivity.this, "취소", "결제가 진행중입니다.\n취소하시겠습니까?",
+				"예", "아니오", posListener , null).create();
+//		AlertDialog.Builder dlgBuilder = new AlertDialog.Builder(this);
+//		AlertDialog alertDlg;
+//
+//		dlgBuilder.setTitle("취소");
+//		dlgBuilder.setMessage("결제가 진행중입니다.\n취소하시겠습니까?");
+//		dlgBuilder.setCancelable(false);
+//		dlgBuilder.setPositiveButton("예",
+//				new DialogInterface.OnClickListener() {
+//			@Override
+//			public void onClick(DialogInterface dialog, int which) {
+//				dialog.dismiss();
+//				finishActivity("사용자 취소");
+//			}
+//		});
+//		dlgBuilder.setNegativeButton("아니오",
+//				new DialogInterface.OnClickListener() {
+//			@Override
+//			public void onClick(DialogInterface dialog, int which) {
+//				dialog.dismiss();
+//			}
+//		});
+//
+//		alertDlg = dlgBuilder.create();
 
 		return alertDlg;
 	}
@@ -808,11 +795,8 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		int resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
 
 		if (p_strFinishMsg != null) {
-			if (p_strFinishMsg.equals("NOT_AVAILABLE")) {
-				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_NOT_AVAILABLE;
-			} else if (p_strFinishMsg.contains("취소")) {
-				resultCode = RESULT_CANCELED;
-			}
+			if (p_strFinishMsg.equals("NOT_AVAILABLE")) resultCode = CODE_RESULT_ACTIVITY_PAYMENT_NOT_AVAILABLE;
+			else if (p_strFinishMsg.contains("취소")) resultCode = RESULT_CANCELED;
 		}
 		Intent payData = new Intent();
 		payData.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
@@ -832,14 +816,6 @@ public class PaymentActivity extends BaseActivity implements Constants {
 
 		JavaScriptExtention() {
 		}
-		// 웹뷰 소스를 보고 싶을때 주소에 이 자바스크립트 콜을 붙여서 보도록한다.
-		@JavascriptInterface
-		public void showHTML(String html) {
-			for(int i=0;i<html.length()/100;i++) { 
-				android.util.Log.e("HTML",html.substring(i*100,(i+1)*100));
-			}
-		}
-
 
 		@JavascriptInterface
 		public void feed(final String msg) {
@@ -869,24 +845,33 @@ public class PaymentActivity extends BaseActivity implements Constants {
 
 	@Override
 	public void onBackPressed() {
-		AlertDialog.Builder alertDialog = new AlertDialog.Builder(
-				PaymentActivity.this);
-		alertDialog.setTitle("결제알림").setMessage("결제를 취소하시겠습니까?")
-		.setCancelable(false)
-		.setPositiveButton("예", new DialogInterface.OnClickListener() {
+		OnClickListener posListener = new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				finish();
 			}
-		})
-		.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				return;
-			}
-		});
-		AlertDialog alert = alertDialog.create();
-		alert.show();
+		};
+		SimpleAlertDialog.build(PaymentActivity.this, "결제알림", "결제를 취소하시겠습니까?",
+				"예", "아니오", posListener , null).show();
+		
+//		AlertDialog.Builder alertDialog = new AlertDialog.Builder(
+//				PaymentActivity.this);
+//		alertDialog.setTitle("결제알림").setMessage("결제를 취소하시겠습니까?")
+//		.setCancelable(false)
+//		.setPositiveButton("예", new DialogInterface.OnClickListener() {
+//			@Override
+//			public void onClick(DialogInterface dialog, int which) {
+//				finish();
+//			}
+//		})
+//		.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+//			@Override
+//			public void onClick(DialogInterface dialog, int which) {
+//				return;
+//			}
+//		});
+//		AlertDialog alert = alertDialog.create();
+//		alert.show();
 	}
 
 }

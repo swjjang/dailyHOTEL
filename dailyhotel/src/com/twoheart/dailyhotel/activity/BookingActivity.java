@@ -8,8 +8,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -53,6 +51,7 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.GaManager;
 import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.Log;
+import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
@@ -180,18 +179,18 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 
 	}
 
-	public void dialog(String str) {
-		AlertDialog.Builder alert = new AlertDialog.Builder(this);
-		alert.setTitle("결제알림");
-		alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.dismiss(); // 닫기
-			}
-		});
-		alert.setMessage(str);
-		alert.show();
-	}
+//	public void dialog(String str) {
+//		AlertDialog.Builder alert = new AlertDialog.Builder(this);
+//		alert.setTitle("결제알림");
+//		alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+//			@Override
+//			public void onClick(DialogInterface dialog, int which) {
+//				dialog.dismiss(); // 닫기
+//			}
+//		});
+//		alert.setMessage(str);
+//		alert.show();
+//	}
 
 	@Override
 	public void onClick(final View v) {
@@ -274,6 +273,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 
 		OnClickListener onClickProceed = null;
 
+		
 		if (type == DIALOG_CONFIRM_PAYMENT_CARD) {
 
 			tvMsg.setText(
@@ -282,19 +282,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 			btnProceed.setText(
 					Html.fromHtml(getString(R.string.dialog_btn_payment_confirm_card))
 					);
-
-			onClickProceed = new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					lockUI();
-					mAliveCallSource = "PAYMENT"; 
-					mQueue.add(new DailyHotelStringRequest(Method.GET,
-							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-									URL_WEBAPI_USER_ALIVE).toString(), null,
-									BookingActivity.this, BookingActivity.this));
-					dialog.dismiss();
-				}
-			};
+			
 		} else if (type == DIALOG_CONFIRM_PAYMENT_ACCOUNT) {
 
 			tvMsg.setText(
@@ -304,19 +292,21 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 					Html.fromHtml(getString(R.string.dialog_btn_payment_confirm_account))
 					);
 
-			onClickProceed = new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					lockUI();
-					mAliveCallSource = "PAYMENT"; 
-					mQueue.add(new DailyHotelStringRequest(Method.GET,
-							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-									URL_WEBAPI_USER_ALIVE).toString(), null,
-									BookingActivity.this, BookingActivity.this));
-					dialog.dismiss();
-				}
-			};
 		}
+		
+		onClickProceed = new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				lockUI();
+				mAliveCallSource = "PAYMENT"; 
+				mQueue.add(new DailyHotelStringRequest(Method.GET,
+						new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+								URL_WEBAPI_USER_ALIVE).toString(), null,
+								BookingActivity.this, BookingActivity.this));
+				dialog.dismiss();
+			}
+		};
+		
 
 		btnClose.setOnClickListener(new OnClickListener() {
 			@Override
@@ -324,6 +314,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				dialog.dismiss();
 			}
 		});
+		
 		btnProceed.setOnClickListener(onClickProceed);
 
 		dialog.setContentView(view);
@@ -345,35 +336,16 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 	private void moveToPayStep() {
 
 		android.util.Log.e("Sale credit / Pay Price ",mPay.isSaleCredit()+" / "+mPay.getPayPrice());
-
-		//		if (mPay.isSaleCredit() && mPay.getPayPrice() <= 0) {
-		//			Map<String, String> bonusParams = new HashMap<String, String>();
-		//			bonusParams.put("saleIdx", mPay.getHotelDetail().getSaleIdx()+"");
-		//			bonusParams.put("email", mPay.getCustomer().getEmail());
-		//			bonusParams.put("name", mPay.getCustomer().getName());
-		//			bonusParams.put("phone", mPay.getCustomer().getPhone());
-		//			bonusParams.put("accessToken", mPay.getCustomer().getAccessToken());
-		//			
-		//			lockUI();
-		//			mQueue.add(new DailyHotelJsonRequest(Method.POST,
-		//					new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-		//							URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT).append("/").
-		//							append(mPay.getHotelDetail().getSaleIdx()).toString(),
-		//							bonusParams, this, this));
-		//		} else {
+		
 		Intent intent = new Intent(this, PaymentActivity.class);
 		intent.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
-
-		startActivityForResult(intent,
-				CODE_REQUEST_ACTIVITY_PAYMENT);
+		startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PAYMENT);
 		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-		//		}
 
 	}
 
 	private void moveToLoginProcess() {
-		if (sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN,
-				false)) {
+		if (sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false)) {
 
 			String id = sharedPreference.getString(
 					KEY_PREFERENCE_USER_ID, null);
@@ -431,7 +403,13 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 	private void activityResulted(int requestCode, int resultCode, Intent intent) {
 		if (requestCode == CODE_REQUEST_ACTIVITY_PAYMENT) {
 			Log.d(TAG, Integer.toString(resultCode));
-
+			
+			String title = "결제알림";
+			String msg = "";
+			String posTitle = "확인";
+			android.content.DialogInterface.OnClickListener posListener = null;
+			
+			
 			switch (resultCode) {
 			case CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE:
 			case CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS:
@@ -447,23 +425,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 						editor.commit();
 					}
 				}
-
-				AlertDialog.Builder alert = new AlertDialog.Builder(
-						BookingActivity.this);
-				alert.setTitle("결제알림");
-				alert.setPositiveButton("확인",
-						new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog,
-							int which) {
-						dialog.dismiss(); // 닫기
-						setResult(RESULT_OK);
-						finish();
-					}
-				});
-				alert.setMessage("결제가 정상적으로 이루어졌습니다");
-				alert.show();
-
+				
 				GaManager.getInstance(getApplicationContext()).
 				purchaseComplete(
 						Integer.toString(mPay.getHotelDetail().getSaleIdx()), 
@@ -472,50 +434,63 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 						(double) mPay.getPayPrice()
 						);
 
+				posListener = new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog,
+							int which) {
+						dialog.dismiss(); // 닫기
+						setResult(RESULT_OK);
+						finish();
+					}
+				};
+				
+				msg = "결제가 정상적으로 이루어졌습니다";
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_SOLD_OUT:
-				dialog("모든 객실이 판매되었습니다.\n다음에 이용해주세요.");
+				msg = "모든 객실이 판매되었습니다.\n다음에 이용해주세요.";
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_NOT_AVAILABLE:
-				dialog("다른 손님이 예약 중입니다.\n잠시 후 이용해주세요.");
+				msg = "다른 손님이 예약 중입니다.\n잠시 후 이용해주세요.";
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR:
-				dialog("네트워크 오류가 발생했습니다.\n네트워크 연결을 확인해주세요.");
+				msg = "네트워크 오류가 발생했습니다.\n네트워크 연결을 확인해주세요.";
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION:
 				VolleyHttpClient.createCookie();	// 쿠키를 다시 생성 시도
-				break;
+				return;
 			case CODE_RESULT_ACTIVITY_PAYMENT_INVALID_DATE:
-				dialog("판매가 마감되었습니다.");
+				msg = "판매가 마감되었습니다.";
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_FAIL:
-				dialog("알 수 없는 오류가 발생했습니다.\n문의해주시기 바랍니다.");
+				msg = "알 수 없는 오류가 발생했습니다.\n문의해주시기 바랍니다.";
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_CANCELED:
-				dialog("결제가 취소되었습니다.");
+				msg = "결제가 취소되었습니다.";
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY:
-				// 예약 확인 리스트 프래그먼트에서 한번 더 들어가기 위한 플래그 설정
+				// 예약 확인 리스트 프래그먼트에서 디테일로 한번 더 들어가기 위한 플래그 설정
 				Editor editor = sharedPreference.edit();
 				editor.putInt(KEY_PREFERENCE_ACCOUNT_READY_FLAG, CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
 				editor.apply();
 
 				setResult(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
 				finish();
-				break;
+				return;
 			case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_TIME_ERROR:
-				dialog("입금대기 시간이 초과되었습니다\n다시 시도해주세요.");
+				msg = "입금대기 시간이 초과되었습니다\n다시 시도해주세요.";
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_DUPLICATE:
-				dialog("이미 입금대기 중인 호텔입니다.");
+				msg = "이미 입금대기 중인 호텔입니다.";
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER:
-				dialog("결제 대기시간이 초과되었습니다.\n다시 시도해주세요.");
+				msg = "결제 대기시간이 초과되었습니다.\n다시 시도해주세요.";
 				break;
 			}
+			
+			SimpleAlertDialog.build(this, title, msg, posTitle, posListener).show();
+			
 		} else if (requestCode == CODE_REQUEST_ACTIVITY_LOGIN) {
-			if (resultCode == RESULT_OK)
-				moveToPayStep();	
+			if (resultCode == RESULT_OK) moveToPayStep();	
 		}
 	}
 
@@ -665,25 +640,17 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 					moveToPayStep();
 
 				} else {
-					Builder builder = new AlertDialog.Builder(
-							BookingActivity.this);
-
-					builder.setTitle("알림");
-					builder
-					.setMessage(getString(R.string.dialog_msg_sales_closed));
-					builder.setCancelable(false);
-					builder.setPositiveButton("확인",
-							new DialogInterface.OnClickListener() {
+					android.content.DialogInterface.OnClickListener posListener = new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							dialog.dismiss();
 							setResult(RESULT_SALES_CLOSED);
 							finish();
 						}
-					});
+					};
+					
+					SimpleAlertDialog.build(this, "알림", getString(R.string.dialog_msg_sales_closed), "확인", posListener).show();
 
-					AlertDialog alertDlg = builder.create();
-					alertDlg.show();
 				}
 
 			} catch (JSONException e) {
@@ -757,6 +724,11 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		} else if(url.contains(URL_WEBAPI_USER_ALIVE)) {
 			android.util.Log.e("USER_ALIVE / CALL_RESOURCE",response.toString()+" / "+mAliveCallSource);
 			unLockUI();
+			/**
+			 * ALIVE CALL은 소스가 두종류,
+			 * 1. BookingActivity => PaymentActivity로 넘어갈때
+			 * 2. PaymentActivity => BookingActivity로 넘어왔을때
+			 */
 			if (response.equals("alive")) {
 				if (mAliveCallSource.equals("PAYMENT")) {
 					mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(

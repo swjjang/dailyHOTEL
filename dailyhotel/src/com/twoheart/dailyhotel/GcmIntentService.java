@@ -3,30 +3,27 @@ package com.twoheart.dailyhotel;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.twoheart.dailyhotel.activity.AccountCompleteDialogActivity;
-import com.twoheart.dailyhotel.activity.GcmLockDialogActivity;
-import com.twoheart.dailyhotel.activity.PushDialogActivity;
-import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.WakeLock;
-
 import android.app.Activity;
 import android.app.ActivityManager;
-import android.app.AlertDialog;
 import android.app.IntentService;
 import android.app.KeyguardManager;
+import android.app.KeyguardManager.KeyguardLock;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.KeyguardManager.KeyguardLock;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
+
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.twoheart.dailyhotel.activity.AccountCompleteDialogActivity;
+import com.twoheart.dailyhotel.activity.GcmLockDialogActivity;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.WakeLock;
 
 /**
  * GCM 메시지가 올 경우 실제로 처리하는 클래스,

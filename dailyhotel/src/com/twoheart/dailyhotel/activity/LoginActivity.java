@@ -22,9 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.TargetApi;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -56,6 +54,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
+import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
@@ -361,18 +360,20 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 					else if (obj.length() > 1) {
 
 						msg = obj.getString("msg");
-						AlertDialog.Builder alert = new AlertDialog.Builder(
-								this);
-						alert.setPositiveButton("»Æ¿Œ",
-								new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								dialog.dismiss(); // ¥›±‚
-							}
-						});
-						alert.setMessage(msg);
-						alert.show();
+						SimpleAlertDialog.build(this, msg, "»Æ¿Œ", null).show();
+//						SimpleAlertDialog.build(this, title, msg, positive, posListener)
+//						AlertDialog.Builder alert = new AlertDialog.Builder(
+//								this);
+//						alert.setPositiveButton("»Æ¿Œ",
+//								new DialogInterface.OnClickListener() {
+//							@Override
+//							public void onClick(DialogInterface dialog,
+//									int which) {
+//								dialog.dismiss(); // ¥›±‚
+//							}
+//						});
+//						alert.setMessage(msg);
+//						alert.show();
 					}
 
 				}

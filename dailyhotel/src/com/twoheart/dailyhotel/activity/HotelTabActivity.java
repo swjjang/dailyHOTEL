@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.activity;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -138,12 +137,7 @@ DailyHotelStringResponseListener {
 
 			String result = response.trim();
 			if (result.equals("alive")) { // session alive
-
-				//				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(
-				//						URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_SALE_TIME)
-				//						.toString(), null, this,
-				//						this));
-
+				
 				Intent i = new Intent(this, BookingActivity.class);
 				i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELDETAIL, hotelDetail);
 				startActivityForResult(i, CODE_REQUEST_ACTIVITY_BOOKING);

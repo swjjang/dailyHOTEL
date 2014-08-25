@@ -28,6 +28,7 @@ import com.android.volley.Request.Method;
 import com.androidquery.AQuery;
 import com.facebook.Session;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
@@ -197,12 +198,7 @@ DailyHotelJsonResponseListener, OnClickListener {
 			}
 
 		} else if (v.getId() == R.id.btn_profile_logout) {
-			AlertDialog.Builder alert_confirm = new AlertDialog.Builder(this);
-			alert_confirm
-			.setMessage(getString(R.string.dialog_msg_chk_wanna_login))
-			.setCancelable(false)
-			.setPositiveButton("로그아웃",
-					new DialogInterface.OnClickListener() {
+			android.content.DialogInterface.OnClickListener posListener = new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog,
 						int which) {
@@ -240,17 +236,10 @@ DailyHotelJsonResponseListener, OnClickListener {
 					finish();
 
 				}
-			})
-			.setNegativeButton("취소",
-					new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog,
-						int which) {
-					return;
-				}
-			});
-			AlertDialog alert = alert_confirm.create();
-			alert.show();
+			};
+			
+			SimpleAlertDialog.build(ProfileActivity.this, null, getString(R.string.dialog_msg_chk_wanna_login), 
+					"로그아웃", "취소", posListener, null).show();
 
 		}
 	}

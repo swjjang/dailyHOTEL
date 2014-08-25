@@ -31,14 +31,8 @@ import uk.co.senab.actionbarpulltorefresh.library.Options;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.AbsListViewDelegate;
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.content.res.Resources;
-import android.graphics.AvoidXfermode.Mode;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -96,9 +90,6 @@ public class HotelListFragment extends BaseFragment implements Constants,
 
 	private boolean mRefreshHotelList;
 
-	private int prevIndex;
-
-	private int prevTop;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -231,10 +222,6 @@ public class HotelListFragment extends BaseFragment implements Constants,
 		
 		if (selectedItem.getType() == HotelListViewItem.TYPE_ENTRY) {
 			mHotelListAdapter.getImgCache().evictAll(); // 호텔 리스트아이템들의 image를 캐싱하는 lru cache 비우기.
-			
-			prevIndex = mHotelListView.getFirstVisiblePosition();
-			View v = mHotelListView.getChildAt(0);
-			prevTop = (v == null) ? 0 : v.getTop();
 			
 			Intent i = new Intent(mHostActivity, HotelTabActivity.class);
 			
