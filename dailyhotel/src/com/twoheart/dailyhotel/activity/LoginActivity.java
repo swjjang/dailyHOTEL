@@ -84,7 +84,7 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		setActionBar(R.string.actionbar_title_login_activity);
 		setContentView(R.layout.activity_login);
 
@@ -323,9 +323,9 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 				if (obj.getBoolean("login")) {
 					VolleyHttpClient.createCookie();
 					storeLoginInfo();
-					
+
 					android.util.Log.e("LOGIN",obj.getBoolean("login")+"");
-					
+
 					if (getGcmId().isEmpty()) {
 						android.util.Log.e("STORED_GCM_IS_EMPTY","true");
 						// 로그인에 성공하였으나 기기에 GCM을 등록하지 않은 유저의 경우 인덱스를 가져와 push_id를 업그레이드 하는 절차 시작.
@@ -391,7 +391,7 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 				onError(e);
 			}
 		} else if (url.contains(URL_WEBAPI_USER_INFO)) {
-			
+
 			try {
 				// GCM 아이디를 등록한다.
 				if (isGoogleServiceAvailable()) {
@@ -415,7 +415,7 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 					android.util.Log.e("STORED_GCM_ID", sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "NOAP"));
 
 				}
-				
+
 				showToast(getString(R.string.toast_msg_logoined), Toast.LENGTH_SHORT, true);
 				setResult(RESULT_OK);
 				finish();
@@ -463,19 +463,23 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 			@Override
 			protected void onPostExecute(String regId) {
 				// 이 값을 서버에 등록하기.
+
+				// gcm id가 없을 경우 스킵.
+				if (regId == null || regId.isEmpty()) return;
+
 				regPushParams = new HashMap<String, String>();
 
 				regPushParams.put("user_idx", idx+"");
 				regPushParams.put("notification_id", regId);
 				regPushParams.put("device_type", GCM_DEVICE_TYPE_ANDROID);
-				
+
 				android.util.Log.e("params for register push id",regPushParams.toString());
-				
+
 				mQueue.add(new DailyHotelJsonRequest(Method.POST,
 						new StringBuilder(URL_DAILYHOTEL_SERVER)
 				.append(URL_GCM_REGISTER)
 				.toString(), regPushParams, LoginActivity.this,
-				LoginActivity.this));
+				LoginActivity.this));	
 			}
 		}.execute();		
 	}

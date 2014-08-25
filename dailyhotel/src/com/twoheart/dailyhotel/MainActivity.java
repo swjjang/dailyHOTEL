@@ -357,6 +357,10 @@ Constants {
 
 			@Override
 			protected void onPostExecute(String regId) {
+				
+				// gcm id가 없을 경우 스킵.
+				if (regId == null || regId.isEmpty()) return;
+				
 				// 이 값을 서버에 등록하기.
 				regPushParams = new HashMap<String, String>();
 
