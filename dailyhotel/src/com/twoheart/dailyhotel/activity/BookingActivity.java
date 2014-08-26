@@ -507,6 +507,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		if (url.contains(URL_WEBAPI_USER_INFO)) {
 			try {
 				JSONObject obj = response;
+				android.util.Log.e("responSE!", response.toString());
 
 				Customer buyer = new Customer();
 				buyer.setEmail(obj.getString("email"));

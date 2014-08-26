@@ -48,12 +48,11 @@ public class BookingTabActivity extends TabActivity implements DailyHotelJsonRes
 	@Override
 	protected void onPostSetCookie() {
 		String[] date = booking.getSday().split("-");
-
+		for (int i=0;i<date.length;i++) android.util.Log.e("date",date[i].toString());
 		String url = new StringBuilder(URL_DAILYHOTEL_SERVER)
 				.append(URL_WEBAPI_HOTEL_DETAIL).append(booking.getHotel_idx())
 				.append("/").append(date[0]).append("/").append(date[1])
 				.append("/").append(date[2]).toString();
-
 		Log.d(TAG, url);
 		
 		lockUI();
@@ -74,6 +73,8 @@ public class BookingTabActivity extends TabActivity implements DailyHotelJsonRes
 				JSONObject obj = response;
 				JSONArray bookingArr = obj.getJSONArray("detail");
 				JSONObject detailObj = bookingArr.getJSONObject(0);
+				
+				android.util.Log.e("TestDetail",response.toString());
 				
 				if (hotelDetail.getHotel() == null) hotelDetail.setHotel(new Hotel());
 				

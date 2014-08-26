@@ -134,7 +134,7 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 						URL_DAILYHOTEL_SERVER).append(
 						URL_WEBAPI_RESERVE_CHECKIN).append(mHotelDetail.getSaleIdx()).toString(), null, this,
 						mHostActivity));
-
+				android.util.Log.e("madsd", mHotelDetail.getSaleIdx()+"");
 			} catch (Exception e) {
 				onError(e);
 				unLockUI();
@@ -142,11 +142,15 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 
 		} else if (url.contains(URL_WEBAPI_RESERVE_CHECKIN)) {
 			try {
+				android.util.Log.e("url!QWEW",url);
 				JSONObject obj = response;
 				String checkin = obj.getString("checkin");
 				String checkout = obj.getString("checkout");
-
+				
 				String in[] = checkin.split("-");
+				android.util.Log.e("chkin",checkin);
+				android.util.Log.e("chkout",checkout);
+				
 				tvCheckIn.setText("20" + in[0] + "년 " + in[1] + "월 " + in[2] + "일 " + in[3] + "시");
 				
 				String out[] = checkout.split("-");

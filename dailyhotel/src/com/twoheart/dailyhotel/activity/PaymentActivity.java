@@ -389,6 +389,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		@Override
 		public void onPageStarted(WebView view, String url, Bitmap favicon) {
 			super.onPageStarted(view, url, favicon);
+			lockUI();
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 				setSupportProgressBarIndeterminateVisibility(true);
 		}
@@ -396,6 +397,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		@Override
 		public void onPageFinished(WebView view, String url) {
 			super.onPageFinished(view, url);
+			unLockUI();
 			view.loadUrl("javascript:window.HtmlObserver.showHTML" +
                     "('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');");
 			

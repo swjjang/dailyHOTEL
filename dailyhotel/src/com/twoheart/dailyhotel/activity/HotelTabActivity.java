@@ -210,15 +210,16 @@ DailyHotelStringResponseListener {
 				/**
 				 * TODO : TEST FOR HOTEL SHARE
 				 */
-//				android.content.DialogInterface.OnClickListener posListener = new android.content.DialogInterface.OnClickListener() {
-//					
-//					@Override
-//					public void onClick(DialogInterface dialog, int which) {
-//						KakaoLinkManager.getInstance(HotelTabActivity.this).shareHotelInfo(hotelDetail);						
-//					}
-//
-//				};
-//				SimpleAlertDialog.build(this, "호텔 정보를 공유합니다.", "공유", posListener).show();
+				android.content.DialogInterface.OnClickListener posListener = new android.content.DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						KakaoLinkManager.newInstance(HotelTabActivity.this).shareHotelInfo(hotelDetail);
+//						KakaoLinkManager.getInstance(HotelTabActivity.this).sendInviteMsgKakaoLink("ASDF");
+					}
+
+				};
+				SimpleAlertDialog.build(this, "호텔 정보를 공유합니다.", "공유", posListener).show();
 
 				Hotel hotelBasic = hotelDetail.getHotel();
 

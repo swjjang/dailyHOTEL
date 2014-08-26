@@ -134,7 +134,7 @@ public class CreditFragment extends BaseFragment implements Constants,
 				 * TODO : KAKAO LINK API ±³Ã¼
 				 */
 				String msg = getString(R.string.kakaolink_msg_prefix) + mRecommendCode + getString(R.string.kakaolink_msg_suffix);
-				KakaoLinkManager.getInstance(getActivity()).sendInviteMsgKakaoLink(msg);
+				KakaoLinkManager.newInstance(getActivity()).sendInviteMsgKakaoLink(msg);
 			} catch (Exception e) {
 				Log.d(TAG, "kakao link error " + e.toString());
 			}
