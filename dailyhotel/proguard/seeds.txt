@@ -37912,7 +37912,7 @@ com.twoheart.dailyhotel.util.GaManager: void purchaseComplete(java.lang.String,j
 com.twoheart.dailyhotel.util.GaManager: void signupComplete()
 com.twoheart.dailyhotel.util.GlobalFont: GlobalFont()
 com.twoheart.dailyhotel.util.GlobalFont: void apply(android.view.ViewGroup)
-com.twoheart.dailyhotel.util.KakaoLinkManager: com.twoheart.dailyhotel.util.KakaoLinkManager getInstance(android.content.Context)
+com.twoheart.dailyhotel.util.KakaoLinkManager: com.twoheart.dailyhotel.util.KakaoLinkManager newInstance(android.content.Context)
 com.twoheart.dailyhotel.util.KakaoLinkManager: void sendInviteMsgKakaoLink(java.lang.String)
 com.twoheart.dailyhotel.util.KakaoLinkManager: void shareHotelInfo(com.twoheart.dailyhotel.model.HotelDetail)
 com.twoheart.dailyhotel.util.Log: Log()

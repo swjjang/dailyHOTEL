@@ -33,6 +33,7 @@ import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.AbsListViewDeleg
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -70,9 +71,9 @@ import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView;
 
 public class HotelListFragment extends BaseFragment implements Constants,
-		OnItemClickListener, OnNavigationListener,
-		DailyHotelJsonArrayResponseListener, DailyHotelJsonResponseListener,
-		DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener {
+OnItemClickListener, OnNavigationListener,
+DailyHotelJsonArrayResponseListener, DailyHotelJsonResponseListener,
+DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener {
 
 	private final static String TAG = "HotelListFragment";
 
@@ -90,6 +91,9 @@ public class HotelListFragment extends BaseFragment implements Constants,
 
 	private boolean mRefreshHotelList;
 
+	private int mKakaoHotelIdx;
+	private String mKakaoCat;
+
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -97,27 +101,37 @@ public class HotelListFragment extends BaseFragment implements Constants,
 
 		View view = inflater.inflate(R.layout.fragment_hotel_list, container, false);
 		
+		/**
+		 * TODO : 카카오링크로 들어온 경우 해당 앱으로 이동하도록
+		 */
+		
+		Uri intentData = ((MainActivity)mHostActivity).intentData;
+		if (intentData != null) {
+			mKakaoHotelIdx = Integer.parseInt(intentData.getQueryParameter("hotelIdx"));
+			mKakaoCat = intentData.getQueryParameter("cat");
+		}
+
 		mDailyHotelSaleTime = new SaleTime();
 		mRefreshHotelList = true;
-		
+
 		mHotelListView = (PinnedSectionListView) view.findViewById(R.id.listview_hotel_list);
 		mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
-		
+
 		mHostActivity.setActionBar(R.string.actionbar_title_hotel_list_frag);
-		
+
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			View listViewFooter = inflater.inflate(R.layout.footer_hotel_list, null);
-			
+
 			llListViewFooter = (LinearLayout) listViewFooter.findViewById(R.id.ll_hotel_list_footer);
 			llListViewFooter.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT,
 					((MainActivity) mHostActivity).config.getNavigationBarHeight()));
-			
+
 			mHotelListView.addFooterView(listViewFooter);
 		}
-		
+
 		View listViewHeader = inflater.inflate(R.layout.header_hotel_list, null);
 		mHotelListView.addHeaderView(listViewHeader);
-		
+
 		ivNewEvent = (ImageView) view.findViewById(R.id.iv_new_event);
 		btnListViewHeader = (LinearLayout) view.findViewById(R.id.btn_footer); // 수정요망 footer -> header
 		GlobalFont.apply(btnListViewHeader);
@@ -130,51 +144,51 @@ public class HotelListFragment extends BaseFragment implements Constants,
 				mHostActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
 			}
 		});
-		
+
 		// Now find the PullToRefreshLayout and set it up
-        ActionBarPullToRefresh.from(mHostActivity)
-        			.options(Options.create()
-        			.scrollDistance(.3f)
-                    .headerTransformer(new AbcDefaultHeaderTransformer())
-                    	.build())
-                    		.allChildrenArePullable()
-                    		.listener(this)
-                // Here we'll set a custom ViewDelegate
-                    		.useViewDelegate(AbsListView.class, new AbsListViewDelegate())
-                			.setup(mPullToRefreshLayout);
-		
-//		ViewTreeObserver vto = mSwipeRefreshLayout.getViewTreeObserver();
-//		vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//			
-//			@Override
-//			public void onGlobalLayout() {
-//				final DisplayMetrics metrics = getResources().getDisplayMetrics();
-//				Float mDistanceToTriggerSync = Math.min(((View) mSwipeRefreshLayout.getParent()).getHeight() * 0.7f,
-//						150 * metrics.density);
-//				
-//				try {
-//					
-//					Field field = SwipeRefreshLayout.class.getDeclaredField("mDistanceToTriggerSync");
-//					field.setAccessible(true);
-//					field.setFloat(mSwipeRefreshLayout, mDistanceToTriggerSync);
-//					
-//				} catch (Exception e) {
-//					if (DEBUG)
-//						e.printStackTrace();
-//				}
-//				
-//				ViewTreeObserver obs = mSwipeRefreshLayout.getViewTreeObserver();
-//				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-//					obs.removeOnGlobalLayoutListener(this);
-//					
-//				} else
-//					obs.removeGlobalOnLayoutListener(this);
-//				
-//			}
-//		});
-		
+		ActionBarPullToRefresh.from(mHostActivity)
+		.options(Options.create()
+				.scrollDistance(.3f)
+				.headerTransformer(new AbcDefaultHeaderTransformer())
+				.build())
+				.allChildrenArePullable()
+				.listener(this)
+				// Here we'll set a custom ViewDelegate
+				.useViewDelegate(AbsListView.class, new AbsListViewDelegate())
+				.setup(mPullToRefreshLayout);
+
+		//		ViewTreeObserver vto = mSwipeRefreshLayout.getViewTreeObserver();
+		//		vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+		//			
+		//			@Override
+		//			public void onGlobalLayout() {
+		//				final DisplayMetrics metrics = getResources().getDisplayMetrics();
+		//				Float mDistanceToTriggerSync = Math.min(((View) mSwipeRefreshLayout.getParent()).getHeight() * 0.7f,
+		//						150 * metrics.density);
+		//				
+		//				try {
+		//					
+		//					Field field = SwipeRefreshLayout.class.getDeclaredField("mDistanceToTriggerSync");
+		//					field.setAccessible(true);
+		//					field.setFloat(mSwipeRefreshLayout, mDistanceToTriggerSync);
+		//					
+		//				} catch (Exception e) {
+		//					if (DEBUG)
+		//						e.printStackTrace();
+		//				}
+		//				
+		//				ViewTreeObserver obs = mSwipeRefreshLayout.getViewTreeObserver();
+		//				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+		//					obs.removeOnGlobalLayoutListener(this);
+		//					
+		//				} else
+		//					obs.removeGlobalOnLayoutListener(this);
+		//				
+		//			}
+		//		});
+
 		mHotelListView.setShadowVisible(false);
-		
+
 		DailyHotel.getGaTracker().set(Fields.SCREEN_NAME, TAG);
 
 		return view;
@@ -191,7 +205,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 	@Override
 	public void onResume() {
 		super.onResume();
-		
+
 		if (mRefreshHotelList) {
 			lockUI();
 			// 현재 서버 시간을 가져온다
@@ -215,19 +229,19 @@ public class HotelListFragment extends BaseFragment implements Constants,
 			int position, long id) {
 		// 7.2 G2 버전에서 호텔리스트에서 이벤트 칸을 클릭할 경우 튕기는 현상을 막기 위함. why? 헤더뷰인데도 아이템 클릭 리스너가 들어감.
 		if (position == 0)  return; 
-		
+
 		int selectedPosition = position - 1;
 
 		HotelListViewItem selectedItem = mHotelListViewList.get(selectedPosition);
-		
+
 		if (selectedItem.getType() == HotelListViewItem.TYPE_ENTRY) {
 			mHotelListAdapter.getImgCache().evictAll(); // 호텔 리스트아이템들의 image를 캐싱하는 lru cache 비우기.
-			
+
 			Intent i = new Intent(mHostActivity, HotelTabActivity.class);
-			
+
 			i.putExtra(NAME_INTENT_EXTRA_DATA_HOTEL, selectedItem.getItem());
 			i.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mDailyHotelSaleTime);
-	
+
 			startActivityForResult(i, CODE_REQUEST_ACTIVITY_HOTELTAB);
 		}
 
@@ -235,7 +249,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		
+
 		if (requestCode == CODE_REQUEST_ACTIVITY_HOTELTAB) {
 			mRefreshHotelList = false;
 			if (resultCode == Activity.RESULT_OK) {
@@ -243,16 +257,16 @@ public class HotelListFragment extends BaseFragment implements Constants,
 			} else if (resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY) {
 				((MainActivity) mHostActivity).selectMenuDrawer(((MainActivity) mHostActivity).menuBookingListFragment);
 			} else {
-//				
-//				lockUI();
-//				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(
-//						URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_TIME)
-//						.toString(), null, HotelListFragment.this,
-//						mHostActivity));
+				//				
+				//				lockUI();
+				//				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(
+				//						URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_TIME)
+				//						.toString(), null, HotelListFragment.this,
+				//						mHostActivity));
 			}
-			
+
 		} 
-		
+
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
@@ -288,11 +302,11 @@ public class HotelListFragment extends BaseFragment implements Constants,
 		selectedRegion = selectedRegion.replace("|", "%7C");
 
 		String url = new StringBuilder(URL_DAILYHOTEL_SERVER)
-				.append(URL_WEBAPI_HOTEL).append(selectedRegion)
-				.append("/near/0/0/0/1000/")
-				.append(mDailyHotelSaleTime.getCurrentYear()).append("/")
-				.append(mDailyHotelSaleTime.getCurrentMonth()).append("/")
-				.append(mDailyHotelSaleTime.getCurrentDay()).toString();
+		.append(URL_WEBAPI_HOTEL).append(selectedRegion)
+		.append("/near/0/0/0/1000/")
+		.append(mDailyHotelSaleTime.getCurrentYear()).append("/")
+		.append(mDailyHotelSaleTime.getCurrentMonth()).append("/")
+		.append(mDailyHotelSaleTime.getCurrentDay()).toString();
 
 		Log.d(TAG, url);
 
@@ -309,10 +323,10 @@ public class HotelListFragment extends BaseFragment implements Constants,
 			try {
 				String open = response.getString("open");
 				String close = response.getString("close");
-				
+
 				mDailyHotelSaleTime.setOpenTime(open);
 				mDailyHotelSaleTime.setCloseTime(close);
-				
+
 				if (!mDailyHotelSaleTime.isSaleTime()) {
 					((MainActivity) mHostActivity).replaceFragment(WaitTimerFragment.newInstance(
 							mDailyHotelSaleTime));
@@ -322,8 +336,8 @@ public class HotelListFragment extends BaseFragment implements Constants,
 					mQueue.add(new DailyHotelJsonArrayRequest(Method.GET,
 							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 									URL_WEBAPI_SITE_LOCATION_LIST).toString(),
-							null, HotelListFragment.this,
-							mHostActivity));
+									null, HotelListFragment.this,
+									mHostActivity));
 				}
 
 			} catch (Exception e) {
@@ -338,7 +352,7 @@ public class HotelListFragment extends BaseFragment implements Constants,
 
 				for (int i = 0; i < hotelArr.length(); i++) {
 					JSONObject obj = hotelArr.getJSONObject(i);
-					
+
 					Hotel newHotel = new Hotel();
 
 					String name = obj.getString("name");
@@ -385,13 +399,13 @@ public class HotelListFragment extends BaseFragment implements Constants,
 
 						Collections.sort(mHotelList, comparator);
 					}
-					
+
 				}
-				
+
 				mHotelListViewList = new ArrayList<HotelListViewItem>();
 				List<String> selectedRegionDetail = mRegionDetailList.get(mRegionList.get(mHostActivity.actionBar
 						.getSelectedNavigationIndex()));
-				
+
 				for (int i = 0; i < selectedRegionDetail.size(); i++) {
 					String region = selectedRegionDetail.get(i);
 					HotelListViewItem section = new HotelListViewItem(region);
@@ -405,13 +419,13 @@ public class HotelListFragment extends BaseFragment implements Constants,
 							count++;
 						}
 					}
-					
+
 					if (count == 0) mHotelListViewList.remove(section);
 				}
-				
+
 				int count = 0;
 				HotelListViewItem others = new HotelListViewItem("기타");
-				
+
 				mHotelListViewList.add(others);
 				for (int i = 0; i < mHotelList.size(); i++) {
 					Hotel hotel = mHotelList.get(i);
@@ -420,25 +434,26 @@ public class HotelListFragment extends BaseFragment implements Constants,
 						count++;
 					}
 				}
-				
+
 				if (count == 0) mHotelListViewList.remove(others);
 
 				mHotelListAdapter = new HotelListAdapter(mHostActivity,
 						R.layout.list_row_hotel, mHotelListViewList);
 				mHotelListView.setAdapter(mHotelListAdapter);
 				mHotelListView.setOnItemClickListener(this);
-				
+
 				mRefreshHotelList = true;
-				
+
 				// 새로운 이벤트 확인을 위해 버전 API 호출
 				mQueue.add(new DailyHotelJsonRequest(Method.GET, 
 						new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_VERSION).toString(),
 						null, this, mHostActivity));
-				
-				unLockUI();
-				 // Notify PullToRefreshLayout that the refresh has finished
-                mPullToRefreshLayout.setRefreshComplete();
 
+				unLockUI();
+
+				// Notify PullToRefreshLayout that the refresh has finished
+				mPullToRefreshLayout.setRefreshComplete();
+				
 			} catch (Exception e) {
 				onError(e);
 			}
@@ -465,35 +480,35 @@ public class HotelListFragment extends BaseFragment implements Constants,
 					String name = new String();
 					StringBuilder nameWithWhiteSpace = new StringBuilder(name);
 					name = nameWithWhiteSpace.append("    ").append(obj.getString("name")).
-					append("     ").toString();
+							append("     ").toString();
 					mRegionList.add(name);
-					
+
 					// 세부지역 추가
 					List<String> nameDetailList = new ArrayList<String>();
 					JSONArray arrDetail = obj.getJSONArray("child");
 					for (int j=0; j<arrDetail.length(); j++) {
 						String nameDetail = arrDetail.getString(j);
 						nameDetailList.add(nameDetail);
-						
+
 					}
 					mRegionDetailList.put(name, nameDetailList);
 				}
-				
+
 				mHostActivity.actionBar.setDisplayShowTitleEnabled(false);
 				// 호텔 프래그먼트 일때 액션바에 네비게이션 리스트 설치.
 				mHostActivity.actionBar
-						.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+				.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 				RegionListAdapter regionListAdapter = new RegionListAdapter(
 						mHostActivity, mRegionList);
 
 				mHostActivity.actionBar.setListNavigationCallbacks(
 						regionListAdapter, this);
 				mHostActivity.actionBar
-						.setSelectedNavigationItem(mHostActivity.sharedPreference
-								.getInt(KEY_PREFERENCE_REGION_INDEX, 0));
+				.setSelectedNavigationItem(mHostActivity.sharedPreference
+						.getInt(KEY_PREFERENCE_REGION_INDEX, 0));
 				// 호텔 리프레시
-//				fetchHotelList(mHostActivity.actionBar.getSelectedNavigationIndex());
-//				mHotelListView.setSelectionFromTop(prevIndex, prevTop);
+				//				fetchHotelList(mHostActivity.actionBar.getSelectedNavigationIndex());
+				//				mHotelListView.setSelectionFromTop(prevIndex, prevTop);
 			} catch (Exception e) {
 				onError(e);
 			}
@@ -519,5 +534,5 @@ public class HotelListFragment extends BaseFragment implements Constants,
 	public void onRefreshStarted(View view) {
 		fetchHotelList(mHostActivity.actionBar.getSelectedNavigationIndex());
 	}
-	
+
 }

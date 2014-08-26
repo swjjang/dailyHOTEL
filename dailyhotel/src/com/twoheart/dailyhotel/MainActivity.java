@@ -32,6 +32,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -127,9 +128,19 @@ Constants {
 
 	protected HashMap<String, String> regPushParams;
 
+	public Uri intentData;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		intentData = getIntent().getData();
+		
+		if (intentData == null) {
+			android.util.Log.e("INTENT_DATA","NULL");
+		} else {
+			android.util.Log.e("INTENT_DATA",intentData.toString());
+		}
 
 		// 쿠키 동기화를 초기화한다. 로그인, 로그아웃 세션 쿠키는 MainActivity의 생명주기와 동기화한다.
 		CookieSyncManager.createInstance(getApplicationContext());

@@ -3119,7 +3119,7 @@ com.twoheart.dailyhotel.activity.BookingActivity:
     private static final int DIALOG_CONFIRM_PAYMENT_CARD
     private static final int DIALOG_CONFIRM_PAYMENT_HP
     private static final int DIALOG_CONFIRM_PAYMENT_ACCOUNT
-    323:352:private void moveToLoginProcess()
+    331:360:private void moveToLoginProcess()
 com.twoheart.dailyhotel.activity.BookingTabActivity:
     private static final java.lang.String TAG
 com.twoheart.dailyhotel.activity.EventWebActivity:

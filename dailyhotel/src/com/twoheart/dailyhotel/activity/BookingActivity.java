@@ -186,10 +186,9 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 	public void onClick(final View v) {
 		if (v.getId() == btnPay.getId()) {
 
-			Dialog dialog = null; 
-
 			if (llReserverInfoEditable.getVisibility() == View.VISIBLE) {
 				Customer buyer = new Customer();
+
 				buyer.setEmail(etReserverEmail.getText().toString());
 				buyer.setPhone(etReserverNumber.getText().toString());
 				buyer.setName(etReserverName.getText().toString());
@@ -198,23 +197,30 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 						buyer.getEmail(),
 						buyer.getPhone(),
 						buyer.getName() })) {
-					showToast(getString(R.string.toast_msg_please_input_booking_user_infos), Toast.LENGTH_LONG, true);
-					return;
-				} else {
+					
+					android.util.Log.e("BUYER",buyer.getEmail()+" / "+buyer.getPhone()+" / "+buyer.getName());
+					showToast(getString(R.string.toast_msg_please_input_booking_user_infos), Toast.LENGTH_LONG, false);
+				} else { //
 					Map<String, String> updateParams =new HashMap<String, String>();
-					updateParams.put("user_email", buyer.getEmail());
-					updateParams.put("user_name", buyer.getName());
-					updateParams.put("user_phone", buyer.getPhone());
+					if (etReserverEmail.isFocusable())
+						updateParams.put("user_email", buyer.getEmail());
+					if (etReserverName.isFocusable())
+						updateParams.put("user_name", buyer.getName());
+					if (etReserverNumber.isFocusable())
+						updateParams.put("user_phone", buyer.getPhone());
+
+					android.util.Log.e("FACEBOOK UPDATE", updateParams.toString());
 
 					lockUI();
 					mQueue.add(new DailyHotelJsonRequest(Method.POST,
 							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 									URL_WEBAPI_USER_UPDATE_FACEBOOK).toString(),
 									updateParams, this, this));
-					return;
 				}
 
 			} else {
+				Dialog dialog = null;
+				
 				if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentCard
 						.getId()) { // 신용카드를 선택했을 경우
 
@@ -229,16 +235,19 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 					dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_ACCOUNT);
 				}
 
+				dialog.setOnDismissListener(new OnDismissListener() {
+					@Override
+					public void onDismiss(DialogInterface dialog) {
+						v.setClickable(true);
+						v.setEnabled(true);
+					}
+				});
+				
+				dialog.show();
+				v.setClickable(false);
+				v.setEnabled(false);
 			}
 
-			dialog.setOnDismissListener(new OnDismissListener() {
-				@Override
-				public void onDismiss(DialogInterface dialog) {
-					v.setClickable(true);
-					v.setEnabled(true);
-				}
-			});
-			dialog.show();
 
 		} else if (v.getId() == rbPaymentAccount.getId() | v.getId() == rbPaymentCard.getId()) {
 			svBooking.fullScroll(View.FOCUS_DOWN);
@@ -270,7 +279,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				Html.fromHtml(getString(R.string.dialog_msg_payment_confirm)));
 		btnProceed.setText(
 				Html.fromHtml(getString(R.string.dialog_btn_payment_confirm)));
-		
+
 		onClickProceed = new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -525,6 +534,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 						buyer.getName() })) {
 					llReserverInfoLabel.setVisibility(View.VISIBLE);
 					llReserverInfoEditable.setVisibility(View.GONE);
+
 					etReserverName.setVisibility(View.GONE);
 					etReserverNumber.setVisibility(View.GONE);
 					etReserverEmail.setVisibility(View.GONE);
@@ -537,10 +547,20 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 					llReserverInfoEditable.setVisibility(View.VISIBLE);
 					llReserverInfoLabel.setVisibility(View.GONE);
 
-					if (!isEmptyTextField(buyer.getName())) etReserverName.setText(buyer.getName());
+					android.util.Log.e("buyer",buyer.getName()+" / " +buyer.getPhone()+" / "+buyer.getEmail() );
+
+					if (!isEmptyTextField(buyer.getName())) {
+						etReserverName.setText(buyer.getName());
+						etReserverName.setKeyListener(null);
+						etReserverName.setFocusable(false);
+						etReserverName.setBackground(null);
+					} 
 
 					if (!isEmptyTextField(buyer.getPhone())) {
 						etReserverNumber.setText(buyer.getPhone());
+						etReserverNumber.setKeyListener(null);
+						etReserverNumber.setFocusable(false);
+						etReserverNumber.setBackground(null);
 					} else {
 						TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext()
 								.getSystemService(Context.TELEPHONY_SERVICE);
@@ -549,7 +569,12 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 								.getLine1Number());
 					}
 
-					if (!isEmptyTextField(buyer.getEmail())) etReserverEmail.setText(buyer.getEmail());
+					if (!isEmptyTextField(buyer.getEmail())) {
+						etReserverEmail.setText(buyer.getEmail());
+						etReserverEmail.setKeyListener(null);
+						etReserverEmail.setFocusable(false);
+						etReserverEmail.setBackground(null);
+					} 
 
 				}
 

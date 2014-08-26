@@ -14,7 +14,10 @@ import org.json.JSONObject;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -207,20 +210,6 @@ DailyHotelStringResponseListener {
 				if (hotelDetail.getHotel() == null)
 					hotelDetail.setHotel(new Hotel());
 				
-				/**
-				 * TODO : TEST FOR HOTEL SHARE
-				 */
-				android.content.DialogInterface.OnClickListener posListener = new android.content.DialogInterface.OnClickListener() {
-					
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						KakaoLinkManager.newInstance(HotelTabActivity.this).shareHotelInfo(hotelDetail);
-//						KakaoLinkManager.getInstance(HotelTabActivity.this).sendInviteMsgKakaoLink("ASDF");
-					}
-
-				};
-				SimpleAlertDialog.build(this, "호텔 정보를 공유합니다.", "공유", posListener).show();
-
 				Hotel hotelBasic = hotelDetail.getHotel();
 
 				hotelBasic.setAddress(detailObj.getString("address"));
@@ -316,4 +305,36 @@ DailyHotelStringResponseListener {
 		//			
 		//		}
 	}
+
+	/*
+	 * TODO : VERRRRRRRY IMPORTANT, 
+	 */
+
+//	@Override
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		getMenuInflater().inflate(R.menu.activity_hotel_tab_actions, menu);
+//		return true;
+//	}
+//
+//	@Override
+//	public boolean onOptionsItemSelected(MenuItem item) {
+//		switch(item.getItemId()){
+//		case R.id.action_share:
+//			/**
+//			 * TODO : TEST FOR HOTEL SHARE
+//			 */
+//			android.content.DialogInterface.OnClickListener posListener = new android.content.DialogInterface.OnClickListener() {
+//				
+//				@Override
+//				public void onClick(DialogInterface dialog, int which) {
+//					KakaoLinkManager.newInstance(HotelTabActivity.this).shareHotelInfo(hotelDetail);
+//				}
+//
+//			};
+//			SimpleAlertDialog.build(this, "(TEST)호텔 정보를 공유합니다.", "공유", posListener).show();
+//			return true;
+//		default:
+//			return super.onOptionsItemSelected(item);
+//		}
+//	}
 }

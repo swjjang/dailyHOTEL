@@ -31511,11 +31511,10 @@ com.twoheart.dailyhotel.util.GaManager -> com.twoheart.dailyhotel.util.e:
 com.twoheart.dailyhotel.util.GlobalFont -> com.twoheart.dailyhotel.util.f:
     void apply(android.view.ViewGroup) -> apply
 com.twoheart.dailyhotel.util.KakaoLinkManager -> com.twoheart.dailyhotel.util.g:
-    com.twoheart.dailyhotel.util.KakaoLinkManager instance -> a
-    com.kakao.KakaoLink kkLink -> b
-    com.kakao.KakaoTalkLinkMessageBuilder kkMsgBuilder -> c
-    android.content.Context mContext -> d
-    com.twoheart.dailyhotel.util.KakaoLinkManager getInstance(android.content.Context) -> getInstance
+    com.kakao.KakaoLink kkLink -> a
+    com.kakao.KakaoTalkLinkMessageBuilder kkMsgBuilder -> b
+    android.content.Context mContext -> c
+    com.twoheart.dailyhotel.util.KakaoLinkManager newInstance(android.content.Context) -> newInstance
     void sendInviteMsgKakaoLink(java.lang.String) -> sendInviteMsgKakaoLink
     void shareHotelInfo(com.twoheart.dailyhotel.model.HotelDetail) -> shareHotelInfo
 com.twoheart.dailyhotel.util.Log -> com.twoheart.dailyhotel.util.h:
