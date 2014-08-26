@@ -37,6 +37,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnLongClickListener;
 import android.webkit.CookieSyncManager;
 import android.webkit.JavascriptInterface;
@@ -48,6 +49,7 @@ import android.widget.Toast;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Pay;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.Log;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
@@ -389,7 +391,10 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		@Override
 		public void onPageStarted(WebView view, String url, Bitmap favicon) {
 			super.onPageStarted(view, url, favicon);
+			
 			lockUI();
+			handler.removeCallbacks(networkCheckRunner); // 결제 완료시 항상 네트워크 불안정뜨므로, 네트워크 체크는 제거하도록 함.
+			
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 				setSupportProgressBarIndeterminateVisibility(true);
 		}
@@ -761,6 +766,17 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		};
 		SimpleAlertDialog.build(PaymentActivity.this, "결제알림", "결제를 취소하시겠습니까?",
 				"예", "아니오", posListener , null).show();
+	}
+	
+	@Override
+	public void lockUI() {
+		mLockUI.show();
+	}
+
+	@Override
+	public void unLockUI() {
+		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
+		mLockUI.hide();
 	}
 
 }

@@ -35500,6 +35500,7 @@ com.twoheart.dailyhotel.MainActivity: com.twoheart.dailyhotel.MainActivity$Drawe
 com.twoheart.dailyhotel.MainActivity: com.twoheart.dailyhotel.MainActivity$DrawerMenu menuBookingListFragment
 com.twoheart.dailyhotel.MainActivity: com.twoheart.dailyhotel.MainActivity$DrawerMenu menuCreditFragment
 com.twoheart.dailyhotel.MainActivity: com.twoheart.dailyhotel.MainActivity$DrawerMenu menuSettingFragment
+com.twoheart.dailyhotel.MainActivity: android.net.Uri intentData
 com.twoheart.dailyhotel.MainActivity: MainActivity()
 com.twoheart.dailyhotel.MainActivity: void onCreate(android.os.Bundle)
 com.twoheart.dailyhotel.MainActivity: void onActivityResult(int,int,android.content.Intent)
@@ -36283,6 +36284,7 @@ com.twoheart.dailyhotel.R$id: int action_context_bar
 com.twoheart.dailyhotel.R$id: int action_menu_divider
 com.twoheart.dailyhotel.R$id: int action_menu_presenter
 com.twoheart.dailyhotel.R$id: int action_mode_close_button
+com.twoheart.dailyhotel.R$id: int action_share
 com.twoheart.dailyhotel.R$id: int activity_chooser_view_content
 com.twoheart.dailyhotel.R$id: int always
 com.twoheart.dailyhotel.R$id: int authButton
@@ -36682,6 +36684,7 @@ com.twoheart.dailyhotel.R$layout: int list_row_hotel_tab_info_content
 com.twoheart.dailyhotel.R$layout: int support_simple_spinner_dropdown_item
 com.twoheart.dailyhotel.R$layout: int tab_indicator_holo
 com.twoheart.dailyhotel.R$layout: R$layout()
+com.twoheart.dailyhotel.R$menu: int activity_hotel_tab_actions
 com.twoheart.dailyhotel.R$menu: int payment_wait_actions
 com.twoheart.dailyhotel.R$menu: R$menu()
 com.twoheart.dailyhotel.R$string: int abc_action_bar_home_description
@@ -36804,6 +36807,7 @@ com.twoheart.dailyhotel.R$string: int dialog_msg_network_please_off_airplain
 com.twoheart.dailyhotel.R$string: int dialog_msg_network_unstable_retry_or_set_wifi
 com.twoheart.dailyhotel.R$string: int dialog_msg_not_installed_kakaotalk
 com.twoheart.dailyhotel.R$string: int dialog_msg_payment_confirm
+com.twoheart.dailyhotel.R$string: int dialog_msg_payment_confirm_hp
 com.twoheart.dailyhotel.R$string: int dialog_msg_please_update_new_version
 com.twoheart.dailyhotel.R$string: int dialog_msg_sales_closed
 com.twoheart.dailyhotel.R$string: int dialog_msg_sent_email
@@ -37396,6 +37400,8 @@ com.twoheart.dailyhotel.activity.PaymentActivity: android.app.Dialog onCreateDia
 com.twoheart.dailyhotel.activity.PaymentActivity: void finishActivity(java.lang.String)
 com.twoheart.dailyhotel.activity.PaymentActivity: void finish()
 com.twoheart.dailyhotel.activity.PaymentActivity: void onBackPressed()
+com.twoheart.dailyhotel.activity.PaymentActivity: void lockUI()
+com.twoheart.dailyhotel.activity.PaymentActivity: void unLockUI()
 com.twoheart.dailyhotel.activity.PaymentActivity$1: boolean onLongClick(android.view.View)
 com.twoheart.dailyhotel.activity.PaymentActivity$2: void onClick(android.content.DialogInterface,int)
 com.twoheart.dailyhotel.activity.PaymentActivity$3: void onClick(android.content.DialogInterface,int)

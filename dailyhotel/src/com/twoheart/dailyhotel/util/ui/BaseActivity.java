@@ -51,13 +51,13 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	protected RequestQueue mQueue;
 	protected Toast mToast;
 
-	private LoadingDialog mLockUI;
+	protected LoadingDialog mLockUI;
 
 	private RequestFilter cancelAllRequestFilter;
 
 	private Handler handler;
 
-	private Runnable networkCheckRunner;
+	protected Runnable networkCheckRunner;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

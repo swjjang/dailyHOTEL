@@ -30059,6 +30059,8 @@ com.twoheart.dailyhotel.HotelListFragment -> com.twoheart.dailyhotel.f:
     android.widget.ImageView ivNewEvent -> m
     android.widget.LinearLayout btnListViewHeader -> n
     boolean mRefreshHotelList -> o
+    int mKakaoHotelIdx -> p
+    java.lang.String mKakaoCat -> q
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     void onStart() -> onStart
     void onResume() -> onResume
@@ -30088,8 +30090,8 @@ com.twoheart.dailyhotel.IntroActivity -> com.twoheart.dailyhotel.IntroActivity:
     android.widget.TextView tvStart -> t
     java.util.List mGuideBackgrounds -> u
     java.util.List mGuideTitles -> v
-    java.util.List mGuideDesces -> y
-    java.util.List mGuideImages -> z
+    java.util.List mGuideDesces -> A
+    java.util.List mGuideImages -> B
     void onCreate(android.os.Bundle) -> onCreate
     void onClick(android.view.View) -> onClick
     void onBackPressed() -> onBackPressed
@@ -30132,6 +30134,7 @@ com.twoheart.dailyhotel.MainActivity -> com.twoheart.dailyhotel.MainActivity:
     com.twoheart.dailyhotel.MainActivity$DrawerMenu menuSettingFragment -> menuSettingFragment
     com.twoheart.dailyhotel.util.ui.CloseOnBackPressed backButtonHandler -> u
     java.util.HashMap regPushParams -> q
+    android.net.Uri intentData -> intentData
     void onCreate(android.os.Bundle) -> onCreate
     void onActivityResult(int,int,android.content.Intent) -> onActivityResult
     void onResponse(java.lang.String,java.lang.String) -> onResponse
@@ -30516,26 +30519,26 @@ com.twoheart.dailyhotel.activity.BookingActivity -> com.twoheart.dailyhotel.acti
     android.widget.TextView tvCreditValue -> t
     android.widget.TextView tvOriginalPrice -> u
     android.widget.TextView tvCredit -> v
-    android.widget.TextView tvPrice -> y
-    android.widget.Button btnPay -> z
-    com.twoheart.dailyhotel.widget.Switch swCredit -> A
-    android.widget.TextView tvReserverName -> B
-    android.widget.TextView tvReserverNumber -> C
-    android.widget.TextView tvReserverEmail -> D
-    android.widget.LinearLayout llReserverInfoLabel -> E
-    android.widget.LinearLayout llReserverInfoEditable -> F
-    android.widget.EditText etReserverName -> G
-    android.widget.EditText etReserverNumber -> H
-    android.widget.EditText etReserverEmail -> I
-    android.widget.RadioGroup rgPaymentMethod -> J
-    android.widget.RadioButton rbPaymentAccount -> K
-    android.widget.RadioButton rbPaymentCard -> L
-    android.widget.RadioButton rbPaymentHp -> M
-    com.twoheart.dailyhotel.model.Pay mPay -> N
-    com.twoheart.dailyhotel.model.SaleTime saleTime -> O
-    int mReqCode -> P
-    int mResCode -> Q
-    android.content.Intent mResIntent -> R
+    android.widget.TextView tvPrice -> A
+    android.widget.Button btnPay -> B
+    com.twoheart.dailyhotel.widget.Switch swCredit -> C
+    android.widget.TextView tvReserverName -> D
+    android.widget.TextView tvReserverNumber -> E
+    android.widget.TextView tvReserverEmail -> F
+    android.widget.LinearLayout llReserverInfoLabel -> G
+    android.widget.LinearLayout llReserverInfoEditable -> H
+    android.widget.EditText etReserverName -> I
+    android.widget.EditText etReserverNumber -> J
+    android.widget.EditText etReserverEmail -> K
+    android.widget.RadioGroup rgPaymentMethod -> L
+    android.widget.RadioButton rbPaymentAccount -> M
+    android.widget.RadioButton rbPaymentCard -> N
+    android.widget.RadioButton rbPaymentHp -> O
+    com.twoheart.dailyhotel.model.Pay mPay -> P
+    com.twoheart.dailyhotel.model.SaleTime saleTime -> Q
+    int mReqCode -> R
+    int mResCode -> S
+    android.content.Intent mResIntent -> T
     java.lang.String mAliveCallSource -> o
     void onCreate(android.os.Bundle) -> onCreate
     void onResume() -> onResume
@@ -30645,11 +30648,11 @@ com.twoheart.dailyhotel.activity.LoginActivity -> com.twoheart.dailyhotel.activi
     android.widget.TextView tvForgotPwd -> t
     com.facebook.widget.LoginButton facebookLogin -> u
     java.util.Map loginParams -> v
-    java.util.Map snsSignupParams -> y
-    java.util.Map regPushParams -> z
+    java.util.Map snsSignupParams -> A
+    java.util.Map regPushParams -> B
     com.facebook.Session fbSession -> fbSession
-    com.google.android.gms.gcm.GoogleCloudMessaging mGcm -> A
-    com.facebook.Session$StatusCallback statusCallback -> B
+    com.google.android.gms.gcm.GoogleCloudMessaging mGcm -> C
+    com.facebook.Session$StatusCallback statusCallback -> D
     void onCreate(android.os.Bundle) -> onCreate
     void makeMeRequest(com.facebook.Session) -> a
     void onClick(android.view.View) -> onClick
@@ -30719,10 +30722,13 @@ com.twoheart.dailyhotel.activity.PaymentActivity -> com.twoheart.dailyhotel.acti
     void finishActivity(java.lang.String) -> finishActivity
     void finish() -> finish
     void onBackPressed() -> onBackPressed
+    void lockUI() -> lockUI
+    void unLockUI() -> unLockUI
     boolean access$0(com.twoheart.dailyhotel.activity.PaymentActivity,android.webkit.WebView,java.lang.String) -> a
     android.webkit.WebView access$1(com.twoheart.dailyhotel.activity.PaymentActivity) -> a
     android.os.Handler access$2(com.twoheart.dailyhotel.activity.PaymentActivity) -> b
-    com.twoheart.dailyhotel.model.Pay access$3(com.twoheart.dailyhotel.activity.PaymentActivity) -> c
+    java.lang.Runnable access$3(com.twoheart.dailyhotel.activity.PaymentActivity) -> c
+    com.twoheart.dailyhotel.model.Pay access$4(com.twoheart.dailyhotel.activity.PaymentActivity) -> d
 com.twoheart.dailyhotel.activity.PaymentActivity$1 -> com.twoheart.dailyhotel.activity.m:
     com.twoheart.dailyhotel.activity.PaymentActivity this$0 -> a
     boolean onLongClick(android.view.View) -> onLongClick
@@ -30849,7 +30855,7 @@ com.twoheart.dailyhotel.activity.SignupActivity -> com.twoheart.dailyhotel.activ
     android.widget.TextView tvTerm -> t
     android.widget.TextView tvPrivacy -> u
     android.widget.Button btnSignUp -> v
-    java.util.Map signupParams -> y
+    java.util.Map signupParams -> A
     void onCreate(android.os.Bundle) -> onCreate
     void onStart() -> onStart
     void getPhoneNumber() -> getPhoneNumber
@@ -31593,10 +31599,10 @@ com.twoheart.dailyhotel.util.ui.BaseActivity -> com.twoheart.dailyhotel.util.b.a
     android.content.SharedPreferences sharedPreference -> sharedPreference
     com.android.volley.RequestQueue mQueue -> w
     android.widget.Toast mToast -> x
-    com.twoheart.dailyhotel.util.ui.LoadingDialog mLockUI -> o
-    com.android.volley.RequestQueue$RequestFilter cancelAllRequestFilter -> p
-    android.os.Handler handler -> q
-    java.lang.Runnable networkCheckRunner -> r
+    com.twoheart.dailyhotel.util.ui.LoadingDialog mLockUI -> y
+    com.android.volley.RequestQueue$RequestFilter cancelAllRequestFilter -> o
+    android.os.Handler handler -> p
+    java.lang.Runnable networkCheckRunner -> z
     void onCreate(android.os.Bundle) -> onCreate
     void onBackPressed() -> onBackPressed
     void setContentView(int) -> setContentView
@@ -31617,8 +31623,7 @@ com.twoheart.dailyhotel.util.ui.BaseActivity -> com.twoheart.dailyhotel.util.b.a
     void onError() -> onError
     void showToast(java.lang.String,int,boolean) -> showToast
     void chgClickable(android.view.View,boolean) -> a
-    com.twoheart.dailyhotel.util.ui.LoadingDialog access$0(com.twoheart.dailyhotel.util.ui.BaseActivity) -> a
-    com.android.volley.RequestQueue$RequestFilter access$1(com.twoheart.dailyhotel.util.ui.BaseActivity) -> b
+    com.android.volley.RequestQueue$RequestFilter access$0(com.twoheart.dailyhotel.util.ui.BaseActivity) -> a
 com.twoheart.dailyhotel.util.ui.BaseActivity$1 -> com.twoheart.dailyhotel.util.b.b:
     com.twoheart.dailyhotel.util.ui.BaseActivity this$0 -> a
     boolean apply(com.android.volley.Request) -> apply

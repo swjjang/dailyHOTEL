@@ -374,6 +374,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 	protected void onActivityResult(int requestCode, int resultCode,
 			Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
+		unLockUI();
 
 		mReqCode = requestCode;
 		mResCode = resultCode;
