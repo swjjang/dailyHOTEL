@@ -296,7 +296,6 @@ DailyHotelStringResponseListener {
 				}
 
 			} catch (JSONException e) {
-
 				onError(e);
 				unLockUI();
 			}
@@ -307,7 +306,7 @@ DailyHotelStringResponseListener {
 	}
 
 	/*
-	 * TODO : VERRRRRRRY IMPORTANT, 
+	 * TODO : VERRRRRRRY IMPORTANT, 朝朝神元滴
 	 */
 
 //	@Override

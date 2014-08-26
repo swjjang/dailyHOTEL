@@ -256,7 +256,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 	}
 	/**
 	 * 결제 수단에 알맞은 결제 동의 확인 다이얼로그를 만든다.
-	 * @param type CARD, ACCOUNT 두가지 타입 존재.
+	 * @param type CARD, ACCOUNT, HP  세가지 타입 존재.
 	 * @return 타입에 맞는 결제 동의 다이얼로그 반환.
 	 */
 
@@ -275,8 +275,12 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 
 		OnClickListener onClickProceed = null;
 
+		String msg = "";
+		if (type == DIALOG_CONFIRM_PAYMENT_HP) msg = getString(R.string.dialog_msg_payment_confirm_hp);
+		else msg = getString(R.string.dialog_msg_payment_confirm);
+		
 		tvMsg.setText(
-				Html.fromHtml(getString(R.string.dialog_msg_payment_confirm)));
+				Html.fromHtml(msg));
 		btnProceed.setText(
 				Html.fromHtml(getString(R.string.dialog_btn_payment_confirm)));
 
