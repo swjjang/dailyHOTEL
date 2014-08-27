@@ -50,10 +50,11 @@ public class KakaoLinkManager implements Constants{
 		}
 	}
 
-	public void shareHotelInfo(HotelDetail hotel) {
+	public void shareHotelInfo(HotelDetail hotel, String region) {
 		try {
-			
-			String schemeParams = "hotelIdx="+hotel.getHotel().getIdx()+"&cat="+hotel.getHotel().getCategory();
+//			android.util.Log.e("hotel",hotel.getHotel().);
+			String schemeParams = "hotelIdx="+hotel.getHotel().getIdx()+"&region="+region;
+			android.util.Log.e("sche",schemeParams);
 			
 			kkMsgBuilder.addAppButton("æ€¿∏∑Œ ¿Ãµø",
 					new AppActionBuilder()

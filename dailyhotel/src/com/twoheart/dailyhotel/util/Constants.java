@@ -34,9 +34,9 @@ public interface Constants {
 
 	// 웹서버 호스트 
 //		public static final String URL_DAILYHOTEL_SERVER = "http://dailyhotel.kr/goodnight/";				// 서비스 서버
-    	public static final String URL_DAILYHOTEL_SERVER = "http://restful.dailyhotel.kr/goodnight/"; //  서비스 서버 2
+//    	public static final String URL_DAILYHOTEL_SERVER = "http://restful.dailyhotel.kr/goodnight/"; //  서비스 서버 2
     	
-//		public static final String URL_DAILYHOTEL_SERVER = "http://dev.dailyhotel.kr/goodnight/";				// 개발 서버 데브서버
+		public static final String URL_DAILYHOTEL_SERVER = "http://dev.dailyhotel.kr/goodnight/";				// 개발 서버 데브서버
 //		public static final String URL_DAILYHOTEL_SERVER = "http://1.234.22.96/goodnight/"; // new 개발 7.6 테라서버
     	
 //    	public static final String URL_DAILYHOTEL_SERVER = "http://newinsik.cafe24.com/goodnight/"; // new 개발
@@ -166,6 +166,7 @@ public interface Constants {
 	public static final String NAME_INTENT_EXTRA_DATA_HOTEL = "hotel";
 	public static final String NAME_INTENT_EXTRA_DATA_HOTELDETAIL = "hoteldetail";
 	public static final String NAME_INTENT_EXTRA_DATA_SALETIME = "saletime";
+	public static final String NAME_INTENT_EXTRA_DATA_REGION = "region";
 	public static final String NAME_INTENT_EXTRA_DATA_BOOKING = "booking";
 	public static final String NAME_INTENT_EXTRA_DATA_PAY = "pay";
 	public static final String NAME_INTENT_EXTRA_DATA_SELECTED_IMAGE_URL = "sel_image_url";

@@ -91,8 +91,10 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 
 	private boolean mRefreshHotelList;
 
-	private int mKakaoHotelIdx;
-	private String mKakaoCat;
+	private int mKakaoHotelIdx = -1;
+	private String mKakaoHotelRegion;
+
+	private String selectedRegion;
 
 
 	@Override
@@ -108,7 +110,8 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 		Uri intentData = ((MainActivity)mHostActivity).intentData;
 		if (intentData != null) {
 			mKakaoHotelIdx = Integer.parseInt(intentData.getQueryParameter("hotelIdx"));
-			mKakaoCat = intentData.getQueryParameter("cat");
+			mKakaoHotelRegion = intentData.getQueryParameter("region");
+			android.util.Log.e("KaKaoHotelIdx", mKakaoHotelIdx + " / " + mKakaoHotelRegion);
 		}
 
 		mDailyHotelSaleTime = new SaleTime();
@@ -231,16 +234,19 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 		if (position == 0)  return; 
 
 		int selectedPosition = position - 1;
-
 		HotelListViewItem selectedItem = mHotelListViewList.get(selectedPosition);
 
 		if (selectedItem.getType() == HotelListViewItem.TYPE_ENTRY) {
 			mHotelListAdapter.getImgCache().evictAll(); // 호텔 리스트아이템들의 image를 캐싱하는 lru cache 비우기.
 
 			Intent i = new Intent(mHostActivity, HotelTabActivity.class);
+			
+			int idx = mHostActivity.actionBar.getSelectedNavigationIndex();
+			selectedRegion = mRegionList.get(idx).trim();
 
 			i.putExtra(NAME_INTENT_EXTRA_DATA_HOTEL, selectedItem.getItem());
 			i.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mDailyHotelSaleTime);
+			i.putExtra(NAME_INTENT_EXTRA_DATA_REGION, selectedRegion);
 
 			startActivityForResult(i, CODE_REQUEST_ACTIVITY_HOTELTAB);
 		}
@@ -460,6 +466,22 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 		} else if (url.contains(URL_WEBAPI_APP_VERSION)) {
 			try {
 				if (response.getString("new_event").equals("1") && (ivNewEvent != null))  ivNewEvent.setVisibility(View.VISIBLE);
+				if (mKakaoHotelIdx != -1) {
+					for (int i=0; i<mHotelListAdapter.getCount(); i++) {
+						HotelListViewItem item = mHotelListAdapter.getItem(i);
+						if (item.getType() == HotelListViewItem.TYPE_SECTION) {
+							continue;
+						} else {
+							if(item.getItem().getIdx() == mKakaoHotelIdx) {
+								mHotelListView.performItemClick(null, i+1, -1);
+								break;
+							}	
+						}
+					}
+
+					mKakaoHotelRegion = null;
+					mKakaoHotelIdx = -1;
+				}
 			} catch (Exception e) {
 				onError(e);
 			}
@@ -493,6 +515,9 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 					}
 					mRegionDetailList.put(name, nameDetailList);
 				}
+				
+				android.util.Log.e("mRegionList", mRegionList.toString());
+				android.util.Log.e("mRegionDetailList", mRegionDetailList.toString());
 
 				mHostActivity.actionBar.setDisplayShowTitleEnabled(false);
 				// 호텔 프래그먼트 일때 액션바에 네비게이션 리스트 설치.
@@ -503,9 +528,24 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 
 				mHostActivity.actionBar.setListNavigationCallbacks(
 						regionListAdapter, this);
+				
+				int regionIdx = 0;
+				if (mKakaoHotelRegion != null && !mKakaoHotelRegion.isEmpty()) {
+					for (int i=0;i<mRegionList.size();i++) {
+						if (mRegionList.get(i).trim().equals(mKakaoHotelRegion)) {
+							regionIdx = i;
+							break;
+						}
+					}
+				} else {
+					regionIdx = mHostActivity.sharedPreference
+							.getInt(KEY_PREFERENCE_REGION_INDEX, 0);
+				}
+				
 				mHostActivity.actionBar
-				.setSelectedNavigationItem(mHostActivity.sharedPreference
-						.getInt(KEY_PREFERENCE_REGION_INDEX, 0));
+				.setSelectedNavigationItem(regionIdx);
+//				.setSelectedNavigationItem(1);
+				
 				// 호텔 리프레시
 				//				fetchHotelList(mHostActivity.actionBar.getSelectedNavigationIndex());
 				//				mHotelListView.setSelectionFromTop(prevIndex, prevTop);

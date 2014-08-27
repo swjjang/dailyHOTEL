@@ -51,6 +51,7 @@ DailyHotelStringResponseListener {
 
 	private Button btnSoldOut;
 	private Button btnBooking;
+	private String mRegion;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +65,7 @@ DailyHotelStringResponseListener {
 			hotelDetail.setHotel((Hotel) bundle
 					.getParcelable(NAME_INTENT_EXTRA_DATA_HOTEL));
 			mSaleTime = bundle.getParcelable(NAME_INTENT_EXTRA_DATA_SALETIME);
+			mRegion = bundle.getString(NAME_INTENT_EXTRA_DATA_REGION);
 		}
 
 		setContentView(R.layout.activity_hotel_tab);
@@ -309,31 +311,31 @@ DailyHotelStringResponseListener {
 	 * TODO : VERRRRRRRY IMPORTANT, 카카오링크
 	 */
 
-//	@Override
-//	public boolean onCreateOptionsMenu(Menu menu) {
-//		getMenuInflater().inflate(R.menu.activity_hotel_tab_actions, menu);
-//		return true;
-//	}
-//
-//	@Override
-//	public boolean onOptionsItemSelected(MenuItem item) {
-//		switch(item.getItemId()){
-//		case R.id.action_share:
-//			/**
-//			 * TODO : TEST FOR HOTEL SHARE
-//			 */
-//			android.content.DialogInterface.OnClickListener posListener = new android.content.DialogInterface.OnClickListener() {
-//				
-//				@Override
-//				public void onClick(DialogInterface dialog, int which) {
-//					KakaoLinkManager.newInstance(HotelTabActivity.this).shareHotelInfo(hotelDetail);
-//				}
-//
-//			};
-//			SimpleAlertDialog.build(this, "(TEST)호텔 정보를 공유합니다.", "공유", posListener).show();
-//			return true;
-//		default:
-//			return super.onOptionsItemSelected(item);
-//		}
-//	}
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.activity_hotel_tab_actions, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch(item.getItemId()){
+		case R.id.action_share:
+			/**
+			 * TODO : TEST FOR HOTEL SHARE
+			 */
+			android.content.DialogInterface.OnClickListener posListener = new android.content.DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					KakaoLinkManager.newInstance(HotelTabActivity.this).shareHotelInfo(hotelDetail, mRegion);
+				}
+
+			};
+			SimpleAlertDialog.build(this, "(TEST)호텔 정보를 공유합니다.", "공유", posListener).show();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
 }
