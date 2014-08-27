@@ -83,8 +83,8 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseLis
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.CloseOnBackPressed;
 
-public class MainActivity extends BaseActivity implements DailyHotelStringResponseListener, DailyHotelJsonResponseListener, OnItemClickListener,
-Constants {
+public class MainActivity extends BaseActivity implements DailyHotelStringResponseListener, DailyHotelJsonResponseListener, 
+	OnItemClickListener, Constants {
 
 	private static final String TAG = "MainActivity";
 
@@ -134,13 +134,9 @@ Constants {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
+		// Intent Scheme Parameter for KakaoLink
 		intentData = getIntent().getData();
-		
-		if (intentData == null) {
-			android.util.Log.e("INTENT_DATA","NULL");
-		} else {
-			android.util.Log.e("INTENT_DATA",intentData.toString());
-		}
+		if (intentData != null)android.util.Log.e(TAG + " / onCreate", "intentData = " + intentData.toString());
 
 		// 쿠키 동기화를 초기화한다. 로그인, 로그아웃 세션 쿠키는 MainActivity의 생명주기와 동기화한다.
 		CookieSyncManager.createInstance(getApplicationContext());
@@ -323,7 +319,6 @@ Constants {
 					Editor editor = sharedPreference.edit();
 					editor.putString(KEY_PREFERENCE_GCM_ID, regPushParams.get("notification_id").toString());
 					editor.apply();
-					android.util.Log.e("STORED_GCM_ID", sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "NOAP"));
 				}
 
 			} catch (Exception e) {
@@ -378,8 +373,6 @@ Constants {
 				regPushParams.put("user_idx", idx+"");
 				regPushParams.put("notification_id", regId);
 				regPushParams.put("device_type", GCM_DEVICE_TYPE_ANDROID);
-
-				android.util.Log.e("params for register push id",regPushParams.toString());
 
 				mQueue.add(new DailyHotelJsonRequest(Method.POST,
 						new StringBuilder(URL_DAILYHOTEL_SERVER)

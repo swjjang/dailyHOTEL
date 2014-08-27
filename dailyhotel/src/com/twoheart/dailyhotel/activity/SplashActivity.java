@@ -96,7 +96,7 @@ DailyHotelJsonResponseListener, ErrorListener {
 		// 비행기 모드
 		boolean isAirplainMode = Settings.System.getInt(getContentResolver(), Settings.System.AIRPLANE_MODE_ON, 0) == 1 ? true:false;
 		boolean isNetworkAvailable = VolleyHttpClient.isAvailableNetwork();
-		android.util.Log.e("STATUS",isAirplainMode + " / " + isNetworkAvailable);
+		android.util.Log.e(TAG + " / onResume", "isAirplainMode = " + isAirplainMode +" / isNetworkAvailable = " + isNetworkAvailable);
 		startSplashLoad();
 
 		if(isAirplainMode && !isNetworkAvailable) {
@@ -209,7 +209,7 @@ DailyHotelJsonResponseListener, ErrorListener {
 
 	private void moveToLoginStep() {
 		if (sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false)) {
-
+			
 			String id = sharedPreference
 					.getString(KEY_PREFERENCE_USER_ID, null);
 			String accessToken = sharedPreference.getString(
@@ -223,6 +223,8 @@ DailyHotelJsonResponseListener, ErrorListener {
 			else loginParams.put("email", id);
 
 			loginParams.put("pw", pw);
+			
+			android.util.Log.e(TAG + " / moveToLoginStep ", "loginParams = " + loginParams.toString());
 
 			mQueue.add(new DailyHotelJsonRequest(Method.POST,
 					new StringBuilder(URL_DAILYHOTEL_SERVER).append(
@@ -262,7 +264,8 @@ DailyHotelJsonResponseListener, ErrorListener {
 
 			try {
 				
-				android.util.Log.e("APP_VERSIONS", response.toString());
+				android.util.Log.e(TAG + " / onResponse", "url = "+ url +" / response = " + response.toString());
+				android.util.Log.e(TAG + " / onResponse", "Stores = "+ RELEASE_STORE);
 				
 				SharedPreferences.Editor editor = sharedPreference.edit();
 

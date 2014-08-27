@@ -12,6 +12,7 @@ import com.twoheart.dailyhotel.model.HotelDetail;
 import android.content.Context;
 
 public class KakaoLinkManager implements Constants{
+	private static final String TAG = "KakaloLinkManager";
 
 	public static KakaoLinkManager newInstance(Context context) {
 		return new KakaoLinkManager(context);
@@ -26,7 +27,6 @@ public class KakaoLinkManager implements Constants{
 			mContext = context;
 			kkLink = KakaoLink.getKakaoLink(mContext);
 			kkMsgBuilder = kkLink.createKakaoTalkLinkMessageBuilder();
-
 		} catch (KakaoParameterException e) {
 			e.printStackTrace();
 		}
@@ -34,17 +34,10 @@ public class KakaoLinkManager implements Constants{
 
 	public void sendInviteMsgKakaoLink(String text) {
 		try {
-			//
 			kkMsgBuilder.addText(text);
-			//			new AppActionBuilder()
-			//			.addActionInfo(AppActionInfoBuilder
-			//					.create);
-
-			//			kkMsgBuilder.addText("QWER");
-			//			kkMsgBuilder.addImage("http://img4.wikia.nocookie.net/__cb20120206123643/pokemon/ko/images/0/04/%EB%A0%88%EB%93%9C%EC%9D%98_%ED%94%BC%EC%B9%B4%EC%B8%84.png", 300, 200);
-			//			kkMsgBuilder.addText("ASDF");
 			kkMsgBuilder.addAppButton("æ€¿∏∑Œ ¿Ãµø");
 			kkLink.sendMessage(kkMsgBuilder.build(), mContext);
+			android.util.Log.e(TAG +" / " + "sendInviteMsgKakaoLink", "text = " + text);
 		} catch (KakaoParameterException e) {
 			e.printStackTrace();
 		}
@@ -52,7 +45,6 @@ public class KakaoLinkManager implements Constants{
 
 	public void shareHotelInfo(HotelDetail hotel, String region) {
 		try {
-//			android.util.Log.e("hotel",hotel.getHotel().);
 			String schemeParams = "hotelIdx="+hotel.getHotel().getIdx()+"&region="+region;
 			android.util.Log.e("sche",schemeParams);
 			
@@ -69,8 +61,8 @@ public class KakaoLinkManager implements Constants{
 						.build());
 			kkMsgBuilder.addImage(hotel.getHotel().getImage(), 300, 200);
 			kkMsgBuilder.addText(hotel.getHotel().getName());
-
 			kkLink.sendMessage(kkMsgBuilder.build(), mContext);
+			android.util.Log.e(TAG +" / " + "shareHotelInfo", "schmeParams = " + schemeParams);
 
 		} catch (KakaoParameterException e) {
 			e.printStackTrace();
