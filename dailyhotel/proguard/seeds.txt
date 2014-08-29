@@ -36145,6 +36145,7 @@ com.twoheart.dailyhotel.R$drawable: int img_bg_guide4
 com.twoheart.dailyhotel.R$drawable: int img_bg_info
 com.twoheart.dailyhotel.R$drawable: int img_btn_cancel
 com.twoheart.dailyhotel.R$drawable: int img_btn_event
+com.twoheart.dailyhotel.R$drawable: int img_btn_event_renew
 com.twoheart.dailyhotel.R$drawable: int img_ic_appicon
 com.twoheart.dailyhotel.R$drawable: int img_ic_code
 com.twoheart.dailyhotel.R$drawable: int img_ic_coin
@@ -36167,11 +36168,13 @@ com.twoheart.dailyhotel.R$drawable: int img_ic_reservation_highlight
 com.twoheart.dailyhotel.R$drawable: int img_ic_reservation_location
 com.twoheart.dailyhotel.R$drawable: int img_ic_reservation_normal
 com.twoheart.dailyhotel.R$drawable: int img_ic_reservation_user
+com.twoheart.dailyhotel.R$drawable: int img_ic_reservationconfirm_button
 com.twoheart.dailyhotel.R$drawable: int img_ic_ribbon
 com.twoheart.dailyhotel.R$drawable: int img_ic_saving_highlight
 com.twoheart.dailyhotel.R$drawable: int img_ic_saving_normal
 com.twoheart.dailyhotel.R$drawable: int img_ic_setting_highlight
 com.twoheart.dailyhotel.R$drawable: int img_ic_setting_normal
+com.twoheart.dailyhotel.R$drawable: int img_ic_share_kakao
 com.twoheart.dailyhotel.R$drawable: int img_ic_star_highlight
 com.twoheart.dailyhotel.R$drawable: int img_ic_star_normal
 com.twoheart.dailyhotel.R$drawable: int img_ic_todayshotel_highlight
@@ -37368,6 +37371,10 @@ com.twoheart.dailyhotel.activity.HotelTabActivity: HotelTabActivity()
 com.twoheart.dailyhotel.activity.HotelTabActivity: void onClick(android.view.View)
 com.twoheart.dailyhotel.activity.HotelTabActivity: void onResponse(java.lang.String,java.lang.String)
 com.twoheart.dailyhotel.activity.HotelTabActivity: void onResponse(java.lang.String,org.json.JSONObject)
+com.twoheart.dailyhotel.activity.HotelTabActivity: boolean onCreateOptionsMenu(android.view.Menu)
+com.twoheart.dailyhotel.activity.HotelTabActivity: boolean onOptionsItemSelected(android.view.MenuItem)
+com.twoheart.dailyhotel.activity.HotelTabActivity$1: void onError(com.facebook.widget.FacebookDialog$PendingCall,java.lang.Exception,android.os.Bundle)
+com.twoheart.dailyhotel.activity.HotelTabActivity$1: void onComplete(com.facebook.widget.FacebookDialog$PendingCall,android.os.Bundle)
 com.twoheart.dailyhotel.activity.ImageDetailActivity
 com.twoheart.dailyhotel.activity.ImageDetailActivity: ImageDetailActivity()
 com.twoheart.dailyhotel.activity.LoginActivity
@@ -37837,6 +37844,7 @@ com.twoheart.dailyhotel.util.Constants: java.lang.String KEY_PREFERENCE_ACCOUNT_
 com.twoheart.dailyhotel.util.Constants: java.lang.String NAME_INTENT_EXTRA_DATA_HOTEL
 com.twoheart.dailyhotel.util.Constants: java.lang.String NAME_INTENT_EXTRA_DATA_HOTELDETAIL
 com.twoheart.dailyhotel.util.Constants: java.lang.String NAME_INTENT_EXTRA_DATA_SALETIME
+com.twoheart.dailyhotel.util.Constants: java.lang.String NAME_INTENT_EXTRA_DATA_REGION
 com.twoheart.dailyhotel.util.Constants: java.lang.String NAME_INTENT_EXTRA_DATA_BOOKING
 com.twoheart.dailyhotel.util.Constants: java.lang.String NAME_INTENT_EXTRA_DATA_PAY
 com.twoheart.dailyhotel.util.Constants: java.lang.String NAME_INTENT_EXTRA_DATA_SELECTED_IMAGE_URL
@@ -37852,7 +37860,6 @@ com.twoheart.dailyhotel.util.Constants: int CODE_REQUEST_ACTIVITY_BOOKING
 com.twoheart.dailyhotel.util.Constants: int CODE_REQUEST_ACTIVITY_INTRO
 com.twoheart.dailyhotel.util.Constants: int CODE_REQUEST_ISPMOBILE
 com.twoheart.dailyhotel.util.Constants: int CODE_REQUEST_KFTC_BANKPAY
-com.twoheart.dailyhotel.util.Constants: int RESULT_SALES_CLOSED
 com.twoheart.dailyhotel.util.Constants: int CODE_REQUEST_ACTIVITY_BOOKING_DETAIL
 com.twoheart.dailyhotel.util.Constants: int CODE_RESULT_ACTIVITY_PAYMENT_FAIL
 com.twoheart.dailyhotel.util.Constants: int CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS
@@ -37868,6 +37875,7 @@ com.twoheart.dailyhotel.util.Constants: int CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT
 com.twoheart.dailyhotel.util.Constants: int CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_TIME_ERROR
 com.twoheart.dailyhotel.util.Constants: int CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_DUPLICATE
 com.twoheart.dailyhotel.util.Constants: int CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER
+com.twoheart.dailyhotel.util.Constants: int CODE_RESULT_ACTIVITY_PAYMENT_SALES_CLOSED
 com.twoheart.dailyhotel.util.Constants: int CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT
 com.twoheart.dailyhotel.util.Constants: int CODE_PAY_TYPE_CARD_COMPLETE
 com.twoheart.dailyhotel.util.Constants: int CODE_PAY_TYPE_ACCOUNT_WAIT
@@ -37920,7 +37928,7 @@ com.twoheart.dailyhotel.util.GlobalFont: GlobalFont()
 com.twoheart.dailyhotel.util.GlobalFont: void apply(android.view.ViewGroup)
 com.twoheart.dailyhotel.util.KakaoLinkManager: com.twoheart.dailyhotel.util.KakaoLinkManager newInstance(android.content.Context)
 com.twoheart.dailyhotel.util.KakaoLinkManager: void sendInviteMsgKakaoLink(java.lang.String)
-com.twoheart.dailyhotel.util.KakaoLinkManager: void shareHotelInfo(com.twoheart.dailyhotel.model.HotelDetail)
+com.twoheart.dailyhotel.util.KakaoLinkManager: void shareHotelInfo(com.twoheart.dailyhotel.model.HotelDetail,java.lang.String)
 com.twoheart.dailyhotel.util.Log: Log()
 com.twoheart.dailyhotel.util.Log: void d(java.lang.String,java.lang.String)
 com.twoheart.dailyhotel.util.Log: void e(java.lang.String)

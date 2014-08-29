@@ -342,16 +342,17 @@ DailyHotelStringResponseListener {
 			 * TODO : TEST FOR HOTEL SHARE, KAKAO, FACEBOOK
 			 * 
 			 */
-
-			android.content.DialogInterface.OnClickListener posListener = new android.content.DialogInterface.OnClickListener() {
-
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					KakaoLinkManager.newInstance(HotelTabActivity.this).shareHotelInfo(hotelDetail, mRegion);
-				}
-
-			};
-			SimpleAlertDialog.build(this, "(TEST)호텔 정보를 공유합니다.", "공유", posListener).show();
+			KakaoLinkManager.newInstance(HotelTabActivity.this).shareHotelInfo(hotelDetail, mRegion);
+			
+//			android.content.DialogInterface.OnClickListener posListener = new android.content.DialogInterface.OnClickListener() {
+//
+//				@Override
+//				public void onClick(DialogInterface dialog, int which) {
+//					KakaoLinkManager.newInstance(HotelTabActivity.this).shareHotelInfo(hotelDetail, mRegion);
+//				}
+//
+//			};
+//			SimpleAlertDialog.build(this, "(TEST)호텔 정보를 공유합니다.", "공유", posListener).show();
 
 
 			/**

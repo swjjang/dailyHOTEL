@@ -391,10 +391,12 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 				onError(e);
 			}
 		} else if (url.contains(URL_WEBAPI_USER_INFO)) {
-
+			unLockUI();
 			try {
 				// GCM 아이디를 등록한다.
+				
 				if (isGoogleServiceAvailable()) {
+					lockUI();
 					mGcm = GoogleCloudMessaging.getInstance(this);
 					regGcmId(response.getInt("idx"));
 				}
@@ -463,7 +465,7 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 			@Override
 			protected void onPostExecute(String regId) {
 				// 이 값을 서버에 등록하기.
-
+				unLockUI();
 				// gcm id가 없을 경우 스킵.
 				if (regId == null || regId.isEmpty()) return;
 
@@ -474,7 +476,7 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 				regPushParams.put("device_type", GCM_DEVICE_TYPE_ANDROID);
 
 				android.util.Log.e("params for register push id",regPushParams.toString());
-
+				lockUI();
 				mQueue.add(new DailyHotelJsonRequest(Method.POST,
 						new StringBuilder(URL_DAILYHOTEL_SERVER)
 				.append(URL_GCM_REGISTER)

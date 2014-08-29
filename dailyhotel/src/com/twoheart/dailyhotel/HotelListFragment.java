@@ -60,6 +60,7 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.Log;
+import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonArrayRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
@@ -499,6 +500,9 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 							regionIdx = i;
 							break;
 						}
+					}
+					if (regionIdx == 0) {
+						SimpleAlertDialog.build(mHostActivity, "알림", "공유받은 호텔이 존재하지 않습니다.", "확인", null);
 					}
 				} else {
 					regionIdx = mHostActivity.sharedPreference

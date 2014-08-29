@@ -30060,7 +30060,8 @@ com.twoheart.dailyhotel.HotelListFragment -> com.twoheart.dailyhotel.f:
     android.widget.LinearLayout btnListViewHeader -> n
     boolean mRefreshHotelList -> o
     int mKakaoHotelIdx -> p
-    java.lang.String mKakaoCat -> q
+    java.lang.String mKakaoHotelRegion -> q
+    java.lang.String selectedRegion -> r
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     void onStart() -> onStart
     void onResume() -> onResume
@@ -30623,6 +30624,8 @@ com.twoheart.dailyhotel.activity.HotelTabActivity -> com.twoheart.dailyhotel.act
     com.twoheart.dailyhotel.model.SaleTime mSaleTime -> o
     android.widget.Button btnSoldOut -> t
     android.widget.Button btnBooking -> u
+    java.lang.String mRegion -> v
+    com.facebook.UiLifecycleHelper uiHelper -> A
     void onCreate(android.os.Bundle) -> onCreate
     void onPostSetCookie() -> c
     void onClick(android.view.View) -> onClick
@@ -30631,6 +30634,16 @@ com.twoheart.dailyhotel.activity.HotelTabActivity -> com.twoheart.dailyhotel.act
     void onResponse(java.lang.String,java.lang.String) -> onResponse
     void loadLoginProcess() -> e
     void onResponse(java.lang.String,org.json.JSONObject) -> onResponse
+    boolean onCreateOptionsMenu(android.view.Menu) -> onCreateOptionsMenu
+    boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
+    void onResume() -> onResume
+    void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
+    void onPause() -> onPause
+    void onDestroy() -> onDestroy
+com.twoheart.dailyhotel.activity.HotelTabActivity$1 -> com.twoheart.dailyhotel.activity.h:
+    com.twoheart.dailyhotel.activity.HotelTabActivity this$0 -> a
+    void onError(com.facebook.widget.FacebookDialog$PendingCall,java.lang.Exception,android.os.Bundle) -> onError
+    void onComplete(com.facebook.widget.FacebookDialog$PendingCall,android.os.Bundle) -> onComplete
 com.twoheart.dailyhotel.activity.ImageDetailActivity -> com.twoheart.dailyhotel.activity.ImageDetailActivity:
     com.twoheart.dailyhotel.model.HotelDetail mHotelDetail -> o
     com.twoheart.dailyhotel.adapter.HotelImageDetailFragmentPagerAdapter mAdapter -> p
@@ -30673,16 +30686,16 @@ com.twoheart.dailyhotel.activity.LoginActivity -> com.twoheart.dailyhotel.activi
     com.android.volley.RequestQueue access$6(com.twoheart.dailyhotel.activity.LoginActivity) -> d
     void access$7(com.twoheart.dailyhotel.activity.LoginActivity,java.util.Map) -> c
     java.util.Map access$8(com.twoheart.dailyhotel.activity.LoginActivity) -> e
-com.twoheart.dailyhotel.activity.LoginActivity$1 -> com.twoheart.dailyhotel.activity.h:
+com.twoheart.dailyhotel.activity.LoginActivity$1 -> com.twoheart.dailyhotel.activity.i:
     com.twoheart.dailyhotel.activity.LoginActivity this$0 -> a
     void call(com.facebook.Session,com.facebook.SessionState,java.lang.Exception) -> call
-com.twoheart.dailyhotel.activity.LoginActivity$2 -> com.twoheart.dailyhotel.activity.i:
+com.twoheart.dailyhotel.activity.LoginActivity$2 -> com.twoheart.dailyhotel.activity.j:
     com.twoheart.dailyhotel.activity.LoginActivity this$0 -> a
     boolean onEditorAction(android.widget.TextView,int,android.view.KeyEvent) -> onEditorAction
-com.twoheart.dailyhotel.activity.LoginActivity$3 -> com.twoheart.dailyhotel.activity.j:
+com.twoheart.dailyhotel.activity.LoginActivity$3 -> com.twoheart.dailyhotel.activity.k:
     com.twoheart.dailyhotel.activity.LoginActivity this$0 -> a
     void onCompleted(com.facebook.model.GraphUser,com.facebook.Response) -> onCompleted
-com.twoheart.dailyhotel.activity.LoginActivity$4 -> com.twoheart.dailyhotel.activity.k:
+com.twoheart.dailyhotel.activity.LoginActivity$4 -> com.twoheart.dailyhotel.activity.l:
     com.twoheart.dailyhotel.activity.LoginActivity this$0 -> a
     int val$idx -> b
     java.lang.String doInBackground(java.lang.Void[]) -> a
@@ -30698,7 +30711,7 @@ com.twoheart.dailyhotel.activity.NoticeActivity -> com.twoheart.dailyhotel.activ
     void finish() -> finish
     void onResponse(java.lang.String,org.json.JSONObject) -> onResponse
     android.widget.ExpandableListView access$0(com.twoheart.dailyhotel.activity.NoticeActivity) -> a
-com.twoheart.dailyhotel.activity.NoticeActivity$1 -> com.twoheart.dailyhotel.activity.l:
+com.twoheart.dailyhotel.activity.NoticeActivity$1 -> com.twoheart.dailyhotel.activity.m:
     int mExpandedChildPos -> b
     com.twoheart.dailyhotel.activity.NoticeActivity this$0 -> a
     void onGroupExpand(int) -> onGroupExpand
@@ -30729,72 +30742,72 @@ com.twoheart.dailyhotel.activity.PaymentActivity -> com.twoheart.dailyhotel.acti
     android.os.Handler access$2(com.twoheart.dailyhotel.activity.PaymentActivity) -> b
     java.lang.Runnable access$3(com.twoheart.dailyhotel.activity.PaymentActivity) -> c
     com.twoheart.dailyhotel.model.Pay access$4(com.twoheart.dailyhotel.activity.PaymentActivity) -> d
-com.twoheart.dailyhotel.activity.PaymentActivity$1 -> com.twoheart.dailyhotel.activity.m:
+com.twoheart.dailyhotel.activity.PaymentActivity$1 -> com.twoheart.dailyhotel.activity.n:
     com.twoheart.dailyhotel.activity.PaymentActivity this$0 -> a
     boolean onLongClick(android.view.View) -> onLongClick
-com.twoheart.dailyhotel.activity.PaymentActivity$2 -> com.twoheart.dailyhotel.activity.n:
+com.twoheart.dailyhotel.activity.PaymentActivity$2 -> com.twoheart.dailyhotel.activity.o:
     com.twoheart.dailyhotel.activity.PaymentActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.twoheart.dailyhotel.activity.PaymentActivity$3 -> com.twoheart.dailyhotel.activity.o:
+com.twoheart.dailyhotel.activity.PaymentActivity$3 -> com.twoheart.dailyhotel.activity.p:
     com.twoheart.dailyhotel.activity.PaymentActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.twoheart.dailyhotel.activity.PaymentActivity$HtmlObserver -> com.twoheart.dailyhotel.activity.p:
+com.twoheart.dailyhotel.activity.PaymentActivity$HtmlObserver -> com.twoheart.dailyhotel.activity.q:
     com.twoheart.dailyhotel.activity.PaymentActivity this$0 -> a
     void showHTML(java.lang.String) -> showHTML
-com.twoheart.dailyhotel.activity.PaymentActivity$JavaScriptExtention -> com.twoheart.dailyhotel.activity.q:
+com.twoheart.dailyhotel.activity.PaymentActivity$JavaScriptExtention -> com.twoheart.dailyhotel.activity.r:
     com.twoheart.dailyhotel.activity.PaymentActivity this$0 -> a
     void feed(java.lang.String) -> feed
-com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayBridge -> com.twoheart.dailyhotel.activity.r:
+com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayBridge -> com.twoheart.dailyhotel.activity.s:
     com.twoheart.dailyhotel.activity.PaymentActivity this$0 -> a
     void launchMISP(java.lang.String) -> launchMISP
     com.twoheart.dailyhotel.activity.PaymentActivity access$1(com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayBridge) -> a
-com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayBridge$1 -> com.twoheart.dailyhotel.activity.s:
+com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayBridge$1 -> com.twoheart.dailyhotel.activity.t:
     com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayBridge this$1 -> a
     java.lang.String val$arg -> b
     void run() -> run
-com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayCardInfoBridge -> com.twoheart.dailyhotel.activity.t:
+com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayCardInfoBridge -> com.twoheart.dailyhotel.activity.u:
     com.twoheart.dailyhotel.activity.PaymentActivity this$0 -> a
     void getCardInfo(java.lang.String,java.lang.String) -> getCardInfo
     void alertToNext() -> alertToNext
     void access$0(com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayCardInfoBridge) -> a
     com.twoheart.dailyhotel.activity.PaymentActivity access$2(com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayCardInfoBridge) -> b
-com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayCardInfoBridge$1 -> com.twoheart.dailyhotel.activity.u:
+com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayCardInfoBridge$1 -> com.twoheart.dailyhotel.activity.v:
     com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayCardInfoBridge this$1 -> a
     java.lang.String val$card_cd -> b
     java.lang.String val$quota -> c
     void run() -> run
-com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayCardInfoBridge$2 -> com.twoheart.dailyhotel.activity.v:
+com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayCardInfoBridge$2 -> com.twoheart.dailyhotel.activity.w:
     com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayCardInfoBridge this$1 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayPinInfoBridge -> com.twoheart.dailyhotel.activity.w:
+com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayPinInfoBridge -> com.twoheart.dailyhotel.activity.x:
     com.twoheart.dailyhotel.activity.PaymentActivity this$0 -> a
     void getPaypinInfo(java.lang.String) -> getPaypinInfo
     void paypinConfim() -> paypinConfim
     void access$0(com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayPinInfoBridge) -> a
     com.twoheart.dailyhotel.activity.PaymentActivity access$2(com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayPinInfoBridge) -> b
-com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayPinInfoBridge$1 -> com.twoheart.dailyhotel.activity.x:
+com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayPinInfoBridge$1 -> com.twoheart.dailyhotel.activity.y:
     com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayPinInfoBridge this$1 -> a
     java.lang.String val$url -> b
     void run() -> run
-com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayPinInfoBridge$2 -> com.twoheart.dailyhotel.activity.y:
+com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayPinInfoBridge$2 -> com.twoheart.dailyhotel.activity.z:
     com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayPinInfoBridge this$1 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayPinInfoBridge$3 -> com.twoheart.dailyhotel.activity.z:
+com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayPinInfoBridge$3 -> com.twoheart.dailyhotel.activity.aa:
     com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayPinInfoBridge this$1 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayPinReturn -> com.twoheart.dailyhotel.activity.aa:
+com.twoheart.dailyhotel.activity.PaymentActivity$KCPPayPinReturn -> com.twoheart.dailyhotel.activity.ab:
     com.twoheart.dailyhotel.activity.PaymentActivity this$0 -> a
     java.lang.String getConfirm() -> getConfirm
-com.twoheart.dailyhotel.activity.PaymentActivity$TeleditBridge -> com.twoheart.dailyhotel.activity.ab:
+com.twoheart.dailyhotel.activity.PaymentActivity$TeleditBridge -> com.twoheart.dailyhotel.activity.ac:
     com.twoheart.dailyhotel.activity.PaymentActivity this$0 -> a
     void Result(java.lang.String) -> Result
     void BestClose() -> BestClose
-com.twoheart.dailyhotel.activity.PaymentActivity$mWebChromeClient -> com.twoheart.dailyhotel.activity.ac:
+com.twoheart.dailyhotel.activity.PaymentActivity$mWebChromeClient -> com.twoheart.dailyhotel.activity.ad:
     boolean isActionBarProgressBarShowing -> a
     com.twoheart.dailyhotel.activity.PaymentActivity this$0 -> b
     void onProgressChanged(android.webkit.WebView,int) -> onProgressChanged
     void setActionBarProgressBar(boolean) -> a
-com.twoheart.dailyhotel.activity.PaymentActivity$mWebViewClient -> com.twoheart.dailyhotel.activity.ad:
+com.twoheart.dailyhotel.activity.PaymentActivity$mWebViewClient -> com.twoheart.dailyhotel.activity.ae:
     com.twoheart.dailyhotel.activity.PaymentActivity this$0 -> a
     boolean shouldOverrideUrlLoading(android.webkit.WebView,java.lang.String) -> shouldOverrideUrlLoading
     void onReceivedError(android.webkit.WebView,int,java.lang.String,java.lang.String) -> onReceivedError
@@ -30832,13 +30845,13 @@ com.twoheart.dailyhotel.activity.ProfileActivity -> com.twoheart.dailyhotel.acti
     void finish() -> finish
     com.androidquery.AQuery access$0(com.twoheart.dailyhotel.activity.ProfileActivity) -> a
     com.android.volley.RequestQueue access$1(com.twoheart.dailyhotel.activity.ProfileActivity) -> b
-com.twoheart.dailyhotel.activity.ProfileActivity$1 -> com.twoheart.dailyhotel.activity.ae:
+com.twoheart.dailyhotel.activity.ProfileActivity$1 -> com.twoheart.dailyhotel.activity.af:
     com.twoheart.dailyhotel.activity.ProfileActivity this$0 -> a
     boolean onEditorAction(android.widget.TextView,int,android.view.KeyEvent) -> onEditorAction
-com.twoheart.dailyhotel.activity.ProfileActivity$2 -> com.twoheart.dailyhotel.activity.af:
+com.twoheart.dailyhotel.activity.ProfileActivity$2 -> com.twoheart.dailyhotel.activity.ag:
     com.twoheart.dailyhotel.activity.ProfileActivity this$0 -> a
     boolean onTouch(android.view.View,android.view.MotionEvent) -> onTouch
-com.twoheart.dailyhotel.activity.ProfileActivity$3 -> com.twoheart.dailyhotel.activity.ag:
+com.twoheart.dailyhotel.activity.ProfileActivity$3 -> com.twoheart.dailyhotel.activity.ah:
     com.twoheart.dailyhotel.activity.ProfileActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
 com.twoheart.dailyhotel.activity.PushDialogActivity -> com.twoheart.dailyhotel.activity.PushDialogActivity:
@@ -30883,48 +30896,48 @@ com.twoheart.dailyhotel.activity.SplashActivity -> com.twoheart.dailyhotel.activ
     android.app.Dialog access$1(com.twoheart.dailyhotel.activity.SplashActivity) -> b
     java.util.ArrayList access$2(com.twoheart.dailyhotel.activity.SplashActivity) -> c
     void access$3(com.twoheart.dailyhotel.activity.SplashActivity,int) -> a
-com.twoheart.dailyhotel.activity.SplashActivity$1 -> com.twoheart.dailyhotel.activity.ah:
+com.twoheart.dailyhotel.activity.SplashActivity$1 -> com.twoheart.dailyhotel.activity.ai:
     com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
     com.twoheart.dailyhotel.activity.SplashActivity access$0(com.twoheart.dailyhotel.activity.SplashActivity$1) -> a
-com.twoheart.dailyhotel.activity.SplashActivity$1$1 -> com.twoheart.dailyhotel.activity.ai:
+com.twoheart.dailyhotel.activity.SplashActivity$1$1 -> com.twoheart.dailyhotel.activity.aj:
     com.twoheart.dailyhotel.activity.SplashActivity$1 this$1 -> a
     void run() -> run
-com.twoheart.dailyhotel.activity.SplashActivity$10 -> com.twoheart.dailyhotel.activity.aj:
+com.twoheart.dailyhotel.activity.SplashActivity$10 -> com.twoheart.dailyhotel.activity.ak:
     com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
     int val$newEventFlag -> b
     void onCancel(android.content.DialogInterface) -> onCancel
-com.twoheart.dailyhotel.activity.SplashActivity$11 -> com.twoheart.dailyhotel.activity.ak:
+com.twoheart.dailyhotel.activity.SplashActivity$11 -> com.twoheart.dailyhotel.activity.al:
     com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
     int val$newEventFlag -> b
     void run() -> run
-com.twoheart.dailyhotel.activity.SplashActivity$2 -> com.twoheart.dailyhotel.activity.al:
+com.twoheart.dailyhotel.activity.SplashActivity$2 -> com.twoheart.dailyhotel.activity.am:
     com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.twoheart.dailyhotel.activity.SplashActivity$3 -> com.twoheart.dailyhotel.activity.am:
+com.twoheart.dailyhotel.activity.SplashActivity$3 -> com.twoheart.dailyhotel.activity.an:
     com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
     boolean onKey(android.content.DialogInterface,int,android.view.KeyEvent) -> onKey
-com.twoheart.dailyhotel.activity.SplashActivity$4 -> com.twoheart.dailyhotel.activity.an:
+com.twoheart.dailyhotel.activity.SplashActivity$4 -> com.twoheart.dailyhotel.activity.ao:
     com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
     com.twoheart.dailyhotel.activity.SplashActivity access$0(com.twoheart.dailyhotel.activity.SplashActivity$4) -> a
-com.twoheart.dailyhotel.activity.SplashActivity$4$1 -> com.twoheart.dailyhotel.activity.ao:
+com.twoheart.dailyhotel.activity.SplashActivity$4$1 -> com.twoheart.dailyhotel.activity.ap:
     com.twoheart.dailyhotel.activity.SplashActivity$4 this$1 -> a
     void run() -> run
-com.twoheart.dailyhotel.activity.SplashActivity$5 -> com.twoheart.dailyhotel.activity.ap:
+com.twoheart.dailyhotel.activity.SplashActivity$5 -> com.twoheart.dailyhotel.activity.aq:
     com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.twoheart.dailyhotel.activity.SplashActivity$6 -> com.twoheart.dailyhotel.activity.aq:
+com.twoheart.dailyhotel.activity.SplashActivity$6 -> com.twoheart.dailyhotel.activity.ar:
     com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
     boolean onKey(android.content.DialogInterface,int,android.view.KeyEvent) -> onKey
-com.twoheart.dailyhotel.activity.SplashActivity$7 -> com.twoheart.dailyhotel.activity.ar:
+com.twoheart.dailyhotel.activity.SplashActivity$7 -> com.twoheart.dailyhotel.activity.as:
     com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
     int val$idx -> b
     void run() -> run
-com.twoheart.dailyhotel.activity.SplashActivity$8 -> com.twoheart.dailyhotel.activity.as:
+com.twoheart.dailyhotel.activity.SplashActivity$8 -> com.twoheart.dailyhotel.activity.at:
     com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.twoheart.dailyhotel.activity.SplashActivity$9 -> com.twoheart.dailyhotel.activity.at:
+com.twoheart.dailyhotel.activity.SplashActivity$9 -> com.twoheart.dailyhotel.activity.au:
     com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
 com.twoheart.dailyhotel.activity.TermActivity -> com.twoheart.dailyhotel.activity.TermActivity:
@@ -31439,6 +31452,7 @@ com.twoheart.dailyhotel.util.Constants -> com.twoheart.dailyhotel.util.b:
     java.lang.String NAME_INTENT_EXTRA_DATA_HOTEL -> NAME_INTENT_EXTRA_DATA_HOTEL
     java.lang.String NAME_INTENT_EXTRA_DATA_HOTELDETAIL -> NAME_INTENT_EXTRA_DATA_HOTELDETAIL
     java.lang.String NAME_INTENT_EXTRA_DATA_SALETIME -> NAME_INTENT_EXTRA_DATA_SALETIME
+    java.lang.String NAME_INTENT_EXTRA_DATA_REGION -> NAME_INTENT_EXTRA_DATA_REGION
     java.lang.String NAME_INTENT_EXTRA_DATA_BOOKING -> NAME_INTENT_EXTRA_DATA_BOOKING
     java.lang.String NAME_INTENT_EXTRA_DATA_PAY -> NAME_INTENT_EXTRA_DATA_PAY
     java.lang.String NAME_INTENT_EXTRA_DATA_SELECTED_IMAGE_URL -> NAME_INTENT_EXTRA_DATA_SELECTED_IMAGE_URL
@@ -31454,7 +31468,6 @@ com.twoheart.dailyhotel.util.Constants -> com.twoheart.dailyhotel.util.b:
     int CODE_REQUEST_ACTIVITY_INTRO -> CODE_REQUEST_ACTIVITY_INTRO
     int CODE_REQUEST_ISPMOBILE -> CODE_REQUEST_ISPMOBILE
     int CODE_REQUEST_KFTC_BANKPAY -> CODE_REQUEST_KFTC_BANKPAY
-    int RESULT_SALES_CLOSED -> RESULT_SALES_CLOSED
     int CODE_REQUEST_ACTIVITY_BOOKING_DETAIL -> CODE_REQUEST_ACTIVITY_BOOKING_DETAIL
     int CODE_RESULT_ACTIVITY_PAYMENT_FAIL -> CODE_RESULT_ACTIVITY_PAYMENT_FAIL
     int CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS -> CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS
@@ -31470,6 +31483,7 @@ com.twoheart.dailyhotel.util.Constants -> com.twoheart.dailyhotel.util.b:
     int CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_TIME_ERROR -> CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_TIME_ERROR
     int CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_DUPLICATE -> CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_DUPLICATE
     int CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER -> CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER
+    int CODE_RESULT_ACTIVITY_PAYMENT_SALES_CLOSED -> CODE_RESULT_ACTIVITY_PAYMENT_SALES_CLOSED
     int CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT -> CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT
     int CODE_PAY_TYPE_CARD_COMPLETE -> CODE_PAY_TYPE_CARD_COMPLETE
     int CODE_PAY_TYPE_ACCOUNT_WAIT -> CODE_PAY_TYPE_ACCOUNT_WAIT
@@ -31522,7 +31536,7 @@ com.twoheart.dailyhotel.util.KakaoLinkManager -> com.twoheart.dailyhotel.util.g:
     android.content.Context mContext -> c
     com.twoheart.dailyhotel.util.KakaoLinkManager newInstance(android.content.Context) -> newInstance
     void sendInviteMsgKakaoLink(java.lang.String) -> sendInviteMsgKakaoLink
-    void shareHotelInfo(com.twoheart.dailyhotel.model.HotelDetail) -> shareHotelInfo
+    void shareHotelInfo(com.twoheart.dailyhotel.model.HotelDetail,java.lang.String) -> shareHotelInfo
 com.twoheart.dailyhotel.util.Log -> com.twoheart.dailyhotel.util.h:
     void d(java.lang.String,java.lang.String) -> d
     void e(java.lang.String) -> e
