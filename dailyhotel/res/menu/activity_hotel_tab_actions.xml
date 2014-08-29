@@ -5,7 +5,7 @@
 	<item
         android:id="@+id/action_share"
         android:orderInCategory="100"
-        android:icon="@drawable/ic_call"
+        android:icon="@drawable/img_ic_share_kakao"
         android:title="공유"
         app:showAsAction="always"/>
 </menu>
