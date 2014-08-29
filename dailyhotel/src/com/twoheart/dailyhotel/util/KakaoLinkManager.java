@@ -45,6 +45,11 @@ public class KakaoLinkManager implements Constants{
 
 	public void shareHotelInfo(HotelDetail hotel, String region) {
 		try {
+			/**
+			 * TODO : 공유하기 시에 정확하게 공유를 하였는지 카운트를 하기 힘듬.
+			 *        카카오링크에서 콜백을 미지원.
+			 *        공유버튼을 눌렀을 경우를 카운트하면 정확하지 않음.(중간에 공유 안할수도) 
+			 */
 			String schemeParams = "hotelIdx="+hotel.getHotel().getIdx()+"&region="+region;
 			android.util.Log.e("sche",schemeParams);
 			

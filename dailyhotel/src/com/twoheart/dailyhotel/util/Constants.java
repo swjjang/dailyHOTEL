@@ -33,10 +33,12 @@ public interface Constants {
     public static final String GCM_DEVICE_TYPE_ANDROID = "0"; // GCM 등록을 할 때 API의 deviceType, 0은 안드로이드 1은 아이폰.
 
 	// 웹서버 호스트 
+		public static final String URL_DAILYHOTEL_SERVER = "http://restful.dailyhotel.kr/goodnight/"; //  서비스 서버
+//		public static final String URL_DAILYHOTEL_SERVER = "http://dev.dailyhotel.kr/goodnight/";				// 개발 서버 데브서버
+		
+		
 //		public static final String URL_DAILYHOTEL_SERVER = "http://dailyhotel.kr/goodnight/";				// 서비스 서버
-//    	public static final String URL_DAILYHOTEL_SERVER = "http://restful.dailyhotel.kr/goodnight/"; //  서비스 서버 2
     	
-		public static final String URL_DAILYHOTEL_SERVER = "http://dev.dailyhotel.kr/goodnight/";				// 개발 서버 데브서버
 //		public static final String URL_DAILYHOTEL_SERVER = "http://1.234.22.96/goodnight/"; // new 개발 7.6 테라서버
     	
 //    	public static final String URL_DAILYHOTEL_SERVER = "http://newinsik.cafe24.com/goodnight/"; // new 개발
@@ -45,9 +47,7 @@ public interface Constants {
 //		public static final String URL_DAILYHOTEL_SERVER = "http://was1.dailyhotel.kr/goodnight/";					// new 개발 서버
 //		public static final String URL_DAILYHOTEL_SERVER = "http://1.234.83.117/goodnight/";							// new 개발 서버
  
-  
 		
-		//
 	// 회사 대표번호
 	public static final String PHONE_NUMBER_DAILYHOTEL = "1800-9120";
 	
@@ -119,9 +119,7 @@ public interface Constants {
 	public static final String URL_STORE_PAYMENT_MPOCKET = "market://details?id=kr.co.samsungcard.mpocket";
 	
 	// Gcm Server URL
-//	public static final String URL_GCM_REGISTER = "user/push/register";
 	public static final String URL_GCM_REGISTER = "user/notification/register";
-//	public static final String URL_GCM_SEND_MSG = "push/sender.php";
 
 	// Payment App PackageName
 	public static final String PACKAGE_NAME_ISP = "kvp.jjy.MispAndroid";
@@ -182,12 +180,9 @@ public interface Constants {
 	public static final int CODE_REQEUST_ACTIVITY_SIGNUP = 6;
 	public static final int CODE_REQUEST_ACTIVITY_BOOKING = 7;
 	public static final int CODE_REQUEST_ACTIVITY_INTRO = 8;
-
 	public static final int CODE_REQUEST_ISPMOBILE = 9;
 	public static final int CODE_REQUEST_KFTC_BANKPAY = 10;
-	public static final int RESULT_SALES_CLOSED = 11; // 예약을 하려 버튼을 눌렀는데 주문 시간이 지난경우.
-	
-	public static final int CODE_REQUEST_ACTIVITY_BOOKING_DETAIL = 12;
+	public static final int CODE_REQUEST_ACTIVITY_BOOKING_DETAIL = 11;
 
 	// Android Activity의 Result Code들이다.
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_FAIL = 100;
@@ -204,9 +199,10 @@ public interface Constants {
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_TIME_ERROR = 111;
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_DUPLICATE = 112;
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER = 113;
-	
+	public static final int CODE_RESULT_ACTIVITY_PAYMENT_SALES_CLOSED = 114; // 예약을 하려 버튼을 눌렀는데 주문 시간이 지난경우.
 	public static final int CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT = 201;
 	
+	// 예약 리스트에서 
 	public static final int CODE_PAY_TYPE_CARD_COMPLETE = 10;
 	public static final int CODE_PAY_TYPE_ACCOUNT_WAIT = 20;
 	public static final int CODE_PAY_TYPE_ACCOUNT_COMPLETE = 21;

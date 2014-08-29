@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 /**
  * 
+ * 푸시가 왔는데 현재 단말이 켜진 상태일 경우 인텐트하는 다이얼로그형 액티비티
  * @author jangjunho
  *
  */

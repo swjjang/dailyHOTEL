@@ -133,24 +133,10 @@ DailyHotelStringResponseListener {
 			switch (resultCode) {
 				case CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT:
 					SimpleAlertDialog.build(getActivity(), "알림", data.getStringExtra("msg"), "확인", null).show();
-//					dialog(data.getStringExtra("msg"));
 					break;
 			}
 		}
 	}
-//	
-//	public void dialog(String str) {
-//		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-//		alert.setTitle("알림");
-//		alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-//			@Override
-//			public void onClick(DialogInterface dialog, int which) {
-//				dialog.dismiss(); // 닫기
-//			}
-//		});
-//		alert.setMessage(str);
-//		alert.show();
-//	}
 
 	@Override
 	public void onResponse(String url, String response) {

@@ -60,6 +60,11 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseLis
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.widget.Switch;
 
+/**
+ * 
+ * @author jangjunho
+ *
+ */
 @SuppressLint({ "NewApi", "ResourceAsColor" })
 public class BookingActivity extends BaseActivity implements
 DailyHotelStringResponseListener, DailyHotelJsonResponseListener, OnClickListener, OnCheckedChangeListener,
@@ -279,10 +284,8 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		if (type == DIALOG_CONFIRM_PAYMENT_HP) msg = getString(R.string.dialog_msg_payment_confirm_hp);
 		else msg = getString(R.string.dialog_msg_payment_confirm);
 		
-		tvMsg.setText(
-				Html.fromHtml(msg));
-		btnProceed.setText(
-				Html.fromHtml(getString(R.string.dialog_btn_payment_confirm)));
+		tvMsg.setText(Html.fromHtml(msg));
+		btnProceed.setText(Html.fromHtml(getString(R.string.dialog_btn_payment_confirm)));
 
 		onClickProceed = new OnClickListener() {
 			@Override
@@ -456,7 +459,12 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				msg = "결제가 취소되었습니다.";
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY:
-				// 예약 확인 리스트 프래그먼트에서 디테일로 한번 더 들어가기 위한 플래그 설정
+				/**
+				 * 가상계좌선택시 해당 가상계좌 정보를 보기위해 화면 스택을 쌓으면서 들어가야함.
+				 * 이를 위한 정보를 셋팅. 예약 리스트 프래그먼트에서 찾아 들어가기 위해서 필요함.
+				 * 들어간 후에는 다시 프리퍼런스를 초기화해줌.
+				 * 플로우) 예약 액티비티 => 호텔탭 액티비티 => 메인액티비티 => 예약 리스트 프래그먼트 => 예약 리스트 갱신 후 최상단 아이템 인텐트
+				 */
 				Editor editor = sharedPreference.edit();
 				editor.putInt(KEY_PREFERENCE_ACCOUNT_READY_FLAG, CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
 				editor.apply();
@@ -533,6 +541,9 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				mPay.setCustomer(buyer);
 				buyer = mPay.getCustomer();
 
+				/**
+				 * 텍스트 필드가 하나라도 비어있으면 해당 정보를 입력 받도록 함.
+				 */
 				if (!isEmptyTextField(new String[] {
 						buyer.getEmail(),
 						buyer.getPhone(),
@@ -653,7 +664,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							dialog.dismiss();
-							setResult(RESULT_SALES_CLOSED);
+							setResult(CODE_RESULT_ACTIVITY_PAYMENT_SALES_CLOSED);
 							finish();
 						}
 					};

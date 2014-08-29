@@ -81,6 +81,9 @@ DailyHotelJsonResponseListener, OnClickListener {
 
 	}
 
+	/**
+	 * 수정중인 상태에서 백버튼을 누른경우에 수정 취소 => 바꾸기 전 상태로 돌아감 
+	 */
 	@Override
 	public void onBackPressed() {
 		if (mAq.id(R.id.tv_profile_edit).getText().equals("완료")) {
@@ -197,6 +200,9 @@ DailyHotelJsonResponseListener, OnClickListener {
 			}
 
 		} else if (v.getId() == R.id.btn_profile_logout) {
+			/**
+			 * 로그 아웃시 내부 저장한 유저정보 초기화
+			 */
 			android.content.DialogInterface.OnClickListener posListener = new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog,

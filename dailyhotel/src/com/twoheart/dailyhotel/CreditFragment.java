@@ -130,9 +130,6 @@ public class CreditFragment extends BaseFragment implements Constants,
 
 		if (v.getId() == btnInvite.getId()) {
 			try {
-				/**
-				 * TODO : KAKAO LINK API ±³Ã¼
-				 */
 				String msg = getString(R.string.kakaolink_msg_prefix) + mRecommendCode + getString(R.string.kakaolink_msg_suffix);
 				KakaoLinkManager.newInstance(getActivity()).sendInviteMsgKakaoLink(msg);
 			} catch (Exception e) {

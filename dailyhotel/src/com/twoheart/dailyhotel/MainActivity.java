@@ -136,7 +136,13 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 		
 		// Intent Scheme Parameter for KakaoLink
 		intentData = getIntent().getData();
-		if (intentData != null)android.util.Log.e(TAG + " / onCreate", "intentData = " + intentData.toString());
+		if (intentData != null) {
+			/**
+			 * TODO : IF(intentData!=null) url from shared link
+			 */
+			
+			android.util.Log.e(TAG + " / onCreate", "intentData = " + intentData.toString());
+		}
 
 		// 쿠키 동기화를 초기화한다. 로그인, 로그아웃 세션 쿠키는 MainActivity의 생명주기와 동기화한다.
 		CookieSyncManager.createInstance(getApplicationContext());

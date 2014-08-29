@@ -2,14 +2,13 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
      >
 
     <LinearLayout
         android:id="@+id/btn_footer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/img_btn_event"
+        android:background="@drawable/img_btn_event_renew"
         android:gravity="center"
         android:layout_gravity="center"
         android:orientation="horizontal"
@@ -29,9 +28,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="false"
-            android:text="이벤트 참여하기"
-            android:textColor="#fff"
-            android:textSize="21dp" />
+            android:text="데일리호텔 이벤트 참여하기"
+            android:textColor="#ccffffff"
+            android:textStyle="bold"
+            android:textSize="17dp" />
     </LinearLayout>
 
 </FrameLayout>

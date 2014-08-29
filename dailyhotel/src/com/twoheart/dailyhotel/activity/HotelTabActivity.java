@@ -14,7 +14,6 @@ import org.json.JSONObject;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +23,10 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
+import com.facebook.Session;
+import com.facebook.UiLifecycleHelper;
+import com.facebook.widget.FacebookDialog.Callback;
+import com.facebook.widget.FacebookDialog.PendingCall;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.HotelTabBookingFragment;
 import com.twoheart.dailyhotel.model.Hotel;
@@ -53,10 +56,14 @@ DailyHotelStringResponseListener {
 	private Button btnBooking;
 	private String mRegion;
 
+	private UiLifecycleHelper uiHelper;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		uiHelper = new UiLifecycleHelper(this, null);
+		uiHelper.onCreate(savedInstanceState);
 
 		hotelDetail = new HotelDetail();
 		mSaleTime = new SaleTime();
@@ -118,7 +125,7 @@ DailyHotelStringResponseListener {
 		chgClickable(btnBooking, true); // 7.2 난타 방지
 		if (requestCode == CODE_REQUEST_ACTIVITY_BOOKING) {
 			setResult(resultCode);
-			if (resultCode == RESULT_OK || resultCode == RESULT_SALES_CLOSED || 
+			if (resultCode == RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_SALES_CLOSED || 
 					resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY) finish();
 		} else if (requestCode == CODE_REQUEST_ACTIVITY_LOGIN) {
 			if (resultCode == RESULT_OK)
@@ -126,7 +133,20 @@ DailyHotelStringResponseListener {
 						URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE)
 						.toString(), null, this, this));
 		}
-		
+
+		uiHelper.onActivityResult(requestCode, resultCode, data, new Callback() {
+
+			@Override
+			public void onError(PendingCall pendingCall, Exception error, Bundle data) {
+				HotelTabActivity.this.onError();
+			}
+
+			@Override
+			public void onComplete(PendingCall pendingCall, Bundle data) {
+
+			}
+		});
+
 
 		super.onActivityResult(requestCode, resultCode, data);
 	}
@@ -145,7 +165,7 @@ DailyHotelStringResponseListener {
 
 			String result = response.trim();
 			if (result.equals("alive")) { // session alive
-				
+
 				Intent i = new Intent(this, BookingActivity.class);
 				i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELDETAIL, hotelDetail);
 				startActivityForResult(i, CODE_REQUEST_ACTIVITY_BOOKING);
@@ -211,7 +231,7 @@ DailyHotelStringResponseListener {
 
 				if (hotelDetail.getHotel() == null)
 					hotelDetail.setHotel(new Hotel());
-				
+
 				Hotel hotelBasic = hotelDetail.getHotel();
 
 				hotelBasic.setAddress(detailObj.getString("address"));
@@ -307,10 +327,6 @@ DailyHotelStringResponseListener {
 		//		}
 	}
 
-	/*
-	 * TODO : VERRRRRRRY IMPORTANT, 카카오링크
-	 */
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_hotel_tab_actions, menu);
@@ -319,13 +335,16 @@ DailyHotelStringResponseListener {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		Session fbSession;
 		switch(item.getItemId()){
 		case R.id.action_share:
 			/**
-			 * TODO : TEST FOR HOTEL SHARE
+			 * TODO : TEST FOR HOTEL SHARE, KAKAO, FACEBOOK
+			 * 
 			 */
+
 			android.content.DialogInterface.OnClickListener posListener = new android.content.DialogInterface.OnClickListener() {
-				
+
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					KakaoLinkManager.newInstance(HotelTabActivity.this).shareHotelInfo(hotelDetail, mRegion);
@@ -333,9 +352,49 @@ DailyHotelStringResponseListener {
 
 			};
 			SimpleAlertDialog.build(this, "(TEST)호텔 정보를 공유합니다.", "공유", posListener).show();
+
+
+			/**
+			 *  TODO : FACEBOOK SHARED DIALOG ISSUES = 페이스북 공유를 하는 경우에 내용을 모두 보여줄수 없다는 면에서 별로임
+			 *         FEED를 사용 할 경우에도 내용을 모두 보여 줄 수 없음.
+			 */
+
+			//			FacebookDialog shareDialog = new FacebookDialog.ShareDialogBuilder(this)
+			//			.setName("데일리호텔")
+			//			.setCaption(hotelDetail.getHotel().getName())
+			//			.setDescription("?______________?")
+			//			.setPicture(hotelDetail.getHotel().getImage())
+			//			.setLink("https://play.google.com/store/apps/details?id=com.twoheart.dailyhotel&hl=ko")
+			//			.build();
+			//			uiHelper.trackPendingDialogCall(shareDialog.present());
+
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		uiHelper.onResume();
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		uiHelper.onSaveInstanceState(outState);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		uiHelper.onPause();
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		uiHelper.onDestroy();
 	}
 }

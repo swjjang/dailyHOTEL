@@ -103,10 +103,6 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 
 		View view = inflater.inflate(R.layout.fragment_hotel_list, container, false);
 		
-		/**
-		 * TODO : 카카오링크로 들어온 경우 해당 앱으로 이동하도록
-		 */
-		
 		Uri intentData = ((MainActivity)mHostActivity).intentData;
 		if (intentData != null) {
 			mKakaoHotelIdx = Integer.parseInt(intentData.getQueryParameter("hotelIdx"));
@@ -159,36 +155,6 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 				// Here we'll set a custom ViewDelegate
 				.useViewDelegate(AbsListView.class, new AbsListViewDelegate())
 				.setup(mPullToRefreshLayout);
-
-		//		ViewTreeObserver vto = mSwipeRefreshLayout.getViewTreeObserver();
-		//		vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-		//			
-		//			@Override
-		//			public void onGlobalLayout() {
-		//				final DisplayMetrics metrics = getResources().getDisplayMetrics();
-		//				Float mDistanceToTriggerSync = Math.min(((View) mSwipeRefreshLayout.getParent()).getHeight() * 0.7f,
-		//						150 * metrics.density);
-		//				
-		//				try {
-		//					
-		//					Field field = SwipeRefreshLayout.class.getDeclaredField("mDistanceToTriggerSync");
-		//					field.setAccessible(true);
-		//					field.setFloat(mSwipeRefreshLayout, mDistanceToTriggerSync);
-		//					
-		//				} catch (Exception e) {
-		//					if (DEBUG)
-		//						e.printStackTrace();
-		//				}
-		//				
-		//				ViewTreeObserver obs = mSwipeRefreshLayout.getViewTreeObserver();
-		//				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-		//					obs.removeOnGlobalLayoutListener(this);
-		//					
-		//				} else
-		//					obs.removeGlobalOnLayoutListener(this);
-		//				
-		//			}
-		//		});
 
 		mHotelListView.setShadowVisible(false);
 
@@ -262,13 +228,6 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 				((MainActivity) mHostActivity).selectMenuDrawer(((MainActivity) mHostActivity).menuBookingListFragment);
 			} else if (resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY) {
 				((MainActivity) mHostActivity).selectMenuDrawer(((MainActivity) mHostActivity).menuBookingListFragment);
-			} else {
-				//				
-				//				lockUI();
-				//				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(
-				//						URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_TIME)
-				//						.toString(), null, HotelListFragment.this,
-				//						mHostActivity));
 			}
 
 		} 
@@ -466,6 +425,7 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 		} else if (url.contains(URL_WEBAPI_APP_VERSION)) {
 			try {
 				if (response.getString("new_event").equals("1") && (ivNewEvent != null))  ivNewEvent.setVisibility(View.VISIBLE);
+				
 				if (mKakaoHotelIdx != -1) {
 					for (int i=0; i<mHotelListAdapter.getCount(); i++) {
 						HotelListViewItem item = mHotelListAdapter.getItem(i);
@@ -529,6 +489,9 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 				mHostActivity.actionBar.setListNavigationCallbacks(
 						regionListAdapter, this);
 				
+				/**
+				 * KaKao링크를 통한 접속 일경우 해당 호텔까지 접속함.
+				 */
 				int regionIdx = 0;
 				if (mKakaoHotelRegion != null && !mKakaoHotelRegion.isEmpty()) {
 					for (int i=0;i<mRegionList.size();i++) {
