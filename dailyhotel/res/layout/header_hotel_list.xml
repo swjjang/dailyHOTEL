@@ -2,6 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="5dp"
      >
 
     <LinearLayout
@@ -28,10 +29,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="false"
-            android:text="데일리호텔 이벤트 참여하기"
+            android:text="데일리호텔 "
+            android:textColor="#ccffffff"
+            android:textSize="17dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:text="이벤트 참여하기"
             android:textColor="#ccffffff"
             android:textStyle="bold"
-            android:textSize="17dp" />
+            android:textSize="18dp" 
+            />
     </LinearLayout>
 
 </FrameLayout>
