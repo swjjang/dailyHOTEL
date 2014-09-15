@@ -403,8 +403,8 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		public void onPageFinished(WebView view, String url) {
 			super.onPageFinished(view, url);
 			unLockUI();
-			view.loadUrl("javascript:window.HtmlObserver.showHTML" +
-                    "('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');");
+//			view.loadUrl("javascript:window.HtmlObserver.showHTML" +
+//                    "('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');");
 			
 			CookieSyncManager.getInstance().sync();
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
@@ -440,8 +440,8 @@ public class PaymentActivity extends BaseActivity implements Constants {
 	}
 	
 	private class HtmlObserver {
-		@JavascriptInterface
-		public void showHTML(String html) { android.util.Log.e("WEB_VIEW", html); }
+//		@JavascriptInterface
+//		public void showHTML(String html) { android.util.Log.e("WEB_VIEW", html); }
 	}
 
 	private class KCPPayPinReturn {
