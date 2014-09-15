@@ -97,7 +97,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 
 		webView.addJavascriptInterface(new TeleditBridge(), "TeleditApp");
 		
-		webView.addJavascriptInterface(new HtmlObserver(), "HtmlObserver");
+//		webView.addJavascriptInterface(new HtmlObserver(), "HtmlObserver");
 
 		webView.setWebChromeClient(new mWebChromeClient());
 		webView.setWebViewClient(new mWebViewClient());
@@ -439,9 +439,15 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		}
 	}
 	
+	/**
+	 * 종종 에러 발생.
+	 * @author jangjunho
+	 *
+	 */
+	@Deprecated
 	private class HtmlObserver {
-//		@JavascriptInterface
-//		public void showHTML(String html) { android.util.Log.e("WEB_VIEW", html); }
+		@JavascriptInterface
+		public void showHTML(String html) { android.util.Log.e("WEB_VIEW", html); }
 	}
 
 	private class KCPPayPinReturn {

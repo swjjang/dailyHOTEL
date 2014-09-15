@@ -106,9 +106,13 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 		
 		Uri intentData = ((MainActivity)mHostActivity).intentData;
 		if (intentData != null) {
-			mKakaoHotelIdx = Integer.parseInt(intentData.getQueryParameter("hotelIdx"));
-			mKakaoHotelRegion = intentData.getQueryParameter("region");
-			android.util.Log.e("KaKaoHotelIdx", mKakaoHotelIdx + " / " + mKakaoHotelRegion);
+			String hotelIdx = intentData.getQueryParameter("hotelIdx");
+			
+			if (hotelIdx != null) {
+				mKakaoHotelIdx = Integer.parseInt(intentData.getQueryParameter("hotelIdx"));
+				mKakaoHotelRegion = intentData.getQueryParameter("region");
+				android.util.Log.e("KaKaoHotelIdx", mKakaoHotelIdx + " / " + mKakaoHotelRegion);
+			}
 		}
 
 		mDailyHotelSaleTime = new SaleTime();
