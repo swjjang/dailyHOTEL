@@ -14,6 +14,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -569,14 +570,14 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 						etReserverName.setText(buyer.getName());
 						etReserverName.setKeyListener(null);
 						etReserverName.setFocusable(false);
-						etReserverName.setBackground(null);
+						etReserverName.setBackground(new ColorDrawable(Color.TRANSPARENT));
 					} 
 
 					if (!isEmptyTextField(buyer.getPhone())) {
 						etReserverNumber.setText(buyer.getPhone());
 						etReserverNumber.setKeyListener(null);
 						etReserverNumber.setFocusable(false);
-						etReserverNumber.setBackground(null);
+						etReserverNumber.setBackground(new ColorDrawable(Color.TRANSPARENT));
 					} else {
 						TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext()
 								.getSystemService(Context.TELEPHONY_SERVICE);
@@ -589,7 +590,8 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 						etReserverEmail.setText(buyer.getEmail());
 						etReserverEmail.setKeyListener(null);
 						etReserverEmail.setFocusable(false);
-						etReserverEmail.setBackground(null);
+						etReserverEmail.setBackgroundColor(Color.TRANSPARENT);
+						etReserverEmail.setBackground(new ColorDrawable(Color.TRANSPARENT));
 					} 
 
 				}
