@@ -225,14 +225,20 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 				boolean isIntentFromPush = getIntent().getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_INTENT_FROM_PUSH, false);
 				if (isIntentFromPush) selectMenuDrawer(menuBookingListFragment);
 				else selectMenuDrawer(menuHotelListFragment);
+				
+				mQueue.add(new DailyHotelStringRequest(Method.GET,
+						new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+								URL_WEBAPI_USER_ALIVE).toString(), null, this, this));
 			}
 
 			// 호텔평가를 위한 현재 로그인 여부 체크
-			mQueue.add(new DailyHotelStringRequest(Method.GET,
-					new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-							URL_WEBAPI_USER_ALIVE).toString(), null, this, this));
+			
 		} else if (requestCode == CODE_REQUEST_ACTIVITY_INTRO) {
 			selectMenuDrawer(menuHotelListFragment);
+			
+//			mQueue.add(new DailyHotelStringRequest(Method.GET,
+//					new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+//							URL_WEBAPI_USER_ALIVE).toString(), null, this, this));
 		}
 
 	}

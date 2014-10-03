@@ -52,6 +52,9 @@ public interface Constants {
 	public static final String PHONE_NUMBER_DAILYHOTEL = "1800-9120";
 	
 	// uiLock을 띄우고 API를 콜하였는데 제한 시간 안에 리턴을 받지 못한경우. error 발생.
+	/**
+	 * TODO :TEST JUDGE
+	 */
 	public static final int REQUEST_EXPIRE_JUDGE = 5000; 
 
 	// 구글플레이 서비스 상태 확인 타임아웃

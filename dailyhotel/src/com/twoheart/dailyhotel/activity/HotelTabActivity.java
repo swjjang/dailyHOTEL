@@ -329,7 +329,10 @@ DailyHotelStringResponseListener {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_hotel_tab_actions, menu);
+		/**
+		 * TODO : 카카오링크 아이콘 보이기
+		 */
+//		getMenuInflater().inflate(R.menu.activity_hotel_tab_actions, menu);
 		return true;
 	}
 
@@ -343,6 +346,9 @@ DailyHotelStringResponseListener {
 			 * 
 			 */
 			KakaoLinkManager.newInstance(HotelTabActivity.this).shareHotelInfo(hotelDetail, mRegion);
+			
+			
+			
 			
 //			android.content.DialogInterface.OnClickListener posListener = new android.content.DialogInterface.OnClickListener() {
 //
