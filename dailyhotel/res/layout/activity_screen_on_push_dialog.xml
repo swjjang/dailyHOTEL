@@ -80,7 +80,7 @@
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/iv_account_complete_dialog_close"
+        android:id="@+id/iv_screen_on_push_dialog_close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"

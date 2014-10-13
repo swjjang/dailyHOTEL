@@ -38,7 +38,7 @@ public class ScreenOnPushDialogActivity extends Activity implements OnClickListe
 		tvMsg = (TextView)findViewById(R.id.tv_screen_on_push_dialog_msg);
 		tvMsg.setText(msg);
 
-		btnClose = (ImageView)findViewById(R.id.iv_account_complete_dialog_close);
+		btnClose = (ImageView)findViewById(R.id.iv_screen_on_push_dialog_close);
 		btnClose.setOnClickListener(this);
 
 		String title = null;

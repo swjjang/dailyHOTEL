@@ -166,7 +166,7 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.twoheart.dailyhotel.activity.GcmLockDialogActivity"
+            android:name="com.twoheart.dailyhotel.activity.PushLockDialogActivity"
             android:theme="@style/TransDialog"
             android:screenOrientation="portrait" >
         </activity>

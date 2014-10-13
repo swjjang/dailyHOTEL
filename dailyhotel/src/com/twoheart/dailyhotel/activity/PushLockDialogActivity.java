@@ -23,7 +23,7 @@ import com.twoheart.dailyhotel.util.WakeLock;
  * @author jangjunho
  *
  */
-public class GcmLockDialogActivity extends Activity implements OnClickListener,Constants{
+public class PushLockDialogActivity extends Activity implements OnClickListener,Constants{
 	
 	private Button btnOkButton;
 	private Button btnCancelButton;

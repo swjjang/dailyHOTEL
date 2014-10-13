@@ -21,7 +21,7 @@ import android.support.v4.app.NotificationCompat;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.twoheart.dailyhotel.activity.ScreenOnPushDialogActivity;
-import com.twoheart.dailyhotel.activity.GcmLockDialogActivity;
+import com.twoheart.dailyhotel.activity.PushLockDialogActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.WakeLock;
 
@@ -41,6 +41,8 @@ public class GcmIntentService extends IntentService implements Constants{
 
 	public static final int NOTIFICATION_ID = 1;
 	private NotificationManager mNotificationManager;
+	private boolean mIsBadge;
+	private boolean mIsSound;
 
 	public GcmIntentService() {
 		super("GcmIntentService");
@@ -52,23 +54,22 @@ public class GcmIntentService extends IntentService implements Constants{
 		GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
 
 		String messageType = gcm.getMessageType(intent);
+		
+		mIsBadge = false;
+		mIsSound = true;
 
 		if (!extras.isEmpty()) { 
 
 			try {
 				JSONObject jsonMsg = new JSONObject(extras.getString("message"));
+				String msg = jsonMsg.getString("msg");
 				int type = -1;
 				
-				if (jsonMsg.getString("type").equals("notice")) {
-					type = PUSH_TYPE_NOTICE;
-				} else if (jsonMsg.getString("type").equals("account_complete")) {
-					type = PUSH_TYPE_ACCOUNT_COMPLETE;
-				}
+				if (jsonMsg.getString("type").equals("notice")) type = PUSH_TYPE_NOTICE;
+				else if (jsonMsg.getString("type").equals("account_complete")) type = PUSH_TYPE_ACCOUNT_COMPLETE;
 				
-				
-				String msg = jsonMsg.getString("msg");
-
-				android.util.Log.e("GCM_MESSAGE",jsonMsg.toString());
+				if (!jsonMsg.isNull("badge")) mIsBadge = jsonMsg.getBoolean("badge");
+				if (!jsonMsg.isNull("sound")) mIsSound = jsonMsg.getBoolean("sound");
 				
 				if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
 					
@@ -80,7 +81,7 @@ public class GcmIntentService extends IntentService implements Constants{
 
 						android.util.Log.e("CURRENT_ACTIVITY_PACKAGE", className+" / "+className);
 						
-						if (className.contains("dailyhotel") && !className.contains("GcmLockDialogActivity")) {
+						if (className.contains("dailyhotel") && !className.contains("GcmLockDialogActivity") && !mIsBadge) {
 							
 							Intent i = new Intent(this, ScreenOnPushDialogActivity.class);
 							i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -89,7 +90,7 @@ public class GcmIntentService extends IntentService implements Constants{
 							startActivity(i);
 						}
 						
-					} else if (!isScreenOn(this)) { // 스크린 꺼져있는경우
+					} else if (!isScreenOn(this) && !mIsBadge) { // 스크린 꺼져있는경우
 						
 						WakeLock.acquireWakeLock(this, PowerManager.FULL_WAKE_LOCK
 								| PowerManager.ACQUIRE_CAUSES_WAKEUP);	// PushDialogActivity에서 release 해줌.
@@ -97,7 +98,7 @@ public class GcmIntentService extends IntentService implements Constants{
 						KeyguardLock lock = manager.newKeyguardLock(Context.KEYGUARD_SERVICE);  
 						lock.disableKeyguard();  // 기존의 잠금화면을 disable
 
-						Intent i = new Intent(this, GcmLockDialogActivity.class);
+						Intent i = new Intent(this, PushLockDialogActivity.class);
 						i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG, msg);
 						i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, type);
 
@@ -107,6 +108,8 @@ public class GcmIntentService extends IntentService implements Constants{
 					}
 					// 노티피케이션은 케이스에 상관없이 항상 뜨도록함.
 					sendNotification(type, msg);
+					
+					android.util.Log.e("GCM_MESSAGE",jsonMsg.toString());
 
 				}
 			} catch (JSONException e) {
@@ -137,7 +140,10 @@ public class GcmIntentService extends IntentService implements Constants{
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
 				intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-		Uri uri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+		Uri uri = null;
+		
+		if (mIsSound) uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+		else uri = null;
 
 		NotificationCompat.Builder mBuilder =
 				new NotificationCompat.Builder(this)
