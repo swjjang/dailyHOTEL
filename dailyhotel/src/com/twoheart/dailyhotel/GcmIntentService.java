@@ -20,7 +20,7 @@ import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.twoheart.dailyhotel.activity.AccountCompleteDialogActivity;
+import com.twoheart.dailyhotel.activity.ScreenOnPushDialogActivity;
 import com.twoheart.dailyhotel.activity.GcmLockDialogActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.WakeLock;
@@ -57,14 +57,22 @@ public class GcmIntentService extends IntentService implements Constants{
 
 			try {
 				JSONObject jsonMsg = new JSONObject(extras.getString("message"));
-				String type = jsonMsg.getString("type");
+				int type = -1;
+				
+				if (jsonMsg.getString("type").equals("notice")) {
+					type = PUSH_TYPE_NOTICE;
+				} else if (jsonMsg.getString("type").equals("account_complete")) {
+					type = PUSH_TYPE_ACCOUNT_COMPLETE;
+				}
+				
+				
 				String msg = jsonMsg.getString("msg");
 
 				android.util.Log.e("GCM_MESSAGE",jsonMsg.toString());
 				
 				if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
 					
-					if (isScreenOn(this) && type.equals("account_complete")) { // 데일리호텔 앱이 켜져있는경우.
+					if (isScreenOn(this) && type != -1) { // 데일리호텔 앱이 켜져있는경우.
 						
 						ActivityManager am = (ActivityManager)getSystemService(ACTIVITY_SERVICE);
 						ComponentName topActivity = am.getRunningTasks(1).get(0).topActivity;
@@ -74,9 +82,10 @@ public class GcmIntentService extends IntentService implements Constants{
 						
 						if (className.contains("dailyhotel") && !className.contains("GcmLockDialogActivity")) {
 							
-							Intent i = new Intent(this, AccountCompleteDialogActivity.class);
+							Intent i = new Intent(this, ScreenOnPushDialogActivity.class);
 							i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-							i.putExtra("msg", msg);
+							i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, type);
+							i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG, msg);
 							startActivity(i);
 						}
 						
@@ -90,6 +99,7 @@ public class GcmIntentService extends IntentService implements Constants{
 
 						Intent i = new Intent(this, GcmLockDialogActivity.class);
 						i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG, msg);
+						i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, type);
 
 						i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | 
 								Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -111,12 +121,17 @@ public class GcmIntentService extends IntentService implements Constants{
 		return ((PowerManager)context.getSystemService(Context.POWER_SERVICE)).isScreenOn();
 	}
 
-	private void sendNotification(String type, String msg) {
+	private void sendNotification(int type, String msg) {
 		mNotificationManager = (NotificationManager)
 				this.getSystemService(Context.NOTIFICATION_SERVICE);
 
 		Intent intent = new Intent(this, MainActivity.class);
-		if (type.equals("account_complete")) intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_INTENT_FROM_PUSH, true);
+		if (type == PUSH_TYPE_ACCOUNT_COMPLETE) { 
+			intent.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, PUSH_TYPE_ACCOUNT_COMPLETE);
+		} else if (type == PUSH_TYPE_NOTICE) {
+			intent.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, PUSH_TYPE_NOTICE);
+		}
+		
 		// type은 notice 타입과 account_complete 타입이 존재함. reservation일 경우 예약확인 창으로 이동.
 
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,

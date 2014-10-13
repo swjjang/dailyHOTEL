@@ -24,16 +24,20 @@ public interface Constants {
 
 	// 스토어 선택.
 	enum Stores { PLAY_STORE, T_STORE, N_STORE };
-	public static final Stores RELEASE_STORE = Stores.PLAY_STORE; 
+	public static final Stores RELEASE_STORE = Stores.N_STORE; 
 
+	
+	
 	// 항상 열리게 셋팅 여부
-	public static final boolean ALWAYS_OPEN = true;
+	public static final boolean ALWAYS_OPEN = false;
 
     public static final String GCM_PROJECT_NUMBER = "1025681158000";
     public static final String GCM_DEVICE_TYPE_ANDROID = "0"; // GCM 등록을 할 때 API의 deviceType, 0은 안드로이드 1은 아이폰.
-
+    
 	// 웹서버 호스트 
 		public static final String URL_DAILYHOTEL_SERVER = "http://restful.dailyhotel.kr/goodnight/"; //  서비스 서버
+		
+		
 //		public static final String URL_DAILYHOTEL_SERVER = "http://dev.dailyhotel.kr/goodnight/";				// 개발 서버 데브서버
 		
 		
@@ -162,6 +166,9 @@ public interface Constants {
 	public static final String KEY_PREFERENCE_USER_IDX = "USER_IDX"; // 예약 성공했을때 예약 사용함, 이름과 용도가 맞지 않음 -> 기존 코드
 	
 	public static final String KEY_PREFERENCE_ACCOUNT_READY_FLAG = "ACCOUNT_READY_FLAG"; //
+	
+	public static final String KEY_PREFERENCE_LOCALE = "LOCALE"; //
+	
 
 	// Android 컴포넌트 간에 데이터를 주고받을 때 사용되는 인텐트 이름(키)을 정의한 상수이다.
 	public static final String NAME_INTENT_EXTRA_DATA_HOTEL = "hotel";
@@ -171,8 +178,13 @@ public interface Constants {
 	public static final String NAME_INTENT_EXTRA_DATA_BOOKING = "booking";
 	public static final String NAME_INTENT_EXTRA_DATA_PAY = "pay";
 	public static final String NAME_INTENT_EXTRA_DATA_SELECTED_IMAGE_URL = "sel_image_url";
-	public static final String NAME_INTENT_EXTRA_DATA_IS_INTENT_FROM_PUSH = "is_intent_from_push";
+//	public static final String NAME_INTENT_EXTRA_DATA_IS_INTENT_FROM_PUSH = "is_intent_from_push";
+	public static final String NAME_INTENT_EXTRA_DATA_PUSH_TYPE = "push_type";
 	public static final String NAME_INTENT_EXTRA_DATA_PUSH_MSG = "push_msg";
+	
+	// Push Type
+	public static final int PUSH_TYPE_NOTICE = 0;
+	public static final int PUSH_TYPE_ACCOUNT_COMPLETE = 1;	
 
 	// Android Activity의 Request Code들이다.
 	public static final int CODE_REQUEST_ACTIVITY_HOTELTAB = 1;

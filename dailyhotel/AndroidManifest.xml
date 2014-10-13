@@ -167,10 +167,11 @@
         </activity>
         <activity
             android:name="com.twoheart.dailyhotel.activity.GcmLockDialogActivity"
+            android:theme="@style/TransDialog"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.twoheart.dailyhotel.activity.AccountCompleteDialogActivity"
+            android:name="com.twoheart.dailyhotel.activity.ScreenOnPushDialogActivity"
             android:screenOrientation="portrait"
             android:theme="@style/TransDialog" >
         </activity>

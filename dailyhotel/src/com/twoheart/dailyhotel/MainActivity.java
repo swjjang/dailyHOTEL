@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import org.json.JSONObject;
 
@@ -133,6 +134,16 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+//		Log.e("GCM??", sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "NOPE"));
+	
+		
+		// 사용자가 선택한 언어, but 만약 사용자가 한국인인데 일본어를 선택하면 jp가 됨.
+		String locale = Locale.getDefault().getDisplayLanguage();
+		Log.e("locale",locale);
+		
+		Editor editor = sharedPreference.edit();
+		editor.putString(KEY_PREFERENCE_LOCALE, locale);
+		editor.apply();
 		
 		// Intent Scheme Parameter for KakaoLink
 		intentData = getIntent().getData();
@@ -222,9 +233,17 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 			if (showGuide) startActivityForResult(new Intent(this, IntroActivity.class), CODE_REQUEST_ACTIVITY_INTRO);
 			else {
 				// Intent가 Push로 부터 온경우
-				boolean isIntentFromPush = getIntent().getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_INTENT_FROM_PUSH, false);
-				if (isIntentFromPush) selectMenuDrawer(menuBookingListFragment);
-				else selectMenuDrawer(menuHotelListFragment);
+				int pushType = getIntent().getIntExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, -1);
+				switch (pushType) {
+				case PUSH_TYPE_NOTICE:
+					selectMenuDrawer(menuHotelListFragment);
+					break;
+				case PUSH_TYPE_ACCOUNT_COMPLETE:
+					selectMenuDrawer(menuBookingListFragment);
+					break;
+				default:
+					selectMenuDrawer(menuHotelListFragment);
+				}
 				
 				mQueue.add(new DailyHotelStringRequest(Method.GET,
 						new StringBuilder(URL_DAILYHOTEL_SERVER).append(

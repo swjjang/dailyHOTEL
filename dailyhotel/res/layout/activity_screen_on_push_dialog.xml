@@ -31,6 +31,7 @@
                 android:src="@drawable/img_logo_popover" />
 
             <TextView
+                android:id="@+id/tv_screen_on_push_dialog_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/logo"
@@ -67,9 +68,9 @@
                 android:paddingTop="40dp" >
 
                 <TextView
-                    android:id="@+id/tv_account_complete_dialog_msg"
+                    android:id="@+id/tv_screen_on_push_dialog_msg"
                     android:layout_width="wrap_content"
-                    android:layout_height="55dp"
+                    android:layout_height="wrap_content"
                     android:gravity="center"
                     android:textColor="@drawable/selector_textcolor_btn_rating_hotel"
                     android:text="[데일리 슈퍼 프리미엄 호텔]예약완료 되었습니다."
