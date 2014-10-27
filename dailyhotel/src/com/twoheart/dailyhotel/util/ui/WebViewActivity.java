@@ -12,11 +12,17 @@
  */
 package com.twoheart.dailyhotel.util.ui;
 
+import java.net.URISyntaxException;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnLongClickListener;
@@ -30,7 +36,7 @@ import android.widget.Toast;
 import com.twoheart.dailyhotel.R;
 
 public class WebViewActivity extends BaseActivity implements
-		OnLongClickListener {
+OnLongClickListener {
 
 	protected DailyHotelWebChromeClient webChromeClient;
 	protected DailyHotelWebViewClient webViewClient;
@@ -67,7 +73,8 @@ public class WebViewActivity extends BaseActivity implements
 
 		@JavascriptInterface
 		@Override
-		public boolean shouldOverrideUrlLoading(WebView view, String url) {
+		public boolean shouldOverrideUrlLoading(WebView view, final String url) {
+			android.util.Log.e("url",url);
 			if (url.equals("event://")) {
 				finish();
 				overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
@@ -81,17 +88,34 @@ public class WebViewActivity extends BaseActivity implements
 			} else if (url.contains("facebook.com") | url.contains("naver.com")) {
 				browseToExternalBrowser(url);
 
+			} else if (url.contains("kakaoplus://")) {
+
+				try {
+					PackageManager pm = getPackageManager();
+					// if throw namenotfoundexception => go to kakaotalk install page
+					pm.getApplicationInfo("com.kakao.talk",PackageManager.GET_META_DATA);
+					startActivity(Intent.parseUri(url, Intent.URI_INTENT_SCHEME));
+				} catch (URISyntaxException e) {
+					e.printStackTrace();
+				} catch (NameNotFoundException e) {
+					try {
+						startActivity(Intent.parseUri("market://details?id=com.kakao.talk", Intent.URI_INTENT_SCHEME));
+					} catch (URISyntaxException e1) {
+						e1.printStackTrace();
+					}
+				}
+
 			} else {
 				view.loadUrl(url);
 			}
 			return true;
 		}
-		
+
 		private void browseToExternalBrowser(String url) {
 			Uri uri = Uri.parse(url);
 			Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 			startActivity(intent);
-			
+
 		}
 
 		@JavascriptInterface
@@ -113,15 +137,15 @@ public class WebViewActivity extends BaseActivity implements
 		public boolean onJsAlert(WebView view, String url, String message,
 				final android.webkit.JsResult result) {
 			new AlertDialog.Builder(view.getContext())
-					.setTitle("알림")
-					.setMessage(message)
-					.setPositiveButton(android.R.string.ok,
-							new AlertDialog.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int which) {
-									result.confirm();
-								}
-							}).setCancelable(false).show();
+			.setTitle("알림")
+			.setMessage(message)
+			.setPositiveButton(android.R.string.ok,
+					new AlertDialog.OnClickListener() {
+				public void onClick(DialogInterface dialog,
+						int which) {
+					result.confirm();
+				}
+			}).setCancelable(false).show();
 			return true;
 		};
 

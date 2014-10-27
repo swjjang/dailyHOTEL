@@ -27,6 +27,9 @@ public class EventWebActivity extends WebViewActivity implements Constants{
 			URL_WEBAPI_EVENT = "http://eventts.dailyhotel.co.kr"; //tStore
 		}
 		
+		// TODO : TEST KAKAO EVENT!!!
+		URL_WEBAPI_EVENT = "http://dev.dailyhotel.co.kr/eventapp_tab/";
+		
 		DailyHotel.getGaTracker().set(Fields.SCREEN_NAME, TAG);
 
 		setContentView(R.layout.activity_event_web);
@@ -42,7 +45,6 @@ public class EventWebActivity extends WebViewActivity implements Constants{
 	@Override
 	protected void onStart() {
 		super.onStart();
-
 		DailyHotel.getGaTracker().send(MapBuilder.createAppView().build());
 	}
 	
