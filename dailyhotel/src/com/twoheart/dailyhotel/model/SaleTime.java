@@ -23,6 +23,7 @@ public class SaleTime implements Constants, Parcelable {
 	
 	public SaleTime() {
 		super();
+//		TimeZone.get
 		format.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
 		
 	}
@@ -70,26 +71,46 @@ public class SaleTime implements Constants, Parcelable {
 	
 	public void setCurrentTime(String currentTime) {
 		try {
-			
 			mCurrentTime = new Date(Long.parseLong(currentTime));
 			calendar.setTime(mCurrentTime);
-			
+						
 		} catch (NumberFormatException e) {
 			if (DEBUG)
 				e.printStackTrace();
 		} 
 	}
 	
+	public SimpleDateFormat getTimezonedDateFormat(String datePattern) {
+		SimpleDateFormat sFormat = new SimpleDateFormat(datePattern);
+		sFormat.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
+		return sFormat;
+	}
+	
 	public String getCurrentMonth() {
-		return new SimpleDateFormat("MM").format(mCurrentTime);
+		return getTimezonedDateFormat("MM").format(mCurrentTime);
+//		return new SimpleDateFormat("MM").format(mCurrentTime);
 	}
 	
 	public String getCurrentDay() {
-		return new SimpleDateFormat("dd").format(mCurrentTime);
+		return getTimezonedDateFormat("dd").format(mCurrentTime);
+//		return new SimpleDateFormat("dd").format(mCurrentTime);
 	}
 	
 	public String getCurrentYear() {
-		return new SimpleDateFormat("yy").format(mCurrentTime);
+		return getTimezonedDateFormat("yy").format(mCurrentTime);
+//		return new SimpleDateFormat("yy").format(mCurrentTime);
+	}
+	
+	public String getCurrentHour() {
+		return getTimezonedDateFormat("hh").format(mCurrentTime);
+	}
+	
+	public String getCurrentMin() {
+		return getTimezonedDateFormat("mm").format(mCurrentTime);
+	}
+	
+	public String getCurrentSec() {
+		return getTimezonedDateFormat("ss").format(mCurrentTime);
 	}
 	
 	public Long getCurrentTime() {

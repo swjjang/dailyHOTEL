@@ -278,6 +278,13 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 		.append(mDailyHotelSaleTime.getCurrentMonth()).append("/")
 		.append(mDailyHotelSaleTime.getCurrentDay()).toString();
 
+		android.util.Log.e("Current Time is",
+				mDailyHotelSaleTime.getCurrentYear().toString()+" "
+				+ mDailyHotelSaleTime.getCurrentMonth().toString()+" "
+				+ mDailyHotelSaleTime.getCurrentDay().toString()+" "
+				+ mDailyHotelSaleTime.getCurrentHour().toString()+" "
+				+ mDailyHotelSaleTime.getCurrentMin().toString()+" "
+				+ mDailyHotelSaleTime.getCurrentSec().toString()+" ");
 		Log.d(TAG, url);
 
 		// 호텔 리스트를 가져온다
