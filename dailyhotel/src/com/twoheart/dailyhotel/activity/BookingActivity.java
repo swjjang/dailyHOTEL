@@ -531,6 +531,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 			try {
 				JSONObject obj = response;
 				android.util.Log.e("responSE!", response.toString());
+				int sdk = android.os.Build.VERSION.SDK_INT;
 
 				Customer buyer = new Customer();
 				buyer.setEmail(obj.getString("email"));
@@ -570,14 +571,22 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 						etReserverName.setText(buyer.getName());
 						etReserverName.setKeyListener(null);
 						etReserverName.setFocusable(false);
-						etReserverName.setBackground(new ColorDrawable(Color.TRANSPARENT));
+						if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+							etReserverName.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+						} else {
+							etReserverName.setBackground(new ColorDrawable(Color.TRANSPARENT));
+						}
 					} 
 
 					if (!isEmptyTextField(buyer.getPhone())) {
 						etReserverNumber.setText(buyer.getPhone());
 						etReserverNumber.setKeyListener(null);
 						etReserverNumber.setFocusable(false);
-						etReserverNumber.setBackground(new ColorDrawable(Color.TRANSPARENT));
+						if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+							etReserverNumber.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+						} else {
+							etReserverNumber.setBackground(new ColorDrawable(Color.TRANSPARENT));
+						}
 					} else {
 						TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext()
 								.getSystemService(Context.TELEPHONY_SERVICE);
@@ -591,7 +600,11 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 						etReserverEmail.setKeyListener(null);
 						etReserverEmail.setFocusable(false);
 						etReserverEmail.setBackgroundColor(Color.TRANSPARENT);
-						etReserverEmail.setBackground(new ColorDrawable(Color.TRANSPARENT));
+						if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+							etReserverEmail.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+						} else {
+							etReserverEmail.setBackground(new ColorDrawable(Color.TRANSPARENT));
+						}
 					} 
 
 				}
