@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
+\ * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
  *
  * Constants (어플리케이션 전역 상수)
  * 
@@ -59,10 +59,10 @@ public interface Constants {
 	/**
 	 * TODO :TEST JUDGE
 	 */
-	public static final int REQUEST_EXPIRE_JUDGE = 5000; 
+	public static final int REQUEST_EXPIRE_JUDGE = 15000; 
 
 	// 구글플레이 서비스 상태 확인 타임아웃
-    public static final int PLAY_SERVICES_RESOLUTION_REQUEST = 5000;
+    public static final int PLAY_SERVICES_RESOLUTION_REQUEST = 15000;
     
 	// Volley의 최대 retry 횟수,  여기서 0은 리퀘스트를 리트라이 하지 않음을 말함.
 	public static final int REQUEST_MAX_RETRY = 0; 
