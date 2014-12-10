@@ -158,7 +158,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 	protected void onResume() {
 		super.onResume();
 		// 적립금 스위치 초기화
-		swCredit.setChecked(false);
+//		swCredit.setChecked(false);
 
 		lockUI();
 		// credit 요청
@@ -181,9 +181,15 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 			int payPrice = originalPrice - credit;
 			payPrice = payPrice < 0 ? 0: payPrice;
 			mPay.setPayPrice(payPrice);
+			
+			if (credit >= originalPrice) credit = originalPrice;
+			tvCreditValue.setText("-"+comma.format(credit)+"원");
 
 		}
-		else mPay.setPayPrice(originalPrice);
+		else {
+			tvCreditValue.setText("0원");
+			mPay.setPayPrice(originalPrice);
+		}
 
 		tvPrice.setText(comma.format(mPay.getPayPrice())+"원");
 
@@ -507,13 +513,13 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 			if (checkedId == rbPaymentCard.getId()) mPay.setPayType("CARD");
 			else if (checkedId == rbPaymentHp.getId()) mPay.setPayType("PHONE_PAY");
 			else if (checkedId == rbPaymentAccount.getId()) mPay.setPayType("VBANK");
-
 		}
 	}
 
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		if (buttonView.getId() == swCredit.getId()) {
+			
 			if (!isChecked) { // 사용안함으로 변경
 				tvOriginalPrice.setEnabled(false);
 				tvCredit.setEnabled(false);
@@ -525,7 +531,6 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				tvCredit.setEnabled(true);
 				tvOriginalPriceValue.setEnabled(true);
 				tvCreditValue.setEnabled(true);
-
 			}
 
 			mPay.setSaleCredit(isChecked);
@@ -732,22 +737,16 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 			try {
 				String bonus = response.trim().replaceAll(",", "");
 				mPay.setCredit(new Credit(null, bonus, null));
-
+				
+				int originalPrice = Integer.parseInt(mPay.getHotelDetail().getHotel()
+						.getDiscount().replaceAll(",", ""));
 				DecimalFormat comma = new DecimalFormat("###,##0");
-
-				int credit = Integer.parseInt(mPay.getCredit().getBonus());
-				int discount = Integer.parseInt(mPay.getHotelDetail().getHotel().getDiscount().replaceAll(",", ""));
-				if (credit >= discount) credit = discount;
-
-				String str = comma.format(credit);
-				tvCreditValue.setText(new StringBuilder(str).append("원"));
-
-				swCredit.toggle();
-				// 적립금이 없다면 한 번 더 누름 이벤트를 불러 switch를 끈다
-				if (Integer.parseInt(mPay.getCredit().getBonus()) == 0) {
-					swCredit.toggle();
-				}
-
+				
+				tvOriginalPriceValue.setText(comma.format(originalPrice)+"원");
+				tvPrice.setText(comma.format(originalPrice)+"원");
+				
+				swCredit.setChecked(false);
+				
 				// 사용자 정보 요청.
 				mQueue.add(new DailyHotelJsonRequest(Method.GET,
 						new StringBuilder(URL_DAILYHOTEL_SERVER).append(
