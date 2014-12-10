@@ -102,6 +102,8 @@
     <string name="dialog_msg_payment_confirm">당일 예약 특성 상, 결제 완료 후&lt;br/&gt;&lt;b&gt;취소나 변경이 불가&lt;/b&gt;합니다.&lt;br/&gt;&lt;br/&gt;\'체크인 시 배정\'의 경우 더블,트윈 등의&lt;br/&gt;&lt;b&gt;베드 타입은 보장하지 않으며&lt;/b&gt;&lt;br/&gt;2인이 투숙할 수 있는 객실로 배정됩니다.&lt;br/&gt;&lt;br/&gt; 위 사항에 동의하시면 아래의&lt;br/&gt;버튼을 눌러 결제를 진행해 주세요.</string>
     <string name="dialog_msg_payment_confirm_hp">당일 예약 특성 상, 결제 완료 후&lt;br/&gt;&lt;b&gt;취소나 변경이 불가&lt;/b&gt;합니다.&lt;br/&gt;&lt;br/&gt;\'체크인 시 배정\'의 경우 더블,트윈 등의&lt;br/&gt;&lt;b&gt;베드 타입은 보장하지 않으며&lt;/b&gt;&lt;br/&gt;2인이 투숙할 수 있는 객실로 배정됩니다.&lt;br/&gt;&lt;br/&gt;휴대폰 결제는 월 30만원이 한도입니다.&lt;br/&gt;&lt;br/&gt; 위 사항에 동의하시면 아래의&lt;br/&gt;버튼을 눌러 결제를 진행해 주세요.</string>
     <string name="dialog_btn_payment_confirm">동의하고 결제 진행</string>
+    <string name="dialog_btn_payment_no_reserve">&lt;br/&gt;&lt;br/&gt;이벤트 호텔의 경우&lt;br/&gt;적립금 사용을 할 수 없습니다.&lt;br/&gt;&lt;br/&gt;</string>
+    
     
     <string name="dialog_btn_text_update">업데이트</string>
     <string name="dialog_btn_text_complete">완료</string>

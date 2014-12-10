@@ -24,7 +24,7 @@ public interface Constants {
 
 	// 스토어 선택.
 	enum Stores { PLAY_STORE, T_STORE, N_STORE };
-	public static final Stores RELEASE_STORE = Stores.N_STORE; 
+	public static final Stores RELEASE_STORE = Stores.PLAY_STORE; 
 
 	
 	

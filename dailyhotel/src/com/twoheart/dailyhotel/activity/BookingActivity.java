@@ -75,6 +75,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 	private static final int DIALOG_CONFIRM_PAYMENT_CARD = 0;
 	private static final int DIALOG_CONFIRM_PAYMENT_HP = 1;
 	private static final int DIALOG_CONFIRM_PAYMENT_ACCOUNT = 2;
+	private static final int DIALOG_CONFIRM_PAYMENT_NO_RSERVE = 3;
 
 	private ScrollView svBooking;
 	private TextView tvCheckIn, tvCheckOut, tvOriginalPriceValue,
@@ -224,6 +225,9 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 									updateParams, this, this));
 				}
 
+			} else if (mPay.isSaleCredit() && mPay.getPayPrice() < 10000) {
+				getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_NO_RSERVE).show();
+				
 			} else {
 				Dialog dialog = null;
 				
@@ -283,6 +287,10 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 
 		String msg = "";
 		if (type == DIALOG_CONFIRM_PAYMENT_HP) msg = getString(R.string.dialog_msg_payment_confirm_hp);
+		else if (type == DIALOG_CONFIRM_PAYMENT_NO_RSERVE) {
+			msg = getString(R.string.dialog_btn_payment_no_reserve);
+			btnProceed.setVisibility(View.GONE);
+		}
 		else msg = getString(R.string.dialog_msg_payment_confirm);
 		
 		tvMsg.setText(Html.fromHtml(msg));

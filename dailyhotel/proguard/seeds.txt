@@ -36304,8 +36304,6 @@ com.twoheart.dailyhotel.R$id: int btn_error
 com.twoheart.dailyhotel.R$id: int btn_event
 com.twoheart.dailyhotel.R$id: int btn_footer
 com.twoheart.dailyhotel.R$id: int btn_forgot_pwd
-com.twoheart.dailyhotel.R$id: int btn_gcm_push_cancle
-com.twoheart.dailyhotel.R$id: int btn_gcm_push_ok
 com.twoheart.dailyhotel.R$id: int btn_hotel_payment
 com.twoheart.dailyhotel.R$id: int btn_hotel_tab_booking
 com.twoheart.dailyhotel.R$id: int btn_login
@@ -36314,6 +36312,8 @@ com.twoheart.dailyhotel.R$id: int btn_no_login_signup
 com.twoheart.dailyhotel.R$id: int btn_on_off
 com.twoheart.dailyhotel.R$id: int btn_profile_logout
 com.twoheart.dailyhotel.R$id: int btn_push_cancle
+com.twoheart.dailyhotel.R$id: int btn_push_lock_dialog_close
+com.twoheart.dailyhotel.R$id: int btn_push_lock_dialog_show
 com.twoheart.dailyhotel.R$id: int btn_push_ok
 com.twoheart.dailyhotel.R$id: int btn_rating_hotel_cancel
 com.twoheart.dailyhotel.R$id: int btn_rating_hotel_recommend
@@ -36389,7 +36389,6 @@ com.twoheart.dailyhotel.R$id: int indicator
 com.twoheart.dailyhotel.R$id: int inside
 com.twoheart.dailyhotel.R$id: int intro_indicator
 com.twoheart.dailyhotel.R$id: int intro_pager
-com.twoheart.dailyhotel.R$id: int iv_account_complete_dialog_close
 com.twoheart.dailyhotel.R$id: int iv_booking_empty
 com.twoheart.dailyhotel.R$id: int iv_code_icon
 com.twoheart.dailyhotel.R$id: int iv_credit_icon
@@ -36399,6 +36398,7 @@ com.twoheart.dailyhotel.R$id: int iv_image_detail
 com.twoheart.dailyhotel.R$id: int iv_image_view
 com.twoheart.dailyhotel.R$id: int iv_list_row_hotel_tab_info_ribbon
 com.twoheart.dailyhotel.R$id: int iv_new_event
+com.twoheart.dailyhotel.R$id: int iv_screen_on_push_dialog_close
 com.twoheart.dailyhotel.R$id: int iv_splash_circle1
 com.twoheart.dailyhotel.R$id: int iv_splash_circle2
 com.twoheart.dailyhotel.R$id: int iv_splash_circle3
@@ -36488,7 +36488,6 @@ com.twoheart.dailyhotel.R$id: int title
 com.twoheart.dailyhotel.R$id: int top
 com.twoheart.dailyhotel.R$id: int top_action_bar
 com.twoheart.dailyhotel.R$id: int triangle
-com.twoheart.dailyhotel.R$id: int tv_account_complete_dialog_msg
 com.twoheart.dailyhotel.R$id: int tv_board_content
 com.twoheart.dailyhotel.R$id: int tv_board_regdate
 com.twoheart.dailyhotel.R$id: int tv_board_subject
@@ -36511,8 +36510,6 @@ com.twoheart.dailyhotel.R$id: int tv_credit_money
 com.twoheart.dailyhotel.R$id: int tv_credit_recommender
 com.twoheart.dailyhotel.R$id: int tv_credit_recommender_code
 com.twoheart.dailyhotel.R$id: int tv_empty_view
-com.twoheart.dailyhotel.R$id: int tv_gcm_push_msg
-com.twoheart.dailyhotel.R$id: int tv_gcm_push_title
 com.twoheart.dailyhotel.R$id: int tv_guide_desc
 com.twoheart.dailyhotel.R$id: int tv_guide_title
 com.twoheart.dailyhotel.R$id: int tv_hotel_payment_checkin
@@ -36553,8 +36550,12 @@ com.twoheart.dailyhotel.R$id: int tv_profile_edit
 com.twoheart.dailyhotel.R$id: int tv_profile_email
 com.twoheart.dailyhotel.R$id: int tv_profile_name
 com.twoheart.dailyhotel.R$id: int tv_profile_phone
+com.twoheart.dailyhotel.R$id: int tv_push_lock_dialog_msg
+com.twoheart.dailyhotel.R$id: int tv_push_lock_dialog_title
 com.twoheart.dailyhotel.R$id: int tv_rating_hotel_name
 com.twoheart.dailyhotel.R$id: int tv_recommender
+com.twoheart.dailyhotel.R$id: int tv_screen_on_push_dialog_msg
+com.twoheart.dailyhotel.R$id: int tv_screen_on_push_dialog_title
 com.twoheart.dailyhotel.R$id: int tv_setting_call
 com.twoheart.dailyhotel.R$id: int tv_setting_email
 com.twoheart.dailyhotel.R$id: int tv_setting_help
@@ -36616,7 +36617,6 @@ com.twoheart.dailyhotel.R$layout: int abc_search_dropdown_item_icons_2line
 com.twoheart.dailyhotel.R$layout: int abc_search_view
 com.twoheart.dailyhotel.R$layout: int abc_simple_decor
 com.twoheart.dailyhotel.R$layout: int activity_about
-com.twoheart.dailyhotel.R$layout: int activity_account_complete_dialog
 com.twoheart.dailyhotel.R$layout: int activity_board
 com.twoheart.dailyhotel.R$layout: int activity_booking
 com.twoheart.dailyhotel.R$layout: int activity_booking_tab
@@ -36633,6 +36633,7 @@ com.twoheart.dailyhotel.R$layout: int activity_privacy
 com.twoheart.dailyhotel.R$layout: int activity_profile
 com.twoheart.dailyhotel.R$layout: int activity_push_dialog
 com.twoheart.dailyhotel.R$layout: int activity_push_lock_dialog_gcm
+com.twoheart.dailyhotel.R$layout: int activity_screen_on_push_dialog
 com.twoheart.dailyhotel.R$layout: int activity_signup
 com.twoheart.dailyhotel.R$layout: int activity_splash
 com.twoheart.dailyhotel.R$layout: int activity_term
@@ -36797,6 +36798,7 @@ com.twoheart.dailyhotel.R$string: int contact_us
 com.twoheart.dailyhotel.R$string: int core_com_kakao_sdk_loading
 com.twoheart.dailyhotel.R$string: int currency
 com.twoheart.dailyhotel.R$string: int dialog_btn_payment_confirm
+com.twoheart.dailyhotel.R$string: int dialog_btn_payment_no_reserve
 com.twoheart.dailyhotel.R$string: int dialog_btn_text_cancel
 com.twoheart.dailyhotel.R$string: int dialog_btn_text_complete
 com.twoheart.dailyhotel.R$string: int dialog_btn_text_confirm
@@ -37325,9 +37327,6 @@ com.twoheart.dailyhotel.WaitTimerFragment: void onResponse(java.lang.String,org.
 com.twoheart.dailyhotel.WaitTimerFragment$1: void handleMessage(android.os.Message)
 com.twoheart.dailyhotel.activity.AboutActivity
 com.twoheart.dailyhotel.activity.AboutActivity: AboutActivity()
-com.twoheart.dailyhotel.activity.AccountCompleteDialogActivity
-com.twoheart.dailyhotel.activity.AccountCompleteDialogActivity: AccountCompleteDialogActivity()
-com.twoheart.dailyhotel.activity.AccountCompleteDialogActivity: void onClick(android.view.View)
 com.twoheart.dailyhotel.activity.BookingActivity
 com.twoheart.dailyhotel.activity.BookingActivity: BookingActivity()
 com.twoheart.dailyhotel.activity.BookingActivity: void onClick(android.view.View)
@@ -37363,9 +37362,6 @@ com.twoheart.dailyhotel.activity.ForgotPwdActivity: boolean isValidEmail(java.la
 com.twoheart.dailyhotel.activity.ForgotPwdActivity: void finish()
 com.twoheart.dailyhotel.activity.ForgotPwdActivity: void onResponse(java.lang.String,java.lang.String)
 com.twoheart.dailyhotel.activity.ForgotPwdActivity$1: boolean onEditorAction(android.widget.TextView,int,android.view.KeyEvent)
-com.twoheart.dailyhotel.activity.GcmLockDialogActivity
-com.twoheart.dailyhotel.activity.GcmLockDialogActivity: GcmLockDialogActivity()
-com.twoheart.dailyhotel.activity.GcmLockDialogActivity: void onClick(android.view.View)
 com.twoheart.dailyhotel.activity.HotelTabActivity
 com.twoheart.dailyhotel.activity.HotelTabActivity: HotelTabActivity()
 com.twoheart.dailyhotel.activity.HotelTabActivity: void onClick(android.view.View)
@@ -37455,6 +37451,12 @@ com.twoheart.dailyhotel.activity.ProfileActivity$3: void onClick(android.content
 com.twoheart.dailyhotel.activity.PushDialogActivity
 com.twoheart.dailyhotel.activity.PushDialogActivity: PushDialogActivity()
 com.twoheart.dailyhotel.activity.PushDialogActivity: void onClick(android.view.View)
+com.twoheart.dailyhotel.activity.PushLockDialogActivity
+com.twoheart.dailyhotel.activity.PushLockDialogActivity: PushLockDialogActivity()
+com.twoheart.dailyhotel.activity.PushLockDialogActivity: void onClick(android.view.View)
+com.twoheart.dailyhotel.activity.ScreenOnPushDialogActivity
+com.twoheart.dailyhotel.activity.ScreenOnPushDialogActivity: ScreenOnPushDialogActivity()
+com.twoheart.dailyhotel.activity.ScreenOnPushDialogActivity: void onClick(android.view.View)
 com.twoheart.dailyhotel.activity.SignupActivity
 com.twoheart.dailyhotel.activity.SignupActivity: SignupActivity()
 com.twoheart.dailyhotel.activity.SignupActivity: void getPhoneNumber()
@@ -37743,9 +37745,13 @@ com.twoheart.dailyhotel.model.SaleTime: java.lang.String dateToString(java.util.
 com.twoheart.dailyhotel.model.SaleTime: void setOpenTime(java.lang.String)
 com.twoheart.dailyhotel.model.SaleTime: void setCloseTime(java.lang.String)
 com.twoheart.dailyhotel.model.SaleTime: void setCurrentTime(java.lang.String)
+com.twoheart.dailyhotel.model.SaleTime: java.text.SimpleDateFormat getTimezonedDateFormat(java.lang.String)
 com.twoheart.dailyhotel.model.SaleTime: java.lang.String getCurrentMonth()
 com.twoheart.dailyhotel.model.SaleTime: java.lang.String getCurrentDay()
 com.twoheart.dailyhotel.model.SaleTime: java.lang.String getCurrentYear()
+com.twoheart.dailyhotel.model.SaleTime: java.lang.String getCurrentHour()
+com.twoheart.dailyhotel.model.SaleTime: java.lang.String getCurrentMin()
+com.twoheart.dailyhotel.model.SaleTime: java.lang.String getCurrentSec()
 com.twoheart.dailyhotel.model.SaleTime: java.lang.Long getCurrentTime()
 com.twoheart.dailyhotel.model.SaleTime: java.lang.Long getOpenTime()
 com.twoheart.dailyhotel.model.SaleTime: java.lang.Long getCloseTime()
@@ -37841,6 +37847,7 @@ com.twoheart.dailyhotel.util.Constants: int VALUE_PREFERENCE_HOTEL_SALE_IDX_DEFA
 com.twoheart.dailyhotel.util.Constants: java.lang.String VALUE_PREFERENCE_HOTEL_CHECKOUT_DEFAULT
 com.twoheart.dailyhotel.util.Constants: java.lang.String KEY_PREFERENCE_USER_IDX
 com.twoheart.dailyhotel.util.Constants: java.lang.String KEY_PREFERENCE_ACCOUNT_READY_FLAG
+com.twoheart.dailyhotel.util.Constants: java.lang.String KEY_PREFERENCE_LOCALE
 com.twoheart.dailyhotel.util.Constants: java.lang.String NAME_INTENT_EXTRA_DATA_HOTEL
 com.twoheart.dailyhotel.util.Constants: java.lang.String NAME_INTENT_EXTRA_DATA_HOTELDETAIL
 com.twoheart.dailyhotel.util.Constants: java.lang.String NAME_INTENT_EXTRA_DATA_SALETIME
@@ -37848,8 +37855,10 @@ com.twoheart.dailyhotel.util.Constants: java.lang.String NAME_INTENT_EXTRA_DATA_
 com.twoheart.dailyhotel.util.Constants: java.lang.String NAME_INTENT_EXTRA_DATA_BOOKING
 com.twoheart.dailyhotel.util.Constants: java.lang.String NAME_INTENT_EXTRA_DATA_PAY
 com.twoheart.dailyhotel.util.Constants: java.lang.String NAME_INTENT_EXTRA_DATA_SELECTED_IMAGE_URL
-com.twoheart.dailyhotel.util.Constants: java.lang.String NAME_INTENT_EXTRA_DATA_IS_INTENT_FROM_PUSH
+com.twoheart.dailyhotel.util.Constants: java.lang.String NAME_INTENT_EXTRA_DATA_PUSH_TYPE
 com.twoheart.dailyhotel.util.Constants: java.lang.String NAME_INTENT_EXTRA_DATA_PUSH_MSG
+com.twoheart.dailyhotel.util.Constants: int PUSH_TYPE_NOTICE
+com.twoheart.dailyhotel.util.Constants: int PUSH_TYPE_ACCOUNT_COMPLETE
 com.twoheart.dailyhotel.util.Constants: int CODE_REQUEST_ACTIVITY_HOTELTAB
 com.twoheart.dailyhotel.util.Constants: int CODE_REQUEST_FRAGMENT_BOOKINGLIST
 com.twoheart.dailyhotel.util.Constants: int CODE_REQUEST_ACTIVITY_LOGIN
