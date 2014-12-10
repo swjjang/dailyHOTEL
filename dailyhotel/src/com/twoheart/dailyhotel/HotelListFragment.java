@@ -16,6 +16,7 @@
 package com.twoheart.dailyhotel;
 
 import java.util.ArrayList;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -183,6 +184,7 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 		if (mRefreshHotelList) {
 			lockUI();
 			// 현재 서버 시간을 가져온다
+			// 사용자 시간은 변경가능성 있음. 서버시간을 바탕으로 판매시간 체크 
 			mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(
 					URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_TIME)
 					.toString(), null, HotelListFragment.this,
@@ -204,10 +206,14 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 		// 7.2 G2 버전에서 호텔리스트에서 이벤트 칸을 클릭할 경우 튕기는 현상을 막기 위함. why? 헤더뷰인데도 아이템 클릭 리스너가 들어감.
 		if (position == 0)  return; 
 
+//		mHostActivity.selectMenuDrawer(mHostActivity.menuHotelListFragment);
+		
 		int selectedPosition = position - 1;
 		HotelListViewItem selectedItem = mHotelListViewList.get(selectedPosition);
 
 		if (selectedItem.getType() == HotelListViewItem.TYPE_ENTRY) {
+			//리스트 뷰로 하면 보이는거 빼고 나머지 지워지는거 메모리에서 사라짐
+			//이미지 캐시 만들어서 캐싱
 			mHotelListAdapter.getImgCache().evictAll(); // 호텔 리스트아이템들의 image를 캐싱하는 lru cache 비우기.
 
 			Intent i = new Intent(mHostActivity, HotelTabActivity.class);
@@ -234,7 +240,6 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 			} else if (resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY) {
 				((MainActivity) mHostActivity).selectMenuDrawer(((MainActivity) mHostActivity).menuBookingListFragment);
 			}
-
 		} 
 
 		super.onActivityResult(requestCode, resultCode, data);

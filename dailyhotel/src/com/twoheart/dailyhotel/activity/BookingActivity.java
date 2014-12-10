@@ -774,12 +774,12 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 			 * 2. PaymentActivity => BookingActivity로 넘어왔을때
 			 */
 			if (response.equals("alive")) {
-				if (mAliveCallSource.equals("PAYMENT")) {
+				if (mAliveCallSource.equals("PAYMENT")) {//1번 
 					mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(
 							URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_TIME)
 							.toString(), null, BookingActivity.this,
 							BookingActivity.this));
-				} else if(mAliveCallSource.equals("ACTIVITY_RESULT")) {
+				} else if(mAliveCallSource.equals("ACTIVITY_RESULT")) {//2번 
 					activityResulted(mReqCode, mResCode, mResIntent);	
 				}
 

@@ -164,6 +164,7 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 			VolleyHttpClient.destroyCookie();
 
 		// 스플래시 화면을 띄운다
+
 		startActivityForResult(new Intent(this, SplashActivity.class), CODE_REQUEST_ACTIVITY_SPLASH);
 
 		// Anroid 4.4 이상에서 Android StatusBar와 Android NavigationBar를 Translucent하게 해주는 API를 사용하도록 한다.

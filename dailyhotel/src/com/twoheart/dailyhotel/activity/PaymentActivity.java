@@ -114,6 +114,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			finish();
 		}
 
+		//기본 결제 방식
 		String url = new StringBuilder(URL_DAILYHOTEL_SERVER)
 		.append(URL_WEBAPI_RESERVE_PAYMENT)
 		.append(mPay.getPayType()).append("/")
@@ -127,6 +128,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			.append(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)
 			.append(mPay.getHotelDetail().getSaleIdx()).toString();
 			
+			//적립금으로만 결제하는 경우 결제창할 필요 없음
 			ArrayList<String> postParameterKey = new ArrayList<String>(Arrays.asList("saleIdx", "email", "name", "phone","accessToken"));
 			ArrayList<String> postParameterValue = new ArrayList<String>(Arrays.asList(mPay.getHotelDetail().getSaleIdx()+"",
 					mPay.getCustomer().getEmail(),
@@ -140,6 +142,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 						postParameterValue.toArray(new String[postParameterValue.size()])));
 			return;
 		} else if (mPay.isSaleCredit()) {
+			//적립금 일부 사용
 			url = new StringBuilder(URL_DAILYHOTEL_SERVER)
 			.append(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)
 			.append(mPay.getPayType()).append("/")
@@ -260,7 +263,8 @@ public class PaymentActivity extends BaseActivity implements Constants {
 				}
 
 				intent = new Intent(Intent.ACTION_VIEW, Uri.parse(intent
-						.getDataString()));
+						.getDataString(
+								)));
 
 				try {
 					startActivity(intent);
