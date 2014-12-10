@@ -231,7 +231,8 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 									updateParams, this, this));
 				}
 
-			} else if (mPay.isSaleCredit() && mPay.getPayPrice() < 10000) {
+			} else if (mPay.isSaleCredit() && (mPay.getPayPrice() < 10000) &&
+					Integer.parseInt(mPay.getCredit().getBonus().replaceAll(",", "")) != 0) {
 				getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_NO_RSERVE).show();
 				
 			} else {
@@ -744,6 +745,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				
 				tvOriginalPriceValue.setText(comma.format(originalPrice)+"¿ø");
 				tvPrice.setText(comma.format(originalPrice)+"¿ø");
+				mPay.setPayPrice(originalPrice);
 				
 				swCredit.setChecked(false);
 				

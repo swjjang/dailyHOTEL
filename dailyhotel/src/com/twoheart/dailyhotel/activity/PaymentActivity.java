@@ -121,6 +121,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		.toString();
 
 		if (mPay.getPayPrice() == 0) {
+			android.util.Log.e("GETPAAA",""+mPay.getPayPrice());
 			// 적립금으로만 결제하기 포스트
 			url = new StringBuilder(URL_DAILYHOTEL_SERVER)
 			.append(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)
@@ -740,8 +741,8 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		public void feed(final String msg) {
 			int resultCode = 0;
 			android.util.Log.e("FEED",msg);
-
-			if (msg.equals("SUCCESS")) resultCode = CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS;
+			if (msg == null) resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
+			else if (msg.equals("SUCCESS")) resultCode = CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS;
 			else if (msg.equals("INVALID_SESSION")) resultCode = CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION;
 			else if (msg.equals("SOLD_OUT")) resultCode = CODE_RESULT_ACTIVITY_PAYMENT_SOLD_OUT;
 			else if (msg.equals("PAYMENT_COMPLETE")) resultCode = CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE;
