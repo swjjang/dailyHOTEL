@@ -31310,9 +31310,10 @@ com.twoheart.dailyhotel.model.Pay -> com.twoheart.dailyhotel.model.Pay:
     com.twoheart.dailyhotel.model.Credit mCredit -> b
     com.twoheart.dailyhotel.model.Customer mCustomer -> c
     int mPayPrice -> d
-    boolean isSaleCredit -> e
-    java.lang.String mCheckOut -> f
-    java.lang.String payType -> g
+    int mOriginalPrice -> e
+    boolean isSaleCredit -> f
+    java.lang.String mCheckOut -> g
+    java.lang.String payType -> h
     android.os.Parcelable$Creator CREATOR -> CREATOR
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
     void readFromParcel(android.os.Parcel) -> a
@@ -31324,6 +31325,8 @@ com.twoheart.dailyhotel.model.Pay -> com.twoheart.dailyhotel.model.Pay:
     void setCustomer(com.twoheart.dailyhotel.model.Customer) -> setCustomer
     int getPayPrice() -> getPayPrice
     void setPayPrice(int) -> setPayPrice
+    int getOriginalPrice() -> getOriginalPrice
+    void setOriginalPrice(int) -> setOriginalPrice
     boolean isSaleCredit() -> isSaleCredit
     void setSaleCredit(boolean) -> setSaleCredit
     java.lang.String getCheckOut() -> getCheckOut

@@ -181,6 +181,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 			int payPrice = originalPrice - credit;
 			payPrice = payPrice < 0 ? 0: payPrice;
 			mPay.setPayPrice(payPrice);
+			mPay.setOriginalPrice(originalPrice);
 			
 			if (credit >= originalPrice) credit = originalPrice;
 			tvCreditValue.setText("-"+comma.format(credit)+"¿ø");
@@ -189,6 +190,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		else {
 			tvCreditValue.setText("0¿ø");
 			mPay.setPayPrice(originalPrice);
+//			mPay.setOriginalPrice(originalPrice);
 		}
 
 		tvPrice.setText(comma.format(mPay.getPayPrice())+"¿ø");
@@ -231,7 +233,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 									updateParams, this, this));
 				}
 
-			} else if (mPay.isSaleCredit() && (mPay.getPayPrice() < 10000) &&
+			} else if (mPay.isSaleCredit() && (mPay.getOriginalPrice() < 10000) &&
 					Integer.parseInt(mPay.getCredit().getBonus().replaceAll(",", "")) != 0) {
 				getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_NO_RSERVE).show();
 				

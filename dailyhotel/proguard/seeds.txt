@@ -37724,6 +37724,8 @@ com.twoheart.dailyhotel.model.Pay: com.twoheart.dailyhotel.model.Customer getCus
 com.twoheart.dailyhotel.model.Pay: void setCustomer(com.twoheart.dailyhotel.model.Customer)
 com.twoheart.dailyhotel.model.Pay: int getPayPrice()
 com.twoheart.dailyhotel.model.Pay: void setPayPrice(int)
+com.twoheart.dailyhotel.model.Pay: int getOriginalPrice()
+com.twoheart.dailyhotel.model.Pay: void setOriginalPrice(int)
 com.twoheart.dailyhotel.model.Pay: boolean isSaleCredit()
 com.twoheart.dailyhotel.model.Pay: void setSaleCredit(boolean)
 com.twoheart.dailyhotel.model.Pay: java.lang.String getCheckOut()
