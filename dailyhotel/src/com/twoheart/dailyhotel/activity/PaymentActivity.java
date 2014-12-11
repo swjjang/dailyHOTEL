@@ -114,6 +114,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			finish();
 		}
 
+		//기본 결제 방식
 		String url = new StringBuilder(URL_DAILYHOTEL_SERVER)
 		.append(URL_WEBAPI_RESERVE_PAYMENT)
 		.append(mPay.getPayType()).append("/")
@@ -121,11 +122,13 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		.toString();
 
 		if (mPay.getPayPrice() == 0) {
+			android.util.Log.e("GETPAAA",""+mPay.getPayPrice());
 			// 적립금으로만 결제하기 포스트
 			url = new StringBuilder(URL_DAILYHOTEL_SERVER)
 			.append(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)
 			.append(mPay.getHotelDetail().getSaleIdx()).toString();
 			
+			//적립금으로만 결제하는 경우 결제창할 필요 없음
 			ArrayList<String> postParameterKey = new ArrayList<String>(Arrays.asList("saleIdx", "email", "name", "phone","accessToken"));
 			ArrayList<String> postParameterValue = new ArrayList<String>(Arrays.asList(mPay.getHotelDetail().getSaleIdx()+"",
 					mPay.getCustomer().getEmail(),
@@ -139,6 +142,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 						postParameterValue.toArray(new String[postParameterValue.size()])));
 			return;
 		} else if (mPay.isSaleCredit()) {
+			//적립금 일부 사용
 			url = new StringBuilder(URL_DAILYHOTEL_SERVER)
 			.append(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)
 			.append(mPay.getPayType()).append("/")
@@ -259,7 +263,8 @@ public class PaymentActivity extends BaseActivity implements Constants {
 				}
 
 				intent = new Intent(Intent.ACTION_VIEW, Uri.parse(intent
-						.getDataString()));
+						.getDataString(
+								)));
 
 				try {
 					startActivity(intent);
@@ -740,8 +745,8 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		public void feed(final String msg) {
 			int resultCode = 0;
 			android.util.Log.e("FEED",msg);
-
-			if (msg.equals("SUCCESS")) resultCode = CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS;
+			if (msg == null) resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
+			else if (msg.equals("SUCCESS")) resultCode = CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS;
 			else if (msg.equals("INVALID_SESSION")) resultCode = CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION;
 			else if (msg.equals("SOLD_OUT")) resultCode = CODE_RESULT_ACTIVITY_PAYMENT_SOLD_OUT;
 			else if (msg.equals("PAYMENT_COMPLETE")) resultCode = CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE;

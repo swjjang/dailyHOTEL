@@ -244,7 +244,8 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 
 	@Override
 	protected void onDestroy() {
-		mLockUI.hide();
+		//mLockUI.hide();
+		unLockUI();
 		super.onDestroy();
 	}
 

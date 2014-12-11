@@ -309,6 +309,7 @@ DailyHotelStringResponseListener {
 					loadLoginProcess();
 
 				} else {
+					//로그인 성공
 					VolleyHttpClient.createCookie();
 
 					mQueue.add(new DailyHotelStringRequest(Method.GET,

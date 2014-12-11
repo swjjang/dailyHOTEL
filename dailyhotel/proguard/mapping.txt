@@ -30043,9 +30043,11 @@ com.twoheart.dailyhotel.GcmBroadcastReceiver -> com.twoheart.dailyhotel.GcmBroad
 com.twoheart.dailyhotel.GcmIntentService -> com.twoheart.dailyhotel.GcmIntentService:
     int NOTIFICATION_ID -> NOTIFICATION_ID
     android.app.NotificationManager mNotificationManager -> a
+    boolean mIsBadge -> b
+    boolean mIsSound -> c
     void onHandleIntent(android.content.Intent) -> onHandleIntent
     boolean isScreenOn(android.content.Context) -> isScreenOn
-    void sendNotification(java.lang.String,java.lang.String) -> a
+    void sendNotification(int,java.lang.String) -> a
 com.twoheart.dailyhotel.HotelListFragment -> com.twoheart.dailyhotel.f:
     com.twoheart.dailyhotel.widget.PinnedSectionListView mHotelListView -> d
     uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout mPullToRefreshLayout -> e
@@ -30507,11 +30509,6 @@ com.twoheart.dailyhotel.WaitTimerFragment$1 -> com.twoheart.dailyhotel.s:
 com.twoheart.dailyhotel.activity.AboutActivity -> com.twoheart.dailyhotel.activity.AboutActivity:
     void onCreate(android.os.Bundle) -> onCreate
     void onResume() -> onResume
-com.twoheart.dailyhotel.activity.AccountCompleteDialogActivity -> com.twoheart.dailyhotel.activity.AccountCompleteDialogActivity:
-    android.widget.TextView tvMsg -> a
-    android.widget.ImageView btnClose -> b
-    void onCreate(android.os.Bundle) -> onCreate
-    void onClick(android.view.View) -> onClick
 com.twoheart.dailyhotel.activity.BookingActivity -> com.twoheart.dailyhotel.activity.BookingActivity:
     android.widget.ScrollView svBooking -> p
     android.widget.TextView tvCheckIn -> q
@@ -30613,13 +30610,6 @@ com.twoheart.dailyhotel.activity.ForgotPwdActivity -> com.twoheart.dailyhotel.ac
 com.twoheart.dailyhotel.activity.ForgotPwdActivity$1 -> com.twoheart.dailyhotel.activity.g:
     com.twoheart.dailyhotel.activity.ForgotPwdActivity this$0 -> a
     boolean onEditorAction(android.widget.TextView,int,android.view.KeyEvent) -> onEditorAction
-com.twoheart.dailyhotel.activity.GcmLockDialogActivity -> com.twoheart.dailyhotel.activity.GcmLockDialogActivity:
-    android.widget.Button btnOkButton -> a
-    android.widget.Button btnCancelButton -> b
-    android.widget.TextView tvMsg -> c
-    android.widget.TextView tvTitle -> d
-    void onCreate(android.os.Bundle) -> onCreate
-    void onClick(android.view.View) -> onClick
 com.twoheart.dailyhotel.activity.HotelTabActivity -> com.twoheart.dailyhotel.activity.HotelTabActivity:
     com.twoheart.dailyhotel.model.SaleTime mSaleTime -> o
     android.widget.Button btnSoldOut -> t
@@ -30854,6 +30844,20 @@ com.twoheart.dailyhotel.activity.ProfileActivity$3 -> com.twoheart.dailyhotel.ac
 com.twoheart.dailyhotel.activity.PushDialogActivity -> com.twoheart.dailyhotel.activity.PushDialogActivity:
     android.widget.Button btnOkButton -> a
     android.widget.Button btnCancelButton -> b
+    void onCreate(android.os.Bundle) -> onCreate
+    void onClick(android.view.View) -> onClick
+com.twoheart.dailyhotel.activity.PushLockDialogActivity -> com.twoheart.dailyhotel.activity.PushLockDialogActivity:
+    android.widget.Button btnOkButton -> a
+    android.widget.Button btnCancelButton -> b
+    android.widget.TextView tvMsg -> c
+    java.lang.String mMsg -> d
+    int mType -> e
+    void onCreate(android.os.Bundle) -> onCreate
+    void onClick(android.view.View) -> onClick
+com.twoheart.dailyhotel.activity.ScreenOnPushDialogActivity -> com.twoheart.dailyhotel.activity.ScreenOnPushDialogActivity:
+    android.widget.TextView tvMsg -> a
+    android.widget.ImageView btnClose -> b
+    android.widget.TextView tvTitle -> c
     void onCreate(android.os.Bundle) -> onCreate
     void onClick(android.view.View) -> onClick
 com.twoheart.dailyhotel.activity.SignupActivity -> com.twoheart.dailyhotel.activity.SignupActivity:
@@ -31306,9 +31310,10 @@ com.twoheart.dailyhotel.model.Pay -> com.twoheart.dailyhotel.model.Pay:
     com.twoheart.dailyhotel.model.Credit mCredit -> b
     com.twoheart.dailyhotel.model.Customer mCustomer -> c
     int mPayPrice -> d
-    boolean isSaleCredit -> e
-    java.lang.String mCheckOut -> f
-    java.lang.String payType -> g
+    int mOriginalPrice -> e
+    boolean isSaleCredit -> f
+    java.lang.String mCheckOut -> g
+    java.lang.String payType -> h
     android.os.Parcelable$Creator CREATOR -> CREATOR
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
     void readFromParcel(android.os.Parcel) -> a
@@ -31320,6 +31325,8 @@ com.twoheart.dailyhotel.model.Pay -> com.twoheart.dailyhotel.model.Pay:
     void setCustomer(com.twoheart.dailyhotel.model.Customer) -> setCustomer
     int getPayPrice() -> getPayPrice
     void setPayPrice(int) -> setPayPrice
+    int getOriginalPrice() -> getOriginalPrice
+    void setOriginalPrice(int) -> setOriginalPrice
     boolean isSaleCredit() -> isSaleCredit
     void setSaleCredit(boolean) -> setSaleCredit
     java.lang.String getCheckOut() -> getCheckOut
@@ -31345,9 +31352,13 @@ com.twoheart.dailyhotel.model.SaleTime -> com.twoheart.dailyhotel.model.SaleTime
     void setOpenTime(java.lang.String) -> setOpenTime
     void setCloseTime(java.lang.String) -> setCloseTime
     void setCurrentTime(java.lang.String) -> setCurrentTime
+    java.text.SimpleDateFormat getTimezonedDateFormat(java.lang.String) -> getTimezonedDateFormat
     java.lang.String getCurrentMonth() -> getCurrentMonth
     java.lang.String getCurrentDay() -> getCurrentDay
     java.lang.String getCurrentYear() -> getCurrentYear
+    java.lang.String getCurrentHour() -> getCurrentHour
+    java.lang.String getCurrentMin() -> getCurrentMin
+    java.lang.String getCurrentSec() -> getCurrentSec
     java.lang.Long getCurrentTime() -> getCurrentTime
     java.lang.Long getOpenTime() -> getOpenTime
     java.lang.Long getCloseTime() -> getCloseTime
@@ -31446,6 +31457,7 @@ com.twoheart.dailyhotel.util.Constants -> com.twoheart.dailyhotel.util.b:
     java.lang.String VALUE_PREFERENCE_HOTEL_CHECKOUT_DEFAULT -> VALUE_PREFERENCE_HOTEL_CHECKOUT_DEFAULT
     java.lang.String KEY_PREFERENCE_USER_IDX -> KEY_PREFERENCE_USER_IDX
     java.lang.String KEY_PREFERENCE_ACCOUNT_READY_FLAG -> KEY_PREFERENCE_ACCOUNT_READY_FLAG
+    java.lang.String KEY_PREFERENCE_LOCALE -> KEY_PREFERENCE_LOCALE
     java.lang.String NAME_INTENT_EXTRA_DATA_HOTEL -> NAME_INTENT_EXTRA_DATA_HOTEL
     java.lang.String NAME_INTENT_EXTRA_DATA_HOTELDETAIL -> NAME_INTENT_EXTRA_DATA_HOTELDETAIL
     java.lang.String NAME_INTENT_EXTRA_DATA_SALETIME -> NAME_INTENT_EXTRA_DATA_SALETIME
@@ -31453,8 +31465,10 @@ com.twoheart.dailyhotel.util.Constants -> com.twoheart.dailyhotel.util.b:
     java.lang.String NAME_INTENT_EXTRA_DATA_BOOKING -> NAME_INTENT_EXTRA_DATA_BOOKING
     java.lang.String NAME_INTENT_EXTRA_DATA_PAY -> NAME_INTENT_EXTRA_DATA_PAY
     java.lang.String NAME_INTENT_EXTRA_DATA_SELECTED_IMAGE_URL -> NAME_INTENT_EXTRA_DATA_SELECTED_IMAGE_URL
-    java.lang.String NAME_INTENT_EXTRA_DATA_IS_INTENT_FROM_PUSH -> NAME_INTENT_EXTRA_DATA_IS_INTENT_FROM_PUSH
+    java.lang.String NAME_INTENT_EXTRA_DATA_PUSH_TYPE -> NAME_INTENT_EXTRA_DATA_PUSH_TYPE
     java.lang.String NAME_INTENT_EXTRA_DATA_PUSH_MSG -> NAME_INTENT_EXTRA_DATA_PUSH_MSG
+    int PUSH_TYPE_NOTICE -> PUSH_TYPE_NOTICE
+    int PUSH_TYPE_ACCOUNT_COMPLETE -> PUSH_TYPE_ACCOUNT_COMPLETE
     int CODE_REQUEST_ACTIVITY_HOTELTAB -> CODE_REQUEST_ACTIVITY_HOTELTAB
     int CODE_REQUEST_FRAGMENT_BOOKINGLIST -> CODE_REQUEST_FRAGMENT_BOOKINGLIST
     int CODE_REQUEST_ACTIVITY_LOGIN -> CODE_REQUEST_ACTIVITY_LOGIN
