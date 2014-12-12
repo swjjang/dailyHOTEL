@@ -1,49 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <!-- Basic Infos -->
     <string name="app_name">데일리호텔</string>
     <string name="app_id">268888829950610</string>
     <string name="homepage">http://dailyhotel.kr</string>
     <string name="contact_us">help@dailyhotel.co.kr</string>
     <string name="currency">원</string>
-    
+
     <!-- Hotel Grade -->
     <string name="grade_special">특급</string>
     <string name="grade_1">1급</string>
     <string name="grade_2">2급</string>
     <string name="grade_3">3급</string>
-    
     <string name="grade_hostel">호스텔</string>
     <string name="grade_boutique">부띠끄</string>
     <string name="grade_residence">레지던스</string>
     <string name="grade_biz">비지니스</string>
-    
     <string name="grade_resort">리조트</string>
     <string name="grade_pension">펜션</string>
     <string name="grade_condo">콘도</string>
-    
     <string name="grade_not_yet">미정</string>
-    
+
     <!-- IntroActivity Guide Ment -->
     <string name="guide_title_1">당일 호텔 예약</string>
     <string name="guide_title_2">엄선된 호텔</string>
     <string name="guide_title_3">쉽고 빠른 결제</string>
     <string name="guide_title_4">놀라운 가격</string>
-    
     <string name="guide_desc_1">사전 예약보다 편리하고 저렴하게\n오늘의 호텔을 예약하세요.</string>
     <string name="guide_desc_2">고객 만족도와 할인율을 바탕으로,\n가장 매력적인 호텔만을 제시합니다.</string>
     <string name="guide_desc_3">오전 9시에서 새벽 2시까지\n30초만에 예약하고 바로 체크인하세요.</string>
     <string name="guide_desc_4">오늘 남은 객실만을 판매하기에\n가장 저렴할 수 밖에 없습니다.\n\n그럼 오늘의 호텔을 만나볼까요?</string>
-    
+
     <!-- Actionbar Titles -->
     <string name="actionbar_title_hotel_list_frag">오늘의 호텔</string>
     <string name="actionbar_title_booking_list_frag">예약확인</string>
     <string name="actionbar_title_credit_frag">적립금</string>
     <string name="actionbar_title_setting_frag">설정</string>
-    
     <string name="actionbar_title_error_frag">dailyHOTEL</string>
     <string name="actionbar_title_wait_timer_frag">dailyHOTEL</string>
-    
     <string name="actionbar_title_about_activity">데일리호텔이란?</string>
     <string name="actionbar_title_booking_tab_activity">예약확인</string>
     <string name="actionbar_title_faq_activity">자주 묻는 질문</string>
@@ -57,7 +52,7 @@
     <string name="actionbar_title_term_activity">이용약관</string>
     <string name="actionbar_title_version_activity">버전정보</string>
     <string name="actionbar_title_zoom_map_activity">지도 확대</string>
-    
+
     <!-- Toast Messages -->
     <string name="toast_msg_network_status_bad">인터넷 연결을 할 수 없습니다.\n설정에서 확인해주세요.</string>
     <string name="toast_msg_please_chk_network_status">인터넷 연결을 할 수 없습니다.\n설정에서 확인해주세요.</string>
@@ -73,21 +68,18 @@
     <string name="toast_msg_profile_success_to_change">성공적으로 변경되었습니다.</string>
     <string name="toast_msg_logouted">로그아웃되었습니다.</string>
     <string name="toast_msg_logoined">로그인되었습니다.</string>
-    
     <string name="toast_msg_please_input_id">아이디를 입력해주세요.</string>
     <string name="toast_msg_please_input_passwd">비밀번호를 입력해주세요.</string>
     <string name="toast_msg_please_input_required_infos">필수 입력사항은 모두 입력해주세요.</string>
     <string name="toast_msg_please_input_password_more_than_4chars">비밀번호를 4글자 이상 입력해주세요.</string>
     <string name="toast_msg_success_to_signup">회원가입이 완료되었습니다</string>
     <string name="toast_msg_already_latest_version">이미 최신버전입니다</string>
-    
     <string name="toast_msg_thanks_to_your_opinion">좋은 의견 감사합니다.</string>
     <string name="toast_msg_backpressed">\'뒤로\' 버튼을 한 번 더 누르시면 앱이 종료됩니다</string>
-    
+
     <!-- Dialog Messages -->
-    
+
     <string name="dialog_title_notice">공지</string>
-    
     <string name="dialog_msg_sent_email">이메일이 발송되었습니다.</string>
     <string name="dialog_msg_install_paypin">PayPin 어플리케이션이 설치되어 있지 않습니다. \n설치를 눌러 진행 해 주십시요.\n취소를 누르면 결제가 취소 됩니다.</string>
     <string name="dialog_msg_install_hana_sk">HANA SK 모듈이 설치 되어있지 않습니다.\n설치 하시겠습니까?</string>
@@ -98,20 +90,17 @@
     <string name="dialog_msg_please_update_new_version">dailyHOTEL의 새로운 버전이 출시되었습니다. 업데이트해주세요</string>
     <string name="dialog_msg_update_now">지금 업그레이드하여 가장 멋진 데일리호텔 앱을 다운받으세요</string>
     <string name="dialog_msg_sales_closed">오전 9시부터 오늘의 호텔이 공개됩니다.</string>
-    
     <string name="dialog_msg_payment_confirm">당일 예약 특성 상, 결제 완료 후&lt;br/&gt;&lt;b&gt;취소나 변경이 불가&lt;/b&gt;합니다.&lt;br/&gt;&lt;br/&gt;\'체크인 시 배정\'의 경우 더블,트윈 등의&lt;br/&gt;&lt;b&gt;베드 타입은 보장하지 않으며&lt;/b&gt;&lt;br/&gt;2인이 투숙할 수 있는 객실로 배정됩니다.&lt;br/&gt;&lt;br/&gt; 위 사항에 동의하시면 아래의&lt;br/&gt;버튼을 눌러 결제를 진행해 주세요.</string>
     <string name="dialog_msg_payment_confirm_hp">당일 예약 특성 상, 결제 완료 후&lt;br/&gt;&lt;b&gt;취소나 변경이 불가&lt;/b&gt;합니다.&lt;br/&gt;&lt;br/&gt;\'체크인 시 배정\'의 경우 더블,트윈 등의&lt;br/&gt;&lt;b&gt;베드 타입은 보장하지 않으며&lt;/b&gt;&lt;br/&gt;2인이 투숙할 수 있는 객실로 배정됩니다.&lt;br/&gt;&lt;br/&gt;휴대폰 결제는 월 30만원이 한도입니다.&lt;br/&gt;&lt;br/&gt; 위 사항에 동의하시면 아래의&lt;br/&gt;버튼을 눌러 결제를 진행해 주세요.</string>
     <string name="dialog_btn_payment_confirm">동의하고 결제 진행</string>
     <string name="dialog_btn_payment_no_reserve">&lt;br/&gt;&lt;br/&gt;이벤트 호텔의 경우&lt;br/&gt;적립금 사용을 할 수 없습니다.&lt;br/&gt;&lt;br/&gt;</string>
-    
-    
     <string name="dialog_btn_text_update">업데이트</string>
     <string name="dialog_btn_text_complete">완료</string>
     <string name="dialog_btn_text_confirm">확인</string>
     <string name="dialog_btn_text_cancel">취소</string>
     <string name="dialog_btn_text_retry">재시도</string>
     <string name="dialog_btn_text_setting">설정</string>
-    
+
     <!-- Main Drawer Menu Titles -->
     <string name="drawer_menu_pin_title_resrvation">예약</string>
     <string name="drawer_menu_item_title_todays_hotel">오늘의 호텔</string>
@@ -119,30 +108,30 @@
     <string name="drawer_menu_pin_title_account">계정</string>
     <string name="drawer_menu_item_title_credit">적립금</string>
     <string name="drawer_menu_item_title_setting">설정</string>
-    
+
     <!-- Mail Text -->
     <string name="mail_text_dialog_title">이메일 어플리케이션 선택</string>
     <string name="mail_text_subject">데일리호텔에 문의합니다</string>
     <string name="mail_text_desc">데일리호텔의 안드로이드 어플리케이션에 관한 문의입니다.</string>
-    
+
     <!-- Prefix Text -->
     <string name="prefix_wait_timer_frag_todays_hotel_open">시 오늘의 호텔이 공개됩니다.</string>
     <string name="prefix_expire_time">유효기간</string>
-    
-    <!-- KaKaoLink Message-->
+
+    <!-- KaKaoLink Message -->
     <string name="kakaolink_msg_prefix">좋은 어플 추천해 드려요~\n오늘 남은 객실만 최대 70% 할인하는 데일리호텔이에요.추천인코드 : </string>
     <string name="kakaolink_msg_suffix">을 입력하면 5,000원 바로 할인!</string>
-    
+
     <!-- Alarm Message -->
     <string name="alarm_title">dailyHOTEL</string>
     <string name="alarm_msg">오늘의 호텔이 도착했습니다.\n지금 데일리호텔에서 확인하세요!</string>
     <string name="alarm_ticker">오늘의 호텔이 도착했습니다!</string>
     <string name="txt_payment_wait_confirm">입금 순서대로 예약이 확정되며,\\n객실 예약이 조기에 마감될 수 있습니다.\\n마감시 입금하신 계좌로 전액 환불됩니다.</string>
     <string name="txt_payment_wait_when_complete">10분이내에 예약완료 문자가 도착합니다.</string>
-    
-    
     <string name="toast_msg_retry_login">다시 로그인해주세요</string>
     <string name="toast_msg_is_not_available_google_service">구글플레이 서비스가 이용가능 하지 않습니다.</string>
-    
-    
+    <string name="title_activity_event_pop_up">EventPopUpActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
 </resources>

@@ -35,8 +35,10 @@ public interface Constants {
     public static final String GCM_DEVICE_TYPE_ANDROID = "0"; // GCM 등록을 할 때 API의 deviceType, 0은 안드로이드 1은 아이폰.
     
 	// 웹서버 호스트 
-		public static final String URL_DAILYHOTEL_SERVER = "http://restful.dailyhotel.kr/goodnight/"; //  서비스 서버
-//    public static final String URL_DAILYHOTEL_SERVER = "http://test.dailyhotel.kr/goodnight/"; //  서비스 서버
+//		public static final String URL_DAILYHOTEL_SERVER = "http://restful.dailyhotel.kr/goodnight/"; //  서비스 서버
+//    public static final String URL_DAILYHOTEL_SERVER = "http://192.168.0.10:8080/goodnight/"; //  서비스 서버
+    public static final String URL_DAILYHOTEL_SERVER = "http://test.dailyhotel.kr/goodnight/"; //  서비스 서버
+
 				
 	// 회사 대표번호
 	public static final String PHONE_NUMBER_DAILYHOTEL = "1800-9120";
@@ -121,7 +123,7 @@ public interface Constants {
 
 	// Preference
 	public static final String NAME_DAILYHOTEL_SHARED_PREFERENCE = "GOOD_NIGHT";
-
+	public static final String RESULT_ACTIVITY_SPLASH_NEW_EVENT = "NEW_EVENT";
 	public static final String KEY_PREFERENCE_RESENT_CNT = "RESENT_CNT";
 
 	// user info

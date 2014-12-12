@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.activity;
 
 import android.os.Bundle;
+
 import android.webkit.JavascriptInterface;
 
 import com.google.analytics.tracking.android.Fields;
