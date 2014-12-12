@@ -259,10 +259,10 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 		
 		boolean showEventPopUp = ((MainActivity) mHostActivity).sharedPreference.getBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false);
 		
-		if (showEventPopUp) {
+//		if (showEventPopUp) {
 			Dialog popUpDialog = getEventPopUpDialog();
 			popUpDialog.show();
-		}
+//		}
 		
 		return true;
 	}
@@ -274,7 +274,7 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 		dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 		dialog.setCanceledOnTouchOutside(false);
 
-		View view = LayoutInflater.from(((MainActivity) mHostActivity)).inflate(R.layout.activity_event_pop_up, null);
+		View view = LayoutInflater.from(((MainActivity) mHostActivity)).inflate(R.layout.fragment_pop_up_event, null);
 		ImageView btnClose = (ImageView) view.findViewById(R.id.btn_confirm_payment_close);
 		WebView popUpWebView = (WebView) view.findViewById(R.id.pop_up_web);
 		
