@@ -26,13 +26,17 @@ import java.util.Locale;
 
 import org.json.JSONObject;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.content.res.Configuration;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -42,6 +46,7 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
+import android.text.Html;
 import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -51,11 +56,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.View.OnClickListener;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -69,12 +78,14 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.readystatesoftware.systembartint.SystemBarTintManager.SystemBarConfig;
+import com.twoheart.dailyhotel.activity.BookingActivity;
 import com.twoheart.dailyhotel.activity.SplashActivity;
 import com.twoheart.dailyhotel.fragment.RatingHotelFragment;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -104,6 +115,7 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 	public ListView drawerList;
 	public DrawerLayout drawerLayout;
 	private FrameLayout mContentFrame;
+	public Dialog popUpDialog;
 
 	public ActionBarDrawerToggle drawerToggle;
 	protected FragmentManager fragmentManager;
@@ -219,17 +231,23 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
+		Editor editor = sharedPreference.edit();
+		
 		if (requestCode == CODE_REQUEST_ACTIVITY_SPLASH) {
 			switch (resultCode) {
 			case RESULT_OK :		// 스플래시 화면이 정상적으로 종료되었을 경우
+				editor.putBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false);
+				editor.apply();
 				break;
 			case CODE_RESULT_ACTIVITY_SPLASH_NEW_EVENT :		// 스플래시가 정상적으로 종료되었는데 새로운 이벤트 알림이 있는 경우
+				editor.putBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, true);
+				editor.apply();
 				break;
 			default :		// 스플래시가 비정상적으로 종료되었을 경우
 				super.finish();		// 어플리케이션(메인 화면)을 종료해버린다
 				return;				// 메서드를 빠져나간다 - 호텔 평가를 수행하지 않음.
 			}
-
+			
 			boolean showGuide = sharedPreference.getBoolean(KEY_PREFERENCE_SHOW_GUIDE, true);
 			if (showGuide) startActivityForResult(new Intent(this, IntroActivity.class), CODE_REQUEST_ACTIVITY_INTRO);
 			else {
@@ -262,7 +280,7 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 		}
 
 	}
-
+	
 	@Override
 	public void onResponse(String url, String response) {
 		if (url.contains(URL_WEBAPI_USER_ALIVE)) {
@@ -284,7 +302,6 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 		if (url.contains(URL_WEBAPI_USER_INFO)) {
 			try {
 				String loginuser_idx = response.getString("idx");
-
 
 				String gcmId=getGcmId();
 				// GCM 등록 시도
@@ -312,6 +329,7 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 						Date checkOut = SaleTime.stringToDate(Util
 								.dailyHotelTimeConvert(purchasedHotelCheckOut));
 
+						//호텔 만족도 조사 
 						if (!purchasedHotelName.equals(VALUE_PREFERENCE_HOTEL_NAME_DEFAULT)) {
 							if (today.compareTo(checkOut) >= 0) {
 								Calendar calendar = Calendar.getInstance();

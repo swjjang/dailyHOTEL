@@ -17,6 +17,7 @@ package com.twoheart.dailyhotel;
 
 import java.util.ArrayList;
 
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -32,8 +33,11 @@ import uk.co.senab.actionbarpulltorefresh.library.Options;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.AbsListViewDelegate;
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -41,8 +45,11 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBar.OnNavigationListener;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -249,9 +256,55 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 	public boolean onNavigationItemSelected(int position, long id) {
 		lockUI();
 		fetchHotelList(position);
-
+		
+		boolean showEventPopUp = ((MainActivity) mHostActivity).sharedPreference.getBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false);
+		
+		if (showEventPopUp) {
+			Dialog popUpDialog = getEventPopUpDialog();
+			popUpDialog.show();
+		}
+		
 		return true;
 	}
+	
+	private Dialog getEventPopUpDialog() {
+		final Dialog dialog = new Dialog(((MainActivity) mHostActivity));
+
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+		dialog.setCanceledOnTouchOutside(false);
+
+		View view = LayoutInflater.from(((MainActivity) mHostActivity)).inflate(R.layout.activity_event_pop_up, null);
+		ImageView btnClose = (ImageView) view.findViewById(R.id.btn_confirm_payment_close);
+		WebView popUpWebView = (WebView) view.findViewById(R.id.pop_up_web);
+		
+		popUpWebView.getSettings().setJavaScriptEnabled(true);
+		popUpWebView.getSettings().setBuiltInZoomControls(true);
+//		popUpWebView.getSettings().setBlockNetworkLoads(false);
+        popUpWebView.loadUrl("http://www.google.com");
+        popUpWebView.setWebViewClient(new WebViewClientClass()); 
+
+		btnClose.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+			}
+		});
+
+		dialog.setContentView(view);
+		GlobalFont.apply((ViewGroup) view);
+
+		return dialog;
+	}
+	
+	private class WebViewClientClass extends WebViewClient { 
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) { 
+            view.loadUrl(url);
+            return true; 
+        } 
+    }
+
 
 	/**
 	 * 호텔리스트를 보여준다.
