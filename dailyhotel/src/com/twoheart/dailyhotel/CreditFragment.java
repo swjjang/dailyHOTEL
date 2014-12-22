@@ -294,7 +294,7 @@ public class CreditFragment extends BaseFragment implements Constants,
 			try {
 				DecimalFormat comma = new DecimalFormat("###,##0");
 				String str = comma.format(Integer.parseInt(response.trim()));
-				tvBonus.setText(new StringBuilder(str).append("원"));
+				tvBonus.setText(new StringBuilder(str).append(getString(R.string.currency)));
 
 				// 사용자 정보 요청.
 				mQueue.add(new DailyHotelJsonRequest(Method.GET,

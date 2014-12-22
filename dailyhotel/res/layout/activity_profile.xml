@@ -27,7 +27,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:text="로그인 계정"
+                    android:text="@string/act_profile_login_acc"
                     android:textColor="@color/textView_textColor_section"
                     android:textSize="12.5dp" />
             </LinearLayout>
@@ -51,7 +51,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="0.3"
                         android:gravity="center_vertical"
-                        android:text="이메일"
+                        android:text="@string/act_profile_email"
                         android:textColor="@drawable/selector_textview_textcolor"
                         android:textSize="15dp" />
 
@@ -86,7 +86,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
-                        android:text="사용자 정보"
+                        android:text="@string/act_profile_user"
                         android:textColor="@color/textView_textColor_section"
                         android:textSize="12.5dp" />
 
@@ -107,7 +107,7 @@
 	                        android:id="@+id/tv_profile_edit"
 	                        android:layout_width="wrap_content"
 	                        android:layout_height="wrap_content"
-	                        android:text="수정"
+	                        android:text="@string/act_profile_modify"
 	                       	android:layout_gravity="center_vertical"
 	                        android:textColor="@color/dh_theme_color"
 	                        android:textSize="12.5dp" />
@@ -146,7 +146,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="0.3"
                                 android:gravity="center_vertical"
-                                android:text="이름"
+                                android:text="@string/act_profile_name"
                                 android:textColor="@drawable/selector_textview_textcolor"
                                 android:textSize="15dp" />
 
@@ -171,7 +171,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="0.3"
                                 android:gravity="center_vertical"
-                                android:text="연락처"
+                                android:text="@string/act_profile_contact"
                                 android:textColor="@drawable/selector_textview_textcolor"
                                 android:textSize="15dp" />
 
@@ -203,7 +203,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="0.3"
                                 android:gravity="center_vertical"
-                                android:text="이름"
+                                android:text="@string/act_profile_name"
                                 android:textColor="@drawable/selector_textview_textcolor"
                                 android:textSize="15dp" />
 
@@ -213,7 +213,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="0.7"
                                 android:gravity="right|center_vertical"
-                                android:hint="이름을 입력해주세요"
+                                android:hint="@string/act_profile_input_name"
                                 android:inputType="text"
                                 android:maxLength="20"
                                 android:singleLine="true"
@@ -231,7 +231,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="0.3"
                                 android:gravity="center_vertical"
-                                android:text="연락처"
+                                android:text="@string/act_profile_contact"
                                 android:textColor="@drawable/selector_textview_textcolor"
                                 android:textSize="15dp" />
 
@@ -241,7 +241,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="0.7"
                                 android:gravity="right|center_vertical"
-                                android:hint="연락처를 입력해주세요"
+                                android:hint="@string/act_profile_input_contact"
                                 android:inputType="phone"
                                 android:maxLength="20"
                                 android:singleLine="true"
@@ -267,7 +267,7 @@
             android:layout_height="50dp"
             android:background="@drawable/shape_button_common_background"
             android:gravity="center"
-            android:text="로그아웃"
+            android:text="@string/act_profile_btn_logout"
             android:textColor="@android:color/white" />
     </LinearLayout>
 

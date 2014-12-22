@@ -35,7 +35,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="30dp"
             android:gravity="center"
-            android:text="오늘은 멋진 호텔에서\n하루를 보내는게 어때요?"
+            android:text="@string/frag_booking_line"
             android:textColor="@color/textView_textColor_sub"
             android:textSize="16.5dp" />
 
@@ -46,7 +46,7 @@
             android:layout_above="@+id/tv_booking_empty_desc"
             android:layout_marginBottom="10dp"
             android:layout_centerHorizontal="true"
-            android:text="예약된 호텔이 없습니다!"
+            android:text="@string/frag_booking_no_hotels"
             android:textColor="@color/textView_textColor_main"
             android:textSize="20dp" />
 
@@ -57,7 +57,7 @@
             android:layout_alignParentBottom="true"
             android:layout_margin="22.5dp"
             android:background="@drawable/shape_button_common_background"
-            android:text="기존 회원 로그인"
+            android:text="@string/frag_booking_btn_login"
             android:textColor="@android:color/white" />
     </RelativeLayout>
 

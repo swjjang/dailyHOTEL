@@ -44,10 +44,10 @@ public class ScreenOnPushDialogActivity extends Activity implements OnClickListe
 		String title = null;
 		switch (type) {
 			case PUSH_TYPE_NOTICE:
-				title = "알림";
+				title = getString(R.string.dialog_notice2);
 				break;
 			case PUSH_TYPE_ACCOUNT_COMPLETE:
-				title = "결제알림";
+				title = getString(R.string.dialog_title_payment);
 				break;
 		}
 		

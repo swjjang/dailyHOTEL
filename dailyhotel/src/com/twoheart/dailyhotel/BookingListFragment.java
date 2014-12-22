@@ -132,7 +132,7 @@ DailyHotelStringResponseListener {
 		if (requestCode == CODE_REQUEST_ACTIVITY_BOOKING_DETAIL) {
 			switch (resultCode) {
 				case CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT:
-					SimpleAlertDialog.build(getActivity(), "알림", data.getStringExtra("msg"), "확인", null).show();
+					SimpleAlertDialog.build(getActivity(), getString(R.string.dialog_notice2), data.getStringExtra("msg"), getString(R.string.dialog_btn_text_confirm), null).show();
 					break;
 			}
 		}

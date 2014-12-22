@@ -388,7 +388,7 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 			if (GooglePlayServicesUtil.isUserRecoverableError(resCode)) {
 				GooglePlayServicesUtil.getErrorDialog(resCode, this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
 			} else {
-				showToast("구글플레이 서비스가 이용가능 하지 않습니다.", Toast.LENGTH_LONG, false);
+				showToast(getString(R.string.toast_msg_is_not_available_google_service), Toast.LENGTH_LONG, false);
 				finish();
 			}
 			return false;

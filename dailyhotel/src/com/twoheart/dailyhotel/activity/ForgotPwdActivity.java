@@ -103,7 +103,7 @@ public class ForgotPwdActivity extends BaseActivity implements Constants,
 
 			if (response.trim().equals("done")) {
 				unLockUI();
-				SimpleAlertDialog.build(this, getString(R.string.dialog_msg_sent_email), "»Æ¿Œ", null).show();
+				SimpleAlertDialog.build(this, getString(R.string.dialog_msg_sent_email), getString(R.string.dialog_btn_text_confirm), null).show();
 				etForgot.setText("");
 			}
 		}
