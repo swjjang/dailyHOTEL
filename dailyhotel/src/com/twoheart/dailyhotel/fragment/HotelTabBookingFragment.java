@@ -36,14 +36,14 @@ OnTouchListener {
 	private Handler mHandler;
 	private int mCurrentPage = 0;
 
-	public static HotelTabBookingFragment newInstance(HotelDetail hotelDetail) {
+	public static HotelTabBookingFragment newInstance(HotelDetail hotelDetail, String title) {
 
 		HotelTabBookingFragment newFragment = new HotelTabBookingFragment();
 		Bundle arguments = new Bundle();
 
 		arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL, hotelDetail);
 		newFragment.setArguments(arguments);
-		newFragment.setTitle("¿¹¾à");
+		newFragment.setTitle(title);
 
 		return newFragment;
 

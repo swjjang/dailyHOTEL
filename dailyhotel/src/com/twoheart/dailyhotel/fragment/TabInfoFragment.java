@@ -28,14 +28,14 @@ public class TabInfoFragment extends BaseFragment {
 
 	private int infoViewCount;
 	
-	public static TabInfoFragment newInstance(HotelDetail hotelDetail) {
+	public static TabInfoFragment newInstance(HotelDetail hotelDetail, String title) {
 		
 		TabInfoFragment newFragment = new TabInfoFragment();
 		Bundle arguments = new Bundle();
 		
 		arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL, hotelDetail);
 		newFragment.setArguments(arguments);
-		newFragment.setTitle("Á¤º¸");
+		newFragment.setTitle(title);
 		
 		return newFragment;
 		

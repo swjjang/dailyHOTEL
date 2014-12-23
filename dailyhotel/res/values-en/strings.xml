@@ -74,7 +74,7 @@
     <string name="toast_msg_please_input_id">Please input your id.</string> 
     <string name="toast_msg_please_input_passwd">Please input pwd.</string> 
     <string name="toast_msg_please_input_required_infos">Please input all essential inputs.</string> 
-    <string name="toast_msg_please_input_password_more_than_4chars">Please input your pwd four letters or more.</string> 
+    <string name="toast_msg_please_input_password_more_than_4chars">Please input your pwd 4 characters or more.</string> 
     <string name="toast_msg_success_to_signup">Signup is completed.</string> 
     <string name="toast_msg_already_latest_version">It\'s already the latest version.</string> 
     <string name="toast_msg_thanks_to_your_opinion">Thank you for a good opinion.</string> 
@@ -93,10 +93,10 @@
     <string name="dialog_msg_network_please_off_airplain">Please turn off airplain mode or use wifi.</string> 
     <string name="dialog_msg_network_unstable_retry_or_set_wifi">Internet is not connected.\nplease try again or check of wifi settings.</string>  
     <string name="dialog_msg_please_update_new_version">dailyHOTEL\'s new version is released. please update.</string> 
-    <string name="dialog_msg_update_now">지금 업그레이드하여 가장 멋진 데일리호텔 앱을 다운받으세요</string>
+    <string name="dialog_msg_update_now">Please download the best dailyHOTEL app once upgrading.</string>
     <string name="dialog_msg_sales_closed">From 9am, Today\'s hotel is released.</string> 
-    <string name="dialog_msg_payment_confirm">당일 예약 특성 상, 결제 완료 후&lt;br/&gt;&lt;b&gt;취소나 변경이 불가&lt;/b&gt;합니다.&lt;br/&gt;&lt;br/&gt;\'체크인 시 배정\'의 경우 더블,트윈 등의&lt;br/&gt;&lt;b&gt;베드 타입은 보장하지 않으며&lt;/b&gt;&lt;br/&gt;2인이 투숙할 수 있는 객실로 배정됩니다.&lt;br/&gt;&lt;br/&gt; 위 사항에 동의하시면 아래의&lt;br/&gt;버튼을 눌러 결제를 진행해 주세요.</string>
-    <string name="dialog_msg_payment_confirm_hp">당일 예약 특성 상, 결제 완료 후&lt;br/&gt;&lt;b&gt;취소나 변경이 불가&lt;/b&gt;합니다.&lt;br/&gt;&lt;br/&gt;\'체크인 시 배정\'의 경우 더블,트윈 등의&lt;br/&gt;&lt;b&gt;베드 타입은 보장하지 않으며&lt;/b&gt;&lt;br/&gt;2인이 투숙할 수 있는 객실로 배정됩니다.&lt;br/&gt;&lt;br/&gt;휴대폰 결제는 월 30만원이 한도입니다.&lt;br/&gt;&lt;br/&gt; 위 사항에 동의하시면 아래의&lt;br/&gt;버튼을 눌러 결제를 진행해 주세요.</string>
+    <string name="dialog_msg_payment_confirm">It is &lt;b&gt;impossible to cancel or change&lt;/b&gt; &lt;br/&gt;after paying as a result of booking on that day. &lt;br/&gt;&lt;br/&gt;In the case of &lt;br/&gt;\'During check-in arrangements\', &lt;br/&gt;&lt;b&gt;bed type are not guaranteed &lt;/b&gt;&lt;br/&gt;and you will be assigned to the room that can accommodate 2 people.&lt;br/&gt;&lt;br/&gt; If you agree with the above information, &lt;br/&gt;please progress payment by pressing the below button.</string>
+    <string name="dialog_msg_payment_confirm_hp">It is &lt;b&gt;impossible to cancel or change&lt;/b&gt; &lt;br/&gt;after paying as a result of booking on that day. &lt;br/&gt;&lt;br/&gt;In the case of &lt;br/&gt;\'During check-in arrangements\', &lt;br/&gt;&lt;b&gt;bed type are not guaranteed &lt;/b&gt;&lt;br/&gt;and you will be assigned to the room that can accommodate 2 people.&lt;br/&gt;&lt;br/&gt;Mobile payment is a monthly limit of 300000 won.&lt;br/&gt;&lt;br/&gt; If you agree with the above information, &lt;br/&gt;please progress payment by pressing the below button.</string>
     <string name="dialog_btn_payment_confirm">Agreement and progress payment</string> 
     <string name="dialog_btn_payment_no_reserve">&lt;br/&gt;&lt;br/&gt;For event hotel,&lt;br/&gt;You can\'t use credit.&lt;br/&gt;&lt;br/&gt;</string>  
     <string name="dialog_btn_text_update">Update</string> 
@@ -180,9 +180,9 @@
     
     <!-- Credit Activity -->
     <string name="act_credit_recom">좋은 건 나눠야죠!</string>
-    <string name="act_credit_line1">친구가 내 추천코드를 넣고 회원가입을 하면</string>
-    <string name="act_credit_line2">친구는 5,000원을 선물받고!</string>
-    <string name="act_credit_line3">친구가 첫 결제를 하면 나도 5,000원 받고!</string>
+    <string name="act_credit_line1">When your friends use \nyour recommand code to sign up</string>
+    <string name="act_credit_line2">they reward 5000 won!</string>
+    <string name="act_credit_line3">You also rewards 5000 won \nwhen they first pay for dailyHOTEL!</string>
     <string name="act_credit_btn_login">Login existing members</string>
     <string name="act_credit_sign_up">Sign up and Invite friends</string>
     <string name="act_credit_view_credit">Credit</string>
@@ -190,7 +190,7 @@
     <string name="act_credit_history">Show credit history</string>
     <string name="act_credit_recom_code">Recommand Code</string>
     <string name="act_credit_my_recom_code">My Recommand Code</string>
-    <string name="act_credit_line4">친구가 회원가입 할 때 내 추천코드를 넣으면\n친구는 5,000원 선물받고!\n친구가 처음 결제하면 나도 5,000원 선물받고!</string>
+    <string name="act_credit_line4">When your friends use your recommand code \nto sign up\nthey reward 5000 won!\nYou also rewards 5000 won \nwhen they first pay for dailyHOTEL!</string>
     <string name="act_credit_kakao">Invite Kakao Talk friends</string>
     
     <!-- Credit List Activity -->
@@ -198,7 +198,7 @@
     
     <!-- Booking List Fragment -->
     <string name="frag_booking_no_hotels">There are no reserved hotels!</string>
-    <string name="frag_booking_line">오늘은 멋진 호텔에서\n하루를 보내는게 어때요?</string>
+    <string name="frag_booking_line">How about spending a day\n at a nice hotel?</string> 
     <string name="frag_booking_btn_login">Login existing members</string>
     
     <!-- Profile Activity -->
@@ -229,6 +229,22 @@
 	<string name="act_toast_payment_account_time_error">입금대기 시간이 초과되었습니다\n다시 시도해주세요</string>
 	<string name="act_toast_payment_account_duplicate">이미 입금대기 중인 호텔입니다</string>
 	<string name="act_toast_payment_account_timeover">결제 대기시간이 초과되었습니다\n다시 시도해주세요</string>
+	<string name="act_booking_chkin_info">Check-in Info</string>
+	<string name="act_booking_chkin">Check-in</string>
+	<string name="act_booking_chkout">Check-out</string>
+	<string name="act_booking_reserver_info">Reserver Info</string>
+	<string name="act_booking_reserver">Reserver</string>
+	<string name="act_booking_mobile">Mobile</string>
+	<string name="act_booking_email">Email</string>
+	<string name="act_booking_payment">Payment</string>
+	<string name="act_booking_credit_use">Using Credit</string>
+	<string name="act_booking_price">Price</string>
+	<string name="act_booking_credit_discount">Discount by using credit</string>
+	<string name="act_booking_price_real">Payment Price(VAT included)</string>
+	<string name="act_booking_pay_card">By Card</string>
+	<string name="act_booking_pay_mobile">By Phone</string>
+	<string name="act_booking_pay_account">By Accounts</string>
+	<string name="act_booking_btn_pay">Go to Payment</string>
 	
 	<!-- Payment Activity -->
 	<string name="act_payment_isp_error">ISP Payment Error</string>
@@ -236,4 +252,54 @@
 	<string name="act_payment_isp_other_error">ISP Payment Other Error</string>
 	<string name="act_payment_user_cancel">User Cancel</string>
 	<string name="act_payment_chk_contain">Cancel</string>
+	
+	<!-- Signup Activity -->
+	<string name="act_signup_phone">[essential] Mobile Number (except \'-\')</string>
+	<string name="act_signup_email">[essential] Email</string>
+	<string name="act_signup_name">[essential] Name (using when checkin)</string>
+	<string name="act_signup_pwd">[essential] Pwd (4 characters or more)</string>
+	<string name="act_signup_code">[optional] Recommand Code</string>
+	<string name="act_signup_btn_signup">Agreement and Sign up</string>
+	<string name="act_signup_terms">Terms of use</string>
+	<string name="act_signup_privacy">Privacy Policy</string>
+	
+	<!-- BookingTabBooking Fragment -->
+	<string name="frag_booking_tab_title">Reservation</string>
+	<string name="frag_booking_tab_year">/ </string>
+	<string name="frag_booking_tab_month">/ </string>
+	<string name="frag_booking_tab_day"> </string>
+	<string name="frag_booking_tab_hour">:00</string>
+	<string name="frag_booking_tab_hotel_info">Hotel Information</string>
+	<string name="frag_booking_tab_location">Location</string>
+	<string name="frag_booking_tab_bed_type">Bed Type</string>
+	<string name="frag_booking_tab_chkin_info">Check in Information</string>
+	<string name="frag_booking_tab_chkin">Check in</string>
+	<string name="frag_booking_tab_chkout">Check out</string>
+	<string name="frag_booking_tab_name">Name</string>
+	<string name="frag_booking_tab_mobile">Mobile</string>
+	<string name="frag_hotel_tab_add">Address</string>
+	<string name="frag_hotel_tab_bed_type">Bed Type</string>
+	<string name="frag_hotel_tab_price">Price\n(Tax&amp;Service charge included)</string>
+	
+	<!-- RatingHotel Fragment -->
+	<string name="frag_rating_hotel_title">호텔 만족도 조사</string>
+	<string name="frag_rating_hotel_text1">지난 번 이용하신</string>
+	<string name="frag_rating_hotel_text2">은 어떠셨나요?</string>
+	<string name="frag_rating_hotel_recomm">만족함</string>
+	<string name="frag_rating_hotel_cancel">만족안함</string>
+	
+	<!-- TabInfo/TabMap Fragment -->
+	<string name="frag_tab_info_title">Info</string>
+	<string name="frag_tab_map_title">Map</string>
+	
+	<!-- KaKaoLinkManager -->
+	<string name="kakao_btn_move">Move to application</string>
+	
+	<!-- Base Activity -->
+	<string name="act_base_network_connect">인터넷 연결 상태가 불안정합니다.\n인터넷 연결을 확인하신 뒤 다시 시도해주세요.</string>
+	
+	<string name="kakao_app_key">ddcea004a79ab5500a3443d589279be7</string>
+    <string name="kakao_scheme">kakaoddcea004a79ab5500a3443d589279be7</string>
+    <string name="kakaolink_host">kakaolink</string>
+
 </resources>

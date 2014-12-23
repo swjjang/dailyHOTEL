@@ -153,7 +153,8 @@ DailyHotelStringResponseListener {
 
 	@Override
 	protected void loadFragments() {
-		mFragments.add(HotelTabBookingFragment.newInstance(hotelDetail));
+		String title = getString(R.string.frag_booking_tab_title);
+		mFragments.add(HotelTabBookingFragment.newInstance(hotelDetail, title));
 		super.loadFragments();
 
 	}

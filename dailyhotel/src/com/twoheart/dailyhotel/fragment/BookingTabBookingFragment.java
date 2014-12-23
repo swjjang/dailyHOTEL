@@ -41,8 +41,9 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 	
 	private Booking mBooking;
 	private HotelDetail mHotelDetail;
+	private static String[] mStrings;
 
-	public static BookingTabBookingFragment newInstance(HotelDetail hotelDetail, Booking booking) {
+	public static BookingTabBookingFragment newInstance(HotelDetail hotelDetail, Booking booking, String[] strings) {
 		BookingTabBookingFragment newFragment = new BookingTabBookingFragment();
 		
 		Bundle arguments = new Bundle();
@@ -50,7 +51,9 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 		arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_BOOKING, booking);
 		
 		newFragment.setArguments(arguments);
-		newFragment.setTitle("예약");
+		newFragment.setTitle(strings[0]);
+		
+		mStrings = strings;
 		
 		return newFragment;
 		
@@ -151,10 +154,10 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 				android.util.Log.e("chkin",checkin);
 				android.util.Log.e("chkout",checkout);
 				
-				tvCheckIn.setText("20" + in[0] + "년 " + in[1] + "월 " + in[2] + "일 " + in[3] + "시");
+				tvCheckIn.setText("20" + in[0] + mStrings[1] + in[1] + mStrings[2] + in[2] + mStrings[3] + in[3] + mStrings[4]);
 				
 				String out[] = checkout.split("-");
-				tvCheckOut.setText("20" + out[0] + "년 " + out[1] + "월 "+ out[2] + "일 " + out[3] + "시");
+				tvCheckOut.setText("20" + out[0] + mStrings[1] + out[1] + mStrings[2] + out[2] + mStrings[3] + out[3] + mStrings[4]);
 				
 				unLockUI();
 
