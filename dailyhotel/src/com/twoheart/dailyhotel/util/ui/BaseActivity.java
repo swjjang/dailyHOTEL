@@ -265,7 +265,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	 */
 	public void onError() {
 		// 잘못된 멘트, 모든 에러가 이쪽으로 빠지게됨. 변경 필요.
-		showToast("인터넷 연결 상태가 불안정합니다.\n인터넷 연결을 확인하신 뒤 다시 시도해주세요.", Toast.LENGTH_LONG, false);
+		showToast(getString(R.string.act_base_network_connect), Toast.LENGTH_LONG, false);
 	}
 
 	/**

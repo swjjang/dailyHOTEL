@@ -1,6 +1,8 @@
 package com.twoheart.dailyhotel;
 
+
 import android.app.Activity;
+
 import android.app.KeyguardManager;
 import android.app.KeyguardManager.KeyguardLock;
 import android.app.Notification;

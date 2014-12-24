@@ -36,7 +36,7 @@
         android:gravity="center_vertical|center"
         android:textSize="20dp"
         android:textColor="@color/textView_textColor_main"
-        android:text="네트워크 연결이 끊어졌습니다"/>
+        android:text="@string/frag_error_network_unavail"/>
     
     
     <LinearLayout 
@@ -52,7 +52,7 @@
         android:layout_width="match_parent"
         android:layout_margin="10dp"
         android:background="@drawable/shape_button_common_background"
-        android:text="연결 재시도"
+        android:text="@string/frag_error_btn"
         android:textColor="@android:color/white"/>
 
 </LinearLayout>

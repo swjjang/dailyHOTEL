@@ -129,7 +129,7 @@ public class SettingFragment extends BaseFragment implements Constants,
 			intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.mail_text_desc));
 			startActivity(Intent.createChooser(intent, getString(R.string.mail_text_dialog_title)));
 		} else if (v.getId() == llLogin.getId()) {
-			if (tvLogin.getText().equals("프로필")) { // 로그인 되어 있는 상태
+			if (tvLogin.getText().equals(getString(R.string.frag_profile))) { // 로그인 되어 있는 상태
 				Intent i = new Intent(mHostActivity, ProfileActivity.class);
 				startActivity(i);
 				mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
@@ -167,10 +167,10 @@ public class SettingFragment extends BaseFragment implements Constants,
 		tvEmail.setText(email);
 		
 		if (login) {
-			tvLogin.setText("프로필");
+			tvLogin.setText(getString(R.string.frag_profile));
 			tvEmail.setVisibility(View.VISIBLE);
 		} else {
-			tvLogin.setText("로그인");
+			tvLogin.setText(getString(R.string.frag_login));
 			tvEmail.setVisibility(View.GONE);
 		}
 		

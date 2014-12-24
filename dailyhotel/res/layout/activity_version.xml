@@ -32,7 +32,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="현재 버전: "
+                    android:text="@string/act_current_version"
                     android:textColor="@color/textView_textColor_sub"
                     android:textSize="16.5dp" />
 
@@ -55,7 +55,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="최신 버전: "
+                    android:text="@string/act_new_version"
                     android:textColor="@color/textView_textColor_main"
                     android:textSize="16.5dp" />
 
@@ -78,7 +78,7 @@
         android:layout_margin="20dp"
         android:background="@drawable/shape_button_common_background"
         android:gravity="center"
-        android:text="최신 버전 업데이트 하기"
+        android:text="@string/act_btn_update"
         android:textColor="@android:color/white" />
 
 </RelativeLayout>

@@ -175,7 +175,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				.replaceAll(",", ""));
 
 		DecimalFormat comma = new DecimalFormat("###,##0");
-		tvOriginalPriceValue.setText(comma.format(originalPrice)+"원");
+		tvOriginalPriceValue.setText(comma.format(originalPrice)+getString(R.string.currency));
 
 		if (applyCredit) {
 			int payPrice = originalPrice - credit;
@@ -184,16 +184,16 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 			mPay.setOriginalPrice(originalPrice);
 			
 			if (credit >= originalPrice) credit = originalPrice;
-			tvCreditValue.setText("-"+comma.format(credit)+"원");
+			tvCreditValue.setText("-"+comma.format(credit)+getString(R.string.currency));
 
 		}
 		else {
-			tvCreditValue.setText("0원");
+			tvCreditValue.setText("0"+getString(R.string.currency));
 			mPay.setPayPrice(originalPrice);
 //			mPay.setOriginalPrice(originalPrice);
 		}
 
-		tvPrice.setText(comma.format(mPay.getPayPrice())+"원");
+		tvPrice.setText(comma.format(mPay.getPayPrice())+getString(R.string.currency));
 
 	}
 
@@ -414,9 +414,9 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		if (requestCode == CODE_REQUEST_ACTIVITY_PAYMENT) {
 			Log.d(TAG, Integer.toString(resultCode));
 
-			String title = "결제알림";
+			String title = getString(R.string.dialog_title_payment);
 			String msg = "";
-			String posTitle = "확인";
+			String posTitle = getString(R.string.dialog_btn_text_confirm);
 			android.content.DialogInterface.OnClickListener posListener = null;
 
 			switch (resultCode) {
@@ -453,28 +453,28 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 					}
 				};
 
-				msg = "결제가 정상적으로 이루어졌습니다";
+				msg = getString(R.string.act_toast_payment_success);
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_SOLD_OUT:
-				msg = "모든 객실이 판매되었습니다.\n다음에 이용해주세요.";
+				msg = getString(R.string.act_toast_payment_soldout);
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_NOT_AVAILABLE:
-				msg = "다른 손님이 예약 중입니다.\n잠시 후 이용해주세요.";
+				msg = getString(R.string.act_toast_payment_not_available);
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR:
-				msg = "네트워크 오류가 발생했습니다.\n네트워크 연결을 확인해주세요.";
+				msg = getString(R.string.act_toast_payment_network_error);
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION:
 				VolleyHttpClient.createCookie();	// 쿠키를 다시 생성 시도
 				return;
 			case CODE_RESULT_ACTIVITY_PAYMENT_INVALID_DATE:
-				msg = "판매가 마감되었습니다.";
+				msg = getString(R.string.act_toast_payment_invalid_date);
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_FAIL:
-				msg = "알 수 없는 오류가 발생했습니다.\n문의해주시기 바랍니다.";
+				msg = getString(R.string.act_toast_payment_fail);
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_CANCELED:
-				msg = "결제가 취소되었습니다.";
+				msg = getString(R.string.act_toast_payment_canceled);
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY:
 				/**
@@ -491,13 +491,13 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				finish();
 				return;
 			case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_TIME_ERROR:
-				msg = "입금대기 시간이 초과되었습니다\n다시 시도해주세요.";
+				msg = getString(R.string.act_toast_payment_account_time_error);
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_DUPLICATE:
-				msg = "이미 입금대기 중인 호텔입니다.";
+				msg = getString(R.string.act_toast_payment_account_duplicate);
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER:
-				msg = "결제 대기시간이 초과되었습니다.\n다시 시도해주세요.";
+				msg = getString(R.string.act_toast_payment_account_timeover);
 				break;
 			default:
 				return;
@@ -700,7 +700,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 						}
 					};
 
-					SimpleAlertDialog.build(this, "알림", getString(R.string.dialog_msg_sales_closed), "확인", posListener).show();
+					SimpleAlertDialog.build(this, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_sales_closed), getString(R.string.dialog_btn_text_confirm), posListener).show();
 
 				}
 
@@ -745,8 +745,8 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 						.getDiscount().replaceAll(",", ""));
 				DecimalFormat comma = new DecimalFormat("###,##0");
 				
-				tvOriginalPriceValue.setText(comma.format(originalPrice)+"원");
-				tvPrice.setText(comma.format(originalPrice)+"원");
+				tvOriginalPriceValue.setText(comma.format(originalPrice)+getString(R.string.currency));
+				tvPrice.setText(comma.format(originalPrice)+getString(R.string.currency));
 				mPay.setPayPrice(originalPrice);
 				
 				swCredit.setChecked(false);

@@ -133,21 +133,21 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 
 	private void setNotify(boolean enable) {
 		if (enable) {
-			btnNotify.setText("알람 끄기");
+			btnNotify.setText(getString(R.string.frag_wait_timer_off));
 
 			if (enable != isEnabledNotify) {
 				alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + remainingTime, pender);
 				
-				showToast("알람이 설정되었습니다", Toast.LENGTH_SHORT, true);
+				showToast(getString(R.string.frag_wait_timer_set), Toast.LENGTH_SHORT, true);
 			}
 
 		} else {
-			btnNotify.setText("알람 켜기");
+			btnNotify.setText(getString(R.string.frag_wait_timer_on));
 
 			if (enable != isEnabledNotify) {
 				alarmManager.cancel(pender);
 				
-				showToast("알람이 취소되었습니다", Toast.LENGTH_SHORT, true);
+				showToast(getString(R.string.frag_wait_timer_cancel), Toast.LENGTH_SHORT, true);
 			}
 
 		}

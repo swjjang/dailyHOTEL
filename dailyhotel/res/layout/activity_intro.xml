@@ -28,7 +28,7 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="14dp"
-            android:text="건너뛰기"
+            android:text="@string/guide_btn_skip"
             android:textColor="@android:color/black"
             android:textSize="18dp" />
 
@@ -58,7 +58,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
-                android:text="시작"
+                android:text="@string/guide_btn_start"
                 android:textColor="@android:color/black"
                 android:textSize="18dp" />
 

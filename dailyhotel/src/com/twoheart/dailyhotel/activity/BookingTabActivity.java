@@ -62,7 +62,9 @@ public class BookingTabActivity extends TabActivity implements DailyHotelJsonRes
 
 	@Override
 	protected void loadFragments() {
-		mFragments.add(BookingTabBookingFragment.newInstance(hotelDetail, booking));
+		String[] strings = {getString(R.string.drawer_menu_pin_title_resrvation), getString(R.string.frag_booking_tab_year), 
+				getString(R.string.frag_booking_tab_month), getString(R.string.frag_booking_tab_day), getString(R.string.frag_booking_tab_hour)};
+		mFragments.add(BookingTabBookingFragment.newInstance(hotelDetail, booking, strings));
 		super.loadFragments();
 	}
 	

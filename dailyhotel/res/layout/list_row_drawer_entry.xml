@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="2dp"
         android:gravity="left|center_vertical"
-        android:text="오늘의 호텔"
+        android:text="@string/actionbar_title_hotel_list_frag"
         android:textColor="@drawable/selector_color_drawermenu"
         android:textSize="19.5dp" />
 

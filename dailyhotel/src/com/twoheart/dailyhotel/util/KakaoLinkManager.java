@@ -7,6 +7,7 @@ import com.kakao.KakaoParameterException;
 import com.kakao.KakaoTalkLinkMessageBuilder;
 import com.kakao.internal.Action;
 import com.kakao.internal.AppActionInfo;
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.HotelDetail;
 
 import android.content.Context;
@@ -35,7 +36,7 @@ public class KakaoLinkManager implements Constants{
 	public void sendInviteMsgKakaoLink(String text) {
 		try {
 			kkMsgBuilder.addText(text);
-			kkMsgBuilder.addAppButton("æ€¿∏∑Œ ¿Ãµø");
+			kkMsgBuilder.addAppButton(mContext.getString(R.string.kakao_btn_move));
 			kkLink.sendMessage(kkMsgBuilder.build(), mContext);
 			android.util.Log.e(TAG +" / " + "sendInviteMsgKakaoLink", "text = " + text);
 		} catch (KakaoParameterException e) {
@@ -53,7 +54,7 @@ public class KakaoLinkManager implements Constants{
 			String schemeParams = "hotelIdx="+hotel.getHotel().getIdx()+"&region="+region;
 			android.util.Log.e("sche",schemeParams);
 			
-			kkMsgBuilder.addAppButton("æ€¿∏∑Œ ¿Ãµø",
+			kkMsgBuilder.addAppButton(mContext.getString(R.string.kakao_btn_move),
 					new AppActionBuilder()
 						.addActionInfo(AppActionInfoBuilder
 								.createAndroidActionInfoBuilder()

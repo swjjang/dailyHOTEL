@@ -359,7 +359,7 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 					// 실패 msg 출력
 					else if (obj.length() > 1) {
 						msg = obj.getString("msg");
-						SimpleAlertDialog.build(this, msg, "확인", null).show();
+						SimpleAlertDialog.build(this, msg, getString(R.string.dialog_btn_text_confirm), null).show();
 					}
 
 				}

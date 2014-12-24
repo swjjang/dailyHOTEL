@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.activity;
 
 import android.graphics.Color;
+
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Window;
