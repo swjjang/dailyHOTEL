@@ -14,7 +14,7 @@
         android:layout_marginTop="10dp"
         android:background="@drawable/edit_text_holo_light"
         android:ems="10"
-        android:hint="이메일"
+        android:hint="@string/act_forgot_pwd_email"
         android:imeActionId="@+id/btn_forgot_pwd"
         android:maxLength="50"
         android:paddingLeft="10dp"
@@ -31,7 +31,7 @@
         android:paddingLeft="10dp"
         android:textColor="@color/textView_textColor_sub"
         android:textSize="13.5dp"
-        android:text="가입한 이메일 주소로 비밀번호 변경 메일이 발송됩니다"/>
+        android:text="@string/act_forgot_pwd_text"/>
     
     <Button 
         android:id="@+id/btn_forgot_pwd"
@@ -42,6 +42,6 @@
         android:background="@drawable/shape_button_common_background"
         android:textSize="19dp"
         android:textColor="@android:color/white"
-        android:text="비밀번호 찾기"/>
+        android:text="@string/act_forgot_pwd_forgot"/>
 
 </LinearLayout>

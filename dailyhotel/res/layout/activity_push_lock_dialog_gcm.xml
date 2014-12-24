@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/logo"
                 android:layout_toRightOf="@+id/logo"
-                android:text="데일리호텔"
+                android:text="@string/app_name"
                 android:textColor="@color/dh_theme_color"
                 android:textSize="13.5dp" />
         </RelativeLayout>
@@ -88,7 +88,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/selector_background_btn_rating_hotel"
                     android:gravity="center"
-                    android:text="보기"
+                    android:text="@string/dialog_btn_text_see"
                     android:textColor="@drawable/selector_textcolor_btn_rating_hotel"
                     android:textSize="17dp" />
 
@@ -99,7 +99,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/selector_background_btn_rating_hotel"
                     android:gravity="center"
-                    android:text="닫기"
+                    android:text="@string/dialog_btn_text_close"
                     android:textColor="@drawable/selector_textcolor_btn_rating_hotel"
                     android:textSize="17dp" />
             </LinearLayout>

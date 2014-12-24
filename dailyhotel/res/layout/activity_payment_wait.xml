@@ -41,7 +41,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:text="결제 정보 (가상계좌)"
+                    android:text="@string/act_wait_payment_payinfo"
                     android:textColor="@color/textView_textColor_section"
                     android:textSize="15dp" />
             </LinearLayout>
@@ -71,7 +71,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:singleLine="true"
-                            android:text="계좌번호"
+                            android:text="@string/act_wait_payment_accounts_no"
                             android:textColor="@color/textView_textColor_section"
                             android:textSize="15dp" />
                     </LinearLayout>
@@ -107,7 +107,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:singleLine="true"
-                            android:text="입금주명"
+                            android:text="@string/act_wait_payment_name"
                             android:textColor="@color/textView_textColor_section"
                             android:textSize="15dp" />
                     </LinearLayout>
@@ -143,7 +143,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:singleLine="true"
-                            android:text="금액"
+                            android:text="@string/act_wait_payment_price"
                             android:textColor="@color/textView_textColor_section"
                             android:textSize="15dp" />
                     </LinearLayout>
@@ -179,7 +179,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:singleLine="true"
-                            android:text="입금기한"
+                            android:text="@string/act_wait_payment_limit"
                             android:textColor="@color/textView_textColor_section"
                             android:textSize="15dp" />
                     </LinearLayout>
@@ -219,7 +219,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:text="확인사항"
+                    android:text="@string/act_wait_payment_confirm"
                     android:textColor="@color/textView_textColor_section"
                     android:textSize="15dp" />
             </LinearLayout>
@@ -232,7 +232,7 @@
                 android:padding="10dp"
                 android:lineSpacingExtra="2dp"
                 android:textSize="15dp" 
-                android:text="입금 순서대로 예약이 확정되며,\n객실 예약이 조기에 마감될 수 있습니다.\n마감시 입금하신 계좌로 전액 환불됩니다." />
+                android:text="@string/txt_payment_wait_confirm" />
         </LinearLayout>
 
         <LinearLayout
@@ -253,7 +253,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:text="입금이 완료되면"
+                    android:text="@string/act_wait_payment_msg1"
                     android:textColor="@color/textView_textColor_section"
                     android:textSize="15dp" />
             </LinearLayout>
@@ -264,7 +264,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:padding="10dp"
-                android:text="10분이내에 예약완료 문자가 도착합니다."
+                android:text="@string/act_wait_payment_msg2"
                 android:textSize="15dp" />
         </LinearLayout>
     </LinearLayout>

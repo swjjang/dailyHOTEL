@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/logo"
                 android:layout_toRightOf="@+id/logo"
-                android:text="이벤트 안내"
+                android:text="@string/frag_popup_event_title"
                 android:textColor="@color/dh_theme_color"
                 android:textSize="13.5dp" />
         </RelativeLayout>
