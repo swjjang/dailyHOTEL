@@ -30,7 +30,7 @@
     <string name="guide_desc_1">Book today\'s hotel more conveniently and inexpensive than advance booking.</string> 
     <string name="guide_desc_2">We are presenting only the most attractive hotels, based on the discount rate and customer satisfaction.</string>
     <string name="guide_desc_3">Check in and make reservations only in 30 seconds until 9 a.m. and 2 a.m.</string> 
-    <string name="guide_desc_4">오늘 남은 객실만을 판매하기에\n가장 저렴할 수 밖에 없습니다.\n\n then how about checking today\'s hotels?</string> 
+    <string name="guide_desc_4">It should be the best price \nbecause it is the last-minute.\n\n then how about checking today\'s hotels?</string> 
     <string name="guide_btn_skip">Skip</string>
     <string name="guide_btn_start">Start</string>
     
@@ -52,7 +52,7 @@
     <string name="actionbar_title_profile_activity">Profile</string> 
     <string name="actionbar_title_signup_activity">Sign up</string>
     <string name="actionbar_title_term_activity">Terms of use</string> 
-    <string name="actionbar_title_version_activity">Version Information</string> 
+    <string name="actionbar_title_version_activity">Version Info</string> 
     <string name="actionbar_title_zoom_map_activity">Enlarged Map</string>
     <string name="actionbar_title_payment_wait_activity">Waiting Deposit</string> 
 
@@ -97,12 +97,12 @@
     <string name="dialog_msg_sales_closed">From 9am, Today\'s hotel is released.</string> 
     <string name="dialog_msg_payment_confirm">It is &lt;b&gt;impossible to cancel or change&lt;/b&gt; &lt;br/&gt;after paying as a result of booking on that day. &lt;br/&gt;&lt;br/&gt;In the case of &lt;br/&gt;\'During check-in arrangements\', &lt;br/&gt;&lt;b&gt;bed type are not guaranteed &lt;/b&gt;&lt;br/&gt;and you will be assigned to the room that can accommodate 2 people.&lt;br/&gt;&lt;br/&gt; If you agree with the above information, &lt;br/&gt;please progress payment by pressing the below button.</string>
     <string name="dialog_msg_payment_confirm_hp">It is &lt;b&gt;impossible to cancel or change&lt;/b&gt; &lt;br/&gt;after paying as a result of booking on that day. &lt;br/&gt;&lt;br/&gt;In the case of &lt;br/&gt;\'During check-in arrangements\', &lt;br/&gt;&lt;b&gt;bed type are not guaranteed &lt;/b&gt;&lt;br/&gt;and you will be assigned to the room that can accommodate 2 people.&lt;br/&gt;&lt;br/&gt;Mobile payment is a monthly limit of 300000 won.&lt;br/&gt;&lt;br/&gt; If you agree with the above information, &lt;br/&gt;please progress payment by pressing the below button.</string>
-    <string name="dialog_btn_payment_confirm">Agreement and progress payment</string> 
+    <string name="dialog_btn_payment_confirm">Agreement and &lt;br/&gt;progress payment</string> 
     <string name="dialog_title_payment_confirm">Confirmation Items</string>
     <string name="dialog_btn_payment_no_reserve">&lt;br/&gt;&lt;br/&gt;For event hotel,&lt;br/&gt;You can\'t use credit.&lt;br/&gt;&lt;br/&gt;</string>  
     <string name="dialog_btn_text_update">Update</string> 
     <string name="dialog_btn_text_complete">Complete</string> 
-    <string name="dialog_btn_text_confirm">Confirmation</string> 
+    <string name="dialog_btn_text_confirm">OK</string> 
     <string name="dialog_btn_text_cancel">Cancel</string> 
     <string name="dialog_btn_text_retry">Retry</string> 
     <string name="dialog_btn_text_setting">Settings</string> 
@@ -134,8 +134,8 @@
     <string name="prefix_expire_time">Expire time</string> 
 
     <!-- KaKaoLink Message -->
-    <string name="kakaolink_msg_prefix">좋은 어플 추천해 드려요~\n오늘 남은 객실만 최대 70% 할인하는 데일리호텔이에요.추천인코드 : </string>
-    <string name="kakaolink_msg_suffix">을 입력하면 5,000원 바로 할인!</string>
+    <string name="kakaolink_msg_prefix">Hot app here!\n dailyHOTEL, 70% discount hotel booking service. recommand code : </string>
+    <string name="kakaolink_msg_suffix">Get 5000 won with code!</string>
 
     <!-- Alarm Message -->
     <string name="alarm_title">dailyHOTEL</string>
@@ -143,7 +143,7 @@
     <string name="alarm_ticker">Today\'s hotel has arrived!</string> 
     <string name="alarm_btn_see">See</string>
     <string name="alarm_btn_close">Close</string>
-    <string name="txt_payment_wait_confirm">입금 순서대로 예약이 확정되며,\\n객실 예약이 조기에 마감될 수 있습니다.\\n마감시 입금하신 계좌로 전액 환불됩니다.</string>
+    <string name="txt_payment_wait_confirm">Booking completes in order.\\nIf you fail to book rooms, you will get refund all.</string>
     <string name="txt_payment_wait_when_complete">Reservation completion message would arrive within 10 minutes.</string> 
     <string name="toast_msg_retry_login">Please log in again.</string> 
     <string name="toast_msg_is_not_available_google_service">Google play service is not available.</string> 
@@ -160,7 +160,7 @@
     <string name="frag_info">Information</string>
     <string name="frag_about">About dailyHOTEL?</string>
     <string name="frag_app">Application</string>
-    <string name="frag_version_info">Version Information</string>
+    <string name="frag_version_info">Version Info</string>
     <string name="frag_account">Accounts</string>
     <string name="frag_profile">Profile</string>
     <string name="frag_login">Login</string>
@@ -183,7 +183,7 @@
     
     <!-- Credit Activity -->
     <string name="act_credit_recom">Good things gotta share!</string>
-    <string name="act_credit_line1">When your friends use \nyour recommand code to sign up</string>
+    <string name="act_credit_line1">When your friends use &lt;br/&gt;your recommand code to sign up</string>
     <string name="act_credit_line2">they reward 5000 won!</string>
     <string name="act_credit_line3">You also rewards 5000 won \nwhen they first pay for dailyHOTEL!</string>
     <string name="act_credit_btn_login">Login existing members</string>
@@ -230,7 +230,7 @@
 	<string name="act_toast_payment_fail">Unknown error has occurred.\nPlease contact to us.</string>
 	<string name="act_toast_payment_canceled">The payment is canceled.</string>
 	<string name="act_toast_payment_account_time_error">The deposit waiting time was exceeded.\nPlease try again.</string>
-	<string name="act_toast_payment_account_duplicate">이미 입금대기 중인 호텔입니다</string>
+	<string name="act_toast_payment_account_duplicate">This hotel already waiting for the deposit.</string>
 	<string name="act_toast_payment_account_timeover">The payment waiting time was exceeded.\nPlease try again.</string>
 	<string name="act_booking_chkin_info">Check-in Info</string>
 	<string name="act_booking_chkin">Check-in</string>
@@ -248,6 +248,7 @@
 	<string name="act_booking_pay_mobile">By Phone</string>
 	<string name="act_booking_pay_account">By Accounts</string>
 	<string name="act_booking_btn_pay">Go to Payment</string>
+	<string name="act_booking_0won">0 won</string>
 	
 	<!-- Payment Activity -->
 	<string name="act_payment_isp_error">ISP Payment Error</string>
@@ -267,7 +268,7 @@
 	<string name="act_signup_privacy">Privacy Policy</string>
 	
 	<!-- BookingTabBooking Fragment -->
-	<string name="frag_booking_tab_title">Reservation</string>
+	<string name="frag_booking_tab_title">Reserve</string>
 	<string name="frag_booking_tab_year">/ </string>
 	<string name="frag_booking_tab_month">/ </string>
 	<string name="frag_booking_tab_day"> </string>
@@ -286,8 +287,8 @@
 	
 	<!-- RatingHotel Fragment -->
 	<string name="frag_rating_hotel_title">Hotel Satisfaction Survey</string>
-	<string name="frag_rating_hotel_text1">지난 번 이용하신</string>
-	<string name="frag_rating_hotel_text2">은 어떠셨나요?</string>
+	<string name="frag_rating_hotel_text1">How was your last </string>
+	<string name="frag_rating_hotel_text2">  hotel?</string>
 	<string name="frag_rating_hotel_recomm">Satisfied</string>
 	<string name="frag_rating_hotel_cancel">Dissatisfied</string>
 	
@@ -307,7 +308,7 @@
     
     <!-- ForgotPwd Activity -->
     <string name="act_forgot_pwd_email">Email</string>
-    <string name="act_forgot_pwd_text">가입한 이메일 주소로 비밀번호 변경 메일이 발송됩니다</string>
+    <string name="act_forgot_pwd_text">E-mailed about password change.</string>
     <string name="act_forgot_pwd_forgot">Found Pwd</string>
     
     <!-- HotelTab Activity -->
@@ -326,14 +327,14 @@
     <!-- Timer Wait Fragment -->
     <string name="frag_wait_timer_title">Join to event</string>
 	<string name="frag_wait_timer_alarm">Turn on alarm</string>
-	<string name="frag_wait_timer_msg">놀라운 가격으로 당신을 찾아갈\n호텔이 기다리고 있어요.</string>
+	<string name="frag_wait_timer_msg">The hotels are waiting for you\n with great deals!</string>
 	
 	<!-- Hotel List Header -->
 	<string name="header_title1">dailyHOTEL </string>
-	<string name="header_title2">Join to event</string>
+	<string name="header_title2">  Join to event</string>
 	
 	<!-- Booking Row List -->
-	<string name="booking_row_ment">체크인시 프론트에 성함을 알려주세요</string>
+	<string name="booking_row_ment">There is a possibility to require your ID at front.</string>
 	
 	<!-- Wait Payment Activity -->
 	<string name="act_wait_payment_payinfo">Payment Info (Virtual Account)</string>

@@ -112,7 +112,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:text="@string/act_booking_chkin_info"
+                    android:text="@string/act_booking_reserver_info"
                     android:textColor="@color/textView_textColor_section"
                     android:textSize="12.5dp" />
             </LinearLayout>
@@ -385,7 +385,7 @@
                             android:layout_height="match_parent"
                             android:layout_weight="0.7"
                             android:gravity="right|center_vertical"
-                            android:text="0원"
+                            android:text="@string/act_booking_0won"
                             android:textColor="@drawable/selector_textview_textcolor"
                             android:textSize="15dp" />
                     </LinearLayout>
@@ -412,7 +412,7 @@
                             android:layout_height="match_parent"
                             android:layout_weight="0.7"
                             android:gravity="right|center_vertical"
-                            android:text="0원"
+                            android:text="@string/act_booking_0won"
                             android:textColor="@drawable/selector_textview_textcolor"
                             android:textSize="15dp" />
                     </LinearLayout>
@@ -442,7 +442,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="right|center_vertical"
-                    android:text="0원"
+                    android:text="@string/act_booking_0won"
                     android:textColor="@drawable/selector_textview_textcolor"
                     android:textSize="15dp" />
             </LinearLayout>
