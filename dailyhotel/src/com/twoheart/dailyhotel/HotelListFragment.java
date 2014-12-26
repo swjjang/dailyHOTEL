@@ -260,8 +260,8 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 		boolean showEventPopUp = ((MainActivity) mHostActivity).sharedPreference.getBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false);
 		
 //		if (showEventPopUp) {
-			Dialog popUpDialog = getEventPopUpDialog();
-			popUpDialog.show();
+//			Dialog popUpDialog = getEventPopUpDialog();
+//			popUpDialog.show();
 //		}
 		
 		return true;

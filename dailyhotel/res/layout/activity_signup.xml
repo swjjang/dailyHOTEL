@@ -15,7 +15,8 @@
         android:singleLine="true"
         android:background="@drawable/edit_text_holo_light"
         android:textColorHint="@color/textView_textColor_disabled"
-        android:hint="@string/act_signup_phone"/>
+        android:hint="@string/act_signup_phone"
+        />
     
     <EditText 
         android:id="@+id/et_signup_email"

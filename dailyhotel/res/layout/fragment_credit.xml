@@ -35,6 +35,16 @@
                 android:text="@string/act_credit_line1"
                 android:textColor="@color/textView_textColor_sub"
                 android:textSize="15dp" />
+            
+            <TextView
+                android:id="@+id/act_credit_line1_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/act_credit_line1_4"
+                android:textColor="@color/textView_textColor_sub"
+                android:textSize="15dp"
+                android:paddingTop="1dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -42,7 +52,8 @@
                 android:gravity="center"
                 android:text="@string/act_credit_line2"
                 android:textColor="@color/textView_textColor_sub"
-                android:textSize="15dp" />
+                android:textSize="15dp"
+                android:paddingTop="1dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -50,7 +61,17 @@
                 android:gravity="center"
                 android:text="@string/act_credit_line3"
                 android:textColor="@color/textView_textColor_sub"
-                android:textSize="15dp" />
+                android:textSize="15dp"
+                android:paddingTop="1dp" />
+            
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/act_credit_line5"
+                android:textColor="@color/textView_textColor_sub"
+                android:textSize="15dp"
+                android:paddingTop="2dp" />
         </LinearLayout>
 
         <LinearLayout

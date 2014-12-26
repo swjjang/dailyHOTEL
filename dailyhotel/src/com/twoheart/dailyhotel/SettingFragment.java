@@ -53,6 +53,7 @@ public class SettingFragment extends BaseFragment implements Constants,
 	private TextView tvNotice, tvHelp, tvMail, tvLogin, tvEmail, tvCall,
 			tvAbout, tvVersion;
 	private LinearLayout llVersion, llLogin;
+	private String profileStr, loginStr;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -99,6 +100,8 @@ public class SettingFragment extends BaseFragment implements Constants,
 	public void onResume() {
 		super.onResume();
 		mHostActivity.setActionBar(R.string.actionbar_title_setting_frag);
+		profileStr = getString(R.string.frag_profile);
+		loginStr = getString(R.string.frag_login);
 		
 		lockUI();
 		mQueue.add(new DailyHotelStringRequest(Method.GET,
@@ -167,10 +170,10 @@ public class SettingFragment extends BaseFragment implements Constants,
 		tvEmail.setText(email);
 		
 		if (login) {
-			tvLogin.setText(getString(R.string.frag_profile));
+			tvLogin.setText(profileStr);
 			tvEmail.setVisibility(View.VISIBLE);
 		} else {
-			tvLogin.setText(getString(R.string.frag_login));
+			tvLogin.setText(loginStr);
 			tvEmail.setVisibility(View.GONE);
 		}
 		

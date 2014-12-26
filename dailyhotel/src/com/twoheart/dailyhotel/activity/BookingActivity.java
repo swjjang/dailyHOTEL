@@ -175,7 +175,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				.replaceAll(",", ""));
 
 		DecimalFormat comma = new DecimalFormat("###,##0");
-		tvOriginalPriceValue.setText(comma.format(originalPrice)+getString(R.string.currency));
+		tvOriginalPriceValue.setText(getString(R.string.currency)+comma.format(originalPrice));
 
 		if (applyCredit) {
 			int payPrice = originalPrice - credit;
@@ -184,16 +184,16 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 			mPay.setOriginalPrice(originalPrice);
 			
 			if (credit >= originalPrice) credit = originalPrice;
-			tvCreditValue.setText("-"+comma.format(credit)+getString(R.string.currency));
+			tvCreditValue.setText("-"+getString(R.string.currency)+comma.format(credit));
 
 		}
 		else {
-			tvCreditValue.setText("0"+getString(R.string.currency));
+			tvCreditValue.setText(getString(R.string.currency)+"0");
 			mPay.setPayPrice(originalPrice);
 //			mPay.setOriginalPrice(originalPrice);
 		}
 
-		tvPrice.setText(comma.format(mPay.getPayPrice())+getString(R.string.currency));
+		tvPrice.setText(getString(R.string.currency)+comma.format(mPay.getPayPrice()));
 
 	}
 
@@ -643,10 +643,12 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				mPay.setCheckOut(checkout);
 
 				String in[] = checkin.split("-");
-				tvCheckIn.setText("20" + in[0] + "년 " + in[1] + "월 " + in[2] + "일 " + in[3] + "시");
+				tvCheckIn.setText("20" + in[0] + getString(R.string.frag_booking_tab_year) + in[1] + getString(R.string.frag_booking_tab_month)
+						+ in[2] + getString(R.string.frag_booking_tab_day) + " " + in[3] + getString(R.string.frag_booking_tab_hour));
 
 				String out[] = checkout.split("-");
-				tvCheckOut.setText("20" + out[0] + "년 " + out[1] + "월 " + out[2] + "일 " + out[3] + "시");
+				tvCheckOut.setText("20" + out[0] + getString(R.string.frag_booking_tab_year) + out[1] + getString(R.string.frag_booking_tab_month) 
+						+ out[2] + getString(R.string.frag_booking_tab_day) + " "+ out[3] + getString(R.string.frag_booking_tab_hour));
 
 				unLockUI();
 			} catch (Exception e) {
@@ -745,8 +747,8 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 						.getDiscount().replaceAll(",", ""));
 				DecimalFormat comma = new DecimalFormat("###,##0");
 				
-				tvOriginalPriceValue.setText(comma.format(originalPrice)+getString(R.string.currency));
-				tvPrice.setText(comma.format(originalPrice)+getString(R.string.currency));
+				tvOriginalPriceValue.setText(getString(R.string.currency)+comma.format(originalPrice));
+				tvPrice.setText(getString(R.string.currency)+comma.format(originalPrice));
 				mPay.setPayPrice(originalPrice);
 				
 				swCredit.setChecked(false);

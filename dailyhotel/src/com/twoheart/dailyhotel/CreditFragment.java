@@ -29,6 +29,9 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.AbsoluteSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -97,6 +100,13 @@ public class CreditFragment extends BaseFragment implements Constants,
 		btnSignup.setOnClickListener(this);
 		btnInvite.setOnClickListener(this);
 		tvCredit.setOnClickListener(this);
+		
+		//영어버전에서만 텍스트 사이의 패딩 값을 주기위해 새로운 텍스트뷰를 보여줌
+		TextView line1_4 = (TextView) view.findViewById(R.id.act_credit_line1_4);
+		String locale = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_LOCALE, null);
+		if (locale.equals("English")) {
+			line1_4.setVisibility(View.VISIBLE);
+		} else line1_4.setVisibility(View.GONE);
 		
 		tvCredit.setPaintFlags(tvCredit.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG); // underlining
 		

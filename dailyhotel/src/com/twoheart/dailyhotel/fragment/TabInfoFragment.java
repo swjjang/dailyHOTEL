@@ -5,6 +5,9 @@ import java.util.List;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.AbsoluteSizeSpan;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -84,7 +87,15 @@ public class TabInfoFragment extends BaseFragment {
 				.findViewById(R.id.tv_hotel_tab_info_subject);
 
 		tvInfoNumber.setText(Integer.toString(infoViewCount++));
-		tv_subject.setText(subject);
+		
+		String locale = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_LOCALE, null);
+		if (locale.equals("English")) {
+			if (subject.equals("데일리의 추천 이유")) tv_subject.setText("daily's Recommend Reason");
+			else if (subject.equals("호텔 정보") || subject.equals("호텔정보")) tv_subject.setText("Hotel Info");
+			else if (subject.equals("교통정보") || subject.equals("교통 정보")) tv_subject.setText("Traffic Info");
+			else if (subject.equals("확인사항")) tv_subject.setText("Confirmation Items");
+		} else tv_subject.setText(subject);
+		
 		tv_subject.setTypeface(DailyHotel.getBoldTypeface());
 
 		LinearLayout content_view = (LinearLayout) layout_view
@@ -103,7 +114,7 @@ public class TabInfoFragment extends BaseFragment {
 
 			// layout_view.addView(rowLayout);
 		}
-
+		
 		// content_view.addView(content_listview);
 		// layout_view.addView(content_view);
 		layout.addView(layout_view);

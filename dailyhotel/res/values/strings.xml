@@ -141,8 +141,8 @@
     <string name="alarm_title">dailyHOTEL</string>
     <string name="alarm_msg">오늘의 호텔이 도착했습니다.\n지금 데일리호텔에서 확인하세요!</string>
     <string name="alarm_ticker">오늘의 호텔이 도착했습니다!</string>
-    <string name="alarm_btn_see">See</string>
-    <string name="alarm_btn_close">Close</string>
+    <string name="alarm_btn_see">보기</string>
+    <string name="alarm_btn_close">닫기</string>
     <string name="txt_payment_wait_confirm">입금 순서대로 예약이 확정되며,\\n객실 예약이 조기에 마감될 수 있습니다.\\n마감시 입금하신 계좌로 전액 환불됩니다.</string>
     <string name="txt_payment_wait_when_complete">10분이내에 예약완료 문자가 도착합니다.</string>
     <string name="toast_msg_retry_login">다시 로그인해주세요</string>
@@ -163,6 +163,7 @@
     <string name="frag_version_info">버전정보</string>
     <string name="frag_account">계정</string>
     <string name="frag_profile">프로필</string>
+    <string name="frag_login">로그인</string>
     
     <!-- Version Activity -->
     <string name="act_current_version">현재 버전: </string>
@@ -185,6 +186,8 @@
     <string name="act_credit_line1">친구가 내 추천코드를 넣고 회원가입을 하면</string>
     <string name="act_credit_line2">친구는 5,000원을 선물받고!</string>
     <string name="act_credit_line3">친구가 첫 결제를 하면 나도 5,000원 받고!</string>
+    <string name="act_credit_line1_4"></string>
+    <string name="act_credit_line5"></string>
     <string name="act_credit_btn_login">기존 회원 로그인</string>
     <string name="act_credit_sign_up">회원 가입하고 친구 초대하기</string>
     <string name="act_credit_view_credit">적립금</string>
@@ -343,4 +346,13 @@
 	<string name="act_wait_payment_confirm">확인사항</string>
 	<string name="act_wait_payment_msg1">입금이 완료되면</string>
 	<string name="act_wait_payment_msg2">10분이내에 예약완료 문자가 도착합니다.</string>
+	
+	<!-- Facebook -->
+	<string name="com_facebook_dialogloginactivity_ok_button">확인</string>
+	<string name="com_facebook_loginview_log_in_button">페이스북으로 로그인</string>
+	<string name="com_facebook_loginview_log_out_button">로그아웃</string>
+	<string name="com_facebook_loginview_logged_in_as">%1$s님으로 로그인</string>
+    <string name="com_facebook_loginview_logged_in_using_facebook">Facebook으로 로그인하셨습니다</string>
+    <string name="com_facebook_loginview_log_out_action">로그아웃</string>
+    <string name="com_facebook_loginview_cancel_action">취소</string>
 </resources>

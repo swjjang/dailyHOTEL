@@ -54,6 +54,7 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 		newFragment.setTitle(strings[0]);
 		
 		mStrings = strings;
+		android.util.Log.e(TAG + " / newInstance", "mStrings = " + mStrings[0] + "  " + mStrings[1] + "  ");
 		
 		return newFragment;
 		

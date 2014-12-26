@@ -42,7 +42,8 @@
                     android:layout_height="wrap_content"
                     android:text="v1. 0. 0"
                     android:textColor="@color/textView_textColor_sub"
-                    android:textSize="16.5dp" />
+                    android:textSize="16.5dp"
+                    android:paddingLeft="5dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -65,7 +66,8 @@
                     android:layout_height="wrap_content"
                     android:text="v1. 0. 0"
                     android:textColor="@color/textView_textColor_main"
-                    android:textSize="16.5dp" />
+                    android:textSize="16.5dp"
+                    android:paddingLeft="5dp" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
