@@ -79,7 +79,9 @@ public class PaymentWaitActivity extends BaseActivity implements DailyHotelJsonR
 					tvName.setText(response.getString("name"));
 
 					DecimalFormat comma = new DecimalFormat("###,##0");
-					tvPrice.setText(comma.format(response.getInt("amt"))+getString(R.string.currency));
+					String locale = sharedPreference.getString(KEY_PREFERENCE_LOCALE, null);
+					if (locale.equals("English"))	tvPrice.setText(getString(R.string.currency)+comma.format(response.getInt("amt")));
+					else	tvPrice.setText(comma.format(response.getInt("amt"))+getString(R.string.currency));
 					
 					String[] dateSlice = response.getString("date").split("/");
 					String[] timeSlice = response.getString("time").split(":");
