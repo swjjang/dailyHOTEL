@@ -117,7 +117,7 @@
     <string name="dialog_btn_text_close">Close</string>
 
     <!-- Main Drawer Menu Titles -->
-    <string name="drawer_menu_pin_title_resrvation">Booking</string> 
+    <string name="drawer_menu_pin_title_resrvation">Book</string> 
     <string name="drawer_menu_item_title_todays_hotel">Today\'s hotel</string> 
     <string name="drawer_menu_item_title_chk_reservation">Bookings</string> 
     <string name="drawer_menu_pin_title_account">Accounts</string> 
@@ -273,7 +273,7 @@
 	<string name="frag_booking_tab_title">Book</string>
 	<string name="frag_booking_tab_year">/ </string>
 	<string name="frag_booking_tab_month">/ </string>
-	<string name="frag_booking_tab_day"> </string>
+	<string name="frag_booking_tab_day">  </string>
 	<string name="frag_booking_tab_hour">:00</string>
 	<string name="frag_booking_tab_hotel_info">Hotel Info</string>
 	<string name="frag_booking_tab_location">Location</string>
@@ -340,8 +340,8 @@
 	
 	<!-- Wait Payment Activity -->
 	<string name="act_wait_payment_payinfo">Payment Info (Virtual Account)</string>
-	<string name="act_wait_payment_accounts_no">Account Number</string>
-	<string name="act_wait_payment_name">Depositor Name</string>
+	<string name="act_wait_payment_accounts_no">Account No</string>
+	<string name="act_wait_payment_name">Depositor</string>
 	<string name="act_wait_payment_price">Price</string>
 	<string name="act_wait_payment_limit">Deposit limit</string>
 	<string name="act_wait_payment_confirm">Confirmation Items</string>

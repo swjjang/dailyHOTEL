@@ -555,6 +555,7 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 				.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 				RegionListAdapter regionListAdapter = new RegionListAdapter(
 						mHostActivity, mRegionList);
+				regionListAdapter.setNotifyOnChange(true);
 
 				mHostActivity.actionBar.setListNavigationCallbacks(
 						regionListAdapter, this);

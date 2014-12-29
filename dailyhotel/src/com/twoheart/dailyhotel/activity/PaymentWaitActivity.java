@@ -86,7 +86,8 @@ public class PaymentWaitActivity extends BaseActivity implements DailyHotelJsonR
 					String[] dateSlice = response.getString("date").split("/");
 					String[] timeSlice = response.getString("time").split(":");
 					
-					tvDeadline.setText(Integer.parseInt(dateSlice[1])+"월 "+Integer.parseInt(dateSlice[2])+"일 "+timeSlice[0]+":"+timeSlice[1]+"까지");
+					if (locale.equals("English"))	tvDeadline.setText("upto " + Integer.parseInt(dateSlice[1])+"/ "+Integer.parseInt(dateSlice[2])+" "+timeSlice[0]+":"+timeSlice[1]);
+					else	tvDeadline.setText(Integer.parseInt(dateSlice[1])+"월 "+Integer.parseInt(dateSlice[2])+"일 "+timeSlice[0]+":"+timeSlice[1]+"까지");
 
 					tvGuide1.setText(response.getString("msg1"));
 					tvGuide2.setText(response.getString("msg2"));

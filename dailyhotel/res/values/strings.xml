@@ -250,6 +250,7 @@
 	<string name="act_booking_pay_mobile">휴대폰</string>
 	<string name="act_booking_pay_account">계좌이체</string>
 	<string name="act_booking_btn_pay">결제하기</string>
+	<string name="act_booking_0won">0원</string>
 	
 	<!-- Payment Activity -->
 	<string name="act_payment_isp_error">ISP 결제 오류</string>

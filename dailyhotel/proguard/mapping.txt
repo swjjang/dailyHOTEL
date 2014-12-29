@@ -30080,7 +30080,7 @@ com.twoheart.dailyhotel.HotelListFragment -> com.twoheart.dailyhotel.f:
 com.twoheart.dailyhotel.HotelListFragment$1 -> com.twoheart.dailyhotel.g:
     com.twoheart.dailyhotel.HotelListFragment this$0 -> a
     void onClick(android.view.View) -> onClick
-com.twoheart.dailyhotel.HotelListFragment$2 -> com.twoheart.dailyhotel.h:
+com.twoheart.dailyhotel.HotelListFragment$3 -> com.twoheart.dailyhotel.h:
     com.twoheart.dailyhotel.HotelListFragment this$0 -> a
     int compare(com.twoheart.dailyhotel.model.Hotel,com.twoheart.dailyhotel.model.Hotel) -> compare
     int compare(java.lang.Object,java.lang.Object) -> compare
@@ -30124,6 +30124,7 @@ com.twoheart.dailyhotel.MainActivity -> com.twoheart.dailyhotel.MainActivity:
     android.widget.ListView drawerList -> drawerList
     android.support.v4.widget.DrawerLayout drawerLayout -> drawerLayout
     android.widget.FrameLayout mContentFrame -> r
+    android.app.Dialog popUpDialog -> popUpDialog
     android.support.v4.app.ActionBarDrawerToggle drawerToggle -> drawerToggle
     android.support.v4.app.FragmentManager fragmentManager -> o
     java.util.List mMenuImages -> p
@@ -30469,6 +30470,8 @@ com.twoheart.dailyhotel.SettingFragment -> com.twoheart.dailyhotel.q:
     android.widget.TextView tvVersion -> m
     android.widget.LinearLayout llVersion -> n
     android.widget.LinearLayout llLogin -> o
+    java.lang.String profileStr -> p
+    java.lang.String loginStr -> q
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     void onResume() -> onResume
     void onClick(android.view.View) -> onClick
@@ -30538,6 +30541,7 @@ com.twoheart.dailyhotel.activity.BookingActivity -> com.twoheart.dailyhotel.acti
     int mResCode -> S
     android.content.Intent mResIntent -> T
     java.lang.String mAliveCallSource -> o
+    java.lang.String locale -> U
     void onCreate(android.os.Bundle) -> onCreate
     void onResume() -> onResume
     void updatePayPrice(boolean) -> b
@@ -31049,7 +31053,8 @@ com.twoheart.dailyhotel.fragment.BookingTabBookingFragment -> com.twoheart.daily
     android.widget.TextView tvCheckOut -> j
     com.twoheart.dailyhotel.model.Booking mBooking -> k
     com.twoheart.dailyhotel.model.HotelDetail mHotelDetail -> l
-    com.twoheart.dailyhotel.fragment.BookingTabBookingFragment newInstance(com.twoheart.dailyhotel.model.HotelDetail,com.twoheart.dailyhotel.model.Booking) -> newInstance
+    java.lang.String[] mStrings -> m
+    com.twoheart.dailyhotel.fragment.BookingTabBookingFragment newInstance(com.twoheart.dailyhotel.model.HotelDetail,com.twoheart.dailyhotel.model.Booking,java.lang.String[]) -> newInstance
     void onCreate(android.os.Bundle) -> onCreate
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     void onResponse(java.lang.String,org.json.JSONObject) -> onResponse
@@ -31063,9 +31068,10 @@ com.twoheart.dailyhotel.fragment.HotelTabBookingFragment -> com.twoheart.dailyho
     android.widget.TextView tvAddress -> i
     android.widget.TextView tvPrice -> j
     android.widget.TextView tvDiscount -> k
-    android.os.Handler mHandler -> l
-    int mCurrentPage -> m
-    com.twoheart.dailyhotel.fragment.HotelTabBookingFragment newInstance(com.twoheart.dailyhotel.model.HotelDetail) -> newInstance
+    android.widget.TextView tvPriceTitle -> l
+    android.os.Handler mHandler -> m
+    int mCurrentPage -> n
+    com.twoheart.dailyhotel.fragment.HotelTabBookingFragment newInstance(com.twoheart.dailyhotel.model.HotelDetail,java.lang.String) -> newInstance
     void onCreate(android.os.Bundle) -> onCreate
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     void onResume() -> onResume
@@ -31133,7 +31139,7 @@ com.twoheart.dailyhotel.fragment.TabInfoFragment -> com.twoheart.dailyhotel.b.h:
     com.twoheart.dailyhotel.model.HotelDetail mHotelDetail -> d
     android.widget.LinearLayout layout -> e
     int infoViewCount -> f
-    com.twoheart.dailyhotel.fragment.TabInfoFragment newInstance(com.twoheart.dailyhotel.model.HotelDetail) -> newInstance
+    com.twoheart.dailyhotel.fragment.TabInfoFragment newInstance(com.twoheart.dailyhotel.model.HotelDetail,java.lang.String) -> newInstance
     void onCreate(android.os.Bundle) -> onCreate
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     void addView(android.view.View,java.lang.String,java.util.List) -> a
@@ -31145,7 +31151,7 @@ com.twoheart.dailyhotel.fragment.TabMapFragment -> com.twoheart.dailyhotel.b.i:
     android.widget.TextView tvName -> g
     android.widget.TextView tvAddress -> h
     com.twoheart.dailyhotel.widget.HotelGradeView hvGrade -> i
-    com.twoheart.dailyhotel.fragment.TabMapFragment newInstance(com.twoheart.dailyhotel.model.HotelDetail) -> newInstance
+    com.twoheart.dailyhotel.fragment.TabMapFragment newInstance(com.twoheart.dailyhotel.model.HotelDetail,java.lang.String) -> newInstance
     void onCreate(android.os.Bundle) -> onCreate
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     void onMapClick(com.google.android.gms.maps.model.LatLng) -> onMapClick
@@ -31436,6 +31442,7 @@ com.twoheart.dailyhotel.util.Constants -> com.twoheart.dailyhotel.util.b:
     java.lang.String PACKAGE_NAME_KFTC -> PACKAGE_NAME_KFTC
     java.lang.String PACKAGE_NAME_MPOCKET -> PACKAGE_NAME_MPOCKET
     java.lang.String NAME_DAILYHOTEL_SHARED_PREFERENCE -> NAME_DAILYHOTEL_SHARED_PREFERENCE
+    java.lang.String RESULT_ACTIVITY_SPLASH_NEW_EVENT -> RESULT_ACTIVITY_SPLASH_NEW_EVENT
     java.lang.String KEY_PREFERENCE_RESENT_CNT -> KEY_PREFERENCE_RESENT_CNT
     java.lang.String KEY_PREFERENCE_AUTO_LOGIN -> KEY_PREFERENCE_AUTO_LOGIN
     java.lang.String KEY_PREFERENCE_USER_ID -> KEY_PREFERENCE_USER_ID

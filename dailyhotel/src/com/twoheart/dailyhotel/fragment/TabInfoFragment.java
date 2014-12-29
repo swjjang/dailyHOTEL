@@ -90,7 +90,7 @@ public class TabInfoFragment extends BaseFragment {
 		
 		String locale = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_LOCALE, null);
 		if (locale.equals("English")) {
-			if (subject.equals("데일리의 추천 이유")) tv_subject.setText("daily's Recommend Reason");
+			if (subject.equals("데일리의 추천 이유") || subject.equals("데일리의 추천이유")) tv_subject.setText("daily's Recommend Reason");
 			else if (subject.equals("호텔 정보") || subject.equals("호텔정보")) tv_subject.setText("Hotel Info");
 			else if (subject.equals("교통정보") || subject.equals("교통 정보")) tv_subject.setText("Traffic Info");
 			else if (subject.equals("확인사항")) tv_subject.setText("Confirmation Items");
