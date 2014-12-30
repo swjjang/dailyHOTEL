@@ -1,7 +1,5 @@
 package com.twoheart.dailyhotel.adapter;
 
-import java.util.ArrayList;
-
 import java.util.List;
 
 import android.content.Context;

@@ -104,6 +104,7 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 	private String mKakaoHotelRegion;
 
 	private String selectedRegion;
+	private RegionListAdapter regionListAdapter;
 
 
 	@Override
@@ -170,6 +171,7 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 				.setup(mPullToRefreshLayout);
 
 		mHotelListView.setShadowVisible(false);
+		
 
 		DailyHotel.getGaTracker().set(Fields.SCREEN_NAME, TAG);
 
@@ -257,7 +259,7 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 		lockUI();
 		fetchHotelList(position);
 		
-		boolean showEventPopUp = ((MainActivity) mHostActivity).sharedPreference.getBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false);
+//		boolean showEventPopUp = ((MainActivity) mHostActivity).sharedPreference.getBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false);
 		
 //		if (showEventPopUp) {
 //			Dialog popUpDialog = getEventPopUpDialog();
@@ -313,17 +315,28 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 	private void fetchHotelList(int position) {
 		android.util.Log.e("FETCHHOTEL LIST",position +"");
 		((MainActivity) mHostActivity).drawerLayout.closeDrawer(((MainActivity) mHostActivity).drawerList);
+		regionListAdapter.notifyDataSetChanged();
 
 		String selectedRegion = mRegionList.get(position);
+		android.util.Log.e("selectedRegion",selectedRegion.trim() +"");
+		String selectedRegionTr = mRegionList.get(position).trim();
 
-		if (position != mHostActivity.sharedPreference.getInt(
-				KEY_PREFERENCE_REGION_INDEX, 0)) {
+//		if (position != mHostActivity.sharedPreference.getInt(
+//				KEY_PREFERENCE_REGION_INDEX, 0)) {
+//			SharedPreferences.Editor editor = mHostActivity.sharedPreference
+//					.edit();
+//			editor.putString(KEY_PREFERENCE_REGION_SELECT, selectedRegion);
+//			editor.putInt(KEY_PREFERENCE_REGION_INDEX, position);
+//			editor.commit();
+//
+//		}
+		
+		if (!selectedRegionTr.equals(mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "서울"))) {
 			SharedPreferences.Editor editor = mHostActivity.sharedPreference
 					.edit();
-			editor.putString(KEY_PREFERENCE_REGION_SELECT, selectedRegion);
+			editor.putString(KEY_PREFERENCE_REGION_SELECT, selectedRegionTr);
 			editor.putInt(KEY_PREFERENCE_REGION_INDEX, position);
 			editor.commit();
-
 		}
 
 		selectedRegion = selectedRegion.replace(" ", "%20");
@@ -553,7 +566,7 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 				// 호텔 프래그먼트 일때 액션바에 네비게이션 리스트 설치.
 				mHostActivity.actionBar
 				.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-				RegionListAdapter regionListAdapter = new RegionListAdapter(
+				regionListAdapter = new RegionListAdapter(
 						mHostActivity, mRegionList);
 				regionListAdapter.setNotifyOnChange(true);
 
@@ -564,23 +577,42 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 				 * KaKao링크를 통한 접속 일경우 해당 호텔까지 접속함.
 				 */
 				int regionIdx = 0;
+				int seoulIdx = 0;
+				boolean isRegion = false;
 				if (mKakaoHotelRegion != null && !mKakaoHotelRegion.isEmpty()) {
 					for (int i=0;i<mRegionList.size();i++) {
 						if (mRegionList.get(i).trim().equals(mKakaoHotelRegion)) {
 							regionIdx = i;
+							isRegion = true;
 							break;
+						}
+						if (mRegionList.get(i).trim().equals("서울")) {
+							seoulIdx = i;
 						}
 					}
 					if (regionIdx == 0) {
 						SimpleAlertDialog.build(mHostActivity, "알림", "공유받은 호텔이 존재하지 않습니다.", "확인", null);
 					}
 				} else {
-					regionIdx = mHostActivity.sharedPreference
-							.getInt(KEY_PREFERENCE_REGION_INDEX, 0);
+					String regionStr = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "서울");
+					
+					for (int i=0;i<mRegionList.size();i++) {
+						if (mRegionList.get(i).trim().equals(regionStr)) {
+							regionIdx = i;
+							isRegion = true;
+							break;
+						}
+						if (mRegionList.get(i).trim().equals("서울")) {
+							seoulIdx = i;
+						}
+					}
+//					regionIdx = mHostActivity.sharedPreference
+//							.getInt(KEY_PREFERENCE_REGION_INDEX, 0);
 				}
+				if (isRegion == false) regionIdx = seoulIdx;
 				
-				mHostActivity.actionBar
-				.setSelectedNavigationItem(regionIdx);
+//				if (regionIdx >= mRegionList.size()-1)	mHostActivity.actionBar.setSelectedNavigationItem(0);
+				mHostActivity.actionBar.setSelectedNavigationItem(regionIdx);
 //				.setSelectedNavigationItem(1);
 				
 				// 호텔 리프레시
