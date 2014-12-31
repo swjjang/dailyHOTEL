@@ -3089,7 +3089,7 @@ com.twoheart.dailyhotel.DailyHotel:
     116:118:private void initializeVolleyImageLoader()
 com.twoheart.dailyhotel.HotelListFragment:
     private static final java.lang.String TAG
-    271:297:private android.app.Dialog getEventPopUpDialog()
+    273:299:private android.app.Dialog getEventPopUpDialog()
 com.twoheart.dailyhotel.HotelListFragment$2
 com.twoheart.dailyhotel.HotelListFragment$WebViewClientClass
 com.twoheart.dailyhotel.MainActivity:

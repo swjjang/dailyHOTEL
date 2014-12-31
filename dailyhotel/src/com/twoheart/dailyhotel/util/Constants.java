@@ -24,10 +24,8 @@ public interface Constants {
 
 	// 스토어 선택.
 	enum Stores { PLAY_STORE, T_STORE, N_STORE };
-	public static final Stores RELEASE_STORE = Stores.T_STORE; 
+	public static final Stores RELEASE_STORE = Stores.N_STORE; 
 
-	
-	
 	// 항상 열리게 셋팅 여부
 	public static final boolean ALWAYS_OPEN = false;
 
@@ -35,9 +33,9 @@ public interface Constants {
     public static final String GCM_DEVICE_TYPE_ANDROID = "0"; // GCM 등록을 할 때 API의 deviceType, 0은 안드로이드 1은 아이폰.
     
 	// 웹서버 호스트 
-//		public static final String URL_DAILYHOTEL_SERVER = "http://restful.dailyhotel.kr/goodnight/"; //  서비스 서버
+		public static final String URL_DAILYHOTEL_SERVER = "http://restful.dailyhotel.kr/goodnight/"; //  서비스 서버
 //    public static final String URL_DAILYHOTEL_SERVER = "http://192.168.0.10:8080/goodnight/"; //  서비스 서버
-    public static final String URL_DAILYHOTEL_SERVER = "http://test.dailyhotel.kr/goodnight/"; //  서비스 서버
+//    public static final String URL_DAILYHOTEL_SERVER = "http://test.dailyhotel.kr/goodnight/"; //  서비스 서버
 
 				
 	// 회사 대표번호

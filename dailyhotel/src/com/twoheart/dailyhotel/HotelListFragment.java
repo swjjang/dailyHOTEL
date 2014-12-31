@@ -67,6 +67,7 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.Log;
+import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonArrayRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -199,25 +200,8 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 					mHostActivity));
 		}
 		
-		GoogleAnalytics gAInstance = GoogleAnalytics.getInstance(mHostActivity.getApplicationContext());
 		
-		Tracker testTracker = gAInstance.getTracker("UA-43721645-6");
-		gAInstance.getLogger().setLogLevel(GA_LOG_VERBOSITY);
-		
-		// Hit sent to UA-XXXX-1.
-		
-		testTracker.send(MapBuilder
-		    .createAppView()
-		    .set(Fields.SCREEN_NAME, "hotelList")
-		    .set(Fields.PAGE, "/todays-hotels/" + selectedRegion)
-		    .build()
-		);
-		
-		testTracker.set(Fields.SCREEN_NAME, null);
-		testTracker.set(Fields.PAGE, null);
-		
-		//TODO: set multiple fields, clear all fields
-		
+		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("hotelList", "/todays-hotels/" + selectedRegion);
 	}
 
 	@Override
@@ -287,6 +271,8 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 		
 		return true;
 	}
+	
+	
 	
 	private Dialog getEventPopUpDialog() {
 		final Dialog dialog = new Dialog(((MainActivity) mHostActivity));

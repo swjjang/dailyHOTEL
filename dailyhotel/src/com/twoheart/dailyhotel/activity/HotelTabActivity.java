@@ -74,7 +74,6 @@ DailyHotelStringResponseListener {
 			mSaleTime = bundle.getParcelable(NAME_INTENT_EXTRA_DATA_SALETIME);
 			mRegion = bundle.getString(NAME_INTENT_EXTRA_DATA_REGION);
 		}
-
 		setContentView(R.layout.activity_hotel_tab);
 
 		mViewPager = (HotelViewPager) findViewById(R.id.pager);

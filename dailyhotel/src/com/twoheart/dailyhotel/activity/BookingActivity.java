@@ -449,7 +449,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 						mPay.getHotelDetail().getHotel().getCategory(), 
 						(double) mPay.getPayPrice()
 						);
-
+				
 				posListener = new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog,

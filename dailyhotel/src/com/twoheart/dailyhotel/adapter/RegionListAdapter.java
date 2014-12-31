@@ -5,6 +5,7 @@ import java.util.List;
 import android.content.Context;
 import android.graphics.Paint;
 import android.support.v7.appcompat.R;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -37,7 +38,7 @@ public class RegionListAdapter extends ArrayAdapter<String> {
 		TextView view = (TextView) super.getView(position, convertView, parent);
 		view.setTypeface(DailyHotel.getTypeface());
 		view.setPaintFlags(view.getPaintFlags() | Paint.SUBPIXEL_TEXT_FLAG);
-		
+	
 		return view;
 	}
 
