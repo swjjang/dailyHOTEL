@@ -30064,6 +30064,7 @@ com.twoheart.dailyhotel.HotelListFragment -> com.twoheart.dailyhotel.f:
     int mKakaoHotelIdx -> p
     java.lang.String mKakaoHotelRegion -> q
     java.lang.String selectedRegion -> r
+    com.twoheart.dailyhotel.adapter.RegionListAdapter regionListAdapter -> s
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     void onStart() -> onStart
     void onResume() -> onResume
@@ -30541,7 +30542,6 @@ com.twoheart.dailyhotel.activity.BookingActivity -> com.twoheart.dailyhotel.acti
     int mResCode -> S
     android.content.Intent mResIntent -> T
     java.lang.String mAliveCallSource -> o
-    java.lang.String locale -> U
     void onCreate(android.os.Bundle) -> onCreate
     void onResume() -> onResume
     void updatePayPrice(boolean) -> b
@@ -31041,6 +31041,7 @@ com.twoheart.dailyhotel.adapter.HotelListAdapter$HotelListViewHolder -> com.twoh
     com.twoheart.dailyhotel.widget.HotelGradeView grade -> h
     com.twoheart.dailyhotel.adapter.HotelListAdapter this$0 -> i
 com.twoheart.dailyhotel.adapter.RegionListAdapter -> com.twoheart.dailyhotel.a.l:
+    java.util.List list -> a
     android.view.View getView(int,android.view.View,android.view.ViewGroup) -> getView
     android.view.View getDropDownView(int,android.view.View,android.view.ViewGroup) -> getDropDownView
 com.twoheart.dailyhotel.fragment.BookingTabBookingFragment -> com.twoheart.dailyhotel.b.a:
