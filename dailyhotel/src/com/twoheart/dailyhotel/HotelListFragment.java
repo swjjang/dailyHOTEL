@@ -16,8 +16,6 @@
 package com.twoheart.dailyhotel;
 
 import java.util.ArrayList;
-
-
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -34,7 +32,6 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.AbsListViewDelegate;
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
@@ -45,9 +42,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBar.OnNavigationListener;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AbsListView;
@@ -58,7 +55,9 @@ import android.widget.LinearLayout;
 
 import com.android.volley.Request.Method;
 import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.GoogleAnalytics;
 import com.google.analytics.tracking.android.MapBuilder;
+import com.google.analytics.tracking.android.Tracker;
 import com.twoheart.dailyhotel.activity.EventWebActivity;
 import com.twoheart.dailyhotel.activity.HotelTabActivity;
 import com.twoheart.dailyhotel.adapter.HotelListAdapter;
@@ -199,6 +198,26 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 					.toString(), null, HotelListFragment.this,
 					mHostActivity));
 		}
+		
+		GoogleAnalytics gAInstance = GoogleAnalytics.getInstance(mHostActivity.getApplicationContext());
+		
+		Tracker testTracker = gAInstance.getTracker("UA-43721645-6");
+		gAInstance.getLogger().setLogLevel(GA_LOG_VERBOSITY);
+		
+		// Hit sent to UA-XXXX-1.
+		
+		testTracker.send(MapBuilder
+		    .createAppView()
+		    .set(Fields.SCREEN_NAME, "hotelList")
+		    .set(Fields.PAGE, "/todays-hotels/" + selectedRegion)
+		    .build()
+		);
+		
+		testTracker.set(Fields.SCREEN_NAME, null);
+		testTracker.set(Fields.PAGE, null);
+		
+		//TODO: set multiple fields, clear all fields
+		
 	}
 
 	@Override

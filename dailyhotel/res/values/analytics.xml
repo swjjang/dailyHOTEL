@@ -3,6 +3,7 @@
     tools:ignore="TypographyDashes">
     
     <string name="ga_trackingId">UA-43721645-1</string>
+    <string name="ga_testTrackingId">UA-43721645-6</string>
     <bool name="ga_autoActivityTracking">false</bool>
 	<bool name="ga_reportUncaughtExceptions">true</bool>
     
