@@ -200,7 +200,6 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 					mHostActivity));
 		}
 		
-		
 		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("hotelList", "/todays-hotels/" + selectedRegion);
 	}
 
