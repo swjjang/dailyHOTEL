@@ -45,7 +45,10 @@ public class RegionListAdapter extends ArrayAdapter<String> {
 		
 		if (position == 0){
 			count++;
-			if (count == 1)	RenewalGaManager.getInstance(this.context).recordScreen("regionList", "/todays-hotels/region");
+			if (count == 1)	{
+				RenewalGaManager.getInstance(this.context).recordScreen("regionList", "/todays-hotels/region");
+				RenewalGaManager.getInstance(this.context).recordEvent("click", "requestRegionList", null, null);
+			}
 			if (count == 3) count = 0;
 		}
 	

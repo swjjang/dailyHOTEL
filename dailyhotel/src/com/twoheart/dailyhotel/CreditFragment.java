@@ -142,6 +142,7 @@ public class CreditFragment extends BaseFragment implements Constants,
 
 		if (v.getId() == btnInvite.getId()) {
 			try {
+				RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "inviteKakaoFriend", null, null);
 				String msg = getString(R.string.kakaolink_msg_prefix) + mRecommendCode + getString(R.string.kakaolink_msg_suffix);
 				KakaoLinkManager.newInstance(getActivity()).sendInviteMsgKakaoLink(msg);
 			} catch (Exception e) {
@@ -150,7 +151,7 @@ public class CreditFragment extends BaseFragment implements Constants,
 
 		} else if (v.getId() == tvCredit.getId()) {
 			((MainActivity) mHostActivity).addFragment(CreditListFragment.newInstance(mCreditList));
-
+			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "requestCreditHistory", null, null);
 		} else if (v.getId() == btnLogin.getId()) {
 			Intent i = new Intent(mHostActivity, LoginActivity.class);
 			startActivity(i);

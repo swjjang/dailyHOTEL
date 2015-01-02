@@ -574,18 +574,22 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 		switch (selectedMenuIconId) {
 		case R.drawable.selector_drawermenu_todayshotel:
 			indexLastFragment = INDEX_HOTEL_LIST_FRAGMENT;
+			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectMenu", getString(R.string.actionbar_title_hotel_list_frag), (long) position);
 			break;
 
 		case R.drawable.selector_drawermenu_reservation:
 			indexLastFragment = INDEX_BOOKING_LIST_FRAGMENT;
+			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectMenu", getString(R.string.actionbar_title_booking_list_frag), (long) position);
 			break;
 
 		case R.drawable.selector_drawermenu_saving:
 			indexLastFragment = INDEX_CREDIT_FRAGMENT;
+			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectMenu", getString(R.string.actionbar_title_credit_frag), (long) position);
 			break;
 
 		case R.drawable.selector_drawermenu_setting:
 			indexLastFragment = INDEX_SETTING_FRAGMENT;
+			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectMenu", getString(R.string.actionbar_title_setting_frag), (long) position);
 			break;
 		}
 
@@ -626,7 +630,8 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 				supportInvalidateOptionsMenu();
 				
 				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("menu", "/menu");
-				
+				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "menu", null, null);
+				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestMenuBar", null, null);
 			}
 		};
 

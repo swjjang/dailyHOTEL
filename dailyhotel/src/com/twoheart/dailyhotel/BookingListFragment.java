@@ -124,6 +124,7 @@ DailyHotelStringResponseListener {
 			int position, long id) {
 		Intent i = null;
 		Booking item = mItems.get(position);
+		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "selectBookingConfirmation", item.getHotel_name(), null);
 		if (item.getPayType() == CODE_PAY_TYPE_CARD_COMPLETE || item.getPayType() == CODE_PAY_TYPE_ACCOUNT_COMPLETE) { // 카드결제 완료 || 가상계좌 완료
 			i = new Intent(mHostActivity, BookingTabActivity.class);
 		} else if (item.getPayType() == CODE_PAY_TYPE_ACCOUNT_WAIT) { // 가상계좌 입금대기

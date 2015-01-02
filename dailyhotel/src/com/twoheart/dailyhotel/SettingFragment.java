@@ -135,6 +135,7 @@ public class SettingFragment extends BaseFragment implements Constants,
 			intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.mail_text_subject));
 			intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.mail_text_desc));
 			startActivity(Intent.createChooser(intent, getString(R.string.mail_text_dialog_title)));
+			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "mailCS", null, null);
 		} else if (v.getId() == llLogin.getId()) {
 			if (tvLogin.getText().equals(getString(R.string.frag_profile))) { // 로그인 되어 있는 상태
 				Intent i = new Intent(mHostActivity, ProfileActivity.class);
@@ -152,6 +153,7 @@ public class SettingFragment extends BaseFragment implements Constants,
 			Intent i = new Intent(Intent.ACTION_DIAL,
 					Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
 			startActivity(i);
+			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "inquireCS", null, null);
 		} else if (v.getId() == tvAbout.getId()) {
 			Intent i = new Intent(mHostActivity, AboutActivity.class);
 			startActivity(i);

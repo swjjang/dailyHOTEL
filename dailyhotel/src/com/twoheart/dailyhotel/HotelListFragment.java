@@ -48,6 +48,7 @@ import android.view.Window;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
@@ -55,9 +56,7 @@ import android.widget.LinearLayout;
 
 import com.android.volley.Request.Method;
 import com.google.analytics.tracking.android.Fields;
-import com.google.analytics.tracking.android.GoogleAnalytics;
 import com.google.analytics.tracking.android.MapBuilder;
-import com.google.analytics.tracking.android.Tracker;
 import com.twoheart.dailyhotel.activity.EventWebActivity;
 import com.twoheart.dailyhotel.activity.HotelTabActivity;
 import com.twoheart.dailyhotel.adapter.HotelListAdapter;
@@ -171,7 +170,6 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 				.setup(mPullToRefreshLayout);
 
 		mHotelListView.setShadowVisible(false);
-		
 
 		DailyHotel.getGaTracker().set(Fields.SCREEN_NAME, TAG);
 
@@ -199,8 +197,25 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 					.toString(), null, HotelListFragment.this,
 					mHostActivity));
 		}
+		mHotelListView.setOnScrollListener(new OnScrollListener() {
+			
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				switch(scrollState) {
+				case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+					RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("scroll", "hotels", selectedRegion, null);
+					break;
+				}
+				
+			}
+			
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				
+			}
+		});
 		
-		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("hotelList", "/todays-hotels/" + selectedRegion);
 	}
 
 	@Override
@@ -221,6 +236,11 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 		
 		int selectedPosition = position - 1;
 		HotelListViewItem selectedItem = mHotelListViewList.get(selectedPosition);
+		int count = 0;
+		for (int i = 0; i < selectedPosition; i++) {
+			if (mHotelListViewList.get(i).getType() == HotelListViewItem.TYPE_SECTION) count++;
+		}
+		int hotelIdx = position - count;
 
 		if (selectedItem.getType() == HotelListViewItem.TYPE_ENTRY) {
 			//리스트 뷰로 하면 보이는거 빼고 나머지 지워지는거 메모리에서 사라짐
@@ -241,10 +261,12 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 			i.putExtra(NAME_INTENT_EXTRA_DATA_HOTEL, selectedItem.getItem());
 			i.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mDailyHotelSaleTime);
 			i.putExtra(NAME_INTENT_EXTRA_DATA_REGION, selectedRegion);
+			i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, hotelIdx);
 
 			startActivityForResult(i, CODE_REQUEST_ACTIVITY_HOTELTAB);
 		}
-
+		
+		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "selectHotel", selectedItem.getItem().getName(), (long) hotelIdx);
 	}
 
 	@Override
@@ -266,6 +288,7 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 	public boolean onNavigationItemSelected(int position, long id) {
 		lockUI();
 		fetchHotelList(position);
+		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "selectRegion", mRegionList.get(position).trim(), (long) (position+1));
 		
 //		boolean showEventPopUp = ((MainActivity) mHostActivity).sharedPreference.getBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false);
 		
@@ -371,6 +394,9 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 		// 호텔 리스트를 가져온다
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null,
 				HotelListFragment.this, mHostActivity));
+		
+		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("visit", "hotelList", selectedRegionTr, (long) position);
+		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("hotelList", "/todays-hotels/" + selectedRegionTr);
 
 	}
 

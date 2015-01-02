@@ -55,6 +55,7 @@ DailyHotelStringResponseListener {
 	private Button btnSoldOut;
 	private Button btnBooking;
 	private String mRegion;
+	private int mHotelIdx;
 
 	private UiLifecycleHelper uiHelper;
 
@@ -73,6 +74,7 @@ DailyHotelStringResponseListener {
 					.getParcelable(NAME_INTENT_EXTRA_DATA_HOTEL));
 			mSaleTime = bundle.getParcelable(NAME_INTENT_EXTRA_DATA_SALETIME);
 			mRegion = bundle.getString(NAME_INTENT_EXTRA_DATA_REGION);
+			mHotelIdx = bundle.getInt(NAME_INTENT_EXTRA_DATA_HOTELIDX);
 		}
 		setContentView(R.layout.activity_hotel_tab);
 
@@ -139,6 +141,7 @@ DailyHotelStringResponseListener {
 					new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 							URL_WEBAPI_USER_ALIVE).toString(), null, this, this));
 
+			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestBooking", hotelDetail.getHotel().getName(), (long) mHotelIdx);
 		}
 	}
 
@@ -191,6 +194,7 @@ DailyHotelStringResponseListener {
 
 				Intent i = new Intent(this, BookingActivity.class);
 				i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELDETAIL, hotelDetail);
+				i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, mHotelIdx);
 				startActivityForResult(i, CODE_REQUEST_ACTIVITY_BOOKING);
 				overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 

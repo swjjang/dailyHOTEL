@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -208,7 +209,7 @@ DailyHotelJsonResponseListener, OnClickListener {
 				@Override
 				public void onClick(DialogInterface dialog,
 						int which) {
-
+					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestLogout", null, null);
 					mQueue.add(new DailyHotelJsonRequest(
 							Method.GET,
 							new StringBuilder(

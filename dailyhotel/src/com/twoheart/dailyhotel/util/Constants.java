@@ -165,6 +165,7 @@ public interface Constants {
 	public static final String NAME_INTENT_EXTRA_DATA_HOTELDETAIL = "hoteldetail";
 	public static final String NAME_INTENT_EXTRA_DATA_SALETIME = "saletime";
 	public static final String NAME_INTENT_EXTRA_DATA_REGION = "region";
+	public static final String NAME_INTENT_EXTRA_DATA_HOTELIDX = "hotelIdx";
 	public static final String NAME_INTENT_EXTRA_DATA_BOOKING = "booking";
 	public static final String NAME_INTENT_EXTRA_DATA_PAY = "pay";
 	public static final String NAME_INTENT_EXTRA_DATA_SELECTED_IMAGE_URL = "sel_image_url";

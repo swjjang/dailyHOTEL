@@ -218,6 +218,8 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 					new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 							URL_WEBAPI_USER_LOGIN).toString(), loginParams,
 							this, this));
+			
+			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestLogin", null, null);
 
 		} else if (v.getId() == facebookLogin.getId()) {
 			fbSession = new Session.Builder(this).setApplicationId(getString(R.string.app_id)).build();
@@ -229,6 +231,8 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 			fbSession.openForRead(or);
 
 			Session.setActiveSession(fbSession);
+			
+			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestFacebookLogin", null, null);
 		}
 	}
 

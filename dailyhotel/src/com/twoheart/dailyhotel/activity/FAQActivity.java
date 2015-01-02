@@ -7,7 +7,9 @@ import org.json.JSONObject;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.AbsListView;
 import android.widget.ExpandableListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.ExpandableListView.OnGroupExpandListener;
 
 import com.android.volley.Request.Method;
@@ -40,6 +42,25 @@ public class FAQActivity extends BaseActivity implements
 			public void onGroupExpand(int groupPosition) {
 				if(mPrevExpandedChildPos != -1 && groupPosition != mPrevExpandedChildPos) mListView.collapseGroup(mPrevExpandedChildPos);
 				mPrevExpandedChildPos = groupPosition;
+				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectFAQ", mList.get(groupPosition).getSubject(), (long) (groupPosition+1));
+			}
+		});
+		mListView.setOnScrollListener(new OnScrollListener() {
+			
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				switch(scrollState) {
+				case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("scroll", "articles", "자주 묻는 질문", null);
+					break;
+				}
+				
+			}
+			
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				
 			}
 		});
 	}
@@ -53,7 +74,7 @@ public class FAQActivity extends BaseActivity implements
 				URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_BOARD_FAQ).toString(),
 				null, this, this));
 		
-		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("FAQList", "/settings/faq");
+		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("fAQList", "/settings/faq");
 	}
 
 	@Override

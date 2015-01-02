@@ -7,7 +7,9 @@ import org.json.JSONObject;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.AbsListView;
 import android.widget.ExpandableListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.ExpandableListView.OnGroupExpandListener;
 
 import com.android.volley.Request.Method;
@@ -47,6 +49,25 @@ public class NoticeActivity extends BaseActivity implements
 				}
 				mExpandedChildPos = groupPosition;
 				mListView.setSelectionFromTop(mExpandedChildPos, 0); // 클릭한 그룹뷰를 탑으로 두기 위하여 이동.
+				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectNotice", mList.get(groupPosition).getSubject(), (long) (groupPosition+1));
+			}
+		});
+		mListView.setOnScrollListener(new OnScrollListener() {
+			
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				switch(scrollState) {
+				case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("scroll", "articles", "공지사항", null);
+					break;
+				}
+				
+			}
+			
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				
 			}
 		});
 	}

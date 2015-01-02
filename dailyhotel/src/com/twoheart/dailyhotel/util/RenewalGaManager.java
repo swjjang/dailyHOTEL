@@ -40,4 +40,13 @@ public class RenewalGaManager extends Application {
 		tracker.set(Fields.SCREEN_NAME, null);
 		tracker.set(Fields.PAGE, null);
 	}
+	
+	public void recordEvent(String category, String action, String label, Long value) {
+		tracker.send(MapBuilder.
+                createEvent(
+                		category, 
+                		action, 
+                		label, 
+                		value).build());
+	}
 }
