@@ -1,9 +1,11 @@
 package com.twoheart.dailyhotel.activity;
 
 import android.os.Bundle;
+import android.util.Log;
 
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.ui.WebViewActivity;
 
 public class AboutActivity extends WebViewActivity {
@@ -20,6 +22,8 @@ public class AboutActivity extends WebViewActivity {
 	protected void onResume() {
 		super.onResume();
 		setWebView(URL_WEB_ABOUT);
+		
+		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("introduction", "/settings/introduction");
 	}
 	
 }

@@ -231,6 +231,12 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 			
 			int idx = mHostActivity.actionBar.getSelectedNavigationIndex();
 			selectedRegion = mRegionList.get(idx).trim();
+			
+			SharedPreferences.Editor editor = mHostActivity.sharedPreference
+					.edit();
+			editor.putString(KEY_PREFERENCE_REGION_SELECT_GA, selectedRegion);
+			editor.putString(KEY_PREFERENCE_HOTEL_NAME_GA, selectedItem.getItem().getName());
+			editor.commit();
 
 			i.putExtra(NAME_INTENT_EXTRA_DATA_HOTEL, selectedItem.getItem());
 			i.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mDailyHotelSaleTime);

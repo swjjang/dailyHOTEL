@@ -51,6 +51,7 @@ import com.twoheart.dailyhotel.model.Pay;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.Log;
+import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
@@ -152,7 +153,17 @@ public class PaymentActivity extends BaseActivity implements Constants {
 
 		android.util.Log.e("GET_URL",url);
 		webView.loadUrl(url);
+		
+	}
+	
+	@Override
+	protected void onResume() {
+		String region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
+		String hotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
+		
+		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("paymentWeb", "/todays-hotels/" + region + "/" + hotelName + "/booking-detail/payment-web");
 
+		super.onResume();
 	}
 
 	private byte[] parsePostParameter(String[] key, String[] value) {

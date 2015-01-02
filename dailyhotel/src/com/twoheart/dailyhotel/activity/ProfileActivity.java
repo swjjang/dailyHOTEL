@@ -27,6 +27,7 @@ import com.android.volley.Request.Method;
 import com.androidquery.AQuery;
 import com.facebook.Session;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -78,7 +79,7 @@ DailyHotelJsonResponseListener, OnClickListener {
 	public void onResume() {
 		super.onResume();
 		updateTextField();
-
+		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("profileWithLogon", "/todays-hotels/profile-with-logon");
 	}
 
 	/**

@@ -21,6 +21,7 @@ import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
@@ -205,6 +206,12 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 			}
 
 		}
+	}
+	
+	@Override
+	public void onResume() {
+		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("bookingDetail_booking", "/bookings/" + mBooking.getHotel_name() + "/booking");
+		super.onResume();
 	}
 
 }

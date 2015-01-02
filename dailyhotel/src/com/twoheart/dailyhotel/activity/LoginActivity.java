@@ -54,6 +54,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
+import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -484,5 +485,11 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 				LoginActivity.this));	
 			}
 		}.execute();		
+	}
+	
+	@Override
+	protected void onResume() {
+		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("profileWithLogoff", "/todays-hotels/profile-with-logoff");
+		super.onResume();
 	}
 }

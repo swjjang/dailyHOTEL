@@ -52,6 +52,7 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.GaManager;
 import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.Log;
+import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -167,6 +168,11 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(
 				URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_SAVED_MONEY)
 				.toString(), null, this, this));
+		
+		String region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
+		String hotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
+		
+		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("bookingDetail", "/todays-hotels/" + region + "/" + hotelName + "/booking-detail");
 	}
 
 	private void updatePayPrice(boolean applyCredit) {
@@ -270,8 +276,15 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				});
 				
 				dialog.show();
+				
 				v.setClickable(false);
 				v.setEnabled(false);
+				
+				String region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
+				String hotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
+				
+				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("paymentAgreement", "/todays-hotels/" + region + "/" + hotelName + "/booking-detail/payment-agreement");
+
 			}
 
 
@@ -425,6 +438,9 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 			String msg = "";
 			String posTitle = getString(R.string.dialog_btn_text_confirm);
 			android.content.DialogInterface.OnClickListener posListener = null;
+			
+			String region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
+			String hotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
 
 			switch (resultCode) {
 			case CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE:
@@ -449,6 +465,8 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 						mPay.getHotelDetail().getHotel().getCategory(), 
 						(double) mPay.getPayPrice()
 						);
+				
+				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("paymentConfirmation", "/todays-hotels/" + region + "/" + hotelName + "/booking-detail/payment-confirm");
 				
 				posListener = new DialogInterface.OnClickListener() {
 					@Override

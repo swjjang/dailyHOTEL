@@ -36,6 +36,8 @@ import com.twoheart.dailyhotel.activity.NoticeActivity;
 import com.twoheart.dailyhotel.activity.ProfileActivity;
 import com.twoheart.dailyhotel.activity.VersionActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Log;
+import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
@@ -107,6 +109,8 @@ public class SettingFragment extends BaseFragment implements Constants,
 		mQueue.add(new DailyHotelStringRequest(Method.GET,
 				new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 						URL_WEBAPI_USER_ALIVE).toString(), null, this, mHostActivity));
+		
+		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("setting", "/settings/");
 	}
 
 	@Override

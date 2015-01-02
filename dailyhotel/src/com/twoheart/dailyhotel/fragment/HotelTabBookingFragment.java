@@ -135,8 +135,10 @@ OnTouchListener {
 			mHandler.removeMessages(0);
 			mHandler.sendEmptyMessageDelayed(0, DURATION_HOTEL_IMAGE_SHOW);
 		}
-//		Log.e("onResume", "region : " + mHotelDetail)
-//		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("hotelDetail_booking", "/todays-hotels/" + selectedRegion);
+		String region = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
+		String hotelName = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
+		
+		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("hotelDetail_booking", "/todays-hotels/" + region + "/" + hotelName + "/booking");
 	}
 
 	@Override
