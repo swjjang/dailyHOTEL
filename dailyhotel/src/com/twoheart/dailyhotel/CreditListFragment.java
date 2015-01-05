@@ -77,6 +77,7 @@ public class CreditListFragment extends BaseFragment {
 	@Override
 	public void onResume() {
 		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("creditHistory", "/credit-with-logon/history");
+		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("visit", "creditHistory", null, null);
 		super.onResume();
 	}
 

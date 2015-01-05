@@ -176,6 +176,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		String hotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
 		
 		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("bookingDetail", "/todays-hotels/" + region + "/" + hotelName + "/booking-detail");
+		RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "bookingDetail", hotelName, (long) mPay.getHotelDetail().getHotel().getIdx());
 	}
 
 	private void updatePayPrice(boolean applyCredit) {
@@ -290,6 +291,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				String hotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
 				
 				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("paymentAgreement", "/todays-hotels/" + region + "/" + hotelName + "/booking-detail/payment-agreement");
+				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "paymentAgreement", mPay.getHotelDetail().getHotel().getName(), (long) mPay.getHotelDetail().getHotel().getIdx());
 				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestPayment", mPay.getHotelDetail().getHotel().getName(), (long) mHotelIdx);
 			}
 
@@ -474,6 +476,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 						);
 				
 				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("paymentConfirmation", "/todays-hotels/" + region + "/" + hotelName + "/booking-detail/payment-confirm");
+				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "paymentConfirmation", hotelName, (long) mPay.getHotelDetail().getHotel().getIdx());
 				
 				posListener = new DialogInterface.OnClickListener() {
 					@Override

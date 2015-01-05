@@ -106,7 +106,8 @@ DailyHotelStringResponseListener {
 						BookingListFragment.this, mHostActivity));
 		
 		Log.v("BookingListFragment", "BookingListFragment");
-//		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("bookingList", "/bookings/");
+		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("bookingList", "/bookings/");
+		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("visit", "bookingList", null, null);
 	}
 
 	@Override

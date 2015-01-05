@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.HotelDetail;
+import com.twoheart.dailyhotel.util.Log;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
 public class TabInfoFragment extends BaseFragment {
@@ -48,7 +49,6 @@ public class TabInfoFragment extends BaseFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mHotelDetail = (HotelDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL);
-		
 	}
 	
 	@Override
@@ -125,6 +125,12 @@ public class TabInfoFragment extends BaseFragment {
 		Resources r = context.getResources();
 		int px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, r.getDisplayMetrics());
 		return px;
+	}
+	
+	@Override
+	public void onResume() {
+//		Log.d("hotelDetail_info", "info name : " + mHotelDetail.getHotel().getName() + " idx : " + mHotelDetail.getHotel().getIdx());
+		super.onResume();
 	}
 
 }

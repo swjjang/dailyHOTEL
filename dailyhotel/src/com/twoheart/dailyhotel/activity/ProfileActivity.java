@@ -81,6 +81,7 @@ DailyHotelJsonResponseListener, OnClickListener {
 		super.onResume();
 		updateTextField();
 		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("profileWithLogon", "/todays-hotels/profile-with-logon");
+		RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "profileWithLogon", null, null);
 	}
 
 	/**

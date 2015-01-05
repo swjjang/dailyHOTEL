@@ -84,6 +84,7 @@ public class VersionActivity extends BaseActivity implements OnClickListener {
 	@Override
 	protected void onResume() {
 		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("versionInfo", "/settings/version-info");
+		RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "versionInfo", null, null);
 		super.onResume();
 	}
 }

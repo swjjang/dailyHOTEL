@@ -207,11 +207,5 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 
 		}
 	}
-	
-	@Override
-	public void onResume() {
-		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("bookingDetail_booking", "/bookings/" + mBooking.getHotel_name() + "/booking");
-		super.onResume();
-	}
 
 }

@@ -494,6 +494,7 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 	@Override
 	protected void onResume() {
 		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("profileWithLogoff", "/todays-hotels/profile-with-logoff");
+		RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "profileWithLogoff", null, null);
 		super.onResume();
 	}
 }

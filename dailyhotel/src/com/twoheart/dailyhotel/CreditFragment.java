@@ -177,10 +177,12 @@ public class CreditFragment extends BaseFragment implements Constants,
 			rlCreditNotLoggedIn.setVisibility(View.GONE);
 			llCreditLoggedIn.setVisibility(View.VISIBLE);
 			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("creditWithLogon", "/credit-with-logon/");
+			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("visit", "creditWithLogon", null, null);
 		} else {
 			rlCreditNotLoggedIn.setVisibility(View.VISIBLE);
 			llCreditLoggedIn.setVisibility(View.GONE);
 			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("creditWithLogoff", "/credit-with-logoff/");
+			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("visit", "creditWithLogoff", null, null);
 		}
 	}
 

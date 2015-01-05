@@ -56,6 +56,10 @@ DailyHotelStringResponseListener {
 	private Button btnBooking;
 	private String mRegion;
 	private int mHotelIdx;
+	private int mPosition = 0;
+	
+	private String region;
+	private String hotelName;
 
 	private UiLifecycleHelper uiHelper;
 
@@ -92,16 +96,29 @@ DailyHotelStringResponseListener {
 			btnSoldOut.setVisibility(View.VISIBLE);
 		}
 		
+		region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
+		hotelName =sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
+		
 		mIndicator.setOnPageChangeListener(new OnPageChangeListener() {
 			
 			@Override
 			public void onPageSelected(int position) {
 				String region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
 				String hotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
+				mPosition = position;
 				
-				if (position == 0) RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_booking", "/todays-hotels/" + region + "/" + hotelName + "/booking");
-				else if (position == 1) RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_info", "/todays-hotels/" + region + "/" + hotelName + "/info");
-				else if (position == 2) RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_map", "/todays-hotels/" + region + "/" + hotelName + "/map");		
+				if (position == 0) {
+					RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_booking", "/todays-hotels/" + region + "/" + hotelName + "/booking");
+					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "hotelDetail_booking", hotelDetail.getHotel().getName(), (long) hotelDetail.getHotel().getIdx());
+				}
+				else if (position == 1) {
+					RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_info", "/todays-hotels/" + region + "/" + hotelName + "/info");
+					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "hotelDetail_info", hotelDetail.getHotel().getName(), (long) hotelDetail.getHotel().getIdx());
+				}
+				else if (position == 2) {
+					RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_map", "/todays-hotels/" + region + "/" + hotelName + "/map");
+					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "hotelDetail_map", hotelDetail.getHotel().getName(), (long) hotelDetail.getHotel().getIdx());
+				}
 			}
 			
 			@Override
@@ -412,6 +429,18 @@ DailyHotelStringResponseListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		if (mPosition == 0) {
+			RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_booking", "/todays-hotels/" + region + "/" + hotelName + "/booking");
+			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "hotelDetail_booking", hotelDetail.getHotel().getName(), (long) hotelDetail.getHotel().getIdx());
+		}
+		if (mPosition == 1)	{
+			RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_info", "/todays-hotels/" + region + "/" + hotelName + "/info");
+			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "hotelDetail_info", hotelDetail.getHotel().getName(), (long) hotelDetail.getHotel().getIdx());
+		}
+		if (mPosition == 2)	{
+			RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_map", "/todays-hotels/" + region + "/" + hotelName + "/map");
+			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "hotelDetail_map", hotelDetail.getHotel().getName(), (long) hotelDetail.getHotel().getIdx());
+		}
 		uiHelper.onResume();
 	}
 

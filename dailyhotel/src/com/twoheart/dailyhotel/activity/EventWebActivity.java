@@ -40,6 +40,7 @@ public class EventWebActivity extends WebViewActivity implements Constants{
 		super.onResume();
 		setWebView(URL_WEBAPI_EVENT);
 		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("event", "/todays-hotels/event");
+		RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "event", null, null);
 	}
 
 	@Override

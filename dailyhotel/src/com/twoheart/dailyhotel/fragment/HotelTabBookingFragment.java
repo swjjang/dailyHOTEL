@@ -42,8 +42,6 @@ OnTouchListener {
 	private Handler mHandler;
 	private int mCurrentPage = 0;
 	
-	private String region;
-	private String hotelName;
 
 	public static HotelTabBookingFragment newInstance(HotelDetail hotelDetail, String title) {
 
@@ -62,9 +60,7 @@ OnTouchListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mHotelDetail = (HotelDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL);
-
-		region = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
-		hotelName = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
+		
 	}
 
 	@Override
@@ -141,7 +137,6 @@ OnTouchListener {
 			mHandler.sendEmptyMessageDelayed(0, DURATION_HOTEL_IMAGE_SHOW);
 		}
 		
-		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("hotelDetail_booking", "/todays-hotels/" + region + "/" + hotelName + "/booking");
 	}
 
 	@Override
@@ -170,7 +165,7 @@ OnTouchListener {
 
 			case MotionEvent.ACTION_UP:
 				mHandler.removeMessages(0);
-				RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("scroll", "photos", hotelName, null);
+				RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("scroll", "photos", mHotelDetail.getHotel().getName(), null);
 				mHandler.sendEmptyMessageDelayed(0,
 						DURATION_HOTEL_IMAGE_SHOW);
 			default:
