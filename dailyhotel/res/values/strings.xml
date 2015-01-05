@@ -303,10 +303,6 @@
 	
 	<!-- Base Activity -->
 	<string name="act_base_network_connect">인터넷 연결 상태가 불안정합니다.\n인터넷 연결을 확인하신 뒤 다시 시도해주세요.</string>
-
-	<string name="kakao_app_key">ddcea004a79ab5500a3443d589279be7</string>
-    <string name="kakao_scheme">kakaoddcea004a79ab5500a3443d589279be7</string>
-    <string name="kakaolink_host">kakaolink</string>
     
     <!-- ForgotPwd Activity -->
     <string name="act_forgot_pwd_email">이메일</string>
