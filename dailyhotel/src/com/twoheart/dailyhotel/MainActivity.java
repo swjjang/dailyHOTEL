@@ -28,15 +28,12 @@ import org.json.JSONObject;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.DialogInterface.OnDismissListener;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.content.res.Configuration;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -46,25 +43,21 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
-import android.text.Html;
 import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.View.OnClickListener;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -73,19 +66,22 @@ import android.widget.Toast;
 
 import com.android.volley.Request.Method;
 import com.androidquery.util.AQUtility;
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.GoogleAnalytics;
+import com.google.analytics.tracking.android.MapBuilder;
+import com.google.analytics.tracking.android.Tracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.readystatesoftware.systembartint.SystemBarTintManager.SystemBarConfig;
-import com.twoheart.dailyhotel.activity.BookingActivity;
 import com.twoheart.dailyhotel.activity.SplashActivity;
 import com.twoheart.dailyhotel.fragment.RatingHotelFragment;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.GlobalFont;
+import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -579,18 +575,22 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 		switch (selectedMenuIconId) {
 		case R.drawable.selector_drawermenu_todayshotel:
 			indexLastFragment = INDEX_HOTEL_LIST_FRAGMENT;
+			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectMenu", getString(R.string.actionbar_title_hotel_list_frag), (long) position);
 			break;
 
 		case R.drawable.selector_drawermenu_reservation:
 			indexLastFragment = INDEX_BOOKING_LIST_FRAGMENT;
+			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectMenu", getString(R.string.actionbar_title_booking_list_frag), (long) position);
 			break;
 
 		case R.drawable.selector_drawermenu_saving:
 			indexLastFragment = INDEX_CREDIT_FRAGMENT;
+			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectMenu", getString(R.string.actionbar_title_credit_frag), (long) position);
 			break;
 
 		case R.drawable.selector_drawermenu_setting:
 			indexLastFragment = INDEX_SETTING_FRAGMENT;
+			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectMenu", getString(R.string.actionbar_title_setting_frag), (long) position);
 			break;
 		}
 
@@ -617,6 +617,7 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 	 */
 	public void setNavigationDrawer() {
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		
 		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
 				R.drawable.ic_drawer, 0, 0) {
 
@@ -628,6 +629,10 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 			public void onDrawerOpened(View drawerView) {
 				super.onDrawerOpened(drawerView);
 				supportInvalidateOptionsMenu();
+				
+				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("menu", "/menu");
+				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "menu", null, null);
+				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestMenuBar", null, null);
 			}
 		};
 
@@ -837,5 +842,4 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 		// Error Fragment를 표시한다.
 		replaceFragment(new ErrorFragment());
 	}
-
 }

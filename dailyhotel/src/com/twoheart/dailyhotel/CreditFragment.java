@@ -50,6 +50,7 @@ import com.twoheart.dailyhotel.model.Credit;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Log;
+import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
@@ -135,6 +136,7 @@ public class CreditFragment extends BaseFragment implements Constants,
 				new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 						URL_WEBAPI_USER_ALIVE).toString(), null,
 				this, mHostActivity));
+		
 	}
 
 	@Override
@@ -142,6 +144,7 @@ public class CreditFragment extends BaseFragment implements Constants,
 
 		if (v.getId() == btnInvite.getId()) {
 			try {
+				RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "inviteKakaoFriend", null, null);
 				String msg = getString(R.string.kakaolink_msg_prefix) + mRecommendCode + getString(R.string.kakaolink_msg_suffix);
 				KakaoLinkManager.newInstance(getActivity()).sendInviteMsgKakaoLink(msg);
 			} catch (Exception e) {
@@ -150,7 +153,7 @@ public class CreditFragment extends BaseFragment implements Constants,
 
 		} else if (v.getId() == tvCredit.getId()) {
 			((MainActivity) mHostActivity).addFragment(CreditListFragment.newInstance(mCreditList));
-
+			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "requestCreditHistory", null, null);
 		} else if (v.getId() == btnLogin.getId()) {
 			Intent i = new Intent(mHostActivity, LoginActivity.class);
 			startActivity(i);
@@ -175,11 +178,13 @@ public class CreditFragment extends BaseFragment implements Constants,
 		if (loginSuccess) {
 			rlCreditNotLoggedIn.setVisibility(View.GONE);
 			llCreditLoggedIn.setVisibility(View.VISIBLE);
-
+			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("creditWithLogon", "/credit-with-logon/");
+			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("visit", "creditWithLogon", null, null);
 		} else {
 			rlCreditNotLoggedIn.setVisibility(View.VISIBLE);
 			llCreditLoggedIn.setVisibility(View.GONE);
-
+			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("creditWithLogoff", "/credit-with-logoff/");
+			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("visit", "creditWithLogoff", null, null);
 		}
 	}
 

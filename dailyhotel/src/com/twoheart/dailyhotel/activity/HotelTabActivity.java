@@ -11,10 +11,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,7 +34,7 @@ import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Log;
-import com.twoheart.dailyhotel.util.SimpleAlertDialog;
+import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.TabActivity;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -55,6 +55,11 @@ DailyHotelStringResponseListener {
 	private Button btnSoldOut;
 	private Button btnBooking;
 	private String mRegion;
+	private int mHotelIdx;
+	private int mPosition = 0;
+	
+	private String region;
+	private String hotelName;
 
 	private UiLifecycleHelper uiHelper;
 
@@ -73,8 +78,8 @@ DailyHotelStringResponseListener {
 					.getParcelable(NAME_INTENT_EXTRA_DATA_HOTEL));
 			mSaleTime = bundle.getParcelable(NAME_INTENT_EXTRA_DATA_SALETIME);
 			mRegion = bundle.getString(NAME_INTENT_EXTRA_DATA_REGION);
+			mHotelIdx = bundle.getInt(NAME_INTENT_EXTRA_DATA_HOTELIDX);
 		}
-
 		setContentView(R.layout.activity_hotel_tab);
 
 		mViewPager = (HotelViewPager) findViewById(R.id.pager);
@@ -90,6 +95,42 @@ DailyHotelStringResponseListener {
 			btnBooking.setVisibility(View.GONE);
 			btnSoldOut.setVisibility(View.VISIBLE);
 		}
+		
+		region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
+		hotelName =sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
+		
+		mIndicator.setOnPageChangeListener(new OnPageChangeListener() {
+			
+			@Override
+			public void onPageSelected(int position) {
+				String region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
+				String hotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
+				mPosition = position;
+				
+				if (position == 0) {
+					RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_booking", "/todays-hotels/" + region + "/" + hotelName + "/booking");
+					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "hotelDetail_booking", hotelDetail.getHotel().getName(), (long) hotelDetail.getHotel().getIdx());
+				}
+				else if (position == 1) {
+					RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_info", "/todays-hotels/" + region + "/" + hotelName + "/info");
+					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "hotelDetail_info", hotelDetail.getHotel().getName(), (long) hotelDetail.getHotel().getIdx());
+				}
+				else if (position == 2) {
+					RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_map", "/todays-hotels/" + region + "/" + hotelName + "/map");
+					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "hotelDetail_map", hotelDetail.getHotel().getName(), (long) hotelDetail.getHotel().getIdx());
+				}
+			}
+			
+			@Override
+			public void onPageScrolled(int arg0, float arg1, int arg2) {
+				
+			}
+			
+			@Override
+			public void onPageScrollStateChanged(int arg0) {
+				
+			}
+		});
 	}
 
 	@Override
@@ -117,6 +158,7 @@ DailyHotelStringResponseListener {
 					new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 							URL_WEBAPI_USER_ALIVE).toString(), null, this, this));
 
+			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestBooking", hotelDetail.getHotel().getName(), (long) mHotelIdx);
 		}
 	}
 
@@ -169,6 +211,7 @@ DailyHotelStringResponseListener {
 
 				Intent i = new Intent(this, BookingActivity.class);
 				i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELDETAIL, hotelDetail);
+				i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, mHotelIdx);
 				startActivityForResult(i, CODE_REQUEST_ACTIVITY_BOOKING);
 				overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
@@ -386,6 +429,18 @@ DailyHotelStringResponseListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		if (mPosition == 0) {
+			RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_booking", "/todays-hotels/" + region + "/" + hotelName + "/booking");
+			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "hotelDetail_booking", hotelDetail.getHotel().getName(), (long) hotelDetail.getHotel().getIdx());
+		}
+		if (mPosition == 1)	{
+			RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_info", "/todays-hotels/" + region + "/" + hotelName + "/info");
+			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "hotelDetail_info", hotelDetail.getHotel().getName(), (long) hotelDetail.getHotel().getIdx());
+		}
+		if (mPosition == 2)	{
+			RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_map", "/todays-hotels/" + region + "/" + hotelName + "/map");
+			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "hotelDetail_map", hotelDetail.getHotel().getName(), (long) hotelDetail.getHotel().getIdx());
+		}
 		uiHelper.onResume();
 	}
 

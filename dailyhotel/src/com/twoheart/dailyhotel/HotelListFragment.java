@@ -16,8 +16,6 @@
 package com.twoheart.dailyhotel;
 
 import java.util.ArrayList;
-
-
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -34,7 +32,6 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.AbsListViewDelegate;
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
@@ -45,12 +42,13 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBar.OnNavigationListener;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
@@ -68,6 +66,7 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.Log;
+import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonArrayRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -171,7 +170,6 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 				.setup(mPullToRefreshLayout);
 
 		mHotelListView.setShadowVisible(false);
-		
 
 		DailyHotel.getGaTracker().set(Fields.SCREEN_NAME, TAG);
 
@@ -199,6 +197,25 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 					.toString(), null, HotelListFragment.this,
 					mHostActivity));
 		}
+		mHotelListView.setOnScrollListener(new OnScrollListener() {
+			
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				switch(scrollState) {
+				case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+					RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("scroll", "hotels", selectedRegion, null);
+					break;
+				}
+				
+			}
+			
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				
+			}
+		});
+		
 	}
 
 	@Override
@@ -219,6 +236,11 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 		
 		int selectedPosition = position - 1;
 		HotelListViewItem selectedItem = mHotelListViewList.get(selectedPosition);
+		int count = 0;
+		for (int i = 0; i < selectedPosition; i++) {
+			if (mHotelListViewList.get(i).getType() == HotelListViewItem.TYPE_SECTION) count++;
+		}
+		int hotelIdx = position - count;
 
 		if (selectedItem.getType() == HotelListViewItem.TYPE_ENTRY) {
 			//리스트 뷰로 하면 보이는거 빼고 나머지 지워지는거 메모리에서 사라짐
@@ -229,14 +251,22 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 			
 			int idx = mHostActivity.actionBar.getSelectedNavigationIndex();
 			selectedRegion = mRegionList.get(idx).trim();
+			
+			SharedPreferences.Editor editor = mHostActivity.sharedPreference
+					.edit();
+			editor.putString(KEY_PREFERENCE_REGION_SELECT_GA, selectedRegion);
+			editor.putString(KEY_PREFERENCE_HOTEL_NAME_GA, selectedItem.getItem().getName());
+			editor.commit();
 
 			i.putExtra(NAME_INTENT_EXTRA_DATA_HOTEL, selectedItem.getItem());
 			i.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mDailyHotelSaleTime);
 			i.putExtra(NAME_INTENT_EXTRA_DATA_REGION, selectedRegion);
+			i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, hotelIdx);
 
 			startActivityForResult(i, CODE_REQUEST_ACTIVITY_HOTELTAB);
 		}
-
+		
+		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "selectHotel", selectedItem.getItem().getName(), (long) hotelIdx);
 	}
 
 	@Override
@@ -258,6 +288,7 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 	public boolean onNavigationItemSelected(int position, long id) {
 		lockUI();
 		fetchHotelList(position);
+		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "selectRegion", mRegionList.get(position).trim(), (long) (position+1));
 		
 //		boolean showEventPopUp = ((MainActivity) mHostActivity).sharedPreference.getBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false);
 		
@@ -268,6 +299,8 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 		
 		return true;
 	}
+	
+	
 	
 	private Dialog getEventPopUpDialog() {
 		final Dialog dialog = new Dialog(((MainActivity) mHostActivity));
@@ -361,6 +394,9 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 		// 호텔 리스트를 가져온다
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null,
 				HotelListFragment.this, mHostActivity));
+		
+		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("visit", "hotelList", selectedRegionTr, (long) position);
+		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("hotelList", "/todays-hotels/" + selectedRegionTr);
 
 	}
 

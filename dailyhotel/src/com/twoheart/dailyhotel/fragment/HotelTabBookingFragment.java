@@ -8,6 +8,7 @@ import android.os.Message;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.AbsoluteSizeSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.adapter.HotelImageFragmentPagerAdapter;
 import com.twoheart.dailyhotel.model.HotelDetail;
+import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 import com.twoheart.dailyhotel.widget.HotelViewPager;
 import com.viewpagerindicator.LoopCirclePageIndicator;
@@ -39,6 +41,7 @@ OnTouchListener {
 
 	private Handler mHandler;
 	private int mCurrentPage = 0;
+	
 
 	public static HotelTabBookingFragment newInstance(HotelDetail hotelDetail, String title) {
 
@@ -57,7 +60,7 @@ OnTouchListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mHotelDetail = (HotelDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL);
-
+		
 	}
 
 	@Override
@@ -136,6 +139,7 @@ OnTouchListener {
 			mHandler.removeMessages(0);
 			mHandler.sendEmptyMessageDelayed(0, DURATION_HOTEL_IMAGE_SHOW);
 		}
+		
 	}
 
 	@Override
@@ -164,6 +168,7 @@ OnTouchListener {
 
 			case MotionEvent.ACTION_UP:
 				mHandler.removeMessages(0);
+				RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("scroll", "photos", mHotelDetail.getHotel().getName(), null);
 				mHandler.sendEmptyMessageDelayed(0,
 						DURATION_HOTEL_IMAGE_SHOW);
 			default:

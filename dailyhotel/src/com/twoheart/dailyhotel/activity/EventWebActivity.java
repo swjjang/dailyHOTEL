@@ -9,6 +9,7 @@ import com.google.analytics.tracking.android.MapBuilder;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.ui.WebViewActivity;
 
 public class EventWebActivity extends WebViewActivity implements Constants{
@@ -38,6 +39,8 @@ public class EventWebActivity extends WebViewActivity implements Constants{
 	protected void onResume() {
 		super.onResume();
 		setWebView(URL_WEBAPI_EVENT);
+		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("event", "/todays-hotels/event");
+		RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "event", null, null);
 	}
 
 	@Override

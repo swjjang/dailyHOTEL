@@ -3,13 +3,17 @@ package com.twoheart.dailyhotel.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.analytics.tracking.android.MapBuilder;
+import com.google.analytics.tracking.android.Tracker;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
@@ -61,10 +65,13 @@ public class VersionActivity extends BaseActivity implements OnClickListener {
 				} else {
 					showToast(getString(R.string.toast_msg_already_latest_version), Toast.LENGTH_SHORT, true);
 				}
+				
+				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestVersionUpdate", this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName, null);
 
 			} catch (Exception e) {
 				onError(e);
 			}
+			
 		}
 	}
 
@@ -72,5 +79,12 @@ public class VersionActivity extends BaseActivity implements OnClickListener {
 	public void finish() {
 		super.finish();
 		overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
+	}
+	
+	@Override
+	protected void onResume() {
+		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("versionInfo", "/settings/version-info");
+		RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "versionInfo", null, null);
+		super.onResume();
 	}
 }

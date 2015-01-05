@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.os.Bundle;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
@@ -17,6 +18,7 @@ import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.util.Log;
+import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.TabActivity;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
@@ -27,6 +29,7 @@ public class BookingTabActivity extends TabActivity implements DailyHotelJsonRes
 
 	private final static String TAG = "BookingTabActivity";
 	public Booking booking;
+	private int mPosition = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +45,37 @@ public class BookingTabActivity extends TabActivity implements DailyHotelJsonRes
 
 		mViewPager = (HotelViewPager) findViewById(R.id.booking_pager);
 		mIndicator = (TabPageIndicator) findViewById(R.id.booking_indicator);
+		
+		mIndicator.setOnPageChangeListener(new OnPageChangeListener() {
+			
+			@Override
+			public void onPageSelected(int position) {
+				mPosition = position;
+				
+				if (position == 0) {
+					RenewalGaManager.getInstance(getApplicationContext()).recordScreen("bookingDetail_booking", "/bookings/" + booking.getHotel_name() + "/booking");
+					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "bookingDetail_booking", booking.getHotel_name(), (long) hotelDetail.getHotel().getIdx());
+				}
+				else if (position == 1) {
+					RenewalGaManager.getInstance(getApplicationContext()).recordScreen("bookingDetail_info", "/bookings/" + booking.getHotel_name() + "/info");
+					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "bookingDetail_info", booking.getHotel_name(), (long) hotelDetail.getHotel().getIdx());
+				}
+				else if (position == 2) {
+					RenewalGaManager.getInstance(getApplicationContext()).recordScreen("bookingDetail_map", "/bookings/" + booking.getHotel_name() + "/map");
+					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "bookingDetail_map", booking.getHotel_name(), (long) hotelDetail.getHotel().getIdx());
+				}
+			}
+			
+			@Override
+			public void onPageScrolled(int arg0, float arg1, int arg2) {
+				
+			}
+			
+			@Override
+			public void onPageScrollStateChanged(int arg0) {
+				
+			}
+		});
 
 	}
 	
@@ -126,5 +160,22 @@ public class BookingTabActivity extends TabActivity implements DailyHotelJsonRes
 				onError(e);
 			}
 		}
+	}
+	
+	@Override
+	protected void onResume() {
+		if (mPosition == 0) {
+			RenewalGaManager.getInstance(getApplicationContext()).recordScreen("bookingDetail_booking", "/bookings/" + booking.getHotel_name() + "/booking");
+			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "bookingDetail_booking", hotelDetail.getHotel().getName(), (long) hotelDetail.getHotel().getIdx());
+		}
+		if (mPosition == 1)	{
+			RenewalGaManager.getInstance(getApplicationContext()).recordScreen("bookingDetail_info", "/bookings/" + booking.getHotel_name() + "/info");
+			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "bookingDetail_info", hotelDetail.getHotel().getName(), (long) hotelDetail.getHotel().getIdx());
+		}
+		if (mPosition == 2)	{
+			RenewalGaManager.getInstance(getApplicationContext()).recordScreen("bookingDetail_map", "/bookings/" + booking.getHotel_name() + "/map");
+			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "bookingDetail_map", hotelDetail.getHotel().getName(), (long) hotelDetail.getHotel().getIdx());
+		}
+		super.onResume();
 	}
 }
