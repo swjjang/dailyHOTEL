@@ -395,7 +395,7 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null,
 				HotelListFragment.this, mHostActivity));
 		
-		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("visit", "hotelList", selectedRegionTr, (long) position);
+		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("visit", "hotelList", selectedRegionTr, (long) (position+1));
 		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("hotelList", "/todays-hotels/" + selectedRegionTr);
 
 	}
