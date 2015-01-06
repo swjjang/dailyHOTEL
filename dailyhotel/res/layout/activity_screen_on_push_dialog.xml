@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/logo"
                 android:layout_toRightOf="@+id/logo"
-                android:text="결제알림"
+                android:text="@string/dialog_title_payment"
                 android:textColor="@color/dh_theme_color"
                 android:textSize="13.5dp" />
         </RelativeLayout>

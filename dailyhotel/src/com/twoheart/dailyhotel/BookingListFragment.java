@@ -12,6 +12,7 @@
 package com.twoheart.dailyhotel;
 
 import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +25,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -43,6 +45,7 @@ import com.twoheart.dailyhotel.activity.PaymentWaitActivity;
 import com.twoheart.dailyhotel.adapter.BookingListAdapter;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -101,6 +104,10 @@ DailyHotelStringResponseListener {
 				new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 						URL_WEBAPI_USER_ALIVE).toString(), null,
 						BookingListFragment.this, mHostActivity));
+		
+		Log.v("BookingListFragment", "BookingListFragment");
+		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("bookingList", "/bookings/");
+		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("visit", "bookingList", null, null);
 	}
 
 	@Override
@@ -118,6 +125,7 @@ DailyHotelStringResponseListener {
 			int position, long id) {
 		Intent i = null;
 		Booking item = mItems.get(position);
+		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "selectBookingConfirmation", item.getHotel_name(), null);
 		if (item.getPayType() == CODE_PAY_TYPE_CARD_COMPLETE || item.getPayType() == CODE_PAY_TYPE_ACCOUNT_COMPLETE) { // 카드결제 완료 || 가상계좌 완료
 			i = new Intent(mHostActivity, BookingTabActivity.class);
 		} else if (item.getPayType() == CODE_PAY_TYPE_ACCOUNT_WAIT) { // 가상계좌 입금대기
@@ -132,7 +140,7 @@ DailyHotelStringResponseListener {
 		if (requestCode == CODE_REQUEST_ACTIVITY_BOOKING_DETAIL) {
 			switch (resultCode) {
 				case CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT:
-					SimpleAlertDialog.build(getActivity(), "알림", data.getStringExtra("msg"), "확인", null).show();
+					SimpleAlertDialog.build(getActivity(), getString(R.string.dialog_notice2), data.getStringExtra("msg"), getString(R.string.dialog_btn_text_confirm), null).show();
 					break;
 			}
 		}

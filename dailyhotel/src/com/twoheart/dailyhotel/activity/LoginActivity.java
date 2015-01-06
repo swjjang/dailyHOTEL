@@ -54,6 +54,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
+import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -217,6 +218,8 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 					new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 							URL_WEBAPI_USER_LOGIN).toString(), loginParams,
 							this, this));
+			
+			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestLogin", null, null);
 
 		} else if (v.getId() == facebookLogin.getId()) {
 			fbSession = new Session.Builder(this).setApplicationId(getString(R.string.app_id)).build();
@@ -228,6 +231,8 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 			fbSession.openForRead(or);
 
 			Session.setActiveSession(fbSession);
+			
+			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestFacebookLogin", null, null);
 		}
 	}
 
@@ -359,7 +364,7 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 					// 실패 msg 출력
 					else if (obj.length() > 1) {
 						msg = obj.getString("msg");
-						SimpleAlertDialog.build(this, msg, "확인", null).show();
+						SimpleAlertDialog.build(this, msg, getString(R.string.dialog_btn_text_confirm), null).show();
 					}
 
 				}
@@ -484,5 +489,12 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 				LoginActivity.this));	
 			}
 		}.execute();		
+	}
+	
+	@Override
+	protected void onResume() {
+		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("profileWithLogoff", "/todays-hotels/profile-with-logoff");
+		RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "profileWithLogoff", null, null);
+		super.onResume();
 	}
 }

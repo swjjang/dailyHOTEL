@@ -6,7 +6,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.AbsListView;
 import android.widget.ExpandableListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.ExpandableListView.OnGroupExpandListener;
 
 import com.android.volley.Request.Method;
@@ -16,6 +19,7 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.adapter.BoardListAdapter;
 import com.twoheart.dailyhotel.model.Board;
+import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
@@ -45,6 +49,25 @@ public class NoticeActivity extends BaseActivity implements
 				}
 				mExpandedChildPos = groupPosition;
 				mListView.setSelectionFromTop(mExpandedChildPos, 0); // 클릭한 그룹뷰를 탑으로 두기 위하여 이동.
+				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectNotice", mList.get(groupPosition).getSubject(), (long) (groupPosition+1));
+			}
+		});
+		mListView.setOnScrollListener(new OnScrollListener() {
+			
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				switch(scrollState) {
+				case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("scroll", "articles", "공지사항", null);
+					break;
+				}
+				
+			}
+			
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				
 			}
 		});
 	}
@@ -57,6 +80,9 @@ public class NoticeActivity extends BaseActivity implements
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(
 				URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_BOARD_NOTICE)
 				.toString(), null, this, this));
+		
+		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("noticeList", "/settings/notice");
+		RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "noticeList", null, null);
 	}
 
 	@Override

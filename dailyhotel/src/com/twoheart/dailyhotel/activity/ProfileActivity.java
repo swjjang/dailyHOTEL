@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -27,6 +28,7 @@ import com.android.volley.Request.Method;
 import com.androidquery.AQuery;
 import com.facebook.Session;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -78,7 +80,8 @@ DailyHotelJsonResponseListener, OnClickListener {
 	public void onResume() {
 		super.onResume();
 		updateTextField();
-
+		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("profileWithLogon", "/todays-hotels/profile-with-logon");
+		RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "profileWithLogon", null, null);
 	}
 
 	/**
@@ -86,7 +89,7 @@ DailyHotelJsonResponseListener, OnClickListener {
 	 */
 	@Override
 	public void onBackPressed() {
-		if (mAq.id(R.id.tv_profile_edit).getText().equals("완료")) {
+		if (mAq.id(R.id.tv_profile_edit).getText().equals(getString(R.string.dialog_btn_text_confirm))) {
 
 			mAq.id(R.id.ll_profile_info_editable).visibility(View.GONE);
 			mAq.id(R.id.ll_profile_info_label).visibility(View.VISIBLE);
@@ -95,7 +98,7 @@ DailyHotelJsonResponseListener, OnClickListener {
 				.startAnimation(
 						AnimationUtils.loadAnimation(this,
 								R.anim.fade_in));
-			mAq.id(R.id.tv_profile_edit).text("수정");
+			mAq.id(R.id.tv_profile_edit).text(getString(R.string.act_profile_modify));
 
 			mAq.id(R.id.et_profile_name).text(prevName);
 			mAq.id(R.id.et_profile_phone).text(prevPh);
@@ -116,7 +119,7 @@ DailyHotelJsonResponseListener, OnClickListener {
 		if (!(view instanceof EditText)) {
 			view.setOnTouchListener(new OnTouchListener() {
 				public boolean onTouch(View v, MotionEvent event) {
-					if (mAq.id(R.id.tv_profile_edit).getText().equals("완료")) {
+					if (mAq.id(R.id.tv_profile_edit).getText().equals(getString(R.string.dialog_btn_text_confirm))) {
 						mAq.id(R.id.ll_profile_edit).click();
 						return true;
 					}
@@ -152,7 +155,7 @@ DailyHotelJsonResponseListener, OnClickListener {
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == R.id.ll_profile_edit) {
-			if (mAq.id(R.id.tv_profile_edit).getText().equals("수정")) {
+			if (mAq.id(R.id.tv_profile_edit).getText().equals(getString(R.string.act_profile_modify))) {
 				mAq.id(R.id.ll_profile_info_label).visibility(View.GONE);
 				mAq.id(R.id.ll_profile_info_editable).visibility(View.VISIBLE);
 				mAq.id(R.id.ll_profile_info_editable)
@@ -160,11 +163,11 @@ DailyHotelJsonResponseListener, OnClickListener {
 				.startAnimation(
 						AnimationUtils.loadAnimation(this,
 								R.anim.fade_in));
-				mAq.id(R.id.tv_profile_edit).text("완료");
+				mAq.id(R.id.tv_profile_edit).text(getString(R.string.dialog_btn_text_confirm));
 
 				toggleKeyboard(true);
 
-			} else if (mAq.id(R.id.tv_profile_edit).getText().equals("완료")) {
+			} else if (mAq.id(R.id.tv_profile_edit).getText().equals(getString(R.string.dialog_btn_text_confirm))) {
 				mAq.id(R.id.ll_profile_info_editable).visibility(View.GONE);
 				mAq.id(R.id.ll_profile_info_label).visibility(View.VISIBLE);
 				mAq.id(R.id.ll_profile_info_label)
@@ -172,7 +175,7 @@ DailyHotelJsonResponseListener, OnClickListener {
 				.startAnimation(
 						AnimationUtils.loadAnimation(this,
 								R.anim.fade_in));
-				mAq.id(R.id.tv_profile_edit).text("수정");
+				mAq.id(R.id.tv_profile_edit).text(getString(R.string.act_profile_modify));
 
 				toggleKeyboard(false);
 
@@ -207,7 +210,7 @@ DailyHotelJsonResponseListener, OnClickListener {
 				@Override
 				public void onClick(DialogInterface dialog,
 						int which) {
-
+					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestLogout", null, null);
 					mQueue.add(new DailyHotelJsonRequest(
 							Method.GET,
 							new StringBuilder(
@@ -244,7 +247,7 @@ DailyHotelJsonResponseListener, OnClickListener {
 			};
 			
 			SimpleAlertDialog.build(ProfileActivity.this, null, getString(R.string.dialog_msg_chk_wanna_login), 
-					"로그아웃", "취소", posListener, null).show();
+					getString(R.string.dialog_btn_text_logout), getString(R.string.dialog_btn_text_cancel), posListener, null).show();
 
 		}
 	}

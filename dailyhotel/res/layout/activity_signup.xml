@@ -15,7 +15,8 @@
         android:singleLine="true"
         android:background="@drawable/edit_text_holo_light"
         android:textColorHint="@color/textView_textColor_disabled"
-        android:hint="[필수] 휴대폰 번호 ('-' 제외)"/>
+        android:hint="@string/act_signup_phone"
+        />
     
     <EditText 
         android:id="@+id/et_signup_email"
@@ -28,7 +29,7 @@
         android:maxLength="50"
         android:background="@drawable/edit_text_holo_light"
         android:textColorHint="@color/textView_textColor_disabled"
-        android:hint="[필수] 이메일"/>
+        android:hint="@string/act_signup_email"/>
     
     <EditText 
         android:id="@+id/et_signup_name"
@@ -41,7 +42,7 @@
         android:maxLength="20"
         android:background="@drawable/edit_text_holo_light"
         android:textColorHint="@color/textView_textColor_disabled"
-        android:hint="[필수] 이름 (체크인시 사용)"/>
+        android:hint="@string/act_signup_name"/>
     
     <EditText 
         android:id="@+id/et_signup_pwd"
@@ -54,7 +55,7 @@
         android:maxLength="20"
         android:background="@drawable/edit_text_holo_light"
         android:textColorHint="@color/textView_textColor_disabled"
-        android:hint="[필수] 비밀번호 (4자이상)"/>
+        android:hint="@string/act_signup_pwd"/>
     
     <EditText 
         android:id="@+id/et_signup_recommender"
@@ -66,7 +67,7 @@
         android:maxLength="10"
         android:background="@drawable/edit_text_holo_light"
         android:textColorHint="@color/textView_textColor_disabled"
-        android:hint="[선택] 추천인 코드"/>
+        android:hint="@string/act_signup_code"/>
 	
     <Button 
         android:id="@+id/btn_signup"
@@ -76,7 +77,7 @@
         android:gravity="center|center_vertical"
         android:background="@drawable/shape_button_common_background"
         android:textColor="@android:color/white"
-        android:text="약관 동의하고 회원가입"/>
+        android:text="@string/act_signup_btn_signup"/>
     
     <LinearLayout 
             android:layout_width="match_parent"
@@ -92,7 +93,7 @@
 	            android:layout_weight="0.5"
 	            android:gravity="center"
 	            android:textColor="@color/textView_textColor_sub"
-	            android:text="이용약관"/>
+	            android:text="@string/act_signup_terms"/>
             
             <TextView
                 android:id="@+id/tv_signup_personal_info" 
@@ -101,7 +102,7 @@
 	            android:layout_weight="0.5"
 	            android:gravity="center"
 	            android:textColor="@color/textView_textColor_sub"
-	            android:text="개인정보 취급방침"/>
+	            android:text="@string/act_signup_privacy"/>
             
         </LinearLayout>
     

@@ -45,7 +45,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking>{
 			TextView name = (TextView) v.findViewById(R.id.tv_booking_row_name);
 			if (element.getPayType() == 20) {
 				TextView ment = (TextView) v.findViewById(R.id.tv_booking_row_ment);
-				ment.setText("입금대기");
+				ment.setText(context.getString(R.string.actionbar_title_payment_wait_activity));
 			}
 			
 			String str = items.get(position).getSday();

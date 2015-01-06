@@ -26,6 +26,7 @@ import java.util.Locale;
 
 import org.json.JSONObject;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
@@ -48,6 +49,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
@@ -64,6 +66,10 @@ import android.widget.Toast;
 
 import com.android.volley.Request.Method;
 import com.androidquery.util.AQUtility;
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.GoogleAnalytics;
+import com.google.analytics.tracking.android.MapBuilder;
+import com.google.analytics.tracking.android.Tracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -75,6 +81,7 @@ import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -104,6 +111,7 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 	public ListView drawerList;
 	public DrawerLayout drawerLayout;
 	private FrameLayout mContentFrame;
+	public Dialog popUpDialog;
 
 	public ActionBarDrawerToggle drawerToggle;
 	protected FragmentManager fragmentManager;
@@ -138,12 +146,13 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 	
 		
 		// 사용자가 선택한 언어, but 만약 사용자가 한국인인데 일본어를 선택하면 jp가 됨.
-		String locale = Locale.getDefault().getDisplayLanguage();
-		Log.e("locale",locale);
-		
-		Editor editor = sharedPreference.edit();
-		editor.putString(KEY_PREFERENCE_LOCALE, locale);
-		editor.apply();
+		// 영어버전 
+//		String locale = Locale.getDefault().getDisplayLanguage();
+//		Log.e("locale",locale);
+//		
+//		Editor editor = sharedPreference.edit();
+//		editor.putString(KEY_PREFERENCE_LOCALE, locale);
+//		editor.apply();
 		
 		// Intent Scheme Parameter for KakaoLink
 		intentData = getIntent().getData();
@@ -219,17 +228,23 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
+		Editor editor = sharedPreference.edit();
+		
 		if (requestCode == CODE_REQUEST_ACTIVITY_SPLASH) {
 			switch (resultCode) {
 			case RESULT_OK :		// 스플래시 화면이 정상적으로 종료되었을 경우
+				editor.putBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false);
+				editor.apply();
 				break;
 			case CODE_RESULT_ACTIVITY_SPLASH_NEW_EVENT :		// 스플래시가 정상적으로 종료되었는데 새로운 이벤트 알림이 있는 경우
+				editor.putBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, true);
+				editor.apply();
 				break;
 			default :		// 스플래시가 비정상적으로 종료되었을 경우
 				super.finish();		// 어플리케이션(메인 화면)을 종료해버린다
 				return;				// 메서드를 빠져나간다 - 호텔 평가를 수행하지 않음.
 			}
-
+			
 			boolean showGuide = sharedPreference.getBoolean(KEY_PREFERENCE_SHOW_GUIDE, true);
 			if (showGuide) startActivityForResult(new Intent(this, IntroActivity.class), CODE_REQUEST_ACTIVITY_INTRO);
 			else {
@@ -262,7 +277,7 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 		}
 
 	}
-
+	
 	@Override
 	public void onResponse(String url, String response) {
 		if (url.contains(URL_WEBAPI_USER_ALIVE)) {
@@ -284,7 +299,6 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 		if (url.contains(URL_WEBAPI_USER_INFO)) {
 			try {
 				String loginuser_idx = response.getString("idx");
-
 
 				String gcmId=getGcmId();
 				// GCM 등록 시도
@@ -312,6 +326,7 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 						Date checkOut = SaleTime.stringToDate(Util
 								.dailyHotelTimeConvert(purchasedHotelCheckOut));
 
+						//호텔 만족도 조사 
 						if (!purchasedHotelName.equals(VALUE_PREFERENCE_HOTEL_NAME_DEFAULT)) {
 							if (today.compareTo(checkOut) >= 0) {
 								Calendar calendar = Calendar.getInstance();
@@ -370,7 +385,7 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 			if (GooglePlayServicesUtil.isUserRecoverableError(resCode)) {
 				GooglePlayServicesUtil.getErrorDialog(resCode, this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
 			} else {
-				showToast("구글플레이 서비스가 이용가능 하지 않습니다.", Toast.LENGTH_LONG, false);
+				showToast(getString(R.string.toast_msg_is_not_available_google_service), Toast.LENGTH_LONG, false);
 				finish();
 			}
 			return false;
@@ -560,18 +575,22 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 		switch (selectedMenuIconId) {
 		case R.drawable.selector_drawermenu_todayshotel:
 			indexLastFragment = INDEX_HOTEL_LIST_FRAGMENT;
+			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectMenu", getString(R.string.actionbar_title_hotel_list_frag), (long) position);
 			break;
 
 		case R.drawable.selector_drawermenu_reservation:
 			indexLastFragment = INDEX_BOOKING_LIST_FRAGMENT;
+			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectMenu", getString(R.string.actionbar_title_booking_list_frag), (long) position);
 			break;
 
 		case R.drawable.selector_drawermenu_saving:
 			indexLastFragment = INDEX_CREDIT_FRAGMENT;
+			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectMenu", getString(R.string.actionbar_title_credit_frag), (long) position);
 			break;
 
 		case R.drawable.selector_drawermenu_setting:
 			indexLastFragment = INDEX_SETTING_FRAGMENT;
+			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectMenu", getString(R.string.actionbar_title_setting_frag), (long) position);
 			break;
 		}
 
@@ -598,6 +617,7 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 	 */
 	public void setNavigationDrawer() {
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		
 		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
 				R.drawable.ic_drawer, 0, 0) {
 
@@ -609,6 +629,10 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 			public void onDrawerOpened(View drawerView) {
 				super.onDrawerOpened(drawerView);
 				supportInvalidateOptionsMenu();
+				
+				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("menu", "/menu");
+				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "menu", null, null);
+				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestMenuBar", null, null);
 			}
 		};
 
@@ -818,5 +842,4 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 		// Error Fragment를 표시한다.
 		replaceFragment(new ErrorFragment());
 	}
-
 }

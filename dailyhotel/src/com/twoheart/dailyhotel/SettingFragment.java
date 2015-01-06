@@ -36,6 +36,8 @@ import com.twoheart.dailyhotel.activity.NoticeActivity;
 import com.twoheart.dailyhotel.activity.ProfileActivity;
 import com.twoheart.dailyhotel.activity.VersionActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Log;
+import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
@@ -53,6 +55,7 @@ public class SettingFragment extends BaseFragment implements Constants,
 	private TextView tvNotice, tvHelp, tvMail, tvLogin, tvEmail, tvCall,
 			tvAbout, tvVersion;
 	private LinearLayout llVersion, llLogin;
+	private String profileStr, loginStr;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -99,11 +102,16 @@ public class SettingFragment extends BaseFragment implements Constants,
 	public void onResume() {
 		super.onResume();
 		mHostActivity.setActionBar(R.string.actionbar_title_setting_frag);
+		profileStr = getString(R.string.frag_profile);
+		loginStr = getString(R.string.frag_login);
 		
 		lockUI();
 		mQueue.add(new DailyHotelStringRequest(Method.GET,
 				new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 						URL_WEBAPI_USER_ALIVE).toString(), null, this, mHostActivity));
+		
+		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("setting", "/settings/");
+		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("visit", "setting", null, null);
 	}
 
 	@Override
@@ -128,8 +136,9 @@ public class SettingFragment extends BaseFragment implements Constants,
 			intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.mail_text_subject));
 			intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.mail_text_desc));
 			startActivity(Intent.createChooser(intent, getString(R.string.mail_text_dialog_title)));
+			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "mailCS", null, null);
 		} else if (v.getId() == llLogin.getId()) {
-			if (tvLogin.getText().equals("프로필")) { // 로그인 되어 있는 상태
+			if (tvLogin.getText().equals(getString(R.string.frag_profile))) { // 로그인 되어 있는 상태
 				Intent i = new Intent(mHostActivity, ProfileActivity.class);
 				startActivity(i);
 				mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
@@ -145,6 +154,7 @@ public class SettingFragment extends BaseFragment implements Constants,
 			Intent i = new Intent(Intent.ACTION_DIAL,
 					Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
 			startActivity(i);
+			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "inquireCS", null, null);
 		} else if (v.getId() == tvAbout.getId()) {
 			Intent i = new Intent(mHostActivity, AboutActivity.class);
 			startActivity(i);
@@ -167,10 +177,10 @@ public class SettingFragment extends BaseFragment implements Constants,
 		tvEmail.setText(email);
 		
 		if (login) {
-			tvLogin.setText("프로필");
+			tvLogin.setText(profileStr);
 			tvEmail.setVisibility(View.VISIBLE);
 		} else {
-			tvLogin.setText("로그인");
+			tvLogin.setText(loginStr);
 			tvEmail.setVisibility(View.GONE);
 		}
 		

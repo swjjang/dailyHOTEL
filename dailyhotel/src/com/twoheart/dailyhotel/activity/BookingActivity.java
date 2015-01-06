@@ -52,6 +52,7 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.GaManager;
 import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.Log;
+import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -95,6 +96,12 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 	private int mResCode;
 	private Intent mResIntent;
 	protected String mAliveCallSource;
+	
+
+	private String locale;
+	
+	private int mHotelIdx;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +114,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		if (bundle != null) {
 			mPay.setHotelDetail((HotelDetail) bundle
 					.getParcelable(NAME_INTENT_EXTRA_DATA_HOTELDETAIL));
+			mHotelIdx = bundle.getInt(NAME_INTENT_EXTRA_DATA_HOTELIDX);
 		}
 
 		setActionBar(mPay.getHotelDetail().getHotel().getName());
@@ -151,7 +159,8 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		rbPaymentCard.setChecked(true);
 
 		saleTime = new SaleTime();
-
+//		locale = sharedPreference.getString(KEY_PREFERENCE_LOCALE, null);
+		
 	}
 
 	@Override
@@ -165,6 +174,12 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(
 				URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_SAVED_MONEY)
 				.toString(), null, this, this));
+		
+		String region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
+		String hotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
+		
+		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("bookingDetail", "/todays-hotels/" + region + "/" + hotelName + "/booking-detail");
+		RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "bookingDetail", hotelName, (long) mPay.getHotelDetail().getHotel().getIdx());
 	}
 
 	private void updatePayPrice(boolean applyCredit) {
@@ -175,7 +190,10 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				.replaceAll(",", ""));
 
 		DecimalFormat comma = new DecimalFormat("###,##0");
-		tvOriginalPriceValue.setText(comma.format(originalPrice)+"원");
+		
+//		if (locale.equals("English"))	tvOriginalPriceValue.setText(getString(R.string.currency)+comma.format(originalPrice));
+//		else	tvOriginalPriceValue.setText(comma.format(originalPrice)+getString(R.string.currency));
+		tvOriginalPriceValue.setText(comma.format(originalPrice)+getString(R.string.currency));
 
 		if (applyCredit) {
 			int payPrice = originalPrice - credit;
@@ -184,16 +202,22 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 			mPay.setOriginalPrice(originalPrice);
 			
 			if (credit >= originalPrice) credit = originalPrice;
-			tvCreditValue.setText("-"+comma.format(credit)+"원");
+//			if (locale.equals("English"))	tvCreditValue.setText("-"+getString(R.string.currency)+comma.format(credit));
+//			else	tvCreditValue.setText("-"+comma.format(credit)+getString(R.string.currency));
+			tvCreditValue.setText("-"+comma.format(credit)+getString(R.string.currency));
 
 		}
 		else {
-			tvCreditValue.setText("0원");
+//			if (locale.equals("English"))	tvCreditValue.setText(getString(R.string.currency)+"0");
+//			else	tvCreditValue.setText("0"+getString(R.string.currency)); 
+			tvCreditValue.setText("0"+getString(R.string.currency));
 			mPay.setPayPrice(originalPrice);
 //			mPay.setOriginalPrice(originalPrice);
 		}
 
-		tvPrice.setText(comma.format(mPay.getPayPrice())+"원");
+//		if (locale.equals("English"))	tvPrice.setText(getString(R.string.currency)+comma.format(mPay.getPayPrice()));
+//		else	tvPrice.setText(comma.format(mPay.getPayPrice())+getString(R.string.currency));
+		tvPrice.setText(comma.format(mPay.getPayPrice())+getString(R.string.currency));
 
 	}
 
@@ -244,14 +268,17 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 						.getId()) { // 신용카드를 선택했을 경우
 
 					dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_CARD);
+					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("radio", "choosePaymentWay", "신용카드", (long) 1);
 				} else if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentHp
 						.getId()) { // 핸드폰을 선택했을 경우
 
 					dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_HP);
+					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("radio", "choosePaymentWay", "휴대폰", (long) 2);
 				} else if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentAccount
 						.getId()) { // 가상계좌 입금을 선택했을 경우
 
 					dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_ACCOUNT);
+					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("radio", "choosePaymentWay", "계좌이체", (long) 3);
 				}
 
 				dialog.setOnDismissListener(new OnDismissListener() {
@@ -263,8 +290,16 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				});
 				
 				dialog.show();
+				
 				v.setClickable(false);
 				v.setEnabled(false);
+				
+				String region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
+				String hotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
+				
+				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("paymentAgreement", "/todays-hotels/" + region + "/" + hotelName + "/booking-detail/payment-agreement");
+				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "paymentAgreement", mPay.getHotelDetail().getHotel().getName(), (long) mPay.getHotelDetail().getHotel().getIdx());
+				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestPayment", mPay.getHotelDetail().getHotel().getName(), (long) mHotelIdx);
 			}
 
 
@@ -315,6 +350,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 								URL_WEBAPI_USER_ALIVE).toString(), null,
 								BookingActivity.this, BookingActivity.this));
 				dialog.dismiss();
+				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "agreePayment", mPay.getHotelDetail().getHotel().getName(), (long) mHotelIdx);
 			}
 		};
 
@@ -414,10 +450,13 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		if (requestCode == CODE_REQUEST_ACTIVITY_PAYMENT) {
 			Log.d(TAG, Integer.toString(resultCode));
 
-			String title = "결제알림";
+			String title = getString(R.string.dialog_title_payment);
 			String msg = "";
-			String posTitle = "확인";
+			String posTitle = getString(R.string.dialog_btn_text_confirm);
 			android.content.DialogInterface.OnClickListener posListener = null;
+			
+			String region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
+			String hotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
 
 			switch (resultCode) {
 			case CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE:
@@ -442,39 +481,43 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 						mPay.getHotelDetail().getHotel().getCategory(), 
 						(double) mPay.getPayPrice()
 						);
-
+				
+				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("paymentConfirmation", "/todays-hotels/" + region + "/" + hotelName + "/booking-detail/payment-confirm");
+				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "paymentConfirmation", hotelName, (long) mPay.getHotelDetail().getHotel().getIdx());
+				
 				posListener = new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog,
 							int which) {
 						dialog.dismiss(); // 닫기
+						RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "confirmPayment", mPay.getHotelDetail().getHotel().getName(), (long)mHotelIdx);
 						setResult(RESULT_OK);
 						BookingActivity.this.finish();
 					}
 				};
 
-				msg = "결제가 정상적으로 이루어졌습니다";
+				msg = getString(R.string.act_toast_payment_success);
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_SOLD_OUT:
-				msg = "모든 객실이 판매되었습니다.\n다음에 이용해주세요.";
+				msg = getString(R.string.act_toast_payment_soldout);
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_NOT_AVAILABLE:
-				msg = "다른 손님이 예약 중입니다.\n잠시 후 이용해주세요.";
+				msg = getString(R.string.act_toast_payment_not_available);
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR:
-				msg = "네트워크 오류가 발생했습니다.\n네트워크 연결을 확인해주세요.";
+				msg = getString(R.string.act_toast_payment_network_error);
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION:
 				VolleyHttpClient.createCookie();	// 쿠키를 다시 생성 시도
 				return;
 			case CODE_RESULT_ACTIVITY_PAYMENT_INVALID_DATE:
-				msg = "판매가 마감되었습니다.";
+				msg = getString(R.string.act_toast_payment_invalid_date);
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_FAIL:
-				msg = "알 수 없는 오류가 발생했습니다.\n문의해주시기 바랍니다.";
+				msg = getString(R.string.act_toast_payment_fail);
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_CANCELED:
-				msg = "결제가 취소되었습니다.";
+				msg = getString(R.string.act_toast_payment_canceled);
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY:
 				/**
@@ -491,13 +534,13 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				finish();
 				return;
 			case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_TIME_ERROR:
-				msg = "입금대기 시간이 초과되었습니다\n다시 시도해주세요.";
+				msg = getString(R.string.act_toast_payment_account_time_error);
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_DUPLICATE:
-				msg = "이미 입금대기 중인 호텔입니다.";
+				msg = getString(R.string.act_toast_payment_account_duplicate);
 				break;
 			case CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER:
-				msg = "결제 대기시간이 초과되었습니다.\n다시 시도해주세요.";
+				msg = getString(R.string.act_toast_payment_account_timeover);
 				break;
 			default:
 				return;
@@ -528,12 +571,16 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				tvCredit.setEnabled(false);
 				tvOriginalPriceValue.setEnabled(false);
 				tvCreditValue.setEnabled(false);
+				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("toggle action", "applyCredit", "off", null);
+				
 
 			} else { // 사용함으로 변경
 				tvOriginalPrice.setEnabled(true);
 				tvCredit.setEnabled(true);
 				tvOriginalPriceValue.setEnabled(true);
 				tvCreditValue.setEnabled(true);
+				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("toggle action", "applyCredit", "on", null);
+				
 			}
 
 			mPay.setSaleCredit(isChecked);
@@ -643,10 +690,12 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				mPay.setCheckOut(checkout);
 
 				String in[] = checkin.split("-");
-				tvCheckIn.setText("20" + in[0] + "년 " + in[1] + "월 " + in[2] + "일 " + in[3] + "시");
+				tvCheckIn.setText("20" + in[0] + getString(R.string.frag_booking_tab_year) + in[1] + getString(R.string.frag_booking_tab_month)
+						+ in[2] + getString(R.string.frag_booking_tab_day) + " " + in[3] + getString(R.string.frag_booking_tab_hour));
 
 				String out[] = checkout.split("-");
-				tvCheckOut.setText("20" + out[0] + "년 " + out[1] + "월 " + out[2] + "일 " + out[3] + "시");
+				tvCheckOut.setText("20" + out[0] + getString(R.string.frag_booking_tab_year) + out[1] + getString(R.string.frag_booking_tab_month) 
+						+ out[2] + getString(R.string.frag_booking_tab_day) + " "+ out[3] + getString(R.string.frag_booking_tab_hour));
 
 				unLockUI();
 			} catch (Exception e) {
@@ -700,7 +749,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 						}
 					};
 
-					SimpleAlertDialog.build(this, "알림", getString(R.string.dialog_msg_sales_closed), "확인", posListener).show();
+					SimpleAlertDialog.build(this, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_sales_closed), getString(R.string.dialog_btn_text_confirm), posListener).show();
 
 				}
 
@@ -745,8 +794,17 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 						.getDiscount().replaceAll(",", ""));
 				DecimalFormat comma = new DecimalFormat("###,##0");
 				
-				tvOriginalPriceValue.setText(comma.format(originalPrice)+"원");
-				tvPrice.setText(comma.format(originalPrice)+"원");
+//				if (locale.equals("English"))	{
+//					tvOriginalPriceValue.setText(getString(R.string.currency)+comma.format(originalPrice));
+//					tvPrice.setText(getString(R.string.currency)+comma.format(originalPrice));
+//				}
+//				else	{
+//					tvOriginalPriceValue.setText(comma.format(originalPrice)+getString(R.string.currency));
+//					tvPrice.setText(comma.format(originalPrice)+getString(R.string.currency));
+//				}
+				tvOriginalPriceValue.setText(comma.format(originalPrice)+getString(R.string.currency));
+				tvPrice.setText(comma.format(originalPrice)+getString(R.string.currency));
+					
 				mPay.setPayPrice(originalPrice);
 				
 				swCredit.setChecked(false);
@@ -829,6 +887,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()){
 		case R.id.action_call:
+			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "callHotel", mPay.getHotelDetail().getHotel().getName(), (long)mHotelIdx);
 			Intent i = new Intent(
 					Intent.ACTION_DIAL,
 					Uri.parse(new StringBuilder("tel:")

@@ -16,13 +16,13 @@
 -->
 
 <resources>
-    <string name="com_facebook_dialogloginactivity_ok_button">확인</string>
-    <string name="com_facebook_loginview_log_out_button">로그아웃</string>
-    <string name="com_facebook_loginview_log_in_button">Facebook으로 로그인</string>
-    <string name="com_facebook_loginview_logged_in_as">%1$s님으로 로그인</string>
+    <!-- <string name="com_facebook_dialogloginactivity_ok_button">확인</string> -->
+    <!-- <string name="com_facebook_loginview_log_out_button">로그아웃</string> -->
+    <!-- <string name="com_facebook_loginview_log_in_button">페이스북으로 로그인</string> -->
+    <!-- <string name="com_facebook_loginview_logged_in_as">%1$s님으로 로그인</string>
     <string name="com_facebook_loginview_logged_in_using_facebook">Facebook으로 로그인하셨습니다</string>
     <string name="com_facebook_loginview_log_out_action">로그아웃</string>
-    <string name="com_facebook_loginview_cancel_action">취소</string>
+    <string name="com_facebook_loginview_cancel_action">취소</string> -->
     <string name="com_facebook_logo_content_description">Facebook Logo</string>
     <string name="com_facebook_usersettingsfragment_log_in_button">Log in&#8230;</string>
     <string name="com_facebook_usersettingsfragment_logged_in">Logged in</string>

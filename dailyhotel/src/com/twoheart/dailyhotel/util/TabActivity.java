@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.view.ViewGroup;
 
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.TabInfoFragment;
 import com.twoheart.dailyhotel.fragment.TabMapFragment;
 import com.twoheart.dailyhotel.model.HotelDetail;
@@ -67,8 +68,9 @@ public abstract class TabActivity extends BaseActivity {
 	}
 
 	protected void loadFragments() {
-		mFragments.add(TabInfoFragment.newInstance(hotelDetail));
-		mFragments.add(TabMapFragment.newInstance(hotelDetail));
+		String[] titles = {getString(R.string.frag_tab_info_title), getString(R.string.frag_tab_map_title)};
+		mFragments.add(TabInfoFragment.newInstance(hotelDetail, titles[0]));
+		mFragments.add(TabMapFragment.newInstance(hotelDetail, titles[1]));
 		
 		mAdapter.notifyDataSetChanged();
 		mIndicator.notifyDataSetChanged();

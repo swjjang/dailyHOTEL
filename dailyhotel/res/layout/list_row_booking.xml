@@ -46,7 +46,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="left|bottom"
-                android:text="체크인시 프론트에 성함을 알려주세요"
+                android:text="@string/booking_row_ment"
                 android:textColor="#7f7f7f"
                 android:textSize="14dp" />
         </LinearLayout>

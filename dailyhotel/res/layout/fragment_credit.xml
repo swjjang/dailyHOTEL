@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:gravity="center"
-                android:text="좋은 건 나눠야죠!"
+                android:text="@string/act_credit_recom"
                 android:textColor="@color/textView_textColor_main"
                 android:textSize="20dp" />
 
@@ -32,25 +32,46 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="친구가 내 추천코드를 넣고 회원가입을 하면"
+                android:text="@string/act_credit_line1"
                 android:textColor="@color/textView_textColor_sub"
                 android:textSize="15dp" />
+            
+            <TextView
+                android:id="@+id/act_credit_line1_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/act_credit_line1_4"
+                android:textColor="@color/textView_textColor_sub"
+                android:textSize="15dp"
+                android:paddingTop="1dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="친구는 5,000원을 선물받고!"
+                android:text="@string/act_credit_line2"
                 android:textColor="@color/textView_textColor_sub"
-                android:textSize="15dp" />
+                android:textSize="15dp"
+                android:paddingTop="1dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="친구가 첫 결제를 하면 나도 5,000원 받고!"
+                android:text="@string/act_credit_line3"
                 android:textColor="@color/textView_textColor_sub"
-                android:textSize="15dp" />
+                android:textSize="15dp"
+                android:paddingTop="1dp" />
+            
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/act_credit_line5"
+                android:textColor="@color/textView_textColor_sub"
+                android:textSize="15dp"
+                android:paddingTop="2dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -67,7 +88,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:background="@drawable/shape_button_common_background"
-                android:text="기존 회원 로그인"
+                android:text="@string/act_credit_btn_login"
                 android:textColor="@android:color/white" />
 
             <Button
@@ -78,7 +99,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:background="@drawable/shape_button_common_background"
-                android:text="회원 가입하고 친구 초대하기"
+                android:text="@string/act_credit_sign_up"
                 android:textColor="@android:color/white" />
         </LinearLayout>
     </RelativeLayout>
@@ -103,7 +124,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:text="적립금"
+                android:text="@string/act_credit_view_credit"
                 android:textColor="@color/textView_textColor_section"
                 android:textSize="12.5dp" />
         </LinearLayout>
@@ -144,7 +165,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="12dp"
                         android:layout_toRightOf="@+id/iv_credit_icon"
-                        android:text="현재 적립금"
+                        android:text="@string/act_credit_current_credit"
                         android:textColor="@color/textView_textColor_sub"
                         android:textSize="15dp" />
                 </RelativeLayout>
@@ -174,7 +195,7 @@
                         android:layout_marginTop="10dp"
                         android:layout_toRightOf="@+id/iv_credit_icon"
                         android:clickable="true"
-                        android:text="적립금내역 보기"
+                        android:text="@string/act_credit_history"
                         android:textColor="@color/textView_textColor_sub"
                         android:textSize="13.5dp" />
                 </LinearLayout>
@@ -194,7 +215,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:text="추천코드"
+                android:text="@string/act_credit_recom_code"
                 android:textColor="@color/textView_textColor_section"
                 android:textSize="12.5dp" />
         </LinearLayout>
@@ -230,7 +251,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="12dp"
                     android:layout_toRightOf="@+id/iv_code_icon"
-                    android:text="나의 추천코드"
+                    android:text="@string/act_credit_my_recom_code"
                     android:textColor="@color/textView_textColor_sub"
                     android:textSize="15dp" />
 
@@ -266,7 +287,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:gravity="right"
-                android:text="친구가 회원가입 할 때 내 추천코드를 넣으면\n친구는 5,000원 선물받고!\n친구가 처음 결제하면 나도 5,000원 선물받고!"
+                android:text="@string/act_credit_line4"
                 android:textColor="@color/textView_textColor_sub"
                 android:textSize="13.5dp" />
         </RelativeLayout>
@@ -299,7 +320,7 @@
                     android:layout_height="wrap_content"
                     android:background="#0000"
                     android:clickable="false"
-                    android:text="카카오톡 친구 초대" />
+                    android:text="@string/act_credit_kakao" />
             </LinearLayout>
 
             <!-- <Button -->

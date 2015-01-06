@@ -137,8 +137,8 @@ DailyHotelJsonResponseListener, ErrorListener {
 				}
 			};
 			
-			SimpleAlertDialog.build(this, "잠시만요!", getString(R.string.dialog_msg_network_please_off_airplain),
-					"확인", "설정", posListener, negaListener).setOnKeyListener(keyListener).show();
+			SimpleAlertDialog.build(this, getString(R.string.dialog_btn_text_waiting), getString(R.string.dialog_msg_network_please_off_airplain),
+					getString(R.string.dialog_btn_text_confirm), getString(R.string.dialog_btn_text_setting), posListener, negaListener).setOnKeyListener(keyListener).show();
 		}
 
 		else if (!isAirplainMode && !isNetworkAvailable) {
@@ -181,8 +181,8 @@ DailyHotelJsonResponseListener, ErrorListener {
 					}
 				};
 				
-				alertDlg = SimpleAlertDialog.build(this, "잠시만요", getString(R.string.dialog_msg_network_unstable_retry_or_set_wifi),
-						"재시도", "설정", posListener, negaListener).setOnKeyListener(keyListener).create();
+				alertDlg = SimpleAlertDialog.build(this, getString(R.string.dialog_btn_text_waiting), getString(R.string.dialog_msg_network_unstable_retry_or_set_wifi),
+						getString(R.string.dialog_btn_text_retry), getString(R.string.dialog_btn_text_setting), posListener, negaListener).setOnKeyListener(keyListener).create();
 			}
 
 			alertDlg.show();
@@ -322,7 +322,7 @@ DailyHotelJsonResponseListener, ErrorListener {
 					};
 					
 					SimpleAlertDialog.build(this, getString(R.string.dialog_title_notice),
-							getString(R.string.dialog_msg_please_update_new_version), "업데이트", posListener).show();
+							getString(R.string.dialog_msg_please_update_new_version), getString(R.string.dialog_btn_text_update), posListener).show();
 					
 				} else if ((maxVersion > currentVersion)
 						&& (skipMaxVersion != maxVersion)) {
@@ -359,7 +359,7 @@ DailyHotelJsonResponseListener, ErrorListener {
 					};
 					
 					SimpleAlertDialog.build(this, getString(R.string.dialog_title_notice),
-							getString(R.string.dialog_msg_update_now), "업데이트", "취소", posListener, null)
+							getString(R.string.dialog_msg_update_now), getString(R.string.dialog_btn_text_update), getString(R.string.dialog_btn_text_cancel), posListener, null)
 							.setOnCancelListener(cancelListener).show();
 					
 				} else {

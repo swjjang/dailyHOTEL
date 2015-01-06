@@ -30,7 +30,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:text="호텔 정보"
+                    android:text="@string/frag_booking_tab_hotel_info"
                     android:textColor="@color/textView_textColor_section"
                     android:textSize="12.5dp" />
             </LinearLayout>
@@ -96,7 +96,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
                             android:singleLine="true"
-                            android:text="위치"
+                            android:text="@string/frag_booking_tab_location"
                             android:textColor="@drawable/selector_textview_textcolor"
                             android:textSize="15dp" />
                     </LinearLayout>
@@ -133,7 +133,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:text="베드타입"
+                        android:text="@string/frag_booking_tab_bed_type"
                         android:textColor="@drawable/selector_textview_textcolor"
                         android:textSize="15dp" />
 
@@ -172,7 +172,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:text="체크인 정보"
+                    android:text="@string/frag_booking_tab_chkin_info"
                     android:textColor="@color/textView_textColor_section"
                     android:textSize="12.5dp" />
             </LinearLayout>
@@ -203,7 +203,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:singleLine="true"
-                        android:text="체크인"
+                        android:text="@string/frag_booking_tab_chkin"
                         android:textColor="@drawable/selector_textview_textcolor"
                         android:textSize="15dp" />
 
@@ -240,7 +240,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:singleLine="true"
-                        android:text="체크아웃"
+                        android:text="@string/frag_booking_tab_chkout"
                         android:textColor="@drawable/selector_textview_textcolor"
                         android:textSize="15dp" />
 
@@ -294,7 +294,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:singleLine="true"
-                        android:text="예약자명"
+                        android:text="@string/frag_booking_tab_name"
                         android:textColor="@drawable/selector_textview_textcolor"
                         android:textSize="15dp" />
 
@@ -331,7 +331,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:singleLine="true"
-                        android:text="예약자 전화번호"
+                        android:text="@string/frag_booking_tab_mobile"
                         android:textColor="@drawable/selector_textview_textcolor"
                         android:textSize="15dp" />
 

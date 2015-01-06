@@ -40,7 +40,7 @@ public class PaymentWaitActivity extends BaseActivity implements DailyHotelJsonR
 		Bundle bundle = getIntent().getExtras();
 		if (bundle != null) booking = (Booking) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_BOOKING);
 
-		setActionBar("입금대기");
+		setActionBar(getString(R.string.actionbar_title_payment_wait_activity));
 		setContentView(R.layout.activity_payment_wait);
 
 		tvHotelName = (TextView) findViewById(R.id.tv_payment_wait_hotel_name);
@@ -79,11 +79,16 @@ public class PaymentWaitActivity extends BaseActivity implements DailyHotelJsonR
 					tvName.setText(response.getString("name"));
 
 					DecimalFormat comma = new DecimalFormat("###,##0");
-					tvPrice.setText(comma.format(response.getInt("amt"))+"원");
+//					String locale = sharedPreference.getString(KEY_PREFERENCE_LOCALE, null);
+//					if (locale.equals("English"))	tvPrice.setText(getString(R.string.currency)+comma.format(response.getInt("amt")));
+//					else	tvPrice.setText(comma.format(response.getInt("amt"))+getString(R.string.currency));
+					tvPrice.setText(comma.format(response.getInt("amt"))+getString(R.string.currency));
 					
 					String[] dateSlice = response.getString("date").split("/");
 					String[] timeSlice = response.getString("time").split(":");
 					
+//					if (locale.equals("English"))	tvDeadline.setText("upto " + Integer.parseInt(dateSlice[1])+"/ "+Integer.parseInt(dateSlice[2])+" "+timeSlice[0]+":"+timeSlice[1]);
+//					else	tvDeadline.setText(Integer.parseInt(dateSlice[1])+"월 "+Integer.parseInt(dateSlice[2])+"일 "+timeSlice[0]+":"+timeSlice[1]+"까지");
 					tvDeadline.setText(Integer.parseInt(dateSlice[1])+"월 "+Integer.parseInt(dateSlice[2])+"일 "+timeSlice[0]+":"+timeSlice[1]+"까지");
 
 					tvGuide1.setText(response.getString("msg1"));

@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.adapter;
 
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Locale;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -13,6 +14,7 @@ import android.graphics.drawable.PaintDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
 import android.support.v4.util.LruCache;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -120,7 +122,19 @@ PinnedSectionListAdapter {
 			viewHolder.name.setText(element.getName());
 			
 			String currency = getContext().getResources().getString(R.string.currency);
-			
+//			String locale = Locale.getDefault().getDisplayLanguage();
+//			
+//			if (locale.equals("English")) {
+//				viewHolder.price.setText(currency + strPrice);
+//				viewHolder.price.setPaintFlags(viewHolder.price.getPaintFlags()
+//						| Paint.STRIKE_THRU_TEXT_FLAG);
+//				viewHolder.discount.setText(currency + strDiscount);
+//			} else {
+//				viewHolder.price.setText(strPrice + currency);
+//				viewHolder.price.setPaintFlags(viewHolder.price.getPaintFlags()
+//						| Paint.STRIKE_THRU_TEXT_FLAG);
+//				viewHolder.discount.setText(strDiscount + currency);
+//			}
 			viewHolder.price.setText(strPrice + currency);
 			viewHolder.price.setPaintFlags(viewHolder.price.getPaintFlags()
 					| Paint.STRIKE_THRU_TEXT_FLAG);

@@ -5,6 +5,9 @@ import java.util.List;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.AbsoluteSizeSpan;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +19,7 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.HotelDetail;
+import com.twoheart.dailyhotel.util.Log;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
 public class TabInfoFragment extends BaseFragment {
@@ -28,14 +32,14 @@ public class TabInfoFragment extends BaseFragment {
 
 	private int infoViewCount;
 	
-	public static TabInfoFragment newInstance(HotelDetail hotelDetail) {
+	public static TabInfoFragment newInstance(HotelDetail hotelDetail, String title) {
 		
 		TabInfoFragment newFragment = new TabInfoFragment();
 		Bundle arguments = new Bundle();
 		
 		arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL, hotelDetail);
 		newFragment.setArguments(arguments);
-		newFragment.setTitle("정보");
+		newFragment.setTitle(title);
 		
 		return newFragment;
 		
@@ -45,7 +49,6 @@ public class TabInfoFragment extends BaseFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mHotelDetail = (HotelDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL);
-		
 	}
 	
 	@Override
@@ -84,7 +87,17 @@ public class TabInfoFragment extends BaseFragment {
 				.findViewById(R.id.tv_hotel_tab_info_subject);
 
 		tvInfoNumber.setText(Integer.toString(infoViewCount++));
+		
+		//영어 버전
+//		String locale = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_LOCALE, null);
+//		if (locale.equals("English")) {
+//			if (subject.equals("데일리의 추천 이유") || subject.equals("데일리의 추천이유")) tv_subject.setText("daily's Recommend Reason");
+//			else if (subject.equals("호텔 정보") || subject.equals("호텔정보")) tv_subject.setText("Hotel Info");
+//			else if (subject.equals("교통정보") || subject.equals("교통 정보")) tv_subject.setText("Traffic Info");
+//			else if (subject.equals("확인사항")) tv_subject.setText("Confirmation Items");
+//		} else tv_subject.setText(subject);
 		tv_subject.setText(subject);
+		
 		tv_subject.setTypeface(DailyHotel.getBoldTypeface());
 
 		LinearLayout content_view = (LinearLayout) layout_view
@@ -103,7 +116,7 @@ public class TabInfoFragment extends BaseFragment {
 
 			// layout_view.addView(rowLayout);
 		}
-
+		
 		// content_view.addView(content_listview);
 		// layout_view.addView(content_view);
 		layout.addView(layout_view);
@@ -114,6 +127,12 @@ public class TabInfoFragment extends BaseFragment {
 		Resources r = context.getResources();
 		int px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, r.getDisplayMetrics());
 		return px;
+	}
+	
+	@Override
+	public void onResume() {
+//		Log.d("hotelDetail_info", "info name : " + mHotelDetail.getHotel().getName() + " idx : " + mHotelDetail.getHotel().getIdx());
+		super.onResume();
 	}
 
 }

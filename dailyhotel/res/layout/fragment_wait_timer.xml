@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="false"
-            android:text="이벤트 참여하기"
+            android:text="@string/frag_wait_timer_title"
             android:textColor="#fff"
             android:textSize="21dp" />
     </LinearLayout>
@@ -45,7 +45,7 @@
         android:layout_marginRight="20dp"
         android:layout_marginBottom="10dp"
         android:background="@drawable/shape_button_common_background"
-        android:text="알람 켜기"
+        android:text="@string/frag_wait_timer_alarm"
         android:textColor="@android:color/white" />
 
     <LinearLayout
@@ -70,7 +70,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:gravity="center"
-            android:text="놀라운 가격으로 당신을 찾아갈\n호텔이 기다리고 있어요."
+            android:text="@string/frag_wait_timer_msg"
             android:textColor="@color/textView_textColor_sub"
             android:textSize="15dp" />
 

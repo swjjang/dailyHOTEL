@@ -51,6 +51,7 @@ import com.twoheart.dailyhotel.model.Pay;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.Log;
+import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
@@ -152,7 +153,18 @@ public class PaymentActivity extends BaseActivity implements Constants {
 
 		android.util.Log.e("GET_URL",url);
 		webView.loadUrl(url);
+		
+	}
+	
+	@Override
+	protected void onResume() {
+		String region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
+		String hotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
+		
+		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("paymentWeb", "/todays-hotels/" + region + "/" + hotelName + "/booking-detail/payment-web");
+		RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "paymentWeb", mPay.getHotelDetail().getHotel().getName(), (long) mPay.getHotelDetail().getHotel().getIdx());
 
+		super.onResume();
 	}
 
 	private byte[] parsePostParameter(String[] key, String[] value) {
@@ -505,8 +517,8 @@ public class PaymentActivity extends BaseActivity implements Constants {
 				}
 			};
 			
-			SimpleAlertDialog.build(PaymentActivity.this, "확인", getString(R.string.dialog_msg_install_paypin),
-					"설치", "취소", posListener, negaListener).show();
+			SimpleAlertDialog.build(PaymentActivity.this, getString(R.string.dialog_btn_text_confirm), getString(R.string.dialog_msg_install_paypin),
+					getString(R.string.dialog_btn_text_install), getString(R.string.dialog_btn_text_cancel), posListener, negaListener).show();
 		}
 	}
 
@@ -547,7 +559,8 @@ public class PaymentActivity extends BaseActivity implements Constants {
 				}
 			};
 			
-			SimpleAlertDialog.build(PaymentActivity.this, "알림", getString(R.string.dialog_msg_install_hana_sk), "예", "아니오",
+			SimpleAlertDialog.build(PaymentActivity.this, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_install_hana_sk), 
+					getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no),
 					posListener, null).show();
 		}
 	}
@@ -661,7 +674,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 						.getQueryParameter("approval_key");
 
 				if (strResultInfo == null || strResultInfo.length() <= 4)
-					finishActivity("ISP 결제 오류");
+					finishActivity(getString(R.string.act_payment_isp_error));
 
 				String strResCD = strResultInfo.substring(strResultInfo
 						.length() - 4);
@@ -685,9 +698,9 @@ public class PaymentActivity extends BaseActivity implements Constants {
 							+ strApprovalKey);
 
 				} else if (strResCD.equals("3001") == true) {
-					finishActivity("ISP 결제 사용자 취소");
+					finishActivity(getString(R.string.act_payment_isp_user_cancel));
 				} else {
-					finishActivity("ISP 결제 기타 오류");
+					finishActivity(getString(R.string.act_payment_isp_other_error));
 				}
 			}
 		} catch (Exception e) { e.printStackTrace(); } 
@@ -703,12 +716,12 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();
-				finishActivity("사용자 취소");
+				finishActivity(getString(R.string.act_payment_user_cancel));
 			}
 		};
 		
-		AlertDialog alertDlg = SimpleAlertDialog.build(PaymentActivity.this, "취소", "결제가 진행중입니다.\n취소하시겠습니까?",
-				"예", "아니오", posListener , null).create();
+		AlertDialog alertDlg = SimpleAlertDialog.build(PaymentActivity.this, getString(R.string.dialog_btn_text_cancel), getString(R.string.dialog_msg_chk_cancel_payment_progress),
+				getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener , null).create();
 
 		return alertDlg;
 	}
@@ -720,7 +733,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 
 		if (p_strFinishMsg != null) {
 			if (p_strFinishMsg.equals("NOT_AVAILABLE")) resultCode = CODE_RESULT_ACTIVITY_PAYMENT_NOT_AVAILABLE;
-			else if (p_strFinishMsg.contains("취소")) resultCode = RESULT_CANCELED;
+			else if (p_strFinishMsg.contains(getString(R.string.act_payment_chk_contain))) resultCode = RESULT_CANCELED;
 		}
 		Intent payData = new Intent();
 		payData.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
@@ -775,8 +788,8 @@ public class PaymentActivity extends BaseActivity implements Constants {
 				finish();
 			}
 		};
-		SimpleAlertDialog.build(PaymentActivity.this, "결제알림", "결제를 취소하시겠습니까?",
-				"예", "아니오", posListener , null).show();
+		SimpleAlertDialog.build(PaymentActivity.this, getString(R.string.dialog_title_payment), getString(R.string.dialog_msg_chk_cancel_payment),
+				getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener , null).show();
 	}
 	
 	@Override

@@ -18,7 +18,7 @@
             android:layout_height="50dp"
             android:background="@drawable/edit_text_holo_light"
             android:ems="10"
-            android:hint="이메일"
+            android:hint="@string/act_login_email"
             android:inputType="textEmailAddress"
             android:maxLength="50"
             android:paddingLeft="10dp"
@@ -35,7 +35,7 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/edit_text_holo_light"
             android:ems="10"
-            android:hint="비밀번호"
+            android:hint="@string/act_login_pwd"
             android:imeActionId="@+id/btn_login"
             android:inputType="textPassword"
             android:maxLength="20"
@@ -58,7 +58,7 @@
             android:gravity="center"
             android:paddingBottom="20dp"
             android:paddingTop="15dp"
-            android:text="자동로그인"
+            android:text="@string/act_login_autologin"
             android:textColor="@color/textView_textColor_main" />
     </LinearLayout>
 
@@ -73,7 +73,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@drawable/shape_button_common_background"
-            android:text="로그인"
+            android:text="@string/act_login_btn_login"
             android:textColor="@android:color/white" />
     </LinearLayout>
 
@@ -90,7 +90,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="비밀번호를 잊어버리셨어요?"
+            android:text="@string/act_login_forgot_pwd"
             android:textColor="@color/textView_textColor_sub"
             android:textSize="12dp" />
 
@@ -108,7 +108,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="회원가입"
+            android:text="@string/act_login_signup"
             android:textColor="@color/textView_textColor_sub"
             android:textSize="12dp" />
     </LinearLayout>
@@ -117,7 +117,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <com.facebook.widget.LoginButton
             android:id="@+id/authButton"

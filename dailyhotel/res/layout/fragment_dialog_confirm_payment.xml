@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/logo"
                 android:layout_toRightOf="@+id/logo"
-                android:text="확인 사항"
+                android:text="@string/dialog_title_payment_confirm"
                 android:textColor="@color/dh_theme_color"
                 android:textSize="13.5dp" />
         </RelativeLayout>
@@ -81,7 +81,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@drawable/selector_background_btn_rating_hotel"
-                    android:text="동의하고 결제 진행"
+                    android:text="@string/dialog_btn_payment_confirm"
                     android:textColor="@drawable/selector_textcolor_btn_rating_hotel"
                     android:textSize="17dp" />
             </LinearLayout>

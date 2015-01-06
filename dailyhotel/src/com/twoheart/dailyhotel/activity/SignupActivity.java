@@ -39,6 +39,7 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.GaManager;
+import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
@@ -154,6 +155,8 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 					new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 							URL_WEBAPI_USER_SIGNUP).toString(), signupParams,
 					this, this));
+			
+			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestSignup", null, null);
 			
 		} else if (v.getId() == tvTerm.getId()) { // 이용약관
 

@@ -51,7 +51,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:text="주소"
+                    android:text="@string/frag_hotel_tab_add"
                     android:textColor="@color/textView_textColor_sub"
                     android:textSize="15dp" />
 
@@ -84,7 +84,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:text="베드타입"
+                    android:text="@string/frag_hotel_tab_bed_type"
                     android:textColor="@color/textView_textColor_sub"
                     android:textSize="15dp" />
 
@@ -122,6 +122,7 @@
             android:paddingTop="15dp" >
 
             <TextView
+                android:id="@+id/tv_hotel_tab_booking_price_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -132,9 +133,11 @@
                 android:marqueeRepeatLimit="marquee_forever"
                 android:scrollHorizontally="true"
                 android:singleLine="true"
-                android:text="가격(세금&amp;봉사료 포함)"
                 android:textColor="@color/textView_textColor_sub"
-                android:textSize="15dp" />
+                android:textSize="15dp"/>
+                <!-- android:text="@string/frag_hotel_tab_price"
+                android:textColor="@color/textView_textColor_sub"
+                android:textSize="15dp" /> -->
 
             <TextView
                 android:id="@+id/tv_hotel_tab_booking_discount"

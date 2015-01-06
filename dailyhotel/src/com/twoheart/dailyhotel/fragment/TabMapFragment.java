@@ -33,14 +33,14 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener {
 	private TextView tvName, tvAddress;
 	private HotelGradeView hvGrade;
 	
-	public static TabMapFragment newInstance(HotelDetail hotelDetail) {
+	public static TabMapFragment newInstance(HotelDetail hotelDetail, String title) {
 		
 		TabMapFragment newFragment = new TabMapFragment();
 		Bundle arguments = new Bundle();
 		
 		arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL, hotelDetail);
 		newFragment.setArguments(arguments);
-		newFragment.setTitle("Áöµµ");
+		newFragment.setTitle(title);
 		
 		return newFragment;
 		

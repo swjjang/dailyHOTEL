@@ -29,6 +29,9 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.AbsoluteSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -47,6 +50,7 @@ import com.twoheart.dailyhotel.model.Credit;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Log;
+import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
@@ -98,6 +102,15 @@ public class CreditFragment extends BaseFragment implements Constants,
 		btnInvite.setOnClickListener(this);
 		tvCredit.setOnClickListener(this);
 		
+		//영어버전에서만 텍스트 사이의 패딩 값을 주기위해 새로운 텍스트뷰를 보여줌
+		TextView line1_4 = (TextView) view.findViewById(R.id.act_credit_line1_4);
+		//영어버전
+//		String locale = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_LOCALE, null);
+//		if (locale.equals("English")) {
+//			line1_4.setVisibility(View.VISIBLE);
+//		} else line1_4.setVisibility(View.GONE);
+		line1_4.setVisibility(View.GONE);
+		
 		tvCredit.setPaintFlags(tvCredit.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG); // underlining
 		
 		DailyHotel.getGaTracker().set(Fields.SCREEN_NAME, TAG);
@@ -123,6 +136,7 @@ public class CreditFragment extends BaseFragment implements Constants,
 				new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 						URL_WEBAPI_USER_ALIVE).toString(), null,
 				this, mHostActivity));
+		
 	}
 
 	@Override
@@ -130,6 +144,7 @@ public class CreditFragment extends BaseFragment implements Constants,
 
 		if (v.getId() == btnInvite.getId()) {
 			try {
+				RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "inviteKakaoFriend", null, null);
 				String msg = getString(R.string.kakaolink_msg_prefix) + mRecommendCode + getString(R.string.kakaolink_msg_suffix);
 				KakaoLinkManager.newInstance(getActivity()).sendInviteMsgKakaoLink(msg);
 			} catch (Exception e) {
@@ -138,7 +153,7 @@ public class CreditFragment extends BaseFragment implements Constants,
 
 		} else if (v.getId() == tvCredit.getId()) {
 			((MainActivity) mHostActivity).addFragment(CreditListFragment.newInstance(mCreditList));
-
+			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "requestCreditHistory", null, null);
 		} else if (v.getId() == btnLogin.getId()) {
 			Intent i = new Intent(mHostActivity, LoginActivity.class);
 			startActivity(i);
@@ -163,11 +178,13 @@ public class CreditFragment extends BaseFragment implements Constants,
 		if (loginSuccess) {
 			rlCreditNotLoggedIn.setVisibility(View.GONE);
 			llCreditLoggedIn.setVisibility(View.VISIBLE);
-
+			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("creditWithLogon", "/credit-with-logon/");
+			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("visit", "creditWithLogon", null, null);
 		} else {
 			rlCreditNotLoggedIn.setVisibility(View.VISIBLE);
 			llCreditLoggedIn.setVisibility(View.GONE);
-
+			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("creditWithLogoff", "/credit-with-logoff/");
+			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("visit", "creditWithLogoff", null, null);
 		}
 	}
 
@@ -294,7 +311,10 @@ public class CreditFragment extends BaseFragment implements Constants,
 			try {
 				DecimalFormat comma = new DecimalFormat("###,##0");
 				String str = comma.format(Integer.parseInt(response.trim()));
-				tvBonus.setText(new StringBuilder(str).append("원"));
+//				String locale = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_LOCALE, null);
+//				if (locale.equals("English"))	tvBonus.setText(getString(R.string.currency) + str);
+//				else	tvBonus.setText(new StringBuilder(str).append(getString(R.string.currency)));
+				tvBonus.setText(new StringBuilder(str).append(getString(R.string.currency)));
 
 				// 사용자 정보 요청.
 				mQueue.add(new DailyHotelJsonRequest(Method.GET,

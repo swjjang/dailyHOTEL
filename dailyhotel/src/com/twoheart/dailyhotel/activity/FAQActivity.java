@@ -6,13 +6,17 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.AbsListView;
 import android.widget.ExpandableListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.ExpandableListView.OnGroupExpandListener;
 
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.adapter.BoardListAdapter;
 import com.twoheart.dailyhotel.model.Board;
+import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
@@ -38,6 +42,25 @@ public class FAQActivity extends BaseActivity implements
 			public void onGroupExpand(int groupPosition) {
 				if(mPrevExpandedChildPos != -1 && groupPosition != mPrevExpandedChildPos) mListView.collapseGroup(mPrevExpandedChildPos);
 				mPrevExpandedChildPos = groupPosition;
+				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectFAQ", mList.get(groupPosition).getSubject(), (long) (groupPosition+1));
+			}
+		});
+		mListView.setOnScrollListener(new OnScrollListener() {
+			
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				switch(scrollState) {
+				case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("scroll", "articles", "자주 묻는 질문", null);
+					break;
+				}
+				
+			}
+			
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				
 			}
 		});
 	}
@@ -50,6 +73,9 @@ public class FAQActivity extends BaseActivity implements
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(
 				URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_BOARD_FAQ).toString(),
 				null, this, this));
+		
+		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("fAQList", "/settings/faq");
+		RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "fAQList", null, null);
 	}
 
 	@Override

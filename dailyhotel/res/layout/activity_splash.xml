@@ -90,7 +90,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_margin="40dp"
-        android:text="누구나 즐기는 호텔 라이프"
+        android:text="@string/act_anybody"
         android:textColor="@color/textView_textColor_main" />
 
 </RelativeLayout>
