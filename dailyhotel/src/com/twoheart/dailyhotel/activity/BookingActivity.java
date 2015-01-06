@@ -160,6 +160,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 
 		saleTime = new SaleTime();
 //		locale = sharedPreference.getString(KEY_PREFERENCE_LOCALE, null);
+		
 	}
 
 	@Override
@@ -571,6 +572,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				tvOriginalPriceValue.setEnabled(false);
 				tvCreditValue.setEnabled(false);
 				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("toggle action", "applyCredit", "off", null);
+				
 
 			} else { // 사용함으로 변경
 				tvOriginalPrice.setEnabled(true);
@@ -578,6 +580,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				tvOriginalPriceValue.setEnabled(true);
 				tvCreditValue.setEnabled(true);
 				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("toggle action", "applyCredit", "on", null);
+				
 			}
 
 			mPay.setSaleCredit(isChecked);
