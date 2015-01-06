@@ -166,15 +166,15 @@ public class BookingTabActivity extends TabActivity implements DailyHotelJsonRes
 	protected void onResume() {
 		if (mPosition == 0) {
 			RenewalGaManager.getInstance(getApplicationContext()).recordScreen("bookingDetail_booking", "/bookings/" + booking.getHotel_name() + "/booking");
-			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "bookingDetail_booking", hotelDetail.getHotel().getName(), (long) hotelDetail.getHotel().getIdx());
+			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "bookingDetail_booking", booking.getHotel_name(), (long) Integer.parseInt(booking.getHotel_idx()));
 		}
 		if (mPosition == 1)	{
 			RenewalGaManager.getInstance(getApplicationContext()).recordScreen("bookingDetail_info", "/bookings/" + booking.getHotel_name() + "/info");
-			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "bookingDetail_info", hotelDetail.getHotel().getName(), (long) hotelDetail.getHotel().getIdx());
+			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "bookingDetail_info", booking.getHotel_name(), (long) Integer.parseInt(booking.getHotel_idx()));
 		}
 		if (mPosition == 2)	{
 			RenewalGaManager.getInstance(getApplicationContext()).recordScreen("bookingDetail_map", "/bookings/" + booking.getHotel_name() + "/map");
-			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "bookingDetail_map", hotelDetail.getHotel().getName(), (long) hotelDetail.getHotel().getIdx());
+			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "bookingDetail_map", booking.getHotel_name(), (long) Integer.parseInt(booking.getHotel_idx()));
 		}
 		super.onResume();
 	}

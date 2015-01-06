@@ -35437,6 +35437,7 @@ com.twoheart.dailyhotel.CreditListFragment: CreditListFragment()
 com.twoheart.dailyhotel.CreditListFragment: com.twoheart.dailyhotel.CreditListFragment newInstance(java.util.List)
 com.twoheart.dailyhotel.CreditListFragment: void onCreate(android.os.Bundle)
 com.twoheart.dailyhotel.CreditListFragment: android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle)
+com.twoheart.dailyhotel.CreditListFragment: void onResume()
 com.twoheart.dailyhotel.DailyHotel
 com.twoheart.dailyhotel.DailyHotel: DailyHotel()
 com.twoheart.dailyhotel.DailyHotel: void onCreate()
@@ -35469,9 +35470,11 @@ com.twoheart.dailyhotel.HotelListFragment: void onResponse(java.lang.String,org.
 com.twoheart.dailyhotel.HotelListFragment: void onResponse(java.lang.String,java.lang.String)
 com.twoheart.dailyhotel.HotelListFragment: void onRefreshStarted(android.view.View)
 com.twoheart.dailyhotel.HotelListFragment$1: void onClick(android.view.View)
-com.twoheart.dailyhotel.HotelListFragment$2: void onClick(android.view.View)
-com.twoheart.dailyhotel.HotelListFragment$3: int compare(com.twoheart.dailyhotel.model.Hotel,com.twoheart.dailyhotel.model.Hotel)
-com.twoheart.dailyhotel.HotelListFragment$3: int compare(java.lang.Object,java.lang.Object)
+com.twoheart.dailyhotel.HotelListFragment$2: void onScrollStateChanged(android.widget.AbsListView,int)
+com.twoheart.dailyhotel.HotelListFragment$2: void onScroll(android.widget.AbsListView,int,int,int)
+com.twoheart.dailyhotel.HotelListFragment$3: void onClick(android.view.View)
+com.twoheart.dailyhotel.HotelListFragment$4: int compare(com.twoheart.dailyhotel.model.Hotel,com.twoheart.dailyhotel.model.Hotel)
+com.twoheart.dailyhotel.HotelListFragment$4: int compare(java.lang.Object,java.lang.Object)
 com.twoheart.dailyhotel.HotelListFragment$WebViewClientClass: boolean shouldOverrideUrlLoading(android.webkit.WebView,java.lang.String)
 com.twoheart.dailyhotel.IntroActivity
 com.twoheart.dailyhotel.IntroActivity: IntroActivity()
@@ -36985,6 +36988,7 @@ com.twoheart.dailyhotel.R$string: int frag_wait_timer_off
 com.twoheart.dailyhotel.R$string: int frag_wait_timer_on
 com.twoheart.dailyhotel.R$string: int frag_wait_timer_set
 com.twoheart.dailyhotel.R$string: int frag_wait_timer_title
+com.twoheart.dailyhotel.R$string: int ga_testTrackingId
 com.twoheart.dailyhotel.R$string: int ga_trackingId
 com.twoheart.dailyhotel.R$string: int grade_1
 com.twoheart.dailyhotel.R$string: int grade_2
@@ -37514,6 +37518,9 @@ com.twoheart.dailyhotel.activity.BookingTabActivity
 com.twoheart.dailyhotel.activity.BookingTabActivity: com.twoheart.dailyhotel.model.Booking booking
 com.twoheart.dailyhotel.activity.BookingTabActivity: BookingTabActivity()
 com.twoheart.dailyhotel.activity.BookingTabActivity: void onResponse(java.lang.String,org.json.JSONObject)
+com.twoheart.dailyhotel.activity.BookingTabActivity$1: void onPageSelected(int)
+com.twoheart.dailyhotel.activity.BookingTabActivity$1: void onPageScrolled(int,float,int)
+com.twoheart.dailyhotel.activity.BookingTabActivity$1: void onPageScrollStateChanged(int)
 com.twoheart.dailyhotel.activity.EventWebActivity
 com.twoheart.dailyhotel.activity.EventWebActivity: EventWebActivity()
 com.twoheart.dailyhotel.activity.EventWebActivity: void onCreate(android.os.Bundle)
@@ -37523,6 +37530,8 @@ com.twoheart.dailyhotel.activity.FAQActivity: FAQActivity()
 com.twoheart.dailyhotel.activity.FAQActivity: void finish()
 com.twoheart.dailyhotel.activity.FAQActivity: void onResponse(java.lang.String,org.json.JSONObject)
 com.twoheart.dailyhotel.activity.FAQActivity$1: void onGroupExpand(int)
+com.twoheart.dailyhotel.activity.FAQActivity$2: void onScrollStateChanged(android.widget.AbsListView,int)
+com.twoheart.dailyhotel.activity.FAQActivity$2: void onScroll(android.widget.AbsListView,int,int,int)
 com.twoheart.dailyhotel.activity.ForgotPwdActivity
 com.twoheart.dailyhotel.activity.ForgotPwdActivity: ForgotPwdActivity()
 com.twoheart.dailyhotel.activity.ForgotPwdActivity: void onClick(android.view.View)
@@ -37537,8 +37546,11 @@ com.twoheart.dailyhotel.activity.HotelTabActivity: void onResponse(java.lang.Str
 com.twoheart.dailyhotel.activity.HotelTabActivity: void onResponse(java.lang.String,org.json.JSONObject)
 com.twoheart.dailyhotel.activity.HotelTabActivity: boolean onCreateOptionsMenu(android.view.Menu)
 com.twoheart.dailyhotel.activity.HotelTabActivity: boolean onOptionsItemSelected(android.view.MenuItem)
-com.twoheart.dailyhotel.activity.HotelTabActivity$1: void onError(com.facebook.widget.FacebookDialog$PendingCall,java.lang.Exception,android.os.Bundle)
-com.twoheart.dailyhotel.activity.HotelTabActivity$1: void onComplete(com.facebook.widget.FacebookDialog$PendingCall,android.os.Bundle)
+com.twoheart.dailyhotel.activity.HotelTabActivity$1: void onPageSelected(int)
+com.twoheart.dailyhotel.activity.HotelTabActivity$1: void onPageScrolled(int,float,int)
+com.twoheart.dailyhotel.activity.HotelTabActivity$1: void onPageScrollStateChanged(int)
+com.twoheart.dailyhotel.activity.HotelTabActivity$2: void onError(com.facebook.widget.FacebookDialog$PendingCall,java.lang.Exception,android.os.Bundle)
+com.twoheart.dailyhotel.activity.HotelTabActivity$2: void onComplete(com.facebook.widget.FacebookDialog$PendingCall,android.os.Bundle)
 com.twoheart.dailyhotel.activity.ImageDetailActivity
 com.twoheart.dailyhotel.activity.ImageDetailActivity: ImageDetailActivity()
 com.twoheart.dailyhotel.activity.LoginActivity
@@ -37557,6 +37569,8 @@ com.twoheart.dailyhotel.activity.NoticeActivity: NoticeActivity()
 com.twoheart.dailyhotel.activity.NoticeActivity: void finish()
 com.twoheart.dailyhotel.activity.NoticeActivity: void onResponse(java.lang.String,org.json.JSONObject)
 com.twoheart.dailyhotel.activity.NoticeActivity$1: void onGroupExpand(int)
+com.twoheart.dailyhotel.activity.NoticeActivity$2: void onScrollStateChanged(android.widget.AbsListView,int)
+com.twoheart.dailyhotel.activity.NoticeActivity$2: void onScroll(android.widget.AbsListView,int,int,int)
 com.twoheart.dailyhotel.activity.PaymentActivity
 com.twoheart.dailyhotel.activity.PaymentActivity: int PROGRESS_STAT_NOT_START
 com.twoheart.dailyhotel.activity.PaymentActivity: int PROGRESS_STAT_IN
@@ -37749,6 +37763,7 @@ com.twoheart.dailyhotel.fragment.TabInfoFragment: com.twoheart.dailyhotel.fragme
 com.twoheart.dailyhotel.fragment.TabInfoFragment: void onCreate(android.os.Bundle)
 com.twoheart.dailyhotel.fragment.TabInfoFragment: android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle)
 com.twoheart.dailyhotel.fragment.TabInfoFragment: int getPixels(int,android.content.Context)
+com.twoheart.dailyhotel.fragment.TabInfoFragment: void onResume()
 com.twoheart.dailyhotel.fragment.TabMapFragment: TabMapFragment()
 com.twoheart.dailyhotel.fragment.TabMapFragment: com.twoheart.dailyhotel.fragment.TabMapFragment newInstance(com.twoheart.dailyhotel.model.HotelDetail,java.lang.String)
 com.twoheart.dailyhotel.fragment.TabMapFragment: void onCreate(android.os.Bundle)
@@ -38009,6 +38024,8 @@ com.twoheart.dailyhotel.util.Constants: java.lang.String KEY_PREFERENCE_MAX_VERS
 com.twoheart.dailyhotel.util.Constants: java.lang.String KEY_PREFERENCE_SKIP_MAX_VERSION
 com.twoheart.dailyhotel.util.Constants: java.lang.String KEY_PREFERENCE_REGION_SELECT
 com.twoheart.dailyhotel.util.Constants: java.lang.String KEY_PREFERENCE_REGION_INDEX
+com.twoheart.dailyhotel.util.Constants: java.lang.String KEY_PREFERENCE_REGION_SELECT_GA
+com.twoheart.dailyhotel.util.Constants: java.lang.String KEY_PREFERENCE_HOTEL_NAME_GA
 com.twoheart.dailyhotel.util.Constants: java.lang.String KEY_PREFERENCE_SHOW_GUIDE
 com.twoheart.dailyhotel.util.Constants: java.lang.String KEY_PREFERENCE_HOTEL_NAME
 com.twoheart.dailyhotel.util.Constants: java.lang.String KEY_PREFERENCE_HOTEL_SALE_IDX
@@ -38023,6 +38040,7 @@ com.twoheart.dailyhotel.util.Constants: java.lang.String NAME_INTENT_EXTRA_DATA_
 com.twoheart.dailyhotel.util.Constants: java.lang.String NAME_INTENT_EXTRA_DATA_HOTELDETAIL
 com.twoheart.dailyhotel.util.Constants: java.lang.String NAME_INTENT_EXTRA_DATA_SALETIME
 com.twoheart.dailyhotel.util.Constants: java.lang.String NAME_INTENT_EXTRA_DATA_REGION
+com.twoheart.dailyhotel.util.Constants: java.lang.String NAME_INTENT_EXTRA_DATA_HOTELIDX
 com.twoheart.dailyhotel.util.Constants: java.lang.String NAME_INTENT_EXTRA_DATA_BOOKING
 com.twoheart.dailyhotel.util.Constants: java.lang.String NAME_INTENT_EXTRA_DATA_PAY
 com.twoheart.dailyhotel.util.Constants: java.lang.String NAME_INTENT_EXTRA_DATA_SELECTED_IMAGE_URL
@@ -38112,6 +38130,10 @@ com.twoheart.dailyhotel.util.KakaoLinkManager: void shareHotelInfo(com.twoheart.
 com.twoheart.dailyhotel.util.Log: Log()
 com.twoheart.dailyhotel.util.Log: void d(java.lang.String,java.lang.String)
 com.twoheart.dailyhotel.util.Log: void e(java.lang.String)
+com.twoheart.dailyhotel.util.RenewalGaManager: com.twoheart.dailyhotel.util.RenewalGaManager getInstance(android.content.Context)
+com.twoheart.dailyhotel.util.RenewalGaManager: com.google.analytics.tracking.android.Tracker getTracker()
+com.twoheart.dailyhotel.util.RenewalGaManager: void recordScreen(java.lang.String,java.lang.String)
+com.twoheart.dailyhotel.util.RenewalGaManager: void recordEvent(java.lang.String,java.lang.String,java.lang.String,java.lang.Long)
 com.twoheart.dailyhotel.util.SimpleAlertDialog: SimpleAlertDialog()
 com.twoheart.dailyhotel.util.SimpleAlertDialog: android.app.AlertDialog$Builder build(android.content.Context,java.lang.String,java.lang.String,java.lang.String,java.lang.String,android.content.DialogInterface$OnClickListener,android.content.DialogInterface$OnClickListener)
 com.twoheart.dailyhotel.util.SimpleAlertDialog: android.app.AlertDialog$Builder build(android.content.Context,java.lang.String,java.lang.String,java.lang.String,android.content.DialogInterface$OnClickListener)

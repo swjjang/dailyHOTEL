@@ -3082,21 +3082,21 @@ com.twoheart.dailyhotel.BookingListFragment:
 com.twoheart.dailyhotel.BuildConfig
 com.twoheart.dailyhotel.CreditFragment:
     private static final java.lang.String TAG
-    168:172:private void alert(java.lang.String)
+    171:175:private void alert(java.lang.String)
 com.twoheart.dailyhotel.CreditListFragment:
     private static final java.lang.String KEY_BUNDLE_ARGUMENTS_CREDITLIST
 com.twoheart.dailyhotel.DailyHotel:
     116:118:private void initializeVolleyImageLoader()
 com.twoheart.dailyhotel.HotelListFragment:
     private static final java.lang.String TAG
-    273:299:private android.app.Dialog getEventPopUpDialog()
-com.twoheart.dailyhotel.HotelListFragment$2
+    306:332:private android.app.Dialog getEventPopUpDialog()
+com.twoheart.dailyhotel.HotelListFragment$3
 com.twoheart.dailyhotel.HotelListFragment$WebViewClientClass
 com.twoheart.dailyhotel.MainActivity:
     private static final java.lang.String TAG
     private static final java.lang.String TAG_FRAGMENT_RATING_HOTEL
     protected java.util.List mFragments
-    455:463:private void initializeFragments()
+    451:459:private void initializeFragments()
 com.twoheart.dailyhotel.Manifest
 com.twoheart.dailyhotel.Manifest$permission
 com.twoheart.dailyhotel.R$anim
@@ -3123,7 +3123,8 @@ com.twoheart.dailyhotel.activity.BookingActivity:
     private static final int DIALOG_CONFIRM_PAYMENT_HP
     private static final int DIALOG_CONFIRM_PAYMENT_ACCOUNT
     private static final int DIALOG_CONFIRM_PAYMENT_NO_RSERVE
-    368:397:private void moveToLoginProcess()
+    private java.lang.String locale
+    393:422:private void moveToLoginProcess()
 com.twoheart.dailyhotel.activity.BookingTabActivity:
     private static final java.lang.String TAG
 com.twoheart.dailyhotel.activity.EventWebActivity:
