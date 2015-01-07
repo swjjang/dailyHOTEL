@@ -16,6 +16,7 @@ package com.twoheart.dailyhotel;
 
 import java.io.IOException;
 import java.security.MessageDigest;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -153,6 +154,18 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 //		Editor editor = sharedPreference.edit();
 //		editor.putString(KEY_PREFERENCE_LOCALE, locale);
 //		editor.apply();
+		
+		if (sharedPreference.getString("push_date", "").isEmpty()) { //저장된 시간이 없는 경우 
+			SimpleDateFormat dateFormat = new  SimpleDateFormat("yyyy-MM-dd HH:mm", java.util.Locale.getDefault());
+			Date date = new Date();
+			String strDate = dateFormat.format(date);
+			
+			Editor editor = sharedPreference.edit();
+			editor.putString("push_date", strDate);
+			editor.apply();
+		} else { //저장된 시간이 있는 경우 
+			Log.d("push_date", "push_date : " + sharedPreference.getString("push_date", ""));
+		}
 		
 		// Intent Scheme Parameter for KakaoLink
 		intentData = getIntent().getData();
