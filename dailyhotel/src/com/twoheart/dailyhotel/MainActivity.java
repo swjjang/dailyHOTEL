@@ -23,10 +23,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -50,7 +50,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
@@ -59,6 +58,7 @@ import android.webkit.CookieSyncManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -67,10 +67,6 @@ import android.widget.Toast;
 
 import com.android.volley.Request.Method;
 import com.androidquery.util.AQUtility;
-import com.google.analytics.tracking.android.Fields;
-import com.google.analytics.tracking.android.GoogleAnalytics;
-import com.google.analytics.tracking.android.MapBuilder;
-import com.google.analytics.tracking.android.Tracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -144,7 +140,16 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d("GCM??", "GCM??" + sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "NOPE"));
-		
+//		
+//		AlertDialog.Builder alert = new AlertDialog.Builder(this);
+//
+//		alert.setTitle("Title");
+//		// Set an EditText view to get user input
+//		final EditText input = new EditText(this);
+//		input.setText(sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "NOPE"));
+//		alert.setView(input);
+//		alert.show();
+
 		// 사용자가 선택한 언어, but 만약 사용자가 한국인인데 일본어를 선택하면 jp가 됨.
 		// 영어버전 
 //		String locale = Locale.getDefault().getDisplayLanguage();
@@ -154,17 +159,17 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 //		editor.putString(KEY_PREFERENCE_LOCALE, locale);
 //		editor.apply();
 		
-		if (sharedPreference.getString("push_date", "").isEmpty()) { //저장된 시간이 없는 경우 
-			SimpleDateFormat dateFormat = new  SimpleDateFormat("yyyy-MM-dd HH:mm", java.util.Locale.getDefault());
-			Date date = new Date();
-			String strDate = dateFormat.format(date);
-			
-			Editor editor = sharedPreference.edit();
-			editor.putString("push_date", strDate);
-			editor.apply();
-		} else { //저장된 시간이 있는 경우 
-			Log.d("push_date", "push_date : " + sharedPreference.getString("push_date", ""));
-		}
+//		if (sharedPreference.getString("push_date", "").isEmpty()) { //저장된 시간이 없는 경우 
+//			SimpleDateFormat dateFormat = new  SimpleDateFormat("yyyy-MM-dd HH:mm", java.util.Locale.getDefault());
+//			Date date = new Date();
+//			String strDate = dateFormat.format(date);
+//			
+//			Editor editor = sharedPreference.edit();
+//			editor.putString("push_date", strDate);
+//			editor.apply();
+//		} else { //저장된 시간이 있는 경우 
+//			Log.d("push_date", "push_date : " + sharedPreference.getString("push_date", ""));
+//		}
 		
 		// Intent Scheme Parameter for KakaoLink
 		intentData = getIntent().getData();

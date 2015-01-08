@@ -46,6 +46,7 @@ public class GcmIntentService extends IntentService implements Constants{
 	private NotificationManager mNotificationManager;
 	private boolean mIsBadge;
 	private boolean mIsSound;
+	private static int count = 0;
 
 	public GcmIntentService() {
 		super("GcmIntentService");
@@ -67,6 +68,7 @@ public class GcmIntentService extends IntentService implements Constants{
 				JSONObject jsonMsg = new JSONObject(extras.getString("message"));
 				String msg = jsonMsg.getString("msg");
 				String pid = jsonMsg.getString("pid");
+				String time = jsonMsg.getString("time");
 				int type = -1;
 				
 				Log.d("pid", "pid : " + pid);
@@ -92,7 +94,12 @@ public class GcmIntentService extends IntentService implements Constants{
 						editor.apply();
 						sendPush(messageType, type, msg);
 					}
-					sendPush(messageType, type, msg);
+//					count++;
+//					
+//					if (pid.equals("fin")) {
+//						sendPush(messageType, type, "count???? " + count + "\n time???? " + time);
+//						count = 0;
+//					}
 					
 				}
 				android.util.Log.e("GCM_MESSAGE",jsonMsg.toString());
