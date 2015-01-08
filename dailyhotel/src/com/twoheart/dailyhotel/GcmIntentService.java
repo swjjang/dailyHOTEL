@@ -92,7 +92,8 @@ public class GcmIntentService extends IntentService implements Constants{
 						editor.apply();
 						sendPush(messageType, type, msg);
 					}
-						
+					sendPush(messageType, type, msg);
+					
 				}
 				android.util.Log.e("GCM_MESSAGE",jsonMsg.toString());
 			} catch (JSONException e) {
@@ -141,7 +142,6 @@ public class GcmIntentService extends IntentService implements Constants{
 			}
 			// 노티피케이션은 케이스에 상관없이 항상 뜨도록함.
 			sendNotification(type, msg);
-			
 		}
 	}
 

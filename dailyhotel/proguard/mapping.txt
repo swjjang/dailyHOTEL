@@ -30046,7 +30046,9 @@ com.twoheart.dailyhotel.GcmIntentService -> com.twoheart.dailyhotel.GcmIntentSer
     android.app.NotificationManager mNotificationManager -> a
     boolean mIsBadge -> b
     boolean mIsSound -> c
+    int count -> d
     void onHandleIntent(android.content.Intent) -> onHandleIntent
+    void sendPush(java.lang.String,int,java.lang.String) -> sendPush
     boolean isScreenOn(android.content.Context) -> isScreenOn
     void sendNotification(int,java.lang.String) -> a
 com.twoheart.dailyhotel.HotelListFragment -> com.twoheart.dailyhotel.f:

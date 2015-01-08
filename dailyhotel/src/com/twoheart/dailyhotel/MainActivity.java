@@ -143,8 +143,7 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		Log.e("GCM??", sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "NOPE"));
-	
+		Log.d("GCM??", "GCM??" + sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "NOPE"));
 		
 		// 사용자가 선택한 언어, but 만약 사용자가 한국인인데 일본어를 선택하면 jp가 됨.
 		// 영어버전 
@@ -315,7 +314,7 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 
 				String gcmId=getGcmId();
 				// GCM 등록 시도
-				android.util.Log.e("NOTE",gcmId);
+				android.util.Log.e("NOTE","NOTE : " + gcmId);
 				if (gcmId.isEmpty()) {
 					if (isGoogleServiceAvailable()) {
 						regGcmId(Integer.parseInt(loginuser_idx));
@@ -416,6 +415,7 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 				String regId = "";
 				try {
 					regId = instance.register(GCM_PROJECT_NUMBER);
+					Log.d("regId", "regId : " + regId);
 				} catch (IOException e) {e.printStackTrace();}
 
 				return regId;

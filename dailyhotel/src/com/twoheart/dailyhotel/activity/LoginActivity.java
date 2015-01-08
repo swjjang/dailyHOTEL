@@ -344,7 +344,9 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 						setResult(RESULT_OK);
 						finish();
 					}
-
+					Editor editor = sharedPreference.edit();
+					editor.putString("pid", "");
+					editor.apply();
 				} else {
 
 					if (loginParams.containsKey("accessToken")) { // SNS 로그인인데
