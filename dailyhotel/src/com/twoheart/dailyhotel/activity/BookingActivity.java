@@ -1,6 +1,9 @@
 package com.twoheart.dailyhotel.activity;
 
 import java.text.DecimalFormat;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -474,13 +477,27 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 					}
 				}
 
+				SimpleDateFormat dateFormat = new  SimpleDateFormat("YYMMDDhhmmss", java.util.Locale.getDefault());
+				Date date = new Date();
+				String strDate = dateFormat.format(date);
+				String transId = mPay.getCustomer().getUserIdx() + strDate;
+				Log.d("transId", "transId?? " + transId);
+				
 				GaManager.getInstance(getApplicationContext()).
 				purchaseComplete(
-						Integer.toString(mPay.getHotelDetail().getSaleIdx()), 
+						transId, 
 						mPay.getHotelDetail().getHotel().getName(), 
 						mPay.getHotelDetail().getHotel().getCategory(), 
 						(double) mPay.getPayPrice()
 						);
+				
+//				RenewalGaManager.getInstance(getApplicationContext()).
+//				purchaseComplete(
+//						mPay.getCustomer().getUserIdx()+strDate, 
+//						mPay.getHotelDetail().getHotel().getName(), 
+//						mPay.getHotelDetail().getHotel().getCategory(), 
+//						(double) mPay.getPayPrice()
+//						);
 				
 				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("paymentConfirmation", "/todays-hotels/" + region + "/" + hotelName + "/booking-detail/payment-confirm");
 				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "paymentConfirmation", hotelName, (long) mPay.getHotelDetail().getHotel().getIdx());
@@ -587,6 +604,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 			updatePayPrice(isChecked);
 		}
 	}
+	
 
 	@Override
 	public void onResponse(String url, JSONObject response) {
@@ -604,6 +622,16 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				buyer.setUserIdx(obj.getString("idx"));
 
 				mPay.setCustomer(buyer);
+				// 현재 시간을 msec으로 구한다.
+				long now = System.currentTimeMillis();
+
+				// 현재 시간을 저장 한다.
+				Date date = new Date(now);
+//				SimpleDateFormat dateFormat = new SimpleDateFormat("YYMMDDhhmmss");
+//				String strDate = dateFormat.format(date);
+				
+				String transId = mPay.getCustomer().getUserIdx();
+				Log.d("transId", "transId?? " + transId + "date : " + date);
 				buyer = mPay.getCustomer();
 
 				/**

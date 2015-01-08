@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.util;
 
 import com.google.analytics.tracking.android.Fields;
+
 import com.google.analytics.tracking.android.GoogleAnalytics;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.google.analytics.tracking.android.Tracker;
@@ -48,5 +49,48 @@ public class RenewalGaManager extends Application {
                 		action, 
                 		label, 
                 		value).build());
+	}
+	
+	/**
+	 * 구매 완료 하였으면 구글 애널래틱스 Ecommerce Tracking 을 위하여 필히 호출한다.
+	 * 실제 우리 앱의 매출을 자동으로 집계하여 알기위함.
+	 * @param trasId userId+YYMMDDhhmmss
+	 * @param pName 호텔명
+	 * @param pCategory 호텔 카테고리
+	 * @param pPrice 호텔 판매가(적립금을 사용 하는 경우 적립금을 까고 결제하는 금액)
+	 */
+
+	public void purchaseComplete(String trasId, 
+			String pName, String pCategory, Double pPrice) {
+
+		tracker.send(
+				MapBuilder.createTransaction(
+						trasId,
+						"DailyHOTEL",
+						pPrice,
+						0d,
+						0d,
+						"KRW"
+						).build()
+				);
+
+		tracker.send(
+				MapBuilder.createItem(
+						trasId,
+						pName,
+						"1",
+						pCategory,
+						pPrice,
+						1L,
+						"KRW"
+						).build()
+				);
+		
+		tracker.send(MapBuilder.
+				createEvent(
+						"Purchase", 
+						"PurchaseComplete", 
+						"PurchaseComplete", 
+						1L).build());
 	}
 }

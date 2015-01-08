@@ -16,17 +16,16 @@ package com.twoheart.dailyhotel;
 
 import java.io.IOException;
 import java.security.MessageDigest;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import org.json.JSONObject;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -58,7 +57,6 @@ import android.webkit.CookieSyncManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -152,12 +150,12 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 
 		// 사용자가 선택한 언어, but 만약 사용자가 한국인인데 일본어를 선택하면 jp가 됨.
 		// 영어버전 
-//		String locale = Locale.getDefault().getDisplayLanguage();
-//		Log.e("locale",locale);
-//		
-//		Editor editor = sharedPreference.edit();
-//		editor.putString(KEY_PREFERENCE_LOCALE, locale);
-//		editor.apply();
+		String locale = Locale.getDefault().getDisplayLanguage();
+		Log.e("locale",locale);
+		
+		Editor editor = sharedPreference.edit();
+		editor.putString(KEY_PREFERENCE_LOCALE, locale);
+		editor.apply();
 		
 //		if (sharedPreference.getString("push_date", "").isEmpty()) { //저장된 시간이 없는 경우 
 //			SimpleDateFormat dateFormat = new  SimpleDateFormat("yyyy-MM-dd HH:mm", java.util.Locale.getDefault());
