@@ -13,15 +13,18 @@ import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.twoheart.dailyhotel.activity.ScreenOnPushDialogActivity;
 import com.twoheart.dailyhotel.activity.PushLockDialogActivity;
+import com.twoheart.dailyhotel.activity.ScreenOnPushDialogActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.WakeLock;
 
@@ -63,7 +66,10 @@ public class GcmIntentService extends IntentService implements Constants{
 			try {
 				JSONObject jsonMsg = new JSONObject(extras.getString("message"));
 				String msg = jsonMsg.getString("msg");
+				String pid = jsonMsg.getString("pid");
 				int type = -1;
+				
+				Log.d("pid", "pid : " + pid);
 				
 				if (jsonMsg.getString("type").equals("notice")) type = PUSH_TYPE_NOTICE;
 				else if (jsonMsg.getString("type").equals("account_complete")) type = PUSH_TYPE_ACCOUNT_COMPLETE;
@@ -71,53 +77,72 @@ public class GcmIntentService extends IntentService implements Constants{
 				if (!jsonMsg.isNull("badge")) mIsBadge = jsonMsg.getBoolean("badge");
 				if (!jsonMsg.isNull("sound")) mIsSound = jsonMsg.getBoolean("sound");
 				
-				if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
-					
-					if (isScreenOn(this) && type != -1) { // 데일리호텔 앱이 켜져있는경우.
-						
-						ActivityManager am = (ActivityManager)getSystemService(ACTIVITY_SERVICE);
-						ComponentName topActivity = am.getRunningTasks(1).get(0).topActivity;
-						String className = topActivity.getClassName();
-
-						android.util.Log.e("CURRENT_ACTIVITY_PACKAGE", className+" / "+className);
-						
-						if (className.contains("dailyhotel") && !className.contains("GcmLockDialogActivity") && !mIsBadge) {
-							
-							Intent i = new Intent(this, ScreenOnPushDialogActivity.class);
-							i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-							i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, type);
-							i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG, msg);
-							startActivity(i);
-						}
-						
-					} else if (!isScreenOn(this) && !mIsBadge) { // 스크린 꺼져있는경우
-						
-						WakeLock.acquireWakeLock(this, PowerManager.FULL_WAKE_LOCK
-								| PowerManager.ACQUIRE_CAUSES_WAKEUP);	// PushDialogActivity에서 release 해줌.
-						KeyguardManager manager = (KeyguardManager)getSystemService(Activity.KEYGUARD_SERVICE);  
-						KeyguardLock lock = manager.newKeyguardLock(Context.KEYGUARD_SERVICE);  
-						lock.disableKeyguard();  // 기존의 잠금화면을 disable
-
-						Intent i = new Intent(this, PushLockDialogActivity.class);
-						i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG, msg);
-						i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, type);
-
-						i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | 
-								Intent.FLAG_ACTIVITY_CLEAR_TOP);
-						this.startActivity(i);
+				switch (type) {
+				case PUSH_TYPE_ACCOUNT_COMPLETE:
+					sendPush(messageType, type, msg);
+					break;
+				
+				case PUSH_TYPE_NOTICE:
+					SharedPreferences pref = this.getSharedPreferences(NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
+					if (pid.equals(pref.getString("pid", ""))) {
+						break;
+					} else {
+						Editor editor = pref.edit();
+						editor.putString("pid", pid);
+						editor.apply();
+						sendPush(messageType, type, msg);
 					}
-					// 노티피케이션은 케이스에 상관없이 항상 뜨도록함.
-					sendNotification(type, msg);
+					sendPush(messageType, type, msg);
 					
-					android.util.Log.e("GCM_MESSAGE",jsonMsg.toString());
-
 				}
+				android.util.Log.e("GCM_MESSAGE",jsonMsg.toString());
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 
 		}
 		GcmBroadcastReceiver.completeWakefulIntent(intent);
+	}
+	
+	public void sendPush(String messageType, int type, String msg) {
+		if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
+			
+			if (isScreenOn(this) && type != -1) { // 데일리호텔 앱이 켜져있는경우.
+				
+				ActivityManager am = (ActivityManager)getSystemService(ACTIVITY_SERVICE);
+				ComponentName topActivity = am.getRunningTasks(1).get(0).topActivity;
+				String className = topActivity.getClassName();
+
+				android.util.Log.e("CURRENT_ACTIVITY_PACKAGE", className+" / "+className);
+				
+				if (className.contains("dailyhotel") && !className.contains("GcmLockDialogActivity") && !mIsBadge) {
+					
+					Intent i = new Intent(this, ScreenOnPushDialogActivity.class);
+					i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, type);
+					i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG, msg);
+					startActivity(i);
+				}
+				
+			} else if (!isScreenOn(this) && !mIsBadge) { // 스크린 꺼져있는경우
+				
+				WakeLock.acquireWakeLock(this, PowerManager.FULL_WAKE_LOCK
+						| PowerManager.ACQUIRE_CAUSES_WAKEUP);	// PushDialogActivity에서 release 해줌.
+				KeyguardManager manager = (KeyguardManager)getSystemService(Activity.KEYGUARD_SERVICE);  
+				KeyguardLock lock = manager.newKeyguardLock(Context.KEYGUARD_SERVICE);  
+				lock.disableKeyguard();  // 기존의 잠금화면을 disable
+
+				Intent i = new Intent(this, PushLockDialogActivity.class);
+				i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG, msg);
+				i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, type);
+
+				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | 
+						Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				this.startActivity(i);
+			}
+			// 노티피케이션은 케이스에 상관없이 항상 뜨도록함.
+			sendNotification(type, msg);
+		}
 	}
 
 	public boolean isScreenOn(Context context) {

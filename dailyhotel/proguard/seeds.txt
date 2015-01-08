@@ -35456,6 +35456,7 @@ com.twoheart.dailyhotel.GcmBroadcastReceiver: void onReceive(android.content.Con
 com.twoheart.dailyhotel.GcmIntentService
 com.twoheart.dailyhotel.GcmIntentService: int NOTIFICATION_ID
 com.twoheart.dailyhotel.GcmIntentService: GcmIntentService()
+com.twoheart.dailyhotel.GcmIntentService: void sendPush(java.lang.String,int,java.lang.String)
 com.twoheart.dailyhotel.GcmIntentService: boolean isScreenOn(android.content.Context)
 com.twoheart.dailyhotel.HotelListFragment: HotelListFragment()
 com.twoheart.dailyhotel.HotelListFragment: android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle)

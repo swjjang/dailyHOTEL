@@ -34,7 +34,7 @@ public class ScreenOnPushDialogActivity extends Activity implements OnClickListe
 		String msg = getIntent().getStringExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG);
 		int type = getIntent().getIntExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, -1);
 		msg = msg.replace("]", "]\n");
-
+		
 		tvMsg = (TextView)findViewById(R.id.tv_screen_on_push_dialog_msg);
 		tvMsg.setText(msg);
 
