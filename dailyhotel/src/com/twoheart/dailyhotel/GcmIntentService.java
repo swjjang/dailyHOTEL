@@ -68,6 +68,7 @@ public class GcmIntentService extends IntentService implements Constants{
 	            
 				JSONObject jsonMsg = new JSONObject(extras.getString("message"));
 				String msg = jsonMsg.getString("msg");
+				Log.d("msg", "msg : " + msg);
 				int type = -1;
 				
 				if (jsonMsg.getString("type").equals("notice")) type = PUSH_TYPE_NOTICE;

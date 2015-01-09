@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -49,13 +50,13 @@ public class PushLockDialogActivity extends Activity implements OnClickListener,
 //			title = mMsg.substring(0, mMsg.indexOf("]")+1);
 //		}
 		
-		String content = mMsg.substring(mMsg.indexOf("]")+1);
+		mMsg = mMsg.replace("]", "]\n");
 		
 //		tvTitle = (TextView) findViewById(R.id.tv_push_lock_dialog_title);
 //		tvTitle.setText(title);
 		
 		tvMsg = (TextView) findViewById(R.id.tv_push_lock_dialog_msg);
-		tvMsg.setText(content);
+		tvMsg.setText(mMsg);
 		
 		btnOkButton = (Button) findViewById(R.id.btn_push_lock_dialog_show);
 		btnCancelButton = (Button) findViewById(R.id.btn_push_lock_dialog_close);
