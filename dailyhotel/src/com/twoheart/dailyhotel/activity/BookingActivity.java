@@ -482,8 +482,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				String strDate = dateFormat.format(date);
 				int userIdx = Integer.parseInt(mPay.getCustomer().getUserIdx());
 				String userIdxStr = String.format("%07d", userIdx);
-				String transId = userIdxStr + strDate;
-				Log.d("transId", "transId?? " + transId);
+				String transId = strDate + userIdxStr;
 				
 				GaManager.getInstance(getApplicationContext()).
 				purchaseComplete(
@@ -495,7 +494,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				
 				RenewalGaManager.getInstance(getApplicationContext()).
 				purchaseComplete(
-						mPay.getCustomer().getUserIdx()+strDate, 
+						transId, 
 						mPay.getHotelDetail().getHotel().getName(), 
 						mPay.getHotelDetail().getHotel().getCategory(), 
 						(double) mPay.getPayPrice()
@@ -624,18 +623,6 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				buyer.setUserIdx(obj.getString("idx"));
 
 				mPay.setCustomer(buyer);
-				// 현재 시간을 msec으로 구한다.
-				long now = System.currentTimeMillis();
-
-				// 현재 시간을 저장 한다.
-				Date date = new Date(now);
-				SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMDDhhmmss");
-				String strDate = dateFormat.format(date);
-				
-				int userIdx = Integer.parseInt(mPay.getCustomer().getUserIdx());
-				String userIdxStr = String.format("%07d", userIdx);
-				String transId = userIdxStr + strDate;
-				Log.d("transId", "transId?? " + transId);
 				buyer = mPay.getCustomer();
 
 				/**
