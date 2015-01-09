@@ -345,7 +345,7 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 						finish();
 					}
 					Editor editor = sharedPreference.edit();
-					editor.putString("pid", "");
+					editor.putString("collapseKey", "");
 					editor.apply();
 				} else {
 

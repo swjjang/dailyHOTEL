@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.content.WakefulBroadcastReceiver;
+import android.util.Log;
 /**
  * GCM 메시지가 올 경우 이를 받아 실제로 처리하는 GcmItentService 로 전달함.
  * @author jangjunho
@@ -23,6 +24,7 @@ public class GcmBroadcastReceiver extends WakefulBroadcastReceiver implements Co
     	} else {
     		ComponentName comp = new ComponentName(context.getPackageName(),GcmIntentService.class.getName());
             startWakefulService(context, (intent.setComponent(comp)));
+
             setResultCode(Activity.RESULT_OK);
 
     	}

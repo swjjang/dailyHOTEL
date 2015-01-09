@@ -26,6 +26,7 @@ import java.util.Locale;
 
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -57,6 +58,7 @@ import android.webkit.CookieSyncManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -150,24 +152,12 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 
 		// 사용자가 선택한 언어, but 만약 사용자가 한국인인데 일본어를 선택하면 jp가 됨.
 		// 영어버전 
-		String locale = Locale.getDefault().getDisplayLanguage();
-		Log.e("locale",locale);
-		
-		Editor editor = sharedPreference.edit();
-		editor.putString(KEY_PREFERENCE_LOCALE, locale);
-		editor.apply();
-		
-//		if (sharedPreference.getString("push_date", "").isEmpty()) { //저장된 시간이 없는 경우 
-//			SimpleDateFormat dateFormat = new  SimpleDateFormat("yyyy-MM-dd HH:mm", java.util.Locale.getDefault());
-//			Date date = new Date();
-//			String strDate = dateFormat.format(date);
-//			
-//			Editor editor = sharedPreference.edit();
-//			editor.putString("push_date", strDate);
-//			editor.apply();
-//		} else { //저장된 시간이 있는 경우 
-//			Log.d("push_date", "push_date : " + sharedPreference.getString("push_date", ""));
-//		}
+//		String locale = Locale.getDefault().getDisplayLanguage();
+//		Log.e("locale",locale);
+//		
+//		Editor editor = sharedPreference.edit();
+//		editor.putString(KEY_PREFERENCE_LOCALE, locale);
+//		editor.apply();
 		
 		// Intent Scheme Parameter for KakaoLink
 		intentData = getIntent().getData();

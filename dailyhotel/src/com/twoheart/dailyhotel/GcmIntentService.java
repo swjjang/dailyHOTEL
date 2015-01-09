@@ -46,7 +46,6 @@ public class GcmIntentService extends IntentService implements Constants{
 	private NotificationManager mNotificationManager;
 	private boolean mIsBadge;
 	private boolean mIsSound;
-	private static int count = 0;
 
 	public GcmIntentService() {
 		super("GcmIntentService");
@@ -65,13 +64,11 @@ public class GcmIntentService extends IntentService implements Constants{
 		if (!extras.isEmpty()) { 
 
 			try {
+				String collapseKey = intent.getStringExtra("collapse_key");
+	            
 				JSONObject jsonMsg = new JSONObject(extras.getString("message"));
 				String msg = jsonMsg.getString("msg");
-				String pid = jsonMsg.getString("pid");
-				String time = jsonMsg.getString("time");
 				int type = -1;
-				
-				Log.d("pid", "pid : " + pid);
 				
 				if (jsonMsg.getString("type").equals("notice")) type = PUSH_TYPE_NOTICE;
 				else if (jsonMsg.getString("type").equals("account_complete")) type = PUSH_TYPE_ACCOUNT_COMPLETE;
@@ -86,20 +83,14 @@ public class GcmIntentService extends IntentService implements Constants{
 				
 				case PUSH_TYPE_NOTICE:
 					SharedPreferences pref = this.getSharedPreferences(NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
-					if (pid.equals(pref.getString("pid", ""))) {
+					if (collapseKey.equals(pref.getString("collapseKey", ""))) {
 						break;
 					} else {
 						Editor editor = pref.edit();
-						editor.putString("pid", pid);
+						editor.putString("collapseKey", collapseKey);
 						editor.apply();
 						sendPush(messageType, type, msg);
 					}
-//					count++;
-//					
-//					if (pid.equals("fin")) {
-//						sendPush(messageType, type, "count???? " + count + "\n time???? " + time);
-//						count = 0;
-//					}
 					
 				}
 				android.util.Log.e("GCM_MESSAGE",jsonMsg.toString());
