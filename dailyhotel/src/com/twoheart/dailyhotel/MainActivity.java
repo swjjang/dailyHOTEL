@@ -22,11 +22,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
+import java.util.StringTokenizer;
 
 import org.json.JSONObject;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -58,7 +57,6 @@ import android.webkit.CookieSyncManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -140,6 +138,7 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d("GCM??", "GCM??" + sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "NOPE"));
+		
 //		
 //		AlertDialog.Builder alert = new AlertDialog.Builder(this);
 //

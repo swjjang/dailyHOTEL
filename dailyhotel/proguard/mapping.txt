@@ -30046,7 +30046,6 @@ com.twoheart.dailyhotel.GcmIntentService -> com.twoheart.dailyhotel.GcmIntentSer
     android.app.NotificationManager mNotificationManager -> a
     boolean mIsBadge -> b
     boolean mIsSound -> c
-    int count -> d
     void onHandleIntent(android.content.Intent) -> onHandleIntent
     void sendPush(java.lang.String,int,java.lang.String) -> sendPush
     boolean isScreenOn(android.content.Context) -> isScreenOn
@@ -30607,6 +30606,7 @@ com.twoheart.dailyhotel.activity.BookingTabActivity$1 -> com.twoheart.dailyhotel
     void onPageScrollStateChanged(int) -> onPageScrollStateChanged
 com.twoheart.dailyhotel.activity.EventWebActivity -> com.twoheart.dailyhotel.activity.EventWebActivity:
     java.lang.String URL_WEBAPI_EVENT -> r
+    android.webkit.WebView web -> s
     void onCreate(android.os.Bundle) -> onCreate
     void onResume() -> onResume
     void onStart() -> onStart
@@ -31616,6 +31616,7 @@ com.twoheart.dailyhotel.util.RenewalGaManager -> com.twoheart.dailyhotel.util.i:
     com.google.analytics.tracking.android.Tracker getTracker() -> getTracker
     void recordScreen(java.lang.String,java.lang.String) -> recordScreen
     void recordEvent(java.lang.String,java.lang.String,java.lang.String,java.lang.Long) -> recordEvent
+    void purchaseComplete(java.lang.String,java.lang.String,java.lang.String,java.lang.Double) -> purchaseComplete
 com.twoheart.dailyhotel.util.SimpleAlertDialog -> com.twoheart.dailyhotel.util.j:
     android.app.AlertDialog$Builder build(android.content.Context,java.lang.String,java.lang.String,java.lang.String,java.lang.String,android.content.DialogInterface$OnClickListener,android.content.DialogInterface$OnClickListener) -> build
     android.app.AlertDialog$Builder build(android.content.Context,java.lang.String,java.lang.String,java.lang.String,android.content.DialogInterface$OnClickListener) -> build

@@ -38135,6 +38135,7 @@ com.twoheart.dailyhotel.util.RenewalGaManager: com.twoheart.dailyhotel.util.Rene
 com.twoheart.dailyhotel.util.RenewalGaManager: com.google.analytics.tracking.android.Tracker getTracker()
 com.twoheart.dailyhotel.util.RenewalGaManager: void recordScreen(java.lang.String,java.lang.String)
 com.twoheart.dailyhotel.util.RenewalGaManager: void recordEvent(java.lang.String,java.lang.String,java.lang.String,java.lang.Long)
+com.twoheart.dailyhotel.util.RenewalGaManager: void purchaseComplete(java.lang.String,java.lang.String,java.lang.String,java.lang.Double)
 com.twoheart.dailyhotel.util.SimpleAlertDialog: SimpleAlertDialog()
 com.twoheart.dailyhotel.util.SimpleAlertDialog: android.app.AlertDialog$Builder build(android.content.Context,java.lang.String,java.lang.String,java.lang.String,java.lang.String,android.content.DialogInterface$OnClickListener,android.content.DialogInterface$OnClickListener)
 com.twoheart.dailyhotel.util.SimpleAlertDialog: android.app.AlertDialog$Builder build(android.content.Context,java.lang.String,java.lang.String,java.lang.String,android.content.DialogInterface$OnClickListener)
