@@ -264,9 +264,12 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 			i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, hotelIdx);
 
 			startActivityForResult(i, CODE_REQUEST_ACTIVITY_HOTELTAB);
+			
+			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "selectHotel", selectedItem.getItem().getName(), (long) hotelIdx);
+		} else if (selectedItem.getType() == HotelListViewItem.TYPE_SECTION) {
+			return;
 		}
 		
-		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "selectHotel", selectedItem.getItem().getName(), (long) hotelIdx);
 	}
 
 	@Override
