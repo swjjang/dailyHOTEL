@@ -30552,6 +30552,7 @@ com.twoheart.dailyhotel.activity.BookingActivity -> com.twoheart.dailyhotel.acti
     android.content.Intent mResIntent -> T
     java.lang.String mAliveCallSource -> o
     int mHotelIdx -> U
+    com.twoheart.dailyhotel.util.RenewalGaManager renewalGaManager -> V
     void onCreate(android.os.Bundle) -> onCreate
     void onResume() -> onResume
     void updatePayPrice(boolean) -> b
@@ -30570,8 +30571,9 @@ com.twoheart.dailyhotel.activity.BookingActivity -> com.twoheart.dailyhotel.acti
     boolean onCreateOptionsMenu(android.view.Menu) -> onCreateOptionsMenu
     boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
     com.android.volley.RequestQueue access$0(com.twoheart.dailyhotel.activity.BookingActivity) -> a
-    com.twoheart.dailyhotel.model.Pay access$1(com.twoheart.dailyhotel.activity.BookingActivity) -> b
-    int access$2(com.twoheart.dailyhotel.activity.BookingActivity) -> c
+    com.twoheart.dailyhotel.util.RenewalGaManager access$1(com.twoheart.dailyhotel.activity.BookingActivity) -> b
+    com.twoheart.dailyhotel.model.Pay access$2(com.twoheart.dailyhotel.activity.BookingActivity) -> c
+    int access$3(com.twoheart.dailyhotel.activity.BookingActivity) -> d
 com.twoheart.dailyhotel.activity.BookingActivity$1 -> com.twoheart.dailyhotel.activity.a:
     com.twoheart.dailyhotel.activity.BookingActivity this$0 -> a
     android.view.View val$v -> b
@@ -31613,9 +31615,11 @@ com.twoheart.dailyhotel.util.RenewalGaManager -> com.twoheart.dailyhotel.util.i:
     com.twoheart.dailyhotel.util.RenewalGaManager instance -> a
     com.google.analytics.tracking.android.Tracker tracker -> b
     com.twoheart.dailyhotel.util.RenewalGaManager getInstance(android.content.Context) -> getInstance
+    com.twoheart.dailyhotel.util.RenewalGaManager getInstance(android.content.Context,java.lang.String) -> getInstance
     com.google.analytics.tracking.android.Tracker getTracker() -> getTracker
     void recordScreen(java.lang.String,java.lang.String) -> recordScreen
     void recordEvent(java.lang.String,java.lang.String,java.lang.String,java.lang.Long) -> recordEvent
+    void recordPage(java.lang.String) -> recordPage
     void purchaseComplete(java.lang.String,java.lang.String,java.lang.String,java.lang.Double) -> purchaseComplete
 com.twoheart.dailyhotel.util.SimpleAlertDialog -> com.twoheart.dailyhotel.util.j:
     android.app.AlertDialog$Builder build(android.content.Context,java.lang.String,java.lang.String,java.lang.String,java.lang.String,android.content.DialogInterface$OnClickListener,android.content.DialogInterface$OnClickListener) -> build
