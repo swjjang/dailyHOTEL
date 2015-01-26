@@ -1697,8 +1697,6 @@ com.google.android.gms.common.AccountPicker
 com.google.android.gms.common.GooglePlayServicesClient
 com.google.android.gms.common.GooglePlayServicesClient$ConnectionCallbacks
 com.google.android.gms.common.GooglePlayServicesClient$OnConnectionFailedListener
-com.google.android.gms.common.GooglePlayServicesUtil:
-    private GooglePlayServicesUtil()
 com.google.android.gms.common.Scopes
 com.google.android.gms.common.SignInButton
 com.google.android.gms.common.a
@@ -2828,6 +2826,186 @@ com.google.tagmanager.protobuf.WireFormat$FieldType$2
 com.google.tagmanager.protobuf.WireFormat$FieldType$3
 com.google.tagmanager.protobuf.WireFormat$FieldType$4
 com.google.tagmanager.protobuf.WireFormat$JavaType
+com.mixpanel.android.R$attr
+com.mixpanel.android.R$color
+com.mixpanel.android.R$integer
+com.mixpanel.android.R$string
+com.mixpanel.android.R$style
+com.mixpanel.android.R$styleable
+com.mixpanel.android.java_websocket.AbstractWrappedByteChannel
+com.mixpanel.android.java_websocket.SSLSocketChannel2
+com.mixpanel.android.java_websocket.client.AbstractClientProxyChannel
+com.mixpanel.android.java_websocket.drafts.Draft_10$IncompleteException:
+    private static final long serialVersionUID
+com.mixpanel.android.java_websocket.exceptions.IncompleteHandshakeException:
+    private static final long serialVersionUID
+com.mixpanel.android.java_websocket.exceptions.InvalidDataException:
+    private static final long serialVersionUID
+com.mixpanel.android.java_websocket.exceptions.InvalidFrameException:
+    private static final long serialVersionUID
+com.mixpanel.android.java_websocket.exceptions.InvalidHandshakeException:
+    private static final long serialVersionUID
+com.mixpanel.android.java_websocket.exceptions.LimitExedeedException:
+    private static final long serialVersionUID
+com.mixpanel.android.java_websocket.exceptions.NotSendableException:
+    private static final long serialVersionUID
+com.mixpanel.android.java_websocket.server.DefaultSSLWebSocketServerFactory
+com.mixpanel.android.java_websocket.server.WebSocketServer:
+    487:487:protected java.lang.String getFlashSecurityPolicy()
+com.mixpanel.android.java_websocket.util.Base64:
+    private static final int MAX_LINE_LENGTH
+    private static final byte EQUALS_SIGN
+    private static final byte NEW_LINE
+    private static final java.lang.String PREFERRED_ENCODING
+    private static final byte WHITE_SPACE_ENC
+    private static final byte EQUALS_SIGN_ENC
+com.mixpanel.android.mpmetrics.AnalyticsMessages:
+    private static final java.lang.String LOGTAG
+    120:120:boolean isDead()
+com.mixpanel.android.mpmetrics.BackgroundCapture:
+    private static final java.lang.String LOGTAG
+    13:13:BackgroundCapture()
+com.mixpanel.android.mpmetrics.BadDecideObjectException:
+    private static final long serialVersionUID
+com.mixpanel.android.mpmetrics.ConfigurationChecker:
+    41:41:ConfigurationChecker()
+com.mixpanel.android.mpmetrics.DecideChecker:
+    private static final java.lang.String LOGTAG
+com.mixpanel.android.mpmetrics.DecideChecker$UnintelligibleMessageException:
+    private static final long serialVersionUID
+com.mixpanel.android.mpmetrics.DecideMessages:
+    private static final java.lang.String LOGTAG
+com.mixpanel.android.mpmetrics.GCMReceiver
+com.mixpanel.android.mpmetrics.GCMReceiver$1
+com.mixpanel.android.mpmetrics.GCMReceiver$2
+com.mixpanel.android.mpmetrics.GCMReceiver$NotificationData
+com.mixpanel.android.mpmetrics.InAppFragment:
+    private static final java.lang.String LOGTAG
+    private static final int MINI_REMOVE_TIME
+com.mixpanel.android.mpmetrics.InAppNotification:
+    private static final java.lang.String LOGTAG
+    79:79:java.lang.String toJSON()
+com.mixpanel.android.mpmetrics.InstallReferrerReceiver
+com.mixpanel.android.mpmetrics.MPConfig:
+    static final java.lang.String REFERRER_PREFS_NAME
+    static final int MAX_NOTIFICATION_CACHE_COUNT
+    private static final java.lang.String LOGTAG
+com.mixpanel.android.mpmetrics.MPDbAdapter:
+    private static final java.lang.String LOGTAG
+    private static final java.lang.String DATABASE_NAME
+    private static final int DATABASE_VERSION
+com.mixpanel.android.mpmetrics.MixpanelAPI:
+    private static final java.lang.String LOGTAG
+    private static final java.lang.String APP_LINKS_LOGTAG
+    private static final java.lang.String ENGAGE_DATE_FORMAT_STRING
+com.mixpanel.android.mpmetrics.PersistentIdentity:
+    private static final java.lang.String LOGTAG
+com.mixpanel.android.mpmetrics.ResourceReader:
+    private static final java.lang.String LOGTAG
+com.mixpanel.android.mpmetrics.ResourceReader$Drawables
+com.mixpanel.android.mpmetrics.ServerMessage:
+    private static final java.lang.String LOGTAG
+com.mixpanel.android.mpmetrics.SynchronizedReference
+com.mixpanel.android.mpmetrics.UpdateDisplayState:
+    private static final java.lang.String LOGTAG
+    private static final long MAX_LOCK_TIME_MILLIS
+    private static final java.lang.String DISTINCT_ID_BUNDLE_KEY
+    private static final java.lang.String TOKEN_BUNDLE_KEY
+    private static final java.lang.String DISPLAYSTATE_BUNDLE_KEY
+com.mixpanel.android.mpmetrics.UpdateDisplayState$DisplayState$SurveyState:
+    private static final java.lang.String SURVEY_BUNDLE_KEY
+    private static final java.lang.String HIGHLIGHT_COLOR_BUNDLE_KEY
+    private static final java.lang.String ANSWERS_BUNDLE_KEY
+    private static final java.lang.String BACKGROUND_COMPRESSED_BUNDLE_KEY
+com.mixpanel.android.mpmetrics.package-info
+com.mixpanel.android.surveys.CardCarouselLayout:
+    private static final long ANIMATION_DURATION_MILLIS
+    private static final long ANIMATION_ROTATION_MILLIS
+com.mixpanel.android.surveys.CardCarouselLayout$ChoiceAdapter:
+    private static final int VIEW_TYPE_FIRST
+    private static final int VIEW_TYPE_LAST
+    private static final int VIEW_TYPE_MIDDLE
+    private static final int VIEW_TYPE_MAX
+com.mixpanel.android.surveys.CardCarouselLayout$UnrecognizedAnswerTypeException:
+    private static final long serialVersionUID
+com.mixpanel.android.surveys.SurveyActivity:
+    private static final java.lang.String SURVEY_BEGUN_BUNDLE_KEY
+    private static final java.lang.String CURRENT_QUESTION_BUNDLE_KEY
+    private static final java.lang.String SURVEY_STATE_BUNDLE_KEY
+    private static final int SHADOW_SIZE_THRESHOLD_PX
+    private static final java.lang.String LOGTAG
+com.mixpanel.android.surveys.SurveyChoiceView:
+    private static final int ANIMATION_DURATION
+    private static final int CHECKMARK_HEIGHT_DP
+    private static final int BOX_PADDING_LEFT_DP
+    private static final int BOX_PADDING_TOP_DP
+com.mixpanel.android.util.ActivityImageUtils:
+    private static final java.lang.String LOGTAG
+com.mixpanel.android.util.StringUtils
+com.mixpanel.android.viewcrawler.Caller:
+    private static final java.lang.String LOGTAG
+com.mixpanel.android.viewcrawler.DynamicEventTracker:
+    private static final int MAX_PROPERTY_LENGTH
+    private static final int DEBOUNCE_TIME_MILLIS
+com.mixpanel.android.viewcrawler.EditProtocol:
+    private static final java.lang.String LOGTAG
+com.mixpanel.android.viewcrawler.EditProtocol$BadInstructionsException:
+    private static final long serialVersionUID
+com.mixpanel.android.viewcrawler.EditProtocol$InapplicableInstructionsException:
+    private static final long serialVersionUID
+com.mixpanel.android.viewcrawler.EditState:
+    private static final java.lang.String LOGTAG
+com.mixpanel.android.viewcrawler.EditorConnection:
+    private static final int CONNECT_TIMEOUT
+    private static final java.lang.String LOGTAG
+com.mixpanel.android.viewcrawler.EditorConnection$EditorConnectionException:
+    private static final long serialVersionUID
+com.mixpanel.android.viewcrawler.FlipGesture:
+    private static final float MINIMUM_GRAVITY_FOR_FLIP
+    private static final float MAXIMUM_GRAVITY_FOR_FLIP
+    private static final long MINIMUM_UP_DOWN_DURATION
+    private static final long MINIMUM_CANCEL_DURATION
+    private static final int FLIP_STATE_UP
+    private static final int FLIP_STATE_NONE
+    private static final int FLIP_STATE_DOWN
+    private static final int TRIGGER_STATE_NONE
+    private static final int TRIGGER_STATE_BEGIN
+    private static final float ACCELEROMETER_SMOOTHING
+    private static final java.lang.String LOGTAG
+com.mixpanel.android.viewcrawler.Pathfinder:
+    private static final java.lang.String LOGTAG
+com.mixpanel.android.viewcrawler.Pathfinder$IntStack:
+    private static final int MAX_INDEX_STACK_SIZE
+com.mixpanel.android.viewcrawler.ViewCrawler:
+    private static final java.lang.String SHARED_PREF_EDITS_FILE
+    private static final java.lang.String SHARED_PREF_CHANGES_KEY
+    private static final java.lang.String SHARED_PREF_BINDINGS_KEY
+    private static final int MESSAGE_INITIALIZE_CHANGES
+    private static final int MESSAGE_CONNECT_TO_EDITOR
+    private static final int MESSAGE_SEND_STATE_FOR_EDITING
+    private static final int MESSAGE_HANDLE_EDITOR_CHANGES_RECEIVED
+    private static final int MESSAGE_SEND_DEVICE_INFO
+    private static final int MESSAGE_EVENT_BINDINGS_RECEIVED
+    private static final int MESSAGE_HANDLE_EDITOR_BINDINGS_RECEIVED
+    private static final int MESSAGE_SEND_EVENT_TRACKED
+    private static final int MESSAGE_HANDLE_EDITOR_CLOSED
+    private static final int EMULATOR_CONNECT_ATTEMPT_INTERVAL_MILLIS
+    private static final java.lang.String LOGTAG
+com.mixpanel.android.viewcrawler.ViewSnapshot:
+    private static final int MAX_CLASS_NAME_CACHE_SIZE
+    private static final java.lang.String LOGTAG
+    116:116:java.util.List getProperties()
+com.mixpanel.android.viewcrawler.ViewVisitor:
+    private static final java.lang.String LOGTAG
+    protected abstract java.lang.String name()
+com.mixpanel.android.viewcrawler.ViewVisitor$AddAccessibilityEventVisitor:
+    133:133:protected java.lang.String name()
+com.mixpanel.android.viewcrawler.ViewVisitor$AddTextChangeListener:
+    237:237:protected java.lang.String name()
+com.mixpanel.android.viewcrawler.ViewVisitor$PropertySetVisitor:
+    79:79:protected java.lang.String name()
+com.mixpanel.android.viewcrawler.ViewVisitor$ViewDetectorVisitor:
+    292:292:protected java.lang.String name()
 com.ning.http.client.AsyncHandlerExtensions
 com.ning.http.client.AsyncHttpClient:
     private static final java.lang.String DEFAULT_PROVIDER
@@ -3124,7 +3302,7 @@ com.twoheart.dailyhotel.activity.BookingActivity:
     private static final int DIALOG_CONFIRM_PAYMENT_ACCOUNT
     private static final int DIALOG_CONFIRM_PAYMENT_NO_RSERVE
     private java.lang.String locale
-    398:427:private void moveToLoginProcess()
+    402:431:private void moveToLoginProcess()
 com.twoheart.dailyhotel.activity.BookingTabActivity:
     private static final java.lang.String TAG
 com.twoheart.dailyhotel.activity.EventWebActivity:

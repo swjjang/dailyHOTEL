@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.activity;
 
 import java.text.DecimalFormat;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -45,6 +44,7 @@ import android.widget.Toast;
 import com.android.volley.Request.Method;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Credit;
@@ -105,6 +105,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 	private int mHotelIdx;
 	
 	private RenewalGaManager renewalGaManager;
+	private MixpanelAPI mMixpanel;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +113,9 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		setContentView(R.layout.activity_booking);
 		DailyHotel.getGaTracker().set(Fields.SCREEN_NAME, TAG);
 		renewalGaManager = RenewalGaManager.getInstance(this.getApplicationContext(), "bookingDetail");
+		
+		mMixpanel = MixpanelAPI.getInstance(this, "791b366dadafcd37803f6cd7d8358373"); // 상수 등록 요망
+		mMixpanel.getPeople().identify(sharedPreference.getString(KEY_PREFERENCE_USER_ID, null));
 
 		mPay = new Pay();
 		Bundle bundle = getIntent().getExtras();
@@ -501,6 +505,36 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 						mPay.getHotelDetail().getHotel().getCategory(), 
 						(double) mPay.getPayPrice()
 						);
+				
+				SimpleDateFormat dateFormat2 = new  SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.getDefault());
+				strDate = dateFormat2.format(date);
+				
+				JSONObject properties = new JSONObject();
+				try {
+					properties.put("hotelName", mPay.getHotelDetail().getHotel().getName());
+					properties.put("datetime", strDate); // 거래 시간 = 연-월-일T시:분:초
+					android.util.Log.e("BookingActivity", "properties hotel name : " + mPay.getHotelDetail().getHotel().getName() + " datetime : " + strDate);
+				} catch (JSONException e) {
+					e.printStackTrace();
+					android.util.Log.e("BookingActivity", e.toString());
+				}
+				
+				mMixpanel.getPeople().trackCharge(mPay.getPayPrice(), properties); // price = 결제 금액
+				
+				JSONObject props = new JSONObject();
+				try {
+					props.put("hotelName", mPay.getHotelDetail().getHotel().getName());
+					props.put("price",mPay.getPayPrice());
+					props.put("datetime", strDate);
+					props.put("userId", userIdxStr);
+					props.put("tranId", transId);
+					android.util.Log.e("BookingActivity", "props hotelName : " + mPay.getHotelDetail().getHotel().getName() + " price : " + mPay.getPayPrice() + " datetime : " + strDate);
+				} catch (JSONException e) {
+					e.printStackTrace();
+					android.util.Log.e("BookingActivity", e.toString());
+				}
+				
+				mMixpanel.track("transaction", props);
 				
 //				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("paymentConfirmation", "/todays-hotels/" + region + "/" + hotelName + "/booking-detail/payment-confirm");
 //				renewalGaManager.recordEvent("visit", "paymentConfirmation", hotelName, (long) mPay.getHotelDetail().getHotel().getIdx());
@@ -919,5 +953,11 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+	
+	@Override
+	protected void onDestroy() {
+		mMixpanel.flush();
+		super.onDestroy();
 	}
 }

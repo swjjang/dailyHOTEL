@@ -28429,6 +28429,1973 @@ com.kakao.widget.PushActivity$1$1 -> com.kakao.widget.PushActivity$1$1:
     void onHttpSessionClosedFailure(com.kakao.APIErrorResult) -> onHttpSessionClosedFailure
     void onHttpFailure(com.kakao.APIErrorResult) -> onHttpFailure
 com.kakao.widget.package-info -> com.kakao.widget.package-info:
+com.mixpanel.android.R -> com.mixpanel.android.a:
+com.mixpanel.android.R$anim -> com.mixpanel.android.b:
+    int com_mixpanel_android_fade_in -> com_mixpanel_android_fade_in
+    int com_mixpanel_android_fade_out -> com_mixpanel_android_fade_out
+    int com_mixpanel_android_slide_down -> com_mixpanel_android_slide_down
+com.mixpanel.android.R$drawable -> com.mixpanel.android.c:
+    int com_mixpanel_android_arrowleft -> com_mixpanel_android_arrowleft
+    int com_mixpanel_android_arrowleft_faded -> com_mixpanel_android_arrowleft_faded
+    int com_mixpanel_android_arrowleft_insets -> com_mixpanel_android_arrowleft_insets
+    int com_mixpanel_android_arrowleft_states -> com_mixpanel_android_arrowleft_states
+    int com_mixpanel_android_arrowright -> com_mixpanel_android_arrowright
+    int com_mixpanel_android_arrowright_faded -> com_mixpanel_android_arrowright_faded
+    int com_mixpanel_android_arrowright_insets -> com_mixpanel_android_arrowright_insets
+    int com_mixpanel_android_arrowright_states -> com_mixpanel_android_arrowright_states
+    int com_mixpanel_android_checkmark -> com_mixpanel_android_checkmark
+    int com_mixpanel_android_checkmark_states -> com_mixpanel_android_checkmark_states
+    int com_mixpanel_android_choice_first_states -> com_mixpanel_android_choice_first_states
+    int com_mixpanel_android_choice_last_states -> com_mixpanel_android_choice_last_states
+    int com_mixpanel_android_choice_middle_states -> com_mixpanel_android_choice_middle_states
+    int com_mixpanel_android_close -> com_mixpanel_android_close
+    int com_mixpanel_android_cta_button -> com_mixpanel_android_cta_button
+    int com_mixpanel_android_cta_button_highlight -> com_mixpanel_android_cta_button_highlight
+    int com_mixpanel_android_ic_bell -> com_mixpanel_android_ic_bell
+    int com_mixpanel_android_ic_clipboard_checkmark -> com_mixpanel_android_ic_clipboard_checkmark
+    int com_mixpanel_android_ic_coin -> com_mixpanel_android_ic_coin
+    int com_mixpanel_android_ic_flag -> com_mixpanel_android_ic_flag
+    int com_mixpanel_android_ic_gear -> com_mixpanel_android_ic_gear
+    int com_mixpanel_android_ic_inbox -> com_mixpanel_android_ic_inbox
+    int com_mixpanel_android_ic_megaphone -> com_mixpanel_android_ic_megaphone
+    int com_mixpanel_android_ic_phone -> com_mixpanel_android_ic_phone
+    int com_mixpanel_android_ic_rocket -> com_mixpanel_android_ic_rocket
+    int com_mixpanel_android_ic_sale_tag -> com_mixpanel_android_ic_sale_tag
+    int com_mixpanel_android_ic_sync -> com_mixpanel_android_ic_sync
+    int com_mixpanel_android_ic_trophy -> com_mixpanel_android_ic_trophy
+    int com_mixpanel_android_ic_vip -> com_mixpanel_android_ic_vip
+    int com_mixpanel_android_ic_warning -> com_mixpanel_android_ic_warning
+    int com_mixpanel_android_logo -> com_mixpanel_android_logo
+    int com_mixpanel_android_nocolor_list -> com_mixpanel_android_nocolor_list
+    int com_mixpanel_android_rounded_bottom -> com_mixpanel_android_rounded_bottom
+    int com_mixpanel_android_rounded_bottom_selected -> com_mixpanel_android_rounded_bottom_selected
+    int com_mixpanel_android_rounded_top -> com_mixpanel_android_rounded_top
+    int com_mixpanel_android_rounded_top_selected -> com_mixpanel_android_rounded_top_selected
+    int com_mixpanel_android_square -> com_mixpanel_android_square
+    int com_mixpanel_android_square_dropshadow -> com_mixpanel_android_square_dropshadow
+    int com_mixpanel_android_square_nodropshadow -> com_mixpanel_android_square_nodropshadow
+    int com_mixpanel_android_square_selected -> com_mixpanel_android_square_selected
+    int com_mixpanel_android_text_answer_border -> com_mixpanel_android_text_answer_border
+    int common_signin_btn_icon_dark -> common_signin_btn_icon_dark
+    int common_signin_btn_icon_disabled_dark -> common_signin_btn_icon_disabled_dark
+    int common_signin_btn_icon_disabled_focus_dark -> common_signin_btn_icon_disabled_focus_dark
+    int common_signin_btn_icon_disabled_focus_light -> common_signin_btn_icon_disabled_focus_light
+    int common_signin_btn_icon_disabled_light -> common_signin_btn_icon_disabled_light
+    int common_signin_btn_icon_focus_dark -> common_signin_btn_icon_focus_dark
+    int common_signin_btn_icon_focus_light -> common_signin_btn_icon_focus_light
+    int common_signin_btn_icon_light -> common_signin_btn_icon_light
+    int common_signin_btn_icon_normal_dark -> common_signin_btn_icon_normal_dark
+    int common_signin_btn_icon_normal_light -> common_signin_btn_icon_normal_light
+    int common_signin_btn_icon_pressed_dark -> common_signin_btn_icon_pressed_dark
+    int common_signin_btn_icon_pressed_light -> common_signin_btn_icon_pressed_light
+    int common_signin_btn_text_dark -> common_signin_btn_text_dark
+    int common_signin_btn_text_disabled_dark -> common_signin_btn_text_disabled_dark
+    int common_signin_btn_text_disabled_focus_dark -> common_signin_btn_text_disabled_focus_dark
+    int common_signin_btn_text_disabled_focus_light -> common_signin_btn_text_disabled_focus_light
+    int common_signin_btn_text_disabled_light -> common_signin_btn_text_disabled_light
+    int common_signin_btn_text_focus_dark -> common_signin_btn_text_focus_dark
+    int common_signin_btn_text_focus_light -> common_signin_btn_text_focus_light
+    int common_signin_btn_text_light -> common_signin_btn_text_light
+    int common_signin_btn_text_normal_dark -> common_signin_btn_text_normal_dark
+    int common_signin_btn_text_normal_light -> common_signin_btn_text_normal_light
+    int common_signin_btn_text_pressed_dark -> common_signin_btn_text_pressed_dark
+    int common_signin_btn_text_pressed_light -> common_signin_btn_text_pressed_light
+    int ic_plusone_medium_off_client -> ic_plusone_medium_off_client
+    int ic_plusone_small_off_client -> ic_plusone_small_off_client
+    int ic_plusone_standard_off_client -> ic_plusone_standard_off_client
+    int ic_plusone_tall_off_client -> ic_plusone_tall_off_client
+com.mixpanel.android.R$id -> com.mixpanel.android.d:
+    int com_mixpanel_android_activity_survey_id -> com_mixpanel_android_activity_survey_id
+    int com_mixpanel_android_button_exit -> com_mixpanel_android_button_exit
+    int com_mixpanel_android_button_exit_wrapper -> com_mixpanel_android_button_exit_wrapper
+    int com_mixpanel_android_button_next -> com_mixpanel_android_button_next
+    int com_mixpanel_android_button_previous -> com_mixpanel_android_button_previous
+    int com_mixpanel_android_multiple_choice_answer_text -> com_mixpanel_android_multiple_choice_answer_text
+    int com_mixpanel_android_notification_bottom_wrapper -> com_mixpanel_android_notification_bottom_wrapper
+    int com_mixpanel_android_notification_button -> com_mixpanel_android_notification_button
+    int com_mixpanel_android_notification_gradient -> com_mixpanel_android_notification_gradient
+    int com_mixpanel_android_notification_image -> com_mixpanel_android_notification_image
+    int com_mixpanel_android_notification_subtext -> com_mixpanel_android_notification_subtext
+    int com_mixpanel_android_notification_title -> com_mixpanel_android_notification_title
+    int com_mixpanel_android_progress_text -> com_mixpanel_android_progress_text
+    int com_mixpanel_android_question_card_holder -> com_mixpanel_android_question_card_holder
+    int hybrid -> hybrid
+    int none -> none
+    int normal -> normal
+    int satellite -> satellite
+    int terrain -> terrain
+com.mixpanel.android.R$layout -> com.mixpanel.android.e:
+    int com_mixpanel_android_activity_notification_full -> com_mixpanel_android_activity_notification_full
+    int com_mixpanel_android_activity_notification_mini -> com_mixpanel_android_activity_notification_mini
+    int com_mixpanel_android_activity_survey -> com_mixpanel_android_activity_survey
+    int com_mixpanel_android_first_choice_answer -> com_mixpanel_android_first_choice_answer
+    int com_mixpanel_android_last_choice_answer -> com_mixpanel_android_last_choice_answer
+    int com_mixpanel_android_middle_choice_answer -> com_mixpanel_android_middle_choice_answer
+    int com_mixpanel_android_question_card -> com_mixpanel_android_question_card
+com.mixpanel.android.java_websocket.SocketChannelIOHelper -> com.mixpanel.android.a.a:
+    boolean read(java.nio.ByteBuffer,com.mixpanel.android.java_websocket.WebSocketImpl,java.nio.channels.ByteChannel) -> read
+    boolean readMore(java.nio.ByteBuffer,com.mixpanel.android.java_websocket.WebSocketImpl,com.mixpanel.android.java_websocket.WrappedByteChannel) -> readMore
+    boolean batch(com.mixpanel.android.java_websocket.WebSocketImpl,java.nio.channels.ByteChannel) -> batch
+com.mixpanel.android.java_websocket.WebSocket -> com.mixpanel.android.a.b:
+    int DEFAULT_PORT -> DEFAULT_PORT
+    int DEFAULT_WSS_PORT -> DEFAULT_WSS_PORT
+    void close(int,java.lang.String) -> close
+    void close(int) -> close
+    void close() -> close
+    void closeConnection(int,java.lang.String) -> closeConnection
+    void send(java.lang.String) -> send
+    void send(java.nio.ByteBuffer) -> send
+    void send(byte[]) -> send
+    void sendFrame(com.mixpanel.android.java_websocket.framing.Framedata) -> sendFrame
+    void sendFragmentedFrame(com.mixpanel.android.java_websocket.framing.Framedata$Opcode,java.nio.ByteBuffer,boolean) -> sendFragmentedFrame
+    boolean hasBufferedData() -> hasBufferedData
+    java.net.InetSocketAddress getRemoteSocketAddress() -> getRemoteSocketAddress
+    java.net.InetSocketAddress getLocalSocketAddress() -> getLocalSocketAddress
+    boolean isConnecting() -> isConnecting
+    boolean isOpen() -> isOpen
+    boolean isClosing() -> isClosing
+    boolean isFlushAndClose() -> isFlushAndClose
+    boolean isClosed() -> isClosed
+    com.mixpanel.android.java_websocket.drafts.Draft getDraft() -> getDraft
+    com.mixpanel.android.java_websocket.WebSocket$READYSTATE getReadyState() -> getReadyState
+    java.lang.String getResourceDescriptor() -> getResourceDescriptor
+com.mixpanel.android.java_websocket.WebSocket$READYSTATE -> com.mixpanel.android.a.c:
+    com.mixpanel.android.java_websocket.WebSocket$READYSTATE NOT_YET_CONNECTED -> NOT_YET_CONNECTED
+    com.mixpanel.android.java_websocket.WebSocket$READYSTATE CONNECTING -> CONNECTING
+    com.mixpanel.android.java_websocket.WebSocket$READYSTATE OPEN -> OPEN
+    com.mixpanel.android.java_websocket.WebSocket$READYSTATE CLOSING -> CLOSING
+    com.mixpanel.android.java_websocket.WebSocket$READYSTATE CLOSED -> CLOSED
+    com.mixpanel.android.java_websocket.WebSocket$READYSTATE[] ENUM$VALUES -> a
+    com.mixpanel.android.java_websocket.WebSocket$READYSTATE[] values() -> values
+    com.mixpanel.android.java_websocket.WebSocket$READYSTATE valueOf(java.lang.String) -> valueOf
+com.mixpanel.android.java_websocket.WebSocket$Role -> com.mixpanel.android.a.d:
+    com.mixpanel.android.java_websocket.WebSocket$Role CLIENT -> CLIENT
+    com.mixpanel.android.java_websocket.WebSocket$Role SERVER -> SERVER
+    com.mixpanel.android.java_websocket.WebSocket$Role[] ENUM$VALUES -> a
+    com.mixpanel.android.java_websocket.WebSocket$Role[] values() -> values
+    com.mixpanel.android.java_websocket.WebSocket$Role valueOf(java.lang.String) -> valueOf
+com.mixpanel.android.java_websocket.WebSocketAdapter -> com.mixpanel.android.a.e:
+    com.mixpanel.android.java_websocket.handshake.ServerHandshakeBuilder onWebsocketHandshakeReceivedAsServer(com.mixpanel.android.java_websocket.WebSocket,com.mixpanel.android.java_websocket.drafts.Draft,com.mixpanel.android.java_websocket.handshake.ClientHandshake) -> onWebsocketHandshakeReceivedAsServer
+    void onWebsocketHandshakeReceivedAsClient(com.mixpanel.android.java_websocket.WebSocket,com.mixpanel.android.java_websocket.handshake.ClientHandshake,com.mixpanel.android.java_websocket.handshake.ServerHandshake) -> onWebsocketHandshakeReceivedAsClient
+    void onWebsocketHandshakeSentAsClient(com.mixpanel.android.java_websocket.WebSocket,com.mixpanel.android.java_websocket.handshake.ClientHandshake) -> onWebsocketHandshakeSentAsClient
+    void onWebsocketMessageFragment(com.mixpanel.android.java_websocket.WebSocket,com.mixpanel.android.java_websocket.framing.Framedata) -> onWebsocketMessageFragment
+    void onWebsocketPing(com.mixpanel.android.java_websocket.WebSocket,com.mixpanel.android.java_websocket.framing.Framedata) -> onWebsocketPing
+    void onWebsocketPong(com.mixpanel.android.java_websocket.WebSocket,com.mixpanel.android.java_websocket.framing.Framedata) -> onWebsocketPong
+    java.lang.String getFlashPolicy(com.mixpanel.android.java_websocket.WebSocket) -> getFlashPolicy
+com.mixpanel.android.java_websocket.WebSocketFactory -> com.mixpanel.android.a.f:
+    com.mixpanel.android.java_websocket.WebSocket createWebSocket(com.mixpanel.android.java_websocket.WebSocketAdapter,com.mixpanel.android.java_websocket.drafts.Draft,java.net.Socket) -> createWebSocket
+    com.mixpanel.android.java_websocket.WebSocket createWebSocket(com.mixpanel.android.java_websocket.WebSocketAdapter,java.util.List,java.net.Socket) -> createWebSocket
+com.mixpanel.android.java_websocket.WebSocketImpl -> com.mixpanel.android.a.g:
+    int RCVBUF -> RCVBUF
+    boolean DEBUG -> DEBUG
+    java.util.List defaultdraftlist -> defaultdraftlist
+    java.nio.channels.SelectionKey key -> key
+    java.nio.channels.ByteChannel channel -> channel
+    java.util.concurrent.BlockingQueue outQueue -> outQueue
+    java.util.concurrent.BlockingQueue inQueue -> inQueue
+    com.mixpanel.android.java_websocket.server.WebSocketServer$WebSocketWorker workerThread -> workerThread
+    boolean flushandclosestate -> b
+    com.mixpanel.android.java_websocket.WebSocket$READYSTATE readystate -> c
+    com.mixpanel.android.java_websocket.WebSocketListener wsl -> d
+    java.util.List knownDrafts -> e
+    com.mixpanel.android.java_websocket.drafts.Draft draft -> f
+    com.mixpanel.android.java_websocket.WebSocket$Role role -> g
+    com.mixpanel.android.java_websocket.framing.Framedata$Opcode current_continuous_frame_opcode -> h
+    java.nio.ByteBuffer tmpHandshakeBytes -> i
+    com.mixpanel.android.java_websocket.handshake.ClientHandshake handshakerequest -> j
+    java.lang.String closemessage -> k
+    java.lang.Integer closecode -> l
+    java.lang.Boolean closedremotely -> m
+    java.lang.String resourceDescriptor -> n
+    boolean $assertionsDisabled -> a
+    void decode(java.nio.ByteBuffer) -> decode
+    boolean decodeHandshake(java.nio.ByteBuffer) -> a
+    void decodeFrames(java.nio.ByteBuffer) -> b
+    void close(int,java.lang.String,boolean) -> c
+    void close(int,java.lang.String) -> close
+    void closeConnection(int,java.lang.String,boolean) -> a
+    void closeConnection(int,boolean) -> a
+    void closeConnection() -> closeConnection
+    void closeConnection(int,java.lang.String) -> closeConnection
+    void flushAndClose(int,java.lang.String,boolean) -> b
+    void eot() -> eot
+    void close(int) -> close
+    void close(com.mixpanel.android.java_websocket.exceptions.InvalidDataException) -> close
+    void send(java.lang.String) -> send
+    void send(java.nio.ByteBuffer) -> send
+    void send(byte[]) -> send
+    void send(java.util.Collection) -> a
+    void sendFragmentedFrame(com.mixpanel.android.java_websocket.framing.Framedata$Opcode,java.nio.ByteBuffer,boolean) -> sendFragmentedFrame
+    void sendFrame(com.mixpanel.android.java_websocket.framing.Framedata) -> sendFrame
+    boolean hasBufferedData() -> hasBufferedData
+    com.mixpanel.android.java_websocket.drafts.Draft$HandshakeState isFlashEdgeCase(java.nio.ByteBuffer) -> c
+    void startHandshake(com.mixpanel.android.java_websocket.handshake.ClientHandshakeBuilder) -> startHandshake
+    void write(java.nio.ByteBuffer) -> d
+    void write(java.util.List) -> a
+    void open(com.mixpanel.android.java_websocket.handshake.Handshakedata) -> a
+    boolean isConnecting() -> isConnecting
+    boolean isOpen() -> isOpen
+    boolean isClosing() -> isClosing
+    boolean isFlushAndClose() -> isFlushAndClose
+    boolean isClosed() -> isClosed
+    com.mixpanel.android.java_websocket.WebSocket$READYSTATE getReadyState() -> getReadyState
+    int hashCode() -> hashCode
+    java.lang.String toString() -> toString
+    java.net.InetSocketAddress getRemoteSocketAddress() -> getRemoteSocketAddress
+    java.net.InetSocketAddress getLocalSocketAddress() -> getLocalSocketAddress
+    com.mixpanel.android.java_websocket.drafts.Draft getDraft() -> getDraft
+    void close() -> close
+    java.lang.String getResourceDescriptor() -> getResourceDescriptor
+com.mixpanel.android.java_websocket.WebSocketListener -> com.mixpanel.android.a.h:
+    com.mixpanel.android.java_websocket.handshake.ServerHandshakeBuilder onWebsocketHandshakeReceivedAsServer(com.mixpanel.android.java_websocket.WebSocket,com.mixpanel.android.java_websocket.drafts.Draft,com.mixpanel.android.java_websocket.handshake.ClientHandshake) -> onWebsocketHandshakeReceivedAsServer
+    void onWebsocketHandshakeReceivedAsClient(com.mixpanel.android.java_websocket.WebSocket,com.mixpanel.android.java_websocket.handshake.ClientHandshake,com.mixpanel.android.java_websocket.handshake.ServerHandshake) -> onWebsocketHandshakeReceivedAsClient
+    void onWebsocketHandshakeSentAsClient(com.mixpanel.android.java_websocket.WebSocket,com.mixpanel.android.java_websocket.handshake.ClientHandshake) -> onWebsocketHandshakeSentAsClient
+    void onWebsocketMessage(com.mixpanel.android.java_websocket.WebSocket,java.lang.String) -> onWebsocketMessage
+    void onWebsocketMessage(com.mixpanel.android.java_websocket.WebSocket,java.nio.ByteBuffer) -> onWebsocketMessage
+    void onWebsocketMessageFragment(com.mixpanel.android.java_websocket.WebSocket,com.mixpanel.android.java_websocket.framing.Framedata) -> onWebsocketMessageFragment
+    void onWebsocketOpen(com.mixpanel.android.java_websocket.WebSocket,com.mixpanel.android.java_websocket.handshake.Handshakedata) -> onWebsocketOpen
+    void onWebsocketClose(com.mixpanel.android.java_websocket.WebSocket,int,java.lang.String,boolean) -> onWebsocketClose
+    void onWebsocketClosing(com.mixpanel.android.java_websocket.WebSocket,int,java.lang.String,boolean) -> onWebsocketClosing
+    void onWebsocketCloseInitiated(com.mixpanel.android.java_websocket.WebSocket,int,java.lang.String) -> onWebsocketCloseInitiated
+    void onWebsocketError(com.mixpanel.android.java_websocket.WebSocket,java.lang.Exception) -> onWebsocketError
+    void onWebsocketPing(com.mixpanel.android.java_websocket.WebSocket,com.mixpanel.android.java_websocket.framing.Framedata) -> onWebsocketPing
+    void onWebsocketPong(com.mixpanel.android.java_websocket.WebSocket,com.mixpanel.android.java_websocket.framing.Framedata) -> onWebsocketPong
+    java.lang.String getFlashPolicy(com.mixpanel.android.java_websocket.WebSocket) -> getFlashPolicy
+    void onWriteDemand(com.mixpanel.android.java_websocket.WebSocket) -> onWriteDemand
+    java.net.InetSocketAddress getLocalSocketAddress(com.mixpanel.android.java_websocket.WebSocket) -> getLocalSocketAddress
+    java.net.InetSocketAddress getRemoteSocketAddress(com.mixpanel.android.java_websocket.WebSocket) -> getRemoteSocketAddress
+com.mixpanel.android.java_websocket.WrappedByteChannel -> com.mixpanel.android.a.i:
+    boolean isNeedWrite() -> isNeedWrite
+    void writeMore() -> writeMore
+    boolean isNeedRead() -> isNeedRead
+    int readMore(java.nio.ByteBuffer) -> readMore
+    boolean isBlocking() -> isBlocking
+com.mixpanel.android.java_websocket.client.WebSocketClient -> com.mixpanel.android.a.a.a:
+    java.net.URI uri -> a
+    com.mixpanel.android.java_websocket.WebSocketImpl engine -> c
+    java.net.Socket socket -> d
+    java.io.InputStream istream -> e
+    java.io.OutputStream ostream -> f
+    java.net.Proxy proxy -> g
+    java.lang.Thread writeThread -> h
+    com.mixpanel.android.java_websocket.drafts.Draft draft -> i
+    java.util.Map headers -> j
+    java.util.concurrent.CountDownLatch connectLatch -> k
+    java.util.concurrent.CountDownLatch closeLatch -> l
+    int connectTimeout -> m
+    boolean $assertionsDisabled -> b
+    java.net.URI getURI() -> getURI
+    com.mixpanel.android.java_websocket.drafts.Draft getDraft() -> getDraft
+    void connect() -> connect
+    boolean connectBlocking() -> connectBlocking
+    void close() -> close
+    void closeBlocking() -> closeBlocking
+    void send(java.lang.String) -> send
+    void send(byte[]) -> send
+    void run() -> run
+    int getPort() -> a
+    void sendHandshake() -> b
+    com.mixpanel.android.java_websocket.WebSocket$READYSTATE getReadyState() -> getReadyState
+    void onWebsocketMessage(com.mixpanel.android.java_websocket.WebSocket,java.lang.String) -> onWebsocketMessage
+    void onWebsocketMessage(com.mixpanel.android.java_websocket.WebSocket,java.nio.ByteBuffer) -> onWebsocketMessage
+    void onWebsocketMessageFragment(com.mixpanel.android.java_websocket.WebSocket,com.mixpanel.android.java_websocket.framing.Framedata) -> onWebsocketMessageFragment
+    void onWebsocketOpen(com.mixpanel.android.java_websocket.WebSocket,com.mixpanel.android.java_websocket.handshake.Handshakedata) -> onWebsocketOpen
+    void onWebsocketClose(com.mixpanel.android.java_websocket.WebSocket,int,java.lang.String,boolean) -> onWebsocketClose
+    void onWebsocketError(com.mixpanel.android.java_websocket.WebSocket,java.lang.Exception) -> onWebsocketError
+    void onWriteDemand(com.mixpanel.android.java_websocket.WebSocket) -> onWriteDemand
+    void onWebsocketCloseInitiated(com.mixpanel.android.java_websocket.WebSocket,int,java.lang.String) -> onWebsocketCloseInitiated
+    void onWebsocketClosing(com.mixpanel.android.java_websocket.WebSocket,int,java.lang.String,boolean) -> onWebsocketClosing
+    void onCloseInitiated(int,java.lang.String) -> onCloseInitiated
+    void onClosing(int,java.lang.String,boolean) -> onClosing
+    com.mixpanel.android.java_websocket.WebSocket getConnection() -> getConnection
+    java.net.InetSocketAddress getLocalSocketAddress(com.mixpanel.android.java_websocket.WebSocket) -> getLocalSocketAddress
+    java.net.InetSocketAddress getRemoteSocketAddress(com.mixpanel.android.java_websocket.WebSocket) -> getRemoteSocketAddress
+    void onOpen(com.mixpanel.android.java_websocket.handshake.ServerHandshake) -> onOpen
+    void onMessage(java.lang.String) -> onMessage
+    void onClose(int,java.lang.String,boolean) -> onClose
+    void onError(java.lang.Exception) -> onError
+    void onMessage(java.nio.ByteBuffer) -> onMessage
+    void onFragment(com.mixpanel.android.java_websocket.framing.Framedata) -> onFragment
+    void setProxy(java.net.Proxy) -> setProxy
+    void setSocket(java.net.Socket) -> setSocket
+    void sendFragmentedFrame(com.mixpanel.android.java_websocket.framing.Framedata$Opcode,java.nio.ByteBuffer,boolean) -> sendFragmentedFrame
+    boolean isOpen() -> isOpen
+    boolean isFlushAndClose() -> isFlushAndClose
+    boolean isClosed() -> isClosed
+    boolean isClosing() -> isClosing
+    boolean isConnecting() -> isConnecting
+    boolean hasBufferedData() -> hasBufferedData
+    void close(int) -> close
+    void close(int,java.lang.String) -> close
+    void closeConnection(int,java.lang.String) -> closeConnection
+    void send(java.nio.ByteBuffer) -> send
+    void sendFrame(com.mixpanel.android.java_websocket.framing.Framedata) -> sendFrame
+    java.net.InetSocketAddress getLocalSocketAddress() -> getLocalSocketAddress
+    java.net.InetSocketAddress getRemoteSocketAddress() -> getRemoteSocketAddress
+    java.lang.String getResourceDescriptor() -> getResourceDescriptor
+    com.mixpanel.android.java_websocket.WebSocketImpl access$0(com.mixpanel.android.java_websocket.client.WebSocketClient) -> a
+    java.io.OutputStream access$1(com.mixpanel.android.java_websocket.client.WebSocketClient) -> b
+com.mixpanel.android.java_websocket.client.WebSocketClient$WebsocketWriteThread -> com.mixpanel.android.a.a.b:
+    com.mixpanel.android.java_websocket.client.WebSocketClient this$0 -> a
+    void run() -> run
+com.mixpanel.android.java_websocket.drafts.Draft -> com.mixpanel.android.a.b.a:
+    int MAX_FAME_SIZE -> MAX_FAME_SIZE
+    int INITIAL_FAMESIZE -> INITIAL_FAMESIZE
+    byte[] FLASH_POLICY_REQUEST -> FLASH_POLICY_REQUEST
+    com.mixpanel.android.java_websocket.WebSocket$Role role -> a
+    com.mixpanel.android.java_websocket.framing.Framedata$Opcode continuousFrameType -> b
+    java.nio.ByteBuffer readLine(java.nio.ByteBuffer) -> readLine
+    java.lang.String readStringLine(java.nio.ByteBuffer) -> readStringLine
+    com.mixpanel.android.java_websocket.handshake.HandshakeBuilder translateHandshakeHttp(java.nio.ByteBuffer,com.mixpanel.android.java_websocket.WebSocket$Role) -> translateHandshakeHttp
+    com.mixpanel.android.java_websocket.drafts.Draft$HandshakeState acceptHandshakeAsClient(com.mixpanel.android.java_websocket.handshake.ClientHandshake,com.mixpanel.android.java_websocket.handshake.ServerHandshake) -> acceptHandshakeAsClient
+    com.mixpanel.android.java_websocket.drafts.Draft$HandshakeState acceptHandshakeAsServer(com.mixpanel.android.java_websocket.handshake.ClientHandshake) -> acceptHandshakeAsServer
+    boolean basicAccept(com.mixpanel.android.java_websocket.handshake.Handshakedata) -> a
+    java.nio.ByteBuffer createBinaryFrame(com.mixpanel.android.java_websocket.framing.Framedata) -> createBinaryFrame
+    java.util.List createFrames(java.nio.ByteBuffer,boolean) -> createFrames
+    java.util.List createFrames(java.lang.String,boolean) -> createFrames
+    java.util.List continuousFrame(com.mixpanel.android.java_websocket.framing.Framedata$Opcode,java.nio.ByteBuffer,boolean) -> continuousFrame
+    void reset() -> reset
+    java.util.List createHandshake(com.mixpanel.android.java_websocket.handshake.Handshakedata,com.mixpanel.android.java_websocket.WebSocket$Role) -> createHandshake
+    java.util.List createHandshake(com.mixpanel.android.java_websocket.handshake.Handshakedata,com.mixpanel.android.java_websocket.WebSocket$Role,boolean) -> createHandshake
+    com.mixpanel.android.java_websocket.handshake.ClientHandshakeBuilder postProcessHandshakeRequestAsClient(com.mixpanel.android.java_websocket.handshake.ClientHandshakeBuilder) -> postProcessHandshakeRequestAsClient
+    com.mixpanel.android.java_websocket.handshake.HandshakeBuilder postProcessHandshakeResponseAsServer(com.mixpanel.android.java_websocket.handshake.ClientHandshake,com.mixpanel.android.java_websocket.handshake.ServerHandshakeBuilder) -> postProcessHandshakeResponseAsServer
+    java.util.List translateFrame(java.nio.ByteBuffer) -> translateFrame
+    com.mixpanel.android.java_websocket.drafts.Draft$CloseHandshakeType getCloseHandshakeType() -> getCloseHandshakeType
+    com.mixpanel.android.java_websocket.drafts.Draft copyInstance() -> copyInstance
+    com.mixpanel.android.java_websocket.handshake.Handshakedata translateHandshake(java.nio.ByteBuffer) -> translateHandshake
+    int checkAlloc(int) -> checkAlloc
+    void setParseMode(com.mixpanel.android.java_websocket.WebSocket$Role) -> setParseMode
+    com.mixpanel.android.java_websocket.WebSocket$Role getRole() -> getRole
+com.mixpanel.android.java_websocket.drafts.Draft$CloseHandshakeType -> com.mixpanel.android.a.b.b:
+    com.mixpanel.android.java_websocket.drafts.Draft$CloseHandshakeType NONE -> NONE
+    com.mixpanel.android.java_websocket.drafts.Draft$CloseHandshakeType ONEWAY -> ONEWAY
+    com.mixpanel.android.java_websocket.drafts.Draft$CloseHandshakeType TWOWAY -> TWOWAY
+    com.mixpanel.android.java_websocket.drafts.Draft$CloseHandshakeType[] ENUM$VALUES -> a
+    com.mixpanel.android.java_websocket.drafts.Draft$CloseHandshakeType[] values() -> values
+    com.mixpanel.android.java_websocket.drafts.Draft$CloseHandshakeType valueOf(java.lang.String) -> valueOf
+com.mixpanel.android.java_websocket.drafts.Draft$HandshakeState -> com.mixpanel.android.a.b.c:
+    com.mixpanel.android.java_websocket.drafts.Draft$HandshakeState MATCHED -> MATCHED
+    com.mixpanel.android.java_websocket.drafts.Draft$HandshakeState NOT_MATCHED -> NOT_MATCHED
+    com.mixpanel.android.java_websocket.drafts.Draft$HandshakeState[] ENUM$VALUES -> a
+    com.mixpanel.android.java_websocket.drafts.Draft$HandshakeState[] values() -> values
+    com.mixpanel.android.java_websocket.drafts.Draft$HandshakeState valueOf(java.lang.String) -> valueOf
+com.mixpanel.android.java_websocket.drafts.Draft_10 -> com.mixpanel.android.a.b.d:
+    java.nio.ByteBuffer incompleteframe -> d
+    com.mixpanel.android.java_websocket.framing.Framedata fragmentedframe -> e
+    java.util.Random reuseableRandom -> f
+    boolean $assertionsDisabled -> c
+    int readVersion(com.mixpanel.android.java_websocket.handshake.Handshakedata) -> readVersion
+    com.mixpanel.android.java_websocket.drafts.Draft$HandshakeState acceptHandshakeAsClient(com.mixpanel.android.java_websocket.handshake.ClientHandshake,com.mixpanel.android.java_websocket.handshake.ServerHandshake) -> acceptHandshakeAsClient
+    com.mixpanel.android.java_websocket.drafts.Draft$HandshakeState acceptHandshakeAsServer(com.mixpanel.android.java_websocket.handshake.ClientHandshake) -> acceptHandshakeAsServer
+    java.nio.ByteBuffer createBinaryFrame(com.mixpanel.android.java_websocket.framing.Framedata) -> createBinaryFrame
+    java.util.List createFrames(java.nio.ByteBuffer,boolean) -> createFrames
+    java.util.List createFrames(java.lang.String,boolean) -> createFrames
+    byte fromOpcode(com.mixpanel.android.java_websocket.framing.Framedata$Opcode) -> a
+    java.lang.String generateFinalKey(java.lang.String) -> a
+    com.mixpanel.android.java_websocket.handshake.ClientHandshakeBuilder postProcessHandshakeRequestAsClient(com.mixpanel.android.java_websocket.handshake.ClientHandshakeBuilder) -> postProcessHandshakeRequestAsClient
+    com.mixpanel.android.java_websocket.handshake.HandshakeBuilder postProcessHandshakeResponseAsServer(com.mixpanel.android.java_websocket.handshake.ClientHandshake,com.mixpanel.android.java_websocket.handshake.ServerHandshakeBuilder) -> postProcessHandshakeResponseAsServer
+    byte[] toByteArray(long,int) -> a
+    com.mixpanel.android.java_websocket.framing.Framedata$Opcode toOpcode(byte) -> a
+    java.util.List translateFrame(java.nio.ByteBuffer) -> translateFrame
+    com.mixpanel.android.java_websocket.framing.Framedata translateSingleFrame(java.nio.ByteBuffer) -> translateSingleFrame
+    void reset() -> reset
+    com.mixpanel.android.java_websocket.drafts.Draft copyInstance() -> copyInstance
+    com.mixpanel.android.java_websocket.drafts.Draft$CloseHandshakeType getCloseHandshakeType() -> getCloseHandshakeType
+com.mixpanel.android.java_websocket.drafts.Draft_10$IncompleteException -> com.mixpanel.android.a.b.e:
+    int preferedsize -> b
+    com.mixpanel.android.java_websocket.drafts.Draft_10 this$0 -> a
+    int getPreferedSize() -> getPreferedSize
+com.mixpanel.android.java_websocket.drafts.Draft_17 -> com.mixpanel.android.a.b.f:
+    com.mixpanel.android.java_websocket.drafts.Draft$HandshakeState acceptHandshakeAsServer(com.mixpanel.android.java_websocket.handshake.ClientHandshake) -> acceptHandshakeAsServer
+    com.mixpanel.android.java_websocket.handshake.ClientHandshakeBuilder postProcessHandshakeRequestAsClient(com.mixpanel.android.java_websocket.handshake.ClientHandshakeBuilder) -> postProcessHandshakeRequestAsClient
+    com.mixpanel.android.java_websocket.drafts.Draft copyInstance() -> copyInstance
+com.mixpanel.android.java_websocket.drafts.Draft_75 -> com.mixpanel.android.a.b.g:
+    byte CR -> CR
+    byte LF -> LF
+    byte START_OF_FRAME -> START_OF_FRAME
+    byte END_OF_FRAME -> END_OF_FRAME
+    boolean readingState -> c
+    java.util.List readyframes -> d
+    java.nio.ByteBuffer currentFrame -> e
+    java.util.Random reuseableRandom -> f
+    com.mixpanel.android.java_websocket.drafts.Draft$HandshakeState acceptHandshakeAsClient(com.mixpanel.android.java_websocket.handshake.ClientHandshake,com.mixpanel.android.java_websocket.handshake.ServerHandshake) -> acceptHandshakeAsClient
+    com.mixpanel.android.java_websocket.drafts.Draft$HandshakeState acceptHandshakeAsServer(com.mixpanel.android.java_websocket.handshake.ClientHandshake) -> acceptHandshakeAsServer
+    java.nio.ByteBuffer createBinaryFrame(com.mixpanel.android.java_websocket.framing.Framedata) -> createBinaryFrame
+    java.util.List createFrames(java.nio.ByteBuffer,boolean) -> createFrames
+    java.util.List createFrames(java.lang.String,boolean) -> createFrames
+    com.mixpanel.android.java_websocket.handshake.ClientHandshakeBuilder postProcessHandshakeRequestAsClient(com.mixpanel.android.java_websocket.handshake.ClientHandshakeBuilder) -> postProcessHandshakeRequestAsClient
+    com.mixpanel.android.java_websocket.handshake.HandshakeBuilder postProcessHandshakeResponseAsServer(com.mixpanel.android.java_websocket.handshake.ClientHandshake,com.mixpanel.android.java_websocket.handshake.ServerHandshakeBuilder) -> postProcessHandshakeResponseAsServer
+    java.util.List translateRegularFrame(java.nio.ByteBuffer) -> a
+    java.util.List translateFrame(java.nio.ByteBuffer) -> translateFrame
+    void reset() -> reset
+    com.mixpanel.android.java_websocket.drafts.Draft$CloseHandshakeType getCloseHandshakeType() -> getCloseHandshakeType
+    java.nio.ByteBuffer createBuffer() -> createBuffer
+    java.nio.ByteBuffer increaseBuffer(java.nio.ByteBuffer) -> increaseBuffer
+    com.mixpanel.android.java_websocket.drafts.Draft copyInstance() -> copyInstance
+com.mixpanel.android.java_websocket.drafts.Draft_76 -> com.mixpanel.android.a.b.h:
+    boolean failed -> f
+    byte[] closehandshake -> g
+    java.util.Random reuseableRandom -> h
+    byte[] createChallenge(java.lang.String,java.lang.String,byte[]) -> createChallenge
+    java.lang.String generateKey() -> a
+    byte[] getPart(java.lang.String) -> a
+    com.mixpanel.android.java_websocket.drafts.Draft$HandshakeState acceptHandshakeAsClient(com.mixpanel.android.java_websocket.handshake.ClientHandshake,com.mixpanel.android.java_websocket.handshake.ServerHandshake) -> acceptHandshakeAsClient
+    com.mixpanel.android.java_websocket.drafts.Draft$HandshakeState acceptHandshakeAsServer(com.mixpanel.android.java_websocket.handshake.ClientHandshake) -> acceptHandshakeAsServer
+    com.mixpanel.android.java_websocket.handshake.ClientHandshakeBuilder postProcessHandshakeRequestAsClient(com.mixpanel.android.java_websocket.handshake.ClientHandshakeBuilder) -> postProcessHandshakeRequestAsClient
+    com.mixpanel.android.java_websocket.handshake.HandshakeBuilder postProcessHandshakeResponseAsServer(com.mixpanel.android.java_websocket.handshake.ClientHandshake,com.mixpanel.android.java_websocket.handshake.ServerHandshakeBuilder) -> postProcessHandshakeResponseAsServer
+    com.mixpanel.android.java_websocket.handshake.Handshakedata translateHandshake(java.nio.ByteBuffer) -> translateHandshake
+    java.util.List translateFrame(java.nio.ByteBuffer) -> translateFrame
+    java.nio.ByteBuffer createBinaryFrame(com.mixpanel.android.java_websocket.framing.Framedata) -> createBinaryFrame
+    com.mixpanel.android.java_websocket.drafts.Draft$CloseHandshakeType getCloseHandshakeType() -> getCloseHandshakeType
+    com.mixpanel.android.java_websocket.drafts.Draft copyInstance() -> copyInstance
+com.mixpanel.android.java_websocket.exceptions.IncompleteHandshakeException -> com.mixpanel.android.a.c.a:
+    int newsize -> a
+    int getPreferedSize() -> getPreferedSize
+com.mixpanel.android.java_websocket.exceptions.InvalidDataException -> com.mixpanel.android.a.c.b:
+    int closecode -> a
+    int getCloseCode() -> getCloseCode
+com.mixpanel.android.java_websocket.exceptions.InvalidFrameException -> com.mixpanel.android.a.c.c:
+com.mixpanel.android.java_websocket.exceptions.InvalidHandshakeException -> com.mixpanel.android.a.c.d:
+com.mixpanel.android.java_websocket.exceptions.LimitExedeedException -> com.mixpanel.android.a.c.e:
+com.mixpanel.android.java_websocket.exceptions.NotSendableException -> com.mixpanel.android.a.c.f:
+com.mixpanel.android.java_websocket.exceptions.WebsocketNotConnectedException -> com.mixpanel.android.a.c.g:
+com.mixpanel.android.java_websocket.framing.CloseFrame -> com.mixpanel.android.a.d.a:
+    int NORMAL -> NORMAL
+    int GOING_AWAY -> GOING_AWAY
+    int PROTOCOL_ERROR -> PROTOCOL_ERROR
+    int REFUSE -> REFUSE
+    int NOCODE -> NOCODE
+    int ABNORMAL_CLOSE -> ABNORMAL_CLOSE
+    int NO_UTF8 -> NO_UTF8
+    int POLICY_VALIDATION -> POLICY_VALIDATION
+    int TOOBIG -> TOOBIG
+    int EXTENSION -> EXTENSION
+    int UNEXPECTED_CONDITION -> UNEXPECTED_CONDITION
+    int TLS_ERROR -> TLS_ERROR
+    int NEVER_CONNECTED -> NEVER_CONNECTED
+    int BUGGYCLOSE -> BUGGYCLOSE
+    int FLASHPOLICY -> FLASHPOLICY
+    int getCloseCode() -> getCloseCode
+    java.lang.String getMessage() -> getMessage
+com.mixpanel.android.java_websocket.framing.CloseFrameBuilder -> com.mixpanel.android.a.d.b:
+    java.nio.ByteBuffer emptybytebuffer -> a
+    int code -> f
+    java.lang.String reason -> g
+    void setCodeAndMessage(int,java.lang.String) -> a
+    void initCloseCode() -> a
+    int getCloseCode() -> getCloseCode
+    void initMessage() -> b
+    java.lang.String getMessage() -> getMessage
+    java.lang.String toString() -> toString
+    void setPayload(java.nio.ByteBuffer) -> setPayload
+    java.nio.ByteBuffer getPayloadData() -> getPayloadData
+com.mixpanel.android.java_websocket.framing.FrameBuilder -> com.mixpanel.android.a.d.c:
+    void setFin(boolean) -> setFin
+    void setOptcode(com.mixpanel.android.java_websocket.framing.Framedata$Opcode) -> setOptcode
+    void setPayload(java.nio.ByteBuffer) -> setPayload
+    void setTransferemasked(boolean) -> setTransferemasked
+com.mixpanel.android.java_websocket.framing.Framedata -> com.mixpanel.android.a.d.d:
+    boolean isFin() -> isFin
+    boolean getTransfereMasked() -> getTransfereMasked
+    com.mixpanel.android.java_websocket.framing.Framedata$Opcode getOpcode() -> getOpcode
+    java.nio.ByteBuffer getPayloadData() -> getPayloadData
+    void append(com.mixpanel.android.java_websocket.framing.Framedata) -> append
+com.mixpanel.android.java_websocket.framing.Framedata$Opcode -> com.mixpanel.android.a.d.e:
+    com.mixpanel.android.java_websocket.framing.Framedata$Opcode CONTINUOUS -> CONTINUOUS
+    com.mixpanel.android.java_websocket.framing.Framedata$Opcode TEXT -> TEXT
+    com.mixpanel.android.java_websocket.framing.Framedata$Opcode BINARY -> BINARY
+    com.mixpanel.android.java_websocket.framing.Framedata$Opcode PING -> PING
+    com.mixpanel.android.java_websocket.framing.Framedata$Opcode PONG -> PONG
+    com.mixpanel.android.java_websocket.framing.Framedata$Opcode CLOSING -> CLOSING
+    com.mixpanel.android.java_websocket.framing.Framedata$Opcode[] ENUM$VALUES -> a
+    com.mixpanel.android.java_websocket.framing.Framedata$Opcode[] values() -> values
+    com.mixpanel.android.java_websocket.framing.Framedata$Opcode valueOf(java.lang.String) -> valueOf
+com.mixpanel.android.java_websocket.framing.FramedataImpl1 -> com.mixpanel.android.a.d.f:
+    byte[] emptyarray -> b
+    boolean fin -> c
+    com.mixpanel.android.java_websocket.framing.Framedata$Opcode optcode -> d
+    java.nio.ByteBuffer unmaskedpayload -> a
+    boolean transferemasked -> e
+    boolean isFin() -> isFin
+    com.mixpanel.android.java_websocket.framing.Framedata$Opcode getOpcode() -> getOpcode
+    boolean getTransfereMasked() -> getTransfereMasked
+    java.nio.ByteBuffer getPayloadData() -> getPayloadData
+    void setFin(boolean) -> setFin
+    void setOptcode(com.mixpanel.android.java_websocket.framing.Framedata$Opcode) -> setOptcode
+    void setPayload(java.nio.ByteBuffer) -> setPayload
+    void setTransferemasked(boolean) -> setTransferemasked
+    void append(com.mixpanel.android.java_websocket.framing.Framedata) -> append
+    java.lang.String toString() -> toString
+com.mixpanel.android.java_websocket.handshake.ClientHandshake -> com.mixpanel.android.a.e.a:
+    java.lang.String getResourceDescriptor() -> getResourceDescriptor
+com.mixpanel.android.java_websocket.handshake.ClientHandshakeBuilder -> com.mixpanel.android.a.e.b:
+    void setResourceDescriptor(java.lang.String) -> setResourceDescriptor
+com.mixpanel.android.java_websocket.handshake.HandshakeBuilder -> com.mixpanel.android.a.e.c:
+    void setContent(byte[]) -> setContent
+    void put(java.lang.String,java.lang.String) -> put
+com.mixpanel.android.java_websocket.handshake.HandshakeImpl1Client -> com.mixpanel.android.a.e.d:
+    java.lang.String resourceDescriptor -> a
+    void setResourceDescriptor(java.lang.String) -> setResourceDescriptor
+    java.lang.String getResourceDescriptor() -> getResourceDescriptor
+com.mixpanel.android.java_websocket.handshake.HandshakeImpl1Server -> com.mixpanel.android.a.e.e:
+    short httpstatus -> a
+    java.lang.String httpstatusmessage -> b
+    java.lang.String getHttpStatusMessage() -> getHttpStatusMessage
+    short getHttpStatus() -> getHttpStatus
+    void setHttpStatusMessage(java.lang.String) -> setHttpStatusMessage
+    void setHttpStatus(short) -> setHttpStatus
+com.mixpanel.android.java_websocket.handshake.Handshakedata -> com.mixpanel.android.a.e.f:
+    java.util.Iterator iterateHttpFields() -> iterateHttpFields
+    java.lang.String getFieldValue(java.lang.String) -> getFieldValue
+    boolean hasFieldValue(java.lang.String) -> hasFieldValue
+    byte[] getContent() -> getContent
+com.mixpanel.android.java_websocket.handshake.HandshakedataImpl1 -> com.mixpanel.android.a.e.g:
+    byte[] content -> a
+    java.util.TreeMap map -> b
+    java.util.Iterator iterateHttpFields() -> iterateHttpFields
+    java.lang.String getFieldValue(java.lang.String) -> getFieldValue
+    byte[] getContent() -> getContent
+    void setContent(byte[]) -> setContent
+    void put(java.lang.String,java.lang.String) -> put
+    boolean hasFieldValue(java.lang.String) -> hasFieldValue
+com.mixpanel.android.java_websocket.handshake.ServerHandshake -> com.mixpanel.android.a.e.h:
+    short getHttpStatus() -> getHttpStatus
+    java.lang.String getHttpStatusMessage() -> getHttpStatusMessage
+com.mixpanel.android.java_websocket.handshake.ServerHandshakeBuilder -> com.mixpanel.android.a.e.i:
+    void setHttpStatus(short) -> setHttpStatus
+    void setHttpStatusMessage(java.lang.String) -> setHttpStatusMessage
+com.mixpanel.android.java_websocket.server.DefaultWebSocketServerFactory -> com.mixpanel.android.a.f.a:
+    com.mixpanel.android.java_websocket.WebSocketImpl createWebSocket(com.mixpanel.android.java_websocket.WebSocketAdapter,com.mixpanel.android.java_websocket.drafts.Draft,java.net.Socket) -> createWebSocket
+    com.mixpanel.android.java_websocket.WebSocketImpl createWebSocket(com.mixpanel.android.java_websocket.WebSocketAdapter,java.util.List,java.net.Socket) -> createWebSocket
+    java.nio.channels.SocketChannel wrapChannel(java.nio.channels.SocketChannel,java.nio.channels.SelectionKey) -> wrapChannel
+    com.mixpanel.android.java_websocket.WebSocket createWebSocket(com.mixpanel.android.java_websocket.WebSocketAdapter,java.util.List,java.net.Socket) -> createWebSocket
+    com.mixpanel.android.java_websocket.WebSocket createWebSocket(com.mixpanel.android.java_websocket.WebSocketAdapter,com.mixpanel.android.java_websocket.drafts.Draft,java.net.Socket) -> createWebSocket
+    java.nio.channels.ByteChannel wrapChannel(java.nio.channels.SocketChannel,java.nio.channels.SelectionKey) -> wrapChannel
+com.mixpanel.android.java_websocket.server.WebSocketServer -> com.mixpanel.android.a.f.b:
+    int DECODERS -> DECODERS
+    java.util.Collection connections -> b
+    java.net.InetSocketAddress address -> c
+    java.nio.channels.ServerSocketChannel server -> d
+    java.nio.channels.Selector selector -> e
+    java.util.List drafts -> f
+    java.lang.Thread selectorthread -> g
+    java.util.concurrent.atomic.AtomicBoolean isclosed -> h
+    java.util.List decoders -> i
+    java.util.List iqueue -> j
+    java.util.concurrent.BlockingQueue buffers -> k
+    int queueinvokes -> l
+    java.util.concurrent.atomic.AtomicInteger queuesize -> m
+    com.mixpanel.android.java_websocket.server.WebSocketServer$WebSocketServerFactory wsf -> n
+    boolean $assertionsDisabled -> a
+    void start() -> start
+    void stop(int) -> stop
+    void stop() -> stop
+    java.util.Collection connections() -> connections
+    java.net.InetSocketAddress getAddress() -> getAddress
+    int getPort() -> getPort
+    java.util.List getDraft() -> getDraft
+    void run() -> run
+    void allocateBuffers(com.mixpanel.android.java_websocket.WebSocket) -> a
+    void releaseBuffers(com.mixpanel.android.java_websocket.WebSocket) -> b
+    java.nio.ByteBuffer createBuffer() -> createBuffer
+    void queue(com.mixpanel.android.java_websocket.WebSocketImpl) -> a
+    java.nio.ByteBuffer takeBuffer() -> a
+    void pushBuffer(java.nio.ByteBuffer) -> a
+    void handleIOException(java.nio.channels.SelectionKey,com.mixpanel.android.java_websocket.WebSocket,java.io.IOException) -> a
+    void handleFatal(com.mixpanel.android.java_websocket.WebSocket,java.lang.Exception) -> a
+    void onWebsocketMessage(com.mixpanel.android.java_websocket.WebSocket,java.lang.String) -> onWebsocketMessage
+    void onWebsocketMessageFragment(com.mixpanel.android.java_websocket.WebSocket,com.mixpanel.android.java_websocket.framing.Framedata) -> onWebsocketMessageFragment
+    void onWebsocketMessage(com.mixpanel.android.java_websocket.WebSocket,java.nio.ByteBuffer) -> onWebsocketMessage
+    void onWebsocketOpen(com.mixpanel.android.java_websocket.WebSocket,com.mixpanel.android.java_websocket.handshake.Handshakedata) -> onWebsocketOpen
+    void onWebsocketClose(com.mixpanel.android.java_websocket.WebSocket,int,java.lang.String,boolean) -> onWebsocketClose
+    boolean removeConnection(com.mixpanel.android.java_websocket.WebSocket) -> c
+    com.mixpanel.android.java_websocket.handshake.ServerHandshakeBuilder onWebsocketHandshakeReceivedAsServer(com.mixpanel.android.java_websocket.WebSocket,com.mixpanel.android.java_websocket.drafts.Draft,com.mixpanel.android.java_websocket.handshake.ClientHandshake) -> onWebsocketHandshakeReceivedAsServer
+    boolean addConnection(com.mixpanel.android.java_websocket.WebSocket) -> d
+    void onWebsocketError(com.mixpanel.android.java_websocket.WebSocket,java.lang.Exception) -> onWebsocketError
+    void onWriteDemand(com.mixpanel.android.java_websocket.WebSocket) -> onWriteDemand
+    void onWebsocketCloseInitiated(com.mixpanel.android.java_websocket.WebSocket,int,java.lang.String) -> onWebsocketCloseInitiated
+    void onWebsocketClosing(com.mixpanel.android.java_websocket.WebSocket,int,java.lang.String,boolean) -> onWebsocketClosing
+    void onCloseInitiated(com.mixpanel.android.java_websocket.WebSocket,int,java.lang.String) -> onCloseInitiated
+    void onClosing(com.mixpanel.android.java_websocket.WebSocket,int,java.lang.String,boolean) -> onClosing
+    void setWebSocketFactory(com.mixpanel.android.java_websocket.server.WebSocketServer$WebSocketServerFactory) -> setWebSocketFactory
+    com.mixpanel.android.java_websocket.WebSocketFactory getWebSocketFactory() -> getWebSocketFactory
+    boolean onConnect(java.nio.channels.SelectionKey) -> a
+    java.net.Socket getSocket(com.mixpanel.android.java_websocket.WebSocket) -> e
+    java.net.InetSocketAddress getLocalSocketAddress(com.mixpanel.android.java_websocket.WebSocket) -> getLocalSocketAddress
+    java.net.InetSocketAddress getRemoteSocketAddress(com.mixpanel.android.java_websocket.WebSocket) -> getRemoteSocketAddress
+    void onOpen(com.mixpanel.android.java_websocket.WebSocket,com.mixpanel.android.java_websocket.handshake.ClientHandshake) -> onOpen
+    void onClose(com.mixpanel.android.java_websocket.WebSocket,int,java.lang.String,boolean) -> onClose
+    void onMessage(com.mixpanel.android.java_websocket.WebSocket,java.lang.String) -> onMessage
+    void onError(com.mixpanel.android.java_websocket.WebSocket,java.lang.Exception) -> onError
+    void onMessage(com.mixpanel.android.java_websocket.WebSocket,java.nio.ByteBuffer) -> onMessage
+    void onFragment(com.mixpanel.android.java_websocket.WebSocket,com.mixpanel.android.java_websocket.framing.Framedata) -> onFragment
+    void access$0(com.mixpanel.android.java_websocket.server.WebSocketServer,java.nio.ByteBuffer) -> a
+    void access$1(com.mixpanel.android.java_websocket.server.WebSocketServer,com.mixpanel.android.java_websocket.WebSocket,java.lang.Exception) -> a
+com.mixpanel.android.java_websocket.server.WebSocketServer$WebSocketServerFactory -> com.mixpanel.android.a.f.c:
+    com.mixpanel.android.java_websocket.WebSocketImpl createWebSocket(com.mixpanel.android.java_websocket.WebSocketAdapter,com.mixpanel.android.java_websocket.drafts.Draft,java.net.Socket) -> createWebSocket
+    com.mixpanel.android.java_websocket.WebSocketImpl createWebSocket(com.mixpanel.android.java_websocket.WebSocketAdapter,java.util.List,java.net.Socket) -> createWebSocket
+    java.nio.channels.ByteChannel wrapChannel(java.nio.channels.SocketChannel,java.nio.channels.SelectionKey) -> wrapChannel
+com.mixpanel.android.java_websocket.server.WebSocketServer$WebSocketWorker -> com.mixpanel.android.a.f.d:
+    java.util.concurrent.BlockingQueue iqueue -> c
+    com.mixpanel.android.java_websocket.server.WebSocketServer this$0 -> a
+    boolean $assertionsDisabled -> b
+    void put(com.mixpanel.android.java_websocket.WebSocketImpl) -> put
+    void run() -> run
+com.mixpanel.android.java_websocket.server.WebSocketServer$WebSocketWorker$1 -> com.mixpanel.android.a.f.e:
+    com.mixpanel.android.java_websocket.server.WebSocketServer$WebSocketWorker this$1 -> a
+    void uncaughtException(java.lang.Thread,java.lang.Throwable) -> uncaughtException
+com.mixpanel.android.java_websocket.util.Base64 -> com.mixpanel.android.a.g.a:
+    int NO_OPTIONS -> NO_OPTIONS
+    int ENCODE -> ENCODE
+    int DECODE -> DECODE
+    int GZIP -> GZIP
+    int DONT_GUNZIP -> DONT_GUNZIP
+    int DO_BREAK_LINES -> DO_BREAK_LINES
+    int URL_SAFE -> URL_SAFE
+    int ORDERED -> ORDERED
+    byte[] _STANDARD_ALPHABET -> b
+    byte[] _STANDARD_DECODABET -> c
+    byte[] _URL_SAFE_ALPHABET -> d
+    byte[] _URL_SAFE_DECODABET -> e
+    byte[] _ORDERED_ALPHABET -> f
+    byte[] _ORDERED_DECODABET -> g
+    boolean $assertionsDisabled -> a
+    byte[] getAlphabet(int) -> b
+    byte[] getDecodabet(int) -> c
+    byte[] encode3to4(byte[],byte[],int,int) -> b
+    byte[] encode3to4(byte[],int,int,byte[],int,int) -> b
+    void encode(java.nio.ByteBuffer,java.nio.ByteBuffer) -> encode
+    void encode(java.nio.ByteBuffer,java.nio.CharBuffer) -> encode
+    java.lang.String encodeObject(java.io.Serializable) -> encodeObject
+    java.lang.String encodeObject(java.io.Serializable,int) -> encodeObject
+    java.lang.String encodeBytes(byte[]) -> encodeBytes
+    java.lang.String encodeBytes(byte[],int) -> encodeBytes
+    java.lang.String encodeBytes(byte[],int,int) -> encodeBytes
+    java.lang.String encodeBytes(byte[],int,int,int) -> encodeBytes
+    byte[] encodeBytesToBytes(byte[]) -> encodeBytesToBytes
+    byte[] encodeBytesToBytes(byte[],int,int,int) -> encodeBytesToBytes
+    int decode4to3(byte[],int,byte[],int,int) -> b
+    byte[] decode(byte[]) -> decode
+    byte[] decode(byte[],int,int,int) -> decode
+    byte[] decode(java.lang.String) -> decode
+    byte[] decode(java.lang.String,int) -> decode
+    java.lang.Object decodeToObject(java.lang.String) -> decodeToObject
+    java.lang.Object decodeToObject(java.lang.String,int,java.lang.ClassLoader) -> decodeToObject
+    void encodeToFile(byte[],java.lang.String) -> encodeToFile
+    void decodeToFile(java.lang.String,java.lang.String) -> decodeToFile
+    byte[] decodeFromFile(java.lang.String) -> decodeFromFile
+    java.lang.String encodeFromFile(java.lang.String) -> encodeFromFile
+    void encodeFileToFile(java.lang.String,java.lang.String) -> encodeFileToFile
+    void decodeFileToFile(java.lang.String,java.lang.String) -> decodeFileToFile
+    byte[] access$0(int) -> a
+    byte[] access$1(byte[],int,int,byte[],int,int) -> a
+    int access$2(byte[],int,byte[],int,int) -> a
+    byte[] access$3(byte[],byte[],int,int) -> a
+com.mixpanel.android.java_websocket.util.Base64$1 -> com.mixpanel.android.a.g.b:
+    java.lang.ClassLoader val$loader -> a
+    java.lang.Class resolveClass(java.io.ObjectStreamClass) -> resolveClass
+com.mixpanel.android.java_websocket.util.Base64$InputStream -> com.mixpanel.android.a.g.c:
+    boolean encode -> a
+    int position -> b
+    byte[] buffer -> c
+    int bufferLength -> d
+    int numSigBytes -> e
+    int lineLength -> f
+    boolean breakLines -> g
+    int options -> h
+    byte[] decodabet -> i
+    int read() -> read
+    int read(byte[],int,int) -> read
+com.mixpanel.android.java_websocket.util.Base64$OutputStream -> com.mixpanel.android.a.g.d:
+    boolean encode -> a
+    int position -> b
+    byte[] buffer -> c
+    int bufferLength -> d
+    int lineLength -> e
+    boolean breakLines -> f
+    byte[] b4 -> g
+    boolean suspendEncoding -> h
+    int options -> i
+    byte[] decodabet -> j
+    void write(int) -> write
+    void write(byte[],int,int) -> write
+    void flushBase64() -> flushBase64
+    void close() -> close
+    void suspendEncoding() -> suspendEncoding
+    void resumeEncoding() -> resumeEncoding
+com.mixpanel.android.java_websocket.util.Charsetfunctions -> com.mixpanel.android.a.g.e:
+    java.nio.charset.CodingErrorAction codingErrorAction -> codingErrorAction
+    byte[] utf8Bytes(java.lang.String) -> utf8Bytes
+    byte[] asciiBytes(java.lang.String) -> asciiBytes
+    java.lang.String stringAscii(byte[]) -> stringAscii
+    java.lang.String stringAscii(byte[],int,int) -> stringAscii
+    java.lang.String stringUtf8(byte[]) -> stringUtf8
+    java.lang.String stringUtf8(java.nio.ByteBuffer) -> stringUtf8
+    void main(java.lang.String[]) -> main
+com.mixpanel.android.mpmetrics.AnalyticsMessages -> com.mixpanel.android.mpmetrics.a:
+    com.mixpanel.android.mpmetrics.AnalyticsMessages$Worker mWorker -> a
+    android.content.Context mContext -> b
+    com.mixpanel.android.mpmetrics.MPConfig mConfig -> c
+    int ENQUEUE_PEOPLE -> d
+    int ENQUEUE_EVENTS -> e
+    int FLUSH_QUEUE -> f
+    int KILL_WORKER -> g
+    int INSTALL_DECIDE_CHECK -> h
+    int REGISTER_FOR_GCM -> i
+    java.util.Map sInstances -> j
+    com.mixpanel.android.mpmetrics.AnalyticsMessages getInstance(android.content.Context) -> getInstance
+    void eventsMessage(com.mixpanel.android.mpmetrics.AnalyticsMessages$EventDescription) -> eventsMessage
+    void peopleMessage(org.json.JSONObject) -> peopleMessage
+    void postToServer() -> postToServer
+    void installDecideCheck(com.mixpanel.android.mpmetrics.DecideMessages) -> installDecideCheck
+    void registerForGCM(java.lang.String) -> registerForGCM
+    void hardKill() -> hardKill
+    com.mixpanel.android.mpmetrics.MPDbAdapter makeDbAdapter(android.content.Context) -> a
+    com.mixpanel.android.mpmetrics.MPConfig getConfig(android.content.Context) -> b
+    com.mixpanel.android.mpmetrics.ServerMessage getPoster() -> a
+    void logAboutMessageToMixpanel(java.lang.String) -> a
+    void logAboutMessageToMixpanel(java.lang.String,java.lang.Throwable) -> a
+    android.content.Context access$0(com.mixpanel.android.mpmetrics.AnalyticsMessages) -> a
+    com.mixpanel.android.mpmetrics.MPConfig access$1(com.mixpanel.android.mpmetrics.AnalyticsMessages) -> b
+    int access$2() -> b
+    void access$3(com.mixpanel.android.mpmetrics.AnalyticsMessages,java.lang.String) -> a
+    int access$4() -> c
+    int access$5() -> d
+    int access$6() -> e
+    int access$7() -> f
+    int access$8() -> g
+    void access$9(com.mixpanel.android.mpmetrics.AnalyticsMessages,java.lang.String,java.lang.Throwable) -> a
+com.mixpanel.android.mpmetrics.AnalyticsMessages$EventDescription -> com.mixpanel.android.mpmetrics.b:
+    java.lang.String eventName -> a
+    org.json.JSONObject properties -> b
+    java.lang.String token -> c
+    java.lang.String getEventName() -> getEventName
+    org.json.JSONObject getProperties() -> getProperties
+    java.lang.String getToken() -> getToken
+com.mixpanel.android.mpmetrics.AnalyticsMessages$Worker -> com.mixpanel.android.mpmetrics.c:
+    java.lang.Object mHandlerLock -> b
+    android.os.Handler mHandler -> c
+    long mFlushCount -> d
+    long mAveFlushFrequency -> e
+    long mLastFlushTime -> f
+    com.mixpanel.android.mpmetrics.SystemInformation mSystemInformation -> g
+    com.mixpanel.android.mpmetrics.AnalyticsMessages this$0 -> a
+    boolean isDead() -> isDead
+    void runMessage(android.os.Message) -> runMessage
+    android.os.Handler restartWorkerThread() -> a
+    void updateFlushFrequency() -> b
+    void access$0(com.mixpanel.android.mpmetrics.AnalyticsMessages$Worker,com.mixpanel.android.mpmetrics.SystemInformation) -> a
+    void access$1(com.mixpanel.android.mpmetrics.AnalyticsMessages$Worker) -> a
+    java.lang.Object access$2(com.mixpanel.android.mpmetrics.AnalyticsMessages$Worker) -> b
+    void access$3(com.mixpanel.android.mpmetrics.AnalyticsMessages$Worker,android.os.Handler) -> a
+    com.mixpanel.android.mpmetrics.SystemInformation access$4(com.mixpanel.android.mpmetrics.AnalyticsMessages$Worker) -> c
+    com.mixpanel.android.mpmetrics.AnalyticsMessages access$5(com.mixpanel.android.mpmetrics.AnalyticsMessages$Worker) -> d
+com.mixpanel.android.mpmetrics.AnalyticsMessages$Worker$AnalyticsMessageHandler -> com.mixpanel.android.mpmetrics.d:
+    com.mixpanel.android.mpmetrics.MPDbAdapter mDbAdapter -> b
+    com.mixpanel.android.mpmetrics.DecideChecker mDecideChecker -> c
+    long mFlushInterval -> d
+    boolean mDisableFallback -> e
+    com.mixpanel.android.mpmetrics.AnalyticsMessages$Worker this$1 -> a
+    void handleMessage(android.os.Message) -> handleMessage
+    void runGCMRegistration(java.lang.String) -> a
+    void sendAllData(com.mixpanel.android.mpmetrics.MPDbAdapter) -> a
+    void sendData(com.mixpanel.android.mpmetrics.MPDbAdapter,com.mixpanel.android.mpmetrics.MPDbAdapter$Table,java.lang.String[]) -> a
+    org.json.JSONObject getDefaultEventProperties() -> a
+    org.json.JSONObject prepareEventObject(com.mixpanel.android.mpmetrics.AnalyticsMessages$EventDescription) -> a
+com.mixpanel.android.mpmetrics.AnalyticsMessages$Worker$AnalyticsMessageHandler$1 -> com.mixpanel.android.mpmetrics.e:
+    com.mixpanel.android.mpmetrics.AnalyticsMessages$Worker$AnalyticsMessageHandler this$2 -> a
+    java.lang.String val$registrationId -> b
+    void process(com.mixpanel.android.mpmetrics.MixpanelAPI) -> process
+com.mixpanel.android.mpmetrics.BackgroundCapture -> com.mixpanel.android.mpmetrics.f:
+    int GRAY_72PERCENT_OPAQUE -> a
+    void captureBackground(android.app.Activity,com.mixpanel.android.mpmetrics.BackgroundCapture$OnBackgroundCapturedListener) -> captureBackground
+    int access$0() -> a
+com.mixpanel.android.mpmetrics.BackgroundCapture$1 -> com.mixpanel.android.mpmetrics.g:
+    android.app.Activity val$parentActivity -> a
+    com.mixpanel.android.mpmetrics.BackgroundCapture$OnBackgroundCapturedListener val$listener -> b
+    void run() -> run
+com.mixpanel.android.mpmetrics.BackgroundCapture$BackgroundCaptureTask -> com.mixpanel.android.mpmetrics.h:
+    com.mixpanel.android.mpmetrics.BackgroundCapture$OnBackgroundCapturedListener mListener -> a
+    android.app.Activity mParentActivity -> b
+    android.graphics.Bitmap mSourceImage -> c
+    int mCalculatedHighlightColor -> d
+    void onPreExecute() -> onPreExecute
+    java.lang.Void doInBackground(java.lang.Void[]) -> a
+    void onPostExecute(java.lang.Void) -> a
+    void onPostExecute(java.lang.Object) -> onPostExecute
+    java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
+com.mixpanel.android.mpmetrics.BackgroundCapture$OnBackgroundCapturedListener -> com.mixpanel.android.mpmetrics.i:
+    void onBackgroundCaptured(android.graphics.Bitmap,int) -> onBackgroundCaptured
+com.mixpanel.android.mpmetrics.BadDecideObjectException -> com.mixpanel.android.mpmetrics.j:
+com.mixpanel.android.mpmetrics.ConfigurationChecker -> com.mixpanel.android.mpmetrics.k:
+    java.lang.String LOGTAG -> LOGTAG
+    boolean checkBasicConfiguration(android.content.Context) -> checkBasicConfiguration
+    boolean checkPushConfiguration(android.content.Context) -> checkPushConfiguration
+    boolean checkSurveyActivityAvailable(android.content.Context) -> checkSurveyActivityAvailable
+    java.lang.String samplePushConfigurationMessage(java.lang.String) -> a
+    boolean checkReceiver(android.content.Context,java.util.Set,java.lang.String) -> a
+com.mixpanel.android.mpmetrics.DecideChecker -> com.mixpanel.android.mpmetrics.l:
+    com.mixpanel.android.mpmetrics.MPConfig mConfig -> a
+    android.content.Context mContext -> b
+    java.util.List mChecks -> c
+    org.json.JSONArray EMPTY_JSON_ARRAY -> d
+    void addDecideCheck(com.mixpanel.android.mpmetrics.DecideMessages) -> addDecideCheck
+    void runDecideChecks(com.mixpanel.android.mpmetrics.ServerMessage) -> runDecideChecks
+    com.mixpanel.android.mpmetrics.DecideChecker$Result runDecideCheck(java.lang.String,java.lang.String,com.mixpanel.android.mpmetrics.ServerMessage) -> a
+    com.mixpanel.android.mpmetrics.DecideChecker$Result parseDecideResponse(java.lang.String) -> a
+    java.lang.String getDecideResponseFromServer(java.lang.String,java.lang.String,com.mixpanel.android.mpmetrics.ServerMessage) -> b
+    android.graphics.Bitmap getNotificationImage(com.mixpanel.android.mpmetrics.InAppNotification,android.content.Context,com.mixpanel.android.mpmetrics.ServerMessage) -> a
+    int getDisplayWidth(android.view.Display) -> a
+    org.json.JSONArray access$0() -> a
+com.mixpanel.android.mpmetrics.DecideChecker$Result -> com.mixpanel.android.mpmetrics.m:
+    java.util.List surveys -> surveys
+    java.util.List notifications -> notifications
+    org.json.JSONArray eventBindings -> eventBindings
+com.mixpanel.android.mpmetrics.DecideChecker$UnintelligibleMessageException -> com.mixpanel.android.mpmetrics.n:
+com.mixpanel.android.mpmetrics.DecideMessages -> com.mixpanel.android.mpmetrics.o:
+    java.lang.String mDistinctId -> a
+    java.lang.String mToken -> b
+    java.util.Set mSurveyIds -> c
+    java.util.Set mNotificationIds -> d
+    java.util.List mUnseenSurveys -> e
+    java.util.List mUnseenNotifications -> f
+    com.mixpanel.android.mpmetrics.DecideMessages$OnNewResultsListener mListener -> g
+    com.mixpanel.android.viewcrawler.UpdatesFromMixpanel mUpdatesFromMixpanel -> h
+    java.lang.String getToken() -> getToken
+    void setDistinctId(java.lang.String) -> setDistinctId
+    java.lang.String getDistinctId() -> getDistinctId
+    void reportResults(java.util.List,java.util.List,org.json.JSONArray) -> reportResults
+    com.mixpanel.android.mpmetrics.Survey getSurvey(boolean) -> getSurvey
+    com.mixpanel.android.mpmetrics.Survey getSurvey(int,boolean) -> getSurvey
+    com.mixpanel.android.mpmetrics.InAppNotification getNotification(boolean) -> getNotification
+    com.mixpanel.android.mpmetrics.InAppNotification getNotification(int,boolean) -> getNotification
+    boolean hasUpdatesAvailable() -> hasUpdatesAvailable
+com.mixpanel.android.mpmetrics.DecideMessages$OnNewResultsListener -> com.mixpanel.android.mpmetrics.p:
+    void onNewResults() -> onNewResults
+com.mixpanel.android.mpmetrics.InAppFragment -> com.mixpanel.android.mpmetrics.q:
+    com.mixpanel.android.mpmetrics.MixpanelAPI mMixpanel -> a
+    android.app.Activity mParent -> b
+    android.view.GestureDetector mDetector -> c
+    android.os.Handler mHandler -> d
+    int mDisplayStateId -> e
+    com.mixpanel.android.mpmetrics.UpdateDisplayState$DisplayState$InAppNotificationState mDisplayState -> f
+    java.lang.Runnable mRemover -> g
+    java.lang.Runnable mDisplayMini -> h
+    android.view.View mInAppView -> i
+    boolean mCleanedUp -> j
+    void setDisplayState(com.mixpanel.android.mpmetrics.MixpanelAPI,int,com.mixpanel.android.mpmetrics.UpdateDisplayState$DisplayState$InAppNotificationState) -> setDisplayState
+    void onAttach(android.app.Activity) -> onAttach
+    void onCreate(android.os.Bundle) -> onCreate
+    android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
+    void onStart() -> onStart
+    void onResume() -> onResume
+    void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
+    void onPause() -> onPause
+    void cleanUp() -> a
+    void remove() -> b
+    void access$0(com.mixpanel.android.mpmetrics.InAppFragment) -> a
+    android.view.View access$1(com.mixpanel.android.mpmetrics.InAppFragment) -> b
+    com.mixpanel.android.mpmetrics.UpdateDisplayState$DisplayState$InAppNotificationState access$2(com.mixpanel.android.mpmetrics.InAppFragment) -> c
+    android.view.GestureDetector access$3(com.mixpanel.android.mpmetrics.InAppFragment) -> d
+    android.app.Activity access$4(com.mixpanel.android.mpmetrics.InAppFragment) -> e
+    com.mixpanel.android.mpmetrics.MixpanelAPI access$5(com.mixpanel.android.mpmetrics.InAppFragment) -> f
+com.mixpanel.android.mpmetrics.InAppFragment$1 -> com.mixpanel.android.mpmetrics.r:
+    com.mixpanel.android.mpmetrics.InAppFragment this$0 -> a
+    void run() -> run
+com.mixpanel.android.mpmetrics.InAppFragment$2 -> com.mixpanel.android.mpmetrics.s:
+    com.mixpanel.android.mpmetrics.InAppFragment this$0 -> a
+    void run() -> run
+    com.mixpanel.android.mpmetrics.InAppFragment access$0(com.mixpanel.android.mpmetrics.InAppFragment$2) -> a
+com.mixpanel.android.mpmetrics.InAppFragment$2$1 -> com.mixpanel.android.mpmetrics.t:
+    com.mixpanel.android.mpmetrics.InAppFragment$2 this$1 -> a
+    boolean onTouch(android.view.View,android.view.MotionEvent) -> onTouch
+com.mixpanel.android.mpmetrics.InAppFragment$3 -> com.mixpanel.android.mpmetrics.u:
+    com.mixpanel.android.mpmetrics.InAppFragment this$0 -> a
+    boolean onDown(android.view.MotionEvent) -> onDown
+    boolean onFling(android.view.MotionEvent,android.view.MotionEvent,float,float) -> onFling
+    void onLongPress(android.view.MotionEvent) -> onLongPress
+    boolean onScroll(android.view.MotionEvent,android.view.MotionEvent,float,float) -> onScroll
+    void onShowPress(android.view.MotionEvent) -> onShowPress
+    boolean onSingleTapUp(android.view.MotionEvent) -> onSingleTapUp
+com.mixpanel.android.mpmetrics.InAppFragment$SineBounceInterpolator -> com.mixpanel.android.mpmetrics.v:
+    com.mixpanel.android.mpmetrics.InAppFragment this$0 -> a
+    float getInterpolation(float) -> getInterpolation
+com.mixpanel.android.mpmetrics.InAppNotification -> com.mixpanel.android.mpmetrics.InAppNotification:
+    android.os.Parcelable$Creator CREATOR -> CREATOR
+    android.graphics.Bitmap mImage -> a
+    org.json.JSONObject mDescription -> b
+    int mId -> c
+    int mMessageId -> d
+    java.lang.String mType -> e
+    java.lang.String mTitle -> f
+    java.lang.String mBody -> g
+    java.lang.String mImageUrl -> h
+    java.lang.String mCallToAction -> i
+    java.lang.String mCallToActionUrl -> j
+    java.util.regex.Pattern FILE_EXTENSION_PATTERN -> k
+    org.json.JSONObject getCampaignProperties() -> a
+    int getId() -> getId
+    int getMessageId() -> getMessageId
+    com.mixpanel.android.mpmetrics.InAppNotification$Type getType() -> getType
+    java.lang.String getTitle() -> getTitle
+    java.lang.String getBody() -> getBody
+    java.lang.String getImageUrl() -> getImageUrl
+    java.lang.String getImage2xUrl() -> getImage2xUrl
+    java.lang.String getImage4xUrl() -> getImage4xUrl
+    java.lang.String getCallToAction() -> getCallToAction
+    java.lang.String getCallToActionUrl() -> getCallToActionUrl
+    void setImage(android.graphics.Bitmap) -> a
+    android.graphics.Bitmap getImage() -> getImage
+    int describeContents() -> describeContents
+    void writeToParcel(android.os.Parcel,int) -> writeToParcel
+    java.lang.String sizeSuffixUrl(java.lang.String,java.lang.String) -> a
+com.mixpanel.android.mpmetrics.InAppNotification$1 -> com.mixpanel.android.mpmetrics.w:
+    com.mixpanel.android.mpmetrics.InAppNotification createFromParcel(android.os.Parcel) -> createFromParcel
+    com.mixpanel.android.mpmetrics.InAppNotification[] newArray(int) -> newArray
+    java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
+    java.lang.Object[] newArray(int) -> newArray
+com.mixpanel.android.mpmetrics.InAppNotification$Type -> com.mixpanel.android.mpmetrics.x:
+    com.mixpanel.android.mpmetrics.InAppNotification$Type UNKNOWN -> UNKNOWN
+    com.mixpanel.android.mpmetrics.InAppNotification$Type MINI -> MINI
+    com.mixpanel.android.mpmetrics.InAppNotification$Type TAKEOVER -> TAKEOVER
+    com.mixpanel.android.mpmetrics.InAppNotification$Type[] ENUM$VALUES -> a
+    com.mixpanel.android.mpmetrics.InAppNotification$Type[] values() -> values
+    com.mixpanel.android.mpmetrics.InAppNotification$Type valueOf(java.lang.String) -> valueOf
+com.mixpanel.android.mpmetrics.InAppNotification$Type$1 -> com.mixpanel.android.mpmetrics.y:
+    java.lang.String toString() -> toString
+com.mixpanel.android.mpmetrics.InAppNotification$Type$2 -> com.mixpanel.android.mpmetrics.z:
+    java.lang.String toString() -> toString
+com.mixpanel.android.mpmetrics.InAppNotification$Type$3 -> com.mixpanel.android.mpmetrics.aa:
+    java.lang.String toString() -> toString
+com.mixpanel.android.mpmetrics.MPConfig -> com.mixpanel.android.mpmetrics.ab:
+    java.lang.String VERSION -> VERSION
+    boolean DEBUG -> DEBUG
+    int UI_FEATURES_MIN_API -> UI_FEATURES_MIN_API
+    int mBulkUploadLimit -> a
+    int mFlushInterval -> b
+    int mDataExpiration -> c
+    boolean mDisableFallback -> d
+    boolean mTestMode -> e
+    boolean mDisableGestureBindingUI -> f
+    boolean mDisableEmulatorBindingUI -> g
+    boolean mDisableAppOpenEvent -> h
+    java.lang.String mEventsEndpoint -> i
+    java.lang.String mEventsFallbackEndpoint -> j
+    java.lang.String mPeopleEndpoint -> k
+    java.lang.String mPeopleFallbackEndpoint -> l
+    java.lang.String mDecideEndpoint -> m
+    java.lang.String mDecideFallbackEndpoint -> n
+    boolean mAutoShowMixpanelUpdates -> o
+    java.lang.String mEditorUrl -> p
+    java.lang.String mResourcePackageName -> q
+    com.mixpanel.android.mpmetrics.MPConfig sInstance -> r
+    java.lang.Object sInstanceLock -> s
+    com.mixpanel.android.mpmetrics.MPConfig getInstance(android.content.Context) -> getInstance
+    int getBulkUploadLimit() -> getBulkUploadLimit
+    int getFlushInterval() -> getFlushInterval
+    int getDataExpiration() -> getDataExpiration
+    boolean getDisableFallback() -> getDisableFallback
+    boolean getDisableGestureBindingUI() -> getDisableGestureBindingUI
+    boolean getDisableEmulatorBindingUI() -> getDisableEmulatorBindingUI
+    boolean getDisableAppOpenEvent() -> getDisableAppOpenEvent
+    boolean getTestMode() -> getTestMode
+    java.lang.String getEventsEndpoint() -> getEventsEndpoint
+    java.lang.String getPeopleEndpoint() -> getPeopleEndpoint
+    java.lang.String getDecideEndpoint() -> getDecideEndpoint
+    java.lang.String getEventsFallbackEndpoint() -> getEventsFallbackEndpoint
+    java.lang.String getPeopleFallbackEndpoint() -> getPeopleFallbackEndpoint
+    java.lang.String getDecideFallbackEndpoint() -> getDecideFallbackEndpoint
+    boolean getAutoShowMixpanelUpdates() -> getAutoShowMixpanelUpdates
+    java.lang.String getEditorUrl() -> getEditorUrl
+    java.lang.String getResourcePackageName() -> getResourcePackageName
+    com.mixpanel.android.mpmetrics.MPConfig readConfig(android.content.Context) -> a
+com.mixpanel.android.mpmetrics.MPDbAdapter -> com.mixpanel.android.mpmetrics.ac:
+    java.lang.String KEY_DATA -> KEY_DATA
+    java.lang.String KEY_CREATED_AT -> KEY_CREATED_AT
+    java.lang.String CREATE_EVENTS_TABLE -> a
+    java.lang.String CREATE_PEOPLE_TABLE -> b
+    java.lang.String EVENTS_TIME_INDEX -> c
+    java.lang.String PEOPLE_TIME_INDEX -> d
+    com.mixpanel.android.mpmetrics.MPDbAdapter$MPDatabaseHelper mDb -> e
+    int addJSON(org.json.JSONObject,com.mixpanel.android.mpmetrics.MPDbAdapter$Table) -> addJSON
+    void cleanupEvents(java.lang.String,com.mixpanel.android.mpmetrics.MPDbAdapter$Table) -> cleanupEvents
+    void cleanupEvents(long,com.mixpanel.android.mpmetrics.MPDbAdapter$Table) -> cleanupEvents
+    void deleteDB() -> deleteDB
+    java.lang.String[] generateDataString(com.mixpanel.android.mpmetrics.MPDbAdapter$Table) -> generateDataString
+    java.lang.String access$0() -> a
+    java.lang.String access$1() -> b
+    java.lang.String access$2() -> c
+    java.lang.String access$3() -> d
+com.mixpanel.android.mpmetrics.MPDbAdapter$MPDatabaseHelper -> com.mixpanel.android.mpmetrics.ad:
+    java.io.File mDatabaseFile -> a
+    void deleteDatabase() -> deleteDatabase
+    void onCreate(android.database.sqlite.SQLiteDatabase) -> onCreate
+    void onUpgrade(android.database.sqlite.SQLiteDatabase,int,int) -> onUpgrade
+com.mixpanel.android.mpmetrics.MPDbAdapter$Table -> com.mixpanel.android.mpmetrics.ae:
+    com.mixpanel.android.mpmetrics.MPDbAdapter$Table EVENTS -> EVENTS
+    com.mixpanel.android.mpmetrics.MPDbAdapter$Table PEOPLE -> PEOPLE
+    java.lang.String mTableName -> a
+    com.mixpanel.android.mpmetrics.MPDbAdapter$Table[] ENUM$VALUES -> b
+    java.lang.String getName() -> getName
+    com.mixpanel.android.mpmetrics.MPDbAdapter$Table[] values() -> values
+    com.mixpanel.android.mpmetrics.MPDbAdapter$Table valueOf(java.lang.String) -> valueOf
+com.mixpanel.android.mpmetrics.MixpanelAPI -> com.mixpanel.android.mpmetrics.af:
+    java.lang.String VERSION -> VERSION
+    android.content.Context mContext -> a
+    com.mixpanel.android.mpmetrics.AnalyticsMessages mMessages -> b
+    com.mixpanel.android.mpmetrics.MPConfig mConfig -> c
+    java.lang.String mToken -> d
+    com.mixpanel.android.mpmetrics.MixpanelAPI$PeopleImpl mPeople -> e
+    com.mixpanel.android.viewcrawler.UpdatesFromMixpanel mUpdatesFromMixpanel -> f
+    com.mixpanel.android.mpmetrics.PersistentIdentity mPersistentIdentity -> g
+    com.mixpanel.android.mpmetrics.MixpanelAPI$UpdatesListener mUpdatesListener -> h
+    com.mixpanel.android.viewcrawler.TrackingDebug mTrackingDebug -> i
+    com.mixpanel.android.mpmetrics.DecideMessages mDecideMessages -> j
+    java.util.Map mDeviceInfo -> k
+    java.util.Map mEventTimings -> l
+    java.util.Map sInstanceMap -> m
+    com.mixpanel.android.mpmetrics.SharedPreferencesLoader sPrefsLoader -> n
+    java.util.concurrent.Future sReferrerPrefs -> o
+    com.mixpanel.android.mpmetrics.MixpanelAPI getInstance(android.content.Context,java.lang.String) -> getInstance
+    void setFlushInterval(android.content.Context,long) -> setFlushInterval
+    void enableFallbackServer(android.content.Context,boolean) -> enableFallbackServer
+    void alias(java.lang.String,java.lang.String) -> alias
+    void identify(java.lang.String) -> identify
+    void timeEvent(java.lang.String) -> timeEvent
+    void track(java.lang.String,org.json.JSONObject) -> track
+    void flush() -> flush
+    org.json.JSONObject getSuperProperties() -> getSuperProperties
+    java.lang.String getDistinctId() -> getDistinctId
+    void registerSuperProperties(org.json.JSONObject) -> registerSuperProperties
+    void unregisterSuperProperty(java.lang.String) -> unregisterSuperProperty
+    void registerSuperPropertiesOnce(org.json.JSONObject) -> registerSuperPropertiesOnce
+    void clearSuperProperties() -> clearSuperProperties
+    com.mixpanel.android.mpmetrics.MixpanelAPI$People getPeople() -> getPeople
+    void reset() -> reset
+    java.util.Map getDeviceInfo() -> getDeviceInfo
+    void logPosts() -> logPosts
+    void registerMixpanelActivityLifecycleCallbacks() -> a
+    void allInstances(com.mixpanel.android.mpmetrics.MixpanelAPI$InstanceProcessor) -> a
+    com.mixpanel.android.mpmetrics.AnalyticsMessages getAnalyticsMessages() -> b
+    com.mixpanel.android.mpmetrics.MPConfig getConfig() -> c
+    com.mixpanel.android.mpmetrics.PersistentIdentity getPersistentIdentity(android.content.Context,java.util.concurrent.Future,java.lang.String) -> a
+    com.mixpanel.android.mpmetrics.DecideMessages constructDecideUpdates(java.lang.String,com.mixpanel.android.mpmetrics.DecideMessages$OnNewResultsListener,com.mixpanel.android.viewcrawler.UpdatesFromMixpanel) -> a
+    com.mixpanel.android.mpmetrics.MixpanelAPI$UpdatesListener constructUpdatesListener() -> d
+    com.mixpanel.android.viewcrawler.UpdatesFromMixpanel constructUpdatesFromMixpanel(android.content.Context,java.lang.String) -> a
+    com.mixpanel.android.viewcrawler.TrackingDebug constructTrackingDebug() -> e
+    boolean sendAppOpen() -> f
+    void recordPeopleMessage(org.json.JSONObject) -> a
+    void pushWaitingPeopleRecord() -> g
+    void sendAllPeopleRecords(org.json.JSONArray) -> a
+    void registerAppLinksListeners(android.content.Context,com.mixpanel.android.mpmetrics.MixpanelAPI) -> a
+    void checkIntentForInboundAppLink(android.content.Context) -> a
+    com.mixpanel.android.mpmetrics.PersistentIdentity access$0(com.mixpanel.android.mpmetrics.MixpanelAPI) -> a
+    com.mixpanel.android.mpmetrics.DecideMessages access$1(com.mixpanel.android.mpmetrics.MixpanelAPI) -> b
+    void access$2(com.mixpanel.android.mpmetrics.MixpanelAPI) -> c
+    java.util.Map access$3(com.mixpanel.android.mpmetrics.MixpanelAPI) -> d
+    void access$4(com.mixpanel.android.mpmetrics.MixpanelAPI,org.json.JSONObject) -> a
+    com.mixpanel.android.mpmetrics.MPConfig access$5(com.mixpanel.android.mpmetrics.MixpanelAPI) -> e
+    android.content.Context access$6(com.mixpanel.android.mpmetrics.MixpanelAPI) -> f
+    com.mixpanel.android.mpmetrics.MixpanelAPI$UpdatesListener access$7(com.mixpanel.android.mpmetrics.MixpanelAPI) -> g
+    java.lang.String access$8(com.mixpanel.android.mpmetrics.MixpanelAPI) -> h
+    com.mixpanel.android.mpmetrics.AnalyticsMessages access$9(com.mixpanel.android.mpmetrics.MixpanelAPI) -> i
+    void access$10(com.mixpanel.android.mpmetrics.MixpanelAPI,org.json.JSONArray) -> a
+com.mixpanel.android.mpmetrics.MixpanelAPI$1 -> com.mixpanel.android.mpmetrics.ag:
+    com.mixpanel.android.mpmetrics.MixpanelAPI this$0 -> a
+    void onPrefsLoaded(android.content.SharedPreferences) -> onPrefsLoaded
+com.mixpanel.android.mpmetrics.MixpanelAPI$2 -> com.mixpanel.android.mpmetrics.ah:
+    com.mixpanel.android.mpmetrics.MixpanelAPI val$mixpanel -> a
+    void onReceive(android.content.Context,android.content.Intent) -> onReceive
+com.mixpanel.android.mpmetrics.MixpanelAPI$InstanceProcessor -> com.mixpanel.android.mpmetrics.ai:
+    void process(com.mixpanel.android.mpmetrics.MixpanelAPI) -> process
+com.mixpanel.android.mpmetrics.MixpanelAPI$People -> com.mixpanel.android.mpmetrics.aj:
+    void identify(java.lang.String) -> identify
+    void set(java.lang.String,java.lang.Object) -> set
+    void set(org.json.JSONObject) -> set
+    void setOnce(java.lang.String,java.lang.Object) -> setOnce
+    void setOnce(org.json.JSONObject) -> setOnce
+    void increment(java.lang.String,double) -> increment
+    void increment(java.util.Map) -> increment
+    void append(java.lang.String,java.lang.Object) -> append
+    void union(java.lang.String,org.json.JSONArray) -> union
+    void unset(java.lang.String) -> unset
+    void trackCharge(double,org.json.JSONObject) -> trackCharge
+    void clearCharges() -> clearCharges
+    void deleteUser() -> deleteUser
+    void initPushHandling(java.lang.String) -> initPushHandling
+    void setPushRegistrationId(java.lang.String) -> setPushRegistrationId
+    void clearPushRegistrationId() -> clearPushRegistrationId
+    java.lang.String getDistinctId() -> getDistinctId
+    void showSurveyIfAvailable(android.app.Activity) -> showSurveyIfAvailable
+    void showNotificationIfAvailable(android.app.Activity) -> showNotificationIfAvailable
+    void showGivenNotification(com.mixpanel.android.mpmetrics.InAppNotification,android.app.Activity) -> showGivenNotification
+    void trackNotification(java.lang.String,com.mixpanel.android.mpmetrics.InAppNotification) -> trackNotification
+    com.mixpanel.android.mpmetrics.Survey getSurveyIfAvailable() -> getSurveyIfAvailable
+    com.mixpanel.android.mpmetrics.InAppNotification getNotificationIfAvailable() -> getNotificationIfAvailable
+    void trackNotificationSeen(com.mixpanel.android.mpmetrics.InAppNotification) -> trackNotificationSeen
+    void showSurveyById(int,android.app.Activity) -> showSurveyById
+    void showNotificationById(int,android.app.Activity) -> showNotificationById
+    com.mixpanel.android.mpmetrics.MixpanelAPI$People withIdentity(java.lang.String) -> withIdentity
+    void addOnMixpanelUpdatesReceivedListener(com.mixpanel.android.mpmetrics.OnMixpanelUpdatesReceivedListener) -> addOnMixpanelUpdatesReceivedListener
+    void removeOnMixpanelUpdatesReceivedListener(com.mixpanel.android.mpmetrics.OnMixpanelUpdatesReceivedListener) -> removeOnMixpanelUpdatesReceivedListener
+    void showSurvey(com.mixpanel.android.mpmetrics.Survey,android.app.Activity) -> showSurvey
+    void checkForSurvey(com.mixpanel.android.mpmetrics.SurveyCallbacks) -> checkForSurvey
+    void checkForSurvey(com.mixpanel.android.mpmetrics.SurveyCallbacks,android.app.Activity) -> checkForSurvey
+com.mixpanel.android.mpmetrics.MixpanelAPI$PeopleImpl -> com.mixpanel.android.mpmetrics.ak:
+    com.mixpanel.android.mpmetrics.MixpanelAPI this$0 -> a
+    void identify(java.lang.String) -> identify
+    void set(org.json.JSONObject) -> set
+    void set(java.lang.String,java.lang.Object) -> set
+    void setOnce(org.json.JSONObject) -> setOnce
+    void setOnce(java.lang.String,java.lang.Object) -> setOnce
+    void increment(java.util.Map) -> increment
+    void increment(java.lang.String,double) -> increment
+    void append(java.lang.String,java.lang.Object) -> append
+    void union(java.lang.String,org.json.JSONArray) -> union
+    void unset(java.lang.String) -> unset
+    void checkForSurvey(com.mixpanel.android.mpmetrics.SurveyCallbacks) -> checkForSurvey
+    void checkForSurvey(com.mixpanel.android.mpmetrics.SurveyCallbacks,android.app.Activity) -> checkForSurvey
+    com.mixpanel.android.mpmetrics.InAppNotification getNotificationIfAvailable() -> getNotificationIfAvailable
+    void trackNotificationSeen(com.mixpanel.android.mpmetrics.InAppNotification) -> trackNotificationSeen
+    com.mixpanel.android.mpmetrics.Survey getSurveyIfAvailable() -> getSurveyIfAvailable
+    void showSurvey(com.mixpanel.android.mpmetrics.Survey,android.app.Activity) -> showSurvey
+    void showSurveyIfAvailable(android.app.Activity) -> showSurveyIfAvailable
+    void showSurveyById(int,android.app.Activity) -> showSurveyById
+    void showNotificationIfAvailable(android.app.Activity) -> showNotificationIfAvailable
+    void showNotificationById(int,android.app.Activity) -> showNotificationById
+    void showGivenNotification(com.mixpanel.android.mpmetrics.InAppNotification,android.app.Activity) -> showGivenNotification
+    void trackNotification(java.lang.String,com.mixpanel.android.mpmetrics.InAppNotification) -> trackNotification
+    void trackCharge(double,org.json.JSONObject) -> trackCharge
+    void clearCharges() -> clearCharges
+    void deleteUser() -> deleteUser
+    void setPushRegistrationId(java.lang.String) -> setPushRegistrationId
+    void clearPushRegistrationId() -> clearPushRegistrationId
+    void initPushHandling(java.lang.String) -> initPushHandling
+    java.lang.String getDistinctId() -> getDistinctId
+    com.mixpanel.android.mpmetrics.MixpanelAPI$People withIdentity(java.lang.String) -> withIdentity
+    void addOnMixpanelUpdatesReceivedListener(com.mixpanel.android.mpmetrics.OnMixpanelUpdatesReceivedListener) -> addOnMixpanelUpdatesReceivedListener
+    void removeOnMixpanelUpdatesReceivedListener(com.mixpanel.android.mpmetrics.OnMixpanelUpdatesReceivedListener) -> removeOnMixpanelUpdatesReceivedListener
+    org.json.JSONObject stdPeopleMessage(java.lang.String,java.lang.Object) -> a
+    void registerForPushIdAPI21AndUp(java.lang.String) -> a
+    void registerForPushIdAPI19AndOlder(java.lang.String) -> b
+    void showGivenOrAvailableSurvey(com.mixpanel.android.mpmetrics.Survey,android.app.Activity) -> a
+    void showGivenOrAvailableNotification(com.mixpanel.android.mpmetrics.InAppNotification,android.app.Activity) -> a
+    com.mixpanel.android.mpmetrics.MixpanelAPI access$2(com.mixpanel.android.mpmetrics.MixpanelAPI$PeopleImpl) -> a
+com.mixpanel.android.mpmetrics.MixpanelAPI$PeopleImpl$1 -> com.mixpanel.android.mpmetrics.al:
+    com.mixpanel.android.mpmetrics.MixpanelAPI$PeopleImpl this$1 -> a
+    java.lang.String val$pushId -> b
+    void process(com.mixpanel.android.mpmetrics.MixpanelAPI) -> process
+com.mixpanel.android.mpmetrics.MixpanelAPI$PeopleImpl$2 -> com.mixpanel.android.mpmetrics.am:
+    com.mixpanel.android.mpmetrics.MixpanelAPI$PeopleImpl this$1 -> b
+    java.lang.String val$distinctId -> c
+    java.lang.String getDistinctId() -> getDistinctId
+    void identify(java.lang.String) -> identify
+com.mixpanel.android.mpmetrics.MixpanelAPI$PeopleImpl$3 -> com.mixpanel.android.mpmetrics.an:
+    com.mixpanel.android.mpmetrics.MixpanelAPI$PeopleImpl this$1 -> a
+    com.mixpanel.android.mpmetrics.UpdateDisplayState$DisplayState$SurveyState val$surveyDisplay -> b
+    android.app.Activity val$parent -> c
+    int val$intentId -> d
+    void onBackgroundCaptured(android.graphics.Bitmap,int) -> onBackgroundCaptured
+com.mixpanel.android.mpmetrics.MixpanelAPI$PeopleImpl$4 -> com.mixpanel.android.mpmetrics.ao:
+    com.mixpanel.android.mpmetrics.MixpanelAPI$PeopleImpl this$1 -> a
+    com.mixpanel.android.mpmetrics.InAppNotification val$notifOrNull -> b
+    android.app.Activity val$parent -> c
+    int[] $SWITCH_TABLE$com$mixpanel$android$mpmetrics$InAppNotification$Type -> d
+    void run() -> run
+    int[] $SWITCH_TABLE$com$mixpanel$android$mpmetrics$InAppNotification$Type() -> a
+com.mixpanel.android.mpmetrics.MixpanelAPI$SupportedUpdatesListener -> com.mixpanel.android.mpmetrics.ap:
+    java.util.Set mListeners -> b
+    java.util.concurrent.Executor mExecutor -> c
+    com.mixpanel.android.mpmetrics.MixpanelAPI this$0 -> a
+    void onNewResults() -> onNewResults
+    void addOnMixpanelUpdatesReceivedListener(com.mixpanel.android.mpmetrics.OnMixpanelUpdatesReceivedListener) -> addOnMixpanelUpdatesReceivedListener
+    void removeOnMixpanelUpdatesReceivedListener(com.mixpanel.android.mpmetrics.OnMixpanelUpdatesReceivedListener) -> removeOnMixpanelUpdatesReceivedListener
+    void run() -> run
+com.mixpanel.android.mpmetrics.MixpanelAPI$UnsupportedUpdatesFromMixpanel -> com.mixpanel.android.mpmetrics.aq:
+    com.mixpanel.android.mpmetrics.Tweaks mEmptyTweaks -> b
+    com.mixpanel.android.mpmetrics.MixpanelAPI this$0 -> a
+    void setEventBindings(org.json.JSONArray) -> setEventBindings
+    com.mixpanel.android.mpmetrics.Tweaks getTweaks() -> getTweaks
+com.mixpanel.android.mpmetrics.MixpanelAPI$UnsupportedUpdatesListener -> com.mixpanel.android.mpmetrics.ar:
+    com.mixpanel.android.mpmetrics.MixpanelAPI this$0 -> a
+    void onNewResults() -> onNewResults
+    void addOnMixpanelUpdatesReceivedListener(com.mixpanel.android.mpmetrics.OnMixpanelUpdatesReceivedListener) -> addOnMixpanelUpdatesReceivedListener
+    void removeOnMixpanelUpdatesReceivedListener(com.mixpanel.android.mpmetrics.OnMixpanelUpdatesReceivedListener) -> removeOnMixpanelUpdatesReceivedListener
+com.mixpanel.android.mpmetrics.MixpanelAPI$UpdatesListener -> com.mixpanel.android.mpmetrics.as:
+    void addOnMixpanelUpdatesReceivedListener(com.mixpanel.android.mpmetrics.OnMixpanelUpdatesReceivedListener) -> addOnMixpanelUpdatesReceivedListener
+    void removeOnMixpanelUpdatesReceivedListener(com.mixpanel.android.mpmetrics.OnMixpanelUpdatesReceivedListener) -> removeOnMixpanelUpdatesReceivedListener
+com.mixpanel.android.mpmetrics.MixpanelActivityLifecycleCallbacks -> com.mixpanel.android.mpmetrics.at:
+    com.mixpanel.android.mpmetrics.MixpanelAPI mMpInstance -> a
+    void onActivityStarted(android.app.Activity) -> onActivityStarted
+    void onActivityCreated(android.app.Activity,android.os.Bundle) -> onActivityCreated
+    void onActivityPaused(android.app.Activity) -> onActivityPaused
+    void onActivityDestroyed(android.app.Activity) -> onActivityDestroyed
+    void onActivitySaveInstanceState(android.app.Activity,android.os.Bundle) -> onActivitySaveInstanceState
+    void onActivityResumed(android.app.Activity) -> onActivityResumed
+    void onActivityStopped(android.app.Activity) -> onActivityStopped
+com.mixpanel.android.mpmetrics.OnMixpanelUpdatesReceivedListener -> com.mixpanel.android.mpmetrics.au:
+    void onMixpanelUpdatesReceived() -> onMixpanelUpdatesReceived
+com.mixpanel.android.mpmetrics.PersistentIdentity -> com.mixpanel.android.mpmetrics.av:
+    java.util.concurrent.Future mLoadStoredPreferences -> a
+    java.util.concurrent.Future mLoadReferrerPreferences -> b
+    android.content.SharedPreferences$OnSharedPreferenceChangeListener mReferrerChangeListener -> c
+    org.json.JSONObject mSuperPropertiesCache -> d
+    java.util.Map mReferrerPropertiesCache -> e
+    boolean mIdentitiesLoaded -> f
+    java.lang.String mEventsDistinctId -> g
+    java.lang.String mPeopleDistinctId -> h
+    org.json.JSONArray mWaitingPeopleRecords -> i
+    boolean sReferrerPrefsDirty -> j
+    java.lang.Object sReferrerPrefsLock -> k
+    org.json.JSONArray waitingPeopleRecordsForSending(android.content.SharedPreferences) -> waitingPeopleRecordsForSending
+    void writeReferrerPrefs(android.content.Context,java.lang.String,java.util.Map) -> writeReferrerPrefs
+    org.json.JSONObject getSuperProperties() -> getSuperProperties
+    java.util.Map getReferrerProperties() -> getReferrerProperties
+    java.lang.String getEventsDistinctId() -> getEventsDistinctId
+    void setEventsDistinctId(java.lang.String) -> setEventsDistinctId
+    java.lang.String getPeopleDistinctId() -> getPeopleDistinctId
+    void setPeopleDistinctId(java.lang.String) -> setPeopleDistinctId
+    void storeWaitingPeopleRecord(org.json.JSONObject) -> storeWaitingPeopleRecord
+    org.json.JSONArray waitingPeopleRecordsForSending() -> waitingPeopleRecordsForSending
+    void clearPreferences() -> clearPreferences
+    void registerSuperProperties(org.json.JSONObject) -> registerSuperProperties
+    void storePushId(java.lang.String) -> storePushId
+    void clearPushId() -> clearPushId
+    java.lang.String getPushId() -> getPushId
+    void unregisterSuperProperty(java.lang.String) -> unregisterSuperProperty
+    void registerSuperPropertiesOnce(org.json.JSONObject) -> registerSuperPropertiesOnce
+    void clearSuperProperties() -> clearSuperProperties
+    void readSuperProperties() -> b
+    void readReferrerProperties() -> c
+    void storeSuperProperties() -> d
+    void readIdentities() -> e
+    void writeIdentities() -> f
+    void writeEdits(android.content.SharedPreferences$Editor) -> a
+    java.lang.Object access$0() -> a
+    void access$1(com.mixpanel.android.mpmetrics.PersistentIdentity) -> a
+    void access$2(boolean) -> a
+com.mixpanel.android.mpmetrics.PersistentIdentity$1 -> com.mixpanel.android.mpmetrics.aw:
+    com.mixpanel.android.mpmetrics.PersistentIdentity this$0 -> a
+    void onSharedPreferenceChanged(android.content.SharedPreferences,java.lang.String) -> onSharedPreferenceChanged
+com.mixpanel.android.mpmetrics.ResourceIds -> com.mixpanel.android.mpmetrics.ax:
+    boolean knownIdName(java.lang.String) -> knownIdName
+    int idFromName(java.lang.String) -> idFromName
+    java.lang.String nameForId(int) -> nameForId
+com.mixpanel.android.mpmetrics.ResourceReader -> com.mixpanel.android.mpmetrics.ay:
+    android.content.Context mContext -> a
+    java.util.Map mIdNameToId -> b
+    android.util.SparseArray mIdToIdName -> c
+    boolean knownIdName(java.lang.String) -> knownIdName
+    int idFromName(java.lang.String) -> idFromName
+    java.lang.String nameForId(int) -> nameForId
+    void readClassIds(java.lang.Class,java.lang.String,java.util.Map) -> a
+    java.lang.Class getSystemClass() -> a
+    java.lang.String getLocalClassName(android.content.Context) -> a
+    void initialize() -> b
+com.mixpanel.android.mpmetrics.ResourceReader$Ids -> com.mixpanel.android.mpmetrics.az:
+    java.lang.String mResourcePackageName -> a
+    java.lang.Class getSystemClass() -> a
+    java.lang.String getLocalClassName(android.content.Context) -> a
+com.mixpanel.android.mpmetrics.ServerMessage -> com.mixpanel.android.mpmetrics.ba:
+    boolean isOnline(android.content.Context) -> isOnline
+    byte[] getUrls(android.content.Context,java.lang.String[]) -> getUrls
+    byte[] performRequest(java.lang.String,java.util.List) -> performRequest
+    byte[] slurp(java.io.InputStream) -> a
+com.mixpanel.android.mpmetrics.SharedPreferencesLoader -> com.mixpanel.android.mpmetrics.bb:
+    java.util.concurrent.Executor mExecutor -> a
+    java.util.concurrent.Future loadPreferences(android.content.Context,java.lang.String,com.mixpanel.android.mpmetrics.SharedPreferencesLoader$OnPrefsLoadedListener) -> loadPreferences
+com.mixpanel.android.mpmetrics.SharedPreferencesLoader$LoadSharedPreferences -> com.mixpanel.android.mpmetrics.bc:
+    android.content.Context mContext -> a
+    java.lang.String mPrefsName -> b
+    com.mixpanel.android.mpmetrics.SharedPreferencesLoader$OnPrefsLoadedListener mListener -> c
+    android.content.SharedPreferences call() -> call
+    java.lang.Object call() -> call
+com.mixpanel.android.mpmetrics.SharedPreferencesLoader$OnPrefsLoadedListener -> com.mixpanel.android.mpmetrics.bd:
+    void onPrefsLoaded(android.content.SharedPreferences) -> onPrefsLoaded
+com.mixpanel.android.mpmetrics.Survey -> com.mixpanel.android.mpmetrics.Survey:
+    android.os.Parcelable$Creator CREATOR -> CREATOR
+    org.json.JSONObject mDescription -> a
+    int mId -> b
+    int mCollectionId -> c
+    java.util.List mQuestions -> d
+    java.lang.String toJSON() -> a
+    int getId() -> getId
+    int getCollectionId() -> getCollectionId
+    java.util.List getQuestions() -> getQuestions
+    int describeContents() -> describeContents
+    void writeToParcel(android.os.Parcel,int) -> writeToParcel
+com.mixpanel.android.mpmetrics.Survey$1 -> com.mixpanel.android.mpmetrics.be:
+    com.mixpanel.android.mpmetrics.Survey createFromParcel(android.os.Parcel) -> createFromParcel
+    com.mixpanel.android.mpmetrics.Survey[] newArray(int) -> newArray
+    java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
+    java.lang.Object[] newArray(int) -> newArray
+com.mixpanel.android.mpmetrics.Survey$Question -> com.mixpanel.android.mpmetrics.bf:
+    int mQuestionId -> b
+    java.lang.String mQuestionType -> c
+    java.lang.String mPrompt -> d
+    java.util.List mChoices -> e
+    com.mixpanel.android.mpmetrics.Survey this$0 -> a
+    int getId() -> getId
+    java.lang.String getPrompt() -> getPrompt
+    java.util.List getChoices() -> getChoices
+    com.mixpanel.android.mpmetrics.Survey$QuestionType getType() -> getType
+com.mixpanel.android.mpmetrics.Survey$QuestionType -> com.mixpanel.android.mpmetrics.bg:
+    com.mixpanel.android.mpmetrics.Survey$QuestionType UNKNOWN -> UNKNOWN
+    com.mixpanel.android.mpmetrics.Survey$QuestionType MULTIPLE_CHOICE -> MULTIPLE_CHOICE
+    com.mixpanel.android.mpmetrics.Survey$QuestionType TEXT -> TEXT
+    com.mixpanel.android.mpmetrics.Survey$QuestionType[] ENUM$VALUES -> a
+    com.mixpanel.android.mpmetrics.Survey$QuestionType[] values() -> values
+    com.mixpanel.android.mpmetrics.Survey$QuestionType valueOf(java.lang.String) -> valueOf
+com.mixpanel.android.mpmetrics.Survey$QuestionType$1 -> com.mixpanel.android.mpmetrics.bh:
+    java.lang.String toString() -> toString
+com.mixpanel.android.mpmetrics.Survey$QuestionType$2 -> com.mixpanel.android.mpmetrics.bi:
+    java.lang.String toString() -> toString
+com.mixpanel.android.mpmetrics.Survey$QuestionType$3 -> com.mixpanel.android.mpmetrics.bj:
+    java.lang.String toString() -> toString
+com.mixpanel.android.mpmetrics.SurveyCallbacks -> com.mixpanel.android.mpmetrics.bk:
+    void foundSurvey(com.mixpanel.android.mpmetrics.Survey) -> foundSurvey
+com.mixpanel.android.mpmetrics.SystemInformation -> com.mixpanel.android.mpmetrics.bl:
+    java.lang.String LOGTAG -> LOGTAG
+    android.content.Context mContext -> a
+    java.lang.Boolean mHasNFC -> b
+    java.lang.Boolean mHasTelephony -> c
+    android.util.DisplayMetrics mDisplayMetrics -> d
+    java.lang.String mAppVersionName -> e
+    java.lang.Integer mAppVersionCode -> f
+    java.lang.String getAppVersionName() -> getAppVersionName
+    java.lang.Integer getAppVersionCode() -> getAppVersionCode
+    boolean hasNFC() -> hasNFC
+    boolean hasTelephony() -> hasTelephony
+    android.util.DisplayMetrics getDisplayMetrics() -> getDisplayMetrics
+    java.lang.String getPhoneRadioType() -> getPhoneRadioType
+    java.lang.String getCurrentNetworkOperator() -> getCurrentNetworkOperator
+    java.lang.Boolean isWifiConnected() -> isWifiConnected
+    java.lang.Boolean isBluetoothEnabled() -> isBluetoothEnabled
+    java.lang.String getBluetoothVersion() -> getBluetoothVersion
+com.mixpanel.android.mpmetrics.Tweaks -> com.mixpanel.android.mpmetrics.bm:
+    java.util.Map mTweaks -> a
+    java.util.Map mBindings -> b
+    android.os.Handler mUiHandler -> c
+    java.lang.String getString(java.lang.String,java.lang.String) -> getString
+    java.lang.Integer getInteger(java.lang.String,java.lang.Integer) -> getInteger
+    java.lang.Long getLong(java.lang.String,java.lang.Long) -> getLong
+    java.lang.Float getFloat(java.lang.String,java.lang.Float) -> getFloat
+    java.lang.Double getDouble(java.lang.String,java.lang.Double) -> getDouble
+    java.lang.Object get(java.lang.String,java.lang.Object) -> get
+    java.util.Map getAll() -> getAll
+    void bind(java.lang.String,java.lang.Object,com.mixpanel.android.mpmetrics.Tweaks$TweakChangeCallback) -> bind
+    void set(java.lang.String,java.lang.Object) -> set
+    void set(java.util.Map) -> set
+    void set(java.lang.String,java.lang.Object,boolean) -> a
+    void runCallback(com.mixpanel.android.mpmetrics.Tweaks$TweakChangeCallback,java.lang.Object) -> a
+com.mixpanel.android.mpmetrics.Tweaks$1 -> com.mixpanel.android.mpmetrics.bn:
+    com.mixpanel.android.mpmetrics.Tweaks this$0 -> a
+    com.mixpanel.android.mpmetrics.Tweaks$TweakChangeCallback val$callback -> b
+    java.lang.Object val$value -> c
+    void run() -> run
+com.mixpanel.android.mpmetrics.Tweaks$TweakChangeCallback -> com.mixpanel.android.mpmetrics.bo:
+    void onChange(java.lang.Object) -> onChange
+com.mixpanel.android.mpmetrics.UpdateDisplayState -> com.mixpanel.android.mpmetrics.UpdateDisplayState:
+    android.os.Parcelable$Creator CREATOR -> CREATOR
+    java.lang.String mDistinctId -> a
+    java.lang.String mToken -> b
+    com.mixpanel.android.mpmetrics.UpdateDisplayState$DisplayState mDisplayState -> c
+    java.util.concurrent.locks.ReentrantLock sUpdateDisplayLock -> d
+    long sUpdateDisplayLockMillis -> e
+    com.mixpanel.android.mpmetrics.UpdateDisplayState sUpdateDisplayState -> f
+    int sNextIntentId -> g
+    int sShowingIntentId -> h
+    java.util.concurrent.locks.ReentrantLock getLockObject() -> a
+    boolean hasCurrentProposal() -> b
+    int proposeDisplay(com.mixpanel.android.mpmetrics.UpdateDisplayState$DisplayState,java.lang.String,java.lang.String) -> a
+    void releaseDisplayState(int) -> releaseDisplayState
+    com.mixpanel.android.mpmetrics.UpdateDisplayState claimDisplayState(int) -> claimDisplayState
+    int describeContents() -> describeContents
+    void writeToParcel(android.os.Parcel,int) -> writeToParcel
+    com.mixpanel.android.mpmetrics.UpdateDisplayState$DisplayState getDisplayState() -> getDisplayState
+    java.lang.String getDistinctId() -> getDistinctId
+    java.lang.String getToken() -> getToken
+com.mixpanel.android.mpmetrics.UpdateDisplayState$1 -> com.mixpanel.android.mpmetrics.bp:
+    com.mixpanel.android.mpmetrics.UpdateDisplayState createFromParcel(android.os.Parcel) -> createFromParcel
+    com.mixpanel.android.mpmetrics.UpdateDisplayState[] newArray(int) -> newArray
+    java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
+    java.lang.Object[] newArray(int) -> newArray
+com.mixpanel.android.mpmetrics.UpdateDisplayState$AnswerMap -> com.mixpanel.android.mpmetrics.UpdateDisplayState$AnswerMap:
+    android.os.Parcelable$Creator CREATOR -> CREATOR
+    java.util.HashMap mMap -> a
+    void put(java.lang.Integer,java.lang.String) -> put
+    java.lang.String get(java.lang.Integer) -> get
+    boolean contentEquals(com.mixpanel.android.mpmetrics.UpdateDisplayState$AnswerMap) -> contentEquals
+    int describeContents() -> describeContents
+    void writeToParcel(android.os.Parcel,int) -> writeToParcel
+com.mixpanel.android.mpmetrics.UpdateDisplayState$AnswerMap$1 -> com.mixpanel.android.mpmetrics.bq:
+    com.mixpanel.android.mpmetrics.UpdateDisplayState$AnswerMap createFromParcel(android.os.Parcel) -> createFromParcel
+    com.mixpanel.android.mpmetrics.UpdateDisplayState$AnswerMap[] newArray(int) -> newArray
+    java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
+    java.lang.Object[] newArray(int) -> newArray
+com.mixpanel.android.mpmetrics.UpdateDisplayState$DisplayState -> com.mixpanel.android.mpmetrics.UpdateDisplayState$DisplayState:
+    android.os.Parcelable$Creator CREATOR -> CREATOR
+    java.lang.String STATE_TYPE_KEY -> STATE_TYPE_KEY
+    java.lang.String STATE_IMPL_KEY -> STATE_IMPL_KEY
+    java.lang.String getType() -> getType
+com.mixpanel.android.mpmetrics.UpdateDisplayState$DisplayState$1 -> com.mixpanel.android.mpmetrics.br:
+    com.mixpanel.android.mpmetrics.UpdateDisplayState$DisplayState createFromParcel(android.os.Parcel) -> createFromParcel
+    com.mixpanel.android.mpmetrics.UpdateDisplayState$DisplayState[] newArray(int) -> newArray
+    java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
+    java.lang.Object[] newArray(int) -> newArray
+com.mixpanel.android.mpmetrics.UpdateDisplayState$DisplayState$InAppNotificationState -> com.mixpanel.android.mpmetrics.UpdateDisplayState$DisplayState$InAppNotificationState:
+    java.lang.String TYPE -> TYPE
+    android.os.Parcelable$Creator CREATOR -> CREATOR
+    com.mixpanel.android.mpmetrics.InAppNotification mInAppNotification -> a
+    int mHighlightColor -> b
+    java.lang.String INAPP_KEY -> c
+    java.lang.String HIGHLIGHT_KEY -> d
+    int getHighlightColor() -> getHighlightColor
+    com.mixpanel.android.mpmetrics.InAppNotification getInAppNotification() -> getInAppNotification
+    java.lang.String getType() -> getType
+    int describeContents() -> describeContents
+    void writeToParcel(android.os.Parcel,int) -> writeToParcel
+com.mixpanel.android.mpmetrics.UpdateDisplayState$DisplayState$InAppNotificationState$1 -> com.mixpanel.android.mpmetrics.bs:
+    com.mixpanel.android.mpmetrics.UpdateDisplayState$DisplayState$InAppNotificationState createFromParcel(android.os.Parcel) -> createFromParcel
+    com.mixpanel.android.mpmetrics.UpdateDisplayState$DisplayState$InAppNotificationState[] newArray(int) -> newArray
+    java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
+    java.lang.Object[] newArray(int) -> newArray
+com.mixpanel.android.mpmetrics.UpdateDisplayState$DisplayState$SurveyState -> com.mixpanel.android.mpmetrics.UpdateDisplayState$DisplayState$SurveyState:
+    java.lang.String TYPE -> TYPE
+    android.os.Parcelable$Creator CREATOR -> CREATOR
+    com.mixpanel.android.mpmetrics.Survey mSurvey -> a
+    com.mixpanel.android.mpmetrics.UpdateDisplayState$AnswerMap mAnswers -> b
+    android.graphics.Bitmap mBackground -> c
+    int mHighlightColor -> d
+    void setBackground(android.graphics.Bitmap) -> setBackground
+    void setHighlightColor(int) -> setHighlightColor
+    android.graphics.Bitmap getBackground() -> getBackground
+    com.mixpanel.android.mpmetrics.UpdateDisplayState$AnswerMap getAnswers() -> getAnswers
+    int getHighlightColor() -> getHighlightColor
+    com.mixpanel.android.mpmetrics.Survey getSurvey() -> getSurvey
+    java.lang.String getType() -> getType
+    int describeContents() -> describeContents
+    void writeToParcel(android.os.Parcel,int) -> writeToParcel
+com.mixpanel.android.mpmetrics.UpdateDisplayState$DisplayState$SurveyState$1 -> com.mixpanel.android.mpmetrics.bt:
+    com.mixpanel.android.mpmetrics.UpdateDisplayState$DisplayState$SurveyState createFromParcel(android.os.Parcel) -> createFromParcel
+    com.mixpanel.android.mpmetrics.UpdateDisplayState$DisplayState$SurveyState[] newArray(int) -> newArray
+    java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
+    java.lang.Object[] newArray(int) -> newArray
+com.mixpanel.android.surveys.AlwaysSubmittableEditText -> com.mixpanel.android.surveys.AlwaysSubmittableEditText:
+    android.view.inputmethod.InputConnection onCreateInputConnection(android.view.inputmethod.EditorInfo) -> onCreateInputConnection
+com.mixpanel.android.surveys.CardCarouselLayout -> com.mixpanel.android.surveys.CardCarouselLayout:
+    int EXIT_ANGLE -> a
+    float EXIT_SIZE -> b
+    float EXIT_ROTATION_CENTER_X -> c
+    float EXIT_ROTATION_CENTER_Y -> d
+    java.util.List mMatchParentChildren -> e
+    com.mixpanel.android.surveys.CardCarouselLayout$QuestionCard mVisibleCard -> f
+    com.mixpanel.android.surveys.CardCarouselLayout$QuestionCard mBackupCard -> g
+    com.mixpanel.android.surveys.CardCarouselLayout$OnQuestionAnsweredListener mListener -> h
+    int[] $SWITCH_TABLE$com$mixpanel$android$surveys$CardCarouselLayout$Direction -> i
+    boolean shouldDelayChildPressedState() -> shouldDelayChildPressedState
+    void setOnQuestionAnsweredListener(com.mixpanel.android.surveys.CardCarouselLayout$OnQuestionAnsweredListener) -> setOnQuestionAnsweredListener
+    void moveTo(com.mixpanel.android.mpmetrics.Survey$Question,java.lang.String,com.mixpanel.android.surveys.CardCarouselLayout$Direction) -> moveTo
+    void replaceTo(com.mixpanel.android.mpmetrics.Survey$Question,java.lang.String) -> replaceTo
+    void onMeasure(int,int) -> onMeasure
+    void onLayout(boolean,int,int,int,int) -> onLayout
+    void initCards(android.content.Context) -> a
+    android.view.animation.Animation enterRight() -> b
+    android.view.animation.Animation exitRight() -> c
+    android.view.animation.Animation enterLeft() -> d
+    android.view.animation.Animation exitLeft() -> e
+    com.mixpanel.android.surveys.CardCarouselLayout$OnQuestionAnsweredListener access$0(com.mixpanel.android.surveys.CardCarouselLayout) -> a
+    int[] $SWITCH_TABLE$com$mixpanel$android$surveys$CardCarouselLayout$Direction() -> a
+com.mixpanel.android.surveys.CardCarouselLayout$1 -> com.mixpanel.android.surveys.a:
+    com.mixpanel.android.surveys.CardCarouselLayout this$0 -> a
+    android.view.View val$viewShowing -> b
+    void onAnimationEnd(android.view.animation.Animation) -> onAnimationEnd
+    void onAnimationRepeat(android.view.animation.Animation) -> onAnimationRepeat
+    void onAnimationStart(android.view.animation.Animation) -> onAnimationStart
+com.mixpanel.android.surveys.CardCarouselLayout$ChoiceAdapter -> com.mixpanel.android.surveys.b:
+    java.util.List mChoices -> a
+    android.view.LayoutInflater mInflater -> b
+    int getCount() -> getCount
+    java.lang.String getItem(int) -> getItem
+    long getItemId(int) -> getItemId
+    int getItemViewType(int) -> getItemViewType
+    android.view.View getView(int,android.view.View,android.view.ViewGroup) -> getView
+    int getViewTypeCount() -> getViewTypeCount
+    boolean hasStableIds() -> hasStableIds
+    boolean isEmpty() -> isEmpty
+    void registerDataSetObserver(android.database.DataSetObserver) -> registerDataSetObserver
+    void unregisterDataSetObserver(android.database.DataSetObserver) -> unregisterDataSetObserver
+    boolean areAllItemsEnabled() -> areAllItemsEnabled
+    boolean isEnabled(int) -> isEnabled
+    java.lang.Object getItem(int) -> getItem
+com.mixpanel.android.surveys.CardCarouselLayout$Direction -> com.mixpanel.android.surveys.c:
+    com.mixpanel.android.surveys.CardCarouselLayout$Direction FORWARD -> FORWARD
+    com.mixpanel.android.surveys.CardCarouselLayout$Direction BACKWARD -> BACKWARD
+    com.mixpanel.android.surveys.CardCarouselLayout$Direction[] ENUM$VALUES -> a
+    com.mixpanel.android.surveys.CardCarouselLayout$Direction[] values() -> values
+    com.mixpanel.android.surveys.CardCarouselLayout$Direction valueOf(java.lang.String) -> valueOf
+com.mixpanel.android.surveys.CardCarouselLayout$OnQuestionAnsweredListener -> com.mixpanel.android.surveys.d:
+    void onQuestionAnswered(com.mixpanel.android.mpmetrics.Survey$Question,java.lang.String) -> onQuestionAnswered
+com.mixpanel.android.surveys.CardCarouselLayout$QuestionCard -> com.mixpanel.android.surveys.e:
+    com.mixpanel.android.mpmetrics.Survey$Question mQuestion -> b
+    android.view.View mCardView -> c
+    android.widget.TextView mPromptView -> d
+    android.widget.TextView mEditAnswerView -> e
+    android.widget.ListView mChoiceView -> f
+    com.mixpanel.android.surveys.CardCarouselLayout this$0 -> a
+    android.view.View getView() -> getView
+    void showQuestionOnCard(com.mixpanel.android.mpmetrics.Survey$Question,java.lang.String) -> showQuestionOnCard
+    com.mixpanel.android.mpmetrics.Survey$Question access$0(com.mixpanel.android.surveys.CardCarouselLayout$QuestionCard) -> a
+    com.mixpanel.android.surveys.CardCarouselLayout access$1(com.mixpanel.android.surveys.CardCarouselLayout$QuestionCard) -> b
+com.mixpanel.android.surveys.CardCarouselLayout$QuestionCard$1 -> com.mixpanel.android.surveys.f:
+    com.mixpanel.android.surveys.CardCarouselLayout$QuestionCard this$1 -> a
+    boolean onEditorAction(android.widget.TextView,int,android.view.KeyEvent) -> onEditorAction
+com.mixpanel.android.surveys.CardCarouselLayout$QuestionCard$2 -> com.mixpanel.android.surveys.g:
+    com.mixpanel.android.surveys.CardCarouselLayout$QuestionCard this$1 -> a
+    void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
+    com.mixpanel.android.surveys.CardCarouselLayout$QuestionCard access$0(com.mixpanel.android.surveys.CardCarouselLayout$QuestionCard$2) -> a
+com.mixpanel.android.surveys.CardCarouselLayout$QuestionCard$2$1 -> com.mixpanel.android.surveys.h:
+    com.mixpanel.android.surveys.CardCarouselLayout$QuestionCard$2 this$2 -> a
+    java.lang.String val$answer -> b
+    void run() -> run
+com.mixpanel.android.surveys.CardCarouselLayout$UnrecognizedAnswerTypeException -> com.mixpanel.android.surveys.i:
+com.mixpanel.android.surveys.FadeOnPressButton -> com.mixpanel.android.surveys.FadeOnPressButton:
+    boolean mIsFaded -> a
+    void drawableStateChanged() -> drawableStateChanged
+    void setAlphaBySDK(float) -> setAlphaBySDK
+com.mixpanel.android.surveys.FadingImageView -> com.mixpanel.android.surveys.FadingImageView:
+    android.graphics.Matrix mGradientMatrix -> a
+    android.graphics.Paint mAlphaGradientPaint -> b
+    android.graphics.Shader mAlphaGradientShader -> c
+    android.graphics.Paint mDarkenGradientPaint -> d
+    android.graphics.Shader mDarkenGradientShader -> e
+    int mHeight -> f
+    int mWidth -> g
+    void onMeasure(int,int) -> onMeasure
+    void draw(android.graphics.Canvas) -> draw
+    void initFadingImageView() -> a
+com.mixpanel.android.surveys.MiniCircleImageView -> com.mixpanel.android.surveys.MiniCircleImageView:
+    android.graphics.Paint mWhitePaint -> a
+    int mCanvasWidth -> b
+    int mCanvasHeight -> c
+    void init() -> a
+    void onDraw(android.graphics.Canvas) -> onDraw
+    void onSizeChanged(int,int,int,int) -> onSizeChanged
+com.mixpanel.android.surveys.SurveyActivity -> com.mixpanel.android.surveys.j:
+    android.app.AlertDialog mDialog -> a
+    com.mixpanel.android.surveys.CardCarouselLayout mCardHolder -> b
+    com.mixpanel.android.mpmetrics.MixpanelAPI mMixpanel -> c
+    android.view.View mPreviousButton -> d
+    android.view.View mNextButton -> e
+    android.widget.TextView mProgressTextView -> f
+    com.mixpanel.android.mpmetrics.UpdateDisplayState mUpdateDisplayState -> g
+    boolean mSurveyBegun -> h
+    int mCurrentQuestion -> i
+    int mIntentId -> j
+    int GRAY_30PERCENT -> k
+    java.lang.String INTENT_ID_KEY -> INTENT_ID_KEY
+    void onCreate(android.os.Bundle) -> onCreate
+    void onCreateInAppNotification(android.os.Bundle) -> a
+    void onCreateSurvey(android.os.Bundle) -> b
+    void onStart() -> onStart
+    void onStartSurvey() -> a
+    void onPause() -> onPause
+    void onDestroy() -> onDestroy
+    void onDestroySurvey() -> b
+    void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
+    void onSaveInstanceStateSurvey(android.os.Bundle) -> c
+    void onBackPressed() -> onBackPressed
+    void goToPreviousQuestion(android.view.View) -> goToPreviousQuestion
+    void goToNextQuestion(android.view.View) -> goToNextQuestion
+    void completeSurvey(android.view.View) -> completeSurvey
+    com.mixpanel.android.mpmetrics.UpdateDisplayState$DisplayState$SurveyState getSurveyState() -> c
+    boolean isShowingSurvey() -> d
+    boolean isShowingInApp() -> e
+    void trackSurveyAttempted() -> f
+    void goToPreviousQuestion() -> goToPreviousQuestion
+    void goToNextQuestion() -> goToNextQuestion
+    void showQuestion(int) -> a
+    void saveAnswer(com.mixpanel.android.mpmetrics.Survey$Question,java.lang.String) -> a
+    void setViewBackground(android.view.View,android.graphics.drawable.Drawable) -> a
+    void requestOrientationLock() -> g
+    void completeSurvey() -> completeSurvey
+    com.mixpanel.android.mpmetrics.MixpanelAPI access$0(com.mixpanel.android.surveys.SurveyActivity) -> a
+    int access$1(com.mixpanel.android.surveys.SurveyActivity) -> b
+    void access$2(com.mixpanel.android.surveys.SurveyActivity,com.mixpanel.android.mpmetrics.Survey$Question,java.lang.String) -> a
+    void access$3(com.mixpanel.android.surveys.SurveyActivity) -> c
+    void access$4(com.mixpanel.android.surveys.SurveyActivity,boolean) -> a
+    int access$5(com.mixpanel.android.surveys.SurveyActivity) -> d
+    void access$6(com.mixpanel.android.surveys.SurveyActivity,int) -> a
+com.mixpanel.android.surveys.SurveyActivity$1 -> com.mixpanel.android.surveys.k:
+    com.mixpanel.android.surveys.SurveyActivity this$0 -> a
+    com.mixpanel.android.mpmetrics.InAppNotification val$inApp -> b
+    void onClick(android.view.View) -> onClick
+com.mixpanel.android.surveys.SurveyActivity$2 -> com.mixpanel.android.surveys.l:
+    com.mixpanel.android.surveys.SurveyActivity this$0 -> a
+    boolean onTouch(android.view.View,android.view.MotionEvent) -> onTouch
+com.mixpanel.android.surveys.SurveyActivity$3 -> com.mixpanel.android.surveys.m:
+    com.mixpanel.android.surveys.SurveyActivity this$0 -> a
+    void onClick(android.view.View) -> onClick
+com.mixpanel.android.surveys.SurveyActivity$4 -> com.mixpanel.android.surveys.n:
+    com.mixpanel.android.surveys.SurveyActivity this$0 -> a
+    void onQuestionAnswered(com.mixpanel.android.mpmetrics.Survey$Question,java.lang.String) -> onQuestionAnswered
+com.mixpanel.android.surveys.SurveyActivity$5 -> com.mixpanel.android.surveys.o:
+    com.mixpanel.android.surveys.SurveyActivity this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.mixpanel.android.surveys.SurveyActivity$6 -> com.mixpanel.android.surveys.p:
+    com.mixpanel.android.surveys.SurveyActivity this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.mixpanel.android.surveys.SurveyChoiceView -> com.mixpanel.android.surveys.SurveyChoiceView:
+    android.graphics.drawable.Drawable mSurveyChoiceCheckMark -> a
+    float mCheckmarkLeftOffset -> b
+    float mTextLeftOffset -> c
+    void setCheckMarkDrawable(android.graphics.drawable.Drawable) -> setCheckMarkDrawable
+    void setChecked(boolean) -> setChecked
+    void onDraw(android.graphics.Canvas) -> onDraw
+    void initSurveyChoiceView() -> a
+    void access$0(com.mixpanel.android.surveys.SurveyChoiceView,float) -> a
+    void access$1(com.mixpanel.android.surveys.SurveyChoiceView,float) -> b
+com.mixpanel.android.surveys.SurveyChoiceView$SetCheckAnimation -> com.mixpanel.android.surveys.q:
+    com.mixpanel.android.surveys.SurveyChoiceView this$0 -> a
+    boolean willChangeTransformationMatrix() -> willChangeTransformationMatrix
+    boolean willChangeBounds() -> willChangeBounds
+    void applyTransformation(float,android.view.animation.Transformation) -> applyTransformation
+com.mixpanel.android.util.ActivityImageUtils -> com.mixpanel.android.b.a:
+    android.graphics.Bitmap getScaledScreenshot(android.app.Activity,int,int,boolean) -> getScaledScreenshot
+    int getHighlightColorFromBackground(android.app.Activity) -> getHighlightColorFromBackground
+    int getHighlightColorFromBitmap(android.graphics.Bitmap) -> getHighlightColorFromBitmap
+    int getHighlightColor(int) -> getHighlightColor
+com.mixpanel.android.util.Base64Coder -> com.mixpanel.android.b.b:
+    char[] map1 -> a
+    byte[] map2 -> b
+    java.lang.String encodeString(java.lang.String) -> encodeString
+    char[] encode(byte[]) -> encode
+    char[] encode(byte[],int) -> encode
+    java.lang.String decodeString(java.lang.String) -> decodeString
+    byte[] decode(java.lang.String) -> decode
+    byte[] decode(char[]) -> decode
+com.mixpanel.android.util.JSONUtils -> com.mixpanel.android.b.c:
+    java.lang.String optionalStringKey(org.json.JSONObject,java.lang.String) -> optionalStringKey
+com.mixpanel.android.util.StackBlurManager -> com.mixpanel.android.b.d:
+    void process(android.graphics.Bitmap,int) -> process
+com.mixpanel.android.viewcrawler.Caller -> com.mixpanel.android.c.a:
+    java.lang.String mMethodName -> a
+    java.lang.Object[] mMethodArgs -> b
+    java.lang.Class[] mMethodTypes -> c
+    java.lang.Class mMethodResultType -> d
+    java.lang.Class mTargetClass -> e
+    java.lang.reflect.Method mTargetMethod -> f
+    java.lang.String toString() -> toString
+    java.lang.Object[] getArgs() -> getArgs
+    java.lang.Object applyMethod(android.view.View) -> applyMethod
+    java.lang.Class assignableArgType(java.lang.Class) -> a
+    java.lang.reflect.Method pickMethod(java.lang.Class) -> b
+com.mixpanel.android.viewcrawler.DynamicEventTracker -> com.mixpanel.android.c.b:
+    com.mixpanel.android.mpmetrics.MixpanelAPI mMixpanel -> a
+    android.os.Handler mHandler -> b
+    java.lang.Runnable mTask -> c
+    java.util.Map mDebouncedEvents -> d
+    java.lang.String LOGTAG -> e
+    void OnEvent(android.view.View,java.lang.String,boolean) -> OnEvent
+    java.lang.String textPropertyFromView(android.view.View) -> a
+    java.util.Map access$0(com.mixpanel.android.viewcrawler.DynamicEventTracker) -> a
+    com.mixpanel.android.mpmetrics.MixpanelAPI access$1(com.mixpanel.android.viewcrawler.DynamicEventTracker) -> b
+    android.os.Handler access$2(com.mixpanel.android.viewcrawler.DynamicEventTracker) -> c
+com.mixpanel.android.viewcrawler.DynamicEventTracker$SendDebouncedTask -> com.mixpanel.android.c.c:
+    com.mixpanel.android.viewcrawler.DynamicEventTracker this$0 -> a
+    void run() -> run
+com.mixpanel.android.viewcrawler.DynamicEventTracker$Signature -> com.mixpanel.android.c.d:
+    int mHashCode -> a
+    boolean equals(java.lang.Object) -> equals
+    int hashCode() -> hashCode
+com.mixpanel.android.viewcrawler.DynamicEventTracker$UnsentEvent -> com.mixpanel.android.c.e:
+    long timeSentMillis -> timeSentMillis
+    java.lang.String eventName -> eventName
+    org.json.JSONObject properties -> properties
+com.mixpanel.android.viewcrawler.EditProtocol -> com.mixpanel.android.c.f:
+    com.mixpanel.android.mpmetrics.ResourceIds mResourceIds -> a
+    java.lang.Class[] NO_PARAMS -> b
+    java.util.List NEVER_MATCH_PATH -> c
+    com.mixpanel.android.viewcrawler.ViewVisitor readEventBinding(org.json.JSONObject,com.mixpanel.android.viewcrawler.ViewVisitor$OnEventListener) -> readEventBinding
+    com.mixpanel.android.viewcrawler.ViewVisitor readEdit(org.json.JSONObject) -> readEdit
+    com.mixpanel.android.viewcrawler.ViewSnapshot readSnapshotConfig(org.json.JSONObject) -> readSnapshotConfig
+    java.util.List readPath(org.json.JSONArray,com.mixpanel.android.mpmetrics.ResourceIds) -> a
+    java.lang.Integer reconcileIdsInPath(int,java.lang.String,com.mixpanel.android.mpmetrics.ResourceIds) -> a
+    com.mixpanel.android.viewcrawler.PropertyDescription readPropertyDescription(java.lang.Class,org.json.JSONObject) -> a
+    java.lang.Object convertArgument(java.lang.Object,java.lang.String) -> a
+com.mixpanel.android.viewcrawler.EditProtocol$BadInstructionsException -> com.mixpanel.android.c.g:
+com.mixpanel.android.viewcrawler.EditProtocol$InapplicableInstructionsException -> com.mixpanel.android.c.h:
+com.mixpanel.android.viewcrawler.EditState -> com.mixpanel.android.c.i:
+    android.os.Handler mUiThreadHandler -> a
+    java.util.Map mIntendedEdits -> b
+    java.util.Set mCurrentEdits -> c
+    void add(android.app.Activity) -> add
+    void remove(android.app.Activity) -> remove
+    void setEdits(java.util.Map) -> setEdits
+    void applyEditsOnUiThread() -> a
+    void applyIntendedEdits() -> b
+    void applyChangesFromList(android.view.View,java.util.List) -> a
+    void add(java.lang.Object) -> add
+    void remove(java.lang.Object) -> remove
+    void access$2(com.mixpanel.android.viewcrawler.EditState) -> a
+com.mixpanel.android.viewcrawler.EditState$1 -> com.mixpanel.android.c.j:
+    com.mixpanel.android.viewcrawler.EditState this$0 -> a
+    void run() -> run
+com.mixpanel.android.viewcrawler.EditState$EditBinding -> com.mixpanel.android.c.k:
+    boolean mDying -> a
+    boolean mAlive -> b
+    java.lang.ref.WeakReference mViewRoot -> c
+    com.mixpanel.android.viewcrawler.ViewVisitor mEdit -> d
+    android.os.Handler mHandler -> e
+    void onGlobalLayout() -> onGlobalLayout
+    void run() -> run
+    void kill() -> kill
+    void cleanUp() -> a
+com.mixpanel.android.viewcrawler.EditorConnection -> com.mixpanel.android.c.l:
+    com.mixpanel.android.viewcrawler.EditorConnection$Editor mService -> a
+    com.mixpanel.android.viewcrawler.EditorConnection$EditorClient mClient -> b
+    java.net.URI mURI -> c
+    java.nio.ByteBuffer EMPTY_BYTE_BUFFER -> d
+    boolean isValid() -> isValid
+    java.io.BufferedOutputStream getBufferedOutputStream() -> getBufferedOutputStream
+    com.mixpanel.android.viewcrawler.EditorConnection$Editor access$0(com.mixpanel.android.viewcrawler.EditorConnection) -> a
+    java.net.URI access$1(com.mixpanel.android.viewcrawler.EditorConnection) -> b
+    com.mixpanel.android.viewcrawler.EditorConnection$EditorClient access$2(com.mixpanel.android.viewcrawler.EditorConnection) -> c
+    java.nio.ByteBuffer access$3() -> a
+com.mixpanel.android.viewcrawler.EditorConnection$Editor -> com.mixpanel.android.c.m:
+    void sendSnapshot(org.json.JSONObject) -> sendSnapshot
+    void performEdit(org.json.JSONObject) -> performEdit
+    void bindEvents(org.json.JSONObject) -> bindEvents
+    void sendDeviceInfo() -> sendDeviceInfo
+    void cleanup() -> cleanup
+com.mixpanel.android.viewcrawler.EditorConnection$EditorClient -> com.mixpanel.android.c.n:
+    com.mixpanel.android.viewcrawler.EditorConnection this$0 -> c
+    void onOpen(com.mixpanel.android.java_websocket.handshake.ServerHandshake) -> onOpen
+    void onMessage(java.lang.String) -> onMessage
+    void onClose(int,java.lang.String,boolean) -> onClose
+    void onError(java.lang.Exception) -> onError
+com.mixpanel.android.viewcrawler.EditorConnection$EditorConnectionException -> com.mixpanel.android.c.o:
+    com.mixpanel.android.viewcrawler.EditorConnection this$0 -> a
+com.mixpanel.android.viewcrawler.EditorConnection$WebSocketOutputStream -> com.mixpanel.android.c.p:
+    com.mixpanel.android.viewcrawler.EditorConnection this$0 -> a
+    void write(int) -> write
+    void write(byte[]) -> write
+    void write(byte[],int,int) -> write
+    void close() -> close
+com.mixpanel.android.viewcrawler.FlipGesture -> com.mixpanel.android.c.q:
+    int mTriggerState -> a
+    int mFlipState -> b
+    long mLastFlipTime -> c
+    float[] mSmoothed -> d
+    com.mixpanel.android.viewcrawler.FlipGesture$OnFlipGestureListener mListener -> e
+    void onSensorChanged(android.hardware.SensorEvent) -> onSensorChanged
+    void onAccuracyChanged(android.hardware.Sensor,int) -> onAccuracyChanged
+    float[] smoothXYZ(float[]) -> a
+com.mixpanel.android.viewcrawler.FlipGesture$OnFlipGestureListener -> com.mixpanel.android.c.r:
+    void onFlipGesture() -> onFlipGesture
+com.mixpanel.android.viewcrawler.Pathfinder -> com.mixpanel.android.c.s:
+    com.mixpanel.android.viewcrawler.Pathfinder$IntStack mIndexStack -> a
+    void findTargetsInRoot(android.view.View,java.util.List,com.mixpanel.android.viewcrawler.Pathfinder$Accumulator) -> findTargetsInRoot
+    void findTargetsInMatchedView(android.view.View,java.util.List,com.mixpanel.android.viewcrawler.Pathfinder$Accumulator) -> a
+    android.view.View findPrefixedMatch(com.mixpanel.android.viewcrawler.Pathfinder$PathElement,android.view.View,int) -> a
+    boolean matches(com.mixpanel.android.viewcrawler.Pathfinder$PathElement,android.view.View) -> a
+    boolean hasClassName(java.lang.Object,java.lang.String) -> a
+com.mixpanel.android.viewcrawler.Pathfinder$Accumulator -> com.mixpanel.android.c.t:
+    void accumulate(android.view.View) -> accumulate
+com.mixpanel.android.viewcrawler.Pathfinder$IntStack -> com.mixpanel.android.c.u:
+    int[] mStack -> a
+    int mStackSize -> b
+    boolean full() -> full
+    int alloc() -> alloc
+    int read(int) -> read
+    void increment(int) -> increment
+    void free() -> free
+com.mixpanel.android.viewcrawler.Pathfinder$PathElement -> com.mixpanel.android.c.v:
+    int prefix -> prefix
+    java.lang.String viewClassName -> viewClassName
+    int index -> index
+    int viewId -> viewId
+    java.lang.String contentDescription -> contentDescription
+    java.lang.String tag -> tag
+    int ZERO_LENGTH_PREFIX -> ZERO_LENGTH_PREFIX
+    int SHORTEST_PREFIX -> SHORTEST_PREFIX
+    java.lang.String toString() -> toString
+com.mixpanel.android.viewcrawler.PropertyDescription -> com.mixpanel.android.c.w:
+    java.lang.String name -> name
+    java.lang.Class targetClass -> targetClass
+    com.mixpanel.android.viewcrawler.Caller accessor -> accessor
+    java.lang.String mMutatorName -> a
+    com.mixpanel.android.viewcrawler.Caller makeMutator(java.lang.Object[]) -> makeMutator
+    java.lang.String toString() -> toString
+com.mixpanel.android.viewcrawler.TrackingDebug -> com.mixpanel.android.c.x:
+    void reportTrack(java.lang.String) -> reportTrack
+com.mixpanel.android.viewcrawler.UIThreadSet -> com.mixpanel.android.c.y:
+    java.util.Set mSet -> a
+    void add(java.lang.Object) -> add
+    void remove(java.lang.Object) -> remove
+    java.util.Set getAll() -> getAll
+    boolean isEmpty() -> isEmpty
+com.mixpanel.android.viewcrawler.UpdatesFromMixpanel -> com.mixpanel.android.c.z:
+    void setEventBindings(org.json.JSONArray) -> setEventBindings
+    com.mixpanel.android.mpmetrics.Tweaks getTweaks() -> getTweaks
+com.mixpanel.android.viewcrawler.ViewCrawler -> com.mixpanel.android.c.aa:
+    java.util.List mPersistentChanges -> a
+    java.util.List mEditorChanges -> b
+    java.util.List mPersistentEventBindings -> c
+    java.util.List mEditorEventBindings -> d
+    com.mixpanel.android.mpmetrics.MPConfig mConfig -> e
+    com.mixpanel.android.viewcrawler.DynamicEventTracker mTracker -> f
+    javax.net.ssl.SSLSocketFactory mSSLSocketFactory -> g
+    com.mixpanel.android.viewcrawler.EditProtocol mProtocol -> h
+    com.mixpanel.android.viewcrawler.EditState mEditState -> i
+    com.mixpanel.android.mpmetrics.Tweaks mTweaks -> j
+    java.util.Map mDeviceInfo -> k
+    com.mixpanel.android.viewcrawler.ViewCrawler$ViewCrawlerHandler mMessageThreadHandler -> l
+    com.mixpanel.android.mpmetrics.Tweaks getTweaks() -> getTweaks
+    void setEventBindings(org.json.JSONArray) -> setEventBindings
+    void reportTrack(java.lang.String) -> reportTrack
+    com.mixpanel.android.viewcrawler.ViewCrawler$ViewCrawlerHandler access$0(com.mixpanel.android.viewcrawler.ViewCrawler) -> a
+    com.mixpanel.android.viewcrawler.EditState access$1(com.mixpanel.android.viewcrawler.ViewCrawler) -> b
+    com.mixpanel.android.mpmetrics.MPConfig access$2(com.mixpanel.android.viewcrawler.ViewCrawler) -> c
+    java.util.List access$3(com.mixpanel.android.viewcrawler.ViewCrawler) -> d
+    java.util.List access$4(com.mixpanel.android.viewcrawler.ViewCrawler) -> e
+    javax.net.ssl.SSLSocketFactory access$5(com.mixpanel.android.viewcrawler.ViewCrawler) -> f
+    com.mixpanel.android.mpmetrics.Tweaks access$6(com.mixpanel.android.viewcrawler.ViewCrawler) -> g
+    java.util.Map access$7(com.mixpanel.android.viewcrawler.ViewCrawler) -> h
+    com.mixpanel.android.viewcrawler.EditProtocol access$8(com.mixpanel.android.viewcrawler.ViewCrawler) -> i
+    java.util.List access$9(com.mixpanel.android.viewcrawler.ViewCrawler) -> j
+    java.util.List access$10(com.mixpanel.android.viewcrawler.ViewCrawler) -> k
+    com.mixpanel.android.viewcrawler.DynamicEventTracker access$11(com.mixpanel.android.viewcrawler.ViewCrawler) -> l
+com.mixpanel.android.viewcrawler.ViewCrawler$Editor -> com.mixpanel.android.c.ab:
+    com.mixpanel.android.viewcrawler.ViewCrawler this$0 -> a
+    void sendSnapshot(org.json.JSONObject) -> sendSnapshot
+    void performEdit(org.json.JSONObject) -> performEdit
+    void bindEvents(org.json.JSONObject) -> bindEvents
+    void sendDeviceInfo() -> sendDeviceInfo
+    void cleanup() -> cleanup
+com.mixpanel.android.viewcrawler.ViewCrawler$EmulatorConnector -> com.mixpanel.android.c.ac:
+    boolean mStopped -> b
+    com.mixpanel.android.viewcrawler.ViewCrawler this$0 -> a
+    void run() -> run
+    void start() -> start
+    void stop() -> stop
+com.mixpanel.android.viewcrawler.ViewCrawler$LifecycleCallbacks -> com.mixpanel.android.c.ad:
+    com.mixpanel.android.viewcrawler.FlipGesture mFlipGesture -> b
+    com.mixpanel.android.viewcrawler.ViewCrawler$EmulatorConnector mEmulatorConnector -> c
+    com.mixpanel.android.viewcrawler.ViewCrawler this$0 -> a
+    void onFlipGesture() -> onFlipGesture
+    void onActivityCreated(android.app.Activity,android.os.Bundle) -> onActivityCreated
+    void onActivityStarted(android.app.Activity) -> onActivityStarted
+    void onActivityResumed(android.app.Activity) -> onActivityResumed
+    void onActivityPaused(android.app.Activity) -> onActivityPaused
+    void onActivityStopped(android.app.Activity) -> onActivityStopped
+    void onActivitySaveInstanceState(android.app.Activity,android.os.Bundle) -> onActivitySaveInstanceState
+    void onActivityDestroyed(android.app.Activity) -> onActivityDestroyed
+    void installConnectionSensor(android.app.Activity) -> a
+    void uninstallConnectionSensor(android.app.Activity) -> b
+    boolean isInEmulator() -> a
+com.mixpanel.android.viewcrawler.ViewCrawler$ViewCrawlerHandler -> com.mixpanel.android.c.ae:
+    com.mixpanel.android.viewcrawler.EditorConnection mEditorConnection -> b
+    com.mixpanel.android.viewcrawler.ViewSnapshot mSnapshot -> c
+    android.content.Context mContext -> d
+    java.lang.String mToken -> e
+    com.mixpanel.android.viewcrawler.ViewCrawler this$0 -> a
+    void handleMessage(android.os.Message) -> handleMessage
+    void initializeChanges() -> a
+    void connectToEditor() -> b
+    void sendError(java.lang.String) -> a
+    void sendDeviceInfo() -> c
+    void sendSnapshot(org.json.JSONObject) -> a
+    void sendReportTrackToEditor(java.lang.String) -> b
+    void handleEditorChangeReceived(org.json.JSONObject) -> b
+    void handleEventBindingsReceived(org.json.JSONArray) -> a
+    void handleEditorBindingsReceived(org.json.JSONObject) -> c
+    void handleEditorClosed() -> d
+    void updateEditState() -> e
+    android.content.SharedPreferences getSharedPreferences() -> f
+com.mixpanel.android.viewcrawler.ViewSnapshot -> com.mixpanel.android.c.af:
+    com.mixpanel.android.viewcrawler.ViewSnapshot$RootViewFinder mRootViewFinder -> a
+    java.util.List mProperties -> b
+    com.mixpanel.android.viewcrawler.ViewSnapshot$ClassNameCache mClassnameCache -> c
+    android.os.Handler mMainThreadHandler -> d
+    com.mixpanel.android.mpmetrics.ResourceIds mResourceIds -> e
+    void snapshots(com.mixpanel.android.viewcrawler.UIThreadSet,java.io.OutputStream) -> snapshots
+    void snapshotViewHierarchy(android.util.JsonWriter,android.view.View) -> a
+    void snapshotView(android.util.JsonWriter,android.view.View) -> b
+    void addProperties(android.util.JsonWriter,android.view.View) -> c
+com.mixpanel.android.viewcrawler.ViewSnapshot$CachedBitmap -> com.mixpanel.android.c.ag:
+    android.graphics.Bitmap mCached -> a
+    android.graphics.Paint mPaint -> b
+    void recreate(int,int,int,android.graphics.Bitmap) -> recreate
+    void writeBitmapJSON(android.graphics.Bitmap$CompressFormat,int,java.io.OutputStream) -> writeBitmapJSON
+com.mixpanel.android.viewcrawler.ViewSnapshot$ClassNameCache -> com.mixpanel.android.c.ah:
+    java.lang.String create(java.lang.Class) -> a
+    java.lang.Object create(java.lang.Object) -> create
+com.mixpanel.android.viewcrawler.ViewSnapshot$RootViewFinder -> com.mixpanel.android.c.ai:
+    com.mixpanel.android.viewcrawler.UIThreadSet mLiveActivities -> a
+    java.util.List mRootViews -> b
+    android.util.DisplayMetrics mDisplayMetrics -> c
+    com.mixpanel.android.viewcrawler.ViewSnapshot$CachedBitmap mCachedBitmap -> d
+    int mClientDensity -> e
+    void findInActivities(com.mixpanel.android.viewcrawler.UIThreadSet) -> findInActivities
+    java.util.List call() -> call
+    void takeScreenshot(com.mixpanel.android.viewcrawler.ViewSnapshot$RootViewInfo) -> a
+    java.lang.Object call() -> call
+com.mixpanel.android.viewcrawler.ViewSnapshot$RootViewInfo -> com.mixpanel.android.c.aj:
+    java.lang.String activityName -> activityName
+    android.view.View rootView -> rootView
+    com.mixpanel.android.viewcrawler.ViewSnapshot$CachedBitmap screenshot -> screenshot
+    float scale -> scale
+com.mixpanel.android.viewcrawler.ViewVisitor -> com.mixpanel.android.c.ak:
+    java.util.List mPath -> a
+    com.mixpanel.android.viewcrawler.Pathfinder mPathfinder -> b
+    void visit(android.view.View) -> visit
+    void cleanup() -> cleanup
+com.mixpanel.android.viewcrawler.ViewVisitor$AddAccessibilityEventVisitor -> com.mixpanel.android.c.al:
+    int mEventType -> a
+    java.util.WeakHashMap mWatching -> b
+    void cleanup() -> cleanup
+    void accumulate(android.view.View) -> accumulate
+    android.view.View$AccessibilityDelegate getOldDelegate(android.view.View) -> b
+    void visit(android.view.View) -> visit
+    int access$1(com.mixpanel.android.viewcrawler.ViewVisitor$AddAccessibilityEventVisitor) -> a
+com.mixpanel.android.viewcrawler.ViewVisitor$AddAccessibilityEventVisitor$TrackingAccessibilityDelegate -> com.mixpanel.android.c.am:
+    android.view.View$AccessibilityDelegate mRealDelegate -> b
+    com.mixpanel.android.viewcrawler.ViewVisitor$AddAccessibilityEventVisitor this$1 -> a
+    android.view.View$AccessibilityDelegate getRealDelegate() -> getRealDelegate
+    boolean willFireEvent(java.lang.String) -> willFireEvent
+    void removeFromDelegateChain(com.mixpanel.android.viewcrawler.ViewVisitor$AddAccessibilityEventVisitor$TrackingAccessibilityDelegate) -> removeFromDelegateChain
+    void sendAccessibilityEvent(android.view.View,int) -> sendAccessibilityEvent
+com.mixpanel.android.viewcrawler.ViewVisitor$AddTextChangeListener -> com.mixpanel.android.c.an:
+    java.util.Map mWatching -> a
+    void cleanup() -> cleanup
+    void accumulate(android.view.View) -> accumulate
+    void visit(android.view.View) -> visit
+com.mixpanel.android.viewcrawler.ViewVisitor$AddTextChangeListener$TrackingTextWatcher -> com.mixpanel.android.c.ao:
+    android.view.View mBoundTo -> b
+    com.mixpanel.android.viewcrawler.ViewVisitor$AddTextChangeListener this$1 -> a
+    void beforeTextChanged(java.lang.CharSequence,int,int,int) -> beforeTextChanged
+    void onTextChanged(java.lang.CharSequence,int,int,int) -> onTextChanged
+    void afterTextChanged(android.text.Editable) -> afterTextChanged
+com.mixpanel.android.viewcrawler.ViewVisitor$EventTriggeringVisitor -> com.mixpanel.android.c.ap:
+    com.mixpanel.android.viewcrawler.ViewVisitor$OnEventListener mListener -> a
+    java.lang.String mEventName -> b
+    boolean mDebounce -> c
+    void fireEvent(android.view.View) -> a
+    java.lang.String getEventName() -> a
+com.mixpanel.android.viewcrawler.ViewVisitor$OnEventListener -> com.mixpanel.android.c.aq:
+    void OnEvent(android.view.View,java.lang.String,boolean) -> OnEvent
+com.mixpanel.android.viewcrawler.ViewVisitor$PropertySetVisitor -> com.mixpanel.android.c.ar:
+    com.mixpanel.android.viewcrawler.Caller mMutator -> a
+    com.mixpanel.android.viewcrawler.Caller mAccessor -> b
+    void cleanup() -> cleanup
+    void accumulate(android.view.View) -> accumulate
+    void visit(android.view.View) -> visit
+com.mixpanel.android.viewcrawler.ViewVisitor$ViewDetectorVisitor -> com.mixpanel.android.c.as:
+    boolean mSeen -> a
+    void cleanup() -> cleanup
+    void accumulate(android.view.View) -> accumulate
+    void visit(android.view.View) -> visit
 com.ning.http.client.AsyncCompletionHandler -> com.d.a.a.a:
     org.slf4j.Logger log -> log
     com.ning.http.client.Response$ResponseBuilder builder -> builder
@@ -30553,6 +32520,7 @@ com.twoheart.dailyhotel.activity.BookingActivity -> com.twoheart.dailyhotel.acti
     java.lang.String mAliveCallSource -> o
     int mHotelIdx -> U
     com.twoheart.dailyhotel.util.RenewalGaManager renewalGaManager -> V
+    com.mixpanel.android.mpmetrics.MixpanelAPI mMixpanel -> W
     void onCreate(android.os.Bundle) -> onCreate
     void onResume() -> onResume
     void updatePayPrice(boolean) -> b
@@ -30570,6 +32538,7 @@ com.twoheart.dailyhotel.activity.BookingActivity -> com.twoheart.dailyhotel.acti
     void onStart() -> onStart
     boolean onCreateOptionsMenu(android.view.Menu) -> onCreateOptionsMenu
     boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
+    void onDestroy() -> onDestroy
     com.android.volley.RequestQueue access$0(com.twoheart.dailyhotel.activity.BookingActivity) -> a
     com.twoheart.dailyhotel.util.RenewalGaManager access$1(com.twoheart.dailyhotel.activity.BookingActivity) -> b
     com.twoheart.dailyhotel.model.Pay access$2(com.twoheart.dailyhotel.activity.BookingActivity) -> c
