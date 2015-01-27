@@ -115,7 +115,6 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		renewalGaManager = RenewalGaManager.getInstance(this.getApplicationContext(), "bookingDetail");
 		
 		mMixpanel = MixpanelAPI.getInstance(this, "791b366dadafcd37803f6cd7d8358373"); // 상수 등록 요망
-		mMixpanel.getPeople().identify(sharedPreference.getString(KEY_PREFERENCE_USER_ID, null));
 
 		mPay = new Pay();
 		Bundle bundle = getIntent().getExtras();
@@ -508,6 +507,8 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				
 				SimpleDateFormat dateFormat2 = new  SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.getDefault());
 				strDate = dateFormat2.format(date);
+				
+				mMixpanel.getPeople().identify(userIdxStr);
 				
 				JSONObject properties = new JSONObject();
 				try {
