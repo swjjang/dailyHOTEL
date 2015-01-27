@@ -481,7 +481,7 @@
                     android:layout_height="wrap_content"
                     android:button="@drawable/btn_radio_holo_light"
                     android:text="@string/act_booking_pay_account"
-                    android:paddingRight="20dp" />
+                    android:paddingRight="15dp" />
             </RadioGroup>
           
         </RelativeLayout>
@@ -499,7 +499,7 @@
                     android:text="결제가 안되시나요? 1800-9120으로 전화주세요"
                     android:textColor="@color/textView_textColor_section"
                     android:textSize="12.5dp"
-                    android:paddingRight="20dp" />
+                    android:paddingRight="15dp" />
             
         </LinearLayout>
 

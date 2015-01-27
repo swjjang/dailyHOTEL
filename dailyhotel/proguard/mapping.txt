@@ -29367,6 +29367,14 @@ com.mixpanel.android.mpmetrics.InAppNotification$Type$2 -> com.mixpanel.android.
     java.lang.String toString() -> toString
 com.mixpanel.android.mpmetrics.InAppNotification$Type$3 -> com.mixpanel.android.mpmetrics.aa:
     java.lang.String toString() -> toString
+com.mixpanel.android.mpmetrics.InstallReferrerReceiver -> com.mixpanel.android.mpmetrics.InstallReferrerReceiver:
+    java.util.regex.Pattern UTM_SOURCE_PATTERN -> a
+    java.util.regex.Pattern UTM_MEDIUM_PATTERN -> b
+    java.util.regex.Pattern UTM_CAMPAIGN_PATTERN -> c
+    java.util.regex.Pattern UTM_CONTENT_PATTERN -> d
+    java.util.regex.Pattern UTM_TERM_PATTERN -> e
+    void onReceive(android.content.Context,android.content.Intent) -> onReceive
+    java.lang.String find(java.util.regex.Matcher) -> a
 com.mixpanel.android.mpmetrics.MPConfig -> com.mixpanel.android.mpmetrics.ab:
     java.lang.String VERSION -> VERSION
     boolean DEBUG -> DEBUG

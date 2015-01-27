@@ -2885,7 +2885,8 @@ com.mixpanel.android.mpmetrics.InAppFragment:
 com.mixpanel.android.mpmetrics.InAppNotification:
     private static final java.lang.String LOGTAG
     79:79:java.lang.String toJSON()
-com.mixpanel.android.mpmetrics.InstallReferrerReceiver
+com.mixpanel.android.mpmetrics.InstallReferrerReceiver:
+    private static final java.lang.String LOGTAG
 com.mixpanel.android.mpmetrics.MPConfig:
     static final java.lang.String REFERRER_PREFS_NAME
     static final int MAX_NOTIFICATION_CACHE_COUNT
