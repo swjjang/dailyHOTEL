@@ -51,8 +51,6 @@ public class IntroActivity extends BaseActivity implements OnClickListener, OnPa
 		tvSkip = (TextView) findViewById(R.id.tv_skip);
 		tvStart = (TextView) findViewById(R.id.tv_start);
 		
-		tvStart.setTypeface(DailyHotel.getBoldTypeface());
-		
 		initializeGuideContents();
 		
 		mAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
@@ -173,7 +171,6 @@ public class IntroActivity extends BaseActivity implements OnClickListener, OnPa
 	@Override
 	protected void onResume() {
 		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("landing", "/landing");
-		RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "landing", null, null);
 		
 		super.onResume();
 	}

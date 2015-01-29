@@ -170,19 +170,10 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 				.setup(mPullToRefreshLayout);
 
 		mHotelListView.setShadowVisible(false);
-
-		DailyHotel.getGaTracker().set(Fields.SCREEN_NAME, TAG);
-
+		
 		return view;
 	}
 
-	@Override
-	public void onStart() {
-		super.onStart();
-
-		DailyHotel.getGaTracker().send(MapBuilder.createAppView().build());
-
-	}
 
 	@Override
 	public void onResume() {
@@ -398,7 +389,6 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null,
 				HotelListFragment.this, mHostActivity));
 		
-		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("visit", "hotelList", selectedRegionTr, (long) (position+1));
 		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("hotelList", "/todays-hotels/" + selectedRegionTr);
 
 	}

@@ -32,8 +32,6 @@ public class EventWebActivity extends WebViewActivity implements Constants{
 			URL_WEBAPI_EVENT = "http://eventts.dailyhotel.co.kr"; //tStore
 		}
 		
-		DailyHotel.getGaTracker().set(Fields.SCREEN_NAME, TAG);
-
 		setContentView(R.layout.activity_event_web);
 
 		web = (WebView) findViewById(R.id.webView);
@@ -47,13 +45,6 @@ public class EventWebActivity extends WebViewActivity implements Constants{
 		
 		setWebView(URL_WEBAPI_EVENT);
 		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("event", "/todays-hotels/event");
-		RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "event", null, null);
-	}
-
-	@Override
-	protected void onStart() {
-		super.onStart();
-		DailyHotel.getGaTracker().send(MapBuilder.createAppView().build());
 	}
 	
 	@Override

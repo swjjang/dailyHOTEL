@@ -112,18 +112,10 @@ public class CreditFragment extends BaseFragment implements Constants,
 		line1_4.setVisibility(View.GONE);
 		
 		tvCredit.setPaintFlags(tvCredit.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG); // underlining
-		
-		DailyHotel.getGaTracker().set(Fields.SCREEN_NAME, TAG);
 
 		return view;
 	}
 
-	@Override
-	public void onStart() {
-		super.onStart();
-
-		DailyHotel.getGaTracker().send(MapBuilder.createAppView().build());
-	}
 
 	@Override
 	public void onResume() {
@@ -179,12 +171,10 @@ public class CreditFragment extends BaseFragment implements Constants,
 			rlCreditNotLoggedIn.setVisibility(View.GONE);
 			llCreditLoggedIn.setVisibility(View.VISIBLE);
 			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("creditWithLogon", "/credit-with-logon/");
-			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("visit", "creditWithLogon", null, null);
 		} else {
 			rlCreditNotLoggedIn.setVisibility(View.VISIBLE);
 			llCreditLoggedIn.setVisibility(View.GONE);
 			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("creditWithLogoff", "/credit-with-logoff/");
-			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("visit", "creditWithLogoff", null, null);
 		}
 	}
 
