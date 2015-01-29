@@ -27,17 +27,6 @@ public class RenewalGaManager   {
 		return instance;
 	}
 	
-	public static RenewalGaManager getInstance(Context con, String screen_name) {
-        instance = new RenewalGaManager(con);
-        instance.getTracker().set(Fields.SCREEN_NAME, screen_name);
-
-        return instance;
-	}
-	
-	private Tracker getTracker() {
-		return this.tracker;
-	}
-	
 	public void recordScreen(String screenName, String page) {
 		tracker.send(MapBuilder
 			    .createAppView()

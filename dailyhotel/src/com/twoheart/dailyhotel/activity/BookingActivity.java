@@ -100,14 +100,12 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 	private String locale;
 	private int mHotelIdx;
 	
-	private RenewalGaManager renewalGaManager;
 	private MixpanelAPI mMixpanel;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_booking);
-		renewalGaManager = RenewalGaManager.getInstance(this.getApplicationContext(), "bookingDetail");
 		
 		mMixpanel = MixpanelAPI.getInstance(this, "791b366dadafcd37803f6cd7d8358373"); // 상수 등록 요망
 
@@ -180,8 +178,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		String region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
 		String hotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
 		
-//		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("bookingDetail", "/todays-hotels/" + region + "/" + hotelName + "/booking-detail");
-		renewalGaManager.recordEvent("visit", "bookingDetail", hotelName, (long) mPay.getHotelDetail().getHotel().getIdx());
+		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("bookingDetail", "/todays-hotels/" + region + "/" + hotelName + "/booking-detail");
 	}
 
 	private void updatePayPrice(boolean applyCredit) {
@@ -270,17 +267,17 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 						.getId()) { // 신용카드를 선택했을 경우
 
 					dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_CARD);
-					renewalGaManager.recordEvent("radio", "choosePaymentWay", "신용카드", (long) 1);
+					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("radio", "choosePaymentWay", "신용카드", (long) 1);
 				} else if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentHp
 						.getId()) { // 핸드폰을 선택했을 경우
 
 					dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_HP);
-					renewalGaManager.recordEvent("radio", "choosePaymentWay", "휴대폰", (long) 2);
+					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("radio", "choosePaymentWay", "휴대폰", (long) 2);
 				} else if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentAccount
 						.getId()) { // 가상계좌 입금을 선택했을 경우
 
 					dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_ACCOUNT);
-					renewalGaManager.recordEvent("radio", "choosePaymentWay", "계좌이체", (long) 3);
+					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("radio", "choosePaymentWay", "계좌이체", (long) 3);
 				}
 
 				dialog.setOnDismissListener(new OnDismissListener() {
@@ -299,9 +296,8 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				String region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
 				String hotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
 				
-//				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("paymentAgreement", "/todays-hotels/" + region + "/" + hotelName + "/booking-detail/payment-agreement");
-//				renewalGaManager.recordEvent("visit", "paymentAgreement", mPay.getHotelDetail().getHotel().getName(), (long) mPay.getHotelDetail().getHotel().getIdx());
-//				renewalGaManager.recordEvent("click", "requestPayment", mPay.getHotelDetail().getHotel().getName(), (long) mHotelIdx);
+				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("paymentAgreement", "/todays-hotels/" + region + "/" + hotelName + "/booking-detail/payment-agreement");
+				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestPayment", mPay.getHotelDetail().getHotel().getName(), (long) mHotelIdx);
 			}
 
 
@@ -352,7 +348,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 								URL_WEBAPI_USER_ALIVE).toString(), null,
 								BookingActivity.this, BookingActivity.this));
 				dialog.dismiss();
-				renewalGaManager.recordEvent("click", "agreePayment", mPay.getHotelDetail().getHotel().getName(), (long) mHotelIdx);
+				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "agreePayment", mPay.getHotelDetail().getHotel().getName(), (long) mHotelIdx);
 			}
 		};
 
@@ -483,7 +479,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				String userIdxStr = String.format("%07d", userIdx);
 				String transId = strDate + userIdxStr;
 				
-				renewalGaManager.
+				RenewalGaManager.getInstance(getApplicationContext()).
 				purchaseComplete(
 						transId, 
 						mPay.getHotelDetail().getHotel().getName(), 
@@ -523,15 +519,14 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				
 				mMixpanel.track("transaction", props);
 				
-//				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("paymentConfirmation", "/todays-hotels/" + region + "/" + hotelName + "/booking-detail/payment-confirm");
-//				renewalGaManager.recordEvent("visit", "paymentConfirmation", hotelName, (long) mPay.getHotelDetail().getHotel().getIdx());
+				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("paymentConfirmation", "/todays-hotels/" + region + "/" + hotelName + "/booking-detail/payment-confirm");
 				
 				posListener = new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog,
 							int which) {
 						dialog.dismiss(); // 닫기
-						renewalGaManager.recordEvent("click", "confirmPayment", mPay.getHotelDetail().getHotel().getName(), (long)mHotelIdx);
+						RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "confirmPayment", mPay.getHotelDetail().getHotel().getName(), (long)mHotelIdx);
 						setResult(RESULT_OK);
 						BookingActivity.this.finish();
 					}
@@ -612,7 +607,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				tvCredit.setEnabled(false);
 				tvOriginalPriceValue.setEnabled(false);
 				tvCreditValue.setEnabled(false);
-				renewalGaManager.recordEvent("toggle action", "applyCredit", "off", null);
+				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("toggle action", "applyCredit", "off", null);
 				
 
 			} else { // 사용함으로 변경
@@ -620,7 +615,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				tvCredit.setEnabled(true);
 				tvOriginalPriceValue.setEnabled(true);
 				tvCreditValue.setEnabled(true);
-				renewalGaManager.recordEvent("toggle action", "applyCredit", "on", null);
+				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("toggle action", "applyCredit", "on", null);
 				
 			}
 
@@ -928,7 +923,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()){
 		case R.id.action_call:
-			renewalGaManager.recordEvent("click", "callHotel", mPay.getHotelDetail().getHotel().getName(), (long)mHotelIdx);
+			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "callHotel", mPay.getHotelDetail().getHotel().getName(), (long)mHotelIdx);
 			Intent i = new Intent(
 					Intent.ACTION_DIAL,
 					Uri.parse(new StringBuilder("tel:")
