@@ -215,10 +215,10 @@ public interface Constants {
 	public static final int CODE_PAY_TYPE_ACCOUNT_COMPLETE = 21;
 
 	// Android Google Analytics Á¤º¸µé.
-	public static final String GA_PROPERTY_ID = "UA-43721645-1";
+	public static final String GA_PROPERTY_ID = "UA-43721645-6";
 
 	// Dispatch period in seconds.
-	public static final int GA_DISPATCH_PERIOD = 30;
+	public static final int GA_DISPATCH_PERIOD = 60;
 
 	// Prevent hits from being sent to reports, i.e. during testing.
 	public static final boolean GA_IS_DRY_RUN = false;
