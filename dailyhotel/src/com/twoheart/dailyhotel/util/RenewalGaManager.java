@@ -6,17 +6,18 @@ import com.google.analytics.tracking.android.GoogleAnalytics;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.google.analytics.tracking.android.Tracker;
 
-import android.app.Application;
 import android.content.Context;
+import android.widget.Toast;
 
-public class RenewalGaManager extends Application {
+public class RenewalGaManager   {
 	private static RenewalGaManager instance = null;
-
+	private static int count = 0;
 	private Tracker tracker;
 
 	private RenewalGaManager(Context con) {
 		GoogleAnalytics ga= GoogleAnalytics.getInstance(con);
-		tracker = ga.getTracker("UA-43721645-6");
+		tracker = ga.getTracker(Constants.GA_PROPERTY_ID);
+		Toast.makeText(con, Constants.GA_PROPERTY_ID+", count is " + ++count, Toast.LENGTH_LONG).show();
 	}
 
 	public static RenewalGaManager getInstance(Context con) {
@@ -45,8 +46,6 @@ public class RenewalGaManager extends Application {
 			    .build()
 			);
 		
-		tracker.set(Fields.SCREEN_NAME, null);
-		tracker.set(Fields.PAGE, null);
 	}
 	
 	public void recordEvent(String category, String action, String label, Long value) {
