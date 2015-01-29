@@ -42,17 +42,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
-import com.google.analytics.tracking.android.Fields;
-import com.google.analytics.tracking.android.MapBuilder;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
-import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Credit;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.model.Pay;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.util.GaManager;
 import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.Log;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
@@ -111,7 +107,6 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_booking);
-		DailyHotel.getGaTracker().set(Fields.SCREEN_NAME, TAG);
 		renewalGaManager = RenewalGaManager.getInstance(this.getApplicationContext(), "bookingDetail");
 		
 		mMixpanel = MixpanelAPI.getInstance(this, "791b366dadafcd37803f6cd7d8358373"); // 상수 등록 요망
@@ -488,14 +483,6 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				int userIdx = Integer.parseInt(mPay.getCustomer().getUserIdx());
 				String userIdxStr = String.format("%07d", userIdx);
 				String transId = strDate + userIdxStr;
-				
-				GaManager.getInstance(getApplicationContext()).
-				purchaseComplete(
-						transId, 
-						mPay.getHotelDetail().getHotel().getName(), 
-						mPay.getHotelDetail().getHotel().getCategory(), 
-						(double) mPay.getPayPrice()
-						);
 				
 				renewalGaManager.
 				purchaseComplete(
@@ -930,7 +917,6 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 	@Override
 	protected void onStart() {
 		super.onStart();
-		DailyHotel.getGaTracker().send(MapBuilder.createAppView().build());
 	}
 
 	@Override

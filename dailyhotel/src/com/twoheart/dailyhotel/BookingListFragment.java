@@ -83,15 +83,7 @@ DailyHotelStringResponseListener {
 
 		btnLogin.setOnClickListener(this);
 
-		DailyHotel.getGaTracker().set(Fields.SCREEN_NAME, TAG);
-
 		return view;
-	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
-		DailyHotel.getGaTracker().send(MapBuilder.createAppView().build());
 	}
 
 	@Override

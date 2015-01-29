@@ -33,12 +33,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
-import com.google.analytics.tracking.android.Fields;
-import com.google.analytics.tracking.android.MapBuilder;
-import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Crypto;
-import com.twoheart.dailyhotel.util.GaManager;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -61,7 +57,6 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 		super.onCreate(savedInstanceState);
 		setActionBar(R.string.actionbar_title_signup_activity);
 		setContentView(R.layout.activity_signup);
-		DailyHotel.getGaTracker().set(Fields.SCREEN_NAME, TAG);
 
 		etPwd = (EditText) findViewById(R.id.et_signup_pwd);
 		etEmail = (EditText) findViewById(R.id.et_signup_email);
@@ -83,7 +78,6 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 	@Override
 	protected void onStart() {
 		super.onStart();
-		DailyHotel.getGaTracker().send(MapBuilder.createAppView().build());
 	}
 
 	public void getPhoneNumber() {
@@ -217,8 +211,6 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 									URL_WEBAPI_USER_LOGIN)
 									.toString(), loginParams,
 							this, this));
-					// 여기서 회원가입 성공 애널래틱스 콜
-					GaManager.getInstance(getApplicationContext()).signupComplete();
 				} else {
 					unLockUI();
 					showToast(msg, Toast.LENGTH_LONG, true);

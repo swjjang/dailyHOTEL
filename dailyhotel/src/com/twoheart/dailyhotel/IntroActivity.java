@@ -51,8 +51,6 @@ public class IntroActivity extends BaseActivity implements OnClickListener, OnPa
 		tvSkip = (TextView) findViewById(R.id.tv_skip);
 		tvStart = (TextView) findViewById(R.id.tv_start);
 		
-		tvStart.setTypeface(DailyHotel.getBoldTypeface());
-		
 		initializeGuideContents();
 		
 		mAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {

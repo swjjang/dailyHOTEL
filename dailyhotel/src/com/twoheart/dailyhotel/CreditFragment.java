@@ -112,18 +112,10 @@ public class CreditFragment extends BaseFragment implements Constants,
 		line1_4.setVisibility(View.GONE);
 		
 		tvCredit.setPaintFlags(tvCredit.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG); // underlining
-		
-		DailyHotel.getGaTracker().set(Fields.SCREEN_NAME, TAG);
 
 		return view;
 	}
 
-	@Override
-	public void onStart() {
-		super.onStart();
-
-		DailyHotel.getGaTracker().send(MapBuilder.createAppView().build());
-	}
 
 	@Override
 	public void onResume() {

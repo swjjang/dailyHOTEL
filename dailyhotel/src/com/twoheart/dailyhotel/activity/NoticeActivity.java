@@ -37,7 +37,6 @@ public class NoticeActivity extends BaseActivity implements
 		super.onCreate(savedInstanceState);
 		setActionBar(R.string.actionbar_title_notice_activity);
 		setContentView(R.layout.activity_board);
-		DailyHotel.getGaTracker().set(Fields.SCREEN_NAME, TAG);
 
 		mListView = (ExpandableListView) findViewById(R.id.expandable_list_board);
 		mListView.setOnGroupExpandListener(new OnGroupExpandListener() {
@@ -83,13 +82,6 @@ public class NoticeActivity extends BaseActivity implements
 		
 		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("noticeList", "/settings/notice");
 		RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "noticeList", null, null);
-	}
-
-	@Override
-	protected void onStart() {
-		super.onStart();
-		
-		DailyHotel.getGaTracker().send(MapBuilder.createAppView().build());
 	}
 
 	@Override
