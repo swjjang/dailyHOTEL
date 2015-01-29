@@ -34,8 +34,6 @@ public class DailyHotel extends Application implements Constants{
 	
 	private static Typeface mTypeface;
 	private static Typeface mBoldTypeface;
-	private static GoogleAnalytics mGa;
-	private static Tracker mTracker;
 
 	@Override
 	public void onCreate() {
@@ -48,8 +46,8 @@ public class DailyHotel extends Application implements Constants{
 	}
 
 	private void initializeGa() {
-		mGa = GoogleAnalytics.getInstance(this);
-		mTracker = mGa.getTracker(GA_PROPERTY_ID);
+		GoogleAnalytics mGa = GoogleAnalytics.getInstance(this);
+		Tracker mTracker = mGa.getTracker(GA_PROPERTY_ID);
 
 		// Set dispatch period.
 		GAServiceManager.getInstance().setLocalDispatchPeriod(GA_DISPATCH_PERIOD);
@@ -78,8 +76,8 @@ public class DailyHotel extends Application implements Constants{
 					}
 				});
 
-		UncaughtExceptionHandler myHandler = new ExceptionReporter(DailyHotel
-				.getGaInstance().getDefaultTracker(), // Tracker, may return
+	
+		UncaughtExceptionHandler myHandler = new ExceptionReporter(mTracker, // Tracker, may return
 														// null if not yet
 														// initialized.
 				GAServiceManager.getInstance(), // GAServiceManager singleton.
@@ -93,19 +91,7 @@ public class DailyHotel extends Application implements Constants{
 		Thread.setDefaultUncaughtExceptionHandler(myHandler);
 	}
 
-	/*
-	 * Returns the Google Analytics tracker.
-	 */
-	public static Tracker getGaTracker() {
-		return mTracker;
-	}
 
-	/*
-	 * Returns the Google Analytics instance.
-	 */
-	public static GoogleAnalytics getGaInstance() {
-		return mGa;
-	}
 
 	private void initializeVolley() {
 		VolleyHttpClient.init(this);
