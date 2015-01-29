@@ -109,15 +109,12 @@ DailyHotelStringResponseListener {
 				
 				if (position == 0) {
 					RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_booking", "/todays-hotels/" + region + "/" + hotelName + "/booking");
-					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "hotelDetail_booking", hotelDetail.getHotel().getName(), (long) hotelDetail.getHotel().getIdx());
 				}
 				else if (position == 1) {
 					RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_info", "/todays-hotels/" + region + "/" + hotelName + "/info");
-					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "hotelDetail_info", hotelDetail.getHotel().getName(), (long) hotelDetail.getHotel().getIdx());
 				}
 				else if (position == 2) {
 					RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_map", "/todays-hotels/" + region + "/" + hotelName + "/map");
-					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "hotelDetail_map", hotelDetail.getHotel().getName(), (long) hotelDetail.getHotel().getIdx());
 				}
 			}
 			
@@ -431,15 +428,12 @@ DailyHotelStringResponseListener {
 		super.onResume();
 		if (mPosition == 0) {
 			RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_booking", "/todays-hotels/" + region + "/" + hotelName + "/booking");
-			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "hotelDetail_booking", hotelDetail.getHotel().getName(), (long) hotelDetail.getHotel().getIdx());
 		}
 		if (mPosition == 1)	{
 			RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_info", "/todays-hotels/" + region + "/" + hotelName + "/info");
-			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "hotelDetail_info", hotelDetail.getHotel().getName(), (long) hotelDetail.getHotel().getIdx());
 		}
 		if (mPosition == 2)	{
 			RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_map", "/todays-hotels/" + region + "/" + hotelName + "/map");
-			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "hotelDetail_map", hotelDetail.getHotel().getName(), (long) hotelDetail.getHotel().getIdx());
 		}
 		uiHelper.onResume();
 	}

@@ -81,7 +81,6 @@ public class NoticeActivity extends BaseActivity implements
 				.toString(), null, this, this));
 		
 		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("noticeList", "/settings/notice");
-		RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "noticeList", null, null);
 	}
 
 	@Override

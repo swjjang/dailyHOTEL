@@ -75,7 +75,6 @@ public class FAQActivity extends BaseActivity implements
 				null, this, this));
 		
 		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("fAQList", "/settings/faq");
-		RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "fAQList", null, null);
 	}
 
 	@Override

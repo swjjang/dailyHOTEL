@@ -171,7 +171,6 @@ public class IntroActivity extends BaseActivity implements OnClickListener, OnPa
 	@Override
 	protected void onResume() {
 		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("landing", "/landing");
-		RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "landing", null, null);
 		
 		super.onResume();
 	}

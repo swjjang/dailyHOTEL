@@ -162,7 +162,6 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		String hotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
 		
 		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("paymentWeb", "/todays-hotels/" + region + "/" + hotelName + "/booking-detail/payment-web");
-		RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "paymentWeb", mPay.getHotelDetail().getHotel().getName(), (long) mPay.getHotelDetail().getHotel().getIdx());
 
 		super.onResume();
 	}

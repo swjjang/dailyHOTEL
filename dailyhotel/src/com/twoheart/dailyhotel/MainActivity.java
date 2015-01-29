@@ -636,7 +636,6 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 				supportInvalidateOptionsMenu();
 				
 				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("menu", "/menu");
-				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "menu", null, null);
 				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestMenuBar", null, null);
 			}
 		};

@@ -111,7 +111,6 @@ public class SettingFragment extends BaseFragment implements Constants,
 						URL_WEBAPI_USER_ALIVE).toString(), null, this, mHostActivity));
 		
 		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("setting", "/settings/");
-		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("visit", "setting", null, null);
 	}
 
 	@Override

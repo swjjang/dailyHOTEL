@@ -24,7 +24,6 @@ public class AboutActivity extends WebViewActivity {
 		setWebView(URL_WEB_ABOUT);
 		
 		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("introduction", "/settings/introduction");
-		RenewalGaManager.getInstance(getApplicationContext()).recordEvent("visit", "introduction", null, null);
 	}
 	
 }
