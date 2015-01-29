@@ -33,7 +33,7 @@ public class RenewalGaManager extends Application {
         return instance;
 	}
 	
-	public Tracker getTracker() {
+	private Tracker getTracker() {
 		return this.tracker;
 	}
 	
@@ -58,13 +58,6 @@ public class RenewalGaManager extends Application {
                 		value).build());
 	}
 	
-	public void recordPage(String page) {
-        tracker.send(MapBuilder
-                .createAppView()
-                .set(Fields.PAGE, page)
-                .build()
-            );
-    }
 	
 	/**
 	 * 구매 완료 하였으면 구글 애널래틱스 Ecommerce Tracking 을 위하여 필히 호출한다.

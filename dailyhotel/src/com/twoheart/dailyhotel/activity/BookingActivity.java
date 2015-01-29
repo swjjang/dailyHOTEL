@@ -180,7 +180,6 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		String region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
 		String hotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
 		
-		renewalGaManager.recordPage("/todays-hotels/" + region + "/" + hotelName + "/booking-detail");
 //		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("bookingDetail", "/todays-hotels/" + region + "/" + hotelName + "/booking-detail");
 		renewalGaManager.recordEvent("visit", "bookingDetail", hotelName, (long) mPay.getHotelDetail().getHotel().getIdx());
 	}
