@@ -55,7 +55,7 @@ public class GcmIntentService extends IntentService implements Constants{
 
 	public GcmIntentService() {
 		super("GcmIntentService");
-		mMixpanel = MixpanelAPI.getInstance(this, "791b366dadafcd37803f6cd7d8358373");
+		mMixpanel = MixpanelAPI.getInstance(getApplicationContext(), "791b366dadafcd37803f6cd7d8358373");
 	}
 
 	@Override
@@ -78,6 +78,7 @@ public class GcmIntentService extends IntentService implements Constants{
 				Log.d("GcmIntentService", "jsonMsg : " + jsonMsg.toString());
 				int type = -1;
 				
+				Log.d("GcmIntentService", "type : " + jsonMsg.getString("type") + " collapseKey : " + collapseKey);
 				if (jsonMsg.getString("type").equals("notice")) type = PUSH_TYPE_NOTICE;
 				else if (jsonMsg.getString("type").equals("account_complete")) type = PUSH_TYPE_ACCOUNT_COMPLETE;
 				
@@ -85,14 +86,15 @@ public class GcmIntentService extends IntentService implements Constants{
 				if (!jsonMsg.isNull("sound")) mIsSound = jsonMsg.getBoolean("sound");
 				SharedPreferences pref = this.getSharedPreferences(NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
 				
+				Log.d("GcmIntentService", "in switch type : " + type);
 				switch (type) {
 				case PUSH_TYPE_ACCOUNT_COMPLETE:
-					String reservId = jsonMsg.getString("reservId");
-					if (reservId.equals(pref.getString("reservId", ""))) {
+					String tid = jsonMsg.getString("TID");
+					if (tid.equals(pref.getString("TID", ""))) {
 						break;
 					} else {
 						Editor editor = pref.edit();
-						editor.putString("reservId", reservId);
+						editor.putString("TID", tid);
 						editor.apply();
 						sendPush(messageType, type, msg);
 						
@@ -106,9 +108,9 @@ public class GcmIntentService extends IntentService implements Constants{
 						RenewalGaManager.getInstance(getApplicationContext()).
 						purchaseComplete(
 								transId, 
-								jsonMsg.getString("pName"), 
-								jsonMsg.getString("pCategory"), 
-								(double) jsonMsg.getInt("pPrice")
+								jsonMsg.getString("hotelName"), 
+								"unidentified", 
+								Double.parseDouble(jsonMsg.getString("paidPrice"))
 								);
 						
 						SimpleDateFormat dateFormat2 = new  SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.getDefault());
@@ -118,18 +120,18 @@ public class GcmIntentService extends IntentService implements Constants{
 						
 						JSONObject properties = new JSONObject();
 						try {
-							properties.put("hotelName", jsonMsg.getString("pName"));
+							properties.put("hotelName", jsonMsg.getString("hotelName"));
 							properties.put("datetime", strDate); // 거래 시간 = 연-월-일T시:분:초
 						} catch (JSONException e) {
 							e.printStackTrace();
 						}
 						
-						mMixpanel.getPeople().trackCharge(jsonMsg.getInt("pPrice"), properties); // price = 결제 금액
+						mMixpanel.getPeople().trackCharge(Double.parseDouble(jsonMsg.getString("paidPrice")), properties); // price = 결제 금액
 						
 						JSONObject props = new JSONObject();
 						try {
-							props.put("hotelName", jsonMsg.getString("pName"));
-							props.put("price", jsonMsg.getInt("pPrice"));
+							props.put("hotelName", jsonMsg.getString("hotelName"));
+							props.put("price", Double.parseDouble(jsonMsg.getString("paidPrice")));
 							props.put("datetime", strDate);
 							props.put("userId", userIdxStr);
 							props.put("tranId", transId);
@@ -138,11 +140,14 @@ public class GcmIntentService extends IntentService implements Constants{
 						}
 						
 						mMixpanel.track("transaction", props);
+						
 					}
 					
+//					sendPush(messageType, type, msg);
 					Log.d("GcmIntentService", "purchase complete!!!");
 				
 				case PUSH_TYPE_NOTICE:
+					Log.d("GcmIntentService", "notice complete!!!");
 					if (collapseKey.equals(pref.getString("collapseKey", ""))) {
 						break;
 					} else {
@@ -151,7 +156,7 @@ public class GcmIntentService extends IntentService implements Constants{
 						editor.apply();
 						sendPush(messageType, type, msg);
 					}
-					
+//					sendPush(messageType, type, msg);
 				}
 				android.util.Log.e("GCM_MESSAGE",jsonMsg.toString());
 			} catch (JSONException e) {
@@ -163,6 +168,7 @@ public class GcmIntentService extends IntentService implements Constants{
 	}
 	
 	public void sendPush(String messageType, int type, String msg) {
+		Log.d("GcmIntentService", "sendPush");
 		if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
 			
 			if (isScreenOn(this) && type != -1) { // 데일리호텔 앱이 켜져있는경우.

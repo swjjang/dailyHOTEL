@@ -51,16 +51,23 @@ public class PushLockDialogActivity extends Activity implements OnClickListener,
 //		}
 		
 //		mMsg = mMsg.replace("]", "]\n");
-		int index = mMsg.lastIndexOf("]");
-		StringBuffer sb = new StringBuffer(mMsg); 
-
-		String result = sb.replace( index, index+1, "]\n" ).toString();
+		
+		tvMsg = (TextView) findViewById(R.id.tv_push_lock_dialog_msg);
+		
+		if (mType == PUSH_TYPE_NOTICE) {
+			tvMsg.setText(mMsg);
+		} else if (mType == PUSH_TYPE_ACCOUNT_COMPLETE) {
+			int index = mMsg.lastIndexOf("]");
+			StringBuffer sb = new StringBuffer(mMsg); 
+			String result = sb.replace( index, index+1, "]\n" ).toString();
+			
+			tvMsg.setText(result);
+		}
+		
 		
 //		tvTitle = (TextView) findViewById(R.id.tv_push_lock_dialog_title);
 //		tvTitle.setText(title);
-		
-		tvMsg = (TextView) findViewById(R.id.tv_push_lock_dialog_msg);
-		tvMsg.setText(result);
+
 		
 		btnOkButton = (Button) findViewById(R.id.btn_push_lock_dialog_show);
 		btnCancelButton = (Button) findViewById(R.id.btn_push_lock_dialog_close);
