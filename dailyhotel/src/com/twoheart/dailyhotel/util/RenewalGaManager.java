@@ -17,7 +17,7 @@ public class RenewalGaManager   {
 	private RenewalGaManager(Context con) {
 		GoogleAnalytics ga= GoogleAnalytics.getInstance(con);
 		tracker = ga.getTracker(Constants.GA_PROPERTY_ID);
-		Toast.makeText(con, Constants.GA_PROPERTY_ID+", count is " + ++count, Toast.LENGTH_LONG).show();
+//		Toast.makeText(con, Constants.GA_PROPERTY_ID+", count is " + ++count, Toast.LENGTH_LONG).show();
 	}
 
 	public static RenewalGaManager getInstance(Context con) {

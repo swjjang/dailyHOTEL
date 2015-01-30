@@ -39,6 +39,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PowerManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -226,7 +227,6 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 		if (DEBUG)  printPackageHashKey();
 
 	}
-
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {

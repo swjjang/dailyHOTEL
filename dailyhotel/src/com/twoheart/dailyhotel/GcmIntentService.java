@@ -1,5 +1,8 @@
 package com.twoheart.dailyhotel;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -23,9 +26,11 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.twoheart.dailyhotel.activity.PushLockDialogActivity;
 import com.twoheart.dailyhotel.activity.ScreenOnPushDialogActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.WakeLock;
 
 /**
@@ -46,9 +51,11 @@ public class GcmIntentService extends IntentService implements Constants{
 	private NotificationManager mNotificationManager;
 	private boolean mIsBadge;
 	private boolean mIsSound;
+	private MixpanelAPI mMixpanel;
 
 	public GcmIntentService() {
 		super("GcmIntentService");
+		mMixpanel = MixpanelAPI.getInstance(this, "791b366dadafcd37803f6cd7d8358373");
 	}
 
 	@Override
@@ -68,7 +75,7 @@ public class GcmIntentService extends IntentService implements Constants{
 	            
 				JSONObject jsonMsg = new JSONObject(extras.getString("message"));
 				String msg = jsonMsg.getString("msg");
-				Log.d("msg", "msg : " + msg);
+				Log.d("GcmIntentService", "jsonMsg : " + jsonMsg.toString());
 				int type = -1;
 				
 				if (jsonMsg.getString("type").equals("notice")) type = PUSH_TYPE_NOTICE;
@@ -76,14 +83,66 @@ public class GcmIntentService extends IntentService implements Constants{
 				
 				if (!jsonMsg.isNull("badge")) mIsBadge = jsonMsg.getBoolean("badge");
 				if (!jsonMsg.isNull("sound")) mIsSound = jsonMsg.getBoolean("sound");
+				SharedPreferences pref = this.getSharedPreferences(NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
 				
 				switch (type) {
 				case PUSH_TYPE_ACCOUNT_COMPLETE:
-					sendPush(messageType, type, msg);
-					break;
+					String reservId = jsonMsg.getString("reservId");
+					if (reservId.equals(pref.getString("reservId", ""))) {
+						break;
+					} else {
+						Editor editor = pref.edit();
+						editor.putString("reservId", reservId);
+						editor.apply();
+						sendPush(messageType, type, msg);
+						
+						SimpleDateFormat dateFormat = new  SimpleDateFormat("yyMMDDHHmmss", java.util.Locale.getDefault());
+						Date date = new Date();
+						String strDate = dateFormat.format(date);
+						int userIdx = Integer.parseInt(pref.getString(KEY_PREFERENCE_USER_IDX, "0"));
+						String userIdxStr = String.format("%07d", userIdx);
+						String transId = strDate + userIdxStr;
+						
+						RenewalGaManager.getInstance(getApplicationContext()).
+						purchaseComplete(
+								transId, 
+								jsonMsg.getString("pName"), 
+								jsonMsg.getString("pCategory"), 
+								(double) jsonMsg.getInt("pPrice")
+								);
+						
+						SimpleDateFormat dateFormat2 = new  SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.getDefault());
+						strDate = dateFormat2.format(date);
+						
+						mMixpanel.getPeople().identify(userIdxStr);
+						
+						JSONObject properties = new JSONObject();
+						try {
+							properties.put("hotelName", jsonMsg.getString("pName"));
+							properties.put("datetime", strDate); // 거래 시간 = 연-월-일T시:분:초
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+						
+						mMixpanel.getPeople().trackCharge(jsonMsg.getInt("pPrice"), properties); // price = 결제 금액
+						
+						JSONObject props = new JSONObject();
+						try {
+							props.put("hotelName", jsonMsg.getString("pName"));
+							props.put("price", jsonMsg.getInt("pPrice"));
+							props.put("datetime", strDate);
+							props.put("userId", userIdxStr);
+							props.put("tranId", transId);
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+						
+						mMixpanel.track("transaction", props);
+					}
+					
+					Log.d("GcmIntentService", "purchase complete!!!");
 				
 				case PUSH_TYPE_NOTICE:
-					SharedPreferences pref = this.getSharedPreferences(NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
 					if (collapseKey.equals(pref.getString("collapseKey", ""))) {
 						break;
 					} else {
@@ -179,6 +238,12 @@ public class GcmIntentService extends IntentService implements Constants{
 
 		mBuilder.setContentIntent(contentIntent);
 		mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+	}
+	
+	@Override
+	public void onDestroy() {
+		mMixpanel.flush();
+		super.onDestroy();
 	}
 	
 

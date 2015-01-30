@@ -472,7 +472,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 					}
 				}
 
-				SimpleDateFormat dateFormat = new  SimpleDateFormat("yyMMDDhhmmss", java.util.Locale.getDefault());
+				SimpleDateFormat dateFormat = new  SimpleDateFormat("yyMMDDHHmmss", java.util.Locale.getDefault());
 				Date date = new Date();
 				String strDate = dateFormat.format(date);
 				int userIdx = Integer.parseInt(mPay.getCustomer().getUserIdx());
@@ -562,6 +562,17 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				 * 들어간 후에는 다시 프리퍼런스를 초기화해줌.
 				 * 플로우) 예약 액티비티 => 호텔탭 액티비티 => 메인액티비티 => 예약 리스트 프래그먼트 => 예약 리스트 갱신 후 최상단 아이템 인텐트
 				 */
+				if (intent != null) {
+					if (intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAY) != null) {
+						Pay payData = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAY);
+
+						Editor editor = sharedPreference.edit();
+						editor.putString(KEY_PREFERENCE_USER_IDX, payData.getCustomer().getUserIdx());
+						Log.d("GcmIntentService", "category? " + payData.getHotelDetail().getHotel().getCategory());
+						editor.commit();
+					}
+				}
+				
 				Editor editor = sharedPreference.edit();
 				editor.putInt(KEY_PREFERENCE_ACCOUNT_READY_FLAG, CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
 				editor.apply();
