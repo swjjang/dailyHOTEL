@@ -77,6 +77,7 @@ public class GcmIntentService extends IntentService implements Constants{
 
 			try {
 				String collapseKey = intent.getStringExtra("collapse_key");
+				Log.d("GcmIntentService", "collapseKey : " + collapseKey);
 	            
 				JSONObject jsonMsg = new JSONObject(extras.getString("message"));
 				String msg = jsonMsg.getString("msg");
@@ -84,6 +85,11 @@ public class GcmIntentService extends IntentService implements Constants{
 				int type = -1;
 				
 				Log.d("GcmIntentService", "type : " + jsonMsg.getString("type") + " collapseKey : " + collapseKey);
+				
+				if (collapseKey.equals("do_not_collapse")) {
+					Log.d("GcmIntentService", "do_not_collapse");
+				}
+				
 				if (jsonMsg.getString("type").equals("notice")) type = PUSH_TYPE_NOTICE;
 				else if (jsonMsg.getString("type").equals("account_complete")) type = PUSH_TYPE_ACCOUNT_COMPLETE;
 				
@@ -94,15 +100,17 @@ public class GcmIntentService extends IntentService implements Constants{
 				Log.d("GcmIntentService", "in switch type : " + type);
 				switch (type) {
 				case PUSH_TYPE_ACCOUNT_COMPLETE:
+//					sendPush(messageType, type, msg, "", "");
+//					break;
 					String tid = jsonMsg.getString("TID");
 					String hotelName = jsonMsg.getString("hotelName");
 					String paidPrice = jsonMsg.getString("paidPrice");
 					
-					if (tid.equals(pref.getString("TID", ""))) {
+					if (collapseKey.equals(pref.getString("collapseKey", ""))) {
 						break;
 					} else {
 						Editor editor = pref.edit();
-						editor.putString("TID", tid);
+						editor.putString("collapseKey", collapseKey);
 						editor.apply();
 						sendPush(messageType, type, msg, hotelName, paidPrice);
 						
@@ -115,7 +123,7 @@ public class GcmIntentService extends IntentService implements Constants{
 						
 						RenewalGaManager.getInstance(getApplicationContext()).
 						purchaseComplete(
-								transId, 
+								tid, 
 								hotelName, 
 								"unidentified", 
 								Double.parseDouble(paidPrice)
@@ -142,7 +150,7 @@ public class GcmIntentService extends IntentService implements Constants{
 							props.put("price", Double.parseDouble(paidPrice));
 							props.put("datetime", strDate);
 							props.put("userId", userIdxStr);
-							props.put("tranId", transId);
+							props.put("tranId", tid);
 						} catch (JSONException e) {
 							e.printStackTrace();
 						}
@@ -156,6 +164,7 @@ public class GcmIntentService extends IntentService implements Constants{
 					Log.d("GcmIntentService", "notice complete!!!");
 					if (collapseKey.equals(pref.getString("collapseKey", ""))) {
 						break;
+						
 					} else {
 						Editor editor = pref.edit();
 						editor.putString("collapseKey", collapseKey);
