@@ -45,24 +45,6 @@ public class FAQActivity extends BaseActivity implements
 				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectFAQ", mList.get(groupPosition).getSubject(), (long) (groupPosition+1));
 			}
 		});
-		mListView.setOnScrollListener(new OnScrollListener() {
-			
-			@Override
-			public void onScrollStateChanged(AbsListView view, int scrollState) {
-				switch(scrollState) {
-				case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("scroll", "articles", "자주 묻는 질문", null);
-					break;
-				}
-				
-			}
-			
-			@Override
-			public void onScroll(AbsListView view, int firstVisibleItem,
-					int visibleItemCount, int totalItemCount) {
-				
-			}
-		});
 	}
 	
 	@Override

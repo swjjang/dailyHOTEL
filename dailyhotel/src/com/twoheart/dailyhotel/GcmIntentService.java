@@ -1,5 +1,8 @@
 package com.twoheart.dailyhotel;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -46,6 +49,7 @@ public class GcmIntentService extends IntentService implements Constants{
 	private NotificationManager mNotificationManager;
 	private boolean mIsBadge;
 	private boolean mIsSound;
+	
 
 	public GcmIntentService() {
 		super("GcmIntentService");
@@ -68,31 +72,45 @@ public class GcmIntentService extends IntentService implements Constants{
 	            
 				JSONObject jsonMsg = new JSONObject(extras.getString("message"));
 				String msg = jsonMsg.getString("msg");
-				Log.d("msg", "msg : " + msg);
+				Log.d("GcmIntentService", "jsonMsg : " + jsonMsg.toString());
 				int type = -1;
 				
+				Log.d("GcmIntentService", "type : " + jsonMsg.getString("type") + " collapseKey : " + collapseKey);
 				if (jsonMsg.getString("type").equals("notice")) type = PUSH_TYPE_NOTICE;
 				else if (jsonMsg.getString("type").equals("account_complete")) type = PUSH_TYPE_ACCOUNT_COMPLETE;
 				
 				if (!jsonMsg.isNull("badge")) mIsBadge = jsonMsg.getBoolean("badge");
 				if (!jsonMsg.isNull("sound")) mIsSound = jsonMsg.getBoolean("sound");
+				SharedPreferences pref = this.getSharedPreferences(NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
 				
+				Log.d("GcmIntentService", "in switch type : " + type);
 				switch (type) {
 				case PUSH_TYPE_ACCOUNT_COMPLETE:
-					sendPush(messageType, type, msg);
-					break;
+					String tid = jsonMsg.getString("TID");
+					String hotelName = jsonMsg.getString("hotelName");
+					String paidPrice = jsonMsg.getString("paidPrice");
+					
+					if (tid.equals(pref.getString("TID", ""))) {
+						break;
+					} else {
+						Editor editor = pref.edit();
+						editor.putString("TID", tid);
+						editor.apply();
+						sendPush(messageType, type, msg, hotelName, paidPrice);
+					}
+					
+					Log.d("GcmIntentService", "purchase complete!!!");
 				
 				case PUSH_TYPE_NOTICE:
-					SharedPreferences pref = this.getSharedPreferences(NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
+					Log.d("GcmIntentService", "notice complete!!!");
 					if (collapseKey.equals(pref.getString("collapseKey", ""))) {
 						break;
 					} else {
 						Editor editor = pref.edit();
 						editor.putString("collapseKey", collapseKey);
 						editor.apply();
-						sendPush(messageType, type, msg);
+						sendPush(messageType, type, msg, "", "");
 					}
-					
 				}
 				android.util.Log.e("GCM_MESSAGE",jsonMsg.toString());
 			} catch (JSONException e) {
@@ -103,7 +121,8 @@ public class GcmIntentService extends IntentService implements Constants{
 		GcmBroadcastReceiver.completeWakefulIntent(intent);
 	}
 	
-	public void sendPush(String messageType, int type, String msg) {
+	public void sendPush(String messageType, int type, String msg, String hotelName, String paidPrice) {
+		Log.d("GcmIntentService", "sendPush");
 		if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
 			
 			if (isScreenOn(this) && type != -1) { // 데일리호텔 앱이 켜져있는경우.
@@ -120,6 +139,8 @@ public class GcmIntentService extends IntentService implements Constants{
 					i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, type);
 					i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG, msg);
+					i.putExtra("hotelName", hotelName);
+					i.putExtra("paidPrice", paidPrice);
 					startActivity(i);
 				}
 				
@@ -134,7 +155,8 @@ public class GcmIntentService extends IntentService implements Constants{
 				Intent i = new Intent(this, PushLockDialogActivity.class);
 				i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG, msg);
 				i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, type);
-
+				i.putExtra("hotelName", hotelName);
+				i.putExtra("paidPrice", paidPrice);
 				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | 
 						Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				this.startActivity(i);
