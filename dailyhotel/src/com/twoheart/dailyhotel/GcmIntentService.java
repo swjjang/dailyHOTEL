@@ -26,11 +26,9 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.twoheart.dailyhotel.activity.PushLockDialogActivity;
 import com.twoheart.dailyhotel.activity.ScreenOnPushDialogActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.WakeLock;
 
 /**
@@ -51,11 +49,10 @@ public class GcmIntentService extends IntentService implements Constants{
 	private NotificationManager mNotificationManager;
 	private boolean mIsBadge;
 	private boolean mIsSound;
-	private MixpanelAPI mMixpanel;
+	
 
 	public GcmIntentService() {
 		super("GcmIntentService");
-		mMixpanel = MixpanelAPI.getInstance(getApplicationContext(), "791b366dadafcd37803f6cd7d8358373");
 	}
 
 	@Override
@@ -90,60 +87,18 @@ public class GcmIntentService extends IntentService implements Constants{
 				switch (type) {
 				case PUSH_TYPE_ACCOUNT_COMPLETE:
 					String tid = jsonMsg.getString("TID");
+					String hotelName = jsonMsg.getString("hotelName");
+					String paidPrice = jsonMsg.getString("paidPrice");
+					
 					if (tid.equals(pref.getString("TID", ""))) {
 						break;
 					} else {
 						Editor editor = pref.edit();
 						editor.putString("TID", tid);
 						editor.apply();
-						sendPush(messageType, type, msg);
-						
-						SimpleDateFormat dateFormat = new  SimpleDateFormat("yyMMDDHHmmss", java.util.Locale.getDefault());
-						Date date = new Date();
-						String strDate = dateFormat.format(date);
-						int userIdx = Integer.parseInt(pref.getString(KEY_PREFERENCE_USER_IDX, "0"));
-						String userIdxStr = String.format("%07d", userIdx);
-						String transId = strDate + userIdxStr;
-						
-						RenewalGaManager.getInstance(getApplicationContext()).
-						purchaseComplete(
-								transId, 
-								jsonMsg.getString("hotelName"), 
-								"unidentified", 
-								Double.parseDouble(jsonMsg.getString("paidPrice"))
-								);
-						
-						SimpleDateFormat dateFormat2 = new  SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.getDefault());
-						strDate = dateFormat2.format(date);
-						
-						mMixpanel.getPeople().identify(userIdxStr);
-						
-						JSONObject properties = new JSONObject();
-						try {
-							properties.put("hotelName", jsonMsg.getString("hotelName"));
-							properties.put("datetime", strDate); // 거래 시간 = 연-월-일T시:분:초
-						} catch (JSONException e) {
-							e.printStackTrace();
-						}
-						
-						mMixpanel.getPeople().trackCharge(Double.parseDouble(jsonMsg.getString("paidPrice")), properties); // price = 결제 금액
-						
-						JSONObject props = new JSONObject();
-						try {
-							props.put("hotelName", jsonMsg.getString("hotelName"));
-							props.put("price", Double.parseDouble(jsonMsg.getString("paidPrice")));
-							props.put("datetime", strDate);
-							props.put("userId", userIdxStr);
-							props.put("tranId", transId);
-						} catch (JSONException e) {
-							e.printStackTrace();
-						}
-						
-						mMixpanel.track("transaction", props);
-						
+						sendPush(messageType, type, msg, hotelName, paidPrice);
 					}
 					
-//					sendPush(messageType, type, msg);
 					Log.d("GcmIntentService", "purchase complete!!!");
 				
 				case PUSH_TYPE_NOTICE:
@@ -154,9 +109,8 @@ public class GcmIntentService extends IntentService implements Constants{
 						Editor editor = pref.edit();
 						editor.putString("collapseKey", collapseKey);
 						editor.apply();
-						sendPush(messageType, type, msg);
+						sendPush(messageType, type, msg, "", "");
 					}
-//					sendPush(messageType, type, msg);
 				}
 				android.util.Log.e("GCM_MESSAGE",jsonMsg.toString());
 			} catch (JSONException e) {
@@ -167,7 +121,7 @@ public class GcmIntentService extends IntentService implements Constants{
 		GcmBroadcastReceiver.completeWakefulIntent(intent);
 	}
 	
-	public void sendPush(String messageType, int type, String msg) {
+	public void sendPush(String messageType, int type, String msg, String hotelName, String paidPrice) {
 		Log.d("GcmIntentService", "sendPush");
 		if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
 			
@@ -185,6 +139,8 @@ public class GcmIntentService extends IntentService implements Constants{
 					i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, type);
 					i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG, msg);
+					i.putExtra("hotelName", hotelName);
+					i.putExtra("paidPrice", paidPrice);
 					startActivity(i);
 				}
 				
@@ -199,7 +155,8 @@ public class GcmIntentService extends IntentService implements Constants{
 				Intent i = new Intent(this, PushLockDialogActivity.class);
 				i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG, msg);
 				i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, type);
-
+				i.putExtra("hotelName", hotelName);
+				i.putExtra("paidPrice", paidPrice);
 				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | 
 						Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				this.startActivity(i);
@@ -244,12 +201,6 @@ public class GcmIntentService extends IntentService implements Constants{
 
 		mBuilder.setContentIntent(contentIntent);
 		mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
-	}
-	
-	@Override
-	public void onDestroy() {
-		mMixpanel.flush();
-		super.onDestroy();
 	}
 	
 

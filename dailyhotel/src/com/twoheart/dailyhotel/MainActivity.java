@@ -71,6 +71,8 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.readystatesoftware.systembartint.SystemBarTintManager.SystemBarConfig;
+import com.twoheart.dailyhotel.activity.PushLockDialogActivity;
+import com.twoheart.dailyhotel.activity.ScreenOnPushDialogActivity;
 import com.twoheart.dailyhotel.activity.SplashActivity;
 import com.twoheart.dailyhotel.fragment.RatingHotelFragment;
 import com.twoheart.dailyhotel.model.Hotel;
@@ -139,6 +141,23 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d("GCM??", "GCM??" + sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "NOPE"));
+		
+//		Intent i = new Intent(this, ScreenOnPushDialogActivity.class);
+//		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//		i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, PUSH_TYPE_NOTICE);
+//		i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG, "[테스트] 결제완료되었습니다");
+//		i.putExtra("hotelName", "테스트");
+//		i.putExtra("paidPrice", "2000");
+//		startActivity(i);
+		
+		Intent i = new Intent(this, PushLockDialogActivity.class);
+		i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG, "[테스트 [테스트]] 결제완료되었습니다");
+		i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, PUSH_TYPE_ACCOUNT_COMPLETE);
+		i.putExtra("hotelName", "테스트");
+		i.putExtra("paidPrice", "2000");
+		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | 
+				Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		this.startActivity(i);
 		
 //		
 //		AlertDialog.Builder alert = new AlertDialog.Builder(this);

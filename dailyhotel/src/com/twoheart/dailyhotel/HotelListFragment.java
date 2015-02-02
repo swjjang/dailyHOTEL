@@ -188,24 +188,6 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 					.toString(), null, HotelListFragment.this,
 					mHostActivity));
 		}
-		mHotelListView.setOnScrollListener(new OnScrollListener() {
-			
-			@Override
-			public void onScrollStateChanged(AbsListView view, int scrollState) {
-				switch(scrollState) {
-				case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-					RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("scroll", "hotels", selectedRegion, null);
-					break;
-				}
-				
-			}
-			
-			@Override
-			public void onScroll(AbsListView view, int firstVisibleItem,
-					int visibleItemCount, int totalItemCount) {
-				
-			}
-		});
 		
 	}
 

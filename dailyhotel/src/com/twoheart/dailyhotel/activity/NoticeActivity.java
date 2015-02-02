@@ -51,24 +51,6 @@ public class NoticeActivity extends BaseActivity implements
 				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectNotice", mList.get(groupPosition).getSubject(), (long) (groupPosition+1));
 			}
 		});
-		mListView.setOnScrollListener(new OnScrollListener() {
-			
-			@Override
-			public void onScrollStateChanged(AbsListView view, int scrollState) {
-				switch(scrollState) {
-				case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("scroll", "articles", "공지사항", null);
-					break;
-				}
-				
-			}
-			
-			@Override
-			public void onScroll(AbsListView view, int firstVisibleItem,
-					int visibleItemCount, int totalItemCount) {
-				
-			}
-		});
 	}
 	
 	@Override
