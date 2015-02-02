@@ -53,7 +53,7 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver{
 		NotificationManager notificationManager = (NotificationManager) context.getSystemService(Activity.NOTIFICATION_SERVICE);
 		
 		Notification notification = new Notification();
-		notification.icon = R.drawable.img_ic_appicon;
+		notification.icon = R.drawable.img_ic_appicon_feature;
 		notification.tickerText = ticker;
 		notification.when = System.currentTimeMillis();
 		notification.vibrate = new long[] { 100, 500, 100, 500 };

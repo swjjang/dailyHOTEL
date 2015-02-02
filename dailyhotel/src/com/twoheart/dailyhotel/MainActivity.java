@@ -27,6 +27,8 @@ import java.util.StringTokenizer;
 import org.json.JSONObject;
 
 import android.app.Dialog;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
@@ -43,6 +45,7 @@ import android.os.PowerManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Base64;
 import android.util.Log;
@@ -142,6 +145,22 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 		super.onCreate(savedInstanceState);
 		Log.d("GCM??", "GCM??" + sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "NOPE"));
 		
+//		Intent intent = new Intent(this, MainActivity.class);
+//		NotificationManager mNotificationManager = (NotificationManager)
+//				this.getSystemService(Context.NOTIFICATION_SERVICE);
+//		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+//				intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//		NotificationCompat.Builder mBuilder =
+//				new NotificationCompat.Builder(this)
+//		.setSmallIcon(R.drawable.img_ic_appicon_feature)
+//		.setContentTitle(getString(R.string.app_name))
+//		.setAutoCancel(true)
+//		.setSound(null)
+//		.setContentText("[테스트] 입니다.");
+//
+//		mBuilder.setContentIntent(contentIntent);
+//		mNotificationManager.notify(1, mBuilder.build());
+		
 //		Intent i = new Intent(this, ScreenOnPushDialogActivity.class);
 //		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //		i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, PUSH_TYPE_NOTICE);
@@ -150,14 +169,14 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 //		i.putExtra("paidPrice", "2000");
 //		startActivity(i);
 		
-		Intent i = new Intent(this, PushLockDialogActivity.class);
-		i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG, "[테스트 [테스트]] 결제완료되었습니다");
-		i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, PUSH_TYPE_ACCOUNT_COMPLETE);
-		i.putExtra("hotelName", "테스트");
-		i.putExtra("paidPrice", "2000");
-		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | 
-				Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		this.startActivity(i);
+//		Intent i = new Intent(this, PushLockDialogActivity.class);
+//		i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG, "[테스트 [테스트]] 결제완료되었습니다");
+//		i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, PUSH_TYPE_ACCOUNT_COMPLETE);
+//		i.putExtra("hotelName", "테스트");
+//		i.putExtra("paidPrice", "2000");
+//		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | 
+//				Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//		this.startActivity(i);
 		
 //		
 //		AlertDialog.Builder alert = new AlertDialog.Builder(this);

@@ -193,7 +193,7 @@ public class GcmIntentService extends IntentService implements Constants{
 
 		NotificationCompat.Builder mBuilder =
 				new NotificationCompat.Builder(this)
-		.setSmallIcon(R.drawable.img_ic_appicon)
+		.setSmallIcon(R.drawable.img_ic_appicon_feature)
 		.setContentTitle(getString(R.string.app_name))
 		.setAutoCancel(true)
 		.setSound(uri)
