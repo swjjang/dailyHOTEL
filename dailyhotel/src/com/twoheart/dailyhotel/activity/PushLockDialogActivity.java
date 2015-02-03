@@ -52,8 +52,6 @@ public class PushLockDialogActivity extends Activity implements OnClickListener,
 		
 		mMsg = getIntent().getStringExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG);
 		mType = getIntent().getIntExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, -1);
-		String hotelName = getIntent().getStringExtra("hotelName");
-		String paidPrice = getIntent().getStringExtra("paidPrice");
 		
 //		String title = null;
 //		if (mType == PUSH_TYPE_NOTICE) {
@@ -69,10 +67,12 @@ public class PushLockDialogActivity extends Activity implements OnClickListener,
 		if (mType == PUSH_TYPE_NOTICE) {
 			tvMsg.setText(mMsg);
 		} else if (mType == PUSH_TYPE_ACCOUNT_COMPLETE) {
-			
-			int index = mMsg.lastIndexOf("]");
-			StringBuffer sb = new StringBuffer(mMsg); 
-			String result = sb.replace( index, index+1, "]\n" ).toString();
+			String result = mMsg;
+			if (mMsg.contains("]")) {
+				int index = mMsg.lastIndexOf("]");
+				StringBuffer sb = new StringBuffer(mMsg); 
+				result = sb.replace(index, index+1, "]\n").toString();
+			}
 			
 			tvMsg.setText(result);
 		}

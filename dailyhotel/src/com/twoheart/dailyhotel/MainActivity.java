@@ -163,17 +163,13 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 		
 //		Intent i = new Intent(this, ScreenOnPushDialogActivity.class);
 //		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//		i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, PUSH_TYPE_NOTICE);
-//		i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG, "[테스트] 결제완료되었습니다");
-//		i.putExtra("hotelName", "테스트");
-//		i.putExtra("paidPrice", "2000");
+//		i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, PUSH_TYPE_ACCOUNT_COMPLETE);
+//		i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG, "[[테스트] 결제완료되었습니다");
 //		startActivity(i);
 		
 //		Intent i = new Intent(this, PushLockDialogActivity.class);
-//		i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG, "[테스트 [테스트]] 결제완료되었습니다");
+//		i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG, "[[[[[테스트]]  ] 결제완료되었습니다");
 //		i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, PUSH_TYPE_ACCOUNT_COMPLETE);
-//		i.putExtra("hotelName", "테스트");
-//		i.putExtra("paidPrice", "2000");
 //		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | 
 //				Intent.FLAG_ACTIVITY_CLEAR_TOP);
 //		this.startActivity(i);

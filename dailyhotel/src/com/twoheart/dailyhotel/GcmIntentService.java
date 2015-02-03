@@ -112,14 +112,14 @@ public class GcmIntentService extends IntentService implements Constants{
 						Editor editor = pref.edit();
 						editor.putString("collapseKey", collapseKey);
 						editor.apply();
-						sendPush(messageType, type, msg, hotelName, paidPrice);
+						sendPush(messageType, type, msg);
 						
 						SimpleDateFormat dateFormat = new  SimpleDateFormat("yyMMDDHHmmss", java.util.Locale.getDefault());
 						Date date = new Date();
 						String strDate = dateFormat.format(date);
 						int userIdx = Integer.parseInt(pref.getString(KEY_PREFERENCE_USER_IDX, "0"));
 						String userIdxStr = String.format("%07d", userIdx);
-						String transId = strDate + userIdxStr;
+						String transId = strDate + userIdxStr; //기타 결제수단은 이걸 transaction ID로 사용하고 계좌이체의 경우 넘겨받는 tid값을 사용함. 
 						
 						RenewalGaManager.getInstance(getApplicationContext()).
 						purchaseComplete(
@@ -169,7 +169,7 @@ public class GcmIntentService extends IntentService implements Constants{
 						Editor editor = pref.edit();
 						editor.putString("collapseKey", collapseKey);
 						editor.apply();
-						sendPush(messageType, type, msg, "", "");
+						sendPush(messageType, type, msg);
 						break;
 					}
 				}
@@ -182,7 +182,7 @@ public class GcmIntentService extends IntentService implements Constants{
 		GcmBroadcastReceiver.completeWakefulIntent(intent);
 	}
 	
-	public void sendPush(String messageType, int type, String msg, String hotelName, String paidPrice) {
+	public void sendPush(String messageType, int type, String msg) {
 		Log.d("GcmIntentService", "sendPush");
 		if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
 			
@@ -200,8 +200,6 @@ public class GcmIntentService extends IntentService implements Constants{
 					i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, type);
 					i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG, msg);
-					i.putExtra("hotelName", hotelName);
-					i.putExtra("paidPrice", paidPrice);
 					startActivity(i);
 				}
 				
@@ -216,8 +214,6 @@ public class GcmIntentService extends IntentService implements Constants{
 				Intent i = new Intent(this, PushLockDialogActivity.class);
 				i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG, msg);
 				i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, type);
-				i.putExtra("hotelName", hotelName);
-				i.putExtra("paidPrice", paidPrice);
 				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | 
 						Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				this.startActivity(i);

@@ -44,8 +44,6 @@ public class ScreenOnPushDialogActivity extends Activity implements OnClickListe
 
 		String msg = getIntent().getStringExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG);
 		int type = getIntent().getIntExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, -1);
-		String hotelName = getIntent().getStringExtra("hotelName");
-		String paidPrice = getIntent().getStringExtra("paidPrice");
 		
 //		msg = msg.replace("]", "]\n");
 		
@@ -54,10 +52,12 @@ public class ScreenOnPushDialogActivity extends Activity implements OnClickListe
 		if (type == PUSH_TYPE_NOTICE) {
 			tvMsg.setText(msg);
 		} else if (type == PUSH_TYPE_ACCOUNT_COMPLETE) {
-			int index = msg.lastIndexOf("]");
-			StringBuffer sb = new StringBuffer(msg); 
-			String result = sb.replace( index, index+1, "]\n" ).toString();
-			
+			String result = msg;
+			if (result.contains("]")) {
+				int index = msg.lastIndexOf("]");
+				StringBuffer sb = new StringBuffer(msg); 
+				result = sb.replace(index, index+1, "]\n").toString();	
+			}
 			tvMsg.setText(result);
 		}
 //		int index = msg.lastIndexOf("]");
