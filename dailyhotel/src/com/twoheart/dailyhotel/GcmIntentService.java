@@ -114,7 +114,7 @@ public class GcmIntentService extends IntentService implements Constants{
 						editor.apply();
 						sendPush(messageType, type, msg);
 						
-						SimpleDateFormat dateFormat = new  SimpleDateFormat("yyMMDDHHmmss", java.util.Locale.getDefault());
+						SimpleDateFormat dateFormat = new  SimpleDateFormat("yyMMddHHmmss", java.util.Locale.getDefault());
 						Date date = new Date();
 						String strDate = dateFormat.format(date);
 						int userIdx = Integer.parseInt(pref.getString(KEY_PREFERENCE_USER_IDX, "0"));

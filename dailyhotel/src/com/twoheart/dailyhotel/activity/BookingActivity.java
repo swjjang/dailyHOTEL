@@ -472,7 +472,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 					}
 				}
 
-				SimpleDateFormat dateFormat = new  SimpleDateFormat("yyMMDDHHmmss", java.util.Locale.getDefault());
+				SimpleDateFormat dateFormat = new  SimpleDateFormat("yyMMddHHmmss", java.util.Locale.getDefault());
 				Date date = new Date();
 				String strDate = dateFormat.format(date);
 				int userIdx = Integer.parseInt(mPay.getCustomer().getUserIdx());
