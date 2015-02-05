@@ -14,9 +14,10 @@
 package com.twoheart.dailyhotel;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
 
 import org.json.JSONArray;
@@ -26,12 +27,8 @@ import org.json.JSONObject;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.style.AbsoluteSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -42,8 +39,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request.Method;
-import com.google.analytics.tracking.android.Fields;
-import com.google.analytics.tracking.android.MapBuilder;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.activity.SignupActivity;
 import com.twoheart.dailyhotel.model.Credit;
@@ -76,6 +72,9 @@ public class CreditFragment extends BaseFragment implements Constants,
 	private TextView tvCredit;
 	private String mRecommendCode;
 	private ArrayList<Credit> mCreditList;
+	
+	private MixpanelAPI mMixpanel;
+	private String idx;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -115,6 +114,13 @@ public class CreditFragment extends BaseFragment implements Constants,
 
 		return view;
 	}
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		mMixpanel = MixpanelAPI.getInstance(mHostActivity, "791b366dadafcd37803f6cd7d8358373");
+		
+		super.onCreate(savedInstanceState);
+	}
 
 
 	@Override
@@ -137,6 +143,20 @@ public class CreditFragment extends BaseFragment implements Constants,
 		if (v.getId() == btnInvite.getId()) {
 			try {
 				RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "inviteKakaoFriend", null, null);
+				int userIdx = Integer.parseInt(idx);
+				String userIdxStr = String.format("%07d", userIdx);
+				
+				SimpleDateFormat dateFormat = new  SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.getDefault());
+				Date date = new Date();
+				String strDate = dateFormat.format(date);
+				
+				mMixpanel.getPeople().identify(userIdxStr);
+				
+				JSONObject props = new JSONObject();
+				props.put("userId", userIdxStr);
+				props.put("datetime", strDate);
+				mMixpanel.track("kakaoInvitation", props);
+				
 				String msg = getString(R.string.kakaolink_msg_prefix) + mRecommendCode + getString(R.string.kakaolink_msg_suffix);
 				KakaoLinkManager.newInstance(getActivity()).sendInviteMsgKakaoLink(msg);
 			} catch (Exception e) {
@@ -214,6 +234,8 @@ public class CreditFragment extends BaseFragment implements Constants,
 				JSONObject obj = response;
 				mRecommendCode = obj.getString("rndnum");
 				tvRecommenderCode.setText(obj.getString("rndnum"));
+				
+				idx = obj.getString("idx");
 
 				// 적립금 목록 요청.
 				mQueue.add(new DailyHotelJsonRequest(Method.GET,

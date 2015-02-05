@@ -12,6 +12,8 @@
  */
 package com.twoheart.dailyhotel.activity;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -25,6 +27,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -33,6 +36,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
@@ -51,6 +55,8 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 	private Button btnSignUp;
 	
 	private Map<String, String> signupParams;
+	
+	private MixpanelAPI mMixpanel;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +79,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 
 		getPhoneNumber();
 
+		mMixpanel = MixpanelAPI.getInstance(this, "791b366dadafcd37803f6cd7d8358373");
 	}
 
 	@Override
@@ -225,14 +232,50 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 				if (response.getBoolean("login")) {
 					VolleyHttpClient.createCookie();
 					unLockUI();
-					showToast(getString(R.string.toast_msg_success_to_signup), Toast.LENGTH_LONG, false);
+//					showToast(getString(R.string.toast_msg_success_to_signup), Toast.LENGTH_LONG, false);
 					
 					storeLoginInfo();
-					finish();
+					
+					lockUI();
+					mQueue.add(new DailyHotelJsonRequest(Method.POST,
+							new StringBuilder(URL_DAILYHOTEL_SERVER)
+					.append(URL_WEBAPI_USER_INFO).toString(), null, this, this));
+					
+//					finish();
 				}
 			} catch (JSONException e) {
 				onError(e);
 			} 
+		} else if (url.contains(URL_WEBAPI_USER_INFO)) {
+
+			try {
+				unLockUI();
+				int userIdx = response.getInt("idx");
+				String userIdxStr = String.format("%07d", userIdx);
+				
+				SimpleDateFormat dateFormat = new  SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.getDefault());
+				Date date = new Date();
+				String strDate = dateFormat.format(date);
+				
+				mMixpanel.getPeople().identify(userIdxStr);
+				
+				JSONObject props = new JSONObject();
+				props.put("userId", userIdxStr);
+				props.put("datetime", strDate);
+				props.put("method", "email");
+				mMixpanel.track("signup", props);
+				
+				showToast(getString(R.string.toast_msg_success_to_signup), Toast.LENGTH_LONG, false);
+				finish();
+			} catch (Exception e) {
+				onError(e);
+			}
 		}
+	}
+	
+	@Override
+	protected void onDestroy() {
+		mMixpanel.flush();
+		super.onDestroy();
 	}
 }

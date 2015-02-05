@@ -13,7 +13,9 @@
 package com.twoheart.dailyhotel.activity;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -30,6 +32,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -51,6 +54,7 @@ import com.facebook.widget.LoginButton;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
@@ -81,6 +85,7 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 	public Session fbSession;
 
 	private GoogleCloudMessaging mGcm;
+	private MixpanelAPI mMixpanel;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +124,8 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 
 		if (Session.getActiveSession() != null)
 			Session.getActiveSession().closeAndClearTokenInformation();
+		
+		mMixpanel = MixpanelAPI.getInstance(this, "791b366dadafcd37803f6cd7d8358373");
 
 	}
 
@@ -328,6 +335,13 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 				if (obj.getBoolean("login")) {
 					VolleyHttpClient.createCookie();
 					storeLoginInfo();
+					
+					if (sharedPreference.getBoolean("Facebook SignUp", false)) {
+						lockUI();
+						mQueue.add(new DailyHotelJsonRequest(Method.POST,
+								new StringBuilder(URL_DAILYHOTEL_SERVER)
+						.append(URL_WEBAPI_USER_INFO).toString(), null, this, this));
+					}
 
 					android.util.Log.e("LOGIN",obj.getBoolean("login")+"");
 
@@ -344,6 +358,7 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 						setResult(RESULT_OK);
 						finish();
 					}
+					
 					Editor editor = sharedPreference.edit();
 					editor.putString("collapseKey", "");
 					editor.apply();
@@ -385,6 +400,10 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 
 				if (result.equals("true")) { // 회원가입에 성공하면 이제 로그인 절차
 					lockUI();
+					Editor ed = sharedPreference.edit();
+					ed.putBoolean("Facebook SignUp", true);
+					ed.commit();
+					
 					mQueue.add(new DailyHotelJsonRequest(Method.POST,
 							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 									URL_WEBAPI_USER_LOGIN).toString(),
@@ -398,11 +417,37 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 				onError(e);
 			}
 		} else if (url.contains(URL_WEBAPI_USER_INFO)) {
+			Log.d(TAG, "user_info!!!!");
 			unLockUI();
 			try {
 				// GCM 아이디를 등록한다.
+				if (sharedPreference.getBoolean("Facebook SignUp", false)) {
+					int userIdx = response.getInt("idx");
+					String userIdxStr = String.format("%07d", userIdx);
+					
+					SimpleDateFormat dateFormat = new  SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.getDefault());
+					Date date = new Date();
+					String strDate = dateFormat.format(date);
+					
+					mMixpanel.getPeople().identify(userIdxStr);
+					
+					JSONObject props = new JSONObject();
+					props.put("userId", userIdxStr);
+					props.put("datetime", strDate);
+					props.put("method", "facebook");
+					mMixpanel.track("signup", props);
+					
+					Editor editor = sharedPreference.edit();
+					editor.putBoolean("Facebook SignUp", false);
+					editor.commit();
+					
+					Log.d(TAG, "facebook signup is completed.");
+					
+					return;
+				}
 				
 				if (isGoogleServiceAvailable()) {
+					Log.d(TAG, "call regGcmId");
 					lockUI();
 					mGcm = GoogleCloudMessaging.getInstance(this);
 					regGcmId(response.getInt("idx"));
@@ -497,5 +542,11 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 	protected void onResume() {
 		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("profileWithLogoff", "/todays-hotels/profile-with-logoff");
 		super.onResume();
+	}
+	
+	@Override
+	protected void onDestroy() {
+		mMixpanel.flush();
+		super.onDestroy();
 	}
 }
