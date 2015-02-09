@@ -184,6 +184,12 @@
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_event_pop_up" >
         </activity>
+         <activity
+            android:name=".RegionListActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" >
+        </activity>
+        
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"

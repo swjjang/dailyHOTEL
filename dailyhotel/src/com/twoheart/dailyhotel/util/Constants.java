@@ -140,6 +140,7 @@ public interface Constants {
 
 	// region
 	public static final String KEY_PREFERENCE_REGION_SELECT = "REGION_SELECT";
+	public static final String KEY_PREFERENCE_REGION_SELECT_BEFORE = "REGION_SELECT_BEFORE";
 	public static final String KEY_PREFERENCE_REGION_INDEX = "REGION_INDEX";
 	
 	// ga
