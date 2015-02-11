@@ -100,7 +100,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	@Override
 	public void setContentView(int layoutResID) {
 		super.setContentView(layoutResID);
-//		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
+		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
 	}
 
 	/**

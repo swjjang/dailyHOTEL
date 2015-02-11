@@ -35,6 +35,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -58,6 +59,7 @@ import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
+import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
@@ -126,7 +128,7 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 			Session.getActiveSession().closeAndClearTokenInformation();
 		
 		mMixpanel = MixpanelAPI.getInstance(this, "791b366dadafcd37803f6cd7d8358373");
-
+		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
 	}
 
 	private void makeMeRequest(final Session session) {

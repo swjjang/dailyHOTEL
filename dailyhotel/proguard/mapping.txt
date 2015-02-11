@@ -31977,7 +31977,10 @@ com.twoheart.dailyhotel.CreditFragment -> com.twoheart.dailyhotel.b:
     android.widget.TextView tvCredit -> k
     java.lang.String mRecommendCode -> l
     java.util.ArrayList mCreditList -> m
+    com.mixpanel.android.mpmetrics.MixpanelAPI mMixpanel -> n
+    java.lang.String idx -> o
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
+    void onCreate(android.os.Bundle) -> onCreate
     void onResume() -> onResume
     void onClick(android.view.View) -> onClick
     void loadLoginProcess(boolean) -> a
@@ -32018,7 +32021,7 @@ com.twoheart.dailyhotel.GcmIntentService -> com.twoheart.dailyhotel.GcmIntentSer
     com.mixpanel.android.mpmetrics.MixpanelAPI mMixpanel -> d
     void onCreate() -> onCreate
     void onHandleIntent(android.content.Intent) -> onHandleIntent
-    void sendPush(java.lang.String,int,java.lang.String,java.lang.String,java.lang.String) -> sendPush
+    void sendPush(java.lang.String,int,java.lang.String) -> sendPush
     boolean isScreenOn(android.content.Context) -> isScreenOn
     void sendNotification(int,java.lang.String) -> a
     void onDestroy() -> onDestroy
@@ -32140,6 +32143,7 @@ com.twoheart.dailyhotel.MainActivity -> com.twoheart.dailyhotel.MainActivity:
     void finish() -> finish
     void onDestroy() -> onDestroy
     void onError() -> onError
+    void replaceErrorFragment(android.support.v4.app.Fragment) -> replaceErrorFragment
     com.android.volley.RequestQueue access$0(com.twoheart.dailyhotel.MainActivity) -> a
 com.twoheart.dailyhotel.MainActivity$1 -> com.twoheart.dailyhotel.j:
     com.twoheart.dailyhotel.MainActivity this$0 -> a
@@ -32658,7 +32662,8 @@ com.twoheart.dailyhotel.activity.LoginActivity -> com.twoheart.dailyhotel.activi
     java.util.Map regPushParams -> B
     com.facebook.Session fbSession -> fbSession
     com.google.android.gms.gcm.GoogleCloudMessaging mGcm -> C
-    com.facebook.Session$StatusCallback statusCallback -> D
+    com.mixpanel.android.mpmetrics.MixpanelAPI mMixpanel -> D
+    com.facebook.Session$StatusCallback statusCallback -> E
     void onCreate(android.os.Bundle) -> onCreate
     void makeMeRequest(com.facebook.Session) -> a
     void onClick(android.view.View) -> onClick
@@ -32671,6 +32676,7 @@ com.twoheart.dailyhotel.activity.LoginActivity -> com.twoheart.dailyhotel.activi
     java.lang.Boolean isGoogleServiceAvailable() -> d
     void regGcmId(int) -> b
     void onResume() -> onResume
+    void onDestroy() -> onDestroy
     void access$0(com.twoheart.dailyhotel.activity.LoginActivity,com.facebook.Session) -> a
     android.widget.Button access$1(com.twoheart.dailyhotel.activity.LoginActivity) -> a
     void access$2(com.twoheart.dailyhotel.activity.LoginActivity,java.util.Map) -> a
@@ -32875,6 +32881,7 @@ com.twoheart.dailyhotel.activity.SignupActivity -> com.twoheart.dailyhotel.activ
     android.widget.TextView tvPrivacy -> u
     android.widget.Button btnSignUp -> v
     java.util.Map signupParams -> A
+    com.mixpanel.android.mpmetrics.MixpanelAPI mMixpanel -> B
     void onCreate(android.os.Bundle) -> onCreate
     void onStart() -> onStart
     void getPhoneNumber() -> getPhoneNumber
@@ -32886,6 +32893,7 @@ com.twoheart.dailyhotel.activity.SignupActivity -> com.twoheart.dailyhotel.activ
     void storeLoginInfo() -> storeLoginInfo
     void finish() -> finish
     void onResponse(java.lang.String,org.json.JSONObject) -> onResponse
+    void onDestroy() -> onDestroy
 com.twoheart.dailyhotel.activity.SplashActivity -> com.twoheart.dailyhotel.activity.SplashActivity:
     boolean isDialogShown -> o
     android.app.Dialog alertDlg -> p
