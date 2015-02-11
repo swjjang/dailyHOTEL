@@ -203,6 +203,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 				String result = obj.getString("join");
 				String msg = null;
 
+				Log.d(TAG, response.toString());
 				if (obj.length() > 1) msg = obj.getString("msg");
 
 				if (result.equals("true")) {

@@ -45,6 +45,7 @@ import android.os.PowerManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Base64;
@@ -259,7 +260,7 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 
 		// Facebook SDK를 관리하기 위한 패키지 Hash 값 표시
 		if (DEBUG)  printPackageHashKey();
-
+		
 	}
 
 	@Override
@@ -520,12 +521,18 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 	 */
 	public void replaceFragment(Fragment fragment) {
 		try {
+//			FragmentTransaction transaction = fragmentManager.beginTransaction();
 			clearFragmentBackStack();
-
+			
+//			transaction.commitAllowingStateLoss();
+			
 			fragmentManager.beginTransaction()
 			.replace(mContentFrame.getId(), fragment)
 			.commitAllowingStateLoss();
-
+			
+//			transaction.replace(mContentFrame.getId(), fragment);
+//			transaction.commitAllowingStateLoss();
+			
 			// Android 4.4 이상일 경우 Android StatusBar와 Android NavigationBar를 모두 Translucent하는데
 			// 우리 어플리케이션에서는 HotelListFragment에서만 Android NavigationBar를 Translucent하게 하였다.
 			// 그래서 다른 Fragment들에서는 네비게이션 드로워가 차지하는 공간에 있어서 차이가 발생하게 되는데 해당 이슈를
@@ -550,8 +557,9 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 				}
 			}
 		} catch (IllegalStateException e) {
-			onError(e);
-
+			onError();
+			
+//			Log.d("MainActivity", "error : " + e.toString());
 		}
 
 	}
@@ -576,7 +584,8 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 	 */
 	private void clearFragmentBackStack() {
 		for (int i = 0; i < fragmentManager.getBackStackEntryCount(); ++i) {
-			fragmentManager.popBackStack();
+			fragmentManager.popBackStackImmediate();
+
 		}
 
 	}
@@ -646,7 +655,8 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				replaceFragment(getFragment(index));		
+				replaceFragment(getFragment(index));
+//				replaceErrorFragment(new ErrorFragment());
 			}
 		}, 300);
 	}
@@ -879,5 +889,63 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 
 		// Error Fragment를 표시한다.
 		replaceFragment(new ErrorFragment());
+	}
+	
+//	public void replaceErrorFragment(Fragment fragment) {
+//		try {
+//			clearFragmentBackStack();
+//			
+//			fragmentManager.beginTransaction()
+//			.replace(mContentFrame.getId(), fragment)
+//			.commitAllowingStateLoss();
+//		
+//			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//				if (fragment instanceof HotelListFragment) {
+//					mContentFrame.setPadding(mContentFrame.getPaddingLeft(),
+//							mContentFrame.getPaddingTop(),
+//							mContentFrame.getPaddingRight(), 0);
+//
+//					Window w = getWindow();
+//					w.setFlags(
+//							WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION,
+//							WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+//
+//				} else {
+//					WindowManager.LayoutParams attrs = getWindow()
+//							.getAttributes();
+//					attrs.flags &= (~WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+//					getWindow().setAttributes(attrs);
+//
+//				}
+//			}
+//			
+//		} catch(IllegalStateException e) {
+//			onError(e);
+//			e.printStackTrace();
+//		}
+//	}
+	
+	public void replaceErrorFragment(Fragment fragment) {
+		try {
+			clearFragmentBackStack();
+		
+			fragmentManager.beginTransaction().replace(mContentFrame.getId(), fragment).commitAllowingStateLoss();
+		
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+				if (fragment instanceof HotelListFragment) {
+					mContentFrame.setPadding(mContentFrame.getPaddingLeft(), mContentFrame.getPaddingTop(), mContentFrame.getPaddingRight(), 0);
+				
+					Window w = getWindow();
+					w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+				} else {
+					WindowManager.LayoutParams attrs = getWindow().getAttributes();
+					attrs.flags &= (~WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+					getWindow().setAttributes(attrs);
+				}
+			}
+		} catch (IllegalStateException e) {
+			onError(e);
+			
+		}
 	}
 }

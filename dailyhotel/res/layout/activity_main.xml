@@ -18,5 +18,5 @@
         android:divider="@color/leftdrawer_divider"
         android:dividerHeight="0.5dp"
         android:listSelector="@android:color/transparent" />
-
+    
 </android.support.v4.widget.DrawerLayout>

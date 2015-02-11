@@ -16,12 +16,14 @@
 package com.twoheart.dailyhotel.util.ui;
 
 import android.content.Context;
+
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -98,7 +100,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	@Override
 	public void setContentView(int layoutResID) {
 		super.setContentView(layoutResID);
-		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
+//		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
 	}
 
 	/**
@@ -265,7 +267,8 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	 */
 	public void onError() {
 		// 잘못된 멘트, 모든 에러가 이쪽으로 빠지게됨. 변경 필요.
-		showToast(getString(R.string.act_base_network_connect), Toast.LENGTH_LONG, false);
+		showToast(this.getResources().getString(R.string.act_base_network_connect), Toast.LENGTH_LONG, false);
+//		Toast.makeText(getApplicationContext(), this.getResources().getString(R.string.act_base_network_connect), Toast.LENGTH_LONG).show();
 	}
 
 	/**
@@ -286,10 +289,11 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	
 			} else {
 				Toast.makeText(getApplicationContext(), message, length).show();
-	
+//				Log.d(TAG, message);
 			}
 		} catch (Exception e) { // show Toast 도중 Stackoverflow가 자주 발생함. 이유를 알 수 없음. 이에따른 임시 방편 
 			e.printStackTrace();
+			Log.d("BaseActivity", e.toString());
 		}
 	}
 
