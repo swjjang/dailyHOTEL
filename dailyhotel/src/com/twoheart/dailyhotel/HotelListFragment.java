@@ -203,6 +203,10 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 		// 7.2 G2 버전에서 호텔리스트에서 이벤트 칸을 클릭할 경우 튕기는 현상을 막기 위함. why? 헤더뷰인데도 아이템 클릭 리스너가 들어감.
 		if (position == 0)  return; 
 
+		//acra test
+//		TextView mTextView = null;
+//		mTextView.setText("testtesttesttest");
+		
 //		mHostActivity.selectMenuDrawer(mHostActivity.menuHotelListFragment);
 	
 		int selectedPosition = position - 1;
