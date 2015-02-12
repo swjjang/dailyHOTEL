@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.activity;
 
 import java.util.ArrayList;
 
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 

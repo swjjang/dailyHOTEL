@@ -464,6 +464,7 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 				unLockUI();
 				android.util.Log.e("MSG?",response.toString());
 				if (response.getString("result").equals("true")) {
+					Log.d(TAG, response.toString());
 					Editor editor = sharedPreference.edit();
 					editor.putString(KEY_PREFERENCE_GCM_ID, regPushParams.get("notification_id").toString());
 					editor.apply();

@@ -34615,9 +34615,712 @@ kr.co.kcp.util.PackageState -> kr.co.kcp.a.a:
     boolean getPackageDownloadInstallState(java.lang.String) -> getPackageDownloadInstallState
     boolean getPackageFreeloadInstallState(java.lang.String) -> getPackageFreeloadInstallState
     java.util.List getInstalledPackagesList() -> getInstalledPackagesList
-org.slf4j.ILoggerFactory -> a.a.a:
+org.acra.ACRA -> org.acra.a:
+    boolean DEV_LOGGING -> DEV_LOGGING
+    java.lang.String LOG_TAG -> LOG_TAG
+    org.acra.log.ACRALog log -> log
+    java.lang.String PREF_DISABLE_ACRA -> PREF_DISABLE_ACRA
+    java.lang.String PREF_ENABLE_ACRA -> PREF_ENABLE_ACRA
+    java.lang.String PREF_ENABLE_SYSTEM_LOGS -> PREF_ENABLE_SYSTEM_LOGS
+    java.lang.String PREF_ENABLE_DEVICE_ID -> PREF_ENABLE_DEVICE_ID
+    java.lang.String PREF_USER_EMAIL_ADDRESS -> PREF_USER_EMAIL_ADDRESS
+    java.lang.String PREF_ALWAYS_ACCEPT -> PREF_ALWAYS_ACCEPT
+    java.lang.String PREF_LAST_VERSION_NR -> PREF_LAST_VERSION_NR
+    android.app.Application mApplication -> a
+    org.acra.annotation.ReportsCrashes mReportsCrashes -> b
+    org.acra.ErrorReporter errorReporterSingleton -> c
+    android.content.SharedPreferences$OnSharedPreferenceChangeListener mPrefListener -> d
+    org.acra.ACRAConfiguration configProxy -> e
+    void init(android.app.Application) -> init
+    org.acra.ErrorReporter getErrorReporter() -> getErrorReporter
+    boolean shouldDisableACRA(android.content.SharedPreferences) -> b
+    void checkCrashResources() -> a
+    android.content.SharedPreferences getACRASharedPreferences() -> getACRASharedPreferences
+    org.acra.ACRAConfiguration getConfig() -> getConfig
+    void setConfig(org.acra.ACRAConfiguration) -> setConfig
+    org.acra.ACRAConfiguration getNewDefaultConfig(android.app.Application) -> getNewDefaultConfig
+    boolean isDebuggable() -> b
+    android.app.Application getApplication() -> c
+    void setLog(org.acra.log.ACRALog) -> setLog
+    boolean access$000(android.content.SharedPreferences) -> a
+org.acra.ACRA$1 -> org.acra.b:
+    void onSharedPreferenceChanged(android.content.SharedPreferences,java.lang.String) -> onSharedPreferenceChanged
+org.acra.ACRA$2 -> org.acra.c:
+    int[] $SwitchMap$org$acra$ReportingInteractionMode -> a
+org.acra.ACRAConfiguration -> org.acra.d:
+    java.lang.String[] mAdditionalDropboxTags -> a
+    java.lang.String[] mAdditionalSharedPreferences -> b
+    java.lang.Integer mConnectionTimeout -> c
+    org.acra.ReportField[] mCustomReportContent -> d
+    java.lang.Boolean mDeleteUnapprovedReportsOnApplicationStart -> e
+    java.lang.Boolean mDeleteOldUnsentReportsOnApplicationStart -> f
+    java.lang.Integer mDropboxCollectionMinutes -> g
+    java.lang.Boolean mForceCloseDialogAfterToast -> h
+    java.lang.String mFormKey -> i
+    java.lang.String mFormUri -> j
+    java.lang.String mFormUriBasicAuthLogin -> k
+    java.lang.String mFormUriBasicAuthPassword -> l
+    java.lang.Boolean mIncludeDropboxSystemTags -> m
+    java.lang.String[] mLogcatArguments -> n
+    java.lang.String mMailTo -> o
+    java.lang.Integer mMaxNumberOfRequestRetries -> p
+    org.acra.ReportingInteractionMode mMode -> q
+    org.acra.annotation.ReportsCrashes mReportsCrashes -> r
+    java.lang.Integer mResDialogCommentPrompt -> s
+    java.lang.Integer mResDialogEmailPrompt -> t
+    java.lang.Integer mResDialogIcon -> u
+    java.lang.Integer mResDialogOkToast -> v
+    java.lang.Integer mResDialogText -> w
+    java.lang.Integer mResDialogTitle -> x
+    java.lang.Integer mResNotifIcon -> y
+    java.lang.Integer mResNotifText -> z
+    java.lang.Integer mResNotifTickerText -> A
+    java.lang.Integer mResNotifTitle -> B
+    java.lang.Integer mResToastText -> C
+    java.lang.Integer mSharedPreferenceMode -> D
+    java.lang.String mSharedPreferenceName -> E
+    java.lang.Integer mSocketTimeout -> F
+    java.lang.Boolean mLogcatFilterByPid -> G
+    java.lang.Boolean mSendReportsInDevMode -> H
+    java.lang.String[] mExcludeMatchingSharedPreferencesKeys -> I
+    java.lang.String[] mExcludeMatchingSettingsKeys -> J
+    java.lang.String mApplicationLogFile -> K
+    java.lang.Integer mApplicationLogFileLines -> L
+    java.lang.String mGoogleFormUrlFormat -> M
+    java.lang.Boolean mDisableSSLCertValidation -> N
+    org.acra.sender.HttpSender$Method mHttpMethod -> O
+    org.acra.sender.HttpSender$Type mReportType -> P
+    java.util.Map mHttpHeaders -> Q
+    void setHttpHeaders(java.util.Map) -> setHttpHeaders
+    java.util.Map getHttpHeaders() -> getHttpHeaders
+    void setAdditionalDropboxTags(java.lang.String[]) -> setAdditionalDropboxTags
+    void setAdditionalSharedPreferences(java.lang.String[]) -> setAdditionalSharedPreferences
+    void setConnectionTimeout(java.lang.Integer) -> setConnectionTimeout
+    void setCustomReportContent(org.acra.ReportField[]) -> setCustomReportContent
+    void setDeleteUnapprovedReportsOnApplicationStart(java.lang.Boolean) -> setDeleteUnapprovedReportsOnApplicationStart
+    void setDeleteOldUnsentReportsOnApplicationStart(java.lang.Boolean) -> setDeleteOldUnsentReportsOnApplicationStart
+    void setDropboxCollectionMinutes(java.lang.Integer) -> setDropboxCollectionMinutes
+    void setForceCloseDialogAfterToast(java.lang.Boolean) -> setForceCloseDialogAfterToast
+    void setFormKey(java.lang.String) -> setFormKey
+    void setFormUri(java.lang.String) -> setFormUri
+    void setFormUriBasicAuthLogin(java.lang.String) -> setFormUriBasicAuthLogin
+    void setFormUriBasicAuthPassword(java.lang.String) -> setFormUriBasicAuthPassword
+    void setIncludeDropboxSystemTags(java.lang.Boolean) -> setIncludeDropboxSystemTags
+    void setLogcatArguments(java.lang.String[]) -> setLogcatArguments
+    void setMailTo(java.lang.String) -> setMailTo
+    void setMaxNumberOfRequestRetries(java.lang.Integer) -> setMaxNumberOfRequestRetries
+    void setMode(org.acra.ReportingInteractionMode) -> setMode
+    void setResDialogCommentPrompt(int) -> setResDialogCommentPrompt
+    void setResDialogEmailPrompt(int) -> setResDialogEmailPrompt
+    void setResDialogIcon(int) -> setResDialogIcon
+    void setResDialogOkToast(int) -> setResDialogOkToast
+    void setResDialogText(int) -> setResDialogText
+    void setResDialogTitle(int) -> setResDialogTitle
+    void setResNotifIcon(int) -> setResNotifIcon
+    void setResNotifText(int) -> setResNotifText
+    void setResNotifTickerText(int) -> setResNotifTickerText
+    void setResNotifTitle(int) -> setResNotifTitle
+    void setResToastText(int) -> setResToastText
+    void setSharedPreferenceMode(java.lang.Integer) -> setSharedPreferenceMode
+    void setSharedPreferenceName(java.lang.String) -> setSharedPreferenceName
+    void setSocketTimeout(java.lang.Integer) -> setSocketTimeout
+    void setLogcatFilterByPid(java.lang.Boolean) -> setLogcatFilterByPid
+    void setSendReportsInDevMode(java.lang.Boolean) -> setSendReportsInDevMode
+    void setExcludeMatchingSharedPreferencesKeys(java.lang.String[]) -> setExcludeMatchingSharedPreferencesKeys
+    void setExcludeMatchingSettingsKeys(java.lang.String[]) -> setExcludeMatchingSettingsKeys
+    void setApplicationLogFile(java.lang.String) -> setApplicationLogFile
+    void setApplicationLogFileLines(int) -> setApplicationLogFileLines
+    void setDisableSSLCertValidation(boolean) -> setDisableSSLCertValidation
+    void setHttpMethod(org.acra.sender.HttpSender$Method) -> setHttpMethod
+    void setReportType(org.acra.sender.HttpSender$Type) -> setReportType
+    java.lang.String[] additionalDropBoxTags() -> additionalDropBoxTags
+    java.lang.String[] additionalSharedPreferences() -> additionalSharedPreferences
+    java.lang.Class annotationType() -> annotationType
+    int connectionTimeout() -> connectionTimeout
+    org.acra.ReportField[] customReportContent() -> customReportContent
+    boolean deleteUnapprovedReportsOnApplicationStart() -> deleteUnapprovedReportsOnApplicationStart
+    boolean deleteOldUnsentReportsOnApplicationStart() -> deleteOldUnsentReportsOnApplicationStart
+    int dropboxCollectionMinutes() -> dropboxCollectionMinutes
+    boolean forceCloseDialogAfterToast() -> forceCloseDialogAfterToast
+    java.lang.String formKey() -> formKey
+    java.lang.String formUri() -> formUri
+    java.lang.String formUriBasicAuthLogin() -> formUriBasicAuthLogin
+    java.lang.String formUriBasicAuthPassword() -> formUriBasicAuthPassword
+    boolean includeDropBoxSystemTags() -> includeDropBoxSystemTags
+    java.lang.String[] logcatArguments() -> logcatArguments
+    java.lang.String mailTo() -> mailTo
+    int maxNumberOfRequestRetries() -> maxNumberOfRequestRetries
+    org.acra.ReportingInteractionMode mode() -> mode
+    int resDialogCommentPrompt() -> resDialogCommentPrompt
+    int resDialogEmailPrompt() -> resDialogEmailPrompt
+    int resDialogIcon() -> resDialogIcon
+    int resDialogOkToast() -> resDialogOkToast
+    int resDialogText() -> resDialogText
+    int resDialogTitle() -> resDialogTitle
+    int resNotifIcon() -> resNotifIcon
+    int resNotifText() -> resNotifText
+    int resNotifTickerText() -> resNotifTickerText
+    int resNotifTitle() -> resNotifTitle
+    int resToastText() -> resToastText
+    int sharedPreferencesMode() -> sharedPreferencesMode
+    java.lang.String sharedPreferencesName() -> sharedPreferencesName
+    int socketTimeout() -> socketTimeout
+    boolean logcatFilterByPid() -> logcatFilterByPid
+    boolean sendReportsInDevMode() -> sendReportsInDevMode
+    java.lang.String[] excludeMatchingSharedPreferencesKeys() -> excludeMatchingSharedPreferencesKeys
+    java.lang.String[] excludeMatchingSettingsKeys() -> excludeMatchingSettingsKeys
+    java.lang.String applicationLogFile() -> applicationLogFile
+    int applicationLogFileLines() -> applicationLogFileLines
+    java.lang.String googleFormUrlFormat() -> googleFormUrlFormat
+    boolean disableSSLCertValidation() -> disableSSLCertValidation
+    org.acra.sender.HttpSender$Method httpMethod() -> httpMethod
+    org.acra.sender.HttpSender$Type reportType() -> reportType
+    boolean isNull(java.lang.String) -> isNull
+org.acra.ACRAConfigurationException -> org.acra.e:
+org.acra.ACRAConstants -> org.acra.f:
+    java.lang.String REPORTFILE_EXTENSION -> REPORTFILE_EXTENSION
+    java.lang.String SILENT_SUFFIX -> a
+    java.lang.String NULL_VALUE -> NULL_VALUE
+    boolean DEFAULT_FORCE_CLOSE_DIALOG_AFTER_TOAST -> DEFAULT_FORCE_CLOSE_DIALOG_AFTER_TOAST
+    int DEFAULT_MAX_NUMBER_OF_REQUEST_RETRIES -> DEFAULT_MAX_NUMBER_OF_REQUEST_RETRIES
+    int DEFAULT_SOCKET_TIMEOUT -> DEFAULT_SOCKET_TIMEOUT
+    int DEFAULT_CONNECTION_TIMEOUT -> DEFAULT_CONNECTION_TIMEOUT
+    boolean DEFAULT_DELETE_UNAPPROVED_REPORTS_ON_APPLICATION_START -> DEFAULT_DELETE_UNAPPROVED_REPORTS_ON_APPLICATION_START
+    boolean DEFAULT_DELETE_OLD_UNSENT_REPORTS_ON_APPLICATION_START -> DEFAULT_DELETE_OLD_UNSENT_REPORTS_ON_APPLICATION_START
+    int DEFAULT_DROPBOX_COLLECTION_MINUTES -> DEFAULT_DROPBOX_COLLECTION_MINUTES
+    boolean DEFAULT_INCLUDE_DROPBOX_SYSTEM_TAGS -> DEFAULT_INCLUDE_DROPBOX_SYSTEM_TAGS
+    int DEFAULT_SHARED_PREFERENCES_MODE -> DEFAULT_SHARED_PREFERENCES_MODE
+    int DEFAULT_NOTIFICATION_ICON -> DEFAULT_NOTIFICATION_ICON
+    int DEFAULT_DIALOG_ICON -> DEFAULT_DIALOG_ICON
+    int DEFAULT_RES_VALUE -> DEFAULT_RES_VALUE
+    java.lang.String DEFAULT_STRING_VALUE -> DEFAULT_STRING_VALUE
+    int DEFAULT_LOGCAT_LINES -> DEFAULT_LOGCAT_LINES
+    int DEFAULT_BUFFER_SIZE_IN_BYTES -> DEFAULT_BUFFER_SIZE_IN_BYTES
+    boolean DEFAULT_LOGCAT_FILTER_BY_PID -> DEFAULT_LOGCAT_FILTER_BY_PID
+    boolean DEFAULT_SEND_REPORTS_IN_DEV_MODE -> DEFAULT_SEND_REPORTS_IN_DEV_MODE
+    java.lang.String DEFAULT_APPLICATION_LOGFILE -> DEFAULT_APPLICATION_LOGFILE
+    int DEFAULT_APPLICATION_LOGFILE_LINES -> DEFAULT_APPLICATION_LOGFILE_LINES
+    java.lang.String DEFAULT_GOOGLE_FORM_URL_FORMAT -> DEFAULT_GOOGLE_FORM_URL_FORMAT
+    boolean DEFAULT_DISABLE_SSL_CERT_VALIDATION -> DEFAULT_DISABLE_SSL_CERT_VALIDATION
+    org.acra.ReportField[] DEFAULT_MAIL_REPORT_FIELDS -> DEFAULT_MAIL_REPORT_FIELDS
+    org.acra.ReportField[] DEFAULT_REPORT_FIELDS -> DEFAULT_REPORT_FIELDS
+org.acra.CrashReportDialog -> org.acra.CrashReportDialog:
+    android.content.SharedPreferences prefs -> c
+    android.widget.EditText userComment -> d
+    android.widget.EditText userEmail -> e
+    java.lang.String mReportFileName -> a
+    android.app.AlertDialog mDialog -> b
+    void onCreate(android.os.Bundle) -> onCreate
+    android.view.View buildCustomView(android.os.Bundle) -> a
+    void cancelNotification() -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+    void cancelReports() -> b
+    void sendCrash() -> c
+    void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
+    void onDismiss(android.content.DialogInterface) -> onDismiss
+org.acra.CrashReportFileNameParser -> org.acra.g:
+    boolean isSilent(java.lang.String) -> isSilent
+    boolean isApproved(java.lang.String) -> isApproved
+org.acra.CrashReportFinder -> org.acra.h:
+    android.content.Context context -> a
+    java.lang.String[] getCrashReportFiles() -> getCrashReportFiles
+org.acra.CrashReportFinder$1 -> org.acra.i:
+    org.acra.CrashReportFinder this$0 -> a
+    boolean accept(java.io.File,java.lang.String) -> accept
+org.acra.CrashReportPersister -> org.acra.j:
+    android.content.Context context -> a
+    org.acra.collector.CrashReportData load(java.lang.String) -> load
+    void store(org.acra.collector.CrashReportData,java.lang.String) -> store
+    boolean isEbcdic(java.io.BufferedInputStream) -> a
+    org.acra.collector.CrashReportData load(java.io.Reader) -> a
+    void dumpString(java.lang.StringBuilder,java.lang.String,boolean) -> a
+org.acra.ErrorReporter -> org.acra.k:
+    boolean enabled -> a
+    android.app.Application mContext -> b
+    android.content.SharedPreferences prefs -> c
+    java.util.List mReportSenders -> d
+    org.acra.collector.CrashReportDataFactory crashReportDataFactory -> e
+    org.acra.CrashReportFileNameParser fileNameParser -> f
+    java.lang.Thread$UncaughtExceptionHandler mDfltExceptionHandler -> g
+    java.lang.Thread brokenThread -> h
+    java.lang.Throwable unhandledThrowable -> i
+    android.app.Activity lastActivityCreated -> j
+    boolean toastWaitEnded -> k
+    int mNotificationCounter -> l
+    org.acra.ErrorReporter getInstance() -> getInstance
+    void addCustomData(java.lang.String,java.lang.String) -> addCustomData
+    java.lang.String putCustomData(java.lang.String,java.lang.String) -> putCustomData
+    java.lang.String removeCustomData(java.lang.String) -> removeCustomData
+    java.lang.String getCustomData(java.lang.String) -> getCustomData
+    void addReportSender(org.acra.sender.ReportSender) -> addReportSender
+    void removeReportSender(org.acra.sender.ReportSender) -> removeReportSender
+    void removeReportSenders(java.lang.Class) -> removeReportSenders
+    void removeAllReportSenders() -> removeAllReportSenders
+    void setReportSender(org.acra.sender.ReportSender) -> setReportSender
+    void uncaughtException(java.lang.Thread,java.lang.Throwable) -> uncaughtException
+    void endApplication() -> c
+    void handleSilentException(java.lang.Throwable) -> handleSilentException
+    void setEnabled(boolean) -> setEnabled
+    org.acra.SendWorker startSendingReports(boolean,boolean) -> a
+    void deletePendingReports() -> a
+    void checkReportsOnApplicationStart() -> checkReportsOnApplicationStart
+    void deletePendingNonApprovedReports(boolean) -> a
+    void handleException(java.lang.Throwable,boolean) -> handleException
+    void handleException(java.lang.Throwable) -> handleException
+    void handleException(java.lang.Throwable,org.acra.ReportingInteractionMode,boolean,boolean) -> a
+    void notifyDialog(java.lang.String) -> a
+    void notifySendReport(java.lang.String) -> b
+    java.lang.String getReportFileName(org.acra.collector.CrashReportData) -> a
+    void saveCrashReportFile(java.lang.String,org.acra.collector.CrashReportData) -> a
+    java.lang.String getLatestNonSilentReport(java.lang.String[]) -> a
+    void deletePendingReports(boolean,boolean,int) -> a
+    boolean containsOnlySilentOrApprovedReports(java.lang.String[]) -> b
+    void setDefaultReportSenders() -> setDefaultReportSenders
+    android.app.Activity access$002(org.acra.ErrorReporter,android.app.Activity) -> a
+    android.app.Application access$100(org.acra.ErrorReporter) -> a
+    boolean access$202(boolean) -> b
+    boolean access$200() -> b
+    void access$300(org.acra.ErrorReporter) -> b
+org.acra.ErrorReporter$1 -> org.acra.l:
+    org.acra.ErrorReporter this$0 -> a
+    void onActivityCreated(android.app.Activity,android.os.Bundle) -> onActivityCreated
+    void onActivityStarted(android.app.Activity) -> onActivityStarted
+    void onActivityResumed(android.app.Activity) -> onActivityResumed
+    void onActivityPaused(android.app.Activity) -> onActivityPaused
+    void onActivityStopped(android.app.Activity) -> onActivityStopped
+    void onActivitySaveInstanceState(android.app.Activity,android.os.Bundle) -> onActivitySaveInstanceState
+    void onActivityDestroyed(android.app.Activity) -> onActivityDestroyed
+org.acra.ErrorReporter$2 -> org.acra.m:
+    org.acra.ErrorReporter this$0 -> a
+    void run() -> run
+org.acra.ErrorReporter$3 -> org.acra.n:
+    org.acra.ErrorReporter this$0 -> a
+    void run() -> run
+org.acra.ErrorReporter$4 -> org.acra.o:
+    org.acra.SendWorker val$worker -> a
+    boolean val$showDirectDialog -> b
+    java.lang.String val$reportFileName -> c
+    boolean val$endApplication -> d
+    org.acra.ErrorReporter this$0 -> e
+    void run() -> run
+org.acra.ReportField -> org.acra.p:
+    org.acra.ReportField REPORT_ID -> REPORT_ID
+    org.acra.ReportField APP_VERSION_CODE -> APP_VERSION_CODE
+    org.acra.ReportField APP_VERSION_NAME -> APP_VERSION_NAME
+    org.acra.ReportField PACKAGE_NAME -> PACKAGE_NAME
+    org.acra.ReportField FILE_PATH -> FILE_PATH
+    org.acra.ReportField PHONE_MODEL -> PHONE_MODEL
+    org.acra.ReportField ANDROID_VERSION -> ANDROID_VERSION
+    org.acra.ReportField BUILD -> BUILD
+    org.acra.ReportField BRAND -> BRAND
+    org.acra.ReportField PRODUCT -> PRODUCT
+    org.acra.ReportField TOTAL_MEM_SIZE -> TOTAL_MEM_SIZE
+    org.acra.ReportField AVAILABLE_MEM_SIZE -> AVAILABLE_MEM_SIZE
+    org.acra.ReportField CUSTOM_DATA -> CUSTOM_DATA
+    org.acra.ReportField STACK_TRACE -> STACK_TRACE
+    org.acra.ReportField INITIAL_CONFIGURATION -> INITIAL_CONFIGURATION
+    org.acra.ReportField CRASH_CONFIGURATION -> CRASH_CONFIGURATION
+    org.acra.ReportField DISPLAY -> DISPLAY
+    org.acra.ReportField USER_COMMENT -> USER_COMMENT
+    org.acra.ReportField USER_APP_START_DATE -> USER_APP_START_DATE
+    org.acra.ReportField USER_CRASH_DATE -> USER_CRASH_DATE
+    org.acra.ReportField DUMPSYS_MEMINFO -> DUMPSYS_MEMINFO
+    org.acra.ReportField DROPBOX -> DROPBOX
+    org.acra.ReportField LOGCAT -> LOGCAT
+    org.acra.ReportField EVENTSLOG -> EVENTSLOG
+    org.acra.ReportField RADIOLOG -> RADIOLOG
+    org.acra.ReportField IS_SILENT -> IS_SILENT
+    org.acra.ReportField DEVICE_ID -> DEVICE_ID
+    org.acra.ReportField INSTALLATION_ID -> INSTALLATION_ID
+    org.acra.ReportField USER_EMAIL -> USER_EMAIL
+    org.acra.ReportField DEVICE_FEATURES -> DEVICE_FEATURES
+    org.acra.ReportField ENVIRONMENT -> ENVIRONMENT
+    org.acra.ReportField SETTINGS_SYSTEM -> SETTINGS_SYSTEM
+    org.acra.ReportField SETTINGS_SECURE -> SETTINGS_SECURE
+    org.acra.ReportField SETTINGS_GLOBAL -> SETTINGS_GLOBAL
+    org.acra.ReportField SHARED_PREFERENCES -> SHARED_PREFERENCES
+    org.acra.ReportField APPLICATION_LOG -> APPLICATION_LOG
+    org.acra.ReportField MEDIA_CODEC_LIST -> MEDIA_CODEC_LIST
+    org.acra.ReportField THREAD_DETAILS -> THREAD_DETAILS
+    org.acra.ReportField USER_IP -> USER_IP
+    org.acra.ReportField[] $VALUES -> a
+    org.acra.ReportField[] values() -> values
+    org.acra.ReportField valueOf(java.lang.String) -> valueOf
+    boolean containsKeyValuePairs() -> containsKeyValuePairs
+org.acra.ReportField$1 -> org.acra.q:
+    boolean containsKeyValuePairs() -> containsKeyValuePairs
+org.acra.ReportField$10 -> org.acra.r:
+    boolean containsKeyValuePairs() -> containsKeyValuePairs
+org.acra.ReportField$11 -> org.acra.s:
+    boolean containsKeyValuePairs() -> containsKeyValuePairs
+org.acra.ReportField$2 -> org.acra.t:
+    boolean containsKeyValuePairs() -> containsKeyValuePairs
+org.acra.ReportField$3 -> org.acra.u:
+    boolean containsKeyValuePairs() -> containsKeyValuePairs
+org.acra.ReportField$4 -> org.acra.v:
+    boolean containsKeyValuePairs() -> containsKeyValuePairs
+org.acra.ReportField$5 -> org.acra.w:
+    boolean containsKeyValuePairs() -> containsKeyValuePairs
+org.acra.ReportField$6 -> org.acra.x:
+    boolean containsKeyValuePairs() -> containsKeyValuePairs
+org.acra.ReportField$7 -> org.acra.y:
+    boolean containsKeyValuePairs() -> containsKeyValuePairs
+org.acra.ReportField$8 -> org.acra.z:
+    boolean containsKeyValuePairs() -> containsKeyValuePairs
+org.acra.ReportField$9 -> org.acra.aa:
+    boolean containsKeyValuePairs() -> containsKeyValuePairs
+org.acra.ReportingInteractionMode -> org.acra.ab:
+    org.acra.ReportingInteractionMode SILENT -> SILENT
+    org.acra.ReportingInteractionMode NOTIFICATION -> NOTIFICATION
+    org.acra.ReportingInteractionMode TOAST -> TOAST
+    org.acra.ReportingInteractionMode DIALOG -> DIALOG
+    org.acra.ReportingInteractionMode[] $VALUES -> a
+    org.acra.ReportingInteractionMode[] values() -> values
+    org.acra.ReportingInteractionMode valueOf(java.lang.String) -> valueOf
+org.acra.SendWorker -> org.acra.ac:
+    android.content.Context context -> a
+    boolean sendOnlySilentReports -> b
+    boolean approvePendingReports -> c
+    org.acra.CrashReportFileNameParser fileNameParser -> d
+    java.util.List reportSenders -> e
+    void run() -> run
+    void approvePendingReports() -> a
+    void checkAndSendReports(android.content.Context,boolean) -> a
+    void sendCrashReport(org.acra.collector.CrashReportData) -> a
+    void deleteFile(android.content.Context,java.lang.String) -> a
+org.acra.annotation.ReportsCrashes -> org.acra.a.a:
+    java.lang.String formKey() -> formKey
+    java.lang.String formUri() -> formUri
+    org.acra.ReportingInteractionMode mode() -> mode
+    int resDialogCommentPrompt() -> resDialogCommentPrompt
+    int resDialogEmailPrompt() -> resDialogEmailPrompt
+    int resDialogIcon() -> resDialogIcon
+    int resDialogOkToast() -> resDialogOkToast
+    int resDialogText() -> resDialogText
+    int resDialogTitle() -> resDialogTitle
+    int resNotifIcon() -> resNotifIcon
+    int resNotifText() -> resNotifText
+    int resNotifTickerText() -> resNotifTickerText
+    int resNotifTitle() -> resNotifTitle
+    int resToastText() -> resToastText
+    java.lang.String sharedPreferencesName() -> sharedPreferencesName
+    int sharedPreferencesMode() -> sharedPreferencesMode
+    boolean includeDropBoxSystemTags() -> includeDropBoxSystemTags
+    java.lang.String[] additionalDropBoxTags() -> additionalDropBoxTags
+    int dropboxCollectionMinutes() -> dropboxCollectionMinutes
+    java.lang.String[] logcatArguments() -> logcatArguments
+    java.lang.String formUriBasicAuthLogin() -> formUriBasicAuthLogin
+    java.lang.String formUriBasicAuthPassword() -> formUriBasicAuthPassword
+    org.acra.ReportField[] customReportContent() -> customReportContent
+    java.lang.String mailTo() -> mailTo
+    boolean deleteUnapprovedReportsOnApplicationStart() -> deleteUnapprovedReportsOnApplicationStart
+    boolean deleteOldUnsentReportsOnApplicationStart() -> deleteOldUnsentReportsOnApplicationStart
+    int connectionTimeout() -> connectionTimeout
+    int socketTimeout() -> socketTimeout
+    int maxNumberOfRequestRetries() -> maxNumberOfRequestRetries
+    boolean forceCloseDialogAfterToast() -> forceCloseDialogAfterToast
+    java.lang.String[] additionalSharedPreferences() -> additionalSharedPreferences
+    boolean logcatFilterByPid() -> logcatFilterByPid
+    boolean sendReportsInDevMode() -> sendReportsInDevMode
+    java.lang.String[] excludeMatchingSharedPreferencesKeys() -> excludeMatchingSharedPreferencesKeys
+    java.lang.String[] excludeMatchingSettingsKeys() -> excludeMatchingSettingsKeys
+    java.lang.String applicationLogFile() -> applicationLogFile
+    int applicationLogFileLines() -> applicationLogFileLines
+    java.lang.String googleFormUrlFormat() -> googleFormUrlFormat
+    boolean disableSSLCertValidation() -> disableSSLCertValidation
+    org.acra.sender.HttpSender$Method httpMethod() -> httpMethod
+    org.acra.sender.HttpSender$Type reportType() -> reportType
+org.acra.collector.Compatibility -> org.acra.b.a:
+    int getAPILevel() -> getAPILevel
+    java.lang.String getDropBoxServiceName() -> getDropBoxServiceName
+org.acra.collector.ConfigurationCollector -> org.acra.b.b:
+    android.util.SparseArray mHardKeyboardHiddenValues -> a
+    android.util.SparseArray mKeyboardValues -> b
+    android.util.SparseArray mKeyboardHiddenValues -> c
+    android.util.SparseArray mNavigationValues -> d
+    android.util.SparseArray mNavigationHiddenValues -> e
+    android.util.SparseArray mOrientationValues -> f
+    android.util.SparseArray mScreenLayoutValues -> g
+    android.util.SparseArray mTouchScreenValues -> h
+    android.util.SparseArray mUiModeValues -> i
+    java.util.HashMap mValueArrays -> j
+    java.lang.String toString(android.content.res.Configuration) -> toString
+    java.lang.String getFieldValueName(android.content.res.Configuration,java.lang.reflect.Field) -> a
+    java.lang.String activeFlags(android.util.SparseArray,int) -> a
+    java.lang.String collectConfiguration(android.content.Context) -> collectConfiguration
+org.acra.collector.CrashReportData -> org.acra.b.c:
+    java.lang.String getProperty(org.acra.ReportField) -> getProperty
+    org.json.JSONObject toJSON() -> toJSON
+org.acra.collector.CrashReportDataFactory -> org.acra.b.d:
+    android.content.Context context -> a
+    android.content.SharedPreferences prefs -> b
+    java.util.Map customParameters -> c
+    android.text.format.Time appStartDate -> d
+    java.lang.String initialConfiguration -> e
+    java.lang.String putCustomData(java.lang.String,java.lang.String) -> putCustomData
+    java.lang.String removeCustomData(java.lang.String) -> removeCustomData
+    java.lang.String getCustomData(java.lang.String) -> getCustomData
+    org.acra.collector.CrashReportData createCrashData(java.lang.Throwable,boolean,java.lang.Thread) -> createCrashData
+    java.lang.String createCustomInfoString() -> a
+    java.lang.String getStackTrace(java.lang.Throwable) -> a
+    java.util.List getReportFields() -> b
+org.acra.collector.DeviceFeaturesCollector -> org.acra.b.e:
+    java.lang.String getFeatures(android.content.Context) -> getFeatures
+org.acra.collector.DisplayManagerCollector -> org.acra.b.f:
+    android.util.SparseArray mFlagsNames -> a
+    android.util.SparseArray mDensities -> b
+    java.lang.String collectDisplays(android.content.Context) -> collectDisplays
+    java.lang.Object collectDisplayData(android.view.Display) -> a
+    java.lang.Object collectIsValid(android.view.Display) -> b
+    java.lang.Object collectRotation(android.view.Display) -> c
+    java.lang.Object collectRectSize(android.view.Display) -> d
+    java.lang.Object collectSize(android.view.Display,java.lang.String) -> a
+    java.lang.String collectCurrentSizeRange(android.view.Display) -> e
+    java.lang.String collectFlags(android.view.Display) -> f
+    java.lang.String collectName(android.view.Display) -> g
+    java.lang.Object collectMetrics(android.view.Display,java.lang.String) -> b
+    java.lang.String activeFlags(android.util.SparseArray,int) -> a
+org.acra.collector.DropBoxCollector -> org.acra.b.g:
+    java.lang.String[] SYSTEM_TAGS -> a
+    java.lang.String read(android.content.Context,java.lang.String[]) -> read
+org.acra.collector.DumpSysCollector -> org.acra.b.h:
+    java.lang.String collectMemInfo() -> collectMemInfo
+org.acra.collector.LogCatCollector -> org.acra.b.i:
+    java.lang.String collectLogCat(java.lang.String) -> collectLogCat
+org.acra.collector.LogCatCollector$1 -> org.acra.b.j:
+    java.lang.Process val$process -> a
+    void run() -> run
+org.acra.collector.LogFileCollector -> org.acra.b.k:
+    java.lang.String collectLogFile(android.content.Context,java.lang.String,int) -> collectLogFile
+org.acra.collector.MediaCodecListCollector -> org.acra.b.l:
+    java.lang.String[] MPEG4_TYPES -> a
+    java.lang.String[] AVC_TYPES -> b
+    java.lang.String[] H263_TYPES -> c
+    java.lang.String[] AAC_TYPES -> d
+    java.lang.Class mediaCodecListClass -> e
+    java.lang.reflect.Method getCodecInfoAtMethod -> f
+    java.lang.Class mediaCodecInfoClass -> g
+    java.lang.reflect.Method getNameMethod -> h
+    java.lang.reflect.Method isEncoderMethod -> i
+    java.lang.reflect.Method getSupportedTypesMethod -> j
+    java.lang.reflect.Method getCapabilitiesForTypeMethod -> k
+    java.lang.Class codecCapabilitiesClass -> l
+    java.lang.reflect.Field colorFormatsField -> m
+    java.lang.reflect.Field profileLevelsField -> n
+    java.lang.reflect.Field profileField -> o
+    java.lang.reflect.Field levelField -> p
+    android.util.SparseArray mColorFormatValues -> q
+    android.util.SparseArray mAVCLevelValues -> r
+    android.util.SparseArray mAVCProfileValues -> s
+    android.util.SparseArray mH263LevelValues -> t
+    android.util.SparseArray mH263ProfileValues -> u
+    android.util.SparseArray mMPEG4LevelValues -> v
+    android.util.SparseArray mMPEG4ProfileValues -> w
+    android.util.SparseArray mAACProfileValues -> x
+    java.lang.String collecMediaCodecList() -> collecMediaCodecList
+    java.lang.String collectCapabilitiesForType(java.lang.Object,java.lang.String) -> a
+    org.acra.collector.MediaCodecListCollector$CodecType identifyCodecType(java.lang.Object) -> a
+org.acra.collector.MediaCodecListCollector$1 -> org.acra.b.m:
+    int[] $SwitchMap$org$acra$collector$MediaCodecListCollector$CodecType -> a
+org.acra.collector.MediaCodecListCollector$CodecType -> org.acra.b.n:
+    org.acra.collector.MediaCodecListCollector$CodecType AVC -> AVC
+    org.acra.collector.MediaCodecListCollector$CodecType H263 -> H263
+    org.acra.collector.MediaCodecListCollector$CodecType MPEG4 -> MPEG4
+    org.acra.collector.MediaCodecListCollector$CodecType AAC -> AAC
+    org.acra.collector.MediaCodecListCollector$CodecType[] $VALUES -> a
+    org.acra.collector.MediaCodecListCollector$CodecType[] values() -> values
+    org.acra.collector.MediaCodecListCollector$CodecType valueOf(java.lang.String) -> valueOf
+org.acra.collector.ReflectionCollector -> org.acra.b.o:
+    java.lang.String collectConstants(java.lang.Class,java.lang.String) -> collectConstants
+    java.lang.String collectStaticGettersResults(java.lang.Class) -> collectStaticGettersResults
+    java.lang.String collectConstants(java.lang.Class) -> collectConstants
+org.acra.collector.SettingsCollector -> org.acra.b.p:
+    java.lang.String collectSystemSettings(android.content.Context) -> collectSystemSettings
+    java.lang.String collectSecureSettings(android.content.Context) -> collectSecureSettings
+    java.lang.String collectGlobalSettings(android.content.Context) -> collectGlobalSettings
+    boolean isAuthorized(java.lang.reflect.Field) -> a
+org.acra.collector.SharedPreferencesCollector -> org.acra.b.q:
+    java.lang.String collect(android.content.Context) -> collect
+    boolean filteredKey(java.lang.String) -> a
+org.acra.collector.ThreadCollector -> org.acra.b.r:
+    java.lang.String collect(java.lang.Thread) -> collect
+org.acra.jraf.android.util.activitylifecyclecallbackscompat.ActivityLifecycleCallbacksCompat -> org.acra.c.a.a.a.a:
+    void onActivityCreated(android.app.Activity,android.os.Bundle) -> onActivityCreated
+    void onActivityStarted(android.app.Activity) -> onActivityStarted
+    void onActivityResumed(android.app.Activity) -> onActivityResumed
+    void onActivityPaused(android.app.Activity) -> onActivityPaused
+    void onActivityStopped(android.app.Activity) -> onActivityStopped
+    void onActivitySaveInstanceState(android.app.Activity,android.os.Bundle) -> onActivitySaveInstanceState
+    void onActivityDestroyed(android.app.Activity) -> onActivityDestroyed
+org.acra.jraf.android.util.activitylifecyclecallbackscompat.ActivityLifecycleCallbacksWrapper -> org.acra.c.a.a.a.b:
+    org.acra.jraf.android.util.activitylifecyclecallbackscompat.ActivityLifecycleCallbacksCompat mCallback -> a
+    void onActivityCreated(android.app.Activity,android.os.Bundle) -> onActivityCreated
+    void onActivityStarted(android.app.Activity) -> onActivityStarted
+    void onActivityResumed(android.app.Activity) -> onActivityResumed
+    void onActivityPaused(android.app.Activity) -> onActivityPaused
+    void onActivityStopped(android.app.Activity) -> onActivityStopped
+    void onActivitySaveInstanceState(android.app.Activity,android.os.Bundle) -> onActivitySaveInstanceState
+    void onActivityDestroyed(android.app.Activity) -> onActivityDestroyed
+org.acra.jraf.android.util.activitylifecyclecallbackscompat.ApplicationHelper -> org.acra.c.a.a.a.c:
+    boolean PRE_ICS -> PRE_ICS
+    void registerActivityLifecycleCallbacks(android.app.Application,org.acra.jraf.android.util.activitylifecyclecallbackscompat.ActivityLifecycleCallbacksCompat) -> registerActivityLifecycleCallbacks
+    void preIcsRegisterActivityLifecycleCallbacks(org.acra.jraf.android.util.activitylifecyclecallbackscompat.ActivityLifecycleCallbacksCompat) -> a
+    void postIcsRegisterActivityLifecycleCallbacks(android.app.Application,org.acra.jraf.android.util.activitylifecyclecallbackscompat.ActivityLifecycleCallbacksCompat) -> a
+    void unregisterActivityLifecycleCallbacks(android.app.Application,org.acra.jraf.android.util.activitylifecyclecallbackscompat.ActivityLifecycleCallbacksCompat) -> unregisterActivityLifecycleCallbacks
+    void preIcsUnregisterActivityLifecycleCallbacks(org.acra.jraf.android.util.activitylifecyclecallbackscompat.ActivityLifecycleCallbacksCompat) -> b
+    void postIcsUnregisterActivityLifecycleCallbacks(android.app.Application,org.acra.jraf.android.util.activitylifecyclecallbackscompat.ActivityLifecycleCallbacksCompat) -> b
+org.acra.jraf.android.util.activitylifecyclecallbackscompat.MainLifecycleDispatcher -> org.acra.c.a.a.a.d:
+    org.acra.jraf.android.util.activitylifecyclecallbackscompat.MainLifecycleDispatcher INSTANCE -> a
+    java.util.ArrayList mActivityLifecycleCallbacks -> b
+    org.acra.jraf.android.util.activitylifecyclecallbackscompat.MainLifecycleDispatcher get() -> get
+    void registerActivityLifecycleCallbacks(org.acra.jraf.android.util.activitylifecyclecallbackscompat.ActivityLifecycleCallbacksCompat) -> a
+    void unregisterActivityLifecycleCallbacks(org.acra.jraf.android.util.activitylifecyclecallbackscompat.ActivityLifecycleCallbacksCompat) -> b
+    java.lang.Object[] collectActivityLifecycleCallbacks() -> a
+    void onActivityCreated(android.app.Activity,android.os.Bundle) -> onActivityCreated
+    void onActivityStarted(android.app.Activity) -> onActivityStarted
+    void onActivityResumed(android.app.Activity) -> onActivityResumed
+    void onActivityPaused(android.app.Activity) -> onActivityPaused
+    void onActivityStopped(android.app.Activity) -> onActivityStopped
+    void onActivitySaveInstanceState(android.app.Activity,android.os.Bundle) -> onActivitySaveInstanceState
+    void onActivityDestroyed(android.app.Activity) -> onActivityDestroyed
+org.acra.log.ACRALog -> org.acra.d.a:
+    int v(java.lang.String,java.lang.String) -> v
+    int v(java.lang.String,java.lang.String,java.lang.Throwable) -> v
+    int d(java.lang.String,java.lang.String) -> d
+    int d(java.lang.String,java.lang.String,java.lang.Throwable) -> d
+    int i(java.lang.String,java.lang.String) -> i
+    int i(java.lang.String,java.lang.String,java.lang.Throwable) -> i
+    int w(java.lang.String,java.lang.String) -> w
+    int w(java.lang.String,java.lang.String,java.lang.Throwable) -> w
+    int w(java.lang.String,java.lang.Throwable) -> w
+    int e(java.lang.String,java.lang.String) -> e
+    int e(java.lang.String,java.lang.String,java.lang.Throwable) -> e
+    java.lang.String getStackTraceString(java.lang.Throwable) -> getStackTraceString
+org.acra.log.AndroidLogDelegate -> org.acra.d.b:
+    int v(java.lang.String,java.lang.String) -> v
+    int v(java.lang.String,java.lang.String,java.lang.Throwable) -> v
+    int d(java.lang.String,java.lang.String) -> d
+    int d(java.lang.String,java.lang.String,java.lang.Throwable) -> d
+    int i(java.lang.String,java.lang.String) -> i
+    int i(java.lang.String,java.lang.String,java.lang.Throwable) -> i
+    int w(java.lang.String,java.lang.String) -> w
+    int w(java.lang.String,java.lang.String,java.lang.Throwable) -> w
+    int w(java.lang.String,java.lang.Throwable) -> w
+    int e(java.lang.String,java.lang.String) -> e
+    int e(java.lang.String,java.lang.String,java.lang.Throwable) -> e
+    java.lang.String getStackTraceString(java.lang.Throwable) -> getStackTraceString
+org.acra.sender.EmailIntentSender -> org.acra.e.a:
+    android.content.Context mContext -> a
+    void send(org.acra.collector.CrashReportData) -> send
+    java.lang.String buildBody(org.acra.collector.CrashReportData) -> a
+org.acra.sender.GoogleFormSender -> org.acra.e.b:
+    android.net.Uri mFormUri -> a
+    void send(org.acra.collector.CrashReportData) -> send
+    java.util.Map remap(java.util.Map) -> a
+org.acra.sender.GoogleFormSender$1 -> org.acra.e.c:
+    int[] $SwitchMap$org$acra$ReportField -> a
+org.acra.sender.HttpSender -> org.acra.e.d:
+    android.net.Uri mFormUri -> a
+    java.util.Map mMapping -> b
+    org.acra.sender.HttpSender$Method mMethod -> c
+    org.acra.sender.HttpSender$Type mType -> d
+    void send(org.acra.collector.CrashReportData) -> send
+    java.util.Map remap(java.util.Map) -> a
+org.acra.sender.HttpSender$1 -> org.acra.e.e:
+    int[] $SwitchMap$org$acra$sender$HttpSender$Type -> a
+    int[] $SwitchMap$org$acra$sender$HttpSender$Method -> b
+org.acra.sender.HttpSender$Method -> org.acra.e.f:
+    org.acra.sender.HttpSender$Method POST -> POST
+    org.acra.sender.HttpSender$Method PUT -> PUT
+    org.acra.sender.HttpSender$Method[] $VALUES -> a
+    org.acra.sender.HttpSender$Method[] values() -> values
+    org.acra.sender.HttpSender$Method valueOf(java.lang.String) -> valueOf
+org.acra.sender.HttpSender$Type -> org.acra.e.g:
+    org.acra.sender.HttpSender$Type FORM -> FORM
+    org.acra.sender.HttpSender$Type JSON -> JSON
+    org.acra.sender.HttpSender$Type[] $VALUES -> a
+    org.acra.sender.HttpSender$Type[] values() -> values
+    org.acra.sender.HttpSender$Type valueOf(java.lang.String) -> valueOf
+    java.lang.String getContentType() -> getContentType
+org.acra.sender.HttpSender$Type$1 -> org.acra.e.h:
+    java.lang.String getContentType() -> getContentType
+org.acra.sender.HttpSender$Type$2 -> org.acra.e.i:
+    java.lang.String getContentType() -> getContentType
+org.acra.sender.ReportSender -> org.acra.e.j:
+    void send(org.acra.collector.CrashReportData) -> send
+org.acra.sender.ReportSenderException -> org.acra.e.k:
+org.acra.util.BoundedLinkedList -> org.acra.f.a:
+    int maxSize -> a
+    boolean add(java.lang.Object) -> add
+    void add(int,java.lang.Object) -> add
+    boolean addAll(java.util.Collection) -> addAll
+    boolean addAll(int,java.util.Collection) -> addAll
+    void addFirst(java.lang.Object) -> addFirst
+    void addLast(java.lang.Object) -> addLast
+    java.lang.String toString() -> toString
+org.acra.util.FakeSocketFactory -> org.acra.f.b:
+    javax.net.ssl.SSLContext sslcontext -> a
+    javax.net.ssl.SSLContext createEasySSLContext() -> a
+    javax.net.ssl.SSLContext getSSLContext() -> b
+    java.net.Socket connectSocket(java.net.Socket,java.lang.String,int,java.net.InetAddress,int,org.apache.http.params.HttpParams) -> connectSocket
+    java.net.Socket createSocket() -> createSocket
+    boolean isSecure(java.net.Socket) -> isSecure
+    java.net.Socket createSocket(java.net.Socket,java.lang.String,int,boolean) -> createSocket
+org.acra.util.HttpRequest -> org.acra.f.c:
+    java.lang.String login -> a
+    java.lang.String password -> b
+    int connectionTimeOut -> c
+    int socketTimeOut -> d
+    int maxNrRetries -> e
+    java.util.Map headers -> f
+    void setLogin(java.lang.String) -> setLogin
+    void setPassword(java.lang.String) -> setPassword
+    void setConnectionTimeOut(int) -> setConnectionTimeOut
+    void setSocketTimeOut(int) -> setSocketTimeOut
+    void setHeaders(java.util.Map) -> setHeaders
+    void setMaxNrRetries(int) -> setMaxNrRetries
+    void send(java.net.URL,org.acra.sender.HttpSender$Method,java.lang.String,org.acra.sender.HttpSender$Type) -> send
+    org.apache.http.client.HttpClient getHttpClient() -> a
+    org.apache.http.auth.UsernamePasswordCredentials getCredentials() -> b
+    org.apache.http.client.methods.HttpEntityEnclosingRequestBase getHttpRequest(java.net.URL,org.acra.sender.HttpSender$Method,java.lang.String,org.acra.sender.HttpSender$Type) -> a
+    java.lang.String getParamsAsFormString(java.util.Map) -> getParamsAsFormString
+org.acra.util.HttpRequest$1 -> org.acra.f.d:
+    int[] $SwitchMap$org$acra$sender$HttpSender$Method -> a
+org.acra.util.HttpRequest$SocketTimeOutRetryHandler -> org.acra.f.e:
+    org.apache.http.params.HttpParams httpParams -> a
+    int maxNrRetries -> b
+    boolean retryRequest(java.io.IOException,int,org.apache.http.protocol.HttpContext) -> retryRequest
+org.acra.util.Installation -> org.acra.f.f:
+    java.lang.String sID -> a
+    java.lang.String id(android.content.Context) -> id
+    java.lang.String readInstallationFile(java.io.File) -> a
+    void writeInstallationFile(java.io.File) -> b
+org.acra.util.JSONReportBuilder -> org.acra.f.g:
+    org.json.JSONObject buildJSONReport(org.acra.collector.CrashReportData) -> buildJSONReport
+    void addJSONFromProperty(org.json.JSONObject,java.lang.String) -> a
+    java.lang.Object guessType(java.lang.String) -> a
+    void addJSONSubTree(org.json.JSONObject,java.lang.String[],java.lang.Object) -> a
+org.acra.util.JSONReportBuilder$JSONReportException -> org.acra.f.h:
+org.acra.util.NaiveTrustManager -> org.acra.f.i:
+    java.security.cert.X509Certificate[] getAcceptedIssuers() -> getAcceptedIssuers
+    void checkClientTrusted(java.security.cert.X509Certificate[],java.lang.String) -> checkClientTrusted
+    void checkServerTrusted(java.security.cert.X509Certificate[],java.lang.String) -> checkServerTrusted
+org.acra.util.PackageManagerWrapper -> org.acra.f.j:
+    android.content.Context context -> a
+    boolean hasPermission(java.lang.String) -> hasPermission
+    android.content.pm.PackageInfo getPackageInfo() -> getPackageInfo
+org.acra.util.ReportUtils -> org.acra.f.k:
+    long getAvailableInternalMemorySize() -> getAvailableInternalMemorySize
+    long getTotalInternalMemorySize() -> getTotalInternalMemorySize
+    java.lang.String getDeviceId(android.content.Context) -> getDeviceId
+    java.lang.String getApplicationFilePath(android.content.Context) -> getApplicationFilePath
+    java.lang.String sparseArrayToString(android.util.SparseArray) -> sparseArrayToString
+    java.lang.String getLocalIpAddress() -> getLocalIpAddress
+org.acra.util.ToastSender -> org.acra.f.l:
+    void sendToast(android.content.Context,int,int) -> sendToast
+org.slf4j.ILoggerFactory -> org.a.a:
     org.slf4j.Logger getLogger(java.lang.String) -> getLogger
-org.slf4j.Logger -> a.a.b:
+org.slf4j.Logger -> org.a.b:
     java.lang.String ROOT_LOGGER_NAME -> ROOT_LOGGER_NAME
     java.lang.String getName() -> getName
     boolean isTraceEnabled() -> isTraceEnabled
@@ -34680,7 +35383,7 @@ org.slf4j.Logger -> a.a.b:
     void error(org.slf4j.Marker,java.lang.String,java.lang.Object,java.lang.Object) -> error
     void error(org.slf4j.Marker,java.lang.String,java.lang.Object[]) -> error
     void error(org.slf4j.Marker,java.lang.String,java.lang.Throwable) -> error
-org.slf4j.LoggerFactory -> a.a.c:
+org.slf4j.LoggerFactory -> org.a.c:
     int INITIALIZATION_STATE -> a
     org.slf4j.helpers.SubstituteLoggerFactory TEMP_FACTORY -> b
     org.slf4j.helpers.NOPLoggerFactory NOP_FALLBACK_FACTORY -> c
@@ -34699,7 +35402,7 @@ org.slf4j.LoggerFactory -> a.a.c:
     org.slf4j.Logger getLogger(java.lang.String) -> getLogger
     org.slf4j.Logger getLogger(java.lang.Class) -> getLogger
     org.slf4j.ILoggerFactory getILoggerFactory() -> getILoggerFactory
-org.slf4j.Marker -> a.a.d:
+org.slf4j.Marker -> org.a.d:
     java.lang.String ANY_MARKER -> ANY_MARKER
     java.lang.String ANY_NON_NULL_MARKER -> ANY_NON_NULL_MARKER
     java.lang.String getName() -> getName
@@ -34712,7 +35415,7 @@ org.slf4j.Marker -> a.a.d:
     boolean contains(java.lang.String) -> contains
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
-org.slf4j.helpers.MarkerIgnoringBase -> a.a.a.a:
+org.slf4j.helpers.MarkerIgnoringBase -> org.a.a.a:
     boolean isTraceEnabled(org.slf4j.Marker) -> isTraceEnabled
     void trace(org.slf4j.Marker,java.lang.String) -> trace
     void trace(org.slf4j.Marker,java.lang.String,java.lang.Object) -> trace
@@ -34745,7 +35448,7 @@ org.slf4j.helpers.MarkerIgnoringBase -> a.a.a.a:
     void error(org.slf4j.Marker,java.lang.String,java.lang.Throwable) -> error
     java.lang.String toString() -> toString
     java.lang.String getName() -> getName
-org.slf4j.helpers.NOPLogger -> a.a.a.b:
+org.slf4j.helpers.NOPLogger -> org.a.a.b:
     org.slf4j.helpers.NOPLogger NOP_LOGGER -> NOP_LOGGER
     java.lang.String getName() -> getName
     boolean isTraceEnabled() -> isTraceEnabled
@@ -34778,16 +35481,16 @@ org.slf4j.helpers.NOPLogger -> a.a.a.b:
     void error(java.lang.String,java.lang.Object,java.lang.Object) -> error
     void error(java.lang.String,java.lang.Object[]) -> error
     void error(java.lang.String,java.lang.Throwable) -> error
-org.slf4j.helpers.NOPLoggerFactory -> a.a.a.c:
+org.slf4j.helpers.NOPLoggerFactory -> org.a.a.c:
     org.slf4j.Logger getLogger(java.lang.String) -> getLogger
-org.slf4j.helpers.NamedLoggerBase -> a.a.a.d:
+org.slf4j.helpers.NamedLoggerBase -> org.a.a.d:
     java.lang.String name -> a
     java.lang.String getName() -> getName
-org.slf4j.helpers.SubstituteLoggerFactory -> a.a.a.e:
+org.slf4j.helpers.SubstituteLoggerFactory -> org.a.a.e:
     java.util.List loggerNameList -> a
     org.slf4j.Logger getLogger(java.lang.String) -> getLogger
     java.util.List getLoggerNameList() -> getLoggerNameList
-org.slf4j.helpers.Util -> a.a.a.f:
+org.slf4j.helpers.Util -> org.a.a.f:
     void report(java.lang.String,java.lang.Throwable) -> report
     void report(java.lang.String) -> report
 uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.AbcDefaultHeaderTransformer -> uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.a:

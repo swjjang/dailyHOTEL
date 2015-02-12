@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.activity;
 
 import android.os.Bundle;
 
+
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;

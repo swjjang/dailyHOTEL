@@ -353,4 +353,10 @@
     <string name="com_facebook_loginview_log_out_action">로그아웃</string>
     <string name="com_facebook_loginview_cancel_action">취소</string>
     
+    <!-- ACRA -->
+    <string name="crash_toast_text">예상치 못한 문제가 발생하였습니다.</string>
+    <string name="crash_dialog_title">Application 문제 리포팅</string>
+    <string name="crash_dialog_text">예상치 못한 문제가 발생했습니다. 문제의 빠른 해결을 위해 오류 데이터를 메일로 보내주세요. 확인을 누르시면 메일로 에러를 리포팅합니다.</string>
+    <string name="crash_dialog_ok_text">빠른 수정 적용하겠습니다.</string>
+    <string name="crash_dialog_comment_prompt">아래에 문제에 관한 의견을 남겨주세요.</string>
 </resources>

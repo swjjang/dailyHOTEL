@@ -164,6 +164,10 @@ public class CreditFragment extends BaseFragment implements Constants,
 			}
 
 		} else if (v.getId() == tvCredit.getId()) {
+			//acra test
+			TextView mTextView = null;
+			mTextView.setText("testtesttesttest");
+			
 			((MainActivity) mHostActivity).addFragment(CreditListFragment.newInstance(mCreditList));
 			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "requestCreditHistory", null, null);
 		} else if (v.getId() == btnLogin.getId()) {

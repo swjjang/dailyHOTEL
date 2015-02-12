@@ -3265,10 +3265,10 @@ com.twoheart.dailyhotel.CreditFragment:
 com.twoheart.dailyhotel.CreditListFragment:
     private static final java.lang.String KEY_BUNDLE_ARGUMENTS_CREDITLIST
 com.twoheart.dailyhotel.DailyHotel:
-    102:104:private void initializeVolleyImageLoader()
+    118:120:private void initializeVolleyImageLoader()
 com.twoheart.dailyhotel.HotelListFragment:
     private static final java.lang.String TAG
-    282:308:private android.app.Dialog getEventPopUpDialog()
+    284:310:private android.app.Dialog getEventPopUpDialog()
 com.twoheart.dailyhotel.HotelListFragment$2
 com.twoheart.dailyhotel.HotelListFragment$WebViewClientClass
 com.twoheart.dailyhotel.MainActivity:
@@ -3436,6 +3436,70 @@ fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable:
     private static final float OFFSET_PER_FRAME
 kr.co.kcp.util.DisplayViewPort
 kr.co.kcp.util.UtilActivity
+org.acra.ACRAConfigurationException:
+    private static final long serialVersionUID
+org.acra.ACRAConstants:
+    static final java.lang.String APPROVED_SUFFIX
+    static final int MAX_SEND_REPORTS
+    protected static final java.lang.String EXTRA_REPORT_FILE_NAME
+    protected static final java.lang.String EXTRA_FORCE_CANCEL
+    static final int NOTIF_CRASH_ID
+    static final int TOAST_WAIT_DURATION
+org.acra.CrashReportDialog:
+    private static final java.lang.String STATE_EMAIL
+    private static final java.lang.String STATE_COMMENT
+org.acra.CrashReportPersister:
+    private static final int NONE
+    private static final int SLASH
+    private static final int UNICODE
+    private static final int CONTINUE
+    private static final int KEY_DONE
+    private static final int IGNORE
+    private static final java.lang.String LINE_SEPARATOR
+org.acra.collector.ConfigurationCollector:
+    private static final java.lang.String SUFFIX_MASK
+    private static final java.lang.String FIELD_SCREENLAYOUT
+    private static final java.lang.String FIELD_UIMODE
+    private static final java.lang.String FIELD_MNC
+    private static final java.lang.String FIELD_MCC
+    private static final java.lang.String PREFIX_UI_MODE
+    private static final java.lang.String PREFIX_TOUCHSCREEN
+    private static final java.lang.String PREFIX_SCREENLAYOUT
+    private static final java.lang.String PREFIX_ORIENTATION
+    private static final java.lang.String PREFIX_NAVIGATIONHIDDEN
+    private static final java.lang.String PREFIX_NAVIGATION
+    private static final java.lang.String PREFIX_KEYBOARDHIDDEN
+    private static final java.lang.String PREFIX_KEYBOARD
+    private static final java.lang.String PREFIX_HARDKEYBOARDHIDDEN
+org.acra.collector.CrashReportData:
+    private static final long serialVersionUID
+org.acra.collector.DeviceFeaturesCollector:
+    32:32:DeviceFeaturesCollector()
+org.acra.collector.DisplayManagerCollector:
+    18:18:DisplayManagerCollector()
+org.acra.collector.DropBoxCollector:
+    private static final java.lang.String NO_RESULT
+    40:40:DropBoxCollector()
+org.acra.collector.DumpSysCollector:
+    34:34:DumpSysCollector()
+org.acra.collector.LogCatCollector:
+    private static final int DEFAULT_TAIL_COUNT
+    41:41:LogCatCollector()
+org.acra.collector.LogFileCollector:
+    41:42:private LogFileCollector()
+org.acra.collector.MediaCodecListCollector:
+    private static final java.lang.String COLOR_FORMAT_PREFIX
+org.acra.collector.ReflectionCollector:
+    32:32:ReflectionCollector()
+org.acra.collector.SettingsCollector:
+    39:39:SettingsCollector()
+org.acra.collector.SharedPreferencesCollector:
+    33:33:SharedPreferencesCollector()
+org.acra.jraf.android.util.activitylifecyclecallbackscompat.ActivityLifecycleCallbacksAdapter
+org.acra.util.Installation:
+    private static final java.lang.String INSTALLATION
+org.acra.util.JSONReportBuilder$JSONReportException:
+    private static final long serialVersionUID
 org.slf4j.IMarkerFactory
 org.slf4j.LoggerFactory:
     static final java.lang.String CODES_PREFIX
