@@ -62,6 +62,7 @@ import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
+import com.twoheart.dailyhotel.util.Constants.Stores;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
@@ -179,6 +180,17 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 					if (userName != null) snsSignupParams.put("name", userName);
 
 					if (deviceId != null) snsSignupParams.put("device", deviceId);
+					
+					String store = "";
+					if (RELEASE_STORE == Stores.N_STORE) {
+						store = "Nstore";
+					} else if (RELEASE_STORE == Stores.PLAY_STORE) {
+						store = "PlayStore";
+					} else if (RELEASE_STORE == Stores.T_STORE) {
+						store = "Tstore";
+					}
+					snsSignupParams.put("marketType", store);
+					
 					unLockUI(); // 페이스북 연결 종료 
 
 					lockUI(); // 서버와 연결 시작 
@@ -400,6 +412,7 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 				String result = obj.getString("join");
 				String msg = obj.getString("msg");
 
+				Log.d(TAG, "user/join? " + response.toString());
 				if (result.equals("true")) { // 회원가입에 성공하면 이제 로그인 절차
 					lockUI();
 					Editor ed = sharedPreference.edit();

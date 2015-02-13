@@ -44,7 +44,7 @@ import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 		resDialogText = R.string.crash_dialog_text,
 		resDialogOkToast = R.string.crash_dialog_ok_text,
 		resDialogCommentPrompt = R.string.crash_dialog_comment_prompt,
-		mailTo = "julia@dailyhotel.co.kr"
+		mailTo = "dev.report@dailyhotel.co.kr"
 )
 public class DailyHotel extends Application implements Constants{
 	

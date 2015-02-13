@@ -40,6 +40,7 @@ import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
+import com.twoheart.dailyhotel.util.Constants.Stores;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
@@ -148,6 +149,16 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 			signupParams.put("phone", etPhone.getText().toString());
 			TelephonyManager tManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 			signupParams.put("device", tManager.getDeviceId());
+			
+			String store = "";
+			if (RELEASE_STORE == Stores.N_STORE) {
+				store = "Nstore";
+			} else if (RELEASE_STORE == Stores.PLAY_STORE) {
+				store = "PlayStore";
+			} else if (RELEASE_STORE == Stores.T_STORE) {
+				store = "Tstore";
+			}
+			signupParams.put("marketType", store);
 			
 			String recommender = etRecommender.getText().toString().trim();
 			if (!recommender.equals(""))	signupParams.put("recommender", recommender);

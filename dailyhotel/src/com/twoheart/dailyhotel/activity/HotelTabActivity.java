@@ -261,6 +261,7 @@ DailyHotelStringResponseListener {
 		if (url.contains(URL_WEBAPI_HOTEL_DETAIL)) {
 			try {
 				JSONObject obj = response;
+				Log.d(TAG, "hotel_detail : " + response.toString());
 				JSONArray bookingArr = obj.getJSONArray("detail");
 				JSONObject detailObj = bookingArr.getJSONObject(0);
 
@@ -294,6 +295,7 @@ DailyHotelStringResponseListener {
 					imageList.add(imgObj.getString("path"));
 				}
 
+				
 				hotelDetail.setImageUrl(imageList);
 				JSONArray specArr = obj.getJSONArray("spec");
 				Map<String, List<String>> contentList = new LinkedHashMap<String, List<String>>();

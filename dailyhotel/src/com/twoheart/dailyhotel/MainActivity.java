@@ -85,6 +85,7 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.Constants.Stores;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
