@@ -48,15 +48,13 @@ import android.view.Window;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.android.volley.Request.Method;
-import com.google.analytics.tracking.android.Fields;
-import com.google.analytics.tracking.android.MapBuilder;
 import com.twoheart.dailyhotel.activity.EventWebActivity;
 import com.twoheart.dailyhotel.activity.HotelTabActivity;
 import com.twoheart.dailyhotel.adapter.HotelListAdapter;
@@ -205,8 +203,12 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 		// 7.2 G2 버전에서 호텔리스트에서 이벤트 칸을 클릭할 경우 튕기는 현상을 막기 위함. why? 헤더뷰인데도 아이템 클릭 리스너가 들어감.
 		if (position == 0)  return; 
 
-//		mHostActivity.selectMenuDrawer(mHostActivity.menuHotelListFragment);
+		//acra test
+//		TextView mTextView = null;
+//		mTextView.setText("testtesttesttest");
 		
+//		mHostActivity.selectMenuDrawer(mHostActivity.menuHotelListFragment);
+	
 		int selectedPosition = position - 1;
 		HotelListViewItem selectedItem = mHotelListViewList.get(selectedPosition);
 		int count = 0;

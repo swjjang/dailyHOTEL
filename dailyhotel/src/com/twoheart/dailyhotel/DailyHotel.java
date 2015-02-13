@@ -16,6 +16,10 @@ package com.twoheart.dailyhotel;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 
+import org.acra.ACRA;
+import org.acra.ReportingInteractionMode;
+import org.acra.annotation.ReportsCrashes;
+
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
@@ -30,6 +34,18 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.VolleyImageLoader;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 
+@ReportsCrashes
+(
+		formKey = "",
+		resToastText = R.string.crash_toast_text,
+		mode = ReportingInteractionMode.DIALOG,
+		resDialogIcon = android.R.drawable.ic_dialog_info,
+		resDialogTitle = R.string.crash_dialog_title,
+		resDialogText = R.string.crash_dialog_text,
+		resDialogOkToast = R.string.crash_dialog_ok_text,
+		resDialogCommentPrompt = R.string.crash_dialog_comment_prompt,
+		mailTo = "julia@dailyhotel.co.kr"
+)
 public class DailyHotel extends Application implements Constants{
 	
 	private static Typeface mTypeface;
@@ -42,7 +58,7 @@ public class DailyHotel extends Application implements Constants{
 		initializeVolley();
 		initializeGa();
 		initializeFont();
-
+		ACRA.init(this);
 	}
 
 	private void initializeGa() {

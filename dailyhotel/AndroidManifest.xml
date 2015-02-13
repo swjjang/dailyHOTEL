@@ -184,6 +184,14 @@
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_event_pop_up" >
         </activity>
+        <activity 
+            android:name="org.acra.CrashReportDialog"
+            android:theme="@android:style/Theme.Dialog"
+            android:launchMode="singleInstance"
+            android:excludeFromRecents="true"
+            android:finishOnTaskLaunch="true">
+            
+        </activity>
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
