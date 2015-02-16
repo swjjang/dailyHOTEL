@@ -28,7 +28,7 @@ public interface Constants {
 	public static final Stores RELEASE_STORE = Stores.PLAY_STORE; 
 
 	// 항상 열리게 셋팅 여부
-	public static final boolean ALWAYS_OPEN = true;
+	public static final boolean ALWAYS_OPEN = false;
 
     public static final String GCM_PROJECT_NUMBER = "1025681158000";
     public static final String GCM_DEVICE_TYPE_ANDROID = "0"; // GCM 등록을 할 때 API의 deviceType, 0은 안드로이드 1은 아이폰.
