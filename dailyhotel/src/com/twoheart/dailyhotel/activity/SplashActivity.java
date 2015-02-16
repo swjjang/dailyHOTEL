@@ -36,6 +36,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -241,6 +242,7 @@ DailyHotelJsonResponseListener, ErrorListener {
 	public void onResponse(String url, JSONObject response) {
 		if (url.contains(URL_WEBAPI_USER_LOGIN)) {
 			try {
+				Log.d(TAG, "login? " + response.toString());
 				if (!response.getBoolean("login")) {
 					// 로그인 실패
 					// data 초기화
