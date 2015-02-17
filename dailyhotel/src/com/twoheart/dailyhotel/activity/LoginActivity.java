@@ -233,6 +233,7 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 			loginParams = new LinkedHashMap<String, String>();
 			loginParams.put("email", etId.getText().toString());
 			loginParams.put("pw", md5);
+			Log.d(TAG, "email : " + loginParams.get("email") + " pw : " + loginParams.get("pw"));
 			lockUI();
 
 			mQueue.add(new DailyHotelJsonRequest(Method.POST,

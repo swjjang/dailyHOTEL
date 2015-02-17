@@ -218,12 +218,11 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 				if (obj.length() > 1) msg = obj.getString("msg");
 
 				if (result.equals("true")) {
-					
+					Log.d(TAG, "result? " + result);
 					Map<String, String> loginParams = new HashMap<String, String>();
 					loginParams.put("email", signupParams.get("email"));
-					loginParams.put("pw", Crypto.encrypt(signupParams.get("pw")).replace(
-							"\n", ""));
-					
+					loginParams.put("pw", Crypto.encrypt(signupParams.get("pw")).replace("\n", ""));
+					Log.d(TAG, "email : " + loginParams.get("email") + " pw : " + loginParams.get("pw"));
 					mQueue.add(new DailyHotelJsonRequest(
 							Method.POST, new StringBuilder(
 									URL_DAILYHOTEL_SERVER).append(
@@ -241,6 +240,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 		} else if (url.contains(URL_WEBAPI_USER_LOGIN)) {
 			
 			try {
+				Log.d(TAG, response.toString());
 				if (response.getBoolean("login")) {
 					VolleyHttpClient.createCookie();
 					unLockUI();
@@ -254,7 +254,8 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 					.append(URL_WEBAPI_USER_INFO).toString(), null, this, this));
 					
 //					finish();
-				}
+				} 
+
 			} catch (JSONException e) {
 				onError(e);
 			} 

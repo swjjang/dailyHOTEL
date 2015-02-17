@@ -25,7 +25,7 @@ public interface Constants {
 	// 스토어 선택.
 	enum Stores { PLAY_STORE, T_STORE, N_STORE };
 
-	public static final Stores RELEASE_STORE = Stores.PLAY_STORE; 
+	public static final Stores RELEASE_STORE = Stores.N_STORE; 
 
 	// 항상 열리게 셋팅 여부
 	public static final boolean ALWAYS_OPEN = false;
@@ -35,7 +35,7 @@ public interface Constants {
     
 	// 웹서버 호스트  
 		public static final String URL_DAILYHOTEL_SERVER = "http://restful.dailyhotel.kr/goodnight/"; //  서비스 서버 //http://ec2restful.dailyhotel.kr    http://restful.dailyhotel.kr/goodnight/
-//    public static final String URL_DAILYHOTEL_SERVER = "http://192.168.0.7:8080/goodnight/"; //  서비스 서버
+//    public static final String URL_DAILYHOTEL_SERVER = "http://192.168.0.10:8080/goodnight/"; //  서비스 서버
 //    public static final String URL_DAILYHOTEL_SERVER = "http://test.dailyhotel.kr/goodnight/"; //  서비스 서버
 
 				
