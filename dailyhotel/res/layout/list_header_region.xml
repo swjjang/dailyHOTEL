@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-    
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
     	android:id="@+id/list_header_title"
     	android:layout_width="fill_parent"
     	android:layout_height="37dp"
@@ -12,5 +10,7 @@
     	android:textColor="@color/textView_textColor_section"
         android:textSize="14.0dp">
 </TextView>
+    
+    
 
 

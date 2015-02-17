@@ -224,7 +224,7 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 			config = tintManager.getConfig();
 
 			tintManager.setStatusBarTintEnabled(true);
-			int actionBarColor = getResources().getColor(android.R.color.white);
+			int actionBarColor = getResources().getColor(android.R.color.black);//white에서 black으로 변경 
 			tintManager.setStatusBarTintColor(actionBarColor);
 
 		} else {

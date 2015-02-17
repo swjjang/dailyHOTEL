@@ -1,35 +1,41 @@
 package com.twoheart.dailyhotel.adapter;
 
+import java.util.ArrayList;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.twoheart.dailyhotel.R;
-
 import android.content.Context;
+import android.graphics.Paint;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
+
+import com.twoheart.dailyhotel.DailyHotel;
+import com.twoheart.dailyhotel.R;
 
 public class SeparatedListAdpater extends BaseAdapter {
 	public final static int TYPE_SECTION_HEADER = 0;
 	 
     public ArrayAdapter<String> headers;
     public Map<String, Adapter> sections = new LinkedHashMap<String, Adapter>();
+    ArrayList<String> items = new ArrayList<String>();
      
-    // Çì´õ »ı¼º
+    // í—¤ë” ìƒì„±
     public SeparatedListAdpater(Context context) {
         headers = new ArrayAdapter<String>(context, R.layout.list_header_region);
     }
      
-    // Çì´õ, ¼½¼Ç ÇÊµå Ãß°¡ ¸Ş¼Òµå
+    // í—¤ë”, ì„¹ì…˜ í•„ë“œ ì¶”ê°€ ë©”ì†Œë“œ
     public void addSection(String section, Adapter adapter) {
         this.headers.add(section);
         this.sections.put(section, adapter);
     }
      
-    // ¸ğµç ¾ÆÀÌÅÛÀÇ ¼ö ¹İÈ¯(+ Çì´õ ÇÊµå)
+    // ëª¨ë“  ì•„ì´í…œì˜ ìˆ˜ ë°˜í™˜(+ í—¤ë” í•„ë“œ)
     @Override
     public int getCount() {
         int total = 0;
@@ -45,11 +51,11 @@ public class SeparatedListAdpater extends BaseAdapter {
             Adapter adapter = sections.get(section);
             int size = adapter.getCount() + 1;
              
-            // positionÀÌ ÇØ´ç section ¾È¿¡ ÀÖ´ÂÁö Ã¼Å©
+            // positionì´ í•´ë‹¹ section ì•ˆì— ìˆëŠ”ì§€ ì²´í¬
             if(position == 0) return section;
             if(position < size) return adapter.getItem(position - 1);
              
-            // positionÀÌ ¼½¼ÇÀÇ Å©±â¸¦ ³Ñ¾î°£´Ù¸é ´ÙÀ½ ¼½¼ÇÀ¸·Î Á¡ÇÁ
+            // positionì´ ì„¹ì…˜ì˜ í¬ê¸°ë¥¼ ë„˜ì–´ê°„ë‹¤ë©´ ë‹¤ìŒ ì„¹ì…˜ìœ¼ë¡œ ì í”„
             position -= size;
         }
         return null;
@@ -66,19 +72,31 @@ public class SeparatedListAdpater extends BaseAdapter {
         for(Object section : this.sections.keySet()) {
             Adapter adapter = sections.get(section);
             int size = adapter.getCount() + 1;
+            
+            // positionì´ í•´ë‹¹ section ì•ˆì— ìˆëŠ”ì§€ ì²´í¬
+            if(position == 0) {
+            	
+            	TextView v = (TextView)headers.getView(sectionNum, convertView, parent);
+            	v.setTypeface(DailyHotel.getTypeface());
+        		v.setPaintFlags(v.getPaintFlags() | Paint.SUBPIXEL_TEXT_FLAG);
+            	return v;
+            }
+            if(position < size) {
+            	TextView v = (TextView)adapter.getView(position - 1, convertView, parent);
+            	v.setTypeface(DailyHotel.getTypeface());
+        		v.setPaintFlags(v.getPaintFlags() | Paint.SUBPIXEL_TEXT_FLAG);
+            	return v;
+            }
              
-            // positionÀÌ ÇØ´ç section ¾È¿¡ ÀÖ´ÂÁö Ã¼Å©
-            if(position == 0) return headers.getView(sectionNum, convertView, parent);
-            if(position < size) return adapter.getView(position - 1, convertView, parent);
-             
-            // positionÀÌ ¼½¼ÇÀÇ Å©±â¸¦ ³Ñ¾î°£´Ù¸é ´ÙÀ½ ¼½¼ÇÀ¸·Î Á¡ÇÁ
+            // positionì´ ì„¹ì…˜ì˜ í¬ê¸°ë¥¼ ë„˜ì–´ê°„ë‹¤ë©´ ë‹¤ìŒ ì„¹ì…˜ìœ¼ë¡œ ì í”„
             position -= size;
             sectionNum++;
         }
+
         return null;
     }
  
-    // ºä Å¸ÀÔÀÇ Å©±â(sectionÀÇ Á¾·ù)¸¦ ¹İÈ¯
+    // ë·° íƒ€ì…ì˜ í¬ê¸°(sectionì˜ ì¢…ë¥˜)ë¥¼ ë°˜í™˜
     public int getViewTypeCount() {
         int total = 1;
         for(Adapter adapter : this.sections.values())
@@ -87,20 +105,20 @@ public class SeparatedListAdpater extends BaseAdapter {
         return total;
     }
      
-    // ¾ÆÀÌÅÛ(ÇÊµå)ÀÇ Å¸ÀÔÀ» ¹İÈ¯
+    // ì•„ì´í…œ(í•„ë“œ)ì˜ íƒ€ì…ì„ ë°˜í™˜
     public int getItemViewType(int position) {
         int type = 1;
         for(Object section : this.sections.keySet()) {
              
-            // ÇØ´ç ¼½¼ÇÀÇ ¾î´ğÅÍ¿Í ¾î´ğÅÍÀÇ ¾ÆÀÌÅÛ Å©±â¸¦ ¹İÈ¯
+            // í•´ë‹¹ ì„¹ì…˜ì˜ ì–´ëŒ‘í„°ì™€ ì–´ëŒ‘í„°ì˜ ì•„ì´í…œ í¬ê¸°ë¥¼ ë°˜í™˜
             Adapter adapter = sections.get(section);
             int size = adapter.getCount() + 1;  // +1 : header
              
-            // positionÀÌ ÇØ´ç section ¾È¿¡ ÀÖ´ÂÁö Ã¼Å©
+            // positionì´ í•´ë‹¹ section ì•ˆì— ìˆëŠ”ì§€ ì²´í¬
             if(position == 0) return TYPE_SECTION_HEADER;
             if(position < size) return type + adapter.getItemViewType(position - 1);
              
-            // positionÀÌ ¼½¼ÇÀÇ Å©±â¸¦ ³Ñ¾î°£´Ù¸é ´ÙÀ½ ¼½¼ÇÀ¸·Î Á¡ÇÁ
+            // positionì´ ì„¹ì…˜ì˜ í¬ê¸°ë¥¼ ë„˜ì–´ê°„ë‹¤ë©´ ë‹¤ìŒ ì„¹ì…˜ìœ¼ë¡œ ì í”„
             position -= size;
             type += adapter.getViewTypeCount();
         }

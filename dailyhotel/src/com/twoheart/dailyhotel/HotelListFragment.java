@@ -187,16 +187,21 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 	public void onResume() {
 		super.onResume();
 
-		if (mRefreshHotelList) {
-			lockUI();
-			// 현재 서버 시간을 가져온다
-			// 사용자 시간은 변경가능성 있음. 서버시간을 바탕으로 판매시간 체크 
-			mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(
-					URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_TIME)
-					.toString(), null, HotelListFragment.this,
-					mHostActivity));
+		if (mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "").equals("")) {
+			Intent i = new Intent(mHostActivity, RegionListActivity.class);
+			startActivity(i);
+			mHostActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
+		} else {
+			if (mRefreshHotelList) {
+				lockUI();
+				// 현재 서버 시간을 가져온다
+				// 사용자 시간은 변경가능성 있음. 서버시간을 바탕으로 판매시간 체크 
+				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(
+						URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_TIME)
+						.toString(), null, HotelListFragment.this,
+						mHostActivity));
+			}
 		}
-		
 	}
 
 	@Override
@@ -606,7 +611,7 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 						SimpleAlertDialog.build(mHostActivity, "알림", "공유받은 호텔이 존재하지 않습니다.", "확인", null);
 					}
 				} else {
-					String regionStr = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "서울");
+					String regionStr = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
 					
 					for (int i=0;i<mRegionList.size();i++) {
 						if (mRegionList.get(i).trim().equals(regionStr)) {
