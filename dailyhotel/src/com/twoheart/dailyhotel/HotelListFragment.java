@@ -97,6 +97,8 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 	private List<Hotel> mHotelList;
 	private List<String> mRegionList;
 	private Map<String, List<String>> mRegionDetailList;
+	private List<String> mJaRegionList;
+	private Map<String, List<String>> mJaRegionDetailList;
 	private SaleTime mDailyHotelSaleTime;
 	private LinearLayout llListViewFooter;
 	private ImageView ivNewEvent;
@@ -111,7 +113,7 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 	private RegionListAdapter regionListAdapter;
 	
 	private LocationManager mLocationManager;
-
+	private int beforeIdx = 0;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -549,7 +551,82 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 
 	@Override
 	public void onResponse(String url, JSONArray response) {
-		if (url.contains(URL_WEBAPI_SITE_LOCATION_LIST)) {
+		if (url.contains("site/get/country")) {
+			try {
+				Log.d("RegionListActivity", "site/get ? " + response.toString());
+				mJaRegionList = new ArrayList<String>();
+				mJaRegionDetailList = new LinkedHashMap<String, List<String>>();
+
+				JSONArray arr = response;
+				for (int i = 0; i < arr.length(); i++) {
+					JSONObject obj = arr.getJSONObject(i);
+					String name = new String();
+					name = obj.getString("name");
+					mJaRegionList.add(name);
+
+					// 세부지역 추가
+					List<String> nameDetailList = new ArrayList<String>();
+					JSONArray arrDetail = obj.getJSONArray("child");
+					for (int j=0; j<arrDetail.length(); j++) {
+						String nameDetail = arrDetail.getString(j);
+						nameDetailList.add(nameDetail);
+
+					}
+					mJaRegionDetailList.put(name, nameDetailList);
+				}
+				
+				android.util.Log.e("mJaRegionList", mJaRegionList.toString());
+				android.util.Log.e("mJaRegionDetailList", mJaRegionDetailList.toString());
+		        
+				/**
+				 * KaKao링크를 통한 접속 일경우 해당 호텔까지 접속함.
+				 */
+				int regionIdx = 0;
+				boolean isRegion = false;
+				if (mKakaoHotelRegion != null && !mKakaoHotelRegion.isEmpty()) {
+					for (int i=0;i<mRegionList.size();i++) {
+						if (mRegionList.get(i).trim().equals(mKakaoHotelRegion)) {
+							regionIdx = i;
+							isRegion = true;
+							break;
+						}
+					}
+					if (regionIdx == 0) {
+						SimpleAlertDialog.build(mHostActivity, "알림", "공유받은 호텔이 존재하지 않습니다.", "확인", null);
+					}
+				} else {
+					String regionStr = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
+					
+					for (int i=0;i<mJaRegionList.size();i++) {
+						if (mJaRegionList.get(i).trim().equals(regionStr)) {
+							regionIdx = i;
+							isRegion = true;
+							break;
+						}
+						if (mJaRegionList.get(i).trim().equals(mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_BEFORE, ""))) {
+							beforeIdx = i;
+						}
+					}
+				}
+				if (isRegion == false) {
+//					String country = getCountryName();
+//					if (country.equals("대한민국"))	regionIdx = seoulIdx;
+//					else if (country.equals("일본")) 
+					
+					regionIdx = beforeIdx;
+					
+					SharedPreferences.Editor editor = mHostActivity.sharedPreference.edit();
+					editor.putString(KEY_PREFERENCE_REGION_SELECT, mJaRegionList.get(regionIdx)); 
+					editor.commit();
+					
+				}
+				
+				fetchHotelList();
+			} catch (Exception e) {
+				onError(e);
+			}
+		}
+		else if (url.contains(URL_WEBAPI_SITE_LOCATION_LIST)) {
 			try {
 				mRegionList = new ArrayList<String>();
 				mRegionDetailList = new LinkedHashMap<String, List<String>>();
@@ -594,7 +671,6 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 				 */
 				int regionIdx = 0;
 				int seoulIdx = 0;
-				int beforeIdx = 0;
 				boolean isRegion = false;
 				if (mKakaoHotelRegion != null && !mKakaoHotelRegion.isEmpty()) {
 					for (int i=0;i<mRegionList.size();i++) {
@@ -639,12 +715,20 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 					SharedPreferences.Editor editor = mHostActivity.sharedPreference.edit();
 					editor.putString(KEY_PREFERENCE_REGION_SELECT, mRegionList.get(regionIdx)); 
 					editor.commit();
+					
+//					mQueue.add(new DailyHotelJsonArrayRequest(Method.GET,
+//							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+//									"site/get/country").toString(),
+//									null, HotelListFragment.this,
+//									mHostActivity));
+				} else {
+					fetchHotelList();
 				}
 				
 //				if (regionIdx >= mRegionList.size()-1)	mHostActivity.actionBar.setSelectedNavigationItem(0);
 //				mHostActivity.actionBar.setSelectedNavigationItem(regionIdx);
 				
-				fetchHotelList();
+//				fetchHotelList();
 //				.setSelectedNavigationItem(1);
 				
 				// 호텔 리프레시
