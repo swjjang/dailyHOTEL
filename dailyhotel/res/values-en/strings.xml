@@ -95,8 +95,8 @@
     <string name="dialog_msg_please_update_new_version">dailyHOTEL\'s lastest version is released. Please update.</string> 
     <string name="dialog_msg_update_now">Please download the best dailyHOTEL app once upgrading.</string>
     <string name="dialog_msg_sales_closed">From 9am, Today\'s hotel is released.</string> 
-    <string name="dialog_msg_payment_confirm">It is &lt;b&gt;impossible to cancel or change&lt;/b&gt; &lt;br/&gt;after paying as a result of booking &lt;br/&gt;on that day. &lt;br/&gt;&lt;br/&gt;In the case of &lt;br/&gt;\'During check-in arrangements\', &lt;br/&gt;&lt;b&gt;bed type are not guaranteed &lt;/b&gt;&lt;br/&gt;and you will be assigned to the room that can accommodate 2 people.&lt;br/&gt;&lt;br/&gt; If you agree with the above information, &lt;br/&gt;please progress payment by pressing the below button.</string>
-    <string name="dialog_msg_payment_confirm_hp">It is &lt;b&gt;impossible to cancel or change&lt;/b&gt; &lt;br/&gt;after paying as a result of booking &lt;br/&gt;on that day. &lt;br/&gt;&lt;br/&gt;In the case of &lt;br/&gt;\'During check-in arrangements\', &lt;br/&gt;&lt;b&gt;bed type are not guaranteed &lt;/b&gt;&lt;br/&gt;and you will be assigned to the room that can accommodate 2 people.&lt;br/&gt;&lt;br/&gt;Mobile payment is a monthly limit of \\300000.&lt;br/&gt;&lt;br/&gt; If you agree with the above information, &lt;br/&gt;please progress payment by pressing the below button.</string>
+    <string name="dialog_msg_payment_confirm">It is &lt;b&gt;impossible to cancel or change&lt;/b&gt; &lt;br/&gt;after paying as a result of booking &lt;br/&gt;on that day. &lt;br/&gt;&lt;br/&gt;In the case of &lt;br/&gt;\'During check-in arrangements\', &lt;br/&gt;&lt;b&gt;bed type are not guaranteed &lt;/b&gt;&lt;br/&gt;and you will be assigned to the room that can accommodate 2 people.&lt;br/&gt;&lt;br/&gt; 미성년자는 보호자 동반시 투숙 가능합니다.&lt;br/&gt;&lt;br/&gt;If you agree with the above information, please progress payment by pressing the below button.</string>
+    <string name="dialog_msg_payment_confirm_hp">It is &lt;b&gt;impossible to cancel or change&lt;/b&gt; &lt;br/&gt;after paying as a result of booking &lt;br/&gt;on that day. &lt;br/&gt;&lt;br/&gt;In the case of &lt;br/&gt;\'During check-in arrangements\', &lt;br/&gt;&lt;b&gt;bed type are not guaranteed &lt;/b&gt;&lt;br/&gt;and you will be assigned to the room that can accommodate 2 people.&lt;br/&gt;&lt;br/&gt;Mobile payment is a monthly limit of \\300000.&lt;br/&gt;&lt;br/&gt;  미성년자는 보호자 동반시 투숙 가능합니다.&lt;br/&gt;&lt;br/&gt;If you agree with the above information, please progress payment by pressing the below button.</string>
     <string name="dialog_btn_payment_confirm">Agreement and &lt;br/&gt;progress payment</string> 
     <string name="dialog_title_payment_confirm">Confirmation Items</string>
     <string name="dialog_btn_payment_no_reserve">&lt;br/&gt;&lt;br/&gt;For event hotel,&lt;br/&gt;You can\'t use credit.&lt;br/&gt;&lt;br/&gt;</string>  
@@ -252,6 +252,7 @@
 	<string name="act_booking_pay_account">By Accounts</string>
 	<string name="act_booking_btn_pay">Go to Payment</string>
 	<string name="act_booking_0won">\\0</string>
+	<string name="act_booking_payment_info">결제가 안되시나요? 1800-9120으로 전화주세요</string>
 	
 	<!-- Payment Activity -->
 	<string name="act_payment_isp_error">ISP Payment Error</string>

@@ -88,16 +88,16 @@ OnTouchListener {
 		
 		//영어 버전에서 괄호부분의 텍스트 사이즈를 줄이기 위함
 		String locale = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_LOCALE, null);
-		if (locale.equals("English")) {
+		if (locale.equals("한국어")) {
+			tvPriceTitle.setText(priceTitle + "");
+			tvDiscount.setText(mHotelDetail.getHotel().getDiscount() + currency);
+			tvPrice.setText(mHotelDetail.getHotel().getPrice() + currency);
+		} else {
 			final SpannableStringBuilder sps = new SpannableStringBuilder(priceTitle);
 			sps.setSpan(new AbsoluteSizeSpan(25), 5, 34, Spannable.SPAN_INCLUSIVE_EXCLUSIVE); 
 			tvPriceTitle.append(sps);
 			tvDiscount.setText(currency + mHotelDetail.getHotel().getDiscount());
 			tvPrice.setText(currency + mHotelDetail.getHotel().getPrice());
-		} else {
-			tvPriceTitle.setText(priceTitle + "");
-			tvDiscount.setText(mHotelDetail.getHotel().getDiscount() + currency);
-			tvPrice.setText(mHotelDetail.getHotel().getPrice() + currency);
 		}
 //		tvPriceTitle.setText(priceTitle + "");
 //		tvDiscount.setText(mHotelDetail.getHotel().getDiscount() + currency);

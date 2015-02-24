@@ -105,9 +105,9 @@ public class CreditFragment extends BaseFragment implements Constants,
 		TextView line1_4 = (TextView) view.findViewById(R.id.act_credit_line1_4);
 		//영어버전
 		String locale = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_LOCALE, null);
-		if (locale.equals("English")) {
-			line1_4.setVisibility(View.VISIBLE);
-		} else line1_4.setVisibility(View.GONE);
+		if (locale.equals("한국어")) {
+			line1_4.setVisibility(View.GONE);
+		} else line1_4.setVisibility(View.VISIBLE);
 //		line1_4.setVisibility(View.GONE);
 		
 		tvCredit.setPaintFlags(tvCredit.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG); // underlining
@@ -324,8 +324,8 @@ public class CreditFragment extends BaseFragment implements Constants,
 				DecimalFormat comma = new DecimalFormat("###,##0");
 				String str = comma.format(Integer.parseInt(response.trim()));
 				String locale = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_LOCALE, null);
-				if (locale.equals("English"))	tvBonus.setText(getString(R.string.currency) + str);
-				else	tvBonus.setText(new StringBuilder(str).append(getString(R.string.currency)));
+				if (locale.equals("한국어"))	tvBonus.setText(new StringBuilder(str).append(getString(R.string.currency)));
+				else	tvBonus.setText(getString(R.string.currency) + str);
 //				tvBonus.setText(new StringBuilder(str).append(getString(R.string.currency)));
 
 				// 사용자 정보 요청.

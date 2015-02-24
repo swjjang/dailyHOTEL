@@ -125,16 +125,16 @@ PinnedSectionListAdapter {
 			String currency = getContext().getResources().getString(R.string.currency);
 			String locale = Locale.getDefault().getDisplayLanguage();
 			
-			if (locale.equals("English")) {
-				viewHolder.price.setText(currency + strPrice);
-				viewHolder.price.setPaintFlags(viewHolder.price.getPaintFlags()
-						| Paint.STRIKE_THRU_TEXT_FLAG);
-				viewHolder.discount.setText(currency + strDiscount);
-			} else {
+			if (locale.equals("ÇÑ±¹¾î")) {
 				viewHolder.price.setText(strPrice + currency);
 				viewHolder.price.setPaintFlags(viewHolder.price.getPaintFlags()
 						| Paint.STRIKE_THRU_TEXT_FLAG);
 				viewHolder.discount.setText(strDiscount + currency);
+			} else {
+				viewHolder.price.setText(currency + strPrice);
+				viewHolder.price.setPaintFlags(viewHolder.price.getPaintFlags()
+						| Paint.STRIKE_THRU_TEXT_FLAG);
+				viewHolder.discount.setText(currency + strDiscount);
 			}
 //			viewHolder.price.setText(strPrice + currency);
 //			viewHolder.price.setPaintFlags(viewHolder.price.getPaintFlags()
