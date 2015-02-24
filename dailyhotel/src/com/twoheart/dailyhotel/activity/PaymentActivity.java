@@ -121,12 +121,12 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			finish();
 		}
 		
-		Intent myIntent = getIntent();
-		if (myIntent.getData().getScheme().equals("dailyHOTEL") == true) {
-			m_uriResult = myIntent.getData();
-		} else {
-			m_uriResult = null;
-		}
+//		Intent myIntent = getIntent();
+//		if (myIntent.getData().getScheme().equals("dailyHOTEL") == true) {
+//			m_uriResult = myIntent.getData();
+//		} else {
+//			m_uriResult = null;
+//		}
 
 		//기본 결제 방식
 		String url = new StringBuilder(URL_DAILYHOTEL_SERVER)

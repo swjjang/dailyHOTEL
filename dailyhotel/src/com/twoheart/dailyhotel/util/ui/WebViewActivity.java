@@ -137,7 +137,7 @@ OnLongClickListener {
 		public boolean onJsAlert(WebView view, String url, String message,
 				final android.webkit.JsResult result) {
 			new AlertDialog.Builder(view.getContext())
-			.setTitle("¾Ë¸²")
+			.setTitle(getString(R.string.dialog_notice2))
 			.setMessage(message)
 			.setPositiveButton(android.R.string.ok,
 					new AlertDialog.OnClickListener() {

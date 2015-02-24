@@ -22,13 +22,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.StringTokenizer;
+import java.util.Locale;
 
 import org.json.JSONObject;
 
 import android.app.Dialog;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
@@ -41,12 +39,9 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.PowerManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Base64;
 import android.util.Log;
@@ -75,8 +70,6 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.readystatesoftware.systembartint.SystemBarTintManager.SystemBarConfig;
-import com.twoheart.dailyhotel.activity.PushLockDialogActivity;
-import com.twoheart.dailyhotel.activity.ScreenOnPushDialogActivity;
 import com.twoheart.dailyhotel.activity.SplashActivity;
 import com.twoheart.dailyhotel.fragment.RatingHotelFragment;
 import com.twoheart.dailyhotel.model.Hotel;
@@ -85,7 +78,6 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.Constants.Stores;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
@@ -188,12 +180,12 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 
 		// 사용자가 선택한 언어, but 만약 사용자가 한국인인데 일본어를 선택하면 jp가 됨.
 		// 영어버전 
-//		String locale = Locale.getDefault().getDisplayLanguage();
-//		Log.e("locale",locale);
-//		
-//		Editor editor = sharedPreference.edit();
-//		editor.putString(KEY_PREFERENCE_LOCALE, locale);
-//		editor.apply();
+		String locale = Locale.getDefault().getDisplayLanguage();
+		Log.e("locale",locale);
+		
+		Editor editor = sharedPreference.edit();
+		editor.putString(KEY_PREFERENCE_LOCALE, locale);
+		editor.apply();
 		
 		// Intent Scheme Parameter for KakaoLink
 		intentData = getIntent().getData();

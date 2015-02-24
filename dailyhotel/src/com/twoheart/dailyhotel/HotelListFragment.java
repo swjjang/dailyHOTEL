@@ -202,10 +202,6 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 			int position, long id) {
 		// 7.2 G2 버전에서 호텔리스트에서 이벤트 칸을 클릭할 경우 튕기는 현상을 막기 위함. why? 헤더뷰인데도 아이템 클릭 리스너가 들어감.
 		if (position == 0)  return; 
-
-		//acra test
-//		TextView mTextView = null;
-//		mTextView.setText("testtesttesttest");
 		
 //		mHostActivity.selectMenuDrawer(mHostActivity.menuHotelListFragment);
 	
@@ -604,7 +600,7 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 						}
 					}
 					if (regionIdx == 0) {
-						SimpleAlertDialog.build(mHostActivity, "알림", "공유받은 호텔이 존재하지 않습니다.", "확인", null);
+						SimpleAlertDialog.build(mHostActivity, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_kakao_link), getString(R.string.dialog_btn_text_confirm), null);
 					}
 				} else {
 					String regionStr = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "서울");

@@ -159,7 +159,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		rbPaymentCard.setChecked(true);
 
 		saleTime = new SaleTime();
-//		locale = sharedPreference.getString(KEY_PREFERENCE_LOCALE, null);
+		locale = sharedPreference.getString(KEY_PREFERENCE_LOCALE, null);
 		
 	}
 
@@ -190,9 +190,9 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 
 		DecimalFormat comma = new DecimalFormat("###,##0");
 		
-//		if (locale.equals("English"))	tvOriginalPriceValue.setText(getString(R.string.currency)+comma.format(originalPrice));
-//		else	tvOriginalPriceValue.setText(comma.format(originalPrice)+getString(R.string.currency));
-		tvOriginalPriceValue.setText(comma.format(originalPrice)+getString(R.string.currency));
+		if (locale.equals("English"))	tvOriginalPriceValue.setText(getString(R.string.currency)+comma.format(originalPrice));
+		else	tvOriginalPriceValue.setText(comma.format(originalPrice)+getString(R.string.currency));
+//		tvOriginalPriceValue.setText(comma.format(originalPrice)+getString(R.string.currency));
 
 		if (applyCredit) {
 			int payPrice = originalPrice - credit;
@@ -201,22 +201,22 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 			mPay.setOriginalPrice(originalPrice);
 			
 			if (credit >= originalPrice) credit = originalPrice;
-//			if (locale.equals("English"))	tvCreditValue.setText("-"+getString(R.string.currency)+comma.format(credit));
-//			else	tvCreditValue.setText("-"+comma.format(credit)+getString(R.string.currency));
-			tvCreditValue.setText("-"+comma.format(credit)+getString(R.string.currency));
+			if (locale.equals("English"))	tvCreditValue.setText("-"+getString(R.string.currency)+comma.format(credit));
+			else	tvCreditValue.setText("-"+comma.format(credit)+getString(R.string.currency));
+//			tvCreditValue.setText("-"+comma.format(credit)+getString(R.string.currency));
 
 		}
 		else {
-//			if (locale.equals("English"))	tvCreditValue.setText(getString(R.string.currency)+"0");
-//			else	tvCreditValue.setText("0"+getString(R.string.currency)); 
-			tvCreditValue.setText("0"+getString(R.string.currency));
+			if (locale.equals("English"))	tvCreditValue.setText(getString(R.string.currency)+"0");
+			else	tvCreditValue.setText("0"+getString(R.string.currency)); 
+//			tvCreditValue.setText("0"+getString(R.string.currency));
 			mPay.setPayPrice(originalPrice);
 //			mPay.setOriginalPrice(originalPrice);
 		}
 
-//		if (locale.equals("English"))	tvPrice.setText(getString(R.string.currency)+comma.format(mPay.getPayPrice()));
-//		else	tvPrice.setText(comma.format(mPay.getPayPrice())+getString(R.string.currency));
-		tvPrice.setText(comma.format(mPay.getPayPrice())+getString(R.string.currency));
+		if (locale.equals("English"))	tvPrice.setText(getString(R.string.currency)+comma.format(mPay.getPayPrice()));
+		else	tvPrice.setText(comma.format(mPay.getPayPrice())+getString(R.string.currency));
+//		tvPrice.setText(comma.format(mPay.getPayPrice())+getString(R.string.currency));
 
 	}
 
@@ -842,16 +842,16 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 						.getDiscount().replaceAll(",", ""));
 				DecimalFormat comma = new DecimalFormat("###,##0");
 				
-//				if (locale.equals("English"))	{
-//					tvOriginalPriceValue.setText(getString(R.string.currency)+comma.format(originalPrice));
-//					tvPrice.setText(getString(R.string.currency)+comma.format(originalPrice));
-//				}
-//				else	{
-//					tvOriginalPriceValue.setText(comma.format(originalPrice)+getString(R.string.currency));
-//					tvPrice.setText(comma.format(originalPrice)+getString(R.string.currency));
-//				}
-				tvOriginalPriceValue.setText(comma.format(originalPrice)+getString(R.string.currency));
-				tvPrice.setText(comma.format(originalPrice)+getString(R.string.currency));
+				if (locale.equals("English"))	{
+					tvOriginalPriceValue.setText(getString(R.string.currency)+comma.format(originalPrice));
+					tvPrice.setText(getString(R.string.currency)+comma.format(originalPrice));
+				}
+				else	{
+					tvOriginalPriceValue.setText(comma.format(originalPrice)+getString(R.string.currency));
+					tvPrice.setText(comma.format(originalPrice)+getString(R.string.currency));
+				}
+//				tvOriginalPriceValue.setText(comma.format(originalPrice)+getString(R.string.currency));
+//				tvPrice.setText(comma.format(originalPrice)+getString(R.string.currency));
 					
 				mPay.setPayPrice(originalPrice);
 				
