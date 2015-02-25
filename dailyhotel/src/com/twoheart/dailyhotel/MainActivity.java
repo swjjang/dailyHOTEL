@@ -138,48 +138,9 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d("GCM??", "GCM??" + sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "NOPE"));
-		
-//		Intent intent = new Intent(this, MainActivity.class);
-//		NotificationManager mNotificationManager = (NotificationManager)
-//				this.getSystemService(Context.NOTIFICATION_SERVICE);
-//		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-//				intent, PendingIntent.FLAG_UPDATE_CURRENT);
-//		NotificationCompat.Builder mBuilder =
-//				new NotificationCompat.Builder(this)
-//		.setSmallIcon(R.drawable.img_ic_appicon_feature)
-//		.setContentTitle(getString(R.string.app_name))
-//		.setAutoCancel(true)
-//		.setSound(null)
-//		.setContentText("[테스트] 입니다.");
-//
-//		mBuilder.setContentIntent(contentIntent);
-//		mNotificationManager.notify(1, mBuilder.build());
-		
-//		Intent i = new Intent(this, ScreenOnPushDialogActivity.class);
-//		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//		i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, PUSH_TYPE_ACCOUNT_COMPLETE);
-//		i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG, "[[테스트] 결제완료되었습니다");
-//		startActivity(i);
-		
-//		Intent i = new Intent(this, PushLockDialogActivity.class);
-//		i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG, "[[[[[테스트]]  ] 결제완료되었습니다");
-//		i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, PUSH_TYPE_ACCOUNT_COMPLETE);
-//		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | 
-//				Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//		this.startActivity(i);
-		
-//		
-//		AlertDialog.Builder alert = new AlertDialog.Builder(this);
-//
-//		alert.setTitle("Title");
-//		// Set an EditText view to get user input
-//		final EditText input = new EditText(this);
-//		input.setText(sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "NOPE"));
-//		alert.setView(input);
-//		alert.show();
 
 		// 사용자가 선택한 언어, but 만약 사용자가 한국인인데 일본어를 선택하면 jp가 됨.
-		// 영어버전 
+		// 영어인 경우 - English, 한글인 경우 - 한국어
 		String locale = Locale.getDefault().getDisplayLanguage();
 		Log.e("locale", "locale? " + locale);
 		
