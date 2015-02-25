@@ -120,13 +120,6 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			showToast(getString(R.string.toast_msg_failed_to_get_payment_info), Toast.LENGTH_SHORT, false);
 			finish();
 		}
-		
-//		Intent myIntent = getIntent();
-//		if (myIntent.getData().getScheme().equals("dailyHOTEL") == true) {
-//			m_uriResult = myIntent.getData();
-//		} else {
-//			m_uriResult = null;
-//		}
 
 		//기본 결제 방식
 		String url = new StringBuilder(URL_DAILYHOTEL_SERVER)
@@ -167,6 +160,18 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		android.util.Log.e("GET_URL",url);
 		webView.loadUrl(url);
 		
+	}
+	
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		Intent myIntent = intent;
+		
+		if (myIntent.getData().getScheme().equals("dailyHOTEL") == true) {
+			m_uriResult = myIntent.getData();
+		} else {
+			m_uriResult = null;
+		}
 	}
 	
 	@Override
