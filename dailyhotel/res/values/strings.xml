@@ -115,6 +115,7 @@
     <string name="dialog_title_payment">결제알림</string>
     <string name="dialog_btn_text_see">보기</string>
     <string name="dialog_btn_text_close">닫기</string>
+    <string name="dialog_msg_kakao_link">공유받은 호텔이 존재하지 않습니다.</string>
 
     <!-- Main Drawer Menu Titles -->
     <string name="drawer_menu_pin_title_resrvation">예약</string>
@@ -251,6 +252,7 @@
 	<string name="act_booking_pay_account">계좌이체</string>
 	<string name="act_booking_btn_pay">결제하기</string>
 	<string name="act_booking_0won">0원</string>
+	<string name="act_booking_payment_info">결제가 안되시나요? 1800-9120으로 전화주세요</string>
 	
 	<!-- Payment Activity -->
 	<string name="act_payment_isp_error">ISP 결제 오류</string>

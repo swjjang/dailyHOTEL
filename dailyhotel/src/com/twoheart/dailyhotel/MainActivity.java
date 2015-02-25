@@ -22,13 +22,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.StringTokenizer;
+import java.util.Locale;
 
 import org.json.JSONObject;
 
 import android.app.Dialog;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
@@ -41,12 +39,9 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.PowerManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Base64;
 import android.util.Log;
@@ -75,8 +70,6 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.readystatesoftware.systembartint.SystemBarTintManager.SystemBarConfig;
-import com.twoheart.dailyhotel.activity.PushLockDialogActivity;
-import com.twoheart.dailyhotel.activity.ScreenOnPushDialogActivity;
 import com.twoheart.dailyhotel.activity.SplashActivity;
 import com.twoheart.dailyhotel.fragment.RatingHotelFragment;
 import com.twoheart.dailyhotel.model.Hotel;
@@ -85,7 +78,6 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.Constants.Stores;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
@@ -146,54 +138,15 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d("GCM??", "GCM??" + sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "NOPE"));
-		
-//		Intent intent = new Intent(this, MainActivity.class);
-//		NotificationManager mNotificationManager = (NotificationManager)
-//				this.getSystemService(Context.NOTIFICATION_SERVICE);
-//		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-//				intent, PendingIntent.FLAG_UPDATE_CURRENT);
-//		NotificationCompat.Builder mBuilder =
-//				new NotificationCompat.Builder(this)
-//		.setSmallIcon(R.drawable.img_ic_appicon_feature)
-//		.setContentTitle(getString(R.string.app_name))
-//		.setAutoCancel(true)
-//		.setSound(null)
-//		.setContentText("[테스트] 입니다.");
-//
-//		mBuilder.setContentIntent(contentIntent);
-//		mNotificationManager.notify(1, mBuilder.build());
-		
-//		Intent i = new Intent(this, ScreenOnPushDialogActivity.class);
-//		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//		i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, PUSH_TYPE_ACCOUNT_COMPLETE);
-//		i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG, "[[테스트] 결제완료되었습니다");
-//		startActivity(i);
-		
-//		Intent i = new Intent(this, PushLockDialogActivity.class);
-//		i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG, "[[[[[테스트]]  ] 결제완료되었습니다");
-//		i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, PUSH_TYPE_ACCOUNT_COMPLETE);
-//		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | 
-//				Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//		this.startActivity(i);
-		
-//		
-//		AlertDialog.Builder alert = new AlertDialog.Builder(this);
-//
-//		alert.setTitle("Title");
-//		// Set an EditText view to get user input
-//		final EditText input = new EditText(this);
-//		input.setText(sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "NOPE"));
-//		alert.setView(input);
-//		alert.show();
 
 		// 사용자가 선택한 언어, but 만약 사용자가 한국인인데 일본어를 선택하면 jp가 됨.
-		// 영어버전 
-//		String locale = Locale.getDefault().getDisplayLanguage();
-//		Log.e("locale",locale);
-//		
-//		Editor editor = sharedPreference.edit();
-//		editor.putString(KEY_PREFERENCE_LOCALE, locale);
-//		editor.apply();
+		// 영어인 경우 - English, 한글인 경우 - 한국어
+		String locale = Locale.getDefault().getDisplayLanguage();
+		Log.e("locale", "locale? " + locale);
+		
+		Editor editor = sharedPreference.edit();
+		editor.putString(KEY_PREFERENCE_LOCALE, locale);
+		editor.apply();
 		
 		// Intent Scheme Parameter for KakaoLink
 		intentData = getIntent().getData();
