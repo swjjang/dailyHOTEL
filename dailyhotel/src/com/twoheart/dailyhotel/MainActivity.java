@@ -238,6 +238,10 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 				return;				// 메서드를 빠져나간다 - 호텔 평가를 수행하지 않음.
 			}
 			
+//			editor.putBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false);
+//			editor.apply();
+			Log.d(TAG, "new_event? " + sharedPreference.getBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false));
+			
 			boolean showGuide = sharedPreference.getBoolean(KEY_PREFERENCE_SHOW_GUIDE, true);
 			if (showGuide) startActivityForResult(new Intent(this, IntroActivity.class), CODE_REQUEST_ACTIVITY_INTRO);
 			else {
@@ -275,6 +279,7 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 	public void onResponse(String url, String response) {
 		if (url.contains(URL_WEBAPI_USER_ALIVE)) {
 			String result = response.trim();
+			Log.d(TAG, "URL_WEBAPI_USER_ALIVE");
 
 			if (result.equals("alive")) { // session alive
 				// 호텔 평가를 위한 사용자 정보 조회

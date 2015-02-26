@@ -32,6 +32,8 @@ import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.Options;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.AbsListViewDelegate;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBar.OnNavigationListener;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -60,7 +62,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.activity.EventWebActivity;
@@ -87,7 +88,7 @@ import com.twoheart.dailyhotel.widget.PinnedSectionListView;
 public class HotelListFragment extends BaseFragment implements Constants,
 OnItemClickListener, 
 DailyHotelJsonArrayResponseListener, DailyHotelJsonResponseListener,
-DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener {//OnNavigationListener,
+DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener, OnNavigationListener {
 
 	private final static String TAG = "HotelListFragment";
 
@@ -115,6 +116,10 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 	
 	private LocationManager mLocationManager;
 	private int beforeIdx = 0;
+	
+	private boolean event;
+	private int seoulIdx = 0;
+	private int tokyoIdx = 0;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -181,6 +186,9 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 
 		mHotelListView.setShadowVisible(false);
 		setHasOptionsMenu(true);
+		
+		//ver_dual API의 new_event값이 0이면 false, 1이면 true
+		event = mHostActivity.sharedPreference.getBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false);
 		
 		return view;
 	}
@@ -276,21 +284,31 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
-//	@Override
-//	public boolean onNavigationItemSelected(int position, long id) {
-//		lockUI();
-//		fetchHotelList(position);
-//		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "selectRegion", mRegionList.get(position).trim(), (long) (position+1));
-//		
-////		boolean showEventPopUp = ((MainActivity) mHostActivity).sharedPreference.getBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false);
-//		
-////		if (showEventPopUp) {
-////			Dialog popUpDialog = getEventPopUpDialog();
-////			popUpDialog.show();
-////		}
-//		
-//		return true;
-//	}
+	@Override
+	public boolean onNavigationItemSelected(int position, long id) {
+		String content = mRegionList.get(position).trim();
+        
+        if (!content.equals(mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, ""))) {
+			SharedPreferences.Editor editor = mHostActivity.sharedPreference.edit();
+			editor.putString(KEY_PREFERENCE_REGION_SELECT_BEFORE, mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, ""));
+			editor.putString(KEY_PREFERENCE_REGION_SELECT, content);
+			editor.commit();
+		}
+        Log.d("RegionListActivity", "before region : " + mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_BEFORE, "") + " select region : " + mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, ""));
+
+		lockUI();
+		fetchHotelList();
+		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "selectRegion", mRegionList.get(position).trim(), (long) (position+1));
+		
+//		boolean showEventPopUp = ((MainActivity) mHostActivity).sharedPreference.getBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false);
+		
+//		if (showEventPopUp) {
+//			Dialog popUpDialog = getEventPopUpDialog();
+//			popUpDialog.show();
+//		}
+		
+		return true;
+	}
 	
 	
 	
@@ -338,13 +356,12 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 	 * @param position
 	 */
 	private void fetchHotelList() {
-//		android.util.Log.e("FETCHHOTEL LIST",position +"");
 		((MainActivity) mHostActivity).drawerLayout.closeDrawer(((MainActivity) mHostActivity).drawerList);
-//		regionListAdapter.notifyDataSetChanged();
 
 		String selectedRegion = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
 		android.util.Log.e("selectedRegion",selectedRegion +" fetchHotelList");
-		mHostActivity.setActionBar("  " + selectedRegion);
+		
+		if (event)	mHostActivity.setActionBar("  " + selectedRegion);
 //		String selectedRegionTr = mRegionList.get(position).trim();
 		
 //		if (!selectedRegion.equals(mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "서울"))) {
@@ -490,7 +507,7 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 				}
 
 				int count = 0;
-				HotelListViewItem others = new HotelListViewItem("기타");
+				HotelListViewItem others = new HotelListViewItem(getString(R.string.frag_hotel_list_others));
 
 				mHotelListViewList.add(others);
 				for (int i = 0; i < mHotelList.size(); i++) {
@@ -525,7 +542,7 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 			}
 		} else if (url.contains(URL_WEBAPI_APP_VERSION)) {
 			try {
-				if (response.getString("new_event").equals("1") && (ivNewEvent != null))  ivNewEvent.setVisibility(View.VISIBLE);
+//				if (response.getString("new_event").equals("1") && (ivNewEvent != null))  ivNewEvent.setVisibility(View.VISIBLE);
 				
 				if (mKakaoHotelIdx != -1) {
 					for (int i=0; i<mHotelListAdapter.getCount(); i++) {
@@ -552,18 +569,17 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 
 	@Override
 	public void onResponse(String url, JSONArray response) {
-		if (url.contains("site/get/country")) {
+		if (url.contains(URL_WEBAPI_SITE_COUNTRY_LOCATION_LIST)) {
 			try {
-				Log.d("RegionListActivity", "site/get ? " + response.toString());
-				mJaRegionList = new ArrayList<String>();
-				mJaRegionDetailList = new LinkedHashMap<String, List<String>>();
+				Log.d(TAG, "site/get ? " + response.toString());
 
 				JSONArray arr = response;
 				for (int i = 0; i < arr.length(); i++) {
 					JSONObject obj = arr.getJSONObject(i);
 					String name = new String();
 					name = obj.getString("name");
-					mJaRegionList.add(name);
+					mRegionList.add(name);
+					if (name.equals(getString(R.string.frag_hotel_list_tokyo))) tokyoIdx = i;
 
 					// 세부지역 추가
 					List<String> nameDetailList = new ArrayList<String>();
@@ -573,17 +589,18 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 						nameDetailList.add(nameDetail);
 
 					}
-					mJaRegionDetailList.put(name, nameDetailList);
+					mRegionDetailList.put(name.trim(), nameDetailList);
 				}
 				
-				android.util.Log.e("mJaRegionList", mJaRegionList.toString());
-				android.util.Log.e("mJaRegionDetailList", mJaRegionDetailList.toString());
+				android.util.Log.e("mJaRegionList", mRegionList.toString());
+				android.util.Log.e("mJaRegionDetailList", mRegionDetailList.toString());
 		        
 				/**
 				 * KaKao링크를 통한 접속 일경우 해당 호텔까지 접속함.
 				 */
 				int regionIdx = 0;
 				boolean isRegion = false;
+				boolean isBeforeRegion = false;
 				if (mKakaoHotelRegion != null && !mKakaoHotelRegion.isEmpty()) {
 					for (int i=0;i<mRegionList.size();i++) {
 						if (mRegionList.get(i).trim().equals(mKakaoHotelRegion)) {
@@ -593,19 +610,20 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 						}
 					}
 					if (regionIdx == 0) {
-						SimpleAlertDialog.build(mHostActivity, "알림", "공유받은 호텔이 존재하지 않습니다.", "확인", null);
+						SimpleAlertDialog.build(mHostActivity, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_kakao_link), getString(R.string.dialog_btn_text_confirm), null);
 					}
 				} else {
 					String regionStr = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
 					
-					for (int i=0;i<mJaRegionList.size();i++) {
-						if (mJaRegionList.get(i).trim().equals(regionStr)) {
+					for (int i=0;i<mRegionList.size();i++) {
+						if (mRegionList.get(i).trim().equals(regionStr)) {
 							regionIdx = i;
 							isRegion = true;
 							break;
 						}
-						if (mJaRegionList.get(i).trim().equals(mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_BEFORE, ""))) {
+						if (mRegionList.get(i).trim().equals(mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_BEFORE, ""))) {
 							beforeIdx = i;
+							isBeforeRegion = true;
 						}
 					}
 				}
@@ -616,8 +634,14 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 					
 					regionIdx = beforeIdx;
 					
+					if (!isBeforeRegion) {
+						String country = getCountryByLocale();
+						if (country.equals(getString(R.string.act_list_region_korea))) regionIdx = seoulIdx;
+						else if (country.equals(getString(R.string.act_list_region_japan))) regionIdx = tokyoIdx;
+					}
+					
 					SharedPreferences.Editor editor = mHostActivity.sharedPreference.edit();
-					editor.putString(KEY_PREFERENCE_REGION_SELECT, mJaRegionList.get(regionIdx)); 
+					editor.putString(KEY_PREFERENCE_REGION_SELECT, mRegionList.get(regionIdx)); 
 					editor.commit();
 					
 				}
@@ -637,10 +661,10 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 					JSONObject obj = arr.getJSONObject(i);
 					String name = new String();
 					StringBuilder nameWithWhiteSpace = new StringBuilder(name);
-//					name = nameWithWhiteSpace.append("    ").append(obj.getString("name")).
-//							append("     ").toString();
-					name = obj.getString("name");
+					if (!event)	name = nameWithWhiteSpace.append("    ").append(obj.getString("name")).append("    ").toString();
+					else name = obj.getString("name");
 					mRegionList.add(name);
+					if (name.trim().equals(getString(R.string.frag_hotel_list_seoul))) seoulIdx = i;
 
 					// 세부지역 추가
 					List<String> nameDetailList = new ArrayList<String>();
@@ -650,29 +674,31 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 						nameDetailList.add(nameDetail);
 
 					}
-					mRegionDetailList.put(name, nameDetailList);
+					mRegionDetailList.put(name.trim(), nameDetailList);
 				}
 				
 				android.util.Log.e("mRegionList", mRegionList.toString());
 				android.util.Log.e("mRegionDetailList", mRegionDetailList.toString());
 
-//				mHostActivity.actionBar.setDisplayShowTitleEnabled(false);
-//				// 호텔 프래그먼트 일때 액션바에 네비게이션 리스트 설치.
-//				mHostActivity.actionBar
-//				.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-//				regionListAdapter = new RegionListAdapter(
-//						mHostActivity, mRegionList);
-//				regionListAdapter.setNotifyOnChange(true);
-//
-//				mHostActivity.actionBar.setListNavigationCallbacks(
-//						regionListAdapter, this);
+				if (!event) {
+					mHostActivity.actionBar.setDisplayShowTitleEnabled(false);
+					// 호텔 프래그먼트 일때 액션바에 네비게이션 리스트 설치.
+					mHostActivity.actionBar
+					.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+					regionListAdapter = new RegionListAdapter(
+							mHostActivity, mRegionList);
+					regionListAdapter.setNotifyOnChange(true);
+
+					mHostActivity.actionBar.setListNavigationCallbacks(
+							regionListAdapter, this);
+				}
 				
 				/**
 				 * KaKao링크를 통한 접속 일경우 해당 호텔까지 접속함.
 				 */
 				int regionIdx = 0;
-				int seoulIdx = 0;
 				boolean isRegion = false;
+				boolean isBeforeRegion = false;
 				if (mKakaoHotelRegion != null && !mKakaoHotelRegion.isEmpty()) {
 					for (int i=0;i<mRegionList.size();i++) {
 						if (mRegionList.get(i).trim().equals(mKakaoHotelRegion)) {
@@ -680,13 +706,10 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 							isRegion = true;
 							break;
 						}
-						if (mRegionList.get(i).trim().equals("서울")) {
-							seoulIdx = i;
-						}
 					}
 					if (regionIdx == 0) {
 
-						SimpleAlertDialog.build(mHostActivity, "알림", "공유받은 호텔이 존재하지 않습니다.", "확인", null);//getString(R.string.dialog_notice2), getString(R.string.dialog_msg_kakao_link), getString(R.string.dialog_btn_text_confirm)
+						SimpleAlertDialog.build(mHostActivity, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_kakao_link), getString(R.string.dialog_btn_text_confirm), null);
 
 					}
 				} else {
@@ -698,11 +721,9 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 							isRegion = true;
 							break;
 						}
-						if (mRegionList.get(i).trim().equals("서울")) {
-							seoulIdx = i;
-						}
 						if (mRegionList.get(i).trim().equals(mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_BEFORE, ""))) {
 							beforeIdx = i;
+							isBeforeRegion = true;
 						}
 					}
 //					regionIdx = mHostActivity.sharedPreference
@@ -713,23 +734,32 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 //					if (country.equals("대한민국"))	regionIdx = seoulIdx;
 //					else if (country.equals("일본")) 
 					
-					regionIdx = beforeIdx;
+					if (!event) {
+						regionIdx = beforeIdx;
+						
+						if (!isBeforeRegion) {
+							String country = getCountryByLocale();
+							if (country.equals(getString(R.string.act_list_region_korea))) regionIdx = seoulIdx;
+						}
+						
+						SharedPreferences.Editor editor = mHostActivity.sharedPreference.edit();
+						editor.putString(KEY_PREFERENCE_REGION_SELECT, mRegionList.get(regionIdx)); 
+						editor.commit();	
+					}
+					else {
+						mQueue.add(new DailyHotelJsonArrayRequest(Method.GET,
+								new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+										URL_WEBAPI_SITE_COUNTRY_LOCATION_LIST).toString(),
+										null, HotelListFragment.this,
+										mHostActivity));
+					}
 					
-					SharedPreferences.Editor editor = mHostActivity.sharedPreference.edit();
-					editor.putString(KEY_PREFERENCE_REGION_SELECT, mRegionList.get(regionIdx)); 
-					editor.commit();
-					
-//					mQueue.add(new DailyHotelJsonArrayRequest(Method.GET,
-//							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-//									"site/get/country").toString(),
-//									null, HotelListFragment.this,
-//									mHostActivity));
 				} else {
 					fetchHotelList();
 				}
 				
 //				if (regionIdx >= mRegionList.size()-1)	mHostActivity.actionBar.setSelectedNavigationItem(0);
-//				mHostActivity.actionBar.setSelectedNavigationItem(regionIdx);
+				if (!event)	mHostActivity.actionBar.setSelectedNavigationItem(regionIdx);
 				
 //				fetchHotelList();
 //				.setSelectedNavigationItem(1);
@@ -750,17 +780,7 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 		
 //		Log.d(TAG, location.getLatitude() + " / " + location.getLongitude()); //35.6894875, 139.69170639999993 -> µµƒÏ
 		if (location == null) {
-			Locale locale = this.getResources().getConfiguration().locale;
-			String code = locale.getLanguage();
-			
-			if (code.equals("ko")) {
-        		countryName = "대한민국";
-			} else if (code.equals("ja")) {
-				countryName = "일본";
-			} else {	
-				countryName = "대한민국";
-			}
-			Log.d(TAG, "Country Code? " + code);
+			countryName = getCountryByLocale();
 			
 		} else {
 			try {
@@ -778,6 +798,21 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 	        }
 		}
 		return countryName;
+	}
+	
+	private String getCountryByLocale() {
+		Locale locale = this.getResources().getConfiguration().locale;
+		String code = locale.getLanguage();
+		String country = "";
+		
+		if (code.equals("ko")) {
+			country = getString(R.string.act_list_region_korea);
+		} else if (code.equals("ja")) {
+			country = getString(R.string.act_list_region_japan);
+		} else {	
+			country = getString(R.string.act_list_region_korea);
+		}
+		return country;
 	}
 	
 	private Location getLastKnownLocation() {
@@ -820,8 +855,11 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		mHostActivity.getMenuInflater().inflate(R.menu.select_region_actions, menu);
-		super.onCreateOptionsMenu(menu, inflater);
+		if (event) {
+			mHostActivity.getMenuInflater().inflate(R.menu.select_region_actions, menu);
+		}
+		
+//		super.onCreateOptionsMenu(menu, inflater);
 	}
 	
 	@Override

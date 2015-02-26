@@ -37,7 +37,7 @@ public class RegionListActivity extends BaseActivity implements OnItemClickListe
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		setActionBar("지역 설정");
+		setActionBar(getString(R.string.act_list_region_title));
 		setContentView(R.layout.activity_region_list);
 		
 		 // 어댑터 생성
@@ -46,9 +46,10 @@ public class RegionListActivity extends BaseActivity implements OnItemClickListe
         list = (ListView) findViewById(R.id.list);       
         list.setOnItemClickListener(this);
         
+        lockUI();
         mQueue.add(new DailyHotelJsonArrayRequest(Method.GET,
 				new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-						"site/get/country").toString(),
+						URL_WEBAPI_SITE_COUNTRY_LOCATION_LIST).toString(),
 						null, RegionListActivity.this,
 						RegionListActivity.this));
         
@@ -74,7 +75,7 @@ public class RegionListActivity extends BaseActivity implements OnItemClickListe
 
 	@Override
 	public void onResponse(String url, JSONArray response) {
-		if (url.contains("site/get/country")) {
+		if (url.contains(URL_WEBAPI_SITE_COUNTRY_LOCATION_LIST)) {
 			try {
 				Log.d("RegionListActivity", "site/get ? " + response.toString());
 				mJaRegionList = new ArrayList<String>();
@@ -83,9 +84,6 @@ public class RegionListActivity extends BaseActivity implements OnItemClickListe
 				for (int i = 0; i < arr.length(); i++) {
 					JSONObject obj = arr.getJSONObject(i);
 					String name = new String();
-					StringBuilder nameWithWhiteSpace = new StringBuilder(name);
-//					name = nameWithWhiteSpace.append("    ").append(obj.getString("name")).
-//							append("    ").toString();
 					name = obj.getString("name");
 					mJaRegionList.add(name);
 				}
@@ -109,20 +107,17 @@ public class RegionListActivity extends BaseActivity implements OnItemClickListe
 				for (int i = 0; i < arr.length(); i++) {
 					JSONObject obj = arr.getJSONObject(i);
 					String name = new String();
-					StringBuilder nameWithWhiteSpace = new StringBuilder(name);
-//					name = nameWithWhiteSpace.append("    ").append(obj.getString("name")).
-//							append("    ").toString();
 					name = obj.getString("name");
 					mKoRegionList.add(name);
 				}
 				
 				// 배열 어댑터를 section으로 추가
-		        adapter.addSection("대한민국", new ArrayAdapter<String>(this, 
+		        adapter.addSection(getString(R.string.act_list_region_korea), new ArrayAdapter<String>(this, 
 		                R.layout.list_row_region, mKoRegionList));
-		        adapter.addSection("일본", new ArrayAdapter<String>(this, 
+		        adapter.addSection(getString(R.string.act_list_region_japan), new ArrayAdapter<String>(this, 
 		                R.layout.list_row_region, mJaRegionList));
 		        list.setAdapter(adapter);
-		        
+		        unLockUI();
 				
 			} catch (Exception e) {
 				onError(e);
@@ -162,7 +157,7 @@ public class RegionListActivity extends BaseActivity implements OnItemClickListe
 	public void onBackPressed() {
 		
 		if (sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "").equals("")) {
-			Toast.makeText(getApplicationContext(), "지역을 선택해주세요.", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), getString(R.string.act_list_region_select_region), Toast.LENGTH_SHORT).show();
 			return;
 		}
 		super.onBackPressed();
