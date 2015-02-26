@@ -1,13 +1,13 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
  *
- * HotelListFragment (È£ÅÚ ¸ñ·Ï È­¸é)
+ * HotelListFragment (í˜¸í…” ëª©ë¡ í™”ë©´)
  * 
- * ¾îÇÃ¸®ÄÉÀÌ¼ÇÀÇ °¡Àå ÁÖ°¡ µÇ´Â È­¸éÀ¸·Î¼­ È£ÅÚµéÀÇ ¸ñ·ÏÀ» º¸¿©ÁÖ´Â È­¸éÀÌ´Ù.
- * È£ÅÚ ¸®½ºÆ®´Â µû·Î Ä¿½ºÅÒµÇ¾î ±¸¼ºµÇ¾î ÀÖÀ¸¸ç, ¾×¼Ç¹ÙÀÇ ³×ºñ°ÔÀÌ¼ÇÀ» ÀÌ¿ë
- * ÇÏ¿© Å« Áö¿ªÀ» ºĞ¸®ÇÏ°í ¸®½ºÆ®ºä Çì´õ¸¦ ÀÌ¿ëÇÏ¿© ¼¼ºÎ Áö¿ªÀ» ³ª´©¾î Ç¥½Ã
- * ÇÑ´Ù. ¸®½ºÆ®ºäÀÇ ¸Ç Ã¹ ¾ÆÀÌÅÛÀº ÀÌº¥Æ® Âü¿©ÇÏ±â ¹öÆ°ÀÌ ÀÖÀ¸¸ç, ÀÌ ¹öÆ°Àº
- * ¼­¹öÀÇ ÀÌº¥Æ® API¿¡ µû¶ó NEW ¾ÆÀÌÄÜÀ» ºÙ¿©ÁÖ±âµµ ÇÑ´Ù.
+ * ì–´í”Œë¦¬ì¼€ì´ì…˜ì˜ ê°€ì¥ ì£¼ê°€ ë˜ëŠ” í™”ë©´ìœ¼ë¡œì„œ í˜¸í…”ë“¤ì˜ ëª©ë¡ì„ ë³´ì—¬ì£¼ëŠ” í™”ë©´ì´ë‹¤.
+ * í˜¸í…” ë¦¬ìŠ¤íŠ¸ëŠ” ë”°ë¡œ ì»¤ìŠ¤í…€ë˜ì–´ êµ¬ì„±ë˜ì–´ ìˆìœ¼ë©°, ì•¡ì…˜ë°”ì˜ ë„¤ë¹„ê²Œì´ì…˜ì„ ì´ìš©
+ * í•˜ì—¬ í° ì§€ì—­ì„ ë¶„ë¦¬í•˜ê³  ë¦¬ìŠ¤íŠ¸ë·° í—¤ë”ë¥¼ ì´ìš©í•˜ì—¬ ì„¸ë¶€ ì§€ì—­ì„ ë‚˜ëˆ„ì–´ í‘œì‹œ
+ * í•œë‹¤. ë¦¬ìŠ¤íŠ¸ë·°ì˜ ë§¨ ì²« ì•„ì´í…œì€ ì´ë²¤íŠ¸ ì°¸ì—¬í•˜ê¸° ë²„íŠ¼ì´ ìˆìœ¼ë©°, ì´ ë²„íŠ¼ì€
+ * ì„œë²„ì˜ ì´ë²¤íŠ¸ APIì— ë”°ë¼ NEW ì•„ì´ì½˜ì„ ë¶™ì—¬ì£¼ê¸°ë„ í•œë‹¤.
  *
  * @since 2014-02-24
  * @version 1
@@ -15,11 +15,13 @@
  */
 package com.twoheart.dailyhotel;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.json.JSONArray;
@@ -32,15 +34,21 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.AbsListViewDelegate;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBar.OnNavigationListener;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -77,9 +85,9 @@ import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView;
 
 public class HotelListFragment extends BaseFragment implements Constants,
-OnItemClickListener, OnNavigationListener,
+OnItemClickListener, 
 DailyHotelJsonArrayResponseListener, DailyHotelJsonResponseListener,
-DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener {
+DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener {//OnNavigationListener,
 
 	private final static String TAG = "HotelListFragment";
 
@@ -90,6 +98,8 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 	private List<Hotel> mHotelList;
 	private List<String> mRegionList;
 	private Map<String, List<String>> mRegionDetailList;
+	private List<String> mJaRegionList;
+	private Map<String, List<String>> mJaRegionDetailList;
 	private SaleTime mDailyHotelSaleTime;
 	private LinearLayout llListViewFooter;
 	private ImageView ivNewEvent;
@@ -102,7 +112,9 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 
 	private String selectedRegion;
 	private RegionListAdapter regionListAdapter;
-
+	
+	private LocationManager mLocationManager;
+	private int beforeIdx = 0;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -143,7 +155,7 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 		mHotelListView.addHeaderView(listViewHeader);
 
 		ivNewEvent = (ImageView) view.findViewById(R.id.iv_new_event);
-		btnListViewHeader = (LinearLayout) view.findViewById(R.id.btn_footer); // ¼öÁ¤¿ä¸Á footer -> header
+		btnListViewHeader = (LinearLayout) view.findViewById(R.id.btn_footer); // ìˆ˜ì •ìš”ë§ footer -> header
 		GlobalFont.apply(btnListViewHeader);
 		btnListViewHeader.setOnClickListener(new OnClickListener() {
 
@@ -168,6 +180,7 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 				.setup(mPullToRefreshLayout);
 
 		mHotelListView.setShadowVisible(false);
+		setHasOptionsMenu(true);
 		
 		return view;
 	}
@@ -177,16 +190,21 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 	public void onResume() {
 		super.onResume();
 
-		if (mRefreshHotelList) {
-			lockUI();
-			// ÇöÀç ¼­¹ö ½Ã°£À» °¡Á®¿Â´Ù
-			// »ç¿ëÀÚ ½Ã°£Àº º¯°æ°¡´É¼º ÀÖÀ½. ¼­¹ö½Ã°£À» ¹ÙÅÁÀ¸·Î ÆÇ¸Å½Ã°£ Ã¼Å© 
-			mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(
-					URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_TIME)
-					.toString(), null, HotelListFragment.this,
-					mHostActivity));
+		if (mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "").equals("")) {
+			Intent i = new Intent(mHostActivity, RegionListActivity.class);
+			startActivity(i);
+			mHostActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
+		} else {
+			if (mRefreshHotelList) {
+				lockUI();
+				// í˜„ì¬ ì„œë²„ ì‹œê°„ì„ ê°€ì ¸ì˜¨ë‹¤
+				// ì‚¬ìš©ì ì‹œê°„ì€ ë³€ê²½ê°€ëŠ¥ì„± ìˆìŒ. ì„œë²„ì‹œê°„ì„ ë°”íƒ•ìœ¼ë¡œ íŒë§¤ì‹œê°„ ì²´í¬ 
+				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(
+						URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_TIME)
+						.toString(), null, HotelListFragment.this,
+						mHostActivity));
+			}
 		}
-		
 	}
 
 	@Override
@@ -196,11 +214,11 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 
 	}
 
-	// È£ÅÚ Å¬¸¯½Ã
+	// í˜¸í…” í´ë¦­ì‹œ
 	@Override
 	public void onItemClick(AdapterView<?> parentView, View childView,
 			int position, long id) {
-		// 7.2 G2 ¹öÀü¿¡¼­ È£ÅÚ¸®½ºÆ®¿¡¼­ ÀÌº¥Æ® Ä­À» Å¬¸¯ÇÒ °æ¿ì Æ¨±â´Â Çö»óÀ» ¸·±â À§ÇÔ. why? Çì´õºäÀÎµ¥µµ ¾ÆÀÌÅÛ Å¬¸¯ ¸®½º³Ê°¡ µé¾î°¨.
+		// 7.2 G2 ë²„ì „ì—ì„œ í˜¸í…”ë¦¬ìŠ¤íŠ¸ì—ì„œ ì´ë²¤íŠ¸ ì¹¸ì„ í´ë¦­í•  ê²½ìš° íŠ•ê¸°ëŠ” í˜„ìƒì„ ë§‰ê¸° ìœ„í•¨. why? í—¤ë”ë·°ì¸ë°ë„ ì•„ì´í…œ í´ë¦­ ë¦¬ìŠ¤ë„ˆê°€ ë“¤ì–´ê°.
 		if (position == 0)  return; 
 		
 //		mHostActivity.selectMenuDrawer(mHostActivity.menuHotelListFragment);
@@ -214,14 +232,14 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 		int hotelIdx = position - count;
 
 		if (selectedItem.getType() == HotelListViewItem.TYPE_ENTRY) {
-			//¸®½ºÆ® ºä·Î ÇÏ¸é º¸ÀÌ´Â°Å »©°í ³ª¸ÓÁö Áö¿öÁö´Â°Å ¸Ş¸ğ¸®¿¡¼­ »ç¶óÁü
-			//ÀÌ¹ÌÁö Ä³½Ã ¸¸µé¾î¼­ Ä³½Ì
-			mHotelListAdapter.getImgCache().evictAll(); // È£ÅÚ ¸®½ºÆ®¾ÆÀÌÅÛµéÀÇ image¸¦ Ä³½ÌÇÏ´Â lru cache ºñ¿ì±â.
+			//ë¦¬ìŠ¤íŠ¸ ë·°ë¡œ í•˜ë©´ ë³´ì´ëŠ”ê±° ë¹¼ê³  ë‚˜ë¨¸ì§€ ì§€ì›Œì§€ëŠ”ê±° ë©”ëª¨ë¦¬ì—ì„œ ì‚¬ë¼ì§
+			//ì´ë¯¸ì§€ ìºì‹œ ë§Œë“¤ì–´ì„œ ìºì‹±
+			mHotelListAdapter.getImgCache().evictAll(); // í˜¸í…” ë¦¬ìŠ¤íŠ¸ì•„ì´í…œë“¤ì˜ imageë¥¼ ìºì‹±í•˜ëŠ” lru cache ë¹„ìš°ê¸°.
 
 			Intent i = new Intent(mHostActivity, HotelTabActivity.class);
 			
-			int idx = mHostActivity.actionBar.getSelectedNavigationIndex();
-			selectedRegion = mRegionList.get(idx).trim();
+//			int idx = mHostActivity.actionBar.getSelectedNavigationIndex();
+			selectedRegion = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
 			
 			SharedPreferences.Editor editor = mHostActivity.sharedPreference
 					.edit();
@@ -258,21 +276,21 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
-	@Override
-	public boolean onNavigationItemSelected(int position, long id) {
-		lockUI();
-		fetchHotelList(position);
-		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "selectRegion", mRegionList.get(position).trim(), (long) (position+1));
-		
-//		boolean showEventPopUp = ((MainActivity) mHostActivity).sharedPreference.getBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false);
-		
-//		if (showEventPopUp) {
-//			Dialog popUpDialog = getEventPopUpDialog();
-//			popUpDialog.show();
-//		}
-		
-		return true;
-	}
+//	@Override
+//	public boolean onNavigationItemSelected(int position, long id) {
+//		lockUI();
+//		fetchHotelList(position);
+//		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "selectRegion", mRegionList.get(position).trim(), (long) (position+1));
+//		
+////		boolean showEventPopUp = ((MainActivity) mHostActivity).sharedPreference.getBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false);
+//		
+////		if (showEventPopUp) {
+////			Dialog popUpDialog = getEventPopUpDialog();
+////			popUpDialog.show();
+////		}
+//		
+//		return true;
+//	}
 	
 	
 	
@@ -316,35 +334,26 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 
 
 	/**
-	 * È£ÅÚ¸®½ºÆ®¸¦ º¸¿©ÁØ´Ù.
+	 * í˜¸í…”ë¦¬ìŠ¤íŠ¸ë¥¼ ë³´ì—¬ì¤€ë‹¤.
 	 * @param position
 	 */
-	private void fetchHotelList(int position) {
-		android.util.Log.e("FETCHHOTEL LIST",position +"");
+	private void fetchHotelList() {
+//		android.util.Log.e("FETCHHOTEL LIST",position +"");
 		((MainActivity) mHostActivity).drawerLayout.closeDrawer(((MainActivity) mHostActivity).drawerList);
-		regionListAdapter.notifyDataSetChanged();
+//		regionListAdapter.notifyDataSetChanged();
 
-		String selectedRegion = mRegionList.get(position);
-		android.util.Log.e("selectedRegion",selectedRegion.trim() +"");
-		String selectedRegionTr = mRegionList.get(position).trim();
-
-//		if (position != mHostActivity.sharedPreference.getInt(
-//				KEY_PREFERENCE_REGION_INDEX, 0)) {
+		String selectedRegion = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
+		android.util.Log.e("selectedRegion",selectedRegion +" fetchHotelList");
+		mHostActivity.setActionBar("  " + selectedRegion);
+//		String selectedRegionTr = mRegionList.get(position).trim();
+		
+//		if (!selectedRegion.equals(mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "ì„œìš¸"))) {
 //			SharedPreferences.Editor editor = mHostActivity.sharedPreference
 //					.edit();
 //			editor.putString(KEY_PREFERENCE_REGION_SELECT, selectedRegion);
 //			editor.putInt(KEY_PREFERENCE_REGION_INDEX, position);
 //			editor.commit();
-//
 //		}
-		
-		if (!selectedRegionTr.equals(mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "¼­¿ï"))) {
-			SharedPreferences.Editor editor = mHostActivity.sharedPreference
-					.edit();
-			editor.putString(KEY_PREFERENCE_REGION_SELECT, selectedRegionTr);
-			editor.putInt(KEY_PREFERENCE_REGION_INDEX, position);
-			editor.commit();
-		}
 
 		selectedRegion = selectedRegion.replace(" ", "%20");
 		selectedRegion = selectedRegion.replace("|", "%7C");
@@ -365,11 +374,11 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 				+ mDailyHotelSaleTime.getCurrentSec().toString()+" ");
 		Log.d(TAG, url);
 
-		// È£ÅÚ ¸®½ºÆ®¸¦ °¡Á®¿Â´Ù
+		// í˜¸í…” ë¦¬ìŠ¤íŠ¸ë¥¼ ê°€ì ¸ì˜¨ë‹¤. 
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null,
 				HotelListFragment.this, mHostActivity));
 		
-		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("hotelList", "/todays-hotels/" + selectedRegionTr);
+		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("hotelList", "/todays-hotels/" + selectedRegion);
 
 	}
 
@@ -389,7 +398,7 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 							mDailyHotelSaleTime));
 					unLockUI();
 				} else {
-					// Áö¿ª ¸®½ºÆ®¸¦ °¡Á®¿Â´Ù
+					// ì§€ì—­ ë¦¬ìŠ¤íŠ¸ë¥¼ ê°€ì ¸ì˜¨ë‹¤
 					mQueue.add(new DailyHotelJsonArrayRequest(Method.GET,
 							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 									URL_WEBAPI_SITE_LOCATION_LIST).toString(),
@@ -439,16 +448,16 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 					newHotel.setImage(image);
 					newHotel.setDetailRegion(detailRegion);
 
-					if (seq >= 0) { // ¼û±èÈ£ÅÚÀÌ ¾Æ´Ï¶ó¸é Ãß°¡. (À½¼öÀÏ °æ¿ì ¼û±èÈ£ÅÚ.)
-						// SOLD OUT µÈ Ç×¸ñÀº ¹ØÀ¸·Î.
+					if (seq >= 0) { // ìˆ¨ê¹€í˜¸í…”ì´ ì•„ë‹ˆë¼ë©´ ì¶”ê°€. (ìŒìˆ˜ì¼ ê²½ìš° ìˆ¨ê¹€í˜¸í…”.)
+						// SOLD OUT ëœ í•­ëª©ì€ ë°‘ìœ¼ë¡œ.
 						if (available <= 0) available *= 100;
 
-						mHotelList.add(newHotel); // Ãß°¡.
+						mHotelList.add(newHotel); // ì¶”ê°€.
 
-						// seq °ª¿¡ µû¸¥ ¸®½ºÆ® Á¤·Ä
+						// seq ê°’ì— ë”°ë¥¸ ë¦¬ìŠ¤íŠ¸ ì •ë ¬
 						Comparator<Hotel> comparator = new Comparator<Hotel>() {
 							public int compare(Hotel o1, Hotel o2) {
-								// ¼ıÀÚÁ¤·Ä
+								// ìˆ«ìì •ë ¬
 								return Integer.parseInt(o1.getSequence() + "")
 										- Integer.parseInt(o2.getSequence() + "");
 							}
@@ -460,8 +469,8 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 				}
 
 				mHotelListViewList = new ArrayList<HotelListViewItem>();
-				List<String> selectedRegionDetail = mRegionDetailList.get(mRegionList.get(mHostActivity.actionBar
-						.getSelectedNavigationIndex()));
+				Log.d(TAG, "region? " + mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, ""));
+				List<String> selectedRegionDetail = mRegionDetailList.get(mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, ""));
 
 				for (int i = 0; i < selectedRegionDetail.size(); i++) {
 					String region = selectedRegionDetail.get(i);
@@ -481,7 +490,7 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 				}
 
 				int count = 0;
-				HotelListViewItem others = new HotelListViewItem("±âÅ¸");
+				HotelListViewItem others = new HotelListViewItem("ê¸°íƒ€");
 
 				mHotelListViewList.add(others);
 				for (int i = 0; i < mHotelList.size(); i++) {
@@ -501,7 +510,7 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 
 				mRefreshHotelList = true;
 
-				// »õ·Î¿î ÀÌº¥Æ® È®ÀÎÀ» À§ÇØ ¹öÀü API È£Ãâ
+				// ìƒˆë¡œìš´ ì´ë²¤íŠ¸ í™•ì¸ì„ ìœ„í•´ ë²„ì „ API í˜¸ì¶œ
 				mQueue.add(new DailyHotelJsonRequest(Method.GET, 
 						new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_VERSION).toString(),
 						null, this, mHostActivity));
@@ -543,7 +552,82 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 
 	@Override
 	public void onResponse(String url, JSONArray response) {
-		if (url.contains(URL_WEBAPI_SITE_LOCATION_LIST)) {
+		if (url.contains("site/get/country")) {
+			try {
+				Log.d("RegionListActivity", "site/get ? " + response.toString());
+				mJaRegionList = new ArrayList<String>();
+				mJaRegionDetailList = new LinkedHashMap<String, List<String>>();
+
+				JSONArray arr = response;
+				for (int i = 0; i < arr.length(); i++) {
+					JSONObject obj = arr.getJSONObject(i);
+					String name = new String();
+					name = obj.getString("name");
+					mJaRegionList.add(name);
+
+					// ì„¸ë¶€ì§€ì—­ ì¶”ê°€
+					List<String> nameDetailList = new ArrayList<String>();
+					JSONArray arrDetail = obj.getJSONArray("child");
+					for (int j=0; j<arrDetail.length(); j++) {
+						String nameDetail = arrDetail.getString(j);
+						nameDetailList.add(nameDetail);
+
+					}
+					mJaRegionDetailList.put(name, nameDetailList);
+				}
+				
+				android.util.Log.e("mJaRegionList", mJaRegionList.toString());
+				android.util.Log.e("mJaRegionDetailList", mJaRegionDetailList.toString());
+		        
+				/**
+				 * KaKaoë§í¬ë¥¼ í†µí•œ ì ‘ì† ì¼ê²½ìš° í•´ë‹¹ í˜¸í…”ê¹Œì§€ ì ‘ì†í•¨.
+				 */
+				int regionIdx = 0;
+				boolean isRegion = false;
+				if (mKakaoHotelRegion != null && !mKakaoHotelRegion.isEmpty()) {
+					for (int i=0;i<mRegionList.size();i++) {
+						if (mRegionList.get(i).trim().equals(mKakaoHotelRegion)) {
+							regionIdx = i;
+							isRegion = true;
+							break;
+						}
+					}
+					if (regionIdx == 0) {
+						SimpleAlertDialog.build(mHostActivity, "ì•Œë¦¼", "ê³µìœ ë°›ì€ í˜¸í…”ì´ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.", "í™•ì¸", null);
+					}
+				} else {
+					String regionStr = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
+					
+					for (int i=0;i<mJaRegionList.size();i++) {
+						if (mJaRegionList.get(i).trim().equals(regionStr)) {
+							regionIdx = i;
+							isRegion = true;
+							break;
+						}
+						if (mJaRegionList.get(i).trim().equals(mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_BEFORE, ""))) {
+							beforeIdx = i;
+						}
+					}
+				}
+				if (isRegion == false) {
+//					String country = getCountryName();
+//					if (country.equals("ëŒ€í•œë¯¼êµ­"))	regionIdx = seoulIdx;
+//					else if (country.equals("ì¼ë³¸")) 
+					
+					regionIdx = beforeIdx;
+					
+					SharedPreferences.Editor editor = mHostActivity.sharedPreference.edit();
+					editor.putString(KEY_PREFERENCE_REGION_SELECT, mJaRegionList.get(regionIdx)); 
+					editor.commit();
+					
+				}
+				
+				fetchHotelList();
+			} catch (Exception e) {
+				onError(e);
+			}
+		}
+		else if (url.contains(URL_WEBAPI_SITE_LOCATION_LIST)) {
 			try {
 				mRegionList = new ArrayList<String>();
 				mRegionDetailList = new LinkedHashMap<String, List<String>>();
@@ -553,11 +637,12 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 					JSONObject obj = arr.getJSONObject(i);
 					String name = new String();
 					StringBuilder nameWithWhiteSpace = new StringBuilder(name);
-					name = nameWithWhiteSpace.append("    ").append(obj.getString("name")).
-							append("     ").toString();
+//					name = nameWithWhiteSpace.append("    ").append(obj.getString("name")).
+//							append("     ").toString();
+					name = obj.getString("name");
 					mRegionList.add(name);
 
-					// ¼¼ºÎÁö¿ª Ãß°¡
+					// ì„¸ë¶€ì§€ì—­ ì¶”ê°€
 					List<String> nameDetailList = new ArrayList<String>();
 					JSONArray arrDetail = obj.getJSONArray("child");
 					for (int j=0; j<arrDetail.length(); j++) {
@@ -571,19 +656,19 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 				android.util.Log.e("mRegionList", mRegionList.toString());
 				android.util.Log.e("mRegionDetailList", mRegionDetailList.toString());
 
-				mHostActivity.actionBar.setDisplayShowTitleEnabled(false);
-				// È£ÅÚ ÇÁ·¡±×¸ÕÆ® ÀÏ¶§ ¾×¼Ç¹Ù¿¡ ³×ºñ°ÔÀÌ¼Ç ¸®½ºÆ® ¼³Ä¡.
-				mHostActivity.actionBar
-				.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-				regionListAdapter = new RegionListAdapter(
-						mHostActivity, mRegionList);
-				regionListAdapter.setNotifyOnChange(true);
-
-				mHostActivity.actionBar.setListNavigationCallbacks(
-						regionListAdapter, this);
+//				mHostActivity.actionBar.setDisplayShowTitleEnabled(false);
+//				// í˜¸í…” í”„ë˜ê·¸ë¨¼íŠ¸ ì¼ë•Œ ì•¡ì…˜ë°”ì— ë„¤ë¹„ê²Œì´ì…˜ ë¦¬ìŠ¤íŠ¸ ì„¤ì¹˜.
+//				mHostActivity.actionBar
+//				.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+//				regionListAdapter = new RegionListAdapter(
+//						mHostActivity, mRegionList);
+//				regionListAdapter.setNotifyOnChange(true);
+//
+//				mHostActivity.actionBar.setListNavigationCallbacks(
+//						regionListAdapter, this);
 				
 				/**
-				 * KaKao¸µÅ©¸¦ ÅëÇÑ Á¢¼Ó ÀÏ°æ¿ì ÇØ´ç È£ÅÚ±îÁö Á¢¼ÓÇÔ.
+				 * KaKaoë§í¬ë¥¼ í†µí•œ ì ‘ì† ì¼ê²½ìš° í•´ë‹¹ í˜¸í…”ê¹Œì§€ ì ‘ì†í•¨.
 				 */
 				int regionIdx = 0;
 				int seoulIdx = 0;
@@ -595,15 +680,17 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 							isRegion = true;
 							break;
 						}
-						if (mRegionList.get(i).trim().equals("¼­¿ï")) {
+						if (mRegionList.get(i).trim().equals("ì„œìš¸")) {
 							seoulIdx = i;
 						}
 					}
 					if (regionIdx == 0) {
-						SimpleAlertDialog.build(mHostActivity, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_kakao_link), getString(R.string.dialog_btn_text_confirm), null);
+
+						SimpleAlertDialog.build(mHostActivity, "ì•Œë¦¼", "ê³µìœ ë°›ì€ í˜¸í…”ì´ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.", "í™•ì¸", null);//getString(R.string.dialog_notice2), getString(R.string.dialog_msg_kakao_link), getString(R.string.dialog_btn_text_confirm)
+
 					}
 				} else {
-					String regionStr = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "¼­¿ï");
+					String regionStr = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
 					
 					for (int i=0;i<mRegionList.size();i++) {
 						if (mRegionList.get(i).trim().equals(regionStr)) {
@@ -611,20 +698,43 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 							isRegion = true;
 							break;
 						}
-						if (mRegionList.get(i).trim().equals("¼­¿ï")) {
+						if (mRegionList.get(i).trim().equals("ì„œìš¸")) {
 							seoulIdx = i;
+						}
+						if (mRegionList.get(i).trim().equals(mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_BEFORE, ""))) {
+							beforeIdx = i;
 						}
 					}
 //					regionIdx = mHostActivity.sharedPreference
 //							.getInt(KEY_PREFERENCE_REGION_INDEX, 0);
 				}
-				if (isRegion == false) regionIdx = seoulIdx;
+				if (isRegion == false) {
+//					String country = getCountryName();
+//					if (country.equals("ëŒ€í•œë¯¼êµ­"))	regionIdx = seoulIdx;
+//					else if (country.equals("ì¼ë³¸")) 
+					
+					regionIdx = beforeIdx;
+					
+					SharedPreferences.Editor editor = mHostActivity.sharedPreference.edit();
+					editor.putString(KEY_PREFERENCE_REGION_SELECT, mRegionList.get(regionIdx)); 
+					editor.commit();
+					
+//					mQueue.add(new DailyHotelJsonArrayRequest(Method.GET,
+//							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+//									"site/get/country").toString(),
+//									null, HotelListFragment.this,
+//									mHostActivity));
+				} else {
+					fetchHotelList();
+				}
 				
 //				if (regionIdx >= mRegionList.size()-1)	mHostActivity.actionBar.setSelectedNavigationItem(0);
-				mHostActivity.actionBar.setSelectedNavigationItem(regionIdx);
+//				mHostActivity.actionBar.setSelectedNavigationItem(regionIdx);
+				
+//				fetchHotelList();
 //				.setSelectedNavigationItem(1);
 				
-				// È£ÅÚ ¸®ÇÁ·¹½Ã
+				// í˜¸í…” ë¦¬í”„ë ˆì‹œ
 				//				fetchHotelList(mHostActivity.actionBar.getSelectedNavigationIndex());
 				//				mHotelListView.setSelectionFromTop(prevIndex, prevTop);
 			} catch (Exception e) {
@@ -632,13 +742,68 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 			}
 		}
 	}
+	
+	private String getCountryName() {
+		mLocationManager = (LocationManager) mHostActivity.getSystemService(Context.LOCATION_SERVICE);
+		Location location = getLastKnownLocation();
+		String countryName = "";
+		
+//		Log.d(TAG, location.getLatitude() + " / " + location.getLongitude()); //35.6894875, 139.69170639999993 -> ÂµÂµÆ’Ã
+		if (location == null) {
+			Locale locale = this.getResources().getConfiguration().locale;
+			String code = locale.getLanguage();
+			
+			if (code.equals("ko")) {
+        		countryName = "ëŒ€í•œë¯¼êµ­";
+			} else if (code.equals("ja")) {
+				countryName = "ì¼ë³¸";
+			} else {	
+				countryName = "ëŒ€í•œë¯¼êµ­";
+			}
+			Log.d(TAG, "Country Code? " + code);
+			
+		} else {
+			try {
+				Geocoder mGeocoder = new Geocoder(mHostActivity, Locale.KOREAN);
+	        	List<Address> addresses = mGeocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+	            if (addresses.size() > 0) {
+	        		countryName = addresses.get(0).getCountryName();
+	        		Log.d(TAG, "Country? " + countryName);
+	        		
+	                addresses.clear();
+	                addresses = null; 
+	            }
+	        } catch ( IOException e ) {
+	            e.printStackTrace();
+	        }
+		}
+		return countryName;
+	}
+	
+	private Location getLastKnownLocation() {
+	    mLocationManager = (LocationManager)mHostActivity.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+	    List<String> providers = mLocationManager.getProviders(true);
+	    Location bestLocation = null;
+	    for (String provider : providers) {
+	        Location l = mLocationManager.getLastKnownLocation(provider);
+	        if (l == null) {
+	            continue;
+	        }
+	        if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
+	            // Found best last known location: %s", l);
+	            bestLocation = l;
+	        }
+	    }
+	    return bestLocation;
+	}
+
 
 	@Override
 	public void onResponse(String url, String response) {
 		if (url.contains(URL_WEBAPI_APP_TIME)) {
 			mDailyHotelSaleTime.setCurrentTime(response);
 
-			// ¿ÀÇÂ, Å¬·ÎÁî Å¸ÀÓÀ» °¡Á®¿Â´Ù
+			// ì˜¤í”ˆ, í´ë¡œì¦ˆ íƒ€ì„ì„ ê°€ì ¸ì˜¨ë‹¤
 			mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(
 					URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_SALE_TIME)
 					.toString(), null, HotelListFragment.this,
@@ -650,7 +815,25 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 
 	@Override
 	public void onRefreshStarted(View view) {
-		fetchHotelList(mHostActivity.actionBar.getSelectedNavigationIndex());
+		fetchHotelList();
+	}
+	
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		mHostActivity.getMenuInflater().inflate(R.menu.select_region_actions, menu);
+		super.onCreateOptionsMenu(menu, inflater);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch(item.getItemId()){
+		case R.id.action_select_region:
+			Intent i = new Intent(mHostActivity, RegionListActivity.class);
+			startActivity(i);
+			mHostActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
+			return true;
+		}
+		return false;
 	}
 
 }
