@@ -1,3 +1,11 @@
+/**
+ * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
+ *
+ * TabMapFragment (지도 탭)
+ * 
+ * 호텔 탭 중 지도 탭 프래그먼트
+ * 
+ */
 package com.twoheart.dailyhotel.fragment;
 
 import android.annotation.TargetApi;
@@ -38,6 +46,7 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener {
 		TabMapFragment newFragment = new TabMapFragment();
 		Bundle arguments = new Bundle();
 		
+		//관련 정보들은 HotelTabActivity, BookingTabActivity에서 넘겨받음. 
 		arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL, hotelDetail);
 		newFragment.setArguments(arguments);
 		newFragment.setTitle(title);

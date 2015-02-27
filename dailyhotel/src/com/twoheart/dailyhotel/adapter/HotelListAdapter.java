@@ -136,10 +136,6 @@ PinnedSectionListAdapter {
 						| Paint.STRIKE_THRU_TEXT_FLAG);
 				viewHolder.discount.setText(currency + strDiscount);
 			}
-//			viewHolder.price.setText(strPrice + currency);
-//			viewHolder.price.setPaintFlags(viewHolder.price.getPaintFlags()
-//					| Paint.STRIKE_THRU_TEXT_FLAG);
-//			viewHolder.discount.setText(strDiscount + currency);
 
 			viewHolder.name.setSelected(true); // Android TextView marquee bug
 

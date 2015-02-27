@@ -76,19 +76,12 @@ public class GcmIntentService extends IntentService implements Constants{
 		if (!extras.isEmpty()) { 
 
 			try {
+				// 중복 체크를 위한 값 
 				String collapseKey = intent.getStringExtra("collapse_key");
-				Log.d("GcmIntentService", "collapseKey : " + collapseKey);
 	            
 				JSONObject jsonMsg = new JSONObject(extras.getString("message"));
 				String msg = jsonMsg.getString("msg");
-				Log.d("GcmIntentService", "jsonMsg : " + jsonMsg.toString());
 				int type = -1;
-				
-				Log.d("GcmIntentService", "type : " + jsonMsg.getString("type") + " collapseKey : " + collapseKey);
-				
-				if (collapseKey.equals("do_not_collapse")) {
-					Log.d("GcmIntentService", "do_not_collapse");
-				}
 				
 				if (jsonMsg.getString("type").equals("notice")) type = PUSH_TYPE_NOTICE;
 				else if (jsonMsg.getString("type").equals("account_complete")) type = PUSH_TYPE_ACCOUNT_COMPLETE;
@@ -97,7 +90,6 @@ public class GcmIntentService extends IntentService implements Constants{
 				if (!jsonMsg.isNull("sound")) mIsSound = jsonMsg.getBoolean("sound");
 				SharedPreferences pref = this.getSharedPreferences(NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
 				
-				Log.d("GcmIntentService", "in switch type : " + type);
 				switch (type) {
 				case PUSH_TYPE_ACCOUNT_COMPLETE:
 //					sendPush(messageType, type, msg, "", "");

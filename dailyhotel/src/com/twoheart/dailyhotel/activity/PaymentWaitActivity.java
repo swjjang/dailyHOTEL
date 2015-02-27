@@ -1,3 +1,12 @@
+/**
+ * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
+ *
+ * PaymentWaitActivity (입금대기 화면)
+ * 
+ * 계좌이체 결제 선택 후 입금대기 상태 화면
+ * 가상계좌 정보를 보여주는 화면이다.
+ * 
+ */
 package com.twoheart.dailyhotel.activity;
 
 import java.text.DecimalFormat;
@@ -80,16 +89,15 @@ public class PaymentWaitActivity extends BaseActivity implements DailyHotelJsonR
 
 					DecimalFormat comma = new DecimalFormat("###,##0");
 					String locale = sharedPreference.getString(KEY_PREFERENCE_LOCALE, null);
+					
 					if (locale.equals("한국어"))	tvPrice.setText(comma.format(response.getInt("amt"))+getString(R.string.currency));
 					else	tvPrice.setText(getString(R.string.currency)+comma.format(response.getInt("amt")));
-//					tvPrice.setText(comma.format(response.getInt("amt"))+getString(R.string.currency));
 					
 					String[] dateSlice = response.getString("date").split("/");
 					String[] timeSlice = response.getString("time").split(":");
 					
 					if (locale.equals("한국어"))	tvDeadline.setText(Integer.parseInt(dateSlice[1])+"월 "+Integer.parseInt(dateSlice[2])+"일 "+timeSlice[0]+":"+timeSlice[1]+"까지");
 					else	tvDeadline.setText("upto " + Integer.parseInt(dateSlice[1])+"/ "+Integer.parseInt(dateSlice[2])+" "+timeSlice[0]+":"+timeSlice[1]);
-//					tvDeadline.setText(Integer.parseInt(dateSlice[1])+"월 "+Integer.parseInt(dateSlice[2])+"일 "+timeSlice[0]+":"+timeSlice[1]+"까지");
 
 					tvGuide1.setText(response.getString("msg1"));
 					tvGuide2.setText(response.getString("msg2"));

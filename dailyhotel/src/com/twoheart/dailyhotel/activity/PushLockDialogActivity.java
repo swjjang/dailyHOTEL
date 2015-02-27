@@ -53,22 +53,15 @@ public class PushLockDialogActivity extends Activity implements OnClickListener,
 		mMsg = getIntent().getStringExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG);
 		mType = getIntent().getIntExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, -1);
 		
-//		String title = null;
-//		if (mType == PUSH_TYPE_NOTICE) {
-//			title = "알림";
-//		} else if (mType == PUSH_TYPE_ACCOUNT_COMPLETE) {
-//			title = mMsg.substring(0, mMsg.indexOf("]")+1);
-//		}
-		
-//		mMsg = mMsg.replace("]", "]\n");
-		
 		tvMsg = (TextView) findViewById(R.id.tv_push_lock_dialog_msg);
 		
-		if (mType == PUSH_TYPE_NOTICE) {
+		// 타입별로 mMsg 표시 방식 설정
+		if (mType == PUSH_TYPE_NOTICE) {// 공지 푸시
 			tvMsg.setText(mMsg);
-		} else if (mType == PUSH_TYPE_ACCOUNT_COMPLETE) {
+		} else if (mType == PUSH_TYPE_ACCOUNT_COMPLETE) {// 계좌이체 결제 완료 푸시  
 			String result = mMsg;
 			if (mMsg.contains("]")) {
+				// [호텔이름 [조식 포함]] 예약되었습니다. 과 같은 경우 마지막 ] 다음에서 개행하여 보기 좋도록 표시
 				int index = mMsg.lastIndexOf("]");
 				StringBuffer sb = new StringBuffer(mMsg); 
 				result = sb.replace(index, index+1, "]\n").toString();
@@ -76,11 +69,6 @@ public class PushLockDialogActivity extends Activity implements OnClickListener,
 			
 			tvMsg.setText(result);
 		}
-		
-		
-//		tvTitle = (TextView) findViewById(R.id.tv_push_lock_dialog_title);
-//		tvTitle.setText(title);
-
 		
 		btnOkButton = (Button) findViewById(R.id.btn_push_lock_dialog_show);
 		btnCancelButton = (Button) findViewById(R.id.btn_push_lock_dialog_close);

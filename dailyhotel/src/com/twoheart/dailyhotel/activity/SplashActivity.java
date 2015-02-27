@@ -382,7 +382,7 @@ DailyHotelJsonResponseListener, ErrorListener {
 			public void run() {
 				if (newEventFlag == VALUE_WEB_API_RESPONSE_NEW_EVENT_NOTIFY) setResult(CODE_RESULT_ACTIVITY_SPLASH_NEW_EVENT);
 				else if (newEventFlag == VALUE_WEB_API_RESPONSE_NEW_EVENT_NONE) setResult(RESULT_OK);
-				finish();
+				finish();//MainActivity·Î finish 
 
 			}
 		}, DURING_SPLASH_ACTIVITY_SHOW);

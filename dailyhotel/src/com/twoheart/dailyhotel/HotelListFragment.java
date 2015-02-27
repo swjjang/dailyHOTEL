@@ -185,9 +185,11 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 				.setup(mPullToRefreshLayout);
 
 		mHotelListView.setShadowVisible(false);
-		setHasOptionsMenu(true);
+		setHasOptionsMenu(true);//프래그먼트 내에서 옵션메뉴를 지정하기 위해 
 		
-		//ver_dual API의 new_event값이 0이면 false, 1이면 true
+		// ver_dual API의 new_event값이 0이면 false, 1이면 true
+		// false인 경우 기존의 호텔리스트 방식으로 
+		// true인 경우 새로 만든 호텔리스트 화면방식으로 전환됨.
 		event = mHostActivity.sharedPreference.getBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false);
 		
 		return view;
@@ -198,6 +200,8 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 	public void onResume() {
 		super.onResume();
 
+		//처음 앱을 설치하는 경우 지역리스트 화면을 띄움.
+		//event의 ver_dual이 1인 경우 -> 새로운 지역리스트 화면 
 		if (mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "").equals("") && event) {
 			Intent i = new Intent(mHostActivity, RegionListActivity.class);
 			startActivity(i);
@@ -311,7 +315,7 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 	}
 	
 	
-	
+	//이벤트 공지를 위한 dialog를 띄움.
 	private Dialog getEventPopUpDialog() {
 		final Dialog dialog = new Dialog(((MainActivity) mHostActivity));
 
@@ -323,7 +327,6 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 		ImageView btnClose = (ImageView) view.findViewById(R.id.btn_confirm_payment_close);
 		WebView popUpWebView = (WebView) view.findViewById(R.id.pop_up_web);
 		
-		popUpWebView.getSettings().setJavaScriptEnabled(true);
 		popUpWebView.getSettings().setBuiltInZoomControls(true);
 //		popUpWebView.getSettings().setBlockNetworkLoads(false);
         popUpWebView.loadUrl("http://www.google.com");
@@ -361,8 +364,9 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 		String selectedRegion = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
 		android.util.Log.e("selectedRegion",selectedRegion +" fetchHotelList");
 		
+		// 새로운 지역리스트화면의 경우 navigation 리스트 대신 지역이름이 들어감.
+		// 기존 방식의 경우 지역 이름 대신 navigation 리스트가 들어가야 함.
 		if (event)	mHostActivity.setActionBar("  " + selectedRegion);
-//		String selectedRegionTr = mRegionList.get(position).trim();
 		
 //		if (!selectedRegion.equals(mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "서울"))) {
 //			SharedPreferences.Editor editor = mHostActivity.sharedPreference
@@ -569,6 +573,7 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 
 	@Override
 	public void onResponse(String url, JSONArray response) {
+		//해외 지역리스트 
 		if (url.contains(URL_WEBAPI_SITE_COUNTRY_LOCATION_LIST)) {
 			try {
 				Log.d(TAG, "site/get ? " + response.toString());
@@ -621,19 +626,25 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 							isRegion = true;
 							break;
 						}
+						//현재 선택지역 이전에 선택했던 지역이 있는지 파악 
 						if (mRegionList.get(i).trim().equals(mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_BEFORE, ""))) {
 							beforeIdx = i;
 							isBeforeRegion = true;
 						}
 					}
 				}
+				
+				//선택지역이 없는 경우 
 				if (isRegion == false) {
 //					String country = getCountryName();
 //					if (country.equals("대한민국"))	regionIdx = seoulIdx;
 //					else if (country.equals("일본")) 
 					
+					//이전에 선택했던 지역을 선택지역으로 설정함.
 					regionIdx = beforeIdx;
 					
+					//이전에 선택했던 지역도 없는 경우
+					//사용자의 나라를 얻어와서 대한민국이면 서울, 일본이면 도쿄를 선택지역으로 설정함. 
 					if (!isBeforeRegion) {
 						String country = getCountryByLocale();
 						if (country.equals(getString(R.string.act_list_region_korea))) regionIdx = seoulIdx;
@@ -661,9 +672,13 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 					JSONObject obj = arr.getJSONObject(i);
 					String name = new String();
 					StringBuilder nameWithWhiteSpace = new StringBuilder(name);
+					
+					// 네비게이션 리스트 방식을 사용할 경우 간격을 조절하기 위함. 
 					if (!event)	name = nameWithWhiteSpace.append("    ").append(obj.getString("name")).append("    ").toString();
 					else name = obj.getString("name");
+					
 					mRegionList.add(name);
+					
 					if (name.trim().equals(getString(R.string.frag_hotel_list_seoul))) seoulIdx = i;
 
 					// 세부지역 추가
@@ -680,6 +695,7 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 				android.util.Log.e("mRegionList", mRegionList.toString());
 				android.util.Log.e("mRegionDetailList", mRegionDetailList.toString());
 
+				//기존의 지역리스트 표시방식 
 				if (!event) {
 					mHostActivity.actionBar.setDisplayShowTitleEnabled(false);
 					// 호텔 프래그먼트 일때 액션바에 네비게이션 리스트 설치.
@@ -729,6 +745,7 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 //					regionIdx = mHostActivity.sharedPreference
 //							.getInt(KEY_PREFERENCE_REGION_INDEX, 0);
 				}
+				//선택지역이 없는 경우 
 				if (isRegion == false) {
 //					String country = getCountryName();
 //					if (country.equals("대한민국"))	regionIdx = seoulIdx;
@@ -746,6 +763,7 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 						editor.putString(KEY_PREFERENCE_REGION_SELECT, mRegionList.get(regionIdx)); 
 						editor.commit();	
 					}
+					//새로운 지역리스트 방식의 경우 해외지역리스트 API도 호출함. 
 					else {
 						mQueue.add(new DailyHotelJsonArrayRequest(Method.GET,
 								new StringBuilder(URL_DAILYHOTEL_SERVER).append(
@@ -758,27 +776,25 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 					fetchHotelList();
 				}
 				
-//				if (regionIdx >= mRegionList.size()-1)	mHostActivity.actionBar.setSelectedNavigationItem(0);
 				if (!event)	mHostActivity.actionBar.setSelectedNavigationItem(regionIdx);
 				
 //				fetchHotelList();
-//				.setSelectedNavigationItem(1);
-				
-				// 호텔 리프레시
-				//				fetchHotelList(mHostActivity.actionBar.getSelectedNavigationIndex());
-				//				mHotelListView.setSelectionFromTop(prevIndex, prevTop);
+
 			} catch (Exception e) {
 				onError(e);
 			}
 		}
 	}
 	
+	// 현재 위치를 바탕으로 국가이름을 얻어옴
+	// 선택한 지역이 없는 경우 현재 위치를 바탕으로 국가를 얻어오기 위해 사용(현재는 사용 안함)
+	// 현재는 선택한 지역이 없는 경우 현재 위치를 바탕으로 얻는 대신
+	// 일종의 캐시 개념으로 그 전에 선택했던 지역을 불러오는 방식을 사용함.
 	private String getCountryName() {
 		mLocationManager = (LocationManager) mHostActivity.getSystemService(Context.LOCATION_SERVICE);
 		Location location = getLastKnownLocation();
 		String countryName = "";
 		
-//		Log.d(TAG, location.getLatitude() + " / " + location.getLongitude()); //35.6894875, 139.69170639999993 -> µµƒÏ
 		if (location == null) {
 			countryName = getCountryByLocale();
 			
@@ -800,6 +816,7 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 		return countryName;
 	}
 	
+	// 사용자의 언어를 바탕으로 국가이름을 얻어옴.
 	private String getCountryByLocale() {
 		Locale locale = this.getResources().getConfiguration().locale;
 		String code = locale.getLanguage();
@@ -855,6 +872,8 @@ DailyHotelStringResponseListener, uk.co.senab.actionbarpulltorefresh.library.lis
 	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		// 새로운 지역리스트 화면을 보여주기 위한 돋보기 버튼
+		// HotelListFragment화면에서만 보여져야 하기 때문에 MainActivity가 아닌 fragment내에서 선언함. 
 		if (event) {
 			mHostActivity.getMenuInflater().inflate(R.menu.select_region_actions, menu);
 		}

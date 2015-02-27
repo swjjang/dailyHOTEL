@@ -216,7 +216,7 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 		if (url.contains(URL_WEBAPI_APP_VERSION)) {
 			try {
 				if (response.getString("new_event").equals("1")) {
-					if (ivNewEvent != null) ivNewEvent.setVisibility(View.VISIBLE);
+//					if (ivNewEvent != null) ivNewEvent.setVisibility(View.VISIBLE);
 				}
 			} catch (Exception e) {
 				onError(e);

@@ -36,6 +36,7 @@ import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 
 @ReportsCrashes
 (
+		// Application Crash Reports for Android(ACRA) ¼³Á¤
 		formKey = "",
 		resToastText = R.string.crash_toast_text,
 		mode = ReportingInteractionMode.DIALOG,

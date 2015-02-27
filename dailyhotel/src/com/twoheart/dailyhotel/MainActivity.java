@@ -225,11 +225,16 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 		
 		if (requestCode == CODE_REQUEST_ACTIVITY_SPLASH) {
 			switch (resultCode) {
-			case RESULT_OK :		// 스플래시 화면이 정상적으로 종료되었을 경우
+			// 스플래시 화면이 정상적으로 종료되었을 경우
+			// ver_dual의 new_event값이 0인 경우
+			case RESULT_OK :		 
 				editor.putBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false);
 				editor.apply();
 				break;
-			case CODE_RESULT_ACTIVITY_SPLASH_NEW_EVENT :		// 스플래시가 정상적으로 종료되었는데 새로운 이벤트 알림이 있는 경우
+				
+			// 스플래시가 정상적으로 종료되었는데 새로운 이벤트 알림이 있는 경우
+			// ver_dual의 new_event값이 1인 경우 
+			case CODE_RESULT_ACTIVITY_SPLASH_NEW_EVENT :		
 				editor.putBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, true);
 				editor.apply();
 				break;
@@ -238,10 +243,7 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 				return;				// 메서드를 빠져나간다 - 호텔 평가를 수행하지 않음.
 			}
 			
-//			editor.putBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false);
-//			editor.apply();
-			Log.d(TAG, "new_event? " + sharedPreference.getBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false));
-			
+			// 앱을 처음 설치한 경우 가이드를 띄움. 
 			boolean showGuide = sharedPreference.getBoolean(KEY_PREFERENCE_SHOW_GUIDE, true);
 			if (showGuide) startActivityForResult(new Intent(this, IntroActivity.class), CODE_REQUEST_ACTIVITY_INTRO);
 			else {
@@ -307,6 +309,7 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 					}
 				}
 
+				// 구매자 정보 확인 
 				String buyerIdx = sharedPreference.getString(KEY_PREFERENCE_USER_IDX, null);
 				if (buyerIdx != null) {
 					if (loginuser_idx.equals(buyerIdx)) {
@@ -480,17 +483,11 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 	 */
 	public void replaceFragment(Fragment fragment) {
 		try {
-//			FragmentTransaction transaction = fragmentManager.beginTransaction();
 			clearFragmentBackStack();
-			
-//			transaction.commitAllowingStateLoss();
 			
 			fragmentManager.beginTransaction()
 			.replace(mContentFrame.getId(), fragment)
 			.commitAllowingStateLoss();
-			
-//			transaction.replace(mContentFrame.getId(), fragment);
-//			transaction.commitAllowingStateLoss();
 			
 			// Android 4.4 이상일 경우 Android StatusBar와 Android NavigationBar를 모두 Translucent하는데
 			// 우리 어플리케이션에서는 HotelListFragment에서만 Android NavigationBar를 Translucent하게 하였다.
@@ -518,7 +515,6 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 		} catch (IllegalStateException e) {
 			onError();
 			
-//			Log.d("MainActivity", "error : " + e.toString());
 		}
 
 	}
@@ -615,7 +611,6 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 			@Override
 			public void run() {
 				replaceFragment(getFragment(index));
-//				replaceErrorFragment(new ErrorFragment());
 			}
 		}, 300);
 	}
@@ -846,65 +841,8 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 	public void onError() {
 		super.onError();
 
-		// Error Fragment를 표시한다.
+		// Error Fragment를 표시한다. -> stackoverflow가 발생하는 경우가 있음. 에러 원인 파악해야 함.
 		replaceFragment(new ErrorFragment());
 	}
-	
-//	public void replaceErrorFragment(Fragment fragment) {
-//		try {
-//			clearFragmentBackStack();
-//			
-//			fragmentManager.beginTransaction()
-//			.replace(mContentFrame.getId(), fragment)
-//			.commitAllowingStateLoss();
-//		
-//			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//				if (fragment instanceof HotelListFragment) {
-//					mContentFrame.setPadding(mContentFrame.getPaddingLeft(),
-//							mContentFrame.getPaddingTop(),
-//							mContentFrame.getPaddingRight(), 0);
-//
-//					Window w = getWindow();
-//					w.setFlags(
-//							WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION,
-//							WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-//
-//				} else {
-//					WindowManager.LayoutParams attrs = getWindow()
-//							.getAttributes();
-//					attrs.flags &= (~WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-//					getWindow().setAttributes(attrs);
-//
-//				}
-//			}
-//			
-//		} catch(IllegalStateException e) {
-//			onError(e);
-//			e.printStackTrace();
-//		}
-//	}
-	
-	public void replaceErrorFragment(Fragment fragment) {
-		try {
-			clearFragmentBackStack();
-		
-			fragmentManager.beginTransaction().replace(mContentFrame.getId(), fragment).commitAllowingStateLoss();
-		
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-				if (fragment instanceof HotelListFragment) {
-					mContentFrame.setPadding(mContentFrame.getPaddingLeft(), mContentFrame.getPaddingTop(), mContentFrame.getPaddingRight(), 0);
-				
-					Window w = getWindow();
-					w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-				} else {
-					WindowManager.LayoutParams attrs = getWindow().getAttributes();
-					attrs.flags &= (~WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-					getWindow().setAttributes(attrs);
-				}
-			}
-		} catch (IllegalStateException e) {
-			onError(e);
-			
-		}
-	}
+
 }

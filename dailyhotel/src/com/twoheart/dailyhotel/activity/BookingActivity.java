@@ -1,3 +1,11 @@
+/**
+ * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
+ *
+ * BookingActivity (예약 화면)
+ * 
+ * 결제 화면으로 넘어가기 전 예약 정보를 보여주고 결제방식을 선택할 수 있는 화면 
+ * 
+ */
 package com.twoheart.dailyhotel.activity;
 
 import java.text.DecimalFormat;
@@ -195,7 +203,6 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		
 		if (locale.equals("한국어"))	tvOriginalPriceValue.setText(comma.format(originalPrice)+getString(R.string.currency));
 		else	tvOriginalPriceValue.setText(getString(R.string.currency)+comma.format(originalPrice));
-//		tvOriginalPriceValue.setText(comma.format(originalPrice)+getString(R.string.currency));
 
 		if (applyCredit) {
 			int payPrice = originalPrice - credit;
@@ -206,20 +213,18 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 			if (credit >= originalPrice) credit = originalPrice;
 			if (locale.equals("한국어"))	tvCreditValue.setText("-"+comma.format(credit)+getString(R.string.currency));
 			else	tvCreditValue.setText("-"+getString(R.string.currency)+comma.format(credit));
-//			tvCreditValue.setText("-"+comma.format(credit)+getString(R.string.currency));
 
 		}
 		else {
 			if (locale.equals("한국어"))	tvCreditValue.setText("0"+getString(R.string.currency));
 			else	tvCreditValue.setText(getString(R.string.currency)+"0"); 
-//			tvCreditValue.setText("0"+getString(R.string.currency));
+			
 			mPay.setPayPrice(originalPrice);
 //			mPay.setOriginalPrice(originalPrice);
 		}
 
 		if (locale.equals("한국어"))	tvPrice.setText(comma.format(mPay.getPayPrice())+getString(R.string.currency));
 		else	tvPrice.setText(getString(R.string.currency)+comma.format(mPay.getPayPrice()));
-//		tvPrice.setText(comma.format(mPay.getPayPrice())+getString(R.string.currency));
 
 	}
 
@@ -259,7 +264,8 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 									updateParams, this, this));
 				}
 
-			} else if (mPay.isSaleCredit() && (mPay.getOriginalPrice() < 10000) &&
+			} //호텔 가격이 만원 이하인 이벤트 호텔에서는 적립금 사용을 못하게 막음. 
+			else if (mPay.isSaleCredit() && (mPay.getOriginalPrice() < 10000) &&
 					Integer.parseInt(mPay.getCredit().getBonus().replaceAll(",", "")) != 0) {
 				getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_NO_RSERVE).show();
 				
@@ -379,6 +385,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		return false;
 	}
 
+	//결제 화면으로 이동 
 	private void moveToPayStep() {
 
 		android.util.Log.e("Sale credit / Pay Price ",mPay.isSaleCredit()+" / "+mPay.getPayPrice());
@@ -448,7 +455,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 	}
 
 	private void activityResulted(int requestCode, int resultCode, Intent intent) {
-		
+		//결제가 끝난 뒤 호출됨. 
 		if (requestCode == CODE_REQUEST_ACTIVITY_PAYMENT) {
 			Log.d(TAG, Integer.toString(resultCode));
 
@@ -461,6 +468,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 			String hotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
 
 			switch (resultCode) {
+			// 결제가 성공한 경우 GA와 믹스패널에 등록 
 			case CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE:
 			case CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS:
 				if (intent != null) {
@@ -854,8 +862,6 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 					tvOriginalPriceValue.setText(getString(R.string.currency)+comma.format(originalPrice));
 					tvPrice.setText(getString(R.string.currency)+comma.format(originalPrice));
 				}
-//				tvOriginalPriceValue.setText(comma.format(originalPrice)+getString(R.string.currency));
-//				tvPrice.setText(comma.format(originalPrice)+getString(R.string.currency));
 					
 				mPay.setPayPrice(originalPrice);
 				

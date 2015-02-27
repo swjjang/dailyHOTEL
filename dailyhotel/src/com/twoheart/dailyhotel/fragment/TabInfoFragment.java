@@ -1,3 +1,11 @@
+/**
+ * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
+ *
+ * TabInfoFragment (정보 탭)
+ * 
+ * 호텔 탭 중 정보 탭 프래그먼트
+ * 
+ */
 package com.twoheart.dailyhotel.fragment;
 
 import java.util.List;
@@ -37,6 +45,7 @@ public class TabInfoFragment extends BaseFragment {
 		TabInfoFragment newFragment = new TabInfoFragment();
 		Bundle arguments = new Bundle();
 		
+		//호텔의 정보는 HotelTabActivity, BookingTabActivity에서 넘겨받음. 
 		arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL, hotelDetail);
 		newFragment.setArguments(arguments);
 		newFragment.setTitle(title);
@@ -129,10 +138,5 @@ public class TabInfoFragment extends BaseFragment {
 		return px;
 	}
 	
-	@Override
-	public void onResume() {
-//		Log.d("hotelDetail_info", "info name : " + mHotelDetail.getHotel().getName() + " idx : " + mHotelDetail.getHotel().getIdx());
-		super.onResume();
-	}
 
 }

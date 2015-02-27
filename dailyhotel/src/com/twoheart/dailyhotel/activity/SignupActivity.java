@@ -88,6 +88,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 		super.onStart();
 	}
 
+	// 기기의 번호를 받아옴
 	public void getPhoneNumber() {
 		TelephonyManager telManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 		String phoneNum = telManager.getLine1Number();

@@ -1,5 +1,6 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
+
  *
  * LoginActivity (로그인화면)
  * 

@@ -108,7 +108,6 @@ public class CreditFragment extends BaseFragment implements Constants,
 		if (locale.equals("한국어")) {
 			line1_4.setVisibility(View.GONE);
 		} else line1_4.setVisibility(View.VISIBLE);
-//		line1_4.setVisibility(View.GONE);
 		
 		tvCredit.setPaintFlags(tvCredit.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG); // underlining
 
@@ -166,6 +165,7 @@ public class CreditFragment extends BaseFragment implements Constants,
 		} else if (v.getId() == tvCredit.getId()) {
 			((MainActivity) mHostActivity).addFragment(CreditListFragment.newInstance(mCreditList));
 			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "requestCreditHistory", null, null);
+			
 		} else if (v.getId() == btnLogin.getId()) {
 			Intent i = new Intent(mHostActivity, LoginActivity.class);
 			startActivity(i);
@@ -247,7 +247,7 @@ public class CreditFragment extends BaseFragment implements Constants,
 				onError(e);
 			}
 
-		} else if (url.contains(URL_WEBAPI_USER_BONUS_ALL)) {
+		} else if (url.contains(URL_WEBAPI_USER_BONUS_ALL)) {//적립금 내역리스트 
 			try {
 				mCreditList = new ArrayList<Credit>();
 
@@ -324,9 +324,9 @@ public class CreditFragment extends BaseFragment implements Constants,
 				DecimalFormat comma = new DecimalFormat("###,##0");
 				String str = comma.format(Integer.parseInt(response.trim()));
 				String locale = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_LOCALE, null);
+				
 				if (locale.equals("한국어"))	tvBonus.setText(new StringBuilder(str).append(getString(R.string.currency)));
 				else	tvBonus.setText(getString(R.string.currency) + str);
-//				tvBonus.setText(new StringBuilder(str).append(getString(R.string.currency)));
 
 				// 사용자 정보 요청.
 				mQueue.add(new DailyHotelJsonRequest(Method.GET,

@@ -762,6 +762,8 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		JavaScriptExtention() {
 		}
 
+		// 서버로부터 받은 결제 결과 메시지를 처리함.
+		// 각각의 경우에 맞는 resultCode를 넣어 BookingActivity로 finish시킴. 
 		@JavascriptInterface
 		public void feed(final String msg) {
 			int resultCode = 0;

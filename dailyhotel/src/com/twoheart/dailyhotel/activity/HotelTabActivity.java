@@ -1,3 +1,12 @@
+/**
+ * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
+ *
+ * HotelTabActivity (호텔 예약, 정보, 지도탭을 보여주는 화면)
+ * 
+ * 호텔 리스트에서 호텔 선택 시 호텔의 정보들을 보여주는 화면이다.
+ * 예약, 정보, 지도 프래그먼트를 담고 있는 액티비티이다.
+ * 
+ */
 package com.twoheart.dailyhotel.activity;
 
 import java.text.DecimalFormat;
@@ -192,6 +201,7 @@ DailyHotelStringResponseListener {
 
 	@Override
 	protected void loadFragments() {
+		//예약(HotelTabBookingFragment), 정보(TabInfoFragment), 지도(TabMapFragment) 프래그먼트들을 로드시킴.
 		String title = getString(R.string.frag_booking_tab_title);
 		mFragments.add(HotelTabBookingFragment.newInstance(hotelDetail, title));
 		super.loadFragments();
@@ -246,6 +256,8 @@ DailyHotelStringResponseListener {
 		}
 	}
 
+	// 예약화면으로 넘어가기 전에 로그인이 필요함.
+	// 로그인 화면을 띄움.
 	private void loadLoginProcess() {
 		showToast(getString(R.string.toast_msg_please_login), Toast.LENGTH_LONG, false);
 		Intent i = new Intent(this, LoginActivity.class);

@@ -1,3 +1,11 @@
+/**
+ * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
+ *
+ * HotelTabBookingFragment (호텔 예약 탭)
+ * 
+ * 호텔 탭 중 예약 탭 프래그먼트
+ * 
+ */
 package com.twoheart.dailyhotel.fragment;
 
 import android.content.SharedPreferences.Editor;
@@ -48,6 +56,7 @@ OnTouchListener {
 		HotelTabBookingFragment newFragment = new HotelTabBookingFragment();
 		Bundle arguments = new Bundle();
 
+		// 관련정보는 HotelTabActivity에서 넘겨받음. 
 		arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL, hotelDetail);
 		newFragment.setArguments(arguments);
 		newFragment.setTitle(title);
@@ -99,9 +108,6 @@ OnTouchListener {
 			tvDiscount.setText(currency + mHotelDetail.getHotel().getDiscount());
 			tvPrice.setText(currency + mHotelDetail.getHotel().getPrice());
 		}
-//		tvPriceTitle.setText(priceTitle + "");
-//		tvDiscount.setText(mHotelDetail.getHotel().getDiscount() + currency);
-//		tvPrice.setText(mHotelDetail.getHotel().getPrice() + currency);
 		
 		tvPrice.setPaintFlags(tvPrice.getPaintFlags()
 				| Paint.STRIKE_THRU_TEXT_FLAG);

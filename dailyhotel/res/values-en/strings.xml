@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+<!-- 한글버전의 string.xml과 차이가 있음. 
+	새로 번역된 걸 기준으로 다시 생성해야 함.
+	영어버전의 테스트를 위해 사용한 파일임. -->
     <!-- Basic Infos -->
     <string name="app_name">dailyHOTEL</string>
     <string name="app_id">268888829950610</string>
@@ -24,7 +26,7 @@
 
     <!-- IntroActivity Guide Ment -->
     <string name="guide_title_1">Last-minute hotel booking</string>
-    <string name="guide_title_2">Selected hotel</string> <!-- (carefully) selected hotel -->
+    <string name="guide_title_2">Selected hotel</string> 
     <string name="guide_title_3">Easy and quick payment</string> 
     <string name="guide_title_4">Amazing price</string> 
     <string name="guide_desc_1">Book today\'s hotel more conveniently and inexpensive than advance booking.</string> 

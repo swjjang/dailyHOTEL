@@ -1,3 +1,11 @@
+/**
+ * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
+ *
+ * BookingTabBookingFragment (예약한 호텔의 예약 탭)
+ * 
+ * 예약한 호텔 탭 중 예약 탭 프래그먼트
+ * 
+ */
 package com.twoheart.dailyhotel.fragment;
 
 import java.util.HashMap;
@@ -47,6 +55,7 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 	public static BookingTabBookingFragment newInstance(HotelDetail hotelDetail, Booking booking, String[] strings) {
 		BookingTabBookingFragment newFragment = new BookingTabBookingFragment();
 		
+		//관련 정보는 BookingTabActivity에서 넘겨받음. 
 		Bundle arguments = new Bundle();
 		arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL, hotelDetail);
 		arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_BOOKING, booking);
@@ -55,7 +64,6 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 		newFragment.setTitle(strings[0]);
 		
 		mStrings = strings;
-		android.util.Log.e(TAG + " / newInstance", "mStrings = " + mStrings[0] + "  " + mStrings[1] + "  ");
 		
 		return newFragment;
 		

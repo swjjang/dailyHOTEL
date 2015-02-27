@@ -1,3 +1,12 @@
+/**
+ * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
+ *
+ * ProfileActivity (프로필 화면)
+ * 
+ * 로그인되어 있는 상태에서 프로필 정보를 보여주는 화면
+ * 이름이나 연락처를 수정할 수 있고, 로그아웃할 수 있는 화면이다.  
+ * 
+ */
 package com.twoheart.dailyhotel.activity;
 
 import java.util.HashMap;

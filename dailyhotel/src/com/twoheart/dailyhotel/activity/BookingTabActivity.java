@@ -1,3 +1,12 @@
+/**
+ * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
+ *
+ * BookingTabActivity (예약한 호텔의 예약, 정보, 지도탭을 보여주는 화면)
+ * 
+ * 예약한 호텔리스트에서 호텔 클릭 시 호텔의 정보들을 보여주는 화면이다.
+ * 예약, 정보, 지도 프래그먼트를 담고 있는 액티비티이다.
+ * 
+ */
 package com.twoheart.dailyhotel.activity;
 
 import java.util.ArrayList;
@@ -93,6 +102,8 @@ public class BookingTabActivity extends TabActivity implements DailyHotelJsonRes
 
 	@Override
 	protected void loadFragments() {
+		// 예약, 정보, 지도 프래그먼트를 로드함. 
+		// 정보와 지도 프래그먼트는 HotelTabActivity에서 로드하는 TabinfoFragment, TabMapFragment임.
 		String[] strings = {getString(R.string.drawer_menu_pin_title_resrvation), getString(R.string.frag_booking_tab_year), 
 				getString(R.string.frag_booking_tab_month), getString(R.string.frag_booking_tab_day), getString(R.string.frag_booking_tab_hour)};
 		mFragments.add(BookingTabBookingFragment.newInstance(hotelDetail, booking, strings));

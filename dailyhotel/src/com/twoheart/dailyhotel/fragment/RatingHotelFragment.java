@@ -1,3 +1,11 @@
+/**
+ * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
+ *
+ * RatingHotelFragment (호텔 만족도 조사 화면)
+ * 
+ * 호텔 만족도 조사를 위한 화면
+ * 
+ */
 package com.twoheart.dailyhotel.fragment;
 
 import java.util.HashMap;

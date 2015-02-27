@@ -1,3 +1,14 @@
+/**
+ * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
+ *
+ * RegionListActivity (지역리스트 화면)
+ * 
+ * 지역리스트를 보여주는 화면
+ * 1. 호텔리스트 화면의 우측상단 돋보기 버튼을 클릭
+ * 2. 앱을 처음 설치하고 가이드 화면이 종료된 후 
+ * 이 화면이 보여진다.  
+ * 
+ */
 package com.twoheart.dailyhotel;
 
 import java.util.ArrayList;
@@ -25,9 +36,7 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonArrayResponse
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 public class RegionListActivity extends BaseActivity implements OnItemClickListener, DailyHotelJsonArrayResponseListener  {
-	// 제목, 설명
- 
-    private SeparatedListAdpater adapter;
+	private SeparatedListAdpater adapter;
     
     private ArrayList<String> mKoRegionList;
     private ArrayList<String> mJaRegionList;
@@ -67,8 +76,7 @@ public class RegionListActivity extends BaseActivity implements OnItemClickListe
 			editor.putString(KEY_PREFERENCE_REGION_SELECT, content);
 			editor.commit();
 		}
-        Log.d("RegionListActivity", "before region : " + sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_BEFORE, "") + " select region : " + sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, ""));
-
+        
         finish();
         
     }
@@ -112,6 +120,11 @@ public class RegionListActivity extends BaseActivity implements OnItemClickListe
 				}
 				
 				// 배열 어댑터를 section으로 추가
+				// site/get API => 대한민국의 지역리스트를 반환함.
+				// site/get/country API => 해외의 지역리스트를 반환함. 현재는 일본의 지역리스트를 반환함.
+				// 지역리스트를 받아올 때 대한민국, 일본 과 같은 국가이름을 받아오지 못함.
+				// 따라서 현재는 대한민국, 일본의 지역리스트를 각각의 list에 담아 추가함.
+				
 		        adapter.addSection(getString(R.string.act_list_region_korea), new ArrayAdapter<String>(this, 
 		                R.layout.list_row_region, mKoRegionList));
 		        adapter.addSection(getString(R.string.act_list_region_japan), new ArrayAdapter<String>(this, 
@@ -155,7 +168,8 @@ public class RegionListActivity extends BaseActivity implements OnItemClickListe
 	
 	@Override
 	public void onBackPressed() {
-		
+		// 선택된 지역이 없는 경우(앱을 처음 깔고 들어온 경우)에 지역을 선택하지 않고 back을 누를경우
+		// 지역을 선택하라는 토스트를 띄워줌.
 		if (sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "").equals("")) {
 			Toast.makeText(getApplicationContext(), getString(R.string.act_list_region_select_region), Toast.LENGTH_SHORT).show();
 			return;

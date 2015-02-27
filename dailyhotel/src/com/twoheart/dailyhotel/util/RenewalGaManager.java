@@ -11,13 +11,11 @@ import android.widget.Toast;
 
 public class RenewalGaManager   {
 	private static RenewalGaManager instance = null;
-	private static int count = 0;
 	private Tracker tracker;
 
 	private RenewalGaManager(Context con) {
 		GoogleAnalytics ga= GoogleAnalytics.getInstance(con);
 		tracker = ga.getTracker(Constants.GA_PROPERTY_ID);
-//		Toast.makeText(con, Constants.GA_PROPERTY_ID+", count is " + ++count, Toast.LENGTH_LONG).show();
 	}
 
 	public static RenewalGaManager getInstance(Context con) {
