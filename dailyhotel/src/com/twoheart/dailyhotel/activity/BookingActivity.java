@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import kr.co.kcp.android.payment.standard.ResultRcvActivity;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -446,6 +448,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 	}
 
 	private void activityResulted(int requestCode, int resultCode, Intent intent) {
+		
 		if (requestCode == CODE_REQUEST_ACTIVITY_PAYMENT) {
 			Log.d(TAG, Integer.toString(resultCode));
 

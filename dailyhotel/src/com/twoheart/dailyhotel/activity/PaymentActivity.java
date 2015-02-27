@@ -70,11 +70,6 @@ public class PaymentActivity extends BaseActivity implements Constants {
 
 	private Pay mPay;
 	
-	public static Uri m_uriResult;
-	public static boolean b_type = false;
-	public static final String m_strLogTag = "PaySample";
-	public static final String s_strLogTag = "PayACNTSample";
-
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -162,17 +157,6 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		
 	}
 	
-	@Override
-	protected void onNewIntent(Intent intent) {
-		super.onNewIntent(intent);
-		Intent myIntent = intent;
-		
-		if (myIntent.getData().getScheme().equals("dailyHOTEL") == true) {
-			m_uriResult = myIntent.getData();
-		} else {
-			m_uriResult = null;
-		}
-	}
 	
 	@Override
 	protected void onResume() {
@@ -228,9 +212,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 
 	@JavascriptInterface
 	private boolean url_scheme_intent(WebView view, String url) {
-//		Log.d(ResultRcvActivity.m_strLogTag,
-//				"[PayDemoActivity] called__test - url=[" + url + "]");
-		Log.d(m_strLogTag,
+		Log.d(ResultRcvActivity.m_strLogTag,
 				"[PayDemoActivity] called__test - url=[" + url + "]");
 
 		// chrome 버젼 방식 : 2014.01 추가
@@ -241,20 +223,16 @@ public class PaymentActivity extends BaseActivity implements Constants {
 					startActivity(Intent
 							.parseUri(url, Intent.URI_INTENT_SCHEME));
 				} catch (URISyntaxException e) {
-//					Log.d(ResultRcvActivity.m_strLogTag,
-//							"[PayDemoActivity] URISyntaxException=["
-//									+ e.getMessage() + "]");
-					Log.d(m_strLogTag,
+					Log.d(ResultRcvActivity.m_strLogTag,
 							"[PayDemoActivity] URISyntaxException=["
 									+ e.getMessage() + "]");
+
 					return false;
 				} catch (ActivityNotFoundException e) {
-//					Log.d(ResultRcvActivity.m_strLogTag,
-//							"[PayDemoActivity] ActivityNotFoundException=["
-//									+ e.getMessage() + "]");
-					Log.d(m_strLogTag,
+					Log.d(ResultRcvActivity.m_strLogTag,
 							"[PayDemoActivity] ActivityNotFoundException=["
 									+ e.getMessage() + "]");
+
 					return false;
 				}
 			}
@@ -263,20 +241,16 @@ public class PaymentActivity extends BaseActivity implements Constants {
 				try {
 					view.getContext().startActivity(Intent.parseUri(url, 0));
 				} catch (URISyntaxException e) {
-//					Log.d(ResultRcvActivity.m_strLogTag,
-//							"[PayDemoActivity] URISyntaxException=["
-//									+ e.getMessage() + "]");
-					Log.d(m_strLogTag,
+					Log.d(ResultRcvActivity.m_strLogTag,
 							"[PayDemoActivity] URISyntaxException=["
 									+ e.getMessage() + "]");
+
 					return false;
 				} catch (ActivityNotFoundException e) {
-//					Log.d(ResultRcvActivity.m_strLogTag,
-//							"[PayDemoActivity] ActivityNotFoundException=["
-//									+ e.getMessage() + "]");
-					Log.d(m_strLogTag,
+					Log.d(ResultRcvActivity.m_strLogTag,
 							"[PayDemoActivity] ActivityNotFoundException=["
 									+ e.getMessage() + "]");
+
 					return false;
 				}
 			}
@@ -287,12 +261,10 @@ public class PaymentActivity extends BaseActivity implements Constants {
 				try {
 					intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
 				} catch (URISyntaxException ex) {
-//					Log.d(ResultRcvActivity.m_strLogTag,
-//							"[PayDemoActivity] URISyntaxException=["
-//									+ ex.getMessage() + "]");
-					Log.d(m_strLogTag,
+					Log.d(ResultRcvActivity.m_strLogTag,
 							"[PayDemoActivity] URISyntaxException=["
 									+ ex.getMessage() + "]");
+
 					return false;
 				}
 
@@ -315,12 +287,10 @@ public class PaymentActivity extends BaseActivity implements Constants {
 				try {
 					startActivity(intent);
 				} catch (ActivityNotFoundException e) {
-//					Log.d(ResultRcvActivity.m_strLogTag,
-//							"[PayDemoActivity] ActivityNotFoundException=["
-//									+ e.getMessage() + "]");
-					Log.d(m_strLogTag,
+					Log.d(ResultRcvActivity.m_strLogTag,
 							"[PayDemoActivity] ActivityNotFoundException=["
 									+ e.getMessage() + "]");
+
 					return false;
 				}
 			}
@@ -402,10 +372,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
-//			Log.d(ResultRcvActivity.m_strLogTag,
-//					"[PayDemoActivity] called__shouldOverrideUrlLoading - url=["
-//							+ url + "]");
-			Log.d(m_strLogTag,
+			Log.d(ResultRcvActivity.m_strLogTag,
 					"[PayDemoActivity] called__shouldOverrideUrlLoading - url=["
 							+ url + "]");
 
@@ -510,8 +477,8 @@ public class PaymentActivity extends BaseActivity implements Constants {
 	private class KCPPayPinReturn {
 		@JavascriptInterface
 		public String getConfirm() {
-			if (b_type) {//ResultRcvActivity.b_type
-				b_type = false;
+			if (ResultRcvActivity.b_type) {//ResultRcvActivity.b_type
+				ResultRcvActivity.b_type = false;
 				return "true";
 			} else {
 				return "false";
@@ -524,10 +491,8 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		public void getPaypinInfo(final String url) {
 			handler.post(new Runnable() {
 				public void run() {
-					Log.d(m_strLogTag,
+					Log.d(ResultRcvActivity.m_strLogTag,
 							"[PayDemoActivity] KCPPayPinInfoBridge=[getPaypinInfo]");
-//					Log.d(ResultRcvActivity.m_strLogTag,
-//							"[PayDemoActivity] KCPPayPinInfoBridge=[getPaypinInfo]");
 
 					PackageState ps = new PackageState(PaymentActivity.this);
 
@@ -570,10 +535,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		public void getCardInfo(final String card_cd, final String quota) {
 			handler.post(new Runnable() {
 				public void run() {
-//					Log.d(ResultRcvActivity.m_strLogTag,
-//							"[PayDemoActivity] KCPPayCardInfoBridge=["
-//									+ card_cd + ", " + quota + "]");
-					Log.d(m_strLogTag,
+					Log.d(ResultRcvActivity.m_strLogTag,
 							"[PayDemoActivity] KCPPayCardInfoBridge=["
 									+ card_cd + ", " + quota + "]");
 
@@ -641,117 +603,82 @@ public class PaymentActivity extends BaseActivity implements Constants {
 	protected void onRestart() {
 		super.onRestart();
 
-//		Log.d(ResultRcvActivity.m_strLogTag,
-//				"[PayDemoActivity] called__onResume + INPROGRESS=[" + m_nStat
-//				+ "]");
-		Log.d(m_strLogTag,
+		Log.d(ResultRcvActivity.m_strLogTag,
 				"[PayDemoActivity] called__onResume + INPROGRESS=[" + m_nStat
 				+ "]");
 
 		// 하나 SK 모듈로 결제 이후 해당 카드 정보를 가지고 오기위해 사용
-		if (m_uriResult != null) {//ResultRcvActivity
-			if (m_uriResult.getQueryParameter("realPan") != null
-					&& m_uriResult.getQueryParameter("cavv") != null
-					&& m_uriResult.getQueryParameter("xid") != null
-					&& m_uriResult.getQueryParameter("eci") != null) {
-//				Log.d(ResultRcvActivity.m_strLogTag,
-//						"[PayDemoActivity] HANA SK Result = javascript:hanaSK('"
-//								+ ResultRcvActivity.m_uriResult
-//								.getQueryParameter("realPan")
-//								+ "', '"
-//								+ ResultRcvActivity.m_uriResult
-//								.getQueryParameter("cavv")
-//								+ "', '"
-//								+ ResultRcvActivity.m_uriResult
-//								.getQueryParameter("xid")
-//								+ "', '"
-//								+ ResultRcvActivity.m_uriResult
-//								.getQueryParameter("eci") + "', '"
-//								+ CARD_CD + "', '" + QUOTA + "');");
-				Log.d(m_strLogTag,
+		if (ResultRcvActivity.m_uriResult != null) {//ResultRcvActivity
+			if (ResultRcvActivity.m_uriResult.getQueryParameter("realPan") != null
+					&& ResultRcvActivity.m_uriResult.getQueryParameter("cavv") != null
+					&& ResultRcvActivity.m_uriResult.getQueryParameter("xid") != null
+					&& ResultRcvActivity.m_uriResult.getQueryParameter("eci") != null) {
+				Log.d(ResultRcvActivity.m_strLogTag,
 						"[PayDemoActivity] HANA SK Result = javascript:hanaSK('"
-								+ m_uriResult
+								+ ResultRcvActivity.m_uriResult
 								.getQueryParameter("realPan")
 								+ "', '"
-								+ m_uriResult
+								+ ResultRcvActivity.m_uriResult
 								.getQueryParameter("cavv")
 								+ "', '"
-								+ m_uriResult
+								+ ResultRcvActivity.m_uriResult
 								.getQueryParameter("xid")
 								+ "', '"
-								+ m_uriResult
+								+ ResultRcvActivity.m_uriResult
 								.getQueryParameter("eci") + "', '"
 								+ CARD_CD + "', '" + QUOTA + "');");
 
+
 				// 하나 SK 모듈로 인증 이후 승인을 하기위해 결제 함수를 호출 (주문자 페이지)
 				webView.loadUrl("javascript:hanaSK('"
-						+ m_uriResult
+						+ ResultRcvActivity.m_uriResult
 						.getQueryParameter("realPan")
 						+ "', '"
-						+ m_uriResult
+						+ ResultRcvActivity.m_uriResult
 						.getQueryParameter("cavv")
 						+ "', '"
-						+ m_uriResult
+						+ ResultRcvActivity.m_uriResult
 						.getQueryParameter("xid")
 						+ "', '"
-						+ m_uriResult
+						+ ResultRcvActivity.m_uriResult
 						.getQueryParameter("eci") + "', '" + CARD_CD
 						+ "', '" + QUOTA + "');");
-//				webView.loadUrl("javascript:hanaSK('"
-//						+ ResultRcvActivity.m_uriResult
-//						.getQueryParameter("realPan")
-//						+ "', '"
-//						+ ResultRcvActivity.m_uriResult
-//						.getQueryParameter("cavv")
-//						+ "', '"
-//						+ ResultRcvActivity.m_uriResult
-//						.getQueryParameter("xid")
-//						+ "', '"
-//						+ ResultRcvActivity.m_uriResult
-//						.getQueryParameter("eci") + "', '" + CARD_CD
-//						+ "', '" + QUOTA + "');");
 			}
 
-			if ((m_uriResult.getQueryParameter("res_cd") == null ? ""
-					: m_uriResult.getQueryParameter("res_cd"))
+			if ((ResultRcvActivity.m_uriResult.getQueryParameter("res_cd") == null ? ""
+					: ResultRcvActivity.m_uriResult.getQueryParameter("res_cd"))
 					.equals("999")) {
-//				Log.d(ResultRcvActivity.m_strLogTag,
-//						"[PayDemoActivity] HANA SK Result = cancel");
-				Log.d(m_strLogTag,
+				Log.d(ResultRcvActivity.m_strLogTag,
 						"[PayDemoActivity] HANA SK Result = cancel");
 
 				m_nStat = 9;
 			}
 
-			if ((m_uriResult.getQueryParameter("isp_res_cd") == null ? ""
-					: m_uriResult
+			if ((ResultRcvActivity.m_uriResult.getQueryParameter("isp_res_cd") == null ? ""
+					: ResultRcvActivity.m_uriResult
 					.getQueryParameter("isp_res_cd")).equals("0000")) {
-//				Log.d(ResultRcvActivity.m_strLogTag,
-//						"[PayDemoActivity] ISP Result = 0000");
-				Log.d(m_strLogTag,
+				Log.d(ResultRcvActivity.m_strLogTag,
 						"[PayDemoActivity] ISP Result = 0000");
 
 				webView.loadUrl("http://pggw.kcp.co.kr/lds/smart_phone_linux_jsp/sample/card/samrt_res.jsp?result=OK&a="
-						+ m_uriResult.getQueryParameter("a"));
+						+ ResultRcvActivity.m_uriResult.getQueryParameter("a"));
 			} else {
-//				Log.d(ResultRcvActivity.m_strLogTag,
-//						"[PayDemoActivity] ISP Result = cancel");
-				Log.d(m_strLogTag,
+				Log.d(ResultRcvActivity.m_strLogTag,
 						"[PayDemoActivity] ISP Result = cancel");
 			}
 		}
 
 		if (m_nStat == PROGRESS_STAT_IN) checkFrom();
-		m_uriResult = null;//ResultRcvActivity.m_uriResult
+		ResultRcvActivity.m_uriResult = null;
 	}
 
 	@JavascriptInterface
 	public void checkFrom() {
 		try {
 
-			if (m_uriResult != null) {//ResultRcvActivity.m_uriResult
+			if (ResultRcvActivity.m_uriResult != null) {
 				m_nStat = PROGRESS_DONE;
-				String strResultInfo = m_uriResult
+				String strResultInfo = ResultRcvActivity.m_uriResult
 						.getQueryParameter("approval_key");
 
 				if (strResultInfo == null || strResultInfo.length() <= 4)
@@ -760,10 +687,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 				String strResCD = strResultInfo.substring(strResultInfo
 						.length() - 4);
 
-//				Log.d(ResultRcvActivity.m_strLogTag,
-//						"[PayDemoActivity] result=[" + strResultInfo + "]+"
-//								+ "res_cd=[" + strResCD + "]");
-				Log.d(m_strLogTag,
+				Log.d(ResultRcvActivity.m_strLogTag,
 						"[PayDemoActivity] result=[" + strResultInfo + "]+"
 								+ "res_cd=[" + strResCD + "]");
 
@@ -774,10 +698,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 					strApprovalKey = strResultInfo.substring(0,
 							strResultInfo.length() - 4);
 
-//					Log.d(ResultRcvActivity.m_strLogTag,
-//							"[PayDemoActivity] approval_key=[" + strApprovalKey
-//							+ "]");
-					Log.d(m_strLogTag,
+					Log.d(ResultRcvActivity.m_strLogTag,
 							"[PayDemoActivity] approval_key=[" + strApprovalKey
 							+ "]");
 

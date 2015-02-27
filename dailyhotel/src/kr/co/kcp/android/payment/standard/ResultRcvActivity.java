@@ -13,6 +13,7 @@ public class ResultRcvActivity extends Activity {
 
 	public static final String m_strLogTag = "PaySample";
 	public static final String s_strLogTag = "PayACNTSample";
+	public static Activity activity; //
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -21,6 +22,8 @@ public class ResultRcvActivity extends Activity {
 
 		super.onCreate(savedInstanceState);
 		Intent myIntent = getIntent();
+		
+		activity = ResultRcvActivity.this;
 
 		Log.d(m_strLogTag, "[ResultRcvActivity] launch_uri=["
 				+ myIntent.getData().toString() + "]");
