@@ -1,5 +1,7 @@
 package com.twoheart.dailyhotel.fragment;
 
+import java.util.Locale;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,6 +67,13 @@ public class IntroGuideFragment extends BaseFragment {
 		ivImage = (ImageView) view.findViewById(R.id.iv_guide_icon);
 		
 		llIntroGuide.setBackgroundResource(mBackground);
+		
+
+		String locale = Locale.getDefault().getDisplayLanguage();
+		
+		if(locale.equals("English"))
+			tvTitle.setTextSize(26.5f);
+		
 		tvTitle.setText(mTitle);
 		tvDesc.setText(mDesc);
 		ivImage.setImageResource(mImage);

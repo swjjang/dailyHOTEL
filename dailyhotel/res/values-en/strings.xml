@@ -6,7 +6,7 @@
     <string name="app_id">268888829950610</string>
     <string name="homepage">http://dailyhotel.kr</string>
     <string name="contact_us">help@dailyhotel.co.kr</string>
-    <string name="currency">USD</string>
+    <string name="currency">USD&#160;</string>
     
 	<!-- Hotel Grade -->
     <string name="grade_special">Five star Hotel</string>
@@ -36,7 +36,7 @@
     
 	<!-- Actionbar Titles -->
     <string name="actionbar_title_hotel_list_frag">Today\'s Hotel</string>
-    <string name="actionbar_title_booking_list_frag">Reservation confirmation</string>
+    <string name="actionbar_title_booking_list_frag">Booking List</string>
     <string name="actionbar_title_credit_frag">Credits</string>
     <string name="actionbar_title_setting_frag">Settings</string>
     <string name="actionbar_title_error_frag">dailyHOTEL</string>
@@ -94,8 +94,8 @@
     <string name="dialog_msg_please_update_new_version">The new version of dailyHOTEL is available now! Download it and enjoy more pleasant hotel life.</string>
     <string name="dialog_msg_update_now">Please download the updated version and enjoy more pleasant hotel life.</string>
     <string name="dialog_msg_sales_closed">At 9AM today\'s hotel will be revealed.</string>
-    <string name="dialog_msg_payment_confirm">Due to the nature of last-minute reservations,&lt;br/&gt;&lt;b&gt;cancelling or changing&lt;/b&gt;is not possible.&lt;br/&gt;&lt;br/&gt;For Assigned at check in option,&lt;br/&gt;&lt;b&gt;double or twin bed types are not guaranteed&lt;br/&gt;&lt;b&gt;and a room for 2 people will be assigned.&lt;br/&gt;&lt;b&gt;If you have read and agree to the notice above,&lt;br/&gt;&lt;b&gt;please press and continue payment.</string>
-    <string name="dialog_msg_payment_confirm_hp">Due to the nature of last-minute reservations,&lt;br/&gt;&lt;b&gt;cancelling or changing&lt;br/&gt;&lt;b&gt;is not possible.&lt;br/&gt;&lt;b&gt;For Assigned at check in option,&lt;br/&gt;&lt;b&gt;double or twin bed types are not guaranteed&lt;br/&gt;&lt;b&gt;and a room for 2 people will be assigned.&lt;br/&gt;&lt;b&gt;Cell phone payment is limited to KRW 300,000 per month.&lt;br/&gt;&lt;b&gt;If you have read and agree to the notice above,&lt;br/&gt;&lt;b&gt;please press and continue payment.</string>
+    <string name="dialog_msg_payment_confirm">Due to the nature of last-minute reservations,&lt;br/&gt;&lt;b&gt;cancelling or changing&lt;/b&gt; is not possible.&lt;br/&gt;&lt;br/&gt;For Assigned at check in option,&lt;br/&gt;&lt;b&gt;double or twin bed types are not guaranteed and a room for 2 people &lt;br/&gt;&lt;b&gt; will be assigned.&lt;br/&gt;&lt;br/&gt;&lt;b&gt;If you have read and agree&lt;br/&gt;&lt;b&gt;to the notice above, &lt;br/&gt;please press and continue payment.</string>
+    <string name="dialog_msg_payment_confirm_hp">Due to the nature of last-minute reservations,&lt;br/&gt;&lt;b&gt;cancelling or changing&lt;br/&gt;&lt;b&gt;is not possible.&lt;br/&gt;&lt;b&gt;For Assigned at check in option,&lt;br/&gt;&lt;b&gt;double or twin bed types are not guaranteed&lt;br/&gt;&lt;b&gt;and a room for 2 people will be assigned.&lt;br/&gt;&lt;b&gt;Cell phone payment is limited to KRW 300,000 per month.&lt;br/&gt;&lt;br/&gt;&lt;b&gt;If you have read and agree to the notice above,&lt;br/&gt;&lt;b&gt;please press and continue payment.</string>
     <string name="dialog_btn_payment_confirm">Agree and continue</string> <string name="dialog_title_payment_confirm">Notice</string> 
     <string name="dialog_btn_payment_no_reserve">&lt;br/&gt;&lt;br/&gt;Credit usage is not available&lt;br/&gt;for event hotel deals&lt;br/&gt;&lt;br/&gt;.</string>
     <string name="dialog_btn_text_update">Update</string>
@@ -117,7 +117,7 @@
     <!-- Main Drawer Menu Titles -->
 	<string name="drawer_menu_pin_title_resrvation">Hotel Booking</string>
 	<string name="drawer_menu_item_title_todays_hotel">Today\'s Hotel</string>
-	<string name="drawer_menu_item_title_chk_reservation">Reservation confirmation</string>
+	<string name="drawer_menu_item_title_chk_reservation">Booking List</string>
 	<string name="drawer_menu_pin_title_account">Account</string>
 	<string name="drawer_menu_item_title_credit">Credits</string>
 	<string name="drawer_menu_item_title_setting">Settings</string>
@@ -193,7 +193,7 @@
 	<string name="act_credit_history">Check my credits history</string>
 	<string name="act_credit_recom_code">Recommendation code</string>
 	<string name="act_credit_my_recom_code">Your recommendation code</string>
-	<string name="act_credit_line4">If your friend signs up using your recommendation code,\nyour friend receives $5!\nIf your friend makes a first time payment,\nI also get $5!</string>
+	<string name="act_credit_line4">If your friend signs up\nusing your recommendation code,\nyour friend receives $5!\nIf your friend makes a first time payment,\nI also get $5!</string>
 	<string name="act_credit_kakao">Invite Kakao Talk friend.</string>
 	
 	<!--   Credit List Activity  -->
@@ -246,6 +246,7 @@
 	<string name="act_booking_price_real">Payment amount(VAT Inc.)</string>
 	<string name="act_booking_pay_card">Credit Card</string>
 	<string name="act_booking_pay_mobile">Cellphone</string>
+	<string name="act_booking_paypal">Paypal</string>
 	<string name="act_booking_pay_account">Account transfer</string>
 	<string name="act_booking_btn_pay">Pay</string>
 	

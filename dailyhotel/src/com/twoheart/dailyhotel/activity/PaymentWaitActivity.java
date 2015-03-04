@@ -17,6 +17,7 @@ import org.json.JSONObject;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -90,8 +91,8 @@ public class PaymentWaitActivity extends BaseActivity implements DailyHotelJsonR
 					DecimalFormat comma = new DecimalFormat("###,##0");
 					String locale = sharedPreference.getString(KEY_PREFERENCE_LOCALE, null);
 					
-					if (locale.equals("한국어"))	tvPrice.setText(comma.format(response.getInt("amt"))+getString(R.string.currency));
-					else	tvPrice.setText(getString(R.string.currency)+comma.format(response.getInt("amt")));
+					if (locale.equals("한국어"))	tvPrice.setText(comma.format(response.getInt("amt"))+Html.fromHtml(getString(R.string.currency)));
+					else	tvPrice.setText(Html.fromHtml(getString(R.string.currency))+comma.format(response.getInt("amt")));
 					
 					String[] dateSlice = response.getString("date").split("/");
 					String[] timeSlice = response.getString("time").split(":");

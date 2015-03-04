@@ -68,8 +68,8 @@
     </style>
 
     <style name="TabDH_Theme" parent="Widget.TabPageIndicator">
-        <item name="android:paddingLeft">32dp</item>
-        <item name="android:paddingRight">32dp</item>
+        <item name="android:paddingLeft">30dp</item>
+        <item name="android:paddingRight">30dp</item>
         <item name="android:background">@drawable/selector_tab_indicator</item>
         <item name="android:divider">@drawable/custom_tab_indicator_divider</item>
         <item name="android:textColor">@color/textView_textColor_main</item>

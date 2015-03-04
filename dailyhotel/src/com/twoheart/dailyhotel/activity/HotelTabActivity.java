@@ -403,9 +403,6 @@ DailyHotelStringResponseListener {
 			 */
 			KakaoLinkManager.newInstance(HotelTabActivity.this).shareHotelInfo(hotelDetail, mRegion);
 			
-			
-			
-			
 //			android.content.DialogInterface.OnClickListener posListener = new android.content.DialogInterface.OnClickListener() {
 //
 //				@Override

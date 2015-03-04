@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.adapter;
 
 import java.text.DecimalFormat;
-
 import java.util.List;
 import java.util.Locale;
 
@@ -15,6 +14,8 @@ import android.graphics.drawable.PaintDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
 import android.support.v4.util.LruCache;
+import android.text.Html;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -122,7 +123,7 @@ PinnedSectionListAdapter {
 			viewHolder.address.setText(element.getAddress());
 			viewHolder.name.setText(element.getName());
 			
-			String currency = getContext().getResources().getString(R.string.currency);
+			Spanned currency = Html.fromHtml(getContext().getResources().getString(R.string.currency));
 			String locale = Locale.getDefault().getDisplayLanguage();
 			
 			if (locale.equals("ÇÑ±¹¾î")) {
@@ -131,10 +132,10 @@ PinnedSectionListAdapter {
 						| Paint.STRIKE_THRU_TEXT_FLAG);
 				viewHolder.discount.setText(strDiscount + currency);
 			} else {
-				viewHolder.price.setText(currency + strPrice);
+				viewHolder.price.setText(currency + " " + strPrice);
 				viewHolder.price.setPaintFlags(viewHolder.price.getPaintFlags()
 						| Paint.STRIKE_THRU_TEXT_FLAG);
-				viewHolder.discount.setText(currency + strDiscount);
+				viewHolder.discount.setText(currency + " " + strDiscount);
 			}
 
 			viewHolder.name.setSelected(true); // Android TextView marquee bug

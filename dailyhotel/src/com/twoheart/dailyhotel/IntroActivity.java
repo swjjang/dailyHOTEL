@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -44,7 +45,7 @@ public class IntroActivity extends BaseActivity implements OnClickListener, OnPa
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setActionBarHide();
 		setContentView(R.layout.activity_intro);
-		
+
 		mPager = (ViewPager) findViewById(R.id.intro_pager);
 		mIndicator = (CirclePageIndicator) findViewById(R.id.intro_indicator);
 		llIntroStart = (LinearLayout) findViewById(R.id.ll_intro_start);
@@ -109,6 +110,7 @@ public class IntroActivity extends BaseActivity implements OnClickListener, OnPa
 		mGuideBackgrounds.add(R.drawable.img_bg_guide2);
 		mGuideBackgrounds.add(R.drawable.img_bg_guide3);
 		mGuideBackgrounds.add(R.drawable.img_bg_guide4);
+		
 		
 		mGuideTitles.add(getString(R.string.guide_title_1));
 		mGuideTitles.add(getString(R.string.guide_title_2));

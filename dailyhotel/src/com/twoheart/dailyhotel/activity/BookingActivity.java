@@ -98,7 +98,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 	private EditText etReserverName, etReserverNumber, etReserverEmail;
 	private RadioGroup rgPaymentMethod;
 	private RadioButton rbPaymentAccount, rbPaymentCard, rbPaymentHp;
-
+	
 	private Pay mPay;
 
 	private SaleTime saleTime;
@@ -158,7 +158,6 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		rbPaymentCard = (RadioButton) findViewById(R.id.rb_payment_card);
 		rbPaymentHp = (RadioButton) findViewById(R.id.rb_payment_hp);
 
-
 		rbPaymentAccount.setOnClickListener(this);
 		rbPaymentCard.setOnClickListener(this);
 		rbPaymentHp.setOnClickListener(this);
@@ -171,7 +170,14 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 
 		saleTime = new SaleTime();
 		locale = sharedPreference.getString(KEY_PREFERENCE_LOCALE, null);
-		
+	
+		// 영문일 경우 PAYPAL
+		if(locale.equals("한국어")){
+			rgPaymentMethod.setVisibility(View.VISIBLE);
+		} else {
+			rgPaymentMethod.setVisibility(View.GONE);
+			mPay.setPayType("PAYPAL");
+		}
 	}
 
 	@Override
@@ -201,8 +207,8 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 
 		DecimalFormat comma = new DecimalFormat("###,##0");
 		
-		if (locale.equals("한국어"))	tvOriginalPriceValue.setText(comma.format(originalPrice)+getString(R.string.currency));
-		else	tvOriginalPriceValue.setText(getString(R.string.currency)+comma.format(originalPrice));
+		if (locale.equals("한국어"))	tvOriginalPriceValue.setText(comma.format(originalPrice)+Html.fromHtml(getString(R.string.currency)));
+		else	tvOriginalPriceValue.setText(Html.fromHtml(getString(R.string.currency))+comma.format(originalPrice));
 
 		if (applyCredit) {
 			int payPrice = originalPrice - credit;
@@ -211,20 +217,20 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 			mPay.setOriginalPrice(originalPrice);
 			
 			if (credit >= originalPrice) credit = originalPrice;
-			if (locale.equals("한국어"))	tvCreditValue.setText("-"+comma.format(credit)+getString(R.string.currency));
-			else	tvCreditValue.setText("-"+getString(R.string.currency)+comma.format(credit));
+			if (locale.equals("한국어"))	tvCreditValue.setText("-"+comma.format(credit)+Html.fromHtml(getString(R.string.currency)));
+			else	tvCreditValue.setText(Html.fromHtml(getString(R.string.currency)) + "-" +comma.format(credit));
 
 		}
 		else {
-			if (locale.equals("한국어"))	tvCreditValue.setText("0"+getString(R.string.currency));
-			else	tvCreditValue.setText(getString(R.string.currency)+"0"); 
+			if (locale.equals("한국어"))	tvCreditValue.setText("0"+Html.fromHtml(getString(R.string.currency)));
+			else	tvCreditValue.setText(Html.fromHtml(getString(R.string.currency))+"0"); 
 			
 			mPay.setPayPrice(originalPrice);
 //			mPay.setOriginalPrice(originalPrice);
 		}
 
-		if (locale.equals("한국어"))	tvPrice.setText(comma.format(mPay.getPayPrice())+getString(R.string.currency));
-		else	tvPrice.setText(getString(R.string.currency)+comma.format(mPay.getPayPrice()));
+		if (locale.equals("한국어"))	tvPrice.setText(comma.format(mPay.getPayPrice())+Html.fromHtml(getString(R.string.currency)));
+		else	tvPrice.setText(Html.fromHtml(getString(R.string.currency))+comma.format(mPay.getPayPrice()));
 
 	}
 
@@ -750,13 +756,25 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 				mPay.setCheckOut(checkout);
 
 				String in[] = checkin.split("-");
-				tvCheckIn.setText("20" + in[0] + getString(R.string.frag_booking_tab_year) + in[1] + getString(R.string.frag_booking_tab_month)
-						+ in[2] + getString(R.string.frag_booking_tab_day) + " " + in[3] + getString(R.string.frag_booking_tab_hour));
-
+				
+				if(locale.equals("한국어")){
+					tvCheckIn.setText("20" + in[0] + getString(R.string.frag_booking_tab_year) + in[1] + getString(R.string.frag_booking_tab_month)
+							+ in[2] + getString(R.string.frag_booking_tab_day) + " " + in[3] + getString(R.string.frag_booking_tab_hour));
+				} else {
+					tvCheckIn.setText("20" + in[0] + "-" + in[1] + "-"
+							+ in[2] + " " + in[3] + ":00");
+				}
+		
 				String out[] = checkout.split("-");
-				tvCheckOut.setText("20" + out[0] + getString(R.string.frag_booking_tab_year) + out[1] + getString(R.string.frag_booking_tab_month) 
-						+ out[2] + getString(R.string.frag_booking_tab_day) + " "+ out[3] + getString(R.string.frag_booking_tab_hour));
-
+				
+				if(locale.equals("한국어")){
+					tvCheckOut.setText("20" + out[0] + getString(R.string.frag_booking_tab_year) + out[1] + getString(R.string.frag_booking_tab_month) 
+							+ out[2] + getString(R.string.frag_booking_tab_day) + " "+ out[3] + getString(R.string.frag_booking_tab_hour));
+				} else {
+					tvCheckOut.setText("20" + out[0] + "-" + out[1] + "-" 
+							+ out[2] + " " + " "+ out[3] + ":00");
+				}
+					
 				unLockUI();
 			} catch (Exception e) {
 				onError(e);
@@ -833,7 +851,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 					tvReserverName.setText(etReserverName.getText().toString());
 					tvReserverNumber.setText(etReserverNumber.getText().toString());
 					tvReserverEmail.setText(etReserverEmail.getText().toString());
-
+					
 					btnPay.performClick();
 				}
 			} catch (JSONException e) {
@@ -854,13 +872,14 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 						.getDiscount().replaceAll(",", ""));
 				DecimalFormat comma = new DecimalFormat("###,##0");
 				
+				Log.d(TAG, locale);
 				if (locale.equals("한국어"))	{
-					tvOriginalPriceValue.setText(comma.format(originalPrice)+getString(R.string.currency));
-					tvPrice.setText(comma.format(originalPrice)+getString(R.string.currency));
+					tvOriginalPriceValue.setText(comma.format(originalPrice)+Html.fromHtml(getString(R.string.currency)));
+					tvPrice.setText(comma.format(originalPrice)+Html.fromHtml(getString(R.string.currency)));
 				}
 				else	{
-					tvOriginalPriceValue.setText(getString(R.string.currency)+comma.format(originalPrice));
-					tvPrice.setText(getString(R.string.currency)+comma.format(originalPrice));
+					tvOriginalPriceValue.setText(Html.fromHtml(getString(R.string.currency))+comma.format(originalPrice));
+					tvPrice.setText(Html.fromHtml(getString(R.string.currency))+comma.format(originalPrice));
 				}
 					
 				mPay.setPayPrice(originalPrice);

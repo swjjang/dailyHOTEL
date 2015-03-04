@@ -34,11 +34,11 @@ public interface Constants {
     public static final String GCM_DEVICE_TYPE_ANDROID = "0"; // GCM 등록을 할 때 API의 deviceType, 0은 안드로이드 1은 아이폰.
     
 	// 웹서버 호스트  
-//		public static final String URL_DAILYHOTEL_SERVER = "http://restful.dailyhotel.kr/goodnight/"; //  서비스 서버 //http://tcwas.dailyhotel.co.kr    http://restful.dailyhotel.kr/goodnight/
-
-//    public static final String URL_DAILYHOTEL_SERVER = "http://192.168.0.10:8080/goodnight/"; //  서비스 서버
-    public static final String URL_DAILYHOTEL_SERVER = "http://tcwas.dailyhotel.co.kr/goodnight/"; //  서비스 서버
-
+//	public static final String URL_DAILYHOTEL_SERVER = "http://restful.dailyhotel.kr/goodnight/"; //  서비스 서버 
+    //http://ec2restful.dailyhotel.kr    http://restful.dailyhotel.kr/goodnight/
+//    public static final String URL_DAILYHOTEL_SERVER = "http://192.168.0.39:8080/goodnight/"; //  서비스 서버
+    public static final String URL_DAILYHOTEL_SERVER = "http://ec2.global.dailyhotel.kr/goodnight/"; //  서비스 서버
+//    public static final String URL_DAILYHOTEL_SERVER = "http://tcwas.dailyhotel.co.kr/goodnight";
 				
 	// 회사 대표번호
 	public static final String PHONE_NUMBER_DAILYHOTEL = "1800-9120";

@@ -13,8 +13,10 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.style.AbsoluteSizeSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -91,7 +93,7 @@ OnTouchListener {
 		tvAddress.setText(mHotelDetail.getHotel().getAddress());
 		tvAddress.setSelected(true);
 		
-		String currency = getString(R.string.currency);
+		Spanned currency = Html.fromHtml(getString(R.string.currency));
 		
 		String priceTitle = getString(R.string.frag_hotel_tab_price);
 		

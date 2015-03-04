@@ -33,7 +33,6 @@ public class ResultRcvActivity extends Activity {
 		} else {
 			m_uriResult = null;
 		}
-
 		finish();
 	}
 }

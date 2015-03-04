@@ -29,6 +29,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -325,8 +326,8 @@ public class CreditFragment extends BaseFragment implements Constants,
 				String str = comma.format(Integer.parseInt(response.trim()));
 				String locale = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_LOCALE, null);
 				
-				if (locale.equals("한국어"))	tvBonus.setText(new StringBuilder(str).append(getString(R.string.currency)));
-				else	tvBonus.setText(getString(R.string.currency) + str);
+				if (locale.equals("한국어"))	tvBonus.setText(new StringBuilder(str).append(Html.fromHtml(getString(R.string.currency))));
+				else	tvBonus.setText(Html.fromHtml(getString(R.string.currency)) + " " + str);
 
 				// 사용자 정보 요청.
 				mQueue.add(new DailyHotelJsonRequest(Method.GET,

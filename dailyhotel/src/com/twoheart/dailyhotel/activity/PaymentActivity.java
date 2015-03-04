@@ -80,7 +80,10 @@ public class PaymentActivity extends BaseActivity implements Constants {
 
 		Bundle bundle = getIntent().getExtras();
 		if (bundle != null) mPay = (Pay) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_PAY);
-
+		
+//		// TODO
+//		mPay.setPayType("CARD");
+		
 		webView = (WebView) findViewById(R.id.webView);
 		webView.getSettings().setSavePassword(false);
 		webView.getSettings().setAppCacheEnabled(false); // 7.4 캐시 정책 비활성화.
@@ -151,7 +154,8 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			.append(mPay.getHotelDetail().getSaleIdx()).append("/")
 			.append(mPay.getCredit().getBonus()).toString();
 		}
-
+		
+//		url = "http://ec2global.dailyhotel.kr/goodnight/reserv/session/req/CARD/92074";
 		android.util.Log.e("GET_URL",url);
 		webView.loadUrl(url);
 		
