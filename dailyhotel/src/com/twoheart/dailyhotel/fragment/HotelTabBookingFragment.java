@@ -105,7 +105,7 @@ OnTouchListener {
 			tvPrice.setText(mHotelDetail.getHotel().getPrice() + currency);
 		} else {
 			final SpannableStringBuilder sps = new SpannableStringBuilder(priceTitle);
-			sps.setSpan(new AbsoluteSizeSpan(25), 5, 34, Spannable.SPAN_INCLUSIVE_EXCLUSIVE); 
+			sps.setSpan(new AbsoluteSizeSpan(25), 5, priceTitle.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE); 
 			tvPriceTitle.append(sps);
 			tvDiscount.setText(currency + mHotelDetail.getHotel().getDiscount());
 			tvPrice.setText(currency + mHotelDetail.getHotel().getPrice());

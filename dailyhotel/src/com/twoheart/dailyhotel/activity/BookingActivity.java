@@ -8,8 +8,8 @@
  */
 package com.twoheart.dailyhotel.activity;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -54,8 +54,11 @@ import android.widget.Toast;
 
 import com.android.volley.Request.Method;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+import com.paypal.android.sdk.payments.PayPalConfiguration;
+import com.paypal.android.sdk.payments.PayPalPayment;
+import com.paypal.android.sdk.payments.PayPalService;
+import com.paypal.android.sdk.payments.PaymentActivity;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.SampleActivity;
 import com.twoheart.dailyhotel.model.Credit;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.HotelDetail;
@@ -108,12 +111,11 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 	private Intent mResIntent;
 	protected String mAliveCallSource;
 	
-
 	private String locale;
 	private int mHotelIdx;
 	
 	private MixpanelAPI mMixpanel;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -398,17 +400,16 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		return false;
 	}
 
-	//결제 화면으로 이동 
+	// 결제 화면으로 이동 
 	private void moveToPayStep() {
 
 		android.util.Log.e("Sale credit / Pay Price ",mPay.isSaleCredit()+" / "+mPay.getPayPrice());
 
-		Intent intent = new Intent(this, PaymentActivity.class);
+		Intent intent = new Intent(this, com.twoheart.dailyhotel.activity.PaymentActivity.class);
 		intent.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
+		
 		startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PAYMENT);
-//		startActivity(new Intent(this, SampleActivity.class));
 		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-
 	}
 
 	private void moveToLoginProcess() {

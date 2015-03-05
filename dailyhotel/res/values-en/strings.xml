@@ -283,7 +283,7 @@
 	<string name="frag_booking_tab_mobile">Guest contact</string>
 	<string name="frag_hotel_tab_add">Address</string>
 	<string name="frag_hotel_tab_bed_type">Bed type</string>
-	<string name="frag_hotel_tab_price">Price(Tax and service charge included)</string>
+	<string name="frag_hotel_tab_price">Price(Tax included)</string>
 	
 	<!-- RatingHotel Fragment -->
 	<string name="frag_rating_hotel_title">Customer satisfaction survey</string>
