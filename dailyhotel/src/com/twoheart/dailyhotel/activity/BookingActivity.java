@@ -55,6 +55,7 @@ import android.widget.Toast;
 import com.android.volley.Request.Method;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.SampleActivity;
 import com.twoheart.dailyhotel.model.Credit;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.HotelDetail;
@@ -171,10 +172,16 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		saleTime = new SaleTime();
 		locale = sharedPreference.getString(KEY_PREFERENCE_LOCALE, null);
 	
-		// 영문일 경우 PAYPAL
-		if(locale.equals("한국어")){
+		// 적립금 부분 기본 통화 표기.
+		tvCreditValue.setText(Html.fromHtml(getString(R.string.currency)) + "0");
+		
+		// 한글, 영문 결제 수단 지정.
+		if(locale.equals("한국어")) {
+			
 			rgPaymentMethod.setVisibility(View.VISIBLE);
-		} else {
+		}
+		else {
+			
 			rgPaymentMethod.setVisibility(View.GONE);
 			mPay.setPayType("PAYPAL");
 		}
@@ -399,6 +406,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		Intent intent = new Intent(this, PaymentActivity.class);
 		intent.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
 		startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PAYMENT);
+//		startActivity(new Intent(this, SampleActivity.class));
 		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
 	}
@@ -772,7 +780,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 							+ out[2] + getString(R.string.frag_booking_tab_day) + " "+ out[3] + getString(R.string.frag_booking_tab_hour));
 				} else {
 					tvCheckOut.setText("20" + out[0] + "-" + out[1] + "-" 
-							+ out[2] + " " + " "+ out[3] + ":00");
+							+ out[2] + " " + out[3] + ":00");
 				}
 					
 				unLockUI();

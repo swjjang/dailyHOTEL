@@ -38,7 +38,7 @@
 }
 
 -keepattributes JavascriptInterface
-
+-keepattributes Signature
 
 # Google Play Services
 

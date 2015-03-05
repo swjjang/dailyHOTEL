@@ -151,7 +151,7 @@
     <string name="title_activity_event_pop_up">EventPopUpActivity</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    
+
     <!-- Setting Fragment -->
     <string name="frag_customer_center">고객센터</string>
     <string name="frag_call_res_contact">전화예약 &amp; 문의</string>
@@ -165,15 +165,15 @@
     <string name="frag_account">계정</string>
     <string name="frag_profile">프로필</string>
     <string name="frag_login">로그인</string>
-    
+
     <!-- Version Activity -->
     <string name="act_current_version">현재 버전: </string>
     <string name="act_new_version">최신 버전: </string>
     <string name="act_btn_update">최신 버전 업데이트 하기</string>
-    
+
     <!-- Splash Activity -->
     <string name="act_anybody">누구나 즐기는 호텔 라이프</string>
-    
+
     <!-- Login Activity -->
     <string name="act_login_email">이메일</string>
     <string name="act_login_pwd">비밀번호</string>
@@ -181,7 +181,7 @@
     <string name="act_login_btn_login">로그인</string>
     <string name="act_login_forgot_pwd">비밀번호를 잊어버리셨어요?</string>
     <string name="act_login_signup">회원가입</string>
-    
+
     <!-- Credit Activity -->
     <string name="act_credit_recom">좋은 건 나눠야죠!</string>
     <string name="act_credit_line1">친구가 내 추천코드를 넣고 회원가입을 하면</string>
@@ -198,176 +198,179 @@
     <string name="act_credit_my_recom_code">나의 추천코드</string>
     <string name="act_credit_line4">친구가 회원가입 할 때 내 추천코드를 넣으면\n친구는 5,000원 선물받고!\n친구가 처음 결제하면 나도 5,000원 선물받고!</string>
     <string name="act_credit_kakao">카카오톡 친구 초대</string>
-    
+
     <!-- Credit List Activity -->
     <string name="act_history_no_details">내역이 없습니다.</string>
-    
+
     <!-- Booking List Fragment -->
     <string name="frag_booking_no_hotels">예약된 호텔이 없습니다!</string>
     <string name="frag_booking_line">오늘은 멋진 호텔에서\n하루를 보내는게 어때요?</string>
     <string name="frag_booking_btn_login">기존 회원 로그인</string>
-    
-	<!-- Profile Activity -->
-	<string name="act_profile_login_acc">로그인 계정</string>
-	<string name="act_profile_email">이메일</string>
-	<string name="act_profile_user">사용자 정보</string>
-	<string name="act_profile_name">이름</string>
-	<string name="act_profile_contact">연락처</string>
-	<string name="act_profile_modify">수정</string>
-	<string name="act_profile_btn_logout">로그아웃</string>
-	<string name="act_profile_input_name">이름을 입력해주세요</string>
-	<string name="act_profile_input_contact">연락처를 입력해주세요</string>
-	
-	<!-- WaitTimer Fragment -->
-	<string name="frag_wait_timer_off">알람 끄기</string>
-	<string name="frag_wait_timer_on">알람 켜기</string>
-	<string name="frag_wait_timer_set">알람이 설정되었습니다</string>
-	<string name="frag_wait_timer_cancel">알람이 취소되었습니다</string>
-	
-	<!-- Booking Activity -->
-	<string name="act_toast_payment_success">결제가 정상적으로 이루어졌습니다</string>
-	<string name="act_toast_payment_soldout">모든 객실이 판매되었습니다\n다음에 이용해주세요</string>
-	<string name="act_toast_payment_not_available">다른 손님이 예약 중입니다\n잠시 후 이용해주세요</string>
-	<string name="act_toast_payment_network_error">네트워크 오류가 발생했습니다\n네트워크 연결을 확인해주세요</string>
-	<string name="act_toast_payment_invalid_date">판매가 마감되었습니다</string>
-	<string name="act_toast_payment_fail">알 수 없는 오류가 발생했습니다\n문의해주시기 바랍니다</string>
-	<string name="act_toast_payment_canceled">결제가 취소되었습니다</string>
-	<string name="act_toast_payment_account_time_error">입금대기 시간이 초과되었습니다\n다시 시도해주세요</string>
-	<string name="act_toast_payment_account_duplicate">이미 입금대기 중인 호텔입니다</string>
-	<string name="act_toast_payment_account_timeover">결제 대기시간이 초과되었습니다\n다시 시도해주세요</string>
-	<string name="act_booking_chkin_info">체크인 정보</string>
-	<string name="act_booking_chkin">체크인</string>
-	<string name="act_booking_chkout">체크아웃</string>
-	<string name="act_booking_reserver_info">예약자 정보</string>
-	<string name="act_booking_reserver">예약자</string>
-	<string name="act_booking_mobile">연락처</string>
-	<string name="act_booking_email">이메일</string>
-	<string name="act_booking_payment">결제</string>
-	<string name="act_booking_credit_use">적립금 사용</string>
-	<string name="act_booking_price">비용</string>
-	<string name="act_booking_credit_discount">적립금 할인</string>
-	<string name="act_booking_price_real">결제금액(VAT 포함)</string>
-	<string name="act_booking_pay_card">신용카드</string>
-	<string name="act_booking_pay_mobile">휴대폰</string>
-	<string name="act_booking_pay_account">계좌이체</string>
-	<string name="act_booking_btn_pay">결제하기</string>
-	<string name="act_booking_0won">0원</string>
-	<string name="act_booking_payment_info">결제가 안되시나요? 1800-9120으로 전화주세요</string>
-	
-	<!-- Payment Activity -->
-	<string name="act_payment_isp_error">ISP 결제 오류</string>
-	<string name="act_payment_isp_user_cancel">ISP 결제 사용자 취소</string>
-	<string name="act_payment_isp_other_error">ISP 결제 기타 오류</string>
-	<string name="act_payment_user_cancel">사용자 취소</string>
-	<string name="act_payment_chk_contain">취소</string>
-	
-	<!-- Signup Activity -->
-	<string name="act_signup_phone">[필수] 휴대폰 번호 (\'-\' 제외)</string>
-	<string name="act_signup_email">[필수] 이메일</string>
-	<string name="act_signup_name">[필수] 이름 (체크인시 사용)</string>
-	<string name="act_signup_pwd">[필수] 비밀번호 (4자이상)</string>
-	<string name="act_signup_code">[선택] 추천인 코드</string>
-	<string name="act_signup_btn_signup">약관 동의하고 회원가입</string>
-	<string name="act_signup_terms">이용약관</string>
-	<string name="act_signup_privacy">개인정보 취급방침</string>
-	
-	<!-- BookingTab/HotelTabBooking Fragment -->
-	<string name="frag_booking_tab_title">예약</string>
-	<string name="frag_booking_tab_year">년 </string>
-	<string name="frag_booking_tab_month">월 </string>
-	<string name="frag_booking_tab_day">일 </string>
-	<string name="frag_booking_tab_hour">시</string>
-	<string name="frag_booking_tab_hotel_info">호텔 정보</string>
-	<string name="frag_booking_tab_location">위치</string>
-	<string name="frag_booking_tab_bed_type">베드타입</string>
-	<string name="frag_booking_tab_chkin_info">체크인 정보</string>
-	<string name="frag_booking_tab_chkin">체크인</string>
-	<string name="frag_booking_tab_chkout">체크아웃</string>
-	<string name="frag_booking_tab_name">예약자명</string>
-	<string name="frag_booking_tab_mobile">예약자 전화번호</string>
-	<string name="frag_hotel_tab_add">주소</string>
-	<string name="frag_hotel_tab_bed_type">베드타입</string>
-	<string name="frag_hotel_tab_price">가격(세금&amp;봉사료 포함)</string>
-	
-	<!-- RatingHotel Fragment -->
-	<string name="frag_rating_hotel_title">호텔 만족도 조사</string>
-	<string name="frag_rating_hotel_text1">지난 번 이용하신</string>
-	<string name="frag_rating_hotel_text2">은 어떠셨나요?</string>
-	<string name="frag_rating_hotel_recomm">만족함</string>
-	<string name="frag_rating_hotel_cancel">만족안함</string>
-	
-	<!-- TabInfo/TabMap Fragment -->
-	<string name="frag_tab_info_title">정보</string>
-	<string name="frag_tab_map_title">지도</string>
-	
-	<!-- KaKaoLinkManager -->
-	<string name="kakao_btn_move">앱으로 이동</string>
-	
-	<!-- Base Activity -->
-	<string name="act_base_network_connect">인터넷 연결 상태가 불안정합니다.\n인터넷 연결을 확인하신 뒤 다시 시도해주세요.</string>
-    
+
+    <!-- Profile Activity -->
+    <string name="act_profile_login_acc">로그인 계정</string>
+    <string name="act_profile_email">이메일</string>
+    <string name="act_profile_user">사용자 정보</string>
+    <string name="act_profile_name">이름</string>
+    <string name="act_profile_contact">연락처</string>
+    <string name="act_profile_modify">수정</string>
+    <string name="act_profile_btn_logout">로그아웃</string>
+    <string name="act_profile_input_name">이름을 입력해주세요</string>
+    <string name="act_profile_input_contact">연락처를 입력해주세요</string>
+
+    <!-- WaitTimer Fragment -->
+    <string name="frag_wait_timer_off">알람 끄기</string>
+    <string name="frag_wait_timer_on">알람 켜기</string>
+    <string name="frag_wait_timer_set">알람이 설정되었습니다</string>
+    <string name="frag_wait_timer_cancel">알람이 취소되었습니다</string>
+
+    <!-- Booking Activity -->
+    <string name="act_toast_payment_success">결제가 정상적으로 이루어졌습니다</string>
+    <string name="act_toast_payment_soldout">모든 객실이 판매되었습니다\n다음에 이용해주세요</string>
+    <string name="act_toast_payment_not_available">다른 손님이 예약 중입니다\n잠시 후 이용해주세요</string>
+    <string name="act_toast_payment_network_error">네트워크 오류가 발생했습니다\n네트워크 연결을 확인해주세요</string>
+    <string name="act_toast_payment_invalid_date">판매가 마감되었습니다</string>
+    <string name="act_toast_payment_fail">알 수 없는 오류가 발생했습니다\n문의해주시기 바랍니다</string>
+    <string name="act_toast_payment_canceled">결제가 취소되었습니다</string>
+    <string name="act_toast_payment_account_time_error">입금대기 시간이 초과되었습니다\n다시 시도해주세요</string>
+    <string name="act_toast_payment_account_duplicate">이미 입금대기 중인 호텔입니다</string>
+    <string name="act_toast_payment_account_timeover">결제 대기시간이 초과되었습니다\n다시 시도해주세요</string>
+    <string name="act_booking_chkin_info">체크인 정보</string>
+    <string name="act_booking_chkin">체크인</string>
+    <string name="act_booking_chkout">체크아웃</string>
+    <string name="act_booking_reserver_info">예약자 정보</string>
+    <string name="act_booking_reserver">예약자</string>
+    <string name="act_booking_mobile">연락처</string>
+    <string name="act_booking_email">이메일</string>
+    <string name="act_booking_payment">결제</string>
+    <string name="act_booking_credit_use">적립금 사용</string>
+    <string name="act_booking_price">비용</string>
+    <string name="act_booking_credit_discount">적립금 할인</string>
+    <string name="act_booking_price_real">결제금액(VAT 포함)</string>
+    <string name="act_booking_pay_card">신용카드</string>
+    <string name="act_booking_pay_mobile">휴대폰</string>
+    <string name="act_booking_pay_account">계좌이체</string>
+    <string name="act_booking_btn_pay">결제하기</string>
+    <string name="act_booking_0won">0원</string>
+    <string name="act_booking_payment_info">결제가 안되시나요? 1800-9120으로 전화주세요</string>
+
+    <!-- Payment Activity -->
+    <string name="act_payment_isp_error">ISP 결제 오류</string>
+    <string name="act_payment_isp_user_cancel">ISP 결제 사용자 취소</string>
+    <string name="act_payment_isp_other_error">ISP 결제 기타 오류</string>
+    <string name="act_payment_user_cancel">사용자 취소</string>
+    <string name="act_payment_chk_contain">취소</string>
+
+    <!-- Signup Activity -->
+    <string name="act_signup_phone">[필수] 휴대폰 번호 (\'-\' 제외)</string>
+    <string name="act_signup_email">[필수] 이메일</string>
+    <string name="act_signup_name">[필수] 이름 (체크인시 사용)</string>
+    <string name="act_signup_pwd">[필수] 비밀번호 (4자이상)</string>
+    <string name="act_signup_code">[선택] 추천인 코드</string>
+    <string name="act_signup_btn_signup">약관 동의하고 회원가입</string>
+    <string name="act_signup_terms">이용약관</string>
+    <string name="act_signup_privacy">개인정보 취급방침</string>
+
+    <!-- BookingTab/HotelTabBooking Fragment -->
+    <string name="frag_booking_tab_title">예약</string>
+    <string name="frag_booking_tab_year">년 </string>
+    <string name="frag_booking_tab_month">월 </string>
+    <string name="frag_booking_tab_day">일 </string>
+    <string name="frag_booking_tab_hour">시</string>
+    <string name="frag_booking_tab_hotel_info">호텔 정보</string>
+    <string name="frag_booking_tab_location">위치</string>
+    <string name="frag_booking_tab_bed_type">베드타입</string>
+    <string name="frag_booking_tab_chkin_info">체크인 정보</string>
+    <string name="frag_booking_tab_chkin">체크인</string>
+    <string name="frag_booking_tab_chkout">체크아웃</string>
+    <string name="frag_booking_tab_name">예약자명</string>
+    <string name="frag_booking_tab_mobile">예약자 전화번호</string>
+    <string name="frag_hotel_tab_add">주소</string>
+    <string name="frag_hotel_tab_bed_type">베드타입</string>
+    <string name="frag_hotel_tab_price">가격(세금&amp;봉사료 포함)</string>
+
+    <!-- RatingHotel Fragment -->
+    <string name="frag_rating_hotel_title">호텔 만족도 조사</string>
+    <string name="frag_rating_hotel_text1">지난 번 이용하신</string>
+    <string name="frag_rating_hotel_text2">은 어떠셨나요?</string>
+    <string name="frag_rating_hotel_recomm">만족함</string>
+    <string name="frag_rating_hotel_cancel">만족안함</string>
+
+    <!-- TabInfo/TabMap Fragment -->
+    <string name="frag_tab_info_title">정보</string>
+    <string name="frag_tab_map_title">지도</string>
+
+    <!-- KaKaoLinkManager -->
+    <string name="kakao_btn_move">앱으로 이동</string>
+
+    <!-- Base Activity -->
+    <string name="act_base_network_connect">인터넷 연결 상태가 불안정합니다.\n인터넷 연결을 확인하신 뒤 다시 시도해주세요.</string>
+
     <!-- ForgotPwd Activity -->
     <string name="act_forgot_pwd_email">이메일</string>
     <string name="act_forgot_pwd_text">가입한 이메일 주소로 비밀번호 변경 메일이 발송됩니다</string>
     <string name="act_forgot_pwd_forgot">비밀번호 찾기</string>
-    
-     <!-- HotelTab Activity -->
+
+    <!-- HotelTab Activity -->
     <string name="act_hotel_tab_btn">예약하기</string>
-    
+
     <!-- Error Fragment -->
     <string name="frag_error_network_unavail">네트워크 연결이 끊어졌습니다.</string>
     <string name="frag_error_btn">연결 재시도</string>
-    
+
     <!-- HotelList Fragment -->
     <string name="frag_hotel_list_swipe">아래로 스와이프하여 새로고침하세요</string>
     <string name="frag_hotel_list_seoul">서울</string>
     <string name="frag_hotel_list_tokyo">도쿄</string>
     <string name="frag_hotel_list_others">기타</string>
-    
+
     <!-- PopUp Event Fragment -->
     <string name="frag_popup_event_title">이벤트 안내</string>
-    
+
     <!-- Timer Wait Fragment -->
     <string name="frag_wait_timer_title">이벤트 참여하기</string>
-	<string name="frag_wait_timer_alarm">알람 켜기</string>
-	<string name="frag_wait_timer_msg">놀라운 가격으로 당신을 찾아갈\n호텔이 기다리고 있어요.</string>
-	
-	<!-- Hotel List Header -->
-	<string name="header_title1">데일리호텔 </string>
-	<string name="header_title2">이벤트 참여하기</string>
-	
-		<!-- Booking Row List -->
-	<string name="booking_row_ment">체크인시 프론트에 성함을 알려주세요</string>
-	
-	<!-- Wait Payment Activity -->
-	<string name="act_wait_payment_payinfo">결제 정보 (가상계좌)</string>
-	<string name="act_wait_payment_accounts_no">계좌번호</string>
-	<string name="act_wait_payment_name">입금주명</string>
-	<string name="act_wait_payment_price">금액</string>
-	<string name="act_wait_payment_limit">입금기한</string>
-	<string name="act_wait_payment_confirm">확인사항</string>
-	<string name="act_wait_payment_msg1">입금이 완료되면</string>
-	<string name="act_wait_payment_msg2">10분이내에 예약완료 문자가 도착합니다.</string>
-	
-	<!-- Facebook -->
-	<string name="com_facebook_dialogloginactivity_ok_button">확인</string>
-	<string name="com_facebook_loginview_log_in_button">페이스북으로 로그인</string>
-	<string name="com_facebook_loginview_log_out_button">로그아웃</string>
-	<string name="com_facebook_loginview_logged_in_as">%1$s님으로 로그인</string>
+    <string name="frag_wait_timer_alarm">알람 켜기</string>
+    <string name="frag_wait_timer_msg">놀라운 가격으로 당신을 찾아갈\n호텔이 기다리고 있어요.</string>
+
+    <!-- Hotel List Header -->
+    <string name="header_title1">데일리호텔 </string>
+    <string name="header_title2">이벤트 참여하기</string>
+
+    <!-- Booking Row List -->
+    <string name="booking_row_ment">체크인시 프론트에 성함을 알려주세요</string>
+
+    <!-- Wait Payment Activity -->
+    <string name="act_wait_payment_payinfo">결제 정보 (가상계좌)</string>
+    <string name="act_wait_payment_accounts_no">계좌번호</string>
+    <string name="act_wait_payment_name">입금주명</string>
+    <string name="act_wait_payment_price">금액</string>
+    <string name="act_wait_payment_limit">입금기한</string>
+    <string name="act_wait_payment_confirm">확인사항</string>
+    <string name="act_wait_payment_msg1">입금이 완료되면</string>
+    <string name="act_wait_payment_msg2">10분이내에 예약완료 문자가 도착합니다.</string>
+
+    <!-- Facebook -->
+    <string name="com_facebook_dialogloginactivity_ok_button">확인</string>
+    <string name="com_facebook_loginview_log_in_button">페이스북으로 로그인</string>
+    <string name="com_facebook_loginview_log_out_button">로그아웃</string>
+    <string name="com_facebook_loginview_logged_in_as">%1$s님으로 로그인</string>
     <string name="com_facebook_loginview_logged_in_using_facebook">Facebook으로 로그인하셨습니다</string>
     <string name="com_facebook_loginview_log_out_action">로그아웃</string>
     <string name="com_facebook_loginview_cancel_action">취소</string>
-    
+
     <!-- ACRA -->
     <string name="crash_toast_text">예상치 못한 문제가 발생하였습니다.</string>
     <string name="crash_dialog_title">Application 문제 리포팅</string>
     <string name="crash_dialog_text">예상치 못한 문제가 발생했습니다. 문제의 빠른 해결을 위해 오류 데이터를 메일로 보내주세요. 확인을 누르시면 메일로 에러를 리포팅합니다.</string>
     <string name="crash_dialog_ok_text">빠른 수정 적용하겠습니다.</string>
     <string name="crash_dialog_comment_prompt">아래에 문제에 관한 의견을 남겨주세요.</string>
-    
+
     <!-- Region List Activity -->
     <string name="act_list_region_select_region">지역을 선택해주세요.</string>
     <string name="act_list_region_title">지역 설정</string>
     <string name="act_list_region_korea">대한민국</string>
     <string name="act_list_region_japan">일본</string>
+    <string name="title_activity_paypal">PaypalActivity</string>
+    <string name="title_activity_sample">SampleActivity</string>
+
 </resources>
