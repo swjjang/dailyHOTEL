@@ -509,15 +509,31 @@
             android:layout_marginTop="20dp"
             android:orientation="vertical"
             android:padding="12dp" >
-
-            <Button
-                android:id="@+id/btn_hotel_payment"
+			
+            <RelativeLayout 
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="@drawable/shape_button_common_background"
-                android:gravity="center"
-                android:text="@string/act_booking_btn_pay"
-                android:textColor="@android:color/white" />
+				android:gravity="center_horizontal">
+                
+                    <ImageView
+                        android:id="@+id/iv_hotel_payment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="50dp"
+                        android:padding="10dp"
+                        android:layout_centerHorizontal="true"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/img_pp_cc_mark_small" />
+                    <Button
+                        android:id="@+id/btn_hotel_payment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="50dp"
+                        android:background="@drawable/shape_button_common_background"
+                        android:layout_toRightOf="@+id/iv_hotel_payment"
+                        android:text="@string/act_booking_btn_pay"
+                        android:textColor="@android:color/white" />
+
+            </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
 

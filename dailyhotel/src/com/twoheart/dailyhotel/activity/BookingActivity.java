@@ -95,6 +95,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 	private ScrollView svBooking;
 	private TextView tvCheckIn, tvCheckOut, tvOriginalPriceValue,
 	tvCreditValue, tvOriginalPrice, tvCredit, tvPrice;
+	private ImageView ivPay;
 	private Button btnPay;
 	private Switch swCredit;
 	private TextView tvReserverName, tvReserverNumber, tvReserverEmail;
@@ -104,7 +105,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 	private RadioButton rbPaymentAccount, rbPaymentCard, rbPaymentHp;
 	
 	private Pay mPay;
-
+	
 	private SaleTime saleTime;
 	private int mReqCode;
 	private int mResCode;
@@ -142,6 +143,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		tvOriginalPriceValue = (TextView) findViewById(R.id.tv_hotel_payment_original_price_value);
 		tvCreditValue = (TextView) findViewById(R.id.tv_hotel_payment_credit_value);
 		tvPrice = (TextView) findViewById(R.id.tv_hotel_payment_price);
+		ivPay = (ImageView) findViewById(R.id.iv_hotel_payment);
 		btnPay = (Button) findViewById(R.id.btn_hotel_payment);
 		swCredit = (Switch) findViewById(R.id.btn_on_off);
 
@@ -179,7 +181,8 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		
 		// 한글, 영문 결제 수단 지정.
 		if(locale.equals("한국어")) {
-			
+
+			ivPay.setVisibility(View.GONE);
 			rgPaymentMethod.setVisibility(View.VISIBLE);
 		}
 		else {
@@ -187,6 +190,7 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 			rgPaymentMethod.setVisibility(View.GONE);
 			mPay.setPayType("PAYPAL");
 		}
+//		mPay.setPayType("CARD");
 	}
 
 	@Override

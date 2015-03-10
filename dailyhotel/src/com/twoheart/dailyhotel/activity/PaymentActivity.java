@@ -123,29 +123,33 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		if (bundle != null)
 			mPay = (Pay) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_PAY);
 
-		if (mPay.getPayType().equals("PAYPAL")) {
-			Intent intent = new Intent(this, PayPalService.class);
-			intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
-			startService(intent);
-			
-			PayPalPayment thingToBuy = getThingToBuy(PayPalPayment.PAYMENT_INTENT_SALE, mPay);
-			/*
-			 * See getStuffToBuy(..) for examples of some available payment
-			 * options.
-			 */
-			intent = new Intent(this, com.paypal.android.sdk.payments.PaymentActivity.class);
-
-			// send the same configuration for restart resiliency
-			intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
-			intent.putExtra(
-					com.paypal.android.sdk.payments.PaymentActivity.EXTRA_PAYMENT,
-					thingToBuy);
-
-			startActivityForResult(intent, REQUEST_CODE_PAYMENT);
-			return;
-		}
-
+//		if (mPay.getPayType().equals("PAYPAL")) {
+//			Intent intent = new Intent(this, PayPalService.class);
+//			intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
+//			startService(intent);
+//			
+//			PayPalPayment thingToBuy = getThingToBuy(PayPalPayment.PAYMENT_INTENT_SALE, mPay);
+//			/*
+//			 * See getStuffToBuy(..) for examples of some available payment
+//			 * options.
+//			 */
+//			intent = new Intent(this, com.paypal.android.sdk.payments.PaymentActivity.class);
+//
+//			// send the same configuration for restart resiliency
+//			intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
+//			intent.putExtra(
+//					com.paypal.android.sdk.payments.PaymentActivity.EXTRA_PAYMENT,
+//					thingToBuy);
+//
+//			startActivityForResult(intent, REQUEST_CODE_PAYMENT);
+//			return;
+//		}
+		
 		webView = (WebView) findViewById(R.id.webView);
+
+		// TODO  setWebContentsDebuggingEnabled
+//		WebView.setWebContentsDebuggingEnabled(true);
+
 		webView.getSettings().setSavePassword(false);
 		webView.getSettings().setAppCacheEnabled(false); // 7.4 캐시 정책 비활성화.
 		webView.getSettings().setJavaScriptEnabled(true);
@@ -427,10 +431,10 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
 
-		if(mPay.getPayType().equals("PAYPAL")){
-			
-			proccessPayPalActivityResult(requestCode, resultCode, intent);
-		} else {
+//		if(mPay.getPayType().equals("PAYPAL")){
+//			
+//			proccessPayPalActivityResult(requestCode, resultCode, intent);
+//		} else {
 			
 			String scriptForSkip = "javascript:";
 			if (requestCode == CODE_REQUEST_ISPMOBILE)
@@ -438,7 +442,7 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			else if (requestCode == CODE_REQUEST_KFTC_BANKPAY)
 				scriptForSkip += "returnUrltoMall();"; // KTFC 확인 버튼 콜
 			webView.loadUrl(scriptForSkip);
-		}
+//		}
 	}
 
 	private void proccessPayPalActivityResult(int requestCode, int resultCode,
@@ -562,7 +566,24 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			unLockUI();
 			// view.loadUrl("javascript:window.HtmlObserver.showHTML" +
 			// "('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');");
-
+			
+			if(mPay.getPayType().equals("PAYPAL")){
+				
+				view.loadUrl("javascript:function on_cancel()" + 
+								"{ " +
+								"var form = document.pmnt_info_form_2;" +
+								"form.action = '/smart//etc/pay_cancel.php';" +
+								"form.submit();" + 
+								 "}");
+				view.loadUrl("javascript:(function(){" + 
+						"var payImg = (document.getElementsByClassName('space_h_auto'))[0];" +
+						"payImg.style.cssText = payImg.style.cssText + ';background-image: url(https://www.paypalobjects.com/webstatic/en_KR/mktg/Logo/pp_cc_mark_74x46.jpg);' +" + 
+						"'background-size: 150px;' +" +  
+						"'background-repeat: no-repeat;' +" +  
+						"'background-position: center;';" +
+						"})();");
+			}
+			
 			CookieSyncManager.getInstance().sync();
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 				setSupportProgressBarIndeterminateVisibility(false);
