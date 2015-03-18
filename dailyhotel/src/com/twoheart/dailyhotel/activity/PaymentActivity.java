@@ -20,13 +20,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-
 import kr.co.kcp.android.payment.standard.ResultRcvActivity;
 import kr.co.kcp.util.PackageState;
-
 import org.apache.http.util.EncodingUtils;
 import org.json.JSONException;
-
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -45,10 +44,10 @@ import android.view.ViewGroup;
 import android.webkit.CookieSyncManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
-
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalPayment;
 import com.paypal.android.sdk.payments.PayPalService;
@@ -63,6 +62,7 @@ import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
+@SuppressLint("NewApi")
 public class PaymentActivity extends BaseActivity implements Constants {
 
 	public static final String TAG = "PaymentActivity";
@@ -154,6 +154,11 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		webView.getSettings().setAppCacheEnabled(false); // 7.4 캐시 정책 비활성화.
 		webView.getSettings().setJavaScriptEnabled(true);
 		webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+	
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+		}
+		
 		webView.addJavascriptInterface(new KCPPayBridge(), "KCPPayApp");
 		// 하나SK 카드 선택시 User가 선택한 기본 정보를 가지고 오기위해 사용
 		webView.addJavascriptInterface(new KCPPayCardInfoBridge(),

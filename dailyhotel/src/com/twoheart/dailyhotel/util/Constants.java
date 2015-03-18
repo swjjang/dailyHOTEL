@@ -37,8 +37,8 @@ public interface Constants {
 //	public static final String URL_DAILYHOTEL_SERVER = "http://restful.dailyhotel.kr/goodnight/"; //  서비스 서버 
     //http://ec2restful.dailyhotel.kr    http://restful.dailyhotel.kr/goodnight/
 //    public static final String URL_DAILYHOTEL_SERVER = "http://192.168.0.39:8080/goodnight/"; //  서비스 서버
-    public static final String URL_DAILYHOTEL_SERVER = "http://ec2.global.dailyhotel.kr/goodnight/"; //  서비스 서버
-//    public static final String URL_DAILYHOTEL_SERVER = "http://tcwas.dailyhotel.co.kr/goodnight";
+//    public static final String 5URL_DAILYHOTEL_SERVER = "http://ec2.global.dailyhotel.kr/goodnight/"; //  서비스 서버
+    public static final String URL_DAILYHOTEL_SERVER = "http://tcwas.dailyhotel.co.kr/goodnight/";
 				
 	// 회사 대표번호
 	public static final String PHONE_NUMBER_DAILYHOTEL = "1800-9120";
