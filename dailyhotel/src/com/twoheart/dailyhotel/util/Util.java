@@ -1,12 +1,17 @@
 package com.twoheart.dailyhotel.util;
 
+import java.util.Locale;
+
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
 
@@ -69,4 +74,13 @@ public class Util implements Constants {
 		return correctTime;
 	}
 	
+    public static void setLocale(Context context, String lang) {
+    	 
+        Locale locale = new Locale(lang);
+        Resources res = context.getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        Configuration conf = res.getConfiguration();
+        conf.locale = locale;
+        res.updateConfiguration(conf, dm);
+    }
 }

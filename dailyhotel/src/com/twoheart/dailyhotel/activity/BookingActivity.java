@@ -176,16 +176,18 @@ android.widget.CompoundButton.OnCheckedChangeListener {
 		saleTime = new SaleTime();
 		locale = sharedPreference.getString(KEY_PREFERENCE_LOCALE, null);
 	
-		// 적립금 부분 기본 통화 표기.
-		tvCreditValue.setText(Html.fromHtml(getString(R.string.currency)) + "0");
-		
+
 		// 한글, 영문 결제 수단 지정.
 		if(locale.equals("한국어")) {
-
+			// 적립금 부분 기본 통화 표기.
+			tvCreditValue.setText("0" + Html.fromHtml(getString(R.string.currency)));
+			
 			ivPay.setVisibility(View.GONE);
 			rgPaymentMethod.setVisibility(View.VISIBLE);
 		}
 		else {
+			// 적립금 부분 기본 통화 표기.
+			tvCreditValue.setText(Html.fromHtml(getString(R.string.currency)) + "0");
 			
 			rgPaymentMethod.setVisibility(View.GONE);
 			mPay.setPayType("PAYPAL");

@@ -2,6 +2,8 @@ package com.twoheart.dailyhotel.fragment;
 
 import java.util.Locale;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,8 +70,8 @@ public class IntroGuideFragment extends BaseFragment {
 		
 		llIntroGuide.setBackgroundResource(mBackground);
 		
-
-		String locale = Locale.getDefault().getDisplayLanguage();
+		SharedPreferences sharedPreference = container.getContext().getSharedPreferences(NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
+		String locale = sharedPreference.getString(KEY_PREFERENCE_LOCALE, null);
 		
 		if(locale.equals("English"))
 			tvTitle.setTextSize(26.5f);

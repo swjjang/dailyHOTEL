@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Locale;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
@@ -31,6 +32,7 @@ import com.androidquery.callback.BitmapAjaxCallback;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Hotel;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
 import com.twoheart.dailyhotel.widget.HotelGradeView;
@@ -124,7 +126,9 @@ PinnedSectionListAdapter {
 			viewHolder.name.setText(element.getName());
 			
 			Spanned currency = Html.fromHtml(getContext().getResources().getString(R.string.currency));
-			String locale = Locale.getDefault().getDisplayLanguage();
+			
+			SharedPreferences sharedPreference = convertView.getContext().getSharedPreferences(Constants.NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
+			String locale = sharedPreference.getString(Constants.KEY_PREFERENCE_LOCALE, null);
 			
 			if (locale.equals("ÇÑ±¹¾î")) {
 				viewHolder.price.setText(strPrice + currency);
