@@ -2,18 +2,15 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
     android:background="#fdfdfd"
-    android:orientation="vertical">
-    
-    <LinearLayout  
+    android:fillViewport="true" >
+
+    <LinearLayout
         android:id="@+id/layout_hotel_tab_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-        
-	</LinearLayout>
-	
-    
-	
+        android:layout_marginTop="-1dp"
+        android:orientation="vertical" >
+    </LinearLayout>
+
 </ScrollView>

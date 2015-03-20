@@ -497,6 +497,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="right"
+               	android:paddingTop="5dp"
                 android:paddingRight="15dp"
                 android:text="@string/act_booking_payment_info"
                 android:textColor="@color/textView_textColor_section"
@@ -526,7 +527,7 @@
                         android:src="@drawable/img_pp_cc_mark_small" />
                     <Button
                         android:id="@+id/btn_hotel_payment"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:background="@drawable/shape_button_common_background"
                         android:layout_toRightOf="@+id/iv_hotel_payment"
