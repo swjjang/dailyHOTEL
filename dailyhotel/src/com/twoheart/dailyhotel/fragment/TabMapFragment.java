@@ -130,7 +130,6 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
 			{
 				if (!mHostActivity.isDestroyed())
 					mHostActivity.getSupportFragmentManager().beginTransaction().remove(mMapFragment).commitAllowingStateLoss();
-
 			}
 
 		} catch (IllegalStateException e)

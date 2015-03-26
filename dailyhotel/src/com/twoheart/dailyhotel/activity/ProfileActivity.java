@@ -18,6 +18,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -50,6 +51,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 	// private EditText etEmail, etName, etPhone;
 	// private LinearLayout llProfileEdit, llProfileInfoLabel,
 	// llProfileInfoEditable;
+	private final String INVALID_NULL = "null";
 
 	private AQuery mAq;
 	private InputMethodManager mInputMethodManager;
@@ -193,7 +195,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 
 				String name = mAq.id(R.id.et_profile_name).getText().toString();
 				String phone = mAq.id(R.id.et_profile_phone).getText().toString();
-
+				
 				if (name.equals(prevName) && phone.equals(prevPh))
 				{
 					showToast(getString(R.string.toast_msg_profile_not_changed), Toast.LENGTH_LONG, false);
@@ -334,6 +336,18 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 				String userEmail = response.getString("email");
 				String userName = response.getString("name");
 				String userPhone = response.getString("phone");
+				
+				if(TextUtils.isEmpty(userEmail) == true || INVALID_NULL.equalsIgnoreCase(userEmail) == true) {
+					userEmail = getString(R.string.act_profile_input_email);
+				}
+				
+				if(TextUtils.isEmpty(userName) == true) {
+					userName = getString(R.string.act_profile_input_name);
+				}
+				
+				if(TextUtils.isEmpty(userPhone) == true || INVALID_NULL.equalsIgnoreCase(userPhone) == true) {
+					userPhone = getString(R.string.act_profile_input_contact);
+				}
 
 				prevName = userName;
 				prevPh = userPhone;
@@ -341,9 +355,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 				mAq.id(R.id.tv_profile_email).text(userEmail);
 				mAq.id(R.id.tv_profile_name).text(userName);
 				mAq.id(R.id.tv_profile_phone).text(userPhone);
-
-				mAq.id(R.id.et_profile_name).text(userName);
-				mAq.id(R.id.et_profile_phone).text(userPhone);
 
 				unLockUI();
 			} catch (Exception e)
