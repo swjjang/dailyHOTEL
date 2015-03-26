@@ -215,8 +215,9 @@
     <string name="act_profile_contact">연락처</string>
     <string name="act_profile_modify">수정</string>
     <string name="act_profile_btn_logout">로그아웃</string>
-    <string name="act_profile_input_name">이름을 입력해주세요</string>
-    <string name="act_profile_input_contact">연락처를 입력해주세요</string>
+    <string name="act_profile_input_name">이름을 입력해주세요.</string>
+    <string name="act_profile_input_contact">연락처를 입력해주세요.</string>
+    <string name="act_profile_input_email">이메일이 없습니다.</string>
 
     <!-- WaitTimer Fragment -->
     <string name="frag_wait_timer_off">알람 끄기</string>
