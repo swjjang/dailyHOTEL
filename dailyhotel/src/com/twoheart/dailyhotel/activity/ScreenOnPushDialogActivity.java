@@ -1,14 +1,6 @@
 package com.twoheart.dailyhotel.activity;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,26 +8,26 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.RenewalGaManager;
-import com.twoheart.dailyhotel.util.ui.BaseActivity;
+
 /**
  * 
- * Çª½Ã°¡ ¿Ô´Âµ¥ ÇöÀç ´Ü¸»ÀÌ ÄÑÁø »óÅÂÀÏ °æ¿ì ÀÎÅÙÆ®ÇÏ´Â ´ÙÀÌ¾ó·Î±×Çü ¾×Æ¼ºñÆ¼
+ * í‘¸ì‹œê°€ ì™”ëŠ”ë° í˜„ì¬ ë‹¨ë§ì´ ì¼œì§„ ìƒíƒœì¼ ê²½ìš° ì¸í…íŠ¸í•˜ëŠ” ë‹¤ì´ì–¼ë¡œê·¸í˜• ì•¡í‹°ë¹„í‹°
+ * 
  * @author jangjunho
  *
  */
-public class ScreenOnPushDialogActivity extends Activity implements OnClickListener, Constants{
+public class ScreenOnPushDialogActivity extends Activity implements OnClickListener, Constants
+{
 
 	private TextView tvMsg;
 	private ImageView btnClose;
 	private TextView tvTitle;
-	
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
 
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -44,28 +36,32 @@ public class ScreenOnPushDialogActivity extends Activity implements OnClickListe
 
 		String msg = getIntent().getStringExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG);
 		int type = getIntent().getIntExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, -1);
-		
-		tvMsg = (TextView)findViewById(R.id.tv_screen_on_push_dialog_msg);
-		
-		// Å¸ÀÔº°·Î mMsg Ç¥½Ã ¹æ½Ä ¼³Á¤
-		if (type == PUSH_TYPE_NOTICE) {// °øÁö Çª½Ã
+
+		tvMsg = (TextView) findViewById(R.id.tv_screen_on_push_dialog_msg);
+
+		// íƒ€ì…ë³„ë¡œ mMsg í‘œì‹œ ë°©ì‹ ì„¤ì •
+		if (type == PUSH_TYPE_NOTICE)
+		{// ê³µì§€ í‘¸ì‹œ
 			tvMsg.setText(msg);
-		} else if (type == PUSH_TYPE_ACCOUNT_COMPLETE) {// °èÁÂÀÌÃ¼ °áÁ¦ ¿Ï·á Çª½Ã
+		} else if (type == PUSH_TYPE_ACCOUNT_COMPLETE)
+		{// ê³„ì¢Œì´ì²´ ê²°ì œ ì™„ë£Œ í‘¸ì‹œ
 			String result = msg;
-			if (result.contains("]")) {
-				// [È£ÅÚÀÌ¸§ [Á¶½Ä Æ÷ÇÔ]] ¿¹¾àµÇ¾ú½À´Ï´Ù. °ú °°Àº °æ¿ì ¸¶Áö¸· ] ´ÙÀ½¿¡¼­ °³ÇàÇÏ¿© º¸±â ÁÁµµ·Ï Ç¥½Ã
+			if (result.contains("]"))
+			{
+				// [í˜¸í…”ì´ë¦„ [ì¡°ì‹ í¬í•¨]] ì˜ˆì•½ë˜ì—ˆìŠµë‹ˆë‹¤. ê³¼ ê°™ì€ ê²½ìš° ë§ˆì§€ë§‰ ] ë‹¤ìŒì—ì„œ ê°œí–‰í•˜ì—¬ ë³´ê¸° ì¢‹ë„ë¡ í‘œì‹œ
 				int index = msg.lastIndexOf("]");
-				StringBuffer sb = new StringBuffer(msg); 
-				result = sb.replace(index, index+1, "]\n").toString();	
+				StringBuffer sb = new StringBuffer(msg);
+				result = sb.replace(index, index + 1, "]\n").toString();
 			}
 			tvMsg.setText(result);
 		}
 
-		btnClose = (ImageView)findViewById(R.id.iv_screen_on_push_dialog_close);
+		btnClose = (ImageView) findViewById(R.id.iv_screen_on_push_dialog_close);
 		btnClose.setOnClickListener(this);
 
 		String title = null;
-		switch (type) {
+		switch (type)
+		{
 			case PUSH_TYPE_NOTICE:
 				title = getString(R.string.dialog_notice2);
 				break;
@@ -73,15 +69,15 @@ public class ScreenOnPushDialogActivity extends Activity implements OnClickListe
 				title = getString(R.string.dialog_title_payment);
 				break;
 		}
-		
-		tvTitle = (TextView)findViewById(R.id.tv_screen_on_push_dialog_title);
+
+		tvTitle = (TextView) findViewById(R.id.tv_screen_on_push_dialog_title);
 		tvTitle.setText(title);
 	}
 
 	@Override
-	public void onClick(View v) { 
-		android.util.Log.e("ACCOUNT_COMPLETE_SCREEN_ON_DIALOG", "closed");
-		finish(); 
+	public void onClick(View v)
+	{
+		finish();
 	}
-	
+
 }

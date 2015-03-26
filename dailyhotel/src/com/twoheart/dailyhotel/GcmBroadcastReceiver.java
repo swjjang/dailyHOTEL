@@ -1,33 +1,38 @@
 package com.twoheart.dailyhotel;
 
-import com.twoheart.dailyhotel.util.Constants;
-
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.content.WakefulBroadcastReceiver;
-import android.util.Log;
+
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ExLog;
+
 /**
- * GCM ¸Ş½ÃÁö°¡ ¿Ã °æ¿ì ÀÌ¸¦ ¹Ş¾Æ ½ÇÁ¦·Î Ã³¸®ÇÏ´Â GcmItentService ·Î Àü´ŞÇÔ.
+ * GCM ë©”ì‹œì§€ê°€ ì˜¬ ê²½ìš° ì´ë¥¼ ë°›ì•„ ì‹¤ì œë¡œ ì²˜ë¦¬í•˜ëŠ” GcmItentService ë¡œ ì „ë‹¬í•¨.
+ * 
  * @author jangjunho
  *
  */
-public class GcmBroadcastReceiver extends WakefulBroadcastReceiver implements Constants{
-    @Override
-    public void onReceive(Context context, Intent intent) {
-    	SharedPreferences pref = context.getSharedPreferences(NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
-    	// gcm_id °¡ empty¶ó¸é ÇØ´ç ±â±â´Â ·Î±×¾Æ¿ô µÈ »óÅÂÀÌ¹Ç·Î, GCMÀ» ¹ŞÁö ¾Êµµ·Ï ÇÑ´Ù.
-    	if (pref.getString(KEY_PREFERENCE_GCM_ID, "").isEmpty()) {
-    		android.util.Log.e("Ignore Push,","true");
-    	} else {
-    		ComponentName comp = new ComponentName(context.getPackageName(),GcmIntentService.class.getName());
-            startWakefulService(context, (intent.setComponent(comp)));
+public class GcmBroadcastReceiver extends WakefulBroadcastReceiver implements Constants
+{
+	@Override
+	public void onReceive(Context context, Intent intent)
+	{
+		SharedPreferences pref = context.getSharedPreferences(NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
+		// gcm_id ê°€ emptyë¼ë©´ í•´ë‹¹ ê¸°ê¸°ëŠ” ë¡œê·¸ì•„ì›ƒ ëœ ìƒíƒœì´ë¯€ë¡œ, GCMì„ ë°›ì§€ ì•Šë„ë¡ í•œë‹¤.
+		if (pref.getString(KEY_PREFERENCE_GCM_ID, "").isEmpty())
+		{
+			ExLog.e("Ignore Push is true");
+		} else
+		{
+			ComponentName comp = new ComponentName(context.getPackageName(), GcmIntentService.class.getName());
+			startWakefulService(context, (intent.setComponent(comp)));
 
-            setResultCode(Activity.RESULT_OK);
+			setResultCode(Activity.RESULT_OK);
 
-    	}
-    }
+		}
+	}
 }
-

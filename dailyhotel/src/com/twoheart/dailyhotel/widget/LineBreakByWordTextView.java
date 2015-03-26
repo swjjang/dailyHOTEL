@@ -9,43 +9,51 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-public class LineBreakByWordTextView extends TextView {
+public class LineBreakByWordTextView extends TextView
+{
 	private int mAvailableWidth = 0;
 	private Paint mPaint;
 	private List<String> mCutStr = new ArrayList<String>();
 
-	public LineBreakByWordTextView(Context context) {
+	public LineBreakByWordTextView(Context context)
+	{
 		super(context);
 	}
 
-	public LineBreakByWordTextView(Context context, AttributeSet attrs) {
+	public LineBreakByWordTextView(Context context, AttributeSet attrs)
+	{
 		super(context, attrs);
 	}
 
-	private int setTextInfo(String text, int textWidth, int textHeight) {
-		// ±×¸± ÆäÀÎÆ® ¼¼ÆÃ
+	private int setTextInfo(String text, int textWidth, int textHeight)
+	{
+		// ê·¸ë¦´ í˜ì¸íŠ¸ ì„¸íŒ…
 		mPaint = getPaint();
 		mPaint.setColor(getTextColors().getDefaultColor());
 		mPaint.setTextSize(getTextSize());
 
 		int mTextHeight = textHeight;
 
-		if (textWidth > 0) {
-			// °ª ¼¼ÆÃ
+		if (textWidth > 0)
+		{
+			// ê°’ ì„¸íŒ…
 			mAvailableWidth = textWidth - this.getPaddingLeft() - this.getPaddingRight();
 
 			mCutStr.clear();
 			int end = 0;
-			do {
-				// ±ÛÀÚ°¡ width º¸´Ù ³Ñ¾î°¡´ÂÁö Ã¼Å©
+			do
+			{
+				// ê¸€ìê°€ width ë³´ë‹¤ ë„˜ì–´ê°€ëŠ”ì§€ ì²´í¬
 				end = mPaint.breakText(text, true, mAvailableWidth, null);
-				if (end > 0) {
-					// ÀÚ¸¥ ¹®ÀÚ¿­À» ¹®ÀÚ¿­ ¹è¿­¿¡ ´ã¾Æ ³õ´Â´Ù.
+				if (end > 0)
+				{
+					// ìë¥¸ ë¬¸ìì—´ì„ ë¬¸ìì—´ ë°°ì—´ì— ë‹´ì•„ ë†“ëŠ”ë‹¤.
 					mCutStr.add(text.substring(0, end));
-					// ³Ñ¾î°£ ±ÛÀÚ ¸ğµÎ Àß¶ó ´ÙÀ½¿¡ »ç¿ëÇÏµµ·Ï ¼¼ÆÃ
+					// ë„˜ì–´ê°„ ê¸€ì ëª¨ë‘ ì˜ë¼ ë‹¤ìŒì— ì‚¬ìš©í•˜ë„ë¡ ì„¸íŒ…
 					text = text.substring(end);
-					// ´ÙÀ½¶óÀÎ ³ôÀÌ ÁöÁ¤
-					if (textHeight == 0) mTextHeight += getLineHeight();
+					// ë‹¤ìŒë¼ì¸ ë†’ì´ ì§€ì •
+					if (textHeight == 0)
+						mTextHeight += getLineHeight();
 				}
 			} while (end > 0);
 		}
@@ -54,36 +62,43 @@ public class LineBreakByWordTextView extends TextView {
 	}
 
 	@Override
-	protected void onDraw(Canvas canvas) {
-		// ±ÛÀÚ ³ôÀÌ ÁöÁ¤
+	protected void onDraw(Canvas canvas)
+	{
+		// ê¸€ì ë†’ì´ ì§€ì •
 		float height = getPaddingTop() + getLineHeight();
-		for (String text : mCutStr) {
-			// Äµ¹ö½º¿¡ ¶óÀÎ ³ôÀÌ ¸¸Å« ±ÛÀÚ ±×¸®±â
+		for (String text : mCutStr)
+		{
+			// ìº”ë²„ìŠ¤ì— ë¼ì¸ ë†’ì´ ë§Œí° ê¸€ì ê·¸ë¦¬ê¸°
 			canvas.drawText(text, getPaddingLeft(), height, mPaint);
 			height += getLineHeight();
 		}
 	}
 
 	@Override
-	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
+	{
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 		int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
 		int parentHeight = MeasureSpec.getSize(heightMeasureSpec);
 		int height = setTextInfo(this.getText().toString(), parentWidth, parentHeight);
-		// ºÎ¸ğ ³ôÀÌ°¡ 0ÀÎ°æ¿ì ½ÇÁ¦ ±×·ÁÁÙ ³ôÀÌ¸¸Å­ »çÀÌÁî¸¦ ³î·ÁÁÜ...
-		if (parentHeight == 0) parentHeight = height;
+		// ë¶€ëª¨ ë†’ì´ê°€ 0ì¸ê²½ìš° ì‹¤ì œ ê·¸ë ¤ì¤„ ë†’ì´ë§Œí¼ ì‚¬ì´ì¦ˆë¥¼ ë†€ë ¤ì¤Œ...
+		if (parentHeight == 0)
+			parentHeight = height;
 		this.setMeasuredDimension(parentWidth, parentHeight);
 	}
 
 	@Override
-	protected void onTextChanged(final CharSequence text, final int start, final int before, final int after) {
-		// ±ÛÀÚ°¡ º¯°æµÇ¾úÀ»¶§ ´Ù½Ã ¼¼ÆÃ
+	protected void onTextChanged(final CharSequence text, final int start, final int before, final int after)
+	{
+		// ê¸€ìê°€ ë³€ê²½ë˜ì—ˆì„ë•Œ ë‹¤ì‹œ ì„¸íŒ…
 		setTextInfo(text.toString(), this.getWidth(), this.getHeight());
 	}
 
 	@Override
-	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-		// »çÀÌÁî°¡ º¯°æµÇ¾úÀ»¶§ ´Ù½Ã ¼¼ÆÃ(°¡·Î »çÀÌÁî¸¸...)
-		if (w != oldw) setTextInfo(this.getText().toString(), w, h);
+	protected void onSizeChanged(int w, int h, int oldw, int oldh)
+	{
+		// ì‚¬ì´ì¦ˆê°€ ë³€ê²½ë˜ì—ˆì„ë•Œ ë‹¤ì‹œ ì„¸íŒ…(ê°€ë¡œ ì‚¬ì´ì¦ˆë§Œ...)
+		if (w != oldw)
+			setTextInfo(this.getText().toString(), w, h);
 	}
 }

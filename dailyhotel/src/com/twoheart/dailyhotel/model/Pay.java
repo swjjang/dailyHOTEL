@@ -1,12 +1,10 @@
 package com.twoheart.dailyhotel.model;
 
-import java.util.List;
-import java.util.Map;
-
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Pay implements Parcelable {
+public class Pay implements Parcelable
+{
 
 	private HotelDetail mHotelDetail;
 	private Credit mCredit;
@@ -17,12 +15,18 @@ public class Pay implements Parcelable {
 	private String mCheckOut;
 	private String payType;
 
-	public Pay() {}
+	public Pay()
+	{
+	}
 
-	public Pay(Parcel in) { readFromParcel(in); }
+	public Pay(Parcel in)
+	{
+		readFromParcel(in);
+	}
 
 	@Override
-	public void writeToParcel(Parcel dest, int flags) {
+	public void writeToParcel(Parcel dest, int flags)
+	{
 		dest.writeValue(mHotelDetail);
 		dest.writeValue(mCredit);
 		dest.writeValue(mCustomer);
@@ -33,9 +37,9 @@ public class Pay implements Parcelable {
 		dest.writeString(getPayType());
 	}
 
-	private void readFromParcel(Parcel in) {
-		mHotelDetail = (HotelDetail) in.readValue(HotelDetail.class
-				.getClassLoader());
+	private void readFromParcel(Parcel in)
+	{
+		mHotelDetail = (HotelDetail) in.readValue(HotelDetail.class.getClassLoader());
 		mCredit = (Credit) in.readValue(Credit.class.getClassLoader());
 		mCustomer = (Customer) in.readValue(Customer.class.getClassLoader());
 		mPayPrice = in.readInt();
@@ -45,43 +49,105 @@ public class Pay implements Parcelable {
 		payType = in.readString();
 	}
 
-	public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
-		public Pay createFromParcel(Parcel in) {
+	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+	{
+		public Pay createFromParcel(Parcel in)
+		{
 			return new Pay(in);
 		}
 
 		@Override
-		public Pay[] newArray(int size) {
+		public Pay[] newArray(int size)
+		{
 			return new Pay[size];
 		}
 
 	};
 
-	public HotelDetail getHotelDetail() { return mHotelDetail; }
-	public void setHotelDetail(HotelDetail hotelDetail) { this.mHotelDetail = hotelDetail; }
+	public HotelDetail getHotelDetail()
+	{
+		return mHotelDetail;
+	}
 
-	public Credit getCredit() { return mCredit; }
-	public void setCredit(Credit credit) { this.mCredit = credit; }
+	public void setHotelDetail(HotelDetail hotelDetail)
+	{
+		this.mHotelDetail = hotelDetail;
+	}
 
-	public Customer getCustomer() { return mCustomer; }
-	public void setCustomer(Customer customer) { this.mCustomer = customer; }
+	public Credit getCredit()
+	{
+		return mCredit;
+	}
 
-	public int getPayPrice() { return mPayPrice; }
-	public void setPayPrice(int payPrice) { this.mPayPrice = payPrice; }
-	
-	public int getOriginalPrice() {	return mOriginalPrice; }
-	public void setOriginalPrice(int originalPrice) {	mOriginalPrice = originalPrice; }
+	public void setCredit(Credit credit)
+	{
+		this.mCredit = credit;
+	}
 
-	public boolean isSaleCredit() { return isSaleCredit; }
-	public void setSaleCredit(boolean isSaleCredit) { this.isSaleCredit = isSaleCredit; }
+	public Customer getCustomer()
+	{
+		return mCustomer;
+	}
 
-	public String getCheckOut() { return mCheckOut; }
-	public void setCheckOut(String checkOut) { mCheckOut = checkOut; }
+	public void setCustomer(Customer customer)
+	{
+		this.mCustomer = customer;
+	}
 
-	public String getPayType() { return payType; }
-	public void setPayType(String payType) { this.payType = payType; }
+	public int getPayPrice()
+	{
+		return mPayPrice;
+	}
+
+	public void setPayPrice(int payPrice)
+	{
+		this.mPayPrice = payPrice;
+	}
+
+	public int getOriginalPrice()
+	{
+		return mOriginalPrice;
+	}
+
+	public void setOriginalPrice(int originalPrice)
+	{
+		mOriginalPrice = originalPrice;
+	}
+
+	public boolean isSaleCredit()
+	{
+		return isSaleCredit;
+	}
+
+	public void setSaleCredit(boolean isSaleCredit)
+	{
+		this.isSaleCredit = isSaleCredit;
+	}
+
+	public String getCheckOut()
+	{
+		return mCheckOut;
+	}
+
+	public void setCheckOut(String checkOut)
+	{
+		mCheckOut = checkOut;
+	}
+
+	public String getPayType()
+	{
+		return payType;
+	}
+
+	public void setPayType(String payType)
+	{
+		this.payType = payType;
+	}
 
 	@Override
-	public int describeContents() { return 0; }
+	public int describeContents()
+	{
+		return 0;
+	}
 
 }

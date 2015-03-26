@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
  *
- * MainActivity (¸ŞÀÎÈ­¸é)
+ * MainActivity (ë©”ì¸í™”ë©´)
  * 
- * ¾îÇÃ¸®ÄÉÀÌ¼ÇÀÇ ÁÖ È­¸éÀ¸·Î¼­ ÃÖÃÊ ½ÇÇà ½Ã º¸¿©Áö´Â È­¸éÀÌ´Ù. ÀÌ È­¸éÀº ¾îÇÃ¸®ÄÉÀÌ¼Ç
- * ÃÖÃÊ ½ÇÇà ½Ã SplashActivity¸¦ ¸ÕÀú ¶ç¿ì¸ç, ´ëºÎºĞÀÇ ¾îÇÃ¸®ÄÉÀÌ¼Ç ÃÊ±âÈ­ ÀÛ¾÷À» 
- * SplashActivity¿¡°Ô ³Ñ±ä´Ù. ±×·¯³ª, ÀÏºÎ ÃÊ±âÈ­ ÀÛ¾÷µµ ¼öÇàÇÏ¸ç, ·Î±×ÀÎ ¼¼¼Ç°ü¸®¿Í
- * ³×ºñ°ÔÀÌ¼Ç ¸Ş´º¸¦ Ç¥½ÃÇÏ´Â ÀÏÀ» ÇÏ´Â È­¸éÀÌ´Ù.
+ * ì–´í”Œë¦¬ì¼€ì´ì…˜ì˜ ì£¼ í™”ë©´ìœ¼ë¡œì„œ ìµœì´ˆ ì‹¤í–‰ ì‹œ ë³´ì—¬ì§€ëŠ” í™”ë©´ì´ë‹¤. ì´ í™”ë©´ì€ ì–´í”Œë¦¬ì¼€ì´ì…˜
+ * ìµœì´ˆ ì‹¤í–‰ ì‹œ SplashActivityë¥¼ ë¨¼ì € ë„ìš°ë©°, ëŒ€ë¶€ë¶„ì˜ ì–´í”Œë¦¬ì¼€ì´ì…˜ ì´ˆê¸°í™” ì‘ì—…ì„ 
+ * SplashActivityì—ê²Œ ë„˜ê¸´ë‹¤. ê·¸ëŸ¬ë‚˜, ì¼ë¶€ ì´ˆê¸°í™” ì‘ì—…ë„ ìˆ˜í–‰í•˜ë©°, ë¡œê·¸ì¸ ì„¸ì…˜ê´€ë¦¬ì™€
+ * ë„¤ë¹„ê²Œì´ì…˜ ë©”ë‰´ë¥¼ í‘œì‹œí•˜ëŠ” ì¼ì„ í•˜ëŠ” í™”ë©´ì´ë‹¤.
  *
  * @since 2014-02-24
  * @version 1
@@ -22,7 +22,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 
 import org.json.JSONObject;
 
@@ -43,8 +42,8 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
+import android.text.TextUtils;
 import android.util.Base64;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -76,6 +75,7 @@ import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
@@ -86,10 +86,8 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseLis
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.CloseOnBackPressed;
 
-public class MainActivity extends BaseActivity implements DailyHotelStringResponseListener, DailyHotelJsonResponseListener, 
-	OnItemClickListener, Constants {
-
-	private static final String TAG = "MainActivity";
+public class MainActivity extends BaseActivity implements OnItemClickListener, Constants
+{
 
 	public static final int INDEX_HOTEL_LIST_FRAGMENT = 0;
 	public static final int INDEX_BOOKING_LIST_FRAGMENT = 1;
@@ -114,20 +112,20 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 	protected List<Fragment> mFragments;
 	private DrawerMenuListAdapter mDrawerMenuListAdapter;
 
-	// ¸¶Áö¸·À¸·Î ¸Ó¹°·¶´ø FragmentÀÇ index
-	public int indexLastFragment;	// Error Fragment¿¡¼­ ´Ù½Ã µ¹¾Æ¿Ã ¶§ ÇÊ¿ä.
+	// ë§ˆì§€ë§‰ìœ¼ë¡œ ë¨¸ë¬¼ë €ë˜ Fragmentì˜ index
+	public int indexLastFragment; // Error Fragmentì—ì„œ ë‹¤ì‹œ ëŒì•„ì˜¬ ë•Œ í•„ìš”.
 
 	// SystemBarTintManager
 	private SystemBarTintManager tintManager;
 	public SystemBarConfig config;
 
-	// DrawerMenu °´Ã¼µé
+	// DrawerMenu ê°ì²´ë“¤
 	public DrawerMenu menuHotelListFragment;
 	public DrawerMenu menuBookingListFragment;
 	public DrawerMenu menuCreditFragment;
 	public DrawerMenu menuSettingFragment;
 
-	// Back ¹öÆ°À» µÎ ¹ø ´­·¯ ÇÚµé·¯ ¸â¹ö º¯¼ö
+	// Back ë²„íŠ¼ì„ ë‘ ë²ˆ ëˆŒëŸ¬ í•¸ë“¤ëŸ¬ ë©¤ë²„ ë³€ìˆ˜
 	private CloseOnBackPressed backButtonHandler;
 
 	protected HashMap<String, String> regPushParams;
@@ -135,58 +133,62 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 	public Uri intentData;
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
-		Log.d("GCM??", "GCM??" + sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "NOPE"));
+		ExLog.d("GCM??" + sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "NOPE"));
 
-		// »ç¿ëÀÚ°¡ ¼±ÅÃÇÑ ¾ğ¾î, but ¸¸¾à »ç¿ëÀÚ°¡ ÇÑ±¹ÀÎÀÎµ¥ ÀÏº»¾î¸¦ ¼±ÅÃÇÏ¸é jp°¡ µÊ.
-		// ¿µ¾îÀÎ °æ¿ì - English, ÇÑ±ÛÀÎ °æ¿ì - ÇÑ±¹¾î
-		
-//		Locale.setDefault(new Locale("ÇÑ±¹¾î"));
-		Util.setLocale(this, "ÇÑ±¹¾î");
-		
-		String locale = "ÇÑ±¹¾î"; // Locale.getDefault().getDisplayLanguage();
-		Log.e("locale", "locale? " + locale);
-		
+		// ì‚¬ìš©ìê°€ ì„ íƒí•œ ì–¸ì–´, but ë§Œì•½ ì‚¬ìš©ìê°€ í•œêµ­ì¸ì¸ë° ì¼ë³¸ì–´ë¥¼ ì„ íƒí•˜ë©´ jpê°€ ë¨.
+		// ì˜ì–´ì¸ ê²½ìš° - English, í•œê¸€ì¸ ê²½ìš° - í•œêµ­ì–´
+
+		//		Locale.setDefault(new Locale("í•œêµ­ì–´"));
+		Util.setLocale(this, "í•œêµ­ì–´");
+
+		String locale = "í•œêµ­ì–´"; // Locale.getDefault().getDisplayLanguage();
+		ExLog.e("locale? " + locale);
+
 		Editor editor = sharedPreference.edit();
 		editor.putString(KEY_PREFERENCE_LOCALE, locale);
 		editor.apply();
-		
+
 		// Intent Scheme Parameter for KakaoLink
 		intentData = getIntent().getData();
-		if (intentData != null) {
+		if (intentData != null)
+		{
 			/**
 			 * TODO : IF(intentData!=null) url from shared link
 			 */
-			
-			android.util.Log.e(TAG + " / onCreate", "intentData = " + intentData.toString());
+
+			ExLog.e("intentData : " + intentData.toString());
 		}
 
-		// ÄíÅ° µ¿±âÈ­¸¦ ÃÊ±âÈ­ÇÑ´Ù. ·Î±×ÀÎ, ·Î±×¾Æ¿ô ¼¼¼Ç ÄíÅ°´Â MainActivityÀÇ »ı¸íÁÖ±â¿Í µ¿±âÈ­ÇÑ´Ù.
+		// ì¿ í‚¤ ë™ê¸°í™”ë¥¼ ì´ˆê¸°í™”í•œë‹¤. ë¡œê·¸ì¸, ë¡œê·¸ì•„ì›ƒ ì„¸ì…˜ ì¿ í‚¤ëŠ” MainActivityì˜ ìƒëª…ì£¼ê¸°ì™€ ë™ê¸°í™”í•œë‹¤.
 		CookieSyncManager.createInstance(getApplicationContext());
 
-		// ÀÌÀüÀÇ ºñÁ¤»ó Á¾·á¿¡ ÀÇÇÑ ¸¸·áµÈ ÄíÅ°µéÀÌ ÀÖÀ» ¼ö ÀÖÀ¸¹Ç·Î, SplashActivity¿¡¼­ ÀÚµ¿ ·Î±×ÀÎÀ»
-		// Ã³¸®ÇÏ±â ÀÌÀü¿¡ ¹Ì¸® ÀÌ¹Ì ÀúÀåµÇ¾î ÀÖ´Â ÄíÅ°µéÀ» Á¤¸®ÇÑ´Ù.
+		// ì´ì „ì˜ ë¹„ì •ìƒ ì¢…ë£Œì— ì˜í•œ ë§Œë£Œëœ ì¿ í‚¤ë“¤ì´ ìˆì„ ìˆ˜ ìˆìœ¼ë¯€ë¡œ, SplashActivityì—ì„œ ìë™ ë¡œê·¸ì¸ì„
+		// ì²˜ë¦¬í•˜ê¸° ì´ì „ì— ë¯¸ë¦¬ ì´ë¯¸ ì €ì¥ë˜ì–´ ìˆëŠ” ì¿ í‚¤ë“¤ì„ ì •ë¦¬í•œë‹¤.
 		if (CookieManager.getInstance().getCookie(URL_DAILYHOTEL_SERVER) != null)
 			VolleyHttpClient.destroyCookie();
 
-		// ½ºÇÃ·¡½Ã È­¸éÀ» ¶ç¿î´Ù
+		// ìŠ¤í”Œë˜ì‹œ í™”ë©´ì„ ë„ìš´ë‹¤
 
 		startActivityForResult(new Intent(this, SplashActivity.class), CODE_REQUEST_ACTIVITY_SPLASH);
 
-		// Anroid 4.4 ÀÌ»ó¿¡¼­ Android StatusBar¿Í Android NavigationBar¸¦ TranslucentÇÏ°Ô ÇØÁÖ´Â API¸¦ »ç¿ëÇÏµµ·Ï ÇÑ´Ù.
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+		// Anroid 4.4 ì´ìƒì—ì„œ Android StatusBarì™€ Android NavigationBarë¥¼ Translucentí•˜ê²Œ í•´ì£¼ëŠ” APIë¥¼ ì‚¬ìš©í•˜ë„ë¡ í•œë‹¤.
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+		{
 			setTheme(R.style.AppTheme_Translucent);
 
-			// SystemBarTintManager´Â 3rd Party ¶óÀÌºê·¯¸®·Î StatusBar¿Í NavigationBar¿Í °ü·ÃµÈ API¸¦ ½±°Ô º¯°æÇÒ ¼ö ÀÖµµ·Ï ÇØÁØ´Ù.
+			// SystemBarTintManagerëŠ” 3rd Party ë¼ì´ë¸ŒëŸ¬ë¦¬ë¡œ StatusBarì™€ NavigationBarì™€ ê´€ë ¨ëœ APIë¥¼ ì‰½ê²Œ ë³€ê²½í•  ìˆ˜ ìˆë„ë¡ í•´ì¤€ë‹¤.
 			tintManager = new SystemBarTintManager(this);
 			config = tintManager.getConfig();
 
 			tintManager.setStatusBarTintEnabled(true);
-			int actionBarColor = getResources().getColor(android.R.color.black);//white¿¡¼­ blackÀ¸·Î º¯°æ 
+			int actionBarColor = getResources().getColor(android.R.color.black);//whiteì—ì„œ blackìœ¼ë¡œ ë³€ê²½ 
 			tintManager.setStatusBarTintColor(actionBarColor);
 
-		} else {
+		} else
+		{
 			setTheme(R.style.AppTheme);
 		}
 
@@ -195,267 +197,179 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 
 		mContentFrame = (FrameLayout) findViewById(R.id.content_frame);
 
-		// Android 4.4 ÀÌ»ó¿¡¼­ Android StatusBar¿Í Android NavigationBar¸¦ TranslucentÇÏ°Ô 
-		// ÇÒ °æ¿ì ¿©¹é °è»êÀÌ ÇÊ¿äÇÑ ÄÉÀÌ½º°¡ ¹ß»ıÇÏ¹Ç·Î ÇØ´ç ÄÉÀÌ½º¿¡ ´ëÇØ ¿¹¿Ü Ã³¸®ÇÑ´Ù.
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-			mContentFrame.setPadding(mContentFrame.getPaddingLeft(),
-					config.getStatusBarHeight() + config.getActionBarHeight(),
-					mContentFrame.getPaddingRight(),
-					mContentFrame.getPaddingBottom());
+		// Android 4.4 ì´ìƒì—ì„œ Android StatusBarì™€ Android NavigationBarë¥¼ Translucentí•˜ê²Œ 
+		// í•  ê²½ìš° ì—¬ë°± ê³„ì‚°ì´ í•„ìš”í•œ ì¼€ì´ìŠ¤ê°€ ë°œìƒí•˜ë¯€ë¡œ í•´ë‹¹ ì¼€ì´ìŠ¤ì— ëŒ€í•´ ì˜ˆì™¸ ì²˜ë¦¬í•œë‹¤.
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+		{
+			mContentFrame.setPadding(mContentFrame.getPaddingLeft(), config.getStatusBarHeight() + config.getActionBarHeight(), mContentFrame.getPaddingRight(), mContentFrame.getPaddingBottom());
 
-			drawerList
-			.setPadding(
-					drawerList.getPaddingLeft(),
-					config.getStatusBarHeight()
-					+ config.getActionBarHeight(),
-					drawerList.getPaddingRight(),
-					drawerList.getPaddingBottom());
+			drawerList.setPadding(drawerList.getPaddingLeft(), config.getStatusBarHeight() + config.getActionBarHeight(), drawerList.getPaddingRight(), drawerList.getPaddingBottom());
 
 		}
 
 		fragmentManager = getSupportFragmentManager();
 		backButtonHandler = new CloseOnBackPressed(this);
 
-		// Facebook SDK¸¦ °ü¸®ÇÏ±â À§ÇÑ ÆĞÅ°Áö Hash °ª Ç¥½Ã
-		if (DEBUG)  printPackageHashKey();
-		
+		// Facebook SDKë¥¼ ê´€ë¦¬í•˜ê¸° ìœ„í•œ íŒ¨í‚¤ì§€ Hash ê°’ í‘œì‹œ
+		if (DEBUG)
+			printPackageHashKey();
+
 	}
 
 	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	public void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
 		super.onActivityResult(requestCode, resultCode, data);
 
 		Editor editor = sharedPreference.edit();
-		
-		if (requestCode == CODE_REQUEST_ACTIVITY_SPLASH) {
-			switch (resultCode) {
-			// ½ºÇÃ·¡½Ã È­¸éÀÌ Á¤»óÀûÀ¸·Î Á¾·áµÇ¾úÀ» °æ¿ì
-			// ver_dualÀÇ new_event°ªÀÌ 0ÀÎ °æ¿ì
-			case RESULT_OK :		 
-				editor.putBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false);
-				editor.apply();
-				break;
-				
-			// ½ºÇÃ·¡½Ã°¡ Á¤»óÀûÀ¸·Î Á¾·áµÇ¾ú´Âµ¥ »õ·Î¿î ÀÌº¥Æ® ¾Ë¸²ÀÌ ÀÖ´Â °æ¿ì
-			// ver_dualÀÇ new_event°ªÀÌ 1ÀÎ °æ¿ì 
-			case CODE_RESULT_ACTIVITY_SPLASH_NEW_EVENT :		
-				editor.putBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, true);
-				editor.apply();
-				break;
-			default :		// ½ºÇÃ·¡½Ã°¡ ºñÁ¤»óÀûÀ¸·Î Á¾·áµÇ¾úÀ» °æ¿ì
-				super.finish();		// ¾îÇÃ¸®ÄÉÀÌ¼Ç(¸ŞÀÎ È­¸é)À» Á¾·áÇØ¹ö¸°´Ù
-				return;				// ¸Ş¼­µå¸¦ ºüÁ®³ª°£´Ù - È£ÅÚ Æò°¡¸¦ ¼öÇàÇÏÁö ¾ÊÀ½.
-			}
-			
-			// ¾ÛÀ» Ã³À½ ¼³Ä¡ÇÑ °æ¿ì °¡ÀÌµå¸¦ ¶ç¿ò. 
-			boolean showGuide = sharedPreference.getBoolean(KEY_PREFERENCE_SHOW_GUIDE, true);
-			if (showGuide) startActivityForResult(new Intent(this, IntroActivity.class), CODE_REQUEST_ACTIVITY_INTRO);
-			else {
-				// Intent°¡ Push·Î ºÎÅÍ ¿Â°æ¿ì
-				int pushType = getIntent().getIntExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, -1);
-				switch (pushType) {
-				case PUSH_TYPE_NOTICE:
-					selectMenuDrawer(menuHotelListFragment);
-					break;
-				case PUSH_TYPE_ACCOUNT_COMPLETE:
-					selectMenuDrawer(menuBookingListFragment);
-					break;
-				default:
-					selectMenuDrawer(menuHotelListFragment);
-				}
-				
-				mQueue.add(new DailyHotelStringRequest(Method.GET,
-						new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-								URL_WEBAPI_USER_ALIVE).toString(), null, this, this));
-			}
 
-			// È£ÅÚÆò°¡¸¦ À§ÇÑ ÇöÀç ·Î±×ÀÎ ¿©ºÎ Ã¼Å©
-			
-		} else if (requestCode == CODE_REQUEST_ACTIVITY_INTRO) {
-			selectMenuDrawer(menuHotelListFragment);
-			
-//			mQueue.add(new DailyHotelStringRequest(Method.GET,
-//					new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-//							URL_WEBAPI_USER_ALIVE).toString(), null, this, this));
-		}
-
-	}
-	
-	@Override
-	public void onResponse(String url, String response) {
-		if (url.contains(URL_WEBAPI_USER_ALIVE)) {
-			String result = response.trim();
-			Log.d(TAG, "URL_WEBAPI_USER_ALIVE");
-
-			if (result.equals("alive")) { // session alive
-				// È£ÅÚ Æò°¡¸¦ À§ÇÑ »ç¿ëÀÚ Á¤º¸ Á¶È¸
-				mQueue.add(new DailyHotelJsonRequest(Method.GET,
-						new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-								URL_WEBAPI_USER_INFO).toString(), null, this,
-								this));
-
-			}
-		}
-	}
-
-	@Override
-	public void onResponse(String url, JSONObject response) {
-		if (url.contains(URL_WEBAPI_USER_INFO)) {
-			try {
-				String loginuser_idx = response.getString("idx");
-
-				String gcmId=getGcmId();
-				// GCM µî·Ï ½Ãµµ
-				android.util.Log.e("NOTE","NOTE : " + gcmId);
-				if (gcmId.isEmpty()) {
-					if (isGoogleServiceAvailable()) {
-						regGcmId(Integer.parseInt(loginuser_idx));
-					}
-				}
-
-				// ±¸¸ÅÀÚ Á¤º¸ È®ÀÎ 
-				String buyerIdx = sharedPreference.getString(KEY_PREFERENCE_USER_IDX, null);
-				if (buyerIdx != null) {
-					if (loginuser_idx.equals(buyerIdx)) {
-						String purchasedHotelName = sharedPreference.getString(
-								KEY_PREFERENCE_HOTEL_NAME,
-								VALUE_PREFERENCE_HOTEL_NAME_DEFAULT);
-						int purchasedHotelSaleIdx = sharedPreference.getInt(
-								KEY_PREFERENCE_HOTEL_SALE_IDX,
-								VALUE_PREFERENCE_HOTEL_SALE_IDX_DEFAULT);
-						String purchasedHotelCheckOut = sharedPreference.getString(
-								KEY_PREFERENCE_HOTEL_CHECKOUT,
-								VALUE_PREFERENCE_HOTEL_CHECKOUT_DEFAULT);
-
-						Date today = new Date();
-						Date checkOut = SaleTime.stringToDate(Util
-								.dailyHotelTimeConvert(purchasedHotelCheckOut));
-
-						//È£ÅÚ ¸¸Á·µµ Á¶»ç 
-						if (!purchasedHotelName.equals(VALUE_PREFERENCE_HOTEL_NAME_DEFAULT)) {
-							if (today.compareTo(checkOut) >= 0) {
-								Calendar calendar = Calendar.getInstance();
-								calendar.setTime(checkOut);
-								calendar.add(Calendar.DATE, DAYS_DISPLAY_RATING_HOTEL_DIALOG);
-								Date deadLineDay = calendar.getTime();
-
-								if (today.compareTo(deadLineDay) < 0) {
-									Hotel purchasedHotel = new Hotel();
-									purchasedHotel.setName(purchasedHotelName);
-
-									HotelDetail purchasedHotelInformation = new HotelDetail();
-									purchasedHotelInformation.setHotel(purchasedHotel);
-									purchasedHotelInformation.setSaleIdx(purchasedHotelSaleIdx);
-
-									RatingHotelFragment dialog = RatingHotelFragment
-											.newInstance(purchasedHotelInformation);
-									dialog.show(fragmentManager, TAG_FRAGMENT_RATING_HOTEL);
-								} else {
-									RatingHotelFragment dialog = RatingHotelFragment
-											.newInstance(null);
-									dialog.destroyRatingHotelFlag();
-								}
-							}
-						}
-					}
-				}
-
-			} catch (Exception e) {
-				onError(e);
-			}
-			unLockUI();
-		} else if (url.contains(URL_GCM_REGISTER)) {
-			// ·Î±×ÀÎ ¼º°ø - À¯Àú Á¤º¸(ÀÎµ¦½º) °¡Á®¿À±â - À¯ÀúÀÇ GCMÅ° µî·Ï ¿Ï·á ÇÑ °æ¿ì ÇÁ¸®ÆÛ·±½º¿¡ Å° µî·ÏÈÄ Á¾·á
-			try {
-				if (response.getString("result").equals("true")) {
-					Editor editor = sharedPreference.edit();
-					editor.putString(KEY_PREFERENCE_GCM_ID, regPushParams.get("notification_id").toString());
+		if (requestCode == CODE_REQUEST_ACTIVITY_SPLASH)
+		{
+			switch (resultCode)
+			{
+			// ìŠ¤í”Œë˜ì‹œ í™”ë©´ì´ ì •ìƒì ìœ¼ë¡œ ì¢…ë£Œë˜ì—ˆì„ ê²½ìš°
+			// ver_dualì˜ new_eventê°’ì´ 0ì¸ ê²½ìš°
+				case RESULT_OK:
+					editor.putBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false);
 					editor.apply();
+					break;
+
+				// ìŠ¤í”Œë˜ì‹œê°€ ì •ìƒì ìœ¼ë¡œ ì¢…ë£Œë˜ì—ˆëŠ”ë° ìƒˆë¡œìš´ ì´ë²¤íŠ¸ ì•Œë¦¼ì´ ìˆëŠ” ê²½ìš°
+				// ver_dualì˜ new_eventê°’ì´ 1ì¸ ê²½ìš° 
+				case CODE_RESULT_ACTIVITY_SPLASH_NEW_EVENT:
+					editor.putBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, true);
+					editor.apply();
+					break;
+				default: // ìŠ¤í”Œë˜ì‹œê°€ ë¹„ì •ìƒì ìœ¼ë¡œ ì¢…ë£Œë˜ì—ˆì„ ê²½ìš°
+					super.finish(); // ì–´í”Œë¦¬ì¼€ì´ì…˜(ë©”ì¸ í™”ë©´)ì„ ì¢…ë£Œí•´ë²„ë¦°ë‹¤
+					return; // ë©”ì„œë“œë¥¼ ë¹ ì ¸ë‚˜ê°„ë‹¤ - í˜¸í…” í‰ê°€ë¥¼ ìˆ˜í–‰í•˜ì§€ ì•ŠìŒ.
+			}
+
+			// ì•±ì„ ì²˜ìŒ ì„¤ì¹˜í•œ ê²½ìš° ê°€ì´ë“œë¥¼ ë„ì›€. 
+			boolean showGuide = sharedPreference.getBoolean(KEY_PREFERENCE_SHOW_GUIDE, true);
+			if (showGuide)
+				startActivityForResult(new Intent(this, IntroActivity.class), CODE_REQUEST_ACTIVITY_INTRO);
+			else
+			{
+				// Intentê°€ Pushë¡œ ë¶€í„° ì˜¨ê²½ìš°
+				int pushType = getIntent().getIntExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, -1);
+				switch (pushType)
+				{
+					case PUSH_TYPE_NOTICE:
+						selectMenuDrawer(menuHotelListFragment);
+						break;
+					case PUSH_TYPE_ACCOUNT_COMPLETE:
+						selectMenuDrawer(menuBookingListFragment);
+						break;
+					default:
+						selectMenuDrawer(menuHotelListFragment);
 				}
 
-			} catch (Exception e) {
-				onError(e);
+				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, this));
 			}
+
+			// í˜¸í…”í‰ê°€ë¥¼ ìœ„í•œ í˜„ì¬ ë¡œê·¸ì¸ ì—¬ë¶€ ì²´í¬
+
+		} else if (requestCode == CODE_REQUEST_ACTIVITY_INTRO)
+		{
+			selectMenuDrawer(menuHotelListFragment);
+
+			//			mQueue.add(new DailyHotelStringRequest(Method.GET,
+			//					new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+			//							URL_WEBAPI_USER_ALIVE).toString(), null, this, this));
 		}
+
 	}
 
-	private String getGcmId() {
+	private String getGcmId()
+	{
 		return sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "");
 	}
 
-	private Boolean isGoogleServiceAvailable() {
+	private Boolean isGoogleServiceAvailable()
+	{
 		int resCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
 
-		if (resCode != ConnectionResult.SUCCESS) {
-			if (GooglePlayServicesUtil.isUserRecoverableError(resCode)) {
+		if (resCode != ConnectionResult.SUCCESS)
+		{
+			if (GooglePlayServicesUtil.isUserRecoverableError(resCode))
+			{
 				GooglePlayServicesUtil.getErrorDialog(resCode, this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
-			} else {
+			} else
+			{
 				showToast(getString(R.string.toast_msg_is_not_available_google_service), Toast.LENGTH_LONG, false);
 				finish();
 			}
 			return false;
-		} else {
+		} else
+		{
 			return true;
 		}
 	}
 
-	private void regGcmId(final int idx) {
-		new AsyncTask<Void, Void, String>() {
+	private void regGcmId(final int idx)
+	{
+		new AsyncTask<Void, Void, String>()
+		{
 
 			@Override
-			protected String doInBackground(Void... params) {
+			protected String doInBackground(Void... params)
+			{
 				GoogleCloudMessaging instance = GoogleCloudMessaging.getInstance(MainActivity.this);
 				String regId = "";
-				try {
+				try
+				{
 					regId = instance.register(GCM_PROJECT_NUMBER);
-					Log.d("regId", "regId : " + regId);
-				} catch (IOException e) {e.printStackTrace();}
+					ExLog.d("regId : " + regId);
+				} catch (IOException e)
+				{
+					ExLog.e(e.toString());
+				}
 
 				return regId;
 			}
 
 			@Override
-			protected void onPostExecute(String regId) {
-				
-				// gcm id°¡ ¾øÀ» °æ¿ì ½ºÅµ.
-				if (regId == null || regId.isEmpty()) return;
-				
-				// ÀÌ °ªÀ» ¼­¹ö¿¡ µî·ÏÇÏ±â.
+			protected void onPostExecute(String regId)
+			{
+
+				// gcm idê°€ ì—†ì„ ê²½ìš° ìŠ¤í‚µ.
+				if (regId == null || regId.isEmpty())
+					return;
+
+				// ì´ ê°’ì„ ì„œë²„ì— ë“±ë¡í•˜ê¸°.
 				regPushParams = new HashMap<String, String>();
 
-				regPushParams.put("user_idx", idx+"");
+				regPushParams.put("user_idx", idx + "");
 				regPushParams.put("notification_id", regId);
 				regPushParams.put("device_type", GCM_DEVICE_TYPE_ANDROID);
 
-				mQueue.add(new DailyHotelJsonRequest(Method.POST,
-						new StringBuilder(URL_DAILYHOTEL_SERVER)
-				.append(URL_GCM_REGISTER)
-				.toString(), regPushParams, MainActivity.this,
-				MainActivity.this));
+				mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_GCM_REGISTER).toString(), regPushParams, mGcmRegisterJsonResponseListener, MainActivity.this));
 			}
-		}.execute();		
+		}.execute();
 	}
 
 	/**
-	 * ³×ºñ°ÔÀÌ¼Ç µå·Î¿ö¿¡¼­ ¸Ş´º¸¦ ¼±ÅÃÇÏ´Â È¿°ú¸¦ ³»ÁÖ´Â ¸Ş¼­µå
-	 * @param selectedMenu DrawerMenu °´Ã¼¸¦ ¹Ş´Â´Ù.
+	 * ë„¤ë¹„ê²Œì´ì…˜ ë“œë¡œì›Œì—ì„œ ë©”ë‰´ë¥¼ ì„ íƒí•˜ëŠ” íš¨ê³¼ë¥¼ ë‚´ì£¼ëŠ” ë©”ì„œë“œ
+	 * 
+	 * @param selectedMenu
+	 *            DrawerMenu ê°ì²´ë¥¼ ë°›ëŠ”ë‹¤.
 	 */
-	public void selectMenuDrawer(DrawerMenu selectedMenu) {
-		drawerList.performItemClick(
-				drawerList.getAdapter().getView(
-						mMenuImages.indexOf(selectedMenu), null, null),
-						mMenuImages.indexOf(selectedMenu), mDrawerMenuListAdapter
-						.getItemId(mMenuImages.indexOf(selectedMenu)));
+	public void selectMenuDrawer(DrawerMenu selectedMenu)
+	{
+		drawerList.performItemClick(drawerList.getAdapter().getView(mMenuImages.indexOf(selectedMenu), null, null), mMenuImages.indexOf(selectedMenu), mDrawerMenuListAdapter.getItemId(mMenuImages.indexOf(selectedMenu)));
 	}
 
 	/**
-	 * µå·Î¾î ¸Ş´º Å¬¸¯½Ã »õ·Î°íÄ§À» ÇÏ´Â ±â´ÉÀ» À§ÇØ¼­ µ¿ÀûÀ¸·Î ÇÁ·¡±×¸ÕÆ®¸¦ »ı¼ºÇÏ¹Ç·Î
-	 * ¹Ì¸® ÃÊ±âÈ­ ÇÏ´Â ÇØ´ç ¸Ş¼­µå´Â ÇÊ¿ä°¡ ¾øÀ½.
+	 * ë“œë¡œì–´ ë©”ë‰´ í´ë¦­ì‹œ ìƒˆë¡œê³ ì¹¨ì„ í•˜ëŠ” ê¸°ëŠ¥ì„ ìœ„í•´ì„œ ë™ì ìœ¼ë¡œ í”„ë˜ê·¸ë¨¼íŠ¸ë¥¼ ìƒì„±í•˜ë¯€ë¡œ ë¯¸ë¦¬ ì´ˆê¸°í™” í•˜ëŠ” í•´ë‹¹ ë©”ì„œë“œëŠ” í•„ìš”ê°€ ì—†ìŒ.
 	 */
 	@Deprecated
-	private void initializeFragments() {
-		if (mFragments != null) mFragments.clear();
-		else mFragments = new LinkedList<Fragment>();
+	private void initializeFragments()
+	{
+		if (mFragments != null)
+			mFragments.clear();
+		else
+			mFragments = new LinkedList<Fragment>();
 
 		mFragments.add(new HotelListFragment());
 		mFragments.add(new BookingListFragment());
@@ -465,84 +379,91 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 	}
 
 	/**
-	 * ³×ºñ°ÔÀÌ¼Ç µå·Î¿ö ¸Ş´º¿¡¼­ ¼±ÅÃÇÒ ¼ö ÀÖ´Â Fragment¸¦ ¹İÈ¯ÇÏ´Â ¸Ş¼­µåÀÌ´Ù.
-	 * @param index Fragment ¸®½ºÆ®¿¡ ÇØ´çÇÏ´Â index¸¦ ¹Ş´Â´Ù.
-	 * @return ¿äÃ»ÇÑ index¿¡ ÇØ´çÇÏ´Â Fragment¸¦ ¹İÈ¯ÇÑ´Ù.
-	 * => ±â´É º¯°æ, ´©¸¦¶§¸¶´Ù ¸®ÇÁ·¹½Ã
+	 * ë„¤ë¹„ê²Œì´ì…˜ ë“œë¡œì›Œ ë©”ë‰´ì—ì„œ ì„ íƒí•  ìˆ˜ ìˆëŠ” Fragmentë¥¼ ë°˜í™˜í•˜ëŠ” ë©”ì„œë“œì´ë‹¤.
+	 * 
+	 * @param index
+	 *            Fragment ë¦¬ìŠ¤íŠ¸ì— í•´ë‹¹í•˜ëŠ” indexë¥¼ ë°›ëŠ”ë‹¤.
+	 * @return ìš”ì²­í•œ indexì— í•´ë‹¹í•˜ëŠ” Fragmentë¥¼ ë°˜í™˜í•œë‹¤. => ê¸°ëŠ¥ ë³€ê²½, ëˆ„ë¥¼ë•Œë§ˆë‹¤ ë¦¬í”„ë ˆì‹œ
 	 */
-	public Fragment getFragment(int index) {
-		switch (index) {
-		case 0: return new HotelListFragment();
-		case 1: return new BookingListFragment();
-		case 2: return new CreditFragment();
-		case 3: return new SettingFragment();
+	public Fragment getFragment(int index)
+	{
+		switch (index)
+		{
+			case 0:
+				return new HotelListFragment();
+			case 1:
+				return new BookingListFragment();
+			case 2:
+				return new CreditFragment();
+			case 3:
+				return new SettingFragment();
 		}
 		return null;
 
 	}
 
 	/**
-	 * Fragment ÄÁÅ×ÀÌ³Ê¿¡¼­ ÇØ´ç Fragment·Î º¯°æÇÏ¿© Ç¥½ÃÇÑ´Ù.
-	 * @param fragment Fragment ¸®½ºÆ®¿¡ º¸°üµÈ FragementµéÀ» ¹Ş´Â °ÍÀÌ ÁÁ´Ù.
+	 * Fragment ì»¨í…Œì´ë„ˆì—ì„œ í•´ë‹¹ Fragmentë¡œ ë³€ê²½í•˜ì—¬ í‘œì‹œí•œë‹¤.
+	 * 
+	 * @param fragment
+	 *            Fragment ë¦¬ìŠ¤íŠ¸ì— ë³´ê´€ëœ Fragementë“¤ì„ ë°›ëŠ” ê²ƒì´ ì¢‹ë‹¤.
 	 */
-	public void replaceFragment(Fragment fragment) {
-		try {
+	public void replaceFragment(Fragment fragment)
+	{
+		try
+		{
 			clearFragmentBackStack();
-			
-			fragmentManager.beginTransaction()
-			.replace(mContentFrame.getId(), fragment)
-			.commitAllowingStateLoss();
-			
-			// Android 4.4 ÀÌ»óÀÏ °æ¿ì Android StatusBar¿Í Android NavigationBar¸¦ ¸ğµÎ TranslucentÇÏ´Âµ¥
-			// ¿ì¸® ¾îÇÃ¸®ÄÉÀÌ¼Ç¿¡¼­´Â HotelListFragment¿¡¼­¸¸ Android NavigationBar¸¦ TranslucentÇÏ°Ô ÇÏ¿´´Ù.
-			// ±×·¡¼­ ´Ù¸¥ Fragmentµé¿¡¼­´Â ³×ºñ°ÔÀÌ¼Ç µå·Î¿ö°¡ Â÷ÁöÇÏ´Â °ø°£¿¡ ÀÖ¾î¼­ Â÷ÀÌ°¡ ¹ß»ıÇÏ°Ô µÇ´Âµ¥ ÇØ´ç ÀÌ½´¸¦
-			// ÇØ°áÇÏ±â À§ÇÑ ºÎºĞÀÌ ÀÌ ºÎºĞÀÌ´Ù.
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-				if (fragment instanceof HotelListFragment) {
-					mContentFrame.setPadding(mContentFrame.getPaddingLeft(),
-							mContentFrame.getPaddingTop(),
-							mContentFrame.getPaddingRight(), 0);
+
+			fragmentManager.beginTransaction().replace(mContentFrame.getId(), fragment).commitAllowingStateLoss();
+
+			// Android 4.4 ì´ìƒì¼ ê²½ìš° Android StatusBarì™€ Android NavigationBarë¥¼ ëª¨ë‘ Translucentí•˜ëŠ”ë°
+			// ìš°ë¦¬ ì–´í”Œë¦¬ì¼€ì´ì…˜ì—ì„œëŠ” HotelListFragmentì—ì„œë§Œ Android NavigationBarë¥¼ Translucentí•˜ê²Œ í•˜ì˜€ë‹¤.
+			// ê·¸ë˜ì„œ ë‹¤ë¥¸ Fragmentë“¤ì—ì„œëŠ” ë„¤ë¹„ê²Œì´ì…˜ ë“œë¡œì›Œê°€ ì°¨ì§€í•˜ëŠ” ê³µê°„ì— ìˆì–´ì„œ ì°¨ì´ê°€ ë°œìƒí•˜ê²Œ ë˜ëŠ”ë° í•´ë‹¹ ì´ìŠˆë¥¼
+			// í•´ê²°í•˜ê¸° ìœ„í•œ ë¶€ë¶„ì´ ì´ ë¶€ë¶„ì´ë‹¤.
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+			{
+				if (fragment instanceof HotelListFragment)
+				{
+					mContentFrame.setPadding(mContentFrame.getPaddingLeft(), mContentFrame.getPaddingTop(), mContentFrame.getPaddingRight(), 0);
 
 					Window w = getWindow();
-					w.setFlags(
-							WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION,
-							WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+					w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 
-				} else {
-					WindowManager.LayoutParams attrs = getWindow()
-							.getAttributes();
+				} else
+				{
+					WindowManager.LayoutParams attrs = getWindow().getAttributes();
 					attrs.flags &= (~WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 					getWindow().setAttributes(attrs);
 
 				}
 			}
-		} catch (IllegalStateException e) {
+		} catch (IllegalStateException e)
+		{
 			onError();
-			
+
 		}
 
 	}
 
 	/**
-	 * Fragment ÄÁÅ×ÀÌ³Ê¿¡¼­ ÇØ´ç Fragement¸¦ ½×¾Æ¿Ã¸°´Ù.
-	 * @param fragment Fragment ¸®½ºÆ®¿¡ º¸°üµÈ FragmentµéÀ» ¹Ş´Â °ÍÀÌ ÁÁ´Ù.
+	 * Fragment ì»¨í…Œì´ë„ˆì—ì„œ í•´ë‹¹ Fragementë¥¼ ìŒ“ì•„ì˜¬ë¦°ë‹¤.
+	 * 
+	 * @param fragment
+	 *            Fragment ë¦¬ìŠ¤íŠ¸ì— ë³´ê´€ëœ Fragmentë“¤ì„ ë°›ëŠ” ê²ƒì´ ì¢‹ë‹¤.
 	 */
-	public void addFragment(Fragment fragment) {
-		fragmentManager
-		.beginTransaction()
-		.setCustomAnimations(R.anim.slide_in_right,
-				R.anim.slide_out_right, R.anim.slide_in_right,
-				R.anim.slide_out_right)
-				.add(R.id.content_frame, fragment).addToBackStack(null)
-				.commit();
+	public void addFragment(Fragment fragment)
+	{
+		fragmentManager.beginTransaction().setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right, R.anim.slide_in_right, R.anim.slide_out_right).add(R.id.content_frame, fragment).addToBackStack(null).commit();
 
 	}
 
 	/**
-	 * Fragment ÄÁÅ×ÀÌ³ÊÀÇ Ç¥½ÃµÇ´Â Fragment¸¦ º¯°æÇÒ ¶§ Fragment ÄÁÅ×ÀÌ³Ê¿¡ ÀûÀçµÈ FragmentµéÀ» Á¤¸®ÇÑ´Ù.
+	 * Fragment ì»¨í…Œì´ë„ˆì˜ í‘œì‹œë˜ëŠ” Fragmentë¥¼ ë³€ê²½í•  ë•Œ Fragment ì»¨í…Œì´ë„ˆì— ì ì¬ëœ Fragmentë“¤ì„ ì •ë¦¬í•œë‹¤.
 	 */
-	private void clearFragmentBackStack() {
-		for (int i = 0; i < fragmentManager.getBackStackEntryCount(); ++i) {
+	private void clearFragmentBackStack()
+	{
+		for (int i = 0; i < fragmentManager.getBackStackEntryCount(); ++i)
+		{
 			fragmentManager.popBackStackImmediate();
 
 		}
@@ -550,93 +471,106 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 	}
 
 	@Deprecated
-	public void removeFragment(Fragment fragment) {
-		fragmentManager.beginTransaction().remove(fragment)
-		.commitAllowingStateLoss();
+	public void removeFragment(Fragment fragment)
+	{
+		fragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss();
 	}
 
 	/**
-	 * ÆäÀÌ½ººÏ SDK¸¦ »ç¿ëÇÏ±â À§ÇØ¼± °³¹ßÇÏ´Â ÄÄÇ»ÅÍÀÇ ÇØ½ÃÅ°¸¦ ÆäÀÌ½ººÏ °³¹ß ÄÜ¼Ö¿¡ µî·Ï ÇÒ ÇÊ¿ä°¡ ÀÖÀ½. ÀÌ¿¡µû¶ó¼­ ÇöÀç ÄÄÇ»ÅÍÀÇ ÇØ½ÃÅ°¸¦ Ãâ·ÂÇØÁÖ¾î µî·ÏÀ» µ½°ÔÇÔ.
+	 * í˜ì´ìŠ¤ë¶ SDKë¥¼ ì‚¬ìš©í•˜ê¸° ìœ„í•´ì„  ê°œë°œí•˜ëŠ” ì»´í“¨í„°ì˜ í•´ì‹œí‚¤ë¥¼ í˜ì´ìŠ¤ë¶ ê°œë°œ ì½˜ì†”ì— ë“±ë¡ í•  í•„ìš”ê°€ ìˆìŒ. ì´ì—ë”°ë¼ì„œ í˜„ì¬ ì»´í“¨í„°ì˜
+	 * í•´ì‹œí‚¤ë¥¼ ì¶œë ¥í•´ì£¼ì–´ ë“±ë¡ì„ ë•ê²Œí•¨.
 	 */
-	public void printPackageHashKey() {
-		try {
-			PackageInfo info = getPackageManager().getPackageInfo(
-					getPackageName(), PackageManager.GET_SIGNATURES);
-			for (Signature signature : info.signatures) {
+	public void printPackageHashKey()
+	{
+		try
+		{
+			PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
+			for (Signature signature : info.signatures)
+			{
 				MessageDigest md = MessageDigest.getInstance("SHA");
 				md.update(signature.toByteArray());
-				Log.e("KeyHash: getPackageName()" + getPackageName(),
-						Base64.encodeToString(md.digest(), Base64.DEFAULT));
+				ExLog.e("KeyHash: getPackageName()" + getPackageName() + ", " + Base64.encodeToString(md.digest(), Base64.DEFAULT));
 			}
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 			onError(e);
 		}
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> adapterView, View view,
-			int position, long id) {
-		int selectedMenuIconId = ((DrawerMenu) (adapterView.getAdapter()
-				.getItem(position))).getIcon();
+	public void onItemClick(AdapterView<?> adapterView, View view, int position, long id)
+	{
+		int selectedMenuIconId = ((DrawerMenu) (adapterView.getAdapter().getItem(position))).getIcon();
 
-		switch (selectedMenuIconId) {
-		case R.drawable.selector_drawermenu_todayshotel:
-			indexLastFragment = INDEX_HOTEL_LIST_FRAGMENT;
-			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectMenu", getString(R.string.actionbar_title_hotel_list_frag), (long) position);
-			break;
+		switch (selectedMenuIconId)
+		{
+			case R.drawable.selector_drawermenu_todayshotel:
+				indexLastFragment = INDEX_HOTEL_LIST_FRAGMENT;
+				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectMenu", getString(R.string.actionbar_title_hotel_list_frag), (long) position);
+				break;
 
-		case R.drawable.selector_drawermenu_reservation:
-			indexLastFragment = INDEX_BOOKING_LIST_FRAGMENT;
-			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectMenu", getString(R.string.actionbar_title_booking_list_frag), (long) position);
-			break;
+			case R.drawable.selector_drawermenu_reservation:
+				indexLastFragment = INDEX_BOOKING_LIST_FRAGMENT;
+				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectMenu", getString(R.string.actionbar_title_booking_list_frag), (long) position);
+				break;
 
-		case R.drawable.selector_drawermenu_saving:
-			indexLastFragment = INDEX_CREDIT_FRAGMENT;
-			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectMenu", getString(R.string.actionbar_title_credit_frag), (long) position);
-			break;
+			case R.drawable.selector_drawermenu_saving:
+				indexLastFragment = INDEX_CREDIT_FRAGMENT;
+				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectMenu", getString(R.string.actionbar_title_credit_frag), (long) position);
+				break;
 
-		case R.drawable.selector_drawermenu_setting:
-			indexLastFragment = INDEX_SETTING_FRAGMENT;
-			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectMenu", getString(R.string.actionbar_title_setting_frag), (long) position);
-			break;
+			case R.drawable.selector_drawermenu_setting:
+				indexLastFragment = INDEX_SETTING_FRAGMENT;
+				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectMenu", getString(R.string.actionbar_title_setting_frag), (long) position);
+				break;
 		}
 
 		delayedReplace(indexLastFragment);
 		drawerLayout.closeDrawer(drawerList);
 
 	}
+
 	/**
-	 * µå·Î¾î ·¹ÀÌ¾Æ¿ôÀÌ ´İÈ÷´Âµ¥ ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ ºÎÇÏ°¡ Å­. ÇÁ·¡±×¸ÕÆ® ÀüÈ¯±îÁö Ãß°¡ÇÑ´Ù¸é ´İÈú¶§ ¹ö¹÷°Å¸®´Â Çö»óÀÌ ¹ß»ı. µû¶ó¼­ 0.3ÃÊ Áö¿¬ÇÏ¿© ÀÚ¿¬½º·¯¿î ¾Ö´Ï¸ŞÀÌ¼ÇÀ» º¸¿©ÁÜ.
-	 * @param index ÇÁ·¡±×¸ÕÆ® ÀÎµ¦½º.
+	 * ë“œë¡œì–´ ë ˆì´ì•„ì›ƒì´ ë‹«íˆëŠ”ë° ì• ë‹ˆë©”ì´ì…˜ì´ ë¶€í•˜ê°€ í¼. í”„ë˜ê·¸ë¨¼íŠ¸ ì „í™˜ê¹Œì§€ ì¶”ê°€í•œë‹¤ë©´ ë‹«íë•Œ ë²„ë²…ê±°ë¦¬ëŠ” í˜„ìƒì´ ë°œìƒ. ë”°ë¼ì„œ 0.3ì´ˆ
+	 * ì§€ì—°í•˜ì—¬ ìì—°ìŠ¤ëŸ¬ìš´ ì• ë‹ˆë©”ì´ì…˜ì„ ë³´ì—¬ì¤Œ.
+	 * 
+	 * @param index
+	 *            í”„ë˜ê·¸ë¨¼íŠ¸ ì¸ë±ìŠ¤.
 	 */
-	public void delayedReplace(final int index){
-		android.util.Log.e("INDEXED",index+"");
-		new Handler().postDelayed(new Runnable() {
+	public void delayedReplace(final int index)
+	{
+		ExLog.e("INDEXED : " + index + "");
+		new Handler().postDelayed(new Runnable()
+		{
 			@Override
-			public void run() {
+			public void run()
+			{
 				replaceFragment(getFragment(index));
 			}
 		}, 300);
 	}
 
 	/**
-	 * ³×ºñ°ÔÀÌ¼Ç µå·Î¿ö¸¦ ¼ÂÆÃÇÏ´Â ¸Ş¼­µå
+	 * ë„¤ë¹„ê²Œì´ì…˜ ë“œë¡œì›Œë¥¼ ì…‹íŒ…í•˜ëŠ” ë©”ì„œë“œ
 	 */
-	public void setNavigationDrawer() {
+	public void setNavigationDrawer()
+	{
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		
-		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
-				R.drawable.ic_drawer, 0, 0) {
 
-			public void onDrawerClosed(View view) {
+		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer, 0, 0)
+		{
+
+			public void onDrawerClosed(View view)
+			{
 				super.onDrawerClosed(view);
 				supportInvalidateOptionsMenu();
 			}
 
-			public void onDrawerOpened(View drawerView) {
+			public void onDrawerOpened(View drawerView)
+			{
 				super.onDrawerOpened(drawerView);
 				supportInvalidateOptionsMenu();
-				
+
 				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("menu", "/menu");
 				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestMenuBar", null, null);
 			}
@@ -645,34 +579,23 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 		drawerLayout.setDrawerListener(drawerToggle);
 		drawerList = (ListView) findViewById(R.id.left_drawer);
 
-		menuHotelListFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_todays_hotel),
-				R.drawable.selector_drawermenu_todayshotel,
-				DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
-		menuBookingListFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_chk_reservation),
-				R.drawable.selector_drawermenu_reservation,
-				DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
-		menuCreditFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_credit),
-				R.drawable.selector_drawermenu_saving,
-				DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
-		menuSettingFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_setting),
-				R.drawable.selector_drawermenu_setting,
-				DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
+		menuHotelListFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_todays_hotel), R.drawable.selector_drawermenu_todayshotel, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
+		menuBookingListFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_chk_reservation), R.drawable.selector_drawermenu_reservation, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
+		menuCreditFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_credit), R.drawable.selector_drawermenu_saving, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
+		menuSettingFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_setting), R.drawable.selector_drawermenu_setting, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
 
 		mMenuImages = new ArrayList<DrawerMenu>();
-		
+
 		mMenuImages.add(new DrawerMenu(DrawerMenu.DRAWER_MENU_LIST_TYPE_LOGO));
-		mMenuImages.add(new DrawerMenu(getString(R.string.drawer_menu_pin_title_resrvation),
-				DrawerMenu.DRAWER_MENU_LIST_TYPE_SECTION));
+		mMenuImages.add(new DrawerMenu(getString(R.string.drawer_menu_pin_title_resrvation), DrawerMenu.DRAWER_MENU_LIST_TYPE_SECTION));
 		mMenuImages.add(menuHotelListFragment);
 		mMenuImages.add(menuBookingListFragment);
-		
-		mMenuImages.add(new DrawerMenu(getString(R.string.drawer_menu_pin_title_account),
-				DrawerMenu.DRAWER_MENU_LIST_TYPE_SECTION));
+
+		mMenuImages.add(new DrawerMenu(getString(R.string.drawer_menu_pin_title_account), DrawerMenu.DRAWER_MENU_LIST_TYPE_SECTION));
 		mMenuImages.add(menuCreditFragment);
 		mMenuImages.add(menuSettingFragment);
 
-		mDrawerMenuListAdapter = new DrawerMenuListAdapter(this,
-				R.layout.list_row_drawer_entry, mMenuImages);
+		mDrawerMenuListAdapter = new DrawerMenuListAdapter(this, R.layout.list_row_drawer_entry, mMenuImages);
 
 		drawerList.setAdapter(mDrawerMenuListAdapter);
 		drawerList.setOnItemClickListener(this);
@@ -680,47 +603,63 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 	}
 
 	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
+	protected void onPostCreate(Bundle savedInstanceState)
+	{
 		super.onPostCreate(savedInstanceState);
 
-		if (drawerToggle != null) drawerToggle.syncState();
+		if (drawerToggle != null)
+			drawerToggle.syncState();
 
 	}
 
 	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
+	public void onConfigurationChanged(Configuration newConfig)
+	{
 		super.onConfigurationChanged(newConfig);
 
-		if (drawerToggle != null) drawerToggle.onConfigurationChanged(newConfig);
+		if (drawerToggle != null)
+			drawerToggle.onConfigurationChanged(newConfig);
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (drawerToggle.onOptionsItemSelected(item))  return true;
-		else return super.onOptionsItemSelected(item);
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		if (drawerToggle.onOptionsItemSelected(item))
+			return true;
+		else
+			return super.onOptionsItemSelected(item);
 	}
 
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_MENU) {
+	public boolean onKeyDown(int keyCode, KeyEvent event)
+	{
+		if (keyCode == KeyEvent.KEYCODE_MENU)
+		{
 			toggleDrawer();
 			return true;
-		} else {
+		} else
+		{
 			return super.onKeyDown(keyCode, event);
 		}
 	}
 
-	public void toggleDrawer() {
-		if (!drawerLayout.isDrawerOpen(drawerList)) drawerLayout.openDrawer(drawerList);
-		else drawerLayout.closeDrawer(drawerList);
+	public void toggleDrawer()
+	{
+		if (!drawerLayout.isDrawerOpen(drawerList))
+			drawerLayout.openDrawer(drawerList);
+		else
+			drawerLayout.closeDrawer(drawerList);
 	}
 
 	@Override
-	public void finish() {
-		if (backButtonHandler.onBackPressed()) super.finish();
+	public void finish()
+	{
+		if (backButtonHandler.onBackPressed())
+			super.finish();
 	}
 
-	private class DrawerMenu {
+	private class DrawerMenu
+	{
 
 		public static final int DRAWER_MENU_LIST_TYPE_LOGO = 0;
 		public static final int DRAWER_MENU_LIST_TYPE_SECTION = 1;
@@ -730,95 +669,129 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 		private int icon;
 		private int type;
 
-		public DrawerMenu(int type) {
+		public DrawerMenu(int type)
+		{
 			super();
 			this.type = type;
 		}
 
-		public DrawerMenu(String title, int type) {
+		public DrawerMenu(String title, int type)
+		{
 			super();
 			this.title = title;
 			this.type = type;
 		}
 
-		public DrawerMenu(String title, int icon, int type) {
+		public DrawerMenu(String title, int icon, int type)
+		{
 			super();
 			this.title = title;
 			this.icon = icon;
 			this.type = type;
 		}
 
-		public int getType() { return type; }
-		public void setType(int type) { this.type = type; }
+		public int getType()
+		{
+			return type;
+		}
 
-		public String getTitle() { return title; }
-		public void setTitle(String title) { this.title = title; }
+		public void setType(int type)
+		{
+			this.type = type;
+		}
 
-		public int getIcon() { return icon; }
-		public void setIcon(int icon) { this.icon = icon; }
+		public String getTitle()
+		{
+			return title;
+		}
+
+		public void setTitle(String title)
+		{
+			this.title = title;
+		}
+
+		public int getIcon()
+		{
+			return icon;
+		}
+
+		public void setIcon(int icon)
+		{
+			this.icon = icon;
+		}
 
 	}
 
-	private class DrawerMenuListAdapter extends BaseAdapter {
+	private class DrawerMenuListAdapter extends BaseAdapter
+	{
 
 		private List<DrawerMenu> list;
 		private LayoutInflater inflater;
 		private Context context;
 		private int layout;
 
-		public DrawerMenuListAdapter(Context context, int layout,
-				List<DrawerMenu> list) {
+		public DrawerMenuListAdapter(Context context, int layout, List<DrawerMenu> list)
+		{
 			this.context = context;
 			this.layout = layout;
-			this.inflater = (LayoutInflater) this.context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			this.inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			this.list = list;
 		}
 
 		@Override
-		public int getCount() { return list.size(); }
+		public int getCount()
+		{
+			return list.size();
+		}
 
 		@Override
-		public Object getItem(int position) { return list.get(position); }
+		public Object getItem(int position)
+		{
+			return list.get(position);
+		}
 
 		@Override
-		public long getItemId(int position) { return position;}
+		public long getItemId(int position)
+		{
+			return position;
+		}
 
 		@Override
-		public boolean isEnabled(int position) {
+		public boolean isEnabled(int position)
+		{
 			return (list.get(position).getType() == DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY) ? true : false;
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
+		public View getView(int position, View convertView, ViewGroup parent)
+		{
 
 			DrawerMenu item = list.get(position);
 
-			switch (item.getType()) {
-			case DrawerMenu.DRAWER_MENU_LIST_TYPE_LOGO:
-				convertView = inflater.inflate(R.layout.list_row_drawer_logo, null);
-				break;
+			switch (item.getType())
+			{
+				case DrawerMenu.DRAWER_MENU_LIST_TYPE_LOGO:
+					convertView = inflater.inflate(R.layout.list_row_drawer_logo, null);
+					break;
 
-			case DrawerMenu.DRAWER_MENU_LIST_TYPE_SECTION:
-				convertView = inflater.inflate(R.layout.list_row_drawer_section, null);
+				case DrawerMenu.DRAWER_MENU_LIST_TYPE_SECTION:
+					convertView = inflater.inflate(R.layout.list_row_drawer_section, null);
 
-				TextView drawerMenuItemTitle = (TextView) convertView.findViewById(R.id.drawerMenuItemTitle);
+					TextView drawerMenuItemTitle = (TextView) convertView.findViewById(R.id.drawerMenuItemTitle);
 
-				drawerMenuItemTitle.setText(item.getTitle());
-				break;
+					drawerMenuItemTitle.setText(item.getTitle());
+					break;
 
-			case DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY:
-				convertView = inflater.inflate(R.layout.list_row_drawer_entry, null);
+				case DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY:
+					convertView = inflater.inflate(R.layout.list_row_drawer_entry, null);
 
-				ImageView drawerMenuItemIcon = (ImageView) convertView
-						.findViewById(R.id.drawerMenuItemIcon);
-				TextView drawerMenuItemText = (TextView) convertView
-						.findViewById(R.id.drawerMenuItemTitle);
+					ImageView drawerMenuItemIcon = (ImageView) convertView.findViewById(R.id.drawerMenuItemIcon);
+					TextView drawerMenuItemText = (TextView) convertView.findViewById(R.id.drawerMenuItemTitle);
 
-				drawerMenuItemIcon.setImageResource(item.getIcon());
-				drawerMenuItemText.setText(item.getTitle());
+					drawerMenuItemIcon.setImageResource(item.getIcon());
+					drawerMenuItemText.setText(item.getTitle());
 
-				break;
+					break;
 			}
 
 			return convertView;
@@ -826,27 +799,259 @@ public class MainActivity extends BaseActivity implements DailyHotelStringRespon
 	}
 
 	@Override
-	protected void onDestroy() {
+	protected void onDestroy()
+	{
 
-		// ÄíÅ° ¸¸·á¸¦ À§ÇÑ ¼­¹ö¿¡ ·Î±×¾Æ¿ô ¸®Äù½ºÆ®
-		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(
-				URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGOUT)
-				.toString(), null, null, null));
+		// ì¿ í‚¤ ë§Œë£Œë¥¼ ìœ„í•œ ì„œë²„ì— ë¡œê·¸ì•„ì›ƒ ë¦¬í€˜ìŠ¤íŠ¸
+		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGOUT).toString(), null, null, null));
 
 		VolleyHttpClient.destroyCookie();
 
-		// AQueryÀÇ Ä³½ÃµéÀ» Á¤¸®ÇÑ´Ù.
+		// AQueryì˜ ìºì‹œë“¤ì„ ì •ë¦¬í•œë‹¤.
 		AQUtility.cleanCacheAsync(getApplicationContext());
 
 		super.onDestroy();
 	}
 
 	@Override
-	public void onError() {
+	public void onError()
+	{
 		super.onError();
 
-		// Error Fragment¸¦ Ç¥½ÃÇÑ´Ù. -> stackoverflow°¡ ¹ß»ıÇÏ´Â °æ¿ì°¡ ÀÖÀ½. ¿¡·¯ ¿øÀÎ ÆÄ¾ÇÇØ¾ß ÇÔ.
+		// Error Fragmentë¥¼ í‘œì‹œí•œë‹¤. -> stackoverflowê°€ ë°œìƒí•˜ëŠ” ê²½ìš°ê°€ ìˆìŒ. ì—ëŸ¬ ì›ì¸ íŒŒì•…í•´ì•¼ í•¨.
 		replaceFragment(new ErrorFragment());
 	}
 
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//Listener
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	private DailyHotelStringResponseListener mUserAliveStringResponseListener = new DailyHotelStringResponseListener()
+	{
+
+		@Override
+		public void onResponse(String url, String response)
+		{
+
+			String result = null;
+
+			if (false == TextUtils.isEmpty(response))
+			{
+				result = response.trim();
+			}
+
+			if (true == "alive".equalsIgnoreCase(result))
+			{ // session alive
+				// í˜¸í…” í‰ê°€ë¥¼ ìœ„í•œ ì‚¬ìš©ì ì •ë³´ ì¡°íšŒ
+				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, MainActivity.this));
+			}
+		}
+	};
+
+	private DailyHotelJsonResponseListener mUserInfoJsonResponseListener = new DailyHotelJsonResponseListener()
+	{
+
+		@Override
+		public void onResponse(String url, JSONObject response)
+		{
+
+			try
+			{
+				if (null == response)
+				{
+					throw new NullPointerException();
+				}
+
+				String loginuser_idx = response.getString("idx");
+				String gcmId = getGcmId();
+
+				if (true == TextUtils.isEmpty(loginuser_idx))
+				{
+					throw new NullPointerException("loginuser_idx is empty.");
+				}
+
+				// GCM ë“±ë¡ ì‹œë„
+				ExLog.e("NOTE : " + gcmId);
+
+				if (gcmId.isEmpty() && isGoogleServiceAvailable())
+				{
+					regGcmId(Integer.parseInt(loginuser_idx));
+				}
+
+				// êµ¬ë§¤ì ì •ë³´ í™•ì¸ 
+				String buyerIdx = sharedPreference.getString(KEY_PREFERENCE_USER_IDX, null);
+
+				if (true == loginuser_idx.equalsIgnoreCase(buyerIdx))
+				{
+					String purchasedHotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME, VALUE_PREFERENCE_HOTEL_NAME_DEFAULT);
+					int purchasedHotelSaleIdx = sharedPreference.getInt(KEY_PREFERENCE_HOTEL_SALE_IDX, VALUE_PREFERENCE_HOTEL_SALE_IDX_DEFAULT);
+					String purchasedHotelCheckOut = sharedPreference.getString(KEY_PREFERENCE_HOTEL_CHECKOUT, VALUE_PREFERENCE_HOTEL_CHECKOUT_DEFAULT);
+
+					Date today = new Date();
+					Date checkOut = SaleTime.stringToDate(Util.dailyHotelTimeConvert(purchasedHotelCheckOut));
+
+					//í˜¸í…” ë§Œì¡±ë„ ì¡°ì‚¬ 
+					if (false == VALUE_PREFERENCE_HOTEL_NAME_DEFAULT.equalsIgnoreCase(purchasedHotelName))
+					{
+						if (today.compareTo(checkOut) >= 0)
+						{
+							Calendar calendar = Calendar.getInstance();
+							calendar.setTime(checkOut);
+							calendar.add(Calendar.DATE, DAYS_DISPLAY_RATING_HOTEL_DIALOG);
+							Date deadLineDay = calendar.getTime();
+
+							if (today.compareTo(deadLineDay) < 0)
+							{
+								Hotel purchasedHotel = new Hotel();
+								purchasedHotel.setName(purchasedHotelName);
+
+								HotelDetail purchasedHotelInformation = new HotelDetail();
+								purchasedHotelInformation.setHotel(purchasedHotel);
+								purchasedHotelInformation.setSaleIdx(purchasedHotelSaleIdx);
+
+								RatingHotelFragment dialog = RatingHotelFragment.newInstance(purchasedHotelInformation);
+								dialog.show(fragmentManager, TAG_FRAGMENT_RATING_HOTEL);
+							} else
+							{
+								RatingHotelFragment dialog = RatingHotelFragment.newInstance(null);
+								dialog.destroyRatingHotelFlag();
+							}
+						}
+					}
+				}
+			} catch (Exception e)
+			{
+				onError(e);
+			}
+			unLockUI();
+		}
+	};
+
+	private DailyHotelJsonResponseListener mGcmRegisterJsonResponseListener = new DailyHotelJsonResponseListener()
+	{
+
+		@Override
+		public void onResponse(String url, JSONObject response)
+		{
+			// ë¡œê·¸ì¸ ì„±ê³µ - ìœ ì € ì •ë³´(ì¸ë±ìŠ¤) ê°€ì ¸ì˜¤ê¸° - ìœ ì €ì˜ GCMí‚¤ ë“±ë¡ ì™„ë£Œ í•œ ê²½ìš° í”„ë¦¬í¼ëŸ°ìŠ¤ì— í‚¤ ë“±ë¡í›„ ì¢…ë£Œ
+			try
+			{
+				String result = null;
+
+				if (null != response)
+				{
+					result = response.getString("result");
+				}
+
+				if (true == "true".equalsIgnoreCase(result))
+				{
+					Editor editor = sharedPreference.edit();
+					editor.putString(KEY_PREFERENCE_GCM_ID, regPushParams.get("notification_id").toString());
+					editor.apply();
+				}
+
+			} catch (Exception e)
+			{
+				onError(e);
+			}
+		}
+	};
+
+	//	@Override
+	//	public void onResponse(String url, String response) {
+	//		if (url.contains(URL_WEBAPI_USER_ALIVE)) {
+	//			String result = response.trim();
+	//			Log.d(TAG, "URL_WEBAPI_USER_ALIVE");
+	//
+	//			if (result.equals("alive")) { // session alive
+	//				// í˜¸í…” í‰ê°€ë¥¼ ìœ„í•œ ì‚¬ìš©ì ì •ë³´ ì¡°íšŒ
+	//				mQueue.add(new DailyHotelJsonRequest(Method.GET,
+	//						new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+	//								URL_WEBAPI_USER_INFO).toString(), null, this,
+	//								this));
+	//
+	//			}
+	//		}
+	//	}
+
+	//	@Override
+	//	public void onResponse(String url, JSONObject response) {
+	//		if (url.contains(URL_WEBAPI_USER_INFO)) {
+	//			try {
+	//				String loginuser_idx = response.getString("idx");
+	//
+	//				String gcmId=getGcmId();
+	//				// GCM ë“±ë¡ ì‹œë„
+	//				ExLog.e("NOTE : " + gcmId);
+	//				if (gcmId.isEmpty()) {
+	//					if (isGoogleServiceAvailable()) {
+	//						regGcmId(Integer.parseInt(loginuser_idx));
+	//					}
+	//				}
+	//
+	//				// êµ¬ë§¤ì ì •ë³´ í™•ì¸ 
+	//				String buyerIdx = sharedPreference.getString(KEY_PREFERENCE_USER_IDX, null);
+	//				if (buyerIdx != null) {
+	//					if (loginuser_idx.equals(buyerIdx)) {
+	//						String purchasedHotelName = sharedPreference.getString(
+	//								KEY_PREFERENCE_HOTEL_NAME,
+	//								VALUE_PREFERENCE_HOTEL_NAME_DEFAULT);
+	//						int purchasedHotelSaleIdx = sharedPreference.getInt(
+	//								KEY_PREFERENCE_HOTEL_SALE_IDX,
+	//								VALUE_PREFERENCE_HOTEL_SALE_IDX_DEFAULT);
+	//						String purchasedHotelCheckOut = sharedPreference.getString(
+	//								KEY_PREFERENCE_HOTEL_CHECKOUT,
+	//								VALUE_PREFERENCE_HOTEL_CHECKOUT_DEFAULT);
+	//
+	//						Date today = new Date();
+	//						Date checkOut = SaleTime.stringToDate(Util
+	//								.dailyHotelTimeConvert(purchasedHotelCheckOut));
+	//
+	//						//í˜¸í…” ë§Œì¡±ë„ ì¡°ì‚¬ 
+	//						if (!purchasedHotelName.equals(VALUE_PREFERENCE_HOTEL_NAME_DEFAULT)) {
+	//							if (today.compareTo(checkOut) >= 0) {
+	//								Calendar calendar = Calendar.getInstance();
+	//								calendar.setTime(checkOut);
+	//								calendar.add(Calendar.DATE, DAYS_DISPLAY_RATING_HOTEL_DIALOG);
+	//								Date deadLineDay = calendar.getTime();
+	//
+	//								if (today.compareTo(deadLineDay) < 0) {
+	//									Hotel purchasedHotel = new Hotel();
+	//									purchasedHotel.setName(purchasedHotelName);
+	//
+	//									HotelDetail purchasedHotelInformation = new HotelDetail();
+	//									purchasedHotelInformation.setHotel(purchasedHotel);
+	//									purchasedHotelInformation.setSaleIdx(purchasedHotelSaleIdx);
+	//
+	//									RatingHotelFragment dialog = RatingHotelFragment
+	//											.newInstance(purchasedHotelInformation);
+	//									dialog.show(fragmentManager, TAG_FRAGMENT_RATING_HOTEL);
+	//								} else {
+	//									RatingHotelFragment dialog = RatingHotelFragment
+	//											.newInstance(null);
+	//									dialog.destroyRatingHotelFlag();
+	//								}
+	//							}
+	//						}
+	//					}
+	//				}
+	//
+	//			} catch (Exception e) {
+	//				onError(e);
+	//			}
+	//			unLockUI();
+	//		} else if (url.contains(URL_GCM_REGISTER)) {
+	//			// ë¡œê·¸ì¸ ì„±ê³µ - ìœ ì € ì •ë³´(ì¸ë±ìŠ¤) ê°€ì ¸ì˜¤ê¸° - ìœ ì €ì˜ GCMí‚¤ ë“±ë¡ ì™„ë£Œ í•œ ê²½ìš° í”„ë¦¬í¼ëŸ°ìŠ¤ì— í‚¤ ë“±ë¡í›„ ì¢…ë£Œ
+	//			try {
+	//				if (response.getString("result").equals("true")) {
+	//					Editor editor = sharedPreference.edit();
+	//					editor.putString(KEY_PREFERENCE_GCM_ID, regPushParams.get("notification_id").toString());
+	//					editor.apply();
+	//				}
+	//
+	//			} catch (Exception e) {
+	//				onError(e);
+	//			}
+	//		}
+	//	}
 }

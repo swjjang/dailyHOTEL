@@ -1,11 +1,11 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
  *
- * CreditFragment (¿˚∏≥±› »≠∏È)
+ * CreditFragment (Ï†ÅÎ¶ΩÍ∏à ÌôîÎ©¥)
  * 
- * ∑Œ±◊¿Œ ø©∫Œø° µ˚∂Û ¿˚∏≥±›¿ª æ»≥ª«œ¥¬ »≠∏È¿Ã¥Ÿ. ¿˚∏≥±›¿ª «•Ω√«œ∏Á ƒ´ƒ´ø¿≈Â
- * ƒ£±∏ √ ¥Î πˆ∆∞¿Ã ¿÷¥Ÿ. ºº∫Œ ≥ªø™¿ª µ˚∑Œ «•Ω√«ÿ¡÷¥¬ πˆ∆∞¿ª ∞°¡ˆ∞Ì ¿÷æÓ 
- * «ÿ¥Á »≠∏È¿ª ∂Áøˆ¡÷±‚µµ «—¥Ÿ.
+ * Î°úÍ∑∏Ïù∏ Ïó¨Î∂ÄÏóê Îî∞Îùº Ï†ÅÎ¶ΩÍ∏àÏùÑ ÏïàÎÇ¥ÌïòÎäî ÌôîÎ©¥Ïù¥Îã§. Ï†ÅÎ¶ΩÍ∏àÏùÑ ÌëúÏãúÌïòÎ©∞ Ïπ¥Ïπ¥Ïò§ÌÜ°
+ * ÏπúÍµ¨ Ï¥àÎåÄ Î≤ÑÌäºÏù¥ ÏûàÎã§. ÏÑ∏Î∂Ä ÎÇ¥Ïó≠ÏùÑ Îî∞Î°ú ÌëúÏãúÌï¥Ï£ºÎäî Î≤ÑÌäºÏùÑ Í∞ÄÏßÄÍ≥† ÏûàÏñ¥ 
+ * Ìï¥Îãπ ÌôîÎ©¥ÏùÑ ÎùÑÏõåÏ£ºÍ∏∞ÎèÑ ÌïúÎã§.
  *
  * @since 2014-02-24
  * @version 1
@@ -30,6 +30,7 @@ import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -45,8 +46,8 @@ import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.activity.SignupActivity;
 import com.twoheart.dailyhotel.model.Credit;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
-import com.twoheart.dailyhotel.util.Log;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -56,15 +57,13 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseLis
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
 /**
- * ¿˚∏≥±› »Æ¿Œ ∆‰¿Ã¡ˆ.
+ * Ï†ÅÎ¶ΩÍ∏à ÌôïÏù∏ ÌéòÏù¥ÏßÄ.
+ * 
  * @author jangjunho
  *
  */
-public class CreditFragment extends BaseFragment implements Constants,
-		OnClickListener, DailyHotelJsonResponseListener,
-		DailyHotelStringResponseListener {
-
-	private static final String TAG = "CreditFragment";
+public class CreditFragment extends BaseFragment implements Constants, OnClickListener
+{
 
 	private RelativeLayout rlCreditNotLoggedIn;
 	private LinearLayout llCreditLoggedIn, btnInvite;
@@ -73,106 +72,109 @@ public class CreditFragment extends BaseFragment implements Constants,
 	private TextView tvCredit;
 	private String mRecommendCode;
 	private ArrayList<Credit> mCreditList;
-	
+
 	private MixpanelAPI mMixpanel;
 	private String idx;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+	{
 
 		View view = inflater.inflate(R.layout.fragment_credit, container, false);
 
-		rlCreditNotLoggedIn = (RelativeLayout) view
-				.findViewById(R.id.rl_credit_not_logged_in);
-		llCreditLoggedIn = (LinearLayout) view
-				.findViewById(R.id.ll_credit_logged_in);
+		rlCreditNotLoggedIn = (RelativeLayout) view.findViewById(R.id.rl_credit_not_logged_in);
+		llCreditLoggedIn = (LinearLayout) view.findViewById(R.id.ll_credit_logged_in);
 
-		btnInvite = (LinearLayout) view
-				.findViewById(R.id.btn_credit_invite_frd);
+		btnInvite = (LinearLayout) view.findViewById(R.id.btn_credit_invite_frd);
 		tvCredit = (TextView) view.findViewById(R.id.tv_credit_history);
-		tvRecommenderCode = (TextView) view
-				.findViewById(R.id.tv_credit_recommender_code);
+		tvRecommenderCode = (TextView) view.findViewById(R.id.tv_credit_recommender_code);
 		tvBonus = (TextView) view.findViewById(R.id.tv_credit_money);
 		btnLogin = (Button) view.findViewById(R.id.btn_no_login_login);
 		btnSignup = (Button) view.findViewById(R.id.btn_no_login_signup);
-		
+
 		btnLogin.setOnClickListener(this);
 		btnSignup.setOnClickListener(this);
 		btnInvite.setOnClickListener(this);
 		tvCredit.setOnClickListener(this);
-		
-		//øµæÓπˆ¿¸ø°º≠∏∏ ≈ÿΩ∫∆Æ ªÁ¿Ã¿« ∆–µ˘ ∞™¿ª ¡÷±‚¿ß«ÿ ªı∑ŒøÓ ≈ÿΩ∫∆Æ∫‰∏¶ ∫∏ø©¡‹
+
+		//ÏòÅÏñ¥Î≤ÑÏ†ÑÏóêÏÑúÎßå ÌÖçÏä§Ìä∏ ÏÇ¨Ïù¥Ïùò Ìå®Îî© Í∞íÏùÑ Ï£ºÍ∏∞ÏúÑÌï¥ ÏÉàÎ°úÏö¥ ÌÖçÏä§Ìä∏Î∑∞Î•º Î≥¥Ïó¨Ï§å
 		TextView line1_4 = (TextView) view.findViewById(R.id.act_credit_line1_4);
-		//øµæÓπˆ¿¸
+		//ÏòÅÏñ¥Î≤ÑÏ†Ñ
 		String locale = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_LOCALE, null);
-		if (locale.equals("«—±πæÓ")) {
+		if (locale.equals("ÌïúÍµ≠Ïñ¥"))
+		{
 			line1_4.setVisibility(View.GONE);
-		} else line1_4.setVisibility(View.VISIBLE);
-		
+		} else
+			line1_4.setVisibility(View.VISIBLE);
+
 		tvCredit.setPaintFlags(tvCredit.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG); // underlining
 
 		return view;
 	}
-	
+
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState)
+	{
 		mMixpanel = MixpanelAPI.getInstance(mHostActivity, "791b366dadafcd37803f6cd7d8358373");
-		
+
 		super.onCreate(savedInstanceState);
 	}
 
-
 	@Override
-	public void onResume() {
+	public void onResume()
+	{
 		super.onResume();
 		// ActionBar Setting
 		mHostActivity.setActionBar(R.string.actionbar_title_credit_frag);
 
 		lockUI();
-		mQueue.add(new DailyHotelStringRequest(Method.GET,
-				new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-						URL_WEBAPI_USER_ALIVE).toString(), null,
-				this, mHostActivity));
-		
+		mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, mHostActivity));
+
 	}
 
 	@Override
-	public void onClick(View v) {
+	public void onClick(View v)
+	{
 
-		if (v.getId() == btnInvite.getId()) {
-			try {
+		if (v.getId() == btnInvite.getId())
+		{
+			try
+			{
 				RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "inviteKakaoFriend", null, null);
 				int userIdx = Integer.parseInt(idx);
 				String userIdxStr = String.format("%07d", userIdx);
-				
-				SimpleDateFormat dateFormat = new  SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.getDefault());
+
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.getDefault());
 				Date date = new Date();
 				String strDate = dateFormat.format(date);
-				
+
 				mMixpanel.getPeople().identify(userIdxStr);
-				
+
 				JSONObject props = new JSONObject();
 				props.put("userId", userIdxStr);
 				props.put("datetime", strDate);
 				mMixpanel.track("kakaoInvitation", props);
-				
+
 				String msg = getString(R.string.kakaolink_msg_prefix) + mRecommendCode + getString(R.string.kakaolink_msg_suffix);
 				KakaoLinkManager.newInstance(getActivity()).sendInviteMsgKakaoLink(msg);
-			} catch (Exception e) {
-				Log.d(TAG, "kakao link error " + e.toString());
+			} catch (Exception e)
+			{
+				ExLog.d("kakao link error " + e.toString());
 			}
 
-		} else if (v.getId() == tvCredit.getId()) {
+		} else if (v.getId() == tvCredit.getId())
+		{
 			((MainActivity) mHostActivity).addFragment(CreditListFragment.newInstance(mCreditList));
 			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "requestCreditHistory", null, null);
-			
-		} else if (v.getId() == btnLogin.getId()) {
+
+		} else if (v.getId() == btnLogin.getId())
+		{
 			Intent i = new Intent(mHostActivity, LoginActivity.class);
 			startActivity(i);
 			mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
-		} else if (v.getId() == btnSignup.getId()) {
+		} else if (v.getId() == btnSignup.getId())
+		{
 			Intent i = new Intent(mHostActivity, SignupActivity.class);
 			startActivity(i);
 			mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
@@ -180,82 +182,88 @@ public class CreditFragment extends BaseFragment implements Constants,
 
 	}
 
-	private void alert(String message) {
-		new AlertDialog.Builder(mHostActivity)
-				.setIcon(android.R.drawable.ic_dialog_alert)
-				.setTitle(R.string.app_name).setMessage(message)
-				.setPositiveButton(android.R.string.ok, null).create().show();
+	private void alert(String message)
+	{
+		new AlertDialog.Builder(mHostActivity).setIcon(android.R.drawable.ic_dialog_alert).setTitle(R.string.app_name).setMessage(message).setPositiveButton(android.R.string.ok, null).create().show();
 	}
 
-	private void loadLoginProcess(boolean loginSuccess) {
-		if (loginSuccess) {
+	private void loadLoginProcess(boolean loginSuccess)
+	{
+		if (loginSuccess)
+		{
 			rlCreditNotLoggedIn.setVisibility(View.GONE);
 			llCreditLoggedIn.setVisibility(View.VISIBLE);
 			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("creditWithLogon", "/credit-with-logon/");
-		} else {
+		} else
+		{
 			rlCreditNotLoggedIn.setVisibility(View.VISIBLE);
 			llCreditLoggedIn.setVisibility(View.GONE);
 			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("creditWithLogoff", "/credit-with-logoff/");
 		}
 	}
 
-	@Override
-	public void onResponse(String url, JSONObject response) {
-		if (url.contains(URL_WEBAPI_USER_LOGIN)) {
-			try {
-				if (!response.getBoolean("login")) {
-					// ∑Œ±◊¿Œ Ω«∆–
-					// data √ ±‚»≠
-					SharedPreferences.Editor ed = mHostActivity.sharedPreference
-							.edit();
-					ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
-					ed.putString(KEY_PREFERENCE_USER_ID, null);
-					ed.putString(KEY_PREFERENCE_USER_PWD, null);
-					ed.commit();
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//Listener
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-					unLockUI();
-					loadLoginProcess(false);
+	private DailyHotelJsonResponseListener mUserInfoJsonResponseListener = new DailyHotelJsonResponseListener()
+	{
 
-				} else {
-					VolleyHttpClient.createCookie();
-					
-					// credit ø‰√ª
-					mQueue.add(new DailyHotelStringRequest(Method.GET,
-							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-									URL_WEBAPI_RESERVE_SAVED_MONEY).toString(),
-							null, this, mHostActivity));
+		@Override
+		public void onResponse(String url, JSONObject response)
+		{
 
+			try
+			{
+				if (null == response)
+				{
+					throw new NullPointerException("response is null.");
 				}
-			} catch (JSONException e) {
+
+				mRecommendCode = response.getString("rndnum");
+				tvRecommenderCode.setText(response.getString("rndnum"));
+
+				idx = response.getString("idx");
+
+				// Ï†ÅÎ¶ΩÍ∏à Î™©Î°ù ÏöîÏ≤≠.
+				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_BONUS_ALL).toString(), null, mUserBonusAllResponseListener, mHostActivity));
+
+			} catch (Exception e)
+			{
 				onError(e);
 			}
+		}
+	};
 
-		} else if (url.contains(URL_WEBAPI_USER_INFO)) {
-			try {
-				JSONObject obj = response;
-				mRecommendCode = obj.getString("rndnum");
-				tvRecommenderCode.setText(obj.getString("rndnum"));
-				
-				idx = obj.getString("idx");
+	private DailyHotelJsonResponseListener mUserBonusAllResponseListener = new DailyHotelJsonResponseListener()
+	{
 
-				// ¿˚∏≥±› ∏Ò∑œ ø‰√ª.
-				mQueue.add(new DailyHotelJsonRequest(Method.GET,
-						new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-								URL_WEBAPI_USER_BONUS_ALL).toString(), null,
-						this, mHostActivity));
+		@Override
+		public void onResponse(String url, JSONObject response)
+		{
 
-			} catch (Exception e) {
-				onError(e);
-			}
+			//Ï†ÅÎ¶ΩÍ∏à ÎÇ¥Ïó≠Î¶¨Ïä§Ìä∏ 
+			try
+			{
+				if (null == response)
+				{
+					throw new NullPointerException("response is null.");
+				}
 
-		} else if (url.contains(URL_WEBAPI_USER_BONUS_ALL)) {//¿˚∏≥±› ≥ªø™∏ÆΩ∫∆Æ 
-			try {
-				mCreditList = new ArrayList<Credit>();
+				if (null == mCreditList)
+				{
+					mCreditList = new ArrayList<Credit>();
+				}
 
-				JSONObject obj = response;
-				JSONArray arr = obj.getJSONArray("history");
-				for (int i = 0; i < arr.length(); i++) {
-					JSONObject historyObj = arr.getJSONObject(i);
+				mCreditList.clear();
+
+				JSONArray jsonArray = response.getJSONArray("history");
+				int length = jsonArray.length();
+
+				for (int i = 0; i < length; i++)
+				{
+					JSONObject historyObj = jsonArray.getJSONObject(i);
+
 					String content = historyObj.getString("content");
 					String expires = historyObj.getString("expires");
 					String bonus = historyObj.getString("bonus");
@@ -266,79 +274,284 @@ public class CreditFragment extends BaseFragment implements Constants,
 				loadLoginProcess(true);
 				unLockUI();
 
-			} catch (Exception e) {
+			} catch (Exception e)
+			{
 				onError(e);
 			}
 		}
+	};
 
-	}
+	private DailyHotelJsonResponseListener mUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
+	{
 
-	@Override
-	public void onResponse(String url, String response) {
-		if (url.contains(URL_WEBAPI_USER_ALIVE)) {
-			String result = response.trim();
-			if (result.equals("alive")) { // session alive
-				// credit ø‰√ª
-				mQueue.add(new DailyHotelStringRequest(Method.GET,
-						new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-								URL_WEBAPI_RESERVE_SAVED_MONEY).toString(),
-						null, this, mHostActivity));
+		@Override
+		public void onResponse(String url, JSONObject response)
+		{
 
-			} else if (result.equals("dead")) { // session dead
+			try
+			{
+				if (!response.getBoolean("login"))
+				{
+					// Î°úÍ∑∏Ïù∏ Ïã§Ìå®
+					// data Ï¥àÍ∏∞Ìôî
+					SharedPreferences.Editor ed = mHostActivity.sharedPreference.edit();
+					ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
+					ed.putString(KEY_PREFERENCE_USER_ID, null);
+					ed.putString(KEY_PREFERENCE_USER_PWD, null);
+					ed.commit();
 
-				// ¿Á∑Œ±◊¿Œ
-				if (mHostActivity.sharedPreference.getBoolean(
-						KEY_PREFERENCE_AUTO_LOGIN, false)) {
-					String id = mHostActivity.sharedPreference.getString(
-							KEY_PREFERENCE_USER_ID, null);
-					String accessToken = mHostActivity.sharedPreference
-							.getString(KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
-					String pw = mHostActivity.sharedPreference.getString(
-							KEY_PREFERENCE_USER_PWD, null);
+					unLockUI();
+					loadLoginProcess(false);
+
+				} else
+				{
+					VolleyHttpClient.createCookie();
+
+					// credit ÏöîÏ≤≠
+					mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_SAVED_MONEY).toString(), null, mReserveSavedMoneyStringResponseListener, mHostActivity));
+
+				}
+			} catch (JSONException e)
+			{
+				onError(e);
+			}
+
+		}
+	};
+
+	private DailyHotelStringResponseListener mUserAliveStringResponseListener = new DailyHotelStringResponseListener()
+	{
+
+		@Override
+		public void onResponse(String url, String response)
+		{
+			String result = null;
+
+			if (false == TextUtils.isEmpty(response))
+			{
+				result = response.trim();
+			}
+
+			if (true == "alive".equalsIgnoreCase(result))
+			{ // session alive
+				// credit ÏöîÏ≤≠
+				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_SAVED_MONEY).toString(), null, mReserveSavedMoneyStringResponseListener, mHostActivity));
+
+			} else if (true == "dead".equalsIgnoreCase(result))
+			{ // session dead
+
+				// Ïû¨Î°úÍ∑∏Ïù∏
+				if (true == mHostActivity.sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false))
+				{
+
+					String id = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_USER_ID, null);
+					String accessToken = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
+					String pw = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_USER_PWD, null);
 
 					Map<String, String> loginParams = new HashMap<String, String>();
 
-					if (accessToken != null) {
+					if (null != accessToken)
+					{
 						loginParams.put("accessToken", accessToken);
-					} else {
+					} else
+					{
 						loginParams.put("email", id);
 					}
 
 					loginParams.put("pw", pw);
 
-					mQueue.add(new DailyHotelJsonRequest(Method.POST,
-							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-									URL_WEBAPI_USER_LOGIN).toString(),
-							loginParams, this,
-							mHostActivity));
-				} else {
+					mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(), loginParams, mUserLoginJsonResponseListener, mHostActivity));
+				} else
+				{
 					unLockUI();
 					loadLoginProcess(false);
 				}
 
-			} else {
+			} else
+			{
 				onError();
 			}
+		}
+	};
 
-		} else if (url.contains(URL_WEBAPI_RESERVE_SAVED_MONEY)) {
-			try {
+	private DailyHotelStringResponseListener mReserveSavedMoneyStringResponseListener = new DailyHotelStringResponseListener()
+	{
+
+		@Override
+		public void onResponse(String url, String response)
+		{
+
+			try
+			{
+				String result = null;
+
+				if (false == TextUtils.isEmpty(response))
+				{
+					result = response.trim();
+				}
+
 				DecimalFormat comma = new DecimalFormat("###,##0");
-				String str = comma.format(Integer.parseInt(response.trim()));
+				String str = comma.format(Integer.parseInt(result));
 				String locale = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_LOCALE, null);
-				
-				if (locale.equals("«—±πæÓ"))	tvBonus.setText(new StringBuilder(str).append(Html.fromHtml(getString(R.string.currency))));
-				else	tvBonus.setText(Html.fromHtml(getString(R.string.currency)) + " " + str);
 
-				// ªÁøÎ¿⁄ ¡§∫∏ ø‰√ª.
-				mQueue.add(new DailyHotelJsonRequest(Method.GET,
-						new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-								URL_WEBAPI_USER_INFO).toString(), null,
-						this, mHostActivity));
+				if (locale.equals("ÌïúÍµ≠Ïñ¥"))
+				{
+					tvBonus.setText(new StringBuilder(str).append(Html.fromHtml(getString(R.string.currency))));
+				} else
+				{
+					tvBonus.setText(Html.fromHtml(getString(R.string.currency)) + " " + str);
+				}
 
-			} catch (Exception e) {
+				// ÏÇ¨Ïö©Ïûê Ï†ïÎ≥¥ ÏöîÏ≤≠.
+				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, mHostActivity));
+
+			} catch (Exception e)
+			{
 				onError(e);
 			}
-		}
-	}
 
+		}
+	};
+
+	//	@Override
+	//	public void onResponse(String url, JSONObject response) {
+	//		if (url.contains(URL_WEBAPI_USER_LOGIN)) {
+	//			try {
+	//				if (!response.getBoolean("login")) {
+	//					// Î°úÍ∑∏Ïù∏ Ïã§Ìå®
+	//					// data Ï¥àÍ∏∞Ìôî
+	//					SharedPreferences.Editor ed = mHostActivity.sharedPreference
+	//							.edit();
+	//					ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
+	//					ed.putString(KEY_PREFERENCE_USER_ID, null);
+	//					ed.putString(KEY_PREFERENCE_USER_PWD, null);
+	//					ed.commit();
+	//
+	//					unLockUI();
+	//					loadLoginProcess(false);
+	//
+	//				} else {
+	//					VolleyHttpClient.createCookie();
+	//					
+	//					// credit ÏöîÏ≤≠
+	//					mQueue.add(new DailyHotelStringRequest(Method.GET,
+	//							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+	//									URL_WEBAPI_RESERVE_SAVED_MONEY).toString(),
+	//							null, this, mHostActivity));
+	//
+	//				}
+	//			} catch (JSONException e) {
+	//				onError(e);
+	//			}
+	//
+	//		} else if (url.contains(URL_WEBAPI_USER_INFO)) {
+	//			try {
+	//				JSONObject obj = response;
+	//				mRecommendCode = obj.getString("rndnum");
+	//				tvRecommenderCode.setText(obj.getString("rndnum"));
+	//				
+	//				idx = obj.getString("idx");
+	//
+	//				// Ï†ÅÎ¶ΩÍ∏à Î™©Î°ù ÏöîÏ≤≠.
+	//				mQueue.add(new DailyHotelJsonRequest(Method.GET,
+	//						new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+	//								URL_WEBAPI_USER_BONUS_ALL).toString(), null,
+	//						this, mHostActivity));
+	//
+	//			} catch (Exception e) {
+	//				onError(e);
+	//			}
+	//
+	//		} else if (url.contains(URL_WEBAPI_USER_BONUS_ALL)) {//Ï†ÅÎ¶ΩÍ∏à ÎÇ¥Ïó≠Î¶¨Ïä§Ìä∏ 
+	//			try {
+	//				mCreditList = new ArrayList<Credit>();
+	//
+	//				JSONObject obj = response;
+	//				JSONArray arr = obj.getJSONArray("history");
+	//				for (int i = 0; i < arr.length(); i++) {
+	//					JSONObject historyObj = arr.getJSONObject(i);
+	//					String content = historyObj.getString("content");
+	//					String expires = historyObj.getString("expires");
+	//					String bonus = historyObj.getString("bonus");
+	//
+	//					mCreditList.add(new Credit(content, bonus, expires));
+	//				}
+	//
+	//				loadLoginProcess(true);
+	//				unLockUI();
+	//
+	//			} catch (Exception e) {
+	//				onError(e);
+	//			}
+	//		}
+	//
+	//	}
+	//
+	//	@Override
+	//	public void onResponse(String url, String response) {
+	//		if (url.contains(URL_WEBAPI_USER_ALIVE)) {
+	//			String result = response.trim();
+	//			if (result.equals("alive")) { // session alive
+	//				// credit ÏöîÏ≤≠
+	//				mQueue.add(new DailyHotelStringRequest(Method.GET,
+	//						new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+	//								URL_WEBAPI_RESERVE_SAVED_MONEY).toString(),
+	//						null, this, mHostActivity));
+	//
+	//			} else if (result.equals("dead")) { // session dead
+	//
+	//				// Ïû¨Î°úÍ∑∏Ïù∏
+	//				if (mHostActivity.sharedPreference.getBoolean(
+	//						KEY_PREFERENCE_AUTO_LOGIN, false)) {
+	//					String id = mHostActivity.sharedPreference.getString(
+	//							KEY_PREFERENCE_USER_ID, null);
+	//					String accessToken = mHostActivity.sharedPreference
+	//							.getString(KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
+	//					String pw = mHostActivity.sharedPreference.getString(
+	//							KEY_PREFERENCE_USER_PWD, null);
+	//
+	//					Map<String, String> loginParams = new HashMap<String, String>();
+	//
+	//					if (accessToken != null) {
+	//						loginParams.put("accessToken", accessToken);
+	//					} else {
+	//						loginParams.put("email", id);
+	//					}
+	//
+	//					loginParams.put("pw", pw);
+	//
+	//					mQueue.add(new DailyHotelJsonRequest(Method.POST,
+	//							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+	//									URL_WEBAPI_USER_LOGIN).toString(),
+	//							loginParams, this,
+	//							mHostActivity));
+	//				} else {
+	//					unLockUI();
+	//					loadLoginProcess(false);
+	//				}
+	//
+	//			} else {
+	//				onError();
+	//			}
+	//
+	//		} else if (url.contains(URL_WEBAPI_RESERVE_SAVED_MONEY)) {
+	//			try {
+	//				DecimalFormat comma = new DecimalFormat("###,##0");
+	//				String str = comma.format(Integer.parseInt(response.trim()));
+	//				String locale = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_LOCALE, null);
+	//				
+	//				if (locale.equals("ÌïúÍµ≠Ïñ¥"))	tvBonus.setText(new StringBuilder(str).append(Html.fromHtml(getString(R.string.currency))));
+	//				else	tvBonus.setText(Html.fromHtml(getString(R.string.currency)) + " " + str);
+	//
+	//				// ÏÇ¨Ïö©Ïûê Ï†ïÎ≥¥ ÏöîÏ≤≠.
+	//				mQueue.add(new DailyHotelJsonRequest(Method.GET,
+	//						new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+	//								URL_WEBAPI_USER_INFO).toString(), null,
+	//						this, mHostActivity));
+	//
+	//			} catch (Exception e) {
+	//				onError(e);
+	//			}
+	//		}
+	//	}
 }

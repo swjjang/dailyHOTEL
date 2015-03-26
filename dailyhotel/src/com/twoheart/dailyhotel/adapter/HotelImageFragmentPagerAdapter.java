@@ -8,46 +8,52 @@ import com.twoheart.dailyhotel.fragment.ImageViewFragment;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.viewpagerindicator.Loopable;
 
-public class HotelImageFragmentPagerAdapter extends FragmentPagerAdapter implements Loopable {
+public class HotelImageFragmentPagerAdapter extends FragmentPagerAdapter implements Loopable
+{
 
 	private HotelDetail mHotelDetail;
 	private int curPosReal;
 
-	public HotelImageFragmentPagerAdapter(FragmentManager fm, 
-			HotelDetail mHotelDetail) {
+	public HotelImageFragmentPagerAdapter(FragmentManager fm, HotelDetail mHotelDetail)
+	{
 		super(fm);
 		this.mHotelDetail = mHotelDetail;
 		this.curPosReal = 0;
 	}
 
 	@Override
-	public Fragment getItem(int position) {
+	public Fragment getItem(int position)
+	{
 		position = getRealPos(position);
 		curPosReal = position;
-		ImageViewFragment item = ImageViewFragment.newInstance(mHotelDetail.getImageUrl()
-				.get(position), mHotelDetail);
-		
+		ImageViewFragment item = ImageViewFragment.newInstance(mHotelDetail.getImageUrl().get(position), mHotelDetail);
+
 		return item;
 	}
 
 	@Override
-	public int getCount() {
-		if(mHotelDetail.getImageUrl().size() == 0) return 0;
-		return Integer.MAX_VALUE; // ·çÇÁ¸¦ À§ÇÏ¿© ºäÆäÀÌÁö¸¦ ¿©·¯°³ ¸¸µë.
+	public int getCount()
+	{
+		if (mHotelDetail.getImageUrl().size() == 0)
+			return 0;
+		return Integer.MAX_VALUE; // ë£¨í”„ë¥¼ ìœ„í•˜ì—¬ ë·°í˜ì´ì§€ë¥¼ ì—¬ëŸ¬ê°œ ë§Œë“¬.
 	}
 
 	@Override
-	public int getRealCount() {
+	public int getRealCount()
+	{
 		return mHotelDetail.getImageUrl().size();
 	}
 
 	@Override
-	public int getRealPos(int fakePos) {
+	public int getRealPos(int fakePos)
+	{
 		return fakePos % getRealCount();
 	}
-	
+
 	@Override
-	public int getRealCurPos() {
+	public int getRealCurPos()
+	{
 		return curPosReal;
 	}
 

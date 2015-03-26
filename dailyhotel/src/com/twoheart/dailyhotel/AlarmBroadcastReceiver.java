@@ -1,8 +1,6 @@
 package com.twoheart.dailyhotel;
 
-
 import android.app.Activity;
-
 import android.app.KeyguardManager;
 import android.app.KeyguardManager.KeyguardLock;
 import android.app.Notification;
@@ -17,41 +15,43 @@ import com.twoheart.dailyhotel.activity.PushDialogActivity;
 import com.twoheart.dailyhotel.util.WakeLock;
 
 /**
- * ÆÇ¸Å°¡ Á¾·áµÈ ½Ã°£ÀÏ¶§ ¿ÀÇÂ ¾Ë¶÷¹Ş±â¸¦ ¼³Á¤ ÇÑ °æ¿ì È£ÃâµÇ´Â ºê·ÎµåÄ³½ºÆ® ¸®½Ã¹ö
+ * íŒë§¤ê°€ ì¢…ë£Œëœ ì‹œê°„ì¼ë•Œ ì˜¤í”ˆ ì•ŒëŒë°›ê¸°ë¥¼ ì„¤ì • í•œ ê²½ìš° í˜¸ì¶œë˜ëŠ” ë¸Œë¡œë“œìºìŠ¤íŠ¸ ë¦¬ì‹œë²„
+ * 
  * @author jangjunho
  *
  */
-public class AlarmBroadcastReceiver extends BroadcastReceiver{
-	
+public class AlarmBroadcastReceiver extends BroadcastReceiver
+{
+
 	@Override
-	public void onReceive(Context context, Intent intent) {
+	public void onReceive(Context context, Intent intent)
+	{
 		WaitTimerFragment.isEnabledNotify = false;
-		
+
 		String title = context.getString(R.string.alarm_title);
 		String msg = context.getString(R.string.alarm_msg);
 		String ticker = context.getString(R.string.alarm_ticker);
-		
+
 		PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
 		boolean isScreenOn = pm.isScreenOn();
-		
-		if (!isScreenOn) { // ½ºÅ©¸° ²¨Á®ÀÖÀ½
-			WakeLock.acquireWakeLock(context, PowerManager.FULL_WAKE_LOCK
-					| PowerManager.ACQUIRE_CAUSES_WAKEUP);	// PushDialogActivity¿¡¼­ release ÇØÁÜ.
-			KeyguardManager manager = (KeyguardManager)context.getSystemService(Activity.KEYGUARD_SERVICE);  
-			KeyguardLock lock = manager.newKeyguardLock(Context.KEYGUARD_SERVICE);  
-			lock.disableKeyguard();  
-			
+
+		if (!isScreenOn)
+		{ // ìŠ¤í¬ë¦° êº¼ì ¸ìˆìŒ
+			// PushDialogActivityì—ì„œ releaseí•´ì¤Œ.
+			WakeLock.acquireWakeLock(context, PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP);
+			KeyguardManager manager = (KeyguardManager) context.getSystemService(Activity.KEYGUARD_SERVICE);
+			KeyguardLock lock = manager.newKeyguardLock(Context.KEYGUARD_SERVICE);
+			lock.disableKeyguard();
+
 			Intent i = new Intent(context, PushDialogActivity.class);
-			i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | 
-					Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			context.startActivity(i);
 		}
-		
-		PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class).
-				setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
-		
+
+		PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
+
 		NotificationManager notificationManager = (NotificationManager) context.getSystemService(Activity.NOTIFICATION_SERVICE);
-		
+
 		Notification notification = new Notification();
 		notification.icon = R.drawable.img_ic_appicon_feature;
 		notification.tickerText = ticker;
@@ -60,7 +60,7 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver{
 		notification.flags = Notification.FLAG_AUTO_CANCEL;
 		notification.setLatestEventInfo(context, title, msg, pendingIntent);
 		notificationManager.notify(0, notification);
-		
+
 	}
-	
+
 }

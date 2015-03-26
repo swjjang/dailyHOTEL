@@ -23,29 +23,28 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.twoheart.dailyhotel.activity.PushLockDialogActivity;
 import com.twoheart.dailyhotel.activity.ScreenOnPushDialogActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.WakeLock;
 
 /**
- * GCM ∏ﬁΩ√¡ˆ∞° ø√ ∞ÊøÏ Ω«¡¶∑Œ √≥∏Æ«œ¥¬ ≈¨∑°Ω∫,
- * Ω∫∏∂∆Æ∆˘¿Ã ≤®¡Æ¿÷¥¬ ∞ÊøÏ ¿·±›¿ª ∂’∞Ì ¥Ÿ¿ÃæÛ∑Œ±◊∏¶ ∂ÁøÚ.
- * Ω∫∏∂∆Æ∆˘¿Ã ƒ—¡Æ¿÷¿∏∏Á øÏ∏Æ æ€¿ª ≈≤ ªÛ≈¬ø°º≠ ∞·¡¶ øœ∑· ∏ﬁΩ√¡ˆ∏¶ πﬁæ“¥Ÿ∏È, ∞·¡¶øœ∑· ¥Ÿ¿ÃæÛ∑Œ±◊∏¶ ∂ÁøÚ.
- * ≥Î∆º««ƒ…¿Ãº«¿∫ GCM¿Ã µÈæÓø¿¥¬ æÓ∂∞«— ∞ÊøÏø°µµ ∏µŒ ∂ÁøÚ.
+ * GCM Î©îÏãúÏßÄÍ∞Ä Ïò¨ Í≤ΩÏö∞ Ïã§Ï†úÎ°ú Ï≤òÎ¶¨ÌïòÎäî ÌÅ¥ÎûòÏä§, Ïä§ÎßàÌä∏Ìè∞Ïù¥ Í∫ºÏ†∏ÏûàÎäî Í≤ΩÏö∞ Ïû†Í∏àÏùÑ Îö´Í≥† Îã§Ïù¥ÏñºÎ°úÍ∑∏Î•º ÎùÑÏõÄ. Ïä§ÎßàÌä∏Ìè∞Ïù¥ ÏºúÏ†∏ÏûàÏúºÎ©∞ Ïö∞Î¶¨ Ïï±ÏùÑ
+ * ÌÇ® ÏÉÅÌÉúÏóêÏÑú Í≤∞Ï†ú ÏôÑÎ£å Î©îÏãúÏßÄÎ•º Î∞õÏïòÎã§Î©¥, Í≤∞Ï†úÏôÑÎ£å Îã§Ïù¥ÏñºÎ°úÍ∑∏Î•º ÎùÑÏõÄ. ÎÖ∏Ìã∞ÌîºÏºÄÏù¥ÏÖòÏùÄ GCMÏù¥ Îì§Ïñ¥Ïò§Îäî Ïñ¥Îñ†Ìïú Í≤ΩÏö∞ÏóêÎèÑ Î™®Îëê ÎùÑÏõÄ.
  * 
- * case 1 : »ﬁ¥Î∆˘¿Ã ƒ—¡Æ¿÷¡ˆ∏∏ «ˆ¿Á µ•¿œ∏Æ»£≈⁄¿Ã ƒ—¡Æ¿÷¡ˆ æ ¿∫ ªÛ»≤, => «™Ω√∏∏ ∂‰ 
- * case 2 : »ﬁ¥Î∆˘¿Ã ƒ—¡Æ¿÷∞Ì µ•¿œ∏Æ»£≈⁄¿Ã ƒ—¡Æ¿÷¥¬ ªÛ»≤ => «™Ω√, ¥Ÿ¿ÃæÛ∑Œ±◊«¸ «™Ω√ ∂‰
- * case 3 : »ﬁ¥Î∆˘¿Ã ≤®¡Æ¿÷¥¬ ∞ÊøÏ => ¥Ÿ¿ÃæÛ∑Œ±◊«¸ «™Ω√∏∏ ∂‰
+ * case 1 : Ìú¥ÎåÄÌè∞Ïù¥ ÏºúÏ†∏ÏûàÏßÄÎßå ÌòÑÏû¨ Îç∞ÏùºÎ¶¨Ìò∏ÌÖîÏù¥ ÏºúÏ†∏ÏûàÏßÄ ÏïäÏùÄ ÏÉÅÌô©, => Ìë∏ÏãúÎßå Îú∏ case 2 : Ìú¥ÎåÄÌè∞Ïù¥ ÏºúÏ†∏ÏûàÍ≥† Îç∞ÏùºÎ¶¨Ìò∏ÌÖîÏù¥
+ * ÏºúÏ†∏ÏûàÎäî ÏÉÅÌô© => Ìë∏Ïãú, Îã§Ïù¥ÏñºÎ°úÍ∑∏Ìòï Ìë∏Ïãú Îú∏ case 3 : Ìú¥ÎåÄÌè∞Ïù¥ Í∫ºÏ†∏ÏûàÎäî Í≤ΩÏö∞ => Îã§Ïù¥ÏñºÎ°úÍ∑∏Ìòï Ìë∏ÏãúÎßå Îú∏
+ * 
  * @author jangjunho
  *
  */
-public class GcmIntentService extends IntentService implements Constants{
+public class GcmIntentService extends IntentService implements Constants
+{
 
 	public static final int NOTIFICATION_ID = 1;
 	private NotificationManager mNotificationManager;
@@ -53,210 +52,224 @@ public class GcmIntentService extends IntentService implements Constants{
 	private boolean mIsSound;
 	private MixpanelAPI mMixpanel;
 
-	public GcmIntentService() {
+	public GcmIntentService()
+	{
 		super("GcmIntentService");
 	}
-	
+
 	@Override
-	public void onCreate() {
+	public void onCreate()
+	{
 		mMixpanel = MixpanelAPI.getInstance(getApplicationContext(), "791b366dadafcd37803f6cd7d8358373");
 		super.onCreate();
 	}
 
 	@Override
-	protected void onHandleIntent(Intent intent) {
+	protected void onHandleIntent(Intent intent)
+	{
 		Bundle extras = intent.getExtras();
 		GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
 
 		String messageType = gcm.getMessageType(intent);
-		
+
 		mIsBadge = false;
 		mIsSound = true;
 
-		if (!extras.isEmpty()) { 
+		if (!extras.isEmpty())
+		{
 
-			try {
-				// ¡ﬂ∫π √º≈©∏¶ ¿ß«— ∞™ 
+			try
+			{
+				// Ï§ëÎ≥µ Ï≤¥ÌÅ¨Î•º ÏúÑÌïú Í∞í 
 				String collapseKey = intent.getStringExtra("collapse_key");
-	            
+
 				JSONObject jsonMsg = new JSONObject(extras.getString("message"));
 				String msg = jsonMsg.getString("msg");
 				int type = -1;
-				
-				if (jsonMsg.getString("type").equals("notice")) type = PUSH_TYPE_NOTICE;
-				else if (jsonMsg.getString("type").equals("account_complete")) type = PUSH_TYPE_ACCOUNT_COMPLETE;
-				
-				if (!jsonMsg.isNull("badge")) mIsBadge = jsonMsg.getBoolean("badge");
-				if (!jsonMsg.isNull("sound")) mIsSound = jsonMsg.getBoolean("sound");
+
+				if (jsonMsg.getString("type").equals("notice"))
+					type = PUSH_TYPE_NOTICE;
+				else if (jsonMsg.getString("type").equals("account_complete"))
+					type = PUSH_TYPE_ACCOUNT_COMPLETE;
+
+				if (!jsonMsg.isNull("badge"))
+					mIsBadge = jsonMsg.getBoolean("badge");
+				if (!jsonMsg.isNull("sound"))
+					mIsSound = jsonMsg.getBoolean("sound");
 				SharedPreferences pref = this.getSharedPreferences(NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
-				
-				switch (type) {
-				case PUSH_TYPE_ACCOUNT_COMPLETE:
-//					sendPush(messageType, type, msg, "", "");
-//					break;
-					String tid = jsonMsg.getString("TID");
-					String hotelName = jsonMsg.getString("hotelName");
-					String paidPrice = jsonMsg.getString("paidPrice");
-					
-					if (collapseKey.equals(pref.getString("collapseKey", ""))) {
-						break;
-					} else {
-						Editor editor = pref.edit();
-						editor.putString("collapseKey", collapseKey);
-						editor.apply();
-						sendPush(messageType, type, msg);
-						
-						SimpleDateFormat dateFormat = new  SimpleDateFormat("yyMMddHHmmss", java.util.Locale.getDefault());
-						Date date = new Date();
-						String strDate = dateFormat.format(date);
-						int userIdx = Integer.parseInt(pref.getString(KEY_PREFERENCE_USER_IDX, "0"));
-						String userIdxStr = String.format("%07d", userIdx);
-						String transId = strDate + userIdxStr; //±‚≈∏ ∞·¡¶ºˆ¥‹¿∫ ¿Ã∞… transaction ID∑Œ ªÁøÎ«œ∞Ì ∞Ë¡¬¿Ã√º¿« ∞ÊøÏ ≥—∞‹πﬁ¥¬ tid∞™¿ª ªÁøÎ«‘. 
-						
-						RenewalGaManager.getInstance(getApplicationContext()).
-						purchaseComplete(
-								tid, 
-								hotelName, 
-								"unidentified", 
-								Double.parseDouble(paidPrice)
-								);
-						
-						SimpleDateFormat dateFormat2 = new  SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.getDefault());
-						strDate = dateFormat2.format(date);
-						
-						mMixpanel.getPeople().identify(userIdxStr);
-						
-						JSONObject properties = new JSONObject();
-						try {
-							properties.put("hotelName", hotelName);
-							properties.put("datetime", strDate); // ∞≈∑° Ω√∞£ = ø¨-ø˘-¿œTΩ√:∫–:√ 
-						} catch (JSONException e) {
-							e.printStackTrace();
+
+				switch (type)
+				{
+					case PUSH_TYPE_ACCOUNT_COMPLETE:
+						//					sendPush(messageType, type, msg, "", "");
+						//					break;
+						String tid = jsonMsg.getString("TID");
+						String hotelName = jsonMsg.getString("hotelName");
+						String paidPrice = jsonMsg.getString("paidPrice");
+
+						if (collapseKey.equals(pref.getString("collapseKey", "")))
+						{
+							break;
+						} else
+						{
+							Editor editor = pref.edit();
+							editor.putString("collapseKey", collapseKey);
+							editor.apply();
+							sendPush(messageType, type, msg);
+
+							SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmss", java.util.Locale.getDefault());
+							Date date = new Date();
+							String strDate = dateFormat.format(date);
+							int userIdx = Integer.parseInt(pref.getString(KEY_PREFERENCE_USER_IDX, "0"));
+							String userIdxStr = String.format("%07d", userIdx);
+							String transId = strDate + userIdxStr; //Í∏∞ÌÉÄ Í≤∞Ï†úÏàòÎã®ÏùÄ Ïù¥Í±∏ transaction IDÎ°ú ÏÇ¨Ïö©ÌïòÍ≥† Í≥ÑÏ¢åÏù¥Ï≤¥Ïùò Í≤ΩÏö∞ ÎÑòÍ≤®Î∞õÎäî tidÍ∞íÏùÑ ÏÇ¨Ïö©Ìï®. 
+
+							RenewalGaManager.getInstance(getApplicationContext()).purchaseComplete(tid, hotelName, "unidentified", Double.parseDouble(paidPrice));
+
+							SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.getDefault());
+							strDate = dateFormat2.format(date);
+
+							mMixpanel.getPeople().identify(userIdxStr);
+
+							JSONObject properties = new JSONObject();
+							try
+							{
+								properties.put("hotelName", hotelName);
+								properties.put("datetime", strDate); // Í±∞Îûò ÏãúÍ∞Ñ = Ïó∞-Ïõî-ÏùºTÏãú:Î∂Ñ:Ï¥à
+							} catch (JSONException e)
+							{
+								ExLog.e(e.toString());
+							}
+
+							mMixpanel.getPeople().trackCharge(Double.parseDouble(paidPrice), properties); // price = Í≤∞Ï†ú Í∏àÏï°
+
+							JSONObject props = new JSONObject();
+							try
+							{
+								props.put("hotelName", hotelName);
+								props.put("price", Double.parseDouble(paidPrice));
+								props.put("datetime", strDate);
+								props.put("userId", userIdxStr);
+								props.put("tranId", tid);
+							} catch (JSONException e)
+							{
+								ExLog.e(e.toString());
+							}
+
+							mMixpanel.track("transaction", props);
+							break;
 						}
-						
-						mMixpanel.getPeople().trackCharge(Double.parseDouble(paidPrice), properties); // price = ∞·¡¶ ±›æ◊
-						
-						JSONObject props = new JSONObject();
-						try {
-							props.put("hotelName", hotelName);
-							props.put("price", Double.parseDouble(paidPrice));
-							props.put("datetime", strDate);
-							props.put("userId", userIdxStr);
-							props.put("tranId", tid);
-						} catch (JSONException e) {
-							e.printStackTrace();
+						//					Log.d("GcmIntentService", "purchase complete!!!");
+
+					case PUSH_TYPE_NOTICE:
+						ExLog.d("GcmIntentService = notice complete!!!");
+						if (collapseKey.equals(pref.getString("collapseKey", "")))
+						{
+							break;
+
+						} else
+						{
+							Editor editor = pref.edit();
+							editor.putString("collapseKey", collapseKey);
+							editor.apply();
+							sendPush(messageType, type, msg);
+							break;
 						}
-						
-						mMixpanel.track("transaction", props);
-						break;
-					}
-//					Log.d("GcmIntentService", "purchase complete!!!");
-					
-				case PUSH_TYPE_NOTICE:
-					Log.d("GcmIntentService", "notice complete!!!");
-					if (collapseKey.equals(pref.getString("collapseKey", ""))) {
-						break;
-						
-					} else {
-						Editor editor = pref.edit();
-						editor.putString("collapseKey", collapseKey);
-						editor.apply();
-						sendPush(messageType, type, msg);
-						break;
-					}
 				}
-				android.util.Log.e("GCM_MESSAGE",jsonMsg.toString());
-			} catch (JSONException e) {
-				e.printStackTrace();
+				ExLog.e("GCM_MESSAGE = " + jsonMsg.toString());
+			} catch (JSONException e)
+			{
+				ExLog.e(e.toString());
 			}
 
 		}
 		GcmBroadcastReceiver.completeWakefulIntent(intent);
 	}
-	
-	public void sendPush(String messageType, int type, String msg) {
-		Log.d("GcmIntentService", "sendPush");
-		if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
-			
-			if (isScreenOn(this) && type != -1) { // µ•¿œ∏Æ»£≈⁄ æ€¿Ã ƒ—¡Æ¿÷¥¬∞ÊøÏ.
-				
-				ActivityManager am = (ActivityManager)getSystemService(ACTIVITY_SERVICE);
+
+	public void sendPush(String messageType, int type, String msg)
+	{
+		ExLog.d("GcmIntentService = sendPush");
+		if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType))
+		{
+
+			if (isScreenOn(this) && type != -1)
+			{ // Îç∞ÏùºÎ¶¨Ìò∏ÌÖî Ïï±Ïù¥ ÏºúÏ†∏ÏûàÎäîÍ≤ΩÏö∞.
+
+				ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
 				ComponentName topActivity = am.getRunningTasks(1).get(0).topActivity;
 				String className = topActivity.getClassName();
 
-				android.util.Log.e("CURRENT_ACTIVITY_PACKAGE", className+" / "+className);
-				
-				if (className.contains("dailyhotel") && !className.contains("GcmLockDialogActivity") && !mIsBadge) {
-					
+				ExLog.e("CURRENT_ACTIVITY_PACKAGE = " + className + " / " + className);
+
+				if (className.contains("dailyhotel") && !className.contains("GcmLockDialogActivity") && !mIsBadge)
+				{
+
 					Intent i = new Intent(this, ScreenOnPushDialogActivity.class);
 					i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, type);
 					i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG, msg);
 					startActivity(i);
 				}
-				
-			} else if (!isScreenOn(this) && !mIsBadge) { // Ω∫≈©∏∞ ≤®¡Æ¿÷¥¬∞ÊøÏ
-				
-				WakeLock.acquireWakeLock(this, PowerManager.FULL_WAKE_LOCK
-						| PowerManager.ACQUIRE_CAUSES_WAKEUP);	// PushDialogActivityø°º≠ release «ÿ¡‹.
-				KeyguardManager manager = (KeyguardManager)getSystemService(Activity.KEYGUARD_SERVICE);  
-				KeyguardLock lock = manager.newKeyguardLock(Context.KEYGUARD_SERVICE);  
-				lock.disableKeyguard();  // ±‚¡∏¿« ¿·±›»≠∏È¿ª disable
+
+			} else if (!isScreenOn(this) && !mIsBadge)
+			{ // Ïä§ÌÅ¨Î¶∞ Í∫ºÏ†∏ÏûàÎäîÍ≤ΩÏö∞
+
+				WakeLock.acquireWakeLock(this, PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP); // PushDialogActivityÏóêÏÑú release Ìï¥Ï§å.
+				KeyguardManager manager = (KeyguardManager) getSystemService(Activity.KEYGUARD_SERVICE);
+				KeyguardLock lock = manager.newKeyguardLock(Context.KEYGUARD_SERVICE);
+				lock.disableKeyguard(); // Í∏∞Ï°¥Ïùò Ïû†Í∏àÌôîÎ©¥ÏùÑ disable
 
 				Intent i = new Intent(this, PushLockDialogActivity.class);
 				i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG, msg);
 				i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, type);
-				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | 
-						Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				this.startActivity(i);
 			}
-			// ≥Î∆º««ƒ…¿Ãº«¿∫ ƒ…¿ÃΩ∫ø° ªÛ∞¸æ¯¿Ã «◊ªÛ ∂ﬂµµ∑œ«‘.
+			// ÎÖ∏Ìã∞ÌîºÏºÄÏù¥ÏÖòÏùÄ ÏºÄÏù¥Ïä§Ïóê ÏÉÅÍ¥ÄÏóÜÏù¥ Ìï≠ÏÉÅ Îú®ÎèÑÎ°ùÌï®.
 			sendNotification(type, msg);
 		}
 	}
 
-	public boolean isScreenOn(Context context) {
-		return ((PowerManager)context.getSystemService(Context.POWER_SERVICE)).isScreenOn();
+	public boolean isScreenOn(Context context)
+	{
+		return ((PowerManager) context.getSystemService(Context.POWER_SERVICE)).isScreenOn();
 	}
 
-	private void sendNotification(int type, String msg) {
-		mNotificationManager = (NotificationManager)
-				this.getSystemService(Context.NOTIFICATION_SERVICE);
+	private void sendNotification(int type, String msg)
+	{
+		mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 
 		Intent intent = new Intent(this, MainActivity.class);
-		if (type == PUSH_TYPE_ACCOUNT_COMPLETE) { 
+		if (type == PUSH_TYPE_ACCOUNT_COMPLETE)
+		{
 			intent.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, PUSH_TYPE_ACCOUNT_COMPLETE);
-		} else if (type == PUSH_TYPE_NOTICE) {
+		} else if (type == PUSH_TYPE_NOTICE)
+		{
 			intent.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, PUSH_TYPE_NOTICE);
 		}
-		
-		// type¿∫ notice ≈∏¿‘∞˙ account_complete ≈∏¿‘¿Ã ¡∏¿Á«‘. reservation¿œ ∞ÊøÏ øπæ‡»Æ¿Œ √¢¿∏∑Œ ¿Ãµø.
 
-		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-				intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		// typeÏùÄ notice ÌÉÄÏûÖÍ≥º account_complete ÌÉÄÏûÖÏù¥ Ï°¥Ïû¨Ìï®. reservationÏùº Í≤ΩÏö∞ ÏòàÏïΩÌôïÏù∏ Ï∞ΩÏúºÎ°ú Ïù¥Îèô.
+
+		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 		Uri uri = null;
-		
-		if (mIsSound) uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-		else uri = null;
 
-		NotificationCompat.Builder mBuilder =
-				new NotificationCompat.Builder(this)
-		.setSmallIcon(R.drawable.img_ic_appicon_feature)
-		.setContentTitle(getString(R.string.app_name))
-		.setAutoCancel(true)
-		.setSound(uri)
-		.setContentText(msg);
+		if (mIsSound)
+			uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+		else
+			uri = null;
+
+		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.img_ic_appicon_feature).setContentTitle(getString(R.string.app_name)).setAutoCancel(true).setSound(uri).setContentText(msg);
 
 		mBuilder.setContentIntent(contentIntent);
 		mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
 	}
-	
+
 	@Override
-	public void onDestroy() {
+	public void onDestroy()
+	{
 		mMixpanel.flush();
 		super.onDestroy();
 	}
-	
 
 }

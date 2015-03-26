@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
  *
- * SignupActivity (È¸¿ø°¡ÀÔÈ­¸é)
+ * SignupActivity (íšŒì›ê°€ì…í™”ë©´)
  * 
- * »õ·Î¿î »ç¿ëÀÚ °¡ÀÔÇÏ´Â È­¸éÀÌ´Ù. »õ·Î¿î »ç¿ëÀÚ·ÎºÎÅÍ ÀÌ¸ŞÀÏ, ÀÌ¸§, ÆĞ½º¿öµå,
- * ÃßÃµÀÎ ÄÚµå¸¦ ÀÔ·Â¹Ş´Â´Ù. È¸¿ø°¡ÀÔÇÏ´Â À¥¼­¹ö API¸¦ ÀÌ¿ëÇÑ´Ù.
+ * ìƒˆë¡œìš´ ì‚¬ìš©ì ê°€ì…í•˜ëŠ” í™”ë©´ì´ë‹¤. ìƒˆë¡œìš´ ì‚¬ìš©ìë¡œë¶€í„° ì´ë©”ì¼, ì´ë¦„, íŒ¨ìŠ¤ì›Œë“œ,
+ * ì¶”ì²œì¸ ì½”ë“œë¥¼ ì…ë ¥ë°›ëŠ”ë‹¤. íšŒì›ê°€ì…í•˜ëŠ” ì›¹ì„œë²„ APIë¥¼ ì´ìš©í•œë‹¤.
  *
  * @since 2014-02-24
  * @version 1
@@ -19,7 +19,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -27,7 +26,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -39,28 +37,27 @@ import com.android.volley.Request.Method;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Crypto;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
-import com.twoheart.dailyhotel.util.Constants.Stores;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
-public class SignupActivity extends BaseActivity implements OnClickListener,
-		DailyHotelJsonResponseListener {
-
-	private static final String TAG = "SignupActivity";
+public class SignupActivity extends BaseActivity implements OnClickListener
+{
 
 	private EditText etEmail, etName, etPhone, etPwd, etRecommender;
 	private TextView tvTerm, tvPrivacy;
 	private Button btnSignUp;
-	
+
 	private Map<String, String> signupParams;
-	
+
 	private MixpanelAPI mMixpanel;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
 		setActionBar(R.string.actionbar_title_signup_activity);
 		setContentView(R.layout.activity_signup);
@@ -84,65 +81,81 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 	}
 
 	@Override
-	protected void onStart() {
+	protected void onStart()
+	{
 		super.onStart();
 	}
 
-	// ±â±âÀÇ ¹øÈ£¸¦ ¹Ş¾Æ¿È
-	public void getPhoneNumber() {
+	// ê¸°ê¸°ì˜ ë²ˆí˜¸ë¥¼ ë°›ì•„ì˜´
+	public void getPhoneNumber()
+	{
 		TelephonyManager telManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 		String phoneNum = telManager.getLine1Number();
 		etPhone.setText(phoneNum);
 	}
 
-	public boolean checkInput() {
-		if (etEmail.getText().toString().equals("")) return false;
-		else if (etName.getText().toString().equals("")) return false;
-		else if (etPhone.getText().toString().equals("")) return false;
-		else if (etPwd.getText().toString().equals("")) return false;
-		else return true;
+	public boolean checkInput()
+	{
+		if (etEmail.getText().toString().equals(""))
+			return false;
+		else if (etName.getText().toString().equals(""))
+			return false;
+		else if (etPhone.getText().toString().equals(""))
+			return false;
+		else if (etPwd.getText().toString().equals(""))
+			return false;
+		else
+			return true;
 	}
 
-	public boolean isValidEmail(String inputStr) {
+	public boolean isValidEmail(String inputStr)
+	{
 		Pattern p = Pattern.compile("^[_a-zA-Z0-9-]+(.[_a-zA-Z0-9-]+)*@(?:\\w+\\.)+\\w+$");
 		Matcher m = p.matcher(inputStr);
 		return m.matches();
 	}
 
-	public boolean isValidPhone(String inputStr) {
+	public boolean isValidPhone(String inputStr)
+	{
 		Pattern p = Pattern.compile("^(01[0|1|6|7|8|9])(\\d{4}|\\d{3})(\\d{4})$");
 		Matcher m = p.matcher(inputStr);
 		return m.matches();
 	}
 
-	public boolean isVaildrecommend(String inputStr) {
+	public boolean isVaildrecommend(String inputStr)
+	{
 		Pattern p = Pattern.compile("^[a-zA-Z0-9]+$");
 		Matcher m = p.matcher(inputStr);
 		return m.matches();
 	}
 
 	@Override
-	public void onClick(View v) {
-		if (v.getId() == btnSignUp.getId()) { // È¸¿ø°¡ÀÔ
+	public void onClick(View v)
+	{
+		if (v.getId() == btnSignUp.getId())
+		{ // íšŒì›ê°€ì…
 
-			// ÇÊ¼ö ÀÔ·Â check
-			if (!checkInput()) {
+			// í•„ìˆ˜ ì…ë ¥ check
+			if (!checkInput())
+			{
 				showToast(getString(R.string.toast_msg_please_input_required_infos), Toast.LENGTH_SHORT, true);
 				return;
 			}
 
 			// email check
-			if (!isValidEmail(etEmail.getText().toString())) {
+			if (!isValidEmail(etEmail.getText().toString()))
+			{
 				showToast(getString(R.string.toast_msg_wrong_email_address), Toast.LENGTH_SHORT, true);
 				return;
 			}
 
-			if (etPwd.length() < 4) {
+			if (etPwd.length() < 4)
+			{
 				showToast(getString(R.string.toast_msg_please_input_password_more_than_4chars), Toast.LENGTH_SHORT, true);
 				return;
 			}
 			lockUI();
-			
+
 			signupParams = new HashMap<String, String>();
 			signupParams.put("email", etEmail.getText().toString());
 			signupParams.put("pw", etPwd.getText().toString());
@@ -150,34 +163,37 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 			signupParams.put("phone", etPhone.getText().toString());
 			TelephonyManager tManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 			signupParams.put("device", tManager.getDeviceId());
-			
+
 			String store = "";
-			if (RELEASE_STORE == Stores.N_STORE) {
+			if (RELEASE_STORE == Stores.N_STORE)
+			{
 				store = "Nstore";
-			} else if (RELEASE_STORE == Stores.PLAY_STORE) {
+			} else if (RELEASE_STORE == Stores.PLAY_STORE)
+			{
 				store = "PlayStore";
-			} else if (RELEASE_STORE == Stores.T_STORE) {
+			} else if (RELEASE_STORE == Stores.T_STORE)
+			{
 				store = "Tstore";
 			}
 			signupParams.put("marketType", store);
-			
+
 			String recommender = etRecommender.getText().toString().trim();
-			if (!recommender.equals(""))	signupParams.put("recommender", recommender);
-			
-			mQueue.add(new DailyHotelJsonRequest(Method.POST,
-					new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-							URL_WEBAPI_USER_SIGNUP).toString(), signupParams,
-					this, this));
-			
+			if (!recommender.equals(""))
+				signupParams.put("recommender", recommender);
+
+			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNUP).toString(), signupParams, mUserSignupJsonResponseListener, this));
+
 			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestSignup", null, null);
-			
-		} else if (v.getId() == tvTerm.getId()) { // ÀÌ¿ë¾à°ü
+
+		} else if (v.getId() == tvTerm.getId())
+		{ // ì´ìš©ì•½ê´€
 
 			Intent i = new Intent(this, TermActivity.class);
 			startActivity(i);
 			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
-		} else if (v.getId() == tvPrivacy.getId()) { // °³ÀÎÁ¤º¸ Ãë±Ş
+		} else if (v.getId() == tvPrivacy.getId())
+		{ // ê°œì¸ì •ë³´ ì·¨ê¸‰
 
 			Intent i = new Intent(this, PrivacyActivity.class);
 			startActivity(i);
@@ -186,7 +202,8 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 		}
 	}
 
-	public void storeLoginInfo() {
+	public void storeLoginInfo()
+	{
 
 		String id = etEmail.getText().toString();
 		String pwd = Crypto.encrypt(etPwd.getText().toString()).replace("\n", "");
@@ -201,95 +218,215 @@ public class SignupActivity extends BaseActivity implements OnClickListener,
 	}
 
 	@Override
-	public void finish() {
+	public void finish()
+	{
 		super.finish();
 		overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
 	}
 
 	@Override
-	public void onResponse(String url, JSONObject response) {
-		if (url.contains(URL_WEBAPI_USER_SIGNUP)) {
-			try {
-				JSONObject obj = response;
+	protected void onDestroy()
+	{
+		mMixpanel.flush();
+		super.onDestroy();
+	}
 
-				String result = obj.getString("join");
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Listener
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	private DailyHotelJsonResponseListener mUserSignupJsonResponseListener = new DailyHotelJsonResponseListener()
+	{
+
+		@Override
+		public void onResponse(String url, JSONObject response)
+		{
+
+			try
+			{
+				if (response == null)
+				{
+					throw new NullPointerException("response == null");
+				}
+
+				String result = response.getString("join");
 				String msg = null;
 
-				Log.d(TAG, response.toString());
-				if (obj.length() > 1) msg = obj.getString("msg");
+				if (response.length() > 1)
+				{
+					msg = response.getString("msg");
+				}
 
-				if (result.equals("true")) {
-					Log.d(TAG, "result? " + result);
+				if (result.equals("true") == true)
+				{
 					Map<String, String> loginParams = new HashMap<String, String>();
 					loginParams.put("email", signupParams.get("email"));
 					loginParams.put("pw", Crypto.encrypt(signupParams.get("pw")).replace("\n", ""));
-					Log.d(TAG, "email : " + loginParams.get("email") + " pw : " + loginParams.get("pw"));
-					mQueue.add(new DailyHotelJsonRequest(
-							Method.POST, new StringBuilder(
-									URL_DAILYHOTEL_SERVER).append(
-									URL_WEBAPI_USER_LOGIN)
-									.toString(), loginParams,
-							this, this));
-				} else {
+
+					ExLog.d("email : " + loginParams.get("email") + " pw : " + loginParams.get("pw"));
+
+					mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(), loginParams, mUserLoginJsonResponseListener, SignupActivity.this));
+				} else
+				{
 					unLockUI();
 					showToast(msg, Toast.LENGTH_LONG, true);
 				}
 
-			} catch (Exception e) {
+			} catch (Exception e)
+			{
 				onError(e);
 			}
-		} else if (url.contains(URL_WEBAPI_USER_LOGIN)) {
-			
-			try {
-				Log.d(TAG, response.toString());
-				if (response.getBoolean("login")) {
+
+		}
+	};
+
+	private DailyHotelJsonResponseListener mUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
+	{
+
+		@Override
+		public void onResponse(String url, JSONObject response)
+		{
+			try
+			{
+				if (response == null)
+				{
+					throw new NullPointerException("response == null");
+				}
+
+				if (response.getBoolean("login") == true)
+				{
 					VolleyHttpClient.createCookie();
 					unLockUI();
-//					showToast(getString(R.string.toast_msg_success_to_signup), Toast.LENGTH_LONG, false);
-					
+					//					showToast(getString(R.string.toast_msg_success_to_signup), Toast.LENGTH_LONG, false);
+
 					storeLoginInfo();
-					
+
 					lockUI();
-					mQueue.add(new DailyHotelJsonRequest(Method.POST,
-							new StringBuilder(URL_DAILYHOTEL_SERVER)
-					.append(URL_WEBAPI_USER_INFO).toString(), null, this, this));
-					
-//					finish();
-				} 
+					mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, SignupActivity.this));
 
-			} catch (JSONException e) {
+					//					finish();
+				}
+			} catch (Exception e)
+			{
 				onError(e);
-			} 
-		} else if (url.contains(URL_WEBAPI_USER_INFO)) {
+			}
 
-			try {
-				unLockUI();
+		}
+	};
+
+	private DailyHotelJsonResponseListener mUserInfoJsonResponseListener = new DailyHotelJsonResponseListener()
+	{
+
+		@Override
+		public void onResponse(String url, JSONObject response)
+		{
+
+			unLockUI();
+
+			try
+			{
 				int userIdx = response.getInt("idx");
 				String userIdxStr = String.format("%07d", userIdx);
-				
-				SimpleDateFormat dateFormat = new  SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.getDefault());
+
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.getDefault());
 				Date date = new Date();
 				String strDate = dateFormat.format(date);
-				
+
 				mMixpanel.getPeople().identify(userIdxStr);
-				
+
 				JSONObject props = new JSONObject();
 				props.put("userId", userIdxStr);
 				props.put("datetime", strDate);
 				props.put("method", "email");
 				mMixpanel.track("signup", props);
-				
+
 				showToast(getString(R.string.toast_msg_success_to_signup), Toast.LENGTH_LONG, false);
 				finish();
-			} catch (Exception e) {
+			} catch (Exception e)
+			{
 				onError(e);
 			}
 		}
-	}
-	
-	@Override
-	protected void onDestroy() {
-		mMixpanel.flush();
-		super.onDestroy();
-	}
+	};
+
+	//	@Override
+	//	public void onResponse(String url, JSONObject response) {
+	//		if (url.contains(URL_WEBAPI_USER_SIGNUP)) {
+	//			try {
+	//				JSONObject obj = response;
+	//
+	//				String result = obj.getString("join");
+	//				String msg = null;
+	//
+	//				ExLog.d(response.toString());
+	//				if (obj.length() > 1) msg = obj.getString("msg");
+	//
+	//				if (result.equals("true")) {
+	//					ExLog.d("result? " + result);
+	//					Map<String, String> loginParams = new HashMap<String, String>();
+	//					loginParams.put("email", signupParams.get("email"));
+	//					loginParams.put("pw", Crypto.encrypt(signupParams.get("pw")).replace("\n", ""));
+	//					ExLog.d("email : " + loginParams.get("email") + " pw : " + loginParams.get("pw"));
+	//					mQueue.add(new DailyHotelJsonRequest(
+	//							Method.POST, new StringBuilder(
+	//									URL_DAILYHOTEL_SERVER).append(
+	//									URL_WEBAPI_USER_LOGIN)
+	//									.toString(), loginParams,
+	//							this, this));
+	//				} else {
+	//					unLockUI();
+	//					showToast(msg, Toast.LENGTH_LONG, true);
+	//				}
+	//
+	//			} catch (Exception e) {
+	//				onError(e);
+	//			}
+	//		} else if (url.contains(URL_WEBAPI_USER_LOGIN)) {
+	//			
+	//			try {
+	//				ExLog.d(response.toString());
+	//				if (response.getBoolean("login")) {
+	//					VolleyHttpClient.createCookie();
+	//					unLockUI();
+	////					showToast(getString(R.string.toast_msg_success_to_signup), Toast.LENGTH_LONG, false);
+	//					
+	//					storeLoginInfo();
+	//					
+	//					lockUI();
+	//					mQueue.add(new DailyHotelJsonRequest(Method.POST,
+	//							new StringBuilder(URL_DAILYHOTEL_SERVER)
+	//					.append(URL_WEBAPI_USER_INFO).toString(), null, this, this));
+	//					
+	////					finish();
+	//				} 
+	//
+	//			} catch (JSONException e) {
+	//				onError(e);
+	//			} 
+	//		} else if (url.contains(URL_WEBAPI_USER_INFO)) {
+	//
+	//			try {
+	//				unLockUI();
+	//				int userIdx = response.getInt("idx");
+	//				String userIdxStr = String.format("%07d", userIdx);
+	//				
+	//				SimpleDateFormat dateFormat = new  SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.getDefault());
+	//				Date date = new Date();
+	//				String strDate = dateFormat.format(date);
+	//				
+	//				mMixpanel.getPeople().identify(userIdxStr);
+	//				
+	//				JSONObject props = new JSONObject();
+	//				props.put("userId", userIdxStr);
+	//				props.put("datetime", strDate);
+	//				props.put("method", "email");
+	//				mMixpanel.track("signup", props);
+	//				
+	//				showToast(getString(R.string.toast_msg_success_to_signup), Toast.LENGTH_LONG, false);
+	//				finish();
+	//			} catch (Exception e) {
+	//				onError(e);
+	//			}
+	//		}
+	//	}
 }

@@ -3,8 +3,8 @@
  *
  * VolleyHttpClient
  * 
- * ³×Æ®¿öÅ© ÀÌ¹ÌÁö Ã³¸® ¹× ³×Æ®¿öÅ© Ã³¸® ÀÛ¾÷À» ´ã´çÇÏ´Â ¿ÜºÎ ¶óÀÌºê·¯¸® Vol
- * ley¸¦ ³×Æ®¿öÅ© Ã³¸® ÀÛ¾÷À» ¸ñÀûÀ¸·Î »ç¿ëÇÏ±â À§ÇØ ¼³Á¤ÇÏ´Â À¯Æ¿ Å¬·¡½ºÀÌ´Ù. 
+ * ë„¤íŠ¸ì›Œí¬ ì´ë¯¸ì§€ ì²˜ë¦¬ ë° ë„¤íŠ¸ì›Œí¬ ì²˜ë¦¬ ì‘ì—…ì„ ë‹´ë‹¹í•˜ëŠ” ì™¸ë¶€ ë¼ì´ë¸ŒëŸ¬ë¦¬ Vol
+ * leyë¥¼ ë„¤íŠ¸ì›Œí¬ ì²˜ë¦¬ ì‘ì—…ì„ ëª©ì ìœ¼ë¡œ ì‚¬ìš©í•˜ê¸° ìœ„í•´ ì„¤ì •í•˜ëŠ” ìœ í‹¸ í´ë˜ìŠ¤ì´ë‹¤. 
  *
  * @since 2014-02-24
  * @version 1
@@ -35,7 +35,8 @@ import com.android.volley.toolbox.Volley;
 import com.twoheart.dailyhotel.util.AvailableNetwork;
 import com.twoheart.dailyhotel.util.Constants;
 
-public class VolleyHttpClient implements Constants {
+public class VolleyHttpClient implements Constants
+{
 
 	private static final String KEY_DAILYHOTEL_COOKIE = "JSESSIONID";
 
@@ -46,86 +47,87 @@ public class VolleyHttpClient implements Constants {
 	private static Context sContext;
 	private static HttpClient sHttpClient;
 
-	public static void init(Context context) {
+	public static void init(Context context)
+	{
 
 		HttpParams params = new BasicHttpParams();
 		SchemeRegistry registry = new SchemeRegistry();
-		registry.register(new Scheme("http", PlainSocketFactory
-				.getSocketFactory(), 80));
-		ClientConnectionManager cm = new ThreadSafeClientConnManager(params,
-				registry);
+		registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+		ClientConnectionManager cm = new ThreadSafeClientConnManager(params, registry);
 		sHttpClient = new DefaultHttpClient(cm, params);
 
 		sContext = context;
-		sRequestQueue = Volley.newRequestQueue(sContext, new HttpClientStack(
-				sHttpClient));
+		sRequestQueue = Volley.newRequestQueue(sContext, new HttpClientStack(sHttpClient));
 		// sRequestQueue = Volley.newRequestQueue(sContext);
-		
+
 	}
 
-	public static RequestQueue getRequestQueue() {
-		if (sRequestQueue == null) init(sContext);
+	public static RequestQueue getRequestQueue()
+	{
+		if (sRequestQueue == null)
+			init(sContext);
 		return sRequestQueue;
-		
+
 	}
-	
-	public static Boolean isAvailableNetwork() {
+
+	public static Boolean isAvailableNetwork()
+	{
 		boolean result = false;
 
 		AvailableNetwork availableNetwork = AvailableNetwork.getInstance();
 
-		switch (availableNetwork.getNetType(sContext)) {
-		case AvailableNetwork.NET_TYPE_WIFI:
-			// WIFI ¿¬°á»óÅÂ
-			result = true;
-			break;
-		case AvailableNetwork.NET_TYPE_3G:
-			// 3G È¤Àº LTE¿¬°á »óÅÂ
-			result = true;
-			break;
-		case AvailableNetwork.NET_TYPE_NONE:
-			result = false;
-			break;
+		switch (availableNetwork.getNetType(sContext))
+		{
+			case AvailableNetwork.NET_TYPE_WIFI:
+				// WIFI ì—°ê²°ìƒíƒœ
+				result = true;
+				break;
+			case AvailableNetwork.NET_TYPE_3G:
+				// 3G í˜¹ì€ LTEì—°ê²° ìƒíƒœ
+				result = true;
+				break;
+			case AvailableNetwork.NET_TYPE_NONE:
+				result = false;
+				break;
 		}
 		return result;
 	}
 
-	// ¼­¹ö response·ÎºÎÅÍ cookie¸¦ °¡Á®¿Í ±â¾ïÇÔ.
-	// ·Î±×ÀÎ ¿äÃ» ÈÄ ¼º°øÀûÀ¸·Î ÀÀ´äÀ» ¹Ş¾ÒÀ» °æ¿ì ¹İµå½Ã ÀÌ ¸Ş¼­µå¸¦ »ç¿ëÇØ¾ß ÇÔ.
-	public static void createCookie() {
-		
-//		if (CookieManager.getInstance().getCookie(URL_DAILYHOTEL_SERVER) != null)
-//			Log.e("Common: " + CookieManager.getInstance().getCookie(URL_DAILYHOTEL_SERVER));
+	// ì„œë²„ responseë¡œë¶€í„° cookieë¥¼ ê°€ì ¸ì™€ ê¸°ì–µí•¨.
+	// ë¡œê·¸ì¸ ìš”ì²­ í›„ ì„±ê³µì ìœ¼ë¡œ ì‘ë‹µì„ ë°›ì•˜ì„ ê²½ìš° ë°˜ë“œì‹œ ì´ ë©”ì„œë“œë¥¼ ì‚¬ìš©í•´ì•¼ í•¨.
+	public static void createCookie()
+	{
 
-		List<Cookie> cookies = ((DefaultHttpClient) sHttpClient)
-				.getCookieStore().getCookies();
+		//		if (CookieManager.getInstance().getCookie(URL_DAILYHOTEL_SERVER) != null)
+		//			Log.e("Common: " + CookieManager.getInstance().getCookie(URL_DAILYHOTEL_SERVER));
 
-		
-		if (cookies != null) {
-			for (int i = 0; i < cookies.size(); i++) {
+		List<Cookie> cookies = ((DefaultHttpClient) sHttpClient).getCookieStore().getCookies();
+
+		if (cookies != null)
+		{
+			for (int i = 0; i < cookies.size(); i++)
+			{
 				Cookie newCookie = cookies.get(i);
-				
-				
-				if (newCookie.getName().equals(KEY_DAILYHOTEL_COOKIE)) {
-					
+
+				if (newCookie.getName().equals(KEY_DAILYHOTEL_COOKIE))
+				{
+
 					StringBuilder cookieString = new StringBuilder();
-					cookieString.append(newCookie.getName()).append("=")
-							.append(newCookie.getValue());
+					cookieString.append(newCookie.getName()).append("=").append(newCookie.getValue());
 					CookieManager.getInstance().setAcceptCookie(true);
-					
-					CookieManager.getInstance().setCookie(newCookie.getDomain(),
-							cookieString.toString());
-					
+
+					CookieManager.getInstance().setCookie(newCookie.getDomain(), cookieString.toString());
+
 					CookieSyncManager.getInstance().sync();
 				}
 			}
 		}
 	}
-	
-	// ·Î±×¾Æ¿ô ½Ã ¹İµå½Ã ÀÌ ¸Ş¼­µå¸¦ »ç¿ëÇØ¾ß ÇÔ.
-	public static void destroyCookie() {
-		CookieManager.getInstance()
-				.removeAllCookie();
+
+	// ë¡œê·¸ì•„ì›ƒ ì‹œ ë°˜ë“œì‹œ ì´ ë©”ì„œë“œë¥¼ ì‚¬ìš©í•´ì•¼ í•¨.
+	public static void destroyCookie()
+	{
+		CookieManager.getInstance().removeAllCookie();
 		CookieSyncManager.getInstance().sync();
 	}
 

@@ -19,37 +19,44 @@ import java.util.Locale;
 
 import android.content.Context;
 import android.graphics.Rect;
-import android.util.Log;
 import android.view.View;
+
+import com.twoheart.dailyhotel.util.ExLog;
 
 /**
  * Transforms source text into an ALL CAPS string, locale-aware.
  * 
  * @hide
  */
-public class AllCapsTransformationMethod implements TransformationMethodCompat2 {
+public class AllCapsTransformationMethod implements TransformationMethodCompat2
+{
 	private static final String TAG = "AllCapsTransformationMethod";
 
 	private boolean mEnabled;
 	private Locale mLocale;
 
-	public AllCapsTransformationMethod(Context context) {
+	public AllCapsTransformationMethod(Context context)
+	{
 		mLocale = context.getResources().getConfiguration().locale;
 	}
 
 	@Override
-	public CharSequence getTransformation(CharSequence source, View view) {
-		if (mEnabled) return source != null ? source.toString().toUpperCase(mLocale) : null;
-		Log.w(TAG, "Caller did not enable length changes; not transforming text");
+	public CharSequence getTransformation(CharSequence source, View view)
+	{
+		if (mEnabled)
+			return source != null ? source.toString().toUpperCase(mLocale) : null;
+		ExLog.w("Caller did not enable length changes; not transforming text");
 		return source;
 	}
 
 	@Override
-	public void onFocusChanged(View view, CharSequence sourceText, boolean focused, int direction, Rect previouslyFocusedRect) {
+	public void onFocusChanged(View view, CharSequence sourceText, boolean focused, int direction, Rect previouslyFocusedRect)
+	{
 	}
 
 	@Override
-	public void setLengthChangesAllowed(boolean allowLengthChanges) {
+	public void setLengthChangesAllowed(boolean allowLengthChanges)
+	{
 		mEnabled = allowLengthChanges;
 	}
 

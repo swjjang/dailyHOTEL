@@ -1,11 +1,11 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
  *
- * SettingFragment (º≥¡§ »≠∏È)
+ * SettingFragment (ÏÑ§Ï†ï ÌôîÎ©¥)
  * 
- * æÓ«√∏Æƒ…¿Ãº«¿« º≥¡§ »≠∏È¿Ã¥Ÿ. ∫‰¥¬ ∏ÆΩ∫∆Æ∫‰√≥∑≥ ∫∏¿Ã≥™ ∏ÆΩ∫∆Æ∫‰√≥∑≥ ∫∏¿Ãµµ∑œ
- * ±∏º∫µ» »≠∏È¿œ ª”¿Ã¥Ÿ. ¿Ã »≠∏Èø°º≠ «ˆ¿Á ∑Œ±◊¿Œ ªÛ≈¬∏¶ ∞°¡Æø¿±‚ ¿ß«ÿ ≥◊∆Æøˆ
- * ≈© ¿€æ˜¿ª «œ±‚µµ «—¥Ÿ.
+ * Ïñ¥ÌîåÎ¶¨ÏºÄÏù¥ÏÖòÏùò ÏÑ§Ï†ï ÌôîÎ©¥Ïù¥Îã§. Î∑∞Îäî Î¶¨Ïä§Ìä∏Î∑∞Ï≤òÎüº Î≥¥Ïù¥ÎÇò Î¶¨Ïä§Ìä∏Î∑∞Ï≤òÎüº Î≥¥Ïù¥ÎèÑÎ°ù
+ * Íµ¨ÏÑ±Îêú ÌôîÎ©¥Ïùº ÎøêÏù¥Îã§. Ïù¥ ÌôîÎ©¥ÏóêÏÑú ÌòÑÏû¨ Î°úÍ∑∏Ïù∏ ÏÉÅÌÉúÎ•º Í∞ÄÏ†∏Ïò§Í∏∞ ÏúÑÌï¥ ÎÑ§Ìä∏Ïõå
+ * ÌÅ¨ ÏûëÏóÖÏùÑ ÌïòÍ∏∞ÎèÑ ÌïúÎã§.
  *
  * @since 2014-02-24
  * @version 1
@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -36,7 +37,6 @@ import com.twoheart.dailyhotel.activity.NoticeActivity;
 import com.twoheart.dailyhotel.activity.ProfileActivity;
 import com.twoheart.dailyhotel.activity.VersionActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.Log;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -45,9 +45,8 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListe
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
-public class SettingFragment extends BaseFragment implements Constants,
-		DailyHotelStringResponseListener, DailyHotelJsonResponseListener,
-		OnClickListener {
+public class SettingFragment extends BaseFragment implements Constants, OnClickListener
+{
 
 	private MainActivity mHostActivity;
 	private RequestQueue mQueue;
@@ -58,8 +57,8 @@ public class SettingFragment extends BaseFragment implements Constants,
 	private String profileStr, loginStr;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+	{
 
 		View view = inflater.inflate(R.layout.fragment_setting, container, false);
 
@@ -86,142 +85,223 @@ public class SettingFragment extends BaseFragment implements Constants,
 		tvCall.setOnClickListener(this);
 		tvAbout.setOnClickListener(this);
 
-		try {
-			String currentVersion = mHostActivity.getPackageManager()
-					.getPackageInfo(mHostActivity.getPackageName(), 0).versionName;
+		try
+		{
+			String currentVersion = mHostActivity.getPackageManager().getPackageInfo(mHostActivity.getPackageName(), 0).versionName;
 
 			tvVersion.setText(currentVersion);
-		} catch (NameNotFoundException e) {
+		} catch (NameNotFoundException e)
+		{
 			onError(e);
 		}
-		
+
 		return view;
 	}
 
 	@Override
-	public void onResume() {
+	public void onResume()
+	{
 		super.onResume();
 		mHostActivity.setActionBar(R.string.actionbar_title_setting_frag);
 		profileStr = getString(R.string.frag_profile);
 		loginStr = getString(R.string.frag_login);
-		
+
 		lockUI();
-		mQueue.add(new DailyHotelStringRequest(Method.GET,
-				new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-						URL_WEBAPI_USER_ALIVE).toString(), null, this, mHostActivity));
-		
+		mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, mHostActivity));
+
 		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("setting", "/settings/");
 	}
 
 	@Override
-	public void onClick(View v) {
-		if (v.getId() == tvNotice.getId()) {
+	public void onClick(View v)
+	{
+		if (v.getId() == tvNotice.getId())
+		{
 			Intent i = new Intent(mHostActivity, NoticeActivity.class);
 			startActivity(i);
 			mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
-		} else if (v.getId() == llVersion.getId()) {
+		} else if (v.getId() == llVersion.getId())
+		{
 			Intent i = new Intent(mHostActivity, VersionActivity.class);
 			startActivity(i);
 			mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
-		} else if (v.getId() == tvHelp.getId()) {
+		} else if (v.getId() == tvHelp.getId())
+		{
 			Intent i = new Intent(mHostActivity, FAQActivity.class);
 			startActivity(i);
 			mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
-		} else if (v.getId() == tvMail.getId()) {
+		} else if (v.getId() == tvMail.getId())
+		{
 			Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:help@dailyhotel.co.kr"));
 			intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.mail_text_subject));
 			intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.mail_text_desc));
+			intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NEW_TASK);
+			
 			startActivity(Intent.createChooser(intent, getString(R.string.mail_text_dialog_title)));
 			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "mailCS", null, null);
-		} else if (v.getId() == llLogin.getId()) {
-			if (tvLogin.getText().equals(getString(R.string.frag_profile))) { // ∑Œ±◊¿Œ µ«æÓ ¿÷¥¬ ªÛ≈¬
+		} else if (v.getId() == llLogin.getId())
+		{
+			if (tvLogin.getText().equals(getString(R.string.frag_profile)))
+			{ // Î°úÍ∑∏Ïù∏ ÎêòÏñ¥ ÏûàÎäî ÏÉÅÌÉú
 				Intent i = new Intent(mHostActivity, ProfileActivity.class);
 				startActivity(i);
 				mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
-			} else { // ∑Œ±◊æ∆øÙ ªÛ≈¬
+			} else
+			{ // Î°úÍ∑∏ÏïÑÏõÉ ÏÉÅÌÉú
 				chgClickable(llLogin);
 				Intent i = new Intent(mHostActivity, LoginActivity.class);
 				startActivityForResult(i, CODE_REQUEST_ACTIVITY_LOGIN);
 				mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 			}
 
-		} else if (v.getId() == tvCall.getId()) {
-			Intent i = new Intent(Intent.ACTION_DIAL,
-					Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
+		} else if (v.getId() == tvCall.getId())
+		{
+			Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
 			startActivity(i);
 			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "inquireCS", null, null);
-		} else if (v.getId() == tvAbout.getId()) {
+		} else if (v.getId() == tvAbout.getId())
+		{
 			Intent i = new Intent(mHostActivity, AboutActivity.class);
 			startActivity(i);
 			mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 		}
 	}
-	
+
 	@Override
-	public void onActivityResult(int requestCode, int resultCode,
-			Intent intent) {
+	public void onActivityResult(int requestCode, int resultCode, Intent intent)
+	{
 		super.onActivityResult(requestCode, resultCode, intent);
-		
-		if (requestCode == CODE_REQUEST_ACTIVITY_LOGIN) {
+
+		if (requestCode == CODE_REQUEST_ACTIVITY_LOGIN)
+		{
 			chgClickable(llLogin);
-			if (resultCode == Activity.RESULT_OK) mHostActivity.selectMenuDrawer(mHostActivity.menuHotelListFragment);
+			if (resultCode == Activity.RESULT_OK)
+				mHostActivity.selectMenuDrawer(mHostActivity.menuHotelListFragment);
 		}
 	}
-	
-	private void invalidateLoginButton(boolean login, String email) {
+
+	private void invalidateLoginButton(boolean login, String email)
+	{
 		tvEmail.setText(email);
-		
-		if (login) {
+
+		if (login)
+		{
 			tvLogin.setText(profileStr);
 			tvEmail.setVisibility(View.VISIBLE);
-		} else {
+		} else
+		{
 			tvLogin.setText(loginStr);
 			tvEmail.setVisibility(View.GONE);
 		}
-		
+
 	}
 
-	@Override
-	public void onResponse(String url, String response) {
-		if (url.contains(URL_WEBAPI_USER_ALIVE)) {
-			String result = response.trim();
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Listener
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-			if (result.equals("alive")) { // session alive
-				// ªÁøÎ¿⁄ ¡§∫∏ ø‰√ª.
-				mQueue.add(new DailyHotelJsonRequest(Method.GET,
-						new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-								URL_WEBAPI_USER_INFO).toString(), null, this,
-						mHostActivity));
+	private DailyHotelStringResponseListener mUserAliveStringResponseListener = new DailyHotelStringResponseListener()
+	{
 
-			} else {
+		@Override
+		public void onResponse(String url, String response)
+		{
+
+			String result = null;
+
+			if (TextUtils.isEmpty(response) == false)
+			{
+				result = response.trim();
+			}
+
+			if ("alive".equalsIgnoreCase(result) == true)
+			{ // session alive
+				// ÏÇ¨Ïö©Ïûê Ï†ïÎ≥¥ ÏöîÏ≤≠.
+				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, mHostActivity));
+
+			} else
+			{
 				invalidateLoginButton(false, "");
 				unLockUI();
 			}
 		}
-	}
+	};
 
-	@Override
-	public void onResponse(String url, JSONObject response) {
-		if (url.contains(URL_WEBAPI_USER_INFO)) {
-			try {
-				JSONObject obj = response;
-				String userEmail = obj.getString("email");
-				
-				if ((userEmail != null) && !(userEmail.equals("")) && !(userEmail.equals("null"))) invalidateLoginButton(true, userEmail);
-				else invalidateLoginButton(true, "");
-				
+	private DailyHotelJsonResponseListener mUserInfoJsonResponseListener = new DailyHotelJsonResponseListener()
+	{
+
+		@Override
+		public void onResponse(String url, JSONObject response)
+		{
+
+			try
+			{
+				if (response == null)
+				{
+					throw new NullPointerException("response == null");
+				}
+
+				String userEmail = response.getString("email");
+
+				if ((userEmail != null) && !(userEmail.equals("")) && !(userEmail.equals("null")))
+				{
+					invalidateLoginButton(true, userEmail);
+				} else
+				{
+					invalidateLoginButton(true, "");
+				}
+
 				unLockUI();
 
-			} catch (Exception e) {
+			} catch (Exception e)
+			{
 				onError(e);
 				invalidateLoginButton(true, "");
 			}
-
 		}
+	};
 
-	}
+	//	@Override
+	//	public void onResponse(String url, String response) {
+	//		if (url.contains(URL_WEBAPI_USER_ALIVE)) {
+	//			String result = response.trim();
+	//
+	//			if (result.equals("alive")) { // session alive
+	//				// ÏÇ¨Ïö©Ïûê Ï†ïÎ≥¥ ÏöîÏ≤≠.
+	//				mQueue.add(new DailyHotelJsonRequest(Method.GET,
+	//						new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+	//								URL_WEBAPI_USER_INFO).toString(), null, this,
+	//						mHostActivity));
+	//
+	//			} else {
+	//				invalidateLoginButton(false, "");
+	//				unLockUI();
+	//			}
+	//		}
+	//	}
+	//
+	//	@Override
+	//	public void onResponse(String url, JSONObject response) {
+	//		if (url.contains(URL_WEBAPI_USER_INFO)) {
+	//			try {
+	//				JSONObject obj = response;
+	//				String userEmail = obj.getString("email");
+	//				
+	//				if ((userEmail != null) && !(userEmail.equals("")) && !(userEmail.equals("null"))) invalidateLoginButton(true, userEmail);
+	//				else invalidateLoginButton(true, "");
+	//				
+	//				unLockUI();
+	//
+	//			} catch (Exception e) {
+	//				onError(e);
+	//				invalidateLoginButton(true, "");
+	//			}
+	//
+	//		}
+	//
+	//	}
 }

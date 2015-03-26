@@ -9,32 +9,38 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 
-public class DailyHotelStringRequest extends DailyHotelRequest<String> {
+public class DailyHotelStringRequest extends DailyHotelRequest<String>
+{
 
 	private DailyHotelStringResponseListener mListener;
 
-	public DailyHotelStringRequest(int method, String url,
-			Map<String, String> parameters,
-			DailyHotelStringResponseListener listener, ErrorListener errorListener) {
+	public DailyHotelStringRequest(int method, String url, Map<String, String> parameters, DailyHotelStringResponseListener listener, ErrorListener errorListener)
+	{
+
 		super(method, url, parameters, errorListener);
 		this.mListener = listener;
 	}
 
 	@Override
-	protected void deliverResponse(String response) {
-		if (mListener != null) mListener.onResponse(getUrl(), response);
+	protected void deliverResponse(String response)
+	{
+		if (mListener != null)
+			mListener.onResponse(getUrl(), response);
 	}
-	
+
 	@Override
-    protected Response<String> parseNetworkResponse(NetworkResponse response) {
-		
-        String parsed;
-        try {
-            parsed = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-        } catch (UnsupportedEncodingException e) {
-            parsed = new String(response.data);
-        }
-        return Response.success(parsed.trim(), HttpHeaderParser.parseCacheHeaders(response));
-    }
+	protected Response<String> parseNetworkResponse(NetworkResponse response)
+	{
+
+		String parsed;
+		try
+		{
+			parsed = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+		} catch (UnsupportedEncodingException e)
+		{
+			parsed = new String(response.data);
+		}
+		return Response.success(parsed.trim(), HttpHeaderParser.parseCacheHeaders(response));
+	}
 
 }

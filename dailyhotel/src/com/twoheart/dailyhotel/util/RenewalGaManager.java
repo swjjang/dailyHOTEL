@@ -1,90 +1,64 @@
 package com.twoheart.dailyhotel.util;
 
-import com.google.analytics.tracking.android.Fields;
+import android.content.Context;
 
+import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.GoogleAnalytics;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.google.analytics.tracking.android.Tracker;
 
-import android.content.Context;
-import android.widget.Toast;
-
-public class RenewalGaManager   {
+public class RenewalGaManager
+{
 	private static RenewalGaManager instance = null;
 	private Tracker tracker;
 
-	private RenewalGaManager(Context con) {
-		GoogleAnalytics ga= GoogleAnalytics.getInstance(con);
+	private RenewalGaManager(Context con)
+	{
+		GoogleAnalytics ga = GoogleAnalytics.getInstance(con);
 		tracker = ga.getTracker(Constants.GA_PROPERTY_ID);
 	}
 
-	public static RenewalGaManager getInstance(Context con) {
-		if (instance == null) { 
+	public static RenewalGaManager getInstance(Context con)
+	{
+		if (instance == null)
+		{
 			instance = new RenewalGaManager(con);
 		}
 		return instance;
 	}
-	
-	public void recordScreen(String screenName, String page) {
-		tracker.send(MapBuilder
-			    .createAppView()
-			    .set(Fields.SCREEN_NAME, screenName)
-			    .set(Fields.PAGE, page)
-			    .build()
-			);
-		
+
+	public void recordScreen(String screenName, String page)
+	{
+		tracker.send(MapBuilder.createAppView().set(Fields.SCREEN_NAME, screenName).set(Fields.PAGE, page).build());
+
 	}
-	
-	public void recordEvent(String category, String action, String label, Long value) {
-		tracker.send(MapBuilder.
-                createEvent(
-                		category, 
-                		action, 
-                		label, 
-                		value).build());
+
+	public void recordEvent(String category, String action, String label, Long value)
+	{
+		tracker.send(MapBuilder.createEvent(category, action, label, value).build());
 	}
-	
-	
+
 	/**
-	 * ±¸¸Å ¿Ï·á ÇÏ¿´À¸¸é ±¸±Û ¾Ö³Î·¡Æ½½º Ecommerce Tracking À» À§ÇÏ¿© ÇÊÈ÷ È£ÃâÇÑ´Ù.
-	 * ½ÇÁ¦ ¿ì¸® ¾ÛÀÇ ¸ÅÃâÀ» ÀÚµ¿À¸·Î Áı°èÇÏ¿© ¾Ë±âÀ§ÇÔ.
-	 * @param trasId userId+YYMMDDhhmmss
-	 * @param pName È£ÅÚ¸í
-	 * @param pCategory È£ÅÚ Ä«Å×°í¸®
-	 * @param pPrice È£ÅÚ ÆÇ¸Å°¡(Àû¸³±İÀ» »ç¿ë ÇÏ´Â °æ¿ì Àû¸³±İÀ» ±î°í °áÁ¦ÇÏ´Â ±İ¾×)
+	 * êµ¬ë§¤ ì™„ë£Œ í•˜ì˜€ìœ¼ë©´ êµ¬ê¸€ ì• ë„ë˜í‹±ìŠ¤ Ecommerce Tracking ì„ ìœ„í•˜ì—¬ í•„íˆ í˜¸ì¶œí•œë‹¤. ì‹¤ì œ ìš°ë¦¬ ì•±ì˜ ë§¤ì¶œì„ ìë™ìœ¼ë¡œ
+	 * ì§‘ê³„í•˜ì—¬ ì•Œê¸°ìœ„í•¨.
+	 * 
+	 * @param trasId
+	 *            userId+YYMMDDhhmmss
+	 * @param pName
+	 *            í˜¸í…”ëª…
+	 * @param pCategory
+	 *            í˜¸í…” ì¹´í…Œê³ ë¦¬
+	 * @param pPrice
+	 *            í˜¸í…” íŒë§¤ê°€(ì ë¦½ê¸ˆì„ ì‚¬ìš© í•˜ëŠ” ê²½ìš° ì ë¦½ê¸ˆì„ ê¹Œê³  ê²°ì œí•˜ëŠ” ê¸ˆì•¡)
 	 */
 
-	public void purchaseComplete(String trasId, 
-			String pName, String pCategory, Double pPrice) {
+	public void purchaseComplete(String trasId, String pName, String pCategory, Double pPrice)
+	{
 
-		tracker.send(
-				MapBuilder.createTransaction(
-						trasId,
-						"DailyHOTEL",
-						pPrice,
-						0d,
-						0d,
-						"KRW"
-						).build()
-				);
+		tracker.send(MapBuilder.createTransaction(trasId, "DailyHOTEL", pPrice, 0d, 0d, "KRW").build());
 
-		tracker.send(
-				MapBuilder.createItem(
-						trasId,
-						pName,
-						"1",
-						pCategory,
-						pPrice,
-						1L,
-						"KRW"
-						).build()
-				);
-		
-		tracker.send(MapBuilder.
-				createEvent(
-						"Purchase", 
-						"PurchaseComplete", 
-						"PurchaseComplete", 
-						1L).build());
+		tracker.send(MapBuilder.createItem(trasId, pName, "1", pCategory, pPrice, 1L, "KRW").build());
+
+		tracker.send(MapBuilder.createEvent("Purchase", "PurchaseComplete", "PurchaseComplete", 1L).build());
 	}
 }

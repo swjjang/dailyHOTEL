@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
  *
- * CreditListFragment (Àû¸³±İ ³»¿ª È­¸é)
+ * CreditListFragment (ì ë¦½ê¸ˆ ë‚´ì—­ í™”ë©´)
  * 
- * Àû¸³±İ ³»¿ª ¸®½ºÆ®¸¦ º¸¿©ÁÖ´Â È­¸éÀÌ´Ù.
+ * ì ë¦½ê¸ˆ ë‚´ì—­ ë¦¬ìŠ¤íŠ¸ë¥¼ ë³´ì—¬ì£¼ëŠ” í™”ë©´ì´ë‹¤.
  *
  * @since 2014-02-24
  * @version 1
@@ -23,59 +23,63 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.adapter.CreditListAdapter;
 import com.twoheart.dailyhotel.model.Credit;
-import com.twoheart.dailyhotel.util.Log;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
 /**
- * Àû¸³±İ ÀÔÃâ·Â ³»¿ª È®ÀÎ.
+ * ì ë¦½ê¸ˆ ì…ì¶œë ¥ ë‚´ì—­ í™•ì¸.
+ * 
  * @author jangjunho
  *
  */
-public class CreditListFragment extends BaseFragment {
-	
+public class CreditListFragment extends BaseFragment
+{
+
 	private static final String KEY_BUNDLE_ARGUMENTS_CREDITLIST = "credit_list";
-	
+
 	private ListView mListView;
 	private CreditListAdapter mAdapter;
 	private List<Credit> mCreditList;
-	
-	public static CreditListFragment newInstance(List<Credit> creditList) {
-		
+
+	public static CreditListFragment newInstance(List<Credit> creditList)
+	{
+
 		CreditListFragment newFragment = new CreditListFragment();
-		
+
 		Bundle arguments = new Bundle();
 		arguments.putParcelableArrayList(KEY_BUNDLE_ARGUMENTS_CREDITLIST, (ArrayList<Credit>) creditList);
-		
+
 		newFragment.setArguments(arguments);
-		
+
 		return newFragment;
-		
+
 	}
-	
+
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
-		
+
 		mCreditList = getArguments().getParcelableArrayList(KEY_BUNDLE_ARGUMENTS_CREDITLIST);
 	}
-	
+
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+	{
+
 		View view = inflater.inflate(R.layout.fragment_credit_list, container, false);
 
 		mListView = (ListView) view.findViewById(R.id.listview_credit);
 		mListView.setEmptyView((TextView) view.findViewById(R.id.empty_listview_credit));
 		mAdapter = new CreditListAdapter(view.getContext(), R.layout.list_row_credit, mCreditList);
 		mListView.setAdapter(mAdapter);
-		
+
 		return view;
 	}
-	
+
 	@Override
-	public void onResume() {
+	public void onResume()
+	{
 		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("creditHistory", "/credit-with-logon/history");
 		super.onResume();
 	}
