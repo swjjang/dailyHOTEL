@@ -27,7 +27,7 @@ public class ExLog
 	/**
 	 * TAG
 	 */
-	private static final String TAG = "dailyHotel";
+	private static final String TAG = "DailyHotel";
 
 	/**
 	 * 최종적으로 Debug 정보를 출력 및 DB에 저장<br>

@@ -66,15 +66,15 @@ public class Crypto
 	// 암호화에 사용할 키. 원하는 값으로 바꿔주자.
 	private final static byte[] key = { (byte) 0x02, (byte) 0x4F, (byte) 0xf0, (byte) 0x01, (byte) 0x00, (byte) 0x00, (byte) 0x31, (byte) 0xAE, (byte) 0x0C, (byte) 0xE0, (byte) 0xA0, (byte) 0x7D, (byte) 0xE2, (byte) 0x01, (byte) 0x00, (byte) 0xFF };
 
-	public static String encrypt(String seed, String cleartext) throws Exception
+	public static String encrypt(String seed, String text) throws Exception
 	{
-		if (TextUtils.isEmpty(cleartext) == true)
+		if (TextUtils.isEmpty(text) == true)
 		{
 			return null;
 		}
 
 		byte[] rawKey = getRawKey(seed.getBytes());
-		byte[] result = encrypt(rawKey, cleartext.getBytes());
+		byte[] result = encrypt(rawKey, text.getBytes());
 		String fromHex = toHex(result);
 		String base64 = new String(Base64.encodeToString(fromHex.getBytes(), Base64.NO_WRAP));
 

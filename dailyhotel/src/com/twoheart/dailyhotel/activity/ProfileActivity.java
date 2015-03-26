@@ -343,19 +343,25 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 				
 				if(TextUtils.isEmpty(userName) == true) {
 					userName = getString(R.string.act_profile_input_name);
+					prevName = "";
+				} else {
+					prevName = userName;
 				}
 				
 				if(TextUtils.isEmpty(userPhone) == true || INVALID_NULL.equalsIgnoreCase(userPhone) == true) {
 					userPhone = getString(R.string.act_profile_input_contact);
+					prevPh = "";
+				} else {
+					prevPh = userPhone;
 				}
-
-				prevName = userName;
-				prevPh = userPhone;
 
 				mAq.id(R.id.tv_profile_email).text(userEmail);
 				mAq.id(R.id.tv_profile_name).text(userName);
 				mAq.id(R.id.tv_profile_phone).text(userPhone);
 
+				mAq.id(R.id.et_profile_name).text(prevName);
+				mAq.id(R.id.et_profile_phone).text(prevPh);
+				
 				unLockUI();
 			} catch (Exception e)
 			{

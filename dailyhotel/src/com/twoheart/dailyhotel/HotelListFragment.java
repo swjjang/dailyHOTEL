@@ -217,17 +217,24 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	{
 		mRefreshHotelList = true;
 		super.onPause();
-
 	}
 
 	// 호텔 클릭시
 	@Override
 	public void onItemClick(AdapterView<?> parentView, View childView, int position, long id)
 	{
-		// 7.2 G2 버전에서 호텔리스트에서 이벤트 칸을 클릭할 경우 튕기는 현상을 막기 위함. why? 헤더뷰인데도 아이템 클릭 리스너가 들어감.
-		if (position == 0)
+		if(isLockUiComponent() == true) {
 			return;
-
+		}
+		
+		lockUiComponent();
+		
+		// 7.2 G2 버전에서 호텔리스트에서 이벤트 칸을 클릭할 경우 튕기는 현상을 막기 위함. why? 헤더뷰인데도 아이템 클릭 리스너가 들어감.
+		if (position == 0) {
+			releaseUiComponent();
+			return;
+		}
+		
 		//		mHostActivity.selectMenuDrawer(mHostActivity.menuHotelListFragment);
 
 		int selectedPosition = position - 1;
@@ -266,15 +273,16 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "selectHotel", selectedItem.getItem().getName(), (long) hotelIdx);
 		} else if (selectedItem.getType() == HotelListViewItem.TYPE_SECTION)
 		{
+			releaseUiComponent();
 			return;
 		}
-
 	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
-
+		releaseUiComponent();
+		
 		if (requestCode == CODE_REQUEST_ACTIVITY_HOTELTAB)
 		{
 			mRefreshHotelList = false;
@@ -1017,7 +1025,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 					// 지역 리스트를 가져온다
 					mQueue.add(new DailyHotelJsonArrayRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SITE_LOCATION_LIST).toString(), null, mSiteLocationListJsonArrayResponseListener, mHostActivity));
 				}
-
 			} catch (Exception e)
 			{
 				onError(e);

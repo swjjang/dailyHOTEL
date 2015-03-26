@@ -21,7 +21,12 @@ public abstract class BaseFragment extends Fragment implements Constants, OnLoad
 	protected RequestQueue mQueue;
 	protected Toast mToast;
 
-	private String title;
+	private String mTitle;
+	
+	/**
+	 * UI Component의 잠금 상태인지 확인하는 변수..  
+	 */
+	private boolean mIsLockUiComponent = false;
 
 	@Override
 	public void onAttach(Activity activity)
@@ -86,23 +91,47 @@ public abstract class BaseFragment extends Fragment implements Constants, OnLoad
 	@Override
 	public void lockUI()
 	{
+		lockUiComponent();
 		mHostActivity.lockUI();
 	}
 
 	@Override
 	public void unLockUI()
 	{
+		releaseUiComponent();
 		mHostActivity.unLockUI();
+	}
+	
+	/**
+	 * UI Component의 잠금 상태를 확인하는 변수.. 
+	 * @return
+	 */
+	protected boolean isLockUiComponent(){
+		return mIsLockUiComponent;
+	}
+	
+	/**
+	 * UI Component를 잠금상태로 변경..
+	 */
+	protected void lockUiComponent(){
+		mIsLockUiComponent = true;
+	}
+	
+	/**
+	 * UI Component를 잠금해제로 변경.. 
+	 */
+	protected void releaseUiComponent(){
+		mIsLockUiComponent = false;
 	}
 
 	public String getTitle()
 	{
-		return title;
+		return mTitle;
 	}
 
 	public void setTitle(String title)
 	{
-		this.title = title;
+		this.mTitle = title;
 	}
 
 	protected void chgClickable(View v)
