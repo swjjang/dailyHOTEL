@@ -6,10 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.AbsListView;
 import android.widget.ExpandableListView;
-import android.widget.AbsListView.OnScrollListener;
 import android.widget.ExpandableListView.OnGroupExpandListener;
 
 import com.android.volley.Request.Method;
@@ -21,60 +18,79 @@ import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
-public class FAQActivity extends BaseActivity implements
-		DailyHotelJsonResponseListener {
-
-	private static final String TAG = "HelpActivity";
+public class FAQActivity extends BaseActivity
+{
 
 	private ArrayList<Board> mList;
 	private ExpandableListView mListView;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
 		setActionBar(R.string.actionbar_title_faq_activity);
 		setContentView(R.layout.activity_board);
 
 		mListView = (ExpandableListView) findViewById(R.id.expandable_list_board);
-		mListView.setOnGroupExpandListener(new OnGroupExpandListener() { // expand only one
+		mListView.setOnGroupExpandListener(new OnGroupExpandListener()
+		{ // expand only one
 			private int mPrevExpandedChildPos = -1;
+
 			@Override
-			public void onGroupExpand(int groupPosition) {
-				if(mPrevExpandedChildPos != -1 && groupPosition != mPrevExpandedChildPos) mListView.collapseGroup(mPrevExpandedChildPos);
+			public void onGroupExpand(int groupPosition)
+			{
+				if (mPrevExpandedChildPos != -1 && groupPosition != mPrevExpandedChildPos)
+					mListView.collapseGroup(mPrevExpandedChildPos);
 				mPrevExpandedChildPos = groupPosition;
-				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectFAQ", mList.get(groupPosition).getSubject(), (long) (groupPosition+1));
+				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectFAQ", mList.get(groupPosition).getSubject(), (long) (groupPosition + 1));
 			}
 		});
 	}
-	
+
 	@Override
-	protected void onResume() {
+	protected void onResume()
+	{
 		super.onResume();
 
 		lockUI();
-		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(
-				URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_BOARD_FAQ).toString(),
-				null, this, this));
-		
+		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_BOARD_FAQ).toString(), null, mBoardFAQJsonResponseListener, this));
+
 		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("fAQList", "/settings/faq");
 	}
 
 	@Override
-	public void finish() {
+	public void finish()
+	{
 		super.finish();
 		overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
 	}
 
-	@Override
-	public void onResponse(String url, JSONObject response) {
-		if (url.contains(URL_WEBAPI_BOARD_FAQ)) {
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Listener
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	private DailyHotelJsonResponseListener mBoardFAQJsonResponseListener = new DailyHotelJsonResponseListener()
+	{
+
+		@Override
+		public void onResponse(String url, JSONObject response)
+		{
+
 			mList = new ArrayList<Board>();
 
-			try {
-				JSONObject jsonObj = response;
-				JSONArray json = jsonObj.getJSONArray("articles");
+			try
+			{
+				if (response == null)
+				{
+					throw new NullPointerException("response == null");
+				}
 
-				for (int i = 0; i < json.length(); i++) {
+				JSONArray json = response.getJSONArray("articles");
+
+				int length = json.length();
+
+				for (int i = 0; i < length; i++)
+				{
 
 					JSONObject obj = json.getJSONObject(i);
 					String subject = obj.getString("subject");
@@ -83,13 +99,43 @@ public class FAQActivity extends BaseActivity implements
 
 					mList.add(new Board(subject, content, regdate));
 				}
-				
-				mListView.setAdapter(new BoardListAdapter(this, mList));
-			} catch (Exception e) {
+
+				mListView.setAdapter(new BoardListAdapter(FAQActivity.this, mList));
+			} catch (Exception e)
+			{
 				onError(e);
-			} finally {
+			} finally
+			{
 				unLockUI();
 			}
 		}
-	}
+	};
+
+	//	@Override
+	//	public void onResponse(String url, JSONObject response) {
+	//		if (url.contains(URL_WEBAPI_BOARD_FAQ)) {
+	//			mList = new ArrayList<Board>();
+	//
+	//			try {
+	//				JSONObject jsonObj = response;
+	//				JSONArray json = jsonObj.getJSONArray("articles");
+	//
+	//				for (int i = 0; i < json.length(); i++) {
+	//
+	//					JSONObject obj = json.getJSONObject(i);
+	//					String subject = obj.getString("subject");
+	//					String content = obj.getString("content");
+	//					String regdate = obj.getString("regdate");
+	//
+	//					mList.add(new Board(subject, content, regdate));
+	//				}
+	//				
+	//				mListView.setAdapter(new BoardListAdapter(this, mList));
+	//			} catch (Exception e) {
+	//				onError(e);
+	//			} finally {
+	//				unLockUI();
+	//			}
+	//		}
+	//	}
 }

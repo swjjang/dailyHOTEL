@@ -3,8 +3,9 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Hotel implements Parcelable {
-	
+public class Hotel implements Parcelable
+{
+
 	private String image;
 	private String name;
 	private String price;
@@ -17,16 +18,18 @@ public class Hotel implements Parcelable {
 	private String bedType;
 	private String detailRegion;
 
-	public Hotel() {
+	public Hotel()
+	{
 		super();
 	}
-	
-	public Hotel(Parcel in) {
+
+	public Hotel(Parcel in)
+	{
 		readFromParcel(in);
 	}
 
-	public Hotel(String image, String name, String price, String discount,
-			String address, String category, int idx, int availableRoom, int sequence, String bedType) {
+	public Hotel(String image, String name, String price, String discount, String address, String category, int idx, int availableRoom, int sequence, String bedType)
+	{
 		this.image = image;
 		this.name = name;
 		this.price = price;
@@ -37,11 +40,12 @@ public class Hotel implements Parcelable {
 		this.availableRoom = availableRoom;
 		this.sequence = sequence;
 		this.bedType = bedType;
-		
+
 	}
-	
+
 	@Override
-	public void writeToParcel(Parcel dest, int flags) {
+	public void writeToParcel(Parcel dest, int flags)
+	{
 		dest.writeString(image);
 		dest.writeString(name);
 		dest.writeString(price);
@@ -54,8 +58,9 @@ public class Hotel implements Parcelable {
 		dest.writeString(bedType);
 
 	}
-	
-	private void readFromParcel(Parcel in) {
+
+	private void readFromParcel(Parcel in)
+	{
 		this.image = in.readString();
 		this.name = in.readString();
 		this.price = in.readString();
@@ -67,53 +72,136 @@ public class Hotel implements Parcelable {
 		this.sequence = in.readInt();
 		this.bedType = in.readString();
 	}
-	
-	public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
-		public Hotel createFromParcel(Parcel in) {
+
+	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+	{
+		public Hotel createFromParcel(Parcel in)
+		{
 			return new Hotel(in);
 		}
 
 		@Override
-		public Hotel[] newArray(int size) {
+		public Hotel[] newArray(int size)
+		{
 			return new Hotel[size];
 		}
 
 	};
 
-	public String getCategory() { return category; }
-	public void setCategory(String category) { this.category = category; }
+	public String getCategory()
+	{
+		return category;
+	}
 
-	public String getImage() { return image; }
-	public void setImage(String image) { this.image = image; }
+	public void setCategory(String category)
+	{
+		this.category = category;
+	}
 
-	public String getName() { return name; }
-	public void setName(String name) { this.name = name; }
+	public String getImage()
+	{
+		return image;
+	}
 
-	public String getPrice() { return price; }
-	public void setPrice(String price) { this.price = price; }
+	public void setImage(String image)
+	{
+		this.image = image;
+	}
 
-	public String getDiscount() { return discount; }
-	public void setDiscount(String discount) { this.discount = discount; }
+	public String getName()
+	{
+		return name;
+	}
 
-	public String getAddress() { return address; }
-	public void setAddress(String address) { this.address = address; }
+	public void setName(String name)
+	{
+		this.name = name;
+	}
 
-	public int getIdx() { return idx; }
-	public void setIdx(int idx) { this.idx = idx; }
+	public String getPrice()
+	{
+		return price;
+	}
 
-	public int getAvailableRoom() { return availableRoom; }
-	public void setAvailableRoom(int availableRoom) { this.availableRoom = availableRoom; }
+	public void setPrice(String price)
+	{
+		this.price = price;
+	}
 
-	public int getSequence() { return sequence; }
-	public void setSequence(int sequence) { this.sequence = sequence; }
+	public String getDiscount()
+	{
+		return discount;
+	}
 
-	public String getBedType() { return bedType; }
-	public void setBedType(String bedType) { this.bedType = bedType; }
+	public void setDiscount(String discount)
+	{
+		this.discount = discount;
+	}
 
-	public String getDetailRegion() { return detailRegion; }
-	public void setDetailRegion(String detailRegion) { this.detailRegion = detailRegion; }
+	public String getAddress()
+	{
+		return address;
+	}
+
+	public void setAddress(String address)
+	{
+		this.address = address;
+	}
+
+	public int getIdx()
+	{
+		return idx;
+	}
+
+	public void setIdx(int idx)
+	{
+		this.idx = idx;
+	}
+
+	public int getAvailableRoom()
+	{
+		return availableRoom;
+	}
+
+	public void setAvailableRoom(int availableRoom)
+	{
+		this.availableRoom = availableRoom;
+	}
+
+	public int getSequence()
+	{
+		return sequence;
+	}
+
+	public void setSequence(int sequence)
+	{
+		this.sequence = sequence;
+	}
+
+	public String getBedType()
+	{
+		return bedType;
+	}
+
+	public void setBedType(String bedType)
+	{
+		this.bedType = bedType;
+	}
+
+	public String getDetailRegion()
+	{
+		return detailRegion;
+	}
+
+	public void setDetailRegion(String detailRegion)
+	{
+		this.detailRegion = detailRegion;
+	}
 
 	@Override
-	public int describeContents() { return 0; }
+	public int describeContents()
+	{
+		return 0;
+	}
 
 }

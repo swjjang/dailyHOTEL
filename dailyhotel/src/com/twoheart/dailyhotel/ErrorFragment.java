@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
  *
- * ErrorFragment (¿À·ù È­¸é)
+ * ErrorFragment (ì˜¤ë¥˜ í™”ë©´)
  * 
- * ³×Æ®¿öÅ© ¹®Á¦ µî ¿À·ù°¡ ¹ß»ıÇßÀ» ½Ã º¸¿©Áö´Â È­¸éÀÌ´Ù. ÀÌ È­¸éÀº ¸ŞÀÎ È­
- * ¸é ´ÜÀ§(MainActivity)¿¡¼­ »ç¿ëµÇ´Â ÀÛÀº È­¸é ´ÜÀ§(Fragment)ÀÌ´Ù.
+ * ë„¤íŠ¸ì›Œí¬ ë¬¸ì œ ë“± ì˜¤ë¥˜ê°€ ë°œìƒí–ˆì„ ì‹œ ë³´ì—¬ì§€ëŠ” í™”ë©´ì´ë‹¤. ì´ í™”ë©´ì€ ë©”ì¸ í™”
+ * ë©´ ë‹¨ìœ„(MainActivity)ì—ì„œ ì‚¬ìš©ë˜ëŠ” ì‘ì€ í™”ë©´ ë‹¨ìœ„(Fragment)ì´ë‹¤.
  *
  * @since 2014-02-24
  * @version 1
@@ -23,37 +23,40 @@ import android.widget.Toast;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
-public class ErrorFragment extends BaseFragment implements OnClickListener {
-
+public class ErrorFragment extends BaseFragment implements OnClickListener
+{
 	private Button btnRetry;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+	{
 
 		View view = inflater.inflate(R.layout.fragment_error, container, false);
 		mHostActivity.setActionBar(R.string.actionbar_title_error_frag);
 
 		btnRetry = (Button) view.findViewById(R.id.btn_error);
 		btnRetry.setOnClickListener(this);
-		
+
 		return view;
 	}
 
 	@Override
-	public void onClick(View v) {
-		if (v.getId() == btnRetry.getId()) {
+	public void onClick(View v)
+	{
+		if (v.getId() == btnRetry.getId())
+		{
 
-			// network ¿¬°áÀÌ ¾ÈµÇÀÖÀ¸¸é
-			if (!VolleyHttpClient.isAvailableNetwork()) {
+			// network ì—°ê²°ì´ ì•ˆë˜ìˆìœ¼ë©´
+			if (!VolleyHttpClient.isAvailableNetwork())
+			{
 				showToast(getString(R.string.toast_msg_please_chk_network_status), Toast.LENGTH_SHORT, true);
 				return;
-			} else {
+			} else
+			{
 				int index = ((MainActivity) mHostActivity).indexLastFragment;
 				((MainActivity) mHostActivity).replaceFragment(((MainActivity) mHostActivity).getFragment(index));
-				
-			}
 
+			}
 		}
 	}
 }

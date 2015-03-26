@@ -3,11 +3,11 @@
  *
  * BaseActivity
  * 
- * ActionBarCompat ¶óÀÌºê·¯¸®ÀÇ ActionBarActivity¸¦ »ó¼Ó¹Ş´Â A
- * ctivity·Î¼­ ¾îÇÃ¸®ÄÉÀÌ¼Ç¿¡¼­ »ç¿ëµÇ´Â ActivityµéÀÇ UI¸¦ ±âº»ÀûÀ¸·Î ±¸
- * ¼ºÇÏ´Âµ¥ ÇÊ¿äÇÑ API ¸Ş¼­µåµéÀ» Á¦°øÇÑ´Ù. »Ó¸¸ ¾Æ´Ï¶ó, CookieSyncMana
- * gerÀÇ ÀÎ½ºÅÏ½º¸¦ °ü¸®ÇÏ±âµµ ÇÏ¸ç, ¾îÇÃ¸®ÄÉÀÌ¼ÇÀÇ SharedPreference¸¦
- * °ü¸®ÇÏ±âµµ ÇÑ´Ù.
+ * ActionBarCompat ë¼ì´ë¸ŒëŸ¬ë¦¬ì˜ ActionBarActivityë¥¼ ìƒì†ë°›ëŠ” A
+ * ctivityë¡œì„œ ì–´í”Œë¦¬ì¼€ì´ì…˜ì—ì„œ ì‚¬ìš©ë˜ëŠ” Activityë“¤ì˜ UIë¥¼ ê¸°ë³¸ì ìœ¼ë¡œ êµ¬
+ * ì„±í•˜ëŠ”ë° í•„ìš”í•œ API ë©”ì„œë“œë“¤ì„ ì œê³µí•œë‹¤. ë¿ë§Œ ì•„ë‹ˆë¼, CookieSyncMana
+ * gerì˜ ì¸ìŠ¤í„´ìŠ¤ë¥¼ ê´€ë¦¬í•˜ê¸°ë„ í•˜ë©°, ì–´í”Œë¦¬ì¼€ì´ì…˜ì˜ SharedPreferenceë¥¼
+ * ê´€ë¦¬í•˜ê¸°ë„ í•œë‹¤.
  *
  * @since 2014-02-24
  * @version 1
@@ -16,14 +16,12 @@
 package com.twoheart.dailyhotel.util.ui;
 
 import android.content.Context;
-
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,11 +37,13 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
 
-public class BaseActivity extends ActionBarActivity implements Constants, OnLoadListener, ErrorListener {
+public class BaseActivity extends ActionBarActivity implements Constants, OnLoadListener, ErrorListener
+{
 
 	private final static String TAG = "BaseActivity";
 
@@ -62,25 +62,31 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	protected Runnable networkCheckRunner;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
 		sharedPreference = getSharedPreferences(NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
 		mQueue = VolleyHttpClient.getRequestQueue();
-		
+
 		mLockUI = new LoadingDialog(this);
 
-		cancelAllRequestFilter = new RequestQueue.RequestFilter() {
+		cancelAllRequestFilter = new RequestQueue.RequestFilter()
+		{
 			@Override
-			public boolean apply(Request<?> request) {
+			public boolean apply(Request<?> request)
+			{
 				return true;
 			}
 		};
 
 		handler = new Handler();
-		networkCheckRunner = new Runnable() {
+		networkCheckRunner = new Runnable()
+		{
 			@Override
-			public void run() {
-				if(mLockUI.isVisible()) {
+			public void run()
+			{
+				if (mLockUI.isVisible())
+				{
 					mQueue.cancelAll(cancelAllRequestFilter);
 					unLockUI();
 					onError();
@@ -91,27 +97,32 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	}
 
 	@Override
-	public void onBackPressed() {
+	public void onBackPressed()
+	{
 		super.onBackPressed();
-		// RequestQueue¿¡ µî·ÏµÈ ¸ğµç RequestµéÀ» Ãë¼ÒÇÑ´Ù.
-		if (mQueue != null) mQueue.cancelAll(cancelAllRequestFilter);
+		// RequestQueueì— ë“±ë¡ëœ ëª¨ë“  Requestë“¤ì„ ì·¨ì†Œí•œë‹¤.
+		if (mQueue != null)
+			mQueue.cancelAll(cancelAllRequestFilter);
 	}
 
 	@Override
-	public void setContentView(int layoutResID) {
+	public void setContentView(int layoutResID)
+	{
 		super.setContentView(layoutResID);
 		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
 	}
 
 	/**
-	 * ¾×¼Ç¹Ù¸¦ ¼³Á¤ÇÏ´Â ¸Ş¼­µå·Î¼­, ¾îÇÃ¸®ÄÉÀÌ¼Ç ¾×¼Ç¹Ù Å×¸¶¸¦ ¼³Á¤ÇÏ°í Á¦¸ñÀ» ÁöÁ¤ÇÑ´Ù.
+	 * ì•¡ì…˜ë°”ë¥¼ ì„¤ì •í•˜ëŠ” ë©”ì„œë“œë¡œì„œ, ì–´í”Œë¦¬ì¼€ì´ì…˜ ì•¡ì…˜ë°” í…Œë§ˆë¥¼ ì„¤ì •í•˜ê³  ì œëª©ì„ ì§€ì •í•œë‹¤.
 	 * 
-	 * @param title ¾×¼Ç¹Ù¿¡ Ç¥½ÃÇÒ È­¸éÀÇ Á¦¸ñÀ» ¹Ş´Â´Ù.
+	 * @param title
+	 *            ì•¡ì…˜ë°”ì— í‘œì‹œí•  í™”ë©´ì˜ ì œëª©ì„ ë°›ëŠ”ë‹¤.
 	 */
-	public void setActionBar(String title) {
+	public void setActionBar(String title)
+	{
 		actionBar = getSupportActionBar();
 
-		// bottom¿¡ 1px ±¸ºĞ¼± Ãß°¡µÈ Èò ¹è°æ.
+		// bottomì— 1px êµ¬ë¶„ì„  ì¶”ê°€ëœ í° ë°°ê²½.
 		actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.actionbar_background));
 
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
@@ -124,47 +135,58 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 		actionBar.setHomeButtonEnabled(true);
 	}
 
-	public void setActionBar(int strId) {
+	public void setActionBar(int strId)
+	{
 		setActionBar(getString(strId));
 	}
 
 	/**
-	 * ¾×¼Ç¹Ù¿¡ ProgressBar¸¦ Ç¥½ÃÇÒ ¼ö ÀÖµµ·Ï ¼ÂÆÃÇÑ´Ù.
+	 * ì•¡ì…˜ë°”ì— ProgressBarë¥¼ í‘œì‹œí•  ìˆ˜ ìˆë„ë¡ ì…‹íŒ…í•œë‹¤.
 	 */
-	public void setActionBarProgressBar() {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+	public void setActionBarProgressBar()
+	{
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+		{
 			supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 			setSupportProgressBarIndeterminate(true);
 		}
 	}
 
 	/**
-	 * ¾×¼Ç¹Ù¸¦ ¼û±âµµ·Ï ¼ÂÆÃÇÑ´Ù.
+	 * ì•¡ì…˜ë°”ë¥¼ ìˆ¨ê¸°ë„ë¡ ì…‹íŒ…í•œë‹¤.
 	 * 
 	 */
-	public void setActionBarHide() {
+	public void setActionBarHide()
+	{
 		supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) getSupportActionBar().hide();
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+			getSupportActionBar().hide();
 
 	}
 
-	// ¸Ş´º ¹öÆ°À» ¸·¾Æ¹ö¸².
+	// ë©”ë‰´ ë²„íŠ¼ì„ ë§‰ì•„ë²„ë¦¼.
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if ( keyCode == KeyEvent.KEYCODE_MENU ) return true;
+	public boolean onKeyDown(int keyCode, KeyEvent event)
+	{
+		if (keyCode == KeyEvent.KEYCODE_MENU)
+			return true;
 		return super.onKeyDown(keyCode, event);
-	}   
+	}
 
 	@Override
-	protected void onPause() {
+	protected void onPause()
+	{
 
-		// ÇöÀç Activity¿¡ ÀÇÁ¸ÀûÀÎ Toast¸¦ Á¦°ÅÇÑ´Ù.
-		if (mToast != null) mToast.cancel();
+		// í˜„ì¬ Activityì— ì˜ì¡´ì ì¸ Toastë¥¼ ì œê±°í•œë‹¤.
+		if (mToast != null)
+			mToast.cancel();
 
-		try {
+		try
+		{
 			CookieSyncManager.getInstance().stopSync();
 
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 			CookieSyncManager.createInstance(getApplicationContext());
 			CookieSyncManager.getInstance().stopSync();
 
@@ -175,12 +197,15 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	}
 
 	@Override
-	protected void onResume() {
+	protected void onResume()
+	{
 		super.onResume();
 
-		try {
+		try
+		{
 			CookieSyncManager.getInstance().startSync();
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 			CookieSyncManager.createInstance(getApplicationContext());
 			CookieSyncManager.getInstance().startSync();
 		}
@@ -190,17 +215,22 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	}
 
 	@Override
-	protected void onStop() {
+	protected void onStop()
+	{
 
-		// ÇöÀç Activity¿¡ µî·ÏµÈ Request¸¦ Ãë¼ÒÇÑ´Ù. 
+		// í˜„ì¬ Activityì— ë“±ë¡ëœ Requestë¥¼ ì·¨ì†Œí•œë‹¤. 
 		if (mQueue != null)
-			mQueue.cancelAll(new RequestQueue.RequestFilter() {
+			mQueue.cancelAll(new RequestQueue.RequestFilter()
+			{
 				@Override
-				public boolean apply(Request<?> request) {
+				public boolean apply(Request<?> request)
+				{
 					DailyHotelRequest<?> dailyHotelRequest = (DailyHotelRequest<?>) request;
 
-					if (dailyHotelRequest != null && dailyHotelRequest.getTag() != null) {
-						if (dailyHotelRequest.getTag().equals(this)) {
+					if (dailyHotelRequest != null && dailyHotelRequest.getTag() != null)
+					{
+						if (dailyHotelRequest.getTag().equals(this))
+						{
 							return true;
 						}
 					}
@@ -213,31 +243,35 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			onBackPressed();
-			return true;
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch (item.getItemId())
+		{
+			case android.R.id.home:
+				onBackPressed();
+				return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
 	/**
-	 * LoadingDialog¸¦ ¶ç¿ö ·Îµù ÁßÀÓÀ» ³ªÅ¸³»¾î »ç¿ëÀÚ°¡ UI¸¦ »ç¿ëÇÒ ¼ö ¾øµµ·Ï ÇÑ´Ù.
+	 * LoadingDialogë¥¼ ë„ì›Œ ë¡œë”© ì¤‘ì„ì„ ë‚˜íƒ€ë‚´ì–´ ì‚¬ìš©ìê°€ UIë¥¼ ì‚¬ìš©í•  ìˆ˜ ì—†ë„ë¡ í•œë‹¤.
 	 */
 	@Override
-	public void lockUI() {
+	public void lockUI()
+	{
 		mLockUI.show();
-		// ¸¸¾à Á¦ÇÑ½Ã°£ÀÌ Áö³µ´Âµ¥µµ ¸®Äù½ºÆ®°¡ ³¡³ªÁö ¾Ê¾Ò´Ù¸é Error ¹ß»ı.
+		// ë§Œì•½ ì œí•œì‹œê°„ì´ ì§€ë‚¬ëŠ”ë°ë„ ë¦¬í€˜ìŠ¤íŠ¸ê°€ ëë‚˜ì§€ ì•Šì•˜ë‹¤ë©´ Error ë°œìƒ.
 		handler.postDelayed(networkCheckRunner, REQUEST_EXPIRE_JUDGE);
 
 	}
 
 	/**
-	 * ·ÎµùÀÌ ¿Ï·áµÇ¾î LoadingDialog¸¦ Á¦°ÅÇÏ°í Àü¿ª ÆùÆ®¸¦ ¼³Á¤ÇÑ´Ù.
+	 * ë¡œë”©ì´ ì™„ë£Œë˜ì–´ LoadingDialogë¥¼ ì œê±°í•˜ê³  ì „ì—­ í°íŠ¸ë¥¼ ì„¤ì •í•œë‹¤.
 	 */
 	@Override
-	public void unLockUI() {
+	public void unLockUI()
+	{
 		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
 		mLockUI.hide();
 		handler.removeCallbacks(networkCheckRunner);
@@ -245,62 +279,84 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	}
 
 	@Override
-	protected void onDestroy() {
+	protected void onDestroy()
+	{
 		//mLockUI.hide();
 		unLockUI();
 		super.onDestroy();
 	}
 
 	@Override
-	public void onErrorResponse(VolleyError error) {
-		if (DEBUG) error.printStackTrace();
+	public void onErrorResponse(VolleyError error)
+	{
+		ExLog.e(error.toString());
+
 		onError();
 	}
 
-	public void onError(Exception error) {
-		if (DEBUG) error.printStackTrace();
+	public void onError(Exception error)
+	{
+		ExLog.e(error.toString());
+
 		onError();
 	}
 
 	/**
-	 * Error ¹ß»ı ½Ã ºĞ±âµÇ´Â ¸Ş¼­µå
+	 * Error ë°œìƒ ì‹œ ë¶„ê¸°ë˜ëŠ” ë©”ì„œë“œ
 	 */
-	public void onError() {
-		// Àß¸øµÈ ¸àÆ®, ¸ğµç ¿¡·¯°¡ ÀÌÂÊÀ¸·Î ºüÁö°ÔµÊ. º¯°æ ÇÊ¿ä.
+	public void onError()
+	{
+		// ì˜ëª»ëœ ë©˜íŠ¸, ëª¨ë“  ì—ëŸ¬ê°€ ì´ìª½ìœ¼ë¡œ ë¹ ì§€ê²Œë¨. ë³€ê²½ í•„ìš”.
 		showToast(this.getResources().getString(R.string.act_base_network_connect), Toast.LENGTH_LONG, false);
 	}
 
 	/**
-	 * Toast¸¦ ½±°Ô Ç¥½ÃÇØÁÖ´Â ¸Ş¼­µå·Î¼­, ÂüÁ¶ Context·Î´Â ApplicationContext¸¦ »ç¿ëÇÑ´Ù. 
-	 * »ï¼º ´Ü¸»±â¿¡¼­ »ï¼º Å×¸¶¸¦ »ç¿ëÇÏ±â À§ÇÔÀÌ´Ù.
+	 * Toastë¥¼ ì‰½ê²Œ í‘œì‹œí•´ì£¼ëŠ” ë©”ì„œë“œë¡œì„œ, ì°¸ì¡° Contextë¡œëŠ” ApplicationContextë¥¼ ì‚¬ìš©í•œë‹¤. ì‚¼ì„± ë‹¨ë§ê¸°ì—ì„œ ì‚¼ì„±
+	 * í…Œë§ˆë¥¼ ì‚¬ìš©í•˜ê¸° ìœ„í•¨ì´ë‹¤.
 	 * 
-	 * @param message Toast¿¡ Ç¥½ÃÇÒ ³»¿ë
-	 * @param length Toast°¡ Ç¥½ÃµÇ´Â ½Ã°£. Toast.LENGTH_SHORT, Toast.LENGTH_LONG
-	 * @param isAttachToActivity	ÇöÀç Activity°¡ Á¾·áµÇ¸é Toastµµ Á¦°ÅÇÒÁö¸¦ °áÁ¤ÇÑ´Ù
+	 * @param message
+	 *            Toastì— í‘œì‹œí•  ë‚´ìš©
+	 * @param length
+	 *            Toastê°€ í‘œì‹œë˜ëŠ” ì‹œê°„. Toast.LENGTH_SHORT, Toast.LENGTH_LONG
+	 * @param isAttachToActivity
+	 *            í˜„ì¬ Activityê°€ ì¢…ë£Œë˜ë©´ Toastë„ ì œê±°í• ì§€ë¥¼ ê²°ì •í•œë‹¤
 	 */
-	public void showToast(String message, int length, boolean isAttachToActivity) {
-		try {
-			if (mToast != null) mToast.cancel();
-	
-			if (isAttachToActivity) {
+	public void showToast(String message, int length, boolean isAttachToActivity)
+	{
+		try
+		{
+			if (mToast != null)
+				mToast.cancel();
+
+			if (isAttachToActivity)
+			{
 				mToast = Toast.makeText(getApplicationContext(), message, length);
 				mToast.show();
-	
-			} else {
+
+			} else
+			{
 				Toast.makeText(getApplicationContext(), message, length).show();
-//				Log.d(TAG, message);
 			}
-		} catch (Exception e) { // show Toast µµÁß Stackoverflow°¡ ÀÚÁÖ ¹ß»ıÇÔ. ÀÌÀ¯¸¦ ¾Ë ¼ö ¾øÀ½. ÀÌ¿¡µû¸¥ ÀÓ½Ã ¹æÆí 
-			e.printStackTrace();
-			Log.d("BaseActivity", e.toString());
+		} catch (Exception e)
+		{ // show Toast ë„ì¤‘ Stackoverflowê°€ ìì£¼ ë°œìƒí•¨. ì´ìœ ë¥¼ ì•Œ ìˆ˜ ì—†ìŒ. ì´ì—ë”°ë¥¸ ì„ì‹œ ë°©í¸ 
+			ExLog.e(e.toString());
 		}
 	}
 
 	/**
-	 * ¹öÆ° ³­Å¸¸¦ ¹æÁöÇÏ±â À§ÇÑ ¸Ş¼­µå, ¹öÆ°ÀÇ Å¬¸¯ °¡´É ¿©ºÎ¸¦ ¹İ´ë·Î º¯°æ.
-	 * @param v Å¸°Ù ºä
+	 * ë²„íŠ¼ ë‚œíƒ€ë¥¼ ë°©ì§€í•˜ê¸° ìœ„í•œ ë©”ì„œë“œ, ë²„íŠ¼ì˜ í´ë¦­ ê°€ëŠ¥ ì—¬ë¶€ë¥¼ ë°˜ëŒ€ë¡œ ë³€ê²½.
+	 * 
+	 * @param v
+	 *            íƒ€ê²Ÿ ë·°
 	 */
-	protected void chgClickable(View v) { v.setClickable(!v.isClickable()); }
-	protected void chgClickable(View v, boolean isClickable) { v.setClickable(isClickable); }
-	
+	protected void chgClickable(View v)
+	{
+		v.setClickable(!v.isClickable());
+	}
+
+	protected void chgClickable(View v, boolean isClickable)
+	{
+		v.setClickable(isClickable);
+	}
+
 }

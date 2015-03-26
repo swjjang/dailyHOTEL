@@ -12,49 +12,52 @@ import android.widget.Button;
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.WakeLock;
+
 /**
- * »õº® 2½Ã°¡ Áö³µÀ»¶§ È£ÅÚ ¸®½ºÆ®°¡ ¾Æ´Ñ Å¸ÀÌ¸Ó È­¸éÀÌ ³ª¿À´Âµ¥
- * °Å±â¼­ Å¸ÀÌ¸Ó¸¦ ¼³Á¤ÇÒ °æ¿ì ½Ã°£ÀÌµÇ¸é ÀÌ ´ÙÀÌ¾ó·Î±×Çü ¿¢Æ¼ºñÆ¼°¡ ½ÇÇàµÈ´Ù.
+ * ìƒˆë²½ 2ì‹œê°€ ì§€ë‚¬ì„ë•Œ í˜¸í…” ë¦¬ìŠ¤íŠ¸ê°€ ì•„ë‹Œ íƒ€ì´ë¨¸ í™”ë©´ì´ ë‚˜ì˜¤ëŠ”ë° ê±°ê¸°ì„œ íƒ€ì´ë¨¸ë¥¼ ì„¤ì •í•  ê²½ìš° ì‹œê°„ì´ë˜ë©´ ì´ ë‹¤ì´ì–¼ë¡œê·¸í˜• ì—‘í‹°ë¹„í‹°ê°€
+ * ì‹¤í–‰ëœë‹¤.
+ * 
  * @author jangjunho
  *
  */
-public class PushDialogActivity extends Activity implements OnClickListener{
-	
+public class PushDialogActivity extends Activity implements OnClickListener
+{
+
 	private Button btnOkButton;
 	private Button btnCancelButton;
-	
+
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_push_dialog);
-		
+
 		btnOkButton = (Button) findViewById(R.id.btn_push_ok);
 		btnCancelButton = (Button) findViewById(R.id.btn_push_cancle);
-		
+
 		btnOkButton.setOnClickListener(this);
 		btnCancelButton.setOnClickListener(this);
-		
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-		        | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
-		        | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-		        | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-		
+
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+
 		WakeLock.releaseWakeLock();
 	}
-	
+
 	@Override
-	public void onClick(View v) {
-		if(v.getId() == btnOkButton.getId()) {
+	public void onClick(View v)
+	{
+		if (v.getId() == btnOkButton.getId())
+		{
 			Intent intent = new Intent();
 			intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 			intent.setClass(this, MainActivity.class);
-			
+
 			startActivity(intent);
 			finish();
-			
-		} else if(v.getId() == btnCancelButton.getId()) {
-			android.util.Log.e("FINISH!", "true");
+
+		} else if (v.getId() == btnCancelButton.getId())
+		{
 			finish();
 		}
 	}

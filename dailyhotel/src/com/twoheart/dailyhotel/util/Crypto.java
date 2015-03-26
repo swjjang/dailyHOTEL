@@ -3,8 +3,8 @@
  *
  * Crypto
  * 
- * ¾ÏÈ£È­ À¯Æ¿ Å¬·¡½ºÀÌ´Ù. MD5·Î ¾ÏÈ£È­ÇÑ µÚ ÀÌ°ÍÀ» ´Ù½Ã BASE64 ÀÎÄÚµùÀ»
- * ¼öÇàÇÏ¿© ¾ÏÈ£È­µÈ String °ªÀ» ¹İÈ¯ÇÑ´Ù.
+ * ì•”í˜¸í™” ìœ í‹¸ í´ë˜ìŠ¤ì´ë‹¤. MD5ë¡œ ì•”í˜¸í™”í•œ ë’¤ ì´ê²ƒì„ ë‹¤ì‹œ BASE64 ì¸ì½”ë”©ì„
+ * ìˆ˜í–‰í•˜ì—¬ ì•”í˜¸í™”ëœ String ê°’ì„ ë°˜í™˜í•œë‹¤.
  *
  * @since 2014-02-24
  * @version 1
@@ -13,32 +13,170 @@
 package com.twoheart.dailyhotel.util;
 
 import java.security.MessageDigest;
+import java.security.SecureRandom;
 
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+
+import android.os.Build;
+import android.text.TextUtils;
 import android.util.Base64;
 
-public class Crypto {
+public class Crypto
+{
 	/**
-     * byte[] ret = HashUtil.digest("MD5", "abcd".getBytes());
-     *  Ã³·³ È£Ãâ
-     */
-    public static byte[] digest(String alg, byte[] input) {
-    	try {
-	        MessageDigest md = MessageDigest.getInstance(alg);
-	        return md.digest(input);
-    	} catch (Exception e){
-    		return null;
-    	}
-    }
-	
-	public static String encrypt(String inputValue) {
-        
-		try {
-			if( inputValue == null ) throw new Exception("Can't conver to Message Digest 5 String value!!");
-	        byte[] ret = digest("MD5", inputValue.getBytes());
-	        String result = Base64.encodeToString(ret, 0);    
-	        return result;
-		} catch (Exception e){
+	 * byte[] ret = HashUtil.digest("MD5", "abcd".getBytes()); ì²˜ëŸ¼ í˜¸ì¶œ
+	 */
+	public static byte[] digest(String alg, byte[] input)
+	{
+		try
+		{
+			MessageDigest md = MessageDigest.getInstance(alg);
+			return md.digest(input);
+		} catch (Exception e)
+		{
 			return null;
 		}
-    }
+	}
+
+	public static String encrypt(String inputValue)
+	{
+
+		try
+		{
+			if (inputValue == null)
+				throw new Exception("Can't conver to Message Digest 5 String value!!");
+			byte[] ret = digest("MD5", inputValue.getBytes());
+			String result = Base64.encodeToString(ret, 0);
+			return result;
+		} catch (Exception e)
+		{
+			return null;
+		}
+	}
+
+	////////////////////////////////////////////////////////////////////////////////////////////////
+	// AESì•”í˜¸
+	////////////////////////////////////////////////////////////////////////////////////////////////
+
+	private final static String HEX = "0123456789ABCDEF";
+
+	// ì•”í˜¸í™”ì— ì‚¬ìš©í•  í‚¤. ì›í•˜ëŠ” ê°’ìœ¼ë¡œ ë°”ê¿”ì£¼ì.
+	private final static byte[] key = { (byte) 0x02, (byte) 0x4F, (byte) 0xf0, (byte) 0x01, (byte) 0x00, (byte) 0x00, (byte) 0x31, (byte) 0xAE, (byte) 0x0C, (byte) 0xE0, (byte) 0xA0, (byte) 0x7D, (byte) 0xE2, (byte) 0x01, (byte) 0x00, (byte) 0xFF };
+
+	public static String encrypt(String seed, String cleartext) throws Exception
+	{
+		if (TextUtils.isEmpty(cleartext) == true)
+		{
+			return null;
+		}
+
+		byte[] rawKey = getRawKey(seed.getBytes());
+		byte[] result = encrypt(rawKey, cleartext.getBytes());
+		String fromHex = toHex(result);
+		String base64 = new String(Base64.encodeToString(fromHex.getBytes(), Base64.NO_WRAP));
+
+		return base64;
+	}
+
+	public static String decrypt(String seed, String encrypted) throws Exception
+	{
+		if (TextUtils.isEmpty(encrypted) == true)
+		{
+			return null;
+		}
+
+		byte[] seedByte = seed.getBytes();
+		System.arraycopy(seedByte, 0, key, 0, ((seedByte.length < 16) ? seedByte.length : 16));
+		String base64 = new String(Base64.decode(encrypted, Base64.NO_WRAP));
+		byte[] rawKey = getRawKey(seedByte);
+		byte[] enc = toByte(base64);
+		byte[] result = decrypt(rawKey, enc);
+
+		return new String(result);
+	}
+
+	private static byte[] getRawKey(byte[] seed) throws Exception
+	{
+		KeyGenerator kgen = KeyGenerator.getInstance("AES");
+		SecureRandom sr = null;
+
+		if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
+		{
+			sr = SecureRandom.getInstance("SHA1PRNG", "Crypto");
+		} else
+		{
+			sr = SecureRandom.getInstance("SHA1PRNG");
+		}
+		sr.setSeed(seed);
+
+		try
+		{
+			kgen.init(256, sr);
+		} catch (Exception e)
+		{
+			try
+			{
+				kgen.init(192, sr);
+			} catch (Exception e1)
+			{
+				kgen.init(128, sr);
+			}
+		}
+
+		SecretKey skey = kgen.generateKey();
+		byte[] raw = skey.getEncoded();
+
+		return raw;
+	}
+
+	private static byte[] encrypt(byte[] raw, byte[] clear) throws Exception
+	{
+		SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
+		Cipher cipher = Cipher.getInstance("AES");
+		cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
+		byte[] encrypted = cipher.doFinal(clear);
+		return encrypted;
+	}
+
+	private static byte[] decrypt(byte[] raw, byte[] encrypted) throws Exception
+	{
+		SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
+		Cipher cipher = Cipher.getInstance("AES");
+		cipher.init(Cipher.DECRYPT_MODE, skeySpec);
+		byte[] decrypted = cipher.doFinal(encrypted);
+		return decrypted;
+	}
+
+	private static byte[] toByte(String hexString)
+	{
+		int len = hexString.length() / 2;
+		byte[] result = new byte[len];
+		for (int i = 0; i < len; i++)
+			result[i] = Integer.valueOf(hexString.substring(2 * i, 2 * i + 2), 16).byteValue();
+		return result;
+	}
+
+	private static String toHex(byte[] buf)
+	{
+		if (buf == null)
+		{
+			return "";
+		}
+
+		StringBuffer result = new StringBuffer(2 * buf.length);
+
+		for (int i = 0; i < buf.length; i++)
+		{
+			appendHex(result, buf[i]);
+		}
+		return result.toString();
+	}
+
+	private static void appendHex(StringBuffer sb, byte b)
+	{
+		sb.append(HEX.charAt((b >> 4) & 0x0f)).append(HEX.charAt(b & 0x0f));
+	}
 }

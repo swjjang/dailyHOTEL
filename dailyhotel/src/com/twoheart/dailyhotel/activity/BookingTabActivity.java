@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
  *
- * BookingTabActivity (¿¹¾àÇÑ È£ÅÚÀÇ ¿¹¾à, Á¤º¸, ÁöµµÅÇÀ» º¸¿©ÁÖ´Â È­¸é)
+ * BookingTabActivity (ì˜ˆì•½í•œ í˜¸í…”ì˜ ì˜ˆì•½, ì •ë³´, ì§€ë„íƒ­ì„ ë³´ì—¬ì£¼ëŠ” í™”ë©´)
  * 
- * ¿¹¾àÇÑ È£ÅÚ¸®½ºÆ®¿¡¼­ È£ÅÚ Å¬¸¯ ½Ã È£ÅÚÀÇ Á¤º¸µéÀ» º¸¿©ÁÖ´Â È­¸éÀÌ´Ù.
- * ¿¹¾à, Á¤º¸, Áöµµ ÇÁ·¡±×¸ÕÆ®¸¦ ´ã°í ÀÖ´Â ¾×Æ¼ºñÆ¼ÀÌ´Ù.
+ * ì˜ˆì•½í•œ í˜¸í…”ë¦¬ìŠ¤íŠ¸ì—ì„œ í˜¸í…” í´ë¦­ ì‹œ í˜¸í…”ì˜ ì •ë³´ë“¤ì„ ë³´ì—¬ì£¼ëŠ” í™”ë©´ì´ë‹¤.
+ * ì˜ˆì•½, ì •ë³´, ì§€ë„ í”„ë˜ê·¸ë¨¼íŠ¸ë¥¼ ë‹´ê³  ìˆëŠ” ì•¡í‹°ë¹„í‹°ì´ë‹¤.
  * 
  */
 package com.twoheart.dailyhotel.activity;
@@ -26,7 +26,7 @@ import com.twoheart.dailyhotel.fragment.BookingTabBookingFragment;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.HotelDetail;
-import com.twoheart.dailyhotel.util.Log;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.TabActivity;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -34,120 +34,167 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListe
 import com.twoheart.dailyhotel.widget.HotelViewPager;
 import com.viewpagerindicator.TabPageIndicator;
 
-public class BookingTabActivity extends TabActivity implements DailyHotelJsonResponseListener {
+public class BookingTabActivity extends TabActivity
+{
 
-	private final static String TAG = "BookingTabActivity";
 	public Booking booking;
 	private int mPosition = 0;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
-		
+
 		hotelDetail = new HotelDetail();
 		booking = new Booking();
 		Bundle bundle = getIntent().getExtras();
-		if (bundle != null) booking = (Booking) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_BOOKING);
-		
+
+		if (bundle != null)
+		{
+			booking = (Booking) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_BOOKING);
+		}
+
 		setActionBar(R.string.actionbar_title_booking_tab_activity);
 		setContentView(R.layout.activity_booking_tab);
 
 		mViewPager = (HotelViewPager) findViewById(R.id.booking_pager);
 		mIndicator = (TabPageIndicator) findViewById(R.id.booking_indicator);
-		
-		mIndicator.setOnPageChangeListener(new OnPageChangeListener() {
-			
+
+		mIndicator.setOnPageChangeListener(new OnPageChangeListener()
+		{
+
 			@Override
-			public void onPageSelected(int position) {
+			public void onPageSelected(int position)
+			{
 				mPosition = position;
-				
-				if (position == 0) {
+
+				if (position == 0)
+				{
 					RenewalGaManager.getInstance(getApplicationContext()).recordScreen("bookingDetail_booking", "/bookings/" + booking.getHotel_name() + "/booking");
-				}
-				else if (position == 1) {
-					RenewalGaManager.getInstance(getApplicationContext()).recordScreen("bookingDetail_info", "/bookings/" + booking.getHotel_name() + "/info");	
-				}
-				else if (position == 2) {
+				} else if (position == 1)
+				{
+					RenewalGaManager.getInstance(getApplicationContext()).recordScreen("bookingDetail_info", "/bookings/" + booking.getHotel_name() + "/info");
+				} else if (position == 2)
+				{
 					RenewalGaManager.getInstance(getApplicationContext()).recordScreen("bookingDetail_map", "/bookings/" + booking.getHotel_name() + "/map");
 				}
 			}
-			
+
 			@Override
-			public void onPageScrolled(int arg0, float arg1, int arg2) {
-				
+			public void onPageScrolled(int arg0, float arg1, int arg2)
+			{
+
 			}
-			
+
 			@Override
-			public void onPageScrollStateChanged(int arg0) {
-				
+			public void onPageScrollStateChanged(int arg0)
+			{
+
 			}
 		});
-
 	}
-	
+
 	@Override
-	protected void onPostSetCookie() {
+	protected void onPostSetCookie()
+	{
 		String[] date = booking.getSday().split("-");
-		for (int i=0;i<date.length;i++) android.util.Log.e("date",date[i].toString());
-		String url = new StringBuilder(URL_DAILYHOTEL_SERVER)
-				.append(URL_WEBAPI_HOTEL_DETAIL).append(booking.getHotel_idx())
-				.append("/").append(date[0]).append("/").append(date[1])
-				.append("/").append(date[2]).toString();
-		Log.d(TAG, url);
-		
+
+		ExLog.d("date", date);
+
+		String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_DETAIL).append('/').append(booking.getHotel_idx()).append("/").append(date[0]).append("/").append(date[1]).append("/").append(date[2]).toString();
+		ExLog.d(url);
+
 		lockUI();
-		// È£ÅÚ Á¤º¸¸¦ °¡Á®¿Â´Ù.
-		mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null, this, this));
+		// í˜¸í…” ì •ë³´ë¥¼ ê°€ì ¸ì˜¨ë‹¤.
+		mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null, mHotelDetailJsonResponseListener, this));
 	}
 
 	@Override
-	protected void loadFragments() {
-		// ¿¹¾à, Á¤º¸, Áöµµ ÇÁ·¡±×¸ÕÆ®¸¦ ·ÎµåÇÔ. 
-		// Á¤º¸¿Í Áöµµ ÇÁ·¡±×¸ÕÆ®´Â HotelTabActivity¿¡¼­ ·ÎµåÇÏ´Â TabinfoFragment, TabMapFragmentÀÓ.
-		String[] strings = {getString(R.string.drawer_menu_pin_title_resrvation), getString(R.string.frag_booking_tab_year), 
-				getString(R.string.frag_booking_tab_month), getString(R.string.frag_booking_tab_day), getString(R.string.frag_booking_tab_hour)};
+	protected void loadFragments()
+	{
+		// ì˜ˆì•½, ì •ë³´, ì§€ë„ í”„ë˜ê·¸ë¨¼íŠ¸ë¥¼ ë¡œë“œí•¨. 
+		// ì •ë³´ì™€ ì§€ë„ í”„ë˜ê·¸ë¨¼íŠ¸ëŠ” HotelTabActivityì—ì„œ ë¡œë“œí•˜ëŠ” TabinfoFragment, TabMapFragmentì„.
+		String[] strings = { getString(R.string.drawer_menu_pin_title_resrvation), getString(R.string.frag_booking_tab_year), getString(R.string.frag_booking_tab_month), getString(R.string.frag_booking_tab_day), getString(R.string.frag_booking_tab_hour) };
 		mFragments.add(BookingTabBookingFragment.newInstance(hotelDetail, booking, strings));
 		super.loadFragments();
 	}
-	
+
 	@Override
-	public void onResponse(String url, JSONObject response) {
-		if (url.contains(URL_WEBAPI_HOTEL_DETAIL)) {
-			try {
-				JSONObject obj = response;
-				JSONArray bookingArr = obj.getJSONArray("detail");
+	protected void onResume()
+	{
+		if (mPosition == 0)
+		{
+			RenewalGaManager.getInstance(getApplicationContext()).recordScreen("bookingDetail_booking", "/bookings/" + booking.getHotel_name() + "/booking");
+		}
+		if (mPosition == 1)
+		{
+			RenewalGaManager.getInstance(getApplicationContext()).recordScreen("bookingDetail_info", "/bookings/" + booking.getHotel_name() + "/info");
+		}
+		if (mPosition == 2)
+		{
+			RenewalGaManager.getInstance(getApplicationContext()).recordScreen("bookingDetail_map", "/bookings/" + booking.getHotel_name() + "/map");
+		}
+		super.onResume();
+	}
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Listener
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	private DailyHotelJsonResponseListener mHotelDetailJsonResponseListener = new DailyHotelJsonResponseListener()
+	{
+
+		@Override
+		public void onResponse(String url, JSONObject response)
+		{
+
+			try
+			{
+				if (response == null)
+				{
+					throw new NullPointerException("response == null");
+				}
+
+				JSONArray bookingArr = response.getJSONArray("detail");
 				JSONObject detailObj = bookingArr.getJSONObject(0);
-				
-				android.util.Log.e("TestDetail",response.toString());
-				
-				if (hotelDetail.getHotel() == null) hotelDetail.setHotel(new Hotel());
-				
+
+				if (hotelDetail.getHotel() == null)
+				{
+					hotelDetail.setHotel(new Hotel());
+				}
+
 				Hotel hotelBasic = hotelDetail.getHotel();
-				
+
 				hotelBasic.setName(detailObj.getString("hotel_name"));
 				hotelBasic.setCategory(detailObj.getString("cat"));
 				hotelBasic.setAddress(detailObj.getString("address"));
 				hotelDetail.setHotel(hotelBasic);
 
-				JSONArray specArr = obj.getJSONArray("spec");
-				Map<String, List<String>> contentList = new LinkedHashMap<String, List<String>>();
-				for (int i = 0; i < specArr.length(); i++) {
+				JSONArray specArr = response.getJSONArray("spec");
+				int length = specArr.length();
+
+				Map<String, List<String>> contentList = new LinkedHashMap<String, List<String>>(length);
+
+				for (int i = 0; i < length; i++)
+				{
 
 					JSONObject specObj = specArr.getJSONObject(i);
 					String key = specObj.getString("key");
 					JSONArray valueArr = specObj.getJSONArray("value");
 
-					List<String> valueList = new ArrayList<String>();
+					int valueLength = valueArr.length();
+					List<String> valueList = new ArrayList<String>(valueLength);
 
-					for (int j = 0; j < valueArr.length(); j++) {
+					for (int j = 0; j < valueLength; j++)
+					{
 						JSONObject valueObj = valueArr.getJSONObject(j);
 						String value = valueObj.getString("value");
 						valueList.add(value);
 					}
 
 					contentList.put(key, valueList);
-
 				}
+
 				hotelDetail.setSpecification(contentList);
 
 				double latitude = detailObj.getDouble("lat");
@@ -155,32 +202,80 @@ public class BookingTabActivity extends TabActivity implements DailyHotelJsonRes
 
 				hotelDetail.setLatitude(latitude);
 				hotelDetail.setLongitude(longitude);
-				
+
 				int saleIdx = detailObj.getInt("idx");
 				hotelDetail.setSaleIdx(saleIdx);
-				
+
 				mFragments.clear();
 				loadFragments();
-				
+
 				unLockUI();
 
-			} catch (Exception e) {
+			} catch (Exception e)
+			{
 				onError(e);
 			}
 		}
-	}
-	
-	@Override
-	protected void onResume() {
-		if (mPosition == 0) {
-			RenewalGaManager.getInstance(getApplicationContext()).recordScreen("bookingDetail_booking", "/bookings/" + booking.getHotel_name() + "/booking");
-		}
-		if (mPosition == 1)	{
-			RenewalGaManager.getInstance(getApplicationContext()).recordScreen("bookingDetail_info", "/bookings/" + booking.getHotel_name() + "/info");
-		}
-		if (mPosition == 2)	{
-			RenewalGaManager.getInstance(getApplicationContext()).recordScreen("bookingDetail_map", "/bookings/" + booking.getHotel_name() + "/map");
-		}
-		super.onResume();
-	}
+	};
+
+	//
+	//	@Override
+	//	public void onResponse(String url, JSONObject response) {
+	//		if (url.contains(URL_WEBAPI_HOTEL_DETAIL)) {
+	//			try {
+	//				JSONObject obj = response;
+	//				JSONArray bookingArr = obj.getJSONArray("detail");
+	//				JSONObject detailObj = bookingArr.getJSONObject(0);
+	//				
+	//				ExLog.e(response.toString());
+	//				
+	//				if (hotelDetail.getHotel() == null) hotelDetail.setHotel(new Hotel());
+	//				
+	//				Hotel hotelBasic = hotelDetail.getHotel();
+	//				
+	//				hotelBasic.setName(detailObj.getString("hotel_name"));
+	//				hotelBasic.setCategory(detailObj.getString("cat"));
+	//				hotelBasic.setAddress(detailObj.getString("address"));
+	//				hotelDetail.setHotel(hotelBasic);
+	//
+	//				JSONArray specArr = obj.getJSONArray("spec");
+	//				Map<String, List<String>> contentList = new LinkedHashMap<String, List<String>>();
+	//				for (int i = 0; i < specArr.length(); i++) {
+	//
+	//					JSONObject specObj = specArr.getJSONObject(i);
+	//					String key = specObj.getString("key");
+	//					JSONArray valueArr = specObj.getJSONArray("value");
+	//
+	//					List<String> valueList = new ArrayList<String>();
+	//
+	//					for (int j = 0; j < valueArr.length(); j++) {
+	//						JSONObject valueObj = valueArr.getJSONObject(j);
+	//						String value = valueObj.getString("value");
+	//						valueList.add(value);
+	//					}
+	//
+	//					contentList.put(key, valueList);
+	//
+	//				}
+	//				hotelDetail.setSpecification(contentList);
+	//
+	//				double latitude = detailObj.getDouble("lat");
+	//				double longitude = detailObj.getDouble("lng");
+	//
+	//				hotelDetail.setLatitude(latitude);
+	//				hotelDetail.setLongitude(longitude);
+	//				
+	//				int saleIdx = detailObj.getInt("idx");
+	//				hotelDetail.setSaleIdx(saleIdx);
+	//				
+	//				mFragments.clear();
+	//				loadFragments();
+	//				
+	//				unLockUI();
+	//
+	//			} catch (Exception e) {
+	//				onError(e);
+	//			}
+	//		}
+	//	}
 }

@@ -26,14 +26,23 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.ui.TransformationMethodCompat2;
 
 /**
- * A Switch is a two-state toggle switch widget that can select between two options. The user may drag the "thumb" back and forth to choose the selected option, or simply tap to toggle as if it were a
- * checkbox. The {@link #setText(CharSequence) text} property controls the text displayed in the label for the switch, whereas the {@link #setTextOff(CharSequence) off} and
- * {@link #setTextOn(CharSequence) on} text controls the text on the thumb. Similarly, the {@link #setTextAppearance(android.content.Context, int) textAppearance} and the related setTypeface() methods
- * control the typeface and style of label text, whereas the {@link #setSwitchTextAppearance(android.content.Context, int) switchTextAppearance} and the related seSwitchTypeface() methods control that
+ * A Switch is a two-state toggle switch widget that can select between two
+ * options. The user may drag the "thumb" back and forth to choose the selected
+ * option, or simply tap to toggle as if it were a checkbox. The
+ * {@link #setText(CharSequence) text} property controls the text displayed in
+ * the label for the switch, whereas the {@link #setTextOff(CharSequence) off}
+ * and {@link #setTextOn(CharSequence) on} text controls the text on the thumb.
+ * Similarly, the {@link #setTextAppearance(android.content.Context, int)
+ * textAppearance} and the related setTypeface() methods control the typeface
+ * and style of label text, whereas the
+ * {@link #setSwitchTextAppearance(android.content.Context, int)
+ * switchTextAppearance} and the related seSwitchTypeface() methods control that
  * of the thumb. <br>
  * 
  * <p>
- * See the <a href="http://developer.android.com/guide/topics/ui/controls/togglebutton.html">Toggle Buttons</a> guide.
+ * See the <a href=
+ * "http://developer.android.com/guide/topics/ui/controls/togglebutton.html"
+ * >Toggle Buttons</a> guide.
  * </p>
  * 
  * @attr ref android.R.styleable#Switch_textOn
@@ -104,12 +113,14 @@ public class Switch extends CompoundButton
 	}
 
 	/**
-	 * Construct a new Switch with default styling, overriding specific style attributes as requested.
+	 * Construct a new Switch with default styling, overriding specific style
+	 * attributes as requested.
 	 * 
 	 * @param context
 	 *            The Context that will determine this widget's theming.
 	 * @param attrs
-	 *            Specification of attributes that should deviate from default styling.
+	 *            Specification of attributes that should deviate from default
+	 *            styling.
 	 */
 	public Switch(Context context, AttributeSet attrs)
 	{
@@ -117,14 +128,18 @@ public class Switch extends CompoundButton
 	}
 
 	/**
-	 * Construct a new Switch with a default style determined by the given theme attribute, overriding specific style attributes as requested.
+	 * Construct a new Switch with a default style determined by the given theme
+	 * attribute, overriding specific style attributes as requested.
 	 * 
 	 * @param context
 	 *            The Context that will determine this widget's theming.
 	 * @param attrs
-	 *            Specification of attributes that should deviate from the default styling.
+	 *            Specification of attributes that should deviate from the
+	 *            default styling.
 	 * @param defStyle
-	 *            An attribute ID within the active theme containing a reference to the default style for this widget. e.g. android.R.attr.switchStyle.
+	 *            An attribute ID within the active theme containing a reference
+	 *            to the default style for this widget. e.g.
+	 *            android.R.attr.switchStyle.
 	 */
 	public Switch(Context context, AttributeSet attrs, int defStyle)
 	{
@@ -173,7 +188,8 @@ public class Switch extends CompoundButton
 	}
 
 	/**
-	 * Sets the switch text color, size, style, hint color, and highlight color from the specified TextAppearance resource.
+	 * Sets the switch text color, size, style, hint color, and highlight color
+	 * from the specified TextAppearance resource.
 	 * 
 	 * @attr ref android.R.styleable#Switch_switchTextAppearance
 	 */
@@ -188,8 +204,7 @@ public class Switch extends CompoundButton
 		if (colors != null)
 		{
 			mTextColors = colors;
-		}
-		else
+		} else
 		{
 			// If no color set in TextAppearance, default to the view's textColor
 			mTextColors = getTextColors();
@@ -212,16 +227,16 @@ public class Switch extends CompoundButton
 
 		setSwitchTypefaceByIndex(typefaceIndex, styleIndex);
 
-//		boolean allCaps = appearance.getBoolean(R.styleable.TextAppearanceSwitch_textAllCaps, false);
-//		if (allCaps)
-//		{
-//			mSwitchTransformationMethod = new AllCapsTransformationMethod(getContext());
-//			mSwitchTransformationMethod.setLengthChangesAllowed(true);
-//		}
-//		else
-//		{
-//			mSwitchTransformationMethod = null;
-//		}
+		//		boolean allCaps = appearance.getBoolean(R.styleable.TextAppearanceSwitch_textAllCaps, false);
+		//		if (allCaps)
+		//		{
+		//			mSwitchTransformationMethod = new AllCapsTransformationMethod(getContext());
+		//			mSwitchTransformationMethod.setLengthChangesAllowed(true);
+		//		}
+		//		else
+		//		{
+		//			mSwitchTransformationMethod = null;
+		//		}
 
 		appearance.recycle();
 	}
@@ -254,8 +269,7 @@ public class Switch extends CompoundButton
 			if (tf == null)
 			{
 				tf = Typeface.defaultFromStyle(style);
-			}
-			else
+			} else
 			{
 				tf = Typeface.create(tf, style);
 			}
@@ -266,8 +280,7 @@ public class Switch extends CompoundButton
 			int need = style & ~typefaceStyle;
 			mTextPaint.setFakeBoldText((need & Typeface.BOLD) != 0);
 			mTextPaint.setTextSkewX((need & Typeface.ITALIC) != 0 ? -0.25f : 0);
-		}
-		else
+		} else
 		{
 			mTextPaint.setFakeBoldText(false);
 			mTextPaint.setTextSkewX(0);
@@ -276,8 +289,11 @@ public class Switch extends CompoundButton
 	}
 
 	/**
-	 * Sets the typeface in which the text should be displayed on the switch. Note that not all Typeface families actually have bold and italic variants, so you may need to use
-	 * {@link #setSwitchTypeface(Typeface, int)} to get the appearance that you actually want.
+	 * Sets the typeface in which the text should be displayed on the switch.
+	 * Note that not all Typeface families actually have bold and italic
+	 * variants, so you may need to use
+	 * {@link #setSwitchTypeface(Typeface, int)} to get the appearance that you
+	 * actually want.
 	 * 
 	 * @attr ref android.R.styleable#TextView_typeface
 	 * @attr ref android.R.styleable#TextView_textStyle
@@ -294,7 +310,8 @@ public class Switch extends CompoundButton
 	}
 
 	/**
-	 * Set the amount of horizontal padding between the switch and the associated text.
+	 * Set the amount of horizontal padding between the switch and the
+	 * associated text.
 	 * 
 	 * @param pixels
 	 *            Amount of padding in pixels
@@ -308,7 +325,8 @@ public class Switch extends CompoundButton
 	}
 
 	/**
-	 * Get the amount of horizontal padding between the switch and the associated text.
+	 * Get the amount of horizontal padding between the switch and the
+	 * associated text.
 	 * 
 	 * @return Amount of padding in pixels
 	 * 
@@ -320,7 +338,9 @@ public class Switch extends CompoundButton
 	}
 
 	/**
-	 * Set the minimum width of the switch in pixels. The switch's width will be the maximum of this value and its measured width as determined by the switch drawables and text used.
+	 * Set the minimum width of the switch in pixels. The switch's width will be
+	 * the maximum of this value and its measured width as determined by the
+	 * switch drawables and text used.
 	 * 
 	 * @param pixels
 	 *            Minimum width of the switch in pixels
@@ -334,7 +354,9 @@ public class Switch extends CompoundButton
 	}
 
 	/**
-	 * Get the minimum width of the switch in pixels. The switch's width will be the maximum of this value and its measured width as determined by the switch drawables and text used.
+	 * Get the minimum width of the switch in pixels. The switch's width will be
+	 * the maximum of this value and its measured width as determined by the
+	 * switch drawables and text used.
 	 * 
 	 * @return Minimum width of the switch in pixels
 	 * 
@@ -411,7 +433,8 @@ public class Switch extends CompoundButton
 	}
 
 	/**
-	 * Set the drawable used for the switch "thumb" - the piece that the user can physically touch and drag along the track.
+	 * Set the drawable used for the switch "thumb" - the piece that the user
+	 * can physically touch and drag along the track.
 	 * 
 	 * @param thumb
 	 *            Thumb drawable
@@ -425,7 +448,8 @@ public class Switch extends CompoundButton
 	}
 
 	/**
-	 * Set the drawable used for the switch "thumb" - the piece that the user can physically touch and drag along the track.
+	 * Set the drawable used for the switch "thumb" - the piece that the user
+	 * can physically touch and drag along the track.
 	 * 
 	 * @param resId
 	 *            Resource ID of a thumb drawable
@@ -438,7 +462,8 @@ public class Switch extends CompoundButton
 	}
 
 	/**
-	 * Get the drawable used for the switch "thumb" - the piece that the user can physically touch and drag along the track.
+	 * Get the drawable used for the switch "thumb" - the piece that the user
+	 * can physically touch and drag along the track.
 	 * 
 	 * @return Thumb drawable
 	 * 
@@ -558,8 +583,7 @@ public class Switch extends CompoundButton
 		final int action = ev.getActionMasked();
 		switch (action)
 		{
-			case MotionEvent.ACTION_DOWN:
-			{
+			case MotionEvent.ACTION_DOWN: {
 				final float x = ev.getX();
 				final float y = ev.getY();
 				if (isEnabled() && hitThumb(x, y))
@@ -571,16 +595,14 @@ public class Switch extends CompoundButton
 				break;
 			}
 
-			case MotionEvent.ACTION_MOVE:
-			{
+			case MotionEvent.ACTION_MOVE: {
 				switch (mTouchMode)
 				{
 					case TOUCH_MODE_IDLE:
 						// Didn't target the thumb, treat normally.
 						break;
 
-					case TOUCH_MODE_DOWN:
-					{
+					case TOUCH_MODE_DOWN: {
 						final float x = ev.getX();
 						final float y = ev.getY();
 						if (Math.abs(x - mTouchX) > mTouchSlop || Math.abs(y - mTouchY) > mTouchSlop)
@@ -594,8 +616,7 @@ public class Switch extends CompoundButton
 						break;
 					}
 
-					case TOUCH_MODE_DRAGGING:
-					{
+					case TOUCH_MODE_DRAGGING: {
 						final float x = ev.getX();
 						final float dx = x - mTouchX;
 						float newPos = Math.max(0, Math.min(mThumbPosition + dx, getThumbScrollRange()));
@@ -612,8 +633,7 @@ public class Switch extends CompoundButton
 			}
 
 			case MotionEvent.ACTION_UP:
-			case MotionEvent.ACTION_CANCEL:
-			{
+			case MotionEvent.ACTION_CANCEL: {
 				if (mTouchMode == TOUCH_MODE_DRAGGING)
 				{
 					stopDrag(ev);
@@ -640,7 +660,8 @@ public class Switch extends CompoundButton
 	 * Called from onTouchEvent to end a drag operation.
 	 * 
 	 * @param ev
-	 *            Event that triggered the end of drag mode - ACTION_UP or ACTION_CANCEL
+	 *            Event that triggered the end of drag mode - ACTION_UP or
+	 *            ACTION_CANCEL
 	 */
 	private void stopDrag(MotionEvent ev)
 	{
@@ -659,14 +680,12 @@ public class Switch extends CompoundButton
 			{
 				// newState = isLayoutRtl() ? (xvel < 0) : (xvel > 0);
 				newState = xvel > 0;
-			}
-			else
+			} else
 			{
 				newState = getTargetCheckedState();
 			}
 			animateThumbToCheckedState(newState);
-		}
-		else
+		} else
 		{
 			animateThumbToCheckedState(isChecked());
 		}

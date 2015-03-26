@@ -3,9 +3,9 @@
  *
  * LoadingDialog
  * 
- * Activity ÀüÃ¼¸¦ ÇÚµéÇÏ´Â ·Îµù ´ÙÀÌ¾ó·Î±× Ã¢ÀÌ´Ù. ·Îµù ÀÛ¾÷À» ¼öÇàÇÏ´Â
- * µ¿¾È ·Îµù ´ÙÀÌ¾ó·Î±× Ã¢À» ¶ç¿ì¸ç Ãë¼Ò½Ã ActivityÀÇ onBackPressed
- * ¸Ş¼­µåµµ °°ÀÌ ¼öÇàµÈ´Ù.
+ * Activity ì „ì²´ë¥¼ í•¸ë“¤í•˜ëŠ” ë¡œë”© ë‹¤ì´ì–¼ë¡œê·¸ ì°½ì´ë‹¤. ë¡œë”© ì‘ì—…ì„ ìˆ˜í–‰í•˜ëŠ”
+ * ë™ì•ˆ ë¡œë”© ë‹¤ì´ì–¼ë¡œê·¸ ì°½ì„ ë„ìš°ë©° ì·¨ì†Œì‹œ Activityì˜ onBackPressed
+ * ë©”ì„œë“œë„ ê°™ì´ ìˆ˜í–‰ëœë‹¤.
  *
  * @since 2014-02-24
  * @version 1
@@ -20,36 +20,44 @@ import android.widget.ProgressBar;
 
 import com.twoheart.dailyhotel.R;
 
-public class LoadingDialog {
+public class LoadingDialog
+{
 
 	private Dialog mDialog;
 
-	public LoadingDialog(final BaseActivity activity) {
+	public LoadingDialog(final BaseActivity activity)
+	{
 		mDialog = new Dialog(activity, R.style.TransDialog);
 		ProgressBar pb = new ProgressBar(activity);
-		LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT,
-				LayoutParams.WRAP_CONTENT);
+		LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		mDialog.addContentView(pb, params);
 		mDialog.setCancelable(true);
-		mDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+		mDialog.setOnCancelListener(new DialogInterface.OnCancelListener()
+		{
 			@Override
-			public void onCancel(DialogInterface dialog) {
+			public void onCancel(DialogInterface dialog)
+			{
 				hide();
 				activity.onBackPressed();
 
 			}
 		});
 	}
-	
-	public boolean isVisible() {
+
+	public boolean isVisible()
+	{
 		return mDialog.isShowing();
 	}
 
-	public void show() {
-		if (!mDialog.isShowing()) mDialog.show();
+	public void show()
+	{
+		if (!mDialog.isShowing())
+			mDialog.show();
 	}
 
-	public void hide() {
-		if (mDialog.isShowing()) mDialog.dismiss();
+	public void hide()
+	{
+		if (mDialog.isShowing())
+			mDialog.dismiss();
 	}
 }

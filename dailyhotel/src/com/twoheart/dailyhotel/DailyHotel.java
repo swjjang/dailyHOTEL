@@ -3,10 +3,10 @@
  *
  * DailyHotel
  * 
- * AndroidÀÇ ApplicationÀ» »ó¼Ó¹ŞÀº ¼­ºê Å¬·¡½º·Î¼­ ¾îÇÃ¸®ÄÉÀÌ¼ÇÀÇ °¡Àå
- * ±âº»ÀÌ µÇ´Â Å¬·¡½ºÀÌ´Ù. ÀÌ Å¬·¡½º¿¡¼­´Â ¾îÇÃ¸®ÄÉÀÌ¼Ç¿¡¼­ Àü¿ªÀûÀ¸·Î »ç¿ëµÇ
- * ´Â GoogleAnalytics¿Í ÆùÆ®, Volley, Universal Image Loder¸¦
- * ÃÊ±âÈ­ÇÏ´Â ÀÛ¾÷À» »ı¼ºµÉ ½Ã(onCreate)¿¡ ¼öÇàÇÑ´Ù.
+ * Androidì˜ Applicationì„ ìƒì†ë°›ì€ ì„œë¸Œ í´ë˜ìŠ¤ë¡œì„œ ì–´í”Œë¦¬ì¼€ì´ì…˜ì˜ ê°€ì¥
+ * ê¸°ë³¸ì´ ë˜ëŠ” í´ë˜ìŠ¤ì´ë‹¤. ì´ í´ë˜ìŠ¤ì—ì„œëŠ” ì–´í”Œë¦¬ì¼€ì´ì…˜ì—ì„œ ì „ì—­ì ìœ¼ë¡œ ì‚¬ìš©ë˜
+ * ëŠ” GoogleAnalyticsì™€ í°íŠ¸, Volley, Universal Image Loderë¥¼
+ * ì´ˆê¸°í™”í•˜ëŠ” ì‘ì—…ì„ ìƒì„±ë  ì‹œ(onCreate)ì— ìˆ˜í–‰í•œë‹¤.
  *
  * @since 2014-02-24
  * @version 1
@@ -34,9 +34,8 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.VolleyImageLoader;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 
-@ReportsCrashes
-(
-		// Application Crash Reports for Android(ACRA) ¼³Á¤
+@ReportsCrashes(
+// Application Crash Reports for Android(ACRA) ì„¤ì •
 		formKey = "",
 		resToastText = R.string.crash_toast_text,
 		mode = ReportingInteractionMode.DIALOG,
@@ -45,24 +44,26 @@ import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 		resDialogText = R.string.crash_dialog_text,
 		resDialogOkToast = R.string.crash_dialog_ok_text,
 		resDialogCommentPrompt = R.string.crash_dialog_comment_prompt,
-		mailTo = "dev.report@dailyhotel.co.kr"
-)
-public class DailyHotel extends Application implements Constants{
-	
+		mailTo = "dev.report@dailyhotel.co.kr")
+public class DailyHotel extends Application implements Constants
+{
+
 	private static Typeface mTypeface;
 	private static Typeface mBoldTypeface;
 
 	@Override
-	public void onCreate() {
+	public void onCreate()
+	{
 		super.onCreate();
-		
+
 		initializeVolley();
 		initializeGa();
 		initializeFont();
 		ACRA.init(this);
 	}
 
-	private void initializeGa() {
+	private void initializeGa()
+	{
 		GoogleAnalytics mGa = GoogleAnalytics.getInstance(this);
 		Tracker mTracker = mGa.getTracker(GA_PROPERTY_ID);
 
@@ -76,67 +77,66 @@ public class DailyHotel extends Application implements Constants{
 		mGa.getLogger().setLogLevel(GA_LOG_VERBOSITY);
 
 		// Set the opt out flag when user updates a tracking preference.
-		SharedPreferences userPrefs = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		userPrefs
-				.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
-					@Override
-					public void onSharedPreferenceChanged(
-							SharedPreferences sharedPreferences, String key) {
-						if (key.equals(TRACKING_PREF_KEY)) {
-							GoogleAnalytics
-									.getInstance(getApplicationContext())
-									.setAppOptOut(
-											sharedPreferences.getBoolean(key,
-													false));
-						}
-					}
-				});
+		SharedPreferences userPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		userPrefs.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener()
+		{
+			@Override
+			public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key)
+			{
+				if (key.equals(TRACKING_PREF_KEY))
+				{
+					GoogleAnalytics.getInstance(getApplicationContext()).setAppOptOut(sharedPreferences.getBoolean(key, false));
+				}
+			}
+		});
 
-	
 		UncaughtExceptionHandler myHandler = new ExceptionReporter(mTracker, // Tracker, may return
-														// null if not yet
-														// initialized.
-				GAServiceManager.getInstance(), // GAServiceManager singleton.
-				Thread.getDefaultUncaughtExceptionHandler(), this); // Current
-																	// default
-																	// uncaught
-																	// exception
-																	// handler.
+		// null if not yet
+		// initialized.
+		GAServiceManager.getInstance(), // GAServiceManager singleton.
+		Thread.getDefaultUncaughtExceptionHandler(), this); // Current
+															// default
+															// uncaught
+															// exception
+															// handler.
 
 		// Make myHandler the new default uncaught exception handler.
 		Thread.setDefaultUncaughtExceptionHandler(myHandler);
 	}
 
-
-
-	private void initializeVolley() {
+	private void initializeVolley()
+	{
 		VolleyHttpClient.init(this);
 
 	}
-	
-	private void initializeVolleyImageLoader() {
+
+	private void initializeVolleyImageLoader()
+	{
 		VolleyImageLoader.init();
-		
+
 	}
-	
-	private void initializeFont() {
+
+	private void initializeFont()
+	{
 		mTypeface = Typeface.createFromAsset(getAssets(), "NanumBarunGothic.ttf.mp3");
 		mBoldTypeface = Typeface.createFromAsset(getAssets(), "NanumBarunGothicBold.ttf.mp3");
 	}
 
-	public static Typeface getTypeface() {
+	public static Typeface getTypeface()
+	{
 		return mTypeface;
 	}
 
-	public static Typeface getBoldTypeface() {
+	public static Typeface getBoldTypeface()
+	{
 		return mBoldTypeface;
 	}
-	
+
 	@Override
-    public void onLowMemory() {
+	public void onLowMemory()
+	{
 		super.onLowMemory();
-        BitmapAjaxCallback.clearCache();
-    }
-	
+		BitmapAjaxCallback.clearCache();
+	}
+
 }

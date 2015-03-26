@@ -14,46 +14,51 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Credit;
 import com.twoheart.dailyhotel.util.GlobalFont;
 
-public class CreditListAdapter extends ArrayAdapter<Credit>{
-	
+public class CreditListAdapter extends ArrayAdapter<Credit>
+{
+
 	private List<Credit> mItems;
 	private Context mContext;
 	private int mResourceId;
-	
-	public CreditListAdapter(Context context, int resourceId, List<Credit> mCreditList) {
+
+	public CreditListAdapter(Context context, int resourceId, List<Credit> mCreditList)
+	{
 		super(context, resourceId, mCreditList);
 		this.mItems = mCreditList;
 		this.mContext = context;
 		this.mResourceId = resourceId;
 	}
-	
+
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(int position, View convertView, ViewGroup parent)
+	{
 		View v = convertView;
-		
-		if(v == null	) {
-			LayoutInflater vi = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+		if (v == null)
+		{
+			LayoutInflater vi = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			v = vi.inflate(mResourceId, null);
 			v.setTag(position);
 		}
-		
+
 		Credit element = mItems.get(position);
-		
-		if(element != null) {
+
+		if (element != null)
+		{
 			TextView bonus = (TextView) v.findViewById(R.id.list_row_credit_bonus);
 			TextView content = (TextView) v.findViewById(R.id.list_row_credit_content);
 			TextView expires = (TextView) v.findViewById(R.id.list_row_credit_expires);
-			
+
 			DecimalFormat comma = new DecimalFormat("###,##0");
 			String strBonus = comma.format(Integer.parseInt(element.getBonus()));
-			
-			bonus.setText("£Ü" + strBonus);
+
+			bonus.setText("ï¿½ï¿½" + strBonus);
 			content.setText(element.getContent());
 			expires.setText(mContext.getString(R.string.prefix_expire_time) + ", " + element.getExpires() + "");
 		}
-		
-		GlobalFont.apply((ViewGroup) v); 
+
+		GlobalFont.apply((ViewGroup) v);
 		return v;
 	}
-	
+
 }

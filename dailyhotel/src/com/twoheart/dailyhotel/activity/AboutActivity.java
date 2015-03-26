@@ -1,29 +1,30 @@
 package com.twoheart.dailyhotel.activity;
 
 import android.os.Bundle;
-import android.util.Log;
-
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.util.ui.WebViewActivity;
 
-public class AboutActivity extends WebViewActivity {
-	private static final String TAG = "AboutActivity";
-	
+public class AboutActivity extends WebViewActivity
+{
+
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
 		setActionBar(R.string.actionbar_title_about_activity);
 		setContentView(R.layout.activity_about);
 	}
 
 	@Override
-	protected void onResume() {
+	protected void onResume()
+	{
 		super.onResume();
-		setWebView(URL_WEB_ABOUT);
-		
+
+		setWebView(DailyHotelRequest.getUrlDecoderEx(URL_WEB_ABOUT));
+
 		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("introduction", "/settings/introduction");
 	}
-	
 }

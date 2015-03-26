@@ -3,8 +3,8 @@
  *
  * WebViewActivity
  * 
- * WebView¸¦ »ç¿ëÇÏ´Â Activity¸¦ À§ÇÑ ºÎ¸ð Å¬·¡½ºÀÌ´Ù. ÀÏ°ýÀûÀÎ WebV
- * iewÀÇ ¼³Á¤À» À§ÇØ ¼³°èµÈ Å¬·¡½ºÀÌ´Ù.
+ * WebViewë¥¼ ì‚¬ìš©í•˜ëŠ” Activityë¥¼ ìœ„í•œ ë¶€ëª¨ í´ëž˜ìŠ¤ì´ë‹¤. ì¼ê´„ì ì¸ WebV
+ * iewì˜ ì„¤ì •ì„ ìœ„í•´ ì„¤ê³„ëœ í´ëž˜ìŠ¤ì´ë‹¤.
  *
  * @since 2014-02-24
  * @version 1
@@ -17,12 +17,10 @@ import java.net.URISyntaxException;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnLongClickListener;
@@ -34,9 +32,10 @@ import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.ExLog;
 
-public class WebViewActivity extends BaseActivity implements
-OnLongClickListener {
+public class WebViewActivity extends BaseActivity implements OnLongClickListener
+{
 
 	protected DailyHotelWebChromeClient webChromeClient;
 	protected DailyHotelWebViewClient webViewClient;
@@ -44,14 +43,16 @@ OnLongClickListener {
 	protected WebView webView;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
 		supportRequestWindowFeature(Window.FEATURE_PROGRESS);
 
 	}
 
 	@JavascriptInterface
-	protected void setWebView(String url) {
+	protected void setWebView(String url)
+	{
 		webChromeClient = new DailyHotelWebChromeClient();
 		webViewClient = new DailyHotelWebViewClient();
 		webView = (WebView) findViewById(R.id.webView);
@@ -69,49 +70,62 @@ OnLongClickListener {
 
 	}
 
-	public class DailyHotelWebViewClient extends WebViewClient {
+	public class DailyHotelWebViewClient extends WebViewClient
+	{
 
 		@JavascriptInterface
 		@Override
-		public boolean shouldOverrideUrlLoading(WebView view, final String url) {
-			android.util.Log.e("url",url);
-			if (url.equals("event://")) {
+		public boolean shouldOverrideUrlLoading(WebView view, final String url)
+		{
+			ExLog.e("url : " + url);
+			if (url.equals("event://"))
+			{
 				finish();
 				overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
 				browseToExternalBrowser(URL_STORE_GOOGLE_DAILYHOTEL);
 
-			} else if (url.equals("event://tstore")) {
+			} else if (url.equals("event://tstore"))
+			{
 				finish();
 				overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
 				browseToExternalBrowser(URL_STORE_T_DAILYHOTEL);
 
-			} else if (url.contains("facebook.com") | url.contains("naver.com")) {
+			} else if (url.contains("facebook.com") | url.contains("naver.com"))
+			{
 				browseToExternalBrowser(url);
 
-			} else if (url.contains("kakaoplus://")) {
+			} else if (url.contains("kakaoplus://"))
+			{
 
-				try {
+				try
+				{
 					PackageManager pm = getPackageManager();
 					// if throw namenotfoundexception => go to kakaotalk install page
-					pm.getApplicationInfo("com.kakao.talk",PackageManager.GET_META_DATA);
+					pm.getApplicationInfo("com.kakao.talk", PackageManager.GET_META_DATA);
 					startActivity(Intent.parseUri(url, Intent.URI_INTENT_SCHEME));
-				} catch (URISyntaxException e) {
-					e.printStackTrace();
-				} catch (NameNotFoundException e) {
-					try {
+				} catch (URISyntaxException e)
+				{
+					ExLog.e(e.toString());
+				} catch (NameNotFoundException e)
+				{
+					try
+					{
 						startActivity(Intent.parseUri("market://details?id=com.kakao.talk", Intent.URI_INTENT_SCHEME));
-					} catch (URISyntaxException e1) {
-						e1.printStackTrace();
+					} catch (URISyntaxException e1)
+					{
+						ExLog.e(e1.toString());
 					}
 				}
 
-			} else {
+			} else
+			{
 				view.loadUrl(url);
 			}
 			return true;
 		}
 
-		private void browseToExternalBrowser(String url) {
+		private void browseToExternalBrowser(String url)
+		{
 			Uri uri = Uri.parse(url);
 			Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 			startActivity(intent);
@@ -120,8 +134,8 @@ OnLongClickListener {
 
 		@JavascriptInterface
 		@Override
-		public void onReceivedError(WebView view, int errorCode,
-				String description, String failingUrl) {
+		public void onReceivedError(WebView view, int errorCode, String description, String failingUrl)
+		{
 			super.onReceivedError(view, errorCode, description, failingUrl);
 			showToast(getString(R.string.toast_msg_network_status_bad), Toast.LENGTH_LONG, false);
 			finish();
@@ -130,49 +144,52 @@ OnLongClickListener {
 
 	}
 
-	public class DailyHotelWebChromeClient extends WebChromeClient {
+	public class DailyHotelWebChromeClient extends WebChromeClient
+	{
 
 		@JavascriptInterface
 		@Override
-		public boolean onJsAlert(WebView view, String url, String message,
-				final android.webkit.JsResult result) {
-			new AlertDialog.Builder(view.getContext())
-			.setTitle(getString(R.string.dialog_notice2))
-			.setMessage(message)
-			.setPositiveButton(android.R.string.ok,
-					new AlertDialog.OnClickListener() {
-				public void onClick(DialogInterface dialog,
-						int which) {
+		public boolean onJsAlert(WebView view, String url, String message, final android.webkit.JsResult result)
+		{
+			new AlertDialog.Builder(view.getContext()).setTitle(getString(R.string.dialog_notice2)).setMessage(message).setPositiveButton(android.R.string.ok, new AlertDialog.OnClickListener()
+			{
+				public void onClick(DialogInterface dialog, int which)
+				{
 					result.confirm();
 				}
 			}).setCancelable(false).show();
 			return true;
 		};
 
-		public void onProgressChanged(WebView view, int progress) {
+		public void onProgressChanged(WebView view, int progress)
+		{
 			WebViewActivity.this.setProgress(progress * 100);
 		}
 
 	}
 
 	@Override
-	public boolean onLongClick(View v) {
+	public boolean onLongClick(View v)
+	{
 		return true;
 	}
 
 	@Override
-	public void finish() {
+	public void finish()
+	{
 		super.finish();
 		overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
 
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			onBackPressed();
-			return true;
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch (item.getItemId())
+		{
+			case android.R.id.home:
+				onBackPressed();
+				return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}

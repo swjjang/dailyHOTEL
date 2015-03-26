@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
  *
- * RegionListActivity (Áö¿ª¸®½ºÆ® È­¸é)
+ * RegionListActivity (ì§€ì—­ë¦¬ìŠ¤íŠ¸ í™”ë©´)
  * 
- * Áö¿ª¸®½ºÆ®¸¦ º¸¿©ÁÖ´Â È­¸é
- * 1. È£ÅÚ¸®½ºÆ® È­¸éÀÇ ¿ìÃø»ó´Ü µ¸º¸±â ¹öÆ°À» Å¬¸¯
- * 2. ¾ÛÀ» Ã³À½ ¼³Ä¡ÇÏ°í °¡ÀÌµå È­¸éÀÌ Á¾·áµÈ ÈÄ 
- * ÀÌ È­¸éÀÌ º¸¿©Áø´Ù.  
+ * ì§€ì—­ë¦¬ìŠ¤íŠ¸ë¥¼ ë³´ì—¬ì£¼ëŠ” í™”ë©´
+ * 1. í˜¸í…”ë¦¬ìŠ¤íŠ¸ í™”ë©´ì˜ ìš°ì¸¡ìƒë‹¨ ë‹ë³´ê¸° ë²„íŠ¼ì„ í´ë¦­
+ * 2. ì•±ì„ ì²˜ìŒ ì„¤ì¹˜í•˜ê³  ê°€ì´ë“œ í™”ë©´ì´ ì¢…ë£Œëœ í›„ 
+ * ì´ í™”ë©´ì´ ë³´ì—¬ì§„ë‹¤.  
  * 
  */
 package com.twoheart.dailyhotel;
@@ -17,163 +17,246 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.content.SharedPreferences;
-import android.graphics.Paint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.adapter.SeparatedListAdpater;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonArrayRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonArrayResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
-public class RegionListActivity extends BaseActivity implements OnItemClickListener, DailyHotelJsonArrayResponseListener  {
+public class RegionListActivity extends BaseActivity implements OnItemClickListener
+{
 	private SeparatedListAdpater adapter;
-    
-    private ArrayList<String> mKoRegionList;
-    private ArrayList<String> mJaRegionList;
-    private ListView list;
-    
+
+	private ArrayList<String> mKoRegionList;
+	private ArrayList<String> mJaRegionList;
+	private ListView list;
+
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
-		
+
 		setActionBar(getString(R.string.act_list_region_title));
 		setContentView(R.layout.activity_region_list);
-		
-		 // ¾î´ğÅÍ »ı¼º
-        adapter = new SeparatedListAdpater(this);
- 
-        list = (ListView) findViewById(R.id.list);       
-        list.setOnItemClickListener(this);
-        
-        lockUI();
-        mQueue.add(new DailyHotelJsonArrayRequest(Method.GET,
-				new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-						URL_WEBAPI_SITE_COUNTRY_LOCATION_LIST).toString(),
-						null, RegionListActivity.this,
-						RegionListActivity.this));
-        
+
+		// ì–´ëŒ‘í„° ìƒì„±
+		adapter = new SeparatedListAdpater(this);
+
+		list = (ListView) findViewById(R.id.list);
+		list.setOnItemClickListener(this);
+
+		lockUI();
+		mQueue.add(new DailyHotelJsonArrayRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SITE_COUNTRY_LOCATION_LIST).toString(), null, mSiteCountryLocationListJsonArrayResponseListener, RegionListActivity.this));
 	}
-	 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        String content = adapter.getItem(position).toString();
-        RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectRegion", content, (long) (position+1));
-        
-        if (!content.equals(sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, ""))) {
-			SharedPreferences.Editor editor = sharedPreference
-					.edit();
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+	{
+		String content = adapter.getItem(position).toString();
+		RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectRegion", content, (long) (position + 1));
+
+		if (!content.equals(sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "")))
+		{
+			SharedPreferences.Editor editor = sharedPreference.edit();
 			editor.putString(KEY_PREFERENCE_REGION_SELECT_BEFORE, sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, ""));
 			editor.putString(KEY_PREFERENCE_REGION_SELECT, content);
 			editor.commit();
 		}
-        
-        finish();
-        
-    }
 
-	@Override
-	public void onResponse(String url, JSONArray response) {
-		if (url.contains(URL_WEBAPI_SITE_COUNTRY_LOCATION_LIST)) {
-			try {
-				Log.d("RegionListActivity", "site/get ? " + response.toString());
-				mJaRegionList = new ArrayList<String>();
+		finish();
 
-				JSONArray arr = response;
-				for (int i = 0; i < arr.length(); i++) {
-					JSONObject obj = arr.getJSONObject(i);
-					String name = new String();
-					name = obj.getString("name");
-					mJaRegionList.add(name);
-				}
-		        
-		        mQueue.add(new DailyHotelJsonArrayRequest(Method.GET,
-						new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-								URL_WEBAPI_SITE_LOCATION_LIST).toString(),
-								null, RegionListActivity.this,
-								RegionListActivity.this));
-				
-			} catch (Exception e) {
-				onError(e);
-			}
-		}
-		else if (url.contains(URL_WEBAPI_SITE_LOCATION_LIST)) {
-			try {
-				Log.d("RegionListActivity", "site/get ? " + response.toString());
-				mKoRegionList = new ArrayList<String>();
-
-				JSONArray arr = response;
-				for (int i = 0; i < arr.length(); i++) {
-					JSONObject obj = arr.getJSONObject(i);
-					String name = new String();
-					name = obj.getString("name");
-					mKoRegionList.add(name);
-				}
-				
-				// ¹è¿­ ¾î´ğÅÍ¸¦ sectionÀ¸·Î Ãß°¡
-				// site/get API => ´ëÇÑ¹Î±¹ÀÇ Áö¿ª¸®½ºÆ®¸¦ ¹İÈ¯ÇÔ.
-				// site/get/country API => ÇØ¿ÜÀÇ Áö¿ª¸®½ºÆ®¸¦ ¹İÈ¯ÇÔ. ÇöÀç´Â ÀÏº»ÀÇ Áö¿ª¸®½ºÆ®¸¦ ¹İÈ¯ÇÔ.
-				// Áö¿ª¸®½ºÆ®¸¦ ¹Ş¾Æ¿Ã ¶§ ´ëÇÑ¹Î±¹, ÀÏº» °ú °°Àº ±¹°¡ÀÌ¸§À» ¹Ş¾Æ¿ÀÁö ¸øÇÔ.
-				// µû¶ó¼­ ÇöÀç´Â ´ëÇÑ¹Î±¹, ÀÏº»ÀÇ Áö¿ª¸®½ºÆ®¸¦ °¢°¢ÀÇ list¿¡ ´ã¾Æ Ãß°¡ÇÔ.
-				
-		        adapter.addSection(getString(R.string.act_list_region_korea), new ArrayAdapter<String>(this, 
-		                R.layout.list_row_region, mKoRegionList));
-		        adapter.addSection(getString(R.string.act_list_region_japan), new ArrayAdapter<String>(this, 
-		                R.layout.list_row_region, mJaRegionList));
-		        list.setAdapter(adapter);
-		        unLockUI();
-				
-			} catch (Exception e) {
-				onError(e);
-			}
-		}
-		
-		
 	}
 
-//	@Override
-//	public boolean onCreateOptionsMenu(Menu menu) {
-//		// Inflate the menu; this adds items to the action bar if it is present.
-//		getMenuInflater().inflate(R.menu.region_list, menu);
-//		return true;
-//	}
-//
-//	@Override
-//	public boolean onOptionsItemSelected(MenuItem item) {
-//		// Handle action bar item clicks here. The action bar will
-//		// automatically handle clicks on the Home/Up button, so long
-//		// as you specify a parent activity in AndroidManifest.xml.
-//		int id = item.getItemId();
-//		if (id == R.id.action_settings) {
-//			return true;
-//		}
-//		return super.onOptionsItemSelected(item);
-//	}
-	
+	//	@Override
+	//	public boolean onCreateOptionsMenu(Menu menu) {
+	//		// Inflate the menu; this adds items to the action bar if it is present.
+	//		getMenuInflater().inflate(R.menu.region_list, menu);
+	//		return true;
+	//	}
+	//
+	//	@Override
+	//	public boolean onOptionsItemSelected(MenuItem item) {
+	//		// Handle action bar item clicks here. The action bar will
+	//		// automatically handle clicks on the Home/Up button, so long
+	//		// as you specify a parent activity in AndroidManifest.xml.
+	//		int id = item.getItemId();
+	//		if (id == R.id.action_settings) {
+	//			return true;
+	//		}
+	//		return super.onOptionsItemSelected(item);
+	//	}
+
 	@Override
-	public void finish() {
+	public void finish()
+	{
 		// TODO Auto-generated method stub
 		super.finish();
 		overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
 	}
-	
+
 	@Override
-	public void onBackPressed() {
-		// ¼±ÅÃµÈ Áö¿ªÀÌ ¾ø´Â °æ¿ì(¾ÛÀ» Ã³À½ ±ò°í µé¾î¿Â °æ¿ì)¿¡ Áö¿ªÀ» ¼±ÅÃÇÏÁö ¾Ê°í backÀ» ´©¸¦°æ¿ì
-		// Áö¿ªÀ» ¼±ÅÃÇÏ¶ó´Â Åä½ºÆ®¸¦ ¶ç¿öÁÜ.
-		if (sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "").equals("")) {
+	public void onBackPressed()
+	{
+		// ì„ íƒëœ ì§€ì—­ì´ ì—†ëŠ” ê²½ìš°(ì•±ì„ ì²˜ìŒ ê¹”ê³  ë“¤ì–´ì˜¨ ê²½ìš°)ì— ì§€ì—­ì„ ì„ íƒí•˜ì§€ ì•Šê³  backì„ ëˆ„ë¥¼ê²½ìš°
+		// ì§€ì—­ì„ ì„ íƒí•˜ë¼ëŠ” í† ìŠ¤íŠ¸ë¥¼ ë„ì›Œì¤Œ.
+		if (sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "").equals(""))
+		{
 			Toast.makeText(getApplicationContext(), getString(R.string.act_list_region_select_region), Toast.LENGTH_SHORT).show();
 			return;
 		}
 		super.onBackPressed();
 	}
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Listener
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	private DailyHotelJsonArrayResponseListener mSiteCountryLocationListJsonArrayResponseListener = new DailyHotelJsonArrayResponseListener()
+	{
+
+		@Override
+		public void onResponse(String url, JSONArray response)
+		{
+
+			try
+			{
+				if (response == null)
+				{
+					throw new NullPointerException("response == null");
+				}
+
+				ExLog.d("site/get ? " + response.toString());
+
+				int length = response.length();
+				mJaRegionList = new ArrayList<String>(length);
+
+				for (int i = 0; i < length; i++)
+				{
+					JSONObject obj = response.getJSONObject(i);
+					String name = obj.getString("name");
+
+					mJaRegionList.add(name);
+				}
+
+				mQueue.add(new DailyHotelJsonArrayRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SITE_LOCATION_LIST).toString(), null, mSiteLocationListJsonArrayResponseListener, RegionListActivity.this));
+			} catch (Exception e)
+			{
+				onError(e);
+			}
+		}
+	};
+
+	private DailyHotelJsonArrayResponseListener mSiteLocationListJsonArrayResponseListener = new DailyHotelJsonArrayResponseListener()
+	{
+
+		@Override
+		public void onResponse(String url, JSONArray response)
+		{
+
+			try
+			{
+				if (response == null)
+				{
+					throw new NullPointerException("response == null");
+				}
+
+				ExLog.d("site/get ? " + response.toString());
+
+				int length = response.length();
+				mKoRegionList = new ArrayList<String>(length);
+
+				for (int i = 0; i < length; i++)
+				{
+					JSONObject obj = response.getJSONObject(i);
+					String name = obj.getString("name");
+
+					mKoRegionList.add(name);
+				}
+
+				// ë°°ì—´ ì–´ëŒ‘í„°ë¥¼ sectionìœ¼ë¡œ ì¶”ê°€
+				// site/get API => ëŒ€í•œë¯¼êµ­ì˜ ì§€ì—­ë¦¬ìŠ¤íŠ¸ë¥¼ ë°˜í™˜í•¨.
+				// site/get/country API => í•´ì™¸ì˜ ì§€ì—­ë¦¬ìŠ¤íŠ¸ë¥¼ ë°˜í™˜í•¨. í˜„ì¬ëŠ” ì¼ë³¸ì˜ ì§€ì—­ë¦¬ìŠ¤íŠ¸ë¥¼ ë°˜í™˜í•¨.
+				// ì§€ì—­ë¦¬ìŠ¤íŠ¸ë¥¼ ë°›ì•„ì˜¬ ë•Œ ëŒ€í•œë¯¼êµ­, ì¼ë³¸ ê³¼ ê°™ì€ êµ­ê°€ì´ë¦„ì„ ë°›ì•„ì˜¤ì§€ ëª»í•¨.
+				// ë”°ë¼ì„œ í˜„ì¬ëŠ” ëŒ€í•œë¯¼êµ­, ì¼ë³¸ì˜ ì§€ì—­ë¦¬ìŠ¤íŠ¸ë¥¼ ê°ê°ì˜ listì— ë‹´ì•„ ì¶”ê°€í•¨.
+
+				adapter.addSection(getString(R.string.act_list_region_korea), new ArrayAdapter<String>(RegionListActivity.this, R.layout.list_row_region, mKoRegionList));
+				adapter.addSection(getString(R.string.act_list_region_japan), new ArrayAdapter<String>(RegionListActivity.this, R.layout.list_row_region, mJaRegionList));
+				list.setAdapter(adapter);
+				unLockUI();
+
+			} catch (Exception e)
+			{
+				onError(e);
+			}
+		}
+	};
+
+	//	@Override
+	//	public void onResponse(String url, JSONArray response) {
+	//		if (url.contains(URL_WEBAPI_SITE_COUNTRY_LOCATION_LIST)) {
+	//			try {
+	//				ExLog.d("site/get ? " + response.toString());
+	//				mJaRegionList = new ArrayList<String>();
+	//
+	//				JSONArray arr = response;
+	//				for (int i = 0; i < arr.length(); i++) {
+	//					JSONObject obj = arr.getJSONObject(i);
+	//					String name = new String();
+	//					name = obj.getString("name");
+	//					mJaRegionList.add(name);
+	//				}
+	//		        
+	//		        mQueue.add(new DailyHotelJsonArrayRequest(Method.GET,
+	//						new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+	//								URL_WEBAPI_SITE_LOCATION_LIST).toString(),
+	//								null, RegionListActivity.this,
+	//								RegionListActivity.this));
+	//				
+	//			} catch (Exception e) {
+	//				onError(e);
+	//			}
+	//		}
+	//		else if (url.contains(URL_WEBAPI_SITE_LOCATION_LIST)) {
+	//			try {
+	//				ExLog.d("site/get ? " + response.toString());
+	//				mKoRegionList = new ArrayList<String>();
+	//
+	//				JSONArray arr = response;
+	//				for (int i = 0; i < arr.length(); i++) {
+	//					JSONObject obj = arr.getJSONObject(i);
+	//					String name = new String();
+	//					name = obj.getString("name");
+	//					mKoRegionList.add(name);
+	//				}
+	//				
+	//				// ë°°ì—´ ì–´ëŒ‘í„°ë¥¼ sectionìœ¼ë¡œ ì¶”ê°€
+	//				// site/get API => ëŒ€í•œë¯¼êµ­ì˜ ì§€ì—­ë¦¬ìŠ¤íŠ¸ë¥¼ ë°˜í™˜í•¨.
+	//				// site/get/country API => í•´ì™¸ì˜ ì§€ì—­ë¦¬ìŠ¤íŠ¸ë¥¼ ë°˜í™˜í•¨. í˜„ì¬ëŠ” ì¼ë³¸ì˜ ì§€ì—­ë¦¬ìŠ¤íŠ¸ë¥¼ ë°˜í™˜í•¨.
+	//				// ì§€ì—­ë¦¬ìŠ¤íŠ¸ë¥¼ ë°›ì•„ì˜¬ ë•Œ ëŒ€í•œë¯¼êµ­, ì¼ë³¸ ê³¼ ê°™ì€ êµ­ê°€ì´ë¦„ì„ ë°›ì•„ì˜¤ì§€ ëª»í•¨.
+	//				// ë”°ë¼ì„œ í˜„ì¬ëŠ” ëŒ€í•œë¯¼êµ­, ì¼ë³¸ì˜ ì§€ì—­ë¦¬ìŠ¤íŠ¸ë¥¼ ê°ê°ì˜ listì— ë‹´ì•„ ì¶”ê°€í•¨.
+	//				
+	//		        adapter.addSection(getString(R.string.act_list_region_korea), new ArrayAdapter<String>(this, 
+	//		                R.layout.list_row_region, mKoRegionList));
+	//		        adapter.addSection(getString(R.string.act_list_region_japan), new ArrayAdapter<String>(this, 
+	//		                R.layout.list_row_region, mJaRegionList));
+	//		        list.setAdapter(adapter);
+	//		        unLockUI();
+	//				
+	//			} catch (Exception e) {
+	//				onError(e);
+	//			}
+	//		}
+	//		
+	//		
+	//	}
 }

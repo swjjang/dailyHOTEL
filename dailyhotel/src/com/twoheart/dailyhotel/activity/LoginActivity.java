@@ -2,10 +2,10 @@
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
 
  *
- * LoginActivity (∑Œ±◊¿Œ»≠∏È)
+ * LoginActivity (Î°úÍ∑∏Ïù∏ÌôîÎ©¥)
  * 
- * ªÁøÎ¿⁄ ∞Ë¡§ ∑Œ±◊¿Œ¿ª ¥„¥Á«œ¥¬ »≠∏È¿Ã¥Ÿ. ªÁøÎ¿⁄∑Œ∫Œ≈Õ æ∆¿ÃµøÕ ∆–Ω∫øˆµÂ∏¶
- * ¿‘∑¬πﬁ¿∏∏Á, ¿Ã∏¶ ∑Œ±◊¿Œ¿ª «œ¥¬ ¿•º≠πˆ API∏¶ ¿ÃøÎ«—¥Ÿ. 
+ * ÏÇ¨Ïö©Ïûê Í≥ÑÏ†ï Î°úÍ∑∏Ïù∏ÏùÑ Îã¥ÎãπÌïòÎäî ÌôîÎ©¥Ïù¥Îã§. ÏÇ¨Ïö©ÏûêÎ°úÎ∂ÄÌÑ∞ ÏïÑÏù¥ÎîîÏôÄ Ìå®Ïä§ÏõåÎìúÎ•º
+ * ÏûÖÎ†•Î∞õÏúºÎ©∞, Ïù¥Î•º Î°úÍ∑∏Ïù∏ÏùÑ ÌïòÎäî ÏõπÏÑúÎ≤Ñ APIÎ•º Ïù¥Ïö©ÌïúÎã§. 
  *
  * @since 2014-02-24
  * @version 1
@@ -33,11 +33,10 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
@@ -60,10 +59,10 @@ import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
-import com.twoheart.dailyhotel.util.Constants.Stores;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
@@ -71,10 +70,8 @@ import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.widget.Switch;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-public class LoginActivity extends BaseActivity implements Constants,
-OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
-
-	private static final String TAG = "LoginActivity";
+public class LoginActivity extends BaseActivity implements Constants, OnClickListener, ErrorListener
+{
 
 	private EditText etId, etPwd;
 	private Switch cbxAutoLogin;
@@ -92,7 +89,8 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 	private MixpanelAPI mMixpanel;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
 
 		setActionBar(R.string.actionbar_title_login_activity);
@@ -112,15 +110,17 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 		facebookLogin.setOnClickListener(this);
 
 		etPwd.setId(EditorInfo.IME_ACTION_DONE);
-		etPwd.setOnEditorActionListener(new OnEditorActionListener() {
+		etPwd.setOnEditorActionListener(new OnEditorActionListener()
+		{
 
 			@Override
-			public boolean onEditorAction(TextView v, int actionId,
-					KeyEvent event) {
-				switch (actionId) {
-				case EditorInfo.IME_ACTION_DONE:
-					btnLogin.performClick();
-					break;
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+			{
+				switch (actionId)
+				{
+					case EditorInfo.IME_ACTION_DONE:
+						btnLogin.performClick();
+						break;
 				}
 				return false;
 			}
@@ -128,79 +128,86 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 
 		if (Session.getActiveSession() != null)
 			Session.getActiveSession().closeAndClearTokenInformation();
-		
+
 		mMixpanel = MixpanelAPI.getInstance(this, "791b366dadafcd37803f6cd7d8358373");
 		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
 	}
 
-	private void makeMeRequest(final Session session) {
+	private void makeMeRequest(final Session session)
+	{
 
-		Request request = Request.newMeRequest(session,
-				new Request.GraphUserCallback() {
+		Request request = Request.newMeRequest(session, new Request.GraphUserCallback()
+		{
 
 			@Override
-			public void onCompleted(GraphUser user, Response response) {
+			public void onCompleted(GraphUser user, Response response)
+			{
 
-				if (user != null) {
-					TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext()
-							.getSystemService(Context.TELEPHONY_SERVICE);
+				if (user != null)
+				{
+					TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
 
 					String userEmail = null;
 
-					try {
-						if (user.getProperty("email") != null) userEmail = user.getProperty("email").toString();
-					} catch (Exception e) {
-						if (DEBUG)
-							e.printStackTrace();
+					try
+					{
+						if (user.getProperty("email") != null)
+							userEmail = user.getProperty("email").toString();
+					} catch (Exception e)
+					{
+						ExLog.e(e.toString());
 					}
 
 					String userId = user.getId();
-					String encryptedId = Crypto.encrypt(userId)
-							.replace("\n", "");
+					String encryptedId = Crypto.encrypt(userId).replace("\n", "");
 					String userName = user.getName();
 					String deviceId = telephonyManager.getDeviceId();
 
 					snsSignupParams = new HashMap<String, String>();
 					loginParams = new HashMap<String, String>();
 
-					if (userEmail != null) snsSignupParams.put("email", userEmail);
+					if (userEmail != null)
+						snsSignupParams.put("email", userEmail);
 
-					if (userId != null) {
+					if (userId != null)
+					{
 						snsSignupParams.put("accessToken", userId);
 						loginParams.put("accessToken", userId);
 					}
 
-					if (encryptedId != null) {
-						snsSignupParams.put("pw", userId); // »∏ø¯∞°¿‘
-						// Ω√ø£ º≠πˆ
-						// ªÁ¿ÃµÂø°º≠
-						// æœ»£»≠
+					if (encryptedId != null)
+					{
+						snsSignupParams.put("pw", userId); // ÌöåÏõêÍ∞ÄÏûÖ
+						// ÏãúÏóî ÏÑúÎ≤Ñ
+						// ÏÇ¨Ïù¥ÎìúÏóêÏÑú
+						// ÏïîÌò∏Ìôî
 						loginParams.put("pw", encryptedId);
 					}
 
-					if (userName != null) snsSignupParams.put("name", userName);
+					if (userName != null)
+						snsSignupParams.put("name", userName);
 
-					if (deviceId != null) snsSignupParams.put("device", deviceId);
-					
+					if (deviceId != null)
+						snsSignupParams.put("device", deviceId);
+
 					String store = "";
-					if (RELEASE_STORE == Stores.N_STORE) {
+					if (RELEASE_STORE == Stores.N_STORE)
+					{
 						store = "Nstore";
-					} else if (RELEASE_STORE == Stores.PLAY_STORE) {
+					} else if (RELEASE_STORE == Stores.PLAY_STORE)
+					{
 						store = "PlayStore";
-					} else if (RELEASE_STORE == Stores.T_STORE) {
+					} else if (RELEASE_STORE == Stores.T_STORE)
+					{
 						store = "Tstore";
 					}
 					snsSignupParams.put("marketType", store);
-					
-					unLockUI(); // ∆‰¿ÃΩ∫∫œ ø¨∞· ¡æ∑· 
 
-					lockUI(); // º≠πˆøÕ ø¨∞· Ω√¿€ 
+					unLockUI(); // ÌéòÏù¥Ïä§Î∂Å Ïó∞Í≤∞ Ï¢ÖÎ£å 
 
-					mQueue.add(new DailyHotelJsonRequest(Method.POST,
-							new StringBuilder(URL_DAILYHOTEL_SERVER)
-					.append(URL_WEBAPI_USER_LOGIN)
-					.toString(), loginParams,
-					LoginActivity.this, LoginActivity.this));
+					lockUI(); // ÏÑúÎ≤ÑÏôÄ Ïó∞Í≤∞ ÏãúÏûë 
+
+					mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(), loginParams, mUserLoginJsonResponseListener, LoginActivity.this));
 
 					fbSession.closeAndClearTokenInformation();
 				}
@@ -208,66 +215,72 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 
 		});
 
-		// ∆‰¿ÃΩ∫∫œ ø¨∞· Ω√¿€
+		// ÌéòÏù¥Ïä§Î∂Å Ïó∞Í≤∞ ÏãúÏûë
 		lockUI();
 		request.executeAsync();
 
 	}
 
 	@Override
-	public void onClick(View v) {
-		if (v.getId() == tvForgotPwd.getId()) { // ∫Òπ–π¯»£ √£±‚
+	public void onClick(View v)
+	{
+		if (v.getId() == tvForgotPwd.getId())
+		{ // ÎπÑÎ∞ÄÎ≤àÌò∏ Ï∞æÍ∏∞
 			Intent i = new Intent(this, ForgotPwdActivity.class);
 			startActivity(i);
 			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
-		} else if (v.getId() == tvSignUp.getId()) { // »∏ø¯∞°¿‘
+		} else if (v.getId() == tvSignUp.getId())
+		{ // ÌöåÏõêÍ∞ÄÏûÖ
 			Intent i = new Intent(this, SignupActivity.class);
 			startActivityForResult(i, CODE_REQEUST_ACTIVITY_SIGNUP);
 			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
-		} else if (v.getId() == btnLogin.getId()) { // ∑Œ±◊¿Œ
-			if (!isBlankFields()) return;
+		} else if (v.getId() == btnLogin.getId())
+		{ // Î°úÍ∑∏Ïù∏
+			if (!isBlankFields())
+				return;
 
 			String md5 = Crypto.encrypt(etPwd.getText().toString()).replace("\n", "");
 
 			loginParams = new LinkedHashMap<String, String>();
 			loginParams.put("email", etId.getText().toString());
 			loginParams.put("pw", md5);
-			Log.d(TAG, "email : " + loginParams.get("email") + " pw : " + loginParams.get("pw"));
+			ExLog.d("email : " + loginParams.get("email") + " pw : " + loginParams.get("pw"));
 			lockUI();
 
-			mQueue.add(new DailyHotelJsonRequest(Method.POST,
-					new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-							URL_WEBAPI_USER_LOGIN).toString(), loginParams,
-							this, this));
-			
+			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(), loginParams, mUserLoginJsonResponseListener, this));
+
 			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestLogin", null, null);
 
-		} else if (v.getId() == facebookLogin.getId()) {
+		} else if (v.getId() == facebookLogin.getId())
+		{
 			fbSession = new Session.Builder(this).setApplicationId(getString(R.string.app_id)).build();
-			Session.OpenRequest or = new Session.OpenRequest(this); // æ»µÂ∑Œ¿ÃµÂ sdk∏¶ ªÁøÎ«œ±‚ ¿ß«ÿº± ≥ª ƒƒ«ª≈Õ¿« hash key∏¶ ∆‰¿ÃΩ∫∫œ ∞≥πﬂ º≥¡§∆‰¿Ã¡ˆø°º≠ √ﬂ∞°«œø©æﬂ«‘.
-			//			or.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO); // æ€ »£√‚¿Ã æ∆¥— ¿•∫‰∏¶ ∞≠¡¶∑Œ »£√‚«‘.
+			Session.OpenRequest or = new Session.OpenRequest(this); // ÏïàÎìúÎ°úÏù¥Îìú sdkÎ•º ÏÇ¨Ïö©ÌïòÍ∏∞ ÏúÑÌï¥ÏÑ† ÎÇ¥ Ïª¥Ìì®ÌÑ∞Ïùò hash keyÎ•º ÌéòÏù¥Ïä§Î∂Å Í∞úÎ∞ú ÏÑ§Ï†ïÌéòÏù¥ÏßÄÏóêÏÑú Ï∂îÍ∞ÄÌïòÏó¨ÏïºÌï®.
+			//			or.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO); // Ïï± Ìò∏Ï∂úÏù¥ ÏïÑÎãå ÏõπÎ∑∞Î•º Í∞ïÏ†úÎ°ú Ìò∏Ï∂úÌï®.
 			or.setPermissions(Arrays.asList("email", "basic_info"));
 			or.setCallback(statusCallback);
 
 			fbSession.openForRead(or);
 
 			Session.setActiveSession(fbSession);
-			
+
 			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestFacebookLogin", null, null);
 		}
 	}
 
-	private Session.StatusCallback statusCallback = new Session.StatusCallback() {
+	private Session.StatusCallback statusCallback = new Session.StatusCallback()
+	{
 
 		@Override
-		public void call(Session session, SessionState state,
-				Exception exception) {
-			if (state.isOpened()) makeMeRequest(session);
-			else if (state.isClosed()) session.closeAndClearTokenInformation();
+		public void call(Session session, SessionState state, Exception exception)
+		{
+			if (state.isOpened())
+				makeMeRequest(session);
+			else if (state.isClosed())
+				session.closeAndClearTokenInformation();
 
-			// ªÁøÎ¿⁄ √Îº“ Ω√
+			// ÏÇ¨Ïö©Ïûê Ï∑®ÏÜå Ïãú
 			//			if (exception instanceof FacebookOperationCanceledException 
 			//					|| exception instanceof FacebookAuthorizationException) {
 			//				unLockUI();
@@ -277,13 +290,16 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 
 	};
 
-	public boolean isBlankFields() {
-		if (etId.getText().toString().trim().length() == 0) {
+	public boolean isBlankFields()
+	{
+		if (etId.getText().toString().trim().length() == 0)
+		{
 			showToast(getString(R.string.toast_msg_please_input_id), Toast.LENGTH_SHORT, true);
 			return false;
 		}
 
-		if (etPwd.getText().toString().trim().length() == 0) {
+		if (etPwd.getText().toString().trim().length() == 0)
+		{
 			showToast(getString(R.string.toast_msg_please_input_passwd), Toast.LENGTH_SHORT, true);
 			return false;
 		}
@@ -291,10 +307,12 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 		return true;
 	}
 
-	public void storeLoginInfo() {
+	public void storeLoginInfo()
+	{
 
-		// ¿⁄µø ∑Œ±◊¿Œ √º≈©Ω√
-		if (cbxAutoLogin.isChecked()) {
+		// ÏûêÎèô Î°úÍ∑∏Ïù∏ Ï≤¥ÌÅ¨Ïãú
+		if (cbxAutoLogin.isChecked())
+		{
 
 			String id = loginParams.get("email");
 			String pwd = loginParams.get("pw");
@@ -303,10 +321,12 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 			SharedPreferences.Editor ed = sharedPreference.edit();
 			ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, true);
 
-			if (accessToken != null) {
+			if (accessToken != null)
+			{
 				ed.putString(KEY_PREFERENCE_USER_ACCESS_TOKEN, accessToken);
 				ed.putString(KEY_PREFERENCE_USER_ID, null);
-			} else {
+			} else
+			{
 				ed.putString(KEY_PREFERENCE_USER_ID, id);
 				ed.putString(KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
 			}
@@ -318,253 +338,487 @@ OnClickListener, DailyHotelJsonResponseListener, ErrorListener {
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (requestCode == CODE_REQEUST_ACTIVITY_SIGNUP) {
-			if (resultCode == RESULT_OK) {
+		if (requestCode == CODE_REQEUST_ACTIVITY_SIGNUP)
+		{
+			if (resultCode == RESULT_OK)
+			{
 				setResult(RESULT_OK);
 				finish();
 			}
-		} else {
+		} else
+		{
 			fbSession.onActivityResult(this, requestCode, resultCode, data);
 		}
 
 	}
 
 	@Override
-	public void finish() {
+	public void finish()
+	{
 		super.finish();
 		overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
 	}
 
-	@Override
-	public void onResponse(String url, JSONObject response) {
-		if (url.contains(URL_WEBAPI_USER_LOGIN)) {
-			// º≠πˆøÕ ø¨∞· ¡æ∑·
-			unLockUI();
-
-			JSONObject obj = response;
-			try {
-				String msg = null;
-
-				if (obj.getBoolean("login")) {
-					VolleyHttpClient.createCookie();
-					storeLoginInfo();
-					
-					if (sharedPreference.getBoolean("Facebook SignUp", false)) {
-						lockUI();
-						mQueue.add(new DailyHotelJsonRequest(Method.POST,
-								new StringBuilder(URL_DAILYHOTEL_SERVER)
-						.append(URL_WEBAPI_USER_INFO).toString(), null, this, this));
-					}
-
-					android.util.Log.e("LOGIN",obj.getBoolean("login")+"");
-
-					if (getGcmId().isEmpty()) {
-						android.util.Log.e("STORED_GCM_IS_EMPTY","true");
-						// ∑Œ±◊¿Œø° º∫∞¯«œø¥¿∏≥™ ±‚±‚ø° GCM¿ª µÓ∑œ«œ¡ˆ æ ¿∫ ¿Ø¿˙¿« ∞ÊøÏ ¿Œµ¶Ω∫∏¶ ∞°¡ÆøÕ push_id∏¶ æ˜±◊∑π¿ÃµÂ «œ¥¬ ¿˝¬˜ Ω√¿€.
-						lockUI();
-						mQueue.add(new DailyHotelJsonRequest(Method.POST,
-								new StringBuilder(URL_DAILYHOTEL_SERVER)
-						.append(URL_WEBAPI_USER_INFO).toString(), null, this, this));
-					} else {
-						// ∑Œ±◊¿Œø° º∫∞¯ «œø¥∞Ì GCM ƒ⁄µÂ ∂««— ¿ÃπÃ ±‚±‚ø° ¿˙¿Âµ«æÓ ¿÷¥¬ ªÛ≈¬¿Ã∏È ¡æ∑·. 
-						showToast(getString(R.string.toast_msg_logoined), Toast.LENGTH_SHORT, true);
-						setResult(RESULT_OK);
-						finish();
-					}
-					
-					Editor editor = sharedPreference.edit();
-					editor.putString("collapseKey", "");
-					editor.apply();
-				} else {
-
-					if (loginParams.containsKey("accessToken")) { // SNS ∑Œ±◊¿Œ¿Œµ•
-						// Ω«∆–«ﬂ¿ª ∞ÊøÏ »∏ø¯∞°¿‘ Ω√µµ
-						lockUI();
-						cbxAutoLogin.setChecked(true); // »∏ø¯∞°¿‘¿« ∞ÊøÏ ±‚∫ª¿∏∑Œ ¿⁄µø ∑Œ±◊¿Œ¿Œ
-						// ¡§√• ªÛ.
-						mQueue.add(new DailyHotelJsonRequest(Method.POST,
-								new StringBuilder(URL_DAILYHOTEL_SERVER)
-						.append(URL_WEBAPI_USER_SIGNUP)
-						.toString(), snsSignupParams, this,
-						this));
-
-					}
-
-					// ∑Œ±◊¿Œ Ω«∆–
-					// Ω«∆– msg √‚∑¬
-					else if (obj.length() > 1) {
-						msg = obj.getString("msg");
-						SimpleAlertDialog.build(this, msg, getString(R.string.dialog_btn_text_confirm), null).show();
-					}
-
-				}
-
-			} catch (Exception e) {
-				onError(e);
-			}
-		} else if (url.contains(URL_WEBAPI_USER_SIGNUP)) {
-			try {
-				unLockUI();
-
-				JSONObject obj = response;
-
-				String result = obj.getString("join");
-				String msg = obj.getString("msg");
-
-				Log.d(TAG, "user/join? " + response.toString());
-				if (result.equals("true")) { // »∏ø¯∞°¿‘ø° º∫∞¯«œ∏È ¿Ã¡¶ ∑Œ±◊¿Œ ¿˝¬˜
-					lockUI();
-					Editor ed = sharedPreference.edit();
-					ed.putBoolean("Facebook SignUp", true);
-					ed.commit();
-					
-					mQueue.add(new DailyHotelJsonRequest(Method.POST,
-							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-									URL_WEBAPI_USER_LOGIN).toString(),
-									loginParams, LoginActivity.this, LoginActivity.this));
-				} else {
-					loginParams.clear();
-					showToast(msg, Toast.LENGTH_LONG, true);
-				}
-
-			} catch (Exception e) {
-				onError(e);
-			}
-		} else if (url.contains(URL_WEBAPI_USER_INFO)) {
-			Log.d(TAG, "user_info!!!!");
-			unLockUI();
-			try {
-				// GCM æ∆¿Ãµ∏¶ µÓ∑œ«—¥Ÿ.
-				if (sharedPreference.getBoolean("Facebook SignUp", false)) {
-					int userIdx = response.getInt("idx");
-					String userIdxStr = String.format("%07d", userIdx);
-					
-					SimpleDateFormat dateFormat = new  SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.getDefault());
-					Date date = new Date();
-					String strDate = dateFormat.format(date);
-					
-					mMixpanel.getPeople().identify(userIdxStr);
-					
-					JSONObject props = new JSONObject();
-					props.put("userId", userIdxStr);
-					props.put("datetime", strDate);
-					props.put("method", "facebook");
-					mMixpanel.track("signup", props);
-					
-					Editor editor = sharedPreference.edit();
-					editor.putBoolean("Facebook SignUp", false);
-					editor.commit();
-					
-					Log.d(TAG, "facebook signup is completed.");
-					
-					return;
-				}
-				
-				if (isGoogleServiceAvailable()) {
-					Log.d(TAG, "call regGcmId");
-					lockUI();
-					mGcm = GoogleCloudMessaging.getInstance(this);
-					regGcmId(response.getInt("idx"));
-				}
-
-			} catch (Exception e) {
-				onError(e);
-			}
-		} else if (url.contains(URL_GCM_REGISTER)) {
-			// ∑Œ±◊¿Œ º∫∞¯ - ¿Ø¿˙ ¡§∫∏(¿Œµ¶Ω∫) ∞°¡Æø¿±‚ - ¿Ø¿˙¿« GCM≈∞ µÓ∑œ øœ∑· «— ∞ÊøÏ «¡∏Æ∆€∑±Ω∫ø° ≈∞ µÓ∑œ»ƒ ¡æ∑·
-			try {
-				unLockUI();
-				android.util.Log.e("MSG?",response.toString());
-				if (response.getString("result").equals("true")) {
-					Log.d(TAG, response.toString());
-					Editor editor = sharedPreference.edit();
-					editor.putString(KEY_PREFERENCE_GCM_ID, regPushParams.get("notification_id").toString());
-					editor.apply();
-
-					android.util.Log.e("STORED_GCM_ID", sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "NOAP"));
-
-				}
-
-				showToast(getString(R.string.toast_msg_logoined), Toast.LENGTH_SHORT, true);
-				setResult(RESULT_OK);
-				finish();
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-		}
-
-	}
-
-	private String getGcmId() {
+	private String getGcmId()
+	{
 		return sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "");
 	}
 
-	private Boolean isGoogleServiceAvailable() {
+	private Boolean isGoogleServiceAvailable()
+	{
 		int resCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
 
-		if (resCode != ConnectionResult.SUCCESS) {
-			if (GooglePlayServicesUtil.isUserRecoverableError(resCode)) {
+		if (resCode != ConnectionResult.SUCCESS)
+		{
+			if (GooglePlayServicesUtil.isUserRecoverableError(resCode))
+			{
 				GooglePlayServicesUtil.getErrorDialog(resCode, this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
-			} else {
+			} else
+			{
 				showToast(getString(R.string.toast_msg_is_not_available_google_service), Toast.LENGTH_LONG, false);
 				finish();
 			}
 			return false;
-		} else {
+		} else
+		{
 			return true;
 		}
 	}
 
-	private void regGcmId(final int idx) {
-		new AsyncTask<Void, Void, String>() {
+	private void regGcmId(final int idx)
+	{
+		new AsyncTask<Void, Void, String>()
+		{
 
 			@Override
-			protected String doInBackground(Void... params) {
+			protected String doInBackground(Void... params)
+			{
 				GoogleCloudMessaging instance = GoogleCloudMessaging.getInstance(LoginActivity.this);
 				String regId = "";
-				try {
+				try
+				{
 					regId = instance.register(GCM_PROJECT_NUMBER);
-				} catch (IOException e) {e.printStackTrace();}
+				} catch (IOException e)
+				{
+					ExLog.e(e.toString());
+				}
 
 				return regId;
 			}
 
 			@Override
-			protected void onPostExecute(String regId) {
-				// ¿Ã ∞™¿ª º≠πˆø° µÓ∑œ«œ±‚.
+			protected void onPostExecute(String regId)
+			{
+				// Ïù¥ Í∞íÏùÑ ÏÑúÎ≤ÑÏóê Îì±Î°ùÌïòÍ∏∞.
 				unLockUI();
-				// gcm id∞° æ¯¿ª ∞ÊøÏ Ω∫≈µ.
-				if (regId == null || regId.isEmpty()) return;
+				// gcm idÍ∞Ä ÏóÜÏùÑ Í≤ΩÏö∞ Ïä§ÌÇµ.
+				if (regId == null || regId.isEmpty())
+					return;
 
 				regPushParams = new HashMap<String, String>();
 
-				regPushParams.put("user_idx", idx+"");
+				regPushParams.put("user_idx", idx + "");
 				regPushParams.put("notification_id", regId);
 				regPushParams.put("device_type", GCM_DEVICE_TYPE_ANDROID);
 
-				android.util.Log.e("params for register push id",regPushParams.toString());
+				ExLog.d("params for register push id : " + regPushParams.toString());
+
 				lockUI();
-				mQueue.add(new DailyHotelJsonRequest(Method.POST,
-						new StringBuilder(URL_DAILYHOTEL_SERVER)
-				.append(URL_GCM_REGISTER)
-				.toString(), regPushParams, LoginActivity.this,
-				LoginActivity.this));	
+				mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_GCM_REGISTER).toString(), regPushParams, mGcmRegisterJsonResponseListener, LoginActivity.this));
 			}
-		}.execute();		
+		}.execute();
 	}
-	
+
 	@Override
-	protected void onResume() {
+	protected void onResume()
+	{
 		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("profileWithLogoff", "/todays-hotels/profile-with-logoff");
 		super.onResume();
 	}
-	
+
 	@Override
-	protected void onDestroy() {
+	protected void onDestroy()
+	{
 		mMixpanel.flush();
 		super.onDestroy();
 	}
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Listener
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	private DailyHotelJsonResponseListener mUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
+	{
+
+		@Override
+		public void onResponse(String url, JSONObject response)
+		{
+
+			// ÏÑúÎ≤ÑÏôÄ Ïó∞Í≤∞ Ï¢ÖÎ£å
+			unLockUI();
+
+			try
+			{
+				String msg = null;
+
+				if (response == null)
+				{
+					throw new NullPointerException("response == null.");
+				}
+
+				if (response.getBoolean("login") == true)
+				{
+					VolleyHttpClient.createCookie();
+					storeLoginInfo();
+
+					if (sharedPreference.getBoolean("Facebook SignUp", false) == true)
+					{
+						lockUI();
+						mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, LoginActivity.this));
+					}
+
+					if (getGcmId().isEmpty() == true)
+					{
+						// Î°úÍ∑∏Ïù∏Ïóê ÏÑ±Í≥µÌïòÏòÄÏúºÎÇò Í∏∞Í∏∞Ïóê GCMÏùÑ Îì±Î°ùÌïòÏßÄ ÏïäÏùÄ Ïú†Ï†ÄÏùò Í≤ΩÏö∞ Ïù∏Îç±Ïä§Î•º Í∞ÄÏ†∏ÏôÄ push_idÎ•º ÏóÖÍ∑∏Î†àÏù¥Îìú ÌïòÎäî Ï†àÏ∞® ÏãúÏûë.
+						lockUI();
+						mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, LoginActivity.this));
+					} else
+					{
+						// Î°úÍ∑∏Ïù∏Ïóê ÏÑ±Í≥µ ÌïòÏòÄÍ≥† GCM ÏΩîÎìú ÎòêÌïú Ïù¥ÎØ∏ Í∏∞Í∏∞Ïóê Ï†ÄÏû•ÎêòÏñ¥ ÏûàÎäî ÏÉÅÌÉúÏù¥Î©¥ Ï¢ÖÎ£å. 
+						showToast(getString(R.string.toast_msg_logoined), Toast.LENGTH_SHORT, true);
+						setResult(RESULT_OK);
+						finish();
+					}
+
+					Editor editor = sharedPreference.edit();
+					editor.putString("collapseKey", "");
+					editor.apply();
+				} else
+				{
+
+					if (loginParams.containsKey("accessToken"))
+					{ // SNS Î°úÍ∑∏Ïù∏Ïù∏Îç∞
+						// Ïã§Ìå®ÌñàÏùÑ Í≤ΩÏö∞ ÌöåÏõêÍ∞ÄÏûÖ ÏãúÎèÑ
+						lockUI();
+						cbxAutoLogin.setChecked(true); // ÌöåÏõêÍ∞ÄÏûÖÏùò Í≤ΩÏö∞ Í∏∞Î≥∏ÏúºÎ°ú ÏûêÎèô Î°úÍ∑∏Ïù∏Ïù∏
+						// Ï†ïÏ±Ö ÏÉÅ.
+						mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNUP).toString(), snsSignupParams, mUserSignupJsonResponseListener, LoginActivity.this));
+
+					}
+
+					// Î°úÍ∑∏Ïù∏ Ïã§Ìå®
+					// Ïã§Ìå® msg Ï∂úÎ†•
+					else if (response.length() > 1)
+					{
+						msg = response.getString("msg");
+						SimpleAlertDialog.build(LoginActivity.this, msg, getString(R.string.dialog_btn_text_confirm), null).show();
+					}
+				}
+			} catch (Exception e)
+			{
+				onError(e);
+			}
+		}
+	};
+
+	private DailyHotelJsonResponseListener mUserInfoJsonResponseListener = new DailyHotelJsonResponseListener()
+	{
+
+		@Override
+		public void onResponse(String url, JSONObject response)
+		{
+
+			unLockUI();
+
+			try
+			{
+				if (response == null)
+				{
+					throw new NullPointerException("response == null.");
+				}
+
+				// GCM ÏïÑÏù¥ÎîîÎ•º Îì±Î°ùÌïúÎã§.
+				if (sharedPreference.getBoolean("Facebook SignUp", false) == true)
+				{
+					int userIdx = response.getInt("idx");
+					String userIdxStr = String.format("%07d", userIdx);
+
+					SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.getDefault());
+					Date date = new Date();
+					String strDate = dateFormat.format(date);
+
+					mMixpanel.getPeople().identify(userIdxStr);
+
+					JSONObject props = new JSONObject();
+					props.put("userId", userIdxStr);
+					props.put("datetime", strDate);
+					props.put("method", "facebook");
+					mMixpanel.track("signup", props);
+
+					Editor editor = sharedPreference.edit();
+					editor.putBoolean("Facebook SignUp", false);
+					editor.commit();
+
+					ExLog.d("facebook signup is completed.");
+
+					return;
+				}
+
+				if (isGoogleServiceAvailable())
+				{
+					ExLog.d("call regGcmId");
+					lockUI();
+					mGcm = GoogleCloudMessaging.getInstance(LoginActivity.this);
+					regGcmId(response.getInt("idx"));
+				}
+
+			} catch (Exception e)
+			{
+				onError(e);
+			}
+		}
+	};
+
+	private DailyHotelJsonResponseListener mUserSignupJsonResponseListener = new DailyHotelJsonResponseListener()
+	{
+
+		@Override
+		public void onResponse(String url, JSONObject response)
+		{
+
+			unLockUI();
+
+			try
+			{
+				if (response == null)
+				{
+					throw new NullPointerException("response == null.");
+				}
+
+				String result = response.getString("join");
+				String msg = response.getString("msg");
+
+				ExLog.d("user/join? " + response.toString());
+
+				if (result.equals("true") == true)
+				{ // ÌöåÏõêÍ∞ÄÏûÖÏóê ÏÑ±Í≥µÌïòÎ©¥ Ïù¥Ï†ú Î°úÍ∑∏Ïù∏ Ï†àÏ∞®
+					lockUI();
+					Editor ed = sharedPreference.edit();
+					ed.putBoolean("Facebook SignUp", true);
+					ed.commit();
+
+					mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(), loginParams, mUserLoginJsonResponseListener, LoginActivity.this));
+				} else
+				{
+					loginParams.clear();
+					showToast(msg, Toast.LENGTH_LONG, true);
+				}
+
+			} catch (Exception e)
+			{
+				onError(e);
+			}
+
+		}
+	};
+
+	private DailyHotelJsonResponseListener mGcmRegisterJsonResponseListener = new DailyHotelJsonResponseListener()
+	{
+
+		@Override
+		public void onResponse(String url, JSONObject response)
+		{
+			// Î°úÍ∑∏Ïù∏ ÏÑ±Í≥µ - Ïú†Ï†Ä Ï†ïÎ≥¥(Ïù∏Îç±Ïä§) Í∞ÄÏ†∏Ïò§Í∏∞ - Ïú†Ï†ÄÏùò GCMÌÇ§ Îì±Î°ù ÏôÑÎ£å Ìïú Í≤ΩÏö∞ ÌîÑÎ¶¨ÌçºÎü∞Ïä§Ïóê ÌÇ§ Îì±Î°ùÌõÑ Ï¢ÖÎ£å
+			unLockUI();
+
+			try
+			{
+				if (response == null)
+				{
+					throw new NullPointerException("response == null.");
+				}
+
+				ExLog.e("MSG : " + response.toString());
+
+				if (response.getString("result").equals("true") == true)
+				{
+					Editor editor = sharedPreference.edit();
+					editor.putString(KEY_PREFERENCE_GCM_ID, regPushParams.get("notification_id").toString());
+					editor.apply();
+				}
+
+				showToast(getString(R.string.toast_msg_logoined), Toast.LENGTH_SHORT, true);
+				setResult(RESULT_OK);
+				finish();
+			} catch (JSONException e)
+			{
+				ExLog.e(e.toString());
+			}
+		}
+	};
+
+	//
+	//	@Override
+	//	public void onResponse(String url, JSONObject response) {
+	//		if (url.contains(URL_WEBAPI_USER_LOGIN)) {
+	//			// ÏÑúÎ≤ÑÏôÄ Ïó∞Í≤∞ Ï¢ÖÎ£å
+	//			unLockUI();
+	//
+	//			JSONObject obj = response;
+	//			try {
+	//				String msg = null;
+	//
+	//				if (obj.getBoolean("login")) {
+	//					VolleyHttpClient.createCookie();
+	//					storeLoginInfo();
+	//					
+	//					if (sharedPreference.getBoolean("Facebook SignUp", false)) {
+	//						lockUI();
+	//						mQueue.add(new DailyHotelJsonRequest(Method.POST,
+	//								new StringBuilder(URL_DAILYHOTEL_SERVER)
+	//						.append(URL_WEBAPI_USER_INFO).toString(), null, this, this));
+	//					}
+	//
+	//					ExLog.e("LOGIN : " + obj.getBoolean("login")+"");
+	//
+	//					if (getGcmId().isEmpty()) {
+	//						ExLog.e("STORED_GCM_IS_EMPTY = true");
+	//						// Î°úÍ∑∏Ïù∏Ïóê ÏÑ±Í≥µÌïòÏòÄÏúºÎÇò Í∏∞Í∏∞Ïóê GCMÏùÑ Îì±Î°ùÌïòÏßÄ ÏïäÏùÄ Ïú†Ï†ÄÏùò Í≤ΩÏö∞ Ïù∏Îç±Ïä§Î•º Í∞ÄÏ†∏ÏôÄ push_idÎ•º ÏóÖÍ∑∏Î†àÏù¥Îìú ÌïòÎäî Ï†àÏ∞® ÏãúÏûë.
+	//						lockUI();
+	//						mQueue.add(new DailyHotelJsonRequest(Method.POST,
+	//								new StringBuilder(URL_DAILYHOTEL_SERVER)
+	//						.append(URL_WEBAPI_USER_INFO).toString(), null, this, this));
+	//					} else {
+	//						// Î°úÍ∑∏Ïù∏Ïóê ÏÑ±Í≥µ ÌïòÏòÄÍ≥† GCM ÏΩîÎìú ÎòêÌïú Ïù¥ÎØ∏ Í∏∞Í∏∞Ïóê Ï†ÄÏû•ÎêòÏñ¥ ÏûàÎäî ÏÉÅÌÉúÏù¥Î©¥ Ï¢ÖÎ£å. 
+	//						showToast(getString(R.string.toast_msg_logoined), Toast.LENGTH_SHORT, true);
+	//						setResult(RESULT_OK);
+	//						finish();
+	//					}
+	//					
+	//					Editor editor = sharedPreference.edit();
+	//					editor.putString("collapseKey", "");
+	//					editor.apply();
+	//				} else {
+	//
+	//					if (loginParams.containsKey("accessToken")) { // SNS Î°úÍ∑∏Ïù∏Ïù∏Îç∞
+	//						// Ïã§Ìå®ÌñàÏùÑ Í≤ΩÏö∞ ÌöåÏõêÍ∞ÄÏûÖ ÏãúÎèÑ
+	//						lockUI();
+	//						cbxAutoLogin.setChecked(true); // ÌöåÏõêÍ∞ÄÏûÖÏùò Í≤ΩÏö∞ Í∏∞Î≥∏ÏúºÎ°ú ÏûêÎèô Î°úÍ∑∏Ïù∏Ïù∏
+	//						// Ï†ïÏ±Ö ÏÉÅ.
+	//						mQueue.add(new DailyHotelJsonRequest(Method.POST,
+	//								new StringBuilder(URL_DAILYHOTEL_SERVER)
+	//						.append(URL_WEBAPI_USER_SIGNUP)
+	//						.toString(), snsSignupParams, this,
+	//						this));
+	//
+	//					}
+	//
+	//					// Î°úÍ∑∏Ïù∏ Ïã§Ìå®
+	//					// Ïã§Ìå® msg Ï∂úÎ†•
+	//					else if (obj.length() > 1) {
+	//						msg = obj.getString("msg");
+	//						SimpleAlertDialog.build(this, msg, getString(R.string.dialog_btn_text_confirm), null).show();
+	//					}
+	//
+	//				}
+	//
+	//			} catch (Exception e) {
+	//				onError(e);
+	//			}
+	//		} else if (url.contains(URL_WEBAPI_USER_SIGNUP)) {
+	//			try {
+	//				unLockUI();
+	//
+	//				JSONObject obj = response;
+	//
+	//				String result = obj.getString("join");
+	//				String msg = obj.getString("msg");
+	//
+	//				ExLog.d("user/join? " + response.toString());
+	//				if (result.equals("true")) { // ÌöåÏõêÍ∞ÄÏûÖÏóê ÏÑ±Í≥µÌïòÎ©¥ Ïù¥Ï†ú Î°úÍ∑∏Ïù∏ Ï†àÏ∞®
+	//					lockUI();
+	//					Editor ed = sharedPreference.edit();
+	//					ed.putBoolean("Facebook SignUp", true);
+	//					ed.commit();
+	//					
+	//					mQueue.add(new DailyHotelJsonRequest(Method.POST,
+	//							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
+	//									URL_WEBAPI_USER_LOGIN).toString(),
+	//									loginParams, LoginActivity.this, LoginActivity.this));
+	//				} else {
+	//					loginParams.clear();
+	//					showToast(msg, Toast.LENGTH_LONG, true);
+	//				}
+	//
+	//			} catch (Exception e) {
+	//				onError(e);
+	//			}
+	//		} else if (url.contains(URL_WEBAPI_USER_INFO)) {
+	//			ExLog.d("user_info!!!!");
+	//			unLockUI();
+	//			try {
+	//				// GCM ÏïÑÏù¥ÎîîÎ•º Îì±Î°ùÌïúÎã§.
+	//				if (sharedPreference.getBoolean("Facebook SignUp", false)) {
+	//					int userIdx = response.getInt("idx");
+	//					String userIdxStr = String.format("%07d", userIdx);
+	//					
+	//					SimpleDateFormat dateFormat = new  SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.getDefault());
+	//					Date date = new Date();
+	//					String strDate = dateFormat.format(date);
+	//					
+	//					mMixpanel.getPeople().identify(userIdxStr);
+	//					
+	//					JSONObject props = new JSONObject();
+	//					props.put("userId", userIdxStr);
+	//					props.put("datetime", strDate);
+	//					props.put("method", "facebook");
+	//					mMixpanel.track("signup", props);
+	//					
+	//					Editor editor = sharedPreference.edit();
+	//					editor.putBoolean("Facebook SignUp", false);
+	//					editor.commit();
+	//					
+	//					ExLog.d("facebook signup is completed.");
+	//					
+	//					return;
+	//				}
+	//				
+	//				if (isGoogleServiceAvailable()) {
+	//					ExLog.d("call regGcmId");
+	//					lockUI();
+	//					mGcm = GoogleCloudMessaging.getInstance(this);
+	//					regGcmId(response.getInt("idx"));
+	//				}
+	//
+	//			} catch (Exception e) {
+	//				onError(e);
+	//			}
+	//		} else if (url.contains(URL_GCM_REGISTER)) {
+	//			// Î°úÍ∑∏Ïù∏ ÏÑ±Í≥µ - Ïú†Ï†Ä Ï†ïÎ≥¥(Ïù∏Îç±Ïä§) Í∞ÄÏ†∏Ïò§Í∏∞ - Ïú†Ï†ÄÏùò GCMÌÇ§ Îì±Î°ù ÏôÑÎ£å Ìïú Í≤ΩÏö∞ ÌîÑÎ¶¨ÌçºÎü∞Ïä§Ïóê ÌÇ§ Îì±Î°ùÌõÑ Ï¢ÖÎ£å
+	//			try {
+	//				unLockUI();
+	//				ExLog.e("MSG : " + response.toString());
+	//				if (response.getString("result").equals("true")) {
+	//					ExLog.d(response.toString());
+	//					Editor editor = sharedPreference.edit();
+	//					editor.putString(KEY_PREFERENCE_GCM_ID, regPushParams.get("notification_id").toString());
+	//					editor.apply();
+	//
+	//					ExLog.e("STORED_GCM_ID : " + sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "NOAP"));
+	//
+	//				}
+	//
+	//				showToast(getString(R.string.toast_msg_logoined), Toast.LENGTH_SHORT, true);
+	//				setResult(RESULT_OK);
+	//				finish();
+	//			} catch (JSONException e) {
+	//				ExLog.e(e.toString());
+	//			}
+	//		}
+	//
+	//	}
 }

@@ -16,18 +16,20 @@
 package com.twoheart.dailyhotel.util.ui;
 
 /**
- * TransformationMethod2 extends the TransformationMethod interface
- * and adds the ability to relax restrictions of TransformationMethod.
+ * TransformationMethod2 extends the TransformationMethod interface and adds the
+ * ability to relax restrictions of TransformationMethod.
  *
  * @hide
  */
-public interface TransformationMethodCompat2 extends TransformationMethodCompat {
-    /**
-     * Relax the contract of TransformationMethod to allow length changes,
-     * or revert to the length-restricted behavior.
-     *
-     * @param allowLengthChanges true to allow the transformation to change the length
-     *                           of the input string.
-     */
-    public void setLengthChangesAllowed(boolean allowLengthChanges);
+public interface TransformationMethodCompat2 extends TransformationMethodCompat
+{
+	/**
+	 * Relax the contract of TransformationMethod to allow length changes, or
+	 * revert to the length-restricted behavior.
+	 *
+	 * @param allowLengthChanges
+	 *            true to allow the transformation to change the length of the
+	 *            input string.
+	 */
+	public void setLengthChangesAllowed(boolean allowLengthChanges);
 }

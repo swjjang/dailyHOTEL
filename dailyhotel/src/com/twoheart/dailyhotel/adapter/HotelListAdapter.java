@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.adapter;
 
 import java.text.DecimalFormat;
 import java.util.List;
-import java.util.Locale;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -17,7 +16,6 @@ import android.graphics.drawable.shapes.RectShape;
 import android.support.v4.util.LruCache;
 import android.text.Html;
 import android.text.Spanned;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,189 +36,206 @@ import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
 import com.twoheart.dailyhotel.widget.HotelGradeView;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView.PinnedSectionListAdapter;
 
-public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
-PinnedSectionListAdapter {
+public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements PinnedSectionListAdapter
+{
 
 	private Context context;
 	private int resourceId;
 	private LayoutInflater inflater;
 	private LruCache<Integer, Bitmap> imgCache;
 
-	public HotelListAdapter(Context context, int resourceId,
-			List<HotelListViewItem> hotelList) {
-		super(context, resourceId, hotelList);	
+	public HotelListAdapter(Context context, int resourceId, List<HotelListViewItem> hotelList)
+	{
+		super(context, resourceId, hotelList);
 		final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
 		final int cacheSize = maxMemory / 8;
-		this.imgCache = new LruCache<Integer, Bitmap>(cacheSize){
+		this.imgCache = new LruCache<Integer, Bitmap>(cacheSize)
+		{
 			@Override
-			protected int sizeOf(Integer key, Bitmap value) {
+			protected int sizeOf(Integer key, Bitmap value)
+			{
 				return value.getRowBytes() * value.getHeight() / 1024;
 			}
-		}; // ÃÖ´ë °¡¿ë ¸Þ¸ð¸®ÀÇ 1/8 
+		}; // ìµœëŒ€ ê°€ìš© ë©”ëª¨ë¦¬ì˜ 1/8 
 		this.context = context;
 		this.resourceId = resourceId;
 
-		this.inflater = (LayoutInflater) this.context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		this.inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
 	@Override
-	public View getView(final int position, View convertView, ViewGroup parent) {
+	public View getView(final int position, View convertView, ViewGroup parent)
+	{
 
 		HotelListViewItem item = getItem(position);
 
-		switch (item.getType()) {
-		case HotelListViewItem.TYPE_SECTION:
-			HeaderListViewHolder headerViewHolder = null;
+		switch (item.getType())
+		{
+			case HotelListViewItem.TYPE_SECTION:
+				HeaderListViewHolder headerViewHolder = null;
 
-			if (convertView != null) {
-				if (convertView.getTag() != null)
-					if (convertView.getTag() instanceof HeaderListViewHolder)
+				if (convertView != null)
+				{
+					Object tag = convertView.getTag();
+
+					if (tag != null && tag instanceof HeaderListViewHolder)
+					{
 						headerViewHolder = (HeaderListViewHolder) convertView.getTag();
-
-			} else {
-				convertView = inflater.inflate(R.layout.list_row_hotel_section, parent, false);
-				headerViewHolder = new HeaderListViewHolder();
-				headerViewHolder.regionDetailName = (TextView) convertView
-						.findViewById(R.id.hotelListRegionName);
-				convertView.setTag(headerViewHolder);
-			}
-
-			headerViewHolder.regionDetailName.setText(item.getCategory());
-			GlobalFont.apply((ViewGroup) convertView);
-
-			break;
-		case HotelListViewItem.TYPE_ENTRY:
-
-			Hotel element = item.getItem();
-			HotelListViewHolder viewHolder = null;
-
-			if (convertView != null) {
-				if (convertView.getTag() != null)
-					if (convertView.getTag() instanceof HotelListViewHolder)
-						viewHolder = (HotelListViewHolder) convertView.getTag();
-			} else {
-				convertView = inflater.inflate(resourceId, parent, false);
-
-				viewHolder = new HotelListViewHolder();
-				viewHolder.llHotelRowContent = (RelativeLayout) convertView.findViewById(R.id.ll_hotel_row_content);
-				viewHolder.img = (ImageView) convertView.findViewById(R.id.iv_hotel_row_img);
-				viewHolder.name = (TextView) convertView.findViewById(R.id.tv_hotel_row_name);
-				viewHolder.price = (TextView) convertView.findViewById(R.id.tv_hotel_row_price);
-				viewHolder.discount = (TextView) convertView.findViewById(R.id.tv_hotel_row_discount);
-				viewHolder.sold_out = (TextView) convertView.findViewById(R.id.tv_hotel_row_soldout);
-				viewHolder.address = (TextView) convertView.findViewById(R.id.tv_hotel_row_address);
-				viewHolder.grade = (HotelGradeView) convertView.findViewById(R.id.hv_hotel_grade);
-
-				convertView.setTag(viewHolder);
-
-			}
-
-			DecimalFormat comma = new DecimalFormat("###,##0");
-			String strPrice = comma
-					.format(Integer.parseInt(element.getPrice()));
-			String strDiscount = comma.format(Integer.parseInt(element
-					.getDiscount()));
-
-			viewHolder.address.setText(element.getAddress());
-			viewHolder.name.setText(element.getName());
-			
-			Spanned currency = Html.fromHtml(getContext().getResources().getString(R.string.currency));
-			
-			SharedPreferences sharedPreference = convertView.getContext().getSharedPreferences(Constants.NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
-			String locale = sharedPreference.getString(Constants.KEY_PREFERENCE_LOCALE, null);
-			
-			if (locale.equals("ÇÑ±¹¾î")) {
-				viewHolder.price.setText(strPrice + currency);
-				viewHolder.price.setPaintFlags(viewHolder.price.getPaintFlags()
-						| Paint.STRIKE_THRU_TEXT_FLAG);
-				viewHolder.discount.setText(strDiscount + currency);
-			} else {
-				viewHolder.price.setText(currency + " " + strPrice);
-				viewHolder.price.setPaintFlags(viewHolder.price.getPaintFlags()
-						| Paint.STRIKE_THRU_TEXT_FLAG);
-				viewHolder.discount.setText(currency + " " + strDiscount);
-			}
-
-			viewHolder.name.setSelected(true); // Android TextView marquee bug
-
-			final int colors[] = { Color.parseColor("#ED000000"),
-					Color.parseColor("#E8000000"),
-					Color.parseColor("#E2000000"),
-					Color.parseColor("#66000000"),
-					Color.parseColor("#00000000") };
-			final float positions[] = { 0.0f, 0.01f, 0.02f, 0.17f, 0.38f };
-
-			PaintDrawable p = new PaintDrawable();
-			p.setShape(new RectShape());
-
-			ShapeDrawable.ShaderFactory sf = new ShapeDrawable.ShaderFactory() {
-				@Override
-				public Shader resize(int width, int height) {
-					return new LinearGradient(0, height, 0, 0, colors,
-							positions, Shader.TileMode.CLAMP);
+					}
 				}
-			};
 
-			p.setShaderFactory(sf);
-			viewHolder.llHotelRowContent.setBackgroundDrawable(p);
+				if (headerViewHolder == null)
+				{
+					convertView = inflater.inflate(R.layout.list_row_hotel_section, parent, false);
+					headerViewHolder = new HeaderListViewHolder();
+					headerViewHolder.regionDetailName = (TextView) convertView.findViewById(R.id.hotelListRegionName);
 
-			// grade
-			viewHolder.grade.setHotelGradeCode(element.getCategory());
+					convertView.setTag(headerViewHolder);
+				}
 
-			GlobalFont.apply((ViewGroup) convertView);
-			viewHolder.name.setTypeface(DailyHotel.getBoldTypeface());
-			viewHolder.discount.setTypeface(DailyHotel.getBoldTypeface());
+				headerViewHolder.regionDetailName.setText(item.getCategory());
 
-			AQuery aq = new AQuery(convertView);
-			Bitmap cachedImg = getImgCache().get(position);
+				GlobalFont.apply((ViewGroup) convertView);
+				break;
 
-			if (cachedImg == null) { // ÈýÀÎ ¹ë·ù°¡ ¾ø´Ù¸é ÀÌ¹ÌÁö¸¦ ºÒ·¯¿Â ÈÄ Ä³½Ã¿¡ ¼¼ÀÌºê
-				BitmapAjaxCallback cb = new BitmapAjaxCallback(){
+			case HotelListViewItem.TYPE_ENTRY:
+
+				Hotel element = item.getItem();
+				HotelListViewHolder viewHolder = null;
+
+				if (convertView != null)
+				{
+					Object tag = convertView.getTag();
+
+					if (tag != null && tag instanceof HotelListViewHolder)
+					{
+						viewHolder = (HotelListViewHolder) convertView.getTag();
+					}
+				}
+
+				if (viewHolder == null)
+				{
+					convertView = inflater.inflate(resourceId, parent, false);
+
+					viewHolder = new HotelListViewHolder();
+					viewHolder.llHotelRowContent = (RelativeLayout) convertView.findViewById(R.id.ll_hotel_row_content);
+					viewHolder.img = (ImageView) convertView.findViewById(R.id.iv_hotel_row_img);
+					viewHolder.name = (TextView) convertView.findViewById(R.id.tv_hotel_row_name);
+					viewHolder.price = (TextView) convertView.findViewById(R.id.tv_hotel_row_price);
+					viewHolder.discount = (TextView) convertView.findViewById(R.id.tv_hotel_row_discount);
+					viewHolder.sold_out = (TextView) convertView.findViewById(R.id.tv_hotel_row_soldout);
+					viewHolder.address = (TextView) convertView.findViewById(R.id.tv_hotel_row_address);
+					viewHolder.grade = (HotelGradeView) convertView.findViewById(R.id.hv_hotel_grade);
+
+					convertView.setTag(viewHolder);
+				}
+
+				DecimalFormat comma = new DecimalFormat("###,##0");
+				String strPrice = comma.format(Integer.parseInt(element.getPrice()));
+				String strDiscount = comma.format(Integer.parseInt(element.getDiscount()));
+
+				viewHolder.address.setText(element.getAddress());
+				viewHolder.name.setText(element.getName());
+
+				Spanned currency = Html.fromHtml(getContext().getResources().getString(R.string.currency));
+
+				SharedPreferences sharedPreference = convertView.getContext().getSharedPreferences(Constants.NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
+				String locale = sharedPreference.getString(Constants.KEY_PREFERENCE_LOCALE, null);
+
+				if (locale.equals("í•œêµ­ì–´") == true)
+				{
+					viewHolder.price.setText(strPrice + currency);
+					viewHolder.price.setPaintFlags(viewHolder.price.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+					viewHolder.discount.setText(strDiscount + currency);
+				} else
+				{
+					viewHolder.price.setText(currency + " " + strPrice);
+					viewHolder.price.setPaintFlags(viewHolder.price.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+					viewHolder.discount.setText(currency + " " + strDiscount);
+				}
+
+				viewHolder.name.setSelected(true); // Android TextView marquee bug
+
+				final int colors[] = { Color.parseColor("#ED000000"), Color.parseColor("#E8000000"), Color.parseColor("#E2000000"), Color.parseColor("#66000000"), Color.parseColor("#00000000") };
+				final float positions[] = { 0.0f, 0.01f, 0.02f, 0.17f, 0.38f };
+
+				PaintDrawable p = new PaintDrawable();
+				p.setShape(new RectShape());
+
+				ShapeDrawable.ShaderFactory sf = new ShapeDrawable.ShaderFactory()
+				{
 					@Override
-					protected void callback(String url, ImageView iv,
-							Bitmap bm, AjaxStatus status) {
-						getImgCache().put(position, bm);
-						super.callback(url, iv, bm, status);
+					public Shader resize(int width, int height)
+					{
+						return new LinearGradient(0, height, 0, 0, colors, positions, Shader.TileMode.CLAMP);
 					}
 				};
-				cb.url(element.getImage()).animation(AQuery.FADE_IN);
-				aq.id(viewHolder.img).image(cb);
 
-			} else { 
-				aq.id(viewHolder.img).image(cachedImg);
-				//				cachedImg.recycle();
-			}
+				p.setShaderFactory(sf);
+				viewHolder.llHotelRowContent.setBackgroundDrawable(p);
 
-			// °´½ÇÀÌ 1~2 °³ÀÏ¶§ label Ç¥½Ã
-			int avail_cnt = element.getAvailableRoom();
-			// if(avail_cnt > 0 && avail_cnt < 3) {
-			// label.setText(avail_cnt + " °´½Ç ³²À½");
-			// label.setVisibility(View.VISIBLE);
-			// }
-			// else
-			// label.setVisibility(View.GONE);
+				// grade
+				viewHolder.grade.setHotelGradeCode(element.getCategory());
 
-			// SOLD OUT Ç¥½Ã
-			if (avail_cnt == 0)
-				viewHolder.sold_out.setVisibility(View.VISIBLE);
-			else
-				viewHolder.sold_out.setVisibility(View.GONE);
+				GlobalFont.apply((ViewGroup) convertView);
+				viewHolder.name.setTypeface(DailyHotel.getBoldTypeface());
+				viewHolder.discount.setTypeface(DailyHotel.getBoldTypeface());
 
-			// if(!items.get(position).isAvaliable()) {
-			// sold_out.setBackgroundResource(R.drawable.dh_sold_out);
-			// Drawable alpha1 = sold_out.getBackground();
-			// alpha1.setAlpha(200);
-			// }
+				AQuery aq = new AQuery(convertView);
+				Bitmap cachedImg = getImgCache().get(position);
 
-			break;
+				if (cachedImg == null)
+				{ // íž›ì¸ ë°¸ë¥˜ê°€ ì—†ë‹¤ë©´ ì´ë¯¸ì§€ë¥¼ ë¶ˆëŸ¬ì˜¨ í›„ ìºì‹œì— ì„¸ì´ë¸Œ
+					BitmapAjaxCallback cb = new BitmapAjaxCallback()
+					{
+						@Override
+						protected void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status)
+						{
+							getImgCache().put(position, bm);
+							super.callback(url, iv, bm, status);
+						}
+					};
+					cb.url(element.getImage()).animation(AQuery.FADE_IN);
+					aq.id(viewHolder.img).image(cb);
+
+				} else
+				{
+					aq.id(viewHolder.img).image(cachedImg);
+					//				cachedImg.recycle();
+				}
+
+				// ê°ì‹¤ì´ 1~2 ê°œì¼ë•Œ label í‘œì‹œ
+				int avail_cnt = element.getAvailableRoom();
+				// if(avail_cnt > 0 && avail_cnt < 3) {
+				// label.setText(avail_cnt + " ê°ì‹¤ ë‚¨ìŒ");
+				// label.setVisibility(View.VISIBLE);
+				// }
+				// else
+				// label.setVisibility(View.GONE);
+
+				// SOLD OUT í‘œì‹œ
+				if (avail_cnt == 0)
+				{
+					viewHolder.sold_out.setVisibility(View.VISIBLE);
+				} else
+				{
+					viewHolder.sold_out.setVisibility(View.GONE);
+				}
+
+				// if(!items.get(position).isAvaliable()) {
+				// sold_out.setBackgroundResource(R.drawable.dh_sold_out);
+				// Drawable alpha1 = sold_out.getBackground();
+				// alpha1.setAlpha(200);
+				// }
+
+				break;
 		}
 
 		return convertView;
 	}
 
-
-	private class HotelListViewHolder {
+	private class HotelListViewHolder
+	{
 		RelativeLayout llHotelRowContent;
 		ImageView img;
 		TextView name;
@@ -231,26 +246,31 @@ PinnedSectionListAdapter {
 		HotelGradeView grade;
 	}
 
-	private class HeaderListViewHolder {
+	private class HeaderListViewHolder
+	{
 		TextView regionDetailName;
 	}
 
 	@Override
-	public boolean isItemViewTypePinned(int viewType) {
+	public boolean isItemViewTypePinned(int viewType)
+	{
 		return viewType == HotelListViewItem.TYPE_SECTION;
 	}
 
 	@Override
-	public int getViewTypeCount() {
+	public int getViewTypeCount()
+	{
 		return 2;
 	}
 
 	@Override
-	public int getItemViewType(int position) {
+	public int getItemViewType(int position)
+	{
 		return getItem(position).getType();
 	}
 
-	public LruCache<Integer, Bitmap> getImgCache() {
+	public LruCache<Integer, Bitmap> getImgCache()
+	{
 		return imgCache;
 	}
 

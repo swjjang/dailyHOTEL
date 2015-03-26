@@ -3,9 +3,9 @@
  *
  * CloseOnBackPressed
  * 
- * Android µğ¹ÙÀÌ½ºÀÇ Back ¹öÆ°À» ÀÌ¿ëÇÑ ÀÓÀÇÀÇ ¾îÇÃ¸®ÄÉÀÌ¼Ç ÀÎ½ºÅÏ½º Á¾
- * ·á¸¦ ¹æÁöÇÏ±â À§ÇÑ Å¬·¡½ºÀÌ´Ù. ÀÌ Å¬·¡½º¸¦ °¡Áö´Â Activity¿¡¼­´Â Back
- * ¹öÆ°À» ¿¬¼Ó µÎ ¹ø ´­·¯¾ßÁö¸¸ Á¾·á°¡ µÈ´Ù.
+ * Android ë””ë°”ì´ìŠ¤ì˜ Back ë²„íŠ¼ì„ ì´ìš©í•œ ì„ì˜ì˜ ì–´í”Œë¦¬ì¼€ì´ì…˜ ì¸ìŠ¤í„´ìŠ¤ ì¢…
+ * ë£Œë¥¼ ë°©ì§€í•˜ê¸° ìœ„í•œ í´ë˜ìŠ¤ì´ë‹¤. ì´ í´ë˜ìŠ¤ë¥¼ ê°€ì§€ëŠ” Activityì—ì„œëŠ” Back
+ * ë²„íŠ¼ì„ ì—°ì† ë‘ ë²ˆ ëˆŒëŸ¬ì•¼ì§€ë§Œ ì¢…ë£Œê°€ ëœë‹¤.
  *
  * @since 2014-02-24
  * @version 1
@@ -18,31 +18,36 @@ import android.widget.Toast;
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 
-public class CloseOnBackPressed {
-	
+public class CloseOnBackPressed
+{
+
 	private long backPressedTime = 0;
 	private MainActivity mActivity;
-	
-	public CloseOnBackPressed(MainActivity activity) {
+
+	public CloseOnBackPressed(MainActivity activity)
+	{
 		mActivity = activity;
-		
+
 	}
-	
-	public boolean onBackPressed() {
-		
-		if (System.currentTimeMillis() <= backPressedTime + 2000) {
+
+	public boolean onBackPressed()
+	{
+
+		if (System.currentTimeMillis() <= backPressedTime + 2000)
+		{
 			mActivity.mToast.cancel();
 			return true;
 		}
-		
+
 		backPressedTime = System.currentTimeMillis();
 		showGuide();
-		
+
 		return false;
-		
+
 	}
-	
-	private void showGuide() {
+
+	private void showGuide()
+	{
 		mActivity.showToast(mActivity.getString(R.string.toast_msg_backpressed), Toast.LENGTH_SHORT, true);
 	}
 

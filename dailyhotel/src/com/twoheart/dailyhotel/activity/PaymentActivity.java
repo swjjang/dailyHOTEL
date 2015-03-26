@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
  *
- * PaymentActivity (∞·¡¶»≠∏È)
+ * PaymentActivity (Í≤∞Ï†úÌôîÎ©¥)
  * 
- * ¿•º≠πˆø°º≠ ¿ÃøÎ«œ¥¬ KCP ∞·¡¶ ∏µ‚¿ª ¿ÃøÎ«œ¥¬ »≠∏È¿Ã¥Ÿ. WebView∏¶ ¿ÃøÎ
- * «ÿº≠ KCP ∞·¡¶∏¶ ¡¯«‡«œ¥¬ ¿•º≠πˆ APIø° POST πÊΩƒ¿∏∑Œ ø‰√ª«—¥Ÿ. ø‰√ª Ω√
- * ø‰√ª ∆ƒ∂ÛπÃ≈Õø° ªÁøÎ¿⁄ ¡§∫∏∏¶ ¥„¥¬¥Ÿ. ¿Ã¥¬ º≠πˆ ªÁ¿ÃµÂø°º≠ Facbook ∞Ë¡§
- * ¿”¿Œ¡ˆ∏¶ »Æ¿Œ«œ±‚ ¿ß«ÿº≠¿Ã¥Ÿ.
+ * ÏõπÏÑúÎ≤ÑÏóêÏÑú Ïù¥Ïö©ÌïòÎäî KCP Í≤∞Ï†ú Î™®ÎìàÏùÑ Ïù¥Ïö©ÌïòÎäî ÌôîÎ©¥Ïù¥Îã§. WebViewÎ•º Ïù¥Ïö©
+ * Ìï¥ÏÑú KCP Í≤∞Ï†úÎ•º ÏßÑÌñâÌïòÎäî ÏõπÏÑúÎ≤Ñ APIÏóê POST Î∞©ÏãùÏúºÎ°ú ÏöîÏ≤≠ÌïúÎã§. ÏöîÏ≤≠ Ïãú
+ * ÏöîÏ≤≠ ÌååÎùºÎØ∏ÌÑ∞Ïóê ÏÇ¨Ïö©Ïûê Ï†ïÎ≥¥Î•º Îã¥ÎäîÎã§. Ïù¥Îäî ÏÑúÎ≤Ñ ÏÇ¨Ïù¥ÎìúÏóêÏÑú Facbook Í≥ÑÏ†ï
+ * ÏûÑÏù∏ÏßÄÎ•º ÌôïÏù∏ÌïòÍ∏∞ ÏúÑÌï¥ÏÑúÏù¥Îã§.
  *
  * @since 2014-02-24
  * @version 1
@@ -20,12 +20,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+
 import kr.co.kcp.android.payment.standard.ResultRcvActivity;
 import kr.co.kcp.util.PackageState;
+
 import org.apache.http.util.EncodingUtils;
 import org.json.JSONException;
+
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -48,22 +50,24 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
+
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalPayment;
-import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Pay;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.GlobalFont;
-import com.twoheart.dailyhotel.util.Log;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 @SuppressLint("NewApi")
-public class PaymentActivity extends BaseActivity implements Constants {
+public class PaymentActivity extends BaseActivity implements Constants
+{
 
 	public static final String TAG = "PaymentActivity";
 
@@ -86,34 +90,30 @@ public class PaymentActivity extends BaseActivity implements Constants {
 	// environments.
 	private static final String CONFIG_CLIENT_ID = "AZlfxxBvLXC7iT3xDEG8oFViHYdqImvcwLB2JG6pyUhVAXb7XuHMYIuNutGI";
 
-	public static PayPalConfiguration config = new PayPalConfiguration()
-			.environment(CONFIG_ENVIRONMENT)
-			.clientId(CONFIG_CLIENT_ID)
-			// The following are only used in PayPalFuturePaymentActivity.
-			.merchantName("Hipster Store")
-			.merchantPrivacyPolicyUri(
-					Uri.parse("https://www.example.com/privacy"))
-			.merchantUserAgreementUri(
-					Uri.parse("https://www.example.com/legal"));
+	public static PayPalConfiguration config = new PayPalConfiguration().environment(CONFIG_ENVIRONMENT).clientId(CONFIG_CLIENT_ID)
+	// The following are only used in PayPalFuturePaymentActivity.
+	.merchantName("Hipster Store").merchantPrivacyPolicyUri(Uri.parse("https://www.example.com/privacy")).merchantUserAgreementUri(Uri.parse("https://www.example.com/legal"));
 
-	private PayPalPayment getThingToBuy(String paymentIntent, Pay pay) {
+	private PayPalPayment getThingToBuy(String paymentIntent, Pay pay)
+	{
 		PayPalPayment payPalPayment = null;
-		
-		if(pay != null && pay.getHotelDetail() != null && pay.getHotelDetail().getHotel() != null){
-			
-			payPalPayment = new PayPalPayment(new BigDecimal(pay.getPayPrice()), "USD",
-					pay.getHotelDetail().getHotel().getName(), paymentIntent);
-		} else {
-			
-			payPalPayment = new PayPalPayment(new BigDecimal("1.75"), "USD",
-					"hipster jeans", paymentIntent);
+
+		if (pay != null && pay.getHotelDetail() != null && pay.getHotelDetail().getHotel() != null)
+		{
+
+			payPalPayment = new PayPalPayment(new BigDecimal(pay.getPayPrice()), "USD", pay.getHotelDetail().getHotel().getName(), paymentIntent);
+		} else
+		{
+
+			payPalPayment = new PayPalPayment(new BigDecimal("1.75"), "USD", "hipster jeans", paymentIntent);
 		}
-		
-		return payPalPayment; 
+
+		return payPalPayment;
 	}
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
 		setActionBarProgressBar();
 
@@ -123,51 +123,50 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		if (bundle != null)
 			mPay = (Pay) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_PAY);
 
-//		if (mPay.getPayType().equals("PAYPAL")) {
-//			Intent intent = new Intent(this, PayPalService.class);
-//			intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
-//			startService(intent);
-//			
-//			PayPalPayment thingToBuy = getThingToBuy(PayPalPayment.PAYMENT_INTENT_SALE, mPay);
-//			/*
-//			 * See getStuffToBuy(..) for examples of some available payment
-//			 * options.
-//			 */
-//			intent = new Intent(this, com.paypal.android.sdk.payments.PaymentActivity.class);
-//
-//			// send the same configuration for restart resiliency
-//			intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
-//			intent.putExtra(
-//					com.paypal.android.sdk.payments.PaymentActivity.EXTRA_PAYMENT,
-//					thingToBuy);
-//
-//			startActivityForResult(intent, REQUEST_CODE_PAYMENT);
-//			return;
-//		}
-		
+		//		if (mPay.getPayType().equals("PAYPAL")) {
+		//			Intent intent = new Intent(this, PayPalService.class);
+		//			intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
+		//			startService(intent);
+		//			
+		//			PayPalPayment thingToBuy = getThingToBuy(PayPalPayment.PAYMENT_INTENT_SALE, mPay);
+		//			/*
+		//			 * See getStuffToBuy(..) for examples of some available payment
+		//			 * options.
+		//			 */
+		//			intent = new Intent(this, com.paypal.android.sdk.payments.PaymentActivity.class);
+		//
+		//			// send the same configuration for restart resiliency
+		//			intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
+		//			intent.putExtra(
+		//					com.paypal.android.sdk.payments.PaymentActivity.EXTRA_PAYMENT,
+		//					thingToBuy);
+		//
+		//			startActivityForResult(intent, REQUEST_CODE_PAYMENT);
+		//			return;
+		//		}
+
 		webView = (WebView) findViewById(R.id.webView);
 
 		// TODO  setWebContentsDebuggingEnabled
-//		WebView.setWebContentsDebuggingEnabled(true);
+		//		WebView.setWebContentsDebuggingEnabled(true);
 
 		webView.getSettings().setSavePassword(false);
-		webView.getSettings().setAppCacheEnabled(false); // 7.4 ƒ≥Ω√ ¡§√• ∫Ò»∞º∫»≠.
+		webView.getSettings().setAppCacheEnabled(false); // 7.4 Ï∫êÏãú Ï†ïÏ±Ö ÎπÑÌôúÏÑ±Ìôî.
 		webView.getSettings().setJavaScriptEnabled(true);
 		webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
-	
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+		{
 			webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
 		}
-		
+
 		webView.addJavascriptInterface(new KCPPayBridge(), "KCPPayApp");
-		// «œ≥™SK ƒ´µÂ º±≈√Ω√ User∞° º±≈√«— ±‚∫ª ¡§∫∏∏¶ ∞°¡ˆ∞Ì ø¿±‚¿ß«ÿ ªÁøÎ
-		webView.addJavascriptInterface(new KCPPayCardInfoBridge(),
-				"KCPPayCardInfo");
-		webView.addJavascriptInterface(new KCPPayPinInfoBridge(),
-				"KCPPayPinInfo"); // ∆‰¿Ã«… ±‚¥… √ﬂ∞°
-		webView.addJavascriptInterface(new KCPPayPinReturn(), "KCPPayPinRet"); // ∆‰¿Ã«…
-		// ±‚¥…
-		// √ﬂ∞°
+		// ÌïòÎÇòSK Ïπ¥Îìú ÏÑ†ÌÉùÏãú UserÍ∞Ä ÏÑ†ÌÉùÌïú Í∏∞Î≥∏ Ï†ïÎ≥¥Î•º Í∞ÄÏßÄÍ≥† Ïò§Í∏∞ÏúÑÌï¥ ÏÇ¨Ïö©
+		webView.addJavascriptInterface(new KCPPayCardInfoBridge(), "KCPPayCardInfo");
+		webView.addJavascriptInterface(new KCPPayPinInfoBridge(), "KCPPayPinInfo"); // ÌéòÏù¥ÌïÄ Í∏∞Îä• Ï∂îÍ∞Ä
+		webView.addJavascriptInterface(new KCPPayPinReturn(), "KCPPayPinRet"); // ÌéòÏù¥ÌïÄ
+		// Í∏∞Îä•
+		// Ï∂îÍ∞Ä
 		webView.addJavascriptInterface(new JavaScriptExtention(), "android");
 
 		webView.addJavascriptInterface(new TeleditBridge(), "TeleditApp");
@@ -177,94 +176,73 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		webView.setWebChromeClient(new mWebChromeClient());
 		webView.setWebViewClient(new mWebViewClient());
 
-		webView.setOnLongClickListener(new OnLongClickListener() {
+		webView.setOnLongClickListener(new OnLongClickListener()
+		{
 			@Override
-			public boolean onLongClick(View v) {
+			public boolean onLongClick(View v)
+			{
 				return true;
 			}
-		}); // ∑’≈¨∏Ø ø°∑Ø πÊ¡ˆ.
+		}); // Î°±ÌÅ¥Î¶≠ ÏóêÎü¨ Î∞©ÏßÄ.
 
-		if (mPay == null) {
-			showToast(getString(R.string.toast_msg_failed_to_get_payment_info),
-					Toast.LENGTH_SHORT, false);
+		if (mPay == null)
+		{
+			showToast(getString(R.string.toast_msg_failed_to_get_payment_info), Toast.LENGTH_SHORT, false);
 			finish();
 		}
 
-		// ±‚∫ª ∞·¡¶ πÊΩƒ
-		String url = new StringBuilder(URL_DAILYHOTEL_SERVER)
-				.append(URL_WEBAPI_RESERVE_PAYMENT).append(mPay.getPayType())
-				.append("/").append(mPay.getHotelDetail().getSaleIdx())
-				.toString();
+		// Í∏∞Î≥∏ Í≤∞Ï†ú Î∞©Ïãù
+		String url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERVE_PAYMENT)).append('/').append(mPay.getPayType()).append("/").append(mPay.getHotelDetail().getSaleIdx()).toString();
 
-		if (mPay.getPayPrice() == 0) {
-			android.util.Log.e("GETPAAA", "" + mPay.getPayPrice());
-			// ¿˚∏≥±›¿∏∑Œ∏∏ ∞·¡¶«œ±‚ ∆˜Ω∫∆Æ
-			url = new StringBuilder(URL_DAILYHOTEL_SERVER)
-					.append(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)
-					.append(mPay.getHotelDetail().getSaleIdx()).toString();
+		if (mPay.getPayPrice() == 0)
+		{
+			ExLog.e("GETPAAA : " + mPay.getPayPrice());
+			// Ï†ÅÎ¶ΩÍ∏àÏúºÎ°úÎßå Í≤∞Ï†úÌïòÍ∏∞ Ìè¨Ïä§Ìä∏
+			url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)).append('/').append(mPay.getHotelDetail().getSaleIdx()).toString();
 
-			// ¿˚∏≥±›¿∏∑Œ∏∏ ∞·¡¶«œ¥¬ ∞ÊøÏ ∞·¡¶√¢«“ « ø‰ æ¯¿Ω
-			ArrayList<String> postParameterKey = new ArrayList<String>(
-					Arrays.asList("saleIdx", "email", "name", "phone",
-							"accessToken"));
-			ArrayList<String> postParameterValue = new ArrayList<String>(
-					Arrays.asList(mPay.getHotelDetail().getSaleIdx() + "", mPay
-							.getCustomer().getEmail(), mPay.getCustomer()
-							.getName(), mPay.getCustomer().getPhone(), mPay
-							.getCustomer().getAccessToken()));
+			// Ï†ÅÎ¶ΩÍ∏àÏúºÎ°úÎßå Í≤∞Ï†úÌïòÎäî Í≤ΩÏö∞ Í≤∞Ï†úÏ∞ΩÌï† ÌïÑÏöî ÏóÜÏùå
+			ArrayList<String> postParameterKey = new ArrayList<String>(Arrays.asList("saleIdx", "email", "name", "phone", "accessToken"));
+			ArrayList<String> postParameterValue = new ArrayList<String>(Arrays.asList(mPay.getHotelDetail().getSaleIdx() + "", mPay.getCustomer().getEmail(), mPay.getCustomer().getName(), mPay.getCustomer().getPhone(), mPay.getCustomer().getAccessToken()));
 
-			webView.postUrl(
-					url,
-					parsePostParameter(postParameterKey
-							.toArray(new String[postParameterKey.size()]),
-							postParameterValue
-									.toArray(new String[postParameterValue
-											.size()])));
+			webView.postUrl(url, parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]), postParameterValue.toArray(new String[postParameterValue.size()])));
 			return;
-		} else if (mPay.isSaleCredit()) {
-			// ¿˚∏≥±› ¿œ∫Œ ªÁøÎ
-			url = new StringBuilder(URL_DAILYHOTEL_SERVER)
-					.append(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)
-					.append(mPay.getPayType()).append("/")
-					.append(mPay.getHotelDetail().getSaleIdx()).append("/")
-					.append(mPay.getCredit().getBonus()).toString();
+		} else if (mPay.isSaleCredit())
+		{
+			// Ï†ÅÎ¶ΩÍ∏à ÏùºÎ∂Ä ÏÇ¨Ïö©
+			url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)).append('/').append(mPay.getPayType()).append("/").append(mPay.getHotelDetail().getSaleIdx()).append("/").append(mPay.getCredit().getBonus()).toString();
 		}
 
-		android.util.Log.e("GET_URL", url); // "http://ec2global.dailyhotel.kr/goodnight/reserv/session/req/CARD/92074";
+		ExLog.e("GET_URL : " + url); // "http://ec2global.dailyhotel.kr/goodnight/reserv/session/req/CARD/92074";
 		webView.loadUrl(url);
 	}
 
 	@Override
-	protected void onResume() {
-		String region = sharedPreference.getString(
-				KEY_PREFERENCE_REGION_SELECT_GA, null);
-		String hotelName = sharedPreference.getString(
-				KEY_PREFERENCE_HOTEL_NAME_GA, null);
+	protected void onResume()
+	{
+		String region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
+		String hotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
 
-		RenewalGaManager.getInstance(getApplicationContext()).recordScreen(
-				"paymentWeb",
-				"/todays-hotels/" + region + "/" + hotelName
-						+ "/booking-detail/payment-web");
-		
+		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("paymentWeb", "/todays-hotels/" + region + "/" + hotelName + "/booking-detail/payment-web");
+
 		super.onResume();
 	}
 
-	private byte[] parsePostParameter(String[] key, String[] value) {
+	private byte[] parsePostParameter(String[] key, String[] value)
+	{
 
 		List<byte[]> resultList = new ArrayList<byte[]>();
 		HashMap<String, byte[]> postParameters = new HashMap<String, byte[]>();
 
 		if (key.length != value.length)
-			throw new IllegalArgumentException(
-					"The length of the key arguments and "
-							+ "the length of the value arguments must be same.");
+			throw new IllegalArgumentException("The length of the key arguments and " + "the length of the value arguments must be same.");
 
-		for (int i = 0; i < key.length; i++) {
-			postParameters.put(key[i],
-					EncodingUtils.getBytes(value[i], "BASE64"));
+		for (int i = 0; i < key.length; i++)
+		{
+			postParameters.put(key[i], EncodingUtils.getBytes(value[i], "BASE64"));
 		}
 
-		for (int i = 0; i < postParameters.size(); i++) {
+		for (int i = 0; i < postParameters.size(); i++)
+		{
 
 			if (resultList.size() != 0)
 				resultList.add("&".getBytes());
@@ -285,10 +263,10 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		byte[] result = new byte[size];
 
 		int currentSize = 0;
-		for (int i = 0; i < resultList.size(); i++) {
+		for (int i = 0; i < resultList.size(); i++)
+		{
 
-			System.arraycopy(resultList.get(i), 0, result, currentSize,
-					resultList.get(i).length);
+			System.arraycopy(resultList.get(i), 0, result, currentSize, resultList.get(i).length);
 			currentSize += resultList.get(i).length;
 		}
 
@@ -296,123 +274,123 @@ public class PaymentActivity extends BaseActivity implements Constants {
 	}
 
 	@JavascriptInterface
-	private boolean url_scheme_intent(WebView view, String url) {
-		Log.d(ResultRcvActivity.m_strLogTag,
-				"[PayDemoActivity] called__test - url=[" + url + "]");
+	private boolean url_scheme_intent(WebView view, String url)
+	{
+		ExLog.d("[PayDemoActivity] called__test - url=[" + url + "]");
 
-		// chrome πˆ¡Ø πÊΩƒ : 2014.01 √ﬂ∞°
-		if (url.startsWith("intent")) {
-			// ILK øÎ
-			if (url.contains("com.lotte.lottesmartpay")) {
-				try {
-					startActivity(Intent
-							.parseUri(url, Intent.URI_INTENT_SCHEME));
-				} catch (URISyntaxException e) {
-					Log.d(ResultRcvActivity.m_strLogTag,
-							"[PayDemoActivity] URISyntaxException=["
-									+ e.getMessage() + "]");
+		// chrome Î≤ÑÏ†º Î∞©Ïãù : 2014.01 Ï∂îÍ∞Ä
+		if (url.startsWith("intent"))
+		{
+			// ILK Ïö©
+			if (url.contains("com.lotte.lottesmartpay"))
+			{
+				try
+				{
+					startActivity(Intent.parseUri(url, Intent.URI_INTENT_SCHEME));
+				} catch (URISyntaxException e)
+				{
+					ExLog.d("[PayDemoActivity] URISyntaxException=[" + e.getMessage() + "]");
 
 					return false;
-				} catch (ActivityNotFoundException e) {
-					Log.d(ResultRcvActivity.m_strLogTag,
-							"[PayDemoActivity] ActivityNotFoundException=["
-									+ e.getMessage() + "]");
+				} catch (ActivityNotFoundException e)
+				{
+					ExLog.d("[PayDemoActivity] ActivityNotFoundException=[" + e.getMessage() + "]");
 
 					return false;
 				}
 			}
-			// ILK øÎ
-			else if (url.contains("com.ahnlab.v3mobileplus")) {
-				try {
+			// ILK Ïö©
+			else if (url.contains("com.ahnlab.v3mobileplus"))
+			{
+				try
+				{
 					view.getContext().startActivity(Intent.parseUri(url, 0));
-				} catch (URISyntaxException e) {
-					Log.d(ResultRcvActivity.m_strLogTag,
-							"[PayDemoActivity] URISyntaxException=["
-									+ e.getMessage() + "]");
+				} catch (URISyntaxException e)
+				{
+					ExLog.d("[PayDemoActivity] URISyntaxException=[" + e.getMessage() + "]");
 
 					return false;
-				} catch (ActivityNotFoundException e) {
-					Log.d(ResultRcvActivity.m_strLogTag,
-							"[PayDemoActivity] ActivityNotFoundException=["
-									+ e.getMessage() + "]");
+				} catch (ActivityNotFoundException e)
+				{
+					ExLog.d("[PayDemoActivity] ActivityNotFoundException=[" + e.getMessage() + "]");
 
 					return false;
 				}
 			}
-			// ∆˙∂Û∏ÆΩ∫ øÎ
-			else {
+			// Ìè¥ÎùºÎ¶¨Ïä§ Ïö©
+			else
+			{
 				Intent intent = null;
 
-				try {
+				try
+				{
 					intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
-				} catch (URISyntaxException ex) {
-					Log.d(ResultRcvActivity.m_strLogTag,
-							"[PayDemoActivity] URISyntaxException=["
-									+ ex.getMessage() + "]");
+				} catch (URISyntaxException ex)
+				{
+					ExLog.d("[PayDemoActivity] URISyntaxException=[" + ex.getMessage() + "]");
 
 					return false;
 				}
 
-				// æ€º≥ƒ° √º≈©∏¶ «’¥œ¥Ÿ.
-				if (getPackageManager().resolveActivity(intent, 0) == null) {
+				// Ïï±ÏÑ§Ïπò Ï≤¥ÌÅ¨Î•º Ìï©ÎãàÎã§.
+				if (getPackageManager().resolveActivity(intent, 0) == null)
+				{
 					String packagename = intent.getPackage();
 
-					if (packagename != null) {
-						startActivity(new Intent(Intent.ACTION_VIEW,
-								Uri.parse("market://search?q=pname:"
-										+ packagename)));
+					if (packagename != null)
+					{
+						startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://search?q=pname:" + packagename)));
 						return true;
 					}
 				}
 
-				intent = new Intent(Intent.ACTION_VIEW, Uri.parse(intent
-						.getDataString()));
+				intent = new Intent(Intent.ACTION_VIEW, Uri.parse(intent.getDataString()));
 
-				try {
+				try
+				{
 					startActivity(intent);
-				} catch (ActivityNotFoundException e) {
-					Log.d(ResultRcvActivity.m_strLogTag,
-							"[PayDemoActivity] ActivityNotFoundException=["
-									+ e.getMessage() + "]");
+				} catch (ActivityNotFoundException e)
+				{
+					ExLog.d("[PayDemoActivity] ActivityNotFoundException=[" + e.getMessage() + "]");
 
 					return false;
 				}
 			}
 		}
 
-		// ±‚¡∏ πÊΩƒ
-		else {
+		// Í∏∞Ï°¥ Î∞©Ïãù
+		else
+		{
 
-			if (url.startsWith("ispmobile")) { // 7.4 ISP ∏µ‚ ø¨µø ≈◊Ω∫∆Æ
-				if (!new PackageState(this)
-						.getPackageDownloadInstallState(PACKAGE_NAME_ISP)) {
-					startActivity(new Intent(Intent.ACTION_VIEW,
-							Uri.parse(URL_STORE_PAYMENT_ISP)));
+			if (url.startsWith("ispmobile"))
+			{ // 7.4 ISP Î™®Îìà Ïó∞Îèô ÌÖåÏä§Ìä∏
+				if (!new PackageState(this).getPackageDownloadInstallState(PACKAGE_NAME_ISP))
+				{
+					startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_PAYMENT_ISP)));
 					view.goBack();
 					return true;
 				}
-			} else if (url.startsWith("kftc-bankpay")) { // 7.9 ¿Ã¥œΩ√Ω∫ ∏µ‚ ø¨µø ≈◊Ω∫∆Æ
-				if (!new PackageState(this)
-						.getPackageDownloadInstallState(PACKAGE_NAME_KFTC)) {
-					startActivity(new Intent(Intent.ACTION_VIEW,
-							Uri.parse(URL_STORE_PAYMENT_KFTC)));
+			} else if (url.startsWith("kftc-bankpay"))
+			{ // 7.9 Ïù¥ÎãàÏãúÏä§ Î™®Îìà Ïó∞Îèô ÌÖåÏä§Ìä∏
+				if (!new PackageState(this).getPackageDownloadInstallState(PACKAGE_NAME_KFTC))
+				{
+					startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_PAYMENT_KFTC)));
 					view.goBack();
 					return true;
 				}
-			} else if (url.startsWith("mpocket.online.ansimclick")) {
-				if (!new PackageState(this)
-						.getPackageDownloadInstallState(PACKAGE_NAME_MPOCKET)) {
-					showToast(
-							getString(R.string.toast_msg_retry_payment_after_install_app),
-							Toast.LENGTH_LONG, false);
-					startActivity(new Intent(Intent.ACTION_VIEW,
-							Uri.parse(URL_STORE_PAYMENT_MPOCKET)));
+			} else if (url.startsWith("mpocket.online.ansimclick"))
+			{
+				if (!new PackageState(this).getPackageDownloadInstallState(PACKAGE_NAME_MPOCKET))
+				{
+					showToast(getString(R.string.toast_msg_retry_payment_after_install_app), Toast.LENGTH_LONG, false);
+					startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_PAYMENT_MPOCKET)));
 					return true;
 				}
 			}
 
-			// ∞·¡¶ ∏µ‚ Ω««‡.
-			try {
+			// Í≤∞Ï†ú Î™®Îìà Ïã§Ìñâ.
+			try
+			{
 				Uri uri = Uri.parse(url);
 				Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 
@@ -423,7 +401,8 @@ public class PaymentActivity extends BaseActivity implements Constants {
 					requestCode = CODE_REQUEST_ISPMOBILE;
 
 				startActivityForResult(intent, requestCode);
-			} catch (ActivityNotFoundException e) {
+			} catch (ActivityNotFoundException e)
+			{
 				return true;
 			}
 		}
@@ -432,64 +411,71 @@ public class PaymentActivity extends BaseActivity implements Constants {
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode,
-			Intent intent) {
+	protected void onActivityResult(int requestCode, int resultCode, Intent intent)
+	{
 		super.onActivityResult(requestCode, resultCode, intent);
 
-//		if(mPay.getPayType().equals("PAYPAL")){
-//			
-//			proccessPayPalActivityResult(requestCode, resultCode, intent);
-//		} else {
-			
-			String scriptForSkip = "javascript:";
-			if (requestCode == CODE_REQUEST_ISPMOBILE)
-				scriptForSkip += "submitIspAuthInfo('RUNSCHEME');"; // ISP »Æ¿Œ πˆ∆∞ ƒ›
-			else if (requestCode == CODE_REQUEST_KFTC_BANKPAY)
-				scriptForSkip += "returnUrltoMall();"; // KTFC »Æ¿Œ πˆ∆∞ ƒ›
-			webView.loadUrl(scriptForSkip);
-//		}
+		//		if(mPay.getPayType().equals("PAYPAL")){
+		//			
+		//			proccessPayPalActivityResult(requestCode, resultCode, intent);
+		//		} else {
+
+		String scriptForSkip = "javascript:";
+		if (requestCode == CODE_REQUEST_ISPMOBILE)
+			scriptForSkip += "submitIspAuthInfo('RUNSCHEME');"; // ISP ÌôïÏù∏ Î≤ÑÌäº ÏΩú
+		else if (requestCode == CODE_REQUEST_KFTC_BANKPAY)
+			scriptForSkip += "returnUrltoMall();"; // KTFC ÌôïÏù∏ Î≤ÑÌäº ÏΩú
+		webView.loadUrl(scriptForSkip);
+		//		}
 	}
 
-	private void proccessPayPalActivityResult(int requestCode, int resultCode,
-			Intent data) {
+	private void proccessPayPalActivityResult(int requestCode, int resultCode, Intent data)
+	{
 
 		JavaScriptExtention javaScriptExtention = new JavaScriptExtention();
-		
-		if (resultCode == Activity.RESULT_OK) {
-			PaymentConfirmation confirm = data
-					.getParcelableExtra(com.paypal.android.sdk.payments.PaymentActivity.EXTRA_RESULT_CONFIRMATION);
-			if (confirm != null) {
-				try {
-					Log.d(TAG, confirm.toJSONObject().toString(4));
-					Log.d(TAG, confirm.getPayment().toJSONObject().toString(4));
-					
-					// º∫∞¯¿˚¿∏∑Œ ∏∂√∆¿ª ∞ÊøÏ 
+
+		if (resultCode == Activity.RESULT_OK)
+		{
+			PaymentConfirmation confirm = data.getParcelableExtra(com.paypal.android.sdk.payments.PaymentActivity.EXTRA_RESULT_CONFIRMATION);
+			if (confirm != null)
+			{
+				try
+				{
+					ExLog.d(confirm.toJSONObject().toString(4));
+					ExLog.d(confirm.getPayment().toJSONObject().toString(4));
+
+					// ÏÑ±Í≥µÏ†ÅÏúºÎ°ú ÎßàÏ≥§ÏùÑ Í≤ΩÏö∞ 
 					javaScriptExtention.feed("SUCCESS");
-				} catch (JSONException e) {
-					Log.d(TAG, "an extremely unlikely failure occurred: ");
+				} catch (JSONException e)
+				{
+					ExLog.d("an extremely unlikely failure occurred: ");
 					javaScriptExtention.feed("NOT_AVAILABLE");
 				}
 			}
-		} else if (resultCode == Activity.RESULT_CANCELED) {
-			Log.d(TAG, "The user canceled.");
+		} else if (resultCode == Activity.RESULT_CANCELED)
+		{
+			ExLog.d("The user canceled.");
 			javaScriptExtention.feed("PAYMENT_CANCELED");
-			
-		} else if (resultCode == com.paypal.android.sdk.payments.PaymentActivity.RESULT_EXTRAS_INVALID) {
-			Log.d(TAG,
-					"An invalid Payment or PayPalConfiguration was submitted. Please see the docs.");
+
+		} else if (resultCode == com.paypal.android.sdk.payments.PaymentActivity.RESULT_EXTRAS_INVALID)
+		{
+			ExLog.d("An invalid Payment or PayPalConfiguration was submitted. Please see the docs.");
 			javaScriptExtention.feed("NOT_AVAILABLE");
 		}
 	}
 
-	private class mWebChromeClient extends WebChromeClient {
+	private class mWebChromeClient extends WebChromeClient
+	{
 
 		boolean isActionBarProgressBarShowing = false;
 
 		@Override
-		public void onProgressChanged(WebView view, int newProgress) {
+		public void onProgressChanged(WebView view, int newProgress)
+		{
 			super.onProgressChanged(view, newProgress);
 
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+			{
 				if (newProgress != 100)
 					setActionBarProgressBar(true);
 				else
@@ -497,53 +483,59 @@ public class PaymentActivity extends BaseActivity implements Constants {
 			}
 		}
 
-		void setActionBarProgressBar(boolean show) {
-			if (show != isActionBarProgressBarShowing) {
+		void setActionBarProgressBar(boolean show)
+		{
+			if (show != isActionBarProgressBarShowing)
+			{
 				setSupportProgressBarIndeterminateVisibility(show);
 				isActionBarProgressBarShowing = show;
 			}
 		}
 	}
 
-	private class mWebViewClient extends WebViewClient {
+	private class mWebViewClient extends WebViewClient
+	{
 
 		@Override
-		public boolean shouldOverrideUrlLoading(WebView view, String url) {
-			Log.d(ResultRcvActivity.m_strLogTag,
-					"[PayDemoActivity] called__shouldOverrideUrlLoading - url=["
-							+ url + "]");
+		public boolean shouldOverrideUrlLoading(WebView view, String url)
+		{
+			ExLog.d("[PayDemoActivity] called__shouldOverrideUrlLoading - url=[" + url + "]");
 
-			if (url != null && !url.equals("about:blank")) {
+			if (url != null && !url.equals("about:blank"))
+			{
 
-				if (url.startsWith("http://") || url.startsWith("https://")) {
-					if (url.contains("http://market.android.com")
-							|| url.contains("http://m.ahnlab.com/kr/site/download")
-							|| url.endsWith(".apk")) {
+				if (url.startsWith("http://") || url.startsWith("https://"))
+				{
+					if (url.contains("http://market.android.com") || url.contains("http://m.ahnlab.com/kr/site/download") || url.endsWith(".apk"))
+					{
 						return url_scheme_intent(view, url);
-					} else {
+					} else
+					{
 						view.loadUrl(url);
 						return false;
 					}
-				} else if (url.startsWith("mailto:")) {
+				} else if (url.startsWith("mailto:"))
+				{
 					return false;
-				} else if (url.startsWith("tel:")) {
+				} else if (url.startsWith("tel:"))
+				{
 					return false;
-				} else {
+				} else
+				{
 					return url_scheme_intent(view, url);
 				}
 			}
-			// else if isp∆«¥‹ , æ¯¿∏∏È isp º≥ƒ°∆‰¿Ã¡ˆ∑Œ ¿Ãµø.
+			// else if ispÌåêÎã® , ÏóÜÏúºÎ©¥ isp ÏÑ§ÏπòÌéòÏù¥ÏßÄÎ°ú Ïù¥Îèô.
 
 			return true;
 		}
 
-		// error √≥∏Æ
+		// error Ï≤òÎ¶¨
 		@Override
-		public void onReceivedError(WebView view, int errorCode,
-				String description, String failingUrl) {
+		public void onReceivedError(WebView view, int errorCode, String description, String failingUrl)
+		{
 			super.onReceivedError(view, errorCode, description, failingUrl);
-			android.util.Log.e("ErrorCode / Description / failingUrl",
-					errorCode + " / " + description + " / " + failingUrl);
+			ExLog.e("ErrorCode / Description / failingUrl : " + errorCode + " / " + description + " / " + failingUrl);
 			webView.loadUrl("about:blank");
 			if (VolleyHttpClient.isAvailableNetwork())
 				setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);
@@ -553,42 +545,34 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		}
 
 		@Override
-		public void onPageStarted(WebView view, String url, Bitmap favicon) {
+		public void onPageStarted(WebView view, String url, Bitmap favicon)
+		{
 			super.onPageStarted(view, url, favicon);
 
 			lockUI();
-			handler.removeCallbacks(networkCheckRunner); // ∞·¡¶ øœ∑·Ω√ «◊ªÛ ≥◊∆Æøˆ≈©
-															// ∫“æ»¡§∂ﬂπ«∑Œ, ≥◊∆Æøˆ≈© √º≈©¥¬
-															// ¡¶∞≈«œµµ∑œ «‘.
+			handler.removeCallbacks(networkCheckRunner); // Í≤∞Ï†ú ÏôÑÎ£åÏãú Ìï≠ÏÉÅ ÎÑ§Ìä∏ÏõåÌÅ¨
+															// Î∂àÏïàÏ†ïÎú®ÎØÄÎ°ú, ÎÑ§Ìä∏ÏõåÌÅ¨ Ï≤¥ÌÅ¨Îäî
+															// Ï†úÍ±∞ÌïòÎèÑÎ°ù Ìï®.
 
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 				setSupportProgressBarIndeterminateVisibility(true);
 		}
 
 		@Override
-		public void onPageFinished(WebView view, String url) {
+		public void onPageFinished(WebView view, String url)
+		{
 			super.onPageFinished(view, url);
 			unLockUI();
 			// view.loadUrl("javascript:window.HtmlObserver.showHTML" +
 			// "('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');");
-			
-			if(mPay.getPayType().equals("PAYPAL")){
-				
-				view.loadUrl("javascript:function on_cancel()" + 
-								"{ " +
-								"var form = document.pmnt_info_form_2;" +
-								"form.action = '/smart//etc/pay_cancel.php';" +
-								"form.submit();" + 
-								 "}");
-				view.loadUrl("javascript:(function(){" + 
-						"var payImg = (document.getElementsByClassName('space_h_auto'))[0];" +
-						"payImg.style.cssText = payImg.style.cssText + ';background-image: url(https://www.paypalobjects.com/webstatic/en_KR/mktg/Logo/pp_cc_mark_74x46.jpg);' +" + 
-						"'background-size: 150px;' +" +  
-						"'background-repeat: no-repeat;' +" +  
-						"'background-position: center;';" +
-						"})();");
+
+			if (mPay.getPayType().equals("PAYPAL"))
+			{
+
+				view.loadUrl("javascript:function on_cancel()" + "{ " + "var form = document.pmnt_info_form_2;" + "form.action = '/smart//etc/pay_cancel.php';" + "form.submit();" + "}");
+				view.loadUrl("javascript:(function(){" + "var payImg = (document.getElementsByClassName('space_h_auto'))[0];" + "payImg.style.cssText = payImg.style.cssText + ';background-image: url(https://www.paypalobjects.com/webstatic/en_KR/mktg/Logo/pp_cc_mark_74x46.jpg);' +" + "'background-size: 150px;' +" + "'background-repeat: no-repeat;' +" + "'background-position: center;';" + "})();");
 			}
-			
+
 			CookieSyncManager.getInstance().sync();
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 				setSupportProgressBarIndeterminateVisibility(false);
@@ -597,67 +581,79 @@ public class PaymentActivity extends BaseActivity implements Constants {
 	}
 
 	/**
-	 * ¥Ÿ≥Ø ∏πŸ¿œ ∞·¡¶ ∞¸∑√ ∫Í∏¥¡ˆ.
+	 * Îã§ÎÇ† Î™®Î∞îÏùº Í≤∞Ï†ú Í¥ÄÎ†® Î∏åÎ¶øÏßÄ.
 	 * 
 	 * @author jangjunho
 	 *
 	 */
-	private class TeleditBridge {
+	private class TeleditBridge
+	{
 		/**
 		 * 
 		 * @param val
-		 *            »ﬁ¥Î∆˘ ∞·¡¶ øœ∑· »ƒ ∞·∞˙∞™.
+		 *            Ìú¥ÎåÄÌè∞ Í≤∞Ï†ú ÏôÑÎ£å ÌõÑ Í≤∞Í≥ºÍ∞í.
 		 */
 		@JavascriptInterface
-		public void Result(final String val) {
-			android.util.Log.e("RES", val);
+		public void Result(final String val)
+		{
+			ExLog.e("RES : " + val);
 			setResult(CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE);
 			finish();
 		}
 
 		/**
-		 * webø°º≠ ¥›±‚∏¶ ƒ› «ﬂ¿ª∂ß »£√‚.
+		 * webÏóêÏÑú Îã´Í∏∞Î•º ÏΩú ÌñàÏùÑÎïå Ìò∏Ï∂ú.
 		 */
 		@JavascriptInterface
-		public void BestClose() {
+		public void BestClose()
+		{
 			setResult(CODE_RESULT_ACTIVITY_PAYMENT_CANCELED);
 			finish();
 		}
 	}
 
 	/**
-	 * ¡æ¡æ ø°∑Ø πﬂª˝.
+	 * Ï¢ÖÏ¢Ö ÏóêÎü¨ Î∞úÏÉù.
 	 * 
 	 * @author jangjunho
 	 *
 	 */
 	@Deprecated
-	private class HtmlObserver {
+	private class HtmlObserver
+	{
 		@JavascriptInterface
-		public void showHTML(String html) {
-			android.util.Log.e("WEB_VIEW", html);
+		public void showHTML(String html)
+		{
+			ExLog.e("WEB_VIEW : " + html);
 		}
 	}
 
-	private class KCPPayPinReturn {
+	private class KCPPayPinReturn
+	{
 		@JavascriptInterface
-		public String getConfirm() {
-			if (ResultRcvActivity.b_type) {// ResultRcvActivity.b_type
+		public String getConfirm()
+		{
+			if (ResultRcvActivity.b_type)
+			{// ResultRcvActivity.b_type
 				ResultRcvActivity.b_type = false;
 				return "true";
-			} else {
+			} else
+			{
 				return "false";
 			}
 		}
 	}
 
-	private class KCPPayPinInfoBridge {
+	private class KCPPayPinInfoBridge
+	{
 		@JavascriptInterface
-		public void getPaypinInfo(final String url) {
-			handler.post(new Runnable() {
-				public void run() {
-					Log.d(ResultRcvActivity.m_strLogTag,
-							"[PayDemoActivity] KCPPayPinInfoBridge=[getPaypinInfo]");
+		public void getPaypinInfo(final String url)
+		{
+			handler.post(new Runnable()
+			{
+				public void run()
+				{
+					ExLog.d("[PayDemoActivity] KCPPayPinInfoBridge=[getPaypinInfo]");
 
 					PackageState ps = new PackageState(PaymentActivity.this);
 
@@ -670,48 +666,47 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		}
 
 		@JavascriptInterface
-		private void paypinConfim() {
-			OnClickListener posListener = new DialogInterface.OnClickListener() {
+		private void paypinConfim()
+		{
+			OnClickListener posListener = new DialogInterface.OnClickListener()
+			{
 				@Override
-				public void onClick(DialogInterface dialog, int which) {
+				public void onClick(DialogInterface dialog, int which)
+				{
 					dialog.dismiss();
 
-					if (!url_scheme_intent(null,
-							"tstore://PRODUCT_VIEW/0000284061/0")) {
-						url_scheme_intent(
-								null,
-								"market://details?id=com.skp.android.paypin&feature=search_result#?t=W251bGwsMSwxLDEsImNvbS5za3AuYW5kcm9pZC5wYXlwaW4iXQ.k");
+					if (!url_scheme_intent(null, "tstore://PRODUCT_VIEW/0000284061/0"))
+					{
+						url_scheme_intent(null, "market://details?id=com.skp.android.paypin&feature=search_result#?t=W251bGwsMSwxLDEsImNvbS5za3AuYW5kcm9pZC5wYXlwaW4iXQ.k");
 					}
 				}
 			};
 
-			OnClickListener negaListener = new DialogInterface.OnClickListener() {
+			OnClickListener negaListener = new DialogInterface.OnClickListener()
+			{
 				@Override
-				public void onClick(DialogInterface dialog, int which) {
+				public void onClick(DialogInterface dialog, int which)
+				{
 					dialog.dismiss();
-					showToast(getString(R.string.toast_msg_cancel_payment),
-							Toast.LENGTH_SHORT, false);
+					showToast(getString(R.string.toast_msg_cancel_payment), Toast.LENGTH_SHORT, false);
 				}
 			};
 
-			SimpleAlertDialog.build(PaymentActivity.this,
-					getString(R.string.dialog_btn_text_confirm),
-					getString(R.string.dialog_msg_install_paypin),
-					getString(R.string.dialog_btn_text_install),
-					getString(R.string.dialog_btn_text_cancel), posListener,
-					negaListener).show();
+			SimpleAlertDialog.build(PaymentActivity.this, getString(R.string.dialog_btn_text_confirm), getString(R.string.dialog_msg_install_paypin), getString(R.string.dialog_btn_text_install), getString(R.string.dialog_btn_text_cancel), posListener, negaListener).show();
 		}
 	}
 
-	// «œ≥™SK ƒ´µÂ º±≈√Ω√ User∞° º±≈√«— ±‚∫ª ¡§∫∏∏¶ ∞°¡ˆ∞Ì ø¿±‚¿ß«ÿ ªÁøÎ
-	private class KCPPayCardInfoBridge {
+	// ÌïòÎÇòSK Ïπ¥Îìú ÏÑ†ÌÉùÏãú UserÍ∞Ä ÏÑ†ÌÉùÌïú Í∏∞Î≥∏ Ï†ïÎ≥¥Î•º Í∞ÄÏßÄÍ≥† Ïò§Í∏∞ÏúÑÌï¥ ÏÇ¨Ïö©
+	private class KCPPayCardInfoBridge
+	{
 		@JavascriptInterface
-		public void getCardInfo(final String card_cd, final String quota) {
-			handler.post(new Runnable() {
-				public void run() {
-					Log.d(ResultRcvActivity.m_strLogTag,
-							"[PayDemoActivity] KCPPayCardInfoBridge=["
-									+ card_cd + ", " + quota + "]");
+		public void getCardInfo(final String card_cd, final String quota)
+		{
+			handler.post(new Runnable()
+			{
+				public void run()
+				{
+					ExLog.d("[PayDemoActivity] KCPPayCardInfoBridge=[" + card_cd + ", " + quota + "]");
 
 					CARD_CD = card_cd;
 					QUOTA = quota;
@@ -725,15 +720,16 @@ public class PaymentActivity extends BaseActivity implements Constants {
 		}
 
 		@JavascriptInterface
-		private void alertToNext() {
-			OnClickListener posListener = new DialogInterface.OnClickListener() {
+		private void alertToNext()
+		{
+			OnClickListener posListener = new DialogInterface.OnClickListener()
+			{
 				@Override
-				public void onClick(DialogInterface dialog, int which) {
+				public void onClick(DialogInterface dialog, int which)
+				{
 					dialog.dismiss();
 
-					Intent intent = new Intent(
-							Intent.ACTION_VIEW,
-							Uri.parse("http://cert.hanaskcard.com/Ansim/HanaSKPay.apk"));
+					Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://cert.hanaskcard.com/Ansim/HanaSKPay.apk"));
 
 					m_nStat = PROGRESS_STAT_IN;
 
@@ -741,20 +737,19 @@ public class PaymentActivity extends BaseActivity implements Constants {
 				}
 			};
 
-			SimpleAlertDialog.build(PaymentActivity.this,
-					getString(R.string.dialog_notice2),
-					getString(R.string.dialog_msg_install_hana_sk),
-					getString(R.string.dialog_btn_text_yes),
-					getString(R.string.dialog_btn_text_no), posListener, null)
-					.show();
+			SimpleAlertDialog.build(PaymentActivity.this, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_install_hana_sk), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null).show();
 		}
 	}
 
-	private class KCPPayBridge {
+	private class KCPPayBridge
+	{
 		@JavascriptInterface
-		public void launchMISP(final String arg) {
-			handler.post(new Runnable() {
-				public void run() {
+		public void launchMISP(final String arg)
+		{
+			handler.post(new Runnable()
+			{
+				public void run()
+				{
 					boolean isp_app = true;
 					String strUrl;
 					String argUrl;
@@ -763,18 +758,15 @@ public class PaymentActivity extends BaseActivity implements Constants {
 
 					argUrl = arg;
 
-					if (!arg.equals("Install")
-							&& !ps.getPackageDownloadInstallState("kvp.jjy.MispAndroid"))
+					if (!arg.equals("Install") && !ps.getPackageDownloadInstallState("kvp.jjy.MispAndroid"))
 						argUrl = "Install";
 
-					strUrl = (argUrl.equals("Install") == true) ? "market://details?id=kvp.jjy.MispAndroid320"
-							: argUrl;
+					strUrl = (argUrl.equals("Install") == true) ? "market://details?id=kvp.jjy.MispAndroid320" : argUrl;
 
-					Intent intent = new Intent(Intent.ACTION_VIEW, Uri
-							.parse(strUrl));
+					Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(strUrl));
 
 					m_nStat = PROGRESS_STAT_IN;
-					Log.d("m_nStat", Integer.toString(m_nStat));
+					ExLog.d("m_nStat : " + Integer.toString(m_nStat));
 					startActivity(intent);
 				}
 			});
@@ -782,70 +774,38 @@ public class PaymentActivity extends BaseActivity implements Constants {
 	}
 
 	@Override
-	protected void onRestart() {
+	protected void onRestart()
+	{
 		super.onRestart();
 
-		Log.d(ResultRcvActivity.m_strLogTag,
-				"[PayDemoActivity] called__onResume + INPROGRESS=[" + m_nStat
-						+ "]");
+		ExLog.d("[PayDemoActivity] called__onResume + INPROGRESS=[" + m_nStat + "]");
 
-		// «œ≥™ SK ∏µ‚∑Œ ∞·¡¶ ¿Ã»ƒ «ÿ¥Á ƒ´µÂ ¡§∫∏∏¶ ∞°¡ˆ∞Ì ø¿±‚¿ß«ÿ ªÁøÎ
-		if (ResultRcvActivity.m_uriResult != null) {// ResultRcvActivity
-			if (ResultRcvActivity.m_uriResult.getQueryParameter("realPan") != null
-					&& ResultRcvActivity.m_uriResult.getQueryParameter("cavv") != null
-					&& ResultRcvActivity.m_uriResult.getQueryParameter("xid") != null
-					&& ResultRcvActivity.m_uriResult.getQueryParameter("eci") != null) {
-				Log.d(ResultRcvActivity.m_strLogTag,
-						"[PayDemoActivity] HANA SK Result = javascript:hanaSK('"
-								+ ResultRcvActivity.m_uriResult
-										.getQueryParameter("realPan")
-								+ "', '"
-								+ ResultRcvActivity.m_uriResult
-										.getQueryParameter("cavv")
-								+ "', '"
-								+ ResultRcvActivity.m_uriResult
-										.getQueryParameter("xid")
-								+ "', '"
-								+ ResultRcvActivity.m_uriResult
-										.getQueryParameter("eci") + "', '"
-								+ CARD_CD + "', '" + QUOTA + "');");
+		// ÌïòÎÇò SK Î™®ÎìàÎ°ú Í≤∞Ï†ú Ïù¥ÌõÑ Ìï¥Îãπ Ïπ¥Îìú Ï†ïÎ≥¥Î•º Í∞ÄÏßÄÍ≥† Ïò§Í∏∞ÏúÑÌï¥ ÏÇ¨Ïö©
+		if (ResultRcvActivity.m_uriResult != null)
+		{// ResultRcvActivity
+			if (ResultRcvActivity.m_uriResult.getQueryParameter("realPan") != null && ResultRcvActivity.m_uriResult.getQueryParameter("cavv") != null && ResultRcvActivity.m_uriResult.getQueryParameter("xid") != null && ResultRcvActivity.m_uriResult.getQueryParameter("eci") != null)
+			{
+				ExLog.d("[PayDemoActivity] HANA SK Result = javascript:hanaSK('" + ResultRcvActivity.m_uriResult.getQueryParameter("realPan") + "', '" + ResultRcvActivity.m_uriResult.getQueryParameter("cavv") + "', '" + ResultRcvActivity.m_uriResult.getQueryParameter("xid") + "', '" + ResultRcvActivity.m_uriResult.getQueryParameter("eci") + "', '" + CARD_CD + "', '" + QUOTA + "');");
 
-				// «œ≥™ SK ∏µ‚∑Œ ¿Œ¡ı ¿Ã»ƒ Ω¬¿Œ¿ª «œ±‚¿ß«ÿ ∞·¡¶ «‘ºˆ∏¶ »£√‚ (¡÷πÆ¿⁄ ∆‰¿Ã¡ˆ)
-				webView.loadUrl("javascript:hanaSK('"
-						+ ResultRcvActivity.m_uriResult
-								.getQueryParameter("realPan")
-						+ "', '"
-						+ ResultRcvActivity.m_uriResult
-								.getQueryParameter("cavv")
-						+ "', '"
-						+ ResultRcvActivity.m_uriResult
-								.getQueryParameter("xid")
-						+ "', '"
-						+ ResultRcvActivity.m_uriResult
-								.getQueryParameter("eci") + "', '" + CARD_CD
-						+ "', '" + QUOTA + "');");
+				// ÌïòÎÇò SK Î™®ÎìàÎ°ú Ïù∏Ï¶ù Ïù¥ÌõÑ ÏäπÏù∏ÏùÑ ÌïòÍ∏∞ÏúÑÌï¥ Í≤∞Ï†ú Ìï®ÏàòÎ•º Ìò∏Ï∂ú (Ï£ºÎ¨∏Ïûê ÌéòÏù¥ÏßÄ)
+				webView.loadUrl("javascript:hanaSK('" + ResultRcvActivity.m_uriResult.getQueryParameter("realPan") + "', '" + ResultRcvActivity.m_uriResult.getQueryParameter("cavv") + "', '" + ResultRcvActivity.m_uriResult.getQueryParameter("xid") + "', '" + ResultRcvActivity.m_uriResult.getQueryParameter("eci") + "', '" + CARD_CD + "', '" + QUOTA + "');");
 			}
 
-			if ((ResultRcvActivity.m_uriResult.getQueryParameter("res_cd") == null ? ""
-					: ResultRcvActivity.m_uriResult.getQueryParameter("res_cd"))
-					.equals("999")) {
-				Log.d(ResultRcvActivity.m_strLogTag,
-						"[PayDemoActivity] HANA SK Result = cancel");
+			if ((ResultRcvActivity.m_uriResult.getQueryParameter("res_cd") == null ? "" : ResultRcvActivity.m_uriResult.getQueryParameter("res_cd")).equals("999"))
+			{
+				ExLog.d("[PayDemoActivity] HANA SK Result = cancel");
 
 				m_nStat = 9;
 			}
 
-			if ((ResultRcvActivity.m_uriResult.getQueryParameter("isp_res_cd") == null ? ""
-					: ResultRcvActivity.m_uriResult
-							.getQueryParameter("isp_res_cd")).equals("0000")) {
-				Log.d(ResultRcvActivity.m_strLogTag,
-						"[PayDemoActivity] ISP Result = 0000");
+			if ((ResultRcvActivity.m_uriResult.getQueryParameter("isp_res_cd") == null ? "" : ResultRcvActivity.m_uriResult.getQueryParameter("isp_res_cd")).equals("0000"))
+			{
+				ExLog.d("[PayDemoActivity] ISP Result = 0000");
 
-				webView.loadUrl("http://pggw.kcp.co.kr/lds/smart_phone_linux_jsp/sample/card/samrt_res.jsp?result=OK&a="
-						+ ResultRcvActivity.m_uriResult.getQueryParameter("a"));
-			} else {
-				Log.d(ResultRcvActivity.m_strLogTag,
-						"[PayDemoActivity] ISP Result = cancel");
+				webView.loadUrl("http://pggw.kcp.co.kr/lds/smart_phone_linux_jsp/sample/card/samrt_res.jsp?result=OK&a=" + ResultRcvActivity.m_uriResult.getQueryParameter("a"));
+			} else
+			{
+				ExLog.d("[PayDemoActivity] ISP Result = cancel");
 			}
 		}
 
@@ -855,83 +815,84 @@ public class PaymentActivity extends BaseActivity implements Constants {
 	}
 
 	@JavascriptInterface
-	public void checkFrom() {
-		try {
+	public void checkFrom()
+	{
+		try
+		{
 
-			if (ResultRcvActivity.m_uriResult != null) {
+			if (ResultRcvActivity.m_uriResult != null)
+			{
 				m_nStat = PROGRESS_DONE;
-				String strResultInfo = ResultRcvActivity.m_uriResult
-						.getQueryParameter("approval_key");
+				String strResultInfo = ResultRcvActivity.m_uriResult.getQueryParameter("approval_key");
 
 				if (strResultInfo == null || strResultInfo.length() <= 4)
+				{
 					finishActivity(getString(R.string.act_payment_isp_error));
+					return;
+				}
 
-				String strResCD = strResultInfo.substring(strResultInfo
-						.length() - 4);
+				String strResCD = strResultInfo.substring(strResultInfo.length() - 4);
 
-				Log.d(ResultRcvActivity.m_strLogTag,
-						"[PayDemoActivity] result=[" + strResultInfo + "]+"
-								+ "res_cd=[" + strResCD + "]");
+				ExLog.d("[PayDemoActivity] result=[" + strResultInfo + "]+" + "res_cd=[" + strResCD + "]");
 
-				if (strResCD.equals("0000") == true) {
+				if (strResCD.equals("0000") == true)
+				{
 
 					String strApprovalKey = "";
 
-					strApprovalKey = strResultInfo.substring(0,
-							strResultInfo.length() - 4);
+					strApprovalKey = strResultInfo.substring(0, strResultInfo.length() - 4);
 
-					Log.d(ResultRcvActivity.m_strLogTag,
-							"[PayDemoActivity] approval_key=[" + strApprovalKey
-									+ "]");
+					ExLog.d("[PayDemoActivity] approval_key=[" + strApprovalKey + "]");
 
-					webView.loadUrl("https://pggw.kcp.co.kr/app.do?ActionResult=app&approval_key="
-							+ strApprovalKey);
+					webView.loadUrl("https://pggw.kcp.co.kr/app.do?ActionResult=app&approval_key=" + strApprovalKey);
 
-				} else if (strResCD.equals("3001") == true) {
+				} else if (strResCD.equals("3001") == true)
+				{
 					finishActivity(getString(R.string.act_payment_isp_user_cancel));
-				} else {
+				} else
+				{
 					finishActivity(getString(R.string.act_payment_isp_other_error));
 				}
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception e)
+		{
+			ExLog.e(e.toString());
 		}
 	}
 
 	@Override
 	@JavascriptInterface
-	protected Dialog onCreateDialog(int id) {
+	protected Dialog onCreateDialog(int id)
+	{
 
 		super.onCreateDialog(id);
 
-		OnClickListener posListener = new DialogInterface.OnClickListener() {
+		OnClickListener posListener = new DialogInterface.OnClickListener()
+		{
 			@Override
-			public void onClick(DialogInterface dialog, int which) {
+			public void onClick(DialogInterface dialog, int which)
+			{
 				dialog.dismiss();
 				finishActivity(getString(R.string.act_payment_user_cancel));
 			}
 		};
 
-		AlertDialog alertDlg = SimpleAlertDialog.build(PaymentActivity.this,
-				getString(R.string.dialog_btn_text_cancel),
-				getString(R.string.dialog_msg_chk_cancel_payment_progress),
-				getString(R.string.dialog_btn_text_yes),
-				getString(R.string.dialog_btn_text_no), posListener, null)
-				.create();
+		AlertDialog alertDlg = SimpleAlertDialog.build(PaymentActivity.this, getString(R.string.dialog_btn_text_cancel), getString(R.string.dialog_msg_chk_cancel_payment_progress), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null).create();
 
 		return alertDlg;
 	}
 
 	@JavascriptInterface
-	public void finishActivity(String p_strFinishMsg) {
+	public void finishActivity(String p_strFinishMsg)
+	{
 
 		int resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
 
-		if (p_strFinishMsg != null) {
+		if (p_strFinishMsg != null)
+		{
 			if (p_strFinishMsg.equals("NOT_AVAILABLE"))
 				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_NOT_AVAILABLE;
-			else if (p_strFinishMsg
-					.contains(getString(R.string.act_payment_chk_contain)))
+			else if (p_strFinishMsg.contains(getString(R.string.act_payment_chk_contain)))
 				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_CANCELED;// RESULT_CANCELED
 		}
 		Intent payData = new Intent();
@@ -942,23 +903,27 @@ public class PaymentActivity extends BaseActivity implements Constants {
 	}
 
 	@Override
-	public void finish() {
+	public void finish()
+	{
 		super.finish();
 		overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
 
 	}
 
-	private class JavaScriptExtention {
+	private class JavaScriptExtention
+	{
 
-		JavaScriptExtention() {
+		JavaScriptExtention()
+		{
 		}
 
-		// º≠πˆ∑Œ∫Œ≈Õ πﬁ¿∫ ∞·¡¶ ∞·∞˙ ∏ﬁΩ√¡ˆ∏¶ √≥∏Æ«‘.
-		// ∞¢∞¢¿« ∞ÊøÏø° ∏¬¥¬ resultCode∏¶ ≥÷æÓ BookingActivity∑Œ finishΩ√≈¥.
+		// ÏÑúÎ≤ÑÎ°úÎ∂ÄÌÑ∞ Î∞õÏùÄ Í≤∞Ï†ú Í≤∞Í≥º Î©îÏãúÏßÄÎ•º Ï≤òÎ¶¨Ìï®.
+		// Í∞ÅÍ∞ÅÏùò Í≤ΩÏö∞Ïóê ÎßûÎäî resultCodeÎ•º ÎÑ£Ïñ¥ BookingActivityÎ°ú finishÏãúÌÇ¥.
 		@JavascriptInterface
-		public void feed(final String msg) {
+		public void feed(final String msg)
+		{
 			int resultCode = 0;
-			android.util.Log.e("FEED", msg);
+			ExLog.e("FEED : " + msg);
 			if (msg == null)
 				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
 			else if (msg.equals("SUCCESS"))
@@ -995,30 +960,29 @@ public class PaymentActivity extends BaseActivity implements Constants {
 	}
 
 	@Override
-	public void onBackPressed() {
-		OnClickListener posListener = new OnClickListener() {
+	public void onBackPressed()
+	{
+		OnClickListener posListener = new OnClickListener()
+		{
 			@Override
-			public void onClick(DialogInterface dialog, int which) {
+			public void onClick(DialogInterface dialog, int which)
+			{
 				finish();
 			}
 		};
-		SimpleAlertDialog.build(PaymentActivity.this,
-				getString(R.string.dialog_title_payment),
-				getString(R.string.dialog_msg_chk_cancel_payment),
-				getString(R.string.dialog_btn_text_yes),
-				getString(R.string.dialog_btn_text_no), posListener, null)
-				.show();
+		SimpleAlertDialog.build(PaymentActivity.this, getString(R.string.dialog_title_payment), getString(R.string.dialog_msg_chk_cancel_payment), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null).show();
 	}
 
 	@Override
-	public void lockUI() {
+	public void lockUI()
+	{
 		mLockUI.show();
 	}
 
 	@Override
-	public void unLockUI() {
-		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content)
-				.getRootView());
+	public void unLockUI()
+	{
+		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
 		mLockUI.hide();
 	}
 

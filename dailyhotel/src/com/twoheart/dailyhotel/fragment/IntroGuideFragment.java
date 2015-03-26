@@ -1,7 +1,5 @@
 package com.twoheart.dailyhotel.fragment;
 
-import java.util.Locale;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -16,70 +14,73 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
-public class IntroGuideFragment extends BaseFragment {
-	
+public class IntroGuideFragment extends BaseFragment
+{
+
 	private static final String KEY_BUNDLE_ARGUMENTS_BACKGROUND = "background";
 	private static final String KEY_BUNDLE_ARGUMENTS_TITLE = "title";
 	private static final String KEY_BUNDLE_ARGUMENTS_IMAGE = "image";
 	private static final String KEY_BUNDLE_ARGUMENTS_DESC = "desc";
-	
+
 	private ImageView ivImage;
 	private TextView tvTitle;
 	private TextView tvDesc;
 	private LinearLayout llIntroGuide;
-	
+
 	private int mBackground;
 	private String mTitle;
 	private int mImage;
 	private String mDesc;
-	
-	public static IntroGuideFragment newInstance(int backgroud, String title, int image, String desc) {
+
+	public static IntroGuideFragment newInstance(int backgroud, String title, int image, String desc)
+	{
 		IntroGuideFragment newFragment = new IntroGuideFragment();
-		
+
 		Bundle arguments = new Bundle();
 		arguments.putInt(KEY_BUNDLE_ARGUMENTS_BACKGROUND, backgroud);
 		arguments.putString(KEY_BUNDLE_ARGUMENTS_TITLE, title);
 		arguments.putInt(KEY_BUNDLE_ARGUMENTS_IMAGE, image);
 		arguments.putString(KEY_BUNDLE_ARGUMENTS_DESC, desc);
 		newFragment.setArguments(arguments);
-		
+
 		return newFragment;
 	}
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
-		
+
 		mBackground = getArguments().getInt(KEY_BUNDLE_ARGUMENTS_BACKGROUND);
 		mTitle = getArguments().getString(KEY_BUNDLE_ARGUMENTS_TITLE);
 		mImage = getArguments().getInt(KEY_BUNDLE_ARGUMENTS_IMAGE);
 		mDesc = getArguments().getString(KEY_BUNDLE_ARGUMENTS_DESC);
-		
+
 	}
-	
+
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+	{
 
 		View view = inflater.inflate(R.layout.fragment_intro_guide, container, false);
-		
+
 		llIntroGuide = (LinearLayout) view.findViewById(R.id.ll_intro_guide);
 		tvTitle = (TextView) view.findViewById(R.id.tv_guide_title);
 		tvDesc = (TextView) view.findViewById(R.id.tv_guide_desc);
 		ivImage = (ImageView) view.findViewById(R.id.iv_guide_icon);
-		
+
 		llIntroGuide.setBackgroundResource(mBackground);
-		
+
 		SharedPreferences sharedPreference = container.getContext().getSharedPreferences(NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
 		String locale = sharedPreference.getString(KEY_PREFERENCE_LOCALE, null);
-		
-		if(locale.equals("English"))
+
+		if (locale.equals("English"))
 			tvTitle.setTextSize(26.5f);
-		
+
 		tvTitle.setText(mTitle);
 		tvDesc.setText(mDesc);
 		ivImage.setImageResource(mImage);
-		
+
 		tvTitle.setTypeface(DailyHotel.getBoldTypeface());
 
 		return view;
