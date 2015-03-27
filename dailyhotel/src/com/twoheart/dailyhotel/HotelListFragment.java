@@ -223,18 +223,20 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	@Override
 	public void onItemClick(AdapterView<?> parentView, View childView, int position, long id)
 	{
-		if(isLockUiComponent() == true) {
+		if (isLockUiComponent() == true)
+		{
 			return;
 		}
-		
+
 		lockUiComponent();
-		
+
 		// 7.2 G2 버전에서 호텔리스트에서 이벤트 칸을 클릭할 경우 튕기는 현상을 막기 위함. why? 헤더뷰인데도 아이템 클릭 리스너가 들어감.
-		if (position == 0) {
+		if (position == 0)
+		{
 			releaseUiComponent();
 			return;
 		}
-		
+
 		//		mHostActivity.selectMenuDrawer(mHostActivity.menuHotelListFragment);
 
 		int selectedPosition = position - 1;
@@ -282,7 +284,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	public void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
 		releaseUiComponent();
-		
+
 		if (requestCode == CODE_REQUEST_ACTIVITY_HOTELTAB)
 		{
 			mRefreshHotelList = false;
@@ -383,8 +385,10 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 		// 새로운 지역리스트화면의 경우 navigation 리스트 대신 지역이름이 들어감.
 		// 기존 방식의 경우 지역 이름 대신 navigation 리스트가 들어가야 함.
-		if (event)
+		if (event == true)
+		{
 			mHostActivity.setActionBar("  " + selectedRegion);
+		}
 
 		//		if (!selectedRegion.equals(mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "서울"))) {
 		//			SharedPreferences.Editor editor = mHostActivity.sharedPreference
@@ -521,13 +525,15 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	// Listener
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+	/**
+	 * Hotel List Listener
+	 */
 	private DailyHotelJsonResponseListener mHotelJsonResponseListener = new DailyHotelJsonResponseListener()
 	{
 
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-
 			try
 			{
 				if (response == null)
@@ -540,61 +546,32 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 				for (int i = 0; i < hotelArr.length(); i++)
 				{
-					JSONObject obj = hotelArr.getJSONObject(i);
+					JSONObject jsonObject = hotelArr.getJSONObject(i);
 
-					Hotel newHotel = new Hotel();
-
-					String name = obj.getString("name");
-					String price = obj.getString("price");
-					String discount = obj.getString("discount");
-					String address = obj.getString("addr_summary");
-					String category = obj.getString("cat");
-					int idx = obj.getInt("idx");
-					int available = obj.getInt("avail_room_count");
-					int seq = obj.getInt("seq");
-					String detailRegion = obj.getString("site2_name");
-					JSONArray arr = obj.getJSONArray("img");
-					String image = "default";
-					if (arr.length() != 0)
-					{
-						JSONObject arrObj = arr.getJSONObject(0);
-						image = arrObj.getString("path");
-					}
-
-					newHotel.setName(name);
-					newHotel.setPrice(price);
-					newHotel.setDiscount(discount);
-					newHotel.setAddress(address);
-					newHotel.setCategory(category);
-					newHotel.setIdx(idx);
-					newHotel.setAvailableRoom(available);
-					newHotel.setSequence(seq);
-					newHotel.setImage(image);
-					newHotel.setDetailRegion(detailRegion);
+					int seq = jsonObject.getInt("seq");
 
 					if (seq >= 0)
-					{ // 숨김호텔이 아니라면 추가. (음수일 경우 숨김호텔.)
-						// SOLD OUT 된 항목은 밑으로.
-						if (available <= 0)
+					{
+						// 숨김호텔이 아니라면 추가. (음수일 경우 숨김호텔.)
+						Hotel newHotel = new Hotel();
+						if (newHotel.setHotel(jsonObject) == true)
 						{
-							available *= 100;
+							mHotelList.add(newHotel); // 추가.
 						}
-
-						mHotelList.add(newHotel); // 추가.
-
-						// seq 값에 따른 리스트 정렬
-						Comparator<Hotel> comparator = new Comparator<Hotel>()
-						{
-							public int compare(Hotel o1, Hotel o2)
-							{
-								// 숫자정렬
-								return Integer.parseInt(o1.getSequence() + "") - Integer.parseInt(o2.getSequence() + "");
-							}
-						};
-
-						Collections.sort(mHotelList, comparator);
 					}
 				}
+
+				// seq 값에 따른 리스트 정렬
+				Comparator<Hotel> comparator = new Comparator<Hotel>()
+				{
+					public int compare(Hotel o1, Hotel o2)
+					{
+						// 숫자정렬
+						return o1.getSequence() - o2.getSequence();
+					}
+				};
+
+				Collections.sort(mHotelList, comparator);
 
 				mHotelListViewList = new ArrayList<HotelListViewItem>();
 				List<String> selectedRegionDetail = mRegionDetailList.get(mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, ""));
@@ -777,6 +754,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 					//					regionIdx = mHostActivity.sharedPreference
 					//							.getInt(KEY_PREFERENCE_REGION_INDEX, 0);
 				}
+
 				//선택지역이 없는 경우 
 				if (isRegion == false)
 				{
@@ -806,17 +784,15 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 					{
 						mQueue.add(new DailyHotelJsonArrayRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SITE_COUNTRY_LOCATION_LIST).toString(), null, mSiteCountryLocationListJsonArrayResponseListener, mHostActivity));
 					}
-
-				} else
-				{
-					fetchHotelList();
 				}
 
-				if (!event)
+				if (event == true)
+				{
+					fetchHotelList();
+				} else
+				{
 					mHostActivity.actionBar.setSelectedNavigationItem(regionIdx);
-
-				//				fetchHotelList();
-
+				}
 			} catch (Exception e)
 			{
 				onError(e);

@@ -1,7 +1,13 @@
 package com.twoheart.dailyhotel.model;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.twoheart.dailyhotel.util.ExLog;
 
 public class Hotel implements Parcelable
 {
@@ -204,4 +210,34 @@ public class Hotel implements Parcelable
 		return 0;
 	}
 
+	public boolean setHotel(JSONObject jsonObject)
+	{
+		try
+		{
+			name = jsonObject.getString("name");
+			price = jsonObject.getString("price");
+			discount = jsonObject.getString("discount");
+			address = jsonObject.getString("addr_summary");
+			category = jsonObject.getString("cat");
+			idx = jsonObject.getInt("idx");
+			availableRoom = jsonObject.getInt("avail_room_count");
+			sequence = jsonObject.getInt("seq");
+			detailRegion = jsonObject.getString("site2_name");
+
+			JSONArray jsonArray = jsonObject.getJSONArray("img");
+			image = "default";
+			if (jsonArray.length() != 0)
+			{
+				JSONObject arrObj = jsonArray.getJSONObject(0);
+				image = arrObj.getString("path");
+			}
+		} catch (JSONException e)
+		{
+			ExLog.d(e.toString());
+
+			return false;
+		}
+
+		return true;
+	}
 }
