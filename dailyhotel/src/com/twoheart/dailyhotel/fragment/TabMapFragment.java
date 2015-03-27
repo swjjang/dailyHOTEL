@@ -20,9 +20,11 @@ import android.widget.TextView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.ZoomMapActivity;
@@ -32,8 +34,6 @@ import com.twoheart.dailyhotel.widget.HotelGradeView;
 
 public class TabMapFragment extends BaseFragment implements OnMapClickListener
 {
-
-	private static final String TAG = "HotelTabMapFragment";
 	private static final String KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL = "hotel_detail";
 
 	private HotelDetail mHotelDetail;
@@ -41,10 +41,10 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
 	private GoogleMap googleMap;
 	private TextView tvName, tvAddress;
 	private HotelGradeView hvGrade;
+	private Marker mMarker;
 
 	public static TabMapFragment newInstance(HotelDetail hotelDetail, String title)
 	{
-
 		TabMapFragment newFragment = new TabMapFragment();
 		Bundle arguments = new Bundle();
 
@@ -54,7 +54,6 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
 		newFragment.setTitle(title);
 
 		return newFragment;
-
 	}
 
 	@Override
@@ -62,13 +61,11 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
 	{
 		super.onCreate(savedInstanceState);
 		mHotelDetail = (HotelDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL);
-
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
-
 		View view = inflater.inflate(R.layout.fragment_hotel_tab_map, container, false);
 
 		tvName = (TextView) view.findViewById(R.id.tv_hotel_tab_map_name);
@@ -113,7 +110,17 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
 		}
 
 		addMarker(mHotelDetail.getLatitude(), mHotelDetail.getLongitude(), mHotelDetail.getHotel().getName());
+	}
 
+	@Override
+	public void onResume()
+	{
+		if (mMarker != null)
+		{
+			mMarker.showInfoWindow();
+		}
+
+		super.onResume();
 	}
 
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -145,10 +152,21 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
 	{
 		if (googleMap != null)
 		{
-			googleMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title(hotel_name));
+			mMarker = googleMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title(hotel_name));
+			mMarker.showInfoWindow();
 			LatLng address = new LatLng(lat, lng);
 			CameraPosition cp = new CameraPosition.Builder().target((address)).zoom(15).build();
 			googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
+
+			googleMap.setOnMarkerClickListener(new OnMarkerClickListener()
+			{
+				@Override
+				public boolean onMarkerClick(Marker marker)
+				{
+					marker.showInfoWindow();
+					return true;
+				}
+			});
 		}
 	}
 }
