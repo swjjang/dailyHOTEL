@@ -72,6 +72,7 @@
     <string name="toast_msg_logouted">로그아웃되었습니다.</string>
     <string name="toast_msg_logoined">로그인되었습니다.</string>
     <string name="toast_msg_please_input_id">아이디를 입력해주세요.</string>
+    <string name="toast_msg_please_input_name">이름을 입력해주세요.</string>
     <string name="toast_msg_please_input_passwd">비밀번호를 입력해주세요.</string>
     <string name="toast_msg_please_input_required_infos">필수 입력사항은 모두 입력해주세요.</string>
     <string name="toast_msg_please_input_password_more_than_4chars">비밀번호를 4글자 이상 입력해주세요.</string>
@@ -79,6 +80,8 @@
     <string name="toast_msg_already_latest_version">이미 최신버전입니다</string>
     <string name="toast_msg_thanks_to_your_opinion">좋은 의견 감사합니다.</string>
     <string name="toast_msg_backpressed">\'뒤로\' 버튼을 한 번 더 누르시면 앱이 종료됩니다</string>
+    <string name="toast_msg_input_error_alphanum">영문, 숫자만 입력 가능합니다.</string>
+    <string name="toast_msg_input_error_alphanumeric_hangul">영문, 숫자, 한글만 입력 가능합니다.</string>
 
     <!-- Dialog Messages -->
 

@@ -9,6 +9,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.PowerManager;
 
 import com.twoheart.dailyhotel.activity.PushDialogActivity;
@@ -33,7 +34,16 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver
 		String ticker = context.getString(R.string.alarm_ticker);
 
 		PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-		boolean isScreenOn = pm.isScreenOn();
+
+		boolean isScreenOn;
+
+		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT)
+		{
+			isScreenOn = pm.isScreenOn();
+		} else
+		{
+			isScreenOn = pm.isInteractive();
+		}
 
 		if (!isScreenOn)
 		{ // 스크린 꺼져있음
@@ -60,7 +70,5 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver
 		notification.flags = Notification.FLAG_AUTO_CANCEL;
 		notification.setLatestEventInfo(context, title, msg, pendingIntent);
 		notificationManager.notify(0, notification);
-
 	}
-
 }

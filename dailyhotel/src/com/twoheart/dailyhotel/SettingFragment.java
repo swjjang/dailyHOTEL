@@ -139,7 +139,7 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 			intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.mail_text_subject));
 			intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.mail_text_desc));
 			intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NEW_TASK);
-			
+
 			startActivity(Intent.createChooser(intent, getString(R.string.mail_text_dialog_title)));
 			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "mailCS", null, null);
 		} else if (v.getId() == llLogin.getId())

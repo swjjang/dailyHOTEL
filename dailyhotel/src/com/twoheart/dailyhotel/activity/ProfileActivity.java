@@ -18,6 +18,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -39,6 +40,7 @@ import com.facebook.Session;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
+import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
@@ -125,7 +127,9 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 	{
 
 		if ((view.getId() == R.id.ll_profile_edit))
+		{
 			return;
+		}
 
 		// Set up touch listener for non-text box views to hide keyboard.
 		if (!(view instanceof EditText))
@@ -161,6 +165,13 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 		if (show)
 		{
 			mAq.id(R.id.et_profile_name).getEditText().requestFocus();
+
+			StringFilter stringFilter = new StringFilter(this);
+			InputFilter[] allowAlphanumericHangul = new InputFilter[1];
+			allowAlphanumericHangul[0] = stringFilter.allowAlphanumericHangul;
+
+			((EditText) findViewById(R.id.et_profile_name)).setFilters(allowAlphanumericHangul);
+
 			mInputMethodManager.showSoftInput(mAq.id(R.id.et_profile_name).getEditText(), InputMethodManager.SHOW_FORCED);
 
 		} else
@@ -186,31 +197,54 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 
 			} else if (mAq.id(R.id.tv_profile_edit).getText().equals(getString(R.string.dialog_btn_text_confirm)))
 			{
-				mAq.id(R.id.ll_profile_info_editable).visibility(View.GONE);
-				mAq.id(R.id.ll_profile_info_label).visibility(View.VISIBLE);
-				mAq.id(R.id.ll_profile_info_label).getView().startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_in));
-				mAq.id(R.id.tv_profile_edit).text(getString(R.string.act_profile_modify));
-
-				toggleKeyboard(false);
-
-				String name = mAq.id(R.id.et_profile_name).getText().toString();
-				String phone = mAq.id(R.id.et_profile_phone).getText().toString();
-				
-				if (name.equals(prevName) && phone.equals(prevPh))
+				if (isLockUiComponent() == true)
 				{
+					return;
+				}
+
+				lockUiComponent();
+
+				String name = mAq.id(R.id.et_profile_name).getText().toString().trim();
+				String phone = mAq.id(R.id.et_profile_phone).getText().toString().trim();
+
+				// 전화번호는 필수 사항이 아니라서 필드만 초기화된다.
+				if (TextUtils.isEmpty(phone) == true)
+				{
+					mAq.id(R.id.et_profile_phone).text("");
+				}
+
+				// 이름은 필수 사항으로 입력되어야 한다.
+				if (TextUtils.isEmpty(name) == true)
+				{
+					releaseUiComponent();
+
+					mAq.id(R.id.et_profile_name).text("");
+					showToast(getString(R.string.toast_msg_please_input_name), Toast.LENGTH_SHORT, false);
+				} else if (name.equals(prevName) && phone.equals(prevPh))
+				{
+					toggleKeyboard(false);
+
+					releaseUiComponent();
+
+					// 기존과 동일하여 서버에 요청할 필요가 없음.
+					mAq.id(R.id.ll_profile_info_editable).visibility(View.GONE);
+					mAq.id(R.id.ll_profile_info_label).visibility(View.VISIBLE);
+					mAq.id(R.id.ll_profile_info_label).getView().startAnimation(AnimationUtils.loadAnimation(ProfileActivity.this, R.anim.fade_in));
+					mAq.id(R.id.tv_profile_edit).text(getString(R.string.act_profile_modify));
+
 					showToast(getString(R.string.toast_msg_profile_not_changed), Toast.LENGTH_LONG, false);
 				} else
 				{
+					toggleKeyboard(false);
+
 					Map<String, String> updateParams = new HashMap<String, String>();
-					updateParams.put("name", mAq.id(R.id.et_profile_name).getText().toString());
-					updateParams.put("phone", mAq.id(R.id.et_profile_phone).getText().toString());
+					updateParams.put("name", name);
+					updateParams.put("phone", phone);
 
 					lockUI();
 					mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_UPDATE).toString(), updateParams, mUserUpdateJsonResponseListener, this));
 				}
-
 			}
-
 		} else if (v.getId() == R.id.btn_profile_logout)
 		{
 			/**
@@ -234,11 +268,13 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 					ed.commit();
 
 					if (Session.getActiveSession() != null)
+					{
 						if (Session.getActiveSession().isOpened())
 						{
 							Session.getActiveSession().closeAndClearTokenInformation();
 							Session.setActiveSession(null);
 						}
+					}
 
 					showToast(getString(R.string.toast_msg_logouted), Toast.LENGTH_SHORT, true);
 					finish();
@@ -276,7 +312,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-
 			try
 			{
 				if (response == null)
@@ -299,6 +334,8 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 					updateTextField();
 				} else
 				{
+					releaseUiComponent();
+
 					unLockUI();
 					showToast(msg, Toast.LENGTH_LONG, true);
 				}
@@ -325,7 +362,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-
 			try
 			{
 				if (response == null)
@@ -336,22 +372,27 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 				String userEmail = response.getString("email");
 				String userName = response.getString("name");
 				String userPhone = response.getString("phone");
-				
-				if(TextUtils.isEmpty(userEmail) == true || INVALID_NULL.equalsIgnoreCase(userEmail) == true) {
+
+				if (TextUtils.isEmpty(userEmail) == true || INVALID_NULL.equalsIgnoreCase(userEmail) == true)
+				{
 					userEmail = getString(R.string.act_profile_input_email);
 				}
-				
-				if(TextUtils.isEmpty(userName) == true) {
+
+				if (TextUtils.isEmpty(userName) == true)
+				{
 					userName = getString(R.string.act_profile_input_name);
 					prevName = "";
-				} else {
+				} else
+				{
 					prevName = userName;
 				}
-				
-				if(TextUtils.isEmpty(userPhone) == true || INVALID_NULL.equalsIgnoreCase(userPhone) == true) {
+
+				if (TextUtils.isEmpty(userPhone) == true || INVALID_NULL.equalsIgnoreCase(userPhone) == true)
+				{
 					userPhone = getString(R.string.act_profile_input_contact);
 					prevPh = "";
-				} else {
+				} else
+				{
 					prevPh = userPhone;
 				}
 
@@ -361,11 +402,18 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 
 				mAq.id(R.id.et_profile_name).text(prevName);
 				mAq.id(R.id.et_profile_phone).text(prevPh);
-				
-				unLockUI();
+
+				mAq.id(R.id.ll_profile_info_editable).visibility(View.GONE);
+				mAq.id(R.id.ll_profile_info_label).visibility(View.VISIBLE);
+				mAq.id(R.id.ll_profile_info_label).getView().startAnimation(AnimationUtils.loadAnimation(ProfileActivity.this, R.anim.fade_in));
+				mAq.id(R.id.tv_profile_edit).text(getString(R.string.act_profile_modify));
 			} catch (Exception e)
 			{
 				onError(e);
+			} finally
+			{
+				unLockUI();
+				releaseUiComponent();
 			}
 		}
 	};
