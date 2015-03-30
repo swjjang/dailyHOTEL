@@ -52,7 +52,7 @@ public class CreditListAdapter extends ArrayAdapter<Credit>
 			DecimalFormat comma = new DecimalFormat("###,##0");
 			String strBonus = comma.format(Integer.parseInt(element.getBonus()));
 
-			bonus.setText("��" + strBonus);
+			bonus.setText("₩" + strBonus);
 			content.setText(element.getContent());
 			expires.setText(mContext.getString(R.string.prefix_expire_time) + ", " + element.getExpires() + "");
 		}

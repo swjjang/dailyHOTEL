@@ -41,8 +41,8 @@ public class EventWebActivity extends WebViewActivity implements Constants
 	protected void onResume()
 	{
 		super.onResume();
-		// ���� ������ �����ϴ� ��� �ٷ� ����� �� �ֵ���
-		// ������ ĳ�� ���� ���� 
+		// 탭의 정보를 변경하는 경우 바로 적용될 수 있도록
+		// 웹뷰의 캐시 삭제 설정 
 		web.clearCache(true);
 		web.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
 
