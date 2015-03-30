@@ -295,7 +295,10 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 					mAdapter = new BookingListAdapter(mHostActivity, R.layout.list_row_booking, mItems);
 					mListView.setOnItemClickListener(BookingListFragment.this);
 					mListView.setAdapter(mAdapter);
-
+					
+					mListView.setVisibility(View.VISIBLE);
+					mEmptyLayout.setVisibility(View.GONE);
+					
 					unLockUI();
 
 					// flag가 가상계좌 입금 대기에서 날아온경우 
@@ -319,7 +322,8 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 					unLockUI();
 				}
 			} else
-			{//예약한 호텔이 없는 경우 
+			{
+				//예약한 호텔이 없는 경우 
 				mListView.setVisibility(View.GONE);
 				mEmptyLayout.setVisibility(View.VISIBLE);
 				btnLogin.setVisibility(View.INVISIBLE);
