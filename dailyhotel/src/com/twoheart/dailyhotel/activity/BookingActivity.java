@@ -78,7 +78,8 @@ import com.twoheart.dailyhotel.widget.Switch;
 @SuppressLint({ "NewApi", "ResourceAsColor" })
 public class BookingActivity extends BaseActivity implements OnClickListener, OnCheckedChangeListener, android.widget.CompoundButton.OnCheckedChangeListener
 {
-
+	private static final int DEFAULT_AVAILABLE_RESERVES = 20000;
+	
 	private static final int DIALOG_CONFIRM_PAYMENT_CARD = 0;
 	private static final int DIALOG_CONFIRM_PAYMENT_HP = 1;
 	private static final int DIALOG_CONFIRM_PAYMENT_ACCOUNT = 2;
@@ -286,7 +287,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				}
 
 			} //호텔 가격이 만원 이하인 이벤트 호텔에서는 적립금 사용을 못하게 막음. 
-			else if (mPay.isSaleCredit() && (mPay.getOriginalPrice() < 10000) && Integer.parseInt(mPay.getCredit().getBonus().replaceAll(",", "")) != 0)
+			else if (mPay.isSaleCredit() && (mPay.getOriginalPrice() <= DEFAULT_AVAILABLE_RESERVES) && Integer.parseInt(mPay.getCredit().getBonus().replaceAll(",", "")) != 0)
 			{
 				getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_NO_RSERVE).show();
 
