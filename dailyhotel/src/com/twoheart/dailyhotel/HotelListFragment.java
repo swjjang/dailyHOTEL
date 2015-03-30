@@ -202,7 +202,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 			mHostActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
 		} else
 		{
-			if (mRefreshHotelList)
+			if (mRefreshHotelList == true)
 			{
 				lockUI();
 				// 현재 서버 시간을 가져온다

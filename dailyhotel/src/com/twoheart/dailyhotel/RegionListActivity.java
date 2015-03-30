@@ -111,7 +111,7 @@ public class RegionListActivity extends BaseActivity implements OnItemClickListe
 		// 지역을 선택하라는 토스트를 띄워줌.
 		if (sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "").equals(""))
 		{
-			Toast.makeText(getApplicationContext(), getString(R.string.act_list_region_select_region), Toast.LENGTH_SHORT).show();
+			showToast(getString(R.string.act_list_region_select_region), Toast.LENGTH_SHORT, false);
 			return;
 		}
 		super.onBackPressed();

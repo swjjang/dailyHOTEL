@@ -2,8 +2,6 @@ package com.twoheart.dailyhotel.util;
 
 import java.util.regex.Pattern;
 
-import android.content.Context;
-import android.os.Handler;
 import android.text.InputFilter;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -11,6 +9,7 @@ import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 /**
  * @description : Inputfilter class to constrain the EditText changes
@@ -23,11 +22,11 @@ public class StringFilter
 	private static final int ALLOW_ALPHANUMERIC_HANGUL = 1;
 	private static final int TOAST_LELNGTH = 400;
 
-	private Context context = null;
+	private BaseActivity mActivity;
 
-	public StringFilter(Context context)
+	public StringFilter(BaseActivity activity)
 	{
-		this.context = context;
+		mActivity = activity;
 	}
 
 	// Allows only alphanumeric characters. Filters special and hangul
@@ -74,11 +73,11 @@ public class StringFilter
 			{
 				if (mode == ALLOW_ALPHANUMERIC)
 				{
-					Toast.makeText(context.getApplicationContext(), context.getString(R.string.toast_msg_input_error_alphanum), Toast.LENGTH_SHORT).show();
+					mActivity.showToast(mActivity.getString(R.string.toast_msg_input_error_alphanum), Toast.LENGTH_SHORT, false);
 
 				} else
 				{
-					Toast.makeText(context.getApplicationContext(), context.getString(R.string.toast_msg_input_error_alphanumeric_hangul), Toast.LENGTH_SHORT).show();
+					mActivity.showToast(mActivity.getString(R.string.toast_msg_input_error_alphanumeric_hangul), Toast.LENGTH_SHORT, false);
 				}
 
 				keepOriginal = false;
@@ -103,19 +102,19 @@ public class StringFilter
 	}
 
 	// Shows toast with specify delay that is shorter than Toast.LENGTH_SHORT
-	private void showToast(String msg)
-	{
-		final Toast toast = Toast.makeText(context.getApplicationContext(), msg, Toast.LENGTH_LONG);
-		toast.show();
-
-		Handler handler = new Handler();
-		handler.postDelayed(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				toast.cancel();
-			}
-		}, TOAST_LELNGTH);
-	}
+//	private void showToast(String msg)
+//	{
+//		final Toast toast = Toast.makeText(context.getApplicationContext(), msg, Toast.LENGTH_LONG);
+//		toast.show();
+//
+//		Handler handler = new Handler();
+//		handler.postDelayed(new Runnable()
+//		{
+//			@Override
+//			public void run()
+//			{
+//				toast.cancel();
+//			}
+//		}, TOAST_LELNGTH);
+//	}
 }

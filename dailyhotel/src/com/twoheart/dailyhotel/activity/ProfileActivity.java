@@ -166,7 +166,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 		{
 			mAq.id(R.id.et_profile_name).getEditText().requestFocus();
 
-			StringFilter stringFilter = new StringFilter(this);
+			StringFilter stringFilter = new StringFilter(ProfileActivity.this);
 			InputFilter[] allowAlphanumericHangul = new InputFilter[1];
 			allowAlphanumericHangul[0] = stringFilter.allowAlphanumericHangul;
 
