@@ -107,6 +107,13 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 	@Override
 	public void onItemClick(AdapterView<?> parentView, View childView, int position, long id)
 	{
+		if(isLockUiComponent() == true)
+		{
+			return;
+		}
+		
+		lockUiComponent();
+		
 		Intent intent = null;
 		Booking item = mItems.get(position);
 		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "selectBookingConfirmation", item.getHotel_name(), null);
@@ -123,12 +130,17 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 		{
 			intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKING, item);
 			startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING_DETAIL);
+		} else 
+		{
+			releaseUiComponent();
 		}
 	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
+		releaseUiComponent();
+		
 		if (requestCode == CODE_REQUEST_ACTIVITY_BOOKING_DETAIL)
 		{
 			switch (resultCode)
