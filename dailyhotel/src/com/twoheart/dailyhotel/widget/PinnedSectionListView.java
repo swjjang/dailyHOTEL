@@ -39,7 +39,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SectionIndexer;
 
-import com.twoheart.dailyhotel.BuildConfig;
+import com.twoheart.dailyhotel.util.Constants;
 
 /**
  * ListView, which is capable to pin section views at its top while the rest is
@@ -433,9 +433,8 @@ public class PinnedSectionListView extends ListView
 	@Override
 	public void setAdapter(ListAdapter adapter)
 	{
-
 		// assert adapter in debug mode
-		if (BuildConfig.DEBUG && adapter != null)
+		if (Constants.DEBUG && adapter != null)
 		{
 			if (!(adapter instanceof PinnedSectionListAdapter))
 				throw new IllegalArgumentException("Does your adapter implement PinnedSectionListAdapter?");

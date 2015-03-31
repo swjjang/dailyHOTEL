@@ -90,7 +90,7 @@ public class WebViewActivity extends BaseActivity implements OnLongClickListener
 				overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
 				browseToExternalBrowser(URL_STORE_T_DAILYHOTEL);
 
-			} else if (url.contains("facebook.com") | url.contains("naver.com"))
+			} else if (url.contains("facebook.com") || url.contains("naver.com"))
 			{
 				browseToExternalBrowser(url);
 

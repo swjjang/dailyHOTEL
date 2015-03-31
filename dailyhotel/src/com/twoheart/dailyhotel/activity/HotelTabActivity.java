@@ -332,7 +332,6 @@ public class HotelTabActivity extends TabActivity implements OnClickListener
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-
 			try
 			{
 				if (response == null)

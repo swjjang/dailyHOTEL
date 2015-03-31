@@ -22,7 +22,7 @@ public class ExLog
 	/**
 	 * DEBUG
 	 */
-	private static final boolean DEBUG = true;
+	private static final boolean DEBUG = Constants.DEBUG;
 
 	/**
 	 * TAG

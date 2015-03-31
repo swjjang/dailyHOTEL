@@ -80,6 +80,7 @@ import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
@@ -212,8 +213,9 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 		// Facebook SDK를 관리하기 위한 패키지 Hash 값 표시
 		if (DEBUG)
+		{
 			printPackageHashKey();
-
+		}
 	}
 
 	@Override

@@ -75,7 +75,7 @@ public class VolleyHttpClient implements Constants
 		boolean result = false;
 
 		AvailableNetwork availableNetwork = AvailableNetwork.getInstance();
-
+		
 		switch (availableNetwork.getNetType(sContext))
 		{
 			case AvailableNetwork.NET_TYPE_WIFI:
@@ -91,6 +91,11 @@ public class VolleyHttpClient implements Constants
 				break;
 		}
 		return result;
+	}
+	
+	public static boolean hasActiveNetwork()
+	{
+		return AvailableNetwork.getInstance().hasActiveNetwork(sContext);
 	}
 
 	// 서버 response로부터 cookie를 가져와 기억함.
