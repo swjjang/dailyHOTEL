@@ -1,8 +1,14 @@
 package com.twoheart.dailyhotel.activity;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -19,7 +25,10 @@ import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
+import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
+import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
@@ -28,6 +37,8 @@ public class ForgotPwdActivity extends BaseActivity implements Constants, OnClic
 
 	private Button btnForgot;
 	private EditText etForgot;
+
+	private String mEmail;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -62,27 +73,36 @@ public class ForgotPwdActivity extends BaseActivity implements Constants, OnClic
 	@Override
 	public void onClick(View v)
 	{
-
 		if (v.getId() == btnForgot.getId())
 		{
+			if (isLockUiComponent() == true)
+			{
+				return;
+			}
 
-			String strEmail = etForgot.getText().toString();
+			lockUiComponent();
 
-			if (strEmail.equals(""))
+			mEmail = etForgot.getText().toString().trim();
+
+			if (mEmail.equals(""))
 			{
 				showToast(getString(R.string.toast_msg_please_input_email_address), Toast.LENGTH_SHORT, true);
 				return;
 			}
 
-			else if (!isValidEmail(strEmail))
+			else if (!isValidEmail(mEmail))
 			{
 				showToast(getString(R.string.toast_msg_wrong_email_address), Toast.LENGTH_SHORT, true);
 				return;
 			}
 
 			lockUI();
-			mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_FORGOTPWD).append('/').append(strEmail).append("/trim").toString(), null, mUserForgotPwdStringResponseListener, this));
 
+			Map<String, String> params = new HashMap<String, String>();
+
+			params.put("userEmail", mEmail);
+
+			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_CHECK_EMAIL).toString(), params, mUserCheckEmailJsonResponseListener, this));
 		}
 	}
 
@@ -104,24 +124,79 @@ public class ForgotPwdActivity extends BaseActivity implements Constants, OnClic
 	// Listener
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	private DailyHotelStringResponseListener mUserForgotPwdStringResponseListener = new DailyHotelStringResponseListener()
+	private DailyHotelJsonResponseListener mUserCheckEmailJsonResponseListener = new DailyHotelJsonResponseListener()
 	{
-
 		@Override
-		public void onResponse(String url, String response)
+		public void onResponse(String url, JSONObject response)
 		{
-			String result = null;
-
-			if (TextUtils.isEmpty(response) == false)
+			try
 			{
-				result = response.trim();
-			}
+				String result = null;
 
-			if ("done".equalsIgnoreCase(result) == true)
+				if (response != null)
+				{
+					result = response.getString("isSuccess");
+				}
+
+				if ("true".equalsIgnoreCase(result) == true)
+				{
+					if (TextUtils.isEmpty(mEmail) == true)
+					{
+						showToast(getString(R.string.toast_msg_please_input_email_address), Toast.LENGTH_SHORT, true);
+					} else
+					{
+						Map<String, String> params = new HashMap<String, String>();
+						params.put("userEmail", mEmail);
+
+						mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_CHANGE_PW).toString(), params, mUserChangePwJsonResponseListener, ForgotPwdActivity.this));
+					}
+				} else
+				{
+					unLockUI();
+					releaseUiComponent();
+
+					String message = response.getString("msg");
+					SimpleAlertDialog.build(ForgotPwdActivity.this, message, getString(R.string.dialog_btn_text_confirm), null).show();
+				}
+			} catch (JSONException e)
+			{
+				onError(e);
+				unLockUI();
+				releaseUiComponent();
+			}
+		}
+	};
+
+	private DailyHotelJsonResponseListener mUserChangePwJsonResponseListener = new DailyHotelJsonResponseListener()
+	{
+		@Override
+		public void onResponse(String url, JSONObject response)
+		{
+			try
+			{
+				String result = null;
+
+				if (response != null)
+				{
+					result = response.getString("isSuccess");
+				}
+
+				if ("true".equalsIgnoreCase(result) == true)
+				{
+					SimpleAlertDialog.build(ForgotPwdActivity.this, getString(R.string.dialog_msg_sent_email), getString(R.string.dialog_btn_text_confirm), null).show();
+					etForgot.setText("");
+				} else
+				{
+					String message = response.getString("msg");
+					SimpleAlertDialog.build(ForgotPwdActivity.this, message, getString(R.string.dialog_btn_text_confirm), null).show();
+				}
+			} catch (JSONException e)
+			{
+				onError(e);
+			} finally
 			{
 				unLockUI();
-				SimpleAlertDialog.build(ForgotPwdActivity.this, getString(R.string.dialog_msg_sent_email), getString(R.string.dialog_btn_text_confirm), null).show();
-				etForgot.setText("");
+				releaseUiComponent();
 			}
 
 		}
