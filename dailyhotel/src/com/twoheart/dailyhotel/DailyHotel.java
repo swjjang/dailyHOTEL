@@ -118,8 +118,8 @@ public class DailyHotel extends Application implements Constants
 
 	private void initializeFont()
 	{
-		mTypeface = Typeface.createFromAsset(getAssets(), "NanumBarunGothic.ttf.mp3");
-		mBoldTypeface = Typeface.createFromAsset(getAssets(), "NanumBarunGothicBold.ttf.mp3");
+		mTypeface = Typeface.createFromAsset(getAssets(), "NanumBarunGothic.ttf");
+		mBoldTypeface = Typeface.createFromAsset(getAssets(), "NanumBarunGothicBold.ttf");
 	}
 
 	public static Typeface getTypeface()
