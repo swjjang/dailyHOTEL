@@ -3284,10 +3284,262 @@ com.paypal.android.sdk.E:
     private static final long serialVersionUID
 com.paypal.android.sdk.G:
     private static final long serialVersionUID
+com.paypal.android.sdk.H
+com.paypal.android.sdk.I
+com.paypal.android.sdk.J
+com.paypal.android.sdk.K
+com.paypal.android.sdk.L
+com.paypal.android.sdk.M
+com.paypal.android.sdk.N
+com.paypal.android.sdk.O
+com.paypal.android.sdk.P
+com.paypal.android.sdk.Q
+com.paypal.android.sdk.R
+com.paypal.android.sdk.S
+com.paypal.android.sdk.T
+com.paypal.android.sdk.V
+com.paypal.android.sdk.W
+com.paypal.android.sdk.X
+com.paypal.android.sdk.Y
+com.paypal.android.sdk.Z:
+    protected static void a(java.util.Map,java.lang.StringBuilder)
+com.paypal.android.sdk.aa
+com.paypal.android.sdk.ad
+com.paypal.android.sdk.ag
+com.paypal.android.sdk.ah
+com.paypal.android.sdk.ai
+com.paypal.android.sdk.aj
+com.paypal.android.sdk.ak
+com.paypal.android.sdk.am
+com.paypal.android.sdk.ao
+com.paypal.android.sdk.ap
+com.paypal.android.sdk.aq
+com.paypal.android.sdk.ar
+com.paypal.android.sdk.as
+com.paypal.android.sdk.at
+com.paypal.android.sdk.au
+com.paypal.android.sdk.av
+com.paypal.android.sdk.bF
+com.paypal.android.sdk.bG
+com.paypal.android.sdk.bH
+com.paypal.android.sdk.bR
+com.paypal.android.sdk.bS
+com.paypal.android.sdk.bW
+com.paypal.android.sdk.bX
+com.paypal.android.sdk.bY
+com.paypal.android.sdk.bZ
+com.paypal.android.sdk.bd
+com.paypal.android.sdk.be
+com.paypal.android.sdk.bf
+com.paypal.android.sdk.bg
+com.paypal.android.sdk.ca
+com.paypal.android.sdk.cb
+com.paypal.android.sdk.cc
+com.paypal.android.sdk.cd
+com.paypal.android.sdk.ce
+com.paypal.android.sdk.cf
+com.paypal.android.sdk.cg
+com.paypal.android.sdk.ch
+com.paypal.android.sdk.ci
+com.paypal.android.sdk.cj
+com.paypal.android.sdk.ck
+com.paypal.android.sdk.cl
+com.paypal.android.sdk.cm
+com.paypal.android.sdk.cn
+com.paypal.android.sdk.co
+com.paypal.android.sdk.cp
+com.paypal.android.sdk.cq
+com.paypal.android.sdk.cr
+com.paypal.android.sdk.cs
+com.paypal.android.sdk.ct
+com.paypal.android.sdk.cu
+com.paypal.android.sdk.cv
+com.paypal.android.sdk.cw
+com.paypal.android.sdk.cx
+com.paypal.android.sdk.cy
+com.paypal.android.sdk.h
+com.paypal.android.sdk.payments.A
+com.paypal.android.sdk.payments.B
 com.paypal.android.sdk.payments.BuildConfig
-com.paypal.android.sdk.payments.C:
-    abstract boolean e()
+com.paypal.android.sdk.payments.C
+com.paypal.android.sdk.payments.D
+com.paypal.android.sdk.payments.F
+com.paypal.android.sdk.payments.FuturePaymentConsentActivity
+com.paypal.android.sdk.payments.FuturePaymentInfoActivity
+com.paypal.android.sdk.payments.G
+com.paypal.android.sdk.payments.H
+com.paypal.android.sdk.payments.I
+com.paypal.android.sdk.payments.J
+com.paypal.android.sdk.payments.K
+com.paypal.android.sdk.payments.L
+com.paypal.android.sdk.payments.LoginActivity
+com.paypal.android.sdk.payments.M
+com.paypal.android.sdk.payments.N
+com.paypal.android.sdk.payments.O
+com.paypal.android.sdk.payments.P
+com.paypal.android.sdk.payments.PayPalAuthorization:
+    PayPalAuthorization(java.lang.String,java.lang.String,java.lang.String)
+com.paypal.android.sdk.payments.PayPalConfiguration:
+    final java.lang.String a()
+    final java.lang.String b()
+    final java.lang.String c()
+    final java.lang.String d()
+    final java.lang.String e()
+    final boolean f()
+    final java.lang.String g()
+    final java.lang.String h()
+    final boolean i()
+    final boolean j()
+    final java.lang.String k()
+    final java.lang.String l()
+    final android.net.Uri m()
+    final android.net.Uri n()
+    final boolean o()
+    private static void a(boolean,java.lang.String)
+com.paypal.android.sdk.payments.PayPalFuturePaymentActivity
+com.paypal.android.sdk.payments.PayPalOAuthScopes:
+    final java.util.List a()
+    final java.lang.String b()
+com.paypal.android.sdk.payments.PayPalPayment:
+    protected final java.math.BigDecimal a()
+    protected final java.lang.String b()
+    protected final java.lang.String c()
+    protected final java.lang.String d()
+    protected final java.lang.String e()
+    protected final com.paypal.android.sdk.payments.PayPalPaymentDetails f()
+    protected final com.paypal.android.sdk.payments.PayPalItem[] g()
+    protected final java.lang.String h()
+    protected final java.lang.String i()
+    protected final java.lang.String j()
+com.paypal.android.sdk.payments.PayPalPaymentDetails:
+    protected final java.math.BigDecimal a()
+    protected final java.math.BigDecimal b()
+    protected final java.math.BigDecimal c()
+com.paypal.android.sdk.payments.PayPalProfileSharingActivity
+com.paypal.android.sdk.payments.PayPalService
+com.paypal.android.sdk.payments.PaymentActivity
+com.paypal.android.sdk.payments.PaymentConfirmActivity
+com.paypal.android.sdk.payments.PaymentConfirmation:
+    PaymentConfirmation(java.lang.String,com.paypal.android.sdk.payments.PayPalPayment,com.paypal.android.sdk.payments.ProofOfPayment)
+com.paypal.android.sdk.payments.PaymentMethodActivity
+com.paypal.android.sdk.payments.ProfileSharingConsentActivity
+com.paypal.android.sdk.payments.Q
+com.paypal.android.sdk.payments.R
+com.paypal.android.sdk.payments.S
+com.paypal.android.sdk.payments.T
+com.paypal.android.sdk.payments.U
+com.paypal.android.sdk.payments.V
 com.paypal.android.sdk.payments.Version
+com.paypal.android.sdk.payments.W
+com.paypal.android.sdk.payments.X
+com.paypal.android.sdk.payments.Y
+com.paypal.android.sdk.payments.Z
+com.paypal.android.sdk.payments.a
+com.paypal.android.sdk.payments.aA
+com.paypal.android.sdk.payments.aB
+com.paypal.android.sdk.payments.aC
+com.paypal.android.sdk.payments.aD
+com.paypal.android.sdk.payments.aE
+com.paypal.android.sdk.payments.aF
+com.paypal.android.sdk.payments.aG
+com.paypal.android.sdk.payments.aH
+com.paypal.android.sdk.payments.aI
+com.paypal.android.sdk.payments.aJ
+com.paypal.android.sdk.payments.aK
+com.paypal.android.sdk.payments.aL
+com.paypal.android.sdk.payments.aM
+com.paypal.android.sdk.payments.aN
+com.paypal.android.sdk.payments.aO
+com.paypal.android.sdk.payments.aP
+com.paypal.android.sdk.payments.aQ
+com.paypal.android.sdk.payments.aR
+com.paypal.android.sdk.payments.aS
+com.paypal.android.sdk.payments.aT
+com.paypal.android.sdk.payments.aU
+com.paypal.android.sdk.payments.aV
+com.paypal.android.sdk.payments.aW
+com.paypal.android.sdk.payments.aX
+com.paypal.android.sdk.payments.aY
+com.paypal.android.sdk.payments.aZ
+com.paypal.android.sdk.payments.aa
+com.paypal.android.sdk.payments.ab
+com.paypal.android.sdk.payments.ac
+com.paypal.android.sdk.payments.ad
+com.paypal.android.sdk.payments.ai
+com.paypal.android.sdk.payments.aj
+com.paypal.android.sdk.payments.ak
+com.paypal.android.sdk.payments.al
+com.paypal.android.sdk.payments.am
+com.paypal.android.sdk.payments.ar
+com.paypal.android.sdk.payments.as
+com.paypal.android.sdk.payments.at
+com.paypal.android.sdk.payments.au
+com.paypal.android.sdk.payments.av
+com.paypal.android.sdk.payments.az
+com.paypal.android.sdk.payments.b:
+    private android.content.Context a
+    b(android.content.Context)
+    final void a(java.util.Collection)
+    static boolean a(android.app.Activity)
+    static android.app.AlertDialog a(android.app.Activity,com.paypal.android.sdk.bV,com.paypal.android.sdk.bV,android.content.DialogInterface$OnClickListener)
+    static android.app.Dialog a(android.content.Context,com.paypal.android.sdk.bV,com.paypal.android.sdk.bV)
+    static void a(android.app.Activity,java.lang.String,int)
+    static android.app.Dialog a(android.app.Activity,com.paypal.android.sdk.bV,android.os.Bundle,int)
+    static android.app.Dialog a(android.app.Activity,com.paypal.android.sdk.bV,android.os.Bundle,android.content.DialogInterface$OnClickListener)
+    static android.app.Dialog a(android.app.Activity,android.content.DialogInterface$OnClickListener)
+    static android.app.Dialog a(android.app.Activity,com.paypal.android.sdk.bV,android.os.Bundle)
+    static void a(android.widget.TextView,java.lang.String)
+    static void a(android.app.Activity,android.widget.TextView,com.paypal.android.sdk.bV)
+    static android.content.Intent b(android.app.Activity)
+    static void a(android.app.Activity,com.paypal.android.sdk.payments.aD,int,int,int)
+    static boolean a(java.lang.String,java.lang.String,java.lang.String)
+com.paypal.android.sdk.payments.bC:
+    bC(android.text.style.URLSpan,com.paypal.android.sdk.payments.d)
+com.paypal.android.sdk.payments.ba
+com.paypal.android.sdk.payments.bb
+com.paypal.android.sdk.payments.bc
+com.paypal.android.sdk.payments.bd
+com.paypal.android.sdk.payments.be
+com.paypal.android.sdk.payments.bf
+com.paypal.android.sdk.payments.bh
+com.paypal.android.sdk.payments.bi
+com.paypal.android.sdk.payments.bj
+com.paypal.android.sdk.payments.bk
+com.paypal.android.sdk.payments.bl
+com.paypal.android.sdk.payments.bm
+com.paypal.android.sdk.payments.bn
+com.paypal.android.sdk.payments.bo
+com.paypal.android.sdk.payments.bp
+com.paypal.android.sdk.payments.bq
+com.paypal.android.sdk.payments.br
+com.paypal.android.sdk.payments.bs
+com.paypal.android.sdk.payments.bt:
+    bt(com.paypal.android.sdk.ah)
+    private static java.util.List a(java.util.Map)
+com.paypal.android.sdk.payments.by
+com.paypal.android.sdk.payments.c:
+    c(android.text.style.URLSpan,android.app.Activity,java.lang.Class,com.paypal.android.sdk.payments.d,com.paypal.android.sdk.payments.E)
+com.paypal.android.sdk.payments.e
+com.paypal.android.sdk.payments.f
+com.paypal.android.sdk.payments.g
+com.paypal.android.sdk.payments.h
+com.paypal.android.sdk.payments.i
+com.paypal.android.sdk.payments.j
+com.paypal.android.sdk.payments.k
+com.paypal.android.sdk.payments.l
+com.paypal.android.sdk.payments.n
+com.paypal.android.sdk.payments.o
+com.paypal.android.sdk.payments.p
+com.paypal.android.sdk.payments.q
+com.paypal.android.sdk.payments.r
+com.paypal.android.sdk.payments.s
+com.paypal.android.sdk.payments.t
+com.paypal.android.sdk.payments.u
+com.paypal.android.sdk.payments.v
+com.paypal.android.sdk.payments.w
+com.paypal.android.sdk.payments.x
+com.paypal.android.sdk.payments.y
+com.paypal.android.sdk.payments.z
 com.readystatesoftware.systembartint.BuildConfig
 com.readystatesoftware.systembartint.SystemBarTintManager$SystemBarConfig:
     private static final java.lang.String STATUS_BAR_HEIGHT_RES_NAME
