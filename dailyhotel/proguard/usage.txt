@@ -651,7 +651,7 @@ com.android.volley.VolleyLog$MarkerLog:
 com.android.volley.toolbox.AndroidAuthenticator
 com.android.volley.toolbox.Authenticator
 com.android.volley.toolbox.BasicNetwork:
-    204:206:protected void logError(java.lang.String,java.lang.String,long)
+    222:224:protected void logError(java.lang.String,java.lang.String,long)
 com.android.volley.toolbox.ClearCacheRequest
 com.android.volley.toolbox.DiskBasedCache:
     private static final int DEFAULT_DISK_USAGE_BYTES
@@ -3295,31 +3295,26 @@ com.readystatesoftware.systembartint.SystemBarTintManager$SystemBarConfig:
     private static final java.lang.String NAV_BAR_HEIGHT_LANDSCAPE_RES_NAME
     private static final java.lang.String NAV_BAR_WIDTH_RES_NAME
     private static final java.lang.String SHOW_NAV_BAR_RES_NAME
-com.twoheart.dailyhotel.BookingListFragment:
-    private static final java.lang.String TAG
 com.twoheart.dailyhotel.BuildConfig
 com.twoheart.dailyhotel.CreditFragment:
-    private static final java.lang.String TAG
-    184:188:private void alert(java.lang.String)
+    187:188:private void alert(java.lang.String)
 com.twoheart.dailyhotel.CreditListFragment:
     private static final java.lang.String KEY_BUNDLE_ARGUMENTS_CREDITLIST
 com.twoheart.dailyhotel.DailyHotel:
-    119:121:private void initializeVolleyImageLoader()
+    115:117:private void initializeVolleyImageLoader()
 com.twoheart.dailyhotel.HotelListFragment:
-    private static final java.lang.String TAG
     private java.util.List mJaRegionList
     private java.util.Map mJaRegionDetailList
     private android.location.LocationManager mLocationManager
-    320:345:private android.app.Dialog getEventPopUpDialog()
-    794:816:private java.lang.String getCountryName()
-    836:849:private android.location.Location getLastKnownLocation()
-com.twoheart.dailyhotel.HotelListFragment$2
+    334:361:private android.app.Dialog getEventPopUpDialog()
+    421:447:private java.lang.String getCountryName()
+    472:488:private android.location.Location getLastKnownLocation()
+com.twoheart.dailyhotel.HotelListFragment$8
 com.twoheart.dailyhotel.HotelListFragment$WebViewClientClass
 com.twoheart.dailyhotel.MainActivity:
-    private static final java.lang.String TAG
     private static final java.lang.String TAG_FRAGMENT_RATING_HOTEL
     protected java.util.List mFragments
-    457:465:private void initializeFragments()
+    371:381:private void initializeFragments()
 com.twoheart.dailyhotel.Manifest
 com.twoheart.dailyhotel.Manifest$permission
 com.twoheart.dailyhotel.R$anim
@@ -3336,61 +3331,34 @@ com.twoheart.dailyhotel.R$menu
 com.twoheart.dailyhotel.R$string
 com.twoheart.dailyhotel.R$style
 com.twoheart.dailyhotel.WaitTimerFragment:
-    private static final java.lang.String TAG
     private static final java.lang.String KEY_BUNDLE_ARGUMENTS_SALETIME
-com.twoheart.dailyhotel.activity.AboutActivity:
-    private static final java.lang.String TAG
 com.twoheart.dailyhotel.activity.BookingActivity:
-    private static final java.lang.String TAG
+    private static final int DEFAULT_AVAILABLE_RESERVES
     private static final int DIALOG_CONFIRM_PAYMENT_CARD
     private static final int DIALOG_CONFIRM_PAYMENT_HP
     private static final int DIALOG_CONFIRM_PAYMENT_ACCOUNT
     private static final int DIALOG_CONFIRM_PAYMENT_NO_RSERVE
-    423:452:private void moveToLoginProcess()
-com.twoheart.dailyhotel.activity.BookingTabActivity:
-    private static final java.lang.String TAG
+    440:466:private void moveToLoginProcess()
 com.twoheart.dailyhotel.activity.EventWebActivity:
     private static final java.lang.String TAG
-com.twoheart.dailyhotel.activity.FAQActivity:
-    private static final java.lang.String TAG
-com.twoheart.dailyhotel.activity.ForgotPwdActivity:
-    private static final java.lang.String TAG
-com.twoheart.dailyhotel.activity.HotelTabActivity:
-    private static final java.lang.String TAG
 com.twoheart.dailyhotel.activity.ImageDetailActivity:
-    private static final java.lang.String TAG
-com.twoheart.dailyhotel.activity.LoginActivity:
-    private static final java.lang.String TAG
-com.twoheart.dailyhotel.activity.NoticeActivity:
     private static final java.lang.String TAG
 com.twoheart.dailyhotel.activity.PaymentActivity:
     private static final int REQUEST_CODE_PAYMENT
     private static final java.lang.String CONFIG_ENVIRONMENT
     private static final java.lang.String CONFIG_CLIENT_ID
-    100:112:private com.paypal.android.sdk.payments.PayPalPayment getThingToBuy(java.lang.String,com.twoheart.dailyhotel.model.Pay)
-    456:482:private void proccessPayPalActivityResult(int,int,android.content.Intent)
+    99:111:private com.paypal.android.sdk.payments.PayPalPayment getThingToBuy(java.lang.String,com.twoheart.dailyhotel.model.Pay)
+    435:465:private void proccessPayPalActivityResult(int,int,android.content.Intent)
 com.twoheart.dailyhotel.activity.PaymentActivity$HtmlObserver
-com.twoheart.dailyhotel.activity.PaymentWaitActivity:
-    private static final java.lang.String TAG
-com.twoheart.dailyhotel.activity.PrivacyActivity:
-    private static final java.lang.String TAG
-com.twoheart.dailyhotel.activity.SignupActivity:
-    private static final java.lang.String TAG
 com.twoheart.dailyhotel.activity.SplashActivity:
-    private static final java.lang.String TAG
     private static final int VALUE_WEB_API_RESPONSE_NEW_EVENT_NOTIFY
     private static final int VALUE_WEB_API_RESPONSE_NEW_EVENT_NONE
     private static final int DURING_SPLASH_ACTIVITY_SHOW
     private com.google.android.gms.gcm.GoogleCloudMessaging mGcm
     protected java.util.HashMap regPushParams
-com.twoheart.dailyhotel.activity.TermActivity:
-    private static final java.lang.String TAG
 com.twoheart.dailyhotel.activity.VersionActivity:
     private static final java.lang.String TAG
-com.twoheart.dailyhotel.activity.ZoomMapActivity:
-    private static final java.lang.String TAG
 com.twoheart.dailyhotel.fragment.BookingTabBookingFragment:
-    private static final java.lang.String TAG
     private static final java.lang.String KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL
     private static final java.lang.String KEY_BUNDLE_ARGUMENTS_BOOKING
 com.twoheart.dailyhotel.fragment.HotelTabBookingFragment:
@@ -3415,12 +3383,20 @@ com.twoheart.dailyhotel.fragment.TabInfoFragment:
     private static final java.lang.String TAG
     private static final java.lang.String KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL
 com.twoheart.dailyhotel.fragment.TabMapFragment:
-    private static final java.lang.String TAG
     private static final java.lang.String KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL
 com.twoheart.dailyhotel.util.BitmapLruCache
+com.twoheart.dailyhotel.util.Crypto:
+    private static final java.lang.String HEX
 com.twoheart.dailyhotel.util.DeviceResolutionUtil
+com.twoheart.dailyhotel.util.ExLog:
+    private static final boolean DEBUG
+    private static final java.lang.String TAG
 com.twoheart.dailyhotel.util.KakaoLinkManager:
     private static final java.lang.String TAG
+com.twoheart.dailyhotel.util.StringFilter:
+    private static final int ALLOW_ALPHANUMERIC
+    private static final int ALLOW_ALPHANUMERIC_HANGUL
+    private static final int TOAST_LELNGTH
 com.twoheart.dailyhotel.util.VolleyImageLoader
 com.twoheart.dailyhotel.util.network.VolleyHttpClient:
     private static final java.lang.String KEY_DAILYHOTEL_COOKIE
@@ -3430,7 +3406,7 @@ com.twoheart.dailyhotel.util.network.request.DailyHotelRequest:
 com.twoheart.dailyhotel.util.ui.AllCapsTransformationMethod
 com.twoheart.dailyhotel.util.ui.BaseActivity:
     private static final java.lang.String TAG
-    303:303:protected void chgClickable(android.view.View)
+    395:396:protected void chgClickable(android.view.View)
 com.twoheart.dailyhotel.util.ui.OnLoadListener
 com.twoheart.dailyhotel.widget.Switch:
     private static final int TOUCH_MODE_IDLE
