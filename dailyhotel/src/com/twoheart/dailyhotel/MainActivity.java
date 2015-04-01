@@ -41,6 +41,7 @@ import android.os.Handler;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
 import android.util.Base64;
@@ -80,7 +81,6 @@ import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
-import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
@@ -527,9 +527,14 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 				break;
 		}
 
-		delayedReplace(indexLastFragment);
-		drawerLayout.closeDrawer(drawerList);
-
+		if(drawerLayout.isDrawerOpen(GravityCompat.START) == true)
+		{
+			delayedReplace(indexLastFragment);
+			drawerLayout.closeDrawer(drawerList);
+		} else
+		{
+			replaceFragment(getFragment(indexLastFragment));
+		}
 	}
 
 	/**
