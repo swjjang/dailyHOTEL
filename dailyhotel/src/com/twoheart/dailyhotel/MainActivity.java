@@ -71,6 +71,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.readystatesoftware.systembartint.SystemBarTintManager.SystemBarConfig;
 import com.twoheart.dailyhotel.activity.SplashActivity;
+import com.twoheart.dailyhotel.fragment.HotelMainFragment;
 import com.twoheart.dailyhotel.fragment.RatingHotelFragment;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.HotelDetail;
@@ -392,7 +393,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		switch (index)
 		{
 			case 0:
-				return new HotelListFragment();
+				return new HotelMainFragment();
 			case 1:
 				return new BookingListFragment();
 			case 2:
