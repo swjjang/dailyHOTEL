@@ -142,7 +142,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 			@Override
 			public void onCompleted(GraphUser user, Response response)
 			{
-
 				if (user != null)
 				{
 					TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
@@ -152,7 +151,9 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 					try
 					{
 						if (user.getProperty("email") != null)
+						{
 							userEmail = user.getProperty("email").toString();
+						}
 					} catch (Exception e)
 					{
 						ExLog.e(e.toString());
@@ -167,7 +168,9 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 					loginParams = new HashMap<String, String>();
 
 					if (userEmail != null)
+					{
 						snsSignupParams.put("email", userEmail);
+					}
 
 					if (userId != null)
 					{
@@ -185,61 +188,53 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 					}
 
 					if (userName != null)
+					{
 						snsSignupParams.put("name", userName);
+					}
 
 					if (deviceId != null)
+					{
 						snsSignupParams.put("device", deviceId);
-
-					String store = "";
-					if (RELEASE_STORE == Stores.N_STORE)
-					{
-						store = "Nstore";
-					} else if (RELEASE_STORE == Stores.PLAY_STORE)
-					{
-						store = "PlayStore";
-					} else if (RELEASE_STORE == Stores.T_STORE)
-					{
-						store = "Tstore";
 					}
-					snsSignupParams.put("marketType", store);
 
-					unLockUI(); // 페이스북 연결 종료 
-
-					lockUI(); // 서버와 연결 시작 
+					snsSignupParams.put("marketType", RELEASE_STORE.getName());
 
 					mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(), loginParams, mUserLoginJsonResponseListener, LoginActivity.this));
 
 					fbSession.closeAndClearTokenInformation();
 				}
 			}
-
 		});
 
 		// 페이스북 연결 시작
 		lockUI();
 		request.executeAsync();
-
 	}
 
 	@Override
 	public void onClick(View v)
 	{
 		if (v.getId() == tvForgotPwd.getId())
-		{ // 비밀번호 찾기
+		{
+			// 비밀번호 찾기
 			Intent i = new Intent(this, ForgotPwdActivity.class);
 			startActivity(i);
 			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
 		} else if (v.getId() == tvSignUp.getId())
-		{ // 회원가입
+		{
+			// 회원가입
 			Intent i = new Intent(this, SignupActivity.class);
 			startActivityForResult(i, CODE_REQEUST_ACTIVITY_SIGNUP);
 			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
 		} else if (v.getId() == btnLogin.getId())
-		{ // 로그인
-			if (!isBlankFields())
+		{
+			// 로그인
+			if (isBlankFields() == false)
+			{
 				return;
+			}
 
 			String md5 = Crypto.encrypt(etPwd.getText().toString()).replace("\n", "");
 
@@ -276,10 +271,15 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 		public void call(Session session, SessionState state, Exception exception)
 		{
 			if (state.isOpened())
+			{
 				makeMeRequest(session);
-			else if (state.isClosed())
+			} else if (state.isClosed())
+			{
 				session.closeAndClearTokenInformation();
-
+			} else
+			{
+				unLockUI();
+			}
 			// 사용자 취소 시
 			//			if (exception instanceof FacebookOperationCanceledException 
 			//					|| exception instanceof FacebookAuthorizationException) {
@@ -313,7 +313,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 		// 자동 로그인 체크시
 		if (cbxAutoLogin.isChecked())
 		{
-
 			String id = loginParams.get("email");
 			String pwd = loginParams.get("pw");
 			String accessToken = loginParams.get("accessToken");
@@ -334,7 +333,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 			ed.putString(KEY_PREFERENCE_USER_PWD, pwd);
 			ed.commit();
 		}
-
 	}
 
 	@Override
@@ -414,10 +412,16 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 			protected void onPostExecute(String regId)
 			{
 				// 이 값을 서버에 등록하기.
-				unLockUI();
 				// gcm id가 없을 경우 스킵.
 				if (regId == null || regId.isEmpty())
+				{
+					unLockUI();
+
+					showToast(getString(R.string.toast_msg_logoined), Toast.LENGTH_SHORT, true);
+					setResult(RESULT_OK);
+					finish();
 					return;
+				}
 
 				regPushParams = new HashMap<String, String>();
 
@@ -427,7 +431,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
 				ExLog.d("params for register push id : " + regPushParams.toString());
 
-				lockUI();
 				mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_GCM_REGISTER).toString(), regPushParams, mGcmRegisterJsonResponseListener, LoginActivity.this));
 			}
 		}.execute();
@@ -457,10 +460,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-
-			// 서버와 연결 종료
-			unLockUI();
-
 			try
 			{
 				String msg = null;
@@ -477,21 +476,22 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
 					if (sharedPreference.getBoolean("Facebook SignUp", false) == true)
 					{
-						lockUI();
-						mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, LoginActivity.this));
-					}
-
-					if (getGcmId().isEmpty() == true)
-					{
-						// 로그인에 성공하였으나 기기에 GCM을 등록하지 않은 유저의 경우 인덱스를 가져와 push_id를 업그레이드 하는 절차 시작.
-						lockUI();
 						mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, LoginActivity.this));
 					} else
 					{
-						// 로그인에 성공 하였고 GCM 코드 또한 이미 기기에 저장되어 있는 상태이면 종료. 
-						showToast(getString(R.string.toast_msg_logoined), Toast.LENGTH_SHORT, true);
-						setResult(RESULT_OK);
-						finish();
+						if (getGcmId().isEmpty() == true)
+						{
+							// 로그인에 성공하였으나 기기에 GCM을 등록하지 않은 유저의 경우 인덱스를 가져와 push_id를 업그레이드 하는 절차 시작.
+							mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, LoginActivity.this));
+						} else
+						{
+							unLockUI();
+
+							// 로그인에 성공 하였고 GCM 코드 또한 이미 기기에 저장되어 있는 상태이면 종료. 
+							showToast(getString(R.string.toast_msg_logoined), Toast.LENGTH_SHORT, true);
+							setResult(RESULT_OK);
+							finish();
+						}
 					}
 
 					Editor editor = sharedPreference.edit();
@@ -499,27 +499,26 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 					editor.apply();
 				} else
 				{
-
 					if (loginParams.containsKey("accessToken"))
-					{ // SNS 로그인인데
+					{
+						// SNS 로그인인데
 						// 실패했을 경우 회원가입 시도
-						lockUI();
 						cbxAutoLogin.setChecked(true); // 회원가입의 경우 기본으로 자동 로그인인
 						// 정책 상.
 						mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNUP).toString(), snsSignupParams, mUserSignupJsonResponseListener, LoginActivity.this));
-
-					}
-
-					// 로그인 실패
-					// 실패 msg 출력
-					else if (response.length() > 1)
+					} else if (response.length() > 1)
 					{
+						// 로그인 실패
+						// 실패 msg 출력
+
+						unLockUI();
 						msg = response.getString("msg");
 						SimpleAlertDialog.build(LoginActivity.this, msg, getString(R.string.dialog_btn_text_confirm), null).show();
 					}
 				}
 			} catch (Exception e)
 			{
+				unLockUI();
 				onError(e);
 			}
 		}
@@ -527,13 +526,9 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
 	private DailyHotelJsonResponseListener mUserInfoJsonResponseListener = new DailyHotelJsonResponseListener()
 	{
-
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-
-			unLockUI();
-
 			try
 			{
 				if (response == null)
@@ -565,19 +560,28 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
 					ExLog.d("facebook signup is completed.");
 
-					return;
+					// Facebook은 한번에 처리하기 위해서.
+					if (getGcmId().isEmpty() == false)
+					{
+						unLockUI();
+
+						// 로그인에 성공 하였고 GCM 코드 또한 이미 기기에 저장되어 있는 상태이면 종료. 
+						showToast(getString(R.string.toast_msg_logoined), Toast.LENGTH_SHORT, true);
+						setResult(RESULT_OK);
+						finish();
+						return;
+					}
 				}
 
-				if (isGoogleServiceAvailable())
+				if (isGoogleServiceAvailable() == true)
 				{
 					ExLog.d("call regGcmId");
-					lockUI();
 					mGcm = GoogleCloudMessaging.getInstance(LoginActivity.this);
 					regGcmId(response.getInt("idx"));
 				}
-
 			} catch (Exception e)
 			{
+				unLockUI();
 				onError(e);
 			}
 		}
@@ -589,9 +593,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-
-			unLockUI();
-
 			try
 			{
 				if (response == null)
@@ -605,8 +606,8 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 				ExLog.d("user/join? " + response.toString());
 
 				if (result.equals("true") == true)
-				{ // 회원가입에 성공하면 이제 로그인 절차
-					lockUI();
+				{
+					// 회원가입에 성공하면 이제 로그인 절차
 					Editor ed = sharedPreference.edit();
 					ed.putBoolean("Facebook SignUp", true);
 					ed.commit();
@@ -614,12 +615,15 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 					mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(), loginParams, mUserLoginJsonResponseListener, LoginActivity.this));
 				} else
 				{
+					unLockUI();
+
 					loginParams.clear();
 					showToast(msg, Toast.LENGTH_LONG, true);
 				}
 
 			} catch (Exception e)
 			{
+				unLockUI();
 				onError(e);
 			}
 
@@ -633,8 +637,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 		public void onResponse(String url, JSONObject response)
 		{
 			// 로그인 성공 - 유저 정보(인덱스) 가져오기 - 유저의 GCM키 등록 완료 한 경우 프리퍼런스에 키 등록후 종료
-			unLockUI();
-
 			try
 			{
 				if (response == null)
@@ -657,6 +659,9 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 			} catch (JSONException e)
 			{
 				ExLog.e(e.toString());
+			} finally
+			{
+				unLockUI();
 			}
 		}
 	};

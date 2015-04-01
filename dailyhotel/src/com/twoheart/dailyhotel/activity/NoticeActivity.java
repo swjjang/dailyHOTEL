@@ -44,7 +44,7 @@ public class NoticeActivity extends BaseActivity
 					mListView.collapseGroup(mExpandedChildPos);
 				}
 				mExpandedChildPos = groupPosition;
-				mListView.setSelectionFromTop(mExpandedChildPos, 0); // Ŭ���� �׷�並 ž���� �α� ���Ͽ� �̵�.
+				mListView.setSelectionFromTop(mExpandedChildPos, 0);
 				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectNotice", mList.get(groupPosition).getSubject(), (long) (groupPosition + 1));
 			}
 		});

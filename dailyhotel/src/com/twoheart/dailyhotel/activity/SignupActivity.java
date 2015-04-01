@@ -161,21 +161,10 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 			signupParams.put("pw", etPwd.getText().toString());
 			signupParams.put("name", etName.getText().toString());
 			signupParams.put("phone", etPhone.getText().toString());
+			
 			TelephonyManager tManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 			signupParams.put("device", tManager.getDeviceId());
-
-			String store = "";
-			if (RELEASE_STORE == Stores.N_STORE)
-			{
-				store = "Nstore";
-			} else if (RELEASE_STORE == Stores.PLAY_STORE)
-			{
-				store = "PlayStore";
-			} else if (RELEASE_STORE == Stores.T_STORE)
-			{
-				store = "Tstore";
-			}
-			signupParams.put("marketType", store);
+			signupParams.put("marketType", RELEASE_STORE.getName());
 
 			String recommender = etRecommender.getText().toString().trim();
 			if (!recommender.equals(""))
