@@ -26,6 +26,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -86,12 +87,20 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 		super.onStart();
 	}
 
-	// 기기의 번호를 받아옴
+	/**
+	 * 기기의 번호를 받아옴
+	 */
 	public void getPhoneNumber()
 	{
 		TelephonyManager telManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 		String phoneNum = telManager.getLine1Number();
-		etPhone.setText(phoneNum);
+		
+		if(TextUtils.isEmpty(phoneNum) == false)
+		{
+			etPhone.setText(phoneNum);
+			etEmail.requestFocus();
+		}
+
 	}
 
 	public boolean checkInput()
