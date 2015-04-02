@@ -393,6 +393,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		switch (index)
 		{
 			case 0:
+//				return new HotelListFragment();
 				return new HotelMainFragment();
 			case 1:
 				return new BookingListFragment();

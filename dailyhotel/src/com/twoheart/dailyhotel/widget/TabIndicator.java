@@ -11,8 +11,10 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.SparseArray;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -72,42 +74,70 @@ public class TabIndicator extends LinearLayout implements OnClickListener
 
 	public void setData(ArrayList<String> dataList, boolean isSelectTab)
 	{
-		for (int i = 0; i < dataList.size(); i++)
+		if(dataList == null)
 		{
-			TabIndicatorItem tab = new TabIndicatorItem(getContext());
-			tab.setId(i);
-			tab.setMainText(dataList.get(i));
-			tab.setOnClickListener(this);
-			mTabArrray.put(i, tab);
-			LayoutParams lp = new LayoutParams(0, LayoutParams.MATCH_PARENT);
-			lp.weight = 1;
-			this.addView(tab, lp);
+			return;
+		}
+		
+		int size = dataList.size();
+		TabIndicatorItem tabIndicatorItem;
+		LayoutParams layoutParams;
+		
+		for (int i = 0; i < size; i++)
+		{
+			tabIndicatorItem = new TabIndicatorItem(getContext());
+			tabIndicatorItem.setId(i);
+			tabIndicatorItem.setMainText(dataList.get(i));
+			tabIndicatorItem.setOnClickListener(this);
+			
+			mTabArrray.put(i, tabIndicatorItem);
+			
+			layoutParams = new LayoutParams(0, LayoutParams.MATCH_PARENT);
+			layoutParams.weight = 1;
+			
+			this.addView(tabIndicatorItem, layoutParams);
 		}
 		mTabArrray.get(0).setSelected(true);
 	}
 	
 	public void setData(ArrayList<String> dataList, ArrayList<String> subList, boolean isSelectTab)
 	{
-		for (int i = 0; i < dataList.size(); i++)
+		if(dataList == null || subList == null || dataList.size() != subList.size())
 		{
-			TabIndicatorItem tab = new TabIndicatorItem(getContext());
-			tab.setId(i);
-			tab.setMainText(dataList.get(i));
-			tab.setOnClickListener(this);
-			mTabArrray.put(i, tab);
-			LayoutParams lp = new LayoutParams(0, LayoutParams.MATCH_PARENT);
-			lp.weight = 1;
-			this.addView(tab, lp);
+			return;
 		}
+		
+		int size = dataList.size();
+		TabIndicatorItem tabIndicatorItem;
+		LayoutParams layoutParams;
+		
+		for (int i = 0; i < size; i++)
+		{
+			tabIndicatorItem = new TabIndicatorItem(getContext());
+			tabIndicatorItem.setId(i);
+			tabIndicatorItem.setMainText(dataList.get(i));
+			
+			String subText = subList.get(i);
+			
+			if(TextUtils.isEmpty(subText) == true)
+			{
+				tabIndicatorItem.setSubTextEnable(false);
+			}else
+			{
+				tabIndicatorItem.setSubTextEnable(true);
+			}
+			
+			tabIndicatorItem.setSubText(subText);
+			tabIndicatorItem.setOnClickListener(this);
+			mTabArrray.put(i, tabIndicatorItem);
+			
+			layoutParams = new LayoutParams(0, LayoutParams.MATCH_PARENT);
+			layoutParams.weight = 1;
+			
+			this.addView(tabIndicatorItem, layoutParams);
+		}
+		
 		mTabArrray.get(0).setSelected(true);
-	}
-
-	public void setSelectedItemUnderLineColor(int color)
-	{
-		for (int i = 0; i < mTabArrray.size(); i++)
-		{
-			mTabArrray.get(i).setSelectedUnderLine(color);
-		}
 	}
 
 	public void setTextTypeface(int style)
@@ -239,7 +269,6 @@ public class TabIndicator extends LinearLayout implements OnClickListener
 	{
 		private TextView mTitleTextView;
 		private TextView mDayTextView;
-		private View mSelectedUnderLineView;
 
 		public TabIndicatorItem(Context context)
 		{
@@ -262,12 +291,14 @@ public class TabIndicator extends LinearLayout implements OnClickListener
 
 		private void init()
 		{
+			setBackgroundResource(R.drawable.selector_tab_indicator);
+			setGravity(Gravity.CENTER);
+			
 			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			View viewv = inflater.inflate(R.layout.tab_indicator_item, this, true);
+			View view = inflater.inflate(R.layout.hotel_main_tab_view, this, true);
 
-			mTitleTextView = (TextView) viewv.findViewById(R.id.tab_indicator_main_text);
-			mDayTextView = (TextView) viewv.findViewById(R.id.tab_indicator_sub_text);
-			mSelectedUnderLineView = viewv.findViewById(R.id.tab_indicator_under_line);
+			mTitleTextView = (TextView) view.findViewById(R.id.tab_indicator_main_text);
+			mDayTextView = (TextView) view.findViewById(R.id.tab_indicator_sub_text);
 		}
 
 		public void setMainTextColor(int color)
@@ -316,24 +347,13 @@ public class TabIndicator extends LinearLayout implements OnClickListener
 			mDayTextView.setText(text);
 		}
 
-		public void setSelectedUnderLine(int color)
-		{
-			mSelectedUnderLineView.setBackgroundColor(color);
-		}
-
 		@Override
 		public void setSelected(boolean selected)
 		{
+			super.setSelected(selected);
+			
 			mTitleTextView.setSelected(selected);
 			mDayTextView.setSelected(selected);
-			
-			if (selected)
-			{
-				mSelectedUnderLineView.setVisibility(View.VISIBLE);
-			} else
-			{
-				mSelectedUnderLineView.setVisibility(View.GONE);
-			}
 		}
 	}
 }

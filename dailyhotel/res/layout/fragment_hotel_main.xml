@@ -7,11 +7,11 @@
     <com.twoheart.dailyhotel.widget.TabIndicator
         android:id="@+id/tabindicator"
         android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:background="@color/my_giftbox_tab_bg" />
+        android:layout_height="48dp"
+        android:background="@color/tab_background" />
 
     <com.twoheart.dailyhotel.widget.FragmentViewPager
-        android:id="@+id/viewpager"
+        android:id="@+id/fragmentViewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

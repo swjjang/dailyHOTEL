@@ -69,7 +69,7 @@ public class FragmentViewPager extends LinearLayout
 	private void init(Context context)
 	{
 		mViewPager = new CustomViewPager(context);
-		mViewPager.setId(100); //http://stackoverflow.com/questions/15262261/android-content-res-resourcesnotfoundexception-unable-to-find-resource-id-0xf 참고
+		mViewPager.setId(100);
 		mViewPager.setOnPageChangeListener(mOnPageChangeListener);
 
 		this.addView(mViewPager);
@@ -214,20 +214,16 @@ public class FragmentViewPager extends LinearLayout
 
 	private class CustomViewPager extends ViewPager
 	{
-		private boolean mEnable;
+		private boolean mEnable = false;
 
 		public CustomViewPager(Context context)
 		{
 			super(context);
-
-			mEnable = true;
 		}
 
 		public CustomViewPager(Context context, AttributeSet attrs)
 		{
 			super(context, attrs);
-
-			mEnable = true;
 		}
 
 		@Override

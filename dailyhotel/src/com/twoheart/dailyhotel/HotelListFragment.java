@@ -68,6 +68,7 @@ import com.twoheart.dailyhotel.activity.EventWebActivity;
 import com.twoheart.dailyhotel.activity.HotelTabActivity;
 import com.twoheart.dailyhotel.adapter.HotelListAdapter;
 import com.twoheart.dailyhotel.adapter.RegionListAdapter;
+import com.twoheart.dailyhotel.fragment.HotelMainFragment;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
@@ -102,8 +103,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	private ImageView ivNewEvent;
 	private LinearLayout btnListViewHeader;
 
-	private boolean mRefreshHotelList;
-
 	private int mKakaoHotelIdx = -1;
 	private String mKakaoHotelRegion;
 
@@ -116,7 +115,9 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	private boolean event;
 	private int seoulIdx = 0;
 	private int tokyoIdx = 0;
-
+	
+	private HotelMainFragment.UserActionListener mUserActionListener;
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
@@ -137,7 +138,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		}
 
 		mDailyHotelSaleTime = new SaleTime();
-		mRefreshHotelList = true;
 
 		mHotelListView = (PinnedSectionListView) view.findViewById(R.id.listview_hotel_list);
 		mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
@@ -202,102 +202,41 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 			mHostActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
 		} else
 		{
-			if (mRefreshHotelList == true)
-			{
-				lockUI();
-				// 현재 서버 시간을 가져온다
-				// 사용자 시간은 변경가능성 있음. 서버시간을 바탕으로 판매시간 체크 
-				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_TIME).toString(), null, mAppTimeStringResponseListener, mHostActivity));
-			}
+//			if (mRefreshHotelList == true)
+//			{
+//				lockUI();
+//				// 현재 서버 시간을 가져온다
+//				// 사용자 시간은 변경가능성 있음. 서버시간을 바탕으로 판매시간 체크 
+//				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_TIME).toString(), null, mAppTimeStringResponseListener, mHostActivity));
+//			}
 		}
-	}
-
-	@Override
-	public void onPause()
-	{
-		mRefreshHotelList = true;
-		super.onPause();
 	}
 
 	// 호텔 클릭시
 	@Override
 	public void onItemClick(AdapterView<?> parentView, View childView, int position, long id)
 	{
-		if (isLockUiComponent() == true)
-		{
-			return;
-		}
-
-		lockUiComponent();
-
 		// 7.2 G2 버전에서 호텔리스트에서 이벤트 칸을 클릭할 경우 튕기는 현상을 막기 위함. why? 헤더뷰인데도 아이템 클릭 리스너가 들어감.
 		if (position == 0)
 		{
-			releaseUiComponent();
 			return;
 		}
-
-		//		mHostActivity.selectMenuDrawer(mHostActivity.menuHotelListFragment);
-
+		
 		int selectedPosition = position - 1;
-		HotelListViewItem selectedItem = mHotelListViewList.get(selectedPosition);
+		HotelListViewItem hotelListViewItem = mHotelListViewList.get(selectedPosition);
+		
 		int count = 0;
 		for (int i = 0; i < selectedPosition; i++)
 		{
 			if (mHotelListViewList.get(i).getType() == HotelListViewItem.TYPE_SECTION)
+			{
 				count++;
-		}
-		int hotelIdx = position - count;
-
-		if (selectedItem.getType() == HotelListViewItem.TYPE_ENTRY)
-		{
-			//리스트 뷰로 하면 보이는거 빼고 나머지 지워지는거 메모리에서 사라짐
-			//이미지 캐시 만들어서 캐싱
-			mHotelListAdapter.getImgCache().evictAll(); // 호텔 리스트아이템들의 image를 캐싱하는 lru cache 비우기.
-
-			Intent i = new Intent(mHostActivity, HotelTabActivity.class);
-
-			//			int idx = mHostActivity.actionBar.getSelectedNavigationIndex();
-			selectedRegion = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
-
-			SharedPreferences.Editor editor = mHostActivity.sharedPreference.edit();
-			editor.putString(KEY_PREFERENCE_REGION_SELECT_GA, selectedRegion);
-			editor.putString(KEY_PREFERENCE_HOTEL_NAME_GA, selectedItem.getItem().getName());
-			editor.commit();
-
-			i.putExtra(NAME_INTENT_EXTRA_DATA_HOTEL, selectedItem.getItem());
-			i.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mDailyHotelSaleTime);
-			i.putExtra(NAME_INTENT_EXTRA_DATA_REGION, selectedRegion);
-			i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, hotelIdx);
-
-			startActivityForResult(i, CODE_REQUEST_ACTIVITY_HOTELTAB);
-
-			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "selectHotel", selectedItem.getItem().getName(), (long) hotelIdx);
-		} else if (selectedItem.getType() == HotelListViewItem.TYPE_SECTION)
-		{
-			releaseUiComponent();
-			return;
-		}
-	}
-
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data)
-	{
-		releaseUiComponent();
-
-		if (requestCode == CODE_REQUEST_ACTIVITY_HOTELTAB)
-		{
-			mRefreshHotelList = false;
-			if (resultCode == Activity.RESULT_OK)
-			{
-				((MainActivity) mHostActivity).selectMenuDrawer(((MainActivity) mHostActivity).menuBookingListFragment);
-			} else if (resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
-			{
-				((MainActivity) mHostActivity).selectMenuDrawer(((MainActivity) mHostActivity).menuBookingListFragment);
 			}
 		}
+		
+		int hotelIndex = position - count;
 
-		super.onActivityResult(requestCode, resultCode, data);
+		mUserActionListener.openHotelDetail(hotelListViewItem, hotelIndex, mDailyHotelSaleTime);
 	}
 
 	@Override
@@ -326,6 +265,11 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		//		}
 
 		return true;
+	}
+	
+	public void setUserActionListener(HotelMainFragment.UserActionListener userActionLister)
+	{
+		mUserActionListener = userActionLister;
 	}
 
 	//이벤트 공지를 위한 dialog를 띄움.
@@ -530,7 +474,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	 */
 	private DailyHotelJsonResponseListener mHotelJsonResponseListener = new DailyHotelJsonResponseListener()
 	{
-
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
@@ -624,8 +567,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 				mHotelListView.setAdapter(mHotelListAdapter);
 				mHotelListView.setOnItemClickListener(HotelListFragment.this);
 
-				mRefreshHotelList = true;
-
 				// 새로운 이벤트 확인을 위해 버전 API 호출
 				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_VERSION).toString(), null, mAppVersionJsonResponseListener, mHostActivity));
 
@@ -642,288 +583,287 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		}
 	};
 
-	private DailyHotelJsonArrayResponseListener mSiteLocationListJsonArrayResponseListener = new DailyHotelJsonArrayResponseListener()
-	{
-
-		@Override
-		public void onResponse(String url, JSONArray response)
-		{
-
-			try
-			{
-				if (response == null)
-				{
-					throw new NullPointerException("response == null");
-				}
-
-				mRegionList = new ArrayList<String>();
-				mRegionDetailList = new LinkedHashMap<String, List<String>>();
-
-				JSONArray arr = response;
-				for (int i = 0; i < arr.length(); i++)
-				{
-					JSONObject obj = arr.getJSONObject(i);
-					String name = new String();
-					StringBuilder nameWithWhiteSpace = new StringBuilder(name);
-
-					// 네비게이션 리스트 방식을 사용할 경우 간격을 조절하기 위함. 
-					if (event == false)
-					{
-						name = nameWithWhiteSpace.append("    ").append(obj.getString("name")).append("    ").toString();
-					} else
-					{
-						name = obj.getString("name");
-					}
-
-					mRegionList.add(name);
-
-					if (name.trim().equals(getString(R.string.frag_hotel_list_seoul)) == true)
-					{
-						seoulIdx = i;
-					}
-
-					// 세부지역 추가
-					JSONArray arrDetail = obj.getJSONArray("child");
-					List<String> nameDetailList = new ArrayList<String>(arrDetail.length());
-
-					for (int j = 0; j < arrDetail.length(); j++)
-					{
-						String nameDetail = arrDetail.getString(j);
-						nameDetailList.add(nameDetail);
-					}
-
-					mRegionDetailList.put(name.trim(), nameDetailList);
-				}
-
-				ExLog.e("mRegionList : " + mRegionList.toString());
-				ExLog.e("mRegionDetailList : " + mRegionDetailList.toString());
-
-				//기존의 지역리스트 표시방식 
-				if (event == false)
-				{
-					mHostActivity.actionBar.setDisplayShowTitleEnabled(false);
-					// 호텔 프래그먼트 일때 액션바에 네비게이션 리스트 설치.
-					mHostActivity.actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-					regionListAdapter = new RegionListAdapter(mHostActivity, mRegionList);
-					regionListAdapter.setNotifyOnChange(true);
-
-					mHostActivity.actionBar.setListNavigationCallbacks(regionListAdapter, HotelListFragment.this);
-				}
-
-				/**
-				 * KaKao링크를 통한 접속 일경우 해당 호텔까지 접속함.
-				 */
-				int regionIdx = 0;
-				boolean isRegion = false;
-				boolean isBeforeRegion = false;
-				if (mKakaoHotelRegion != null && !mKakaoHotelRegion.isEmpty())
-				{
-					for (int i = 0; i < mRegionList.size(); i++)
-					{
-						if (mRegionList.get(i).trim().equals(mKakaoHotelRegion) == true)
-						{
-							regionIdx = i;
-							isRegion = true;
-							break;
-						}
-					}
-
-					if (regionIdx == 0)
-					{
-						SimpleAlertDialog.build(mHostActivity, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_kakao_link), getString(R.string.dialog_btn_text_confirm), null);
-					}
-				} else
-				{
-					String regionStr = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
-
-					for (int i = 0; i < mRegionList.size(); i++)
-					{
-						if (mRegionList.get(i).trim().equals(regionStr) == true)
-						{
-							regionIdx = i;
-							isRegion = true;
-							break;
-						}
-
-						if (mRegionList.get(i).trim().equals(mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_BEFORE, "")) == true)
-						{
-							beforeIdx = i;
-							isBeforeRegion = true;
-						}
-					}
-					//					regionIdx = mHostActivity.sharedPreference
-					//							.getInt(KEY_PREFERENCE_REGION_INDEX, 0);
-				}
-
-				//선택지역이 없는 경우 
-				if (isRegion == false)
-				{
-					//					String country = getCountryName();
-					//					if (country.equals("대한민국"))	regionIdx = seoulIdx;
-					//					else if (country.equals("일본")) 
-
-					if (event == false)
-					{
-						regionIdx = beforeIdx;
-
-						if (!isBeforeRegion)
-						{
-							String country = getCountryByLocale();
-							if (country.equals(getString(R.string.act_list_region_korea)))
-							{
-								regionIdx = seoulIdx;
-							}
-						}
-
-						SharedPreferences.Editor editor = mHostActivity.sharedPreference.edit();
-						editor.putString(KEY_PREFERENCE_REGION_SELECT, mRegionList.get(regionIdx));
-						editor.commit();
-					}
-					//새로운 지역리스트 방식의 경우 해외지역리스트 API도 호출함. 
-					else
-					{
-						mQueue.add(new DailyHotelJsonArrayRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SITE_COUNTRY_LOCATION_LIST).toString(), null, mSiteCountryLocationListJsonArrayResponseListener, mHostActivity));
-					}
-				}
-
-				if (event == true)
-				{
-					fetchHotelList();
-				} else
-				{
-					mHostActivity.actionBar.setSelectedNavigationItem(regionIdx);
-				}
-			} catch (Exception e)
-			{
-				onError(e);
-			}
-
-		}
-	};
-
-	private DailyHotelJsonArrayResponseListener mSiteCountryLocationListJsonArrayResponseListener = new DailyHotelJsonArrayResponseListener()
-	{
-
-		@Override
-		public void onResponse(String url, JSONArray response)
-		{
-
-			try
-			{
-				if (response == null)
-				{
-					throw new NullPointerException("response == null");
-				}
-
-				for (int i = 0; i < response.length(); i++)
-				{
-					JSONObject obj = response.getJSONObject(i);
-					String name = obj.getString("name");
-
-					mRegionList.add(name);
-					if (name.equals(getString(R.string.frag_hotel_list_tokyo)) == true)
-					{
-						tokyoIdx = i;
-					}
-
-					// 세부지역 추가
-					JSONArray arrDetail = obj.getJSONArray("child");
-					List<String> nameDetailList = new ArrayList<String>(arrDetail.length());
-
-					for (int j = 0; j < arrDetail.length(); j++)
-					{
-						String nameDetail = arrDetail.getString(j);
-						nameDetailList.add(nameDetail);
-					}
-
-					mRegionDetailList.put(name.trim(), nameDetailList);
-				}
-
-				ExLog.e("mJaRegionList : " + mRegionList.toString());
-				ExLog.e("mJaRegionDetailList : " + mRegionDetailList.toString());
-
-				/**
-				 * KaKao링크를 통한 접속 일경우 해당 호텔까지 접속함.
-				 */
-				int regionIdx = 0;
-				boolean isRegion = false;
-				boolean isBeforeRegion = false;
-
-				if (mKakaoHotelRegion != null && mKakaoHotelRegion.isEmpty() == false)
-				{
-					for (int i = 0; i < mRegionList.size(); i++)
-					{
-						if (mRegionList.get(i).trim().equals(mKakaoHotelRegion) == true)
-						{
-							regionIdx = i;
-							isRegion = true;
-							break;
-						}
-					}
-
-					if (regionIdx == 0)
-					{
-						SimpleAlertDialog.build(mHostActivity, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_kakao_link), getString(R.string.dialog_btn_text_confirm), null);
-					}
-				} else
-				{
-					String regionStr = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
-
-					for (int i = 0; i < mRegionList.size(); i++)
-					{
-						if (mRegionList.get(i).trim().equals(regionStr) == true)
-						{
-							regionIdx = i;
-							isRegion = true;
-							break;
-						}
-
-						//현재 선택지역 이전에 선택했던 지역이 있는지 파악 
-						if (mRegionList.get(i).trim().equals(mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_BEFORE, "")) == true)
-						{
-							beforeIdx = i;
-							isBeforeRegion = true;
-						}
-					}
-				}
-
-				//선택지역이 없는 경우 
-				if (isRegion == false)
-				{
-					//					String country = getCountryName();
-					//					if (country.equals("대한민국"))	regionIdx = seoulIdx;
-					//					else if (country.equals("일본")) 
-
-					//이전에 선택했던 지역을 선택지역으로 설정함.
-					regionIdx = beforeIdx;
-
-					//이전에 선택했던 지역도 없는 경우
-					//사용자의 나라를 얻어와서 대한민국이면 서울, 일본이면 도쿄를 선택지역으로 설정함. 
-					if (isBeforeRegion == false)
-					{
-						String country = getCountryByLocale();
-
-						if (country.equals(getString(R.string.act_list_region_korea)))
-						{
-							regionIdx = seoulIdx;
-						} else if (country.equals(getString(R.string.act_list_region_japan)))
-						{
-							regionIdx = tokyoIdx;
-						}
-					}
-
-					SharedPreferences.Editor editor = mHostActivity.sharedPreference.edit();
-					editor.putString(KEY_PREFERENCE_REGION_SELECT, mRegionList.get(regionIdx));
-					editor.commit();
-				}
-
-				fetchHotelList();
-			} catch (Exception e)
-			{
-				onError(e);
-			}
-		}
-	};
+//	private DailyHotelJsonArrayResponseListener mSiteLocationListJsonArrayResponseListener = new DailyHotelJsonArrayResponseListener()
+//	{
+//
+//		@Override
+//		public void onResponse(String url, JSONArray response)
+//		{
+//			try
+//			{
+//				if (response == null)
+//				{
+//					throw new NullPointerException("response == null");
+//				}
+//
+//				mRegionList = new ArrayList<String>();
+//				mRegionDetailList = new LinkedHashMap<String, List<String>>();
+//
+//				JSONArray arr = response;
+//				for (int i = 0; i < arr.length(); i++)
+//				{
+//					JSONObject obj = arr.getJSONObject(i);
+//					String name = new String();
+//					StringBuilder nameWithWhiteSpace = new StringBuilder(name);
+//
+//					// 네비게이션 리스트 방식을 사용할 경우 간격을 조절하기 위함. 
+//					if (event == false)
+//					{
+//						name = nameWithWhiteSpace.append("    ").append(obj.getString("name")).append("    ").toString();
+//					} else
+//					{
+//						name = obj.getString("name");
+//					}
+//
+//					mRegionList.add(name);
+//
+//					if (name.trim().equals(getString(R.string.frag_hotel_list_seoul)) == true)
+//					{
+//						seoulIdx = i;
+//					}
+//
+//					// 세부지역 추가
+//					JSONArray arrDetail = obj.getJSONArray("child");
+//					List<String> nameDetailList = new ArrayList<String>(arrDetail.length());
+//
+//					for (int j = 0; j < arrDetail.length(); j++)
+//					{
+//						String nameDetail = arrDetail.getString(j);
+//						nameDetailList.add(nameDetail);
+//					}
+//
+//					mRegionDetailList.put(name.trim(), nameDetailList);
+//				}
+//
+//				ExLog.e("mRegionList : " + mRegionList.toString());
+//				ExLog.e("mRegionDetailList : " + mRegionDetailList.toString());
+//
+//				//기존의 지역리스트 표시방식 
+//				if (event == false)
+//				{
+//					mHostActivity.actionBar.setDisplayShowTitleEnabled(false);
+//					// 호텔 프래그먼트 일때 액션바에 네비게이션 리스트 설치.
+//					mHostActivity.actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+//					regionListAdapter = new RegionListAdapter(mHostActivity, mRegionList);
+//					regionListAdapter.setNotifyOnChange(true);
+//
+//					mHostActivity.actionBar.setListNavigationCallbacks(regionListAdapter, HotelListFragment.this);
+//				}
+//
+//				/**
+//				 * KaKao링크를 통한 접속 일경우 해당 호텔까지 접속함.
+//				 */
+//				int regionIdx = 0;
+//				boolean isRegion = false;
+//				boolean isBeforeRegion = false;
+//				if (mKakaoHotelRegion != null && !mKakaoHotelRegion.isEmpty())
+//				{
+//					for (int i = 0; i < mRegionList.size(); i++)
+//					{
+//						if (mRegionList.get(i).trim().equals(mKakaoHotelRegion) == true)
+//						{
+//							regionIdx = i;
+//							isRegion = true;
+//							break;
+//						}
+//					}
+//
+//					if (regionIdx == 0)
+//					{
+//						SimpleAlertDialog.build(mHostActivity, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_kakao_link), getString(R.string.dialog_btn_text_confirm), null);
+//					}
+//				} else
+//				{
+//					String regionStr = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
+//
+//					for (int i = 0; i < mRegionList.size(); i++)
+//					{
+//						if (mRegionList.get(i).trim().equals(regionStr) == true)
+//						{
+//							regionIdx = i;
+//							isRegion = true;
+//							break;
+//						}
+//
+//						if (mRegionList.get(i).trim().equals(mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_BEFORE, "")) == true)
+//						{
+//							beforeIdx = i;
+//							isBeforeRegion = true;
+//						}
+//					}
+//					//					regionIdx = mHostActivity.sharedPreference
+//					//							.getInt(KEY_PREFERENCE_REGION_INDEX, 0);
+//				}
+//
+//				//선택지역이 없는 경우 
+//				if (isRegion == false)
+//				{
+//					//					String country = getCountryName();
+//					//					if (country.equals("대한민국"))	regionIdx = seoulIdx;
+//					//					else if (country.equals("일본")) 
+//
+//					if (event == false)
+//					{
+//						regionIdx = beforeIdx;
+//
+//						if (!isBeforeRegion)
+//						{
+//							String country = getCountryByLocale();
+//							if (country.equals(getString(R.string.act_list_region_korea)))
+//							{
+//								regionIdx = seoulIdx;
+//							}
+//						}
+//
+//						SharedPreferences.Editor editor = mHostActivity.sharedPreference.edit();
+//						editor.putString(KEY_PREFERENCE_REGION_SELECT, mRegionList.get(regionIdx));
+//						editor.commit();
+//					}
+//					//새로운 지역리스트 방식의 경우 해외지역리스트 API도 호출함. 
+//					else
+//					{
+//						mQueue.add(new DailyHotelJsonArrayRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SITE_COUNTRY_LOCATION_LIST).toString(), null, mSiteCountryLocationListJsonArrayResponseListener, mHostActivity));
+//					}
+//				}
+//
+//				if (event == true)
+//				{
+//					fetchHotelList();
+//				} else
+//				{
+//					mHostActivity.actionBar.setSelectedNavigationItem(regionIdx);
+//				}
+//			} catch (Exception e)
+//			{
+//				onError(e);
+//			}
+//
+//		}
+//	};
+//
+//	private DailyHotelJsonArrayResponseListener mSiteCountryLocationListJsonArrayResponseListener = new DailyHotelJsonArrayResponseListener()
+//	{
+//
+//		@Override
+//		public void onResponse(String url, JSONArray response)
+//		{
+//
+//			try
+//			{
+//				if (response == null)
+//				{
+//					throw new NullPointerException("response == null");
+//				}
+//
+//				for (int i = 0; i < response.length(); i++)
+//				{
+//					JSONObject obj = response.getJSONObject(i);
+//					String name = obj.getString("name");
+//
+//					mRegionList.add(name);
+//					if (name.equals(getString(R.string.frag_hotel_list_tokyo)) == true)
+//					{
+//						tokyoIdx = i;
+//					}
+//
+//					// 세부지역 추가
+//					JSONArray arrDetail = obj.getJSONArray("child");
+//					List<String> nameDetailList = new ArrayList<String>(arrDetail.length());
+//
+//					for (int j = 0; j < arrDetail.length(); j++)
+//					{
+//						String nameDetail = arrDetail.getString(j);
+//						nameDetailList.add(nameDetail);
+//					}
+//
+//					mRegionDetailList.put(name.trim(), nameDetailList);
+//				}
+//
+//				ExLog.e("mJaRegionList : " + mRegionList.toString());
+//				ExLog.e("mJaRegionDetailList : " + mRegionDetailList.toString());
+//
+//				/**
+//				 * KaKao링크를 통한 접속 일경우 해당 호텔까지 접속함.
+//				 */
+//				int regionIdx = 0;
+//				boolean isRegion = false;
+//				boolean isBeforeRegion = false;
+//
+//				if (mKakaoHotelRegion != null && mKakaoHotelRegion.isEmpty() == false)
+//				{
+//					for (int i = 0; i < mRegionList.size(); i++)
+//					{
+//						if (mRegionList.get(i).trim().equals(mKakaoHotelRegion) == true)
+//						{
+//							regionIdx = i;
+//							isRegion = true;
+//							break;
+//						}
+//					}
+//
+//					if (regionIdx == 0)
+//					{
+//						SimpleAlertDialog.build(mHostActivity, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_kakao_link), getString(R.string.dialog_btn_text_confirm), null);
+//					}
+//				} else
+//				{
+//					String regionStr = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
+//
+//					for (int i = 0; i < mRegionList.size(); i++)
+//					{
+//						if (mRegionList.get(i).trim().equals(regionStr) == true)
+//						{
+//							regionIdx = i;
+//							isRegion = true;
+//							break;
+//						}
+//
+//						//현재 선택지역 이전에 선택했던 지역이 있는지 파악 
+//						if (mRegionList.get(i).trim().equals(mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_BEFORE, "")) == true)
+//						{
+//							beforeIdx = i;
+//							isBeforeRegion = true;
+//						}
+//					}
+//				}
+//
+//				//선택지역이 없는 경우 
+//				if (isRegion == false)
+//				{
+//					//					String country = getCountryName();
+//					//					if (country.equals("대한민국"))	regionIdx = seoulIdx;
+//					//					else if (country.equals("일본")) 
+//
+//					//이전에 선택했던 지역을 선택지역으로 설정함.
+//					regionIdx = beforeIdx;
+//
+//					//이전에 선택했던 지역도 없는 경우
+//					//사용자의 나라를 얻어와서 대한민국이면 서울, 일본이면 도쿄를 선택지역으로 설정함. 
+//					if (isBeforeRegion == false)
+//					{
+//						String country = getCountryByLocale();
+//
+//						if (country.equals(getString(R.string.act_list_region_korea)))
+//						{
+//							regionIdx = seoulIdx;
+//						} else if (country.equals(getString(R.string.act_list_region_japan)))
+//						{
+//							regionIdx = tokyoIdx;
+//						}
+//					}
+//
+//					SharedPreferences.Editor editor = mHostActivity.sharedPreference.edit();
+//					editor.putString(KEY_PREFERENCE_REGION_SELECT, mRegionList.get(regionIdx));
+//					editor.commit();
+//				}
+//
+//				fetchHotelList();
+//			} catch (Exception e)
+//			{
+//				onError(e);
+//			}
+//		}
+//	};
 
 	private DailyHotelJsonResponseListener mAppVersionJsonResponseListener = new DailyHotelJsonResponseListener()
 	{
@@ -972,58 +912,57 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		}
 	};
 
-	private DailyHotelJsonResponseListener mAppSaleTimeJsonResponseListener = new DailyHotelJsonResponseListener()
-	{
-
-		@Override
-		public void onResponse(String url, JSONObject response)
-		{
-
-			try
-			{
-				if (response == null)
-				{
-					throw new NullPointerException("response == null");
-				}
-
-				String open = response.getString("open");
-				String close = response.getString("close");
-
-				mDailyHotelSaleTime.setOpenTime(open);
-				mDailyHotelSaleTime.setCloseTime(close);
-
-				if (!mDailyHotelSaleTime.isSaleTime())
-				{
-					((MainActivity) mHostActivity).replaceFragment(WaitTimerFragment.newInstance(mDailyHotelSaleTime));
-					unLockUI();
-				} else
-				{
-					// 지역 리스트를 가져온다
-					mQueue.add(new DailyHotelJsonArrayRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SITE_LOCATION_LIST).toString(), null, mSiteLocationListJsonArrayResponseListener, mHostActivity));
-				}
-			} catch (Exception e)
-			{
-				onError(e);
-			}
-		}
-	};
-
-	private DailyHotelStringResponseListener mAppTimeStringResponseListener = new DailyHotelStringResponseListener()
-	{
-
-		@Override
-		public void onResponse(String url, String response)
-		{
-
-			if (response != null)
-			{
-				mDailyHotelSaleTime.setCurrentTime(response);
-			}
-
-			// 오픈, 클로즈 타임을 가져온다
-			mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_SALE_TIME).toString(), null, mAppSaleTimeJsonResponseListener, mHostActivity));
-		}
-	};
+//	private DailyHotelJsonResponseListener mAppSaleTimeJsonResponseListener = new DailyHotelJsonResponseListener()
+//	{
+//
+//		@Override
+//		public void onResponse(String url, JSONObject response)
+//		{
+//			try
+//			{
+//				if (response == null)
+//				{
+//					throw new NullPointerException("response == null");
+//				}
+//
+//				String open = response.getString("open");
+//				String close = response.getString("close");
+//
+//				mDailyHotelSaleTime.setOpenTime(open);
+//				mDailyHotelSaleTime.setCloseTime(close);
+//
+//				if (mDailyHotelSaleTime.isSaleTime() == false)
+//				{
+//					((MainActivity) mHostActivity).replaceFragment(WaitTimerFragment.newInstance(mDailyHotelSaleTime));
+//					unLockUI();
+//				} else
+//				{
+//					// 지역 리스트를 가져온다
+//					mQueue.add(new DailyHotelJsonArrayRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SITE_LOCATION_LIST).toString(), null, mSiteLocationListJsonArrayResponseListener, mHostActivity));
+//				}
+//			} catch (Exception e)
+//			{
+//				onError(e);
+//			}
+//		}
+//	};
+//
+//	private DailyHotelStringResponseListener mAppTimeStringResponseListener = new DailyHotelStringResponseListener()
+//	{
+//
+//		@Override
+//		public void onResponse(String url, String response)
+//		{
+//
+//			if (response != null)
+//			{
+//				mDailyHotelSaleTime.setCurrentTime(response);
+//			}
+//
+//			// 오픈, 클로즈 타임을 가져온다
+//			mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_SALE_TIME).toString(), null, mAppSaleTimeJsonResponseListener, mHostActivity));
+//		}
+//	};
 
 	//
 	//	@Override
