@@ -417,8 +417,6 @@ public class HotelMainFragment extends BaseFragment implements OnNavigationListe
 			}
 			
 			mFragmentViewPager.setCurrentItem(position);
-			
-			refreshHotelList();
 		}
 	};
 
@@ -428,6 +426,8 @@ public class HotelMainFragment extends BaseFragment implements OnNavigationListe
 		public void onPageSelected(int position)
 		{
 			mTabIndicator.setCurrentItem(position);
+			
+			refreshHotelList();
 		}
 	};
 	

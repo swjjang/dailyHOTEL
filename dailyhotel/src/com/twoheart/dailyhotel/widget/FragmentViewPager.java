@@ -214,7 +214,7 @@ public class FragmentViewPager extends LinearLayout
 
 	private class CustomViewPager extends ViewPager
 	{
-		private boolean mEnable = false;
+		private boolean mEnable = true;
 
 		public CustomViewPager(Context context)
 		{

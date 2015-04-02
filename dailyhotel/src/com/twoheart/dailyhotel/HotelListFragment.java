@@ -73,7 +73,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	private LinearLayout btnListViewHeader;
 	
 	private SaleTime mSaleTime;
-	private Map<String, List<String>> mRegionDetailList;
+	private Map<String, List<String>> mDetailRegionList;
 
 	private boolean event;
 	
@@ -206,7 +206,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	
 	public void setRegionList(Map<String, List<String>> regionDetailList)
 	{
-		mRegionDetailList = regionDetailList;
+		mDetailRegionList = regionDetailList;
 	}
 
 	public void setUserActionListener(HotelMainFragment.UserActionListener userActionLister)
@@ -411,6 +411,42 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	 */
 	private DailyHotelJsonResponseListener mHotelJsonResponseListener = new DailyHotelJsonResponseListener()
 	{
+		/**
+		 * 
+		 * @param region : in
+		 * @param hotelList : in & out
+		 * @param hotelListViewList : out
+		 */
+		private void makeRegionHotelList(final String region, ArrayList<Hotel> hotelList, ArrayList<HotelListViewItem> hotelListViewList)
+		{
+			// insert section
+			HotelListViewItem section = new HotelListViewItem(region);
+			hotelListViewList.add(section);
+			
+			int insertHotelSize = 0;
+			int size = hotelList.size();
+			Hotel hotel;
+			
+			for (int i = size - 1; i >= 0; i--)
+			{
+				hotel = hotelList.get(i);
+				
+				if (region.equalsIgnoreCase(hotel.getDetailRegion()) == true)
+				{
+					hotelListViewList.add(new HotelListViewItem(hotel));
+					hotelList.remove(i);
+					
+					insertHotelSize++;
+				}
+			}
+
+			// 해당 지역에 호텔 정보가 없으면 section정보를 제거한다.
+			if (insertHotelSize == 0)
+			{
+				hotelListViewList.remove(section);
+			}
+		}
+		
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
@@ -421,14 +457,12 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 					throw new NullPointerException("response == null");
 				}
 				
-				long startTime = System.nanoTime();
-
 				JSONArray hotelJSONArray = response.getJSONArray("hotels");
 				
 				int length = hotelJSONArray.length();
 				JSONObject jsonObject;
 				
-				ArrayList<Hotel> mHotelList = new ArrayList<Hotel>(length);
+				ArrayList<Hotel> hotelList = new ArrayList<Hotel>(length);
 				
 				for (int i = 0; i < length; i++)
 				{
@@ -443,11 +477,11 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 						
 						if (newHotel.setHotel(jsonObject) == true)
 						{
-							mHotelList.add(newHotel); // 추가.
+							hotelList.add(newHotel); // 추가.
 						}
 					}
 				}
-
+				
 				// seq 값에 따른 역순으로 정렬
 				Comparator<Hotel> comparator = new Comparator<Hotel>()
 				{
@@ -458,73 +492,40 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 					}
 				};
 
-				Collections.sort(mHotelList, comparator);
+				Collections.sort(hotelList, comparator);
 
-				List<String> selectedDetailRegionList = mRegionDetailList.get(mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, ""));
-				int size = selectedDetailRegionList.size();
+				List<String> selectedDetailRegionList = mDetailRegionList.get(mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, ""));
 				
-				ArrayList<HotelListViewItem> mHotelListViewList = new ArrayList<HotelListViewItem>(size);
+				int hotelListSize = selectedDetailRegionList.size() + hotelList.size();
+				ArrayList<HotelListViewItem> hotelListViewList = new ArrayList<HotelListViewItem>(hotelListSize);
 				
-				for (String detailRegion : selectedDetailRegionList)
+				if(hotelList.size() > 0)
 				{
-					if(TextUtils.isEmpty(detailRegion) == true)
+					// 지역별로 호텔 리스트를 넣어준다.
+					for (String detailRegion : selectedDetailRegionList)
 					{
-						continue;
-					}
-					
-					HotelListViewItem section = new HotelListViewItem(detailRegion);
-					mHotelListViewList.add(section);
-
-					int count = 0;
-					int hotelSize = mHotelList.size();
-					Hotel hotel;
-					
-					for (int i = hotelSize - 1; i >= 0; i++)
-					{
-						hotel = mHotelList.get(i);
-						
-						if (detailRegion.equalsIgnoreCase(hotel.getDetailRegion()) == true)
+						if(TextUtils.isEmpty(detailRegion) == true)
 						{
-							mHotelListViewList.add(new HotelListViewItem(hotel));
-							mHotelList.remove(i);
-							count++;
+							continue;
+						}
+						
+						makeRegionHotelList(detailRegion, hotelList, hotelListViewList);
+					}
+
+					// 호텔 지역 정보가 없는 기타 호텔들...
+					if(hotelList.size() > 0)
+					{
+						HotelListViewItem section = new HotelListViewItem(getString(R.string.frag_hotel_list_others));
+						hotelListViewList.add(section);
+						
+						for (Hotel hotel : hotelList)
+						{
+							hotelListViewList.add(new HotelListViewItem(hotel));
 						}
 					}
-
-					if (count == 0)
-					{
-						mHotelListViewList.remove(section);
-					}
-				}
-
-				// 호텔 지역 정보가 없는 기타 호텔들...
-				int count = 0;
-				HotelListViewItem otherHotels = new HotelListViewItem(getString(R.string.frag_hotel_list_others));
-				int hotelSize = mHotelList.size();
-				Hotel hotel;
-				
-				mHotelListViewList.add(otherHotels);
-				
-				for (int i = hotelSize - 1; i >= 0; i++)
-				{
-					hotel = mHotelList.get(i);
-					
-					if ("null".equalsIgnoreCase(hotel.getDetailRegion()) == true)
-					{
-						mHotelListViewList.add(new HotelListViewItem(hotel));
-						mHotelList.remove(i);
-						count++;
-					}
-				}
-
-				if (count == 0)
-				{
-					mHotelListViewList.remove(otherHotels);
 				}
 				
-				ExLog.d("Time :" + (System.nanoTime() - startTime));
-
-				mHotelListAdapter = new HotelListAdapter(mHostActivity, R.layout.list_row_hotel, mHotelListViewList);
+				mHotelListAdapter = new HotelListAdapter(mHostActivity, R.layout.list_row_hotel, hotelListViewList);
 				mHotelListView.setAdapter(mHotelListAdapter);
 				mHotelListView.setOnItemClickListener(HotelListFragment.this);
 
