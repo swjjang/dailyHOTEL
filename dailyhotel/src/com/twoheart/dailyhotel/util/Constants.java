@@ -126,7 +126,7 @@ public interface Constants
 	public static final String URL_WEBAPI_USER_CHECK_EMAIL = UNENCRYPTED_URL ? "user/check/email_auth" : "NCQ4MCQ0MyQyNiQ4OCQ=$MzY0XM0YwNTgwNzYwMjJBOEQyMQEIxMDM3MDQ1RjBGMjUZGQzJERjU5OTAwQzQ2OEM2REJGMzc3RTI3REIUwNEYzGMQ==$";
 
 	// user/change_pw
-	public static final String URL_WEBAPI_USER_CHANGE_PW = UNENCRYPTED_URL ? "user/change_pw" : "MTQkMjMkNjgkNzgkOSQ=$RTlFNEFCNTTY3Q0RVFNzU0N0TJEMDVBNDBFQjFCQjgzNTQyN0Q3QzczODVBMUVDNkM5MUZY5OTI4MkMSxRjFGNzQ0QQ==$";
+	public static final String URL_WEBAPI_USER_CHANGE_PW = UNENCRYPTED_URL ? "user/change_pw" : "MjMkMzAkMyQxNCQzMiQ=$QzcB0MkU1RjExOATlDMjU5OTBKCMkU4NIK0IwMUVCNTZENjI=$";
 
 	// DailyHOTEL Reservation Controller WebAPI URL
 	//"reserv/session/req";
