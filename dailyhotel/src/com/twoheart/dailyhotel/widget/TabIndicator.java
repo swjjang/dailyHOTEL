@@ -71,6 +71,16 @@ public class TabIndicator extends LinearLayout implements OnClickListener
 
 		setTabEnable(true);
 	}
+	
+	public int size()
+	{
+		if(mTabArrray == null)
+		{
+			return 0;
+		}
+		
+		return mTabArrray.size();
+	}
 
 	public void setData(ArrayList<String> dataList, boolean isSelectTab)
 	{
@@ -87,6 +97,7 @@ public class TabIndicator extends LinearLayout implements OnClickListener
 		{
 			tabIndicatorItem = new TabIndicatorItem(getContext());
 			tabIndicatorItem.setId(i);
+			tabIndicatorItem.setSubTextEnable(false);
 			tabIndicatorItem.setMainText(dataList.get(i));
 			tabIndicatorItem.setOnClickListener(this);
 			
@@ -125,9 +136,9 @@ public class TabIndicator extends LinearLayout implements OnClickListener
 			}else
 			{
 				tabIndicatorItem.setSubTextEnable(true);
+				tabIndicatorItem.setSubText(subText);
 			}
 			
-			tabIndicatorItem.setSubText(subText);
 			tabIndicatorItem.setOnClickListener(this);
 			mTabArrray.put(i, tabIndicatorItem);
 			

@@ -17,7 +17,7 @@ import android.widget.LinearLayout;
 
 public class FragmentViewPager extends LinearLayout
 {
-	private ArrayList<Fragment> mDataList;
+	private ArrayList<? extends Fragment> mDataList;
 	private ArrayList<String> mPageTitleList;
 	private FragementViewPagerAdapter mAdapter;
 
@@ -75,12 +75,12 @@ public class FragmentViewPager extends LinearLayout
 		this.addView(mViewPager);
 	}
 
-	public void setData(ArrayList<Fragment> dataList)
+	public void setData(ArrayList<? extends Fragment> dataList)
 	{
 		mDataList = dataList;
 	}
 
-	public void setData(ArrayList<Fragment> dataList, ArrayList<String> tabList)
+	public void setData(ArrayList<? extends Fragment> dataList, ArrayList<String> tabList)
 	{
 		mDataList = dataList;
 		mPageTitleList = tabList;

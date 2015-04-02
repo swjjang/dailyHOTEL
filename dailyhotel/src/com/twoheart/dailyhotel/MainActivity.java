@@ -374,7 +374,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		else
 			mFragments = new LinkedList<Fragment>();
 
-		mFragments.add(new HotelListFragment());
+		mFragments.add(new HotelMainFragment());
 		mFragments.add(new BookingListFragment());
 		mFragments.add(new CreditFragment());
 		mFragments.add(new SettingFragment());
@@ -426,7 +426,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			// 해결하기 위한 부분이 이 부분이다.
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
 			{
-				if (fragment instanceof HotelListFragment)
+				if (fragment instanceof HotelMainFragment)
 				{
 					mContentFrame.setPadding(mContentFrame.getPaddingLeft(), mContentFrame.getPaddingTop(), mContentFrame.getPaddingRight(), 0);
 
@@ -469,9 +469,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		for (int i = 0; i < fragmentManager.getBackStackEntryCount(); ++i)
 		{
 			fragmentManager.popBackStackImmediate();
-
 		}
-
 	}
 
 	@Deprecated

@@ -14,7 +14,6 @@ import com.twoheart.dailyhotel.util.ExLog;
 
 public class SaleTime implements Constants, Parcelable
 {
-
 	private Date mOpenTime;
 	private Date mCloseTime;
 	private Date mCurrentTime;
@@ -27,7 +26,6 @@ public class SaleTime implements Constants, Parcelable
 		super();
 		//		TimeZone.get
 		format.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
-
 	}
 
 	public SaleTime(Parcel in)
