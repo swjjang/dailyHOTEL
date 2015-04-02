@@ -106,9 +106,11 @@ public class HotelMainFragment extends BaseFragment implements OnNavigationListe
 		mFragmentList.add(hotelListFragment);
 
 		HotelListFragment hotelListFragment01 = new HotelListFragment();
+		hotelListFragment01.setUserActionListener(mUserActionListener);
 		mFragmentList.add(hotelListFragment01);
 
 		HotelListFragment hotelListFragment02 = new HotelListFragment();
+		hotelListFragment02.setUserActionListener(mUserActionListener);
 		mFragmentList.add(hotelListFragment02);
 		
 		mFragmentViewPager.setData(mFragmentList);
@@ -413,8 +415,10 @@ public class HotelMainFragment extends BaseFragment implements OnNavigationListe
 			{
 				return;
 			}
-
+			
 			mFragmentViewPager.setCurrentItem(position);
+			
+			refreshHotelList();
 		}
 	};
 

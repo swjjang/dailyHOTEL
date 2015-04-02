@@ -32,6 +32,7 @@ import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.AbsListViewDeleg
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -65,8 +66,8 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	private PinnedSectionListView mHotelListView;
 	private PullToRefreshLayout mPullToRefreshLayout;
 	private HotelListAdapter mHotelListAdapter;
-	private List<HotelListViewItem> mHotelListViewList;
-	private List<Hotel> mHotelList;
+//	private List<HotelListViewItem> mHotelListViewList;
+//	private List<Hotel> mHotelList;
 
 	private LinearLayout llListViewFooter;
 	private LinearLayout btnListViewHeader;
@@ -171,15 +172,23 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		}
 		
 		int selectedPosition = position - 1;
-		HotelListViewItem hotelListViewItem = mHotelListViewList.get(selectedPosition);
+		
+		HotelListViewItem hotelListViewItem = mHotelListAdapter.getItem(selectedPosition);
+		
+//		HotelListViewItem hotelListViewItem = mHotelListViewList.get(selectedPosition);
 		
 		int count = 0;
 		for (int i = 0; i < selectedPosition; i++)
 		{
-			if (mHotelListViewList.get(i).getType() == HotelListViewItem.TYPE_SECTION)
+			if (mHotelListAdapter.getItem(i).getType() == HotelListViewItem.TYPE_SECTION)
 			{
 				count++;
 			}
+			
+//			if (mHotelListViewList.get(i).getType() == HotelListViewItem.TYPE_SECTION)
+//			{
+//				count++;
+//			}
 		}
 		
 		int hotelIndex = position - count;
@@ -222,6 +231,8 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 			ExLog.e("saleTime == null");
 			return;
 		}
+		
+		lockUI();
 		
 		String selectedRegion = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
 		ExLog.e("selectedRegion : " + selectedRegion + " fetchHotelList");
@@ -409,13 +420,19 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 				{
 					throw new NullPointerException("response == null");
 				}
+				
+				long startTime = System.nanoTime();
 
-				JSONArray hotelArr = response.getJSONArray("hotels");
-				mHotelList = new ArrayList<Hotel>(hotelArr.length());
-
-				for (int i = 0; i < hotelArr.length(); i++)
+				JSONArray hotelJSONArray = response.getJSONArray("hotels");
+				
+				int length = hotelJSONArray.length();
+				JSONObject jsonObject;
+				
+				ArrayList<Hotel> mHotelList = new ArrayList<Hotel>(length);
+				
+				for (int i = 0; i < length; i++)
 				{
-					JSONObject jsonObject = hotelArr.getJSONObject(i);
+					jsonObject = hotelJSONArray.getJSONObject(i);
 
 					int seq = jsonObject.getInt("seq");
 
@@ -423,6 +440,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 					{
 						// 숨김호텔이 아니라면 추가. (음수일 경우 숨김호텔.)
 						Hotel newHotel = new Hotel();
+						
 						if (newHotel.setHotel(jsonObject) == true)
 						{
 							mHotelList.add(newHotel); // 추가.
@@ -430,36 +448,45 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 					}
 				}
 
-				// seq 값에 따른 리스트 정렬
+				// seq 값에 따른 역순으로 정렬
 				Comparator<Hotel> comparator = new Comparator<Hotel>()
 				{
 					public int compare(Hotel o1, Hotel o2)
 					{
 						// 숫자정렬
-						return o1.getSequence() - o2.getSequence();
+						return o2.getSequence() - o1.getSequence();
 					}
 				};
 
 				Collections.sort(mHotelList, comparator);
 
-				mHotelListViewList = new ArrayList<HotelListViewItem>();
+				List<String> selectedDetailRegionList = mRegionDetailList.get(mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, ""));
+				int size = selectedDetailRegionList.size();
 				
-				List<String> selectedRegionDetail = mRegionDetailList.get(mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, ""));
-
-				for (int i = 0; i < selectedRegionDetail.size(); i++)
+				ArrayList<HotelListViewItem> mHotelListViewList = new ArrayList<HotelListViewItem>(size);
+				
+				for (String detailRegion : selectedDetailRegionList)
 				{
-					String region = selectedRegionDetail.get(i);
-					HotelListViewItem section = new HotelListViewItem(region);
+					if(TextUtils.isEmpty(detailRegion) == true)
+					{
+						continue;
+					}
+					
+					HotelListViewItem section = new HotelListViewItem(detailRegion);
 					mHotelListViewList.add(section);
 
 					int count = 0;
-					for (int j = 0; j < mHotelList.size(); j++)
+					int hotelSize = mHotelList.size();
+					Hotel hotel;
+					
+					for (int i = hotelSize - 1; i >= 0; i++)
 					{
-						Hotel hotel = mHotelList.get(j);
-
-						if (hotel.getDetailRegion().equals(region) == true)
+						hotel = mHotelList.get(i);
+						
+						if (detailRegion.equalsIgnoreCase(hotel.getDetailRegion()) == true)
 						{
 							mHotelListViewList.add(new HotelListViewItem(hotel));
+							mHotelList.remove(i);
 							count++;
 						}
 					}
@@ -470,31 +497,36 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 					}
 				}
 
+				// 호텔 지역 정보가 없는 기타 호텔들...
 				int count = 0;
-				HotelListViewItem others = new HotelListViewItem(getString(R.string.frag_hotel_list_others));
-
-				mHotelListViewList.add(others);
-				for (int i = 0; i < mHotelList.size(); i++)
+				HotelListViewItem otherHotels = new HotelListViewItem(getString(R.string.frag_hotel_list_others));
+				int hotelSize = mHotelList.size();
+				Hotel hotel;
+				
+				mHotelListViewList.add(otherHotels);
+				
+				for (int i = hotelSize - 1; i >= 0; i++)
 				{
-					Hotel hotel = mHotelList.get(i);
-
-					if (hotel.getDetailRegion().equals("null") == true)
+					hotel = mHotelList.get(i);
+					
+					if ("null".equalsIgnoreCase(hotel.getDetailRegion()) == true)
 					{
 						mHotelListViewList.add(new HotelListViewItem(hotel));
+						mHotelList.remove(i);
 						count++;
 					}
 				}
 
 				if (count == 0)
 				{
-					mHotelListViewList.remove(others);
+					mHotelListViewList.remove(otherHotels);
 				}
+				
+				ExLog.d("Time :" + (System.nanoTime() - startTime));
 
 				mHotelListAdapter = new HotelListAdapter(mHostActivity, R.layout.list_row_hotel, mHotelListViewList);
 				mHotelListView.setAdapter(mHotelListAdapter);
 				mHotelListView.setOnItemClickListener(HotelListFragment.this);
-
-				unLockUI();
 
 				// Notify PullToRefreshLayout that the refresh has finished
 				mPullToRefreshLayout.setRefreshComplete();
@@ -502,6 +534,10 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 			} catch (Exception e)
 			{
 				onError(e);
+			}
+			finally
+			{
+				unLockUI();
 			}
 
 		}

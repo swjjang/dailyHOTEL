@@ -86,12 +86,16 @@ public class ForgotPwdActivity extends BaseActivity implements Constants, OnClic
 
 			if (mEmail.equals(""))
 			{
+				releaseUiComponent();
+				
 				showToast(getString(R.string.toast_msg_please_input_email_address), Toast.LENGTH_SHORT, true);
 				return;
 			}
 
 			else if (!isValidEmail(mEmail))
 			{
+				releaseUiComponent();
+				
 				showToast(getString(R.string.toast_msg_wrong_email_address), Toast.LENGTH_SHORT, true);
 				return;
 			}
