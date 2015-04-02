@@ -1,18 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <com.twoheart.dailyhotel.widget.TabIndicator
-        android:id="@+id/tabindicator"
+    <RelativeLayout
+        android:id="@+id/tabLayout"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@color/tab_background" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <com.twoheart.dailyhotel.widget.TabIndicator
+            android:id="@+id/tabindicator"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@color/tab_background" />
+
+        <LinearLayout
+            android:id="@+id/checkInLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tabindicator"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="체크인"
+                android:textSize="16dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false" >
+
+                <include
+                    android:id="@+id/item01"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    layout="@layout/view_selectday_item" />
+
+                <include
+                    android:id="@+id/item02"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    layout="@layout/view_selectday_item" />
+
+                <include
+                    android:id="@+id/item03"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    layout="@layout/view_selectday_item" />
+
+                <include
+                    android:id="@+id/item04"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    layout="@layout/view_selectday_item" />
+
+                <include
+                    android:id="@+id/item05"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    layout="@layout/view_selectday_item" />
+
+                <include
+                    android:id="@+id/item06"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    layout="@layout/view_selectday_item" />
+
+                <include
+                    android:id="@+id/item07"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    layout="@layout/view_selectday_item" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
 
     <com.twoheart.dailyhotel.widget.FragmentViewPager
         android:id="@+id/fragmentViewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_below="@id/tabLayout" />
 
-</LinearLayout>
+</RelativeLayout>

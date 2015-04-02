@@ -11,7 +11,6 @@ package com.twoheart.dailyhotel.fragment;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -20,6 +19,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBar.OnNavigationListener;
@@ -27,6 +27,9 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.TranslateAnimation;
 
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.HotelListFragment;
@@ -54,21 +57,22 @@ import com.twoheart.dailyhotel.widget.TabIndicator.OnTabSelectedListener;
 public class HotelMainFragment extends BaseFragment implements OnNavigationListener
 {
 	private TabIndicator mTabIndicator;
+	private View mCheckInLayout;
 	private FragmentViewPager mFragmentViewPager;
 	private ArrayList<HotelListFragment> mFragmentList;
-	
+
 	private SaleTime mSaleTime;
 	private List<String> mRegionList;
-	private Map<String, List<String>> mRegionDetailList;
-	
+
 	public interface UserActionListener
 	{
 		public void selectHotel(HotelListViewItem hotelListViewItem, int hotelIndex);
 	};
-	
+
 	public interface UserAnalyticsActionListener
 	{
 		public void selectHotel(String hotelName, long hotelIndex);
+
 		public void selectRegion(int position);
 	};
 
@@ -82,18 +86,22 @@ public class HotelMainFragment extends BaseFragment implements OnNavigationListe
 		titleList.add("내일");
 		titleList.add("선택");
 
-//		ArrayList<String> dayList = new ArrayList<String>();
-//		dayList.add("1일(수)");
-//		dayList.add("2일(목)");
-//		dayList.add("");
+		//		ArrayList<String> dayList = new ArrayList<String>();
+		//		dayList.add("1일(수)");
+		//		dayList.add("2일(목)");
+		//		dayList.add("");
 
 		mTabIndicator = (TabIndicator) view.findViewById(R.id.tabindicator);
-//		mTabIndicator.setData(titleList, dayList, true);
+		//		mTabIndicator.setData(titleList, dayList, true);
 		mTabIndicator.setData(titleList, true);
 		mTabIndicator.setTextColor(getResources().getColor(R.color.textView_textColor_main));
 		mTabIndicator.setTextTypeface(Typeface.BOLD);
 		mTabIndicator.setSubTextColor(getResources().getColor(R.color.textView_textColor_main));
 		mTabIndicator.setOnTabSelectListener(mOnTabSelectedListener);
+		mTabIndicator.bringToFront();
+
+		mCheckInLayout = view.findViewById(R.id.checkInLayout);
+		mCheckInLayout.setVisibility(View.GONE);
 
 		mFragmentViewPager = (FragmentViewPager) view.findViewById(R.id.fragmentViewPager);
 		mFragmentViewPager.setOnPageSelectedListener(mOnPageSelectedListener);
@@ -112,7 +120,7 @@ public class HotelMainFragment extends BaseFragment implements OnNavigationListe
 		HotelListFragment hotelListFragment02 = new HotelListFragment();
 		hotelListFragment02.setUserActionListener(mUserActionListener);
 		mFragmentList.add(hotelListFragment02);
-		
+
 		mFragmentViewPager.setData(mFragmentList);
 		mFragmentViewPager.setAdapter(getChildFragmentManager());
 
@@ -120,17 +128,17 @@ public class HotelMainFragment extends BaseFragment implements OnNavigationListe
 
 		return view;
 	}
-	
+
 	@Override
 	public void onResume()
 	{
 		lockUI();
-		
+
 		mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_TIME).toString(), null, mAppTimeStringResponseListener, mHostActivity));
-	
+
 		super.onResume();
 	}
-	
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
@@ -149,7 +157,7 @@ public class HotelMainFragment extends BaseFragment implements OnNavigationListe
 
 		super.onActivityResult(requestCode, resultCode, data);
 	}
-	
+
 	@Override
 	public boolean onNavigationItemSelected(int position, long id)
 	{
@@ -163,28 +171,104 @@ public class HotelMainFragment extends BaseFragment implements OnNavigationListe
 			editor.putString(KEY_PREFERENCE_REGION_SELECT, region);
 			editor.commit();
 		}
-		
+
 		refreshHotelList();
 
 		ExLog.d("before region : " + mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_BEFORE, "") + " select region : " + mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, ""));
-		
+
 		mUserAnalyticsActionListener.selectRegion(position);
 		return true;
 	}
-	
+
 	private void refreshHotelList()
 	{
-//		((MainActivity) mHostActivity).drawerLayout.closeDrawer(((MainActivity) mHostActivity).drawerList);
-		
+		//		((MainActivity) mHostActivity).drawerLayout.closeDrawer(((MainActivity) mHostActivity).drawerList);
+
 		HotelListFragment hotelListFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
-		
+
 		hotelListFragment.refreshHotelList();
 	}
 
-	
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-// NetworkActionListener
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
+	private void showCheckIn()
+	{
+		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1)
+		{
+			TranslateAnimation translateAnimation = new TranslateAnimation(
+					TranslateAnimation.RELATIVE_TO_SELF, 0.0f, 
+					TranslateAnimation.RELATIVE_TO_SELF, 0.0f, 
+					TranslateAnimation.RELATIVE_TO_SELF, -1.0f, 
+					TranslateAnimation.RELATIVE_TO_SELF, 0.0f);
+			translateAnimation.setDuration(500);
+			
+			translateAnimation.setAnimationListener(new AnimationListener()
+			{
+				@Override
+				public void onAnimationStart(Animation animation)
+				{
+					
+				}
+
+				@Override
+				public void onAnimationEnd(Animation animation)
+				{
+					mCheckInLayout.setVisibility(View.VISIBLE);
+				}
+
+				@Override
+				public void onAnimationRepeat(Animation animation)
+				{
+
+				}
+			});
+
+			mCheckInLayout.startAnimation(translateAnimation);
+		} else
+		{
+
+		}
+	}
+
+	private void hideCheckIn()
+	{
+		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1)
+		{
+			TranslateAnimation translateAnimation = new TranslateAnimation(TranslateAnimation.RELATIVE_TO_SELF, 0.0f, TranslateAnimation.RELATIVE_TO_SELF, 0.f, TranslateAnimation.RELATIVE_TO_SELF, 0.0f, TranslateAnimation.RELATIVE_TO_SELF, -1.0f);
+			translateAnimation.setDuration(500);
+			
+			translateAnimation.setAnimationListener(new AnimationListener()
+			{
+				@Override
+				public void onAnimationStart(Animation animation)
+				{
+					// TODO Auto-generated method stub
+
+				}
+
+				@Override
+				public void onAnimationEnd(Animation animation)
+				{
+					mCheckInLayout.setVisibility(View.GONE);
+					mCheckInLayout.startAnimation(null);
+				}
+
+				@Override
+				public void onAnimationRepeat(Animation animation)
+				{
+					// TODO Auto-generated method stub
+
+				}
+			});
+
+			mCheckInLayout.startAnimation(translateAnimation);
+		} else
+		{
+
+		}
+	}
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// NetworkActionListener
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	private DailyHotelStringResponseListener mAppTimeStringResponseListener = new DailyHotelStringResponseListener()
 	{
@@ -197,9 +281,9 @@ public class HotelMainFragment extends BaseFragment implements OnNavigationListe
 				{
 					throw new NullPointerException("response == null");
 				}
-				
+
 				mSaleTime.setCurrentTime(response);
-				
+
 				// 오픈, 클로즈 타임을 가져온다
 				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_SALE_TIME).toString(), null, mAppSaleTimeJsonResponseListener, mHostActivity));
 
@@ -210,7 +294,7 @@ public class HotelMainFragment extends BaseFragment implements OnNavigationListe
 			}
 		}
 	};
-	
+
 	private DailyHotelJsonResponseListener mAppSaleTimeJsonResponseListener = new DailyHotelJsonResponseListener()
 	{
 		@Override
@@ -243,8 +327,8 @@ public class HotelMainFragment extends BaseFragment implements OnNavigationListe
 				onError(e);
 			}
 		}
-	};	
-	
+	};
+
 	private DailyHotelJsonArrayResponseListener mSiteLocationListJsonArrayResponseListener = new DailyHotelJsonArrayResponseListener()
 	{
 		@Override
@@ -257,37 +341,32 @@ public class HotelMainFragment extends BaseFragment implements OnNavigationListe
 					throw new NullPointerException("response == null");
 				}
 
-				if(mRegionList == null)
+				if (mRegionList == null)
 				{
 					mRegionList = new ArrayList<String>();
 				}
-				
+
 				mRegionList.clear();
-				
-				if(mRegionDetailList == null)
-				{
-					mRegionDetailList = new LinkedHashMap<String, List<String>>();
-				}
-				
-				mRegionDetailList.clear();
-				
+
+				LinkedHashMap<String, List<String>> detailRegionList = new LinkedHashMap<String, List<String>>();
+
 				int length = response.length();
 				int seoulIndex = -1;
-				
+
 				for (int i = 0; i < length; i++)
 				{
 					JSONObject jsonObject = response.getJSONObject(i);
-					
+
 					String name = jsonObject.getString("name").trim();
-					
-					if(TextUtils.isEmpty(name) == true) 
+
+					if (TextUtils.isEmpty(name) == true)
 					{
 						continue;
 					}
-					
+
 					mRegionList.add(name);
-					
-					if(getString(R.string.frag_hotel_list_seoul).equalsIgnoreCase(name) == true)
+
+					if (getString(R.string.frag_hotel_list_seoul).equalsIgnoreCase(name) == true)
 					{
 						seoulIndex = mRegionList.size() - 1;
 					}
@@ -303,32 +382,32 @@ public class HotelMainFragment extends BaseFragment implements OnNavigationListe
 						nameDetailList.add(childJSONArray.getString(j));
 					}
 
-					mRegionDetailList.put(name, nameDetailList);
+					detailRegionList.put(name, nameDetailList);
 				}
 
 				ExLog.e("mRegionList : " + mRegionList.toString());
-				ExLog.e("mRegionDetailList : " + mRegionDetailList.toString());
+				ExLog.e("mRegionDetailList : " + detailRegionList.toString());
 
 				//기존의 지역리스트 표시방식 
 				mHostActivity.actionBar.setDisplayShowTitleEnabled(false);
-				
+
 				// 호텔 프래그먼트 일때 액션바에 네비게이션 리스트 설치.
 				mHostActivity.actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 				RegionListAdapter regionListAdapter = new RegionListAdapter(mHostActivity, mRegionList);
 				regionListAdapter.setNotifyOnChange(true);
-				
+
 				mHostActivity.actionBar.setListNavigationCallbacks(regionListAdapter, HotelMainFragment.this);
-				
+
 				int currentRegionIndex = -1;
 				int beforeRegionIndex = -1;
-				
+
 				String regionStr = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
 				int size = mRegionList.size();
-				
+
 				for (int i = 0; i < size; i++)
 				{
 					String regison = mRegionList.get(i);
-					
+
 					if (regison.equalsIgnoreCase(regionStr) == true)
 					{
 						currentRegionIndex = i;
@@ -345,10 +424,10 @@ public class HotelMainFragment extends BaseFragment implements OnNavigationListe
 				if (currentRegionIndex == -1)
 				{
 					// 이전에 선택한 지역이 없는 경우.
-					if(beforeRegionIndex == -1)
+					if (beforeRegionIndex == -1)
 					{
 						currentRegionIndex = seoulIndex;
-					}else
+					} else
 					{
 						currentRegionIndex = beforeRegionIndex;
 					}
@@ -357,29 +436,29 @@ public class HotelMainFragment extends BaseFragment implements OnNavigationListe
 					editor.putString(KEY_PREFERENCE_REGION_SELECT, mRegionList.get(currentRegionIndex));
 					editor.commit();
 				}
-				
-				if(mFragmentList != null)
+
+				if (mFragmentList != null)
 				{
-					for(HotelListFragment hotelListFragment : mFragmentList)
+					for (HotelListFragment hotelListFragment : mFragmentList)
 					{
 						hotelListFragment.setSaleTime(mSaleTime);
-						hotelListFragment.setRegionList(mRegionDetailList);
+						hotelListFragment.setRegionList(detailRegionList);
 					}
 				}
-				
+
 				// 임시로 여기서 날짜를 넣는다.
 				ArrayList<String> dayList = new ArrayList<String>();
 				dayList.add("1일(수)");
 				dayList.add("2일(목)");
 				dayList.add("");
-				
+
 				int tabSize = mTabIndicator.size();
-				
-				for(int i = 0; i < tabSize; i++)
+
+				for (int i = 0; i < tabSize; i++)
 				{
 					String day = dayList.get(i);
-					
-					if(TextUtils.isEmpty(day) == true)
+
+					if (TextUtils.isEmpty(day) == true)
 					{
 						mTabIndicator.setSubTextEnable(i, false);
 					} else
@@ -388,24 +467,22 @@ public class HotelMainFragment extends BaseFragment implements OnNavigationListe
 						mTabIndicator.setSubText(i, day);
 					}
 				}
-				
+
 				mHostActivity.actionBar.setSelectedNavigationItem(currentRegionIndex);
 			} catch (Exception e)
 			{
 				onError(e);
-			}
-			finally
+			} finally
 			{
 				unLockUI();
 			}
 		}
 	};
-	
-	
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-// UserActionListener
-//////////////////////////////////////////////////////////////////////////////////////////////////////////	
-	
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// UserActionListener
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////	
+
 	private OnTabSelectedListener mOnTabSelectedListener = new OnTabSelectedListener()
 	{
 		@Override
@@ -415,7 +492,7 @@ public class HotelMainFragment extends BaseFragment implements OnNavigationListe
 			{
 				return;
 			}
-			
+
 			mFragmentViewPager.setCurrentItem(position);
 		}
 	};
@@ -426,11 +503,16 @@ public class HotelMainFragment extends BaseFragment implements OnNavigationListe
 		public void onPageSelected(int position)
 		{
 			mTabIndicator.setCurrentItem(position);
-			
+
 			refreshHotelList();
+			
+			if(position == 2)
+			{
+				showCheckIn();
+			}
 		}
 	};
-	
+
 	private UserActionListener mUserActionListener = new UserActionListener()
 	{
 
@@ -443,19 +525,18 @@ public class HotelMainFragment extends BaseFragment implements OnNavigationListe
 			}
 
 			lockUiComponent();
-			
-			if(hotelListViewItem == null || hotelIndex < 0)
+
+			if (hotelListViewItem == null || hotelIndex < 0)
 			{
 				ExLog.d("hotelListViewItem == null || hotelIndex < 0");
-				
+
 				releaseUiComponent();
 				return;
 			}
-			
-			switch(hotelListViewItem.getType())
+
+			switch (hotelListViewItem.getType())
 			{
-				case HotelListViewItem.TYPE_ENTRY:
-				{
+				case HotelListViewItem.TYPE_ENTRY: {
 					Intent i = new Intent(mHostActivity, HotelTabActivity.class);
 
 					String region = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
@@ -475,7 +556,7 @@ public class HotelMainFragment extends BaseFragment implements OnNavigationListe
 					mUserAnalyticsActionListener.selectHotel(hotelListViewItem.getItem().getName(), hotelIndex);
 					break;
 				}
-				
+
 				case HotelListViewItem.TYPE_SECTION:
 				default:
 					releaseUiComponent();
@@ -483,7 +564,7 @@ public class HotelMainFragment extends BaseFragment implements OnNavigationListe
 			}
 		}
 	};
-	
+
 	private UserAnalyticsActionListener mUserAnalyticsActionListener = new UserAnalyticsActionListener()
 	{
 		@Override
