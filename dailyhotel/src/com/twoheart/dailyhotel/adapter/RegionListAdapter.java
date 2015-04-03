@@ -38,7 +38,7 @@ public class RegionListAdapter extends ArrayAdapter<String>
 
 		String text = getItem(position);
 
-		view.setText("    " + text + "    ");
+		view.setText("      " + text + "    ");
 		view.setTypeface(DailyHotel.getTypeface());
 		view.setPaintFlags(view.getPaintFlags() | Paint.SUBPIXEL_TEXT_FLAG);
 
@@ -52,7 +52,7 @@ public class RegionListAdapter extends ArrayAdapter<String>
 
 		String text = getItem(position);
 
-		view.setText("    " + text + "    ");
+		view.setText("      " + text + "  ");
 		view.setTypeface(DailyHotel.getTypeface());
 		view.setPaintFlags(view.getPaintFlags() | Paint.SUBPIXEL_TEXT_FLAG);
 

@@ -70,9 +70,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	//	private List<HotelListViewItem> mHotelListViewList;
 	//	private List<Hotel> mHotelList;
 
-	private LinearLayout llListViewFooter;
-	private LinearLayout btnListViewHeader;
-
 	private SaleTime mSaleTime;
 	private Map<String, List<String>> mDetailRegionList;
 
@@ -94,31 +91,19 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 		mHostActivity.setActionBar(R.string.actionbar_title_hotel_list_frag);
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-		{
-			View listViewFooter = inflater.inflate(R.layout.footer_hotel_list, null);
-
-			llListViewFooter = (LinearLayout) listViewFooter.findViewById(R.id.ll_hotel_list_footer);
-			llListViewFooter.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, ((MainActivity) mHostActivity).config.getNavigationBarHeight()));
-
-			mHotelListView.addFooterView(listViewFooter);
-		}
-
-		View listViewHeader = inflater.inflate(R.layout.header_hotel_list, null);
-		mHotelListView.addHeaderView(listViewHeader);
-
-		btnListViewHeader = (LinearLayout) view.findViewById(R.id.btn_footer); // 수정요망 footer -> header
-		GlobalFont.apply(btnListViewHeader);
-		btnListViewHeader.setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
-			{
-				Intent i = new Intent(mHostActivity, EventWebActivity.class);
-				mHostActivity.startActivity(i);
-				mHostActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
-			}
-		});
+		GlobalFont.apply(container);
+		
+		// 추후 왼쪽 탭로 빠질것이다.
+//		btnListViewHeader.setOnClickListener(new OnClickListener()
+//		{
+//			@Override
+//			public void onClick(View v)
+//			{
+//				Intent i = new Intent(mHostActivity, EventWebActivity.class);
+//				mHostActivity.startActivity(i);
+//				mHostActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
+//			}
+//		});
 
 		// Now find the PullToRefreshLayout and set it up
 		ActionBarPullToRefresh.from(mHostActivity).options(Options.create().scrollDistance(.3f).headerTransformer(new AbcDefaultHeaderTransformer()).build()).allChildrenArePullable().listener(this)
