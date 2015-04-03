@@ -102,19 +102,19 @@ public class StringFilter
 	}
 
 	// Shows toast with specify delay that is shorter than Toast.LENGTH_SHORT
-//	private void showToast(String msg)
-//	{
-//		final Toast toast = Toast.makeText(context.getApplicationContext(), msg, Toast.LENGTH_LONG);
-//		toast.show();
-//
-//		Handler handler = new Handler();
-//		handler.postDelayed(new Runnable()
-//		{
-//			@Override
-//			public void run()
-//			{
-//				toast.cancel();
-//			}
-//		}, TOAST_LELNGTH);
-//	}
+	//	private void showToast(String msg)
+	//	{
+	//		final Toast toast = Toast.makeText(context.getApplicationContext(), msg, Toast.LENGTH_LONG);
+	//		toast.show();
+	//
+	//		Handler handler = new Handler();
+	//		handler.postDelayed(new Runnable()
+	//		{
+	//			@Override
+	//			public void run()
+	//			{
+	//				toast.cancel();
+	//			}
+	//		}, TOAST_LELNGTH);
+	//	}
 }

@@ -102,7 +102,7 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 	public void onResume()
 	{
 		super.onResume();
-		
+
 		mHostActivity.setActionBar(R.string.actionbar_title_setting_frag);
 		profileStr = getString(R.string.frag_profile);
 		loginStr = getString(R.string.frag_login);
@@ -146,14 +146,14 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 		} else if (v.getId() == llLogin.getId())
 		{
 			if (tvLogin.getText().equals(getString(R.string.frag_profile)))
-			{ 
+			{
 				// 로그인 되어 있는 상태
 				Intent i = new Intent(mHostActivity, ProfileActivity.class);
 				startActivity(i);
 				mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
 			} else
-			{ 
+			{
 				// 로그아웃 상태
 				chgClickable(llLogin);
 				Intent i = new Intent(mHostActivity, LoginActivity.class);
@@ -182,7 +182,7 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 		if (requestCode == CODE_REQUEST_ACTIVITY_LOGIN)
 		{
 			chgClickable(llLogin);
-			
+
 			if (resultCode == Activity.RESULT_OK)
 			{
 				mHostActivity.selectMenuDrawer(mHostActivity.menuHotelListFragment);

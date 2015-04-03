@@ -325,7 +325,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	public void onErrorResponse(VolleyError error)
 	{
 		releaseUiComponent();
-		
+
 		ExLog.e(error.toString());
 
 		onError();
@@ -334,7 +334,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	public void onError(Exception error)
 	{
 		releaseUiComponent();
-		
+
 		ExLog.e(error.toString());
 
 		onError();
@@ -346,7 +346,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	public void onError()
 	{
 		releaseUiComponent();
-		
+
 		// 잘못된 멘트, 모든 에러가 이쪽으로 빠지게됨. 변경 필요.
 		showToast(this.getResources().getString(R.string.act_base_network_connect), Toast.LENGTH_LONG, false);
 	}

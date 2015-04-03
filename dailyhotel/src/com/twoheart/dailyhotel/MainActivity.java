@@ -393,7 +393,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		switch (index)
 		{
 			case 0:
-//				return new HotelListFragment();
+				//				return new HotelListFragment();
 				return new HotelMainFragment();
 			case 1:
 				return new BookingListFragment();
@@ -527,7 +527,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 				break;
 		}
 
-		if(drawerLayout.isDrawerOpen(GravityCompat.START) == true)
+		if (drawerLayout.isDrawerOpen(GravityCompat.START) == true)
 		{
 			delayedReplace(indexLastFragment);
 			drawerLayout.closeDrawer(drawerList);

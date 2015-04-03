@@ -5,8 +5,6 @@ package com.twoheart.dailyhotel.widget;
 
 import java.util.ArrayList;
 
-import com.twoheart.dailyhotel.R;
-
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -21,6 +19,8 @@ import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.twoheart.dailyhotel.R;
 
 public class TabIndicator extends LinearLayout implements OnClickListener
 {
@@ -71,28 +71,28 @@ public class TabIndicator extends LinearLayout implements OnClickListener
 
 		setTabEnable(true);
 	}
-	
+
 	public int size()
 	{
-		if(mTabArrray == null)
+		if (mTabArrray == null)
 		{
 			return 0;
 		}
-		
+
 		return mTabArrray.size();
 	}
 
 	public void setData(ArrayList<String> dataList, boolean isSelectTab)
 	{
-		if(dataList == null)
+		if (dataList == null)
 		{
 			return;
 		}
-		
+
 		int size = dataList.size();
 		TabIndicatorItem tabIndicatorItem;
 		LayoutParams layoutParams;
-		
+
 		for (int i = 0; i < size; i++)
 		{
 			tabIndicatorItem = new TabIndicatorItem(getContext());
@@ -100,54 +100,54 @@ public class TabIndicator extends LinearLayout implements OnClickListener
 			tabIndicatorItem.setSubTextEnable(false);
 			tabIndicatorItem.setMainText(dataList.get(i));
 			tabIndicatorItem.setOnClickListener(this);
-			
+
 			mTabArrray.put(i, tabIndicatorItem);
-			
+
 			layoutParams = new LayoutParams(0, LayoutParams.MATCH_PARENT);
 			layoutParams.weight = 1;
-			
+
 			this.addView(tabIndicatorItem, layoutParams);
 		}
 		mTabArrray.get(0).setSelected(true);
 	}
-	
+
 	public void setData(ArrayList<String> dataList, ArrayList<String> subList, boolean isSelectTab)
 	{
-		if(dataList == null || subList == null || dataList.size() != subList.size())
+		if (dataList == null || subList == null || dataList.size() != subList.size())
 		{
 			return;
 		}
-		
+
 		int size = dataList.size();
 		TabIndicatorItem tabIndicatorItem;
 		LayoutParams layoutParams;
-		
+
 		for (int i = 0; i < size; i++)
 		{
 			tabIndicatorItem = new TabIndicatorItem(getContext());
 			tabIndicatorItem.setId(i);
 			tabIndicatorItem.setMainText(dataList.get(i));
-			
+
 			String subText = subList.get(i);
-			
-			if(TextUtils.isEmpty(subText) == true)
+
+			if (TextUtils.isEmpty(subText) == true)
 			{
 				tabIndicatorItem.setSubTextEnable(false);
-			}else
+			} else
 			{
 				tabIndicatorItem.setSubTextEnable(true);
 				tabIndicatorItem.setSubText(subText);
 			}
-			
+
 			tabIndicatorItem.setOnClickListener(this);
 			mTabArrray.put(i, tabIndicatorItem);
-			
+
 			layoutParams = new LayoutParams(0, LayoutParams.MATCH_PARENT);
 			layoutParams.weight = 1;
-			
+
 			this.addView(tabIndicatorItem, layoutParams);
 		}
-		
+
 		mTabArrray.get(0).setSelected(true);
 	}
 
@@ -304,7 +304,7 @@ public class TabIndicator extends LinearLayout implements OnClickListener
 		{
 			setBackgroundResource(R.drawable.selector_tab_indicator);
 			setGravity(Gravity.CENTER);
-			
+
 			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View view = inflater.inflate(R.layout.hotel_main_tab_view, this, true);
 
@@ -362,7 +362,7 @@ public class TabIndicator extends LinearLayout implements OnClickListener
 		public void setSelected(boolean selected)
 		{
 			super.setSelected(selected);
-			
+
 			mTitleTextView.setSelected(selected);
 			mDayTextView.setSelected(selected);
 		}

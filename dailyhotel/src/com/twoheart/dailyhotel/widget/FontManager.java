@@ -1,9 +1,9 @@
 package com.twoheart.dailyhotel.widget;
 
-import com.twoheart.dailyhotel.DailyHotel;
-
 import android.content.Context;
 import android.graphics.Typeface;
+
+import com.twoheart.dailyhotel.DailyHotel;
 
 /**
  * asset의 폰트를 싱글톤으로 관리하기 위해서 사용. (여기저기서 막 사용하면 메모리 낭비가 심해지므로)
@@ -25,13 +25,13 @@ public class FontManager
 	{
 		if (mTypeface == null)
 		{
-//			mTypeface = Typeface.createFromAsset(context.getAssets(), "NanumBarunGothic.ttf");
+			//			mTypeface = Typeface.createFromAsset(context.getAssets(), "NanumBarunGothic.ttf");
 			mTypeface = DailyHotel.getTypeface();
 		}
 
 		if (mBoldTypeface == null)
 		{
-//			mBoldTypeface = Typeface.createFromAsset(context.getAssets(), "NanumBarunGothicBold.ttf");
+			//			mBoldTypeface = Typeface.createFromAsset(context.getAssets(), "NanumBarunGothicBold.ttf");
 			mBoldTypeface = DailyHotel.getBoldTypeface();
 		}
 

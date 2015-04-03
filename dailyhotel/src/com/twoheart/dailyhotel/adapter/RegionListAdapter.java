@@ -35,9 +35,9 @@ public class RegionListAdapter extends ArrayAdapter<String>
 		}
 
 		TextView view = (TextView) super.getView(position, convertView, parent);
-		
+
 		String text = getItem(position);
-		
+
 		view.setText("    " + text + "    ");
 		view.setTypeface(DailyHotel.getTypeface());
 		view.setPaintFlags(view.getPaintFlags() | Paint.SUBPIXEL_TEXT_FLAG);
@@ -51,7 +51,7 @@ public class RegionListAdapter extends ArrayAdapter<String>
 		TextView view = (TextView) super.getView(position, convertView, parent);
 
 		String text = getItem(position);
-		
+
 		view.setText("    " + text + "    ");
 		view.setTypeface(DailyHotel.getTypeface());
 		view.setPaintFlags(view.getPaintFlags() | Paint.SUBPIXEL_TEXT_FLAG);

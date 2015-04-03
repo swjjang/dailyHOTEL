@@ -67,8 +67,8 @@ public class TabInfoFragment extends BaseFragment
 		layout = (LinearLayout) view.findViewById(R.id.layout_hotel_tab_info);
 
 		infoViewCount = 1;
-		
-		if(mHotelDetail != null)
+
+		if (mHotelDetail != null)
 		{
 			for (String key : mHotelDetail.getSpecification().keySet())
 			{

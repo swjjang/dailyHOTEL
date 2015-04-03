@@ -75,7 +75,7 @@ public class VolleyHttpClient implements Constants
 		boolean result = false;
 
 		AvailableNetwork availableNetwork = AvailableNetwork.getInstance();
-		
+
 		switch (availableNetwork.getNetType(sContext))
 		{
 			case AvailableNetwork.NET_TYPE_WIFI:
@@ -92,7 +92,7 @@ public class VolleyHttpClient implements Constants
 		}
 		return result;
 	}
-	
+
 	public static boolean hasActiveNetwork()
 	{
 		return AvailableNetwork.getInstance().hasActiveNetwork(sContext);

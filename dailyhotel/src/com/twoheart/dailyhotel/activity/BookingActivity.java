@@ -79,7 +79,7 @@ import com.twoheart.dailyhotel.widget.Switch;
 public class BookingActivity extends BaseActivity implements OnClickListener, OnCheckedChangeListener, android.widget.CompoundButton.OnCheckedChangeListener
 {
 	private static final int DEFAULT_AVAILABLE_RESERVES = 20000;
-	
+
 	private static final int DIALOG_CONFIRM_PAYMENT_CARD = 0;
 	private static final int DIALOG_CONFIRM_PAYMENT_HP = 1;
 	private static final int DIALOG_CONFIRM_PAYMENT_ACCOUNT = 2;

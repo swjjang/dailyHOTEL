@@ -107,13 +107,13 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 	@Override
 	public void onItemClick(AdapterView<?> parentView, View childView, int position, long id)
 	{
-		if(isLockUiComponent() == true)
+		if (isLockUiComponent() == true)
 		{
 			return;
 		}
-		
+
 		lockUiComponent();
-		
+
 		Intent intent = null;
 		Booking item = mItems.get(position);
 		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "selectBookingConfirmation", item.getHotel_name(), null);
@@ -130,7 +130,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 		{
 			intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKING, item);
 			startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING_DETAIL);
-		} else 
+		} else
 		{
 			releaseUiComponent();
 		}
@@ -140,7 +140,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 	public void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
 		releaseUiComponent();
-		
+
 		if (requestCode == CODE_REQUEST_ACTIVITY_BOOKING_DETAIL)
 		{
 			switch (resultCode)
@@ -307,10 +307,10 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 					mAdapter = new BookingListAdapter(mHostActivity, R.layout.list_row_booking, mItems);
 					mListView.setOnItemClickListener(BookingListFragment.this);
 					mListView.setAdapter(mAdapter);
-					
+
 					mListView.setVisibility(View.VISIBLE);
 					mEmptyLayout.setVisibility(View.GONE);
-					
+
 					unLockUI();
 
 					// flag가 가상계좌 입금 대기에서 날아온경우 

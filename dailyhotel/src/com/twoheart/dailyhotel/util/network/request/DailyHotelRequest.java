@@ -102,11 +102,11 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
 
 	public static String getUrlDecoderEx(String url)
 	{
-		if(Constants.UNENCRYPTED_URL == true)
+		if (Constants.UNENCRYPTED_URL == true)
 		{
 			return url;
 		}
-		
+
 		String param = null;
 		String encoderUrl = null;
 

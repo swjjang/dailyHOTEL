@@ -1,7 +1,8 @@
 package com.twoheart.dailyhotel.adapter;
 
 import java.text.DecimalFormat;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -13,6 +14,7 @@ import android.graphics.Shader;
 import android.graphics.drawable.PaintDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
+import android.os.Build;
 import android.support.v4.util.LruCache;
 import android.text.Html;
 import android.text.Spanned;
@@ -38,15 +40,15 @@ import com.twoheart.dailyhotel.widget.PinnedSectionListView.PinnedSectionListAda
 
 public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements PinnedSectionListAdapter
 {
-
 	private Context context;
 	private int resourceId;
 	private LayoutInflater inflater;
 	private LruCache<Integer, Bitmap> imgCache;
 
-	public HotelListAdapter(Context context, int resourceId, List<HotelListViewItem> hotelList)
+	public HotelListAdapter(Context context, int resourceId, ArrayList<HotelListViewItem> hotelList)
 	{
 		super(context, resourceId, hotelList);
+
 		final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
 		final int cacheSize = maxMemory / 8;
 		this.imgCache = new LruCache<Integer, Bitmap>(cacheSize)
@@ -61,6 +63,26 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 		this.resourceId = resourceId;
 
 		this.inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	}
+
+	@Override
+	public void addAll(Collection<? extends HotelListViewItem> collection)
+	{
+		if (collection == null)
+		{
+			return;
+		}
+
+		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1)
+		{
+			super.addAll(collection);
+		} else
+		{
+			for (HotelListViewItem item : collection)
+			{
+				add(item);
+			}
+		}
 	}
 
 	@Override
@@ -195,6 +217,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 							super.callback(url, iv, bm, status);
 						}
 					};
+
 					cb.url(element.getImage()).animation(AQuery.FADE_IN);
 					aq.id(viewHolder.img).image(cb);
 

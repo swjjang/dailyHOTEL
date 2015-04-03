@@ -32,7 +32,7 @@ public class AvailableNetwork
 	{
 		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo ni = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-		
+
 		if (ni != null)
 			if (ni.isConnected())
 				return true;
@@ -55,10 +55,12 @@ public class AvailableNetwork
 	{
 		final ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		final NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-		if (networkInfo != null && networkInfo.isConnected()) {
-		    return true;
-		} else {
-		    return false;
-		} 
+		if (networkInfo != null && networkInfo.isConnected())
+		{
+			return true;
+		} else
+		{
+			return false;
+		}
 	}
 }

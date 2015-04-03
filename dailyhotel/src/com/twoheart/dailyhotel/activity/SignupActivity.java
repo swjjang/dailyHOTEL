@@ -94,8 +94,8 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 	{
 		TelephonyManager telManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 		String phoneNum = telManager.getLine1Number();
-		
-		if(TextUtils.isEmpty(phoneNum) == false)
+
+		if (TextUtils.isEmpty(phoneNum) == false)
 		{
 			etPhone.setText(phoneNum);
 			etEmail.requestFocus();
@@ -170,7 +170,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 			signupParams.put("pw", etPwd.getText().toString());
 			signupParams.put("name", etName.getText().toString());
 			signupParams.put("phone", etPhone.getText().toString());
-			
+
 			TelephonyManager tManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 			signupParams.put("device", tManager.getDeviceId());
 			signupParams.put("marketType", RELEASE_STORE.getName());

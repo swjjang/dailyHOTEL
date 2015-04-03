@@ -19,7 +19,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBar.OnNavigationListener;
@@ -27,11 +26,9 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.view.animation.TranslateAnimation;
 
 import com.android.volley.Request.Method;
+import com.twoheart.dailyhotel.HotelDaysListFragment;
 import com.twoheart.dailyhotel.HotelListFragment;
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
@@ -57,7 +54,6 @@ import com.twoheart.dailyhotel.widget.TabIndicator.OnTabSelectedListener;
 public class HotelMainFragment extends BaseFragment implements OnNavigationListener
 {
 	private TabIndicator mTabIndicator;
-	private View mCheckInLayout;
 	private FragmentViewPager mFragmentViewPager;
 	private ArrayList<HotelListFragment> mFragmentList;
 
@@ -98,10 +94,6 @@ public class HotelMainFragment extends BaseFragment implements OnNavigationListe
 		mTabIndicator.setTextTypeface(Typeface.BOLD);
 		mTabIndicator.setSubTextColor(getResources().getColor(R.color.textView_textColor_main));
 		mTabIndicator.setOnTabSelectListener(mOnTabSelectedListener);
-		mTabIndicator.bringToFront();
-
-		mCheckInLayout = view.findViewById(R.id.checkInLayout);
-		mCheckInLayout.setVisibility(View.GONE);
 
 		mFragmentViewPager = (FragmentViewPager) view.findViewById(R.id.fragmentViewPager);
 		mFragmentViewPager.setOnPageSelectedListener(mOnPageSelectedListener);
@@ -117,7 +109,7 @@ public class HotelMainFragment extends BaseFragment implements OnNavigationListe
 		hotelListFragment01.setUserActionListener(mUserActionListener);
 		mFragmentList.add(hotelListFragment01);
 
-		HotelListFragment hotelListFragment02 = new HotelListFragment();
+		HotelDaysListFragment hotelListFragment02 = new HotelDaysListFragment();
 		hotelListFragment02.setUserActionListener(mUserActionListener);
 		mFragmentList.add(hotelListFragment02);
 
@@ -172,7 +164,7 @@ public class HotelMainFragment extends BaseFragment implements OnNavigationListe
 			editor.commit();
 		}
 
-		refreshHotelList();
+		refreshHotelList(true);
 
 		ExLog.d("before region : " + mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_BEFORE, "") + " select region : " + mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, ""));
 
@@ -180,90 +172,11 @@ public class HotelMainFragment extends BaseFragment implements OnNavigationListe
 		return true;
 	}
 
-	private void refreshHotelList()
+	private void refreshHotelList(boolean isSelectedNavigationItem)
 	{
-		//		((MainActivity) mHostActivity).drawerLayout.closeDrawer(((MainActivity) mHostActivity).drawerList);
-
 		HotelListFragment hotelListFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
 
-		hotelListFragment.refreshHotelList();
-	}
-
-	private void showCheckIn()
-	{
-		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1)
-		{
-			TranslateAnimation translateAnimation = new TranslateAnimation(
-					TranslateAnimation.RELATIVE_TO_SELF, 0.0f, 
-					TranslateAnimation.RELATIVE_TO_SELF, 0.0f, 
-					TranslateAnimation.RELATIVE_TO_SELF, -1.0f, 
-					TranslateAnimation.RELATIVE_TO_SELF, 0.0f);
-			translateAnimation.setDuration(500);
-			
-			translateAnimation.setAnimationListener(new AnimationListener()
-			{
-				@Override
-				public void onAnimationStart(Animation animation)
-				{
-					
-				}
-
-				@Override
-				public void onAnimationEnd(Animation animation)
-				{
-					mCheckInLayout.setVisibility(View.VISIBLE);
-				}
-
-				@Override
-				public void onAnimationRepeat(Animation animation)
-				{
-
-				}
-			});
-
-			mCheckInLayout.startAnimation(translateAnimation);
-		} else
-		{
-
-		}
-	}
-
-	private void hideCheckIn()
-	{
-		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1)
-		{
-			TranslateAnimation translateAnimation = new TranslateAnimation(TranslateAnimation.RELATIVE_TO_SELF, 0.0f, TranslateAnimation.RELATIVE_TO_SELF, 0.f, TranslateAnimation.RELATIVE_TO_SELF, 0.0f, TranslateAnimation.RELATIVE_TO_SELF, -1.0f);
-			translateAnimation.setDuration(500);
-			
-			translateAnimation.setAnimationListener(new AnimationListener()
-			{
-				@Override
-				public void onAnimationStart(Animation animation)
-				{
-					// TODO Auto-generated method stub
-
-				}
-
-				@Override
-				public void onAnimationEnd(Animation animation)
-				{
-					mCheckInLayout.setVisibility(View.GONE);
-					mCheckInLayout.startAnimation(null);
-				}
-
-				@Override
-				public void onAnimationRepeat(Animation animation)
-				{
-					// TODO Auto-generated method stub
-
-				}
-			});
-
-			mCheckInLayout.startAnimation(translateAnimation);
-		} else
-		{
-
-		}
+		hotelListFragment.refreshHotelList(isSelectedNavigationItem);
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -493,7 +406,14 @@ public class HotelMainFragment extends BaseFragment implements OnNavigationListe
 				return;
 			}
 
-			mFragmentViewPager.setCurrentItem(position);
+			if (mFragmentViewPager.getCurrentItem() == position)
+			{
+				HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
+				currentFragment.onPageSelected(false);
+			} else
+			{
+				mFragmentViewPager.setCurrentItem(position);
+			}
 		}
 	};
 
@@ -504,12 +424,21 @@ public class HotelMainFragment extends BaseFragment implements OnNavigationListe
 		{
 			mTabIndicator.setCurrentItem(position);
 
-			refreshHotelList();
-			
-			if(position == 2)
+			// 현재 페이지 선택 상태를 Fragment에게 알려준다.
+			HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
+
+			for (HotelListFragment hotelListFragment : mFragmentList)
 			{
-				showCheckIn();
+				if (hotelListFragment == currentFragment)
+				{
+					hotelListFragment.onPageSelected(true);
+				} else
+				{
+					hotelListFragment.onPageUnSelected();
+				}
 			}
+
+			refreshHotelList(false);
 		}
 	};
 

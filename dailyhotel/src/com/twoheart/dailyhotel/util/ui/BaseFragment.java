@@ -75,14 +75,14 @@ public abstract class BaseFragment extends Fragment implements Constants, OnLoad
 	public void onError(Exception error)
 	{
 		releaseUiComponent();
-		
+
 		mHostActivity.onError(error);
 	}
 
 	public void onError()
 	{
 		releaseUiComponent();
-		
+
 		mHostActivity.onError();
 	}
 
@@ -90,7 +90,7 @@ public abstract class BaseFragment extends Fragment implements Constants, OnLoad
 	public void onErrorResponse(VolleyError error)
 	{
 		releaseUiComponent();
-		
+
 		mHostActivity.onErrorResponse(error);
 	}
 
