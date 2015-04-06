@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.twoheart.dailyhotel"
-    android:versionCode="54"
-    android:versionName="1.5.4" >
+    android:versionCode="55"
+    android:versionName="1.5.5" >
 
     <uses-sdk
         android:minSdkVersion="9"
@@ -25,21 +25,9 @@
     <uses-permission android:name="com.twoheart.dailyhotel.permission.C2D_MESSAGE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
 
-    <!-- for card.io card scanning -->
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="false" />
-    <uses-feature
-        android:name="android.hardware.camera.autofocus"
-        android:required="false" />
-
     <permission
         android:name="com.twoheart.dailyhotel.permission.MAPS_RECEIVE"
-        android:protectionLevel="signature" >
-    </permission>
+        android:protectionLevel="signature" />
     <permission
         android:name="com.twoheart.dailyhotel.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
@@ -52,29 +40,15 @@
         android:label="@string/app_name"
         android:largeHeap="true"
         android:theme="@style/AppTheme" >
-        <service
-            android:name="com.paypal.android.sdk.payments.PayPalService"
-            android:exported="false" />
-
-        <activity android:name="com.paypal.android.sdk.payments.PaymentActivity" />
-        <activity android:name="com.paypal.android.sdk.payments.LoginActivity" />
-        <activity android:name="com.paypal.android.sdk.payments.PaymentMethodActivity" />
-        <activity android:name="com.paypal.android.sdk.payments.PaymentConfirmActivity" />
-        <activity android:name="com.paypal.android.sdk.payments.PayPalFuturePaymentActivity" />
-        <activity android:name="com.paypal.android.sdk.payments.FuturePaymentConsentActivity" />
-        <activity android:name="com.paypal.android.sdk.payments.FuturePaymentInfoActivity" />
-        <activity android:name="com.paypal.android.sdk.payments.PayPalProfileSharingActivity" />
-        <activity android:name="com.paypal.android.sdk.payments.ProfileSharingConsentActivity" />
         <activity
             android:name="io.card.payment.CardIOActivity"
             android:configChanges="keyboardHidden|orientation" />
         <activity android:name="io.card.payment.DataEntryActivity" />
-        
         <activity
             android:name=".MainActivity"
             android:icon="@drawable/img_ic_appicon"
             android:label="@string/app_name"
-     		android:launchMode="singleTop" 
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
             <intent-filter>
@@ -270,12 +244,6 @@
         </receiver>
 
         <service android:name=".GcmIntentService" />
-
-        <!-- paypal -->
-        <activity
-            android:name=".PaypalActivity"
-            android:label="@string/title_activity_paypal" >
-        </activity>
     </application>
 
 </manifest>

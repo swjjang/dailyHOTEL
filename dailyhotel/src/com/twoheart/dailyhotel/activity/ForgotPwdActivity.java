@@ -8,7 +8,6 @@ import java.util.regex.Pattern;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -25,11 +24,8 @@ import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
-import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
-import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 public class ForgotPwdActivity extends BaseActivity implements Constants, OnClickListener
@@ -86,12 +82,16 @@ public class ForgotPwdActivity extends BaseActivity implements Constants, OnClic
 
 			if (mEmail.equals(""))
 			{
+				releaseUiComponent();
+				
 				showToast(getString(R.string.toast_msg_please_input_email_address), Toast.LENGTH_SHORT, true);
 				return;
 			}
 
 			else if (!isValidEmail(mEmail))
 			{
+				releaseUiComponent();
+				
 				showToast(getString(R.string.toast_msg_wrong_email_address), Toast.LENGTH_SHORT, true);
 				return;
 			}
