@@ -41,7 +41,9 @@ public class HotelGradeView extends FrameLayout
 		tvHotelGradeName.setGravity(Gravity.CENTER);
 		tvHotelGradeName.setSingleLine(true);
 
-		addView(tvHotelGradeName);
+		FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+
+		addView(tvHotelGradeName, layoutParams);
 		setPadding(Util.dpToPx(context, 5.5), 2, Util.dpToPx(context, 5.5), 1);
 
 	}
