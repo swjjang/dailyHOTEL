@@ -36,12 +36,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
                 
-                <com.twoheart.dailyhotel.widget.HotelGradeView
-                        android:id="@+id/hv_hotel_grade"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true" >
-                </com.twoheart.dailyhotel.widget.HotelGradeView>
+                <com.twoheart.dailyhotel.widget.NanumBarunTextView
+                    android:id="@+id/hv_hotel_grade"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:textColor="@android:color/white"
+                    android:layout_centerVertical="true"
+                    android:textSize="11.5dp"
+                    android:gravity="center"
+                    android:paddingLeft="5.5dp"
+                    android:paddingTop="2px"
+                    android:paddingRight="5.5dp"
+                    android:paddingBottom="1px" />
 
                 <TextView
                     android:id="@+id/tv_hotel_tab_map_name"

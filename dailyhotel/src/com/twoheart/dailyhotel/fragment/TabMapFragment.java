@@ -40,7 +40,7 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
 	private SupportMapFragment mMapFragment;
 	private GoogleMap googleMap;
 	private TextView tvName, tvAddress;
-	private HotelGradeView hvGrade;
+	private TextView hvGrade;
 	private Marker mMarker;
 
 	public static TabMapFragment newInstance(HotelDetail hotelDetail, String title)
@@ -76,13 +76,11 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
 		tvAddress.setText(mHotelDetail.getHotel().getAddress());
 		tvAddress.setSelected(true);
 
-		hvGrade = (HotelGradeView) view.findViewById(R.id.hv_hotel_grade);
-		//		gradeBackground = (FrameLayout) view
-		//				.findViewById(R.id.fl_hotel_row_grade);
-		//		gradeText = (TextView) view.findViewById(R.id.tv_hotel_row_grade);
-
-		String category = mHotelDetail.getHotel().getCategory();
-		hvGrade.setHotelGradeCode(category);
+		hvGrade = (TextView) view.findViewById(R.id.hv_hotel_grade);
+		
+		// grade
+		hvGrade.setText(mHotelDetail.getHotel().getCategory().getName(getActivity()));
+		hvGrade.setBackgroundResource(mHotelDetail.getHotel().getCategory().getColorResId());
 
 		return view;
 	}

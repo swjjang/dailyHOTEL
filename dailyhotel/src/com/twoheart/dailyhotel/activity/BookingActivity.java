@@ -530,7 +530,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					String userIdxStr = String.format("%07d", userIdx);
 					String transId = strDate + userIdxStr;
 
-					RenewalGaManager.getInstance(getApplicationContext()).purchaseComplete(transId, mPay.getHotelDetail().getHotel().getName(), mPay.getHotelDetail().getHotel().getCategory(), (double) mPay.getPayPrice());
+					RenewalGaManager.getInstance(getApplicationContext()).purchaseComplete(transId, mPay.getHotelDetail().getHotel().getName(), mPay.getHotelDetail().getHotel().getCategory().name(), (double) mPay.getPayPrice());
 
 					SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.getDefault());
 					strDate = dateFormat2.format(date);

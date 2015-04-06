@@ -32,7 +32,7 @@ import android.view.animation.TranslateAnimation;
 
 import com.twoheart.dailyhotel.util.ExLog;
 
-public class HotelDaysListFragment extends HotelListFragment
+public class HotelDaysListFragment extends HotelListFragment implements OnClickListener
 {
 	// 날짜가 나오는 탭의 높이이다. 마진이 있는 경우 고려해서 넣을것.px 로 넣어야 함.
 	private static final int DAYSLIST_HEIGHT = 168;
@@ -43,6 +43,7 @@ public class HotelDaysListFragment extends HotelListFragment
 	private boolean mIsShowDaysList;
 	private boolean mIsAnimationStart;
 	private ObjectAnimator mObjectAnimator;
+	private View[] mDaysView;
 
 	private Handler mHandler = new Handler();
 
@@ -65,7 +66,16 @@ public class HotelDaysListFragment extends HotelListFragment
 				}
 			}
 		});
-
+		
+		// 날짜를 어떻게 받을 것인지 필요.
+		mDaysLayout.findViewById(R.id.item01).setOnClickListener(this);
+		mDaysLayout.findViewById(R.id.item02).setOnClickListener(this);
+		mDaysLayout.findViewById(R.id.item03).setOnClickListener(this);
+		mDaysLayout.findViewById(R.id.item04).setOnClickListener(this);
+		mDaysLayout.findViewById(R.id.item05).setOnClickListener(this);
+		mDaysLayout.findViewById(R.id.item06).setOnClickListener(this);
+		mDaysLayout.findViewById(R.id.item07).setOnClickListener(this);
+		
 		hideDaysList();
 
 		return view;
@@ -141,6 +151,14 @@ public class HotelDaysListFragment extends HotelListFragment
 				}
 			}, 500);
 		}
+	}
+	
+
+	@Override
+	public void onClick(View v)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 
 	private void hideDaysList()

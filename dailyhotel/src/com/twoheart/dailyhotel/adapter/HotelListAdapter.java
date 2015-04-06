@@ -94,6 +94,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 		switch (item.getType())
 		{
 			case HotelListViewItem.TYPE_SECTION:
+			{
 				HeaderListViewHolder headerViewHolder = null;
 
 				if (convertView != null)
@@ -116,12 +117,11 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 				}
 
 				headerViewHolder.regionDetailName.setText(item.getCategory());
-
-				GlobalFont.apply((ViewGroup) convertView);
 				break;
+			}
 
 			case HotelListViewItem.TYPE_ENTRY:
-
+			{
 				Hotel element = item.getItem();
 				HotelListViewHolder viewHolder = null;
 
@@ -147,7 +147,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 					viewHolder.discount = (TextView) convertView.findViewById(R.id.tv_hotel_row_discount);
 					viewHolder.sold_out = (TextView) convertView.findViewById(R.id.tv_hotel_row_soldout);
 					viewHolder.address = (TextView) convertView.findViewById(R.id.tv_hotel_row_address);
-					viewHolder.grade = (HotelGradeView) convertView.findViewById(R.id.hv_hotel_grade);
+					viewHolder.grade = (TextView) convertView.findViewById(R.id.hv_hotel_grade);
 
 					convertView.setTag(viewHolder);
 				}
@@ -197,9 +197,9 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 				viewHolder.llHotelRowContent.setBackgroundDrawable(p);
 
 				// grade
-				viewHolder.grade.setHotelGradeCode(element.getCategory());
-
-				GlobalFont.apply((ViewGroup) convertView);
+				viewHolder.grade.setText(element.getCategory().getName(getContext()));
+				viewHolder.grade.setBackgroundResource(element.getCategory().getColorResId());
+				
 				viewHolder.name.setTypeface(DailyHotel.getBoldTypeface());
 				viewHolder.discount.setTypeface(DailyHotel.getBoldTypeface());
 
@@ -252,6 +252,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 				// }
 
 				break;
+			}
 		}
 
 		return convertView;
@@ -266,7 +267,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 		TextView discount;
 		TextView sold_out;
 		TextView address;
-		HotelGradeView grade;
+		TextView grade;
 	}
 
 	private class HeaderListViewHolder

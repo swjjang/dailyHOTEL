@@ -125,29 +125,15 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	@Override
 	public void onItemClick(AdapterView<?> parentView, View childView, int position, long id)
 	{
-		// 7.2 G2 버전에서 호텔리스트에서 이벤트 칸을 클릭할 경우 튕기는 현상을 막기 위함. why? 헤더뷰인데도 아이템 클릭 리스너가 들어감.
-		if (position == 0)
-		{
-			return;
-		}
-
-		int selectedPosition = position - 1;
-
-		HotelListViewItem hotelListViewItem = mHotelListAdapter.getItem(selectedPosition);
-		//		HotelListViewItem hotelListViewItem = mHotelListViewList.get(selectedPosition);
+		HotelListViewItem hotelListViewItem = mHotelListAdapter.getItem(position);
 
 		int count = 0;
-		for (int i = 0; i < selectedPosition; i++)
+		for (int i = 0; i < position; i++)
 		{
 			if (mHotelListAdapter.getItem(i).getType() == HotelListViewItem.TYPE_SECTION)
 			{
 				count++;
 			}
-
-			//			if (mHotelListViewList.get(i).getType() == HotelListViewItem.TYPE_SECTION)
-			//			{
-			//				count++;
-			//			}
 		}
 
 		int hotelIndex = position - count;

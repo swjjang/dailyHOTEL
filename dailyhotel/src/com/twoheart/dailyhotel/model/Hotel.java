@@ -4,25 +4,62 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.ExLog;
 
 public class Hotel implements Parcelable
 {
-
 	private String image;
 	private String name;
 	private String price;
 	private String discount;
 	private String address;
-	private String category;
+	private HotelGrade category;
 	private int idx;
 	private int availableRoom;
 	private int sequence;
 	private String bedType;
 	private String detailRegion;
+	
+	public enum HotelGrade
+	{
+		biz(R.string.grade_biz, R.color.grade_hotel),
+		hostel(R.string.grade_hostel, R.color.grade_hotel),
+		grade1(R.string.grade_1, R.color.grade_hotel),
+		grade2(R.string.grade_2, R.color.grade_hotel),
+		grade3(R.string.grade_3, R.color.grade_hotel),
+		boutique(R.string.grade_boutique, R.color.grade_boutique),
+		residence(R.string.grade_residence, R.color.grade_residence),
+		resort(R.string.grade_resort, R.color.grade_resort_pension_condo),
+		pension(R.string.grade_pension, R.color.grade_resort_pension_condo),
+		condo(R.string.grade_condo, R.color.grade_resort_pension_condo),
+		special(R.string.grade_special, R.color.grade_special),
+		etc(R.string.grade_not_yet, R.color.grade_not_yet);
+		
+		private int mNameResId;
+		private int mColorResId;
+		
+		private HotelGrade(int nameResId, int colorResId)
+		{
+			mNameResId = nameResId;
+			mColorResId = colorResId;
+		}
+		
+		public String getName(Context context)
+		{
+			return context.getString(mNameResId);
+		}
+		
+		public int getColorResId()
+		{
+			return mColorResId;
+		}
+	};
+	
 
 	public Hotel()
 	{
@@ -41,7 +78,7 @@ public class Hotel implements Parcelable
 		this.price = price;
 		this.discount = discount;
 		this.address = address;
-		this.category = category;
+		this.category = HotelGrade.valueOf(category);
 		this.idx = idx;
 		this.availableRoom = availableRoom;
 		this.sequence = sequence;
@@ -57,7 +94,7 @@ public class Hotel implements Parcelable
 		dest.writeString(price);
 		dest.writeString(discount);
 		dest.writeString(address);
-		dest.writeString(category);
+		dest.writeString(category.name());
 		dest.writeInt(idx);
 		dest.writeInt(availableRoom);
 		dest.writeInt(sequence);
@@ -72,7 +109,7 @@ public class Hotel implements Parcelable
 		this.price = in.readString();
 		this.discount = in.readString();
 		this.address = in.readString();
-		this.category = in.readString();
+		this.category = HotelGrade.valueOf(in.readString());
 		this.idx = in.readInt();
 		this.availableRoom = in.readInt();
 		this.sequence = in.readInt();
@@ -94,14 +131,14 @@ public class Hotel implements Parcelable
 
 	};
 
-	public String getCategory()
+	public HotelGrade getCategory()
 	{
 		return category;
 	}
 
 	public void setCategory(String category)
 	{
-		this.category = category;
+		this.category = HotelGrade.valueOf(category);
 	}
 
 	public String getImage()
@@ -218,7 +255,7 @@ public class Hotel implements Parcelable
 			price = jsonObject.getString("price");
 			discount = jsonObject.getString("discount");
 			address = jsonObject.getString("addr_summary");
-			category = jsonObject.getString("cat");
+			category = HotelGrade.valueOf(jsonObject.getString("cat"));
 			idx = jsonObject.getInt("idx");
 			availableRoom = jsonObject.getInt("avail_room_count");
 			sequence = jsonObject.getInt("seq");
