@@ -66,7 +66,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	//	private List<HotelListViewItem> mHotelListViewList;
 	//	private List<Hotel> mHotelList;
 
-	private SaleTime mSaleTime;
+	protected SaleTime mSaleTime;
 	private Map<String, List<String>> mDetailRegionList;
 
 	private boolean event;
@@ -75,7 +75,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	//	private LocationManager mLocationManager;
 	//	private ImageView ivNewEvent;
 
-	private HotelMainFragment.UserActionListener mUserActionListener;
+	protected HotelMainFragment.UserActionListener mUserActionListener;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -156,6 +156,11 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	public void setSaleTime(SaleTime saleTime)
 	{
 		mSaleTime = saleTime;
+	}
+	
+	public SaleTime getSaleTime()
+	{
+		return mSaleTime;
 	}
 
 	public void setRegionList(Map<String, List<String>> regionDetailList)

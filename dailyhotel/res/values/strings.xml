@@ -376,5 +376,11 @@
     <string name="act_list_region_japan">일본</string>
     <string name="title_activity_paypal">PaypalActivity</string>
     <string name="title_activity_sample">SampleActivity</string>
-
+    
+    <!-- Main Tab -->
+	<string name="label_today">오늘</string>
+	<string name="label_tomorrow">내일</string>
+	<string name="label_selecteday">선택</string>
+	
+	<string name="label_format_tabday">%1$s일(%2$s)</string>
 </resources>

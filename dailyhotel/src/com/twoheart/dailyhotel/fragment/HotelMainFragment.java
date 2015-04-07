@@ -18,7 +18,6 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -55,12 +54,13 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 	private FragmentViewPager mFragmentViewPager;
 	private ArrayList<HotelListFragment> mFragmentList;
 
-	private SaleTime mSaleTime;
+	private SaleTime mTodaySaleTime;
 	private ArrayList<String> mRegionList;
 
 	public interface UserActionListener
 	{
 		public void selectHotel(HotelListViewItem hotelListViewItem, int hotelIndex);
+		public void selectDay(HotelListFragment fragment);
 	};
 
 	public interface UserAnalyticsActionListener
@@ -76,9 +76,9 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 		View view = inflater.inflate(R.layout.fragment_hotel_main, container, false);
 
 		ArrayList<String> titleList = new ArrayList<String>();
-		titleList.add("오늘");
-		titleList.add("내일");
-		titleList.add("선택");
+		titleList.add(getString(R.string.label_today));
+		titleList.add(getString(R.string.label_tomorrow));
+		titleList.add(getString(R.string.label_selecteday));
 
 		//		ArrayList<String> dayList = new ArrayList<String>();
 		//		dayList.add("1일(수)");
@@ -88,16 +88,13 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 		mTabIndicator = (TabIndicator) view.findViewById(R.id.tabindicator);
 		//		mTabIndicator.setData(titleList, dayList, true);
 		mTabIndicator.setData(titleList, true);
-		mTabIndicator.setTextColor(getResources().getColor(R.color.textView_textColor_main));
-		mTabIndicator.setTextTypeface(Typeface.BOLD);
-		mTabIndicator.setSubTextColor(getResources().getColor(R.color.textView_textColor_main));
 		mTabIndicator.setOnTabSelectListener(mOnTabSelectedListener);
 
 		mFragmentViewPager = (FragmentViewPager) view.findViewById(R.id.fragmentViewPager);
 		mFragmentViewPager.setOnPageSelectedListener(mOnPageSelectedListener);
 
 		mFragmentList = new ArrayList<HotelListFragment>();
-		mSaleTime = new SaleTime();
+		mTodaySaleTime = new SaleTime();
 
 		HotelListFragment hotelListFragment = new HotelListFragment();
 		hotelListFragment.setUserActionListener(mUserActionListener);
@@ -201,7 +198,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 					throw new NullPointerException("response == null");
 				}
 
-				mSaleTime.setCurrentTime(response);
+				mTodaySaleTime.setCurrentTime(response);
 
 				// 오픈, 클로즈 타임을 가져온다
 				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_SALE_TIME).toString(), null, mAppSaleTimeJsonResponseListener, mHostActivity));
@@ -229,12 +226,12 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 				String open = response.getString("open");
 				String close = response.getString("close");
 
-				mSaleTime.setOpenTime(open);
-				mSaleTime.setCloseTime(close);
+				mTodaySaleTime.setOpenTime(open);
+				mTodaySaleTime.setCloseTime(close);
 
-				if (mSaleTime.isSaleTime() == false)
+				if (mTodaySaleTime.isSaleTime() == false)
 				{
-					((MainActivity) mHostActivity).replaceFragment(WaitTimerFragment.newInstance(mSaleTime));
+					((MainActivity) mHostActivity).replaceFragment(WaitTimerFragment.newInstance(mTodaySaleTime));
 					unLockUI();
 				} else
 				{
@@ -348,17 +345,23 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 
 				if (mFragmentList != null)
 				{
-					for (HotelListFragment hotelListFragment : mFragmentList)
+					int fragmentSize = mFragmentList.size();
+					
+					for (int i = 0; i < fragmentSize; i++)
 					{
-						hotelListFragment.setSaleTime(mSaleTime);
+						HotelListFragment hotelListFragment = mFragmentList.get(i);
+						hotelListFragment.setSaleTime(mTodaySaleTime.getClone(i));
 						hotelListFragment.setRegionList(detailRegionList);
 					}
 				}
 
 				// 임시로 여기서 날짜를 넣는다.
 				ArrayList<String> dayList = new ArrayList<String>();
-				dayList.add("1일(수)");
-				dayList.add("2일(목)");
+				
+				SaleTime nextSaleTime = mTodaySaleTime.getClone(1);
+				
+				dayList.add(getString(R.string.label_format_tabday, mTodaySaleTime.getCurrentDayEx(), mTodaySaleTime.getCurrentDayOftheWeek()));
+				dayList.add(getString(R.string.label_format_tabday, nextSaleTime.getCurrentDayEx(), nextSaleTime.getCurrentDayOftheWeek()));
 				dayList.add("");
 
 				int tabSize = mTabIndicator.size();
@@ -376,7 +379,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 						mTabIndicator.setSubText(i, day);
 					}
 				}
-
+				
 				// 호텔 프래그먼트 일때 액션바에 네비게이션 리스트 설치.
 				mHostActivity.setActionBarListEnabled(true);
 				mHostActivity.setActionBarListData(mRegionList.get(currentRegionIndex), mRegionList, HotelMainFragment.this);
@@ -476,7 +479,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 					editor.commit();
 
 					i.putExtra(NAME_INTENT_EXTRA_DATA_HOTEL, hotelListViewItem.getItem());
-					i.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mSaleTime);
+					i.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mTodaySaleTime);
 					i.putExtra(NAME_INTENT_EXTRA_DATA_REGION, region);
 					i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, hotelIndex);
 
@@ -491,6 +494,31 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 					releaseUiComponent();
 					break;
 			}
+		}
+
+		@Override
+		public void selectDay(HotelListFragment fragment)
+		{
+			if (isLockUiComponent() == true)
+			{
+				return;
+			}
+
+			lockUiComponent();
+			
+			if(fragment != null)
+			{
+				// 선택탭의 이름을 수정한다.
+				SaleTime saleTime = fragment.getSaleTime();
+				String day = getString(R.string.label_format_tabday, saleTime.getCurrentDayEx(), saleTime.getCurrentDayOftheWeek());
+				
+				mTabIndicator.setSubTextEnable(2, true);
+				mTabIndicator.setSubText(2, day);
+				
+				fragment.refreshHotelList(false);
+			}
+			
+			releaseUiComponent();
 		}
 	};
 

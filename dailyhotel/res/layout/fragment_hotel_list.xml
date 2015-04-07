@@ -29,7 +29,7 @@
     <LinearLayout
         android:id="@+id/daysLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="110dp"
         android:background="@color/white"
         android:baselineAligned="false"
         android:visibility="gone" >
@@ -37,49 +37,49 @@
         <include
             android:id="@+id/item01"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             layout="@layout/view_selectday_item" />
 
         <include
             android:id="@+id/item02"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             layout="@layout/view_selectday_item" />
 
         <include
             android:id="@+id/item03"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             layout="@layout/view_selectday_item" />
 
         <include
             android:id="@+id/item04"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             layout="@layout/view_selectday_item" />
 
         <include
             android:id="@+id/item05"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             layout="@layout/view_selectday_item" />
 
         <include
             android:id="@+id/item06"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             layout="@layout/view_selectday_item" />
 
         <include
             android:id="@+id/item07"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             layout="@layout/view_selectday_item" />
     </LinearLayout>

@@ -29,13 +29,18 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.TranslateAnimation;
+import android.widget.TextView;
 
+import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 
 public class HotelDaysListFragment extends HotelListFragment implements OnClickListener
 {
+	private static final int DAY_OF_COUNT = 7;
+
 	// 날짜가 나오는 탭의 높이이다. 마진이 있는 경우 고려해서 넣을것.px 로 넣어야 함.
-	private static final int DAYSLIST_HEIGHT = 168;
+	private int DAYSLIST_HEIGHT;
 
 	private View mDaysBackgroundView;
 	private View mDaysLayout;
@@ -55,6 +60,8 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		mDaysBackgroundView = view.findViewById(R.id.daysBackgroundView);
 		mDaysLayout = view.findViewById(R.id.daysLayout);
 
+		DAYSLIST_HEIGHT = Util.dpToPx(mHostActivity, 110);
+
 		mDaysBackgroundView.setOnClickListener(new OnClickListener()
 		{
 			@Override
@@ -66,19 +73,40 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 				}
 			}
 		});
-		
-		// 날짜를 어떻게 받을 것인지 필요.
-		mDaysLayout.findViewById(R.id.item01).setOnClickListener(this);
-		mDaysLayout.findViewById(R.id.item02).setOnClickListener(this);
-		mDaysLayout.findViewById(R.id.item03).setOnClickListener(this);
-		mDaysLayout.findViewById(R.id.item04).setOnClickListener(this);
-		mDaysLayout.findViewById(R.id.item05).setOnClickListener(this);
-		mDaysLayout.findViewById(R.id.item06).setOnClickListener(this);
-		mDaysLayout.findViewById(R.id.item07).setOnClickListener(this);
-		
+
+		if (mDaysView == null)
+		{
+			mDaysView = new View[DAY_OF_COUNT];
+		}
+
 		hideDaysList();
 
 		return view;
+	}
+
+	@Override
+	public void setSaleTime(SaleTime saleTime)
+	{
+		super.setSaleTime(saleTime);
+
+		// 날짜를 어떻게 받을 것인지 필요.
+		mDaysView[0] = mDaysLayout.findViewById(R.id.item01);
+		mDaysView[1] = mDaysLayout.findViewById(R.id.item02);
+		mDaysView[2] = mDaysLayout.findViewById(R.id.item03);
+		mDaysView[3] = mDaysLayout.findViewById(R.id.item04);
+		mDaysView[4] = mDaysLayout.findViewById(R.id.item05);
+		mDaysView[5] = mDaysLayout.findViewById(R.id.item06);
+		mDaysView[6] = mDaysLayout.findViewById(R.id.item07);
+
+		initLayoutDays(mDaysView[0], mSaleTime.getClone(-2));
+		initLayoutDays(mDaysView[1], mSaleTime.getClone(-1));
+		initLayoutDays(mDaysView[2], mSaleTime.getClone(0));
+		initLayoutDays(mDaysView[3], mSaleTime.getClone(1));
+		initLayoutDays(mDaysView[4], mSaleTime.getClone(2));
+		initLayoutDays(mDaysView[5], mSaleTime.getClone(3));
+		initLayoutDays(mDaysView[6], mSaleTime.getClone(4));
+		
+		setSelectedDays(mDaysView[2]);
 	}
 
 	@Override
@@ -152,13 +180,62 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 			}, 500);
 		}
 	}
-	
 
 	@Override
 	public void onClick(View v)
 	{
-		// TODO Auto-generated method stub
+		setSelectedDays(v);
 		
+		mSaleTime = (SaleTime) v.getTag();
+		
+		mUserActionListener.selectDay(this);
+
+		mHandler.postDelayed(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				hideAnimationDaysList();
+			}
+			
+		}, 500);
+	}
+
+	private void initLayoutDays(View view, SaleTime saleTime)
+	{
+		if (view == null)
+		{
+			return;
+		}
+
+		TextView dayOfTheWeekTextView = (TextView) view.findViewById(R.id.textView1);
+		TextView dayTextView = (TextView) view.findViewById(R.id.textView2);
+
+		dayOfTheWeekTextView.setText(saleTime.getCurrentDayOftheWeek());
+		dayTextView.setText(saleTime.getCurrentDayEx());
+
+		view.setOnClickListener(this);
+
+		view.setTag(saleTime);
+	}
+
+	private void setSelectedDays(View view)
+	{
+		if (view == null || mDaysView == null)
+		{
+			return;
+		}
+
+		for (View dayView : mDaysView)
+		{
+			TextView dayOfTheWeekTextView = (TextView) dayView.findViewById(R.id.textView1);
+			TextView dayTextView = (TextView) dayView.findViewById(R.id.textView2);
+
+			boolean selectedView = dayView == view;
+			
+			dayOfTheWeekTextView.setSelected(selectedView);
+			dayTextView.setSelected(selectedView);
+		}
 	}
 
 	private void hideDaysList()

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -20,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 
 public class TabIndicator extends LinearLayout implements OnClickListener
@@ -108,6 +110,7 @@ public class TabIndicator extends LinearLayout implements OnClickListener
 
 			this.addView(tabIndicatorItem, layoutParams);
 		}
+		
 		mTabArrray.get(0).setSelected(true);
 	}
 
@@ -280,6 +283,7 @@ public class TabIndicator extends LinearLayout implements OnClickListener
 	{
 		private TextView mTitleTextView;
 		private TextView mDayTextView;
+		private View mSelectedUnderLineView;
 
 		public TabIndicatorItem(Context context)
 		{
@@ -302,7 +306,7 @@ public class TabIndicator extends LinearLayout implements OnClickListener
 
 		private void init()
 		{
-			setBackgroundResource(R.drawable.selector_tab_indicator);
+			setBackgroundResource(R.color.white);
 			setGravity(Gravity.CENTER);
 
 			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -310,6 +314,7 @@ public class TabIndicator extends LinearLayout implements OnClickListener
 
 			mTitleTextView = (TextView) view.findViewById(R.id.tab_indicator_main_text);
 			mDayTextView = (TextView) view.findViewById(R.id.tab_indicator_sub_text);
+			mSelectedUnderLineView = view.findViewById(R.id.tab_indicator_under_line);
 		}
 
 		public void setMainTextColor(int color)
@@ -362,9 +367,25 @@ public class TabIndicator extends LinearLayout implements OnClickListener
 		public void setSelected(boolean selected)
 		{
 			super.setSelected(selected);
+			
+			if(selected == true)
+			{
+				mTitleTextView.setTypeface(mTitleTextView.getTypeface(), Typeface.BOLD);
+			} else 
+			{
+				mTitleTextView.setTypeface(mTitleTextView.getTypeface(), Typeface.NORMAL);
+			}
 
 			mTitleTextView.setSelected(selected);
 			mDayTextView.setSelected(selected);
+
+			if (selected)
+			{
+				mSelectedUnderLineView.setVisibility(View.VISIBLE);
+			} else
+			{
+				mSelectedUnderLineView.setVisibility(View.INVISIBLE);
+			}
 		}
 	}
 }

@@ -7,13 +7,20 @@
     <com.twoheart.dailyhotel.widget.TabIndicator
         android:id="@+id/tabindicator"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="53dp"
         android:background="@color/tab_background" />
-
+    
+    <View
+        android:id="@+id/underLine"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@id/tabindicator"
+        android:background="@color/tab_underline" />
+    
     <com.twoheart.dailyhotel.widget.FragmentViewPager
         android:id="@+id/fragmentViewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/tabindicator" />
+        android:layout_below="@id/underLine" />
 
 </RelativeLayout>
