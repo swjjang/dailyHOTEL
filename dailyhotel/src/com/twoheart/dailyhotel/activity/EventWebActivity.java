@@ -22,7 +22,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setActionBarHide();
 
 		if (RELEASE_STORE == Stores.PLAY_STORE || RELEASE_STORE == Stores.N_STORE)
 		{

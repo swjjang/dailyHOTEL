@@ -154,18 +154,18 @@ public class Switch extends CompoundButton
 		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.Switch, defStyle, 0);
 
 		mThumbDrawable = a.getDrawable(R.styleable.Switch_thumb);
-		mTrackDrawable = a.getDrawable(R.styleable.Switch_track);
+//		mTrackDrawable = a.getDrawable(R.styleable.Switch_track);
 		mTextOn = a.getText(R.styleable.Switch_textOn);
 		mTextOff = a.getText(R.styleable.Switch_textOff);
-		mThumbTextPadding = a.getDimensionPixelSize(R.styleable.Switch_thumbTextPadding, 0);
-		mSwitchMinWidth = a.getDimensionPixelSize(R.styleable.Switch_switchMinWidth, 0);
-		mSwitchPadding = a.getDimensionPixelSize(R.styleable.Switch_switchPadding, 0);
+//		mThumbTextPadding = a.getDimensionPixelSize(R.styleable.Switch_thumbTextPadding, 0);
+//		mSwitchMinWidth = a.getDimensionPixelSize(R.styleable.Switch_switchMinWidth, 0);
+//		mSwitchPadding = a.getDimensionPixelSize(R.styleable.Switch_switchPadding, 0);
 
-		int appearance = a.getResourceId(R.styleable.Switch_switchTextAppearance, 0);
-		if (appearance != 0)
-		{
-			setSwitchTextAppearance(context, appearance);
-		}
+//		int appearance = a.getResourceId(R.styleable.Switch_switchTextAppearance, 0);
+//		if (appearance != 0)
+//		{
+//			setSwitchTextAppearance(context, appearance);
+//		}
 		a.recycle();
 
 		ViewConfiguration config = ViewConfiguration.get(context);

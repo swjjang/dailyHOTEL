@@ -33,9 +33,7 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
-import com.twoheart.dailyhotel.widget.HotelGradeView;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView.PinnedSectionListAdapter;
 
 public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements PinnedSectionListAdapter

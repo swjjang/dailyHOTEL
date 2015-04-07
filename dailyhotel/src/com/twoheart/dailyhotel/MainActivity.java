@@ -38,11 +38,12 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.view.KeyEvent;
@@ -118,7 +119,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	public int indexLastFragment; // Error Fragment에서 다시 돌아올 때 필요.
 
 	// SystemBarTintManager
-	private SystemBarTintManager tintManager;
 	public SystemBarConfig config;
 
 	// DrawerMenu 객체들
@@ -176,38 +176,12 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 		startActivityForResult(new Intent(this, SplashActivity.class), CODE_REQUEST_ACTIVITY_SPLASH);
 
-		// Anroid 4.4 이상에서 Android StatusBar와 Android NavigationBar를 Translucent하게 해주는 API를 사용하도록 한다.
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-		{
-			setTheme(R.style.AppTheme_Translucent);
-
-			// SystemBarTintManager는 3rd Party 라이브러리로 StatusBar와 NavigationBar와 관련된 API를 쉽게 변경할 수 있도록 해준다.
-			tintManager = new SystemBarTintManager(this);
-			config = tintManager.getConfig();
-
-			tintManager.setStatusBarTintEnabled(true);
-			int actionBarColor = getResources().getColor(android.R.color.black);//white에서 black으로 변경 
-			tintManager.setStatusBarTintColor(actionBarColor);
-
-		} else
-		{
-			setTheme(R.style.AppTheme);
-		}
-
 		setContentView(R.layout.activity_main);
-		setNavigationDrawer();
+		
+		Toolbar toolbar = setActionBar("");
+		setNavigationDrawer(toolbar);
 
 		mContentFrame = (FrameLayout) findViewById(R.id.content_frame);
-
-		// Android 4.4 이상에서 Android StatusBar와 Android NavigationBar를 Translucent하게 
-		// 할 경우 여백 계산이 필요한 케이스가 발생하므로 해당 케이스에 대해 예외 처리한다.
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-		{
-			mContentFrame.setPadding(mContentFrame.getPaddingLeft(), config.getStatusBarHeight() + config.getActionBarHeight(), mContentFrame.getPaddingRight(), mContentFrame.getPaddingBottom());
-
-			drawerList.setPadding(drawerList.getPaddingLeft(), config.getStatusBarHeight() + config.getActionBarHeight(), drawerList.getPaddingRight(), drawerList.getPaddingBottom());
-
-		}
 
 		fragmentManager = getSupportFragmentManager();
 		backButtonHandler = new CloseOnBackPressed(this);
@@ -419,28 +393,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			clearFragmentBackStack();
 
 			fragmentManager.beginTransaction().replace(mContentFrame.getId(), fragment).commitAllowingStateLoss();
-
-			// Android 4.4 이상일 경우 Android StatusBar와 Android NavigationBar를 모두 Translucent하는데
-			// 우리 어플리케이션에서는 HotelListFragment에서만 Android NavigationBar를 Translucent하게 하였다.
-			// 그래서 다른 Fragment들에서는 네비게이션 드로워가 차지하는 공간에 있어서 차이가 발생하게 되는데 해당 이슈를
-			// 해결하기 위한 부분이 이 부분이다.
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-			{
-				if (fragment instanceof HotelMainFragment)
-				{
-					mContentFrame.setPadding(mContentFrame.getPaddingLeft(), mContentFrame.getPaddingTop(), mContentFrame.getPaddingRight(), 0);
-
-					Window w = getWindow();
-					w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-
-				} else
-				{
-					WindowManager.LayoutParams attrs = getWindow().getAttributes();
-					attrs.flags &= (~WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-					getWindow().setAttributes(attrs);
-
-				}
-			}
 		} catch (IllegalStateException e)
 		{
 			onError();
@@ -560,13 +512,12 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	/**
 	 * 네비게이션 드로워를 셋팅하는 메서드
 	 */
-	public void setNavigationDrawer()
+	public void setNavigationDrawer(Toolbar toolbar)
 	{
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer, 0, 0)
+		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, 0, 0)
 		{
-
 			public void onDrawerClosed(View view)
 			{
 				super.onDrawerClosed(view);
@@ -583,7 +534,15 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			}
 		};
 
+		drawerLayout.post(new Runnable() {
+            @Override
+            public void run() {
+            	drawerToggle.syncState();
+            }
+        });
+		
 		drawerLayout.setDrawerListener(drawerToggle);
+		
 		drawerList = (ListView) findViewById(R.id.left_drawer);
 
 		menuHotelListFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_todays_hotel), R.drawable.selector_drawermenu_todayshotel, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
@@ -930,7 +889,10 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			{
 				onError(e);
 			}
-			unLockUI();
+			finally
+			{
+				unLockUI();
+			}
 		}
 	};
 

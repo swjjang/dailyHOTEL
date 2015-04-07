@@ -25,7 +25,6 @@ public class ImageDetailActivity extends BaseActivity implements Constants
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setActionBarHide();
 		setContentView(R.layout.activity_image_detail);
 
 		Bundle bundle = getIntent().getExtras();

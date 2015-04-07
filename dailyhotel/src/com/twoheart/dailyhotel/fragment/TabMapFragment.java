@@ -30,7 +30,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.ZoomMapActivity;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
-import com.twoheart.dailyhotel.widget.HotelGradeView;
 
 public class TabMapFragment extends BaseFragment implements OnMapClickListener
 {

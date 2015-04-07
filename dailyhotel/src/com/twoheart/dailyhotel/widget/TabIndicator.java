@@ -306,7 +306,7 @@ public class TabIndicator extends LinearLayout implements OnClickListener
 			setGravity(Gravity.CENTER);
 
 			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			View view = inflater.inflate(R.layout.hotel_main_tab_view, this, true);
+			View view = inflater.inflate(R.layout.tab_row_hotel_main, this, true);
 
 			mTitleTextView = (TextView) view.findViewById(R.id.tab_indicator_main_text);
 			mDayTextView = (TextView) view.findViewById(R.id.tab_indicator_sub_text);

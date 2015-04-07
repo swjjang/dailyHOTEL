@@ -42,7 +42,6 @@ public class IntroActivity extends BaseActivity implements OnClickListener, OnPa
 	{
 		super.onCreate(savedInstanceState);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		setActionBarHide();
 		setContentView(R.layout.activity_intro);
 
 		mPager = (ViewPager) findViewById(R.id.intro_pager);

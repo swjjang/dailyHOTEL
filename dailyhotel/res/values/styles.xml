@@ -5,17 +5,11 @@
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
-    <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light">
-        <!-- 
-        	android:windowContentOverlay 스타일은 현재 안드로이드 4.3에서 버그가 발견되어 적용되지 않는 문제 발생.
-        	따라서 안드로이드 4.3 커널을 이용하는 유저들은 액션바에 바텀 섀도우가 빠진채로 레이아웃 형성.
-         -->
-        <item name="actionMenuTextColor">@color/dh_theme_color</item>
-        <item name="actionMenuTextAppearance">@style/actionbarMenuTextAppearance</item>
-        <item name="actionBarItemBackground">@drawable/item_background_holo_light</item>
-        <item name="actionDropDownStyle">@style/DropDownListViewDH_Theme.ActionBar</item>
-        <item name="dropDownListViewStyle">@style/DropDownDH_Theme.ActionBar</item>
-        <item name="android:ratingBarStyle">@style/RatingBarDH</item>
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+       <item name="colorPrimary">@color/actionbar_background</item>
+        <item name="colorAccent">@color/myAccentColor</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="android:windowContentTransitions">true</item>
     </style>
 
     <!-- Application theme. -->
@@ -108,10 +102,6 @@
         <item name="android:textSize">18dp</item>
     </style>
 
-    <style name="Theme.AppCompat.Light.NoActionBar" parent="AppTheme">
-        <item name="android:windowNoTitle">true</item>
-    </style>
-
     <style name="switch_light">
         <item name="track">@drawable/switch_track_holo_light</item>
         <item name="thumb">@drawable/switch_inner_holo_light</item>
@@ -135,5 +125,16 @@
         <item name="android:progressDrawable">@drawable/dh_ratingbar_full_holo_light</item>
         <item name="android:indeterminateDrawable">@drawable/dh_ratingbar_full_holo_light</item>
     </style>
-    
+
+    <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">@color/actionbar_hamburger</item>
+    </style>
+
+    <style name="ToolBarStyle" parent="">
+        <item name="android:elevation">0dp</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+    </style>
+
 </resources>

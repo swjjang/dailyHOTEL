@@ -73,14 +73,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		// Anroid 4.4 이상에서 Android StatusBar와 Android NavigationBar를
-		// Translucent하게 해주는 API를 사용하도록 한다.
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-		{
-			setTheme(R.style.AppTheme_Translucent);
-		}
 
-		setActionBarHide();
 		setContentView(R.layout.activity_splash);
 
 		ivCircles = new ArrayList<ImageView>();

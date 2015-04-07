@@ -20,8 +20,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBar.OnNavigationListener;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +32,6 @@ import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.WaitTimerFragment;
 import com.twoheart.dailyhotel.activity.HotelTabActivity;
-import com.twoheart.dailyhotel.adapter.RegionListAdapter;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
@@ -48,17 +45,18 @@ import com.twoheart.dailyhotel.util.ui.BaseFragment;
 import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
 import com.twoheart.dailyhotel.widget.FragmentViewPager;
 import com.twoheart.dailyhotel.widget.FragmentViewPager.OnPageSelectedListener;
+import com.twoheart.dailyhotel.widget.RegionPopupListView;
 import com.twoheart.dailyhotel.widget.TabIndicator;
 import com.twoheart.dailyhotel.widget.TabIndicator.OnTabSelectedListener;
 
-public class HotelMainFragment extends BaseFragment implements OnNavigationListener
+public class HotelMainFragment extends BaseFragment implements RegionPopupListView.UserActionListener
 {
 	private TabIndicator mTabIndicator;
 	private FragmentViewPager mFragmentViewPager;
 	private ArrayList<HotelListFragment> mFragmentList;
 
 	private SaleTime mSaleTime;
-	private List<String> mRegionList;
+	private ArrayList<String> mRegionList;
 
 	public interface UserActionListener
 	{
@@ -151,10 +149,18 @@ public class HotelMainFragment extends BaseFragment implements OnNavigationListe
 	}
 
 	@Override
-	public boolean onNavigationItemSelected(int position, long id)
+	public void onItemClick(int position)
+	{
+		onNavigationItemSelected(position);
+	}
+	
+	public boolean onNavigationItemSelected(int position)
 	{
 		String region = mRegionList.get(position);
-
+		
+		mHostActivity.setActionBarListEnabled(true);
+		mHostActivity.setActionBarListData(region, mRegionList, this);
+		
 		// 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
 		if (region.equalsIgnoreCase(mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "")) == false)
 		{
@@ -301,16 +307,6 @@ public class HotelMainFragment extends BaseFragment implements OnNavigationListe
 				ExLog.e("mRegionList : " + mRegionList.toString());
 				ExLog.e("mRegionDetailList : " + detailRegionList.toString());
 
-				//기존의 지역리스트 표시방식 
-				mHostActivity.actionBar.setDisplayShowTitleEnabled(false);
-
-				// 호텔 프래그먼트 일때 액션바에 네비게이션 리스트 설치.
-				mHostActivity.actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-				RegionListAdapter regionListAdapter = new RegionListAdapter(mHostActivity, mRegionList);
-				regionListAdapter.setNotifyOnChange(true);
-
-				mHostActivity.actionBar.setListNavigationCallbacks(regionListAdapter, HotelMainFragment.this);
-
 				int currentRegionIndex = -1;
 				int beforeRegionIndex = -1;
 
@@ -381,7 +377,11 @@ public class HotelMainFragment extends BaseFragment implements OnNavigationListe
 					}
 				}
 
-				mHostActivity.actionBar.setSelectedNavigationItem(currentRegionIndex);
+				// 호텔 프래그먼트 일때 액션바에 네비게이션 리스트 설치.
+				mHostActivity.setActionBarListEnabled(true);
+				mHostActivity.setActionBarListData(mRegionList.get(currentRegionIndex), mRegionList, HotelMainFragment.this);
+				
+				onNavigationItemSelected(currentRegionIndex);
 			} catch (Exception e)
 			{
 				onError(e);

@@ -3,6 +3,12 @@
     <color name="dh_theme_color">#FF7A7A</color>
   
     <color name="actionbar_border">#7f7f7f</color>
+    <color name="actionbar_title">#181818</color>
+    <color name="actionbar_underline">#b4b4b4</color>
+    <color name="actionbar_background">#ffffff</color>
+    <color name="actionbar_hamburger">#ff7a7a</color>
+    
+    <color name="myAccentColor">#FF4081</color>
     
     <color name="drawermenu_border">#d6d6d6</color>
     <color name="common_border">#dcdcdc</color>
@@ -36,6 +42,7 @@
     <color name="grade_resort_pension_condo">#cf8d14</color>
     <color name="grade_special">#ab380a</color>
     <color name="grade_not_yet">#808080</color>
+    
 	<color name="white">#ffffff</color>
 
 </resources>	
