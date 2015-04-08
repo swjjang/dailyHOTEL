@@ -45,12 +45,29 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 	private View mDaysBackgroundView;
 	private View mDaysLayout;
 
-	private boolean mIsShowDaysList;
-	private boolean mIsAnimationStart;
+	private ANIMATION_STATUS mAnimationStatus = ANIMATION_STATUS.HIDE_END;
+	private ANIMATION_STATE mAnimationState = ANIMATION_STATE.END;
 	private ObjectAnimator mObjectAnimator;
+	private AlphaAnimation mAlphaAnimation;
+	
 	private View[] mDaysView;
 
 	private Handler mHandler = new Handler();
+	
+	private enum ANIMATION_STATE
+	{
+		START,
+		END,
+		CANCEL
+	};
+	
+	private enum ANIMATION_STATUS
+	{
+		SHOW,
+		HIDE,
+		SHOW_END,
+		HIDE_END
+	};
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -113,33 +130,22 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 	public void onPageSelected(boolean isRequestHotelList)
 	{
 		super.onPageSelected(isRequestHotelList);
+		
+		ExLog.d("pinkred : mAnimationStatus : " + mAnimationState + ", mAnimationStatus : " + mAnimationStatus + ", isRequestHotelList : " + isRequestHotelList);
 
-		if (mIsShowDaysList == false)
+		switch(mAnimationStatus)
 		{
-			// 네트워크 요청이 없으면 바로 애니매이션 시작.
-			if (isRequestHotelList == false)
-			{
-				if (mIsAnimationStart == true)
+			case SHOW:
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1)
 				{
-					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1)
-					{
-						hideAnimationDaysList();
-					} else
-					{
-						return;
-					}
+					hideAnimationDaysList();
 				} else
 				{
-					showAnimationDaysList();
+					return;
 				}
-			} else
-			{
-				showAnimationFadeOut();
-			}
-		} else
-		{
-			if (mIsAnimationStart == true)
-			{
+				break;
+				
+			case HIDE:
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1)
 				{
 					showAnimationDaysList();
@@ -147,20 +153,70 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 				{
 					return;
 				}
-
-			} else
-			{
+				break;
+				
+			case SHOW_END:
 				hideAnimationDaysList();
-			}
+				break;
+				
+			case HIDE_END:
+				if (isRequestHotelList == true)
+				{
+					showAnimationFadeOut();
+				} else
+				{
+					showAnimationDaysList();
+				}
+				break;
 		}
+//		
+//		if (mIsShowDaysList == false)
+//		{
+//			// 네트워크 요청이 없으면 바로 애니매이션 시작.
+//			if (isRequestHotelList == false)
+//			{
+//				if (mAnimationStatus == ANIMATION_STATUS.START)
+//				{
+//					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1)
+//					{
+//						hideAnimationDaysList();
+//					} else
+//					{
+//						return;
+//					}
+//				} else
+//				{
+//					showAnimationDaysList();
+//				}
+//			} else
+//			{
+//				showAnimationFadeOut();
+//			}
+//		} else
+//		{
+//			if (mAnimationStatus == ANIMATION_STATUS.START)
+//			{
+//				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1)
+//				{
+//					showAnimationDaysList();
+//				} else
+//				{
+//					return;
+//				}
+//
+//			} else
+//			{
+//				hideAnimationDaysList();
+//			}
+//		}
 	}
 
 	@Override
 	public void onPageUnSelected()
 	{
 		super.onPageUnSelected();
-
-		mIsShowDaysList = false;
+		
+		ExLog.d("onPageUnSelected");
 
 		hideDaysList();
 	}
@@ -168,7 +224,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 	@Override
 	public void onRefreshComplete(boolean isSelectedNavigationItem)
 	{
-		if (isSelectedNavigationItem == false && mIsShowDaysList == false)
+		if (isSelectedNavigationItem == false && mAnimationStatus == ANIMATION_STATUS.HIDE_END)
 		{
 			mHandler.postDelayed(new Runnable()
 			{
@@ -248,20 +304,13 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1)
 		{
 			mDaysLayout.setVisibility(View.INVISIBLE);
-
-			// 위치 숨겨놓기.
-			mHandler.post(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					mDaysLayout.animate().translationY(-mDaysLayout.getHeight()).withLayer();
-				}
-			});
+			mDaysLayout.setTranslationY(-DAYSLIST_HEIGHT);
 		} else
 		{
 			mDaysLayout.setVisibility(View.GONE);
 		}
+		
+		mAnimationStatus = ANIMATION_STATUS.HIDE_END;
 	}
 
 	private void showAnimationDaysList()
@@ -269,38 +318,57 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1)
 		{
 			final float y = mDaysLayout.getY();
+			
+			ExLog.d("pinkred showAnimationDaysList y :" + y);
 
 			if (mObjectAnimator != null)
 			{
-				mObjectAnimator.cancel();
-				mObjectAnimator.removeAllListeners();
+				if (mObjectAnimator.isRunning() == true)
+				{
+					mObjectAnimator.cancel();
+					mObjectAnimator.removeAllListeners();
+				}
+
 				mObjectAnimator = null;
 			}
 
 			mObjectAnimator = ObjectAnimator.ofFloat(mDaysLayout, "y", y, 0);
-			mObjectAnimator.setDuration(500);
+			mObjectAnimator.setDuration(300);
 
 			mObjectAnimator.addListener(new AnimatorListener()
 			{
 				@Override
 				public void onAnimationStart(Animator animation)
 				{
-					mDaysLayout.setVisibility(View.VISIBLE);
-					mIsAnimationStart = true;
+					if(mDaysLayout.getVisibility() != View.VISIBLE)
+					{
+						mDaysLayout.setVisibility(View.VISIBLE);
+					}
+					
+					mAnimationState = ANIMATION_STATE.START;
+					mAnimationStatus = ANIMATION_STATUS.SHOW;
+					
+					ExLog.d("pinkred showAnimationDaysList - onAnimationStart");
 				}
 
 				@Override
 				public void onAnimationEnd(Animator animation)
 				{
-					mIsShowDaysList = true;
-					mIsAnimationStart = false;
+					ExLog.d("pinkred showAnimationDaysList - onAnimationEnd");
+					
+					if(mAnimationState != ANIMATION_STATE.CANCEL)
+					{
+						mAnimationStatus = ANIMATION_STATUS.SHOW_END;
+						mAnimationState = ANIMATION_STATE.END;
+					}
 				}
 
 				@Override
 				public void onAnimationCancel(Animator animation)
 				{
-					mIsAnimationStart = false;
-
+					mAnimationState = ANIMATION_STATE.CANCEL;
+					
+					ExLog.d("pinkred showAnimationDaysList - onAnimationCancel");
 				}
 
 				@Override
@@ -314,7 +382,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		} else
 		{
 			TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, -DAYSLIST_HEIGHT, 0);
-			translateAnimation.setDuration(500);
+			translateAnimation.setDuration(300);
 			translateAnimation.setFillBefore(true);
 			translateAnimation.setFillAfter(true);
 			translateAnimation.setInterpolator(mHostActivity, android.R.anim.decelerate_interpolator);
@@ -325,7 +393,8 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 				public void onAnimationStart(Animation animation)
 				{
 					mDaysLayout.setVisibility(View.VISIBLE);
-					mIsAnimationStart = true;
+					mAnimationState = ANIMATION_STATE.START;
+					mAnimationStatus = ANIMATION_STATUS.SHOW;
 				}
 
 				@Override
@@ -337,8 +406,8 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 				@Override
 				public void onAnimationEnd(Animation animation)
 				{
-					mIsShowDaysList = true;
-					mIsAnimationStart = false;
+					mAnimationStatus = ANIMATION_STATUS.SHOW_END;
+					mAnimationState = ANIMATION_STATE.END;
 				}
 			});
 
@@ -352,40 +421,54 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 	{
 		final float y = mDaysLayout.getY();
 
-		ExLog.d("pinkred y :" + y);
+		ExLog.d("pinkred hideAnimationDaysList y :" + y);
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1)
 		{
 			if (mObjectAnimator != null)
 			{
-				mObjectAnimator.cancel();
-				mObjectAnimator.removeAllListeners();
+				if (mObjectAnimator.isRunning() == true)
+				{
+					mObjectAnimator.cancel();
+					mObjectAnimator.removeAllListeners();
+				}
+
 				mObjectAnimator = null;
 			}
 
 			mObjectAnimator = ObjectAnimator.ofFloat(mDaysLayout, "y", y, -DAYSLIST_HEIGHT);
-			mObjectAnimator.setDuration(500);
+			mObjectAnimator.setDuration(300);
 
 			mObjectAnimator.addListener(new AnimatorListener()
 			{
 				@Override
 				public void onAnimationStart(Animator animation)
 				{
-					mIsAnimationStart = true;
+					mAnimationState = ANIMATION_STATE.START;
+					mAnimationStatus = ANIMATION_STATUS.HIDE;
+					ExLog.d("pinkred hideAnimationDaysList - onAnimationStart");
 				}
 
 				@Override
 				public void onAnimationEnd(Animator animation)
 				{
-					mIsShowDaysList = false;
-					mIsAnimationStart = false;
-
-					mDaysLayout.setVisibility(View.INVISIBLE);
+					ExLog.d("pinkred hideAnimationDaysList - onAnimationEnd : " + mAnimationState);
+					
+					if(mAnimationState != ANIMATION_STATE.CANCEL)
+					{
+						mAnimationStatus = ANIMATION_STATUS.HIDE_END;
+						mAnimationState = ANIMATION_STATE.END;
+	
+						hideDaysList();
+					}
 				}
 
 				@Override
 				public void onAnimationCancel(Animator animation)
 				{
+					mAnimationState = ANIMATION_STATE.CANCEL;
+					
+					ExLog.d("pinkred hideAnimationDaysList - onAnimationCancel");
 				}
 
 				@Override
@@ -398,7 +481,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		} else
 		{
 			TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, y, -DAYSLIST_HEIGHT);
-			translateAnimation.setDuration(500);
+			translateAnimation.setDuration(300);
 			translateAnimation.setFillBefore(true);
 			translateAnimation.setFillAfter(true);
 			translateAnimation.setInterpolator(mHostActivity, android.R.anim.decelerate_interpolator);
@@ -408,7 +491,8 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 				@Override
 				public void onAnimationStart(Animation animation)
 				{
-					mIsAnimationStart = true;
+					mAnimationState = ANIMATION_STATE.START;
+					mAnimationStatus = ANIMATION_STATUS.HIDE;
 				}
 
 				@Override
@@ -419,8 +503,8 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 				@Override
 				public void onAnimationEnd(Animation animation)
 				{
-					mIsShowDaysList = false;
-					mIsAnimationStart = false;
+					mAnimationStatus = ANIMATION_STATUS.HIDE_END;
+					mAnimationState = ANIMATION_STATE.END;
 				}
 			});
 
@@ -435,17 +519,22 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 	 */
 	private void showAnimationFadeIn()
 	{
-		if (mDaysBackgroundView.getVisibility() == View.GONE)
+		if(mAlphaAnimation != null)
 		{
-			return;
+			if(mAlphaAnimation.hasEnded() == false)
+			{
+				mAlphaAnimation.cancel();
+			}
+			
+			mAlphaAnimation = null;
 		}
 
-		AlphaAnimation alphaAnimation = new AlphaAnimation(1.0f, 0.0f);
-		alphaAnimation.setDuration(500);
-		alphaAnimation.setFillBefore(true);
-		alphaAnimation.setFillAfter(true);
-
-		alphaAnimation.setAnimationListener(new AnimationListener()
+		mAlphaAnimation = new AlphaAnimation(1.0f, 0.0f);
+		mAlphaAnimation.setDuration(300);
+		mAlphaAnimation.setFillBefore(true);
+		mAlphaAnimation.setFillAfter(true);
+		
+		mAlphaAnimation.setAnimationListener(new AnimationListener()
 		{
 			@Override
 			public void onAnimationStart(Animation animation)
@@ -455,7 +544,6 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 			@Override
 			public void onAnimationEnd(Animation animation)
 			{
-				hideDaysList();
 			}
 
 			@Override
@@ -464,7 +552,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 			}
 		});
 
-		mDaysBackgroundView.startAnimation(alphaAnimation);
+		mDaysBackgroundView.startAnimation(mAlphaAnimation);
 	}
 
 	/**
@@ -472,22 +560,30 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 	 */
 	private void showAnimationFadeOut()
 	{
-		if (mDaysBackgroundView.getVisibility() == View.VISIBLE)
+		if(mAlphaAnimation != null)
 		{
-			return;
+			if(mAlphaAnimation.hasEnded() == false)
+			{
+				mAlphaAnimation.cancel();
+			}
+			
+			mAlphaAnimation = null;
 		}
+		
+		mAlphaAnimation = new AlphaAnimation(0.0f, 1.0f);
+		mAlphaAnimation.setDuration(300);
+		mAlphaAnimation.setFillBefore(true);
+		mAlphaAnimation.setFillAfter(true);
 
-		AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f, 1.0f);
-		alphaAnimation.setDuration(500);
-		alphaAnimation.setFillBefore(true);
-		alphaAnimation.setFillAfter(true);
-
-		alphaAnimation.setAnimationListener(new AnimationListener()
+		mAlphaAnimation.setAnimationListener(new AnimationListener()
 		{
 			@Override
 			public void onAnimationStart(Animation animation)
 			{
-				mDaysBackgroundView.setVisibility(View.VISIBLE);
+				if(mDaysBackgroundView.getVisibility() != View.VISIBLE)
+				{
+					mDaysBackgroundView.setVisibility(View.VISIBLE);
+				}
 			}
 
 			@Override
@@ -501,6 +597,6 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 			}
 		});
 
-		mDaysBackgroundView.startAnimation(alphaAnimation);
+		mDaysBackgroundView.startAnimation(mAlphaAnimation);
 	}
 }

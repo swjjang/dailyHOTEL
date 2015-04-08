@@ -27,6 +27,10 @@ public abstract class BaseFragment extends Fragment implements Constants, OnLoad
 	 * UI Component의 잠금 상태인지 확인하는 변수..
 	 */
 	private boolean mIsLockUiComponent = false;
+	
+	public BaseFragment()
+	{
+	}
 
 	@Override
 	public void onAttach(Activity activity)
