@@ -18,25 +18,35 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.os.Bundle;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.view.ViewGroup;
 
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.BookingTabBookingFragment;
+import com.twoheart.dailyhotel.fragment.TabInfoFragment;
+import com.twoheart.dailyhotel.fragment.TabMapFragment;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
-import com.twoheart.dailyhotel.util.TabActivity;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.widget.HotelViewPager;
-import com.viewpagerindicator.TabPageIndicator;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
+import com.twoheart.dailyhotel.util.ui.BaseFragment;
+import com.twoheart.dailyhotel.widget.FragmentViewPager;
+import com.twoheart.dailyhotel.widget.FragmentViewPager.OnPageSelectedListener;
+import com.twoheart.dailyhotel.widget.TabIndicator;
+import com.twoheart.dailyhotel.widget.TabIndicator.OnTabSelectedListener;
 
-public class BookingTabActivity extends TabActivity
+public class BookingTabActivity extends BaseActivity
 {
+	private TabIndicator mTabIndicator;
+	private FragmentViewPager mFragmentViewPager;
+	private ArrayList<BaseFragment> mFragmentList;
 
+	public HotelDetail mHotelDetail;
 	public Booking booking;
 	private int mPosition = 0;
 
@@ -45,7 +55,7 @@ public class BookingTabActivity extends TabActivity
 	{
 		super.onCreate(savedInstanceState);
 
-		hotelDetail = new HotelDetail();
+		mHotelDetail = new HotelDetail();
 		booking = new Booking();
 		Bundle bundle = getIntent().getExtras();
 
@@ -57,45 +67,17 @@ public class BookingTabActivity extends TabActivity
 		setContentView(R.layout.activity_booking_tab);
 		setActionBar(R.string.actionbar_title_booking_tab_activity);
 
-		mViewPager = (HotelViewPager) findViewById(R.id.booking_pager);
-		mIndicator = (TabPageIndicator) findViewById(R.id.booking_indicator);
+		ArrayList<String> titleList = new ArrayList<String>();
+		titleList.add(getString(R.string.frag_booking_tab_title));
+		titleList.add(getString(R.string.frag_tab_info_title));
+		titleList.add(getString(R.string.frag_tab_map_title));
 
-		mIndicator.setOnPageChangeListener(new OnPageChangeListener()
-		{
-
-			@Override
-			public void onPageSelected(int position)
-			{
-				mPosition = position;
-
-				if (position == 0)
-				{
-					RenewalGaManager.getInstance(getApplicationContext()).recordScreen("bookingDetail_booking", "/bookings/" + booking.getHotel_name() + "/booking");
-				} else if (position == 1)
-				{
-					RenewalGaManager.getInstance(getApplicationContext()).recordScreen("bookingDetail_info", "/bookings/" + booking.getHotel_name() + "/info");
-				} else if (position == 2)
-				{
-					RenewalGaManager.getInstance(getApplicationContext()).recordScreen("bookingDetail_map", "/bookings/" + booking.getHotel_name() + "/map");
-				}
-			}
-
-			@Override
-			public void onPageScrolled(int arg0, float arg1, int arg2)
-			{
-
-			}
-
-			@Override
-			public void onPageScrollStateChanged(int arg0)
-			{
-
-			}
-		});
+		mTabIndicator = (TabIndicator) findViewById(R.id.tabindicator);
+		mTabIndicator.setData(titleList, true);
+		mTabIndicator.setOnTabSelectListener(mOnTabSelectedListener);
 	}
 
-	@Override
-	protected void onPostSetCookie()
+	private void onPostSetCookie()
 	{
 		String[] date = booking.getSday().split("-");
 
@@ -105,23 +87,49 @@ public class BookingTabActivity extends TabActivity
 		ExLog.d(url);
 
 		lockUI();
+		
 		// 호텔 정보를 가져온다.
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null, mHotelDetailJsonResponseListener, this));
 	}
 
-	@Override
-	protected void loadFragments()
+	private void loadFragments()
 	{
-		// 예약, 정보, 지도 프래그먼트를 로드함. 
-		// 정보와 지도 프래그먼트는 HotelTabActivity에서 로드하는 TabinfoFragment, TabMapFragment임.
-		String[] strings = { getString(R.string.drawer_menu_pin_title_resrvation), getString(R.string.frag_booking_tab_year), getString(R.string.frag_booking_tab_month), getString(R.string.frag_booking_tab_day), getString(R.string.frag_booking_tab_hour) };
-		mFragments.add(BookingTabBookingFragment.newInstance(hotelDetail, booking, strings));
-		super.loadFragments();
+	
+		if(mFragmentViewPager == null)
+		{
+			String[] strings = { getString(R.string.drawer_menu_pin_title_resrvation), getString(R.string.frag_booking_tab_year), getString(R.string.frag_booking_tab_month), getString(R.string.frag_booking_tab_day), getString(R.string.frag_booking_tab_hour) };
+			
+			ArrayList<String> titleList = new ArrayList<String>();
+			titleList.add(getString(R.string.frag_booking_tab_title));
+			titleList.add(getString(R.string.frag_tab_info_title));
+			titleList.add(getString(R.string.frag_tab_map_title));
+			
+			mFragmentViewPager = (FragmentViewPager) findViewById(R.id.fragmentViewPager);
+			mFragmentViewPager.setOnPageSelectedListener(mOnPageSelectedListener);
+
+			mFragmentList = new ArrayList<BaseFragment>();
+
+			BaseFragment baseFragment01 = BookingTabBookingFragment.newInstance(mHotelDetail, booking, strings);
+			mFragmentList.add(baseFragment01);
+
+			BaseFragment baseFragment02 = TabInfoFragment.newInstance(mHotelDetail, titleList.get(1));
+			mFragmentList.add(baseFragment02);
+
+			BaseFragment baseFragment03 = TabMapFragment.newInstance(mHotelDetail, titleList.get(2));
+			mFragmentList.add(baseFragment03);
+
+			mFragmentViewPager.setData(mFragmentList);
+			mFragmentViewPager.setAdapter(getSupportFragmentManager());
+
+			GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
+		}
 	}
 
 	@Override
 	protected void onResume()
 	{
+		onPostSetCookie();
+		
 		if (mPosition == 0)
 		{
 			RenewalGaManager.getInstance(getApplicationContext()).recordScreen("bookingDetail_booking", "/bookings/" + booking.getHotel_name() + "/booking");
@@ -134,9 +142,48 @@ public class BookingTabActivity extends TabActivity
 		{
 			RenewalGaManager.getInstance(getApplicationContext()).recordScreen("bookingDetail_map", "/bookings/" + booking.getHotel_name() + "/map");
 		}
+		
 		super.onResume();
 	}
 
+	private OnTabSelectedListener mOnTabSelectedListener = new OnTabSelectedListener()
+	{
+		@Override
+		public void onTabSelected(int position)
+		{
+			if (mFragmentViewPager == null)
+			{
+				return;
+			}
+
+			if (mFragmentViewPager.getCurrentItem() != position)
+			{
+				mFragmentViewPager.setCurrentItem(position);
+			}
+		}
+	};
+
+	private OnPageSelectedListener mOnPageSelectedListener = new OnPageSelectedListener()
+	{
+		@Override
+		public void onPageSelected(int position)
+		{
+			mTabIndicator.setCurrentItem(position);
+
+			mPosition = position;
+
+			if (position == 0)
+			{
+				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("bookingDetail_booking", "/bookings/" + booking.getHotel_name() + "/booking");
+			} else if (position == 1)
+			{
+				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("bookingDetail_info", "/bookings/" + booking.getHotel_name() + "/info");
+			} else if (position == 2)
+			{
+				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("bookingDetail_map", "/bookings/" + booking.getHotel_name() + "/map");
+			}
+		}
+	};
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Listener
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -147,7 +194,6 @@ public class BookingTabActivity extends TabActivity
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-
 			try
 			{
 				if (response == null)
@@ -158,17 +204,17 @@ public class BookingTabActivity extends TabActivity
 				JSONArray bookingArr = response.getJSONArray("detail");
 				JSONObject detailObj = bookingArr.getJSONObject(0);
 
-				if (hotelDetail.getHotel() == null)
+				if (mHotelDetail.getHotel() == null)
 				{
-					hotelDetail.setHotel(new Hotel());
+					mHotelDetail.setHotel(new Hotel());
 				}
 
-				Hotel hotelBasic = hotelDetail.getHotel();
+				Hotel hotelBasic = mHotelDetail.getHotel();
 
 				hotelBasic.setName(detailObj.getString("hotel_name"));
 				hotelBasic.setCategory(detailObj.getString("cat"));
 				hotelBasic.setAddress(detailObj.getString("address"));
-				hotelDetail.setHotel(hotelBasic);
+				mHotelDetail.setHotel(hotelBasic);
 
 				JSONArray specArr = response.getJSONArray("spec");
 				int length = specArr.length();
@@ -177,7 +223,6 @@ public class BookingTabActivity extends TabActivity
 
 				for (int i = 0; i < length; i++)
 				{
-
 					JSONObject specObj = specArr.getJSONObject(i);
 					String key = specObj.getString("key");
 					JSONArray valueArr = specObj.getJSONArray("value");
@@ -195,25 +240,25 @@ public class BookingTabActivity extends TabActivity
 					contentList.put(key, valueList);
 				}
 
-				hotelDetail.setSpecification(contentList);
+				mHotelDetail.setSpecification(contentList);
 
 				double latitude = detailObj.getDouble("lat");
 				double longitude = detailObj.getDouble("lng");
 
-				hotelDetail.setLatitude(latitude);
-				hotelDetail.setLongitude(longitude);
+				mHotelDetail.setLatitude(latitude);
+				mHotelDetail.setLongitude(longitude);
 
 				int saleIdx = detailObj.getInt("idx");
-				hotelDetail.setSaleIdx(saleIdx);
+				mHotelDetail.setSaleIdx(saleIdx);
 
-				mFragments.clear();
 				loadFragments();
-
-				unLockUI();
-
 			} catch (Exception e)
 			{
 				onError(e);
+			}
+			finally
+			{
+				unLockUI();
 			}
 		}
 	};

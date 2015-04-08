@@ -103,6 +103,7 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 		}
 
 		setContentView(R.layout.activity_hotel_tab);
+		setActionBar(hotelDetail.getHotel().getName());
 		
 		ArrayList<String> titleList = new ArrayList<String>();
 		titleList.add(getString(R.string.frag_booking_tab_title));
@@ -117,8 +118,6 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 		btnBooking = (Button) findViewById(R.id.btn_hotel_tab_booking);
 
 		btnBooking.setOnClickListener(this);
-
-		setActionBar(hotelDetail.getHotel().getName());
 
 		// 호텔 sold out시
 		if (hotelDetail.getHotel().getAvailableRoom() == 0)
@@ -290,8 +289,6 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 	@Override
 	protected void onResume()
 	{
-		super.onResume();
-		
 		onPostSetCookie();
 		
 		if (mPosition == 0)
@@ -308,6 +305,8 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 		}
 		
 		uiHelper.onResume();
+		
+		super.onResume();
 	}
 
 	@Override
@@ -420,13 +419,8 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 				JSONArray imgArr = detailObj.getJSONArray("img");
 				List<String> imageList = new ArrayList<String>(imgArr.length());
 
-				for (int i = 0; i < imgArr.length(); i++)
+				for (int i = 1; i < imgArr.length(); i++)
 				{
-					if (i == 0)
-					{
-						continue;
-					}
-
 					JSONObject imgObj = imgArr.getJSONObject(i);
 					imageList.add(imgObj.getString("path"));
 				}

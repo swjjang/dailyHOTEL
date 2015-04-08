@@ -67,7 +67,6 @@
                     android:marqueeRepeatLimit="marquee_forever"
                     android:scrollHorizontally="true"
                     android:singleLine="true"
-                    android:text="경기도 안양시 관양동 1455-1"
                     android:textColor="@color/textView_textColor_main"
                     android:textSize="16dp" />
             </RelativeLayout>
@@ -101,7 +100,6 @@
                     android:marqueeRepeatLimit="marquee_forever"
                     android:scrollHorizontally="true"
                     android:singleLine="true"
-                    android:text="더블싱글룸"
                     android:textColor="@color/textView_textColor_main"
                     android:textSize="16dp" />
             </RelativeLayout>
@@ -150,7 +148,6 @@
                 android:marqueeRepeatLimit="marquee_forever"
                 android:scrollHorizontally="true"
                 android:singleLine="true"
-                android:text="73,000원 "
                 android:textColor="@color/dh_theme_color"
                 android:textSize="16dp"
                 android:textStyle="bold" />
@@ -166,7 +163,6 @@
                 android:marqueeRepeatLimit="marquee_forever"
                 android:scrollHorizontally="true"
                 android:singleLine="true"
-                android:text="210,000원"
                 android:textColor="@color/textView_textColor_main"
                 android:textSize="15dp" />
         </RelativeLayout>

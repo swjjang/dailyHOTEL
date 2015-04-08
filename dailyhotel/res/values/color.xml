@@ -8,8 +8,6 @@
     <color name="actionbar_background">#ffffff</color>
     <color name="actionbar_hamburger">#ff7a7a</color>
     
-    <color name="myAccentColor">#FF4081</color>
-    
     <color name="drawermenu_border">#d6d6d6</color>
     <color name="common_border">#dcdcdc</color>
     <color name="section_border">#ebebeb</color>
@@ -50,5 +48,10 @@
 	<color name="tab_underline">#d6d6d6</color>
 	
 	<color name="daytab_text">#9a9a9a</color>
+	<color name="booking_vline">#c2c2c2</color>
+	<color name="booking_hline">#e0e0e0</color>
+	<color name="booking_hline01">#d4d4d4</color>
+	
+	<color name="booking_subtext">#cc7f7f7f</color>
 
 </resources>	

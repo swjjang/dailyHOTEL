@@ -141,9 +141,12 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 			setSupportActionBar(mToolbar);
 
 			mToolbar.setTitleTextColor(getResources().getColor(R.color.actionbar_title));
+			mToolbar.setBackgroundColor(getResources().getColor(R.color.white));
 		}
 
-		mToolbar.setTitle(title);
+		setActionBarListEnabled(false);
+//		mToolbar.setTitle(title);
+		getSupportActionBar().setTitle(title);
 		
 		if(isFinish == true)
 		{
@@ -158,8 +161,6 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 				}
 			});
 		}
-		
-		setActionBarListEnabled(false);
 		
 		GlobalFont.apply(mToolbar);
 

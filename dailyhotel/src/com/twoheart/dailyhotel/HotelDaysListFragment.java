@@ -233,7 +233,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 				{
 					showAnimationDaysList();
 				}
-			}, 500);
+			}, 400);
 		}
 	}
 

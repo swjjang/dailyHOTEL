@@ -115,11 +115,13 @@
         <activity
             android:name=".activity.LoginActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppBaseTheme" />
         <activity
             android:name=".activity.SignupActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppBaseTheme" />
         <activity
             android:name=".activity.ForgotPwdActivity"
             android:launchMode="singleTop"
@@ -139,7 +141,8 @@
         <activity
             android:name=".activity.BookingActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppBaseTheme" />
         <activity
             android:name=".activity.EventWebActivity"
             android:launchMode="singleTop"
@@ -147,7 +150,8 @@
         <activity
             android:name=".activity.ProfileActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppBaseTheme" />
         <activity
             android:name=".IntroActivity"
             android:launchMode="singleTop"

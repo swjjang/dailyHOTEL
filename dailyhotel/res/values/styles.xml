@@ -7,7 +7,7 @@
     -->
     <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
        <item name="colorPrimary">@color/actionbar_background</item>
-        <item name="colorAccent">@color/myAccentColor</item>
+        <item name="colorAccent">@color/actionbar_hamburger</item>
         <item name="colorButtonNormal">@color/actionbar_hamburger</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:windowContentTransitions">true</item>
@@ -15,8 +15,6 @@
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
-        <item name="vpiTabPageIndicatorStyle">@style/TabDH_Theme</item>
-        <item name="switchStyle">@style/switch_light</item>
         <item name="android:editTextStyle">@style/EditTextDH_Theme</item>
         <item name="android:checkboxStyle">@style/CheckBoxDH_Theme</item>
         <item name="android:spinnerStyle">@style/SpinnerDH_Theme</item>
@@ -62,15 +60,6 @@
         <item name="android:checkMark">@drawable/btn_radio_holo_light</item>
     </style>
 
-    <style name="TabDH_Theme" parent="Widget.TabPageIndicator">
-        <item name="android:paddingLeft">30dp</item>
-        <item name="android:paddingRight">30dp</item>
-        <item name="android:background">@drawable/selector_tab_indicator</item>
-        <item name="android:divider">@drawable/custom_tab_indicator_divider</item>
-        <item name="android:textColor">@color/textView_textColor_main</item>
-        <item name="android:textSize">15dp</item>
-    </style>
-
     <style name="ProgressBarDH_Theme" parent="android:Widget.ProgressBar.Horizontal">
         <item name="android:progressDrawable">@drawable/progress_horizontal_holo_light</item>
         <item name="android:indeterminateDrawable">@drawable/progress_indeterminate_horizontal_holo_light</item>
@@ -101,17 +90,6 @@
 
     <style name="actionbarMenuTextAppearance">
         <item name="android:textSize">18dp</item>
-    </style>
-
-    <style name="switch_light">
-        <item name="track">@drawable/switch_track_holo_light</item>
-        <item name="thumb">@drawable/switch_inner_holo_light</item>
-        <item name="textOn">""</item>
-        <item name="textOff">""</item>
-        <item name="thumbTextPadding">12dip</item>
-        <item name="switchMinWidth">96dip</item>
-        <item name="switchPadding">16dip</item>
-        <item name="switchTextAppearance">@style/TextAppearance</item>
     </style>
 
     <style name="TextAppearance">

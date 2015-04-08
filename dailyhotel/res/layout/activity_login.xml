@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="@color/white" >
 
     <include
         android:id="@+id/toolbar_actionbar"
@@ -25,75 +27,60 @@
         android:paddingRight="10dp"
         android:paddingTop="10dp" >
 
-        <LinearLayout
+        <EditText
+            android:id="@+id/et_login_id"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:layout_height="50dp"
+            android:ems="10"
+            android:hint="@string/act_login_email"
+            android:inputType="textEmailAddress"
+            android:maxLength="50"
+            android:paddingLeft="10dp"
+            android:singleLine="true"
+            android:textColorHint="@color/textView_textColor_disabled" >
 
-            <EditText
-                android:id="@+id/et_login_id"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@drawable/edit_text_holo_light"
-                android:ems="10"
-                android:hint="@string/act_login_email"
-                android:inputType="textEmailAddress"
-                android:maxLength="50"
-                android:paddingLeft="10dp"
-                android:singleLine="true"
-                android:textColorHint="@color/textView_textColor_disabled" >
+            <requestFocus />
+        </EditText>
 
-                <requestFocus />
-            </EditText>
-
-            <EditText
-                android:id="@+id/et_login_pwd"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/edit_text_holo_light"
-                android:ems="10"
-                android:hint="@string/act_login_pwd"
-                android:imeActionId="@+id/btn_login"
-                android:inputType="textPassword"
-                android:maxLength="20"
-                android:paddingLeft="10dp"
-                android:singleLine="true"
-                android:textColorHint="@color/textView_textColor_disabled" />
-        </LinearLayout>
-
-        <LinearLayout
+        <EditText
+            android:id="@+id/et_login_pwd"
             android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="@string/act_login_pwd"
+            android:imeActionId="@+id/btn_login"
+            android:inputType="textPassword"
+            android:maxLength="20"
+            android:paddingLeft="10dp"
+            android:singleLine="true"
+            android:textColorHint="@color/textView_textColor_disabled" />
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/cb_login_auto"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="right"
-            android:orientation="vertical" >
+            android:layout_gravity="right"
+            android:background="@null"
+            android:checked="true"
+            android:gravity="center"
+            android:paddingBottom="10dp"
+            android:paddingRight="4dp"
+            android:paddingTop="10dp"
+            android:text="@string/act_login_autologin"
+            android:textColor="@color/textView_textColor_main"
+            android:textOff=""
+            android:textOn="" />
 
-            <com.twoheart.dailyhotel.widget.Switch
-                android:id="@+id/cb_login_auto"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:gravity="center"
-                android:paddingBottom="20dp"
-                android:paddingTop="15dp"
-                android:text="@string/act_login_autologin"
-                android:textColor="@color/textView_textColor_main" />
-        </LinearLayout>
-
-        <LinearLayout
+        <Button
+            android:id="@+id/btn_login"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_marginTop="20dp"
-            android:orientation="vertical" >
-
-            <Button
-                android:id="@+id/btn_login"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@drawable/shape_button_common_background"
-                android:text="@string/act_login_btn_login"
-                android:textColor="@android:color/white" />
-        </LinearLayout>
+            android:background="@drawable/shape_button_common_background"
+            android:text="@string/act_login_btn_login"
+            android:textColor="@android:color/white"
+            android:textSize="17dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -131,19 +118,14 @@
                 android:textSize="12dp" />
         </LinearLayout>
 
-        <LinearLayout
+        <com.facebook.widget.LoginButton
+            android:id="@+id/authButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:orientation="vertical" >
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="45dp"
+            android:textSize="17dp" />
 
-            <com.facebook.widget.LoginButton
-                android:id="@+id/authButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="30dp" />
-        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>

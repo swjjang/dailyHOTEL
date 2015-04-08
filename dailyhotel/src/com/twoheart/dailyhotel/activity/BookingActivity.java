@@ -26,8 +26,10 @@ import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.widget.SwitchCompat;
 import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.text.TextUtils;
@@ -62,13 +64,13 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
-import com.twoheart.dailyhotel.widget.Switch;
 
 /**
  * 
@@ -86,14 +88,16 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	private static final int DIALOG_CONFIRM_PAYMENT_NO_RSERVE = 3;
 
 	private ScrollView svBooking;
-	private TextView tvCheckIn, tvCheckOut, tvOriginalPriceValue,
+	private TextView mCheckinDayTextView, mCheckinTimeTextView, mCheckoutDayTextView, mCheckoutTimeTextView;
+	
+	private TextView tvOriginalPriceValue,
 			tvCreditValue, tvOriginalPrice, tvCredit, tvPrice;
-	private ImageView ivPay;
 	private Button btnPay;
-	private Switch swCredit;
-	private TextView tvReserverName, tvReserverNumber, tvReserverEmail;
-	private LinearLayout llReserverInfoLabel, llReserverInfoEditable;
+	private SwitchCompat swCredit;
+//	private TextView tvReserverName, tvReserverNumber, tvReserverEmail;
+//	private LinearLayout llReserverInfoLabel, llReserverInfoEditable;
 	private EditText etReserverName, etReserverNumber, etReserverEmail;
+	private Drawable[] mEditTextBackground;
 	private RadioGroup rgPaymentMethod;
 	private RadioButton rbPaymentAccount, rbPaymentCard, rbPaymentHp;
 
@@ -130,28 +134,38 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 		svBooking = (ScrollView) findViewById(R.id.sv_booking);
 
-		tvCheckIn = (TextView) findViewById(R.id.tv_hotel_payment_checkin);
-		tvCheckOut = (TextView) findViewById(R.id.tv_hotel_payment_checkout);
+		mCheckinDayTextView = (TextView) findViewById(R.id.checkinDayTextView);
+		mCheckinTimeTextView = (TextView) findViewById(R.id.checkinTimeTextView);
+		mCheckoutDayTextView = (TextView) findViewById(R.id.checkoutDayTextView);
+		mCheckoutTimeTextView = (TextView) findViewById(R.id.checkoutTimeTextView);
+		
 		tvOriginalPrice = (TextView) findViewById(R.id.tv_hotel_payment_original_price);
 		tvCredit = (TextView) findViewById(R.id.tv_hotel_payment_credit);
 		tvOriginalPriceValue = (TextView) findViewById(R.id.tv_hotel_payment_original_price_value);
 		tvCreditValue = (TextView) findViewById(R.id.tv_hotel_payment_credit_value);
 		tvPrice = (TextView) findViewById(R.id.tv_hotel_payment_price);
-		ivPay = (ImageView) findViewById(R.id.iv_hotel_payment);
 		btnPay = (Button) findViewById(R.id.btn_hotel_payment);
-		swCredit = (Switch) findViewById(R.id.btn_on_off);
-
-		tvReserverName = (TextView) findViewById(R.id.tv_hotel_payment_reserver_name);
-		tvReserverNumber = (TextView) findViewById(R.id.tv_hotel_payment_reserver_number);
-		tvReserverEmail = (TextView) findViewById(R.id.tv_hotel_payment_reserver_email);
-
-		llReserverInfoLabel = (LinearLayout) findViewById(R.id.ll_reserver_info_label);
-		llReserverInfoEditable = (LinearLayout) findViewById(R.id.ll_reserver_info_editable);
+		swCredit = (SwitchCompat) findViewById(R.id.btn_on_off);
+		
+		swCredit.setSwitchMinWidth(Util.dpToPx(BookingActivity.this, 60));
 
 		etReserverName = (EditText) findViewById(R.id.et_hotel_payment_reserver_name);
 		etReserverNumber = (EditText) findViewById(R.id.et_hotel_payment_reserver_number);
 		etReserverEmail = (EditText) findViewById(R.id.et_hotel_payment_reserver_email);
-
+		
+		mEditTextBackground = new Drawable[3];
+		mEditTextBackground[0] = etReserverName.getBackground();
+		mEditTextBackground[1] = etReserverNumber.getBackground();
+		mEditTextBackground[2] = etReserverEmail.getBackground();
+		
+		etReserverName.setBackground(null);
+		etReserverNumber.setBackground(null);
+		etReserverEmail.setBackground(null);
+		
+		etReserverName.setEnabled(false);
+		etReserverNumber.setEnabled(false);
+		etReserverEmail.setEnabled(false);
+		
 		rgPaymentMethod = (RadioGroup) findViewById(R.id.rg_payment_method);
 		rbPaymentAccount = (RadioButton) findViewById(R.id.rb_payment_account);
 		rbPaymentCard = (RadioButton) findViewById(R.id.rb_payment_card);
@@ -164,7 +178,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		rgPaymentMethod.setOnCheckedChangeListener(this);
 		btnPay.setOnClickListener(this);
 		swCredit.setOnCheckedChangeListener(this);
-
+		
 		rbPaymentCard.setChecked(true);
 
 		saleTime = new SaleTime();
@@ -176,7 +190,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			// 적립금 부분 기본 통화 표기.
 			tvCreditValue.setText("0" + Html.fromHtml(getString(R.string.currency)));
 
-			ivPay.setVisibility(View.GONE);
 			rgPaymentMethod.setVisibility(View.VISIBLE);
 		} else
 		{
@@ -193,10 +206,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	protected void onResume()
 	{
 		super.onResume();
-		// 적립금 스위치 초기화
-		//		swCredit.setChecked(false);
-
 		lockUI();
+		
 		// credit 요청
 		mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_SAVED_MONEY).toString(), null, mReserveSavedMoneyStringResponseListener, this));
 
@@ -208,7 +219,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 	private void updatePayPrice(boolean applyCredit)
 	{
-
 		int originalPrice = Integer.parseInt(mPay.getHotelDetail().getHotel().getDiscount().replaceAll(",", ""));
 		int credit = Integer.parseInt(mPay.getCredit().getBonus().replaceAll(",", ""));
 
@@ -257,85 +267,85 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		if (v.getId() == btnPay.getId())
 		{
 
-			if (llReserverInfoEditable.getVisibility() == View.VISIBLE)
-			{
-				Customer buyer = new Customer();
-
-				buyer.setEmail(etReserverEmail.getText().toString());
-				buyer.setPhone(etReserverNumber.getText().toString());
-				buyer.setName(etReserverName.getText().toString());
-
-				if (isEmptyTextField(new String[] { buyer.getEmail(), buyer.getPhone(), buyer.getName() }))
-				{
-
-					ExLog.e("BUYER : " + buyer.getEmail() + " / " + buyer.getPhone() + " / " + buyer.getName());
-					showToast(getString(R.string.toast_msg_please_input_booking_user_infos), Toast.LENGTH_LONG, false);
-				} else
-				{ //
-					Map<String, String> updateParams = new HashMap<String, String>();
-					if (etReserverEmail.isFocusable())
-						updateParams.put("user_email", buyer.getEmail());
-					if (etReserverName.isFocusable())
-						updateParams.put("user_name", buyer.getName());
-					if (etReserverNumber.isFocusable())
-						updateParams.put("user_phone", buyer.getPhone());
-
-					ExLog.e("FACEBOOK UPDATE : " + updateParams.toString());
-
-					lockUI();
-					mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_UPDATE_FACEBOOK).toString(), updateParams, mUserUpdateFacebookJsonResponseListener, this));
-				}
-
-			} //호텔 가격이 만원 이하인 이벤트 호텔에서는 적립금 사용을 못하게 막음. 
-			else if (mPay.isSaleCredit() && (mPay.getOriginalPrice() <= DEFAULT_AVAILABLE_RESERVES) && Integer.parseInt(mPay.getCredit().getBonus().replaceAll(",", "")) != 0)
-			{
-				getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_NO_RSERVE).show();
-
-			} else
-			{
-				Dialog dialog = null;
-
-				if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentCard.getId())
-				{ // 신용카드를 선택했을 경우
-
-					dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_CARD);
-					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("radio", "choosePaymentWay", "신용카드", (long) 1);
-				} else if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentHp.getId())
-				{ // 핸드폰을 선택했을 경우
-
-					dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_HP);
-					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("radio", "choosePaymentWay", "휴대폰", (long) 2);
-				} else if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentAccount.getId())
-				{ // 가상계좌 입금을 선택했을 경우
-
-					dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_ACCOUNT);
-					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("radio", "choosePaymentWay", "계좌이체", (long) 3);
-				}
-
-				if (null != dialog)
-				{
-					dialog.setOnDismissListener(new OnDismissListener()
-					{
-						@Override
-						public void onDismiss(DialogInterface dialog)
-						{
-							v.setClickable(true);
-							v.setEnabled(true);
-						}
-					});
-
-					dialog.show();
-				}
-
-				v.setClickable(false);
-				v.setEnabled(false);
-
-				String region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
-				String hotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
-
-				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("paymentAgreement", "/todays-hotels/" + region + "/" + hotelName + "/booking-detail/payment-agreement");
-				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestPayment", mPay.getHotelDetail().getHotel().getName(), (long) mHotelIdx);
-			}
+//			if (llReserverInfoEditable.getVisibility() == View.VISIBLE)
+//			{
+//				Customer buyer = new Customer();
+//
+//				buyer.setEmail(etReserverEmail.getText().toString());
+//				buyer.setPhone(etReserverNumber.getText().toString());
+//				buyer.setName(etReserverName.getText().toString());
+//
+//				if (isEmptyTextField(new String[] { buyer.getEmail(), buyer.getPhone(), buyer.getName() }))
+//				{
+//
+//					ExLog.e("BUYER : " + buyer.getEmail() + " / " + buyer.getPhone() + " / " + buyer.getName());
+//					showToast(getString(R.string.toast_msg_please_input_booking_user_infos), Toast.LENGTH_LONG, false);
+//				} else
+//				{ //
+//					Map<String, String> updateParams = new HashMap<String, String>();
+//					if (etReserverEmail.isFocusable())
+//						updateParams.put("user_email", buyer.getEmail());
+//					if (etReserverName.isFocusable())
+//						updateParams.put("user_name", buyer.getName());
+//					if (etReserverNumber.isFocusable())
+//						updateParams.put("user_phone", buyer.getPhone());
+//
+//					ExLog.e("FACEBOOK UPDATE : " + updateParams.toString());
+//
+//					lockUI();
+//					mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_UPDATE_FACEBOOK).toString(), updateParams, mUserUpdateFacebookJsonResponseListener, this));
+//				}
+//
+//			} //호텔 가격이 만원 이하인 이벤트 호텔에서는 적립금 사용을 못하게 막음. 
+//			else if (mPay.isSaleCredit() && (mPay.getOriginalPrice() <= DEFAULT_AVAILABLE_RESERVES) && Integer.parseInt(mPay.getCredit().getBonus().replaceAll(",", "")) != 0)
+//			{
+//				getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_NO_RSERVE).show();
+//
+//			} else
+//			{
+//				Dialog dialog = null;
+//
+//				if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentCard.getId())
+//				{ // 신용카드를 선택했을 경우
+//
+//					dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_CARD);
+//					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("radio", "choosePaymentWay", "신용카드", (long) 1);
+//				} else if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentHp.getId())
+//				{ // 핸드폰을 선택했을 경우
+//
+//					dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_HP);
+//					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("radio", "choosePaymentWay", "휴대폰", (long) 2);
+//				} else if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentAccount.getId())
+//				{ // 가상계좌 입금을 선택했을 경우
+//
+//					dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_ACCOUNT);
+//					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("radio", "choosePaymentWay", "계좌이체", (long) 3);
+//				}
+//
+//				if (null != dialog)
+//				{
+//					dialog.setOnDismissListener(new OnDismissListener()
+//					{
+//						@Override
+//						public void onDismiss(DialogInterface dialog)
+//						{
+//							v.setClickable(true);
+//							v.setEnabled(true);
+//						}
+//					});
+//
+//					dialog.show();
+//				}
+//
+//				v.setClickable(false);
+//				v.setEnabled(false);
+//
+//				String region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
+//				String hotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
+//
+//				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("paymentAgreement", "/todays-hotels/" + region + "/" + hotelName + "/booking-detail/payment-agreement");
+//				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestPayment", mPay.getHotelDetail().getHotel().getName(), (long) mHotelIdx);
+//			}
 
 		} else if (v.getId() == rbPaymentAccount.getId() || v.getId() == rbPaymentCard.getId() || v.getId() == rbPaymentHp.getId())
 		{
@@ -671,9 +681,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	{
 		if (buttonView.getId() == swCredit.getId())
 		{
-
 			if (!isChecked)
-			{ // 사용안함으로 변경
+			{ 
+				// 사용안함으로 변경
 				tvOriginalPrice.setEnabled(false);
 				tvCredit.setEnabled(false);
 				tvOriginalPriceValue.setEnabled(false);
@@ -681,7 +691,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("toggle action", "applyCredit", "off", null);
 
 			} else
-			{ // 사용함으로 변경
+			{ 
+				// 사용함으로 변경
 				tvOriginalPrice.setEnabled(true);
 				tvCredit.setEnabled(true);
 				tvOriginalPriceValue.setEnabled(true);
@@ -769,15 +780,12 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-
 			try
 			{
 				if (response == null)
 				{
 					throw new NullPointerException("response == null");
 				}
-
-				int sdk = android.os.Build.VERSION.SDK_INT;
 
 				Customer buyer = new Customer();
 				buyer.setEmail(response.getString("email"));
@@ -794,75 +802,59 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				 */
 				if (isEmptyTextField(new String[] { buyer.getEmail(), buyer.getPhone(), buyer.getName() }) == false)
 				{
-					llReserverInfoLabel.setVisibility(View.VISIBLE);
-					llReserverInfoEditable.setVisibility(View.GONE);
-
-					etReserverName.setVisibility(View.GONE);
-					etReserverNumber.setVisibility(View.GONE);
-					etReserverEmail.setVisibility(View.GONE);
-
-					tvReserverName.setText(buyer.getName());
-					tvReserverNumber.setText(buyer.getPhone());
-					tvReserverEmail.setText(buyer.getEmail());
-
+					etReserverName.setEnabled(false);
+					etReserverNumber.setEnabled(false);
+					etReserverEmail.setEnabled(false);
+					
+					etReserverName.setBackground(null);
+					etReserverNumber.setBackground(null);
+					etReserverEmail.setBackground(null);
+					
+					etReserverName.setText(buyer.getEmail());
+					etReserverNumber.setText(buyer.getPhone());
+					etReserverEmail.setText(buyer.getName());
 				} else
 				{
-					llReserverInfoEditable.setVisibility(View.VISIBLE);
-					llReserverInfoLabel.setVisibility(View.GONE);
-
 					ExLog.e("buyer :" + buyer.getName() + " / " + buyer.getPhone() + " / " + buyer.getEmail());
 
 					if (isEmptyTextField(buyer.getName()) == false)
 					{
+						etReserverName.setEnabled(false);
+						etReserverName.setBackground(null);
 						etReserverName.setText(buyer.getName());
-						etReserverName.setKeyListener(null);
-						etReserverName.setFocusable(false);
-
-						if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN)
-						{
-							etReserverName.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-						} else
-						{
-							etReserverName.setBackground(new ColorDrawable(Color.TRANSPARENT));
-						}
+					} else 
+					{
+						etReserverName.setEnabled(true);
+						etReserverName.setBackground(mEditTextBackground[0]);
+						etReserverName.setText(buyer.getName());
 					}
 
 					if (isEmptyTextField(buyer.getPhone()) == false)
 					{
+						etReserverNumber.setEnabled(false);
+						etReserverNumber.setBackground(null);
 						etReserverNumber.setText(buyer.getPhone());
-						etReserverNumber.setKeyListener(null);
-						etReserverNumber.setFocusable(false);
-
-						if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN)
-						{
-							etReserverNumber.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-						} else
-						{
-							etReserverNumber.setBackground(new ColorDrawable(Color.TRANSPARENT));
-						}
 					} else
 					{
 						TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
 
 						etReserverNumber.setText(telephonyManager.getLine1Number());
+						etReserverNumber.setEnabled(true);
+						etReserverNumber.setBackground(mEditTextBackground[1]);
 					}
-
+					
 					if (isEmptyTextField(buyer.getEmail()) == false)
 					{
+						etReserverEmail.setEnabled(false);
+						etReserverEmail.setBackground(null);
 						etReserverEmail.setText(buyer.getEmail());
-						etReserverEmail.setKeyListener(null);
-						etReserverEmail.setFocusable(false);
-						etReserverEmail.setBackgroundColor(Color.TRANSPARENT);
-
-						if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN)
-						{
-							etReserverEmail.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-						} else
-						{
-							etReserverEmail.setBackground(new ColorDrawable(Color.TRANSPARENT));
-						}
 					}
-
+					else
+					{
+						etReserverEmail.setEnabled(true);
+						etReserverEmail.setBackground(mEditTextBackground[2]);
+						etReserverEmail.setText(buyer.getName());
+					}
 				}
 
 				// 체크인 정보 요청
@@ -903,13 +895,10 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				{
 					Customer buyer = mPay.getCustomer();
 
-					if (llReserverInfoLabel.getVisibility() == View.VISIBLE)
-					{
 
-						buyer.setEmail(tvReserverEmail.getText().toString());
-						buyer.setPhone(tvReserverNumber.getText().toString());
-						buyer.setName(tvReserverName.getText().toString());
-					}
+					buyer.setEmail(etReserverEmail.getText().toString());
+					buyer.setPhone(etReserverNumber.getText().toString());
+					buyer.setName(etReserverName.getText().toString());
 
 					mPay.setCustomer(buyer);
 					moveToPayStep();
@@ -959,15 +948,13 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					showToast(response.getString("message"), Toast.LENGTH_LONG, false);
 				} else
 				{
-					llReserverInfoLabel.setVisibility(View.VISIBLE);
-					llReserverInfoEditable.setVisibility(View.GONE);
-					etReserverName.setVisibility(View.GONE);
-					etReserverNumber.setVisibility(View.GONE);
-					etReserverEmail.setVisibility(View.GONE);
+					etReserverName.setEnabled(false);
+					etReserverNumber.setEnabled(false);
+					etReserverEmail.setEnabled(false);
 
-					tvReserverName.setText(etReserverName.getText().toString());
-					tvReserverNumber.setText(etReserverNumber.getText().toString());
-					tvReserverEmail.setText(etReserverEmail.getText().toString());
+					etReserverName.setText(etReserverName.getText().toString());
+					etReserverNumber.setText(etReserverNumber.getText().toString());
+					etReserverEmail.setText(etReserverEmail.getText().toString());
 
 					btnPay.performClick();
 				}
@@ -1001,26 +988,31 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 				if (locale.equals("한국어") == true)
 				{
-					tvCheckIn.setText("20" + in[0] + getString(R.string.frag_booking_tab_year) + in[1] + getString(R.string.frag_booking_tab_month) + in[2] + getString(R.string.frag_booking_tab_day) + " " + in[3] + getString(R.string.frag_booking_tab_hour));
+					mCheckinDayTextView.setText(in[1] + "/" + in[2]);
+//					tvCheckIn.setText("20" + in[0] + getString(R.string.frag_booking_tab_year) + in[1] + getString(R.string.frag_booking_tab_month) + in[2] + getString(R.string.frag_booking_tab_day) + " " + in[3] + getString(R.string.frag_booking_tab_hour));
 				} else
 				{
-					tvCheckIn.setText("20" + in[0] + "-" + in[1] + "-" + in[2] + " " + in[3] + ":00");
+//					tvCheckIn.setText("20" + in[0] + "-" + in[1] + "-" + in[2] + " " + in[3] + ":00");
 				}
 
 				String out[] = checkout.split("-");
 
 				if (locale.equals("한국어") == true)
 				{
-					tvCheckOut.setText("20" + out[0] + getString(R.string.frag_booking_tab_year) + out[1] + getString(R.string.frag_booking_tab_month) + out[2] + getString(R.string.frag_booking_tab_day) + " " + out[3] + getString(R.string.frag_booking_tab_hour));
+					mCheckoutDayTextView.setText(out[1] + "/" + out[2]);
+					
+//					tvCheckOut.setText("20" + out[0] + getString(R.string.frag_booking_tab_year) + out[1] + getString(R.string.frag_booking_tab_month) + out[2] + getString(R.string.frag_booking_tab_day) + " " + out[3] + getString(R.string.frag_booking_tab_hour));
 				} else
 				{
-					tvCheckOut.setText("20" + out[0] + "-" + out[1] + "-" + out[2] + " " + out[3] + ":00");
+//					tvCheckOut.setText("20" + out[0] + "-" + out[1] + "-" + out[2] + " " + out[3] + ":00");
 				}
-
-				unLockUI();
 			} catch (Exception e)
 			{
 				onError(e);
+			}
+			finally
+			{
+				unLockUI();
 			}
 		}
 	};
@@ -1061,8 +1053,14 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				}
 
 				mPay.setPayPrice(originalPrice);
-
-				swCredit.setChecked(false);
+				
+				if(Integer.valueOf(bonus) == 0)
+				{
+					swCredit.setChecked(false);
+				} else 
+				{
+					swCredit.setChecked(swCredit.isChecked());
+				}
 
 				// 사용자 정보 요청.
 				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, BookingActivity.this));

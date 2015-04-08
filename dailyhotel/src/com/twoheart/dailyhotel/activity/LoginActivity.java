@@ -32,6 +32,7 @@ import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.widget.SwitchCompat;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
 import android.view.View;
@@ -63,18 +64,18 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
-import com.twoheart.dailyhotel.widget.Switch;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class LoginActivity extends BaseActivity implements Constants, OnClickListener, ErrorListener
 {
 
 	private EditText etId, etPwd;
-	private Switch cbxAutoLogin;
+	private SwitchCompat cbxAutoLogin;
 	private Button btnLogin;
 	private TextView tvSignUp, tvForgotPwd;
 	private LoginButton facebookLogin;
@@ -98,11 +99,15 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
 		etId = (EditText) findViewById(R.id.et_login_id);
 		etPwd = (EditText) findViewById(R.id.et_login_pwd);
-		cbxAutoLogin = (Switch) findViewById(R.id.cb_login_auto);
+		cbxAutoLogin = (SwitchCompat) findViewById(R.id.cb_login_auto);
 		tvSignUp = (TextView) findViewById(R.id.tv_login_signup);
 		tvForgotPwd = (TextView) findViewById(R.id.tv_login_forgot);
 		btnLogin = (Button) findViewById(R.id.btn_login);
 		facebookLogin = (LoginButton) findViewById(R.id.authButton);
+
+		cbxAutoLogin.setSwitchMinWidth(Util.dpToPx(LoginActivity.this, 60));
+		cbxAutoLogin.setChecked(true);
+		cbxAutoLogin.setSwitchPadding(Util.dpToPx(LoginActivity.this, 15));
 
 		tvSignUp.setOnClickListener(this);
 		tvForgotPwd.setOnClickListener(this);
