@@ -29,6 +29,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.ZoomMapActivity;
 import com.twoheart.dailyhotel.model.HotelDetail;
+import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
 public class TabMapFragment extends BaseFragment implements OnMapClickListener
@@ -80,7 +81,7 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
 		// grade
 		hvGrade.setText(mHotelDetail.getHotel().getCategory().getName(getActivity()));
 		hvGrade.setBackgroundResource(mHotelDetail.getHotel().getCategory().getColorResId());
-
+		
 		return view;
 	}
 
@@ -97,7 +98,7 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
 	{
 		super.onActivityCreated(savedInstanceState);
 
-		mMapFragment = (SupportMapFragment) mHostActivity.getSupportFragmentManager().findFragmentById(R.id.frag_map);
+		mMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.frag_map);
 		googleMap = mMapFragment.getMap();
 
 		if (googleMap != null)
@@ -151,6 +152,7 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
 		{
 			mMarker = googleMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title(hotel_name));
 			mMarker.showInfoWindow();
+			
 			LatLng address = new LatLng(lat, lng);
 			CameraPosition cp = new CameraPosition.Builder().target((address)).zoom(15).build();
 			googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));

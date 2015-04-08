@@ -54,8 +54,8 @@ public class BookingTabActivity extends TabActivity
 			booking = (Booking) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_BOOKING);
 		}
 
-		setActionBar(R.string.actionbar_title_booking_tab_activity);
 		setContentView(R.layout.activity_booking_tab);
+		setActionBar(R.string.actionbar_title_booking_tab_activity);
 
 		mViewPager = (HotelViewPager) findViewById(R.id.booking_pager);
 		mIndicator = (TabPageIndicator) findViewById(R.id.booking_indicator);

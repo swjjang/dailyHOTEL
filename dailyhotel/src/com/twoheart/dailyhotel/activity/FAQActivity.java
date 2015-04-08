@@ -20,7 +20,6 @@ import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 public class FAQActivity extends BaseActivity
 {
-
 	private ArrayList<Board> mList;
 	private ExpandableListView mListView;
 
@@ -28,19 +27,24 @@ public class FAQActivity extends BaseActivity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setActionBar(R.string.actionbar_title_faq_activity);
+		
 		setContentView(R.layout.activity_board);
-
+		setActionBar(R.string.actionbar_title_faq_activity);
+		
 		mListView = (ExpandableListView) findViewById(R.id.expandable_list_board);
 		mListView.setOnGroupExpandListener(new OnGroupExpandListener()
-		{ // expand only one
+		{ 
+			// expand only one
 			private int mPrevExpandedChildPos = -1;
 
 			@Override
 			public void onGroupExpand(int groupPosition)
 			{
 				if (mPrevExpandedChildPos != -1 && groupPosition != mPrevExpandedChildPos)
+				{
 					mListView.collapseGroup(mPrevExpandedChildPos);
+				}
+				
 				mPrevExpandedChildPos = groupPosition;
 				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectFAQ", mList.get(groupPosition).getSubject(), (long) (groupPosition + 1));
 			}

@@ -8,6 +8,7 @@
     <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
        <item name="colorPrimary">@color/actionbar_background</item>
         <item name="colorAccent">@color/myAccentColor</item>
+        <item name="colorButtonNormal">@color/actionbar_hamburger</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:windowContentTransitions">true</item>
     </style>

@@ -85,7 +85,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 	public void onResume()
 	{
 		super.onResume();
-		mHostActivity.setActionBar(R.string.actionbar_title_booking_list_frag);
+		mHostActivity.setActionBar(getString(R.string.actionbar_title_booking_list_frag), false);
 
 		lockUI();
 		mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, mHostActivity));

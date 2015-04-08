@@ -28,8 +28,6 @@ import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
 public class TabInfoFragment extends BaseFragment
 {
-
-	private static final String TAG = "HotelTabInfoFragment";
 	private static final String KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL = "hotel_detail";
 
 	private HotelDetail mHotelDetail;

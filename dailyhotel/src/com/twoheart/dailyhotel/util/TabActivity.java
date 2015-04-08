@@ -19,7 +19,6 @@ import com.viewpagerindicator.TabPageIndicator;
 
 public abstract class TabActivity extends BaseActivity
 {
-
 	public HotelDetail hotelDetail;
 
 	protected List<BaseFragment> mFragments;

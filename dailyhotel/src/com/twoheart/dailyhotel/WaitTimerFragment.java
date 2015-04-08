@@ -97,7 +97,7 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 		btnNotify.setOnClickListener(this);
 		btnEvent.setOnClickListener(this);
 
-		mHostActivity.setActionBar(R.string.actionbar_title_wait_timer_frag);
+		mHostActivity.setActionBar(getString(R.string.actionbar_title_wait_timer_frag), false);
 		tvTitle.setText(new SimpleDateFormat("aa H").format(mSaleTime.getOpenTime()) + getString(R.string.prefix_wait_timer_frag_todays_hotel_open));
 
 		isEnabledNotify = false;

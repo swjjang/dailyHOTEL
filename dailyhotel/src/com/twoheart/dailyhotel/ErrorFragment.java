@@ -32,7 +32,7 @@ public class ErrorFragment extends BaseFragment implements OnClickListener
 	{
 
 		View view = inflater.inflate(R.layout.fragment_error, container, false);
-		mHostActivity.setActionBar(R.string.actionbar_title_error_frag);
+		mHostActivity.setActionBar(getString(R.string.actionbar_title_error_frag), false);
 
 		btnRetry = (Button) view.findViewById(R.id.btn_error);
 		btnRetry.setOnClickListener(this);

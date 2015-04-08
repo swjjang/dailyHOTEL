@@ -103,7 +103,7 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 	{
 		super.onResume();
 
-		mHostActivity.setActionBar(R.string.actionbar_title_setting_frag);
+		mHostActivity.setActionBar(getString(R.string.actionbar_title_setting_frag), false);
 		profileStr = getString(R.string.frag_profile);
 		loginStr = getString(R.string.frag_login);
 

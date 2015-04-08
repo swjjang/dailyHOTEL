@@ -85,8 +85,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		mHotelListView = (PinnedSectionListView) view.findViewById(R.id.listview_hotel_list);
 		mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
 
-		mHostActivity.setActionBar(R.string.actionbar_title_hotel_list_frag);
-
 		GlobalFont.apply(container);
 		
 		// 추후 왼쪽 탭로 빠질것이다.

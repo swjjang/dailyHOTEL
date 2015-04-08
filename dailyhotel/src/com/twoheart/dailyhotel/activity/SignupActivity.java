@@ -60,8 +60,9 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setActionBar(R.string.actionbar_title_signup_activity);
+		
 		setContentView(R.layout.activity_signup);
+		setActionBar(R.string.actionbar_title_signup_activity);
 
 		etPwd = (EditText) findViewById(R.id.et_signup_pwd);
 		etEmail = (EditText) findViewById(R.id.et_signup_email);

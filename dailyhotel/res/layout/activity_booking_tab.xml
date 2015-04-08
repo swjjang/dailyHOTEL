@@ -1,20 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-    
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/toolbar_actionbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        layout="@layout/toolbar_default" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignBaseline="@id/toolbar_actionbar"
+        android:layout_alignBottom="@id/toolbar_actionbar"
+        android:background="@color/actionbar_underline" />
+
     <com.viewpagerindicator.TabPageIndicator
         android:id="@+id/booking_indicator"
-        android:background="#f4f4f4"
-        android:layout_weight="0.1"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_width="match_parent" />
-    
+        android:layout_below="@+id/toolbar_actionbar"
+        android:layout_weight="0.1"
+        android:background="#f4f4f4" />
+
     <com.twoheart.dailyhotel.widget.HotelViewPager
         android:id="@+id/booking_pager"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.9"/>
+        android:layout_below="@+id/booking_indicator"
+        android:layout_weight="0.9" />
 
-</LinearLayout>
+</RelativeLayout>

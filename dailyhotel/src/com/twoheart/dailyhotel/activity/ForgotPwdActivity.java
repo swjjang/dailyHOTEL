@@ -40,8 +40,9 @@ public class ForgotPwdActivity extends BaseActivity implements Constants, OnClic
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setActionBar(R.string.actionbar_title_forgot_pwd_activity);
+		
 		setContentView(R.layout.activity_forgot_pwd);
+		setActionBar(R.string.actionbar_title_forgot_pwd_activity);
 
 		etForgot = (EditText) findViewById(R.id.et_forgot_pwd);
 		btnForgot = (Button) findViewById(R.id.btn_forgot_pwd);

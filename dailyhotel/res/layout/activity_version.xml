@@ -6,10 +6,24 @@
     android:orientation="vertical"
     android:weightSum="1" >
 
+    <include
+        android:id="@+id/toolbar_actionbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        layout="@layout/toolbar_default" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignBaseline="@id/toolbar_actionbar"
+        android:layout_alignBottom="@id/toolbar_actionbar"
+        android:background="@color/actionbar_underline" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/btn_version_update"
+        android:layout_below="@+id/toolbar_actionbar"
         android:gravity="center" >
 
         <LinearLayout
@@ -26,8 +40,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:paddingTop="5dp"
-                android:orientation="horizontal" >
+                android:orientation="horizontal"
+                android:paddingTop="5dp" >
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -40,18 +54,18 @@
                     android:id="@+id/tv_version_cur"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingLeft="5dp"
                     android:text="v1. 0. 0"
                     android:textColor="@color/textView_textColor_sub"
-                    android:textSize="16.5dp"
-                    android:paddingLeft="5dp" />
+                    android:textSize="16.5dp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:paddingTop="5dp"
-                android:orientation="horizontal" >
+                android:orientation="horizontal"
+                android:paddingTop="5dp" >
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -64,10 +78,10 @@
                     android:id="@+id/tv_version_new"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingLeft="5dp"
                     android:text="v1. 0. 0"
                     android:textColor="@color/textView_textColor_main"
-                    android:textSize="16.5dp"
-                    android:paddingLeft="5dp" />
+                    android:textSize="16.5dp" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

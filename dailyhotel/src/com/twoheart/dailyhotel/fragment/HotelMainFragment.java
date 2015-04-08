@@ -111,8 +111,6 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 		mFragmentViewPager.setData(mFragmentList);
 		mFragmentViewPager.setAdapter(getChildFragmentManager());
 
-		mHostActivity.setActionBar(R.string.actionbar_title_hotel_list_frag);
-
 		return view;
 	}
 

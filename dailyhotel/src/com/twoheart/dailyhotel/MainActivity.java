@@ -35,7 +35,6 @@ import android.content.pm.Signature;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -51,8 +50,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.widget.AdapterView;
@@ -69,7 +66,6 @@ import com.androidquery.util.AQUtility;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.readystatesoftware.systembartint.SystemBarTintManager.SystemBarConfig;
 import com.twoheart.dailyhotel.activity.SplashActivity;
 import com.twoheart.dailyhotel.fragment.HotelMainFragment;
@@ -178,7 +174,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 		setContentView(R.layout.activity_main);
 		
-		Toolbar toolbar = setActionBar("");
+		Toolbar toolbar = setActionBar(getString(R.string.actionbar_title_hotel_list_frag), false);
 		setNavigationDrawer(toolbar);
 
 		mContentFrame = (FrameLayout) findViewById(R.id.content_frame);
@@ -344,15 +340,16 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	private void initializeFragments()
 	{
 		if (mFragments != null)
+		{
 			mFragments.clear();
-		else
+		} else {
 			mFragments = new LinkedList<Fragment>();
+		}
 
 		mFragments.add(new HotelMainFragment());
 		mFragments.add(new BookingListFragment());
 		mFragments.add(new CreditFragment());
 		mFragments.add(new SettingFragment());
-
 	}
 
 	/**

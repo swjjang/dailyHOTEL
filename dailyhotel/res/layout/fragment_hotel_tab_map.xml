@@ -19,8 +19,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="40dp" >
+        android:layout_marginBottom="40dp"
+        android:layout_marginTop="20dp" >
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -35,22 +35,22 @@
                 android:id="@+id/rl_hotel_upper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
-                
+
                 <com.twoheart.dailyhotel.widget.NanumBarunTextView
                     android:id="@+id/hv_hotel_grade"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:textColor="@android:color/white"
                     android:layout_centerVertical="true"
-                    android:textSize="11.5dp"
                     android:gravity="center"
+                    android:paddingBottom="1px"
                     android:paddingLeft="5.5dp"
-                    android:paddingTop="2px"
                     android:paddingRight="5.5dp"
-                    android:paddingBottom="1px" />
+                    android:paddingTop="2px"
+                    android:textColor="@android:color/white"
+                    android:textSize="11.5dp" />
 
-                <TextView
+                <com.twoheart.dailyhotel.widget.NanumBarunTextView
                     android:id="@+id/tv_hotel_tab_map_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -75,7 +75,7 @@
                 android:layout_below="@+id/rl_hotel_upper"
                 android:orientation="vertical" >
 
-                <TextView
+                <com.twoheart.dailyhotel.widget.NanumBarunTextView
                     android:id="@+id/tv_hotel_tab_map_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

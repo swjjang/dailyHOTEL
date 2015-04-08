@@ -133,7 +133,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	 * @param title
 	 *            액션바에 표시할 화면의 제목을 받는다.
 	 */
-	public Toolbar setActionBar(String title)
+	public Toolbar setActionBar(String title, boolean isFinish)
 	{
 		if (mToolbar == null)
 		{
@@ -144,22 +144,36 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 		}
 
 		mToolbar.setTitle(title);
+		
+		if(isFinish == true)
+		{
+			mToolbar.setNavigationIcon(R.drawable.back);
+	        
+			mToolbar.setNavigationOnClickListener(new View.OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+					finish();
+				}
+			});
+		}
+		
 		setActionBarListEnabled(false);
-
-		//		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-		//		actionBar.setDisplayShowTitleEnabled(true);
-
-		//		actionBar.setIcon(R.drawable.img_ic_menu);
-
-		//		actionBar.setDisplayHomeAsUpEnabled(true);
-		//		actionBar.setHomeButtonEnabled(true);
+		
+		GlobalFont.apply(mToolbar);
 
 		return mToolbar;
 	}
 
 	public void setActionBar(int strId)
 	{
-		setActionBar(getString(strId));
+		setActionBar(getString(strId), true);
+	}
+	
+	public void setActionBar(String text)
+	{
+		setActionBar(text, true);
 	}
 	
 	private int mSpinnderIndex = -1;
@@ -188,7 +202,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 		}
 	}
 
-	public void setActionBarListData(String title, final ArrayList<String> arrayList, final UserActionListener userActionListener)
+	public void setActionBarListData(final String title, final ArrayList<String> arrayList, final UserActionListener userActionListener)
 	{
 		if(mSpinnderIndex == -1)
 		{

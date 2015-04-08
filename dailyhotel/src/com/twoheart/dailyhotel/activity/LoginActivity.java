@@ -93,8 +93,8 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 	{
 		super.onCreate(savedInstanceState);
 
-		setActionBar(R.string.actionbar_title_login_activity);
 		setContentView(R.layout.activity_login);
+		setActionBar(R.string.actionbar_title_login_activity);
 
 		etId = (EditText) findViewById(R.id.et_login_id);
 		etPwd = (EditText) findViewById(R.id.et_login_pwd);
