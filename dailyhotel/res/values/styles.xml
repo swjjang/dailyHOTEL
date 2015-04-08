@@ -18,7 +18,6 @@
         <item name="android:editTextStyle">@style/EditTextDH_Theme</item>
         <item name="android:checkboxStyle">@style/CheckBoxDH_Theme</item>
         <item name="android:spinnerStyle">@style/SpinnerDH_Theme</item>
-        <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItemDH_Theme</item>
         <item name="android:progressBarStyleHorizontal">@style/ProgressBarDH_Theme</item>
         <item name="android:listViewStyle">@style/ListViewDH_Theme</item>
         <item name="android:listViewWhiteStyle">@style/ListViewDH_Theme.White</item>
@@ -54,10 +53,6 @@
     <style name="SpinnerDH_Theme" parent="android:Widget.Spinner">
         <item name="android:background">@drawable/selector_spinner_background</item>
         <item name="android:dropDownSelector">@drawable/list_selector_holo_light</item>
-    </style>
-
-    <style name="SpinnerDropDownItemDH_Theme" parent="android:Widget.DropDownItem.Spinner">
-        <item name="android:checkMark">@drawable/btn_radio_holo_light</item>
     </style>
 
     <style name="ProgressBarDH_Theme" parent="android:Widget.ProgressBar.Horizontal">
