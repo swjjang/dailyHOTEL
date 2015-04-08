@@ -56,6 +56,7 @@ import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
+import com.twoheart.dailyhotel.widget.DailyHotelHeaderTransformer;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView;
 
 public class HotelListFragment extends BaseFragment implements Constants, OnItemClickListener, OnRefreshListener
@@ -100,7 +101,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 //		});
 
 		// Now find the PullToRefreshLayout and set it up
-		ActionBarPullToRefresh.from(mHostActivity).options(Options.create().scrollDistance(.3f).headerTransformer(new AbcDefaultHeaderTransformer()).build()).allChildrenArePullable().listener(this)
+		ActionBarPullToRefresh.from(mHostActivity).options(Options.create().scrollDistance(.3f).headerTransformer(new DailyHotelHeaderTransformer()).build()).allChildrenArePullable().listener(this)
 		// Here we'll set a custom ViewDelegate
 		.useViewDelegate(AbsListView.class, new AbsListViewDelegate()).setup(mPullToRefreshLayout);
 
