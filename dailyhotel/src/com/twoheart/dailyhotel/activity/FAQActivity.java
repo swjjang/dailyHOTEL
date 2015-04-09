@@ -27,13 +27,13 @@ public class FAQActivity extends BaseActivity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		
+
 		setContentView(R.layout.activity_board);
 		setActionBar(R.string.actionbar_title_faq_activity);
-		
+
 		mListView = (ExpandableListView) findViewById(R.id.expandable_list_board);
 		mListView.setOnGroupExpandListener(new OnGroupExpandListener()
-		{ 
+		{
 			// expand only one
 			private int mPrevExpandedChildPos = -1;
 
@@ -44,7 +44,7 @@ public class FAQActivity extends BaseActivity
 				{
 					mListView.collapseGroup(mPrevExpandedChildPos);
 				}
-				
+
 				mPrevExpandedChildPos = groupPosition;
 				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectFAQ", mList.get(groupPosition).getSubject(), (long) (groupPosition + 1));
 			}

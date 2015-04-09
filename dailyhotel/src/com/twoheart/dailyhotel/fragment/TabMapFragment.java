@@ -77,11 +77,11 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
 		tvAddress.setSelected(true);
 
 		hvGrade = (TextView) view.findViewById(R.id.hv_hotel_grade);
-		
+
 		// grade
 		hvGrade.setText(mHotelDetail.getHotel().getCategory().getName(getActivity()));
 		hvGrade.setBackgroundResource(mHotelDetail.getHotel().getCategory().getColorResId());
-		
+
 		return view;
 	}
 
@@ -152,7 +152,7 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
 		{
 			mMarker = googleMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title(hotel_name));
 			mMarker.showInfoWindow();
-			
+
 			LatLng address = new LatLng(lat, lng);
 			CameraPosition cp = new CameraPosition.Builder().target((address)).zoom(15).build();
 			googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));

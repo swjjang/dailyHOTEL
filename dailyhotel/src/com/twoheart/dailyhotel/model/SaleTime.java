@@ -15,7 +15,7 @@ import com.twoheart.dailyhotel.util.ExLog;
 public class SaleTime implements Constants, Parcelable
 {
 	private final long SECONDS_IN_A_DAY = 3600 * 24;
-	
+
 	private Date mOpenTime;
 	private Date mCloseTime;
 	private Date mCurrentTime;
@@ -52,7 +52,7 @@ public class SaleTime implements Constants, Parcelable
 	{
 		return format.format(date);
 	}
-	
+
 	public void setOpenTime(String openTime)
 	{
 		try
@@ -88,13 +88,13 @@ public class SaleTime implements Constants, Parcelable
 			ExLog.e(e.toString());
 		}
 	}
-	
+
 	public SaleTime getClone(int nextDay)
 	{
 		SaleTime nextSaleTime = new SaleTime();
-		
+
 		long nextMillis = nextDay * SECONDS_IN_A_DAY * 1000;
-		
+
 		nextSaleTime.mOpenTime = new Date(mOpenTime.getTime() + nextMillis);
 		nextSaleTime.mCloseTime = new Date(mCloseTime.getTime() + nextMillis);
 		nextSaleTime.mCurrentTime = new Date(mCurrentTime.getTime() + nextMillis);
@@ -120,18 +120,18 @@ public class SaleTime implements Constants, Parcelable
 		return getTimezonedDateFormat("dd").format(mCurrentTime);
 		//		return new SimpleDateFormat("dd").format(mCurrentTime);
 	}
-	
+
 	public String getCurrentDayEx()
 	{
 		return getTimezonedDateFormat("d").format(mCurrentTime);
 	}
-	
+
 	public String getCurrentYear()
 	{
 		return getTimezonedDateFormat("yy").format(mCurrentTime);
 		//		return new SimpleDateFormat("yy").format(mCurrentTime);
 	}
-	
+
 	public String getCurrentDayOftheWeek()
 	{
 		return getTimezonedDateFormat("EEE").format(mCurrentTime);
@@ -166,7 +166,7 @@ public class SaleTime implements Constants, Parcelable
 	{
 		return mCloseTime.getTime();
 	}
-	
+
 	// TimeControl: 시간 조정
 	public boolean isSaleTime()
 	{

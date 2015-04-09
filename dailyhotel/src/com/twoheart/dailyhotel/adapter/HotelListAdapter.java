@@ -91,8 +91,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 
 		switch (item.getType())
 		{
-			case HotelListViewItem.TYPE_SECTION:
-			{
+			case HotelListViewItem.TYPE_SECTION: {
 				HeaderListViewHolder headerViewHolder = null;
 
 				if (convertView != null)
@@ -118,8 +117,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 				break;
 			}
 
-			case HotelListViewItem.TYPE_ENTRY:
-			{
+			case HotelListViewItem.TYPE_ENTRY: {
 				Hotel element = item.getItem();
 				HotelListViewHolder viewHolder = null;
 
@@ -197,7 +195,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 				// grade
 				viewHolder.grade.setText(element.getCategory().getName(getContext()));
 				viewHolder.grade.setBackgroundResource(element.getCategory().getColorResId());
-				
+
 				viewHolder.name.setTypeface(DailyHotel.getBoldTypeface());
 				viewHolder.discount.setTypeface(DailyHotel.getBoldTypeface());
 

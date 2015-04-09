@@ -104,7 +104,7 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 
 		setContentView(R.layout.activity_hotel_tab);
 		setActionBar(hotelDetail.getHotel().getName());
-		
+
 		ArrayList<String> titleList = new ArrayList<String>();
 		titleList.add(getString(R.string.frag_booking_tab_title));
 		titleList.add(getString(R.string.frag_tab_info_title));
@@ -132,13 +132,13 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 
 	private void loadFragments()
 	{
-		if(mFragmentViewPager == null)
+		if (mFragmentViewPager == null)
 		{
 			ArrayList<String> titleList = new ArrayList<String>();
 			titleList.add(getString(R.string.frag_booking_tab_title));
 			titleList.add(getString(R.string.frag_tab_info_title));
 			titleList.add(getString(R.string.frag_tab_map_title));
-			
+
 			mFragmentViewPager = (FragmentViewPager) findViewById(R.id.fragmentViewPager);
 			mFragmentViewPager.setOnPageSelectedListener(mOnPageSelectedListener);
 
@@ -290,7 +290,7 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 	protected void onResume()
 	{
 		onPostSetCookie();
-		
+
 		if (mPosition == 0)
 		{
 			RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_booking", "/todays-hotels/" + region + "/" + hotelName + "/booking");
@@ -303,9 +303,9 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 		{
 			RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_map", "/todays-hotels/" + region + "/" + hotelName + "/map");
 		}
-		
+
 		uiHelper.onResume();
-		
+
 		super.onResume();
 	}
 
@@ -456,7 +456,7 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 
 				int saleIdx = detailObj.getInt("idx");
 				hotelDetail.setSaleIdx(saleIdx);
-				
+
 				loadFragments();
 			} catch (Exception e)
 			{

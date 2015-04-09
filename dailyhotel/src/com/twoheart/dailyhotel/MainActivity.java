@@ -79,6 +79,7 @@ import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
@@ -136,6 +137,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		super.onCreate(savedInstanceState);
 		ExLog.d("GCM??" + sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "NOPE"));
 
+//		DailyHotelRequest.makeUrlEncoder();
+
 		// 사용자가 선택한 언어, but 만약 사용자가 한국인인데 일본어를 선택하면 jp가 됨.
 		// 영어인 경우 - English, 한글인 경우 - 한국어
 
@@ -173,7 +176,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		startActivityForResult(new Intent(this, SplashActivity.class), CODE_REQUEST_ACTIVITY_SPLASH);
 
 		setContentView(R.layout.activity_main);
-		
+
 		Toolbar toolbar = setActionBar(getString(R.string.actionbar_title_hotel_list_frag), false);
 		setNavigationDrawer(toolbar);
 
@@ -342,7 +345,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		if (mFragments != null)
 		{
 			mFragments.clear();
-		} else {
+		} else
+		{
 			mFragments = new LinkedList<Fragment>();
 		}
 
@@ -531,15 +535,17 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			}
 		};
 
-		drawerLayout.post(new Runnable() {
-            @Override
-            public void run() {
-            	drawerToggle.syncState();
-            }
-        });
-		
+		drawerLayout.post(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				drawerToggle.syncState();
+			}
+		});
+
 		drawerLayout.setDrawerListener(drawerToggle);
-		
+
 		drawerList = (ListView) findViewById(R.id.left_drawer);
 
 		menuHotelListFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_todays_hotel), R.drawable.selector_drawermenu_todayshotel, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
@@ -734,18 +740,23 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			switch (item.getType())
 			{
 				case DrawerMenu.DRAWER_MENU_LIST_TYPE_LOGO:
+				{
 					convertView = inflater.inflate(R.layout.list_row_drawer_logo, null);
 					break;
+				}
 
 				case DrawerMenu.DRAWER_MENU_LIST_TYPE_SECTION:
+				{
 					convertView = inflater.inflate(R.layout.list_row_drawer_section, null);
 
 					TextView drawerMenuItemTitle = (TextView) convertView.findViewById(R.id.drawerMenuItemTitle);
 
 					drawerMenuItemTitle.setText(item.getTitle());
 					break;
+				}
 
 				case DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY:
+				{
 					convertView = inflater.inflate(R.layout.list_row_drawer_entry, null);
 
 					ImageView drawerMenuItemIcon = (ImageView) convertView.findViewById(R.id.drawerMenuItemIcon);
@@ -755,6 +766,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 					drawerMenuItemText.setText(item.getTitle());
 
 					break;
+				}
 			}
 
 			return convertView;
@@ -885,8 +897,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			} catch (Exception e)
 			{
 				onError(e);
-			}
-			finally
+			} finally
 			{
 				unLockUI();
 			}

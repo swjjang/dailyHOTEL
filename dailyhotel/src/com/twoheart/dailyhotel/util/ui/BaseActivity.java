@@ -26,6 +26,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -48,6 +49,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.GlobalFont;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.widget.RegionPopupListView;
@@ -145,13 +147,13 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 		}
 
 		setActionBarListEnabled(false);
-//		mToolbar.setTitle(title);
+		//		mToolbar.setTitle(title);
 		getSupportActionBar().setTitle(title);
-		
-		if(isFinish == true)
+
+		if (isFinish == true)
 		{
 			mToolbar.setNavigationIcon(R.drawable.back);
-	        
+
 			mToolbar.setNavigationOnClickListener(new View.OnClickListener()
 			{
 				@Override
@@ -161,7 +163,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 				}
 			});
 		}
-		
+
 		GlobalFont.apply(mToolbar);
 
 		return mToolbar;
@@ -171,22 +173,22 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	{
 		setActionBar(getString(strId), true);
 	}
-	
+
 	public void setActionBar(String text)
 	{
 		setActionBar(text, true);
 	}
-	
+
 	private int mSpinnderIndex = -1;
-	
+
 	public void setActionBarListEnabled(boolean isEnable)
 	{
 		if (isEnable == true)
 		{
-			if(mSpinnderIndex == -1)
+			if (mSpinnderIndex == -1)
 			{
 				mToolbar.setTitle("");
-				
+
 				LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				View view = inflater.inflate(R.layout.view_actionbar_spinner, null, true);
 
@@ -195,7 +197,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 			}
 		} else
 		{
-			if(mSpinnderIndex != -1 && mToolbar.getChildAt(mSpinnderIndex) != null)
+			if (mSpinnderIndex != -1 && mToolbar.getChildAt(mSpinnderIndex) != null)
 			{
 				mToolbar.removeViewAt(mSpinnderIndex);
 				mSpinnderIndex = -1;
@@ -205,18 +207,18 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 
 	public void setActionBarListData(final String title, final ArrayList<String> arrayList, final UserActionListener userActionListener)
 	{
-		if(mSpinnderIndex == -1)
+		if (mSpinnderIndex == -1)
 		{
 			return;
 		}
-		
+
 		View view = mToolbar.getChildAt(mSpinnderIndex);
-		
-		if(view != null)
+
+		if (view != null)
 		{
 			TextView textView = (TextView) view.findViewById(R.id.titleTextView);
 			textView.setText(title);
-			
+
 			view.setOnClickListener(new View.OnClickListener()
 			{
 				@Override
@@ -256,7 +258,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 		regionPopupListView.setData(stringlist);
 		regionPopupListView.setUserActionListener(new RegionPopupListView.UserActionListener()
 		{
-			
+
 			@Override
 			public void onItemClick(int position)
 			{
@@ -265,8 +267,8 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 					mPopupWindow.dismiss();
 					mPopupWindow = null;
 				}
-				
-				if(userActionListener != null)
+
+				if (userActionListener != null)
 				{
 					userActionListener.onItemClick(position);
 				}
@@ -274,7 +276,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 		});
 
 		mPopupWindow = new PopupWindow(regionPopupListView, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		
+
 		//영역이외의 터치시 팝업 윈도우를 닫히게 하기 위해서
 		mPopupWindow.setOutsideTouchable(true);
 		mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
@@ -307,7 +309,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 		{
 			return true;
 		}
-		
+
 		return super.onKeyDown(keyCode, event);
 	}
 
@@ -470,7 +472,14 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 
 		ExLog.e(error.toString());
 
-		onError();
+		if (Constants.DEBUG == true)
+		{
+			Log.e("DailyHotel", error.toString(), error.fillInStackTrace());
+			showToast(error.toString(), Toast.LENGTH_LONG, false);
+		} else
+		{
+			onError();
+		}
 	}
 
 	/**

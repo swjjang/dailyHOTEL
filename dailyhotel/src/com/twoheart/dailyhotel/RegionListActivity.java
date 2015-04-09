@@ -48,7 +48,7 @@ public class RegionListActivity extends BaseActivity implements OnItemClickListe
 
 		setContentView(R.layout.activity_region_list);
 		setActionBar(R.string.act_list_region_title);
-		
+
 		// 어댑터 생성
 		adapter = new SeparatedListAdpater(this);
 

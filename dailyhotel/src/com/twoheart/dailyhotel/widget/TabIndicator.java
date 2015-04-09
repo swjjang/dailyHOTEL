@@ -110,7 +110,7 @@ public class TabIndicator extends LinearLayout implements OnClickListener
 
 			this.addView(tabIndicatorItem, layoutParams);
 		}
-		
+
 		mTabArrray.get(0).setSelected(true);
 	}
 
@@ -209,14 +209,14 @@ public class TabIndicator extends LinearLayout implements OnClickListener
 			mTabArrray.get(index).setSubText(text);
 		}
 	}
-	
+
 	public String getSubText(int index)
 	{
 		if (index > -1 && index < mTabArrray.size())
 		{
 			return mTabArrray.get(index).getSubText();
 		}
-		
+
 		return null;
 	}
 
@@ -372,7 +372,7 @@ public class TabIndicator extends LinearLayout implements OnClickListener
 		{
 			mDayTextView.setText(text);
 		}
-		
+
 		public String getSubText()
 		{
 			return mDayTextView.getText().toString();
@@ -382,11 +382,11 @@ public class TabIndicator extends LinearLayout implements OnClickListener
 		public void setSelected(boolean selected)
 		{
 			super.setSelected(selected);
-			
-			if(selected == true)
+
+			if (selected == true)
 			{
 				mTitleTextView.setTypeface(mTitleTextView.getTypeface(), Typeface.BOLD);
-			} else 
+			} else
 			{
 				mTitleTextView.setTypeface(mTitleTextView.getTypeface(), Typeface.NORMAL);
 			}

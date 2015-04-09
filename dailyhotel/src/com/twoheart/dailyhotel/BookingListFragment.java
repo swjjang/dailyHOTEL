@@ -217,7 +217,8 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 			if ("alive".equalsIgnoreCase(result) == true)
 			{ // session alive
 				// 예약 목록 요청.
-				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_MINE).toString(), null, mReserveMineStringResponseListener, mHostActivity));
+//				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_MINE).toString(), null, mReserveMineStringResponseListener, mHostActivity));
+				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_MINE).toString(), null, mReserveMineStringResponseListener, mHostActivity));
 
 			} else if ("dead".equalsIgnoreCase(result) == true)
 			{ // session dead

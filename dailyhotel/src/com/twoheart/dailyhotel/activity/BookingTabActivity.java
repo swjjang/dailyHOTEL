@@ -87,23 +87,23 @@ public class BookingTabActivity extends BaseActivity
 		ExLog.d(url);
 
 		lockUI();
-		
+
 		// 호텔 정보를 가져온다.
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null, mHotelDetailJsonResponseListener, this));
 	}
 
 	private void loadFragments()
 	{
-	
-		if(mFragmentViewPager == null)
+
+		if (mFragmentViewPager == null)
 		{
 			String[] strings = { getString(R.string.drawer_menu_pin_title_resrvation), getString(R.string.frag_booking_tab_year), getString(R.string.frag_booking_tab_month), getString(R.string.frag_booking_tab_day), getString(R.string.frag_booking_tab_hour) };
-			
+
 			ArrayList<String> titleList = new ArrayList<String>();
 			titleList.add(getString(R.string.frag_booking_tab_title));
 			titleList.add(getString(R.string.frag_tab_info_title));
 			titleList.add(getString(R.string.frag_tab_map_title));
-			
+
 			mFragmentViewPager = (FragmentViewPager) findViewById(R.id.fragmentViewPager);
 			mFragmentViewPager.setOnPageSelectedListener(mOnPageSelectedListener);
 
@@ -129,7 +129,7 @@ public class BookingTabActivity extends BaseActivity
 	protected void onResume()
 	{
 		onPostSetCookie();
-		
+
 		if (mPosition == 0)
 		{
 			RenewalGaManager.getInstance(getApplicationContext()).recordScreen("bookingDetail_booking", "/bookings/" + booking.getHotel_name() + "/booking");
@@ -142,7 +142,7 @@ public class BookingTabActivity extends BaseActivity
 		{
 			RenewalGaManager.getInstance(getApplicationContext()).recordScreen("bookingDetail_map", "/bookings/" + booking.getHotel_name() + "/map");
 		}
-		
+
 		super.onResume();
 	}
 
@@ -255,8 +255,7 @@ public class BookingTabActivity extends BaseActivity
 			} catch (Exception e)
 			{
 				onError(e);
-			}
-			finally
+			} finally
 			{
 				unLockUI();
 			}

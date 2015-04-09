@@ -206,6 +206,7 @@ public class ExLog
 	 */
 	public static void e(String message)
 	{
+		
 		String caller = getCallerInfo(); // 호출한 Class와 Method를 찾아서 로그에 넣어준다(직전
 		// Class와
 		// Method)

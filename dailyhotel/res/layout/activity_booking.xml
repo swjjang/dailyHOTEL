@@ -76,8 +76,9 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
                         android:layout_below="@id/checkinTextView"
-                        android:layout_centerHorizontal="true"
+                        android:layout_marginRight="10dp"
                         android:layout_marginTop="10dp"
                         android:gravity="center_vertical"
                         android:orientation="vertical" >
@@ -93,15 +94,11 @@
                             android:id="@+id/checkinTimeTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
                             android:layout_gravity="right|center_vertical"
-                            android:layout_toRightOf="@id/checkinDayTextView"
                             android:drawableLeft="@drawable/img_ic_reservation_checkin"
                             android:gravity="right"
                             android:textColor="@drawable/selector_textview_textcolor"
                             android:textSize="16dp" />
-
                     </LinearLayout>
                 </RelativeLayout>
 
@@ -130,8 +127,9 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
                         android:layout_below="@id/checkoutTextView"
-                        android:layout_centerHorizontal="true"
+                        android:layout_marginRight="10dp"
                         android:layout_marginTop="10dp"
                         android:gravity="center_vertical"
                         android:orientation="vertical" >
@@ -147,15 +145,11 @@
                             android:id="@+id/checkoutTimeTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
                             android:layout_gravity="right|center_vertical"
-                            android:layout_toRightOf="@id/checkoutDayTextView"
                             android:drawableLeft="@drawable/img_ic_reservation_checkout"
                             android:gravity="right"
                             android:textColor="@drawable/selector_textview_textcolor"
                             android:textSize="16dp" />
-
                     </LinearLayout>
                 </RelativeLayout>
             </LinearLayout>
@@ -202,7 +196,6 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
                         android:layout_weight="0.3"
                         android:text="@string/act_booking_reserver"
                         android:textColor="@color/booking_subtext"
@@ -212,7 +205,6 @@
                         android:id="@+id/et_hotel_payment_reserver_name"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
                         android:layout_weight="0.7"
                         android:gravity="right|center_vertical"
                         android:lines="1"
@@ -230,7 +222,6 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
                         android:layout_weight="0.3"
                         android:text="@string/act_booking_mobile"
                         android:textColor="@color/booking_subtext"
@@ -240,7 +231,6 @@
                         android:id="@+id/et_hotel_payment_reserver_number"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
                         android:layout_weight="0.7"
                         android:gravity="right|center_vertical"
                         android:lines="1"
@@ -258,7 +248,6 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
                         android:layout_weight="0.3"
                         android:text="@string/act_booking_email"
                         android:textColor="@color/booking_subtext"
@@ -268,7 +257,6 @@
                         android:id="@+id/et_hotel_payment_reserver_email"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
                         android:layout_weight="0.7"
                         android:gravity="right|center_vertical"
                         android:lines="1"
@@ -330,7 +318,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:background="@null"
-                        android:checked="true"
+                        android:checked="false"
                         android:gravity="center"
                         android:paddingRight="4dp"
                         android:textOff=""
@@ -448,6 +436,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
+                    android:button="@drawable/abc_btn_radio_material"
+                    android:buttonTint="@color/actionbar_hamburger"
                     android:text="@string/act_booking_pay_card"
                     android:textColor="@color/textView_textColor_main" />
 
@@ -456,6 +446,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
+                    android:button="@drawable/abc_btn_radio_material"
+                    android:buttonTint="@color/actionbar_hamburger"
                     android:text="@string/act_booking_pay_mobile"
                     android:textColor="@color/textView_textColor_main" />
 
@@ -463,6 +455,8 @@
                     android:id="@+id/rb_payment_account"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:button="@drawable/abc_btn_radio_material"
+                    android:buttonTint="@color/actionbar_hamburger"
                     android:paddingRight="15dp"
                     android:text="@string/act_booking_pay_account"
                     android:textColor="@color/textView_textColor_main" />
@@ -491,7 +485,6 @@
                 android:layout_marginLeft="12dp"
                 android:layout_marginRight="12dp"
                 android:layout_marginTop="20dp"
-                android:layout_toRightOf="@+id/iv_hotel_payment"
                 android:background="@drawable/shape_button_common_background"
                 android:text="@string/act_booking_btn_pay"
                 android:textColor="@android:color/white"

@@ -64,7 +64,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		
+
 		setContentView(R.layout.activity_profile);
 		setActionBar(R.string.actionbar_title_profile_activity);
 

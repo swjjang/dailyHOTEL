@@ -3,13 +3,12 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@android:color/transparent"
-    android:padding="25dp"
-    >
+    android:padding="25dp" >
 
     <LinearLayout
-        android:layout_centerInParent="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:background="@drawable/background_dialog_rating_hotel"
         android:orientation="vertical"
         android:paddingBottom="10dp" >
@@ -72,11 +71,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="110dp"
                     android:gravity="center"
-                    android:textColor="@drawable/selector_textcolor_btn_rating_hotel"
                     android:text="[데일리 슈퍼 프리미엄 호텔]예약완료 되었습니다."
+                    android:textColor="@drawable/selector_textcolor_btn_rating_hotel"
                     android:textSize="18.5dp" />
             </LinearLayout>
-            
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >

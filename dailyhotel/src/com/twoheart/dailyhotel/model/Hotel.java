@@ -24,42 +24,52 @@ public class Hotel implements Parcelable
 	private int sequence;
 	private String bedType;
 	private String detailRegion;
-	
+
 	public enum HotelGrade
 	{
-		biz(R.string.grade_biz, R.color.grade_hotel),
-		hostel(R.string.grade_hostel, R.color.grade_hotel),
-		grade1(R.string.grade_1, R.color.grade_hotel),
-		grade2(R.string.grade_2, R.color.grade_hotel),
-		grade3(R.string.grade_3, R.color.grade_hotel),
-		boutique(R.string.grade_boutique, R.color.grade_boutique),
-		residence(R.string.grade_residence, R.color.grade_residence),
-		resort(R.string.grade_resort, R.color.grade_resort_pension_condo),
-		pension(R.string.grade_pension, R.color.grade_resort_pension_condo),
-		condo(R.string.grade_condo, R.color.grade_resort_pension_condo),
-		special(R.string.grade_special, R.color.grade_special),
-		etc(R.string.grade_not_yet, R.color.grade_not_yet);
-		
+		biz(R.string.grade_biz, R.color.grade_hotel), hostel(
+				R.string.grade_hostel,
+				R.color.grade_hotel), grade1(
+				R.string.grade_1,
+				R.color.grade_hotel), grade2(
+				R.string.grade_2,
+				R.color.grade_hotel), grade3(
+				R.string.grade_3,
+				R.color.grade_hotel), boutique(
+				R.string.grade_boutique,
+				R.color.grade_boutique), residence(
+				R.string.grade_residence,
+				R.color.grade_residence), resort(
+				R.string.grade_resort,
+				R.color.grade_resort_pension_condo), pension(
+				R.string.grade_pension,
+				R.color.grade_resort_pension_condo), condo(
+				R.string.grade_condo,
+				R.color.grade_resort_pension_condo), special(
+				R.string.grade_special,
+				R.color.grade_special), etc(
+				R.string.grade_not_yet,
+				R.color.grade_not_yet);
+
 		private int mNameResId;
 		private int mColorResId;
-		
+
 		private HotelGrade(int nameResId, int colorResId)
 		{
 			mNameResId = nameResId;
 			mColorResId = colorResId;
 		}
-		
+
 		public String getName(Context context)
 		{
 			return context.getString(mNameResId);
 		}
-		
+
 		public int getColorResId()
 		{
 			return mColorResId;
 		}
 	};
-	
 
 	public Hotel()
 	{

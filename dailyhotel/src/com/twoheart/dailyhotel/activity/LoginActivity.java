@@ -76,7 +76,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
 	private EditText etId, etPwd;
 	private SwitchCompat cbxAutoLogin;
-	private Button btnLogin;
+	private TextView btnLogin;
 	private TextView tvSignUp, tvForgotPwd;
 	private LoginButton facebookLogin;
 
@@ -102,7 +102,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 		cbxAutoLogin = (SwitchCompat) findViewById(R.id.cb_login_auto);
 		tvSignUp = (TextView) findViewById(R.id.tv_login_signup);
 		tvForgotPwd = (TextView) findViewById(R.id.tv_login_forgot);
-		btnLogin = (Button) findViewById(R.id.btn_login);
+		btnLogin = (TextView) findViewById(R.id.btn_login);
 		facebookLogin = (LoginButton) findViewById(R.id.authButton);
 
 		cbxAutoLogin.setSwitchMinWidth(Util.dpToPx(LoginActivity.this, 60));

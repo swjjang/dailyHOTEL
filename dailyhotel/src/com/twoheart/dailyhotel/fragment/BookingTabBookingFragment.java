@@ -8,8 +8,11 @@
  */
 package com.twoheart.dailyhotel.fragment;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -172,7 +175,8 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 				tvCustomerPhone.setText(phone);
 
 				// 체크인 정보 요청.
-				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_CHECKIN).append('/').append(mHotelDetail.getSaleIdx()).toString(), null, mReserveCheckInJsonResponseListener, mHostActivity));
+//				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_CHECKIN).append('/').append(mHotelDetail.getSaleIdx()).toString(), null, mReserveCheckInJsonResponseListener, mHostActivity));
+				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_CHECKINOUT).append('/').append(mHotelDetail.getSaleIdx()).toString(), null, mReserveCheckInJsonResponseListener, mHostActivity));
 				ExLog.e("madsd : " + mHotelDetail.getSaleIdx() + "");
 			} catch (Exception e)
 			{
@@ -188,7 +192,6 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-
 			try
 			{
 				if (response == null)
@@ -196,23 +199,33 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 					throw new NullPointerException("response == null");
 				}
 
-				String checkin = response.getString("checkin");
-				String checkout = response.getString("checkout");
+				long checkin = Long.valueOf(response.getString("checkin"));
+				long checkout = Long.valueOf(response.getString("checkout"));
+				
+				SimpleDateFormat format = new SimpleDateFormat("yyyy년 MM월 dd일 HH시");
+				format.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
+				
+				// Check In
+				Calendar calendarCheckin = Calendar.getInstance();
+				calendarCheckin.setTimeInMillis(checkin);
+				
+				String checkInday = format.format(calendarCheckin.getTime());
+					
+				tvCheckIn.setText(checkInday);
 
-				String in[] = checkin.split("-");
-				ExLog.e("chkin : " + checkin);
-				ExLog.e("chkout : " + checkout);
+				// Check Out
+				Calendar calendarCheckout = Calendar.getInstance();
+				calendarCheckout.setTimeInMillis(checkout);
 
-				tvCheckIn.setText("20" + in[0] + mStrings[1] + in[1] + mStrings[2] + in[2] + mStrings[3] + in[3] + mStrings[4]);
-
-				String out[] = checkout.split("-");
-				tvCheckOut.setText("20" + out[0] + mStrings[1] + out[1] + mStrings[2] + out[2] + mStrings[3] + out[3] + mStrings[4]);
-
-				unLockUI();
-
+				String checkOutday = format.format(calendarCheckout.getTime());
+				
+				tvCheckOut.setText(checkOutday);
 			} catch (Exception e)
 			{
 				onError(e);
+			}
+			finally
+			{
 				unLockUI();
 			}
 		}

@@ -10,9 +10,11 @@ package com.twoheart.dailyhotel.activity;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,6 +29,7 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
 import android.telephony.TelephonyManager;
@@ -156,9 +159,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		mEditTextBackground[1] = etReserverNumber.getBackground();
 		mEditTextBackground[2] = etReserverEmail.getBackground();
 
-		etReserverName.setBackground(null);
-		etReserverNumber.setBackground(null);
-		etReserverEmail.setBackground(null);
+		etReserverName.setBackgroundResource(0);
+		etReserverNumber.setBackgroundResource(0);
+		etReserverEmail.setBackgroundResource(0);
 
 		etReserverName.setEnabled(false);
 		etReserverNumber.setEnabled(false);
@@ -168,7 +171,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		rbPaymentAccount = (RadioButton) findViewById(R.id.rb_payment_account);
 		rbPaymentCard = (RadioButton) findViewById(R.id.rb_payment_card);
 		rbPaymentHp = (RadioButton) findViewById(R.id.rb_payment_hp);
-
+		
 		rbPaymentAccount.setOnClickListener(this);
 		rbPaymentCard.setOnClickListener(this);
 		rbPaymentHp.setOnClickListener(this);
@@ -305,17 +308,17 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				Dialog dialog = null;
 
 				if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentCard.getId())
-				{ 
+				{
 					// 신용카드를 선택했을 경우
 					dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_CARD);
 					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("radio", "choosePaymentWay", "신용카드", (long) 1);
 				} else if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentHp.getId())
-				{ 
+				{
 					// 핸드폰을 선택했을 경우
 					dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_HP);
 					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("radio", "choosePaymentWay", "휴대폰", (long) 2);
 				} else if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentAccount.getId())
-				{ 
+				{
 					// 가상계좌 입금을 선택했을 경우
 					dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_ACCOUNT);
 					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("radio", "choosePaymentWay", "계좌이체", (long) 3);
@@ -750,7 +753,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-
 			try
 			{
 				if (response == null)
@@ -768,6 +770,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			} catch (JSONException e)
 			{
 				onError(e);
+
+				finish();
 			}
 
 		}
@@ -805,9 +809,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					etReserverNumber.setEnabled(false);
 					etReserverEmail.setEnabled(false);
 
-					etReserverName.setBackground(null);
-					etReserverNumber.setBackground(null);
-					etReserverEmail.setBackground(null);
+					etReserverName.setBackgroundResource(0);
+					etReserverNumber.setBackgroundResource(0);
+					etReserverEmail.setBackgroundResource(0);
 
 					etReserverName.setText(buyer.getEmail());
 					etReserverNumber.setText(buyer.getPhone());
@@ -821,12 +825,20 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					if (isEmptyTextField(buyer.getName()) == false)
 					{
 						etReserverName.setEnabled(false);
-						etReserverName.setBackground(null);
+						etReserverName.setBackgroundResource(0);
 						etReserverName.setText(buyer.getName());
 					} else
 					{
 						etReserverName.setEnabled(true);
-						etReserverName.setBackground(mEditTextBackground[0]);
+
+						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+						{
+							etReserverName.setBackground(mEditTextBackground[0]);
+						} else
+						{
+							etReserverName.setBackgroundDrawable(mEditTextBackground[0]);
+						}
+
 						etReserverName.setText(buyer.getName());
 
 						mIsEditMode = true;
@@ -835,7 +847,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					if (isEmptyTextField(buyer.getPhone()) == false)
 					{
 						etReserverNumber.setEnabled(false);
-						etReserverNumber.setBackground(null);
+						etReserverNumber.setBackgroundResource(0);
 						etReserverNumber.setText(buyer.getPhone());
 					} else
 					{
@@ -843,7 +855,14 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 						etReserverNumber.setText(telephonyManager.getLine1Number());
 						etReserverNumber.setEnabled(true);
-						etReserverNumber.setBackground(mEditTextBackground[1]);
+
+						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+						{
+							etReserverNumber.setBackground(mEditTextBackground[1]);
+						} else
+						{
+							etReserverNumber.setBackgroundDrawable(mEditTextBackground[0]);
+						}
 
 						mIsEditMode = true;
 					}
@@ -851,24 +870,34 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					if (isEmptyTextField(buyer.getEmail()) == false)
 					{
 						etReserverEmail.setEnabled(false);
-						etReserverEmail.setBackground(null);
+						etReserverEmail.setBackgroundResource(0);
 						etReserverEmail.setText(buyer.getEmail());
 					} else
 					{
 						etReserverEmail.setEnabled(true);
-						etReserverEmail.setBackground(mEditTextBackground[2]);
 						etReserverEmail.setText(buyer.getName());
+
+						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+						{
+							etReserverEmail.setBackground(mEditTextBackground[2]);
+						} else
+						{
+							etReserverEmail.setBackgroundDrawable(mEditTextBackground[0]);
+						}
 
 						mIsEditMode = true;
 					}
 				}
 
 				// 체크인 정보 요청
-				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_CHECKIN).append('/').append(mPay.getHotelDetail().getSaleIdx()).toString(), null, mReserveCheckInJsonResponseListener, BookingActivity.this));
+				//				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_CHECKIN).append('/').append(mPay.getHotelDetail().getSaleIdx()).toString(), null, mReserveCheckInJsonResponseListener, BookingActivity.this));
+				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_CHECKINOUT).append('/').append(mPay.getHotelDetail().getSaleIdx()).toString(), null, mReserveCheckInJsonResponseListener, BookingActivity.this));
 
 			} catch (Exception e)
 			{
 				onError(e);
+
+				finish();
 			}
 
 		}
@@ -927,6 +956,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			} catch (JSONException e)
 			{
 				onError(e);
+
+				finish();
 			}
 		}
 	};
@@ -972,8 +1003,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			} catch (Exception e)
 			{
 				onError(e);
-			}
 
+				finish();
+			}
 		}
 	};
 
@@ -983,49 +1015,71 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
+			if (response == null)
+			{
+				throw new NullPointerException("response == null");
+			}
+
+			long checkin = 0;
+			long checkout = 0;
 
 			try
 			{
-				if (response == null)
-				{
-					throw new NullPointerException("response == null");
-				}
-
-				String checkin = response.getString("checkin");
-				String checkout = response.getString("checkout");
-				mPay.setCheckOut(checkout);
-
-				String in[] = checkin.split("-");
-
-				if (locale.equals("한국어") == true)
-				{
-					mCheckinDayTextView.setText(Integer.parseInt(in[1]) + "/" + Integer.parseInt(in[2]) + "  금");
-					mCheckinTimeTextView.setText(in[3] + ":00");
-					//					tvCheckIn.setText("20" + in[0] + getString(R.string.frag_booking_tab_year) + in[1] + getString(R.string.frag_booking_tab_month) + in[2] + getString(R.string.frag_booking_tab_day) + " " + in[3] + getString(R.string.frag_booking_tab_hour));
-				} else
-				{
-					//					tvCheckIn.setText("20" + in[0] + "-" + in[1] + "-" + in[2] + " " + in[3] + ":00");
-				}
-
-				String out[] = checkout.split("-");
-
-				if (locale.equals("한국어") == true)
-				{
-					mCheckoutDayTextView.setText(Integer.parseInt(out[1]) + "/" + Integer.parseInt(out[2]) + "  금");
-					mCheckoutTimeTextView.setText(out[3] + ":00");
-
-					//					tvCheckOut.setText("20" + out[0] + getString(R.string.frag_booking_tab_year) + out[1] + getString(R.string.frag_booking_tab_month) + out[2] + getString(R.string.frag_booking_tab_day) + " " + out[3] + getString(R.string.frag_booking_tab_hour));
-				} else
-				{
-					//					tvCheckOut.setText("20" + out[0] + "-" + out[1] + "-" + out[2] + " " + out[3] + ":00");
-				}
+				checkin = Long.valueOf(response.getString("checkin"));
+				checkout = Long.valueOf(response.getString("checkout"));
 			} catch (Exception e)
 			{
+				ExLog.e(e.toString());
+
 				onError(e);
-			} finally
-			{
-				unLockUI();
+				finish();
+				return;
 			}
+
+			if (checkin == 0 || checkout == 0)
+			{
+				onError();
+				finish();
+				return;
+			}
+
+			// Check In
+			Calendar calendarCheckin = Calendar.getInstance();
+			calendarCheckin.setTimeInMillis(checkin);
+
+			if (locale.equals("한국어") == true)
+			{
+				SimpleDateFormat formatIn = new SimpleDateFormat("M/d  EEE");
+				formatIn.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
+				String day = formatIn.format(calendarCheckin.getTime());
+
+				mCheckinDayTextView.setText(day);
+
+				//
+				mCheckinTimeTextView.setText(calendarCheckin.get(Calendar.HOUR_OF_DAY) + ":00");
+			}
+
+			// CheckOut
+			Calendar calendarCheckout = Calendar.getInstance();
+			calendarCheckout.setTimeInMillis(checkout);
+
+			SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd-hh");
+			format.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
+			String formatCheckout = format.format(calendarCheckout.getTime());
+
+			mPay.setCheckOut(formatCheckout);
+
+			if (locale.equals("한국어") == true)
+			{
+				SimpleDateFormat formatOut = new SimpleDateFormat("M/d  EEE");
+				formatOut.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
+				String day = formatOut.format(calendarCheckout.getTime());
+
+				mCheckoutDayTextView.setText(day);
+				mCheckoutTimeTextView.setText(calendarCheckout.get(Calendar.HOUR_OF_DAY) + ":00");
+			}
+
+			unLockUI();
 		}
 	};
 
@@ -1035,7 +1089,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		@Override
 		public void onResponse(String url, String response)
 		{
-
 			try
 			{
 				String result = null;
@@ -1066,12 +1119,14 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 				mPay.setPayPrice(originalPrice);
 
-				if (Integer.valueOf(bonus) == 0)
+				boolean checked = swCredit.isChecked();
+
+				if (checked == false)
 				{
-					swCredit.setChecked(false);
+					onCheckedChanged(swCredit, false);
 				} else
 				{
-					swCredit.setChecked(swCredit.isChecked());
+					swCredit.setChecked(false);
 				}
 
 				// 사용자 정보 요청.
@@ -1080,17 +1135,17 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			} catch (Exception e)
 			{
 				onError(e);
+
+				finish();
 			}
 		}
 	};
 
 	private DailyHotelStringResponseListener mAppTimeStringResponseListener = new DailyHotelStringResponseListener()
 	{
-
 		@Override
 		public void onResponse(String url, String response)
 		{
-
 			String result = null;
 
 			if (TextUtils.isEmpty(response) == false)
@@ -1101,7 +1156,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			saleTime.setCurrentTime(result);
 
 			mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_SALE_TIME).toString(), null, mAppSaleTimeJsonResponseListener, BookingActivity.this));
-
 		}
 	};
 
@@ -1111,7 +1165,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		@Override
 		public void onResponse(String url, String response)
 		{
-
 			ExLog.e("USER_ALIVE / CALL_RESOURCE : " + response.toString() + " / " + mAliveCallSource);
 			unLockUI();
 			/**

@@ -60,6 +60,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 	public interface UserActionListener
 	{
 		public void selectHotel(HotelListViewItem hotelListViewItem, int hotelIndex);
+
 		public void selectDay(HotelListFragment fragment);
 	};
 
@@ -148,14 +149,14 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 	{
 		onNavigationItemSelected(position);
 	}
-	
+
 	public boolean onNavigationItemSelected(int position)
 	{
 		String region = mRegionList.get(position);
-		
+
 		mHostActivity.setActionBarListEnabled(true);
 		mHostActivity.setActionBarListData(region, mRegionList, this);
-		
+
 		// 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
 		if (region.equalsIgnoreCase(mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "")) == false)
 		{
@@ -344,7 +345,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 				if (mFragmentList != null)
 				{
 					int fragmentSize = mFragmentList.size();
-					
+
 					for (int i = 0; i < fragmentSize; i++)
 					{
 						HotelListFragment hotelListFragment = mFragmentList.get(i);
@@ -355,14 +356,13 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 
 				// 임시로 여기서 날짜를 넣는다.
 				ArrayList<String> dayList = new ArrayList<String>();
-				
+
 				SaleTime nextSaleTime = mTodaySaleTime.getClone(1);
-				
+
 				dayList.add(getString(R.string.label_format_tabday, mTodaySaleTime.getCurrentDayEx(), mTodaySaleTime.getCurrentDayOftheWeek()));
 				dayList.add(getString(R.string.label_format_tabday, nextSaleTime.getCurrentDayEx(), nextSaleTime.getCurrentDayOftheWeek()));
 				dayList.add(mTabIndicator.getSubText(2));
-				
-				
+
 				int tabSize = mTabIndicator.size();
 
 				for (int i = 0; i < tabSize; i++)
@@ -378,11 +378,11 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 						mTabIndicator.setSubText(i, day);
 					}
 				}
-				
+
 				// 호텔 프래그먼트 일때 액션바에 네비게이션 리스트 설치.
 				mHostActivity.setActionBarListEnabled(true);
 				mHostActivity.setActionBarListData(mRegionList.get(currentRegionIndex), mRegionList, HotelMainFragment.this);
-				
+
 				onNavigationItemSelected(currentRegionIndex);
 			} catch (Exception e)
 			{
@@ -504,19 +504,19 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 			}
 
 			lockUiComponent();
-			
-			if(fragment != null)
+
+			if (fragment != null)
 			{
 				// 선택탭의 이름을 수정한다.
 				SaleTime saleTime = fragment.getSaleTime();
 				String day = getString(R.string.label_format_tabday, saleTime.getCurrentDayEx(), saleTime.getCurrentDayOftheWeek());
-				
+
 				mTabIndicator.setSubTextEnable(2, true);
 				mTabIndicator.setSubText(2, day);
-				
+
 				fragment.refreshHotelList(false);
 			}
-			
+
 			releaseUiComponent();
 		}
 	};

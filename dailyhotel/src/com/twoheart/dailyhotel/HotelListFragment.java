@@ -82,18 +82,18 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
 
 		GlobalFont.apply(container);
-		
+
 		// 추후 왼쪽 탭로 빠질것이다.
-//		btnListViewHeader.setOnClickListener(new OnClickListener()
-//		{
-//			@Override
-//			public void onClick(View v)
-//			{
-//				Intent i = new Intent(mHostActivity, EventWebActivity.class);
-//				mHostActivity.startActivity(i);
-//				mHostActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
-//			}
-//		});
+		//		btnListViewHeader.setOnClickListener(new OnClickListener()
+		//		{
+		//			@Override
+		//			public void onClick(View v)
+		//			{
+		//				Intent i = new Intent(mHostActivity, EventWebActivity.class);
+		//				mHostActivity.startActivity(i);
+		//				mHostActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
+		//			}
+		//		});
 
 		// Now find the PullToRefreshLayout and set it up
 		ActionBarPullToRefresh.from(mHostActivity).options(Options.create().scrollDistance(.3f).headerTransformer(new DailyHotelHeaderTransformer()).build()).allChildrenArePullable().listener(this)
@@ -151,7 +151,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	{
 		mSaleTime = saleTime;
 	}
-	
+
 	public SaleTime getSaleTime()
 	{
 		return mSaleTime;
@@ -195,7 +195,9 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		selectedRegion = selectedRegion.replace(" ", "%20");
 		selectedRegion = selectedRegion.replace("|", "%7C");
 
-		String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL).append('/').append(selectedRegion).append("/near/0/0/0/1000/").append(saleTime.getCurrentYear()).append("/").append(saleTime.getCurrentMonth()).append("/").append(saleTime.getCurrentDay()).toString();
+		//		String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL).append('/').append(selectedRegion).append("/near/0/0/0/1000/").append(saleTime.getCurrentYear()).append("/").append(saleTime.getCurrentMonth()).append("/").append(saleTime.getCurrentDay()).toString();
+
+		String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE).append('/').append(selectedRegion).append("/").append(saleTime.getCurrentYear()).append(saleTime.getCurrentMonth()).append(saleTime.getCurrentDay()).toString();
 
 		// 호텔 리스트를 가져온다. 
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null, mHotelJsonResponseListener, mHostActivity));

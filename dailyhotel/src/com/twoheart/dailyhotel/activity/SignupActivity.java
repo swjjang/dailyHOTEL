@@ -60,7 +60,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		
+
 		setContentView(R.layout.activity_signup);
 		setActionBar(R.string.actionbar_title_signup_activity);
 

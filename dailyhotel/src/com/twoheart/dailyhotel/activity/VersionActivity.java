@@ -26,7 +26,7 @@ public class VersionActivity extends BaseActivity implements OnClickListener
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		
+
 		setContentView(R.layout.activity_version);
 		setActionBar(R.string.actionbar_title_version_activity);
 

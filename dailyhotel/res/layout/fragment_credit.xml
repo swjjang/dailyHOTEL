@@ -178,8 +178,6 @@
                     android:id="@+id/ll_credit_totalss"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
                     android:clickable="true"
                     android:gravity="right"
                     android:orientation="vertical" >
@@ -197,7 +195,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:layout_toRightOf="@+id/iv_credit_icon"
                         android:clickable="true"
                         android:text="@string/act_credit_history"
                         android:textColor="@color/textView_textColor_sub"

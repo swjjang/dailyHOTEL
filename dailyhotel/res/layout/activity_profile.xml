@@ -114,7 +114,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_toLeftOf="@+id/tv_profile_edit"
                         android:adjustViewBounds="true"
                         android:src="@drawable/img_ic_edit" />
 
