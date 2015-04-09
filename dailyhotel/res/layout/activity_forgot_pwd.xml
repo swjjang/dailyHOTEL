@@ -51,12 +51,13 @@
             android:textColor="@color/textView_textColor_sub"
             android:textSize="13.5dp" />
 
-        <Button
+        <TextView
             android:id="@+id/btn_forgot_pwd"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="62dp"
             android:background="@drawable/shape_button_common_background"
+            android:gravity="center"
             android:paddingLeft="10dp"
             android:text="@string/act_forgot_pwd_forgot"
             android:textColor="@android:color/white"

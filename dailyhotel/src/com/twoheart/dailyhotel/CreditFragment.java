@@ -67,7 +67,7 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 
 	private RelativeLayout rlCreditNotLoggedIn;
 	private LinearLayout llCreditLoggedIn, btnInvite;
-	private Button btnLogin, btnSignup;
+	private TextView btnLogin, btnSignup;
 	private TextView tvBonus, tvRecommenderCode;
 	private TextView tvCredit;
 	private String mRecommendCode;
@@ -89,8 +89,8 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 		tvCredit = (TextView) view.findViewById(R.id.tv_credit_history);
 		tvRecommenderCode = (TextView) view.findViewById(R.id.tv_credit_recommender_code);
 		tvBonus = (TextView) view.findViewById(R.id.tv_credit_money);
-		btnLogin = (Button) view.findViewById(R.id.btn_no_login_login);
-		btnSignup = (Button) view.findViewById(R.id.btn_no_login_signup);
+		btnLogin = (TextView) view.findViewById(R.id.btn_no_login_login);
+		btnSignup = (TextView) view.findViewById(R.id.btn_no_login_signup);
 
 		btnLogin.setOnClickListener(this);
 		btnSignup.setOnClickListener(this);

@@ -55,7 +55,7 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 
 	private static Handler sHandler;
 	private TextView tvTimer, tvTitle;
-	private Button btnNotify;
+	private TextView btnNotify;
 
 	private AlarmManager alarmManager;
 	private PendingIntent pender;
@@ -90,7 +90,7 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 
 		tvTimer = (TextView) view.findViewById(R.id.tv_timer);
 		tvTitle = (TextView) view.findViewById(R.id.tv_wait_timer_main);
-		btnNotify = (Button) view.findViewById(R.id.btn_wait_timer_alram);
+		btnNotify = (TextView) view.findViewById(R.id.btn_wait_timer_alram);
 		ivNewEvent = (ImageView) view.findViewById(R.id.iv_new_event);
 		btnEvent = (LinearLayout) view.findViewById(R.id.btn_event);
 

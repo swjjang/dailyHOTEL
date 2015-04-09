@@ -50,7 +50,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
 	private EditText etEmail, etName, etPhone, etPwd, etRecommender;
 	private TextView tvTerm, tvPrivacy;
-	private Button btnSignUp;
+	private TextView btnSignUp;
 
 	private Map<String, String> signupParams;
 
@@ -71,7 +71,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 		etPhone = (EditText) findViewById(R.id.et_signup_phone);
 		tvTerm = (TextView) findViewById(R.id.tv_signup_agreement);
 		tvPrivacy = (TextView) findViewById(R.id.tv_signup_personal_info);
-		btnSignUp = (Button) findViewById(R.id.btn_signup);
+		btnSignUp = (TextView) findViewById(R.id.btn_signup);
 
 		tvTerm.setOnClickListener(this);
 		tvPrivacy.setOnClickListener(this);

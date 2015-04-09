@@ -273,7 +273,7 @@
         android:orientation="vertical"
         android:padding="12dp" >
 
-        <Button
+        <TextView
             android:id="@+id/btn_profile_logout"
             android:layout_width="match_parent"
             android:layout_height="50dp"

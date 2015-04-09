@@ -16,11 +16,8 @@ import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 public class VersionActivity extends BaseActivity implements OnClickListener
 {
-
-	private static final String TAG = "VersionActivity";
-
 	private TextView tvCurrentVersion, tvNewVersion;
-	private Button btnUpdate;
+	private TextView btnUpdate;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -32,7 +29,7 @@ public class VersionActivity extends BaseActivity implements OnClickListener
 
 		tvCurrentVersion = (TextView) findViewById(R.id.tv_version_cur);
 		tvNewVersion = (TextView) findViewById(R.id.tv_version_new);
-		btnUpdate = (Button) findViewById(R.id.btn_version_update);
+		btnUpdate = (TextView) findViewById(R.id.btn_version_update);
 		btnUpdate.setOnClickListener(this);
 
 		getVersionInfo();

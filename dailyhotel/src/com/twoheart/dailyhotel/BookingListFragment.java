@@ -31,9 +31,9 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.activity.BookingTabActivity;
@@ -65,7 +65,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
 	private RelativeLayout mEmptyLayout;
 	private ListView mListView;
-	private Button btnLogin;
+	private TextView btnLogin;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -74,7 +74,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
 		mListView = (ListView) view.findViewById(R.id.listview_booking);
 		mEmptyLayout = (RelativeLayout) view.findViewById(R.id.layout_booking_empty);
-		btnLogin = (Button) view.findViewById(R.id.btn_booking_empty_login);
+		btnLogin = (TextView) view.findViewById(R.id.btn_booking_empty_login);
 
 		btnLogin.setOnClickListener(this);
 

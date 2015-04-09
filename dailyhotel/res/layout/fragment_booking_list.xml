@@ -51,13 +51,14 @@
             android:textColor="@color/textView_textColor_main"
             android:textSize="20dp" />
 
-        <Button
+        <TextView
             android:id="@+id/btn_booking_empty_login"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_alignParentBottom="true"
             android:layout_margin="22.5dp"
             android:background="@drawable/shape_button_common_background"
+            android:gravity="center"
             android:text="@string/frag_booking_btn_login"
             android:textColor="@android:color/white"
             android:textSize="17dp" />

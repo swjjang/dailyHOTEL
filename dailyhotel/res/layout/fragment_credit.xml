@@ -81,7 +81,7 @@
             android:layout_alignParentBottom="true"
             android:orientation="vertical" >
 
-            <Button
+            <TextView
                 android:id="@+id/btn_no_login_login"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -89,11 +89,12 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:background="@drawable/shape_button_common_background"
+                android:gravity="center"
                 android:text="@string/act_credit_btn_login"
                 android:textColor="@android:color/white"
                 android:textSize="17dp" />
 
-            <Button
+            <TextView
                 android:id="@+id/btn_no_login_signup"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -101,6 +102,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:background="@drawable/shape_button_common_background"
+                android:gravity="center"
                 android:text="@string/act_credit_sign_up"
                 android:textColor="@android:color/white"
                 android:textSize="17dp" />

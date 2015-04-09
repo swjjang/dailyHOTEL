@@ -82,13 +82,13 @@
             android:singleLine="true"
             android:textColorHint="@color/textView_textColor_disabled" />
 
-        <Button
+        <TextView
             android:id="@+id/btn_signup"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="20dp"
             android:background="@drawable/shape_button_common_background"
-            android:gravity="center|center_vertical"
+            android:gravity="center"
             android:text="@string/act_signup_btn_signup"
             android:textColor="@android:color/white"
             android:textSize="17dp" />

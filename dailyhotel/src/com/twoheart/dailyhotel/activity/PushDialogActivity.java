@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
+import android.widget.TextView;
 
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
@@ -23,8 +23,8 @@ import com.twoheart.dailyhotel.util.WakeLock;
 public class PushDialogActivity extends Activity implements OnClickListener
 {
 
-	private Button btnOkButton;
-	private Button btnCancelButton;
+	private TextView btnOkButton;
+	private TextView btnCancelButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -33,8 +33,8 @@ public class PushDialogActivity extends Activity implements OnClickListener
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_push_dialog);
 
-		btnOkButton = (Button) findViewById(R.id.btn_push_ok);
-		btnCancelButton = (Button) findViewById(R.id.btn_push_cancle);
+		btnOkButton = (TextView) findViewById(R.id.btn_push_ok);
+		btnCancelButton = (TextView) findViewById(R.id.btn_push_cancle);
 
 		btnOkButton.setOnClickListener(this);
 		btnCancelButton.setOnClickListener(this);

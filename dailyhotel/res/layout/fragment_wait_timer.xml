@@ -36,7 +36,7 @@
             android:textSize="21dp" />
     </LinearLayout>
 
-    <Button
+    <TextView
         android:id="@+id/btn_wait_timer_alram"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -45,6 +45,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:background="@drawable/shape_button_common_background"
+        android:gravity="center"
         android:text="@string/frag_wait_timer_alarm"
         android:textColor="@android:color/white"
         android:textSize="17sp" />

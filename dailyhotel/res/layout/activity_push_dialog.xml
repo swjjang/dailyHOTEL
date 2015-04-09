@@ -51,17 +51,18 @@
            android:layout_width="match_parent"
            android:layout_height="60dp">
            
-           <Button
+           <TextView
                android:id="@+id/btn_push_ok"
                android:layout_width="80dp"
                android:layout_height="match_parent"
                android:layout_margin="10dp"
                android:background="@drawable/shape_button_common_background"
+               android:gravity="center"
                android:text="@string/alarm_btn_see"
                android:textColor="@android:color/white"
                android:textSize="17dp" />
            
-           <Button
+           <TextView
                android:id="@+id/btn_push_cancle" 
                android:layout_height="match_parent"
                android:layout_width="80dp"
@@ -69,6 +70,7 @@
                android:textColor="@android:color/white"
                android:text="@string/alarm_btn_close"
                android:background="@drawable/shape_button_common_background"
+               android:gravity="center"
                android:textSize="17dp"/>
            
        </LinearLayout>

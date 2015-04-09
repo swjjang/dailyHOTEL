@@ -30,6 +30,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
@@ -72,7 +73,7 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 	protected SaleTime mSaleTime;
 
 	private Button btnSoldOut;
-	private Button btnBooking;
+	private TextView btnBooking;
 	private String mRegion;
 	private int mHotelIdx;
 	private int mPosition = 0;
@@ -115,7 +116,7 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 		mTabIndicator.setOnTabSelectListener(mOnTabSelectedListener);
 
 		btnSoldOut = (Button) findViewById(R.id.tv_hotel_tab_soldout);
-		btnBooking = (Button) findViewById(R.id.btn_hotel_tab_booking);
+		btnBooking = (TextView) findViewById(R.id.btn_hotel_tab_booking);
 
 		btnBooking.setOnClickListener(this);
 

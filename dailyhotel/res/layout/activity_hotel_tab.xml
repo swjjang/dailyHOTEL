@@ -38,11 +38,12 @@
         android:layout_alignParentBottom="true"
         android:layout_margin="10dp" >
 
-        <Button
+        <TextView
             android:id="@+id/btn_hotel_tab_booking"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/shape_button_common_background"
+            android:gravity="center"
             android:text="@string/act_hotel_tab_btn"
             android:textColor="@android:color/white"
             android:textSize="17dp" />

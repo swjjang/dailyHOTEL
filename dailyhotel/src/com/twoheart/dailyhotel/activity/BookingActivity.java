@@ -94,7 +94,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 	private TextView tvOriginalPriceValue, tvCreditValue, tvOriginalPrice,
 			tvCredit, tvPrice;
-	private Button btnPay;
+	private TextView btnPay;
 	private SwitchCompat swCredit;
 	private EditText etReserverName, etReserverNumber, etReserverEmail;
 	private Drawable[] mEditTextBackground;
@@ -145,7 +145,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		tvOriginalPriceValue = (TextView) findViewById(R.id.tv_hotel_payment_original_price_value);
 		tvCreditValue = (TextView) findViewById(R.id.tv_hotel_payment_credit_value);
 		tvPrice = (TextView) findViewById(R.id.tv_hotel_payment_price);
-		btnPay = (Button) findViewById(R.id.btn_hotel_payment);
+		btnPay = (TextView) findViewById(R.id.btn_hotel_payment);
 		swCredit = (SwitchCompat) findViewById(R.id.btn_on_off);
 
 		swCredit.setSwitchMinWidth(Util.dpToPx(BookingActivity.this, 60));

@@ -31,7 +31,7 @@ import com.twoheart.dailyhotel.util.ui.BaseActivity;
 public class ForgotPwdActivity extends BaseActivity implements Constants, OnClickListener
 {
 
-	private Button btnForgot;
+	private TextView btnForgot;
 	private EditText etForgot;
 
 	private String mEmail;
@@ -45,7 +45,7 @@ public class ForgotPwdActivity extends BaseActivity implements Constants, OnClic
 		setActionBar(R.string.actionbar_title_forgot_pwd_activity);
 
 		etForgot = (EditText) findViewById(R.id.et_forgot_pwd);
-		btnForgot = (Button) findViewById(R.id.btn_forgot_pwd);
+		btnForgot = (TextView) findViewById(R.id.btn_forgot_pwd);
 		btnForgot.setOnClickListener(this);
 		etForgot.setId(EditorInfo.IME_ACTION_DONE);
 		etForgot.setOnEditorActionListener(new OnEditorActionListener()
