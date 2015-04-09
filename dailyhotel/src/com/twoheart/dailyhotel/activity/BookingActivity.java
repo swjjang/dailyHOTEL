@@ -999,8 +999,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 				if (locale.equals("한국어") == true)
 				{
-					mCheckinDayTextView.setText(Integer.parseInt(in[1]) + "/" + Integer.parseInt(in[2]));
-					mCheckinTimeTextView.setText("금," + in[3] + ":00");
+					mCheckinDayTextView.setText(Integer.parseInt(in[1]) + "/" + Integer.parseInt(in[2]) + "  금");
+					mCheckinTimeTextView.setText(in[3] + ":00");
 					//					tvCheckIn.setText("20" + in[0] + getString(R.string.frag_booking_tab_year) + in[1] + getString(R.string.frag_booking_tab_month) + in[2] + getString(R.string.frag_booking_tab_day) + " " + in[3] + getString(R.string.frag_booking_tab_hour));
 				} else
 				{
@@ -1011,8 +1011,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 				if (locale.equals("한국어") == true)
 				{
-					mCheckoutDayTextView.setText(Integer.parseInt(out[1]) + "/" + Integer.parseInt(out[2]));
-					mCheckoutTimeTextView.setText("금," + out[3] + ":00");
+					mCheckoutDayTextView.setText(Integer.parseInt(out[1]) + "/" + Integer.parseInt(out[2]) + "  금");
+					mCheckoutTimeTextView.setText(out[3] + ":00");
 
 					//					tvCheckOut.setText("20" + out[0] + getString(R.string.frag_booking_tab_year) + out[1] + getString(R.string.frag_booking_tab_month) + out[2] + getString(R.string.frag_booking_tab_day) + " " + out[3] + getString(R.string.frag_booking_tab_hour));
 				} else

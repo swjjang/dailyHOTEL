@@ -51,14 +51,14 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="110dp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingLeft="17dp"
                 android:paddingRight="17dp" >
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
                     android:layout_marginRight="17dp"
                     android:layout_marginTop="15dp"
@@ -73,12 +73,14 @@
                         android:textColor="@color/booking_subtext"
                         android:textSize="15dp" />
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
+                    <LinearLayout
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/checkinTextView"
-                        android:layout_marginTop="20dp"
-                        android:gravity="center_vertical" >
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical" >
 
                         <TextView
                             android:id="@+id/checkinDayTextView"
@@ -95,10 +97,12 @@
                             android:layout_centerVertical="true"
                             android:layout_gravity="right|center_vertical"
                             android:layout_toRightOf="@id/checkinDayTextView"
+                            android:drawableLeft="@drawable/img_ic_reservation_checkin"
                             android:gravity="right"
                             android:textColor="@drawable/selector_textview_textcolor"
                             android:textSize="16dp" />
-                    </RelativeLayout>
+
+                    </LinearLayout>
                 </RelativeLayout>
 
                 <View
@@ -123,12 +127,14 @@
                         android:textColor="@color/booking_subtext"
                         android:textSize="15dp" />
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
+                    <LinearLayout
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/checkoutTextView"
-                        android:layout_marginTop="20dp"
-                        android:gravity="center_vertical" >
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical" >
 
                         <TextView
                             android:id="@+id/checkoutDayTextView"
@@ -145,10 +151,12 @@
                             android:layout_centerVertical="true"
                             android:layout_gravity="right|center_vertical"
                             android:layout_toRightOf="@id/checkoutDayTextView"
+                            android:drawableLeft="@drawable/img_ic_reservation_checkout"
                             android:gravity="right"
                             android:textColor="@drawable/selector_textview_textcolor"
                             android:textSize="16dp" />
-                    </RelativeLayout>
+
+                    </LinearLayout>
                 </RelativeLayout>
             </LinearLayout>
 
@@ -487,7 +495,7 @@
                 android:background="@drawable/shape_button_common_background"
                 android:text="@string/act_booking_btn_pay"
                 android:textColor="@android:color/white"
-                android:textSize="17sp" />
+                android:textSize="17dp" />
         </LinearLayout>
     </ScrollView>
 

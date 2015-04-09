@@ -60,7 +60,7 @@
             android:paddingLeft="10dp"
             android:text="@string/act_forgot_pwd_forgot"
             android:textColor="@android:color/white"
-            android:textSize="19dp" />
+            android:textSize="17dp" />
     </LinearLayout>
 
 </RelativeLayout>

@@ -51,6 +51,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 	private AlphaAnimation mAlphaAnimation;
 	
 	private View[] mDaysView;
+	private View mSelectedView = null;
 
 	private Handler mHandler = new Handler();
 	
@@ -123,7 +124,13 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		initLayoutDays(mDaysView[5], mSaleTime.getClone(3));
 		initLayoutDays(mDaysView[6], mSaleTime.getClone(4));
 		
-		setSelectedDays(mDaysView[2]);
+		if(mSelectedView == null)
+		{
+			setSelectedDays(mDaysView[0]);
+		} else
+		{
+			setSelectedDays(mSelectedView);
+		}
 	}
 
 	@Override
@@ -169,46 +176,6 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 				}
 				break;
 		}
-//		
-//		if (mIsShowDaysList == false)
-//		{
-//			// 네트워크 요청이 없으면 바로 애니매이션 시작.
-//			if (isRequestHotelList == false)
-//			{
-//				if (mAnimationStatus == ANIMATION_STATUS.START)
-//				{
-//					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1)
-//					{
-//						hideAnimationDaysList();
-//					} else
-//					{
-//						return;
-//					}
-//				} else
-//				{
-//					showAnimationDaysList();
-//				}
-//			} else
-//			{
-//				showAnimationFadeOut();
-//			}
-//		} else
-//		{
-//			if (mAnimationStatus == ANIMATION_STATUS.START)
-//			{
-//				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1)
-//				{
-//					showAnimationDaysList();
-//				} else
-//				{
-//					return;
-//				}
-//
-//			} else
-//			{
-//				hideAnimationDaysList();
-//			}
-//		}
 	}
 
 	@Override
@@ -282,6 +249,8 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 			return;
 		}
 
+		mSelectedView = view;
+		
 		for (View dayView : mDaysView)
 		{
 			TextView dayOfTheWeekTextView = (TextView) dayView.findViewById(R.id.textView1);

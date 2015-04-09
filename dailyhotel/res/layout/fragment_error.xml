@@ -45,14 +45,15 @@
         android:layout_height="0dp">
     </LinearLayout>
     
-    <Button 
+    <Button
         android:id="@+id/btn_error"
-        android:layout_weight="0.1"
-        android:layout_height="0dp"
         android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:layout_margin="10dp"
+        android:layout_weight="0.1"
         android:background="@drawable/shape_button_common_background"
         android:text="@string/frag_error_btn"
-        android:textColor="@android:color/white"/>
+        android:textColor="@android:color/white"
+        android:textSize="17dp" />
 
 </LinearLayout>

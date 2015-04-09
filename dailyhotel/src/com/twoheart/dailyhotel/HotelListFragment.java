@@ -64,17 +64,12 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	private PinnedSectionListView mHotelListView;
 	private PullToRefreshLayout mPullToRefreshLayout;
 	private HotelListAdapter mHotelListAdapter;
-	//	private List<HotelListViewItem> mHotelListViewList;
-	//	private List<Hotel> mHotelList;
 
 	protected SaleTime mSaleTime;
 	private Map<String, List<String>> mDetailRegionList;
 
 	private boolean event;
 	protected boolean mIsSelectedNavigationItem;
-
-	//	private LocationManager mLocationManager;
-	//	private ImageView ivNewEvent;
 
 	protected HotelMainFragment.UserActionListener mUserActionListener;
 
@@ -211,7 +206,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	@Override
 	public void onRefreshStarted(View view)
 	{
-		fetchHotelList(mSaleTime);
+		refreshHotelList(true);
 	}
 
 	@Override
@@ -502,6 +497,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 				// 리스트 요청 완료.
 				onRefreshComplete(mIsSelectedNavigationItem);
+				mIsSelectedNavigationItem = true;
 			} catch (Exception e)
 			{
 				onError(e);

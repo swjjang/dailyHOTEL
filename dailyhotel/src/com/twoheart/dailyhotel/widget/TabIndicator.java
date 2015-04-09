@@ -209,6 +209,16 @@ public class TabIndicator extends LinearLayout implements OnClickListener
 			mTabArrray.get(index).setSubText(text);
 		}
 	}
+	
+	public String getSubText(int index)
+	{
+		if (index > -1 && index < mTabArrray.size())
+		{
+			return mTabArrray.get(index).getSubText();
+		}
+		
+		return null;
+	}
 
 	public void setCurrentItem(int position)
 	{
@@ -361,6 +371,11 @@ public class TabIndicator extends LinearLayout implements OnClickListener
 		public void setSubText(String text)
 		{
 			mDayTextView.setText(text);
+		}
+		
+		public String getSubText()
+		{
+			return mDayTextView.getText().toString();
 		}
 
 		@Override

@@ -281,7 +281,9 @@
             android:background="@drawable/shape_button_common_background"
             android:gravity="center"
             android:text="@string/act_profile_btn_logout"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:textSize="17dp" />
+
     </LinearLayout>
 
 </RelativeLayout>
