@@ -79,7 +79,6 @@ import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
-import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
@@ -455,7 +454,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	@Override
 	public void onItemClick(AdapterView<?> adapterView, View view, int position, long id)
 	{
-		int selectedMenuIconId = ((DrawerMenu) (adapterView.getAdapter().getItem(position))).getIcon();
+		DrawerMenu selectedDrawMenu = (DrawerMenu) (adapterView.getAdapter().getItem(position));
+		int selectedMenuIconId = selectedDrawMenu.getIcon();
 
 		switch (selectedMenuIconId)
 		{
@@ -479,6 +479,15 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectMenu", getString(R.string.actionbar_title_setting_frag), (long) position);
 				break;
 		}
+		
+		//
+		menuHotelListFragment.setSelected(false);
+		menuBookingListFragment.setSelected(false);
+		menuCreditFragment.setSelected(false);
+		menuSettingFragment.setSelected(false);
+		
+		selectedDrawMenu.setSelected(true);
+		mDrawerMenuListAdapter.notifyDataSetChanged();
 
 		if (drawerLayout.isDrawerOpen(GravityCompat.START) == true)
 		{
@@ -568,7 +577,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 		drawerList.setAdapter(mDrawerMenuListAdapter);
 		drawerList.setOnItemClickListener(this);
-
 	}
 
 	@Override
@@ -637,6 +645,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		private String title;
 		private int icon;
 		private int type;
+		private boolean mSelected;
 
 		public DrawerMenu(int type)
 		{
@@ -688,7 +697,16 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		{
 			this.icon = icon;
 		}
-
+		
+		public void setSelected(boolean selected)
+		{
+			mSelected = selected;
+		}
+		
+		public boolean isSelected()
+		{
+			return mSelected;
+		}
 	}
 
 	private class DrawerMenuListAdapter extends BaseAdapter
@@ -734,7 +752,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent)
 		{
-
 			DrawerMenu item = list.get(position);
 
 			switch (item.getType())
@@ -764,6 +781,16 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 					drawerMenuItemIcon.setImageResource(item.getIcon());
 					drawerMenuItemText.setText(item.getTitle());
+					
+					if(item.isSelected() == true)
+					{
+						drawerMenuItemIcon.setSelected(true);
+						drawerMenuItemText.setSelected(true);
+					} else
+					{
+						drawerMenuItemIcon.setSelected(false);
+						drawerMenuItemText.setSelected(false);
+					}
 
 					break;
 				}

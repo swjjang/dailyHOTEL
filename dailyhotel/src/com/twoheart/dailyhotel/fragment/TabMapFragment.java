@@ -31,6 +31,7 @@ import com.twoheart.dailyhotel.activity.ZoomMapActivity;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
+import com.twoheart.dailyhotel.widget.GoogleMapPopupAdapter;
 
 public class TabMapFragment extends BaseFragment implements OnMapClickListener
 {
@@ -156,7 +157,7 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
 			LatLng address = new LatLng(lat, lng);
 			CameraPosition cp = new CameraPosition.Builder().target((address)).zoom(15).build();
 			googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
-
+			googleMap.setInfoWindowAdapter(new GoogleMapPopupAdapter(mHostActivity));
 			googleMap.setOnMarkerClickListener(new OnMarkerClickListener()
 			{
 				@Override

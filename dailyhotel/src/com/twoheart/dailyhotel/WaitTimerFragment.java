@@ -231,7 +231,11 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-
+			if(getActivity() == null)
+			{
+				return;
+			}
+			
 			try
 			{
 				if (response == null)

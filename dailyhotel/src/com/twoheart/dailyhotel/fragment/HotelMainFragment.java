@@ -190,6 +190,11 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 		@Override
 		public void onResponse(String url, String response)
 		{
+			if(getActivity() == null)
+			{
+				return;
+			}
+			
 			try
 			{
 				if (response == null)
@@ -215,6 +220,11 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
+			if(getActivity() == null)
+			{
+				return;
+			}
+			
 			try
 			{
 				if (response == null)
@@ -249,6 +259,11 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 		@Override
 		public void onResponse(String url, JSONArray response)
 		{
+			if(getActivity() == null)
+			{
+				return;
+			}
+			
 			try
 			{
 				if (response == null)

@@ -162,7 +162,11 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-
+			if(getActivity() == null)
+			{
+				return;
+			}
+			
 			try
 			{
 				String result = null;
@@ -206,7 +210,11 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 		@Override
 		public void onResponse(String url, String response)
 		{
-
+			if(getActivity() == null)
+			{
+				return;
+			}
+			
 			String result = null;
 
 			if (TextUtils.isEmpty(response) == false)
@@ -271,6 +279,11 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 		@Override
 		public void onResponse(String url, String response)
 		{
+			if(getActivity() == null)
+			{
+				return;
+			}
+			
 			String result = null;
 
 			if (TextUtils.isEmpty(response) == false)

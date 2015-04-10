@@ -19,6 +19,7 @@
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="false"
         android:paddingBottom="5dp"
+        android:paddingLeft="1dp"
         android:paddingTop="5dp"
         android:scrollbars="none"
         android:smoothScrollbar="true" />

@@ -123,7 +123,11 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-
+			if(getActivity() == null)
+			{
+				return;
+			}
+			
 			try
 			{
 				if (response == null)
@@ -161,7 +165,11 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-
+			if(getActivity() == null)
+			{
+				return;
+			}
+			
 			try
 			{
 				if (response == null)
@@ -192,6 +200,11 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
+			if(getActivity() == null)
+			{
+				return;
+			}
+			
 			try
 			{
 				if (response == null)
@@ -237,7 +250,11 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 		@Override
 		public void onResponse(String url, String response)
 		{
-
+			if(getActivity() == null)
+			{
+				return;
+			}
+			
 			String result = null;
 
 			if (TextUtils.isEmpty(response) == false)

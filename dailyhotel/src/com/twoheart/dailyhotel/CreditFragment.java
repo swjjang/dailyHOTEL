@@ -64,7 +64,6 @@ import com.twoheart.dailyhotel.util.ui.BaseFragment;
  */
 public class CreditFragment extends BaseFragment implements Constants, OnClickListener
 {
-
 	private RelativeLayout rlCreditNotLoggedIn;
 	private LinearLayout llCreditLoggedIn, btnInvite;
 	private TextView btnLogin, btnSignup;
@@ -212,7 +211,11 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-
+			if(getActivity() == null)
+			{
+				return;
+			}
+			
 			try
 			{
 				if (null == response)
@@ -241,7 +244,11 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-
+			if(getActivity() == null)
+			{
+				return;
+			}
+			
 			//적립금 내역리스트 
 			try
 			{
@@ -287,7 +294,11 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-
+			if(getActivity() == null)
+			{
+				return;
+			}
+			
 			try
 			{
 				if (!response.getBoolean("login"))
@@ -325,6 +336,11 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 		@Override
 		public void onResponse(String url, String response)
 		{
+			if(getActivity() == null)
+			{
+				return;
+			}
+			
 			String result = null;
 
 			if (false == TextUtils.isEmpty(response))
@@ -380,7 +396,11 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 		@Override
 		public void onResponse(String url, String response)
 		{
-
+			if(getActivity() == null)
+			{
+				return;
+			}
+			
 			try
 			{
 				String result = null;

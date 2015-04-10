@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.widget;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
 public class HotelViewPager extends ViewPager
@@ -32,5 +33,18 @@ public class HotelViewPager extends ViewPager
 					}
 
 		return super.canScroll(v, checkV, dx, x, y);
+	}
+
+	@Override
+	public boolean onInterceptTouchEvent(MotionEvent event)
+	{
+		if (event.getAction() == MotionEvent.ACTION_MOVE)
+		{
+			this.getParent().requestDisallowInterceptTouchEvent(true);
+			return true;
+		} else
+		{
+			return super.onInterceptTouchEvent(event);
+		}
 	}
 }

@@ -261,6 +261,14 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			tvPrice.setText(Html.fromHtml(getString(R.string.currency)) + comma.format(mPay.getPayPrice()));
 
 	}
+	
+	@Override
+	public void onError()
+	{
+		super.onError();
+		
+		finish();
+	}
 
 	@Override
 	public void onClick(final View v)
@@ -770,8 +778,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			} catch (JSONException e)
 			{
 				onError(e);
-
-				finish();
 			}
 
 		}
@@ -896,8 +902,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			} catch (Exception e)
 			{
 				onError(e);
-
-				finish();
 			}
 
 		}
@@ -956,8 +960,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			} catch (JSONException e)
 			{
 				onError(e);
-
-				finish();
 			}
 		}
 	};
@@ -1003,8 +1005,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			} catch (Exception e)
 			{
 				onError(e);
-
-				finish();
 			}
 		}
 	};
@@ -1032,14 +1032,12 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				ExLog.e(e.toString());
 
 				onError(e);
-				finish();
 				return;
 			}
 
 			if (checkin == 0 || checkout == 0)
 			{
 				onError();
-				finish();
 				return;
 			}
 
@@ -1135,8 +1133,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			} catch (Exception e)
 			{
 				onError(e);
-
-				finish();
 			}
 		}
 	};

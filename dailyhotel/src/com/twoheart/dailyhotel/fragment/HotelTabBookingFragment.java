@@ -85,7 +85,7 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 		tvDiscount = (TextView) view.findViewById(R.id.tv_hotel_tab_booking_discount);
 		mViewPager = (HotelViewPager) view.findViewById(R.id.vp_hotel_tab_booking_img);
 		mIndicator = (LoopCirclePageIndicator) view.findViewById(R.id.cp_hotel_tab_booking_indicator);
-
+		
 		tvBedType.setText(mHotelDetail.getHotel().getBedType());
 		tvAddress.setText(mHotelDetail.getHotel().getAddress());
 		tvAddress.setSelected(true);
