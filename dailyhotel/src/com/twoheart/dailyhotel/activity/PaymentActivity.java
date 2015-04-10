@@ -64,6 +64,7 @@ import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 @SuppressLint("NewApi")
 public class PaymentActivity extends BaseActivity implements Constants
@@ -189,7 +190,7 @@ public class PaymentActivity extends BaseActivity implements Constants
 
 		if (mPay == null)
 		{
-			showToast(getString(R.string.toast_msg_failed_to_get_payment_info), Toast.LENGTH_SHORT, false);
+			DailyToast.showToast(PaymentActivity.this, R.string.toast_msg_failed_to_get_payment_info, Toast.LENGTH_SHORT);
 			finish();
 			return;
 		}
@@ -385,7 +386,7 @@ public class PaymentActivity extends BaseActivity implements Constants
 			{
 				if (!new PackageState(this).getPackageDownloadInstallState(PACKAGE_NAME_MPOCKET))
 				{
-					showToast(getString(R.string.toast_msg_retry_payment_after_install_app), Toast.LENGTH_LONG, false);
+					DailyToast.showToast(PaymentActivity.this, R.string.toast_msg_retry_payment_after_install_app, Toast.LENGTH_LONG);
 					startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_PAYMENT_MPOCKET)));
 					return true;
 				}
@@ -691,7 +692,7 @@ public class PaymentActivity extends BaseActivity implements Constants
 				public void onClick(DialogInterface dialog, int which)
 				{
 					dialog.dismiss();
-					showToast(getString(R.string.toast_msg_cancel_payment), Toast.LENGTH_SHORT, false);
+					DailyToast.showToast(PaymentActivity.this, R.string.toast_msg_cancel_payment, Toast.LENGTH_SHORT);
 				}
 			};
 

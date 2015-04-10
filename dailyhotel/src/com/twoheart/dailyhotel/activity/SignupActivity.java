@@ -29,7 +29,6 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,6 +43,7 @@ import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class SignupActivity extends BaseActivity implements OnClickListener
 {
@@ -148,20 +148,20 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 			// 필수 입력 check
 			if (!checkInput())
 			{
-				showToast(getString(R.string.toast_msg_please_input_required_infos), Toast.LENGTH_SHORT, true);
+				DailyToast.showToast(SignupActivity.this, R.string.toast_msg_please_input_required_infos, Toast.LENGTH_SHORT);
 				return;
 			}
 
 			// email check
 			if (!isValidEmail(etEmail.getText().toString()))
 			{
-				showToast(getString(R.string.toast_msg_wrong_email_address), Toast.LENGTH_SHORT, true);
+				DailyToast.showToast(SignupActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
 				return;
 			}
 
 			if (etPwd.length() < 4)
 			{
-				showToast(getString(R.string.toast_msg_please_input_password_more_than_4chars), Toast.LENGTH_SHORT, true);
+				DailyToast.showToast(SignupActivity.this, R.string.toast_msg_please_input_password_more_than_4chars, Toast.LENGTH_SHORT);
 				return;
 			}
 			lockUI();
@@ -268,7 +268,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 				} else
 				{
 					unLockUI();
-					showToast(msg, Toast.LENGTH_LONG, true);
+					DailyToast.showToast(SignupActivity.this, msg, Toast.LENGTH_LONG);
 				}
 
 			} catch (Exception e)
@@ -339,7 +339,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 				props.put("method", "email");
 				mMixpanel.track("signup", props);
 
-				showToast(getString(R.string.toast_msg_success_to_signup), Toast.LENGTH_LONG, false);
+				DailyToast.showToast(SignupActivity.this, R.string.toast_msg_success_to_signup, Toast.LENGTH_LONG);
 				finish();
 			} catch (Exception e)
 			{

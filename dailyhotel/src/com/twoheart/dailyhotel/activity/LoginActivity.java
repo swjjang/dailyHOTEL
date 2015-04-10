@@ -39,7 +39,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -69,6 +68,7 @@ import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class LoginActivity extends BaseActivity implements Constants, OnClickListener, ErrorListener
@@ -299,13 +299,13 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 	{
 		if (etId.getText().toString().trim().length() == 0)
 		{
-			showToast(getString(R.string.toast_msg_please_input_id), Toast.LENGTH_SHORT, true);
+			DailyToast.showToast(this, R.string.toast_msg_please_input_id, Toast.LENGTH_SHORT);
 			return false;
 		}
 
 		if (etPwd.getText().toString().trim().length() == 0)
 		{
-			showToast(getString(R.string.toast_msg_please_input_passwd), Toast.LENGTH_SHORT, true);
+			DailyToast.showToast(this, R.string.toast_msg_please_input_passwd, Toast.LENGTH_SHORT);
 			return false;
 		}
 
@@ -382,7 +382,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 				GooglePlayServicesUtil.getErrorDialog(resCode, this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
 			} else
 			{
-				showToast(getString(R.string.toast_msg_is_not_available_google_service), Toast.LENGTH_LONG, false);
+				DailyToast.showToast(this, R.string.toast_msg_is_not_available_google_service, Toast.LENGTH_LONG);
 				finish();
 			}
 			return false;
@@ -422,7 +422,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 				{
 					unLockUI();
 
-					showToast(getString(R.string.toast_msg_logoined), Toast.LENGTH_SHORT, true);
+					DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);
 					setResult(RESULT_OK);
 					finish();
 					return;
@@ -493,7 +493,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 							unLockUI();
 
 							// 로그인에 성공 하였고 GCM 코드 또한 이미 기기에 저장되어 있는 상태이면 종료. 
-							showToast(getString(R.string.toast_msg_logoined), Toast.LENGTH_SHORT, true);
+							DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);
 							setResult(RESULT_OK);
 							finish();
 						}
@@ -571,7 +571,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 						unLockUI();
 
 						// 로그인에 성공 하였고 GCM 코드 또한 이미 기기에 저장되어 있는 상태이면 종료. 
-						showToast(getString(R.string.toast_msg_logoined), Toast.LENGTH_SHORT, true);
+						DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);
 						setResult(RESULT_OK);
 						finish();
 						return;
@@ -623,7 +623,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 					unLockUI();
 
 					loginParams.clear();
-					showToast(msg, Toast.LENGTH_LONG, true);
+					DailyToast.showToast(LoginActivity.this, msg, Toast.LENGTH_LONG);
 				}
 
 			} catch (Exception e)
@@ -658,7 +658,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 					editor.apply();
 				}
 
-				showToast(getString(R.string.toast_msg_logoined), Toast.LENGTH_SHORT, true);
+				DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);
 				setResult(RESULT_OK);
 				finish();
 			} catch (JSONException e)

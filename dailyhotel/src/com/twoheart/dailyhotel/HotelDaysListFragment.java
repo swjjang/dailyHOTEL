@@ -252,7 +252,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 
 			dayOfTheWeekTextView.setSelected(selectedView);
 			dayTextView.setSelected(selectedView);
-			((View)dayTextView.getParent()).setSelected(selectedView);
+			((View) dayTextView.getParent()).setSelected(selectedView);
 		}
 	}
 
@@ -358,7 +358,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 					{
 						mDaysLayout.setVisibility(View.VISIBLE);
 					}
-					
+
 					mAnimationState = ANIMATION_STATE.START;
 					mAnimationStatus = ANIMATION_STATUS.SHOW;
 				}
@@ -377,7 +377,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 				}
 			});
 
-			if(mDaysLayout != null)
+			if (mDaysLayout != null)
 			{
 				mDaysLayout.startAnimation(translateAnimation);
 			}
@@ -391,7 +391,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1)
 		{
 			final float y = mDaysLayout.getY();
-			
+
 			if (mObjectAnimator != null)
 			{
 				if (mObjectAnimator.isRunning() == true)
@@ -472,12 +472,12 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 				{
 					mAnimationStatus = ANIMATION_STATUS.HIDE_END;
 					mAnimationState = ANIMATION_STATE.END;
-					
+
 					hideDaysList();
 				}
 			});
 
-			if(mDaysLayout != null)
+			if (mDaysLayout != null)
 			{
 				mDaysLayout.startAnimation(translateAnimation);
 			}
@@ -524,7 +524,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 			}
 		});
 
-		if(mDaysBackgroundView != null)
+		if (mDaysBackgroundView != null)
 		{
 			mDaysBackgroundView.startAnimation(mAlphaAnimation);
 		}
@@ -572,7 +572,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 			}
 		});
 
-		if(mDaysBackgroundView != null)
+		if (mDaysBackgroundView != null)
 		{
 			mDaysBackgroundView.startAnimation(mAlphaAnimation);
 		}

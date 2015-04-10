@@ -38,8 +38,6 @@ import com.facebook.Session;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.FacebookDialog.Callback;
 import com.facebook.widget.FacebookDialog.PendingCall;
-import com.twoheart.dailyhotel.HotelDaysListFragment;
-import com.twoheart.dailyhotel.HotelListFragment;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.HotelTabBookingFragment;
 import com.twoheart.dailyhotel.fragment.TabInfoFragment;
@@ -58,6 +56,7 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListe
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
+import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.FragmentViewPager;
 import com.twoheart.dailyhotel.widget.FragmentViewPager.OnPageSelectedListener;
 import com.twoheart.dailyhotel.widget.TabIndicator;
@@ -226,7 +225,7 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 	// 로그인 화면을 띄움.
 	private void loadLoginProcess()
 	{
-		showToast(getString(R.string.toast_msg_please_login), Toast.LENGTH_LONG, false);
+		DailyToast.showToast(this, R.string.toast_msg_please_login, Toast.LENGTH_LONG);
 		Intent i = new Intent(this, LoginActivity.class);
 		i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP); // 7.2 S2에서 예약버튼 난타할 경우 여러개의 엑티비티가 생성되는것을 막음
 		startActivityForResult(i, CODE_REQUEST_ACTIVITY_LOGIN);

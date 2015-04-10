@@ -216,11 +216,11 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 		@Override
 		public void onResponse(String url, String response)
 		{
-			if(getActivity() == null)
+			if (getActivity() == null)
 			{
 				return;
 			}
-			
+
 			String result = null;
 
 			if (TextUtils.isEmpty(response) == false)
@@ -247,11 +247,11 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-			if(getActivity() == null)
+			if (getActivity() == null)
 			{
 				return;
 			}
-			
+
 			try
 			{
 				if (response == null)

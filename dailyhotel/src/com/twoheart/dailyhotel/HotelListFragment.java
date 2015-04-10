@@ -24,7 +24,6 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.AbcDefaultHeaderTransformer;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.Options;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
@@ -408,11 +407,11 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-			if(getActivity() == null)
+			if (getActivity() == null)
 			{
 				return;
 			}
-			
+
 			try
 			{
 				if (response == null)

@@ -35,7 +35,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -211,11 +210,11 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-			if(getActivity() == null)
+			if (getActivity() == null)
 			{
 				return;
 			}
-			
+
 			try
 			{
 				if (null == response)
@@ -244,11 +243,11 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-			if(getActivity() == null)
+			if (getActivity() == null)
 			{
 				return;
 			}
-			
+
 			//적립금 내역리스트 
 			try
 			{
@@ -294,11 +293,11 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-			if(getActivity() == null)
+			if (getActivity() == null)
 			{
 				return;
 			}
-			
+
 			try
 			{
 				if (!response.getBoolean("login"))
@@ -336,11 +335,11 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 		@Override
 		public void onResponse(String url, String response)
 		{
-			if(getActivity() == null)
+			if (getActivity() == null)
 			{
 				return;
 			}
-			
+
 			String result = null;
 
 			if (false == TextUtils.isEmpty(response))
@@ -396,11 +395,11 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 		@Override
 		public void onResponse(String url, String response)
 		{
-			if(getActivity() == null)
+			if (getActivity() == null)
 			{
 				return;
 			}
-			
+
 			try
 			{
 				String result = null;

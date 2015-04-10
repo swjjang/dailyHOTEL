@@ -72,6 +72,7 @@ import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 /**
  * 
@@ -288,7 +289,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				{
 
 					ExLog.e("BUYER : " + buyer.getEmail() + " / " + buyer.getPhone() + " / " + buyer.getName());
-					showToast(getString(R.string.toast_msg_please_input_booking_user_infos), Toast.LENGTH_LONG, false);
+					DailyToast.showToast(this, R.string.toast_msg_please_input_booking_user_infos, Toast.LENGTH_LONG);
 				} else
 				{ //
 					Map<String, String> updateParams = new HashMap<String, String>();
@@ -478,7 +479,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		} else
 		{
 			unLockUI();
-			showToast(getString(R.string.toast_msg_retry_login), Toast.LENGTH_LONG, false);
+			DailyToast.showToast(this, R.string.toast_msg_retry_login, Toast.LENGTH_LONG);
 
 			startActivityForResult(new Intent(this, LoginActivity.class), CODE_REQUEST_ACTIVITY_LOGIN);
 			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
@@ -986,7 +987,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				{
 					unLockUI();
 
-					showToast(response.getString("message"), Toast.LENGTH_LONG, false);
+					DailyToast.showToast(BookingActivity.this, response.getString("message"), Toast.LENGTH_LONG);
 				} else
 				{
 					etReserverName.setEnabled(false);

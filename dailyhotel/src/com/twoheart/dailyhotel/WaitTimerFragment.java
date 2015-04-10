@@ -32,7 +32,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -231,11 +230,11 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-			if(getActivity() == null)
+			if (getActivity() == null)
 			{
 				return;
 			}
-			
+
 			try
 			{
 				if (response == null)

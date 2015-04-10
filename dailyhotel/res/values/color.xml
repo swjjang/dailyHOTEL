@@ -53,5 +53,7 @@
 	<color name="booking_hline01">#d4d4d4</color>
 	
 	<color name="booking_subtext">#cc7f7f7f</color>
+	
+	<color name="toast_background">#000000</color>
 
 </resources>	

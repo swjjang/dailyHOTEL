@@ -49,9 +49,9 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.GlobalFont;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
+import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.RegionPopupListView;
 import com.twoheart.dailyhotel.widget.RegionPopupListView.UserActionListener;
 
@@ -61,7 +61,6 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	public SharedPreferences sharedPreference;
 
 	protected RequestQueue mQueue;
-	protected Toast mToast;
 
 	protected LoadingDialog mLockUI;
 
@@ -316,11 +315,6 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	@Override
 	protected void onPause()
 	{
-
-		// 현재 Activity에 의존적인 Toast를 제거한다.
-		if (mToast != null)
-			mToast.cancel();
-
 		try
 		{
 			CookieSyncManager.getInstance().stopSync();
@@ -475,7 +469,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 		if (Constants.DEBUG == true)
 		{
 			Log.e("DailyHotel", error.toString(), error.fillInStackTrace());
-			showToast(error.toString(), Toast.LENGTH_LONG, false);
+			DailyToast.showToast(this, error.toString(), Toast.LENGTH_LONG);
 		} else
 		{
 			onError();
@@ -490,7 +484,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 		releaseUiComponent();
 
 		// 잘못된 멘트, 모든 에러가 이쪽으로 빠지게됨. 변경 필요.
-		showToast(this.getResources().getString(R.string.act_base_network_connect), Toast.LENGTH_LONG, false);
+		DailyToast.showToast(this, getResources().getString(R.string.act_base_network_connect), Toast.LENGTH_LONG);
 	}
 
 	/**
@@ -504,27 +498,27 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	 * @param isAttachToActivity
 	 *            현재 Activity가 종료되면 Toast도 제거할지를 결정한다
 	 */
-	public void showToast(String message, int length, boolean isAttachToActivity)
-	{
-		try
-		{
-			if (mToast != null)
-				mToast.cancel();
-
-			if (isAttachToActivity)
-			{
-				mToast = Toast.makeText(getApplicationContext(), message, length);
-				mToast.show();
-
-			} else
-			{
-				Toast.makeText(getApplicationContext(), message, length).show();
-			}
-		} catch (Exception e)
-		{ // show Toast 도중 Stackoverflow가 자주 발생함. 이유를 알 수 없음. 이에따른 임시 방편 
-			ExLog.e(e.toString());
-		}
-	}
+	//	public void showToast(String message, int length, boolean isAttachToActivity)
+	//	{
+	//		try
+	//		{
+	//			if (mToast != null)
+	//				mToast.cancel();
+	//
+	//			if (isAttachToActivity)
+	//			{
+	//				mToast = Toast.makeText(getApplicationContext(), message, length);
+	//				mToast.show();
+	//
+	//			} else
+	//			{
+	//				Toast.makeText(getApplicationContext(), message, length).show();
+	//			}
+	//		} catch (Exception e)
+	//		{ // show Toast 도중 Stackoverflow가 자주 발생함. 이유를 알 수 없음. 이에따른 임시 방편 
+	//			ExLog.e(e.toString());
+	//		}
+	//	}
 
 	/**
 	 * 버튼 난타를 방지하기 위한 메서드, 버튼의 클릭 가능 여부를 반대로 변경.

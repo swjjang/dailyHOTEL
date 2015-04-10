@@ -123,11 +123,11 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-			if(getActivity() == null)
+			if (getActivity() == null)
 			{
 				return;
 			}
-			
+
 			try
 			{
 				if (response == null)
@@ -165,11 +165,11 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-			if(getActivity() == null)
+			if (getActivity() == null)
 			{
 				return;
 			}
-			
+
 			try
 			{
 				if (response == null)
@@ -183,7 +183,7 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 				tvCustomerPhone.setText(phone);
 
 				// 체크인 정보 요청.
-//				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_CHECKIN).append('/').append(mHotelDetail.getSaleIdx()).toString(), null, mReserveCheckInJsonResponseListener, mHostActivity));
+				//				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_CHECKIN).append('/').append(mHotelDetail.getSaleIdx()).toString(), null, mReserveCheckInJsonResponseListener, mHostActivity));
 				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_CHECKINOUT).append('/').append(mHotelDetail.getSaleIdx()).toString(), null, mReserveCheckInJsonResponseListener, mHostActivity));
 				ExLog.e("madsd : " + mHotelDetail.getSaleIdx() + "");
 			} catch (Exception e)
@@ -200,11 +200,11 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-			if(getActivity() == null)
+			if (getActivity() == null)
 			{
 				return;
 			}
-			
+
 			try
 			{
 				if (response == null)
@@ -214,16 +214,16 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 
 				long checkin = Long.valueOf(response.getString("checkin"));
 				long checkout = Long.valueOf(response.getString("checkout"));
-				
+
 				SimpleDateFormat format = new SimpleDateFormat("yyyy년 MM월 dd일 HH시");
 				format.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
-				
+
 				// Check In
 				Calendar calendarCheckin = Calendar.getInstance();
 				calendarCheckin.setTimeInMillis(checkin);
-				
+
 				String checkInday = format.format(calendarCheckin.getTime());
-					
+
 				tvCheckIn.setText(checkInday);
 
 				// Check Out
@@ -231,13 +231,12 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 				calendarCheckout.setTimeInMillis(checkout);
 
 				String checkOutday = format.format(calendarCheckout.getTime());
-				
+
 				tvCheckOut.setText(checkOutday);
 			} catch (Exception e)
 			{
 				onError(e);
-			}
-			finally
+			} finally
 			{
 				unLockUI();
 			}
@@ -250,11 +249,11 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 		@Override
 		public void onResponse(String url, String response)
 		{
-			if(getActivity() == null)
+			if (getActivity() == null)
 			{
 				return;
 			}
-			
+
 			String result = null;
 
 			if (TextUtils.isEmpty(response) == false)

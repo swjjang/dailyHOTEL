@@ -1,10 +1,10 @@
 package com.twoheart.dailyhotel.widget;
 
+import uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.AbcDefaultHeaderTransformer;
+import uk.co.senab.actionbarpulltorefresh.library.R;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.AbcDefaultHeaderTransformer;
-import uk.co.senab.actionbarpulltorefresh.library.R;
 
 public class DailyHotelHeaderTransformer extends AbcDefaultHeaderTransformer
 {

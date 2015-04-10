@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class CloseOnBackPressed
 {
@@ -35,7 +36,6 @@ public class CloseOnBackPressed
 
 		if (System.currentTimeMillis() <= backPressedTime + 2000)
 		{
-			mActivity.mToast.cancel();
 			return true;
 		}
 
@@ -48,7 +48,7 @@ public class CloseOnBackPressed
 
 	private void showGuide()
 	{
-		mActivity.showToast(mActivity.getString(R.string.toast_msg_backpressed), Toast.LENGTH_SHORT, true);
+		DailyToast.showToast(mActivity, mActivity.getString(R.string.toast_msg_backpressed), Toast.LENGTH_SHORT);
 	}
 
 }

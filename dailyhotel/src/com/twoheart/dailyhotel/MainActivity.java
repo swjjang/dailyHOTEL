@@ -84,6 +84,7 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListe
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.CloseOnBackPressed;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class MainActivity extends BaseActivity implements OnItemClickListener, Constants
 {
@@ -136,7 +137,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		super.onCreate(savedInstanceState);
 		ExLog.d("GCM??" + sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "NOPE"));
 
-//		DailyHotelRequest.makeUrlEncoder();
+		//		DailyHotelRequest.makeUrlEncoder();
 
 		// 사용자가 선택한 언어, but 만약 사용자가 한국인인데 일본어를 선택하면 jp가 됨.
 		// 영어인 경우 - English, 한글인 경우 - 한국어
@@ -272,7 +273,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 				GooglePlayServicesUtil.getErrorDialog(resCode, this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
 			} else
 			{
-				showToast(getString(R.string.toast_msg_is_not_available_google_service), Toast.LENGTH_LONG, false);
+				DailyToast.showToast(this, R.string.toast_msg_is_not_available_google_service, Toast.LENGTH_LONG);
 				finish();
 			}
 			return false;
@@ -479,13 +480,13 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectMenu", getString(R.string.actionbar_title_setting_frag), (long) position);
 				break;
 		}
-		
+
 		//
 		menuHotelListFragment.setSelected(false);
 		menuBookingListFragment.setSelected(false);
 		menuCreditFragment.setSelected(false);
 		menuSettingFragment.setSelected(false);
-		
+
 		selectedDrawMenu.setSelected(true);
 		mDrawerMenuListAdapter.notifyDataSetChanged();
 
@@ -697,12 +698,12 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		{
 			this.icon = icon;
 		}
-		
+
 		public void setSelected(boolean selected)
 		{
 			mSelected = selected;
 		}
-		
+
 		public boolean isSelected()
 		{
 			return mSelected;
@@ -756,14 +757,12 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 			switch (item.getType())
 			{
-				case DrawerMenu.DRAWER_MENU_LIST_TYPE_LOGO:
-				{
+				case DrawerMenu.DRAWER_MENU_LIST_TYPE_LOGO: {
 					convertView = inflater.inflate(R.layout.list_row_drawer_logo, null);
 					break;
 				}
 
-				case DrawerMenu.DRAWER_MENU_LIST_TYPE_SECTION:
-				{
+				case DrawerMenu.DRAWER_MENU_LIST_TYPE_SECTION: {
 					convertView = inflater.inflate(R.layout.list_row_drawer_section, null);
 
 					TextView drawerMenuItemTitle = (TextView) convertView.findViewById(R.id.drawerMenuItemTitle);
@@ -772,8 +771,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 					break;
 				}
 
-				case DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY:
-				{
+				case DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY: {
 					convertView = inflater.inflate(R.layout.list_row_drawer_entry, null);
 
 					ImageView drawerMenuItemIcon = (ImageView) convertView.findViewById(R.id.drawerMenuItemIcon);
@@ -781,8 +779,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 					drawerMenuItemIcon.setImageResource(item.getIcon());
 					drawerMenuItemText.setText(item.getTitle());
-					
-					if(item.isSelected() == true)
+
+					if (item.isSelected() == true)
 					{
 						drawerMenuItemIcon.setSelected(true);
 						drawerMenuItemText.setSelected(true);
@@ -843,7 +841,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			}
 
 			if (true == "alive".equalsIgnoreCase(result))
-			{ // session alive
+			{
+				// session alive
 				// 호텔 평가를 위한 사용자 정보 조회
 				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, MainActivity.this));
 			}

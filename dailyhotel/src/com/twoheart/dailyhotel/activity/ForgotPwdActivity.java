@@ -14,7 +14,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -27,6 +26,7 @@ import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class ForgotPwdActivity extends BaseActivity implements Constants, OnClickListener
 {
@@ -85,7 +85,7 @@ public class ForgotPwdActivity extends BaseActivity implements Constants, OnClic
 			{
 				releaseUiComponent();
 
-				showToast(getString(R.string.toast_msg_please_input_email_address), Toast.LENGTH_SHORT, true);
+				DailyToast.showToast(this, R.string.toast_msg_please_input_email_address, Toast.LENGTH_SHORT);
 				return;
 			}
 
@@ -93,7 +93,7 @@ public class ForgotPwdActivity extends BaseActivity implements Constants, OnClic
 			{
 				releaseUiComponent();
 
-				showToast(getString(R.string.toast_msg_wrong_email_address), Toast.LENGTH_SHORT, true);
+				DailyToast.showToast(this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
 				return;
 			}
 
@@ -143,7 +143,7 @@ public class ForgotPwdActivity extends BaseActivity implements Constants, OnClic
 				{
 					if (TextUtils.isEmpty(mEmail) == true)
 					{
-						showToast(getString(R.string.toast_msg_please_input_email_address), Toast.LENGTH_SHORT, true);
+						DailyToast.showToast(ForgotPwdActivity.this, R.string.toast_msg_please_input_email_address, Toast.LENGTH_SHORT);
 					} else
 					{
 						Map<String, String> params = new HashMap<String, String>();

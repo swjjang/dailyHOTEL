@@ -45,6 +45,7 @@ import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class ProfileActivity extends BaseActivity implements OnClickListener
 {
@@ -220,7 +221,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 					releaseUiComponent();
 
 					mAq.id(R.id.et_profile_name).text("");
-					showToast(getString(R.string.toast_msg_please_input_name), Toast.LENGTH_SHORT, false);
+					DailyToast.showToast(ProfileActivity.this, R.string.toast_msg_please_input_name, Toast.LENGTH_SHORT);
 				} else if (name.equals(prevName) && phone.equals(prevPh))
 				{
 					toggleKeyboard(false);
@@ -233,7 +234,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 					mAq.id(R.id.ll_profile_info_label).getView().startAnimation(AnimationUtils.loadAnimation(ProfileActivity.this, R.anim.fade_in));
 					mAq.id(R.id.tv_profile_edit).text(getString(R.string.act_profile_modify));
 
-					showToast(getString(R.string.toast_msg_profile_not_changed), Toast.LENGTH_LONG, false);
+					DailyToast.showToast(ProfileActivity.this, R.string.toast_msg_profile_not_changed, Toast.LENGTH_LONG);
 				} else
 				{
 					toggleKeyboard(false);
@@ -277,7 +278,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 						}
 					}
 
-					showToast(getString(R.string.toast_msg_logouted), Toast.LENGTH_SHORT, true);
+					DailyToast.showToast(ProfileActivity.this, R.string.toast_msg_logouted, Toast.LENGTH_SHORT);
 					finish();
 
 				}
@@ -331,14 +332,14 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 				if (result.equals("true") == true)
 				{
 					unLockUI();
-					showToast(getString(R.string.toast_msg_profile_success_to_change), Toast.LENGTH_SHORT, true);
+					DailyToast.showToast(ProfileActivity.this, R.string.toast_msg_profile_success_to_change, Toast.LENGTH_SHORT);
 					updateTextField();
 				} else
 				{
 					releaseUiComponent();
 
 					unLockUI();
-					showToast(msg, Toast.LENGTH_LONG, true);
+					DailyToast.showToast(ProfileActivity.this, msg, Toast.LENGTH_LONG);
 				}
 			} catch (Exception e)
 			{

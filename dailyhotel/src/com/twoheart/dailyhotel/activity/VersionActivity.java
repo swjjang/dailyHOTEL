@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -13,6 +12,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class VersionActivity extends BaseActivity implements OnClickListener
 {
@@ -66,7 +66,7 @@ public class VersionActivity extends BaseActivity implements OnClickListener
 					startActivity(marketLaunch);
 				} else
 				{
-					showToast(getString(R.string.toast_msg_already_latest_version), Toast.LENGTH_SHORT, true);
+					DailyToast.showToast(VersionActivity.this, R.string.toast_msg_already_latest_version, Toast.LENGTH_SHORT);
 				}
 
 				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestVersionUpdate", this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName, null);
