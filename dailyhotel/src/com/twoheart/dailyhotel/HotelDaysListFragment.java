@@ -252,6 +252,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 
 			dayOfTheWeekTextView.setSelected(selectedView);
 			dayTextView.setSelected(selectedView);
+			((View)dayTextView.getParent()).setSelected(selectedView);
 		}
 	}
 

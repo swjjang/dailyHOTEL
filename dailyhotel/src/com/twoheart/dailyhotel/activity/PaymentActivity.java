@@ -121,7 +121,9 @@ public class PaymentActivity extends BaseActivity implements Constants
 
 		Bundle bundle = getIntent().getExtras();
 		if (bundle != null)
+		{
 			mPay = (Pay) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_PAY);
+		}
 
 		//		if (mPay.getPayType().equals("PAYPAL")) {
 		//			Intent intent = new Intent(this, PayPalService.class);
@@ -189,6 +191,7 @@ public class PaymentActivity extends BaseActivity implements Constants
 		{
 			showToast(getString(R.string.toast_msg_failed_to_get_payment_info), Toast.LENGTH_SHORT, false);
 			finish();
+			return;
 		}
 
 		// 기본 결제 방식
@@ -206,7 +209,7 @@ public class PaymentActivity extends BaseActivity implements Constants
 
 			webView.postUrl(url, parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]), postParameterValue.toArray(new String[postParameterValue.size()])));
 			return;
-		} else if (mPay.isSaleCredit())
+		} else if (mPay.isSaleCredit() == true)
 		{
 			// 적립금 일부 사용
 			url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)).append('/').append(mPay.getPayType()).append("/").append(mPay.getHotelDetail().getSaleIdx()).append("/").append(mPay.getCredit().getBonus()).toString();
@@ -263,9 +266,9 @@ public class PaymentActivity extends BaseActivity implements Constants
 		byte[] result = new byte[size];
 
 		int currentSize = 0;
+
 		for (int i = 0; i < resultList.size(); i++)
 		{
-
 			System.arraycopy(resultList.get(i), 0, result, currentSize, resultList.get(i).length);
 			currentSize += resultList.get(i).length;
 		}
