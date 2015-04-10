@@ -171,7 +171,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		rbPaymentAccount = (RadioButton) findViewById(R.id.rb_payment_account);
 		rbPaymentCard = (RadioButton) findViewById(R.id.rb_payment_card);
 		rbPaymentHp = (RadioButton) findViewById(R.id.rb_payment_hp);
-		
+
 		rbPaymentAccount.setOnClickListener(this);
 		rbPaymentCard.setOnClickListener(this);
 		rbPaymentHp.setOnClickListener(this);
@@ -261,12 +261,12 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			tvPrice.setText(Html.fromHtml(getString(R.string.currency)) + comma.format(mPay.getPayPrice()));
 
 	}
-	
+
 	@Override
 	public void onError()
 	{
 		super.onError();
-		
+
 		finish();
 	}
 
@@ -406,6 +406,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			public void onClick(View v)
 			{
 				lockUI();
+
 				mAliveCallSource = "PAYMENT";
 				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, BookingActivity.this));
 				dialog.dismiss();
@@ -770,16 +771,18 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 				if (response.getBoolean("login") == true)
 				{
-					unLockUI();
 					VolleyHttpClient.createCookie();
 
 					mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_TIME).toString(), null, mAppTimeStringResponseListener, BookingActivity.this));
+				} else
+				{
+					unLockUI();
 				}
 			} catch (JSONException e)
 			{
 				onError(e);
+				unLockUI();
 			}
-
 		}
 	};
 
@@ -1162,7 +1165,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		public void onResponse(String url, String response)
 		{
 			ExLog.e("USER_ALIVE / CALL_RESOURCE : " + response.toString() + " / " + mAliveCallSource);
-			unLockUI();
+
 			/**
 			 * ALIVE CALL은 소스가 두종류, 1. BookingActivity => PaymentActivity로 넘어갈때
 			 * 2. PaymentActivity => BookingActivity로 넘어왔을때
@@ -1177,18 +1180,20 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			if ("alive".equalsIgnoreCase(result) == true)
 			{
 				if ("PAYMENT".equalsIgnoreCase(mAliveCallSource) == true)
-				{//1번 
+				{
+					//1번 
 					mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_TIME).toString(), null, mAppTimeStringResponseListener, BookingActivity.this));
 				} else if ("ACTIVITY_RESULT".equalsIgnoreCase(mAliveCallSource) == true)
-				{//2번 
+				{
+					unLockUI();
+
+					//2번 
 					activityResulted(mReqCode, mResCode, mResIntent);
 				}
-
 			} else
 			{
 				if (sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false) == true)
 				{
-
 					String id = sharedPreference.getString(KEY_PREFERENCE_USER_ID, null);
 					String accessToken = sharedPreference.getString(KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
 					String pw = sharedPreference.getString(KEY_PREFERENCE_USER_PWD, null);
@@ -1206,6 +1211,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					loginParams.put("pw", pw);
 
 					mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(), loginParams, mUserLoginJsonResponseListener, BookingActivity.this));
+				} else
+				{
+					unLockUI();
 				}
 			}
 		}

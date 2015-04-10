@@ -59,7 +59,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 
 	public interface UserActionListener
 	{
-		public void selectHotel(HotelListViewItem hotelListViewItem, int hotelIndex);
+		public void selectHotel(HotelListViewItem hotelListViewItem, int hotelIndex, SaleTime saleTime);
 
 		public void selectDay(HotelListFragment fragment);
 	};
@@ -463,7 +463,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 	{
 
 		@Override
-		public void selectHotel(HotelListViewItem hotelListViewItem, int hotelIndex)
+		public void selectHotel(HotelListViewItem hotelListViewItem, int hotelIndex, SaleTime saleTime)
 		{
 			if (isLockUiComponent() == true)
 			{
@@ -493,7 +493,9 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 					editor.commit();
 
 					i.putExtra(NAME_INTENT_EXTRA_DATA_HOTEL, hotelListViewItem.getItem());
-					i.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mTodaySaleTime);
+					
+					i.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
+					
 					i.putExtra(NAME_INTENT_EXTRA_DATA_REGION, region);
 					i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, hotelIndex);
 

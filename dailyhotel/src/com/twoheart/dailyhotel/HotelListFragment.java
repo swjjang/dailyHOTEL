@@ -130,7 +130,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 		if (mUserActionListener != null)
 		{
-			mUserActionListener.selectHotel(hotelListViewItem, hotelIndex);
+			mUserActionListener.selectHotel(hotelListViewItem, hotelIndex, mSaleTime);
 		}
 	}
 
