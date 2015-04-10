@@ -376,7 +376,15 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 
 				dayList.add(getString(R.string.label_format_tabday, mTodaySaleTime.getCurrentDayEx(), mTodaySaleTime.getCurrentDayOftheWeek()));
 				dayList.add(getString(R.string.label_format_tabday, nextSaleTime.getCurrentDayEx(), nextSaleTime.getCurrentDayOftheWeek()));
-				dayList.add(mTabIndicator.getSubText(2));
+
+				if (TextUtils.isEmpty(mTabIndicator.getSubText(2)) == true)
+				{
+					SaleTime nextnextSaleTime = mTodaySaleTime.getClone(2);
+					dayList.add(getString(R.string.label_format_tabday, nextnextSaleTime.getCurrentDayEx(), nextnextSaleTime.getCurrentDayOftheWeek()));
+				} else
+				{
+					dayList.add(mTabIndicator.getSubText(2));
+				}
 
 				int tabSize = mTabIndicator.size();
 

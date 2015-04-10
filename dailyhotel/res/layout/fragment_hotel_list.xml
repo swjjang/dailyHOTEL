@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ECECEC"
-    android:orientation="vertical" >
+    android:background="#ECECEC" >
 
     <uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout
         xmlns:ptr="http://schemas.android.com/apk/res-auto"
@@ -19,6 +18,13 @@
             android:divider="@null" />
     </uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout>
 
+    <include
+        android:id="@+id/emptyView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/view_empty_list"
+        android:visibility="gone" />
+
     <View
         android:id="@+id/daysBackgroundView"
         android:layout_width="match_parent"
@@ -32,6 +38,8 @@
         android:layout_height="110dp"
         android:background="@color/white"
         android:baselineAligned="false"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
         android:visibility="gone" >
 
         <include
@@ -64,20 +72,6 @@
 
         <include
             android:id="@+id/item05"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            layout="@layout/view_selectday_item" />
-
-        <include
-            android:id="@+id/item06"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            layout="@layout/view_selectday_item" />
-
-        <include
-            android:id="@+id/item07"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"

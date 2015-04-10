@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
@@ -69,6 +70,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 	private boolean event;
 	protected boolean mIsSelectedNavigationItem;
+	private View mEmptyView;
 
 	protected HotelMainFragment.UserActionListener mUserActionListener;
 
@@ -79,6 +81,8 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 		mHotelListView = (PinnedSectionListView) view.findViewById(R.id.listview_hotel_list);
 		mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
+		mEmptyView = view.findViewById(R.id.emptyView);
+		mEmptyView.setVisibility(View.GONE);
 
 		GlobalFont.apply(container);
 
@@ -422,81 +426,106 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 				JSONArray hotelJSONArray = response.getJSONArray("hotels");
 
 				int length = hotelJSONArray.length();
-				JSONObject jsonObject;
 
-				ArrayList<Hotel> hotelList = new ArrayList<Hotel>(length);
-
-				for (int i = 0; i < length; i++)
+				if (length == 0)
 				{
-					jsonObject = hotelJSONArray.getJSONObject(i);
+					mEmptyView.setVisibility(View.VISIBLE);
 
-					int seq = jsonObject.getInt("seq");
-
-					if (seq >= 0)
+					if (mHotelListAdapter == null)
 					{
-						// 숨김호텔이 아니라면 추가. (음수일 경우 숨김호텔.)
-						Hotel newHotel = new Hotel();
+						mHotelListAdapter = new HotelListAdapter(mHostActivity, R.layout.list_row_hotel, new ArrayList<HotelListViewItem>());
+						mHotelListView.setAdapter(mHotelListAdapter);
+						mHotelListView.setOnItemClickListener(HotelListFragment.this);
+					}
 
-						if (newHotel.setHotel(jsonObject) == true)
+					mHotelListAdapter.clear();
+					mHotelListAdapter.notifyDataSetChanged();
+
+					mHotelListView.setVisibility(View.GONE);
+				} else
+				{
+					mEmptyView.setVisibility(View.GONE);
+					mHotelListView.setVisibility(View.VISIBLE);
+
+					JSONObject jsonObject;
+
+					ArrayList<Hotel> hotelList = new ArrayList<Hotel>(length);
+
+					for (int i = 0; i < length; i++)
+					{
+						jsonObject = hotelJSONArray.getJSONObject(i);
+
+						int seq = jsonObject.getInt("seq");
+
+						if (seq >= 0)
 						{
-							hotelList.add(newHotel); // 추가.
+							// 숨김호텔이 아니라면 추가. (음수일 경우 숨김호텔.)
+							Hotel newHotel = new Hotel();
+
+							if (newHotel.setHotel(jsonObject) == true)
+							{
+								hotelList.add(newHotel); // 추가.
+							}
 						}
 					}
-				}
 
-				// seq 값에 따른 역순으로 정렬
-				Comparator<Hotel> comparator = new Comparator<Hotel>()
-				{
-					public int compare(Hotel o1, Hotel o2)
+					if (length > 1)
 					{
-						// 숫자정렬
-						return o2.getSequence() - o1.getSequence();
-					}
-				};
-
-				Collections.sort(hotelList, comparator);
-
-				List<String> selectedDetailRegionList = mDetailRegionList.get(mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, ""));
-
-				int hotelListSize = selectedDetailRegionList.size() + hotelList.size();
-				ArrayList<HotelListViewItem> hotelListViewList = new ArrayList<HotelListViewItem>(hotelListSize);
-
-				if (hotelList.size() > 0)
-				{
-					// 지역별로 호텔 리스트를 넣어준다.
-					for (String detailRegion : selectedDetailRegionList)
-					{
-						if (TextUtils.isEmpty(detailRegion) == true)
+						// seq 값에 따른 역순으로 정렬
+						Comparator<Hotel> comparator = new Comparator<Hotel>()
 						{
-							continue;
-						}
+							public int compare(Hotel o1, Hotel o2)
+							{
+								// 숫자정렬
+								return o2.getSequence() - o1.getSequence();
+							}
+						};
 
-						makeRegionHotelList(detailRegion, hotelList, hotelListViewList);
+						Collections.sort(hotelList, comparator);
 					}
 
-					// 호텔 지역 정보가 없는 기타 호텔들...
+					List<String> selectedDetailRegionList = mDetailRegionList.get(mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, ""));
+
+					int hotelListSize = selectedDetailRegionList.size() + hotelList.size();
+					ArrayList<HotelListViewItem> hotelListViewList = new ArrayList<HotelListViewItem>(hotelListSize);
+
 					if (hotelList.size() > 0)
 					{
-						HotelListViewItem section = new HotelListViewItem(getString(R.string.frag_hotel_list_others));
-						hotelListViewList.add(section);
-
-						for (Hotel hotel : hotelList)
+						// 지역별로 호텔 리스트를 넣어준다.
+						for (String detailRegion : selectedDetailRegionList)
 						{
-							hotelListViewList.add(new HotelListViewItem(hotel));
+							if (TextUtils.isEmpty(detailRegion) == true)
+							{
+								continue;
+							}
+
+							makeRegionHotelList(detailRegion, hotelList, hotelListViewList);
+						}
+
+						// 호텔 지역 정보가 없는 기타 호텔들...
+						if (hotelList.size() > 0)
+						{
+							HotelListViewItem section = new HotelListViewItem(getString(R.string.frag_hotel_list_others));
+							hotelListViewList.add(section);
+
+							for (Hotel hotel : hotelList)
+							{
+								hotelListViewList.add(new HotelListViewItem(hotel));
+							}
 						}
 					}
-				}
 
-				if (mHotelListAdapter == null)
-				{
-					mHotelListAdapter = new HotelListAdapter(mHostActivity, R.layout.list_row_hotel, new ArrayList<HotelListViewItem>());
-					mHotelListView.setAdapter(mHotelListAdapter);
-					mHotelListView.setOnItemClickListener(HotelListFragment.this);
-				}
+					if (mHotelListAdapter == null)
+					{
+						mHotelListAdapter = new HotelListAdapter(mHostActivity, R.layout.list_row_hotel, new ArrayList<HotelListViewItem>());
+						mHotelListView.setAdapter(mHotelListAdapter);
+						mHotelListView.setOnItemClickListener(HotelListFragment.this);
+					}
 
-				mHotelListAdapter.clear();
-				mHotelListAdapter.addAll(hotelListViewList);
-				mHotelListAdapter.notifyDataSetChanged();
+					mHotelListAdapter.clear();
+					mHotelListAdapter.addAll(hotelListViewList);
+					mHotelListAdapter.notifyDataSetChanged();
+				}
 
 				// Notify PullToRefreshLayout that the refresh has finished
 				mPullToRefreshLayout.setRefreshComplete();
@@ -504,7 +533,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 				// 리스트 요청 완료.
 				onRefreshComplete(mIsSelectedNavigationItem);
 				mIsSelectedNavigationItem = true;
-			} catch (Exception e)
+			} catch (JSONException e)
 			{
 				onError(e);
 			} finally

@@ -246,7 +246,6 @@
 	<string name="act_booking_price_real">Payment amount(VAT Inc.)</string>
 	<string name="act_booking_pay_card">Credit Card</string>
 	<string name="act_booking_pay_mobile">Cellphone</string>
-	<string name="act_booking_paypal">Paypal</string>
 	<string name="act_booking_pay_account">Account transfer</string>
 	<string name="act_booking_btn_pay">Pay</string>
 	

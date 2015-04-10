@@ -95,11 +95,6 @@
         <item name="textSize">16sp</item>
     </style>
 
-    <style name="RatingBarDH" parent="android:Widget.RatingBar">
-        <item name="android:progressDrawable">@drawable/dh_ratingbar_full_holo_light</item>
-        <item name="android:indeterminateDrawable">@drawable/dh_ratingbar_full_holo_light</item>
-    </style>
-
     <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="spinBars">true</item>
         <item name="color">@color/actionbar_hamburger</item>

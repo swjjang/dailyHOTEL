@@ -17,7 +17,7 @@ public class DailyHotelHeaderTransformer extends AbcDefaultHeaderTransformer
 
 		if (view != null)
 		{
-			view.setBackgroundColor(android.R.color.transparent);
+			view.setBackgroundColor(view.getResources().getColor(android.R.color.transparent));
 			TextView mHeaderTextView = (TextView) view.findViewById(R.id.ptr_text);
 			ViewGroup mContentLayout = (ViewGroup) view.findViewById(R.id.ptr_content);
 

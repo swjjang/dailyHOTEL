@@ -37,7 +37,7 @@ import com.twoheart.dailyhotel.util.Util;
 
 public class HotelDaysListFragment extends HotelListFragment implements OnClickListener
 {
-	private static final int DAY_OF_COUNT = 7;
+	private static final int DAY_OF_COUNT = 5;
 
 	// 날짜가 나오는 탭의 높이이다. 마진이 있는 경우 고려해서 넣을것.px 로 넣어야 함.
 	private int DAYSLIST_HEIGHT;
@@ -105,16 +105,16 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		mDaysView[2] = mDaysLayout.findViewById(R.id.item03);
 		mDaysView[3] = mDaysLayout.findViewById(R.id.item04);
 		mDaysView[4] = mDaysLayout.findViewById(R.id.item05);
-		mDaysView[5] = mDaysLayout.findViewById(R.id.item06);
-		mDaysView[6] = mDaysLayout.findViewById(R.id.item07);
+		//		mDaysView[5] = mDaysLayout.findViewById(R.id.item06);
+		//		mDaysView[6] = mDaysLayout.findViewById(R.id.item07);
 
-		initLayoutDays(mDaysView[0], mSaleTime.getClone(-2));
-		initLayoutDays(mDaysView[1], mSaleTime.getClone(-1));
-		initLayoutDays(mDaysView[2], mSaleTime.getClone(0));
-		initLayoutDays(mDaysView[3], mSaleTime.getClone(1));
-		initLayoutDays(mDaysView[4], mSaleTime.getClone(2));
-		initLayoutDays(mDaysView[5], mSaleTime.getClone(3));
-		initLayoutDays(mDaysView[6], mSaleTime.getClone(4));
+		initLayoutDays(mDaysView[0], mSaleTime.getClone(0));
+		initLayoutDays(mDaysView[1], mSaleTime.getClone(1));
+		initLayoutDays(mDaysView[2], mSaleTime.getClone(2));
+		initLayoutDays(mDaysView[3], mSaleTime.getClone(3));
+		initLayoutDays(mDaysView[4], mSaleTime.getClone(4));
+		//		initLayoutDays(mDaysView[5], mSaleTime.getClone(3));
+		//		initLayoutDays(mDaysView[6], mSaleTime.getClone(4));
 
 		if (mSelectedView == null)
 		{

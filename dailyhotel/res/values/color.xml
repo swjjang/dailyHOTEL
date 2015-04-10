@@ -54,6 +54,6 @@
 	
 	<color name="booking_subtext">#cc7f7f7f</color>
 	
-	<color name="toast_background">#000000</color>
+	<color name="toast_background">#aa000000</color>
 
 </resources>	

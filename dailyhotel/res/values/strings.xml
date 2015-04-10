@@ -327,6 +327,8 @@
     <string name="frag_hotel_list_seoul">서울</string>
     <string name="frag_hotel_list_tokyo">도쿄</string>
     <string name="frag_hotel_list_others">기타</string>
+    <string name="frag_hotel_list_no_hotels">호텔이 없습니다!</string>
+    <string name="frag_hotel_list_line">멋진 호텔에서\n하루를 보내는게 어때요?</string>
 
     <!-- PopUp Event Fragment -->
     <string name="frag_popup_event_title">이벤트 안내</string>
@@ -376,11 +378,11 @@
     <string name="act_list_region_japan">일본</string>
     <string name="title_activity_paypal">PaypalActivity</string>
     <string name="title_activity_sample">SampleActivity</string>
-    
+
     <!-- Main Tab -->
-	<string name="label_today">오늘</string>
-	<string name="label_tomorrow">내일</string>
-	<string name="label_selecteday">날짜</string>
-	
-	<string name="label_format_tabday">%1$s일(%2$s)</string>
+    <string name="label_today">오늘</string>
+    <string name="label_tomorrow">내일</string>
+    <string name="label_selecteday">날짜</string>
+    <string name="label_format_tabday">%1$s일(%2$s)</string>
+
 </resources>

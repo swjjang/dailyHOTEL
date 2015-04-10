@@ -14,7 +14,6 @@
  */
 package com.twoheart.dailyhotel.activity;
 
-import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,10 +24,8 @@ import kr.co.kcp.android.payment.standard.ResultRcvActivity;
 import kr.co.kcp.util.PackageState;
 
 import org.apache.http.util.EncodingUtils;
-import org.json.JSONException;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
@@ -51,9 +48,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-import com.paypal.android.sdk.payments.PayPalConfiguration;
-import com.paypal.android.sdk.payments.PayPalPayment;
-import com.paypal.android.sdk.payments.PaymentConfirmation;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Pay;
 import com.twoheart.dailyhotel.util.Constants;
@@ -86,31 +80,31 @@ public class PaymentActivity extends BaseActivity implements Constants
 
 	// init paypal
 	private static final int REQUEST_CODE_PAYMENT = 1;
-	private static final String CONFIG_ENVIRONMENT = PayPalConfiguration.ENVIRONMENT_NO_NETWORK;
+	//	private static final String CONFIG_ENVIRONMENT = PayPalConfiguration.ENVIRONMENT_NO_NETWORK;
 	// note that these credentials will differ between live & sandbox
 	// environments.
 	private static final String CONFIG_CLIENT_ID = "AZlfxxBvLXC7iT3xDEG8oFViHYdqImvcwLB2JG6pyUhVAXb7XuHMYIuNutGI";
 
-	public static PayPalConfiguration config = new PayPalConfiguration().environment(CONFIG_ENVIRONMENT).clientId(CONFIG_CLIENT_ID)
-	// The following are only used in PayPalFuturePaymentActivity.
-	.merchantName("Hipster Store").merchantPrivacyPolicyUri(Uri.parse("https://www.example.com/privacy")).merchantUserAgreementUri(Uri.parse("https://www.example.com/legal"));
-
-	private PayPalPayment getThingToBuy(String paymentIntent, Pay pay)
-	{
-		PayPalPayment payPalPayment = null;
-
-		if (pay != null && pay.getHotelDetail() != null && pay.getHotelDetail().getHotel() != null)
-		{
-
-			payPalPayment = new PayPalPayment(new BigDecimal(pay.getPayPrice()), "USD", pay.getHotelDetail().getHotel().getName(), paymentIntent);
-		} else
-		{
-
-			payPalPayment = new PayPalPayment(new BigDecimal("1.75"), "USD", "hipster jeans", paymentIntent);
-		}
-
-		return payPalPayment;
-	}
+	//	public static PayPalConfiguration config = new PayPalConfiguration().environment(CONFIG_ENVIRONMENT).clientId(CONFIG_CLIENT_ID)
+	//	// The following are only used in PayPalFuturePaymentActivity.
+	//	.merchantName("Hipster Store").merchantPrivacyPolicyUri(Uri.parse("https://www.example.com/privacy")).merchantUserAgreementUri(Uri.parse("https://www.example.com/legal"));
+	//
+	//	private PayPalPayment getThingToBuy(String paymentIntent, Pay pay)
+	//	{
+	//		PayPalPayment payPalPayment = null;
+	//
+	//		if (pay != null && pay.getHotelDetail() != null && pay.getHotelDetail().getHotel() != null)
+	//		{
+	//
+	//			payPalPayment = new PayPalPayment(new BigDecimal(pay.getPayPrice()), "USD", pay.getHotelDetail().getHotel().getName(), paymentIntent);
+	//		} else
+	//		{
+	//
+	//			payPalPayment = new PayPalPayment(new BigDecimal("1.75"), "USD", "hipster jeans", paymentIntent);
+	//		}
+	//
+	//		return payPalPayment;
+	//	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -433,40 +427,40 @@ public class PaymentActivity extends BaseActivity implements Constants
 		//		}
 	}
 
-	private void proccessPayPalActivityResult(int requestCode, int resultCode, Intent data)
-	{
-
-		JavaScriptExtention javaScriptExtention = new JavaScriptExtention();
-
-		if (resultCode == Activity.RESULT_OK)
-		{
-			PaymentConfirmation confirm = data.getParcelableExtra(com.paypal.android.sdk.payments.PaymentActivity.EXTRA_RESULT_CONFIRMATION);
-			if (confirm != null)
-			{
-				try
-				{
-					ExLog.d(confirm.toJSONObject().toString(4));
-					ExLog.d(confirm.getPayment().toJSONObject().toString(4));
-
-					// 성공적으로 마쳤을 경우 
-					javaScriptExtention.feed("SUCCESS");
-				} catch (JSONException e)
-				{
-					ExLog.d("an extremely unlikely failure occurred: ");
-					javaScriptExtention.feed("NOT_AVAILABLE");
-				}
-			}
-		} else if (resultCode == Activity.RESULT_CANCELED)
-		{
-			ExLog.d("The user canceled.");
-			javaScriptExtention.feed("PAYMENT_CANCELED");
-
-		} else if (resultCode == com.paypal.android.sdk.payments.PaymentActivity.RESULT_EXTRAS_INVALID)
-		{
-			ExLog.d("An invalid Payment or PayPalConfiguration was submitted. Please see the docs.");
-			javaScriptExtention.feed("NOT_AVAILABLE");
-		}
-	}
+	//	private void proccessPayPalActivityResult(int requestCode, int resultCode, Intent data)
+	//	{
+	//
+	//		JavaScriptExtention javaScriptExtention = new JavaScriptExtention();
+	//
+	//		if (resultCode == Activity.RESULT_OK)
+	//		{
+	//			PaymentConfirmation confirm = data.getParcelableExtra(com.paypal.android.sdk.payments.PaymentActivity.EXTRA_RESULT_CONFIRMATION);
+	//			if (confirm != null)
+	//			{
+	//				try
+	//				{
+	//					ExLog.d(confirm.toJSONObject().toString(4));
+	//					ExLog.d(confirm.getPayment().toJSONObject().toString(4));
+	//
+	//					// 성공적으로 마쳤을 경우 
+	//					javaScriptExtention.feed("SUCCESS");
+	//				} catch (JSONException e)
+	//				{
+	//					ExLog.d("an extremely unlikely failure occurred: ");
+	//					javaScriptExtention.feed("NOT_AVAILABLE");
+	//				}
+	//			}
+	//		} else if (resultCode == Activity.RESULT_CANCELED)
+	//		{
+	//			ExLog.d("The user canceled.");
+	//			javaScriptExtention.feed("PAYMENT_CANCELED");
+	//
+	//		} else if (resultCode == com.paypal.android.sdk.payments.PaymentActivity.RESULT_EXTRAS_INVALID)
+	//		{
+	//			ExLog.d("An invalid Payment or PayPalConfiguration was submitted. Please see the docs.");
+	//			javaScriptExtention.feed("NOT_AVAILABLE");
+	//		}
+	//	}
 
 	private class mWebChromeClient extends WebChromeClient
 	{
