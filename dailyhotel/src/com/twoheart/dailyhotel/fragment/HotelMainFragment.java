@@ -88,7 +88,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 
 		mTabIndicator = (TabIndicator) view.findViewById(R.id.tabindicator);
 		//		mTabIndicator.setData(titleList, dayList, true);
-		mTabIndicator.setData(titleList, true);
+		mTabIndicator.setData(titleList);
 		mTabIndicator.setOnTabSelectListener(mOnTabSelectedListener);
 
 		mFragmentViewPager = (FragmentViewPager) view.findViewById(R.id.fragmentViewPager);

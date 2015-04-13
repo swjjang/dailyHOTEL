@@ -37485,6 +37485,7 @@ com.twoheart.dailyhotel.HotelDaysListFragment -> com.twoheart.dailyhotel.n:
     void onRefreshComplete(boolean) -> onRefreshComplete
     void onClick(android.view.View) -> onClick
     void initLayoutDays(android.view.View,com.twoheart.dailyhotel.model.SaleTime) -> a
+    void setDaysLayoutEnabled(boolean) -> a
     void setSelectedDays(android.view.View) -> b
     void hideDaysList() -> e
     void showAnimationDaysList() -> f
@@ -37498,8 +37499,9 @@ com.twoheart.dailyhotel.HotelDaysListFragment -> com.twoheart.dailyhotel.n:
     void access$4(com.twoheart.dailyhotel.HotelDaysListFragment,com.twoheart.dailyhotel.HotelDaysListFragment$ANIMATION_STATE) -> a
     void access$5(com.twoheart.dailyhotel.HotelDaysListFragment,com.twoheart.dailyhotel.HotelDaysListFragment$ANIMATION_STATUS) -> a
     com.twoheart.dailyhotel.HotelDaysListFragment$ANIMATION_STATE access$6(com.twoheart.dailyhotel.HotelDaysListFragment) -> d
-    void access$7(com.twoheart.dailyhotel.HotelDaysListFragment) -> e
-    android.view.View access$8(com.twoheart.dailyhotel.HotelDaysListFragment) -> f
+    void access$7(com.twoheart.dailyhotel.HotelDaysListFragment,boolean) -> a
+    void access$8(com.twoheart.dailyhotel.HotelDaysListFragment) -> e
+    android.view.View access$9(com.twoheart.dailyhotel.HotelDaysListFragment) -> f
 com.twoheart.dailyhotel.HotelDaysListFragment$1 -> com.twoheart.dailyhotel.o:
     com.twoheart.dailyhotel.HotelDaysListFragment this$0 -> a
     void onClick(android.view.View) -> onClick
@@ -37564,8 +37566,9 @@ com.twoheart.dailyhotel.HotelListFragment -> com.twoheart.dailyhotel.z:
     java.util.Map mDetailRegionList -> j
     boolean event -> k
     boolean mIsSelectedNavigationItem -> b
+    android.view.View mEmptyView -> l
     com.twoheart.dailyhotel.fragment.HotelMainFragment$UserActionListener mUserActionListener -> c
-    com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener mHotelJsonResponseListener -> l
+    com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener mHotelJsonResponseListener -> m
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
     void onPageSelected(boolean) -> onPageSelected
@@ -37580,12 +37583,13 @@ com.twoheart.dailyhotel.HotelListFragment -> com.twoheart.dailyhotel.z:
     void onRefreshStarted(android.view.View) -> onRefreshStarted
     void onCreateOptionsMenu(android.view.Menu,android.view.MenuInflater) -> onCreateOptionsMenu
     boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
-    java.util.Map access$0(com.twoheart.dailyhotel.HotelListFragment) -> a
-    com.twoheart.dailyhotel.util.ui.BaseActivity access$1(com.twoheart.dailyhotel.HotelListFragment) -> b
-    com.twoheart.dailyhotel.adapter.HotelListAdapter access$2(com.twoheart.dailyhotel.HotelListFragment) -> c
-    void access$3(com.twoheart.dailyhotel.HotelListFragment,com.twoheart.dailyhotel.adapter.HotelListAdapter) -> a
-    com.twoheart.dailyhotel.widget.PinnedSectionListView access$4(com.twoheart.dailyhotel.HotelListFragment) -> d
-    uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout access$5(com.twoheart.dailyhotel.HotelListFragment) -> e
+    android.view.View access$0(com.twoheart.dailyhotel.HotelListFragment) -> a
+    com.twoheart.dailyhotel.widget.PinnedSectionListView access$1(com.twoheart.dailyhotel.HotelListFragment) -> b
+    java.util.Map access$2(com.twoheart.dailyhotel.HotelListFragment) -> c
+    com.twoheart.dailyhotel.util.ui.BaseActivity access$3(com.twoheart.dailyhotel.HotelListFragment) -> d
+    com.twoheart.dailyhotel.adapter.HotelListAdapter access$4(com.twoheart.dailyhotel.HotelListFragment) -> e
+    void access$5(com.twoheart.dailyhotel.HotelListFragment,com.twoheart.dailyhotel.adapter.HotelListAdapter) -> a
+    uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout access$6(com.twoheart.dailyhotel.HotelListFragment) -> f
 com.twoheart.dailyhotel.HotelListFragment$1 -> com.twoheart.dailyhotel.aa:
     com.twoheart.dailyhotel.HotelListFragment this$0 -> a
     void makeRegionHotelList(java.lang.String,java.util.ArrayList,java.util.ArrayList) -> a
@@ -40706,6 +40710,7 @@ fr.castorflex.android.smoothprogressbar.R$attr -> fr.castorflex.android.smoothpr
     int spb_color -> spb_color
     int spb_colors -> spb_colors
     int spb_generate_background_with_colors -> spb_generate_background_with_colors
+    int spb_gradients -> spb_gradients
     int spb_interpolator -> spb_interpolator
     int spb_mirror_mode -> spb_mirror_mode
     int spb_progressiveStart_activated -> spb_progressiveStart_activated
@@ -40729,6 +40734,16 @@ fr.castorflex.android.smoothprogressbar.R$integer -> fr.castorflex.android.smoot
     int spb_default_interpolator -> spb_default_interpolator
     int spb_default_sections_count -> spb_default_sections_count
 fr.castorflex.android.smoothprogressbar.R$string -> fr.castorflex.android.smoothprogressbar.h:
+    int define_smoothprogressbar -> define_smoothprogressbar
+    int library_smoothprogressbar_author -> library_smoothprogressbar_author
+    int library_smoothprogressbar_authorWebsite -> library_smoothprogressbar_authorWebsite
+    int library_smoothprogressbar_isOpenSource -> library_smoothprogressbar_isOpenSource
+    int library_smoothprogressbar_libraryDescription -> library_smoothprogressbar_libraryDescription
+    int library_smoothprogressbar_libraryName -> library_smoothprogressbar_libraryName
+    int library_smoothprogressbar_libraryVersion -> library_smoothprogressbar_libraryVersion
+    int library_smoothprogressbar_libraryWebsite -> library_smoothprogressbar_libraryWebsite
+    int library_smoothprogressbar_licenseId -> library_smoothprogressbar_licenseId
+    int library_smoothprogressbar_repositoryLink -> library_smoothprogressbar_repositoryLink
     int spb_default_speed -> spb_default_speed
 fr.castorflex.android.smoothprogressbar.R$styleable -> fr.castorflex.android.smoothprogressbar.i:
     int[] SmoothProgressBar -> SmoothProgressBar
@@ -40737,6 +40752,7 @@ fr.castorflex.android.smoothprogressbar.R$styleable -> fr.castorflex.android.smo
     int SmoothProgressBar_spb_color -> SmoothProgressBar_spb_color
     int SmoothProgressBar_spb_colors -> SmoothProgressBar_spb_colors
     int SmoothProgressBar_spb_generate_background_with_colors -> SmoothProgressBar_spb_generate_background_with_colors
+    int SmoothProgressBar_spb_gradients -> SmoothProgressBar_spb_gradients
     int SmoothProgressBar_spb_interpolator -> SmoothProgressBar_spb_interpolator
     int SmoothProgressBar_spb_mirror_mode -> SmoothProgressBar_spb_mirror_mode
     int SmoothProgressBar_spb_progressiveStart_activated -> SmoothProgressBar_spb_progressiveStart_activated
@@ -40766,10 +40782,16 @@ fr.castorflex.android.smoothprogressbar.SmoothProgressBar -> fr.castorflex.andro
     void setProgressiveStartActivated(boolean) -> setProgressiveStartActivated
     void setSmoothProgressDrawableCallbacks(fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable$Callbacks) -> setSmoothProgressDrawableCallbacks
     void setSmoothProgressDrawableBackgroundDrawable(android.graphics.drawable.Drawable) -> setSmoothProgressDrawableBackgroundDrawable
+    void setSmoothProgressDrawableUseGradients(boolean) -> setSmoothProgressDrawableUseGradients
     void progressiveStart() -> progressiveStart
     void progressiveStop() -> progressiveStop
 fr.castorflex.android.smoothprogressbar.SmoothProgressBarUtils -> fr.castorflex.android.smoothprogressbar.j:
     android.graphics.drawable.Drawable generateDrawableWithColors(int[],float) -> generateDrawableWithColors
+    void checkSpeed(float) -> a
+    void checkColors(int[]) -> a
+    void checkPositiveOrZero(float,java.lang.String) -> a
+    void checkPositive(int,java.lang.String) -> a
+    void checkNotNull(java.lang.Object,java.lang.String) -> a
 fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable -> fr.castorflex.android.smoothprogressbar.k:
     android.graphics.Rect fBackgroundRect -> a
     fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable$Callbacks mCallbacks -> b
@@ -40780,22 +40802,26 @@ fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable -> fr.castorflex.
     int mColorsIndex -> g
     boolean mRunning -> h
     float mCurrentOffset -> i
-    int mSeparatorLength -> j
-    int mSectionsCount -> k
-    float mSpeed -> l
-    float mProgressiveStartSpeed -> m
-    float mProgressiveStopSpeed -> n
-    boolean mReversed -> o
-    boolean mNewTurn -> p
-    boolean mMirrorMode -> q
-    float mMaxOffset -> r
-    boolean mFinishing -> s
-    boolean mProgressiveStartActivated -> t
-    int mStartSection -> u
-    int mCurrentSections -> v
-    float mStrokeWidth -> w
-    android.graphics.drawable.Drawable mBackgroundDrawable -> x
-    java.lang.Runnable mUpdater -> y
+    float mFinishingOffset -> j
+    int mSeparatorLength -> k
+    int mSectionsCount -> l
+    float mSpeed -> m
+    float mProgressiveStartSpeed -> n
+    float mProgressiveStopSpeed -> o
+    boolean mReversed -> p
+    boolean mNewTurn -> q
+    boolean mMirrorMode -> r
+    float mMaxOffset -> s
+    boolean mFinishing -> t
+    boolean mProgressiveStartActivated -> u
+    int mStartSection -> v
+    int mCurrentSections -> w
+    float mStrokeWidth -> x
+    android.graphics.drawable.Drawable mBackgroundDrawable -> y
+    boolean mUseGradients -> z
+    int[] mLinearGradientColors -> A
+    float[] mLinearGradientPositions -> B
+    java.lang.Runnable mUpdater -> C
     void setInterpolator(android.view.animation.Interpolator) -> setInterpolator
     void setColors(int[]) -> setColors
     void setColor(int) -> setColor
@@ -40812,8 +40838,11 @@ fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable -> fr.castorflex.
     int[] getColors() -> getColors
     float getStrokeWidth() -> getStrokeWidth
     void setProgressiveStartActivated(boolean) -> setProgressiveStartActivated
+    void setUseGradients(boolean) -> setUseGradients
+    void refreshLinearGradientOptions() -> a
     void draw(android.graphics.Canvas) -> draw
-    void drawStrokes(android.graphics.Canvas) -> a
+    void drawGradient(android.graphics.Canvas) -> a
+    void drawStrokes(android.graphics.Canvas) -> b
     void drawLine(android.graphics.Canvas,int,float,float,float,float,int) -> a
     void drawBackgroundIfNeeded(android.graphics.Canvas,float,float) -> a
     void drawBackground(android.graphics.Canvas,float,float) -> b
@@ -40838,10 +40867,12 @@ fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable -> fr.castorflex.
     float access$1(fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable) -> b
     void access$2(fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable,float) -> a
     float access$3(fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable) -> c
-    float access$4(fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable) -> d
-    float access$5(fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable) -> e
-    void access$6(fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable,boolean) -> a
-    java.lang.Runnable access$7(fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable) -> f
+    void access$4(fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable,float) -> b
+    float access$5(fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable) -> d
+    float access$6(fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable) -> e
+    float access$7(fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable) -> f
+    void access$8(fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable,boolean) -> a
+    java.lang.Runnable access$9(fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable) -> g
 fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable$1 -> fr.castorflex.android.smoothprogressbar.l:
     fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable this$0 -> a
     void run() -> run
@@ -40858,10 +40889,11 @@ fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable$Builder -> fr.cas
     int mStrokeSeparatorLength -> j
     boolean mProgressiveStartActivated -> k
     boolean mGenerateBackgroundUsingColors -> l
-    android.graphics.drawable.Drawable mBackgroundDrawableWhenHidden -> m
-    fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable$Callbacks mOnProgressiveStopEndedListener -> n
+    boolean mGradients -> m
+    android.graphics.drawable.Drawable mBackgroundDrawableWhenHidden -> n
+    fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable$Callbacks mOnProgressiveStopEndedListener -> o
     fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable build() -> build
-    void initValues(android.content.Context) -> a
+    void initValues(android.content.Context,boolean) -> a
     fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable$Builder interpolator(android.view.animation.Interpolator) -> interpolator
     fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable$Builder sectionsCount(int) -> sectionsCount
     fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable$Builder separatorLength(int) -> separatorLength
@@ -40877,6 +40909,8 @@ fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable$Builder -> fr.cas
     fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable$Builder callbacks(fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable$Callbacks) -> callbacks
     fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable$Builder backgroundDrawable(android.graphics.drawable.Drawable) -> backgroundDrawable
     fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable$Builder generateBackgroundUsingColors() -> generateBackgroundUsingColors
+    fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable$Builder gradients() -> gradients
+    fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable$Builder gradients(boolean) -> gradients
 fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable$Callbacks -> fr.castorflex.android.smoothprogressbar.n:
     void onStop() -> onStop
     void onStart() -> onStart
@@ -41936,6 +41970,7 @@ uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.R$attr -> uk.co.senab.
     int ptrPullText -> ptrPullText
     int ptrRefreshingText -> ptrRefreshingText
     int ptrReleaseText -> ptrReleaseText
+    int ptrSmoothProgressBarStyle -> ptrSmoothProgressBarStyle
     int ptrViewDelegateClass -> ptrViewDelegateClass
     int queryBackground -> queryBackground
     int queryHint -> queryHint
@@ -41951,6 +41986,7 @@ uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.R$attr -> uk.co.senab.
     int spb_color -> spb_color
     int spb_colors -> spb_colors
     int spb_generate_background_with_colors -> spb_generate_background_with_colors
+    int spb_gradients -> spb_gradients
     int spb_interpolator -> spb_interpolator
     int spb_mirror_mode -> spb_mirror_mode
     int spb_progressiveStart_activated -> spb_progressiveStart_activated
@@ -42202,6 +42238,7 @@ uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.R$styleable -> uk.co.s
     int PullToRefreshHeader_ptrPullText -> PullToRefreshHeader_ptrPullText
     int PullToRefreshHeader_ptrRefreshingText -> PullToRefreshHeader_ptrRefreshingText
     int PullToRefreshHeader_ptrReleaseText -> PullToRefreshHeader_ptrReleaseText
+    int PullToRefreshHeader_ptrSmoothProgressBarStyle -> PullToRefreshHeader_ptrSmoothProgressBarStyle
     int[] PullToRefreshView -> PullToRefreshView
     int PullToRefreshView_ptrViewDelegateClass -> PullToRefreshView_ptrViewDelegateClass
     int[] SearchView -> SearchView
@@ -42226,6 +42263,7 @@ uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.R$styleable -> uk.co.s
     int SmoothProgressBar_spb_color -> SmoothProgressBar_spb_color
     int SmoothProgressBar_spb_colors -> SmoothProgressBar_spb_colors
     int SmoothProgressBar_spb_generate_background_with_colors -> SmoothProgressBar_spb_generate_background_with_colors
+    int SmoothProgressBar_spb_gradients -> SmoothProgressBar_spb_gradients
     int SmoothProgressBar_spb_interpolator -> SmoothProgressBar_spb_interpolator
     int SmoothProgressBar_spb_mirror_mode -> SmoothProgressBar_spb_mirror_mode
     int SmoothProgressBar_spb_progressiveStart_activated -> SmoothProgressBar_spb_progressiveStart_activated
@@ -42505,7 +42543,8 @@ uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher -> uk.co.senab.
     boolean mIsDestroyed -> u
     int[] mViewLocationResult -> v
     android.graphics.Rect mRect -> w
-    java.lang.Runnable mRefreshMinimizeRunnable -> x
+    uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher$AddHeaderViewRunnable mAddHeaderViewRunnable -> x
+    java.lang.Runnable mRefreshMinimizeRunnable -> y
     void addRefreshableView(android.view.View,uk.co.senab.actionbarpulltorefresh.library.viewdelegates.ViewDelegate) -> a
     void useViewDelegate(java.lang.Class,uk.co.senab.actionbarpulltorefresh.library.viewdelegates.ViewDelegate) -> a
     void clearRefreshableViews() -> c
@@ -42538,21 +42577,23 @@ uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher -> uk.co.senab.
     void reset(boolean) -> c
     void startRefresh(android.view.View,boolean) -> a
     boolean isDestroyed() -> o
-    int getInternalDimensionSize(android.content.res.Resources,java.lang.String) -> a
     void addHeaderViewToActivity(android.view.View) -> a
     void updateHeaderViewPosition(android.view.View) -> b
     void removeHeaderViewFromActivity(android.view.View) -> c
-    android.view.View access$0(uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher) -> a
+    boolean access$0(uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher) -> a
+    android.view.View access$1(uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher) -> b
 uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher$1 -> uk.co.senab.actionbarpulltorefresh.a.k:
     uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher this$0 -> a
     void run() -> run
 uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher$2 -> uk.co.senab.actionbarpulltorefresh.a.l:
     uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher this$0 -> a
-    android.view.ViewGroup val$decorView -> b
-    void run() -> run
-uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher$3 -> uk.co.senab.actionbarpulltorefresh.a.m:
-    uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher this$0 -> a
     android.content.Context getContextForInflater(android.app.Activity) -> getContextForInflater
+uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher$AddHeaderViewRunnable -> uk.co.senab.actionbarpulltorefresh.a.m:
+    uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher this$0 -> a
+    void run() -> run
+    void start() -> start
+    void finish() -> finish
+    android.view.View getDecorView() -> a
 uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout -> uk.co.senab.actionbarpulltorefresh.a.n:
     uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher mPullToRefreshAttacher -> a
     void setRefreshing(boolean) -> setRefreshing
@@ -42589,12 +42630,14 @@ uk.co.senab.actionbarpulltorefresh.library.R$attr -> uk.co.senab.actionbarpullto
     int ptrPullText -> ptrPullText
     int ptrRefreshingText -> ptrRefreshingText
     int ptrReleaseText -> ptrReleaseText
+    int ptrSmoothProgressBarStyle -> ptrSmoothProgressBarStyle
     int ptrViewDelegateClass -> ptrViewDelegateClass
     int spbStyle -> spbStyle
     int spb_background -> spb_background
     int spb_color -> spb_color
     int spb_colors -> spb_colors
     int spb_generate_background_with_colors -> spb_generate_background_with_colors
+    int spb_gradients -> spb_gradients
     int spb_interpolator -> spb_interpolator
     int spb_mirror_mode -> spb_mirror_mode
     int spb_progressiveStart_activated -> spb_progressiveStart_activated
@@ -42608,11 +42651,7 @@ uk.co.senab.actionbarpulltorefresh.library.R$attr -> uk.co.senab.actionbarpullto
 uk.co.senab.actionbarpulltorefresh.library.R$color -> uk.co.senab.actionbarpulltorefresh.a.r:
     int default_progress_bar_color -> default_progress_bar_color
     int spb_default_color -> spb_default_color
-uk.co.senab.actionbarpulltorefresh.library.R$dimen -> uk.co.senab.actionbarpulltorefresh.a.s:
-    int ptr_progress_bar_stroke_width -> ptr_progress_bar_stroke_width
-    int spb_default_stroke_separator_length -> spb_default_stroke_separator_length
-    int spb_default_stroke_width -> spb_default_stroke_width
-uk.co.senab.actionbarpulltorefresh.library.R$id -> uk.co.senab.actionbarpulltorefresh.a.t:
+uk.co.senab.actionbarpulltorefresh.library.R$id -> uk.co.senab.actionbarpulltorefresh.a.s:
     int inside -> inside
     int outside -> outside
     int ptr_content -> ptr_content
@@ -42622,14 +42661,24 @@ uk.co.senab.actionbarpulltorefresh.library.R$id -> uk.co.senab.actionbarpulltore
     int spb_interpolator_acceleratedecelerate -> spb_interpolator_acceleratedecelerate
     int spb_interpolator_decelerate -> spb_interpolator_decelerate
     int spb_interpolator_linear -> spb_interpolator_linear
-uk.co.senab.actionbarpulltorefresh.library.R$layout -> uk.co.senab.actionbarpulltorefresh.a.u:
+uk.co.senab.actionbarpulltorefresh.library.R$layout -> uk.co.senab.actionbarpulltorefresh.a.t:
     int default_header -> default_header
-uk.co.senab.actionbarpulltorefresh.library.R$string -> uk.co.senab.actionbarpulltorefresh.a.v:
+uk.co.senab.actionbarpulltorefresh.library.R$string -> uk.co.senab.actionbarpulltorefresh.a.u:
+    int define_smoothprogressbar -> define_smoothprogressbar
+    int library_smoothprogressbar_author -> library_smoothprogressbar_author
+    int library_smoothprogressbar_authorWebsite -> library_smoothprogressbar_authorWebsite
+    int library_smoothprogressbar_isOpenSource -> library_smoothprogressbar_isOpenSource
+    int library_smoothprogressbar_libraryDescription -> library_smoothprogressbar_libraryDescription
+    int library_smoothprogressbar_libraryName -> library_smoothprogressbar_libraryName
+    int library_smoothprogressbar_libraryVersion -> library_smoothprogressbar_libraryVersion
+    int library_smoothprogressbar_libraryWebsite -> library_smoothprogressbar_libraryWebsite
+    int library_smoothprogressbar_licenseId -> library_smoothprogressbar_licenseId
+    int library_smoothprogressbar_repositoryLink -> library_smoothprogressbar_repositoryLink
     int pull_to_refresh_pull_label -> pull_to_refresh_pull_label
     int pull_to_refresh_refreshing_label -> pull_to_refresh_refreshing_label
     int pull_to_refresh_release_label -> pull_to_refresh_release_label
     int spb_default_speed -> spb_default_speed
-uk.co.senab.actionbarpulltorefresh.library.R$styleable -> uk.co.senab.actionbarpulltorefresh.a.w:
+uk.co.senab.actionbarpulltorefresh.library.R$styleable -> uk.co.senab.actionbarpulltorefresh.a.v:
     int[] PullToRefreshHeader -> PullToRefreshHeader
     int PullToRefreshHeader_ptrHeaderBackground -> PullToRefreshHeader_ptrHeaderBackground
     int PullToRefreshHeader_ptrHeaderHeight -> PullToRefreshHeader_ptrHeaderHeight
@@ -42640,6 +42689,7 @@ uk.co.senab.actionbarpulltorefresh.library.R$styleable -> uk.co.senab.actionbarp
     int PullToRefreshHeader_ptrPullText -> PullToRefreshHeader_ptrPullText
     int PullToRefreshHeader_ptrRefreshingText -> PullToRefreshHeader_ptrRefreshingText
     int PullToRefreshHeader_ptrReleaseText -> PullToRefreshHeader_ptrReleaseText
+    int PullToRefreshHeader_ptrSmoothProgressBarStyle -> PullToRefreshHeader_ptrSmoothProgressBarStyle
     int[] PullToRefreshView -> PullToRefreshView
     int PullToRefreshView_ptrViewDelegateClass -> PullToRefreshView_ptrViewDelegateClass
     int[] SmoothProgressBar -> SmoothProgressBar
@@ -42648,6 +42698,7 @@ uk.co.senab.actionbarpulltorefresh.library.R$styleable -> uk.co.senab.actionbarp
     int SmoothProgressBar_spb_color -> SmoothProgressBar_spb_color
     int SmoothProgressBar_spb_colors -> SmoothProgressBar_spb_colors
     int SmoothProgressBar_spb_generate_background_with_colors -> SmoothProgressBar_spb_generate_background_with_colors
+    int SmoothProgressBar_spb_gradients -> SmoothProgressBar_spb_gradients
     int SmoothProgressBar_spb_interpolator -> SmoothProgressBar_spb_interpolator
     int SmoothProgressBar_spb_mirror_mode -> SmoothProgressBar_spb_mirror_mode
     int SmoothProgressBar_spb_progressiveStart_activated -> SmoothProgressBar_spb_progressiveStart_activated

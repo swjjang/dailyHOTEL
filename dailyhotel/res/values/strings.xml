@@ -327,7 +327,7 @@
     <string name="frag_hotel_list_seoul">서울</string>
     <string name="frag_hotel_list_tokyo">도쿄</string>
     <string name="frag_hotel_list_others">기타</string>
-    <string name="frag_hotel_list_no_hotels">호텔이 없습니다!</string>
+    <string name="frag_hotel_list_no_hotels">호텔을 준비 중에 있습니다.</string>
     <string name="frag_hotel_list_line">멋진 호텔에서\n하루를 보내는게 어때요?</string>
 
     <!-- PopUp Event Fragment -->

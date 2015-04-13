@@ -3752,7 +3752,7 @@ com.twoheart.dailyhotel.activity.BookingActivity:
     private static final int DIALOG_CONFIRM_PAYMENT_HP
     private static final int DIALOG_CONFIRM_PAYMENT_ACCOUNT
     private static final int DIALOG_CONFIRM_PAYMENT_NO_RSERVE
-    462:488:private void moveToLoginProcess()
+    461:487:private void moveToLoginProcess()
 com.twoheart.dailyhotel.activity.EventWebActivity:
     private static final java.lang.String TAG
 com.twoheart.dailyhotel.activity.ImageDetailActivity:
@@ -3866,6 +3866,7 @@ fr.castorflex.android.smoothprogressbar.SmoothProgressBar:
     private static final int INTERPOLATOR_DECELERATE
 fr.castorflex.android.smoothprogressbar.SmoothProgressBarUtils:
     10:11:private SmoothProgressBarUtils()
+    30:32:static void checkAngle(int)
 fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable:
     private static final long FRAME_DURATION
     private static final float OFFSET_PER_FRAME
@@ -3990,11 +3991,11 @@ uk.co.senab.actionbarpulltorefresh.library.Options:
 uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher:
     private static final boolean DEBUG
     private static final java.lang.String LOG_TAG
-    private static final java.lang.String STATUS_BAR_HEIGHT_RES_NAME
 uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout:
     private static final boolean DEBUG
     private static final java.lang.String LOG_TAG
 uk.co.senab.actionbarpulltorefresh.library.R$bool
+uk.co.senab.actionbarpulltorefresh.library.R$dimen
 uk.co.senab.actionbarpulltorefresh.library.R$integer
 uk.co.senab.actionbarpulltorefresh.library.R$style
 uk.co.senab.actionbarpulltorefresh.library.sdk.CompatBase:
@@ -4004,6 +4005,6 @@ uk.co.senab.actionbarpulltorefresh.library.sdk.CompatV11:
 uk.co.senab.actionbarpulltorefresh.library.sdk.CompatV16:
     5:5:CompatV16()
 uk.co.senab.actionbarpulltorefresh.library.viewdelegates.AbsListViewDelegate$Compat:
-    70:70:AbsListViewDelegate$Compat()
+    72:72:AbsListViewDelegate$Compat()
 uk.co.senab.actionbarpulltorefresh.library.viewdelegates.AbsListViewDelegate$CompatV11:
-    80:80:AbsListViewDelegate$CompatV11()
+    82:82:AbsListViewDelegate$CompatV11()

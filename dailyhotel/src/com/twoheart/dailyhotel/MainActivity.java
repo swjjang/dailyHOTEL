@@ -66,7 +66,7 @@ import com.androidquery.util.AQUtility;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.readystatesoftware.systembartint.SystemBarTintManager.SystemBarConfig;
+import com.twoheart.dailyhotel.activity.EventWebActivity;
 import com.twoheart.dailyhotel.activity.SplashActivity;
 import com.twoheart.dailyhotel.fragment.HotelMainFragment;
 import com.twoheart.dailyhotel.fragment.RatingHotelFragment;
@@ -102,6 +102,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	private static final String TAG_FRAGMENT_RATING_HOTEL = "rating_hotel";
 
 	public ListView drawerList;
+	private View drawerView;
 	public DrawerLayout drawerLayout;
 	private FrameLayout mContentFrame;
 	public Dialog popUpDialog;
@@ -114,9 +115,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 	// 마지막으로 머물렀던 Fragment의 index
 	public int indexLastFragment; // Error Fragment에서 다시 돌아올 때 필요.
-
-	// SystemBarTintManager
-	public SystemBarConfig config;
 
 	// DrawerMenu 객체들
 	public DrawerMenu menuHotelListFragment;
@@ -493,7 +491,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		if (drawerLayout.isDrawerOpen(GravityCompat.START) == true)
 		{
 			delayedReplace(indexLastFragment);
-			drawerLayout.closeDrawer(drawerList);
+			drawerLayout.closeDrawer(drawerView);
 		} else
 		{
 			replaceFragment(getFragment(indexLastFragment));
@@ -556,7 +554,22 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 		drawerLayout.setDrawerListener(drawerToggle);
 
-		drawerList = (ListView) findViewById(R.id.left_drawer);
+		drawerView = findViewById(R.id.left_drawer);
+		drawerList = (ListView) findViewById(R.id.drawListView);
+
+		View bannerView = findViewById(R.id.bannerView);
+
+		bannerView.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				Intent i = new Intent(MainActivity.this, EventWebActivity.class);
+				startActivity(i);
+				
+				drawerLayout.closeDrawer(drawerView);
+			}
+		});
 
 		menuHotelListFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_todays_hotel), R.drawable.selector_drawermenu_todayshotel, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
 		menuBookingListFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_chk_reservation), R.drawable.selector_drawermenu_reservation, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
@@ -623,10 +636,10 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 	public void toggleDrawer()
 	{
-		if (!drawerLayout.isDrawerOpen(drawerList))
-			drawerLayout.openDrawer(drawerList);
+		if (!drawerLayout.isDrawerOpen(drawerView))
+			drawerLayout.openDrawer(drawerView);
 		else
-			drawerLayout.closeDrawer(drawerList);
+			drawerLayout.closeDrawer(drawerView);
 	}
 
 	@Override
@@ -757,12 +770,14 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 			switch (item.getType())
 			{
-				case DrawerMenu.DRAWER_MENU_LIST_TYPE_LOGO: {
+				case DrawerMenu.DRAWER_MENU_LIST_TYPE_LOGO:
+				{
 					convertView = inflater.inflate(R.layout.list_row_drawer_logo, null);
 					break;
 				}
 
-				case DrawerMenu.DRAWER_MENU_LIST_TYPE_SECTION: {
+				case DrawerMenu.DRAWER_MENU_LIST_TYPE_SECTION:
+				{
 					convertView = inflater.inflate(R.layout.list_row_drawer_section, null);
 
 					TextView drawerMenuItemTitle = (TextView) convertView.findViewById(R.id.drawerMenuItemTitle);
@@ -771,7 +786,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 					break;
 				}
 
-				case DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY: {
+				case DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY:
+				{
 					convertView = inflater.inflate(R.layout.list_row_drawer_entry, null);
 
 					ImageView drawerMenuItemIcon = (ImageView) convertView.findViewById(R.id.drawerMenuItemIcon);

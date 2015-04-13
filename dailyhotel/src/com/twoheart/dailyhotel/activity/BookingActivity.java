@@ -1050,14 +1050,14 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 			if (locale.equals("한국어") == true)
 			{
-				SimpleDateFormat formatIn = new SimpleDateFormat("M/d  EEE");
+				SimpleDateFormat formatIn = new SimpleDateFormat("M월 d일 (EEE)");
 				formatIn.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
 				String day = formatIn.format(calendarCheckin.getTime());
 
 				mCheckinDayTextView.setText(day);
 
 				//
-				mCheckinTimeTextView.setText(calendarCheckin.get(Calendar.HOUR_OF_DAY) + ":00");
+				mCheckinTimeTextView.setText(calendarCheckin.get(Calendar.HOUR_OF_DAY) + "시");
 			}
 
 			// CheckOut
@@ -1072,12 +1072,12 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 			if (locale.equals("한국어") == true)
 			{
-				SimpleDateFormat formatOut = new SimpleDateFormat("M/d  EEE");
+				SimpleDateFormat formatOut = new SimpleDateFormat("M월 d일 (EEE)");
 				formatOut.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
 				String day = formatOut.format(calendarCheckout.getTime());
 
 				mCheckoutDayTextView.setText(day);
-				mCheckoutTimeTextView.setText(calendarCheckout.get(Calendar.HOUR_OF_DAY) + ":00");
+				mCheckoutTimeTextView.setText(calendarCheckout.get(Calendar.HOUR_OF_DAY) + "시");
 			}
 
 			unLockUI();

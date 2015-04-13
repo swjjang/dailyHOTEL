@@ -143,6 +143,8 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 	public void onPageUnSelected()
 	{
+		mEmptyView.setVisibility(View.VISIBLE);
+		mHotelListView.setVisibility(View.GONE);
 	}
 
 	public void onRefreshComplete(boolean isSelectedNavigationItem)
