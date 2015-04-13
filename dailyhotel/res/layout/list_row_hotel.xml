@@ -63,7 +63,7 @@
                 <!-- android:textSize="11.5dp" /> -->
                 <!-- </FrameLayout> -->
 
-                <com.twoheart.dailyhotel.widget.NanumBarunTextView
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                     android:id="@+id/hv_hotel_grade"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -77,7 +77,7 @@
                     android:paddingRight="5.5dp"
                     android:paddingBottom="1px" />
 
-                <com.twoheart.dailyhotel.widget.NanumBarunTextView
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                     android:id="@+id/tv_hotel_row_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -99,7 +99,7 @@
                     android:textColor="@android:color/white"
                     android:textSize="18dp" />
 
-                <com.twoheart.dailyhotel.widget.NanumBarunTextView
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                     android:id="@+id/tv_hotel_row_discount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -121,7 +121,7 @@
                 android:orientation="horizontal"
                 android:paddingTop="5dp" >
 
-                <com.twoheart.dailyhotel.widget.NanumBarunTextView
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                     android:id="@+id/tv_hotel_row_address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -136,7 +136,7 @@
                     android:textColor="#cecece"
                     android:textSize="13.5dp" />
 
-                <com.twoheart.dailyhotel.widget.NanumBarunTextView
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                     android:id="@+id/tv_hotel_row_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -152,7 +152,7 @@
         </RelativeLayout>
     </RelativeLayout>
 
-    <com.twoheart.dailyhotel.widget.NanumBarunTextView
+    <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
         android:id="@+id/tv_hotel_row_soldout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

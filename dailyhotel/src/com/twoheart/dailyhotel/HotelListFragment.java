@@ -39,6 +39,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -435,9 +436,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 					mHotelListView.setVisibility(View.GONE);
 				} else
 				{
-					mEmptyView.setVisibility(View.GONE);
-					mHotelListView.setVisibility(View.VISIBLE);
-
 					JSONObject jsonObject;
 
 					ArrayList<Hotel> hotelList = new ArrayList<Hotel>(length);
@@ -516,6 +514,10 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 					mHotelListAdapter.clear();
 					mHotelListAdapter.addAll(hotelListViewList);
 					mHotelListAdapter.notifyDataSetChanged();
+					
+					mEmptyView.setVisibility(View.GONE);
+					mHotelListView.setVisibility(View.VISIBLE);
+					mHotelListView.startAnimation(AnimationUtils.loadAnimation(mHostActivity, R.anim.fade_in));
 				}
 
 				// Notify PullToRefreshLayout that the refresh has finished

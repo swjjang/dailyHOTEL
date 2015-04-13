@@ -176,14 +176,7 @@ public class IntroActivity extends BaseActivity implements OnClickListener, OnPa
 			tvSkip.setVisibility(View.VISIBLE);
 		}
 
-		if (position == 0)
-			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("scroll", "landing", (position + 1) + "", (long) (position + 1));
-		if (position == 1)
-			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("scroll", "landing", (position + 1) + "", (long) (position + 1));
-		if (position == 2)
-			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("scroll", "landing", (position + 1) + "", (long) (position + 1));
-		if (position == 3)
-			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("scroll", "landing", (position + 1) + "", (long) (position + 1));
+		RenewalGaManager.getInstance(getApplicationContext()).recordEvent("scroll", "landing", (position + 1) + "", (long) (position + 1));
 	}
 
 	private void disableShowGuide()

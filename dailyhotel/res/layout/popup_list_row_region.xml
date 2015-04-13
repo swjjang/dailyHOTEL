@@ -6,7 +6,7 @@
     android:background="@drawable/selector_background_defaultcolor"
     android:orientation="vertical" >
 
-    <com.twoheart.dailyhotel.widget.NanumBarunTextView
+    <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
         android:id="@+id/regionItem"
         android:layout_width="80dp"
         android:layout_height="45dp"

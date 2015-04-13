@@ -5,21 +5,21 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-public class NanumBarunTextView extends TextView
+public class DailyCustomFontTextView extends TextView
 {
 	private int mCurMaxLine = 0;
 
-	public NanumBarunTextView(Context context)
+	public DailyCustomFontTextView(Context context)
 	{
 		super(context);
 	}
 
-	public NanumBarunTextView(Context context, AttributeSet attrs)
+	public DailyCustomFontTextView(Context context, AttributeSet attrs)
 	{
 		super(context, attrs);
 	}
 
-	public NanumBarunTextView(Context context, AttributeSet attrs, int defStyle)
+	public DailyCustomFontTextView(Context context, AttributeSet attrs, int defStyle)
 	{
 		super(context, attrs, defStyle);
 	}
