@@ -21,7 +21,9 @@ import android.os.Build;
 import android.view.View;
 import android.widget.AbsListView;
 
-@TargetApi(Build.VERSION_CODES.DONUT)
+/**
+ * FIXME
+ */
 public class AbsListViewDelegate implements ViewDelegate {
 
     public static final Class[] SUPPORTED_VIEW_CLASSES =  { AbsListView.class };
@@ -36,7 +38,7 @@ public class AbsListViewDelegate implements ViewDelegate {
             ready = true;
         } else if (absListView.getFirstVisiblePosition() == 0) {
             final View firstVisibleChild = absListView.getChildAt(0);
-            ready = firstVisibleChild != null && firstVisibleChild.getTop() >= 0;
+            ready = firstVisibleChild != null && firstVisibleChild.getTop() >= absListView.getPaddingTop();
         }
 
         // Then we have to check whether the fas scroller is enabled, and check we're not starting

@@ -34,6 +34,11 @@ public class SmoothProgressBar extends ProgressBar {
   public SmoothProgressBar(Context context, AttributeSet attrs, int defStyle) {
     super(context, attrs, defStyle);
 
+    if (isInEditMode()) {
+      setIndeterminateDrawable(new SmoothProgressDrawable.Builder(context, true).build());
+      return;
+    }
+
     Resources res = context.getResources();
     TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SmoothProgressBar, defStyle, 0);
 
@@ -52,6 +57,7 @@ public class SmoothProgressBar extends ProgressBar {
     final boolean progressiveStartActivated = a.getBoolean(R.styleable.SmoothProgressBar_spb_progressiveStart_activated, res.getBoolean(R.bool.spb_default_progressiveStart_activated));
     final Drawable backgroundDrawable = a.getDrawable(R.styleable.SmoothProgressBar_spb_background);
     final boolean generateBackgroundWithColors = a.getBoolean(R.styleable.SmoothProgressBar_spb_generate_background_with_colors, false);
+    final boolean gradients = a.getBoolean(R.styleable.SmoothProgressBar_spb_gradients, false);
     a.recycle();
 
     //interpolator
@@ -92,7 +98,8 @@ public class SmoothProgressBar extends ProgressBar {
         .strokeWidth(strokeWidth)
         .reversed(reversed)
         .mirrorMode(mirrorMode)
-        .progressiveStart(progressiveStartActivated);
+        .progressiveStart(progressiveStartActivated)
+        .gradients(gradients);
 
     if (backgroundDrawable != null) {
       builder.backgroundDrawable(backgroundDrawable);
@@ -152,8 +159,11 @@ public class SmoothProgressBar extends ProgressBar {
     if (a.hasValue(R.styleable.SmoothProgressBar_spb_progressiveStart_activated)) {
       setProgressiveStartActivated(a.getBoolean(R.styleable.SmoothProgressBar_spb_progressiveStart_activated, false));
     }
-    if (a.hasValue(R.styleable.SmoothProgressBar_spb_background)) {
-      setSmoothProgressDrawableBackgroundDrawable(a.getDrawable(R.styleable.SmoothProgressBar_spb_background));
+    if (a.hasValue(R.styleable.SmoothProgressBar_spb_progressiveStart_activated)) {
+      setProgressiveStartActivated(a.getBoolean(R.styleable.SmoothProgressBar_spb_progressiveStart_activated, false));
+    }
+    if (a.hasValue(R.styleable.SmoothProgressBar_spb_gradients)) {
+      setSmoothProgressDrawableUseGradients(a.getBoolean(R.styleable.SmoothProgressBar_spb_gradients, false));
     }
     if (a.hasValue(R.styleable.SmoothProgressBar_spb_generate_background_with_colors)) {
       if (a.getBoolean(R.styleable.SmoothProgressBar_spb_generate_background_with_colors, false)) {
@@ -265,6 +275,10 @@ public class SmoothProgressBar extends ProgressBar {
 
   public void setSmoothProgressDrawableBackgroundDrawable(Drawable drawable) {
     checkIndeterminateDrawable().setBackgroundDrawable(drawable);
+  }
+
+  public void setSmoothProgressDrawableUseGradients(boolean useGradients) {
+    checkIndeterminateDrawable().setUseGradients(useGradients);
   }
 
   public void progressiveStart() {

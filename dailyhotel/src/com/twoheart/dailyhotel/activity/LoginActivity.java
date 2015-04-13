@@ -105,7 +105,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 		btnLogin = (TextView) findViewById(R.id.btn_login);
 		facebookLogin = (LoginButton) findViewById(R.id.authButton);
 
-		cbxAutoLogin.setSwitchMinWidth(Util.dpToPx(LoginActivity.this, 60));
+//		cbxAutoLogin.setSwitchMinWidth(Util.dpToPx(LoginActivity.this, 60));
 		cbxAutoLogin.setChecked(true);
 		cbxAutoLogin.setSwitchPadding(Util.dpToPx(LoginActivity.this, 15));
 

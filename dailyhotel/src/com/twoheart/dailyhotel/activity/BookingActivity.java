@@ -149,7 +149,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		btnPay = (TextView) findViewById(R.id.btn_hotel_payment);
 		swCredit = (SwitchCompat) findViewById(R.id.btn_on_off);
 
-		swCredit.setSwitchMinWidth(Util.dpToPx(BookingActivity.this, 60));
+//		swCredit.setSwitchMinWidth(Util.dpToPx(BookingActivity.this, 60));
 
 		etReserverName = (EditText) findViewById(R.id.et_hotel_payment_reserver_name);
 		etReserverNumber = (EditText) findViewById(R.id.et_hotel_payment_reserver_number);

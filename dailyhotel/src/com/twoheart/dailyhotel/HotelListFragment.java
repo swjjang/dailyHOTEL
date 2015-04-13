@@ -430,17 +430,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 				if (length == 0)
 				{
 					mEmptyView.setVisibility(View.VISIBLE);
-
-					if (mHotelListAdapter == null)
-					{
-						mHotelListAdapter = new HotelListAdapter(mHostActivity, R.layout.list_row_hotel, new ArrayList<HotelListViewItem>());
-						mHotelListView.setAdapter(mHotelListAdapter);
-						mHotelListView.setOnItemClickListener(HotelListFragment.this);
-					}
-
-					mHotelListAdapter.clear();
-					mHotelListAdapter.notifyDataSetChanged();
-
 					mHotelListView.setVisibility(View.GONE);
 				} else
 				{

@@ -4,14 +4,22 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
+import android.graphics.Shader;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Interpolator;
+
+import static fr.castorflex.android.smoothprogressbar.SmoothProgressBarUtils.checkColors;
+import static fr.castorflex.android.smoothprogressbar.SmoothProgressBarUtils.checkNotNull;
+import static fr.castorflex.android.smoothprogressbar.SmoothProgressBarUtils.checkPositive;
+import static fr.castorflex.android.smoothprogressbar.SmoothProgressBarUtils.checkPositiveOrZero;
+import static fr.castorflex.android.smoothprogressbar.SmoothProgressBarUtils.checkSpeed;
 
 /**
  * Created by castorflex on 11/10/13.
@@ -24,33 +32,38 @@ public class SmoothProgressDrawable extends Drawable implements Animatable {
     public void onStart();
   }
 
-  private static final long FRAME_DURATION = 1000 / 60;
+  private static final long  FRAME_DURATION   = 1000 / 60;
   private final static float OFFSET_PER_FRAME = 0.01f;
 
   private final Rect fBackgroundRect = new Rect();
-  private Callbacks mCallbacks;
+  private Callbacks    mCallbacks;
   private Interpolator mInterpolator;
-  private Rect mBounds;
-  private Paint mPaint;
-  private int[] mColors;
-  private int mColorsIndex;
-  private boolean mRunning;
-  private float mCurrentOffset;
-  private int mSeparatorLength;
-  private int mSectionsCount;
-  private float mSpeed;
-  private float mProgressiveStartSpeed;
-  private float mProgressiveStopSpeed;
-  private boolean mReversed;
-  private boolean mNewTurn;
-  private boolean mMirrorMode;
-  private float mMaxOffset;
-  private boolean mFinishing;
-  private boolean mProgressiveStartActivated;
-  private int mStartSection;
-  private int mCurrentSections;
-  private float mStrokeWidth;
-  private Drawable mBackgroundDrawable;
+  private Rect         mBounds;
+  private Paint        mPaint;
+  private int[]        mColors;
+  private int          mColorsIndex;
+  private boolean      mRunning;
+  private float        mCurrentOffset;
+  private float        mFinishingOffset;
+  private int          mSeparatorLength;
+  private int          mSectionsCount;
+  private float        mSpeed;
+  private float        mProgressiveStartSpeed;
+  private float        mProgressiveStopSpeed;
+  private boolean      mReversed;
+  private boolean      mNewTurn;
+  private boolean      mMirrorMode;
+  private float        mMaxOffset;
+  private boolean      mFinishing;
+  private boolean      mProgressiveStartActivated;
+  private int          mStartSection;
+  private int          mCurrentSections;
+  private float        mStrokeWidth;
+  private Drawable     mBackgroundDrawable;
+  private boolean      mUseGradients;
+  private int[]        mLinearGradientColors;
+  private float[]      mLinearGradientPositions;
+
 
   private SmoothProgressDrawable(Interpolator interpolator,
                                  int sectionsCount,
@@ -64,7 +77,8 @@ public class SmoothProgressDrawable extends Drawable implements Animatable {
                                  boolean mirrorMode,
                                  Callbacks callbacks,
                                  boolean progressiveStartActivated,
-                                 Drawable backgroundDrawable) {
+                                 Drawable backgroundDrawable,
+                                 boolean useGradients) {
     mRunning = false;
     mInterpolator = interpolator;
     mSectionsCount = sectionsCount;
@@ -92,6 +106,9 @@ public class SmoothProgressDrawable extends Drawable implements Animatable {
 
     mProgressiveStartActivated = progressiveStartActivated;
     mCallbacks = callbacks;
+
+    mUseGradients = useGradients;
+    refreshLinearGradientOptions();
   }
 
   ////////////////////////////////////////////////////////////////////////////
@@ -107,6 +124,7 @@ public class SmoothProgressDrawable extends Drawable implements Animatable {
       throw new IllegalArgumentException("Colors cannot be null or empty");
     mColorsIndex = 0;
     mColors = colors;
+    refreshLinearGradientOptions();
     invalidateSelf();
   }
 
@@ -137,6 +155,7 @@ public class SmoothProgressDrawable extends Drawable implements Animatable {
     mSectionsCount = sectionsCount;
     mMaxOffset = 1f / mSectionsCount;
     mCurrentOffset %= mMaxOffset;
+    refreshLinearGradientOptions();
     invalidateSelf();
   }
 
@@ -187,6 +206,25 @@ public class SmoothProgressDrawable extends Drawable implements Animatable {
     mProgressiveStartActivated = progressiveStartActivated;
   }
 
+  public void setUseGradients(boolean useGradients) {
+    if (mUseGradients == useGradients) return;
+
+    mUseGradients = useGradients;
+    refreshLinearGradientOptions();
+    invalidateSelf();
+  }
+
+  protected void refreshLinearGradientOptions() {
+    if (mUseGradients) {
+      mLinearGradientColors = new int[mSectionsCount + 2];
+      mLinearGradientPositions = new float[mSectionsCount + 2];
+    } else {
+      mPaint.setShader(null);
+      mLinearGradientColors = null;
+      mLinearGradientPositions = null;
+    }
+  }
+
   ////////////////////////////////////////////////////////////////////////////
   ///////////////////         DRAW
 
@@ -194,24 +232,6 @@ public class SmoothProgressDrawable extends Drawable implements Animatable {
   public void draw(Canvas canvas) {
     mBounds = getBounds();
     canvas.clipRect(mBounds);
-
-    int boundsWidth = mBounds.width();
-
-    if (mReversed) {
-      canvas.translate(boundsWidth, 0);
-      canvas.scale(-1, 1);
-    }
-
-    drawStrokes(canvas);
-  }
-
-  private void drawStrokes(Canvas canvas) {
-    float prevValue = 0f;
-    int boundsWidth = mBounds.width();
-    if (mMirrorMode) boundsWidth /= 2;
-    int width = boundsWidth + mSeparatorLength + mSectionsCount;
-    int centerY = mBounds.centerY();
-    float xSectionWidth = 1f / mSectionsCount;
 
     //new turn
     if (mNewTurn) {
@@ -230,6 +250,58 @@ public class SmoothProgressDrawable extends Drawable implements Animatable {
         mCurrentSections++;
       }
     }
+
+    if (mUseGradients)
+      drawGradient(canvas);
+
+    drawStrokes(canvas);
+  }
+
+  private void drawGradient(Canvas canvas) {
+    float xSectionWidth = 1f / mSectionsCount;
+    int currentIndexColor = mColorsIndex;
+
+    mLinearGradientPositions[0] = 0f;
+    mLinearGradientPositions[mLinearGradientPositions.length - 1] = 1f;
+    int firstColorIndex = currentIndexColor - 1;
+    if (firstColorIndex < 0) firstColorIndex += mColors.length;
+
+    mLinearGradientColors[0] = mColors[firstColorIndex];
+
+    for (int i = 0; i < mSectionsCount; ++i) {
+
+      float position = mInterpolator.getInterpolation(i * xSectionWidth + mCurrentOffset);
+      mLinearGradientPositions[i + 1] = position;
+      mLinearGradientColors[i + 1] = mColors[currentIndexColor];
+
+      currentIndexColor = (currentIndexColor + 1) % mColors.length;
+    }
+    mLinearGradientColors[mLinearGradientColors.length - 1] = mColors[currentIndexColor];
+
+    float left = mReversed ? (mMirrorMode ? Math.abs(mBounds.left - mBounds.right) / 2 : mBounds.left) : mBounds.left;
+    float right = mMirrorMode ? (mReversed ? mBounds.left : Math.abs(mBounds.left - mBounds.right) / 2) :
+        mBounds.right;
+    float top = mBounds.centerY() - mStrokeWidth / 2;
+    float bottom = mBounds.centerY() + mStrokeWidth / 2;
+    LinearGradient linearGradient = new LinearGradient(left, top, right, bottom,
+        mLinearGradientColors, mLinearGradientPositions,
+        mMirrorMode ? Shader.TileMode.MIRROR : Shader.TileMode.CLAMP);
+
+    mPaint.setShader(linearGradient);
+  }
+
+  private void drawStrokes(Canvas canvas) {
+    if (mReversed) {
+      canvas.translate(mBounds.width(), 0);
+      canvas.scale(-1, 1);
+    }
+
+    float prevValue = 0f;
+    int boundsWidth = mBounds.width();
+    if (mMirrorMode) boundsWidth /= 2;
+    int width = boundsWidth + mSeparatorLength + mSectionsCount;
+    int centerY = mBounds.centerY();
+    float xSectionWidth = 1f / mSectionsCount;
 
     float startX;
     float endX;
@@ -263,11 +335,12 @@ public class SmoothProgressDrawable extends Drawable implements Animatable {
       drawLength = sectionWidth > spaceLength ? sectionWidth - spaceLength : 0;
       end = prevValue + drawLength;
       if (end > prevValue && i >= mStartSection) {
-        startX = Math.min(boundsWidth, prevValue);
+        float xFinishingOffset = mInterpolator.getInterpolation(Math.min(mFinishingOffset, 1f));
+        startX = Math.max(xFinishingOffset * width, Math.min(boundsWidth, prevValue));
         endX = Math.min(boundsWidth, end);
         drawLine(canvas, boundsWidth, startX, centerY, endX, centerY, currentIndexColor);
         if (i == mStartSection) { // first loop
-          firstX = startX;
+          firstX = startX - mSeparatorLength;
         }
       }
       if (i == mCurrentSections) {
@@ -411,6 +484,7 @@ public class SmoothProgressDrawable extends Drawable implements Animatable {
 
     mCurrentOffset = 0;
     mFinishing = false;
+    mFinishingOffset = 0f;
     mStartSection = 0;
     mCurrentSections = 0;
     mColorsIndex = index;
@@ -488,7 +562,11 @@ public class SmoothProgressDrawable extends Drawable implements Animatable {
     @Override
     public void run() {
       if (isFinishing()) {
+        mFinishingOffset += (OFFSET_PER_FRAME * mProgressiveStopSpeed);
         mCurrentOffset += (OFFSET_PER_FRAME * mProgressiveStopSpeed);
+        if (mFinishingOffset >= 1f) {
+          stop();
+        }
       } else if (isStarting()) {
         mCurrentOffset += (OFFSET_PER_FRAME * mProgressiveStartSpeed);
       } else {
@@ -499,7 +577,10 @@ public class SmoothProgressDrawable extends Drawable implements Animatable {
         mNewTurn = true;
         mCurrentOffset -= mMaxOffset;
       }
-      scheduleSelf(mUpdater, SystemClock.uptimeMillis() + FRAME_DURATION);
+
+      if (isRunning())
+        scheduleSelf(mUpdater, SystemClock.uptimeMillis() + FRAME_DURATION);
+
       invalidateSelf();
     }
   };
@@ -528,23 +609,28 @@ public class SmoothProgressDrawable extends Drawable implements Animatable {
    */
   public static class Builder {
     private Interpolator mInterpolator;
-    private int mSectionsCount;
-    private int[] mColors;
-    private float mSpeed;
-    private float mProgressiveStartSpeed;
-    private float mProgressiveStopSpeed;
-    private boolean mReversed;
-    private boolean mMirrorMode;
-    private float mStrokeWidth;
-    private int mStrokeSeparatorLength;
-    private boolean mProgressiveStartActivated;
-    private boolean mGenerateBackgroundUsingColors;
-    private Drawable mBackgroundDrawableWhenHidden;
+    private int          mSectionsCount;
+    private int[]        mColors;
+    private float        mSpeed;
+    private float        mProgressiveStartSpeed;
+    private float        mProgressiveStopSpeed;
+    private boolean      mReversed;
+    private boolean      mMirrorMode;
+    private float        mStrokeWidth;
+    private int          mStrokeSeparatorLength;
+    private boolean      mProgressiveStartActivated;
+    private boolean      mGenerateBackgroundUsingColors;
+    private boolean      mGradients;
+    private Drawable     mBackgroundDrawableWhenHidden;
 
     private Callbacks mOnProgressiveStopEndedListener;
 
     public Builder(Context context) {
-      initValues(context);
+      this(context, false);
+    }
+
+    public Builder(Context context, boolean editMode) {
+      initValues(context, editMode);
     }
 
     public SmoothProgressDrawable build() {
@@ -564,40 +650,50 @@ public class SmoothProgressDrawable extends Drawable implements Animatable {
           mMirrorMode,
           mOnProgressiveStopEndedListener,
           mProgressiveStartActivated,
-          mBackgroundDrawableWhenHidden);
+          mBackgroundDrawableWhenHidden,
+          mGradients);
       return ret;
     }
 
-    private void initValues(Context context) {
+    private void initValues(Context context, boolean editMode) {
       Resources res = context.getResources();
       mInterpolator = new AccelerateInterpolator();
-      mSectionsCount = res.getInteger(R.integer.spb_default_sections_count);
-      mColors = new int[]{res.getColor(R.color.spb_default_color)};
-      mSpeed = Float.parseFloat(res.getString(R.string.spb_default_speed));
+      if (!editMode) {
+        mSectionsCount = res.getInteger(R.integer.spb_default_sections_count);
+        mSpeed = Float.parseFloat(res.getString(R.string.spb_default_speed));
+        mReversed = res.getBoolean(R.bool.spb_default_reversed);
+        mProgressiveStartActivated = res.getBoolean(R.bool.spb_default_progressiveStart_activated);
+        mColors = new int[]{res.getColor(R.color.spb_default_color)};
+        mStrokeSeparatorLength = res.getDimensionPixelSize(R.dimen.spb_default_stroke_separator_length);
+        mStrokeWidth = res.getDimensionPixelOffset(R.dimen.spb_default_stroke_width);
+      } else {
+        mSectionsCount = 4;
+        mSpeed = 1f;
+        mReversed = false;
+        mProgressiveStartActivated = false;
+        mColors = new int[]{0xffFF7A7A};
+        mStrokeSeparatorLength = 4;
+        mStrokeWidth = 4;
+      }
       mProgressiveStartSpeed = mSpeed;
       mProgressiveStopSpeed = mSpeed;
-      mReversed = res.getBoolean(R.bool.spb_default_reversed);
-      mStrokeSeparatorLength = res.getDimensionPixelSize(R.dimen.spb_default_stroke_separator_length);
-      mStrokeWidth = res.getDimensionPixelOffset(R.dimen.spb_default_stroke_width);
-      mProgressiveStartActivated = res.getBoolean(R.bool.spb_default_progressiveStart_activated);
+      mGradients = false;
     }
 
     public Builder interpolator(Interpolator interpolator) {
-      if (interpolator == null)
-        throw new IllegalArgumentException("Interpolator can't be null");
+      checkNotNull(interpolator, "Interpolator");
       mInterpolator = interpolator;
       return this;
     }
 
     public Builder sectionsCount(int sectionsCount) {
-      if (sectionsCount <= 0) throw new IllegalArgumentException("SectionsCount must be > 0");
+      checkPositive(sectionsCount, "Sections count");
       mSectionsCount = sectionsCount;
       return this;
     }
 
     public Builder separatorLength(int separatorLength) {
-      if (separatorLength < 0)
-        throw new IllegalArgumentException("SeparatorLength must be >= 0");
+      checkPositiveOrZero(separatorLength, "Separator length");
       mStrokeSeparatorLength = separatorLength;
       return this;
     }
@@ -608,34 +704,31 @@ public class SmoothProgressDrawable extends Drawable implements Animatable {
     }
 
     public Builder colors(int[] colors) {
-      if (colors == null || colors.length == 0)
-        throw new IllegalArgumentException("Your color array must not be empty");
+      checkColors(colors);
       mColors = colors;
       return this;
     }
 
     public Builder strokeWidth(float width) {
-      if (width < 0) throw new IllegalArgumentException("The width must be >= 0");
+      checkPositiveOrZero(width, "Width");
       mStrokeWidth = width;
       return this;
     }
 
     public Builder speed(float speed) {
-      if (speed < 0) throw new IllegalArgumentException("Speed must be >= 0");
+      checkSpeed(speed);
       mSpeed = speed;
       return this;
     }
 
     public Builder progressiveStartSpeed(float progressiveStartSpeed) {
-      if (progressiveStartSpeed < 0)
-        throw new IllegalArgumentException("progressiveStartSpeed must be >= 0");
+      checkSpeed(progressiveStartSpeed);
       mProgressiveStartSpeed = progressiveStartSpeed;
       return this;
     }
 
     public Builder progressiveStopSpeed(float progressiveStopSpeed) {
-      if (progressiveStopSpeed < 0)
-        throw new IllegalArgumentException("progressiveStopSpeed must be >= 0");
+      checkSpeed(progressiveStopSpeed);
       mProgressiveStopSpeed = progressiveStopSpeed;
       return this;
     }
@@ -667,6 +760,15 @@ public class SmoothProgressDrawable extends Drawable implements Animatable {
 
     public Builder generateBackgroundUsingColors() {
       mGenerateBackgroundUsingColors = true;
+      return this;
+    }
+
+    public Builder gradients() {
+      return gradients(true);
+    }
+
+    public Builder gradients(boolean useGradients) {
+      mGradients = useGradients;
       return this;
     }
   }

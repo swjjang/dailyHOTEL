@@ -233,6 +233,19 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 
 		view.setTag(saleTime);
 	}
+	
+	private void setDaysLayoutEnabled(boolean enabled)
+	{
+		if(mDaysView == null)
+		{
+			return;
+		}
+		
+		for(View view : mDaysView)
+		{
+			view.setEnabled(enabled);
+		}
+	}
 
 	private void setSelectedDays(View view)
 	{
@@ -322,6 +335,8 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 					{
 						mAnimationStatus = ANIMATION_STATUS.SHOW_END;
 						mAnimationState = ANIMATION_STATE.END;
+						
+						setDaysLayoutEnabled(true);
 					}
 				}
 
@@ -374,6 +389,8 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 				{
 					mAnimationStatus = ANIMATION_STATUS.SHOW_END;
 					mAnimationState = ANIMATION_STATE.END;
+					
+					setDaysLayoutEnabled(true);
 				}
 			});
 
@@ -413,14 +430,13 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 				{
 					mAnimationState = ANIMATION_STATE.START;
 					mAnimationStatus = ANIMATION_STATUS.HIDE;
-					ExLog.d("pinkred hideAnimationDaysList - onAnimationStart");
+					
+					setDaysLayoutEnabled(false);
 				}
 
 				@Override
 				public void onAnimationEnd(Animator animation)
 				{
-					ExLog.d("pinkred hideAnimationDaysList - onAnimationEnd : " + mAnimationState);
-
 					if (mAnimationState != ANIMATION_STATE.CANCEL)
 					{
 						mAnimationStatus = ANIMATION_STATUS.HIDE_END;
@@ -434,8 +450,6 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 				public void onAnimationCancel(Animator animation)
 				{
 					mAnimationState = ANIMATION_STATE.CANCEL;
-
-					ExLog.d("pinkred hideAnimationDaysList - onAnimationCancel");
 				}
 
 				@Override
@@ -460,6 +474,8 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 				{
 					mAnimationState = ANIMATION_STATE.START;
 					mAnimationStatus = ANIMATION_STATUS.HIDE;
+					
+					setDaysLayoutEnabled(false);
 				}
 
 				@Override

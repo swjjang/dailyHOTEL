@@ -13,7 +13,10 @@
   ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
--->
-<resources>
+  -->
 
+<resources>
+    <string name="pull_to_refresh_pull_label">Yenilemek için kaydırın…</string>
+    <string name="pull_to_refresh_release_label">Yenilemek için bırakın…</string>
+    <string name="pull_to_refresh_refreshing_label">Yükleniyor…</string>
 </resources>
