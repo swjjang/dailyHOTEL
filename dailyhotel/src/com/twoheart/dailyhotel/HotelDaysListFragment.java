@@ -294,8 +294,6 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		{
 			final float y = mDaysLayout.getY();
 
-			ExLog.d("pinkred showAnimationDaysList y :" + y);
-
 			if (mObjectAnimator != null)
 			{
 				if (mObjectAnimator.isRunning() == true)
@@ -322,15 +320,11 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 
 					mAnimationState = ANIMATION_STATE.START;
 					mAnimationStatus = ANIMATION_STATUS.SHOW;
-
-					ExLog.d("pinkred showAnimationDaysList - onAnimationStart");
 				}
 
 				@Override
 				public void onAnimationEnd(Animator animation)
 				{
-					ExLog.d("pinkred showAnimationDaysList - onAnimationEnd");
-
 					if (mAnimationState != ANIMATION_STATE.CANCEL)
 					{
 						mAnimationStatus = ANIMATION_STATUS.SHOW_END;
@@ -344,8 +338,6 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 				public void onAnimationCancel(Animator animation)
 				{
 					mAnimationState = ANIMATION_STATE.CANCEL;
-
-					ExLog.d("pinkred showAnimationDaysList - onAnimationCancel");
 				}
 
 				@Override

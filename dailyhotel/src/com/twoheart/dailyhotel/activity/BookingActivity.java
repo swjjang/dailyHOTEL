@@ -65,7 +65,6 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
