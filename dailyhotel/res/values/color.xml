@@ -42,6 +42,7 @@
     <color name="grade_not_yet">#808080</color>
     
 	<color name="white">#ffffff</color>
+	<color name="black">#000000</color>
 	
 	<color name="tab_text">#a6000000</color>
 	<color name="tab_subtext_selected">#ccff7a7a</color>

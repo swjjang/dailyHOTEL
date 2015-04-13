@@ -70,6 +70,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 
 	protected Runnable networkCheckRunner;
 	private PopupWindow mPopupWindow;
+	private int mSpinnderIndex = -1;
 
 	/**
 	 * UI Component의 잠금 상태인지 확인하는 변수..
@@ -178,8 +179,25 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 		setActionBar(text, true);
 	}
 
-	private int mSpinnderIndex = -1;
-
+	public void setActionBarRegionEnable(boolean isEnable)
+	{
+		if (mSpinnderIndex != -1 && mToolbar.getChildAt(mSpinnderIndex) != null)
+		{
+			View view = mToolbar.getChildAt(mSpinnderIndex);
+			View imageView = view.findViewById(R.id.spinnerImageView);
+			
+			if(isEnable == true)
+			{
+				view.setEnabled(true);
+				imageView.setVisibility(View.VISIBLE);
+			} else 
+			{
+				view.setEnabled(false);
+				imageView.setVisibility(View.INVISIBLE);
+			}
+		}
+	}
+	
 	public void setActionBarListEnabled(boolean isEnable)
 	{
 		if (isEnable == true)

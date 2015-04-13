@@ -2,11 +2,18 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white" >
+    android:background="@color/black" >
+
+    <include
+        android:id="@+id/emptyView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/view_empty_list" />
 
     <uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout
         xmlns:ptr="http://schemas.android.com/apk/res-auto"
         android:id="@+id/ptr_layout"
+        android:background="@null"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
@@ -14,16 +21,10 @@
             android:id="@+id/listview_hotel_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@null"
             android:cacheColorHint="@android:color/transparent"
             android:divider="@null" />
     </uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout>
-
-    <include
-        android:id="@+id/emptyView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        layout="@layout/view_empty_list"
-        android:visibility="gone" />
 
     <View
         android:id="@+id/daysBackgroundView"

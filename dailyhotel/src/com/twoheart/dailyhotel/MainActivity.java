@@ -128,6 +128,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	protected HashMap<String, String> regPushParams;
 
 	public Uri intentData;
+	private Handler mHandler = new Handler();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -507,7 +508,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	 */
 	public void delayedReplace(final int index)
 	{
-		ExLog.e("INDEXED : " + index + "");
 		new Handler().postDelayed(new Runnable()
 		{
 			@Override
@@ -531,18 +531,47 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			{
 				super.onDrawerClosed(view);
 				supportInvalidateOptionsMenu();
+				
+				// 메뉴가 열리면 상단에 지역 리스트 삭제.
+				setActionBarRegionEnable(true);
 			}
 
 			public void onDrawerOpened(View drawerView)
 			{
 				super.onDrawerOpened(drawerView);
+				
+				// 메뉴가 열리면 상단에 지역 리스트 삭제.
 				supportInvalidateOptionsMenu();
 
 				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("menu", "/menu");
 				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestMenuBar", null, null);
 			}
+			
+			@Override
+			public void onDrawerStateChanged(int newState)
+			{
+				switch(newState)
+				{
+					case DrawerLayout.STATE_IDLE:
+						break;
+						
+					case DrawerLayout.STATE_DRAGGING:
+					case DrawerLayout.STATE_SETTLING:
+						if (drawerLayout.isDrawerOpen(GravityCompat.START) == true)
+						{
+							
+						} else
+						{
+							setActionBarRegionEnable(false);
+						}
+						
+						break;		
+				}
+				
+				super.onDrawerStateChanged(newState);
+			}
 		};
-
+		
 		drawerLayout.post(new Runnable()
 		{
 			@Override
@@ -564,10 +593,17 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			@Override
 			public void onClick(View v)
 			{
-				Intent i = new Intent(MainActivity.this, EventWebActivity.class);
-				startActivity(i);
-				
 				drawerLayout.closeDrawer(drawerView);
+				
+				mHandler.postDelayed(new Runnable() 
+				{
+					@Override
+					public void run()
+					{
+						Intent i = new Intent(MainActivity.this, EventWebActivity.class);
+						startActivity(i);
+					}
+				}, 300);
 			}
 		});
 
@@ -640,6 +676,17 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			drawerLayout.openDrawer(drawerView);
 		else
 			drawerLayout.closeDrawer(drawerView);
+	}
+	
+	public void closeDrawer()
+	{
+		if(drawerLayout != null)
+		{
+			if (drawerLayout.isDrawerOpen(GravityCompat.START) == true)
+			{
+				drawerLayout.closeDrawer(drawerView);
+			}
+		}
 	}
 
 	@Override

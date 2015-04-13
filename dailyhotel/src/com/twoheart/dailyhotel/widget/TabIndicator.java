@@ -359,7 +359,7 @@ public class TabIndicator extends LinearLayout implements OnClickListener
 				mDayTextView.setVisibility(View.VISIBLE);
 			} else
 			{
-				mDayTextView.setVisibility(View.INVISIBLE);
+				mDayTextView.setVisibility(View.GONE);
 			}
 		}
 

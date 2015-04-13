@@ -98,7 +98,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 	public void setSaleTime(SaleTime saleTime)
 	{
 		super.setSaleTime(saleTime);
-
+		
 		// 날짜를 어떻게 받을 것인지 필요.
 		mDaysView[0] = mDaysLayout.findViewById(R.id.item01);
 		mDaysView[1] = mDaysLayout.findViewById(R.id.item02);
@@ -122,6 +122,8 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		} else
 		{
 			setSelectedDays(mSelectedView);
+			
+			super.setSaleTime((SaleTime)mSelectedView.getTag());
 		}
 	}
 

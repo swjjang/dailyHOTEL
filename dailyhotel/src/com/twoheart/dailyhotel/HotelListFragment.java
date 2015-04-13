@@ -39,7 +39,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.Animation.AnimationListener;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -74,7 +77,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	private View mEmptyView;
 
 	protected HotelMainFragment.UserActionListener mUserActionListener;
-
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
@@ -83,8 +86,10 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		mHotelListView = (PinnedSectionListView) view.findViewById(R.id.listview_hotel_list);
 		mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
 		mEmptyView = view.findViewById(R.id.emptyView);
-		mEmptyView.setVisibility(View.GONE);
-
+		
+		mEmptyView.setVisibility(View.VISIBLE);
+		mPullToRefreshLayout.setVisibility(View.INVISIBLE);
+		
 		GlobalFont.apply(container);
 
 		// 추후 왼쪽 탭로 빠질것이다.
@@ -145,7 +150,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	public void onPageUnSelected()
 	{
 		mEmptyView.setVisibility(View.VISIBLE);
-		mHotelListView.setVisibility(View.GONE);
+		mPullToRefreshLayout.setVisibility(View.INVISIBLE);
 	}
 
 	public void onRefreshComplete(boolean isSelectedNavigationItem)
@@ -433,7 +438,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 				if (length == 0)
 				{
 					mEmptyView.setVisibility(View.VISIBLE);
-					mHotelListView.setVisibility(View.GONE);
+					mPullToRefreshLayout.setVisibility(View.INVISIBLE);
 				} else
 				{
 					JSONObject jsonObject;
@@ -515,9 +520,10 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 					mHotelListAdapter.addAll(hotelListViewList);
 					mHotelListAdapter.notifyDataSetChanged();
 					
-					mEmptyView.setVisibility(View.GONE);
-					mHotelListView.setVisibility(View.VISIBLE);
-					mHotelListView.startAnimation(AnimationUtils.loadAnimation(mHostActivity, R.anim.fade_in));
+//					mEmptyView.setVisibility(View.INVISIBLE);
+					showAnimationFadeOut();
+//					mPullToRefreshLayout.setVisibility(View.VISIBLE);
+//					mPullToRefreshLayout.startAnimation(AnimationUtils.loadAnimation(mHostActivity, R.anim.fade_in));
 				}
 
 				// Notify PullToRefreshLayout that the refresh has finished
@@ -535,6 +541,46 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 			}
 		}
 	};
+	
+	/**
+	 * 점점 어두워짐.
+	 */
+	private void showAnimationFadeOut()
+	{
+		AlphaAnimation mAlphaAnimation = new AlphaAnimation(1.0f, 0.5f);
+		mAlphaAnimation.setDuration(200);
+
+		mAlphaAnimation.setAnimationListener(new AnimationListener()
+		{
+			@Override
+			public void onAnimationStart(Animation animation)
+			{
+				if (mEmptyView.getVisibility() != View.VISIBLE)
+				{
+					mEmptyView.setVisibility(View.VISIBLE);
+				}
+			}
+
+			@Override
+			public void onAnimationEnd(Animation animation)
+			{
+				mEmptyView.setVisibility(View.INVISIBLE);
+				
+				mPullToRefreshLayout.setVisibility(View.VISIBLE);
+				mPullToRefreshLayout.startAnimation(AnimationUtils.loadAnimation(mHostActivity, R.anim.viewpager_fade_in));
+			}
+
+			@Override
+			public void onAnimationRepeat(Animation animation)
+			{
+			}
+		});
+
+		if (mEmptyView != null)
+		{
+			mEmptyView.startAnimation(mAlphaAnimation);
+		}
+	}
 
 	//	private DailyHotelJsonArrayResponseListener mSiteLocationListJsonArrayResponseListener = new DailyHotelJsonArrayResponseListener()
 	//	{
