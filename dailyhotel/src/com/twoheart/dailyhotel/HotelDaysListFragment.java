@@ -207,7 +207,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		
 		setDaysLayoutEnabled(false);
 
-		mUserActionListener.selectDay(this);
+		mUserActionListener.selectDay(this, true);
 		
 		mHandler.postDelayed(new Runnable()
 		{

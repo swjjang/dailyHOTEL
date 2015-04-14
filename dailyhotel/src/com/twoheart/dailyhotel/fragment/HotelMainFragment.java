@@ -61,7 +61,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 	{
 		public void selectHotel(HotelListViewItem hotelListViewItem, int hotelIndex, SaleTime saleTime);
 
-		public void selectDay(HotelListFragment fragment);
+		public void selectDay(HotelListFragment fragment, boolean isListSelectionTop);
 	};
 
 	public interface UserAnalyticsActionListener
@@ -521,7 +521,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 		}
 
 		@Override
-		public void selectDay(HotelListFragment fragment)
+		public void selectDay(HotelListFragment fragment, boolean isListSelectionTop)
 		{
 			if (isLockUiComponent() == true)
 			{
@@ -539,7 +539,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 				mTabIndicator.setSubTextEnable(2, true);
 				mTabIndicator.setSubText(2, day);
 
-				fragment.refreshHotelList(false);
+				fragment.refreshHotelList(isListSelectionTop);
 			}
 
 			releaseUiComponent();
