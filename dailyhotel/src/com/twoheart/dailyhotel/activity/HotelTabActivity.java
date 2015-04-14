@@ -290,18 +290,20 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 	protected void onResume()
 	{
 		onPostSetCookie();
-
-		if (mPosition == 0)
+		
+		switch(mPosition)
 		{
-			RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_booking", "/todays-hotels/" + region + "/" + hotelName + "/booking");
-		}
-		if (mPosition == 1)
-		{
-			RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_info", "/todays-hotels/" + region + "/" + hotelName + "/info");
-		}
-		if (mPosition == 2)
-		{
-			RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_map", "/todays-hotels/" + region + "/" + hotelName + "/map");
+			case 0:
+				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_booking", "/todays-hotels/" + region + "/" + hotelName + "/booking");
+				break;
+				
+			case 1:
+				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_info", "/todays-hotels/" + region + "/" + hotelName + "/info");
+				break;
+				
+			case 2:
+				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_map", "/todays-hotels/" + region + "/" + hotelName + "/map");
+				break;
 		}
 
 		uiHelper.onResume();
@@ -361,16 +363,20 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 			String region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
 			String hotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
 			mPosition = position;
-
-			if (position == 0)
+			
+			switch(mPosition)
 			{
-				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_booking", "/todays-hotels/" + region + "/" + hotelName + "/booking");
-			} else if (position == 1)
-			{
-				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_info", "/todays-hotels/" + region + "/" + hotelName + "/info");
-			} else if (position == 2)
-			{
-				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_map", "/todays-hotels/" + region + "/" + hotelName + "/map");
+				case 0:
+					RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_booking", "/todays-hotels/" + region + "/" + hotelName + "/booking");
+					break;
+					
+				case 1:
+					RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_info", "/todays-hotels/" + region + "/" + hotelName + "/info");
+					break;
+					
+				case 2:
+					RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_map", "/todays-hotels/" + region + "/" + hotelName + "/map");
+					break;
 			}
 		}
 	};

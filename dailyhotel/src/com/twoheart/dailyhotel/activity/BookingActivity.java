@@ -870,7 +870,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 							etReserverNumber.setBackground(mEditTextBackground[1]);
 						} else
 						{
-							etReserverNumber.setBackgroundDrawable(mEditTextBackground[0]);
+							etReserverNumber.setBackgroundDrawable(mEditTextBackground[1]);
 						}
 
 						mIsEditMode = true;
@@ -891,7 +891,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 							etReserverEmail.setBackground(mEditTextBackground[2]);
 						} else
 						{
-							etReserverEmail.setBackgroundDrawable(mEditTextBackground[0]);
+							etReserverEmail.setBackgroundDrawable(mEditTextBackground[2]);
 						}
 
 						mIsEditMode = true;
