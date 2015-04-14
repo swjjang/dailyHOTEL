@@ -3721,7 +3721,7 @@ com.twoheart.dailyhotel.DailyHotel:
 com.twoheart.dailyhotel.HotelDaysListFragment:
     private static final int DAY_OF_COUNT
 com.twoheart.dailyhotel.HotelListFragment:
-    548:581:private void showAnimationFadeOut()
+    553:586:private void showAnimationFadeOut()
 com.twoheart.dailyhotel.HotelListFragment$2
 com.twoheart.dailyhotel.MainActivity:
     private static final java.lang.String TAG_FRAGMENT_RATING_HOTEL
@@ -3762,10 +3762,10 @@ com.twoheart.dailyhotel.activity.PaymentActivity:
     private static final java.lang.String CONFIG_CLIENT_ID
 com.twoheart.dailyhotel.activity.PaymentActivity$HtmlObserver
 com.twoheart.dailyhotel.activity.SplashActivity:
+    private static final int PROGRESS_CIRCLE_COUNT
     private static final int VALUE_WEB_API_RESPONSE_NEW_EVENT_NOTIFY
     private static final int VALUE_WEB_API_RESPONSE_NEW_EVENT_NONE
     private static final int DURING_SPLASH_ACTIVITY_SHOW
-    private com.google.android.gms.gcm.GoogleCloudMessaging mGcm
     protected java.util.HashMap regPushParams
 com.twoheart.dailyhotel.fragment.BookingTabBookingFragment:
     private static final java.lang.String KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL
@@ -3814,7 +3814,7 @@ com.twoheart.dailyhotel.util.network.request.DailyHotelRequest:
     protected abstract void deliverResponse(java.lang.Object)
 com.twoheart.dailyhotel.util.ui.AllCapsTransformationMethod
 com.twoheart.dailyhotel.util.ui.BaseActivity:
-    556:557:protected void chgClickable(android.view.View)
+    568:569:protected void chgClickable(android.view.View)
 com.twoheart.dailyhotel.util.ui.OnLoadListener
 com.twoheart.dailyhotel.util.ui.TransformationMethodCompat
 com.twoheart.dailyhotel.util.ui.TransformationMethodCompat2

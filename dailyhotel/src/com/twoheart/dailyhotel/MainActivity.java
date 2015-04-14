@@ -531,16 +531,12 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			{
 				super.onDrawerClosed(view);
 				supportInvalidateOptionsMenu();
-				
-				// 메뉴가 열리면 상단에 지역 리스트 삭제.
-				setActionBarRegionEnable(true);
 			}
 
 			public void onDrawerOpened(View drawerView)
 			{
 				super.onDrawerOpened(drawerView);
 				
-				// 메뉴가 열리면 상단에 지역 리스트 삭제.
 				supportInvalidateOptionsMenu();
 
 				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("menu", "/menu");
@@ -548,27 +544,17 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			}
 			
 			@Override
-			public void onDrawerStateChanged(int newState)
+			public void onDrawerSlide(View drawerView, float slideOffset)
 			{
-				switch(newState)
+				if(Float.compare(slideOffset, 0.0f) > 0)
 				{
-					case DrawerLayout.STATE_IDLE:
-						break;
-						
-					case DrawerLayout.STATE_DRAGGING:
-					case DrawerLayout.STATE_SETTLING:
-						if (drawerLayout.isDrawerOpen(GravityCompat.START) == true)
-						{
-							
-						} else
-						{
-							setActionBarRegionEnable(false);
-						}
-						
-						break;		
+					setActionBarRegionEnable(false);
+				} else if(Float.compare(slideOffset, 0.0f) == 0)
+				{
+					setActionBarRegionEnable(true);
 				}
 				
-				super.onDrawerStateChanged(newState);
+				super.onDrawerSlide(drawerView, slideOffset);
 			}
 		};
 		

@@ -37658,7 +37658,7 @@ com.twoheart.dailyhotel.MainActivity$6 -> com.twoheart.dailyhotel.ai:
     com.twoheart.dailyhotel.MainActivity this$0 -> a
     void onDrawerClosed(android.view.View) -> onDrawerClosed
     void onDrawerOpened(android.view.View) -> onDrawerOpened
-    void onDrawerStateChanged(int) -> onDrawerStateChanged
+    void onDrawerSlide(android.view.View,float) -> onDrawerSlide
 com.twoheart.dailyhotel.MainActivity$7 -> com.twoheart.dailyhotel.aj:
     com.twoheart.dailyhotel.MainActivity this$0 -> a
     void run() -> run
@@ -38382,12 +38382,11 @@ com.twoheart.dailyhotel.activity.SignupActivity$3 -> com.twoheart.dailyhotel.act
     com.twoheart.dailyhotel.activity.SignupActivity this$0 -> a
     void onResponse(java.lang.String,org.json.JSONObject) -> onResponse
 com.twoheart.dailyhotel.activity.SplashActivity -> com.twoheart.dailyhotel.activity.SplashActivity:
-    boolean isDialogShown -> n
-    android.app.Dialog alertDlg -> o
-    java.util.ArrayList ivCircles -> p
-    android.os.Handler mHandler -> t
-    com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener mUserLoginJsonResponseListener -> u
-    com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener mAppVersionJsonResponseListener -> v
+    android.app.Dialog alertDlg -> n
+    android.view.View[] mCircleViewList -> o
+    android.os.Handler mHandler -> p
+    com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener mUserLoginJsonResponseListener -> t
+    com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener mAppVersionJsonResponseListener -> u
     void onCreate(android.os.Bundle) -> onCreate
     void onResume() -> onResume
     void startSplashLoad() -> c
@@ -38399,7 +38398,7 @@ com.twoheart.dailyhotel.activity.SplashActivity -> com.twoheart.dailyhotel.activ
     void access$1(com.twoheart.dailyhotel.activity.SplashActivity) -> a
     android.os.Handler access$2(com.twoheart.dailyhotel.activity.SplashActivity) -> b
     android.app.Dialog access$3(com.twoheart.dailyhotel.activity.SplashActivity) -> c
-    java.util.ArrayList access$4(com.twoheart.dailyhotel.activity.SplashActivity) -> d
+    android.view.View[] access$4(com.twoheart.dailyhotel.activity.SplashActivity) -> d
 com.twoheart.dailyhotel.activity.SplashActivity$1 -> com.twoheart.dailyhotel.activity.bm:
     com.twoheart.dailyhotel.activity.SplashActivity this$0 -> a
     void onResponse(java.lang.String,org.json.JSONObject) -> onResponse
@@ -38518,16 +38517,16 @@ com.twoheart.dailyhotel.adapter.HotelListAdapter -> com.twoheart.dailyhotel.a.f:
     android.content.Context context -> a
     int resourceId -> b
     android.view.LayoutInflater inflater -> c
-    android.support.v4.util.LruCache imgCache -> d
+    android.support.v4.util.LruCache mLruCache -> d
     void addAll(java.util.Collection) -> addAll
     android.view.View getView(int,android.view.View,android.view.ViewGroup) -> getView
     boolean isItemViewTypePinned(int) -> isItemViewTypePinned
     int getViewTypeCount() -> getViewTypeCount
     int getItemViewType(int) -> getItemViewType
-    android.support.v4.util.LruCache getImgCache() -> getImgCache
+    android.support.v4.util.LruCache access$0(com.twoheart.dailyhotel.adapter.HotelListAdapter) -> a
 com.twoheart.dailyhotel.adapter.HotelListAdapter$1 -> com.twoheart.dailyhotel.a.g:
     com.twoheart.dailyhotel.adapter.HotelListAdapter this$0 -> a
-    int sizeOf(java.lang.Integer,android.graphics.Bitmap) -> a
+    int sizeOf(java.lang.String,android.graphics.Bitmap) -> a
     int sizeOf(java.lang.Object,java.lang.Object) -> a
 com.twoheart.dailyhotel.adapter.HotelListAdapter$2 -> com.twoheart.dailyhotel.a.h:
     com.twoheart.dailyhotel.adapter.HotelListAdapter this$0 -> a
@@ -38536,7 +38535,6 @@ com.twoheart.dailyhotel.adapter.HotelListAdapter$2 -> com.twoheart.dailyhotel.a.
     android.graphics.Shader resize(int,int) -> resize
 com.twoheart.dailyhotel.adapter.HotelListAdapter$3 -> com.twoheart.dailyhotel.a.i:
     com.twoheart.dailyhotel.adapter.HotelListAdapter this$0 -> i
-    int val$position -> j
     void callback(java.lang.String,android.widget.ImageView,android.graphics.Bitmap,com.androidquery.callback.AjaxStatus) -> a
 com.twoheart.dailyhotel.adapter.HotelListAdapter$HeaderListViewHolder -> com.twoheart.dailyhotel.a.j:
     android.widget.TextView regionDetailName -> a
@@ -38657,14 +38655,14 @@ com.twoheart.dailyhotel.fragment.HotelMainFragment$5 -> com.twoheart.dailyhotel.
 com.twoheart.dailyhotel.fragment.HotelMainFragment$6 -> com.twoheart.dailyhotel.b.l:
     com.twoheart.dailyhotel.fragment.HotelMainFragment this$0 -> a
     void selectHotel(com.twoheart.dailyhotel.util.ui.HotelListViewItem,int,com.twoheart.dailyhotel.model.SaleTime) -> selectHotel
-    void selectDay(com.twoheart.dailyhotel.HotelListFragment) -> selectDay
+    void selectDay(com.twoheart.dailyhotel.HotelListFragment,boolean) -> selectDay
 com.twoheart.dailyhotel.fragment.HotelMainFragment$7 -> com.twoheart.dailyhotel.b.m:
     com.twoheart.dailyhotel.fragment.HotelMainFragment this$0 -> a
     void selectHotel(java.lang.String,long) -> selectHotel
     void selectRegion(int) -> selectRegion
 com.twoheart.dailyhotel.fragment.HotelMainFragment$UserActionListener -> com.twoheart.dailyhotel.b.n:
     void selectHotel(com.twoheart.dailyhotel.util.ui.HotelListViewItem,int,com.twoheart.dailyhotel.model.SaleTime) -> selectHotel
-    void selectDay(com.twoheart.dailyhotel.HotelListFragment) -> selectDay
+    void selectDay(com.twoheart.dailyhotel.HotelListFragment,boolean) -> selectDay
 com.twoheart.dailyhotel.fragment.HotelMainFragment$UserAnalyticsActionListener -> com.twoheart.dailyhotel.b.o:
     void selectHotel(java.lang.String,long) -> selectHotel
     void selectRegion(int) -> selectRegion
@@ -39327,7 +39325,8 @@ com.twoheart.dailyhotel.util.ui.BaseActivity -> com.twoheart.dailyhotel.util.b.a
     java.lang.Runnable networkCheckRunner -> s
     android.widget.PopupWindow mPopupWindow -> t
     int mSpinnderIndex -> u
-    boolean mIsLockUiComponent -> v
+    boolean mActionBarRegionEnabled -> v
+    boolean mIsLockUiComponent -> w
     void onCreate(android.os.Bundle) -> onCreate
     void onBackPressed() -> onBackPressed
     void setContentView(int) -> setContentView
