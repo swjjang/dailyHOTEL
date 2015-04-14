@@ -522,6 +522,11 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 					mHotelListAdapter.clear();
 					mHotelListAdapter.addAll(hotelListViewList);
 					mHotelListAdapter.notifyDataSetChanged();
+					
+					if(mIsSelectedNavigationItem == true)
+					{
+						mHotelListView.setSelection(0);
+					}
 				}
 
 				// Notify PullToRefreshLayout that the refresh has finished
