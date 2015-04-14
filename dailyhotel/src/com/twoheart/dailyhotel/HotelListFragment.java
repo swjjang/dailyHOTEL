@@ -41,8 +41,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -87,8 +87,8 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
 		mEmptyView = view.findViewById(R.id.emptyView);
 		
-		mEmptyView.setVisibility(View.VISIBLE);
-		mPullToRefreshLayout.setVisibility(View.INVISIBLE);
+		mEmptyView.setVisibility(View.INVISIBLE);
+		mPullToRefreshLayout.setVisibility(View.VISIBLE);
 		
 		GlobalFont.apply(container);
 
@@ -149,8 +149,8 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 	public void onPageUnSelected()
 	{
-		mEmptyView.setVisibility(View.VISIBLE);
-		mPullToRefreshLayout.setVisibility(View.INVISIBLE);
+//		mEmptyView.setVisibility(View.VISIBLE);
+//		mPullToRefreshLayout.setVisibility(View.INVISIBLE);
 	}
 
 	public void onRefreshComplete(boolean isSelectedNavigationItem)
@@ -520,10 +520,8 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 					mHotelListAdapter.addAll(hotelListViewList);
 					mHotelListAdapter.notifyDataSetChanged();
 					
-//					mEmptyView.setVisibility(View.INVISIBLE);
-					showAnimationFadeOut();
-//					mPullToRefreshLayout.setVisibility(View.VISIBLE);
-//					mPullToRefreshLayout.startAnimation(AnimationUtils.loadAnimation(mHostActivity, R.anim.fade_in));
+					mEmptyView.setVisibility(View.INVISIBLE);
+					mPullToRefreshLayout.setVisibility(View.VISIBLE);
 				}
 
 				// Notify PullToRefreshLayout that the refresh has finished

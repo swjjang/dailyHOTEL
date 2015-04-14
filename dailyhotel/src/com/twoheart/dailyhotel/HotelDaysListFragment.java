@@ -247,6 +247,8 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		{
 			view.setEnabled(enabled);
 		}
+		
+		mDaysBackgroundView.setEnabled(enabled);
 	}
 
 	private void setSelectedDays(View view)

@@ -37284,62 +37284,6 @@ com.ning.http.util.UTF8UrlEncoder -> com.d.a.c.o:
     java.lang.StringBuilder appendEncoded(java.lang.StringBuilder,java.lang.String) -> appendEncoded
     void appendSingleByteEncoded(java.lang.StringBuilder,int) -> a
     void appendMultiByteEncoded(java.lang.StringBuilder,int) -> b
-com.readystatesoftware.systembartint.SystemBarTintManager -> com.e.a.a:
-    int DEFAULT_TINT_COLOR -> DEFAULT_TINT_COLOR
-    java.lang.String sNavBarOverride -> a
-    com.readystatesoftware.systembartint.SystemBarTintManager$SystemBarConfig mConfig -> b
-    boolean mStatusBarAvailable -> c
-    boolean mNavBarAvailable -> d
-    boolean mStatusBarTintEnabled -> e
-    boolean mNavBarTintEnabled -> f
-    android.view.View mStatusBarTintView -> g
-    android.view.View mNavBarTintView -> h
-    void setStatusBarTintEnabled(boolean) -> setStatusBarTintEnabled
-    void setNavigationBarTintEnabled(boolean) -> setNavigationBarTintEnabled
-    void setTintColor(int) -> setTintColor
-    void setTintResource(int) -> setTintResource
-    void setTintDrawable(android.graphics.drawable.Drawable) -> setTintDrawable
-    void setTintAlpha(float) -> setTintAlpha
-    void setStatusBarTintColor(int) -> setStatusBarTintColor
-    void setStatusBarTintResource(int) -> setStatusBarTintResource
-    void setStatusBarTintDrawable(android.graphics.drawable.Drawable) -> setStatusBarTintDrawable
-    void setStatusBarAlpha(float) -> setStatusBarAlpha
-    void setNavigationBarTintColor(int) -> setNavigationBarTintColor
-    void setNavigationBarTintResource(int) -> setNavigationBarTintResource
-    void setNavigationBarTintDrawable(android.graphics.drawable.Drawable) -> setNavigationBarTintDrawable
-    void setNavigationBarAlpha(float) -> setNavigationBarAlpha
-    com.readystatesoftware.systembartint.SystemBarTintManager$SystemBarConfig getConfig() -> getConfig
-    boolean isStatusBarTintEnabled() -> isStatusBarTintEnabled
-    boolean isNavBarTintEnabled() -> isNavBarTintEnabled
-    void setupStatusBarView(android.content.Context,android.view.ViewGroup) -> a
-    void setupNavBarView(android.content.Context,android.view.ViewGroup) -> b
-    java.lang.String access$100() -> a
-com.readystatesoftware.systembartint.SystemBarTintManager$1 -> com.e.a.b:
-com.readystatesoftware.systembartint.SystemBarTintManager$SystemBarConfig -> com.e.a.c:
-    boolean mTranslucentStatusBar -> a
-    boolean mTranslucentNavBar -> b
-    int mStatusBarHeight -> c
-    int mActionBarHeight -> d
-    boolean mHasNavigationBar -> e
-    int mNavigationBarHeight -> f
-    int mNavigationBarWidth -> g
-    boolean mInPortrait -> h
-    float mSmallestWidthDp -> i
-    int getActionBarHeight(android.content.Context) -> a
-    int getNavigationBarHeight(android.content.Context) -> b
-    int getNavigationBarWidth(android.content.Context) -> c
-    boolean hasNavBar(android.content.Context) -> d
-    int getInternalDimensionSize(android.content.res.Resources,java.lang.String) -> a
-    float getSmallestWidthDp(android.app.Activity) -> a
-    boolean isNavigationAtBottom() -> isNavigationAtBottom
-    int getStatusBarHeight() -> getStatusBarHeight
-    int getActionBarHeight() -> getActionBarHeight
-    boolean hasNavigtionBar() -> hasNavigtionBar
-    int getNavigationBarHeight() -> getNavigationBarHeight
-    int getNavigationBarWidth() -> getNavigationBarWidth
-    int getPixelInsetTop(boolean) -> getPixelInsetTop
-    int getPixelInsetBottom() -> getPixelInsetBottom
-    int getPixelInsetRight() -> getPixelInsetRight
 com.twoheart.dailyhotel.AlarmBroadcastReceiver -> com.twoheart.dailyhotel.AlarmBroadcastReceiver:
     void onReceive(android.content.Context,android.content.Intent) -> onReceive
 com.twoheart.dailyhotel.BookingListFragment -> com.twoheart.dailyhotel.a:
@@ -37583,13 +37527,15 @@ com.twoheart.dailyhotel.HotelListFragment -> com.twoheart.dailyhotel.z:
     void onRefreshStarted(android.view.View) -> onRefreshStarted
     void onCreateOptionsMenu(android.view.Menu,android.view.MenuInflater) -> onCreateOptionsMenu
     boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
+    void showAnimationFadeOut() -> a
     android.view.View access$0(com.twoheart.dailyhotel.HotelListFragment) -> a
-    com.twoheart.dailyhotel.widget.PinnedSectionListView access$1(com.twoheart.dailyhotel.HotelListFragment) -> b
+    uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout access$1(com.twoheart.dailyhotel.HotelListFragment) -> b
     java.util.Map access$2(com.twoheart.dailyhotel.HotelListFragment) -> c
     com.twoheart.dailyhotel.util.ui.BaseActivity access$3(com.twoheart.dailyhotel.HotelListFragment) -> d
     com.twoheart.dailyhotel.adapter.HotelListAdapter access$4(com.twoheart.dailyhotel.HotelListFragment) -> e
     void access$5(com.twoheart.dailyhotel.HotelListFragment,com.twoheart.dailyhotel.adapter.HotelListAdapter) -> a
-    uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout access$6(com.twoheart.dailyhotel.HotelListFragment) -> f
+    com.twoheart.dailyhotel.widget.PinnedSectionListView access$6(com.twoheart.dailyhotel.HotelListFragment) -> f
+    void access$7(com.twoheart.dailyhotel.HotelListFragment) -> g
 com.twoheart.dailyhotel.HotelListFragment$1 -> com.twoheart.dailyhotel.aa:
     com.twoheart.dailyhotel.HotelListFragment this$0 -> a
     void makeRegionHotelList(java.lang.String,java.util.ArrayList,java.util.ArrayList) -> a
@@ -37598,6 +37544,11 @@ com.twoheart.dailyhotel.HotelListFragment$1$1 -> com.twoheart.dailyhotel.ab:
     com.twoheart.dailyhotel.HotelListFragment$1 this$1 -> a
     int compare(com.twoheart.dailyhotel.model.Hotel,com.twoheart.dailyhotel.model.Hotel) -> compare
     int compare(java.lang.Object,java.lang.Object) -> compare
+com.twoheart.dailyhotel.HotelListFragment$2 -> com.twoheart.dailyhotel.ac:
+    com.twoheart.dailyhotel.HotelListFragment this$0 -> a
+    void onAnimationStart(android.view.animation.Animation) -> onAnimationStart
+    void onAnimationEnd(android.view.animation.Animation) -> onAnimationEnd
+    void onAnimationRepeat(android.view.animation.Animation) -> onAnimationRepeat
 com.twoheart.dailyhotel.IntroActivity -> com.twoheart.dailyhotel.IntroActivity:
     android.support.v4.app.FragmentPagerAdapter mAdapter -> n
     android.support.v4.view.ViewPager mPager -> o
@@ -37624,7 +37575,7 @@ com.twoheart.dailyhotel.IntroActivity -> com.twoheart.dailyhotel.IntroActivity:
     java.util.List access$1(com.twoheart.dailyhotel.IntroActivity) -> b
     java.util.List access$2(com.twoheart.dailyhotel.IntroActivity) -> c
     java.util.List access$3(com.twoheart.dailyhotel.IntroActivity) -> d
-com.twoheart.dailyhotel.IntroActivity$1 -> com.twoheart.dailyhotel.ac:
+com.twoheart.dailyhotel.IntroActivity$1 -> com.twoheart.dailyhotel.ad:
     com.twoheart.dailyhotel.IntroActivity this$0 -> a
     android.support.v4.app.Fragment getItem(int) -> getItem
     int getCount() -> getCount
@@ -37638,25 +37589,26 @@ com.twoheart.dailyhotel.MainActivity -> com.twoheart.dailyhotel.MainActivity:
     java.lang.String KEY_CREDIT_FRAGMENT -> KEY_CREDIT_FRAGMENT
     java.lang.String KEY_SEETING_FRAGMENT -> KEY_SEETING_FRAGMENT
     android.widget.ListView drawerList -> drawerList
+    android.view.View drawerView -> t
     android.support.v4.widget.DrawerLayout drawerLayout -> drawerLayout
-    android.widget.FrameLayout mContentFrame -> t
+    android.widget.FrameLayout mContentFrame -> u
     android.app.Dialog popUpDialog -> popUpDialog
     android.support.v7.app.ActionBarDrawerToggle drawerToggle -> drawerToggle
     android.support.v4.app.FragmentManager fragmentManager -> n
     java.util.List mMenuImages -> o
-    com.twoheart.dailyhotel.MainActivity$DrawerMenuListAdapter mDrawerMenuListAdapter -> u
+    com.twoheart.dailyhotel.MainActivity$DrawerMenuListAdapter mDrawerMenuListAdapter -> v
     int indexLastFragment -> indexLastFragment
-    com.readystatesoftware.systembartint.SystemBarTintManager$SystemBarConfig config -> config
     com.twoheart.dailyhotel.MainActivity$DrawerMenu menuHotelListFragment -> menuHotelListFragment
     com.twoheart.dailyhotel.MainActivity$DrawerMenu menuBookingListFragment -> menuBookingListFragment
     com.twoheart.dailyhotel.MainActivity$DrawerMenu menuCreditFragment -> menuCreditFragment
     com.twoheart.dailyhotel.MainActivity$DrawerMenu menuSettingFragment -> menuSettingFragment
-    com.twoheart.dailyhotel.util.ui.CloseOnBackPressed backButtonHandler -> v
+    com.twoheart.dailyhotel.util.ui.CloseOnBackPressed backButtonHandler -> w
     java.util.HashMap regPushParams -> p
     android.net.Uri intentData -> intentData
-    com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener mUserAliveStringResponseListener -> w
-    com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener mUserInfoJsonResponseListener -> x
-    com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener mGcmRegisterJsonResponseListener -> y
+    android.os.Handler mHandler -> x
+    com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener mUserAliveStringResponseListener -> y
+    com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener mUserInfoJsonResponseListener -> z
+    com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener mGcmRegisterJsonResponseListener -> A
     void onCreate(android.os.Bundle) -> onCreate
     void onActivityResult(int,int,android.content.Intent) -> onActivityResult
     java.lang.String getGcmId() -> c
@@ -37677,6 +37629,7 @@ com.twoheart.dailyhotel.MainActivity -> com.twoheart.dailyhotel.MainActivity:
     boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
     boolean onKeyDown(int,android.view.KeyEvent) -> onKeyDown
     void toggleDrawer() -> toggleDrawer
+    void closeDrawer() -> closeDrawer
     void finish() -> finish
     void onDestroy() -> onDestroy
     void onError() -> onError
@@ -37686,34 +37639,44 @@ com.twoheart.dailyhotel.MainActivity -> com.twoheart.dailyhotel.MainActivity:
     java.lang.Boolean access$3(com.twoheart.dailyhotel.MainActivity) -> d
     void access$4(com.twoheart.dailyhotel.MainActivity,int) -> a
     com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener access$5(com.twoheart.dailyhotel.MainActivity) -> e
-com.twoheart.dailyhotel.MainActivity$1 -> com.twoheart.dailyhotel.ad:
+    android.view.View access$6(com.twoheart.dailyhotel.MainActivity) -> f
+    android.os.Handler access$7(com.twoheart.dailyhotel.MainActivity) -> g
+com.twoheart.dailyhotel.MainActivity$1 -> com.twoheart.dailyhotel.ae:
     com.twoheart.dailyhotel.MainActivity this$0 -> a
     void onResponse(java.lang.String,java.lang.String) -> onResponse
-com.twoheart.dailyhotel.MainActivity$2 -> com.twoheart.dailyhotel.ae:
+com.twoheart.dailyhotel.MainActivity$2 -> com.twoheart.dailyhotel.af:
     com.twoheart.dailyhotel.MainActivity this$0 -> a
     void onResponse(java.lang.String,org.json.JSONObject) -> onResponse
-com.twoheart.dailyhotel.MainActivity$3 -> com.twoheart.dailyhotel.af:
+com.twoheart.dailyhotel.MainActivity$3 -> com.twoheart.dailyhotel.ag:
     com.twoheart.dailyhotel.MainActivity this$0 -> a
     void onResponse(java.lang.String,org.json.JSONObject) -> onResponse
-com.twoheart.dailyhotel.MainActivity$4 -> com.twoheart.dailyhotel.ag:
+com.twoheart.dailyhotel.MainActivity$4 -> com.twoheart.dailyhotel.ah:
     com.twoheart.dailyhotel.MainActivity this$0 -> a
     int val$idx -> b
     java.lang.String doInBackground(java.lang.Void[]) -> a
     void onPostExecute(java.lang.String) -> a
     void onPostExecute(java.lang.Object) -> onPostExecute
     java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
-com.twoheart.dailyhotel.MainActivity$5 -> com.twoheart.dailyhotel.ah:
+com.twoheart.dailyhotel.MainActivity$5 -> com.twoheart.dailyhotel.ai:
     com.twoheart.dailyhotel.MainActivity this$0 -> a
     int val$index -> b
     void run() -> run
-com.twoheart.dailyhotel.MainActivity$6 -> com.twoheart.dailyhotel.ai:
+com.twoheart.dailyhotel.MainActivity$6 -> com.twoheart.dailyhotel.aj:
     com.twoheart.dailyhotel.MainActivity this$0 -> a
     void onDrawerClosed(android.view.View) -> onDrawerClosed
     void onDrawerOpened(android.view.View) -> onDrawerOpened
-com.twoheart.dailyhotel.MainActivity$7 -> com.twoheart.dailyhotel.aj:
+    void onDrawerStateChanged(int) -> onDrawerStateChanged
+com.twoheart.dailyhotel.MainActivity$7 -> com.twoheart.dailyhotel.ak:
     com.twoheart.dailyhotel.MainActivity this$0 -> a
     void run() -> run
-com.twoheart.dailyhotel.MainActivity$DrawerMenu -> com.twoheart.dailyhotel.ak:
+com.twoheart.dailyhotel.MainActivity$8 -> com.twoheart.dailyhotel.al:
+    com.twoheart.dailyhotel.MainActivity this$0 -> a
+    void onClick(android.view.View) -> onClick
+    com.twoheart.dailyhotel.MainActivity access$0(com.twoheart.dailyhotel.MainActivity$8) -> a
+com.twoheart.dailyhotel.MainActivity$8$1 -> com.twoheart.dailyhotel.am:
+    com.twoheart.dailyhotel.MainActivity$8 this$1 -> a
+    void run() -> run
+com.twoheart.dailyhotel.MainActivity$DrawerMenu -> com.twoheart.dailyhotel.an:
     int DRAWER_MENU_LIST_TYPE_LOGO -> DRAWER_MENU_LIST_TYPE_LOGO
     int DRAWER_MENU_LIST_TYPE_SECTION -> DRAWER_MENU_LIST_TYPE_SECTION
     int DRAWER_MENU_LIST_TYPE_ENTRY -> DRAWER_MENU_LIST_TYPE_ENTRY
@@ -37730,7 +37693,7 @@ com.twoheart.dailyhotel.MainActivity$DrawerMenu -> com.twoheart.dailyhotel.ak:
     void setIcon(int) -> setIcon
     void setSelected(boolean) -> setSelected
     boolean isSelected() -> isSelected
-com.twoheart.dailyhotel.MainActivity$DrawerMenuListAdapter -> com.twoheart.dailyhotel.al:
+com.twoheart.dailyhotel.MainActivity$DrawerMenuListAdapter -> com.twoheart.dailyhotel.ao:
     java.util.List list -> b
     android.view.LayoutInflater inflater -> c
     android.content.Context context -> d
@@ -37760,13 +37723,13 @@ com.twoheart.dailyhotel.RegionListActivity -> com.twoheart.dailyhotel.RegionList
     java.util.ArrayList access$5(com.twoheart.dailyhotel.RegionListActivity) -> d
     com.twoheart.dailyhotel.adapter.SeparatedListAdpater access$6(com.twoheart.dailyhotel.RegionListActivity) -> e
     android.widget.ListView access$7(com.twoheart.dailyhotel.RegionListActivity) -> f
-com.twoheart.dailyhotel.RegionListActivity$1 -> com.twoheart.dailyhotel.am:
+com.twoheart.dailyhotel.RegionListActivity$1 -> com.twoheart.dailyhotel.ap:
     com.twoheart.dailyhotel.RegionListActivity this$0 -> a
     void onResponse(java.lang.String,org.json.JSONArray) -> onResponse
-com.twoheart.dailyhotel.RegionListActivity$2 -> com.twoheart.dailyhotel.an:
+com.twoheart.dailyhotel.RegionListActivity$2 -> com.twoheart.dailyhotel.aq:
     com.twoheart.dailyhotel.RegionListActivity this$0 -> a
     void onResponse(java.lang.String,org.json.JSONArray) -> onResponse
-com.twoheart.dailyhotel.SettingFragment -> com.twoheart.dailyhotel.ao:
+com.twoheart.dailyhotel.SettingFragment -> com.twoheart.dailyhotel.ar:
     com.twoheart.dailyhotel.MainActivity mHostActivity -> a
     com.android.volley.RequestQueue mQueue -> b
     android.widget.TextView tvNotice -> c
@@ -37792,13 +37755,13 @@ com.twoheart.dailyhotel.SettingFragment -> com.twoheart.dailyhotel.ao:
     com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener access$1(com.twoheart.dailyhotel.SettingFragment) -> b
     com.twoheart.dailyhotel.MainActivity access$2(com.twoheart.dailyhotel.SettingFragment) -> c
     void access$3(com.twoheart.dailyhotel.SettingFragment,boolean,java.lang.String) -> a
-com.twoheart.dailyhotel.SettingFragment$1 -> com.twoheart.dailyhotel.ap:
+com.twoheart.dailyhotel.SettingFragment$1 -> com.twoheart.dailyhotel.as:
     com.twoheart.dailyhotel.SettingFragment this$0 -> a
     void onResponse(java.lang.String,java.lang.String) -> onResponse
-com.twoheart.dailyhotel.SettingFragment$2 -> com.twoheart.dailyhotel.aq:
+com.twoheart.dailyhotel.SettingFragment$2 -> com.twoheart.dailyhotel.at:
     com.twoheart.dailyhotel.SettingFragment this$0 -> a
     void onResponse(java.lang.String,org.json.JSONObject) -> onResponse
-com.twoheart.dailyhotel.WaitTimerFragment -> com.twoheart.dailyhotel.ar:
+com.twoheart.dailyhotel.WaitTimerFragment -> com.twoheart.dailyhotel.au:
     boolean isEnabledNotify -> isEnabledNotify
     android.os.Handler sHandler -> a
     android.widget.TextView tvTimer -> b
@@ -37825,10 +37788,10 @@ com.twoheart.dailyhotel.WaitTimerFragment -> com.twoheart.dailyhotel.ar:
     void access$2(com.twoheart.dailyhotel.WaitTimerFragment,long) -> b
     com.twoheart.dailyhotel.util.ui.BaseActivity access$3(com.twoheart.dailyhotel.WaitTimerFragment) -> b
     void access$4(com.twoheart.dailyhotel.WaitTimerFragment,com.twoheart.dailyhotel.util.ui.BaseActivity) -> a
-com.twoheart.dailyhotel.WaitTimerFragment$1 -> com.twoheart.dailyhotel.as:
+com.twoheart.dailyhotel.WaitTimerFragment$1 -> com.twoheart.dailyhotel.av:
     com.twoheart.dailyhotel.WaitTimerFragment this$0 -> a
     void onResponse(java.lang.String,org.json.JSONObject) -> onResponse
-com.twoheart.dailyhotel.WaitTimerFragment$2 -> com.twoheart.dailyhotel.at:
+com.twoheart.dailyhotel.WaitTimerFragment$2 -> com.twoheart.dailyhotel.aw:
     com.twoheart.dailyhotel.WaitTimerFragment this$0 -> a
     void handleMessage(android.os.Message) -> handleMessage
 com.twoheart.dailyhotel.activity.AboutActivity -> com.twoheart.dailyhotel.activity.AboutActivity:
@@ -39367,14 +39330,15 @@ com.twoheart.dailyhotel.util.ui.BaseActivity -> com.twoheart.dailyhotel.util.b.a
     android.os.Handler handler -> p
     java.lang.Runnable networkCheckRunner -> s
     android.widget.PopupWindow mPopupWindow -> t
-    boolean mIsLockUiComponent -> u
-    int mSpinnderIndex -> v
+    int mSpinnderIndex -> u
+    boolean mIsLockUiComponent -> v
     void onCreate(android.os.Bundle) -> onCreate
     void onBackPressed() -> onBackPressed
     void setContentView(int) -> setContentView
     android.support.v7.widget.Toolbar setActionBar(java.lang.String,boolean) -> setActionBar
     void setActionBar(int) -> setActionBar
     void setActionBar(java.lang.String) -> setActionBar
+    void setActionBarRegionEnable(boolean) -> setActionBarRegionEnable
     void setActionBarListEnabled(boolean) -> setActionBarListEnabled
     void setActionBarListData(java.lang.String,java.util.ArrayList,com.twoheart.dailyhotel.widget.RegionPopupListView$UserActionListener) -> setActionBarListData
     void setActionBarProgressBar() -> setActionBarProgressBar
@@ -39489,6 +39453,11 @@ com.twoheart.dailyhotel.util.ui.WebViewActivity$DailyHotelWebViewClient -> com.t
     boolean shouldOverrideUrlLoading(android.webkit.WebView,java.lang.String) -> shouldOverrideUrlLoading
     void browseToExternalBrowser(java.lang.String) -> a
     void onReceivedError(android.webkit.WebView,int,java.lang.String,java.lang.String) -> onReceivedError
+com.twoheart.dailyhotel.widget.DailyCustomFontTextView -> com.twoheart.dailyhotel.widget.DailyCustomFontTextView:
+    int mCurMaxLine -> a
+    int getCurrentMaxLines() -> getCurrentMaxLines
+    void setMaxLines(int) -> setMaxLines
+    void setTypeface(android.graphics.Typeface,int) -> setTypeface
 com.twoheart.dailyhotel.widget.DailyHotelHeaderTransformer -> com.twoheart.dailyhotel.widget.a:
     void onReset() -> onReset
 com.twoheart.dailyhotel.widget.DailyToast -> com.twoheart.dailyhotel.widget.b:
@@ -39567,11 +39536,6 @@ com.twoheart.dailyhotel.widget.LineBreakByWordTextView -> com.twoheart.dailyhote
     void onMeasure(int,int) -> onMeasure
     void onTextChanged(java.lang.CharSequence,int,int,int) -> onTextChanged
     void onSizeChanged(int,int,int,int) -> onSizeChanged
-com.twoheart.dailyhotel.widget.NanumBarunTextView -> com.twoheart.dailyhotel.widget.NanumBarunTextView:
-    int mCurMaxLine -> a
-    int getCurrentMaxLines() -> getCurrentMaxLines
-    void setMaxLines(int) -> setMaxLines
-    void setTypeface(android.graphics.Typeface,int) -> setTypeface
 com.twoheart.dailyhotel.widget.PinnedSectionListView -> com.twoheart.dailyhotel.widget.PinnedSectionListView:
     android.graphics.Rect mTouchRect -> e
     android.graphics.PointF mTouchPoint -> f
@@ -39651,8 +39615,8 @@ com.twoheart.dailyhotel.widget.TabIndicator -> com.twoheart.dailyhotel.widget.Ta
     com.twoheart.dailyhotel.widget.TabIndicator$OnTabSelectedListener mOnTabSelectedListener -> c
     void init() -> a
     int size() -> size
-    void setData(java.util.ArrayList,boolean) -> setData
-    void setData(java.util.ArrayList,java.util.ArrayList,boolean) -> setData
+    void setData(java.util.ArrayList) -> setData
+    void setData(java.util.ArrayList,java.util.ArrayList) -> setData
     void setTextTypeface(int) -> setTextTypeface
     void setTextColor(int) -> setTextColor
     void setSubTextColor(int) -> setSubTextColor

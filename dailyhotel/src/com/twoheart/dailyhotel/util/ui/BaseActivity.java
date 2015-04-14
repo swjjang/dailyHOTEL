@@ -185,19 +185,19 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 		{
 			View view = mToolbar.getChildAt(mSpinnderIndex);
 			View imageView = view.findViewById(R.id.spinnerImageView);
-			
-			if(isEnable == true)
+
+			if (isEnable == true)
 			{
 				view.setEnabled(true);
 				imageView.setVisibility(View.VISIBLE);
-			} else 
+			} else
 			{
 				view.setEnabled(false);
 				imageView.setVisibility(View.INVISIBLE);
 			}
 		}
 	}
-	
+
 	public void setActionBarListEnabled(boolean isEnable)
 	{
 		if (isEnable == true)
@@ -501,8 +501,15 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	{
 		releaseUiComponent();
 
-		// 잘못된 멘트, 모든 에러가 이쪽으로 빠지게됨. 변경 필요.
-		DailyToast.showToast(this, getResources().getString(R.string.act_base_network_connect), Toast.LENGTH_LONG);
+		handler.post(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				// 잘못된 멘트, 모든 에러가 이쪽으로 빠지게됨. 변경 필요.
+				DailyToast.showToast(BaseActivity.this, getResources().getString(R.string.act_base_network_connect), Toast.LENGTH_LONG);
+			}
+		});
 	}
 
 	/**

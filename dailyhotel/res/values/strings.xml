@@ -98,8 +98,8 @@
     <string name="dialog_msg_please_update_new_version">dailyHOTEL의 새로운 버전이 출시되었습니다. 업데이트해주세요</string>
     <string name="dialog_msg_update_now">지금 업그레이드하여 가장 멋진 데일리호텔 앱을 다운받으세요</string>
     <string name="dialog_msg_sales_closed">오전 9시부터 오늘의 호텔이 공개됩니다.</string>
-    <string name="dialog_msg_payment_confirm">당일 예약 특성 상, 결제 완료 후&lt;br/&gt;&lt;b&gt;취소나 변경이 불가&lt;/b&gt;합니다.&lt;br/&gt;&lt;br/&gt;\'체크인 시 배정\'의 경우 더블,트윈 등의&lt;br/&gt;&lt;b&gt;베드 타입은 보장하지 않으며&lt;/b&gt;&lt;br/&gt;2인이 투숙할 수 있는 객실로 배정됩니다.&lt;br/&gt;&lt;br/&gt;미성년자는 보호자 동반시 투숙 가능합니다.&lt;br/&gt;&lt;br/&gt; 위 사항에 동의하시면 아래의&lt;br/&gt;버튼을 눌러 결제를 진행해 주세요.</string>
-    <string name="dialog_msg_payment_confirm_hp">당일 예약 특성 상, 결제 완료 후&lt;br/&gt;&lt;b&gt;취소나 변경이 불가&lt;/b&gt;합니다.&lt;br/&gt;&lt;br/&gt;\'체크인 시 배정\'의 경우 더블,트윈 등의&lt;br/&gt;&lt;b&gt;베드 타입은 보장하지 않으며&lt;/b&gt;&lt;br/&gt;2인이 투숙할 수 있는 객실로 배정됩니다.&lt;br/&gt;&lt;br/&gt;미성년자는 보호자 동반시 투숙 가능합니다.&lt;br/&gt;&lt;br/&gt;휴대폰 결제는 월 30만원이 한도입니다.&lt;br/&gt;&lt;br/&gt; 위 사항에 동의하시면 아래의&lt;br/&gt;버튼을 눌러 결제를 진행해 주세요.</string>
+    <string name="dialog_msg_payment_confirm">당일 호텔 특성 상, 결제 완료 후&lt;br/&gt;&lt;b&gt;취소나 변경이 불가&lt;/b&gt;합니다.&lt;br/&gt;&lt;br/&gt;\'체크인 시 배정\'의 경우 더블,트윈 등의&lt;br/&gt;&lt;b&gt;베드 타입은 보장하지 않으며&lt;/b&gt;&lt;br/&gt;2인이 투숙할 수 있는 객실로 배정됩니다.&lt;br/&gt;&lt;br/&gt;미성년자는 보호자 동반시 투숙 가능합니다.&lt;br/&gt;&lt;br/&gt; 위 사항에 동의하시면 아래의&lt;br/&gt;버튼을 눌러 결제를 진행해 주세요.</string>
+    <string name="dialog_msg_payment_confirm_hp">당일 호텔 특성 상, 결제 완료 후&lt;br/&gt;&lt;b&gt;취소나 변경이 불가&lt;/b&gt;합니다.&lt;br/&gt;&lt;br/&gt;\'체크인 시 배정\'의 경우 더블,트윈 등의&lt;br/&gt;&lt;b&gt;베드 타입은 보장하지 않으며&lt;/b&gt;&lt;br/&gt;2인이 투숙할 수 있는 객실로 배정됩니다.&lt;br/&gt;&lt;br/&gt;미성년자는 보호자 동반시 투숙 가능합니다.&lt;br/&gt;&lt;br/&gt;휴대폰 결제는 월 30만원이 한도입니다.&lt;br/&gt;&lt;br/&gt; 위 사항에 동의하시면 아래의&lt;br/&gt;버튼을 눌러 결제를 진행해 주세요.</string>
     <string name="dialog_btn_payment_confirm">동의하고 결제 진행</string>
     <string name="dialog_title_payment_confirm">확인 사항</string>
     <string name="dialog_btn_payment_no_reserve">&lt;br/&gt;&lt;br/&gt;이벤트 호텔의 경우&lt;br/&gt;적립금 사용을 할 수 없습니다.&lt;br/&gt;&lt;br/&gt;</string>
@@ -327,7 +327,7 @@
     <string name="frag_hotel_list_seoul">서울</string>
     <string name="frag_hotel_list_tokyo">도쿄</string>
     <string name="frag_hotel_list_others">기타</string>
-    <string name="frag_hotel_list_no_hotels">호텔을 준비 중에 있습니다.</string>
+    <string name="frag_hotel_list_no_hotels">호텔을 준비하고 있습니다.</string>
     <string name="frag_hotel_list_line">멋진 호텔에서\n하루를 보내는게 어때요?</string>
 
     <!-- PopUp Event Fragment -->
@@ -384,5 +384,9 @@
     <string name="label_tomorrow">내일</string>
     <string name="label_selecteday">날짜</string>
     <string name="label_format_tabday">%1$s일(%2$s)</string>
-
+    
+    <!-- Banner -->
+	<string name="label_event_title01">이벤트</string>
+	<string name="label_event_title02"> 참여하기</string>
+	<string name="label_event_subtitle">데일리호텔의 이벤트에 참여하세요.</string>
 </resources>

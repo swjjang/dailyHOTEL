@@ -126,6 +126,7 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 		mIndicator.setSnap(true);
 
 		mCurrentPage = mHotelDetail.getImageUrl().size();
+		
 		mHandler = new Handler()
 		{
 			public void handleMessage(Message msg)

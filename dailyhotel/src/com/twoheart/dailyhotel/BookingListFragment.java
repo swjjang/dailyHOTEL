@@ -226,7 +226,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 			{ // session alive
 				// 예약 목록 요청.
 				//				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_MINE).toString(), null, mReserveMineStringResponseListener, mHostActivity));
-				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_MINE).toString(), null, mReserveMineStringResponseListener, mHostActivity));
+				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_MINE).toString(), null, mReserveMineJsonResponseListener, mHostActivity));
 
 			} else if ("dead".equalsIgnoreCase(result) == true)
 			{ // session dead
@@ -273,37 +273,58 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 		}
 	};
 
-	private DailyHotelStringResponseListener mReserveMineStringResponseListener = new DailyHotelStringResponseListener()
+	private DailyHotelJsonResponseListener mReserveMineJsonResponseListener = new DailyHotelJsonResponseListener()
 	{
 
 		@Override
-		public void onResponse(String url, String response)
+		public void onResponse(String url, JSONObject response)
 		{
 			if (getActivity() == null)
 			{
 				return;
 			}
 
-			String result = null;
+			int msg_code = -1;
 
-			if (TextUtils.isEmpty(response) == false)
+			try
 			{
-				result = response.trim();
+				if (response == null)
+				{
+					throw new NullPointerException("response == null");
+				}
+
+				// 해당 화면은 메시지를 넣지 않는다.
+				msg_code = response.getInt("msg_code");
+			} catch (Exception e)
+			{
+				onError(e);
+				unLockUI();
+				return;
 			}
 
-			//예약한 호텔 리스트 
-			if ("none".equalsIgnoreCase(result) == false)
+			try
 			{
-				mItems = new ArrayList<Booking>();
+				JSONArray jsonArray = response.getJSONArray("data");
+				int length = jsonArray.length();
 
-				try
+				if (length == 0)
 				{
-					JSONObject obj = new JSONObject(response);
-					JSONArray rsvArr = obj.getJSONArray("rsv");
-
-					for (int i = 0; i < rsvArr.length(); i++)
+					//예약한 호텔이 없는 경우 
+					mListView.setVisibility(View.GONE);
+					mEmptyLayout.setVisibility(View.VISIBLE);
+					btnLogin.setVisibility(View.INVISIBLE);
+				} else
+				{
+					if (mItems == null)
 					{
-						JSONObject rsvObj = rsvArr.getJSONObject(i);
+						mItems = new ArrayList<Booking>();
+					}
+
+					mItems.clear();
+
+					for (int i = 0; i < length; i++)
+					{
+						JSONObject rsvObj = jsonArray.getJSONObject(i);
 
 						//kcpno (depre)
 						String hotel_name = rsvObj.getString("hotel_name");
@@ -325,8 +346,6 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 					mListView.setVisibility(View.VISIBLE);
 					mEmptyLayout.setVisibility(View.GONE);
 
-					unLockUI();
-
 					// flag가 가상계좌 입금 대기에서 날아온경우 
 					SharedPreferences pref = getActivity().getSharedPreferences(NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
 					int flag = pref.getInt(KEY_PREFERENCE_ACCOUNT_READY_FLAG, -1);
@@ -337,23 +356,18 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 						editor.remove(KEY_PREFERENCE_ACCOUNT_READY_FLAG);
 						editor.apply();
 					}
-
-				} catch (Exception e)
-				{
-					mListView.setVisibility(View.GONE);
-					mEmptyLayout.setVisibility(View.VISIBLE);
-					btnLogin.setVisibility(View.INVISIBLE);
-
-					onError(e);
-					unLockUI();
 				}
-			} else
+
+			} catch (Exception e)
 			{
-				//예약한 호텔이 없는 경우 
 				mListView.setVisibility(View.GONE);
 				mEmptyLayout.setVisibility(View.VISIBLE);
 				btnLogin.setVisibility(View.INVISIBLE);
 
+				onError(e);
+			}
+			finally
+			{
 				unLockUI();
 			}
 		}

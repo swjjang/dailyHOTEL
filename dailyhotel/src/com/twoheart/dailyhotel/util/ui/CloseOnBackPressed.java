@@ -40,15 +40,9 @@ public class CloseOnBackPressed
 		}
 
 		backPressedTime = System.currentTimeMillis();
-		showGuide();
+		
+		DailyToast.showToast(mActivity, mActivity.getString(R.string.toast_msg_backpressed), Toast.LENGTH_SHORT);
 
 		return false;
-
 	}
-
-	private void showGuide()
-	{
-		DailyToast.showToast(mActivity, mActivity.getString(R.string.toast_msg_backpressed), Toast.LENGTH_SHORT);
-	}
-
 }

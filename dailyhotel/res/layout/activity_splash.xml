@@ -31,39 +31,54 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp" >
 
-            <ImageView
-                android:id="@+id/iv_splash_circle1"
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="6dp"
-                android:src="@drawable/splash_circle"
-                android:visibility="invisible" />
+                android:layout_marginRight="6dp" >
 
-            <ImageView
-                android:id="@+id/iv_splash_circle2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="6dp"
-                android:src="@drawable/splash_circle"
-                android:visibility="invisible" />
+                <ImageView
+                    android:id="@+id/iv_splash_circle1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/splash_circle"
+                    android:visibility="invisible" />
+            </RelativeLayout>
 
-            <ImageView
-                android:id="@+id/iv_splash_circle3"
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/splash_circle"
-                android:visibility="invisible" />
+                android:layout_marginRight="6dp" >
+
+                <ImageView
+                    android:id="@+id/iv_splash_circle2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/splash_circle"
+                    android:visibility="invisible" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <ImageView
+                    android:id="@+id/iv_splash_circle3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/splash_circle"
+                    android:visibility="invisible" />
+            </RelativeLayout>
         </LinearLayout>
-    </LinearLayout>
 
-    <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-        android:id="@+id/tv_splash_information"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="40dp"
-        android:text="@string/act_anybody"
-        android:textColor="@color/textView_textColor_main" />
+        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            android:id="@+id/tv_splash_information"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="40dp"
+            android:text="@string/act_anybody"
+            android:textColor="@color/textView_textColor_main" />
+    </LinearLayout>
 
 </RelativeLayout>

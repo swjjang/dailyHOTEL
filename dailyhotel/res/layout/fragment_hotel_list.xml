@@ -2,20 +2,21 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black" >
+    android:background="@color/white" >
 
     <include
         android:id="@+id/emptyView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        layout="@layout/view_empty_list" />
+        layout="@layout/view_empty_list"
+        android:visibility="gone" />
 
     <uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout
         xmlns:ptr="http://schemas.android.com/apk/res-auto"
         android:id="@+id/ptr_layout"
-        android:background="@null"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:background="@null" >
 
         <com.twoheart.dailyhotel.widget.PinnedSectionListView
             android:id="@+id/listview_hotel_list"

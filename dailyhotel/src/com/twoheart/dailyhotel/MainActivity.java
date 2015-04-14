@@ -508,7 +508,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	 */
 	public void delayedReplace(final int index)
 	{
-		new Handler().postDelayed(new Runnable()
+		mHandler.postDelayed(new Runnable()
 		{
 			@Override
 			public void run()

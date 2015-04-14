@@ -822,9 +822,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					etReserverNumber.setBackgroundResource(0);
 					etReserverEmail.setBackgroundResource(0);
 
-					etReserverName.setText(buyer.getEmail());
+					etReserverName.setText(buyer.getName());
 					etReserverNumber.setText(buyer.getPhone());
-					etReserverEmail.setText(buyer.getName());
+					etReserverEmail.setText(buyer.getEmail());
 
 					mIsEditMode = false;
 				} else
@@ -884,7 +884,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					} else
 					{
 						etReserverEmail.setEnabled(true);
-						etReserverEmail.setText(buyer.getName());
+						etReserverEmail.setText(buyer.getEmail());
 
 						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
 						{

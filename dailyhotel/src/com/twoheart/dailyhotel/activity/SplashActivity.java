@@ -67,6 +67,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 	protected HashMap<String, String> regPushParams;
 
 	private ArrayList<ImageView> ivCircles;
+	private Handler mHandler = new Handler();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -104,7 +105,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 						moveToLoginStep();
 					} else
 					{
-						new Handler().postDelayed(new Runnable()
+						mHandler.postDelayed(new Runnable()
 						{
 							@Override
 							public void run()
@@ -160,7 +161,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 							moveToLoginStep();
 						} else
 						{
-							new Handler().postDelayed(new Runnable()
+							mHandler.postDelayed(new Runnable()
 							{
 								@Override
 								public void run()
@@ -215,7 +216,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 		for (int i = 0; i < 3; i++)
 		{
 			final int idx = i;
-			new Handler().postDelayed(new Runnable()
+			mHandler.postDelayed(new Runnable()
 			{
 				@Override
 				public void run()
@@ -256,8 +257,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 	private void showMainActivity(final int newEventFlag)
 	{
 		// sleep 2 second
-		Handler h = new Handler();
-		h.postDelayed(new Runnable()
+		mHandler.postDelayed(new Runnable()
 		{
 			public void run()
 			{

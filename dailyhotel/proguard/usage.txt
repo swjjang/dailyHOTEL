@@ -3708,12 +3708,9 @@ com.ning.http.util.UTF8Codec
 com.ning.http.util.UTF8UrlEncoder:
     49:50:private UTF8UrlEncoder()
 com.readystatesoftware.systembartint.BuildConfig
-com.readystatesoftware.systembartint.SystemBarTintManager$SystemBarConfig:
-    private static final java.lang.String STATUS_BAR_HEIGHT_RES_NAME
-    private static final java.lang.String NAV_BAR_HEIGHT_RES_NAME
-    private static final java.lang.String NAV_BAR_HEIGHT_LANDSCAPE_RES_NAME
-    private static final java.lang.String NAV_BAR_WIDTH_RES_NAME
-    private static final java.lang.String SHOW_NAV_BAR_RES_NAME
+com.readystatesoftware.systembartint.SystemBarTintManager
+com.readystatesoftware.systembartint.SystemBarTintManager$1
+com.readystatesoftware.systembartint.SystemBarTintManager$SystemBarConfig
 com.twoheart.dailyhotel.BuildConfig
 com.twoheart.dailyhotel.CreditFragment:
     185:186:private void alert(java.lang.String)
@@ -3726,7 +3723,7 @@ com.twoheart.dailyhotel.HotelDaysListFragment:
 com.twoheart.dailyhotel.MainActivity:
     private static final java.lang.String TAG_FRAGMENT_RATING_HOTEL
     protected java.util.List mFragments
-    345:357:private void initializeFragments()
+    344:356:private void initializeFragments()
 com.twoheart.dailyhotel.Manifest
 com.twoheart.dailyhotel.Manifest$permission
 com.twoheart.dailyhotel.R
@@ -3814,7 +3811,7 @@ com.twoheart.dailyhotel.util.network.request.DailyHotelRequest:
     protected abstract void deliverResponse(java.lang.Object)
 com.twoheart.dailyhotel.util.ui.AllCapsTransformationMethod
 com.twoheart.dailyhotel.util.ui.BaseActivity:
-    531:532:protected void chgClickable(android.view.View)
+    549:550:protected void chgClickable(android.view.View)
 com.twoheart.dailyhotel.util.ui.OnLoadListener
 com.twoheart.dailyhotel.util.ui.TransformationMethodCompat
 com.twoheart.dailyhotel.util.ui.TransformationMethodCompat2
