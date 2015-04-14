@@ -41,7 +41,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 	private Context context;
 	private int resourceId;
 	private LayoutInflater inflater;
-	private LruCache<Integer, Bitmap> imgCache;
+	private LruCache<String, Bitmap> mLruCache;
 
 	public HotelListAdapter(Context context, int resourceId, ArrayList<HotelListViewItem> hotelList)
 	{
@@ -49,10 +49,10 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 
 		final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
 		final int cacheSize = maxMemory / 8;
-		this.imgCache = new LruCache<Integer, Bitmap>(cacheSize)
+		mLruCache = new LruCache<String, Bitmap>(cacheSize)
 		{
 			@Override
-			protected int sizeOf(Integer key, Bitmap value)
+			protected int sizeOf(String key, Bitmap value)
 			{
 				return value.getRowBytes() * value.getHeight() / 1024;
 			}
@@ -91,7 +91,8 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 
 		switch (item.getType())
 		{
-			case HotelListViewItem.TYPE_SECTION: {
+			case HotelListViewItem.TYPE_SECTION:
+			{
 				HeaderListViewHolder headerViewHolder = null;
 
 				if (convertView != null)
@@ -117,7 +118,8 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 				break;
 			}
 
-			case HotelListViewItem.TYPE_ENTRY: {
+			case HotelListViewItem.TYPE_ENTRY:
+			{
 				Hotel element = item.getItem();
 				HotelListViewHolder viewHolder = null;
 
@@ -200,7 +202,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 				viewHolder.discount.setTypeface(DailyHotel.getBoldTypeface());
 
 				AQuery aq = new AQuery(convertView);
-				Bitmap cachedImg = getImgCache().get(position);
+				Bitmap cachedImg = mLruCache.get(element.getImage());
 
 				if (cachedImg == null)
 				{ // 힛인 밸류가 없다면 이미지를 불러온 후 캐시에 세이브
@@ -209,7 +211,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 						@Override
 						protected void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status)
 						{
-							getImgCache().put(position, bm);
+							mLruCache.put(url, bm);
 							super.callback(url, iv, bm, status);
 						}
 					};
@@ -288,10 +290,4 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 	{
 		return getItem(position).getType();
 	}
-
-	public LruCache<Integer, Bitmap> getImgCache()
-	{
-		return imgCache;
-	}
-
 }

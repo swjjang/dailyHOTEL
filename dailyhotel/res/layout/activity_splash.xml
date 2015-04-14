@@ -36,11 +36,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="6dp" >
 
-                <ImageView
+                <View
                     android:id="@+id/iv_splash_circle1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/splash_circle"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:background="@drawable/splash_circle"
                     android:visibility="invisible" />
             </RelativeLayout>
 
@@ -49,11 +49,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="6dp" >
 
-                <ImageView
+                <View
                     android:id="@+id/iv_splash_circle2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/splash_circle"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:background="@drawable/splash_circle"
                     android:visibility="invisible" />
             </RelativeLayout>
 
@@ -61,11 +61,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" >
 
-                <ImageView
+                <View
                     android:id="@+id/iv_splash_circle3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/splash_circle"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:background="@drawable/splash_circle"
                     android:visibility="invisible" />
             </RelativeLayout>
         </LinearLayout>

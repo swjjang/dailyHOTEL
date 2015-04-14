@@ -15,7 +15,6 @@
  */
 package com.twoheart.dailyhotel.activity;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,7 +35,6 @@ import android.provider.Settings;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 
 import com.android.volley.Request.Method;
 import com.android.volley.Response.ErrorListener;
@@ -54,19 +52,16 @@ import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 public class SplashActivity extends BaseActivity implements Constants, ErrorListener
 {
+	private static final int PROGRESS_CIRCLE_COUNT = 3;
 
 	private static final int VALUE_WEB_API_RESPONSE_NEW_EVENT_NOTIFY = 1;
 	private static final int VALUE_WEB_API_RESPONSE_NEW_EVENT_NONE = 0;
 	private static final int DURING_SPLASH_ACTIVITY_SHOW = 1000;
-	private boolean isDialogShown = false;
 
 	private Dialog alertDlg;
-
-	private GoogleCloudMessaging mGcm;
-
 	protected HashMap<String, String> regPushParams;
 
-	private ArrayList<ImageView> ivCircles;
+	private View[] mCircleViewList;
 	private Handler mHandler = new Handler();
 
 	@Override
@@ -76,10 +71,12 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 
 		setContentView(R.layout.activity_splash);
 
-		ivCircles = new ArrayList<ImageView>();
-		for (int i = 0; i < 3; i++)
-			ivCircles.add((ImageView) findViewById(R.id.iv_splash_circle1 + i));
+		mCircleViewList = new View[PROGRESS_CIRCLE_COUNT];
 
+		for (int i = 0; i < PROGRESS_CIRCLE_COUNT; i++)
+		{
+			mCircleViewList[i] = findViewById(R.id.iv_splash_circle1 + i);
+		}
 	}
 
 	@Override
@@ -213,7 +210,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 	private void startSplashLoad()
 	{
 
-		for (int i = 0; i < 3; i++)
+		for (int i = 0; i < PROGRESS_CIRCLE_COUNT; i++)
 		{
 			final int idx = i;
 			mHandler.postDelayed(new Runnable()
@@ -221,8 +218,8 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 				@Override
 				public void run()
 				{
-					ivCircles.get(idx).setVisibility(View.VISIBLE);
-					ivCircles.get(idx).startAnimation(AnimationUtils.loadAnimation(SplashActivity.this, R.anim.splash_load));
+					mCircleViewList[idx].setVisibility(View.VISIBLE);
+					mCircleViewList[idx].startAnimation(AnimationUtils.loadAnimation(SplashActivity.this, R.anim.splash_load));
 				}
 			}, 250 * (i + 1));
 		}

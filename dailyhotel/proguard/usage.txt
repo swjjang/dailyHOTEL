@@ -3720,6 +3720,9 @@ com.twoheart.dailyhotel.DailyHotel:
     115:117:private void initializeVolleyImageLoader()
 com.twoheart.dailyhotel.HotelDaysListFragment:
     private static final int DAY_OF_COUNT
+com.twoheart.dailyhotel.HotelListFragment:
+    548:581:private void showAnimationFadeOut()
+com.twoheart.dailyhotel.HotelListFragment$2
 com.twoheart.dailyhotel.MainActivity:
     private static final java.lang.String TAG_FRAGMENT_RATING_HOTEL
     protected java.util.List mFragments
@@ -3811,7 +3814,7 @@ com.twoheart.dailyhotel.util.network.request.DailyHotelRequest:
     protected abstract void deliverResponse(java.lang.Object)
 com.twoheart.dailyhotel.util.ui.AllCapsTransformationMethod
 com.twoheart.dailyhotel.util.ui.BaseActivity:
-    549:550:protected void chgClickable(android.view.View)
+    556:557:protected void chgClickable(android.view.View)
 com.twoheart.dailyhotel.util.ui.OnLoadListener
 com.twoheart.dailyhotel.util.ui.TransformationMethodCompat
 com.twoheart.dailyhotel.util.ui.TransformationMethodCompat2

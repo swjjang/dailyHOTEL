@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:textColor="@color/actionbar_title"
-        android:textSize="16dp" />
+        android:textSize="16dp"
+        android:textStyle="bold" />
 
 </LinearLayout>

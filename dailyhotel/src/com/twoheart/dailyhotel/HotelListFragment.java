@@ -516,12 +516,12 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 						mHotelListView.setOnItemClickListener(HotelListFragment.this);
 					}
 
+					mEmptyView.setVisibility(View.INVISIBLE);
+					mPullToRefreshLayout.setVisibility(View.VISIBLE);
+					
 					mHotelListAdapter.clear();
 					mHotelListAdapter.addAll(hotelListViewList);
 					mHotelListAdapter.notifyDataSetChanged();
-					
-					mEmptyView.setVisibility(View.INVISIBLE);
-					mPullToRefreshLayout.setVisibility(View.VISIBLE);
 				}
 
 				// Notify PullToRefreshLayout that the refresh has finished
