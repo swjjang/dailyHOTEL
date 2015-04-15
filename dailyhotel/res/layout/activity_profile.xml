@@ -87,19 +87,19 @@
             android:orientation="vertical" >
 
             <RelativeLayout
+                android:id="@+id/profileSectionBarLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/shape_section_background"
                 android:orientation="horizontal"
-                android:paddingBottom="9dp"
-                android:paddingLeft="13dp"
-                android:paddingRight="13dp"
-                android:paddingTop="20dp" >
+                android:paddingLeft="13dp" >
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
+                    android:paddingBottom="9dp"
+                    android:paddingTop="20dp"
                     android:text="@string/act_profile_user"
                     android:textColor="@color/textView_textColor_section"
                     android:textSize="12.5dp" />
@@ -108,7 +108,11 @@
                     android:id="@+id/ll_profile_edit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true" >
+                    android:layout_alignParentRight="true"
+                    android:paddingBottom="9dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="13dp"
+                    android:paddingTop="20dp" >
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -282,7 +286,6 @@
             android:text="@string/act_profile_btn_logout"
             android:textColor="@android:color/white"
             android:textSize="17dp" />
-
     </LinearLayout>
 
 </RelativeLayout>

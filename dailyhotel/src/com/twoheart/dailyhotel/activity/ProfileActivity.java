@@ -71,7 +71,22 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 
 		mAq = new AQuery(this);
 		mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-		setupUI(findViewById(android.R.id.content));
+
+		// 수정시에 인터페이스 편의를 위해 [사용자 정보] 바를 터치하면 완료되도록 수정.
+		findViewById(R.id.profileSectionBarLayout).setOnTouchListener(new View.OnTouchListener()
+		{
+			@Override
+			public boolean onTouch(View v, MotionEvent event)
+			{
+				if (mAq.id(R.id.tv_profile_edit).getText().equals(getString(R.string.dialog_btn_text_confirm)))
+				{
+					mAq.id(R.id.ll_profile_edit).click();
+					return true;
+				}
+
+				return false;
+			}
+		});
 
 		mAq.id(R.id.ll_profile_edit).clicked(this);
 		mAq.id(R.id.btn_profile_logout).clicked(this);
@@ -128,7 +143,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 	public void setupUI(View view)
 	{
 
-		if ((view.getId() == R.id.ll_profile_edit))
+		if (view.getId() == R.id.ll_profile_edit)
 		{
 			return;
 		}
