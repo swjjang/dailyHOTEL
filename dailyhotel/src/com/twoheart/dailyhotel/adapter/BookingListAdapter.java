@@ -48,11 +48,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking>
 		{
 			TextView day = (TextView) v.findViewById(R.id.tv_booking_row_day);
 			TextView name = (TextView) v.findViewById(R.id.tv_booking_row_name);
-			if (element.getPayType() == 20)
-			{
-				TextView ment = (TextView) v.findViewById(R.id.tv_booking_row_ment);
-				ment.setText(context.getString(R.string.actionbar_title_payment_wait_activity));
-			}
+			TextView ment = (TextView) v.findViewById(R.id.tv_booking_row_ment);
 
 			String str = items.get(position).getSday();
 			str = str.replace("-", " / ");
@@ -60,6 +56,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking>
 			ExLog.e("SDAY : " + items.get(position).getSday() + " / " + str);
 			day.setText(str);
 			name.setText(items.get(position).getHotel_name());
+			ment.setText(items.get(position).ment);
 		}
 
 		// pinkred_font

@@ -44,22 +44,10 @@
                 android:paddingLeft="17dp" >
 
                 <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-                    android:id="@+id/titleTextView01"
+                    android:id="@+id/titleTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="left|center_vertical"
-                    android:text="@string/label_event_title01"
-                    android:textColor="@color/white"
-                    android:textSize="20dp"
-                    android:textStyle="bold" />
-
-                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-                    android:id="@+id/titleTextView02"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/titleTextView01"
-                    android:gravity="left|center_vertical"
-                    android:text="@string/label_event_title02"
                     android:textColor="@color/white"
                     android:textSize="20dp" />
 
@@ -67,7 +55,7 @@
                     android:id="@+id/subTitleTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/titleTextView01"
+                    android:layout_below="@id/titleTextView"
                     android:layout_marginTop="5dp"
                     android:gravity="left|center_vertical"
                     android:text="@string/label_event_subtitle"

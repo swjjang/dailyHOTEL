@@ -11,7 +11,7 @@ public class Booking implements Parcelable
 	private String bedType;
 	private int payType;
 	private String tid;
-	private String ment;
+	public String ment;
 
 	public Booking()
 	{

@@ -86,6 +86,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	private static final int DIALOG_CONFIRM_PAYMENT_HP = 1;
 	private static final int DIALOG_CONFIRM_PAYMENT_ACCOUNT = 2;
 	private static final int DIALOG_CONFIRM_PAYMENT_NO_RSERVE = 3;
+	private static final int DIALOG_CONFIRM_CALL = 4;
 
 	private ScrollView svBooking;
 	private TextView mCheckinDayTextView, mCheckinTimeTextView,
@@ -308,7 +309,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			} //호텔 가격이 만원 이하인 이벤트 호텔에서는 적립금 사용을 못하게 막음. 
 			else if (mPay.isSaleCredit() && (mPay.getOriginalPrice() <= DEFAULT_AVAILABLE_RESERVES) && Integer.parseInt(mPay.getCredit().getBonus().replaceAll(",", "")) != 0)
 			{
-				getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_NO_RSERVE).show();
+				getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_NO_RSERVE, null).show();
 
 			} else
 			{
@@ -317,17 +318,17 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentCard.getId())
 				{
 					// 신용카드를 선택했을 경우
-					dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_CARD);
+					dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_CARD, null);
 					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("radio", "choosePaymentWay", "신용카드", (long) 1);
 				} else if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentHp.getId())
 				{
 					// 핸드폰을 선택했을 경우
-					dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_HP);
+					dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_HP, null);
 					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("radio", "choosePaymentWay", "휴대폰", (long) 2);
 				} else if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentAccount.getId())
 				{
 					// 가상계좌 입금을 선택했을 경우
-					dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_ACCOUNT);
+					dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_ACCOUNT, null);
 					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("radio", "choosePaymentWay", "계좌이체", (long) 3);
 				}
 
@@ -370,7 +371,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	 * @return 타입에 맞는 결제 동의 다이얼로그 반환.
 	 */
 
-	private Dialog getPaymentConfirmDialog(int type)
+	private Dialog getPaymentConfirmDialog(int type, final View.OnClickListener onClickListener)
 	{
 		final Dialog dialog = new Dialog(this);
 
@@ -384,34 +385,68 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		Button btnProceed = (Button) view.findViewById(R.id.btn_confirm_payment_proceed);
 		ImageView btnClose = (ImageView) view.findViewById(R.id.btn_confirm_payment_close);
 
-		OnClickListener onClickProceed = null;
+		String msg;
+		String buttonText;
 
-		String msg = "";
-		if (type == DIALOG_CONFIRM_PAYMENT_HP)
-			msg = getString(R.string.dialog_msg_payment_confirm_hp);
-		else if (type == DIALOG_CONFIRM_PAYMENT_NO_RSERVE)
+		OnClickListener buttonOnClickListener = null;
+
+		switch (type)
 		{
-			msg = getString(R.string.dialog_btn_payment_no_reserve);
-			btnProceed.setVisibility(View.GONE);
-		} else
-			msg = getString(R.string.dialog_msg_payment_confirm);
+			case DIALOG_CONFIRM_PAYMENT_HP:
+				msg = getString(R.string.dialog_msg_payment_confirm_hp);
+				buttonText = getString(R.string.dialog_btn_payment_confirm);
+				break;
+
+			case DIALOG_CONFIRM_PAYMENT_NO_RSERVE:
+				msg = getString(R.string.dialog_btn_payment_no_reserve);
+
+				btnProceed.setVisibility(View.GONE);
+				buttonText = getString(R.string.dialog_btn_payment_confirm);
+				break;
+
+			case DIALOG_CONFIRM_CALL:
+				msg = getString(R.string.dialog_msg_call);
+				buttonText = getString(R.string.dialog_btn_call);
+				break;
+
+			//			case DIALOG_CONFIRM_PAYMENT_CARD:
+			//			case DIALOG_CONFIRM_PAYMENT_ACCOUNT:
+			default:
+				msg = getString(R.string.dialog_msg_payment_confirm);
+				buttonText = getString(R.string.dialog_btn_payment_confirm);
+				break;
+		}
 
 		tvMsg.setText(Html.fromHtml(msg));
-		btnProceed.setText(Html.fromHtml(getString(R.string.dialog_btn_payment_confirm)));
+		btnProceed.setText(Html.fromHtml(buttonText));
 
-		onClickProceed = new OnClickListener()
+		if (onClickListener == null)
 		{
-			@Override
-			public void onClick(View v)
+			buttonOnClickListener = new OnClickListener()
 			{
-				lockUI();
+				@Override
+				public void onClick(View v)
+				{
+					lockUI();
 
-				mAliveCallSource = "PAYMENT";
-				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, BookingActivity.this));
-				dialog.dismiss();
-				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "agreePayment", mPay.getHotelDetail().getHotel().getName(), (long) mHotelIdx);
-			}
-		};
+					mAliveCallSource = "PAYMENT";
+					mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, BookingActivity.this));
+					dialog.dismiss();
+					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "agreePayment", mPay.getHotelDetail().getHotel().getName(), (long) mHotelIdx);
+				}
+			};
+		} else
+		{
+			buttonOnClickListener = new OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+					dialog.dismiss();
+					onClickListener.onClick(v);
+				}
+			};
+		}
 
 		btnClose.setOnClickListener(new OnClickListener()
 		{
@@ -422,7 +457,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			}
 		});
 
-		btnProceed.setOnClickListener(onClickProceed);
+		btnProceed.setOnClickListener(buttonOnClickListener);
 
 		dialog.setContentView(view);
 
@@ -737,10 +772,21 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		switch (item.getItemId())
 		{
 			case R.id.action_call:
-				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "callHotel", mPay.getHotelDetail().getHotel().getName(), (long) mHotelIdx);
-				Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
-				startActivity(i);
+			{
+				getPaymentConfirmDialog(DIALOG_CONFIRM_CALL, new View.OnClickListener()
+				{
+					@Override
+					public void onClick(View v)
+					{
+						RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "callHotel", mPay.getHotelDetail().getHotel().getName(), (long) mHotelIdx);
+						Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
+						startActivity(i);
+					}
+				}).show();
+
 				return true;
+			}
+
 			default:
 				return super.onOptionsItemSelected(item);
 		}
