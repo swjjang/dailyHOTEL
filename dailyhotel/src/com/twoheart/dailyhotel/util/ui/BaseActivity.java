@@ -84,8 +84,6 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	{
 		super.onCreate(savedInstanceState);
 
-		setLocale(Locale.KOREA);
-
 		sharedPreference = getSharedPreferences(NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
 		mQueue = VolleyHttpClient.getRequestQueue();
 
