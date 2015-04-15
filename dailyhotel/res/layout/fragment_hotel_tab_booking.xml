@@ -45,7 +45,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
 
-                <TextView
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                     android:id="@+id/hotel_tab_booking_address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -55,7 +55,7 @@
                     android:textColor="@color/textView_textColor_sub"
                     android:textSize="15dp" />
 
-                <TextView
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                     android:id="@+id/tv_hotel_tab_booking_address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -78,7 +78,7 @@
                 android:layout_below="@+id/rl_hotel_upper"
                 android:layout_marginTop="10dp" >
 
-                <TextView
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                     android:id="@+id/hotel_tab_booking_bed_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -87,7 +87,7 @@
                     android:textColor="@color/textView_textColor_sub"
                     android:textSize="15dp" />
 
-                <TextView
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                     android:id="@+id/tv_hotel_tab_booking_bed_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -119,7 +119,7 @@
             android:paddingRight="10dp"
             android:paddingTop="15dp" >
 
-            <TextView
+            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                 android:id="@+id/tv_hotel_tab_booking_price_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -137,7 +137,7 @@
                 android:textColor="@color/textView_textColor_sub"
                 android:textSize="15dp" /> -->
 
-            <TextView
+            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                 android:id="@+id/tv_hotel_tab_booking_discount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -152,7 +152,7 @@
                 android:textSize="16dp"
                 android:textStyle="bold" />
 
-            <TextView
+            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                 android:id="@+id/tv_hotel_tab_booking_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

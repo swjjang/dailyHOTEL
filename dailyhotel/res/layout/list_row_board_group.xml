@@ -12,7 +12,7 @@
     android:paddingBottom="7dp"
      >
 
-    <TextView
+    <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
         android:id="@+id/tv_board_subject"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,7 +26,7 @@
         android:textSize="16.5dp"
         android:textColor="@color/textView_textColor_main" />
 
-    <TextView
+    <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
         android:id="@+id/tv_board_regdate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

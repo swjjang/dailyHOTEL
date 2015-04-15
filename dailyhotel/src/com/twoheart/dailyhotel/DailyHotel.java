@@ -59,6 +59,7 @@ public class DailyHotel extends Application implements Constants
 		initializeVolley();
 		initializeGa();
 		initializeFont();
+
 		ACRA.init(this);
 	}
 

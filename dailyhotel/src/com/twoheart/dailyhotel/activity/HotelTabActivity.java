@@ -28,7 +28,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,7 +45,6 @@ import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
@@ -156,7 +154,8 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 			mFragmentViewPager.setData(mFragmentList);
 			mFragmentViewPager.setAdapter(getSupportFragmentManager());
 
-			GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
+			// pinkred_font
+			//			GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
 		}
 	}
 
@@ -290,17 +289,17 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 	protected void onResume()
 	{
 		onPostSetCookie();
-		
-		switch(mPosition)
+
+		switch (mPosition)
 		{
 			case 0:
 				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_booking", "/todays-hotels/" + region + "/" + hotelName + "/booking");
 				break;
-				
+
 			case 1:
 				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_info", "/todays-hotels/" + region + "/" + hotelName + "/info");
 				break;
-				
+
 			case 2:
 				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_map", "/todays-hotels/" + region + "/" + hotelName + "/map");
 				break;
@@ -363,17 +362,17 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 			String region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
 			String hotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
 			mPosition = position;
-			
-			switch(mPosition)
+
+			switch (mPosition)
 			{
 				case 0:
 					RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_booking", "/todays-hotels/" + region + "/" + hotelName + "/booking");
 					break;
-					
+
 				case 1:
 					RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_info", "/todays-hotels/" + region + "/" + hotelName + "/info");
 					break;
-					
+
 				case 2:
 					RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_map", "/todays-hotels/" + region + "/" + hotelName + "/map");
 					break;

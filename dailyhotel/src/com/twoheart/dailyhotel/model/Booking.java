@@ -5,13 +5,13 @@ import android.os.Parcelable;
 
 public class Booking implements Parcelable
 {
-
 	private String sday;
 	private String hotel_idx;
 	private String hotel_name;
 	private String bedType;
 	private int payType;
 	private String tid;
+	private String ment;
 
 	public Booking()
 	{
@@ -57,7 +57,7 @@ public class Booking implements Parcelable
 		}
 	};
 
-	public Booking(String sday, String hotel_idx, String hotel_name, String bedType, int payType, String tid)
+	public Booking(String sday, String hotel_idx, String hotel_name, String bedType, int payType, String tid, String ment)
 	{
 		this.sday = sday;
 		this.hotel_idx = hotel_idx;
@@ -65,6 +65,7 @@ public class Booking implements Parcelable
 		this.bedType = bedType;
 		this.payType = payType;
 		this.tid = tid;
+		this.ment = ment;
 	}
 
 	public String getSday()

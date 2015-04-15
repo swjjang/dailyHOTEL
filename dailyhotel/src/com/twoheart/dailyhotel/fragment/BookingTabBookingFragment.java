@@ -33,6 +33,7 @@ import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -219,7 +220,7 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 				format.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
 
 				// Check In
-				Calendar calendarCheckin = Calendar.getInstance();
+				Calendar calendarCheckin = DailyCalendar.getInstance();
 				calendarCheckin.setTimeInMillis(checkin);
 
 				String checkInday = format.format(calendarCheckin.getTime());
@@ -227,7 +228,7 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 				tvCheckIn.setText(checkInday);
 
 				// Check Out
-				Calendar calendarCheckout = Calendar.getInstance();
+				Calendar calendarCheckout = DailyCalendar.getInstance();
 				calendarCheckout.setTimeInMillis(checkout);
 
 				String checkOutday = format.format(calendarCheckout.getTime());

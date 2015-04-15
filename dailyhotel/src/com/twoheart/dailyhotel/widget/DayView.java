@@ -44,8 +44,8 @@ public class DayView extends LinearLayout
 		setOrientation(LinearLayout.VERTICAL);
 		setGravity(Gravity.CENTER_HORIZONTAL);
 
-		mDayTextView = new TextView(getContext());
-		mWeekTextView = new TextView(getContext());
+		mDayTextView = new DailyCustomFontTextView(getContext());
+		mWeekTextView = new DailyCustomFontTextView(getContext());
 
 		addView(mDayTextView);
 		addView(mWeekTextView);

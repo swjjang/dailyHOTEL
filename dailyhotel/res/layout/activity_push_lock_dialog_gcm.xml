@@ -29,7 +29,7 @@
                 android:adjustViewBounds="true"
                 android:src="@drawable/img_logo_popover" />
 
-            <TextView
+            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                 android:id="@+id/tv_push_lock_dialog_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -66,7 +66,7 @@
                 android:paddingRight="10dp"
                 android:paddingTop="10dp" >
 
-                <TextView
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                     android:id="@+id/tv_push_lock_dialog_msg"
                     android:layout_width="wrap_content"
                     android:layout_height="110dp"
@@ -80,7 +80,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
 
-                <Button
+                <com.twoheart.dailyhotel.widget.DailyCustomFontButton
                     android:id="@+id/btn_push_lock_dialog_show"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -91,7 +91,7 @@
                     android:textColor="@drawable/selector_textcolor_btn_rating_hotel"
                     android:textSize="17dp" />
 
-                <Button
+                <com.twoheart.dailyhotel.widget.DailyCustomFontButton
                     android:id="@+id/btn_push_lock_dialog_close"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

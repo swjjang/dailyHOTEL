@@ -490,7 +490,8 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 
 			switch (hotelListViewItem.getType())
 			{
-				case HotelListViewItem.TYPE_ENTRY: {
+				case HotelListViewItem.TYPE_ENTRY:
+				{
 					Intent i = new Intent(mHostActivity, HotelTabActivity.class);
 
 					String region = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");

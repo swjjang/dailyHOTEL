@@ -40,7 +40,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -61,8 +60,8 @@ import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.model.Pay;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
@@ -148,7 +147,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		btnPay = (TextView) findViewById(R.id.btn_hotel_payment);
 		swCredit = (SwitchCompat) findViewById(R.id.btn_on_off);
 
-//		swCredit.setSwitchMinWidth(Util.dpToPx(BookingActivity.this, 60));
+		//		swCredit.setSwitchMinWidth(Util.dpToPx(BookingActivity.this, 60));
 
 		etReserverName = (EditText) findViewById(R.id.et_hotel_payment_reserver_name);
 		etReserverNumber = (EditText) findViewById(R.id.et_hotel_payment_reserver_number);
@@ -426,7 +425,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		btnProceed.setOnClickListener(onClickProceed);
 
 		dialog.setContentView(view);
-		GlobalFont.apply((ViewGroup) view);
+
+		// pinkred_font
+		//		GlobalFont.apply((ViewGroup) view);
 
 		return dialog;
 	}
@@ -1045,7 +1046,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			}
 
 			// Check In
-			Calendar calendarCheckin = Calendar.getInstance();
+			Calendar calendarCheckin = DailyCalendar.getInstance();
 			calendarCheckin.setTimeInMillis(checkin);
 
 			if (locale.equals("한국어") == true)
@@ -1061,7 +1062,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			}
 
 			// CheckOut
-			Calendar calendarCheckout = Calendar.getInstance();
+			Calendar calendarCheckout = DailyCalendar.getInstance();
 			calendarCheckout.setTimeInMillis(checkout);
 
 			SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd-hh");

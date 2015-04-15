@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.GlobalFont;
 
 public class BookingListAdapter extends ArrayAdapter<Booking>
 {
@@ -63,7 +62,8 @@ public class BookingListAdapter extends ArrayAdapter<Booking>
 			name.setText(items.get(position).getHotel_name());
 		}
 
-		GlobalFont.apply((ViewGroup) v);
+		// pinkred_font
+		//		GlobalFont.apply((ViewGroup) v);
 		return v;
 	}
 

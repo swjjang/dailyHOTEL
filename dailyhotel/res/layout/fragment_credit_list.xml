@@ -19,7 +19,7 @@
             android:scrollbars="vertical" >
         </ListView>
 
-        <TextView
+        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
             android:id="@+id/empty_listview_credit"
             android:layout_gravity="center"
             android:layout_width="wrap_content"

@@ -2,43 +2,24 @@ package com.twoheart.dailyhotel.widget;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.v7.internal.widget.TintRadioButton;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
-public class DailyCustomFontTextView extends TextView
+public class DailyCustomFontRadioButton extends TintRadioButton
 {
-	private int mCurMaxLine = 0;
-
-	public DailyCustomFontTextView(Context context)
+	public DailyCustomFontRadioButton(Context context)
 	{
-		super(context);
+		super(context, null);
 	}
 
-	public DailyCustomFontTextView(Context context, AttributeSet attrs)
+	public DailyCustomFontRadioButton(Context context, AttributeSet attrs)
 	{
 		super(context, attrs);
 	}
 
-	public DailyCustomFontTextView(Context context, AttributeSet attrs, int defStyle)
+	public DailyCustomFontRadioButton(Context context, AttributeSet attrs, int defStyleAttr)
 	{
-		super(context, attrs, defStyle);
-	}
-
-	public DailyCustomFontTextView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
-	{
-		super(context, attrs, defStyleAttr, defStyleRes);
-	}
-
-	public int getCurrentMaxLines()
-	{
-		return mCurMaxLine;
-	}
-
-	@Override
-	public void setMaxLines(int maxlines)
-	{
-		mCurMaxLine = maxlines;
-		super.setMaxLines(maxlines);
+		super(context, attrs, defStyleAttr);
 	}
 
 	@Override
@@ -47,6 +28,7 @@ public class DailyCustomFontTextView extends TextView
 		switch (style)
 		{
 			case Typeface.NORMAL:
+
 				setTypeface(FontManager.getInstance(getContext().getApplicationContext()).getNormalTypeface());
 				//				if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1)
 				//				{
@@ -89,5 +71,6 @@ public class DailyCustomFontTextView extends TextView
 				//				}
 				break;
 		}
+
 	}
 }

@@ -4,14 +4,12 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 
 public abstract class BaseFragment extends Fragment implements Constants, OnLoadListener, ErrorListener
@@ -50,7 +48,9 @@ public abstract class BaseFragment extends Fragment implements Constants, OnLoad
 	public void onActivityCreated(Bundle savedInstanceState)
 	{
 		super.onActivityCreated(savedInstanceState);
-		GlobalFont.apply((ViewGroup) getView().getRootView());
+
+		// pinkred_font
+		//		GlobalFont.apply((ViewGroup) getView().getRootView());
 	}
 
 	@Override

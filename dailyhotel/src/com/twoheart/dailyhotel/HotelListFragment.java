@@ -54,7 +54,6 @@ import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
@@ -77,7 +76,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	private View mEmptyView;
 
 	protected HotelMainFragment.UserActionListener mUserActionListener;
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
@@ -86,11 +85,12 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		mHotelListView = (PinnedSectionListView) view.findViewById(R.id.listview_hotel_list);
 		mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
 		mEmptyView = view.findViewById(R.id.emptyView);
-		
+
 		mEmptyView.setVisibility(View.INVISIBLE);
 		mPullToRefreshLayout.setVisibility(View.VISIBLE);
-		
-		GlobalFont.apply(container);
+
+		// pinkred_font
+		//		GlobalFont.apply(container);
 
 		// 추후 왼쪽 탭로 빠질것이다.
 		//		btnListViewHeader.setOnClickListener(new OnClickListener()
@@ -149,8 +149,8 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 	public void onPageUnSelected()
 	{
-//		mEmptyView.setVisibility(View.VISIBLE);
-//		mPullToRefreshLayout.setVisibility(View.INVISIBLE);
+		//		mEmptyView.setVisibility(View.VISIBLE);
+		//		mPullToRefreshLayout.setVisibility(View.INVISIBLE);
 	}
 
 	public void onRefreshComplete(boolean isSelectedNavigationItem)
@@ -518,12 +518,12 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 					mEmptyView.setVisibility(View.INVISIBLE);
 					mPullToRefreshLayout.setVisibility(View.VISIBLE);
-					
+
 					mHotelListAdapter.clear();
 					mHotelListAdapter.addAll(hotelListViewList);
 					mHotelListAdapter.notifyDataSetChanged();
-					
-					if(mIsSelectedNavigationItem == true)
+
+					if (mIsSelectedNavigationItem == true)
 					{
 						mHotelListView.setSelection(0);
 					}
@@ -544,7 +544,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 			}
 		}
 	};
-	
+
 	/**
 	 * 점점 어두워짐.
 	 */
@@ -568,7 +568,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 			public void onAnimationEnd(Animation animation)
 			{
 				mEmptyView.setVisibility(View.INVISIBLE);
-				
+
 				mPullToRefreshLayout.setVisibility(View.VISIBLE);
 				mPullToRefreshLayout.startAnimation(AnimationUtils.loadAnimation(mHostActivity, R.anim.viewpager_fade_in));
 			}

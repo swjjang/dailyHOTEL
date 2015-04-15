@@ -2,43 +2,24 @@ package com.twoheart.dailyhotel.widget;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.v7.widget.SwitchCompat;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
-public class DailyCustomFontTextView extends TextView
+public class DailyCustomFontSwitchCompat extends SwitchCompat
 {
-	private int mCurMaxLine = 0;
-
-	public DailyCustomFontTextView(Context context)
+	public DailyCustomFontSwitchCompat(Context context)
 	{
 		super(context);
 	}
 
-	public DailyCustomFontTextView(Context context, AttributeSet attrs)
+	public DailyCustomFontSwitchCompat(Context context, AttributeSet attrs)
 	{
 		super(context, attrs);
 	}
 
-	public DailyCustomFontTextView(Context context, AttributeSet attrs, int defStyle)
+	public DailyCustomFontSwitchCompat(Context context, AttributeSet attrs, int defStyle)
 	{
 		super(context, attrs, defStyle);
-	}
-
-	public DailyCustomFontTextView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
-	{
-		super(context, attrs, defStyleAttr, defStyleRes);
-	}
-
-	public int getCurrentMaxLines()
-	{
-		return mCurMaxLine;
-	}
-
-	@Override
-	public void setMaxLines(int maxlines)
-	{
-		mCurMaxLine = maxlines;
-		super.setMaxLines(maxlines);
 	}
 
 	@Override

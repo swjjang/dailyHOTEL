@@ -98,7 +98,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 	public void setSaleTime(SaleTime saleTime)
 	{
 		super.setSaleTime(saleTime);
-		
+
 		// 날짜를 어떻게 받을 것인지 필요.
 		mDaysView[0] = mDaysLayout.findViewById(R.id.item01);
 		mDaysView[1] = mDaysLayout.findViewById(R.id.item02);
@@ -122,8 +122,8 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		} else
 		{
 			setSelectedDays(mSelectedView);
-			
-			super.setSaleTime((SaleTime)mSelectedView.getTag());
+
+			super.setSaleTime((SaleTime) mSelectedView.getTag());
 		}
 	}
 
@@ -204,11 +204,11 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		setSelectedDays(v);
 
 		mSaleTime = (SaleTime) v.getTag();
-		
+
 		setDaysLayoutEnabled(false);
 
 		mUserActionListener.selectDay(this, true);
-		
+
 		mHandler.postDelayed(new Runnable()
 		{
 			@Override
@@ -237,19 +237,19 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 
 		view.setTag(saleTime);
 	}
-	
+
 	private void setDaysLayoutEnabled(boolean enabled)
 	{
-		if(mDaysView == null)
+		if (mDaysView == null)
 		{
 			return;
 		}
-		
-		for(View view : mDaysView)
+
+		for (View view : mDaysView)
 		{
 			view.setEnabled(enabled);
 		}
-		
+
 		mDaysBackgroundView.setEnabled(enabled);
 	}
 
@@ -335,7 +335,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 					{
 						mAnimationStatus = ANIMATION_STATUS.SHOW_END;
 						mAnimationState = ANIMATION_STATE.END;
-						
+
 						setDaysLayoutEnabled(true);
 					}
 				}
@@ -387,7 +387,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 				{
 					mAnimationStatus = ANIMATION_STATUS.SHOW_END;
 					mAnimationState = ANIMATION_STATE.END;
-					
+
 					setDaysLayoutEnabled(true);
 				}
 			});
@@ -428,7 +428,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 				{
 					mAnimationState = ANIMATION_STATE.START;
 					mAnimationStatus = ANIMATION_STATUS.HIDE;
-					
+
 					setDaysLayoutEnabled(false);
 				}
 
@@ -472,7 +472,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 				{
 					mAnimationState = ANIMATION_STATE.START;
 					mAnimationStatus = ANIMATION_STATUS.HIDE;
-					
+
 					setDaysLayoutEnabled(false);
 				}
 

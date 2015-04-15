@@ -18,7 +18,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.os.Bundle;
-import android.view.ViewGroup;
 
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
@@ -29,7 +28,6 @@ import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
@@ -121,7 +119,8 @@ public class BookingTabActivity extends BaseActivity
 			mFragmentViewPager.setData(mFragmentList);
 			mFragmentViewPager.setAdapter(getSupportFragmentManager());
 
-			GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
+			// pinkred_font
+			//			GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
 		}
 	}
 

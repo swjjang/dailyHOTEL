@@ -5,7 +5,7 @@
     android:gravity="center"
     android:orientation="vertical" >
 
-    <TextView
+    <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -22,7 +22,7 @@
             android:layout_alignParentRight="true"
             android:background="@drawable/selector_daystab_daybackground" />
 
-        <TextView
+        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
             android:id="@+id/textView2"
             android:layout_width="40dp"
             android:layout_height="40dp"

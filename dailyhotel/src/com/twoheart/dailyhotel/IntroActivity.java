@@ -43,7 +43,7 @@ public class IntroActivity extends BaseActivity implements OnClickListener, OnPa
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		
+
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
 		{
 			Window window = getWindow();
@@ -53,7 +53,7 @@ public class IntroActivity extends BaseActivity implements OnClickListener, OnPa
 		{
 			getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		}
-		
+
 		setContentView(R.layout.activity_intro);
 
 		mPager = (ViewPager) findViewById(R.id.intro_pager);

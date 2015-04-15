@@ -16,9 +16,11 @@
 package com.twoheart.dailyhotel.util.ui;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
@@ -32,7 +34,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.webkit.CookieSyncManager;
@@ -82,6 +83,9 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+
+		setLocale(Locale.KOREA);
+
 		sharedPreference = getSharedPreferences(NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
 		mQueue = VolleyHttpClient.getRequestQueue();
 
@@ -120,14 +124,18 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 
 		// RequestQueue에 등록된 모든 Request들을 취소한다.
 		if (mQueue != null)
+		{
 			mQueue.cancelAll(cancelAllRequestFilter);
+		}
 	}
 
 	@Override
 	public void setContentView(int layoutResID)
 	{
 		super.setContentView(layoutResID);
-		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
+
+		// pinkred_font
+		//		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
 	}
 
 	/**
@@ -147,6 +155,8 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 			mToolbar.setBackgroundColor(getResources().getColor(R.color.white));
 		}
 
+		GlobalFont.apply(mToolbar);
+
 		setActionBarListEnabled(false);
 		//		mToolbar.setTitle(title);
 		getSupportActionBar().setTitle(title);
@@ -165,7 +175,8 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 			});
 		}
 
-		GlobalFont.apply(mToolbar);
+		// pinkred_font
+		//		GlobalFont.apply(mToolbar);
 
 		return mToolbar;
 	}
@@ -182,13 +193,13 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 
 	public void setActionBarRegionEnable(boolean isEnable)
 	{
-		if(mActionBarRegionEnabled == isEnable)
+		if (mActionBarRegionEnabled == isEnable)
 		{
 			return;
 		}
-		
+
 		mActionBarRegionEnabled = isEnable;
-		
+
 		if (mSpinnderIndex != -1 && mToolbar.getChildAt(mSpinnderIndex) != null)
 		{
 			View view = mToolbar.getChildAt(mSpinnderIndex);
@@ -205,7 +216,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 			}
 		}
 	}
-	
+
 	public void setActionBarListEnabled(boolean isEnable)
 	{
 		if (isEnable == true)
@@ -219,7 +230,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 
 				mSpinnderIndex = mToolbar.getChildCount();
 				mToolbar.addView(view, mSpinnderIndex);
-				
+
 				mActionBarRegionEnabled = true;
 			}
 		} else
@@ -228,7 +239,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 			{
 				mToolbar.removeViewAt(mSpinnderIndex);
 				mSpinnderIndex = -1;
-				
+
 				mActionBarRegionEnabled = false;
 			}
 		}
@@ -269,6 +280,15 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 			supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 			setSupportProgressBarIndeterminate(true);
 		}
+	}
+
+	private void setLocale(Locale locale)
+	{
+		Locale.setDefault(locale);
+		Configuration config = new Configuration();
+		config.locale = locale;
+		getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+
 	}
 
 	private void showPopupWindow(View oTargetView, ArrayList<String> stringlist, final UserActionListener userActionListener)
@@ -440,7 +460,8 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	{
 		lockUiComponent();
 
-		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
+		// pinkred_font
+		//		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
 		mLockUI.hide();
 		handler.removeCallbacks(networkCheckRunner);
 
@@ -499,7 +520,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 		if (Constants.DEBUG == true)
 		{
 			Log.e("DailyHotel", error.toString(), error.fillInStackTrace());
-//			DailyToast.showToast(this, error.toString(), Toast.LENGTH_LONG);
+			//			DailyToast.showToast(this, error.toString(), Toast.LENGTH_LONG);
 		} else
 		{
 			onError();

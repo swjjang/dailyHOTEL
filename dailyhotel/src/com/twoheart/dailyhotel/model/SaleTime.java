@@ -10,6 +10,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 
 public class SaleTime implements Constants, Parcelable
@@ -20,7 +21,7 @@ public class SaleTime implements Constants, Parcelable
 	private Date mCloseTime;
 	private Date mCurrentTime;
 
-	private static final Calendar calendar = Calendar.getInstance();
+	private static final Calendar calendar = DailyCalendar.getInstance();
 	private static final SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
 
 	public SaleTime()

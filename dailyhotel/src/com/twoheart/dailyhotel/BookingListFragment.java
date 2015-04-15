@@ -335,8 +335,9 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 						String bedType = rsvObj.getString("bed_type");
 						int payType = rsvObj.getInt("pay_type");
 						String tid = rsvObj.getString("tid");
+						String comment = rsvObj.getString("comment");
 
-						mItems.add(new Booking(sday, hotel_idx, hotel_name, bedType, payType, tid));
+						mItems.add(new Booking(sday, hotel_idx, hotel_name, bedType, payType, tid, comment));
 					}
 
 					mAdapter = new BookingListAdapter(mHostActivity, R.layout.list_row_booking, mItems);
@@ -365,8 +366,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 				btnLogin.setVisibility(View.INVISIBLE);
 
 				onError(e);
-			}
-			finally
+			} finally
 			{
 				unLockUI();
 			}

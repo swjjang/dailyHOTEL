@@ -29,14 +29,14 @@
                android:layout_marginRight="10dp"
                android:orientation="vertical">
                
-              <TextView 
+              <com.twoheart.dailyhotel.widget.DailyCustomFontTextView 
                   android:layout_width="match_parent"
                   android:layout_height="25dp"
                   android:textColor="@color/textView_textColor_main"
                   android:textSize="20dp"
                   android:text="@string/alarm_title"/>
               
-              <TextView 
+              <com.twoheart.dailyhotel.widget.DailyCustomFontTextView 
                   android:layout_width="match_parent"
                   android:layout_height="15dp"
                   android:textColor="@color/textView_textColor_sub"
@@ -51,7 +51,7 @@
            android:layout_width="match_parent"
            android:layout_height="60dp">
            
-           <TextView
+           <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                android:id="@+id/btn_push_ok"
                android:layout_width="80dp"
                android:layout_height="match_parent"
@@ -62,7 +62,7 @@
                android:textColor="@android:color/white"
                android:textSize="17dp" />
            
-           <TextView
+           <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                android:id="@+id/btn_push_cancle" 
                android:layout_height="match_parent"
                android:layout_width="80dp"

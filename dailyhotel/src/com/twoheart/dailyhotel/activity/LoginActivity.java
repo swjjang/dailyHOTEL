@@ -37,7 +37,6 @@ import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -105,7 +104,9 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 		btnLogin = (TextView) findViewById(R.id.btn_login);
 		facebookLogin = (LoginButton) findViewById(R.id.authButton);
 
-//		cbxAutoLogin.setSwitchMinWidth(Util.dpToPx(LoginActivity.this, 60));
+		GlobalFont.apply(facebookLogin);
+
+		//		cbxAutoLogin.setSwitchMinWidth(Util.dpToPx(LoginActivity.this, 60));
 		cbxAutoLogin.setChecked(true);
 		cbxAutoLogin.setSwitchPadding(Util.dpToPx(LoginActivity.this, 15));
 
@@ -135,7 +136,9 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 			Session.getActiveSession().closeAndClearTokenInformation();
 
 		mMixpanel = MixpanelAPI.getInstance(this, "791b366dadafcd37803f6cd7d8358373");
-		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
+
+		// pinkred_font
+		//		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
 	}
 
 	private void makeMeRequest(final Session session)

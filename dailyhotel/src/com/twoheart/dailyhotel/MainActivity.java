@@ -74,6 +74,7 @@ import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.Util;
@@ -536,28 +537,28 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			public void onDrawerOpened(View drawerView)
 			{
 				super.onDrawerOpened(drawerView);
-				
+
 				supportInvalidateOptionsMenu();
 
 				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("menu", "/menu");
 				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestMenuBar", null, null);
 			}
-			
+
 			@Override
 			public void onDrawerSlide(View drawerView, float slideOffset)
 			{
-				if(Float.compare(slideOffset, 0.0f) > 0)
+				if (Float.compare(slideOffset, 0.0f) > 0)
 				{
 					setActionBarRegionEnable(false);
-				} else if(Float.compare(slideOffset, 0.0f) == 0)
+				} else if (Float.compare(slideOffset, 0.0f) == 0)
 				{
 					setActionBarRegionEnable(true);
 				}
-				
+
 				super.onDrawerSlide(drawerView, slideOffset);
 			}
 		};
-		
+
 		drawerLayout.post(new Runnable()
 		{
 			@Override
@@ -580,8 +581,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			public void onClick(View v)
 			{
 				drawerLayout.closeDrawer(drawerView);
-				
-				mHandler.postDelayed(new Runnable() 
+
+				mHandler.postDelayed(new Runnable()
 				{
 					@Override
 					public void run()
@@ -600,7 +601,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 		mMenuImages = new ArrayList<DrawerMenu>();
 
-		mMenuImages.add(new DrawerMenu(DrawerMenu.DRAWER_MENU_LIST_TYPE_LOGO));
+		//		mMenuImages.add(new DrawerMenu(DrawerMenu.DRAWER_MENU_LIST_TYPE_LOGO));
 		mMenuImages.add(new DrawerMenu(getString(R.string.drawer_menu_pin_title_resrvation), DrawerMenu.DRAWER_MENU_LIST_TYPE_SECTION));
 		mMenuImages.add(menuHotelListFragment);
 		mMenuImages.add(menuBookingListFragment);
@@ -656,17 +657,29 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		}
 	}
 
+	@Override
+	public void onBackPressed()
+	{
+		if (drawerLayout.isDrawerOpen(drawerView) == true)
+		{
+			drawerLayout.closeDrawer(drawerView);
+			return;
+		}
+
+		super.onBackPressed();
+	}
+
 	public void toggleDrawer()
 	{
-		if (!drawerLayout.isDrawerOpen(drawerView))
+		if (drawerLayout.isDrawerOpen(drawerView) == false)
 			drawerLayout.openDrawer(drawerView);
 		else
 			drawerLayout.closeDrawer(drawerView);
 	}
-	
+
 	public void closeDrawer()
 	{
-		if(drawerLayout != null)
+		if (drawerLayout != null)
 		{
 			if (drawerLayout.isDrawerOpen(GravityCompat.START) == true)
 			{
@@ -945,7 +958,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 					{
 						if (today.compareTo(checkOut) >= 0)
 						{
-							Calendar calendar = Calendar.getInstance();
+							Calendar calendar = DailyCalendar.getInstance();
 							calendar.setTime(checkOut);
 							calendar.add(Calendar.DATE, DAYS_DISPLAY_RATING_HOTEL_DIALOG);
 							Date deadLineDay = calendar.getTime();

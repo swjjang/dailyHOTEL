@@ -115,6 +115,14 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("profileWithLogon", "/todays-hotels/profile-with-logon");
 	}
 
+	@Override
+	protected void onPause()
+	{
+		toggleKeyboard(false);
+
+		super.onPause();
+	}
+
 	/**
 	 * 수정중인 상태에서 백버튼을 누른경우에 수정 취소 => 바꾸기 전 상태로 돌아감
 	 */

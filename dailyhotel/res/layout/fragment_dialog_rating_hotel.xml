@@ -29,7 +29,7 @@
                 android:adjustViewBounds="true"
                 android:src="@drawable/img_logo_popover" />
 
-            <TextView
+            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/logo"
@@ -65,14 +65,14 @@
                 android:paddingRight="10dp"
                 android:paddingTop="40dp" >
                 
-                <TextView
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
                     android:text="@string/frag_rating_hotel_text1"
                     android:textSize="16.5dp" />
 
-                <TextView
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                     android:id="@+id/tv_rating_hotel_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -80,7 +80,7 @@
                     android:textStyle="bold"
                     android:textSize="16.5dp" />
 
-                <TextView
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
@@ -93,7 +93,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
 
-                <Button
+                <com.twoheart.dailyhotel.widget.DailyCustomFontButton
                     android:id="@+id/btn_rating_hotel_recommend"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -103,7 +103,7 @@
                     android:textColor="@drawable/selector_textcolor_btn_rating_hotel"
                     android:textSize="17dp" />
 
-                <Button
+                <com.twoheart.dailyhotel.widget.DailyCustomFontButton
                     android:id="@+id/btn_rating_hotel_cancel"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

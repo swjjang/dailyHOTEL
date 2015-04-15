@@ -98,7 +98,7 @@ public class TabIndicator extends LinearLayout implements OnClickListener
 		{
 			tabIndicatorItem = new TabIndicatorItem(getContext());
 			tabIndicatorItem.setId(i);
-			
+
 			tabIndicatorItem.setSubTextEnable(false);
 			tabIndicatorItem.setMainText(dataList.get(i));
 			tabIndicatorItem.setOnClickListener(this);

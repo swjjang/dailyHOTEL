@@ -22,31 +22,28 @@
             android:layout_weight="0.9"
             android:orientation="vertical" >
 
-            <TextView
+            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                 android:id="@+id/tv_booking_row_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8.5dp"
-                android:text="호텔 더 디자이너스 종로"
                 android:textColor="#5c5c5c"
                 android:textSize="18.5dp" />
 
-            <TextView
+            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                 android:id="@+id/tv_booking_row_day"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="left"
-                android:text="2014 / 05 / 17"
                 android:textColor="#7f7f7f"
                 android:textSize="14dp" />
 
-            <TextView
+            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                 android:id="@+id/tv_booking_row_ment"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="left|bottom"
-                android:text="@string/booking_row_ment"
                 android:textColor="#7f7f7f"
                 android:textSize="14dp" />
         </LinearLayout>
