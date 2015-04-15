@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.json.JSONException;
@@ -550,7 +551,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 					int userIdx = response.getInt("idx");
 					String userIdxStr = String.format("%07d", userIdx);
 
-					SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.getDefault());
+					SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
 					Date date = new Date();
 					String strDate = dateFormat.format(date);
 

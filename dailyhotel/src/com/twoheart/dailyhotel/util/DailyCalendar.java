@@ -25,6 +25,7 @@ public abstract class DailyCalendar extends Calendar
 
 	public static Calendar getInstance()
 	{
+		// TimeZone은 시간위치 , Locale은 지역
 		return Calendar.getInstance(Locale.KOREA);
 	}
 }

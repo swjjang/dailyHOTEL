@@ -16,6 +16,7 @@ package com.twoheart.dailyhotel;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import org.json.JSONObject;
@@ -97,7 +98,7 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 		btnEvent.setOnClickListener(this);
 
 		mHostActivity.setActionBar(getString(R.string.actionbar_title_wait_timer_frag), false);
-		tvTitle.setText(new SimpleDateFormat("aa H").format(mSaleTime.getOpenTime()) + getString(R.string.prefix_wait_timer_frag_todays_hotel_open));
+		tvTitle.setText(new SimpleDateFormat("aa H", Locale.KOREA).format(mSaleTime.getOpenTime()) + getString(R.string.prefix_wait_timer_frag_todays_hotel_open));
 
 		isEnabledNotify = false;
 		setTimer();
@@ -202,7 +203,7 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 
 	private void printCurrentRemaingTime(long remainingTime)
 	{
-		SimpleDateFormat displayTimeFormat = new SimpleDateFormat("HH:mm:ss");
+		SimpleDateFormat displayTimeFormat = new SimpleDateFormat("HH:mm:ss", Locale.KOREA);
 		displayTimeFormat.setTimeZone(TimeZone.getTimeZone("KST"));
 
 		tvTimer.setText(displayTimeFormat.format(remainingTime));

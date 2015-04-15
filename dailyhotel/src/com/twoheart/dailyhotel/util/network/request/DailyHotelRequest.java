@@ -24,15 +24,14 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
 		this(method, url, errorListener);
 
 		mParameters = parameters;
-		setRetryPolicy(new DefaultRetryPolicy(REQUEST_EXPIRE_JUDGE, REQUEST_MAX_RETRY, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 	}
 
 	private DailyHotelRequest(int method, String url, ErrorListener listener)
 	{
 		super(method, getUrlDecoderEx(url), listener);
+		setTag(listener);
 
 		setRetryPolicy(new DefaultRetryPolicy(REQUEST_EXPIRE_JUDGE, REQUEST_MAX_RETRY, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-		setTag(listener);
 
 		if (VolleyHttpClient.hasActiveNetwork() == false)
 		{

@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -580,7 +581,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 						}
 					}
 
-					SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmss", java.util.Locale.getDefault());
+					SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmss", Locale.KOREA);
 					Date date = new Date();
 					String strDate = dateFormat.format(date);
 					int userIdx = Integer.parseInt(mPay.getCustomer().getUserIdx());
@@ -589,7 +590,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 					RenewalGaManager.getInstance(getApplicationContext()).purchaseComplete(transId, mPay.getHotelDetail().getHotel().getName(), mPay.getHotelDetail().getHotel().getCategory().name(), (double) mPay.getPayPrice());
 
-					SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.getDefault());
+					SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
 					strDate = dateFormat2.format(date);
 
 					mMixpanel.getPeople().identify(userIdxStr);
@@ -1097,7 +1098,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 			if (locale.equals("한국어") == true)
 			{
-				SimpleDateFormat formatIn = new SimpleDateFormat("M월 d일 (EEE)");
+				SimpleDateFormat formatIn = new SimpleDateFormat("M월 d일 (EEE)", Locale.KOREA);
 				formatIn.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
 				String day = formatIn.format(calendarCheckin.getTime());
 
@@ -1111,7 +1112,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			Calendar calendarCheckout = DailyCalendar.getInstance();
 			calendarCheckout.setTimeInMillis(checkout);
 
-			SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd-hh");
+			SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd-hh", Locale.KOREA);
 			format.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
 			String formatCheckout = format.format(calendarCheckout.getTime());
 
@@ -1119,7 +1120,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 			if (locale.equals("한국어") == true)
 			{
-				SimpleDateFormat formatOut = new SimpleDateFormat("M월 d일 (EEE)");
+				SimpleDateFormat formatOut = new SimpleDateFormat("M월 d일 (EEE)", Locale.KOREA);
 				formatOut.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
 				String day = formatOut.format(calendarCheckout.getTime());
 

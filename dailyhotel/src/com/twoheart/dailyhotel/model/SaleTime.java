@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import android.os.Parcel;
@@ -22,7 +23,7 @@ public class SaleTime implements Constants, Parcelable
 	private Date mCurrentTime;
 
 	private static final Calendar calendar = DailyCalendar.getInstance();
-	private static final SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
+	private static final SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd HH:mm:ss", Locale.KOREA);
 
 	public SaleTime()
 	{
@@ -105,7 +106,7 @@ public class SaleTime implements Constants, Parcelable
 
 	public SimpleDateFormat getTimezonedDateFormat(String datePattern)
 	{
-		SimpleDateFormat sFormat = new SimpleDateFormat(datePattern);
+		SimpleDateFormat sFormat = new SimpleDateFormat(datePattern, Locale.KOREA);
 		sFormat.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
 		return sFormat;
 	}

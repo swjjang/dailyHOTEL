@@ -11,6 +11,7 @@ package com.twoheart.dailyhotel.fragment;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -216,7 +217,7 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 				long checkin = Long.valueOf(response.getString("checkin"));
 				long checkout = Long.valueOf(response.getString("checkout"));
 
-				SimpleDateFormat format = new SimpleDateFormat("yyyy년 MM월 dd일 HH시");
+				SimpleDateFormat format = new SimpleDateFormat("yyyy년 MM월 dd일 HH시", Locale.KOREA);
 				format.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
 
 				// Check In

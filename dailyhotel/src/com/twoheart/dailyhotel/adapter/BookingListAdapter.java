@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Booking;
-import com.twoheart.dailyhotel.util.ExLog;
 
 public class BookingListAdapter extends ArrayAdapter<Booking>
 {
@@ -53,8 +52,8 @@ public class BookingListAdapter extends ArrayAdapter<Booking>
 			String str = items.get(position).getSday();
 			str = str.replace("-", " / ");
 			str = "20" + str;
-			ExLog.e("SDAY : " + items.get(position).getSday() + " / " + str);
 			day.setText(str);
+
 			name.setText(items.get(position).getHotel_name());
 			ment.setText(items.get(position).ment);
 		}

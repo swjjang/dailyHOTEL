@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.json.JSONArray;
@@ -142,7 +143,7 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 				int userIdx = Integer.parseInt(idx);
 				String userIdxStr = String.format("%07d", userIdx);
 
-				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.getDefault());
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
 				Date date = new Date();
 				String strDate = dateFormat.format(date);
 

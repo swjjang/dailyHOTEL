@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -117,7 +118,7 @@ public class GcmIntentService extends IntentService implements Constants
 							editor.apply();
 							sendPush(messageType, type, msg);
 
-							SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmss", java.util.Locale.getDefault());
+							SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmss", Locale.KOREA);
 							Date date = new Date();
 							String strDate = dateFormat.format(date);
 							int userIdx = Integer.parseInt(pref.getString(KEY_PREFERENCE_USER_IDX, "0"));
@@ -126,7 +127,7 @@ public class GcmIntentService extends IntentService implements Constants
 
 							RenewalGaManager.getInstance(getApplicationContext()).purchaseComplete(tid, hotelName, "unidentified", Double.parseDouble(paidPrice));
 
-							SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.getDefault());
+							SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
 							strDate = dateFormat2.format(date);
 
 							mMixpanel.getPeople().identify(userIdxStr);

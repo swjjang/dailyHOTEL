@@ -15,6 +15,7 @@ package com.twoheart.dailyhotel.activity;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -327,7 +328,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 				int userIdx = response.getInt("idx");
 				String userIdxStr = String.format("%07d", userIdx);
 
-				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.getDefault());
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
 				Date date = new Date();
 				String strDate = dateFormat.format(date);
 
