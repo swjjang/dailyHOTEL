@@ -159,6 +159,11 @@ public class SaleTime implements Constants, Parcelable
 		return calendar.getTimeInMillis();
 	}
 
+	public String getCurrentDate()
+	{
+		return getTimezonedDateFormat("M월 dd일 EEEE").format(mCurrentTime);
+	}
+
 	public Long getOpenTime()
 	{
 		return mOpenTime.getTime();

@@ -48,6 +48,7 @@ import android.text.TextUtils;
 import android.util.Base64;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -640,12 +641,33 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	}
 
 	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		//		getMenuInflater().inflate(R.menu.actionbar_icon_map, menu);
+		return true;
+	}
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
 		if (drawerToggle.onOptionsItemSelected(item))
+		{
 			return true;
-		else
-			return super.onOptionsItemSelected(item);
+		} else
+		{
+			switch (item.getItemId())
+			{
+				case R.id.action_map:
+				{
+					return true;
+				}
+
+				default:
+				{
+					return super.onOptionsItemSelected(item);
+				}
+			}
+		}
 	}
 
 	@Override

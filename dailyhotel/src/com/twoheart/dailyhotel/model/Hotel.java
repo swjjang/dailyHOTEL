@@ -24,32 +24,23 @@ public class Hotel implements Parcelable
 	private int sequence;
 	private String bedType;
 	private String detailRegion;
+	public double mLatitude;
+	public double mLongitude;
 
 	public enum HotelGrade
 	{
-		biz(R.string.grade_biz, R.color.grade_hotel), hostel(
-				R.string.grade_hostel,
-				R.color.grade_hotel), grade1(
-				R.string.grade_1,
-				R.color.grade_hotel), grade2(
-				R.string.grade_2,
-				R.color.grade_hotel), grade3(
-				R.string.grade_3,
-				R.color.grade_hotel), boutique(
-				R.string.grade_boutique,
-				R.color.grade_boutique), residence(
-				R.string.grade_residence,
-				R.color.grade_residence), resort(
-				R.string.grade_resort,
-				R.color.grade_resort_pension_condo), pension(
-				R.string.grade_pension,
-				R.color.grade_resort_pension_condo), condo(
-				R.string.grade_condo,
-				R.color.grade_resort_pension_condo), special(
-				R.string.grade_special,
-				R.color.grade_special), etc(
-				R.string.grade_not_yet,
-				R.color.grade_not_yet);
+		biz(R.string.grade_biz, R.color.grade_hotel), //
+		hostel(R.string.grade_hostel, R.color.grade_hotel), //
+		grade1(R.string.grade_1, R.color.grade_hotel),
+		grade2(R.string.grade_2, R.color.grade_hotel),
+		grade3(R.string.grade_3, R.color.grade_hotel),
+		boutique(R.string.grade_boutique, R.color.grade_boutique),
+		residence(R.string.grade_residence, R.color.grade_residence),
+		resort(R.string.grade_resort, R.color.grade_resort_pension_condo),
+		pension(R.string.grade_pension, R.color.grade_resort_pension_condo),
+		condo(R.string.grade_condo, R.color.grade_resort_pension_condo),
+		special(R.string.grade_special, R.color.grade_special),
+		etc(R.string.grade_not_yet, R.color.grade_not_yet);
 
 		private int mNameResId;
 		private int mColorResId;
@@ -93,7 +84,6 @@ public class Hotel implements Parcelable
 		this.availableRoom = availableRoom;
 		this.sequence = sequence;
 		this.bedType = bedType;
-
 	}
 
 	@Override
@@ -109,7 +99,8 @@ public class Hotel implements Parcelable
 		dest.writeInt(availableRoom);
 		dest.writeInt(sequence);
 		dest.writeString(bedType);
-
+		dest.writeDouble(mLatitude);
+		dest.writeDouble(mLongitude);
 	}
 
 	private void readFromParcel(Parcel in)
@@ -124,6 +115,8 @@ public class Hotel implements Parcelable
 		this.availableRoom = in.readInt();
 		this.sequence = in.readInt();
 		this.bedType = in.readString();
+		this.mLatitude = in.readDouble();
+		this.mLongitude = in.readDouble();
 	}
 
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
@@ -277,6 +270,16 @@ public class Hotel implements Parcelable
 			{
 				JSONObject arrObj = jsonArray.getJSONObject(0);
 				image = arrObj.getString("path");
+			}
+
+			if (jsonObject.has("lat") == true)
+			{
+				mLatitude = jsonObject.getDouble("lat");
+			}
+
+			if (jsonObject.has("lng") == true)
+			{
+				mLongitude = jsonObject.getDouble("lng");
 			}
 		} catch (JSONException e)
 		{

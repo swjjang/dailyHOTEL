@@ -25,21 +25,10 @@
     <uses-permission android:name="com.twoheart.dailyhotel.permission.C2D_MESSAGE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
 
-    <!-- for card.io card scanning -->
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="false" />
-    <uses-feature
-        android:name="android.hardware.camera.autofocus"
-        android:required="false" />
-
     <permission
         android:name="com.twoheart.dailyhotel.permission.MAPS_RECEIVE"
-        android:protectionLevel="signature" >
-    </permission>
+        android:protectionLevel="signature" />
+    
     <permission
         android:name="com.twoheart.dailyhotel.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
