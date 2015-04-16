@@ -31,6 +31,7 @@ public class Booking implements Parcelable
 		dest.writeString(bedType);
 		dest.writeInt(payType);
 		dest.writeString(tid);
+		dest.writeString(ment);
 	}
 
 	private void readFromParcel(Parcel in)
@@ -41,6 +42,7 @@ public class Booking implements Parcelable
 		bedType = in.readString();
 		payType = in.readInt();
 		tid = in.readString();
+		ment = in.readString();
 	}
 
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
