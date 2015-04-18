@@ -27,6 +27,13 @@
             android:divider="@null" />
     </uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout>
 
+    <fragment
+        android:id="@+id/frag_full_map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar_actionbar"
+        class="com.twoheart.dailyhotel.fragment.HotelListMapFragment" />
+
     <View
         android:id="@+id/daysBackgroundView"
         android:layout_width="match_parent"

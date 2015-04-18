@@ -51,7 +51,6 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.RegionPopupListView;
 import com.twoheart.dailyhotel.widget.RegionPopupListView.UserActionListener;
@@ -402,16 +401,17 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 
 		// 현재 Activity에 등록된 Request를 취소한다. 
 		if (mQueue != null)
+
 			mQueue.cancelAll(new RequestQueue.RequestFilter()
 			{
 				@Override
 				public boolean apply(Request<?> request)
 				{
-					DailyHotelRequest<?> dailyHotelRequest = (DailyHotelRequest<?>) request;
+					Request<?> cancelRequest = (Request<?>) request;
 
-					if (dailyHotelRequest != null && dailyHotelRequest.getTag() != null)
+					if (cancelRequest != null && cancelRequest.getTag() != null)
 					{
-						if (dailyHotelRequest.getTag().equals(this))
+						if (cancelRequest.getTag().equals(this))
 						{
 							return true;
 						}

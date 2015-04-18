@@ -14,8 +14,6 @@ import android.graphics.Shader;
 import android.graphics.drawable.PaintDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
-import android.os.Build;
-import android.support.v4.util.LruCache;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.LayoutInflater;
@@ -33,6 +31,7 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.VolleyImageLoader;
 import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView.PinnedSectionListAdapter;
 
@@ -41,26 +40,70 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 	private Context context;
 	private int resourceId;
 	private LayoutInflater inflater;
-	private LruCache<String, Bitmap> mLruCache;
+	//	private LruCache<String, Bitmap> mLruCache;
+	private ArrayList<HotelListViewItem> mHoteList;
 
 	public HotelListAdapter(Context context, int resourceId, ArrayList<HotelListViewItem> hotelList)
 	{
 		super(context, resourceId, hotelList);
 
-		final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-		final int cacheSize = maxMemory / 8;
-		mLruCache = new LruCache<String, Bitmap>(cacheSize)
+		if (mHoteList == null)
 		{
-			@Override
-			protected int sizeOf(String key, Bitmap value)
-			{
-				return value.getRowBytes() * value.getHeight() / 1024;
-			}
-		}; // 최대 가용 메모리의 1/8 
+			mHoteList = new ArrayList<HotelListViewItem>();
+		}
+
+		mHoteList.clear();
+		mHoteList.addAll(hotelList);
+
+		//		final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+		//		final int cacheSize = maxMemory / 8;
+		//		mLruCache = new LruCache<String, Bitmap>(cacheSize)
+		//		{
+		//			@Override
+		//			protected int sizeOf(String key, Bitmap value)
+		//			{
+		//				return value.getRowBytes() * value.getHeight() / 1024;
+		//			}
+		//		}; // 최대 가용 메모리의 1/8 
 		this.context = context;
 		this.resourceId = resourceId;
 
 		this.inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	}
+
+	@Override
+	public void clear()
+	{
+		if (mHoteList == null)
+		{
+			mHoteList = new ArrayList<HotelListViewItem>();
+		}
+
+		mHoteList.clear();
+
+		super.clear();
+	}
+
+	@Override
+	public HotelListViewItem getItem(int position)
+	{
+		if (mHoteList == null)
+		{
+			return null;
+		}
+
+		return mHoteList.get(position);
+	}
+
+	@Override
+	public int getCount()
+	{
+		if (mHoteList == null)
+		{
+			return 0;
+		}
+
+		return mHoteList.size();
 	}
 
 	@Override
@@ -71,22 +114,22 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 			return;
 		}
 
-		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1)
+		if (mHoteList == null)
 		{
-			super.addAll(collection);
-		} else
-		{
-			for (HotelListViewItem item : collection)
-			{
-				add(item);
-			}
+			mHoteList = new ArrayList<HotelListViewItem>();
 		}
+
+		mHoteList.addAll(collection);
+	}
+
+	public ArrayList<HotelListViewItem> getData()
+	{
+		return mHoteList;
 	}
 
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent)
 	{
-
 		HotelListViewItem item = getItem(position);
 
 		switch (item.getType())
@@ -201,8 +244,12 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 				viewHolder.name.setTypeface(DailyHotel.getBoldTypeface());
 				viewHolder.discount.setTypeface(DailyHotel.getBoldTypeface());
 
+				// 볼리 사용시 
+				//				viewHolder.img.setImageUrl(element.getImage(), VolleyImageLoader.getImageLoader());
+
+				// AQuery사용시 
 				AQuery aq = new AQuery(convertView);
-				Bitmap cachedImg = mLruCache.get(element.getImage());
+				Bitmap cachedImg = VolleyImageLoader.getCache(element.getImage());
 
 				if (cachedImg == null)
 				{ // 힛인 밸류가 없다면 이미지를 불러온 후 캐시에 세이브
@@ -211,7 +258,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 						@Override
 						protected void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status)
 						{
-							mLruCache.put(url, bm);
+							VolleyImageLoader.putCache(url, bm);
 							super.callback(url, iv, bm, status);
 						}
 					};

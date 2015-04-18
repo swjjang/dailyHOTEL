@@ -643,7 +643,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
-		//		getMenuInflater().inflate(R.menu.actionbar_icon_map, menu);
 		return true;
 	}
 
@@ -655,18 +654,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			return true;
 		} else
 		{
-			switch (item.getItemId())
-			{
-				case R.id.action_map:
-				{
-					return true;
-				}
-
-				default:
-				{
-					return super.onOptionsItemSelected(item);
-				}
-			}
+			return super.onOptionsItemSelected(item);
 		}
 	}
 

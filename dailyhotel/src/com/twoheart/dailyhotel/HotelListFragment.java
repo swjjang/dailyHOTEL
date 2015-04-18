@@ -48,6 +48,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.android.volley.Request.Method;
+import com.twoheart.dailyhotel.activity.HotelListMapActivity;
 import com.twoheart.dailyhotel.adapter.HotelListAdapter;
 import com.twoheart.dailyhotel.fragment.HotelMainFragment;
 import com.twoheart.dailyhotel.model.Hotel;
@@ -71,7 +72,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	protected SaleTime mSaleTime;
 	private Map<String, List<String>> mDetailRegionList;
 
-	private boolean event;
+	//	private boolean event;
 	protected boolean mIsSelectedNavigationItem;
 	private View mEmptyView;
 
@@ -115,7 +116,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		// ver_dual API의 new_event값이 0이면 false, 1이면 true
 		// false인 경우 기존의 호텔리스트 방식으로 
 		// true인 경우 새로 만든 호텔리스트 화면방식으로 전환됨.
-		event = mHostActivity.sharedPreference.getBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false);
+		//		event = mHostActivity.sharedPreference.getBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false);
 
 		return view;
 	}
@@ -225,14 +226,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
 	{
-		// 새로운 지역리스트 화면을 보여주기 위한 돋보기 버튼
-		// HotelListFragment화면에서만 보여져야 하기 때문에 MainActivity가 아닌 fragment내에서 선언함. 
-		if (event)
-		{
-			mHostActivity.getMenuInflater().inflate(R.menu.select_region_actions, menu);
-		}
-
-		//		super.onCreateOptionsMenu(menu, inflater);
+		mHostActivity.getMenuInflater().inflate(R.menu.actionbar_icon_map, menu);
 	}
 
 	@Override
@@ -240,13 +234,39 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	{
 		switch (item.getItemId())
 		{
-			case R.id.action_select_region:
-				Intent i = new Intent(mHostActivity, RegionListActivity.class);
-				startActivity(i);
-				mHostActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
+			case R.id.action_map:
+			{
+//				item.setIcon(R.drawable.img_ic_list);
+				
+				Intent intent = new Intent(mHostActivity, HotelListMapActivity.class);
+
+				String selectedRegion = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
+
+				intent.putExtra(NAME_INTENT_EXTRA_DATA_REGION, selectedRegion);
+				intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mSaleTime);
+
+				ArrayList<HotelListViewItem> arrayList = mHotelListAdapter.getData();
+				ArrayList<Hotel> hotelArrayList = new ArrayList<Hotel>(arrayList.size());
+
+				for (HotelListViewItem hotelListViewItem : arrayList)
+				{
+					if (hotelListViewItem.getType() == HotelListViewItem.TYPE_ENTRY)
+					{
+						hotelArrayList.add(hotelListViewItem.getItem());
+					}
+				}
+
+				intent.putParcelableArrayListExtra(NAME_INTENT_EXTRA_DATA_HOTELLIST, hotelArrayList);
+
+				startActivity(intent);
 				return true;
+			}
+
+			default:
+			{
+				return super.onOptionsItemSelected(item);
+			}
 		}
-		return false;
 	}
 
 	// 현재 위치를 바탕으로 국가이름을 얻어옴
@@ -461,10 +481,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 								hotelList.add(newHotel); // 추가.
 							}
 						}
-					}
 
-					if (length > 1)
-					{
 						// seq 값에 따른 역순으로 정렬
 						Comparator<Hotel> comparator = new Comparator<Hotel>()
 						{

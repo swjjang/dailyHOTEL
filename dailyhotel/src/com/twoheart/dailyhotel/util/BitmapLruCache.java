@@ -23,15 +23,38 @@ import com.android.volley.toolbox.ImageLoader.ImageCache;
 
 public class BitmapLruCache extends LruCache<String, Bitmap> implements ImageCache
 {
-	public BitmapLruCache(int maxSize)
+	public static int getDefaultLruCacheSize()
 	{
-		super(maxSize);
+		final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+
+		int divideValue = 8;
+		// [2015.02.26 - bugman] 저사양 단말의 경우 Bitmap Cache Size가 너무 작아서 이미지 로딩에 이슈가 발생하기 때문에 Size를 조정함..
+		// 주 메모리 용량이 65MB 보다 작을 경우는 CacheSize를 1/4로 하고 그 이상은 1/8로 조정함. (테스트하면서 값 조정 필요)
+		if (maxMemory < 65 * 1024)
+		{
+			divideValue = 4;
+		}
+
+		final int cacheSize = maxMemory / divideValue;
+
+		ExLog.i("[BitmapLruCache - getDefaultLruCacheSize] maxMemory : " + maxMemory + ", cacheSize : " + cacheSize);
+		return cacheSize;
+	}
+
+	public BitmapLruCache()
+	{
+		this(getDefaultLruCacheSize());
+	}
+
+	public BitmapLruCache(int sizeInKiloBytes)
+	{
+		super(sizeInKiloBytes);
 	}
 
 	@Override
 	protected int sizeOf(String key, Bitmap value)
 	{
-		return value.getRowBytes() * value.getHeight();
+		return value.getRowBytes() * value.getHeight() / 1024;
 	}
 
 	@Override

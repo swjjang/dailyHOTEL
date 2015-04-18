@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.widget;
+package com.twoheart.dailyhotel.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,11 +9,11 @@ import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.model.Marker;
 import com.twoheart.dailyhotel.R;
 
-public class GoogleMapPopupAdapter implements InfoWindowAdapter
+public class HotelNameInfoWindowAdapter implements InfoWindowAdapter
 {
 	private LayoutInflater mLayoutInflaterinflater = null;
 
-	public GoogleMapPopupAdapter(Context context)
+	public HotelNameInfoWindowAdapter(Context context)
 	{
 		mLayoutInflaterinflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}

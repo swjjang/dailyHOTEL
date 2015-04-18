@@ -44,6 +44,7 @@ encoding//src/com/twoheart/dailyhotel/adapter/HotelImageFragmentPagerAdapter.jav
 encoding//src/com/twoheart/dailyhotel/adapter/HotelListAdapter.java=UTF-8
 encoding//src/com/twoheart/dailyhotel/adapter/SeparatedListAdpater.java=UTF-8
 encoding//src/com/twoheart/dailyhotel/fragment/BookingTabBookingFragment.java=UTF-8
+encoding//src/com/twoheart/dailyhotel/fragment/HotelListMapFragment.java=UTF-8
 encoding//src/com/twoheart/dailyhotel/fragment/HotelTabBookingFragment.java=UTF-8
 encoding//src/com/twoheart/dailyhotel/fragment/ImageDetailFragment.java=UTF-8
 encoding//src/com/twoheart/dailyhotel/fragment/ImageViewFragment.java=UTF-8
