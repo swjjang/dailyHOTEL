@@ -28,10 +28,11 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.util.VolleyImageLoader;
+import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
 
 public class HotelInfoWindowAdapter implements InfoWindowAdapter
 {
-	private Hotel mHotel;
+	private HotelListViewItem mHotelListViewItem;
 	private int mHotelIndex;
 	private Context mContext;
 	private boolean mRefreshingInfoWindow;
@@ -49,9 +50,9 @@ public class HotelInfoWindowAdapter implements InfoWindowAdapter
 		}
 	}
 
-	public void setHotel(Hotel hotel, int index)
+	public void setHotelListViewItem(HotelListViewItem hotelListViewItem)
 	{
-		mHotel = hotel;
+		mHotelListViewItem = hotelListViewItem;
 
 		mRefreshingInfoWindow = false;
 
@@ -67,9 +68,9 @@ public class HotelInfoWindowAdapter implements InfoWindowAdapter
 		mHotelIndex = index;
 	}
 
-	public Hotel getHotel()
+	public HotelListViewItem getHotelListViewItem()
 	{
-		return mHotel;
+		return mHotelListViewItem;
 	}
 
 	public int getHotelIndex()
@@ -95,11 +96,14 @@ public class HotelInfoWindowAdapter implements InfoWindowAdapter
 			TextView grade = (TextView) mView.findViewById(R.id.hv_hotel_grade);
 
 			DecimalFormat comma = new DecimalFormat("###,##0");
-			String strPrice = comma.format(Integer.parseInt(mHotel.getPrice()));
-			String strDiscount = comma.format(Integer.parseInt(mHotel.getDiscount()));
 
-			address.setText(mHotel.getAddress());
-			name.setText(mHotel.getName());
+			Hotel hotel = mHotelListViewItem.getItem();
+
+			String strPrice = comma.format(Integer.parseInt(hotel.getPrice()));
+			String strDiscount = comma.format(Integer.parseInt(hotel.getDiscount()));
+
+			address.setText(hotel.getAddress());
+			name.setText(hotel.getName());
 
 			Spanned currency = Html.fromHtml(mContext.getResources().getString(R.string.currency));
 			price.setText(strPrice + currency);
@@ -127,8 +131,8 @@ public class HotelInfoWindowAdapter implements InfoWindowAdapter
 			llHotelRowContent.setBackgroundDrawable(p);
 
 			// grade
-			grade.setText(mHotel.getCategory().getName(mContext));
-			grade.setBackgroundResource(mHotel.getCategory().getColorResId());
+			grade.setText(hotel.getCategory().getName(mContext));
+			grade.setBackgroundResource(hotel.getCategory().getColorResId());
 
 			name.setTypeface(DailyHotel.getBoldTypeface());
 			discount.setTypeface(DailyHotel.getBoldTypeface());
@@ -168,7 +172,7 @@ public class HotelInfoWindowAdapter implements InfoWindowAdapter
 
 				// Used AQuery
 				AQuery aq = new AQuery(mView);
-				Bitmap cachedImg = VolleyImageLoader.getCache(mHotel.getImage());
+				Bitmap cachedImg = VolleyImageLoader.getCache(hotel.getImage());
 
 				if (cachedImg == null)
 				{ // 힛인 밸류가 없다면 이미지를 불러온 후 캐시에 세이브
@@ -185,7 +189,7 @@ public class HotelInfoWindowAdapter implements InfoWindowAdapter
 						}
 					};
 
-					cb.url(mHotel.getImage());
+					cb.url(hotel.getImage());
 					aq.id(img).image(cb);
 
 				} else
@@ -199,7 +203,7 @@ public class HotelInfoWindowAdapter implements InfoWindowAdapter
 			}
 
 			// 객실이 1~2 개일때 label 표시
-			int avail_cnt = mHotel.getAvailableRoom();
+			int avail_cnt = hotel.getAvailableRoom();
 
 			// SOLD OUT 표시
 			if (avail_cnt == 0)

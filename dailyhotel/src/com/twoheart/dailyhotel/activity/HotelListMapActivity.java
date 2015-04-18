@@ -4,7 +4,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 
@@ -112,7 +111,7 @@ public class HotelListMapActivity extends BaseActivity
 
 							if (latlng.latitude == hotel.mLatitude && latlng.longitude == hotel.mLongitude)
 							{
-								mHotelInfoWindowAdapter.setHotel(hotel, i);
+								//								mHotelInfoWindowAdapter.setHotel(hotel, i);
 								marker.showInfoWindow();
 								break;
 							}
@@ -133,27 +132,27 @@ public class HotelListMapActivity extends BaseActivity
 						}
 
 						lockUiComponent();
-
-						Hotel hotel = mHotelInfoWindowAdapter.getHotel();
-						int index = mHotelInfoWindowAdapter.getHotelIndex();
-
-						Intent intent = new Intent(HotelListMapActivity.this, HotelTabActivity.class);
-
-						String region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
-
-						SharedPreferences.Editor editor = sharedPreference.edit();
-						editor.putString(KEY_PREFERENCE_REGION_SELECT_GA, region);
-						editor.putString(KEY_PREFERENCE_HOTEL_NAME_GA, hotel.getName());
-						editor.commit();
-
-						intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTEL, hotel);
-
-						intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mSaleTime);
-
-						intent.putExtra(NAME_INTENT_EXTRA_DATA_REGION, region);
-						intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, index);
-
-						startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTELTAB);
+						//
+						//						Hotel hotel = mHotelInfoWindowAdapter.getHotel();
+						//						int index = mHotelInfoWindowAdapter.getHotelIndex();
+						//
+						//						Intent intent = new Intent(HotelListMapActivity.this, HotelTabActivity.class);
+						//
+						//						String region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
+						//
+						//						SharedPreferences.Editor editor = sharedPreference.edit();
+						//						editor.putString(KEY_PREFERENCE_REGION_SELECT_GA, region);
+						//						editor.putString(KEY_PREFERENCE_HOTEL_NAME_GA, hotel.getName());
+						//						editor.commit();
+						//
+						//						intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTEL, hotel);
+						//
+						//						intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mSaleTime);
+						//
+						//						intent.putExtra(NAME_INTENT_EXTRA_DATA_REGION, region);
+						//						intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, index);
+						//
+						//						startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTELTAB);
 
 						releaseUiComponent();
 					}

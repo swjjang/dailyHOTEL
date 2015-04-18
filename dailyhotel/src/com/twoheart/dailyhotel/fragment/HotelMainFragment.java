@@ -21,6 +21,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -57,6 +60,13 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 	private SaleTime mTodaySaleTime;
 	private ArrayList<String> mRegionList;
 
+	private HOTEL_VIEW_TYPE mHotelViewType = HOTEL_VIEW_TYPE.LIST;
+
+	public enum HOTEL_VIEW_TYPE
+	{
+		LIST, MAP, GONE, // 목록이 비어있는 경우.
+	};
+
 	public interface UserActionListener
 	{
 		public void selectHotel(HotelListViewItem hotelListViewItem, int hotelIndex, SaleTime saleTime);
@@ -86,6 +96,8 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 		//		dayList.add("2일(목)");
 		//		dayList.add("");
 
+		mHotelViewType = HOTEL_VIEW_TYPE.LIST;
+
 		mTabIndicator = (TabIndicator) view.findViewById(R.id.tabindicator);
 		//		mTabIndicator.setData(titleList, dayList, true);
 		mTabIndicator.setData(titleList);
@@ -111,6 +123,8 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 
 		mFragmentViewPager.setData(mFragmentList);
 		mFragmentViewPager.setAdapter(getChildFragmentManager());
+
+		setHasOptionsMenu(true);//프래그먼트 내에서 옵션메뉴를 지정하기 위해 
 
 		return view;
 	}
@@ -148,6 +162,60 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 	public void onItemClick(int position)
 	{
 		onNavigationItemSelected(position);
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+	{
+		mHostActivity.getMenuInflater().inflate(R.menu.actionbar_icon_map, menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch (item.getItemId())
+		{
+			case R.id.action_map:
+			{
+				if (isLockUiComponent() == true)
+				{
+					return true;
+				}
+
+				lockUI();
+
+				switch (mHotelViewType)
+				{
+					case LIST:
+						item.setIcon(R.drawable.img_ic_list);
+						mHotelViewType = HOTEL_VIEW_TYPE.MAP;
+						break;
+
+					case MAP:
+						item.setIcon(R.drawable.img_ic_map);
+						mHotelViewType = HOTEL_VIEW_TYPE.LIST;
+						break;
+				}
+
+				// 현재 페이지 선택 상태를 Fragment에게 알려준다.
+				HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
+
+				for (HotelListFragment hotelListFragment : mFragmentList)
+				{
+					boolean isCurrentFragment = hotelListFragment == currentFragment;
+
+					hotelListFragment.setHotelViewType(mHotelViewType, isCurrentFragment);
+				}
+
+				unLockUI();
+				return true;
+			}
+
+			default:
+			{
+				return super.onOptionsItemSelected(item);
+			}
+		}
 	}
 
 	public boolean onNavigationItemSelected(int position)

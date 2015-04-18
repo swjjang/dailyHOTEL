@@ -16,10 +16,8 @@
 
 package com.google.maps.android.ui;
 
-import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
@@ -27,11 +25,9 @@ import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
-import android.graphics.Shader.TileMode;
 import android.graphics.drawable.Drawable;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.Util;
 
 /**
  * Draws a bubble with a shadow, filled with any color.
@@ -60,20 +56,20 @@ class BubbleDrawable extends Drawable
 	public void draw(Canvas canvas)
 	{
 		mMask01.draw(canvas);
-		
+
 		Bitmap split = Bitmap.createBitmap(canvas.getWidth() - 8, canvas.getHeight() - 8, Bitmap.Config.ARGB_8888);
-		
+
 		Canvas dstCanvas = new Canvas(split);
-		
+
 		Rect rect = mMask.getBounds();
 		mMask.setBounds(rect.left + 4, rect.top + 4, rect.right - 4, rect.bottom - 4);
 		mMask.draw(dstCanvas);
 		dstCanvas.drawColor(mColor, PorterDuff.Mode.SRC_IN);
-		
+
 		Paint paint = new Paint();
 		paint.setAntiAlias(true);
 		canvas.drawBitmap(split, 0, 0, paint);
-		
+
 		mShadow.draw(canvas);
 	}
 
@@ -102,7 +98,7 @@ class BubbleDrawable extends Drawable
 		mMask01.setBounds(left, top, right, bottom);
 		mShadow.setBounds(left, top, right, bottom);
 	}
-	
+
 	@Override
 	public void setBounds(Rect bounds)
 	{

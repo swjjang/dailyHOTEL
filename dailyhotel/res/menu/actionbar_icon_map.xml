@@ -6,7 +6,6 @@
         android:id="@+id/action_map"
         android:orderInCategory="100"
         android:icon="@drawable/img_ic_map"
-        android:title="지도"
         app:showAsAction="always"/>
 
 </menu>

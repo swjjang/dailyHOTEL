@@ -30,27 +30,21 @@ import uk.co.senab.actionbarpulltorefresh.library.Options;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.AbsListViewDelegate;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.FrameLayout;
 
 import com.android.volley.Request.Method;
-import com.twoheart.dailyhotel.activity.HotelListMapActivity;
 import com.twoheart.dailyhotel.adapter.HotelListAdapter;
+import com.twoheart.dailyhotel.fragment.HotelListMapFragment;
 import com.twoheart.dailyhotel.fragment.HotelMainFragment;
+import com.twoheart.dailyhotel.fragment.HotelMainFragment.HOTEL_VIEW_TYPE;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
@@ -75,6 +69,9 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	//	private boolean event;
 	protected boolean mIsSelectedNavigationItem;
 	private View mEmptyView;
+	private FrameLayout mMapLayout;
+	private HotelListMapFragment mHotelListMapFragment;
+	private HOTEL_VIEW_TYPE mHotelViewType;
 
 	protected HotelMainFragment.UserActionListener mUserActionListener;
 
@@ -86,9 +83,13 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		mHotelListView = (PinnedSectionListView) view.findViewById(R.id.listview_hotel_list);
 		mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
 		mEmptyView = view.findViewById(R.id.emptyView);
+		mMapLayout = (FrameLayout) view.findViewById(R.id.hotelMapLayout);
 
-		mEmptyView.setVisibility(View.INVISIBLE);
-		mPullToRefreshLayout.setVisibility(View.VISIBLE);
+		//		mHotelListMapFragment = (HotelListMapFragment) getChildFragmentManager().findFragmentById(R.id.hotelMapFragment);
+
+		mHotelViewType = HOTEL_VIEW_TYPE.LIST;
+
+		setVisibility(HOTEL_VIEW_TYPE.LIST);
 
 		// pinkred_font
 		//		GlobalFont.apply(container);
@@ -111,7 +112,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		.useViewDelegate(AbsListView.class, new AbsListViewDelegate()).setup(mPullToRefreshLayout);
 
 		mHotelListView.setShadowVisible(false);
-		setHasOptionsMenu(true);//프래그먼트 내에서 옵션메뉴를 지정하기 위해 
 
 		// ver_dual API의 new_event값이 0이면 false, 1이면 true
 		// false인 경우 기존의 호텔리스트 방식으로 
@@ -157,6 +157,78 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	public void onRefreshComplete(boolean isSelectedNavigationItem)
 	{
 
+	}
+
+	public void setHotelViewType(HOTEL_VIEW_TYPE type, boolean isCurrentPage)
+	{
+		mHotelViewType = type;
+
+		if (mEmptyView.getVisibility() == View.VISIBLE)
+		{
+			setVisibility(HOTEL_VIEW_TYPE.GONE);
+		} else
+		{
+			switch (mHotelViewType)
+			{
+				case LIST:
+					setVisibility(HOTEL_VIEW_TYPE.LIST);
+					break;
+
+				case MAP:
+					setVisibility(HOTEL_VIEW_TYPE.MAP);
+
+					mHotelListMapFragment.setUserActionListener(mUserActionListener);
+
+					if (isCurrentPage == true)
+					{
+						mHotelListMapFragment.setHotelList(mHotelListAdapter.getData(), mSaleTime);
+					}
+					break;
+
+				case GONE:
+					break;
+			}
+		}
+	}
+
+	private void setVisibility(HOTEL_VIEW_TYPE type)
+	{
+		switch (type)
+		{
+			case LIST:
+				mEmptyView.setVisibility(View.GONE);
+				mMapLayout.setVisibility(View.GONE);
+
+				if (mHotelListMapFragment != null)
+				{
+					getChildFragmentManager().beginTransaction().remove(mHotelListMapFragment).commit();
+					mMapLayout.removeAllViews();
+					mHotelListMapFragment = null;
+				}
+
+				mPullToRefreshLayout.setVisibility(View.VISIBLE);
+				break;
+
+			case MAP:
+				mEmptyView.setVisibility(View.GONE);
+				mMapLayout.setVisibility(View.VISIBLE);
+
+				if (mHotelListMapFragment == null)
+				{
+					mHotelListMapFragment = new HotelListMapFragment();
+					getChildFragmentManager().beginTransaction().add(mMapLayout.getId(), mHotelListMapFragment).commit();
+				}
+
+				mPullToRefreshLayout.setVisibility(View.INVISIBLE);
+				break;
+
+			case GONE:
+				mEmptyView.setVisibility(View.VISIBLE);
+				mMapLayout.setVisibility(View.GONE);
+
+				mPullToRefreshLayout.setVisibility(View.INVISIBLE);
+				break;
+		}
 	}
 
 	public void setSaleTime(SaleTime saleTime)
@@ -221,52 +293,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	public void onRefreshStarted(View view)
 	{
 		refreshHotelList(true);
-	}
-
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
-	{
-		mHostActivity.getMenuInflater().inflate(R.menu.actionbar_icon_map, menu);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item)
-	{
-		switch (item.getItemId())
-		{
-			case R.id.action_map:
-			{
-//				item.setIcon(R.drawable.img_ic_list);
-				
-				Intent intent = new Intent(mHostActivity, HotelListMapActivity.class);
-
-				String selectedRegion = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
-
-				intent.putExtra(NAME_INTENT_EXTRA_DATA_REGION, selectedRegion);
-				intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mSaleTime);
-
-				ArrayList<HotelListViewItem> arrayList = mHotelListAdapter.getData();
-				ArrayList<Hotel> hotelArrayList = new ArrayList<Hotel>(arrayList.size());
-
-				for (HotelListViewItem hotelListViewItem : arrayList)
-				{
-					if (hotelListViewItem.getType() == HotelListViewItem.TYPE_ENTRY)
-					{
-						hotelArrayList.add(hotelListViewItem.getItem());
-					}
-				}
-
-				intent.putParcelableArrayListExtra(NAME_INTENT_EXTRA_DATA_HOTELLIST, hotelArrayList);
-
-				startActivity(intent);
-				return true;
-			}
-
-			default:
-			{
-				return super.onOptionsItemSelected(item);
-			}
-		}
 	}
 
 	// 현재 위치를 바탕으로 국가이름을 얻어옴
@@ -457,8 +483,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 				if (length == 0)
 				{
-					mEmptyView.setVisibility(View.VISIBLE);
-					mPullToRefreshLayout.setVisibility(View.INVISIBLE);
+					setVisibility(HOTEL_VIEW_TYPE.GONE);
 				} else
 				{
 					JSONObject jsonObject;
@@ -533,8 +558,13 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 						mHotelListView.setOnItemClickListener(HotelListFragment.this);
 					}
 
-					mEmptyView.setVisibility(View.INVISIBLE);
-					mPullToRefreshLayout.setVisibility(View.VISIBLE);
+					setVisibility(mHotelViewType);
+
+					if (mHotelViewType == HOTEL_VIEW_TYPE.MAP)
+					{
+						mHotelListMapFragment.setUserActionListener(mUserActionListener);
+						mHotelListMapFragment.setHotelList(hotelListViewList, mSaleTime);
+					}
 
 					mHotelListAdapter.clear();
 					mHotelListAdapter.addAll(hotelListViewList);
@@ -561,46 +591,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 			}
 		}
 	};
-
-	/**
-	 * 점점 어두워짐.
-	 */
-	private void showAnimationFadeOut()
-	{
-		AlphaAnimation mAlphaAnimation = new AlphaAnimation(1.0f, 0.5f);
-		mAlphaAnimation.setDuration(200);
-
-		mAlphaAnimation.setAnimationListener(new AnimationListener()
-		{
-			@Override
-			public void onAnimationStart(Animation animation)
-			{
-				if (mEmptyView.getVisibility() != View.VISIBLE)
-				{
-					mEmptyView.setVisibility(View.VISIBLE);
-				}
-			}
-
-			@Override
-			public void onAnimationEnd(Animation animation)
-			{
-				mEmptyView.setVisibility(View.INVISIBLE);
-
-				mPullToRefreshLayout.setVisibility(View.VISIBLE);
-				mPullToRefreshLayout.startAnimation(AnimationUtils.loadAnimation(mHostActivity, R.anim.viewpager_fade_in));
-			}
-
-			@Override
-			public void onAnimationRepeat(Animation animation)
-			{
-			}
-		});
-
-		if (mEmptyView != null)
-		{
-			mEmptyView.startAnimation(mAlphaAnimation);
-		}
-	}
 
 	//	private DailyHotelJsonArrayResponseListener mSiteLocationListJsonArrayResponseListener = new DailyHotelJsonArrayResponseListener()
 	//	{
