@@ -91,11 +91,6 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 		titleList.add(getString(R.string.label_tomorrow));
 		titleList.add(getString(R.string.label_selecteday));
 
-		//		ArrayList<String> dayList = new ArrayList<String>();
-		//		dayList.add("1일(수)");
-		//		dayList.add("2일(목)");
-		//		dayList.add("");
-
 		mHotelViewType = HOTEL_VIEW_TYPE.LIST;
 
 		mTabIndicator = (TabIndicator) view.findViewById(R.id.tabindicator);
@@ -167,7 +162,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
 	{
-		mHostActivity.getMenuInflater().inflate(R.menu.actionbar_icon_map, menu);
+//		mHostActivity.getMenuInflater().inflate(R.menu.actionbar_icon_map, menu);
 	}
 
 	@Override
@@ -189,6 +184,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 					case LIST:
 						item.setIcon(R.drawable.img_ic_list);
 						mHotelViewType = HOTEL_VIEW_TYPE.MAP;
+
 						break;
 
 					case MAP:
@@ -442,13 +438,13 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 
 				SaleTime nextSaleTime = mTodaySaleTime.getClone(1);
 
-				dayList.add(getString(R.string.label_format_tabday, mTodaySaleTime.getCurrentDayEx(), mTodaySaleTime.getCurrentDayOftheWeek()));
-				dayList.add(getString(R.string.label_format_tabday, nextSaleTime.getCurrentDayEx(), nextSaleTime.getCurrentDayOftheWeek()));
+				dayList.add(getString(R.string.label_format_tabday, mTodaySaleTime.getOpenDayEx(), mTodaySaleTime.getOpenDayOftheWeek()));
+				dayList.add(getString(R.string.label_format_tabday, nextSaleTime.getOpenDayEx(), nextSaleTime.getOpenDayOftheWeek()));
 
 				if (TextUtils.isEmpty(mTabIndicator.getSubText(2)) == true)
 				{
 					SaleTime nextnextSaleTime = mTodaySaleTime.getClone(2);
-					dayList.add(getString(R.string.label_format_tabday, nextnextSaleTime.getCurrentDayEx(), nextnextSaleTime.getCurrentDayOftheWeek()));
+					dayList.add(getString(R.string.label_format_tabday, nextnextSaleTime.getOpenDayEx(), nextnextSaleTime.getOpenDayOftheWeek()));
 				} else
 				{
 					dayList.add(mTabIndicator.getSubText(2));

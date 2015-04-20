@@ -5,18 +5,22 @@ import java.util.ArrayList;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
@@ -24,6 +28,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.adapter.HotelInfoWindowAdapter;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
 
 public class HotelListMapFragment extends
@@ -32,9 +37,11 @@ public class HotelListMapFragment extends
 	private GoogleMap googleMap;
 	private ArrayList<HotelListViewItem> mHotelArrayList;
 	private HotelInfoWindowAdapter mHotelInfoWindowAdapter;
+
 	protected HotelMainFragment.UserActionListener mUserActionListener;
 	private SaleTime mSaleTime;
 	private boolean mIsCreateView = false;
+	private Handler mHandler = new Handler();
 
 	public HotelListMapFragment()
 	{
@@ -109,10 +116,12 @@ public class HotelListMapFragment extends
 			return;
 		}
 
-		int count = 0;
-		double latitude = 0.0;
-		double longitude = 0.0;
-		double i = 0.0;
+//		int count = 0;
+		//		double latitude = 0.0;
+		//		double longitude = 0.0;
+		//		double i = 0.0;
+
+		LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
 		for (HotelListViewItem hotelListViewItem : mHotelArrayList)
 		{
@@ -123,34 +132,71 @@ public class HotelListMapFragment extends
 
 			Hotel hotel = hotelListViewItem.getItem();
 
-			if (hotel.mLatitude == 0.0)
-			{
-				hotel.mLatitude = 36.240562 + i / 1000;
-			}
-
-			if (hotel.mLongitude == 0.0)
-			{
-				hotel.mLongitude = 127.867222 + i / 1000;
-			}
-
-			i++;
+			//			if (hotel.mLatitude == 0.0)
+			//			{
+			//				hotel.mLatitude = 37.540705 + i / 1000;
+			//			}
+			//
+			//			if (hotel.mLongitude == 0.0)
+			//			{
+			//				hotel.mLongitude = 126.956764 + i / 1000;
+			//			}
+			//
+			//			i++;
 
 			addMarker(hotel);
 
-			latitude += hotel.mLatitude;
-			longitude += hotel.mLongitude;
+//			count++;
 
-			count++;
+			LatLng latlng = new LatLng(hotel.mLatitude, hotel.mLongitude);
+			builder.include(latlng);
 		}
 
-		latitude /= count;
-		longitude /= count;
+		final LatLngBounds bounds = builder.build();
+		
+		mHandler.post(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				int width = getView().getWidth();
+				int height = getView().getHeight();
+				
+				int zoomLevel = getBoundsZoomLevel(bounds.northeast, bounds.southwest, width, height );
 
-		LatLng address = new LatLng(latitude, longitude);
+				CameraPosition cp = new CameraPosition.Builder().target((bounds.getCenter())).zoom(zoomLevel).build();
+				googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
+			}
+		});
+		
+//		int width = getView().getWidth();
+//		int height = getView().getHeight();
+//		
+//		int zoomLevel = getBoundsZoomLevel(bounds.northeast, bounds.southwest, width, height );
+//
+//		if(zoomLevel > 15)
+//		{
+//			zoomLevel = 15;
+//		}
+//		
+//		CameraPosition cp = new CameraPosition.Builder().target((bounds.getCenter())).zoom(zoomLevel).build();
+//		googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
 
-		CameraPosition cp = new CameraPosition.Builder().target((address)).zoom(15).build();
-
-		googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
+//		if (count > 1)
+//		{
+//
+//			googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback()
+//			{
+//				@Override
+//				public void onMapLoaded()
+//				{
+//					CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, Util.dpToPx(getActivity(), 50));
+//					cameraUpdate.
+//
+//					googleMap.animateCamera(cameraUpdate, 500, null);
+//				}
+//			});
+//		}
 
 		mHotelInfoWindowAdapter = new HotelInfoWindowAdapter(getActivity());
 
@@ -212,6 +258,32 @@ public class HotelListMapFragment extends
 
 			googleMap.addMarker(new MarkerOptions().position(new LatLng(hotel.mLatitude, hotel.mLongitude)).title(hotel.getDiscount()).icon(hotelPriceRenderer.getBitmap()));
 		}
+	}
+
+	private int getBoundsZoomLevel(LatLng northeast, LatLng southwest, int width, int height)
+	{
+		final int GLOBE_WIDTH = 256; // a constant in Google's map projection  
+		final int ZOOM_MAX = 15;
+		double latFraction = (latRad(northeast.latitude) - latRad(southwest.latitude)) / Math.PI;
+		double lngDiff = northeast.longitude - southwest.longitude;
+		double lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
+		double latZoom = zoom(height, GLOBE_WIDTH, latFraction);
+		double lngZoom = zoom(width, GLOBE_WIDTH, lngFraction);
+		double zoom = Math.min(Math.min(latZoom, lngZoom), ZOOM_MAX);
+		return (int) (zoom);
+	}
+
+	private double latRad(double lat)
+	{
+		double sin = Math.sin(lat * Math.PI / 180);
+		double radX2 = Math.log((1 + sin) / (1 - sin)) / 2;
+		return Math.max(Math.min(radX2, Math.PI), -Math.PI) / 2;
+	}
+
+	private double zoom(double mapPx, double worldPx, double fraction)
+	{
+		final double LN2 = .693147180559945309417;
+		return (Math.log(mapPx / worldPx / fraction) / LN2);
 	}
 
 	private class HotelPriceRenderer

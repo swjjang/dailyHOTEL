@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.model;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -11,7 +10,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 
 public class SaleTime implements Constants, Parcelable
@@ -22,7 +20,6 @@ public class SaleTime implements Constants, Parcelable
 	private Date mCloseTime;
 	private Date mCurrentTime;
 
-	private static final Calendar calendar = DailyCalendar.getInstance();
 	private static final SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd HH:mm:ss", Locale.KOREA);
 
 	public SaleTime()
@@ -83,7 +80,6 @@ public class SaleTime implements Constants, Parcelable
 		try
 		{
 			mCurrentTime = new Date(Long.parseLong(currentTime));
-			calendar.setTime(mCurrentTime);
 
 		} catch (NumberFormatException e)
 		{
@@ -128,6 +124,11 @@ public class SaleTime implements Constants, Parcelable
 		return getTimezonedDateFormat("d").format(mCurrentTime);
 	}
 
+	public String getOpenDayEx()
+	{
+		return getTimezonedDateFormat("d").format(mOpenTime);
+	}
+
 	public String getCurrentYear()
 	{
 		return getTimezonedDateFormat("yy").format(mCurrentTime);
@@ -137,6 +138,11 @@ public class SaleTime implements Constants, Parcelable
 	public String getCurrentDayOftheWeek()
 	{
 		return getTimezonedDateFormat("EEE").format(mCurrentTime);
+	}
+
+	public String getOpenDayOftheWeek()
+	{
+		return getTimezonedDateFormat("EEE").format(mOpenTime);
 	}
 
 	public String getCurrentHour()
@@ -156,7 +162,7 @@ public class SaleTime implements Constants, Parcelable
 
 	public Long getCurrentTime()
 	{
-		return calendar.getTimeInMillis();
+		return mCurrentTime.getTime();
 	}
 
 	public String getCurrentDate()

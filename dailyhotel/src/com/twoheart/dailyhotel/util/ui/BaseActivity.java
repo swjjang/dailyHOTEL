@@ -519,10 +519,9 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 		{
 			Log.e("DailyHotel", error.toString(), error.fillInStackTrace());
 			//			DailyToast.showToast(this, error.toString(), Toast.LENGTH_LONG);
-		} else
-		{
-			onError();
 		}
+
+		onError();
 	}
 
 	/**
