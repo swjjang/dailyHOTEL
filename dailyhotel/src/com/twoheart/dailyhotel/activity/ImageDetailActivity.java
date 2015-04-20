@@ -12,9 +12,6 @@ import com.viewpagerindicator.LoopCirclePageIndicator;
 
 public class ImageDetailActivity extends BaseActivity implements Constants
 {
-
-	private static final String TAG = "ImageDetailActivity";
-
 	private HotelDetail mHotelDetail;
 	private HotelImageDetailFragmentPagerAdapter mAdapter;
 	private ViewPager mPager;

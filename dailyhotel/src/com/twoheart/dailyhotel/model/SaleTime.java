@@ -75,11 +75,11 @@ public class SaleTime implements Constants, Parcelable
 		}
 	}
 
-	public void setCurrentTime(String currentTime)
+	public void setCurrentTime(long currentTime)
 	{
 		try
 		{
-			mCurrentTime = new Date(Long.parseLong(currentTime));
+			mCurrentTime = new Date(currentTime);
 
 		} catch (NumberFormatException e)
 		{

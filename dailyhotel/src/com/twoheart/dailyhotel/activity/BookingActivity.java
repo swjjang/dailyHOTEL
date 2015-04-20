@@ -821,7 +821,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				{
 					VolleyHttpClient.createCookie();
 
-					mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_TIME).toString(), null, mAppTimeStringResponseListener, BookingActivity.this));
+					mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_TIME).toString(), null, mAppTimeJsonResponseListener, BookingActivity.this));
 				} else
 				{
 					unLockUI();
@@ -1188,21 +1188,29 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		}
 	};
 
-	private DailyHotelStringResponseListener mAppTimeStringResponseListener = new DailyHotelStringResponseListener()
+	private DailyHotelJsonResponseListener mAppTimeJsonResponseListener = new DailyHotelJsonResponseListener()
 	{
 		@Override
-		public void onResponse(String url, String response)
+		public void onResponse(String url, JSONObject response)
 		{
-			String result = null;
-
-			if (TextUtils.isEmpty(response) == false)
+			try
 			{
-				result = response.trim();
+				if (response == null)
+				{
+					throw new NullPointerException("response == null");
+				}
+
+				long time = response.getLong("time");
+
+				saleTime.setCurrentTime(time);
+
+				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_SALE_TIME).toString(), null, mAppSaleTimeJsonResponseListener, BookingActivity.this));
+
+			} catch (Exception e)
+			{
+				unLockUI();
+				onError(e);
 			}
-
-			saleTime.setCurrentTime(result);
-
-			mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_SALE_TIME).toString(), null, mAppSaleTimeJsonResponseListener, BookingActivity.this));
 		}
 	};
 
@@ -1230,7 +1238,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				if ("PAYMENT".equalsIgnoreCase(mAliveCallSource) == true)
 				{
 					//1번 
-					mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_TIME).toString(), null, mAppTimeStringResponseListener, BookingActivity.this));
+					mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_TIME).toString(), null, mAppTimeJsonResponseListener, BookingActivity.this));
 				} else if ("ACTIVITY_RESULT".equalsIgnoreCase(mAliveCallSource) == true)
 				{
 					unLockUI();

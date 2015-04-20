@@ -180,6 +180,9 @@ public interface Constants
 	//"board/json/notice";
 	public static final String URL_WEBAPI_BOARD_NOTICE = UNENCRYPTED_URL ? "board/json/notice" : "MjYkMzMkNzAkNzQkNyQ=$MzkwMDcUyNDcwMjI5NUY3MzdGQjMU3NDFEWQUVCQURCQUMwODY2NERDNjNFNEJDMzczOUM0JNDkS0QUI0Qjk2NDYxMQ==$";
 
+	// api/common/time
+	public static final String URL_WEBAPI_COMMON_TIME = UNENCRYPTED_URL ? "api/common/time" : "MjMkNDEkMCQwJDEyJA==$UZMjY5Njg1QTYNBRkE4NzdDMDYQ0Mzc1QjI1Njc0QTYwXRjE=$";
+
 	// api/sale
 	public static final String URL_WEBAPI_SALE = UNENCRYPTED_URL ? "api/sale" : "MyQyJDM2JDM4JDMwJA==$QjDZJFQjY1MEEzQzI2ODJERkZDQUMxOQzhEM0LUYwNkY0OUU=$";
 

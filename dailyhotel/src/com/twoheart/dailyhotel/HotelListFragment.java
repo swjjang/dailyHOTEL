@@ -465,13 +465,13 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-			if (getActivity() == null)
-			{
-				return;
-			}
-
 			try
 			{
+				if (getActivity() == null)
+				{
+					return;
+				}
+
 				if (response == null)
 				{
 					throw new NullPointerException("response == null");

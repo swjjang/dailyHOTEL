@@ -39,10 +39,8 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonArrayRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
-import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonArrayResponseListener;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
 import com.twoheart.dailyhotel.widget.FragmentViewPager;
@@ -129,7 +127,8 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 	{
 		lockUI();
 
-		mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_TIME).toString(), null, mAppTimeStringResponseListener, mHostActivity));
+		//		mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_TIME).toString(), null, mAppTimeStringResponseListener, mHostActivity));
+		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_TIME).toString(), null, mAppTimeJsonResponseListener, mHostActivity));
 
 		super.onResume();
 	}
@@ -249,10 +248,10 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 	// NetworkActionListener
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	private DailyHotelStringResponseListener mAppTimeStringResponseListener = new DailyHotelStringResponseListener()
+	private DailyHotelJsonResponseListener mAppTimeJsonResponseListener = new DailyHotelJsonResponseListener()
 	{
 		@Override
-		public void onResponse(String url, String response)
+		public void onResponse(String url, JSONObject response)
 		{
 			if (getActivity() == null)
 			{
@@ -266,7 +265,9 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 					throw new NullPointerException("response == null");
 				}
 
-				mTodaySaleTime.setCurrentTime(response);
+				long time = response.getLong("time");
+
+				mTodaySaleTime.setCurrentTime(time);
 
 				// 오픈, 클로즈 타임을 가져온다
 				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_SALE_TIME).toString(), null, mAppSaleTimeJsonResponseListener, mHostActivity));
