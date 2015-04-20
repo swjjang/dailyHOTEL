@@ -10,10 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -28,7 +26,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.adapter.HotelInfoWindowAdapter;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
 
 public class HotelListMapFragment extends
@@ -116,7 +113,7 @@ public class HotelListMapFragment extends
 			return;
 		}
 
-//		int count = 0;
+		//		int count = 0;
 		//		double latitude = 0.0;
 		//		double longitude = 0.0;
 		//		double i = 0.0;
@@ -146,14 +143,14 @@ public class HotelListMapFragment extends
 
 			addMarker(hotel);
 
-//			count++;
+			//			count++;
 
 			LatLng latlng = new LatLng(hotel.mLatitude, hotel.mLongitude);
 			builder.include(latlng);
 		}
 
 		final LatLngBounds bounds = builder.build();
-		
+
 		mHandler.post(new Runnable()
 		{
 			@Override
@@ -161,42 +158,42 @@ public class HotelListMapFragment extends
 			{
 				int width = getView().getWidth();
 				int height = getView().getHeight();
-				
-				int zoomLevel = getBoundsZoomLevel(bounds.northeast, bounds.southwest, width, height );
+
+				int zoomLevel = getBoundsZoomLevel(bounds.northeast, bounds.southwest, width, height);
 
 				CameraPosition cp = new CameraPosition.Builder().target((bounds.getCenter())).zoom(zoomLevel).build();
 				googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
 			}
 		});
-		
-//		int width = getView().getWidth();
-//		int height = getView().getHeight();
-//		
-//		int zoomLevel = getBoundsZoomLevel(bounds.northeast, bounds.southwest, width, height );
-//
-//		if(zoomLevel > 15)
-//		{
-//			zoomLevel = 15;
-//		}
-//		
-//		CameraPosition cp = new CameraPosition.Builder().target((bounds.getCenter())).zoom(zoomLevel).build();
-//		googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
 
-//		if (count > 1)
-//		{
-//
-//			googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback()
-//			{
-//				@Override
-//				public void onMapLoaded()
-//				{
-//					CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, Util.dpToPx(getActivity(), 50));
-//					cameraUpdate.
-//
-//					googleMap.animateCamera(cameraUpdate, 500, null);
-//				}
-//			});
-//		}
+		//		int width = getView().getWidth();
+		//		int height = getView().getHeight();
+		//		
+		//		int zoomLevel = getBoundsZoomLevel(bounds.northeast, bounds.southwest, width, height );
+		//
+		//		if(zoomLevel > 15)
+		//		{
+		//			zoomLevel = 15;
+		//		}
+		//		
+		//		CameraPosition cp = new CameraPosition.Builder().target((bounds.getCenter())).zoom(zoomLevel).build();
+		//		googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
+
+		//		if (count > 1)
+		//		{
+		//
+		//			googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback()
+		//			{
+		//				@Override
+		//				public void onMapLoaded()
+		//				{
+		//					CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, Util.dpToPx(getActivity(), 50));
+		//					cameraUpdate.
+		//
+		//					googleMap.animateCamera(cameraUpdate, 500, null);
+		//				}
+		//			});
+		//		}
 
 		mHotelInfoWindowAdapter = new HotelInfoWindowAdapter(getActivity());
 

@@ -162,7 +162,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
 	{
-//		mHostActivity.getMenuInflater().inflate(R.menu.actionbar_icon_map, menu);
+		//		mHostActivity.getMenuInflater().inflate(R.menu.actionbar_icon_map, menu);
 	}
 
 	@Override
@@ -301,6 +301,9 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 
 				mTodaySaleTime.setOpenTime(open);
 				mTodaySaleTime.setCloseTime(close);
+
+				//				mTodaySaleTime.setCurrentTime("" + (System.currentTimeMillis() - 10000));
+				//				mTodaySaleTime.setOpenTime((String)DateFormat.format("HH:mm:ss", System.currentTimeMillis() + 5000));
 
 				if (mTodaySaleTime.isSaleTime() == false)
 				{

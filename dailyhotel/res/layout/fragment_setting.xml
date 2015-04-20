@@ -200,7 +200,7 @@
                 android:id="@+id/tv_setting_login"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.4"
+                android:layout_weight="0.3"
                 android:gravity="left|center_vertical"
                 android:textColor="@color/textView_textColor_main"
                 android:textSize="16.5dp" />
@@ -209,7 +209,7 @@
                 android:id="@+id/tv_setting_email"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.6"
+                android:layout_weight="0.7"
                 android:gravity="right|center_vertical"
                 android:paddingRight="17dp"
                 android:singleLine="true"

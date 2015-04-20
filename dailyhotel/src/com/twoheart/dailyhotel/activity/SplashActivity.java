@@ -383,12 +383,12 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 						{
 							Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
 							marketLaunch.setData(Uri.parse(Util.storeReleaseAddress()));
-							
-							if(marketLaunch.resolveActivity(getPackageManager()) == null)
+
+							if (marketLaunch.resolveActivity(getPackageManager()) == null)
 							{
 								marketLaunch.setData(Uri.parse(Constants.URL_STORE_GOOGLE_DAILYHOTEL_WEB));
 							}
-							
+
 							startActivity(marketLaunch);
 							finish();
 						}
@@ -406,16 +406,16 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 						{
 							Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
 							marketLaunch.setData(Uri.parse(Util.storeReleaseAddress()));
-							
-							if(marketLaunch.resolveActivity(getPackageManager()) == null)
+
+							if (marketLaunch.resolveActivity(getPackageManager()) == null)
 							{
 								marketLaunch.setData(Uri.parse(Constants.URL_STORE_GOOGLE_DAILYHOTEL_WEB));
 							}
-							
+
 							startActivity(marketLaunch);
 						}
 					};
-					
+
 					OnClickListener negListener = new DialogInterface.OnClickListener()
 					{
 						@Override
