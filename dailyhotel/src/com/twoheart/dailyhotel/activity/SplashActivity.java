@@ -383,6 +383,12 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 						{
 							Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
 							marketLaunch.setData(Uri.parse(Util.storeReleaseAddress()));
+							
+							if(marketLaunch.resolveActivity(getPackageManager()) == null)
+							{
+								marketLaunch.setData(Uri.parse(Constants.URL_STORE_GOOGLE_DAILYHOTEL_WEB));
+							}
+							
 							startActivity(marketLaunch);
 							finish();
 						}
@@ -400,13 +406,27 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 						{
 							Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
 							marketLaunch.setData(Uri.parse(Util.storeReleaseAddress()));
+							
+							if(marketLaunch.resolveActivity(getPackageManager()) == null)
+							{
+								marketLaunch.setData(Uri.parse(Constants.URL_STORE_GOOGLE_DAILYHOTEL_WEB));
+							}
+							
 							startActivity(marketLaunch);
+						}
+					};
+					
+					OnClickListener negListener = new DialogInterface.OnClickListener()
+					{
+						@Override
+						public void onClick(DialogInterface dialog, int which)
+						{
+							dialog.cancel();
 						}
 					};
 
 					OnCancelListener cancelListener = new OnCancelListener()
 					{
-
 						@Override
 						public void onCancel(DialogInterface dialog)
 						{
@@ -417,7 +437,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 						}
 					};
 
-					SimpleAlertDialog.build(SplashActivity.this, getString(R.string.dialog_title_notice), getString(R.string.dialog_msg_update_now), getString(R.string.dialog_btn_text_update), getString(R.string.dialog_btn_text_cancel), posListener, null).setOnCancelListener(cancelListener).show();
+					SimpleAlertDialog.build(SplashActivity.this, getString(R.string.dialog_title_notice), getString(R.string.dialog_msg_update_now), getString(R.string.dialog_btn_text_update), getString(R.string.dialog_btn_text_cancel), posListener, negListener).setOnCancelListener(cancelListener).show();
 				} else
 				{
 					showMainActivity(newEventFlag);
