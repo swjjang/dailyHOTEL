@@ -14,7 +14,7 @@ import com.twoheart.dailyhotel.util.ExLog;
 
 public class SaleTime implements Constants, Parcelable
 {
-	private final long SECONDS_IN_A_DAY = 3600 * 24;
+	public static final long SECONDS_IN_A_DAY = 3600 * 24;
 
 	private Date mOpenTime;
 	private Date mCloseTime;
@@ -124,11 +124,6 @@ public class SaleTime implements Constants, Parcelable
 		return getTimezonedDateFormat("d").format(mCurrentTime);
 	}
 
-	public String getOpenDayEx()
-	{
-		return getTimezonedDateFormat("d").format(mOpenTime);
-	}
-
 	public String getCurrentYear()
 	{
 		return getTimezonedDateFormat("yy").format(mCurrentTime);
@@ -138,11 +133,6 @@ public class SaleTime implements Constants, Parcelable
 	public String getCurrentDayOftheWeek()
 	{
 		return getTimezonedDateFormat("EEE").format(mCurrentTime);
-	}
-
-	public String getOpenDayOftheWeek()
-	{
-		return getTimezonedDateFormat("EEE").format(mOpenTime);
 	}
 
 	public String getCurrentHour()

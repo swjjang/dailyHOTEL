@@ -8,9 +8,13 @@
  */
 package com.twoheart.dailyhotel.fragment;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -300,11 +304,11 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 				String open = response.getString("open");
 				String close = response.getString("close");
 
+				// SaleTime 시간 테스트 하기.
+				//				mTodaySaleTime.setCurrentTime(System.currentTimeMillis() + 3600 * 15 * 1000 + 60 * 15);
+
 				mTodaySaleTime.setOpenTime(open);
 				mTodaySaleTime.setCloseTime(close);
-
-				//				mTodaySaleTime.setCurrentTime("" + (System.currentTimeMillis() - 10000));
-				//				mTodaySaleTime.setOpenTime((String)DateFormat.format("HH:mm:ss", System.currentTimeMillis() + 5000));
 
 				if (mTodaySaleTime.isSaleTime() == false)
 				{
@@ -440,15 +444,40 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 				// 임시로 여기서 날짜를 넣는다.
 				ArrayList<String> dayList = new ArrayList<String>();
 
-				SaleTime nextSaleTime = mTodaySaleTime.getClone(1);
+				long tomorrowTime = 0, dateTime = 0;
 
-				dayList.add(getString(R.string.label_format_tabday, mTodaySaleTime.getOpenDayEx(), mTodaySaleTime.getOpenDayOftheWeek()));
-				dayList.add(getString(R.string.label_format_tabday, nextSaleTime.getOpenDayEx(), nextSaleTime.getOpenDayOftheWeek()));
+				// 현재 시간을 넣는다.
+				long todayTime = mTodaySaleTime.getCurrentTime();
+
+				// 현재 시간이 오픈 시간 보다 커지면 다음 날이 됨.
+				if (mTodaySaleTime.getCurrentTime() >= mTodaySaleTime.getOpenTime())
+				{
+				} else
+				{
+					// 다음 날이 되면 오늘 정시에서 클로즈 시간을 뺀다.
+					String todayString = SaleTime.attachCurrentDate(mTodaySaleTime.getCurrentYear(), mTodaySaleTime.getCurrentMonth(), mTodaySaleTime.getCurrentDay(), "00:00:00");
+					Date onTimeDate = SaleTime.stringToDate(todayString);
+
+					todayTime += (onTimeDate.getTime() - mTodaySaleTime.getCloseTime());
+				}
+
+				SimpleDateFormat weekFormat = new SimpleDateFormat("EEE", Locale.KOREA);
+				weekFormat.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
+
+				SimpleDateFormat dayFormat = new SimpleDateFormat("d", Locale.KOREA);
+				dayFormat.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
+
+				final long nextMillis = SaleTime.SECONDS_IN_A_DAY * 1000;
+
+				tomorrowTime = todayTime + nextMillis;
+				dateTime = tomorrowTime + nextMillis;
+
+				dayList.add(getString(R.string.label_format_tabday, dayFormat.format(new Date(todayTime)), weekFormat.format(new Date(todayTime))));
+				dayList.add(getString(R.string.label_format_tabday, dayFormat.format(new Date(tomorrowTime)), weekFormat.format(new Date(tomorrowTime))));
 
 				if (TextUtils.isEmpty(mTabIndicator.getSubText(2)) == true)
 				{
-					SaleTime nextnextSaleTime = mTodaySaleTime.getClone(2);
-					dayList.add(getString(R.string.label_format_tabday, nextnextSaleTime.getOpenDayEx(), nextnextSaleTime.getOpenDayOftheWeek()));
+					dayList.add(getString(R.string.label_format_tabday, dayFormat.format(new Date(dateTime)), weekFormat.format(new Date(dateTime))));
 				} else
 				{
 					dayList.add(mTabIndicator.getSubText(2));
