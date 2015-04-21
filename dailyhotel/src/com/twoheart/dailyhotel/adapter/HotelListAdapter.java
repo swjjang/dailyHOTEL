@@ -240,7 +240,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 						}
 					};
 
-					cb.url(element.getImage()).animation(AQuery.FADE_IN).ratio(1.0f);
+					cb.url(element.getImage()).animation(AQuery.FADE_IN);
 					aquery.id(viewHolder.img).image(cb);
 
 				} else
