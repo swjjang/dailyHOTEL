@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -31,7 +32,7 @@ import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
 public class HotelListMapFragment extends
 		com.google.android.gms.maps.SupportMapFragment
 {
-	private GoogleMap googleMap;
+	private GoogleMap mGoogleMap;
 	private ArrayList<HotelListViewItem> mHotelArrayList;
 	private HotelInfoWindowAdapter mHotelInfoWindowAdapter;
 
@@ -50,35 +51,42 @@ public class HotelListMapFragment extends
 	{
 		View view = super.onCreateView(inflater, container, savedInstanceState);
 
-		googleMap = super.getMap();
-		googleMap.setMyLocationEnabled(false);
+		getMapAsync(new OnMapReadyCallback()
+		{
+			@Override
+			public void onMapReady(GoogleMap googleMap)
+			{
+				mGoogleMap = googleMap;
+				mGoogleMap.setMyLocationEnabled(false);
 
-		// 기본 위치 서울시청.
-		//		서울시       : 37.540705, 126.956764
-		//		인천광역시 : 37.469221, 126.573234
-		//		광주광역시 : 35.126033, 126.831302
-		//		대구광역시 : 35.798838, 128.583052
-		//		울산광역시 : 35.519301, 129.239078
-		//		대전광역시 : 36.321655, 127.378953
-		//		부산광역시 : 35.198362, 129.053922
-		//		경기도       : 37.567167, 127.190292
-		//		강원도       : 37.555837, 128.209315
-		//		충청남도    : 36.557229, 126.779757
-		//		충청북도    : 36.628503, 127.929344
-		//		경상북도    : 36.248647, 128.664734
-		//		경상남도    : 35.259787, 128.664734
-		//		전라북도    : 35.716705, 127.144185
-		//		전라남도    : 34.819400, 126.893113
-		//		제주도       : 33.364805, 126.542671
+				// 기본 위치 서울시청.
+				//		서울시       : 37.540705, 126.956764
+				//		인천광역시 : 37.469221, 126.573234
+				//		광주광역시 : 35.126033, 126.831302
+				//		대구광역시 : 35.798838, 128.583052
+				//		울산광역시 : 35.519301, 129.239078
+				//		대전광역시 : 36.321655, 127.378953
+				//		부산광역시 : 35.198362, 129.053922
+				//		경기도       : 37.567167, 127.190292
+				//		강원도       : 37.555837, 128.209315
+				//		충청남도    : 36.557229, 126.779757
+				//		충청북도    : 36.628503, 127.929344
+				//		경상북도    : 36.248647, 128.664734
+				//		경상남도    : 35.259787, 128.664734
+				//		전라북도    : 35.716705, 127.144185
+				//		전라남도    : 34.819400, 126.893113
+				//		제주도       : 33.364805, 126.542671
 
-		LatLng address = new LatLng(37.540705, 126.956764);
-		CameraPosition cp = new CameraPosition.Builder().target((address)).zoom(15).build();
-		googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
+				LatLng address = new LatLng(37.540705, 126.956764);
+				CameraPosition cp = new CameraPosition.Builder().target((address)).zoom(15).build();
+				mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
 
-		mIsCreateView = true;
+				mIsCreateView = true;
 
-		makeMarker();
-
+				makeMarker();
+			}
+		});
+		
 		return view;
 	}
 
@@ -101,12 +109,12 @@ public class HotelListMapFragment extends
 
 	private void makeMarker()
 	{
-		if (googleMap == null)
+		if (mGoogleMap == null)
 		{
 			return;
 		}
 
-		googleMap.clear();
+		mGoogleMap.clear();
 
 		if (mHotelArrayList == null)
 		{
@@ -162,7 +170,7 @@ public class HotelListMapFragment extends
 				int zoomLevel = getBoundsZoomLevel(bounds.northeast, bounds.southwest, width, height);
 
 				CameraPosition cp = new CameraPosition.Builder().target((bounds.getCenter())).zoom(zoomLevel).build();
-				googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
+				mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
 			}
 		});
 
@@ -197,8 +205,8 @@ public class HotelListMapFragment extends
 
 		mHotelInfoWindowAdapter = new HotelInfoWindowAdapter(getActivity());
 
-		googleMap.setInfoWindowAdapter(mHotelInfoWindowAdapter);
-		googleMap.setOnMarkerClickListener(new OnMarkerClickListener()
+		mGoogleMap.setInfoWindowAdapter(mHotelInfoWindowAdapter);
+		mGoogleMap.setOnMarkerClickListener(new OnMarkerClickListener()
 		{
 			@Override
 			public boolean onMarkerClick(Marker marker)
@@ -231,7 +239,7 @@ public class HotelListMapFragment extends
 			}
 		});
 
-		googleMap.setOnInfoWindowClickListener(new OnInfoWindowClickListener()
+		mGoogleMap.setOnInfoWindowClickListener(new OnInfoWindowClickListener()
 		{
 			@Override
 			public void onInfoWindowClick(Marker arg0)
@@ -249,11 +257,11 @@ public class HotelListMapFragment extends
 
 	private void addMarker(Hotel hotel)
 	{
-		if (googleMap != null)
+		if (mGoogleMap != null)
 		{
 			HotelPriceRenderer hotelPriceRenderer = new HotelPriceRenderer(hotel);
 
-			googleMap.addMarker(new MarkerOptions().position(new LatLng(hotel.mLatitude, hotel.mLongitude)).title(hotel.getDiscount()).icon(hotelPriceRenderer.getBitmap()));
+			mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(hotel.mLatitude, hotel.mLongitude)).title(hotel.getDiscount()).icon(hotelPriceRenderer.getBitmap()));
 		}
 	}
 
