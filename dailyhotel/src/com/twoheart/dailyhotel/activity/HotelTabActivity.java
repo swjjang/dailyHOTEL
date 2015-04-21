@@ -109,7 +109,7 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 		titleList.add(getString(R.string.frag_tab_map_title));
 
 		mTabIndicator = (TabIndicator) findViewById(R.id.tabindicator);
-		mTabIndicator.setData(titleList);
+		mTabIndicator.setData(titleList, false);
 		mTabIndicator.setOnTabSelectListener(mOnTabSelectedListener);
 
 		btnSoldOut = (Button) findViewById(R.id.tv_hotel_tab_soldout);

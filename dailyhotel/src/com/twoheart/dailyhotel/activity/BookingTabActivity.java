@@ -71,7 +71,7 @@ public class BookingTabActivity extends BaseActivity
 		titleList.add(getString(R.string.frag_tab_map_title));
 
 		mTabIndicator = (TabIndicator) findViewById(R.id.tabindicator);
-		mTabIndicator.setData(titleList);
+		mTabIndicator.setData(titleList, false);
 		mTabIndicator.setOnTabSelectListener(mOnTabSelectedListener);
 	}
 

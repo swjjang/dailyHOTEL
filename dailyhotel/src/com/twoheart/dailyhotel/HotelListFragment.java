@@ -67,11 +67,12 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	private Map<String, List<String>> mDetailRegionList;
 
 	//	private boolean event;
-	protected boolean mIsSelectedNavigationItem;
+	protected boolean mIsSelectionTop;
 	private View mEmptyView;
 	private FrameLayout mMapLayout;
 	private HotelListMapFragment mHotelListMapFragment;
 	private HOTEL_VIEW_TYPE mHotelViewType;
+	private String mSelectedRegion;
 
 	protected HotelMainFragment.UserActionListener mUserActionListener;
 
@@ -150,11 +151,9 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 	public void onPageUnSelected()
 	{
-		//		mEmptyView.setVisibility(View.VISIBLE);
-		//		mPullToRefreshLayout.setVisibility(View.INVISIBLE);
 	}
 
-	public void onRefreshComplete(boolean isSelectedNavigationItem)
+	public void onRefreshComplete()
 	{
 
 	}
@@ -251,9 +250,9 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		mUserActionListener = userActionLister;
 	}
 
-	public void refreshHotelList(boolean isSelectedNavigationItem)
+	public void refreshHotelList(boolean isSelectionTop)
 	{
-		mIsSelectedNavigationItem = isSelectedNavigationItem;
+		mIsSelectionTop = isSelectionTop;
 
 		fetchHotelList(mSaleTime);
 	}
@@ -273,20 +272,25 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 		lockUI();
 
-		String selectedRegion = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
-		ExLog.e("selectedRegion : " + selectedRegion + " fetchHotelList");
+		mSelectedRegion = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
+		ExLog.e("selectedRegion : " + mSelectedRegion + " fetchHotelList");
 
-		selectedRegion = selectedRegion.replace(" ", "%20");
-		selectedRegion = selectedRegion.replace("|", "%7C");
+		mSelectedRegion = mSelectedRegion.replace(" ", "%20");
+		mSelectedRegion = mSelectedRegion.replace("|", "%7C");
 
 		//		String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL).append('/').append(selectedRegion).append("/near/0/0/0/1000/").append(saleTime.getCurrentYear()).append("/").append(saleTime.getCurrentMonth()).append("/").append(saleTime.getCurrentDay()).toString();
 
-		String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE).append('/').append(selectedRegion).append("/").append(saleTime.getCurrentYear()).append(saleTime.getCurrentMonth()).append(saleTime.getCurrentDay()).toString();
+		String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE).append('/').append(mSelectedRegion).append("/").append(saleTime.getCurrentYear()).append(saleTime.getCurrentMonth()).append(saleTime.getCurrentDay()).toString();
 
 		// 호텔 리스트를 가져온다. 
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null, mHotelJsonResponseListener, mHostActivity));
 
-		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("hotelList", "/todays-hotels/" + selectedRegion);
+		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("hotelList", "/todays-hotels/" + mSelectedRegion);
+	}
+
+	public String getRegion()
+	{
+		return mSelectedRegion;
 	}
 
 	@Override
@@ -570,18 +574,17 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 					mHotelListAdapter.addAll(hotelListViewList);
 					mHotelListAdapter.notifyDataSetChanged();
 
-					//					if (mIsSelectedNavigationItem == true)
-					//					{
-					//						mHotelListView.setSelection(0);
-					//					}
+					if (mIsSelectionTop == true)
+					{
+						mHotelListView.setSelection(0);
+					}
 				}
 
 				// Notify PullToRefreshLayout that the refresh has finished
 				mPullToRefreshLayout.setRefreshComplete();
 
-				// 리스트 요청 완료.
-				onRefreshComplete(mIsSelectedNavigationItem);
-				mIsSelectedNavigationItem = true;
+				// 리스트 요청 완료후에 날짜 탭은 애니매이션을 진행하도록 한다.
+				onRefreshComplete();
 			} catch (JSONException e)
 			{
 				onError(e);

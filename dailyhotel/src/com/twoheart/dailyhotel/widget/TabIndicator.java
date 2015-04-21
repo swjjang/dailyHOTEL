@@ -27,6 +27,7 @@ public class TabIndicator extends LinearLayout implements OnClickListener
 {
 	private SparseArray<TabIndicatorItem> mTabArrray;
 	private boolean mTabEnable;
+	private boolean mHasSubText;
 
 	private OnTabSelectedListener mOnTabSelectedListener;
 
@@ -83,12 +84,14 @@ public class TabIndicator extends LinearLayout implements OnClickListener
 		return mTabArrray.size();
 	}
 
-	public void setData(ArrayList<String> dataList)
+	public void setData(ArrayList<String> dataList, boolean hasSubText)
 	{
 		if (dataList == null)
 		{
 			return;
 		}
+
+		mHasSubText = hasSubText;
 
 		int size = dataList.size();
 		TabIndicatorItem tabIndicatorItem;
@@ -359,7 +362,13 @@ public class TabIndicator extends LinearLayout implements OnClickListener
 				mDayTextView.setVisibility(View.VISIBLE);
 			} else
 			{
-				mDayTextView.setVisibility(View.INVISIBLE);
+				if (mHasSubText == true)
+				{
+					mDayTextView.setVisibility(View.INVISIBLE);
+				} else
+				{
+					mDayTextView.setVisibility(View.GONE);
+				}
 			}
 		}
 

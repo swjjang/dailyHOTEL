@@ -52,6 +52,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 
 	private View[] mDaysView;
 	private View mSelectedView = null;
+	private boolean mIsShowDaysList;
 
 	private Handler mHandler = new Handler();
 
@@ -161,14 +162,17 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 				break;
 
 			case HIDE_END:
+			{
 				if (isRequestHotelList == true)
 				{
+					mIsShowDaysList = true;
 					showAnimationFadeOut();
 				} else
 				{
 					showAnimationDaysList();
 				}
 				break;
+			}
 		}
 	}
 
@@ -183,10 +187,12 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 	}
 
 	@Override
-	public void onRefreshComplete(boolean isSelectedNavigationItem)
+	public void onRefreshComplete()
 	{
-		if (isSelectedNavigationItem == false && mAnimationStatus == ANIMATION_STATUS.HIDE_END)
+		if (mIsShowDaysList == true && mAnimationStatus == ANIMATION_STATUS.HIDE_END)
 		{
+			mIsShowDaysList = false;
+
 			mHandler.postDelayed(new Runnable()
 			{
 				@Override

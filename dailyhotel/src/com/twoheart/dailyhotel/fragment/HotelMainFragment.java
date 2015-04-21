@@ -97,7 +97,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 
 		mTabIndicator = (TabIndicator) view.findViewById(R.id.tabindicator);
 		//		mTabIndicator.setData(titleList, dayList, true);
-		mTabIndicator.setData(titleList);
+		mTabIndicator.setData(titleList, true);
 		mTabIndicator.setOnTabSelectListener(mOnTabSelectedListener);
 
 		mFragmentViewPager = (FragmentViewPager) view.findViewById(R.id.fragmentViewPager);
@@ -224,6 +224,8 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 		mHostActivity.setActionBarListEnabled(true);
 		mHostActivity.setActionBarListData(region, mRegionList, this);
 
+		boolean isSelectionTop = false;
+
 		// 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
 		if (region.equalsIgnoreCase(mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "")) == false)
 		{
@@ -231,9 +233,11 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 			editor.putString(KEY_PREFERENCE_REGION_SELECT_BEFORE, mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, ""));
 			editor.putString(KEY_PREFERENCE_REGION_SELECT, region);
 			editor.commit();
+
+			isSelectionTop = true;
 		}
 
-		refreshHotelList(true);
+		refreshHotelList(isSelectionTop);
 
 		ExLog.d("before region : " + mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_BEFORE, "") + " select region : " + mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, ""));
 
@@ -241,11 +245,11 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 		return true;
 	}
 
-	private void refreshHotelList(boolean isSelectedNavigationItem)
+	private void refreshHotelList(boolean isSelectionTop)
 	{
 		HotelListFragment hotelListFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
 
-		hotelListFragment.refreshHotelList(isSelectedNavigationItem);
+		hotelListFragment.refreshHotelList(isSelectionTop);
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -549,10 +553,17 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 			// 현재 페이지 선택 상태를 Fragment에게 알려준다.
 			HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
 
+			boolean isSelectionTop = false;
+
 			for (HotelListFragment hotelListFragment : mFragmentList)
 			{
 				if (hotelListFragment == currentFragment)
 				{
+					String listRegion = hotelListFragment.getRegion();
+					String selectedRegion = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
+
+					isSelectionTop = selectedRegion.equalsIgnoreCase(listRegion) == false;
+
 					hotelListFragment.onPageSelected(true);
 				} else
 				{
@@ -560,7 +571,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 				}
 			}
 
-			refreshHotelList(false);
+			refreshHotelList(isSelectionTop);
 		}
 	};
 
