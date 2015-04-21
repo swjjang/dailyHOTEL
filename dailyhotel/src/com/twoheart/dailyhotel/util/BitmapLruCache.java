@@ -38,6 +38,7 @@ public class BitmapLruCache extends LruCache<String, Bitmap> implements ImageCac
 		final int cacheSize = maxMemory / divideValue;
 
 		ExLog.i("[BitmapLruCache - getDefaultLruCacheSize] maxMemory : " + maxMemory + ", cacheSize : " + cacheSize);
+
 		return cacheSize;
 	}
 

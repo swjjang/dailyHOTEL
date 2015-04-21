@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="240dp"
-    android:background="#3a3a3a"
-    android:paddingBottom="1px" >
+    android:layout_height="240dp" >
 
     <!-- img -->
 
@@ -13,8 +11,7 @@
         android:layout_height="240dp"
         android:adjustViewBounds="true"
         android:background="@drawable/img_placeholder"
-        android:scaleType="centerCrop"
-        android:src="@drawable/img_placeholder" />
+        android:scaleType="centerCrop" />
 
     <RelativeLayout
         android:id="@+id/ll_hotel_row_content"
@@ -69,14 +66,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:textColor="@android:color/white"
                     android:layout_centerVertical="true"
-                    android:textSize="11.5dp"
                     android:gravity="center"
+                    android:paddingBottom="1px"
                     android:paddingLeft="5.5dp"
-                    android:paddingTop="2px"
                     android:paddingRight="5.5dp"
-                    android:paddingBottom="1px" />
+                    android:paddingTop="2px"
+                    android:textColor="@android:color/white"
+                    android:textSize="11.5dp" />
 
                 <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                     android:id="@+id/tv_hotel_row_name"
@@ -98,7 +95,8 @@
                     android:shadowRadius="0.01"
                     android:singleLine="true"
                     android:textColor="@android:color/white"
-                    android:textSize="18dp" />
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
 
                 <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                     android:id="@+id/tv_hotel_row_discount"
@@ -112,7 +110,8 @@
                     android:shadowDy="2"
                     android:shadowRadius="0.01"
                     android:textColor="@android:color/white"
-                    android:textSize="18dp" />
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -163,5 +162,11 @@
         android:textColor="@android:color/darker_gray"
         android:textSize="40dp"
         android:visibility="gone" />
+    
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignParentBottom="true"
+        android:background="@color/hotel_list_item_underline" />
 
 </RelativeLayout>

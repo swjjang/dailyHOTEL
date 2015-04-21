@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
@@ -27,10 +26,8 @@ import android.widget.TextView;
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.androidquery.callback.BitmapAjaxCallback;
-import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Hotel;
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.VolleyImageLoader;
 import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView.PinnedSectionListAdapter;
@@ -42,6 +39,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 	private LayoutInflater inflater;
 	//	private LruCache<String, Bitmap> mLruCache;
 	private ArrayList<HotelListViewItem> mHoteList;
+	private PaintDrawable mPaintDrawable;
 
 	public HotelListAdapter(Context context, int resourceId, ArrayList<HotelListViewItem> hotelList)
 	{
@@ -55,20 +53,33 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 		mHoteList.clear();
 		mHoteList.addAll(hotelList);
 
-		//		final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-		//		final int cacheSize = maxMemory / 8;
-		//		mLruCache = new LruCache<String, Bitmap>(cacheSize)
-		//		{
-		//			@Override
-		//			protected int sizeOf(String key, Bitmap value)
-		//			{
-		//				return value.getRowBytes() * value.getHeight() / 1024;
-		//			}
-		//		}; // 최대 가용 메모리의 1/8 
 		this.context = context;
 		this.resourceId = resourceId;
 
 		this.inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+		makeShaderFactory();
+	}
+
+	private void makeShaderFactory()
+	{
+		// 그라디에이션 만들기.
+		final int colors[] = { Color.parseColor("#ED000000"), Color.parseColor("#E8000000"), Color.parseColor("#E2000000"), Color.parseColor("#66000000"), Color.parseColor("#00000000") };
+		final float positions[] = { 0.0f, 0.01f, 0.02f, 0.17f, 0.38f };
+
+		mPaintDrawable = new PaintDrawable();
+		mPaintDrawable.setShape(new RectShape());
+
+		ShapeDrawable.ShaderFactory sf = new ShapeDrawable.ShaderFactory()
+		{
+			@Override
+			public Shader resize(int width, int height)
+			{
+				return new LinearGradient(0, height, 0, 0, colors, positions, Shader.TileMode.CLAMP);
+			}
+		};
+
+		mPaintDrawable.setShaderFactory(sf);
 	}
 
 	@Override
@@ -202,53 +213,19 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 
 				Spanned currency = Html.fromHtml(getContext().getResources().getString(R.string.currency));
 
-				SharedPreferences sharedPreference = convertView.getContext().getSharedPreferences(Constants.NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
-				String locale = sharedPreference.getString(Constants.KEY_PREFERENCE_LOCALE, null);
-
-				if (locale.equals("한국어") == true)
-				{
-					viewHolder.price.setText(strPrice + currency);
-					viewHolder.price.setPaintFlags(viewHolder.price.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-					viewHolder.discount.setText(strDiscount + currency);
-				} else
-				{
-					viewHolder.price.setText(currency + " " + strPrice);
-					viewHolder.price.setPaintFlags(viewHolder.price.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-					viewHolder.discount.setText(currency + " " + strDiscount);
-				}
-
+				viewHolder.price.setText(strPrice + currency);
+				viewHolder.price.setPaintFlags(viewHolder.price.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+				viewHolder.discount.setText(strDiscount + currency);
 				viewHolder.name.setSelected(true); // Android TextView marquee bug
 
-				final int colors[] = { Color.parseColor("#ED000000"), Color.parseColor("#E8000000"), Color.parseColor("#E2000000"), Color.parseColor("#66000000"), Color.parseColor("#00000000") };
-				final float positions[] = { 0.0f, 0.01f, 0.02f, 0.17f, 0.38f };
-
-				PaintDrawable p = new PaintDrawable();
-				p.setShape(new RectShape());
-
-				ShapeDrawable.ShaderFactory sf = new ShapeDrawable.ShaderFactory()
-				{
-					@Override
-					public Shader resize(int width, int height)
-					{
-						return new LinearGradient(0, height, 0, 0, colors, positions, Shader.TileMode.CLAMP);
-					}
-				};
-
-				p.setShaderFactory(sf);
-				viewHolder.llHotelRowContent.setBackgroundDrawable(p);
+				viewHolder.llHotelRowContent.setBackgroundDrawable(mPaintDrawable);
 
 				// grade
 				viewHolder.grade.setText(element.getCategory().getName(getContext()));
 				viewHolder.grade.setBackgroundResource(element.getCategory().getColorResId());
 
-				viewHolder.name.setTypeface(DailyHotel.getBoldTypeface());
-				viewHolder.discount.setTypeface(DailyHotel.getBoldTypeface());
-
-				// 볼리 사용시 
-				//				viewHolder.img.setImageUrl(element.getImage(), VolleyImageLoader.getImageLoader());
-
 				// AQuery사용시 
-				AQuery aq = new AQuery(convertView);
+				AQuery aquery = new AQuery(convertView);
 				Bitmap cachedImg = VolleyImageLoader.getCache(element.getImage());
 
 				if (cachedImg == null)
@@ -263,12 +240,13 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 						}
 					};
 
-					cb.url(element.getImage()).animation(AQuery.FADE_IN);
-					aq.id(viewHolder.img).image(cb);
+					cb.url(element.getImage()).animation(AQuery.FADE_IN).ratio(1.0f);
+					aquery.id(viewHolder.img).image(cb);
 
 				} else
 				{
-					aq.id(viewHolder.img).image(cachedImg);
+					aquery.id(viewHolder.img).image(cachedImg).animate(AQuery.FADE_IN);
+
 					//				cachedImg.recycle();
 				}
 

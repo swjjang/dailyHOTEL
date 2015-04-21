@@ -644,6 +644,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					msg = getString(R.string.act_toast_payment_soldout);
 					break;
 				case CODE_RESULT_ACTIVITY_PAYMENT_NOT_AVAILABLE:
+					title = getString(R.string.dialog_notice2);
 					msg = getString(R.string.act_toast_payment_not_available);
 					break;
 				case CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR:
