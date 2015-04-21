@@ -249,7 +249,6 @@
                     android:gravity="center_horizontal"
                     android:lineSpacingExtra="2dp"
                     android:padding="10dp"
-                    android:text="@string/txt_payment_wait_confirm"
                     android:textSize="15dp" />
             </LinearLayout>
 
@@ -282,7 +281,6 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:padding="10dp"
-                    android:text="@string/act_wait_payment_msg2"
                     android:textSize="15dp" />
             </LinearLayout>
         </LinearLayout>
