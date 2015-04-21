@@ -98,8 +98,8 @@
     <string name="dialog_msg_please_update_new_version">dailyHOTEL의 새로운 버전이 출시되었습니다. 업데이트해주세요</string>
     <string name="dialog_msg_update_now">지금 업그레이드하여 가장 멋진 데일리호텔 앱을 다운받으세요</string>
     <string name="dialog_msg_sales_closed">오전 9시부터 오늘의 호텔이 공개됩니다.</string>
-    <string name="dialog_msg_payment_confirm">당일 호텔 특성 상, 결제 완료 후&lt;br/&gt;&lt;b&gt;취소나 변경이 불가&lt;/b&gt;합니다.&lt;br/&gt;&lt;br/&gt;\'체크인 시 배정\'의 경우 더블,트윈 등의&lt;br/&gt;&lt;b&gt;베드 타입은 보장하지 않으며&lt;/b&gt;&lt;br/&gt;2인이 투숙할 수 있는 객실로 배정됩니다.&lt;br/&gt;&lt;br/&gt;미성년자는 보호자 동반시 투숙 가능합니다.&lt;br/&gt;&lt;br/&gt; 위 사항에 동의하시면 아래의&lt;br/&gt;버튼을 눌러 결제를 진행해 주세요.</string>
-    <string name="dialog_msg_payment_confirm_hp">당일 호텔 특성 상, 결제 완료 후&lt;br/&gt;&lt;b&gt;취소나 변경이 불가&lt;/b&gt;합니다.&lt;br/&gt;&lt;br/&gt;\'체크인 시 배정\'의 경우 더블,트윈 등의&lt;br/&gt;&lt;b&gt;베드 타입은 보장하지 않으며&lt;/b&gt;&lt;br/&gt;2인이 투숙할 수 있는 객실로 배정됩니다.&lt;br/&gt;&lt;br/&gt;미성년자는 보호자 동반시 투숙 가능합니다.&lt;br/&gt;&lt;br/&gt;휴대폰 결제는 월 30만원이 한도입니다.&lt;br/&gt;&lt;br/&gt; 위 사항에 동의하시면 아래의&lt;br/&gt;버튼을 눌러 결제를 진행해 주세요.</string>
+    <string name="dialog_msg_payment_confirm">본 상품은 특가 예약 상품이므로&lt;br/&gt;결제 완료 후&lt;br/&gt;&lt;b&gt;취소나 교환 및 환불이 불가&lt;/b&gt;합니다.&lt;br/&gt;&lt;br/&gt;\'체크인 시 배정\'의 경우 더블,트윈 등의&lt;br/&gt;&lt;b&gt;베드 타입은 보장하지 않으며&lt;/b&gt;&lt;br/&gt;2인이 투숙할 수 있는 객실로 배정됩니다.&lt;br/&gt;&lt;br/&gt;미성년자는 보호자 동반시 투숙 가능합니다.&lt;br/&gt;&lt;br/&gt; 위 사항에 동의하시면 아래의&lt;br/&gt;버튼을 눌러 결제를 진행해 주세요.</string>
+    <string name="dialog_msg_payment_confirm_hp">본 상품은 특가 예약 상품이므로&lt;br/&gt;결제 완료 후&lt;br/&gt;&lt;b&gt;취소나 교환 및 환불이 불가&lt;/b&gt;합니다.&lt;br/&gt;&lt;br/&gt;\'체크인 시 배정\'의 경우 더블,트윈 등의&lt;br/&gt;&lt;b&gt;베드 타입은 보장하지 않으며&lt;/b&gt;&lt;br/&gt;2인이 투숙할 수 있는 객실로 배정됩니다.&lt;br/&gt;&lt;br/&gt;미성년자는 보호자 동반시 투숙 가능합니다.&lt;br/&gt;&lt;br/&gt;휴대폰 결제는 월 30만원이 한도입니다.&lt;br/&gt;&lt;br/&gt; 위 사항에 동의하시면 아래의&lt;br/&gt;버튼을 눌러 결제를 진행해 주세요.</string>
     <string name="dialog_msg_call">데일리호텔 고객센터로 전화 연결합니다.</string>
     <string name="dialog_btn_call">전화 연결</string>
     <string name="dialog_btn_payment_confirm">동의하고 결제 진행</string>
@@ -233,7 +233,7 @@
     <!-- Booking Activity -->
     <string name="act_toast_payment_success">결제가 정상적으로 이루어졌습니다</string>
     <string name="act_toast_payment_soldout">모든 객실이 판매되었습니다\n다음에 이용해주세요</string>
-    <string name="act_toast_payment_not_available">다른 손님이 예약 중입니다\n잠시 후 이용해주세요</string>
+    <string name="act_toast_payment_not_available">마지막 상품을 다른 고객님이 결제중입니다.\n추가 상품 확보를 위해 노력하고 있으니 잠시 후 다시 확인해주세요!</string>
     <string name="act_toast_payment_network_error">네트워크 오류가 발생했습니다\n네트워크 연결을 확인해주세요</string>
     <string name="act_toast_payment_invalid_date">판매가 마감되었습니다</string>
     <string name="act_toast_payment_fail">알 수 없는 오류가 발생했습니다\n문의해주시기 바랍니다</string>
