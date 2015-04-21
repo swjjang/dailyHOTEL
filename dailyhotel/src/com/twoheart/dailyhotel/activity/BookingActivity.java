@@ -276,7 +276,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	{
 		if (v.getId() == btnPay.getId())
 		{
-
 			if (mIsEditMode == true)
 			{
 				Customer buyer = new Customer();
@@ -307,7 +306,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_UPDATE_FACEBOOK).toString(), updateParams, mUserUpdateFacebookJsonResponseListener, this));
 				}
 
-			} //호텔 가격이 만원 이하인 이벤트 호텔에서는 적립금 사용을 못하게 막음. 
+			} //호텔 가격이 xx 이하인 이벤트 호텔에서는 적립금 사용을 못하게 막음. 
 			else if (mPay.isSaleCredit() && (mPay.getOriginalPrice() <= DEFAULT_AVAILABLE_RESERVES) && Integer.parseInt(mPay.getCredit().getBonus().replaceAll(",", "")) != 0)
 			{
 				getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_NO_RSERVE, null).show();
@@ -541,9 +540,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		mResIntent = intent;
 
 		mAliveCallSource = "ACTIVITY_RESULT";
+
 		lockUI();
 		mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, BookingActivity.this));
-
 	}
 
 	private void activityResulted(int requestCode, int resultCode, Intent intent)
@@ -980,8 +979,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				saleTime.setOpenTime(open);
 				saleTime.setCloseTime(close);
 
-				unLockUI();
-
 				if (saleTime.isSaleTime() == true)
 				{
 					Customer buyer = mPay.getCustomer();
@@ -995,6 +992,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 				} else
 				{
+					unLockUI();
+
 					android.content.DialogInterface.OnClickListener posListener = new DialogInterface.OnClickListener()
 					{
 						@Override
@@ -1011,6 +1010,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 			} catch (JSONException e)
 			{
+				unLockUI();
 				onError(e);
 			}
 		}
@@ -1234,45 +1234,90 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				result = response.trim();
 			}
 
-			if ("alive".equalsIgnoreCase(result) == true)
+			if ("PAYMENT".equalsIgnoreCase(mAliveCallSource) == true)
 			{
-				if ("PAYMENT".equalsIgnoreCase(mAliveCallSource) == true)
+				// 임시로 강제 로그인 시킨다.
+				result = "";
+
+				if ("alive".equalsIgnoreCase(result) == true)
 				{
 					//1번 
 					mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_TIME).toString(), null, mAppTimeJsonResponseListener, BookingActivity.this));
-				} else if ("ACTIVITY_RESULT".equalsIgnoreCase(mAliveCallSource) == true)
-				{
-					unLockUI();
-
-					//2번 
-					activityResulted(mReqCode, mResCode, mResIntent);
-				}
-			} else
-			{
-				if (sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false) == true)
-				{
-					String id = sharedPreference.getString(KEY_PREFERENCE_USER_ID, null);
-					String accessToken = sharedPreference.getString(KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
-					String pw = sharedPreference.getString(KEY_PREFERENCE_USER_PWD, null);
-
-					Map<String, String> loginParams = new HashMap<String, String>();
-
-					if (accessToken != null)
-					{
-						loginParams.put("accessToken", accessToken);
-					} else
-					{
-						loginParams.put("email", id);
-					}
-
-					loginParams.put("pw", pw);
-
-					mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(), loginParams, mUserLoginJsonResponseListener, BookingActivity.this));
 				} else
 				{
-					unLockUI();
+					if (sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false) == true)
+					{
+						String id = sharedPreference.getString(KEY_PREFERENCE_USER_ID, null);
+						String accessToken = sharedPreference.getString(KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
+						String pw = sharedPreference.getString(KEY_PREFERENCE_USER_PWD, null);
+
+						Map<String, String> loginParams = new HashMap<String, String>();
+
+						if (accessToken != null)
+						{
+							loginParams.put("accessToken", accessToken);
+						} else
+						{
+							loginParams.put("email", id);
+						}
+
+						loginParams.put("pw", pw);
+
+						mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(), loginParams, mUserLoginJsonResponseListener, BookingActivity.this));
+					} else
+					{
+						unLockUI();
+					}
 				}
+			} else if ("ACTIVITY_RESULT".equalsIgnoreCase(mAliveCallSource) == true)
+			{
+				unLockUI();
+
+				//2번 
+				activityResulted(mReqCode, mResCode, mResIntent);
 			}
+
+			//			
+			//			// 임시로 강제 로그인 시킨다.
+			//			if ("alive".equalsIgnoreCase(result) == true)
+			//			{
+			//				if ("PAYMENT".equalsIgnoreCase(mAliveCallSource) == true)
+			//				{
+			//					//1번 
+			//					mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_TIME).toString(), null, mAppTimeJsonResponseListener, BookingActivity.this));
+			//				} else if ("ACTIVITY_RESULT".equalsIgnoreCase(mAliveCallSource) == true)
+			//				{
+			//					unLockUI();
+			//
+			//					//2번 
+			//					activityResulted(mReqCode, mResCode, mResIntent);
+			//				}
+			//			} else
+			//			{
+			//				if (sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false) == true)
+			//				{
+			//					String id = sharedPreference.getString(KEY_PREFERENCE_USER_ID, null);
+			//					String accessToken = sharedPreference.getString(KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
+			//					String pw = sharedPreference.getString(KEY_PREFERENCE_USER_PWD, null);
+			//
+			//					Map<String, String> loginParams = new HashMap<String, String>();
+			//
+			//					if (accessToken != null)
+			//					{
+			//						loginParams.put("accessToken", accessToken);
+			//					} else
+			//					{
+			//						loginParams.put("email", id);
+			//					}
+			//
+			//					loginParams.put("pw", pw);
+			//
+			//					mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(), loginParams, mUserLoginJsonResponseListener, BookingActivity.this));
+			//				} else
+			//				{
+			//					unLockUI();
+			//				}
+			//			}
 		}
 	};
 

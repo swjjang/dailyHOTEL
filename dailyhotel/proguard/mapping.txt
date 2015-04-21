@@ -42372,13 +42372,14 @@ com.twoheart.dailyhotel.HotelDaysListFragment -> com.twoheart.dailyhotel.n:
     android.view.animation.AlphaAnimation mAlphaAnimation -> m
     android.view.View[] mDaysView -> n
     android.view.View mSelectedView -> o
-    android.os.Handler mHandler -> p
-    int[] $SWITCH_TABLE$com$twoheart$dailyhotel$HotelDaysListFragment$ANIMATION_STATUS -> q
+    boolean mIsShowDaysList -> p
+    android.os.Handler mHandler -> q
+    int[] $SWITCH_TABLE$com$twoheart$dailyhotel$HotelDaysListFragment$ANIMATION_STATUS -> r
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     void setSaleTime(com.twoheart.dailyhotel.model.SaleTime) -> setSaleTime
     void onPageSelected(boolean) -> onPageSelected
     void onPageUnSelected() -> onPageUnSelected
-    void onRefreshComplete(boolean) -> onRefreshComplete
+    void onRefreshComplete() -> onRefreshComplete
     void onClick(android.view.View) -> onClick
     void initLayoutDays(android.view.View,com.twoheart.dailyhotel.model.SaleTime) -> a
     void setDaysLayoutEnabled(boolean) -> a
@@ -42460,19 +42461,20 @@ com.twoheart.dailyhotel.HotelListFragment -> com.twoheart.dailyhotel.z:
     com.twoheart.dailyhotel.adapter.HotelListAdapter mHotelListAdapter -> i
     com.twoheart.dailyhotel.model.SaleTime mSaleTime -> a
     java.util.Map mDetailRegionList -> j
-    boolean mIsSelectedNavigationItem -> b
+    boolean mIsSelectionTop -> b
     android.view.View mEmptyView -> k
     android.widget.FrameLayout mMapLayout -> l
     com.twoheart.dailyhotel.fragment.HotelListMapFragment mHotelListMapFragment -> m
     com.twoheart.dailyhotel.fragment.HotelMainFragment$HOTEL_VIEW_TYPE mHotelViewType -> n
+    java.lang.String mSelectedRegion -> o
     com.twoheart.dailyhotel.fragment.HotelMainFragment$UserActionListener mUserActionListener -> c
-    com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener mHotelJsonResponseListener -> o
-    int[] $SWITCH_TABLE$com$twoheart$dailyhotel$fragment$HotelMainFragment$HOTEL_VIEW_TYPE -> p
+    com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener mHotelJsonResponseListener -> p
+    int[] $SWITCH_TABLE$com$twoheart$dailyhotel$fragment$HotelMainFragment$HOTEL_VIEW_TYPE -> q
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
     void onPageSelected(boolean) -> onPageSelected
     void onPageUnSelected() -> onPageUnSelected
-    void onRefreshComplete(boolean) -> onRefreshComplete
+    void onRefreshComplete() -> onRefreshComplete
     void setHotelViewType(com.twoheart.dailyhotel.fragment.HotelMainFragment$HOTEL_VIEW_TYPE,boolean) -> setHotelViewType
     void setVisibility(com.twoheart.dailyhotel.fragment.HotelMainFragment$HOTEL_VIEW_TYPE) -> a
     void setSaleTime(com.twoheart.dailyhotel.model.SaleTime) -> setSaleTime
@@ -42481,6 +42483,7 @@ com.twoheart.dailyhotel.HotelListFragment -> com.twoheart.dailyhotel.z:
     void setUserActionListener(com.twoheart.dailyhotel.fragment.HotelMainFragment$UserActionListener) -> setUserActionListener
     void refreshHotelList(boolean) -> refreshHotelList
     void fetchHotelList(com.twoheart.dailyhotel.model.SaleTime) -> a
+    java.lang.String getRegion() -> getRegion
     void onRefreshStarted(android.view.View) -> onRefreshStarted
     void access$0(com.twoheart.dailyhotel.HotelListFragment,com.twoheart.dailyhotel.fragment.HotelMainFragment$HOTEL_VIEW_TYPE) -> a
     java.util.Map access$1(com.twoheart.dailyhotel.HotelListFragment) -> a
@@ -43515,6 +43518,8 @@ com.twoheart.dailyhotel.adapter.HotelListAdapter -> com.twoheart.dailyhotel.a.i:
     int resourceId -> b
     android.view.LayoutInflater inflater -> c
     java.util.ArrayList mHoteList -> d
+    android.graphics.drawable.PaintDrawable mPaintDrawable -> e
+    void makeShaderFactory() -> a
     void clear() -> clear
     com.twoheart.dailyhotel.util.ui.HotelListViewItem getItem(int) -> getItem
     int getCount() -> getCount
@@ -44691,10 +44696,11 @@ com.twoheart.dailyhotel.widget.RegionPopupListView$UserActionListener -> com.two
 com.twoheart.dailyhotel.widget.TabIndicator -> com.twoheart.dailyhotel.widget.TabIndicator:
     android.util.SparseArray mTabArrray -> a
     boolean mTabEnable -> b
-    com.twoheart.dailyhotel.widget.TabIndicator$OnTabSelectedListener mOnTabSelectedListener -> c
+    boolean mHasSubText -> c
+    com.twoheart.dailyhotel.widget.TabIndicator$OnTabSelectedListener mOnTabSelectedListener -> d
     void init() -> a
     int size() -> size
-    void setData(java.util.ArrayList) -> setData
+    void setData(java.util.ArrayList,boolean) -> setData
     void setData(java.util.ArrayList,java.util.ArrayList) -> setData
     void setTextTypeface(int) -> setTextTypeface
     void setTextColor(int) -> setTextColor
@@ -44709,6 +44715,7 @@ com.twoheart.dailyhotel.widget.TabIndicator -> com.twoheart.dailyhotel.widget.Ta
     void setOnTabSelectListener(com.twoheart.dailyhotel.widget.TabIndicator$OnTabSelectedListener) -> setOnTabSelectListener
     boolean isTabEnable() -> isTabEnable
     void setTabEnable(boolean) -> setTabEnable
+    boolean access$0(com.twoheart.dailyhotel.widget.TabIndicator) -> a
 com.twoheart.dailyhotel.widget.TabIndicator$OnTabSelectedListener -> com.twoheart.dailyhotel.widget.r:
     void onTabSelected(int) -> onTabSelected
 com.twoheart.dailyhotel.widget.TabIndicator$TabIndicatorItem -> com.twoheart.dailyhotel.widget.s:

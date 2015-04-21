@@ -3537,10 +3537,6 @@ com.ning.http.util.ProxyUtils:
 com.ning.http.util.UTF8Codec
 com.ning.http.util.UTF8UrlEncoder:
     49:50:private UTF8UrlEncoder()
-com.readystatesoftware.systembartint.BuildConfig
-com.readystatesoftware.systembartint.SystemBarTintManager
-com.readystatesoftware.systembartint.SystemBarTintManager$1
-com.readystatesoftware.systembartint.SystemBarTintManager$SystemBarConfig
 com.twoheart.dailyhotel.BuildConfig
 com.twoheart.dailyhotel.CreditFragment:
     186:187:private void alert(java.lang.String)

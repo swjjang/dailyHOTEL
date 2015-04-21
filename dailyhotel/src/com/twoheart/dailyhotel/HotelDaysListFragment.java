@@ -21,6 +21,7 @@ import android.animation.ObjectAnimator;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -37,6 +38,7 @@ import com.twoheart.dailyhotel.util.Util;
 
 public class HotelDaysListFragment extends HotelListFragment implements OnClickListener
 {
+	private static final int HANDLER_MESSAGE_SHOWDAYSLIST = 1;
 	private static final int DAY_OF_COUNT = 5;
 
 	// 날짜가 나오는 탭의 높이이다. 마진이 있는 경우 고려해서 넣을것.px 로 넣어야 함.
@@ -54,7 +56,19 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 	private View mSelectedView = null;
 	private boolean mIsShowDaysList;
 
-	private Handler mHandler = new Handler();
+	private Handler mHandler = new Handler()
+	{
+		@Override
+		public void handleMessage(Message msg)
+		{
+			switch (msg.what)
+			{
+				case HANDLER_MESSAGE_SHOWDAYSLIST:
+					showAnimationDaysList();
+					break;
+			}
+		}
+	};
 
 	private enum ANIMATION_STATE
 	{
@@ -183,6 +197,8 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 
 		ExLog.d("onPageUnSelected");
 
+		mHandler.removeMessages(1);
+
 		hideDaysList();
 	}
 
@@ -193,14 +209,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		{
 			mIsShowDaysList = false;
 
-			mHandler.postDelayed(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					showAnimationDaysList();
-				}
-			}, 400);
+			mHandler.sendEmptyMessageDelayed(HANDLER_MESSAGE_SHOWDAYSLIST, 400);
 		}
 	}
 
@@ -283,6 +292,17 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 
 	private void hideDaysList()
 	{
+		if (mObjectAnimator != null)
+		{
+			if (mObjectAnimator.isRunning() == true)
+			{
+				mObjectAnimator.cancel();
+				mObjectAnimator.removeAllListeners();
+			}
+
+			mObjectAnimator = null;
+		}
+
 		mDaysBackgroundView.setAnimation(null);
 		mDaysLayout.setAnimation(null);
 
