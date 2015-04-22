@@ -483,7 +483,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	// 결제 화면으로 이동 
 	private void moveToPayStep()
 	{
-
+		unLockUI();
+		
 		ExLog.e("Sale credit / Pay Price : " + mPay.isSaleCredit() + " / " + mPay.getPayPrice());
 
 		Intent intent = new Intent(this, com.twoheart.dailyhotel.activity.PaymentActivity.class);

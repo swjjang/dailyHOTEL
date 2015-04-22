@@ -3578,7 +3578,7 @@ com.twoheart.dailyhotel.activity.BookingActivity:
     private static final int DIALOG_CONFIRM_PAYMENT_ACCOUNT
     private static final int DIALOG_CONFIRM_PAYMENT_NO_RSERVE
     private static final int DIALOG_CONFIRM_CALL
-    498:524:private void moveToLoginProcess()
+    499:525:private void moveToLoginProcess()
 com.twoheart.dailyhotel.activity.EventWebActivity:
     private static final java.lang.String TAG
 com.twoheart.dailyhotel.activity.PaymentActivity:
@@ -3639,12 +3639,13 @@ com.twoheart.dailyhotel.util.network.request.DailyHotelRequest:
 com.twoheart.dailyhotel.util.ui.AllCapsTransformationMethod
 com.twoheart.dailyhotel.util.ui.BaseActivity:
     284:289:private void setLocale(java.util.Locale)
-    586:587:protected void chgClickable(android.view.View)
+    584:585:protected void chgClickable(android.view.View)
 com.twoheart.dailyhotel.util.ui.OnLoadListener
 com.twoheart.dailyhotel.util.ui.TransformationMethodCompat
 com.twoheart.dailyhotel.util.ui.TransformationMethodCompat2
 com.twoheart.dailyhotel.widget.DailyCustomFontCheckBox
 com.twoheart.dailyhotel.widget.DayView
+com.twoheart.dailyhotel.widget.HotelGradeView
 com.viewpagerindicator.CirclePageIndicator:
     private static final int INVALID_POINTER
 com.viewpagerindicator.IconPageIndicator

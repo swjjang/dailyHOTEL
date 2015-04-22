@@ -43186,9 +43186,8 @@ com.twoheart.dailyhotel.activity.PaymentActivity -> com.twoheart.dailyhotel.acti
     void unLockUI() -> unLockUI
     boolean access$0(com.twoheart.dailyhotel.activity.PaymentActivity,android.webkit.WebView,java.lang.String) -> a
     android.webkit.WebView access$1(com.twoheart.dailyhotel.activity.PaymentActivity) -> a
-    android.os.Handler access$2(com.twoheart.dailyhotel.activity.PaymentActivity) -> b
-    java.lang.Runnable access$3(com.twoheart.dailyhotel.activity.PaymentActivity) -> c
-    com.twoheart.dailyhotel.model.Pay access$4(com.twoheart.dailyhotel.activity.PaymentActivity) -> d
+    com.twoheart.dailyhotel.model.Pay access$2(com.twoheart.dailyhotel.activity.PaymentActivity) -> b
+    android.os.Handler access$3(com.twoheart.dailyhotel.activity.PaymentActivity) -> c
 com.twoheart.dailyhotel.activity.PaymentActivity$1 -> com.twoheart.dailyhotel.activity.aq:
     com.twoheart.dailyhotel.activity.PaymentActivity this$0 -> a
     boolean onLongClick(android.view.View) -> onLongClick
