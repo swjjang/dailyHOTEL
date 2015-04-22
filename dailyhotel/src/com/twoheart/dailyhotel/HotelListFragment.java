@@ -280,7 +280,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 		//		String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL).append('/').append(selectedRegion).append("/near/0/0/0/1000/").append(saleTime.getCurrentYear()).append("/").append(saleTime.getCurrentMonth()).append("/").append(saleTime.getCurrentDay()).toString();
 
-		String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE).append('/').append(mSelectedRegion).append("/").append(saleTime.getCurrentYear()).append(saleTime.getCurrentMonth()).append(saleTime.getCurrentDay()).toString();
+		String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE).append('/').append(mSelectedRegion).append("/").append(saleTime.getLogicalDateFormat("yyMMdd")).toString();
 
 		// 호텔 리스트를 가져온다. 
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null, mHotelJsonResponseListener, mHostActivity));

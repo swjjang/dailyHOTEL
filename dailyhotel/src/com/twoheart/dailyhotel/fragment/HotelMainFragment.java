@@ -8,13 +8,9 @@
  */
 package com.twoheart.dailyhotel.fragment;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -276,6 +272,9 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 				long time = response.getLong("time");
 
 				mTodaySaleTime.setCurrentTime(time);
+				
+				// SaleTime 시간 테스트 하기.
+//				mTodaySaleTime.setCurrentTime(time + 3600 * 15 * 1000);// + 60 * 25 * 1000);
 
 				// 오픈, 클로즈 타임을 가져온다
 				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_SALE_TIME).toString(), null, mAppSaleTimeJsonResponseListener, mHostActivity));
@@ -307,9 +306,6 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 
 				String open = response.getString("open");
 				String close = response.getString("close");
-
-				// SaleTime 시간 테스트 하기.
-				//				mTodaySaleTime.setCurrentTime(System.currentTimeMillis() + 3600 * 15 * 1000 + 60 * 15);
 
 				mTodaySaleTime.setOpenTime(open);
 				mTodaySaleTime.setCloseTime(close);
@@ -432,56 +428,36 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 					editor.putString(KEY_PREFERENCE_REGION_SELECT, mRegionList.get(currentRegionIndex));
 					editor.commit();
 				}
+				
+				//탭에 들어갈 날짜를 만든다.
+				mTodaySaleTime.setLogicalTime();
+				
+				SaleTime[] tabSaleTime = null;
+				
+				int fragmentSize = mFragmentList.size();
+				
+				tabSaleTime = new SaleTime[3];
 
-				if (mFragmentList != null)
+				for (int i = 0; i < fragmentSize; i++)
 				{
-					int fragmentSize = mFragmentList.size();
-
-					for (int i = 0; i < fragmentSize; i++)
-					{
-						HotelListFragment hotelListFragment = mFragmentList.get(i);
-						hotelListFragment.setSaleTime(mTodaySaleTime.getClone(i));
-						hotelListFragment.setRegionList(detailRegionList);
-					}
+					HotelListFragment hotelListFragment = mFragmentList.get(i);
+					
+					SaleTime saleTime = mTodaySaleTime.getClone(i);
+					tabSaleTime[i] = saleTime;
+					
+					hotelListFragment.setSaleTime(saleTime);
+					hotelListFragment.setRegionList(detailRegionList);
 				}
 
 				// 임시로 여기서 날짜를 넣는다.
 				ArrayList<String> dayList = new ArrayList<String>();
 
-				long tomorrowTime = 0, dateTime = 0;
-
-				// 현재 시간을 넣는다.
-				long todayTime = mTodaySaleTime.getCurrentTime();
-
-				// 현재 시간이 오픈 시간 보다 커지면 다음 날이 됨.
-				if (mTodaySaleTime.getCurrentTime() >= mTodaySaleTime.getOpenTime())
-				{
-				} else
-				{
-					// 다음 날이 되면 오늘 정시에서 클로즈 시간을 뺀다.
-					String todayString = SaleTime.attachCurrentDate(mTodaySaleTime.getCurrentYear(), mTodaySaleTime.getCurrentMonth(), mTodaySaleTime.getCurrentDay(), "00:00:00");
-					Date onTimeDate = SaleTime.stringToDate(todayString);
-
-					todayTime += (onTimeDate.getTime() - mTodaySaleTime.getCloseTime());
-				}
-
-				SimpleDateFormat weekFormat = new SimpleDateFormat("EEE", Locale.KOREA);
-				weekFormat.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
-
-				SimpleDateFormat dayFormat = new SimpleDateFormat("d", Locale.KOREA);
-				dayFormat.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
-
-				final long nextMillis = SaleTime.SECONDS_IN_A_DAY * 1000;
-
-				tomorrowTime = todayTime + nextMillis;
-				dateTime = tomorrowTime + nextMillis;
-
-				dayList.add(getString(R.string.label_format_tabday, dayFormat.format(new Date(todayTime)), weekFormat.format(new Date(todayTime))));
-				dayList.add(getString(R.string.label_format_tabday, dayFormat.format(new Date(tomorrowTime)), weekFormat.format(new Date(tomorrowTime))));
+				dayList.add(getString(R.string.label_format_tabday, tabSaleTime[0].getLogicalDay(), tabSaleTime[0].getLogicalDayOftheWeek()));
+				dayList.add(getString(R.string.label_format_tabday, tabSaleTime[1].getLogicalDay(), tabSaleTime[1].getLogicalDayOftheWeek()));
 
 				if (TextUtils.isEmpty(mTabIndicator.getSubText(2)) == true)
 				{
-					dayList.add(getString(R.string.label_format_tabday, dayFormat.format(new Date(dateTime)), weekFormat.format(new Date(dateTime))));
+					dayList.add(getString(R.string.label_format_tabday, tabSaleTime[2].getLogicalDay(), tabSaleTime[2].getLogicalDayOftheWeek()));
 				} else
 				{
 					dayList.add(mTabIndicator.getSubText(2));
@@ -643,7 +619,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 			{
 				// 선택탭의 이름을 수정한다.
 				SaleTime saleTime = fragment.getSaleTime();
-				String day = getString(R.string.label_format_tabday, saleTime.getCurrentDayEx(), saleTime.getCurrentDayOftheWeek());
+				String day = getString(R.string.label_format_tabday, saleTime.getLogicalDay(), saleTime.getLogicalDayOftheWeek());
 
 				mTabIndicator.setSubTextEnable(2, true);
 				mTabIndicator.setSubText(2, day);

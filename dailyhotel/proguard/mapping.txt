@@ -42390,8 +42390,8 @@ com.twoheart.dailyhotel.HotelDaysListFragment -> com.twoheart.dailyhotel.n:
     void showAnimationFadeIn() -> i
     void showAnimationFadeOut() -> j
     void access$0(com.twoheart.dailyhotel.HotelDaysListFragment) -> a
+    void access$1(com.twoheart.dailyhotel.HotelDaysListFragment) -> b
     int[] $SWITCH_TABLE$com$twoheart$dailyhotel$HotelDaysListFragment$ANIMATION_STATUS() -> a
-    void access$2(com.twoheart.dailyhotel.HotelDaysListFragment) -> b
     android.view.View access$3(com.twoheart.dailyhotel.HotelDaysListFragment) -> c
     void access$4(com.twoheart.dailyhotel.HotelDaysListFragment,com.twoheart.dailyhotel.HotelDaysListFragment$ANIMATION_STATE) -> a
     void access$5(com.twoheart.dailyhotel.HotelDaysListFragment,com.twoheart.dailyhotel.HotelDaysListFragment$ANIMATION_STATUS) -> a
@@ -42401,10 +42401,10 @@ com.twoheart.dailyhotel.HotelDaysListFragment -> com.twoheart.dailyhotel.n:
     android.view.View access$9(com.twoheart.dailyhotel.HotelDaysListFragment) -> f
 com.twoheart.dailyhotel.HotelDaysListFragment$1 -> com.twoheart.dailyhotel.o:
     com.twoheart.dailyhotel.HotelDaysListFragment this$0 -> a
-    void onClick(android.view.View) -> onClick
+    void handleMessage(android.os.Message) -> handleMessage
 com.twoheart.dailyhotel.HotelDaysListFragment$2 -> com.twoheart.dailyhotel.p:
     com.twoheart.dailyhotel.HotelDaysListFragment this$0 -> a
-    void run() -> run
+    void onClick(android.view.View) -> onClick
 com.twoheart.dailyhotel.HotelDaysListFragment$3 -> com.twoheart.dailyhotel.q:
     com.twoheart.dailyhotel.HotelDaysListFragment this$0 -> a
     void run() -> run
@@ -42832,11 +42832,11 @@ com.twoheart.dailyhotel.activity.BookingActivity -> com.twoheart.dailyhotel.acti
     android.support.v7.widget.SwitchCompat access$20(com.twoheart.dailyhotel.activity.BookingActivity) -> s
     com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener access$21(com.twoheart.dailyhotel.activity.BookingActivity) -> t
     com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener access$22(com.twoheart.dailyhotel.activity.BookingActivity) -> u
-    int access$23(com.twoheart.dailyhotel.activity.BookingActivity) -> v
+    com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener access$23(com.twoheart.dailyhotel.activity.BookingActivity) -> v
     int access$24(com.twoheart.dailyhotel.activity.BookingActivity) -> w
-    android.content.Intent access$25(com.twoheart.dailyhotel.activity.BookingActivity) -> x
-    void access$26(com.twoheart.dailyhotel.activity.BookingActivity,int,int,android.content.Intent) -> a
-    com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener access$27(com.twoheart.dailyhotel.activity.BookingActivity) -> y
+    int access$25(com.twoheart.dailyhotel.activity.BookingActivity) -> x
+    android.content.Intent access$26(com.twoheart.dailyhotel.activity.BookingActivity) -> y
+    void access$27(com.twoheart.dailyhotel.activity.BookingActivity,int,int,android.content.Intent) -> a
     com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener access$28(com.twoheart.dailyhotel.activity.BookingActivity) -> z
     int access$29(com.twoheart.dailyhotel.activity.BookingActivity) -> A
 com.twoheart.dailyhotel.activity.BookingActivity$1 -> com.twoheart.dailyhotel.activity.a:

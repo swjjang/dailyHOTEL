@@ -67,7 +67,6 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 
 	public static WaitTimerFragment newInstance(SaleTime saleTime)
 	{
-
 		WaitTimerFragment newFragment = new WaitTimerFragment();
 
 		Bundle arguments = new Bundle();
@@ -162,7 +161,6 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 
 	private void setTimer()
 	{
-
 		Date currentDate = new Date(mSaleTime.getCurrentTime());
 		Date dailyOpenDate = new Date(mSaleTime.getOpenTime());
 

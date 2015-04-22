@@ -245,8 +245,8 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		TextView dayOfTheWeekTextView = (TextView) view.findViewById(R.id.textView1);
 		TextView dayTextView = (TextView) view.findViewById(R.id.textView2);
 
-		dayOfTheWeekTextView.setText(saleTime.getCurrentDayOftheWeek());
-		dayTextView.setText(saleTime.getCurrentDayEx());
+		dayOfTheWeekTextView.setText(saleTime.getLogicalDayOftheWeek());
+		dayTextView.setText(saleTime.getLogicalDay());
 
 		view.setOnClickListener(this);
 

@@ -19,6 +19,7 @@ public class SaleTime implements Constants, Parcelable
 	private Date mOpenTime;
 	private Date mCloseTime;
 	private Date mCurrentTime;
+	private Date mLogicalTime; // 사전 예약을 위한 현재 리스트의 날짜.
 
 	private static final SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd HH:mm:ss", Locale.KOREA);
 
@@ -77,25 +78,68 @@ public class SaleTime implements Constants, Parcelable
 
 	public void setCurrentTime(long currentTime)
 	{
-		try
-		{
-			mCurrentTime = new Date(currentTime);
-
-		} catch (NumberFormatException e)
-		{
-			ExLog.e(e.toString());
-		}
+		mCurrentTime = new Date(currentTime);
 	}
+	
+	public void setLogicalTime()
+	{
+		long logicalTime = getCurrentTime();
+		
+		ExLog.d("Current Time : "+ mCurrentTime.toString() + ", mOpenTime : " + mOpenTime.toString());
+		
+		// 현재 시간이 오픈 시간 보다 작아지면.
+		if (mCurrentTime.compareTo(mOpenTime) < 0)
+		{
+			try
+			{
+				// 다음 날이 되면 오늘 정시에서 클로즈 시간을 뺀다.
+				String todayString = SaleTime.attachCurrentDate(getCurrentYear(), getCurrentMonth(), getCurrentDay(), "00:00:00");
+				Date onTimeDate = SaleTime.stringToDate(todayString);
+				
+				ExLog.d("On Time : "+ onTimeDate.toString() + ", Close Time :"+ mCloseTime.toString());
 
+				logicalTime += (onTimeDate.getTime() - getCloseTime());
+			}catch(Exception e)
+			{
+				ExLog.e(e.toString());
+			}
+		}
+		
+		mLogicalTime = new Date(logicalTime);
+		
+		ExLog.d("Logical Time : "+ mLogicalTime.toString());
+	}
+	
+	public Date getLogicaltime()
+	{
+		return mLogicalTime;
+	}
+	
+	public String getLogicalDayOftheWeek()
+	{
+		return getTimezonedDateFormat("EEE").format(mLogicalTime);
+	}
+	
+	public String getLogicalDay()
+	{
+		return getTimezonedDateFormat("d").format(mLogicalTime);
+	}
+	
+	public String getLogicalDateFormat(String format)
+	{
+		return getTimezonedDateFormat(format).format(mLogicalTime);
+	}
+	
 	public SaleTime getClone(int nextDay)
 	{
 		SaleTime nextSaleTime = new SaleTime();
 
 		long nextMillis = nextDay * SECONDS_IN_A_DAY * 1000;
 
-		nextSaleTime.mOpenTime = new Date(mOpenTime.getTime() + nextMillis);
-		nextSaleTime.mCloseTime = new Date(mCloseTime.getTime() + nextMillis);
-		nextSaleTime.mCurrentTime = new Date(mCurrentTime.getTime() + nextMillis);
+		nextSaleTime.mLogicalTime = new Date(mLogicalTime.getTime() + nextMillis);
+		nextSaleTime.mOpenTime = new Date(mOpenTime.getTime());
+		nextSaleTime.mCloseTime = new Date(mCloseTime.getTime());
+		nextSaleTime.mCurrentTime = new Date(mCurrentTime.getTime());
 
 		return nextSaleTime;
 	}
@@ -209,7 +253,7 @@ public class SaleTime implements Constants, Parcelable
 		dest.writeValue(mOpenTime);
 		dest.writeValue(mCloseTime);
 		dest.writeValue(mCurrentTime);
-
+		dest.writeValue(mLogicalTime);
 	}
 
 	private void readFromParcel(Parcel in)
@@ -217,6 +261,7 @@ public class SaleTime implements Constants, Parcelable
 		mOpenTime = (Date) in.readValue(Date.class.getClassLoader());
 		mCloseTime = (Date) in.readValue(Date.class.getClassLoader());
 		mCurrentTime = (Date) in.readValue(Date.class.getClassLoader());
+		mLogicalTime = (Date) in.readValue(Date.class.getClassLoader());
 	}
 
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()

@@ -3545,6 +3545,7 @@ com.twoheart.dailyhotel.CreditListFragment:
 com.twoheart.dailyhotel.DailyHotel:
     116:118:private void initializeVolleyImageLoader()
 com.twoheart.dailyhotel.HotelDaysListFragment:
+    private static final int HANDLER_MESSAGE_SHOWDAYSLIST
     private static final int DAY_OF_COUNT
 com.twoheart.dailyhotel.MainActivity:
     private static final java.lang.String TAG_FRAGMENT_RATING_HOTEL
@@ -3577,7 +3578,7 @@ com.twoheart.dailyhotel.activity.BookingActivity:
     private static final int DIALOG_CONFIRM_PAYMENT_ACCOUNT
     private static final int DIALOG_CONFIRM_PAYMENT_NO_RSERVE
     private static final int DIALOG_CONFIRM_CALL
-    498:524:private void moveToLoginProcess()
+    497:523:private void moveToLoginProcess()
 com.twoheart.dailyhotel.activity.EventWebActivity:
     private static final java.lang.String TAG
 com.twoheart.dailyhotel.activity.PaymentActivity:

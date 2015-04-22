@@ -161,7 +161,7 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 
 	protected void onPostSetCookie()
 	{
-		String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_DETAIL).append('/').append(hotelDetail.getHotel().getIdx()).append("/").append(mSaleTime.getCurrentYear()).append("/").append(mSaleTime.getCurrentMonth()).append("/").append(mSaleTime.getCurrentDay()).toString();
+		String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_DETAIL).append('/').append(hotelDetail.getHotel().getIdx()).append("/").append(mSaleTime.getLogicalDateFormat("yy/MM/dd")).toString();
 
 		ExLog.d(url);
 
