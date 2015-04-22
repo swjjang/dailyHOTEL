@@ -44051,7 +44051,8 @@ com.twoheart.dailyhotel.model.SaleTime -> com.twoheart.dailyhotel.model.SaleTime
     java.util.Date mOpenTime -> a
     java.util.Date mCloseTime -> b
     java.util.Date mCurrentTime -> c
-    java.text.SimpleDateFormat format -> d
+    java.util.Date mLogicalTime -> d
+    java.text.SimpleDateFormat format -> e
     android.os.Parcelable$Creator CREATOR -> CREATOR
     java.lang.String attachCurrentDate(java.lang.String,java.lang.String,java.lang.String,java.lang.String) -> attachCurrentDate
     java.util.Date stringToDate(java.lang.String) -> stringToDate
@@ -44059,6 +44060,11 @@ com.twoheart.dailyhotel.model.SaleTime -> com.twoheart.dailyhotel.model.SaleTime
     void setOpenTime(java.lang.String) -> setOpenTime
     void setCloseTime(java.lang.String) -> setCloseTime
     void setCurrentTime(long) -> setCurrentTime
+    void setLogicalTime() -> setLogicalTime
+    java.util.Date getLogicaltime() -> getLogicaltime
+    java.lang.String getLogicalDayOftheWeek() -> getLogicalDayOftheWeek
+    java.lang.String getLogicalDay() -> getLogicalDay
+    java.lang.String getLogicalDateFormat(java.lang.String) -> getLogicalDateFormat
     com.twoheart.dailyhotel.model.SaleTime getClone(int) -> getClone
     java.text.SimpleDateFormat getTimezonedDateFormat(java.lang.String) -> getTimezonedDateFormat
     java.lang.String getCurrentMonth() -> getCurrentMonth

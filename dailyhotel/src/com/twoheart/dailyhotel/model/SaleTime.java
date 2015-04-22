@@ -20,6 +20,7 @@ public class SaleTime implements Constants, Parcelable
 	private Date mCloseTime;
 	private Date mCurrentTime;
 	private Date mLogicalTime; // 사전 예약을 위한 현재 리스트의 날짜.
+	private Date mHotelRequestTime; // 임시로 호텔에 요청할 시간을 넣는다.
 
 	private static final SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd HH:mm:ss", Locale.KOREA);
 
@@ -80,13 +81,13 @@ public class SaleTime implements Constants, Parcelable
 	{
 		mCurrentTime = new Date(currentTime);
 	}
-	
+
 	public void setLogicalTime()
 	{
 		long logicalTime = getCurrentTime();
-		
-		ExLog.d("Current Time : "+ mCurrentTime.toString() + ", mOpenTime : " + mOpenTime.toString());
-		
+
+		ExLog.d("Current Time : " + mCurrentTime.toString() + ", mOpenTime : " + mOpenTime.toString());
+
 		// 현재 시간이 오픈 시간 보다 작아지면.
 		if (mCurrentTime.compareTo(mOpenTime) < 0)
 		{
@@ -95,39 +96,45 @@ public class SaleTime implements Constants, Parcelable
 				// 다음 날이 되면 오늘 정시에서 클로즈 시간을 뺀다.
 				String todayString = SaleTime.attachCurrentDate(getCurrentYear(), getCurrentMonth(), getCurrentDay(), "00:00:00");
 				Date onTimeDate = SaleTime.stringToDate(todayString);
-				
-				ExLog.d("On Time : "+ onTimeDate.toString() + ", Close Time :"+ mCloseTime.toString());
+
+				ExLog.d("On Time : " + onTimeDate.toString() + ", Close Time :" + mCloseTime.toString());
 
 				logicalTime += (onTimeDate.getTime() - getCloseTime());
-			}catch(Exception e)
+			} catch (Exception e)
 			{
 				ExLog.e(e.toString());
 			}
 		}
-		
+
 		mLogicalTime = new Date(logicalTime);
-		
-		ExLog.d("Logical Time : "+ mLogicalTime.toString());
+		mHotelRequestTime = new Date(getCurrentTime());
+
+		ExLog.d("Logical Time : " + mLogicalTime.toString());
 	}
-	
+
 	public Date getLogicaltime()
 	{
 		return mLogicalTime;
 	}
-	
+
 	public String getLogicalDayOftheWeek()
 	{
 		return getTimezonedDateFormat("EEE").format(mLogicalTime);
 	}
-	
+
 	public String getLogicalDay()
 	{
 		return getTimezonedDateFormat("d").format(mLogicalTime);
 	}
-	
+
 	public String getLogicalDateFormat(String format)
 	{
 		return getTimezonedDateFormat(format).format(mLogicalTime);
+	}
+	
+	public String getRequestHotelDateFormat(String format)
+	{
+		return getTimezonedDateFormat(format).format(mHotelRequestTime);
 	}
 	
 	public SaleTime getClone(int nextDay)
@@ -137,6 +144,7 @@ public class SaleTime implements Constants, Parcelable
 		long nextMillis = nextDay * SECONDS_IN_A_DAY * 1000;
 
 		nextSaleTime.mLogicalTime = new Date(mLogicalTime.getTime() + nextMillis);
+		nextSaleTime.mHotelRequestTime = new Date(mHotelRequestTime.getTime() + nextMillis);
 		nextSaleTime.mOpenTime = new Date(mOpenTime.getTime());
 		nextSaleTime.mCloseTime = new Date(mCloseTime.getTime());
 		nextSaleTime.mCurrentTime = new Date(mCurrentTime.getTime());
@@ -254,6 +262,7 @@ public class SaleTime implements Constants, Parcelable
 		dest.writeValue(mCloseTime);
 		dest.writeValue(mCurrentTime);
 		dest.writeValue(mLogicalTime);
+		dest.writeValue(mHotelRequestTime);
 	}
 
 	private void readFromParcel(Parcel in)
@@ -262,6 +271,7 @@ public class SaleTime implements Constants, Parcelable
 		mCloseTime = (Date) in.readValue(Date.class.getClassLoader());
 		mCurrentTime = (Date) in.readValue(Date.class.getClassLoader());
 		mLogicalTime = (Date) in.readValue(Date.class.getClassLoader());
+		mHotelRequestTime = (Date) in.readValue(Date.class.getClassLoader());
 	}
 
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()

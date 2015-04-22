@@ -272,9 +272,9 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 				long time = response.getLong("time");
 
 				mTodaySaleTime.setCurrentTime(time);
-				
+
 				// SaleTime 시간 테스트 하기.
-//				mTodaySaleTime.setCurrentTime(time + 3600 * 15 * 1000);// + 60 * 25 * 1000);
+				//				mTodaySaleTime.setCurrentTime(time + 3600 * 14 * 1000);// + 60 * 25 * 1000);
 
 				// 오픈, 클로즈 타임을 가져온다
 				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_SALE_TIME).toString(), null, mAppSaleTimeJsonResponseListener, mHostActivity));
@@ -428,23 +428,23 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 					editor.putString(KEY_PREFERENCE_REGION_SELECT, mRegionList.get(currentRegionIndex));
 					editor.commit();
 				}
-				
+
 				//탭에 들어갈 날짜를 만든다.
 				mTodaySaleTime.setLogicalTime();
-				
+
 				SaleTime[] tabSaleTime = null;
-				
+
 				int fragmentSize = mFragmentList.size();
-				
+
 				tabSaleTime = new SaleTime[3];
 
 				for (int i = 0; i < fragmentSize; i++)
 				{
 					HotelListFragment hotelListFragment = mFragmentList.get(i);
-					
+
 					SaleTime saleTime = mTodaySaleTime.getClone(i);
 					tabSaleTime[i] = saleTime;
-					
+
 					hotelListFragment.setSaleTime(saleTime);
 					hotelListFragment.setRegionList(detailRegionList);
 				}
