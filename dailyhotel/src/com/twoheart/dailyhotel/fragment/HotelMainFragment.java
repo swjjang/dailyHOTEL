@@ -430,7 +430,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 				}
 
 				//탭에 들어갈 날짜를 만든다.
-				mTodaySaleTime.setLogicalTime();
+				//				mTodaySaleTime.setLogicalTime();
 
 				SaleTime[] tabSaleTime = null;
 

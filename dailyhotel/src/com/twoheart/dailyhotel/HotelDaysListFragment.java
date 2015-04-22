@@ -123,11 +123,11 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		//		mDaysView[5] = mDaysLayout.findViewById(R.id.item06);
 		//		mDaysView[6] = mDaysLayout.findViewById(R.id.item07);
 
-		initLayoutDays(mDaysView[0], saleTime.getClone(0));
-		initLayoutDays(mDaysView[1], saleTime.getClone(1));
-		initLayoutDays(mDaysView[2], saleTime.getClone(2));
-		initLayoutDays(mDaysView[3], saleTime.getClone(3));
-		initLayoutDays(mDaysView[4], saleTime.getClone(4));
+		initLayoutDays(mDaysView[0], saleTime.getClone(2));
+		initLayoutDays(mDaysView[1], saleTime.getClone(3));
+		initLayoutDays(mDaysView[2], saleTime.getClone(4));
+		initLayoutDays(mDaysView[3], saleTime.getClone(5));
+		initLayoutDays(mDaysView[4], saleTime.getClone(6));
 		//		initLayoutDays(mDaysView[5], mSaleTime.getClone(3));
 		//		initLayoutDays(mDaysView[6], mSaleTime.getClone(4));
 

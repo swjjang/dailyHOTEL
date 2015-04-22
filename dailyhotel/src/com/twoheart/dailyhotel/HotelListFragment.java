@@ -74,6 +74,9 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	private HOTEL_VIEW_TYPE mHotelViewType;
 	private String mSelectedRegion;
 
+	private HotelListViewItem mSelectedHotelListViewItem;
+	private int mSelectedHotelIndex;
+
 	protected HotelMainFragment.UserActionListener mUserActionListener;
 
 	@Override
@@ -126,7 +129,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	@Override
 	public void onItemClick(AdapterView<?> parentView, View childView, int position, long id)
 	{
-		HotelListViewItem hotelListViewItem = mHotelListAdapter.getItem(position);
+		mSelectedHotelListViewItem = mHotelListAdapter.getItem(position);
 
 		int count = 0;
 		for (int i = 0; i < position; i++)
@@ -137,12 +140,9 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 			}
 		}
 
-		int hotelIndex = position - count;
+		mSelectedHotelIndex = position - count;
 
-		if (mUserActionListener != null)
-		{
-			mUserActionListener.selectHotel(hotelListViewItem, hotelIndex, mSaleTime);
-		}
+		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_TIME).toString(), null, mAppTimeJsonResponseListener, mHostActivity));
 	}
 
 	public void onPageSelected(boolean isRequestHotelList)
@@ -591,6 +591,79 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 			} finally
 			{
 				unLockUI();
+			}
+		}
+	};
+
+	private DailyHotelJsonResponseListener mAppTimeJsonResponseListener = new DailyHotelJsonResponseListener()
+	{
+		@Override
+		public void onResponse(String url, JSONObject response)
+		{
+			if (getActivity() == null)
+			{
+				return;
+			}
+
+			try
+			{
+				if (response == null)
+				{
+					throw new NullPointerException("response == null");
+				}
+
+				long time = response.getLong("time");
+
+				mSaleTime.setCurrentTime(time);
+
+				// 오픈, 클로즈 타임을 가져온다
+				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_SALE_TIME).toString(), null, mAppSaleTimeJsonResponseListener, mHostActivity));
+
+			} catch (Exception e)
+			{
+				unLockUI();
+				onError(e);
+			}
+		}
+	};
+
+	private DailyHotelJsonResponseListener mAppSaleTimeJsonResponseListener = new DailyHotelJsonResponseListener()
+	{
+		@Override
+		public void onResponse(String url, JSONObject response)
+		{
+			if (getActivity() == null)
+			{
+				return;
+			}
+
+			try
+			{
+				if (response == null)
+				{
+					throw new NullPointerException("response == null");
+				}
+
+				String open = response.getString("open");
+				String close = response.getString("close");
+
+				mSaleTime.setOpenTime(open);
+				mSaleTime.setCloseTime(close);
+
+				if (mSaleTime.isSaleTime() == false)
+				{
+					((MainActivity) mHostActivity).replaceFragment(WaitTimerFragment.newInstance(mSaleTime));
+					unLockUI();
+				} else
+				{
+					if (mUserActionListener != null)
+					{
+						mUserActionListener.selectHotel(mSelectedHotelListViewItem, mSelectedHotelIndex, mSaleTime);
+					}
+				}
+			} catch (Exception e)
+			{
+				onError(e);
 			}
 		}
 	};
