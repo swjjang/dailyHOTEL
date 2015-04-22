@@ -62,7 +62,7 @@ public interface Constants
 	//	public static final String URL_DAILYHOTEL_SERVER = "http://ec2.test.dailyhotel.kr/goodnight/";
 
 	//"http://tcwas.dailyhotel.co.kr/goodnight/";
-	//	public static final String URL_DAILYHOTEL_SERVER = UNENCRYPTED_URL ? "http://tcwas.dailyhotel.co.kr/goodnight/" : "NzYkNTkkMzIkMTI0JDg2JA==$OUQ3NTdBMUQ5RjFENEQyNTU3NUY5QjA4GMkM4QzRFRDNGQjQ2MTRDQTlEQzJKFNjRCRDQ5RUE5RUM4HRUYwNjAQ2ODk2RTg5RDQ3OThGRTVGODg4REMzRTUzRDRFMAkVBMzJB$";
+	//		public static final String URL_DAILYHOTEL_SERVER = UNENCRYPTED_URL ? "http://tcwas.dailyhotel.co.kr/goodnight/" : "NzYkNTkkMzIkMTI0JDg2JA==$OUQ3NTdBMUQ5RjFENEQyNTU3NUY5QjA4GMkM4QzRFRDNGQjQ2MTRDQTlEQzJKFNjRCRDQ5RUE5RUM4HRUYwNjAQ2ODk2RTg5RDQ3OThGRTVGODg4REMzRTUzRDRFMAkVBMzJB$";
 
 	// 회사 대표번호
 	public static final String PHONE_NUMBER_DAILYHOTEL = "1800-9120";
@@ -191,6 +191,9 @@ public interface Constants
 
 	// api/reserv/mine
 	public static final String URL_WEBAPI_RESERV_MINE = UNENCRYPTED_URL ? "api/reserv/mine" : "MjAkMzQkMTgkMSQyNiQ=$NAEM4QjIwQzc1NDdFNkII2HNjlUGMjIwRkVGNZjI3NjFDMEY=$";
+
+	// api/reserv/validate
+	public static final String URL_WEBAPI_RESERV_VALIDATE = UNENCRYPTED_URL ? "api/reserv/validate" : "MCQ2NCQ0MiQ1MyQ2JA==$MREJDOKDlGOEVGNkU1RTlFQzFDQzNGMUMyOTg3NTRCOYEE5RDk4RUYI2MTRCQzFBQThABMzQ1MDNCMEI1QkZGODgyMQ==$";
 
 	// DailyHOTEL Site Controller WebAPI URL
 	//"site/get";

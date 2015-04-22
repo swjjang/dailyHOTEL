@@ -54,6 +54,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.VolleyError;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Credit;
@@ -115,6 +117,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	private boolean mIsEditMode;
 
 	private MixpanelAPI mMixpanel;
+
+	private View mClickView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -313,39 +317,36 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 			} else
 			{
-				Dialog dialog = null;
+				// 해당 호텔이 결제하기를 못하는 경우를 처리한다.
+				Map<String, String> updateParams = new HashMap<String, String>();
+				updateParams.put("saleIdx", String.valueOf(mPay.getHotelDetail().getSaleIdx()));
 
-				if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentCard.getId())
-				{
-					// 신용카드를 선택했을 경우
-					dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_CARD, null);
-					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("radio", "choosePaymentWay", "신용카드", (long) 1);
-				} else if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentHp.getId())
-				{
-					// 핸드폰을 선택했을 경우
-					dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_HP, null);
-					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("radio", "choosePaymentWay", "휴대폰", (long) 2);
-				} else if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentAccount.getId())
-				{
-					// 가상계좌 입금을 선택했을 경우
-					dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_ACCOUNT, null);
-					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("radio", "choosePaymentWay", "계좌이체", (long) 3);
-				}
+				mClickView = v;
 
-				if (null != dialog)
+				mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_VALIDATE).toString(), updateParams, mReservValidateJsonResponseListener, new ErrorListener()
 				{
-					dialog.setOnDismissListener(new OnDismissListener()
+
+					@Override
+					public void onErrorResponse(VolleyError error)
 					{
-						@Override
-						public void onDismiss(DialogInterface dialog)
+						if (error.networkResponse.statusCode == 404)
 						{
-							v.setClickable(true);
-							v.setEnabled(true);
+							try
+							{
+								JSONObject jsonObject = new JSONObject();
+								jsonObject.put("msg_code", 0);
+								jsonObject.put("data", true);
+								mReservValidateJsonResponseListener.onResponse(null, jsonObject);
+							} catch (Exception e)
+							{
+								ExLog.e(e.toString());
+							}
+						} else
+						{
+							onErrorResponse(error);
 						}
-					});
-
-					dialog.show();
-				}
+					}
+				}));
 
 				v.setClickable(false);
 				v.setEnabled(false);
@@ -356,11 +357,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("paymentAgreement", "/todays-hotels/" + region + "/" + hotelName + "/booking-detail/payment-agreement");
 				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestPayment", mPay.getHotelDetail().getHotel().getName(), (long) mHotelIdx);
 			}
-
-		} else if (v.getId() == rbPaymentAccount.getId() || v.getId() == rbPaymentCard.getId() || v.getId() == rbPaymentHp.getId())
-		{
-			svBooking.fullScroll(View.FOCUS_DOWN);
 		}
+		//		else if (v.getId() == rbPaymentAccount.getId() || v.getId() == rbPaymentCard.getId() || v.getId() == rbPaymentHp.getId())
+		//		{
+		//			svBooking.fullScroll(View.FOCUS_DOWN);
+		//		}
 	}
 
 	/**
@@ -1207,6 +1208,80 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_SALE_TIME).toString(), null, mAppSaleTimeJsonResponseListener, BookingActivity.this));
 
+			} catch (Exception e)
+			{
+				unLockUI();
+				onError(e);
+			}
+		}
+	};
+
+	private DailyHotelJsonResponseListener mReservValidateJsonResponseListener = new DailyHotelJsonResponseListener()
+	{
+		@Override
+		public void onResponse(String url, JSONObject response)
+		{
+			try
+			{
+				if (response == null)
+				{
+					throw new NullPointerException("response == null");
+				}
+
+				int msg_code = response.getInt("msg_code");
+				boolean result = response.getBoolean("data");
+
+				if (result == true)
+				{
+					Dialog dialog = null;
+
+					if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentCard.getId())
+					{
+						// 신용카드를 선택했을 경우
+						dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_CARD, null);
+						RenewalGaManager.getInstance(getApplicationContext()).recordEvent("radio", "choosePaymentWay", "신용카드", (long) 1);
+					} else if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentHp.getId())
+					{
+						// 핸드폰을 선택했을 경우
+						dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_HP, null);
+						RenewalGaManager.getInstance(getApplicationContext()).recordEvent("radio", "choosePaymentWay", "휴대폰", (long) 2);
+					} else if (rgPaymentMethod.getCheckedRadioButtonId() == rbPaymentAccount.getId())
+					{
+						// 가상계좌 입금을 선택했을 경우
+						dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_ACCOUNT, null);
+						RenewalGaManager.getInstance(getApplicationContext()).recordEvent("radio", "choosePaymentWay", "계좌이체", (long) 3);
+					}
+
+					if (null != dialog)
+					{
+						dialog.setOnDismissListener(new OnDismissListener()
+						{
+							@Override
+							public void onDismiss(DialogInterface dialog)
+							{
+								mClickView.setClickable(true);
+								mClickView.setEnabled(true);
+							}
+						});
+
+						dialog.show();
+					}
+				} else
+				{
+					String msg = response.getString("msg");
+					String title = getString(R.string.dialog_notice2);
+					String positive = getString(R.string.dialog_btn_text_confirm);
+
+					SimpleAlertDialog.build(BookingActivity.this, title, msg, positive, new DialogInterface.OnClickListener()
+					{
+
+						@Override
+						public void onClick(DialogInterface dialog, int which)
+						{
+							finish();
+						}
+					}).show();
+				}
 			} catch (Exception e)
 			{
 				unLockUI();

@@ -254,7 +254,6 @@ public class SaleTime implements Constants, Parcelable
 		dest.writeValue(mOpenTime);
 		dest.writeValue(mCloseTime);
 		dest.writeValue(mCurrentTime);
-		//		dest.writeValue(mLogicalTime);
 		dest.writeInt(mDayOfDays);
 	}
 
@@ -263,7 +262,6 @@ public class SaleTime implements Constants, Parcelable
 		mOpenTime = (Date) in.readValue(Date.class.getClassLoader());
 		mCloseTime = (Date) in.readValue(Date.class.getClassLoader());
 		mCurrentTime = (Date) in.readValue(Date.class.getClassLoader());
-		//		mLogicalTime = (Date) in.readValue(Date.class.getClassLoader());
 		mDayOfDays = in.readInt();
 	}
 
