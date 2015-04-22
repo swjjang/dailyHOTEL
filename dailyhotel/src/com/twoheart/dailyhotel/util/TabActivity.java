@@ -6,7 +6,6 @@ import java.util.List;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.TabInfoFragment;
@@ -19,7 +18,6 @@ import com.viewpagerindicator.TabPageIndicator;
 
 public abstract class TabActivity extends BaseActivity
 {
-
 	public HotelDetail hotelDetail;
 
 	protected List<BaseFragment> mFragments;
@@ -85,6 +83,7 @@ public abstract class TabActivity extends BaseActivity
 		mAdapter.notifyDataSetChanged();
 		mIndicator.notifyDataSetChanged();
 
-		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
+		// pinkred_font
+		//		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
 	}
 }

@@ -28,9 +28,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.ZoomMapActivity;
+import com.twoheart.dailyhotel.adapter.HotelNameInfoWindowAdapter;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
-import com.twoheart.dailyhotel.widget.HotelGradeView;
 
 public class TabMapFragment extends BaseFragment implements OnMapClickListener
 {
@@ -40,7 +40,7 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
 	private SupportMapFragment mMapFragment;
 	private GoogleMap googleMap;
 	private TextView tvName, tvAddress;
-	private HotelGradeView hvGrade;
+	private TextView hvGrade;
 	private Marker mMarker;
 
 	public static TabMapFragment newInstance(HotelDetail hotelDetail, String title)
@@ -76,13 +76,11 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
 		tvAddress.setText(mHotelDetail.getHotel().getAddress());
 		tvAddress.setSelected(true);
 
-		hvGrade = (HotelGradeView) view.findViewById(R.id.hv_hotel_grade);
-		//		gradeBackground = (FrameLayout) view
-		//				.findViewById(R.id.fl_hotel_row_grade);
-		//		gradeText = (TextView) view.findViewById(R.id.tv_hotel_row_grade);
+		hvGrade = (TextView) view.findViewById(R.id.hv_hotel_grade);
 
-		String category = mHotelDetail.getHotel().getCategory();
-		hvGrade.setHotelGradeCode(category);
+		// grade
+		hvGrade.setText(mHotelDetail.getHotel().getCategory().getName(getActivity()));
+		hvGrade.setBackgroundResource(mHotelDetail.getHotel().getCategory().getColorResId());
 
 		return view;
 	}
@@ -100,7 +98,7 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
 	{
 		super.onActivityCreated(savedInstanceState);
 
-		mMapFragment = (SupportMapFragment) mHostActivity.getSupportFragmentManager().findFragmentById(R.id.frag_map);
+		mMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.frag_map);
 		googleMap = mMapFragment.getMap();
 
 		if (googleMap != null)
@@ -154,10 +152,11 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
 		{
 			mMarker = googleMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title(hotel_name));
 			mMarker.showInfoWindow();
+
 			LatLng address = new LatLng(lat, lng);
 			CameraPosition cp = new CameraPosition.Builder().target((address)).zoom(15).build();
 			googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
-
+			googleMap.setInfoWindowAdapter(new HotelNameInfoWindowAdapter(mHostActivity));
 			googleMap.setOnMarkerClickListener(new OnMarkerClickListener()
 			{
 				@Override

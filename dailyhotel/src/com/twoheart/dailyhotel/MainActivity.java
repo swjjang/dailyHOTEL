@@ -35,23 +35,23 @@ import android.content.pm.Signature;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.widget.AdapterView;
@@ -68,14 +68,15 @@ import com.androidquery.util.AQUtility;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.readystatesoftware.systembartint.SystemBarTintManager;
-import com.readystatesoftware.systembartint.SystemBarTintManager.SystemBarConfig;
+import com.twoheart.dailyhotel.activity.EventWebActivity;
 import com.twoheart.dailyhotel.activity.SplashActivity;
+import com.twoheart.dailyhotel.fragment.HotelMainFragment;
 import com.twoheart.dailyhotel.fragment.RatingHotelFragment;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.Util;
@@ -86,6 +87,7 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListe
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.CloseOnBackPressed;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class MainActivity extends BaseActivity implements OnItemClickListener, Constants
 {
@@ -103,6 +105,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	private static final String TAG_FRAGMENT_RATING_HOTEL = "rating_hotel";
 
 	public ListView drawerList;
+	private View drawerView;
 	public DrawerLayout drawerLayout;
 	private FrameLayout mContentFrame;
 	public Dialog popUpDialog;
@@ -116,10 +119,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	// 마지막으로 머물렀던 Fragment의 index
 	public int indexLastFragment; // Error Fragment에서 다시 돌아올 때 필요.
 
-	// SystemBarTintManager
-	private SystemBarTintManager tintManager;
-	public SystemBarConfig config;
-
 	// DrawerMenu 객체들
 	public DrawerMenu menuHotelListFragment;
 	public DrawerMenu menuBookingListFragment;
@@ -132,12 +131,15 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	protected HashMap<String, String> regPushParams;
 
 	public Uri intentData;
+	private Handler mHandler = new Handler();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		ExLog.d("GCM??" + sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "NOPE"));
+
+		//		DailyHotelRequest.makeUrlEncoder();
 
 		// 사용자가 선택한 언어, but 만약 사용자가 한국인인데 일본어를 선택하면 jp가 됨.
 		// 영어인 경우 - English, 한글인 경우 - 한국어
@@ -175,38 +177,12 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 		startActivityForResult(new Intent(this, SplashActivity.class), CODE_REQUEST_ACTIVITY_SPLASH);
 
-		// Anroid 4.4 이상에서 Android StatusBar와 Android NavigationBar를 Translucent하게 해주는 API를 사용하도록 한다.
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-		{
-			setTheme(R.style.AppTheme_Translucent);
-
-			// SystemBarTintManager는 3rd Party 라이브러리로 StatusBar와 NavigationBar와 관련된 API를 쉽게 변경할 수 있도록 해준다.
-			tintManager = new SystemBarTintManager(this);
-			config = tintManager.getConfig();
-
-			tintManager.setStatusBarTintEnabled(true);
-			int actionBarColor = getResources().getColor(android.R.color.black);//white에서 black으로 변경 
-			tintManager.setStatusBarTintColor(actionBarColor);
-
-		} else
-		{
-			setTheme(R.style.AppTheme);
-		}
-
 		setContentView(R.layout.activity_main);
-		setNavigationDrawer();
+
+		Toolbar toolbar = setActionBar(getString(R.string.actionbar_title_hotel_list_frag), false);
+		setNavigationDrawer(toolbar);
 
 		mContentFrame = (FrameLayout) findViewById(R.id.content_frame);
-
-		// Android 4.4 이상에서 Android StatusBar와 Android NavigationBar를 Translucent하게 
-		// 할 경우 여백 계산이 필요한 케이스가 발생하므로 해당 케이스에 대해 예외 처리한다.
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-		{
-			mContentFrame.setPadding(mContentFrame.getPaddingLeft(), config.getStatusBarHeight() + config.getActionBarHeight(), mContentFrame.getPaddingRight(), mContentFrame.getPaddingBottom());
-
-			drawerList.setPadding(drawerList.getPaddingLeft(), config.getStatusBarHeight() + config.getActionBarHeight(), drawerList.getPaddingRight(), drawerList.getPaddingBottom());
-
-		}
 
 		fragmentManager = getSupportFragmentManager();
 		backButtonHandler = new CloseOnBackPressed(this);
@@ -299,7 +275,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 				GooglePlayServicesUtil.getErrorDialog(resCode, this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
 			} else
 			{
-				showToast(getString(R.string.toast_msg_is_not_available_google_service), Toast.LENGTH_LONG, false);
+				DailyToast.showToast(this, R.string.toast_msg_is_not_available_google_service, Toast.LENGTH_LONG);
 				finish();
 			}
 			return false;
@@ -369,15 +345,17 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	private void initializeFragments()
 	{
 		if (mFragments != null)
+		{
 			mFragments.clear();
-		else
+		} else
+		{
 			mFragments = new LinkedList<Fragment>();
+		}
 
-		mFragments.add(new HotelListFragment());
+		mFragments.add(new HotelMainFragment());
 		mFragments.add(new BookingListFragment());
 		mFragments.add(new CreditFragment());
 		mFragments.add(new SettingFragment());
-
 	}
 
 	/**
@@ -392,7 +370,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		switch (index)
 		{
 			case 0:
-				return new HotelListFragment();
+				//				return new HotelListFragment();
+				return new HotelMainFragment();
 			case 1:
 				return new BookingListFragment();
 			case 2:
@@ -417,28 +396,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			clearFragmentBackStack();
 
 			fragmentManager.beginTransaction().replace(mContentFrame.getId(), fragment).commitAllowingStateLoss();
-
-			// Android 4.4 이상일 경우 Android StatusBar와 Android NavigationBar를 모두 Translucent하는데
-			// 우리 어플리케이션에서는 HotelListFragment에서만 Android NavigationBar를 Translucent하게 하였다.
-			// 그래서 다른 Fragment들에서는 네비게이션 드로워가 차지하는 공간에 있어서 차이가 발생하게 되는데 해당 이슈를
-			// 해결하기 위한 부분이 이 부분이다.
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-			{
-				if (fragment instanceof HotelListFragment)
-				{
-					mContentFrame.setPadding(mContentFrame.getPaddingLeft(), mContentFrame.getPaddingTop(), mContentFrame.getPaddingRight(), 0);
-
-					Window w = getWindow();
-					w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-
-				} else
-				{
-					WindowManager.LayoutParams attrs = getWindow().getAttributes();
-					attrs.flags &= (~WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-					getWindow().setAttributes(attrs);
-
-				}
-			}
 		} catch (IllegalStateException e)
 		{
 			onError();
@@ -467,9 +424,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		for (int i = 0; i < fragmentManager.getBackStackEntryCount(); ++i)
 		{
 			fragmentManager.popBackStackImmediate();
-
 		}
-
 	}
 
 	@Deprecated
@@ -502,7 +457,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	@Override
 	public void onItemClick(AdapterView<?> adapterView, View view, int position, long id)
 	{
-		int selectedMenuIconId = ((DrawerMenu) (adapterView.getAdapter().getItem(position))).getIcon();
+		DrawerMenu selectedDrawMenu = (DrawerMenu) (adapterView.getAdapter().getItem(position));
+		int selectedMenuIconId = selectedDrawMenu.getIcon();
 
 		switch (selectedMenuIconId)
 		{
@@ -527,10 +483,19 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 				break;
 		}
 
-		if(drawerLayout.isDrawerOpen(GravityCompat.START) == true)
+		//
+		menuHotelListFragment.setSelected(false);
+		menuBookingListFragment.setSelected(false);
+		menuCreditFragment.setSelected(false);
+		menuSettingFragment.setSelected(false);
+
+		selectedDrawMenu.setSelected(true);
+		mDrawerMenuListAdapter.notifyDataSetChanged();
+
+		if (drawerLayout.isDrawerOpen(GravityCompat.START) == true)
 		{
 			delayedReplace(indexLastFragment);
-			drawerLayout.closeDrawer(drawerList);
+			drawerLayout.closeDrawer(drawerView);
 		} else
 		{
 			replaceFragment(getFragment(indexLastFragment));
@@ -546,8 +511,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	 */
 	public void delayedReplace(final int index)
 	{
-		ExLog.e("INDEXED : " + index + "");
-		new Handler().postDelayed(new Runnable()
+		mHandler.postDelayed(new Runnable()
 		{
 			@Override
 			public void run()
@@ -560,13 +524,15 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	/**
 	 * 네비게이션 드로워를 셋팅하는 메서드
 	 */
-	public void setNavigationDrawer()
+	public void setNavigationDrawer(Toolbar toolbar)
 	{
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer, 0, 0)
-		{
+		TextView eventTextView = (TextView) findViewById(R.id.titleTextView);
+		eventTextView.setText(Html.fromHtml(getString(R.string.label_event_title)));
 
+		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, 0, 0)
+		{
 			public void onDrawerClosed(View view)
 			{
 				super.onDrawerClosed(view);
@@ -576,15 +542,62 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			public void onDrawerOpened(View drawerView)
 			{
 				super.onDrawerOpened(drawerView);
+
 				supportInvalidateOptionsMenu();
 
 				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("menu", "/menu");
 				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestMenuBar", null, null);
 			}
+
+			@Override
+			public void onDrawerSlide(View drawerView, float slideOffset)
+			{
+				if (Float.compare(slideOffset, 0.0f) > 0)
+				{
+					setActionBarRegionEnable(false);
+				} else if (Float.compare(slideOffset, 0.0f) == 0)
+				{
+					setActionBarRegionEnable(true);
+				}
+
+				super.onDrawerSlide(drawerView, slideOffset);
+			}
 		};
 
+		drawerLayout.post(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				drawerToggle.syncState();
+			}
+		});
+
 		drawerLayout.setDrawerListener(drawerToggle);
-		drawerList = (ListView) findViewById(R.id.left_drawer);
+
+		drawerView = findViewById(R.id.left_drawer);
+		drawerList = (ListView) findViewById(R.id.drawListView);
+
+		View bannerView = findViewById(R.id.bannerView);
+
+		bannerView.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				drawerLayout.closeDrawer(drawerView);
+
+				mHandler.postDelayed(new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						Intent i = new Intent(MainActivity.this, EventWebActivity.class);
+						startActivity(i);
+					}
+				}, 300);
+			}
+		});
 
 		menuHotelListFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_todays_hotel), R.drawable.selector_drawermenu_todayshotel, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
 		menuBookingListFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_chk_reservation), R.drawable.selector_drawermenu_reservation, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
@@ -593,7 +606,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 		mMenuImages = new ArrayList<DrawerMenu>();
 
-		mMenuImages.add(new DrawerMenu(DrawerMenu.DRAWER_MENU_LIST_TYPE_LOGO));
+		//		mMenuImages.add(new DrawerMenu(DrawerMenu.DRAWER_MENU_LIST_TYPE_LOGO));
 		mMenuImages.add(new DrawerMenu(getString(R.string.drawer_menu_pin_title_resrvation), DrawerMenu.DRAWER_MENU_LIST_TYPE_SECTION));
 		mMenuImages.add(menuHotelListFragment);
 		mMenuImages.add(menuBookingListFragment);
@@ -606,7 +619,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 		drawerList.setAdapter(mDrawerMenuListAdapter);
 		drawerList.setOnItemClickListener(this);
-
 	}
 
 	@Override
@@ -629,12 +641,21 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	}
 
 	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		return true;
+	}
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
 		if (drawerToggle.onOptionsItemSelected(item))
+		{
 			return true;
-		else
+		} else
+		{
 			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	@Override
@@ -650,12 +671,35 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		}
 	}
 
+	@Override
+	public void onBackPressed()
+	{
+		if (drawerLayout.isDrawerOpen(drawerView) == true)
+		{
+			drawerLayout.closeDrawer(drawerView);
+			return;
+		}
+
+		super.onBackPressed();
+	}
+
 	public void toggleDrawer()
 	{
-		if (!drawerLayout.isDrawerOpen(drawerList))
-			drawerLayout.openDrawer(drawerList);
+		if (drawerLayout.isDrawerOpen(drawerView) == false)
+			drawerLayout.openDrawer(drawerView);
 		else
-			drawerLayout.closeDrawer(drawerList);
+			drawerLayout.closeDrawer(drawerView);
+	}
+
+	public void closeDrawer()
+	{
+		if (drawerLayout != null)
+		{
+			if (drawerLayout.isDrawerOpen(GravityCompat.START) == true)
+			{
+				drawerLayout.closeDrawer(drawerView);
+			}
+		}
 	}
 
 	@Override
@@ -675,6 +719,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		private String title;
 		private int icon;
 		private int type;
+		private boolean mSelected;
 
 		public DrawerMenu(int type)
 		{
@@ -727,6 +772,15 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			this.icon = icon;
 		}
 
+		public void setSelected(boolean selected)
+		{
+			mSelected = selected;
+		}
+
+		public boolean isSelected()
+		{
+			return mSelected;
+		}
 	}
 
 	private class DrawerMenuListAdapter extends BaseAdapter
@@ -772,24 +826,28 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent)
 		{
-
 			DrawerMenu item = list.get(position);
 
 			switch (item.getType())
 			{
 				case DrawerMenu.DRAWER_MENU_LIST_TYPE_LOGO:
+				{
 					convertView = inflater.inflate(R.layout.list_row_drawer_logo, null);
 					break;
+				}
 
 				case DrawerMenu.DRAWER_MENU_LIST_TYPE_SECTION:
+				{
 					convertView = inflater.inflate(R.layout.list_row_drawer_section, null);
 
 					TextView drawerMenuItemTitle = (TextView) convertView.findViewById(R.id.drawerMenuItemTitle);
 
 					drawerMenuItemTitle.setText(item.getTitle());
 					break;
+				}
 
 				case DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY:
+				{
 					convertView = inflater.inflate(R.layout.list_row_drawer_entry, null);
 
 					ImageView drawerMenuItemIcon = (ImageView) convertView.findViewById(R.id.drawerMenuItemIcon);
@@ -798,7 +856,18 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 					drawerMenuItemIcon.setImageResource(item.getIcon());
 					drawerMenuItemText.setText(item.getTitle());
 
+					if (item.isSelected() == true)
+					{
+						drawerMenuItemIcon.setSelected(true);
+						drawerMenuItemText.setSelected(true);
+					} else
+					{
+						drawerMenuItemIcon.setSelected(false);
+						drawerMenuItemText.setSelected(false);
+					}
+
 					break;
+				}
 			}
 
 			return convertView;
@@ -848,7 +917,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			}
 
 			if (true == "alive".equalsIgnoreCase(result))
-			{ // session alive
+			{
+				// session alive
 				// 호텔 평가를 위한 사용자 정보 조회
 				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, MainActivity.this));
 			}
@@ -902,7 +972,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 					{
 						if (today.compareTo(checkOut) >= 0)
 						{
-							Calendar calendar = Calendar.getInstance();
+							Calendar calendar = DailyCalendar.getInstance();
 							calendar.setTime(checkOut);
 							calendar.add(Calendar.DATE, DAYS_DISPLAY_RATING_HOTEL_DIALOG);
 							Date deadLineDay = calendar.getTime();
@@ -929,8 +999,10 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			} catch (Exception e)
 			{
 				onError(e);
+			} finally
+			{
+				unLockUI();
 			}
-			unLockUI();
 		}
 	};
 

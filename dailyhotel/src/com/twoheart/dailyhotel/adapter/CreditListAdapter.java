@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Credit;
-import com.twoheart.dailyhotel.util.GlobalFont;
 
 public class CreditListAdapter extends ArrayAdapter<Credit>
 {
@@ -57,7 +56,8 @@ public class CreditListAdapter extends ArrayAdapter<Credit>
 			expires.setText(mContext.getString(R.string.prefix_expire_time) + ", " + element.getExpires() + "");
 		}
 
-		GlobalFont.apply((ViewGroup) v);
+		// pinkred_font
+		//		GlobalFont.apply((ViewGroup) v);
 		return v;
 	}
 

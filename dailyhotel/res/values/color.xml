@@ -3,6 +3,10 @@
     <color name="dh_theme_color">#FF7A7A</color>
   
     <color name="actionbar_border">#7f7f7f</color>
+    <color name="actionbar_title">#181818</color>
+    <color name="actionbar_underline">#b4b4b4</color>
+    <color name="actionbar_background">#ffffff</color>
+    <color name="actionbar_hamburger">#ff7a7a</color>
     
     <color name="drawermenu_border">#d6d6d6</color>
     <color name="common_border">#dcdcdc</color>
@@ -36,5 +40,29 @@
     <color name="grade_resort_pension_condo">#cf8d14</color>
     <color name="grade_special">#ab380a</color>
     <color name="grade_not_yet">#808080</color>
+    
+	<color name="white">#ffffff</color>
+	<color name="black">#000000</color>
+	
+	<color name="tab_text">#a6000000</color>
+	<color name="tab_subtext_selected">#ccff7a7a</color>
+	<color name="tab_underline">#d6d6d6</color>
+	
+	<color name="daytab_text">#9a9a9a</color>
+	<color name="booking_vline">#c2c2c2</color>
+	<color name="booking_hline">#e0e0e0</color>
+	<color name="booking_hline01">#d4d4d4</color>
+	
+	<color name="booking_subtext">#cc7f7f7f</color>
+	
+	<color name="toast_background">#aa000000</color>
+	
+	<!-- banner -->
+	<color name="banner_title_text">#454545</color>
+	<color name="banner_subtitle_text">#b3454545</color>
+	
+	
+	<color name="hotel_list_item_underline">#3a3a3a</color>
+	<color name="hotel_list_background">#ececec</color>
 
 </resources>	

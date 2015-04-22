@@ -19,8 +19,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="40dp" >
+        android:layout_marginBottom="40dp"
+        android:layout_marginTop="20dp" >
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -35,15 +35,22 @@
                 android:id="@+id/rl_hotel_upper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
-                
-                <com.twoheart.dailyhotel.widget.HotelGradeView
-                        android:id="@+id/hv_hotel_grade"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true" >
-                </com.twoheart.dailyhotel.widget.HotelGradeView>
 
-                <TextView
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                    android:id="@+id/hv_hotel_grade"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:paddingBottom="1px"
+                    android:paddingLeft="5.5dp"
+                    android:paddingRight="5.5dp"
+                    android:paddingTop="2px"
+                    android:textColor="@android:color/white"
+                    android:textSize="11.5dp" />
+
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                     android:id="@+id/tv_hotel_tab_map_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -68,7 +75,7 @@
                 android:layout_below="@+id/rl_hotel_upper"
                 android:orientation="vertical" >
 
-                <TextView
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                     android:id="@+id/tv_hotel_tab_map_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

@@ -6,7 +6,7 @@
     android:gravity="center_vertical"
     android:orientation="horizontal" >
 
-    <TextView
+    <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
         android:id="@+id/drawerMenuItemTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

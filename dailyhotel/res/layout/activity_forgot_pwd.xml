@@ -1,47 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingTop="10dp"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp" >
+    android:layout_height="match_parent" >
 
-    <EditText
-        android:id="@+id/et_forgot_pwd"
+    <include
+        android:id="@+id/toolbar_actionbar"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/edit_text_holo_light"
-        android:ems="10"
-        android:hint="@string/act_forgot_pwd_email"
-        android:imeActionId="@+id/btn_forgot_pwd"
-        android:maxLength="50"
-        android:paddingLeft="10dp"
-        android:singleLine="true"
-        android:textColorHint="@color/textView_textColor_sub" >
+        android:layout_height="56dp"
+        layout="@layout/toolbar_default" />
 
-        <requestFocus />
-    </EditText>
-    
-    <TextView
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+    <View
         android:layout_width="match_parent"
-        android:paddingLeft="10dp"
-        android:textColor="@color/textView_textColor_sub"
-        android:textSize="13.5dp"
-        android:text="@string/act_forgot_pwd_text"/>
-    
-    <Button 
-        android:id="@+id/btn_forgot_pwd"
-        android:layout_height="50dp"
-        android:layout_width="match_parent"
-        android:layout_marginTop="62dp"
-        android:paddingLeft="10dp"
-        android:background="@drawable/shape_button_common_background"
-        android:textSize="19dp"
-        android:textColor="@android:color/white"
-        android:text="@string/act_forgot_pwd_forgot"/>
+        android:layout_height="1px"
+        android:layout_alignBaseline="@id/toolbar_actionbar"
+        android:layout_alignBottom="@id/toolbar_actionbar"
+        android:background="@color/actionbar_underline" />
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar_actionbar"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp" >
+
+        <com.twoheart.dailyhotel.widget.DailyCustomFontEditText
+            android:id="@+id/et_forgot_pwd"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/edit_text_holo_light"
+            android:ems="10"
+            android:hint="@string/act_forgot_pwd_email"
+            android:imeActionId="@+id/btn_forgot_pwd"
+            android:maxLength="50"
+            android:paddingLeft="10dp"
+            android:singleLine="true"
+            android:textColorHint="@color/textView_textColor_sub" >
+
+            <requestFocus />
+        </com.twoheart.dailyhotel.widget.DailyCustomFontEditText>
+
+        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="10dp"
+            android:text="@string/act_forgot_pwd_text"
+            android:textColor="@color/textView_textColor_sub"
+            android:textSize="13.5dp" />
+
+        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            android:id="@+id/btn_forgot_pwd"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="62dp"
+            android:background="@drawable/shape_button_common_background"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:text="@string/act_forgot_pwd_forgot"
+            android:textColor="@android:color/white"
+            android:textSize="17dp" />
+    </LinearLayout>
+
+</RelativeLayout>

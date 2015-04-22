@@ -5,27 +5,19 @@
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
-    <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light">
-        <!-- 
-        	android:windowContentOverlay 스타일은 현재 안드로이드 4.3에서 버그가 발견되어 적용되지 않는 문제 발생.
-        	따라서 안드로이드 4.3 커널을 이용하는 유저들은 액션바에 바텀 섀도우가 빠진채로 레이아웃 형성.
-         -->
-        <item name="actionMenuTextColor">@color/dh_theme_color</item>
-        <item name="actionMenuTextAppearance">@style/actionbarMenuTextAppearance</item>
-        <item name="actionBarItemBackground">@drawable/item_background_holo_light</item>
-        <item name="actionDropDownStyle">@style/DropDownListViewDH_Theme.ActionBar</item>
-        <item name="dropDownListViewStyle">@style/DropDownDH_Theme.ActionBar</item>
-        <item name="android:ratingBarStyle">@style/RatingBarDH</item>
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/actionbar_background</item>
+        <item name="colorAccent">@color/actionbar_hamburger</item>
+        <item name="colorButtonNormal">@color/actionbar_hamburger</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="android:windowContentTransitions">true</item>
     </style>
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
-        <item name="vpiTabPageIndicatorStyle">@style/TabDH_Theme</item>
-        <item name="switchStyle">@style/switch_light</item>
         <item name="android:editTextStyle">@style/EditTextDH_Theme</item>
         <item name="android:checkboxStyle">@style/CheckBoxDH_Theme</item>
         <item name="android:spinnerStyle">@style/SpinnerDH_Theme</item>
-        <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItemDH_Theme</item>
         <item name="android:progressBarStyleHorizontal">@style/ProgressBarDH_Theme</item>
         <item name="android:listViewStyle">@style/ListViewDH_Theme</item>
         <item name="android:listViewWhiteStyle">@style/ListViewDH_Theme.White</item>
@@ -63,19 +55,6 @@
         <item name="android:dropDownSelector">@drawable/list_selector_holo_light</item>
     </style>
 
-    <style name="SpinnerDropDownItemDH_Theme" parent="android:Widget.DropDownItem.Spinner">
-        <item name="android:checkMark">@drawable/btn_radio_holo_light</item>
-    </style>
-
-    <style name="TabDH_Theme" parent="Widget.TabPageIndicator">
-        <item name="android:paddingLeft">30dp</item>
-        <item name="android:paddingRight">30dp</item>
-        <item name="android:background">@drawable/selector_tab_indicator</item>
-        <item name="android:divider">@drawable/custom_tab_indicator_divider</item>
-        <item name="android:textColor">@color/textView_textColor_main</item>
-        <item name="android:textSize">15dp</item>
-    </style>
-
     <style name="ProgressBarDH_Theme" parent="android:Widget.ProgressBar.Horizontal">
         <item name="android:progressDrawable">@drawable/progress_horizontal_holo_light</item>
         <item name="android:indeterminateDrawable">@drawable/progress_indeterminate_horizontal_holo_light</item>
@@ -108,21 +87,6 @@
         <item name="android:textSize">18dp</item>
     </style>
 
-    <style name="Theme.AppCompat.Light.NoActionBar" parent="AppTheme">
-        <item name="android:windowNoTitle">true</item>
-    </style>
-
-    <style name="switch_light">
-        <item name="track">@drawable/switch_track_holo_light</item>
-        <item name="thumb">@drawable/switch_inner_holo_light</item>
-        <item name="textOn">""</item>
-        <item name="textOff">""</item>
-        <item name="thumbTextPadding">12dip</item>
-        <item name="switchMinWidth">96dip</item>
-        <item name="switchPadding">16dip</item>
-        <item name="switchTextAppearance">@style/TextAppearance</item>
-    </style>
-
     <style name="TextAppearance">
         <item name="textColor">?android:attr/textColorPrimary</item>
         <item name="textColorHighlight">?android:attr/textColorHighlight</item>
@@ -131,9 +95,24 @@
         <item name="textSize">16sp</item>
     </style>
 
-    <style name="RatingBarDH" parent="android:Widget.RatingBar">
-        <item name="android:progressDrawable">@drawable/dh_ratingbar_full_holo_light</item>
-        <item name="android:indeterminateDrawable">@drawable/dh_ratingbar_full_holo_light</item>
+    <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">@color/actionbar_hamburger</item>
     </style>
-    
+
+    <style name="ToolBarStyle" parent="">
+        <item name="android:elevation">0dp</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+    </style>
+
+    <style name="Bubble.TextAppearance.Dark" parent="android:TextAppearance.Medium">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#ff7f7f7f</item>
+    </style>
+
+    <style name="Bubble.TextAppearance.Light" parent="Bubble.TextAppearance.Dark">
+        <item name="android:textColor">#ffeeeeee</item>
+    </style>
+
 </resources>

@@ -17,7 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
@@ -25,16 +25,16 @@ import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
 public class ErrorFragment extends BaseFragment implements OnClickListener
 {
-	private Button btnRetry;
+	private TextView btnRetry;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 
 		View view = inflater.inflate(R.layout.fragment_error, container, false);
-		mHostActivity.setActionBar(R.string.actionbar_title_error_frag);
+		mHostActivity.setActionBar(getString(R.string.actionbar_title_error_frag), false);
 
-		btnRetry = (Button) view.findViewById(R.id.btn_error);
+		btnRetry = (TextView) view.findViewById(R.id.btn_error);
 		btnRetry.setOnClickListener(this);
 
 		return view;

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.SharedPreferences.Editor;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -11,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
@@ -41,8 +43,17 @@ public class IntroActivity extends BaseActivity implements OnClickListener, OnPa
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		setActionBarHide();
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+		{
+			Window window = getWindow();
+			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+		} else
+		{
+			getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		}
+
 		setContentView(R.layout.activity_intro);
 
 		mPager = (ViewPager) findViewById(R.id.intro_pager);
@@ -165,14 +176,7 @@ public class IntroActivity extends BaseActivity implements OnClickListener, OnPa
 			tvSkip.setVisibility(View.VISIBLE);
 		}
 
-		if (position == 0)
-			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("scroll", "landing", (position + 1) + "", (long) (position + 1));
-		if (position == 1)
-			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("scroll", "landing", (position + 1) + "", (long) (position + 1));
-		if (position == 2)
-			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("scroll", "landing", (position + 1) + "", (long) (position + 1));
-		if (position == 3)
-			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("scroll", "landing", (position + 1) + "", (long) (position + 1));
+		RenewalGaManager.getInstance(getApplicationContext()).recordEvent("scroll", "landing", (position + 1) + "", (long) (position + 1));
 	}
 
 	private void disableShowGuide()

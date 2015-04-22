@@ -14,7 +14,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -27,11 +26,12 @@ import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class ForgotPwdActivity extends BaseActivity implements Constants, OnClickListener
 {
 
-	private Button btnForgot;
+	private TextView btnForgot;
 	private EditText etForgot;
 
 	private String mEmail;
@@ -40,11 +40,12 @@ public class ForgotPwdActivity extends BaseActivity implements Constants, OnClic
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setActionBar(R.string.actionbar_title_forgot_pwd_activity);
+
 		setContentView(R.layout.activity_forgot_pwd);
+		setActionBar(R.string.actionbar_title_forgot_pwd_activity);
 
 		etForgot = (EditText) findViewById(R.id.et_forgot_pwd);
-		btnForgot = (Button) findViewById(R.id.btn_forgot_pwd);
+		btnForgot = (TextView) findViewById(R.id.btn_forgot_pwd);
 		btnForgot.setOnClickListener(this);
 		etForgot.setId(EditorInfo.IME_ACTION_DONE);
 		etForgot.setOnEditorActionListener(new OnEditorActionListener()
@@ -83,16 +84,16 @@ public class ForgotPwdActivity extends BaseActivity implements Constants, OnClic
 			if (mEmail.equals(""))
 			{
 				releaseUiComponent();
-				
-				showToast(getString(R.string.toast_msg_please_input_email_address), Toast.LENGTH_SHORT, true);
+
+				DailyToast.showToast(this, R.string.toast_msg_please_input_email_address, Toast.LENGTH_SHORT);
 				return;
 			}
 
 			else if (!isValidEmail(mEmail))
 			{
 				releaseUiComponent();
-				
-				showToast(getString(R.string.toast_msg_wrong_email_address), Toast.LENGTH_SHORT, true);
+
+				DailyToast.showToast(this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
 				return;
 			}
 
@@ -142,7 +143,7 @@ public class ForgotPwdActivity extends BaseActivity implements Constants, OnClic
 				{
 					if (TextUtils.isEmpty(mEmail) == true)
 					{
-						showToast(getString(R.string.toast_msg_please_input_email_address), Toast.LENGTH_SHORT, true);
+						DailyToast.showToast(ForgotPwdActivity.this, R.string.toast_msg_please_input_email_address, Toast.LENGTH_SHORT);
 					} else
 					{
 						Map<String, String> params = new HashMap<String, String>();

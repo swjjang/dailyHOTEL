@@ -30,7 +30,7 @@
                 android:adjustViewBounds="true"
                 android:src="@drawable/img_logo_popover" />
 
-            <TextView
+            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                 android:id="@+id/tv_screen_on_push_dialog_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -67,7 +67,7 @@
                 android:paddingRight="10dp"
                 android:paddingTop="10dp" >
 
-                <TextView
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                     android:id="@+id/tv_screen_on_push_dialog_msg"
                     android:layout_width="wrap_content"
                     android:layout_height="110dp"

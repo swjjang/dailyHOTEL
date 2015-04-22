@@ -32,16 +32,15 @@ import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 public class PaymentWaitActivity extends BaseActivity
 {
+	private Booking booking;
 
-	Booking booking;
-
-	TextView tvHotelName;
-	TextView tvAccount;
-	TextView tvName;
-	TextView tvPrice;
-	TextView tvDeadline;
-	TextView tvGuide1;
-	TextView tvGuide2;
+	private TextView tvHotelName;
+	private TextView tvAccount;
+	private TextView tvName;
+	private TextView tvPrice;
+	private TextView tvDeadline;
+	private TextView tvGuide1;
+	private TextView tvGuide2;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -53,8 +52,8 @@ public class PaymentWaitActivity extends BaseActivity
 		if (bundle != null)
 			booking = (Booking) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_BOOKING);
 
-		setActionBar(getString(R.string.actionbar_title_payment_wait_activity));
 		setContentView(R.layout.activity_payment_wait);
+		setActionBar(getString(R.string.actionbar_title_payment_wait_activity));
 
 		tvHotelName = (TextView) findViewById(R.id.tv_payment_wait_hotel_name);
 		tvAccount = (TextView) findViewById(R.id.tv_payment_wait_account);
@@ -105,7 +104,6 @@ public class PaymentWaitActivity extends BaseActivity
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-
 			try
 			{
 				if (response == null)

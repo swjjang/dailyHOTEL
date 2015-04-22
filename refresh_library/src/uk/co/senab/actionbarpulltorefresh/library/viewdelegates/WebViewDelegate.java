@@ -19,6 +19,9 @@ package uk.co.senab.actionbarpulltorefresh.library.viewdelegates;
 import android.view.View;
 import android.webkit.WebView;
 
+/**
+ * FIXME
+ */
 public class WebViewDelegate implements ViewDelegate {
 
     public static final Class[] SUPPORTED_VIEW_CLASSES =  { WebView.class };

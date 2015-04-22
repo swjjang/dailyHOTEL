@@ -14,7 +14,6 @@
  */
 package com.twoheart.dailyhotel.activity;
 
-import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,10 +24,8 @@ import kr.co.kcp.android.payment.standard.ResultRcvActivity;
 import kr.co.kcp.util.PackageState;
 
 import org.apache.http.util.EncodingUtils;
-import org.json.JSONException;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
@@ -42,7 +39,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.view.View.OnLongClickListener;
-import android.view.ViewGroup;
 import android.webkit.CookieSyncManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
@@ -51,19 +47,16 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-import com.paypal.android.sdk.payments.PayPalConfiguration;
-import com.paypal.android.sdk.payments.PayPalPayment;
-import com.paypal.android.sdk.payments.PaymentConfirmation;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Pay;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 @SuppressLint("NewApi")
 public class PaymentActivity extends BaseActivity implements Constants
@@ -85,31 +78,31 @@ public class PaymentActivity extends BaseActivity implements Constants
 
 	// init paypal
 	private static final int REQUEST_CODE_PAYMENT = 1;
-	private static final String CONFIG_ENVIRONMENT = PayPalConfiguration.ENVIRONMENT_NO_NETWORK;
+	//	private static final String CONFIG_ENVIRONMENT = PayPalConfiguration.ENVIRONMENT_NO_NETWORK;
 	// note that these credentials will differ between live & sandbox
 	// environments.
 	private static final String CONFIG_CLIENT_ID = "AZlfxxBvLXC7iT3xDEG8oFViHYdqImvcwLB2JG6pyUhVAXb7XuHMYIuNutGI";
 
-	public static PayPalConfiguration config = new PayPalConfiguration().environment(CONFIG_ENVIRONMENT).clientId(CONFIG_CLIENT_ID)
-	// The following are only used in PayPalFuturePaymentActivity.
-	.merchantName("Hipster Store").merchantPrivacyPolicyUri(Uri.parse("https://www.example.com/privacy")).merchantUserAgreementUri(Uri.parse("https://www.example.com/legal"));
-
-	private PayPalPayment getThingToBuy(String paymentIntent, Pay pay)
-	{
-		PayPalPayment payPalPayment = null;
-
-		if (pay != null && pay.getHotelDetail() != null && pay.getHotelDetail().getHotel() != null)
-		{
-
-			payPalPayment = new PayPalPayment(new BigDecimal(pay.getPayPrice()), "USD", pay.getHotelDetail().getHotel().getName(), paymentIntent);
-		} else
-		{
-
-			payPalPayment = new PayPalPayment(new BigDecimal("1.75"), "USD", "hipster jeans", paymentIntent);
-		}
-
-		return payPalPayment;
-	}
+	//	public static PayPalConfiguration config = new PayPalConfiguration().environment(CONFIG_ENVIRONMENT).clientId(CONFIG_CLIENT_ID)
+	//	// The following are only used in PayPalFuturePaymentActivity.
+	//	.merchantName("Hipster Store").merchantPrivacyPolicyUri(Uri.parse("https://www.example.com/privacy")).merchantUserAgreementUri(Uri.parse("https://www.example.com/legal"));
+	//
+	//	private PayPalPayment getThingToBuy(String paymentIntent, Pay pay)
+	//	{
+	//		PayPalPayment payPalPayment = null;
+	//
+	//		if (pay != null && pay.getHotelDetail() != null && pay.getHotelDetail().getHotel() != null)
+	//		{
+	//
+	//			payPalPayment = new PayPalPayment(new BigDecimal(pay.getPayPrice()), "USD", pay.getHotelDetail().getHotel().getName(), paymentIntent);
+	//		} else
+	//		{
+	//
+	//			payPalPayment = new PayPalPayment(new BigDecimal("1.75"), "USD", "hipster jeans", paymentIntent);
+	//		}
+	//
+	//		return payPalPayment;
+	//	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -121,7 +114,9 @@ public class PaymentActivity extends BaseActivity implements Constants
 
 		Bundle bundle = getIntent().getExtras();
 		if (bundle != null)
+		{
 			mPay = (Pay) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_PAY);
+		}
 
 		//		if (mPay.getPayType().equals("PAYPAL")) {
 		//			Intent intent = new Intent(this, PayPalService.class);
@@ -187,8 +182,9 @@ public class PaymentActivity extends BaseActivity implements Constants
 
 		if (mPay == null)
 		{
-			showToast(getString(R.string.toast_msg_failed_to_get_payment_info), Toast.LENGTH_SHORT, false);
+			DailyToast.showToast(PaymentActivity.this, R.string.toast_msg_failed_to_get_payment_info, Toast.LENGTH_SHORT);
 			finish();
+			return;
 		}
 
 		// 기본 결제 방식
@@ -206,7 +202,7 @@ public class PaymentActivity extends BaseActivity implements Constants
 
 			webView.postUrl(url, parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]), postParameterValue.toArray(new String[postParameterValue.size()])));
 			return;
-		} else if (mPay.isSaleCredit())
+		} else if (mPay.isSaleCredit() == true)
 		{
 			// 적립금 일부 사용
 			url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)).append('/').append(mPay.getPayType()).append("/").append(mPay.getHotelDetail().getSaleIdx()).append("/").append(mPay.getCredit().getBonus()).toString();
@@ -263,9 +259,9 @@ public class PaymentActivity extends BaseActivity implements Constants
 		byte[] result = new byte[size];
 
 		int currentSize = 0;
+
 		for (int i = 0; i < resultList.size(); i++)
 		{
-
 			System.arraycopy(resultList.get(i), 0, result, currentSize, resultList.get(i).length);
 			currentSize += resultList.get(i).length;
 		}
@@ -382,7 +378,7 @@ public class PaymentActivity extends BaseActivity implements Constants
 			{
 				if (!new PackageState(this).getPackageDownloadInstallState(PACKAGE_NAME_MPOCKET))
 				{
-					showToast(getString(R.string.toast_msg_retry_payment_after_install_app), Toast.LENGTH_LONG, false);
+					DailyToast.showToast(PaymentActivity.this, R.string.toast_msg_retry_payment_after_install_app, Toast.LENGTH_LONG);
 					startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_PAYMENT_MPOCKET)));
 					return true;
 				}
@@ -429,40 +425,40 @@ public class PaymentActivity extends BaseActivity implements Constants
 		//		}
 	}
 
-	private void proccessPayPalActivityResult(int requestCode, int resultCode, Intent data)
-	{
-
-		JavaScriptExtention javaScriptExtention = new JavaScriptExtention();
-
-		if (resultCode == Activity.RESULT_OK)
-		{
-			PaymentConfirmation confirm = data.getParcelableExtra(com.paypal.android.sdk.payments.PaymentActivity.EXTRA_RESULT_CONFIRMATION);
-			if (confirm != null)
-			{
-				try
-				{
-					ExLog.d(confirm.toJSONObject().toString(4));
-					ExLog.d(confirm.getPayment().toJSONObject().toString(4));
-
-					// 성공적으로 마쳤을 경우 
-					javaScriptExtention.feed("SUCCESS");
-				} catch (JSONException e)
-				{
-					ExLog.d("an extremely unlikely failure occurred: ");
-					javaScriptExtention.feed("NOT_AVAILABLE");
-				}
-			}
-		} else if (resultCode == Activity.RESULT_CANCELED)
-		{
-			ExLog.d("The user canceled.");
-			javaScriptExtention.feed("PAYMENT_CANCELED");
-
-		} else if (resultCode == com.paypal.android.sdk.payments.PaymentActivity.RESULT_EXTRAS_INVALID)
-		{
-			ExLog.d("An invalid Payment or PayPalConfiguration was submitted. Please see the docs.");
-			javaScriptExtention.feed("NOT_AVAILABLE");
-		}
-	}
+	//	private void proccessPayPalActivityResult(int requestCode, int resultCode, Intent data)
+	//	{
+	//
+	//		JavaScriptExtention javaScriptExtention = new JavaScriptExtention();
+	//
+	//		if (resultCode == Activity.RESULT_OK)
+	//		{
+	//			PaymentConfirmation confirm = data.getParcelableExtra(com.paypal.android.sdk.payments.PaymentActivity.EXTRA_RESULT_CONFIRMATION);
+	//			if (confirm != null)
+	//			{
+	//				try
+	//				{
+	//					ExLog.d(confirm.toJSONObject().toString(4));
+	//					ExLog.d(confirm.getPayment().toJSONObject().toString(4));
+	//
+	//					// 성공적으로 마쳤을 경우 
+	//					javaScriptExtention.feed("SUCCESS");
+	//				} catch (JSONException e)
+	//				{
+	//					ExLog.d("an extremely unlikely failure occurred: ");
+	//					javaScriptExtention.feed("NOT_AVAILABLE");
+	//				}
+	//			}
+	//		} else if (resultCode == Activity.RESULT_CANCELED)
+	//		{
+	//			ExLog.d("The user canceled.");
+	//			javaScriptExtention.feed("PAYMENT_CANCELED");
+	//
+	//		} else if (resultCode == com.paypal.android.sdk.payments.PaymentActivity.RESULT_EXTRAS_INVALID)
+	//		{
+	//			ExLog.d("An invalid Payment or PayPalConfiguration was submitted. Please see the docs.");
+	//			javaScriptExtention.feed("NOT_AVAILABLE");
+	//		}
+	//	}
 
 	private class mWebChromeClient extends WebChromeClient
 	{
@@ -688,7 +684,7 @@ public class PaymentActivity extends BaseActivity implements Constants
 				public void onClick(DialogInterface dialog, int which)
 				{
 					dialog.dismiss();
-					showToast(getString(R.string.toast_msg_cancel_payment), Toast.LENGTH_SHORT, false);
+					DailyToast.showToast(PaymentActivity.this, R.string.toast_msg_cancel_payment, Toast.LENGTH_SHORT);
 				}
 			};
 
@@ -982,7 +978,8 @@ public class PaymentActivity extends BaseActivity implements Constants
 	@Override
 	public void unLockUI()
 	{
-		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
+		// pinkred_font
+		//		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
 		mLockUI.hide();
 	}
 

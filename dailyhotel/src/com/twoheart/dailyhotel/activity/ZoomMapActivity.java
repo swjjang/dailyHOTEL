@@ -11,6 +11,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.adapter.HotelNameInfoWindowAdapter;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
@@ -23,12 +24,9 @@ public class ZoomMapActivity extends BaseActivity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		// 액션바 불투명 처리  		
-		//		supportRequestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
-		//		actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#CCFFFFFF")));
-		setActionBar(R.string.actionbar_title_zoom_map_activity);
 
 		setContentView(R.layout.activity_zoom_map);
+		setActionBar(R.string.actionbar_title_zoom_map_activity);
 
 		Bundle bundle = getIntent().getExtras();
 
@@ -56,6 +54,7 @@ public class ZoomMapActivity extends BaseActivity
 			CameraPosition cp = new CameraPosition.Builder().target((address)).zoom(15).build();
 
 			googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
+			googleMap.setInfoWindowAdapter(new HotelNameInfoWindowAdapter(this));
 			googleMap.setOnMarkerClickListener(new OnMarkerClickListener()
 			{
 				@Override

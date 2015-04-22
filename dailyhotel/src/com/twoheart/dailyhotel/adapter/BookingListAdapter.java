@@ -11,8 +11,6 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Booking;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.GlobalFont;
 
 public class BookingListAdapter extends ArrayAdapter<Booking>
 {
@@ -49,21 +47,19 @@ public class BookingListAdapter extends ArrayAdapter<Booking>
 		{
 			TextView day = (TextView) v.findViewById(R.id.tv_booking_row_day);
 			TextView name = (TextView) v.findViewById(R.id.tv_booking_row_name);
-			if (element.getPayType() == 20)
-			{
-				TextView ment = (TextView) v.findViewById(R.id.tv_booking_row_ment);
-				ment.setText(context.getString(R.string.actionbar_title_payment_wait_activity));
-			}
+			TextView ment = (TextView) v.findViewById(R.id.tv_booking_row_ment);
 
 			String str = items.get(position).getSday();
 			str = str.replace("-", " / ");
 			str = "20" + str;
-			ExLog.e("SDAY : " + items.get(position).getSday() + " / " + str);
 			day.setText(str);
+
 			name.setText(items.get(position).getHotel_name());
+			ment.setText(items.get(position).ment);
 		}
 
-		GlobalFont.apply((ViewGroup) v);
+		// pinkred_font
+		//		GlobalFont.apply((ViewGroup) v);
 		return v;
 	}
 

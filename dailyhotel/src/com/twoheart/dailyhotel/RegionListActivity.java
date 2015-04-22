@@ -32,6 +32,7 @@ import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonArrayRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonArrayResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class RegionListActivity extends BaseActivity implements OnItemClickListener
 {
@@ -46,8 +47,8 @@ public class RegionListActivity extends BaseActivity implements OnItemClickListe
 	{
 		super.onCreate(savedInstanceState);
 
-		setActionBar(getString(R.string.act_list_region_title));
 		setContentView(R.layout.activity_region_list);
+		setActionBar(R.string.act_list_region_title);
 
 		// 어댑터 생성
 		adapter = new SeparatedListAdpater(this);
@@ -111,7 +112,7 @@ public class RegionListActivity extends BaseActivity implements OnItemClickListe
 		// 지역을 선택하라는 토스트를 띄워줌.
 		if (sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "").equals(""))
 		{
-			showToast(getString(R.string.act_list_region_select_region), Toast.LENGTH_SHORT, false);
+			DailyToast.showToast(this, R.string.act_list_region_select_region, Toast.LENGTH_SHORT);
 			return;
 		}
 		super.onBackPressed();

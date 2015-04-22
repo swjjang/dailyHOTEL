@@ -27,7 +27,7 @@
             android:src="@drawable/img_newevent"
             android:visibility="gone" />
 
-        <TextView
+        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="false"
@@ -36,17 +36,19 @@
             android:textSize="21dp" />
     </LinearLayout>
 
-    <Button
+    <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
         android:id="@+id/btn_wait_timer_alram"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginBottom="10dp"
         android:background="@drawable/shape_button_common_background"
+        android:gravity="center"
         android:text="@string/frag_wait_timer_alarm"
-        android:textColor="@android:color/white" />
+        android:textColor="@android:color/white"
+        android:textSize="17sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -57,14 +59,14 @@
         android:gravity="center"
         android:orientation="vertical" >
 
-        <TextView
+        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
             android:id="@+id/tv_wait_timer_main"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/textView_textColor_main"
             android:textSize="20dp" />
 
-        <TextView
+        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
             android:id="@+id/tv_wait_timer_sub"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -88,7 +90,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
-            <TextView
+            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                 android:id="@+id/tv_timer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

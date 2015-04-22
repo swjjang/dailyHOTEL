@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.json.JSONArray;
@@ -35,7 +36,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -64,10 +64,9 @@ import com.twoheart.dailyhotel.util.ui.BaseFragment;
  */
 public class CreditFragment extends BaseFragment implements Constants, OnClickListener
 {
-
 	private RelativeLayout rlCreditNotLoggedIn;
 	private LinearLayout llCreditLoggedIn, btnInvite;
-	private Button btnLogin, btnSignup;
+	private TextView btnLogin, btnSignup;
 	private TextView tvBonus, tvRecommenderCode;
 	private TextView tvCredit;
 	private String mRecommendCode;
@@ -89,8 +88,8 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 		tvCredit = (TextView) view.findViewById(R.id.tv_credit_history);
 		tvRecommenderCode = (TextView) view.findViewById(R.id.tv_credit_recommender_code);
 		tvBonus = (TextView) view.findViewById(R.id.tv_credit_money);
-		btnLogin = (Button) view.findViewById(R.id.btn_no_login_login);
-		btnSignup = (Button) view.findViewById(R.id.btn_no_login_signup);
+		btnLogin = (TextView) view.findViewById(R.id.btn_no_login_login);
+		btnSignup = (TextView) view.findViewById(R.id.btn_no_login_signup);
 
 		btnLogin.setOnClickListener(this);
 		btnSignup.setOnClickListener(this);
@@ -125,7 +124,7 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 	{
 		super.onResume();
 		// ActionBar Setting
-		mHostActivity.setActionBar(R.string.actionbar_title_credit_frag);
+		mHostActivity.setActionBar(getString(R.string.actionbar_title_credit_frag), false);
 
 		lockUI();
 		mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, mHostActivity));
@@ -144,7 +143,7 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 				int userIdx = Integer.parseInt(idx);
 				String userIdxStr = String.format("%07d", userIdx);
 
-				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.getDefault());
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
 				Date date = new Date();
 				String strDate = dateFormat.format(date);
 
@@ -212,6 +211,10 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
+			if (getActivity() == null)
+			{
+				return;
+			}
 
 			try
 			{
@@ -241,6 +244,10 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
+			if (getActivity() == null)
+			{
+				return;
+			}
 
 			//적립금 내역리스트 
 			try
@@ -287,6 +294,10 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
+			if (getActivity() == null)
+			{
+				return;
+			}
 
 			try
 			{
@@ -325,6 +336,11 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 		@Override
 		public void onResponse(String url, String response)
 		{
+			if (getActivity() == null)
+			{
+				return;
+			}
+
 			String result = null;
 
 			if (false == TextUtils.isEmpty(response))
@@ -380,6 +396,10 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 		@Override
 		public void onResponse(String url, String response)
 		{
+			if (getActivity() == null)
+			{
+				return;
+			}
 
 			try
 			{

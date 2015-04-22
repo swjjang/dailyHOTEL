@@ -20,7 +20,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -39,11 +38,13 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
-import fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable;
 import uk.co.senab.actionbarpulltorefresh.library.sdk.Compat;
 
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+/**
+ * Default Header Transformer.
+ */
 public class DefaultHeaderTransformer extends HeaderTransformer {
 
     public static final int PROGRESS_BAR_STYLE_INSIDE = 0;
@@ -101,6 +102,7 @@ public class DefaultHeaderTransformer extends HeaderTransformer {
         // Apply any custom ProgressBar colors and corner radius
         applyProgressBarSettings();
 
+        // FIXME: I do not like this call here
         onReset();
     }
 
@@ -227,6 +229,7 @@ public class DefaultHeaderTransformer extends HeaderTransformer {
     public void setProgressBarColor(int color) {
         if (color != mProgressDrawableColor) {
             mProgressDrawableColor = color;
+            mHeaderProgressBar.setSmoothProgressDrawableColor(color);
             applyProgressBarSettings();
         }
     }
@@ -325,7 +328,7 @@ public class DefaultHeaderTransformer extends HeaderTransformer {
         mProgressBarStyle = styleAttrs.getInt(
                 R.styleable.PullToRefreshHeader_ptrProgressBarStyle, PROGRESS_BAR_STYLE_OUTSIDE);
 
-        if(styleAttrs.hasValue(R.styleable.PullToRefreshHeader_ptrProgressBarHeight)) {
+        if (styleAttrs.hasValue(R.styleable.PullToRefreshHeader_ptrProgressBarHeight)) {
             mProgressBarHeight = styleAttrs.getDimensionPixelSize(
                     R.styleable.PullToRefreshHeader_ptrProgressBarHeight, mProgressBarHeight);
         }
@@ -340,6 +343,14 @@ public class DefaultHeaderTransformer extends HeaderTransformer {
         }
         if (styleAttrs.hasValue(R.styleable.PullToRefreshHeader_ptrReleaseText)) {
             mReleaseLabel = styleAttrs.getString(R.styleable.PullToRefreshHeader_ptrReleaseText);
+        }
+
+        //SmoothProgressBar Style
+        if (styleAttrs.hasValue(R.styleable.PullToRefreshHeader_ptrSmoothProgressBarStyle)) {
+            int spbStyleRes = styleAttrs.getResourceId(R.styleable.PullToRefreshHeader_ptrSmoothProgressBarStyle, 0);
+            if (spbStyleRes != 0)
+                mHeaderProgressBar.applyStyle(spbStyleRes);
+
         }
 
         styleAttrs.recycle();
@@ -363,15 +374,6 @@ public class DefaultHeaderTransformer extends HeaderTransformer {
 
     private void applyProgressBarSettings() {
         if (mHeaderProgressBar != null) {
-            final int strokeWidth = mHeaderProgressBar.getResources()
-                    .getDimensionPixelSize(R.dimen.ptr_progress_bar_stroke_width);
-
-            mHeaderProgressBar.setIndeterminateDrawable(
-                    new SmoothProgressDrawable.Builder(mHeaderProgressBar.getContext())
-                            .color(mProgressDrawableColor)
-//                            .width(strokeWidth)
-                            .build());
-
             ShapeDrawable shape = new ShapeDrawable();
             shape.setShape(new RectShape());
             shape.getPaint().setColor(mProgressDrawableColor);
@@ -435,11 +437,11 @@ public class DefaultHeaderTransformer extends HeaderTransformer {
     }
 
     protected static TypedArray obtainStyledAttrsFromThemeAttr(Context context, int themeAttr,
-            int[] styleAttrs) {
+                                                               int[] styleAttrs) {
         // Need to get resource id of style pointed to from the theme attr
         TypedValue outValue = new TypedValue();
         context.getTheme().resolveAttribute(themeAttr, outValue, true);
-        final int styleResId =  outValue.resourceId;
+        final int styleResId = outValue.resourceId;
 
         // Now return the values (from styleAttrs) from the style
         return context.obtainStyledAttributes(styleResId, styleAttrs);

@@ -16,16 +16,11 @@
 
 package uk.co.senab.actionbarpulltorefresh.library;
 
-import java.util.WeakHashMap;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.HeaderViewListener;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
-import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.ViewDelegate;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.os.Build;
@@ -38,12 +33,17 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
+import java.util.WeakHashMap;
+
+import uk.co.senab.actionbarpulltorefresh.library.listeners.HeaderViewListener;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.ViewDelegate;
+
+@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class PullToRefreshAttacher {
 
     private static final boolean DEBUG = false;
     private static final String LOG_TAG = "PullToRefreshAttacher";
-    
-    private static final String STATUS_BAR_HEIGHT_RES_NAME = "status_bar_height";
 
     /* Member Variables */
 
@@ -74,8 +74,9 @@ public class PullToRefreshAttacher {
     private final int[] mViewLocationResult = new int[2];
     private final Rect mRect = new Rect();
 
-    @TargetApi(Build.VERSION_CODES.CUPCAKE)
-	protected PullToRefreshAttacher(Activity activity, Options options) {
+    private final AddHeaderViewRunnable mAddHeaderViewRunnable;
+
+    protected PullToRefreshAttacher(Activity activity, Options options) {
         if (activity == null) {
             throw new IllegalArgumentException("activity cannot be null");
         }
@@ -123,18 +124,8 @@ public class PullToRefreshAttacher {
         mHeaderTransformer.onViewCreated(activity, mHeaderView);
 
         // Now HeaderView to Activity
-        decorView.post(new Runnable() {
-            @Override
-            public void run() {
-                if (decorView.getWindowToken() != null) {
-                    // The Decor View has a Window Token, so we can add the HeaderView!
-                    addHeaderViewToActivity(mHeaderView);
-                } else {
-                    // The Decor View doesn't have a Window Token yet, post ourselves again...
-                    decorView.post(this);
-                }
-            }
-        });
+        mAddHeaderViewRunnable = new AddHeaderViewRunnable();
+        mAddHeaderViewRunnable.start();
     }
 
     /**
@@ -282,7 +273,7 @@ public class PullToRefreshAttacher {
                     final float yDiff = y - mInitialMotionY;
                     final float xDiff = x - mInitialMotionX;
 
-                    if (yDiff > xDiff && yDiff > mTouchSlop) {
+                    if (Math.abs(yDiff) > Math.abs(xDiff) && yDiff > mTouchSlop) {
                         mIsBeingDragged = true;
                         onPullStarted(y);
                     } else if (yDiff < -mTouchSlop) {
@@ -483,8 +474,7 @@ public class PullToRefreshAttacher {
 
     protected EnvironmentDelegate createDefaultEnvironmentDelegate() {
         return new EnvironmentDelegate() {
-            @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-			@Override
+            @Override
             public Context getContextForInflater(Activity activity) {
                 Context context = null;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
@@ -592,24 +582,11 @@ public class PullToRefreshAttacher {
         }
         return mIsDestroyed;
     }
-    
-    private int getInternalDimensionSize(Resources res, String key) {
-        int result = 0;
-        int resourceId = res.getIdentifier(key, "dimen", "android");
-        if (resourceId > 0) {
-            result = res.getDimensionPixelSize(resourceId);
-        }
-        return result;
-    }
 
-    @TargetApi(Build.VERSION_CODES.CUPCAKE)
-	protected void addHeaderViewToActivity(View headerView) {
+    protected void addHeaderViewToActivity(View headerView) {
         // Get the Display Rect of the Decor View
         mActivity.getWindow().getDecorView().getWindowVisibleDisplayFrame(mRect);
-        
-        Resources res = mActivity.getResources();
-        int statusBarHeight = getInternalDimensionSize(res, STATUS_BAR_HEIGHT_RES_NAME);
-        
+
         // Honour the requested layout params
         int width = WindowManager.LayoutParams.MATCH_PARENT;
         int height = WindowManager.LayoutParams.WRAP_CONTENT;
@@ -622,10 +599,11 @@ public class PullToRefreshAttacher {
         // Create LayoutParams for adding the View as a panel
         WindowManager.LayoutParams wlp = new WindowManager.LayoutParams(width, height,
                 WindowManager.LayoutParams.TYPE_APPLICATION_PANEL,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE |
+                        WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
                 PixelFormat.TRANSLUCENT);
         wlp.x = 0;
-        wlp.y = statusBarHeight;
+        wlp.y = mRect.top;
         wlp.gravity = Gravity.TOP;
 
         // Workaround for Issue #182
@@ -633,14 +611,10 @@ public class PullToRefreshAttacher {
         mActivity.getWindowManager().addView(headerView, wlp);
     }
 
-    @TargetApi(Build.VERSION_CODES.CUPCAKE)
-	protected void updateHeaderViewPosition(View headerView) {
+    protected void updateHeaderViewPosition(View headerView) {
         // Refresh the Display Rect of the Decor View
         mActivity.getWindow().getDecorView().getWindowVisibleDisplayFrame(mRect);
-        
-        Resources res = mActivity.getResources();
-        int statusBarHeight = getInternalDimensionSize(res, STATUS_BAR_HEIGHT_RES_NAME);
-        
+
         WindowManager.LayoutParams wlp = null;
         if (headerView.getLayoutParams() instanceof WindowManager.LayoutParams) {
             wlp = (WindowManager.LayoutParams) headerView.getLayoutParams();
@@ -649,12 +623,14 @@ public class PullToRefreshAttacher {
         }
 
         if (wlp != null && wlp.y != mRect.top) {
-            wlp.y = statusBarHeight;
+            wlp.y = mRect.top;
             mActivity.getWindowManager().updateViewLayout(headerView, wlp);
         }
     }
 
     protected void removeHeaderViewFromActivity(View headerView) {
+        mAddHeaderViewRunnable.finish();
+
         if (headerView.getWindowToken() != null) {
             mActivity.getWindowManager().removeViewImmediate(headerView);
         }
@@ -666,4 +642,31 @@ public class PullToRefreshAttacher {
             minimizeHeader();
         }
     };
+
+    private class AddHeaderViewRunnable implements Runnable {
+        @Override
+        public void run() {
+            if (isDestroyed()) return;
+
+            if (getDecorView().getWindowToken() != null) {
+                // The Decor View has a Window Token, so we can add the HeaderView!
+                addHeaderViewToActivity(mHeaderView);
+            } else {
+                // The Decor View doesn't have a Window Token yet, post ourselves again...
+                start();
+            }
+        }
+
+        public void start() {
+            getDecorView().post(this);
+        }
+
+        public void finish() {
+            getDecorView().removeCallbacks(this);
+        }
+
+        private View getDecorView() {
+            return getAttachedActivity().getWindow().getDecorView();
+        }
+    }
 }

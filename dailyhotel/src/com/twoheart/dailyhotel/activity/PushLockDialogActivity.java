@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -14,7 +13,6 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.WakeLock;
 
 /**
@@ -75,7 +73,8 @@ public class PushLockDialogActivity extends Activity implements OnClickListener,
 
 		WakeLock.releaseWakeLock();
 
-		GlobalFont.apply((ViewGroup) getWindow().getDecorView());
+		// pinkred_font
+		//		GlobalFont.apply((ViewGroup) getWindow().getDecorView());
 
 	}
 

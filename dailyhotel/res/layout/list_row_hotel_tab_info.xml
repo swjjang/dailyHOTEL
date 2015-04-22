@@ -22,7 +22,7 @@
                 android:layout_gravity="center"
                 android:src="@drawable/img_ic_ribbon" />
 
-            <TextView
+            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                 android:id="@+id/tv_list_row_hotel_tab_info_number"
                 android:layout_marginBottom="2dp"
                 android:layout_width="wrap_content"
@@ -40,7 +40,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-        <TextView
+        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
             android:id="@+id/tv_hotel_tab_info_subject"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -2,8 +2,8 @@ package com.twoheart.dailyhotel.model;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import android.os.Parcel;
@@ -14,20 +14,20 @@ import com.twoheart.dailyhotel.util.ExLog;
 
 public class SaleTime implements Constants, Parcelable
 {
+	public static final long SECONDS_IN_A_DAY = 3600 * 24;
 
 	private Date mOpenTime;
 	private Date mCloseTime;
 	private Date mCurrentTime;
+	private int mDayOfDays; // 데이즈 날짜. curentTime으로 부터 몇일.
 
-	private static final Calendar calendar = Calendar.getInstance();
-	private static final SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
+	private static final SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd HH:mm:ss", Locale.KOREA);
 
 	public SaleTime()
 	{
 		super();
 		//		TimeZone.get
 		format.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
-
 	}
 
 	public SaleTime(Parcel in)
@@ -76,22 +76,78 @@ public class SaleTime implements Constants, Parcelable
 		}
 	}
 
-	public void setCurrentTime(String currentTime)
+	public void setCurrentTime(long currentTime)
 	{
-		try
-		{
-			mCurrentTime = new Date(Long.parseLong(currentTime));
-			calendar.setTime(mCurrentTime);
+		mCurrentTime = new Date(currentTime);
+	}
 
-		} catch (NumberFormatException e)
+	public Date getLogicaltime()
+	{
+		long logicalTime = getCurrentTime() + SECONDS_IN_A_DAY * 1000 * mDayOfDays;
+
+		ExLog.d("Current Time : " + mCurrentTime.toString() + ", mOpenTime : " + mOpenTime.toString());
+
+		// 현재 시간이 오픈 시간 보다 작아지면.
+		if (mCurrentTime.compareTo(mOpenTime) < 0)
 		{
-			ExLog.e(e.toString());
+			try
+			{
+				// 다음 날이 되면 오늘 정시에서 클로즈 시간을 뺀다.
+				String todayString = SaleTime.attachCurrentDate(getCurrentYear(), getCurrentMonth(), getCurrentDay(), "00:00:00");
+				Date onTimeDate = SaleTime.stringToDate(todayString);
+
+				ExLog.d("On Time : " + onTimeDate.toString() + ", Close Time :" + mCloseTime.toString());
+
+				logicalTime += (onTimeDate.getTime() - getCloseTime());
+			} catch (Exception e)
+			{
+				ExLog.e(e.toString());
+			}
 		}
+
+		return new Date(logicalTime);
+	}
+
+	public String getLogicalDayOftheWeek()
+	{
+		return getTimezonedDateFormat("EEE").format(getLogicaltime());
+	}
+
+	public String getLogicalDay()
+	{
+		return getTimezonedDateFormat("d").format(getLogicaltime());
+	}
+
+	public String getLogicalDateFormat(String format)
+	{
+		return getTimezonedDateFormat(format).format(getLogicaltime());
+	}
+
+	public Date getRequestHotelDate()
+	{
+		return new Date(mCurrentTime.getTime() + SECONDS_IN_A_DAY * mDayOfDays * 1000);
+	}
+
+	public String getRequestHotelDateFormat(String format)
+	{
+		return getTimezonedDateFormat(format).format(getRequestHotelDate());
+	}
+
+	public SaleTime getClone(int nextDay)
+	{
+		SaleTime nextSaleTime = new SaleTime();
+
+		nextSaleTime.mDayOfDays = nextDay;
+		nextSaleTime.mOpenTime = new Date(mOpenTime.getTime());
+		nextSaleTime.mCloseTime = new Date(mCloseTime.getTime());
+		nextSaleTime.mCurrentTime = new Date(mCurrentTime.getTime());
+
+		return nextSaleTime;
 	}
 
 	public SimpleDateFormat getTimezonedDateFormat(String datePattern)
 	{
-		SimpleDateFormat sFormat = new SimpleDateFormat(datePattern);
+		SimpleDateFormat sFormat = new SimpleDateFormat(datePattern, Locale.KOREA);
 		sFormat.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
 		return sFormat;
 	}
@@ -108,10 +164,20 @@ public class SaleTime implements Constants, Parcelable
 		//		return new SimpleDateFormat("dd").format(mCurrentTime);
 	}
 
+	public String getCurrentDayEx()
+	{
+		return getTimezonedDateFormat("d").format(mCurrentTime);
+	}
+
 	public String getCurrentYear()
 	{
 		return getTimezonedDateFormat("yy").format(mCurrentTime);
 		//		return new SimpleDateFormat("yy").format(mCurrentTime);
+	}
+
+	public String getCurrentDayOftheWeek()
+	{
+		return getTimezonedDateFormat("EEE").format(mCurrentTime);
 	}
 
 	public String getCurrentHour()
@@ -131,7 +197,12 @@ public class SaleTime implements Constants, Parcelable
 
 	public Long getCurrentTime()
 	{
-		return calendar.getTimeInMillis();
+		return mCurrentTime.getTime();
+	}
+
+	public String getCurrentDate()
+	{
+		return getTimezonedDateFormat("M월 dd일 EEEE").format(mCurrentTime);
 	}
 
 	public Long getOpenTime()
@@ -183,7 +254,7 @@ public class SaleTime implements Constants, Parcelable
 		dest.writeValue(mOpenTime);
 		dest.writeValue(mCloseTime);
 		dest.writeValue(mCurrentTime);
-
+		dest.writeInt(mDayOfDays);
 	}
 
 	private void readFromParcel(Parcel in)
@@ -191,6 +262,7 @@ public class SaleTime implements Constants, Parcelable
 		mOpenTime = (Date) in.readValue(Date.class.getClassLoader());
 		mCloseTime = (Date) in.readValue(Date.class.getClassLoader());
 		mCurrentTime = (Date) in.readValue(Date.class.getClassLoader());
+		mDayOfDays = in.readInt();
 	}
 
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()

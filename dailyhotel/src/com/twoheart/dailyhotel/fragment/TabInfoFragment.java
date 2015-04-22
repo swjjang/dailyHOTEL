@@ -28,8 +28,6 @@ import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
 public class TabInfoFragment extends BaseFragment
 {
-
-	private static final String TAG = "HotelTabInfoFragment";
 	private static final String KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL = "hotel_detail";
 
 	private HotelDetail mHotelDetail;
@@ -67,9 +65,13 @@ public class TabInfoFragment extends BaseFragment
 		layout = (LinearLayout) view.findViewById(R.id.layout_hotel_tab_info);
 
 		infoViewCount = 1;
-		for (String key : mHotelDetail.getSpecification().keySet())
+
+		if (mHotelDetail != null)
 		{
-			addView(view, key, mHotelDetail.getSpecification().get(key));
+			for (String key : mHotelDetail.getSpecification().keySet())
+			{
+				addView(view, key, mHotelDetail.getSpecification().get(key));
+			}
 		}
 
 		return view;

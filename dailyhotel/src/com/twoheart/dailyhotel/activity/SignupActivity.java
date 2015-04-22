@@ -15,6 +15,7 @@ package com.twoheart.dailyhotel.activity;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,7 +30,6 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,13 +44,14 @@ import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class SignupActivity extends BaseActivity implements OnClickListener
 {
 
 	private EditText etEmail, etName, etPhone, etPwd, etRecommender;
 	private TextView tvTerm, tvPrivacy;
-	private Button btnSignUp;
+	private TextView btnSignUp;
 
 	private Map<String, String> signupParams;
 
@@ -60,8 +61,9 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setActionBar(R.string.actionbar_title_signup_activity);
+
 		setContentView(R.layout.activity_signup);
+		setActionBar(R.string.actionbar_title_signup_activity);
 
 		etPwd = (EditText) findViewById(R.id.et_signup_pwd);
 		etEmail = (EditText) findViewById(R.id.et_signup_email);
@@ -70,7 +72,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 		etPhone = (EditText) findViewById(R.id.et_signup_phone);
 		tvTerm = (TextView) findViewById(R.id.tv_signup_agreement);
 		tvPrivacy = (TextView) findViewById(R.id.tv_signup_personal_info);
-		btnSignUp = (Button) findViewById(R.id.btn_signup);
+		btnSignUp = (TextView) findViewById(R.id.btn_signup);
 
 		tvTerm.setOnClickListener(this);
 		tvPrivacy.setOnClickListener(this);
@@ -94,12 +96,13 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 	{
 		TelephonyManager telManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 		String phoneNum = telManager.getLine1Number();
-		
-		if(TextUtils.isEmpty(phoneNum) == false)
+
+		if (TextUtils.isEmpty(phoneNum) == false)
 		{
 			etPhone.setText(phoneNum);
 			etEmail.requestFocus();
 		}
+
 	}
 
 	public boolean checkInput()
@@ -146,20 +149,20 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 			// 필수 입력 check
 			if (!checkInput())
 			{
-				showToast(getString(R.string.toast_msg_please_input_required_infos), Toast.LENGTH_SHORT, true);
+				DailyToast.showToast(SignupActivity.this, R.string.toast_msg_please_input_required_infos, Toast.LENGTH_SHORT);
 				return;
 			}
 
 			// email check
 			if (!isValidEmail(etEmail.getText().toString()))
 			{
-				showToast(getString(R.string.toast_msg_wrong_email_address), Toast.LENGTH_SHORT, true);
+				DailyToast.showToast(SignupActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
 				return;
 			}
 
 			if (etPwd.length() < 4)
 			{
-				showToast(getString(R.string.toast_msg_please_input_password_more_than_4chars), Toast.LENGTH_SHORT, true);
+				DailyToast.showToast(SignupActivity.this, R.string.toast_msg_please_input_password_more_than_4chars, Toast.LENGTH_SHORT);
 				return;
 			}
 			lockUI();
@@ -169,7 +172,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 			signupParams.put("pw", etPwd.getText().toString());
 			signupParams.put("name", etName.getText().toString());
 			signupParams.put("phone", etPhone.getText().toString());
-			
+
 			TelephonyManager tManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 			signupParams.put("device", tManager.getDeviceId());
 			signupParams.put("marketType", RELEASE_STORE.getName());
@@ -266,7 +269,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 				} else
 				{
 					unLockUI();
-					showToast(msg, Toast.LENGTH_LONG, true);
+					DailyToast.showToast(SignupActivity.this, msg, Toast.LENGTH_LONG);
 				}
 
 			} catch (Exception e)
@@ -325,7 +328,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 				int userIdx = response.getInt("idx");
 				String userIdxStr = String.format("%07d", userIdx);
 
-				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.getDefault());
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
 				Date date = new Date();
 				String strDate = dateFormat.format(date);
 
@@ -337,7 +340,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 				props.put("method", "email");
 				mMixpanel.track("signup", props);
 
-				showToast(getString(R.string.toast_msg_success_to_signup), Toast.LENGTH_LONG, false);
+				DailyToast.showToast(SignupActivity.this, R.string.toast_msg_success_to_signup, Toast.LENGTH_LONG);
 				finish();
 			} catch (Exception e)
 			{

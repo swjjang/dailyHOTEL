@@ -24,15 +24,14 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
 		this(method, url, errorListener);
 
 		mParameters = parameters;
-		setRetryPolicy(new DefaultRetryPolicy(REQUEST_EXPIRE_JUDGE, REQUEST_MAX_RETRY, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 	}
 
 	private DailyHotelRequest(int method, String url, ErrorListener listener)
 	{
 		super(method, getUrlDecoderEx(url), listener);
+		setTag(listener);
 
 		setRetryPolicy(new DefaultRetryPolicy(REQUEST_EXPIRE_JUDGE, REQUEST_MAX_RETRY, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-		setTag(listener);
 
 		if (VolleyHttpClient.hasActiveNetwork() == false)
 		{
@@ -102,11 +101,11 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
 
 	public static String getUrlDecoderEx(String url)
 	{
-		if(Constants.UNENCRYPTED_URL == true)
+		if (Constants.UNENCRYPTED_URL == true)
 		{
 			return url;
 		}
-		
+
 		String param = null;
 		String encoderUrl = null;
 
@@ -182,9 +181,9 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
 		return decodeUrl;
 	}
 
-//			public static void makeUrlEncoder()
-//			{
-//				String test = null;
+	//		public static void makeUrlEncoder()
+	//		{
+	//			String test = null;
 	//	
 	//	test = DailyHotelRequest.getUrlEncoder("http://restful.dailyhotel.kr/goodnight/");
 	//	test = DailyHotelRequest.getUrlEncoder("http://ec2.global.dailyhotel.kr/goodnight/");
@@ -203,8 +202,8 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
 	//		test = DailyHotelRequest.getUrlEncoder("user/sendpw");
 	//		test = DailyHotelRequest.getUrlEncoder("user/findrnd");
 	//		test = DailyHotelRequest.getUrlEncoder("user/update");
-	//			test = DailyHotelRequest.getUrlEncoder("user/check/email_auth");
-//				test = DailyHotelRequest.getUrlEncoder("user/change_pw");
+	//		test = DailyHotelRequest.getUrlEncoder("user/check/email_auth");
+	//		test = DailyHotelRequest.getUrlEncoder("user/change_pw");
 	//		
 	//		test = DailyHotelRequest.getUrlEncoder("reserv/session/req");
 	//		test = DailyHotelRequest.getUrlEncoder("reserv/session/bonus");
@@ -225,6 +224,12 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
 	//		
 	//		test = DailyHotelRequest.getUrlEncoder("board/json/faq");
 	//		test = DailyHotelRequest.getUrlEncoder("board/json/notice");
+
+	//	test = DailyHotelRequest.getUrlEncoder("api/common/time");
+	//		test = DailyHotelRequest.getUrlEncoder("api/sale");
+	//		test = DailyHotelRequest.getUrlEncoder("api/reserv/checkinout");
+	//		test = DailyHotelRequest.getUrlEncoder("api/reserv/mine");
+
 	//		
 	//		test = DailyHotelRequest.getUrlEncoder("site/get");
 	//		test = DailyHotelRequest.getUrlEncoder("site/get/country");
@@ -235,5 +240,5 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
 	//		test = DailyHotelRequest.getUrlEncoder("http://policies.dailyhotel.co.kr/terms/");
 	//		test = DailyHotelRequest.getUrlEncoder("http://policies.dailyhotel.co.kr/about/");
 	//		
-//			}
+	//		}
 }

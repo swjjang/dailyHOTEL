@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -13,25 +12,24 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class VersionActivity extends BaseActivity implements OnClickListener
 {
-
-	private static final String TAG = "VersionActivity";
-
 	private TextView tvCurrentVersion, tvNewVersion;
-	private Button btnUpdate;
+	private TextView btnUpdate;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setActionBar(R.string.actionbar_title_version_activity);
+
 		setContentView(R.layout.activity_version);
+		setActionBar(R.string.actionbar_title_version_activity);
 
 		tvCurrentVersion = (TextView) findViewById(R.id.tv_version_cur);
 		tvNewVersion = (TextView) findViewById(R.id.tv_version_new);
-		btnUpdate = (Button) findViewById(R.id.btn_version_update);
+		btnUpdate = (TextView) findViewById(R.id.btn_version_update);
 		btnUpdate.setOnClickListener(this);
 
 		getVersionInfo();
@@ -68,7 +66,7 @@ public class VersionActivity extends BaseActivity implements OnClickListener
 					startActivity(marketLaunch);
 				} else
 				{
-					showToast(getString(R.string.toast_msg_already_latest_version), Toast.LENGTH_SHORT, true);
+					DailyToast.showToast(VersionActivity.this, R.string.toast_msg_already_latest_version, Toast.LENGTH_SHORT);
 				}
 
 				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestVersionUpdate", this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName, null);

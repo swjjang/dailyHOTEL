@@ -50,4 +50,21 @@ public class GlobalFont
 
 	}
 
+	public static void apply(View view)
+	{
+		if (view instanceof TextView)
+		{
+			TextView fontTextView = ((TextView) view);
+
+			fontTextView.setPaintFlags(((TextView) view).getPaintFlags() | Paint.SUBPIXEL_TEXT_FLAG);
+
+			if (fontTextView.getTypeface() != null && fontTextView.getTypeface().equals(DailyHotel.getBoldTypeface()))
+			{
+				return;
+			}
+
+			fontTextView.setTypeface(DailyHotel.getTypeface());
+			fontTextView.invalidate();
+		}
+	}
 }

@@ -7,9 +7,8 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
-public class LineBreakByWordTextView extends TextView
+public class LineBreakByWordTextView extends DailyCustomFontTextView
 {
 	private int mAvailableWidth = 0;
 	private Paint mPaint;

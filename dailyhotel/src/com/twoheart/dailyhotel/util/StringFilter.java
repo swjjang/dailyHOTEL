@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 /**
  * @description : Inputfilter class to constrain the EditText changes
@@ -20,7 +21,6 @@ public class StringFilter
 {
 	private static final int ALLOW_ALPHANUMERIC = 0;
 	private static final int ALLOW_ALPHANUMERIC_HANGUL = 1;
-	private static final int TOAST_LELNGTH = 400;
 
 	private BaseActivity mActivity;
 
@@ -73,11 +73,11 @@ public class StringFilter
 			{
 				if (mode == ALLOW_ALPHANUMERIC)
 				{
-					mActivity.showToast(mActivity.getString(R.string.toast_msg_input_error_alphanum), Toast.LENGTH_SHORT, false);
+					DailyToast.showToast(mActivity, mActivity.getString(R.string.toast_msg_input_error_alphanum), Toast.LENGTH_SHORT);
 
 				} else
 				{
-					mActivity.showToast(mActivity.getString(R.string.toast_msg_input_error_alphanumeric_hangul), Toast.LENGTH_SHORT, false);
+					DailyToast.showToast(mActivity, mActivity.getString(R.string.toast_msg_input_error_alphanumeric_hangul), Toast.LENGTH_SHORT);
 				}
 
 				keepOriginal = false;
@@ -102,19 +102,19 @@ public class StringFilter
 	}
 
 	// Shows toast with specify delay that is shorter than Toast.LENGTH_SHORT
-//	private void showToast(String msg)
-//	{
-//		final Toast toast = Toast.makeText(context.getApplicationContext(), msg, Toast.LENGTH_LONG);
-//		toast.show();
-//
-//		Handler handler = new Handler();
-//		handler.postDelayed(new Runnable()
-//		{
-//			@Override
-//			public void run()
-//			{
-//				toast.cancel();
-//			}
-//		}, TOAST_LELNGTH);
-//	}
+	//	private void showToast(String msg)
+	//	{
+	//		final Toast toast = Toast.makeText(context.getApplicationContext(), msg, Toast.LENGTH_LONG);
+	//		toast.show();
+	//
+	//		Handler handler = new Handler();
+	//		handler.postDelayed(new Runnable()
+	//		{
+	//			@Override
+	//			public void run()
+	//			{
+	//				toast.cancel();
+	//			}
+	//		}, TOAST_LELNGTH);
+	//	}
 }

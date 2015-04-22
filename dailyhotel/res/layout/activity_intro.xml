@@ -21,13 +21,14 @@
         android:layout_alignParentBottom="true"
         android:background="@drawable/shape_intro_bottom_bar_border" >
 
-        <TextView
+        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
             android:id="@+id/tv_skip"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="14dp"
+            android:gravity="center_vertical"
             android:text="@string/guide_btn_skip"
             android:textColor="@android:color/black"
             android:textSize="18dp" />
@@ -46,14 +47,14 @@
         <LinearLayout
             android:id="@+id/ll_intro_start"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="14dp"
             android:gravity="center_vertical"
             android:visibility="gone" >
 
-            <TextView
+            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                 android:id="@+id/tv_start"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

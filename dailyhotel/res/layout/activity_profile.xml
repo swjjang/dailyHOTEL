@@ -2,11 +2,25 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/activity_background" >
+    android:background="@color/white" >
+
+    <include
+        android:id="@+id/toolbar_actionbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        layout="@layout/toolbar_default" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignBaseline="@id/toolbar_actionbar"
+        android:layout_alignBottom="@id/toolbar_actionbar"
+        android:background="@color/actionbar_underline" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar_actionbar"
         android:orientation="vertical" >
 
         <LinearLayout
@@ -23,7 +37,7 @@
                 android:paddingLeft="13dp"
                 android:paddingTop="20dp" >
 
-                <TextView
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
@@ -46,7 +60,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal" >
 
-                    <TextView
+                    <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.3"
@@ -55,7 +69,7 @@
                         android:textColor="@drawable/selector_textview_textcolor"
                         android:textSize="15dp" />
 
-                    <TextView
+                    <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                         android:id="@+id/tv_profile_email"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -72,203 +86,206 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/shape_section_background"
-                    android:orientation="horizontal"
+            <RelativeLayout
+                android:id="@+id/profileSectionBarLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/shape_section_background"
+                android:orientation="horizontal"
+                android:paddingLeft="13dp" >
+
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
                     android:paddingBottom="9dp"
-                    android:paddingLeft="13dp"
+                    android:paddingTop="20dp"
+                    android:text="@string/act_profile_user"
+                    android:textColor="@color/textView_textColor_section"
+                    android:textSize="12.5dp" />
+
+                <LinearLayout
+                    android:id="@+id/ll_profile_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:paddingBottom="9dp"
+                    android:paddingLeft="20dp"
                     android:paddingRight="13dp"
                     android:paddingTop="20dp" >
 
-                    <TextView
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:text="@string/act_profile_user"
-                        android:textColor="@color/textView_textColor_section"
+                        android:layout_gravity="center_vertical"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/img_ic_edit" />
+
+                    <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                        android:id="@+id/tv_profile_edit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/act_profile_modify"
+                        android:textColor="@color/dh_theme_color"
                         android:textSize="12.5dp" />
-
-                    <LinearLayout
-                        android:id="@+id/ll_profile_edit"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true" >
-	                    <ImageView
-	                        android:layout_width="wrap_content"
-	                        android:layout_height="wrap_content"
-	                        android:layout_toLeftOf="@+id/tv_profile_edit"
-	                        android:adjustViewBounds="true"
-	                        android:layout_gravity="center_vertical"
-	                        android:src="@drawable/img_ic_edit" />
-	
-	                    <TextView
-	                        android:id="@+id/tv_profile_edit"
-	                        android:layout_width="wrap_content"
-	                        android:layout_height="wrap_content"
-	                        android:text="@string/act_profile_modify"
-	                       	android:layout_gravity="center_vertical"
-	                        android:textColor="@color/dh_theme_color"
-	                        android:textSize="12.5dp" />
-                    </LinearLayout>
-
-                </RelativeLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingBottom="20dp"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:paddingTop="20dp" >
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
-
-                    <LinearLayout
-                        android:id="@+id/ll_profile_info_label"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical" >
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal" >
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="0.3"
-                                android:gravity="center_vertical"
-                                android:text="@string/act_profile_name"
-                                android:textColor="@drawable/selector_textview_textcolor"
-                                android:textSize="15dp" />
-
-                            <TextView
-                                android:id="@+id/tv_profile_name"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="0.7"
-                                android:gravity="right|center_vertical"
-                                android:textColor="@drawable/selector_textview_textcolor"
-                                android:textSize="15dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:orientation="horizontal" >
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="0.3"
-                                android:gravity="center_vertical"
-                                android:text="@string/act_profile_contact"
-                                android:textColor="@drawable/selector_textview_textcolor"
-                                android:textSize="15dp" />
-
-                            <TextView
-                                android:id="@+id/tv_profile_phone"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="0.7"
-                                android:gravity="right|center_vertical"
-                                android:textColor="@drawable/selector_textview_textcolor"
-                                android:textSize="15dp" />
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/ll_profile_info_editable"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:visibility="gone" >
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal" >
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="0.3"
-                                android:gravity="center_vertical"
-                                android:text="@string/act_profile_name"
-                                android:textColor="@drawable/selector_textview_textcolor"
-                                android:textSize="15dp" />
-
-                            <EditText
-                                android:id="@+id/et_profile_name"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="0.7"
-                                android:gravity="right|center_vertical"
-                                android:hint="@string/act_profile_input_name"
-                                android:inputType="text"
-                                android:maxLength="20"
-                                android:singleLine="true"
-                                android:textColor="@drawable/selector_textview_textcolor"
-                                android:textSize="15dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal" >
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="0.3"
-                                android:gravity="center_vertical"
-                                android:text="@string/act_profile_contact"
-                                android:textColor="@drawable/selector_textview_textcolor"
-                                android:textSize="15dp" />
-
-                            <EditText
-                                android:id="@+id/et_profile_phone"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="0.7"
-                                android:gravity="right|center_vertical"
-                                android:hint="@string/act_profile_input_contact"
-                                android:inputType="phone"
-                                android:maxLength="20"
-                                android:singleLine="true"
-                                android:textColor="@drawable/selector_textview_textcolor"
-                                android:textSize="15dp" />
-                        </LinearLayout>
-                    </LinearLayout>
-                </FrameLayout>
-            </LinearLayout>
+                </LinearLayout>
+            </RelativeLayout>
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="20dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="20dp" >
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <LinearLayout
+                    android:id="@+id/ll_profile_info_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical" >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal" >
+
+                        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.3"
+                            android:gravity="center_vertical"
+                            android:text="@string/act_profile_name"
+                            android:textColor="@drawable/selector_textview_textcolor"
+                            android:textSize="15dp" />
+
+                        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                            android:id="@+id/tv_profile_name"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.7"
+                            android:gravity="right|center_vertical"
+                            android:textColor="@drawable/selector_textview_textcolor"
+                            android:textSize="15dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal" >
+
+                        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.3"
+                            android:gravity="center_vertical"
+                            android:text="@string/act_profile_contact"
+                            android:textColor="@drawable/selector_textview_textcolor"
+                            android:textSize="15dp" />
+
+                        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                            android:id="@+id/tv_profile_phone"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.7"
+                            android:gravity="right|center_vertical"
+                            android:textColor="@drawable/selector_textview_textcolor"
+                            android:textSize="15dp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_profile_info_editable"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:visibility="gone" >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal" >
+
+                        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.3"
+                            android:gravity="center_vertical"
+                            android:text="@string/act_profile_name"
+                            android:textColor="@drawable/selector_textview_textcolor"
+                            android:textSize="15dp" />
+
+                        <com.twoheart.dailyhotel.widget.DailyCustomFontEditText
+                            android:id="@+id/et_profile_name"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.7"
+                            android:gravity="right|center_vertical"
+                            android:hint="@string/act_profile_input_name"
+                            android:inputType="text"
+                            android:maxLength="20"
+                            android:singleLine="true"
+                            android:textColor="@drawable/selector_textview_textcolor"
+                            android:textSize="15dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal" >
+
+                        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.3"
+                            android:gravity="center_vertical"
+                            android:text="@string/act_profile_contact"
+                            android:textColor="@drawable/selector_textview_textcolor"
+                            android:textSize="15dp" />
+
+                        <com.twoheart.dailyhotel.widget.DailyCustomFontEditText
+                            android:id="@+id/et_profile_phone"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.7"
+                            android:gravity="right|center_vertical"
+                            android:hint="@string/act_profile_input_contact"
+                            android:inputType="phone"
+                            android:maxLength="20"
+                            android:singleLine="true"
+                            android:textColor="@drawable/selector_textview_textcolor"
+                            android:textSize="15dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </FrameLayout>
+        </LinearLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_marginTop="40dp"
         android:orientation="vertical"
-        android:layout_alignParentBottom="true"
         android:padding="12dp" >
 
-        <Button
+        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
             android:id="@+id/btn_profile_logout"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@drawable/shape_button_common_background"
             android:gravity="center"
             android:text="@string/act_profile_btn_logout"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:textSize="17dp" />
     </LinearLayout>
 
 </RelativeLayout>

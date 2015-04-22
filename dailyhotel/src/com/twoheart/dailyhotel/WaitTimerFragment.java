@@ -16,6 +16,7 @@ package com.twoheart.dailyhotel;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import org.json.JSONObject;
@@ -32,7 +33,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -55,7 +55,7 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 
 	private static Handler sHandler;
 	private TextView tvTimer, tvTitle;
-	private Button btnNotify;
+	private TextView btnNotify;
 
 	private AlarmManager alarmManager;
 	private PendingIntent pender;
@@ -67,7 +67,6 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 
 	public static WaitTimerFragment newInstance(SaleTime saleTime)
 	{
-
 		WaitTimerFragment newFragment = new WaitTimerFragment();
 
 		Bundle arguments = new Bundle();
@@ -90,15 +89,15 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 
 		tvTimer = (TextView) view.findViewById(R.id.tv_timer);
 		tvTitle = (TextView) view.findViewById(R.id.tv_wait_timer_main);
-		btnNotify = (Button) view.findViewById(R.id.btn_wait_timer_alram);
+		btnNotify = (TextView) view.findViewById(R.id.btn_wait_timer_alram);
 		ivNewEvent = (ImageView) view.findViewById(R.id.iv_new_event);
 		btnEvent = (LinearLayout) view.findViewById(R.id.btn_event);
 
 		btnNotify.setOnClickListener(this);
 		btnEvent.setOnClickListener(this);
 
-		mHostActivity.setActionBar(R.string.actionbar_title_wait_timer_frag);
-		tvTitle.setText(new SimpleDateFormat("aa H").format(mSaleTime.getOpenTime()) + getString(R.string.prefix_wait_timer_frag_todays_hotel_open));
+		mHostActivity.setActionBar(getString(R.string.actionbar_title_wait_timer_frag), false);
+		tvTitle.setText(new SimpleDateFormat("aa H", Locale.KOREA).format(mSaleTime.getOpenTime()) + getString(R.string.prefix_wait_timer_frag_todays_hotel_open));
 
 		isEnabledNotify = false;
 		setTimer();
@@ -162,7 +161,6 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 
 	private void setTimer()
 	{
-
 		Date currentDate = new Date(mSaleTime.getCurrentTime());
 		Date dailyOpenDate = new Date(mSaleTime.getOpenTime());
 
@@ -203,7 +201,7 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 
 	private void printCurrentRemaingTime(long remainingTime)
 	{
-		SimpleDateFormat displayTimeFormat = new SimpleDateFormat("HH:mm:ss");
+		SimpleDateFormat displayTimeFormat = new SimpleDateFormat("HH:mm:ss", Locale.KOREA);
 		displayTimeFormat.setTimeZone(TimeZone.getTimeZone("KST"));
 
 		tvTimer.setText(displayTimeFormat.format(remainingTime));
@@ -231,6 +229,10 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
+			if (getActivity() == null)
+			{
+				return;
+			}
 
 			try
 			{

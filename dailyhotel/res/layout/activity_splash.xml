@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,89 +9,76 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/tv_splash_information"
-        android:gravity="center" >
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/img_logo_splash" />
+
+        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="Delivering HOTELs…"
+            android:textColor="@color/textView_textColor_main"
+            android:textSize="15dp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical" >
+            android:layout_marginTop="10dp" >
 
-            <ImageView
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/img_logo_splash" />
+                android:layout_marginRight="6dp" >
 
-            <LinearLayout
+                <View
+                    android:id="@+id/iv_splash_circle1"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:background="@drawable/splash_circle"
+                    android:visibility="invisible" />
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:orientation="horizontal" >
+                android:layout_marginRight="6dp" >
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Delivering HOTELs…"
-                    android:textColor="@color/textView_textColor_main"
-                    android:textSize="15dp" />
-                
-            </LinearLayout>
+                <View
+                    android:id="@+id/iv_splash_circle2"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:background="@drawable/splash_circle"
+                    android:visibility="invisible" />
+            </RelativeLayout>
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp" >
+                android:layout_height="wrap_content" >
 
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="6dp" >
-
-                    <ImageView
-                        android:id="@+id/iv_splash_circle1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/splash_circle"
-                        android:visibility="gone" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="6dp" >
-
-                    <ImageView
-                        android:id="@+id/iv_splash_circle2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/splash_circle"
-                        android:visibility="gone" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
-
-                    <ImageView
-                        android:id="@+id/iv_splash_circle3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/splash_circle"
-                        android:visibility="gone" />
-                </RelativeLayout>
-            </LinearLayout>
+                <View
+                    android:id="@+id/iv_splash_circle3"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:background="@drawable/splash_circle"
+                    android:visibility="invisible" />
+            </RelativeLayout>
         </LinearLayout>
-    </LinearLayout>
 
-    <TextView
-        android:id="@+id/tv_splash_information"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="40dp"
-        android:text="@string/act_anybody"
-        android:textColor="@color/textView_textColor_main" />
+        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            android:id="@+id/tv_splash_information"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="40dp"
+            android:text="@string/act_anybody"
+            android:textColor="@color/textView_textColor_main" />
+    </LinearLayout>
 
 </RelativeLayout>

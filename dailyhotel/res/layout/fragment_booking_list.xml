@@ -27,7 +27,7 @@
             android:adjustViewBounds="true"
             android:src="@drawable/img_ic_empty" />
 
-        <TextView
+        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
             android:id="@+id/tv_booking_empty_desc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
             android:textColor="@color/textView_textColor_sub"
             android:textSize="16.5dp" />
 
-        <TextView
+        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
             android:id="@+id/tv_booking_empty_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -51,15 +51,18 @@
             android:textColor="@color/textView_textColor_main"
             android:textSize="20dp" />
 
-        <Button
+        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
             android:id="@+id/btn_booking_empty_login"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_alignParentBottom="true"
             android:layout_margin="22.5dp"
             android:background="@drawable/shape_button_common_background"
+            android:gravity="center"
             android:text="@string/frag_booking_btn_login"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:textSize="17dp" />
+
     </RelativeLayout>
 
 </FrameLayout>

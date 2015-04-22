@@ -41,11 +41,11 @@ import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.OnLoadListener;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class RatingHotelFragment extends DialogFragment implements Constants, OnClickListener, OnLoadListener
 {
@@ -124,7 +124,8 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 		btnRecommend.setOnClickListener(this);
 		btnCancel.setOnClickListener(this);
 
-		GlobalFont.apply((ViewGroup) view);
+		// pinkred_font
+		//		GlobalFont.apply((ViewGroup) view);
 
 		return view;
 
@@ -219,9 +220,9 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 		mHostActivity.unLockUI();
 	}
 
-	private void showToast(String message, int length, boolean isAttachToActivity)
+	private void showToast(int resId, int length)
 	{
-		mHostActivity.showToast(message, length, isAttachToActivity);
+		DailyToast.showToast(mHostActivity, resId, length);
 	}
 
 	private void onError(Exception e)
@@ -260,7 +261,7 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 				onError(e);
 			} finally
 			{
-				showToast(getString(R.string.toast_msg_thanks_to_your_opinion), Toast.LENGTH_LONG, false);
+				showToast(R.string.toast_msg_thanks_to_your_opinion, Toast.LENGTH_LONG);
 				dismiss();
 			}
 

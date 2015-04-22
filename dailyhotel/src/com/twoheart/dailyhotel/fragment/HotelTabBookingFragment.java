@@ -35,9 +35,6 @@ import com.viewpagerindicator.LoopCirclePageIndicator;
 
 public class HotelTabBookingFragment extends BaseFragment implements OnTouchListener
 {
-
-	private static final String TAG = "HotelTabBookingFragment";
-
 	private static final int DURATION_HOTEL_IMAGE_SHOW = 4000;
 	private static final String KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL = "hotel_detail";
 
@@ -123,11 +120,13 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 		}
 
 		mViewPager.setOnTouchListener(this);
+
 		mViewPager.setCurrentItem((mHotelDetail.getImageUrl().size() * 10000)); // 페이지를 큰 수의 배수로 설정하여 루핑을 하게 함 
 		mIndicator.setViewPager(mViewPager);
 		mIndicator.setSnap(true);
 
 		mCurrentPage = mHotelDetail.getImageUrl().size();
+
 		mHandler = new Handler()
 		{
 			public void handleMessage(Message msg)

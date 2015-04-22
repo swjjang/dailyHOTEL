@@ -15,7 +15,6 @@
  */
 package com.twoheart.dailyhotel.activity;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,19 +29,16 @@ import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 
 import com.android.volley.Request.Method;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -55,38 +51,31 @@ import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 public class SplashActivity extends BaseActivity implements Constants, ErrorListener
 {
+	private static final int PROGRESS_CIRCLE_COUNT = 3;
 
 	private static final int VALUE_WEB_API_RESPONSE_NEW_EVENT_NOTIFY = 1;
 	private static final int VALUE_WEB_API_RESPONSE_NEW_EVENT_NONE = 0;
 	private static final int DURING_SPLASH_ACTIVITY_SHOW = 1000;
-	private boolean isDialogShown = false;
 
 	private Dialog alertDlg;
-
-	private GoogleCloudMessaging mGcm;
-
 	protected HashMap<String, String> regPushParams;
 
-	private ArrayList<ImageView> ivCircles;
+	private View[] mCircleViewList;
+	private Handler mHandler = new Handler();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		// Anroid 4.4 이상에서 Android StatusBar와 Android NavigationBar를
-		// Translucent하게 해주는 API를 사용하도록 한다.
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-		{
-			setTheme(R.style.AppTheme_Translucent);
-		}
 
-		setActionBarHide();
 		setContentView(R.layout.activity_splash);
 
-		ivCircles = new ArrayList<ImageView>();
-		for (int i = 0; i < 3; i++)
-			ivCircles.add((ImageView) findViewById(R.id.iv_splash_circle1 + i));
+		mCircleViewList = new View[PROGRESS_CIRCLE_COUNT];
 
+		for (int i = 0; i < PROGRESS_CIRCLE_COUNT; i++)
+		{
+			mCircleViewList[i] = findViewById(R.id.iv_splash_circle1 + i);
+		}
 	}
 
 	@Override
@@ -96,7 +85,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 		// 비행기 모드
 		boolean isAirplainMode = Settings.System.getInt(getContentResolver(), Settings.System.AIRPLANE_MODE_ON, 0) == 1 ? true : false;
 		boolean isNetworkAvailable = VolleyHttpClient.isAvailableNetwork();
-		ExLog.e(" / onResume : isAirplainMode = " + isAirplainMode + " / isNetworkAvailable = " + isNetworkAvailable);
+		ExLog.d(" / onResume : isAirplainMode = " + isAirplainMode + " / isNetworkAvailable = " + isNetworkAvailable);
 		startSplashLoad();
 
 		if (isAirplainMode && !isNetworkAvailable)
@@ -112,7 +101,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 						moveToLoginStep();
 					} else
 					{
-						new Handler().postDelayed(new Runnable()
+						mHandler.postDelayed(new Runnable()
 						{
 							@Override
 							public void run()
@@ -168,7 +157,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 							moveToLoginStep();
 						} else
 						{
-							new Handler().postDelayed(new Runnable()
+							mHandler.postDelayed(new Runnable()
 							{
 								@Override
 								public void run()
@@ -220,16 +209,16 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 	private void startSplashLoad()
 	{
 
-		for (int i = 0; i < 3; i++)
+		for (int i = 0; i < PROGRESS_CIRCLE_COUNT; i++)
 		{
 			final int idx = i;
-			new Handler().postDelayed(new Runnable()
+			mHandler.postDelayed(new Runnable()
 			{
 				@Override
 				public void run()
 				{
-					ivCircles.get(idx).setVisibility(View.VISIBLE);
-					ivCircles.get(idx).startAnimation(AnimationUtils.loadAnimation(SplashActivity.this, R.anim.splash_load));
+					mCircleViewList[idx].setVisibility(View.VISIBLE);
+					mCircleViewList[idx].startAnimation(AnimationUtils.loadAnimation(SplashActivity.this, R.anim.splash_load));
 				}
 			}, 250 * (i + 1));
 		}
@@ -264,8 +253,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 	private void showMainActivity(final int newEventFlag)
 	{
 		// sleep 2 second
-		Handler h = new Handler();
-		h.postDelayed(new Runnable()
+		mHandler.postDelayed(new Runnable()
 		{
 			public void run()
 			{
@@ -395,6 +383,12 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 						{
 							Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
 							marketLaunch.setData(Uri.parse(Util.storeReleaseAddress()));
+
+							if (marketLaunch.resolveActivity(getPackageManager()) == null)
+							{
+								marketLaunch.setData(Uri.parse(Constants.URL_STORE_GOOGLE_DAILYHOTEL_WEB));
+							}
+
 							startActivity(marketLaunch);
 							finish();
 						}
@@ -412,13 +406,27 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 						{
 							Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
 							marketLaunch.setData(Uri.parse(Util.storeReleaseAddress()));
+
+							if (marketLaunch.resolveActivity(getPackageManager()) == null)
+							{
+								marketLaunch.setData(Uri.parse(Constants.URL_STORE_GOOGLE_DAILYHOTEL_WEB));
+							}
+
 							startActivity(marketLaunch);
+						}
+					};
+
+					OnClickListener negListener = new DialogInterface.OnClickListener()
+					{
+						@Override
+						public void onClick(DialogInterface dialog, int which)
+						{
+							dialog.cancel();
 						}
 					};
 
 					OnCancelListener cancelListener = new OnCancelListener()
 					{
-
 						@Override
 						public void onCancel(DialogInterface dialog)
 						{
@@ -429,7 +437,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 						}
 					};
 
-					SimpleAlertDialog.build(SplashActivity.this, getString(R.string.dialog_title_notice), getString(R.string.dialog_msg_update_now), getString(R.string.dialog_btn_text_update), getString(R.string.dialog_btn_text_cancel), posListener, null).setOnCancelListener(cancelListener).show();
+					SimpleAlertDialog.build(SplashActivity.this, getString(R.string.dialog_title_notice), getString(R.string.dialog_msg_update_now), getString(R.string.dialog_btn_text_update), getString(R.string.dialog_btn_text_cancel), posListener, negListener).setOnCancelListener(cancelListener).show();
 				} else
 				{
 					showMainActivity(newEventFlag);

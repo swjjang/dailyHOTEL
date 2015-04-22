@@ -28,8 +28,9 @@ public class NoticeActivity extends BaseActivity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setActionBar(R.string.actionbar_title_notice_activity);
+
 		setContentView(R.layout.activity_board);
+		setActionBar(R.string.actionbar_title_notice_activity);
 
 		mListView = (ExpandableListView) findViewById(R.id.expandable_list_board);
 		mListView.setOnGroupExpandListener(new OnGroupExpandListener()

@@ -14,8 +14,8 @@ public class AboutActivity extends WebViewActivity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setActionBar(R.string.actionbar_title_about_activity);
 		setContentView(R.layout.activity_about);
+		setActionBar(R.string.actionbar_title_about_activity);
 	}
 
 	@Override

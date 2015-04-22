@@ -5,13 +5,13 @@ import android.os.Parcelable;
 
 public class Booking implements Parcelable
 {
-
 	private String sday;
 	private String hotel_idx;
 	private String hotel_name;
 	private String bedType;
 	private int payType;
 	private String tid;
+	public String ment;
 
 	public Booking()
 	{
@@ -31,6 +31,7 @@ public class Booking implements Parcelable
 		dest.writeString(bedType);
 		dest.writeInt(payType);
 		dest.writeString(tid);
+		dest.writeString(ment);
 	}
 
 	private void readFromParcel(Parcel in)
@@ -41,6 +42,7 @@ public class Booking implements Parcelable
 		bedType = in.readString();
 		payType = in.readInt();
 		tid = in.readString();
+		ment = in.readString();
 	}
 
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
@@ -57,7 +59,7 @@ public class Booking implements Parcelable
 		}
 	};
 
-	public Booking(String sday, String hotel_idx, String hotel_name, String bedType, int payType, String tid)
+	public Booking(String sday, String hotel_idx, String hotel_name, String bedType, int payType, String tid, String ment)
 	{
 		this.sday = sday;
 		this.hotel_idx = hotel_idx;
@@ -65,6 +67,7 @@ public class Booking implements Parcelable
 		this.bedType = bedType;
 		this.payType = payType;
 		this.tid = tid;
+		this.ment = ment;
 	}
 
 	public String getSday()

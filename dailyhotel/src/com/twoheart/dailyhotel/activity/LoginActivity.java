@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.json.JSONException;
@@ -32,13 +33,12 @@ import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.widget.SwitchCompat;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -63,19 +63,20 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
-import com.twoheart.dailyhotel.widget.Switch;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class LoginActivity extends BaseActivity implements Constants, OnClickListener, ErrorListener
 {
 
 	private EditText etId, etPwd;
-	private Switch cbxAutoLogin;
-	private Button btnLogin;
+	private SwitchCompat cbxAutoLogin;
+	private TextView btnLogin;
 	private TextView tvSignUp, tvForgotPwd;
 	private LoginButton facebookLogin;
 
@@ -93,16 +94,22 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 	{
 		super.onCreate(savedInstanceState);
 
-		setActionBar(R.string.actionbar_title_login_activity);
 		setContentView(R.layout.activity_login);
+		setActionBar(R.string.actionbar_title_login_activity);
 
 		etId = (EditText) findViewById(R.id.et_login_id);
 		etPwd = (EditText) findViewById(R.id.et_login_pwd);
-		cbxAutoLogin = (Switch) findViewById(R.id.cb_login_auto);
+		cbxAutoLogin = (SwitchCompat) findViewById(R.id.cb_login_auto);
 		tvSignUp = (TextView) findViewById(R.id.tv_login_signup);
 		tvForgotPwd = (TextView) findViewById(R.id.tv_login_forgot);
-		btnLogin = (Button) findViewById(R.id.btn_login);
+		btnLogin = (TextView) findViewById(R.id.btn_login);
 		facebookLogin = (LoginButton) findViewById(R.id.authButton);
+
+		GlobalFont.apply(facebookLogin);
+
+		//		cbxAutoLogin.setSwitchMinWidth(Util.dpToPx(LoginActivity.this, 60));
+		cbxAutoLogin.setChecked(true);
+		cbxAutoLogin.setSwitchPadding(Util.dpToPx(LoginActivity.this, 15));
 
 		tvSignUp.setOnClickListener(this);
 		tvForgotPwd.setOnClickListener(this);
@@ -130,7 +137,9 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 			Session.getActiveSession().closeAndClearTokenInformation();
 
 		mMixpanel = MixpanelAPI.getInstance(this, "791b366dadafcd37803f6cd7d8358373");
-		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
+
+		// pinkred_font
+		//		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
 	}
 
 	private void makeMeRequest(final Session session)
@@ -294,13 +303,13 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 	{
 		if (etId.getText().toString().trim().length() == 0)
 		{
-			showToast(getString(R.string.toast_msg_please_input_id), Toast.LENGTH_SHORT, true);
+			DailyToast.showToast(this, R.string.toast_msg_please_input_id, Toast.LENGTH_SHORT);
 			return false;
 		}
 
 		if (etPwd.getText().toString().trim().length() == 0)
 		{
-			showToast(getString(R.string.toast_msg_please_input_passwd), Toast.LENGTH_SHORT, true);
+			DailyToast.showToast(this, R.string.toast_msg_please_input_passwd, Toast.LENGTH_SHORT);
 			return false;
 		}
 
@@ -377,7 +386,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 				GooglePlayServicesUtil.getErrorDialog(resCode, this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
 			} else
 			{
-				showToast(getString(R.string.toast_msg_is_not_available_google_service), Toast.LENGTH_LONG, false);
+				DailyToast.showToast(this, R.string.toast_msg_is_not_available_google_service, Toast.LENGTH_LONG);
 				finish();
 			}
 			return false;
@@ -417,7 +426,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 				{
 					unLockUI();
 
-					showToast(getString(R.string.toast_msg_logoined), Toast.LENGTH_SHORT, true);
+					DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);
 					setResult(RESULT_OK);
 					finish();
 					return;
@@ -488,7 +497,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 							unLockUI();
 
 							// 로그인에 성공 하였고 GCM 코드 또한 이미 기기에 저장되어 있는 상태이면 종료. 
-							showToast(getString(R.string.toast_msg_logoined), Toast.LENGTH_SHORT, true);
+							DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);
 							setResult(RESULT_OK);
 							finish();
 						}
@@ -542,7 +551,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 					int userIdx = response.getInt("idx");
 					String userIdxStr = String.format("%07d", userIdx);
 
-					SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.getDefault());
+					SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
 					Date date = new Date();
 					String strDate = dateFormat.format(date);
 
@@ -566,7 +575,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 						unLockUI();
 
 						// 로그인에 성공 하였고 GCM 코드 또한 이미 기기에 저장되어 있는 상태이면 종료. 
-						showToast(getString(R.string.toast_msg_logoined), Toast.LENGTH_SHORT, true);
+						DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);
 						setResult(RESULT_OK);
 						finish();
 						return;
@@ -618,7 +627,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 					unLockUI();
 
 					loginParams.clear();
-					showToast(msg, Toast.LENGTH_LONG, true);
+					DailyToast.showToast(LoginActivity.this, msg, Toast.LENGTH_LONG);
 				}
 
 			} catch (Exception e)
@@ -653,7 +662,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 					editor.apply();
 				}
 
-				showToast(getString(R.string.toast_msg_logoined), Toast.LENGTH_SHORT, true);
+				DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);
 				setResult(RESULT_OK);
 				finish();
 			} catch (JSONException e)
