@@ -313,7 +313,22 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			} //호텔 가격이 xx 이하인 이벤트 호텔에서는 적립금 사용을 못하게 막음. 
 			else if (mPay.isSaleCredit() && (mPay.getOriginalPrice() <= DEFAULT_AVAILABLE_RESERVES) && Integer.parseInt(mPay.getCredit().getBonus().replaceAll(",", "")) != 0)
 			{
-				getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_NO_RSERVE, null).show();
+				v.setClickable(false);
+				v.setEnabled(false);
+
+				final Dialog dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_NO_RSERVE, null);
+
+				dialog.setOnDismissListener(new OnDismissListener()
+				{
+					@Override
+					public void onDismiss(DialogInterface dialog)
+					{
+						v.setClickable(true);
+						v.setEnabled(true);
+					}
+				});
+
+				dialog.show();
 
 			} else
 			{
@@ -484,7 +499,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	private void moveToPayStep()
 	{
 		unLockUI();
-		
+
 		ExLog.e("Sale credit / Pay Price : " + mPay.isSaleCredit() + " / " + mPay.getPayPrice());
 
 		Intent intent = new Intent(this, com.twoheart.dailyhotel.activity.PaymentActivity.class);
