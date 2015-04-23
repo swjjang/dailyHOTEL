@@ -1,0 +1,22 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        Base application theme for API 14+. This theme completely replaces
+        AppBaseTheme from BOTH res/values/styles.xml and
+        res/values-v11/styles.xml on API 14+ devices.
+    -->
+    <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light">
+        <item name="android:actionMenuTextColor">@color/dh_theme_color</item>
+        <item name="android:actionMenuTextAppearance">@style/actionbarMenuTextAppearance</item>
+        <item name="android:actionBarItemBackground">@drawable/item_background_holo_light</item>
+        <item name="android:actionDropDownStyle">@style/DropDownListViewDH_Theme.ActionBar</item>
+        <item name="android:dropDownListViewStyle">@style/DropDownDH_Theme.ActionBar</item>
+        <item name="android:ratingBarStyle">@style/RatingBarDH</item>
+    </style>
+    
+    <style name="RatingBarDH" parent="android:Widget.Holo.Light.RatingBar">
+      <item name="android:progressDrawable">@drawable/dh_ratingbar_full_holo_light</item>
+      <item name="android:indeterminateDrawable">@drawable/dh_ratingbar_full_holo_light</item>
+  	</style>
+
+</resources>

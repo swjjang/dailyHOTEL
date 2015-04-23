@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<!-- Basic Infos -->
+    <string name="app_name">dailyHOTEL</string>
+    <string name="app_id">268888829950610</string>
+    <string name="homepage">http://dailyhotel.kr</string>
+    <string name="contact_us">help@dailyhotel.co.kr</string>
+    <string name="currency">USD&#160;</string>
+    
+	<!-- Hotel Grade -->
+    <string name="grade_special">Five star Hotel</string>
+    <string name="grade_1">1st class</string>
+    <string name="grade_2">2nd class</string>
+    <string name="grade_3">3rd class</string>
+    <string name="grade_hostel">Hostel</string>
+    <string name="grade_boutique">Boutique</string>
+    <string name="grade_residence">Residence</string>
+    <string name="grade_biz">Business</string>
+    <string name="grade_resort">Resort</string>
+    <string name="grade_pension">Pension</string>
+    <string name="grade_condo">Condo</string>
+    <string name="grade_not_yet">Others</string>
+    
+	<!-- IntroActivity Guide Ment -->
+    <string name="guide_title_1">Last-minute Hotel Booking</string>
+    <string name="guide_title_2">Carefully selected Hotels</string>
+    <string name="guide_title_3">Quick and easy payment</string>
+    <string name="guide_title_4">Amazing prices</string>
+    <string name="guide_desc_1">Stay in hotels\nat a great price tonight.</string>
+    <string name="guide_desc_2">We provide only the best hotels\nbased on customer satisfaction and discount rates.</string>
+    <string name="guide_desc_3">From 9AM to 2AM,\nmake a reservation within 30 seconds and check in instantly.</string>
+    <string name="guide_desc_4">We arrange daily vacant rooms,\nwhich are inevitably cheap.\n\nSo, shall we meet today\'s Hotel?</string>
+    <string name="guide_btn_skip">Skip</string>
+    <string name="guide_btn_start">Start</string>
+    
+	<!-- Actionbar Titles -->
+    <string name="actionbar_title_hotel_list_frag">Today\'s Hotel</string>
+    <string name="actionbar_title_booking_list_frag">Booking List</string>
+    <string name="actionbar_title_credit_frag">Credits</string>
+    <string name="actionbar_title_setting_frag">Settings</string>
+    <string name="actionbar_title_error_frag">dailyHOTEL</string>
+    <string name="actionbar_title_wait_timer_frag">dailyHOTEL</string>
+    <string name="actionbar_title_about_activity">What is Daily Hotel?</string>
+    <string name="actionbar_title_booking_tab_activity">Reservation confirmation</string>
+    <string name="actionbar_title_faq_activity">FAQ</string>
+    <string name="actionbar_title_forgot_pwd_activity">Find password</string>
+    <string name="actionbar_title_login_activity">Sign in</string>
+    <string name="actionbar_title_notice_activity">Notice</string>
+    <string name="actionbar_title_payment_activity">Book now</string>
+    <string name="actionbar_title_privacy_activity">Privacy Policy</string>
+    <string name="actionbar_title_profile_activity">Profile</string>
+    <string name="actionbar_title_signup_activity">Create an Account</string>
+    <string name="actionbar_title_term_activity">Terms of Use</string>
+    <string name="actionbar_title_version_activity">Version Information</string>
+    <string name="actionbar_title_zoom_map_activity">Zoom in</string>
+    <string name="actionbar_title_payment_wait_activity">Waiting for Deposit</string>
+    
+	<!-- Toast Messages -->
+    <string name="toast_msg_network_status_bad">Cannot connect to internet.\nPlease recheck settings.</string>
+    <string name="toast_msg_please_chk_network_status">Cannot connect to internet.\nPlease recheck settings.</string>
+    <string name="toast_msg_please_input_booking_user_infos">Guest name and contact,\nPlease enter your full E-mail address</string>
+    <string name="toast_msg_please_input_email_address">Please enter your email address </string>
+    <string name="toast_msg_wrong_email_address">Please enter an accurate email address</string>
+    <string name="toast_msg_please_login">Please sign in </string>
+    <string name="toast_msg_failed_to_login">You have failed to log in.</string>
+    <string name="toast_msg_failed_to_get_payment_info">Cannot load payment data.</string>
+    <string name="toast_msg_retry_payment_after_install_app">Please try again after downloading the application.</string>
+    <string name="toast_msg_cancel_payment">Payment has been cancelled.</string>
+    <string name="toast_msg_profile_not_changed">No updated information.</string>
+    <string name="toast_msg_profile_success_to_change">Update is complete.</string>
+    <string name="toast_msg_logouted">You have successfully signed out.</string>
+    <string name="toast_msg_logoined">You have successfully logged in.</string>
+    <string name="toast_msg_please_input_id">Please enter your account ID</string>
+    <string name="toast_msg_please_input_passwd">Please enter your password.</string>
+    <string name="toast_msg_please_input_required_infos">Please enter all mandatory items.</string>
+    <string name="toast_msg_please_input_password_more_than_4chars">Password needs to exceed 4 letters.</string>
+    <string name="toast_msg_success_to_signup">You have successfully signed up</string>
+    <string name="toast_msg_already_latest_version">Already the latest version.</string>
+    <string name="toast_msg_thanks_to_your_opinion">Thank you for your feedback.</string>
+    <string name="toast_msg_backpressed">Click \'Back\' once more to end the application.</string>
+    
+	<!-- Dialog Messages -->
+    <string name="dialog_title_notice">Notice</string>
+    <string name="dialog_msg_sent_email">E-mail sent.</string>
+    <string name="dialog_msg_install_paypin">You do not have a PayPin application installed.\nPlease click to install application.\nPayment will be cancelled if you press cancel.</string>
+    <string name="dialog_msg_install_hana_sk">You do not have the HANA SK module installed.\nWould you like to install?</string>
+    <string name="dialog_msg_chk_wanna_login">Would you like to sign out?</string>
+    <string name="dialog_msg_chk_cancel_payment">Would you like to cancel the payment?</string>
+    <string name="dialog_msg_chk_cancel_payment_progress">Payment in process,\nWould you like to cancel the payment?</string>
+    <string name="dialog_msg_not_installed_kakaotalk">You do not have Kakao Talk installed.</string>
+    <string name="dialog_msg_network_please_off_airplain">Please turn off airplane mode or use WIFI.</string>
+    <string name="dialog_msg_network_unstable_retry_or_set_wifi">Cannot connect to internet.\nPlease retry or check your WIFI settings.</string>
+    <string name="dialog_msg_please_update_new_version">The new version of dailyHOTEL is available now! Download it and enjoy more pleasant hotel life.</string>
+    <string name="dialog_msg_update_now">Please download the updated version and enjoy more pleasant hotel life.</string>
+    <string name="dialog_msg_sales_closed">At 9AM today\'s hotel will be revealed.</string>
+    <string name="dialog_msg_payment_confirm">Due to the nature of last-minute reservations,&lt;br/&gt;&lt;b&gt;cancelling or changing&lt;/b&gt; is not possible.&lt;br/&gt;&lt;br/&gt;For Assigned at check in option,&lt;br/&gt;&lt;b&gt;double or twin bed types are not guaranteed and a room for 2 people &lt;br/&gt;&lt;b&gt; will be assigned.&lt;br/&gt;&lt;br/&gt;&lt;b&gt;If you have read and agree&lt;br/&gt;&lt;b&gt;to the notice above, &lt;br/&gt;please press and continue payment.</string>
+    <string name="dialog_msg_payment_confirm_hp">Due to the nature of last-minute reservations,&lt;br/&gt;&lt;b&gt;cancelling or changing&lt;br/&gt;&lt;b&gt;is not possible.&lt;br/&gt;&lt;b&gt;For Assigned at check in option,&lt;br/&gt;&lt;b&gt;double or twin bed types are not guaranteed&lt;br/&gt;&lt;b&gt;and a room for 2 people will be assigned.&lt;br/&gt;&lt;b&gt;Cell phone payment is limited to KRW 300,000 per month.&lt;br/&gt;&lt;br/&gt;&lt;b&gt;If you have read and agree to the notice above,&lt;br/&gt;&lt;b&gt;please press and continue payment.</string>
+    <string name="dialog_btn_payment_confirm">Agree and continue</string> <string name="dialog_title_payment_confirm">Notice</string> 
+    <string name="dialog_btn_payment_no_reserve">&lt;br/&gt;&lt;br/&gt;Credit usage is not available&lt;br/&gt;for event hotel deals&lt;br/&gt;&lt;br/&gt;.</string>
+    <string name="dialog_btn_text_update">Update</string>
+    <string name="dialog_btn_text_complete">Complete</string>
+    <string name="dialog_btn_text_confirm">Confirm</string>
+    <string name="dialog_btn_text_cancel">Cancle</string>
+    <string name="dialog_btn_text_retry">Retry</string>
+    <string name="dialog_btn_text_setting">Settings</string>
+    <string name="dialog_btn_text_waiting">Please wait</string>
+    <string name="dialog_btn_text_logout">Sign out</string>
+    <string name="dialog_btn_text_install">Install</string>
+    <string name="dialog_btn_text_yes">Yes</string>
+    <string name="dialog_btn_text_no">No</string>
+    <string name="dialog_notice2">Notice</string>
+    <string name="dialog_title_payment">Payment notice</string>
+    <string name="dialog_btn_text_see">Find out</string>
+    <string name="dialog_btn_text_close">Cancel</string>
+    
+    <!-- Main Drawer Menu Titles -->
+	<string name="drawer_menu_pin_title_resrvation">Hotel Booking</string>
+	<string name="drawer_menu_item_title_todays_hotel">Today\'s Hotel</string>
+	<string name="drawer_menu_item_title_chk_reservation">Booking List</string>
+	<string name="drawer_menu_pin_title_account">Account</string>
+	<string name="drawer_menu_item_title_credit">Credits</string>
+	<string name="drawer_menu_item_title_setting">Settings</string>
+	
+	<!-- Mail Text -->
+	<string name="mail_text_dialog_title">Select email application</string>
+	<string name="mail_text_subject">Ask Daily Hotel</string>
+	<string name="mail_text_desc">A question regarding Daily Hotel\'s Android application.</string>
+	
+	<!-- Prefix Text -->
+	<string name="prefix_wait_timer_frag_todays_hotel_open">today\'s hotel will be revealed.</string>
+	<string name="prefix_expire_time">expiration date</string>
+	
+	<!-- KaKaoLink Message -->
+	<string name="kakaolink_msg_prefix">Let me recommend you a great application~\ndailyHOTEL that provides discounts up to 70% on daily vacant hotel rooms. recommendation code of :</string>
+	<string name="kakaolink_msg_suffix">Get $5 off instantly by entering a recommendation code of :</string>
+	
+	<!-- Alarm Message -->
+	<string name="alarm_title">dailyHOTEL</string>
+	<string name="alarm_msg">Today\'s hotel\'s have arrived.\nCheck them out at dailyHotel!</string>
+	<string name="alarm_ticker">Today\'s hotel\'s have arrived!</string>
+	<string name="alarm_btn_see">Find out</string>
+	<string name="alarm_btn_close">Cancle</string>
+	<string name="txt_payment_wait_confirm">Reservations are completed according to order of payment.\nRoom reservation deals may end early.\nIn case the deals close, all payments will be refunded to the original account.</string>
+	<string name="txt_payment_wait_when_complete">The booking voucher will be sent to you within 10 minutes. Please check the mobile text message.</string>
+	<string name="toast_msg_retry_login">Please Sign in again</string>
+	<string name="toast_msg_is_not_available_google_service">Google Play service is not available.</string>
+	<string name="title_activity_event_pop_up">EventPopUpActivity</string>
+	<string name="hello_world">Hello world!</string>
+	<string name="action_settings">Settings</string>
+	
+	<!--   Setting Fragment  -->
+	<string name="frag_customer_center">Customer service</string>
+	<string name="frag_call_res_contact">Phone reservations &amp; Inquiries</string>
+	<string name="frag_send_mail">E-mail suggestions</string>
+	<string name="frag_notice">Notice</string>
+	<string name="frag_faqs">FAQ</string>
+	<string name="frag_info">Introduction</string>
+	<string name="frag_about">What is Daily Hotel?</string>
+	<string name="frag_app">App</string>
+	<string name="frag_version_info">Version Information</string>
+	<string name="frag_account">Account</string>
+	<string name="frag_profile">Profile</string>
+	<string name="frag_login">Sign In</string>
+	
+	<!--   Version Activity  -->
+	<string name="act_current_version">Current version:</string>
+	<string name="act_new_version">Latest version:</string>
+	<string name="act_btn_update">Update to the Latest Version</string>
+	
+	<!-- Splash Activity -->
+	<string name="act_anybody">Hotel life that anyone can relish</string>
+	
+	<!-- Login Activity -->
+	<string name="act_login_email">Email</string>
+	<string name="act_login_pwd">Password</string>
+	<string name="act_login_autologin">Stay Signed In</string>
+	<string name="act_login_btn_login">Sign In</string>
+	<string name="act_login_forgot_pwd">Forgot your Password?</string>
+	<string name="act_login_signup">Create an Account</string>
+	
+	<!--   Credit Activity  -->
+	<string name="act_credit_recom">Sharing is caring!</string>
+	<string name="act_credit_line1">If your friend signs up using your recommendation code,</string>
+	<string name="act_credit_line2">your friend receives $5!</string>
+	<string name="act_credit_line3">If your friend makes a first time payment, I also get $5!</string>
+	<string name="act_credit_line1_4"></string>
+	<string name="act_credit_line5"></string>
+	<string name="act_credit_btn_login">Sign in with my account</string>
+	<string name="act_credit_sign_up">Sign up and invite friend</string>
+	<string name="act_credit_view_credit">Credits</string>
+	<string name="act_credit_current_credit">Current Credits</string>
+	<string name="act_credit_history">Check my credits history</string>
+	<string name="act_credit_recom_code">Recommendation code</string>
+	<string name="act_credit_my_recom_code">Your recommendation code</string>
+	<string name="act_credit_line4">If your friend signs up\nusing your recommendation code,\nyour friend receives $5!\nIf your friend makes a first time payment,\nI also get $5!</string>
+	<string name="act_credit_kakao">Invite Kakao Talk friend.</string>
+	
+	<!--   Credit List Activity  -->
+	<string name="act_history_no_details">You have no credits history.</string>
+	
+	<!--   Booking List Fragment  -->
+	<string name="frag_booking_no_hotels">You have no reservations at the moment!</string>
+	<string name="frag_booking_line">How about spending\na day at a fabulous hotel?</string>
+	<string name="frag_booking_btn_login">Sign in with my account</string>
+	
+	<!--   Profile Activity  -->
+	<string name="act_profile_login_acc">Sign in account</string>
+	<string name="act_profile_email">E-mail</string>
+	<string name="act_profile_user">User Information</string>
+	<string name="act_profile_name">Name</string>
+	<string name="act_profile_contact">contact</string>
+	<string name="act_profile_modify">Update</string>
+	<string name="act_profile_btn_logout">Sign out</string>
+	<string name="act_profile_input_name">Please enter your name</string>
+	<string name="act_profile_input_contact">Please enter your contact</string>
+	
+	<!--   WaitTimer Fragment  -->
+	<string name="frag_wait_timer_off">Turn off alarm</string>
+	<string name="frag_wait_timer_on">Turn on alarm</string>
+	<string name="frag_wait_timer_set">Alarm has been set.</string>
+	<string name="frag_wait_timer_cancel">Alarm has been cancelled.</string>
+	
+	<!--   Booking Activity  -->
+	<string name="act_toast_payment_success">Payment has been successfully completed.</string>
+	<string name="act_toast_payment_soldout">All rooms have already been booked,\nplease try again next time.</string>
+	<string name="act_toast_payment_not_available">Another guest is in process of reservation\nplease try again later.</string>
+	<string name="act_toast_payment_network_error">Network error,\nplease check your network connection</string>
+	<string name="act_toast_payment_invalid_date">The deal has been closed	</string>
+	<string name="act_toast_payment_fail">An unexpected error has occurred,\nplease contact us.</string>
+	<string name="act_toast_payment_canceled">Payment has been cancelled.</string>
+	<string name="act_toast_payment_account_time_error">Your payment standby time has exceeded\nplease try again.</string>
+	<string name="act_toast_payment_account_duplicate">This hotel is already waiting for your payment.</string>
+	<string name="act_toast_payment_account_timeover">Your payment standby time has exceeded\nplease try again.</string>
+	<string name="act_booking_chkin_info">Check in Information</string>
+	<string name="act_booking_chkin">Check in</string>
+	<string name="act_booking_chkout">Check out </string>
+	<string name="act_booking_reserver_info">Guest Information</string>
+	<string name="act_booking_reserver">Guest name</string>
+	<string name="act_booking_mobile">Cellphone</string>
+	<string name="act_booking_email">E-mail</string>
+	<string name="act_booking_payment">Payment</string>
+	<string name="act_booking_credit_use">Use credits</string>
+	<string name="act_booking_price">Price</string>
+	<string name="act_booking_credit_discount">Credit Redeemed</string>
+	<string name="act_booking_price_real">Payment amount(VAT Inc.)</string>
+	<string name="act_booking_pay_card">Credit Card</string>
+	<string name="act_booking_pay_mobile">Cellphone</string>
+	<string name="act_booking_paypal">Paypal</string>
+	<string name="act_booking_pay_account">Account transfer</string>
+	<string name="act_booking_btn_pay">Pay</string>
+	
+	<!-- Payment Activity -->
+	<string name="act_payment_isp_error">ISP payment error</string>
+	<string name="act_payment_isp_user_cancel">ISP payment user cancel</string>
+	<string name="act_payment_isp_other_error">Other ISP payment error</string>
+	<string name="act_payment_user_cancel">User cancel</string>
+	<string name="act_payment_chk_contain">Cancel</string>
+	
+	<!--   Signup Activity  -->
+	<string name="act_signup_phone">[Required] Cell phone number (excluding \'-\')</string>
+	<string name="act_signup_email">[Required] E-mail</string>
+	<string name="act_signup_name">[Required] Guest name(Used to check in)</string>
+	<string name="act_signup_pwd">[Required]Password(exceeding 4 letters) </string>
+	<string name="act_signup_code">[Preferred] Recommendation code</string>
+	<string name="act_signup_btn_signup">Agree to terms and policies and sign up</string>
+	<string name="act_signup_terms">Terms of Use</string>
+	<string name="act_signup_privacy">Privacy Policy</string>
+	
+	<!-- BookingTab/HotelTabBooking Fragment -->
+	<string name="frag_booking_tab_title">Reservation</string>
+	<string name="frag_booking_tab_year">Year</string>
+	<string name="frag_booking_tab_month">Month</string>
+	<string name="frag_booking_tab_day">Day</string>
+	<string name="frag_booking_tab_hour">Hour</string>
+	<string name="frag_booking_tab_hotel_info">Hotel information</string>
+	<string name="frag_booking_tab_location">Location</string>
+	<string name="frag_booking_tab_bed_type">Bed type</string>
+	<string name="frag_booking_tab_chkin_info">Check in Information</string>
+	<string name="frag_booking_tab_chkin">Check in</string>
+	<string name="frag_booking_tab_chkout">Check out</string>
+	<string name="frag_booking_tab_name">Guest name</string>
+	<string name="frag_booking_tab_mobile">Guest contact</string>
+	<string name="frag_hotel_tab_add">Address</string>
+	<string name="frag_hotel_tab_bed_type">Bed type</string>
+	<string name="frag_hotel_tab_price">Price(Tax included)</string>
+	
+	<!-- RatingHotel Fragment -->
+	<string name="frag_rating_hotel_title">Customer satisfaction survey</string>
+	<string name="frag_rating_hotel_text1">How was the \'Hotel name\'</string>
+	<string name="frag_rating_hotel_text2">that you used last time?</string>
+	<string name="frag_rating_hotel_recomm">Satisfied</string>
+	<string name="frag_rating_hotel_cancel">Dissatisfied</string>
+	
+	<!-- TabInfo/TabMap Fragment -->
+	<string name="frag_tab_info_title">Hotel Information</string>
+	<string name="frag_tab_map_title">Map</string>
+	
+	<!-- KaKaoLinkManager -->
+	<string name="kakao_btn_move">Connect to Kakao</string>
+	
+	<!-- Base Activity -->
+	<string name="act_base_network_connect">Cannot connect to internet.\nPlease retry or check your WIFI settings.</string>
+	<string name="kakao_app_key">ddcea004a79ab5500a3443d589279be7</string>
+	<string name="kakao_scheme">kakaoddcea004a79ab5500a3443d589279be7</string>
+	<string name="kakaolink_host">kakaolink</string>
+	
+	<!-- ForgotPwd Activity -->
+	<string name="act_forgot_pwd_email">E-mail</string>
+	<string name="act_forgot_pwd_text">An e-mail to reset your password will be sent to your email account.</string>
+	<string name="act_forgot_pwd_forgot">Find password</string>
+	
+	<!-- HotelTab Activity -->
+	<string name="act_hotel_tab_btn">Book now</string>
+	
+	<!-- Error Fragment -->
+	<string name="frag_error_network_unavail">Network has been disconnected.</string>
+	<string name="frag_error_btn">Retry connection</string>
+	
+	<!-- HotelList Fragment -->
+	<string name="frag_hotel_list_swipe">Swipe down to refresh</string>
+	
+	<!-- PopUp Event Fragment -->
+	<string name="frag_popup_event_title">Promotional Event</string>
+	
+	<!-- Timer Wait Fragment -->
+	<string name="frag_wait_timer_title">Promotional Event</string>
+	<string name="frag_wait_timer_alarm">Turn on alarm</string>
+	<string name="frag_wait_timer_msg">Hotels waiting to meet you at amazing prices. </string>
+	
+	<!-- Hotel List Header -->
+	<string name="header_title1">dailyHOTEL</string>
+	<string name="header_title2">Promotional Event</string>
+	
+	<!-- Booking Row List -->
+	<string name="booking_row_ment">Please register your name at the front desk during check in.</string>
+	
+	<!-- Wait Payment Activity -->
+	<string name="act_wait_payment_payinfo">Payment information</string>
+	<string name="act_wait_payment_accounts_no">Account number</string>
+	<string name="act_wait_payment_name">Name of account</string>
+	<string name="act_wait_payment_price">Amount</string>
+	<string name="act_wait_payment_limit">Payment deadline</string>
+	<string name="act_wait_payment_confirm">Notice</string>
+	<string name="act_wait_payment_msg1">Once the payment is completed</string>
+	<string name="act_wait_payment_msg2">a text message of confirmation will be sent.</string>
+	
+	<!-- Facebook -->
+	<string name="com_facebook_dialogloginactivity_ok_button">Confirm</string>
+	<string name="com_facebook_loginview_log_in_button">Sign in with Facebook</string>
+	<string name="com_facebook_loginview_log_out_button">Sign out</string>
+	<string name="com_facebook_loginview_logged_in_as">Sign in to %1$s</string>
+	<string name="com_facebook_loginview_logged_in_using_facebook">You have logged in with Facebook</string>
+	<string name="com_facebook_loginview_log_out_action">Sign out</string>
+	<string name="com_facebook_loginview_cancel_action">Cancel</string>
+
+    <string name="dialog_msg_kakao_link">You do not have any shared hotels.</string>
+    <string name="act_booking_payment_info">Have trouble paying? Please call 1800-9120</string>
+    <string name="crash_toast_text">An unexpected error has occurred.</string>
+    <string name="crash_dialog_title">Application error report</string>
+    <string name="crash_dialog_text">An unexpected error has occurred. Please help us fix this by sending us the error information data. Click confirm to send an error report email.</string>
+	<string name="crash_dialog_ok_text">Sorry for the inconvenience. We will fix this as quickly as possible.</string>
+	<string name="crash_dialog_comment_prompt">Please leave comments for the following error.</string>
+	
+</resources>
