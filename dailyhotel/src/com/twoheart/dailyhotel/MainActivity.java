@@ -679,8 +679,11 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			drawerLayout.closeDrawer(drawerView);
 			return;
 		}
-
-		super.onBackPressed();
+		
+		if (backButtonHandler.onBackPressed())
+		{
+			super.onBackPressed();
+		}
 	}
 
 	public void toggleDrawer()
@@ -700,13 +703,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 				drawerLayout.closeDrawer(drawerView);
 			}
 		}
-	}
-
-	@Override
-	public void finish()
-	{
-		if (backButtonHandler.onBackPressed())
-			super.finish();
 	}
 
 	private class DrawerMenu

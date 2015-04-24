@@ -19,6 +19,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -44,7 +46,6 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListe
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
 import com.twoheart.dailyhotel.widget.FragmentViewPager;
-import com.twoheart.dailyhotel.widget.FragmentViewPager.OnPageSelectedListener;
 import com.twoheart.dailyhotel.widget.RegionPopupListView;
 import com.twoheart.dailyhotel.widget.TabIndicator;
 import com.twoheart.dailyhotel.widget.TabIndicator.OnTabSelectedListener;
@@ -70,6 +71,8 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 		public void selectHotel(HotelListViewItem hotelListViewItem, int hotelIndex, SaleTime saleTime);
 
 		public void selectDay(HotelListFragment fragment, boolean isListSelectionTop);
+		
+		public void toggleViewType();
 	};
 
 	public interface UserAnalyticsActionListener
@@ -97,7 +100,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 		mTabIndicator.setOnTabSelectListener(mOnTabSelectedListener);
 
 		mFragmentViewPager = (FragmentViewPager) view.findViewById(R.id.fragmentViewPager);
-		mFragmentViewPager.setOnPageSelectedListener(mOnPageSelectedListener);
+		mFragmentViewPager.setOnPageChangeListener(mOnPageChangeListener);
 
 		mFragmentList = new ArrayList<HotelListFragment>();
 		mTodaySaleTime = new SaleTime();
@@ -161,7 +164,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
 	{
-		mHostActivity.getMenuInflater().inflate(R.menu.actionbar_icon_map, menu);
+//		mHostActivity.getMenuInflater().inflate(R.menu.actionbar_icon_map, menu);
 	}
 
 	@Override
@@ -171,38 +174,38 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 		{
 			case R.id.action_map:
 			{
-				if (isLockUiComponent() == true)
-				{
-					return true;
-				}
-
-				lockUI();
-
-				switch (mHotelViewType)
-				{
-					case LIST:
-						item.setIcon(R.drawable.img_ic_list);
-						mHotelViewType = HOTEL_VIEW_TYPE.MAP;
-
-						break;
-
-					case MAP:
-						item.setIcon(R.drawable.img_ic_map);
-						mHotelViewType = HOTEL_VIEW_TYPE.LIST;
-						break;
-				}
-
-				// 현재 페이지 선택 상태를 Fragment에게 알려준다.
-				HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
-
-				for (HotelListFragment hotelListFragment : mFragmentList)
-				{
-					boolean isCurrentFragment = hotelListFragment == currentFragment;
-
-					hotelListFragment.setHotelViewType(mHotelViewType, isCurrentFragment);
-				}
-
-				unLockUI();
+//				if (isLockUiComponent() == true)
+//				{
+//					return true;
+//				}
+//
+//				lockUI();
+//
+//				switch (mHotelViewType)
+//				{
+//					case LIST:
+//						item.setIcon(R.drawable.img_ic_list);
+//						mHotelViewType = HOTEL_VIEW_TYPE.MAP;
+//
+//						break;
+//
+//					case MAP:
+//						item.setIcon(R.drawable.img_ic_map);
+//						mHotelViewType = HOTEL_VIEW_TYPE.LIST;
+//						break;
+//				}
+//
+//				// 현재 페이지 선택 상태를 Fragment에게 알려준다.
+//				HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
+//
+//				for (HotelListFragment hotelListFragment : mFragmentList)
+//				{
+//					boolean isCurrentFragment = hotelListFragment == currentFragment;
+//
+//					hotelListFragment.setHotelViewType(mHotelViewType, isCurrentFragment);
+//				}
+//
+//				unLockUI();
 				return true;
 			}
 
@@ -519,7 +522,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 		}
 	};
 
-	private OnPageSelectedListener mOnPageSelectedListener = new OnPageSelectedListener()
+	private OnPageChangeListener mOnPageChangeListener = new OnPageChangeListener()
 	{
 		@Override
 		public void onPageSelected(int position)
@@ -548,6 +551,29 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 			}
 
 			refreshHotelList(isSelectionTop);
+		}
+
+		@Override
+		public void onPageScrollStateChanged(int state)
+		{
+			switch(state)
+			{
+				case ViewPager.SCROLL_STATE_IDLE:
+					break;
+					
+				case ViewPager.SCROLL_STATE_DRAGGING:
+					HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
+					currentFragment.setFloatingActionButtonVisible(false);
+					break;
+					
+				case ViewPager.SCROLL_STATE_SETTLING:
+					break;
+			}
+		}
+
+		@Override
+		public void onPageScrolled(int arg0, float arg1, int arg2)
+		{
 		}
 	};
 
@@ -628,6 +654,41 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 			}
 
 			releaseUiComponent();
+		}
+
+		@Override
+		public void toggleViewType()
+		{
+			if (isLockUiComponent() == true)
+			{
+				return;
+			}
+
+			lockUI();
+
+			switch (mHotelViewType)
+			{
+				case LIST:
+					mHotelViewType = HOTEL_VIEW_TYPE.MAP;
+
+					break;
+
+				case MAP:
+					mHotelViewType = HOTEL_VIEW_TYPE.LIST;
+					break;
+			}
+
+			// 현재 페이지 선택 상태를 Fragment에게 알려준다.
+			HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
+
+			for (HotelListFragment hotelListFragment : mFragmentList)
+			{
+				boolean isCurrentFragment = hotelListFragment == currentFragment;
+
+				hotelListFragment.setHotelViewType(mHotelViewType, isCurrentFragment);
+			}
+
+			unLockUI();
 		}
 	};
 

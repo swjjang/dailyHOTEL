@@ -18,6 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.os.Bundle;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
@@ -34,7 +35,6 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListe
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 import com.twoheart.dailyhotel.widget.FragmentViewPager;
-import com.twoheart.dailyhotel.widget.FragmentViewPager.OnPageSelectedListener;
 import com.twoheart.dailyhotel.widget.TabIndicator;
 import com.twoheart.dailyhotel.widget.TabIndicator.OnTabSelectedListener;
 
@@ -103,7 +103,7 @@ public class BookingTabActivity extends BaseActivity
 			titleList.add(getString(R.string.frag_tab_map_title));
 
 			mFragmentViewPager = (FragmentViewPager) findViewById(R.id.fragmentViewPager);
-			mFragmentViewPager.setOnPageSelectedListener(mOnPageSelectedListener);
+			mFragmentViewPager.setOnPageChangeListener(mOnPageChangeListener);
 
 			mFragmentList = new ArrayList<BaseFragment>();
 
@@ -162,7 +162,7 @@ public class BookingTabActivity extends BaseActivity
 		}
 	};
 
-	private OnPageSelectedListener mOnPageSelectedListener = new OnPageSelectedListener()
+	private OnPageChangeListener mOnPageChangeListener = new OnPageChangeListener()
 	{
 		@Override
 		public void onPageSelected(int position)
@@ -181,6 +181,20 @@ public class BookingTabActivity extends BaseActivity
 			{
 				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("bookingDetail_map", "/bookings/" + booking.getHotel_name() + "/map");
 			}
+		}
+
+		@Override
+		public void onPageScrollStateChanged(int arg0)
+		{
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onPageScrolled(int arg0, float arg1, int arg2)
+		{
+			// TODO Auto-generated method stub
+			
 		}
 	};
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////

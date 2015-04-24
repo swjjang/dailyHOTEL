@@ -23,18 +23,7 @@ public class FragmentViewPager extends LinearLayout
 
 	private CustomViewPager mViewPager;
 
-	private OnPageSelectedListener mOnPageSelectedListener;
-	private OnPageScrolledListener mOnPageScrolledListener;
-
-	public interface OnPageSelectedListener
-	{
-		public void onPageSelected(int position);
-	}
-
-	public interface OnPageScrolledListener
-	{
-		public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels);
-	}
+	private OnPageChangeListener mRequestOnPageChangeListener;
 
 	/**
 	 * @param context
@@ -118,41 +107,39 @@ public class FragmentViewPager extends LinearLayout
 		return mViewPager.getCurrentItem();
 	}
 
-	public void setOnPageSelectedListener(OnPageSelectedListener l)
+	public void setOnPageChangeListener(OnPageChangeListener l)
 	{
-		mOnPageSelectedListener = l;
+		mRequestOnPageChangeListener = l;
 	}
-
-	public void setOnPageScrolledListener(OnPageScrolledListener l)
-	{
-		mOnPageScrolledListener = l;
-	}
-
+	
 	private OnPageChangeListener mOnPageChangeListener = new OnPageChangeListener()
 	{
 
 		@Override
 		public void onPageSelected(int arg0)
 		{
-			if (null != mOnPageSelectedListener)
+			if (null != mRequestOnPageChangeListener)
 			{
-				mOnPageSelectedListener.onPageSelected(arg0);
+				mRequestOnPageChangeListener.onPageSelected(arg0);
 			}
 		}
 
 		@Override
 		public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
 		{
-			if (null != mOnPageScrolledListener)
+			if (null != mRequestOnPageChangeListener)
 			{
-				mOnPageScrolledListener.onPageScrolled(position, positionOffset, positionOffsetPixels);
+				mRequestOnPageChangeListener.onPageScrolled(position, positionOffset, positionOffsetPixels);
 			}
 		}
 
 		@Override
 		public void onPageScrollStateChanged(int arg0)
 		{
-
+			if (null != mRequestOnPageChangeListener)
+			{
+				mRequestOnPageChangeListener.onPageScrollStateChanged(arg0);
+			}
 		}
 	};
 
@@ -199,12 +186,6 @@ public class FragmentViewPager extends LinearLayout
 	public void setPagingEnable(boolean enable)
 	{
 		mViewPager.setPagingEnable(enable);
-	}
-
-	public OnPageChangeListener getOnPageChangeListener()
-	{
-		return mOnPageChangeListener;
-
 	}
 
 	public void setPageMargin(int margin)

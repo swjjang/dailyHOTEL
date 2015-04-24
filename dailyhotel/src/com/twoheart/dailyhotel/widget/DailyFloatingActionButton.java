@@ -49,6 +49,8 @@ public class DailyFloatingActionButton extends ImageButton
 	private int mShadowSize;
 	private boolean mMarginsSet;
 	private int mFirstVisibleItem;
+	
+	private int mScrollState = -1;
 
 	private final Interpolator mInterpolator = new AccelerateDecelerateInterpolator();
 
@@ -84,7 +86,7 @@ public class DailyFloatingActionButton extends ImageButton
 
 	private void init(Context context, AttributeSet attributeSet)
 	{
-		mVisible = true;
+		mVisible = false;
 		mColorNormal = getColor(R.color.white);
 		mColorPressed = darkenColor(mColorNormal);
 		mColorRipple = lightenColor(mColorNormal);
@@ -215,18 +217,7 @@ public class DailyFloatingActionButton extends ImageButton
 			setBackgroundDrawable(drawable);
 		}
 	}
-
-	private int getMarginBottom()
-	{
-		int marginBottom = 0;
-		final ViewGroup.LayoutParams layoutParams = getLayoutParams();
-		if (layoutParams instanceof ViewGroup.MarginLayoutParams)
-		{
-			marginBottom = ((ViewGroup.MarginLayoutParams) layoutParams).bottomMargin;
-		}
-		return marginBottom;
-	}
-
+	
 	public void setColorNormal(int color)
 	{
 		if (color != mColorNormal)
@@ -331,10 +322,20 @@ public class DailyFloatingActionButton extends ImageButton
 	{
 		toggle(true, animate, false);
 	}
-
+	
 	public void hide(boolean animate)
 	{
 		toggle(false, animate, false);
+	}
+	
+	public void show(boolean animate, boolean force)
+	{
+		toggle(true, animate, force);
+	}
+	
+	public void hide(boolean animate, boolean force)
+	{
+		toggle(false, animate, force);
 	}
 
 	private void toggle(final boolean visible, final boolean animate, boolean force)
@@ -376,6 +377,7 @@ public class DailyFloatingActionButton extends ImageButton
 					startAnimation(scalAnimation);
 				} else
 				{
+					setAnimation(null);
 					setVisibility(View.VISIBLE);
 				}
 			} else
@@ -412,6 +414,7 @@ public class DailyFloatingActionButton extends ImageButton
 					startAnimation(scalAnimation);
 				} else
 				{
+					setAnimation(null);
 					setVisibility(View.GONE);
 				}
 			}
@@ -459,13 +462,21 @@ public class DailyFloatingActionButton extends ImageButton
 	{
 		listView.setOnScrollListener(mOnScrollListener);
 	}
+	
+	public void detachToListView(AbsListView listView)
+	{
+		listView.setOnScrollListener(null);
+		mScrollState = -1;
+	}
 
 	private AbsListView.OnScrollListener mOnScrollListener = new AbsListView.OnScrollListener()
 	{
 		@Override
 		public void onScrollStateChanged(AbsListView view, int scrollState)
 		{
-			ExLog.d("scrollState : " +scrollState);
+			ExLog.d("onPage scrollState : " +scrollState);
+			
+			mScrollState = scrollState;
 			
 			if(scrollState == SCROLL_STATE_IDLE)
 			{
@@ -476,6 +487,13 @@ public class DailyFloatingActionButton extends ImageButton
 		@Override
 		public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount)
 		{
+			ExLog.d("onPage onScroll : " + mScrollState);
+			
+			if(mScrollState == -1)
+			{
+				return;
+			}
+			
 			if(mFirstVisibleItem != firstVisibleItem)
 			{
 				mFirstVisibleItem = firstVisibleItem;

@@ -31,12 +31,14 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.AbsListViewDelegate;
 import android.os.Bundle;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.FrameLayout;
 
@@ -87,6 +89,13 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		View view = inflater.inflate(R.layout.fragment_hotel_list, container, false);
 
 		mHotelListView = (PinnedSectionListView) view.findViewById(R.id.listview_hotel_list);
+		
+		// 이벤트를 마지막에 넣는다.
+		View eventView = inflater.inflate(R.layout.list_row_hotel_event, null, true);
+		TextView eventTextView = (TextView) eventView.findViewById(R.id.titleTextView);
+		eventTextView.setText(Html.fromHtml(getString(R.string.label_event_title)));
+		mHotelListView.addFooterView(eventView);
+		
 		mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
 		mEmptyView = view.findViewById(R.id.emptyView);
 		mMapLayout = (FrameLayout) view.findViewById(R.id.hotelMapLayout);
@@ -94,15 +103,15 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		//		mHotelListMapFragment = (HotelListMapFragment) getChildFragmentManager().findFragmentById(R.id.hotelMapFragment);
 		
 		mDailyFloatingActionButton = (DailyFloatingActionButton) view.findViewById(R.id.floatingActionButton);
-		mDailyFloatingActionButton.attachToListView(mHotelListView);
 		mDailyFloatingActionButton.setOnClickListener(new View.OnClickListener()
 		{
-			
 			@Override
 			public void onClick(View v)
 			{
-				// TODO Auto-generated method stub
-				
+				if(mUserActionListener != null)
+				{
+					mUserActionListener.toggleViewType();
+				}
 			}
 		});
 
@@ -159,18 +168,21 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_TIME).toString(), null, mAppTimeJsonResponseListener, mHostActivity));
 	}
-
+	
 	public void onPageSelected(boolean isRequestHotelList)
 	{
+		ExLog.d("onPage Selected : " + this.toString());
 	}
 
 	public void onPageUnSelected()
 	{
+		ExLog.d("onPage UnSelected : " + this.toString());
 	}
 
 	public void onRefreshComplete()
 	{
-
+		mDailyFloatingActionButton.attachToListView(mHotelListView);
+		setFloatingActionButtonVisible(true);
 	}
 
 	public void setHotelViewType(HOTEL_VIEW_TYPE type, boolean isCurrentPage)
@@ -263,6 +275,24 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	public void setUserActionListener(HotelMainFragment.UserActionListener userActionLister)
 	{
 		mUserActionListener = userActionLister;
+	}
+	
+	public void setFloatingActionButtonVisible(boolean visible)
+	{
+		if(mDailyFloatingActionButton == null)
+		{
+			return;
+		}
+		
+		ExLog.d("setFloatingActionButtonVisible : " + visible);
+		
+		if(visible == true)
+		{
+			mDailyFloatingActionButton.show(false, true);
+		} else
+		{
+			mDailyFloatingActionButton.hide(false, true);
+		}
 	}
 
 	public void refreshHotelList(boolean isSelectionTop)
@@ -592,6 +622,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 					if (mIsSelectionTop == true)
 					{
 						mHotelListView.setSelection(0);
+						mDailyFloatingActionButton.detachToListView(mHotelListView);
 					}
 				}
 
