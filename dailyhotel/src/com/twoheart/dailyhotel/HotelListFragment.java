@@ -54,6 +54,7 @@ import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
+import com.twoheart.dailyhotel.widget.DailyFloatingActionButton;
 import com.twoheart.dailyhotel.widget.DailyHotelHeaderTransformer;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView;
 
@@ -73,6 +74,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	private HotelListMapFragment mHotelListMapFragment;
 	private HOTEL_VIEW_TYPE mHotelViewType;
 	private String mSelectedRegion;
+	private DailyFloatingActionButton mDailyFloatingActionButton;
 
 	private HotelListViewItem mSelectedHotelListViewItem;
 	private int mSelectedHotelIndex;
@@ -90,11 +92,24 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		mMapLayout = (FrameLayout) view.findViewById(R.id.hotelMapLayout);
 
 		//		mHotelListMapFragment = (HotelListMapFragment) getChildFragmentManager().findFragmentById(R.id.hotelMapFragment);
+		
+		mDailyFloatingActionButton = (DailyFloatingActionButton) view.findViewById(R.id.floatingActionButton);
+		mDailyFloatingActionButton.attachToListView(mHotelListView);
+		mDailyFloatingActionButton.setOnClickListener(new View.OnClickListener()
+		{
+			
+			@Override
+			public void onClick(View v)
+			{
+				// TODO Auto-generated method stub
+				
+			}
+		});
 
 		mHotelViewType = HOTEL_VIEW_TYPE.LIST;
 
 		setVisibility(HOTEL_VIEW_TYPE.LIST);
-
+		
 		// pinkred_font
 		//		GlobalFont.apply(container);
 

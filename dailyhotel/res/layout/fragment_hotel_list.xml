@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/hotel_list_background" >
-    
+
     <FrameLayout
         android:id="@+id/hotelMapLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone">
-        
-        <!-- 
+        android:visibility="gone" >
+
+        <!--
 	    <fragment
 	        android:id="@+id/hotelMapFragment"
 	        android:layout_width="match_parent"
 	        android:layout_height="match_parent"
 	        class="com.twoheart.dailyhotel.fragment.HotelListMapFragment" />
-	        
-	     -->
-	</FrameLayout>
+        -->
+    </FrameLayout>
 
     <include
         android:id="@+id/emptyView"
@@ -40,6 +40,18 @@
             android:cacheColorHint="@android:color/transparent"
             android:divider="@null" />
     </uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout>
+
+    <com.twoheart.dailyhotel.widget.DailyFloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="16dp"
+        android:src="@drawable/img_ic_map_mini"
+        fab:fab_colorNormal="@color/floating_action_button_default"
+        fab:fab_colorPressed="@color/floating_action_button_pressed"
+        fab:fab_colorRipple="@color/floating_action_button_pressed" />
 
     <View
         android:id="@+id/daysBackgroundView"

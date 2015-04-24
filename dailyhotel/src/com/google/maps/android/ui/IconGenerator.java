@@ -20,6 +20,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
@@ -73,11 +74,16 @@ public class IconGenerator
 	 * @param text
 	 *            the text content to display inside the icon.
 	 */
-	public Bitmap makeIcon(String text)
+	public Bitmap makeIcon(String text, boolean isSoldOut)
 	{
 		if (mTextView != null)
 		{
 			mTextView.setText(text);
+			
+			if(isSoldOut)
+			{
+				mTextView.setPaintFlags(mTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+			}
 		}
 
 		return makeIcon();

@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
@@ -27,6 +28,8 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.adapter.HotelInfoWindowAdapter;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
 
 public class HotelListMapFragment extends
@@ -40,6 +43,12 @@ public class HotelListMapFragment extends
 	private SaleTime mSaleTime;
 	private boolean mIsCreateView = false;
 	private Handler mHandler = new Handler();
+	private BaseActivity mHotelActivity;
+
+	private HotelListViewItem mHotelListViewItem;
+	private int mHotelIndex;
+	private Marker mMarker;
+	private boolean mOpenMakrer;
 
 	public HotelListMapFragment()
 	{
@@ -50,6 +59,13 @@ public class HotelListMapFragment extends
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		View view = super.onCreateView(inflater, container, savedInstanceState);
+
+		mHotelActivity = (BaseActivity) getActivity();
+
+		if (mHotelActivity != null)
+		{
+			mHotelActivity.lockUI();
+		}
 
 		getMapAsync(new OnMapReadyCallback()
 		{
@@ -84,6 +100,8 @@ public class HotelListMapFragment extends
 				mIsCreateView = true;
 
 				makeMarker();
+
+				mHotelActivity.unLockUI();
 			}
 		});
 
@@ -121,10 +139,14 @@ public class HotelListMapFragment extends
 			return;
 		}
 
-		//		int count = 0;
-		//		double latitude = 0.0;
-		//		double longitude = 0.0;
-		//		double i = 0.0;
+		double latitude = 0.0;
+		double longitude = 0.0;
+
+		if (mOpenMakrer == true)
+		{
+			latitude = mHotelListViewItem.getItem().mLatitude;
+			longitude = mHotelListViewItem.getItem().mLongitude;
+		}
 
 		LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
@@ -136,22 +158,15 @@ public class HotelListMapFragment extends
 			}
 
 			Hotel hotel = hotelListViewItem.getItem();
+			Marker marker = addMarker(hotel);
 
-			//			if (hotel.mLatitude == 0.0)
-			//			{
-			//				hotel.mLatitude = 37.540705 + i / 1000;
-			//			}
-			//
-			//			if (hotel.mLongitude == 0.0)
-			//			{
-			//				hotel.mLongitude = 126.956764 + i / 1000;
-			//			}
-			//
-			//			i++;
-
-			addMarker(hotel);
-
-			//			count++;
+			if (mOpenMakrer == true)
+			{
+				if (latitude == hotel.mLatitude && longitude == hotel.mLongitude)
+				{
+					mMarker = marker;
+				}
+			}
 
 			LatLng latlng = new LatLng(hotel.mLatitude, hotel.mLongitude);
 			builder.include(latlng);
@@ -159,20 +174,22 @@ public class HotelListMapFragment extends
 
 		final LatLngBounds bounds = builder.build();
 
-		mHandler.post(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				int width = getView().getWidth();
-				int height = getView().getHeight();
-
-				int zoomLevel = getBoundsZoomLevel(bounds.northeast, bounds.southwest, width, height);
-
-				CameraPosition cp = new CameraPosition.Builder().target((bounds.getCenter())).zoom(zoomLevel).build();
-				mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
-			}
-		});
+		//		mHandler.post(new Runnable()
+		//		{
+		//			@Override
+		//			public void run()
+		//			{
+		//				int width = getView().getWidth();
+		//				int height = getView().getHeight();
+		//
+		//				MapHelper mapHelper = new MapHelper(mGoogleMap);
+		//				
+		//				int zoomLevel = getBoundsZoomLevel(bounds.northeast, bounds.southwest, width, height);
+		//
+		//				CameraPosition cp = new CameraPosition.Builder().target((bounds.getCenter())).zoom(zoomLevel).build();
+		//				mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
+		//			}
+		//		});
 
 		//		int width = getView().getWidth();
 		//		int height = getView().getHeight();
@@ -184,24 +201,38 @@ public class HotelListMapFragment extends
 		//			zoomLevel = 15;
 		//		}
 		//		
-		//		CameraPosition cp = new CameraPosition.Builder().target((bounds.getCenter())).zoom(zoomLevel).build();
-		//		googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
+		if (mOpenMakrer == false)
+		{
+			CameraPosition cp = new CameraPosition.Builder().target((bounds.getCenter())).zoom(15).build();
+			mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
+		}
 
-		//		if (count > 1)
-		//		{
-		//
-		//			googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback()
-		//			{
-		//				@Override
-		//				public void onMapLoaded()
-		//				{
-		//					CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, Util.dpToPx(getActivity(), 50));
-		//					cameraUpdate.
-		//
-		//					googleMap.animateCamera(cameraUpdate, 500, null);
-		//				}
-		//			});
-		//		}
+		if (mHotelArrayList.size() > 1)
+		{
+
+			mGoogleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback()
+			{
+				@Override
+				public void onMapLoaded()
+				{
+					if (mOpenMakrer == true)
+					{
+						mOpenMakrer = false;
+
+						if (mMarker != null)
+						{
+							mHotelInfoWindowAdapter.setHotelListViewItem(mHotelListViewItem);
+							mHotelInfoWindowAdapter.setHotelIndex(mHotelIndex);
+							mMarker.showInfoWindow();
+						}
+					} else
+					{
+						CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, Util.dpToPx(getActivity(), 50));
+						mGoogleMap.animateCamera(cameraUpdate);
+					}
+				}
+			});
+		}
 
 		mHotelInfoWindowAdapter = new HotelInfoWindowAdapter(getActivity());
 
@@ -244,25 +275,31 @@ public class HotelListMapFragment extends
 			@Override
 			public void onInfoWindowClick(Marker arg0)
 			{
-				HotelListViewItem hotelListViewItem = mHotelInfoWindowAdapter.getHotelListViewItem();
-				int index = mHotelInfoWindowAdapter.getHotelIndex();
+				mHotelListViewItem = mHotelInfoWindowAdapter.getHotelListViewItem();
+				mHotelIndex = mHotelInfoWindowAdapter.getHotelIndex();
 
 				if (mUserActionListener != null)
 				{
-					mUserActionListener.selectHotel(hotelListViewItem, index, mSaleTime);
+					mUserActionListener.selectHotel(mHotelListViewItem, mHotelIndex, mSaleTime);
+
+					mOpenMakrer = true;
 				}
 			}
 		});
 	}
 
-	private void addMarker(Hotel hotel)
+	private Marker addMarker(Hotel hotel)
 	{
 		if (mGoogleMap != null)
 		{
 			HotelPriceRenderer hotelPriceRenderer = new HotelPriceRenderer(hotel);
 
-			mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(hotel.mLatitude, hotel.mLongitude)).title(hotel.getDiscount()).icon(hotelPriceRenderer.getBitmap()));
+			MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(hotel.mLatitude, hotel.mLongitude)).title(hotel.getDiscount()).icon(hotelPriceRenderer.getBitmap());
+
+			return mGoogleMap.addMarker(markerOptions);
 		}
+
+		return null;
 	}
 
 	private int getBoundsZoomLevel(LatLng northeast, LatLng southwest, int width, int height)
@@ -295,6 +332,7 @@ public class HotelListMapFragment extends
 	{
 		private String mPrice;
 		private IconGenerator mIconGenerator;
+		private boolean mIsSoldOut;
 
 		public HotelPriceRenderer(Hotel hotel)
 		{
@@ -304,6 +342,9 @@ public class HotelListMapFragment extends
 			mPrice = "₩" + comma.format(originalPrice);
 
 			mIconGenerator = new IconGenerator(getActivity());
+			
+			// SOLD OUT
+			mIsSoldOut = hotel.getAvailableRoom() == 0;
 
 			mIconGenerator.setTextColor(getResources().getColor(R.color.white));
 			mIconGenerator.setColor(getResources().getColor(hotel.getCategory().getColorResId()));
@@ -311,7 +352,7 @@ public class HotelListMapFragment extends
 
 		public BitmapDescriptor getBitmap()
 		{
-			Bitmap icon = mIconGenerator.makeIcon(mPrice);
+			Bitmap icon = mIconGenerator.makeIcon(mPrice, mIsSoldOut);
 
 			return BitmapDescriptorFactory.fromBitmap(icon);
 		}

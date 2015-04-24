@@ -116,7 +116,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 
 		mFragmentViewPager.setData(mFragmentList);
 		mFragmentViewPager.setAdapter(getChildFragmentManager());
-
+		
 		setHasOptionsMenu(true);//프래그먼트 내에서 옵션메뉴를 지정하기 위해 
 
 		return view;
@@ -161,7 +161,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
 	{
-		//		mHostActivity.getMenuInflater().inflate(R.menu.actionbar_icon_map, menu);
+		mHostActivity.getMenuInflater().inflate(R.menu.actionbar_icon_map, menu);
 	}
 
 	@Override
