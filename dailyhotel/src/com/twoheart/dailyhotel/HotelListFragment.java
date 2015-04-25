@@ -242,9 +242,11 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 				if (mHotelListMapFragment == null)
 				{
 					mHotelListMapFragment = new HotelListMapFragment();
+					mHotelListMapFragment.setRegion(mSelectedRegion);
+					
 					getChildFragmentManager().beginTransaction().add(mMapLayout.getId(), mHotelListMapFragment).commit();
 				}
-
+				
 				mPullToRefreshLayout.setVisibility(View.INVISIBLE);
 				break;
 

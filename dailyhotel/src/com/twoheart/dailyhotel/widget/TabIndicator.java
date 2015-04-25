@@ -100,6 +100,8 @@ public class TabIndicator extends HorizontalScrollView implements OnClickListene
 		mRectPaint.setAntiAlias(true);
 		mRectPaint.setStyle(Style.FILL);
 		mRectPaint.setColor(getResources().getColor(R.color.dh_theme_color));
+		
+		mIndicatorHeight = Util.dpToPx(context, 4);
 
 		setTabEnable(true);
 	}
@@ -110,21 +112,21 @@ public class TabIndicator extends HorizontalScrollView implements OnClickListene
 		super.onDraw(canvas);
 
 		final int height = getHeight();
-		View currentTab = mLinearLayout.getChildAt(mCurrentPosition);
-		float lineLeft = currentTab.getLeft();
-		float lineRight = currentTab.getRight();
+		View currentView = mLinearLayout.getChildAt(mCurrentPosition);
+		float lineLeft = currentView.getLeft();
+		float lineRight = currentView.getRight();
 
 		if (mCurrentPositionOffset > 0f && mCurrentPosition < size() - 1)
 		{
-			View nextTab = mLinearLayout.getChildAt(mCurrentPosition + 1);
-			final float nextTabLeft = nextTab.getLeft();
-			final float nextTabRight = nextTab.getRight();
+			View nextView = mLinearLayout.getChildAt(mCurrentPosition + 1);
+			final float nextTabLeft = nextView.getLeft();
+			final float nextTabRight = nextView.getRight();
 
 			lineLeft = (mCurrentPositionOffset * nextTabLeft + (1f - mCurrentPositionOffset) * lineLeft);
 			lineRight = (mCurrentPositionOffset * nextTabRight + (1f - mCurrentPositionOffset) * lineRight);
 		}
 
-		canvas.drawRect(lineLeft, height - Util.dpToPx(getContext(), 4), lineRight, height, mRectPaint);
+		canvas.drawRect(lineLeft, height - mIndicatorHeight, lineRight, height, mRectPaint);
 	}
 
 	public void setViewPager(ViewPager viewPager)
@@ -319,7 +321,6 @@ public class TabIndicator extends HorizontalScrollView implements OnClickListene
 			{
 				mTabArrray.get(i).setSelected(false);
 			}
-
 		}
 		if (null != mOnTabSelectedListener)
 		{
@@ -407,7 +408,6 @@ public class TabIndicator extends HorizontalScrollView implements OnClickListene
 
 	private void scrollToChild(int position, int offset)
 	{
-
 		if (size() == 0)
 		{
 			return;

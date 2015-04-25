@@ -42,17 +42,16 @@ public class HotelListMapFragment extends
 	protected HotelMainFragment.UserActionListener mUserActionListener;
 	private SaleTime mSaleTime;
 	private boolean mIsCreateView = false;
-	private Handler mHandler = new Handler();
 	private BaseActivity mHotelActivity;
 
 	private HotelListViewItem mHotelListViewItem;
 	private int mHotelIndex;
 	private Marker mMarker;
 	private boolean mOpenMakrer;
+	private String mRegion;
 
 	public HotelListMapFragment()
 	{
-
 	}
 
 	@Override
@@ -93,7 +92,60 @@ public class HotelListMapFragment extends
 				//		전라남도    : 34.819400, 126.893113
 				//		제주도       : 33.364805, 126.542671
 
-				LatLng address = new LatLng(37.540705, 126.956764);
+				double latitude = 37.540705;
+				double longitude = 126.956764;
+
+				if ("서울".equalsIgnoreCase(mRegion) == true)
+				{
+
+				} else if ("경기".equalsIgnoreCase(mRegion) == true)
+				{
+					// 37.567167, 127.190292
+					latitude = 37.567167;
+					longitude = 127.190292;
+				} else if ("인천".equalsIgnoreCase(mRegion) == true)
+				{
+					// 37.469221, 126.573234
+					latitude = 37.469221;
+					longitude = 126.573234;
+				} else if ("부산".equalsIgnoreCase(mRegion) == true)
+				{
+					// 35.198362, 129.053922
+					latitude = 35.198362;
+					longitude = 129.053922;
+				} else if ("경상".equalsIgnoreCase(mRegion) == true)
+				{
+					//		경상북도    : 36.248647, 128.664734
+					//		경상남도    : 35.259787, 128.664734
+					
+					latitude = (35.259787 + 36.248647) / 2;
+					longitude = 128.664734;
+					
+				} else if ("전라".equalsIgnoreCase(mRegion) == true)
+				{
+					//		전라북도    : 35.716705, 127.144185
+					//		전라남도    : 34.819400, 126.893113
+					latitude = (35.716705 + 34.819400) / 2;
+					longitude = (127.144185 + 126.893113) / 2;
+				} else if ("충청".equalsIgnoreCase(mRegion) == true)
+				{
+					//		충청남도    : 36.557229, 126.779757
+					//		충청북도    : 36.628503, 127.929344
+					latitude = (36.557229 + 36.628503) / 2;
+					longitude = (126.779757 + 127.929344) / 2;
+				} else if ("강원".equalsIgnoreCase(mRegion) == true)
+				{
+					// 37.555837, 128.209315
+					latitude = 37.555837;
+					longitude = 128.209315;
+				} else if ("제주".equalsIgnoreCase(mRegion) == true)
+				{
+					// 33.364805, 126.542671
+					latitude = 33.364805;
+					longitude = 126.542671;
+				}
+
+				LatLng address = new LatLng(latitude, longitude);
 				CameraPosition cp = new CameraPosition.Builder().target((address)).zoom(15).build();
 				mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
 
@@ -106,6 +158,11 @@ public class HotelListMapFragment extends
 		});
 
 		return view;
+	}
+
+	public void setRegion(String region)
+	{
+		mRegion = region;
 	}
 
 	public void setUserActionListener(HotelMainFragment.UserActionListener userActionLister)
@@ -141,6 +198,7 @@ public class HotelListMapFragment extends
 
 		double latitude = 0.0;
 		double longitude = 0.0;
+		int count = 0;
 
 		if (mOpenMakrer == true)
 		{
@@ -159,6 +217,8 @@ public class HotelListMapFragment extends
 
 			Hotel hotel = hotelListViewItem.getItem();
 			Marker marker = addMarker(hotel);
+			
+			count++;
 
 			if (mOpenMakrer == true)
 			{
@@ -207,9 +267,8 @@ public class HotelListMapFragment extends
 			mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
 		}
 
-		if (mHotelArrayList.size() > 1)
+		if (count > 1)
 		{
-
 			mGoogleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback()
 			{
 				@Override

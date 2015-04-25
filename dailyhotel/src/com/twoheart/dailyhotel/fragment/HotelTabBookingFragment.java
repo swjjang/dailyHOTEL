@@ -59,7 +59,6 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 		newFragment.setTitle(title);
 
 		return newFragment;
-
 	}
 
 	@Override
@@ -145,13 +144,13 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 	public void onResume()
 	{
 		super.onResume();
+		
 		tvDiscount.setTypeface(DailyHotel.getBoldTypeface());
 		if (mHandler != null)
 		{
 			mHandler.removeMessages(0);
 			mHandler.sendEmptyMessageDelayed(0, DURATION_HOTEL_IMAGE_SHOW);
 		}
-
 	}
 
 	@Override
@@ -173,7 +172,6 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 	@Override
 	public boolean onTouch(View v, MotionEvent event)
 	{
-
 		if (v.getId() == mViewPager.getId())
 		{
 			switch (event.getAction())
