@@ -71,7 +71,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 		public void selectHotel(HotelListViewItem hotelListViewItem, int hotelIndex, SaleTime saleTime);
 
 		public void selectDay(HotelListFragment fragment, boolean isListSelectionTop);
-		
+
 		public void toggleViewType();
 	};
 
@@ -100,7 +100,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 		mTabIndicator.setOnTabSelectListener(mOnTabSelectedListener);
 
 		mFragmentViewPager = (FragmentViewPager) view.findViewById(R.id.fragmentViewPager);
-		mFragmentViewPager.setOnPageChangeListener(mOnPageChangeListener);
+		//		mFragmentViewPager.setOnPageChangeListener(mOnPageChangeListener);
 
 		mFragmentList = new ArrayList<HotelListFragment>();
 		mTodaySaleTime = new SaleTime();
@@ -119,8 +119,11 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 
 		mFragmentViewPager.setData(mFragmentList);
 		mFragmentViewPager.setAdapter(getChildFragmentManager());
-		
-		setHasOptionsMenu(true);//프래그먼트 내에서 옵션메뉴를 지정하기 위해 
+
+		mTabIndicator.setViewPager(mFragmentViewPager.getViewPager());
+		mTabIndicator.setOnPageChangeListener(mOnPageChangeListener);
+
+		//		setHasOptionsMenu(true);//프래그먼트 내에서 옵션메뉴를 지정하기 위해 
 
 		return view;
 	}
@@ -164,7 +167,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
 	{
-//		mHostActivity.getMenuInflater().inflate(R.menu.actionbar_icon_map, menu);
+		//		mHostActivity.getMenuInflater().inflate(R.menu.actionbar_icon_map, menu);
 	}
 
 	@Override
@@ -174,38 +177,38 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 		{
 			case R.id.action_map:
 			{
-//				if (isLockUiComponent() == true)
-//				{
-//					return true;
-//				}
-//
-//				lockUI();
-//
-//				switch (mHotelViewType)
-//				{
-//					case LIST:
-//						item.setIcon(R.drawable.img_ic_list);
-//						mHotelViewType = HOTEL_VIEW_TYPE.MAP;
-//
-//						break;
-//
-//					case MAP:
-//						item.setIcon(R.drawable.img_ic_map);
-//						mHotelViewType = HOTEL_VIEW_TYPE.LIST;
-//						break;
-//				}
-//
-//				// 현재 페이지 선택 상태를 Fragment에게 알려준다.
-//				HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
-//
-//				for (HotelListFragment hotelListFragment : mFragmentList)
-//				{
-//					boolean isCurrentFragment = hotelListFragment == currentFragment;
-//
-//					hotelListFragment.setHotelViewType(mHotelViewType, isCurrentFragment);
-//				}
-//
-//				unLockUI();
+				//				if (isLockUiComponent() == true)
+				//				{
+				//					return true;
+				//				}
+				//
+				//				lockUI();
+				//
+				//				switch (mHotelViewType)
+				//				{
+				//					case LIST:
+				//						item.setIcon(R.drawable.img_ic_list);
+				//						mHotelViewType = HOTEL_VIEW_TYPE.MAP;
+				//
+				//						break;
+				//
+				//					case MAP:
+				//						item.setIcon(R.drawable.img_ic_map);
+				//						mHotelViewType = HOTEL_VIEW_TYPE.LIST;
+				//						break;
+				//				}
+				//
+				//				// 현재 페이지 선택 상태를 Fragment에게 알려준다.
+				//				HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
+				//
+				//				for (HotelListFragment hotelListFragment : mFragmentList)
+				//				{
+				//					boolean isCurrentFragment = hotelListFragment == currentFragment;
+				//
+				//					hotelListFragment.setHotelViewType(mHotelViewType, isCurrentFragment);
+				//				}
+				//
+				//				unLockUI();
 				return true;
 			}
 
@@ -556,16 +559,16 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 		@Override
 		public void onPageScrollStateChanged(int state)
 		{
-			switch(state)
+			switch (state)
 			{
 				case ViewPager.SCROLL_STATE_IDLE:
 					break;
-					
+
 				case ViewPager.SCROLL_STATE_DRAGGING:
 					HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
 					currentFragment.setFloatingActionButtonVisible(false);
 					break;
-					
+
 				case ViewPager.SCROLL_STATE_SETTLING:
 					break;
 			}

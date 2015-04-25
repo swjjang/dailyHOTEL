@@ -342,7 +342,7 @@ public class HotelListMapFragment extends
 			mPrice = "₩" + comma.format(originalPrice);
 
 			mIconGenerator = new IconGenerator(getActivity());
-			
+
 			// SOLD OUT
 			mIsSoldOut = hotel.getAvailableRoom() == 0;
 

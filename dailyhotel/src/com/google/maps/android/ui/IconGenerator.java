@@ -79,8 +79,8 @@ public class IconGenerator
 		if (mTextView != null)
 		{
 			mTextView.setText(text);
-			
-			if(isSoldOut)
+
+			if (isSoldOut)
 			{
 				mTextView.setPaintFlags(mTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 			}

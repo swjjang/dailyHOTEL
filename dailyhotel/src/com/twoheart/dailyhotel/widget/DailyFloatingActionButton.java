@@ -49,7 +49,7 @@ public class DailyFloatingActionButton extends ImageButton
 	private int mShadowSize;
 	private boolean mMarginsSet;
 	private int mFirstVisibleItem;
-	
+
 	private int mScrollState = -1;
 
 	private final Interpolator mInterpolator = new AccelerateDecelerateInterpolator();
@@ -217,7 +217,7 @@ public class DailyFloatingActionButton extends ImageButton
 			setBackgroundDrawable(drawable);
 		}
 	}
-	
+
 	public void setColorNormal(int color)
 	{
 		if (color != mColorNormal)
@@ -322,17 +322,17 @@ public class DailyFloatingActionButton extends ImageButton
 	{
 		toggle(true, animate, false);
 	}
-	
+
 	public void hide(boolean animate)
 	{
 		toggle(false, animate, false);
 	}
-	
+
 	public void show(boolean animate, boolean force)
 	{
 		toggle(true, animate, force);
 	}
-	
+
 	public void hide(boolean animate, boolean force)
 	{
 		toggle(false, animate, force);
@@ -343,37 +343,37 @@ public class DailyFloatingActionButton extends ImageButton
 		if (mVisible != visible || force)
 		{
 			mVisible = visible;
-			
-			if(visible == true)
+
+			if (visible == true)
 			{
-				if(animate)
+				if (animate)
 				{
 					ScaleAnimation scalAnimation = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
 					scalAnimation.setDuration(SCALE_DURATION_MILLIS);
 					scalAnimation.setInterpolator(mInterpolator);
 					scalAnimation.setFillAfter(true);
-					
+
 					scalAnimation.setAnimationListener(new AnimationListener()
 					{
-						
+
 						@Override
 						public void onAnimationStart(Animation animation)
 						{
 							setVisibility(View.VISIBLE);
 						}
-						
+
 						@Override
 						public void onAnimationRepeat(Animation animation)
 						{
-							
+
 						}
-						
+
 						@Override
 						public void onAnimationEnd(Animation animation)
 						{
 						}
 					});
-					
+
 					startAnimation(scalAnimation);
 				} else
 				{
@@ -382,35 +382,35 @@ public class DailyFloatingActionButton extends ImageButton
 				}
 			} else
 			{
-				if(animate)
+				if (animate)
 				{
 					ScaleAnimation scalAnimation = new ScaleAnimation(1.0f, 0.0f, 1.0f, 0.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
 					scalAnimation.setDuration(SCALE_DURATION_MILLIS);
 					scalAnimation.setInterpolator(mInterpolator);
 					scalAnimation.setFillAfter(true);
-					
+
 					scalAnimation.setAnimationListener(new AnimationListener()
 					{
-						
+
 						@Override
 						public void onAnimationStart(Animation animation)
 						{
-							
+
 						}
-						
+
 						@Override
 						public void onAnimationRepeat(Animation animation)
 						{
-							
+
 						}
-						
+
 						@Override
 						public void onAnimationEnd(Animation animation)
 						{
 							setVisibility(View.GONE);
 						}
 					});
-					
+
 					startAnimation(scalAnimation);
 				} else
 				{
@@ -418,7 +418,7 @@ public class DailyFloatingActionButton extends ImageButton
 					setVisibility(View.GONE);
 				}
 			}
-			
+
 			// On pre-Honeycomb a translated view is still clickable, so we need to disable clicks manually
 			if (!hasHoneycombApi())
 			{
@@ -462,7 +462,7 @@ public class DailyFloatingActionButton extends ImageButton
 	{
 		listView.setOnScrollListener(mOnScrollListener);
 	}
-	
+
 	public void detachToListView(AbsListView listView)
 	{
 		listView.setOnScrollListener(null);
@@ -474,11 +474,11 @@ public class DailyFloatingActionButton extends ImageButton
 		@Override
 		public void onScrollStateChanged(AbsListView view, int scrollState)
 		{
-			ExLog.d("onPage scrollState : " +scrollState);
-			
+			ExLog.d("onPage scrollState : " + scrollState);
+
 			mScrollState = scrollState;
-			
-			if(scrollState == SCROLL_STATE_IDLE)
+
+			if (scrollState == SCROLL_STATE_IDLE)
 			{
 				show();
 			}
@@ -488,16 +488,16 @@ public class DailyFloatingActionButton extends ImageButton
 		public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount)
 		{
 			ExLog.d("onPage onScroll : " + mScrollState);
-			
-			if(mScrollState == -1)
+
+			if (mScrollState == -1)
 			{
 				return;
 			}
-			
-			if(mFirstVisibleItem != firstVisibleItem)
+
+			if (mFirstVisibleItem != firstVisibleItem)
 			{
 				mFirstVisibleItem = firstVisibleItem;
-				
+
 				hide();
 			}
 		}

@@ -103,11 +103,11 @@ public class HotelGradeView extends FrameLayout
 
 	private void setHotelGradeName(String hotelGradeName)
 	{
-		if(tvHotelGradeName == null)
+		if (tvHotelGradeName == null)
 		{
 			return;
 		}
-		
+
 		tvHotelGradeName.setText(hotelGradeName);
 	}
 

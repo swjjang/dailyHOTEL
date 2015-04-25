@@ -59,7 +59,7 @@ public class FragmentViewPager extends LinearLayout
 	{
 		mViewPager = new CustomViewPager(context);
 		mViewPager.setId(100);
-		mViewPager.setOnPageChangeListener(mOnPageChangeListener);
+		//		mViewPager.setOnPageChangeListener(mOnPageChangeListener);
 
 		this.addView(mViewPager);
 	}
@@ -107,11 +107,11 @@ public class FragmentViewPager extends LinearLayout
 		return mViewPager.getCurrentItem();
 	}
 
-	public void setOnPageChangeListener(OnPageChangeListener l)
-	{
-		mRequestOnPageChangeListener = l;
-	}
-	
+	//	public void setOnPageChangeListener(OnPageChangeListener l)
+	//	{
+	//		mRequestOnPageChangeListener = l;
+	//	}
+
 	private OnPageChangeListener mOnPageChangeListener = new OnPageChangeListener()
 	{
 

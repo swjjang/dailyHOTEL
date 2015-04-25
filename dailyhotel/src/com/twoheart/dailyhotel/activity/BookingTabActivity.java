@@ -103,7 +103,7 @@ public class BookingTabActivity extends BaseActivity
 			titleList.add(getString(R.string.frag_tab_map_title));
 
 			mFragmentViewPager = (FragmentViewPager) findViewById(R.id.fragmentViewPager);
-			mFragmentViewPager.setOnPageChangeListener(mOnPageChangeListener);
+			//			mFragmentViewPager.setOnPageChangeListener(mOnPageChangeListener);
 
 			mFragmentList = new ArrayList<BaseFragment>();
 
@@ -118,6 +118,9 @@ public class BookingTabActivity extends BaseActivity
 
 			mFragmentViewPager.setData(mFragmentList);
 			mFragmentViewPager.setAdapter(getSupportFragmentManager());
+
+			mTabIndicator.setViewPager(mFragmentViewPager.getViewPager());
+			mTabIndicator.setOnPageChangeListener(mOnPageChangeListener);
 
 			// pinkred_font
 			//			GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
@@ -187,14 +190,14 @@ public class BookingTabActivity extends BaseActivity
 		public void onPageScrollStateChanged(int arg0)
 		{
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void onPageScrolled(int arg0, float arg1, int arg2)
 		{
 			// TODO Auto-generated method stub
-			
+
 		}
 	};
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////

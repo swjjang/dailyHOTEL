@@ -148,7 +148,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		ExLog.d("pinkred : mAnimationStatus : " + mAnimationState + ", mAnimationStatus : " + mAnimationStatus + ", isRequestHotelList : " + isRequestHotelList);
 
 		super.onPageSelected(isRequestHotelList);
-		
+
 		switch (mAnimationStatus)
 		{
 			case SHOW:
@@ -194,7 +194,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 	public void onPageUnSelected()
 	{
 		super.onPageUnSelected();
-		
+
 		mHandler.removeMessages(1);
 
 		hideDaysList();
@@ -204,7 +204,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 	public void onRefreshComplete()
 	{
 		super.onRefreshComplete();
-		
+
 		if (mIsShowDaysList == true && mAnimationStatus == ANIMATION_STATUS.HIDE_END)
 		{
 			mIsShowDaysList = false;

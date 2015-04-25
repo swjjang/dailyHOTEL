@@ -38,9 +38,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.adapter.HotelListAdapter;
@@ -89,26 +89,26 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		View view = inflater.inflate(R.layout.fragment_hotel_list, container, false);
 
 		mHotelListView = (PinnedSectionListView) view.findViewById(R.id.listview_hotel_list);
-		
+
 		// 이벤트를 마지막에 넣는다.
 		View eventView = inflater.inflate(R.layout.list_row_hotel_event, null, true);
 		TextView eventTextView = (TextView) eventView.findViewById(R.id.titleTextView);
 		eventTextView.setText(Html.fromHtml(getString(R.string.label_event_title)));
 		mHotelListView.addFooterView(eventView);
-		
+
 		mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
 		mEmptyView = view.findViewById(R.id.emptyView);
 		mMapLayout = (FrameLayout) view.findViewById(R.id.hotelMapLayout);
 
 		//		mHotelListMapFragment = (HotelListMapFragment) getChildFragmentManager().findFragmentById(R.id.hotelMapFragment);
-		
+
 		mDailyFloatingActionButton = (DailyFloatingActionButton) view.findViewById(R.id.floatingActionButton);
 		mDailyFloatingActionButton.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
 			public void onClick(View v)
 			{
-				if(mUserActionListener != null)
+				if (mUserActionListener != null)
 				{
 					mUserActionListener.toggleViewType();
 				}
@@ -118,7 +118,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		mHotelViewType = HOTEL_VIEW_TYPE.LIST;
 
 		setVisibility(HOTEL_VIEW_TYPE.LIST);
-		
+
 		// pinkred_font
 		//		GlobalFont.apply(container);
 
@@ -168,7 +168,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_TIME).toString(), null, mAppTimeJsonResponseListener, mHostActivity));
 	}
-	
+
 	public void onPageSelected(boolean isRequestHotelList)
 	{
 		ExLog.d("onPage Selected : " + this.toString());
@@ -276,17 +276,17 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	{
 		mUserActionListener = userActionLister;
 	}
-	
+
 	public void setFloatingActionButtonVisible(boolean visible)
 	{
-		if(mDailyFloatingActionButton == null)
+		if (mDailyFloatingActionButton == null)
 		{
 			return;
 		}
-		
+
 		ExLog.d("setFloatingActionButtonVisible : " + visible);
-		
-		if(visible == true)
+
+		if (visible == true)
 		{
 			mDailyFloatingActionButton.show(false, true);
 		} else

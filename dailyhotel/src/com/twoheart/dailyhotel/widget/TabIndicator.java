@@ -8,8 +8,13 @@ import java.util.ArrayList;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Paint.Style;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.SparseArray;
@@ -17,18 +22,30 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.Util;
 
-public class TabIndicator extends LinearLayout implements OnClickListener
+public class TabIndicator extends HorizontalScrollView implements OnClickListener
 {
 	private SparseArray<TabIndicatorItem> mTabArrray;
 	private boolean mTabEnable;
 	private boolean mHasSubText;
+	private LinearLayout mLinearLayout;
+	private ViewPager mViewPager;
 
+	private int mCurrentPosition = 0;
+	private float mCurrentPositionOffset = 0f;
+	private int mLastScrollX = 0;
+	private int mScrollOffset = 52;
+	private int mIndicatorHeight = 8;
+	private Paint mRectPaint;
+
+	private OnPageChangeListener mRequestOnPageChangeListener;
 	private OnTabSelectedListener mOnTabSelectedListener;
 
 	public interface OnTabSelectedListener
@@ -42,7 +59,7 @@ public class TabIndicator extends LinearLayout implements OnClickListener
 	public TabIndicator(Context context)
 	{
 		super(context);
-		init();
+		init(context);
 	}
 
 	/**
@@ -52,7 +69,7 @@ public class TabIndicator extends LinearLayout implements OnClickListener
 	public TabIndicator(Context context, AttributeSet attrs)
 	{
 		super(context, attrs);
-		init();
+		init(context);
 	}
 
 	/**
@@ -64,14 +81,67 @@ public class TabIndicator extends LinearLayout implements OnClickListener
 	public TabIndicator(Context context, AttributeSet attrs, int defStyle)
 	{
 		super(context, attrs, defStyle);
-		init();
+		init(context);
 	}
 
-	private void init()
+	private void init(Context context)
 	{
+		setFillViewport(true);
+		setWillNotDraw(false);
+
+		mLinearLayout = new LinearLayout(context);
+		mLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
+		mLinearLayout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		addView(mLinearLayout);
+
 		mTabArrray = new SparseArray<TabIndicatorItem>();
 
+		mRectPaint = new Paint();
+		mRectPaint.setAntiAlias(true);
+		mRectPaint.setStyle(Style.FILL);
+		mRectPaint.setColor(getResources().getColor(R.color.dh_theme_color));
+
 		setTabEnable(true);
+	}
+
+	@Override
+	protected void onDraw(Canvas canvas)
+	{
+		super.onDraw(canvas);
+
+		final int height = getHeight();
+		View currentTab = mLinearLayout.getChildAt(mCurrentPosition);
+		float lineLeft = currentTab.getLeft();
+		float lineRight = currentTab.getRight();
+
+		if (mCurrentPositionOffset > 0f && mCurrentPosition < size() - 1)
+		{
+			View nextTab = mLinearLayout.getChildAt(mCurrentPosition + 1);
+			final float nextTabLeft = nextTab.getLeft();
+			final float nextTabRight = nextTab.getRight();
+
+			lineLeft = (mCurrentPositionOffset * nextTabLeft + (1f - mCurrentPositionOffset) * lineLeft);
+			lineRight = (mCurrentPositionOffset * nextTabRight + (1f - mCurrentPositionOffset) * lineRight);
+		}
+
+		canvas.drawRect(lineLeft, height - Util.dpToPx(getContext(), 4), lineRight, height, mRectPaint);
+	}
+
+	public void setViewPager(ViewPager viewPager)
+	{
+		mViewPager = viewPager;
+
+		if (viewPager.getAdapter() == null)
+		{
+			throw new IllegalStateException("ViewPager does not have adapter instance.");
+		}
+
+		viewPager.setOnPageChangeListener(mOnPageChangeListener);
+	}
+
+	public void setOnPageChangeListener(OnPageChangeListener l)
+	{
+		mRequestOnPageChangeListener = l;
 	}
 
 	public int size()
@@ -95,7 +165,7 @@ public class TabIndicator extends LinearLayout implements OnClickListener
 
 		int size = dataList.size();
 		TabIndicatorItem tabIndicatorItem;
-		LayoutParams layoutParams;
+		LinearLayout.LayoutParams layoutParams;
 
 		for (int i = 0; i < size; i++)
 		{
@@ -108,10 +178,10 @@ public class TabIndicator extends LinearLayout implements OnClickListener
 
 			mTabArrray.put(i, tabIndicatorItem);
 
-			layoutParams = new LayoutParams(0, LayoutParams.MATCH_PARENT);
+			layoutParams = new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT);
 			layoutParams.weight = 1;
 
-			this.addView(tabIndicatorItem, layoutParams);
+			mLinearLayout.addView(tabIndicatorItem, layoutParams);
 		}
 
 		mTabArrray.get(0).setSelected(true);
@@ -126,7 +196,7 @@ public class TabIndicator extends LinearLayout implements OnClickListener
 
 		int size = dataList.size();
 		TabIndicatorItem tabIndicatorItem;
-		LayoutParams layoutParams;
+		LinearLayout.LayoutParams layoutParams;
 
 		for (int i = 0; i < size; i++)
 		{
@@ -148,10 +218,10 @@ public class TabIndicator extends LinearLayout implements OnClickListener
 			tabIndicatorItem.setOnClickListener(this);
 			mTabArrray.put(i, tabIndicatorItem);
 
-			layoutParams = new LayoutParams(0, LayoutParams.MATCH_PARENT);
+			layoutParams = new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT);
 			layoutParams.weight = 1;
 
-			this.addView(tabIndicatorItem, layoutParams);
+			mLinearLayout.addView(tabIndicatorItem, layoutParams);
 		}
 
 		mTabArrray.get(0).setSelected(true);
@@ -292,11 +362,76 @@ public class TabIndicator extends LinearLayout implements OnClickListener
 		}
 	}
 
+	private OnPageChangeListener mOnPageChangeListener = new OnPageChangeListener()
+	{
+
+		@Override
+		public void onPageSelected(int arg0)
+		{
+			if (null != mRequestOnPageChangeListener)
+			{
+				mRequestOnPageChangeListener.onPageSelected(arg0);
+			}
+		}
+
+		@Override
+		public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
+		{
+			mCurrentPosition = position;
+			mCurrentPositionOffset = positionOffset;
+
+			scrollToChild(position, (int) (positionOffset * mLinearLayout.getChildAt(position).getWidth()));
+
+			invalidate();
+
+			if (null != mRequestOnPageChangeListener)
+			{
+				mRequestOnPageChangeListener.onPageScrolled(position, positionOffset, positionOffsetPixels);
+			}
+		}
+
+		@Override
+		public void onPageScrollStateChanged(int state)
+		{
+			if (state == ViewPager.SCROLL_STATE_IDLE)
+			{
+				scrollToChild(mViewPager.getCurrentItem(), 0);
+			}
+
+			if (null != mRequestOnPageChangeListener)
+			{
+				mRequestOnPageChangeListener.onPageScrollStateChanged(state);
+			}
+		}
+	};
+
+	private void scrollToChild(int position, int offset)
+	{
+
+		if (size() == 0)
+		{
+			return;
+		}
+
+		int newScrollX = mLinearLayout.getChildAt(position).getLeft() + offset;
+
+		if (position > 0 || offset > 0)
+		{
+			newScrollX -= mScrollOffset;
+		}
+
+		if (newScrollX != mLastScrollX)
+		{
+			mLastScrollX = newScrollX;
+			scrollTo(newScrollX, 0);
+		}
+
+	}
+
 	private class TabIndicatorItem extends RelativeLayout
 	{
 		private TextView mTitleTextView;
 		private TextView mDayTextView;
-		private View mSelectedUnderLineView;
 
 		public TabIndicatorItem(Context context)
 		{
@@ -319,7 +454,6 @@ public class TabIndicator extends LinearLayout implements OnClickListener
 
 		private void init()
 		{
-			setBackgroundResource(R.color.white);
 			setGravity(Gravity.CENTER);
 
 			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -327,7 +461,6 @@ public class TabIndicator extends LinearLayout implements OnClickListener
 
 			mTitleTextView = (TextView) view.findViewById(R.id.tab_indicator_main_text);
 			mDayTextView = (TextView) view.findViewById(R.id.tab_indicator_sub_text);
-			mSelectedUnderLineView = view.findViewById(R.id.tab_indicator_under_line);
 		}
 
 		public void setMainTextColor(int color)
@@ -402,14 +535,6 @@ public class TabIndicator extends LinearLayout implements OnClickListener
 
 			mTitleTextView.setSelected(selected);
 			mDayTextView.setSelected(selected);
-
-			if (selected)
-			{
-				mSelectedUnderLineView.setVisibility(View.VISIBLE);
-			} else
-			{
-				mSelectedUnderLineView.setVisibility(View.INVISIBLE);
-			}
 		}
 	}
 }

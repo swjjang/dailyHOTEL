@@ -679,7 +679,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			drawerLayout.closeDrawer(drawerView);
 			return;
 		}
-		
+
 		if (backButtonHandler.onBackPressed())
 		{
 			super.onBackPressed();
