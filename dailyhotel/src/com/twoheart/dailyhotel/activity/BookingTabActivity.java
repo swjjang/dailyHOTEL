@@ -10,6 +10,7 @@
 package com.twoheart.dailyhotel.activity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,9 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
@@ -29,10 +32,12 @@ import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
+import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
+import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.FragmentViewPager;
 import com.twoheart.dailyhotel.widget.FragmentViewPager.OnPageSelectedListener;
 import com.twoheart.dailyhotel.widget.TabIndicator;
@@ -81,13 +86,18 @@ public class BookingTabActivity extends BaseActivity
 
 		ExLog.d("date", date);
 
-		String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_DETAIL).append('/').append(booking.getHotel_idx()).append("/").append(date[0]).append("/").append(date[1]).append("/").append(date[2]).toString();
+		//		String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_DETAIL).append('/').append(booking.getHotel_idx()).append("/").append(date[0]).append("/").append(date[1]).append("/").append(date[2]).toString();
+		String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_SALEDETAILINFO).toString();
+
 		ExLog.d(url);
 
 		lockUI();
 
 		// 호텔 정보를 가져온다.
-		mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null, mHotelDetailJsonResponseListener, this));
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("saleIdx", String.valueOf(booking.saleIdx));
+
+		mQueue.add(new DailyHotelJsonRequest(Method.POST, url, params, mHotelDetailJsonResponseListener, this));
 	}
 
 	private void loadFragments()
@@ -189,7 +199,6 @@ public class BookingTabActivity extends BaseActivity
 
 	private DailyHotelJsonResponseListener mHotelDetailJsonResponseListener = new DailyHotelJsonResponseListener()
 	{
-
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
@@ -200,8 +209,34 @@ public class BookingTabActivity extends BaseActivity
 					throw new NullPointerException("response == null");
 				}
 
-				JSONArray bookingArr = response.getJSONArray("detail");
-				JSONObject detailObj = bookingArr.getJSONObject(0);
+				int msg_code = response.getInt("msg_code");
+
+				if (msg_code != 0)
+				{
+					// 에러가 나오는 경우 처리는 추후 통합해서 관리해야 한다.
+					switch (msg_code)
+					{
+						case 100:
+						{
+							String msg = response.getString("");
+							DailyToast.showToast(BookingTabActivity.this, msg, Toast.LENGTH_SHORT);
+							break;
+						}
+
+						case 200:
+						{
+							String msg = response.getString("");
+							AlertDialog alertDlg = SimpleAlertDialog.build(BookingTabActivity.this, null, msg, getString(R.string.dialog_btn_text_confirm), null, null, null).create();
+							alertDlg.show();
+							break;
+						}
+					}
+
+					finish();
+					return;
+				}
+
+				JSONObject jsonObject = response.getJSONObject("data");
 
 				if (mHotelDetail.getHotel() == null)
 				{
@@ -210,19 +245,20 @@ public class BookingTabActivity extends BaseActivity
 
 				Hotel hotelBasic = mHotelDetail.getHotel();
 
-				hotelBasic.setName(detailObj.getString("hotel_name"));
-				hotelBasic.setCategory(detailObj.getString("cat"));
-				hotelBasic.setAddress(detailObj.getString("address"));
+				hotelBasic.setName(jsonObject.getString("hotel_name"));
+				hotelBasic.setCategory(jsonObject.getString("cat"));
+				hotelBasic.setAddress(jsonObject.getString("address"));
 				mHotelDetail.setHotel(hotelBasic);
 
-				JSONArray specArr = response.getJSONArray("spec");
-				int length = specArr.length();
+				JSONObject wrapJSONObject = new JSONObject(jsonObject.getString("spec"));
+				JSONArray jsonArray = wrapJSONObject.getJSONArray("wrap");
+				int length = jsonArray.length();
 
 				Map<String, List<String>> contentList = new LinkedHashMap<String, List<String>>(length);
 
 				for (int i = 0; i < length; i++)
 				{
-					JSONObject specObj = specArr.getJSONObject(i);
+					JSONObject specObj = jsonArray.getJSONObject(i);
 					String key = specObj.getString("key");
 					JSONArray valueArr = specObj.getJSONArray("value");
 
@@ -241,13 +277,13 @@ public class BookingTabActivity extends BaseActivity
 
 				mHotelDetail.setSpecification(contentList);
 
-				double latitude = detailObj.getDouble("lat");
-				double longitude = detailObj.getDouble("lng");
+				double latitude = jsonObject.getDouble("lat");
+				double longitude = jsonObject.getDouble("lng");
 
 				mHotelDetail.setLatitude(latitude);
 				mHotelDetail.setLongitude(longitude);
 
-				int saleIdx = detailObj.getInt("idx");
+				int saleIdx = jsonObject.getInt("idx");
 				mHotelDetail.setSaleIdx(saleIdx);
 
 				loadFragments();

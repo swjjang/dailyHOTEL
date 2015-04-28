@@ -1,7 +1,11 @@
 package com.twoheart.dailyhotel.model;
 
+import org.json.JSONObject;
+
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.twoheart.dailyhotel.util.ExLog;
 
 public class Booking implements Parcelable
 {
@@ -12,6 +16,7 @@ public class Booking implements Parcelable
 	private int payType;
 	private String tid;
 	public String ment;
+	public int saleIdx;
 
 	public Booking()
 	{
@@ -32,6 +37,7 @@ public class Booking implements Parcelable
 		dest.writeInt(payType);
 		dest.writeString(tid);
 		dest.writeString(ment);
+		dest.writeInt(saleIdx);
 	}
 
 	private void readFromParcel(Parcel in)
@@ -43,6 +49,7 @@ public class Booking implements Parcelable
 		payType = in.readInt();
 		tid = in.readString();
 		ment = in.readString();
+		saleIdx = in.readInt();
 	}
 
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
@@ -59,15 +66,22 @@ public class Booking implements Parcelable
 		}
 	};
 
-	public Booking(String sday, String hotel_idx, String hotel_name, String bedType, int payType, String tid, String ment)
+	public Booking(JSONObject jsonObject)
 	{
-		this.sday = sday;
-		this.hotel_idx = hotel_idx;
-		this.hotel_name = hotel_name;
-		this.bedType = bedType;
-		this.payType = payType;
-		this.tid = tid;
-		this.ment = ment;
+		try
+		{
+			hotel_name = jsonObject.getString("hotel_name");
+			sday = jsonObject.getString("sday");
+			hotel_idx = jsonObject.getString("hotel_idx");
+			bedType = jsonObject.getString("bed_type");
+			payType = jsonObject.getInt("pay_type");
+			tid = jsonObject.getString("tid");
+			ment = jsonObject.getString("comment");
+			saleIdx = jsonObject.getInt("saleidx");
+		} catch (Exception e)
+		{
+			ExLog.d(e.toString());
+		}
 	}
 
 	public String getSday()
