@@ -100,7 +100,7 @@ public class TabIndicator extends HorizontalScrollView implements OnClickListene
 		mRectPaint.setAntiAlias(true);
 		mRectPaint.setStyle(Style.FILL);
 		mRectPaint.setColor(getResources().getColor(R.color.dh_theme_color));
-		
+
 		mIndicatorHeight = Util.dpToPx(context, 4);
 
 		setTabEnable(true);

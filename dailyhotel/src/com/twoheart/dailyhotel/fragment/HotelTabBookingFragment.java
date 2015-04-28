@@ -144,7 +144,7 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 	public void onResume()
 	{
 		super.onResume();
-		
+
 		tvDiscount.setTypeface(DailyHotel.getBoldTypeface());
 		if (mHandler != null)
 		{

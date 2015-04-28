@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Handler;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +13,9 @@ import android.view.ViewGroup;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -44,11 +46,13 @@ public class HotelListMapFragment extends
 	private boolean mIsCreateView = false;
 	private BaseActivity mHotelActivity;
 
-	private HotelListViewItem mHotelListViewItem;
-	private int mHotelIndex;
+	private HotelListViewItem mSelectedHotelListViewItem;
+	private int mSelectedHotelIndex;
 	private Marker mMarker;
 	private boolean mOpenMakrer;
+	private boolean mIsPause;
 	private String mRegion;
+	private String mDetailRegion;
 
 	public HotelListMapFragment()
 	{
@@ -60,11 +64,7 @@ public class HotelListMapFragment extends
 		View view = super.onCreateView(inflater, container, savedInstanceState);
 
 		mHotelActivity = (BaseActivity) getActivity();
-
-		if (mHotelActivity != null)
-		{
-			mHotelActivity.lockUI();
-		}
+		mHotelActivity.lockUI();
 
 		getMapAsync(new OnMapReadyCallback()
 		{
@@ -73,6 +73,7 @@ public class HotelListMapFragment extends
 			{
 				mGoogleMap = googleMap;
 				mGoogleMap.setMyLocationEnabled(false);
+				mGoogleMap.getUiSettings().setMapToolbarEnabled(false);
 
 				// 기본 위치 서울시청.
 				//		서울시       : 37.540705, 126.956764
@@ -92,61 +93,8 @@ public class HotelListMapFragment extends
 				//		전라남도    : 34.819400, 126.893113
 				//		제주도       : 33.364805, 126.542671
 
-				double latitude = 37.540705;
-				double longitude = 126.956764;
-
-				if ("서울".equalsIgnoreCase(mRegion) == true)
-				{
-
-				} else if ("경기".equalsIgnoreCase(mRegion) == true)
-				{
-					// 37.567167, 127.190292
-					latitude = 37.567167;
-					longitude = 127.190292;
-				} else if ("인천".equalsIgnoreCase(mRegion) == true)
-				{
-					// 37.469221, 126.573234
-					latitude = 37.469221;
-					longitude = 126.573234;
-				} else if ("부산".equalsIgnoreCase(mRegion) == true)
-				{
-					// 35.198362, 129.053922
-					latitude = 35.198362;
-					longitude = 129.053922;
-				} else if ("경상".equalsIgnoreCase(mRegion) == true)
-				{
-					//		경상북도    : 36.248647, 128.664734
-					//		경상남도    : 35.259787, 128.664734
-					
-					latitude = (35.259787 + 36.248647) / 2;
-					longitude = 128.664734;
-					
-				} else if ("전라".equalsIgnoreCase(mRegion) == true)
-				{
-					//		전라북도    : 35.716705, 127.144185
-					//		전라남도    : 34.819400, 126.893113
-					latitude = (35.716705 + 34.819400) / 2;
-					longitude = (127.144185 + 126.893113) / 2;
-				} else if ("충청".equalsIgnoreCase(mRegion) == true)
-				{
-					//		충청남도    : 36.557229, 126.779757
-					//		충청북도    : 36.628503, 127.929344
-					latitude = (36.557229 + 36.628503) / 2;
-					longitude = (126.779757 + 127.929344) / 2;
-				} else if ("강원".equalsIgnoreCase(mRegion) == true)
-				{
-					// 37.555837, 128.209315
-					latitude = 37.555837;
-					longitude = 128.209315;
-				} else if ("제주".equalsIgnoreCase(mRegion) == true)
-				{
-					// 33.364805, 126.542671
-					latitude = 33.364805;
-					longitude = 126.542671;
-				}
-
-				LatLng address = new LatLng(latitude, longitude);
-				CameraPosition cp = new CameraPosition.Builder().target((address)).zoom(15).build();
+				// 서울이 아니고 상세 지역 정보가 아닌 경우..지역별 중심값으로 이동.
+				CameraPosition cp = new CameraPosition.Builder().target((getRegionCenter(mRegion))).zoom(15).build();
 				mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
 
 				mIsCreateView = true;
@@ -160,9 +108,22 @@ public class HotelListMapFragment extends
 		return view;
 	}
 
+	@Override
+	public void onPause()
+	{
+		mIsPause = true;
+
+		super.onPause();
+	}
+
 	public void setRegion(String region)
 	{
 		mRegion = region;
+	}
+
+	public void setDetailRegion(String region)
+	{
+		mDetailRegion = region;
 	}
 
 	public void setUserActionListener(HotelMainFragment.UserActionListener userActionLister)
@@ -202,11 +163,13 @@ public class HotelListMapFragment extends
 
 		if (mOpenMakrer == true)
 		{
-			latitude = mHotelListViewItem.getItem().mLatitude;
-			longitude = mHotelListViewItem.getItem().mLongitude;
+			latitude = mSelectedHotelListViewItem.getItem().mLatitude;
+			longitude = mSelectedHotelListViewItem.getItem().mLongitude;
 		}
 
 		LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+		boolean isSeoul = "서울".equalsIgnoreCase(mRegion);
 
 		for (HotelListViewItem hotelListViewItem : mHotelArrayList)
 		{
@@ -217,8 +180,23 @@ public class HotelListMapFragment extends
 
 			Hotel hotel = hotelListViewItem.getItem();
 			Marker marker = addMarker(hotel);
-			
-			count++;
+
+			if (isSeoul == true)
+			{
+				if (TextUtils.isEmpty(mDetailRegion) == false && mDetailRegion.contains(hotel.getDetailRegion()) == true)
+				{
+					LatLng latlng = new LatLng(hotel.mLatitude, hotel.mLongitude);
+					builder.include(latlng);
+
+					count++;
+				}
+			} else
+			{
+				LatLng latlng = new LatLng(hotel.mLatitude, hotel.mLongitude);
+				builder.include(latlng);
+
+				count++;
+			}
 
 			if (mOpenMakrer == true)
 			{
@@ -227,70 +205,83 @@ public class HotelListMapFragment extends
 					mMarker = marker;
 				}
 			}
-
-			LatLng latlng = new LatLng(hotel.mLatitude, hotel.mLongitude);
-			builder.include(latlng);
 		}
+
+		// 특정 지역의 마커들을 모아서 한 화면에 보이도록 한다.
+		// 해당 개수가 1개이면 줌 레벨 15이다.
+		// 만일 해당 지역에 마커가 없으면 고민해보기
+		// onPause()가 호출 되면 애니매이션 하지 않가.
 
 		final LatLngBounds bounds = builder.build();
 
-		//		mHandler.post(new Runnable()
-		//		{
-		//			@Override
-		//			public void run()
-		//			{
-		//				int width = getView().getWidth();
-		//				int height = getView().getHeight();
-		//
-		//				MapHelper mapHelper = new MapHelper(mGoogleMap);
-		//				
-		//				int zoomLevel = getBoundsZoomLevel(bounds.northeast, bounds.southwest, width, height);
-		//
-		//				CameraPosition cp = new CameraPosition.Builder().target((bounds.getCenter())).zoom(zoomLevel).build();
-		//				mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
-		//			}
-		//		});
-
-		//		int width = getView().getWidth();
-		//		int height = getView().getHeight();
-		//		
-		//		int zoomLevel = getBoundsZoomLevel(bounds.northeast, bounds.southwest, width, height );
-		//
-		//		if(zoomLevel > 15)
-		//		{
-		//			zoomLevel = 15;
-		//		}
-		//		
-		if (mOpenMakrer == false)
+		if (mOpenMakrer == false && mIsPause == false)
 		{
-			CameraPosition cp = new CameraPosition.Builder().target((bounds.getCenter())).zoom(15).build();
-			mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
-		}
-
-		if (count > 1)
-		{
-			mGoogleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback()
+			if (count == 0)
 			{
-				@Override
-				public void onMapLoaded()
-				{
-					if (mOpenMakrer == true)
-					{
-						mOpenMakrer = false;
+				CameraPosition cp = new CameraPosition.Builder().target(getRegionCenter(mRegion)).zoom(15).build();
+				mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
+			} else if (count == 1)
+			{
+				CameraPosition cp = new CameraPosition.Builder().target(bounds.getCenter()).zoom(15).build();
+				mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
+			} else
+			{
+				//				mGoogleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback()
+				//				{
+				//					@Override
+				//					public void onMapLoaded()
+				//					{
+				//						if (mOpenMakrer == true)
+				//						{
+				//							mOpenMakrer = false;
+				//
+				//							if (mMarker != null)
+				//							{
+				//								mHotelInfoWindowAdapter.setHotelListViewItem(mHotelListViewItem);
+				//								mHotelInfoWindowAdapter.setHotelIndex(mHotelIndex);
+				//								mMarker.showInfoWindow();
+				//							}
+				//						} else
+				//						{
+				//							CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, Util.dpToPx(getActivity(), 50));
+				//							mGoogleMap.animateCamera(cameraUpdate);
+				//						}
+				//					}
+				//				});
+				
+//				CameraPosition cp = new CameraPosition.Builder().target(bounds.getCenter()).zoom(15).build();
+//				mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
 
-						if (mMarker != null)
+//				mGoogleMap.setOnCameraChangeListener(new OnCameraChangeListener()
+//				{
+//					@Override
+//					public void onCameraChange(CameraPosition arg0)
+//					{
+//						mGoogleMap.setOnCameraChangeListener(null);
+
+						if (mOpenMakrer == true)
 						{
-							mHotelInfoWindowAdapter.setHotelListViewItem(mHotelListViewItem);
-							mHotelInfoWindowAdapter.setHotelIndex(mHotelIndex);
-							mMarker.showInfoWindow();
+							mOpenMakrer = false;
+
+							if (mMarker != null)
+							{
+								mHotelInfoWindowAdapter.setHotelListViewItem(mSelectedHotelListViewItem);
+								mHotelInfoWindowAdapter.setHotelIndex(mSelectedHotelIndex);
+								mMarker.showInfoWindow();
+							}
+						} else
+						{
+							if (mIsPause == false)
+							{
+								CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, Util.dpToPx(getActivity(), 50));
+								mGoogleMap.animateCamera(cameraUpdate);
+							}
+
+							mIsPause = false;
 						}
-					} else
-					{
-						CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, Util.dpToPx(getActivity(), 50));
-						mGoogleMap.animateCamera(cameraUpdate);
-					}
-				}
-			});
+//					}
+//				});
+			}
 		}
 
 		mHotelInfoWindowAdapter = new HotelInfoWindowAdapter(getActivity());
@@ -319,6 +310,8 @@ public class HotelListMapFragment extends
 						mHotelInfoWindowAdapter.setHotelListViewItem(hotelListViewItem);
 						mHotelInfoWindowAdapter.setHotelIndex(index);
 						marker.showInfoWindow();
+
+						mOpenMakrer = true;
 						break;
 					}
 
@@ -329,19 +322,26 @@ public class HotelListMapFragment extends
 			}
 		});
 
+		mGoogleMap.setOnMapClickListener(new OnMapClickListener()
+		{
+			@Override
+			public void onMapClick(LatLng latlng)
+			{
+				mOpenMakrer = false;
+			}
+		});
+
 		mGoogleMap.setOnInfoWindowClickListener(new OnInfoWindowClickListener()
 		{
 			@Override
 			public void onInfoWindowClick(Marker arg0)
 			{
-				mHotelListViewItem = mHotelInfoWindowAdapter.getHotelListViewItem();
-				mHotelIndex = mHotelInfoWindowAdapter.getHotelIndex();
+				mSelectedHotelListViewItem = mHotelInfoWindowAdapter.getHotelListViewItem();
+				mSelectedHotelIndex = mHotelInfoWindowAdapter.getHotelIndex();
 
 				if (mUserActionListener != null)
 				{
-					mUserActionListener.selectHotel(mHotelListViewItem, mHotelIndex, mSaleTime);
-
-					mOpenMakrer = true;
+					mUserActionListener.selectHotel(mSelectedHotelListViewItem, mSelectedHotelIndex, mSaleTime);
 				}
 			}
 		});
@@ -361,30 +361,62 @@ public class HotelListMapFragment extends
 		return null;
 	}
 
-	private int getBoundsZoomLevel(LatLng northeast, LatLng southwest, int width, int height)
+	private LatLng getRegionCenter(String region)
 	{
-		final int GLOBE_WIDTH = 256; // a constant in Google's map projection  
-		final int ZOOM_MAX = 15;
-		double latFraction = (latRad(northeast.latitude) - latRad(southwest.latitude)) / Math.PI;
-		double lngDiff = northeast.longitude - southwest.longitude;
-		double lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
-		double latZoom = zoom(height, GLOBE_WIDTH, latFraction);
-		double lngZoom = zoom(width, GLOBE_WIDTH, lngFraction);
-		double zoom = Math.min(Math.min(latZoom, lngZoom), ZOOM_MAX);
-		return (int) (zoom);
-	}
+		// Default Seoul
+		double latitude = 37.540705;
+		double longitude = 126.956764;
 
-	private double latRad(double lat)
-	{
-		double sin = Math.sin(lat * Math.PI / 180);
-		double radX2 = Math.log((1 + sin) / (1 - sin)) / 2;
-		return Math.max(Math.min(radX2, Math.PI), -Math.PI) / 2;
-	}
+		if ("서울".equalsIgnoreCase(region) == true)
+		{
+		} else if ("경기".equalsIgnoreCase(region) == true)
+		{
+			// 37.567167, 127.190292
+			latitude = 37.567167;
+			longitude = 127.190292;
+		} else if ("인천".equalsIgnoreCase(region) == true)
+		{
+			// 37.469221, 126.573234
+			latitude = 37.469221;
+			longitude = 126.573234;
+		} else if ("부산".equalsIgnoreCase(region) == true)
+		{
+			// 35.198362, 129.053922
+			latitude = 35.198362;
+			longitude = 129.053922;
+		} else if ("경상".equalsIgnoreCase(region) == true)
+		{
+			//		경상북도    : 36.248647, 128.664734
+			//		경상남도    : 35.259787, 128.664734
 
-	private double zoom(double mapPx, double worldPx, double fraction)
-	{
-		final double LN2 = .693147180559945309417;
-		return (Math.log(mapPx / worldPx / fraction) / LN2);
+			latitude = (35.259787 + 36.248647) / 2;
+			longitude = 128.664734;
+
+		} else if ("전라".equalsIgnoreCase(region) == true)
+		{
+			//		전라북도    : 35.716705, 127.144185
+			//		전라남도    : 34.819400, 126.893113
+			latitude = (35.716705 + 34.819400) / 2;
+			longitude = (127.144185 + 126.893113) / 2;
+		} else if ("충청".equalsIgnoreCase(region) == true)
+		{
+			//		충청남도    : 36.557229, 126.779757
+			//		충청북도    : 36.628503, 127.929344
+			latitude = (36.557229 + 36.628503) / 2;
+			longitude = (126.779757 + 127.929344) / 2;
+		} else if ("강원".equalsIgnoreCase(region) == true)
+		{
+			// 37.555837, 128.209315
+			latitude = 37.555837;
+			longitude = 128.209315;
+		} else if ("제주".equalsIgnoreCase(region) == true)
+		{
+			// 33.364805, 126.542671
+			latitude = 33.364805;
+			longitude = 126.542671;
+		}
+
+		return new LatLng(latitude, longitude);
 	}
 
 	private class HotelPriceRenderer

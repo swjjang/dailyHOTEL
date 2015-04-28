@@ -43,6 +43,8 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request.Method;
+import com.twoheart.dailyhotel.activity.SelectDetailRegionDialog;
+import com.twoheart.dailyhotel.activity.SelectDetailRegionDialog.OnSelectedDetailRegionListener;
 import com.twoheart.dailyhotel.adapter.HotelListAdapter;
 import com.twoheart.dailyhotel.fragment.HotelListMapFragment;
 import com.twoheart.dailyhotel.fragment.HotelMainFragment;
@@ -76,6 +78,8 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	private HotelListMapFragment mHotelListMapFragment;
 	private HOTEL_VIEW_TYPE mHotelViewType;
 	private String mSelectedRegion;
+	private String mSelectedDetailRegion;
+
 	private DailyFloatingActionButton mDailyFloatingActionButton;
 
 	private HotelListViewItem mSelectedHotelListViewItem;
@@ -108,9 +112,45 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 			@Override
 			public void onClick(View v)
 			{
-				if (mUserActionListener != null)
+				switch (mHotelViewType)
 				{
-					mUserActionListener.toggleViewType();
+					case LIST:
+					{
+						// 서울인경우에만 지역 맵을 나오도록 함.
+						if ("서울".equalsIgnoreCase(mSelectedRegion) == true)
+						{
+							SelectDetailRegionDialog dialog = new SelectDetailRegionDialog(mHostActivity, android.R.style.Theme_Translucent_NoTitleBar);
+							dialog.setOnSelectedRegionListener(new OnSelectedDetailRegionListener()
+							{
+								@Override
+								public void onClick(String detailRegion)
+								{
+									mSelectedDetailRegion = detailRegion;
+									
+									if (mUserActionListener != null)
+									{
+										mUserActionListener.toggleViewType(detailRegion);
+									}
+								}
+							});
+
+							dialog.show();
+						} else
+						{
+							if (mUserActionListener != null)
+							{
+								mUserActionListener.toggleViewType();
+							}
+						}
+						break;
+					}
+
+					case MAP:
+						if (mUserActionListener != null)
+						{
+							mUserActionListener.toggleViewType();
+						}
+						break;
 				}
 			}
 		});
@@ -169,6 +209,23 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_TIME).toString(), null, mAppTimeJsonResponseListener, mHostActivity));
 	}
 
+	/**
+	 * 토글이 아닌 경우에만 진행하는 프로세스.
+	 * @param detailRegion
+	 */
+	public void processSelectedDetailRegion(String detailRegion)
+	{
+		// 맵 지도를 띄운다.
+		// 해당하는 지역의 맵 지도를 띄운다.
+		mSelectedDetailRegion = detailRegion;
+		
+		// 현재 맵화면을 보고 있으면 맵화면을 유지 시켜중어야 한다.
+		if(mHotelViewType == HOTEL_VIEW_TYPE.MAP)
+		{
+			refreshHotelList(true);
+		}
+	}
+
 	public void onPageSelected(boolean isRequestHotelList)
 	{
 		ExLog.d("onPage Selected : " + this.toString());
@@ -185,6 +242,12 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		setFloatingActionButtonVisible(true);
 	}
 
+	/**
+	 * 새로 고침을 하지 않고 기존의 있는 데이터를 보여준다.
+	 * 
+	 * @param type
+	 * @param isCurrentPage
+	 */
 	public void setHotelViewType(HOTEL_VIEW_TYPE type, boolean isCurrentPage)
 	{
 		mHotelViewType = type;
@@ -207,6 +270,9 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 					if (isCurrentPage == true)
 					{
+						// 선택한 상세 지역들의 모임들 ex) 강남구|서초구|동작구
+						mHotelListMapFragment.setRegion(mSelectedRegion);
+						mHotelListMapFragment.setDetailRegion(mSelectedDetailRegion);
 						mHotelListMapFragment.setHotelList(mHotelListAdapter.getData(), mSaleTime);
 					}
 					break;
@@ -242,11 +308,9 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 				if (mHotelListMapFragment == null)
 				{
 					mHotelListMapFragment = new HotelListMapFragment();
-					mHotelListMapFragment.setRegion(mSelectedRegion);
-					
-					getChildFragmentManager().beginTransaction().add(mMapLayout.getId(), mHotelListMapFragment).commit();
+					getChildFragmentManager().beginTransaction().add(mMapLayout.getId(), mHotelListMapFragment).commitAllowingStateLoss();
 				}
-				
+
 				mPullToRefreshLayout.setVisibility(View.INVISIBLE);
 				break;
 
@@ -272,6 +336,11 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	public void setRegionList(Map<String, List<String>> regionDetailList)
 	{
 		mDetailRegionList = regionDetailList;
+	}
+	
+	public void setSelectedDetailRegion(String region)
+	{
+		mSelectedDetailRegion = region;
 	}
 
 	public void setUserActionListener(HotelMainFragment.UserActionListener userActionLister)
@@ -611,9 +680,12 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 					setVisibility(mHotelViewType);
 
+					// 지역이 변경되면 다시 리스트를 받아오는데 어떻게 해야할지 의문.
 					if (mHotelViewType == HOTEL_VIEW_TYPE.MAP)
 					{
 						mHotelListMapFragment.setUserActionListener(mUserActionListener);
+						mHotelListMapFragment.setRegion(mSelectedRegion);
+						mHotelListMapFragment.setDetailRegion(mSelectedDetailRegion);
 						mHotelListMapFragment.setHotelList(hotelListViewList, mSaleTime);
 					}
 

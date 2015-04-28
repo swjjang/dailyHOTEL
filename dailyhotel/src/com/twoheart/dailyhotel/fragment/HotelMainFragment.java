@@ -36,6 +36,8 @@ import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.WaitTimerFragment;
 import com.twoheart.dailyhotel.activity.HotelTabActivity;
+import com.twoheart.dailyhotel.activity.SelectDetailRegionDialog;
+import com.twoheart.dailyhotel.activity.SelectDetailRegionDialog.OnSelectedDetailRegionListener;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
@@ -58,6 +60,8 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 
 	private SaleTime mTodaySaleTime;
 	private ArrayList<String> mRegionList;
+	
+	private String mSelectedDetailRegion;
 
 	private HOTEL_VIEW_TYPE mHotelViewType = HOTEL_VIEW_TYPE.LIST;
 
@@ -73,6 +77,8 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 		public void selectDay(HotelListFragment fragment, boolean isListSelectionTop);
 
 		public void toggleViewType();
+		
+		public void toggleViewType(String detailRegion);
 	};
 
 	public interface UserAnalyticsActionListener
@@ -133,7 +139,6 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 	{
 		lockUI();
 
-		//		mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_TIME).toString(), null, mAppTimeStringResponseListener, mHostActivity));
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_TIME).toString(), null, mAppTimeJsonResponseListener, mHostActivity));
 
 		super.onResume();
@@ -144,14 +149,25 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 	{
 		releaseUiComponent();
 
-		if (requestCode == CODE_REQUEST_ACTIVITY_HOTELTAB)
+		switch (requestCode)
 		{
-			if (resultCode == Activity.RESULT_OK)
+			case CODE_REQUEST_ACTIVITY_HOTELTAB:
 			{
-				((MainActivity) mHostActivity).selectMenuDrawer(((MainActivity) mHostActivity).menuBookingListFragment);
-			} else if (resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
+				if (resultCode == Activity.RESULT_OK)
+				{
+					((MainActivity) mHostActivity).selectMenuDrawer(((MainActivity) mHostActivity).menuBookingListFragment);
+				} else if (resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
+				{
+					((MainActivity) mHostActivity).selectMenuDrawer(((MainActivity) mHostActivity).menuBookingListFragment);
+				}
+				break;
+			}
+
+			case CODE_REQUEST_ACTIVITY_SELECT_REGIONMAP:
 			{
-				((MainActivity) mHostActivity).selectMenuDrawer(((MainActivity) mHostActivity).menuBookingListFragment);
+				HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
+				currentFragment.onActivityResult(requestCode, resultCode, data);
+				break;
 			}
 		}
 
@@ -219,7 +235,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 		}
 	}
 
-	public boolean onNavigationItemSelected(int position)
+	public void onNavigationItemSelected(int position)
 	{
 		String region = mRegionList.get(position);
 
@@ -238,19 +254,44 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 
 			isSelectionTop = true;
 		}
+		
+		if(mUserAnalyticsActionListener != null)
+		{
+			mUserAnalyticsActionListener.selectRegion(position);
+		}
+		
+		// 맵상태에서 서울 지역으로 이동할 경우. 새로 로딩 되어야 한다.
+		if (mHotelViewType == HOTEL_VIEW_TYPE.MAP && "서울".equalsIgnoreCase(region) == true)
+		{
+			SelectDetailRegionDialog dialog = new SelectDetailRegionDialog(mHostActivity, android.R.style.Theme_Translucent_NoTitleBar);
+			dialog.setOnSelectedRegionListener(new OnSelectedDetailRegionListener()
+			{
+				@Override
+				public void onClick(String detailRegion)
+				{
+					mSelectedDetailRegion = detailRegion;
+					
+					HotelListFragment hotelListFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
+
+					hotelListFragment.processSelectedDetailRegion(detailRegion);
+				}
+			});
+
+			dialog.show();
+			return;
+		}
 
 		refreshHotelList(isSelectionTop);
 
 		ExLog.d("before region : " + mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_BEFORE, "") + " select region : " + mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, ""));
-
-		mUserAnalyticsActionListener.selectRegion(position);
-		return true;
+		return;
 	}
 
 	private void refreshHotelList(boolean isSelectionTop)
 	{
 		HotelListFragment hotelListFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
 
+		hotelListFragment.setSelectedDetailRegion(mSelectedDetailRegion);
 		hotelListFragment.refreshHotelList(isSelectionTop);
 	}
 
@@ -562,15 +603,23 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 			switch (state)
 			{
 				case ViewPager.SCROLL_STATE_IDLE:
+				{
+					HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
+					currentFragment.setFloatingActionButtonVisible(true);
 					break;
+				}
 
 				case ViewPager.SCROLL_STATE_DRAGGING:
+				{
 					HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
 					currentFragment.setFloatingActionButtonVisible(false);
 					break;
+				}
 
 				case ViewPager.SCROLL_STATE_SETTLING:
+				{
 					break;
+				}
 			}
 		}
 
@@ -673,7 +722,6 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 			{
 				case LIST:
 					mHotelViewType = HOTEL_VIEW_TYPE.MAP;
-
 					break;
 
 				case MAP:
@@ -692,6 +740,14 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 			}
 
 			unLockUI();
+		}
+
+		@Override
+		public void toggleViewType(String detailRegion)
+		{
+			mSelectedDetailRegion = detailRegion;
+			
+			toggleViewType();
 		}
 	};
 

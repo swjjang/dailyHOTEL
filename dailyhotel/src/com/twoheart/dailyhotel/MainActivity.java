@@ -91,7 +91,6 @@ import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class MainActivity extends BaseActivity implements OnItemClickListener, Constants
 {
-
 	public static final int INDEX_HOTEL_LIST_FRAGMENT = 0;
 	public static final int INDEX_BOOKING_LIST_FRAGMENT = 1;
 	public static final int INDEX_CREDIT_FRAGMENT = 2;

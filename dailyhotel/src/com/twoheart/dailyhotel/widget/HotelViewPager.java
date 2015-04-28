@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.widget;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -38,10 +39,16 @@ public class HotelViewPager extends ViewPager
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent event)
 	{
-		if (event.getAction() == MotionEvent.ACTION_MOVE)
+		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1)
 		{
-			this.getParent().requestDisallowInterceptTouchEvent(true);
-			return true;
+			if (event.getAction() == MotionEvent.ACTION_MOVE)
+			{
+				this.getParent().requestDisallowInterceptTouchEvent(true);
+				return true;
+			} else
+			{
+				return super.onInterceptTouchEvent(event);
+			}
 		} else
 		{
 			return super.onInterceptTouchEvent(event);
