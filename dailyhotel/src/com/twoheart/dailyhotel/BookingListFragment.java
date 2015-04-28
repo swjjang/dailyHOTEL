@@ -324,20 +324,9 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
 					for (int i = 0; i < length; i++)
 					{
-						JSONObject rsvObj = jsonArray.getJSONObject(i);
+						JSONObject jsonObject = jsonArray.getJSONObject(i);
 
-						//kcpno (depre)
-						String hotel_name = rsvObj.getString("hotel_name");
-						//room_name (depre)
-						String sday = rsvObj.getString("sday");
-						//rsv_idx (dpre)
-						String hotel_idx = rsvObj.getString("hotel_idx");
-						String bedType = rsvObj.getString("bed_type");
-						int payType = rsvObj.getInt("pay_type");
-						String tid = rsvObj.getString("tid");
-						String comment = rsvObj.getString("comment");
-
-						mItems.add(new Booking(sday, hotel_idx, hotel_name, bedType, payType, tid, comment));
+						mItems.add(new Booking(jsonObject));
 					}
 
 					mAdapter = new BookingListAdapter(mHostActivity, R.layout.list_row_booking, mItems);

@@ -67,13 +67,11 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 	{
 		super.onCreate(savedInstanceState);
 		mHotelDetail = (HotelDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL);
-
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
-
 		View view = inflater.inflate(R.layout.fragment_hotel_tab_booking, container, false);
 
 		tvBedType = (TextView) view.findViewById(R.id.tv_hotel_tab_booking_bed_type);
@@ -173,7 +171,6 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 	@Override
 	public boolean onTouch(View v, MotionEvent event)
 	{
-
 		if (v.getId() == mViewPager.getId())
 		{
 			switch (event.getAction())
@@ -181,6 +178,7 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 				case MotionEvent.ACTION_DOWN:
 					mHandler.removeMessages(0);
 					break;
+
 				case MotionEvent.ACTION_MOVE:
 					mHandler.removeMessages(0);
 					break;
