@@ -23,9 +23,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -36,11 +33,10 @@ import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.WaitTimerFragment;
 import com.twoheart.dailyhotel.activity.HotelTabActivity;
-import com.twoheart.dailyhotel.activity.SelectDetailRegionDialog;
-import com.twoheart.dailyhotel.activity.SelectDetailRegionDialog.OnSelectedDetailRegionListener;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonArrayRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonArrayResponseListener;
@@ -60,8 +56,8 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 
 	private SaleTime mTodaySaleTime;
 	private ArrayList<String> mRegionList;
-	
-	private String mSelectedDetailRegion;
+
+	//	private String mSelectedDetailRegion;
 
 	private HOTEL_VIEW_TYPE mHotelViewType = HOTEL_VIEW_TYPE.LIST;
 
@@ -77,8 +73,12 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 		public void selectDay(HotelListFragment fragment, boolean isListSelectionTop);
 
 		public void toggleViewType();
-		
-		public void toggleViewType(String detailRegion);
+
+		//		public void toggleViewType(String detailRegion);
+
+		public void showProgress();
+
+		public void hideProgress();
 	};
 
 	public interface UserAnalyticsActionListener
@@ -180,61 +180,6 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 		onNavigationItemSelected(position);
 	}
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
-	{
-		//		mHostActivity.getMenuInflater().inflate(R.menu.actionbar_icon_map, menu);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item)
-	{
-		switch (item.getItemId())
-		{
-			case R.id.action_map:
-			{
-				//				if (isLockUiComponent() == true)
-				//				{
-				//					return true;
-				//				}
-				//
-				//				lockUI();
-				//
-				//				switch (mHotelViewType)
-				//				{
-				//					case LIST:
-				//						item.setIcon(R.drawable.img_ic_list);
-				//						mHotelViewType = HOTEL_VIEW_TYPE.MAP;
-				//
-				//						break;
-				//
-				//					case MAP:
-				//						item.setIcon(R.drawable.img_ic_map);
-				//						mHotelViewType = HOTEL_VIEW_TYPE.LIST;
-				//						break;
-				//				}
-				//
-				//				// 현재 페이지 선택 상태를 Fragment에게 알려준다.
-				//				HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
-				//
-				//				for (HotelListFragment hotelListFragment : mFragmentList)
-				//				{
-				//					boolean isCurrentFragment = hotelListFragment == currentFragment;
-				//
-				//					hotelListFragment.setHotelViewType(mHotelViewType, isCurrentFragment);
-				//				}
-				//
-				//				unLockUI();
-				return true;
-			}
-
-			default:
-			{
-				return super.onOptionsItemSelected(item);
-			}
-		}
-	}
-
 	public void onNavigationItemSelected(int position)
 	{
 		String region = mRegionList.get(position);
@@ -254,32 +199,40 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 
 			isSelectionTop = true;
 		}
-		
-		if(mUserAnalyticsActionListener != null)
+
+		if (mUserAnalyticsActionListener != null)
 		{
 			mUserAnalyticsActionListener.selectRegion(position);
 		}
-		
+
 		// 맵상태에서 서울 지역으로 이동할 경우. 새로 로딩 되어야 한다.
-		if (mHotelViewType == HOTEL_VIEW_TYPE.MAP && "서울".equalsIgnoreCase(region) == true)
-		{
-			SelectDetailRegionDialog dialog = new SelectDetailRegionDialog(mHostActivity, android.R.style.Theme_Translucent_NoTitleBar);
-			dialog.setOnSelectedRegionListener(new OnSelectedDetailRegionListener()
-			{
-				@Override
-				public void onClick(String detailRegion)
-				{
-					mSelectedDetailRegion = detailRegion;
-					
-					HotelListFragment hotelListFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
-
-					hotelListFragment.processSelectedDetailRegion(detailRegion);
-				}
-			});
-
-			dialog.show();
-			return;
-		}
+		//		if (mHotelViewType == HOTEL_VIEW_TYPE.MAP && "서울".equalsIgnoreCase(region) == true && isSelectionTop == true)
+		//		{
+		//			SelectDetailRegionDialog dialog = new SelectDetailRegionDialog(mHostActivity, android.R.style.Theme_Translucent_NoTitleBar);
+		//			dialog.setOnSelectedRegionListener(new OnSelectedDetailRegionListener()
+		//			{
+		//				@Override
+		//				public void onClick(String detailRegion)
+		//				{
+		//					mSelectedDetailRegion = detailRegion;
+		//					
+		//					HotelListFragment hotelListFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
+		//					hotelListFragment.processSelectedDetailRegion(detailRegion);
+		//				}
+		//
+		//				@Override
+		//				public void onCancel()
+		//				{
+		//					mSelectedDetailRegion = null;
+		//					
+		//					HotelListFragment hotelListFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
+		//					hotelListFragment.processSelectedDetailRegion(null);
+		//				}
+		//			});
+		//
+		//			dialog.show();
+		//			return;
+		//		}
 
 		refreshHotelList(isSelectionTop);
 
@@ -291,7 +244,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 	{
 		HotelListFragment hotelListFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
 
-		hotelListFragment.setSelectedDetailRegion(mSelectedDetailRegion);
+		//		hotelListFragment.setSelectedDetailRegion(mSelectedDetailRegion);
 		hotelListFragment.refreshHotelList(isSelectionTop);
 	}
 
@@ -571,30 +524,41 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 		@Override
 		public void onPageSelected(int position)
 		{
-			mTabIndicator.setCurrentItem(position);
-
-			// 현재 페이지 선택 상태를 Fragment에게 알려준다.
-			HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
-
-			boolean isSelectionTop = false;
-
-			for (HotelListFragment hotelListFragment : mFragmentList)
+			try
 			{
-				if (hotelListFragment == currentFragment)
-				{
-					String listRegion = hotelListFragment.getRegion();
-					String selectedRegion = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
+				mTabIndicator.setCurrentItem(position);
 
-					isSelectionTop = selectedRegion.equalsIgnoreCase(listRegion) == false;
+				// 현재 페이지 선택 상태를 Fragment에게 알려준다.
+				HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
 
-					hotelListFragment.onPageSelected(true);
-				} else
+				boolean isSelectionTop = false;
+
+				for (HotelListFragment hotelListFragment : mFragmentList)
 				{
-					hotelListFragment.onPageUnSelected();
+					if (hotelListFragment == currentFragment)
+					{
+						String listRegion = hotelListFragment.getRegion();
+						String selectedRegion = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
+
+						isSelectionTop = selectedRegion.equalsIgnoreCase(listRegion) == false;
+						hotelListFragment.onPageSelected(true);
+					} else
+					{
+						hotelListFragment.onPageUnSelected();
+					}
+				}
+
+				refreshHotelList(isSelectionTop);
+			} catch (Exception e)
+			{
+				ExLog.e(e.toString());
+
+				// 릴리즈 버전에서 메모리 해지에 문제가 생기는 경우가 있어 앱을 재 시작 시킨다.
+				if (DEBUG == false)
+				{
+					Util.restartApp(mHostActivity.getApplicationContext());
 				}
 			}
-
-			refreshHotelList(isSelectionTop);
 		}
 
 		@Override
@@ -742,12 +706,24 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 			unLockUI();
 		}
 
+		//		@Override
+		//		public void toggleViewType(String detailRegion)
+		//		{
+		//			mSelectedDetailRegion = detailRegion;
+		//			
+		//			toggleViewType();
+		//		}
+
 		@Override
-		public void toggleViewType(String detailRegion)
+		public void showProgress()
 		{
-			mSelectedDetailRegion = detailRegion;
-			
-			toggleViewType();
+			lockUI();
+		}
+
+		@Override
+		public void hideProgress()
+		{
+			unLockUI();
 		}
 	};
 

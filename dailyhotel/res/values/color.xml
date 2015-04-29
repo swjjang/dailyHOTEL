@@ -66,6 +66,6 @@
 	<color name="hotel_list_background">#ececec</color>
 	
 	<color name="floating_action_button_default">#FF7A7A</color>
-	<color name="floating_action_button_pressed">#ff2a2a</color>
+	<color name="floating_action_button_pressed">#ff5a5a</color>
 
 </resources>	

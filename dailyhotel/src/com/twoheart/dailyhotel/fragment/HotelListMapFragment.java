@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +30,6 @@ import com.twoheart.dailyhotel.adapter.HotelInfoWindowAdapter;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
 
 public class HotelListMapFragment extends
@@ -44,15 +42,16 @@ public class HotelListMapFragment extends
 	protected HotelMainFragment.UserActionListener mUserActionListener;
 	private SaleTime mSaleTime;
 	private boolean mIsCreateView = false;
-	private BaseActivity mHotelActivity;
 
 	private HotelListViewItem mSelectedHotelListViewItem;
 	private int mSelectedHotelIndex;
 	private Marker mMarker;
 	private boolean mOpenMakrer;
 	private boolean mIsPause;
+	private boolean mIsMapMove;
 	private String mRegion;
-	private String mDetailRegion;
+
+	//	private String mDetailRegion;
 
 	public HotelListMapFragment()
 	{
@@ -62,9 +61,6 @@ public class HotelListMapFragment extends
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		View view = super.onCreateView(inflater, container, savedInstanceState);
-
-		mHotelActivity = (BaseActivity) getActivity();
-		mHotelActivity.lockUI();
 
 		getMapAsync(new OnMapReadyCallback()
 		{
@@ -99,9 +95,7 @@ public class HotelListMapFragment extends
 
 				mIsCreateView = true;
 
-				makeMarker();
-
-				mHotelActivity.unLockUI();
+				makeMarker(true);
 			}
 		});
 
@@ -121,17 +115,17 @@ public class HotelListMapFragment extends
 		mRegion = region;
 	}
 
-	public void setDetailRegion(String region)
-	{
-		mDetailRegion = region;
-	}
+	//	public void setDetailRegion(String region)
+	//	{
+	//		mDetailRegion = region;
+	//	}
 
 	public void setUserActionListener(HotelMainFragment.UserActionListener userActionLister)
 	{
 		mUserActionListener = userActionLister;
 	}
 
-	public void setHotelList(ArrayList<HotelListViewItem> hotelArrayList, SaleTime saleTime)
+	public void setHotelList(ArrayList<HotelListViewItem> hotelArrayList, SaleTime saleTime, boolean isChangedRegion)
 	{
 		mHotelArrayList = hotelArrayList;
 		mSaleTime = saleTime;
@@ -139,11 +133,11 @@ public class HotelListMapFragment extends
 		// Marker 만들기.
 		if (mIsCreateView == true)
 		{
-			makeMarker();
+			makeMarker(isChangedRegion);
 		}
 	}
 
-	private void makeMarker()
+	private synchronized void makeMarker(boolean isChangedRegion)
 	{
 		if (mGoogleMap == null)
 		{
@@ -152,16 +146,28 @@ public class HotelListMapFragment extends
 
 		mGoogleMap.clear();
 
-		if (mHotelArrayList == null)
+		if (mHotelArrayList == null || mHotelArrayList.size() == 0)
 		{
 			return;
+		}
+
+		if (mUserActionListener != null)
+		{
+			mUserActionListener.showProgress();
+		}
+
+		if (isChangedRegion == true)
+		{
+			mOpenMakrer = false;
+			mIsPause = false;
 		}
 
 		double latitude = 0.0;
 		double longitude = 0.0;
 		int count = 0;
+		int index = 0;
 
-		if (mOpenMakrer == true)
+		if (mOpenMakrer == true && mSelectedHotelListViewItem != null)
 		{
 			latitude = mSelectedHotelListViewItem.getItem().mLatitude;
 			longitude = mSelectedHotelListViewItem.getItem().mLongitude;
@@ -169,7 +175,9 @@ public class HotelListMapFragment extends
 
 		LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-		boolean isSeoul = "서울".equalsIgnoreCase(mRegion);
+		//		boolean isSeoul = "서울".equalsIgnoreCase(mRegion);
+
+		mMarker = null;
 
 		for (HotelListViewItem hotelListViewItem : mHotelArrayList)
 		{
@@ -181,27 +189,37 @@ public class HotelListMapFragment extends
 			Hotel hotel = hotelListViewItem.getItem();
 			Marker marker = addMarker(hotel);
 
-			if (isSeoul == true)
-			{
-				if (TextUtils.isEmpty(mDetailRegion) == false && mDetailRegion.contains(hotel.getDetailRegion()) == true)
-				{
-					LatLng latlng = new LatLng(hotel.mLatitude, hotel.mLongitude);
-					builder.include(latlng);
+			// 추후 상세 지역을 위해서 .
+			index++;
+			count++;
 
-					count++;
-				}
-			} else
-			{
-				LatLng latlng = new LatLng(hotel.mLatitude, hotel.mLongitude);
-				builder.include(latlng);
+			LatLng latlng = new LatLng(hotel.mLatitude, hotel.mLongitude);
+			builder.include(latlng);
 
-				count++;
-			}
+			//			if (isSeoul == true)
+			//			{
+			//				if (TextUtils.isEmpty(mDetailRegion) == false && mDetailRegion.contains(hotel.getDetailRegion()) == true)
+			//				{
+			//					LatLng latlng = new LatLng(hotel.mLatitude, hotel.mLongitude);
+			//					builder.include(latlng);
+			//
+			//					count++;
+			//				}
+			//			} else
+			//			{
+			//				LatLng latlng = new LatLng(hotel.mLatitude, hotel.mLongitude);
+			//				builder.include(latlng);
+			//
+			//				count++;
+			//			}
 
 			if (mOpenMakrer == true)
 			{
-				if (latitude == hotel.mLatitude && longitude == hotel.mLongitude)
+				if (mMarker == null && latitude == hotel.mLatitude && longitude == hotel.mLongitude)
 				{
+					mSelectedHotelListViewItem = hotelListViewItem;
+					mSelectedHotelIndex = index;
+
 					mMarker = marker;
 				}
 			}
@@ -226,65 +244,37 @@ public class HotelListMapFragment extends
 				mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
 			} else
 			{
-				//				mGoogleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback()
-				//				{
-				//					@Override
-				//					public void onMapLoaded()
-				//					{
-				//						if (mOpenMakrer == true)
-				//						{
-				//							mOpenMakrer = false;
-				//
-				//							if (mMarker != null)
-				//							{
-				//								mHotelInfoWindowAdapter.setHotelListViewItem(mHotelListViewItem);
-				//								mHotelInfoWindowAdapter.setHotelIndex(mHotelIndex);
-				//								mMarker.showInfoWindow();
-				//							}
-				//						} else
-				//						{
-				//							CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, Util.dpToPx(getActivity(), 50));
-				//							mGoogleMap.animateCamera(cameraUpdate);
-				//						}
-				//					}
-				//				});
-				
-//				CameraPosition cp = new CameraPosition.Builder().target(bounds.getCenter()).zoom(15).build();
-//				mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
+				CameraPosition cp = new CameraPosition.Builder().target(bounds.getCenter()).zoom(15).build();
+				mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
 
-//				mGoogleMap.setOnCameraChangeListener(new OnCameraChangeListener()
-//				{
-//					@Override
-//					public void onCameraChange(CameraPosition arg0)
-//					{
-//						mGoogleMap.setOnCameraChangeListener(null);
+				mGoogleMap.setOnCameraChangeListener(new OnCameraChangeListener()
+				{
+					@Override
+					public void onCameraChange(CameraPosition arg0)
+					{
+						mGoogleMap.setOnCameraChangeListener(null);
 
-						if (mOpenMakrer == true)
-						{
-							mOpenMakrer = false;
-
-							if (mMarker != null)
-							{
-								mHotelInfoWindowAdapter.setHotelListViewItem(mSelectedHotelListViewItem);
-								mHotelInfoWindowAdapter.setHotelIndex(mSelectedHotelIndex);
-								mMarker.showInfoWindow();
-							}
-						} else
-						{
-							if (mIsPause == false)
-							{
-								CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, Util.dpToPx(getActivity(), 50));
-								mGoogleMap.animateCamera(cameraUpdate);
-							}
-
-							mIsPause = false;
-						}
-//					}
-//				});
+						CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, Util.dpToPx(getActivity(), 50));
+						mGoogleMap.moveCamera(cameraUpdate);
+					}
+				});
+			}
+		} else
+		{
+			if (mOpenMakrer == true && mMarker != null)
+			{
+				mHotelInfoWindowAdapter.setHotelListViewItem(mSelectedHotelListViewItem);
+				mMarker.showInfoWindow();
 			}
 		}
 
-		mHotelInfoWindowAdapter = new HotelInfoWindowAdapter(getActivity());
+		mOpenMakrer = false;
+		mIsPause = false;
+
+		if (mHotelInfoWindowAdapter == null)
+		{
+			mHotelInfoWindowAdapter = new HotelInfoWindowAdapter(getActivity());
+		}
 
 		mGoogleMap.setInfoWindowAdapter(mHotelInfoWindowAdapter);
 		mGoogleMap.setOnMarkerClickListener(new OnMarkerClickListener()
@@ -307,8 +297,10 @@ public class HotelListMapFragment extends
 
 					if (latlng.latitude == hotel.mLatitude && latlng.longitude == hotel.mLongitude)
 					{
+						mSelectedHotelListViewItem = hotelListViewItem;
+						mSelectedHotelIndex = index;
+
 						mHotelInfoWindowAdapter.setHotelListViewItem(hotelListViewItem);
-						mHotelInfoWindowAdapter.setHotelIndex(index);
 						marker.showInfoWindow();
 
 						mOpenMakrer = true;
@@ -322,22 +314,12 @@ public class HotelListMapFragment extends
 			}
 		});
 
-		mGoogleMap.setOnMapClickListener(new OnMapClickListener()
-		{
-			@Override
-			public void onMapClick(LatLng latlng)
-			{
-				mOpenMakrer = false;
-			}
-		});
-
 		mGoogleMap.setOnInfoWindowClickListener(new OnInfoWindowClickListener()
 		{
 			@Override
 			public void onInfoWindowClick(Marker arg0)
 			{
-				mSelectedHotelListViewItem = mHotelInfoWindowAdapter.getHotelListViewItem();
-				mSelectedHotelIndex = mHotelInfoWindowAdapter.getHotelIndex();
+				mOpenMakrer = true;
 
 				if (mUserActionListener != null)
 				{
@@ -345,6 +327,11 @@ public class HotelListMapFragment extends
 				}
 			}
 		});
+
+		if (mUserActionListener != null)
+		{
+			mUserActionListener.hideProgress();
+		}
 	}
 
 	private Marker addMarker(Hotel hotel)
@@ -424,6 +411,7 @@ public class HotelListMapFragment extends
 		private String mPrice;
 		private IconGenerator mIconGenerator;
 		private boolean mIsSoldOut;
+		private boolean mIsDailyChoice;
 
 		public HotelPriceRenderer(Hotel hotel)
 		{
@@ -436,14 +424,14 @@ public class HotelListMapFragment extends
 
 			// SOLD OUT
 			mIsSoldOut = hotel.getAvailableRoom() == 0;
-
+			
 			mIconGenerator.setTextColor(getResources().getColor(R.color.white));
 			mIconGenerator.setColor(getResources().getColor(hotel.getCategory().getColorResId()));
 		}
 
 		public BitmapDescriptor getBitmap()
 		{
-			Bitmap icon = mIconGenerator.makeIcon(mPrice, mIsSoldOut);
+			Bitmap icon = mIconGenerator.makeIcon(mPrice, mIsSoldOut, mIsDailyChoice);
 
 			return BitmapDescriptorFactory.fromBitmap(icon);
 		}

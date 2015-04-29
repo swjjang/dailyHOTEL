@@ -20,7 +20,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
@@ -47,6 +46,7 @@ public class IconGenerator
 	private ViewGroup mContainer;
 	private RotationLayout mRotationLayout;
 	private TextView mTextView;
+	private TextView mSoldOutTextView;
 	private View mContentView;
 
 	private int mRotation;
@@ -65,6 +65,8 @@ public class IconGenerator
 		mContainer = (ViewGroup) LayoutInflater.from(mContext).inflate(R.layout.text_bubble, null);
 		mRotationLayout = (RotationLayout) mContainer.getChildAt(0);
 		mContentView = mTextView = (TextView) mRotationLayout.findViewById(R.id.text);
+		mSoldOutTextView = (TextView) mRotationLayout.findViewById(R.id.tv_hotel_row_soldout);
+		
 		setStyle(STYLE_DEFAULT);
 	}
 
@@ -74,15 +76,15 @@ public class IconGenerator
 	 * @param text
 	 *            the text content to display inside the icon.
 	 */
-	public Bitmap makeIcon(String text, boolean isSoldOut)
+	public Bitmap makeIcon(String text, boolean isSoldOut, boolean isDailyChoice)
 	{
 		if (mTextView != null)
 		{
 			mTextView.setText(text);
 
-			if (isSoldOut)
+			if (isSoldOut == true)
 			{
-				mTextView.setPaintFlags(mTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+				mSoldOutTextView.setVisibility(View.VISIBLE);
 			}
 		}
 
@@ -104,6 +106,25 @@ public class IconGenerator
 		int measuredHeight = mContainer.getMeasuredHeight();
 
 		mContainer.layout(0, 0, measuredWidth, measuredHeight);
+		
+		if(mSoldOutTextView.getVisibility() == View.VISIBLE)
+		{
+			int width = mSoldOutTextView.getMeasuredWidth();
+			int height = mSoldOutTextView.getMeasuredHeight();
+			
+			int width1 = mTextView.getMeasuredWidth();
+			int height1 = mTextView.getMeasuredHeight();
+			
+			if(width < width1)
+			{
+				mSoldOutTextView.layout(0, 0, width1, height1);
+				
+				int left = (width1 - width) / 2;
+				int top = (height1 - height) / 2;
+				
+				mSoldOutTextView.setPadding(left, top, 0, 0);
+			}
+		}
 
 		if (mRotation == 1 || mRotation == 3)
 		{

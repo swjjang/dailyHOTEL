@@ -33,7 +33,6 @@ import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
 public class HotelInfoWindowAdapter implements InfoWindowAdapter
 {
 	private HotelListViewItem mHotelListViewItem;
-	private int mHotelIndex;
 	private Context mContext;
 	private boolean mRefreshingInfoWindow;
 	private View mView;
@@ -61,21 +60,6 @@ public class HotelInfoWindowAdapter implements InfoWindowAdapter
 			ImageView imageView = (ImageView) mView.findViewById(R.id.iv_hotel_row_img);
 			imageView.setBackgroundResource(R.drawable.img_placeholder);
 		}
-	}
-
-	public void setHotelIndex(int index)
-	{
-		mHotelIndex = index;
-	}
-
-	public HotelListViewItem getHotelListViewItem()
-	{
-		return mHotelListViewItem;
-	}
-
-	public int getHotelIndex()
-	{
-		return mHotelIndex;
 	}
 
 	@Override

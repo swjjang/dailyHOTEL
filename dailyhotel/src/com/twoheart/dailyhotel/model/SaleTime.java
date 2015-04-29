@@ -85,8 +85,6 @@ public class SaleTime implements Constants, Parcelable
 	{
 		long logicalTime = getCurrentTime() + SECONDS_IN_A_DAY * 1000 * mDayOfDays;
 
-		ExLog.d("Current Time : " + mCurrentTime.toString() + ", mOpenTime : " + mOpenTime.toString());
-
 		// 현재 시간이 오픈 시간 보다 작아지면.
 		if (mCurrentTime.compareTo(mOpenTime) < 0)
 		{
@@ -95,8 +93,6 @@ public class SaleTime implements Constants, Parcelable
 				// 다음 날이 되면 오늘 정시에서 클로즈 시간을 뺀다.
 				String todayString = SaleTime.attachCurrentDate(getCurrentYear(), getCurrentMonth(), getCurrentDay(), "00:00:00");
 				Date onTimeDate = SaleTime.stringToDate(todayString);
-
-				ExLog.d("On Time : " + onTimeDate.toString() + ", Close Time :" + mCloseTime.toString());
 
 				logicalTime += (onTimeDate.getTime() - getCloseTime());
 			} catch (Exception e)

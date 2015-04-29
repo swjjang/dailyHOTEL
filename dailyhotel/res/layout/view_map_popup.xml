@@ -10,7 +10,7 @@
     <ImageView
         android:id="@+id/iv_hotel_row_img"
         android:layout_width="220dp"
-        android:layout_height="120dp"
+        android:layout_height="140dp"
         android:adjustViewBounds="false"
         android:background="@drawable/img_placeholder"
         android:scaleType="fitXY"
@@ -19,7 +19,7 @@
     <RelativeLayout
         android:id="@+id/ll_hotel_row_content"
         android:layout_width="220dp"
-        android:layout_height="120dp" >
+        android:layout_height="140dp" >
 
         <!-- board -->
 
@@ -126,7 +126,7 @@
     <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
         android:id="@+id/tv_hotel_row_soldout"
         android:layout_width="220dp"
-        android:layout_height="120dp"
+        android:layout_height="140dp"
         android:background="@color/textView_textColor_shadow_soldout"
         android:gravity="center_vertical|center"
         android:text="SOLD OUT"

@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.LinearLayout;
@@ -22,8 +21,6 @@ public class FragmentViewPager extends LinearLayout
 	private FragementViewPagerAdapter mAdapter;
 
 	private CustomViewPager mViewPager;
-
-	private OnPageChangeListener mRequestOnPageChangeListener;
 
 	/**
 	 * @param context
@@ -106,42 +103,6 @@ public class FragmentViewPager extends LinearLayout
 	{
 		return mViewPager.getCurrentItem();
 	}
-
-	//	public void setOnPageChangeListener(OnPageChangeListener l)
-	//	{
-	//		mRequestOnPageChangeListener = l;
-	//	}
-
-	private OnPageChangeListener mOnPageChangeListener = new OnPageChangeListener()
-	{
-
-		@Override
-		public void onPageSelected(int arg0)
-		{
-			if (null != mRequestOnPageChangeListener)
-			{
-				mRequestOnPageChangeListener.onPageSelected(arg0);
-			}
-		}
-
-		@Override
-		public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
-		{
-			if (null != mRequestOnPageChangeListener)
-			{
-				mRequestOnPageChangeListener.onPageScrolled(position, positionOffset, positionOffsetPixels);
-			}
-		}
-
-		@Override
-		public void onPageScrollStateChanged(int arg0)
-		{
-			if (null != mRequestOnPageChangeListener)
-			{
-				mRequestOnPageChangeListener.onPageScrollStateChanged(arg0);
-			}
-		}
-	};
 
 	private class FragementViewPagerAdapter extends FragmentPagerAdapter
 	{

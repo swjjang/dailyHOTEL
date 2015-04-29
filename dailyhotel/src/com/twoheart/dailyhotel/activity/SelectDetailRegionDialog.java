@@ -15,6 +15,8 @@ public class SelectDetailRegionDialog extends Dialog implements com.twoheart.dai
 	public interface OnSelectedDetailRegionListener
 	{
 		public void onClick(String detailRegion);
+
+		public void onCancel();
 	}
 
 	public SelectDetailRegionDialog(Context context)
@@ -63,7 +65,7 @@ public class SelectDetailRegionDialog extends Dialog implements com.twoheart.dai
 			{
 				if (mOnSelectedDetailRegionListener != null)
 				{
-					mOnSelectedDetailRegionListener.onClick(null);
+					mOnSelectedDetailRegionListener.onCancel();
 				}
 			}
 		});

@@ -3,32 +3,12 @@
     android:id="@+id/bannerView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/banner"
-    android:gravity="center_vertical"
-    android:paddingLeft="17dp" >
+    android:gravity="center_vertical" >
 
-    <View
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="88dp" />
-
-    <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-        android:id="@+id/titleTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="left|center_vertical"
-        android:text="@string/label_event_title"
-        android:textColor="@color/white"
-        android:textSize="20dp" />
-
-    <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-        android:id="@+id/subTitleTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/titleTextView"
-        android:layout_marginTop="5dp"
-        android:gravity="left|center_vertical"
-        android:text="@string/label_event_subtitle"
-        android:textColor="@color/white"
-        android:textSize="14dp" />
+        android:layout_height="88dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/img_btn_event_renew" />
 
 </RelativeLayout>
