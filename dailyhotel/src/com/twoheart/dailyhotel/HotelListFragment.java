@@ -195,7 +195,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 		return view;
 	}
-	
+
 	// 호텔 클릭시
 	@Override
 	public void onItemClick(AdapterView<?> parentView, View childView, int position, long id)
@@ -259,7 +259,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	public void setHotelViewType(HOTEL_VIEW_TYPE type, boolean isCurrentPage)
 	{
 		mHotelViewType = type;
-		
+
 		if (mEmptyView.getVisibility() == View.VISIBLE)
 		{
 			setVisibility(HOTEL_VIEW_TYPE.GONE);
@@ -275,7 +275,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 					setVisibility(HOTEL_VIEW_TYPE.MAP);
 
 					mHotelListMapFragment.setUserActionListener(mUserActionListener);
-					
+
 					if (isCurrentPage == true)
 					{
 						mHotelListMapFragment.setRegion(mSelectedRegion);
@@ -629,11 +629,11 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 				if (length == 0)
 				{
-					if(mHotelListAdapter != null)
+					if (mHotelListAdapter != null)
 					{
 						mHotelListAdapter.clear();
 					}
-					
+
 					setVisibility(HOTEL_VIEW_TYPE.GONE);
 				} else
 				{
