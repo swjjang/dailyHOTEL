@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/hotel_list_background" >
 
-    <FrameLayout
+    <com.twoheart.dailyhotel.util.ui.HotelMapLayout
         android:id="@+id/hotelMapLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -18,7 +18,7 @@
 	        android:layout_height="match_parent"
 	        class="com.twoheart.dailyhotel.fragment.HotelListMapFragment" />
         -->
-    </FrameLayout>
+    </com.twoheart.dailyhotel.util.ui.HotelMapLayout>
 
     <include
         android:id="@+id/emptyView"

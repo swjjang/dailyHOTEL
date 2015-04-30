@@ -66,7 +66,7 @@ public class IconGenerator
 		mRotationLayout = (RotationLayout) mContainer.getChildAt(0);
 		mContentView = mTextView = (TextView) mRotationLayout.findViewById(R.id.text);
 		mSoldOutTextView = (TextView) mRotationLayout.findViewById(R.id.tv_hotel_row_soldout);
-		
+
 		setStyle(STYLE_DEFAULT);
 	}
 
@@ -106,22 +106,22 @@ public class IconGenerator
 		int measuredHeight = mContainer.getMeasuredHeight();
 
 		mContainer.layout(0, 0, measuredWidth, measuredHeight);
-		
-		if(mSoldOutTextView.getVisibility() == View.VISIBLE)
+
+		if (mSoldOutTextView.getVisibility() == View.VISIBLE)
 		{
 			int width = mSoldOutTextView.getMeasuredWidth();
 			int height = mSoldOutTextView.getMeasuredHeight();
-			
+
 			int width1 = mTextView.getMeasuredWidth();
 			int height1 = mTextView.getMeasuredHeight();
-			
-			if(width < width1)
+
+			if (width < width1)
 			{
 				mSoldOutTextView.layout(0, 0, width1, height1);
-				
+
 				int left = (width1 - width) / 2;
 				int top = (height1 - height) / 2;
-				
+
 				mSoldOutTextView.setPadding(left, top, 0, 0);
 			}
 		}

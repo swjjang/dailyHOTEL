@@ -1,20 +1,25 @@
 package com.twoheart.dailyhotel.adapter;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.Shader;
 import android.graphics.drawable.PaintDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
+import android.os.Handler;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -27,179 +32,323 @@ import com.google.android.gms.maps.model.Marker;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Hotel;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.VolleyImageLoader;
-import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
 
-public class HotelInfoWindowAdapter implements InfoWindowAdapter
+public class HotelInfoWindowAdapter implements InfoWindowAdapter, View.OnTouchListener
 {
-	private HotelListViewItem mHotelListViewItem;
+	private static final int MAX_CHILD_VIEW = 4;
+	
+	private ArrayList<Hotel> mHotelList;
 	private Context mContext;
 	private boolean mRefreshingInfoWindow;
-	private View mView;
+	private View mRootView;
+	private View[] mChildView;
+	private OnInfoWindowClickListener mOnInfoWindowClickListener;
+	private Handler mHandler = new Handler();
+	private boolean mIsPressed;
+	
+	private View mSelectedView;
+	
+	
+	public interface OnInfoWindowClickListener
+	{
+		public void onInfoWindowClickListener(Hotel selectedHotel);
+	}
 
 	public HotelInfoWindowAdapter(Context context)
 	{
 		mContext = context;
+		
+		// Max 4
+		mChildView = new View[MAX_CHILD_VIEW];
+	}
 
-		LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-		if (mView == null)
+	public void setHotelListViewItems(ArrayList<Hotel> arrayList)
+	{
+		if (arrayList == null)
 		{
-			mView = layoutInflater.inflate(R.layout.view_map_popup, null);
+			return;
+		}
+		
+		int size = arrayList.size();
+		mHotelList = new ArrayList<Hotel>(MAX_CHILD_VIEW);
+		
+		for(int i = 0; i < MAX_CHILD_VIEW && i < size; i++)
+		{
+			mHotelList.add(arrayList.get(i));
+		}
+		
+		int hotelSize = mHotelList.size();
+		
+		mRefreshingInfoWindow = false;
+
+		LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+		if (hotelSize == 1)
+		{
+			if(mRootView == null || mRootView.getId() != R.layout.view_map_popup)
+			{
+				mRootView = layoutInflater.inflate(R.layout.view_map_popup, null);
+			}
+			
+			mRootView.setOnTouchListener(this);
+			mRootView.setTag(mHotelList.get(0));
+			
+			ImageView imageView = (ImageView) mRootView.findViewById(R.id.iv_hotel_row_img);
+			imageView.setBackgroundResource(R.drawable.img_placeholder);
+		} else
+		{
+			if(mRootView == null || mRootView.getId() != R.layout.views_map_popup)
+			{
+				mRootView = layoutInflater.inflate(R.layout.views_map_popup, null);
+			}
+			
+			mChildView[0] = mRootView.findViewById(R.id.view01);
+			mChildView[1] = mRootView.findViewById(R.id.view02);
+			mChildView[2] = mRootView.findViewById(R.id.view03);
+			mChildView[3] = mRootView.findViewById(R.id.view04);
+			
+			for(int i = 0; i < MAX_CHILD_VIEW; i++)
+			{
+				if(i < hotelSize)
+				{
+					mChildView[i].setVisibility(View.VISIBLE);
+					mChildView[i].setTag(mHotelList.get(i));
+					mChildView[i].setOnTouchListener(mChildTouch);
+					
+					ImageView imageView = (ImageView) mChildView[i].findViewById(R.id.iv_hotel_row_img);
+					imageView.setBackgroundResource(R.drawable.img_placeholder);
+				} else
+				{
+					mChildView[i].setVisibility(View.GONE);
+					mChildView[i].setTag(null);
+					mChildView[i].setOnTouchListener(null);
+				}
+			}
 		}
 	}
 
-	public void setHotelListViewItem(HotelListViewItem hotelListViewItem)
+	public void setOnInfoWindowClickListener(OnInfoWindowClickListener listener)
 	{
-		mHotelListViewItem = hotelListViewItem;
+		mOnInfoWindowClickListener = listener;
+	}
 
-		mRefreshingInfoWindow = false;
+	public View getInfoWindow()
+	{
+		return mRootView;
+	}
 
-		if (mView != null)
+	private final Runnable mConfirmClickRunnable = new Runnable()
+	{
+		public void run()
 		{
-			ImageView imageView = (ImageView) mView.findViewById(R.id.iv_hotel_row_img);
-			imageView.setBackgroundResource(R.drawable.img_placeholder);
+			if (mIsPressed == true)
+			{
+				mHandler.removeCallbacks(mConfirmClickRunnable);
+				
+				if(mSelectedView != null)
+				{
+					mOnInfoWindowClickListener.onInfoWindowClickListener((Hotel)mSelectedView.getTag());
+				}
+			}
 		}
+	};
+	
+	private OnTouchListener mChildTouch = new OnTouchListener()
+	{
+		@Override
+		public boolean onTouch(View v, MotionEvent event)
+		{
+			switch (event.getActionMasked())
+			{
+				case MotionEvent.ACTION_DOWN:
+					if (mIsPressed == false)
+					{
+						mSelectedView = null;
+						mIsPressed = true;
+						mHandler.removeCallbacks(mConfirmClickRunnable);
+					}
+					break;
+
+				case MotionEvent.ACTION_UP:
+					mSelectedView = v;
+					mHandler.postDelayed(mConfirmClickRunnable, 150);
+					break;
+
+				case MotionEvent.ACTION_CANCEL:
+					if (mIsPressed == true)
+					{
+						mSelectedView = null;
+						mIsPressed = false;
+						mHandler.removeCallbacks(mConfirmClickRunnable);
+					}
+					break;
+				default:
+					break;
+			}
+			
+			return true;
+		}
+	};
+
+	@Override
+	public boolean onTouch(View v, MotionEvent event)
+	{
+		if (0 <= event.getX() && event.getX() <= v.getWidth() && 0 <= event.getY() && event.getY() <= v.getHeight())
+		{
+			switch (event.getActionMasked())
+			{
+				case MotionEvent.ACTION_DOWN:
+					if (mIsPressed == false)
+					{
+						mSelectedView = null;
+						mIsPressed = true;
+						mHandler.removeCallbacks(mConfirmClickRunnable);
+					}
+					break;
+
+				case MotionEvent.ACTION_UP:
+					mSelectedView = v;
+					mHandler.postDelayed(mConfirmClickRunnable, 150);
+					break;
+
+				case MotionEvent.ACTION_CANCEL:
+					if (mIsPressed == true)
+					{
+						mSelectedView = null;
+						mIsPressed = false;
+						mHandler.removeCallbacks(mConfirmClickRunnable);
+					}
+					break;
+				default:
+					break;
+			}
+		}
+
+		return false;
 	}
 
 	@Override
-	public View getInfoWindow(final Marker marker)
+	public View getInfoWindow(Marker marker)
 	{
 		if (mRefreshingInfoWindow == true)
 		{
 
 		} else
 		{
-			RelativeLayout llHotelRowContent = (RelativeLayout) mView.findViewById(R.id.ll_hotel_row_content);
-			final ImageView img = (ImageView) mView.findViewById(R.id.iv_hotel_row_img);
-			TextView name = (TextView) mView.findViewById(R.id.tv_hotel_row_name);
-			TextView price = (TextView) mView.findViewById(R.id.tv_hotel_row_price);
-			TextView discount = (TextView) mView.findViewById(R.id.tv_hotel_row_discount);
-			TextView sold_out = (TextView) mView.findViewById(R.id.tv_hotel_row_soldout);
-			TextView address = (TextView) mView.findViewById(R.id.tv_hotel_row_address);
-			TextView grade = (TextView) mView.findViewById(R.id.hv_hotel_grade);
-
-			DecimalFormat comma = new DecimalFormat("###,##0");
-
-			Hotel hotel = mHotelListViewItem.getItem();
-
-			String strPrice = comma.format(Integer.parseInt(hotel.getPrice()));
-			String strDiscount = comma.format(Integer.parseInt(hotel.getDiscount()));
-
-			address.setText(hotel.getAddress());
-			name.setText(hotel.getName());
-
-			Spanned currency = Html.fromHtml(mContext.getResources().getString(R.string.currency));
-			price.setText(strPrice + currency);
-			price.setPaintFlags(price.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-			discount.setText(strDiscount + currency);
-
-			name.setSelected(true); // Android TextView marquee bug
-
-			final int colors[] = { Color.parseColor("#ED000000"), Color.parseColor("#E8000000"), Color.parseColor("#E2000000"), Color.parseColor("#66000000"), Color.parseColor("#00000000") };
-			final float positions[] = { 0.0f, 0.01f, 0.02f, 0.17f, 0.38f };
-
-			PaintDrawable p = new PaintDrawable();
-			p.setShape(new RectShape());
-
-			ShapeDrawable.ShaderFactory sf = new ShapeDrawable.ShaderFactory()
+			int size = mHotelList.size();
+			
+			if(size == 1)
 			{
-				@Override
-				public Shader resize(int width, int height)
-				{
-					return new LinearGradient(0, height, 0, 0, colors, positions, Shader.TileMode.CLAMP);
-				}
-			};
-
-			p.setShaderFactory(sf);
-			llHotelRowContent.setBackgroundDrawable(p);
-
-			// grade
-			grade.setText(hotel.getCategory().getName(mContext));
-			grade.setBackgroundResource(hotel.getCategory().getColorResId());
-
-			name.setTypeface(DailyHotel.getBoldTypeface());
-			discount.setTypeface(DailyHotel.getBoldTypeface());
-
-			if (mRefreshingInfoWindow == false)
-			{
-				// Used Volley
-				//				VolleyImageLoader.getImageLoader().get(mHotel.getImage(), new ImageListener()
-				//				{
-				//					
-				//					@Override
-				//					public void onErrorResponse(VolleyError arg0)
-				//					{
-				//						// TODO Auto-generated method stub
-				//						
-				//					}
-				//					
-				//					@Override
-				//					public void onResponse(ImageContainer arg0, boolean arg1)
-				//					{
-				//						if(arg0 != null)
-				//						{
-				//							Bitmap bitmap = arg0.getBitmap();
-				//							
-				//							if(bitmap != null)
-				//							{
-				//								if(mRefreshingInfoWindow == false)
-				//								{
-				//									mRefreshingInfoWindow = true;
-				//									img.setBackgroundDrawable(new BitmapDrawable(mContext.getResources(), bitmap));
-				//									marker.showInfoWindow();
-				//								}
-				//							}
-				//						}
-				//					}
-				//				});
-
-				// Used AQuery
-				AQuery aq = new AQuery(mView);
-				Bitmap cachedImg = VolleyImageLoader.getCache(hotel.getImage());
-
-				if (cachedImg == null)
-				{ // 힛인 밸류가 없다면 이미지를 불러온 후 캐시에 세이브
-					BitmapAjaxCallback cb = new BitmapAjaxCallback()
-					{
-						@Override
-						protected void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status)
-						{
-							VolleyImageLoader.putCache(url, bm);
-							super.callback(url, iv, bm, status);
-
-							mRefreshingInfoWindow = true;
-							marker.showInfoWindow();
-						}
-					};
-
-					cb.url(hotel.getImage());
-					aq.id(img).image(cb);
-
-				} else
-				{
-					aq.id(img).image(cachedImg);
-					//				cachedImg.recycle();
-
-					mRefreshingInfoWindow = true;
-					marker.showInfoWindow();
-				}
-			}
-
-			// 객실이 1~2 개일때 label 표시
-			int avail_cnt = hotel.getAvailableRoom();
-
-			// SOLD OUT 표시
-			if (avail_cnt == 0)
-			{
-				sold_out.setVisibility(View.VISIBLE);
+				makeLayout(marker, mRootView, mHotelList.get(0));
 			} else
 			{
-				sold_out.setVisibility(View.GONE);
+				for(int i = 0; i < size; i++)
+				{
+					makeLayout(marker, mChildView[i], mHotelList.get(i));
+				}
 			}
 		}
 
-		return mView;
+		return mRootView;
+	}
+	
+	private void makeLayout(final Marker marker, View view, Hotel hotel)
+	{
+		RelativeLayout llHotelRowContent = (RelativeLayout) view.findViewById(R.id.ll_hotel_row_content);
+		final ImageView img = (ImageView) view.findViewById(R.id.iv_hotel_row_img);
+		TextView name = (TextView) view.findViewById(R.id.tv_hotel_row_name);
+		TextView price = (TextView) view.findViewById(R.id.tv_hotel_row_price);
+		TextView discount = (TextView) view.findViewById(R.id.tv_hotel_row_discount);
+		TextView sold_out = (TextView) view.findViewById(R.id.tv_hotel_row_soldout);
+		TextView address = (TextView) view.findViewById(R.id.tv_hotel_row_address);
+		TextView grade = (TextView) view.findViewById(R.id.hv_hotel_grade);
+
+		DecimalFormat comma = new DecimalFormat("###,##0");
+		String strPrice = comma.format(Integer.parseInt(hotel.getPrice()));
+		String strDiscount = comma.format(Integer.parseInt(hotel.getDiscount()));
+
+		address.setText(hotel.getAddress());
+		name.setText(hotel.getName());
+
+		Spanned currency = Html.fromHtml(mContext.getResources().getString(R.string.currency));
+		price.setText(strPrice + currency);
+		price.setPaintFlags(price.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+		discount.setText(strDiscount + currency);
+
+		name.setSelected(true); // Android TextView marquee bug
+
+		final int colors[] = { Color.parseColor("#ED000000"), Color.parseColor("#E8000000"), Color.parseColor("#E2000000"), Color.parseColor("#66000000"), Color.parseColor("#00000000") };
+		final float positions[] = { 0.0f, 0.01f, 0.02f, 0.17f, 0.38f };
+
+		PaintDrawable p = new PaintDrawable();
+		p.setShape(new RectShape());
+
+		ShapeDrawable.ShaderFactory sf = new ShapeDrawable.ShaderFactory()
+		{
+			@Override
+			public Shader resize(int width, int height)
+			{
+				return new LinearGradient(0, height, 0, 0, colors, positions, Shader.TileMode.CLAMP);
+			}
+		};
+
+		p.setShaderFactory(sf);
+		llHotelRowContent.setBackgroundDrawable(p);
+
+		// grade
+		grade.setText(hotel.getCategory().getName(mContext));
+		grade.setBackgroundResource(hotel.getCategory().getColorResId());
+
+		name.setTypeface(DailyHotel.getBoldTypeface());
+		discount.setTypeface(DailyHotel.getBoldTypeface());
+
+		if (mRefreshingInfoWindow == false)
+		{
+			// Used AQuery
+			AQuery aq = new AQuery(view);
+			Bitmap cachedImg = VolleyImageLoader.getCache(hotel.getImage());
+
+			if (cachedImg == null)
+			{ // 힛인 밸류가 없다면 이미지를 불러온 후 캐시에 세이브
+				BitmapAjaxCallback cb = new BitmapAjaxCallback()
+				{
+					@Override
+					protected void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status)
+					{
+						VolleyImageLoader.putCache(url, bm);
+						super.callback(url, iv, bm, status);
+
+						mRefreshingInfoWindow = true;
+						marker.showInfoWindow();
+					}
+				};
+
+				cb.url(hotel.getImage());
+				aq.id(img).image(cb);
+
+			} else
+			{
+				aq.id(img).image(cachedImg);
+				//				cachedImg.recycle();
+
+				mRefreshingInfoWindow = true;
+				marker.showInfoWindow();
+			}
+		}
+
+		// 객실이 1~2 개일때 label 표시
+		int avail_cnt = hotel.getAvailableRoom();
+
+		// SOLD OUT 표시
+		if (avail_cnt == 0)
+		{
+			sold_out.setVisibility(View.VISIBLE);
+		} else
+		{
+			sold_out.setVisibility(View.GONE);
+		}
 	}
 
 	@Override
@@ -207,4 +356,5 @@ public class HotelInfoWindowAdapter implements InfoWindowAdapter
 	{
 		return null;
 	}
+
 }

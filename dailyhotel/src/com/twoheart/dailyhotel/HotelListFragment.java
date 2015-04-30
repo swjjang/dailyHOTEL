@@ -31,7 +31,6 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.AbsListViewDelegate;
 import android.os.Bundle;
-import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,7 +39,6 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.adapter.HotelListAdapter;
@@ -56,6 +54,7 @@ import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
+import com.twoheart.dailyhotel.util.ui.HotelMapLayout;
 import com.twoheart.dailyhotel.widget.DailyFloatingActionButton;
 import com.twoheart.dailyhotel.widget.DailyHotelHeaderTransformer;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView;
@@ -72,8 +71,9 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	//	private boolean event;
 	protected boolean mIsSelectionTop;
 	private View mEmptyView;
-	private FrameLayout mMapLayout;
 	private View mFooterView;
+	
+	private HotelMapLayout mMapLayout;
 	private HotelListMapFragment mHotelListMapFragment;
 	private HOTEL_VIEW_TYPE mHotelViewType;
 	private String mSelectedRegion;
@@ -99,7 +99,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 		mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
 		mEmptyView = view.findViewById(R.id.emptyView);
-		mMapLayout = (FrameLayout) view.findViewById(R.id.hotelMapLayout);
+		mMapLayout = (HotelMapLayout) view.findViewById(R.id.hotelMapLayout);
 
 		//		mHotelListMapFragment = (HotelListMapFragment) getChildFragmentManager().findFragmentById(R.id.hotelMapFragment);
 
@@ -304,6 +304,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 				{
 					getChildFragmentManager().beginTransaction().remove(mHotelListMapFragment).commit();
 					mMapLayout.removeAllViews();
+					mMapLayout.setMapFragment(null);
 					mHotelListMapFragment = null;
 				}
 
@@ -322,6 +323,8 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 					mHotelListMapFragment = new HotelListMapFragment();
 					getChildFragmentManager().beginTransaction().add(mMapLayout.getId(), mHotelListMapFragment).commitAllowingStateLoss();
 				}
+				
+				mMapLayout.setMapFragment(mHotelListMapFragment);
 
 				mDailyFloatingActionButton.setVisibility(View.VISIBLE);
 				mDailyFloatingActionButton.setImageResource(R.drawable.img_ic_list_mini);
@@ -591,6 +594,11 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 					insertHotelSize++;
 				}
+				
+				if(hotel.getName().contains("스탠포드"))
+				{
+					ExLog.d(hotel.getName() + " : " + hotel.getSequence() + ", " + hotel.mLatitude + ", " + hotel.mLongitude);
+				}
 			}
 
 			// 해당 지역에 호텔 정보가 없으면 section정보를 제거한다.
@@ -626,15 +634,14 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 				} else
 				{
 					// 추후 개수는 화면에 보이는 리스트 아이템의 개수에 따라서 다르다. 
-					if(length == 1)
+					if (length == 1)
 					{
 						mFooterView.setVisibility(View.GONE);
-					}
-					else 
+					} else
 					{
 						mFooterView.setVisibility(View.VISIBLE);
 					}
-					
+
 					JSONObject jsonObject;
 
 					ArrayList<Hotel> hotelList = new ArrayList<Hotel>(length);

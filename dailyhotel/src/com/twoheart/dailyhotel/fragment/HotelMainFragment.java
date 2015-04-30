@@ -138,10 +138,10 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 	public void onResume()
 	{
 		lockUI();
+		
+		super.onResume();
 
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_TIME).toString(), null, mAppTimeJsonResponseListener, mHostActivity));
-
-		super.onResume();
 	}
 
 	@Override
@@ -395,7 +395,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 
 				String regionStr = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
 				int size = mRegionList.size();
-
+				
 				for (int i = 0; i < size; i++)
 				{
 					String regison = mRegionList.get(i);
@@ -428,7 +428,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 					editor.putString(KEY_PREFERENCE_REGION_SELECT, mRegionList.get(currentRegionIndex));
 					editor.commit();
 				}
-
+				
 				//탭에 들어갈 날짜를 만든다.
 				//				mTodaySaleTime.setLogicalTime();
 
@@ -447,13 +447,20 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 
 					hotelListFragment.setSaleTime(saleTime);
 					hotelListFragment.setRegionList(detailRegionList);
+					
+					ExLog.d("saleTime : " + saleTime);
 				}
 
 				// 임시로 여기서 날짜를 넣는다.
 				ArrayList<String> dayList = new ArrayList<String>();
 
+				ExLog.d("tabSaleTime[0].getLogicalDay() : " + tabSaleTime[0].getLogicalDay());
 				dayList.add(getString(R.string.label_format_tabday, tabSaleTime[0].getLogicalDay(), tabSaleTime[0].getLogicalDayOftheWeek()));
+				
+				ExLog.d("tabSaleTime[0].getLogicalDay() : " + tabSaleTime[1].getLogicalDay());
 				dayList.add(getString(R.string.label_format_tabday, tabSaleTime[1].getLogicalDay(), tabSaleTime[1].getLogicalDayOftheWeek()));
+				
+				ExLog.d("mTabIndicator.getSubText(2) : " + mTabIndicator.getSubText(2));
 
 				if (TextUtils.isEmpty(mTabIndicator.getSubText(2)) == true)
 				{
@@ -464,6 +471,8 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 				}
 
 				int tabSize = mTabIndicator.size();
+				
+				ExLog.d("tabSize : " + tabSize);
 
 				for (int i = 0; i < tabSize; i++)
 				{
@@ -477,13 +486,19 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 						mTabIndicator.setSubTextEnable(i, true);
 						mTabIndicator.setSubText(i, day);
 					}
+					
+					ExLog.d("day : " + day);
 				}
 
 				// 호텔 프래그먼트 일때 액션바에 네비게이션 리스트 설치.
 				mHostActivity.setActionBarListEnabled(true);
 				mHostActivity.setActionBarListData(mRegionList.get(currentRegionIndex), mRegionList, HotelMainFragment.this);
 
+				ExLog.d("mRegionList.get(currentRegionIndex) : " + mRegionList.get(currentRegionIndex));
+				
 				onNavigationItemSelected(currentRegionIndex);
+				
+				ExLog.d("onNavigationItemSelected(currentRegionIndex);");
 			} catch (Exception e)
 			{
 				onError(e);
