@@ -38,7 +38,6 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.FrameLayout;
 
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.adapter.HotelListAdapter;
@@ -54,6 +53,8 @@ import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
+import com.twoheart.dailyhotel.util.ui.HotelMapLayout;
+import com.twoheart.dailyhotel.widget.DailyFloatingActionButton;
 import com.twoheart.dailyhotel.widget.DailyHotelHeaderTransformer;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView;
 
@@ -69,10 +70,15 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	//	private boolean event;
 	protected boolean mIsSelectionTop;
 	private View mEmptyView;
-	private FrameLayout mMapLayout;
+	private View mFooterView;
+
+	private HotelMapLayout mMapLayout;
 	private HotelListMapFragment mHotelListMapFragment;
 	private HOTEL_VIEW_TYPE mHotelViewType;
 	private String mSelectedRegion;
+	//	private String mSelectedDetailRegion;
+
+	private DailyFloatingActionButton mDailyFloatingActionButton;
 
 	private HotelListViewItem mSelectedHotelListViewItem;
 	private int mSelectedHotelIndex;
@@ -85,11 +91,76 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		View view = inflater.inflate(R.layout.fragment_hotel_list, container, false);
 
 		mHotelListView = (PinnedSectionListView) view.findViewById(R.id.listview_hotel_list);
+
+		// 이벤트를 마지막에 넣는다.
+		mFooterView = inflater.inflate(R.layout.list_row_hotel_event, null, true);
+		mHotelListView.addFooterView(mFooterView);
+
 		mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
 		mEmptyView = view.findViewById(R.id.emptyView);
-		mMapLayout = (FrameLayout) view.findViewById(R.id.hotelMapLayout);
+		mMapLayout = (HotelMapLayout) view.findViewById(R.id.hotelMapLayout);
 
 		//		mHotelListMapFragment = (HotelListMapFragment) getChildFragmentManager().findFragmentById(R.id.hotelMapFragment);
+
+		mDailyFloatingActionButton = (DailyFloatingActionButton) view.findViewById(R.id.floatingActionButton);
+		mDailyFloatingActionButton.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				if (mUserActionListener != null)
+				{
+					mUserActionListener.toggleViewType();
+				}
+
+				//				switch (mHotelViewType)
+				//				{
+				//					case LIST:
+				//					{
+				//						// 서울인경우에만 지역 맵을 나오도록 함.
+				//						if ("서울".equalsIgnoreCase(mSelectedRegion) == true)
+				//						{
+				//							SelectDetailRegionDialog dialog = new SelectDetailRegionDialog(mHostActivity, android.R.style.Theme_Translucent_NoTitleBar);
+				//							dialog.setOnSelectedRegionListener(new OnSelectedDetailRegionListener()
+				//							{
+				//								@Override
+				//								public void onClick(String detailRegion)
+				//								{
+				//									mSelectedDetailRegion = detailRegion;
+				//									
+				//									if (detailRegion != null && mUserActionListener != null)
+				//									{
+				//										mUserActionListener.toggleViewType(detailRegion);
+				//									}
+				//								}
+				//
+				//								@Override
+				//								public void onCancel()
+				//								{
+				//									mSelectedDetailRegion = null;
+				//								}
+				//							});
+				//
+				//							dialog.show();
+				//						} else
+				//						{
+				//							if (mUserActionListener != null)
+				//							{
+				//								mUserActionListener.toggleViewType();
+				//							}
+				//						}
+				//						break;
+				//					}
+				//
+				//					case MAP:
+				//						if (mUserActionListener != null)
+				//						{
+				//							mUserActionListener.toggleViewType();
+				//						}
+				//						break;
+				//				}
+			}
+		});
 
 		mHotelViewType = HOTEL_VIEW_TYPE.LIST;
 
@@ -145,19 +216,46 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_TIME).toString(), null, mAppTimeJsonResponseListener, mHostActivity));
 	}
 
+	/**
+	 * 토글이 아닌 경우에만 진행하는 프로세스.
+	 * 
+	 * @param detailRegion
+	 */
+	public void processSelectedDetailRegion(String detailRegion)
+	{
+		// 맵 지도를 띄운다.
+		// 해당하는 지역의 맵 지도를 띄운다.
+		//		mSelectedDetailRegion = detailRegion;
+
+		// 현재 맵화면을 보고 있으면 맵화면을 유지 시켜중어야 한다.
+		if (detailRegion != null && mHotelViewType == HOTEL_VIEW_TYPE.MAP)
+		{
+			refreshHotelList(true);
+		}
+	}
+
 	public void onPageSelected(boolean isRequestHotelList)
 	{
+		ExLog.d("onPage Selected : " + this.toString());
 	}
 
 	public void onPageUnSelected()
 	{
+		ExLog.d("onPage UnSelected : " + this.toString());
 	}
 
 	public void onRefreshComplete()
 	{
-
+		mDailyFloatingActionButton.attachToListView(mHotelListView);
+		setFloatingActionButtonVisible(true);
 	}
 
+	/**
+	 * 새로 고침을 하지 않고 기존의 있는 데이터를 보여준다.
+	 * 
+	 * @param type
+	 * @param isCurrentPage
+	 */
 	public void setHotelViewType(HOTEL_VIEW_TYPE type, boolean isCurrentPage)
 	{
 		mHotelViewType = type;
@@ -180,7 +278,10 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 					if (isCurrentPage == true)
 					{
-						mHotelListMapFragment.setHotelList(mHotelListAdapter.getData(), mSaleTime);
+						// 선택한 상세 지역들의 모임들 ex) 강남구|서초구|동작구
+						mHotelListMapFragment.setRegion(mSelectedRegion);
+						//						mHotelListMapFragment.setDetailRegion(mSelectedDetailRegion);
+						mHotelListMapFragment.setHotelList(mHotelListAdapter.getData(), mSaleTime, false);
 					}
 					break;
 
@@ -202,8 +303,12 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 				{
 					getChildFragmentManager().beginTransaction().remove(mHotelListMapFragment).commit();
 					mMapLayout.removeAllViews();
+					mMapLayout.setMapFragment(null);
 					mHotelListMapFragment = null;
 				}
+
+				mDailyFloatingActionButton.setVisibility(View.VISIBLE);
+				mDailyFloatingActionButton.setImageResource(R.drawable.img_ic_map_mini);
 
 				mPullToRefreshLayout.setVisibility(View.VISIBLE);
 				break;
@@ -215,9 +320,13 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 				if (mHotelListMapFragment == null)
 				{
 					mHotelListMapFragment = new HotelListMapFragment();
-					getChildFragmentManager().beginTransaction().add(mMapLayout.getId(), mHotelListMapFragment).commit();
+					getChildFragmentManager().beginTransaction().add(mMapLayout.getId(), mHotelListMapFragment).commitAllowingStateLoss();
 				}
 
+				mMapLayout.setMapFragment(mHotelListMapFragment);
+
+				mDailyFloatingActionButton.setVisibility(View.VISIBLE);
+				mDailyFloatingActionButton.setImageResource(R.drawable.img_ic_list_mini);
 				mPullToRefreshLayout.setVisibility(View.INVISIBLE);
 				break;
 
@@ -225,6 +334,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 				mEmptyView.setVisibility(View.VISIBLE);
 				mMapLayout.setVisibility(View.GONE);
 
+				mDailyFloatingActionButton.setVisibility(View.GONE);
 				mPullToRefreshLayout.setVisibility(View.INVISIBLE);
 				break;
 		}
@@ -245,9 +355,35 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		mDetailRegionList = regionDetailList;
 	}
 
+	//	public void setSelectedDetailRegion(String region)
+	//	{
+	//		mSelectedDetailRegion = region;
+	//	}
+
 	public void setUserActionListener(HotelMainFragment.UserActionListener userActionLister)
 	{
 		mUserActionListener = userActionLister;
+	}
+
+	public void setFloatingActionButtonVisible(boolean visible)
+	{
+		if (mDailyFloatingActionButton == null)
+		{
+			return;
+		}
+
+		ExLog.d("setFloatingActionButtonVisible : " + visible);
+
+		if (visible == true)
+		{
+			if (mHotelListAdapter != null && mHotelListAdapter.getCount() != 0)
+			{
+				mDailyFloatingActionButton.show(false, true);
+			}
+		} else
+		{
+			mDailyFloatingActionButton.hide(false, true);
+		}
 	}
 
 	public void refreshHotelList(boolean isSelectionTop)
@@ -457,6 +593,11 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 					insertHotelSize++;
 				}
+
+				if (hotel.getName().contains("스탠포드"))
+				{
+					ExLog.d(hotel.getName() + " : " + hotel.getSequence() + ", " + hotel.mLatitude + ", " + hotel.mLongitude);
+				}
 			}
 
 			// 해당 지역에 호텔 정보가 없으면 section정보를 제거한다.
@@ -487,9 +628,19 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 				if (length == 0)
 				{
+					mHotelListAdapter.clear();
 					setVisibility(HOTEL_VIEW_TYPE.GONE);
 				} else
 				{
+					// 추후 개수는 화면에 보이는 리스트 아이템의 개수에 따라서 다르다. 
+					if (length == 1)
+					{
+						mFooterView.setVisibility(View.GONE);
+					} else
+					{
+						mFooterView.setVisibility(View.VISIBLE);
+					}
+
 					JSONObject jsonObject;
 
 					ArrayList<Hotel> hotelList = new ArrayList<Hotel>(length);
@@ -564,10 +715,13 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 					setVisibility(mHotelViewType);
 
+					// 지역이 변경되면 다시 리스트를 받아오는데 어떻게 해야할지 의문.
 					if (mHotelViewType == HOTEL_VIEW_TYPE.MAP)
 					{
 						mHotelListMapFragment.setUserActionListener(mUserActionListener);
-						mHotelListMapFragment.setHotelList(hotelListViewList, mSaleTime);
+						mHotelListMapFragment.setRegion(mSelectedRegion);
+						//						mHotelListMapFragment.setDetailRegion(mSelectedDetailRegion);
+						mHotelListMapFragment.setHotelList(hotelListViewList, mSaleTime, mIsSelectionTop);
 					}
 
 					mHotelListAdapter.clear();
@@ -577,6 +731,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 					if (mIsSelectionTop == true)
 					{
 						mHotelListView.setSelection(0);
+						mDailyFloatingActionButton.detachToListView(mHotelListView);
 					}
 				}
 

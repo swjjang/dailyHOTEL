@@ -3,7 +3,10 @@ package com.twoheart.dailyhotel.util;
 import java.util.Locale;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -98,4 +101,18 @@ public class Util implements Constants
 		conf.locale = locale;
 		res.updateConfiguration(conf, dm);
 	}
+
+	public static void restartApp(Context context)
+	{
+		// 메모리 해지 및 기타 바탕화면으로 빠진후에 메모리가 해지 되는 경우가 있어 강제 종료후에 다시 재실행한다.
+		// 에러 후에 알람으로 다시 실행시키기.
+		AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+		Intent intent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
+		PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+
+		alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + 500, pendingIntent);
+		System.exit(0);
+	}
+
 }

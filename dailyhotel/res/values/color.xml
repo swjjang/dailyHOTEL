@@ -64,5 +64,8 @@
 	
 	<color name="hotel_list_item_underline">#3a3a3a</color>
 	<color name="hotel_list_background">#ececec</color>
+	
+	<color name="floating_action_button_default">#FF7A7A</color>
+	<color name="floating_action_button_pressed">#ff5a5a</color>
 
 </resources>	

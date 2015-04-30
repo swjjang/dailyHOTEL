@@ -22,7 +22,6 @@ import com.twoheart.dailyhotel.R;
 
 public class LoadingDialog
 {
-
 	private Dialog mDialog;
 
 	public LoadingDialog(final BaseActivity activity)
@@ -39,7 +38,6 @@ public class LoadingDialog
 			{
 				hide();
 				activity.onBackPressed();
-
 			}
 		});
 	}

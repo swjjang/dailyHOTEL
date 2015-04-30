@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="220dp"
+    android:layout_width="154dp"
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:padding="2dp" >
@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/iv_hotel_row_img"
-        android:layout_width="220dp"
-        android:layout_height="140dp"
+        android:layout_width="154dp"
+        android:layout_height="98dp"
         android:adjustViewBounds="false"
         android:background="@drawable/img_placeholder"
         android:scaleType="fitXY"
@@ -18,14 +18,14 @@
 
     <RelativeLayout
         android:id="@+id/ll_hotel_row_content"
-        android:layout_width="220dp"
-        android:layout_height="140dp" >
+        android:layout_width="154dp"
+        android:layout_height="98dp" >
 
         <!-- board -->
 
         <RelativeLayout
             android:id="@+id/rl_hotel_under"
-            android:layout_width="220dp"
+            android:layout_width="154dp"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:padding="5dp" >
@@ -125,8 +125,8 @@
 
     <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
         android:id="@+id/tv_hotel_row_soldout"
-        android:layout_width="220dp"
-        android:layout_height="140dp"
+        android:layout_width="154dp"
+        android:layout_height="98dp"
         android:background="@color/textView_textColor_shadow_soldout"
         android:gravity="center_vertical|center"
         android:text="SOLD OUT"

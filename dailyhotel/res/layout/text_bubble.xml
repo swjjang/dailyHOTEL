@@ -2,12 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical" >
 
     <com.google.maps.android.ui.RotationLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical" >
 
         <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
             android:id="@+id/text"
@@ -21,6 +21,21 @@
             android:textColor="@color/white"
             android:textSize="13dp" />
 
+        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            android:id="@+id/tv_hotel_row_soldout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/textView_textColor_shadow_soldout"
+            android:gravity="center"
+            android:paddingBottom="5dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="5dp"
+            android:text="SOLD OUT"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="14dp"
+            android:textStyle="bold"
+            android:visibility="gone" />
     </com.google.maps.android.ui.RotationLayout>
 
 </LinearLayout>
