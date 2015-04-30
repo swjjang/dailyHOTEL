@@ -31,6 +31,7 @@ import com.twoheart.dailyhotel.adapter.HotelInfoWindowAdapter;
 import com.twoheart.dailyhotel.adapter.HotelInfoWindowAdapter.OnInfoWindowClickListener;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
 
@@ -69,7 +70,10 @@ public class HotelListMapFragment extends
 	{
 		View view = super.onCreateView(inflater, container, savedInstanceState);
 
-		mDuplicateHotel = new HashMap<String, ArrayList<Hotel>>();
+		if(mDuplicateHotel == null)
+		{
+			mDuplicateHotel = new HashMap<String, ArrayList<Hotel>>();
+		}
 
 		getMapAsync(new OnMapReadyCallback()
 		{
@@ -85,27 +89,14 @@ public class HotelListMapFragment extends
 				mGoogleMap.setMyLocationEnabled(false);
 				mGoogleMap.getUiSettings().setMapToolbarEnabled(false);
 
-				// 기본 위치 서울시청.
-				//		서울시       : 37.540705, 126.956764
-				//		인천광역시 : 37.469221, 126.573234
-				//		광주광역시 : 35.126033, 126.831302
-				//		대구광역시 : 35.798838, 128.583052
-				//		울산광역시 : 35.519301, 129.239078
-				//		대전광역시 : 36.321655, 127.378953
-				//		부산광역시 : 35.198362, 129.053922
-				//		경기도       : 37.567167, 127.190292
-				//		강원도       : 37.555837, 128.209315
-				//		충청남도    : 36.557229, 126.779757
-				//		충청북도    : 36.628503, 127.929344
-				//		경상북도    : 36.248647, 128.664734
-				//		경상남도    : 35.259787, 128.664734
-				//		전라북도    : 35.716705, 127.144185
-				//		전라남도    : 34.819400, 126.893113
-				//		제주도       : 33.364805, 126.542671
-
 				// 서울이 아니고 상세 지역 정보가 아닌 경우..지역별 중심값으로 이동.
-				CameraPosition cp = new CameraPosition.Builder().target((getRegionCenter(mRegion))).zoom(15).build();
-				mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
+				LatLng latlng = new LatLng(35.856899430657805, 127.73446206003428);
+				
+				if(latlng != null)
+				{
+					CameraPosition cp = new CameraPosition.Builder().target(latlng).zoom(6.791876f).build();
+					mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
+				}
 
 				mIsCreateView = true;
 
@@ -124,6 +115,11 @@ public class HotelListMapFragment extends
 
 	public void setRegion(String region)
 	{
+		if(region == null)
+		{
+			return;
+		}
+		
 		mRegion = region;
 	}
 
@@ -176,7 +172,7 @@ public class HotelListMapFragment extends
 		double latitude = 0.0;
 		double longitude = 0.0;
 		int count = 0;
-		int index = 0;
+//		int index = 0;
 
 		if (mOpenMakrer == true && mSelectedHotelListViewItem != null)
 		{
@@ -190,119 +186,25 @@ public class HotelListMapFragment extends
 
 		mMarker = null;
 
-		ArrayList<HotelListViewItem> arrangeList = new ArrayList<HotelListViewItem>(mHotelArrayList);
+		if(mDuplicateHotel == null)
+		{
+			mDuplicateHotel = new HashMap<String, ArrayList<Hotel>>();
+		}
+		
 		mDuplicateHotel.clear();
 
-		{
-			int size = arrangeList.size();
-			HotelListViewItem hotelListViewItem = null;
+		// 중복 지역을 찾아내기 위한 로직.
+		
+		ArrayList<HotelListViewItem> arrangeList = searchDuplicateLocateion(mHotelArrayList, mDuplicateHotel);
 
-			for (int i = size - 1; i >= 0; i--)
-			{
-				hotelListViewItem = arrangeList.get(i);
-
-				if (hotelListViewItem.getType() == HotelListViewItem.TYPE_SECTION)
-				{
-					arrangeList.remove(i);
-				}
-			}
-
-			// seq 값에 따른 역순으로 정렬
-			Comparator<HotelListViewItem> comparator = new Comparator<HotelListViewItem>()
-			{
-				public int compare(HotelListViewItem o1, HotelListViewItem o2)
-				{
-					Hotel item01 = o1.getItem();
-					Hotel item02 = o2.getItem();
-
-					double distanceLat = item01.mLatitude - item02.mLatitude;
-					double distanceLng = item01.mLongitude - item02.mLongitude;
-
-					double distance = distanceLat + distanceLng;
-
-					if (distance > 0)
-					{
-						return 1;
-					} else if (distance < 0)
-					{
-						return -1;
-					} else
-					{
-						return 0;
-					}
-				}
-			};
-
-			Collections.sort(arrangeList, comparator);
-
-			size = arrangeList.size();
-
-			if (size > 1)
-			{
-				Hotel item01 = null;
-				Hotel item02 = null;
-
-				for (int i = size - 1; i > 0; i--)
-				{
-					item01 = arrangeList.get(i).getItem();
-					item02 = arrangeList.get(i - 1).getItem();
-
-					if (item01.mLatitude == item02.mLatitude && item01.mLongitude == item02.mLongitude)
-					{
-						int item01DisCount = Integer.parseInt(item01.getDiscount().replaceAll(",", ""));
-						int item02DisCount = Integer.parseInt(item02.getDiscount().replaceAll(",", ""));
-
-						if (item01DisCount >= item02DisCount)
-						{
-							arrangeList.remove(i);
-						} else
-						{
-							arrangeList.remove(i - 1);
-						}
-
-						String key = String.valueOf(item01.mLatitude) + String.valueOf(item01.mLongitude);
-
-						if (mDuplicateHotel.containsKey(key) == true)
-						{
-							ArrayList<Hotel> dulicateHotelArrayList = mDuplicateHotel.get(key);
-
-							if (dulicateHotelArrayList.contains(item01) == false)
-							{
-								dulicateHotelArrayList.add(item01);
-							}
-
-							if (dulicateHotelArrayList.contains(item02) == false)
-							{
-								dulicateHotelArrayList.add(item02);
-							}
-						} else
-						{
-							ArrayList<Hotel> dulicateHotelArrayList = new ArrayList<Hotel>();
-
-							dulicateHotelArrayList.add(item01);
-							dulicateHotelArrayList.add(item02);
-
-							mDuplicateHotel.put(key, dulicateHotelArrayList);
-						}
-					}
-				}
-			}
-		}
-
-		//		for (HotelListViewItem hotelListViewItem : mHotelArrayList)
 		for (HotelListViewItem hotelListViewItem : arrangeList)
 		{
-			//			if (hotelListViewItem.getType() == HotelListViewItem.TYPE_SECTION)
-			//			{
-			//				continue;
-			//			}
-
 			Hotel hotel = hotelListViewItem.getItem();
 
 			Marker marker = addMarker(hotel);
 
 			// 추후 상세 지역을 위해서 .
-			index++;
+//			index++;
 			count++;
 
 			LatLng latlng = new LatLng(hotel.mLatitude, hotel.mLongitude);
@@ -346,8 +248,20 @@ public class HotelListMapFragment extends
 		{
 			if (count == 0)
 			{
-				CameraPosition cp = new CameraPosition.Builder().target(getRegionCenter(mRegion)).zoom(15).build();
-				mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
+				LatLng latlng = new LatLng(35.856899430657805, 127.73446206003428);
+				
+				if(latlng != null)
+				{
+					CameraPosition cp = new CameraPosition.Builder().target(latlng).zoom(6.791876f).build();
+					mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
+				}
+//				LatLng latlng = getRegionCenter(mRegion);
+//				
+//				if(latlng != null)
+//				{
+//					CameraPosition cp = new CameraPosition.Builder().target(getRegionCenter(mRegion)).zoom(15).build();
+//					mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
+//				}
 			} else if (count == 1)
 			{
 				CameraPosition cp = new CameraPosition.Builder().target(bounds.getCenter()).zoom(15).build();
@@ -421,60 +335,184 @@ public class HotelListMapFragment extends
 
 	private LatLng getRegionCenter(String region)
 	{
+		if(region == null)
+		{
+			return null;
+		}
+		
 		// Default Seoul
 		double latitude = 37.540705;
 		double longitude = 126.956764;
+		
+		// 기본 위치 서울시청.
+		//		서울시       : 37.540705, 126.956764
+		//		인천광역시 : 37.469221, 126.573234
+		//		광주광역시 : 35.126033, 126.831302
+		//		대구광역시 : 35.798838, 128.583052
+		//		울산광역시 : 35.519301, 129.239078
+		//		대전광역시 : 36.321655, 127.378953
+		//		부산광역시 : 35.198362, 129.053922
+		//		경기도       : 37.567167, 127.190292
+		//		강원도       : 37.555837, 128.209315
+		//		충청남도    : 36.557229, 126.779757
+		//		충청북도    : 36.628503, 127.929344
+		//		경상북도    : 36.248647, 128.664734
+		//		경상남도    : 35.259787, 128.664734
+		//		전라북도    : 35.716705, 127.144185
+		//		전라남도    : 34.819400, 126.893113
+		//		제주도       : 33.364805, 126.542671
 
-		if ("서울".equalsIgnoreCase(region) == true)
-		{
-		} else if ("경기".equalsIgnoreCase(region) == true)
-		{
-			// 37.567167, 127.190292
-			latitude = 37.567167;
-			longitude = 127.190292;
-		} else if ("인천".equalsIgnoreCase(region) == true)
-		{
-			// 37.469221, 126.573234
-			latitude = 37.469221;
-			longitude = 126.573234;
-		} else if ("부산".equalsIgnoreCase(region) == true)
-		{
-			// 35.198362, 129.053922
-			latitude = 35.198362;
-			longitude = 129.053922;
-		} else if ("경상".equalsIgnoreCase(region) == true)
-		{
-			//		경상북도    : 36.248647, 128.664734
-			//		경상남도    : 35.259787, 128.664734
-
-			latitude = (35.259787 + 36.248647) / 2;
-			longitude = 128.664734;
-
-		} else if ("전라".equalsIgnoreCase(region) == true)
-		{
-			//		전라북도    : 35.716705, 127.144185
-			//		전라남도    : 34.819400, 126.893113
-			latitude = (35.716705 + 34.819400) / 2;
-			longitude = (127.144185 + 126.893113) / 2;
-		} else if ("충청".equalsIgnoreCase(region) == true)
-		{
-			//		충청남도    : 36.557229, 126.779757
-			//		충청북도    : 36.628503, 127.929344
-			latitude = (36.557229 + 36.628503) / 2;
-			longitude = (126.779757 + 127.929344) / 2;
-		} else if ("강원".equalsIgnoreCase(region) == true)
-		{
-			// 37.555837, 128.209315
-			latitude = 37.555837;
-			longitude = 128.209315;
-		} else if ("제주".equalsIgnoreCase(region) == true)
-		{
-			// 33.364805, 126.542671
-			latitude = 33.364805;
-			longitude = 126.542671;
-		}
+//		if ("서울".equalsIgnoreCase(region) == true)
+//		{
+//		} else if ("경기".equalsIgnoreCase(region) == true)
+//		{
+//			// 37.567167, 127.190292
+//			latitude = 37.567167;
+//			longitude = 127.190292;
+//		} else if ("인천".equalsIgnoreCase(region) == true)
+//		{
+//			// 37.469221, 126.573234
+//			latitude = 37.469221;
+//			longitude = 126.573234;
+//		} else if ("부산".equalsIgnoreCase(region) == true)
+//		{
+//			// 35.198362, 129.053922
+//			latitude = 35.198362;
+//			longitude = 129.053922;
+//		} else if ("경상".equalsIgnoreCase(region) == true)
+//		{
+//			//		경상북도    : 36.248647, 128.664734
+//			//		경상남도    : 35.259787, 128.664734
+//
+//			latitude = (35.259787 + 36.248647) / 2;
+//			longitude = 128.664734;
+//
+//		} else if ("전라".equalsIgnoreCase(region) == true)
+//		{
+//			//		전라북도    : 35.716705, 127.144185
+//			//		전라남도    : 34.819400, 126.893113
+//			latitude = (35.716705 + 34.819400) / 2;
+//			longitude = (127.144185 + 126.893113) / 2;
+//		} else if ("충청".equalsIgnoreCase(region) == true)
+//		{
+//			//		충청남도    : 36.557229, 126.779757
+//			//		충청북도    : 36.628503, 127.929344
+//			latitude = (36.557229 + 36.628503) / 2;
+//			longitude = (126.779757 + 127.929344) / 2;
+//		} else if ("강원".equalsIgnoreCase(region) == true)
+//		{
+//			// 37.555837, 128.209315
+//			latitude = 37.555837;
+//			longitude = 128.209315;
+//		} else if ("제주".equalsIgnoreCase(region) == true)
+//		{
+//			// 33.364805, 126.542671
+//			latitude = 33.364805;
+//			longitude = 126.542671;
+//		}
 
 		return new LatLng(latitude, longitude);
+	}
+	
+	private ArrayList<HotelListViewItem> searchDuplicateLocateion(ArrayList<HotelListViewItem> hotelArrayList, HashMap<String, ArrayList<Hotel>> hashMap)
+	{
+		ArrayList<HotelListViewItem> arrangeList = new ArrayList<HotelListViewItem>(hotelArrayList);
+		
+		int size = arrangeList.size();
+		HotelListViewItem hotelListViewItem = null;
+
+		for (int i = size - 1; i >= 0; i--)
+		{
+			hotelListViewItem = arrangeList.get(i);
+
+			if (hotelListViewItem.getType() == HotelListViewItem.TYPE_SECTION)
+			{
+				arrangeList.remove(i);
+			}
+		}
+
+		// seq 값에 따른 역순으로 정렬
+		Comparator<HotelListViewItem> comparator = new Comparator<HotelListViewItem>()
+		{
+			public int compare(HotelListViewItem o1, HotelListViewItem o2)
+			{
+				Hotel item01 = o1.getItem();
+				Hotel item02 = o2.getItem();
+
+				double distanceLat = item01.mLatitude - item02.mLatitude;
+				double distanceLng = item01.mLongitude - item02.mLongitude;
+
+				double distance = distanceLat + distanceLng;
+
+				if (distance > 0)
+				{
+					return -1;
+				} else if (distance < 0)
+				{
+					return 1;
+				} else
+				{
+					return 0;
+				}
+			}
+		};
+
+		Collections.sort(arrangeList, comparator);
+
+		size = arrangeList.size();
+
+		if (size > 1)
+		{
+			Hotel item01 = null;
+			Hotel item02 = null;
+
+			for (int i = size - 1; i > 0; i--)
+			{
+				item01 = arrangeList.get(i).getItem();
+				item02 = arrangeList.get(i - 1).getItem();
+
+				if (item01.mLatitude == item02.mLatitude && item01.mLongitude == item02.mLongitude)
+				{
+					int item01DisCount = Integer.parseInt(item01.getDiscount().replaceAll(",", ""));
+					int item02DisCount = Integer.parseInt(item02.getDiscount().replaceAll(",", ""));
+
+					if (item01DisCount >= item02DisCount)
+					{
+						arrangeList.remove(i);
+					} else
+					{
+						arrangeList.remove(i - 1);
+					}
+
+					String key = String.valueOf(item01.mLatitude) + String.valueOf(item01.mLongitude);
+
+					if (hashMap.containsKey(key) == true)
+					{
+						ArrayList<Hotel> dulicateHotelArrayList = hashMap.get(key);
+
+						if (dulicateHotelArrayList.contains(item01) == false)
+						{
+							dulicateHotelArrayList.add(item01);
+						}
+
+						if (dulicateHotelArrayList.contains(item02) == false)
+						{
+							dulicateHotelArrayList.add(item02);
+						}
+					} else
+					{
+						ArrayList<Hotel> dulicateHotelArrayList = new ArrayList<Hotel>();
+
+						dulicateHotelArrayList.add(item01);
+						dulicateHotelArrayList.add(item02);
+
+						hashMap.put(key, dulicateHotelArrayList);
+					}
+				}
+			}
+		}
+		
+		return arrangeList;
 	}
 
 	public void setOnMakerInfoWindowListener(OnMakerInfoWindowListener listener)
@@ -593,7 +631,7 @@ public class HotelListMapFragment extends
 	{
 		private String mPrice;
 		private IconGenerator mIconGenerator;
-		private boolean mIsSoldOut;
+//		private boolean mIsSoldOut;
 		private boolean mIsDailyChoice;
 
 		public HotelPriceRenderer(Hotel hotel)
@@ -606,7 +644,7 @@ public class HotelListMapFragment extends
 			mIconGenerator = new IconGenerator(getActivity());
 
 			// SOLD OUT
-			mIsSoldOut = hotel.getAvailableRoom() == 0;
+//			mIsSoldOut = hotel.getAvailableRoom() == 0;
 
 			mIconGenerator.setTextColor(getResources().getColor(R.color.white));
 			mIconGenerator.setColor(getResources().getColor(hotel.getCategory().getColorResId()));
@@ -614,7 +652,7 @@ public class HotelListMapFragment extends
 
 		public BitmapDescriptor getBitmap()
 		{
-			Bitmap icon = mIconGenerator.makeIcon(mPrice, mIsSoldOut, mIsDailyChoice);
+			Bitmap icon = mIconGenerator.makeIcon(mPrice, false, mIsDailyChoice);
 
 			if (icon == null)
 			{

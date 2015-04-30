@@ -195,7 +195,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 		return view;
 	}
-
+	
 	// 호텔 클릭시
 	@Override
 	public void onItemClick(AdapterView<?> parentView, View childView, int position, long id)
@@ -259,7 +259,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	public void setHotelViewType(HOTEL_VIEW_TYPE type, boolean isCurrentPage)
 	{
 		mHotelViewType = type;
-
+		
 		if (mEmptyView.getVisibility() == View.VISIBLE)
 		{
 			setVisibility(HOTEL_VIEW_TYPE.GONE);
@@ -275,11 +275,11 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 					setVisibility(HOTEL_VIEW_TYPE.MAP);
 
 					mHotelListMapFragment.setUserActionListener(mUserActionListener);
-
+					
 					if (isCurrentPage == true)
 					{
-						// 선택한 상세 지역들의 모임들 ex) 강남구|서초구|동작구
 						mHotelListMapFragment.setRegion(mSelectedRegion);
+						// 선택한 상세 지역들의 모임들 ex) 강남구|서초구|동작구
 						//						mHotelListMapFragment.setDetailRegion(mSelectedDetailRegion);
 						mHotelListMapFragment.setHotelList(mHotelListAdapter.getData(), mSaleTime, false);
 					}
@@ -320,6 +320,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 				if (mHotelListMapFragment == null)
 				{
 					mHotelListMapFragment = new HotelListMapFragment();
+					mHotelListMapFragment.setRegion(mSelectedRegion);
 					getChildFragmentManager().beginTransaction().add(mMapLayout.getId(), mHotelListMapFragment).commitAllowingStateLoss();
 				}
 
@@ -628,7 +629,11 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 				if (length == 0)
 				{
-					mHotelListAdapter.clear();
+					if(mHotelListAdapter != null)
+					{
+						mHotelListAdapter.clear();
+					}
+					
 					setVisibility(HOTEL_VIEW_TYPE.GONE);
 				} else
 				{
