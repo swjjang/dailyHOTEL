@@ -27,6 +27,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -40,6 +41,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
+import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
@@ -69,6 +71,14 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 		etEmail = (EditText) findViewById(R.id.et_signup_email);
 		etRecommender = (EditText) findViewById(R.id.et_signup_recommender);
 		etName = (EditText) findViewById(R.id.et_signup_name);
+
+		// 회원 가입시 이름 필터 적용.
+		StringFilter stringFilter = new StringFilter(SignupActivity.this);
+		InputFilter[] allowAlphanumericHangul = new InputFilter[1];
+		allowAlphanumericHangul[0] = stringFilter.allowAlphanumericHangul;
+
+		etName.setFilters(allowAlphanumericHangul);
+
 		etPhone = (EditText) findViewById(R.id.et_signup_phone);
 		tvTerm = (TextView) findViewById(R.id.tv_signup_agreement);
 		tvPrivacy = (TextView) findViewById(R.id.tv_signup_personal_info);

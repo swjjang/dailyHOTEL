@@ -336,6 +336,9 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 				return;
 			}
 
+			LinkedHashMap<String, List<String>> detailRegionList = null;
+			int seoulIndex = -1;
+
 			try
 			{
 				if (response == null)
@@ -350,10 +353,9 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 
 				mRegionList.clear();
 
-				LinkedHashMap<String, List<String>> detailRegionList = new LinkedHashMap<String, List<String>>();
+				detailRegionList = new LinkedHashMap<String, List<String>>();
 
 				int length = response.length();
-				int seoulIndex = -1;
 
 				for (int i = 0; i < length; i++)
 				{
@@ -387,125 +389,117 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 					detailRegionList.put(name, nameDetailList);
 				}
 
-				ExLog.e("mRegionList : " + mRegionList.toString());
-				ExLog.e("mRegionDetailList : " + detailRegionList.toString());
-
-				int currentRegionIndex = -1;
-				int beforeRegionIndex = -1;
-
-				String regionStr = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
-				int size = mRegionList.size();
-
-				for (int i = 0; i < size; i++)
-				{
-					String regison = mRegionList.get(i);
-
-					if (regison.equalsIgnoreCase(regionStr) == true)
-					{
-						currentRegionIndex = i;
-						break;
-					}
-
-					if (regison.equalsIgnoreCase(mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_BEFORE, "")) == true)
-					{
-						beforeRegionIndex = i;
-					}
-				}
-
-				//현재 선택 지역이 없는 경우 기본을 [서울]로 한다.
-				if (currentRegionIndex == -1)
-				{
-					// 이전에 선택한 지역이 없는 경우.
-					if (beforeRegionIndex == -1)
-					{
-						currentRegionIndex = seoulIndex;
-					} else
-					{
-						currentRegionIndex = beforeRegionIndex;
-					}
-
-					SharedPreferences.Editor editor = mHostActivity.sharedPreference.edit();
-					editor.putString(KEY_PREFERENCE_REGION_SELECT, mRegionList.get(currentRegionIndex));
-					editor.commit();
-				}
-
-				//탭에 들어갈 날짜를 만든다.
-				//				mTodaySaleTime.setLogicalTime();
-
-				SaleTime[] tabSaleTime = null;
-
-				int fragmentSize = mFragmentList.size();
-
-				tabSaleTime = new SaleTime[3];
-
-				for (int i = 0; i < fragmentSize; i++)
-				{
-					HotelListFragment hotelListFragment = mFragmentList.get(i);
-
-					SaleTime saleTime = mTodaySaleTime.getClone(i);
-					tabSaleTime[i] = saleTime;
-
-					hotelListFragment.setSaleTime(saleTime);
-					hotelListFragment.setRegionList(detailRegionList);
-
-					ExLog.d("saleTime : " + saleTime);
-				}
-
-				// 임시로 여기서 날짜를 넣는다.
-				ArrayList<String> dayList = new ArrayList<String>();
-
-				ExLog.d("tabSaleTime[0].getLogicalDay() : " + tabSaleTime[0].getLogicalDay());
-				dayList.add(getString(R.string.label_format_tabday, tabSaleTime[0].getLogicalDay(), tabSaleTime[0].getLogicalDayOftheWeek()));
-
-				ExLog.d("tabSaleTime[0].getLogicalDay() : " + tabSaleTime[1].getLogicalDay());
-				dayList.add(getString(R.string.label_format_tabday, tabSaleTime[1].getLogicalDay(), tabSaleTime[1].getLogicalDayOftheWeek()));
-
-				ExLog.d("mTabIndicator.getSubText(2) : " + mTabIndicator.getSubText(2));
-
-				if (TextUtils.isEmpty(mTabIndicator.getSubText(2)) == true)
-				{
-					dayList.add(getString(R.string.label_format_tabday, tabSaleTime[2].getLogicalDay(), tabSaleTime[2].getLogicalDayOftheWeek()));
-				} else
-				{
-					dayList.add(mTabIndicator.getSubText(2));
-				}
-
-				int tabSize = mTabIndicator.size();
-
-				ExLog.d("tabSize : " + tabSize);
-
-				for (int i = 0; i < tabSize; i++)
-				{
-					String day = dayList.get(i);
-
-					if (TextUtils.isEmpty(day) == true)
-					{
-						mTabIndicator.setSubTextEnable(i, false);
-					} else
-					{
-						mTabIndicator.setSubTextEnable(i, true);
-						mTabIndicator.setSubText(i, day);
-					}
-
-					ExLog.d("day : " + day);
-				}
-
-				// 호텔 프래그먼트 일때 액션바에 네비게이션 리스트 설치.
-				mHostActivity.setActionBarListEnabled(true);
-				mHostActivity.setActionBarListData(mRegionList.get(currentRegionIndex), mRegionList, HotelMainFragment.this);
-
-				ExLog.d("mRegionList.get(currentRegionIndex) : " + mRegionList.get(currentRegionIndex));
-
-				onNavigationItemSelected(currentRegionIndex);
-
-				ExLog.d("onNavigationItemSelected(currentRegionIndex);");
 			} catch (Exception e)
 			{
+				detailRegionList = null;
+
 				onError(e);
-			} finally
-			{
-				unLockUI();
 			}
+
+			if (detailRegionList == null)
+			{
+				return;
+			}
+
+			ExLog.d("mRegionList : " + mRegionList.toString());
+			ExLog.d("mRegionDetailList : " + detailRegionList.toString());
+
+			int currentRegionIndex = -1;
+			int beforeRegionIndex = -1;
+
+			String regionStr = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
+			int size = mRegionList.size();
+
+			for (int i = 0; i < size; i++)
+			{
+				String regison = mRegionList.get(i);
+
+				if (regison.equalsIgnoreCase(regionStr) == true)
+				{
+					currentRegionIndex = i;
+					break;
+				}
+
+				if (regison.equalsIgnoreCase(mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_BEFORE, "")) == true)
+				{
+					beforeRegionIndex = i;
+				}
+			}
+
+			//현재 선택 지역이 없는 경우 기본을 [서울]로 한다.
+			if (currentRegionIndex == -1)
+			{
+				// 이전에 선택한 지역이 없는 경우.
+				if (beforeRegionIndex == -1)
+				{
+					currentRegionIndex = seoulIndex;
+				} else
+				{
+					currentRegionIndex = beforeRegionIndex;
+				}
+
+				SharedPreferences.Editor editor = mHostActivity.sharedPreference.edit();
+				editor.putString(KEY_PREFERENCE_REGION_SELECT, mRegionList.get(currentRegionIndex));
+				editor.commit();
+			}
+
+			//탭에 들어갈 날짜를 만든다.
+			//				mTodaySaleTime.setLogicalTime();
+
+			SaleTime[] tabSaleTime = null;
+
+			int fragmentSize = mFragmentList.size();
+
+			tabSaleTime = new SaleTime[3];
+
+			for (int i = 0; i < fragmentSize; i++)
+			{
+				HotelListFragment hotelListFragment = mFragmentList.get(i);
+
+				SaleTime saleTime = mTodaySaleTime.getClone(i);
+				tabSaleTime[i] = saleTime;
+
+				hotelListFragment.setSaleTime(saleTime);
+				hotelListFragment.setRegionList(detailRegionList);
+			}
+
+			// 임시로 여기서 날짜를 넣는다.
+			ArrayList<String> dayList = new ArrayList<String>();
+
+			dayList.add(getString(R.string.label_format_tabday, tabSaleTime[0].getLogicalDay(), tabSaleTime[0].getLogicalDayOftheWeek()));
+			dayList.add(getString(R.string.label_format_tabday, tabSaleTime[1].getLogicalDay(), tabSaleTime[1].getLogicalDayOftheWeek()));
+
+			if (TextUtils.isEmpty(mTabIndicator.getSubText(2)) == true)
+			{
+				dayList.add(getString(R.string.label_format_tabday, tabSaleTime[2].getLogicalDay(), tabSaleTime[2].getLogicalDayOftheWeek()));
+			} else
+			{
+				dayList.add(mTabIndicator.getSubText(2));
+			}
+
+			int tabSize = mTabIndicator.size();
+
+			for (int i = 0; i < tabSize; i++)
+			{
+				String day = dayList.get(i);
+
+				if (TextUtils.isEmpty(day) == true)
+				{
+					mTabIndicator.setSubTextEnable(i, false);
+				} else
+				{
+					mTabIndicator.setSubTextEnable(i, true);
+					mTabIndicator.setSubText(i, day);
+				}
+			}
+
+			// 호텔 프래그먼트 일때 액션바에 네비게이션 리스트 설치.
+			mHostActivity.setActionBarListEnabled(true);
+			mHostActivity.setActionBarListData(mRegionList.get(currentRegionIndex), mRegionList, HotelMainFragment.this);
+
+			onNavigationItemSelected(currentRegionIndex);
+
+			unLockUI();
 		}
 	};
 
