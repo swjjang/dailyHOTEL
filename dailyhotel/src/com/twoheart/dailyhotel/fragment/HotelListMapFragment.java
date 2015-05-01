@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -25,19 +26,25 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.maps.android.ui.IconGenerator;
-import com.google.maps.android.ui.RegionIconGenerator;
+import com.google.maps.android.clustering.Cluster;
+import com.google.maps.android.clustering.ClusterItem;
+import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.adapter.HotelInfoWindowAdapter;
 import com.twoheart.dailyhotel.adapter.HotelInfoWindowAdapter.OnInfoWindowClickListener;
+import com.twoheart.dailyhotel.fragment.HotelListMapFragment.HotelClusterItem;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.HotelGroup;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.ui.HotelIconGenerator;
 import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
+import com.twoheart.dailyhotel.util.ui.RegionIconGenerator;
 
 public class HotelListMapFragment extends
-		com.google.android.gms.maps.SupportMapFragment
+		com.google.android.gms.maps.SupportMapFragment implements ClusterManager.OnClusterClickListener<HotelClusterItem>, ClusterManager.OnClusterItemClickListener<HotelClusterItem>
 {
 	private static final String MARKER_REGION = "region";
 	private static final String MARKER_HOTEL = "hotel";
@@ -59,6 +66,10 @@ public class HotelListMapFragment extends
 
 	private boolean mIsHotelGroup;
 	private HotelGroup mOpendHotelGroup;
+
+	private ClusterManager<HotelClusterItem> mClusterManager;
+	private HotelClusterRenderer mHotelClusterRenderer;
+	private HotelClusterItem mSelectedHotelClusterItem;
 
 	private OnMakerInfoWindowListener mOnMakerInfoWindowListener;
 
@@ -101,6 +112,19 @@ public class HotelListMapFragment extends
 				mGoogleMap = googleMap;
 				mGoogleMap.setMyLocationEnabled(false);
 				mGoogleMap.getUiSettings().setMapToolbarEnabled(false);
+
+				mClusterManager = new ClusterManager<HotelClusterItem>(getActivity(), mGoogleMap);
+				mHotelClusterRenderer = new HotelClusterRenderer(getActivity(), mGoogleMap, mClusterManager);
+
+				mClusterManager.setRenderer(mHotelClusterRenderer);
+				mClusterManager.setOnClusterClickListener(HotelListMapFragment.this);
+				mClusterManager.setOnClusterItemClickListener(HotelListMapFragment.this);
+				//		        mClusterManager.setOnClusterItemInfoWindowClickListener(HotelListMapFragment.this);
+
+				mHotelInfoWindowAdapter = new HotelInfoWindowAdapter(getActivity());
+				mGoogleMap.setInfoWindowAdapter(mHotelInfoWindowAdapter);
+
+				mHotelInfoWindowAdapter.setOnInfoWindowClickListener(mOnInfoWindowClickListener);
 
 				// 서울이 아니고 상세 지역 정보가 아닌 경우..지역별 중심값으로 이동.
 				LatLng latlng = new LatLng(35.856899430657805, 127.73446206003428);
@@ -216,19 +240,74 @@ public class HotelListMapFragment extends
 		// 중복 지역을 찾아내기 위한 로직.
 		ArrayList<HotelListViewItem> arrangeList = searchDuplicateLocateion(mHotelArrayList, mDuplicateHotel);
 
-		if (mIsHotelGroup == true)
+		// 클러스터 적용.
+		boolean isClusterManager = true;
+
+		if (isClusterManager)
 		{
-			mHotelGroupArrayList.add(new HotelGroup(getString(R.string.label_seoul_area1), new LatLng(37.458272, 127.041874)));
-			mHotelGroupArrayList.add(new HotelGroup(getString(R.string.label_seoul_area2), new LatLng(37.559584, 127.072773)));
-			mHotelGroupArrayList.add(new HotelGroup(getString(R.string.label_seoul_area3), new LatLng(37.522090, 126.981310)));
-			mHotelGroupArrayList.add(new HotelGroup(getString(R.string.label_seoul_area4), new LatLng(37.570470, 126.900425)));
-			mHotelGroupArrayList.add(new HotelGroup(getString(R.string.label_seoul_area5), new LatLng(37.475712, 126.888065)));
+			mClusterManager.clearItems();
+			mGoogleMap.setOnMarkerClickListener(mClusterManager);
 
 			for (HotelListViewItem hotelListViewItem : arrangeList)
 			{
 				Hotel hotel = hotelListViewItem.getItem();
 
 				count++;
+
+				HotelClusterItem hotelClusterItem = new HotelClusterItem(hotel);
+				mClusterManager.addItem(hotelClusterItem);
+
+				LatLng latlng = new LatLng(hotel.mLatitude, hotel.mLongitude);
+				builder.include(latlng);
+				
+				if (mOpenMakrer == true)
+				{
+					if (mMarker == null && latitude == hotel.mLatitude && longitude == hotel.mLongitude)
+					{
+						mSelectedHotelClusterItem = hotelClusterItem;
+					}
+				}
+			}
+
+			if (mUserActionListener != null)
+			{
+				mUserActionListener.hideProgress();
+			}
+
+			if (isChangedRegion == true)
+			{
+				cameraSetting(builder.build(), count);
+			} else
+			{
+				mClusterManager.cluster();
+			}
+			return;
+		}
+
+		if (mIsHotelGroup == true)
+		{
+
+			//			// 강남
+			//			mHotelGroupArrayList.add(new HotelGroup(getString(R.string.label_seoul_area1), new LatLng(37.458272, 127.041874)));
+			//			// 강동
+			//			mHotelGroupArrayList.add(new HotelGroup(getString(R.string.label_seoul_area2), new LatLng(37.559584, 127.072773)));
+			//			// 중앙
+			//			mHotelGroupArrayList.add(new HotelGroup(getString(R.string.label_seoul_area3), new LatLng(37.546592, 126.977877)));
+			//			// 마포
+			//			mHotelGroupArrayList.add(new HotelGroup(getString(R.string.label_seoul_area4), new LatLng(37.570470, 126.900425)));
+			//			// 강서
+			//			mHotelGroupArrayList.add(new HotelGroup(getString(R.string.label_seoul_area5), new LatLng(37.475712, 126.888065)));
+			//
+			mGoogleMap.setOnCameraChangeListener(mClusterManager);
+			mGoogleMap.setOnMarkerClickListener(mClusterManager);
+
+			for (HotelListViewItem hotelListViewItem : arrangeList)
+			{
+				Hotel hotel = hotelListViewItem.getItem();
+
+				count++;
+
+				mClusterManager.addItem(new HotelClusterItem(hotel));
 
 				for (HotelGroup hotelGroup : mHotelGroupArrayList)
 				{
@@ -252,10 +331,12 @@ public class HotelListMapFragment extends
 				}
 			}
 
-			for (HotelGroup hotelGroup : mHotelGroupArrayList)
-			{
-				addMarker(hotelGroup.getLatLng(), hotelGroup.getCount());
-			}
+			return;
+			//
+			//			for (HotelGroup hotelGroup : mHotelGroupArrayList)
+			//			{
+			//				addMarker(hotelGroup.getLatLng(), hotelGroup.getCount());
+			//			}
 		} else
 		{
 			for (HotelListViewItem hotelListViewItem : arrangeList)
@@ -290,48 +371,50 @@ public class HotelListMapFragment extends
 
 		if (isChangedRegion == true)
 		{
-			if (count == 0)
-			{
-				LatLng latlng = new LatLng(35.856899430657805, 127.73446206003428);
+			cameraSetting(bounds, count);
 
-				if (latlng != null)
-				{
-					CameraPosition cp = new CameraPosition.Builder().target(latlng).zoom(6.791876f).build();
-					mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
-				}
-				//				LatLng latlng = getRegionCenter(mRegion);
-				//				
-				//				if(latlng != null)
-				//				{
-				//					CameraPosition cp = new CameraPosition.Builder().target(getRegionCenter(mRegion)).zoom(15).build();
-				//					mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
-				//				}
-			} else if (count == 1)
-			{
-				CameraPosition cp = new CameraPosition.Builder().target(bounds.getCenter()).zoom(15).build();
-				mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
-			} else
-			{
-				CameraPosition cp = new CameraPosition.Builder().target(bounds.getCenter()).zoom(15).build();
-				mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
-
-				mGoogleMap.setOnCameraChangeListener(new OnCameraChangeListener()
-				{
-					@Override
-					public void onCameraChange(CameraPosition arg0)
-					{
-						mGoogleMap.setOnCameraChangeListener(null);
-
-						if (getActivity() == null)
-						{
-							return;
-						}
-
-						CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, Util.dpToPx(getActivity(), 50));
-						mGoogleMap.moveCamera(cameraUpdate);
-					}
-				});
-			}
+			//			if (count == 0)
+			//			{
+			//				LatLng latlng = new LatLng(35.856899430657805, 127.73446206003428);
+			//
+			//				if (latlng != null)
+			//				{
+			//					CameraPosition cp = new CameraPosition.Builder().target(latlng).zoom(6.791876f).build();
+			//					mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
+			//				}
+			//				//				LatLng latlng = getRegionCenter(mRegion);
+			//				//				
+			//				//				if(latlng != null)
+			//				//				{
+			//				//					CameraPosition cp = new CameraPosition.Builder().target(getRegionCenter(mRegion)).zoom(15).build();
+			//				//					mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
+			//				//				}
+			//			} else if (count == 1)
+			//			{
+			//				CameraPosition cp = new CameraPosition.Builder().target(bounds.getCenter()).zoom(15).build();
+			//				mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
+			//			} else
+			//			{
+			//				CameraPosition cp = new CameraPosition.Builder().target(bounds.getCenter()).zoom(15).build();
+			//				mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
+			//
+			//				mGoogleMap.setOnCameraChangeListener(new OnCameraChangeListener()
+			//				{
+			//					@Override
+			//					public void onCameraChange(CameraPosition arg0)
+			//					{
+			//						mGoogleMap.setOnCameraChangeListener(null);
+			//
+			//						if (getActivity() == null)
+			//						{
+			//							return;
+			//						}
+			//
+			//						CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, Util.dpToPx(getActivity(), 50));
+			//						mGoogleMap.moveCamera(cameraUpdate);
+			//					}
+			//				});
+			//			}
 		} else
 		{
 			if (mOpenMakrer == true && mMarker != null)
@@ -342,12 +425,6 @@ public class HotelListMapFragment extends
 
 		mOpenMakrer = false;
 
-		if (mHotelInfoWindowAdapter == null)
-		{
-			mHotelInfoWindowAdapter = new HotelInfoWindowAdapter(getActivity());
-		}
-
-		mGoogleMap.setInfoWindowAdapter(mHotelInfoWindowAdapter);
 		mGoogleMap.setOnMarkerClickListener(mOnMarkerClickListener);
 
 		mHotelInfoWindowAdapter.setOnInfoWindowClickListener(mOnInfoWindowClickListener);
@@ -405,19 +482,29 @@ public class HotelListMapFragment extends
 			}
 		}
 
-		final LatLngBounds bounds = builder.build();
+		LatLngBounds bounds = builder.build();
 
+		cameraSetting(bounds, count);
+
+		if (mUserActionListener != null)
+		{
+			mUserActionListener.hideProgress();
+		}
+	}
+
+	private void cameraSetting(final LatLngBounds bounds, int hotelCount)
+	{
 		CameraPosition cp = new CameraPosition.Builder().target(bounds.getCenter()).zoom(mGoogleMap.getCameraPosition().zoom).build();
 		mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
 
-		if (count == 1)
+		if (hotelCount == 1)
 		{
 			mGoogleMap.setOnCameraChangeListener(new OnCameraChangeListener()
 			{
 				@Override
-				public void onCameraChange(CameraPosition arg0)
+				public void onCameraChange(CameraPosition cameraPosition)
 				{
-					mGoogleMap.setOnCameraChangeListener(null);
+					mGoogleMap.setOnCameraChangeListener(mClusterManager);
 
 					if (getActivity() == null)
 					{
@@ -426,6 +513,8 @@ public class HotelListMapFragment extends
 
 					CameraPosition cp = new CameraPosition.Builder().target(bounds.getCenter()).zoom(15).build();
 					mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
+					
+					mClusterManager.cluster();
 				}
 			});
 		} else
@@ -433,9 +522,9 @@ public class HotelListMapFragment extends
 			mGoogleMap.setOnCameraChangeListener(new OnCameraChangeListener()
 			{
 				@Override
-				public void onCameraChange(CameraPosition arg0)
+				public void onCameraChange(CameraPosition cameraPosition)
 				{
-					mGoogleMap.setOnCameraChangeListener(null);
+					mGoogleMap.setOnCameraChangeListener(mClusterManager);
 
 					if (getActivity() == null)
 					{
@@ -446,11 +535,6 @@ public class HotelListMapFragment extends
 					mGoogleMap.moveCamera(cameraUpdate);
 				}
 			});
-		}
-
-		if (mUserActionListener != null)
-		{
-			mUserActionListener.hideProgress();
 		}
 	}
 
@@ -816,7 +900,7 @@ public class HotelListMapFragment extends
 	private class HotelPriceRenderer
 	{
 		private String mPrice;
-		private IconGenerator mIconGenerator;
+		private HotelIconGenerator mIconGenerator;
 		//		private boolean mIsSoldOut;
 		private boolean mIsDailyChoice;
 
@@ -827,7 +911,7 @@ public class HotelListMapFragment extends
 
 			mPrice = "₩" + comma.format(originalPrice);
 
-			mIconGenerator = new IconGenerator(getActivity());
+			mIconGenerator = new HotelIconGenerator(getActivity());
 
 			// SOLD OUT
 			//			mIsSoldOut = hotel.getAvailableRoom() == 0;
@@ -872,5 +956,134 @@ public class HotelListMapFragment extends
 
 			return BitmapDescriptorFactory.fromBitmap(icon);
 		}
+	}
+
+	public class HotelClusterItem implements ClusterItem
+	{
+		private final Hotel mHotel;
+		private final LatLng mPosition;
+
+		public HotelClusterItem(Hotel hotel)
+		{
+			mHotel = hotel;
+			mPosition = new LatLng(hotel.mLatitude, hotel.mLongitude);
+		}
+
+		@Override
+		public LatLng getPosition()
+		{
+			return mPosition;
+		}
+
+		public Hotel getHotel()
+		{
+			return mHotel;
+		}
+	}
+
+	public class HotelClusterRenderer extends
+			DefaultClusterRenderer<HotelClusterItem>
+	{
+		public HotelClusterRenderer(Context context, GoogleMap map, ClusterManager<HotelClusterItem> clusterManager)
+		{
+			super(context, map, clusterManager);
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		protected void onBeforeClusterItemRendered(HotelClusterItem item, MarkerOptions markerOptions)
+		{
+			HotelPriceRenderer hotelPriceRenderer = new HotelPriceRenderer(item.getHotel());
+
+			BitmapDescriptor icon = hotelPriceRenderer.getBitmap();
+
+			if (icon != null)
+			{
+				markerOptions.icon(icon);
+			} else
+			{
+				super.onBeforeClusterItemRendered(item, markerOptions);
+			}
+		}
+
+		@Override
+		protected void onBeforeClusterRendered(Cluster<HotelClusterItem> cluster, MarkerOptions markerOptions)
+		{
+			HotelCountRenderer hotelCountRenderer = new HotelCountRenderer(cluster.getSize());
+
+			BitmapDescriptor icon = hotelCountRenderer.getBitmap();
+
+			if (icon != null)
+			{
+				markerOptions.icon(icon);
+			} else
+			{
+				super.onBeforeClusterRendered(cluster, markerOptions);
+			}
+		}
+		
+		@Override
+		protected void onClusterItemRendered(HotelClusterItem clusterItem, Marker marker)
+		{
+			if(mSelectedHotelClusterItem != null)
+			{
+				if(mSelectedHotelClusterItem.equals(clusterItem) == true)
+				{
+					mSelectedHotelClusterItem = null;
+					mOpenMakrer = false;
+					marker.showInfoWindow();
+				}
+			}
+			
+			super.onClusterItemRendered(clusterItem, marker);
+		}
+
+		@Override
+		protected boolean shouldRenderAsCluster(Cluster<HotelClusterItem> cluster)
+		{
+			return super.shouldRenderAsCluster(cluster);
+		}
+	}
+
+//	@Override
+//	public void onClusterItemInfoWindowClick(HotelClusterItem item)
+//	{
+//		mOnInfoWindowClickListener.onInfoWindowClickListener(item.getHotel());
+//	}
+
+	@Override
+	public boolean onClusterItemClick(HotelClusterItem item)
+	{
+		if (getActivity() == null)
+		{
+			return false;
+		}
+
+		Marker marker = mHotelClusterRenderer.getMarker(item);
+		mOnMarkerClickListener.onMarkerClick(marker);
+
+		return false;
+	}
+
+	@Override
+	public boolean onClusterClick(Cluster<HotelClusterItem> cluster)
+	{
+		ExLog.d("onClusterClick");
+		
+		LatLngBounds.Builder builder = new LatLngBounds.Builder();
+		
+		for (HotelClusterItem hotelClusterItem : cluster.getItems())
+		{
+			LatLng latlng = hotelClusterItem.getPosition();
+			builder.include(latlng);
+		}
+
+		CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(builder.build(), Util.dpToPx(getActivity(), 50));
+		mGoogleMap.moveCamera(cameraUpdate);
+		
+
+//		mGoogleMap.moveCamera(CameraUpdateFactory.zoomIn());
+
+		return true;
 	}
 }
