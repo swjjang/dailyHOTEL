@@ -234,11 +234,11 @@ public class HotelInfoWindowAdapter implements InfoWindowAdapter, View.OnTouchLi
 
 		} else
 		{
-			if(mHotelList == null)
+			if (mHotelList == null)
 			{
 				return null;
 			}
-			
+
 			int size = mHotelList.size();
 
 			if (size == 1)

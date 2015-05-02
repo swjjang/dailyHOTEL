@@ -49,6 +49,7 @@ import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
 /**
@@ -85,12 +86,20 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 	public void onResume()
 	{
 		super.onResume();
-		mHostActivity.setActionBar(getString(R.string.actionbar_title_booking_list_frag), false);
+
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
+		baseActivity.setActionBar(getString(R.string.actionbar_title_booking_list_frag), false);
 
 		lockUI();
-		mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, mHostActivity));
+		mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, baseActivity));
 
-		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("bookingList", "/bookings/");
+		RenewalGaManager.getInstance(baseActivity.getApplicationContext()).recordScreen("bookingList", "/bookings/");
 	}
 
 	@Override
@@ -98,15 +107,29 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 	{
 		if (v.getId() == btnLogin.getId())
 		{
-			Intent i = new Intent(mHostActivity, LoginActivity.class);
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null)
+			{
+				return;
+			}
+
+			Intent i = new Intent(baseActivity, LoginActivity.class);
 			startActivity(i);
-			mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+			baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 		}
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> parentView, View childView, int position, long id)
 	{
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
 		if (isLockUiComponent() == true)
 		{
 			return;
@@ -116,14 +139,14 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
 		Intent intent = null;
 		Booking item = mItems.get(position);
-		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "selectBookingConfirmation", item.getHotel_name(), null);
+		RenewalGaManager.getInstance(baseActivity.getApplicationContext()).recordEvent("click", "selectBookingConfirmation", item.getHotel_name(), null);
 
 		if (item.getPayType() == CODE_PAY_TYPE_CARD_COMPLETE || item.getPayType() == CODE_PAY_TYPE_ACCOUNT_COMPLETE)
 		{ // 카드결제 완료 || 가상계좌 완료
-			intent = new Intent(mHostActivity, BookingTabActivity.class);
+			intent = new Intent(baseActivity, BookingTabActivity.class);
 		} else if (item.getPayType() == CODE_PAY_TYPE_ACCOUNT_WAIT)
 		{ // 가상계좌 입금대기
-			intent = new Intent(mHostActivity, PaymentWaitActivity.class);
+			intent = new Intent(baseActivity, PaymentWaitActivity.class);
 		}
 
 		if (intent != null)
@@ -162,7 +185,9 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-			if (getActivity() == null)
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null)
 			{
 				return;
 			}
@@ -180,7 +205,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 				{
 					// 로그인 실패
 					// data 초기화
-					SharedPreferences.Editor ed = mHostActivity.sharedPreference.edit();
+					SharedPreferences.Editor ed = baseActivity.sharedPreference.edit();
 					ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
 					ed.putString(KEY_PREFERENCE_USER_ID, null);
 					ed.putString(KEY_PREFERENCE_USER_PWD, null);
@@ -210,7 +235,9 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 		@Override
 		public void onResponse(String url, String response)
 		{
-			if (getActivity() == null)
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null)
 			{
 				return;
 			}
@@ -226,17 +253,17 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 			{ // session alive
 				// 예약 목록 요청.
 				//				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_MINE).toString(), null, mReserveMineStringResponseListener, mHostActivity));
-				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_MINE).toString(), null, mReserveMineJsonResponseListener, mHostActivity));
+				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_MINE).toString(), null, mReserveMineJsonResponseListener, baseActivity));
 
 			} else if ("dead".equalsIgnoreCase(result) == true)
 			{ // session dead
 				// 재로그인
-				if (true == mHostActivity.sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false))
+				if (true == baseActivity.sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false))
 				{
 
-					String id = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_USER_ID, null);
-					String accessToken = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
-					String pw = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_USER_PWD, null);
+					String id = baseActivity.sharedPreference.getString(KEY_PREFERENCE_USER_ID, null);
+					String accessToken = baseActivity.sharedPreference.getString(KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
+					String pw = baseActivity.sharedPreference.getString(KEY_PREFERENCE_USER_PWD, null);
 
 					Map<String, String> loginParams = new HashMap<String, String>();
 
@@ -250,7 +277,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
 					loginParams.put("pw", pw);
 
-					mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(), loginParams, mUserLoginJsonResponseListener, mHostActivity));
+					mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(), loginParams, mUserLoginJsonResponseListener, baseActivity));
 
 					mListView.setVisibility(View.GONE);
 					mEmptyLayout.setVisibility(View.VISIBLE);
@@ -279,7 +306,9 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-			if (getActivity() == null)
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null)
 			{
 				return;
 			}
@@ -329,7 +358,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 						mItems.add(new Booking(jsonObject));
 					}
 
-					mAdapter = new BookingListAdapter(mHostActivity, R.layout.list_row_booking, mItems);
+					mAdapter = new BookingListAdapter(baseActivity, R.layout.list_row_booking, mItems);
 					mListView.setOnItemClickListener(BookingListFragment.this);
 					mListView.setAdapter(mAdapter);
 

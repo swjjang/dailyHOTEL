@@ -51,6 +51,7 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
 import com.twoheart.dailyhotel.util.ui.HotelMapLayout;
@@ -88,6 +89,13 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return null;
+		}
+
 		View view = inflater.inflate(R.layout.fragment_hotel_list, container, false);
 
 		mHotelListView = (PinnedSectionListView) view.findViewById(R.id.listview_hotel_list);
@@ -112,53 +120,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 				{
 					mUserActionListener.toggleViewType();
 				}
-
-				//				switch (mHotelViewType)
-				//				{
-				//					case LIST:
-				//					{
-				//						// 서울인경우에만 지역 맵을 나오도록 함.
-				//						if ("서울".equalsIgnoreCase(mSelectedRegion) == true)
-				//						{
-				//							SelectDetailRegionDialog dialog = new SelectDetailRegionDialog(mHostActivity, android.R.style.Theme_Translucent_NoTitleBar);
-				//							dialog.setOnSelectedRegionListener(new OnSelectedDetailRegionListener()
-				//							{
-				//								@Override
-				//								public void onClick(String detailRegion)
-				//								{
-				//									mSelectedDetailRegion = detailRegion;
-				//									
-				//									if (detailRegion != null && mUserActionListener != null)
-				//									{
-				//										mUserActionListener.toggleViewType(detailRegion);
-				//									}
-				//								}
-				//
-				//								@Override
-				//								public void onCancel()
-				//								{
-				//									mSelectedDetailRegion = null;
-				//								}
-				//							});
-				//
-				//							dialog.show();
-				//						} else
-				//						{
-				//							if (mUserActionListener != null)
-				//							{
-				//								mUserActionListener.toggleViewType();
-				//							}
-				//						}
-				//						break;
-				//					}
-				//
-				//					case MAP:
-				//						if (mUserActionListener != null)
-				//						{
-				//							mUserActionListener.toggleViewType();
-				//						}
-				//						break;
-				//				}
 			}
 		});
 
@@ -182,7 +143,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		//		});
 
 		// Now find the PullToRefreshLayout and set it up
-		ActionBarPullToRefresh.from(mHostActivity).options(Options.create().scrollDistance(.3f).headerTransformer(new DailyHotelHeaderTransformer()).build()).allChildrenArePullable().listener(this)
+		ActionBarPullToRefresh.from(baseActivity).options(Options.create().scrollDistance(.3f).headerTransformer(new DailyHotelHeaderTransformer()).build()).allChildrenArePullable().listener(this)
 		// Here we'll set a custom ViewDelegate
 		.useViewDelegate(AbsListView.class, new AbsListViewDelegate()).setup(mPullToRefreshLayout);
 
@@ -200,6 +161,13 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	@Override
 	public void onItemClick(AdapterView<?> parentView, View childView, int position, long id)
 	{
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
 		mSelectedHotelListViewItem = mHotelListAdapter.getItem(position);
 
 		int count = 0;
@@ -213,7 +181,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 		mSelectedHotelIndex = position - count;
 
-		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_TIME).toString(), null, mAppTimeJsonResponseListener, mHostActivity));
+		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_TIME).toString(), null, mAppTimeJsonResponseListener, baseActivity));
 	}
 
 	/**
@@ -223,10 +191,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	 */
 	public void processSelectedDetailRegion(String detailRegion)
 	{
-		// 맵 지도를 띄운다.
-		// 해당하는 지역의 맵 지도를 띄운다.
-		//		mSelectedDetailRegion = detailRegion;
-
 		// 현재 맵화면을 보고 있으면 맵화면을 유지 시켜중어야 한다.
 		if (detailRegion != null && mHotelViewType == HOTEL_VIEW_TYPE.MAP)
 		{
@@ -236,12 +200,10 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 	public void onPageSelected(boolean isRequestHotelList)
 	{
-		ExLog.d("onPage Selected : " + this.toString());
 	}
 
 	public void onPageUnSelected()
 	{
-		ExLog.d("onPage UnSelected : " + this.toString());
 	}
 
 	public void onRefreshComplete()
@@ -278,9 +240,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 					if (isCurrentPage == true)
 					{
-						mHotelListMapFragment.setRegion(mSelectedRegion);
-						// 선택한 상세 지역들의 모임들 ex) 강남구|서초구|동작구
-						//						mHotelListMapFragment.setDetailRegion(mSelectedDetailRegion);
 						mHotelListMapFragment.setHotelList(mHotelListAdapter.getData(), mSaleTime, false);
 					}
 					break;
@@ -320,7 +279,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 				if (mHotelListMapFragment == null)
 				{
 					mHotelListMapFragment = new HotelListMapFragment();
-					mHotelListMapFragment.setRegion(mSelectedRegion);
 					getChildFragmentManager().beginTransaction().add(mMapLayout.getId(), mHotelListMapFragment).commitAllowingStateLoss();
 				}
 
@@ -355,11 +313,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	{
 		mDetailRegionList = regionDetailList;
 	}
-
-	//	public void setSelectedDetailRegion(String region)
-	//	{
-	//		mSelectedDetailRegion = region;
-	//	}
 
 	public void setUserActionListener(HotelMainFragment.UserActionListener userActionLister)
 	{
@@ -407,9 +360,16 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 			return;
 		}
 
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
 		lockUI();
 
-		mSelectedRegion = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
+		mSelectedRegion = baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
 		ExLog.e("selectedRegion : " + mSelectedRegion + " fetchHotelList");
 
 		mSelectedRegion = mSelectedRegion.replace(" ", "%20");
@@ -420,9 +380,9 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE).append('/').append(mSelectedRegion).append("/").append(saleTime.getRequestHotelDateFormat("yyMMdd")).toString();
 
 		// 호텔 리스트를 가져온다. 
-		mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null, mHotelJsonResponseListener, mHostActivity));
+		mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null, mHotelJsonResponseListener, baseActivity));
 
-		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("hotelList", "/todays-hotels/" + mSelectedRegion);
+		RenewalGaManager.getInstance(baseActivity.getApplicationContext()).recordScreen("hotelList", "/todays-hotels/" + mSelectedRegion);
 	}
 
 	public String getRegion()
@@ -611,6 +571,13 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null)
+			{
+				return;
+			}
+
 			try
 			{
 				if (getActivity() == null)
@@ -680,7 +647,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 						Collections.sort(hotelList, comparator);
 					}
 
-					List<String> selectedDetailRegionList = mDetailRegionList.get(mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, ""));
+					List<String> selectedDetailRegionList = mDetailRegionList.get(baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, ""));
 
 					int hotelListSize = selectedDetailRegionList.size() + hotelList.size();
 					ArrayList<HotelListViewItem> hotelListViewList = new ArrayList<HotelListViewItem>(hotelListSize);
@@ -713,7 +680,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 					if (mHotelListAdapter == null)
 					{
-						mHotelListAdapter = new HotelListAdapter(mHostActivity, R.layout.list_row_hotel, new ArrayList<HotelListViewItem>());
+						mHotelListAdapter = new HotelListAdapter(baseActivity, R.layout.list_row_hotel, new ArrayList<HotelListViewItem>());
 						mHotelListView.setAdapter(mHotelListAdapter);
 						mHotelListView.setOnItemClickListener(HotelListFragment.this);
 					}
@@ -724,8 +691,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 					if (mHotelViewType == HOTEL_VIEW_TYPE.MAP)
 					{
 						mHotelListMapFragment.setUserActionListener(mUserActionListener);
-						mHotelListMapFragment.setRegion(mSelectedRegion);
-						//						mHotelListMapFragment.setDetailRegion(mSelectedDetailRegion);
 						mHotelListMapFragment.setHotelList(hotelListViewList, mSaleTime, mIsSelectionTop);
 					}
 
@@ -760,7 +725,9 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-			if (getActivity() == null)
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null)
 			{
 				return;
 			}
@@ -777,7 +744,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 				mSaleTime.setCurrentTime(time);
 
 				// 오픈, 클로즈 타임을 가져온다
-				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_SALE_TIME).toString(), null, mAppSaleTimeJsonResponseListener, mHostActivity));
+				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_SALE_TIME).toString(), null, mAppSaleTimeJsonResponseListener, baseActivity));
 
 			} catch (Exception e)
 			{
@@ -792,7 +759,9 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-			if (getActivity() == null)
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null)
 			{
 				return;
 			}
@@ -812,7 +781,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 				if (mSaleTime.isSaleTime() == false)
 				{
-					((MainActivity) mHostActivity).replaceFragment(WaitTimerFragment.newInstance(mSaleTime));
+					((MainActivity) baseActivity).replaceFragment(WaitTimerFragment.newInstance(mSaleTime));
 					unLockUI();
 				} else
 				{

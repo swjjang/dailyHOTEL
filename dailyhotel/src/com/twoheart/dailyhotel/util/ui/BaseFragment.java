@@ -14,8 +14,6 @@ import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 
 public abstract class BaseFragment extends Fragment implements Constants, OnLoadListener, ErrorListener
 {
-
-	protected BaseActivity mHostActivity;
 	protected RequestQueue mQueue;
 	protected Toast mToast;
 
@@ -34,7 +32,6 @@ public abstract class BaseFragment extends Fragment implements Constants, OnLoad
 	public void onAttach(Activity activity)
 	{
 		super.onAttach(activity);
-		mHostActivity = (BaseActivity) activity;
 	}
 
 	@Override
@@ -64,14 +61,21 @@ public abstract class BaseFragment extends Fragment implements Constants, OnLoad
 
 	public void showToast(String message, int length, boolean isAttachToFragment)
 	{
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
 		if (isAttachToFragment)
 		{
-			mToast = Toast.makeText(mHostActivity.getApplicationContext(), message, length);
+			mToast = Toast.makeText(baseActivity.getApplicationContext(), message, length);
 			mToast.show();
 
 		} else
 		{
-			Toast.makeText(mHostActivity.getApplicationContext(), message, length).show();
+			Toast.makeText(baseActivity.getApplicationContext(), message, length).show();
 
 		}
 	}
@@ -80,14 +84,28 @@ public abstract class BaseFragment extends Fragment implements Constants, OnLoad
 	{
 		releaseUiComponent();
 
-		mHostActivity.onError(error);
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
+		baseActivity.onError(error);
 	}
 
 	public void onError()
 	{
 		releaseUiComponent();
 
-		mHostActivity.onError();
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
+		baseActivity.onError();
 	}
 
 	@Override
@@ -95,21 +113,44 @@ public abstract class BaseFragment extends Fragment implements Constants, OnLoad
 	{
 		releaseUiComponent();
 
-		mHostActivity.onErrorResponse(error);
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
+		baseActivity.onErrorResponse(error);
 	}
 
 	@Override
 	public void lockUI()
 	{
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
 		lockUiComponent();
-		mHostActivity.lockUI();
+
+		baseActivity.lockUI();
 	}
 
 	@Override
 	public void unLockUI()
 	{
 		releaseUiComponent();
-		mHostActivity.unLockUI();
+
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
+		baseActivity.unLockUI();
 	}
 
 	/**

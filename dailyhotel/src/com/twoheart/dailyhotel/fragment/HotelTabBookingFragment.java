@@ -13,10 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
 import android.text.Spanned;
-import android.text.style.AbsoluteSizeSpan;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -29,6 +26,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.adapter.HotelImageFragmentPagerAdapter;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 import com.twoheart.dailyhotel.widget.HotelViewPager;
 import com.viewpagerindicator.LoopCirclePageIndicator;
@@ -89,21 +87,9 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 
 		String priceTitle = getString(R.string.frag_hotel_tab_price);
 
-		//영어 버전에서 괄호부분의 텍스트 사이즈를 줄이기 위함
-		String locale = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_LOCALE, null);
-		if (locale.equals("한국어"))
-		{
-			tvPriceTitle.setText(priceTitle + "");
-			tvDiscount.setText(mHotelDetail.getHotel().getDiscount() + currency);
-			tvPrice.setText(mHotelDetail.getHotel().getPrice() + currency);
-		} else
-		{
-			final SpannableStringBuilder sps = new SpannableStringBuilder(priceTitle);
-			sps.setSpan(new AbsoluteSizeSpan(25), 5, priceTitle.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
-			tvPriceTitle.append(sps);
-			tvDiscount.setText(currency + mHotelDetail.getHotel().getDiscount());
-			tvPrice.setText(currency + mHotelDetail.getHotel().getPrice());
-		}
+		tvPriceTitle.setText(priceTitle + "");
+		tvDiscount.setText(mHotelDetail.getHotel().getDiscount() + currency);
+		tvPrice.setText(mHotelDetail.getHotel().getPrice() + currency);
 
 		tvPrice.setPaintFlags(tvPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
@@ -183,8 +169,15 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 					break;
 
 				case MotionEvent.ACTION_UP:
+					BaseActivity baseActivity = (BaseActivity) getActivity();
+
+					if (baseActivity == null)
+					{
+						return false;
+					}
+
 					mHandler.removeMessages(0);
-					RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("scroll", "photos", mHotelDetail.getHotel().getName(), null);
+					RenewalGaManager.getInstance(baseActivity.getApplicationContext()).recordEvent("scroll", "photos", mHotelDetail.getHotel().getName(), null);
 					mHandler.sendEmptyMessageDelayed(0, DURATION_HOTEL_IMAGE_SHOW);
 				default:
 					break;

@@ -14,6 +14,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.ImageDetailActivity;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
 public class ImageViewFragment extends BaseFragment implements OnClickListener, Constants
@@ -52,6 +53,12 @@ public class ImageViewFragment extends BaseFragment implements OnClickListener, 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return null;
+		}
 
 		View view = inflater.inflate(R.layout.fragment_image_view, container, false);
 		mImageView = (ImageView) view.findViewById(R.id.iv_image_view);
@@ -61,7 +68,7 @@ public class ImageViewFragment extends BaseFragment implements OnClickListener, 
 		//		mImageLoader.displayImage(mImageUrl, mImageView, new ProgressImageLoading(mProgressBar));
 		//		mImageView.setImageUrl(mImageUrl, mImageLoader, mProgressBar);
 		//		mImageLoader.DisplayImage(mImageUrl, mImageView, mProgressBar);
-		mAq = new AQuery(mHostActivity, view);
+		mAq = new AQuery(baseActivity, view);
 		mAq.id(mImageView).progress(mProgressBar).image(mImageUrl, true, true, 0, R.drawable.img_placeholder, null, AQuery.FADE_IN_NETWORK);
 
 		return view;
@@ -70,9 +77,16 @@ public class ImageViewFragment extends BaseFragment implements OnClickListener, 
 	@Override
 	public void onClick(View v)
 	{
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
 		if (v.getId() == mImageView.getId())
 		{
-			Intent i = new Intent(mHostActivity, ImageDetailActivity.class);
+			Intent i = new Intent(baseActivity, ImageDetailActivity.class);
 			i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELDETAIL, mHotelDetail);
 			i.putExtra(NAME_INTENT_EXTRA_DATA_SELECTED_IMAGE_URL, mImageUrl);
 			startActivity(i);

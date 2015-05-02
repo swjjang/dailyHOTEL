@@ -41,6 +41,7 @@ import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonArrayRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonArrayResponseListener;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
 import com.twoheart.dailyhotel.widget.FragmentViewPager;
@@ -137,11 +138,18 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 	@Override
 	public void onResume()
 	{
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
 		lockUI();
 
 		super.onResume();
 
-		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_TIME).toString(), null, mAppTimeJsonResponseListener, mHostActivity));
+		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_TIME).toString(), null, mAppTimeJsonResponseListener, baseActivity));
 	}
 
 	@Override
@@ -153,12 +161,19 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 		{
 			case CODE_REQUEST_ACTIVITY_HOTELTAB:
 			{
+				BaseActivity baseActivity = (BaseActivity) getActivity();
+
+				if (baseActivity == null)
+				{
+					return;
+				}
+
 				if (resultCode == Activity.RESULT_OK)
 				{
-					((MainActivity) mHostActivity).selectMenuDrawer(((MainActivity) mHostActivity).menuBookingListFragment);
+					((MainActivity) baseActivity).selectMenuDrawer(((MainActivity) baseActivity).menuBookingListFragment);
 				} else if (resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
 				{
-					((MainActivity) mHostActivity).selectMenuDrawer(((MainActivity) mHostActivity).menuBookingListFragment);
+					((MainActivity) baseActivity).selectMenuDrawer(((MainActivity) baseActivity).menuBookingListFragment);
 				}
 				break;
 			}
@@ -182,18 +197,25 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 
 	public void onNavigationItemSelected(int position)
 	{
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
 		String region = mRegionList.get(position);
 
-		mHostActivity.setActionBarListEnabled(true);
-		mHostActivity.setActionBarListData(region, mRegionList, this);
+		baseActivity.setActionBarListEnabled(true);
+		baseActivity.setActionBarListData(region, mRegionList, this);
 
 		boolean isSelectionTop = false;
 
 		// 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
-		if (region.equalsIgnoreCase(mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "")) == false)
+		if (region.equalsIgnoreCase(baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "")) == false)
 		{
-			SharedPreferences.Editor editor = mHostActivity.sharedPreference.edit();
-			editor.putString(KEY_PREFERENCE_REGION_SELECT_BEFORE, mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, ""));
+			SharedPreferences.Editor editor = baseActivity.sharedPreference.edit();
+			editor.putString(KEY_PREFERENCE_REGION_SELECT_BEFORE, baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, ""));
 			editor.putString(KEY_PREFERENCE_REGION_SELECT, region);
 			editor.commit();
 
@@ -205,38 +227,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 			mUserAnalyticsActionListener.selectRegion(position);
 		}
 
-		// 맵상태에서 서울 지역으로 이동할 경우. 새로 로딩 되어야 한다.
-		//		if (mHotelViewType == HOTEL_VIEW_TYPE.MAP && "서울".equalsIgnoreCase(region) == true && isSelectionTop == true)
-		//		{
-		//			SelectDetailRegionDialog dialog = new SelectDetailRegionDialog(mHostActivity, android.R.style.Theme_Translucent_NoTitleBar);
-		//			dialog.setOnSelectedRegionListener(new OnSelectedDetailRegionListener()
-		//			{
-		//				@Override
-		//				public void onClick(String detailRegion)
-		//				{
-		//					mSelectedDetailRegion = detailRegion;
-		//					
-		//					HotelListFragment hotelListFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
-		//					hotelListFragment.processSelectedDetailRegion(detailRegion);
-		//				}
-		//
-		//				@Override
-		//				public void onCancel()
-		//				{
-		//					mSelectedDetailRegion = null;
-		//					
-		//					HotelListFragment hotelListFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
-		//					hotelListFragment.processSelectedDetailRegion(null);
-		//				}
-		//			});
-		//
-		//			dialog.show();
-		//			return;
-		//		}
-
 		refreshHotelList(isSelectionTop);
-
-		ExLog.d("before region : " + mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_BEFORE, "") + " select region : " + mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, ""));
 		return;
 	}
 
@@ -257,7 +248,9 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-			if (getActivity() == null)
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null)
 			{
 				return;
 			}
@@ -277,7 +270,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 				//				mTodaySaleTime.setCurrentTime(time + 3600 * 14 * 1000);// + 60 * 25 * 1000);
 
 				// 오픈, 클로즈 타임을 가져온다
-				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_SALE_TIME).toString(), null, mAppSaleTimeJsonResponseListener, mHostActivity));
+				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_SALE_TIME).toString(), null, mAppSaleTimeJsonResponseListener, baseActivity));
 
 			} catch (Exception e)
 			{
@@ -292,7 +285,9 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-			if (getActivity() == null)
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null)
 			{
 				return;
 			}
@@ -312,12 +307,12 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 
 				if (mTodaySaleTime.isSaleTime() == false)
 				{
-					((MainActivity) mHostActivity).replaceFragment(WaitTimerFragment.newInstance(mTodaySaleTime));
+					((MainActivity) baseActivity).replaceFragment(WaitTimerFragment.newInstance(mTodaySaleTime));
 					unLockUI();
 				} else
 				{
 					// 지역 리스트를 가져온다
-					mQueue.add(new DailyHotelJsonArrayRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SITE_LOCATION_LIST).toString(), null, mSiteLocationListJsonArrayResponseListener, mHostActivity));
+					mQueue.add(new DailyHotelJsonArrayRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SITE_LOCATION_LIST).toString(), null, mSiteLocationListJsonArrayResponseListener, baseActivity));
 				}
 			} catch (Exception e)
 			{
@@ -331,7 +326,9 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 		@Override
 		public void onResponse(String url, JSONArray response)
 		{
-			if (getActivity() == null)
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null)
 			{
 				return;
 			}
@@ -407,7 +404,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 			int currentRegionIndex = -1;
 			int beforeRegionIndex = -1;
 
-			String regionStr = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
+			String regionStr = baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
 			int size = mRegionList.size();
 
 			for (int i = 0; i < size; i++)
@@ -420,7 +417,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 					break;
 				}
 
-				if (regison.equalsIgnoreCase(mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_BEFORE, "")) == true)
+				if (regison.equalsIgnoreCase(baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_BEFORE, "")) == true)
 				{
 					beforeRegionIndex = i;
 				}
@@ -438,7 +435,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 					currentRegionIndex = beforeRegionIndex;
 				}
 
-				SharedPreferences.Editor editor = mHostActivity.sharedPreference.edit();
+				SharedPreferences.Editor editor = baseActivity.sharedPreference.edit();
 				editor.putString(KEY_PREFERENCE_REGION_SELECT, mRegionList.get(currentRegionIndex));
 				editor.commit();
 			}
@@ -494,8 +491,8 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 			}
 
 			// 호텔 프래그먼트 일때 액션바에 네비게이션 리스트 설치.
-			mHostActivity.setActionBarListEnabled(true);
-			mHostActivity.setActionBarListData(mRegionList.get(currentRegionIndex), mRegionList, HotelMainFragment.this);
+			baseActivity.setActionBarListEnabled(true);
+			baseActivity.setActionBarListData(mRegionList.get(currentRegionIndex), mRegionList, HotelMainFragment.this);
 
 			onNavigationItemSelected(currentRegionIndex);
 
@@ -533,6 +530,13 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 		@Override
 		public void onPageSelected(int position)
 		{
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null)
+			{
+				return;
+			}
+
 			try
 			{
 				mTabIndicator.setCurrentItem(position);
@@ -547,7 +551,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 					if (hotelListFragment == currentFragment)
 					{
 						String listRegion = hotelListFragment.getRegion();
-						String selectedRegion = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
+						String selectedRegion = baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
 
 						isSelectionTop = selectedRegion.equalsIgnoreCase(listRegion) == false;
 						hotelListFragment.onPageSelected(true);
@@ -565,7 +569,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 				// 릴리즈 버전에서 메모리 해지에 문제가 생기는 경우가 있어 앱을 재 시작 시킨다.
 				if (DEBUG == false)
 				{
-					Util.restartApp(mHostActivity.getApplicationContext());
+					Util.restartApp(baseActivity.getApplicationContext());
 				}
 			}
 		}
@@ -608,6 +612,13 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 		@Override
 		public void selectHotel(HotelListViewItem hotelListViewItem, int hotelIndex, SaleTime saleTime)
 		{
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null)
+			{
+				return;
+			}
+
 			if (isLockUiComponent() == true)
 			{
 				return;
@@ -627,11 +638,11 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 			{
 				case HotelListViewItem.TYPE_ENTRY:
 				{
-					Intent i = new Intent(mHostActivity, HotelTabActivity.class);
+					Intent i = new Intent(baseActivity, HotelTabActivity.class);
 
-					String region = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
+					String region = baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
 
-					SharedPreferences.Editor editor = mHostActivity.sharedPreference.edit();
+					SharedPreferences.Editor editor = baseActivity.sharedPreference.edit();
 					editor.putString(KEY_PREFERENCE_REGION_SELECT_GA, region);
 					editor.putString(KEY_PREFERENCE_HOTEL_NAME_GA, hotelListViewItem.getItem().getName());
 					editor.commit();
@@ -741,13 +752,27 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 		@Override
 		public void selectHotel(String hotelName, long hotelIndex)
 		{
-			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "selectHotel", hotelName, hotelIndex);
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null)
+			{
+				return;
+			}
+
+			RenewalGaManager.getInstance(baseActivity.getApplicationContext()).recordEvent("click", "selectHotel", hotelName, hotelIndex);
 		}
 
 		@Override
 		public void selectRegion(int position)
 		{
-			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "selectRegion", mRegionList.get(position), (long) (position + 1));
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null)
+			{
+				return;
+			}
+
+			RenewalGaManager.getInstance(baseActivity.getApplicationContext()).recordEvent("click", "selectRegion", mRegionList.get(position), (long) (position + 1));
 		}
 	};
 }

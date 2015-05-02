@@ -35,6 +35,7 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 public class HotelDaysListFragment extends HotelListFragment implements OnClickListener
 {
@@ -55,6 +56,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 	private View[] mDaysView;
 	private View mSelectedView = null;
 	private boolean mIsShowDaysList;
+	private boolean mIsCreate = false;
 
 	private Handler mHandler = new Handler()
 	{
@@ -83,12 +85,19 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return null;
+		}
+
 		View view = super.onCreateView(inflater, container, savedInstanceState);
 
 		mDaysBackgroundView = view.findViewById(R.id.daysBackgroundView);
 		mDaysLayout = view.findViewById(R.id.daysLayout);
 
-		DAYSLIST_HEIGHT = Util.dpToPx(mHostActivity, 110);
+		DAYSLIST_HEIGHT = Util.dpToPx(baseActivity, 110);
 
 		mDaysBackgroundView.setOnClickListener(new OnClickListener()
 		{
@@ -99,20 +108,19 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 			}
 		});
 
-		if (mDaysView == null)
-		{
-			mDaysView = new View[DAY_OF_COUNT];
-		}
-
 		hideDaysList();
 
 		return view;
 	}
 
-	@Override
-	public void setSaleTime(SaleTime saleTime)
+	private void initDaysLayout()
 	{
-		super.setSaleTime(saleTime);
+		if (mDaysView != null)
+		{
+			return;
+		}
+
+		mDaysView = new View[DAY_OF_COUNT];
 
 		// 날짜를 어떻게 받을 것인지 필요.
 		mDaysView[0] = mDaysLayout.findViewById(R.id.item01);
@@ -123,11 +131,11 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		//		mDaysView[5] = mDaysLayout.findViewById(R.id.item06);
 		//		mDaysView[6] = mDaysLayout.findViewById(R.id.item07);
 
-		initLayoutDays(mDaysView[0], saleTime.getClone(2));
-		initLayoutDays(mDaysView[1], saleTime.getClone(3));
-		initLayoutDays(mDaysView[2], saleTime.getClone(4));
-		initLayoutDays(mDaysView[3], saleTime.getClone(5));
-		initLayoutDays(mDaysView[4], saleTime.getClone(6));
+		initLayoutDays(mDaysView[0], mSaleTime.getClone(2));
+		initLayoutDays(mDaysView[1], mSaleTime.getClone(3));
+		initLayoutDays(mDaysView[2], mSaleTime.getClone(4));
+		initLayoutDays(mDaysView[3], mSaleTime.getClone(5));
+		initLayoutDays(mDaysView[4], mSaleTime.getClone(6));
 		//		initLayoutDays(mDaysView[5], mSaleTime.getClone(3));
 		//		initLayoutDays(mDaysView[6], mSaleTime.getClone(4));
 
@@ -148,6 +156,8 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		ExLog.d("pinkred : mAnimationStatus : " + mAnimationState + ", mAnimationStatus : " + mAnimationStatus + ", isRequestHotelList : " + isRequestHotelList);
 
 		super.onPageSelected(isRequestHotelList);
+
+		initDaysLayout();
 
 		switch (mAnimationStatus)
 		{
@@ -382,11 +392,18 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 			mObjectAnimator.start();
 		} else
 		{
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null)
+			{
+				return;
+			}
+
 			TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, -DAYSLIST_HEIGHT, 0);
 			translateAnimation.setDuration(300);
 			translateAnimation.setFillBefore(true);
 			translateAnimation.setFillAfter(true);
-			translateAnimation.setInterpolator(mHostActivity, android.R.anim.decelerate_interpolator);
+			translateAnimation.setInterpolator(baseActivity, android.R.anim.decelerate_interpolator);
 
 			translateAnimation.setAnimationListener(new AnimationListener()
 			{
@@ -485,11 +502,18 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 			mObjectAnimator.start();
 		} else
 		{
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null)
+			{
+				return;
+			}
+
 			TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, 0, -DAYSLIST_HEIGHT);
 			translateAnimation.setDuration(300);
 			translateAnimation.setFillBefore(true);
 			translateAnimation.setFillAfter(true);
-			translateAnimation.setInterpolator(mHostActivity, android.R.anim.decelerate_interpolator);
+			translateAnimation.setInterpolator(baseActivity, android.R.anim.decelerate_interpolator);
 
 			translateAnimation.setAnimationListener(new AnimationListener()
 			{
