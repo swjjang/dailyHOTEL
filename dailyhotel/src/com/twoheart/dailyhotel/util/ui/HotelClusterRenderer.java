@@ -80,13 +80,19 @@ public class HotelClusterRenderer extends
 	@Override
 	protected void onClusterItemRendered(HotelClusterItem clusterItem, Marker marker)
 	{
-		if (mSelectedHotelClusterItem != null && mSelectedHotelClusterItem.equals(clusterItem) == true)
+		if (mSelectedHotelClusterItem != null)
 		{
-			mSelectedHotelClusterItem = null;
+			LatLng selectedLatLng = mSelectedHotelClusterItem.getPosition();
+			LatLng currentLatLng = clusterItem.getPosition();
 
-			if (mOnSelectedClusterItemListener != null)
+			if (selectedLatLng.latitude == currentLatLng.latitude && selectedLatLng.longitude == currentLatLng.longitude)
 			{
-				mOnSelectedClusterItemListener.onSelectedClusterItemListener(marker);
+				mSelectedHotelClusterItem = null;
+
+				if (mOnSelectedClusterItemListener != null)
+				{
+					mOnSelectedClusterItemListener.onSelectedClusterItemListener(marker);
+				}
 			}
 		}
 

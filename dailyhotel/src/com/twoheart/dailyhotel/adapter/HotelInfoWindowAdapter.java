@@ -31,6 +31,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Hotel;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.VolleyImageLoader;
 
 public class HotelInfoWindowAdapter implements InfoWindowAdapter, View.OnTouchListener
@@ -51,6 +52,8 @@ public class HotelInfoWindowAdapter implements InfoWindowAdapter, View.OnTouchLi
 	public interface OnInfoWindowClickListener
 	{
 		public void onInfoWindowClickListener(Hotel selectedHotel);
+
+		public void onCancelInfoWindowClickListener();
 	}
 
 	public HotelInfoWindowAdapter(Context context)
@@ -94,19 +97,58 @@ public class HotelInfoWindowAdapter implements InfoWindowAdapter, View.OnTouchLi
 
 			ImageView imageView = (ImageView) mRootView.findViewById(R.id.iv_hotel_row_img);
 			imageView.setBackgroundResource(R.drawable.img_placeholder);
+
+			ImageView cancelView = (ImageView) mRootView.findViewById(R.id.cancelView);
+			cancelView.setOnTouchListener(mCancelTouch);
+
 		} else
 		{
-			if (mRootView == null || mRootView.getId() != R.layout.views_map_popup)
+			switch (hotelSize)
 			{
-				mRootView = layoutInflater.inflate(R.layout.views_map_popup, null);
+				case 2:
+				{
+					if (mRootView == null || mRootView.getId() != R.layout.views_map_popup02)
+					{
+						mRootView = layoutInflater.inflate(R.layout.views_map_popup02, null);
+					}
+
+					mChildView[0] = mRootView.findViewById(R.id.view01);
+					mChildView[1] = mRootView.findViewById(R.id.view02);
+					break;
+				}
+
+				case 3:
+				{
+					if (mRootView == null || mRootView.getId() != R.layout.views_map_popup03)
+					{
+						mRootView = layoutInflater.inflate(R.layout.views_map_popup03, null);
+					}
+
+					mChildView[0] = mRootView.findViewById(R.id.view01);
+					mChildView[1] = mRootView.findViewById(R.id.view02);
+					mChildView[2] = mRootView.findViewById(R.id.view03);
+					break;
+				}
+
+				case 4:
+				{
+					if (mRootView == null || mRootView.getId() != R.layout.views_map_popup04)
+					{
+						mRootView = layoutInflater.inflate(R.layout.views_map_popup04, null);
+					}
+
+					mChildView[0] = mRootView.findViewById(R.id.view01);
+					mChildView[1] = mRootView.findViewById(R.id.view02);
+					mChildView[2] = mRootView.findViewById(R.id.view03);
+					mChildView[3] = mRootView.findViewById(R.id.view04);
+					break;
+				}
 			}
 
-			mChildView[0] = mRootView.findViewById(R.id.view01);
-			mChildView[1] = mRootView.findViewById(R.id.view02);
-			mChildView[2] = mRootView.findViewById(R.id.view03);
-			mChildView[3] = mRootView.findViewById(R.id.view04);
+			ImageView cancelView = (ImageView) mRootView.findViewById(R.id.cancelView);
+			cancelView.setOnTouchListener(mCancelTouch);
 
-			for (int i = 0; i < MAX_CHILD_VIEW; i++)
+			for (int i = 0; i < hotelSize; i++)
 			{
 				if (i < hotelSize)
 				{
@@ -152,6 +194,15 @@ public class HotelInfoWindowAdapter implements InfoWindowAdapter, View.OnTouchLi
 		}
 	};
 
+	private final Runnable mConfirmCancelClickRunnable = new Runnable()
+	{
+		public void run()
+		{
+			mHandler.removeCallbacks(mConfirmClickRunnable);
+			mOnInfoWindowClickListener.onCancelInfoWindowClickListener();
+		}
+	};
+
 	private OnTouchListener mChildTouch = new OnTouchListener()
 	{
 		@Override
@@ -189,10 +240,50 @@ public class HotelInfoWindowAdapter implements InfoWindowAdapter, View.OnTouchLi
 		}
 	};
 
+	private OnTouchListener mCancelTouch = new OnTouchListener()
+	{
+		@Override
+		public boolean onTouch(View v, MotionEvent event)
+		{
+			switch (event.getActionMasked())
+			{
+				case MotionEvent.ACTION_DOWN:
+					if (mIsPressed == false)
+					{
+						mIsPressed = true;
+						mHandler.removeCallbacks(mConfirmCancelClickRunnable);
+					}
+					break;
+
+				case MotionEvent.ACTION_UP:
+					mHandler.postDelayed(mConfirmCancelClickRunnable, 150);
+					break;
+
+				case MotionEvent.ACTION_CANCEL:
+					if (mIsPressed == true)
+					{
+						mIsPressed = false;
+						mHandler.removeCallbacks(mConfirmCancelClickRunnable);
+					}
+					break;
+				default:
+					break;
+			}
+
+			return true;
+		}
+	};
+
 	@Override
 	public boolean onTouch(View v, MotionEvent event)
 	{
-		if (0 <= event.getX() && event.getX() <= v.getWidth() && 0 <= event.getY() && event.getY() <= v.getHeight())
+		final int cancelButtonWidth = Util.dpToPx(mContext, 30);
+
+		// 상단 취소 버튼.
+		if (v.getWidth() - cancelButtonWidth <= event.getX() && event.getX() <= v.getWidth() && v.getHeight() - cancelButtonWidth <= event.getY() && event.getY() <= v.getHeight())
+		{
+
+		} else if (0 <= event.getX() && event.getX() <= v.getWidth() && 0 <= event.getY() && event.getY() <= v.getHeight())
 		{
 			switch (event.getActionMasked())
 			{
