@@ -3,9 +3,6 @@ package com.twoheart.dailyhotel.model;
 import android.content.Context;
 import android.graphics.Bitmap;
 
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.ui.RegionIconGenerator;
 
 public class HotelRegionRenderer
@@ -17,18 +14,33 @@ public class HotelRegionRenderer
 	{
 		mCount = count;
 		mRegionIconGenerator = new RegionIconGenerator(context);
-		mRegionIconGenerator.setTextColor(context.getResources().getColor(R.color.white));
+
+		if (count < 5)
+		{
+			mRegionIconGenerator.setTextPadding(40);
+		} else if (count >= 5 && count < 10)
+		{
+			mRegionIconGenerator.setTextPadding(45);
+		} else if (count >= 10 && count < 20)
+		{
+			mRegionIconGenerator.setTextPadding(50);
+		} else
+		{
+			mRegionIconGenerator.setTextPadding(60);
+		}
 	}
 
-	public BitmapDescriptor getBitmap()
+	public Bitmap getBitmap()
 	{
 		Bitmap icon = mRegionIconGenerator.makeIcon(String.valueOf(mCount));
 
-		if (icon == null)
-		{
-			return null;
-		}
+		return icon;
 
-		return BitmapDescriptorFactory.fromBitmap(icon);
+		//		if (icon == null)
+		//		{
+		//			return null;
+		//		}
+		//
+		//		return BitmapDescriptorFactory.fromBitmap(icon);
 	}
 }

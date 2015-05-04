@@ -76,10 +76,6 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 		public void toggleViewType();
 
 		//		public void toggleViewType(String detailRegion);
-
-		public void showProgress();
-
-		public void hideProgress();
 	};
 
 	public interface UserAnalyticsActionListener
@@ -234,8 +230,6 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 	private void refreshHotelList(boolean isSelectionTop)
 	{
 		HotelListFragment hotelListFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
-
-		//		hotelListFragment.setSelectedDetailRegion(mSelectedDetailRegion);
 		hotelListFragment.refreshHotelList(isSelectionTop);
 	}
 
@@ -723,26 +717,6 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 				hotelListFragment.setHotelViewType(mHotelViewType, isCurrentFragment);
 			}
 
-			unLockUI();
-		}
-
-		//		@Override
-		//		public void toggleViewType(String detailRegion)
-		//		{
-		//			mSelectedDetailRegion = detailRegion;
-		//			
-		//			toggleViewType();
-		//		}
-
-		@Override
-		public void showProgress()
-		{
-			lockUI();
-		}
-
-		@Override
-		public void hideProgress()
-		{
 			unLockUI();
 		}
 	};

@@ -209,7 +209,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	public void onRefreshComplete()
 	{
 		mDailyFloatingActionButton.attachToListView(mHotelListView);
-		setFloatingActionButtonVisible(true);
+		//		setFloatingActionButtonVisible(true);
 	}
 
 	/**
@@ -374,8 +374,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 		mSelectedRegion = mSelectedRegion.replace(" ", "%20");
 		mSelectedRegion = mSelectedRegion.replace("|", "%7C");
-
-		//		String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL).append('/').append(selectedRegion).append("/near/0/0/0/1000/").append(saleTime.getCurrentYear()).append("/").append(saleTime.getCurrentMonth()).append("/").append(saleTime.getCurrentDay()).toString();
 
 		String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE).append('/').append(mSelectedRegion).append("/").append(saleTime.getRequestHotelDateFormat("yyMMdd")).toString();
 
@@ -553,11 +551,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 					hotelList.remove(i);
 
 					insertHotelSize++;
-				}
-
-				if (hotel.getName().contains("스탠포드"))
-				{
-					ExLog.d(hotel.getName() + " : " + hotel.getSequence() + ", " + hotel.mLatitude + ", " + hotel.mLongitude);
 				}
 			}
 

@@ -10,6 +10,7 @@ import android.widget.FrameLayout;
 import com.google.android.gms.maps.model.Marker;
 import com.twoheart.dailyhotel.fragment.HotelListMapFragment;
 import com.twoheart.dailyhotel.fragment.HotelListMapFragment.OnMakerInfoWindowListener;
+import com.twoheart.dailyhotel.util.Util;
 
 public class HotelMapLayout extends FrameLayout implements OnMakerInfoWindowListener
 {
@@ -66,10 +67,14 @@ public class HotelMapLayout extends FrameLayout implements OnMakerInfoWindowList
 			// Get a marker position on the screen
 			Point point = mHotelListMapFragment.getMap().getProjection().toScreenLocation(mMarker.getPosition());
 
+			int[] location = new int[2];
+			mInfoWindowView.getLocationOnScreen(location);
+
 			// Make a copy of the MotionEvent and adjust it's location
 			// so it is relative to the infoWindow left top corner
 			MotionEvent copyEv = MotionEvent.obtain(ev);
-			copyEv.offsetLocation(-point.x + (mInfoWindowView.getWidth() / 2), -point.y + mInfoWindowView.getHeight());
+			// 마지막 인자는 마커의 높이.
+			copyEv.offsetLocation(-point.x + (mInfoWindowView.getWidth() / 2), -point.y + mInfoWindowView.getHeight() + Util.dpToPx(getContext(), 44));
 
 			// Dispatch the adjusted MotionEvent to the infoWindow
 			ret = mInfoWindowView.dispatchTouchEvent(copyEv);

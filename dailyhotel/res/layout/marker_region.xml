@@ -11,7 +11,7 @@
         android:layout_centerInParent="true"
         android:layout_gravity="center"
         android:padding="15dp"
-        android:textColor="@color/white"
-        android:textSize="30dp" />
+        android:textColor="@color/region_circle_text"
+        android:textSize="25dp" />
 
 </RelativeLayout>

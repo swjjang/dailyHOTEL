@@ -1,9 +1,14 @@
 package com.twoheart.dailyhotel.util.ui;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Point;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
@@ -11,7 +16,6 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.twoheart.dailyhotel.model.HotelRegionRenderer;
 import com.twoheart.dailyhotel.model.HotelRenderer;
-import com.twoheart.dailyhotel.util.ExLog;
 
 public class HotelClusterRenderer extends
 		DefaultClusterRenderer<HotelClusterItem>
@@ -19,8 +23,7 @@ public class HotelClusterRenderer extends
 	private Context mContext;
 	private HotelClusterItem mSelectedHotelClusterItem;
 	private OnSelectedClusterItemListener mOnSelectedClusterItemListener;
-	
-	private int mItemSizeOfCluster;
+	private GoogleMap mGoogleMap;
 
 	public interface OnSelectedClusterItemListener
 	{
@@ -32,7 +35,7 @@ public class HotelClusterRenderer extends
 		super(context, map, clusterManager);
 
 		mContext = context;
-		mItemSizeOfCluster = 1;
+		mGoogleMap = map;
 	}
 
 	@Override
@@ -56,11 +59,18 @@ public class HotelClusterRenderer extends
 	{
 		HotelRegionRenderer hotelRegionRenderer = new HotelRegionRenderer(mContext, cluster.getSize());
 
-		BitmapDescriptor icon = hotelRegionRenderer.getBitmap();
+		Bitmap icon = hotelRegionRenderer.getBitmap();
 
 		if (icon != null)
 		{
-			markerOptions.icon(icon);
+			LatLng latlng = markerOptions.getPosition();
+
+			Projection projection = mGoogleMap.getProjection();
+
+			Point point = projection.toScreenLocation(latlng);
+			point.y = point.y + icon.getHeight() / 2;
+
+			markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon)).position(projection.fromScreenLocation(point));
 		} else
 		{
 			super.onBeforeClusterRendered(cluster, markerOptions);
@@ -84,16 +94,17 @@ public class HotelClusterRenderer extends
 	}
 
 	@Override
-	protected boolean shouldRenderAsCluster(Cluster<HotelClusterItem> cluster)
+	protected boolean shouldRenderAsCluster(Cluster<HotelClusterItem> cluster, float zoom)
 	{
-		return cluster.getSize() > mItemSizeOfCluster;
+		if (Float.compare(zoom, 12.0f) >= 0)
+		{
+			return false;
+		} else
+		{
+			return true;
+		}
 	}
-	
-	public void setshouldRenderAsCluster(int itemSizeOfCluster)
-	{
-		mItemSizeOfCluster = itemSizeOfCluster;
-	}
-	
+
 	public void setSelectedClusterItem(HotelClusterItem hotelClusterItem)
 	{
 		mSelectedHotelClusterItem = hotelClusterItem;

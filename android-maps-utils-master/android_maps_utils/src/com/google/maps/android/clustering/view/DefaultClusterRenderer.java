@@ -279,7 +279,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     /**
      * Determine whether the cluster should be rendered as individual markers or a cluster.
      */
-    protected boolean shouldRenderAsCluster(Cluster<T> cluster) {
+    protected boolean shouldRenderAsCluster(Cluster<T> cluster, float zoom) {
         return cluster.getSize() > MIN_CLUSTER_SIZE;
     }
 
@@ -353,7 +353,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
             if (DefaultClusterRenderer.this.mClusters != null && SHOULD_ANIMATE) {
                 existingClustersOnScreen = new ArrayList<Point>();
                 for (Cluster<T> c : DefaultClusterRenderer.this.mClusters) {
-                    if (shouldRenderAsCluster(c) && visibleBounds.contains(c.getPosition())) {
+                    if (shouldRenderAsCluster(c, mMapZoom) && visibleBounds.contains(c.getPosition())) {
                         Point point = mSphericalMercatorProjection.toPoint(c.getPosition());
                         existingClustersOnScreen.add(point);
                     }
@@ -370,12 +370,12 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
                     Point closest = findClosestCluster(existingClustersOnScreen, point);
                     if (closest != null) {
                         LatLng animateTo = mSphericalMercatorProjection.toLatLng(closest);
-                        markerModifier.add(true, new CreateMarkerTask(c, newMarkers, animateTo));
+                        markerModifier.add(true, new CreateMarkerTask(c, newMarkers, animateTo, mMapZoom));
                     } else {
-                        markerModifier.add(true, new CreateMarkerTask(c, newMarkers, null));
+                        markerModifier.add(true, new CreateMarkerTask(c, newMarkers, null, mMapZoom));
                     }
                 } else {
-                    markerModifier.add(onScreen, new CreateMarkerTask(c, newMarkers, null));
+                    markerModifier.add(onScreen, new CreateMarkerTask(c, newMarkers, null, mMapZoom));
                 }
             }
 
@@ -392,7 +392,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
             if (SHOULD_ANIMATE) {
                 newClustersOnScreen = new ArrayList<Point>();
                 for (Cluster<T> c : clusters) {
-                    if (shouldRenderAsCluster(c) && visibleBounds.contains(c.getPosition())) {
+                    if (shouldRenderAsCluster(c, mMapZoom) && visibleBounds.contains(c.getPosition())) {
                         Point p = mSphericalMercatorProjection.toPoint(c.getPosition());
                         newClustersOnScreen.add(p);
                     }
@@ -770,6 +770,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         private final Cluster<T> cluster;
         private final Set<MarkerWithPosition> newMarkers;
         private final LatLng animateFrom;
+        private final float zoom;
 
         /**
          * @param c            the cluster to render.
@@ -777,15 +778,16 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
          * @param animateFrom  the location to animate the markerWithPosition from, or null if no
          *                     animation is required.
          */
-        public CreateMarkerTask(Cluster<T> c, Set<MarkerWithPosition> markersAdded, LatLng animateFrom) {
+        public CreateMarkerTask(Cluster<T> c, Set<MarkerWithPosition> markersAdded, LatLng animateFrom, float zoom) {
             this.cluster = c;
             this.newMarkers = markersAdded;
             this.animateFrom = animateFrom;
+            this.zoom = zoom;
         }
 
         private void perform(MarkerModifier markerModifier) {
             // Don't show small clusters. Render the markers inside, instead.
-            if (!shouldRenderAsCluster(cluster)) {
+            if (!shouldRenderAsCluster(cluster, zoom)) {
                 for (T item : cluster.getItems()) {
                     Marker marker = mMarkerCache.get(item);
                     MarkerWithPosition markerWithPosition;

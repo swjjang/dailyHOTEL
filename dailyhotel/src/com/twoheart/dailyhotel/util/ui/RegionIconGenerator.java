@@ -132,6 +132,14 @@ public class RegionIconGenerator
 		}
 	}
 
+	public void setTextPadding(int value)
+	{
+		if (mTextView != null)
+		{
+			mTextView.setPadding(value, value, value, value);
+		}
+	}
+
 	/**
 	 * Sets the text color, size, style, hint color, and highlight color from
 	 * the specified <code>TextAppearance</code> resource.

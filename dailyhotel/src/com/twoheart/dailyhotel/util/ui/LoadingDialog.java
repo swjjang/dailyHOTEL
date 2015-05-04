@@ -15,6 +15,8 @@ package com.twoheart.dailyhotel.util.ui;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.os.Handler;
+import android.os.Message;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ProgressBar;
 
@@ -23,6 +25,17 @@ import com.twoheart.dailyhotel.R;
 public class LoadingDialog
 {
 	private Dialog mDialog;
+	private Handler mHandler = new Handler()
+	{
+		@Override
+		public void handleMessage(Message msg)
+		{
+			if (mDialog.isShowing())
+			{
+				mDialog.dismiss();
+			}
+		}
+	};
 
 	public LoadingDialog(final BaseActivity activity)
 	{
@@ -49,13 +62,18 @@ public class LoadingDialog
 
 	public void show()
 	{
+		mHandler.removeMessages(0);
+
 		if (!mDialog.isShowing())
 			mDialog.show();
 	}
 
 	public void hide()
 	{
-		if (mDialog.isShowing())
-			mDialog.dismiss();
+		mHandler.removeMessages(0);
+		mHandler.sendEmptyMessageDelayed(0, 500);
+
+		//		if (mDialog.isShowing())
+		//			mDialog.dismiss();
 	}
 }
