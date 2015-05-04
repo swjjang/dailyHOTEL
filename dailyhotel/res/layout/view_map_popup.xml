@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="225dp"
-    android:layout_height="145dp" >
+    android:layout_width="227dp"
+    android:layout_height="wrap_content" >
 
     <View
-        android:layout_width="225dp"
-        android:layout_height="145dp" />
+        android:layout_width="230dp"
+        android:layout_height="147dp" />
 
     <RelativeLayout
         android:id="@+id/hotelLayout"
         android:layout_width="220dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         android:background="@color/white"
         android:padding="2dp" >
 
@@ -150,8 +150,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignRight="@id/hotelLayout"
-        android:layout_marginRight="-12dp"
-        android:layout_marginTop="-7dp"
+        android:layout_marginRight="-10dp"
+        android:layout_marginTop="-3dp"
         android:src="@drawable/img_btn_cancel" />
 
 </RelativeLayout>

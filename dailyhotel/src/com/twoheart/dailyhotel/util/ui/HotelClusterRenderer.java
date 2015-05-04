@@ -59,18 +59,11 @@ public class HotelClusterRenderer extends
 	{
 		HotelRegionRenderer hotelRegionRenderer = new HotelRegionRenderer(mContext, cluster.getSize());
 
-		Bitmap icon = hotelRegionRenderer.getBitmap();
+		BitmapDescriptor icon = hotelRegionRenderer.getBitmap();
 
 		if (icon != null)
 		{
-			LatLng latlng = markerOptions.getPosition();
-
-			Projection projection = mGoogleMap.getProjection();
-
-			Point point = projection.toScreenLocation(latlng);
-			point.y = point.y + icon.getHeight() / 2;
-
-			markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon)).position(projection.fromScreenLocation(point));
+			markerOptions.icon(icon).anchor(0.5f, 0.5f);
 		} else
 		{
 			super.onBeforeClusterRendered(cluster, markerOptions);

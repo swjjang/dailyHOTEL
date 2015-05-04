@@ -3,6 +3,9 @@ package com.twoheart.dailyhotel.model;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.ui.RegionIconGenerator;
 
 public class HotelRegionRenderer
@@ -15,32 +18,30 @@ public class HotelRegionRenderer
 		mCount = count;
 		mRegionIconGenerator = new RegionIconGenerator(context);
 
-		if (count < 5)
+		if (count < 4)
 		{
-			mRegionIconGenerator.setTextPadding(40);
-		} else if (count >= 5 && count < 10)
+			mRegionIconGenerator.setTextPadding(Util.dpToPx(context, 10));
+		} else if (count >= 4 && count < 10)
 		{
-			mRegionIconGenerator.setTextPadding(45);
-		} else if (count >= 10 && count < 20)
+			mRegionIconGenerator.setTextPadding(Util.dpToPx(context, 15));
+		} else if (count >= 10 && count < 21)
 		{
-			mRegionIconGenerator.setTextPadding(50);
+			mRegionIconGenerator.setTextPadding(Util.dpToPx(context, 18));
 		} else
 		{
-			mRegionIconGenerator.setTextPadding(60);
+			mRegionIconGenerator.setTextPadding(Util.dpToPx(context, 25));
 		}
 	}
 
-	public Bitmap getBitmap()
+	public BitmapDescriptor getBitmap()
 	{
 		Bitmap icon = mRegionIconGenerator.makeIcon(String.valueOf(mCount));
 
-		return icon;
+		if (icon == null)
+		{
+			return null;
+		}
 
-		//		if (icon == null)
-		//		{
-		//			return null;
-		//		}
-		//
-		//		return BitmapDescriptorFactory.fromBitmap(icon);
+		return BitmapDescriptorFactory.fromBitmap(icon);
 	}
 }

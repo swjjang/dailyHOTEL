@@ -58,8 +58,6 @@ public class HotelListMapFragment extends
 	private HotelClusterRenderer mHotelClusterRenderer;
 	private Marker mSelectedMarker;
 
-	private Handler mHandler = new Handler();
-
 	private OnMakerInfoWindowListener mOnMakerInfoWindowListener;
 
 	public interface OnMakerInfoWindowListener
@@ -101,6 +99,8 @@ public class HotelListMapFragment extends
 				mGoogleMap = googleMap;
 				mGoogleMap.setMyLocationEnabled(false);
 				mGoogleMap.getUiSettings().setMapToolbarEnabled(false);
+				mGoogleMap.getUiSettings().setRotateGesturesEnabled(false);
+				mGoogleMap.getUiSettings().setTiltGesturesEnabled(false);
 				mGoogleMap.setOnMapClickListener(mOnMapClickListener);
 
 				mClusterManager = new ClusterManager<HotelClusterItem>(baseActivity, mGoogleMap);
@@ -310,7 +310,7 @@ public class HotelListMapFragment extends
 						return;
 					}
 
-					CameraPosition cp = new CameraPosition.Builder().target(bounds.getCenter()).zoom(14).build();
+					CameraPosition cp = new CameraPosition.Builder().target(bounds.getCenter()).zoom(14.0f).build();
 					mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
 
 					mClusterManager.cluster();
@@ -353,7 +353,7 @@ public class HotelListMapFragment extends
 
 		if (hotelCount == 1)
 		{
-			CameraPosition cp = new CameraPosition.Builder().target(bounds.getCenter()).zoom(14).build();
+			CameraPosition cp = new CameraPosition.Builder().target(bounds.getCenter()).zoom(14.0f).build();
 			mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
 		} else
 		{
@@ -510,27 +510,6 @@ public class HotelListMapFragment extends
 			{
 				return false;
 			}
-
-			//			if(mIsOpenMakrer == true)
-			//			{
-			//				LatLng selectedLatLng = mSelectedMarker.getPosition();
-			//				LatLng currentLatLng = marker.getPosition();
-			//				
-			//				if (mSelectedMarker != null && selectedLatLng.latitude == currentLatLng.latitude && selectedLatLng.longitude == currentLatLng.longitude)
-			//				{
-			//					mHandler.post(new Runnable()
-			//					{
-			//						@Override
-			//						public void run()
-			//						{
-			//							mSelectedMarker.hideInfoWindow();
-			//							mOnMapClickListener.onMapClick(null);
-			//						}
-			//					});
-			//					
-			//					return false;
-			//				}
-			//			}
 
 			mIsOpenMakrer = true;
 

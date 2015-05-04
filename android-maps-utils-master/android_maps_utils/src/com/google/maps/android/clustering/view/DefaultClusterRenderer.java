@@ -1,5 +1,20 @@
 package com.google.maps.android.clustering.view;
 
+import static com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm.MAX_DISTANCE_AT_ZOOM;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.TimeInterpolator;
@@ -36,23 +51,8 @@ import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.geometry.Point;
 import com.google.maps.android.projection.SphericalMercatorProjection;
-import com.google.maps.android.ui.SquareTextView;
 import com.google.maps.android.ui.IconGenerator;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
-import static com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm.MAX_DISTANCE_AT_ZOOM;
+import com.google.maps.android.ui.SquareTextView;
 
 /**
  * The default view for a ClusterManager. Markers are animated in and out of clusters.
@@ -332,9 +332,29 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
 
         @SuppressLint("NewApi")
         public void run() {
+        	boolean isAnimation = SHOULD_ANIMATE;
+        	
             if (clusters.equals(DefaultClusterRenderer.this.mClusters)) {
-                mCallback.run();
-                return;
+            	boolean isOneRegion = true;
+            	
+            	for (Cluster<T> c : clusters)
+            	{
+            		if(c.getSize() != 1)
+            		{
+            			isOneRegion = false;
+            			
+            			break;
+            		}
+            	}
+            	
+            	if(isOneRegion == false)
+            	{
+                    mCallback.run();
+                    return;
+            	} else
+            	{
+            		isAnimation = false;
+            	}
             }
 
             final MarkerModifier markerModifier = new MarkerModifier();
@@ -350,7 +370,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
             // Find all of the existing clusters that are on-screen. These are candidates for
             // markers to animate from.
             List<Point> existingClustersOnScreen = null;
-            if (DefaultClusterRenderer.this.mClusters != null && SHOULD_ANIMATE) {
+            if (DefaultClusterRenderer.this.mClusters != null && SHOULD_ANIMATE && isAnimation) {
                 existingClustersOnScreen = new ArrayList<Point>();
                 for (Cluster<T> c : DefaultClusterRenderer.this.mClusters) {
                     if (shouldRenderAsCluster(c, mMapZoom) && visibleBounds.contains(c.getPosition())) {
@@ -365,7 +385,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
                     new ConcurrentHashMap<MarkerWithPosition, Boolean>());
             for (Cluster<T> c : clusters) {
                 boolean onScreen = visibleBounds.contains(c.getPosition());
-                if (zoomingIn && onScreen && SHOULD_ANIMATE) {
+                if (zoomingIn && onScreen && SHOULD_ANIMATE && isAnimation) {
                     Point point = mSphericalMercatorProjection.toPoint(c.getPosition());
                     Point closest = findClosestCluster(existingClustersOnScreen, point);
                     if (closest != null) {
@@ -389,7 +409,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
             // Find all of the new clusters that were added on-screen. These are candidates for
             // markers to animate from.
             List<Point> newClustersOnScreen = null;
-            if (SHOULD_ANIMATE) {
+            if (SHOULD_ANIMATE && isAnimation) {
                 newClustersOnScreen = new ArrayList<Point>();
                 for (Cluster<T> c : clusters) {
                     if (shouldRenderAsCluster(c, mMapZoom) && visibleBounds.contains(c.getPosition())) {
@@ -404,7 +424,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
                 boolean onScreen = visibleBounds.contains(marker.position);
                 // Don't animate when zooming out more than 3 zoom levels.
                 // TODO: drop animation based on speed of device & number of markers to animate.
-                if (!zoomingIn && zoomDelta > -3 && onScreen && SHOULD_ANIMATE) {
+                if (!zoomingIn && zoomDelta > -3 && onScreen && SHOULD_ANIMATE && isAnimation) {
                     final Point point = mSphericalMercatorProjection.toPoint(marker.position);
                     final Point closest = findClosestCluster(newClustersOnScreen, point);
                     if (closest != null) {
