@@ -558,7 +558,7 @@ public class HotelListMapFragment extends
 				marker.showInfoWindow();
 			}
 
-			return true;
+			return false;
 		}
 	};
 
