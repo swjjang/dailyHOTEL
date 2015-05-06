@@ -67,5 +67,8 @@
 	
 	<color name="floating_action_button_default">#FF7A7A</color>
 	<color name="floating_action_button_pressed">#ff5a5a</color>
+	
+	<color name="region_circle">#80FF7A7A</color>
+	<color name="region_circle_text">#ac1055</color>
 
 </resources>	

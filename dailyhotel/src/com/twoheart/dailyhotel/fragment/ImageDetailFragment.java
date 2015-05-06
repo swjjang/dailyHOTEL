@@ -9,6 +9,7 @@ import android.widget.ProgressBar;
 
 import com.androidquery.AQuery;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
 public class ImageDetailFragment extends BaseFragment
@@ -43,13 +44,19 @@ public class ImageDetailFragment extends BaseFragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return null;
+		}
 
 		View view = inflater.inflate(R.layout.fragment_image_detail, container, false);
 
 		mImageView = (ImageView) view.findViewById(R.id.iv_image_detail);
 		mProgressBar = (ProgressBar) view.findViewById(R.id.pb_image_detail);
 
-		mAq = new AQuery(mHostActivity, view);
+		mAq = new AQuery(baseActivity, view);
 		mAq.id(mImageView).progress(mProgressBar).image(mImageUrl, true, true, 0, R.drawable.img_placeholder, null, AQuery.FADE_IN);
 
 		return view;

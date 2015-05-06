@@ -28,7 +28,6 @@ import android.widget.AbsListView;
 import android.widget.ImageButton;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.ExLog;
 
 public class DailyFloatingActionButton extends ImageButton
 {
@@ -474,8 +473,6 @@ public class DailyFloatingActionButton extends ImageButton
 		@Override
 		public void onScrollStateChanged(AbsListView view, int scrollState)
 		{
-			ExLog.d("onPage scrollState : " + scrollState);
-
 			mScrollState = scrollState;
 
 			if (scrollState == SCROLL_STATE_IDLE)
@@ -487,8 +484,6 @@ public class DailyFloatingActionButton extends ImageButton
 		@Override
 		public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount)
 		{
-			ExLog.d("onPage onScroll : " + mScrollState);
-
 			if (mScrollState == -1)
 			{
 				return;
@@ -497,8 +492,7 @@ public class DailyFloatingActionButton extends ImageButton
 			if (mFirstVisibleItem != firstVisibleItem)
 			{
 				mFirstVisibleItem = firstVisibleItem;
-
-				hide();
+				//				hide();
 			}
 		}
 	};

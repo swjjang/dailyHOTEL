@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.adapter.CreditListAdapter;
 import com.twoheart.dailyhotel.model.Credit;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
 /**
@@ -80,7 +81,14 @@ public class CreditListFragment extends BaseFragment
 	@Override
 	public void onResume()
 	{
-		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("creditHistory", "/credit-with-logon/history");
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
+		RenewalGaManager.getInstance(baseActivity.getApplicationContext()).recordScreen("creditHistory", "/credit-with-logon/history");
 		super.onResume();
 	}
 
