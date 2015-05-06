@@ -112,8 +112,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
+                    android:layout_marginRight="3dp"
                     android:layout_toLeftOf="@+id/tv_hotel_row_price"
-                    android:gravity="center_vertical"
+                    android:gravity="right|center_vertical"
                     android:shadowColor="@color/textView_textColor_shadow"
                     android:shadowDx="0"
                     android:shadowDy="2"
@@ -133,6 +134,7 @@
                     android:shadowRadius="0.01"
                     android:textColor="#cecece"
                     android:textSize="11dp" />
+
             </RelativeLayout>
         </RelativeLayout>
     </RelativeLayout>

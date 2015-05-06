@@ -161,9 +161,6 @@ public class HotelListMapFragment extends
 			builder.include(latlng);
 		}
 
-		//		CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(builder.build(), Util.dpToPx(getActivity(), 50));
-		//		mGoogleMap.moveCamera(cameraUpdate);
-
 		directCameraSetting(builder.build(), cluster.getSize());
 
 		return true;
@@ -194,7 +191,7 @@ public class HotelListMapFragment extends
 		}
 
 		mGoogleMap.clear();
-
+		
 		if (mHotelArrayList == null || mHotelArrayList.size() == 0)
 		{
 			return;

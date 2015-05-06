@@ -95,7 +95,7 @@ public class HotelClusterRenderer extends
 	@Override
 	protected boolean shouldRenderAsCluster(Cluster<HotelClusterItem> cluster, float zoom)
 	{
-		if (Float.compare(zoom, 12.0f) >= 0)
+		if (Float.compare(zoom, 13.0f) >= 0)
 		{
 			return false;
 		} else
