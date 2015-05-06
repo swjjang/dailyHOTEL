@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -100,7 +101,10 @@ public class HotelListMapFragment extends
 				mGoogleMap.getUiSettings().setMapToolbarEnabled(false);
 				mGoogleMap.getUiSettings().setRotateGesturesEnabled(false);
 				mGoogleMap.getUiSettings().setTiltGesturesEnabled(false);
+				mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
 				mGoogleMap.setOnMapClickListener(mOnMapClickListener);
+
+				relocationZoomControl();
 
 				mClusterManager = new ClusterManager<HotelClusterItem>(baseActivity, mGoogleMap);
 				mHotelClusterRenderer = new HotelClusterRenderer(baseActivity, mGoogleMap, mClusterManager);
@@ -179,6 +183,35 @@ public class HotelListMapFragment extends
 		if (mIsCreateView == true)
 		{
 			makeMarker(isChangedRegion);
+		}
+	}
+
+	/**
+	 * 추후 UI추가 필요 구글맵 버전이 바뀌면 문제가 될수도 있음.
+	 */
+	private void relocationZoomControl()
+	{
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
+		// Find myLocationButton view
+		View zoomControl = getView().findViewById(0x1);
+
+		if (zoomControl != null && zoomControl.getLayoutParams() instanceof RelativeLayout.LayoutParams)
+		{
+			RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) zoomControl.getLayoutParams();
+			params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+			params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+
+			params.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0);
+			params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
+
+			zoomControl.setPadding(zoomControl.getPaddingLeft(), Util.dpToPx(baseActivity, 10), zoomControl.getPaddingRight(), zoomControl.getPaddingBottom());
+			zoomControl.setLayoutParams(params);
 		}
 	}
 
