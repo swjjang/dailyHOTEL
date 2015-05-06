@@ -6,7 +6,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -191,7 +190,7 @@ public class HotelListMapFragment extends
 		}
 
 		mGoogleMap.clear();
-		
+
 		if (mHotelArrayList == null || mHotelArrayList.size() == 0)
 		{
 			return;
@@ -217,7 +216,7 @@ public class HotelListMapFragment extends
 		double latitude = 0.0;
 		double longitude = 0.0;
 		int count = 0;
-		boolean isOpenMarker = mIsOpenMakrer;
+		boolean isOpenMarker = false;
 
 		if (mIsOpenMakrer == true && mSelectedHotelListViewItem != null)
 		{
@@ -259,19 +258,31 @@ public class HotelListMapFragment extends
 			{
 				if (latitude == hotel.mLatitude && longitude == hotel.mLongitude)
 				{
-					mIsOpenMakrer = false;
+					isOpenMarker = true;
+
 					mHotelClusterRenderer.setSelectedClusterItem(hotelClusterItem);
 					mHotelClusterRenderer.setSelectedClusterItemListener(new OnSelectedClusterItemListener()
 					{
 						@Override
 						public void onSelectedClusterItemListener(Marker marker)
 						{
-							mClusterManager.onMarkerClick(marker);
+							if (marker != null)
+							{
+								mClusterManager.onMarkerClick(marker);
+							} else
+							{
+								if (mLoadingDialog != null)
+								{
+									mLoadingDialog.hide();
+								}
+							}
 						}
 					});
 				}
 			}
 		}
+
+		mIsOpenMakrer = false;
 
 		if (isChangedRegion == true)
 		{
@@ -375,6 +386,7 @@ public class HotelListMapFragment extends
 		int size = arrangeList.size();
 		HotelListViewItem hotelListViewItem = null;
 
+		// 섹션 정보와 솔드 아웃인 경우 목록에서 제거 시킨다.
 		for (int i = size - 1; i >= 0; i--)
 		{
 			hotelListViewItem = arrangeList.get(i);
@@ -382,6 +394,12 @@ public class HotelListMapFragment extends
 			if (hotelListViewItem.getType() == HotelListViewItem.TYPE_SECTION)
 			{
 				arrangeList.remove(i);
+			} else
+			{
+				if (hotelListViewItem.getItem().getAvailableRoom() == 0)
+				{
+					arrangeList.remove(i);
+				}
 			}
 		}
 

@@ -1,13 +1,9 @@
 package com.twoheart.dailyhotel.util.ui;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Point;
 
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -23,7 +19,6 @@ public class HotelClusterRenderer extends
 	private Context mContext;
 	private HotelClusterItem mSelectedHotelClusterItem;
 	private OnSelectedClusterItemListener mOnSelectedClusterItemListener;
-	private GoogleMap mGoogleMap;
 
 	public interface OnSelectedClusterItemListener
 	{
@@ -35,7 +30,6 @@ public class HotelClusterRenderer extends
 		super(context, map, clusterManager);
 
 		mContext = context;
-		mGoogleMap = map;
 	}
 
 	@Override
@@ -48,9 +42,6 @@ public class HotelClusterRenderer extends
 		if (icon != null)
 		{
 			markerOptions.icon(icon);
-		} else
-		{
-			super.onBeforeClusterItemRendered(item, markerOptions);
 		}
 	}
 
@@ -64,9 +55,6 @@ public class HotelClusterRenderer extends
 		if (icon != null)
 		{
 			markerOptions.icon(icon).anchor(0.5f, 0.5f);
-		} else
-		{
-			super.onBeforeClusterRendered(cluster, markerOptions);
 		}
 	}
 
@@ -88,8 +76,6 @@ public class HotelClusterRenderer extends
 				}
 			}
 		}
-
-		super.onClusterItemRendered(clusterItem, marker);
 	}
 
 	@Override
