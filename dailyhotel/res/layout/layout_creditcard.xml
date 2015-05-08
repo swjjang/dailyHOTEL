@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:id="@+id/notLoginLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/gradient_window_background"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="55dp"
+            android:gravity="center"
+            android:text="1초만에 결제하는 데일리페이"
+            android:textColor="@color/textView_textColor_main"
+            android:textSize="20dp" />
+
+        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="신용카드 등록하시고 결제하시면"
+            android:textColor="@color/textView_textColor_sub"
+            android:textSize="15dp" />
+
+        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="1dp"
+            android:text="쉽고 빠르고 간편하게 결제가 가능합니다."
+            android:textColor="@color/textView_textColor_sub"
+            android:textSize="15dp" />
+
+        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="1dp"
+            android:text="이제부터는 쉽고 빠르고 간편하게"
+            android:textColor="@color/textView_textColor_sub"
+            android:textSize="15dp" />
+
+        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="1dp"
+            android:text="데일리페이로 등록하세요!"
+            android:textColor="@color/textView_textColor_sub"
+            android:textSize="15dp" />
+
+        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="2dp"
+            android:text="@string/act_credit_line5"
+            android:textColor="@color/textView_textColor_sub"
+            android:textSize="15dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                android:id="@+id/singupButton"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/shape_button_common_background"
+                android:gravity="center"
+                android:text="@string/act_credit_sign_up"
+                android:textColor="@android:color/white"
+                android:textSize="17dp" />
+
+            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                android:id="@+id/loginButton"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_above="@id/singupButton"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/shape_button_common_background"
+                android:gravity="center"
+                android:text="@string/act_credit_btn_login"
+                android:textColor="@android:color/white"
+                android:textSize="17dp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/loginLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <RadioGroup
+            android:id="@+id/creditcardRadioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:orientation="vertical" >
+
+            <com.twoheart.dailyhotel.widget.DailyCustomFontRadioButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/shape_creditcard_background"
+                android:button="@drawable/abc_btn_radio_material"
+                android:buttonTint="@color/actionbar_hamburger"
+                android:paddingLeft="50dp"
+                android:text="삼성카드\n4009-****-****-****"
+                android:textColor="@color/textView_textColor_main"
+                android:visibility="visible" />
+
+            <com.twoheart.dailyhotel.widget.DailyCustomFontRadioButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/shape_creditcard_background"
+                android:button="@drawable/abc_btn_radio_material"
+                android:buttonTint="@color/actionbar_hamburger"
+                android:paddingLeft="20dp"
+                android:text="삼성카드\n4009-****-****-****"
+                android:textColor="@color/textView_textColor_main"
+                android:visibility="gone" />
+        </RadioGroup>
+
+        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            android:id="@+id/addCreditCardButton"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/shape_button_common_background"
+            android:gravity="center"
+            android:text="신용카드 추가하기"
+            android:textColor="@android:color/white"
+            android:textSize="17dp" />
+
+        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="1dp"
+            android:text="*카드정보 및 개인정보는 일체 저장하지 않습니다."
+            android:textColor="@color/textView_textColor_sub"
+            android:textSize="15dp" />
+    </LinearLayout>
+
+</FrameLayout>

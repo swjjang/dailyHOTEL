@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
+
+    <com.twoheart.dailyhotel.widget.DailyCustomFontRadioButton
+        android:id="@+id/rb_payment_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/shape_creditcard_background"
+        android:button="@drawable/abc_btn_radio_material"
+        android:buttonTint="@color/actionbar_hamburger"
+        android:paddingLeft="20dp"
+        android:text="삼성카드\n4009-****-****-****"
+        android:textColor="@color/textView_textColor_main" />
+
+</merge>
