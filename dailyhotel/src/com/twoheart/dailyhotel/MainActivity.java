@@ -43,7 +43,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.view.KeyEvent;
@@ -68,7 +67,6 @@ import com.androidquery.util.AQUtility;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.twoheart.dailyhotel.activity.EventWebActivity;
 import com.twoheart.dailyhotel.activity.SplashActivity;
 import com.twoheart.dailyhotel.fragment.HotelMainFragment;
 import com.twoheart.dailyhotel.fragment.RatingHotelFragment;
@@ -82,7 +80,6 @@ import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
-import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
@@ -139,7 +136,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		super.onCreate(savedInstanceState);
 		ExLog.d("GCM??" + sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "NOPE"));
 
-		DailyHotelRequest.makeUrlEncoder();
+		//		DailyHotelRequest.makeUrlEncoder();
 
 		// 사용자가 선택한 언어, but 만약 사용자가 한국인인데 일본어를 선택하면 jp가 됨.
 		// 영어인 경우 - English, 한글인 경우 - 한국어
@@ -529,8 +526,9 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	{
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-		TextView eventTextView = (TextView) findViewById(R.id.titleTextView);
-		eventTextView.setText(Html.fromHtml(getString(R.string.label_event_title)));
+		// 이벤트 제거.
+		//		TextView eventTextView = (TextView) findViewById(R.id.titleTextView);
+		//		eventTextView.setText(Html.fromHtml(getString(R.string.label_event_title)));
 
 		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, 0, 0)
 		{
@@ -579,26 +577,27 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		drawerView = findViewById(R.id.left_drawer);
 		drawerList = (ListView) findViewById(R.id.drawListView);
 
-		View bannerView = findViewById(R.id.bannerView);
-
-		bannerView.setOnClickListener(new View.OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
-			{
-				drawerLayout.closeDrawer(drawerView);
-
-				mHandler.postDelayed(new Runnable()
-				{
-					@Override
-					public void run()
-					{
-						Intent i = new Intent(MainActivity.this, EventWebActivity.class);
-						startActivity(i);
-					}
-				}, 300);
-			}
-		});
+		// 이벤트 제거.
+		//		View bannerView = findViewById(R.id.bannerView);
+		//
+		//		bannerView.setOnClickListener(new View.OnClickListener()
+		//		{
+		//			@Override
+		//			public void onClick(View v)
+		//			{
+		//				drawerLayout.closeDrawer(drawerView);
+		//
+		//				mHandler.postDelayed(new Runnable()
+		//				{
+		//					@Override
+		//					public void run()
+		//					{
+		//						Intent i = new Intent(MainActivity.this, EventWebActivity.class);
+		//						startActivity(i);
+		//					}
+		//				}, 300);
+		//			}
+		//		});
 
 		menuHotelListFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_todays_hotel), R.drawable.selector_drawermenu_todayshotel, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
 		menuBookingListFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_chk_reservation), R.drawable.selector_drawermenu_reservation, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);

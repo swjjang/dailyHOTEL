@@ -105,9 +105,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	private SwitchCompat swCredit;
 	private EditText etReserverName, etReserverNumber, etReserverEmail;
 	private Drawable[] mEditTextBackground;
-	private RadioGroup rgPaymentMethod;
+	private RadioGroup rgPaymentMethod, mRegCreditCardRadioGroup;
 	private RadioButton rbPaymentAccount, rbPaymentCard, rbPaymentHp;
-	private ViewGroup mRegCreditCardLayout;
 
 	private Pay mPay;
 
@@ -177,18 +176,21 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		etReserverNumber.setEnabled(false);
 		etReserverEmail.setEnabled(false);
 
+		mRegCreditCardRadioGroup = (RadioGroup) findViewById(R.id.regCreditCardRadioGroup);
+		mRegCreditCardRadioGroup.setVisibility(View.GONE);
+
 		rgPaymentMethod = (RadioGroup) findViewById(R.id.rg_payment_method);
 		rbPaymentAccount = (RadioButton) findViewById(R.id.rb_payment_account);
 		rbPaymentCard = (RadioButton) findViewById(R.id.rb_payment_card);
 		rbPaymentHp = (RadioButton) findViewById(R.id.rb_payment_hp);
-
-		mRegCreditCardLayout = (ViewGroup) findViewById(R.id.regCreditCardLayout);
 
 		rbPaymentAccount.setOnClickListener(this);
 		rbPaymentCard.setOnClickListener(this);
 		rbPaymentHp.setOnClickListener(this);
 
 		rgPaymentMethod.setOnCheckedChangeListener(this);
+		mRegCreditCardRadioGroup.setOnCheckedChangeListener(this);
+
 		btnPay.setOnClickListener(this);
 		mAddCreditCard.setOnClickListener(this);
 		swCredit.setOnCheckedChangeListener(this);
@@ -739,19 +741,35 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	@Override
 	public void onCheckedChanged(RadioGroup group, int checkedId)
 	{
-		if (checkedId == rbPaymentCard.getId())
+		rgPaymentMethod.setOnCheckedChangeListener(null);
+		mRegCreditCardRadioGroup.setOnCheckedChangeListener(null);
+
+		rgPaymentMethod.clearCheck();
+		mRegCreditCardRadioGroup.clearCheck();
+
+		if (group.getId() == rgPaymentMethod.getId())
 		{
-			mPay.setType(Pay.Type.CARD);
-		} else if (checkedId == rbPaymentHp.getId())
+			rgPaymentMethod.check(checkedId);
+
+			if (checkedId == rbPaymentCard.getId())
+			{
+				mPay.setType(Pay.Type.CARD);
+			} else if (checkedId == rbPaymentHp.getId())
+			{
+				mPay.setType(Pay.Type.PHONE_PAY);
+			} else if (checkedId == rbPaymentAccount.getId())
+			{
+				mPay.setType(Pay.Type.VBANK);
+			}
+		} else if (group.getId() == mRegCreditCardRadioGroup.getId())
 		{
-			mPay.setType(Pay.Type.PHONE_PAY);
-		} else if (checkedId == rbPaymentAccount.getId())
-		{
-			mPay.setType(Pay.Type.VBANK);
-		} else
-		{
+			mRegCreditCardRadioGroup.check(checkedId);
+
 			mPay.setType(Pay.Type.REG_CARD);
 		}
+
+		rgPaymentMethod.setOnCheckedChangeListener(this);
+		mRegCreditCardRadioGroup.setOnCheckedChangeListener(this);
 	}
 
 	@Override
@@ -1019,7 +1037,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					// 등록된 신용카드 인경우에는 빌링 키를 추가한다.
 					if (mPay.getType() == Pay.Type.REG_CARD)
 					{
-						View radioButton = rgPaymentMethod.findViewById(rgPaymentMethod.getCheckedRadioButtonId());
+						View radioButton = mRegCreditCardRadioGroup.findViewById(mRegCreditCardRadioGroup.getCheckedRadioButtonId());
 
 						Object object = radioButton.getTag();
 
@@ -1477,26 +1495,40 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				{
 					// 등록된 카드가 없으면 신용카드 등록 버튼을 보여준다.
 					mAddCreditCard.setVisibility(View.VISIBLE);
+					mRegCreditCardRadioGroup.setVisibility(View.GONE);
 				} else
 				{
 					mAddCreditCard.setVisibility(View.GONE);
-					mRegCreditCardLayout.removeAllViews();
+					mRegCreditCardRadioGroup.setVisibility(View.VISIBLE);
+					mRegCreditCardRadioGroup.setOnCheckedChangeListener(null);
 
-					for (int i = length - 1; i >= 0; i--)
+					boolean hasChild = false;
+
+					if (mRegCreditCardRadioGroup.getChildCount() > 0)
+					{
+						hasChild = true;
+						mRegCreditCardRadioGroup.removeAllViews();
+					}
+
+					mRegCreditCardRadioGroup.setOnCheckedChangeListener(BookingActivity.this);
+
+					LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+					for (int i = 0; i < length; i++)
 					{
 						JSONObject jsonObject = jsonArray.getJSONObject(i);
 
 						// 목록에서는 빌링키가 필요없다.
 						CreditCard creditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"));
 
-						LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 						DailyCustomFontRadioButton radioButton = (DailyCustomFontRadioButton) inflater.inflate(R.layout.radiobutton_creditcard, null);
 						radioButton.setText(String.format("%s (%s)", creditCard.name, creditCard.number));
 						radioButton.setTag(creditCard);
 
-						mRegCreditCardLayout.addView(radioButton, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+						mRegCreditCardRadioGroup.addView(radioButton, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-						if (i == 0)
+						// 한번도 로딩된 적이 없으면 등록된 신용카드 처음으로 체크해준다.
+						if (hasChild == false && i == 0)
 						{
 							radioButton.setChecked(true);
 						}

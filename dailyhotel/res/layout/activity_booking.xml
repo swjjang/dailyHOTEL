@@ -445,6 +445,17 @@
                 android:textSize="15dp" />
 
             <RadioGroup
+                android:id="@+id/regCreditCardRadioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/shape_creditcard_background"
+                android:orientation="vertical"
+                android:visibility="gone" />
+
+            <RadioGroup
                 android:id="@+id/rg_payment_method"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -453,14 +464,6 @@
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="10dp"
                 android:orientation="vertical" >
-
-                <LinearLayout
-                    android:id="@+id/regCreditCardLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/shape_creditcard_background"
-                    android:orientation="vertical" >
-                </LinearLayout>
 
                 <com.twoheart.dailyhotel.widget.DailyCustomFontRadioButton
                     android:id="@+id/rb_payment_card"

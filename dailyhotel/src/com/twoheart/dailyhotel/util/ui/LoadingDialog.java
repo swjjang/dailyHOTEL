@@ -30,7 +30,7 @@ public class LoadingDialog
 		@Override
 		public void handleMessage(Message msg)
 		{
-			if (mDialog.isShowing())
+			if (mDialog != null && mDialog.isShowing())
 			{
 				mDialog.dismiss();
 			}
@@ -75,5 +75,13 @@ public class LoadingDialog
 
 		//		if (mDialog.isShowing())
 		//			mDialog.dismiss();
+	}
+
+	public void dismiss()
+	{
+		if (mDialog.isShowing() == true)
+		{
+			mDialog.dismiss();
+		}
 	}
 }

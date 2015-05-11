@@ -373,13 +373,21 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 
 		}
 
-		super.onPause();
+		unLockUI();
+		mLockUI.dismiss();
+		mLockUI = null;
 
+		super.onPause();
 	}
 
 	@Override
 	protected void onResume()
 	{
+		if (mLockUI == null)
+		{
+			mLockUI = new LoadingDialog(this);
+		}
+
 		super.onResume();
 
 		try
@@ -398,7 +406,6 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	@Override
 	protected void onStop()
 	{
-
 		// 현재 Activity에 등록된 Request를 취소한다. 
 		if (mQueue != null)
 
@@ -446,6 +453,11 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 
 		if (isFinishing() == false)
 		{
+			if (mLockUI == null)
+			{
+				mLockUI = new LoadingDialog(this);
+			}
+
 			mLockUI.show();
 		}
 
@@ -464,7 +476,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 		// pinkred_font
 		//		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
 
-		if (isFinishing() == false)
+		if (isFinishing() == false && mLockUI != null)
 		{
 			mLockUI.hide();
 		}
