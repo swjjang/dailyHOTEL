@@ -1,18 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content" >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_creditcard_background" >
 
-    <com.twoheart.dailyhotel.widget.DailyCustomFontRadioButton
-        android:id="@+id/rb_payment_card"
+    <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+        android:id="@+id/nameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="30dp"
+        android:paddingTop="26dp"
+        android:textColor="@color/textView_textColor_main"
+        android:textSize="18dp" />
+
+    <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+        android:id="@+id/numberTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/nameTextView"
         android:layout_marginBottom="20dp"
-        android:background="@drawable/shape_creditcard_background"
-        android:button="@drawable/abc_btn_radio_material"
-        android:buttonTint="@color/actionbar_hamburger"
-        android:paddingLeft="20dp"
-        android:text="삼성카드\n4009-****-****-****"
-        android:textColor="@color/textView_textColor_main" />
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:paddingTop="20dp"
+        android:textColor="@color/textView_textColor_main"
+        android:textSize="16dp" />
 
-</merge>
+    <ImageView
+        android:id="@+id/deleteImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/img_btn_close" />
+
+</RelativeLayout>

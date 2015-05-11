@@ -31,6 +31,7 @@ import android.widget.TextView;
 import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.twoheart.dailyhotel.activity.AboutActivity;
+import com.twoheart.dailyhotel.activity.CreditCardListActivity;
 import com.twoheart.dailyhotel.activity.FAQActivity;
 import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.activity.NoticeActivity;
@@ -53,6 +54,7 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 
 	private TextView tvNotice, tvHelp, tvMail, tvLogin, tvEmail, tvCall,
 			tvAbout, tvVersion;
+	private TextView mSettingCardTextView;
 	private LinearLayout llVersion, llLogin;
 	private String profileStr, loginStr;
 
@@ -76,6 +78,7 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 		tvEmail = (TextView) view.findViewById(R.id.tv_setting_email);
 		tvCall = (TextView) view.findViewById(R.id.tv_setting_call);
 		tvAbout = (TextView) view.findViewById(R.id.tv_setting_introduction);
+		mSettingCardTextView = (TextView) view.findViewById(R.id.settingCardTextView);
 
 		tvNotice.setOnClickListener(this);
 		llVersion.setOnClickListener(this);
@@ -84,6 +87,7 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 		llLogin.setOnClickListener(this);
 		tvCall.setOnClickListener(this);
 		tvAbout.setOnClickListener(this);
+		mSettingCardTextView.setOnClickListener(this);
 
 		try
 		{
@@ -116,25 +120,27 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 	@Override
 	public void onClick(View v)
 	{
-		if (v.getId() == tvNotice.getId())
+		int id = v.getId();
+
+		if (id == tvNotice.getId())
 		{
 			Intent i = new Intent(mHostActivity, NoticeActivity.class);
 			startActivity(i);
 			mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
-		} else if (v.getId() == llVersion.getId())
+		} else if (id == llVersion.getId())
 		{
 			Intent i = new Intent(mHostActivity, VersionActivity.class);
 			startActivity(i);
 			mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
-		} else if (v.getId() == tvHelp.getId())
+		} else if (id == tvHelp.getId())
 		{
 			Intent i = new Intent(mHostActivity, FAQActivity.class);
 			startActivity(i);
 			mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
-		} else if (v.getId() == tvMail.getId())
+		} else if (id == tvMail.getId())
 		{
 			Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:help@dailyhotel.co.kr"));
 			intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.mail_text_subject));
@@ -143,7 +149,7 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 
 			startActivity(Intent.createChooser(intent, getString(R.string.mail_text_dialog_title)));
 			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "mailCS", null, null);
-		} else if (v.getId() == llLogin.getId())
+		} else if (id == llLogin.getId())
 		{
 			if (tvLogin.getText().equals(getString(R.string.frag_profile)))
 			{
@@ -161,14 +167,19 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 				mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 			}
 
-		} else if (v.getId() == tvCall.getId())
+		} else if (id == tvCall.getId())
 		{
 			Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
 			startActivity(i);
 			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "inquireCS", null, null);
-		} else if (v.getId() == tvAbout.getId())
+		} else if (id == tvAbout.getId())
 		{
 			Intent i = new Intent(mHostActivity, AboutActivity.class);
+			startActivity(i);
+			mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+		} else if (id == mSettingCardTextView.getId())
+		{
+			Intent i = new Intent(mHostActivity, CreditCardListActivity.class);
 			startActivity(i);
 			mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 		}

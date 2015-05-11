@@ -444,7 +444,11 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	{
 		lockUiComponent();
 
-		mLockUI.show();
+		if (isFinishing() == false)
+		{
+			mLockUI.show();
+		}
+
 		// 만약 제한시간이 지났는데도 리퀘스트가 끝나지 않았다면 Error 발생.
 		//		handler.postDelayed(networkCheckRunner, REQUEST_EXPIRE_JUDGE);
 	}
@@ -459,7 +463,12 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 
 		// pinkred_font
 		//		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
-		mLockUI.hide();
+
+		if (isFinishing() == false)
+		{
+			mLockUI.hide();
+		}
+
 		//		handler.removeCallbacks(networkCheckRunner);
 	}
 
@@ -500,7 +509,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	@Override
 	public void onErrorResponse(VolleyError error)
 	{
-		releaseUiComponent();
+		unLockUI();
 
 		ExLog.e(error.toString());
 

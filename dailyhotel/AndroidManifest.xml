@@ -48,6 +48,7 @@
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
@@ -144,6 +145,10 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".activity.RegisterCreditCardActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.PaymentActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" >
@@ -185,6 +190,11 @@
         </activity>
         <activity
             android:name=".RegionListActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".activity.CreditCardListActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" >
         </activity>
@@ -233,6 +243,10 @@
         </receiver>
 
         <service android:name=".GcmIntentService" />
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="bd223ac8e751f29e89aacd6487b47df88384f04e" />
     </application>
 
 </manifest>

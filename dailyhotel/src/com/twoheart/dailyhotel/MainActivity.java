@@ -82,6 +82,7 @@ import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
@@ -138,7 +139,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		super.onCreate(savedInstanceState);
 		ExLog.d("GCM??" + sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "NOPE"));
 
-		//				DailyHotelRequest.makeUrlEncoder();
+		DailyHotelRequest.makeUrlEncoder();
 
 		// 사용자가 선택한 언어, but 만약 사용자가 한국인인데 일본어를 선택하면 jp가 됨.
 		// 영어인 경우 - English, 한글인 경우 - 한국어
@@ -170,7 +171,9 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		// 이전의 비정상 종료에 의한 만료된 쿠키들이 있을 수 있으므로, SplashActivity에서 자동 로그인을
 		// 처리하기 이전에 미리 이미 저장되어 있는 쿠키들을 정리한다.
 		if (CookieManager.getInstance().getCookie(URL_DAILYHOTEL_SERVER) != null)
+		{
 			VolleyHttpClient.destroyCookie();
+		}
 
 		// 스플래시 화면을 띄운다
 
@@ -368,14 +371,13 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	{
 		switch (index)
 		{
-			case 0:
-				//				return new HotelListFragment();
+			case INDEX_HOTEL_LIST_FRAGMENT:
 				return new HotelMainFragment();
-			case 1:
+			case INDEX_BOOKING_LIST_FRAGMENT:
 				return new BookingListFragment();
-			case 2:
+			case INDEX_CREDIT_FRAGMENT:
 				return new CreditFragment();
-			case 3:
+			case INDEX_SETTING_FRAGMENT:
 				return new SettingFragment();
 		}
 		return null;

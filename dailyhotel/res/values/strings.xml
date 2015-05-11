@@ -38,6 +38,7 @@
     <string name="actionbar_title_hotel_list_frag">오늘의 호텔</string>
     <string name="actionbar_title_booking_list_frag">예약확인</string>
     <string name="actionbar_title_credit_frag">적립금</string>
+    <string name="actionbar_title_reg_creditcard">신용카드 추가하기</string>
     <string name="actionbar_title_setting_frag">설정</string>
     <string name="actionbar_title_error_frag">dailyHOTEL</string>
     <string name="actionbar_title_wait_timer_frag">dailyHOTEL</string>
@@ -55,6 +56,7 @@
     <string name="actionbar_title_version_activity">버전정보</string>
     <string name="actionbar_title_zoom_map_activity">지도 확대</string>
     <string name="actionbar_title_payment_wait_activity">입금 대기</string>
+    <string name="actionbar_title_creditcard_activity">신용카드등록</string>
 
     <!-- Toast Messages -->
     <string name="toast_msg_network_status_bad">인터넷 연결을 할 수 없습니다.\n설정에서 확인해주세요.</string>
@@ -121,6 +123,8 @@
     <string name="dialog_btn_text_see">보기</string>
     <string name="dialog_btn_text_close">닫기</string>
     <string name="dialog_msg_kakao_link">공유받은 호텔이 존재하지 않습니다.</string>
+    <string name="dialog_msg_register_creditcard_cancel">신용카드 등록을 취소하시겠습니까?</string>
+    <string name="dialog_msg_delete_register_creditcard">등록된 신용카드를 삭제하시겠습니까?</string>
 
     <!-- Main Drawer Menu Titles -->
     <string name="drawer_menu_pin_title_resrvation">예약</string>
@@ -128,6 +132,7 @@
     <string name="drawer_menu_item_title_chk_reservation">예약확인</string>
     <string name="drawer_menu_pin_title_account">계정</string>
     <string name="drawer_menu_item_title_credit">적립금</string>
+    <string name="drawer_menu_item_title_reg_credit_card">신용카드등록</string>
     <string name="drawer_menu_item_title_setting">설정</string>
 
     <!-- Mail Text -->
@@ -367,13 +372,6 @@
     <string name="com_facebook_loginview_log_out_action">로그아웃</string>
     <string name="com_facebook_loginview_cancel_action">취소</string>
 
-    <!-- ACRA -->
-    <string name="crash_toast_text">예상치 못한 문제가 발생하였습니다.</string>
-    <string name="crash_dialog_title">Application 문제 리포팅</string>
-    <string name="crash_dialog_text">예상치 못한 문제가 발생했습니다. 문제의 빠른 해결을 위해 오류 데이터를 메일로 보내주세요. 확인을 누르시면 메일로 에러를 리포팅합니다.</string>
-    <string name="crash_dialog_ok_text">빠른 수정 적용하겠습니다.</string>
-    <string name="crash_dialog_comment_prompt">아래에 문제에 관한 의견을 남겨주세요.</string>
-
     <!-- Region List Activity -->
     <string name="act_list_region_select_region">지역을 선택해주세요.</string>
     <string name="act_list_region_title">지역 설정</string>
@@ -398,4 +396,13 @@
     <string name="label_seoul_area3">중구|종로구|용산구</string>
     <string name="label_seoul_area4">마포구|서대문구|은평구</string>
     <string name="label_seoul_area5">영등포구|양천구|강서구|금천구|구로구</string>
+    
+    <!-- CreditCardFragment -->
+    <string name="label_add_creditcard">+ 내 신용카드 추가하기</string>
+    <string name="message_billing_success">카드 등록이 완료되었습니다.</string>
+    <string name="message_billing_fail">카드 등록을 실패하였습니다.</string>
+    <string name="message_billing_duplicate">이미 등록된 신용카드입니다.</string>
+    <string name="message_term_info">*카드정보 및 개인정보는 일체 저장하지 않습니다.</string>
+    
+    
 </resources>

@@ -156,7 +156,6 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 					ed.putString(KEY_PREFERENCE_USER_PWD, null);
 					ed.commit();
 
-					unLockUI();
 					showToast(getString(R.string.toast_msg_failed_to_login), Toast.LENGTH_SHORT, true);
 				} else
 				{
@@ -165,6 +164,8 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 			} catch (JSONException e)
 			{
 				onError(e);
+			} finally
+			{
 				unLockUI();
 			}
 		}

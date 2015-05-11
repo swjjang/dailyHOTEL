@@ -309,12 +309,12 @@ public class DailyFloatingActionButton extends ImageButton
 
 	public void show()
 	{
-		show(true);
+		show(false);
 	}
 
 	public void hide()
 	{
-		hide(true);
+		hide(false);
 	}
 
 	public void show(boolean animate)

@@ -187,29 +187,55 @@ public class PaymentActivity extends BaseActivity implements Constants
 			return;
 		}
 
-		// 기본 결제 방식
-		String url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERVE_PAYMENT)).append('/').append(mPay.getPayType()).append("/").append(mPay.getHotelDetail().getSaleIdx()).toString();
-
-		if (mPay.getPayPrice() == 0)
+		if (mPay.getType() == Pay.Type.REG_CARD)
 		{
-			ExLog.e("GETPAAA : " + mPay.getPayPrice());
-			// 적립금으로만 결제하기 포스트
-			url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)).append('/').append(mPay.getHotelDetail().getSaleIdx()).toString();
+			StringBuilder url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERV_SESSION_BILLING)).append('/').append(mPay.getHotelDetail().getSaleIdx());
 
-			// 적립금으로만 결제하는 경우 결제창할 필요 없음
-			ArrayList<String> postParameterKey = new ArrayList<String>(Arrays.asList("saleIdx", "email", "name", "phone", "accessToken"));
-			ArrayList<String> postParameterValue = new ArrayList<String>(Arrays.asList(mPay.getHotelDetail().getSaleIdx() + "", mPay.getCustomer().getEmail(), mPay.getCustomer().getName(), mPay.getCustomer().getPhone(), mPay.getCustomer().getAccessToken()));
+			ArrayList<String> postParameterKey = new ArrayList<String>(Arrays.asList("billkey", "mileage"));
 
-			webView.postUrl(url, parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]), postParameterValue.toArray(new String[postParameterValue.size()])));
-			return;
-		} else if (mPay.isSaleCredit() == true)
+			String bonus = "0"; // 적립금
+
+			if (mPay.isSaleCredit() == true || mPay.getPayPrice() == 0)
+			{
+				// 적립금을 절대값으로 보냄..
+				try
+				{
+					bonus = String.valueOf(Math.abs(Integer.parseInt(mPay.getCredit().getBonus())));
+				} catch (Exception e)
+				{
+					ExLog.e(e.toString());
+				}
+			}
+
+			ArrayList<String> postParameterValue = new ArrayList<String>(Arrays.asList(mPay.getCustomer().mBillingKey, bonus));
+
+			webView.postUrl(url.toString(), parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]), postParameterValue.toArray(new String[postParameterValue.size()])));
+		} else
 		{
-			// 적립금 일부 사용
-			url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)).append('/').append(mPay.getPayType()).append("/").append(mPay.getHotelDetail().getSaleIdx()).append("/").append(mPay.getCredit().getBonus()).toString();
+			// 기본 결제 방식
+			String url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERVE_PAYMENT)).append('/').append(mPay.getType().name()).append("/").append(mPay.getHotelDetail().getSaleIdx()).toString();
+
+			if (mPay.getPayPrice() == 0)
+			{
+				ExLog.e("GETPAAA : " + mPay.getPayPrice());
+				// 적립금으로만 결제하기 포스트
+				url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)).append('/').append(mPay.getHotelDetail().getSaleIdx()).toString();
+
+				// 적립금으로만 결제하는 경우 결제창할 필요 없음
+				ArrayList<String> postParameterKey = new ArrayList<String>(Arrays.asList("saleIdx", "email", "name", "phone", "accessToken"));
+				ArrayList<String> postParameterValue = new ArrayList<String>(Arrays.asList(mPay.getHotelDetail().getSaleIdx() + "", mPay.getCustomer().getEmail(), mPay.getCustomer().getName(), mPay.getCustomer().getPhone(), mPay.getCustomer().getAccessToken()));
+
+				webView.postUrl(url, parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]), postParameterValue.toArray(new String[postParameterValue.size()])));
+				return;
+			} else if (mPay.isSaleCredit() == true)
+			{
+				// 적립금 일부 사용
+				url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)).append('/').append(mPay.getType().name()).append("/").append(mPay.getHotelDetail().getSaleIdx()).append("/").append(mPay.getCredit().getBonus()).toString();
+			}
+
+			ExLog.e("GET_URL : " + url); // "http://ec2global.dailyhotel.kr/goodnight/reserv/session/req/CARD/92074";
+			webView.loadUrl(url);
 		}
-
-		ExLog.e("GET_URL : " + url); // "http://ec2global.dailyhotel.kr/goodnight/reserv/session/req/CARD/92074";
-		webView.loadUrl(url);
 	}
 
 	@Override
@@ -562,12 +588,12 @@ public class PaymentActivity extends BaseActivity implements Constants
 			// view.loadUrl("javascript:window.HtmlObserver.showHTML" +
 			// "('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');");
 
-			if (mPay.getPayType().equals("PAYPAL"))
-			{
-
-				view.loadUrl("javascript:function on_cancel()" + "{ " + "var form = document.pmnt_info_form_2;" + "form.action = '/smart//etc/pay_cancel.php';" + "form.submit();" + "}");
-				view.loadUrl("javascript:(function(){" + "var payImg = (document.getElementsByClassName('space_h_auto'))[0];" + "payImg.style.cssText = payImg.style.cssText + ';background-image: url(https://www.paypalobjects.com/webstatic/en_KR/mktg/Logo/pp_cc_mark_74x46.jpg);' +" + "'background-size: 150px;' +" + "'background-repeat: no-repeat;' +" + "'background-position: center;';" + "})();");
-			}
+			//			if (mPay.getType() == Pay.Type.PAYPAL)
+			//			{
+			//
+			//				view.loadUrl("javascript:function on_cancel()" + "{ " + "var form = document.pmnt_info_form_2;" + "form.action = '/smart//etc/pay_cancel.php';" + "form.submit();" + "}");
+			//				view.loadUrl("javascript:(function(){" + "var payImg = (document.getElementsByClassName('space_h_auto'))[0];" + "payImg.style.cssText = payImg.style.cssText + ';background-image: url(https://www.paypalobjects.com/webstatic/en_KR/mktg/Logo/pp_cc_mark_74x46.jpg);' +" + "'background-size: 150px;' +" + "'background-repeat: no-repeat;' +" + "'background-position: center;';" + "})();");
+			//			}
 
 			CookieSyncManager.getInstance().sync();
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)

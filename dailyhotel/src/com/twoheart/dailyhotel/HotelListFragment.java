@@ -326,8 +326,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 			return;
 		}
 
-		ExLog.d("setFloatingActionButtonVisible : " + visible);
-
 		if (visible == true)
 		{
 			if (mHotelListAdapter != null && mHotelListAdapter.getCount() != 0)

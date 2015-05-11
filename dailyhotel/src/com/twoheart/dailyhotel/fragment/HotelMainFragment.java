@@ -311,6 +311,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 			} catch (Exception e)
 			{
 				onError(e);
+				unLockUI();
 			}
 		}
 	};

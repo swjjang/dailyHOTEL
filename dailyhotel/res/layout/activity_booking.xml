@@ -101,7 +101,6 @@
                             android:gravity="right"
                             android:textColor="@drawable/selector_textview_textcolor"
                             android:textSize="15dp" />
-
                     </LinearLayout>
                 </RelativeLayout>
 
@@ -157,7 +156,6 @@
                             android:gravity="right"
                             android:textColor="@drawable/selector_textview_textcolor"
                             android:textSize="15dp" />
-
                     </LinearLayout>
                 </RelativeLayout>
             </LinearLayout>
@@ -432,20 +430,42 @@
 
             <!-- 결제 종류 선택 -->
 
+            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                android:id="@+id/addCreditCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/shape_creditcard_background"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp"
+                android:text="@string/label_add_creditcard"
+                android:textSize="15dp" />
+
             <RadioGroup
                 android:id="@+id/rg_payment_method"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
                 android:layout_marginTop="10dp"
-                android:gravity="center"
-                android:orientation="horizontal" >
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:id="@+id/regCreditCardLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_creditcard_background"
+                    android:orientation="vertical" >
+                </LinearLayout>
 
                 <com.twoheart.dailyhotel.widget.DailyCustomFontRadioButton
                     android:id="@+id/rb_payment_card"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
                     android:button="@drawable/abc_btn_radio_material"
                     android:buttonTint="@color/actionbar_hamburger"
                     android:text="@string/act_booking_pay_card"
@@ -455,7 +475,6 @@
                     android:id="@+id/rb_payment_hp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
                     android:button="@drawable/abc_btn_radio_material"
                     android:buttonTint="@color/actionbar_hamburger"
                     android:text="@string/act_booking_pay_mobile"
