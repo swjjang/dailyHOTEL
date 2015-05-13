@@ -118,6 +118,7 @@
     <string name="dialog_btn_text_install">설치</string>
     <string name="dialog_btn_text_yes">예</string>
     <string name="dialog_btn_text_no">아니오</string>
+    <string name="dialog_btn_text_pay">결제완료</string>
     <string name="dialog_notice2">알림</string>
     <string name="dialog_title_payment">결제알림</string>
     <string name="dialog_btn_text_see">보기</string>
@@ -126,6 +127,7 @@
     <string name="dialog_msg_register_creditcard_cancel">신용카드 등록을 취소하시겠습니까?</string>
     <string name="dialog_msg_delete_register_creditcard">등록된 신용카드를 삭제하시겠습니까?</string>
     <string name="dialog_msg_error_signature">서명 내용이 부족합니다. 다시 시도해 주십시오.</string>
+    <string name="dialog_msg_payment_creditcard_confirm">결제 완료 후&lt;br/&gt;&lt;b&gt;취소나 교환 및 환불이 불가&lt;/b&gt;합니다.&lt;br/&gt;&lt;br/&gt;\'체크인 시 배정\'의 경우&lt;br/&gt;베드 타입을 보장하지 않으며&lt;/b&gt;&lt;br/&gt;2인이 투숙할 수 있는 객실로 배정됩니다.&lt;br/&gt;&lt;br/&gt;미성년자는 보호자 동반시 투숙 가능합니다.</string>
 
     <!-- Main Drawer Menu Titles -->
     <string name="drawer_menu_pin_title_resrvation">예약</string>
@@ -267,6 +269,9 @@
     <string name="act_booking_payment_info">결제가 안되시나요? 1800-9120으로 전화주세요.</string>
     <string name="action_booking_cardmanager">카드관리</string>
     <string name="label_booking_easypayment">신용카드 간편결제</string>
+    <string name="label_booking_agree_term">위의 내용에 동의하시면 서명해 주세요.</string>
+    <string name="label_booking_confirm_signature">서명 후 결제 완료</string>
+    <string name="message_booking_easypayment">결제 완료 후 취소 및 환불 불가합니다.\n</string>
 
     <!-- Payment Activity -->
     <string name="act_payment_isp_error">ISP 결제 오류</string>
@@ -392,20 +397,19 @@
     <!-- Banner -->
     <string name="label_event_title">&lt;b&gt;이벤트&lt;/b&gt; 참여하기</string>
     <string name="label_event_subtitle">데일리호텔의 이벤트에 참여하세요.</string>
-    
+
     <!-- Map -->
     <string name="label_seoul_area1">강남구|서초구|동작구|송파구|강동구</string>
     <string name="label_seoul_area2">동대문구|성동구|광진구|성북구|강북구|중랑구|노원구|도봉구</string>
     <string name="label_seoul_area3">중구|종로구|용산구</string>
     <string name="label_seoul_area4">마포구|서대문구|은평구</string>
     <string name="label_seoul_area5">영등포구|양천구|강서구|금천구|구로구</string>
-    
+
     <!-- CreditCardFragment -->
     <string name="label_add_creditcard">+ 내 신용카드 추가하기</string>
     <string name="message_billing_success">카드 등록이 완료되었습니다.</string>
     <string name="message_billing_fail">카드 등록을 실패하였습니다.</string>
     <string name="message_billing_duplicate">이미 등록된 신용카드입니다.</string>
     <string name="message_term_info">*카드정보 및 개인정보는 일체 저장하지 않습니다.</string>
-    
-    
+
 </resources>

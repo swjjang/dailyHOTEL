@@ -32,6 +32,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Hotel;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.VolleyImageLoader;
 
@@ -246,8 +247,9 @@ public class HotelInfoWindowAdapter implements InfoWindowAdapter, View.OnTouchLi
 						int x = (int) (prev_x - event.getX());
 						int y = (int) (prev_y - event.getY());
 
-						int distance = x * x + y * y;
-						if (distance > (mViewConfiguration.getScaledWindowTouchSlop() >> 1))
+						int distance = (int) Math.sqrt(x * x + y * y);
+						
+						if (distance > mViewConfiguration.getScaledWindowTouchSlop())
 						{
 							event.setAction(MotionEvent.ACTION_CANCEL);
 							onTouch(v, event);
@@ -268,6 +270,8 @@ public class HotelInfoWindowAdapter implements InfoWindowAdapter, View.OnTouchLi
 					break;
 			}
 
+			ExLog.d("mIsPressed : " + mIsPressed);
+			
 			return true;
 		}
 	};

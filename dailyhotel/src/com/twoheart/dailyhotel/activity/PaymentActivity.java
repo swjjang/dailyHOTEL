@@ -33,12 +33,14 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.view.View.OnLongClickListener;
+import android.view.Window;
 import android.webkit.CookieSyncManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
@@ -108,8 +110,6 @@ public class PaymentActivity extends BaseActivity implements Constants
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setActionBarProgressBar();
-
 		setContentView(R.layout.activity_payment);
 
 		Bundle bundle = getIntent().getExtras();
@@ -187,7 +187,7 @@ public class PaymentActivity extends BaseActivity implements Constants
 			return;
 		}
 
-		if (mPay.getType() == Pay.Type.REG_CARD)
+		if (mPay.getType() == Pay.Type.EASY_CARD)
 		{
 			StringBuilder url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERV_SESSION_BILLING)).append('/').append(mPay.getHotelDetail().getSaleIdx());
 
@@ -212,6 +212,8 @@ public class PaymentActivity extends BaseActivity implements Constants
 			webView.postUrl(url.toString(), parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]), postParameterValue.toArray(new String[postParameterValue.size()])));
 		} else
 		{
+			setActionBarProgressBar();
+			
 			// 기본 결제 방식
 			String url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERVE_PAYMENT)).append('/').append(mPay.getType().name()).append("/").append(mPay.getHotelDetail().getSaleIdx()).toString();
 
@@ -984,6 +986,11 @@ public class PaymentActivity extends BaseActivity implements Constants
 	@Override
 	public void onBackPressed()
 	{
+		if(mPay.getType() == Pay.Type.EASY_CARD)
+		{
+			return;
+		}
+		
 		OnClickListener posListener = new OnClickListener()
 		{
 			@Override

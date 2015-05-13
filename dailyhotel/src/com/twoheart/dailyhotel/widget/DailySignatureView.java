@@ -2,6 +2,9 @@ package com.twoheart.dailyhotel.widget;
 
 import java.util.ArrayList;
 
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.Util;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -16,6 +19,7 @@ import android.view.View;
 public class DailySignatureView extends View
 {
 	private static final int CONFIRM_RAIO_PERCENT_OF_SIGNATURE = 20; // 전체 화면의 25%
+	private static final int B_CURVE_COUNT_OF_POINT = 5;
 
 	private Path mPath;
 	private Paint mPaint;
@@ -63,7 +67,7 @@ public class DailySignatureView extends View
 		mPaint.setStyle(Paint.Style.STROKE);
 		mPaint.setStrokeJoin(Paint.Join.ROUND);
 		mPaint.setStrokeCap(Paint.Cap.ROUND);
-		mPaint.setStrokeWidth(5f);
+		mPaint.setStrokeWidth(7f);
 		mPaint.setColor(Color.BLACK);
 
 		mPath = new Path();
@@ -88,7 +92,7 @@ public class DailySignatureView extends View
 
 		if (mCanvas != null)
 		{
-			mCanvas.drawColor(Color.WHITE);
+			clearCanvas(mCanvas);
 		}
 
 		if (mArrayList != null)
@@ -101,6 +105,22 @@ public class DailySignatureView extends View
 			mPath.reset();
 		}
 	}
+	
+	private void clearCanvas(Canvas canvas)
+	{
+		if (canvas == null)
+		{
+			return;
+		}
+		
+		canvas.drawColor(getContext().getResources().getColor(R.color.white_a50));
+		
+		Paint paint = new Paint();
+		paint.setStrokeWidth(Util.dpToPx(getContext(), 1));
+		paint.setStyle(Paint.Style.STROKE);
+		paint.setColor(getResources().getColor(R.color.dh_theme_color));
+		canvas.drawRect(0, 0, canvas.getWidth() - paint.getStrokeWidth(), canvas.getHeight() - paint.getStrokeWidth(), paint);
+	}
 
 	@Override
 	protected void onLayout(boolean changed, int left, int top, int right, int bottom)
@@ -111,6 +131,8 @@ public class DailySignatureView extends View
 		{
 			mBitmap = Bitmap.createBitmap(right - left, bottom - top, Bitmap.Config.ARGB_8888);
 			mCanvas = new Canvas(mBitmap);
+			
+			clearCanvas(mCanvas);
 		}
 	}
 
@@ -147,7 +169,6 @@ public class DailySignatureView extends View
 			}
 
 			case MotionEvent.ACTION_MOVE:
-			case MotionEvent.ACTION_UP:
 			{
 				float x = event.getX();
 				float y = event.getY();
@@ -155,10 +176,8 @@ public class DailySignatureView extends View
 				mArrayList.add(new Point(x, y));
 				mRectF.union(x, y);
 
-				if (mArrayList.size() == 5)
+				if (mArrayList.size() >= B_CURVE_COUNT_OF_POINT)
 				{
-					mPath.reset();
-
 					Point point0 = mArrayList.get(0);
 					Point point1 = mArrayList.get(1);
 					Point point2 = mArrayList.get(2);
@@ -168,19 +187,62 @@ public class DailySignatureView extends View
 					Point point234Mid = getTringleCenter(point2, point3, point4);
 					//					Point point24Mid = new Point((point2.x + point4.x) / 2, (point2.y + point4.y) / 2);
 
-					mPath.moveTo(point0.x, point0.y);
-					mPath.cubicTo(point1.x, point1.y, point2.x, point2.y, point234Mid.x, point234Mid.y);
+					drawBCurve(point0, point1, point2, point234Mid);
 
 					mArrayList.clear();
 					mArrayList.add(point234Mid);
 					mArrayList.add(point4);
 
-					mCanvas.drawPath(mPath, mPaint);
-
 					invalidate();
 				}
+				// 사인 영역 체크 테스트 
+				//				mCanvas.drawRect(mRectF, mPaint);
+				break;
+			}
 
-				mCanvas.drawRect(mRectF, mPaint);
+			case MotionEvent.ACTION_UP:
+			{
+				switch (mArrayList.size())
+				{
+					case 4:
+					{
+						Point point0 = mArrayList.get(0);
+						Point point1 = mArrayList.get(1);
+						Point point2 = mArrayList.get(2);
+						Point point3 = mArrayList.get(3);
+
+						drawBCurve(point0, point1, point2, point3);
+						break;
+					}
+
+					case 3:
+					{
+						Point point0 = mArrayList.get(0);
+						Point point1 = mArrayList.get(1);
+						Point point2 = mArrayList.get(2);
+
+						drawBCurve(point0, point1, point2);
+						break;
+					}
+
+					case 2:
+					{
+						Point point0 = mArrayList.get(0);
+						Point point1 = mArrayList.get(1);
+
+						mCanvas.drawLine(point0.x, point0.y, point1.x, point1.y, mPaint);
+						break;
+					}
+
+					default:
+					{
+						Point point0 = mArrayList.get(0);
+						mCanvas.drawPoint(point0.x, point0.y, mPaint);
+						break;
+					}
+				}
+
+				invalidate();
 				break;
 			}
 
@@ -189,6 +251,24 @@ public class DailySignatureView extends View
 		}
 
 		return true;
+	}
+
+	private void drawBCurve(Point p1, Point p2, Point p3, Point p4)
+	{
+		mPath.reset();
+		mPath.moveTo(p1.x, p1.y);
+		mPath.cubicTo(p2.x, p2.y, p3.x, p3.y, p4.x, p4.y);
+
+		mCanvas.drawPath(mPath, mPaint);
+	}
+
+	private void drawBCurve(Point p1, Point p2, Point p3)
+	{
+		mPath.reset();
+		mPath.moveTo(p1.x, p1.y);
+		mPath.quadTo(p2.x, p2.y, p3.x, p3.y);
+
+		mCanvas.drawPath(mPath, mPaint);
 	}
 
 	private Point getTringleCenter(Point p1, Point p2, Point p3)

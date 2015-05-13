@@ -45,6 +45,7 @@ import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
@@ -282,29 +283,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 				public void onClick(DialogInterface dialog, int which)
 				{
 					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestLogout", null, null);
-					mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGOUT).toString(), null, null, null));
-					VolleyHttpClient.destroyCookie();
-
-					SharedPreferences.Editor ed = sharedPreference.edit();
-					ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
-					ed.putString(KEY_PREFERENCE_USER_ID, null);
-					ed.putString(KEY_PREFERENCE_USER_PWD, null);
-					ed.putString(KEY_PREFERENCE_GCM_ID, null);
-
-					ed.commit();
-
-					if (Session.getActiveSession() != null)
-					{
-						if (Session.getActiveSession().isOpened())
-						{
-							Session.getActiveSession().closeAndClearTokenInformation();
-							Session.setActiveSession(null);
-						}
-					}
-
-					DailyToast.showToast(ProfileActivity.this, R.string.toast_msg_logouted, Toast.LENGTH_SHORT);
-					finish();
-
+					mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGOUT).toString(), null, mUserLogoutStringResponseListener, ProfileActivity.this));
 				}
 			};
 
@@ -316,6 +295,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 	private void updateTextField()
 	{
 		lockUI();
+
 		// 사용자 정보 요청.
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserLogInfoJsonResponseListener, this));
 	}
@@ -428,6 +408,35 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 			{
 				unLockUI();
 			}
+		}
+	};
+
+	private DailyHotelStringResponseListener mUserLogoutStringResponseListener = new DailyHotelStringResponseListener()
+	{
+		@Override
+		public void onResponse(String url, String response)
+		{
+			VolleyHttpClient.destroyCookie();
+
+			SharedPreferences.Editor ed = sharedPreference.edit();
+			ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
+			ed.putString(KEY_PREFERENCE_USER_ID, null);
+			ed.putString(KEY_PREFERENCE_USER_PWD, null);
+			ed.putString(KEY_PREFERENCE_GCM_ID, null);
+
+			ed.commit();
+
+			if (Session.getActiveSession() != null)
+			{
+				if (Session.getActiveSession().isOpened())
+				{
+					Session.getActiveSession().closeAndClearTokenInformation();
+					Session.setActiveSession(null);
+				}
+			}
+
+			DailyToast.showToast(ProfileActivity.this, R.string.toast_msg_logouted, Toast.LENGTH_SHORT);
+			finish();
 		}
 	};
 

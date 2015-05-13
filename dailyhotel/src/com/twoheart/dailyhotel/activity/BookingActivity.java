@@ -521,7 +521,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		intent.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
 
 		startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PAYMENT);
-		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+		
+		if(mPay.getType() != Pay.Type.EASY_CARD)
+		{
+			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+		}
 	}
 
 	private void moveToLoginProcess()
@@ -807,7 +811,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		{
 			if (checkedId == mEasyPaymentRadioButton.getId())
 			{
-				mPay.setType(Pay.Type.REG_CARD);
+				mPay.setType(Pay.Type.EASY_CARD);
 			} else if (checkedId == rbPaymentCard.getId())
 			{
 				mPay.setType(Pay.Type.CARD);
@@ -902,7 +906,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 		switch (type)
 		{
-			case REG_CARD:
+			case EASY_CARD:
 				// 나머지의 경우에는 등록된 신용 카드인 경우.
 				dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_REGCARD, null);
 				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("radio", "choosePaymentWay", "등록된신용카드", (long) 4);
@@ -965,8 +969,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		Button btnProceed = (Button) finalCheckLayout.findViewById(R.id.btn_confirm_payment_proceed);
 		ImageView btnClose = (ImageView) finalCheckLayout.findViewById(R.id.btn_confirm_payment_close);
 
-		tvMsg.setText(Html.fromHtml(getString(R.string.dialog_msg_payment_confirm)));
-		btnProceed.setText(Html.fromHtml(getString(R.string.dialog_btn_payment_confirm)));
+		tvMsg.setText(Html.fromHtml(getString(R.string.dialog_msg_payment_creditcard_confirm)));
+		btnProceed.setText(R.string.dialog_btn_text_pay);
 
 		OnClickListener buttonOnClickListener = new OnClickListener()
 		{
@@ -982,14 +986,12 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				}
 
 				dialog.dismiss();
-				//				
-				//				lockUI();
-				//				
-				//
-				//				mAliveCallSource = "PAYMENT";
-				//				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, BookingActivity.this));
-				//				dialog.dismiss();
-				//				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "agreePayment", mPay.getHotelDetail().getHotel().getName(), (long) mHotelIdx);
+
+				lockUI();
+
+				mAliveCallSource = "PAYMENT";
+				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, BookingActivity.this));
+				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "agreePayment", mPay.getHotelDetail().getHotel().getName(), (long) mHotelIdx);
 			}
 		};
 
@@ -1206,7 +1208,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					buyer.setName(etReserverName.getText().toString());
 
 					// 등록된 신용카드 인경우에는 빌링 키를 추가한다.
-					if (mPay.getType() == Pay.Type.REG_CARD && mSelectedCreditCard != null)
+					if (mPay.getType() == Pay.Type.EASY_CARD && mSelectedCreditCard != null)
 					{
 						buyer.mBillingKey = mSelectedCreditCard.billingkey;
 					}
@@ -1458,7 +1460,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				if (result == true)
 				{
 					// 간편 결제를 시도하였으나 결제할 카드가 없는 경우.
-					if (mPay.getType() == Pay.Type.REG_CARD)
+					if (mPay.getType() == Pay.Type.EASY_CARD)
 					{
 						if (mSelectedCreditCard == null)
 						{
@@ -1670,7 +1672,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 						}
 					}
 
-					mEasyPaymentRadioButton.setText(String.format("%s (%s)", mSelectedCreditCard.name.replace("카드", ""), mSelectedCreditCard.number));
+					mEasyPaymentRadioButton.setText(String.format("%s %s", mSelectedCreditCard.name.replace("카드", ""), mSelectedCreditCard.number));
 				}
 
 			} catch (Exception e)
@@ -1724,7 +1726,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					JSONObject jsonObject = jsonArray.getJSONObject(0);
 
 					mSelectedCreditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"));
-					mEasyPaymentRadioButton.setText(String.format("%s (%s)", mSelectedCreditCard.name.replace("카드", ""), mSelectedCreditCard.number));
+					mEasyPaymentRadioButton.setText(String.format("%s %s", mSelectedCreditCard.name.replace("카드", ""), mSelectedCreditCard.number));
 
 					// final check 결제 화면을 보여준다.
 					showFinalCheckDialog();

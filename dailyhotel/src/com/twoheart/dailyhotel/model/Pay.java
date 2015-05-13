@@ -7,7 +7,7 @@ public class Pay implements Parcelable
 {
 	public enum Type
 	{
-		REG_CARD, CARD, PHONE_PAY, VBANK,
+		EASY_CARD, CARD, PHONE_PAY, VBANK,
 		//		PAYPAL
 	};
 
