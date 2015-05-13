@@ -995,18 +995,4 @@ public class PaymentActivity extends BaseActivity implements Constants
 		SimpleAlertDialog.build(PaymentActivity.this, getString(R.string.dialog_title_payment), getString(R.string.dialog_msg_chk_cancel_payment), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null).show();
 	}
 
-	@Override
-	public void lockUI()
-	{
-		mLockUI.show();
-	}
-
-	@Override
-	public void unLockUI()
-	{
-		// pinkred_font
-		//		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
-		mLockUI.hide();
-	}
-
 }

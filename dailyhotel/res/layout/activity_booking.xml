@@ -428,71 +428,73 @@
                 android:layout_height="1px"
                 android:background="@color/booking_hline" />
 
-            <!-- 결제 종류 선택 -->
-
-            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-                android:id="@+id/addCreditCard"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/shape_creditcard_background"
-                android:paddingBottom="10dp"
-                android:paddingLeft="10dp"
-                android:paddingTop="10dp"
-                android:text="@string/label_add_creditcard"
-                android:textSize="15dp" />
+                android:layout_height="wrap_content" >
 
-            <RadioGroup
-                android:id="@+id/regCreditCardRadioGroup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/shape_creditcard_background"
-                android:orientation="vertical"
-                android:visibility="gone" />
+                <!-- 카드 관리 버튼 -->
 
-            <RadioGroup
-                android:id="@+id/rg_payment_method"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="10dp"
-                android:orientation="vertical" >
-
-                <com.twoheart.dailyhotel.widget.DailyCustomFontRadioButton
-                    android:id="@+id/rb_payment_card"
+                <ImageView
+                    android:id="@+id/cardManagerButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:button="@drawable/abc_btn_radio_material"
-                    android:buttonTint="@color/actionbar_hamburger"
-                    android:text="@string/act_booking_pay_card"
-                    android:textColor="@color/textView_textColor_main" />
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/img_ic_creditcard_manager" />
 
-                <com.twoheart.dailyhotel.widget.DailyCustomFontRadioButton
-                    android:id="@+id/rb_payment_hp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:button="@drawable/abc_btn_radio_material"
-                    android:buttonTint="@color/actionbar_hamburger"
-                    android:text="@string/act_booking_pay_mobile"
-                    android:textColor="@color/textView_textColor_main" />
+                <!-- 결제 종류 선택 -->
 
-                <com.twoheart.dailyhotel.widget.DailyCustomFontRadioButton
-                    android:id="@+id/rb_payment_account"
-                    android:layout_width="wrap_content"
+                <RadioGroup
+                    android:id="@+id/rg_payment_method"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:button="@drawable/abc_btn_radio_material"
-                    android:buttonTint="@color/actionbar_hamburger"
-                    android:paddingRight="15dp"
-                    android:text="@string/act_booking_pay_account"
-                    android:textColor="@color/textView_textColor_main" />
-            </RadioGroup>
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_toLeftOf="@id/cardManagerButton"
+                    android:orientation="vertical" >
+
+                    <com.twoheart.dailyhotel.widget.DailyCustomFontRadioButton
+                        android:id="@+id/easyPaymentRadioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:button="@drawable/abc_btn_radio_material"
+                        android:buttonTint="@color/actionbar_hamburger"
+                        android:text="@string/label_booking_easypayment"
+                        android:textColor="@color/textView_textColor_main" />
+
+                    <com.twoheart.dailyhotel.widget.DailyCustomFontRadioButton
+                        android:id="@+id/rb_payment_card"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:button="@drawable/abc_btn_radio_material"
+                        android:buttonTint="@color/actionbar_hamburger"
+                        android:text="@string/act_booking_pay_card"
+                        android:textColor="@color/textView_textColor_main" />
+
+                    <com.twoheart.dailyhotel.widget.DailyCustomFontRadioButton
+                        android:id="@+id/rb_payment_hp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:button="@drawable/abc_btn_radio_material"
+                        android:buttonTint="@color/actionbar_hamburger"
+                        android:text="@string/act_booking_pay_mobile"
+                        android:textColor="@color/textView_textColor_main" />
+
+                    <com.twoheart.dailyhotel.widget.DailyCustomFontRadioButton
+                        android:id="@+id/rb_payment_account"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:button="@drawable/abc_btn_radio_material"
+                        android:buttonTint="@color/actionbar_hamburger"
+                        android:paddingRight="15dp"
+                        android:text="@string/act_booking_pay_account"
+                        android:textColor="@color/textView_textColor_main" />
+                </RadioGroup>
+            </RelativeLayout>
 
             <!-- 안내문구 -->
 

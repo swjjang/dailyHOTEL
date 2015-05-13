@@ -55,6 +55,7 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 	private TextView tvNotice, tvHelp, tvMail, tvLogin, tvEmail, tvCall,
 			tvAbout, tvVersion;
 	private TextView mSettingCardTextView;
+	private View mSettingCardLayout;
 	private LinearLayout llVersion, llLogin;
 	private String profileStr, loginStr;
 
@@ -78,6 +79,8 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 		tvEmail = (TextView) view.findViewById(R.id.tv_setting_email);
 		tvCall = (TextView) view.findViewById(R.id.tv_setting_call);
 		tvAbout = (TextView) view.findViewById(R.id.tv_setting_introduction);
+
+		mSettingCardLayout = view.findViewById(R.id.settingCardLayout);
 		mSettingCardTextView = (TextView) view.findViewById(R.id.settingCardTextView);
 
 		tvNotice.setOnClickListener(this);
@@ -246,6 +249,8 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 
 			} else
 			{
+				mSettingCardLayout.setVisibility(View.GONE);
+
 				invalidateLoginButton(false, "");
 				unLockUI();
 			}
@@ -279,6 +284,8 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 				{
 					invalidateLoginButton(true, "");
 				}
+
+				mSettingCardLayout.setVisibility(View.VISIBLE);
 
 				unLockUI();
 

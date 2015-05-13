@@ -301,6 +301,7 @@ public interface Constants
 	public static final String NAME_INTENT_EXTRA_DATA_PUSH_TYPE = "push_type";
 	public static final String NAME_INTENT_EXTRA_DATA_PUSH_MSG = "push_msg";
 	public static final String NAME_INTENT_EXTRA_DATA_REGIONMAP = "regionmap";
+	public static final String NAME_INTENT_EXTRA_DATA_CREDITCARD = "creditcard";
 
 	// Push Type
 	public static final int PUSH_TYPE_NOTICE = 0;
@@ -319,6 +320,7 @@ public interface Constants
 	public static final int CODE_REQUEST_KFTC_BANKPAY = 10;
 	public static final int CODE_REQUEST_ACTIVITY_BOOKING_DETAIL = 11;
 	public static final int CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD = 12;
+	public static final int CODE_REQUEST_ACTIVITY_CREDITCARD_MANAGER = 13;
 	public static final int CODE_REQUEST_ACTIVITY_SELECT_REGIONMAP = 10000;
 
 	// Android Activity의 Result Code들이다.

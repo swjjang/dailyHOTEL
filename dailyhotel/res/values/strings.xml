@@ -56,7 +56,7 @@
     <string name="actionbar_title_version_activity">버전정보</string>
     <string name="actionbar_title_zoom_map_activity">지도 확대</string>
     <string name="actionbar_title_payment_wait_activity">입금 대기</string>
-    <string name="actionbar_title_creditcard_activity">신용카드등록</string>
+    <string name="actionbar_title_creditcard_activity">신용카드관리</string>
 
     <!-- Toast Messages -->
     <string name="toast_msg_network_status_bad">인터넷 연결을 할 수 없습니다.\n설정에서 확인해주세요.</string>
@@ -125,6 +125,7 @@
     <string name="dialog_msg_kakao_link">공유받은 호텔이 존재하지 않습니다.</string>
     <string name="dialog_msg_register_creditcard_cancel">신용카드 등록을 취소하시겠습니까?</string>
     <string name="dialog_msg_delete_register_creditcard">등록된 신용카드를 삭제하시겠습니까?</string>
+    <string name="dialog_msg_error_signature">서명 내용이 부족합니다. 다시 시도해 주십시오.</string>
 
     <!-- Main Drawer Menu Titles -->
     <string name="drawer_menu_pin_title_resrvation">예약</string>
@@ -258,12 +259,14 @@
     <string name="act_booking_price">비용</string>
     <string name="act_booking_credit_discount">적립금 할인</string>
     <string name="act_booking_price_real">결제금액(VAT 포함)</string>
-    <string name="act_booking_pay_card">신용카드</string>
+    <string name="act_booking_pay_card">신용카드 일반결제</string>
     <string name="act_booking_pay_mobile">휴대폰</string>
     <string name="act_booking_pay_account">계좌이체</string>
     <string name="act_booking_btn_pay">결제하기</string>
     <string name="act_booking_0won">0원</string>
     <string name="act_booking_payment_info">결제가 안되시나요? 1800-9120으로 전화주세요.</string>
+    <string name="action_booking_cardmanager">카드관리</string>
+    <string name="label_booking_easypayment">신용카드 간편결제</string>
 
     <!-- Payment Activity -->
     <string name="act_payment_isp_error">ISP 결제 오류</string>

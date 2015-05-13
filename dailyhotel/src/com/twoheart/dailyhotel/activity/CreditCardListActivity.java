@@ -21,6 +21,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
@@ -32,6 +33,7 @@ import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.ui.CreditCardLayout;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
@@ -50,6 +52,7 @@ import com.twoheart.dailyhotel.util.ui.BaseActivity;
 public class CreditCardListActivity extends BaseActivity
 {
 	private CreditCardLayout mCreditCardLayout;
+	private boolean mIsPickMode;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -58,10 +61,20 @@ public class CreditCardListActivity extends BaseActivity
 
 		setContentView(R.layout.activity_creditcardlist);
 
-		initLayout();
+		Intent intent = getIntent();
+
+		if (intent != null && intent.getAction() == Intent.ACTION_PICK)
+		{
+			mIsPickMode = true;
+		} else
+		{
+			mIsPickMode = false;
+		}
+
+		initLayout(mIsPickMode);
 	}
 
-	private void initLayout()
+	private void initLayout(boolean isPickMode)
 	{
 		setActionBar(R.string.actionbar_title_creditcard_activity);
 
@@ -131,6 +144,8 @@ public class CreditCardListActivity extends BaseActivity
 		public void addCreditCard();
 
 		public void deleteCreditCard(CreditCard card);
+
+		public void onItemClick(CreditCard card);
 	}
 
 	private UserActionListener mUserActionListener = new UserActionListener()
@@ -206,6 +221,27 @@ public class CreditCardListActivity extends BaseActivity
 			};
 
 			SimpleAlertDialog.build(CreditCardListActivity.this, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_delete_register_creditcard), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null).show();
+
+			unLockUI();
+		}
+
+		@Override
+		public void onItemClick(CreditCard card)
+		{
+			if (mIsPickMode == true)
+			{
+				if (isLockUiComponent() == true)
+				{
+					return;
+				}
+
+				lockUI();
+
+				Intent intent = new Intent();
+				intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_CREDITCARD, card);
+				setResult(Activity.RESULT_OK, intent);
+				finish();
+			}
 		}
 	};
 

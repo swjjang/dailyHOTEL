@@ -77,11 +77,13 @@ public class LoadingDialog
 		//			mDialog.dismiss();
 	}
 
-	public void dismiss()
+	public void close()
 	{
 		if (mDialog.isShowing() == true)
 		{
 			mDialog.dismiss();
 		}
+
+		mDialog = null;
 	}
 }

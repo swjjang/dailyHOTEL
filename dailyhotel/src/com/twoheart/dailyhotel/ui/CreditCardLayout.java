@@ -21,6 +21,8 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListView;
@@ -101,6 +103,20 @@ public class CreditCardLayout extends FrameLayout
 	public void setUserActionListener(CreditCardListActivity.UserActionListener listener)
 	{
 		mUserActionListener = listener;
+
+		mListView.setOnItemClickListener(new OnItemClickListener()
+		{
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+			{
+				CreditCard caeditCard = mAdapter.getItem(position);
+
+				if (mUserActionListener != null)
+				{
+					mUserActionListener.onItemClick(caeditCard);
+				}
+			}
+		});
 	}
 
 	public void setCreditCardList(ArrayList<CreditCard> arrayList)

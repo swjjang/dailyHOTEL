@@ -43,6 +43,7 @@ import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.widget.DailyToast;
@@ -281,7 +282,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 				public void onClick(DialogInterface dialog, int which)
 				{
 					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestLogout", null, null);
-					mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGOUT).toString(), null, mUserLogoutJsonResponseListener, ProfileActivity.this));
+					mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGOUT).toString(), null, null, null));
 					VolleyHttpClient.destroyCookie();
 
 					SharedPreferences.Editor ed = sharedPreference.edit();
@@ -359,8 +360,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 					updateTextField();
 				} else
 				{
-					releaseUiComponent();
-
 					unLockUI();
 					DailyToast.showToast(ProfileActivity.this, msg, Toast.LENGTH_LONG);
 				}
@@ -368,16 +367,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 			{
 				onError(e);
 			}
-		}
-	};
-
-	private DailyHotelJsonResponseListener mUserLogoutJsonResponseListener = new DailyHotelJsonResponseListener()
-	{
-
-		@Override
-		public void onResponse(String url, JSONObject response)
-		{
-
 		}
 	};
 
@@ -438,7 +427,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 			} finally
 			{
 				unLockUI();
-				releaseUiComponent();
 			}
 		}
 	};

@@ -62,7 +62,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 
 	protected RequestQueue mQueue;
 
-	protected LoadingDialog mLockUI;
+	private LoadingDialog mLockUI;
 
 	private RequestFilter cancelAllRequestFilter;
 
@@ -374,7 +374,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 		}
 
 		unLockUI();
-		mLockUI.dismiss();
+		mLockUI.close();
 		mLockUI = null;
 
 		super.onPause();
@@ -471,7 +471,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	@Override
 	public void unLockUI()
 	{
-		lockUiComponent();
+		releaseUiComponent();
 
 		// pinkred_font
 		//		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
