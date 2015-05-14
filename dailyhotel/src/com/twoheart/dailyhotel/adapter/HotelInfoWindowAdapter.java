@@ -248,7 +248,7 @@ public class HotelInfoWindowAdapter implements InfoWindowAdapter, View.OnTouchLi
 						int y = (int) (prev_y - event.getY());
 
 						int distance = (int) Math.sqrt(x * x + y * y);
-						
+
 						if (distance > mViewConfiguration.getScaledWindowTouchSlop())
 						{
 							event.setAction(MotionEvent.ACTION_CANCEL);
@@ -271,7 +271,7 @@ public class HotelInfoWindowAdapter implements InfoWindowAdapter, View.OnTouchLi
 			}
 
 			ExLog.d("mIsPressed : " + mIsPressed);
-			
+
 			return true;
 		}
 	};
@@ -309,7 +309,7 @@ public class HotelInfoWindowAdapter implements InfoWindowAdapter, View.OnTouchLi
 						int y = (int) (prev_y - event.getY());
 
 						int distance = (int) Math.sqrt(x * x + y * y);
-						
+
 						if (distance > mViewConfiguration.getScaledWindowTouchSlop())
 						{
 							event.setAction(MotionEvent.ACTION_CANCEL);

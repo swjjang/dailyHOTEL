@@ -407,9 +407,9 @@
 
     <!-- CreditCardFragment -->
     <string name="label_add_creditcard">+ 내 신용카드 추가하기</string>
+    <string name="label_creditcard_introduce">1분만에 카드 등록하고\n1초만에 결제완료하세요!</string>
     <string name="message_billing_success">카드 등록이 완료되었습니다.</string>
     <string name="message_billing_fail">카드 등록을 실패하였습니다.</string>
     <string name="message_billing_duplicate">이미 등록된 신용카드입니다.</string>
-    <string name="message_term_info">*카드정보 및 개인정보는 일체 저장하지 않습니다.</string>
 
 </resources>

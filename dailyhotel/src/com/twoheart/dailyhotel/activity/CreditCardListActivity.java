@@ -53,6 +53,7 @@ public class CreditCardListActivity extends BaseActivity
 {
 	private CreditCardLayout mCreditCardLayout;
 	private boolean mIsPickMode;
+	private CreditCard mSelectedCreditCard;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -66,6 +67,7 @@ public class CreditCardListActivity extends BaseActivity
 		if (intent != null && intent.getAction() == Intent.ACTION_PICK)
 		{
 			mIsPickMode = true;
+			mSelectedCreditCard = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CREDITCARD);
 		} else
 		{
 			mIsPickMode = false;
@@ -137,10 +139,6 @@ public class CreditCardListActivity extends BaseActivity
 
 	public interface UserActionListener
 	{
-		public void onLogin();
-
-		public void onSingup();
-
 		public void addCreditCard();
 
 		public void deleteCreditCard(CreditCard card);
@@ -150,36 +148,6 @@ public class CreditCardListActivity extends BaseActivity
 
 	private UserActionListener mUserActionListener = new UserActionListener()
 	{
-
-		@Override
-		public void onLogin()
-		{
-			if (isLockUiComponent() == true)
-			{
-				return;
-			}
-
-			lockUI();
-
-			Intent intent = new Intent(CreditCardListActivity.this, LoginActivity.class);
-			startActivity(intent);
-			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-		}
-
-		@Override
-		public void onSingup()
-		{
-			if (isLockUiComponent() == true)
-			{
-				return;
-			}
-
-			lockUI();
-
-			Intent intent = new Intent(CreditCardListActivity.this, SignupActivity.class);
-			startActivity(intent);
-			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-		}
 
 		@Override
 		public void addCreditCard()
@@ -390,7 +358,13 @@ public class CreditCardListActivity extends BaseActivity
 					}
 				}
 
-				mCreditCardLayout.setCreditCardList(arrayList);
+				if (mIsPickMode == true)
+				{
+					mCreditCardLayout.setCreditCardList(arrayList, true, mSelectedCreditCard);
+				} else
+				{
+					mCreditCardLayout.setCreditCardList(arrayList);
+				}
 			} catch (Exception e)
 			{
 				onError(e);

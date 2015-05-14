@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import android.content.Context;
+import android.support.v7.internal.widget.TintRadioButton;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,8 +43,7 @@ import com.twoheart.dailyhotel.util.Util;
  */
 public class CreditCardLayout extends FrameLayout
 {
-	private ViewGroup mNotLoginLayout, mLogingLayout, mIntroductionLayout;
-	private TextView mLoginButton, mSignupButton;
+	private ViewGroup mLogingLayout, mIntroductionLayout;
 	private TextView mAddCreditCardButton;
 	private ListView mListView;
 	private CreditCardListAdapter mAdapter;
@@ -83,20 +83,15 @@ public class CreditCardLayout extends FrameLayout
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View view = inflater.inflate(R.layout.layout_creditcard, this, true);
 
-		mNotLoginLayout = (ViewGroup) view.findViewById(R.id.notLoginLayout);
 		mLogingLayout = (ViewGroup) view.findViewById(R.id.loginLayout);
 		mIntroductionLayout = (ViewGroup) mLogingLayout.findViewById(R.id.introductionLayout);
 
-		mLoginButton = (TextView) view.findViewById(R.id.loginButton);
-		mSignupButton = (TextView) view.findViewById(R.id.singupButton);
 		mAddCreditCardButton = (TextView) view.findViewById(R.id.addCreditCardButton);
 
 		mListView = (ListView) view.findViewById(R.id.creditcardListView);
 		mListView.setDivider(null);
 		mListView.setDividerHeight(Util.dpToPx(context, 20));
 
-		mLoginButton.setOnClickListener(mLoginClickListener);
-		mSignupButton.setOnClickListener(mSignupClickListener);
 		mAddCreditCardButton.setOnClickListener(mAddCreditCardClickListener);
 	}
 
@@ -121,6 +116,11 @@ public class CreditCardLayout extends FrameLayout
 
 	public void setCreditCardList(ArrayList<CreditCard> arrayList)
 	{
+		setCreditCardList(arrayList, false, null);
+	}
+
+	public void setCreditCardList(ArrayList<CreditCard> arrayList, boolean isPickMode, CreditCard selectedCreditCard)
+	{
 		if (mAdapter == null)
 		{
 			mAdapter = new CreditCardListAdapter(getContext(), R.layout.list_row_creditcard, null);
@@ -137,6 +137,19 @@ public class CreditCardLayout extends FrameLayout
 
 		mAdapter.clear();
 		mAdapter.addAll(arrayList);
+
+		if (selectedCreditCard != null)
+		{
+			mAdapter.setPickMode(isPickMode, selectedCreditCard);
+		} else
+		{
+			// 만일 선택된 카드가 없을 경우 첫번째 배열로 한다.
+			if (arrayList.size() > 0)
+			{
+				mAdapter.setPickMode(isPickMode, arrayList.get(0));
+			}
+		}
+
 		mAdapter.notifyDataSetChanged();
 	}
 
@@ -144,12 +157,10 @@ public class CreditCardLayout extends FrameLayout
 	{
 		if (isLogin)
 		{
-			mNotLoginLayout.setVisibility(View.GONE);
 			mLogingLayout.setVisibility(View.VISIBLE);
 			RenewalGaManager.getInstance(getContext()).recordScreen("creditWithLogon", "/credit-with-logon/");
 		} else
 		{
-			mNotLoginLayout.setVisibility(View.VISIBLE);
 			mLogingLayout.setVisibility(View.GONE);
 			RenewalGaManager.getInstance(getContext()).recordScreen("creditWithLogoff", "/credit-with-logoff/");
 		}
@@ -158,6 +169,9 @@ public class CreditCardLayout extends FrameLayout
 	private class CreditCardListAdapter extends ArrayAdapter<CreditCard>
 	{
 		private ArrayList<CreditCard> mArrayList;
+
+		private boolean mIsPickMode;
+		private CreditCard mSelectedCreditCard;
 
 		public CreditCardListAdapter(Context context, int textViewResourceId, ArrayList<CreditCard> arrayList)
 		{
@@ -215,6 +229,12 @@ public class CreditCardLayout extends FrameLayout
 			mArrayList.clear();
 		}
 
+		public void setPickMode(boolean isPickMode, CreditCard selectedCreditCard)
+		{
+			mIsPickMode = isPickMode;
+			mSelectedCreditCard = selectedCreditCard;
+		}
+
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent)
 		{
@@ -227,6 +247,32 @@ public class CreditCardLayout extends FrameLayout
 			}
 
 			final CreditCard card = getItem(position);
+
+			if (mIsPickMode == true)
+			{
+				TintRadioButton radioButton = (TintRadioButton) view.findViewById(R.id.selectRadioButton);
+				radioButton.setVisibility(View.VISIBLE);
+
+				radioButton.setOnClickListener(new View.OnClickListener()
+				{
+					@Override
+					public void onClick(View v)
+					{
+						if (mUserActionListener != null)
+						{
+							mUserActionListener.onItemClick(card);
+						}
+					}
+				});
+
+				if (mSelectedCreditCard != null && mSelectedCreditCard.billingkey.equals(card.billingkey) == true)
+				{
+					radioButton.setChecked(true);
+				} else
+				{
+					radioButton.setChecked(false);
+				}
+			}
 
 			TextView nameTextView = (TextView) view.findViewById(R.id.nameTextView);
 			TextView numberTextView = (TextView) view.findViewById(R.id.numberTextView);
@@ -255,30 +301,6 @@ public class CreditCardLayout extends FrameLayout
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// UI Listener
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	private View.OnClickListener mLoginClickListener = new View.OnClickListener()
-	{
-		@Override
-		public void onClick(View v)
-		{
-			if (mUserActionListener != null)
-			{
-				mUserActionListener.onLogin();
-			}
-		}
-	};
-
-	private View.OnClickListener mSignupClickListener = new View.OnClickListener()
-	{
-		@Override
-		public void onClick(View v)
-		{
-			if (mUserActionListener != null)
-			{
-				mUserActionListener.onSingup();
-			}
-		}
-	};
 
 	private View.OnClickListener mAddCreditCardClickListener = new View.OnClickListener()
 	{

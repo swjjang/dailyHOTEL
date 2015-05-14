@@ -3,100 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <LinearLayout
-        android:id="@+id/notLoginLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/gradient_window_background"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:visibility="gone" >
-
-        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="55dp"
-            android:gravity="center"
-            android:text="1초만에 결제하는 데일리페이"
-            android:textColor="@color/textView_textColor_main"
-            android:textSize="20dp" />
-
-        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="신용카드 등록하시고 결제하시면"
-            android:textColor="@color/textView_textColor_sub"
-            android:textSize="15dp" />
-
-        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingTop="1dp"
-            android:text="쉽고 빠르고 간편하게 결제가 가능합니다."
-            android:textColor="@color/textView_textColor_sub"
-            android:textSize="15dp" />
-
-        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingTop="1dp"
-            android:text="이제부터는 쉽고 빠르고 간편하게"
-            android:textColor="@color/textView_textColor_sub"
-            android:textSize="15dp" />
-
-        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingTop="1dp"
-            android:text="데일리페이로 등록하세요!"
-            android:textColor="@color/textView_textColor_sub"
-            android:textSize="15dp" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
-
-            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-                android:id="@+id/singupButton"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_alignParentBottom="true"
-                android:layout_marginBottom="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:background="@drawable/shape_button_common_background"
-                android:gravity="center"
-                android:text="@string/act_credit_sign_up"
-                android:textColor="@android:color/white"
-                android:textSize="17dp" />
-
-            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-                android:id="@+id/loginButton"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_above="@id/singupButton"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:background="@drawable/shape_button_common_background"
-                android:gravity="center"
-                android:text="@string/act_credit_btn_login"
-                android:textColor="@android:color/white"
-                android:textSize="17dp" />
-        </RelativeLayout>
-    </LinearLayout>
-
     <RelativeLayout
         android:id="@+id/loginLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone" >
+        android:visibility="visible" >
 
         <LinearLayout
             android:id="@+id/introductionLayout"
@@ -111,64 +22,16 @@
                 android:layout_marginBottom="20dp"
                 android:layout_marginTop="55dp"
                 android:gravity="center"
-                android:text="1초만에 결제하는 데일리페이"
+                 android:text="@string/label_creditcard_introduce"
                 android:textColor="@color/textView_textColor_main"
                 android:textSize="20dp" />
-
-            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="신용카드 등록하시고 결제하시면"
-                android:textColor="@color/textView_textColor_sub"
-                android:textSize="15dp" />
-
-            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingTop="1dp"
-                android:text="쉽고 빠르고 간편하게 결제가 가능합니다."
-                android:textColor="@color/textView_textColor_sub"
-                android:textSize="15dp" />
-
-            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingTop="1dp"
-                android:text="이제부터는 쉽고 빠르고 간편하게"
-                android:textColor="@color/textView_textColor_sub"
-                android:textSize="15dp" />
-
-            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingTop="1dp"
-                android:text="데일리페이로 등록하세요!"
-                android:textColor="@color/textView_textColor_sub"
-                android:textSize="15dp" />
         </LinearLayout>
-
-        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-            android:id="@+id/cardTermTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="20dp"
-            android:gravity="center"
-            android:paddingTop="1dp"
-            android:text="@string/message_term_info"
-            android:textColor="@color/textView_textColor_sub"
-            android:textSize="15dp" />
 
         <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
             android:id="@+id/addCreditCardButton"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_above="@id/cardTermTextView"
+            android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="20dp"

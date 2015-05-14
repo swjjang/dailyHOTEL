@@ -388,6 +388,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		{
 			Intent intent = new Intent(this, CreditCardListActivity.class);
 			intent.setAction(Intent.ACTION_PICK);
+			intent.putExtra(NAME_INTENT_EXTRA_DATA_CREDITCARD, mSelectedCreditCard);
+
 			startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CREDITCARD_MANAGER);
 			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 		}
@@ -521,8 +523,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		intent.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
 
 		startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PAYMENT);
-		
-		if(mPay.getType() != Pay.Type.EASY_CARD)
+
+		if (mPay.getType() != Pay.Type.EASY_CARD)
 		{
 			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 		}

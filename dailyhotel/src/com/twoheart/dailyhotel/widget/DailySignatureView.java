@@ -2,9 +2,6 @@ package com.twoheart.dailyhotel.widget;
 
 import java.util.ArrayList;
 
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.Util;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -15,6 +12,9 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.Util;
 
 public class DailySignatureView extends View
 {
@@ -105,16 +105,16 @@ public class DailySignatureView extends View
 			mPath.reset();
 		}
 	}
-	
+
 	private void clearCanvas(Canvas canvas)
 	{
 		if (canvas == null)
 		{
 			return;
 		}
-		
+
 		canvas.drawColor(getContext().getResources().getColor(R.color.white_a50));
-		
+
 		Paint paint = new Paint();
 		paint.setStrokeWidth(Util.dpToPx(getContext(), 1));
 		paint.setStyle(Paint.Style.STROKE);
@@ -131,7 +131,7 @@ public class DailySignatureView extends View
 		{
 			mBitmap = Bitmap.createBitmap(right - left, bottom - top, Bitmap.Config.ARGB_8888);
 			mCanvas = new Canvas(mBitmap);
-			
+
 			clearCanvas(mCanvas);
 		}
 	}
