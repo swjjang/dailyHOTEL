@@ -266,7 +266,9 @@
     <string name="act_booking_pay_account">계좌이체</string>
     <string name="act_booking_btn_pay">결제하기</string>
     <string name="act_booking_0won">0원</string>
-    <string name="act_booking_payment_info">결제가 안되시나요? 1800-9120으로 전화주세요.</string>
+    <string name="act_booking_payment_info01">결제가 안되시나요? </string>
+    <string name="act_booking_payment_info02">1800-9120</string>
+    <string name="act_booking_payment_info03">으로 전화주세요.</string>
     <string name="action_booking_cardmanager">카드관리</string>
     <string name="label_booking_easypayment">신용카드 간편결제</string>
     <string name="label_booking_agree_term">위의 내용에 동의하시면 서명해 주세요.</string>

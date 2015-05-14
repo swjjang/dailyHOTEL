@@ -15,12 +15,11 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 public class DailySignatureView extends View
 {
-	private static final int CONFIRM_RAIO_PERCENT_OF_SIGNATURE = 20; // 전체 화면의 25%
+	private static final int CONFIRM_RAIO_PERCENT_OF_SIGNATURE = 15; // 전체 화면의 25%
 	private static final int B_CURVE_COUNT_OF_POINT = 5;
 
 	private Path mPath;
@@ -33,7 +32,6 @@ public class DailySignatureView extends View
 
 	private int mTouchAction;
 	private boolean mIsSignatureChecked;
-	private BCurveTask mBCurveTask;
 
 	public interface OnUserActionListener
 	{
@@ -105,26 +103,6 @@ public class DailySignatureView extends View
 		return 100 * signatureDimensions / bitmapDimenions > CONFIRM_RAIO_PERCENT_OF_SIGNATURE;
 	}
 
-	//	public void clearSignature()
-	//	{
-	//		mRectF = new RectF();
-	//
-	//		if (mCanvas != null)
-	//		{
-	//			clearCanvas(mCanvas);
-	//		}
-	//
-	//		if (mArrayList != null)
-	//		{
-	//			mArrayList.clear();
-	//		}
-	//
-	//		if (mPath != null)
-	//		{
-	//			mPath.reset();
-	//		}
-	//	}
-
 	private void clearCanvas(Canvas canvas)
 	{
 		if (canvas == null)
@@ -186,8 +164,7 @@ public class DailySignatureView extends View
 					mRectF.bottom = y;
 				}
 
-				mBCurveTask = new BCurveTask();
-				mBCurveTask.execute(mArrayList);
+				new BCurveTask().execute(mArrayList);
 				break;
 			}
 
@@ -307,8 +284,6 @@ public class DailySignatureView extends View
 				}
 
 				Thread.yield();
-
-				ExLog.d("arrayList : " + arrayList.size());
 			}
 
 			return arrayList;
@@ -321,16 +296,8 @@ public class DailySignatureView extends View
 		}
 
 		@Override
-		protected void onCancelled()
-		{
-			ExLog.d("onCancelled");
-		}
-
-		@Override
 		protected void onPostExecute(ArrayList<Point> result)
 		{
-			ExLog.d("onPostExecute");
-
 			if (result == null)
 			{
 				return;

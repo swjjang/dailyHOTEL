@@ -500,12 +500,11 @@
 
             <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                 android:id="@+id/tv_card_notice"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:layout_marginRight="15dp"
                 android:gravity="right"
-                android:text="@string/act_booking_payment_info"
                 android:textColor="@color/textView_textColor_section"
                 android:textSize="12.5dp" />
 

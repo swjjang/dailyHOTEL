@@ -29,6 +29,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -37,7 +38,12 @@ import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
 import android.telephony.TelephonyManager;
 import android.text.Html;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -218,6 +224,21 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			//			rgPaymentMethod.setVisibility(View.GONE);
 			//			mPay.setType(Pay.Type.PAYPAL);
 		}
+
+		TextView linkTextView = (TextView) findViewById(R.id.tv_card_notice);
+		SpannableStringBuilder stringBuilder = new SpannableStringBuilder();
+
+		String info01 = getString(R.string.act_booking_payment_info01);
+		String info02 = getString(R.string.act_booking_payment_info02);
+
+		stringBuilder.append(info01);
+		stringBuilder.append(info02);
+		stringBuilder.append(getString(R.string.act_booking_payment_info03));
+
+		stringBuilder.setSpan(new TelophoneClickSpannable(), info01.length(), info01.length() + info02.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+		linkTextView.setText(stringBuilder);
+		linkTextView.setMovementMethod(LinkMovementMethod.getInstance());
 	}
 
 	@Override
@@ -1035,6 +1056,36 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		});
 
 		dialog.show();
+	}
+
+	private class TelophoneClickSpannable extends ClickableSpan
+	{
+		public TelophoneClickSpannable()
+		{
+		}
+
+		@Override
+		public void updateDrawState(TextPaint textPain)
+		{
+			textPain.setColor(Color.BLUE);
+			textPain.setFakeBoldText(true);
+			textPain.setUnderlineText(true);
+		}
+
+		@Override
+		public void onClick(View widget)
+		{
+			getPaymentConfirmDialog(DIALOG_CONFIRM_CALL, new View.OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "callHotel", mPay.getHotelDetail().getHotel().getName(), (long) mHotelIdx);
+					Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
+					startActivity(i);
+				}
+			}).show();
+		}
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
