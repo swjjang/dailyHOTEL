@@ -48,7 +48,7 @@ public class CreditCardLayout extends FrameLayout
 	private ListView mListView;
 	private CreditCardListAdapter mAdapter;
 
-	private CreditCardListActivity.UserActionListener mUserActionListener;
+	private CreditCardListActivity.OnUserActionListener mOnUserActionListener;
 
 	public CreditCardLayout(Context context)
 	{
@@ -95,9 +95,9 @@ public class CreditCardLayout extends FrameLayout
 		mAddCreditCardButton.setOnClickListener(mAddCreditCardClickListener);
 	}
 
-	public void setUserActionListener(CreditCardListActivity.UserActionListener listener)
+	public void setUserActionListener(CreditCardListActivity.OnUserActionListener listener)
 	{
-		mUserActionListener = listener;
+		mOnUserActionListener = listener;
 
 		mListView.setOnItemClickListener(new OnItemClickListener()
 		{
@@ -106,9 +106,9 @@ public class CreditCardLayout extends FrameLayout
 			{
 				CreditCard caeditCard = mAdapter.getItem(position);
 
-				if (mUserActionListener != null)
+				if (mOnUserActionListener != null)
 				{
-					mUserActionListener.onItemClick(caeditCard);
+					mOnUserActionListener.onItemClick(caeditCard);
 				}
 			}
 		});
@@ -258,9 +258,9 @@ public class CreditCardLayout extends FrameLayout
 					@Override
 					public void onClick(View v)
 					{
-						if (mUserActionListener != null)
+						if (mOnUserActionListener != null)
 						{
-							mUserActionListener.onItemClick(card);
+							mOnUserActionListener.onItemClick(card);
 						}
 					}
 				});
@@ -287,9 +287,9 @@ public class CreditCardLayout extends FrameLayout
 				@Override
 				public void onClick(View v)
 				{
-					if (mUserActionListener != null)
+					if (mOnUserActionListener != null)
 					{
-						mUserActionListener.deleteCreditCard(card);
+						mOnUserActionListener.deleteCreditCard(card);
 					}
 				}
 			});
@@ -307,9 +307,9 @@ public class CreditCardLayout extends FrameLayout
 		@Override
 		public void onClick(View v)
 		{
-			if (mUserActionListener != null)
+			if (mOnUserActionListener != null)
 			{
-				mUserActionListener.addCreditCard();
+				mOnUserActionListener.addCreditCard();
 			}
 		}
 	};

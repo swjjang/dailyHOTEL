@@ -81,7 +81,7 @@ public class CreditCardListActivity extends BaseActivity
 		setActionBar(R.string.actionbar_title_creditcard_activity);
 
 		mCreditCardLayout = (CreditCardLayout) findViewById(R.id.creditCardLayout);
-		mCreditCardLayout.setUserActionListener(mUserActionListener);
+		mCreditCardLayout.setUserActionListener(mOnUserActionListener);
 	}
 
 	@Override
@@ -137,7 +137,7 @@ public class CreditCardListActivity extends BaseActivity
 	// UI Listener
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public interface UserActionListener
+	public interface OnUserActionListener
 	{
 		public void addCreditCard();
 
@@ -146,7 +146,7 @@ public class CreditCardListActivity extends BaseActivity
 		public void onItemClick(CreditCard card);
 	}
 
-	private UserActionListener mUserActionListener = new UserActionListener()
+	private OnUserActionListener mOnUserActionListener = new OnUserActionListener()
 	{
 
 		@Override

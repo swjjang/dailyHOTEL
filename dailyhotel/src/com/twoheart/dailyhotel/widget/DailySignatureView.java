@@ -27,6 +27,14 @@ public class DailySignatureView extends View
 	private Canvas mCanvas;
 	private ArrayList<Point> mArrayList;
 	private RectF mRectF;
+	private OnUserActionListener mOnUserActionListener;
+
+	private boolean mIsSignatureChecked;
+
+	public interface OnUserActionListener
+	{
+		public void onConfirmSignature();
+	};
 
 	public DailySignatureView(Context context)
 	{
@@ -71,9 +79,16 @@ public class DailySignatureView extends View
 		mPaint.setColor(Color.BLACK);
 
 		mPath = new Path();
+
+		mIsSignatureChecked = false;
 	}
 
-	public boolean isSignatureChecked()
+	public void setOnUserActionListener(DailySignatureView.OnUserActionListener listener)
+	{
+		mOnUserActionListener = listener;
+	}
+
+	private boolean isSignatureChecked()
 	{
 		if (mBitmap == null)
 		{
@@ -86,25 +101,25 @@ public class DailySignatureView extends View
 		return 100 * signatureDimensions / bitmapDimenions > CONFIRM_RAIO_PERCENT_OF_SIGNATURE;
 	}
 
-	public void clearSignature()
-	{
-		mRectF = new RectF();
-
-		if (mCanvas != null)
-		{
-			clearCanvas(mCanvas);
-		}
-
-		if (mArrayList != null)
-		{
-			mArrayList.clear();
-		}
-
-		if (mPath != null)
-		{
-			mPath.reset();
-		}
-	}
+	//	public void clearSignature()
+	//	{
+	//		mRectF = new RectF();
+	//
+	//		if (mCanvas != null)
+	//		{
+	//			clearCanvas(mCanvas);
+	//		}
+	//
+	//		if (mArrayList != null)
+	//		{
+	//			mArrayList.clear();
+	//		}
+	//
+	//		if (mPath != null)
+	//		{
+	//			mPath.reset();
+	//		}
+	//	}
 
 	private void clearCanvas(Canvas canvas)
 	{
@@ -197,6 +212,16 @@ public class DailySignatureView extends View
 				}
 				// 사인 영역 체크 테스트 
 				//				mCanvas.drawRect(mRectF, mPaint);
+
+				if (mIsSignatureChecked == false && isSignatureChecked() == true)
+				{
+					mIsSignatureChecked = true;
+
+					if (mOnUserActionListener != null)
+					{
+						mOnUserActionListener.onConfirmSignature();
+					}
+				}
 				break;
 			}
 
@@ -243,6 +268,16 @@ public class DailySignatureView extends View
 				}
 
 				invalidate();
+
+				if (mIsSignatureChecked == false && isSignatureChecked() == true)
+				{
+					mIsSignatureChecked = true;
+
+					if (mOnUserActionListener != null)
+					{
+						mOnUserActionListener.onConfirmSignature();
+					}
+				}
 				break;
 			}
 

@@ -56,7 +56,6 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setActionBarProgressBar();
 
 		setContentView(R.layout.activity_regcreditcard);
 		setActionBar(R.string.actionbar_title_reg_creditcard);

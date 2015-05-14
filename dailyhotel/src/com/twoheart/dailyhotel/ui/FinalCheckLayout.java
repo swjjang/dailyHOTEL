@@ -68,21 +68,29 @@ public class FinalCheckLayout extends FrameLayout
 		mDailySignatureView = (DailySignatureView) view.findViewById(R.id.signatureView);
 	}
 
-	public boolean isSignatureChecked()
-	{
-		if (mDailySignatureView == null)
-		{
-			return false;
-		}
-
-		return mDailySignatureView.isSignatureChecked();
-	}
-
-	public void clearSignature()
+	public void setOnUserActionListener(DailySignatureView.OnUserActionListener listener)
 	{
 		if (mDailySignatureView != null)
 		{
-			mDailySignatureView.clearSignature();
+			mDailySignatureView.setOnUserActionListener(listener);
 		}
 	}
+
+	//	public boolean isSignatureChecked()
+	//	{
+	//		if (mDailySignatureView == null)
+	//		{
+	//			return false;
+	//		}
+	//
+	//		return mDailySignatureView.isSignatureChecked();
+	//	}
+	//
+	//	public void clearSignature()
+	//	{
+	//		if (mDailySignatureView != null)
+	//		{
+	//			mDailySignatureView.clearSignature();
+	//		}
+	//	}
 }

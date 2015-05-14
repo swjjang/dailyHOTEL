@@ -78,7 +78,7 @@
                     android:paddingRight="5dp" >
 
                     <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-                        android:id="@+id/tv_confirm_payment_msg"
+                        android:id="@+id/agreeSinatureTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -92,14 +92,19 @@
                         android:layout_height="200dp" />
                 </FrameLayout>
 
-                <com.twoheart.dailyhotel.widget.DailyCustomFontButton
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                     android:id="@+id/btn_confirm_payment_proceed"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/selector_background_btn_rating_hotel"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/btn_confirm_normal"
+                    android:gravity="center"
                     android:text="@string/dialog_btn_text_pay"
-                    android:textColor="@drawable/selector_textcolor_btn_rating_hotel"
-                    android:textSize="17dp" />
+                    android:textColor="@color/black_a25"
+                    android:textSize="17dp"
+                    android:visibility="visible" />
             </LinearLayout>
         </LinearLayout>
 
@@ -113,7 +118,6 @@
             android:layout_marginTop="-5dp"
             android:background="@android:color/transparent"
             android:src="@drawable/img_btn_cancel" />
-
     </RelativeLayout>
 
 </merge>

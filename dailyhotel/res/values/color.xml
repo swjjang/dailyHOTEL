@@ -44,6 +44,7 @@
 	<color name="white">#ffffff</color>
 	<color name="white_a50">#80ffffff</color>
 	<color name="black">#000000</color>
+	<color name="black_a25">#40000000</color>
 	
 	<color name="tab_text">#a6000000</color>
 	<color name="tab_subtext_selected">#ccff7a7a</color>

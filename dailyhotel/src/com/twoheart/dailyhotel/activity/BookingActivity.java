@@ -45,7 +45,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -77,6 +76,7 @@ import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
+import com.twoheart.dailyhotel.widget.DailySignatureView;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
 /**
@@ -414,7 +414,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		View view = LayoutInflater.from(this).inflate(R.layout.fragment_dialog_confirm_payment, null);
 
 		TextView tvMsg = (TextView) view.findViewById(R.id.tv_confirm_payment_msg);
-		Button btnProceed = (Button) view.findViewById(R.id.btn_confirm_payment_proceed);
+		TextView btnProceed = (TextView) view.findViewById(R.id.btn_confirm_payment_proceed);
 		ImageView btnClose = (ImageView) view.findViewById(R.id.btn_confirm_payment_close);
 
 		String msg;
@@ -968,34 +968,51 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		final FinalCheckLayout finalCheckLayout = new FinalCheckLayout(BookingActivity.this);
 
 		TextView tvMsg = (TextView) finalCheckLayout.findViewById(R.id.tv_confirm_payment_msg);
-		Button btnProceed = (Button) finalCheckLayout.findViewById(R.id.btn_confirm_payment_proceed);
+
+		final TextView agreeSinatureTextView = (TextView) finalCheckLayout.findViewById(R.id.agreeSinatureTextView);
+		final TextView btnProceed = (TextView) finalCheckLayout.findViewById(R.id.btn_confirm_payment_proceed);
 		ImageView btnClose = (ImageView) finalCheckLayout.findViewById(R.id.btn_confirm_payment_close);
 
-		tvMsg.setText(Html.fromHtml(getString(R.string.dialog_msg_payment_creditcard_confirm)));
-		btnProceed.setText(R.string.dialog_btn_text_pay);
+		btnProceed.setEnabled(false);
 
-		OnClickListener buttonOnClickListener = new OnClickListener()
+		tvMsg.setText(Html.fromHtml(getString(R.string.dialog_msg_payment_creditcard_confirm)));
+
+		finalCheckLayout.setOnUserActionListener(new DailySignatureView.OnUserActionListener()
 		{
 			@Override
-			public void onClick(View v)
+			public void onConfirmSignature()
 			{
-				if (finalCheckLayout.isSignatureChecked() == false)
+				btnProceed.setEnabled(true);
+				btnProceed.setBackgroundResource(R.drawable.shape_button_common_background);
+				btnProceed.setTextColor(getResources().getColor(R.color.white));
+
+				agreeSinatureTextView.setVisibility(View.GONE);
+
+				btnProceed.setOnClickListener(new View.OnClickListener()
 				{
-					finalCheckLayout.clearSignature();
 
-					SimpleAlertDialog.build(BookingActivity.this, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_error_signature), getString(R.string.dialog_btn_text_confirm), null).show();
-					return;
-				}
+					@Override
+					public void onClick(View v)
+					{
+						//						if (finalCheckLayout.isSignatureChecked() == false)
+						//						{
+						//							finalCheckLayout.clearSignature();
+						//		
+						//							SimpleAlertDialog.build(BookingActivity.this, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_error_signature), getString(R.string.dialog_btn_text_confirm), null).show();
+						//							return;
+						//						}
 
-				dialog.dismiss();
+						dialog.dismiss();
 
-				lockUI();
+						lockUI();
 
-				mAliveCallSource = "PAYMENT";
-				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, BookingActivity.this));
-				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "agreePayment", mPay.getHotelDetail().getHotel().getName(), (long) mHotelIdx);
+						mAliveCallSource = "PAYMENT";
+						mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, BookingActivity.this));
+						RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "agreePayment", mPay.getHotelDetail().getHotel().getName(), (long) mHotelIdx);
+					}
+				});
 			}
-		};
+		});
 
 		btnClose.setOnClickListener(new OnClickListener()
 		{
@@ -1005,8 +1022,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				dialog.dismiss();
 			}
 		});
-
-		btnProceed.setOnClickListener(buttonOnClickListener);
 
 		dialog.setContentView(finalCheckLayout);
 		dialog.setOnDismissListener(new OnDismissListener()

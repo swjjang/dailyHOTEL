@@ -210,8 +210,6 @@ public class PaymentActivity extends BaseActivity implements Constants
 			webView.postUrl(url.toString(), parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]), postParameterValue.toArray(new String[postParameterValue.size()])));
 		} else
 		{
-			setActionBarProgressBar();
-
 			// 기본 결제 방식
 			String url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERVE_PAYMENT)).append('/').append(mPay.getType().name()).append("/").append(mPay.getHotelDetail().getSaleIdx()).toString();
 

@@ -23,7 +23,6 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
@@ -35,7 +34,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
-import android.view.Window;
 import android.webkit.CookieSyncManager;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -270,14 +268,14 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	/**
 	 * 액션바에 ProgressBar를 표시할 수 있도록 셋팅한다.
 	 */
-	public void setActionBarProgressBar()
-	{
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-		{
-			supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-			setSupportProgressBarIndeterminate(true);
-		}
-	}
+	//	public void setActionBarProgressBar()
+	//	{
+	//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+	//		{
+	//			supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+	//			setSupportProgressBarIndeterminate(true);
+	//		}
+	//	}
 
 	private void setLocale(Locale locale)
 	{
