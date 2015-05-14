@@ -9,11 +9,13 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 public class DailySignatureView extends View
@@ -29,7 +31,9 @@ public class DailySignatureView extends View
 	private RectF mRectF;
 	private OnUserActionListener mOnUserActionListener;
 
+	private int mTouchAction;
 	private boolean mIsSignatureChecked;
+	private BCurveTask mBCurveTask;
 
 	public interface OnUserActionListener
 	{
@@ -68,14 +72,14 @@ public class DailySignatureView extends View
 	{
 		mRectF = new RectF();
 
-		mArrayList = new ArrayList<Point>(5);
+		mArrayList = new ArrayList<Point>(100);
 
 		mPaint = new Paint();
 		mPaint.setAntiAlias(true);
 		mPaint.setStyle(Paint.Style.STROKE);
 		mPaint.setStrokeJoin(Paint.Join.ROUND);
 		mPaint.setStrokeCap(Paint.Cap.ROUND);
-		mPaint.setStrokeWidth(7f);
+		mPaint.setStrokeWidth(5f);
 		mPaint.setColor(Color.BLACK);
 
 		mPath = new Path();
@@ -167,10 +171,11 @@ public class DailySignatureView extends View
 		{
 			case MotionEvent.ACTION_DOWN:
 			{
+				mTouchAction = MotionEvent.ACTION_DOWN;
+
 				float x = event.getX();
 				float y = event.getY();
 
-				mArrayList.clear();
 				mArrayList.add(new Point(x, y));
 
 				if (mRectF.isEmpty() == true)
@@ -180,38 +185,21 @@ public class DailySignatureView extends View
 					mRectF.right = x;
 					mRectF.bottom = y;
 				}
+
+				mBCurveTask = new BCurveTask();
+				mBCurveTask.execute(mArrayList);
 				break;
 			}
 
 			case MotionEvent.ACTION_MOVE:
 			{
+				mTouchAction = MotionEvent.ACTION_MOVE;
+
 				float x = event.getX();
 				float y = event.getY();
 
 				mArrayList.add(new Point(x, y));
 				mRectF.union(x, y);
-
-				if (mArrayList.size() >= B_CURVE_COUNT_OF_POINT)
-				{
-					Point point0 = mArrayList.get(0);
-					Point point1 = mArrayList.get(1);
-					Point point2 = mArrayList.get(2);
-					Point point3 = mArrayList.get(3);
-					Point point4 = mArrayList.get(4);
-
-					Point point234Mid = getTringleCenter(point2, point3, point4);
-					//					Point point24Mid = new Point((point2.x + point4.x) / 2, (point2.y + point4.y) / 2);
-
-					drawBCurve(point0, point1, point2, point234Mid);
-
-					mArrayList.clear();
-					mArrayList.add(point234Mid);
-					mArrayList.add(point4);
-
-					invalidate();
-				}
-				// 사인 영역 체크 테스트 
-				//				mCanvas.drawRect(mRectF, mPaint);
 
 				if (mIsSignatureChecked == false && isSignatureChecked() == true)
 				{
@@ -226,48 +214,9 @@ public class DailySignatureView extends View
 			}
 
 			case MotionEvent.ACTION_UP:
+			case MotionEvent.ACTION_CANCEL:
 			{
-				switch (mArrayList.size())
-				{
-					case 4:
-					{
-						Point point0 = mArrayList.get(0);
-						Point point1 = mArrayList.get(1);
-						Point point2 = mArrayList.get(2);
-						Point point3 = mArrayList.get(3);
-
-						drawBCurve(point0, point1, point2, point3);
-						break;
-					}
-
-					case 3:
-					{
-						Point point0 = mArrayList.get(0);
-						Point point1 = mArrayList.get(1);
-						Point point2 = mArrayList.get(2);
-
-						drawBCurve(point0, point1, point2);
-						break;
-					}
-
-					case 2:
-					{
-						Point point0 = mArrayList.get(0);
-						Point point1 = mArrayList.get(1);
-
-						mCanvas.drawLine(point0.x, point0.y, point1.x, point1.y, mPaint);
-						break;
-					}
-
-					default:
-					{
-						Point point0 = mArrayList.get(0);
-						mCanvas.drawPoint(point0.x, point0.y, mPaint);
-						break;
-					}
-				}
-
-				invalidate();
+				mTouchAction = MotionEvent.ACTION_UP;
 
 				if (mIsSignatureChecked == false && isSignatureChecked() == true)
 				{
@@ -320,6 +269,131 @@ public class DailySignatureView extends View
 		{
 			this.x = x;
 			this.y = y;
+		}
+	}
+
+	public class BCurveTask extends
+			AsyncTask<ArrayList<Point>, Integer, ArrayList<Point>>
+	{
+
+		@Override
+		protected ArrayList<Point> doInBackground(ArrayList<Point>... params)
+		{
+			ArrayList<Point> arrayList = params[0];
+
+			if (arrayList == null || arrayList.size() == 0)
+			{
+				return null;
+			}
+
+			while (mTouchAction != MotionEvent.ACTION_UP || arrayList.size() >= B_CURVE_COUNT_OF_POINT)
+			{
+				if (arrayList.size() >= B_CURVE_COUNT_OF_POINT)
+				{
+					Point point0 = arrayList.remove(0);
+					Point point1 = arrayList.remove(0);
+					Point point2 = arrayList.remove(0);
+					Point point3 = arrayList.remove(0);
+					Point point4 = arrayList.remove(0);
+
+					Point point234Mid = getTringleCenter(point2, point3, point4);
+
+					drawBCurve(point0, point1, point2, point234Mid);
+
+					arrayList.add(0, point4);
+					arrayList.add(0, point234Mid);
+
+					publishProgress(arrayList.size());
+				}
+
+				Thread.yield();
+
+				ExLog.d("arrayList : " + arrayList.size());
+			}
+
+			return arrayList;
+		}
+
+		@Override
+		protected void onProgressUpdate(Integer... values)
+		{
+			invalidate();
+		}
+
+		@Override
+		protected void onCancelled()
+		{
+			ExLog.d("onCancelled");
+		}
+
+		@Override
+		protected void onPostExecute(ArrayList<Point> result)
+		{
+			ExLog.d("onPostExecute");
+
+			if (result == null)
+			{
+				return;
+			}
+
+			int size = result.size();
+
+			if (size == 0)
+			{
+				return;
+			}
+
+			switch (size)
+			{
+				case 4:
+				{
+					Point point0 = result.remove(0);
+					Point point1 = result.remove(0);
+					Point point2 = result.remove(0);
+					Point point3 = result.remove(0);
+
+					drawBCurve(point0, point1, point2, point3);
+					break;
+				}
+
+				case 3:
+				{
+					Point point0 = result.remove(0);
+					Point point1 = result.remove(0);
+					Point point2 = result.remove(0);
+
+					drawBCurve(point0, point1, point2);
+					break;
+				}
+
+				case 2:
+				{
+					Point point0 = result.remove(0);
+					Point point1 = result.remove(0);
+
+					mCanvas.drawLine(point0.x, point0.y, point1.x, point1.y, mPaint);
+					break;
+				}
+
+				default:
+				{
+					Point point0 = result.remove(0);
+					mCanvas.drawPoint(point0.x, point0.y, mPaint);
+					break;
+				}
+			}
+
+			invalidate();
+
+			if (mIsSignatureChecked == false && isSignatureChecked() == true)
+			{
+				mIsSignatureChecked = true;
+
+				if (mOnUserActionListener != null)
+				{
+					mOnUserActionListener.onConfirmSignature();
+				}
+			}
 		}
 	}
 }

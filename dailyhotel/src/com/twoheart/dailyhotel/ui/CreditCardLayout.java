@@ -250,20 +250,28 @@ public class CreditCardLayout extends FrameLayout
 
 			if (mIsPickMode == true)
 			{
-				TintRadioButton radioButton = (TintRadioButton) view.findViewById(R.id.selectRadioButton);
-				radioButton.setVisibility(View.VISIBLE);
-
-				radioButton.setOnClickListener(new View.OnClickListener()
+				View.OnClickListener onClickListener = new View.OnClickListener()
 				{
 					@Override
 					public void onClick(View v)
 					{
+						mSelectedCreditCard = card;
+
+						notifyDataSetChanged();
+
 						if (mOnUserActionListener != null)
 						{
 							mOnUserActionListener.onItemClick(card);
 						}
 					}
-				});
+				};
+
+				TintRadioButton radioButton = (TintRadioButton) view.findViewById(R.id.selectRadioButton);
+				radioButton.setVisibility(View.VISIBLE);
+				radioButton.setOnClickListener(onClickListener);
+
+				View cardLayout = view.findViewById(R.id.cardLayout);
+				cardLayout.setOnClickListener(onClickListener);
 
 				if (mSelectedCreditCard != null && mSelectedCreditCard.billingkey.equals(card.billingkey) == true)
 				{

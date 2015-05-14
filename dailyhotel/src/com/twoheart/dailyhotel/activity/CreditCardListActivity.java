@@ -343,9 +343,16 @@ public class CreditCardListActivity extends BaseActivity
 				if (length == 0)
 				{
 					arrayList = new ArrayList<CreditCard>();
+
+					if (mIsPickMode == true)
+					{
+						mSelectedCreditCard = null;
+					}
 				} else
 				{
 					arrayList = new ArrayList<CreditCard>(length);
+
+					boolean hasCreditCard = false;
 
 					for (int i = 0; i < length; i++)
 					{
@@ -355,6 +362,20 @@ public class CreditCardListActivity extends BaseActivity
 						CreditCard creditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"));
 
 						arrayList.add(creditCard);
+
+						if (mIsPickMode == true)
+						{
+							if (mSelectedCreditCard != null && mSelectedCreditCard.billingkey.equals(creditCard.billingkey) == true)
+							{
+								hasCreditCard = true;
+								mSelectedCreditCard = creditCard;
+							}
+						}
+					}
+
+					if (mIsPickMode == true && hasCreditCard == false)
+					{
+						mSelectedCreditCard = null;
 					}
 				}
 
