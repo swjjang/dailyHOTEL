@@ -308,8 +308,9 @@ public class HotelInfoWindowAdapter implements InfoWindowAdapter, View.OnTouchLi
 						int x = (int) (prev_x - event.getX());
 						int y = (int) (prev_y - event.getY());
 
-						int distance = x * x + y * y;
-						if (distance > (mViewConfiguration.getScaledWindowTouchSlop() >> 1))
+						int distance = (int) Math.sqrt(x * x + y * y);
+						
+						if (distance > mViewConfiguration.getScaledWindowTouchSlop())
 						{
 							event.setAction(MotionEvent.ACTION_CANCEL);
 							onTouch(v, event);

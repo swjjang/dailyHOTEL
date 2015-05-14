@@ -5,7 +5,6 @@ import android.os.Parcelable;
 
 public class Customer implements Parcelable
 {
-
 	private String mEmail;
 	private String mName;
 	private String mPhone;
