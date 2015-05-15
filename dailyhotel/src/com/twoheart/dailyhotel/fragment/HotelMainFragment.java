@@ -23,6 +23,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -126,7 +129,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 		mTabIndicator.setViewPager(mFragmentViewPager.getViewPager());
 		mTabIndicator.setOnPageChangeListener(mOnPageChangeListener);
 
-		//		setHasOptionsMenu(true);//프래그먼트 내에서 옵션메뉴를 지정하기 위해 
+		setHasOptionsMenu(true);//프래그먼트 내에서 옵션메뉴를 지정하기 위해 
 
 		return view;
 	}
@@ -147,6 +150,52 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_TIME).toString(), null, mAppTimeJsonResponseListener, baseActivity));
 	}
+	
+ 	@Override
+ 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+ 	{
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+		
+		baseActivity.getMenuInflater().inflate(R.menu.actionbar_icon_map, menu);
+ 	}
+ 	
+ 	@Override
+ 	public boolean onOptionsItemSelected(MenuItem item)
+ 	{
+		switch (item.getItemId())
+		{
+			case R.id.action_map:
+			{
+				switch(mHotelViewType)
+				{
+					case LIST:
+						item.setIcon(R.drawable.img_ic_list_mini_pink);
+						item.setTitle(getString(R.string.label_list));
+						break;
+						
+					case MAP:
+						item.setIcon(R.drawable.img_ic_map_mini_pink);
+						item.setTitle(getString(R.string.label_map));
+						break;
+				}
+				
+				if(mUserActionListener != null)
+				{
+					mUserActionListener.toggleViewType();
+				}
+				return true;
+			}
+			
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+ 	}
+
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data)

@@ -14,21 +14,24 @@
         android:visibility="gone" />
 
     <RelativeLayout
-         android:id="@+id/cardLayout"
+        android:id="@+id/cardLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="15dp"
         android:layout_toRightOf="@id/selectRadioButton"
-        android:background="@drawable/shape_creditcard_background" >
+        android:background="@drawable/shape_creditcard_background"
+        android:paddingBottom="20dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="20dp" >
 
         <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
             android:id="@+id/nameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="30dp"
-            android:paddingTop="26dp"
+            android:text="신용카드"
             android:textColor="@color/textView_textColor_main"
             android:textSize="18dp" />
 
@@ -37,12 +40,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/nameTextView"
-            android:layout_marginBottom="20dp"
-            android:paddingLeft="30dp"
-            android:paddingRight="30dp"
-            android:paddingTop="20dp"
+            android:layout_marginTop="10dp"
+            android:text="ㅌㅌㅌ"
             android:textColor="@color/textView_textColor_main"
             android:textSize="16dp" />
+
     </RelativeLayout>
 
     <ImageView
@@ -50,8 +52,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="-5dp"
-        android:layout_marginTop="-5dp"
         android:src="@drawable/img_btn_cancel" />
 
 </RelativeLayout>
