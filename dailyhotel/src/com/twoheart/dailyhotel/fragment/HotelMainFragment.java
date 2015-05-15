@@ -150,52 +150,51 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_TIME).toString(), null, mAppTimeJsonResponseListener, baseActivity));
 	}
-	
- 	@Override
- 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
- 	{
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+	{
 		BaseActivity baseActivity = (BaseActivity) getActivity();
 
 		if (baseActivity == null)
 		{
 			return;
 		}
-		
+
 		baseActivity.getMenuInflater().inflate(R.menu.actionbar_icon_map, menu);
- 	}
- 	
- 	@Override
- 	public boolean onOptionsItemSelected(MenuItem item)
- 	{
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
 		switch (item.getItemId())
 		{
 			case R.id.action_map:
 			{
-				switch(mHotelViewType)
+				switch (mHotelViewType)
 				{
 					case LIST:
 						item.setIcon(R.drawable.img_ic_list_mini_pink);
 						item.setTitle(getString(R.string.label_list));
 						break;
-						
+
 					case MAP:
 						item.setIcon(R.drawable.img_ic_map_mini_pink);
 						item.setTitle(getString(R.string.label_map));
 						break;
 				}
-				
-				if(mUserActionListener != null)
+
+				if (mUserActionListener != null)
 				{
 					mUserActionListener.toggleViewType();
 				}
 				return true;
 			}
-			
+
 			default:
 				return super.onOptionsItemSelected(item);
 		}
- 	}
-
+	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data)

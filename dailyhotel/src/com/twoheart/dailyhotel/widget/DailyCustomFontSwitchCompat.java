@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.widget;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.support.v7.widget.SwitchCompat;
 import android.util.AttributeSet;
@@ -25,6 +26,8 @@ public class DailyCustomFontSwitchCompat extends SwitchCompat
 	@Override
 	public void setTypeface(Typeface tf, int style)
 	{
+		setPaintFlags(getPaintFlags() | Paint.SUBPIXEL_TEXT_FLAG);
+
 		switch (style)
 		{
 			case Typeface.NORMAL:

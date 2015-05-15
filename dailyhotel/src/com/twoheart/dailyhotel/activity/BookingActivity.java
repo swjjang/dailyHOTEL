@@ -29,7 +29,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -1067,7 +1066,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		@Override
 		public void updateDrawState(TextPaint textPain)
 		{
-			textPain.setColor(Color.BLUE);
+			textPain.setColor(getResources().getColor(R.color.booking_tel_link));
 			textPain.setFakeBoldText(true);
 			textPain.setUnderlineText(true);
 		}

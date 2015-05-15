@@ -274,6 +274,13 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 			}
 		} else if (v.getId() == R.id.btn_profile_logout)
 		{
+			if (isLockUiComponent() == true)
+			{
+				return;
+			}
+
+			lockUiComponent();
+
 			/**
 			 * 로그 아웃시 내부 저장한 유저정보 초기화
 			 */
@@ -287,8 +294,9 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 				}
 			};
 
-			SimpleAlertDialog.build(ProfileActivity.this, null, getString(R.string.dialog_msg_chk_wanna_login), getString(R.string.dialog_btn_text_logout), getString(R.string.dialog_btn_text_cancel), posListener, null).show();
+			SimpleAlertDialog.build(ProfileActivity.this, null, getString(R.string.dialog_msg_chk_wanna_login), getString(R.string.dialog_btn_text_logout), getString(R.string.dialog_btn_text_cancel), posListener, null).setCancelable(false).show();
 
+			releaseUiComponent();
 		}
 	}
 

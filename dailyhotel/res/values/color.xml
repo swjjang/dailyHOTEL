@@ -54,6 +54,7 @@
 	<color name="booking_vline">#c2c2c2</color>
 	<color name="booking_hline">#e0e0e0</color>
 	<color name="booking_hline01">#d4d4d4</color>
+	<color name="booking_tel_link">#2079b5</color>
 	
 	<color name="booking_subtext">#cc7f7f7f</color>
 	

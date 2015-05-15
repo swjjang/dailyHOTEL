@@ -36,6 +36,7 @@ import com.twoheart.dailyhotel.ui.CreditCardLayout;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
@@ -159,9 +160,40 @@ public class CreditCardListActivity extends BaseActivity
 
 			lockUI();
 
-			Intent intent = new Intent(CreditCardListActivity.this, RegisterCreditCardActivity.class);
-			startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD);
-			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+			// 세션 여부를 판단한다.
+			mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, new DailyHotelStringResponseListener()
+			{
+				@Override
+				public void onResponse(String url, String response)
+				{
+					String result = null;
+
+					unLockUI();
+
+					if (false == TextUtils.isEmpty(response))
+					{
+						result = response.trim();
+					}
+
+					if (true == "alive".equalsIgnoreCase(result))
+					{
+						Intent intent = new Intent(CreditCardListActivity.this, RegisterCreditCardActivity.class);
+						startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD);
+						overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+					} else
+					{
+						// 세션이 만료되어 재시작 요청.
+						SimpleAlertDialog.build(CreditCardListActivity.this, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_session_expired), getString(R.string.dialog_btn_text_confirm), null, new OnClickListener()
+						{
+							@Override
+							public void onClick(DialogInterface dialog, int which)
+							{
+								Util.restartApp(CreditCardListActivity.this);
+							}
+						}, null).setCancelable(false).show();
+					}
+				}
+			}, CreditCardListActivity.this));
 		}
 
 		@Override
@@ -174,23 +206,52 @@ public class CreditCardListActivity extends BaseActivity
 
 			lockUI();
 
-			// 신용카드를 삭제하시겠습니까?
-			OnClickListener posListener = new OnClickListener()
+			// 세션 여부를 판단한다.
+			mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, new DailyHotelStringResponseListener()
 			{
 				@Override
-				public void onClick(DialogInterface dialog, int which)
+				public void onResponse(String url, String response)
 				{
-					// 등록된 카드 삭제.
-					HashMap<String, String> params = new HashMap<String, String>();
-					params.put("billkey", card.billingkey);
+					String result = null;
 
-					mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_DEL).toString(), params, mUserSessionBillingCardDelJsonResponseListener, CreditCardListActivity.this));
+					unLockUI();
+
+					if (false == TextUtils.isEmpty(response))
+					{
+						result = response.trim();
+					}
+
+					if (true == "alive".equalsIgnoreCase(result))
+					{
+						// 신용카드를 삭제하시겠습니까?
+						OnClickListener posListener = new OnClickListener()
+						{
+							@Override
+							public void onClick(DialogInterface dialog, int which)
+							{
+								// 등록된 카드 삭제.
+								HashMap<String, String> params = new HashMap<String, String>();
+								params.put("billkey", card.billingkey);
+
+								mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_DEL).toString(), params, mUserSessionBillingCardDelJsonResponseListener, CreditCardListActivity.this));
+							}
+						};
+
+						SimpleAlertDialog.build(CreditCardListActivity.this, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_delete_register_creditcard), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null).show();
+					} else
+					{
+						// 세션이 만료되어 재시작 요청.
+						SimpleAlertDialog.build(CreditCardListActivity.this, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_session_expired), getString(R.string.dialog_btn_text_confirm), null, new OnClickListener()
+						{
+							@Override
+							public void onClick(DialogInterface dialog, int which)
+							{
+								Util.restartApp(CreditCardListActivity.this);
+							}
+						}, null).setCancelable(false).show();
+					}
 				}
-			};
-
-			SimpleAlertDialog.build(CreditCardListActivity.this, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_delete_register_creditcard), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null).show();
-
-			unLockUI();
+			}, CreditCardListActivity.this));
 		}
 
 		@Override

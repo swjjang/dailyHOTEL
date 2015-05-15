@@ -71,7 +71,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	//	private boolean event;
 	protected boolean mIsSelectionTop;
 	private View mEmptyView;
-	private View mFooterView;
+	//	private View mFooterView; // FooterView
 
 	private HotelMapLayout mMapLayout;
 	private HotelListMapFragment mHotelListMapFragment;
@@ -101,8 +101,9 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		mHotelListView = (PinnedSectionListView) view.findViewById(R.id.listview_hotel_list);
 
 		// 이벤트를 마지막에 넣는다.
-		mFooterView = inflater.inflate(R.layout.list_row_hotel_event, null, true);
-		mHotelListView.addFooterView(mFooterView);
+		// FooterView
+		//		mFooterView = inflater.inflate(R.layout.list_row_hotel_event, null, true);
+		//		mHotelListView.addFooterView(mFooterView);
 
 		mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
 		mEmptyView = view.findViewById(R.id.emptyView);
@@ -118,7 +119,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 			{
 			}
 		});
-		
+
 		mDailyFloatingActionButton.setVisibility(View.GONE);
 
 		mHotelViewType = HOTEL_VIEW_TYPE.LIST;
@@ -206,8 +207,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 	public void onRefreshComplete()
 	{
-		mDailyFloatingActionButton.attachToListView(mHotelListView);
-		//		setFloatingActionButtonVisible(true);
+		//		mDailyFloatingActionButton.attachToListView(mHotelListView);
 	}
 
 	/**
@@ -264,8 +264,8 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 					mHotelListMapFragment = null;
 				}
 
-//				mDailyFloatingActionButton.setVisibility(View.VISIBLE);
-//				mDailyFloatingActionButton.setImageResource(R.drawable.img_ic_map_mini);
+				//				mDailyFloatingActionButton.setVisibility(View.VISIBLE);
+				//				mDailyFloatingActionButton.setImageResource(R.drawable.img_ic_map_mini);
 
 				mPullToRefreshLayout.setVisibility(View.VISIBLE);
 				break;
@@ -282,8 +282,8 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 				mMapLayout.setMapFragment(mHotelListMapFragment);
 
-//				mDailyFloatingActionButton.setVisibility(View.VISIBLE);
-//				mDailyFloatingActionButton.setImageResource(R.drawable.img_ic_list_mini);
+				//				mDailyFloatingActionButton.setVisibility(View.VISIBLE);
+				//				mDailyFloatingActionButton.setImageResource(R.drawable.img_ic_list_mini);
 				mPullToRefreshLayout.setVisibility(View.INVISIBLE);
 				break;
 
@@ -319,24 +319,24 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 	public void setFloatingActionButtonVisible(boolean visible)
 	{
+		if (mDailyFloatingActionButton == null)
+		{
+			return;
+		}
+
 		// 일단 눈에 안보이도록 함.
 		mDailyFloatingActionButton.hide(false, true);
-		
-//		if (mDailyFloatingActionButton == null)
-//		{
-//			return;
-//		}
-//
-//		if (visible == true)
-//		{
-//			if (mHotelListAdapter != null && mHotelListAdapter.getCount() != 0)
-//			{
-//				mDailyFloatingActionButton.show(false, true);
-//			}
-//		} else
-//		{
-//			mDailyFloatingActionButton.hide(false, true);
-//		}
+		//
+		//		if (visible == true)
+		//		{
+		//			if (mHotelListAdapter != null && mHotelListAdapter.getCount() != 0)
+		//			{
+		//				mDailyFloatingActionButton.show(false, true);
+		//			}
+		//		} else
+		//		{
+		//			mDailyFloatingActionButton.hide(false, true);
+		//		}
 	}
 
 	public void refreshHotelList(boolean isSelectionTop)
@@ -597,13 +597,14 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 				} else
 				{
 					// 추후 개수는 화면에 보이는 리스트 아이템의 개수에 따라서 다르다. 
-					if (length == 1)
-					{
-						mFooterView.setVisibility(View.GONE);
-					} else
-					{
-						mFooterView.setVisibility(View.VISIBLE);
-					}
+					// FooterView
+					//					if (length == 1)
+					//					{
+					//						mFooterView.setVisibility(View.GONE);
+					//					} else
+					//					{
+					//						mFooterView.setVisibility(View.VISIBLE);
+					//					}
 
 					JSONObject jsonObject;
 
@@ -693,7 +694,8 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 					if (mIsSelectionTop == true)
 					{
 						mHotelListView.setSelection(0);
-						mDailyFloatingActionButton.detachToListView(mHotelListView);
+						// mDailyFloatingActionButton
+						//						mDailyFloatingActionButton.detachToListView(mHotelListView);
 					}
 				}
 

@@ -130,7 +130,10 @@
     <string name="dialog_msg_delete_register_creditcard">등록된 신용카드를 삭제하시겠습니까?</string>
     <string name="dialog_msg_error_signature">서명 내용이 부족합니다. 다시 시도해 주십시오.</string>
     <string name="dialog_msg_payment_creditcard_confirm">결제 완료 후&lt;br/&gt;&lt;b&gt;취소나 교환 및 환불이 불가&lt;/b&gt;합니다.&lt;br/&gt;&lt;br/&gt;\'체크인 시 배정\'의 경우&lt;br/&gt;베드 타입을 보장하지 않으며&lt;/b&gt;&lt;br/&gt;2인이 투숙할 수 있는 객실로 배정됩니다.&lt;br/&gt;&lt;br/&gt;미성년자는 보호자 동반시 투숙 가능합니다.</string>
-
+    <string name="dialog_msg_session_expired">세션이 만료되어 재시작합니다.</string>
+    
+   
+   
     <!-- Main Drawer Menu Titles -->
     <string name="drawer_menu_pin_title_resrvation">예약</string>
     <string name="drawer_menu_item_title_todays_hotel">오늘의 호텔</string>
