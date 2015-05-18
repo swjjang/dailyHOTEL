@@ -341,6 +341,8 @@ public interface Constants
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_SALES_CLOSED = 114; // 예약을 하려 버튼을 눌렀는데 주문 시간이 지난경우.
 	public static final int CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT = 201;
 
+	public static final int CODE_RESULT_ACTIVITY_SETTING_LOCATION = 210;
+
 	public static final int CODE_RESULT_PAYMENT_BILLING_SUCCSESS = 300;
 	public static final int CODE_RESULT_PAYMENT_BILLING_FAIL = 301;
 	public static final int CODE_RESULT_PAYMENT_BILLING_DUPLICATE = 302;

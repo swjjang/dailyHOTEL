@@ -216,6 +216,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 			}
 
 			case CODE_REQUEST_ACTIVITY_SELECT_REGIONMAP:
+			case CODE_RESULT_ACTIVITY_SETTING_LOCATION:
 			{
 				HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
 				currentFragment.onActivityResult(requestCode, resultCode, data);

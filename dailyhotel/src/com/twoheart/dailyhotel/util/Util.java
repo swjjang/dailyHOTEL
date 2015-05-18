@@ -104,11 +104,11 @@ public class Util implements Constants
 
 	public static void restartApp(Context context)
 	{
-		if(context == null)
+		if (context == null)
 		{
 			return;
 		}
-		
+
 		// 메모리 해지 및 기타 바탕화면으로 빠진후에 메모리가 해지 되는 경우가 있어 강제 종료후에 다시 재실행한다.
 		// 에러 후에 알람으로 다시 실행시키기.
 		AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
