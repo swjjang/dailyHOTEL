@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
+import android.location.Location;
+import android.location.LocationListener;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +24,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm;
@@ -36,6 +39,8 @@ import com.twoheart.dailyhotel.util.ui.HotelClusterRenderer;
 import com.twoheart.dailyhotel.util.ui.HotelClusterRenderer.OnSelectedClusterItemListener;
 import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
+import com.twoheart.dailyhotel.util.ui.LocationFactory;
+import com.twoheart.dailyhotel.util.ui.MyLocationMarker;
 
 public class HotelListMapFragment extends
 		com.google.android.gms.maps.SupportMapFragment implements ClusterManager.OnClusterClickListener<HotelClusterItem>, ClusterManager.OnClusterItemClickListener<HotelClusterItem>
@@ -97,13 +102,15 @@ public class HotelListMapFragment extends
 				}
 
 				mGoogleMap = googleMap;
-				mGoogleMap.setMyLocationEnabled(false);
+
+				//				mGoogleMap.setMyLocationEnabled(true);
 				mGoogleMap.getUiSettings().setMapToolbarEnabled(false);
 				mGoogleMap.getUiSettings().setRotateGesturesEnabled(false);
 				mGoogleMap.getUiSettings().setTiltGesturesEnabled(false);
 				mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
 				mGoogleMap.setOnMapClickListener(mOnMapClickListener);
 
+				relocationMyLocation();
 				relocationZoomControl();
 
 				mClusterManager = new ClusterManager<HotelClusterItem>(baseActivity, mGoogleMap);
@@ -210,8 +217,26 @@ public class HotelListMapFragment extends
 			params.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0);
 			params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
 
-			zoomControl.setPadding(zoomControl.getPaddingLeft(), Util.dpToPx(baseActivity, 10), zoomControl.getPaddingRight(), zoomControl.getPaddingBottom());
+			zoomControl.setPadding(zoomControl.getPaddingLeft(), Util.dpToPx(baseActivity, 50), zoomControl.getPaddingRight(), zoomControl.getPaddingBottom());
 			zoomControl.setLayoutParams(params);
+		}
+	}
+
+	private void relocationMyLocation()
+	{
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
+		View myLocation = getView().findViewById(0x2);
+
+		if (myLocation != null)
+		{
+			myLocation.setVisibility(View.VISIBLE);
+			myLocation.setOnClickListener(mOnMyLocationClickListener);
 		}
 	}
 
@@ -533,6 +558,60 @@ public class HotelListMapFragment extends
 	// Listener
 	////////////////////////////////////////////////////////////////////////////////
 
+	public View.OnClickListener mOnMyLocationClickListener = new View.OnClickListener()
+	{
+		@Override
+		public void onClick(View v)
+		{
+			LocationFactory.getInstance().startLocationMeasure(HotelListMapFragment.this, new LocationListener()
+			{
+
+				@Override
+				public void onStatusChanged(String provider, int status, Bundle extras)
+				{
+					// TODO Auto-generated method stub
+
+				}
+
+				@Override
+				public void onProviderEnabled(String provider)
+				{
+					// TODO Auto-generated method stub
+
+				}
+
+				@Override
+				public void onProviderDisabled(String provider)
+				{
+					// 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
+					LocationFactory.getInstance().stopLocationMeasure();
+				}
+
+				@Override
+				public void onLocationChanged(Location location)
+				{
+					BaseActivity baseActivity = (BaseActivity) getActivity();
+
+					if (baseActivity == null)
+					{
+						return;
+					}
+
+					LocationFactory.getInstance().stopLocationMeasure();
+
+					MarkerOptions markerOptions = new MarkerOptions();
+					markerOptions.icon(new MyLocationMarker(baseActivity).makeIcon());
+					markerOptions.position(new LatLng(location.getLatitude(), location.getLongitude()));
+					markerOptions.anchor(0.5f, 0.5f);
+					mGoogleMap.addMarker(markerOptions);
+
+					CameraPosition cameraPosition = new CameraPosition.Builder().target(markerOptions.getPosition()).zoom(13f).build();
+					mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+				}
+			});
+		}
+	};
+
 	private OnMapClickListener mOnMapClickListener = new OnMapClickListener()
 	{
 		@Override
@@ -658,4 +737,5 @@ public class HotelListMapFragment extends
 			}
 		}
 	};
+
 }

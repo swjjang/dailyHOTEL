@@ -53,6 +53,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
@@ -182,6 +183,20 @@ public class PaymentActivity extends BaseActivity implements Constants
 		{
 			DailyToast.showToast(PaymentActivity.this, R.string.toast_msg_failed_to_get_payment_info, Toast.LENGTH_SHORT);
 			finish();
+			return;
+		}
+
+		if (mPay.getHotelDetail().getSaleIdx() == 0)
+		{
+			// 세션이 만료되어 재시작 요청.
+			SimpleAlertDialog.build(PaymentActivity.this, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_session_expired), getString(R.string.dialog_btn_text_confirm), null, new OnClickListener()
+			{
+				@Override
+				public void onClick(DialogInterface dialog, int which)
+				{
+					Util.restartApp(PaymentActivity.this);
+				}
+			}, null).setCancelable(false).show();
 			return;
 		}
 

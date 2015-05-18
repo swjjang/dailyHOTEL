@@ -156,7 +156,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		return view;
 	}
 
-	// 호텔 클릭시
 	@Override
 	public void onItemClick(AdapterView<?> parentView, View childView, int position, long id)
 	{

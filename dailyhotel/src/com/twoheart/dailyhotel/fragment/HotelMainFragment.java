@@ -154,14 +154,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
 	{
-		BaseActivity baseActivity = (BaseActivity) getActivity();
-
-		if (baseActivity == null)
-		{
-			return;
-		}
-
-		baseActivity.getMenuInflater().inflate(R.menu.actionbar_icon_map, menu);
+		inflater.inflate(R.menu.actionbar_icon_map, menu);
 	}
 
 	@Override

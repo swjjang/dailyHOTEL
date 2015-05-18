@@ -75,6 +75,7 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
@@ -124,7 +125,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	private Intent mResIntent;
 	protected String mAliveCallSource;
 
-	private String locale;
+	//	private String locale;
 	private int mHotelIdx;
 	private boolean mIsEditMode;
 
@@ -206,23 +207,23 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		rbPaymentCard.setChecked(true);
 
 		saleTime = new SaleTime();
-		locale = sharedPreference.getString(KEY_PREFERENCE_LOCALE, null);
+		//		locale = sharedPreference.getString(KEY_PREFERENCE_LOCALE, null);
 
 		// 한글, 영문 결제 수단 지정.
-		if (locale.equals("한국어"))
-		{
-			// 적립금 부분 기본 통화 표기.
-			tvCreditValue.setText("0" + Html.fromHtml(getString(R.string.currency)));
+		//		if (locale.equals("한국어"))
+		//		{
+		// 적립금 부분 기본 통화 표기.
+		tvCreditValue.setText("0" + Html.fromHtml(getString(R.string.currency)));
 
-			rgPaymentMethod.setVisibility(View.VISIBLE);
-		} else
-		{
-			// 적립금 부분 기본 통화 표기.
-			//			tvCreditValue.setText(Html.fromHtml(getString(R.string.currency)) + "0");
-			//
-			//			rgPaymentMethod.setVisibility(View.GONE);
-			//			mPay.setType(Pay.Type.PAYPAL);
-		}
+		rgPaymentMethod.setVisibility(View.VISIBLE);
+		//		} else
+		//		{
+		// 적립금 부분 기본 통화 표기.
+		//			tvCreditValue.setText(Html.fromHtml(getString(R.string.currency)) + "0");
+		//
+		//			rgPaymentMethod.setVisibility(View.GONE);
+		//			mPay.setType(Pay.Type.PAYPAL);
+		//		}
 
 		TextView linkTextView = (TextView) findViewById(R.id.tv_card_notice);
 		SpannableStringBuilder stringBuilder = new SpannableStringBuilder();
@@ -262,10 +263,10 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 		DecimalFormat comma = new DecimalFormat("###,##0");
 
-		if (locale.equals("한국어"))
-			tvOriginalPriceValue.setText(comma.format(originalPrice) + Html.fromHtml(getString(R.string.currency)));
-		else
-			tvOriginalPriceValue.setText(Html.fromHtml(getString(R.string.currency)) + comma.format(originalPrice));
+		//		if (locale.equals("한국어"))
+		tvOriginalPriceValue.setText(comma.format(originalPrice) + Html.fromHtml(getString(R.string.currency)));
+		//		else
+		//			tvOriginalPriceValue.setText(Html.fromHtml(getString(R.string.currency)) + comma.format(originalPrice));
 
 		if (applyCredit)
 		{
@@ -275,27 +276,30 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			mPay.setOriginalPrice(originalPrice);
 
 			if (credit >= originalPrice)
+			{
 				credit = originalPrice;
-			if (locale.equals("한국어"))
-				tvCreditValue.setText("-" + comma.format(credit) + Html.fromHtml(getString(R.string.currency)));
-			else
-				tvCreditValue.setText(Html.fromHtml(getString(R.string.currency)) + "-" + comma.format(credit));
+			}
+
+			//			if (locale.equals("한국어"))
+			tvCreditValue.setText("-" + comma.format(credit) + Html.fromHtml(getString(R.string.currency)));
+			//			else
+			//				tvCreditValue.setText(Html.fromHtml(getString(R.string.currency)) + "-" + comma.format(credit));
 
 		} else
 		{
-			if (locale.equals("한국어"))
-				tvCreditValue.setText("0" + Html.fromHtml(getString(R.string.currency)));
-			else
-				tvCreditValue.setText(Html.fromHtml(getString(R.string.currency)) + "0");
+			//			if (locale.equals("한국어"))
+			tvCreditValue.setText("0" + Html.fromHtml(getString(R.string.currency)));
+			//			else
+			//				tvCreditValue.setText(Html.fromHtml(getString(R.string.currency)) + "0");
 
 			mPay.setPayPrice(originalPrice);
 			//			mPay.setOriginalPrice(originalPrice);
 		}
 
-		if (locale.equals("한국어"))
-			tvPrice.setText(comma.format(mPay.getPayPrice()) + Html.fromHtml(getString(R.string.currency)));
-		else
-			tvPrice.setText(Html.fromHtml(getString(R.string.currency)) + comma.format(mPay.getPayPrice()));
+		//		if (locale.equals("한국어"))
+		tvPrice.setText(comma.format(mPay.getPayPrice()) + Html.fromHtml(getString(R.string.currency)));
+		//		else
+		//			tvPrice.setText(Html.fromHtml(getString(R.string.currency)) + comma.format(mPay.getPayPrice()));
 
 	}
 
@@ -453,6 +457,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				msg = getString(R.string.dialog_btn_payment_no_reserve);
 
 				btnProceed.setVisibility(View.GONE);
+				buttonText = getString(R.string.dialog_btn_payment_confirm);
+				break;
+
+			case DIALOG_CONFIRM_PAYMENT_ACCOUNT:
+				msg = getString(R.string.dialog_msg_payment_confirm_account);
 				buttonText = getString(R.string.dialog_btn_payment_confirm);
 				break;
 
@@ -850,29 +859,39 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
 	{
-		if (buttonView.getId() == swCredit.getId())
+		// 앱 메모리 삭제하고 복귀하는 경우 에러가 생기는 경우가 발생하여
+		// 앱을 재부팅하는 코드 추가.
+		try
 		{
-			if (!isChecked)
+			if (buttonView.getId() == swCredit.getId())
 			{
-				// 사용안함으로 변경
-				tvOriginalPrice.setEnabled(false);
-				tvCredit.setEnabled(false);
-				tvOriginalPriceValue.setEnabled(false);
-				tvCreditValue.setEnabled(false);
-				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("toggle action", "applyCredit", "off", null);
+				if (!isChecked)
+				{
+					// 사용안함으로 변경
+					tvOriginalPrice.setEnabled(false);
+					tvCredit.setEnabled(false);
+					tvOriginalPriceValue.setEnabled(false);
+					tvCreditValue.setEnabled(false);
+					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("toggle action", "applyCredit", "off", null);
 
-			} else
-			{
-				// 사용함으로 변경
-				tvOriginalPrice.setEnabled(true);
-				tvCredit.setEnabled(true);
-				tvOriginalPriceValue.setEnabled(true);
-				tvCreditValue.setEnabled(true);
-				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("toggle action", "applyCredit", "on", null);
+				} else
+				{
+					// 사용함으로 변경
+					tvOriginalPrice.setEnabled(true);
+					tvCredit.setEnabled(true);
+					tvOriginalPriceValue.setEnabled(true);
+					tvCreditValue.setEnabled(true);
+					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("toggle action", "applyCredit", "on", null);
+				}
+
+				mPay.setSaleCredit(isChecked);
+				updatePayPrice(isChecked);
 			}
+		} catch (Exception e)
+		{
+			ExLog.d(e.toString());
 
-			mPay.setSaleCredit(isChecked);
-			updatePayPrice(isChecked);
+			Util.restartApp(BookingActivity.this);
 		}
 	}
 
@@ -1010,7 +1029,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 				btnProceed.setOnClickListener(new View.OnClickListener()
 				{
-
 					@Override
 					public void onClick(View v)
 					{
@@ -1233,10 +1251,25 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					}
 				}
 
-				// 체크인 정보 요청
-				//				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_CHECKIN).append('/').append(mPay.getHotelDetail().getSaleIdx()).toString(), null, mReserveCheckInJsonResponseListener, BookingActivity.this));
-				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_CHECKINOUT).append('/').append(mPay.getHotelDetail().getSaleIdx()).toString(), null, mReserveCheckInJsonResponseListener, BookingActivity.this));
-
+				// SailIndex가 0인 경우에 서버에 이슈가 발생할수 있다.
+				// 0인 경우 아마도 메모리에서 정보가 삭제되어 발생한듯 하다.
+				if (mPay.getHotelDetail().getSaleIdx() == 0)
+				{
+					// 세션이 만료되어 재시작 요청.
+					SimpleAlertDialog.build(BookingActivity.this, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_session_expired), getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnClickListener()
+					{
+						@Override
+						public void onClick(DialogInterface dialog, int which)
+						{
+							Util.restartApp(BookingActivity.this);
+						}
+					}, null).setCancelable(false).show();
+				} else
+				{
+					// 체크인 정보 요청
+					//				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_CHECKIN).append('/').append(mPay.getHotelDetail().getSaleIdx()).toString(), null, mReserveCheckInJsonResponseListener, BookingActivity.this));
+					mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_CHECKINOUT).append('/').append(mPay.getHotelDetail().getSaleIdx()).toString(), null, mReserveCheckInJsonResponseListener, BookingActivity.this));
+				}
 			} catch (Exception e)
 			{
 				onError(e);
@@ -1360,11 +1393,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-			if (response == null)
-			{
-				throw new NullPointerException("response == null");
-			}
-
 			long checkin = 0;
 			long checkout = 0;
 
@@ -1390,17 +1418,17 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			Calendar calendarCheckin = DailyCalendar.getInstance();
 			calendarCheckin.setTimeInMillis(checkin);
 
-			if (locale.equals("한국어") == true)
-			{
-				SimpleDateFormat formatIn = new SimpleDateFormat("M월 d일 (EEE)", Locale.KOREA);
-				formatIn.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
-				String day = formatIn.format(calendarCheckin.getTime());
+			//			if (locale.equals("한국어") == true)
+			//			{
+			SimpleDateFormat formatIn = new SimpleDateFormat("M월 d일 (EEE)", Locale.KOREA);
+			formatIn.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
+			String day = formatIn.format(calendarCheckin.getTime());
 
-				mCheckinDayTextView.setText(day);
+			mCheckinDayTextView.setText(day);
 
-				//
-				mCheckinTimeTextView.setText(calendarCheckin.get(Calendar.HOUR_OF_DAY) + "시");
-			}
+			//
+			mCheckinTimeTextView.setText(calendarCheckin.get(Calendar.HOUR_OF_DAY) + "시");
+			//			}
 
 			// CheckOut
 			Calendar calendarCheckout = DailyCalendar.getInstance();
@@ -1412,15 +1440,14 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 			mPay.setCheckOut(formatCheckout);
 
-			if (locale.equals("한국어") == true)
-			{
-				SimpleDateFormat formatOut = new SimpleDateFormat("M월 d일 (EEE)", Locale.KOREA);
-				formatOut.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
-				String day = formatOut.format(calendarCheckout.getTime());
+			//			if (locale.equals("한국어") == true)
+			//			{
+			SimpleDateFormat formatOut = new SimpleDateFormat("M월 d일 (EEE)", Locale.KOREA);
+			formatOut.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
 
-				mCheckoutDayTextView.setText(day);
-				mCheckoutTimeTextView.setText(calendarCheckout.get(Calendar.HOUR_OF_DAY) + "시");
-			}
+			mCheckoutDayTextView.setText(formatOut.format(calendarCheckout.getTime()));
+			mCheckoutTimeTextView.setText(calendarCheckout.get(Calendar.HOUR_OF_DAY) + "시");
+			//			}
 
 			// credit card 요청
 			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_INFO).toString(), null, mUserSessionBillingCardInfoJsonResponseListener, BookingActivity.this));
@@ -1451,15 +1478,15 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				int originalPrice = Integer.parseInt(mPay.getHotelDetail().getHotel().getDiscount().replaceAll(",", ""));
 				DecimalFormat comma = new DecimalFormat("###,##0");
 
-				if ("한국어".equalsIgnoreCase(locale) == true)
-				{
-					tvOriginalPriceValue.setText(comma.format(originalPrice) + Html.fromHtml(getString(R.string.currency)));
-					tvPrice.setText(comma.format(originalPrice) + Html.fromHtml(getString(R.string.currency)));
-				} else
-				{
-					tvOriginalPriceValue.setText(Html.fromHtml(getString(R.string.currency)) + comma.format(originalPrice));
-					tvPrice.setText(Html.fromHtml(getString(R.string.currency)) + comma.format(originalPrice));
-				}
+				//				if ("한국어".equalsIgnoreCase(locale) == true)
+				//				{
+				tvOriginalPriceValue.setText(comma.format(originalPrice) + Html.fromHtml(getString(R.string.currency)));
+				tvPrice.setText(comma.format(originalPrice) + Html.fromHtml(getString(R.string.currency)));
+				//				} else
+				//				{
+				//					tvOriginalPriceValue.setText(Html.fromHtml(getString(R.string.currency)) + comma.format(originalPrice));
+				//					tvPrice.setText(Html.fromHtml(getString(R.string.currency)) + comma.format(originalPrice));
+				//				}
 
 				mPay.setPayPrice(originalPrice);
 
@@ -1526,11 +1553,19 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 				if (result == true)
 				{
+					unLockUI();
+
 					// 간편 결제를 시도하였으나 결제할 카드가 없는 경우.
 					if (mPay.getType() == Pay.Type.EASY_CARD)
 					{
 						if (mSelectedCreditCard == null)
 						{
+							if (mClickView != null)
+							{
+								mClickView.setClickable(true);
+								mClickView.setEnabled(true);
+							}
+
 							Intent intent = new Intent(BookingActivity.this, RegisterCreditCardActivity.class);
 							startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD);
 							overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
