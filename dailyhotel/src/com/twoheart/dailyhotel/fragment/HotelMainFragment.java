@@ -152,7 +152,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 	}
 
 	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+	public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater)
 	{
 		inflater.inflate(R.menu.actionbar_icon_map, menu);
 	}
@@ -167,9 +167,11 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 				switch (mHotelViewType)
 				{
 					case LIST:
+					{
 						item.setIcon(R.drawable.img_ic_list_mini_pink);
 						item.setTitle(getString(R.string.label_list));
 						break;
+					}
 
 					case MAP:
 						item.setIcon(R.drawable.img_ic_map_mini_pink);

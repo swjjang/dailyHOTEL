@@ -21,7 +21,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.webkit.CookieSyncManager;
@@ -50,7 +50,6 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
 	public int m_nStat = PROGRESS_STAT_NOT_START;
 
 	private WebView webView;
-	private final Handler handler = new Handler();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -214,13 +213,11 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
 		{
 		}
 
-		// 서버로부터 받은 결제 결과 메시지를 처리함.
-		// 각각의 경우에 맞는 resultCode를 넣어 BookingActivity로 finish시킴.
 		@JavascriptInterface
-		public void feed(final String msg)
+		public void feed(String msg)
 		{
 			int resultCode = 0;
-			ExLog.d("FEED : " + msg);
+			Intent payData = new Intent();
 
 			if ("PAYMENT_BILLING_SUCCSESS".equals(msg) == true)
 			{
@@ -232,9 +229,18 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
 			// else if ("PAYMENT_BILLING_FAIL".equals(msg) == true)
 			{
 				resultCode = CODE_RESULT_PAYMENT_BILLING_FAIL;
+
+				String[] splits = msg.split("\\|");
+
+				if (splits.length > 1)
+				{
+					if (TextUtils.isEmpty(splits[1]) == false)
+					{
+						payData.putExtra(NAME_INTENT_EXTRA_DATA_MESSAGE, splits[1]);
+					}
+				}
 			}
 
-			Intent payData = new Intent();
 			setResult(resultCode, payData);
 			finish();
 		}

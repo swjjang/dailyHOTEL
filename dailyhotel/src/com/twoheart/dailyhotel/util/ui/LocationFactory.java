@@ -12,7 +12,6 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.widget.ImageView;
@@ -219,9 +218,11 @@ public class LocationFactory
 		mHandler.removeMessages(1);
 		mHandler.removeMessages(2);
 
+		mHandler.sendEmptyMessage(2);
+
 		mIsMeasuringLocation = false;
 
-		if (mLocationManager != null && mOnLocationListener != null)
+		if (mLocationManager != null)// && mOnLocationListener != null)
 		{
 			//			mLocationManager.removeUpdates(mOnLocationListener);
 			mLocationManager.removeUpdates(mUpdatePendingIntent);
@@ -292,51 +293,51 @@ public class LocationFactory
 	// Listener
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	private LocationListener mOnLocationListener = new LocationListener()
-	{
-		@Override
-		public void onStatusChanged(String provider, int status, Bundle extras)
-		{
-			if (mLocationListener != null)
-			{
-				mLocationListener.onStatusChanged(provider, status, extras);
-			}
-		}
-
-		@Override
-		public void onProviderEnabled(String provider)
-		{
-			if (mLocationListener != null)
-			{
-				mLocationListener.onProviderEnabled(provider);
-			}
-		}
-
-		@Override
-		public void onProviderDisabled(String provider)
-		{
-			mIsMeasuringLocation = false;
-
-			if (mLocationListener != null)
-			{
-				mLocationListener.onProviderDisabled(provider);
-			}
-		}
-
-		@Override
-		public void onLocationChanged(Location location)
-		{
-			if (isBetterLocation(location, mLocation))
-			{
-				mLocation = location;
-			}
-
-			mIsMeasuringLocation = false;
-
-			if (mLocationListener != null)
-			{
-				mLocationListener.onLocationChanged(mLocation);
-			}
-		}
-	};
+	//	private LocationListener mOnLocationListener = new LocationListener()
+	//	{
+	//		@Override
+	//		public void onStatusChanged(String provider, int status, Bundle extras)
+	//		{
+	//			if (mLocationListener != null)
+	//			{
+	//				mLocationListener.onStatusChanged(provider, status, extras);
+	//			}
+	//		}
+	//
+	//		@Override
+	//		public void onProviderEnabled(String provider)
+	//		{
+	//			if (mLocationListener != null)
+	//			{
+	//				mLocationListener.onProviderEnabled(provider);
+	//			}
+	//		}
+	//
+	//		@Override
+	//		public void onProviderDisabled(String provider)
+	//		{
+	//			mIsMeasuringLocation = false;
+	//
+	//			if (mLocationListener != null)
+	//			{
+	//				mLocationListener.onProviderDisabled(provider);
+	//			}
+	//		}
+	//
+	//		@Override
+	//		public void onLocationChanged(Location location)
+	//		{
+	//			if (isBetterLocation(location, mLocation))
+	//			{
+	//				mLocation = location;
+	//			}
+	//
+	//			mIsMeasuringLocation = false;
+	//
+	//			if (mLocationListener != null)
+	//			{
+	//				mLocationListener.onLocationChanged(mLocation);
+	//			}
+	//		}
+	//	};
 }

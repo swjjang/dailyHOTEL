@@ -112,7 +112,13 @@ public class CreditCardListActivity extends BaseActivity
 					break;
 
 				case CODE_RESULT_PAYMENT_BILLING_FAIL:
-					msg = getString(R.string.message_billing_fail);
+					if (data != null && data.hasExtra(NAME_INTENT_EXTRA_DATA_MESSAGE) == true)
+					{
+						msg = data.getStringExtra(NAME_INTENT_EXTRA_DATA_MESSAGE);
+					} else
+					{
+						msg = getString(R.string.message_billing_fail);
+					}
 					break;
 
 				case CODE_RESULT_ACTIVITY_PAYMENT_FAIL:

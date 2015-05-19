@@ -788,5 +788,4 @@ public class HotelListMapFragment extends
 			}
 		}
 	};
-
 }
