@@ -554,9 +554,28 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 				if (Float.compare(slideOffset, 0.0f) > 0)
 				{
 					setActionBarRegionEnable(false);
+
+					for (Fragment fragment : fragmentManager.getFragments())
+					{
+						if (fragment != null && fragment.isVisible() && fragment instanceof HotelMainFragment)
+						{
+							((HotelMainFragment) fragment).setMenuEnabled(false);
+							break;
+						}
+					}
+
 				} else if (Float.compare(slideOffset, 0.0f) == 0)
 				{
 					setActionBarRegionEnable(true);
+
+					for (Fragment fragment : fragmentManager.getFragments())
+					{
+						if (fragment != null && fragment.isVisible() && fragment instanceof HotelMainFragment)
+						{
+							((HotelMainFragment) fragment).setMenuEnabled(true);
+							break;
+						}
+					}
 				}
 
 				super.onDrawerSlide(drawerView, slideOffset);
@@ -781,7 +800,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 	private class DrawerMenuListAdapter extends BaseAdapter
 	{
-
 		private List<DrawerMenu> list;
 		private LayoutInflater inflater;
 		private Context context;
@@ -1004,7 +1022,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 	private DailyHotelJsonResponseListener mGcmRegisterJsonResponseListener = new DailyHotelJsonResponseListener()
 	{
-
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
@@ -1024,7 +1041,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 					editor.putString(KEY_PREFERENCE_GCM_ID, regPushParams.get("notification_id").toString());
 					editor.apply();
 				}
-
 			} catch (Exception e)
 			{
 				onError(e);

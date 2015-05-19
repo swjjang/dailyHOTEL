@@ -230,7 +230,7 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
 			{
 				resultCode = CODE_RESULT_PAYMENT_BILLING_FAIL;
 
-				String[] splits = msg.split("\\|");
+				String[] splits = msg.split("\\^");
 
 				if (splits.length > 1)
 				{

@@ -410,7 +410,7 @@
     <string name="label_seoul_area3">중구|종로구|용산구</string>
     <string name="label_seoul_area4">마포구|서대문구|은평구</string>
     <string name="label_seoul_area5">영등포구|양천구|강서구|금천구|구로구</string>
-    <string name="message_failed_mylocation">일시적으로 내 위치를 찾을 수 없습니다.</string>
+    <string name="message_failed_mylocation">일시적으로 내 위치 정보를 얻을 수 없습니다.</string>
 
     <!-- CreditCardFragment -->
     <string name="label_add_creditcard">+ 내 신용카드 추가하기</string>

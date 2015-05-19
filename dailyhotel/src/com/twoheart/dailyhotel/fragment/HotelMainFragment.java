@@ -61,6 +61,8 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 	private SaleTime mTodaySaleTime;
 	private ArrayList<String> mRegionList;
 
+	private boolean mMenuEnabled;
+
 	//	private String mSelectedDetailRegion;
 
 	private HOTEL_VIEW_TYPE mHotelViewType = HOTEL_VIEW_TYPE.LIST;
@@ -130,6 +132,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 		mTabIndicator.setOnPageChangeListener(mOnPageChangeListener);
 
 		setHasOptionsMenu(true);//프래그먼트 내에서 옵션메뉴를 지정하기 위해 
+		mMenuEnabled = true;
 
 		return view;
 	}
@@ -152,9 +155,33 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 	}
 
 	@Override
-	public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater)
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
 	{
-		inflater.inflate(R.menu.actionbar_icon_map, menu);
+		menu.clear();
+
+		if (mMenuEnabled == true)
+		{
+			inflater.inflate(R.menu.actionbar_icon_map, menu);
+		}
+	}
+
+	public void setMenuEnabled(boolean enabled)
+	{
+		if (mMenuEnabled == enabled)
+		{
+			return;
+		}
+
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
+		mMenuEnabled = enabled;
+
+		baseActivity.invalidateOptionsMenu();
 	}
 
 	@Override
@@ -167,11 +194,9 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 				switch (mHotelViewType)
 				{
 					case LIST:
-					{
 						item.setIcon(R.drawable.img_ic_list_mini_pink);
 						item.setTitle(getString(R.string.label_list));
 						break;
-					}
 
 					case MAP:
 						item.setIcon(R.drawable.img_ic_map_mini_pink);

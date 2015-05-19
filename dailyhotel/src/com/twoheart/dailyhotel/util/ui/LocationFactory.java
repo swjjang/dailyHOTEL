@@ -76,6 +76,15 @@ public class LocationFactory
 					sendEmptyMessageDelayed(1, 1000);
 					break;
 				}
+
+				case 3:
+				{
+					if (mMyLocationView != null)
+					{
+						mMyLocationView.setBackgroundDrawable(mMyLocationDrawable);
+					}
+					break;
+				}
 			}
 		};
 	};
@@ -218,7 +227,7 @@ public class LocationFactory
 		mHandler.removeMessages(1);
 		mHandler.removeMessages(2);
 
-		mHandler.sendEmptyMessage(2);
+		mHandler.sendEmptyMessage(3);
 
 		mIsMeasuringLocation = false;
 
