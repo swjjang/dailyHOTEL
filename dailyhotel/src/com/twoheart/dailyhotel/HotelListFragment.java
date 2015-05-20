@@ -652,7 +652,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 							}
 						}
 					}
-					
+
 					// seq 값에 따른 역순으로 정렬
 					Comparator<Hotel> comparator = new Comparator<Hotel>()
 					{

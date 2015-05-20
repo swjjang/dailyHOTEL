@@ -161,7 +161,16 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 
 		if (mMenuEnabled == true)
 		{
-			inflater.inflate(R.menu.actionbar_icon_map, menu);
+			switch (mHotelViewType)
+			{
+				case LIST:
+					inflater.inflate(R.menu.actionbar_icon_map, menu);
+					break;
+
+				case MAP:
+					inflater.inflate(R.menu.actionbar_icon_list, menu);
+					break;
+			}
 		}
 	}
 
