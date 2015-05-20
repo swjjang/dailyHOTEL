@@ -13,7 +13,6 @@ import com.android.volley.Response.ErrorListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 
 public abstract class DailyHotelRequest<T> extends Request<T> implements Constants
 {
@@ -33,10 +32,11 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
 
 		setRetryPolicy(new DefaultRetryPolicy(REQUEST_EXPIRE_JUDGE, REQUEST_MAX_RETRY, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
-		if (VolleyHttpClient.hasActiveNetwork() == false)
-		{
-			cancel();
-		}
+		// 네트워크가 연결 안되어이 있는경우 cancel을 하게 되면 에러가 발생하지 않아 문제가 될수 있다.
+		//		if (VolleyHttpClient.hasActiveNetwork() == false)
+		//		{
+		//			cancel();
+		//		}
 	}
 
 	@Override

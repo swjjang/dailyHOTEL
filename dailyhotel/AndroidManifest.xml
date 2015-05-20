@@ -151,6 +151,10 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".activity.CreditListActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.PaymentActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" >

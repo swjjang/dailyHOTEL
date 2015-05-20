@@ -28,6 +28,7 @@ import org.apache.http.util.EncodingUtils;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -223,6 +224,8 @@ public class PaymentActivity extends BaseActivity implements Constants
 			ArrayList<String> postParameterValue = new ArrayList<String>(Arrays.asList(mPay.getCustomer().mBillingKey, bonus));
 
 			webView.postUrl(url.toString(), parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]), postParameterValue.toArray(new String[postParameterValue.size()])));
+
+			ProgressDialog.show(PaymentActivity.this, null, getString(R.string.dialog_msg_processing_payment), true).show();
 		} else
 		{
 			// 기본 결제 방식
@@ -584,6 +587,11 @@ public class PaymentActivity extends BaseActivity implements Constants
 		{
 			super.onPageStarted(view, url, favicon);
 
+			if (mPay.getType() == Pay.Type.EASY_CARD)
+			{
+				return;
+			}
+
 			lockUI();
 			//			handler.removeCallbacks(networkCheckRunner); // 결제 완료시 항상 네트워크
 			// 불안정뜨므로, 네트워크 체크는
@@ -597,6 +605,12 @@ public class PaymentActivity extends BaseActivity implements Constants
 		public void onPageFinished(WebView view, String url)
 		{
 			super.onPageFinished(view, url);
+
+			if (mPay.getType() == Pay.Type.EASY_CARD)
+			{
+				return;
+			}
+
 			unLockUI();
 			// view.loadUrl("javascript:window.HtmlObserver.showHTML" +
 			// "('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');");

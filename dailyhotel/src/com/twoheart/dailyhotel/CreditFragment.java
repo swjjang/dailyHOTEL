@@ -41,6 +41,7 @@ import android.widget.TextView;
 
 import com.android.volley.Request.Method;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+import com.twoheart.dailyhotel.activity.CreditListActivity;
 import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.activity.SignupActivity;
 import com.twoheart.dailyhotel.model.Credit;
@@ -136,7 +137,6 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 
 		lockUI();
 		mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, baseActivity));
-
 	}
 
 	@Override
@@ -177,8 +177,13 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 
 		} else if (v.getId() == tvCredit.getId())
 		{
-			((MainActivity) baseActivity).addFragment(CreditListFragment.newInstance(mCreditList));
+			//			((MainActivity) baseActivity).addFragment(CreditListFragment.newInstance(mCreditList));
 			RenewalGaManager.getInstance(baseActivity.getApplicationContext()).recordEvent("click", "requestCreditHistory", null, null);
+
+			Intent i = new Intent(baseActivity, CreditListActivity.class);
+			i.putParcelableArrayListExtra(CreditListActivity.KEY_BUNDLE_ARGUMENTS_CREDITLIST, mCreditList);
+			startActivity(i);
+			baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
 		} else if (v.getId() == btnLogin.getId())
 		{
