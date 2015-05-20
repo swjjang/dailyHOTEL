@@ -19,7 +19,6 @@ import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.widget.DailyToast;
-import com.twoheart.dailyhotel.widget.FontManager;
 
 public class LocationFactory
 {
@@ -93,7 +92,7 @@ public class LocationFactory
 	{
 		if (mInstance == null)
 		{
-			synchronized (FontManager.class)
+			synchronized (LocationFactory.class)
 			{
 				if (mInstance == null)
 				{

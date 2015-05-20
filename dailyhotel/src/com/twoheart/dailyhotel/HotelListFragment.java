@@ -625,6 +625,22 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 						int seq = jsonObject.getInt("seq");
 
+						// 정가가 0원인 경우는 리스트에서 제거한다.
+						try
+						{
+							int price = Integer.parseInt(jsonObject.getString("price"));
+
+							if (price <= 0)
+							{
+								continue;
+							}
+						} catch (Exception e)
+						{
+							ExLog.d(e.toString());
+
+							continue;
+						}
+
 						if (seq >= 0)
 						{
 							// 숨김호텔이 아니라면 추가. (음수일 경우 숨김호텔.)
@@ -635,19 +651,19 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 								hotelList.add(newHotel); // 추가.
 							}
 						}
-
-						// seq 값에 따른 역순으로 정렬
-						Comparator<Hotel> comparator = new Comparator<Hotel>()
-						{
-							public int compare(Hotel o1, Hotel o2)
-							{
-								// 숫자정렬
-								return o2.getSequence() - o1.getSequence();
-							}
-						};
-
-						Collections.sort(hotelList, comparator);
 					}
+					
+					// seq 값에 따른 역순으로 정렬
+					Comparator<Hotel> comparator = new Comparator<Hotel>()
+					{
+						public int compare(Hotel o1, Hotel o2)
+						{
+							// 숫자정렬
+							return o2.getSequence() - o1.getSequence();
+						}
+					};
+
+					Collections.sort(hotelList, comparator);
 
 					List<String> selectedDetailRegionList = mDetailRegionList.get(baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, ""));
 
@@ -667,6 +683,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 							makeRegionHotelList(detailRegion, hotelList, hotelListViewList);
 						}
 
+						// 위의 makeRegionHotelList를 거치면 hotelList 사이즈가 변경된다.
 						// 호텔 지역 정보가 없는 기타 호텔들...
 						if (hotelList.size() > 0)
 						{
