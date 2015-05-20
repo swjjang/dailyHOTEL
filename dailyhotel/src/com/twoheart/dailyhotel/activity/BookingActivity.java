@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,6 +39,7 @@ import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
 import android.telephony.TelephonyManager;
 import android.text.Html;
+import android.text.InputFilter;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -75,6 +78,7 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
+import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -324,11 +328,26 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				buyer.setPhone(etReserverNumber.getText().toString());
 				buyer.setName(etReserverName.getText().toString());
 
-				if (isEmptyTextField(new String[] { buyer.getEmail(), buyer.getPhone(), buyer.getName() }))
+				if (isEmptyTextField(buyer.getName()) == true)
 				{
+					etReserverName.requestFocus();
 
-					ExLog.e("BUYER : " + buyer.getEmail() + " / " + buyer.getPhone() + " / " + buyer.getName());
-					DailyToast.showToast(this, R.string.toast_msg_please_input_booking_user_infos, Toast.LENGTH_LONG);
+					DailyToast.showToast(this, R.string.toast_msg_please_input_guest, Toast.LENGTH_SHORT);
+				} else if (isEmptyTextField(buyer.getPhone()) == true)
+				{
+					etReserverNumber.requestFocus();
+
+					DailyToast.showToast(this, R.string.toast_msg_please_input_contact, Toast.LENGTH_SHORT);
+				} else if (isEmptyTextField(buyer.getEmail()) == true)
+				{
+					etReserverEmail.requestFocus();
+
+					DailyToast.showToast(this, R.string.toast_msg_please_input_email, Toast.LENGTH_SHORT);
+				} else if (isValidEmail(buyer.getEmail()) == false)
+				{
+					etReserverEmail.requestFocus();
+
+					DailyToast.showToast(BookingActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
 				} else
 				{ //
 					Map<String, String> updateParams = new HashMap<String, String>();
@@ -534,11 +553,16 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 		for (int i = 0; i < fieldText.length; i++)
 		{
-			if (fieldText[i] == null || fieldText[i].equals("") || fieldText[i].equals("null"))
+			if (isEmptyTextField(fieldText[i]) == true)
 				return true;
 		}
 
 		return false;
+	}
+
+	private boolean isEmptyTextField(String fieldText)
+	{
+		return (TextUtils.isEmpty(fieldText) == true || fieldText.equals("null") == true || fieldText.trim().length() == 0);
 	}
 
 	// 결제 화면으로 이동 
@@ -1075,6 +1099,13 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		dialog.show();
 	}
 
+	private boolean isValidEmail(String inputStr)
+	{
+		Pattern p = Pattern.compile("^[_a-zA-Z0-9-]+(.[_a-zA-Z0-9-]+)*@(?:\\w+\\.)+\\w+$");
+		Matcher m = p.matcher(inputStr);
+		return m.matches();
+	}
+
 	private class TelophoneClickSpannable extends ClickableSpan
 	{
 		public TelophoneClickSpannable()
@@ -1192,6 +1223,13 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					} else
 					{
 						etReserverName.setEnabled(true);
+
+						// 회원 가입시 이름 필터 적용.
+						StringFilter stringFilter = new StringFilter(BookingActivity.this);
+						InputFilter[] allowAlphanumericHangul = new InputFilter[1];
+						allowAlphanumericHangul[0] = stringFilter.allowAlphanumericHangul;
+
+						etReserverName.setFilters(allowAlphanumericHangul);
 
 						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
 						{
