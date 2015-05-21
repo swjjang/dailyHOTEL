@@ -2,12 +2,12 @@ package com.twoheart.dailyhotel.model;
 
 import java.text.DecimalFormat;
 
+import android.R;
 import android.content.Context;
 import android.graphics.Bitmap;
 
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.ui.HotelIconGenerator;
 
 public class HotelRenderer

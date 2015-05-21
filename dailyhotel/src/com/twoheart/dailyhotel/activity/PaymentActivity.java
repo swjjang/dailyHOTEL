@@ -28,6 +28,7 @@ import org.apache.http.util.EncodingUtils;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -53,6 +54,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
@@ -108,8 +110,6 @@ public class PaymentActivity extends BaseActivity implements Constants
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setActionBarProgressBar();
-
 		setContentView(R.layout.activity_payment);
 
 		Bundle bundle = getIntent().getExtras();
@@ -187,29 +187,71 @@ public class PaymentActivity extends BaseActivity implements Constants
 			return;
 		}
 
-		// 기본 결제 방식
-		String url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERVE_PAYMENT)).append('/').append(mPay.getPayType()).append("/").append(mPay.getHotelDetail().getSaleIdx()).toString();
-
-		if (mPay.getPayPrice() == 0)
+		if (mPay.getHotelDetail().getSaleIdx() == 0)
 		{
-			ExLog.e("GETPAAA : " + mPay.getPayPrice());
-			// 적립금으로만 결제하기 포스트
-			url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)).append('/').append(mPay.getHotelDetail().getSaleIdx()).toString();
-
-			// 적립금으로만 결제하는 경우 결제창할 필요 없음
-			ArrayList<String> postParameterKey = new ArrayList<String>(Arrays.asList("saleIdx", "email", "name", "phone", "accessToken"));
-			ArrayList<String> postParameterValue = new ArrayList<String>(Arrays.asList(mPay.getHotelDetail().getSaleIdx() + "", mPay.getCustomer().getEmail(), mPay.getCustomer().getName(), mPay.getCustomer().getPhone(), mPay.getCustomer().getAccessToken()));
-
-			webView.postUrl(url, parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]), postParameterValue.toArray(new String[postParameterValue.size()])));
+			// 세션이 만료되어 재시작 요청.
+			SimpleAlertDialog.build(PaymentActivity.this, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_session_expired), getString(R.string.dialog_btn_text_confirm), null, new OnClickListener()
+			{
+				@Override
+				public void onClick(DialogInterface dialog, int which)
+				{
+					Util.restartApp(PaymentActivity.this);
+				}
+			}, null).setCancelable(false).show();
 			return;
-		} else if (mPay.isSaleCredit() == true)
-		{
-			// 적립금 일부 사용
-			url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)).append('/').append(mPay.getPayType()).append("/").append(mPay.getHotelDetail().getSaleIdx()).append("/").append(mPay.getCredit().getBonus()).toString();
 		}
 
-		ExLog.e("GET_URL : " + url); // "http://ec2global.dailyhotel.kr/goodnight/reserv/session/req/CARD/92074";
-		webView.loadUrl(url);
+		if (mPay.getType() == Pay.Type.EASY_CARD)
+		{
+			StringBuilder url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERV_SESSION_BILLING)).append('/').append(mPay.getHotelDetail().getSaleIdx());
+
+			ArrayList<String> postParameterKey = new ArrayList<String>(Arrays.asList("billkey", "mileage"));
+
+			String bonus = "0"; // 적립금
+
+			if (mPay.isSaleCredit() == true || mPay.getPayPrice() == 0)
+			{
+				// 적립금을 절대값으로 보냄..
+				try
+				{
+					bonus = String.valueOf(Math.abs(Integer.parseInt(mPay.getCredit().getBonus())));
+				} catch (Exception e)
+				{
+					ExLog.e(e.toString());
+				}
+			}
+
+			ArrayList<String> postParameterValue = new ArrayList<String>(Arrays.asList(mPay.getCustomer().mBillingKey, bonus));
+
+			webView.postUrl(url.toString(), parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]), postParameterValue.toArray(new String[postParameterValue.size()])));
+
+			ProgressDialog.show(PaymentActivity.this, null, getString(R.string.dialog_msg_processing_payment), true).setCancelable(false);
+		} else
+		{
+			// 기본 결제 방식
+			String url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERVE_PAYMENT)).append('/').append(mPay.getType().name()).append("/").append(mPay.getHotelDetail().getSaleIdx()).toString();
+
+			if (mPay.getPayPrice() == 0)
+			{
+				ExLog.e("GETPAAA : " + mPay.getPayPrice());
+				// 적립금으로만 결제하기 포스트
+				url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)).append('/').append(mPay.getHotelDetail().getSaleIdx()).toString();
+
+				// 적립금으로만 결제하는 경우 결제창할 필요 없음
+				ArrayList<String> postParameterKey = new ArrayList<String>(Arrays.asList("saleIdx", "email", "name", "phone", "accessToken"));
+				ArrayList<String> postParameterValue = new ArrayList<String>(Arrays.asList(mPay.getHotelDetail().getSaleIdx() + "", mPay.getCustomer().getEmail(), mPay.getCustomer().getName(), mPay.getCustomer().getPhone(), mPay.getCustomer().getAccessToken()));
+
+				webView.postUrl(url, parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]), postParameterValue.toArray(new String[postParameterValue.size()])));
+				return;
+			} else if (mPay.isSaleCredit() == true)
+			{
+				// 적립금 일부 사용
+				url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)).append('/').append(mPay.getType().name()).append("/").append(mPay.getHotelDetail().getSaleIdx()).append("/").append(mPay.getCredit().getBonus()).toString();
+			}
+
+			ExLog.e("GET_URL : " + url); // "http://ec2global.dailyhotel.kr/goodnight/reserv/session/req/CARD/92074";
+			webView.loadUrl(url);
+		}
 	}
 
 	@Override
@@ -545,6 +587,11 @@ public class PaymentActivity extends BaseActivity implements Constants
 		{
 			super.onPageStarted(view, url, favicon);
 
+			if (mPay.getType() == Pay.Type.EASY_CARD)
+			{
+				return;
+			}
+
 			lockUI();
 			//			handler.removeCallbacks(networkCheckRunner); // 결제 완료시 항상 네트워크
 			// 불안정뜨므로, 네트워크 체크는
@@ -558,16 +605,22 @@ public class PaymentActivity extends BaseActivity implements Constants
 		public void onPageFinished(WebView view, String url)
 		{
 			super.onPageFinished(view, url);
+
+			if (mPay.getType() == Pay.Type.EASY_CARD)
+			{
+				return;
+			}
+
 			unLockUI();
 			// view.loadUrl("javascript:window.HtmlObserver.showHTML" +
 			// "('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');");
 
-			if (mPay.getPayType().equals("PAYPAL"))
-			{
-
-				view.loadUrl("javascript:function on_cancel()" + "{ " + "var form = document.pmnt_info_form_2;" + "form.action = '/smart//etc/pay_cancel.php';" + "form.submit();" + "}");
-				view.loadUrl("javascript:(function(){" + "var payImg = (document.getElementsByClassName('space_h_auto'))[0];" + "payImg.style.cssText = payImg.style.cssText + ';background-image: url(https://www.paypalobjects.com/webstatic/en_KR/mktg/Logo/pp_cc_mark_74x46.jpg);' +" + "'background-size: 150px;' +" + "'background-repeat: no-repeat;' +" + "'background-position: center;';" + "})();");
-			}
+			//			if (mPay.getType() == Pay.Type.PAYPAL)
+			//			{
+			//
+			//				view.loadUrl("javascript:function on_cancel()" + "{ " + "var form = document.pmnt_info_form_2;" + "form.action = '/smart//etc/pay_cancel.php';" + "form.submit();" + "}");
+			//				view.loadUrl("javascript:(function(){" + "var payImg = (document.getElementsByClassName('space_h_auto'))[0];" + "payImg.style.cssText = payImg.style.cssText + ';background-image: url(https://www.paypalobjects.com/webstatic/en_KR/mktg/Logo/pp_cc_mark_74x46.jpg);' +" + "'background-size: 150px;' +" + "'background-repeat: no-repeat;' +" + "'background-position: center;';" + "})();");
+			//			}
 
 			CookieSyncManager.getInstance().sync();
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
@@ -958,6 +1011,11 @@ public class PaymentActivity extends BaseActivity implements Constants
 	@Override
 	public void onBackPressed()
 	{
+		if (mPay.getType() == Pay.Type.EASY_CARD)
+		{
+			return;
+		}
+
 		OnClickListener posListener = new OnClickListener()
 		{
 			@Override
@@ -967,20 +1025,6 @@ public class PaymentActivity extends BaseActivity implements Constants
 			}
 		};
 		SimpleAlertDialog.build(PaymentActivity.this, getString(R.string.dialog_title_payment), getString(R.string.dialog_msg_chk_cancel_payment), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null).show();
-	}
-
-	@Override
-	public void lockUI()
-	{
-		mLockUI.show();
-	}
-
-	@Override
-	public void unLockUI()
-	{
-		// pinkred_font
-		//		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
-		mLockUI.hide();
 	}
 
 }

@@ -43,7 +43,6 @@ public class Crypto
 
 	public static String encrypt(String inputValue)
 	{
-
 		try
 		{
 			if (inputValue == null)

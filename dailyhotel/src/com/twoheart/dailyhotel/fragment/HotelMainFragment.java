@@ -23,6 +23,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -57,6 +60,8 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 
 	private SaleTime mTodaySaleTime;
 	private ArrayList<String> mRegionList;
+
+	private boolean mMenuEnabled;
 
 	//	private String mSelectedDetailRegion;
 
@@ -126,7 +131,8 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 		mTabIndicator.setViewPager(mFragmentViewPager.getViewPager());
 		mTabIndicator.setOnPageChangeListener(mOnPageChangeListener);
 
-		//		setHasOptionsMenu(true);//프래그먼트 내에서 옵션메뉴를 지정하기 위해 
+		setHasOptionsMenu(true);//프래그먼트 내에서 옵션메뉴를 지정하기 위해 
+		mMenuEnabled = true;
 
 		return view;
 	}
@@ -146,6 +152,77 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 		super.onResume();
 
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_TIME).toString(), null, mAppTimeJsonResponseListener, baseActivity));
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+	{
+		menu.clear();
+
+		if (mMenuEnabled == true)
+		{
+			switch (mHotelViewType)
+			{
+				case LIST:
+					inflater.inflate(R.menu.actionbar_icon_map, menu);
+					break;
+
+				case MAP:
+					inflater.inflate(R.menu.actionbar_icon_list, menu);
+					break;
+			}
+		}
+	}
+
+	public void setMenuEnabled(boolean enabled)
+	{
+		if (mMenuEnabled == enabled)
+		{
+			return;
+		}
+
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
+		mMenuEnabled = enabled;
+
+		baseActivity.invalidateOptionsMenu();
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch (item.getItemId())
+		{
+			case R.id.action_map:
+			{
+				switch (mHotelViewType)
+				{
+					case LIST:
+						item.setIcon(R.drawable.img_ic_list_mini_pink);
+						item.setTitle(getString(R.string.label_list));
+						break;
+
+					case MAP:
+						item.setIcon(R.drawable.img_ic_map_mini_pink);
+						item.setTitle(getString(R.string.label_map));
+						break;
+				}
+
+				if (mUserActionListener != null)
+				{
+					mUserActionListener.toggleViewType();
+				}
+				return true;
+			}
+
+			default:
+				return super.onOptionsItemSelected(item);
+		}
 	}
 
 	@Override
@@ -175,6 +252,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 			}
 
 			case CODE_REQUEST_ACTIVITY_SELECT_REGIONMAP:
+			case CODE_RESULT_ACTIVITY_SETTING_LOCATION:
 			{
 				HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
 				currentFragment.onActivityResult(requestCode, resultCode, data);
@@ -311,6 +389,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 			} catch (Exception e)
 			{
 				onError(e);
+				unLockUI();
 			}
 		}
 	};

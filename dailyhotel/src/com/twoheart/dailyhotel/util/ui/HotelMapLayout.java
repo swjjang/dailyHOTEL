@@ -44,7 +44,6 @@ public class HotelMapLayout extends FrameLayout implements OnMakerInfoWindowList
 
 	private void initLayout(Context context)
 	{
-
 	}
 
 	public void setMapFragment(HotelListMapFragment hotelListMapFragment)

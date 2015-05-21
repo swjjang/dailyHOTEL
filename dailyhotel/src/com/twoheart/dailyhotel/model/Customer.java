@@ -5,12 +5,12 @@ import android.os.Parcelable;
 
 public class Customer implements Parcelable
 {
-
 	private String mEmail;
 	private String mName;
 	private String mPhone;
 	private String mAccessToken;
 	private String mUserIdx;
+	public String mBillingKey;
 
 	public Customer()
 	{
@@ -29,6 +29,7 @@ public class Customer implements Parcelable
 		dest.writeString(mPhone);
 		dest.writeString(mAccessToken);
 		dest.writeString(mUserIdx);
+		dest.writeString(mBillingKey);
 	}
 
 	private void readFromParcel(Parcel in)
@@ -38,6 +39,7 @@ public class Customer implements Parcelable
 		mPhone = in.readString();
 		mAccessToken = in.readString();
 		mUserIdx = in.readString();
+		mBillingKey = in.readString();
 	}
 
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()

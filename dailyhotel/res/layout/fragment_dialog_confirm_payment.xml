@@ -68,21 +68,25 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:text="@string/dialog_msg_payment_confirm"
                     android:textSize="13.5dp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
-                <com.twoheart.dailyhotel.widget.DailyCustomFontButton
+
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                     android:id="@+id/btn_confirm_payment_proceed"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/selector_background_btn_rating_hotel"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/shape_button_common_background"
+                    android:gravity="center"
                     android:text="@string/dialog_btn_payment_confirm"
-                    android:textColor="@drawable/selector_textcolor_btn_rating_hotel"
+                    android:textColor="@android:color/white"
                     android:textSize="17dp" />
             </LinearLayout>
         </LinearLayout>

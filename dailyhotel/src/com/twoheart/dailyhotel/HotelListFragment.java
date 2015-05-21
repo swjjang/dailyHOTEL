@@ -30,6 +30,7 @@ import uk.co.senab.actionbarpulltorefresh.library.Options;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.AbsListViewDelegate;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -71,7 +72,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	//	private boolean event;
 	protected boolean mIsSelectionTop;
 	private View mEmptyView;
-	private View mFooterView;
+	//	private View mFooterView; // FooterView
 
 	private HotelMapLayout mMapLayout;
 	private HotelListMapFragment mHotelListMapFragment;
@@ -101,8 +102,9 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		mHotelListView = (PinnedSectionListView) view.findViewById(R.id.listview_hotel_list);
 
 		// 이벤트를 마지막에 넣는다.
-		mFooterView = inflater.inflate(R.layout.list_row_hotel_event, null, true);
-		mHotelListView.addFooterView(mFooterView);
+		// FooterView
+		//		mFooterView = inflater.inflate(R.layout.list_row_hotel_event, null, true);
+		//		mHotelListView.addFooterView(mFooterView);
 
 		mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
 		mEmptyView = view.findViewById(R.id.emptyView);
@@ -116,12 +118,10 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 			@Override
 			public void onClick(View v)
 			{
-				if (mUserActionListener != null)
-				{
-					mUserActionListener.toggleViewType();
-				}
 			}
 		});
+
+		mDailyFloatingActionButton.setVisibility(View.GONE);
 
 		mHotelViewType = HOTEL_VIEW_TYPE.LIST;
 
@@ -157,7 +157,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		return view;
 	}
 
-	// 호텔 클릭시
 	@Override
 	public void onItemClick(AdapterView<?> parentView, View childView, int position, long id)
 	{
@@ -184,6 +183,15 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_TIME).toString(), null, mAppTimeJsonResponseListener, baseActivity));
 	}
 
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		if (mHotelListMapFragment != null)
+		{
+			mHotelListMapFragment.onActivityResult(requestCode, resultCode, data);
+		}
+	}
+
 	/**
 	 * 토글이 아닌 경우에만 진행하는 프로세스.
 	 * 
@@ -208,8 +216,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 	public void onRefreshComplete()
 	{
-		mDailyFloatingActionButton.attachToListView(mHotelListView);
-		//		setFloatingActionButtonVisible(true);
+		//		mDailyFloatingActionButton.attachToListView(mHotelListView);
 	}
 
 	/**
@@ -266,8 +273,8 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 					mHotelListMapFragment = null;
 				}
 
-				mDailyFloatingActionButton.setVisibility(View.VISIBLE);
-				mDailyFloatingActionButton.setImageResource(R.drawable.img_ic_map_mini);
+				//				mDailyFloatingActionButton.setVisibility(View.VISIBLE);
+				//				mDailyFloatingActionButton.setImageResource(R.drawable.img_ic_map_mini);
 
 				mPullToRefreshLayout.setVisibility(View.VISIBLE);
 				break;
@@ -284,8 +291,8 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 				mMapLayout.setMapFragment(mHotelListMapFragment);
 
-				mDailyFloatingActionButton.setVisibility(View.VISIBLE);
-				mDailyFloatingActionButton.setImageResource(R.drawable.img_ic_list_mini);
+				//				mDailyFloatingActionButton.setVisibility(View.VISIBLE);
+				//				mDailyFloatingActionButton.setImageResource(R.drawable.img_ic_list_mini);
 				mPullToRefreshLayout.setVisibility(View.INVISIBLE);
 				break;
 
@@ -326,18 +333,19 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 			return;
 		}
 
-		ExLog.d("setFloatingActionButtonVisible : " + visible);
-
-		if (visible == true)
-		{
-			if (mHotelListAdapter != null && mHotelListAdapter.getCount() != 0)
-			{
-				mDailyFloatingActionButton.show(false, true);
-			}
-		} else
-		{
-			mDailyFloatingActionButton.hide(false, true);
-		}
+		// 일단 눈에 안보이도록 함.
+		mDailyFloatingActionButton.hide(false, true);
+		//
+		//		if (visible == true)
+		//		{
+		//			if (mHotelListAdapter != null && mHotelListAdapter.getCount() != 0)
+		//			{
+		//				mDailyFloatingActionButton.show(false, true);
+		//			}
+		//		} else
+		//		{
+		//			mDailyFloatingActionButton.hide(false, true);
+		//		}
 	}
 
 	public void refreshHotelList(boolean isSelectionTop)
@@ -598,13 +606,14 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 				} else
 				{
 					// 추후 개수는 화면에 보이는 리스트 아이템의 개수에 따라서 다르다. 
-					if (length == 1)
-					{
-						mFooterView.setVisibility(View.GONE);
-					} else
-					{
-						mFooterView.setVisibility(View.VISIBLE);
-					}
+					// FooterView
+					//					if (length == 1)
+					//					{
+					//						mFooterView.setVisibility(View.GONE);
+					//					} else
+					//					{
+					//						mFooterView.setVisibility(View.VISIBLE);
+					//					}
 
 					JSONObject jsonObject;
 
@@ -616,6 +625,22 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 						int seq = jsonObject.getInt("seq");
 
+						// 정가가 0원인 경우는 리스트에서 제거한다.
+						try
+						{
+							int price = Integer.parseInt(jsonObject.getString("price"));
+
+							if (price <= 0)
+							{
+								continue;
+							}
+						} catch (Exception e)
+						{
+							ExLog.d(e.toString());
+
+							continue;
+						}
+
 						if (seq >= 0)
 						{
 							// 숨김호텔이 아니라면 추가. (음수일 경우 숨김호텔.)
@@ -626,19 +651,19 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 								hotelList.add(newHotel); // 추가.
 							}
 						}
-
-						// seq 값에 따른 역순으로 정렬
-						Comparator<Hotel> comparator = new Comparator<Hotel>()
-						{
-							public int compare(Hotel o1, Hotel o2)
-							{
-								// 숫자정렬
-								return o2.getSequence() - o1.getSequence();
-							}
-						};
-
-						Collections.sort(hotelList, comparator);
 					}
+
+					// seq 값에 따른 역순으로 정렬
+					Comparator<Hotel> comparator = new Comparator<Hotel>()
+					{
+						public int compare(Hotel o1, Hotel o2)
+						{
+							// 숫자정렬
+							return o2.getSequence() - o1.getSequence();
+						}
+					};
+
+					Collections.sort(hotelList, comparator);
 
 					List<String> selectedDetailRegionList = mDetailRegionList.get(baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, ""));
 
@@ -658,6 +683,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 							makeRegionHotelList(detailRegion, hotelList, hotelListViewList);
 						}
 
+						// 위의 makeRegionHotelList를 거치면 hotelList 사이즈가 변경된다.
 						// 호텔 지역 정보가 없는 기타 호텔들...
 						if (hotelList.size() > 0)
 						{
@@ -694,7 +720,8 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 					if (mIsSelectionTop == true)
 					{
 						mHotelListView.setSelection(0);
-						mDailyFloatingActionButton.detachToListView(mHotelListView);
+						// mDailyFloatingActionButton
+						//						mDailyFloatingActionButton.detachToListView(mHotelListView);
 					}
 				}
 

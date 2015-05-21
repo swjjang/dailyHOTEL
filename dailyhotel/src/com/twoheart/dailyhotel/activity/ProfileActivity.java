@@ -43,7 +43,9 @@ import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
@@ -272,6 +274,13 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 			}
 		} else if (v.getId() == R.id.btn_profile_logout)
 		{
+			if (isLockUiComponent() == true)
+			{
+				return;
+			}
+
+			lockUiComponent();
+
 			/**
 			 * 로그 아웃시 내부 저장한 유저정보 초기화
 			 */
@@ -281,40 +290,20 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 				public void onClick(DialogInterface dialog, int which)
 				{
 					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestLogout", null, null);
-					mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGOUT).toString(), null, mUserLogoutJsonResponseListener, ProfileActivity.this));
-					VolleyHttpClient.destroyCookie();
-
-					SharedPreferences.Editor ed = sharedPreference.edit();
-					ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
-					ed.putString(KEY_PREFERENCE_USER_ID, null);
-					ed.putString(KEY_PREFERENCE_USER_PWD, null);
-					ed.putString(KEY_PREFERENCE_GCM_ID, null);
-
-					ed.commit();
-
-					if (Session.getActiveSession() != null)
-					{
-						if (Session.getActiveSession().isOpened())
-						{
-							Session.getActiveSession().closeAndClearTokenInformation();
-							Session.setActiveSession(null);
-						}
-					}
-
-					DailyToast.showToast(ProfileActivity.this, R.string.toast_msg_logouted, Toast.LENGTH_SHORT);
-					finish();
-
+					mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGOUT).toString(), null, mUserLogoutStringResponseListener, ProfileActivity.this));
 				}
 			};
 
-			SimpleAlertDialog.build(ProfileActivity.this, null, getString(R.string.dialog_msg_chk_wanna_login), getString(R.string.dialog_btn_text_logout), getString(R.string.dialog_btn_text_cancel), posListener, null).show();
+			SimpleAlertDialog.build(ProfileActivity.this, null, getString(R.string.dialog_msg_chk_wanna_login), getString(R.string.dialog_btn_text_logout), getString(R.string.dialog_btn_text_cancel), posListener, null).setCancelable(false).show();
 
+			releaseUiComponent();
 		}
 	}
 
 	private void updateTextField()
 	{
 		lockUI();
+
 		// 사용자 정보 요청.
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserLogInfoJsonResponseListener, this));
 	}
@@ -359,8 +348,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 					updateTextField();
 				} else
 				{
-					releaseUiComponent();
-
 					unLockUI();
 					DailyToast.showToast(ProfileActivity.this, msg, Toast.LENGTH_LONG);
 				}
@@ -368,16 +355,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 			{
 				onError(e);
 			}
-		}
-	};
-
-	private DailyHotelJsonResponseListener mUserLogoutJsonResponseListener = new DailyHotelJsonResponseListener()
-	{
-
-		@Override
-		public void onResponse(String url, JSONObject response)
-		{
-
 		}
 	};
 
@@ -438,8 +415,36 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 			} finally
 			{
 				unLockUI();
-				releaseUiComponent();
 			}
+		}
+	};
+
+	private DailyHotelStringResponseListener mUserLogoutStringResponseListener = new DailyHotelStringResponseListener()
+	{
+		@Override
+		public void onResponse(String url, String response)
+		{
+			VolleyHttpClient.destroyCookie();
+
+			SharedPreferences.Editor ed = sharedPreference.edit();
+			ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
+			ed.putString(KEY_PREFERENCE_USER_ID, null);
+			ed.putString(KEY_PREFERENCE_USER_PWD, null);
+			ed.putString(KEY_PREFERENCE_GCM_ID, null);
+
+			ed.commit();
+
+			if (Session.getActiveSession() != null)
+			{
+				if (Session.getActiveSession().isOpened())
+				{
+					Session.getActiveSession().closeAndClearTokenInformation();
+					Session.setActiveSession(null);
+				}
+			}
+
+			DailyToast.showToast(ProfileActivity.this, R.string.toast_msg_logouted, Toast.LENGTH_SHORT);
+			finish();
 		}
 	};
 

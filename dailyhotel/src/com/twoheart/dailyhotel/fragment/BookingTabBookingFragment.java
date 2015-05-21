@@ -18,6 +18,8 @@ import java.util.TimeZone;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -35,7 +37,8 @@ import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.SimpleAlertDialog;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
@@ -156,7 +159,6 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 					ed.putString(KEY_PREFERENCE_USER_PWD, null);
 					ed.commit();
 
-					unLockUI();
 					showToast(getString(R.string.toast_msg_failed_to_login), Toast.LENGTH_SHORT, true);
 				} else
 				{
@@ -165,6 +167,8 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 			} catch (JSONException e)
 			{
 				onError(e);
+			} finally
+			{
 				unLockUI();
 			}
 		}
@@ -195,10 +199,25 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 				tvCustomerName.setText(name);
 				tvCustomerPhone.setText(phone);
 
-				// 체크인 정보 요청.
-				//				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_CHECKIN).append('/').append(mHotelDetail.getSaleIdx()).toString(), null, mReserveCheckInJsonResponseListener, mHostActivity));
-				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_CHECKINOUT).append('/').append(mHotelDetail.getSaleIdx()).toString(), null, mReserveCheckInJsonResponseListener, baseActivity));
-				ExLog.e("madsd : " + mHotelDetail.getSaleIdx() + "");
+				// SailIndex가 0인 경우에 서버에 이슈가 발생할수 있다.
+				// 0인 경우 아마도 메모리에서 정보가 삭제되어 발생한듯 하다.
+				if (mHotelDetail.getSaleIdx() == 0)
+				{
+					// 세션이 만료되어 재시작 요청.
+					SimpleAlertDialog.build(baseActivity, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_session_expired), getString(R.string.dialog_btn_text_confirm), null, new OnClickListener()
+					{
+						@Override
+						public void onClick(DialogInterface dialog, int which)
+						{
+							Util.restartApp(getActivity());
+						}
+					}, null).setCancelable(false).show();
+				} else
+				{
+					// 체크인 정보 요청.
+					//				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_CHECKIN).append('/').append(mHotelDetail.getSaleIdx()).toString(), null, mReserveCheckInJsonResponseListener, mHostActivity));
+					mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_CHECKINOUT).append('/').append(mHotelDetail.getSaleIdx()).toString(), null, mReserveCheckInJsonResponseListener, baseActivity));
+				}
 			} catch (Exception e)
 			{
 				onError(e);

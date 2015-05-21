@@ -94,7 +94,7 @@ public class Hotel implements Parcelable
 		dest.writeString(price);
 		dest.writeString(discount);
 		dest.writeString(address);
-		dest.writeString(category.name());
+		dest.writeSerializable(category);
 		dest.writeInt(idx);
 		dest.writeInt(availableRoom);
 		dest.writeInt(sequence);
@@ -110,7 +110,7 @@ public class Hotel implements Parcelable
 		this.price = in.readString();
 		this.discount = in.readString();
 		this.address = in.readString();
-		this.category = HotelGrade.valueOf(in.readString());
+		this.category = (HotelGrade) in.readSerializable();
 		this.idx = in.readInt();
 		this.availableRoom = in.readInt();
 		this.sequence = in.readInt();

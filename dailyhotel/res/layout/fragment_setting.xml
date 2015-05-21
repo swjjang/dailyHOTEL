@@ -2,8 +2,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
     android:background="#fdfdfd"
+    android:fillViewport="true"
     android:orientation="vertical" >
 
     <LinearLayout
@@ -11,6 +11,80 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:weightSum="1" >
+
+        <!-- 계정 -->
+
+        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:text="@string/frag_account"
+            android:textColor="@color/textView_textColor_sub"
+            android:textSize="13.5dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/setting_fragment_section_border" />
+
+        <LinearLayout
+            android:id="@+id/ll_setting_login"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:paddingLeft="17dp" >
+
+            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                android:id="@+id/tv_setting_login"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:gravity="left|center_vertical"
+                android:textColor="@color/textView_textColor_main"
+                android:textSize="16.5dp" />
+
+            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                android:id="@+id/tv_setting_email"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.7"
+                android:gravity="right|center_vertical"
+                android:paddingRight="17dp"
+                android:singleLine="true"
+                android:textColor="@color/textView_textColor_sub"
+                android:textSize="16.5dp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="10dp"
+            android:background="@color/common_border" />
+
+        <LinearLayout
+            android:id="@+id/settingCardLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                android:id="@+id/settingCardTextView"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="17dp"
+                android:gravity="left|center_vertical"
+                android:text="@string/actionbar_title_creditcard_activity"
+                android:textColor="@color/textView_textColor_main"
+                android:textSize="16.5dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="10dp"
+                android:background="@color/common_border" />
+        </LinearLayout>
 
         <!-- 고객센터 -->
 
@@ -160,62 +234,11 @@
                 android:id="@+id/tv_setting_version"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:paddingRight="17dp"
                 android:layout_weight="0.3"
                 android:gravity="right|center_vertical"
-                android:textColor="@color/textView_textColor_sub"
-                android:textSize="16.5dp" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="10dp"
-            android:background="@color/common_border" />
-
-        <!-- 계정 -->
-
-        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="15dp"
-            android:text="@string/frag_account"
-            android:textColor="@color/textView_textColor_sub"
-            android:textSize="13.5dp" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/setting_fragment_section_border" />
-        
-        <LinearLayout
-            android:id="@+id/ll_setting_login"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="horizontal"
-            android:paddingLeft="17dp" >
-
-            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-                android:id="@+id/tv_setting_login"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.3"
-                android:gravity="left|center_vertical"
-                android:textColor="@color/textView_textColor_main"
-                android:textSize="16.5dp" />
-
-            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-                android:id="@+id/tv_setting_email"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.7"
-                android:gravity="right|center_vertical"
                 android:paddingRight="17dp"
-                android:singleLine="true"
                 android:textColor="@color/textView_textColor_sub"
                 android:textSize="16.5dp" />
-
         </LinearLayout>
 
         <View

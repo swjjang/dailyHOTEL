@@ -30,7 +30,7 @@ public class VersionActivity extends BaseActivity implements OnClickListener
 		tvCurrentVersion = (TextView) findViewById(R.id.tv_version_cur);
 		tvNewVersion = (TextView) findViewById(R.id.tv_version_new);
 		btnUpdate = (TextView) findViewById(R.id.btn_version_update);
-		btnUpdate.setOnClickListener(this);
+		//		btnUpdate.setOnClickListener(this);
 
 		getVersionInfo();
 
@@ -46,7 +46,6 @@ public class VersionActivity extends BaseActivity implements OnClickListener
 		{
 			onError(e);
 		}
-
 	}
 
 	@Override

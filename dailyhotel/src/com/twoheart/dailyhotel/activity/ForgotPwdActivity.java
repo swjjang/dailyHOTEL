@@ -154,7 +154,6 @@ public class ForgotPwdActivity extends BaseActivity implements Constants, OnClic
 				} else
 				{
 					unLockUI();
-					releaseUiComponent();
 
 					String message = response.getString("msg");
 					SimpleAlertDialog.build(ForgotPwdActivity.this, message, getString(R.string.dialog_btn_text_confirm), null).show();
@@ -163,7 +162,6 @@ public class ForgotPwdActivity extends BaseActivity implements Constants, OnClic
 			{
 				onError(e);
 				unLockUI();
-				releaseUiComponent();
 			}
 		}
 	};
@@ -197,7 +195,6 @@ public class ForgotPwdActivity extends BaseActivity implements Constants, OnClic
 			} finally
 			{
 				unLockUI();
-				releaseUiComponent();
 			}
 
 		}

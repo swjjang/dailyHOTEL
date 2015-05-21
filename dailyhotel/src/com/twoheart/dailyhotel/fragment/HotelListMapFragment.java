@@ -5,10 +5,16 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -22,6 +28,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm;
@@ -29,6 +36,7 @@ import com.twoheart.dailyhotel.adapter.HotelInfoWindowAdapter;
 import com.twoheart.dailyhotel.adapter.HotelInfoWindowAdapter.OnInfoWindowClickListener;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.HotelClusterItem;
@@ -36,6 +44,8 @@ import com.twoheart.dailyhotel.util.ui.HotelClusterRenderer;
 import com.twoheart.dailyhotel.util.ui.HotelClusterRenderer.OnSelectedClusterItemListener;
 import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
+import com.twoheart.dailyhotel.util.ui.LocationFactory;
+import com.twoheart.dailyhotel.util.ui.MyLocationMarker;
 
 public class HotelListMapFragment extends
 		com.google.android.gms.maps.SupportMapFragment implements ClusterManager.OnClusterClickListener<HotelClusterItem>, ClusterManager.OnClusterItemClickListener<HotelClusterItem>
@@ -44,6 +54,8 @@ public class HotelListMapFragment extends
 	private ArrayList<HotelListViewItem> mHotelArrayList;
 	private HotelInfoWindowAdapter mHotelInfoWindowAdapter;
 	private LoadingDialog mLoadingDialog;
+	private MarkerOptions mMyLocationMarkerOptions;
+	private Marker mMyLocationMarker;
 
 	protected HotelMainFragment.UserActionListener mUserActionListener;
 	private SaleTime mSaleTime;
@@ -57,6 +69,7 @@ public class HotelListMapFragment extends
 	private ClusterManager<HotelClusterItem> mClusterManager;
 	private HotelClusterRenderer mHotelClusterRenderer;
 	private Marker mSelectedMarker;
+	private ImageView mMyLocationView;
 
 	private OnMakerInfoWindowListener mOnMakerInfoWindowListener;
 
@@ -97,13 +110,15 @@ public class HotelListMapFragment extends
 				}
 
 				mGoogleMap = googleMap;
-				mGoogleMap.setMyLocationEnabled(false);
+
+				//				mGoogleMap.setMyLocationEnabled(true);
 				mGoogleMap.getUiSettings().setMapToolbarEnabled(false);
 				mGoogleMap.getUiSettings().setRotateGesturesEnabled(false);
 				mGoogleMap.getUiSettings().setTiltGesturesEnabled(false);
 				mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
 				mGoogleMap.setOnMapClickListener(mOnMapClickListener);
 
+				relocationMyLocation();
 				relocationZoomControl();
 
 				mClusterManager = new ClusterManager<HotelClusterItem>(baseActivity, mGoogleMap);
@@ -169,6 +184,17 @@ public class HotelListMapFragment extends
 		return true;
 	}
 
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		switch (requestCode)
+		{
+			case Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION:
+				mOnMyLocationClickListener.onClick(null);
+				break;
+		}
+	}
+
 	public void setUserActionListener(HotelMainFragment.UserActionListener userActionLister)
 	{
 		mUserActionListener = userActionLister;
@@ -210,8 +236,26 @@ public class HotelListMapFragment extends
 			params.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0);
 			params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
 
-			zoomControl.setPadding(zoomControl.getPaddingLeft(), Util.dpToPx(baseActivity, 10), zoomControl.getPaddingRight(), zoomControl.getPaddingBottom());
+			zoomControl.setPadding(zoomControl.getPaddingLeft(), Util.dpToPx(baseActivity, 50), zoomControl.getPaddingRight(), zoomControl.getPaddingBottom());
 			zoomControl.setLayoutParams(params);
+		}
+	}
+
+	private void relocationMyLocation()
+	{
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
+		mMyLocationView = (ImageView) getView().findViewById(0x2);
+
+		if (mMyLocationView != null)
+		{
+			mMyLocationView.setVisibility(View.VISIBLE);
+			mMyLocationView.setOnClickListener(mOnMyLocationClickListener);
 		}
 	}
 
@@ -332,6 +376,11 @@ public class HotelListMapFragment extends
 			{
 				mLoadingDialog.hide();
 			}
+		}
+
+		if (mMyLocationMarker != null)
+		{
+			mMyLocationMarker = mGoogleMap.addMarker(mMyLocationMarkerOptions);
 		}
 	}
 
@@ -532,6 +581,87 @@ public class HotelListMapFragment extends
 	/////////////////////////////////////////////////////////////////////////////////
 	// Listener
 	////////////////////////////////////////////////////////////////////////////////
+
+	public View.OnClickListener mOnMyLocationClickListener = new View.OnClickListener()
+	{
+		@Override
+		public void onClick(View v)
+		{
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null)
+			{
+				return;
+			}
+
+			LocationFactory.getInstance().startLocationMeasure(baseActivity, HotelListMapFragment.this, mMyLocationView, new LocationListener()
+			{
+				@Override
+				public void onStatusChanged(String provider, int status, Bundle extras)
+				{
+					// TODO Auto-generated method stub
+
+				}
+
+				@Override
+				public void onProviderEnabled(String provider)
+				{
+					// TODO Auto-generated method stub
+
+				}
+
+				@Override
+				public void onProviderDisabled(String provider)
+				{
+					// 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
+					LocationFactory.getInstance().stopLocationMeasure();
+
+					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setMessage("GPS 셋팅이 되지 않았을수도 있습니다.\n 설정창으로 가시겠습니까?").setNegativeButton("취소", null).setPositiveButton("설정", new DialogInterface.OnClickListener()
+					{
+						@Override
+						public void onClick(DialogInterface dialog, int which)
+						{
+							Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+							startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
+						}
+					});
+
+					builder.show();
+				}
+
+				@Override
+				public void onLocationChanged(Location location)
+				{
+					BaseActivity baseActivity = (BaseActivity) getActivity();
+
+					if (baseActivity == null)
+					{
+						return;
+					}
+
+					LocationFactory.getInstance().stopLocationMeasure();
+
+					if (mMyLocationMarkerOptions == null)
+					{
+						mMyLocationMarkerOptions = new MarkerOptions();
+						mMyLocationMarkerOptions.icon(new MyLocationMarker(baseActivity).makeIcon());
+						mMyLocationMarkerOptions.anchor(0.5f, 0.5f);
+					}
+
+					if (mMyLocationMarker != null)
+					{
+						mMyLocationMarker.remove();
+					}
+
+					mMyLocationMarkerOptions.position(new LatLng(location.getLatitude(), location.getLongitude()));
+					mMyLocationMarker = mGoogleMap.addMarker(mMyLocationMarkerOptions);
+
+					CameraPosition cameraPosition = new CameraPosition.Builder().target(mMyLocationMarkerOptions.getPosition()).zoom(13f).build();
+					mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+				}
+			});
+		}
+	};
 
 	private OnMapClickListener mOnMapClickListener = new OnMapClickListener()
 	{
