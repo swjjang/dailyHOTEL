@@ -225,7 +225,7 @@ public class PaymentActivity extends BaseActivity implements Constants
 
 			webView.postUrl(url.toString(), parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]), postParameterValue.toArray(new String[postParameterValue.size()])));
 
-			ProgressDialog.show(PaymentActivity.this, null, getString(R.string.dialog_msg_processing_payment), true).show();
+			ProgressDialog.show(PaymentActivity.this, null, getString(R.string.dialog_msg_processing_payment), true).setCancelable(false);
 		} else
 		{
 			// 기본 결제 방식

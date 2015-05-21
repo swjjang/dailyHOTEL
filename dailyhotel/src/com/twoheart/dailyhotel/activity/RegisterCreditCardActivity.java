@@ -64,6 +64,7 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
 		// TODO  setWebContentsDebuggingEnabled
 		//		WebView.setWebContentsDebuggingEnabled(true);
 
+		webView.getSettings().setSaveFormData(false);
 		webView.getSettings().setAppCacheEnabled(false); // 7.4 캐시 정책 비활성화.
 		webView.getSettings().setJavaScriptEnabled(true);
 		webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);

@@ -235,6 +235,8 @@ public class CreditCardListActivity extends BaseActivity
 							@Override
 							public void onClick(DialogInterface dialog, int which)
 							{
+								lockUI();
+
 								// 등록된 카드 삭제.
 								HashMap<String, String> params = new HashMap<String, String>();
 								params.put("billkey", card.billingkey);
@@ -485,17 +487,46 @@ public class CreditCardListActivity extends BaseActivity
 					ExLog.d("msg_code : " + msg_code);
 				}
 
-				int result = response.getInt("data");
+				JSONObject jsonObject = response.getJSONObject("data");
 
-				ExLog.d("delete card result : " + result);
+				boolean result = false;
 
-				// credit card 요청
-				mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_INFO).toString(), null, mUserSessionBillingCardInfoJsonResponseListener, CreditCardListActivity.this));
+				if (jsonObject != null)
+				{
+					result = jsonObject.getInt("isSuccess") == 1;
+				}
 
+				if (result == true)
+				{
+					// 성공
+					// credit card 요청
+					mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_INFO).toString(), null, mUserSessionBillingCardInfoJsonResponseListener, CreditCardListActivity.this));
+				} else
+				{
+					unLockUI();
+
+					// 실패 
+					SimpleAlertDialog.build(CreditCardListActivity.this, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_delete_failed_creditcard), getString(R.string.dialog_btn_text_confirm), new DialogInterface.OnClickListener()
+					{
+						@Override
+						public void onClick(DialogInterface dialog, int which)
+						{
+							lockUI();
+
+							// credit card 요청
+							mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_INFO).toString(), null, mUserSessionBillingCardInfoJsonResponseListener, CreditCardListActivity.this));
+						}
+
+					}).show();
+				}
 			} catch (Exception e)
 			{
 				onError(e);
-				unLockUI();
+
+				lockUI();
+
+				// credit card 요청
+				mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_INFO).toString(), null, mUserSessionBillingCardInfoJsonResponseListener, CreditCardListActivity.this));
 			}
 		}
 	};
