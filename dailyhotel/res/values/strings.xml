@@ -38,7 +38,7 @@
 
     <!-- Actionbar Titles -->
     <string name="actionbar_title_hotel_list_frag">오늘의 호텔</string>
-    <string name="actionbar_title_booking_list_frag">예약확인</string>
+    <string name="actionbar_title_booking_list_frag">예약내역</string>
     <string name="actionbar_title_credit_frag">적립금</string>
     <string name="actionbar_title_reg_creditcard">신용카드 추가하기</string>
     <string name="actionbar_title_setting_frag">설정</string>
@@ -141,7 +141,7 @@
     <!-- Main Drawer Menu Titles -->
     <string name="drawer_menu_pin_title_resrvation">예약</string>
     <string name="drawer_menu_item_title_todays_hotel">오늘의 호텔</string>
-    <string name="drawer_menu_item_title_chk_reservation">예약확인</string>
+    <string name="drawer_menu_item_title_chk_reservation">예약내역</string>
     <string name="drawer_menu_pin_title_account">계정</string>
     <string name="drawer_menu_item_title_credit">적립금</string>
     <string name="drawer_menu_item_title_reg_credit_card">신용카드등록</string>

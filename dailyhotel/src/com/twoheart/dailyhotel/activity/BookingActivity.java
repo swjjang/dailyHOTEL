@@ -456,6 +456,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 		View view = LayoutInflater.from(this).inflate(R.layout.fragment_dialog_confirm_payment, null);
 
+		TextView titleTextView = (TextView) view.findViewById(R.id.titleTextView);
 		TextView tvMsg = (TextView) view.findViewById(R.id.tv_confirm_payment_msg);
 		TextView btnProceed = (TextView) view.findViewById(R.id.btn_confirm_payment_proceed);
 		ImageView btnClose = (ImageView) view.findViewById(R.id.btn_confirm_payment_close);
@@ -485,6 +486,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				break;
 
 			case DIALOG_CONFIRM_CALL:
+				titleTextView.setText(R.string.dialog_notice2);
 				msg = getString(R.string.dialog_msg_call);
 				buttonText = getString(R.string.dialog_btn_call);
 				break;

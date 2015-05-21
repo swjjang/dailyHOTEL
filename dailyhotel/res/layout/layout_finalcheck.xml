@@ -13,7 +13,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/background_dialog_rating_hotel"
             android:orientation="vertical"
             android:paddingBottom="10dp" >

@@ -24,7 +24,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnLongClickListener;
-import android.webkit.CookieSyncManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -64,6 +63,7 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
 		// TODO  setWebContentsDebuggingEnabled
 		//		WebView.setWebContentsDebuggingEnabled(true);
 
+		webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
 		webView.getSettings().setSaveFormData(false);
 		webView.getSettings().setAppCacheEnabled(false); // 7.4 캐시 정책 비활성화.
 		webView.getSettings().setJavaScriptEnabled(true);
@@ -152,7 +152,9 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
 		public void onReceivedError(WebView view, int errorCode, String description, String failingUrl)
 		{
 			super.onReceivedError(view, errorCode, description, failingUrl);
+			
 			webView.loadUrl("about:blank");
+			
 			if (VolleyHttpClient.isAvailableNetwork())
 			{
 				setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);
@@ -185,7 +187,6 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
 
 			unLockUI();
 
-			CookieSyncManager.getInstance().sync();
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 				setSupportProgressBarIndeterminateVisibility(false);
 		}
