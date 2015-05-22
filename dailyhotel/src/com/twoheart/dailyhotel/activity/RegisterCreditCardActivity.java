@@ -152,9 +152,9 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
 		public void onReceivedError(WebView view, int errorCode, String description, String failingUrl)
 		{
 			super.onReceivedError(view, errorCode, description, failingUrl);
-			
+
 			webView.loadUrl("about:blank");
-			
+
 			if (VolleyHttpClient.isAvailableNetwork())
 			{
 				setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);

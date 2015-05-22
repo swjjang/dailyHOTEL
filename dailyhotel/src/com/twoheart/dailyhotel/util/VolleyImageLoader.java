@@ -20,13 +20,21 @@ public class VolleyImageLoader
 
 		sImageLoader = new ImageLoader(sRequestQueue, mBitmapLruCache);
 		sImageLoader.setBatchedResponseDelay(0);
-
 	}
 
 	public static ImageLoader getImageLoader()
 	{
 		if (sImageLoader == null)
-			init();
+		{
+			synchronized (VolleyImageLoader.class)
+			{
+				if (sImageLoader == null)
+				{
+					init();
+				}
+			}
+		}
+
 		return sImageLoader;
 	}
 
@@ -40,7 +48,7 @@ public class VolleyImageLoader
 
 	public static Bitmap getCache(String url)
 	{
-		if (mBitmapLruCache != null)
+		if (mBitmapLruCache != null && url != null)
 		{
 			return mBitmapLruCache.getBitmap(url);
 		}

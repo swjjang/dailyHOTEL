@@ -18,8 +18,6 @@ import java.util.TimeZone;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -37,8 +35,6 @@ import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.SimpleAlertDialog;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
@@ -204,14 +200,7 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 				if (mHotelDetail.getSaleIdx() == 0)
 				{
 					// 세션이 만료되어 재시작 요청.
-					SimpleAlertDialog.build(baseActivity, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_session_expired), getString(R.string.dialog_btn_text_confirm), null, new OnClickListener()
-					{
-						@Override
-						public void onClick(DialogInterface dialog, int which)
-						{
-							Util.restartApp(getActivity());
-						}
-					}, null).setCancelable(false).show();
+					baseActivity.restartApp();
 				} else
 				{
 					// 체크인 정보 요청.

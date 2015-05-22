@@ -43,8 +43,10 @@
     
 	<color name="white">#ffffff</color>
 	<color name="white_a50">#80ffffff</color>
+	<color name="white_a30">#4dffffff</color>
 	<color name="black">#000000</color>
 	<color name="black_a25">#40000000</color>
+	<color name="black_a80">#cc000000</color>
 	
 	<color name="tab_text">#a6000000</color>
 	<color name="tab_subtext_selected">#ccff7a7a</color>
@@ -76,5 +78,9 @@
 	
 	<!-- Credit Card -->
 	<color name="creditcard_background">#fefbf6</color>
+	
+	<!-- Booking List -->
+	<color name="bookinglist_section_background">#292929</color>
+	<color name="bookinglist_used_text">#8b8b8b</color>
 
 </resources>	

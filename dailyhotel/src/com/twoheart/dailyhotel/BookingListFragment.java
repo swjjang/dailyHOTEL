@@ -31,7 +31,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -51,6 +50,7 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListe
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
+import com.twoheart.dailyhotel.widget.PinnedSectionListView;
 
 /**
  * 예약한 호텔의 리스트들을 출력.
@@ -65,15 +65,18 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 	private BookingListAdapter mAdapter;
 
 	private RelativeLayout mEmptyLayout;
-	private ListView mListView;
+	private PinnedSectionListView mListView;
 	private TextView btnLogin;
+	private long mCurrentTime;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		View view = inflater.inflate(R.layout.fragment_booking_list, container, false);
 
-		mListView = (ListView) view.findViewById(R.id.listview_booking);
+		mListView = (PinnedSectionListView) view.findViewById(R.id.listview_booking);
+		mListView.setShadowVisible(false);
+
 		mEmptyLayout = (RelativeLayout) view.findViewById(R.id.layout_booking_empty);
 		btnLogin = (TextView) view.findViewById(R.id.btn_booking_empty_login);
 
@@ -139,6 +142,14 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
 		Intent intent = null;
 		Booking item = mItems.get(position);
+
+		if (item.type == Booking.TYPE_SECTION)
+		{
+			releaseUiComponent();
+
+			return;
+		}
+
 		RenewalGaManager.getInstance(baseActivity.getApplicationContext()).recordEvent("click", "selectBookingConfirmation", item.getHotel_name(), null);
 
 		if (item.getPayType() == CODE_PAY_TYPE_CARD_COMPLETE || item.getPayType() == CODE_PAY_TYPE_ACCOUNT_COMPLETE)
@@ -251,9 +262,10 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
 			if ("alive".equalsIgnoreCase(result) == true)
 			{ // session alive
-				// 예약 목록 요청.
-				//				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_MINE).toString(), null, mReserveMineStringResponseListener, mHostActivity));
-				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_MINE).toString(), null, mReserveMineJsonResponseListener, baseActivity));
+				Map<String, String> params = new HashMap<String, String>();
+				params.put("timeZone", "Asia/Seoul");
+
+				mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, baseActivity));
 
 			} else if ("dead".equalsIgnoreCase(result) == true)
 			{ // session dead
@@ -295,6 +307,37 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 				mEmptyLayout.setVisibility(View.VISIBLE);
 
 				onError();
+				unLockUI();
+			}
+		}
+	};
+
+	private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
+	{
+
+		@Override
+		public void onResponse(String url, JSONObject response)
+		{
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null)
+			{
+				return;
+			}
+
+			try
+			{
+				if (response == null)
+				{
+					throw new NullPointerException("response == null");
+				}
+
+				mCurrentTime = response.getLong("currentDateTime");
+
+				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_MINE_ALL).toString(), null, mReserveMineJsonResponseListener, baseActivity));
+			} catch (Exception e)
+			{
+				onError(e);
 				unLockUI();
 			}
 		}
@@ -344,6 +387,40 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 					btnLogin.setVisibility(View.INVISIBLE);
 				} else
 				{
+					// 입금대기, 결제완료, 이용완료
+					ArrayList<Booking> waitBookingList = new ArrayList<Booking>();
+					ArrayList<Booking> paymentBookingList = new ArrayList<Booking>();
+					ArrayList<Booking> usedBookingList = new ArrayList<Booking>();
+
+					for (int i = 0; i < length; i++)
+					{
+						JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+						Booking booking = new Booking(jsonObject);
+
+						switch (booking.getPayType())
+						{
+							case CODE_PAY_TYPE_CARD_COMPLETE:
+							case CODE_PAY_TYPE_ACCOUNT_COMPLETE:
+								boolean isUsed = booking.checkoutTime < mCurrentTime;
+
+								booking.isUsed = isUsed;
+
+								if (isUsed)
+								{
+									usedBookingList.add(booking);
+								} else
+								{
+									paymentBookingList.add(booking);
+								}
+								break;
+
+							case CODE_PAY_TYPE_ACCOUNT_WAIT:
+								waitBookingList.add(booking);
+								break;
+						}
+					}
+
 					if (mItems == null)
 					{
 						mItems = new ArrayList<Booking>();
@@ -351,11 +428,28 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
 					mItems.clear();
 
-					for (int i = 0; i < length; i++)
+					// 입금 대기가 있는 경우.
+					if (waitBookingList.size() > 0)
 					{
-						JSONObject jsonObject = jsonArray.getJSONObject(i);
+						Booking sectionWait = new Booking(getString(R.string.frag_booking_wait_account));
+						mItems.add(sectionWait);
+						mItems.addAll(waitBookingList);
+					}
 
-						mItems.add(new Booking(jsonObject));
+					// 결제 완료가 있는 경우.
+					if (paymentBookingList.size() > 0)
+					{
+						Booking sectionPay = new Booking(getString(R.string.frag_booking_complete_payment));
+						mItems.add(sectionPay);
+						mItems.addAll(paymentBookingList);
+					}
+
+					// 이용 완료가 있는 경우.
+					if (usedBookingList.size() > 0)
+					{
+						Booking sectionUsed = new Booking(getString(R.string.frag_booking_use));
+						mItems.add(sectionUsed);
+						mItems.addAll(usedBookingList);
 					}
 
 					mAdapter = new BookingListAdapter(baseActivity, R.layout.list_row_booking, mItems);

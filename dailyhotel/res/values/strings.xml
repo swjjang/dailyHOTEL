@@ -58,7 +58,7 @@
     <string name="actionbar_title_version_activity">버전정보</string>
     <string name="actionbar_title_zoom_map_activity">지도 확대</string>
     <string name="actionbar_title_payment_wait_activity">입금 대기</string>
-    <string name="actionbar_title_creditcard_activity">신용카드관리</string>
+    <string name="actionbar_title_creditcard_activity">신용카드 관리</string>
 
     <!-- Toast Messages -->
     <string name="toast_msg_network_status_bad">인터넷 연결을 할 수 없습니다.\n설정에서 확인해주세요.</string>
@@ -228,6 +228,9 @@
     <string name="frag_booking_no_hotels">예약된 호텔이 없습니다!</string>
     <string name="frag_booking_line">오늘은 멋진 호텔에서\n하루를 보내는게 어때요?</string>
     <string name="frag_booking_btn_login">기존 회원 로그인</string>
+    <string name="frag_booking_wait_account">입금대기</string>
+    <string name="frag_booking_complete_payment">결제완료</string>
+    <string name="frag_booking_use">이용완료</string>
 
     <!-- Profile Activity -->
     <string name="act_profile_login_acc">로그인 계정</string>

@@ -188,15 +188,7 @@ public class CreditCardListActivity extends BaseActivity
 						overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 					} else
 					{
-						// 세션이 만료되어 재시작 요청.
-						SimpleAlertDialog.build(CreditCardListActivity.this, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_session_expired), getString(R.string.dialog_btn_text_confirm), null, new OnClickListener()
-						{
-							@Override
-							public void onClick(DialogInterface dialog, int which)
-							{
-								Util.restartApp(CreditCardListActivity.this);
-							}
-						}, null).setCancelable(false).show();
+						restartApp();
 					}
 				}
 			}, CreditCardListActivity.this));

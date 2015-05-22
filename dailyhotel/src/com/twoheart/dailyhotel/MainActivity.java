@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.json.JSONObject;
 
@@ -978,7 +979,10 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 					int purchasedHotelSaleIdx = sharedPreference.getInt(KEY_PREFERENCE_HOTEL_SALE_IDX, VALUE_PREFERENCE_HOTEL_SALE_IDX_DEFAULT);
 					String purchasedHotelCheckOut = sharedPreference.getString(KEY_PREFERENCE_HOTEL_CHECKOUT, VALUE_PREFERENCE_HOTEL_CHECKOUT_DEFAULT);
 
-					Date today = new Date();
+					Calendar calendar = DailyCalendar.getInstance();
+					calendar.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
+					
+					Date today = calendar.getTime();
 					Date checkOut = SaleTime.stringToDate(Util.dailyHotelTimeConvert(purchasedHotelCheckOut));
 
 					//호텔 만족도 조사 
@@ -986,10 +990,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 					{
 						if (today.compareTo(checkOut) >= 0)
 						{
-							Calendar calendar = DailyCalendar.getInstance();
-							calendar.setTime(checkOut);
-							calendar.add(Calendar.DATE, DAYS_DISPLAY_RATING_HOTEL_DIALOG);
-							Date deadLineDay = calendar.getTime();
+							Date deadLineDay = new Date(checkOut.getTime() + 7 * SaleTime.SECONDS_IN_A_DAY * 1000);
 
 							if (today.compareTo(deadLineDay) < 0)
 							{

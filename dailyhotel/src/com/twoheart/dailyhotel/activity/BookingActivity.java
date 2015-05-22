@@ -79,7 +79,6 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.StringFilter;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
@@ -917,7 +916,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		{
 			ExLog.d(e.toString());
 
-			Util.restartApp(BookingActivity.this);
+			restartApp();
 		}
 	}
 
@@ -1296,14 +1295,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				if (mPay.getHotelDetail().getSaleIdx() == 0)
 				{
 					// 세션이 만료되어 재시작 요청.
-					SimpleAlertDialog.build(BookingActivity.this, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_session_expired), getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnClickListener()
-					{
-						@Override
-						public void onClick(DialogInterface dialog, int which)
-						{
-							Util.restartApp(BookingActivity.this);
-						}
-					}, null).setCancelable(false).show();
+					restartApp();
 				} else
 				{
 					// 체크인 정보 요청
@@ -1460,14 +1452,14 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 			//			if (locale.equals("한국어") == true)
 			//			{
-			SimpleDateFormat formatIn = new SimpleDateFormat("M월 d일 (EEE)", Locale.KOREA);
-			formatIn.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
-			String day = formatIn.format(calendarCheckin.getTime());
+			SimpleDateFormat formatDay = new SimpleDateFormat("M월 d일 (EEE)", Locale.KOREA);
+			formatDay.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
 
-			mCheckinDayTextView.setText(day);
+			SimpleDateFormat formatHour = new SimpleDateFormat("HH시", Locale.KOREA);
+			formatHour.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
 
-			//
-			mCheckinTimeTextView.setText(calendarCheckin.get(Calendar.HOUR_OF_DAY) + "시");
+			mCheckinDayTextView.setText(formatDay.format(calendarCheckin.getTime()));
+			mCheckinTimeTextView.setText(formatHour.format(calendarCheckin.getTime()));
 			//			}
 
 			// CheckOut
@@ -1482,11 +1474,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 			//			if (locale.equals("한국어") == true)
 			//			{
-			SimpleDateFormat formatOut = new SimpleDateFormat("M월 d일 (EEE)", Locale.KOREA);
-			formatOut.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
-
-			mCheckoutDayTextView.setText(formatOut.format(calendarCheckout.getTime()));
-			mCheckoutTimeTextView.setText(calendarCheckout.get(Calendar.HOUR_OF_DAY) + "시");
+			mCheckoutDayTextView.setText(formatDay.format(calendarCheckout.getTime()));
+			mCheckoutTimeTextView.setText(formatHour.format(calendarCheckout.getTime()));
 			//			}
 
 			// credit card 요청

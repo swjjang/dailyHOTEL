@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Rect;
@@ -48,6 +49,8 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.GlobalFont;
+import com.twoheart.dailyhotel.util.SimpleAlertDialog;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.RegionPopupListView;
@@ -284,6 +287,19 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 		config.locale = locale;
 		getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
 
+	}
+
+	public void restartApp()
+	{
+		// 세션이 만료되어 재시작 요청.
+		SimpleAlertDialog.build(BaseActivity.this, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_session_expired), getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				Util.restartApp(BaseActivity.this);
+			}
+		}, null).setCancelable(false).show();
 	}
 
 	private void showPopupWindow(View oTargetView, ArrayList<String> stringlist, final UserActionListener userActionListener)
