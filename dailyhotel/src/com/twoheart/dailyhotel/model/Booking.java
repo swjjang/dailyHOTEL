@@ -12,6 +12,7 @@ public class Booking implements Parcelable
 	public static final int TYPE_ENTRY = 0;
 	public static final int TYPE_SECTION = 1;
 
+	public int index; // 호텔 예약 고유 번호.
 	public int type = TYPE_ENTRY;
 	private String sday;
 	private String hotel_idx;
@@ -45,6 +46,7 @@ public class Booking implements Parcelable
 	@Override
 	public void writeToParcel(Parcel dest, int flags)
 	{
+		dest.writeInt(index);
 		dest.writeInt(type);
 		dest.writeString(sday);
 		dest.writeString(hotel_idx);
@@ -63,6 +65,7 @@ public class Booking implements Parcelable
 
 	private void readFromParcel(Parcel in)
 	{
+		index = in.readInt();
 		type = in.readInt();
 		sday = in.readString();
 		hotel_idx = in.readString();
@@ -97,6 +100,7 @@ public class Booking implements Parcelable
 	{
 		try
 		{
+			index = jsonObject.getInt("idx");
 			hotel_name = jsonObject.getString("hotel_name");
 			sday = jsonObject.getString("sday");
 			hotel_idx = jsonObject.getString("hotel_idx");
@@ -104,12 +108,12 @@ public class Booking implements Parcelable
 			payType = jsonObject.getInt("pay_type");
 			tid = jsonObject.getString("tid");
 			ment = jsonObject.getString("comment");
-			
-			if(jsonObject.has("saleidx") == true)
+
+			if (jsonObject.has("saleidx") == true)
 			{
 				saleIdx = jsonObject.getInt("saleidx");
 			}
-			
+
 			checkinTime = jsonObject.getLong("checkin_time");
 			checkoutTime = jsonObject.getLong("checkout_time");
 			hotelImageUrl = jsonObject.getString("path");

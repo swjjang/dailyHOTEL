@@ -33,13 +33,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
-import com.twoheart.dailyhotel.activity.EventWebActivity;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.WakeLock;
@@ -62,8 +59,9 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 	private Intent intent;
 	private SaleTime mSaleTime;
 	private long remainingTime;
-	private ImageView ivNewEvent;
-	private LinearLayout btnEvent;
+
+	//	private ImageView ivNewEvent;
+	//	private LinearLayout btnEvent;
 
 	public static WaitTimerFragment newInstance(SaleTime saleTime)
 	{
@@ -96,9 +94,9 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 		tvTimer = (TextView) view.findViewById(R.id.tv_timer);
 		tvTitle = (TextView) view.findViewById(R.id.tv_wait_timer_main);
 		btnNotify = (TextView) view.findViewById(R.id.btn_wait_timer_alram);
-		ivNewEvent = (ImageView) view.findViewById(R.id.iv_new_event);
-		btnEvent = (LinearLayout) view.findViewById(R.id.btn_event);
-		btnEvent.setVisibility(View.GONE);
+		//		ivNewEvent = (ImageView) view.findViewById(R.id.iv_new_event);
+		//		btnEvent = (LinearLayout) view.findViewById(R.id.btn_event);
+		//		btnEvent.setVisibility(View.GONE);
 
 		btnNotify.setOnClickListener(this);
 		//		btnEvent.setOnClickListener(this);
@@ -135,19 +133,20 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 		if (v.getId() == btnNotify.getId())
 		{
 			setNotify(!isEnabledNotify);
-		} else if (v.getId() == btnEvent.getId())
-		{
-			BaseActivity baseActivity = (BaseActivity) getActivity();
-
-			if (baseActivity == null)
-			{
-				return;
-			}
-
-			Intent i = new Intent(baseActivity, EventWebActivity.class);
-			baseActivity.startActivity(i);
-			baseActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
 		}
+		//		else if (v.getId() == btnEvent.getId())
+		//		{
+		//			BaseActivity baseActivity = (BaseActivity) getActivity();
+		//
+		//			if (baseActivity == null)
+		//			{
+		//				return;
+		//			}
+		//
+		//			Intent i = new Intent(baseActivity, EventWebActivity.class);
+		//			baseActivity.startActivity(i);
+		//			baseActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
+		//		}
 	}
 
 	private void setNotify(boolean enable)
@@ -238,7 +237,7 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 	private void printCurrentRemaingTime(long remainingTime)
 	{
 		SimpleDateFormat displayTimeFormat = new SimpleDateFormat("HH:mm:ss", Locale.KOREA);
-		displayTimeFormat.setTimeZone(TimeZone.getTimeZone("KST"));
+		displayTimeFormat.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
 
 		tvTimer.setText(displayTimeFormat.format(remainingTime));
 

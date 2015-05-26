@@ -981,7 +981,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 					Calendar calendar = DailyCalendar.getInstance();
 					calendar.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
-					
+
 					Date today = calendar.getTime();
 					Date checkOut = SaleTime.stringToDate(Util.dailyHotelTimeConvert(purchasedHotelCheckOut));
 

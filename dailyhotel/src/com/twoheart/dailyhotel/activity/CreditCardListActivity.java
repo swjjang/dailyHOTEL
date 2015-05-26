@@ -36,7 +36,6 @@ import com.twoheart.dailyhotel.ui.CreditCardLayout;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
@@ -240,15 +239,7 @@ public class CreditCardListActivity extends BaseActivity
 						SimpleAlertDialog.build(CreditCardListActivity.this, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_delete_register_creditcard), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null).show();
 					} else
 					{
-						// 세션이 만료되어 재시작 요청.
-						SimpleAlertDialog.build(CreditCardListActivity.this, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_session_expired), getString(R.string.dialog_btn_text_confirm), null, new OnClickListener()
-						{
-							@Override
-							public void onClick(DialogInterface dialog, int which)
-							{
-								Util.restartApp(CreditCardListActivity.this);
-							}
-						}, null).setCancelable(false).show();
+						restartApp();
 					}
 				}
 			}, CreditCardListActivity.this));

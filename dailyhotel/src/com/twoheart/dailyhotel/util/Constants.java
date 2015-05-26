@@ -52,7 +52,7 @@ public interface Constants
 
 	// 웹서버 호스트  
 	//"http://restful.dailyhotel.kr/goodnight/"; //  서비스 서버 
-	//			public static final String URL_DAILYHOTEL_SERVER = UNENCRYPTED_URL ? "http://restful.dailyhotel.kr/goodnight/" : "MzkkNTQkNjEkNTYkNDck$RTA3Q0MwQTlGOTVCNUM4RkQ1OTM5MzMxRDVDNkUK0MTBBRjIUyMjU4OIEDE4NzQWwRDI4QTNGRUFERUNDMDMzMjk4QzIyODlFMDkwMjNDMDMyRUUxMjBDRUU1MTlBMDQ3MzRB$";
+	//				public static final String URL_DAILYHOTEL_SERVER = UNENCRYPTED_URL ? "http://restful.dailyhotel.kr/goodnight/" : "MzkkNTQkNjEkNTYkNDck$RTA3Q0MwQTlGOTVCNUM4RkQ1OTM5MzMxRDVDNkUK0MTBBRjIUyMjU4OIEDE4NzQWwRDI4QTNGRUFERUNDMDMzMjk4QzIyODlFMDkwMjNDMDMyRUUxMjBDRUU1MTlBMDQ3MzRB$";
 	//http://ec2restful.dailyhotel.kr    http://restful.dailyhotel.kr/goodnight/
 	//    public static final String URL_DAILYHOTEL_SERVER = "http://192.168.0.39:8080/goodnight/"; //  서비스 서버
 
@@ -197,6 +197,9 @@ public interface Constants
 
 	// api/reserv/mine/all
 	public static final String URL_WEBAPI_RESERV_MINE_ALL = UNENCRYPTED_URL ? "api/reserv/mine/all" : "MjQkMzYkNTkkOCQ5MCQ=$Q0UyMzU1ERjgxNzE2RTM5Qjc5FMTM5OUFGRDAC2Q0Q2MkJGOEM1NTAxNTk0MOzlERTlBQjA2NUUxNDczQTE0RkFGMQJ==$";
+
+	// api/reserv/mine/hidden
+	public static final String URL_WEBAPI_RESERV_MINE_HIDDEN = UNENCRYPTED_URL ? "api/reserv/mine/hidden" : "NyQ1OCQzMiQyMyQzOCQ=$RkI3OTZDGQ0UzOEYzQ0U2RkZMzQ0ZFRTNDGRkQOxNERFMjc4NDYzMkQ0MEE1RFDI5Q0NDMDk5NjEzMTEyRkIyNUIzRQ==$";
 
 	// api/reserv/validate
 	public static final String URL_WEBAPI_RESERV_VALIDATE = UNENCRYPTED_URL ? "api/reserv/validate" : "MCQ2NCQ0MiQ1MyQ2JA==$MREJDOKDlGOEVGNkU1RTlFQzFDQzNGMUMyOTg3NTRCOYEE5RDk4RUYI2MTRCQzFBQThABMzQ1MDNCMEI1QkZGODgyMQ==$";
