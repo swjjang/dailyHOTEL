@@ -528,7 +528,11 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 				SaleTime saleTime = mTodaySaleTime.getClone(i);
 				tabSaleTime[i] = saleTime;
 
-				hotelListFragment.setSaleTime(saleTime);
+				if (hotelListFragment.getSaleTime() == null)
+				{
+					hotelListFragment.setSaleTime(saleTime);
+				}
+
 				hotelListFragment.setRegionList(detailRegionList);
 			}
 

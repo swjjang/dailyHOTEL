@@ -104,7 +104,7 @@ public class Booking implements Parcelable
 			{
 				index = jsonObject.getInt("idx");
 			}
-			
+
 			hotel_name = jsonObject.getString("hotel_name");
 			sday = jsonObject.getString("sday");
 			hotel_idx = jsonObject.getString("hotel_idx");
