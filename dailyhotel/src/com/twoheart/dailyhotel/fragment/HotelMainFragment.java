@@ -39,7 +39,6 @@ import com.twoheart.dailyhotel.activity.HotelTabActivity;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonArrayRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonArrayResponseListener;
@@ -529,7 +528,11 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 				SaleTime saleTime = mTodaySaleTime.getClone(i);
 				tabSaleTime[i] = saleTime;
 
-				hotelListFragment.setSaleTime(saleTime);
+				if (hotelListFragment.getSaleTime() == null)
+				{
+					hotelListFragment.setSaleTime(saleTime);
+				}
+
 				hotelListFragment.setRegionList(detailRegionList);
 			}
 
@@ -642,7 +645,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 				// 릴리즈 버전에서 메모리 해지에 문제가 생기는 경우가 있어 앱을 재 시작 시킨다.
 				if (DEBUG == false)
 				{
-					Util.restartApp(baseActivity.getApplicationContext());
+					baseActivity.restartApp();
 				}
 			}
 		}

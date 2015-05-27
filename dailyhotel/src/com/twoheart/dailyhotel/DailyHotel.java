@@ -90,17 +90,14 @@ public class DailyHotel extends Application implements Constants
 
 		// Make myHandler the new default uncaught exception handler.
 		Thread.setDefaultUncaughtExceptionHandler(myHandler);
+
+		VolleyImageLoader.init();
 	}
 
 	private void initializeVolley()
 	{
 		VolleyHttpClient.init(this);
 
-	}
-
-	private void initializeVolleyImageLoader()
-	{
-		VolleyImageLoader.init();
 	}
 
 	private void initializeFont()

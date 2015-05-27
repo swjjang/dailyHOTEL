@@ -37,6 +37,7 @@ import com.twoheart.dailyhotel.adapter.HotelInfoWindowAdapter.OnInfoWindowClickL
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.HotelClusterItem;
@@ -363,7 +364,13 @@ public class HotelListMapFragment extends
 
 		if (isChangedRegion == true)
 		{
-			cameraSetting(builder.build(), count);
+			try
+			{
+				cameraSetting(builder.build(), count);
+			} catch (Exception e)
+			{
+				ExLog.d(e.toString());
+			}
 		} else
 		{
 			mGoogleMap.setOnCameraChangeListener(mClusterManager);
@@ -386,7 +393,10 @@ public class HotelListMapFragment extends
 
 	private void cameraSetting(final LatLngBounds bounds, int hotelCount)
 	{
-		if (hotelCount == 1)
+		if (hotelCount <= 0)
+		{
+			return;
+		} else if (hotelCount == 1)
 		{
 			mGoogleMap.setOnCameraChangeListener(new OnCameraChangeListener()
 			{

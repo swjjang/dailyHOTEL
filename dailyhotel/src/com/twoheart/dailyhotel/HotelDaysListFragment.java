@@ -56,7 +56,6 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 	private View[] mDaysView;
 	private View mSelectedView = null;
 	private boolean mIsShowDaysList;
-	private boolean mIsCreate = false;
 
 	private Handler mHandler = new Handler()
 	{
@@ -203,11 +202,29 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 	@Override
 	public void onPageUnSelected()
 	{
-		super.onPageUnSelected();
+		try
+		{
+			super.onPageUnSelected();
 
-		mHandler.removeMessages(1);
+			if (mHandler != null)
+			{
+				mHandler.removeMessages(1);
+			}
 
-		hideDaysList();
+			hideDaysList();
+		} catch (Exception e)
+		{
+			ExLog.d(e.toString());
+
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null)
+			{
+				return;
+			}
+
+			baseActivity.restartApp();
+		}
 	}
 
 	@Override

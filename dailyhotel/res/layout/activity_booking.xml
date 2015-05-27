@@ -461,39 +461,43 @@
                     <com.twoheart.dailyhotel.widget.DailyCustomFontRadioButton
                         android:id="@+id/easyPaymentRadioButton"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="30dp"
                         android:button="@drawable/abc_btn_radio_material"
                         android:buttonTint="@color/actionbar_hamburger"
                         android:text="@string/label_booking_easypayment"
-                        android:textColor="@color/textView_textColor_main" />
+                        android:textColor="@color/textView_textColor_main"
+                        android:textSize="15dp" />
 
                     <com.twoheart.dailyhotel.widget.DailyCustomFontRadioButton
                         android:id="@+id/rb_payment_card"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="30dp"
                         android:button="@drawable/abc_btn_radio_material"
                         android:buttonTint="@color/actionbar_hamburger"
                         android:text="@string/act_booking_pay_card"
-                        android:textColor="@color/textView_textColor_main" />
+                        android:textColor="@color/textView_textColor_main"
+                        android:textSize="15dp" />
 
                     <com.twoheart.dailyhotel.widget.DailyCustomFontRadioButton
                         android:id="@+id/rb_payment_hp"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="30dp"
                         android:button="@drawable/abc_btn_radio_material"
                         android:buttonTint="@color/actionbar_hamburger"
                         android:text="@string/act_booking_pay_mobile"
-                        android:textColor="@color/textView_textColor_main" />
+                        android:textColor="@color/textView_textColor_main"
+                        android:textSize="15dp" />
 
                     <com.twoheart.dailyhotel.widget.DailyCustomFontRadioButton
                         android:id="@+id/rb_payment_account"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="30dp"
                         android:button="@drawable/abc_btn_radio_material"
                         android:buttonTint="@color/actionbar_hamburger"
                         android:paddingRight="15dp"
                         android:text="@string/act_booking_pay_account"
-                        android:textColor="@color/textView_textColor_main" />
+                        android:textColor="@color/textView_textColor_main"
+                        android:textSize="15dp" />
                 </RadioGroup>
             </RelativeLayout>
 

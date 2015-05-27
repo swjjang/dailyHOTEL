@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_window_background" >
 
-    <ListView
+    <com.twoheart.dailyhotel.widget.PinnedSectionListView
         android:id="@+id/listview_booking"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/gradient_window_background"
+        android:cacheColorHint="@android:color/transparent"
         android:divider="@null"
-        android:fadingEdge="none"
-        android:scrollbars="vertical" />
+        android:fadingEdge="none" />
 
     <RelativeLayout
         android:id="@+id/layout_booking_empty"
-        android:background="@drawable/gradient_window_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/gradient_window_background"
         android:visibility="invisible" >
 
         <ImageView
@@ -44,8 +44,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@+id/tv_booking_empty_desc"
-            android:layout_marginBottom="10dp"
             android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
             android:gravity="center"
             android:text="@string/frag_booking_no_hotels"
             android:textColor="@color/textView_textColor_main"
@@ -62,7 +62,6 @@
             android:text="@string/frag_booking_btn_login"
             android:textColor="@android:color/white"
             android:textSize="17dp" />
-
     </RelativeLayout>
 
 </FrameLayout>

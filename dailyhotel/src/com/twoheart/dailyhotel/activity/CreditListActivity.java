@@ -77,7 +77,7 @@ public class CreditListActivity extends BaseActivity
 	public void finish()
 	{
 		super.finish();
-		
+
 		overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
 	}
 }
