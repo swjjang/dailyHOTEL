@@ -394,7 +394,17 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 						}
 					};
 
-					SimpleAlertDialog.build(SplashActivity.this, getString(R.string.dialog_title_notice), getString(R.string.dialog_msg_please_update_new_version), getString(R.string.dialog_btn_text_update), posListener).show();
+					OnCancelListener cancelListener = new OnCancelListener()
+					{
+						@Override
+						public void onCancel(DialogInterface dialog)
+						{
+							setResult(RESULT_CANCELED);
+							finish();
+						}
+					};
+
+					SimpleAlertDialog.build(SplashActivity.this, getString(R.string.dialog_title_notice), getString(R.string.dialog_msg_please_update_new_version), getString(R.string.dialog_btn_text_update), posListener).setOnCancelListener(cancelListener).show();
 
 				} else if ((maxVersion > currentVersion) && (skipMaxVersion != maxVersion))
 				{
