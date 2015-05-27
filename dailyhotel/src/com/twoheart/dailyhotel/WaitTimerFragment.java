@@ -237,7 +237,7 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 	private void printCurrentRemaingTime(long remainingTime)
 	{
 		SimpleDateFormat displayTimeFormat = new SimpleDateFormat("HH:mm:ss", Locale.KOREA);
-		displayTimeFormat.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
+		displayTimeFormat.setTimeZone(TimeZone.getTimeZone("KST"));
 
 		tvTimer.setText(displayTimeFormat.format(remainingTime));
 
