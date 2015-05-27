@@ -86,7 +86,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
 	public Session fbSession;
 
-	private GoogleCloudMessaging mGcm;
 	private MixpanelAPI mMixpanel;
 
 	@Override
@@ -406,9 +405,13 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
 	private void regGcmId(final int idx)
 	{
+		if (isGoogleServiceAvailable() == false)
+		{
+			return;
+		}
+		
 		new AsyncTask<Void, Void, String>()
 		{
-
 			@Override
 			protected String doInBackground(Void... params)
 			{
@@ -590,12 +593,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 					}
 				}
 
-				if (isGoogleServiceAvailable() == true)
-				{
-					ExLog.d("call regGcmId");
-					mGcm = GoogleCloudMessaging.getInstance(LoginActivity.this);
-					regGcmId(response.getInt("idx"));
-				}
+				regGcmId(response.getInt("idx"));
 			} catch (Exception e)
 			{
 				unLockUI();
