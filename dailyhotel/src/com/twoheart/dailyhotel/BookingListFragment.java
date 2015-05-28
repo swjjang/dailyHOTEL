@@ -464,6 +464,11 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
 				if (length == 0)
 				{
+					if (mAdapter != null)
+					{
+						mAdapter.clear();
+					}
+
 					//예약한 호텔이 없는 경우 
 					mListView.setVisibility(View.GONE);
 					mEmptyLayout.setVisibility(View.VISIBLE);
@@ -530,10 +535,17 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 						bookingArrayList.addAll(usedBookingList);
 					}
 
-					mAdapter = new BookingListAdapter(baseActivity, R.layout.list_row_booking, bookingArrayList);
-					mAdapter.setOnUserActionListener(mOnUserActionListener);
-					mListView.setOnItemClickListener(BookingListFragment.this);
-					mListView.setAdapter(mAdapter);
+					if (mAdapter == null)
+					{
+						mAdapter = new BookingListAdapter(baseActivity, R.layout.list_row_booking, new ArrayList<Booking>());
+						mAdapter.setOnUserActionListener(mOnUserActionListener);
+						mListView.setOnItemClickListener(BookingListFragment.this);
+						mListView.setAdapter(mAdapter);
+					}
+
+					mAdapter.clear();
+					mAdapter.addAll(bookingArrayList);
+					mAdapter.notifyDataSetChanged();
 
 					mListView.setVisibility(View.VISIBLE);
 					mEmptyLayout.setVisibility(View.GONE);
@@ -549,7 +561,6 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 						editor.apply();
 					}
 				}
-
 			} catch (Exception e)
 			{
 				mListView.setVisibility(View.GONE);

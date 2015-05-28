@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.adapter;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -26,16 +27,24 @@ import com.twoheart.dailyhotel.widget.PinnedSectionListView.PinnedSectionListAda
 
 public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedSectionListAdapter
 {
-	private ArrayList<Booking> items;
-	private Context context;
+	private ArrayList<Booking> mBookingList;
+	private Context mContext;
 	private BookingListFragment.OnUserActionListener mOnUserActionListener;
 
 	public BookingListAdapter(Context context, int resourceId, ArrayList<Booking> items)
 	{
 		super(context, resourceId, items);
 
-		this.items = items;
-		this.context = context;
+		if (mBookingList == null)
+		{
+			mBookingList = new ArrayList<Booking>();
+		}
+
+		mBookingList.clear();
+		mBookingList.addAll(mBookingList);
+
+		this.mBookingList = items;
+		this.mContext = context;
 	}
 
 	public void setOnUserActionListener(BookingListFragment.OnUserActionListener listener)
@@ -44,9 +53,78 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
 	}
 
 	@Override
+	public void clear()
+	{
+		if (mBookingList == null)
+		{
+			mBookingList = new ArrayList<Booking>();
+		}
+
+		mBookingList.clear();
+
+		super.clear();
+	}
+
+	@Override
+	public Booking getItem(int position)
+	{
+		if (mBookingList == null)
+		{
+			return null;
+		}
+
+		return mBookingList.get(position);
+	}
+
+	@Override
+	public int getCount()
+	{
+		if (mBookingList == null)
+		{
+			return 0;
+		}
+
+		return mBookingList.size();
+	}
+
+	@Override
+	public void addAll(Collection<? extends Booking> collection)
+	{
+		if (collection == null)
+		{
+			return;
+		}
+
+		if (mBookingList == null)
+		{
+			mBookingList = new ArrayList<Booking>();
+		}
+
+		mBookingList.addAll(collection);
+	}
+
+	@Override
+	public boolean isItemViewTypePinned(int viewType)
+	{
+		return viewType == Booking.TYPE_SECTION;
+	}
+
+	@Override
+	public int getViewTypeCount()
+	{
+		return 2;
+	}
+
+	@Override
+	public int getItemViewType(int position)
+	{
+		return getItem(position).type;
+	}
+
+	@Override
 	public View getView(int position, View convertView, ViewGroup parent)
 	{
-		Booking booking = items.get(position);
+		Booking booking = getItem(position);
 
 		if (convertView != null)
 		{
@@ -64,7 +142,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
 			{
 				if (convertView == null)
 				{
-					LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+					LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 					convertView = layoutInflater.inflate(R.layout.list_row_booking, parent, false);
 					convertView.setTag(Booking.TYPE_ENTRY);
 				}
@@ -77,7 +155,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
 			{
 				if (convertView == null)
 				{
-					LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+					LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 					convertView = layoutInflater.inflate(R.layout.list_row_booking_section, parent, false);
 					convertView.setTag(Booking.TYPE_SECTION);
 				}
@@ -144,8 +222,8 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
 			waitAccountTextView.setVisibility(View.GONE);
 			bookingIconImageView.setVisibility(View.GONE);
 
-			name.setTextColor(context.getResources().getColor(R.color.bookinglist_used_text));
-			day.setTextColor(context.getResources().getColor(R.color.bookinglist_used_text));
+			name.setTextColor(mContext.getResources().getColor(R.color.bookinglist_used_text));
+			day.setTextColor(mContext.getResources().getColor(R.color.bookinglist_used_text));
 
 			dimView.setVisibility(View.VISIBLE);
 			deleteView.setVisibility(View.VISIBLE);
@@ -177,8 +255,8 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
 				bookingIconImageView.setImageResource(R.drawable.ic_complete);
 			}
 
-			name.setTextColor(context.getResources().getColor(R.color.white));
-			day.setTextColor(context.getResources().getColor(R.color.white));
+			name.setTextColor(mContext.getResources().getColor(R.color.white));
+			day.setTextColor(mContext.getResources().getColor(R.color.white));
 
 			dimView.setVisibility(View.GONE);
 			deleteView.setVisibility(View.GONE);
@@ -199,23 +277,5 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
 		sectionName.setText(booking.getHotel_name());
 
 		return view;
-	}
-
-	@Override
-	public boolean isItemViewTypePinned(int viewType)
-	{
-		return viewType == Booking.TYPE_SECTION;
-	}
-
-	@Override
-	public int getViewTypeCount()
-	{
-		return 2;
-	}
-
-	@Override
-	public int getItemViewType(int position)
-	{
-		return getItem(position).type;
 	}
 }
