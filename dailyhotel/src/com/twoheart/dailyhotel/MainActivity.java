@@ -135,8 +135,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		ExLog.d("GCM??" + sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "NOPE"));
-
 		//		DailyHotelRequest.makeUrlEncoder();
 
 		// 사용자가 선택한 언어, but 만약 사용자가 한국인인데 일본어를 선택하면 jp가 됨.
@@ -223,6 +221,10 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 					return; // 메서드를 빠져나간다 - 호텔 평가를 수행하지 않음.
 			}
 
+			// 앱 시작시에 notification_id 값을 삭제한다.
+			editor.putString(KEY_PREFERENCE_GCM_ID, "");
+			editor.apply();
+
 			// 앱을 처음 설치한 경우 가이드를 띄움. 
 			boolean showGuide = sharedPreference.getBoolean(KEY_PREFERENCE_SHOW_GUIDE, true);
 			if (showGuide)
@@ -285,16 +287,21 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		}
 	}
 
-	private void regGcmId(final int idx)
+	private void regGcmId(final String idx)
 	{
+		if (isGoogleServiceAvailable() == false)
+		{
+			return;
+		}
+
 		new AsyncTask<Void, Void, String>()
 		{
-
 			@Override
 			protected String doInBackground(Void... params)
 			{
 				GoogleCloudMessaging instance = GoogleCloudMessaging.getInstance(MainActivity.this);
 				String regId = "";
+				
 				try
 				{
 					regId = instance.register(GCM_PROJECT_NUMBER);
@@ -310,17 +317,17 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			@Override
 			protected void onPostExecute(String regId)
 			{
-
 				// gcm id가 없을 경우 스킵.
 				if (regId == null || regId.isEmpty())
 					return;
 
 				// 이 값을 서버에 등록하기.
 				regPushParams = new HashMap<String, String>();
-
-				regPushParams.put("user_idx", idx + "");
+				regPushParams.put("user_idx", idx);
 				regPushParams.put("notification_id", regId);
 				regPushParams.put("device_type", GCM_DEVICE_TYPE_ANDROID);
+				
+				ExLog.d("params for register push id : " + regPushParams.toString());
 
 				mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_GCM_REGISTER).toString(), regPushParams, mGcmRegisterJsonResponseListener, MainActivity.this));
 			}
@@ -936,6 +943,12 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 				// session alive
 				// 호텔 평가를 위한 사용자 정보 조회
 				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, MainActivity.this));
+			} else
+			{
+				if (getGcmId().isEmpty() == true)
+				{
+					regGcmId("-1");
+				}
 			}
 		}
 	};
@@ -955,19 +968,15 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 				}
 
 				String loginuser_idx = response.getString("idx");
-				String gcmId = getGcmId();
 
 				if (true == TextUtils.isEmpty(loginuser_idx))
 				{
 					throw new NullPointerException("loginuser_idx is empty.");
 				}
 
-				// GCM 등록 시도
-				ExLog.e("NOTE : " + gcmId);
-
-				if (gcmId.isEmpty() && isGoogleServiceAvailable())
+				if (getGcmId().isEmpty() == true)
 				{
-					regGcmId(Integer.parseInt(loginuser_idx));
+					regGcmId(loginuser_idx);
 				}
 
 				// 구매자 정보 확인 
