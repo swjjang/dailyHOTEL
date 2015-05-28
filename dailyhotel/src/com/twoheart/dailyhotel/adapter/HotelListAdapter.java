@@ -205,7 +205,8 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 				}
 
 				DecimalFormat comma = new DecimalFormat("###,##0");
-				String strPrice = comma.format(Integer.parseInt(element.getPrice()));
+				int price = Integer.parseInt(element.getPrice());
+				String strPrice = comma.format(price);
 				String strDiscount = comma.format(Integer.parseInt(element.getDiscount()));
 
 				viewHolder.address.setText(element.getAddress());
@@ -213,8 +214,18 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 
 				Spanned currency = Html.fromHtml(getContext().getResources().getString(R.string.currency));
 
-				viewHolder.price.setText(strPrice + currency);
-				viewHolder.price.setPaintFlags(viewHolder.price.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+				if (price <= 0)
+				{
+					viewHolder.price.setVisibility(View.INVISIBLE);
+					viewHolder.price.setText(null);
+				} else
+				{
+					viewHolder.price.setVisibility(View.VISIBLE);
+
+					viewHolder.price.setText(strPrice + currency);
+					viewHolder.price.setPaintFlags(viewHolder.price.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+				}
+
 				viewHolder.discount.setText(strDiscount + currency);
 				viewHolder.name.setSelected(true); // Android TextView marquee bug
 
