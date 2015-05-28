@@ -3598,7 +3598,6 @@ com.twoheart.dailyhotel.activity.BookingActivity:
     private static final int DIALOG_CONFIRM_PAYMENT_NO_RSERVE
     private static final int DIALOG_CONFIRM_CALL
     private static final int DIALOG_CONFIRM_PAYMENT_REGCARD
-    589:615:private void moveToLoginProcess()
 com.twoheart.dailyhotel.activity.EventWebActivity:
     private static final java.lang.String TAG
 com.twoheart.dailyhotel.activity.PaymentActivity:

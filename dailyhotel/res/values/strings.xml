@@ -138,6 +138,7 @@
 	<string name="dialog_msg_delete_failed_creditcard">신용카드 삭제를 실패하였습니다.</string>
 	<string name="dialog_msg_delete_booking">이용 완료한 예약 내역을 삭제하시겠습니까?</string>
 	<string name="dialog_msg_failed_delete_booking">예약 내역 삭제를 실패하였습니다.</string>
+	<string name="dialog_msg_changed_pay">객실 상황 변동으로 인하여 가격이 변경되었습니다.\n확인 뒤 결제해주세요.</string>
 
     <!-- Main Drawer Menu Titles -->
     <string name="drawer_menu_pin_title_resrvation">예약</string>

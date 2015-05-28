@@ -159,6 +159,26 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 
 			// pinkred_font
 			//			GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
+		} else
+		{
+			if (mFragmentList != null)
+			{
+				for (BaseFragment baseFragment : mFragmentList)
+				{
+					if (baseFragment instanceof HotelTabBookingFragment)
+					{
+						((HotelTabBookingFragment) baseFragment).setHotelDetail(hotelDetail);
+						break;
+					}
+					//					else if(baseFragment instanceof TabInfoFragment)
+					//					{
+					//						((TabInfoFragment)baseFragment).setHotelDetail(hotelDetail);
+					//					} else if(baseFragment instanceof TabMapFragment)
+					//					{
+					//						
+					//					}
+				}
+			}
 		}
 	}
 
@@ -557,6 +577,8 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 				Intent i = new Intent(HotelTabActivity.this, BookingActivity.class);
 				i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELDETAIL, hotelDetail);
 				i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, mHotelIdx);
+				i.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mSaleTime);
+
 				startActivityForResult(i, CODE_REQUEST_ACTIVITY_BOOKING);
 				overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 

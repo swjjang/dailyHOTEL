@@ -187,4 +187,23 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 		return false;
 	}
 
+	public void setHotelDetail(HotelDetail hotelDetail)
+	{
+		if (hotelDetail == null)
+		{
+			return;
+		}
+
+		mHotelDetail = hotelDetail;
+
+		Spanned currency = Html.fromHtml(getString(R.string.currency));
+
+		String priceTitle = getString(R.string.frag_hotel_tab_price);
+
+		tvPriceTitle.setText(priceTitle + "");
+		tvDiscount.setText(hotelDetail.getHotel().getDiscount() + currency);
+		tvPrice.setText(hotelDetail.getHotel().getPrice() + currency);
+
+		tvPrice.setPaintFlags(tvPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+	}
 }
