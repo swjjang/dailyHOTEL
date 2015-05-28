@@ -653,80 +653,29 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		//결제가 끝난 뒤 호출됨. 
 		if (requestCode == CODE_REQUEST_ACTIVITY_PAYMENT)
 		{
-			ExLog.d(Integer.toString(resultCode));
-
 			String title = getString(R.string.dialog_title_payment);
 			String msg = "";
 			String posTitle = getString(R.string.dialog_btn_text_confirm);
 			android.content.DialogInterface.OnClickListener posListener = null;
-
-			String region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
-			String hotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
 
 			switch (resultCode)
 			{
 			// 결제가 성공한 경우 GA와 믹스패널에 등록 
 				case CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE:
 				case CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS:
-					if (intent != null)
+					if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_DATA_PAY) == true)
 					{
-						if (intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAY) != null)
-						{
-							Pay payData = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAY);
+						Pay payData = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAY);
 
-							Editor editor = sharedPreference.edit();
-							editor.putString(KEY_PREFERENCE_HOTEL_NAME, payData.getHotelDetail().getHotel().getName());
-							editor.putInt(KEY_PREFERENCE_HOTEL_SALE_IDX, payData.getHotelDetail().getSaleIdx());
-							editor.putString(KEY_PREFERENCE_HOTEL_CHECKOUT, payData.getCheckOut());
-							editor.putString(KEY_PREFERENCE_USER_IDX, payData.getCustomer().getUserIdx());
-							editor.commit();
-						}
+						Editor editor = sharedPreference.edit();
+						editor.putString(KEY_PREFERENCE_HOTEL_NAME, payData.getHotelDetail().getHotel().getName());
+						editor.putInt(KEY_PREFERENCE_HOTEL_SALE_IDX, payData.getHotelDetail().getSaleIdx());
+						editor.putString(KEY_PREFERENCE_HOTEL_CHECKOUT, payData.getCheckOut());
+						editor.putString(KEY_PREFERENCE_USER_IDX, payData.getCustomer().getUserIdx());
+						editor.commit();
 					}
 
-					SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmss", Locale.KOREA);
-					Date date = new Date();
-					String strDate = dateFormat.format(date);
-					int userIdx = Integer.parseInt(mPay.getCustomer().getUserIdx());
-					String userIdxStr = String.format("%07d", userIdx);
-					String transId = strDate + userIdxStr;
-
-					RenewalGaManager.getInstance(getApplicationContext()).purchaseComplete(transId, mPay.getHotelDetail().getHotel().getName(), mPay.getHotelDetail().getHotel().getCategory().name(), (double) mPay.getPayPrice());
-
-					SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
-					strDate = dateFormat2.format(date);
-
-					mMixpanel.getPeople().identify(userIdxStr);
-
-					JSONObject properties = new JSONObject();
-					try
-					{
-						properties.put("hotelName", mPay.getHotelDetail().getHotel().getName());
-						properties.put("datetime", strDate); // 거래 시간 = 연-월-일T시:분:초
-						ExLog.e("properties hotel name : " + mPay.getHotelDetail().getHotel().getName() + " datetime : " + strDate);
-					} catch (JSONException e)
-					{
-						ExLog.e(e.toString());
-					}
-
-					mMixpanel.getPeople().trackCharge(mPay.getPayPrice(), properties); // price = 결제 금액
-
-					JSONObject props = new JSONObject();
-					try
-					{
-						props.put("hotelName", mPay.getHotelDetail().getHotel().getName());
-						props.put("price", mPay.getPayPrice());
-						props.put("datetime", strDate);
-						props.put("userId", userIdxStr);
-						props.put("tranId", transId);
-						ExLog.e("props hotelName : " + mPay.getHotelDetail().getHotel().getName() + " price : " + mPay.getPayPrice() + " datetime : " + strDate);
-					} catch (JSONException e)
-					{
-						ExLog.e(e.toString());
-					}
-
-					mMixpanel.track("transaction", props);
-
-					RenewalGaManager.getInstance(getApplicationContext()).recordScreen("paymentConfirmation", "/todays-hotels/" + region + "/" + hotelName + "/booking-detail/payment-confirm");
+					writeLogPaid(mPay);
 
 					posListener = new DialogInterface.OnClickListener()
 					{
@@ -734,7 +683,15 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 						public void onClick(DialogInterface dialog, int which)
 						{
 							dialog.dismiss(); // 닫기
-							RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "confirmPayment", mPay.getHotelDetail().getHotel().getName(), (long) mHotelIdx);
+
+							try
+							{
+								RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "confirmPayment", mPay.getHotelDetail().getHotel().getName(), (long) mHotelIdx);
+							} catch (Exception e)
+							{
+								ExLog.e(e.toString());
+							}
+
 							setResult(RESULT_OK);
 							BookingActivity.this.finish();
 						}
@@ -1123,6 +1080,51 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		return m.matches();
 	}
 
+	private void writeLogPaid(Pay pay)
+	{
+		try
+		{
+			String region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
+			String hotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
+
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmss", Locale.KOREA);
+			Date date = new Date();
+			String strDate = dateFormat.format(date);
+			int userIdx = Integer.parseInt(pay.getCustomer().getUserIdx());
+			String userIdxStr = String.format("%07d", userIdx);
+			String transId = strDate + userIdxStr;
+
+			RenewalGaManager.getInstance(getApplicationContext()).purchaseComplete(transId, pay.getHotelDetail().getHotel().getName(), pay.getHotelDetail().getHotel().getCategory().name(), (double) pay.getPayPrice());
+
+			SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
+			strDate = dateFormat2.format(date);
+
+			mMixpanel.getPeople().identify(userIdxStr);
+
+			JSONObject properties = new JSONObject();
+			properties.put("hotelName", pay.getHotelDetail().getHotel().getName());
+			properties.put("datetime", strDate); // 거래 시간 = 연-월-일T시:분:초
+			ExLog.e("properties hotel name : " + pay.getHotelDetail().getHotel().getName() + " datetime : " + strDate);
+
+			mMixpanel.getPeople().trackCharge(pay.getPayPrice(), properties); // price = 결제 금액
+
+			JSONObject props = new JSONObject();
+			props.put("hotelName", pay.getHotelDetail().getHotel().getName());
+			props.put("price", pay.getPayPrice());
+			props.put("datetime", strDate);
+			props.put("userId", userIdxStr);
+			props.put("tranId", transId);
+			ExLog.e("props hotelName : " + pay.getHotelDetail().getHotel().getName() + " price : " + pay.getPayPrice() + " datetime : " + strDate);
+
+			mMixpanel.track("transaction", props);
+
+			RenewalGaManager.getInstance(getApplicationContext()).recordScreen("paymentConfirmation", "/todays-hotels/" + region + "/" + hotelName + "/booking-detail/payment-confirm");
+		} catch (Exception e)
+		{
+			ExLog.e(e.toString());
+		}
+	}
+
 	private class TelophoneClickSpannable extends ClickableSpan
 	{
 		public TelophoneClickSpannable()
@@ -1208,7 +1210,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				buyer.setUserIdx(response.getString("idx"));
 
 				mPay.setCustomer(buyer);
-				buyer = mPay.getCustomer();
 
 				/**
 				 * 텍스트 필드가 하나라도 비어있으면 해당 정보를 입력 받도록 함.
