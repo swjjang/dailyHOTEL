@@ -30,6 +30,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.ZoomMapActivity;
 import com.twoheart.dailyhotel.adapter.HotelNameInfoWindowAdapter;
 import com.twoheart.dailyhotel.model.HotelDetail;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
 public class TabMapFragment extends BaseFragment implements OnMapClickListener
@@ -88,7 +89,14 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
 	@Override
 	public void onMapClick(LatLng latLng)
 	{
-		Intent i = new Intent(mHostActivity, ZoomMapActivity.class);
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
+		Intent i = new Intent(baseActivity, ZoomMapActivity.class);
 		i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELDETAIL, mHotelDetail);
 		startActivity(i);
 	}
@@ -125,16 +133,23 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
 	@Override
 	public void onDestroyView()
 	{
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
 		try
 		{
 			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1)
 			{
-				if (!mHostActivity.isFinishing())
-					mHostActivity.getSupportFragmentManager().beginTransaction().remove(mMapFragment).commitAllowingStateLoss();
+				if (!baseActivity.isFinishing())
+					baseActivity.getSupportFragmentManager().beginTransaction().remove(mMapFragment).commitAllowingStateLoss();
 			} else
 			{
-				if (!mHostActivity.isDestroyed())
-					mHostActivity.getSupportFragmentManager().beginTransaction().remove(mMapFragment).commitAllowingStateLoss();
+				if (!baseActivity.isDestroyed())
+					baseActivity.getSupportFragmentManager().beginTransaction().remove(mMapFragment).commitAllowingStateLoss();
 			}
 
 		} catch (IllegalStateException e)
@@ -148,6 +163,13 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
 	// 마커 추가
 	public void addMarker(Double lat, Double lng, String hotel_name)
 	{
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
 		if (googleMap != null)
 		{
 			mMarker = googleMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title(hotel_name));
@@ -156,7 +178,7 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
 			LatLng address = new LatLng(lat, lng);
 			CameraPosition cp = new CameraPosition.Builder().target((address)).zoom(15).build();
 			googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
-			googleMap.setInfoWindowAdapter(new HotelNameInfoWindowAdapter(mHostActivity));
+			googleMap.setInfoWindowAdapter(new HotelNameInfoWindowAdapter(baseActivity));
 			googleMap.setOnMarkerClickListener(new OnMarkerClickListener()
 			{
 				@Override

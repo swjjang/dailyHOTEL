@@ -5,6 +5,11 @@ import android.os.Parcelable;
 
 public class Pay implements Parcelable
 {
+	public enum Type
+	{
+		EASY_CARD, CARD, PHONE_PAY, VBANK,
+		//		PAYPAL
+	};
 
 	private HotelDetail mHotelDetail;
 	private Credit mCredit;
@@ -13,7 +18,7 @@ public class Pay implements Parcelable
 	private int mOriginalPrice;
 	private boolean isSaleCredit;
 	private String mCheckOut;
-	private String payType;
+	private Type mType;
 
 	public Pay()
 	{
@@ -34,7 +39,7 @@ public class Pay implements Parcelable
 		dest.writeInt(mOriginalPrice);
 		dest.writeByte((byte) (isSaleCredit ? 1 : 0));
 		dest.writeString(mCheckOut);
-		dest.writeString(getPayType());
+		dest.writeSerializable(mType);
 	}
 
 	private void readFromParcel(Parcel in)
@@ -46,7 +51,7 @@ public class Pay implements Parcelable
 		mOriginalPrice = in.readInt();
 		isSaleCredit = in.readByte() != 0;
 		mCheckOut = in.readString();
-		payType = in.readString();
+		mType = (Type) in.readSerializable();
 	}
 
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
@@ -134,14 +139,14 @@ public class Pay implements Parcelable
 		mCheckOut = checkOut;
 	}
 
-	public String getPayType()
+	public Type getType()
 	{
-		return payType;
+		return mType;
 	}
 
-	public void setPayType(String payType)
+	public void setType(Type type)
 	{
-		this.payType = payType;
+		mType = type;
 	}
 
 	@Override

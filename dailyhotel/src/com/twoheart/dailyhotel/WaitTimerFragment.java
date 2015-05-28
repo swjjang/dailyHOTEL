@@ -33,23 +33,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
-import com.twoheart.dailyhotel.activity.EventWebActivity;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.WakeLock;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
 public class WaitTimerFragment extends BaseFragment implements OnClickListener, Constants
 {
-
 	private final static String KEY_BUNDLE_ARGUMENTS_SALETIME = "saletime";
 	public static boolean isEnabledNotify;
 
@@ -62,8 +59,9 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 	private Intent intent;
 	private SaleTime mSaleTime;
 	private long remainingTime;
-	private ImageView ivNewEvent;
-	private LinearLayout btnEvent;
+
+	//	private ImageView ivNewEvent;
+	//	private LinearLayout btnEvent;
 
 	public static WaitTimerFragment newInstance(SaleTime saleTime)
 	{
@@ -80,23 +78,30 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return null;
+		}
 
 		View view = inflater.inflate(R.layout.fragment_wait_timer, container, false);
 		mSaleTime = (SaleTime) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_SALETIME);
-		alarmManager = (AlarmManager) mHostActivity.getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-		intent = new Intent(mHostActivity.getApplicationContext(), AlarmBroadcastReceiver.class);
-		pender = PendingIntent.getBroadcast(mHostActivity.getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		alarmManager = (AlarmManager) baseActivity.getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+		intent = new Intent(baseActivity.getApplicationContext(), AlarmBroadcastReceiver.class);
+		pender = PendingIntent.getBroadcast(baseActivity.getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 		tvTimer = (TextView) view.findViewById(R.id.tv_timer);
 		tvTitle = (TextView) view.findViewById(R.id.tv_wait_timer_main);
 		btnNotify = (TextView) view.findViewById(R.id.btn_wait_timer_alram);
-		ivNewEvent = (ImageView) view.findViewById(R.id.iv_new_event);
-		btnEvent = (LinearLayout) view.findViewById(R.id.btn_event);
+		//		ivNewEvent = (ImageView) view.findViewById(R.id.iv_new_event);
+		//		btnEvent = (LinearLayout) view.findViewById(R.id.btn_event);
+		//		btnEvent.setVisibility(View.GONE);
 
 		btnNotify.setOnClickListener(this);
-		btnEvent.setOnClickListener(this);
+		//		btnEvent.setOnClickListener(this);
 
-		mHostActivity.setActionBar(getString(R.string.actionbar_title_wait_timer_frag), false);
+		baseActivity.setActionBar(getString(R.string.actionbar_title_wait_timer_frag), false);
 		tvTitle.setText(new SimpleDateFormat("aa H", Locale.KOREA).format(mSaleTime.getOpenTime()) + getString(R.string.prefix_wait_timer_frag_todays_hotel_open));
 
 		isEnabledNotify = false;
@@ -111,8 +116,15 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 		super.onResume();
 		setNotify(isEnabledNotify);
 
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
 		// 새로운 이벤트 확인을 위해 버전 API 호출
-		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_VERSION).toString(), null, mAppVersionResponseListener, mHostActivity));
+		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_VERSION).toString(), null, mAppVersionResponseListener, baseActivity));
 	}
 
 	@Override
@@ -121,12 +133,20 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 		if (v.getId() == btnNotify.getId())
 		{
 			setNotify(!isEnabledNotify);
-		} else if (v.getId() == btnEvent.getId())
-		{
-			Intent i = new Intent(mHostActivity, EventWebActivity.class);
-			mHostActivity.startActivity(i);
-			mHostActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
 		}
+		//		else if (v.getId() == btnEvent.getId())
+		//		{
+		//			BaseActivity baseActivity = (BaseActivity) getActivity();
+		//
+		//			if (baseActivity == null)
+		//			{
+		//				return;
+		//			}
+		//
+		//			Intent i = new Intent(baseActivity, EventWebActivity.class);
+		//			baseActivity.startActivity(i);
+		//			baseActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
+		//		}
 	}
 
 	private void setNotify(boolean enable)
@@ -161,13 +181,20 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 
 	private void setTimer()
 	{
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
 		Date currentDate = new Date(mSaleTime.getCurrentTime());
 		Date dailyOpenDate = new Date(mSaleTime.getOpenTime());
 
 		remainingTime = dailyOpenDate.getTime() - currentDate.getTime();
 		printCurrentRemaingTime(remainingTime);
 
-		WakeLock.acquireWakeLock(mHostActivity.getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
+		WakeLock.acquireWakeLock(baseActivity.getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
 
 		sHandler = new Handler()
 		{
@@ -185,18 +212,26 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 					this.removeMessages(0);
 					WakeLock.releaseWakeLock();
 
-					if (mHostActivity != null)
+					if (sHandler != null)
 					{
-						((MainActivity) mHostActivity).replaceFragment(((MainActivity) mHostActivity).getFragment(MainActivity.INDEX_HOTEL_LIST_FRAGMENT));
+						BaseActivity baseActivity = (BaseActivity) getActivity();
 
-						mHostActivity = null;
+						if (baseActivity == null)
+						{
+							return;
+						}
+
+						((MainActivity) baseActivity).replaceFragment(((MainActivity) baseActivity).getFragment(MainActivity.INDEX_HOTEL_LIST_FRAGMENT));
+						sHandler = null;
 					}
 				}
 			}
 		};
 
-		sHandler.sendEmptyMessageDelayed(0, 1000);
-
+		if (sHandler != null)
+		{
+			sHandler.sendEmptyMessageDelayed(0, 1000);
+		}
 	}
 
 	private void printCurrentRemaingTime(long remainingTime)

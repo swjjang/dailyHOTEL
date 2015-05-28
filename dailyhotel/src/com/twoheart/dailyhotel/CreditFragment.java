@@ -25,7 +25,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Paint;
@@ -42,6 +41,7 @@ import android.widget.TextView;
 
 import com.android.volley.Request.Method;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+import com.twoheart.dailyhotel.activity.CreditListActivity;
 import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.activity.SignupActivity;
 import com.twoheart.dailyhotel.model.Credit;
@@ -54,6 +54,7 @@ import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
 /**
@@ -78,7 +79,6 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
-
 		View view = inflater.inflate(R.layout.fragment_credit, container, false);
 
 		rlCreditNotLoggedIn = (RelativeLayout) view.findViewById(R.id.rl_credit_not_logged_in);
@@ -98,13 +98,7 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 
 		//영어버전에서만 텍스트 사이의 패딩 값을 주기위해 새로운 텍스트뷰를 보여줌
 		TextView line1_4 = (TextView) view.findViewById(R.id.act_credit_line1_4);
-		//영어버전
-		String locale = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_LOCALE, null);
-		if (locale.equals("한국어"))
-		{
-			line1_4.setVisibility(View.GONE);
-		} else
-			line1_4.setVisibility(View.VISIBLE);
+		line1_4.setVisibility(View.GONE);
 
 		tvCredit.setPaintFlags(tvCredit.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG); // underlining
 
@@ -114,7 +108,14 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
-		mMixpanel = MixpanelAPI.getInstance(mHostActivity, "791b366dadafcd37803f6cd7d8358373");
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
+		mMixpanel = MixpanelAPI.getInstance(baseActivity, "791b366dadafcd37803f6cd7d8358373");
 
 		super.onCreate(savedInstanceState);
 	}
@@ -123,23 +124,36 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 	public void onResume()
 	{
 		super.onResume();
+
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
 		// ActionBar Setting
-		mHostActivity.setActionBar(getString(R.string.actionbar_title_credit_frag), false);
+		baseActivity.setActionBar(getString(R.string.actionbar_title_credit_frag), false);
 
 		lockUI();
-		mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, mHostActivity));
-
+		mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, baseActivity));
 	}
 
 	@Override
 	public void onClick(View v)
 	{
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
 
 		if (v.getId() == btnInvite.getId())
 		{
 			try
 			{
-				RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "inviteKakaoFriend", null, null);
+				RenewalGaManager.getInstance(baseActivity.getApplicationContext()).recordEvent("click", "inviteKakaoFriend", null, null);
 				int userIdx = Integer.parseInt(idx);
 				String userIdxStr = String.format("%07d", userIdx);
 
@@ -163,41 +177,48 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 
 		} else if (v.getId() == tvCredit.getId())
 		{
-			((MainActivity) mHostActivity).addFragment(CreditListFragment.newInstance(mCreditList));
-			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "requestCreditHistory", null, null);
+			//			((MainActivity) baseActivity).addFragment(CreditListFragment.newInstance(mCreditList));
+			RenewalGaManager.getInstance(baseActivity.getApplicationContext()).recordEvent("click", "requestCreditHistory", null, null);
+
+			Intent i = new Intent(baseActivity, CreditListActivity.class);
+			i.putParcelableArrayListExtra(CreditListActivity.KEY_BUNDLE_ARGUMENTS_CREDITLIST, mCreditList);
+			startActivity(i);
+			baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
 		} else if (v.getId() == btnLogin.getId())
 		{
-			Intent i = new Intent(mHostActivity, LoginActivity.class);
+			Intent i = new Intent(baseActivity, LoginActivity.class);
 			startActivity(i);
-			mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+			baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
 		} else if (v.getId() == btnSignup.getId())
 		{
-			Intent i = new Intent(mHostActivity, SignupActivity.class);
+			Intent i = new Intent(baseActivity, SignupActivity.class);
 			startActivity(i);
-			mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+			baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 		}
 
 	}
 
-	private void alert(String message)
-	{
-		new AlertDialog.Builder(mHostActivity).setIcon(android.R.drawable.ic_dialog_alert).setTitle(R.string.app_name).setMessage(message).setPositiveButton(android.R.string.ok, null).create().show();
-	}
-
 	private void loadLoginProcess(boolean loginSuccess)
 	{
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
 		if (loginSuccess)
 		{
 			rlCreditNotLoggedIn.setVisibility(View.GONE);
 			llCreditLoggedIn.setVisibility(View.VISIBLE);
-			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("creditWithLogon", "/credit-with-logon/");
+			RenewalGaManager.getInstance(baseActivity.getApplicationContext()).recordScreen("creditWithLogon", "/credit-with-logon/");
 		} else
 		{
 			rlCreditNotLoggedIn.setVisibility(View.VISIBLE);
 			llCreditLoggedIn.setVisibility(View.GONE);
-			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("creditWithLogoff", "/credit-with-logoff/");
+			RenewalGaManager.getInstance(baseActivity.getApplicationContext()).recordScreen("creditWithLogoff", "/credit-with-logoff/");
 		}
 	}
 
@@ -211,7 +232,9 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-			if (getActivity() == null)
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null)
 			{
 				return;
 			}
@@ -229,7 +252,7 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 				idx = response.getString("idx");
 
 				// 적립금 목록 요청.
-				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_BONUS_ALL).toString(), null, mUserBonusAllResponseListener, mHostActivity));
+				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_BONUS_ALL).toString(), null, mUserBonusAllResponseListener, baseActivity));
 
 			} catch (Exception e)
 			{
@@ -294,7 +317,9 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-			if (getActivity() == null)
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null)
 			{
 				return;
 			}
@@ -305,7 +330,7 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 				{
 					// 로그인 실패
 					// data 초기화
-					SharedPreferences.Editor ed = mHostActivity.sharedPreference.edit();
+					SharedPreferences.Editor ed = baseActivity.sharedPreference.edit();
 					ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
 					ed.putString(KEY_PREFERENCE_USER_ID, null);
 					ed.putString(KEY_PREFERENCE_USER_PWD, null);
@@ -319,7 +344,7 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 					VolleyHttpClient.createCookie();
 
 					// credit 요청
-					mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_SAVED_MONEY).toString(), null, mReserveSavedMoneyStringResponseListener, mHostActivity));
+					mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_SAVED_MONEY).toString(), null, mReserveSavedMoneyStringResponseListener, baseActivity));
 
 				}
 			} catch (JSONException e)
@@ -336,7 +361,9 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 		@Override
 		public void onResponse(String url, String response)
 		{
-			if (getActivity() == null)
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null)
 			{
 				return;
 			}
@@ -351,18 +378,18 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 			if (true == "alive".equalsIgnoreCase(result))
 			{ // session alive
 				// credit 요청
-				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_SAVED_MONEY).toString(), null, mReserveSavedMoneyStringResponseListener, mHostActivity));
+				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_SAVED_MONEY).toString(), null, mReserveSavedMoneyStringResponseListener, baseActivity));
 
 			} else if (true == "dead".equalsIgnoreCase(result))
 			{ // session dead
 
 				// 재로그인
-				if (true == mHostActivity.sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false))
+				if (true == baseActivity.sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false))
 				{
 
-					String id = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_USER_ID, null);
-					String accessToken = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
-					String pw = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_USER_PWD, null);
+					String id = baseActivity.sharedPreference.getString(KEY_PREFERENCE_USER_ID, null);
+					String accessToken = baseActivity.sharedPreference.getString(KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
+					String pw = baseActivity.sharedPreference.getString(KEY_PREFERENCE_USER_PWD, null);
 
 					Map<String, String> loginParams = new HashMap<String, String>();
 
@@ -376,7 +403,7 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 
 					loginParams.put("pw", pw);
 
-					mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(), loginParams, mUserLoginJsonResponseListener, mHostActivity));
+					mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(), loginParams, mUserLoginJsonResponseListener, baseActivity));
 				} else
 				{
 					unLockUI();
@@ -396,7 +423,9 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 		@Override
 		public void onResponse(String url, String response)
 		{
-			if (getActivity() == null)
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null)
 			{
 				return;
 			}
@@ -412,7 +441,7 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 
 				DecimalFormat comma = new DecimalFormat("###,##0");
 				String str = comma.format(Integer.parseInt(result));
-				String locale = mHostActivity.sharedPreference.getString(KEY_PREFERENCE_LOCALE, null);
+				String locale = baseActivity.sharedPreference.getString(KEY_PREFERENCE_LOCALE, null);
 
 				if (locale.equals("한국어"))
 				{
@@ -423,7 +452,7 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 				}
 
 				// 사용자 정보 요청.
-				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, mHostActivity));
+				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, baseActivity));
 
 			} catch (Exception e)
 			{

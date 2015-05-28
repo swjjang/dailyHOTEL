@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.LinearLayout;
@@ -22,19 +21,6 @@ public class FragmentViewPager extends LinearLayout
 	private FragementViewPagerAdapter mAdapter;
 
 	private CustomViewPager mViewPager;
-
-	private OnPageSelectedListener mOnPageSelectedListener;
-	private OnPageScrolledListener mOnPageScrolledListener;
-
-	public interface OnPageSelectedListener
-	{
-		public void onPageSelected(int position);
-	}
-
-	public interface OnPageScrolledListener
-	{
-		public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels);
-	}
 
 	/**
 	 * @param context
@@ -70,7 +56,7 @@ public class FragmentViewPager extends LinearLayout
 	{
 		mViewPager = new CustomViewPager(context);
 		mViewPager.setId(100);
-		mViewPager.setOnPageChangeListener(mOnPageChangeListener);
+		//		mViewPager.setOnPageChangeListener(mOnPageChangeListener);
 
 		this.addView(mViewPager);
 	}
@@ -118,44 +104,6 @@ public class FragmentViewPager extends LinearLayout
 		return mViewPager.getCurrentItem();
 	}
 
-	public void setOnPageSelectedListener(OnPageSelectedListener l)
-	{
-		mOnPageSelectedListener = l;
-	}
-
-	public void setOnPageScrolledListener(OnPageScrolledListener l)
-	{
-		mOnPageScrolledListener = l;
-	}
-
-	private OnPageChangeListener mOnPageChangeListener = new OnPageChangeListener()
-	{
-
-		@Override
-		public void onPageSelected(int arg0)
-		{
-			if (null != mOnPageSelectedListener)
-			{
-				mOnPageSelectedListener.onPageSelected(arg0);
-			}
-		}
-
-		@Override
-		public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
-		{
-			if (null != mOnPageScrolledListener)
-			{
-				mOnPageScrolledListener.onPageScrolled(position, positionOffset, positionOffsetPixels);
-			}
-		}
-
-		@Override
-		public void onPageScrollStateChanged(int arg0)
-		{
-
-		}
-	};
-
 	private class FragementViewPagerAdapter extends FragmentPagerAdapter
 	{
 
@@ -199,12 +147,6 @@ public class FragmentViewPager extends LinearLayout
 	public void setPagingEnable(boolean enable)
 	{
 		mViewPager.setPagingEnable(enable);
-	}
-
-	public OnPageChangeListener getOnPageChangeListener()
-	{
-		return mOnPageChangeListener;
-
 	}
 
 	public void setPageMargin(int margin)

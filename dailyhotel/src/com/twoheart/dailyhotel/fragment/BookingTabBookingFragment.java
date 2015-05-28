@@ -35,12 +35,12 @@ import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
 public class BookingTabBookingFragment extends BaseFragment implements Constants
@@ -86,6 +86,12 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return null;
+		}
 
 		View view = inflater.inflate(R.layout.fragment_booking_tab_booking, container, false);
 		tvCustomerName = (TextView) view.findViewById(R.id.tv_booking_tab_user_name);
@@ -110,7 +116,7 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 		tvCheckOut.setSelected(true);
 
 		lockUI();
-		mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, mHostActivity));
+		mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, baseActivity));
 
 		return view;
 	}
@@ -125,7 +131,9 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-			if (getActivity() == null)
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null)
 			{
 				return;
 			}
@@ -141,13 +149,12 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 				{
 					// 로그인 실패
 					// data 초기화
-					SharedPreferences.Editor ed = mHostActivity.sharedPreference.edit();
+					SharedPreferences.Editor ed = baseActivity.sharedPreference.edit();
 					ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
 					ed.putString(KEY_PREFERENCE_USER_ID, null);
 					ed.putString(KEY_PREFERENCE_USER_PWD, null);
 					ed.commit();
 
-					unLockUI();
 					showToast(getString(R.string.toast_msg_failed_to_login), Toast.LENGTH_SHORT, true);
 				} else
 				{
@@ -156,6 +163,8 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 			} catch (JSONException e)
 			{
 				onError(e);
+			} finally
+			{
 				unLockUI();
 			}
 		}
@@ -167,7 +176,9 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-			if (getActivity() == null)
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null)
 			{
 				return;
 			}
@@ -184,10 +195,18 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 				tvCustomerName.setText(name);
 				tvCustomerPhone.setText(phone);
 
-				// 체크인 정보 요청.
-				//				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_CHECKIN).append('/').append(mHotelDetail.getSaleIdx()).toString(), null, mReserveCheckInJsonResponseListener, mHostActivity));
-				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_CHECKINOUT).append('/').append(mHotelDetail.getSaleIdx()).toString(), null, mReserveCheckInJsonResponseListener, mHostActivity));
-				ExLog.e("madsd : " + mHotelDetail.getSaleIdx() + "");
+				// SailIndex가 0인 경우에 서버에 이슈가 발생할수 있다.
+				// 0인 경우 아마도 메모리에서 정보가 삭제되어 발생한듯 하다.
+				if (mHotelDetail.getSaleIdx() == 0)
+				{
+					// 세션이 만료되어 재시작 요청.
+					baseActivity.restartApp();
+				} else
+				{
+					// 체크인 정보 요청.
+					//				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_CHECKIN).append('/').append(mHotelDetail.getSaleIdx()).toString(), null, mReserveCheckInJsonResponseListener, mHostActivity));
+					mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_CHECKINOUT).append('/').append(mHotelDetail.getSaleIdx()).toString(), null, mReserveCheckInJsonResponseListener, baseActivity));
+				}
 			} catch (Exception e)
 			{
 				onError(e);
@@ -251,7 +270,9 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 		@Override
 		public void onResponse(String url, String response)
 		{
-			if (getActivity() == null)
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null)
 			{
 				return;
 			}
@@ -266,21 +287,21 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 			if ("alive".equalsIgnoreCase(result) == true)
 			{ // session alive
 				// 사용자 정보 요청.
-				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, mHostActivity));
+				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, baseActivity));
 
 			} else if ("dead".equalsIgnoreCase(result) == true)
 			{ // session dead
 				// 재로그인
-				if (mHostActivity.sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false))
+				if (baseActivity.sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false))
 				{
 					Map<String, String> loginParams = new HashMap<String, String>();
-					loginParams.put("email", mHostActivity.sharedPreference.getString(KEY_PREFERENCE_USER_ID, null));
-					loginParams.put("pw", mHostActivity.sharedPreference.getString(KEY_PREFERENCE_USER_PWD, null));
+					loginParams.put("email", baseActivity.sharedPreference.getString(KEY_PREFERENCE_USER_ID, null));
+					loginParams.put("pw", baseActivity.sharedPreference.getString(KEY_PREFERENCE_USER_PWD, null));
 
-					mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(), loginParams, mUserLoginJsonResponseListener, mHostActivity));
+					mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(), loginParams, mUserLoginJsonResponseListener, baseActivity));
 				} else
 				{
-					startActivity(new Intent(mHostActivity, LoginActivity.class));
+					startActivity(new Intent(baseActivity, LoginActivity.class));
 				}
 			} else
 			{

@@ -7,6 +7,8 @@
     <string name="homepage">http://dailyhotel.kr</string>
     <string name="contact_us">help@dailyhotel.co.kr</string>
     <string name="currency">원</string>
+    <string name="label_map">지도</string>
+    <string name="label_list">목록</string>
 
     <!-- Hotel Grade -->
     <string name="grade_special">특급</string>
@@ -36,8 +38,9 @@
 
     <!-- Actionbar Titles -->
     <string name="actionbar_title_hotel_list_frag">오늘의 호텔</string>
-    <string name="actionbar_title_booking_list_frag">예약확인</string>
+    <string name="actionbar_title_booking_list_frag">예약내역</string>
     <string name="actionbar_title_credit_frag">적립금</string>
+    <string name="actionbar_title_reg_creditcard">신용카드 추가하기</string>
     <string name="actionbar_title_setting_frag">설정</string>
     <string name="actionbar_title_error_frag">dailyHOTEL</string>
     <string name="actionbar_title_wait_timer_frag">dailyHOTEL</string>
@@ -55,11 +58,15 @@
     <string name="actionbar_title_version_activity">버전정보</string>
     <string name="actionbar_title_zoom_map_activity">지도 확대</string>
     <string name="actionbar_title_payment_wait_activity">입금 대기</string>
+    <string name="actionbar_title_creditcard_activity">신용카드 관리</string>
 
     <!-- Toast Messages -->
     <string name="toast_msg_network_status_bad">인터넷 연결을 할 수 없습니다.\n설정에서 확인해주세요.</string>
     <string name="toast_msg_please_chk_network_status">인터넷 연결을 할 수 없습니다.\n설정에서 확인해주세요.</string>
     <string name="toast_msg_please_input_booking_user_infos">예약자와 연락처, 이메일을 모두 입력해주십시요</string>
+    <string name="toast_msg_please_input_guest">예약자를 입력해주세요.</string>
+    <string name="toast_msg_please_input_contact">연락처를 입력해주세요.</string>
+    <string name="toast_msg_please_input_email">이메일을 입력해주세요.</string>
     <string name="toast_msg_please_input_email_address">이메일 주소를 입력해주세요</string>
     <string name="toast_msg_wrong_email_address">올바른 이메일 형식을 입력해주세요</string>
     <string name="toast_msg_please_login">로그인이 필요합니다</string>
@@ -100,6 +107,7 @@
     <string name="dialog_msg_sales_closed">오전 9시부터 오늘의 호텔이 공개됩니다.</string>
     <string name="dialog_msg_payment_confirm">본 상품은 특가 예약 상품이므로&lt;br/&gt;결제 완료 후&lt;br/&gt;&lt;b&gt;취소나 교환 및 환불이 불가&lt;/b&gt;합니다.&lt;br/&gt;&lt;br/&gt;\'체크인 시 배정\'의 경우 더블,트윈 등의&lt;br/&gt;&lt;b&gt;베드 타입은 보장하지 않으며&lt;/b&gt;&lt;br/&gt;2인이 투숙할 수 있는 객실로 배정됩니다.&lt;br/&gt;&lt;br/&gt;미성년자는 보호자 동반시 투숙 가능합니다.&lt;br/&gt;&lt;br/&gt; 위 사항에 동의하시면 아래의&lt;br/&gt;버튼을 눌러 결제를 진행해 주세요.</string>
     <string name="dialog_msg_payment_confirm_hp">본 상품은 특가 예약 상품이므로&lt;br/&gt;결제 완료 후&lt;br/&gt;&lt;b&gt;취소나 교환 및 환불이 불가&lt;/b&gt;합니다.&lt;br/&gt;&lt;br/&gt;\'체크인 시 배정\'의 경우 더블,트윈 등의&lt;br/&gt;&lt;b&gt;베드 타입은 보장하지 않으며&lt;/b&gt;&lt;br/&gt;2인이 투숙할 수 있는 객실로 배정됩니다.&lt;br/&gt;&lt;br/&gt;미성년자는 보호자 동반시 투숙 가능합니다.&lt;br/&gt;&lt;br/&gt;휴대폰 결제는 월 30만원이 한도입니다.&lt;br/&gt;&lt;br/&gt; 위 사항에 동의하시면 아래의&lt;br/&gt;버튼을 눌러 결제를 진행해 주세요.</string>
+    <string name="dialog_msg_payment_confirm_account">본 상품은 특가 예약 상품이므로&lt;br/&gt;결제 완료 후&lt;br/&gt;&lt;b&gt;취소나 교환 및 환불이 불가&lt;/b&gt;합니다.&lt;br/&gt;&lt;br/&gt;\'체크인 시 배정\'의 경우 더블, 트윈 등의&lt;br/&gt;&lt;b&gt;베드타입은 보장하지 않으며&lt;/b&gt;&lt;br/&gt;2인이 투숙할 수 있는 객실로 배정됩니다.&lt;br/&gt;&lt;br/&gt;미성년자는 보호자 동반시 투숙 가능합니다.&lt;br/&gt;&lt;br/&gt;계좌이체는 거래건 고유의 가상계좌가 발급되며 &lt;b&gt;10분안에 입금&lt;/b&gt;되지 않으면 &lt;br/&gt;자동으로 예약이 취소됩니다.&lt;br/&gt;&lt;br/&gt;위 사항에 동의하시면 아래의&lt;br/&gt;버튼을 눌러 결제를 진행해 주세요.</string>
     <string name="dialog_msg_call">데일리호텔 고객센터로 전화 연결합니다.</string>
     <string name="dialog_btn_call">전화 연결</string>
     <string name="dialog_btn_payment_confirm">동의하고 결제 진행</string>
@@ -116,18 +124,29 @@
     <string name="dialog_btn_text_install">설치</string>
     <string name="dialog_btn_text_yes">예</string>
     <string name="dialog_btn_text_no">아니오</string>
+    <string name="dialog_btn_text_pay">결제완료</string>
     <string name="dialog_notice2">알림</string>
     <string name="dialog_title_payment">결제알림</string>
     <string name="dialog_btn_text_see">보기</string>
     <string name="dialog_btn_text_close">닫기</string>
     <string name="dialog_msg_kakao_link">공유받은 호텔이 존재하지 않습니다.</string>
+    <string name="dialog_msg_register_creditcard_cancel">신용카드 등록을 취소하시겠습니까?</string>
+    <string name="dialog_msg_delete_register_creditcard">등록된 신용카드를 삭제하시겠습니까?</string>
+    <string name="dialog_msg_error_signature">서명 내용이 부족합니다. 다시 시도해 주십시오.</string>
+    <string name="dialog_msg_payment_creditcard_confirm">본 상품은 특가 예약 상품이므로&lt;br/&gt;결제 완료 후&lt;br/&gt;&lt;b&gt;취소나 교환 및 환불이 불가&lt;/b&gt;합니다.&lt;br/&gt;&lt;br/&gt;\'체크인 시 배정\'의 경우&lt;br/&gt;베드 타입을 보장하지 않으며&lt;/b&gt;&lt;br/&gt;2인이 투숙할 수 있는 객실로 배정됩니다.&lt;br/&gt;&lt;br/&gt;미성년자는 보호자 동반시 투숙 가능합니다.</string>    <string name="dialog_msg_session_expired">세션이 만료되어 재시작합니다.</string>
+	<string name="dialog_msg_processing_payment">결제가 진행 중입니다. 잠시만 기다려 주십시오.</string>
+	<string name="dialog_msg_delete_failed_creditcard">신용카드 삭제를 실패하였습니다.</string>
+	<string name="dialog_msg_delete_booking">이용 완료한 예약 내역을 삭제하시겠습니까?</string>
+	<string name="dialog_msg_failed_delete_booking">예약 내역 삭제를 실패하였습니다.</string>
+	<string name="dialog_msg_changed_pay">객실 상황 변동으로 인하여 가격이 변경되었습니다.\n확인 뒤 결제해주세요.</string>
 
     <!-- Main Drawer Menu Titles -->
     <string name="drawer_menu_pin_title_resrvation">예약</string>
     <string name="drawer_menu_item_title_todays_hotel">오늘의 호텔</string>
-    <string name="drawer_menu_item_title_chk_reservation">예약확인</string>
+    <string name="drawer_menu_item_title_chk_reservation">예약내역</string>
     <string name="drawer_menu_pin_title_account">계정</string>
     <string name="drawer_menu_item_title_credit">적립금</string>
+    <string name="drawer_menu_item_title_reg_credit_card">신용카드등록</string>
     <string name="drawer_menu_item_title_setting">설정</string>
 
     <!-- Mail Text -->
@@ -211,6 +230,9 @@
     <string name="frag_booking_no_hotels">예약된 호텔이 없습니다!</string>
     <string name="frag_booking_line">오늘은 멋진 호텔에서\n하루를 보내는게 어때요?</string>
     <string name="frag_booking_btn_login">기존 회원 로그인</string>
+    <string name="frag_booking_wait_account">입금대기</string>
+    <string name="frag_booking_complete_payment">결제완료</string>
+    <string name="frag_booking_use">이용완료</string>
 
     <!-- Profile Activity -->
     <string name="act_profile_login_acc">로그인 계정</string>
@@ -253,12 +275,19 @@
     <string name="act_booking_price">비용</string>
     <string name="act_booking_credit_discount">적립금 할인</string>
     <string name="act_booking_price_real">결제금액(VAT 포함)</string>
-    <string name="act_booking_pay_card">신용카드</string>
+    <string name="act_booking_pay_card">신용카드 일반결제</string>
     <string name="act_booking_pay_mobile">휴대폰</string>
     <string name="act_booking_pay_account">계좌이체</string>
     <string name="act_booking_btn_pay">결제하기</string>
     <string name="act_booking_0won">0원</string>
-    <string name="act_booking_payment_info">결제가 안되시나요? 1800-9120으로 전화주세요.</string>
+    <string name="act_booking_payment_info01">결제가 안되시나요? </string>
+    <string name="act_booking_payment_info02">1800-9120</string>
+    <string name="act_booking_payment_info03">으로 전화주세요.</string>
+    <string name="action_booking_cardmanager">카드관리</string>
+    <string name="label_booking_easypayment">신용카드 간편결제</string>
+    <string name="label_booking_agree_term">위의 내용에 동의하시면 서명해 주세요.</string>
+    <string name="label_booking_confirm_signature">서명 후 결제 완료</string>
+    <string name="message_booking_easypayment">결제 완료 후 취소 및 환불 불가합니다.\n</string>
 
     <!-- Payment Activity -->
     <string name="act_payment_isp_error">ISP 결제 오류</string>
@@ -367,13 +396,6 @@
     <string name="com_facebook_loginview_log_out_action">로그아웃</string>
     <string name="com_facebook_loginview_cancel_action">취소</string>
 
-    <!-- ACRA -->
-    <string name="crash_toast_text">예상치 못한 문제가 발생하였습니다.</string>
-    <string name="crash_dialog_title">Application 문제 리포팅</string>
-    <string name="crash_dialog_text">예상치 못한 문제가 발생했습니다. 문제의 빠른 해결을 위해 오류 데이터를 메일로 보내주세요. 확인을 누르시면 메일로 에러를 리포팅합니다.</string>
-    <string name="crash_dialog_ok_text">빠른 수정 적용하겠습니다.</string>
-    <string name="crash_dialog_comment_prompt">아래에 문제에 관한 의견을 남겨주세요.</string>
-
     <!-- Region List Activity -->
     <string name="act_list_region_select_region">지역을 선택해주세요.</string>
     <string name="act_list_region_title">지역 설정</string>
@@ -391,5 +413,20 @@
     <!-- Banner -->
     <string name="label_event_title">&lt;b&gt;이벤트&lt;/b&gt; 참여하기</string>
     <string name="label_event_subtitle">데일리호텔의 이벤트에 참여하세요.</string>
+
+    <!-- Map -->
+    <string name="label_seoul_area1">강남구|서초구|동작구|송파구|강동구</string>
+    <string name="label_seoul_area2">동대문구|성동구|광진구|성북구|강북구|중랑구|노원구|도봉구</string>
+    <string name="label_seoul_area3">중구|종로구|용산구</string>
+    <string name="label_seoul_area4">마포구|서대문구|은평구</string>
+    <string name="label_seoul_area5">영등포구|양천구|강서구|금천구|구로구</string>
+    <string name="message_failed_mylocation">일시적으로 내 위치 정보를 얻을 수 없습니다.</string>
+
+    <!-- CreditCardFragment -->
+    <string name="label_add_creditcard">+ 내 신용카드 추가하기</string>
+    <string name="label_creditcard_introduce">간편하게 카드등록하고\n1초만에 결제하세요!</string>
+    <string name="message_billing_success">카드 등록이 완료되었습니다.</string>
+    <string name="message_billing_fail">카드 등록을 실패하였습니다.</string>
+    <string name="message_billing_duplicate">이미 등록된 신용카드입니다.</string>
 
 </resources>

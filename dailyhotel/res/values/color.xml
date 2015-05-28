@@ -42,7 +42,11 @@
     <color name="grade_not_yet">#808080</color>
     
 	<color name="white">#ffffff</color>
+	<color name="white_a50">#80ffffff</color>
+	<color name="white_a30">#4dffffff</color>
 	<color name="black">#000000</color>
+	<color name="black_a25">#40000000</color>
+	<color name="black_a80">#cc000000</color>
 	
 	<color name="tab_text">#a6000000</color>
 	<color name="tab_subtext_selected">#ccff7a7a</color>
@@ -52,6 +56,7 @@
 	<color name="booking_vline">#c2c2c2</color>
 	<color name="booking_hline">#e0e0e0</color>
 	<color name="booking_hline01">#d4d4d4</color>
+	<color name="booking_tel_link">#2079b5</color>
 	
 	<color name="booking_subtext">#cc7f7f7f</color>
 	
@@ -64,5 +69,18 @@
 	
 	<color name="hotel_list_item_underline">#3a3a3a</color>
 	<color name="hotel_list_background">#ececec</color>
+	
+	<color name="floating_action_button_default">#FF7A7A</color>
+	<color name="floating_action_button_pressed">#ff5a5a</color>
+	
+	<color name="region_circle">#80FF7A7A</color>
+	<color name="region_circle_text">#ac1055</color>
+	
+	<!-- Credit Card -->
+	<color name="creditcard_background">#fefbf6</color>
+	
+	<!-- Booking List -->
+	<color name="bookinglist_section_background">#292929</color>
+	<color name="bookinglist_used_text">#8b8b8b</color>
 
 </resources>	

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_region_circle"
+    android:gravity="center" >
+
+    <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:textColor="@color/region_circle_text"
+        android:textSize="25dp" />
+
+</FrameLayout>

@@ -1,137 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="220dp"
-    android:layout_height="wrap_content"
-    android:background="@color/white"
-    android:padding="2dp" >
+    android:layout_width="227dp"
+    android:layout_height="wrap_content" >
 
-    <!-- img -->
-
-    <ImageView
-        android:id="@+id/iv_hotel_row_img"
-        android:layout_width="220dp"
-        android:layout_height="120dp"
-        android:adjustViewBounds="false"
-        android:background="@drawable/img_placeholder"
-        android:scaleType="fitXY"
-        android:visibility="visible" />
+    <View
+        android:layout_width="230dp"
+        android:layout_height="147dp" />
 
     <RelativeLayout
-        android:id="@+id/ll_hotel_row_content"
+        android:id="@+id/hotelLayout"
         android:layout_width="220dp"
-        android:layout_height="120dp" >
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@color/white"
+        android:padding="2dp" >
 
-        <!-- board -->
+        <!-- img -->
+
+        <ImageView
+            android:id="@+id/iv_hotel_row_img"
+            android:layout_width="220dp"
+            android:layout_height="140dp"
+            android:adjustViewBounds="false"
+            android:background="@drawable/img_placeholder"
+            android:scaleType="fitXY"
+            android:visibility="visible" />
 
         <RelativeLayout
-            android:id="@+id/rl_hotel_under"
+            android:id="@+id/ll_hotel_row_content"
             android:layout_width="220dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:padding="5dp" >
+            android:layout_height="140dp" >
+
+            <!-- board -->
 
             <RelativeLayout
-                android:id="@+id/ll_hotel_under_upper"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-
-                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-                    android:id="@+id/hv_hotel_grade"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:gravity="center"
-                    android:paddingBottom="1px"
-                    android:paddingLeft="5.5dp"
-                    android:paddingRight="5.5dp"
-                    android:paddingTop="2px"
-                    android:textColor="@android:color/white"
-                    android:textSize="11dp" />
-
-                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-                    android:id="@+id/tv_hotel_row_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/tv_hotel_row_discount"
-                    android:layout_toRightOf="@+id/hv_hotel_grade"
-                    android:ellipsize="end"
-                    android:freezesText="true"
-                    android:gravity="center_vertical"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    android:paddingLeft="6dp"
-                    android:paddingRight="3dp"
-                    android:scrollHorizontally="true"
-                    android:shadowColor="@color/textView_textColor_shadow"
-                    android:shadowDx="0"
-                    android:shadowDy="2"
-                    android:shadowRadius="0.01"
-                    android:singleLine="true"
-                    android:textColor="@android:color/white"
-                    android:textSize="13dp" />
-
-                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-                    android:id="@+id/tv_hotel_row_discount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:gravity="center_vertical|right"
-                    android:shadowColor="@color/textView_textColor_shadow"
-                    android:shadowDx="0"
-                    android:shadowDy="2"
-                    android:shadowRadius="0.01"
-                    android:textColor="@android:color/white"
-                    android:textSize="13dp" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
+                android:id="@+id/rl_hotel_under"
+                android:layout_width="220dp"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/ll_hotel_under_upper"
-                android:paddingTop="5dp" >
+                android:layout_alignParentBottom="true"
+                android:padding="5dp" >
 
-                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-                    android:id="@+id/tv_hotel_row_address"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_toLeftOf="@+id/tv_hotel_row_price"
-                    android:gravity="center_vertical"
-                    android:shadowColor="@color/textView_textColor_shadow"
-                    android:shadowDx="0"
-                    android:shadowDy="2"
-                    android:shadowRadius="0.01"
-                    android:singleLine="true"
-                    android:textColor="#cecece"
-                    android:textSize="11dp" />
+                <RelativeLayout
+                    android:id="@+id/ll_hotel_under_upper"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
 
-                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-                    android:id="@+id/tv_hotel_row_price"
-                    android:layout_width="wrap_content"
+                    <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                        android:id="@+id/hv_hotel_grade"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:gravity="center"
+                        android:paddingBottom="1px"
+                        android:paddingLeft="5.5dp"
+                        android:paddingRight="5.5dp"
+                        android:paddingTop="2px"
+                        android:textColor="@android:color/white"
+                        android:textSize="11dp" />
+
+                    <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                        android:id="@+id/tv_hotel_row_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/tv_hotel_row_discount"
+                        android:layout_toRightOf="@+id/hv_hotel_grade"
+                        android:ellipsize="end"
+                        android:freezesText="true"
+                        android:gravity="center_vertical"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:paddingLeft="6dp"
+                        android:paddingRight="3dp"
+                        android:scrollHorizontally="true"
+                        android:shadowColor="@color/textView_textColor_shadow"
+                        android:shadowDx="0"
+                        android:shadowDy="2"
+                        android:shadowRadius="0.01"
+                        android:singleLine="true"
+                        android:textColor="@android:color/white"
+                        android:textSize="13dp" />
+
+                    <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                        android:id="@+id/tv_hotel_row_discount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:gravity="center_vertical|right"
+                        android:shadowColor="@color/textView_textColor_shadow"
+                        android:shadowDx="0"
+                        android:shadowDy="2"
+                        android:shadowRadius="0.01"
+                        android:textColor="@android:color/white"
+                        android:textSize="13dp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:gravity="center_vertical|right"
-                    android:shadowColor="@color/textView_textColor_shadow"
-                    android:shadowDx="0"
-                    android:shadowDy="2"
-                    android:shadowRadius="0.01"
-                    android:textColor="#cecece"
-                    android:textSize="11dp" />
+                    android:layout_below="@+id/ll_hotel_under_upper"
+                    android:paddingTop="5dp" >
+
+                    <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                        android:id="@+id/tv_hotel_row_address"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_toLeftOf="@+id/tv_hotel_row_price"
+                        android:gravity="center_vertical"
+                        android:shadowColor="@color/textView_textColor_shadow"
+                        android:shadowDx="0"
+                        android:shadowDy="2"
+                        android:shadowRadius="0.01"
+                        android:singleLine="true"
+                        android:textColor="#cecece"
+                        android:textSize="11dp" />
+
+                    <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                        android:id="@+id/tv_hotel_row_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical|right"
+                        android:shadowColor="@color/textView_textColor_shadow"
+                        android:shadowDx="0"
+                        android:shadowDy="2"
+                        android:shadowRadius="0.01"
+                        android:textColor="#cecece"
+                        android:textSize="11dp" />
+                </RelativeLayout>
             </RelativeLayout>
         </RelativeLayout>
+
+        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            android:id="@+id/tv_hotel_row_soldout"
+            android:layout_width="220dp"
+            android:layout_height="140dp"
+            android:background="@color/textView_textColor_shadow_soldout"
+            android:gravity="center_vertical|center"
+            android:text="SOLD OUT"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="30dp"
+            android:visibility="gone" />
     </RelativeLayout>
 
-    <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-        android:id="@+id/tv_hotel_row_soldout"
-        android:layout_width="220dp"
-        android:layout_height="120dp"
-        android:background="@color/textView_textColor_shadow_soldout"
-        android:gravity="center_vertical|center"
-        android:text="SOLD OUT"
-        android:textColor="@android:color/darker_gray"
-        android:textSize="30dp"
-        android:visibility="gone" />
+    <ImageView
+        android:id="@+id/cancelView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@id/hotelLayout"
+        android:layout_marginRight="-10dp"
+        android:layout_marginTop="-3dp"
+        android:src="@drawable/img_btn_cancel" />
 
 </RelativeLayout>

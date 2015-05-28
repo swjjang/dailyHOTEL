@@ -23,6 +23,7 @@ import org.json.JSONObject;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -56,7 +57,6 @@ import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.FragmentViewPager;
-import com.twoheart.dailyhotel.widget.FragmentViewPager.OnPageSelectedListener;
 import com.twoheart.dailyhotel.widget.TabIndicator;
 import com.twoheart.dailyhotel.widget.TabIndicator.OnTabSelectedListener;
 
@@ -138,7 +138,7 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 			titleList.add(getString(R.string.frag_tab_map_title));
 
 			mFragmentViewPager = (FragmentViewPager) findViewById(R.id.fragmentViewPager);
-			mFragmentViewPager.setOnPageSelectedListener(mOnPageSelectedListener);
+			//			mFragmentViewPager.setOnPageChangeListener(mOnPageChangeListener);
 
 			mFragmentList = new ArrayList<BaseFragment>();
 
@@ -154,8 +154,31 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 			mFragmentViewPager.setData(mFragmentList);
 			mFragmentViewPager.setAdapter(getSupportFragmentManager());
 
+			mTabIndicator.setViewPager(mFragmentViewPager.getViewPager());
+			mTabIndicator.setOnPageChangeListener(mOnPageChangeListener);
+
 			// pinkred_font
 			//			GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
+		} else
+		{
+			if (mFragmentList != null)
+			{
+				for (BaseFragment baseFragment : mFragmentList)
+				{
+					if (baseFragment instanceof HotelTabBookingFragment)
+					{
+						((HotelTabBookingFragment) baseFragment).setHotelDetail(hotelDetail);
+						break;
+					}
+					//					else if(baseFragment instanceof TabInfoFragment)
+					//					{
+					//						((TabInfoFragment)baseFragment).setHotelDetail(hotelDetail);
+					//					} else if(baseFragment instanceof TabMapFragment)
+					//					{
+					//						
+					//					}
+				}
+			}
 		}
 	}
 
@@ -352,7 +375,7 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 		}
 	};
 
-	private OnPageSelectedListener mOnPageSelectedListener = new OnPageSelectedListener()
+	private OnPageChangeListener mOnPageChangeListener = new OnPageChangeListener()
 	{
 		@Override
 		public void onPageSelected(int position)
@@ -377,6 +400,20 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 					RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_map", "/todays-hotels/" + region + "/" + hotelName + "/map");
 					break;
 			}
+		}
+
+		@Override
+		public void onPageScrollStateChanged(int arg0)
+		{
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onPageScrolled(int arg0, float arg1, int arg2)
+		{
+			// TODO Auto-generated method stub
+
 		}
 	};
 
@@ -540,6 +577,8 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 				Intent i = new Intent(HotelTabActivity.this, BookingActivity.class);
 				i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELDETAIL, hotelDetail);
 				i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, mHotelIdx);
+				i.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mSaleTime);
+
 				startActivityForResult(i, CODE_REQUEST_ACTIVITY_BOOKING);
 				overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 

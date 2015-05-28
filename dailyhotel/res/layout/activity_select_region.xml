@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/textView_textColor_shadow_soldout" >
+
+    <ImageView
+        android:id="@+id/map_seoul_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true" />
+
+    <View
+        android:id="@+id/view01"
+        android:layout_width="150dp"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="134dp"
+        android:layout_marginRight="12dp" />
+
+    <View
+        android:id="@+id/view05"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_above="@+id/view01"
+        android:layout_marginBottom="29dp"
+        android:layout_toRightOf="@+id/view03" />
+
+    <View
+        android:id="@+id/view02"
+        android:layout_width="130dp"
+        android:layout_height="100dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignTop="@+id/view01" />
+
+    <View
+        android:id="@+id/view03"
+        android:layout_width="50dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
+
+    <View
+        android:id="@+id/view04"
+        android:layout_width="100dp"
+        android:layout_height="150dp"
+        android:layout_above="@+id/view02"
+        android:layout_toLeftOf="@+id/view03" />
+
+</RelativeLayout>

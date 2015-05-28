@@ -259,6 +259,14 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
 		} else if (v.getId() == facebookLogin.getId())
 		{
+			//			fbSession = new Session.Builder(this).setTokenCachingStrategy(new SharedPreferencesTokenCachingStrategy(this)).setApplicationId(getString(R.string.app_id)).build();
+			//			Session.OpenRequest openRequest = new Session.OpenRequest(this);
+			//			openRequest.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO);
+			//			openRequest.setRequestCode(Session.DEFAULT_AUTHORIZE_ACTIVITY_CODE);
+			//			openRequest.setPermissions(Arrays.asList("email", "basic_info"));
+			//			openRequest.setCallback(statusCallback);
+			//			fbSession.openForRead(openRequest); 
+
 			fbSession = new Session.Builder(this).setApplicationId(getString(R.string.app_id)).build();
 			Session.OpenRequest or = new Session.OpenRequest(this); // 안드로이드 sdk를 사용하기 위해선 내 컴퓨터의 hash key를 페이스북 개발 설정페이지에서 추가하여야함.
 			//			or.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO); // 앱 호출이 아닌 웹뷰를 강제로 호출함.
@@ -614,7 +622,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
 				ExLog.d("user/join? " + response.toString());
 
-				if (result.equals("true") == true)
+				if ("true".equalsIgnoreCase(result) == true)
 				{
 					// 회원가입에 성공하면 이제 로그인 절차
 					Editor ed = sharedPreference.edit();

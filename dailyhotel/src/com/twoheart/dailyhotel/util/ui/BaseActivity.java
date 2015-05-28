@@ -19,11 +19,11 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
@@ -35,7 +35,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
-import android.view.Window;
 import android.webkit.CookieSyncManager;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -50,6 +49,8 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.GlobalFont;
+import com.twoheart.dailyhotel.util.SimpleAlertDialog;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.RegionPopupListView;
@@ -62,7 +63,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 
 	protected RequestQueue mQueue;
 
-	protected LoadingDialog mLockUI;
+	private LoadingDialog mLockUI;
 
 	private RequestFilter cancelAllRequestFilter;
 
@@ -270,14 +271,14 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	/**
 	 * 액션바에 ProgressBar를 표시할 수 있도록 셋팅한다.
 	 */
-	public void setActionBarProgressBar()
-	{
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-		{
-			supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-			setSupportProgressBarIndeterminate(true);
-		}
-	}
+	//	public void setActionBarProgressBar()
+	//	{
+	//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+	//		{
+	//			supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+	//			setSupportProgressBarIndeterminate(true);
+	//		}
+	//	}
 
 	private void setLocale(Locale locale)
 	{
@@ -286,6 +287,19 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 		config.locale = locale;
 		getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
 
+	}
+
+	public void restartApp()
+	{
+		// 세션이 만료되어 재시작 요청.
+		SimpleAlertDialog.build(BaseActivity.this, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_session_expired), getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				Util.restartApp(BaseActivity.this);
+			}
+		}, null).setCancelable(false).show();
 	}
 
 	private void showPopupWindow(View oTargetView, ArrayList<String> stringlist, final UserActionListener userActionListener)
@@ -373,13 +387,21 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 
 		}
 
-		super.onPause();
+		unLockUI();
+		mLockUI.close();
+		mLockUI = null;
 
+		super.onPause();
 	}
 
 	@Override
 	protected void onResume()
 	{
+		if (mLockUI == null)
+		{
+			mLockUI = new LoadingDialog(this);
+		}
+
 		super.onResume();
 
 		try
@@ -398,7 +420,6 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	@Override
 	protected void onStop()
 	{
-
 		// 현재 Activity에 등록된 Request를 취소한다. 
 		if (mQueue != null)
 
@@ -444,7 +465,16 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	{
 		lockUiComponent();
 
-		mLockUI.show();
+		if (isFinishing() == false)
+		{
+			if (mLockUI == null)
+			{
+				mLockUI = new LoadingDialog(this);
+			}
+
+			mLockUI.show();
+		}
+
 		// 만약 제한시간이 지났는데도 리퀘스트가 끝나지 않았다면 Error 발생.
 		//		handler.postDelayed(networkCheckRunner, REQUEST_EXPIRE_JUDGE);
 	}
@@ -455,11 +485,16 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	@Override
 	public void unLockUI()
 	{
-		lockUiComponent();
+		releaseUiComponent();
 
 		// pinkred_font
 		//		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
-		mLockUI.hide();
+
+		if (isFinishing() == false && mLockUI != null)
+		{
+			mLockUI.hide();
+		}
+
 		//		handler.removeCallbacks(networkCheckRunner);
 	}
 
@@ -500,7 +535,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	@Override
 	public void onErrorResponse(VolleyError error)
 	{
-		releaseUiComponent();
+		unLockUI();
 
 		ExLog.e(error.toString());
 

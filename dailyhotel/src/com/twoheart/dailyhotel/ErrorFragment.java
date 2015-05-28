@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
 public class ErrorFragment extends BaseFragment implements OnClickListener
@@ -30,9 +31,15 @@ public class ErrorFragment extends BaseFragment implements OnClickListener
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return null;
+		}
 
 		View view = inflater.inflate(R.layout.fragment_error, container, false);
-		mHostActivity.setActionBar(getString(R.string.actionbar_title_error_frag), false);
+		baseActivity.setActionBar(getString(R.string.actionbar_title_error_frag), false);
 
 		btnRetry = (TextView) view.findViewById(R.id.btn_error);
 		btnRetry.setOnClickListener(this);
@@ -45,6 +52,12 @@ public class ErrorFragment extends BaseFragment implements OnClickListener
 	{
 		if (v.getId() == btnRetry.getId())
 		{
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null)
+			{
+				return;
+			}
 
 			// network 연결이 안되있으면
 			if (!VolleyHttpClient.isAvailableNetwork())
@@ -53,8 +66,8 @@ public class ErrorFragment extends BaseFragment implements OnClickListener
 				return;
 			} else
 			{
-				int index = ((MainActivity) mHostActivity).indexLastFragment;
-				((MainActivity) mHostActivity).replaceFragment(((MainActivity) mHostActivity).getFragment(index));
+				int index = ((MainActivity) baseActivity).indexLastFragment;
+				((MainActivity) baseActivity).replaceFragment(((MainActivity) baseActivity).getFragment(index));
 
 			}
 		}

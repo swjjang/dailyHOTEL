@@ -4,38 +4,6 @@
     android:layout_height="match_parent"
     android:background="@drawable/gradient_window_background" >
 
-    <LinearLayout
-        android:id="@+id/btn_event"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_gravity="center"
-        android:background="@drawable/img_btn_event"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp" >
-
-        <ImageView
-            android:id="@+id/iv_new_event"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:background="#0000"
-            android:clickable="false"
-            android:src="@drawable/img_newevent"
-            android:visibility="gone" />
-
-        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="false"
-            android:text="@string/frag_wait_timer_title"
-            android:textColor="#fff"
-            android:textSize="21dp" />
-    </LinearLayout>
-
     <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
         android:id="@+id/btn_wait_timer_alram"
         android:layout_width="match_parent"
@@ -53,9 +21,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btn_wait_timer_alram"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/btn_event"
+        android:layout_centerVertical="true"
         android:gravity="center"
         android:orientation="vertical" >
 

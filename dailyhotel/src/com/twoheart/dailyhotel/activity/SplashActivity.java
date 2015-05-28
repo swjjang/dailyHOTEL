@@ -346,19 +346,19 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 
 				if (RELEASE_STORE == Stores.PLAY_STORE)
 				{
-					ExLog.e("RELEASE_PLAY_STORE : true");
+					ExLog.d("RELEASE_PLAY_STORE : true");
 
 					editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME, response.getString("play_max"));
 					editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME, response.getString("play_min"));
 				} else if (RELEASE_STORE == Stores.T_STORE)
 				{
-					ExLog.e("RELEASE_T_STORE : true");
+					ExLog.d("RELEASE_T_STORE : true");
 
 					editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME, response.getString("tstore_max"));
 					editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME, response.getString("tstore_min"));
 				} else if (RELEASE_STORE == Stores.N_STORE)
 				{
-					ExLog.e("RELEASE_N_STORE : true");
+					ExLog.d("RELEASE_N_STORE : true");
 					editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME, response.getString("nstore_max"));
 					editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME, response.getString("nstore_min"));
 				}
@@ -394,7 +394,17 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 						}
 					};
 
-					SimpleAlertDialog.build(SplashActivity.this, getString(R.string.dialog_title_notice), getString(R.string.dialog_msg_please_update_new_version), getString(R.string.dialog_btn_text_update), posListener).show();
+					OnCancelListener cancelListener = new OnCancelListener()
+					{
+						@Override
+						public void onCancel(DialogInterface dialog)
+						{
+							setResult(RESULT_CANCELED);
+							finish();
+						}
+					};
+
+					SimpleAlertDialog.build(SplashActivity.this, getString(R.string.dialog_title_notice), getString(R.string.dialog_msg_please_update_new_version), getString(R.string.dialog_btn_text_update), posListener).setOnCancelListener(cancelListener).show();
 
 				} else if ((maxVersion > currentVersion) && (skipMaxVersion != maxVersion))
 				{

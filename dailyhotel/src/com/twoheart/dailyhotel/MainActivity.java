@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.json.JSONObject;
 
@@ -43,7 +44,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.view.KeyEvent;
@@ -68,7 +68,6 @@ import com.androidquery.util.AQUtility;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.twoheart.dailyhotel.activity.EventWebActivity;
 import com.twoheart.dailyhotel.activity.SplashActivity;
 import com.twoheart.dailyhotel.fragment.HotelMainFragment;
 import com.twoheart.dailyhotel.fragment.RatingHotelFragment;
@@ -91,7 +90,6 @@ import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class MainActivity extends BaseActivity implements OnItemClickListener, Constants
 {
-
 	public static final int INDEX_HOTEL_LIST_FRAGMENT = 0;
 	public static final int INDEX_BOOKING_LIST_FRAGMENT = 1;
 	public static final int INDEX_CREDIT_FRAGMENT = 2;
@@ -139,7 +137,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		super.onCreate(savedInstanceState);
 		ExLog.d("GCM??" + sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "NOPE"));
 
-		//				DailyHotelRequest.makeUrlEncoder();
+		//		DailyHotelRequest.makeUrlEncoder();
 
 		// 사용자가 선택한 언어, but 만약 사용자가 한국인인데 일본어를 선택하면 jp가 됨.
 		// 영어인 경우 - English, 한글인 경우 - 한국어
@@ -171,7 +169,9 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		// 이전의 비정상 종료에 의한 만료된 쿠키들이 있을 수 있으므로, SplashActivity에서 자동 로그인을
 		// 처리하기 이전에 미리 이미 저장되어 있는 쿠키들을 정리한다.
 		if (CookieManager.getInstance().getCookie(URL_DAILYHOTEL_SERVER) != null)
+		{
 			VolleyHttpClient.destroyCookie();
+		}
 
 		// 스플래시 화면을 띄운다
 
@@ -369,14 +369,13 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	{
 		switch (index)
 		{
-			case 0:
-				//				return new HotelListFragment();
+			case INDEX_HOTEL_LIST_FRAGMENT:
 				return new HotelMainFragment();
-			case 1:
+			case INDEX_BOOKING_LIST_FRAGMENT:
 				return new BookingListFragment();
-			case 2:
+			case INDEX_CREDIT_FRAGMENT:
 				return new CreditFragment();
-			case 3:
+			case INDEX_SETTING_FRAGMENT:
 				return new SettingFragment();
 		}
 		return null;
@@ -528,8 +527,9 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	{
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-		TextView eventTextView = (TextView) findViewById(R.id.titleTextView);
-		eventTextView.setText(Html.fromHtml(getString(R.string.label_event_title)));
+		// 이벤트 제거.
+		//		TextView eventTextView = (TextView) findViewById(R.id.titleTextView);
+		//		eventTextView.setText(Html.fromHtml(getString(R.string.label_event_title)));
 
 		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, 0, 0)
 		{
@@ -555,9 +555,28 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 				if (Float.compare(slideOffset, 0.0f) > 0)
 				{
 					setActionBarRegionEnable(false);
+
+					for (Fragment fragment : fragmentManager.getFragments())
+					{
+						if (fragment != null && fragment.isVisible() && fragment instanceof HotelMainFragment)
+						{
+							((HotelMainFragment) fragment).setMenuEnabled(false);
+							break;
+						}
+					}
+
 				} else if (Float.compare(slideOffset, 0.0f) == 0)
 				{
 					setActionBarRegionEnable(true);
+
+					for (Fragment fragment : fragmentManager.getFragments())
+					{
+						if (fragment != null && fragment.isVisible() && fragment instanceof HotelMainFragment)
+						{
+							((HotelMainFragment) fragment).setMenuEnabled(true);
+							break;
+						}
+					}
 				}
 
 				super.onDrawerSlide(drawerView, slideOffset);
@@ -578,26 +597,27 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		drawerView = findViewById(R.id.left_drawer);
 		drawerList = (ListView) findViewById(R.id.drawListView);
 
-		View bannerView = findViewById(R.id.bannerView);
-
-		bannerView.setOnClickListener(new View.OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
-			{
-				drawerLayout.closeDrawer(drawerView);
-
-				mHandler.postDelayed(new Runnable()
-				{
-					@Override
-					public void run()
-					{
-						Intent i = new Intent(MainActivity.this, EventWebActivity.class);
-						startActivity(i);
-					}
-				}, 300);
-			}
-		});
+		// 이벤트 제거.
+		//		View bannerView = findViewById(R.id.bannerView);
+		//
+		//		bannerView.setOnClickListener(new View.OnClickListener()
+		//		{
+		//			@Override
+		//			public void onClick(View v)
+		//			{
+		//				drawerLayout.closeDrawer(drawerView);
+		//
+		//				mHandler.postDelayed(new Runnable()
+		//				{
+		//					@Override
+		//					public void run()
+		//					{
+		//						Intent i = new Intent(MainActivity.this, EventWebActivity.class);
+		//						startActivity(i);
+		//					}
+		//				}, 300);
+		//			}
+		//		});
 
 		menuHotelListFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_todays_hotel), R.drawable.selector_drawermenu_todayshotel, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
 		menuBookingListFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_chk_reservation), R.drawable.selector_drawermenu_reservation, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
@@ -781,7 +801,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 	private class DrawerMenuListAdapter extends BaseAdapter
 	{
-
 		private List<DrawerMenu> list;
 		private LayoutInflater inflater;
 		private Context context;
@@ -960,7 +979,10 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 					int purchasedHotelSaleIdx = sharedPreference.getInt(KEY_PREFERENCE_HOTEL_SALE_IDX, VALUE_PREFERENCE_HOTEL_SALE_IDX_DEFAULT);
 					String purchasedHotelCheckOut = sharedPreference.getString(KEY_PREFERENCE_HOTEL_CHECKOUT, VALUE_PREFERENCE_HOTEL_CHECKOUT_DEFAULT);
 
-					Date today = new Date();
+					Calendar calendar = DailyCalendar.getInstance();
+					calendar.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
+
+					Date today = calendar.getTime();
 					Date checkOut = SaleTime.stringToDate(Util.dailyHotelTimeConvert(purchasedHotelCheckOut));
 
 					//호텔 만족도 조사 
@@ -968,10 +990,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 					{
 						if (today.compareTo(checkOut) >= 0)
 						{
-							Calendar calendar = DailyCalendar.getInstance();
-							calendar.setTime(checkOut);
-							calendar.add(Calendar.DATE, DAYS_DISPLAY_RATING_HOTEL_DIALOG);
-							Date deadLineDay = calendar.getTime();
+							Date deadLineDay = new Date(checkOut.getTime() + 7 * SaleTime.SECONDS_IN_A_DAY * 1000);
 
 							if (today.compareTo(deadLineDay) < 0)
 							{
@@ -1004,7 +1023,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 	private DailyHotelJsonResponseListener mGcmRegisterJsonResponseListener = new DailyHotelJsonResponseListener()
 	{
-
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
@@ -1024,7 +1042,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 					editor.putString(KEY_PREFERENCE_GCM_ID, regPushParams.get("notification_id").toString());
 					editor.apply();
 				}
-
 			} catch (Exception e)
 			{
 				onError(e);

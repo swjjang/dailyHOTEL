@@ -2803,8 +2803,35 @@ com.google.android.gms.safetynet.zzc
 com.google.android.gms.security.ProviderInstaller
 com.google.android.gms.security.ProviderInstaller$1
 com.google.android.gms.security.ProviderInstaller$ProviderInstallListener
+com.google.maps.android.MathUtil
+com.google.maps.android.PolyUtil
+com.google.maps.android.R$anim
+com.google.maps.android.R$attr
+com.google.maps.android.R$bool
+com.google.maps.android.R$color
+com.google.maps.android.R$dimen
+com.google.maps.android.R$integer
+com.google.maps.android.R$raw
+com.google.maps.android.R$string
+com.google.maps.android.R$styleable
+com.google.maps.android.SphericalUtil
+com.google.maps.android.clustering.algo.GridBasedAlgorithm
+com.google.maps.android.clustering.view.DefaultClusterRenderer:
+    private static final int MIN_CLUSTER_SIZE
+com.google.maps.android.clustering.view.DefaultClusterRenderer$MarkerModifier:
+    private static final int BLANK
+com.google.maps.android.clustering.view.DefaultClusterRenderer$ViewModifier:
+    private static final int RUN_TASK
+    private static final int TASK_FINISHED
+com.google.maps.android.heatmaps.Gradient
+com.google.maps.android.heatmaps.Gradient$ColorInterval
+com.google.maps.android.heatmaps.HeatmapTileProvider
+com.google.maps.android.heatmaps.HeatmapTileProvider$Builder
+com.google.maps.android.heatmaps.WeightedLatLng
+com.google.maps.android.quadtree.PointQuadTree:
+    private static final int MAX_ELEMENTS
+    private static final int MAX_DEPTH
 com.google.maps.android.ui.BubbleIconFactory
-com.google.maps.android.ui.SquareTextView
 com.google.tagmanager.AdvertiserIdMacro
 com.google.tagmanager.AdvertisingTrackingEnabledMacro
 com.google.tagmanager.AdwordsClickReferrerListener
@@ -3538,12 +3565,6 @@ com.ning.http.util.UTF8Codec
 com.ning.http.util.UTF8UrlEncoder:
     49:50:private UTF8UrlEncoder()
 com.twoheart.dailyhotel.BuildConfig
-com.twoheart.dailyhotel.CreditFragment:
-    186:187:private void alert(java.lang.String)
-com.twoheart.dailyhotel.CreditListFragment:
-    private static final java.lang.String KEY_BUNDLE_ARGUMENTS_CREDITLIST
-com.twoheart.dailyhotel.DailyHotel:
-    116:118:private void initializeVolleyImageLoader()
 com.twoheart.dailyhotel.HotelDaysListFragment:
     private static final int HANDLER_MESSAGE_SHOWDAYSLIST
     private static final int DAY_OF_COUNT
@@ -3553,7 +3574,6 @@ com.twoheart.dailyhotel.MainActivity:
     347:359:private void initializeFragments()
 com.twoheart.dailyhotel.Manifest
 com.twoheart.dailyhotel.Manifest$permission
-com.twoheart.dailyhotel.R
 com.twoheart.dailyhotel.R$anim
 com.twoheart.dailyhotel.R$array
 com.twoheart.dailyhotel.R$attr
@@ -3568,7 +3588,6 @@ com.twoheart.dailyhotel.R$menu
 com.twoheart.dailyhotel.R$raw
 com.twoheart.dailyhotel.R$string
 com.twoheart.dailyhotel.R$style
-com.twoheart.dailyhotel.R$styleable
 com.twoheart.dailyhotel.WaitTimerFragment:
     private static final java.lang.String KEY_BUNDLE_ARGUMENTS_SALETIME
 com.twoheart.dailyhotel.activity.BookingActivity:
@@ -3578,19 +3597,25 @@ com.twoheart.dailyhotel.activity.BookingActivity:
     private static final int DIALOG_CONFIRM_PAYMENT_ACCOUNT
     private static final int DIALOG_CONFIRM_PAYMENT_NO_RSERVE
     private static final int DIALOG_CONFIRM_CALL
-    499:525:private void moveToLoginProcess()
+    private static final int DIALOG_CONFIRM_PAYMENT_REGCARD
 com.twoheart.dailyhotel.activity.EventWebActivity:
     private static final java.lang.String TAG
 com.twoheart.dailyhotel.activity.PaymentActivity:
     private static final int REQUEST_CODE_PAYMENT
     private static final java.lang.String CONFIG_CLIENT_ID
 com.twoheart.dailyhotel.activity.PaymentActivity$HtmlObserver
+com.twoheart.dailyhotel.activity.RegisterCreditCardActivity$HtmlObserver
+com.twoheart.dailyhotel.activity.SelectDetailRegionDialog
+com.twoheart.dailyhotel.activity.SelectDetailRegionDialog$1
+com.twoheart.dailyhotel.activity.SelectDetailRegionDialog$OnSelectedDetailRegionListener
 com.twoheart.dailyhotel.activity.SplashActivity:
     private static final int PROGRESS_CIRCLE_COUNT
     private static final int VALUE_WEB_API_RESPONSE_NEW_EVENT_NOTIFY
     private static final int VALUE_WEB_API_RESPONSE_NEW_EVENT_NONE
     private static final int DURING_SPLASH_ACTIVITY_SHOW
     protected java.util.HashMap regPushParams
+com.twoheart.dailyhotel.adapter.HotelInfoWindowAdapter:
+    private static final int MAX_CHILD_VIEW
 com.twoheart.dailyhotel.fragment.BookingTabBookingFragment:
     private static final java.lang.String KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL
     private static final java.lang.String KEY_BUNDLE_ARGUMENTS_BOOKING
@@ -3638,12 +3663,22 @@ com.twoheart.dailyhotel.util.network.request.DailyHotelRequest:
     protected abstract void deliverResponse(java.lang.Object)
 com.twoheart.dailyhotel.util.ui.AllCapsTransformationMethod
 com.twoheart.dailyhotel.util.ui.BaseActivity:
-    284:289:private void setLocale(java.util.Locale)
-    584:585:protected void chgClickable(android.view.View)
+    285:290:private void setLocale(java.util.Locale)
+    619:620:protected void chgClickable(android.view.View)
+com.twoheart.dailyhotel.util.ui.LocationFactory:
+    private static final int TWO_MINUTES
+    private static final int TEN_MINUTES
+    252:288:private boolean isBetterLocation(android.location.Location,android.location.Location)
+    293:297:private boolean isSameProvider(java.lang.String,java.lang.String)
 com.twoheart.dailyhotel.util.ui.OnLoadListener
 com.twoheart.dailyhotel.util.ui.TransformationMethodCompat
 com.twoheart.dailyhotel.util.ui.TransformationMethodCompat2
 com.twoheart.dailyhotel.widget.DailyCustomFontCheckBox
+com.twoheart.dailyhotel.widget.DailyFloatingActionButton:
+    private static final int SCALE_DURATION_MILLIS
+com.twoheart.dailyhotel.widget.DailySignatureView:
+    private static final int CONFIRM_RAIO_PERCENT_OF_SIGNATURE
+    private static final int B_CURVE_COUNT_OF_POINT
 com.twoheart.dailyhotel.widget.DayView
 com.twoheart.dailyhotel.widget.HotelGradeView
 com.viewpagerindicator.CirclePageIndicator:
@@ -3656,6 +3691,7 @@ com.viewpagerindicator.LinePageIndicator:
     private static final int INVALID_POINTER
 com.viewpagerindicator.LoopCirclePageIndicator:
     private static final int INVALID_POINTER
+    private boolean mIsDragging
 com.viewpagerindicator.PageIndicator:
     public abstract void setViewPager(android.support.v4.view.ViewPager)
     public abstract void setViewPager(android.support.v4.view.ViewPager,int)
@@ -3697,72 +3733,148 @@ fr.castorflex.android.smoothprogressbar.SmoothProgressBarUtils:
 fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable:
     private static final long FRAME_DURATION
     private static final float OFFSET_PER_FRAME
+io.fabric.sdk.android.BuildConfig
+io.fabric.sdk.android.Fabric:
+    static final java.lang.String ROOT_DIR
+    static final boolean DEFAULT_DEBUGGABLE
+io.fabric.sdk.android.InitializationTask:
+    private static final java.lang.String TIMING_METRIC_TAG
+io.fabric.sdk.android.Onboarding:
+    static final java.lang.String CRASHLYTICS_API_ENDPOINT
+io.fabric.sdk.android.SilentLogger
+io.fabric.sdk.android.services.common.AdvertisingInfoProvider:
+    private static final java.lang.String ADVERTISING_INFO_PREFERENCES
+    private static final java.lang.String PREFKEY_LIMIT_AD_TRACKING
+    private static final java.lang.String PREFKEY_ADVERTISING_ID
+io.fabric.sdk.android.services.common.AdvertisingInfoReflectionStrategy:
+    private static final int GOOGLE_PLAY_SERVICES_SUCCESS_CODE
+    private static final java.lang.String CLASS_NAME_GOOGLE_PLAY_SERVICES_UTILS
+    private static final java.lang.String METHOD_NAME_IS_GOOGLE_PLAY_SERVICES_AVAILABLE
+    private static final java.lang.String CLASS_NAME_ADVERTISING_ID_CLIENT
+    private static final java.lang.String CLASS_NAME_ADVERTISING_ID_CLIENT_INFO
+    private static final java.lang.String METHOD_NAME_GET_ADVERTISING_ID_INFO
+    private static final java.lang.String METHOD_NAME_GET_ID
+    private static final java.lang.String METHOD_NAME_IS_LIMITED_AD_TRACKING_ENABLED
+io.fabric.sdk.android.services.common.AdvertisingInfoServiceStrategy:
+    private static final java.lang.String GOOGLE_PLAY_SERVICE_PACKAGE_NAME
+io.fabric.sdk.android.services.common.AdvertisingInfoServiceStrategy$AdvertisingConnection:
+    private static final int QUEUE_TIMEOUT_IN_MS
+io.fabric.sdk.android.services.common.AdvertisingInfoServiceStrategy$AdvertisingInterface:
+    private static final int FLAGS_NONE
+    private static final int AD_TRANSACTION_CODE_ID
+    private static final int AD_TRANSACTION_CODE_LIMIT_AD_TRACKING
+io.fabric.sdk.android.services.common.ApiKey:
+    static final java.lang.String FABRIC_API_KEY
+    static final java.lang.String CRASHLYTICS_API_KEY
+io.fabric.sdk.android.services.common.CommonUtils:
+    private static final java.lang.String LOG_PRIORITY_NAME_ASSERT
+    private static final java.lang.String LOG_PRIORITY_NAME_DEBUG
+    private static final java.lang.String LOG_PRIORITY_NAME_ERROR
+    private static final java.lang.String LOG_PRIORITY_NAME_INFO
+    private static final java.lang.String LOG_PRIORITY_NAME_VERBOSE
+    private static final java.lang.String LOG_PRIORITY_NAME_WARN
+    private static final java.lang.String LOG_PRIORITY_NAME_UNKNOWN
+    private static final java.lang.String CLS_SHARED_PREFERENCES_NAME
+    static final java.lang.String CLS_TRACE_PREFERENCE_NAME
+    static final boolean CLS_TRACE_DEFAULT
+    private static final java.lang.String LOGGING_DISABLED_KEY
+    private static final boolean LOGGING_DISABLED_DEFAULT
+    static final java.lang.String ENCRYPTION_AES
+    static final java.lang.String FABRIC_BUILD_ID
+    static final java.lang.String CRASHLYTICS_BUILD_ID
+    private static final long UNCALCULATED_TOTAL_RAM
+    static final int BYTES_IN_A_GIGABYTE
+    static final int BYTES_IN_A_MEGABYTE
+    static final int BYTES_IN_A_KILOBYTE
+io.fabric.sdk.android.services.common.ExecutorUtils:
+    private static final long DEFAULT_TERMINATION_TIMEOUT
+    21:22:private ExecutorUtils()
+io.fabric.sdk.android.services.common.IdManager:
+    private static final java.lang.String PREFKEY_INSTALLATION_UUID
+    private static final java.lang.String SDK_ASSETS_ROOT
+    private static final java.lang.String BAD_ANDROID_ID
+    private static final java.lang.String BLUETOOTH_ERROR_MESSAGE
+    433:433:private java.lang.String[] getTwitterSdkAssetsList()
+io.fabric.sdk.android.services.common.InstallerPackageNameProvider:
+    private static final java.lang.String NO_INSTALLER_PACKAGE_NAME
+io.fabric.sdk.android.services.common.QueueFile:
+    private static final int INITIAL_LENGTH
+    static final int HEADER_LENGTH
+    120:123:QueueFile(java.io.RandomAccessFile)
+io.fabric.sdk.android.services.common.QueueFile$Element:
+    static final int HEADER_LENGTH
+io.fabric.sdk.android.services.common.SafeToast
+io.fabric.sdk.android.services.common.SafeToast$1
+io.fabric.sdk.android.services.concurrency.AsyncTask:
+    private static final java.lang.String LOG_TAG
+    private static final int KEEP_ALIVE
+    private static final int MESSAGE_POST_RESULT
+    private static final int MESSAGE_POST_PROGRESS
+    629:633:protected final varargs void publishProgress(java.lang.Object[])
+io.fabric.sdk.android.services.concurrency.DelegateProvider
+io.fabric.sdk.android.services.concurrency.DependencyPriorityBlockingQueue:
+    static final int TAKE
+    static final int PEEK
+    static final int POLL
+    static final int POLL_WITH_TIMEOUT
+io.fabric.sdk.android.services.concurrency.PriorityRunnable
+io.fabric.sdk.android.services.concurrency.PriorityThreadPoolExecutor:
+    private static final long KEEP_ALIVE
+io.fabric.sdk.android.services.concurrency.internal.AbstractFuture:
+    151:151:protected final boolean wasInterrupted()
+io.fabric.sdk.android.services.concurrency.internal.AbstractFuture$Sync:
+    static final int RUNNING
+    static final int COMPLETING
+    static final int COMPLETED
+    static final int CANCELLED
+    static final int INTERRUPTED
+    private static final long serialVersionUID
+    308:308:boolean wasInterrupted()
+io.fabric.sdk.android.services.concurrency.internal.DefaultRetryPolicy
+io.fabric.sdk.android.services.concurrency.internal.ExponentialBackoff
+io.fabric.sdk.android.services.network.CertificateChainCleaner:
+    17:18:private CertificateChainCleaner()
+io.fabric.sdk.android.services.network.DefaultHttpRequestFactory:
+    private static final java.lang.String HTTPS
+io.fabric.sdk.android.services.network.HttpRequest:
+    private static final java.lang.String BOUNDARY
+    private static final java.lang.String CONTENT_TYPE_MULTIPART
+    private static final java.lang.String CRLF
+    2516:2516:protected io.fabric.sdk.android.services.network.HttpRequest writePartHeader(java.lang.String,java.lang.String)
+io.fabric.sdk.android.services.network.HttpRequest$Base64:
+    private static final byte EQUALS_SIGN
+    private static final java.lang.String PREFERRED_ENCODING
+    412:413:private HttpRequest$Base64()
+io.fabric.sdk.android.services.network.HttpRequest$HttpRequestException:
+    private static final long serialVersionUID
+io.fabric.sdk.android.services.network.NetworkUtils:
+    15:16:private NetworkUtils()
+io.fabric.sdk.android.services.network.PinningTrustManager:
+    private static final long PIN_FRESHNESS_DURATION_MILLIS
+io.fabric.sdk.android.services.network.UrlUtils
+io.fabric.sdk.android.services.persistence.FileStore
+io.fabric.sdk.android.services.persistence.PersistenceStrategy
+io.fabric.sdk.android.services.persistence.PreferenceStoreStrategy
+io.fabric.sdk.android.services.persistence.SerializationStrategy
+io.fabric.sdk.android.services.settings.AbstractAppSpiCall:
+    static final java.lang.String ICON_FILE_NAME
+    static final java.lang.String ICON_CONTENT_TYPE
+io.fabric.sdk.android.services.settings.AppSpiCall
+io.fabric.sdk.android.services.settings.DefaultSettingsController:
+    private static final java.lang.String LOAD_ERROR_MESSAGE
+    private static final java.lang.String PREFS_BUILD_INSTANCE_IDENTIFIER
+io.fabric.sdk.android.services.settings.DefaultSettingsSpiCall:
+    static final java.lang.String BUILD_VERSION_PARAM
+    static final java.lang.String DISPLAY_VERSION_PARAM
+    static final java.lang.String INSTANCE_PARAM
+    static final java.lang.String SOURCE_PARAM
+    static final java.lang.String ICON_HASH
+io.fabric.sdk.android.services.settings.Settings:
+    private static final java.lang.String SETTINGS_URL_FORMAT
+io.fabric.sdk.android.services.settings.Settings$LazyHolder:
+    29:29:Settings$LazyHolder()
 kr.co.kcp.util.DisplayViewPort
 kr.co.kcp.util.UtilActivity
-org.acra.ACRAConfigurationException:
-    private static final long serialVersionUID
-org.acra.ACRAConstants:
-    static final java.lang.String APPROVED_SUFFIX
-    static final int MAX_SEND_REPORTS
-    protected static final java.lang.String EXTRA_REPORT_FILE_NAME
-    protected static final java.lang.String EXTRA_FORCE_CANCEL
-    static final int NOTIF_CRASH_ID
-    static final int TOAST_WAIT_DURATION
-org.acra.CrashReportDialog:
-    private static final java.lang.String STATE_EMAIL
-    private static final java.lang.String STATE_COMMENT
-org.acra.CrashReportPersister:
-    private static final int NONE
-    private static final int SLASH
-    private static final int UNICODE
-    private static final int CONTINUE
-    private static final int KEY_DONE
-    private static final int IGNORE
-    private static final java.lang.String LINE_SEPARATOR
-org.acra.collector.ConfigurationCollector:
-    private static final java.lang.String SUFFIX_MASK
-    private static final java.lang.String FIELD_SCREENLAYOUT
-    private static final java.lang.String FIELD_UIMODE
-    private static final java.lang.String FIELD_MNC
-    private static final java.lang.String FIELD_MCC
-    private static final java.lang.String PREFIX_UI_MODE
-    private static final java.lang.String PREFIX_TOUCHSCREEN
-    private static final java.lang.String PREFIX_SCREENLAYOUT
-    private static final java.lang.String PREFIX_ORIENTATION
-    private static final java.lang.String PREFIX_NAVIGATIONHIDDEN
-    private static final java.lang.String PREFIX_NAVIGATION
-    private static final java.lang.String PREFIX_KEYBOARDHIDDEN
-    private static final java.lang.String PREFIX_KEYBOARD
-    private static final java.lang.String PREFIX_HARDKEYBOARDHIDDEN
-org.acra.collector.CrashReportData:
-    private static final long serialVersionUID
-org.acra.collector.DeviceFeaturesCollector:
-    32:32:DeviceFeaturesCollector()
-org.acra.collector.DisplayManagerCollector:
-    18:18:DisplayManagerCollector()
-org.acra.collector.DropBoxCollector:
-    private static final java.lang.String NO_RESULT
-    40:40:DropBoxCollector()
-org.acra.collector.DumpSysCollector:
-    34:34:DumpSysCollector()
-org.acra.collector.LogCatCollector:
-    private static final int DEFAULT_TAIL_COUNT
-    41:41:LogCatCollector()
-org.acra.collector.LogFileCollector:
-    41:42:private LogFileCollector()
-org.acra.collector.MediaCodecListCollector:
-    private static final java.lang.String COLOR_FORMAT_PREFIX
-org.acra.collector.ReflectionCollector:
-    32:32:ReflectionCollector()
-org.acra.collector.SettingsCollector:
-    39:39:SettingsCollector()
-org.acra.collector.SharedPreferencesCollector:
-    33:33:SharedPreferencesCollector()
-org.acra.jraf.android.util.activitylifecyclecallbackscompat.ActivityLifecycleCallbacksAdapter
-org.acra.util.Installation:
-    private static final java.lang.String INSTALLATION
-org.acra.util.JSONReportBuilder$JSONReportException:
-    private static final long serialVersionUID
 org.slf4j.IMarkerFactory
 org.slf4j.LoggerFactory:
     static final java.lang.String CODES_PREFIX
