@@ -615,22 +615,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 						int seq = jsonObject.getInt("seq");
 
-						// 정가가 0원인 경우는 리스트에서 제거한다.
-						try
-						{
-							int price = Integer.parseInt(jsonObject.getString("price"));
-
-							if (price <= 0)
-							{
-								continue;
-							}
-						} catch (Exception e)
-						{
-							ExLog.d(e.toString());
-
-							continue;
-						}
-
 						if (seq >= 0)
 						{
 							// 숨김호텔이 아니라면 추가. (음수일 경우 숨김호텔.)
