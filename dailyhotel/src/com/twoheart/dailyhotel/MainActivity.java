@@ -301,7 +301,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			{
 				GoogleCloudMessaging instance = GoogleCloudMessaging.getInstance(MainActivity.this);
 				String regId = "";
-				
+
 				try
 				{
 					regId = instance.register(GCM_PROJECT_NUMBER);
@@ -326,7 +326,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 				regPushParams.put("user_idx", idx);
 				regPushParams.put("notification_id", regId);
 				regPushParams.put("device_type", GCM_DEVICE_TYPE_ANDROID);
-				
+
 				ExLog.d("params for register push id : " + regPushParams.toString());
 
 				mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_GCM_REGISTER).toString(), regPushParams, mGcmRegisterJsonResponseListener, MainActivity.this));

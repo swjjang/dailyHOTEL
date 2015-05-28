@@ -605,16 +605,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 					setVisibility(HOTEL_VIEW_TYPE.GONE);
 				} else
 				{
-					// 추후 개수는 화면에 보이는 리스트 아이템의 개수에 따라서 다르다. 
-					// FooterView
-					//					if (length == 1)
-					//					{
-					//						mFooterView.setVisibility(View.GONE);
-					//					} else
-					//					{
-					//						mFooterView.setVisibility(View.VISIBLE);
-					//					}
-
 					JSONObject jsonObject;
 
 					ArrayList<Hotel> hotelList = new ArrayList<Hotel>(length);

@@ -365,9 +365,11 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 			}
 		} else
 		{
-			fbSession.onActivityResult(this, requestCode, resultCode, data);
+			if (fbSession != null)
+			{
+				fbSession.onActivityResult(this, requestCode, resultCode, data);
+			}
 		}
-
 	}
 
 	@Override
@@ -409,7 +411,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 		{
 			return;
 		}
-		
+
 		new AsyncTask<Void, Void, String>()
 		{
 			@Override
