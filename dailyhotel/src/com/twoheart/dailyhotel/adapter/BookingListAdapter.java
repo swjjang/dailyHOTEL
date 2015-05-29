@@ -279,8 +279,8 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
 	private void setGrayScale(ImageView imageView)
 	{
 		ColorMatrix matrix = new ColorMatrix();
-		matrix.setSaturation(0); //0이면 grayscale
-		ColorMatrixColorFilter cf = new ColorMatrixColorFilter(matrix);
-		imageView.setColorFilter(cf);
+		matrix.setSaturation(0);
+		ColorMatrixColorFilter colorFilter = new ColorMatrixColorFilter(matrix);
+		imageView.setColorFilter(colorFilter);
 	}
 }

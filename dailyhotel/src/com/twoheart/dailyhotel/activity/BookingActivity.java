@@ -29,6 +29,7 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
@@ -134,6 +135,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	private Intent mResIntent;
 	protected String mAliveCallSource;
 	private Dialog mFinalCheckDialog;
+	private ProgressDialog mProgressDialog;
 
 	//	private String locale;
 	private int mHotelIdx;
@@ -582,15 +584,57 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	{
 		unLockUI();
 
-		ExLog.e("Sale credit / Pay Price : " + mPay.isSaleCredit() + " / " + mPay.getPayPrice());
-
-		Intent intent = new Intent(this, com.twoheart.dailyhotel.activity.PaymentActivity.class);
-		intent.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
-
-		startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PAYMENT);
-
-		if (mPay.getType() != Pay.Type.EASY_CARD)
+		if (mPay.getType() == Pay.Type.EASY_CARD)
 		{
+			if (mFinalCheckDialog != null && mFinalCheckDialog.isShowing() == true)
+			{
+				mFinalCheckDialog.dismiss();
+			}
+
+			if (mProgressDialog != null)
+			{
+				if (mProgressDialog.isShowing() == true)
+				{
+					mProgressDialog.dismiss();
+				}
+
+				mProgressDialog = null;
+			}
+
+			mProgressDialog = new ProgressDialog(BookingActivity.this);
+			mProgressDialog.setMessage(getString(R.string.dialog_msg_processing_payment));
+			mProgressDialog.setIndeterminate(true);
+			mProgressDialog.setCancelable(false);
+			mProgressDialog.show();
+
+			String mileage = "0"; // 적립금
+
+			if (mPay.isSaleCredit() == true)
+			{
+				// 적립금을 절대값으로 보냄..
+				try
+				{
+					mileage = String.valueOf(Math.abs(Integer.parseInt(mPay.getCredit().getBonus())));
+				} catch (Exception e)
+				{
+					ExLog.e(e.toString());
+				}
+			}
+
+			Map<String, String> params = new HashMap<String, String>();
+
+			params.put("saleIdx", String.valueOf(mPay.getHotelDetail().getSaleIdx()));
+			params.put("billkey", mPay.getCustomer().mBillingKey);
+			params.put("mileage", mileage);
+
+			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_PAYMENT).toString(), params, mUserSessionBillingPayment, BookingActivity.this));
+		} else
+		{
+			Intent intent = new Intent(this, com.twoheart.dailyhotel.activity.PaymentActivity.class);
+			intent.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
+
+			startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PAYMENT);
+
 			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 		}
 	}
@@ -757,6 +801,17 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				case CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER:
 					msg = getString(R.string.act_toast_payment_account_timeover);
 					break;
+
+				case CODE_RESULT_ACTIVITY_PAYMENT_UNKNOW_ERROR:
+					if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_DATA_MESSAGE) == true)
+					{
+						msg = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_MESSAGE);
+					} else
+					{
+						msg = getString(R.string.act_toast_payment_fail);
+					}
+					break;
+
 				default:
 					return;
 			}
@@ -934,6 +989,21 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	protected void onDestroy()
 	{
 		mMixpanel.flush();
+
+		if (mFinalCheckDialog != null && mFinalCheckDialog.isShowing() == true)
+		{
+			mFinalCheckDialog.dismiss();
+		}
+
+		mFinalCheckDialog = null;
+
+		if (mProgressDialog != null && mProgressDialog.isShowing() == true)
+		{
+			mProgressDialog.dismiss();
+		}
+
+		mProgressDialog = null;
+
 		super.onDestroy();
 	}
 
@@ -2110,6 +2180,104 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				} else
 				{
 					moveToPayStep();
+				}
+			} catch (Exception e)
+			{
+				ExLog.e(e.toString());
+
+				onError(e);
+			} finally
+			{
+				unLockUI();
+			}
+		}
+	};
+
+	private DailyHotelJsonResponseListener mUserSessionBillingPayment = new DailyHotelJsonResponseListener()
+	{
+
+		@Override
+		public void onResponse(String url, JSONObject response)
+		{
+			if (mProgressDialog != null && mProgressDialog.isShowing() == true)
+			{
+				mProgressDialog.dismiss();
+			}
+
+			mProgressDialog = null;
+
+			try
+			{
+				int msg_code = -1;
+
+				if (response == null)
+				{
+					throw new NullPointerException("response == null");
+				}
+
+				//				---------------------------------
+				//				* 기본 포맷 *
+				//				{msg_code : value, msg: value, data : value}
+				//				---------------------------------
+				//				* 성공시 *
+				//				msg_code : 0
+				//				data : PAYMENT_COMPLETE
+				//				---------------------------------
+				//				* 실패시 *
+				//				msg_code : 200
+				//				msg : 에러 메시지
+				//				data : PAYMENT_CANCELED, NOT_AVAILABLE, SOLD_OUT, ACCOUNT_DUPLICATE, INVALID_DATE
+
+				// 해당 화면은 메시지를 넣지 않는다.
+				msg_code = response.getInt("msg_code");
+
+				Intent intent = new Intent();
+				intent.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
+
+				if (msg_code == 0)
+				{
+					activityResulted(CODE_REQUEST_ACTIVITY_PAYMENT, CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE, intent);
+				} else
+				{
+					String data = response.getString("data");
+					String msg = null;
+
+					if (response.has("msg") == true)
+					{
+						msg = response.getString("msg");
+					}
+
+					int resultCode = 0;
+
+					if (TextUtils.isEmpty(data) == true)
+					{
+						resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
+					} else if ("SOLD_OUT".equalsIgnoreCase(data) == true)
+					{
+						resultCode = CODE_RESULT_ACTIVITY_PAYMENT_SOLD_OUT;
+					} else if ("INVALID_DATE".equalsIgnoreCase(data) == true)
+					{
+						resultCode = CODE_RESULT_ACTIVITY_PAYMENT_INVALID_DATE;
+					} else if ("PAYMENT_CANCELED".equalsIgnoreCase(data) == true)
+					{
+						resultCode = CODE_RESULT_ACTIVITY_PAYMENT_CANCELED;
+					} else if ("ACCOUNT_DUPLICATE".equalsIgnoreCase(data) == true)
+					{
+						resultCode = CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_DUPLICATE;
+					} else if ("NOT_AVAILABLE".equalsIgnoreCase(data) == true)
+					{
+						resultCode = CODE_RESULT_ACTIVITY_PAYMENT_NOT_AVAILABLE;
+					} else
+					{
+						if (msg != null)
+						{
+							intent.putExtra(NAME_INTENT_EXTRA_DATA_MESSAGE, msg);
+						}
+
+						resultCode = CODE_RESULT_ACTIVITY_PAYMENT_UNKNOW_ERROR;
+					}
+
+					activityResulted(CODE_REQUEST_ACTIVITY_PAYMENT, resultCode, intent);
 				}
 			} catch (Exception e)
 			{
