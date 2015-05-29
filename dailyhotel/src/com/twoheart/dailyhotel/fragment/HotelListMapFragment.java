@@ -32,6 +32,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm;
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.adapter.HotelInfoWindowAdapter;
 import com.twoheart.dailyhotel.adapter.HotelInfoWindowAdapter.OnInfoWindowClickListener;
 import com.twoheart.dailyhotel.model.Hotel;
@@ -70,7 +71,7 @@ public class HotelListMapFragment extends
 	private ClusterManager<HotelClusterItem> mClusterManager;
 	private HotelClusterRenderer mHotelClusterRenderer;
 	private Marker mSelectedMarker;
-	private ImageView mMyLocationView;
+	private View mMyLocationView;
 
 	private OnMakerInfoWindowListener mOnMakerInfoWindowListener;
 
@@ -251,7 +252,12 @@ public class HotelListMapFragment extends
 			return;
 		}
 
-		mMyLocationView = (ImageView) getView().findViewById(0x2);
+		mMyLocationView = getView().findViewById(0x2);
+
+		if (mMyLocationView instanceof ImageView == false)
+		{
+			mMyLocationView = null;
+		}
 
 		if (mMyLocationView != null)
 		{
@@ -626,7 +632,7 @@ public class HotelListMapFragment extends
 					// 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
 					LocationFactory.getInstance().stopLocationMeasure();
 
-					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setMessage("GPS 셋팅이 되지 않았을수도 있습니다.\n 설정창으로 가시겠습니까?").setNegativeButton("취소", null).setPositiveButton("설정", new DialogInterface.OnClickListener()
+					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setTitle(R.string.dialog_title_used_gps).setMessage(getString(R.string.dialog_msg_used_gps)).setNegativeButton(getString(R.string.dialog_btn_text_cancel), null).setPositiveButton(getString(R.string.dialog_btn_text_dosetting), new DialogInterface.OnClickListener()
 					{
 						@Override
 						public void onClick(DialogInterface dialog, int which)

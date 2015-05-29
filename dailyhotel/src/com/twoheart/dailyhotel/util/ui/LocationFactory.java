@@ -14,7 +14,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.widget.ImageView;
+import android.view.View;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
@@ -34,7 +34,7 @@ public class LocationFactory
 	private boolean mIsMeasuringLocation = false;
 	private LocationListener mLocationListener;
 	private Context mContext;
-	private ImageView mMyLocationView;
+	private View mMyLocationView;
 	private Drawable mMyLocationDrawable;
 
 	protected PendingIntent mUpdatePendingIntent;
@@ -108,7 +108,7 @@ public class LocationFactory
 
 	}
 
-	public void startLocationMeasure(Context context, final Fragment fragment, ImageView myLocation, LocationListener listener)
+	public void startLocationMeasure(Context context, final Fragment fragment, View myLocation, LocationListener listener)
 	{
 		if (mIsMeasuringLocation)
 		{
