@@ -237,17 +237,20 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 			switch (mHotelViewType)
 			{
 				case LIST:
-					setVisibility(HOTEL_VIEW_TYPE.LIST);
+					setVisibility(HOTEL_VIEW_TYPE.LIST, isCurrentPage);
 					break;
 
 				case MAP:
-					setVisibility(HOTEL_VIEW_TYPE.MAP);
+					setVisibility(HOTEL_VIEW_TYPE.MAP, isCurrentPage);
 
-					mHotelListMapFragment.setUserActionListener(mUserActionListener);
-
-					if (isCurrentPage == true)
+					if (mHotelListMapFragment != null)
 					{
-						mHotelListMapFragment.setHotelList(mHotelListAdapter.getData(), mSaleTime, false);
+						mHotelListMapFragment.setUserActionListener(mUserActionListener);
+
+						if (isCurrentPage == true)
+						{
+							mHotelListMapFragment.setHotelList(mHotelListAdapter.getData(), mSaleTime, false);
+						}
 					}
 					break;
 
@@ -257,7 +260,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		}
 	}
 
-	private void setVisibility(HOTEL_VIEW_TYPE type)
+	private void setVisibility(HOTEL_VIEW_TYPE type, boolean isCurrentPage)
 	{
 		switch (type)
 		{
@@ -283,13 +286,16 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 				mEmptyView.setVisibility(View.GONE);
 				mMapLayout.setVisibility(View.VISIBLE);
 
-				if (mHotelListMapFragment == null)
+				if (isCurrentPage == true)
 				{
-					mHotelListMapFragment = new HotelListMapFragment();
-					getChildFragmentManager().beginTransaction().add(mMapLayout.getId(), mHotelListMapFragment).commitAllowingStateLoss();
-				}
+					if (mHotelListMapFragment == null)
+					{
+						mHotelListMapFragment = new HotelListMapFragment();
+						getChildFragmentManager().beginTransaction().add(mMapLayout.getId(), mHotelListMapFragment).commitAllowingStateLoss();
+					}
 
-				mMapLayout.setMapFragment(mHotelListMapFragment);
+					mMapLayout.setMapFragment(mHotelListMapFragment);
+				}
 
 				//				mDailyFloatingActionButton.setVisibility(View.VISIBLE);
 				//				mDailyFloatingActionButton.setImageResource(R.drawable.img_ic_list_mini);
@@ -304,6 +310,11 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 				mPullToRefreshLayout.setVisibility(View.INVISIBLE);
 				break;
 		}
+	}
+
+	private void setVisibility(HOTEL_VIEW_TYPE type)
+	{
+		setVisibility(type, true);
 	}
 
 	public void setSaleTime(SaleTime saleTime)
