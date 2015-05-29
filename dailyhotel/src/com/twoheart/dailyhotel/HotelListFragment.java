@@ -247,7 +247,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 					{
 						mHotelListMapFragment.setUserActionListener(mUserActionListener);
 
-						if (isCurrentPage == true)
+						if (isCurrentPage == true && mHotelListAdapter != null)
 						{
 							mHotelListMapFragment.setHotelList(mHotelListAdapter.getData(), mSaleTime, false);
 						}
