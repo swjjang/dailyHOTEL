@@ -254,11 +254,6 @@ public class HotelListMapFragment extends
 
 		mMyLocationView = getView().findViewById(0x2);
 
-		if (mMyLocationView instanceof ImageView == false)
-		{
-			mMyLocationView = null;
-		}
-
 		if (mMyLocationView != null)
 		{
 			mMyLocationView.setVisibility(View.VISIBLE);
