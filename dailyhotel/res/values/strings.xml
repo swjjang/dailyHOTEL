@@ -233,9 +233,9 @@
     <string name="frag_booking_no_hotels">예약된 호텔이 없습니다!</string>
     <string name="frag_booking_line">오늘은 멋진 호텔에서\n하루를 보내는게 어때요?</string>
     <string name="frag_booking_btn_login">기존 회원 로그인</string>
-    <string name="frag_booking_wait_account">입금대기</string>
-    <string name="frag_booking_complete_payment">결제완료</string>
-    <string name="frag_booking_use">이용완료</string>
+    <string name="frag_booking_wait_account">입금 대기</string>
+    <string name="frag_booking_complete_payment">결제 완료</string>
+    <string name="frag_booking_use">이용 완료</string>
 
     <!-- Profile Activity -->
     <string name="act_profile_login_acc">로그인 계정</string>
