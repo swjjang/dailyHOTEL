@@ -67,8 +67,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.VolleyError;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Credit;
@@ -405,30 +403,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 				mClickView = v;
 
-				mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_VALIDATE).toString(), updateParams, mReservValidateJsonResponseListener, new ErrorListener()
-				{
-
-					@Override
-					public void onErrorResponse(VolleyError error)
-					{
-						if (error.networkResponse.statusCode == 404)
-						{
-							try
-							{
-								JSONObject jsonObject = new JSONObject();
-								jsonObject.put("msg_code", 0);
-								jsonObject.put("data", true);
-								mReservValidateJsonResponseListener.onResponse(null, jsonObject);
-							} catch (Exception e)
-							{
-								ExLog.e(e.toString());
-							}
-						} else
-						{
-							onErrorResponse(error);
-						}
-					}
-				}));
+				mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_VALIDATE).toString(), updateParams, mReservValidateJsonResponseListener, BookingActivity.this));
 
 				v.setClickable(false);
 				v.setEnabled(false);
