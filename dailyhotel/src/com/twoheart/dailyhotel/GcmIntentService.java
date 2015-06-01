@@ -177,8 +177,7 @@ public class GcmIntentService extends IntentService implements Constants
 							break;
 						}
 				}
-				ExLog.e("GCM_MESSAGE = " + jsonMsg.toString());
-			} catch (JSONException e)
+			} catch (Exception e)
 			{
 				ExLog.e(e.toString());
 			}
