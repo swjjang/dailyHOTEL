@@ -387,23 +387,36 @@ public class HotelInfoWindowAdapter implements InfoWindowAdapter, View.OnTouchLi
 		RelativeLayout llHotelRowContent = (RelativeLayout) view.findViewById(R.id.ll_hotel_row_content);
 		final ImageView img = (ImageView) view.findViewById(R.id.iv_hotel_row_img);
 		TextView name = (TextView) view.findViewById(R.id.tv_hotel_row_name);
-		TextView price = (TextView) view.findViewById(R.id.tv_hotel_row_price);
-		TextView discount = (TextView) view.findViewById(R.id.tv_hotel_row_discount);
+		TextView priceTextView = (TextView) view.findViewById(R.id.tv_hotel_row_price);
+		TextView discountTextView = (TextView) view.findViewById(R.id.tv_hotel_row_discount);
 		TextView sold_out = (TextView) view.findViewById(R.id.tv_hotel_row_soldout);
 		TextView address = (TextView) view.findViewById(R.id.tv_hotel_row_address);
 		TextView grade = (TextView) view.findViewById(R.id.hv_hotel_grade);
 
 		DecimalFormat comma = new DecimalFormat("###,##0");
-		String strPrice = comma.format(Integer.parseInt(hotel.getPrice()));
+		int price = Integer.parseInt(hotel.getPrice());
+		String strPrice = comma.format(price);
 		String strDiscount = comma.format(Integer.parseInt(hotel.getDiscount()));
 
 		address.setText(hotel.getAddress());
 		name.setText(hotel.getName());
 
 		Spanned currency = Html.fromHtml(mContext.getResources().getString(R.string.currency));
-		price.setText(strPrice + currency);
-		price.setPaintFlags(price.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-		discount.setText(strDiscount + currency);
+
+		if (price <= 0)
+		{
+			priceTextView.setVisibility(View.INVISIBLE);
+
+			priceTextView.setText(null);
+		} else
+		{
+			priceTextView.setVisibility(View.VISIBLE);
+
+			priceTextView.setText(strPrice + currency);
+			priceTextView.setPaintFlags(priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+		}
+
+		discountTextView.setText(strDiscount + currency);
 
 		name.setSelected(true); // Android TextView marquee bug
 
@@ -430,7 +443,7 @@ public class HotelInfoWindowAdapter implements InfoWindowAdapter, View.OnTouchLi
 		grade.setBackgroundResource(hotel.getCategory().getColorResId());
 
 		name.setTypeface(DailyHotel.getBoldTypeface());
-		discount.setTypeface(DailyHotel.getBoldTypeface());
+		discountTextView.setTypeface(DailyHotel.getBoldTypeface());
 
 		if (mRefreshingInfoWindow == false)
 		{

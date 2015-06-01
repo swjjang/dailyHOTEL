@@ -89,9 +89,21 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 
 		tvPriceTitle.setText(priceTitle + "");
 		tvDiscount.setText(mHotelDetail.getHotel().getDiscount() + currency);
-		tvPrice.setText(mHotelDetail.getHotel().getPrice() + currency);
 
-		tvPrice.setPaintFlags(tvPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+		int price = Integer.parseInt(mHotelDetail.getHotel().getPrice());
+
+		if (price <= 0)
+		{
+			tvPrice.setVisibility(View.INVISIBLE);
+
+			tvPrice.setText(null);
+		} else
+		{
+			tvPrice.setVisibility(View.VISIBLE);
+
+			tvPrice.setText(mHotelDetail.getHotel().getPrice() + currency);
+			tvPrice.setPaintFlags(tvPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+		}
 
 		if (mAdapter == null)
 		{
