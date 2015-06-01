@@ -119,7 +119,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	private Drawable[] mEditTextBackground;
 	private RadioGroup rgPaymentMethod;
 	private RadioButton rbPaymentAccount, rbPaymentCard, rbPaymentHp,
-			mEasyPaymentRadioButton;
+			mSimplePaymentRadioButton;
 	private View mCardManagerButton;
 
 	private Pay mPay;
@@ -199,7 +199,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 		rgPaymentMethod = (RadioGroup) findViewById(R.id.rg_payment_method);
 
-		mEasyPaymentRadioButton = (RadioButton) findViewById(R.id.easyPaymentRadioButton);
+		mSimplePaymentRadioButton = (RadioButton) findViewById(R.id.easyPaymentRadioButton);
 		rbPaymentAccount = (RadioButton) findViewById(R.id.rb_payment_account);
 		rbPaymentCard = (RadioButton) findViewById(R.id.rb_payment_card);
 		rbPaymentHp = (RadioButton) findViewById(R.id.rb_payment_hp);
@@ -210,7 +210,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		rbPaymentAccount.setOnClickListener(this);
 		rbPaymentCard.setOnClickListener(this);
 		rbPaymentHp.setOnClickListener(this);
-		mEasyPaymentRadioButton.setOnClickListener(this);
+		mSimplePaymentRadioButton.setOnClickListener(this);
 
 		rgPaymentMethod.setOnCheckedChangeListener(this);
 
@@ -815,6 +815,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 						if (creditCard != null)
 						{
 							mSelectedCreditCard = creditCard;
+
+							rgPaymentMethod.check(mSimplePaymentRadioButton.getId());
 						}
 					}
 					break;
@@ -866,7 +868,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	{
 		if (group.getId() == rgPaymentMethod.getId())
 		{
-			if (checkedId == mEasyPaymentRadioButton.getId())
+			if (checkedId == mSimplePaymentRadioButton.getId())
 			{
 				mPay.setType(Pay.Type.EASY_CARD);
 			} else if (checkedId == rbPaymentCard.getId())
@@ -1832,8 +1834,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					mCardManagerButton.setVisibility(View.INVISIBLE);
 
 					mSelectedCreditCard = null;
-					mEasyPaymentRadioButton.setChecked(true);
-					mEasyPaymentRadioButton.setText(R.string.label_booking_easypayment);
+					mSimplePaymentRadioButton.setChecked(true);
+					mSimplePaymentRadioButton.setText(R.string.label_booking_easypayment);
 				} else
 				{
 					mCardManagerButton.setVisibility(View.VISIBLE);
@@ -1843,7 +1845,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 						JSONObject jsonObject = jsonArray.getJSONObject(0);
 
 						mSelectedCreditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"));
-						mEasyPaymentRadioButton.setChecked(true);
+						mSimplePaymentRadioButton.setChecked(true);
 					} else
 					{
 						boolean hasCreditCard = false;
@@ -1868,7 +1870,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 						}
 					}
 
-					mEasyPaymentRadioButton.setText(String.format("%s %s", mSelectedCreditCard.name.replace("카드", ""), mSelectedCreditCard.number));
+					mSimplePaymentRadioButton.setText(String.format("%s %s", mSelectedCreditCard.name.replace("카드", ""), mSelectedCreditCard.number));
 				}
 
 				// 호텔 가격 정보가 변경되었습니다.
@@ -1924,7 +1926,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					mCardManagerButton.setVisibility(View.INVISIBLE);
 
 					mSelectedCreditCard = null;
-					mEasyPaymentRadioButton.setText(R.string.label_booking_easypayment);
+					mSimplePaymentRadioButton.setText(R.string.label_booking_easypayment);
 
 				} else
 				{
@@ -1933,7 +1935,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					JSONObject jsonObject = jsonArray.getJSONObject(0);
 
 					mSelectedCreditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"));
-					mEasyPaymentRadioButton.setText(String.format("%s %s", mSelectedCreditCard.name.replace("카드", ""), mSelectedCreditCard.number));
+					mSimplePaymentRadioButton.setText(String.format("%s %s", mSelectedCreditCard.name.replace("카드", ""), mSelectedCreditCard.number));
 
 					// final check 결제 화면을 보여준다.
 					showFinalCheckDialog();

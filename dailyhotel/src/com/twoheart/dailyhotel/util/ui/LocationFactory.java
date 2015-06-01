@@ -142,7 +142,10 @@ public class LocationFactory
 
 		if (isGpsProviderEnabled == false && isNetworkProviderEnabled == false)
 		{
-			mLocationListener.onProviderDisabled(null);
+			if (mLocationListener != null)
+			{
+				mLocationListener.onProviderDisabled(null);
+			}
 			return;
 		}
 
@@ -152,7 +155,10 @@ public class LocationFactory
 
 		if (location != null)
 		{
-			mLocationListener.onLocationChanged(location);
+			if (mLocationListener != null)
+			{
+				mLocationListener.onLocationChanged(location);
+			}
 		}
 
 		mHandler.sendEmptyMessageDelayed(1, 1000);
@@ -170,8 +176,6 @@ public class LocationFactory
 		@Override
 		public void onReceive(Context context, Intent intent)
 		{
-			context.unregisterReceiver(mSingleUpdateReceiver);
-
 			String key = LocationManager.KEY_LOCATION_CHANGED;
 			Location location = (Location) intent.getExtras().get(key);
 
@@ -228,8 +232,6 @@ public class LocationFactory
 
 		mHandler.sendEmptyMessage(3);
 
-		mIsMeasuringLocation = false;
-
 		if (mLocationManager != null)// && mOnLocationListener != null)
 		{
 			//			mLocationManager.removeUpdates(mOnLocationListener);
@@ -245,6 +247,8 @@ public class LocationFactory
 			{
 			}
 		}
+
+		mIsMeasuringLocation = false;
 	}
 
 	private boolean isBetterLocation(Location location, Location currentBestLocation)
