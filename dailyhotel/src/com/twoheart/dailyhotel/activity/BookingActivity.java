@@ -2014,37 +2014,37 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 				hotelDetail.setHotel(hotelBasic);
 
-				JSONArray imgArr = detailObj.getJSONArray("img");
-				List<String> imageList = new ArrayList<String>(imgArr.length());
-
-				for (int i = 1; i < imgArr.length(); i++)
-				{
-					JSONObject imgObj = imgArr.getJSONObject(i);
-					imageList.add(imgObj.getString("path"));
-				}
-
-				hotelDetail.setImageUrl(imageList);
-				JSONArray specArr = response.getJSONArray("spec");
-				Map<String, List<String>> contentList = new LinkedHashMap<String, List<String>>(specArr.length());
-
-				for (int i = 0; i < specArr.length(); i++)
-				{
-					JSONObject specObj = specArr.getJSONObject(i);
-					String key = specObj.getString("key");
-					JSONArray valueArr = specObj.getJSONArray("value");
-					List<String> valueList = new ArrayList<String>(valueArr.length());
-
-					for (int j = 0; j < valueArr.length(); j++)
-					{
-						JSONObject valueObj = valueArr.getJSONObject(j);
-						String value = valueObj.getString("value");
-						valueList.add(value);
-					}
-
-					contentList.put(key, valueList);
-				}
-
-				hotelDetail.setSpecification(contentList);
+//				JSONArray imgArr = detailObj.getJSONArray("img");
+//				List<String> imageList = new ArrayList<String>(imgArr.length());
+//
+//				for (int i = 1; i < imgArr.length(); i++)
+//				{
+//					JSONObject imgObj = imgArr.getJSONObject(i);
+//					imageList.add(imgObj.getString("path"));
+//				}
+//
+//				hotelDetail.setImageUrl(imageList);
+//				JSONArray specArr = response.getJSONArray("spec");
+//				Map<String, List<String>> contentList = new LinkedHashMap<String, List<String>>(specArr.length());
+//
+//				for (int i = 0; i < specArr.length(); i++)
+//				{
+//					JSONObject specObj = specArr.getJSONObject(i);
+//					String key = specObj.getString("key");
+//					JSONArray valueArr = specObj.getJSONArray("value");
+//					List<String> valueList = new ArrayList<String>(valueArr.length());
+//
+//					for (int j = 0; j < valueArr.length(); j++)
+//					{
+//						JSONObject valueObj = valueArr.getJSONObject(j);
+//						String value = valueObj.getString("value");
+//						valueList.add(value);
+//					}
+//
+//					contentList.put(key, valueList);
+//				}
+//
+//				hotelDetail.setSpecification(contentList);
 
 				double latitude = detailObj.getDouble("lat");
 				double longitude = detailObj.getDouble("lng");
@@ -2109,37 +2109,37 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 				hotelDetail.setHotel(hotelBasic);
 
-				JSONArray imgArr = detailObj.getJSONArray("img");
-				List<String> imageList = new ArrayList<String>(imgArr.length());
-
-				for (int i = 1; i < imgArr.length(); i++)
-				{
-					JSONObject imgObj = imgArr.getJSONObject(i);
-					imageList.add(imgObj.getString("path"));
-				}
-
-				hotelDetail.setImageUrl(imageList);
-				JSONArray specArr = response.getJSONArray("spec");
-				Map<String, List<String>> contentList = new LinkedHashMap<String, List<String>>(specArr.length());
-
-				for (int i = 0; i < specArr.length(); i++)
-				{
-					JSONObject specObj = specArr.getJSONObject(i);
-					String key = specObj.getString("key");
-					JSONArray valueArr = specObj.getJSONArray("value");
-					List<String> valueList = new ArrayList<String>(valueArr.length());
-
-					for (int j = 0; j < valueArr.length(); j++)
-					{
-						JSONObject valueObj = valueArr.getJSONObject(j);
-						String value = valueObj.getString("value");
-						valueList.add(value);
-					}
-
-					contentList.put(key, valueList);
-				}
-
-				hotelDetail.setSpecification(contentList);
+//				JSONArray imgArr = detailObj.getJSONArray("img");
+//				List<String> imageList = new ArrayList<String>(imgArr.length());
+//
+//				for (int i = 1; i < imgArr.length(); i++)
+//				{
+//					JSONObject imgObj = imgArr.getJSONObject(i);
+//					imageList.add(imgObj.getString("path"));
+//				}
+//
+//				hotelDetail.setImageUrl(imageList);
+//				JSONArray specArr = response.getJSONArray("spec");
+//				Map<String, List<String>> contentList = new LinkedHashMap<String, List<String>>(specArr.length());
+//
+//				for (int i = 0; i < specArr.length(); i++)
+//				{
+//					JSONObject specObj = specArr.getJSONObject(i);
+//					String key = specObj.getString("key");
+//					JSONArray valueArr = specObj.getJSONArray("value");
+//					List<String> valueList = new ArrayList<String>(valueArr.length());
+//
+//					for (int j = 0; j < valueArr.length(); j++)
+//					{
+//						JSONObject valueObj = valueArr.getJSONObject(j);
+//						String value = valueObj.getString("value");
+//						valueList.add(value);
+//					}
+//
+//					contentList.put(key, valueList);
+//				}
+//
+//				hotelDetail.setSpecification(contentList);
 
 				double latitude = detailObj.getDouble("lat");
 				double longitude = detailObj.getDouble("lng");

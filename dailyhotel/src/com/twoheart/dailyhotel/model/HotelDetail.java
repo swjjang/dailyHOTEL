@@ -2,11 +2,17 @@ package com.twoheart.dailyhotel.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.twoheart.dailyhotel.util.ExLog;
 
 public class HotelDetail implements Parcelable
 {
@@ -107,6 +113,54 @@ public class HotelDetail implements Parcelable
 	public Map<String, List<String>> getSpecification()
 	{
 		return mSpecification;
+	}
+
+	public void setSpecification(JSONArray jsonArray)
+	{
+		if (jsonArray == null)
+		{
+			return;
+		}
+
+		try
+		{
+			int length = jsonArray.length();
+
+			Map<String, List<String>> contentList = new LinkedHashMap<String, List<String>>(length);
+
+			for (int i = 0; i < length; i++)
+			{
+				JSONObject specObj = jsonArray.getJSONObject(i);
+
+				if (specObj == null || specObj.has("key") == false || specObj.has("value") == false)
+				{
+					continue;
+				}
+
+				String key = specObj.getString("key");
+				JSONArray valueArr = specObj.getJSONArray("value");
+				List<String> valueList = new ArrayList<String>(valueArr.length());
+
+				for (int j = 0; j < valueArr.length(); j++)
+				{
+					JSONObject valueObj = valueArr.getJSONObject(j);
+
+					if (valueObj == null || valueObj.has("value") == false)
+					{
+						continue;
+					}
+
+					String value = valueObj.getString("value");
+					valueList.add(value);
+				}
+
+				contentList.put(key, valueList);
+				setSpecification(contentList);
+			}
+		} catch (Exception e)
+		{
+			ExLog.d(e.toString());
+		}
 	}
 
 	public void setSpecification(Map<String, List<String>> specification)

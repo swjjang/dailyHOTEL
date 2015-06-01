@@ -269,30 +269,7 @@ public class BookingTabActivity extends BaseActivity
 
 				JSONObject wrapJSONObject = new JSONObject(jsonObject.getString("spec"));
 				JSONArray jsonArray = wrapJSONObject.getJSONArray("wrap");
-				int length = jsonArray.length();
-
-				Map<String, List<String>> contentList = new LinkedHashMap<String, List<String>>(length);
-
-				for (int i = 0; i < length; i++)
-				{
-					JSONObject specObj = jsonArray.getJSONObject(i);
-					String key = specObj.getString("key");
-					JSONArray valueArr = specObj.getJSONArray("value");
-
-					int valueLength = valueArr.length();
-					List<String> valueList = new ArrayList<String>(valueLength);
-
-					for (int j = 0; j < valueLength; j++)
-					{
-						JSONObject valueObj = valueArr.getJSONObject(j);
-						String value = valueObj.getString("value");
-						valueList.add(value);
-					}
-
-					contentList.put(key, valueList);
-				}
-
-				mHotelDetail.setSpecification(contentList);
+				mHotelDetail.setSpecification(jsonArray);
 
 				double latitude = jsonObject.getDouble("lat");
 				double longitude = jsonObject.getDouble("lng");
