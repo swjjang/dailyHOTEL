@@ -1467,9 +1467,17 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					etReserverNumber.setEnabled(false);
 					etReserverEmail.setEnabled(false);
 
-					etReserverName.setBackground(null);
-					etReserverNumber.setBackground(null);
-					etReserverEmail.setBackground(null);
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+					{
+						etReserverName.setBackground(null);
+						etReserverNumber.setBackground(null);
+						etReserverEmail.setBackground(null);
+					} else
+					{
+						etReserverName.setBackgroundDrawable(null);
+						etReserverNumber.setBackgroundDrawable(null);
+						etReserverEmail.setBackgroundDrawable(null);
+					}
 
 					etReserverName.setText(etReserverName.getText().toString());
 					etReserverNumber.setText(etReserverNumber.getText().toString());
