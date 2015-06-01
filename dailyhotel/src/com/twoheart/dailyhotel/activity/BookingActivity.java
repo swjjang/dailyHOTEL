@@ -497,12 +497,20 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				@Override
 				public void onClick(View v)
 				{
-					lockUI();
+					synchronized (BookingActivity.this)
+					{
+						if (isLockUiComponent() == true)
+						{
+							return;
+						}
 
-					mAliveCallSource = "PAYMENT";
-					mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, BookingActivity.this));
-					dialog.dismiss();
-					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "agreePayment", mPay.getHotelDetail().getHotel().getName(), (long) mHotelIdx);
+						lockUI();
+
+						mAliveCallSource = "PAYMENT";
+						mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, BookingActivity.this));
+						dialog.dismiss();
+						RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "agreePayment", mPay.getHotelDetail().getHotel().getName(), (long) mHotelIdx);
+					}
 				}
 			};
 		} else
@@ -1085,13 +1093,21 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					@Override
 					public void onClick(View v)
 					{
-						mFinalCheckDialog.dismiss();
+						synchronized (BookingActivity.this)
+						{
+							if (isLockUiComponent() == true)
+							{
+								return;
+							}
 
-						lockUI();
+							lockUI();
 
-						mAliveCallSource = "PAYMENT";
-						mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, BookingActivity.this));
-						RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "agreePayment", mPay.getHotelDetail().getHotel().getName(), (long) mHotelIdx);
+							mFinalCheckDialog.dismiss();
+
+							mAliveCallSource = "PAYMENT";
+							mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, BookingActivity.this));
+							RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "agreePayment", mPay.getHotelDetail().getHotel().getName(), (long) mHotelIdx);
+						}
 					}
 				});
 			}
