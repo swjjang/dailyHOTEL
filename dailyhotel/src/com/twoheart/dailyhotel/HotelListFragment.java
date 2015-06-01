@@ -270,7 +270,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 				if (mHotelListMapFragment != null)
 				{
-					getChildFragmentManager().beginTransaction().remove(mHotelListMapFragment).commit();
+					getChildFragmentManager().beginTransaction().remove(mHotelListMapFragment).commitAllowingStateLoss();
 					mMapLayout.removeAllViews();
 					mMapLayout.setMapFragment(null);
 					mHotelListMapFragment = null;

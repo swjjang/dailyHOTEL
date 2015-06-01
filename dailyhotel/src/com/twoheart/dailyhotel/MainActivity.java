@@ -404,8 +404,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			fragmentManager.beginTransaction().replace(mContentFrame.getId(), fragment).commitAllowingStateLoss();
 		} catch (IllegalStateException e)
 		{
-			onError();
-
+			// 에러가 나는 경우 앱을 재부팅 시킨다.
+			Util.restartApp(MainActivity.this);
 		}
 
 	}
@@ -418,7 +418,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	 */
 	public void addFragment(Fragment fragment)
 	{
-		fragmentManager.beginTransaction().setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right, R.anim.slide_in_right, R.anim.slide_out_right).add(R.id.content_frame, fragment).addToBackStack(null).commit();
+		fragmentManager.beginTransaction().setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right, R.anim.slide_in_right, R.anim.slide_out_right).add(R.id.content_frame, fragment).addToBackStack(null).commitAllowingStateLoss();
 
 	}
 
