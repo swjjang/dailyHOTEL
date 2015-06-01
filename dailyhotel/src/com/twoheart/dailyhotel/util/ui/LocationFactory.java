@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class LocationFactory
@@ -245,6 +246,7 @@ public class LocationFactory
 				mContext.unregisterReceiver(mSingleUpdateReceiver);
 			} catch (Exception e)
 			{
+				ExLog.d(e.toString());
 			}
 		}
 
