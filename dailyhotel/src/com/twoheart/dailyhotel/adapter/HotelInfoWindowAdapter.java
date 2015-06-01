@@ -394,14 +394,13 @@ public class HotelInfoWindowAdapter implements InfoWindowAdapter, View.OnTouchLi
 		TextView grade = (TextView) view.findViewById(R.id.hv_hotel_grade);
 
 		DecimalFormat comma = new DecimalFormat("###,##0");
-		int price = Integer.parseInt(hotel.getPrice());
-		String strPrice = comma.format(price);
-		String strDiscount = comma.format(Integer.parseInt(hotel.getDiscount()));
 
 		address.setText(hotel.getAddress());
 		name.setText(hotel.getName());
 
 		Spanned currency = Html.fromHtml(mContext.getResources().getString(R.string.currency));
+
+		int price = hotel.getPrice();
 
 		if (price <= 0)
 		{
@@ -412,11 +411,11 @@ public class HotelInfoWindowAdapter implements InfoWindowAdapter, View.OnTouchLi
 		{
 			priceTextView.setVisibility(View.VISIBLE);
 
-			priceTextView.setText(strPrice + currency);
+			priceTextView.setText(comma.format(price) + currency);
 			priceTextView.setPaintFlags(priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 		}
 
-		discountTextView.setText(strDiscount + currency);
+		discountTextView.setText(comma.format(hotel.getDiscount()) + currency);
 
 		name.setSelected(true); // Android TextView marquee bug
 

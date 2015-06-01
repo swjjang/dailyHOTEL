@@ -269,7 +269,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 	private void updatePayPrice(boolean applyCredit)
 	{
-		int originalPrice = Integer.parseInt(mPay.getHotelDetail().getHotel().getDiscount().replaceAll(",", ""));
+		int originalPrice = mPay.getHotelDetail().getHotel().getDiscount();
 		int credit = Integer.parseInt(mPay.getCredit().getBonus().replaceAll(",", ""));
 
 		DecimalFormat comma = new DecimalFormat("###,##0");
@@ -1592,7 +1592,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				String bonus = result.replaceAll(",", "");
 				mPay.setCredit(new Credit(null, bonus, null));
 
-				int originalPrice = Integer.parseInt(mPay.getHotelDetail().getHotel().getDiscount().replaceAll(",", ""));
+				int originalPrice = mPay.getHotelDetail().getHotel().getDiscount();
 				DecimalFormat comma = new DecimalFormat("###,##0");
 
 				//				if ("한국어".equalsIgnoreCase(locale) == true)
@@ -1989,59 +1989,26 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				JSONArray bookingArr = response.getJSONArray("detail");
 				JSONObject detailObj = bookingArr.getJSONObject(0);
 
-				DecimalFormat comma = new DecimalFormat("###,##0");
-				String strDiscount = comma.format(Integer.parseInt(detailObj.getString("discount")));
-				String strPrice = comma.format(Integer.parseInt(detailObj.getString("price")));
+				int discount = Integer.parseInt(detailObj.getString("discount"));
+				int price = Integer.parseInt(detailObj.getString("price"));
 
 				HotelDetail hotelDetail = mPay.getHotelDetail();
 				Hotel hotelBasic = hotelDetail.getHotel();
 
 				// 가격이 변동 되었다.
-				if (hotelBasic.getDiscount().equalsIgnoreCase(strDiscount) == false)
+				if (hotelBasic.getDiscount() != discount)
 				{
 					mIsChangedPay = true;
 				}
 
 				hotelBasic.setAddress(detailObj.getString("address"));
 				hotelBasic.setName(detailObj.getString("hotel_name"));
-				hotelBasic.setDiscount(strDiscount);
-				hotelBasic.setPrice(strPrice);
+				hotelBasic.setDiscount(discount);
+				hotelBasic.setPrice(price);
 				hotelBasic.setCategory(detailObj.getString("cat"));
 				hotelBasic.setBedType(detailObj.getString("bed_type"));
 
 				hotelDetail.setHotel(hotelBasic);
-
-				//				JSONArray imgArr = detailObj.getJSONArray("img");
-				//				List<String> imageList = new ArrayList<String>(imgArr.length());
-				//
-				//				for (int i = 1; i < imgArr.length(); i++)
-				//				{
-				//					JSONObject imgObj = imgArr.getJSONObject(i);
-				//					imageList.add(imgObj.getString("path"));
-				//				}
-				//
-				//				hotelDetail.setImageUrl(imageList);
-				//				JSONArray specArr = response.getJSONArray("spec");
-				//				Map<String, List<String>> contentList = new LinkedHashMap<String, List<String>>(specArr.length());
-				//
-				//				for (int i = 0; i < specArr.length(); i++)
-				//				{
-				//					JSONObject specObj = specArr.getJSONObject(i);
-				//					String key = specObj.getString("key");
-				//					JSONArray valueArr = specObj.getJSONArray("value");
-				//					List<String> valueList = new ArrayList<String>(valueArr.length());
-				//
-				//					for (int j = 0; j < valueArr.length(); j++)
-				//					{
-				//						JSONObject valueObj = valueArr.getJSONObject(j);
-				//						String value = valueObj.getString("value");
-				//						valueList.add(value);
-				//					}
-				//
-				//					contentList.put(key, valueList);
-				//				}
-				//
-				//				hotelDetail.setSpecification(contentList);
 
 				double latitude = detailObj.getDouble("lat");
 				double longitude = detailObj.getDouble("lng");
@@ -2084,59 +2051,26 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				JSONArray bookingArr = response.getJSONArray("detail");
 				JSONObject detailObj = bookingArr.getJSONObject(0);
 
-				DecimalFormat comma = new DecimalFormat("###,##0");
-				String strDiscount = comma.format(Integer.parseInt(detailObj.getString("discount")));
-				String strPrice = comma.format(Integer.parseInt(detailObj.getString("price")));
+				int discount = Integer.parseInt(detailObj.getString("discount"));
+				int price = Integer.parseInt(detailObj.getString("price"));
 
 				HotelDetail hotelDetail = mPay.getHotelDetail();
 				Hotel hotelBasic = hotelDetail.getHotel();
 
 				// 가격이 변동 되었다.
-				if (hotelBasic.getDiscount().equalsIgnoreCase(strDiscount) == false)
+				if (hotelBasic.getDiscount() != discount)
 				{
 					mIsChangedPay = true;
 				}
 
 				hotelBasic.setAddress(detailObj.getString("address"));
 				hotelBasic.setName(detailObj.getString("hotel_name"));
-				hotelBasic.setDiscount(strDiscount);
-				hotelBasic.setPrice(strPrice);
+				hotelBasic.setDiscount(discount);
+				hotelBasic.setPrice(price);
 				hotelBasic.setCategory(detailObj.getString("cat"));
 				hotelBasic.setBedType(detailObj.getString("bed_type"));
 
 				hotelDetail.setHotel(hotelBasic);
-
-				//				JSONArray imgArr = detailObj.getJSONArray("img");
-				//				List<String> imageList = new ArrayList<String>(imgArr.length());
-				//
-				//				for (int i = 1; i < imgArr.length(); i++)
-				//				{
-				//					JSONObject imgObj = imgArr.getJSONObject(i);
-				//					imageList.add(imgObj.getString("path"));
-				//				}
-				//
-				//				hotelDetail.setImageUrl(imageList);
-				//				JSONArray specArr = response.getJSONArray("spec");
-				//				Map<String, List<String>> contentList = new LinkedHashMap<String, List<String>>(specArr.length());
-				//
-				//				for (int i = 0; i < specArr.length(); i++)
-				//				{
-				//					JSONObject specObj = specArr.getJSONObject(i);
-				//					String key = specObj.getString("key");
-				//					JSONArray valueArr = specObj.getJSONArray("value");
-				//					List<String> valueList = new ArrayList<String>(valueArr.length());
-				//
-				//					for (int j = 0; j < valueArr.length(); j++)
-				//					{
-				//						JSONObject valueObj = valueArr.getJSONObject(j);
-				//						String value = valueObj.getString("value");
-				//						valueList.add(value);
-				//					}
-				//
-				//					contentList.put(key, valueList);
-				//				}
-				//
-				//				hotelDetail.setSpecification(contentList);
 
 				double latitude = detailObj.getDouble("lat");
 				double longitude = detailObj.getDouble("lng");

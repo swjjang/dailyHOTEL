@@ -9,7 +9,6 @@
  */
 package com.twoheart.dailyhotel.activity;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -437,9 +436,8 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 				JSONArray bookingArr = response.getJSONArray("detail");
 				JSONObject detailObj = bookingArr.getJSONObject(0);
 
-				DecimalFormat comma = new DecimalFormat("###,##0");
-				String strDiscount = comma.format(Integer.parseInt(detailObj.getString("discount")));
-				String strPrice = comma.format(Integer.parseInt(detailObj.getString("price")));
+				int discount = Integer.parseInt(detailObj.getString("discount"));
+				int price = Integer.parseInt(detailObj.getString("price"));
 
 				if (hotelDetail.getHotel() == null)
 				{
@@ -450,8 +448,8 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 
 				hotelBasic.setAddress(detailObj.getString("address"));
 				hotelBasic.setName(detailObj.getString("hotel_name"));
-				hotelBasic.setDiscount(strDiscount);
-				hotelBasic.setPrice(strPrice);
+				hotelBasic.setDiscount(discount);
+				hotelBasic.setPrice(price);
 				hotelBasic.setCategory(detailObj.getString("cat"));
 				hotelBasic.setBedType(detailObj.getString("bed_type"));
 

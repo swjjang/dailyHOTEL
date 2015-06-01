@@ -205,9 +205,10 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 				}
 
 				DecimalFormat comma = new DecimalFormat("###,##0");
-				int price = Integer.parseInt(element.getPrice());
+				int price = element.getPrice();
+
 				String strPrice = comma.format(price);
-				String strDiscount = comma.format(Integer.parseInt(element.getDiscount()));
+				String strDiscount = comma.format(element.getDiscount());
 
 				viewHolder.address.setText(element.getAddress());
 				viewHolder.name.setText(element.getName());

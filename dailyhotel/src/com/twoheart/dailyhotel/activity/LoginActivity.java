@@ -209,7 +209,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
 					mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(), loginParams, mUserLoginJsonResponseListener, LoginActivity.this));
 
-					if(fbSession != null)
+					if (fbSession != null)
 					{
 						fbSession.closeAndClearTokenInformation();
 					}
