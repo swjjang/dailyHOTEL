@@ -66,7 +66,7 @@ public class BookingTabActivity extends BaseActivity
 		}
 
 		setContentView(R.layout.activity_booking_tab);
-		setActionBar(R.string.actionbar_title_booking_tab_activity);
+		setActionBar(booking.getHotel_name());
 
 		ArrayList<String> titleList = new ArrayList<String>();
 		titleList.add(getString(R.string.frag_booking_tab_title));
