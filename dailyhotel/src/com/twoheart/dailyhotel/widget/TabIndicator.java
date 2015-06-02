@@ -373,6 +373,8 @@ public class TabIndicator extends HorizontalScrollView implements OnClickListene
 			{
 				mRequestOnPageChangeListener.onPageSelected(arg0);
 			}
+			
+			scrollToChild(arg0, 0);
 		}
 
 		@Override

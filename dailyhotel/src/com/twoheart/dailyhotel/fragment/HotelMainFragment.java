@@ -205,29 +205,32 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 		{
 			case R.id.action_map:
 			{
-				int isInstalledGooglePlayServices = -1;
-
 				switch (mHotelViewType)
 				{
 					case LIST:
-						isInstalledGooglePlayServices = installGooglePlayService(getActivity());
+						int isInstalledGooglePlayServices = installGooglePlayService(getActivity());
 						
 						if(isInstalledGooglePlayServices == 1)
 						{
 							item.setIcon(R.drawable.img_ic_list_mini_pink);
 							item.setTitle(getString(R.string.label_list));
+							
+							if (mUserActionListener != null)
+							{
+								mUserActionListener.toggleViewType();
+							}
 						}
 						break;
 
 					case MAP:
 						item.setIcon(R.drawable.img_ic_map_mini_pink);
 						item.setTitle(getString(R.string.label_map));
+						
+						if (mUserActionListener != null)
+						{
+							mUserActionListener.toggleViewType();
+						}
 						break;
-				}
-
-				if (mUserActionListener != null && isInstalledGooglePlayServices == 1)
-				{
-					mUserActionListener.toggleViewType();
 				}
 				return true;
 			}
