@@ -717,7 +717,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 							}
 
 							setResult(RESULT_OK);
-							BookingActivity.this.finish();
+							finish();
 						}
 					};
 
@@ -1131,6 +1131,23 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		});
 
 		mFinalCheckDialog.show();
+	}
+
+	private void showStopOnSaleDialog()
+	{
+		String title = getString(R.string.dialog_notice2);
+		String msg = getString(R.string.dialog_msg_stop_onsale);
+		String positive = getString(R.string.dialog_btn_text_confirm);
+
+		SimpleAlertDialog.build(BookingActivity.this, title, msg, positive, new DialogInterface.OnClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				setResult(CODE_RESULT_ACTIVITY_PAYMENT_NOT_ONSALE);
+				finish();
+			}
+		}).show();
 	}
 
 	private boolean isValidEmail(String inputStr)
@@ -2010,6 +2027,19 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 				hotelDetail.setHotel(hotelBasic);
 
+				boolean isOnSale = false; // 판매중인 상품인지.
+
+				try
+				{
+					if (detailObj.has("on_sale") == true)
+					{
+						isOnSale = detailObj.getInt("on_sale") == 1;
+					}
+				} catch (Exception e)
+				{
+					ExLog.e(e.toString());
+				}
+
 				double latitude = detailObj.getDouble("lat");
 				double longitude = detailObj.getDouble("lng");
 
@@ -2024,6 +2054,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				// credit 요청
 				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_SAVED_MONEY).toString(), null, mReserveSavedMoneyStringResponseListener, BookingActivity.this));
 
+				// 판매 중지 상품으로 호텔 리스트로 복귀 시킨다.
+				if (isOnSale == false)
+				{
+					showStopOnSaleDialog();
+				}
 			} catch (Exception e)
 			{
 				ExLog.e(e.toString());
@@ -2083,7 +2118,23 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 				mPay.setHotelDetail(hotelDetail);
 
-				if (mIsChangedPay == true)
+				boolean isOnSale = false; // 판매중인 상품인지.
+
+				try
+				{
+					if (detailObj.has("on_sale") == true)
+					{
+						isOnSale = detailObj.getInt("on_sale") == 1;
+					}
+				} catch (Exception e)
+				{
+					ExLog.e(e.toString());
+				}
+
+				if (isOnSale == false)
+				{
+					showStopOnSaleDialog();
+				} else if (mIsChangedPay == true)
 				{
 					mIsChangedPay = false;
 
