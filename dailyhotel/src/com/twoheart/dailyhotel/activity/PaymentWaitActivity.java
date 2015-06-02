@@ -14,6 +14,7 @@ import java.text.DecimalFormat;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
@@ -69,7 +71,6 @@ public class PaymentWaitActivity extends BaseActivity
 
 		lockUI();
 
-		ExLog.e(" / URL : " + url);
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null, mReserveMineDetailJsonResponseListener, this));
 	}
 
@@ -86,9 +87,21 @@ public class PaymentWaitActivity extends BaseActivity
 		switch (item.getItemId())
 		{
 			case R.id.action_call:
-				Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
-				startActivity(i);
+				String title = getString(R.string.dialog_notice2);
+				String message = getString(R.string.dialog_msg_call);
+				String positive = getString(R.string.dialog_btn_call);
+
+				SimpleAlertDialog.build(this, title, message, positive, new DialogInterface.OnClickListener()
+				{
+					@Override
+					public void onClick(DialogInterface dialog, int which)
+					{
+						Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
+						startActivity(i);
+					}
+				}).show();
 				return true;
+
 			default:
 				return super.onOptionsItemSelected(item);
 		}
