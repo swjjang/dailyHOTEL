@@ -104,6 +104,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	private static final int DIALOG_CONFIRM_PAYMENT_NO_RSERVE = 3;
 	private static final int DIALOG_CONFIRM_CALL = 4;
 	private static final int DIALOG_CONFIRM_PAYMENT_REGCARD = 5;
+	private static final int DIALOG_CONFIRM_STOP_ONSALE = 6;
 
 	private TextView mCheckinDayTextView, mCheckinTimeTextView,
 			mCheckoutDayTextView, mCheckoutTimeTextView;
@@ -473,6 +474,16 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				titleTextView.setText(R.string.dialog_notice2);
 				msg = getString(R.string.dialog_msg_call);
 				buttonText = getString(R.string.dialog_btn_call);
+				break;
+
+			case DIALOG_CONFIRM_STOP_ONSALE:
+				dialog.setCancelable(false);
+
+				btnClose.setVisibility(View.INVISIBLE);
+				titleTextView.setText(R.string.dialog_notice2);
+
+				msg = getString(R.string.dialog_msg_stop_onsale);
+				buttonText = getString(R.string.dialog_btn_text_confirm);
 				break;
 
 			//			case DIALOG_CONFIRM_PAYMENT_REGCARD:
@@ -1135,14 +1146,10 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 	private void showStopOnSaleDialog()
 	{
-		String title = getString(R.string.dialog_notice2);
-		String msg = getString(R.string.dialog_msg_stop_onsale);
-		String positive = getString(R.string.dialog_btn_text_confirm);
-
-		SimpleAlertDialog.build(BookingActivity.this, title, msg, positive, new DialogInterface.OnClickListener()
+		getPaymentConfirmDialog(DIALOG_CONFIRM_STOP_ONSALE, new OnClickListener()
 		{
 			@Override
-			public void onClick(DialogInterface dialog, int which)
+			public void onClick(View v)
 			{
 				setResult(CODE_RESULT_ACTIVITY_PAYMENT_NOT_ONSALE);
 				finish();
