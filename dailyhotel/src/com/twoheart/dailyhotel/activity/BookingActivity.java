@@ -328,8 +328,15 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	{
 		if (v.getId() == btnPay.getId())
 		{
+			if (isLockUiComponent(true) == true)
+			{
+				return;
+			}
+
 			if (mIsEditMode == true)
 			{
+				releaseUiComponent();
+
 				Customer buyer = new Customer();
 
 				buyer.setEmail(etReserverEmail.getText().toString());
@@ -386,6 +393,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					@Override
 					public void onDismiss(DialogInterface dialog)
 					{
+						releaseUiComponent();
+
 						v.setClickable(true);
 						v.setEnabled(true);
 					}
@@ -393,8 +402,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 				dialog.show();
 
+				releaseUiComponent();
 			} else
 			{
+				lockUI();
+
 				// 해당 호텔이 결제하기를 못하는 경우를 처리한다.
 				Map<String, String> updateParams = new HashMap<String, String>();
 				updateParams.put("saleIdx", String.valueOf(mPay.getHotelDetail().getSaleIdx()));
@@ -414,6 +426,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			}
 		} else if (v.getId() == mCardManagerButton.getId())
 		{
+			if (isLockUiComponent(true) == true)
+			{
+				return;
+			}
+
 			Intent intent = new Intent(this, CreditCardListActivity.class);
 			intent.setAction(Intent.ACTION_PICK);
 			intent.putExtra(NAME_INTENT_EXTRA_DATA_CREDITCARD, mSelectedCreditCard);
@@ -959,17 +976,34 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		{
 			case R.id.action_call:
 			{
-				getPaymentConfirmDialog(DIALOG_CONFIRM_CALL, new View.OnClickListener()
+				if (isLockUiComponent(true) == true)
+				{
+					return super.onOptionsItemSelected(item);
+				}
+
+				Dialog dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_CALL, new View.OnClickListener()
 				{
 					@Override
 					public void onClick(View v)
 					{
+						releaseUiComponent();
+
 						RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "callHotel", mPay.getHotelDetail().getHotel().getName(), (long) mHotelIdx);
 						Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
 						startActivity(i);
 					}
-				}).show();
+				});
 
+				dialog.setOnDismissListener(new OnDismissListener()
+				{
+					@Override
+					public void onDismiss(DialogInterface dialog)
+					{
+						releaseUiComponent();
+					}
+				});
+
+				dialog.show();
 				return true;
 			}
 
@@ -1043,6 +1077,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				@Override
 				public void onDismiss(DialogInterface dialog)
 				{
+					releaseUiComponent();
+
 					mClickView.setClickable(true);
 					mClickView.setEnabled(true);
 				}
@@ -1136,6 +1172,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			@Override
 			public void onDismiss(DialogInterface dialog)
 			{
+				releaseUiComponent();
+
 				mClickView.setClickable(true);
 				mClickView.setEnabled(true);
 			}
@@ -1226,16 +1264,34 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		@Override
 		public void onClick(View widget)
 		{
-			getPaymentConfirmDialog(DIALOG_CONFIRM_CALL, new View.OnClickListener()
+			if (isLockUiComponent(true) == true)
+			{
+				return;
+			}
+
+			Dialog dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_CALL, new View.OnClickListener()
 			{
 				@Override
 				public void onClick(View v)
 				{
+					releaseUiComponent();
+
 					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "callHotel", mPay.getHotelDetail().getHotel().getName(), (long) mHotelIdx);
 					Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
 					startActivity(i);
 				}
-			}).show();
+			});
+
+			dialog.setOnDismissListener(new OnDismissListener()
+			{
+				@Override
+				public void onDismiss(DialogInterface dialog)
+				{
+					releaseUiComponent();
+				}
+			});
+
+			dialog.show();
 		}
 	}
 
@@ -1694,8 +1750,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 				if (result == true)
 				{
-					unLockUI();
-
 					// 간편 결제를 시도하였으나 결제할 카드가 없는 경우.
 					if (mPay.getType() == Pay.Type.EASY_CARD)
 					{
@@ -1736,8 +1790,10 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				}
 			} catch (Exception e)
 			{
-				unLockUI();
 				onError(e);
+			} finally
+			{
+				unLockUI();
 			}
 		}
 	};
