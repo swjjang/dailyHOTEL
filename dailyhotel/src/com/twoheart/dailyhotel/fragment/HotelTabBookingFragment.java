@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.activity.HotelTabActivity;
 import com.twoheart.dailyhotel.adapter.HotelImageFragmentPagerAdapter;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -44,6 +45,8 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 	private HotelViewPager mViewPager;
 	private LoopCirclePageIndicator mIndicator;
 	private TextView tvBedType, tvAddress, tvPrice, tvDiscount, tvPriceTitle;
+
+	private HotelTabActivity.OnUserActionListener mOnUserActionListener;
 
 	private Handler mHandler;
 	private int mCurrentPage = 0;
@@ -114,6 +117,8 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 		if (mAdapter == null)
 		{
 			mAdapter = new HotelImageFragmentPagerAdapter(getChildFragmentManager(), mHotelDetail);
+			mAdapter.setOnUserActionListener(mOnUserActionListener);
+
 			mViewPager.setAdapter(mAdapter);
 		} else
 		{
@@ -203,6 +208,11 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 		}
 
 		return false;
+	}
+
+	public void setOnUserActionListener(HotelTabActivity.OnUserActionListener listener)
+	{
+		mOnUserActionListener = listener;
 	}
 
 	public void setHotelDetail(HotelDetail hotelDetail)

@@ -183,6 +183,7 @@ public class GcmIntentService extends IntentService implements Constants
 			}
 
 		}
+
 		GcmBroadcastReceiver.completeWakefulIntent(intent);
 	}
 

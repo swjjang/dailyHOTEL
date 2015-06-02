@@ -527,6 +527,21 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 		}
 	}
 
+	public boolean isLockUiComponent(boolean lock)
+	{
+		synchronized (this)
+		{
+			if (mIsLockUiComponent == true)
+			{
+				return true;
+			} else
+			{
+				mIsLockUiComponent = lock;
+				return false;
+			}
+		}
+	}
+
 	/**
 	 * UI Component를 잠금상태로 변경..
 	 */
