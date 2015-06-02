@@ -227,19 +227,20 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
 		releaseUiComponent();
+		baseActivity.releaseUiComponent();
 
 		switch (requestCode)
 		{
 			case CODE_REQUEST_ACTIVITY_HOTELTAB:
 			{
-				BaseActivity baseActivity = (BaseActivity) getActivity();
-
-				if (baseActivity == null)
-				{
-					return;
-				}
-
 				if (resultCode == Activity.RESULT_OK)
 				{
 					((MainActivity) baseActivity).selectMenuDrawer(((MainActivity) baseActivity).menuBookingListFragment);
@@ -695,18 +696,20 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 				return;
 			}
 
-			if (isLockUiComponent() == true)
+			if (isLockUiComponent() == true || baseActivity.isLockUiComponent() == true)
 			{
 				return;
 			}
 
 			lockUiComponent();
+			baseActivity.lockUiComponent();
 
 			if (hotelListViewItem == null || hotelIndex < 0)
 			{
 				ExLog.d("hotelListViewItem == null || hotelIndex < 0");
 
 				releaseUiComponent();
+				baseActivity.releaseUiComponent();
 				return;
 			}
 
@@ -739,6 +742,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 				case HotelListViewItem.TYPE_SECTION:
 				default:
 					releaseUiComponent();
+					baseActivity.releaseUiComponent();
 					break;
 			}
 		}

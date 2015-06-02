@@ -552,8 +552,27 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 				supportInvalidateOptionsMenu();
 
+				releaseUiComponent();
+
 				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("menu", "/menu");
 				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestMenuBar", null, null);
+			}
+
+			@Override
+			public void onDrawerStateChanged(int newState)
+			{
+				if (newState == DrawerLayout.STATE_SETTLING && drawerLayout.isDrawerOpen(drawerView) == false)
+				{
+					if (isLockUiComponent() == true)
+					{
+						drawerLayout.closeDrawer(drawerView);
+						return;
+					}
+
+					lockUiComponent();
+				}
+
+				super.onDrawerStateChanged(newState);
 			}
 
 			@Override
