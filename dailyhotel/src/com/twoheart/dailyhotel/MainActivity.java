@@ -582,25 +582,34 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 				{
 					setActionBarRegionEnable(false);
 
-					for (Fragment fragment : fragmentManager.getFragments())
+					fragmentManager = getSupportFragmentManager();
+
+					if (fragmentManager != null)
 					{
-						if (fragment != null && fragment.isVisible() && fragment instanceof HotelMainFragment)
+						for (Fragment fragment : fragmentManager.getFragments())
 						{
-							((HotelMainFragment) fragment).setMenuEnabled(false);
-							break;
+							if (fragment != null && fragment.isVisible() && fragment instanceof HotelMainFragment)
+							{
+								((HotelMainFragment) fragment).setMenuEnabled(false);
+								break;
+							}
 						}
 					}
-
 				} else if (Float.compare(slideOffset, 0.0f) == 0)
 				{
 					setActionBarRegionEnable(true);
 
-					for (Fragment fragment : fragmentManager.getFragments())
+					fragmentManager = getSupportFragmentManager();
+
+					if (fragmentManager != null)
 					{
-						if (fragment != null && fragment.isVisible() && fragment instanceof HotelMainFragment)
+						for (Fragment fragment : fragmentManager.getFragments())
 						{
-							((HotelMainFragment) fragment).setMenuEnabled(true);
-							break;
+							if (fragment != null && fragment.isVisible() && fragment instanceof HotelMainFragment)
+							{
+								((HotelMainFragment) fragment).setMenuEnabled(true);
+								break;
+							}
 						}
 					}
 				}
