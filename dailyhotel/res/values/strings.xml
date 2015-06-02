@@ -129,6 +129,8 @@
     <string name="dialog_notice2">알림</string>
     <string name="dialog_title_payment">결제알림</string>
     <string name="dialog_btn_text_see">보기</string>
+    <string name="dialog_btn_install">설치</string>
+    <string name="dialog_btn_update">업데이트</string>
     <string name="dialog_btn_text_close">닫기</string>
     <string name="dialog_msg_kakao_link">공유받은 호텔이 존재하지 않습니다.</string>
     <string name="dialog_msg_register_creditcard_cancel">신용카드 등록을 취소하시겠습니까?</string>
@@ -142,6 +144,9 @@
 	<string name="dialog_title_used_gps">위치 서비스 사용</string>
 	<string name="dialog_msg_used_gps">내 위치 정보를 사용하려면, 단말기의 설정에서 \'위치 서비스\' 사용을 허용해주세요.</string>
 	<string name="dialog_msg_stop_onsale">모든 객실이 예약 완료되었습니다.</string>
+	<string name="dialog_title_googleplayservice">Google Play Services</string>
+	<string name="dialog_msg_install_googleplayservice">맵을 사용하기 위한 Google Play Services의 설치가 필요합니다.</string>
+	<string name="dialog_msg_update_googleplayservice">맵을 사용하기 위한 Google Play Services의 업데이트가 필요합니다.</string>
 
     <!-- Main Drawer Menu Titles -->
     <string name="drawer_menu_pin_title_resrvation">예약</string>

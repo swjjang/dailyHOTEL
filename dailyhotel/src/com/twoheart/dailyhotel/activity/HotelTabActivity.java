@@ -21,6 +21,7 @@ import org.json.JSONObject;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -77,6 +78,12 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 	private String hotelName;
 
 	private UiLifecycleHelper uiHelper;
+	private Handler mHandler = new Handler();
+
+	public interface OnUserActionListener
+	{
+		public void onClickImage(HotelDetail hotelDetail, String imageUrl);
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -141,6 +148,8 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 			mFragmentList = new ArrayList<BaseFragment>();
 
 			BaseFragment baseFragment01 = HotelTabBookingFragment.newInstance(hotelDetail, titleList.get(0));
+			((HotelTabBookingFragment) baseFragment01).setOnUserActionListener(mOnUserActionListener);
+
 			mFragmentList.add(baseFragment01);
 
 			BaseFragment baseFragment02 = TabInfoFragment.newInstance(hotelDetail, titleList.get(1));
@@ -196,8 +205,15 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 	{
 		if (v.getId() == btnBooking.getId())
 		{
-			chgClickable(btnBooking, false); // 7.2 난타 방지
+			if (isLockUiComponent(true) == true)
+			{
+				return;
+			}
+
 			lockUI();
+
+			chgClickable(btnBooking, false); // 7.2 난타 방지
+
 			mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, this));
 
 			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestBooking", hotelDetail.getHotel().getName(), (long) mHotelIdx);
@@ -207,6 +223,8 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
+		releaseUiComponent();
+
 		chgClickable(btnBooking, true); // 7.2 난타 방지
 		if (requestCode == CODE_REQUEST_ACTIVITY_BOOKING)
 		{
@@ -309,6 +327,7 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 	@Override
 	protected void onResume()
 	{
+		mTabIndicator.setTabEnable(true);
 		onPostSetCookie();
 
 		switch (mPosition)
@@ -356,13 +375,35 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 	// UserActionListener
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////	
 
+	private OnUserActionListener mOnUserActionListener = new OnUserActionListener()
+	{
+		@Override
+		public void onClickImage(HotelDetail hotelDetail, String imageUrl)
+		{
+			if (isLockUiComponent() == true)
+			{
+				return;
+			}
+
+			mTabIndicator.setTabEnable(false);
+
+			Intent intent = new Intent(HotelTabActivity.this, ImageDetailActivity.class);
+			intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELDETAIL, hotelDetail);
+			intent.putExtra(NAME_INTENT_EXTRA_DATA_SELECTED_IMAGE_URL, imageUrl);
+			startActivity(intent);
+		}
+	};
+
 	private OnTabSelectedListener mOnTabSelectedListener = new OnTabSelectedListener()
 	{
 		@Override
 		public void onTabSelected(int position)
 		{
+			lockUiComponent();
+
 			if (mFragmentViewPager == null)
 			{
+				releaseUiComponent();
 				return;
 			}
 
@@ -398,6 +439,14 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 					RenewalGaManager.getInstance(getApplicationContext()).recordScreen("hotelDetail_map", "/todays-hotels/" + region + "/" + hotelName + "/map");
 					break;
 			}
+
+			mHandler.postDelayed(new Runnable()
+			{
+				public void run()
+				{
+					releaseUiComponent();
+				}
+			}, 500);
 		}
 
 		@Override
