@@ -544,6 +544,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			{
 				super.onDrawerClosed(view);
 				supportInvalidateOptionsMenu();
+
+				releaseUiComponent();
 			}
 
 			public void onDrawerOpened(View drawerView)
@@ -561,15 +563,26 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			@Override
 			public void onDrawerStateChanged(int newState)
 			{
-				if (newState == DrawerLayout.STATE_SETTLING && drawerLayout.isDrawerOpen(drawerView) == false)
+				switch (newState)
 				{
-					if (isLockUiComponent() == true)
+					case DrawerLayout.STATE_SETTLING:
 					{
-						drawerLayout.closeDrawer(drawerView);
-						return;
+						if (drawerLayout.isDrawerOpen(drawerView) == false)
+						{
+							if (isLockUiComponent() == true)
+							{
+								drawerLayout.closeDrawer(drawerView);
+								return;
+							}
+
+							lockUiComponent();
+						}
+						break;
 					}
 
-					lockUiComponent();
+					case DrawerLayout.STATE_IDLE:
+						releaseUiComponent();
+						break;
 				}
 
 				super.onDrawerStateChanged(newState);
@@ -581,7 +594,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 				if (Float.compare(slideOffset, 0.0f) > 0)
 				{
 					setActionBarRegionEnable(false);
-					
+
 					fragmentManager = getSupportFragmentManager();
 
 					if (fragmentManager != null)
