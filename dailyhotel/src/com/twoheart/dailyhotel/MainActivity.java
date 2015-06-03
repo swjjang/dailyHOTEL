@@ -581,7 +581,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 				if (Float.compare(slideOffset, 0.0f) > 0)
 				{
 					setActionBarRegionEnable(false);
-
+					
 					fragmentManager = getSupportFragmentManager();
 
 					if (fragmentManager != null)
