@@ -76,7 +76,7 @@ public class GcmIntentService extends IntentService implements Constants
 		mIsBadge = false;
 		mIsSound = true;
 
-		if (!extras.isEmpty())
+		if (extras != null && !extras.isEmpty())
 		{
 			try
 			{
