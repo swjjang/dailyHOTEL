@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@android:color/transparent"
     android:padding="25dp" >
 
@@ -71,7 +71,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="110dp"
                     android:gravity="center"
-                    android:text="[데일리 슈퍼 프리미엄 호텔]예약완료 되었습니다."
                     android:textColor="@drawable/selector_textcolor_btn_rating_hotel"
                     android:textSize="18.5dp" />
             </LinearLayout>
