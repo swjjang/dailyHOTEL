@@ -1981,6 +1981,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				ExLog.e(e.toString());
 			} finally
 			{
+				onCheckedChanged(swCredit, swCredit.isChecked());
 				unLockUI();
 			}
 		}
