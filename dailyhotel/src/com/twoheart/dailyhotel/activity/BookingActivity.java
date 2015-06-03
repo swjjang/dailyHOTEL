@@ -1687,16 +1687,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 				mPay.setPayPrice(originalPrice);
 
-				boolean checked = swCredit.isChecked();
-
-				if (checked == false)
-				{
-					onCheckedChanged(swCredit, false);
-				} else
-				{
-					swCredit.setChecked(false);
-				}
-
 				// 사용자 정보 요청.
 				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, BookingActivity.this));
 
