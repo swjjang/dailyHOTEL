@@ -44,6 +44,7 @@ public class TabIndicator extends HorizontalScrollView implements OnClickListene
 	private int mScrollOffset = 52;
 	private int mIndicatorHeight = 8;
 	private Paint mRectPaint;
+	private boolean mIsLock;
 
 	private OnPageChangeListener mRequestOnPageChangeListener;
 	private OnTabSelectedListener mOnTabSelectedListener;
@@ -312,11 +313,20 @@ public class TabIndicator extends HorizontalScrollView implements OnClickListene
 	@Override
 	public void onClick(View v)
 	{
+		if (mIsLock == true)
+		{
+			return;
+		}
+
+		mIsLock = true;
+
 		for (int i = 0; i < mTabArrray.size(); i++)
 		{
 			if (v.getId() == mTabArrray.get(i).getId())
 			{
 				mTabArrray.get(i).setSelected(true);
+
+				scrollToChild(i, 0);
 			} else
 			{
 				mTabArrray.get(i).setSelected(false);
@@ -326,6 +336,8 @@ public class TabIndicator extends HorizontalScrollView implements OnClickListene
 		{
 			mOnTabSelectedListener.onTabSelected(v.getId());
 		}
+
+		mIsLock = false;
 	}
 
 	public void setOnTabSelectListener(OnTabSelectedListener l)
