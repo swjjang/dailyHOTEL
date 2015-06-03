@@ -2172,7 +2172,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 				mPay.setHotelDetail(hotelDetail);
 
-				boolean isOnSale = false; // 판매중인 상품인지.
+				boolean isOnSale = true; // 판매중인 상품인지.
 
 				try
 				{
