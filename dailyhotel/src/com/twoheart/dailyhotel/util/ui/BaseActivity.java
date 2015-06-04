@@ -262,6 +262,13 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 				@Override
 				public void onClick(View v)
 				{
+					if (mActionBarRegionEnabled == false || isLockUiComponent() == true)
+					{
+						return;
+					}
+
+					lockUiComponent();
+
 					showPopupWindow(v, arrayList, userActionListener);
 				}
 			});
@@ -336,6 +343,15 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 		});
 
 		mPopupWindow = new PopupWindow(regionPopupListView, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+
+		mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener()
+		{
+			@Override
+			public void onDismiss()
+			{
+				releaseUiComponent();
+			}
+		});
 
 		//영역이외의 터치시 팝업 윈도우를 닫히게 하기 위해서
 		mPopupWindow.setOutsideTouchable(true);
@@ -503,25 +519,49 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	 * 
 	 * @return
 	 */
-	protected boolean isLockUiComponent()
+	public boolean isLockUiComponent()
 	{
-		return mIsLockUiComponent;
+		synchronized (this)
+		{
+			return mIsLockUiComponent;
+		}
+	}
+
+	public boolean isLockUiComponent(boolean lock)
+	{
+		synchronized (this)
+		{
+			if (mIsLockUiComponent == true)
+			{
+				return true;
+			} else
+			{
+				mIsLockUiComponent = lock;
+				return false;
+			}
+		}
 	}
 
 	/**
 	 * UI Component를 잠금상태로 변경..
 	 */
-	protected void lockUiComponent()
+	public void lockUiComponent()
 	{
-		mIsLockUiComponent = true;
+		synchronized (this)
+		{
+			mIsLockUiComponent = true;
+		}
 	}
 
 	/**
 	 * UI Component를 잠금해제로 변경..
 	 */
-	protected void releaseUiComponent()
+	public void releaseUiComponent()
 	{
-		mIsLockUiComponent = false;
+		synchronized (this)
+		{
+			mIsLockUiComponent = false;
+		}
 	}
 
 	@Override

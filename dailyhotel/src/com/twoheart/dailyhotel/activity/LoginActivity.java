@@ -209,7 +209,10 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
 					mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(), loginParams, mUserLoginJsonResponseListener, LoginActivity.this));
 
-					fbSession.closeAndClearTokenInformation();
+					if (fbSession != null)
+					{
+						fbSession.closeAndClearTokenInformation();
+					}
 				}
 			}
 		});
@@ -365,9 +368,11 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 			}
 		} else
 		{
-			fbSession.onActivityResult(this, requestCode, resultCode, data);
+			if (fbSession != null)
+			{
+				fbSession.onActivityResult(this, requestCode, resultCode, data);
+			}
 		}
-
 	}
 
 	@Override
@@ -409,7 +414,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 		{
 			return;
 		}
-		
+
 		new AsyncTask<Void, Void, String>()
 		{
 			@Override
@@ -499,19 +504,15 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 						mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, LoginActivity.this));
 					} else
 					{
-						if (getGcmId().isEmpty() == true)
-						{
-							// 로그인에 성공하였으나 기기에 GCM을 등록하지 않은 유저의 경우 인덱스를 가져와 push_id를 업그레이드 하는 절차 시작.
-							mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, LoginActivity.this));
-						} else
-						{
-							unLockUI();
+						// 로그인에 성공하였으나 기기에 GCM을 등록하지 않은 유저의 경우 인덱스를 가져와 push_id를 업그레이드 하는 절차 시작.
+						mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, LoginActivity.this));
 
-							// 로그인에 성공 하였고 GCM 코드 또한 이미 기기에 저장되어 있는 상태이면 종료. 
-							DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);
-							setResult(RESULT_OK);
-							finish();
-						}
+						unLockUI();
+
+						// 로그인에 성공 하였고 GCM 코드 또한 이미 기기에 저장되어 있는 상태이면 종료. 
+						DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);
+						setResult(RESULT_OK);
+						finish();
 					}
 
 					Editor editor = sharedPreference.edit();
@@ -549,6 +550,8 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
+			int userIdx = 0;
+
 			try
 			{
 				if (response == null)
@@ -559,7 +562,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 				// GCM 아이디를 등록한다.
 				if (sharedPreference.getBoolean("Facebook SignUp", false) == true)
 				{
-					int userIdx = response.getInt("idx");
+					userIdx = response.getInt("idx");
 					String userIdxStr = String.format("%07d", userIdx);
 
 					SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
@@ -592,12 +595,13 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 						return;
 					}
 				}
-
-				regGcmId(response.getInt("idx"));
 			} catch (Exception e)
 			{
 				unLockUI();
 				onError(e);
+			} finally
+			{
+				regGcmId(userIdx);
 			}
 		}
 	};

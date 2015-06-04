@@ -16,8 +16,15 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -61,8 +68,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 	private ArrayList<String> mRegionList;
 
 	private boolean mMenuEnabled;
-
-	//	private String mSelectedDetailRegion;
+	private AlertDialog mAlertDialog;
 
 	private HOTEL_VIEW_TYPE mHotelViewType = HOTEL_VIEW_TYPE.LIST;
 
@@ -202,19 +208,29 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 				switch (mHotelViewType)
 				{
 					case LIST:
-						item.setIcon(R.drawable.img_ic_list_mini_pink);
-						item.setTitle(getString(R.string.label_list));
+						int isInstalledGooglePlayServices = installGooglePlayService(getActivity());
+
+						if (isInstalledGooglePlayServices == 1)
+						{
+							item.setIcon(R.drawable.img_ic_list_mini_pink);
+							item.setTitle(getString(R.string.label_list));
+
+							if (mUserActionListener != null)
+							{
+								mUserActionListener.toggleViewType();
+							}
+						}
 						break;
 
 					case MAP:
 						item.setIcon(R.drawable.img_ic_map_mini_pink);
 						item.setTitle(getString(R.string.label_map));
-						break;
-				}
 
-				if (mUserActionListener != null)
-				{
-					mUserActionListener.toggleViewType();
+						if (mUserActionListener != null)
+						{
+							mUserActionListener.toggleViewType();
+						}
+						break;
 				}
 				return true;
 			}
@@ -227,19 +243,20 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
 		releaseUiComponent();
+		baseActivity.releaseUiComponent();
 
 		switch (requestCode)
 		{
 			case CODE_REQUEST_ACTIVITY_HOTELTAB:
 			{
-				BaseActivity baseActivity = (BaseActivity) getActivity();
-
-				if (baseActivity == null)
-				{
-					return;
-				}
-
 				if (resultCode == Activity.RESULT_OK)
 				{
 					((MainActivity) baseActivity).selectMenuDrawer(((MainActivity) baseActivity).menuBookingListFragment);
@@ -308,6 +325,104 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 	{
 		HotelListFragment hotelListFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
 		hotelListFragment.refreshHotelList(isSelectionTop);
+	}
+
+	/**
+	 * 
+	 * @param activity
+	 * @return -1 : 설치가 필요., 0 : 업데이트가 필요, 1 : 이상없음.
+	 */
+	private int installGooglePlayService(final Activity activity)
+	{
+		if (activity == null || (mAlertDialog != null && mAlertDialog.isShowing() == true))
+		{
+			return -1;
+		}
+
+		int state = -1;
+
+		try
+		{
+			PackageManager packageManager = activity.getPackageManager();
+
+			ApplicationInfo applicationInfo = packageManager.getApplicationInfo("com.google.android.gms", 0);
+			PackageInfo packageInfo = packageManager.getPackageInfo(applicationInfo.packageName, PackageManager.GET_SIGNATURES);
+
+			if (packageInfo.versionCode < 7500000)
+			{
+				state = 0;
+			} else
+			{
+				state = 1;
+			}
+		} catch (PackageManager.NameNotFoundException e)
+		{
+			state = -1;
+		}
+
+		if (state == 1)
+		{
+			return 1;
+		} else
+		{
+			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
+
+			// set dialog message
+			int messageId = state == -1 ? R.string.dialog_msg_install_googleplayservice : R.string.dialog_msg_update_googleplayservice;
+			int positiveId = state == -1 ? R.string.dialog_btn_install : R.string.dialog_btn_update;
+
+			mAlertDialog = alertDialogBuilder.setTitle(activity.getString(R.string.dialog_title_googleplayservice)).setMessage(activity.getString(messageId)).setCancelable(true).setPositiveButton(activity.getString(positiveId), new DialogInterface.OnClickListener()
+			{
+				public void onClick(DialogInterface dialog, int id)
+				{
+					dialog.dismiss();
+					// Try the new HTTP method (I assume that is the official way now given that google uses it).
+					try
+					{
+						Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.gms"));
+						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+						intent.setPackage("com.android.vending");
+						activity.startActivity(intent);
+					} catch (ActivityNotFoundException e)
+					{
+						// Ok that didn't work, try the market method.
+						try
+						{
+							Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.google.android.gms"));
+							intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+							intent.setPackage("com.android.vending");
+							activity.startActivity(intent);
+						} catch (ActivityNotFoundException f)
+						{
+							// Ok, weird. Maybe they don't have any market app. Just show the website.
+
+							Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.gms"));
+							intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+							activity.startActivity(intent);
+						}
+					}
+				}
+			}).setNegativeButton(activity.getString(R.string.dialog_btn_text_no), new DialogInterface.OnClickListener()
+			{
+				public void onClick(DialogInterface dialog, int id)
+				{
+					dialog.cancel();
+				}
+			}).create();
+
+			mAlertDialog.setOnDismissListener(new DialogInterface.OnDismissListener()
+			{
+				@Override
+				public void onDismiss(DialogInterface dialog)
+				{
+					mAlertDialog = null;
+				}
+			});
+
+			mAlertDialog.show();
+
+			return -1;
+		}
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -695,18 +810,20 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 				return;
 			}
 
-			if (isLockUiComponent() == true)
+			if (isLockUiComponent() == true || baseActivity.isLockUiComponent() == true)
 			{
 				return;
 			}
 
 			lockUiComponent();
+			baseActivity.lockUiComponent();
 
 			if (hotelListViewItem == null || hotelIndex < 0)
 			{
 				ExLog.d("hotelListViewItem == null || hotelIndex < 0");
 
 				releaseUiComponent();
+				baseActivity.releaseUiComponent();
 				return;
 			}
 
@@ -739,6 +856,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 				case HotelListViewItem.TYPE_SECTION:
 				default:
 					releaseUiComponent();
+					baseActivity.releaseUiComponent();
 					break;
 			}
 		}

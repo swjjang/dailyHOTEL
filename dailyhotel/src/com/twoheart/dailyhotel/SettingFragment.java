@@ -123,6 +123,13 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 	@Override
 	public void onClick(View v)
 	{
+		if (isLockUiComponent() == true)
+		{
+			return;
+		}
+
+		lockUiComponent();
+
 		int id = v.getId();
 
 		if (id == tvNotice.getId())
@@ -185,12 +192,17 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 			Intent i = new Intent(mHostActivity, CreditCardListActivity.class);
 			startActivity(i);
 			mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+		} else
+		{
+			releaseUiComponent();
 		}
 	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent intent)
 	{
+		releaseUiComponent();
+
 		super.onActivityResult(requestCode, resultCode, intent);
 
 		if (requestCode == CODE_REQUEST_ACTIVITY_LOGIN)
@@ -286,13 +298,13 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 				}
 
 				mSettingCardLayout.setVisibility(View.VISIBLE);
-
-				unLockUI();
-
 			} catch (Exception e)
 			{
 				onError(e);
 				invalidateLoginButton(true, "");
+			} finally
+			{
+				unLockUI();
 			}
 		}
 	};

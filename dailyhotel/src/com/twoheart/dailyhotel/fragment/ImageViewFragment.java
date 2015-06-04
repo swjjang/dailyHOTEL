@@ -1,6 +1,5 @@
 package com.twoheart.dailyhotel.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +10,7 @@ import android.widget.ProgressBar;
 
 import com.androidquery.AQuery;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.activity.ImageDetailActivity;
+import com.twoheart.dailyhotel.activity.HotelTabActivity;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
@@ -19,7 +18,6 @@ import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
 public class ImageViewFragment extends BaseFragment implements OnClickListener, Constants
 {
-
 	private static final String KEY_BUNDLE_ARGUMENTS_HOTELDETAIL = "hoteldetail";
 	private static final String KEY_BUNDLE_ARGUMENTS_IMAGEURL = "image_url";
 
@@ -28,6 +26,8 @@ public class ImageViewFragment extends BaseFragment implements OnClickListener, 
 	private AQuery mAq;
 	private ImageView mImageView;
 	private ProgressBar mProgressBar;
+
+	private HotelTabActivity.OnUserActionListener mOnUserActionListener;
 
 	public static ImageViewFragment newInstance(String imageUrl, HotelDetail hotelDetail)
 	{
@@ -40,6 +40,11 @@ public class ImageViewFragment extends BaseFragment implements OnClickListener, 
 		newFragment.setArguments(arguments);
 
 		return newFragment;
+	}
+
+	public void setOnUserActionListener(HotelTabActivity.OnUserActionListener listener)
+	{
+		mOnUserActionListener = listener;
 	}
 
 	@Override
@@ -86,11 +91,10 @@ public class ImageViewFragment extends BaseFragment implements OnClickListener, 
 
 		if (v.getId() == mImageView.getId())
 		{
-			Intent i = new Intent(baseActivity, ImageDetailActivity.class);
-			i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELDETAIL, mHotelDetail);
-			i.putExtra(NAME_INTENT_EXTRA_DATA_SELECTED_IMAGE_URL, mImageUrl);
-			startActivity(i);
+			if (mOnUserActionListener != null)
+			{
+				mOnUserActionListener.onClickImage(mHotelDetail, mImageUrl);
+			}
 		}
 	}
-
 }

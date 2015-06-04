@@ -8,6 +8,8 @@ import java.util.TimeZone;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -204,7 +206,6 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
 		ImageView bookingIconImageView = (ImageView) view.findViewById(R.id.bookingIconImageView);
 		TextView name = (TextView) view.findViewById(R.id.tv_booking_row_name);
 		TextView day = (TextView) view.findViewById(R.id.tv_booking_row_day);
-		View dimView = view.findViewById(R.id.usedDimView);
 		View deleteView = view.findViewById(R.id.deleteView);
 
 		name.setText(booking.getHotel_name());
@@ -219,13 +220,11 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
 
 		if (booking.isUsed == true)
 		{
+			setGrayScale(hotelImageView);
+
 			waitAccountTextView.setVisibility(View.GONE);
 			bookingIconImageView.setVisibility(View.GONE);
 
-			name.setTextColor(mContext.getResources().getColor(R.color.bookinglist_used_text));
-			day.setTextColor(mContext.getResources().getColor(R.color.bookinglist_used_text));
-
-			dimView.setVisibility(View.VISIBLE);
 			deleteView.setVisibility(View.VISIBLE);
 
 			// 삭제 버튼을 누를 경우;
@@ -242,6 +241,8 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
 			});
 		} else
 		{
+			hotelImageView.clearColorFilter();
+
 			bookingIconImageView.setVisibility(View.VISIBLE);
 
 			if (booking.getPayType() == Constants.CODE_PAY_TYPE_ACCOUNT_WAIT)
@@ -255,10 +256,6 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
 				bookingIconImageView.setImageResource(R.drawable.ic_complete);
 			}
 
-			name.setTextColor(mContext.getResources().getColor(R.color.white));
-			day.setTextColor(mContext.getResources().getColor(R.color.white));
-
-			dimView.setVisibility(View.GONE);
 			deleteView.setVisibility(View.GONE);
 		}
 
@@ -277,5 +274,13 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
 		sectionName.setText(booking.getHotel_name());
 
 		return view;
+	}
+
+	private void setGrayScale(ImageView imageView)
+	{
+		ColorMatrix matrix = new ColorMatrix();
+		matrix.setSaturation(0);
+		ColorMatrixColorFilter colorFilter = new ColorMatrixColorFilter(matrix);
+		imageView.setColorFilter(colorFilter);
 	}
 }

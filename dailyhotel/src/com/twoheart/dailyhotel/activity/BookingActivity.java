@@ -10,12 +10,9 @@ package com.twoheart.dailyhotel.activity;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
@@ -29,6 +26,7 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
@@ -66,8 +64,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.VolleyError;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Credit;
@@ -108,6 +104,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	private static final int DIALOG_CONFIRM_PAYMENT_NO_RSERVE = 3;
 	private static final int DIALOG_CONFIRM_CALL = 4;
 	private static final int DIALOG_CONFIRM_PAYMENT_REGCARD = 5;
+	private static final int DIALOG_CONFIRM_STOP_ONSALE = 6;
 
 	private TextView mCheckinDayTextView, mCheckinTimeTextView,
 			mCheckoutDayTextView, mCheckoutTimeTextView;
@@ -120,7 +117,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	private Drawable[] mEditTextBackground;
 	private RadioGroup rgPaymentMethod;
 	private RadioButton rbPaymentAccount, rbPaymentCard, rbPaymentHp,
-			mEasyPaymentRadioButton;
+			mSimplePaymentRadioButton;
 	private View mCardManagerButton;
 
 	private Pay mPay;
@@ -134,6 +131,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	private Intent mResIntent;
 	protected String mAliveCallSource;
 	private Dialog mFinalCheckDialog;
+	private ProgressDialog mProgressDialog;
 
 	//	private String locale;
 	private int mHotelIdx;
@@ -199,7 +197,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 		rgPaymentMethod = (RadioGroup) findViewById(R.id.rg_payment_method);
 
-		mEasyPaymentRadioButton = (RadioButton) findViewById(R.id.easyPaymentRadioButton);
+		mSimplePaymentRadioButton = (RadioButton) findViewById(R.id.easyPaymentRadioButton);
 		rbPaymentAccount = (RadioButton) findViewById(R.id.rb_payment_account);
 		rbPaymentCard = (RadioButton) findViewById(R.id.rb_payment_card);
 		rbPaymentHp = (RadioButton) findViewById(R.id.rb_payment_hp);
@@ -210,7 +208,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		rbPaymentAccount.setOnClickListener(this);
 		rbPaymentCard.setOnClickListener(this);
 		rbPaymentHp.setOnClickListener(this);
-		mEasyPaymentRadioButton.setOnClickListener(this);
+		mSimplePaymentRadioButton.setOnClickListener(this);
 
 		rgPaymentMethod.setOnCheckedChangeListener(this);
 
@@ -272,7 +270,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 	private void updatePayPrice(boolean applyCredit)
 	{
-		int originalPrice = Integer.parseInt(mPay.getHotelDetail().getHotel().getDiscount().replaceAll(",", ""));
+		int originalPrice = mPay.getHotelDetail().getHotel().getDiscount();
 		int credit = Integer.parseInt(mPay.getCredit().getBonus().replaceAll(",", ""));
 
 		DecimalFormat comma = new DecimalFormat("###,##0");
@@ -330,8 +328,15 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	{
 		if (v.getId() == btnPay.getId())
 		{
+			if (isLockUiComponent(true) == true)
+			{
+				return;
+			}
+
 			if (mIsEditMode == true)
 			{
+				releaseUiComponent();
+
 				Customer buyer = new Customer();
 
 				buyer.setEmail(etReserverEmail.getText().toString());
@@ -388,6 +393,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					@Override
 					public void onDismiss(DialogInterface dialog)
 					{
+						releaseUiComponent();
+
 						v.setClickable(true);
 						v.setEnabled(true);
 					}
@@ -395,38 +402,18 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 				dialog.show();
 
+				releaseUiComponent();
 			} else
 			{
+				lockUI();
+
 				// 해당 호텔이 결제하기를 못하는 경우를 처리한다.
 				Map<String, String> updateParams = new HashMap<String, String>();
 				updateParams.put("saleIdx", String.valueOf(mPay.getHotelDetail().getSaleIdx()));
 
 				mClickView = v;
 
-				mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_VALIDATE).toString(), updateParams, mReservValidateJsonResponseListener, new ErrorListener()
-				{
-
-					@Override
-					public void onErrorResponse(VolleyError error)
-					{
-						if (error.networkResponse.statusCode == 404)
-						{
-							try
-							{
-								JSONObject jsonObject = new JSONObject();
-								jsonObject.put("msg_code", 0);
-								jsonObject.put("data", true);
-								mReservValidateJsonResponseListener.onResponse(null, jsonObject);
-							} catch (Exception e)
-							{
-								ExLog.e(e.toString());
-							}
-						} else
-						{
-							onErrorResponse(error);
-						}
-					}
-				}));
+				mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_VALIDATE).toString(), updateParams, mReservValidateJsonResponseListener, BookingActivity.this));
 
 				v.setClickable(false);
 				v.setEnabled(false);
@@ -439,6 +426,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			}
 		} else if (v.getId() == mCardManagerButton.getId())
 		{
+			if (isLockUiComponent(true) == true)
+			{
+				return;
+			}
+
 			Intent intent = new Intent(this, CreditCardListActivity.class);
 			intent.setAction(Intent.ACTION_PICK);
 			intent.putExtra(NAME_INTENT_EXTRA_DATA_CREDITCARD, mSelectedCreditCard);
@@ -501,6 +493,16 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				buttonText = getString(R.string.dialog_btn_call);
 				break;
 
+			case DIALOG_CONFIRM_STOP_ONSALE:
+				dialog.setCancelable(false);
+
+				btnClose.setVisibility(View.INVISIBLE);
+				titleTextView.setText(R.string.dialog_notice2);
+
+				msg = getString(R.string.dialog_msg_stop_onsale);
+				buttonText = getString(R.string.dialog_btn_text_confirm);
+				break;
+
 			//			case DIALOG_CONFIRM_PAYMENT_REGCARD:
 			//			case DIALOG_CONFIRM_PAYMENT_CARD:
 			//			case DIALOG_CONFIRM_PAYMENT_ACCOUNT:
@@ -520,12 +522,20 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				@Override
 				public void onClick(View v)
 				{
-					lockUI();
+					synchronized (BookingActivity.this)
+					{
+						if (isLockUiComponent() == true)
+						{
+							return;
+						}
 
-					mAliveCallSource = "PAYMENT";
-					mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, BookingActivity.this));
-					dialog.dismiss();
-					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "agreePayment", mPay.getHotelDetail().getHotel().getName(), (long) mHotelIdx);
+						lockUI();
+
+						mAliveCallSource = "PAYMENT";
+						mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, BookingActivity.this));
+						dialog.dismiss();
+						RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "agreePayment", mPay.getHotelDetail().getHotel().getName(), (long) mHotelIdx);
+					}
 				}
 			};
 		} else
@@ -582,15 +592,57 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	{
 		unLockUI();
 
-		ExLog.e("Sale credit / Pay Price : " + mPay.isSaleCredit() + " / " + mPay.getPayPrice());
-
-		Intent intent = new Intent(this, com.twoheart.dailyhotel.activity.PaymentActivity.class);
-		intent.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
-
-		startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PAYMENT);
-
-		if (mPay.getType() != Pay.Type.EASY_CARD)
+		if (mPay.getType() == Pay.Type.EASY_CARD)
 		{
+			if (mFinalCheckDialog != null && mFinalCheckDialog.isShowing() == true)
+			{
+				mFinalCheckDialog.dismiss();
+			}
+
+			if (mProgressDialog != null)
+			{
+				if (mProgressDialog.isShowing() == true)
+				{
+					mProgressDialog.dismiss();
+				}
+
+				mProgressDialog = null;
+			}
+
+			mProgressDialog = new ProgressDialog(BookingActivity.this);
+			mProgressDialog.setMessage(getString(R.string.dialog_msg_processing_payment));
+			mProgressDialog.setIndeterminate(true);
+			mProgressDialog.setCancelable(false);
+			mProgressDialog.show();
+
+			String mileage = "0"; // 적립금
+
+			if (mPay.isSaleCredit() == true)
+			{
+				// 적립금을 절대값으로 보냄..
+				try
+				{
+					mileage = String.valueOf(Math.abs(Integer.parseInt(mPay.getCredit().getBonus())));
+				} catch (Exception e)
+				{
+					ExLog.e(e.toString());
+				}
+			}
+
+			Map<String, String> params = new HashMap<String, String>();
+
+			params.put("saleIdx", String.valueOf(mPay.getHotelDetail().getSaleIdx()));
+			params.put("billkey", mPay.getCustomer().mBillingKey);
+			params.put("mileage", mileage);
+
+			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_PAYMENT).toString(), params, mUserSessionBillingPayment, BookingActivity.this));
+		} else
+		{
+			Intent intent = new Intent(this, com.twoheart.dailyhotel.activity.PaymentActivity.class);
+			intent.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
+
+			startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PAYMENT);
+
 			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 		}
 	}
@@ -653,80 +705,29 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		//결제가 끝난 뒤 호출됨. 
 		if (requestCode == CODE_REQUEST_ACTIVITY_PAYMENT)
 		{
-			ExLog.d(Integer.toString(resultCode));
-
 			String title = getString(R.string.dialog_title_payment);
 			String msg = "";
 			String posTitle = getString(R.string.dialog_btn_text_confirm);
 			android.content.DialogInterface.OnClickListener posListener = null;
-
-			String region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
-			String hotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
 
 			switch (resultCode)
 			{
 			// 결제가 성공한 경우 GA와 믹스패널에 등록 
 				case CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE:
 				case CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS:
-					if (intent != null)
+					if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_DATA_PAY) == true)
 					{
-						if (intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAY) != null)
-						{
-							Pay payData = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAY);
+						Pay payData = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAY);
 
-							Editor editor = sharedPreference.edit();
-							editor.putString(KEY_PREFERENCE_HOTEL_NAME, payData.getHotelDetail().getHotel().getName());
-							editor.putInt(KEY_PREFERENCE_HOTEL_SALE_IDX, payData.getHotelDetail().getSaleIdx());
-							editor.putString(KEY_PREFERENCE_HOTEL_CHECKOUT, payData.getCheckOut());
-							editor.putString(KEY_PREFERENCE_USER_IDX, payData.getCustomer().getUserIdx());
-							editor.commit();
-						}
+						Editor editor = sharedPreference.edit();
+						editor.putString(KEY_PREFERENCE_HOTEL_NAME, payData.getHotelDetail().getHotel().getName());
+						editor.putInt(KEY_PREFERENCE_HOTEL_SALE_IDX, payData.getHotelDetail().getSaleIdx());
+						editor.putString(KEY_PREFERENCE_HOTEL_CHECKOUT, payData.getCheckOut());
+						editor.putString(KEY_PREFERENCE_USER_IDX, payData.getCustomer().getUserIdx());
+						editor.commit();
 					}
 
-					SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmss", Locale.KOREA);
-					Date date = new Date();
-					String strDate = dateFormat.format(date);
-					int userIdx = Integer.parseInt(mPay.getCustomer().getUserIdx());
-					String userIdxStr = String.format("%07d", userIdx);
-					String transId = strDate + userIdxStr;
-
-					RenewalGaManager.getInstance(getApplicationContext()).purchaseComplete(transId, mPay.getHotelDetail().getHotel().getName(), mPay.getHotelDetail().getHotel().getCategory().name(), (double) mPay.getPayPrice());
-
-					SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
-					strDate = dateFormat2.format(date);
-
-					mMixpanel.getPeople().identify(userIdxStr);
-
-					JSONObject properties = new JSONObject();
-					try
-					{
-						properties.put("hotelName", mPay.getHotelDetail().getHotel().getName());
-						properties.put("datetime", strDate); // 거래 시간 = 연-월-일T시:분:초
-						ExLog.e("properties hotel name : " + mPay.getHotelDetail().getHotel().getName() + " datetime : " + strDate);
-					} catch (JSONException e)
-					{
-						ExLog.e(e.toString());
-					}
-
-					mMixpanel.getPeople().trackCharge(mPay.getPayPrice(), properties); // price = 결제 금액
-
-					JSONObject props = new JSONObject();
-					try
-					{
-						props.put("hotelName", mPay.getHotelDetail().getHotel().getName());
-						props.put("price", mPay.getPayPrice());
-						props.put("datetime", strDate);
-						props.put("userId", userIdxStr);
-						props.put("tranId", transId);
-						ExLog.e("props hotelName : " + mPay.getHotelDetail().getHotel().getName() + " price : " + mPay.getPayPrice() + " datetime : " + strDate);
-					} catch (JSONException e)
-					{
-						ExLog.e(e.toString());
-					}
-
-					mMixpanel.track("transaction", props);
-
-					RenewalGaManager.getInstance(getApplicationContext()).recordScreen("paymentConfirmation", "/todays-hotels/" + region + "/" + hotelName + "/booking-detail/payment-confirm");
+					writeLogPaid(mPay);
 
 					posListener = new DialogInterface.OnClickListener()
 					{
@@ -734,9 +735,17 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 						public void onClick(DialogInterface dialog, int which)
 						{
 							dialog.dismiss(); // 닫기
-							RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "confirmPayment", mPay.getHotelDetail().getHotel().getName(), (long) mHotelIdx);
+
+							try
+							{
+								RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "confirmPayment", mPay.getHotelDetail().getHotel().getName(), (long) mHotelIdx);
+							} catch (Exception e)
+							{
+								ExLog.e(e.toString());
+							}
+
 							setResult(RESULT_OK);
-							BookingActivity.this.finish();
+							finish();
 						}
 					};
 
@@ -800,6 +809,17 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				case CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER:
 					msg = getString(R.string.act_toast_payment_account_timeover);
 					break;
+
+				case CODE_RESULT_ACTIVITY_PAYMENT_UNKNOW_ERROR:
+					if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_DATA_MESSAGE) == true)
+					{
+						msg = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_MESSAGE);
+					} else
+					{
+						msg = getString(R.string.act_toast_payment_fail);
+					}
+					break;
+
 				default:
 					return;
 			}
@@ -828,6 +848,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 						if (creditCard != null)
 						{
 							mSelectedCreditCard = creditCard;
+
+							rgPaymentMethod.check(mSimplePaymentRadioButton.getId());
 						}
 					}
 					break;
@@ -879,7 +901,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	{
 		if (group.getId() == rgPaymentMethod.getId())
 		{
-			if (checkedId == mEasyPaymentRadioButton.getId())
+			if (checkedId == mSimplePaymentRadioButton.getId())
 			{
 				mPay.setType(Pay.Type.EASY_CARD);
 			} else if (checkedId == rbPaymentCard.getId())
@@ -954,17 +976,34 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		{
 			case R.id.action_call:
 			{
-				getPaymentConfirmDialog(DIALOG_CONFIRM_CALL, new View.OnClickListener()
+				if (isLockUiComponent(true) == true)
+				{
+					return super.onOptionsItemSelected(item);
+				}
+
+				Dialog dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_CALL, new View.OnClickListener()
 				{
 					@Override
 					public void onClick(View v)
 					{
+						releaseUiComponent();
+
 						RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "callHotel", mPay.getHotelDetail().getHotel().getName(), (long) mHotelIdx);
 						Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
 						startActivity(i);
 					}
-				}).show();
+				});
 
+				dialog.setOnDismissListener(new OnDismissListener()
+				{
+					@Override
+					public void onDismiss(DialogInterface dialog)
+					{
+						releaseUiComponent();
+					}
+				});
+
+				dialog.show();
 				return true;
 			}
 
@@ -977,6 +1016,21 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	protected void onDestroy()
 	{
 		mMixpanel.flush();
+
+		if (mFinalCheckDialog != null && mFinalCheckDialog.isShowing() == true)
+		{
+			mFinalCheckDialog.dismiss();
+		}
+
+		mFinalCheckDialog = null;
+
+		if (mProgressDialog != null && mProgressDialog.isShowing() == true)
+		{
+			mProgressDialog.dismiss();
+		}
+
+		mProgressDialog = null;
+
 		super.onDestroy();
 	}
 
@@ -1023,6 +1077,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				@Override
 				public void onDismiss(DialogInterface dialog)
 				{
+					releaseUiComponent();
+
 					mClickView.setClickable(true);
 					mClickView.setEnabled(true);
 				}
@@ -1081,13 +1137,21 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					@Override
 					public void onClick(View v)
 					{
-						mFinalCheckDialog.dismiss();
+						synchronized (BookingActivity.this)
+						{
+							if (isLockUiComponent() == true)
+							{
+								return;
+							}
 
-						lockUI();
+							lockUI();
 
-						mAliveCallSource = "PAYMENT";
-						mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, BookingActivity.this));
-						RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "agreePayment", mPay.getHotelDetail().getHotel().getName(), (long) mHotelIdx);
+							mFinalCheckDialog.dismiss();
+
+							mAliveCallSource = "PAYMENT";
+							mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, BookingActivity.this));
+							RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "agreePayment", mPay.getHotelDetail().getHotel().getName(), (long) mHotelIdx);
+						}
 					}
 				});
 			}
@@ -1108,6 +1172,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			@Override
 			public void onDismiss(DialogInterface dialog)
 			{
+				releaseUiComponent();
+
 				mClickView.setClickable(true);
 				mClickView.setEnabled(true);
 			}
@@ -1116,11 +1182,69 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		mFinalCheckDialog.show();
 	}
 
+	private void showStopOnSaleDialog()
+	{
+		getPaymentConfirmDialog(DIALOG_CONFIRM_STOP_ONSALE, new OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				setResult(CODE_RESULT_ACTIVITY_PAYMENT_NOT_ONSALE);
+				finish();
+			}
+		}).show();
+	}
+
 	private boolean isValidEmail(String inputStr)
 	{
 		Pattern p = Pattern.compile("^[_a-zA-Z0-9-]+(.[_a-zA-Z0-9-]+)*@(?:\\w+\\.)+\\w+$");
 		Matcher m = p.matcher(inputStr);
 		return m.matches();
+	}
+
+	private void writeLogPaid(Pay pay)
+	{
+		try
+		{
+			String region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
+			String hotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
+
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmss", Locale.KOREA);
+			Date date = new Date();
+			String strDate = dateFormat.format(date);
+			int userIdx = Integer.parseInt(pay.getCustomer().getUserIdx());
+			String userIdxStr = String.format("%07d", userIdx);
+			String transId = strDate + userIdxStr;
+
+			RenewalGaManager.getInstance(getApplicationContext()).purchaseComplete(transId, pay.getHotelDetail().getHotel().getName(), pay.getHotelDetail().getHotel().getCategory().name(), (double) pay.getPayPrice());
+
+			SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
+			strDate = dateFormat2.format(date);
+
+			mMixpanel.getPeople().identify(userIdxStr);
+
+			JSONObject properties = new JSONObject();
+			properties.put("hotelName", pay.getHotelDetail().getHotel().getName());
+			properties.put("datetime", strDate); // 거래 시간 = 연-월-일T시:분:초
+			ExLog.e("properties hotel name : " + pay.getHotelDetail().getHotel().getName() + " datetime : " + strDate);
+
+			mMixpanel.getPeople().trackCharge(pay.getPayPrice(), properties); // price = 결제 금액
+
+			JSONObject props = new JSONObject();
+			props.put("hotelName", pay.getHotelDetail().getHotel().getName());
+			props.put("price", pay.getPayPrice());
+			props.put("datetime", strDate);
+			props.put("userId", userIdxStr);
+			props.put("tranId", transId);
+			ExLog.e("props hotelName : " + pay.getHotelDetail().getHotel().getName() + " price : " + pay.getPayPrice() + " datetime : " + strDate);
+
+			mMixpanel.track("transaction", props);
+
+			RenewalGaManager.getInstance(getApplicationContext()).recordScreen("paymentConfirmation", "/todays-hotels/" + region + "/" + hotelName + "/booking-detail/payment-confirm");
+		} catch (Exception e)
+		{
+			ExLog.e(e.toString());
+		}
 	}
 
 	private class TelophoneClickSpannable extends ClickableSpan
@@ -1140,16 +1264,34 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		@Override
 		public void onClick(View widget)
 		{
-			getPaymentConfirmDialog(DIALOG_CONFIRM_CALL, new View.OnClickListener()
+			if (isLockUiComponent(true) == true)
+			{
+				return;
+			}
+
+			Dialog dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_CALL, new View.OnClickListener()
 			{
 				@Override
 				public void onClick(View v)
 				{
+					releaseUiComponent();
+
 					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "callHotel", mPay.getHotelDetail().getHotel().getName(), (long) mHotelIdx);
 					Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
 					startActivity(i);
 				}
-			}).show();
+			});
+
+			dialog.setOnDismissListener(new OnDismissListener()
+			{
+				@Override
+				public void onDismiss(DialogInterface dialog)
+				{
+					releaseUiComponent();
+				}
+			});
+
+			dialog.show();
 		}
 	}
 
@@ -1208,7 +1350,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				buyer.setUserIdx(response.getString("idx"));
 
 				mPay.setCustomer(buyer);
-				buyer = mPay.getCustomer();
 
 				/**
 				 * 텍스트 필드가 하나라도 비어있으면 해당 정보를 입력 받도록 함.
@@ -1419,9 +1560,17 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					etReserverNumber.setEnabled(false);
 					etReserverEmail.setEnabled(false);
 
-					etReserverName.setBackground(null);
-					etReserverNumber.setBackground(null);
-					etReserverEmail.setBackground(null);
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+					{
+						etReserverName.setBackground(null);
+						etReserverNumber.setBackground(null);
+						etReserverEmail.setBackground(null);
+					} else
+					{
+						etReserverName.setBackgroundDrawable(null);
+						etReserverNumber.setBackgroundDrawable(null);
+						etReserverEmail.setBackgroundDrawable(null);
+					}
 
 					etReserverName.setText(etReserverName.getText().toString());
 					etReserverNumber.setText(etReserverNumber.getText().toString());
@@ -1523,7 +1672,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				String bonus = result.replaceAll(",", "");
 				mPay.setCredit(new Credit(null, bonus, null));
 
-				int originalPrice = Integer.parseInt(mPay.getHotelDetail().getHotel().getDiscount().replaceAll(",", ""));
+				int originalPrice = mPay.getHotelDetail().getHotel().getDiscount();
 				DecimalFormat comma = new DecimalFormat("###,##0");
 
 				//				if ("한국어".equalsIgnoreCase(locale) == true)
@@ -1537,16 +1686,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				//				}
 
 				mPay.setPayPrice(originalPrice);
-
-				boolean checked = swCredit.isChecked();
-
-				if (checked == false)
-				{
-					onCheckedChanged(swCredit, false);
-				} else
-				{
-					swCredit.setChecked(false);
-				}
 
 				// 사용자 정보 요청.
 				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, BookingActivity.this));
@@ -1601,8 +1740,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 				if (result == true)
 				{
-					unLockUI();
-
 					// 간편 결제를 시도하였으나 결제할 카드가 없는 경우.
 					if (mPay.getType() == Pay.Type.EASY_CARD)
 					{
@@ -1643,8 +1780,10 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				}
 			} catch (Exception e)
 			{
-				unLockUI();
 				onError(e);
+			} finally
+			{
+				unLockUI();
 			}
 		}
 	};
@@ -1786,8 +1925,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					mCardManagerButton.setVisibility(View.INVISIBLE);
 
 					mSelectedCreditCard = null;
-					mEasyPaymentRadioButton.setChecked(true);
-					mEasyPaymentRadioButton.setText(R.string.label_booking_easypayment);
+					mSimplePaymentRadioButton.setChecked(true);
+					mSimplePaymentRadioButton.setText(R.string.label_booking_easypayment);
 				} else
 				{
 					mCardManagerButton.setVisibility(View.VISIBLE);
@@ -1797,7 +1936,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 						JSONObject jsonObject = jsonArray.getJSONObject(0);
 
 						mSelectedCreditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"));
-						mEasyPaymentRadioButton.setChecked(true);
+						mSimplePaymentRadioButton.setChecked(true);
 					} else
 					{
 						boolean hasCreditCard = false;
@@ -1822,7 +1961,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 						}
 					}
 
-					mEasyPaymentRadioButton.setText(String.format("%s %s", mSelectedCreditCard.name.replace("카드", ""), mSelectedCreditCard.number));
+					mSimplePaymentRadioButton.setText(String.format("%s %s", mSelectedCreditCard.name.replace("카드", ""), mSelectedCreditCard.number));
 				}
 
 				// 호텔 가격 정보가 변경되었습니다.
@@ -1842,6 +1981,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				ExLog.e(e.toString());
 			} finally
 			{
+				onCheckedChanged(swCredit, swCredit.isChecked());
 				unLockUI();
 			}
 		}
@@ -1878,7 +2018,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					mCardManagerButton.setVisibility(View.INVISIBLE);
 
 					mSelectedCreditCard = null;
-					mEasyPaymentRadioButton.setText(R.string.label_booking_easypayment);
+					mSimplePaymentRadioButton.setText(R.string.label_booking_easypayment);
 
 				} else
 				{
@@ -1887,7 +2027,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					JSONObject jsonObject = jsonArray.getJSONObject(0);
 
 					mSelectedCreditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"));
-					mEasyPaymentRadioButton.setText(String.format("%s %s", mSelectedCreditCard.name.replace("카드", ""), mSelectedCreditCard.number));
+					mSimplePaymentRadioButton.setText(String.format("%s %s", mSelectedCreditCard.name.replace("카드", ""), mSelectedCreditCard.number));
 
 					// final check 결제 화면을 보여준다.
 					showFinalCheckDialog();
@@ -1920,59 +2060,39 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				JSONArray bookingArr = response.getJSONArray("detail");
 				JSONObject detailObj = bookingArr.getJSONObject(0);
 
-				DecimalFormat comma = new DecimalFormat("###,##0");
-				String strDiscount = comma.format(Integer.parseInt(detailObj.getString("discount")));
-				String strPrice = comma.format(Integer.parseInt(detailObj.getString("price")));
+				int discount = Integer.parseInt(detailObj.getString("discount"));
+				int price = Integer.parseInt(detailObj.getString("price"));
 
 				HotelDetail hotelDetail = mPay.getHotelDetail();
 				Hotel hotelBasic = hotelDetail.getHotel();
 
 				// 가격이 변동 되었다.
-				if (hotelBasic.getDiscount().equalsIgnoreCase(strDiscount) == false)
+				if (hotelBasic.getDiscount() != discount)
 				{
 					mIsChangedPay = true;
 				}
 
 				hotelBasic.setAddress(detailObj.getString("address"));
 				hotelBasic.setName(detailObj.getString("hotel_name"));
-				hotelBasic.setDiscount(strDiscount);
-				hotelBasic.setPrice(strPrice);
+				hotelBasic.setDiscount(discount);
+				hotelBasic.setPrice(price);
 				hotelBasic.setCategory(detailObj.getString("cat"));
 				hotelBasic.setBedType(detailObj.getString("bed_type"));
 
 				hotelDetail.setHotel(hotelBasic);
 
-				JSONArray imgArr = detailObj.getJSONArray("img");
-				List<String> imageList = new ArrayList<String>(imgArr.length());
+				boolean isOnSale = true; // 판매중인 상품인지.
 
-				for (int i = 1; i < imgArr.length(); i++)
+				try
 				{
-					JSONObject imgObj = imgArr.getJSONObject(i);
-					imageList.add(imgObj.getString("path"));
-				}
-
-				hotelDetail.setImageUrl(imageList);
-				JSONArray specArr = response.getJSONArray("spec");
-				Map<String, List<String>> contentList = new LinkedHashMap<String, List<String>>(specArr.length());
-
-				for (int i = 0; i < specArr.length(); i++)
-				{
-					JSONObject specObj = specArr.getJSONObject(i);
-					String key = specObj.getString("key");
-					JSONArray valueArr = specObj.getJSONArray("value");
-					List<String> valueList = new ArrayList<String>(valueArr.length());
-
-					for (int j = 0; j < valueArr.length(); j++)
+					if (detailObj.has("on_sale") == true)
 					{
-						JSONObject valueObj = valueArr.getJSONObject(j);
-						String value = valueObj.getString("value");
-						valueList.add(value);
+						isOnSale = detailObj.getInt("on_sale") == 1;
 					}
-
-					contentList.put(key, valueList);
+				} catch (Exception e)
+				{
+					ExLog.e(e.toString());
 				}
-
-				hotelDetail.setSpecification(contentList);
 
 				double latitude = detailObj.getDouble("lat");
 				double longitude = detailObj.getDouble("lng");
@@ -1988,6 +2108,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				// credit 요청
 				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_SAVED_MONEY).toString(), null, mReserveSavedMoneyStringResponseListener, BookingActivity.this));
 
+				// 판매 중지 상품으로 호텔 리스트로 복귀 시킨다.
+				if (isOnSale == false)
+				{
+					showStopOnSaleDialog();
+				}
 			} catch (Exception e)
 			{
 				ExLog.e(e.toString());
@@ -2015,59 +2140,26 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				JSONArray bookingArr = response.getJSONArray("detail");
 				JSONObject detailObj = bookingArr.getJSONObject(0);
 
-				DecimalFormat comma = new DecimalFormat("###,##0");
-				String strDiscount = comma.format(Integer.parseInt(detailObj.getString("discount")));
-				String strPrice = comma.format(Integer.parseInt(detailObj.getString("price")));
+				int discount = Integer.parseInt(detailObj.getString("discount"));
+				int price = Integer.parseInt(detailObj.getString("price"));
 
 				HotelDetail hotelDetail = mPay.getHotelDetail();
 				Hotel hotelBasic = hotelDetail.getHotel();
 
 				// 가격이 변동 되었다.
-				if (hotelBasic.getDiscount().equalsIgnoreCase(strDiscount) == false)
+				if (hotelBasic.getDiscount() != discount)
 				{
 					mIsChangedPay = true;
 				}
 
 				hotelBasic.setAddress(detailObj.getString("address"));
 				hotelBasic.setName(detailObj.getString("hotel_name"));
-				hotelBasic.setDiscount(strDiscount);
-				hotelBasic.setPrice(strPrice);
+				hotelBasic.setDiscount(discount);
+				hotelBasic.setPrice(price);
 				hotelBasic.setCategory(detailObj.getString("cat"));
 				hotelBasic.setBedType(detailObj.getString("bed_type"));
 
 				hotelDetail.setHotel(hotelBasic);
-
-				JSONArray imgArr = detailObj.getJSONArray("img");
-				List<String> imageList = new ArrayList<String>(imgArr.length());
-
-				for (int i = 1; i < imgArr.length(); i++)
-				{
-					JSONObject imgObj = imgArr.getJSONObject(i);
-					imageList.add(imgObj.getString("path"));
-				}
-
-				hotelDetail.setImageUrl(imageList);
-				JSONArray specArr = response.getJSONArray("spec");
-				Map<String, List<String>> contentList = new LinkedHashMap<String, List<String>>(specArr.length());
-
-				for (int i = 0; i < specArr.length(); i++)
-				{
-					JSONObject specObj = specArr.getJSONObject(i);
-					String key = specObj.getString("key");
-					JSONArray valueArr = specObj.getJSONArray("value");
-					List<String> valueList = new ArrayList<String>(valueArr.length());
-
-					for (int j = 0; j < valueArr.length(); j++)
-					{
-						JSONObject valueObj = valueArr.getJSONObject(j);
-						String value = valueObj.getString("value");
-						valueList.add(value);
-					}
-
-					contentList.put(key, valueList);
-				}
-
-				hotelDetail.setSpecification(contentList);
 
 				double latitude = detailObj.getDouble("lat");
 				double longitude = detailObj.getDouble("lng");
@@ -2080,7 +2172,23 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 				mPay.setHotelDetail(hotelDetail);
 
-				if (mIsChangedPay == true)
+				boolean isOnSale = true; // 판매중인 상품인지.
+
+				try
+				{
+					if (detailObj.has("on_sale") == true)
+					{
+						isOnSale = detailObj.getInt("on_sale") == 1;
+					}
+				} catch (Exception e)
+				{
+					ExLog.e(e.toString());
+				}
+
+				if (isOnSale == false)
+				{
+					showStopOnSaleDialog();
+				} else if (mIsChangedPay == true)
 				{
 					mIsChangedPay = false;
 
@@ -2109,6 +2217,104 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				} else
 				{
 					moveToPayStep();
+				}
+			} catch (Exception e)
+			{
+				ExLog.e(e.toString());
+
+				onError(e);
+			} finally
+			{
+				unLockUI();
+			}
+		}
+	};
+
+	private DailyHotelJsonResponseListener mUserSessionBillingPayment = new DailyHotelJsonResponseListener()
+	{
+
+		@Override
+		public void onResponse(String url, JSONObject response)
+		{
+			if (mProgressDialog != null && mProgressDialog.isShowing() == true)
+			{
+				mProgressDialog.dismiss();
+			}
+
+			mProgressDialog = null;
+
+			try
+			{
+				int msg_code = -1;
+
+				if (response == null)
+				{
+					throw new NullPointerException("response == null");
+				}
+
+				//				---------------------------------
+				//				* 기본 포맷 *
+				//				{msg_code : value, msg: value, data : value}
+				//				---------------------------------
+				//				* 성공시 *
+				//				msg_code : 0
+				//				data : PAYMENT_COMPLETE
+				//				---------------------------------
+				//				* 실패시 *
+				//				msg_code : 200
+				//				msg : 에러 메시지
+				//				data : PAYMENT_CANCELED, NOT_AVAILABLE, SOLD_OUT, ACCOUNT_DUPLICATE, INVALID_DATE
+
+				// 해당 화면은 메시지를 넣지 않는다.
+				msg_code = response.getInt("msg_code");
+
+				Intent intent = new Intent();
+				intent.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
+
+				if (msg_code == 0)
+				{
+					activityResulted(CODE_REQUEST_ACTIVITY_PAYMENT, CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE, intent);
+				} else
+				{
+					String data = response.getString("data");
+					String msg = null;
+
+					if (response.has("msg") == true)
+					{
+						msg = response.getString("msg");
+					}
+
+					int resultCode = 0;
+
+					if (TextUtils.isEmpty(data) == true)
+					{
+						resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
+					} else if ("SOLD_OUT".equalsIgnoreCase(data) == true)
+					{
+						resultCode = CODE_RESULT_ACTIVITY_PAYMENT_SOLD_OUT;
+					} else if ("INVALID_DATE".equalsIgnoreCase(data) == true)
+					{
+						resultCode = CODE_RESULT_ACTIVITY_PAYMENT_INVALID_DATE;
+					} else if ("PAYMENT_CANCELED".equalsIgnoreCase(data) == true)
+					{
+						resultCode = CODE_RESULT_ACTIVITY_PAYMENT_CANCELED;
+					} else if ("ACCOUNT_DUPLICATE".equalsIgnoreCase(data) == true)
+					{
+						resultCode = CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_DUPLICATE;
+					} else if ("NOT_AVAILABLE".equalsIgnoreCase(data) == true)
+					{
+						resultCode = CODE_RESULT_ACTIVITY_PAYMENT_NOT_AVAILABLE;
+					} else
+					{
+						if (msg != null)
+						{
+							intent.putExtra(NAME_INTENT_EXTRA_DATA_MESSAGE, msg);
+						}
+
+						resultCode = CODE_RESULT_ACTIVITY_PAYMENT_UNKNOW_ERROR;
+					}
+
+					activityResulted(CODE_REQUEST_ACTIVITY_PAYMENT, resultCode, intent);
 				}
 			} catch (Exception e)
 			{

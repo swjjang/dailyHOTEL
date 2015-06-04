@@ -301,7 +301,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			{
 				GoogleCloudMessaging instance = GoogleCloudMessaging.getInstance(MainActivity.this);
 				String regId = "";
-				
+
 				try
 				{
 					regId = instance.register(GCM_PROJECT_NUMBER);
@@ -326,7 +326,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 				regPushParams.put("user_idx", idx);
 				regPushParams.put("notification_id", regId);
 				regPushParams.put("device_type", GCM_DEVICE_TYPE_ANDROID);
-				
+
 				ExLog.d("params for register push id : " + regPushParams.toString());
 
 				mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_GCM_REGISTER).toString(), regPushParams, mGcmRegisterJsonResponseListener, MainActivity.this));
@@ -404,8 +404,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			fragmentManager.beginTransaction().replace(mContentFrame.getId(), fragment).commitAllowingStateLoss();
 		} catch (IllegalStateException e)
 		{
-			onError();
-
+			// 에러가 나는 경우 앱을 재부팅 시킨다.
+			Util.restartApp(MainActivity.this);
 		}
 
 	}
@@ -418,7 +418,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	 */
 	public void addFragment(Fragment fragment)
 	{
-		fragmentManager.beginTransaction().setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right, R.anim.slide_in_right, R.anim.slide_out_right).add(R.id.content_frame, fragment).addToBackStack(null).commit();
+		fragmentManager.beginTransaction().setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right, R.anim.slide_in_right, R.anim.slide_out_right).add(R.id.content_frame, fragment).addToBackStack(null).commitAllowingStateLoss();
 
 	}
 
@@ -544,6 +544,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			{
 				super.onDrawerClosed(view);
 				supportInvalidateOptionsMenu();
+
+				releaseUiComponent();
 			}
 
 			public void onDrawerOpened(View drawerView)
@@ -552,8 +554,38 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 				supportInvalidateOptionsMenu();
 
+				releaseUiComponent();
+
 				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("menu", "/menu");
 				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestMenuBar", null, null);
+			}
+
+			@Override
+			public void onDrawerStateChanged(int newState)
+			{
+				switch (newState)
+				{
+					case DrawerLayout.STATE_SETTLING:
+					{
+						if (drawerLayout.isDrawerOpen(drawerView) == false)
+						{
+							if (isLockUiComponent() == true)
+							{
+								drawerLayout.closeDrawer(drawerView);
+								return;
+							}
+
+							lockUiComponent();
+						}
+						break;
+					}
+
+					case DrawerLayout.STATE_IDLE:
+						releaseUiComponent();
+						break;
+				}
+
+				super.onDrawerStateChanged(newState);
 			}
 
 			@Override
@@ -563,25 +595,34 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 				{
 					setActionBarRegionEnable(false);
 
-					for (Fragment fragment : fragmentManager.getFragments())
+					fragmentManager = getSupportFragmentManager();
+
+					if (fragmentManager != null)
 					{
-						if (fragment != null && fragment.isVisible() && fragment instanceof HotelMainFragment)
+						for (Fragment fragment : fragmentManager.getFragments())
 						{
-							((HotelMainFragment) fragment).setMenuEnabled(false);
-							break;
+							if (fragment != null && fragment.isVisible() && fragment instanceof HotelMainFragment)
+							{
+								((HotelMainFragment) fragment).setMenuEnabled(false);
+								break;
+							}
 						}
 					}
-
 				} else if (Float.compare(slideOffset, 0.0f) == 0)
 				{
 					setActionBarRegionEnable(true);
 
-					for (Fragment fragment : fragmentManager.getFragments())
+					fragmentManager = getSupportFragmentManager();
+
+					if (fragmentManager != null)
 					{
-						if (fragment != null && fragment.isVisible() && fragment instanceof HotelMainFragment)
+						for (Fragment fragment : fragmentManager.getFragments())
 						{
-							((HotelMainFragment) fragment).setMenuEnabled(true);
-							break;
+							if (fragment != null && fragment.isVisible() && fragment instanceof HotelMainFragment)
+							{
+								((HotelMainFragment) fragment).setMenuEnabled(true);
+								break;
+							}
 						}
 					}
 				}

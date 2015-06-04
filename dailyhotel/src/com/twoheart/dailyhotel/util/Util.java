@@ -119,5 +119,4 @@ public class Util implements Constants
 		alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + 500, pendingIntent);
 		System.exit(0);
 	}
-
 }

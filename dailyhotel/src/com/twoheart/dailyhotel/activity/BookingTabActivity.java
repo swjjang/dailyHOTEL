@@ -11,8 +11,6 @@ package com.twoheart.dailyhotel.activity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.json.JSONArray;
@@ -68,7 +66,7 @@ public class BookingTabActivity extends BaseActivity
 		}
 
 		setContentView(R.layout.activity_booking_tab);
-		setActionBar(R.string.actionbar_title_booking_tab_activity);
+		setActionBar(booking.getHotel_name());
 
 		ArrayList<String> titleList = new ArrayList<String>();
 		titleList.add(getString(R.string.frag_booking_tab_title));
@@ -269,30 +267,7 @@ public class BookingTabActivity extends BaseActivity
 
 				JSONObject wrapJSONObject = new JSONObject(jsonObject.getString("spec"));
 				JSONArray jsonArray = wrapJSONObject.getJSONArray("wrap");
-				int length = jsonArray.length();
-
-				Map<String, List<String>> contentList = new LinkedHashMap<String, List<String>>(length);
-
-				for (int i = 0; i < length; i++)
-				{
-					JSONObject specObj = jsonArray.getJSONObject(i);
-					String key = specObj.getString("key");
-					JSONArray valueArr = specObj.getJSONArray("value");
-
-					int valueLength = valueArr.length();
-					List<String> valueList = new ArrayList<String>(valueLength);
-
-					for (int j = 0; j < valueLength; j++)
-					{
-						JSONObject valueObj = valueArr.getJSONObject(j);
-						String value = valueObj.getString("value");
-						valueList.add(value);
-					}
-
-					contentList.put(key, valueList);
-				}
-
-				mHotelDetail.setSpecification(contentList);
+				mHotelDetail.setSpecification(jsonArray);
 
 				double latitude = jsonObject.getDouble("lat");
 				double longitude = jsonObject.getDouble("lng");

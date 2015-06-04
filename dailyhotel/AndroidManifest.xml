@@ -178,8 +178,10 @@
         </activity>
         <activity
             android:name=".activity.PushLockDialogActivity"
+            android:excludeFromRecents="true"
             android:screenOrientation="portrait"
-            android:theme="@style/TransDialog" >
+            android:taskAffinity="com.twoheart.dailyhotel.popup"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         </activity>
         <activity
             android:name=".activity.ScreenOnPushDialogActivity"

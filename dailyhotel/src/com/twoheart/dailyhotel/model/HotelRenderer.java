@@ -22,10 +22,9 @@ public class HotelRenderer
 	{
 		mContext = context;
 
-		int originalPrice = Integer.parseInt(hotel.getDiscount().replaceAll(",", ""));
 		DecimalFormat comma = new DecimalFormat("###,##0");
 
-		mPrice = "₩" + comma.format(originalPrice);
+		mPrice = "₩" + comma.format(hotel.getDiscount());
 
 		mIconGenerator = new HotelIconGenerator(mContext);
 
