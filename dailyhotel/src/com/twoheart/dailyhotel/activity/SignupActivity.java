@@ -129,13 +129,6 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 			return true;
 	}
 
-	public boolean isValidEmail(String inputStr)
-	{
-		Pattern p = Pattern.compile("^[_a-zA-Z0-9-]+(.[_a-zA-Z0-9-]+)*@(?:\\w+\\.)+\\w+$");
-		Matcher m = p.matcher(inputStr);
-		return m.matches();
-	}
-
 	public boolean isValidPhone(String inputStr)
 	{
 		Pattern p = Pattern.compile("^(01[0|1|6|7|8|9])(\\d{4}|\\d{3})(\\d{4})$");
@@ -164,7 +157,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 			}
 
 			// email check
-			if (!isValidEmail(etEmail.getText().toString()))
+			if (android.util.Patterns.EMAIL_ADDRESS.matcher(etEmail.getText().toString()).matches() == false)
 			{
 				DailyToast.showToast(SignupActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
 				return;

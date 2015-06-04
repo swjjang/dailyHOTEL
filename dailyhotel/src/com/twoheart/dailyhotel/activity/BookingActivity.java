@@ -358,7 +358,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					etReserverEmail.requestFocus();
 
 					DailyToast.showToast(this, R.string.toast_msg_please_input_email, Toast.LENGTH_SHORT);
-				} else if (isValidEmail(buyer.getEmail()) == false)
+				} else if (android.util.Patterns.EMAIL_ADDRESS.matcher(buyer.getEmail()).matches() == false)
 				{
 					etReserverEmail.requestFocus();
 
@@ -1193,13 +1193,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				finish();
 			}
 		}).show();
-	}
-
-	private boolean isValidEmail(String inputStr)
-	{
-		Pattern p = Pattern.compile("^[_a-zA-Z0-9-]+(.[_a-zA-Z0-9-]+)*@(?:\\w+\\.)+\\w+$");
-		Matcher m = p.matcher(inputStr);
-		return m.matches();
 	}
 
 	private void writeLogPaid(Pay pay)
