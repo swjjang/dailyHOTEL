@@ -38,7 +38,7 @@
 
     <!-- Actionbar Titles -->
     <string name="actionbar_title_hotel_list_frag">오늘의 호텔</string>
-    <string name="actionbar_title_booking_list_frag">예약내역</string>
+    <string name="actionbar_title_booking_list_frag">예약 내역</string>
     <string name="actionbar_title_credit_frag">적립금</string>
     <string name="actionbar_title_reg_creditcard">신용카드 추가하기</string>
     <string name="actionbar_title_setting_frag">설정</string>
@@ -120,6 +120,7 @@
     <string name="dialog_btn_text_retry">재시도</string>
     <string name="dialog_btn_text_setting">설정</string>
     <string name="dialog_btn_text_waiting">잠시만요!</string>
+    <string name="dialog_btn_text_dosetting">설정하기</string>
     <string name="dialog_btn_text_logout">로그아웃</string>
     <string name="dialog_btn_text_install">설치</string>
     <string name="dialog_btn_text_yes">예</string>
@@ -128,6 +129,8 @@
     <string name="dialog_notice2">알림</string>
     <string name="dialog_title_payment">결제알림</string>
     <string name="dialog_btn_text_see">보기</string>
+    <string name="dialog_btn_install">설치</string>
+    <string name="dialog_btn_update">업데이트</string>
     <string name="dialog_btn_text_close">닫기</string>
     <string name="dialog_msg_kakao_link">공유받은 호텔이 존재하지 않습니다.</string>
     <string name="dialog_msg_register_creditcard_cancel">신용카드 등록을 취소하시겠습니까?</string>
@@ -136,14 +139,19 @@
     <string name="dialog_msg_payment_creditcard_confirm">본 상품은 특가 예약 상품이므로&lt;br/&gt;결제 완료 후&lt;br/&gt;&lt;b&gt;취소나 교환 및 환불이 불가&lt;/b&gt;합니다.&lt;br/&gt;&lt;br/&gt;\'체크인 시 배정\'의 경우&lt;br/&gt;베드 타입을 보장하지 않으며&lt;/b&gt;&lt;br/&gt;2인이 투숙할 수 있는 객실로 배정됩니다.&lt;br/&gt;&lt;br/&gt;미성년자는 보호자 동반시 투숙 가능합니다.</string>    <string name="dialog_msg_session_expired">세션이 만료되어 재시작합니다.</string>
 	<string name="dialog_msg_processing_payment">결제가 진행 중입니다. 잠시만 기다려 주십시오.</string>
 	<string name="dialog_msg_delete_failed_creditcard">신용카드 삭제를 실패하였습니다.</string>
-	<string name="dialog_msg_delete_booking">이용 완료한 예약 내역을 삭제하시겠습니까?</string>
-	<string name="dialog_msg_failed_delete_booking">예약 내역 삭제를 실패하였습니다.</string>
+	<string name="dialog_msg_delete_booking">이용 완료한 내역을 삭제하시겠습니까?</string>
 	<string name="dialog_msg_changed_pay">객실 상황 변동으로 인하여 가격이 변경되었습니다.\n확인 뒤 결제해주세요.</string>
+	<string name="dialog_title_used_gps">위치 서비스 사용</string>
+	<string name="dialog_msg_used_gps">내 위치 정보를 사용하려면, 단말기의 설정에서 \'위치 서비스\' 사용을 허용해주세요.</string>
+	<string name="dialog_msg_stop_onsale">모든 객실이 예약 완료되었습니다.</string>
+	<string name="dialog_title_googleplayservice">Google Play Services</string>
+	<string name="dialog_msg_install_googleplayservice">맵을 사용하기 위한 Google Play Services의 설치가 필요합니다.</string>
+	<string name="dialog_msg_update_googleplayservice">맵을 사용하기 위한 Google Play Services의 업데이트가 필요합니다.</string>
 
     <!-- Main Drawer Menu Titles -->
     <string name="drawer_menu_pin_title_resrvation">예약</string>
     <string name="drawer_menu_item_title_todays_hotel">오늘의 호텔</string>
-    <string name="drawer_menu_item_title_chk_reservation">예약내역</string>
+    <string name="drawer_menu_item_title_chk_reservation">예약 내역</string>
     <string name="drawer_menu_pin_title_account">계정</string>
     <string name="drawer_menu_item_title_credit">적립금</string>
     <string name="drawer_menu_item_title_reg_credit_card">신용카드등록</string>
@@ -230,9 +238,9 @@
     <string name="frag_booking_no_hotels">예약된 호텔이 없습니다!</string>
     <string name="frag_booking_line">오늘은 멋진 호텔에서\n하루를 보내는게 어때요?</string>
     <string name="frag_booking_btn_login">기존 회원 로그인</string>
-    <string name="frag_booking_wait_account">입금대기</string>
-    <string name="frag_booking_complete_payment">결제완료</string>
-    <string name="frag_booking_use">이용완료</string>
+    <string name="frag_booking_wait_account">입금 대기</string>
+    <string name="frag_booking_complete_payment">결제 완료</string>
+    <string name="frag_booking_use">이용 완료</string>
 
     <!-- Profile Activity -->
     <string name="act_profile_login_acc">로그인 계정</string>

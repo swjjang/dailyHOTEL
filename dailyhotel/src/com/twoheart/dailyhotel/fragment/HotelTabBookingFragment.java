@@ -8,6 +8,8 @@
  */
 package com.twoheart.dailyhotel.fragment;
 
+import java.text.DecimalFormat;
+
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,8 +25,10 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.activity.HotelTabActivity;
 import com.twoheart.dailyhotel.adapter.HotelImageFragmentPagerAdapter;
 import com.twoheart.dailyhotel.model.HotelDetail;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
@@ -41,6 +45,8 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 	private HotelViewPager mViewPager;
 	private LoopCirclePageIndicator mIndicator;
 	private TextView tvBedType, tvAddress, tvPrice, tvDiscount, tvPriceTitle;
+
+	private HotelTabActivity.OnUserActionListener mOnUserActionListener;
 
 	private Handler mHandler;
 	private int mCurrentPage = 0;
@@ -88,14 +94,31 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 		String priceTitle = getString(R.string.frag_hotel_tab_price);
 
 		tvPriceTitle.setText(priceTitle + "");
-		tvDiscount.setText(mHotelDetail.getHotel().getDiscount() + currency);
-		tvPrice.setText(mHotelDetail.getHotel().getPrice() + currency);
 
-		tvPrice.setPaintFlags(tvPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+		DecimalFormat comma = new DecimalFormat("###,##0");
+
+		tvDiscount.setText(comma.format(mHotelDetail.getHotel().getDiscount()) + currency);
+
+		int price = mHotelDetail.getHotel().getPrice();
+
+		if (price <= 0)
+		{
+			tvPrice.setVisibility(View.INVISIBLE);
+
+			tvPrice.setText(null);
+		} else
+		{
+			tvPrice.setVisibility(View.VISIBLE);
+
+			tvPrice.setText(comma.format(price) + currency);
+			tvPrice.setPaintFlags(tvPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+		}
 
 		if (mAdapter == null)
 		{
 			mAdapter = new HotelImageFragmentPagerAdapter(getChildFragmentManager(), mHotelDetail);
+			mAdapter.setOnUserActionListener(mOnUserActionListener);
+
 			mViewPager.setAdapter(mAdapter);
 		} else
 		{
@@ -187,6 +210,11 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 		return false;
 	}
 
+	public void setOnUserActionListener(HotelTabActivity.OnUserActionListener listener)
+	{
+		mOnUserActionListener = listener;
+	}
+
 	public void setHotelDetail(HotelDetail hotelDetail)
 	{
 		if (hotelDetail == null)
@@ -201,9 +229,32 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 		String priceTitle = getString(R.string.frag_hotel_tab_price);
 
 		tvPriceTitle.setText(priceTitle + "");
-		tvDiscount.setText(hotelDetail.getHotel().getDiscount() + currency);
-		tvPrice.setText(hotelDetail.getHotel().getPrice() + currency);
 
-		tvPrice.setPaintFlags(tvPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+		DecimalFormat comma = new DecimalFormat("###,##0");
+		int discount = hotelDetail.getHotel().getDiscount();
+		tvDiscount.setText(comma.format(discount) + currency);
+
+		try
+		{
+			int price = hotelDetail.getHotel().getPrice();
+
+			if (price <= 0)
+			{
+				tvPrice.setVisibility(View.INVISIBLE);
+				tvPrice.setText(null);
+			} else
+			{
+				tvPrice.setVisibility(View.VISIBLE);
+
+				tvPrice.setText(comma.format(price) + currency);
+				tvPrice.setPaintFlags(tvPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+			}
+		} catch (Exception e)
+		{
+			ExLog.d(e.toString());
+
+			tvPrice.setVisibility(View.INVISIBLE);
+			tvPrice.setText(null);
+		}
 	}
 }

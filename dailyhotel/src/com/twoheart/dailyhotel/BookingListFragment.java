@@ -34,6 +34,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.activity.BookingTabActivity;
@@ -42,7 +43,6 @@ import com.twoheart.dailyhotel.activity.PaymentWaitActivity;
 import com.twoheart.dailyhotel.adapter.BookingListAdapter;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
@@ -52,6 +52,7 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListe
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
+import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView;
 
 /**
@@ -464,6 +465,11 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
 				if (length == 0)
 				{
+					if (mAdapter != null)
+					{
+						mAdapter.clear();
+					}
+
 					//예약한 호텔이 없는 경우 
 					mListView.setVisibility(View.GONE);
 					mEmptyLayout.setVisibility(View.VISIBLE);
@@ -530,10 +536,17 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 						bookingArrayList.addAll(usedBookingList);
 					}
 
-					mAdapter = new BookingListAdapter(baseActivity, R.layout.list_row_booking, bookingArrayList);
-					mAdapter.setOnUserActionListener(mOnUserActionListener);
-					mListView.setOnItemClickListener(BookingListFragment.this);
-					mListView.setAdapter(mAdapter);
+					if (mAdapter == null)
+					{
+						mAdapter = new BookingListAdapter(baseActivity, R.layout.list_row_booking, new ArrayList<Booking>());
+						mAdapter.setOnUserActionListener(mOnUserActionListener);
+						mListView.setOnItemClickListener(BookingListFragment.this);
+						mListView.setAdapter(mAdapter);
+					}
+
+					mAdapter.clear();
+					mAdapter.addAll(bookingArrayList);
+					mAdapter.notifyDataSetChanged();
 
 					mListView.setVisibility(View.VISIBLE);
 					mEmptyLayout.setVisibility(View.GONE);
@@ -549,7 +562,6 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 						editor.apply();
 					}
 				}
-
 			} catch (Exception e)
 			{
 				mListView.setVisibility(View.GONE);
@@ -589,13 +601,8 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 				// 해당 화면은 메시지를 넣지 않는다.
 				msg_code = response.getInt("msg_code");
 
-				if (msg_code != 0)
-				{
-					ExLog.d("msg_code : " + msg_code);
-				}
-
 				JSONObject jsonObject = response.getJSONObject("data");
-
+				String message = null;
 				boolean result = false;
 
 				if (jsonObject != null)
@@ -603,16 +610,12 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 					result = jsonObject.getInt("isSuccess") == 1;
 				}
 
+				// 성공 실패 여부는 팝업에서 리스너를 다르게 등록한다. 
+				DialogInterface.OnClickListener onClickListener;
+
 				if (result == true)
 				{
-					// 성공
-					mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_MINE_ALL).toString(), null, mReserveMineJsonResponseListener, baseActivity));
-				} else
-				{
-					unLockUI();
-
-					// 실패 
-					SimpleAlertDialog.build(baseActivity, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_failed_delete_booking), getString(R.string.dialog_btn_text_confirm), new DialogInterface.OnClickListener()
+					onClickListener = new DialogInterface.OnClickListener()
 					{
 						@Override
 						public void onClick(DialogInterface dialog, int which)
@@ -629,8 +632,65 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 							// credit card 요청
 							mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_MINE_ALL).toString(), null, mReserveMineJsonResponseListener, baseActivity));
 						}
+					};
+				} else
+				{
+					onClickListener = new DialogInterface.OnClickListener()
+					{
+						@Override
+						public void onClick(DialogInterface dialog, int which)
+						{
+							BaseActivity baseActivity = (BaseActivity) getActivity();
 
-					}).show();
+							if (baseActivity == null)
+							{
+								return;
+							}
+
+							lockUI();
+
+							// credit card 요청
+							mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_MINE_ALL).toString(), null, mReserveMineJsonResponseListener, baseActivity));
+						}
+					};
+				}
+
+				switch (msg_code)
+				{
+					case 0:
+						mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_MINE_ALL).toString(), null, mReserveMineJsonResponseListener, baseActivity));
+						break;
+
+					// Toast
+					case 100:
+					{
+						message = response.getString("msg");
+
+						if (TextUtils.isEmpty(message) == false)
+						{
+							DailyToast.showToast(baseActivity, message, Toast.LENGTH_SHORT);
+						}
+
+						mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_MINE_ALL).toString(), null, mReserveMineJsonResponseListener, baseActivity));
+						break;
+					}
+
+					// Popup
+					case 200:
+					{
+						message = response.getString("msg");
+
+						if (TextUtils.isEmpty(message) == false)
+						{
+							unLockUI();
+
+							SimpleAlertDialog.build(baseActivity, getString(R.string.dialog_notice2), message, getString(R.string.dialog_btn_text_confirm), onClickListener).show();
+						} else
+						{
+							mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_MINE_ALL).toString(), null, mReserveMineJsonResponseListener, baseActivity));
+						}
+						break;
+					}
 				}
 			} catch (Exception e)
 			{

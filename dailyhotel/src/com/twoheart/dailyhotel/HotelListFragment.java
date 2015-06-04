@@ -237,17 +237,20 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 			switch (mHotelViewType)
 			{
 				case LIST:
-					setVisibility(HOTEL_VIEW_TYPE.LIST);
+					setVisibility(HOTEL_VIEW_TYPE.LIST, isCurrentPage);
 					break;
 
 				case MAP:
-					setVisibility(HOTEL_VIEW_TYPE.MAP);
+					setVisibility(HOTEL_VIEW_TYPE.MAP, isCurrentPage);
 
-					mHotelListMapFragment.setUserActionListener(mUserActionListener);
-
-					if (isCurrentPage == true)
+					if (mHotelListMapFragment != null)
 					{
-						mHotelListMapFragment.setHotelList(mHotelListAdapter.getData(), mSaleTime, false);
+						mHotelListMapFragment.setUserActionListener(mUserActionListener);
+
+						if (isCurrentPage == true && mHotelListAdapter != null)
+						{
+							mHotelListMapFragment.setHotelList(mHotelListAdapter.getData(), mSaleTime, false);
+						}
 					}
 					break;
 
@@ -257,7 +260,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		}
 	}
 
-	private void setVisibility(HOTEL_VIEW_TYPE type)
+	private void setVisibility(HOTEL_VIEW_TYPE type, boolean isCurrentPage)
 	{
 		switch (type)
 		{
@@ -267,7 +270,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 				if (mHotelListMapFragment != null)
 				{
-					getChildFragmentManager().beginTransaction().remove(mHotelListMapFragment).commit();
+					getChildFragmentManager().beginTransaction().remove(mHotelListMapFragment).commitAllowingStateLoss();
 					mMapLayout.removeAllViews();
 					mMapLayout.setMapFragment(null);
 					mHotelListMapFragment = null;
@@ -283,13 +286,16 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 				mEmptyView.setVisibility(View.GONE);
 				mMapLayout.setVisibility(View.VISIBLE);
 
-				if (mHotelListMapFragment == null)
+				if (isCurrentPage == true)
 				{
-					mHotelListMapFragment = new HotelListMapFragment();
-					getChildFragmentManager().beginTransaction().add(mMapLayout.getId(), mHotelListMapFragment).commitAllowingStateLoss();
-				}
+					if (mHotelListMapFragment == null)
+					{
+						mHotelListMapFragment = new HotelListMapFragment();
+						getChildFragmentManager().beginTransaction().add(mMapLayout.getId(), mHotelListMapFragment).commitAllowingStateLoss();
+					}
 
-				mMapLayout.setMapFragment(mHotelListMapFragment);
+					mMapLayout.setMapFragment(mHotelListMapFragment);
+				}
 
 				//				mDailyFloatingActionButton.setVisibility(View.VISIBLE);
 				//				mDailyFloatingActionButton.setImageResource(R.drawable.img_ic_list_mini);
@@ -304,6 +310,11 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 				mPullToRefreshLayout.setVisibility(View.INVISIBLE);
 				break;
 		}
+	}
+
+	private void setVisibility(HOTEL_VIEW_TYPE type)
+	{
+		setVisibility(type, true);
 	}
 
 	public void setSaleTime(SaleTime saleTime)
@@ -605,16 +616,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 					setVisibility(HOTEL_VIEW_TYPE.GONE);
 				} else
 				{
-					// 추후 개수는 화면에 보이는 리스트 아이템의 개수에 따라서 다르다. 
-					// FooterView
-					//					if (length == 1)
-					//					{
-					//						mFooterView.setVisibility(View.GONE);
-					//					} else
-					//					{
-					//						mFooterView.setVisibility(View.VISIBLE);
-					//					}
-
 					JSONObject jsonObject;
 
 					ArrayList<Hotel> hotelList = new ArrayList<Hotel>(length);
@@ -624,22 +625,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 						jsonObject = hotelJSONArray.getJSONObject(i);
 
 						int seq = jsonObject.getInt("seq");
-
-						// 정가가 0원인 경우는 리스트에서 제거한다.
-						try
-						{
-							int price = Integer.parseInt(jsonObject.getString("price"));
-
-							if (price <= 0)
-							{
-								continue;
-							}
-						} catch (Exception e)
-						{
-							ExLog.d(e.toString());
-
-							continue;
-						}
 
 						if (seq >= 0)
 						{

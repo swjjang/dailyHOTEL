@@ -34,6 +34,7 @@
             android:ems="10"
             android:hint="@string/act_forgot_pwd_email"
             android:imeActionId="@+id/btn_forgot_pwd"
+            android:inputType="textEmailAddress"
             android:maxLength="50"
             android:paddingLeft="10dp"
             android:singleLine="true"

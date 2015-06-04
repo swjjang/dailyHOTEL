@@ -295,7 +295,16 @@ public class CirclePageIndicator extends View implements PageIndicator {
 
             case MotionEvent.ACTION_MOVE: {
                 final int activePointerIndex = MotionEventCompat.findPointerIndex(ev, mActivePointerId);
-                final float x = MotionEventCompat.getX(ev, activePointerIndex);
+                float x;
+                		
+                try
+                {
+                	x = MotionEventCompat.getX(ev, activePointerIndex);
+                }catch(Exception e)
+                {
+                	x = MotionEventCompat.getX(ev, 0);
+                }
+                
                 final float deltaX = x - mLastMotionX;
 
                 if (!mIsDragging) {
@@ -342,7 +351,15 @@ public class CirclePageIndicator extends View implements PageIndicator {
 
             case MotionEventCompat.ACTION_POINTER_DOWN: {
                 final int index = MotionEventCompat.getActionIndex(ev);
-                mLastMotionX = MotionEventCompat.getX(ev, index);
+                
+                try
+                {
+                	mLastMotionX = MotionEventCompat.getX(ev, index);
+                }catch(Exception e)
+                {
+                	mLastMotionX = MotionEventCompat.getX(ev, 0);
+                }
+                
                 mActivePointerId = MotionEventCompat.getPointerId(ev, index);
                 break;
             }
@@ -354,7 +371,14 @@ public class CirclePageIndicator extends View implements PageIndicator {
                     final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
                     mActivePointerId = MotionEventCompat.getPointerId(ev, newPointerIndex);
                 }
-                mLastMotionX = MotionEventCompat.getX(ev, MotionEventCompat.findPointerIndex(ev, mActivePointerId));
+                
+                try
+                {
+                	mLastMotionX = MotionEventCompat.getX(ev, MotionEventCompat.findPointerIndex(ev, mActivePointerId));
+                }catch(Exception e)
+                {
+                	mLastMotionX = MotionEventCompat.getX(ev, 0);
+                }
                 break;
         }
 

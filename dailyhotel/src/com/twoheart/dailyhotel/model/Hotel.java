@@ -15,8 +15,8 @@ public class Hotel implements Parcelable
 {
 	private String image;
 	private String name;
-	private String price;
-	private String discount;
+	private int price;
+	private int discount;
 	private String address;
 	private HotelGrade category;
 	private int idx;
@@ -72,7 +72,7 @@ public class Hotel implements Parcelable
 		readFromParcel(in);
 	}
 
-	public Hotel(String image, String name, String price, String discount, String address, String category, int idx, int availableRoom, int sequence, String bedType)
+	public Hotel(String image, String name, int price, int discount, String address, String category, int idx, int availableRoom, int sequence, String bedType)
 	{
 		this.image = image;
 		this.name = name;
@@ -91,8 +91,8 @@ public class Hotel implements Parcelable
 	{
 		dest.writeString(image);
 		dest.writeString(name);
-		dest.writeString(price);
-		dest.writeString(discount);
+		dest.writeInt(price);
+		dest.writeInt(discount);
 		dest.writeString(address);
 		dest.writeSerializable(category);
 		dest.writeInt(idx);
@@ -107,8 +107,8 @@ public class Hotel implements Parcelable
 	{
 		this.image = in.readString();
 		this.name = in.readString();
-		this.price = in.readString();
-		this.discount = in.readString();
+		this.price = in.readInt();
+		this.discount = in.readInt();
 		this.address = in.readString();
 		this.category = (HotelGrade) in.readSerializable();
 		this.idx = in.readInt();
@@ -164,22 +164,22 @@ public class Hotel implements Parcelable
 		this.name = name;
 	}
 
-	public String getPrice()
+	public int getPrice()
 	{
 		return price;
 	}
 
-	public void setPrice(String price)
+	public void setPrice(int price)
 	{
 		this.price = price;
 	}
 
-	public String getDiscount()
+	public int getDiscount()
 	{
 		return discount;
 	}
 
-	public void setDiscount(String discount)
+	public void setDiscount(int discount)
 	{
 		this.discount = discount;
 	}
@@ -255,8 +255,8 @@ public class Hotel implements Parcelable
 		try
 		{
 			name = jsonObject.getString("name");
-			price = jsonObject.getString("price");
-			discount = jsonObject.getString("discount");
+			price = Integer.parseInt(jsonObject.getString("price"));
+			discount = Integer.parseInt(jsonObject.getString("discount"));
 			address = jsonObject.getString("addr_summary");
 			category = HotelGrade.valueOf(jsonObject.getString("cat"));
 			idx = jsonObject.getInt("idx");

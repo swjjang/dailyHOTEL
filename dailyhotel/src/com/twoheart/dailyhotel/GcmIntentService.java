@@ -76,9 +76,8 @@ public class GcmIntentService extends IntentService implements Constants
 		mIsBadge = false;
 		mIsSound = true;
 
-		if (!extras.isEmpty())
+		if (extras != null && !extras.isEmpty())
 		{
-
 			try
 			{
 				// 중복 체크를 위한 값 
@@ -177,22 +176,20 @@ public class GcmIntentService extends IntentService implements Constants
 							break;
 						}
 				}
-				ExLog.e("GCM_MESSAGE = " + jsonMsg.toString());
-			} catch (JSONException e)
+			} catch (Exception e)
 			{
 				ExLog.e(e.toString());
 			}
 
 		}
+
 		GcmBroadcastReceiver.completeWakefulIntent(intent);
 	}
 
 	public void sendPush(String messageType, int type, String msg)
 	{
-		ExLog.d("GcmIntentService = sendPush");
 		if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType))
 		{
-
 			if (isScreenOn(this) && type != -1)
 			{ // 데일리호텔 앱이 켜져있는경우.
 

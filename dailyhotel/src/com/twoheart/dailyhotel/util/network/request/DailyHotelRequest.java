@@ -176,11 +176,12 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
 		return decodeUrl;
 	}
 
-	//			public static void makeUrlEncoder()
-	//			{
-	//				String test = null;
-	//				
-	//				test = DailyHotelRequest.getUrlEncoder("api/reserv/mine/hidden");
+	//	public static void makeUrlEncoder()
+	//	{
+	//		String test = null;
+	//
+	//		test = DailyHotelRequest.getUrlEncoder("api/reserv/session/billing/payment");
+	//		test = DailyHotelRequest.getUrlEncoder("api/reserv/mine/hidden");
 	//			
 	//			test = DailyHotelRequest.getUrlEncoder("api/reserv/mine/all");
 	//			test = DailyHotelRequest.getUrlEncoder("api/common/datetime");
@@ -250,5 +251,5 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
 	//		test = DailyHotelRequest.getUrlEncoder("http://policies.dailyhotel.co.kr/terms/");
 	//		test = DailyHotelRequest.getUrlEncoder("http://policies.dailyhotel.co.kr/about/");
 	//		
-	//			}
+	//	}
 }

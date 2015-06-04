@@ -90,120 +90,79 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 
 		if (isAirplainMode && !isNetworkAvailable)
 		{
-
-			OnClickListener posListener = new DialogInterface.OnClickListener()
-			{
-				@Override
-				public void onClick(DialogInterface dialog, int which)
-				{
-					if (VolleyHttpClient.isAvailableNetwork())
-					{
-						moveToLoginStep();
-					} else
-					{
-						mHandler.postDelayed(new Runnable()
-						{
-							@Override
-							public void run()
-							{
-								alertDlg.show();
-							}
-						}, 100);
-					}
-				}
-			};
-
-			OnClickListener negaListener = new DialogInterface.OnClickListener()
-			{
-				@Override
-				public void onClick(DialogInterface dialog, int which)
-				{
-					startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-					dialog.dismiss();
-				}
-			};
-
-			OnKeyListener keyListener = new OnKeyListener()
-			{
-				@Override
-				public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event)
-				{
-					if (keyCode == KeyEvent.KEYCODE_BACK)
-					{
-						dialog.dismiss();
-						finish();
-						return true;
-					}
-					return false;
-				}
-			};
-
-			SimpleAlertDialog.build(this, getString(R.string.dialog_btn_text_waiting), getString(R.string.dialog_msg_network_please_off_airplain), getString(R.string.dialog_btn_text_confirm), getString(R.string.dialog_btn_text_setting), posListener, negaListener).setOnKeyListener(keyListener).show();
-		}
-
-		else if (!isAirplainMode && !isNetworkAvailable)
+			showDisabledNetworkPopup();
+		} else if (!isAirplainMode && !isNetworkAvailable)
 		{
-
-			if (alertDlg == null)
-			{
-
-				OnClickListener posListener = new DialogInterface.OnClickListener()
-				{
-					@Override
-					public void onClick(DialogInterface dialog, int which)
-					{
-						if (VolleyHttpClient.isAvailableNetwork())
-						{
-							moveToLoginStep();
-						} else
-						{
-							mHandler.postDelayed(new Runnable()
-							{
-								@Override
-								public void run()
-								{
-									alertDlg.show();
-								}
-							}, 100);
-						}
-					}
-				};
-
-				OnClickListener negaListener = new DialogInterface.OnClickListener()
-				{
-					@Override
-					public void onClick(DialogInterface dialog, int which)
-					{
-						startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-						dialog.dismiss();
-					}
-				};
-
-				OnKeyListener keyListener = new OnKeyListener()
-				{
-					@Override
-					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event)
-					{
-						if (keyCode == KeyEvent.KEYCODE_BACK)
-						{
-							dialog.dismiss();
-							finish();
-							return true;
-						}
-						return false;
-					}
-				};
-
-				alertDlg = SimpleAlertDialog.build(this, getString(R.string.dialog_btn_text_waiting), getString(R.string.dialog_msg_network_unstable_retry_or_set_wifi), getString(R.string.dialog_btn_text_retry), getString(R.string.dialog_btn_text_setting), posListener, negaListener).setOnKeyListener(keyListener).create();
-			}
-
-			alertDlg.show();
-
+			showDisabledNetworkPopup();
 		} else
 		{
 			moveToLoginStep();
 		}
+	}
 
+	private void showDisabledNetworkPopup()
+	{
+		if (alertDlg != null)
+		{
+			if (alertDlg.isShowing() == true)
+			{
+				alertDlg.dismiss();
+			}
+
+			alertDlg = null;
+		}
+
+		OnClickListener posListener = new DialogInterface.OnClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				alertDlg.dismiss();
+
+				if (VolleyHttpClient.isAvailableNetwork())
+				{
+					moveToLoginStep();
+				} else
+				{
+					mHandler.postDelayed(new Runnable()
+					{
+						@Override
+						public void run()
+						{
+							showDisabledNetworkPopup();
+						}
+					}, 100);
+				}
+			}
+		};
+
+		OnClickListener negaListener = new DialogInterface.OnClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+				alertDlg.dismiss();
+			}
+		};
+
+		OnKeyListener keyListener = new OnKeyListener()
+		{
+			@Override
+			public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event)
+			{
+				if (keyCode == KeyEvent.KEYCODE_BACK)
+				{
+					alertDlg.dismiss();
+					finish();
+					return true;
+				}
+				return false;
+			}
+		};
+
+		alertDlg = SimpleAlertDialog.build(this, getString(R.string.dialog_btn_text_waiting), getString(R.string.dialog_msg_network_unstable_retry_or_set_wifi), getString(R.string.dialog_btn_text_retry), getString(R.string.dialog_btn_text_setting), posListener, negaListener).setOnKeyListener(keyListener).create();
+		alertDlg.show();
 	}
 
 	private void startSplashLoad()
