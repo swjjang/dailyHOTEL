@@ -302,7 +302,7 @@ public class CirclePageIndicator extends View implements PageIndicator {
                 	x = MotionEventCompat.getX(ev, activePointerIndex);
                 }catch(Exception e)
                 {
-                	x = MotionEventCompat.getX(ev, 0);
+                	x = ev.getX();
                 }
                 
                 final float deltaX = x - mLastMotionX;
@@ -357,7 +357,7 @@ public class CirclePageIndicator extends View implements PageIndicator {
                 	mLastMotionX = MotionEventCompat.getX(ev, index);
                 }catch(Exception e)
                 {
-                	mLastMotionX = MotionEventCompat.getX(ev, 0);
+                	mLastMotionX = ev.getX();
                 }
                 
                 mActivePointerId = MotionEventCompat.getPointerId(ev, index);
@@ -377,7 +377,7 @@ public class CirclePageIndicator extends View implements PageIndicator {
                 	mLastMotionX = MotionEventCompat.getX(ev, MotionEventCompat.findPointerIndex(ev, mActivePointerId));
                 }catch(Exception e)
                 {
-                	mLastMotionX = MotionEventCompat.getX(ev, 0);
+                	mLastMotionX = ev.getX();
                 }
                 break;
         }

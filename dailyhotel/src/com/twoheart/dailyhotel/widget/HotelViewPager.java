@@ -7,7 +7,9 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-public class HotelViewPager extends ViewPager
+import com.twoheart.dailyhotel.ui.LoopViewPager;
+
+public class HotelViewPager extends LoopViewPager
 {
 	public HotelViewPager(Context context)
 	{
