@@ -172,6 +172,17 @@ public class HotelListMapFragment extends
 	}
 
 	@Override
+	public void onDestroyView()
+	{
+		if (mLoadingDialog != null)
+		{
+			mLoadingDialog.close();
+		}
+
+		super.onDestroyView();
+	}
+
+	@Override
 	public boolean onClusterItemClick(HotelClusterItem item, Marker marker)
 	{
 		if (getActivity() == null)
@@ -528,39 +539,31 @@ public class HotelListMapFragment extends
 			}
 		}
 
-		//		// 매번 마커 터치시에 좌표를 새로 계산한다.
-		//		Comparator<HotelListViewItem> comparator = new Comparator<HotelListViewItem>()
-		//		{
-		//			final LatLng latlng = new LatLng(37.23945, 131.8689);
-		//			
-		//			public int compare(HotelListViewItem o1, HotelListViewItem o2)
-		//			{
-		//				Hotel item01 = o1.getItem();
-		//				Hotel item02 = o2.getItem();
-		//
-		//				Location location = new Location("독도");
-		//				location.setLatitude(latlng.latitude);
-		//				location.setLongitude(latlng.longitude);
-		//				
-		//				Location location1 = new Location("item01");
-		//				location1.setLatitude(item01.mLatitude);
-		//				location1.setLongitude(item01.mLongitude);
-		//				
-		//				Location location2 = new Location("item02");
-		//				location2.setLatitude(item02.mLatitude);
-		//				location2.setLongitude(item02.mLongitude);
-		//				
-		//				float distance1 = location.distanceTo(location1);
-		//				float distance2 = location.distanceTo(location2);
-		//				
-		//				return Float.compare(distance1, distance2);
-		//			}
-		//		};
-		//
-		//		Collections.sort(arrangeList, comparator);
+		// 중복된 위치에 있는 호텔들은 위해서 소팅한다.
+		Comparator<HotelListViewItem> comparator = new Comparator<HotelListViewItem>()
+		{
+			final LatLng latlng = new LatLng(37.23945, 131.8689);
+
+			public int compare(HotelListViewItem o1, HotelListViewItem o2)
+			{
+				Hotel item01 = o1.getItem();
+				Hotel item02 = o2.getItem();
+
+				float[] results1 = new float[3];
+				Location.distanceBetween(latlng.latitude, latlng.longitude, item01.mLatitude, item01.mLongitude, results1);
+
+				float[] results2 = new float[3];
+				Location.distanceBetween(latlng.latitude, latlng.longitude, item02.mLatitude, item02.mLongitude, results2);
+
+				return Float.compare(results1[0], results2[0]);
+			}
+		};
+
+		Collections.sort(arrangeList, comparator);
 
 		size = arrangeList.size();
 
+		// 중복된 호텔들은 낮은 가격을 노출하도록 한다.
 		if (size > 1)
 		{
 			Hotel item01 = null;

@@ -57,6 +57,11 @@ public class LoadingDialog
 
 	public boolean isVisible()
 	{
+		if (mDialog == null)
+		{
+			return false;
+		}
+
 		return mDialog.isShowing();
 	}
 
@@ -64,8 +69,10 @@ public class LoadingDialog
 	{
 		mHandler.removeMessages(0);
 
-		if (!mDialog.isShowing())
+		if (mDialog != null && mDialog.isShowing() == false)
+		{
 			mDialog.show();
+		}
 	}
 
 	public void hide()
@@ -79,7 +86,7 @@ public class LoadingDialog
 
 	public void close()
 	{
-		if (mDialog.isShowing() == true)
+		if (mDialog != null && mDialog.isShowing() == true)
 		{
 			mDialog.dismiss();
 		}
