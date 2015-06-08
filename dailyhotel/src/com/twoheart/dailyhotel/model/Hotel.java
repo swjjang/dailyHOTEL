@@ -29,26 +29,64 @@ public class Hotel implements Parcelable
 
 	public enum HotelGrade
 	{
-		biz(R.string.grade_biz, R.color.grade_hotel), //
-		hostel(R.string.grade_hostel, R.color.grade_hotel), //
-		grade1(R.string.grade_1, R.color.grade_hotel),
-		grade2(R.string.grade_2, R.color.grade_hotel),
-		grade3(R.string.grade_3, R.color.grade_hotel),
-		boutique(R.string.grade_boutique, R.color.grade_boutique),
-		residence(R.string.grade_residence, R.color.grade_residence),
-		resort(R.string.grade_resort, R.color.grade_resort_pension_condo),
-		pension(R.string.grade_pension, R.color.grade_resort_pension_condo),
-		condo(R.string.grade_condo, R.color.grade_resort_pension_condo),
-		special(R.string.grade_special, R.color.grade_special),
-		etc(R.string.grade_not_yet, R.color.grade_not_yet);
+		biz(
+				R.string.grade_biz,
+				R.color.grade_hotel,
+				R.drawable.bg_hotel_price_055870), //
+		hostel(
+				R.string.grade_hostel,
+				R.color.grade_hotel,
+				R.drawable.bg_hotel_price_055870), //
+		grade1(
+				R.string.grade_1,
+				R.color.grade_hotel,
+				R.drawable.bg_hotel_price_055870),
+		grade2(
+				R.string.grade_2,
+				R.color.grade_hotel,
+				R.drawable.bg_hotel_price_055870),
+		grade3(
+				R.string.grade_3,
+				R.color.grade_hotel,
+				R.drawable.bg_hotel_price_055870),
+		boutique(
+				R.string.grade_boutique,
+				R.color.grade_boutique,
+				R.drawable.bg_hotel_price_9f2d58),
+		residence(
+				R.string.grade_residence,
+				R.color.grade_residence,
+				R.drawable.bg_hotel_price_407f67),
+		resort(
+				R.string.grade_resort,
+				R.color.grade_resort_pension_condo,
+				R.drawable.bg_hotel_price_cf8d14),
+		pension(
+				R.string.grade_pension,
+				R.color.grade_resort_pension_condo,
+				R.drawable.bg_hotel_price_cf8d14),
+		condo(
+				R.string.grade_condo,
+				R.color.grade_resort_pension_condo,
+				R.drawable.bg_hotel_price_cf8d14),
+		special(
+				R.string.grade_special,
+				R.color.grade_special,
+				R.drawable.bg_hotel_price_ab380a),
+		etc(
+				R.string.grade_not_yet,
+				R.color.grade_not_yet,
+				R.drawable.bg_hotel_price_808080);
 
 		private int mNameResId;
 		private int mColorResId;
+		private int mMarkerResId;
 
-		private HotelGrade(int nameResId, int colorResId)
+		private HotelGrade(int nameResId, int colorResId, int markerResId)
 		{
 			mNameResId = nameResId;
 			mColorResId = colorResId;
+			mMarkerResId = markerResId;
 		}
 
 		public String getName(Context context)
@@ -59,6 +97,11 @@ public class Hotel implements Parcelable
 		public int getColorResId()
 		{
 			return mColorResId;
+		}
+
+		public int getMarkerResId()
+		{
+			return mMarkerResId;
 		}
 	};
 

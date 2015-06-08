@@ -2,8 +2,6 @@ package com.twoheart.dailyhotel.activity;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -89,7 +87,7 @@ public class ForgotPwdActivity extends BaseActivity implements Constants, OnClic
 				return;
 			}
 
-			else if (!isValidEmail(mEmail))
+			else if (android.util.Patterns.EMAIL_ADDRESS.matcher(mEmail).matches() == false)
 			{
 				releaseUiComponent();
 
@@ -105,13 +103,6 @@ public class ForgotPwdActivity extends BaseActivity implements Constants, OnClic
 
 			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_CHECK_EMAIL).toString(), params, mUserCheckEmailJsonResponseListener, this));
 		}
-	}
-
-	public boolean isValidEmail(String inputStr)
-	{
-		Pattern p = Pattern.compile("^(?:\\w+\\.?)*\\w+@(?:\\w+\\.)+\\w+$");
-		Matcher m = p.matcher(inputStr);
-		return m.matches();
 	}
 
 	@Override

@@ -212,7 +212,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 
 						if (isInstalledGooglePlayServices == 1)
 						{
-							item.setIcon(R.drawable.img_ic_list_mini_pink);
+							item.setIcon(R.drawable.actionbar_ic_picture);
 							item.setTitle(getString(R.string.label_list));
 
 							if (mUserActionListener != null)
@@ -223,7 +223,7 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 						break;
 
 					case MAP:
-						item.setIcon(R.drawable.img_ic_map_mini_pink);
+						item.setIcon(R.drawable.actionbar_ic_map);
 						item.setTitle(getString(R.string.label_map));
 
 						if (mUserActionListener != null)
