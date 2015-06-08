@@ -24,6 +24,7 @@ import com.twoheart.dailyhotel.R;
 
 public class LoadingDialog
 {
+	private BaseActivity mActivity;
 	private Dialog mDialog;
 	private Handler mHandler = new Handler()
 	{
@@ -37,8 +38,10 @@ public class LoadingDialog
 		}
 	};
 
-	public LoadingDialog(final BaseActivity activity)
+	public LoadingDialog(BaseActivity activity)
 	{
+		mActivity = activity;
+
 		mDialog = new Dialog(activity, R.style.TransDialog);
 		ProgressBar pb = new ProgressBar(activity);
 		LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -50,7 +53,7 @@ public class LoadingDialog
 			public void onCancel(DialogInterface dialog)
 			{
 				hide();
-				activity.onBackPressed();
+				mActivity.onBackPressed();
 			}
 		});
 	}
@@ -67,6 +70,11 @@ public class LoadingDialog
 
 	public void show()
 	{
+		if (mActivity == null || mActivity.isFinishing() == true)
+		{
+			return;
+		}
+
 		mHandler.removeMessages(0);
 
 		if (mDialog != null && mDialog.isShowing() == false)

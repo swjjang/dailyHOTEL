@@ -395,7 +395,10 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 		{
 			if (GooglePlayServicesUtil.isUserRecoverableError(resCode))
 			{
-				GooglePlayServicesUtil.getErrorDialog(resCode, this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
+				if (isFinishing() == false)
+				{
+					GooglePlayServicesUtil.getErrorDialog(resCode, this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
+				}
 			} else
 			{
 				DailyToast.showToast(this, R.string.toast_msg_is_not_available_google_service, Toast.LENGTH_LONG);

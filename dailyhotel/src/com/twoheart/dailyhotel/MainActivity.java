@@ -173,11 +173,11 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			{
 				VolleyHttpClient.destroyCookie();
 			}
-		}catch(Exception e)
+		} catch (Exception e)
 		{
 			ExLog.d(e.toString());
 		}
-		
+
 		// 스플래시 화면을 띄운다
 
 		startActivityForResult(new Intent(this, SplashActivity.class), CODE_REQUEST_ACTIVITY_SPLASH);
@@ -281,7 +281,10 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		{
 			if (GooglePlayServicesUtil.isUserRecoverableError(resCode))
 			{
-				GooglePlayServicesUtil.getErrorDialog(resCode, this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
+				if (isFinishing() == false)
+				{
+					GooglePlayServicesUtil.getErrorDialog(resCode, this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
+				}
 			} else
 			{
 				DailyToast.showToast(this, R.string.toast_msg_is_not_available_google_service, Toast.LENGTH_LONG);

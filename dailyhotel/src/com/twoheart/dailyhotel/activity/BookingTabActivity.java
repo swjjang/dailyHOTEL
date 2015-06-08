@@ -240,6 +240,11 @@ public class BookingTabActivity extends BaseActivity
 
 						case 200:
 						{
+							if (isFinishing() == true)
+							{
+								return;
+							}
+
 							String msg = response.getString("");
 							AlertDialog alertDlg = SimpleAlertDialog.build(BookingTabActivity.this, null, msg, getString(R.string.dialog_btn_text_confirm), null, null, null).create();
 							alertDlg.show();

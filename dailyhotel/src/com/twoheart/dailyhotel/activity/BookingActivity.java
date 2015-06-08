@@ -381,6 +381,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			} //호텔 가격이 xx 이하인 이벤트 호텔에서는 적립금 사용을 못하게 막음. 
 			else if (mPay.isSaleCredit() && (mPay.getOriginalPrice() <= DEFAULT_AVAILABLE_RESERVES) && Integer.parseInt(mPay.getCredit().getBonus().replaceAll(",", "")) != 0)
 			{
+				if (isFinishing() == true)
+				{
+					return;
+				}
+
 				v.setClickable(false);
 				v.setEnabled(false);
 
@@ -592,6 +597,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 		if (mPay.getType() == Pay.Type.EASY_CARD)
 		{
+			if (isFinishing() == true)
+			{
+				return;
+			}
+
 			if (mFinalCheckDialog != null && mFinalCheckDialog.isShowing() == true)
 			{
 				mFinalCheckDialog.dismiss();
@@ -974,6 +984,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		{
 			case R.id.action_call:
 			{
+				if (isFinishing() == true)
+				{
+					return super.onOptionsItemSelected(item);
+				}
+
 				if (isLockUiComponent(true) == true)
 				{
 					return super.onOptionsItemSelected(item);
@@ -1070,6 +1085,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 		if (null != mFinalCheckDialog)
 		{
+			if (isFinishing() == true)
+			{
+				return;
+			}
+
 			mFinalCheckDialog.setOnDismissListener(new OnDismissListener()
 			{
 				@Override
@@ -1088,6 +1108,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 	private void showFinalCheckDialog()
 	{
+		if (isFinishing() == true)
+		{
+			return;
+		}
+
 		if (mFinalCheckDialog != null)
 		{
 			mFinalCheckDialog.cancel();
@@ -1182,6 +1207,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 	private void showStopOnSaleDialog()
 	{
+		if (isFinishing() == true)
+		{
+			return;
+		}
+
 		getPaymentConfirmDialog(DIALOG_CONFIRM_STOP_ONSALE, new OnClickListener()
 		{
 			@Override
@@ -1255,6 +1285,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		@Override
 		public void onClick(View widget)
 		{
+			if (isFinishing() == true)
+			{
+				return;
+			}
+
 			if (isLockUiComponent(true) == true)
 			{
 				return;

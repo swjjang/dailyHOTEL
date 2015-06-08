@@ -365,6 +365,11 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 			return 1;
 		} else
 		{
+			if (activity.isFinishing() == true)
+			{
+				return -1;
+			}
+
 			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
 
 			// set dialog message
