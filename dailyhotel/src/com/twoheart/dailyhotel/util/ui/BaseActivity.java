@@ -404,8 +404,6 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 		}
 
 		unLockUI();
-		mLockUI.close();
-		mLockUI = null;
 
 		super.onPause();
 	}
