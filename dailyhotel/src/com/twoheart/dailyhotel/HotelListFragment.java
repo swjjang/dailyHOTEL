@@ -39,6 +39,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.FrameLayout;
 
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.adapter.HotelListAdapter;
@@ -55,7 +56,6 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListe
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
-import com.twoheart.dailyhotel.util.ui.HotelMapLayout;
 import com.twoheart.dailyhotel.widget.DailyFloatingActionButton;
 import com.twoheart.dailyhotel.widget.DailyHotelHeaderTransformer;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView;
@@ -74,7 +74,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	private View mEmptyView;
 	//	private View mFooterView; // FooterView
 
-	private HotelMapLayout mMapLayout;
+	private FrameLayout mMapLayout;
 	private HotelListMapFragment mHotelListMapFragment;
 	private HOTEL_VIEW_TYPE mHotelViewType;
 	private String mSelectedRegion;
@@ -108,7 +108,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 		mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
 		mEmptyView = view.findViewById(R.id.emptyView);
-		mMapLayout = (HotelMapLayout) view.findViewById(R.id.hotelMapLayout);
+		mMapLayout = (FrameLayout) view.findViewById(R.id.hotelMapLayout);
 
 		//		mHotelListMapFragment = (HotelListMapFragment) getChildFragmentManager().findFragmentById(R.id.hotelMapFragment);
 
@@ -272,7 +272,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 				{
 					getChildFragmentManager().beginTransaction().remove(mHotelListMapFragment).commitAllowingStateLoss();
 					mMapLayout.removeAllViews();
-					mMapLayout.setMapFragment(null);
 					mHotelListMapFragment = null;
 				}
 
@@ -293,8 +292,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 						mHotelListMapFragment = new HotelListMapFragment();
 						getChildFragmentManager().beginTransaction().add(mMapLayout.getId(), mHotelListMapFragment).commitAllowingStateLoss();
 					}
-
-					mMapLayout.setMapFragment(mHotelListMapFragment);
 				}
 
 				//				mDailyFloatingActionButton.setVisibility(View.VISIBLE);

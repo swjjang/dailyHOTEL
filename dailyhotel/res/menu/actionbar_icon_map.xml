@@ -5,7 +5,7 @@
     <item
         android:id="@+id/action_map"
         android:orderInCategory="100"
-        android:icon="@drawable/img_ic_map_mini_pink"
+        android:icon="@drawable/actionbar_ic_map"
         android:title="@string/label_map"
         app:showAsAction="always"/>
 </menu>

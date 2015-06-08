@@ -5,20 +5,11 @@
     android:layout_height="match_parent"
     android:background="@color/hotel_list_background" >
 
-    <com.twoheart.dailyhotel.util.ui.HotelMapLayout
+    <FrameLayout
         android:id="@+id/hotelMapLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone" >
-
-        <!--
-	    <fragment
-	        android:id="@+id/hotelMapFragment"
-	        android:layout_width="match_parent"
-	        android:layout_height="match_parent"
-	        class="com.twoheart.dailyhotel.fragment.HotelListMapFragment" />
-        -->
-    </com.twoheart.dailyhotel.util.ui.HotelMapLayout>
+        android:visibility="gone" />
 
     <include
         android:id="@+id/emptyView"

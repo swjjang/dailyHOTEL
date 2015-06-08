@@ -16,13 +16,24 @@ import com.twoheart.dailyhotel.model.HotelRenderer;
 public class HotelClusterRenderer extends
 		DefaultClusterRenderer<HotelClusterItem>
 {
+	public enum Renderer
+	{
+		CLUSTER, CLUSTER_ITEM,
+	}
+
 	private Context mContext;
 	private HotelClusterItem mSelectedHotelClusterItem;
 	private OnSelectedClusterItemListener mOnSelectedClusterItemListener;
+	private OnClusterRenderedListener mOnClusterRenderedListener;
 
 	public interface OnSelectedClusterItemListener
 	{
 		public void onSelectedClusterItemListener(Marker marker);
+	}
+
+	public interface OnClusterRenderedListener
+	{
+		public void onClusterRenderedListener(Renderer renderer);
 	}
 
 	public HotelClusterRenderer(Context context, GoogleMap map, ClusterManager<HotelClusterItem> clusterManager)
@@ -35,19 +46,30 @@ public class HotelClusterRenderer extends
 	@Override
 	protected void onBeforeClusterItemRendered(HotelClusterItem item, MarkerOptions markerOptions)
 	{
+		if (mOnClusterRenderedListener != null)
+		{
+			mOnClusterRenderedListener.onClusterRenderedListener(Renderer.CLUSTER_ITEM);
+		}
+
 		HotelRenderer hotelRenderer = new HotelRenderer(mContext, item.getHotel());
 
-		BitmapDescriptor icon = hotelRenderer.getBitmap();
+		BitmapDescriptor icon = hotelRenderer.getBitmap(false);
 
 		if (icon != null)
 		{
 			markerOptions.icon(icon);
+			markerOptions.anchor(0.0f, 1.0f);
 		}
 	}
 
 	@Override
 	protected void onBeforeClusterRendered(Cluster<HotelClusterItem> cluster, MarkerOptions markerOptions)
 	{
+		if (mOnClusterRenderedListener != null)
+		{
+			mOnClusterRenderedListener.onClusterRenderedListener(Renderer.CLUSTER);
+		}
+
 		HotelRegionRenderer hotelRegionRenderer = new HotelRegionRenderer(mContext, cluster.getSize());
 
 		BitmapDescriptor icon = hotelRegionRenderer.getBitmap();
@@ -76,6 +98,11 @@ public class HotelClusterRenderer extends
 				}
 			}
 		}
+	}
+
+	public void setOnClusterRenderedListener(OnClusterRenderedListener listener)
+	{
+		mOnClusterRenderedListener = listener;
 	}
 
 	@Override

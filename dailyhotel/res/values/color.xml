@@ -82,5 +82,9 @@
 	<!-- Booking List -->
 	<color name="bookinglist_section_background">#292929</color>
 	<color name="bookinglist_used_text">#8b8b8b</color>
+	
+	<!-- Map View -->
+	<color name="mapview_hotelwindow_topline">#292929</color>
+	<color name="mapview_hotelwindow_background">#e2e2e2</color>
 
 </resources>	
