@@ -10,11 +10,13 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 public class DailySignatureView extends View
@@ -164,7 +166,13 @@ public class DailySignatureView extends View
 					mRectF.bottom = y;
 				}
 
-				new BCurveTask().execute(mArrayList);
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+				{
+					new BCurveTask().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, mArrayList);
+				} else
+				{
+					new BCurveTask().execute(mArrayList);
+				}
 				break;
 			}
 
@@ -216,6 +224,11 @@ public class DailySignatureView extends View
 
 	private void drawBCurve(Point p1, Point p2, Point p3, Point p4)
 	{
+		if (p1 == null || p2 == null || p3 == null || p4 == null)
+		{
+			return;
+		}
+
 		mPath.reset();
 		mPath.moveTo(p1.x, p1.y);
 		mPath.cubicTo(p2.x, p2.y, p3.x, p3.y, p4.x, p4.y);
@@ -234,6 +247,11 @@ public class DailySignatureView extends View
 
 	private Point getTringleCenter(Point p1, Point p2, Point p3)
 	{
+		if (p1 == null || p1 == null || p3 == null)
+		{
+			return null;
+		}
+
 		return new Point((p1.x + p2.x + p3.x) / 3, (p1.y + p2.y + p3.y) / 3);
 	}
 
@@ -267,20 +285,32 @@ public class DailySignatureView extends View
 			{
 				if (arrayList.size() >= B_CURVE_COUNT_OF_POINT)
 				{
-					Point point0 = arrayList.remove(0);
-					Point point1 = arrayList.remove(0);
-					Point point2 = arrayList.remove(0);
-					Point point3 = arrayList.remove(0);
-					Point point4 = arrayList.remove(0);
+					try
+					{
+						Point point0 = arrayList.get(0);
+						Point point1 = arrayList.get(1);
+						Point point2 = arrayList.get(2);
+						Point point3 = arrayList.get(3);
+						Point point4 = arrayList.get(4);
 
-					Point point234Mid = getTringleCenter(point2, point3, point4);
+						Point point234Mid = getTringleCenter(point2, point3, point4);
 
-					drawBCurve(point0, point1, point2, point234Mid);
+						if (point234Mid != null)
+						{
+							drawBCurve(point0, point1, point2, point234Mid);
 
-					arrayList.add(0, point4);
-					arrayList.add(0, point234Mid);
+							arrayList.remove(0);
+							arrayList.remove(0);
+							arrayList.remove(0);
+							arrayList.remove(0);
+							arrayList.add(0, point234Mid);
 
-					publishProgress(arrayList.size());
+							publishProgress(arrayList.size());
+						}
+					} catch (Exception e)
+					{
+						break;
+					}
 				}
 
 				Thread.yield();
