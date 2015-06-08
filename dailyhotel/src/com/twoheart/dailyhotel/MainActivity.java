@@ -166,11 +166,18 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 		// 이전의 비정상 종료에 의한 만료된 쿠키들이 있을 수 있으므로, SplashActivity에서 자동 로그인을
 		// 처리하기 이전에 미리 이미 저장되어 있는 쿠키들을 정리한다.
-		if (CookieManager.getInstance().getCookie(URL_DAILYHOTEL_SERVER) != null)
+		// android.content.pm.PackageManager$NameNotFoundException: com.google.android.webview
+		try
 		{
-			VolleyHttpClient.destroyCookie();
+			if (CookieManager.getInstance().getCookie(URL_DAILYHOTEL_SERVER) != null)
+			{
+				VolleyHttpClient.destroyCookie();
+			}
+		}catch(Exception e)
+		{
+			ExLog.d(e.toString());
 		}
-
+		
 		// 스플래시 화면을 띄운다
 
 		startActivityForResult(new Intent(this, SplashActivity.class), CODE_REQUEST_ACTIVITY_SPLASH);
