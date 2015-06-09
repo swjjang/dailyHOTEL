@@ -838,6 +838,12 @@ public class HotelListMapFragment extends
 				@Override
 				public void onProviderDisabled(String provider)
 				{
+					// Fragment가 added가 되지 않은 상태에서 터치가 될경우.
+					if (isAdded() == false)
+					{
+						return;
+					}
+
 					// 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
 					LocationFactory.getInstance().stopLocationMeasure();
 
