@@ -180,6 +180,9 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
 	//	{
 	//		String test = null;
 	//
+	//		test = DailyHotelRequest.getUrlEncoder("api/reserv/receipt");
+	//
+	//
 	//		test = DailyHotelRequest.getUrlEncoder("api/reserv/session/billing/payment");
 	//		test = DailyHotelRequest.getUrlEncoder("api/reserv/mine/hidden");
 	//			
