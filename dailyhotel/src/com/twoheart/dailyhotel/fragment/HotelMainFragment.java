@@ -160,8 +160,17 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 	}
 
 	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+	public void onPrepareOptionsMenu(Menu menu)
 	{
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
+		MenuInflater inflater = baseActivity.getMenuInflater();
+
 		menu.clear();
 
 		if (mMenuEnabled == true)
@@ -201,37 +210,39 @@ public class HotelMainFragment extends BaseFragment implements RegionPopupListVi
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return false;
+		}
+
 		switch (item.getItemId())
 		{
+			case R.id.action_list:
+			{
+				int isInstalledGooglePlayServices = installGooglePlayService(getActivity());
+
+				if (isInstalledGooglePlayServices == 1)
+				{
+					if (mUserActionListener != null)
+					{
+						mUserActionListener.toggleViewType();
+					}
+
+					baseActivity.invalidateOptionsMenu();
+				}
+				return true;
+			}
+
 			case R.id.action_map:
 			{
-				switch (mHotelViewType)
+				if (mUserActionListener != null)
 				{
-					case LIST:
-						int isInstalledGooglePlayServices = installGooglePlayService(getActivity());
-
-						if (isInstalledGooglePlayServices == 1)
-						{
-							item.setIcon(R.drawable.actionbar_ic_picture);
-							item.setTitle(getString(R.string.label_list));
-
-							if (mUserActionListener != null)
-							{
-								mUserActionListener.toggleViewType();
-							}
-						}
-						break;
-
-					case MAP:
-						item.setIcon(R.drawable.actionbar_ic_map);
-						item.setTitle(getString(R.string.label_map));
-
-						if (mUserActionListener != null)
-						{
-							mUserActionListener.toggleViewType();
-						}
-						break;
+					mUserActionListener.toggleViewType();
 				}
+
+				baseActivity.invalidateOptionsMenu();
 				return true;
 			}
 
