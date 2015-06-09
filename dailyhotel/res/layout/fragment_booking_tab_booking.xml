@@ -351,6 +351,18 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
+
+        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            android:id="@+id/viewReceiptTextView"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/shape_button_common_background"
+            android:gravity="center"
+            android:text="@string/frag_issuing_receipt"
+            android:textColor="@android:color/white"
+            android:textSize="17dp"
+            android:visibility="gone" />
     </LinearLayout>
 
 </ScrollView>
