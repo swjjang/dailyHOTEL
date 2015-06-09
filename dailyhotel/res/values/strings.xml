@@ -136,17 +136,18 @@
     <string name="dialog_msg_register_creditcard_cancel">신용카드 등록을 취소하시겠습니까?</string>
     <string name="dialog_msg_delete_register_creditcard">등록된 신용카드를 삭제하시겠습니까?</string>
     <string name="dialog_msg_error_signature">서명 내용이 부족합니다. 다시 시도해 주십시오.</string>
-    <string name="dialog_msg_payment_creditcard_confirm">본 상품은 특가 예약 상품이므로&lt;br/&gt;결제 완료 후&lt;br/&gt;&lt;b&gt;취소나 교환 및 환불이 불가&lt;/b&gt;합니다.&lt;br/&gt;&lt;br/&gt;\'체크인 시 배정\'의 경우&lt;br/&gt;베드 타입을 보장하지 않으며&lt;/b&gt;&lt;br/&gt;2인이 투숙할 수 있는 객실로 배정됩니다.&lt;br/&gt;&lt;br/&gt;미성년자는 보호자 동반시 투숙 가능합니다.</string>    <string name="dialog_msg_session_expired">세션이 만료되어 재시작합니다.</string>
-	<string name="dialog_msg_processing_payment">결제가 진행 중입니다. 잠시만 기다려 주십시오.</string>
-	<string name="dialog_msg_delete_failed_creditcard">신용카드 삭제를 실패하였습니다.</string>
-	<string name="dialog_msg_delete_booking">이용 완료한 내역을 삭제하시겠습니까?</string>
-	<string name="dialog_msg_changed_pay">객실 상황 변동으로 인하여 가격이 변경되었습니다.\n확인 뒤 결제해주세요.</string>
-	<string name="dialog_title_used_gps">위치 서비스 사용</string>
-	<string name="dialog_msg_used_gps">내 위치 정보를 사용하려면, 단말기의 설정에서 \'위치 서비스\' 사용을 허용해주세요.</string>
-	<string name="dialog_msg_stop_onsale">모든 객실이 예약 완료되었습니다.</string>
-	<string name="dialog_title_googleplayservice">Google Play Services</string>
-	<string name="dialog_msg_install_googleplayservice">맵을 사용하기 위한 Google Play Services의 설치가 필요합니다.</string>
-	<string name="dialog_msg_update_googleplayservice">맵을 사용하기 위한 Google Play Services의 업데이트가 필요합니다.</string>
+    <string name="dialog_msg_payment_creditcard_confirm">본 상품은 특가 예약 상품이므로&lt;br/&gt;결제 완료 후&lt;br/&gt;&lt;b&gt;취소나 교환 및 환불이 불가&lt;/b&gt;합니다.&lt;br/&gt;&lt;br/&gt;\'체크인 시 배정\'의 경우&lt;br/&gt;베드 타입을 보장하지 않으며&lt;/b&gt;&lt;br/&gt;2인이 투숙할 수 있는 객실로 배정됩니다.&lt;br/&gt;&lt;br/&gt;미성년자는 보호자 동반시 투숙 가능합니다.</string>
+    <string name="dialog_msg_session_expired">세션이 만료되어 재시작합니다.</string>
+    <string name="dialog_msg_processing_payment">결제가 진행 중입니다. 잠시만 기다려 주십시오.</string>
+    <string name="dialog_msg_delete_failed_creditcard">신용카드 삭제를 실패하였습니다.</string>
+    <string name="dialog_msg_delete_booking">이용 완료한 내역을 삭제하시겠습니까?</string>
+    <string name="dialog_msg_changed_pay">객실 상황 변동으로 인하여 가격이 변경되었습니다.\n확인 뒤 결제해주세요.</string>
+    <string name="dialog_title_used_gps">위치 서비스 사용</string>
+    <string name="dialog_msg_used_gps">내 위치 정보를 사용하려면, 단말기의 설정에서 \'위치 서비스\' 사용을 허용해주세요.</string>
+    <string name="dialog_msg_stop_onsale">모든 객실이 예약 완료되었습니다.</string>
+    <string name="dialog_title_googleplayservice">Google Play Services</string>
+    <string name="dialog_msg_install_googleplayservice">맵을 사용하기 위한 Google Play Services의 설치가 필요합니다.</string>
+    <string name="dialog_msg_update_googleplayservice">맵을 사용하기 위한 Google Play Services의 업데이트가 필요합니다.</string>
 
     <!-- Main Drawer Menu Titles -->
     <string name="drawer_menu_pin_title_resrvation">예약</string>
@@ -437,5 +438,27 @@
     <string name="message_billing_success">카드 등록이 완료되었습니다.</string>
     <string name="message_billing_fail">카드 등록을 실패하였습니다.</string>
     <string name="message_billing_duplicate">이미 등록된 신용카드입니다.</string>
+
+    <!-- Issuingreceipt Activity -->
+    <string name="label_receipt_bookinginfo">예약 세부정보</string>
+    <string name="label_receipt_hotelname">호텔명</string>
+    <string name="label_receipt_hoteladdress">주소</string>
+    <string name="label_receipt_customerinfo">고객성명/번호</string>
+    <string name="label_receipt_checkinout">체크인-아웃</string>
+    <string name="label_receipt_nights_rooms">숙박 일수/객실수</string>
+    <string name="label_receipt_paymentinfo">결제정보</string>
+    <string name="label_receipt_paymentday">결제일</string>
+    <string name="label_receipt_supplyvalue">소개</string>
+    <string name="label_receipt_vat">세금 및 수수료</string>
+    <string name="label_receipt_discount">총금액</string>
+    <string name="label_receipt_payment">지불 금액</string>
+    <string name="label_receipt_paymenttype">지불 방식</string>
+    <string name="label_receipt_provider">공급자</string>
+    <string name="label_receipt_business_license">상호 | %1$s</string>
+    <string name="label_receipt_registeration_number">등록번호 | %1$s</string>
+    <string name="label_receipt_ceo">대표자 | %1$s</string>
+    <string name="label_receipt_address">주소 | </string>
+    <string name="label_receipt_phone">전화번호 | %1$s</string>
+    <string name="label_receipt_fax">팩스 | %1$s</string>
 
 </resources>

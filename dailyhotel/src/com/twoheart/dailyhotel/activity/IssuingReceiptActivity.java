@@ -50,24 +50,36 @@ public class IssuingReceiptActivity extends WebViewActivity
 		}
 	}
 
+	@Override
+	protected void onResume()
+	{
+		lockUI();
+		mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, this));
+
+		super.onResume();
+	}
+
 	private boolean makeLayout(JSONObject jsonObject)
 	{
 		try
 		{
-			String userName = jsonObject.getString("user_name");
-			String userPhone = jsonObject.getString("user_phone");
-			String checkin = jsonObject.getString("checkin");
-			String checkout = jsonObject.getString("checkout");
-			int nights = jsonObject.getInt("nights");
-			int rooms = jsonObject.getInt("rooms");
-			String hotelName = jsonObject.getString("hotel_name");
-			String hotelAddress = jsonObject.getString("hotel_address");
-			String valueDate = jsonObject.getString("value_date");
-			String currency = jsonObject.getString("currency");
-			int discount = jsonObject.getInt("discount");
-			int vat = jsonObject.getInt("vat");
-			int supoplyValue = jsonObject.getInt("supply_value");
-			String paymentName = jsonObject.getString("payment_name");
+			// 영숭증 
+			JSONObject receipt = jsonObject.getJSONObject("receipt");
+
+			String userName = receipt.getString("user_name");
+			String userPhone = receipt.getString("user_phone");
+			String checkin = receipt.getString("checkin");
+			String checkout = receipt.getString("checkout");
+			int nights = receipt.getInt("nights");
+			int rooms = receipt.getInt("rooms");
+			String hotelName = receipt.getString("hotel_name");
+			String hotelAddress = receipt.getString("hotel_address");
+			String valueDate = receipt.getString("value_date");
+			String currency = receipt.getString("currency");
+			int discount = receipt.getInt("discount");
+			int vat = receipt.getInt("vat");
+			int supoplyValue = receipt.getInt("supply_value");
+			String paymentName = receipt.getString("payment_name");
 
 			// **예약 세부 정보**
 			View bookingInfoLayout = findViewById(R.id.bookingInfoLayout);
@@ -103,26 +115,65 @@ public class IssuingReceiptActivity extends WebViewActivity
 
 			// 소개
 			TextView supplyValueTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView25);
-			supplyValueTextView.setText("₩" + comma.format(supoplyValue));
+			supplyValueTextView.setText("₩ " + comma.format(supoplyValue));
 
 			// 세금 및 수수료
 			TextView vatTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView27);
-			vatTextView.setText("₩" + comma.format(vat));
+			vatTextView.setText("₩ " + comma.format(vat));
 
 			// 총금액
 			TextView discountTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView29);
-			discountTextView.setText("₩" + comma.format(discount));
+			discountTextView.setText("₩ " + comma.format(discount));
 
 			// 지불 금액
 			TextView paymentTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView31);
-			paymentTextView.setText("₩" + comma.format(discount));
+			paymentTextView.setText("₩ " + comma.format(discount));
 
 			// 지불 방식
 			TextView paymentTypeTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView33);
 			paymentTypeTextView.setText(paymentName);
 
 			// **공급자**
+
+			JSONObject provider = jsonObject.getJSONObject("provider");
+
+			String phone = provider.getString("phone");
+			String fax = provider.getString("fax");
+			String memo = provider.getString("memo");
+			String address = provider.getString("address");
+			String ceoName = provider.getString("ceoName");
+			String registrationNo = provider.getString("registrationNo");
+			String companyName = provider.getString("companyName");
+
 			View providerInfoLayout = findViewById(R.id.providerInfoLayout);
+
+			// 상호
+			TextView companyNameTextView = (TextView) providerInfoLayout.findViewById(R.id.textView42);
+			companyNameTextView.setText(getString(R.string.label_receipt_business_license, companyName));
+
+			// 등록번호
+			TextView registrationNoTextView = (TextView) providerInfoLayout.findViewById(R.id.textView43);
+			registrationNoTextView.setText(getString(R.string.label_receipt_registeration_number, registrationNo));
+
+			// 대표자
+			TextView ceoNameTextView = (TextView) providerInfoLayout.findViewById(R.id.textView44);
+			ceoNameTextView.setText(getString(R.string.label_receipt_ceo, ceoName));
+
+			// 주소
+			TextView addressTextView = (TextView) providerInfoLayout.findViewById(R.id.textView46);
+			addressTextView.setText(address);
+
+			// 전화번호 
+			TextView phoneTextView = (TextView) providerInfoLayout.findViewById(R.id.textView47);
+			phoneTextView.setText(getString(R.string.label_receipt_phone, phone));
+
+			// 팩스
+			TextView faxTextView = (TextView) providerInfoLayout.findViewById(R.id.textView48);
+			faxTextView.setText(getString(R.string.label_receipt_fax, fax));
+
+			// 코멘트
+			TextView commentTextView = (TextView) providerInfoLayout.findViewById(R.id.textView49);
+			commentTextView.setText(memo);
 
 		} catch (Exception e)
 		{
@@ -130,15 +181,6 @@ public class IssuingReceiptActivity extends WebViewActivity
 		}
 
 		return true;
-	}
-
-	@Override
-	protected void onResume()
-	{
-		lockUI();
-		mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, this));
-
-		super.onResume();
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -218,6 +260,7 @@ public class IssuingReceiptActivity extends WebViewActivity
 					if (makeLayout(response.getJSONObject("data")) == false)
 					{
 						finish();
+						return;
 					}
 				} else
 				{
