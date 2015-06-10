@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="169dp" >
+    android:layout_height="169dp"
+    android:background="@color/mapview_hotelwindow_background" >
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:adjustViewBounds="true"
+        android:scaleType="matrix"
+        android:src="@drawable/img_placeholder_small" />
 
     <ImageView
         android:id="@+id/hotelImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
-        android:background="@drawable/img_placeholder"
         android:scaleType="centerCrop" />
 
     <LinearLayout
@@ -62,7 +70,7 @@
         android:layout_height="1px"
         android:layout_alignParentBottom="true"
         android:background="@color/hotel_list_item_underline" />
-    
+
     <ImageView
         android:id="@+id/deleteView"
         android:layout_width="wrap_content"
