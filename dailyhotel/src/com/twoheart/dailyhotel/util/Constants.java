@@ -221,7 +221,13 @@ public interface Constants
 
 	// Simple Payment
 	// api/reserv/session/billing/payment
-	public static final String URL_WEBAPI_USER_SESSION_BILLING_PAYMENT = UNENCRYPTED_URL ? "api/reserv/session/billing/payment" : "NDUkODQkNDUkMTE2JDk2JA==$QkNGMEY5OTlBMEM5MzE5NjE3QzI1OTc2NUU3QzcwRTBERQEEEwQUExNkVGMEI0MTRFRDE3QzUyRDRDQkIzNTEZ2MjA3NTYzNHkY5QUEwQzU1MjAxQjEwMREU3MjU3REVCM0VB$";
+	public static final String URL_WEBAPI_RESERV_SESSION_BILLING_PAYMENT = UNENCRYPTED_URL ? "api/reserv/session/billing/payment" : "NDUkODQkNDUkMTE2JDk2JA==$QkNGMEY5OTlBMEM5MzE5NjE3QzI1OTc2NUU3QzcwRTBERQEEEwQUExNkVGMEI0MTRFRDE3QzUyRDRDQkIzNTEZ2MjA3NTYzNHkY5QUEwQzU1MjAxQjEwMREU3MjU3REVCM0VB$";
+
+	// api/sale/hotel/list
+	public static final String URL_WEBAPI_SALE_HOTEL_LIST = UNENCRYPTED_URL ? "api/sale/hotel/list" : "ODAkNDMkMzQkNDQkODAk$MzVBRDI4MUMzMkY3Q0JCNTRBNjRCRjk3MjJNCQkMzNTQXJ2NUU2REIxQUNGOUNENkExODE1RDhCRjY2NGTUxSRTBDMg==$";
+
+	// api/sale/region/all
+	public static final String URL_WEBAPI_SALE_HOTEL_ALL = UNENCRYPTED_URL ? "api/sale/region/all" : "MTEkMjckMzQkMTUkNDIk$RjgwRDA0OUUU2QjYBEODJDMEM5RTIYxODc2PMDJGOTBZBRUY3ODUwMzYwRUJEQjA2MEUwRDA3NkVGOEY0OUIzMDM5Qw==$";
 
 	// DailyHOTEL Site Controller WebAPI URL
 	//"site/get";
@@ -319,6 +325,8 @@ public interface Constants
 	public static final String NAME_INTENT_EXTRA_DATA_REGIONMAP = "regionmap";
 	public static final String NAME_INTENT_EXTRA_DATA_CREDITCARD = "creditcard";
 	public static final String NAME_INTENT_EXTRA_DATA_MESSAGE = "message";
+	public static final String NAME_INTENT_EXTRA_DATA_PROVINCE = "province";
+	public static final String NAME_INTENT_EXTRA_DATA_AREA = "area";
 
 	// Push Type
 	public static final int PUSH_TYPE_NOTICE = 0;
@@ -338,7 +346,7 @@ public interface Constants
 	public static final int CODE_REQUEST_ACTIVITY_BOOKING_DETAIL = 11;
 	public static final int CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD = 12;
 	public static final int CODE_REQUEST_ACTIVITY_CREDITCARD_MANAGER = 13;
-	public static final int CODE_REQUEST_ACTIVITY_SELECT_REGIONMAP = 10000;
+	public static final int CODE_REQUEST_ACTIVITY_SELECT_AREA = 14;
 
 	// Android Activity의 Result Code들이다.
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_FAIL = 100;

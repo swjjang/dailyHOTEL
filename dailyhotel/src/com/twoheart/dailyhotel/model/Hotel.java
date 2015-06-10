@@ -1,6 +1,5 @@
 package com.twoheart.dailyhotel.model;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,6 +25,7 @@ public class Hotel implements Parcelable
 	private String detailRegion;
 	public double mLatitude;
 	public double mLongitude;
+	public String mSaleDay; //현재 호텔이 팔리고 있는 날짜. 디버그에서만 사용.
 
 	public enum HotelGrade
 	{
@@ -113,20 +113,6 @@ public class Hotel implements Parcelable
 	public Hotel(Parcel in)
 	{
 		readFromParcel(in);
-	}
-
-	public Hotel(String image, String name, int price, int discount, String address, String category, int idx, int availableRoom, int sequence, String bedType)
-	{
-		this.image = image;
-		this.name = name;
-		this.price = price;
-		this.discount = discount;
-		this.address = address;
-		this.category = HotelGrade.valueOf(category);
-		this.idx = idx;
-		this.availableRoom = availableRoom;
-		this.sequence = sequence;
-		this.bedType = bedType;
 	}
 
 	@Override
@@ -305,15 +291,8 @@ public class Hotel implements Parcelable
 			idx = jsonObject.getInt("idx");
 			availableRoom = jsonObject.getInt("avail_room_count");
 			sequence = jsonObject.getInt("seq");
-			detailRegion = jsonObject.getString("site2_name");
-
-			JSONArray jsonArray = jsonObject.getJSONArray("img");
-			image = "default";
-			if (jsonArray.length() != 0)
-			{
-				JSONObject arrObj = jsonArray.getJSONObject(0);
-				image = arrObj.getString("path");
-			}
+			detailRegion = jsonObject.getString("district_name");
+			image = jsonObject.getString("img");
 
 			if (jsonObject.has("lat") == true)
 			{
@@ -323,6 +302,11 @@ public class Hotel implements Parcelable
 			if (jsonObject.has("lng") == true)
 			{
 				mLongitude = jsonObject.getDouble("lng");
+			}
+
+			if (jsonObject.has("sday") == true)
+			{
+				mSaleDay = jsonObject.getString("sday");
 			}
 		} catch (JSONException e)
 		{

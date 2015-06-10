@@ -46,6 +46,7 @@ import com.android.volley.RequestQueue.RequestFilter;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.fragment.HotelMainFragment;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.GlobalFont;
@@ -155,7 +156,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 
 		GlobalFont.apply(mToolbar);
 
-		setActionBarListEnabled(false);
+		setActionBarAreaEnabled(false);
 		//		mToolbar.setTitle(title);
 		getSupportActionBar().setTitle(title);
 
@@ -215,7 +216,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 		}
 	}
 
-	public void setActionBarListEnabled(boolean isEnable)
+	public void setActionBarAreaEnabled(boolean isEnable)
 	{
 		if (isEnable == true)
 		{
@@ -243,7 +244,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 		}
 	}
 
-	public void setActionBarListData(final String title, final ArrayList<String> arrayList, final UserActionListener userActionListener)
+	public void setActionBarArea(String title, final HotelMainFragment.OnUserActionListener listener)
 	{
 		if (mSpinnderIndex == -1)
 		{
@@ -269,7 +270,11 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 
 					lockUiComponent();
 
-					showPopupWindow(v, arrayList, userActionListener);
+					// 지역표시를 선택할 경우.
+					if (listener != null)
+					{
+						listener.onClickActionBarArea();
+					}
 				}
 			});
 		}

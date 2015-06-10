@@ -102,7 +102,11 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 		//		btnEvent.setOnClickListener(this);
 
 		baseActivity.setActionBar(getString(R.string.actionbar_title_wait_timer_frag), false);
-		tvTitle.setText(new SimpleDateFormat("aa H", Locale.KOREA).format(mSaleTime.getOpenTime()) + getString(R.string.prefix_wait_timer_frag_todays_hotel_open));
+
+		SimpleDateFormat sFormat = new SimpleDateFormat("aa H", Locale.KOREA);
+		sFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+		tvTitle.setText(sFormat.format(mSaleTime.getOpenTime()) + getString(R.string.prefix_wait_timer_frag_todays_hotel_open));
 
 		isEnabledNotify = false;
 		setTimer();

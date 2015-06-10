@@ -120,9 +120,6 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 			mAdapter.setOnUserActionListener(mOnUserActionListener);
 
 			mViewPager.setAdapter(mAdapter);
-		} else
-		{
-			mAdapter.notifyDataSetChanged();
 		}
 
 		mViewPager.setBoundaryCaching(true);

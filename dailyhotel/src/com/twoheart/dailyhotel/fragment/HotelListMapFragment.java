@@ -66,7 +66,7 @@ public class HotelListMapFragment extends
 	private MarkerOptions mMyLocationMarkerOptions;
 	private Marker mMyLocationMarker;
 
-	protected HotelMainFragment.UserActionListener mUserActionListener;
+	protected HotelMainFragment.OnUserActionListener mUserActionListener;
 	private SaleTime mSaleTime;
 	private boolean mIsCreateView = false;
 	private boolean mCallMakeMarker = false;
@@ -227,7 +227,7 @@ public class HotelListMapFragment extends
 		}
 	}
 
-	public void setUserActionListener(HotelMainFragment.UserActionListener userActionLister)
+	public void setUserActionListener(HotelMainFragment.OnUserActionListener userActionLister)
 	{
 		mUserActionListener = userActionLister;
 	}

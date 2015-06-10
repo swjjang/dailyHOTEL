@@ -204,7 +204,6 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 
 			lockUI();
 			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_REVIEW).append('/').append(mHotelDetail.getSaleIdx()).toString(), reviewResultParams, mReserveReviewJsonResponseListener, mHostActivity));
-
 		}
 	}
 

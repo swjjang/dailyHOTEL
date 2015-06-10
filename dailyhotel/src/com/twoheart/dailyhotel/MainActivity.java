@@ -950,7 +950,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	@Override
 	protected void onDestroy()
 	{
-
 		// 쿠키 만료를 위한 서버에 로그아웃 리퀘스트
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGOUT).toString(), null, null, null));
 

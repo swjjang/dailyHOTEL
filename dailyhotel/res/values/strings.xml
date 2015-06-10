@@ -460,5 +460,7 @@
     <string name="label_receipt_address">주소 | </string>
     <string name="label_receipt_phone">전화번호 | %1$s</string>
     <string name="label_receipt_fax">팩스 | %1$s</string>
-
+    
+    <!-- Area -->
+	<string name="label_selectarea_area">지역</string>
 </resources>
