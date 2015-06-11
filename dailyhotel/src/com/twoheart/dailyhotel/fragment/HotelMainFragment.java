@@ -884,7 +884,7 @@ public class HotelMainFragment extends BaseFragment
 			{
 				case HotelListViewItem.TYPE_ENTRY:
 				{
-					Intent i = new Intent(baseActivity, HotelTabActivity.class);
+					Intent intent = new Intent(baseActivity, HotelTabActivity.class);
 
 					String region = baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
 
@@ -893,14 +893,12 @@ public class HotelMainFragment extends BaseFragment
 					editor.putString(KEY_PREFERENCE_HOTEL_NAME_GA, hotelListViewItem.getItem().getName());
 					editor.commit();
 
-					i.putExtra(NAME_INTENT_EXTRA_DATA_HOTEL, hotelListViewItem.getItem());
+					intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTEL, hotelListViewItem.getItem());
+					intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
+					intent.putExtra(NAME_INTENT_EXTRA_DATA_REGION, region);
+					intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, hotelIndex);
 
-					i.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
-
-					i.putExtra(NAME_INTENT_EXTRA_DATA_REGION, region);
-					i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, hotelIndex);
-
-					startActivityForResult(i, CODE_REQUEST_ACTIVITY_HOTELTAB);
+					startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTELTAB);
 
 					mUserAnalyticsActionListener.selectHotel(hotelListViewItem.getItem().getName(), hotelIndex);
 					break;
