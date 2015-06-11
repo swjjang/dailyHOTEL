@@ -174,22 +174,22 @@ public class LoopViewPager extends ViewPager
 				{
 					setCurrentItem(realPosition, false);
 				}
-			}
 
-			mPreviousOffset = positionOffset;
-			if (mOuterPageChangeListener != null)
-			{
-				if (realPosition != mAdapter.getRealCount() - 1)
+				mPreviousOffset = positionOffset;
+				if (mOuterPageChangeListener != null)
 				{
-					mOuterPageChangeListener.onPageScrolled(realPosition, positionOffset, positionOffsetPixels);
-				} else
-				{
-					if (positionOffset > .5)
+					if (realPosition != mAdapter.getRealCount() - 1)
 					{
-						mOuterPageChangeListener.onPageScrolled(0, 0, 0);
+						mOuterPageChangeListener.onPageScrolled(realPosition, positionOffset, positionOffsetPixels);
 					} else
 					{
-						mOuterPageChangeListener.onPageScrolled(realPosition, 0, 0);
+						if (positionOffset > .5)
+						{
+							mOuterPageChangeListener.onPageScrolled(0, 0, 0);
+						} else
+						{
+							mOuterPageChangeListener.onPageScrolled(realPosition, 0, 0);
+						}
 					}
 				}
 			}

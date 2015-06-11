@@ -246,7 +246,7 @@ public class DailySignatureView extends View
 
 	private Point getTringleCenter(Point p1, Point p2, Point p3)
 	{
-		if (p1 == null || p1 == null || p3 == null)
+		if (p1 == null || p2 == null || p3 == null)
 		{
 			return null;
 		}

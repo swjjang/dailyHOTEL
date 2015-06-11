@@ -42,6 +42,7 @@ import com.twoheart.dailyhotel.adapter.HotelListViewPagerAdapter;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.HotelRenderer;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.ui.LoopViewPager;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -157,7 +158,7 @@ public class HotelListMapFragment extends
 		});
 
 		// Add Hotel Info ViewPager 
-		mViewPager = new ViewPager(view.getContext());
+		mViewPager = new LoopViewPager(view.getContext());
 		mViewPager.setOffscreenPageLimit(1);
 		mViewPager.setOnPageChangeListener(mOnPageChangeListener);
 
@@ -706,10 +707,10 @@ public class HotelListMapFragment extends
 		{
 			mHotelListViewPagerAdapter = new HotelListViewPagerAdapter(baseActivity);
 			mHotelListViewPagerAdapter.setOnUserActionListener(mOnInfoWindowUserActionListener);
-			mViewPager.setAdapter(mHotelListViewPagerAdapter);
 		}
 
 		mHotelListViewPagerAdapter.setData(mHotelArrangeArrayList);
+		mViewPager.setAdapter(mHotelListViewPagerAdapter);
 		mHotelListViewPagerAdapter.notifyDataSetChanged();
 
 		mIsOpenMakrer = true;

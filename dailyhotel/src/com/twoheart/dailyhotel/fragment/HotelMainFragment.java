@@ -72,6 +72,7 @@ public class HotelMainFragment extends BaseFragment
 
 	private boolean mMenuEnabled;
 	private AlertDialog mAlertDialog;
+	private boolean mDontReloadAtOnResume;
 
 	private HOTEL_VIEW_TYPE mHotelViewType = HOTEL_VIEW_TYPE.LIST;
 
@@ -157,14 +158,20 @@ public class HotelMainFragment extends BaseFragment
 			return;
 		}
 
-		lockUI();
+		if (mDontReloadAtOnResume == true)
+		{
+			mDontReloadAtOnResume = false;
+		} else
+		{
+			lockUI();
+
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("timeZone", "Asia/Seoul");
+
+			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, baseActivity));
+		}
 
 		super.onResume();
-
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("timeZone", "Asia/Seoul");
-
-		mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, baseActivity));
 	}
 
 	@Override
@@ -290,6 +297,31 @@ public class HotelMainFragment extends BaseFragment
 			{
 				HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
 				currentFragment.onActivityResult(requestCode, resultCode, data);
+				break;
+			}
+
+			// 지역을 선택한 후에 되돌아 온경우.
+			case CODE_REQUEST_ACTIVITY_SELECT_AREA:
+			{
+				mDontReloadAtOnResume = true;
+
+				if (resultCode == Activity.RESULT_OK)
+				{
+					if (data != null)
+					{
+						if (data.hasExtra(NAME_INTENT_EXTRA_DATA_PROVINCE) == true)
+						{
+							Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
+
+							onNavigationItemSelected(province);
+						} else if (data.hasExtra(NAME_INTENT_EXTRA_DATA_AREA) == true)
+						{
+							Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_AREA);
+
+							onNavigationItemSelected(province);
+						}
+					}
+				}
 				break;
 			}
 		}

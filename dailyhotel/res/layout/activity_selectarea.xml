@@ -16,7 +16,7 @@
         android:layout_alignBottom="@id/toolbar_actionbar"
         android:background="@color/actionbar_underline" />
 
-    <com.skplanet.android.tstore.ui.MyUpdateExpandableListView
+    <com.twoheart.dailyhotel.ui.DailyAnimatedExpandableListView
         android:id="@+id/listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
