@@ -112,22 +112,32 @@ public class TabIndicator extends HorizontalScrollView implements OnClickListene
 	{
 		super.onDraw(canvas);
 
-		final int height = getHeight();
-		View currentView = mLinearLayout.getChildAt(mCurrentPosition);
-		float lineLeft = currentView.getLeft();
-		float lineRight = currentView.getRight();
-
-		if (mCurrentPositionOffset > 0f && mCurrentPosition < size() - 1)
+		if (mLinearLayout == null)
 		{
-			View nextView = mLinearLayout.getChildAt(mCurrentPosition + 1);
-			final float nextTabLeft = nextView.getLeft();
-			final float nextTabRight = nextView.getRight();
-
-			lineLeft = (mCurrentPositionOffset * nextTabLeft + (1f - mCurrentPositionOffset) * lineLeft);
-			lineRight = (mCurrentPositionOffset * nextTabRight + (1f - mCurrentPositionOffset) * lineRight);
+			return;
 		}
 
-		canvas.drawRect(lineLeft, height - mIndicatorHeight, lineRight, height, mRectPaint);
+		final int height = getHeight();
+
+		View currentView = mLinearLayout.getChildAt(mCurrentPosition);
+
+		if (currentView != null)
+		{
+			float lineLeft = currentView.getLeft();
+			float lineRight = currentView.getRight();
+
+			if (mCurrentPositionOffset > 0f && mCurrentPosition < size() - 1)
+			{
+				View nextView = mLinearLayout.getChildAt(mCurrentPosition + 1);
+				final float nextTabLeft = nextView.getLeft();
+				final float nextTabRight = nextView.getRight();
+
+				lineLeft = (mCurrentPositionOffset * nextTabLeft + (1f - mCurrentPositionOffset) * lineLeft);
+				lineRight = (mCurrentPositionOffset * nextTabRight + (1f - mCurrentPositionOffset) * lineRight);
+			}
+
+			canvas.drawRect(lineLeft, height - mIndicatorHeight, lineRight, height, mRectPaint);
+		}
 	}
 
 	public void setViewPager(ViewPager viewPager)

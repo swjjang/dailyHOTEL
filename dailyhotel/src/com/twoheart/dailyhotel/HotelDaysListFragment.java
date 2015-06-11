@@ -18,7 +18,6 @@ package com.twoheart.dailyhotel;
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.ObjectAnimator;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -168,7 +167,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		switch (mAnimationStatus)
 		{
 			case SHOW:
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1)
+				if (isUsedAnimatorApi() == true)
 				{
 					hideAnimationDaysList();
 				} else
@@ -178,7 +177,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 				break;
 
 			case HIDE:
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1)
+				if (isUsedAnimatorApi() == true)
 				{
 					showAnimationDaysList();
 				} else
@@ -342,7 +341,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 
 		mDaysBackgroundView.setVisibility(View.GONE);
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1)
+		if (isUsedAnimatorApi() == true)
 		{
 			mDaysLayout.setVisibility(View.INVISIBLE);
 			mDaysLayout.setTranslationY(-DAYSLIST_HEIGHT);
@@ -356,7 +355,14 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 
 	private void showAnimationDaysList()
 	{
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1)
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
+		if (isUsedAnimatorApi() == true)
 		{
 			final float y = mDaysLayout.getY();
 
@@ -371,7 +377,9 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 				mObjectAnimator = null;
 			}
 
-			mObjectAnimator = ObjectAnimator.ofFloat(mDaysLayout, "y", y, 0);
+			View underlineView02 = baseActivity.findViewById(R.id.tabindicator_underLine);
+
+			mObjectAnimator = ObjectAnimator.ofFloat(mDaysLayout, "y", y, underlineView02.getBottom());
 			mObjectAnimator.setDuration(300);
 
 			mObjectAnimator.addListener(new AnimatorListener()
@@ -416,14 +424,9 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 			mObjectAnimator.start();
 		} else
 		{
-			BaseActivity baseActivity = (BaseActivity) getActivity();
+			View underlineView02 = baseActivity.findViewById(R.id.tabindicator_underLine);
 
-			if (baseActivity == null)
-			{
-				return;
-			}
-
-			TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, -DAYSLIST_HEIGHT, 0);
+			TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, underlineView02.getBottom() - DAYSLIST_HEIGHT, underlineView02.getBottom());
 			translateAnimation.setDuration(300);
 			translateAnimation.setFillBefore(true);
 			translateAnimation.setFillAfter(true);
@@ -470,7 +473,14 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 
 	private void hideAnimationDaysList()
 	{
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1)
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
+		if (isUsedAnimatorApi() == true)
 		{
 			final float y = mDaysLayout.getY();
 
@@ -485,7 +495,9 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 				mObjectAnimator = null;
 			}
 
-			mObjectAnimator = ObjectAnimator.ofFloat(mDaysLayout, "y", y, -DAYSLIST_HEIGHT);
+			View underlineView02 = baseActivity.findViewById(R.id.tabindicator_underLine);
+
+			mObjectAnimator = ObjectAnimator.ofFloat(mDaysLayout, "y", y, underlineView02.getBottom() - DAYSLIST_HEIGHT);
 			mObjectAnimator.setDuration(300);
 
 			mObjectAnimator.addListener(new AnimatorListener()
@@ -526,14 +538,9 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 			mObjectAnimator.start();
 		} else
 		{
-			BaseActivity baseActivity = (BaseActivity) getActivity();
+			View underlineView02 = baseActivity.findViewById(R.id.tabindicator_underLine);
 
-			if (baseActivity == null)
-			{
-				return;
-			}
-
-			TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, 0, -DAYSLIST_HEIGHT);
+			TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, underlineView02.getBottom(), underlineView02.getBottom() - DAYSLIST_HEIGHT);
 			translateAnimation.setDuration(300);
 			translateAnimation.setFillBefore(true);
 			translateAnimation.setFillAfter(true);

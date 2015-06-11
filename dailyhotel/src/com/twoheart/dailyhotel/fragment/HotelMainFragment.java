@@ -220,6 +220,21 @@ public class HotelMainFragment extends BaseFragment
 		mMenuEnabled = enabled;
 
 		baseActivity.invalidateOptionsMenu();
+
+		// 메뉴가 열리는 시점이다.
+		HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
+
+		if (currentFragment != null)
+		{
+			if (enabled == true)
+			{
+				currentFragment.setActionBarAnimationLock(false);
+			} else
+			{
+				currentFragment.showActionBarAnimatoin(baseActivity);
+				currentFragment.setActionBarAnimationLock(true);
+			}
+		}
 	}
 
 	@Override

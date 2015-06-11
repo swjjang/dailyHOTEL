@@ -27,10 +27,16 @@ import uk.co.senab.actionbarpulltorefresh.library.Options;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.AbsListViewDelegate;
+import android.animation.Animator;
+import android.animation.Animator.AnimatorListener;
+import android.animation.ValueAnimator;
+import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -50,6 +56,7 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
@@ -84,6 +91,15 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 	protected HotelMainFragment.OnUserActionListener mUserActionListener;
 
+	private float mOldY;
+	private int mOldfirstVisibleItem;
+	private int mDirection;
+	private static boolean mIsClosedActionBar;
+	private static boolean mIsAnimating;
+	private static ValueAnimator mValueAnimator;
+	private static boolean mLockActionBar;
+	private int mScrollState;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
@@ -97,6 +113,15 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		View view = inflater.inflate(R.layout.fragment_hotel_list, container, false);
 
 		mHotelListView = (PinnedSectionListView) view.findViewById(R.id.listview_hotel_list);
+
+		if (isCanActionBarAnimation() == true)
+		{
+			mHotelListView.addHeaderView(inflater.inflate(R.layout.list_header_empty, null, true));
+			mHotelListView.setOnScrollListener(mOnScrollListener);
+		} else
+		{
+			mHotelListView.setPadding(0, Util.dpToPx(baseActivity, 109) + 2, 0, 0);
+		}
 
 		// 이벤트를 마지막에 넣는다.
 		// FooterView
@@ -164,6 +189,8 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 			return;
 		}
 
+		position -= mHotelListView.getHeaderViewsCount();
+
 		mSelectedHotelListViewItem = mHotelListAdapter.getItem(position);
 
 		int count = 0;
@@ -208,10 +235,22 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 	public void onPageSelected(boolean isRequestHotelList)
 	{
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
+		showActionBarAnimatoin(baseActivity);
+		setActionBarAnimationLock(true);
+
+		mDirection = MotionEvent.ACTION_CANCEL;
 	}
 
 	public void onPageUnSelected()
 	{
+		mDirection = MotionEvent.ACTION_CANCEL;
 	}
 
 	public void onRefreshComplete()
@@ -314,6 +353,16 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		setVisibility(type, true);
 	}
 
+	protected boolean isCanActionBarAnimation()
+	{
+		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1;
+	}
+
+	protected boolean isUsedAnimatorApi()
+	{
+		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1;
+	}
+
 	public void setSaleTime(SaleTime saleTime)
 	{
 		mSaleTime = saleTime;
@@ -413,124 +462,270 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		refreshHotelList(mSelectedProvince, true);
 	}
 
-	// 현재 위치를 바탕으로 국가이름을 얻어옴
-	// 선택한 지역이 없는 경우 현재 위치를 바탕으로 국가를 얻어오기 위해 사용(현재는 사용 안함)
-	// 현재는 선택한 지역이 없는 경우 현재 위치를 바탕으로 얻는 대신
-	// 일종의 캐시 개념으로 그 전에 선택했던 지역을 불러오는 방식을 사용함.
-	//	private String getCountryName()
-	//	{
-	//		mLocationManager = (LocationManager) mHostActivity.getSystemService(Context.LOCATION_SERVICE);
-	//		Location location = getLastKnownLocation();
-	//		String countryName = "";
-	//
-	//		if (location == null)
-	//		{
-	//			countryName = getCountryByLocale();
-	//
-	//		} else
-	//		{
-	//			try
-	//			{
-	//				Geocoder mGeocoder = new Geocoder(mHostActivity, Locale.KOREAN);
-	//				List<Address> addresses = mGeocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-	//				if (addresses.size() > 0)
-	//				{
-	//					countryName = addresses.get(0).getCountryName();
-	//
-	//					addresses.clear();
-	//					addresses = null;
-	//				}
-	//			} catch (IOException e)
-	//			{
-	//				e.printStackTrace();
-	//			}
-	//		}
-	//		return countryName;
-	//	}
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// ScrollListener
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	// 사용자의 언어를 바탕으로 국가이름을 얻어옴.
-	//	private String getCountryByLocale()
-	//	{
-	//		Locale locale = this.getResources().getConfiguration().locale;
-	//		String code = locale.getLanguage();
-	//		String country = "";
-	//
-	//		if (code.equals("ko"))
-	//		{
-	//			country = getString(R.string.act_list_region_korea);
-	//		} else if (code.equals("ja"))
-	//		{
-	//			country = getString(R.string.act_list_region_japan);
-	//		} else
-	//		{
-	//			country = getString(R.string.act_list_region_korea);
-	//		}
-	//		return country;
-	//	}
+	public void setActionBarAnimationLock(boolean lock)
+	{
+		mLockActionBar = lock;
 
-	//	private Location getLastKnownLocation()
-	//	{
-	//		mLocationManager = (LocationManager) mHostActivity.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
-	//		List<String> providers = mLocationManager.getProviders(true);
-	//		Location bestLocation = null;
-	//		for (String provider : providers)
-	//		{
-	//			Location l = mLocationManager.getLastKnownLocation(provider);
-	//			if (l == null)
-	//			{
-	//				continue;
-	//			}
-	//			if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy())
-	//			{
-	//				// Found best last known location: %s", l);
-	//				bestLocation = l;
-	//			}
-	//		}
-	//		return bestLocation;
-	//	}
+		mDirection = MotionEvent.ACTION_CANCEL;
+	}
 
-	//	//이벤트 공지를 위한 dialog를 띄움.
-	//	private Dialog getEventPopUpDialog()
-	//	{
-	//		final Dialog dialog = new Dialog(((MainActivity) mHostActivity));
-	//
-	//		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-	//		dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-	//		dialog.setCanceledOnTouchOutside(false);
-	//
-	//		View view = LayoutInflater.from(((MainActivity) mHostActivity)).inflate(R.layout.fragment_pop_up_event, null);
-	//		ImageView btnClose = (ImageView) view.findViewById(R.id.btn_confirm_payment_close);
-	//		WebView popUpWebView = (WebView) view.findViewById(R.id.pop_up_web);
-	//
-	//		popUpWebView.getSettings().setBuiltInZoomControls(true);
-	//		//		popUpWebView.getSettings().setBlockNetworkLoads(false);
-	//		popUpWebView.loadUrl("http://www.google.com");
-	//		popUpWebView.setWebViewClient(new WebViewClientClass());
-	//
-	//		btnClose.setOnClickListener(new OnClickListener()
-	//		{
-	//			@Override
-	//			public void onClick(View v)
-	//			{
-	//				dialog.dismiss();
-	//			}
-	//		});
-	//
-	//		dialog.setContentView(view);
-	//		GlobalFont.apply((ViewGroup) view);
-	//
-	//		return dialog;
-	//	}
+	public void showActionBarAnimatoin(BaseActivity baseActivity)
+	{
+		if (isCanActionBarAnimation() == true || mIsAnimating == true || mIsClosedActionBar == false || mLockActionBar == true)
+		{
+			return;
+		}
 
-	//	private class WebViewClientClass extends WebViewClient
-	//	{
-	//		@Override
-	//		public boolean shouldOverrideUrlLoading(WebView view, String url)
-	//		{
-	//			view.loadUrl(url);
-	//			return true;
-	//		}
-	//	}
+		mIsAnimating = true;
+		mIsClosedActionBar = false;
+
+		final View anchorView = baseActivity.findViewById(R.id.anchorAnimation);
+		final View actionbarView = baseActivity.findViewById(R.id.toolbar_actionbar);
+		final View tabindicatorView = baseActivity.findViewById(R.id.tabindicator);
+		final View underlineView01 = baseActivity.findViewById(R.id.toolbar_actionbar_underline);
+		final View underlineView02 = baseActivity.findViewById(R.id.tabindicator_underLine);
+
+		anchorView.setVisibility(View.VISIBLE);
+
+		if (mValueAnimator != null)
+		{
+			mValueAnimator.cancel();
+			mValueAnimator.removeAllListeners();
+			mValueAnimator = null;
+		}
+
+		mValueAnimator = ValueAnimator.ofInt(-anchorView.getHeight(), 0);
+		mValueAnimator.setDuration(300).addUpdateListener(new AnimatorUpdateListener()
+		{
+			@Override
+			public void onAnimationUpdate(ValueAnimator animation)
+			{
+				int value = (Integer) animation.getAnimatedValue();
+
+				anchorView.setTranslationY(value);
+				actionbarView.setTranslationY(value);
+				underlineView01.setTranslationY(value);
+				tabindicatorView.setTranslationY(value);
+				underlineView02.setTranslationY(value);
+			}
+		});
+
+		mValueAnimator.addListener(new AnimatorListener()
+		{
+			@Override
+			public void onAnimationStart(Animator animation)
+			{
+
+			}
+
+			@Override
+			public void onAnimationRepeat(Animator animation)
+			{
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onAnimationEnd(Animator animation)
+			{
+				mIsAnimating = false;
+				anchorView.setVisibility(View.INVISIBLE);
+			}
+
+			@Override
+			public void onAnimationCancel(Animator animation)
+			{
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		mValueAnimator.start();
+
+	}
+
+	private void hideActionbarAnimation(BaseActivity baseActivity)
+	{
+		if (isCanActionBarAnimation() == true || mIsAnimating == true || mIsClosedActionBar == true || mLockActionBar == true)
+		{
+			return;
+		}
+
+		mIsAnimating = true;
+		mIsClosedActionBar = true;
+
+		final View anchorView = baseActivity.findViewById(R.id.anchorAnimation);
+		final View actionbarView = baseActivity.findViewById(R.id.toolbar_actionbar);
+		final View tabindicatorView = baseActivity.findViewById(R.id.tabindicator);
+		final View underlineView01 = baseActivity.findViewById(R.id.toolbar_actionbar_underline);
+		final View underlineView02 = baseActivity.findViewById(R.id.tabindicator_underLine);
+
+		anchorView.setVisibility(View.VISIBLE);
+
+		if (mValueAnimator != null)
+		{
+			mValueAnimator.cancel();
+			mValueAnimator.removeAllListeners();
+			mValueAnimator = null;
+		}
+
+		mValueAnimator = ValueAnimator.ofInt(0, -anchorView.getHeight());
+		mValueAnimator.setDuration(300).addUpdateListener(new AnimatorUpdateListener()
+		{
+			@Override
+			public void onAnimationUpdate(ValueAnimator animation)
+			{
+				int value = (Integer) animation.getAnimatedValue();
+
+				anchorView.setTranslationY(value);
+				actionbarView.setTranslationY(value);
+				underlineView01.setTranslationY(value);
+				tabindicatorView.setTranslationY(value);
+				underlineView02.setTranslationY(value);
+			}
+		});
+
+		mValueAnimator.addListener(new AnimatorListener()
+		{
+			@Override
+			public void onAnimationStart(Animator animation)
+			{
+
+			}
+
+			@Override
+			public void onAnimationRepeat(Animator animation)
+			{
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onAnimationEnd(Animator animation)
+			{
+				mIsAnimating = false;
+			}
+
+			@Override
+			public void onAnimationCancel(Animator animation)
+			{
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		mValueAnimator.start();
+	}
+
+	private AbsListView.OnScrollListener mOnScrollListener = new AbsListView.OnScrollListener()
+	{
+		@Override
+		public void onScrollStateChanged(AbsListView view, int scrollState)
+		{
+			mScrollState = scrollState;
+		}
+
+		@Override
+		public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount)
+		{
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null)
+			{
+				return;
+			}
+
+			if (isLockUiComponent() == true || baseActivity.isLockUiComponent() == true)
+			{
+				return;
+			}
+
+			View firstView = view.getChildAt(0);
+
+			if (null == firstView)
+			{
+				return;
+			}
+
+			int[] lastViewRect = new int[2];
+			float y = Float.MAX_VALUE;
+
+			View lastView = view.getChildAt(view.getChildCount() - 1);
+
+			if (null != lastView)
+			{
+				lastView.getLocationOnScreen(lastViewRect);
+				y = lastViewRect[1];
+			}
+
+			if (Float.compare(mOldY, Float.MAX_VALUE) == 0)
+			{
+				mOldY = y;
+				mOldfirstVisibleItem = firstVisibleItem;
+			} else
+			{
+				// MotionEvent.ACTION_CANCEL을 사용하는 이유는 가끔씩 내리거나 올리면 갑자기 좌표가 튀는 경우가
+				// 있는데 해당 튀는 경우를 무시하기 위해서
+				if (mOldfirstVisibleItem > firstVisibleItem)
+				{
+					mDirection = MotionEvent.ACTION_DOWN;
+				} else if (mOldfirstVisibleItem < firstVisibleItem)
+				{
+					mDirection = MotionEvent.ACTION_UP;
+				} else
+				{
+					//					if (mScrollState != OnScrollListener.SCROLL_STATE_FLING)
+					//					{
+					//						if (mOldY > y)
+					//						{
+					//							if (mDirection == MotionEvent.ACTION_DOWN)
+					//							{
+					//								mDirection = MotionEvent.ACTION_CANCEL;
+					//							} else
+					//							{
+					//								mDirection = MotionEvent.ACTION_UP;
+					//							}
+					//						} else if (mOldY < y)
+					//						{
+					//							if (mDirection == MotionEvent.ACTION_UP)
+					//							{
+					//								mDirection = MotionEvent.ACTION_CANCEL;
+					//							} else
+					//							{
+					//								mDirection = MotionEvent.ACTION_DOWN;
+					//							}
+					//						}
+					//					}
+				}
+
+				mOldY = y;
+				mOldfirstVisibleItem = firstVisibleItem;
+			}
+
+			switch (mDirection)
+			{
+				case MotionEvent.ACTION_DOWN:
+				{
+					showActionBarAnimatoin(baseActivity);
+					break;
+				}
+
+				case MotionEvent.ACTION_UP:
+				{
+					// 전체 내용을 위로 올린다.
+					if (firstVisibleItem >= 1)
+					{
+						hideActionbarAnimation(baseActivity);
+					}
+					break;
+				}
+			}
+		}
+	};
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Listener
@@ -681,6 +876,8 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 				// 리스트 요청 완료후에 날짜 탭은 애니매이션을 진행하도록 한다.
 				onRefreshComplete();
+
+				setActionBarAnimationLock(false);
 			} catch (Exception e)
 			{
 				onError(e);

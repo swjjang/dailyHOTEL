@@ -9,6 +9,7 @@
         android:id="@+id/hotelMapLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingTop="109dp"
         android:visibility="gone" />
 
     <include
@@ -30,6 +31,7 @@
             android:layout_height="match_parent"
             android:cacheColorHint="@android:color/transparent"
             android:divider="@null" />
+
     </uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout>
 
     <com.twoheart.dailyhotel.widget.DailyFloatingActionButton
