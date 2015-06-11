@@ -204,6 +204,13 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 		{
 			public void handleMessage(Message msg)
 			{
+				BaseActivity baseActivity = (BaseActivity) getActivity();
+
+				if (baseActivity == null || baseActivity.isFinishing() == true)
+				{
+					return;
+				}
+
 				remainingTime -= 1000;
 
 				if (remainingTime > 0)
@@ -218,13 +225,6 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 
 					if (sHandler != null)
 					{
-						BaseActivity baseActivity = (BaseActivity) getActivity();
-
-						if (baseActivity == null)
-						{
-							return;
-						}
-
 						((MainActivity) baseActivity).replaceFragment(((MainActivity) baseActivity).getFragment(MainActivity.INDEX_HOTEL_LIST_FRAGMENT));
 						sHandler = null;
 					}

@@ -62,6 +62,13 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		@Override
 		public void handleMessage(Message msg)
 		{
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null || baseActivity.isFinishing() == true)
+			{
+				return;
+			}
+
 			switch (msg.what)
 			{
 				case HANDLER_MESSAGE_SHOWDAYSLIST:

@@ -31,6 +31,11 @@ public class LoadingDialog
 		@Override
 		public void handleMessage(Message msg)
 		{
+			if (mActivity == null || mActivity.isFinishing() == true)
+			{
+				return;
+			}
+
 			if (mDialog != null && mDialog.isShowing())
 			{
 				mDialog.dismiss();

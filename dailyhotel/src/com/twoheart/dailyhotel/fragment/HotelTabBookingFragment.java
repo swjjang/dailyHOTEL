@@ -135,6 +135,13 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 		{
 			public void handleMessage(Message msg)
 			{
+				BaseActivity baseActivity = (BaseActivity) getActivity();
+
+				if (baseActivity == null || baseActivity.isFinishing() == true)
+				{
+					return;
+				}
+
 				mCurrentPage = mViewPager.getCurrentItem();
 				mCurrentPage++;
 				mViewPager.setCurrentItem(mCurrentPage, true);

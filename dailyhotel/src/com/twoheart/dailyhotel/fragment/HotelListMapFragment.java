@@ -820,7 +820,7 @@ public class HotelListMapFragment extends
 				return;
 			}
 
-			LocationFactory.getInstance().startLocationMeasure(baseActivity, HotelListMapFragment.this, mMyLocationView, new LocationListener()
+			LocationFactory.getInstance(baseActivity).startLocationMeasure(HotelListMapFragment.this, mMyLocationView, new LocationListener()
 			{
 				@Override
 				public void onStatusChanged(String provider, int status, Bundle extras)
@@ -839,6 +839,13 @@ public class HotelListMapFragment extends
 				@Override
 				public void onProviderDisabled(String provider)
 				{
+					BaseActivity baseActivity = (BaseActivity) getActivity();
+
+					if (baseActivity == null)
+					{
+						return;
+					}
+
 					// Fragment가 added가 되지 않은 상태에서 터치가 될경우.
 					if (isAdded() == false)
 					{
@@ -846,7 +853,7 @@ public class HotelListMapFragment extends
 					}
 
 					// 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
-					LocationFactory.getInstance().stopLocationMeasure();
+					LocationFactory.getInstance(baseActivity).stopLocationMeasure();
 
 					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setTitle(R.string.dialog_title_used_gps).setMessage(getString(R.string.dialog_msg_used_gps)).setNegativeButton(getString(R.string.dialog_btn_text_cancel), null).setPositiveButton(getString(R.string.dialog_btn_text_dosetting), new DialogInterface.OnClickListener()
 					{
@@ -871,7 +878,7 @@ public class HotelListMapFragment extends
 						return;
 					}
 
-					LocationFactory.getInstance().stopLocationMeasure();
+					LocationFactory.getInstance(baseActivity).stopLocationMeasure();
 
 					if (mMyLocationMarkerOptions == null)
 					{
