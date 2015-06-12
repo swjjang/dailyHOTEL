@@ -95,9 +95,9 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	private int mOldfirstVisibleItem;
 	private int mDirection;
 	private static boolean mIsClosedActionBar = false;
-	private static boolean mIsAnimating = false;
 	private static ValueAnimator mValueAnimator = null;
 	private static boolean mLockActionBar = false;
+	private static int mAnchorY = Integer.MAX_VALUE;
 	private int mScrollState;
 
 	@Override
@@ -475,12 +475,11 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 	public void showActionBarAnimatoin(BaseActivity baseActivity)
 	{
-		if (isCanActionBarAnimation() == false || mIsAnimating == true || mIsClosedActionBar == false || mLockActionBar == true)
+		if (isCanActionBarAnimation() == false || mIsClosedActionBar == false || mLockActionBar == true)
 		{
 			return;
 		}
 
-		mIsAnimating = true;
 		mIsClosedActionBar = false;
 
 		final View anchorView = baseActivity.findViewById(R.id.anchorAnimation);
@@ -498,13 +497,20 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 			mValueAnimator = null;
 		}
 
-		mValueAnimator = ValueAnimator.ofInt(-anchorView.getHeight(), 0);
+		if (mAnchorY == Integer.MAX_VALUE)
+		{
+			mAnchorY = -anchorView.getHeight();
+		}
+
+		mValueAnimator = ValueAnimator.ofInt(mAnchorY, 0);
 		mValueAnimator.setDuration(300).addUpdateListener(new AnimatorUpdateListener()
 		{
 			@Override
 			public void onAnimationUpdate(ValueAnimator animation)
 			{
 				int value = (Integer) animation.getAnimatedValue();
+
+				mAnchorY = value;
 
 				anchorView.setTranslationY(value);
 				actionbarView.setTranslationY(value);
@@ -519,28 +525,22 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 			@Override
 			public void onAnimationStart(Animator animation)
 			{
-
 			}
 
 			@Override
 			public void onAnimationRepeat(Animator animation)
 			{
-				// TODO Auto-generated method stub
-
 			}
 
 			@Override
 			public void onAnimationEnd(Animator animation)
 			{
-				mIsAnimating = false;
 				anchorView.setVisibility(View.INVISIBLE);
 			}
 
 			@Override
 			public void onAnimationCancel(Animator animation)
 			{
-				// TODO Auto-generated method stub
-
 			}
 		});
 
@@ -550,12 +550,11 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 	private void hideActionbarAnimation(BaseActivity baseActivity)
 	{
-		if (isCanActionBarAnimation() == false || mIsAnimating == true || mIsClosedActionBar == true || mLockActionBar == true)
+		if (isCanActionBarAnimation() == false || mIsClosedActionBar == true || mLockActionBar == true)
 		{
 			return;
 		}
 
-		mIsAnimating = true;
 		mIsClosedActionBar = true;
 
 		final View anchorView = baseActivity.findViewById(R.id.anchorAnimation);
@@ -573,13 +572,20 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 			mValueAnimator = null;
 		}
 
-		mValueAnimator = ValueAnimator.ofInt(0, -anchorView.getHeight());
+		if (mAnchorY == Integer.MAX_VALUE)
+		{
+			mAnchorY = 0;
+		}
+
+		mValueAnimator = ValueAnimator.ofInt(mAnchorY, -anchorView.getHeight());
 		mValueAnimator.setDuration(300).addUpdateListener(new AnimatorUpdateListener()
 		{
 			@Override
 			public void onAnimationUpdate(ValueAnimator animation)
 			{
 				int value = (Integer) animation.getAnimatedValue();
+
+				mAnchorY = value;
 
 				anchorView.setTranslationY(value);
 				actionbarView.setTranslationY(value);
@@ -594,27 +600,21 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 			@Override
 			public void onAnimationStart(Animator animation)
 			{
-
 			}
 
 			@Override
 			public void onAnimationRepeat(Animator animation)
 			{
-				// TODO Auto-generated method stub
-
 			}
 
 			@Override
 			public void onAnimationEnd(Animator animation)
 			{
-				mIsAnimating = false;
 			}
 
 			@Override
 			public void onAnimationCancel(Animator animation)
 			{
-				// TODO Auto-generated method stub
-
 			}
 		});
 
