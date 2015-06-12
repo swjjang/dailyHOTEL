@@ -327,6 +327,11 @@ public class HotelListMapFragment extends
 		if (isChangedRegion == true)
 		{
 			mIsOpenMakrer = false;
+
+			if (mOnInfoWindowUserActionListener != null)
+			{
+				mOnInfoWindowUserActionListener.onCloseInfoWindowClickListener();
+			}
 		}
 
 		double latitude = 0.0;

@@ -6,7 +6,7 @@ import org.json.JSONObject;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Area extends Province implements Parcelable
+public class Area extends Province
 {
 	public int provinceIndex;
 	public String tag;

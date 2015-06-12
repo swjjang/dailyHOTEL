@@ -6,5 +6,5 @@
     android:paddingLeft="40dp"
     android:textColor="@color/textView_textColor_main"
     android:textSize="17dp"
-    android:background="@color/mapview_hotelwindow_background"
+    android:background="@drawable/selector_background_area"
     android:gravity="center_vertical" />

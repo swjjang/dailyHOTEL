@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
+import com.twoheart.dailyhotel.model.AreaItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.ui.DailyAnimatedExpandableListView;
 import com.twoheart.dailyhotel.ui.DailyAnimatedExpandableListView.AnimatedExpandableListAdapter;
@@ -24,13 +25,7 @@ import com.twoheart.dailyhotel.util.ui.BaseActivity;
 public class SelectAreaActivity extends BaseActivity
 {
 	private DailyAnimatedExpandableListView mListView;
-	private ArrayList<AreaItem> mArrayList;
-
-	private class AreaItem
-	{
-		Province province;
-		ArrayList<Area> areaList;
-	}
+	private AreaAnimatedExpandableListAdapter mAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -47,52 +42,81 @@ public class SelectAreaActivity extends BaseActivity
 			return;
 		}
 
-		ArrayList<Province> mProvinceList = intent.getParcelableArrayListExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
-		ArrayList<Area> mAreaList = intent.getParcelableArrayListExtra(NAME_INTENT_EXTRA_DATA_AREA);
+		Province province = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
+		ArrayList<AreaItem> arrayList = intent.getParcelableArrayListExtra(NAME_INTENT_EXTRA_DATA_AREAITEMLIST);
 
-		mArrayList = new ArrayList<AreaItem>(mProvinceList.size());
+		initLayout(arrayList, province);
 
-		for (Province province : mProvinceList)
+		if (province instanceof Area)
 		{
-			AreaItem item = new AreaItem();
+			int size = arrayList.size();
+			Area selectedArea = (Area) province;
 
-			item.province = province;
-			item.areaList = new ArrayList<Area>();
-
-			for (Area area : mAreaList)
+			for (int i = 0; i < size; i++)
 			{
-				if (province.index == area.provinceIndex)
+				AreaItem areaItem = arrayList.get(i);
+
+				if (selectedArea.provinceIndex == areaItem.getProvince().index)
 				{
-					if (item.areaList.size() == 0)
+					if (areaItem.getAreaList().size() == 0)
 					{
-						Area totalArea = new Area();
+						// 상세 지역이 없는 경우.
+						mListView.setSelection(i);
+						mListView.setSelectedGroup(i);
+					} else
+					{
+						ArrayList<Area> areaList = areaItem.getAreaList();
+						int areaSize = areaList.size();
 
-						totalArea.index = -1;
-						totalArea.name = province.name + " 전체";
-						totalArea.provinceIndex = province.index;
-						totalArea.sequence = -1;
-						totalArea.tag = totalArea.name;
+						for (int j = 0; j < areaSize; j++)
+						{
+							Area area = areaList.get(j);
 
-						item.areaList.add(totalArea);
+							if (area.index == selectedArea.index)
+							{
+								mListView.setSelection(i);
+								mListView.expandGroup(i);
+								break;
+							}
+						}
 					}
-
-					item.areaList.add(area);
+					break;
 				}
 			}
+		} else
+		{
+			int size = arrayList.size();
 
-			mArrayList.add(item);
+			for (int i = 0; i < size; i++)
+			{
+				AreaItem areaItem = arrayList.get(i);
+
+				if (province.index == areaItem.getProvince().index)
+				{
+					if (areaItem.getAreaList().size() == 0)
+					{
+						// 상세 지역이 없는 경우.
+						mListView.setSelection(i);
+						mListView.setSelectedGroup(i);
+					} else
+					{
+						mListView.setSelection(i);
+						mListView.expandGroup(i);
+					}
+					break;
+				}
+			}
 		}
-
-		initLayout();
 	}
 
-	private void initLayout()
+	private void initLayout(ArrayList<AreaItem> arrayList, Province province)
 	{
-		AreaAnimatedExpandableListAdapter adapter = new AreaAnimatedExpandableListAdapter(this);
-		adapter.setData(mArrayList);
+		mAdapter = new AreaAnimatedExpandableListAdapter(this);
+		mAdapter.setData(arrayList);
+		mAdapter.setSelected(province);
 
 		mListView = (DailyAnimatedExpandableListView) findViewById(R.id.listview);
-		mListView.setAdapter(adapter);
+		mListView.setAdapter(mAdapter);
 
 		mListView.setOnGroupClickListener(new OnGroupClickListener()
 		{
@@ -100,10 +124,13 @@ public class SelectAreaActivity extends BaseActivity
 			public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id)
 			{
 				//
-				if (mArrayList.get(groupPosition).areaList.size() == 0)
+				if (mAdapter.getChildrenCount(groupPosition) == 0)
 				{
+					mAdapter.setSelected(mAdapter.getGroup(groupPosition));
+					mAdapter.notifyDataSetChanged();
+
 					Intent intent = new Intent();
-					intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, mArrayList.get(groupPosition).province);
+					intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, mAdapter.getGroup(groupPosition));
 					setResult(RESULT_OK, intent);
 					finish();
 					return true;
@@ -129,11 +156,17 @@ public class SelectAreaActivity extends BaseActivity
 
 				if (childPosition == 0)
 				{
-					intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, mArrayList.get(groupPosition).province);
+					mAdapter.setSelected(mAdapter.getChildren(groupPosition).get(childPosition));
+					mAdapter.notifyDataSetChanged();
+
+					intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, mAdapter.getGroup(groupPosition));
 
 				} else
 				{
-					intent.putExtra(NAME_INTENT_EXTRA_DATA_AREA, mArrayList.get(groupPosition).areaList.get(childPosition));
+					mAdapter.setSelected(mAdapter.getChildren(groupPosition).get(childPosition));
+					mAdapter.notifyDataSetChanged();
+
+					intent.putExtra(NAME_INTENT_EXTRA_DATA_AREA, mAdapter.getChildren(groupPosition).get(childPosition));
 				}
 
 				setResult(RESULT_OK, intent);
@@ -164,7 +197,7 @@ public class SelectAreaActivity extends BaseActivity
 			AnimatedExpandableListAdapter
 	{
 		private LayoutInflater inflater;
-
+		private Province mSelectedProvince;
 		private List<AreaItem> items;
 
 		public AreaAnimatedExpandableListAdapter(Context context)
@@ -177,10 +210,20 @@ public class SelectAreaActivity extends BaseActivity
 			this.items = items;
 		}
 
+		public void setSelected(Province province)
+		{
+			mSelectedProvince = province;
+		}
+
+		public ArrayList<Area> getChildren(int groupPosition)
+		{
+			return items.get(groupPosition).getAreaList();
+		}
+
 		@Override
 		public Area getChild(int groupPosition, int childPosition)
 		{
-			return items.get(groupPosition).areaList.get(childPosition);
+			return items.get(groupPosition).getAreaList().get(childPosition);
 		}
 
 		@Override
@@ -203,19 +246,30 @@ public class SelectAreaActivity extends BaseActivity
 
 			textView.setText(area.tag);
 
+			if (mSelectedProvince instanceof Area && mSelectedProvince.index == area.index)
+			{
+				convertView.setBackgroundColor(getResources().getColor(R.color.dh_theme_color));
+			} else if (mSelectedProvince instanceof Province && (mSelectedProvince.index == area.provinceIndex && area.index == -1))
+			{
+				convertView.setBackgroundColor(getResources().getColor(R.color.dh_theme_color));
+			} else
+			{
+				convertView.setBackgroundResource(R.drawable.selector_background_area);
+			}
+
 			return convertView;
 		}
 
 		@Override
 		public int getRealChildrenCount(int groupPosition)
 		{
-			return items.get(groupPosition).areaList.size();
+			return items.get(groupPosition).getAreaList().size();
 		}
 
 		@Override
 		public Province getGroup(int groupPosition)
 		{
-			return items.get(groupPosition).province;
+			return items.get(groupPosition).getProvince();
 		}
 
 		@Override
@@ -243,6 +297,17 @@ public class SelectAreaActivity extends BaseActivity
 			TextView textView = (TextView) convertView.findViewById(R.id.provinceTextView);
 
 			textView.setText(province.name);
+
+			if (mSelectedProvince != null && mSelectedProvince instanceof Area == false && mSelectedProvince.index == province.index)
+			{
+				if (getRealChildrenCount(groupPosition) == 0)
+				{
+					convertView.setBackgroundColor(getResources().getColor(R.color.dh_theme_color));
+				}
+			} else
+			{
+				convertView.setBackgroundResource(R.drawable.selector_background_province);
+			}
 
 			return convertView;
 		}

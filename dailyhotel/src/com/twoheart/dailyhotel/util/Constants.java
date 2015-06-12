@@ -327,6 +327,7 @@ public interface Constants
 	public static final String NAME_INTENT_EXTRA_DATA_MESSAGE = "message";
 	public static final String NAME_INTENT_EXTRA_DATA_PROVINCE = "province";
 	public static final String NAME_INTENT_EXTRA_DATA_AREA = "area";
+	public static final String NAME_INTENT_EXTRA_DATA_AREAITEMLIST = "areaItemlist";
 
 	// Push Type
 	public static final int PUSH_TYPE_NOTICE = 0;

@@ -46,6 +46,7 @@ import com.twoheart.dailyhotel.WaitTimerFragment;
 import com.twoheart.dailyhotel.activity.HotelTabActivity;
 import com.twoheart.dailyhotel.activity.SelectAreaActivity;
 import com.twoheart.dailyhotel.model.Area;
+import com.twoheart.dailyhotel.model.AreaItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -66,8 +67,9 @@ public class HotelMainFragment extends BaseFragment
 	private ArrayList<HotelListFragment> mFragmentList;
 
 	private SaleTime mTodaySaleTime;
-	private ArrayList<Province> mProvinceList;
-	private ArrayList<Area> mAreaList;
+	//	private ArrayList<Province> mProvinceList;
+	//	private ArrayList<Area> mAreaList;
+	private ArrayList<AreaItem> mAreaItemList;
 	private Province mSelectedProvince;
 
 	private boolean mMenuEnabled;
@@ -390,6 +392,46 @@ public class HotelMainFragment extends BaseFragment
 		hotelListFragment.refreshHotelList(province, isSelectionTop);
 	}
 
+	private ArrayList<AreaItem> makeAreaItemList(ArrayList<Province> provinceList, ArrayList<Area> areaList)
+	{
+		ArrayList<AreaItem> arrayList = new ArrayList<AreaItem>(provinceList.size());
+
+		for (Province province : provinceList)
+		{
+			AreaItem item = new AreaItem();
+
+			item.setProvince(province);
+			item.setAreaList(new ArrayList<Area>());
+
+			for (Area area : areaList)
+			{
+				if (province.index == area.provinceIndex)
+				{
+					ArrayList<Area> areaArrayList = item.getAreaList();
+
+					if (areaArrayList.size() == 0)
+					{
+						Area totalArea = new Area();
+
+						totalArea.index = -1;
+						totalArea.name = province.name + " 전체";
+						totalArea.provinceIndex = province.index;
+						totalArea.sequence = -1;
+						totalArea.tag = totalArea.name;
+
+						areaArrayList.add(totalArea);
+					}
+
+					areaArrayList.add(area);
+				}
+			}
+
+			arrayList.add(item);
+		}
+
+		return arrayList;
+	}
+
 	/**
 	 * 
 	 * @param activity
@@ -557,19 +599,6 @@ public class HotelMainFragment extends BaseFragment
 					throw new NullPointerException("response == null");
 				}
 
-				if (mProvinceList == null)
-				{
-					mProvinceList = new ArrayList<Province>();
-				}
-
-				if (mAreaList == null)
-				{
-					mAreaList = new ArrayList<Area>();
-				}
-
-				mProvinceList.clear();
-				mAreaList.clear();
-
 				int msg_code = response.getInt("msg_code");
 
 				if (msg_code != 0)
@@ -580,10 +609,10 @@ public class HotelMainFragment extends BaseFragment
 				JSONObject dataJSONObject = response.getJSONObject("data");
 
 				JSONArray provinceArray = dataJSONObject.getJSONArray("province");
-				makeProvinceList(provinceArray);
+				ArrayList<Province> provinceList = makeProvinceList(provinceArray);
 
 				JSONArray areaJSONArray = dataJSONObject.getJSONArray("area");
-				makeAreaList(areaJSONArray);
+				ArrayList<Area> areaList = makeAreaList(areaJSONArray);
 
 				// 마지막으로 선택한 지역을 가져온다.
 				String regionName = baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
@@ -597,14 +626,14 @@ public class HotelMainFragment extends BaseFragment
 					// 해당 지역이 없는 경우 Province의 첫번째 지역으로 한다.
 					if (TextUtils.isEmpty(regionName) == true)
 					{
-						selectedProvince = mProvinceList.get(0);
+						selectedProvince = provinceList.get(0);
 						regionName = selectedProvince.name;
 					}
 				}
 
 				if (selectedProvince == null)
 				{
-					for (Province province : mProvinceList)
+					for (Province province : provinceList)
 					{
 						if (province.name.equals(regionName) == true)
 						{
@@ -615,7 +644,7 @@ public class HotelMainFragment extends BaseFragment
 
 					if (selectedProvince == null)
 					{
-						for (Area area : mAreaList)
+						for (Area area : areaList)
 						{
 							if (area.name.equals(regionName) == true)
 							{
@@ -626,10 +655,12 @@ public class HotelMainFragment extends BaseFragment
 					}
 				}
 
+				mAreaItemList = makeAreaItemList(provinceList, areaList);
+
 				// 여러가지 방식으로 지역을 검색했지만 찾지 못하는 경우.
 				if (selectedProvince == null)
 				{
-					selectedProvince = mProvinceList.get(0);
+					selectedProvince = provinceList.get(0);
 					regionName = selectedProvince.name;
 				}
 
@@ -697,8 +728,10 @@ public class HotelMainFragment extends BaseFragment
 			}
 		}
 
-		private boolean makeAreaList(JSONArray jsonArray)
+		private ArrayList<Area> makeAreaList(JSONArray jsonArray)
 		{
+			ArrayList<Area> areaList = new ArrayList<Area>();
+
 			try
 			{
 				int length = jsonArray.length();
@@ -711,7 +744,7 @@ public class HotelMainFragment extends BaseFragment
 					{
 						Area area = new Area(jsonObject);
 
-						mAreaList.add(area);
+						areaList.add(area);
 					} catch (JSONException e)
 					{
 						ExLog.d(e.toString());
@@ -719,14 +752,16 @@ public class HotelMainFragment extends BaseFragment
 				}
 			} catch (Exception e)
 			{
-				return false;
+				ExLog.d(e.toString());
 			}
 
-			return true;
+			return areaList;
 		}
 
-		private boolean makeProvinceList(JSONArray jsonArray)
+		private ArrayList<Province> makeProvinceList(JSONArray jsonArray)
 		{
+			ArrayList<Province> provinceList = new ArrayList<Province>();
+
 			try
 			{
 				int length = jsonArray.length();
@@ -739,7 +774,7 @@ public class HotelMainFragment extends BaseFragment
 					{
 						Province province = new Province(jsonObject);
 
-						mProvinceList.add(province);
+						provinceList.add(province);
 					} catch (JSONException e)
 					{
 						ExLog.d(e.toString());
@@ -747,10 +782,10 @@ public class HotelMainFragment extends BaseFragment
 				}
 			} catch (Exception e)
 			{
-				return false;
+				ExLog.d(e.toString());
 			}
 
-			return true;
+			return provinceList;
 		}
 
 	};
@@ -997,8 +1032,8 @@ public class HotelMainFragment extends BaseFragment
 			}
 
 			Intent intent = new Intent(baseActivity, SelectAreaActivity.class);
-			intent.putParcelableArrayListExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, mProvinceList);
-			intent.putParcelableArrayListExtra(NAME_INTENT_EXTRA_DATA_AREA, mAreaList);
+			intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, mSelectedProvince);
+			intent.putParcelableArrayListExtra(NAME_INTENT_EXTRA_DATA_AREAITEMLIST, mAreaItemList);
 			startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SELECT_AREA);
 
 			baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);

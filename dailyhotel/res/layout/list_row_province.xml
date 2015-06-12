@@ -3,7 +3,8 @@
     android:id="@+id/provinceTextView"
     android:layout_width="match_parent"
     android:layout_height="50dp"
+    android:background="@drawable/selector_background_province"
+    android:gravity="center_vertical"
     android:paddingLeft="20dp"
     android:textColor="@color/textView_textColor_main"
-    android:textSize="17dp"
-    android:gravity="center_vertical" />
+    android:textSize="17dp" />

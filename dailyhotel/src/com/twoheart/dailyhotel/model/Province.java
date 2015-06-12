@@ -12,6 +12,8 @@ public class Province implements Parcelable
 	public String name;
 	public int sequence;
 
+	public boolean isSelected;
+
 	public Province()
 	{
 		super();
