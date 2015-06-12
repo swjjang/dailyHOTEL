@@ -94,10 +94,10 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	private float mOldY;
 	private int mOldfirstVisibleItem;
 	private int mDirection;
-	private static boolean mIsClosedActionBar;
-	private static boolean mIsAnimating;
-	private static ValueAnimator mValueAnimator;
-	private static boolean mLockActionBar;
+	private static boolean mIsClosedActionBar = false;
+	private static boolean mIsAnimating = false;
+	private static ValueAnimator mValueAnimator = null;
+	private static boolean mLockActionBar = false;
 	private int mScrollState;
 
 	@Override
@@ -475,7 +475,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 	public void showActionBarAnimatoin(BaseActivity baseActivity)
 	{
-		if (isCanActionBarAnimation() == true || mIsAnimating == true || mIsClosedActionBar == false || mLockActionBar == true)
+		if (isCanActionBarAnimation() == false || mIsAnimating == true || mIsClosedActionBar == false || mLockActionBar == true)
 		{
 			return;
 		}
@@ -550,7 +550,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 	private void hideActionbarAnimation(BaseActivity baseActivity)
 	{
-		if (isCanActionBarAnimation() == true || mIsAnimating == true || mIsClosedActionBar == true || mLockActionBar == true)
+		if (isCanActionBarAnimation() == false || mIsAnimating == true || mIsClosedActionBar == true || mLockActionBar == true)
 		{
 			return;
 		}
