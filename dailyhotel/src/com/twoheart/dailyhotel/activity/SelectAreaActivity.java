@@ -246,10 +246,23 @@ public class SelectAreaActivity extends BaseActivity
 
 			textView.setText(area.tag);
 
-			if (mSelectedProvince instanceof Area && mSelectedProvince.index == area.index)
+			boolean isSelected = false;
+
+			if (mSelectedProvince instanceof Area)
 			{
-				convertView.setBackgroundColor(getResources().getColor(R.color.dh_theme_color));
-			} else if (mSelectedProvince instanceof Province && (mSelectedProvince.index == area.provinceIndex && area.index == -1))
+				if (mSelectedProvince.index == area.index && mSelectedProvince.name.equalsIgnoreCase(area.name) == true)
+				{
+					isSelected = true;
+				}
+			} else if (mSelectedProvince instanceof Province)
+			{
+				if (mSelectedProvince.index == area.provinceIndex && area.index == -1)
+				{
+					isSelected = true;
+				}
+			}
+
+			if (isSelected == true)
 			{
 				convertView.setBackgroundColor(getResources().getColor(R.color.dh_theme_color));
 			} else
@@ -298,12 +311,19 @@ public class SelectAreaActivity extends BaseActivity
 
 			textView.setText(province.name);
 
-			if (mSelectedProvince != null && mSelectedProvince instanceof Area == false && mSelectedProvince.index == province.index)
+			boolean isSelected = false;
+
+			if (mSelectedProvince instanceof Area == false && mSelectedProvince.index == province.index)
 			{
 				if (getRealChildrenCount(groupPosition) == 0)
 				{
-					convertView.setBackgroundColor(getResources().getColor(R.color.dh_theme_color));
+					isSelected = true;
 				}
+			}
+
+			if (isSelected == true)
+			{
+				convertView.setBackgroundColor(getResources().getColor(R.color.dh_theme_color));
 			} else
 			{
 				convertView.setBackgroundResource(R.drawable.selector_background_province);
