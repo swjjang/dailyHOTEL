@@ -433,7 +433,7 @@
     <string name="message_failed_mylocation">일시적으로 내 위치 정보를 얻을 수 없습니다.</string>
 
     <!-- CreditCardFragment -->
-    <string name="label_add_creditcard">+ 내 신용카드 추가하기</string>
+    <string name="label_add_creditcard">신용카드 추가하기</string>
     <string name="label_creditcard_introduce">간편하게 카드등록하고\n1초만에 결제하세요!</string>
     <string name="message_billing_success">카드 등록이 완료되었습니다.</string>
     <string name="message_billing_fail">카드 등록을 실패하였습니다.</string>

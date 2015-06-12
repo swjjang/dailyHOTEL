@@ -78,6 +78,7 @@
 	
 	<!-- Credit Card -->
 	<color name="creditcard_background">#fefbf6</color>
+	<color name="creditcard_number_text">#58585a</color>
 	
 	<!-- Booking List -->
 	<color name="bookinglist_section_background">#292929</color>

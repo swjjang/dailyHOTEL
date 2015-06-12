@@ -34,11 +34,11 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="10dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:background="@drawable/shape_button_common_background"
             android:gravity="center"
-            android:text="신용카드 추가하기"
+            android:text="@string/label_add_creditcard"
             android:textColor="@android:color/white"
             android:textSize="17dp" />
 
@@ -47,11 +47,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@id/addCreditCardButton"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:scrollbarStyle="outsideOverlay" />
+            android:divider="@null"
+            android:cacheColorHint="@android:color/transparent"
+            android:paddingBottom="10dp" />
 
     </RelativeLayout>
 

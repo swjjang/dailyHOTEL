@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import android.content.Context;
-import android.support.v7.internal.widget.TintRadioButton;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +26,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -33,7 +34,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.CreditCardListActivity;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
-import com.twoheart.dailyhotel.util.Util;
 
 /**
  * 신용카드 등록하기.
@@ -89,9 +89,6 @@ public class CreditCardLayout extends FrameLayout
 		mAddCreditCardButton = (TextView) view.findViewById(R.id.addCreditCardButton);
 
 		mListView = (ListView) view.findViewById(R.id.creditcardListView);
-		mListView.setDivider(null);
-		mListView.setDividerHeight(Util.dpToPx(context, 20));
-
 		mAddCreditCardButton.setOnClickListener(mAddCreditCardClickListener);
 	}
 
@@ -266,26 +263,38 @@ public class CreditCardLayout extends FrameLayout
 					}
 				};
 
-				TintRadioButton radioButton = (TintRadioButton) view.findViewById(R.id.selectRadioButton);
-				radioButton.setVisibility(View.VISIBLE);
-				radioButton.setOnClickListener(onClickListener);
+				ImageView checkImageView = (ImageView) view.findViewById(R.id.checkedImageView);
 
 				View cardLayout = view.findViewById(R.id.cardLayout);
 				cardLayout.setOnClickListener(onClickListener);
 
 				if (mSelectedCreditCard != null && mSelectedCreditCard.billingkey.equals(card.billingkey) == true)
 				{
-					radioButton.setChecked(true);
+					checkImageView.setVisibility(View.VISIBLE);
+
+					cardLayout.setBackgroundResource(R.drawable.card_bg_select);
+					checkImageView.setImageResource(R.drawable.card_btn_v_select);
 				} else
 				{
-					radioButton.setChecked(false);
+					checkImageView.setVisibility(View.INVISIBLE);
+					cardLayout.setBackgroundResource(R.drawable.card_bg);
 				}
 			}
 
-			TextView nameTextView = (TextView) view.findViewById(R.id.nameTextView);
-			TextView numberTextView = (TextView) view.findViewById(R.id.numberTextView);
+			ImageView logoImageView = (ImageView) view.findViewById(R.id.logoImageView);
 
-			nameTextView.setText(card.name);
+			int resLogo = getLogo(card.name);
+
+			if (resLogo == 0)
+			{
+				logoImageView.setVisibility(View.INVISIBLE);
+			} else
+			{
+				logoImageView.setVisibility(View.VISIBLE);
+				logoImageView.setImageResource(resLogo);
+			}
+
+			TextView numberTextView = (TextView) view.findViewById(R.id.numberTextView);
 			numberTextView.setText(card.number);
 
 			View deleteButton = view.findViewById(R.id.deleteImageView);
@@ -303,6 +312,64 @@ public class CreditCardLayout extends FrameLayout
 			});
 
 			return view;
+		}
+
+		private int getLogo(String cardName)
+		{
+			if (TextUtils.isEmpty(cardName) == true)
+			{
+				return 0;
+			}
+
+			if (cardName.startsWith("외환") == true)
+			{
+				return R.drawable.card_logo_01;
+			} else if (cardName.startsWith("롯데") == true)
+			{
+				return R.drawable.card_logo_02;
+			} else if (cardName.startsWith("현대") == true)
+			{
+				return R.drawable.card_logo_03;
+			} else if (cardName.startsWith("국민") == true)
+			{
+				return R.drawable.card_logo_04;
+			} else if (cardName.startsWith("BC") == true)
+			{
+				return R.drawable.card_logo_05;
+			} else if (cardName.startsWith("삼성") == true)
+			{
+				return R.drawable.card_logo_06;
+			} else if (cardName.startsWith("신한") == true)
+			{
+				return R.drawable.card_logo_07;
+			} else if (cardName.startsWith("한미") == true)
+			{
+				return R.drawable.card_logo_08;
+			} else if (cardName.startsWith("NH") == true)
+			{
+				return R.drawable.card_logo_09;
+			} else if (cardName.startsWith("하나 SK") == true)
+			{
+				return R.drawable.card_logo_10;
+			} else if (cardName.startsWith("해외비자") == true)
+			{
+				return R.drawable.card_logo_11;
+			} else if (cardName.startsWith("해외마스터") == true)
+			{
+				return R.drawable.card_logo_12;
+			} else if (cardName.startsWith("JCB") == true)
+			{
+				return R.drawable.card_logo_13;
+			} else if (cardName.startsWith("해외아멕스") == true)
+			{
+				return R.drawable.card_logo_14;
+			} else if (cardName.startsWith("해외다이너스") == true)
+			{
+				return R.drawable.card_logo_15;
+			} else
+			{
+				return 0;
+			}
 		}
 	}
 

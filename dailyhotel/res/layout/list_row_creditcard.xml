@@ -1,53 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" >
-
-    <com.twoheart.dailyhotel.widget.DailyCustomFontRadioButton
-        android:id="@+id/selectRadioButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:button="@drawable/abc_btn_radio_material"
-        android:buttonTint="@color/actionbar_hamburger"
-        android:textColor="@color/textView_textColor_main"
-        android:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/cardLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/selectRadioButton"
-        android:background="@drawable/shape_creditcard_background"
-        android:paddingBottom="20dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:paddingTop="20dp" >
+        android:layout_height="190dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/card_bg"
+        android:paddingBottom="18dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="15dp" >
 
-        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-            android:id="@+id/nameTextView"
+        <ImageView
+            android:id="@+id/logoImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="신용카드"
-            android:textColor="@color/textView_textColor_main"
-            android:textSize="18dp" />
+            android:src="@drawable/card_logo_01" />
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/card_daily" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/logoImageView"
+            android:layout_marginTop="12dp"
+            android:src="@drawable/card_chip" />
 
         <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
             android:id="@+id/numberTextView"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/nameTextView"
-            android:layout_marginTop="10dp"
-            android:textColor="@color/textView_textColor_main"
+            android:layout_above="@id/imageView1"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="6dp"
+            android:text="1234-****-123*-1234"
+            android:textColor="@color/creditcard_number_text"
             android:textSize="16dp" />
 
+        <ImageView
+            android:id="@+id/checkedImageView"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="43dp"
+            android:src="@drawable/card_btn_v_off"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/deleteImageView"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/card_btn_x_off" />
     </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/deleteImageView"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_alignParentRight="true"
-        android:src="@drawable/img_btn_cancel" />
-
-</RelativeLayout>
+</FrameLayout>

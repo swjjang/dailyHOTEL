@@ -158,8 +158,6 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 	@Override
 	public void onPageSelected(boolean isRequestHotelList)
 	{
-		ExLog.d("pinkred : mAnimationStatus : " + mAnimationState + ", mAnimationStatus : " + mAnimationStatus + ", isRequestHotelList : " + isRequestHotelList);
-
 		super.onPageSelected(isRequestHotelList);
 
 		initDaysLayout();
