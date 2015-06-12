@@ -204,11 +204,6 @@
             android:theme="@android:style/Theme.Dialog" >
         </activity>
         <activity
-            android:name=".RegionListActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
             android:name=".activity.CreditCardListActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" >

@@ -39,6 +39,7 @@ import android.widget.Toast;
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.WakeLock;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
@@ -86,6 +87,8 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 		}
 
 		View view = inflater.inflate(R.layout.fragment_wait_timer, container, false);
+		view.setPadding(0, Util.dpToPx(container.getContext(), 56) + 1, 0, 0);
+
 		mSaleTime = (SaleTime) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_SALETIME);
 		alarmManager = (AlarmManager) baseActivity.getApplicationContext().getSystemService(Context.ALARM_SERVICE);
 		intent = new Intent(baseActivity.getApplicationContext(), AlarmBroadcastReceiver.class);

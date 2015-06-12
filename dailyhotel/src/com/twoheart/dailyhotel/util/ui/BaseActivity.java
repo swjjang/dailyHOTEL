@@ -15,28 +15,22 @@
  */
 package com.twoheart.dailyhotel.util.ui;
 
-import java.util.ArrayList;
 import java.util.Locale;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
 import android.webkit.CookieSyncManager;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,8 +48,6 @@ import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.widget.DailyToast;
-import com.twoheart.dailyhotel.widget.RegionPopupListView;
-import com.twoheart.dailyhotel.widget.RegionPopupListView.UserActionListener;
 
 public class BaseActivity extends ActionBarActivity implements Constants, OnLoadListener, ErrorListener
 {
@@ -71,7 +63,6 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	private Handler handler;
 
 	protected Runnable networkCheckRunner;
-	private PopupWindow mPopupWindow;
 	private int mSpinnderIndex = -1;
 	private boolean mActionBarRegionEnabled;
 
@@ -312,74 +303,6 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 				Util.restartApp(BaseActivity.this);
 			}
 		}, null).setCancelable(false).show();
-	}
-
-	private void showPopupWindow(View oTargetView, ArrayList<String> stringlist, final UserActionListener userActionListener)
-	{
-		if (oTargetView == null || stringlist == null)
-		{
-			return;
-		}
-
-		if (mPopupWindow != null && mPopupWindow.isShowing() == true)
-		{
-			return;
-		}
-
-		RegionPopupListView regionPopupListView = new RegionPopupListView(BaseActivity.this);
-		regionPopupListView.setData(stringlist);
-		regionPopupListView.setUserActionListener(new RegionPopupListView.UserActionListener()
-		{
-
-			@Override
-			public void onItemClick(int position)
-			{
-				if (mPopupWindow != null && mPopupWindow.isShowing() == true)
-				{
-					mPopupWindow.dismiss();
-					mPopupWindow = null;
-				}
-
-				if (userActionListener != null)
-				{
-					userActionListener.onItemClick(position);
-				}
-			}
-		});
-
-		mPopupWindow = new PopupWindow(regionPopupListView, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-
-		mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener()
-		{
-			@Override
-			public void onDismiss()
-			{
-				releaseUiComponent();
-			}
-		});
-
-		//영역이외의 터치시 팝업 윈도우를 닫히게 하기 위해서
-		mPopupWindow.setOutsideTouchable(true);
-		mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
-		//팝업 윈도우에 터치가 가능 하게 하려면 포커스를 줘야 함 
-		mPopupWindow.setFocusable(true);
-
-		mPopupWindow.setAnimationStyle(-1); // 애니메이션 설정(-1:설정, 0:설정안함)
-		//      mPopupWindow.showAsDropDown(btn_Popup, 50, 50);
-
-		Rect oRect = new Rect();
-		oTargetView.getGlobalVisibleRect(oRect);
-
-		/**
-		 * showAtLocation(parent, gravity, x, y)
-		 * 
-		 * @praent : PopupWindow가 생성될 parent View 지정 View v = (View)
-		 *         findViewById(R.id.btn_click)의 형태로 parent 생성
-		 * @gravity : parent View의 Gravity 속성 지정 Popupwindow 위치에 영향을 줌.
-		 * @x : PopupWindow를 (-x, +x) 만큼 좌,우 이동된 위치에 생성
-		 * @y : PopupWindow를 (-y, +y) 만큼 상,하 이동된 위치에 생성
-		 */
-		mPopupWindow.showAtLocation(regionPopupListView, Gravity.NO_GRAVITY, oRect.left, oRect.top + oRect.height() / 5);
 	}
 
 	// 메뉴 버튼을 막아버림.
