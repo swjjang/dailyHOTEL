@@ -65,7 +65,6 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 
 	public static RatingHotelFragment newInstance(HotelDetail hotelDetail)
 	{
-
 		RatingHotelFragment newFragment = new RatingHotelFragment();
 		Bundle arguments = new Bundle();
 
@@ -91,7 +90,6 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 
 		mQueue = VolleyHttpClient.getRequestQueue();
 		mHotelDetail = getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL);
-
 	}
 
 	@Override
@@ -126,7 +124,7 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 
 		// pinkred_font
 		//		GlobalFont.apply((ViewGroup) view);
-
+		
 		return view;
 
 	}
@@ -167,13 +165,18 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 	@Override
 	public void onDestroyView()
 	{
-		destroyRatingHotelFlag();
+		destroyRatingHotelFlag(mHostActivity);
 		super.onDestroyView();
 	}
 
-	public void destroyRatingHotelFlag()
+	public void destroyRatingHotelFlag(Context context)
 	{
-		SharedPreferences sharedPreference = mHostActivity.getSharedPreferences(NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
+		if(context == null)
+		{
+			return;
+		}
+		
+		SharedPreferences sharedPreference = context.getSharedPreferences(NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
 		Editor editor = sharedPreference.edit();
 
 		editor.putString(KEY_PREFERENCE_HOTEL_NAME, VALUE_PREFERENCE_HOTEL_NAME_DEFAULT);
@@ -182,7 +185,6 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 		editor.remove(KEY_PREFERENCE_USER_IDX);
 
 		editor.commit();
-
 	}
 
 	@Override
@@ -210,23 +212,35 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 	@Override
 	public void lockUI()
 	{
-		mHostActivity.lockUI();
+		if(mHostActivity != null)
+		{
+			mHostActivity.lockUI();
+		}
 	}
 
 	@Override
 	public void unLockUI()
 	{
-		mHostActivity.unLockUI();
+		if(mHostActivity != null)
+		{
+			mHostActivity.unLockUI();
+		}
 	}
 
 	private void showToast(int resId, int length)
 	{
-		DailyToast.showToast(mHostActivity, resId, length);
+		if(mHostActivity != null)
+		{
+			DailyToast.showToast(mHostActivity, resId, length);
+		}
 	}
 
 	private void onError(Exception e)
 	{
-		mHostActivity.onError(e);
+		if(mHostActivity != null)
+		{
+			mHostActivity.onError(e);
+		}
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////

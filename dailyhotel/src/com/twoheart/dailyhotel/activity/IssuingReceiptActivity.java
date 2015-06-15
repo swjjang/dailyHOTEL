@@ -53,8 +53,8 @@ public class IssuingReceiptActivity extends BaseActivity
 	@Override
 	protected void onResume()
 	{
-		lockUI();
-		mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, this));
+//		lockUI();
+//		mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, this));
 
 		super.onResume();
 	}

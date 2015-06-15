@@ -1065,7 +1065,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 							} else
 							{
 								RatingHotelFragment dialog = RatingHotelFragment.newInstance(null);
-								dialog.destroyRatingHotelFlag();
+								dialog.destroyRatingHotelFlag(MainActivity.this);
 							}
 						}
 					}
