@@ -130,7 +130,9 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 		mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
 		mEmptyView = view.findViewById(R.id.emptyView);
+
 		mMapLayout = (FrameLayout) view.findViewById(R.id.hotelMapLayout);
+		mMapLayout.setPadding(0, Util.dpToPx(baseActivity, 109) + 2, 0, 0);
 
 		//		mHotelListMapFragment = (HotelListMapFragment) getChildFragmentManager().findFragmentById(R.id.hotelMapFragment);
 
@@ -149,33 +151,12 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 		setVisibility(HOTEL_VIEW_TYPE.LIST);
 
-		// pinkred_font
-		//		GlobalFont.apply(container);
-
-		// 추후 왼쪽 탭로 빠질것이다.
-		//		btnListViewHeader.setOnClickListener(new OnClickListener()
-		//		{
-		//			@Override
-		//			public void onClick(View v)
-		//			{
-		//				Intent i = new Intent(mHostActivity, EventWebActivity.class);
-		//				mHostActivity.startActivity(i);
-		//				mHostActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
-		//			}
-		//		});
-
 		// Now find the PullToRefreshLayout and set it up
 		ActionBarPullToRefresh.from(baseActivity).options(Options.create().scrollDistance(.3f).headerTransformer(new DailyHotelHeaderTransformer()).build()).allChildrenArePullable().listener(this)
 		// Here we'll set a custom ViewDelegate
 		.useViewDelegate(AbsListView.class, new AbsListViewDelegate()).setup(mPullToRefreshLayout);
 
 		mHotelListView.setShadowVisible(false);
-
-		// ver_dual API의 new_event값이 0이면 false, 1이면 true
-		// false인 경우 기존의 호텔리스트 방식으로 
-		// true인 경우 새로 만든 호텔리스트 화면방식으로 전환됨.
-		//		event = mHostActivity.sharedPreference.getBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false);
-
 		return view;
 	}
 

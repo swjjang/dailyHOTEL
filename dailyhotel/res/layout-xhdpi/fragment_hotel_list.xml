@@ -9,13 +9,13 @@
         android:id="@+id/hotelMapLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="109dp"
         android:visibility="gone" />
 
     <include
         android:id="@+id/emptyView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="109dp"
         layout="@layout/view_empty_list"
         android:visibility="gone" />
 

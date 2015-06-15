@@ -404,7 +404,7 @@
                     android:layout_below="@id/textView42"
                     android:layout_marginTop="6dp"
                     android:layout_toRightOf="@id/textView45"
-                    android:lineSpacingExtra="8dp"
+                    android:lineSpacingExtra="6dp"
                     android:text=" 서울시 관악구 낙성대동 서울대학교 연구공\n단지 SK상생혁신센터 1층 데일리호텔"
                     android:textColor="@color/receipt_detail_text"
                     android:textSize="10dp" />
@@ -414,7 +414,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="12dp"
                     android:layout_below="@+id/textView46"
-                    android:layout_marginTop="6dp"
                     android:text="전화번호 | 1800-9210"
                     android:textColor="@color/receipt_detail_text"
                     android:textSize="10dp" />
@@ -425,7 +424,6 @@
                     android:layout_height="12dp"
                     android:layout_alignParentRight="true"
                     android:layout_below="@id/textView46"
-                    android:layout_marginTop="6dp"
                     android:text="팩스 | 02-1234-1233"
                     android:textColor="@color/receipt_detail_text"
                     android:textSize="10dp" />
@@ -446,9 +444,11 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
+                android:layout_above="@id/providerInfoLayout"
+                android:layout_centerHorizontal="true"
                 android:alpha="0.1"
                 android:src="@drawable/img_ic_guide_logo" />
+
         </RelativeLayout>
     </ScrollView>
 
