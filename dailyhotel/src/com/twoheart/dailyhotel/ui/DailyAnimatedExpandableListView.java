@@ -35,15 +35,16 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 
+import com.twoheart.dailyhotel.activity.SelectAreaActivity;
+
 public class DailyAnimatedExpandableListView extends ExpandableListView
 {
-	@SuppressWarnings("unused")
-	private static final String TAG = AnimatedExpandableListAdapter.class.getSimpleName();
-
 	/**
 	 * The duration of the expand/collapse animations
 	 */
 	private static final int ANIMATION_DURATION = 300;
+
+	private SelectAreaActivity.OnUserActionListener mOnUserActionListener;
 
 	private AnimatedExpandableListAdapter adapter;
 
@@ -78,6 +79,11 @@ public class DailyAnimatedExpandableListView extends ExpandableListView
 		{
 			throw new ClassCastException(adapter.toString() + " must implement AnimatedExpandableListAdapter");
 		}
+	}
+
+	public void setOnUserActionListener(SelectAreaActivity.OnUserActionListener listener)
+	{
+		mOnUserActionListener = listener;
 	}
 
 	/**
@@ -214,9 +220,9 @@ public class DailyAnimatedExpandableListView extends ExpandableListView
 		private SparseArray<GroupInfo> groupInfo = new SparseArray<GroupInfo>();
 		private DailyAnimatedExpandableListView parent;
 
-		private static final int STATE_IDLE = 0;
-		private static final int STATE_EXPANDING = 1;
-		private static final int STATE_COLLAPSING = 2;
+		protected static final int STATE_IDLE = 0;
+		protected static final int STATE_EXPANDING = 1;
+		protected static final int STATE_COLLAPSING = 2;
 
 		private void setParent(DailyAnimatedExpandableListView parent)
 		{

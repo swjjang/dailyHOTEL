@@ -124,7 +124,7 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 
 		// pinkred_font
 		//		GlobalFont.apply((ViewGroup) view);
-		
+
 		return view;
 
 	}
@@ -171,11 +171,11 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 
 	public void destroyRatingHotelFlag(Context context)
 	{
-		if(context == null)
+		if (context == null)
 		{
 			return;
 		}
-		
+
 		SharedPreferences sharedPreference = context.getSharedPreferences(NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
 		Editor editor = sharedPreference.edit();
 
@@ -212,7 +212,7 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 	@Override
 	public void lockUI()
 	{
-		if(mHostActivity != null)
+		if (mHostActivity != null)
 		{
 			mHostActivity.lockUI();
 		}
@@ -221,7 +221,7 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 	@Override
 	public void unLockUI()
 	{
-		if(mHostActivity != null)
+		if (mHostActivity != null)
 		{
 			mHostActivity.unLockUI();
 		}
@@ -229,7 +229,7 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 
 	private void showToast(int resId, int length)
 	{
-		if(mHostActivity != null)
+		if (mHostActivity != null)
 		{
 			DailyToast.showToast(mHostActivity, resId, length);
 		}
@@ -237,7 +237,7 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 
 	private void onError(Exception e)
 	{
-		if(mHostActivity != null)
+		if (mHostActivity != null)
 		{
 			mHostActivity.onError(e);
 		}

@@ -90,5 +90,10 @@
 	
 	<!-- Receipt -->
 	<color name="receipt_detail_text">#747474</color>
+	
+	<!-- Selected Area -->
+	<color name="selectarea_text_group">#858585</color>
+	<color name="selectarea_background_child">#f0f0f0</color>
+	<color name="selectarea_underline">#e1e0e0</color>
 
 </resources>	
