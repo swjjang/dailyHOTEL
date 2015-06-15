@@ -397,12 +397,17 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 			{
 				if (isFinishing() == false)
 				{
-					GooglePlayServicesUtil.getErrorDialog(resCode, this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
+					try
+					{
+						GooglePlayServicesUtil.getErrorDialog(resCode, LoginActivity.this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
+					}catch(Exception e)
+					{
+						ExLog.d(e.toString());
+					}
 				}
 			} else
 			{
 				DailyToast.showToast(this, R.string.toast_msg_is_not_available_google_service, Toast.LENGTH_LONG);
-				finish();
 			}
 			return false;
 		} else
@@ -415,6 +420,9 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 	{
 		if (isGoogleServiceAvailable() == false)
 		{
+			DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);
+			setResult(RESULT_OK);
+			finish();
 			return;
 		}
 
@@ -587,16 +595,16 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 					ExLog.d("facebook signup is completed.");
 
 					// Facebook은 한번에 처리하기 위해서.
-					if (getGcmId().isEmpty() == false)
-					{
-						unLockUI();
-
-						// 로그인에 성공 하였고 GCM 코드 또한 이미 기기에 저장되어 있는 상태이면 종료. 
-						DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);
-						setResult(RESULT_OK);
-						finish();
-						return;
-					}
+//					if (getGcmId().isEmpty() == false)
+//					{
+//						unLockUI();
+//
+//						// 로그인에 성공 하였고 GCM 코드 또한 이미 기기에 저장되어 있는 상태이면 종료. 
+//						DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);
+//						setResult(RESULT_OK);
+//						finish();
+//						return;
+//					}
 				}
 			} catch (Exception e)
 			{

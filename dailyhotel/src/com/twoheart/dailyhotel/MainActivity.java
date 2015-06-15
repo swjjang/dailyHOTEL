@@ -61,7 +61,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request.Method;
 import com.androidquery.util.AQUtility;
@@ -86,7 +85,6 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListe
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.CloseOnBackPressed;
-import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class MainActivity extends BaseActivity implements OnItemClickListener, Constants
 {
@@ -279,17 +277,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 		if (resCode != ConnectionResult.SUCCESS)
 		{
-			if (GooglePlayServicesUtil.isUserRecoverableError(resCode))
-			{
-				if (isFinishing() == false)
-				{
-					GooglePlayServicesUtil.getErrorDialog(resCode, this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
-				}
-			} else
-			{
-				DailyToast.showToast(this, R.string.toast_msg_is_not_available_google_service, Toast.LENGTH_LONG);
-				finish();
-			}
 			return false;
 		} else
 		{
