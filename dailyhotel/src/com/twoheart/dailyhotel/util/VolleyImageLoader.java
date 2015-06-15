@@ -56,4 +56,12 @@ public class VolleyImageLoader
 		return null;
 	}
 
+	public static void removeCache(String url)
+	{
+		if (mBitmapLruCache != null)
+		{
+			mBitmapLruCache.remove(url);
+		}
+	}
+
 }

@@ -39,6 +39,7 @@ import android.widget.Toast;
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.WakeLock;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
@@ -86,6 +87,8 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 		}
 
 		View view = inflater.inflate(R.layout.fragment_wait_timer, container, false);
+		view.setPadding(0, Util.dpToPx(container.getContext(), 56) + 1, 0, 0);
+
 		mSaleTime = (SaleTime) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_SALETIME);
 		alarmManager = (AlarmManager) baseActivity.getApplicationContext().getSystemService(Context.ALARM_SERVICE);
 		intent = new Intent(baseActivity.getApplicationContext(), AlarmBroadcastReceiver.class);
@@ -102,7 +105,11 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 		//		btnEvent.setOnClickListener(this);
 
 		baseActivity.setActionBar(getString(R.string.actionbar_title_wait_timer_frag), false);
-		tvTitle.setText(new SimpleDateFormat("aa H", Locale.KOREA).format(mSaleTime.getOpenTime()) + getString(R.string.prefix_wait_timer_frag_todays_hotel_open));
+
+		SimpleDateFormat sFormat = new SimpleDateFormat("aa H", Locale.KOREA);
+		sFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+		tvTitle.setText(sFormat.format(mSaleTime.getOpenTime()) + getString(R.string.prefix_wait_timer_frag_todays_hotel_open));
 
 		isEnabledNotify = false;
 		setTimer();
@@ -200,6 +207,13 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 		{
 			public void handleMessage(Message msg)
 			{
+				BaseActivity baseActivity = (BaseActivity) getActivity();
+
+				if (baseActivity == null || baseActivity.isFinishing() == true)
+				{
+					return;
+				}
+
 				remainingTime -= 1000;
 
 				if (remainingTime > 0)
@@ -214,13 +228,6 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 
 					if (sHandler != null)
 					{
-						BaseActivity baseActivity = (BaseActivity) getActivity();
-
-						if (baseActivity == null)
-						{
-							return;
-						}
-
 						((MainActivity) baseActivity).replaceFragment(((MainActivity) baseActivity).getFragment(MainActivity.INDEX_HOTEL_LIST_FRAGMENT));
 						sHandler = null;
 					}

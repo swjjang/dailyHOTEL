@@ -42,6 +42,7 @@ import com.twoheart.dailyhotel.adapter.HotelListViewPagerAdapter;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.HotelRenderer;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.ui.LoopViewPager;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -66,7 +67,7 @@ public class HotelListMapFragment extends
 	private MarkerOptions mMyLocationMarkerOptions;
 	private Marker mMyLocationMarker;
 
-	protected HotelMainFragment.UserActionListener mUserActionListener;
+	protected HotelMainFragment.OnUserActionListener mUserActionListener;
 	private SaleTime mSaleTime;
 	private boolean mIsCreateView = false;
 	private boolean mCallMakeMarker = false;
@@ -157,7 +158,7 @@ public class HotelListMapFragment extends
 		});
 
 		// Add Hotel Info ViewPager 
-		mViewPager = new ViewPager(view.getContext());
+		mViewPager = new LoopViewPager(view.getContext());
 		mViewPager.setOffscreenPageLimit(1);
 		mViewPager.setOnPageChangeListener(mOnPageChangeListener);
 
@@ -227,7 +228,7 @@ public class HotelListMapFragment extends
 		}
 	}
 
-	public void setUserActionListener(HotelMainFragment.UserActionListener userActionLister)
+	public void setUserActionListener(HotelMainFragment.OnUserActionListener userActionLister)
 	{
 		mUserActionListener = userActionLister;
 	}
@@ -326,6 +327,11 @@ public class HotelListMapFragment extends
 		if (isChangedRegion == true)
 		{
 			mIsOpenMakrer = false;
+
+			if (mOnInfoWindowUserActionListener != null)
+			{
+				mOnInfoWindowUserActionListener.onCloseInfoWindowClickListener();
+			}
 		}
 
 		double latitude = 0.0;
@@ -706,10 +712,10 @@ public class HotelListMapFragment extends
 		{
 			mHotelListViewPagerAdapter = new HotelListViewPagerAdapter(baseActivity);
 			mHotelListViewPagerAdapter.setOnUserActionListener(mOnInfoWindowUserActionListener);
-			mViewPager.setAdapter(mHotelListViewPagerAdapter);
 		}
 
 		mHotelListViewPagerAdapter.setData(mHotelArrangeArrayList);
+		mViewPager.setAdapter(mHotelListViewPagerAdapter);
 		mHotelListViewPagerAdapter.notifyDataSetChanged();
 
 		mIsOpenMakrer = true;
@@ -819,7 +825,7 @@ public class HotelListMapFragment extends
 				return;
 			}
 
-			LocationFactory.getInstance().startLocationMeasure(baseActivity, HotelListMapFragment.this, mMyLocationView, new LocationListener()
+			LocationFactory.getInstance(baseActivity).startLocationMeasure(HotelListMapFragment.this, mMyLocationView, new LocationListener()
 			{
 				@Override
 				public void onStatusChanged(String provider, int status, Bundle extras)
@@ -838,8 +844,21 @@ public class HotelListMapFragment extends
 				@Override
 				public void onProviderDisabled(String provider)
 				{
+					BaseActivity baseActivity = (BaseActivity) getActivity();
+
+					if (baseActivity == null)
+					{
+						return;
+					}
+
+					// Fragment가 added가 되지 않은 상태에서 터치가 될경우.
+					if (isAdded() == false)
+					{
+						return;
+					}
+
 					// 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
-					LocationFactory.getInstance().stopLocationMeasure();
+					LocationFactory.getInstance(baseActivity).stopLocationMeasure();
 
 					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setTitle(R.string.dialog_title_used_gps).setMessage(getString(R.string.dialog_msg_used_gps)).setNegativeButton(getString(R.string.dialog_btn_text_cancel), null).setPositiveButton(getString(R.string.dialog_btn_text_dosetting), new DialogInterface.OnClickListener()
 					{
@@ -864,7 +883,7 @@ public class HotelListMapFragment extends
 						return;
 					}
 
-					LocationFactory.getInstance().stopLocationMeasure();
+					LocationFactory.getInstance(baseActivity).stopLocationMeasure();
 
 					if (mMyLocationMarkerOptions == null)
 					{

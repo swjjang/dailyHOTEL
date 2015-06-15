@@ -49,6 +49,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
@@ -80,6 +81,7 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		View view = inflater.inflate(R.layout.fragment_credit, container, false);
+		view.setPadding(0, Util.dpToPx(container.getContext(), 56) + 1, 0, 0);
 
 		rlCreditNotLoggedIn = (RelativeLayout) view.findViewById(R.id.rl_credit_not_logged_in);
 		llCreditLoggedIn = (LinearLayout) view.findViewById(R.id.ll_credit_logged_in);

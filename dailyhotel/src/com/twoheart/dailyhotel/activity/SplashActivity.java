@@ -102,6 +102,11 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 
 	private void showDisabledNetworkPopup()
 	{
+		if (isFinishing() == true)
+		{
+			return;
+		}
+
 		if (alertDlg != null)
 		{
 			if (alertDlg.isShowing() == true)

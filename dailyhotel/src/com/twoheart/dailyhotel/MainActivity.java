@@ -61,7 +61,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request.Method;
 import com.androidquery.util.AQUtility;
@@ -86,7 +85,6 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListe
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.CloseOnBackPressed;
-import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class MainActivity extends BaseActivity implements OnItemClickListener, Constants
 {
@@ -135,7 +133,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		//		DailyHotelRequest.makeUrlEncoder();
+		//		com.twoheart.dailyhotel.util.network.request.DailyHotelRequest.makeUrlEncoder();
 
 		// 사용자가 선택한 언어, but 만약 사용자가 한국인인데 일본어를 선택하면 jp가 됨.
 		// 영어인 경우 - English, 한글인 경우 - 한국어
@@ -173,11 +171,11 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			{
 				VolleyHttpClient.destroyCookie();
 			}
-		}catch(Exception e)
+		} catch (Exception e)
 		{
 			ExLog.d(e.toString());
 		}
-		
+
 		// 스플래시 화면을 띄운다
 
 		startActivityForResult(new Intent(this, SplashActivity.class), CODE_REQUEST_ACTIVITY_SPLASH);
@@ -279,14 +277,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 		if (resCode != ConnectionResult.SUCCESS)
 		{
-			if (GooglePlayServicesUtil.isUserRecoverableError(resCode))
-			{
-				GooglePlayServicesUtil.getErrorDialog(resCode, this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
-			} else
-			{
-				DailyToast.showToast(this, R.string.toast_msg_is_not_available_google_service, Toast.LENGTH_LONG);
-				finish();
-			}
 			return false;
 		} else
 		{
@@ -947,7 +937,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	@Override
 	protected void onDestroy()
 	{
-
 		// 쿠키 만료를 위한 서버에 로그아웃 리퀘스트
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGOUT).toString(), null, null, null));
 
@@ -1063,7 +1052,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 							} else
 							{
 								RatingHotelFragment dialog = RatingHotelFragment.newInstance(null);
-								dialog.destroyRatingHotelFlag();
+								dialog.destroyRatingHotelFlag(MainActivity.this);
 							}
 						}
 					}

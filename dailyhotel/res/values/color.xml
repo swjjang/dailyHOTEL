@@ -78,6 +78,7 @@
 	
 	<!-- Credit Card -->
 	<color name="creditcard_background">#fefbf6</color>
+	<color name="creditcard_number_text">#58585a</color>
 	
 	<!-- Booking List -->
 	<color name="bookinglist_section_background">#292929</color>
@@ -86,5 +87,13 @@
 	<!-- Map View -->
 	<color name="mapview_hotelwindow_topline">#292929</color>
 	<color name="mapview_hotelwindow_background">#e2e2e2</color>
+	
+	<!-- Receipt -->
+	<color name="receipt_detail_text">#747474</color>
+	
+	<!-- Selected Area -->
+	<color name="selectarea_text_group">#858585</color>
+	<color name="selectarea_background_child">#f0f0f0</color>
+	<color name="selectarea_underline">#e1e0e0</color>
 
 </resources>	

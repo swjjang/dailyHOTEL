@@ -51,7 +51,7 @@ public interface Constants
 
 	// 웹서버 호스트  
 	//"http://restful.dailyhotel.kr/goodnight/"; //  서비스 서버 
-//	public static final String URL_DAILYHOTEL_SERVER = UNENCRYPTED_URL ? "http://restful.dailyhotel.kr/goodnight/" : "MzkkNTQkNjEkNTYkNDck$RTA3Q0MwQTlGOTVCNUM4RkQ1OTM5MzMxRDVDNkUK0MTBBRjIUyMjU4OIEDE4NzQWwRDI4QTNGRUFERUNDMDMzMjk4QzIyODlFMDkwMjNDMDMyRUUxMjBDRUU1MTlBMDQ3MzRB$";
+	//	public static final String URL_DAILYHOTEL_SERVER = UNENCRYPTED_URL ? "http://restful.dailyhotel.kr/goodnight/" : "MzkkNTQkNjEkNTYkNDck$RTA3Q0MwQTlGOTVCNUM4RkQ1OTM5MzMxRDVDNkUK0MTBBRjIUyMjU4OIEDE4NzQWwRDI4QTNGRUFERUNDMDMzMjk4QzIyODlFMDkwMjNDMDMyRUUxMjBDRUU1MTlBMDQ3MzRB$";
 	//http://ec2restful.dailyhotel.kr    http://restful.dailyhotel.kr/goodnight/
 	//    public static final String URL_DAILYHOTEL_SERVER = "http://192.168.0.39:8080/goodnight/"; //  서비스 서버
 
@@ -209,6 +209,9 @@ public interface Constants
 	// api/reserv/session/billing/
 	public static final String URL_WEBAPI_RESERV_SESSION_BILLING = UNENCRYPTED_URL ? "api/reserv/session/billing" : "ODIkMjkkODEkODgkOTEk$NUQ1MDk3RTlCODI3NjE0QjZENENFMVjY0NjM2MDE5RDM1RTQ1RTRFOEM5NjE5QjU4RkNDMTBFMDc4NDNCUQjBk3RKg=E=$";
 
+	// api/reserv/receipt
+	public static final String URL_WEBAPI_RESERV_RECEIPT = UNENCRYPTED_URL ? "api/reserv/receipt" : "OCQ3NiQ3OSQyNSQ2NyQ=$MDgxRDE5WRDExNDUzRjAzNTg1KNDIyMEVCQTlGMDE5NjE5RjVEMjYxMEFBRTRCQzQ4RRTFBMDU0NjFADNCEUxMkI4Qg==$";
+
 	// Register Credit Card
 	// api/user/session/billing/card/info
 	public static final String URL_WEBAPI_USER_SESSION_BILLING_CARD_INFO = UNENCRYPTED_URL ? "api/user/session/billing/card/info" : "NjIkNjkkNTAkMzgkMCQ=$XMUVCNTA1RUJERjVGQkE5NTM0QUM2RkI1MTAxOEQVFQjk3N0UzNTIIzQkRFNTg5RTQUyRDhCNMURCQjBENTIzQUU0N0RGRTgwMEYxREMwOUJCOTM2RDczNEY5OEE0NEU3RTdG$";
@@ -218,7 +221,13 @@ public interface Constants
 
 	// Simple Payment
 	// api/reserv/session/billing/payment
-	public static final String URL_WEBAPI_USER_SESSION_BILLING_PAYMENT = UNENCRYPTED_URL ? "api/reserv/session/billing/payment" : "NDUkODQkNDUkMTE2JDk2JA==$QkNGMEY5OTlBMEM5MzE5NjE3QzI1OTc2NUU3QzcwRTBERQEEEwQUExNkVGMEI0MTRFRDE3QzUyRDRDQkIzNTEZ2MjA3NTYzNHkY5QUEwQzU1MjAxQjEwMREU3MjU3REVCM0VB$";
+	public static final String URL_WEBAPI_RESERV_SESSION_BILLING_PAYMENT = UNENCRYPTED_URL ? "api/reserv/session/billing/payment" : "NDUkODQkNDUkMTE2JDk2JA==$QkNGMEY5OTlBMEM5MzE5NjE3QzI1OTc2NUU3QzcwRTBERQEEEwQUExNkVGMEI0MTRFRDE3QzUyRDRDQkIzNTEZ2MjA3NTYzNHkY5QUEwQzU1MjAxQjEwMREU3MjU3REVCM0VB$";
+
+	// api/sale/hotel/list
+	public static final String URL_WEBAPI_SALE_HOTEL_LIST = UNENCRYPTED_URL ? "api/sale/hotel/list" : "ODAkNDMkMzQkNDQkODAk$MzVBRDI4MUMzMkY3Q0JCNTRBNjRCRjk3MjJNCQkMzNTQXJ2NUU2REIxQUNGOUNENkExODE1RDhCRjY2NGTUxSRTBDMg==$";
+
+	// api/sale/region/all
+	public static final String URL_WEBAPI_SALE_HOTEL_ALL = UNENCRYPTED_URL ? "api/sale/region/all" : "MTEkMjckMzQkMTUkNDIk$RjgwRDA0OUUU2QjYBEODJDMEM5RTIYxODc2PMDJGOTBZBRUY3ODUwMzYwRUJEQjA2MEUwRDA3NkVGOEY0OUIzMDM5Qw==$";
 
 	// DailyHOTEL Site Controller WebAPI URL
 	//"site/get";
@@ -307,6 +316,7 @@ public interface Constants
 	public static final String NAME_INTENT_EXTRA_DATA_REGION = "region";
 	public static final String NAME_INTENT_EXTRA_DATA_HOTELIDX = "hotelIdx";
 	public static final String NAME_INTENT_EXTRA_DATA_BOOKING = "booking";
+	public static final String NAME_INTENT_EXTRA_DATA_BOOKINGIDX = "bookingIdx";
 	public static final String NAME_INTENT_EXTRA_DATA_PAY = "pay";
 	public static final String NAME_INTENT_EXTRA_DATA_SELECTED_IMAGE_URL = "sel_image_url";
 	//	public static final String NAME_INTENT_EXTRA_DATA_IS_INTENT_FROM_PUSH = "is_intent_from_push";
@@ -315,6 +325,9 @@ public interface Constants
 	public static final String NAME_INTENT_EXTRA_DATA_REGIONMAP = "regionmap";
 	public static final String NAME_INTENT_EXTRA_DATA_CREDITCARD = "creditcard";
 	public static final String NAME_INTENT_EXTRA_DATA_MESSAGE = "message";
+	public static final String NAME_INTENT_EXTRA_DATA_PROVINCE = "province";
+	public static final String NAME_INTENT_EXTRA_DATA_AREA = "area";
+	public static final String NAME_INTENT_EXTRA_DATA_AREAITEMLIST = "areaItemlist";
 
 	// Push Type
 	public static final int PUSH_TYPE_NOTICE = 0;
@@ -334,7 +347,7 @@ public interface Constants
 	public static final int CODE_REQUEST_ACTIVITY_BOOKING_DETAIL = 11;
 	public static final int CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD = 12;
 	public static final int CODE_REQUEST_ACTIVITY_CREDITCARD_MANAGER = 13;
-	public static final int CODE_REQUEST_ACTIVITY_SELECT_REGIONMAP = 10000;
+	public static final int CODE_REQUEST_ACTIVITY_SELECT_AREA = 14;
 
 	// Android Activity의 Result Code들이다.
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_FAIL = 100;

@@ -33,7 +33,7 @@ import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 import com.twoheart.dailyhotel.widget.HotelViewPager;
-import com.viewpagerindicator.LoopCirclePageIndicator;
+import com.viewpagerindicator.CirclePageIndicator;
 
 public class HotelTabBookingFragment extends BaseFragment implements OnTouchListener
 {
@@ -43,7 +43,7 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 	private HotelDetail mHotelDetail;
 	private HotelImageFragmentPagerAdapter mAdapter;
 	private HotelViewPager mViewPager;
-	private LoopCirclePageIndicator mIndicator;
+	private CirclePageIndicator mIndicator;
 	private TextView tvBedType, tvAddress, tvPrice, tvDiscount, tvPriceTitle;
 
 	private HotelTabActivity.OnUserActionListener mOnUserActionListener;
@@ -83,7 +83,7 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 		tvPrice = (TextView) view.findViewById(R.id.tv_hotel_tab_booking_price);
 		tvDiscount = (TextView) view.findViewById(R.id.tv_hotel_tab_booking_discount);
 		mViewPager = (HotelViewPager) view.findViewById(R.id.vp_hotel_tab_booking_img);
-		mIndicator = (LoopCirclePageIndicator) view.findViewById(R.id.cp_hotel_tab_booking_indicator);
+		mIndicator = (CirclePageIndicator) view.findViewById(R.id.cp_hotel_tab_booking_indicator);
 
 		tvBedType.setText(mHotelDetail.getHotel().getBedType());
 		tvAddress.setText(mHotelDetail.getHotel().getAddress());
@@ -120,14 +120,12 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 			mAdapter.setOnUserActionListener(mOnUserActionListener);
 
 			mViewPager.setAdapter(mAdapter);
-		} else
-		{
-			mAdapter.notifyDataSetChanged();
 		}
 
+		mViewPager.setBoundaryCaching(true);
 		mViewPager.setOnTouchListener(this);
 
-		mViewPager.setCurrentItem((mHotelDetail.getImageUrl().size() * 10000)); // 페이지를 큰 수의 배수로 설정하여 루핑을 하게 함 
+		mViewPager.setCurrentItem(0);
 		mIndicator.setViewPager(mViewPager);
 		mIndicator.setSnap(true);
 
@@ -137,6 +135,13 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 		{
 			public void handleMessage(Message msg)
 			{
+				BaseActivity baseActivity = (BaseActivity) getActivity();
+
+				if (baseActivity == null || baseActivity.isFinishing() == true)
+				{
+					return;
+				}
+
 				mCurrentPage = mViewPager.getCurrentItem();
 				mCurrentPage++;
 				mViewPager.setCurrentItem(mCurrentPage, true);

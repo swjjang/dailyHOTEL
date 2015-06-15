@@ -7,12 +7,11 @@ import android.support.v4.app.FragmentPagerAdapter;
 import com.twoheart.dailyhotel.activity.HotelTabActivity;
 import com.twoheart.dailyhotel.fragment.ImageViewFragment;
 import com.twoheart.dailyhotel.model.HotelDetail;
-import com.viewpagerindicator.Loopable;
+import com.twoheart.dailyhotel.ui.LoopViewPager;
 
-public class HotelImageFragmentPagerAdapter extends FragmentPagerAdapter implements Loopable
+public class HotelImageFragmentPagerAdapter extends FragmentPagerAdapter
 {
 	private HotelDetail mHotelDetail;
-	private int curPosReal;
 
 	private HotelTabActivity.OnUserActionListener mOnUserActionListener;
 
@@ -20,7 +19,6 @@ public class HotelImageFragmentPagerAdapter extends FragmentPagerAdapter impleme
 	{
 		super(fm);
 		this.mHotelDetail = mHotelDetail;
-		this.curPosReal = 0;
 	}
 
 	public void setOnUserActionListener(HotelTabActivity.OnUserActionListener listener)
@@ -31,9 +29,9 @@ public class HotelImageFragmentPagerAdapter extends FragmentPagerAdapter impleme
 	@Override
 	public Fragment getItem(int position)
 	{
-		position = getRealPos(position);
-		curPosReal = position;
-		ImageViewFragment item = ImageViewFragment.newInstance(mHotelDetail.getImageUrl().get(position), mHotelDetail);
+		position = LoopViewPager.toRealPosition(position, getCount());
+
+		ImageViewFragment item = ImageViewFragment.newInstance(mHotelDetail.getImageUrl().get(position % getCount()), mHotelDetail);
 		item.setOnUserActionListener(mOnUserActionListener);
 
 		return item;
@@ -42,27 +40,6 @@ public class HotelImageFragmentPagerAdapter extends FragmentPagerAdapter impleme
 	@Override
 	public int getCount()
 	{
-		if (mHotelDetail.getImageUrl().size() == 0)
-			return 0;
-		return Integer.MAX_VALUE; // 루프를 위하여 뷰페이지를 여러개 만듬.
-	}
-
-	@Override
-	public int getRealCount()
-	{
 		return mHotelDetail.getImageUrl().size();
 	}
-
-	@Override
-	public int getRealPos(int fakePos)
-	{
-		return fakePos % getRealCount();
-	}
-
-	@Override
-	public int getRealCurPos()
-	{
-		return curPosReal;
-	}
-
 }

@@ -45,6 +45,7 @@ import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
@@ -78,6 +79,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		View view = inflater.inflate(R.layout.fragment_booking_list, container, false);
+		view.setPadding(0, Util.dpToPx(container.getContext(), 56) + 1, 0, 0);
 
 		mListView = (PinnedSectionListView) view.findViewById(R.id.listview_booking);
 		mListView.setShadowVisible(false);

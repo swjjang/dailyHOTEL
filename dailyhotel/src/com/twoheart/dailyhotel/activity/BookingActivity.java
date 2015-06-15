@@ -123,7 +123,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	private SaleTime mSaleTime;
 	private boolean mIsChangedPay; // 가격이 변경된 경우.
 
-	private SaleTime saleTime;
 	private int mReqCode;
 	private int mResCode;
 	private Intent mResIntent;
@@ -215,7 +214,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 		rbPaymentCard.setChecked(true);
 
-		saleTime = new SaleTime();
 		//		locale = sharedPreference.getString(KEY_PREFERENCE_LOCALE, null);
 
 		// 한글, 영문 결제 수단 지정.
@@ -258,7 +256,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		lockUI();
 
 		// 호텔 디테일 정보 재 요청
-		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_DETAIL).append('/').append(mPay.getHotelDetail().getHotel().getIdx()).append("/").append(mSaleTime.getRequestHotelDateFormat("yy/MM/dd")).toString(), null, mHotelDetailJsonResponseListener, this));
+		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_DETAIL).append('/').append(mPay.getHotelDetail().getHotel().getIdx()).append("/").append(mSaleTime.getDayOfDaysHotelDateFormat("yy/MM/dd")).toString(), null, mHotelDetailJsonResponseListener, this));
 
 		String region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
 		String hotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
@@ -381,6 +379,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			} //호텔 가격이 xx 이하인 이벤트 호텔에서는 적립금 사용을 못하게 막음. 
 			else if (mPay.isSaleCredit() && (mPay.getOriginalPrice() <= DEFAULT_AVAILABLE_RESERVES) && Integer.parseInt(mPay.getCredit().getBonus().replaceAll(",", "")) != 0)
 			{
+				if (isFinishing() == true)
+				{
+					return;
+				}
+
 				v.setClickable(false);
 				v.setEnabled(false);
 
@@ -592,6 +595,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 		if (mPay.getType() == Pay.Type.EASY_CARD)
 		{
+			if (isFinishing() == true)
+			{
+				return;
+			}
+
 			if (mFinalCheckDialog != null && mFinalCheckDialog.isShowing() == true)
 			{
 				mFinalCheckDialog.dismiss();
@@ -633,7 +641,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			params.put("billkey", mPay.getCustomer().mBillingKey);
 			params.put("mileage", mileage);
 
-			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_PAYMENT).toString(), params, mUserSessionBillingPayment, BookingActivity.this));
+			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_SESSION_BILLING_PAYMENT).toString(), params, mUserSessionBillingPayment, BookingActivity.this));
 		} else
 		{
 			Intent intent = new Intent(this, com.twoheart.dailyhotel.activity.PaymentActivity.class);
@@ -974,6 +982,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		{
 			case R.id.action_call:
 			{
+				if (isFinishing() == true)
+				{
+					return super.onOptionsItemSelected(item);
+				}
+
 				if (isLockUiComponent(true) == true)
 				{
 					return super.onOptionsItemSelected(item);
@@ -1070,6 +1083,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 		if (null != mFinalCheckDialog)
 		{
+			if (isFinishing() == true)
+			{
+				return;
+			}
+
 			mFinalCheckDialog.setOnDismissListener(new OnDismissListener()
 			{
 				@Override
@@ -1088,6 +1106,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 	private void showFinalCheckDialog()
 	{
+		if (isFinishing() == true)
+		{
+			return;
+		}
+
 		if (mFinalCheckDialog != null)
 		{
 			mFinalCheckDialog.cancel();
@@ -1182,6 +1205,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 	private void showStopOnSaleDialog()
 	{
+		if (isFinishing() == true)
+		{
+			return;
+		}
+
 		getPaymentConfirmDialog(DIALOG_CONFIRM_STOP_ONSALE, new OnClickListener()
 		{
 			@Override
@@ -1255,6 +1283,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		@Override
 		public void onClick(View widget)
 		{
+			if (isFinishing() == true)
+			{
+				return;
+			}
+
 			if (isLockUiComponent(true) == true)
 			{
 				return;
@@ -1307,7 +1340,10 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				{
 					VolleyHttpClient.createCookie();
 
-					mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_TIME).toString(), null, mAppTimeJsonResponseListener, BookingActivity.this));
+					Map<String, String> params = new HashMap<String, String>();
+					params.put("timeZone", "Asia/Seoul");
+
+					mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, BookingActivity.this));
 				} else
 				{
 					unLockUI();
@@ -1458,14 +1494,16 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		}
 	};
 
-	private DailyHotelJsonResponseListener mAppSaleTimeJsonResponseListener = new DailyHotelJsonResponseListener()
+	private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
 	{
-
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
+			if (isFinishing() == true)
+			{
+				return;
+			}
 
-			// 앱 시간이 오픈 시간보다 크고 클로즈 시간보다 작은경우 다음 스텝으로 이동
 			try
 			{
 				if (response == null)
@@ -1473,13 +1511,12 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					throw new NullPointerException("response == null");
 				}
 
-				String open = response.getString("open");
-				String close = response.getString("close");
+				mSaleTime.setCurrentTime(response.getLong("currentDateTime"));
+				mSaleTime.setOpenTime(response.getLong("openDateTime"));
+				mSaleTime.setCloseTime(response.getLong("closeDateTime"));
+				mSaleTime.setDailyTime(response.getLong("dailyDateTime"));
 
-				saleTime.setOpenTime(open);
-				saleTime.setCloseTime(close);
-
-				if (saleTime.isSaleTime() == true)
+				if (mSaleTime.isSaleTime() == true)
 				{
 					Customer buyer = mPay.getCustomer();
 
@@ -1498,7 +1535,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					lockUI();
 
 					// 호텔 디테일 정보 재 요청
-					mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_DETAIL).append('/').append(mPay.getHotelDetail().getHotel().getIdx()).append("/").append(mSaleTime.getRequestHotelDateFormat("yy/MM/dd")).toString(), null, mFinalCheckPayJsonResponseListener, BookingActivity.this));
+					mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_DETAIL).append('/').append(mPay.getHotelDetail().getHotel().getIdx()).append("/").append(mSaleTime.getDayOfDaysHotelDateFormat("yy/MM/dd")).toString(), null, mFinalCheckPayJsonResponseListener, BookingActivity.this));
 				} else
 				{
 					unLockUI();
@@ -1517,10 +1554,10 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					SimpleAlertDialog.build(BookingActivity.this, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_sales_closed), getString(R.string.dialog_btn_text_confirm), posListener).show();
 				}
 
-			} catch (JSONException e)
+			} catch (Exception e)
 			{
-				unLockUI();
 				onError(e);
+				unLockUI();
 			}
 		}
 	};
@@ -1688,32 +1725,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		}
 	};
 
-	private DailyHotelJsonResponseListener mAppTimeJsonResponseListener = new DailyHotelJsonResponseListener()
-	{
-		@Override
-		public void onResponse(String url, JSONObject response)
-		{
-			try
-			{
-				if (response == null)
-				{
-					throw new NullPointerException("response == null");
-				}
-
-				long time = response.getLong("time");
-
-				saleTime.setCurrentTime(time);
-
-				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_SALE_TIME).toString(), null, mAppSaleTimeJsonResponseListener, BookingActivity.this));
-
-			} catch (Exception e)
-			{
-				unLockUI();
-				onError(e);
-			}
-		}
-	};
-
 	private DailyHotelJsonResponseListener mReservValidateJsonResponseListener = new DailyHotelJsonResponseListener()
 	{
 		@Override
@@ -1806,7 +1817,10 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				if ("alive".equalsIgnoreCase(result) == true)
 				{
 					//1번 
-					mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_TIME).toString(), null, mAppTimeJsonResponseListener, BookingActivity.this));
+					Map<String, String> params = new HashMap<String, String>();
+					params.put("timeZone", "Asia/Seoul");
+
+					mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, BookingActivity.this));
 				} else
 				{
 					if (sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false) == true)
@@ -2202,7 +2216,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 							lockUI();
 
 							// 호텔 디테일 정보 재 요청
-							mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_DETAIL).append('/').append(mPay.getHotelDetail().getHotel().getIdx()).append("/").append(mSaleTime.getRequestHotelDateFormat("yy/MM/dd")).toString(), null, mHotelDetailJsonResponseListener, BookingActivity.this));
+							mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_DETAIL).append('/').append(mPay.getHotelDetail().getHotel().getIdx()).append("/").append(mSaleTime.getDayOfDaysHotelDateFormat("yy/MM/dd")).toString(), null, mHotelDetailJsonResponseListener, BookingActivity.this));
 						}
 					}).show();
 				} else
