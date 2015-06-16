@@ -736,6 +736,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 			}
 
 			String area = null;
+			boolean hasDailyChoice = false;
 
 			for (Hotel hotel : hotelList)
 			{
@@ -746,12 +747,24 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 					continue;
 				}
 
-				if (TextUtils.isEmpty(area) == true || region.equalsIgnoreCase(area) == false)
+				if (hotel.isDailyChoice == true)
 				{
-					area = region;
+					if (hasDailyChoice == false)
+					{
+						hasDailyChoice = true;
 
-					HotelListViewItem section = new HotelListViewItem(region);
-					hotelListViewItemList.add(section);
+						HotelListViewItem section = new HotelListViewItem(getString(R.string.label_dailychoice));
+						hotelListViewItemList.add(section);
+					}
+				} else
+				{
+					if (TextUtils.isEmpty(area) == true || region.equalsIgnoreCase(area) == false)
+					{
+						area = region;
+
+						HotelListViewItem section = new HotelListViewItem(region);
+						hotelListViewItemList.add(section);
+					}
 				}
 
 				hotelListViewItemList.add(new HotelListViewItem(hotel));
@@ -818,8 +831,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 							hotelList.add(newHotel); // 추가.
 						}
 					}
-
-					// 데일리 초이스 위로 올리기..
 
 					// section 및 HotelListViewItem 으로 바꾸어 주기.
 					ArrayList<HotelListViewItem> hotelListViewItemList = makeSectionHotelList(hotelList);
