@@ -122,32 +122,39 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 			mViewPager.setAdapter(mAdapter);
 		}
 
-		mViewPager.setBoundaryCaching(true);
-		mViewPager.setOnTouchListener(this);
+		mCurrentPage = mHotelDetail.getImageUrl().size();
+
+		if (mCurrentPage != 0)
+		{
+			mViewPager.setBoundaryCaching(true);
+			mViewPager.setOnTouchListener(this);
+		}
 
 		mViewPager.setCurrentItem(0);
+
 		mIndicator.setViewPager(mViewPager);
 		mIndicator.setSnap(true);
 
-		mCurrentPage = mHotelDetail.getImageUrl().size();
-
-		mHandler = new Handler()
+		if (mCurrentPage != 0)
 		{
-			public void handleMessage(Message msg)
+			mHandler = new Handler()
 			{
-				BaseActivity baseActivity = (BaseActivity) getActivity();
-
-				if (baseActivity == null || baseActivity.isFinishing() == true)
+				public void handleMessage(Message msg)
 				{
-					return;
-				}
+					BaseActivity baseActivity = (BaseActivity) getActivity();
 
-				mCurrentPage = mViewPager.getCurrentItem();
-				mCurrentPage++;
-				mViewPager.setCurrentItem(mCurrentPage, true);
-				this.sendEmptyMessageDelayed(0, DURATION_HOTEL_IMAGE_SHOW);
-			}
-		};
+					if (baseActivity == null || baseActivity.isFinishing() == true)
+					{
+						return;
+					}
+
+					mCurrentPage = mViewPager.getCurrentItem();
+					mCurrentPage++;
+					mViewPager.setCurrentItem(mCurrentPage, true);
+					this.sendEmptyMessageDelayed(0, DURATION_HOTEL_IMAGE_SHOW);
+				}
+			};
+		}
 
 		return view;
 	}

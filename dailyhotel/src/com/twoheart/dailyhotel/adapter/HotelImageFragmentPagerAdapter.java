@@ -31,7 +31,16 @@ public class HotelImageFragmentPagerAdapter extends FragmentPagerAdapter
 	{
 		position = LoopViewPager.toRealPosition(position, getCount());
 
-		ImageViewFragment item = ImageViewFragment.newInstance(mHotelDetail.getImageUrl().get(position % getCount()), mHotelDetail);
+		ImageViewFragment item = null;
+
+		if (mHotelDetail.getImageUrl().size() == 0)
+		{
+			item = ImageViewFragment.newInstance("", mHotelDetail);
+		} else
+		{
+			item = ImageViewFragment.newInstance(mHotelDetail.getImageUrl().get(position % getCount()), mHotelDetail);
+		}
+
 		item.setOnUserActionListener(mOnUserActionListener);
 
 		return item;
@@ -40,6 +49,11 @@ public class HotelImageFragmentPagerAdapter extends FragmentPagerAdapter
 	@Override
 	public int getCount()
 	{
+		if (mHotelDetail.getImageUrl().size() == 0)
+		{
+			return 1;
+		}
+
 		return mHotelDetail.getImageUrl().size();
 	}
 }

@@ -132,10 +132,12 @@
                 android:scrollHorizontally="true"
                 android:singleLine="true"
                 android:textColor="@color/textView_textColor_sub"
-                android:textSize="15dp"/>
-                <!-- android:text="@string/frag_hotel_tab_price"
+                android:textSize="15dp" />
+            <!--
+                android:text="@string/frag_hotel_tab_price"
                 android:textColor="@color/textView_textColor_sub"
-                android:textSize="15dp" /> -->
+                android:textSize="15dp" />
+            -->
 
             <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                 android:id="@+id/tv_hotel_tab_booking_discount"
