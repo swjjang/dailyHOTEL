@@ -9,6 +9,7 @@
     <string name="currency">원</string>
     <string name="label_map">지도</string>
     <string name="label_list">목록</string>
+    <string name="label_dailychoice">데일리초이스</string>
 
     <!-- Hotel Grade -->
     <string name="grade_special">특급</string>
@@ -441,6 +442,7 @@
 
     <!-- Issuingreceipt Activity -->
     <string name="label_receipt_bookinginfo">예약 세부정보</string>
+    <string name="label_receipt_reservation_index">예약 번호</string>
     <string name="label_receipt_hotelname">호텔명</string>
     <string name="label_receipt_hoteladdress">호텔주소</string>
     <string name="label_receipt_customerinfo">고객성명/번호</string>
@@ -457,7 +459,7 @@
     <string name="label_receipt_business_license">상호 | %1$s</string>
     <string name="label_receipt_registeration_number">등록번호 | %1$s</string>
     <string name="label_receipt_ceo">대표자 | %1$s</string>
-    <string name="label_receipt_address">주소 | </string>
+    <string name="label_receipt_address">주소 |</string>
     <string name="label_receipt_phone">전화번호 | %1$s</string>
     <string name="label_receipt_fax">팩스 | %1$s</string>
     

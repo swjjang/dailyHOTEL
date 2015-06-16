@@ -31,7 +31,7 @@
             <RelativeLayout
                 android:id="@+id/bookingInfoLayout"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="165dp"
                 android:background="@drawable/receipt_bg_top"
                 android:paddingLeft="11dp"
                 android:paddingRight="11dp" >
@@ -47,11 +47,34 @@
                     android:textStyle="bold" />
 
                 <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-                    android:id="@+id/textView2"
+                    android:id="@+id/textView12"
                     android:layout_width="wrap_content"
                     android:layout_height="13dp"
                     android:layout_below="@id/textView1"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="@dimen/issuingreceipt_linespacing"
+                    android:gravity="center_vertical"
+                    android:text="@string/label_receipt_reservation_index"
+                    android:textColor="@color/receipt_detail_text"
+                    android:textSize="10dp" />
+
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                    android:id="@+id/textView13"
+                    android:layout_width="wrap_content"
+                    android:layout_height="13dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@id/textView1"
+                    android:layout_marginLeft="69dp"
+                    android:layout_marginTop="@dimen/issuingreceipt_linespacing"
+                    android:gravity="right"
+                    android:textColor="@color/black"
+                    android:textSize="11dp" />
+
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="13dp"
+                    android:layout_below="@id/textView12"
+                    android:layout_marginTop="@dimen/issuingreceipt_linespacing"
                     android:gravity="center_vertical"
                     android:text="@string/label_receipt_hotelname"
                     android:textColor="@color/receipt_detail_text"
@@ -62,12 +85,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="13dp"
                     android:layout_alignParentRight="true"
-                    android:layout_below="@id/textView1"
+                    android:layout_below="@id/textView12"
                     android:layout_marginLeft="69dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="@dimen/issuingreceipt_linespacing"
                     android:layout_toRightOf="@id/textView2"
                     android:gravity="right"
-                    android:text="호텔 투핸븐 종로"
                     android:textColor="@color/black"
                     android:textSize="11dp" />
 
@@ -76,7 +98,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="13dp"
                     android:layout_below="@id/textView2"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="@dimen/issuingreceipt_linespacing"
                     android:gravity="center_vertical"
                     android:text="@string/label_receipt_hoteladdress"
                     android:textColor="@color/receipt_detail_text"
@@ -89,11 +111,10 @@
                     android:layout_alignParentRight="true"
                     android:layout_below="@id/textView2"
                     android:layout_marginLeft="58dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="@dimen/issuingreceipt_linespacing"
                     android:layout_toRightOf="@id/textView4"
                     android:gravity="right"
                     android:maxLines="2"
-                    android:text="서울시 종ㄹ로구 낙원동 113동"
                     android:textColor="@color/black"
                     android:textSize="11dp" />
 
@@ -102,7 +123,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="13dp"
                     android:layout_below="@id/textView5"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="@dimen/issuingreceipt_linespacing"
                     android:gravity="center_vertical"
                     android:text="@string/label_receipt_customerinfo"
                     android:textColor="@color/receipt_detail_text"
@@ -114,8 +135,7 @@
                     android:layout_height="13dp"
                     android:layout_alignParentRight="true"
                     android:layout_below="@id/textView5"
-                    android:layout_marginTop="10dp"
-                    android:text="David jwaYoon Kim / 010-1234-1232"
+                    android:layout_marginTop="@dimen/issuingreceipt_linespacing"
                     android:textColor="@color/black"
                     android:textSize="11dp" />
 
@@ -124,7 +144,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="13dp"
                     android:layout_below="@id/textView6"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="@dimen/issuingreceipt_linespacing"
                     android:gravity="center_vertical"
                     android:text="@string/label_receipt_checkinout"
                     android:textColor="@color/receipt_detail_text"
@@ -136,8 +156,7 @@
                     android:layout_height="13dp"
                     android:layout_alignParentRight="true"
                     android:layout_below="@id/textView6"
-                    android:layout_marginTop="10dp"
-                    android:text="2104/06/04 - 2012/12/12"
+                    android:layout_marginTop="@dimen/issuingreceipt_linespacing"
                     android:textColor="@color/black"
                     android:textSize="11dp" />
 
@@ -146,7 +165,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="13dp"
                     android:layout_below="@id/textView8"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="@dimen/issuingreceipt_linespacing"
                     android:gravity="center_vertical"
                     android:text="@string/label_receipt_nights_rooms"
                     android:textColor="@color/receipt_detail_text"
@@ -158,8 +177,7 @@
                     android:layout_height="13dp"
                     android:layout_alignParentRight="true"
                     android:layout_below="@id/textView8"
-                    android:layout_marginTop="10dp"
-                    android:text="1일/1객실"
+                    android:layout_marginTop="@dimen/issuingreceipt_linespacing"
                     android:textColor="@color/black"
                     android:textSize="11dp" />
             </RelativeLayout>
@@ -169,7 +187,7 @@
             <RelativeLayout
                 android:id="@+id/paymentInfoLayout"
                 android:layout_width="match_parent"
-                android:layout_height="170dp"
+                android:layout_height="165dp"
                 android:layout_below="@+id/bookingInfoLayout"
                 android:background="@drawable/receipt_bg_middle"
                 android:paddingLeft="11dp"
@@ -190,7 +208,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="13dp"
                     android:layout_below="@id/textView21"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="@dimen/issuingreceipt_linespacing"
                     android:gravity="center_vertical"
                     android:text="@string/label_receipt_paymentday"
                     android:textColor="@color/receipt_detail_text"
@@ -202,8 +220,7 @@
                     android:layout_height="13dp"
                     android:layout_alignParentRight="true"
                     android:layout_below="@id/textView21"
-                    android:layout_marginTop="10dp"
-                    android:text="2014/06/06"
+                    android:layout_marginTop="@dimen/issuingreceipt_linespacing"
                     android:textColor="@color/black"
                     android:textSize="11dp" />
 
@@ -212,7 +229,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="13dp"
                     android:layout_below="@id/textView22"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="@dimen/issuingreceipt_linespacing"
                     android:gravity="center_vertical"
                     android:text="@string/label_receipt_supplyvalue"
                     android:textColor="@color/receipt_detail_text"
@@ -224,8 +241,7 @@
                     android:layout_height="13dp"
                     android:layout_alignParentRight="true"
                     android:layout_below="@id/textView22"
-                    android:layout_marginTop="10dp"
-                    android:text="$ 71,727"
+                    android:layout_marginTop="@dimen/issuingreceipt_linespacing"
                     android:textColor="@color/black"
                     android:textSize="11dp" />
 
@@ -234,7 +250,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="13dp"
                     android:layout_below="@id/textView24"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="@dimen/issuingreceipt_linespacing"
                     android:gravity="center_vertical"
                     android:text="@string/label_receipt_vat"
                     android:textColor="@color/receipt_detail_text"
@@ -246,8 +262,7 @@
                     android:layout_height="13dp"
                     android:layout_alignParentRight="true"
                     android:layout_below="@id/textView24"
-                    android:layout_marginTop="10dp"
-                    android:text="$ 7,123"
+                    android:layout_marginTop="@dimen/issuingreceipt_linespacing"
                     android:textColor="@color/black"
                     android:textSize="11dp" />
 
@@ -256,7 +271,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="13dp"
                     android:layout_below="@id/textView26"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="@dimen/issuingreceipt_linespacing"
                     android:gravity="center_vertical"
                     android:text="@string/label_receipt_discount"
                     android:textColor="@color/receipt_detail_text"
@@ -268,8 +283,7 @@
                     android:layout_height="13dp"
                     android:layout_alignParentRight="true"
                     android:layout_below="@id/textView26"
-                    android:layout_marginTop="10dp"
-                    android:text="$ 72,123"
+                    android:layout_marginTop="@dimen/issuingreceipt_linespacing"
                     android:textColor="@color/black"
                     android:textSize="11dp" />
 
@@ -278,7 +292,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="13dp"
                     android:layout_below="@id/textView28"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="@dimen/issuingreceipt_linespacing"
                     android:gravity="center_vertical"
                     android:text="@string/label_receipt_payment"
                     android:textColor="@color/receipt_detail_text"
@@ -290,8 +304,7 @@
                     android:layout_height="13dp"
                     android:layout_alignParentRight="true"
                     android:layout_below="@id/textView28"
-                    android:layout_marginTop="10dp"
-                    android:text="$ 72,123"
+                    android:layout_marginTop="@dimen/issuingreceipt_linespacing"
                     android:textColor="@color/black"
                     android:textSize="11dp" />
 
@@ -300,7 +313,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="13dp"
                     android:layout_below="@id/textView30"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="@dimen/issuingreceipt_linespacing"
                     android:gravity="center_vertical"
                     android:text="@string/label_receipt_paymenttype"
                     android:textColor="@color/receipt_detail_text"
@@ -312,8 +325,7 @@
                     android:layout_height="13dp"
                     android:layout_alignParentRight="true"
                     android:layout_below="@id/textView30"
-                    android:layout_marginTop="10dp"
-                    android:text="신용카드"
+                    android:layout_marginTop="@dimen/issuingreceipt_linespacing"
                     android:textColor="@color/black"
                     android:textSize="11dp" />
             </RelativeLayout>
@@ -360,7 +372,6 @@
                     android:layout_height="12dp"
                     android:layout_below="@id/imageView1"
                     android:layout_marginTop="8dp"
-                    android:text="상호 | (주)데일리"
                     android:textColor="@color/receipt_detail_text"
                     android:textSize="10dp" />
 
@@ -371,7 +382,6 @@
                     android:layout_below="@id/imageView1"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="8dp"
-                    android:text="등록번호 | 133-81-15781"
                     android:textColor="@color/receipt_detail_text"
                     android:textSize="10dp" />
 
@@ -382,7 +392,6 @@
                     android:layout_alignParentRight="true"
                     android:layout_below="@id/imageView1"
                     android:layout_marginTop="8dp"
-                    android:text="대표자 | 신인식"
                     android:textColor="@color/receipt_detail_text"
                     android:textSize="10dp" />
 
@@ -401,10 +410,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textView42"
+                    android:layout_marginLeft="5dp"
                     android:layout_marginTop="8dp"
                     android:layout_toRightOf="@id/textView45"
                     android:lineSpacingExtra="8dp"
-                    android:text=" 서울시 관악구 낙성대동 서울대학교 연구공\n단지 SK상생혁신센터 1층 데일리호텔"
                     android:textColor="@color/receipt_detail_text"
                     android:textSize="10dp" />
 
@@ -415,7 +424,6 @@
                     android:layout_alignParentRight="true"
                     android:layout_below="@id/textView42"
                     android:layout_marginTop="8dp"
-                    android:text="전화번호 | 1800-9210"
                     android:textColor="@color/receipt_detail_text"
                     android:textSize="10dp" />
 
@@ -426,7 +434,6 @@
                     android:layout_alignParentRight="true"
                     android:layout_below="@id/textView47"
                     android:layout_marginTop="8dp"
-                    android:text="팩스 | 02-1234-1233"
                     android:textColor="@color/receipt_detail_text"
                     android:textSize="10dp" />
 
@@ -438,7 +445,6 @@
                     android:layout_marginTop="15dp"
                     android:gravity="center_horizontal"
                     android:lineSpacingExtra="3dp"
-                    android:text="이 예약에 대해 총 요금이 고객에게 청구되었습니다.\n이 양식은 부가가치(VAT)청구서가 아니\n지출 증명서 사용됩니다."
                     android:textColor="@color/dh_theme_color"
                     android:textSize="10dp" />
             </RelativeLayout>
