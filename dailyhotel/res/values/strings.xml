@@ -149,6 +149,7 @@
     <string name="dialog_title_googleplayservice">Google Play Services</string>
     <string name="dialog_msg_install_googleplayservice">맵을 사용하기 위한 Google Play Services의 설치가 필요합니다.</string>
     <string name="dialog_msg_update_googleplayservice">맵을 사용하기 위한 Google Play Services의 업데이트가 필요합니다.</string>
+    <string name="dialog_msg_outofmemory">앱 실행에 필요한 메모리가 부족하여 종료됩니다. 메모리 정리 후에 재 실행 부탁드립니다.</string>
 
     <!-- Main Drawer Menu Titles -->
     <string name="drawer_menu_pin_title_resrvation">예약</string>

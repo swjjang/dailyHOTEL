@@ -405,6 +405,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			Util.restartApp(MainActivity.this);
 		}
 
+		// 액션바 위치를 다시 잡아준다.
+
 	}
 
 	/**

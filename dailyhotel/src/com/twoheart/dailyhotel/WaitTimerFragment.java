@@ -86,7 +86,17 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 			return null;
 		}
 
-		View view = inflater.inflate(R.layout.fragment_wait_timer, container, false);
+		View view = null;
+
+		try
+		{
+			view = inflater.inflate(R.layout.fragment_wait_timer, container, false);
+		} catch (OutOfMemoryError errror)
+		{
+			Util.finishOutOfMemory(baseActivity);
+			return null;
+		}
+
 		view.setPadding(0, Util.dpToPx(container.getContext(), 56) + 1, 0, 0);
 
 		mSaleTime = (SaleTime) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_SALETIME);
