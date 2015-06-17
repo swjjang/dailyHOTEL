@@ -161,6 +161,21 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	}
 
 	@Override
+	public void onPause()
+	{
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
+		showActionBarAnimatoin(baseActivity);
+
+		super.onPause();
+	}
+
+	@Override
 	public void onItemClick(AdapterView<?> parentView, View childView, int position, long id)
 	{
 		BaseActivity baseActivity = (BaseActivity) getActivity();

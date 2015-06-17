@@ -19,8 +19,7 @@
         <ImageView
             android:id="@+id/logoImageView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/card_logo_01" />
+            android:layout_height="wrap_content" />
 
         <ImageView
             android:id="@+id/imageView1"
@@ -44,7 +43,6 @@
             android:layout_above="@id/imageView1"
             android:layout_alignParentRight="true"
             android:layout_marginBottom="6dp"
-            android:text="1234-****-123*-1234"
             android:textColor="@color/creditcard_number_text"
             android:textSize="16dp" />
 
