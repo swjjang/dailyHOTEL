@@ -21,10 +21,40 @@
             android:layout_gravity="start"
             android:layout_marginTop="56dp" >
 
+            <RelativeLayout
+                android:id="@+id/bannerView"
+                android:layout_width="match_parent"
+                android:layout_height="74dp"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/banner"
+                android:gravity="center_vertical"
+                android:paddingLeft="17dp" >
+
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                    android:id="@+id/titleTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left|center_vertical"
+                    android:textColor="@color/white"
+                    android:textSize="20dp" />
+
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                    android:id="@+id/subTitleTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/titleTextView"
+                    android:layout_marginTop="5dp"
+                    android:gravity="left|center_vertical"
+                    android:text="@string/label_event_subtitle"
+                    android:textColor="@color/white"
+                    android:textSize="14dp" />
+            </RelativeLayout>
+
             <ListView
                 android:id="@+id/drawListView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_above="@+id/bannerView"
                 android:layout_gravity="center_vertical"
                 android:background="@android:color/white"
                 android:choiceMode="singleChoice"

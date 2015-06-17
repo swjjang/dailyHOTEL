@@ -44,6 +44,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.view.KeyEvent;
@@ -67,6 +68,7 @@ import com.androidquery.util.AQUtility;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.twoheart.dailyhotel.activity.EventWebActivity;
 import com.twoheart.dailyhotel.activity.SplashActivity;
 import com.twoheart.dailyhotel.fragment.HotelMainFragment;
 import com.twoheart.dailyhotel.fragment.RatingHotelFragment;
@@ -534,8 +536,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
 		// 이벤트 제거.
-		//		TextView eventTextView = (TextView) findViewById(R.id.titleTextView);
-		//		eventTextView.setText(Html.fromHtml(getString(R.string.label_event_title)));
+		TextView eventTextView = (TextView) findViewById(R.id.titleTextView);
+		eventTextView.setText(Html.fromHtml(getString(R.string.label_event_title)));
 
 		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, 0, 0)
 		{
@@ -645,26 +647,26 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		drawerList = (ListView) findViewById(R.id.drawListView);
 
 		// 이벤트 제거.
-		//		View bannerView = findViewById(R.id.bannerView);
-		//
-		//		bannerView.setOnClickListener(new View.OnClickListener()
-		//		{
-		//			@Override
-		//			public void onClick(View v)
-		//			{
-		//				drawerLayout.closeDrawer(drawerView);
-		//
-		//				mHandler.postDelayed(new Runnable()
-		//				{
-		//					@Override
-		//					public void run()
-		//					{
-		//						Intent i = new Intent(MainActivity.this, EventWebActivity.class);
-		//						startActivity(i);
-		//					}
-		//				}, 300);
-		//			}
-		//		});
+		View bannerView = findViewById(R.id.bannerView);
+
+		bannerView.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				drawerLayout.closeDrawer(drawerView);
+
+				mHandler.postDelayed(new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						Intent i = new Intent(MainActivity.this, EventWebActivity.class);
+						startActivity(i);
+					}
+				}, 300);
+			}
+		});
 
 		menuHotelListFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_todays_hotel), R.drawable.selector_drawermenu_todayshotel, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
 		menuBookingListFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_chk_reservation), R.drawable.selector_drawermenu_reservation, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
