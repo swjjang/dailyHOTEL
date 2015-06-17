@@ -159,6 +159,22 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		mHotelListView.setShadowVisible(false);
 		return view;
 	}
+	
+	@Override
+	public void onResume()
+	{
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
+		showActionBar(baseActivity);
+		setActionBarAnimationLock(false);
+		
+		super.onResume();
+	}
 
 	@Override
 	public void onPause()
@@ -170,7 +186,8 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 			return;
 		}
 
-		showActionBarAnimatoin(baseActivity);
+		showActionBar(baseActivity);
+		setActionBarAnimationLock(true);
 
 		super.onPause();
 	}
@@ -468,7 +485,42 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 		mDirection = MotionEvent.ACTION_CANCEL;
 	}
+	
+	private void showActionBar(BaseActivity baseActivity)
+	{
+		if (isCanActionBarAnimation() == false || mIsClosedActionBar == false)
+		{
+			return;
+		}
 
+		mIsClosedActionBar = false;
+
+		final View anchorView = baseActivity.findViewById(R.id.anchorAnimation);
+		final View actionbarView = baseActivity.findViewById(R.id.toolbar_actionbar);
+		final View tabindicatorView = baseActivity.findViewById(R.id.tabindicator);
+		final View underlineView01 = baseActivity.findViewById(R.id.toolbar_actionbar_underline);
+		final View underlineView02 = baseActivity.findViewById(R.id.tabindicator_underLine);
+
+		anchorView.setVisibility(View.VISIBLE);
+
+		if (mValueAnimator != null)
+		{
+			mValueAnimator.cancel();
+			mValueAnimator.removeAllListeners();
+			mValueAnimator = null;
+		}
+		
+		mAnchorY = 0;
+
+		anchorView.setTranslationY(0);
+		actionbarView.setTranslationY(0);
+		underlineView01.setTranslationY(0);
+		tabindicatorView.setTranslationY(0);
+		underlineView02.setTranslationY(0);
+
+		anchorView.setVisibility(View.INVISIBLE);
+	}
+	
 	public void showActionBarAnimatoin(BaseActivity baseActivity)
 	{
 		if (isCanActionBarAnimation() == false || mIsClosedActionBar == false || mLockActionBar == true)

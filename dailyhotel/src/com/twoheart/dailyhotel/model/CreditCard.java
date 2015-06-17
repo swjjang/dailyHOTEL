@@ -8,7 +8,8 @@ public class CreditCard implements Parcelable
 	public String name;
 	public String number;
 	public String billingkey;
-
+	public String cardcd;
+	
 	public CreditCard()
 	{
 
@@ -19,11 +20,12 @@ public class CreditCard implements Parcelable
 		readFromParcel(in);
 	}
 
-	public CreditCard(String name, String number, String billkey)
+	public CreditCard(String name, String number, String billkey, String cardcd)
 	{
 		this.name = name;
 		this.number = number;
 		this.billingkey = billkey;
+		this.cardcd = cardcd;
 	}
 
 	@Override
@@ -32,6 +34,7 @@ public class CreditCard implements Parcelable
 		dest.writeString(name);
 		dest.writeString(number);
 		dest.writeString(billingkey);
+		dest.writeString(cardcd);
 	}
 
 	private void readFromParcel(Parcel in)
@@ -39,6 +42,7 @@ public class CreditCard implements Parcelable
 		name = in.readString();
 		number = in.readString();
 		billingkey = in.readString();
+		cardcd = in.readString();
 	}
 
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()

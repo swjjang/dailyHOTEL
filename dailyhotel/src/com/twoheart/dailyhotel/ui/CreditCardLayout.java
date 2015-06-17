@@ -283,7 +283,7 @@ public class CreditCardLayout extends FrameLayout
 
 			ImageView logoImageView = (ImageView) view.findViewById(R.id.logoImageView);
 
-			int resLogo = getLogo(card.name);
+			int resLogo = getLogo(card.cardcd);
 
 			if (resLogo == 0)
 			{
@@ -314,56 +314,67 @@ public class CreditCardLayout extends FrameLayout
 			return view;
 		}
 
-		private int getLogo(String cardName)
+		private int getLogo(String cardcd)
 		{
-			if (TextUtils.isEmpty(cardName) == true)
-			{
-				return 0;
-			}
-
-			if (cardName.startsWith("외환") == true)
+//			'01','외환'
+//			'03','롯데'
+//			'04','현대'
+//			'06','국민'
+//			'11','BC'
+//			'12','삼성'
+//			'14','신한'
+//			'15','한미'
+//			'16','NH'
+//			'17','하나 SK'
+//			'21','해외비자'
+//			'22','해외마스터'
+//			'23','JCB'
+//			'24','해외아멕스'
+//			'25','해외다이너스'
+			
+			if ("01".equalsIgnoreCase(cardcd) == true)
 			{
 				return R.drawable.card_logo_01;
-			} else if (cardName.startsWith("롯데") == true)
+			} else if ("03".equalsIgnoreCase(cardcd) == true)
 			{
 				return R.drawable.card_logo_02;
-			} else if (cardName.startsWith("현대") == true)
+			} else if ("04".equalsIgnoreCase(cardcd) == true)
 			{
 				return R.drawable.card_logo_03;
-			} else if (cardName.startsWith("국민") == true)
+			} else if ("06".equalsIgnoreCase(cardcd) == true)
 			{
 				return R.drawable.card_logo_04;
-			} else if (cardName.startsWith("BC") == true)
+			} else if ("11".equalsIgnoreCase(cardcd) == true)
 			{
 				return R.drawable.card_logo_05;
-			} else if (cardName.startsWith("삼성") == true)
+			} else if ("12".equalsIgnoreCase(cardcd) == true)
 			{
 				return R.drawable.card_logo_06;
-			} else if (cardName.startsWith("신한") == true)
+			} else if ("14".equalsIgnoreCase(cardcd) == true)
 			{
 				return R.drawable.card_logo_07;
-			} else if (cardName.startsWith("한미") == true)
+			} else if ("15".equalsIgnoreCase(cardcd) == true)
 			{
 				return R.drawable.card_logo_08;
-			} else if (cardName.startsWith("NH") == true)
+			} else if ("16".equalsIgnoreCase(cardcd) == true)
 			{
 				return R.drawable.card_logo_09;
-			} else if (cardName.startsWith("하나 SK") == true)
+			} else if ("17".equalsIgnoreCase(cardcd) == true)
 			{
 				return R.drawable.card_logo_10;
-			} else if (cardName.startsWith("해외비자") == true)
+			} else if ("21".equalsIgnoreCase(cardcd) == true)
 			{
 				return R.drawable.card_logo_11;
-			} else if (cardName.startsWith("해외마스터") == true)
+			} else if ("22".equalsIgnoreCase(cardcd) == true)
 			{
 				return R.drawable.card_logo_12;
-			} else if (cardName.startsWith("JCB") == true)
+			} else if ("23".equalsIgnoreCase(cardcd) == true)
 			{
 				return R.drawable.card_logo_13;
-			} else if (cardName.startsWith("해외아멕스") == true)
+			} else if ("24".equalsIgnoreCase(cardcd) == true)
 			{
 				return R.drawable.card_logo_14;
-			} else if (cardName.startsWith("해외다이너스") == true)
+			} else if ("25".equalsIgnoreCase(cardcd) == true)
 			{
 				return R.drawable.card_logo_15;
 			} else
