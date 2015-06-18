@@ -9,7 +9,7 @@ public class CreditCard implements Parcelable
 	public String number;
 	public String billingkey;
 	public String cardcd;
-	
+
 	public CreditCard()
 	{
 

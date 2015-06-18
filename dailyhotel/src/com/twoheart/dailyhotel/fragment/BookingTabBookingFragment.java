@@ -116,11 +116,14 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 		tvCheckOut.setSelected(true);
 
 		// 영수증 발급
-		View viewReceiptTextView = view.findViewById(R.id.viewReceiptTextView);
+		TextView viewReceiptTextView = (TextView) view.findViewById(R.id.viewReceiptTextView);
+		TextView guideReceiptTextView = (TextView) view.findViewById(R.id.guideReceiptTextView);
 
 		if (mBooking.isUsed == true)
 		{
-			viewReceiptTextView.setVisibility(View.VISIBLE);
+			viewReceiptTextView.setTextColor(getResources().getColor(R.color.white));
+			viewReceiptTextView.setBackgroundResource(R.drawable.shape_button_common_background);
+			guideReceiptTextView.setText(R.string.message_can_issuing_receipt);
 
 			viewReceiptTextView.setOnClickListener(new View.OnClickListener()
 			{
@@ -141,7 +144,9 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 			});
 		} else
 		{
-			viewReceiptTextView.setVisibility(View.GONE);
+			viewReceiptTextView.setTextColor(getResources().getColor(R.color.black_a25));
+			viewReceiptTextView.setBackgroundResource(R.drawable.btn_confirm_normal);
+			guideReceiptTextView.setText(R.string.message_cant_issuing_receipt);
 		}
 
 		lockUI();

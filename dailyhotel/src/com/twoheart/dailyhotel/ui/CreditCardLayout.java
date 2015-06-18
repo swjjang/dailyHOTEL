@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -316,22 +315,22 @@ public class CreditCardLayout extends FrameLayout
 
 		private int getLogo(String cardcd)
 		{
-//			'01','외환'
-//			'03','롯데'
-//			'04','현대'
-//			'06','국민'
-//			'11','BC'
-//			'12','삼성'
-//			'14','신한'
-//			'15','한미'
-//			'16','NH'
-//			'17','하나 SK'
-//			'21','해외비자'
-//			'22','해외마스터'
-//			'23','JCB'
-//			'24','해외아멕스'
-//			'25','해외다이너스'
-			
+			//			'01','외환'
+			//			'03','롯데'
+			//			'04','현대'
+			//			'06','국민'
+			//			'11','BC'
+			//			'12','삼성'
+			//			'14','신한'
+			//			'15','한미'
+			//			'16','NH'
+			//			'17','하나 SK'
+			//			'21','해외비자'
+			//			'22','해외마스터'
+			//			'23','JCB'
+			//			'24','해외아멕스'
+			//			'25','해외다이너스'
+
 			if ("01".equalsIgnoreCase(cardcd) == true)
 			{
 				return R.drawable.card_logo_01;

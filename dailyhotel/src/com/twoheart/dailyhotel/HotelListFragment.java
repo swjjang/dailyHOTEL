@@ -99,6 +99,16 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	private static boolean mLockActionBar = false;
 	private static int mAnchorY = Integer.MAX_VALUE;
 	private int mScrollState;
+	private ActionbarViewHolder mActionbarViewHolder;
+
+	private class ActionbarViewHolder
+	{
+		public View mAnchorView;
+		public View mActionbarView;
+		public View mTabindicatorView;
+		public View mUnderlineView01;
+		public View mUnderlineView02;
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -157,9 +167,18 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		.useViewDelegate(AbsListView.class, new AbsListViewDelegate()).setup(mPullToRefreshLayout);
 
 		mHotelListView.setShadowVisible(false);
+
+		mActionbarViewHolder = new ActionbarViewHolder();
+
+		mActionbarViewHolder.mAnchorView = baseActivity.findViewById(R.id.anchorAnimation);
+		mActionbarViewHolder.mActionbarView = baseActivity.findViewById(R.id.toolbar_actionbar);
+		mActionbarViewHolder.mTabindicatorView = baseActivity.findViewById(R.id.tabindicator);
+		mActionbarViewHolder.mUnderlineView01 = baseActivity.findViewById(R.id.toolbar_actionbar_underline);
+		mActionbarViewHolder.mUnderlineView02 = baseActivity.findViewById(R.id.tabindicator_underLine);
+
 		return view;
 	}
-	
+
 	@Override
 	public void onResume()
 	{
@@ -172,7 +191,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 		showActionBar(baseActivity);
 		setActionBarAnimationLock(false);
-		
+
 		super.onResume();
 	}
 
@@ -485,23 +504,15 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 		mDirection = MotionEvent.ACTION_CANCEL;
 	}
-	
+
 	private void showActionBar(BaseActivity baseActivity)
 	{
-		if (isCanActionBarAnimation() == false || mIsClosedActionBar == false)
+		if (isCanActionBarAnimation() == false)
 		{
 			return;
 		}
 
 		mIsClosedActionBar = false;
-
-		final View anchorView = baseActivity.findViewById(R.id.anchorAnimation);
-		final View actionbarView = baseActivity.findViewById(R.id.toolbar_actionbar);
-		final View tabindicatorView = baseActivity.findViewById(R.id.tabindicator);
-		final View underlineView01 = baseActivity.findViewById(R.id.toolbar_actionbar_underline);
-		final View underlineView02 = baseActivity.findViewById(R.id.tabindicator_underLine);
-
-		anchorView.setVisibility(View.VISIBLE);
 
 		if (mValueAnimator != null)
 		{
@@ -509,18 +520,20 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 			mValueAnimator.removeAllListeners();
 			mValueAnimator = null;
 		}
-		
+
+		mActionbarViewHolder.mAnchorView.setVisibility(View.VISIBLE);
+
 		mAnchorY = 0;
 
-		anchorView.setTranslationY(0);
-		actionbarView.setTranslationY(0);
-		underlineView01.setTranslationY(0);
-		tabindicatorView.setTranslationY(0);
-		underlineView02.setTranslationY(0);
+		mActionbarViewHolder.mAnchorView.setTranslationY(0);
+		mActionbarViewHolder.mActionbarView.setTranslationY(0);
+		mActionbarViewHolder.mUnderlineView01.setTranslationY(0);
+		mActionbarViewHolder.mTabindicatorView.setTranslationY(0);
+		mActionbarViewHolder.mUnderlineView02.setTranslationY(0);
 
-		anchorView.setVisibility(View.INVISIBLE);
+		mActionbarViewHolder.mAnchorView.setVisibility(View.INVISIBLE);
 	}
-	
+
 	public void showActionBarAnimatoin(BaseActivity baseActivity)
 	{
 		if (isCanActionBarAnimation() == false || mIsClosedActionBar == false || mLockActionBar == true)
@@ -530,13 +543,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 		mIsClosedActionBar = false;
 
-		final View anchorView = baseActivity.findViewById(R.id.anchorAnimation);
-		final View actionbarView = baseActivity.findViewById(R.id.toolbar_actionbar);
-		final View tabindicatorView = baseActivity.findViewById(R.id.tabindicator);
-		final View underlineView01 = baseActivity.findViewById(R.id.toolbar_actionbar_underline);
-		final View underlineView02 = baseActivity.findViewById(R.id.tabindicator_underLine);
-
-		anchorView.setVisibility(View.VISIBLE);
+		mActionbarViewHolder.mAnchorView.setVisibility(View.VISIBLE);
 
 		if (mValueAnimator != null)
 		{
@@ -547,7 +554,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 		if (mAnchorY == Integer.MAX_VALUE)
 		{
-			mAnchorY = -anchorView.getHeight();
+			mAnchorY = -mActionbarViewHolder.mAnchorView.getHeight();
 		}
 
 		mValueAnimator = ValueAnimator.ofInt(mAnchorY, 0);
@@ -560,11 +567,11 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 				mAnchorY = value;
 
-				anchorView.setTranslationY(value);
-				actionbarView.setTranslationY(value);
-				underlineView01.setTranslationY(value);
-				tabindicatorView.setTranslationY(value);
-				underlineView02.setTranslationY(value);
+				mActionbarViewHolder.mAnchorView.setTranslationY(value);
+				mActionbarViewHolder.mActionbarView.setTranslationY(value);
+				mActionbarViewHolder.mUnderlineView01.setTranslationY(value);
+				mActionbarViewHolder.mTabindicatorView.setTranslationY(value);
+				mActionbarViewHolder.mUnderlineView02.setTranslationY(value);
 			}
 		});
 
@@ -583,7 +590,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 			@Override
 			public void onAnimationEnd(Animator animation)
 			{
-				anchorView.setVisibility(View.INVISIBLE);
+				mActionbarViewHolder.mAnchorView.setVisibility(View.INVISIBLE);
 			}
 
 			@Override
@@ -605,13 +612,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 		mIsClosedActionBar = true;
 
-		final View anchorView = baseActivity.findViewById(R.id.anchorAnimation);
-		final View actionbarView = baseActivity.findViewById(R.id.toolbar_actionbar);
-		final View tabindicatorView = baseActivity.findViewById(R.id.tabindicator);
-		final View underlineView01 = baseActivity.findViewById(R.id.toolbar_actionbar_underline);
-		final View underlineView02 = baseActivity.findViewById(R.id.tabindicator_underLine);
-
-		anchorView.setVisibility(View.VISIBLE);
+		mActionbarViewHolder.mAnchorView.setVisibility(View.VISIBLE);
 
 		if (mValueAnimator != null)
 		{
@@ -625,7 +626,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 			mAnchorY = 0;
 		}
 
-		mValueAnimator = ValueAnimator.ofInt(mAnchorY, -anchorView.getHeight());
+		mValueAnimator = ValueAnimator.ofInt(mAnchorY, -mActionbarViewHolder.mAnchorView.getHeight());
 		mValueAnimator.setDuration(300).addUpdateListener(new AnimatorUpdateListener()
 		{
 			@Override
@@ -635,11 +636,11 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 				mAnchorY = value;
 
-				anchorView.setTranslationY(value);
-				actionbarView.setTranslationY(value);
-				underlineView01.setTranslationY(value);
-				tabindicatorView.setTranslationY(value);
-				underlineView02.setTranslationY(value);
+				mActionbarViewHolder.mAnchorView.setTranslationY(value);
+				mActionbarViewHolder.mActionbarView.setTranslationY(value);
+				mActionbarViewHolder.mUnderlineView01.setTranslationY(value);
+				mActionbarViewHolder.mTabindicatorView.setTranslationY(value);
+				mActionbarViewHolder.mUnderlineView02.setTranslationY(value);
 			}
 		});
 

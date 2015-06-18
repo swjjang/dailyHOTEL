@@ -245,6 +245,8 @@
     <string name="frag_booking_complete_payment">결제 완료</string>
     <string name="frag_booking_use">이용 완료</string>
     <string name="frag_issuing_receipt">영수증 발급</string>
+    <string name="message_cant_issuing_receipt">영수증 발급은 체크아웃 후에 가능합니다.</string>
+    <string name="message_can_issuing_receipt">영수증 발급이 가능합니다.</string>
 
     <!-- Profile Activity -->
     <string name="act_profile_login_acc">로그인 계정</string>

@@ -352,17 +352,37 @@
             </LinearLayout>
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="#dcdcdc" />
+
+        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            android:id="@+id/guideReceiptTextView"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:text="@string/message_cant_issuing_receipt"
+            android:textColor="@color/textView_textColor_main"
+            android:textSize="13dp" />
+
         <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
             android:id="@+id/viewReceiptTextView"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_margin="10dp"
-            android:background="@drawable/shape_button_common_background"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/btn_confirm_normal"
             android:gravity="center"
             android:text="@string/frag_issuing_receipt"
-            android:textColor="@android:color/white"
-            android:textSize="17dp"
-            android:visibility="gone" />
+            android:textColor="@color/black_a25"
+            android:textSize="17dp" />
+
     </LinearLayout>
 
 </ScrollView>
