@@ -163,7 +163,7 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 		// 문의 하기 기능.
 		int state = ABTestPreferences.getInstance(getActivity()).getKakaotalkConsult();
 
-		setKakaotalkConsultVisible(view, state != 1);
+		setKakaotalkConsultVisible(view, state == 1);
 
 		return view;
 	}
@@ -313,6 +313,9 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 					{
 						return;
 					}
+
+					// ABTest
+					ABTestPreferences.getInstance(baseActivity).feedbackKakaotalkConsult(baseActivity, mQueue, null);
 
 					try
 					{

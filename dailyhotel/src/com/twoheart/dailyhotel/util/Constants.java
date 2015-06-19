@@ -237,8 +237,11 @@ public interface Constants
 	public static final String URL_WEBAPI_SITE_COUNTRY_LOCATION_LIST = UNENCRYPTED_URL ? "site/get/country" : "MjMkNjQkNjYkMTYkNzgk$QTE5MzIwNjU2MkIwIREUyODhODODI4Q0IyN0NFQjA4QjJCMDU1MDI2QUQ5RTU4QUMCyNQUExREM4NTMA5QUM0RDc2Mg==$";
 
 	// A/B Test
-	// api/abtest/kakao/consult
-	public static final String URL_WEBAPI_ABTEST_KAKAO_CONSULT = UNENCRYPTED_URL ? "api/abtest/kakao/consult" : "";
+	// api/abtest/testcase
+	public static final String URL_WEBAPI_ABTEST_TESTCASE = UNENCRYPTED_URL ? "api/abtest/testcase" : "NTYkMzgkOSQ3NyQ4MSQ=$QTc1QzU3QP0VBMkUyQ0RDMjA4RUZFQUEwRjBCOEOY1MkYwNzg4OEI4MEZDBMzAwRjExRkM4N0VBRUFRGMHDYxMkM3QQ==$";
+
+	// api/abtest/kakao/consult/feedback
+	public static final String URL_WEBAPI_ABTEST_KAKAO_CONSULT_FEEDBACK = UNENCRYPTED_URL ? "api/abtest/kakao/consult/feedback" : "NTEkMjgkMTEwJDQ3JDQ0JA==$QTUxRjgwNzIyNDY1MjQ2ODJGMTdDIMUU4QTRCOTc3QTEP3MDTc5OTMG4RTc1M0NGRUIzNkNBOUJBQUJCOTg4OTU5MjBCNzg4MEZFODk5M0VFRTgxZODMyMDU3NjlGQUYxMzkw$";
 
 	public static final String URL_STORE_GOOGLE_DAILYHOTEL = "market://details?id=com.twoheart.dailyhotel";
 	public static final String URL_STORE_GOOGLE_KAKAOTALK = "market://details?id=com.kakao.talk";

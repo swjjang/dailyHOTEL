@@ -41,6 +41,7 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.ABTestPreferences;
+import com.twoheart.dailyhotel.util.ABTestPreferences.OnABTestListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
@@ -207,8 +208,6 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 
 			loginParams.put("pw", pw);
 
-			ExLog.e(" / moveToLoginStep : loginParams = " + loginParams.toString());
-
 			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(), loginParams, mUserLoginJsonResponseListener, this));
 		}
 
@@ -244,36 +243,15 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 
 	private void requestConfigurationABTest()
 	{
-		int state = ABTestPreferences.getInstance(getApplicationContext()).getKakaotalkConsult();
-
-		if (state == 0)
+		// ABTest
+		ABTestPreferences.getInstance(getApplicationContext()).requestConfiguration(getApplicationContext(), mQueue, new OnABTestListener()
 		{
-			Map<String, String> params = new HashMap<String, String>();
-
-			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append("").toString(), params, new DailyHotelJsonResponseListener()
+			@Override
+			public void onPostExecute()
 			{
-				@Override
-				public void onResponse(String url, JSONObject response)
-				{
-
-					ABTestPreferences.getInstance(getApplicationContext()).configurationABTest(getApplicationContext(), response);
-
-					showMainActivity();
-				}
-			}, new ErrorListener()
-			{
-				@Override
-				public void onErrorResponse(VolleyError arg0)
-				{
-					ABTestPreferences.getInstance(getApplicationContext()).setKakaotalkConsult(0);
-
-					showMainActivity();
-				}
-			}));
-		} else
-		{
-			showMainActivity();
-		}
+				showMainActivity();
+			}
+		});
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -286,7 +264,6 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-
 			try
 			{
 				String result = null;
@@ -326,7 +303,6 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-
 			try
 			{
 				if (response == null)

@@ -462,23 +462,20 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 		lockUI();
 
-		Map<String, String> params = new HashMap<String, String>();
+		String params = null;
 
 		if (province instanceof Area)
 		{
 			Area area = (Area) province;
 
-			params.put("province_idx", String.valueOf(area.provinceIndex));
-			params.put("area_idx", String.valueOf(area.index));
+			params = String.format("?province_idx=%d&area_idx=%d&date=%s", area.provinceIndex, area.index, saleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
 		} else
 		{
-			params.put("province_idx", String.valueOf(province.index));
+			params = String.format("?province_idx=%d&date=%s", province.index, saleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
 		}
 
-		params.put("date", saleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
-
 		// 호텔 리스트를 가져온다. 
-		mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_HOTEL_LIST).toString(), params, mHotelJsonResponseListener, baseActivity));
+		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_HOTEL_LIST).append(params).toString(), null, mHotelJsonResponseListener, baseActivity));
 
 		RenewalGaManager.getInstance(baseActivity.getApplicationContext()).recordScreen("hotelList", "/todays-hotels/" + province.name);
 	}
