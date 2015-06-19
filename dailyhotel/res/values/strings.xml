@@ -337,6 +337,8 @@
     <string name="frag_hotel_tab_add">주소</string>
     <string name="frag_hotel_tab_bed_type">베드타입</string>
     <string name="frag_hotel_tab_price">가격(세금&amp;봉사료 포함)</string>
+    <string name="label_consult_kakao">문의하기</string>
+    <string name="message_consult_kakao">무엇을 도와드릴까요?</string>
 
     <!-- RatingHotel Fragment -->
     <string name="frag_rating_hotel_title">호텔 만족도 조사</string>

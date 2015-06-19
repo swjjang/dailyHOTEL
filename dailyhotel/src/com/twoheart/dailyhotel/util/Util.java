@@ -1,6 +1,8 @@
 package com.twoheart.dailyhotel.util;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Locale;
+import java.util.UUID;
 
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -15,6 +17,8 @@ import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.provider.Settings.Secure;
+import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
@@ -134,5 +138,34 @@ public class Util implements Constants
 				System.exit(0);
 			}
 		}, null).setCancelable(false).show();
+	}
+
+	public static String getDeviceUUID(final Context context)
+	{
+		UUID uuid = null;
+
+		final String androidId = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
+		try
+		{
+			if (!"9774d56d682e549c".equals(androidId))
+			{
+				uuid = UUID.nameUUIDFromBytes(androidId.getBytes("utf8"));
+			} else
+			{
+				final String deviceId = ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
+				uuid = deviceId != null ? UUID.nameUUIDFromBytes(deviceId.getBytes("utf8")) : UUID.randomUUID();
+			}
+		} catch (UnsupportedEncodingException e)
+		{
+			ExLog.d(e.toString());
+		}
+
+		if (uuid != null)
+		{
+			return uuid.toString();
+		} else
+		{
+			return null;
+		}
 	}
 }

@@ -72,6 +72,7 @@ encoding//src/com/twoheart/dailyhotel/model/Province.java=UTF-8
 encoding//src/com/twoheart/dailyhotel/model/SaleTime.java=UTF-8
 encoding//src/com/twoheart/dailyhotel/ui/CreditCardLayout.java=UTF-8
 encoding//src/com/twoheart/dailyhotel/ui/FinalCheckLayout.java=UTF-8
+encoding//src/com/twoheart/dailyhotel/util/ABTestPreferences.java=UTF-8
 encoding//src/com/twoheart/dailyhotel/util/AvailableNetwork.java=UTF-8
 encoding//src/com/twoheart/dailyhotel/util/BitmapLruCache.java=UTF-8
 encoding//src/com/twoheart/dailyhotel/util/Constants.java=UTF-8
