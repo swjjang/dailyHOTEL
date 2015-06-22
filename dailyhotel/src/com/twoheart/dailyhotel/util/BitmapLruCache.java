@@ -67,6 +67,11 @@ public class BitmapLruCache extends LruCache<String, Bitmap> implements ImageCac
 	@Override
 	public void putBitmap(String url, Bitmap bitmap)
 	{
+		if (url == null || bitmap == null)
+		{
+			return;
+		}
+
 		put(url, bitmap);
 	}
 }

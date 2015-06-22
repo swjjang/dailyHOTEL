@@ -219,14 +219,6 @@ public class SelectAreaActivity extends BaseActivity
 		super.onBackPressed();
 	}
 
-	@Override
-	public void finish()
-	{
-		super.finish();
-
-		overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
-	}
-
 	private OnUserActionListener mOnUserActionListener = new OnUserActionListener()
 	{
 

@@ -253,10 +253,16 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	{
 		super.onResume();
 
-		lockUI();
-
 		// 호텔 디테일 정보 재 요청
-		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_DETAIL).append('/').append(mPay.getHotelDetail().getHotel().getIdx()).append("/").append(mSaleTime.getDayOfDaysHotelDateFormat("yy/MM/dd")).toString(), null, mHotelDetailJsonResponseListener, this));
+		if ("ACTIVITY_RESULT".equalsIgnoreCase(mAliveCallSource) == true && mReqCode == CODE_REQUEST_ACTIVITY_PAYMENT)
+		{
+
+		} else
+		{
+			lockUI();
+
+			mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_DETAIL).append('/').append(mPay.getHotelDetail().getHotel().getIdx()).append("/").append(mSaleTime.getDayOfDaysHotelDateFormat("yy/MM/dd")).toString(), null, mHotelDetailJsonResponseListener, this));
+		}
 
 		String region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
 		String hotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
@@ -1940,7 +1946,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					{
 						JSONObject jsonObject = jsonArray.getJSONObject(0);
 
-						mSelectedCreditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"));
+						mSelectedCreditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"), jsonObject.getString("cardcd"));
 						mSimplePaymentRadioButton.setChecked(true);
 					} else
 					{
@@ -1962,7 +1968,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 						{
 							JSONObject jsonObject = jsonArray.getJSONObject(0);
 
-							mSelectedCreditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"));
+							mSelectedCreditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"), jsonObject.getString("cardcd"));
 						}
 					}
 
@@ -2031,7 +2037,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 					JSONObject jsonObject = jsonArray.getJSONObject(0);
 
-					mSelectedCreditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"));
+					mSelectedCreditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"), jsonObject.getString("cardcd"));
 					mSimplePaymentRadioButton.setText(String.format("%s %s", mSelectedCreditCard.name.replace("카드", ""), mSelectedCreditCard.number));
 
 					// final check 결제 화면을 보여준다.
@@ -2275,6 +2281,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 				Intent intent = new Intent();
 				intent.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
+
+				mAliveCallSource = "ACTIVITY_RESULT";
+				mReqCode = CODE_REQUEST_ACTIVITY_PAYMENT;
 
 				if (msg_code == 0)
 				{

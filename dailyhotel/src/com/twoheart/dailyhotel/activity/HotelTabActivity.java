@@ -34,9 +34,6 @@ import android.widget.Toast;
 
 import com.android.volley.Request.Method;
 import com.facebook.Session;
-import com.facebook.UiLifecycleHelper;
-import com.facebook.widget.FacebookDialog.Callback;
-import com.facebook.widget.FacebookDialog.PendingCall;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.HotelTabBookingFragment;
 import com.twoheart.dailyhotel.fragment.TabInfoFragment;
@@ -78,7 +75,7 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 	private String region;
 	private String hotelName;
 
-	private UiLifecycleHelper uiHelper;
+	//	private UiLifecycleHelper uiHelper;
 	private Handler mHandler = new Handler();
 
 	public interface OnUserActionListener
@@ -91,8 +88,8 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 	{
 		super.onCreate(savedInstanceState);
 
-		uiHelper = new UiLifecycleHelper(this, null);
-		uiHelper.onCreate(savedInstanceState);
+		//		uiHelper = new UiLifecycleHelper(this, null);
+		//		uiHelper.onCreate(savedInstanceState);
 
 		hotelDetail = new HotelDetail();
 		Intent intent = getIntent();
@@ -254,21 +251,21 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, this));
 		}
 
-		uiHelper.onActivityResult(requestCode, resultCode, data, new Callback()
-		{
-
-			@Override
-			public void onError(PendingCall pendingCall, Exception error, Bundle data)
-			{
-				HotelTabActivity.this.onError();
-			}
-
-			@Override
-			public void onComplete(PendingCall pendingCall, Bundle data)
-			{
-
-			}
-		});
+		//		uiHelper.onActivityResult(requestCode, resultCode, data, new Callback()
+		//		{
+		//
+		//			@Override
+		//			public void onError(PendingCall pendingCall, Exception error, Bundle data)
+		//			{
+		//				HotelTabActivity.this.onError();
+		//			}
+		//
+		//			@Override
+		//			public void onComplete(PendingCall pendingCall, Bundle data)
+		//			{
+		//
+		//			}
+		//		});
 
 		super.onActivityResult(requestCode, resultCode, data);
 	}
@@ -359,7 +356,7 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 				break;
 		}
 
-		uiHelper.onResume();
+		//		uiHelper.onResume();
 
 		super.onResume();
 	}
@@ -368,21 +365,21 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 	protected void onSaveInstanceState(Bundle outState)
 	{
 		super.onSaveInstanceState(outState);
-		uiHelper.onSaveInstanceState(outState);
+		//		uiHelper.onSaveInstanceState(outState);
 	}
 
 	@Override
 	protected void onPause()
 	{
 		super.onPause();
-		uiHelper.onPause();
+		//		uiHelper.onPause();
 	}
 
 	@Override
 	protected void onDestroy()
 	{
 		super.onDestroy();
-		uiHelper.onDestroy();
+		//		uiHelper.onDestroy();
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////

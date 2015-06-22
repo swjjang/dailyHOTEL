@@ -10,7 +10,10 @@ package com.twoheart.dailyhotel.fragment;
 
 import java.text.DecimalFormat;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -28,6 +31,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.HotelTabActivity;
 import com.twoheart.dailyhotel.adapter.HotelImageFragmentPagerAdapter;
 import com.twoheart.dailyhotel.model.HotelDetail;
+import com.twoheart.dailyhotel.util.ABTestPreferences;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
@@ -122,32 +126,44 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 			mViewPager.setAdapter(mAdapter);
 		}
 
-		mViewPager.setBoundaryCaching(true);
-		mViewPager.setOnTouchListener(this);
+		mCurrentPage = mHotelDetail.getImageUrl().size();
+
+		if (mCurrentPage != 0)
+		{
+			mViewPager.setBoundaryCaching(true);
+			mViewPager.setOnTouchListener(this);
+		}
 
 		mViewPager.setCurrentItem(0);
+
 		mIndicator.setViewPager(mViewPager);
 		mIndicator.setSnap(true);
 
-		mCurrentPage = mHotelDetail.getImageUrl().size();
-
-		mHandler = new Handler()
+		if (mCurrentPage != 0)
 		{
-			public void handleMessage(Message msg)
+			mHandler = new Handler()
 			{
-				BaseActivity baseActivity = (BaseActivity) getActivity();
-
-				if (baseActivity == null || baseActivity.isFinishing() == true)
+				public void handleMessage(Message msg)
 				{
-					return;
-				}
+					BaseActivity baseActivity = (BaseActivity) getActivity();
 
-				mCurrentPage = mViewPager.getCurrentItem();
-				mCurrentPage++;
-				mViewPager.setCurrentItem(mCurrentPage, true);
-				this.sendEmptyMessageDelayed(0, DURATION_HOTEL_IMAGE_SHOW);
-			}
-		};
+					if (baseActivity == null || baseActivity.isFinishing() == true)
+					{
+						return;
+					}
+
+					mCurrentPage = mViewPager.getCurrentItem();
+					mCurrentPage++;
+					mViewPager.setCurrentItem(mCurrentPage, true);
+					this.sendEmptyMessageDelayed(0, DURATION_HOTEL_IMAGE_SHOW);
+				}
+			};
+		}
+
+		// 문의 하기 기능.
+		int state = ABTestPreferences.getInstance(getActivity()).getKakaotalkConsult();
+
+		setKakaotalkConsultVisible(view, state == 1);
 
 		return view;
 	}
@@ -156,6 +172,8 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 	public void onResume()
 	{
 		super.onResume();
+
+		releaseUiComponent();
 
 		tvDiscount.setTypeface(DailyHotel.getBoldTypeface());
 		if (mHandler != null)
@@ -261,5 +279,62 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 			tvPrice.setVisibility(View.INVISIBLE);
 			tvPrice.setText(null);
 		}
+	}
+
+	private void setKakaotalkConsultVisible(View view, boolean visible)
+	{
+		View kakaoConsultLayout = view.findViewById(R.id.kakaoConsultLayout);
+
+		if (visible == false)
+		{
+			kakaoConsultLayout.setVisibility(View.GONE);
+
+		} else
+		{
+			kakaoConsultLayout.setVisibility(View.VISIBLE);
+
+			// 카톡 1:1 실시간 상담
+			View consultKakaoButton = view.findViewById(R.id.consultKakaoButton);
+			consultKakaoButton.setOnClickListener(new View.OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+					if (isLockUiComponent() == true)
+					{
+						return;
+					}
+
+					lockUiComponent();
+
+					BaseActivity baseActivity = (BaseActivity) getActivity();
+
+					if (baseActivity == null || baseActivity.isFinishing() == true)
+					{
+						return;
+					}
+
+					// ABTest
+					ABTestPreferences.getInstance(baseActivity).feedbackKakaotalkConsult(baseActivity, mQueue, null);
+
+					try
+					{
+						startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/@%EB%8D%B0%EC%9D%BC%EB%A6%AC%ED%98%B8%ED%85%94")));
+					} catch (ActivityNotFoundException e)
+					{
+						try
+						{
+							startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
+						} catch (ActivityNotFoundException e1)
+						{
+							Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+							marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
+							startActivity(marketLaunch);
+						}
+					}
+				}
+			});
+		}
+
 	}
 }

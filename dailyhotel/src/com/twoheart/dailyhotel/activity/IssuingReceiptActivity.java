@@ -18,6 +18,7 @@ import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
@@ -52,8 +53,8 @@ public class IssuingReceiptActivity extends BaseActivity
 	@Override
 	protected void onResume()
 	{
-		//		lockUI();
-		//		mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, this));
+		lockUI();
+		mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, this));
 
 		super.onResume();
 	}
@@ -82,6 +83,10 @@ public class IssuingReceiptActivity extends BaseActivity
 
 			// **예약 세부 정보**
 			View bookingInfoLayout = findViewById(R.id.bookingInfoLayout);
+
+			// 예약 번호
+			TextView registerationTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView13);
+			registerationTextView.setText(String.valueOf(mBookingIdx));
 
 			// 호텔명
 			TextView hotelNameTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView3);

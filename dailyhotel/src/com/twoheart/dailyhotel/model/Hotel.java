@@ -26,6 +26,7 @@ public class Hotel implements Parcelable
 	public double mLatitude;
 	public double mLongitude;
 	public String mSaleDay; //현재 호텔이 팔리고 있는 날짜. 디버그에서만 사용.
+	public boolean isDailyChoice;
 
 	public enum HotelGrade
 	{
@@ -130,22 +131,24 @@ public class Hotel implements Parcelable
 		dest.writeString(bedType);
 		dest.writeDouble(mLatitude);
 		dest.writeDouble(mLongitude);
+		dest.writeInt(isDailyChoice ? 1 : 0);
 	}
 
 	private void readFromParcel(Parcel in)
 	{
-		this.image = in.readString();
-		this.name = in.readString();
-		this.price = in.readInt();
-		this.discount = in.readInt();
-		this.address = in.readString();
-		this.category = (HotelGrade) in.readSerializable();
-		this.idx = in.readInt();
-		this.availableRoom = in.readInt();
-		this.sequence = in.readInt();
-		this.bedType = in.readString();
-		this.mLatitude = in.readDouble();
-		this.mLongitude = in.readDouble();
+		image = in.readString();
+		name = in.readString();
+		price = in.readInt();
+		discount = in.readInt();
+		address = in.readString();
+		category = (HotelGrade) in.readSerializable();
+		idx = in.readInt();
+		availableRoom = in.readInt();
+		sequence = in.readInt();
+		bedType = in.readString();
+		mLatitude = in.readDouble();
+		mLongitude = in.readDouble();
+		isDailyChoice = in.readInt() == 1 ? true : false;
 	}
 
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
@@ -307,6 +310,11 @@ public class Hotel implements Parcelable
 			if (jsonObject.has("sday") == true)
 			{
 				mSaleDay = jsonObject.getString("sday");
+			}
+
+			if (jsonObject.has("is_dailychoice") == true)
+			{
+				isDailyChoice = jsonObject.getBoolean("is_dailychoice");
 			}
 		} catch (JSONException e)
 		{

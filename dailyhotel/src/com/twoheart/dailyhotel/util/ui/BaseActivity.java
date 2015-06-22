@@ -122,7 +122,13 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	@Override
 	public void setContentView(int layoutResID)
 	{
-		super.setContentView(layoutResID);
+		try
+		{
+			super.setContentView(layoutResID);
+		} catch (OutOfMemoryError errror)
+		{
+			Util.finishOutOfMemory(BaseActivity.this);
+		}
 
 		// pinkred_font
 		//		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
