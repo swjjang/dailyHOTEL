@@ -664,6 +664,21 @@ public class HotelMainFragment extends BaseFragment
 					regionName = selectedProvince.name;
 				}
 
+				// 마지막으로 지역이 Area로 되어있으면 Province로 바꾸어 준다.
+				if (selectedProvince instanceof Area)
+				{
+					int provinceIndex = ((Area) selectedProvince).provinceIndex;
+
+					for (Province province : provinceList)
+					{
+						if (province.index == provinceIndex)
+						{
+							selectedProvince = province;
+							break;
+						}
+					}
+				}
+
 				SharedPreferences.Editor editor = baseActivity.sharedPreference.edit();
 				editor.putString(KEY_PREFERENCE_REGION_SELECT, regionName);
 				editor.commit();

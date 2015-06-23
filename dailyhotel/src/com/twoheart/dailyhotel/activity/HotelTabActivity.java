@@ -39,9 +39,9 @@ import com.twoheart.dailyhotel.fragment.HotelTabBookingFragment;
 import com.twoheart.dailyhotel.fragment.TabInfoFragment;
 import com.twoheart.dailyhotel.fragment.TabMapFragment;
 import com.twoheart.dailyhotel.model.Hotel;
+import com.twoheart.dailyhotel.model.Hotel.HotelGrade;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.model.Hotel.HotelGrade;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
@@ -511,15 +511,15 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 				hotelBasic.setName(detailObj.getString("hotel_name"));
 				hotelBasic.setDiscount(discount);
 				hotelBasic.setPrice(price);
-				
+
 				try
 				{
 					hotelBasic.setCategory(detailObj.getString("cat"));
-				}catch(Exception e)
+				} catch (Exception e)
 				{
 					hotelBasic.setCategory(HotelGrade.etc.name());
 				}
-				
+
 				hotelBasic.setBedType(detailObj.getString("bed_type"));
 
 				hotelDetail.setHotel(hotelBasic);
