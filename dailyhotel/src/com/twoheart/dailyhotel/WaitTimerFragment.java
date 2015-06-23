@@ -33,10 +33,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
+import com.twoheart.dailyhotel.activity.EventWebActivity;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
@@ -62,7 +64,7 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 	private long remainingTime;
 
 	//	private ImageView ivNewEvent;
-	//	private LinearLayout btnEvent;
+	private LinearLayout btnEvent;
 
 	public static WaitTimerFragment newInstance(SaleTime saleTime)
 	{
@@ -97,8 +99,6 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 			return null;
 		}
 
-		view.setPadding(0, Util.dpToPx(container.getContext(), 56) + 1, 0, 0);
-
 		mSaleTime = (SaleTime) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_SALETIME);
 		alarmManager = (AlarmManager) baseActivity.getApplicationContext().getSystemService(Context.ALARM_SERVICE);
 		intent = new Intent(baseActivity.getApplicationContext(), AlarmBroadcastReceiver.class);
@@ -108,11 +108,10 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 		tvTitle = (TextView) view.findViewById(R.id.tv_wait_timer_main);
 		btnNotify = (TextView) view.findViewById(R.id.btn_wait_timer_alram);
 		//		ivNewEvent = (ImageView) view.findViewById(R.id.iv_new_event);
-		//		btnEvent = (LinearLayout) view.findViewById(R.id.btn_event);
-		//		btnEvent.setVisibility(View.GONE);
+		btnEvent = (LinearLayout) view.findViewById(R.id.btn_event);
 
 		btnNotify.setOnClickListener(this);
-		//		btnEvent.setOnClickListener(this);
+		btnEvent.setOnClickListener(this);
 
 		baseActivity.setActionBar(getString(R.string.actionbar_title_wait_timer_frag), false);
 
@@ -150,20 +149,19 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 		if (v.getId() == btnNotify.getId())
 		{
 			setNotify(!isEnabledNotify);
+		} else if (v.getId() == btnEvent.getId())
+		{
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null)
+			{
+				return;
+			}
+
+			Intent i = new Intent(baseActivity, EventWebActivity.class);
+			baseActivity.startActivity(i);
+			baseActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
 		}
-		//		else if (v.getId() == btnEvent.getId())
-		//		{
-		//			BaseActivity baseActivity = (BaseActivity) getActivity();
-		//
-		//			if (baseActivity == null)
-		//			{
-		//				return;
-		//			}
-		//
-		//			Intent i = new Intent(baseActivity, EventWebActivity.class);
-		//			baseActivity.startActivity(i);
-		//			baseActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
-		//		}
 	}
 
 	private void setNotify(boolean enable)
