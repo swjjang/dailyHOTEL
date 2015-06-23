@@ -1586,8 +1586,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 				if (response.getBoolean("result") == false)
 				{
-					unLockUI();
-
 					DailyToast.showToast(BookingActivity.this, response.getString("message"), Toast.LENGTH_LONG);
 				} else
 				{
@@ -1618,6 +1616,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			} catch (Exception e)
 			{
 				onError(e);
+			} finally
+			{
+				unLockUI();
 			}
 		}
 	};
