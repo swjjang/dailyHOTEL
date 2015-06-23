@@ -79,7 +79,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		View view = inflater.inflate(R.layout.fragment_booking_list, container, false);
-		view.setPadding(0, Util.dpToPx(container.getContext(), 56) + 1, 0, 0);
+		view.setPadding(0, Util.dpToPx(container.getContext(), 56), 0, 0);
 
 		mListView = (PinnedSectionListView) view.findViewById(R.id.listview_booking);
 		mListView.setShadowVisible(false);
