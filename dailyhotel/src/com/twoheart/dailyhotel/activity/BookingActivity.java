@@ -1578,7 +1578,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			try
 			{
 				unLockUI();
-				
+
 				if (response == null)
 				{
 					throw new NullPointerException("response == null");

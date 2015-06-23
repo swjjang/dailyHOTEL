@@ -72,6 +72,10 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 
 		setContentView(R.layout.activity_splash);
 
+		SharedPreferences.Editor editor = sharedPreference.edit();
+		editor.putBoolean(KEY_PREFERENCE_REGION_SETTING, false);
+		editor.commit();
+
 		mCircleViewList = new View[PROGRESS_CIRCLE_COUNT];
 
 		for (int i = 0; i < PROGRESS_CIRCLE_COUNT; i++)
