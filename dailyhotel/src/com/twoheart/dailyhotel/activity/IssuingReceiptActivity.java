@@ -66,6 +66,7 @@ public class IssuingReceiptActivity extends BaseActivity
 			// 영숭증 
 			JSONObject receipt = jsonObject.getJSONObject("receipt");
 
+			String reservationIndex = jsonObject.getString("reservation_idx");
 			String userName = receipt.getString("user_name");
 			String userPhone = receipt.getString("user_phone");
 			String checkin = receipt.getString("checkin");
@@ -86,7 +87,7 @@ public class IssuingReceiptActivity extends BaseActivity
 
 			// 예약 번호
 			TextView registerationTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView13);
-			registerationTextView.setText(String.valueOf(mBookingIdx));
+			registerationTextView.setText(reservationIndex);
 
 			// 호텔명
 			TextView hotelNameTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView3);
@@ -117,7 +118,7 @@ public class IssuingReceiptActivity extends BaseActivity
 
 			DecimalFormat comma = new DecimalFormat("###,##0");
 
-			// 소개
+			// 소계
 			TextView supplyValueTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView25);
 			supplyValueTextView.setText("₩ " + comma.format(supoplyValue));
 

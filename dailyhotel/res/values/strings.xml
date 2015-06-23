@@ -455,7 +455,7 @@
     <string name="label_receipt_nights_rooms">숙박 일수/객실수</string>
     <string name="label_receipt_paymentinfo">결제정보</string>
     <string name="label_receipt_paymentday">결제일</string>
-    <string name="label_receipt_supplyvalue">소개</string>
+    <string name="label_receipt_supplyvalue">소계</string>
     <string name="label_receipt_vat">세금 및 수수료</string>
     <string name="label_receipt_discount">총금액</string>
     <string name="label_receipt_payment">지불 금액</string>
