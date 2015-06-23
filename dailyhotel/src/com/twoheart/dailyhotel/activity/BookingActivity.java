@@ -71,6 +71,7 @@ import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.model.Pay;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.Hotel.HotelGrade;
 import com.twoheart.dailyhotel.ui.FinalCheckLayout;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -2167,7 +2168,15 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				hotelBasic.setName(detailObj.getString("hotel_name"));
 				hotelBasic.setDiscount(discount);
 				hotelBasic.setPrice(price);
-				hotelBasic.setCategory(detailObj.getString("cat"));
+				
+				try
+				{
+					hotelBasic.setCategory(detailObj.getString("cat"));
+				}catch(Exception e)
+				{
+					hotelBasic.setCategory(HotelGrade.etc.name());
+				}
+				
 				hotelBasic.setBedType(detailObj.getString("bed_type"));
 
 				hotelDetail.setHotel(hotelBasic);

@@ -290,7 +290,15 @@ public class Hotel implements Parcelable
 			price = Integer.parseInt(jsonObject.getString("price"));
 			discount = Integer.parseInt(jsonObject.getString("discount"));
 			address = jsonObject.getString("addr_summary");
-			category = HotelGrade.valueOf(jsonObject.getString("cat"));
+			
+			try
+			{
+				category = HotelGrade.valueOf(jsonObject.getString("cat"));
+			}catch(Exception e)
+			{
+				category = HotelGrade.etc;
+			}
+			
 			idx = jsonObject.getInt("idx");
 			availableRoom = jsonObject.getInt("avail_room_count");
 			sequence = jsonObject.getInt("seq");
