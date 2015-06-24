@@ -54,28 +54,6 @@ public class IssuingReceiptActivity extends BaseActivity
 		mIsFullscreen = false;
 	}
 
-	private void updateFullscreenStatus(boolean bUseFullscreen)
-	{
-		View actionBar = findViewById(R.id.toolbar_actionbar);
-		View underLine = findViewById(R.id.toolbar_actionbarUnderLine);
-		
-		if (bUseFullscreen)
-		{
-			actionBar.setVisibility(View.INVISIBLE);
-			underLine.setVisibility(View.INVISIBLE);
-
-			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-		} else
-		{
-			actionBar.setVisibility(View.VISIBLE);
-			underLine.setVisibility(View.VISIBLE);
-
-			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		}
-	}
-
 	@Override
 	protected void onResume()
 	{
@@ -83,6 +61,19 @@ public class IssuingReceiptActivity extends BaseActivity
 		mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, this));
 
 		super.onResume();
+	}
+
+	@Override
+	public void onBackPressed()
+	{
+		if (mIsFullscreen == true)
+		{
+			mIsFullscreen = !mIsFullscreen;
+			updateFullscreenStatus(mIsFullscreen);
+		} else
+		{
+			super.onBackPressed();
+		}
 	}
 
 	private boolean makeLayout(JSONObject jsonObject)
@@ -210,7 +201,7 @@ public class IssuingReceiptActivity extends BaseActivity
 		{
 			return false;
 		}
-		
+
 		View view = findViewById(R.id.receiptLayout);
 		view.setOnClickListener(new View.OnClickListener()
 		{
@@ -223,6 +214,28 @@ public class IssuingReceiptActivity extends BaseActivity
 		});
 
 		return true;
+	}
+
+	private void updateFullscreenStatus(boolean bUseFullscreen)
+	{
+		View actionBar = findViewById(R.id.toolbar_actionbar);
+		View underLine = findViewById(R.id.toolbar_actionbarUnderLine);
+
+		if (bUseFullscreen)
+		{
+			actionBar.setVisibility(View.INVISIBLE);
+			underLine.setVisibility(View.INVISIBLE);
+
+			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+		} else
+		{
+			actionBar.setVisibility(View.VISIBLE);
+			underLine.setVisibility(View.VISIBLE);
+
+			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		}
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////

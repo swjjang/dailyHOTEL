@@ -666,13 +666,12 @@ public class HotelMainFragment extends BaseFragment
 
 				boolean mIsProvinceSetting = baseActivity.sharedPreference.getBoolean(KEY_PREFERENCE_REGION_SETTING, false);
 				SharedPreferences.Editor editor = baseActivity.sharedPreference.edit();
+				editor.putBoolean(KEY_PREFERENCE_REGION_SETTING, true);
+				editor.commit();
 
 				// 마지막으로 지역이 Area로 되어있으면 Province로 바꾸어 준다.
 				if (mIsProvinceSetting == false && selectedProvince instanceof Area)
 				{
-					editor.putBoolean(KEY_PREFERENCE_REGION_SETTING, true);
-					editor.commit();
-
 					int provinceIndex = ((Area) selectedProvince).provinceIndex;
 
 					for (Province province : provinceList)

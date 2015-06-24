@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="56dp"
-    android:background="@drawable/gradient_window_background" >
+    android:background="@drawable/gradient_window_background"
+    android:paddingTop="56dp" >
 
     <LinearLayout
         android:id="@+id/btn_event"
@@ -16,7 +16,8 @@
         android:layout_marginTop="10dp"
         android:background="@drawable/img_btn_event"
         android:gravity="center"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:visibility="gone" >
 
         <ImageView
             android:id="@+id/iv_new_event"
