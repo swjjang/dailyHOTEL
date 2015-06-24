@@ -24,12 +24,18 @@ import com.twoheart.dailyhotel.R;
 
 public class LoadingDialog
 {
+	private BaseActivity mActivity;
 	private Dialog mDialog;
 	private Handler mHandler = new Handler()
 	{
 		@Override
 		public void handleMessage(Message msg)
 		{
+			if (mActivity == null || mActivity.isFinishing() == true)
+			{
+				return;
+			}
+
 			if (mDialog != null && mDialog.isShowing())
 			{
 				mDialog.dismiss();
@@ -37,8 +43,10 @@ public class LoadingDialog
 		}
 	};
 
-	public LoadingDialog(final BaseActivity activity)
+	public LoadingDialog(BaseActivity activity)
 	{
+		mActivity = activity;
+
 		mDialog = new Dialog(activity, R.style.TransDialog);
 		ProgressBar pb = new ProgressBar(activity);
 		LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -50,22 +58,34 @@ public class LoadingDialog
 			public void onCancel(DialogInterface dialog)
 			{
 				hide();
-				activity.onBackPressed();
+				mActivity.onBackPressed();
 			}
 		});
 	}
 
 	public boolean isVisible()
 	{
+		if (mDialog == null)
+		{
+			return false;
+		}
+
 		return mDialog.isShowing();
 	}
 
 	public void show()
 	{
+		if (mActivity == null || mActivity.isFinishing() == true)
+		{
+			return;
+		}
+
 		mHandler.removeMessages(0);
 
-		if (!mDialog.isShowing())
+		if (mDialog != null && mDialog.isShowing() == false)
+		{
 			mDialog.show();
+		}
 	}
 
 	public void hide()
@@ -79,7 +99,7 @@ public class LoadingDialog
 
 	public void close()
 	{
-		if (mDialog.isShowing() == true)
+		if (mDialog != null && mDialog.isShowing() == true)
 		{
 			mDialog.dismiss();
 		}

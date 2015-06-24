@@ -28,6 +28,7 @@ import com.twoheart.dailyhotel.fragment.TabInfoFragment;
 import com.twoheart.dailyhotel.fragment.TabMapFragment;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.Hotel;
+import com.twoheart.dailyhotel.model.Hotel.HotelGrade;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
@@ -240,6 +241,11 @@ public class BookingTabActivity extends BaseActivity
 
 						case 200:
 						{
+							if (isFinishing() == true)
+							{
+								return;
+							}
+
 							String msg = response.getString("");
 							AlertDialog alertDlg = SimpleAlertDialog.build(BookingTabActivity.this, null, msg, getString(R.string.dialog_btn_text_confirm), null, null, null).create();
 							alertDlg.show();
@@ -261,7 +267,15 @@ public class BookingTabActivity extends BaseActivity
 				Hotel hotelBasic = mHotelDetail.getHotel();
 
 				hotelBasic.setName(jsonObject.getString("hotel_name"));
-				hotelBasic.setCategory(jsonObject.getString("cat"));
+
+				try
+				{
+					hotelBasic.setCategory(jsonObject.getString("cat"));
+				} catch (Exception e)
+				{
+					hotelBasic.setCategory(HotelGrade.etc.name());
+				}
+
 				hotelBasic.setAddress(jsonObject.getString("address"));
 				mHotelDetail.setHotel(hotelBasic);
 

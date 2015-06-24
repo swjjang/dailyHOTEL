@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
@@ -39,6 +40,8 @@ public class ErrorFragment extends BaseFragment implements OnClickListener
 		}
 
 		View view = inflater.inflate(R.layout.fragment_error, container, false);
+		view.setPadding(0, Util.dpToPx(container.getContext(), 56) + 1, 0, 0);
+
 		baseActivity.setActionBar(getString(R.string.actionbar_title_error_frag), false);
 
 		btnRetry = (TextView) view.findViewById(R.id.btn_error);

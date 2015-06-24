@@ -1,11 +1,14 @@
 package com.twoheart.dailyhotel.util;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Locale;
+import java.util.UUID;
 
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -14,9 +17,13 @@ import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.provider.Settings.Secure;
+import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
+
+import com.twoheart.dailyhotel.R;
 
 public class Util implements Constants
 {
@@ -118,5 +125,47 @@ public class Util implements Constants
 
 		alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + 500, pendingIntent);
 		System.exit(0);
+	}
+
+	public static void finishOutOfMemory(Activity activity)
+	{
+		// 세션이 만료되어 재시작 요청.
+		SimpleAlertDialog.build(activity, activity.getString(R.string.dialog_notice2), activity.getString(R.string.dialog_msg_outofmemory), activity.getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				System.exit(0);
+			}
+		}, null).setCancelable(false).show();
+	}
+
+	public static String getDeviceUUID(final Context context)
+	{
+		UUID uuid = null;
+
+		final String androidId = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
+		try
+		{
+			if (!"9774d56d682e549c".equals(androidId))
+			{
+				uuid = UUID.nameUUIDFromBytes(androidId.getBytes("utf8"));
+			} else
+			{
+				final String deviceId = ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
+				uuid = deviceId != null ? UUID.nameUUIDFromBytes(deviceId.getBytes("utf8")) : UUID.randomUUID();
+			}
+		} catch (UnsupportedEncodingException e)
+		{
+			ExLog.d(e.toString());
+		}
+
+		if (uuid != null)
+		{
+			return uuid.toString();
+		} else
+		{
+			return null;
+		}
 	}
 }

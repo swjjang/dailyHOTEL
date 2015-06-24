@@ -34,9 +34,9 @@ public class LocationFactory
 	private Location mLocation = null;
 	private boolean mIsMeasuringLocation = false;
 	private LocationListener mLocationListener;
-	private Context mContext;
 	private View mMyLocationView;
 	private Drawable mMyLocationDrawable;
+	private BaseActivity mBaseActivity;
 
 	protected PendingIntent mUpdatePendingIntent;
 
@@ -44,14 +44,19 @@ public class LocationFactory
 	{
 		public void handleMessage(android.os.Message msg)
 		{
+			if (mBaseActivity == null || mBaseActivity.isFinishing() == true)
+			{
+				return;
+			}
+
 			switch (msg.what)
 			{
 				case 0:
 					stopLocationMeasure();
 
-					if (mContext != null)
+					if (mBaseActivity != null)
 					{
-						DailyToast.showToast(mContext, R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
+						DailyToast.showToast(mBaseActivity, R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
 					}
 					break;
 
@@ -59,7 +64,7 @@ public class LocationFactory
 				{
 					if (mMyLocationView != null)
 					{
-						mMyLocationView.setBackgroundColor(mContext.getResources().getColor(R.color.dh_theme_color));
+						mMyLocationView.setBackgroundColor(mBaseActivity.getResources().getColor(R.color.dh_theme_color));
 					}
 
 					sendEmptyMessageDelayed(2, 1000);
@@ -89,7 +94,7 @@ public class LocationFactory
 		};
 	};
 
-	public static LocationFactory getInstance()
+	public static LocationFactory getInstance(BaseActivity activity)
 	{
 		if (mInstance == null)
 		{
@@ -101,15 +106,17 @@ public class LocationFactory
 				}
 			}
 		}
+
+		mInstance.mBaseActivity = activity;
+
 		return mInstance;
 	}
 
 	private LocationFactory()
 	{
-
 	}
 
-	public void startLocationMeasure(Context context, final Fragment fragment, View myLocation, LocationListener listener)
+	public void startLocationMeasure(final Fragment fragment, View myLocation, LocationListener listener)
 	{
 		if (mIsMeasuringLocation)
 		{
@@ -124,10 +131,9 @@ public class LocationFactory
 		if (mUpdatePendingIntent == null)
 		{
 			Intent updateIntent = new Intent(SINGLE_LOCATION_UPDATE_ACTION);
-			mUpdatePendingIntent = PendingIntent.getBroadcast(context, 0, updateIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+			mUpdatePendingIntent = PendingIntent.getBroadcast(mBaseActivity, 0, updateIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		}
 
-		mContext = context;
 		mLocationListener = listener;
 		mMyLocationView = myLocation;
 
@@ -152,7 +158,7 @@ public class LocationFactory
 
 		mIsMeasuringLocation = true;
 
-		Location location = getLastBestLocation(context, 10, TEN_MINUTES);
+		Location location = getLastBestLocation(mBaseActivity, 10, TEN_MINUTES);
 
 		if (location != null)
 		{
@@ -165,7 +171,7 @@ public class LocationFactory
 		mHandler.sendEmptyMessageDelayed(1, 1000);
 
 		IntentFilter locIntentFilter = new IntentFilter(SINGLE_LOCATION_UPDATE_ACTION);
-		context.registerReceiver(mSingleUpdateReceiver, locIntentFilter);
+		mBaseActivity.registerReceiver(mSingleUpdateReceiver, locIntentFilter);
 		mLocationManager.requestSingleUpdate(new Criteria(), mUpdatePendingIntent);
 
 		mHandler.removeMessages(0);
@@ -239,11 +245,11 @@ public class LocationFactory
 			mLocationManager.removeUpdates(mUpdatePendingIntent);
 		}
 
-		if (mContext != null)
+		if (mBaseActivity != null)
 		{
 			try
 			{
-				mContext.unregisterReceiver(mSingleUpdateReceiver);
+				mBaseActivity.unregisterReceiver(mSingleUpdateReceiver);
 			} catch (Exception e)
 			{
 				ExLog.d(e.toString());

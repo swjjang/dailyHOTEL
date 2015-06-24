@@ -109,6 +109,11 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
 			int index = url.indexOf('/');
 			param = url.substring(index);
 			encoderUrl = url.substring(0, index);
+		} else if (url.contains("?") == true)
+		{
+			int index = url.indexOf('?');
+			param = url.substring(index);
+			encoderUrl = url.substring(0, index);
 		} else
 		{
 			encoderUrl = url;
@@ -176,9 +181,22 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
 		return decodeUrl;
 	}
 
-	//	public static void makeUrlEncoder()
-	//	{
-	//		String test = null;
+	//		public static void makeUrlEncoder()
+	//		{
+	//			String test = null;
+	//			
+	//			test = DailyHotelRequest.getUrlEncoder("api/abtest/testcase");
+	//			test = DailyHotelRequest.getUrlEncoder("api/abtest/kakao/consult/feedback");
+
+	//
+	//		test = DailyHotelRequest.getUrlEncoder("api/abtest/kakao/consult");
+	//
+	//	
+	//			test = DailyHotelRequest.getUrlEncoder("api/sale/hotel/list");
+	//			test = DailyHotelRequest.getUrlEncoder("api/sale/region/all");
+	//			
+	//		test = DailyHotelRequest.getUrlEncoder("api/reserv/receipt");
+	//
 	//
 	//		test = DailyHotelRequest.getUrlEncoder("api/reserv/session/billing/payment");
 	//		test = DailyHotelRequest.getUrlEncoder("api/reserv/mine/hidden");
@@ -251,5 +269,5 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
 	//		test = DailyHotelRequest.getUrlEncoder("http://policies.dailyhotel.co.kr/terms/");
 	//		test = DailyHotelRequest.getUrlEncoder("http://policies.dailyhotel.co.kr/about/");
 	//		
-	//	}
+	//		}
 }

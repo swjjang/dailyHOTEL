@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.activity.IssuingReceiptActivity;
 import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.HotelDetail;
@@ -45,7 +46,6 @@ import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
 public class BookingTabBookingFragment extends BaseFragment implements Constants
 {
-
 	private static final String KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL = "hotel_detail";
 	private static final String KEY_BUNDLE_ARGUMENTS_BOOKING = "booking";
 
@@ -114,6 +114,40 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 		tvBedtype.setSelected(true);
 		tvCheckIn.setSelected(true);
 		tvCheckOut.setSelected(true);
+
+		// 영수증 발급
+		TextView viewReceiptTextView = (TextView) view.findViewById(R.id.viewReceiptTextView);
+		TextView guideReceiptTextView = (TextView) view.findViewById(R.id.guideReceiptTextView);
+
+		if (mBooking.isUsed == true)
+		{
+			viewReceiptTextView.setTextColor(getResources().getColor(R.color.white));
+			viewReceiptTextView.setBackgroundResource(R.drawable.shape_button_common_background);
+			guideReceiptTextView.setText(R.string.message_can_issuing_receipt);
+
+			viewReceiptTextView.setOnClickListener(new View.OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+					BaseActivity baseActivity = (BaseActivity) getActivity();
+
+					if (baseActivity == null)
+					{
+						return;
+					}
+
+					Intent intent = new Intent(baseActivity, IssuingReceiptActivity.class);
+					intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, mBooking.index);
+					startActivity(intent);
+				}
+			});
+		} else
+		{
+			viewReceiptTextView.setTextColor(getResources().getColor(R.color.black_a25));
+			viewReceiptTextView.setBackgroundResource(R.drawable.btn_confirm_normal);
+			guideReceiptTextView.setText(R.string.message_cant_issuing_receipt);
+		}
 
 		lockUI();
 		mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, baseActivity));

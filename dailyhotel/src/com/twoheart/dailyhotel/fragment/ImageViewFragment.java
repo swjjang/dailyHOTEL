@@ -1,11 +1,13 @@
 package com.twoheart.dailyhotel.fragment;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.ProgressBar;
 
 import com.androidquery.AQuery;
@@ -69,12 +71,22 @@ public class ImageViewFragment extends BaseFragment implements OnClickListener, 
 		mImageView = (ImageView) view.findViewById(R.id.iv_image_view);
 		mProgressBar = (ProgressBar) view.findViewById(R.id.pb_image_view);
 
-		mImageView.setOnClickListener(this);
-		//		mImageLoader.displayImage(mImageUrl, mImageView, new ProgressImageLoading(mProgressBar));
-		//		mImageView.setImageUrl(mImageUrl, mImageLoader, mProgressBar);
-		//		mImageLoader.DisplayImage(mImageUrl, mImageView, mProgressBar);
-		mAq = new AQuery(baseActivity, view);
-		mAq.id(mImageView).progress(mProgressBar).image(mImageUrl, true, true, 0, R.drawable.img_placeholder, null, AQuery.FADE_IN_NETWORK);
+		if (TextUtils.isEmpty(mImageUrl) == true)
+		{
+			mProgressBar.setVisibility(View.GONE);
+			mImageView.setOnClickListener(null);
+			mImageView.setImageResource(R.drawable.img_placeholder);
+		} else
+		{
+			mImageView.setOnClickListener(this);
+			mImageView.setScaleType(ScaleType.CENTER_CROP);
+
+			//		mImageLoader.displayImage(mImageUrl, mImageView, new ProgressImageLoading(mProgressBar));
+			//		mImageView.setImageUrl(mImageUrl, mImageLoader, mProgressBar);
+			//		mImageLoader.DisplayImage(mImageUrl, mImageView, mProgressBar);
+			mAq = new AQuery(baseActivity, view);
+			mAq.id(mImageView).progress(mProgressBar).image(mImageUrl, true, true, 0, R.drawable.img_placeholder, null, AQuery.FADE_IN_NETWORK);
+		}
 
 		return view;
 	}

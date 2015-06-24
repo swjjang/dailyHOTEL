@@ -34,19 +34,18 @@ import android.widget.Toast;
 
 import com.android.volley.Request.Method;
 import com.facebook.Session;
-import com.facebook.UiLifecycleHelper;
-import com.facebook.widget.FacebookDialog.Callback;
-import com.facebook.widget.FacebookDialog.PendingCall;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.HotelTabBookingFragment;
 import com.twoheart.dailyhotel.fragment.TabInfoFragment;
 import com.twoheart.dailyhotel.fragment.TabMapFragment;
 import com.twoheart.dailyhotel.model.Hotel;
+import com.twoheart.dailyhotel.model.Hotel.HotelGrade;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
@@ -77,7 +76,7 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 	private String region;
 	private String hotelName;
 
-	private UiLifecycleHelper uiHelper;
+	//	private UiLifecycleHelper uiHelper;
 	private Handler mHandler = new Handler();
 
 	public interface OnUserActionListener
@@ -90,47 +89,60 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 	{
 		super.onCreate(savedInstanceState);
 
-		uiHelper = new UiLifecycleHelper(this, null);
-		uiHelper.onCreate(savedInstanceState);
+		//		uiHelper = new UiLifecycleHelper(this, null);
+		//		uiHelper.onCreate(savedInstanceState);
 
 		hotelDetail = new HotelDetail();
-		mSaleTime = new SaleTime();
-		Bundle bundle = getIntent().getExtras();
+		Intent intent = getIntent();
 
-		if (bundle != null)
+		if (intent != null)
 		{
-			hotelDetail.setHotel((Hotel) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_HOTEL));
-			mSaleTime = bundle.getParcelable(NAME_INTENT_EXTRA_DATA_SALETIME);
-			mRegion = bundle.getString(NAME_INTENT_EXTRA_DATA_REGION);
-			mHotelIdx = bundle.getInt(NAME_INTENT_EXTRA_DATA_HOTELIDX);
+			hotelDetail.setHotel((Hotel) intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_HOTEL));
+			mSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
+			mRegion = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_REGION);
+			mHotelIdx = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, -1);
 		}
 
-		setContentView(R.layout.activity_hotel_tab);
-		setActionBar(hotelDetail.getHotel().getName());
+		Hotel hotel = hotelDetail.getHotel();
 
-		ArrayList<String> titleList = new ArrayList<String>();
-		titleList.add(getString(R.string.frag_booking_tab_title));
-		titleList.add(getString(R.string.frag_tab_info_title));
-		titleList.add(getString(R.string.frag_tab_map_title));
-
-		mTabIndicator = (TabIndicator) findViewById(R.id.tabindicator);
-		mTabIndicator.setData(titleList, false);
-		mTabIndicator.setOnTabSelectListener(mOnTabSelectedListener);
-
-		btnSoldOut = (Button) findViewById(R.id.tv_hotel_tab_soldout);
-		btnBooking = (TextView) findViewById(R.id.btn_hotel_tab_booking);
-
-		btnBooking.setOnClickListener(this);
-
-		// 호텔 sold out시
-		if (hotelDetail.getHotel().getAvailableRoom() == 0)
+		if (hotel == null || mSaleTime == null || mRegion == null || mHotelIdx == -1)
 		{
-			btnBooking.setVisibility(View.GONE);
-			btnSoldOut.setVisibility(View.VISIBLE);
+			Util.restartApp(this);
+			return;
 		}
 
-		region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
-		hotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
+		try
+		{
+			setContentView(R.layout.activity_hotel_tab);
+			setActionBar(hotel.getName());
+
+			ArrayList<String> titleList = new ArrayList<String>();
+			titleList.add(getString(R.string.frag_booking_tab_title));
+			titleList.add(getString(R.string.frag_tab_info_title));
+			titleList.add(getString(R.string.frag_tab_map_title));
+
+			mTabIndicator = (TabIndicator) findViewById(R.id.tabindicator);
+			mTabIndicator.setData(titleList, false);
+			mTabIndicator.setOnTabSelectListener(mOnTabSelectedListener);
+
+			btnSoldOut = (Button) findViewById(R.id.tv_hotel_tab_soldout);
+			btnBooking = (TextView) findViewById(R.id.btn_hotel_tab_booking);
+
+			btnBooking.setOnClickListener(this);
+
+			// 호텔 sold out시
+			if (hotel.getAvailableRoom() == 0)
+			{
+				btnBooking.setVisibility(View.GONE);
+				btnSoldOut.setVisibility(View.VISIBLE);
+			}
+
+			region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
+			hotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
+		} catch (Exception e)
+		{
+			Util.restartApp(this);
+		}
 	}
 
 	private void loadFragments()
@@ -191,7 +203,7 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 
 	protected void onPostSetCookie()
 	{
-		String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_DETAIL).append('/').append(hotelDetail.getHotel().getIdx()).append("/").append(mSaleTime.getRequestHotelDateFormat("yy/MM/dd")).toString();
+		String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_DETAIL).append('/').append(hotelDetail.getHotel().getIdx()).append("/").append(mSaleTime.getDayOfDaysHotelDateFormat("yy/MM/dd")).toString();
 
 		ExLog.d(url);
 
@@ -240,21 +252,21 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, this));
 		}
 
-		uiHelper.onActivityResult(requestCode, resultCode, data, new Callback()
-		{
-
-			@Override
-			public void onError(PendingCall pendingCall, Exception error, Bundle data)
-			{
-				HotelTabActivity.this.onError();
-			}
-
-			@Override
-			public void onComplete(PendingCall pendingCall, Bundle data)
-			{
-
-			}
-		});
+		//		uiHelper.onActivityResult(requestCode, resultCode, data, new Callback()
+		//		{
+		//
+		//			@Override
+		//			public void onError(PendingCall pendingCall, Exception error, Bundle data)
+		//			{
+		//				HotelTabActivity.this.onError();
+		//			}
+		//
+		//			@Override
+		//			public void onComplete(PendingCall pendingCall, Bundle data)
+		//			{
+		//
+		//			}
+		//		});
 
 		super.onActivityResult(requestCode, resultCode, data);
 	}
@@ -345,7 +357,7 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 				break;
 		}
 
-		uiHelper.onResume();
+		//		uiHelper.onResume();
 
 		super.onResume();
 	}
@@ -354,21 +366,21 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 	protected void onSaveInstanceState(Bundle outState)
 	{
 		super.onSaveInstanceState(outState);
-		uiHelper.onSaveInstanceState(outState);
+		//		uiHelper.onSaveInstanceState(outState);
 	}
 
 	@Override
 	protected void onPause()
 	{
 		super.onPause();
-		uiHelper.onPause();
+		//		uiHelper.onPause();
 	}
 
 	@Override
 	protected void onDestroy()
 	{
 		super.onDestroy();
-		uiHelper.onDestroy();
+		//		uiHelper.onDestroy();
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -499,7 +511,15 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 				hotelBasic.setName(detailObj.getString("hotel_name"));
 				hotelBasic.setDiscount(discount);
 				hotelBasic.setPrice(price);
-				hotelBasic.setCategory(detailObj.getString("cat"));
+
+				try
+				{
+					hotelBasic.setCategory(detailObj.getString("cat"));
+				} catch (Exception e)
+				{
+					hotelBasic.setCategory(HotelGrade.etc.name());
+				}
+
 				hotelBasic.setBedType(detailObj.getString("bed_type"));
 
 				hotelDetail.setHotel(hotelBasic);
@@ -644,168 +664,4 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 			}
 		}
 	};
-
-	//	@Override
-	//	public void onResponse(String url, String response) {
-	//		if (url.contains(URL_WEBAPI_USER_ALIVE)) {
-	//			unLockUI();
-	//
-	//			String result = response.trim();
-	//			if (result.equals("alive")) { // session alive
-	//
-	//				Intent i = new Intent(this, BookingActivity.class);
-	//				i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELDETAIL, hotelDetail);
-	//				i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, mHotelIdx);
-	//				startActivityForResult(i, CODE_REQUEST_ACTIVITY_BOOKING);
-	//				overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-	//
-	//			} else if (result.equals("dead")) { // session dead
-	//
-	//				// 재로그인
-	//				if (sharedPreference.getBoolean(
-	//						KEY_PREFERENCE_AUTO_LOGIN, false)) {
-	//					String id = sharedPreference.getString(
-	//							KEY_PREFERENCE_USER_ID, null);
-	//					String accessToken = sharedPreference.getString(
-	//							KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
-	//					String pw = sharedPreference.getString(
-	//							KEY_PREFERENCE_USER_PWD, null);
-	//
-	//					Map<String, String> loginParams = new HashMap<String, String>();
-	//
-	//					if (accessToken != null) loginParams.put("accessToken", accessToken);
-	//					else loginParams.put("email", id);
-	//
-	//					loginParams.put("pw", pw);
-	//
-	//					mQueue.add(new DailyHotelJsonRequest(Method.POST,
-	//							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-	//									URL_WEBAPI_USER_LOGIN).toString(),
-	//									loginParams, this, this));
-	//				} else {
-	//					loadLoginProcess();
-	//				}
-	//
-	//			} else {
-	//				onError();
-	//			}
-	//
-	//		}
-	//	}
-
-	//	@Override
-	//	public void onResponse(String url, JSONObject response) {
-	//		if (url.contains(URL_WEBAPI_HOTEL_DETAIL)) {
-	//			try {
-	//				JSONObject obj = response;
-	//				ExLog.d("hotel_detail : " + response.toString());
-	//				JSONArray bookingArr = obj.getJSONArray("detail");
-	//				JSONObject detailObj = bookingArr.getJSONObject(0);
-	//
-	//				DecimalFormat comma = new DecimalFormat("###,##0");
-	//				String strDiscount = comma.format(Integer.parseInt(detailObj
-	//						.getString("discount")));
-	//				String strPrice = comma.format(Integer.parseInt(detailObj
-	//						.getString("price")));
-	//
-	//				if (hotelDetail.getHotel() == null)
-	//					hotelDetail.setHotel(new Hotel());
-	//
-	//				Hotel hotelBasic = hotelDetail.getHotel();
-	//
-	//				hotelBasic.setAddress(detailObj.getString("address"));
-	//				hotelBasic.setName(detailObj.getString("hotel_name"));
-	//				hotelBasic.setDiscount(strDiscount);
-	//				hotelBasic.setPrice(strPrice);
-	//				hotelBasic.setCategory(detailObj.getString("cat"));
-	//				hotelBasic.setBedType(detailObj.getString("bed_type"));
-	//
-	//				hotelDetail.setHotel(hotelBasic);
-	//
-	//				JSONArray imgArr = detailObj.getJSONArray("img");
-	//				List<String> imageList = new ArrayList<String>();
-	//
-	//				for (int i = 0; i < imgArr.length(); i++) {
-	//					if (i == 0)
-	//						continue;
-	//					JSONObject imgObj = imgArr.getJSONObject(i);
-	//					imageList.add(imgObj.getString("path"));
-	//				}
-	//
-	//				
-	//				hotelDetail.setImageUrl(imageList);
-	//				JSONArray specArr = obj.getJSONArray("spec");
-	//				Map<String, List<String>> contentList = new LinkedHashMap<String, List<String>>();
-	//
-	//				for (int i = 0; i < specArr.length(); i++) {
-	//
-	//					JSONObject specObj = specArr.getJSONObject(i);
-	//					String key = specObj.getString("key");
-	//					JSONArray valueArr = specObj.getJSONArray("value");
-	//					List<String> valueList = new ArrayList<String>();
-	//
-	//					for (int j = 0; j < valueArr.length(); j++) {
-	//						JSONObject valueObj = valueArr.getJSONObject(j);
-	//						String value = valueObj.getString("value");
-	//						valueList.add(value);
-	//					}
-	//					contentList.put(key, valueList);
-	//
-	//				}
-	//				hotelDetail.setSpecification(contentList);
-	//
-	//				double latitude = detailObj.getDouble("lat");
-	//				double longitude = detailObj.getDouble("lng");
-	//
-	//				hotelDetail.setLatitude(latitude);
-	//				hotelDetail.setLongitude(longitude);
-	//
-	//				int saleIdx = detailObj.getInt("idx");
-	//				hotelDetail.setSaleIdx(saleIdx);
-	//
-	//				mFragments.clear();
-	//				loadFragments();
-	//
-	//				unLockUI();
-	//
-	//			} catch (Exception e) {
-	//				ExLog.e(e.toString());
-	//				
-	//				onError(e);
-	//			}
-	//		} else if (url.contains(URL_WEBAPI_USER_LOGIN)) {
-	//			try {
-	//				if (!response.getString("login").equals("true")) {
-	//					// 로그인 실패
-	//					// data 초기화
-	//					SharedPreferences.Editor ed = sharedPreference
-	//							.edit();
-	//					ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
-	//					ed.putString(KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
-	//					ed.putString(KEY_PREFERENCE_USER_ID, null);
-	//					ed.putString(KEY_PREFERENCE_USER_PWD, null);
-	//					ed.commit();
-	//
-	//					unLockUI();
-	//					loadLoginProcess();
-	//
-	//				} else {
-	//					//로그인 성공
-	//					VolleyHttpClient.createCookie();
-	//
-	//					mQueue.add(new DailyHotelStringRequest(Method.GET,
-	//							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-	//									URL_WEBAPI_USER_ALIVE).toString(), null, this, this));
-	//
-	//				}
-	//
-	//			} catch (JSONException e) {
-	//				onError(e);
-	//				unLockUI();
-	//			}
-	//		} 
-	//		//		else if (url.contains(URL_WEBAPI_APP_SALE_TIME)) {
-	//		//			
-	//		//		}
-	//	}
 }

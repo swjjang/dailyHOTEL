@@ -44,6 +44,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.view.KeyEvent;
@@ -61,13 +62,13 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request.Method;
 import com.androidquery.util.AQUtility;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.twoheart.dailyhotel.activity.EventWebActivity;
 import com.twoheart.dailyhotel.activity.SplashActivity;
 import com.twoheart.dailyhotel.fragment.HotelMainFragment;
 import com.twoheart.dailyhotel.fragment.RatingHotelFragment;
@@ -86,7 +87,6 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListe
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.CloseOnBackPressed;
-import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class MainActivity extends BaseActivity implements OnItemClickListener, Constants
 {
@@ -135,7 +135,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		//		DailyHotelRequest.makeUrlEncoder();
+		//		com.twoheart.dailyhotel.util.network.request.DailyHotelRequest.makeUrlEncoder();
 
 		// 사용자가 선택한 언어, but 만약 사용자가 한국인인데 일본어를 선택하면 jp가 됨.
 		// 영어인 경우 - English, 한글인 경우 - 한국어
@@ -166,9 +166,16 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 		// 이전의 비정상 종료에 의한 만료된 쿠키들이 있을 수 있으므로, SplashActivity에서 자동 로그인을
 		// 처리하기 이전에 미리 이미 저장되어 있는 쿠키들을 정리한다.
-		if (CookieManager.getInstance().getCookie(URL_DAILYHOTEL_SERVER) != null)
+		// android.content.pm.PackageManager$NameNotFoundException: com.google.android.webview
+		try
 		{
-			VolleyHttpClient.destroyCookie();
+			if (CookieManager.getInstance().getCookie(URL_DAILYHOTEL_SERVER) != null)
+			{
+				VolleyHttpClient.destroyCookie();
+			}
+		} catch (Exception e)
+		{
+			ExLog.d(e.toString());
 		}
 
 		// 스플래시 화면을 띄운다
@@ -225,8 +232,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			editor.putString(KEY_PREFERENCE_GCM_ID, "");
 			editor.apply();
 
-			// 앱을 처음 설치한 경우 가이드를 띄움. 
-			boolean showGuide = sharedPreference.getBoolean(KEY_PREFERENCE_SHOW_GUIDE, true);
+			// 앱을 처음 설치한 경우 가이드를 띄움. 일단 화면 보이지 않도록 수정.
+			boolean showGuide = false;//sharedPreference.getBoolean(KEY_PREFERENCE_SHOW_GUIDE, true);
 			if (showGuide)
 				startActivityForResult(new Intent(this, IntroActivity.class), CODE_REQUEST_ACTIVITY_INTRO);
 			else
@@ -272,14 +279,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 		if (resCode != ConnectionResult.SUCCESS)
 		{
-			if (GooglePlayServicesUtil.isUserRecoverableError(resCode))
-			{
-				GooglePlayServicesUtil.getErrorDialog(resCode, this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
-			} else
-			{
-				DailyToast.showToast(this, R.string.toast_msg_is_not_available_google_service, Toast.LENGTH_LONG);
-				finish();
-			}
 			return false;
 		} else
 		{
@@ -408,6 +407,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			Util.restartApp(MainActivity.this);
 		}
 
+		// 액션바 위치를 다시 잡아준다.
+
 	}
 
 	/**
@@ -535,8 +536,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
 		// 이벤트 제거.
-		//		TextView eventTextView = (TextView) findViewById(R.id.titleTextView);
-		//		eventTextView.setText(Html.fromHtml(getString(R.string.label_event_title)));
+		TextView eventTextView = (TextView) findViewById(R.id.titleTextView);
+		eventTextView.setText(Html.fromHtml(getString(R.string.label_event_title)));
 
 		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, 0, 0)
 		{
@@ -646,26 +647,26 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		drawerList = (ListView) findViewById(R.id.drawListView);
 
 		// 이벤트 제거.
-		//		View bannerView = findViewById(R.id.bannerView);
-		//
-		//		bannerView.setOnClickListener(new View.OnClickListener()
-		//		{
-		//			@Override
-		//			public void onClick(View v)
-		//			{
-		//				drawerLayout.closeDrawer(drawerView);
-		//
-		//				mHandler.postDelayed(new Runnable()
-		//				{
-		//					@Override
-		//					public void run()
-		//					{
-		//						Intent i = new Intent(MainActivity.this, EventWebActivity.class);
-		//						startActivity(i);
-		//					}
-		//				}, 300);
-		//			}
-		//		});
+		View bannerView = findViewById(R.id.bannerView);
+
+		bannerView.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				drawerLayout.closeDrawer(drawerView);
+
+				mHandler.postDelayed(new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						Intent i = new Intent(MainActivity.this, EventWebActivity.class);
+						startActivity(i);
+					}
+				}, 300);
+			}
+		});
 
 		menuHotelListFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_todays_hotel), R.drawable.selector_drawermenu_todayshotel, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
 		menuBookingListFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_chk_reservation), R.drawable.selector_drawermenu_reservation, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
@@ -940,7 +941,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	@Override
 	protected void onDestroy()
 	{
-
 		// 쿠키 만료를 위한 서버에 로그아웃 리퀘스트
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGOUT).toString(), null, null, null));
 
@@ -1056,7 +1056,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 							} else
 							{
 								RatingHotelFragment dialog = RatingHotelFragment.newInstance(null);
-								dialog.destroyRatingHotelFlag();
+								dialog.destroyRatingHotelFlag(MainActivity.this);
 							}
 						}
 					}

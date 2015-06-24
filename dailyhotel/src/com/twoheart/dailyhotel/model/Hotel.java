@@ -1,6 +1,5 @@
 package com.twoheart.dailyhotel.model;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,29 +25,69 @@ public class Hotel implements Parcelable
 	private String detailRegion;
 	public double mLatitude;
 	public double mLongitude;
+	public String mSaleDay; //현재 호텔이 팔리고 있는 날짜. 디버그에서만 사용.
+	public boolean isDailyChoice;
 
 	public enum HotelGrade
 	{
-		biz(R.string.grade_biz, R.color.grade_hotel), //
-		hostel(R.string.grade_hostel, R.color.grade_hotel), //
-		grade1(R.string.grade_1, R.color.grade_hotel),
-		grade2(R.string.grade_2, R.color.grade_hotel),
-		grade3(R.string.grade_3, R.color.grade_hotel),
-		boutique(R.string.grade_boutique, R.color.grade_boutique),
-		residence(R.string.grade_residence, R.color.grade_residence),
-		resort(R.string.grade_resort, R.color.grade_resort_pension_condo),
-		pension(R.string.grade_pension, R.color.grade_resort_pension_condo),
-		condo(R.string.grade_condo, R.color.grade_resort_pension_condo),
-		special(R.string.grade_special, R.color.grade_special),
-		etc(R.string.grade_not_yet, R.color.grade_not_yet);
+		biz(
+				R.string.grade_biz,
+				R.color.grade_hotel,
+				R.drawable.bg_hotel_price_055870), //
+		hostel(
+				R.string.grade_hostel,
+				R.color.grade_hotel,
+				R.drawable.bg_hotel_price_055870), //
+		grade1(
+				R.string.grade_1,
+				R.color.grade_hotel,
+				R.drawable.bg_hotel_price_055870),
+		grade2(
+				R.string.grade_2,
+				R.color.grade_hotel,
+				R.drawable.bg_hotel_price_055870),
+		grade3(
+				R.string.grade_3,
+				R.color.grade_hotel,
+				R.drawable.bg_hotel_price_055870),
+		boutique(
+				R.string.grade_boutique,
+				R.color.grade_boutique,
+				R.drawable.bg_hotel_price_9f2d58),
+		residence(
+				R.string.grade_residence,
+				R.color.grade_residence,
+				R.drawable.bg_hotel_price_407f67),
+		resort(
+				R.string.grade_resort,
+				R.color.grade_resort_pension_condo,
+				R.drawable.bg_hotel_price_cf8d14),
+		pension(
+				R.string.grade_pension,
+				R.color.grade_resort_pension_condo,
+				R.drawable.bg_hotel_price_cf8d14),
+		condo(
+				R.string.grade_condo,
+				R.color.grade_resort_pension_condo,
+				R.drawable.bg_hotel_price_cf8d14),
+		special(
+				R.string.grade_special,
+				R.color.grade_special,
+				R.drawable.bg_hotel_price_ab380a),
+		etc(
+				R.string.grade_not_yet,
+				R.color.grade_not_yet,
+				R.drawable.bg_hotel_price_808080);
 
 		private int mNameResId;
 		private int mColorResId;
+		private int mMarkerResId;
 
-		private HotelGrade(int nameResId, int colorResId)
+		private HotelGrade(int nameResId, int colorResId, int markerResId)
 		{
 			mNameResId = nameResId;
 			mColorResId = colorResId;
+			mMarkerResId = markerResId;
 		}
 
 		public String getName(Context context)
@@ -60,6 +99,11 @@ public class Hotel implements Parcelable
 		{
 			return mColorResId;
 		}
+
+		public int getMarkerResId()
+		{
+			return mMarkerResId;
+		}
 	};
 
 	public Hotel()
@@ -70,20 +114,6 @@ public class Hotel implements Parcelable
 	public Hotel(Parcel in)
 	{
 		readFromParcel(in);
-	}
-
-	public Hotel(String image, String name, int price, int discount, String address, String category, int idx, int availableRoom, int sequence, String bedType)
-	{
-		this.image = image;
-		this.name = name;
-		this.price = price;
-		this.discount = discount;
-		this.address = address;
-		this.category = HotelGrade.valueOf(category);
-		this.idx = idx;
-		this.availableRoom = availableRoom;
-		this.sequence = sequence;
-		this.bedType = bedType;
 	}
 
 	@Override
@@ -101,22 +131,24 @@ public class Hotel implements Parcelable
 		dest.writeString(bedType);
 		dest.writeDouble(mLatitude);
 		dest.writeDouble(mLongitude);
+		dest.writeInt(isDailyChoice ? 1 : 0);
 	}
 
 	private void readFromParcel(Parcel in)
 	{
-		this.image = in.readString();
-		this.name = in.readString();
-		this.price = in.readInt();
-		this.discount = in.readInt();
-		this.address = in.readString();
-		this.category = (HotelGrade) in.readSerializable();
-		this.idx = in.readInt();
-		this.availableRoom = in.readInt();
-		this.sequence = in.readInt();
-		this.bedType = in.readString();
-		this.mLatitude = in.readDouble();
-		this.mLongitude = in.readDouble();
+		image = in.readString();
+		name = in.readString();
+		price = in.readInt();
+		discount = in.readInt();
+		address = in.readString();
+		category = (HotelGrade) in.readSerializable();
+		idx = in.readInt();
+		availableRoom = in.readInt();
+		sequence = in.readInt();
+		bedType = in.readString();
+		mLatitude = in.readDouble();
+		mLongitude = in.readDouble();
+		isDailyChoice = in.readInt() == 1 ? true : false;
 	}
 
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
@@ -258,19 +290,20 @@ public class Hotel implements Parcelable
 			price = Integer.parseInt(jsonObject.getString("price"));
 			discount = Integer.parseInt(jsonObject.getString("discount"));
 			address = jsonObject.getString("addr_summary");
-			category = HotelGrade.valueOf(jsonObject.getString("cat"));
+
+			try
+			{
+				category = HotelGrade.valueOf(jsonObject.getString("cat"));
+			} catch (Exception e)
+			{
+				category = HotelGrade.etc;
+			}
+
 			idx = jsonObject.getInt("idx");
 			availableRoom = jsonObject.getInt("avail_room_count");
 			sequence = jsonObject.getInt("seq");
-			detailRegion = jsonObject.getString("site2_name");
-
-			JSONArray jsonArray = jsonObject.getJSONArray("img");
-			image = "default";
-			if (jsonArray.length() != 0)
-			{
-				JSONObject arrObj = jsonArray.getJSONObject(0);
-				image = arrObj.getString("path");
-			}
+			detailRegion = jsonObject.getString("district_name");
+			image = jsonObject.getString("img");
 
 			if (jsonObject.has("lat") == true)
 			{
@@ -280,6 +313,16 @@ public class Hotel implements Parcelable
 			if (jsonObject.has("lng") == true)
 			{
 				mLongitude = jsonObject.getDouble("lng");
+			}
+
+			if (jsonObject.has("sday") == true)
+			{
+				mSaleDay = jsonObject.getString("sday");
+			}
+
+			if (jsonObject.has("is_dailychoice") == true)
+			{
+				isDailyChoice = jsonObject.getBoolean("is_dailychoice");
 			}
 		} catch (JSONException e)
 		{

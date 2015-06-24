@@ -14,9 +14,8 @@ public class HotelRenderer
 {
 	private Context mContext;
 	private String mPrice;
+	private int mMarkerResId;
 	private HotelIconGenerator mIconGenerator;
-	//		private boolean mIsSoldOut;
-	private boolean mIsDailyChoice;
 
 	public HotelRenderer(Context context, Hotel hotel)
 	{
@@ -26,18 +25,23 @@ public class HotelRenderer
 
 		mPrice = "₩" + comma.format(hotel.getDiscount());
 
+		mMarkerResId = hotel.getCategory().getMarkerResId();
+
 		mIconGenerator = new HotelIconGenerator(mContext);
-
-		// SOLD OUT
-		//			mIsSoldOut = hotel.getAvailableRoom() == 0;
-
 		mIconGenerator.setTextColor(mContext.getResources().getColor(R.color.white));
-		mIconGenerator.setColor(mContext.getResources().getColor(hotel.getCategory().getColorResId()));
 	}
 
-	public BitmapDescriptor getBitmap()
+	public BitmapDescriptor getBitmap(boolean isSelected)
 	{
-		Bitmap icon = mIconGenerator.makeIcon(mPrice, false, mIsDailyChoice);
+		Bitmap icon = null;
+
+		if (isSelected == false)
+		{
+			icon = mIconGenerator.makeIcon(mPrice, mMarkerResId);
+		} else
+		{
+			icon = mIconGenerator.makeSelectedIcon(mPrice, mMarkerResId);
+		}
 
 		if (icon == null)
 		{

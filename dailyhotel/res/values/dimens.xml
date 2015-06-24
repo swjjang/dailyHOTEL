@@ -15,4 +15,7 @@
 
     <dimen name="fab_scroll_threshold">4dp</dimen>
     <dimen name="fab_elevation_lollipop">8dp</dimen>
+    
+    <dimen name="issuingreceipt_linespacing">9dp</dimen>
+    <dimen name="hdpi_issuingreceipt_linespacing">5dp</dimen>
 </resources>

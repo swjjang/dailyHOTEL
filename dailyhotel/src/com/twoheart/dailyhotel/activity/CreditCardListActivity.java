@@ -411,7 +411,7 @@ public class CreditCardListActivity extends BaseActivity
 						JSONObject jsonObject = jsonArray.getJSONObject(i);
 
 						// 목록에서는 빌링키가 필요없다.
-						CreditCard creditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"));
+						CreditCard creditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"), jsonObject.getString("cardcd"));
 
 						arrayList.add(creditCard);
 

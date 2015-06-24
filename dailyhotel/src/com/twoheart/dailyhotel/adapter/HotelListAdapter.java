@@ -28,6 +28,7 @@ import com.androidquery.callback.AjaxStatus;
 import com.androidquery.callback.BitmapAjaxCallback;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Hotel;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.VolleyImageLoader;
 import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView.PinnedSectionListAdapter;
@@ -210,7 +211,14 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 				String strPrice = comma.format(price);
 				String strDiscount = comma.format(element.getDiscount());
 
-				viewHolder.address.setText(element.getAddress());
+				if (Constants.DEBUG == true)
+				{
+					viewHolder.address.setText(element.getAddress() + ": " + element.mSaleDay);
+				} else
+				{
+					viewHolder.address.setText(element.getAddress());
+				}
+
 				viewHolder.name.setText(element.getName());
 
 				Spanned currency = Html.fromHtml(getContext().getResources().getString(R.string.currency));

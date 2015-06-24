@@ -40,6 +40,8 @@ import com.android.volley.Request.Method;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.ABTestPreferences;
+import com.twoheart.dailyhotel.util.ABTestPreferences.OnABTestListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
@@ -69,6 +71,10 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_splash);
+
+		SharedPreferences.Editor editor = sharedPreference.edit();
+		editor.putBoolean(KEY_PREFERENCE_REGION_SETTING, false);
+		editor.commit();
 
 		mCircleViewList = new View[PROGRESS_CIRCLE_COUNT];
 
@@ -102,6 +108,11 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 
 	private void showDisabledNetworkPopup()
 	{
+		if (isFinishing() == true)
+		{
+			return;
+		}
+
 		if (alertDlg != null)
 		{
 			if (alertDlg.isShowing() == true)
@@ -201,27 +212,21 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 
 			loginParams.put("pw", pw);
 
-			ExLog.e(" / moveToLoginStep : loginParams = " + loginParams.toString());
-
 			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(), loginParams, mUserLoginJsonResponseListener, this));
 		}
 
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_VERSION).toString(), null, mAppVersionJsonResponseListener, this));
 	}
 
-	private void showMainActivity(final int newEventFlag)
+	private void showMainActivity()
 	{
 		// sleep 2 second
 		mHandler.postDelayed(new Runnable()
 		{
 			public void run()
 			{
-				if (newEventFlag == VALUE_WEB_API_RESPONSE_NEW_EVENT_NOTIFY)
-					setResult(CODE_RESULT_ACTIVITY_SPLASH_NEW_EVENT);
-				else if (newEventFlag == VALUE_WEB_API_RESPONSE_NEW_EVENT_NONE)
-					setResult(RESULT_OK);
+				setResult(RESULT_OK);
 				finish();//MainActivity로 finish 
-
 			}
 		}, DURING_SPLASH_ACTIVITY_SHOW);
 	}
@@ -240,6 +245,19 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 		overridePendingTransition(R.anim.hold, R.anim.fade_out);
 	}
 
+	private void requestConfigurationABTest()
+	{
+		// ABTest
+		ABTestPreferences.getInstance(getApplicationContext()).requestConfiguration(getApplicationContext(), mQueue, new OnABTestListener()
+		{
+			@Override
+			public void onPostExecute()
+			{
+				showMainActivity();
+			}
+		});
+	}
+
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Listener
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -250,7 +268,6 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-
 			try
 			{
 				String result = null;
@@ -290,7 +307,6 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-
 			try
 			{
 				if (response == null)
@@ -382,6 +398,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 							}
 
 							startActivity(marketLaunch);
+							finish();
 						}
 					};
 
@@ -402,14 +419,15 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 							SharedPreferences.Editor editor = sharedPreference.edit();
 							editor.putString(KEY_PREFERENCE_SKIP_MAX_VERSION, sharedPreference.getString(KEY_PREFERENCE_MAX_VERSION_NAME, "1.0.0"));
 							editor.commit();
-							showMainActivity(newEventFlag);
+
+							requestConfigurationABTest();
 						}
 					};
 
 					SimpleAlertDialog.build(SplashActivity.this, getString(R.string.dialog_title_notice), getString(R.string.dialog_msg_update_now), getString(R.string.dialog_btn_text_update), getString(R.string.dialog_btn_text_cancel), posListener, negListener).setOnCancelListener(cancelListener).show();
 				} else
 				{
-					showMainActivity(newEventFlag);
+					requestConfigurationABTest();
 				}
 
 			} catch (Exception e)
@@ -418,142 +436,4 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 			}
 		}
 	};
-
-	//
-	//	@Override
-	//	public void onResponse(String url, JSONObject response) {
-	//		if (url.contains(URL_WEBAPI_USER_LOGIN)) {
-	//			try {
-	//				ExLog.d("login : " + response.toString());
-	//				if (!response.getBoolean("login")) {
-	//					// 로그인 실패
-	//					// data 초기화
-	//					SharedPreferences.Editor ed = sharedPreference.edit();
-	//					ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
-	//					ed.putString(KEY_PREFERENCE_USER_ID, null);
-	//					ed.putString(KEY_PREFERENCE_USER_PWD, null);
-	//					ed.commit();
-	//
-	//				} else { 
-	//					// 로그인 성공
-	//					VolleyHttpClient.createCookie();
-	//					// 로그인에 성공하였으나 GCM을 등록하지 않은 유저의 경우 인덱스를 가져와 push_id를 업그레이드 하는 절차 시작.
-	//				}
-	//
-	//			} catch (JSONException e) {
-	//				onError(e);
-	//			}
-	//
-	//		} else if (url.contains(URL_WEBAPI_APP_VERSION)) {
-	//
-	//			try {
-	//				
-	//				ExLog.e(" / onResponse : url = "+ url +" / response = " + response.toString());
-	//				ExLog.e(" / onResponse : Stores = "+ RELEASE_STORE);
-	//				
-	//				SharedPreferences.Editor editor = sharedPreference.edit();
-	//
-	//				if (RELEASE_STORE == Stores.PLAY_STORE) {
-	//					ExLog.e("RELEASE_PLAY_STORE : true");
-	//					
-	//					editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME,
-	//							response.getString("play_max"));
-	//					editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME,
-	//							response.getString("play_min"));
-	//				} else if (RELEASE_STORE == Stores.T_STORE) {
-	//					ExLog.e("RELEASE_T_STORE : true");
-	//					
-	//					editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME,
-	//							response.getString("tstore_max"));
-	//					editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME,
-	//							response.getString("tstore_min"));
-	//				} else if (RELEASE_STORE == Stores.N_STORE) {
-	//					ExLog.e("RELEASE_N_STORE : true");
-	//					editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME,
-	//							response.getString("nstore_max"));
-	//					editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME,
-	//							response.getString("nstore_min"));
-	//				} 
-	//
-	//				editor.commit();
-	//				
-	//				int maxVersion = Integer.parseInt(sharedPreference.getString(
-	//						KEY_PREFERENCE_MAX_VERSION_NAME, "1.0.0").replace(".",""));
-	//				int minVersion = Integer.parseInt(sharedPreference.getString(
-	//						KEY_PREFERENCE_MIN_VERSION_NAME, "1.0.0").replace(".",""));
-	//				int currentVersion = Integer.parseInt(this.getPackageManager()
-	//						.getPackageInfo(this.getPackageName(), 0).versionName.replace(".", ""));
-	//				int skipMaxVersion = Integer.parseInt(sharedPreference
-	//						.getString(KEY_PREFERENCE_SKIP_MAX_VERSION, "1.0.0").replace(".", ""));
-	//
-	//				final int newEventFlag = Integer.parseInt(response.getString("new_event"));
-	//				
-	//				ExLog.e("MIN / MAX / CUR / SKIP : "+  minVersion+" / "+maxVersion+" / "+currentVersion+" / "+skipMaxVersion);
-	//
-	//				if (minVersion > currentVersion) { // 강제 업데이트
-	//					OnClickListener posListener = new DialogInterface.OnClickListener() {
-	//						@Override
-	//						public void onClick(
-	//								DialogInterface dialog,
-	//								int which) {
-	//							Intent marketLaunch = new Intent(
-	//									Intent.ACTION_VIEW);
-	//							marketLaunch.setData(Uri.parse(Util
-	//									.storeReleaseAddress()));
-	//							startActivity(marketLaunch);
-	//							finish();
-	//						}
-	//					};
-	//					
-	//					SimpleAlertDialog.build(this, getString(R.string.dialog_title_notice),
-	//							getString(R.string.dialog_msg_please_update_new_version), getString(R.string.dialog_btn_text_update), posListener).show();
-	//					
-	//				} else if ((maxVersion > currentVersion)
-	//						&& (skipMaxVersion != maxVersion)) {
-	//					
-	//					OnClickListener posListener = new DialogInterface.OnClickListener() {
-	//						@Override
-	//						public void onClick(
-	//								DialogInterface dialog,
-	//								int which) {
-	//							Intent marketLaunch = new Intent(
-	//									Intent.ACTION_VIEW);
-	//							marketLaunch.setData(Uri.parse(Util
-	//									.storeReleaseAddress()));
-	//							startActivity(marketLaunch);
-	//						}
-	//					};
-	//					
-	//					OnCancelListener cancelListener = new OnCancelListener() {
-	//
-	//						@Override
-	//						public void onCancel(DialogInterface dialog) {
-	//							SharedPreferences.Editor editor = sharedPreference
-	//									.edit();
-	//							editor.putString(
-	//									KEY_PREFERENCE_SKIP_MAX_VERSION,
-	//									sharedPreference
-	//									.getString(
-	//											KEY_PREFERENCE_MAX_VERSION_NAME,
-	//											"1.0.0"));
-	//
-	//							editor.commit();
-	//							showMainActivity(newEventFlag);
-	//						}
-	//					};
-	//					
-	//					SimpleAlertDialog.build(this, getString(R.string.dialog_title_notice),
-	//							getString(R.string.dialog_msg_update_now), getString(R.string.dialog_btn_text_update), getString(R.string.dialog_btn_text_cancel), posListener, null)
-	//							.setOnCancelListener(cancelListener).show();
-	//					
-	//				} else {
-	//					showMainActivity(newEventFlag);
-	//				}
-	//
-	//			} catch (Exception e) {
-	//				onError(e);
-	//
-	//			}
-	//		} 
-	//	}
 }

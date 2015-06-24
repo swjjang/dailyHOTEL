@@ -185,7 +185,13 @@ public class FragmentViewPager extends LinearLayout
 		{
 			if (true == mEnable)
 			{
-				return super.onTouchEvent(event);
+				try
+				{
+					return super.onTouchEvent(event);
+				} catch (Exception e)
+				{
+					return true;
+				}
 			} else
 			{
 				return false;

@@ -23,6 +23,8 @@
     <color name="textView_textColor_shadow">#7F000000</color>
     <color name="textView_textColor_shadow_soldout">#AF000000</color>
     
+    <color name="kakaotalk_textcolkr">#3c1e1e</color>
+    
     <color name="tab_background">#f4f4f4</color>
     <color name="button_background">#FF7A7A</color>
     <color name="activity_background">#fdfdfd</color>
@@ -78,9 +80,22 @@
 	
 	<!-- Credit Card -->
 	<color name="creditcard_background">#fefbf6</color>
+	<color name="creditcard_number_text">#58585a</color>
 	
 	<!-- Booking List -->
 	<color name="bookinglist_section_background">#292929</color>
 	<color name="bookinglist_used_text">#8b8b8b</color>
+	
+	<!-- Map View -->
+	<color name="mapview_hotelwindow_topline">#292929</color>
+	<color name="mapview_hotelwindow_background">#e2e2e2</color>
+	
+	<!-- Receipt -->
+	<color name="receipt_detail_text">#747474</color>
+	
+	<!-- Selected Area -->
+	<color name="selectarea_text_group">#858585</color>
+	<color name="selectarea_background_child">#f0f0f0</color>
+	<color name="selectarea_underline">#e1e0e0</color>
 
 </resources>	

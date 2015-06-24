@@ -1,0 +1,88 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <android.support.v4.widget.DrawerLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <FrameLayout
+            android:id="@+id/content_frame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <RelativeLayout
+            android:id="@+id/left_drawer"
+            android:layout_width="240dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:layout_marginTop="56dp" >
+
+            <RelativeLayout
+                android:id="@+id/bannerView"
+                android:layout_width="match_parent"
+                android:layout_height="74dp"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/banner"
+                android:gravity="center_vertical"
+                android:paddingLeft="17dp" >
+
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                    android:id="@+id/titleTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left|center_vertical"
+                    android:textColor="@color/white"
+                    android:textSize="20dp" />
+
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                    android:id="@+id/subTitleTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/titleTextView"
+                    android:layout_marginTop="5dp"
+                    android:gravity="left|center_vertical"
+                    android:text="@string/label_event_subtitle"
+                    android:textColor="@color/white"
+                    android:textSize="14dp" />
+            </RelativeLayout>
+
+            <ListView
+                android:id="@+id/drawListView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/bannerView"
+                android:layout_gravity="center_vertical"
+                android:background="@android:color/white"
+                android:choiceMode="singleChoice"
+                android:divider="@color/leftdrawer_divider"
+                android:dividerHeight="0.5dp"
+                android:listSelector="@android:color/transparent" />
+        </RelativeLayout>
+    </android.support.v4.widget.DrawerLayout>
+
+    <include
+        android:id="@+id/toolbar_actionbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        layout="@layout/toolbar_default" />
+
+    <View
+        android:id="@+id/toolbar_actionbar_underline"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignBaseline="@id/toolbar_actionbar"
+        android:layout_alignBottom="@id/toolbar_actionbar"
+        android:background="@color/actionbar_underline" />
+
+    <View
+        android:id="@+id/anchorAnimation"
+        android:layout_width="match_parent"
+        android:layout_height="121dp"
+        android:clickable="true"
+        android:visibility="invisible" />
+
+</RelativeLayout>
