@@ -17,12 +17,12 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListe
 
 /**
  */
-public class ABTestPreferences
+public class ABTestPreference
 {
 	private SharedPreferences mPreferences;
 	private Editor mEditor;
 
-	private static ABTestPreferences mInstance;
+	private static ABTestPreference mInstance;
 
 	// A/B Test 기능
 	private static final String KAKAOTALK_CONSULT = "1";
@@ -32,15 +32,15 @@ public class ABTestPreferences
 		public void onPostExecute();
 	};
 
-	public static ABTestPreferences getInstance(Context context)
+	public static ABTestPreference getInstance(Context context)
 	{
 		if (mInstance == null)
 		{
-			synchronized (ABTestPreferences.class)
+			synchronized (ABTestPreference.class)
 			{
 				if (mInstance == null)
 				{
-					mInstance = new ABTestPreferences(context);
+					mInstance = new ABTestPreference(context);
 				}
 			}
 		}
@@ -48,7 +48,7 @@ public class ABTestPreferences
 		return mInstance;
 	}
 
-	private ABTestPreferences(Context context)
+	private ABTestPreference(Context context)
 	{
 		mPreferences = context.getSharedPreferences("abTest", Context.MODE_PRIVATE);
 		mEditor = mPreferences.edit();

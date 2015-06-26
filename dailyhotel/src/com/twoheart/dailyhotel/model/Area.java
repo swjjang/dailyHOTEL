@@ -8,7 +8,8 @@ import android.os.Parcelable;
 
 public class Area extends Province
 {
-	public int provinceIndex;
+	public Province province;
+	private int provinceIndex;
 	public String tag;
 
 	public Area()
@@ -28,10 +29,38 @@ public class Area extends Province
 		provinceIndex = jsonObject.getInt("province_idx");
 		tag = jsonObject.getString("tag");
 	}
-	
+
+	public Province getProvince()
+	{
+		return province;
+	}
+
+	public void setProvince(Province province)
+	{
+		this.province = province;
+	}
+
+	public void setProvinceIndex(int provinceIndex)
+	{
+		this.provinceIndex = provinceIndex;
+	}
+
+	@Override
 	public int getProvinceIndex()
 	{
 		return provinceIndex;
+	}
+
+	@Override
+	public int getSaleWeek()
+	{
+		if (province == null)
+		{
+			return 1;
+		} else
+		{
+			return province.getSaleWeek();
+		}
 	}
 
 	@Override
@@ -41,6 +70,8 @@ public class Area extends Province
 
 		dest.writeInt(provinceIndex);
 		dest.writeString(tag);
+
+		province.writeToParcel(dest, flags);
 	}
 
 	protected void readFromParcel(Parcel in)
@@ -49,6 +80,8 @@ public class Area extends Province
 
 		provinceIndex = in.readInt();
 		tag = in.readString();
+
+		province = new Province(in);
 	}
 
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()

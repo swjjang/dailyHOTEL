@@ -51,7 +51,7 @@ public interface Constants
 
 	// 웹서버 호스트  
 	//"http://restful.dailyhotel.kr/goodnight/"; //  서비스 서버 
-//	public static final String URL_DAILYHOTEL_SERVER = UNENCRYPTED_URL ? "http://restful.dailyhotel.kr/goodnight/" : "MzkkNTQkNjEkNTYkNDck$RTA3Q0MwQTlGOTVCNUM4RkQ1OTM5MzMxRDVDNkUK0MTBBRjIUyMjU4OIEDE4NzQWwRDI4QTNGRUFERUNDMDMzMjk4QzIyODlFMDkwMjNDMDMyRUUxMjBDRUU1MTlBMDQ3MzRB$";
+	//	public static final String URL_DAILYHOTEL_SERVER = UNENCRYPTED_URL ? "http://restful.dailyhotel.kr/goodnight/" : "MzkkNTQkNjEkNTYkNDck$RTA3Q0MwQTlGOTVCNUM4RkQ1OTM5MzMxRDVDNkUK0MTBBRjIUyMjU4OIEDE4NzQWwRDI4QTNGRUFERUNDMDMzMjk4QzIyODlFMDkwMjNDMDMyRUUxMjBDRUU1MTlBMDQ3MzRB$";
 	//http://ec2restful.dailyhotel.kr    http://restful.dailyhotel.kr/goodnight/
 	//    public static final String URL_DAILYHOTEL_SERVER = "http://192.168.0.39:8080/goodnight/"; //  서비스 서버
 

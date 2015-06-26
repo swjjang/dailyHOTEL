@@ -44,7 +44,6 @@ import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.WaitTimerFragment;
 import com.twoheart.dailyhotel.activity.HotelDetailActivity;
-import com.twoheart.dailyhotel.activity.HotelTabActivity;
 import com.twoheart.dailyhotel.activity.SelectAreaActivity;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.AreaItem;
@@ -416,13 +415,15 @@ public class HotelMainFragment extends BaseFragment
 
 						totalArea.index = -1;
 						totalArea.name = province.name + " 전체";
-						totalArea.provinceIndex = province.getProvinceIndex();
+						totalArea.setProvince(province);
 						totalArea.sequence = -1;
 						totalArea.tag = totalArea.name;
+						totalArea.setProvinceIndex(province.getProvinceIndex());
 
 						areaArrayList.add(totalArea);
 					}
 
+					area.setProvince(province);
 					areaArrayList.add(area);
 				}
 			}
@@ -954,8 +955,8 @@ public class HotelMainFragment extends BaseFragment
 			{
 				case HotelListViewItem.TYPE_ENTRY:
 				{
-					Intent intent = new Intent(baseActivity, HotelTabActivity.class);
-//					Intent intent = new Intent(baseActivity, HotelDetailActivity.class);
+					//					Intent intent = new Intent(baseActivity, HotelTabActivity.class);
+					Intent intent = new Intent(baseActivity, HotelDetailActivity.class);
 
 					String region = baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
 

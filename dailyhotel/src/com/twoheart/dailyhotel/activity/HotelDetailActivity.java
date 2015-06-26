@@ -26,7 +26,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,7 +52,7 @@ public class HotelDetailActivity extends BaseActivity implements OnClickListener
 {
 	private HotelDetail mHotelDetail;
 	private SaleTime mSaleTime;
-	
+
 	private Toolbar mToolbar;
 
 	private Button mSoldOutButton;
@@ -62,20 +61,19 @@ public class HotelDetailActivity extends BaseActivity implements OnClickListener
 	private int mHotelIdx;
 	private int mPosition = 0;
 
-//	private String region;
-//	private String hotelName;
-	
-	private HotelDetailLayout mHotelDetailLayout;
-	
+	//	private String region;
+	//	private String hotelName;
 
+	private HotelDetailLayout mHotelDetailLayout;
 
 	private Handler mHandler = new Handler();
 
 	public interface OnUserActionListener
 	{
 		public void showActionBar();
+
 		public void hideActionBar();
-		
+
 		public void onClickImage(HotelDetail hotelDetail, String imageUrl);
 	};
 
@@ -105,54 +103,51 @@ public class HotelDetailActivity extends BaseActivity implements OnClickListener
 
 		initLayout(hotel);
 	}
-	
+
 	private void initLayout(Hotel hotel)
 	{
 		try
 		{
-//			supportRequestWindowFeature(Window.FEATURE_ACTION_BAR);
-//			getSupportActionBar().hide();
-			
 			mHotelDetailLayout = new HotelDetailLayout(this);
 			mHotelDetailLayout.setUserActionListener(mOnUserActionListener);
-			
+
 			setContentView(mHotelDetailLayout.getView());
-			
-//			mToolbar = setActionBar(hotel.getName());
-			mToolbar = setActionBar("토스카나 호텔");
-			
+
+			mToolbar = setActionBar(hotel.getName());
+
 			mOnUserActionListener.hideActionBar();
-			
-//			btnSoldOut = (Button) findViewById(R.id.tv_hotel_tab_soldout);
-//			btnBooking = (TextView) findViewById(R.id.btn_hotel_tab_booking);
-//
-//			btnBooking.setOnClickListener(this);
-//
-//			// 호텔 sold out시
-//			if (hotel.getAvailableRoom() == 0)
-//			{
-//				btnBooking.setVisibility(View.GONE);
-//				btnSoldOut.setVisibility(View.VISIBLE);
-//			}
-			
+
+			//			btnSoldOut = (Button) findViewById(R.id.tv_hotel_tab_soldout);
+			//			btnBooking = (TextView) findViewById(R.id.btn_hotel_tab_booking);
+			//
+			//			btnBooking.setOnClickListener(this);
+			//
+			//			// 호텔 sold out시
+			//			if (hotel.getAvailableRoom() == 0)
+			//			{
+			//				btnBooking.setVisibility(View.GONE);
+			//				btnSoldOut.setVisibility(View.VISIBLE);
+			//			}
+
 		} catch (Exception e)
 		{
 			Util.restartApp(this);
 		}
 	}
-	
+
 	@Override
 	protected void onResume()
 	{
 		lockUI();
-		
+
 		// 호텔 정보를 가져온다.
-		String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_DETAIL).append('/').append(mHotelDetail.getHotel().getIdx()).append("/").append(mSaleTime.getDayOfDaysHotelDateFormat("yy/MM/dd")).toString();
-		mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null, mHotelDetailJsonResponseListener, this));
+		String params = String.format("?hotel_idx=%d&sday=%s", mHotelDetail.getHotel().getIdx(), mSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
+
+		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_DETAIL).append(params).toString(), null, mHotelDetailJsonResponseListener, this));
 
 		super.onResume();
 	}
-	
+
 	@Override
 	public void onClick(View v)
 	{
@@ -225,7 +220,7 @@ public class HotelDetailActivity extends BaseActivity implements OnClickListener
 		{
 			setActionBarBackgroundVisible(false);
 		}
-		
+
 		@Override
 		public void onClickImage(HotelDetail hotelDetail, String imageUrl)
 		{
@@ -258,11 +253,27 @@ public class HotelDetailActivity extends BaseActivity implements OnClickListener
 					throw new NullPointerException("response == null");
 				}
 
-				JSONArray bookingArr = response.getJSONArray("detail");
-				JSONObject detailObj = bookingArr.getJSONObject(0);
+				int msg_code = response.getInt("msg_code");
 
-				int discount = Integer.parseInt(detailObj.getString("discount"));
-				int price = Integer.parseInt(detailObj.getString("price"));
+				if (msg_code != 0)
+				{
+					if (response.has("msg") == true)
+					{
+						String msg = response.getString("msg");
+
+						DailyToast.showToast(HotelDetailActivity.this, msg, Toast.LENGTH_SHORT);
+						finish();
+						return;
+					} else
+					{
+						throw new NullPointerException("response == null");
+					}
+				}
+
+				JSONObject jsonData = response.getJSONObject("data");
+
+				int discount = Integer.parseInt(jsonData.getString("discount"));
+				int price = Integer.parseInt(jsonData.getString("price"));
 
 				if (mHotelDetail.getHotel() == null)
 				{
@@ -271,30 +282,34 @@ public class HotelDetailActivity extends BaseActivity implements OnClickListener
 
 				Hotel hotelBasic = mHotelDetail.getHotel();
 
-				hotelBasic.setAddress(detailObj.getString("address"));
-				hotelBasic.setName(detailObj.getString("hotel_name"));
+				hotelBasic.setAddress(jsonData.getString("address"));
+				hotelBasic.setName(jsonData.getString("hotel_name"));
 				hotelBasic.setDiscount(discount);
 				hotelBasic.setPrice(price);
 
+				if (jsonData.has("sday") == true)
+				{
+					hotelBasic.mSaleDay = jsonData.getString("sday");
+				}
+
 				try
 				{
-					hotelBasic.setCategory(detailObj.getString("cat"));
+					hotelBasic.setCategory(jsonData.getString("cat"));
 				} catch (Exception e)
 				{
 					hotelBasic.setCategory(HotelGrade.etc.name());
 				}
 
-				hotelBasic.setBedType(detailObj.getString("bed_type"));
+				hotelBasic.setBedType(jsonData.getString("bed_type"));
 
 				mHotelDetail.setHotel(hotelBasic);
 
-				JSONArray imgArr = detailObj.getJSONArray("img");
+				JSONArray imgArr = jsonData.getJSONArray("img");
 				List<String> imageList = new ArrayList<String>(imgArr.length());
 
 				for (int i = 0; i < imgArr.length(); i++)
 				{
-					JSONObject imgObj = imgArr.getJSONObject(i);
-					imageList.add(imgObj.getString("path"));
+					imageList.add(imgArr.getString(i));
 				}
 
 				mHotelDetail.setImageUrl(imageList);
@@ -302,16 +317,16 @@ public class HotelDetailActivity extends BaseActivity implements OnClickListener
 				JSONArray specArr = response.getJSONArray("spec");
 				mHotelDetail.setSpecification(specArr);
 
-				double latitude = detailObj.getDouble("lat");
-				double longitude = detailObj.getDouble("lng");
+				double latitude = jsonData.getDouble("lat");
+				double longitude = jsonData.getDouble("lng");
 
 				mHotelDetail.setLatitude(latitude);
 				mHotelDetail.setLongitude(longitude);
 
-				int saleIdx = detailObj.getInt("idx");
+				int saleIdx = jsonData.getInt("idx");
 				mHotelDetail.setSaleIdx(saleIdx);
-				
-				if(mHotelDetailLayout != null)
+
+				if (mHotelDetailLayout != null)
 				{
 					mHotelDetailLayout.setHotelDetail(mHotelDetail);
 				}

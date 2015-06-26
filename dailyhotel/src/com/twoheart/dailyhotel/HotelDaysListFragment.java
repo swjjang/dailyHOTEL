@@ -32,7 +32,6 @@ import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.util.ConfigurationPreferences;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
@@ -152,7 +151,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 
 		if (mSelectedProvince != null)
 		{
-			visibleCount = ConfigurationPreferences.getInstance(baseActivity).getDaysCountOfProvince(mSelectedProvince.getProvinceIndex());
+			visibleCount = mSelectedProvince.getSaleWeek() == 1 ? DEFAULT_DAY_OF_COUNT : DAY_OF_TOTALCOUNT;
 		}
 
 		View line2Layout = mDaysLayout.findViewById(R.id.daysLine2Layout);

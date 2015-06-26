@@ -16,7 +16,7 @@ import com.twoheart.dailyhotel.util.Util;
 
 public class HotelDetailImageViewPagerAdapter extends PagerAdapter
 {
-	private Context	mContext;
+	private Context mContext;
 	private List<String> mImageUrlList;
 	private AQuery mAQuery;
 
@@ -24,7 +24,7 @@ public class HotelDetailImageViewPagerAdapter extends PagerAdapter
 	{
 		mContext = context;
 	}
-	
+
 	public void setData(List<String> list)
 	{
 		mImageUrlList = list;
@@ -45,9 +45,9 @@ public class HotelDetailImageViewPagerAdapter extends PagerAdapter
 
 		mAQuery = new AQuery(mContext);
 		mAQuery.id(imageView).image(url, true, true, 0, R.drawable.img_placeholder, null, AQuery.FADE_IN_NETWORK);
-		
+
 		int width = Util.getLCDWidth(mContext);
-		
+
 		LayoutParams layoutParams = new LayoutParams(width, width);
 		container.addView(imageView, 0, layoutParams);
 

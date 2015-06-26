@@ -376,7 +376,7 @@ public class SelectAreaActivity extends BaseActivity
 				}
 			} else if (mSelectedProvince instanceof Province)
 			{
-				if (mSelectedProvince.getProvinceIndex() == area.getProvinceIndex() && area.index == -1)
+				if (mSelectedProvince.getProvinceIndex() == ((Province) area).getProvinceIndex() && area.index == -1)
 				{
 					isSelected = true;
 				}

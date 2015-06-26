@@ -176,7 +176,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 
 		return mToolbar;
 	}
-	
+
 	public void setActionBarBackgroundVisible(boolean visible)
 	{
 		if (mToolbar != null)
@@ -184,19 +184,19 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 			mToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
 			setSupportActionBar(mToolbar);
 		}
-		
-		if(visible == true)
+
+		if (visible == true)
 		{
 			mToolbar.setTitleTextColor(getResources().getColor(R.color.actionbar_title));
 			mToolbar.setBackgroundColor(getResources().getColor(R.color.white));
-			
+
 			View view = findViewById(R.id.toolbar_actionbarUnderLine);
 			view.setVisibility(View.VISIBLE);
 		} else
 		{
 			mToolbar.setTitleTextColor(android.R.color.transparent);
 			mToolbar.setBackgroundColor(android.R.color.transparent);
-			
+
 			View view = findViewById(R.id.toolbar_actionbarUnderLine);
 			view.setVisibility(View.INVISIBLE);
 		}
