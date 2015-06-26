@@ -71,8 +71,11 @@
         <activity
             android:name=".activity.HotelTabActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.HotelDetailActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ImageDetailActivity"
             android:launchMode="singleTop"
