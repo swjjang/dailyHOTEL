@@ -176,15 +176,40 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 
 		return mToolbar;
 	}
+	
+	public void setActionBarBackgroundVisible(boolean visible)
+	{
+		if (mToolbar != null)
+		{
+			mToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
+			setSupportActionBar(mToolbar);
+		}
+		
+		if(visible == true)
+		{
+			mToolbar.setTitleTextColor(getResources().getColor(R.color.actionbar_title));
+			mToolbar.setBackgroundColor(getResources().getColor(R.color.white));
+			
+			View view = findViewById(R.id.toolbar_actionbarUnderLine);
+			view.setVisibility(View.VISIBLE);
+		} else
+		{
+			mToolbar.setTitleTextColor(android.R.color.transparent);
+			mToolbar.setBackgroundColor(android.R.color.transparent);
+			
+			View view = findViewById(R.id.toolbar_actionbarUnderLine);
+			view.setVisibility(View.INVISIBLE);
+		}
+	}
 
 	public void setActionBar(int strId)
 	{
 		setActionBar(getString(strId), true);
 	}
 
-	public void setActionBar(String text)
+	public Toolbar setActionBar(String text)
 	{
-		setActionBar(text, true);
+		return setActionBar(text, true);
 	}
 
 	public void setActionBarRegionEnable(boolean isEnable)

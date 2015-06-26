@@ -43,6 +43,7 @@ import com.twoheart.dailyhotel.HotelListFragment;
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.WaitTimerFragment;
+import com.twoheart.dailyhotel.activity.HotelDetailActivity;
 import com.twoheart.dailyhotel.activity.HotelTabActivity;
 import com.twoheart.dailyhotel.activity.SelectAreaActivity;
 import com.twoheart.dailyhotel.model.Area;
@@ -405,7 +406,7 @@ public class HotelMainFragment extends BaseFragment
 
 			for (Area area : areaList)
 			{
-				if (province.index == area.provinceIndex)
+				if (province.getProvinceIndex() == area.getProvinceIndex())
 				{
 					ArrayList<Area> areaArrayList = item.getAreaList();
 
@@ -415,7 +416,7 @@ public class HotelMainFragment extends BaseFragment
 
 						totalArea.index = -1;
 						totalArea.name = province.name + " 전체";
-						totalArea.provinceIndex = province.index;
+						totalArea.provinceIndex = province.getProvinceIndex();
 						totalArea.sequence = -1;
 						totalArea.tag = totalArea.name;
 
@@ -672,11 +673,11 @@ public class HotelMainFragment extends BaseFragment
 				// 마지막으로 지역이 Area로 되어있으면 Province로 바꾸어 준다.
 				if (mIsProvinceSetting == false && selectedProvince instanceof Area)
 				{
-					int provinceIndex = ((Area) selectedProvince).provinceIndex;
+					int provinceIndex = ((Area) selectedProvince).getProvinceIndex();
 
 					for (Province province : provinceList)
 					{
-						if (province.index == provinceIndex)
+						if (province.getProvinceIndex() == provinceIndex)
 						{
 							selectedProvince = province;
 							break;
@@ -954,6 +955,7 @@ public class HotelMainFragment extends BaseFragment
 				case HotelListViewItem.TYPE_ENTRY:
 				{
 					Intent intent = new Intent(baseActivity, HotelTabActivity.class);
+//					Intent intent = new Intent(baseActivity, HotelDetailActivity.class);
 
 					String region = baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
 

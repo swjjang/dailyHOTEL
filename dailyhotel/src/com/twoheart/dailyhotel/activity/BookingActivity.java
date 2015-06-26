@@ -371,12 +371,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				} else
 				{ //
 					Map<String, String> updateParams = new HashMap<String, String>();
-					if (etReserverEmail.isFocusable())
-						updateParams.put("user_email", buyer.getEmail());
-					if (etReserverName.isFocusable())
-						updateParams.put("user_name", buyer.getName());
-					if (etReserverNumber.isFocusable())
-						updateParams.put("user_phone", buyer.getPhone());
+					updateParams.put("user_email", buyer.getEmail());
+					updateParams.put("user_name", buyer.getName());
+					updateParams.put("user_phone", buyer.getPhone());
 
 					ExLog.e("FACEBOOK UPDATE : " + updateParams.toString());
 

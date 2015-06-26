@@ -30,6 +30,11 @@ public class Province implements Parcelable
 		name = jsonObject.getString("name");
 		sequence = jsonObject.getInt("seq");
 	}
+	
+	public int getProvinceIndex()
+	{
+		return index;
+	}
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags)
@@ -51,7 +56,7 @@ public class Province implements Parcelable
 		this.name = in.readString();
 		this.sequence = in.readInt();
 	}
-
+	
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
 	{
 		public Province createFromParcel(Parcel in)

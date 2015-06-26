@@ -28,6 +28,11 @@ public class Area extends Province
 		provinceIndex = jsonObject.getInt("province_idx");
 		tag = jsonObject.getString("tag");
 	}
+	
+	public int getProvinceIndex()
+	{
+		return provinceIndex;
+	}
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags)

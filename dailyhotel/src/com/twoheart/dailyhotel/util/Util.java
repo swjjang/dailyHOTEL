@@ -168,4 +168,28 @@ public class Util implements Constants
 			return null;
 		}
 	}
+	
+	public static int getLCDWidth(Context context)
+	{
+		if(context == null)
+		{
+			return 0;
+		}
+		
+		DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+
+		return displayMetrics.widthPixels;
+	}
+	
+	public static int getLCDHeight(Context context)
+	{
+		if(context == null)
+		{
+			return 0;
+		}
+		
+		DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+
+		return displayMetrics.heightPixels;
+	}
 }

@@ -82,7 +82,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	private FrameLayout mMapLayout;
 	private HotelListMapFragment mHotelListMapFragment;
 	private HOTEL_VIEW_TYPE mHotelViewType;
-	private Province mSelectedProvince;
+	protected Province mSelectedProvince;
 
 	private DailyFloatingActionButton mDailyFloatingActionButton;
 
@@ -468,10 +468,10 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		{
 			Area area = (Area) province;
 
-			params = String.format("?province_idx=%d&area_idx=%d&date=%s", area.provinceIndex, area.index, saleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
+			params = String.format("?province_idx=%d&area_idx=%d&date=%s", area.getProvinceIndex(), area.index, saleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
 		} else
 		{
-			params = String.format("?province_idx=%d&date=%s", province.index, saleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
+			params = String.format("?province_idx=%d&date=%s", province.getProvinceIndex(), saleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
 		}
 
 		// 호텔 리스트를 가져온다. 

@@ -31,7 +31,6 @@
             android:layout_height="match_parent"
             android:cacheColorHint="@android:color/transparent"
             android:divider="@null" />
-
     </uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout>
 
     <com.twoheart.dailyhotel.widget.DailyFloatingActionButton
@@ -57,47 +56,115 @@
     <LinearLayout
         android:id="@+id/daysLayout"
         android:layout_width="match_parent"
-        android:layout_height="110dp"
+        android:layout_height="wrap_content"
         android:background="@color/white"
         android:baselineAligned="false"
+        android:orientation="vertical"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:visibility="gone" >
 
-        <include
-            android:id="@+id/item01"
+        <LinearLayout
+            android:id="@+id/daysLine1Layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            layout="@layout/view_selectday_item" />
+            android:layout_height="100dp" >
 
-        <include
-            android:id="@+id/item02"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            layout="@layout/view_selectday_item" />
+            <include
+                android:id="@+id/item01"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                layout="@layout/view_selectday_item" />
 
-        <include
-            android:id="@+id/item03"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            layout="@layout/view_selectday_item" />
+            <include
+                android:id="@+id/item02"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                layout="@layout/view_selectday_item" />
 
-        <include
-            android:id="@+id/item04"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            layout="@layout/view_selectday_item" />
+            <include
+                android:id="@+id/item03"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                layout="@layout/view_selectday_item" />
 
-        <include
-            android:id="@+id/item05"
+            <include
+                android:id="@+id/item04"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                layout="@layout/view_selectday_item" />
+
+            <include
+                android:id="@+id/item05"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                layout="@layout/view_selectday_item" />
+
+            <include
+                android:id="@+id/item06"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                layout="@layout/view_selectday_item" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/daysMiddleLine"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            layout="@layout/view_selectday_item" />
+            android:layout_height="1px"
+            android:background="@color/daytab_text" />
+
+        <LinearLayout
+            android:id="@+id/daysLine2Layout"
+            android:layout_width="match_parent"
+            android:layout_height="100dp" >
+
+            <include
+                android:id="@+id/item07"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                layout="@layout/view_selectday_item" />
+
+            <include
+                android:id="@+id/item08"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                layout="@layout/view_selectday_item" />
+
+            <include
+                android:id="@+id/item09"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                layout="@layout/view_selectday_item" />
+
+            <include
+                android:id="@+id/item10"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                layout="@layout/view_selectday_item" />
+
+            <include
+                android:id="@+id/item11"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                layout="@layout/view_selectday_item" />
+
+            <include
+                android:id="@+id/item12"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                layout="@layout/view_selectday_item" />
+        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>
