@@ -2072,12 +2072,27 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					throw new NullPointerException("response == null");
 				}
 
-				ExLog.d("hotel_detail : " + response.toString());
-				JSONArray bookingArr = response.getJSONArray("detail");
-				JSONObject detailObj = bookingArr.getJSONObject(0);
+				int msg_code = response.getInt("msg_code");
 
-				int discount = Integer.parseInt(detailObj.getString("discount"));
-				int price = Integer.parseInt(detailObj.getString("price"));
+				if (msg_code != 0)
+				{
+					if (response.has("msg") == true)
+					{
+						String msg = response.getString("msg");
+
+						DailyToast.showToast(BookingActivity.this, msg, Toast.LENGTH_SHORT);
+						finish();
+						return;
+					} else
+					{
+						throw new NullPointerException("response == null");
+					}
+				}
+
+				JSONObject jsonData = response.getJSONObject("data");
+
+				int discount = Integer.parseInt(jsonData.getString("discount"));
+				int price = Integer.parseInt(jsonData.getString("price"));
 
 				HotelDetail hotelDetail = mPay.getHotelDetail();
 				Hotel hotelBasic = hotelDetail.getHotel();
@@ -2088,12 +2103,12 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					mIsChangedPay = true;
 				}
 
-				hotelBasic.setAddress(detailObj.getString("address"));
-				hotelBasic.setName(detailObj.getString("hotel_name"));
+				hotelBasic.setAddress(jsonData.getString("address"));
+				hotelBasic.setName(jsonData.getString("hotel_name"));
 				hotelBasic.setDiscount(discount);
 				hotelBasic.setPrice(price);
-				hotelBasic.setCategory(detailObj.getString("cat"));
-				hotelBasic.setBedType(detailObj.getString("bed_type"));
+				hotelBasic.setCategory(jsonData.getString("cat"));
+				hotelBasic.setBedType(jsonData.getString("bed_type"));
 
 				hotelDetail.setHotel(hotelBasic);
 
@@ -2101,22 +2116,22 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 				try
 				{
-					if (detailObj.has("on_sale") == true)
+					if (jsonData.has("on_sale") == true)
 					{
-						isOnSale = detailObj.getInt("on_sale") == 1;
+						isOnSale = jsonData.getInt("on_sale") == 1;
 					}
 				} catch (Exception e)
 				{
 					ExLog.e(e.toString());
 				}
 
-				double latitude = detailObj.getDouble("lat");
-				double longitude = detailObj.getDouble("lng");
+				double latitude = jsonData.getDouble("lat");
+				double longitude = jsonData.getDouble("lng");
 
 				hotelDetail.setLatitude(latitude);
 				hotelDetail.setLongitude(longitude);
 
-				int saleIdx = detailObj.getInt("idx");
+				int saleIdx = jsonData.getInt("idx");
 				hotelDetail.setSaleIdx(saleIdx);
 
 				mPay.setHotelDetail(hotelDetail);
@@ -2153,11 +2168,27 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					throw new NullPointerException("response == null");
 				}
 
-				JSONArray bookingArr = response.getJSONArray("detail");
-				JSONObject detailObj = bookingArr.getJSONObject(0);
+				int msg_code = response.getInt("msg_code");
 
-				int discount = Integer.parseInt(detailObj.getString("discount"));
-				int price = Integer.parseInt(detailObj.getString("price"));
+				if (msg_code != 0)
+				{
+					if (response.has("msg") == true)
+					{
+						String msg = response.getString("msg");
+
+						DailyToast.showToast(BookingActivity.this, msg, Toast.LENGTH_SHORT);
+						finish();
+						return;
+					} else
+					{
+						throw new NullPointerException("response == null");
+					}
+				}
+
+				JSONObject jsonData = response.getJSONObject("data");
+
+				int discount = Integer.parseInt(jsonData.getString("discount"));
+				int price = Integer.parseInt(jsonData.getString("price"));
 
 				HotelDetail hotelDetail = mPay.getHotelDetail();
 				Hotel hotelBasic = hotelDetail.getHotel();
@@ -2168,30 +2199,30 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					mIsChangedPay = true;
 				}
 
-				hotelBasic.setAddress(detailObj.getString("address"));
-				hotelBasic.setName(detailObj.getString("hotel_name"));
+				hotelBasic.setAddress(jsonData.getString("address"));
+				hotelBasic.setName(jsonData.getString("hotel_name"));
 				hotelBasic.setDiscount(discount);
 				hotelBasic.setPrice(price);
 
 				try
 				{
-					hotelBasic.setCategory(detailObj.getString("cat"));
+					hotelBasic.setCategory(jsonData.getString("cat"));
 				} catch (Exception e)
 				{
 					hotelBasic.setCategory(HotelGrade.etc.name());
 				}
 
-				hotelBasic.setBedType(detailObj.getString("bed_type"));
+				hotelBasic.setBedType(jsonData.getString("bed_type"));
 
 				hotelDetail.setHotel(hotelBasic);
 
-				double latitude = detailObj.getDouble("lat");
-				double longitude = detailObj.getDouble("lng");
+				double latitude = jsonData.getDouble("lat");
+				double longitude = jsonData.getDouble("lng");
 
 				hotelDetail.setLatitude(latitude);
 				hotelDetail.setLongitude(longitude);
 
-				int saleIdx = detailObj.getInt("idx");
+				int saleIdx = jsonData.getInt("idx");
 				hotelDetail.setSaleIdx(saleIdx);
 
 				mPay.setHotelDetail(hotelDetail);
@@ -2200,9 +2231,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 				try
 				{
-					if (detailObj.has("on_sale") == true)
+					if (jsonData.has("on_sale") == true)
 					{
-						isOnSale = detailObj.getInt("on_sale") == 1;
+						isOnSale = jsonData.getInt("on_sale") == 1;
 					}
 				} catch (Exception e)
 				{
