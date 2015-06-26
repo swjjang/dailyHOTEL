@@ -314,7 +314,7 @@ public class HotelDetailActivity extends BaseActivity implements OnClickListener
 
 				mHotelDetail.setImageUrl(imageList);
 
-				JSONArray specArr = response.getJSONArray("spec");
+				JSONArray specArr = jsonData.getJSONArray("spec");
 				mHotelDetail.setSpecification(specArr);
 
 				double latitude = jsonData.getDouble("lat");

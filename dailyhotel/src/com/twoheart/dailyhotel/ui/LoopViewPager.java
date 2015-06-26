@@ -20,8 +20,6 @@ import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
 
 /**
  * A ViewPager subclass enabling infinte scrolling of the viewPager elements
@@ -50,8 +48,6 @@ public class LoopViewPager extends ViewPager
 	private LoopPagerAdapterWrapper mAdapter;
 	private boolean mBoundaryCaching = DEFAULT_BOUNDARY_CASHING;
 
-	private GestureDetector mGestureDetector;
-	private boolean mIsLockOnHorizontalAxis = false;
 
 	/**
 	 * helper function which may be used when implementing FragmentPagerAdapter
@@ -144,47 +140,9 @@ public class LoopViewPager extends ViewPager
 
 	private void init(Context context)
 	{
-		mGestureDetector = new GestureDetector(context, new XScrollDetector());
-
 		super.setOnPageChangeListener(onPageChangeListener);
 	}
-
-	@Override
-	public boolean onTouchEvent(MotionEvent event)
-	{
-		// decide if horizontal axis is locked already or we need to check the scrolling direction
-		if (!mIsLockOnHorizontalAxis)
-			mIsLockOnHorizontalAxis = mGestureDetector.onTouchEvent(event);
-
-		// release the lock when finger is up
-		if (event.getAction() == MotionEvent.ACTION_UP)
-			mIsLockOnHorizontalAxis = false;
-
-		getParent().requestDisallowInterceptTouchEvent(mIsLockOnHorizontalAxis);
-		return super.onTouchEvent(event);
-	}
-
-	private class XScrollDetector extends
-			GestureDetector.SimpleOnGestureListener
-	{
-
-		// -----------------------------------------------------------------------
-		//
-		// Methods
-		//
-		// -----------------------------------------------------------------------
-		/**
-		 * @return true - if we're scrolling in X direction, false - in Y
-		 *         direction.
-		 */
-		@Override
-		public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY)
-		{
-			return Math.abs(distanceX) > Math.abs(distanceY);
-		}
-
-	}
-
+	
 	private OnPageChangeListener onPageChangeListener = new OnPageChangeListener()
 	{
 		private float mPreviousOffset = -1;

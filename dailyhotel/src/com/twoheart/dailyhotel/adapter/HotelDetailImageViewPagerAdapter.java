@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.adapter;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +12,11 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
 import com.androidquery.AQuery;
+import com.androidquery.callback.AjaxStatus;
+import com.androidquery.callback.BitmapAjaxCallback;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.VolleyImageLoader;
 
 public class HotelDetailImageViewPagerAdapter extends PagerAdapter
 {
@@ -43,8 +47,31 @@ public class HotelDetailImageViewPagerAdapter extends PagerAdapter
 
 		String url = mImageUrlList.get(position);
 
-		mAQuery = new AQuery(mContext);
-		mAQuery.id(imageView).image(url, true, true, 0, R.drawable.img_placeholder, null, AQuery.FADE_IN_NETWORK);
+		if(mAQuery == null)
+		{
+			mAQuery = new AQuery(mContext);
+		}
+		
+		Bitmap cachedImg = VolleyImageLoader.getCache(url);
+		
+		if (cachedImg == null)
+		{ // 힛인 밸류가 없다면 이미지를 불러온 후 캐시에 세이브
+			BitmapAjaxCallback cb = new BitmapAjaxCallback()
+			{
+				@Override
+				protected void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status)
+				{
+					VolleyImageLoader.putCache(url, bm);
+					super.callback(url, iv, bm, status);
+				}
+			};
+
+			cb.url(url).animation(AQuery.FADE_IN);
+			mAQuery.id(imageView).image(cb);
+		} else
+		{
+			mAQuery.id(imageView).image(cachedImg);
+		}
 
 		int width = Util.getLCDWidth(mContext);
 

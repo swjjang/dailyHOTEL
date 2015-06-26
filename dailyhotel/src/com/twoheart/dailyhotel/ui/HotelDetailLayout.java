@@ -18,18 +18,19 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.os.Build;
 import android.support.v4.view.ViewPager;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewTreeObserver.OnScrollChangedListener;
 import android.view.animation.AlphaAnimation;
-import android.widget.ScrollView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.HotelDetailActivity;
 import com.twoheart.dailyhotel.adapter.HotelDetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.model.HotelDetail;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 /**
@@ -46,6 +47,7 @@ public class HotelDetailLayout
 	private ViewPager mViewPager;
 	private View mHotelTitleLaout;
 	private View mHotelGradeTextView;
+	private HotelDetailScrollView mScrollView;
 	private HotelDetailImageViewPagerAdapter mAdapter;
 
 	private int mStatusBarHeight;
@@ -66,18 +68,19 @@ public class HotelDetailLayout
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mViewRoot = inflater.inflate(R.layout.layout_hoteldetail, null, false);
 
+		mScrollView = (HotelDetailScrollView) mViewRoot.findViewById(R.id.hotelScrollView);
+
+		try
+		{
+			mScrollView.getViewTreeObserver().removeOnScrollChangedListener(mOnScrollChangedListener);
+		} catch (Exception e)
+		{
+		}
+
+		mScrollView.getViewTreeObserver().addOnScrollChangedListener(mOnScrollChangedListener);
+
 		// 이미지 ViewPage 넣기.
 		mViewPager = (ViewPager) mViewRoot.findViewById(R.id.defaultHotelImageView);
-
-		mViewPager.setOnTouchListener(new View.OnTouchListener()
-		{
-			@Override
-			public boolean onTouch(View view, MotionEvent event)
-			{
-				view.getParent().requestDisallowInterceptTouchEvent(true);
-				return false;
-			}
-		});
 
 		mImageHeight = Util.getLCDWidth(context);
 		LayoutParams layoutParams = (LayoutParams) mViewPager.getLayoutParams();
@@ -86,19 +89,11 @@ public class HotelDetailLayout
 		View emptyView = mViewRoot.findViewById(R.id.imageEmptyHeight);
 		emptyView.getLayoutParams().height = mImageHeight;
 
+		emptyView.setClickable(true);
+		emptyView.setOnTouchListener(mEmptyViewOnTouchListener);
+
 		mHotelTitleLaout = mViewRoot.findViewById(R.id.hotelTitleLaout);
 		mHotelGradeTextView = mViewRoot.findViewById(R.id.hotelGradeTextView);
-
-		ScrollView scrollView = (ScrollView) mViewRoot.findViewById(R.id.hotelScrollView);
-
-		try
-		{
-			scrollView.getViewTreeObserver().removeOnScrollChangedListener(mOnScrollChangedListener);
-		} catch (Exception e)
-		{
-		}
-
-		scrollView.getViewTreeObserver().addOnScrollChangedListener(mOnScrollChangedListener);
 	}
 
 	public View getView()
@@ -185,4 +180,78 @@ public class HotelDetailLayout
 			}
 		}
 	};
+
+	View.OnTouchListener mEmptyViewOnTouchListener = new View.OnTouchListener()
+	{
+		private GestureDetector mGestureDetector;
+		private int mMoveState;
+
+		@Override
+		public boolean onTouch(View v, MotionEvent event)
+		{
+			if (mGestureDetector == null)
+			{
+				mGestureDetector = new GestureDetector(mActivity, new XScrollDetector());
+			}
+
+			boolean isXScroll = mGestureDetector.onTouchEvent(event);
+
+			ExLog.d("isXScroll : " + isXScroll);
+
+			switch (event.getAction())
+			{
+				case MotionEvent.ACTION_DOWN:
+				{
+					mMoveState = 0;
+					mScrollView.setScrollEnabled(false);
+					mViewPager.onTouchEvent(event);
+					break;
+				}
+
+				case MotionEvent.ACTION_UP:
+				case MotionEvent.ACTION_CANCEL:
+				{
+					mMoveState = 0;
+					mViewPager.onTouchEvent(event);
+					break;
+				}
+
+				case MotionEvent.ACTION_MOVE:
+				{
+					if (mMoveState < 5)
+					{
+						mMoveState++;
+
+						if (isXScroll == true)
+						{
+							mMoveState = 100;
+							mViewPager.onTouchEvent(event);
+						}
+					} else if (mMoveState >= 5 && mMoveState != 100)
+					{
+						mMoveState = 10;
+						mScrollView.setScrollEnabled(true);
+					} else if (mMoveState == 100)
+					{
+						mViewPager.onTouchEvent(event);
+					}
+					break;
+				}
+			}
+
+			return false;
+		}
+	};
+
+	private class XScrollDetector extends
+			GestureDetector.SimpleOnGestureListener
+	{
+
+		@Override
+		public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY)
+		{
+			return Math.abs(distanceX) > Math.abs(distanceY);
+		}
+
+	}
 }
