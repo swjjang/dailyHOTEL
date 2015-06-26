@@ -32,6 +32,7 @@ import com.twoheart.dailyhotel.activity.HotelTabActivity;
 import com.twoheart.dailyhotel.adapter.HotelImageFragmentPagerAdapter;
 import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.util.ABTestPreferences;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
@@ -89,7 +90,14 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 		mViewPager = (HotelViewPager) view.findViewById(R.id.vp_hotel_tab_booking_img);
 		mIndicator = (CirclePageIndicator) view.findViewById(R.id.cp_hotel_tab_booking_indicator);
 
-		tvBedType.setText(mHotelDetail.getHotel().getBedType());
+		if (Constants.DEBUG == true)
+		{
+			tvBedType.setText(mHotelDetail.getHotel().mSaleDay + "," + mHotelDetail.getHotel().getBedType());
+		} else
+		{
+			tvBedType.setText(mHotelDetail.getHotel().getBedType());
+		}
+
 		tvAddress.setText(mHotelDetail.getHotel().getAddress());
 		tvAddress.setSelected(true);
 
