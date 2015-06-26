@@ -262,7 +262,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		{
 			lockUI();
 
-			mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_DETAIL).append('/').append(mPay.getHotelDetail().getHotel().getIdx()).append("/").append(mSaleTime.getDayOfDaysHotelDateFormat("yy/MM/dd")).toString(), null, mHotelDetailJsonResponseListener, this));
+			String params = String.format("?hotel_idx=%d&sday=%s", mPay.getHotelDetail().getHotel().getIdx(), mSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
+
+			mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_DETAIL).append(params).toString(), null, mHotelDetailJsonResponseListener, this));
 		}
 
 		String region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
@@ -1541,8 +1543,10 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 					lockUI();
 
+					String params = String.format("?hotel_idx=%d&sday=%s", mPay.getHotelDetail().getHotel().getIdx(), mSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
+
 					// 호텔 디테일 정보 재 요청
-					mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_DETAIL).append('/').append(mPay.getHotelDetail().getHotel().getIdx()).append("/").append(mSaleTime.getDayOfDaysHotelDateFormat("yy/MM/dd")).toString(), null, mFinalCheckPayJsonResponseListener, BookingActivity.this));
+					mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_DETAIL).append(params).toString(), null, mFinalCheckPayJsonResponseListener, BookingActivity.this));
 				} else
 				{
 					unLockUI();
@@ -2231,7 +2235,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 							lockUI();
 
 							// 호텔 디테일 정보 재 요청
-							mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_DETAIL).append('/').append(mPay.getHotelDetail().getHotel().getIdx()).append("/").append(mSaleTime.getDayOfDaysHotelDateFormat("yy/MM/dd")).toString(), null, mHotelDetailJsonResponseListener, BookingActivity.this));
+							String params = String.format("?hotel_idx=%d&sday=%s", mPay.getHotelDetail().getHotel().getIdx(), mSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
+
+							mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_DETAIL).append(params).toString(), null, mHotelDetailJsonResponseListener, BookingActivity.this));
 						}
 					}).show();
 				} else

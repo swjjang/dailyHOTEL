@@ -203,13 +203,12 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 
 	protected void onPostSetCookie()
 	{
-		String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_DETAIL).append('/').append(hotelDetail.getHotel().getIdx()).append("/").append(mSaleTime.getDayOfDaysHotelDateFormat("yy/MM/dd")).toString();
-
-		ExLog.d(url);
-
 		lockUI();
 		// 호텔 정보를 가져온다.
-		mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null, mHotelDetailJsonResponseListener, this));
+
+		String params = String.format("?hotel_idx=%d&sday=%s", hotelDetail.getHotel().getIdx(), mSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
+
+		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_DETAIL).append(params).toString(), null, mHotelDetailJsonResponseListener, this));
 	}
 
 	@Override
