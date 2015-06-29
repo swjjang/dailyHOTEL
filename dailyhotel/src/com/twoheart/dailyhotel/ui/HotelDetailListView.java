@@ -3,34 +3,34 @@ package com.twoheart.dailyhotel.ui;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.widget.ScrollView;
+import android.widget.ListView;
 
-public class HotelDetailScrollView extends ScrollView
+public class HotelDetailListView extends ListView
 {
 	private boolean mScrollable = true;
 
-	public HotelDetailScrollView(Context context)
+	public HotelDetailListView(Context context)
 	{
 		super(context);
 
 		initLayout(context);
 	}
 
-	public HotelDetailScrollView(Context context, AttributeSet attrs)
+	public HotelDetailListView(Context context, AttributeSet attrs)
 	{
 		super(context, attrs);
 
 		initLayout(context);
 	}
 
-	public HotelDetailScrollView(Context context, AttributeSet attrs, int defStyleAttr)
+	public HotelDetailListView(Context context, AttributeSet attrs, int defStyleAttr)
 	{
 		super(context, attrs, defStyleAttr);
 
 		initLayout(context);
 	}
 
-	public HotelDetailScrollView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
+	public HotelDetailListView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
 	{
 		super(context, attrs, defStyleAttr, defStyleRes);
 

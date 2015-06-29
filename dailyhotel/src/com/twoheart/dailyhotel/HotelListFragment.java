@@ -194,9 +194,9 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 		super.onResume();
 	}
-
+	
 	@Override
-	public void onPause()
+	public void onDestroyView()
 	{
 		BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -207,8 +207,8 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 		showActionBar(baseActivity);
 		setActionBarAnimationLock(true);
-
-		super.onPause();
+		
+		super.onDestroyView();
 	}
 
 	@Override

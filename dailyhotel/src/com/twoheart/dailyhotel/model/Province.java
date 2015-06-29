@@ -12,6 +12,7 @@ public class Province implements Parcelable
 	public String name;
 	public int sequence;
 	private int saleWeek = 1; // 1 : 1주일,  2 : 2주일
+	public int countryCode;
 
 	public boolean isSelected;
 
@@ -57,6 +58,7 @@ public class Province implements Parcelable
 		dest.writeString(name);
 		dest.writeInt(sequence);
 		dest.writeInt(saleWeek);
+		dest.writeInt(countryCode);
 	}
 
 	@Override
@@ -71,6 +73,7 @@ public class Province implements Parcelable
 		name = in.readString();
 		sequence = in.readInt();
 		saleWeek = in.readInt();
+		countryCode = in.readInt();
 	}
 
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
