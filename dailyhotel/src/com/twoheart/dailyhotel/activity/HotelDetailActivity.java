@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
@@ -50,23 +51,38 @@ import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class HotelDetailActivity extends BaseActivity implements OnClickListener
 {
+	private static final int DURATION_HOTEL_IMAGE_SHOW = 4000;
+	
 	private HotelDetail mHotelDetail;
 	private SaleTime mSaleTime;
-
-	private Toolbar mToolbar;
 
 	private Button mSoldOutButton;
 	private TextView mBookingButton;
 	private String mRegion;
 	private int mHotelIdx;
-	private int mPosition = 0;
+	private int mCurrentImage;
 
 	//	private String region;
 	//	private String hotelName;
-
+	
 	private HotelDetailLayout mHotelDetailLayout;
 
-	private Handler mHandler = new Handler();
+	private Handler mImageHandler = new Handler()
+	{
+		public void handleMessage(Message msg)
+		{
+			if (isFinishing() == true)
+			{
+				return;
+			}
+
+			mCurrentImage = mHotelDetailLayout.getCurrentImage();
+			mCurrentImage++;
+			
+			mHotelDetailLayout.setCurrentImage(mCurrentImage);
+			sendEmptyMessageDelayed(0, DURATION_HOTEL_IMAGE_SHOW);
+		}
+	};
 
 	public interface OnUserActionListener
 	{
@@ -74,7 +90,13 @@ public class HotelDetailActivity extends BaseActivity implements OnClickListener
 
 		public void hideActionBar();
 
-		public void onClickImage(HotelDetail hotelDetail, String imageUrl);
+		public void onClickImage(HotelDetail hotelDetail);
+		
+		public void startAutoSlide();
+		
+		public void stopAutoSlide();
+		
+		public void onSelectedImagePosition(int position);
 	};
 
 	@Override
@@ -113,7 +135,7 @@ public class HotelDetailActivity extends BaseActivity implements OnClickListener
 
 			setContentView(mHotelDetailLayout.getView());
 
-			mToolbar = setActionBar(hotel.getName());
+			setActionBar(hotel.getName());
 
 			mOnUserActionListener.hideActionBar();
 
@@ -144,8 +166,24 @@ public class HotelDetailActivity extends BaseActivity implements OnClickListener
 		String params = String.format("?hotel_idx=%d&sday=%s", mHotelDetail.getHotel().getIdx(), mSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
 
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_DETAIL).append(params).toString(), null, mHotelDetailJsonResponseListener, this));
-
+		
 		super.onResume();
+	}
+	
+	@Override
+	protected void onPause()
+	{
+		mOnUserActionListener.stopAutoSlide();
+		
+		super.onPause();
+	}
+	
+	@Override
+	protected void onDestroy()
+	{
+		mOnUserActionListener.stopAutoSlide();
+		
+		super.onDestroy();
 	}
 
 	@Override
@@ -222,17 +260,38 @@ public class HotelDetailActivity extends BaseActivity implements OnClickListener
 		}
 
 		@Override
-		public void onClickImage(HotelDetail hotelDetail, String imageUrl)
+		public void onClickImage(HotelDetail hotelDetail)
 		{
 			if (isLockUiComponent() == true)
 			{
 				return;
 			}
 
-			Intent intent = new Intent(HotelDetailActivity.this, ImageDetailActivity.class);
+			lockUiComponent();
+
+			Intent intent = new Intent(HotelDetailActivity.this, ImageDetailListActivity.class);
 			intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELDETAIL, hotelDetail);
-			intent.putExtra(NAME_INTENT_EXTRA_DATA_SELECTED_IMAGE_URL, imageUrl);
+			intent.putExtra(NAME_INTENT_EXTRA_DATA_SELECTED_POSOTION, mCurrentImage);
 			startActivity(intent);
+		}
+
+		@Override
+		public void startAutoSlide()
+		{
+			mImageHandler.removeMessages(0);
+			mImageHandler.sendEmptyMessageDelayed(0, DURATION_HOTEL_IMAGE_SHOW);
+		}
+
+		@Override
+		public void stopAutoSlide()
+		{
+			mImageHandler.removeMessages(0);
+		}
+
+		@Override
+		public void onSelectedImagePosition(int position)
+		{
+			mCurrentImage = position;
 		}
 	};
 
@@ -328,7 +387,7 @@ public class HotelDetailActivity extends BaseActivity implements OnClickListener
 
 				if (mHotelDetailLayout != null)
 				{
-					mHotelDetailLayout.setHotelDetail(mHotelDetail);
+					mHotelDetailLayout.setHotelDetail(mHotelDetail, mCurrentImage);
 				}
 			} catch (Exception e)
 			{

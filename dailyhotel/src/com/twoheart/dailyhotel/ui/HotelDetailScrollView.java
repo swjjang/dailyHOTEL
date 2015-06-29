@@ -12,31 +12,31 @@ public class HotelDetailScrollView extends ScrollView
 	public HotelDetailScrollView(Context context)
 	{
 		super(context);
-		
+
 		initLayout(context);
 	}
 
 	public HotelDetailScrollView(Context context, AttributeSet attrs)
 	{
 		super(context, attrs);
-		
+
 		initLayout(context);
 	}
 
 	public HotelDetailScrollView(Context context, AttributeSet attrs, int defStyleAttr)
 	{
 		super(context, attrs, defStyleAttr);
-		
+
 		initLayout(context);
 	}
 
 	public HotelDetailScrollView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
 	{
 		super(context, attrs, defStyleAttr, defStyleRes);
-		
+
 		initLayout(context);
 	}
-	
+
 	private void initLayout(Context context)
 	{
 	}

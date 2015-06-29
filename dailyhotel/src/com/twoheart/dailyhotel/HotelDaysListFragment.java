@@ -29,6 +29,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.TranslateAnimation;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.model.SaleTime;
@@ -104,8 +105,6 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		mDaysBackgroundView = view.findViewById(R.id.daysBackgroundView);
 		mDaysLayout = view.findViewById(R.id.daysLayout);
 
-		DAYSLIST_HEIGHT = Util.dpToPx(baseActivity, 200);
-
 		mDaysBackgroundView.setOnClickListener(new OnClickListener()
 		{
 			@Override
@@ -153,6 +152,8 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		{
 			visibleCount = mSelectedProvince.getSaleWeek() == 1 ? DEFAULT_DAY_OF_COUNT : DAY_OF_TOTALCOUNT;
 		}
+
+		DAYSLIST_HEIGHT = visibleCount <= DEFAULT_LINE_COUNT ? Util.dpToPx(baseActivity, 100) : Util.dpToPx(baseActivity, 200);
 
 		View line2Layout = mDaysLayout.findViewById(R.id.daysLine2Layout);
 		View daysMiddleLine = mDaysLayout.findViewById(R.id.daysMiddleLine);
@@ -400,8 +401,12 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 
 		if (isUsedAnimatorApi() == true)
 		{
+			((RelativeLayout.LayoutParams) mDaysLayout.getLayoutParams()).topMargin = 0;
+
 			mDaysLayout.setVisibility(View.INVISIBLE);
 			mDaysLayout.setTranslationY(-DAYSLIST_HEIGHT);
+
+			setActionBarAnimationLock(false);
 		} else
 		{
 			mDaysLayout.setVisibility(View.GONE);
@@ -483,7 +488,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		{
 			View underlineView02 = baseActivity.findViewById(R.id.tabindicator_underLine);
 
-			TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, underlineView02.getBottom() - DAYSLIST_HEIGHT, underlineView02.getBottom());
+			TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, -DAYSLIST_HEIGHT, 0);
 			translateAnimation.setDuration(300);
 			translateAnimation.setFillBefore(true);
 			translateAnimation.setFillAfter(true);
@@ -595,9 +600,9 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 			mObjectAnimator.start();
 		} else
 		{
-			View underlineView02 = baseActivity.findViewById(R.id.tabindicator_underLine);
+			//			View underlineView02 = baseActivity.findViewById(R.id.tabindicator_underLine);
 
-			TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, underlineView02.getBottom(), underlineView02.getBottom() - DAYSLIST_HEIGHT);
+			TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, 0, -DAYSLIST_HEIGHT);
 			translateAnimation.setDuration(300);
 			translateAnimation.setFillBefore(true);
 			translateAnimation.setFillAfter(true);

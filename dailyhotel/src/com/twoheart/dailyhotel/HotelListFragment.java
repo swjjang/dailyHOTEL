@@ -84,7 +84,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	private HOTEL_VIEW_TYPE mHotelViewType;
 	protected Province mSelectedProvince;
 
-	private DailyFloatingActionButton mDailyFloatingActionButton;
+	//	private DailyFloatingActionButton mDailyFloatingActionButton;
 
 	private HotelListViewItem mSelectedHotelListViewItem;
 	private int mSelectedHotelIndex;
@@ -130,7 +130,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 			mHotelListView.setOnScrollListener(mOnScrollListener);
 		} else
 		{
-			mHotelListView.setPadding(0, Util.dpToPx(baseActivity, 109) + 2, 0, 0);
+			mHotelListView.setPadding(0, Util.dpToPx(baseActivity, 110), 0, 0);
 		}
 
 		// 이벤트를 마지막에 넣는다.
@@ -146,16 +146,16 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 		//		mHotelListMapFragment = (HotelListMapFragment) getChildFragmentManager().findFragmentById(R.id.hotelMapFragment);
 
-		mDailyFloatingActionButton = (DailyFloatingActionButton) view.findViewById(R.id.floatingActionButton);
-		mDailyFloatingActionButton.setOnClickListener(new View.OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
-			{
-			}
-		});
+		//		mDailyFloatingActionButton = (DailyFloatingActionButton) view.findViewById(R.id.floatingActionButton);
+		//		mDailyFloatingActionButton.setOnClickListener(new View.OnClickListener()
+		//		{
+		//			@Override
+		//			public void onClick(View v)
+		//			{
+		//			}
+		//		});
 
-		mDailyFloatingActionButton.setVisibility(View.GONE);
+		//		mDailyFloatingActionButton.setVisibility(View.GONE);
 
 		mHotelViewType = HOTEL_VIEW_TYPE.LIST;
 
@@ -374,7 +374,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 				mEmptyView.setVisibility(View.VISIBLE);
 				mMapLayout.setVisibility(View.GONE);
 
-				mDailyFloatingActionButton.setVisibility(View.GONE);
+				//				mDailyFloatingActionButton.setVisibility(View.GONE);
 				mPullToRefreshLayout.setVisibility(View.INVISIBLE);
 				break;
 		}
@@ -412,13 +412,13 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 	public void setFloatingActionButtonVisible(boolean visible)
 	{
-		if (mDailyFloatingActionButton == null)
-		{
-			return;
-		}
-
-		// 일단 눈에 안보이도록 함.
-		mDailyFloatingActionButton.hide(false, true);
+		//		if (mDailyFloatingActionButton == null)
+		//		{
+		//			return;
+		//		}
+		//
+		//		// 일단 눈에 안보이도록 함.
+		//		mDailyFloatingActionButton.hide(false, true);
 		//
 		//		if (visible == true)
 		//		{
@@ -685,6 +685,8 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 				return;
 			}
 
+			ExLog.d("isLockUiComponent() : " + isLockUiComponent() + ", baseActivity.isLockUiComponent() : " + baseActivity.isLockUiComponent());
+
 			if (isLockUiComponent() == true || baseActivity.isLockUiComponent() == true)
 			{
 				return;
@@ -751,6 +753,8 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 				mOldY = y;
 				mOldfirstVisibleItem = firstVisibleItem;
 			}
+
+			ExLog.d("mDirection : " + mDirection);
 
 			switch (mDirection)
 			{

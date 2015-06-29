@@ -48,7 +48,6 @@ public class LoopViewPager extends ViewPager
 	private LoopPagerAdapterWrapper mAdapter;
 	private boolean mBoundaryCaching = DEFAULT_BOUNDARY_CASHING;
 
-
 	/**
 	 * helper function which may be used when implementing FragmentPagerAdapter
 	 * 
@@ -142,7 +141,7 @@ public class LoopViewPager extends ViewPager
 	{
 		super.setOnPageChangeListener(onPageChangeListener);
 	}
-	
+
 	private OnPageChangeListener onPageChangeListener = new OnPageChangeListener()
 	{
 		private float mPreviousOffset = -1;

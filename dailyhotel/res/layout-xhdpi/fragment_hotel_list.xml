@@ -33,7 +33,7 @@
             android:divider="@null" />
     </uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout>
 
-    <com.twoheart.dailyhotel.widget.DailyFloatingActionButton
+<!--     <com.twoheart.dailyhotel.widget.DailyFloatingActionButton
         android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
         android:visibility="gone"
         fab:fab_colorNormal="@color/floating_action_button_default"
         fab:fab_colorPressed="@color/floating_action_button_pressed"
-        fab:fab_colorRipple="@color/floating_action_button_pressed" />
+        fab:fab_colorRipple="@color/floating_action_button_pressed" /> -->
 
     <View
         android:id="@+id/daysBackgroundView"
@@ -52,11 +52,12 @@
         android:layout_height="match_parent"
         android:background="@color/textView_textColor_shadow_soldout"
         android:visibility="gone" />
-
+    
     <LinearLayout
         android:id="@+id/daysLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="110dp"
         android:background="@color/white"
         android:baselineAligned="false"
         android:orientation="vertical"

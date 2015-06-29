@@ -44,7 +44,7 @@ public class Province implements Parcelable
 	{
 		return index;
 	}
-	
+
 	public int getSaleWeek()
 	{
 		return saleWeek;

@@ -330,6 +330,7 @@ public interface Constants
 	public static final String NAME_INTENT_EXTRA_DATA_BOOKINGIDX = "bookingIdx";
 	public static final String NAME_INTENT_EXTRA_DATA_PAY = "pay";
 	public static final String NAME_INTENT_EXTRA_DATA_SELECTED_IMAGE_URL = "sel_image_url";
+	public static final String NAME_INTENT_EXTRA_DATA_SELECTED_POSOTION = "selectedPosition";
 	//	public static final String NAME_INTENT_EXTRA_DATA_IS_INTENT_FROM_PUSH = "is_intent_from_push";
 	public static final String NAME_INTENT_EXTRA_DATA_PUSH_TYPE = "push_type";
 	public static final String NAME_INTENT_EXTRA_DATA_PUSH_MSG = "push_msg";

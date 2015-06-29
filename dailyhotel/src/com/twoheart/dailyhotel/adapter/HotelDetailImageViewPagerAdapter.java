@@ -47,13 +47,13 @@ public class HotelDetailImageViewPagerAdapter extends PagerAdapter
 
 		String url = mImageUrlList.get(position);
 
-		if(mAQuery == null)
+		if (mAQuery == null)
 		{
 			mAQuery = new AQuery(mContext);
 		}
-		
+
 		Bitmap cachedImg = VolleyImageLoader.getCache(url);
-		
+
 		if (cachedImg == null)
 		{ // 힛인 밸류가 없다면 이미지를 불러온 후 캐시에 세이브
 			BitmapAjaxCallback cb = new BitmapAjaxCallback()
