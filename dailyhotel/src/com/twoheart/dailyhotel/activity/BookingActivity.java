@@ -592,18 +592,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		return dialog;
 	}
 
-	private boolean isEmptyTextField(String... fieldText)
-	{
-
-		for (int i = 0; i < fieldText.length; i++)
-		{
-			if (isEmptyTextField(fieldText[i]) == true)
-				return true;
-		}
-
-		return false;
-	}
-
 	private boolean isEmptyTextField(String fieldText)
 	{
 		return (TextUtils.isEmpty(fieldText) == true || fieldText.equals("null") == true || fieldText.trim().length() == 0);
@@ -1695,59 +1683,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			{
 				onError(e);
 				unLockUI();
-			}
-		}
-	};
-
-	private DailyHotelJsonResponseListener mUserUpdateFacebookJsonResponseListener = new DailyHotelJsonResponseListener()
-	{
-
-		@Override
-		public void onResponse(String url, JSONObject response)
-		{
-			try
-			{
-				unLockUI();
-
-				if (response == null)
-				{
-					throw new NullPointerException("response == null");
-				}
-
-				ExLog.e("UPDATE_FACEBOOK_RESULT : " + response.toString());
-
-				if (response.getBoolean("result") == false)
-				{
-					DailyToast.showToast(BookingActivity.this, response.getString("message"), Toast.LENGTH_LONG);
-				} else
-				{
-					etReserverName.setEnabled(false);
-					etReserverNumber.setEnabled(false);
-					etReserverEmail.setEnabled(false);
-
-					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-					{
-						etReserverName.setBackground(null);
-						etReserverNumber.setBackground(null);
-						etReserverEmail.setBackground(null);
-					} else
-					{
-						etReserverName.setBackgroundDrawable(null);
-						etReserverNumber.setBackgroundDrawable(null);
-						etReserverEmail.setBackgroundDrawable(null);
-					}
-
-					etReserverName.setText(etReserverName.getText().toString());
-					etReserverNumber.setText(etReserverNumber.getText().toString());
-					etReserverEmail.setText(etReserverEmail.getText().toString());
-
-					mIsEditMode = false;
-
-					btnPay.performClick();
-				}
-			} catch (Exception e)
-			{
-				onError(e);
 			}
 		}
 	};
