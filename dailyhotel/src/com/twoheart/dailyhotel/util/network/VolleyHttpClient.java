@@ -55,11 +55,10 @@ public class VolleyHttpClient implements Constants
 		registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
 		ClientConnectionManager cm = new ThreadSafeClientConnManager(params, registry);
 		sHttpClient = new DefaultHttpClient(cm, params);
-
+		
 		sContext = context;
 		sRequestQueue = Volley.newRequestQueue(sContext, new HttpClientStack(sHttpClient));
 		// sRequestQueue = Volley.newRequestQueue(sContext);
-
 	}
 
 	public static RequestQueue getRequestQueue()

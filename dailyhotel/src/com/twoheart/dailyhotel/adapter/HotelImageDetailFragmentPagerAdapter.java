@@ -31,6 +31,11 @@ public class HotelImageDetailFragmentPagerAdapter extends FragmentPagerAdapter
 	@Override
 	public int getCount()
 	{
+		if(mHotelDetail == null || mHotelDetail.getImageUrl() == null)
+		{
+			return 0;
+		}
+		
 		return mHotelDetail.getImageUrl().size();
 	}
 }

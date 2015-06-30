@@ -23,6 +23,7 @@ public class HotelDetail implements Parcelable
 	private Map<String, List<String>> mSpecification = new HashMap<String, List<String>>();
 	private List<String> mImageUrl = new ArrayList<String>();
 	private int mSaleIdx;
+	public boolean isOverseas;
 
 	public HotelDetail()
 	{
@@ -42,6 +43,7 @@ public class HotelDetail implements Parcelable
 		dest.writeMap(mSpecification);
 		dest.writeList(mImageUrl);
 		dest.writeInt(mSaleIdx);
+		dest.writeInt(isOverseas ? 1 : 0);
 
 	}
 
@@ -53,6 +55,7 @@ public class HotelDetail implements Parcelable
 		in.readMap(mSpecification, Map.class.getClassLoader());
 		in.readList(mImageUrl, List.class.getClassLoader());
 		mSaleIdx = in.readInt();
+		isOverseas = in.readInt() == 1 ? true : false;
 	}
 
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()

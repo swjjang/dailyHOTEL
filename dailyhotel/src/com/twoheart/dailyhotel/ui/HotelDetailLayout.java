@@ -69,11 +69,6 @@ public class HotelDetailLayout
 		layoutParams.height = mImageHeight;
 	}
 
-	private void initHotelDetailLayout(HotelDetail hotelDetail)
-	{
-
-	}
-
 	public View getView()
 	{
 		return mViewRoot;
@@ -95,8 +90,6 @@ public class HotelDetailLayout
 
 		if (hotelDetail != null)
 		{
-			initHotelDetailLayout(hotelDetail);
-
 			mImageAdapter.setData(hotelDetail.getImageUrl());
 			mViewPager.setAdapter(mImageAdapter);
 			mListView.setAdapter(mListAdapter);

@@ -1,10 +1,12 @@
 package com.twoheart.dailyhotel.util.network.request;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
 import android.util.Base64;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -49,6 +51,16 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
 	protected Map<String, String> getParams()
 	{
 		return mParameters;
+	}
+	
+	@Override
+	public Map<String, String> getHeaders() throws AuthFailureError
+	{
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("ostype", "android");
+		map.put("version", VERSION);
+		
+		return map;
 	}
 
 	public static String getUrlEncoder(final String url)

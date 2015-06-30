@@ -124,7 +124,7 @@ public class LoopViewPager extends ViewPager
 	{
 		mOuterPageChangeListener = listener;
 	};
-
+	
 	public LoopViewPager(Context context)
 	{
 		super(context);
