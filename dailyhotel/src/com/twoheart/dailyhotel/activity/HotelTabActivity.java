@@ -564,6 +564,8 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 
 				int saleIdx = jsonData.getInt("idx");
 				hotelDetail.setSaleIdx(saleIdx);
+				
+				hotelDetail.isOverseas = jsonData.getInt("is_overseas");
 
 				loadFragments();
 			} catch (Exception e)

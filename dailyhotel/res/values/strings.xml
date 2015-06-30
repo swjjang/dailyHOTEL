@@ -280,8 +280,8 @@
     <string name="act_booking_chkin_info">체크인 정보</string>
     <string name="act_booking_chkin">체크인</string>
     <string name="act_booking_chkout">체크아웃</string>
-    <string name="act_booking_reserver_info">예약자 정보</string>
-    <string name="act_booking_reserver">예약자</string>
+    <string name="act_booking_reserver_info">투숙객 정보</string>
+    <string name="act_booking_reserver">투숙객</string>
     <string name="act_booking_mobile">연락처</string>
     <string name="act_booking_email">이메일</string>
     <string name="act_booking_payment">결제</string>

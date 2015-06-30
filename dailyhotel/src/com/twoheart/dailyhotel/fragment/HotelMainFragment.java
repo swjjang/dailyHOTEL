@@ -939,7 +939,7 @@ public class HotelMainFragment extends BaseFragment
 			{
 				return;
 			}
-
+			
 			lockUiComponent();
 			baseActivity.lockUiComponent();
 
@@ -956,8 +956,8 @@ public class HotelMainFragment extends BaseFragment
 			{
 				case HotelListViewItem.TYPE_ENTRY:
 				{
-//					Intent intent = new Intent(baseActivity, HotelTabActivity.class);
-					Intent intent = new Intent(baseActivity, HotelDetailActivity.class);
+					Intent intent = new Intent(baseActivity, HotelTabActivity.class);
+//					Intent intent = new Intent(baseActivity, HotelDetailActivity.class);
 
 					String region = baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
 

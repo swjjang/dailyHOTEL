@@ -384,6 +384,8 @@ public class HotelDetailActivity extends BaseActivity implements OnClickListener
 
 				int saleIdx = jsonData.getInt("idx");
 				mHotelDetail.setSaleIdx(saleIdx);
+				
+				mHotelDetail.isOverseas = jsonData.getInt("is_overseas");
 
 				if (mHotelDetailLayout != null)
 				{

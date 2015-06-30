@@ -216,7 +216,14 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	{
 		BaseActivity baseActivity = (BaseActivity) getActivity();
 
-		if (baseActivity == null || position < 0)
+		if (baseActivity == null)
+		{
+			return;
+		}
+
+		position -= mHotelListView.getHeaderViewsCount();
+		
+		if(position < 0)
 		{
 			return;
 		}

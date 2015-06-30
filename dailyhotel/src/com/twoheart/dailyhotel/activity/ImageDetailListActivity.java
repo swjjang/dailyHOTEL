@@ -111,9 +111,7 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
 			} else
 			{
 				setImageViewHeight(imageView, cachedImg);
-
 				imageView.setImageBitmap(cachedImg);
-				//				mAquery.id(imageView).image(cachedImg).animate(R.anim.fade_in);
 			}
 
 			return view;

@@ -199,7 +199,8 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
 			aquery.id(hotelImageView).image(cb).animate(R.anim.fade_in);
 		} else
 		{
-			aquery.id(hotelImageView).image(cachedImg).animate(R.anim.fade_in);
+			hotelImageView.setImageBitmap(cachedImg);
+//			aquery.id(hotelImageView).image(cachedImg).animate(R.anim.fade_in);
 		}
 
 		TextView waitAccountTextView = (TextView) view.findViewById(R.id.waitAccountTextView);
