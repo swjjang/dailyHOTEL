@@ -752,7 +752,6 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 			{
 				onError(e);
 			}
-
 		}
 	};
 }

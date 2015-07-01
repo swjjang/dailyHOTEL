@@ -62,9 +62,6 @@ public class HotelDetailActivity extends BaseActivity implements OnClickListener
 	private int mHotelIdx;
 	private int mCurrentImage;
 
-	//	private String region;
-	//	private String hotelName;
-	
 	private HotelDetailLayout mHotelDetailLayout;
 
 	private Handler mImageHandler = new Handler()

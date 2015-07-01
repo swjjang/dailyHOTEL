@@ -2,39 +2,52 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/hotelTitleLaout"
     android:layout_width="match_parent"
-    android:layout_height="56dp"
+    android:layout_height="256dp"
     android:background="@color/white"
-    android:gravity="center_vertical" >
+    android:orientation="vertical" >
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/selectarea_underline" />
 
     <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:background="@color/black"
-        android:gravity="center"
-        android:paddingBottom="1px"
-        android:paddingLeft="5.5dp"
-        android:paddingRight="5.5dp"
-        android:paddingTop="2px"
-        android:text="특급"
-        android:textColor="@android:color/white"
-        android:textSize="11.5dp" />
-
-    <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-        android:layout_width="wrap_content"
+        android:id="@+id/hotelAddressTextView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="20dp"
-        android:ellipsize="marquee"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="20dp"
+        android:drawableLeft="@drawable/info_ic_map_small"
+        android:drawablePadding="5dp"
+        android:ellipsize="end"
         android:freezesText="true"
-        android:gravity="center_vertical"
-        android:marqueeRepeatLimit="marquee_forever"
-        android:scrollHorizontally="true"
         android:singleLine="true"
-        android:text="토스카나 호텔3"
-        android:textColor="@android:color/black"
-        android:textSize="18dp"
-        android:textStyle="bold" />
+        android:text="부산광역시 해운대구해변로 217"
+        android:textColor="@color/hoteldetail_contents_text_color"
+        android:textSize="12dp" />
+
+    <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+        android:id="@+id/hotelSimpleLocationTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
+        android:ellipsize="end"
+        android:freezesText="true"
+        android:singleLine="true"
+        android:text="부2호선 해운대역 7번출구 도보 12분"
+        android:textColor="@color/hoteldetail_contents_text_color"
+        android:textSize="12dp" />
+
+    <fragment
+        android:id="@+id/googleMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        class="com.google.android.gms.maps.SupportMapFragment" />
 
 </LinearLayout>

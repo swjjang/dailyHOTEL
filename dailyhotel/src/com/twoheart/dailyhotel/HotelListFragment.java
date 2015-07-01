@@ -225,6 +225,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		
 		if(position < 0)
 		{
+			refreshHotelList(mSelectedProvince, true);
 			return;
 		}
 

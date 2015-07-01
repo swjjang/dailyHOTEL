@@ -8,10 +8,43 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <RelativeLayout
+        android:id="@+id/bottomLayout"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_alignParentBottom="true" >
+
+        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            android:id="@+id/btn_hotel_tab_booking"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/actionbar_hamburger"
+            android:gravity="center"
+            android:text="객실선택"
+            android:textColor="@android:color/white"
+            android:textSize="20dp" />
+
+        <com.twoheart.dailyhotel.widget.DailyCustomFontButton
+            android:id="@+id/tv_hotel_tab_soldout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/dh_btn_soldout"
+            android:gravity="center_vertical|center"
+            android:padding="0dp"
+            android:visibility="gone" />
+    </RelativeLayout>
+
     <com.twoheart.dailyhotel.ui.HotelDetailListView
         android:id="@+id/hotelListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@id/bottomLayout"
+        android:fadingEdge="none"
+        android:fadingEdgeLength="0dp"
+        android:cacheColorHint="#00000000"
+        android:overScrollMode="never"
         android:divider="@null" />
 
     <include

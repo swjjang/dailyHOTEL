@@ -160,7 +160,6 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 		if (isFinish == true)
 		{
 			mToolbar.setNavigationIcon(R.drawable.back);
-
 			mToolbar.setNavigationOnClickListener(new View.OnClickListener()
 			{
 				@Override
@@ -179,26 +178,31 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 
 	public void setActionBarBackgroundVisible(boolean visible)
 	{
-		if (mToolbar != null)
+		if (mToolbar == null)
 		{
-			mToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
-			setSupportActionBar(mToolbar);
+			return;
 		}
+
+		View view = findViewById(R.id.toolbar_actionbarUnderLine);
 
 		if (visible == true)
 		{
-			mToolbar.setTitleTextColor(getResources().getColor(R.color.actionbar_title));
-			mToolbar.setBackgroundColor(getResources().getColor(R.color.white));
+			if (view.getVisibility() != View.VISIBLE)
+			{
+				mToolbar.setTitleTextColor(getResources().getColor(R.color.actionbar_title));
+				mToolbar.setBackgroundColor(getResources().getColor(R.color.white));
 
-			View view = findViewById(R.id.toolbar_actionbarUnderLine);
-			view.setVisibility(View.VISIBLE);
+				view.setVisibility(View.VISIBLE);
+			}
 		} else
 		{
-			mToolbar.setTitleTextColor(android.R.color.transparent);
-			mToolbar.setBackgroundColor(android.R.color.transparent);
+			if (view.getVisibility() != View.INVISIBLE)
+			{
+				mToolbar.setTitleTextColor(android.R.color.transparent);
+				mToolbar.setBackgroundColor(android.R.color.transparent);
 
-			View view = findViewById(R.id.toolbar_actionbarUnderLine);
-			view.setVisibility(View.INVISIBLE);
+				view.setVisibility(View.INVISIBLE);
+			}
 		}
 	}
 

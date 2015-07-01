@@ -97,5 +97,9 @@
 	<color name="selectarea_text_group">#858585</color>
 	<color name="selectarea_background_child">#f0f0f0</color>
 	<color name="selectarea_underline">#e1e0e0</color>
-
+	
+	<!-- New Hotel Detail -->
+	<color name="hoteldetail_contents_text_color">#1c1c1c</color>
+	
+	
 </resources>	
