@@ -1,8 +1,11 @@
 package com.twoheart.dailyhotel.ui;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -17,6 +20,7 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.android.volley.Request.Method;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -30,7 +34,11 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.HotelDetailActivity;
 import com.twoheart.dailyhotel.adapter.HotelDetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.model.HotelDetail;
+import com.twoheart.dailyhotel.util.ABTestPreference;
+import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 /**
  * 호텔 상세 정보 화면
@@ -93,6 +101,11 @@ public class HotelDetailLayout
 
 	public void setHotelDetail(HotelDetail hotelDetail, int imagePosition)
 	{
+		if (hotelDetail == null)
+		{
+			return;
+		}
+
 		mHotelDetail = hotelDetail;
 
 		if (mImageAdapter == null)
@@ -100,23 +113,43 @@ public class HotelDetailLayout
 			mImageAdapter = new HotelDetailImageViewPagerAdapter(mActivity);
 		}
 
+		mImageAdapter.setData(hotelDetail.getImageUrl());
+		mViewPager.setAdapter(mImageAdapter);
+
 		if (mListAdapter == null)
 		{
 			mListAdapter = new HotelDetailListAdapter((FragmentActivity) mActivity);
+			mListView.setAdapter(mListAdapter);
 		}
 
-		if (hotelDetail != null)
+		setCurrentImage(imagePosition);
+
+		if (mOnUserActionListener != null)
 		{
-			mImageAdapter.setData(hotelDetail.getImageUrl());
-			mViewPager.setAdapter(mImageAdapter);
-			mListView.setAdapter(mListAdapter);
+			mOnUserActionListener.startAutoSlide();
+		}
 
-			setCurrentImage(imagePosition);
+		// 호텔 sold out시
+		View bookingView = mViewRoot.findViewById(R.id.bookingTextView);
+		View soldoutView = mViewRoot.findViewById(R.id.soldoutTextView);
 
-			if (mOnUserActionListener != null)
+		if (hotelDetail.getHotel().getAvailableRoom() == 0)
+		{
+			bookingView.setVisibility(View.GONE);
+			soldoutView.setVisibility(View.VISIBLE);
+		} else
+		{
+			bookingView.setVisibility(View.VISIBLE);
+			bookingView.setOnClickListener(new View.OnClickListener()
 			{
-				mOnUserActionListener.startAutoSlide();
-			}
+				@Override
+				public void onClick(View v)
+				{
+					//객실 애니매이션 시작.
+				}
+			});
+
+			soldoutView.setVisibility(View.GONE);
 		}
 	}
 
@@ -224,6 +257,7 @@ public class HotelDetailLayout
 					if (mDeatilView[4] == null)
 					{
 						mDeatilView[4] = layoutInflater.inflate(R.layout.list_row_detail05, parent, false);
+						getDeatil04View(mDeatilView[4]);
 					}
 					break;
 
@@ -231,6 +265,7 @@ public class HotelDetailLayout
 					if (mDeatilView[5] == null)
 					{
 						mDeatilView[5] = layoutInflater.inflate(R.layout.list_row_detail06, parent, false);
+
 					}
 					break;
 
@@ -238,6 +273,7 @@ public class HotelDetailLayout
 					if (mDeatilView[6] == null)
 					{
 						mDeatilView[6] = layoutInflater.inflate(R.layout.list_row_detail07, parent, false);
+						getDeatil06View(mDeatilView[6]);
 					}
 					break;
 			}
@@ -297,6 +333,54 @@ public class HotelDetailLayout
 
 					CameraPosition cameraPosition = new CameraPosition.Builder().target(latlng).zoom(15).build();
 					googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+				}
+			});
+
+			return view;
+		}
+
+		private View getDeatil03View(View view)
+		{
+
+			return view;
+		}
+
+		private View getDeatil04View(View view)
+		{
+			View moreInfoView = view.findViewById(R.id.moreInfoView);
+			moreInfoView.setOnClickListener(new View.OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+					if (mOnUserActionListener != null)
+					{
+						mOnUserActionListener.viewMoreInfomation();
+					}
+				}
+			});
+			
+			return view;
+		}
+
+		private View getDeatil05View(View view)
+		{
+			return view;
+		}
+
+		private View getDeatil06View(View view)
+		{
+			// 카톡 1:1 실시간 상담
+			View consultKakaoView = view.findViewById(R.id.kakaoImageView);
+			consultKakaoView.setOnClickListener(new View.OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+					if (mOnUserActionListener != null)
+					{
+						mOnUserActionListener.doKakaotalkConsult();
+					}
 				}
 			});
 

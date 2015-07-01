@@ -11,19 +11,19 @@
         android:layout_height="1px"
         android:background="@color/selectarea_underline" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical" >
+        android:layout_marginBottom="14dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="14dp" >
 
         <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="24dp"
-            android:text="카카오톡 문의"
+            android:layout_centerVertical="true"
+            android:text="무엇을 도와드릴까요?"
             android:textColor="@color/hoteldetail_contents_text_color"
             android:textSize="15dp"
             android:textStyle="bold" />
@@ -32,11 +32,9 @@
             android:id="@+id/kakaoImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="24dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:src="@drawable/info_btn_kakao" />
-    </LinearLayout>
+    </RelativeLayout>
 
 </LinearLayout>

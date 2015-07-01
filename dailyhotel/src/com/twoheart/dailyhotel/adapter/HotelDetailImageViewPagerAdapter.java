@@ -14,7 +14,6 @@ import android.widget.ImageView.ScaleType;
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.androidquery.callback.BitmapAjaxCallback;
-import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.VolleyImageLoader;
 

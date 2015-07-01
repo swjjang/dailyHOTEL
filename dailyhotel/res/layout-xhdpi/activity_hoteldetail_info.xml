@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <include
+        android:id="@+id/toolbar_actionbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        layout="@layout/toolbar_default" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignBaseline="@id/toolbar_actionbar"
+        android:layout_alignBottom="@id/toolbar_actionbar"
+        android:background="@color/actionbar_underline" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar_actionbar" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginTop="5dp"
+                    android:src="@drawable/info_ic_text_dot" />
+
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:freezesText="true"
+                    android:text="체크인: 15:00 | 체크아웃: 12:00"
+                    android:textColor="@color/dh_theme_color"
+                    android:textSize="13dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginTop="5dp"
+                    android:src="@drawable/info_ic_text_dot" />
+
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:freezesText="true"
+                    android:text="2인 기준 객실"
+                    android:textColor="@color/dh_theme_color"
+                    android:textSize="13dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginTop="5dp"
+                    android:src="@drawable/info_ic_text_dot" />
+
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:freezesText="true"
+                    android:text="추가비용안내"
+                    android:textColor="@color/hoteldetail_contents_text_color"
+                    android:textSize="13dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="33dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                android:freezesText="true"
+                android:lineSpacingExtra="10dp"
+                android:text="기준인원 외 인원추가 불가\n침구추가: 48,4000원 현장결\n엑스트라베드: 48,400원 현장결제"
+                android:textColor="@color/hoteldetail_contents_text_color"
+                android:textSize="13dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginTop="5dp"
+                    android:src="@drawable/info_ic_text_dot" />
+
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:freezesText="true"
+                    android:text="객실정보"
+                    android:textColor="@color/hoteldetail_contents_text_color"
+                    android:textSize="13dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="33dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                android:freezesText="true"
+                android:lineSpacingExtra="10dp"
+                android:text="전망 (시티뷰, 오션뷰)\n무료 WiFi\n객실내 기본 Bath Amentiy 구비 (칫솔 및 치약제외)\n46인치 스마트TV, 다리미, 헤어드라이어, 목용가운"
+                android:textColor="@color/hoteldetail_contents_text_color"
+                android:textSize="13dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginTop="5dp"
+                    android:src="@drawable/info_ic_text_dot" />
+
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:freezesText="true"
+                    android:text="부대시설안내"
+                    android:textColor="@color/hoteldetail_contents_text_color"
+                    android:textSize="13dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="33dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                android:freezesText="true"
+                android:lineSpacingExtra="10dp"
+                android:text="휘트니스센터 및 대수영장 무료 이용\n그랜드 사우나 50% 할인\n로비라운지, 뷔페레스토랑, 중식당"
+                android:textColor="@color/hoteldetail_contents_text_color"
+                android:textSize="13dp" />
+            
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginTop="5dp"
+                    android:src="@drawable/info_ic_text_dot" />
+
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:freezesText="true"
+                    android:text="조식정보"
+                    android:textColor="@color/hoteldetail_contents_text_color"
+                    android:textSize="13dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="33dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                android:freezesText="true"
+                android:lineSpacingExtra="10dp"
+                android:text="31,000원 현장결제(성인)\n18,000원 현장결제(소인)"
+                android:textColor="@color/hoteldetail_contents_text_color"
+                android:textSize="13dp" />
+            
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginTop="5dp"
+                    android:src="@drawable/info_ic_text_dot" />
+
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:freezesText="true"
+                    android:text="기타사항"
+                    android:textColor="@color/hoteldetail_contents_text_color"
+                    android:textSize="13dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="33dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                android:freezesText="true"
+                android:lineSpacingExtra="10dp"
+                android:text="전 객실 금연입니다.\n객실 내 반려동물 동반 불가합니다.\n타 할인 및 카드제휴 할인 등 중복할인 불가합니다."
+                android:textColor="@color/hoteldetail_contents_text_color"
+                android:textSize="13dp" />
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

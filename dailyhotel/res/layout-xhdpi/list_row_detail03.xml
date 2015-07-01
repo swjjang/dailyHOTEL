@@ -26,7 +26,7 @@
         android:singleLine="true"
         android:text="부산광역시 해운대구해변로 217"
         android:textColor="@color/hoteldetail_contents_text_color"
-        android:textSize="12dp" />
+        android:textSize="13dp" />
 
     <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
         android:id="@+id/hotelSimpleLocationTextView"
@@ -42,7 +42,7 @@
         android:singleLine="true"
         android:text="부2호선 해운대역 7번출구 도보 12분"
         android:textColor="@color/hoteldetail_contents_text_color"
-        android:textSize="12dp" />
+        android:textSize="13dp" />
 
     <fragment
         android:id="@+id/googleMapFragment"

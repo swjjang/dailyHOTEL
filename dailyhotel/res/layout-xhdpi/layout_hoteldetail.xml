@@ -15,17 +15,18 @@
         android:layout_alignParentBottom="true" >
 
         <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-            android:id="@+id/btn_hotel_tab_booking"
+            android:id="@+id/bookingTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/actionbar_hamburger"
             android:gravity="center"
             android:text="객실선택"
             android:textColor="@android:color/white"
-            android:textSize="20dp" />
+            android:textSize="20dp"
+            android:visibility="gone" />
 
         <com.twoheart.dailyhotel.widget.DailyCustomFontButton
-            android:id="@+id/tv_hotel_tab_soldout"
+            android:id="@+id/soldoutTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentBottom="true"

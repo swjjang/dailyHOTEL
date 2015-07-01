@@ -35,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="5dp"
             android:src="@drawable/info_ic_text_dot" />
 
         <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
@@ -45,7 +45,7 @@
             android:freezesText="true"
             android:text="부산 해운대의 바다정원이 펼쳐진 특1급 호텔"
             android:textColor="@color/hoteldetail_contents_text_color"
-            android:textSize="12dp" />
+            android:textSize="13dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -59,7 +59,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="5dp"
             android:src="@drawable/info_ic_text_dot" />
 
         <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
@@ -69,7 +69,7 @@
             android:freezesText="true"
             android:text="총 3만 1천 여평의 면적 내 고품격 321개의 객실"
             android:textColor="@color/hoteldetail_contents_text_color"
-            android:textSize="12dp" />
+            android:textSize="13dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -84,7 +84,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="5dp"
             android:src="@drawable/info_ic_text_dot" />
 
         <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
@@ -94,7 +94,7 @@
             android:freezesText="true"
             android:text="시원한 해운대 바람과 함께 편안한 휴식 되시길 바랍니다."
             android:textColor="@color/hoteldetail_contents_text_color"
-            android:textSize="12dp" />
+            android:textSize="13dp" />
     </LinearLayout>
 
 </LinearLayout>

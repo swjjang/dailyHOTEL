@@ -18,21 +18,21 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.Hotel.HotelGrade;
 import com.twoheart.dailyhotel.model.HotelDetail;
@@ -49,10 +49,10 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseLis
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
-public class HotelDetailActivity extends BaseActivity implements OnClickListener
+public class HotelDetailActivity extends BaseActivity
 {
 	private static final int DURATION_HOTEL_IMAGE_SHOW = 4000;
-	
+
 	private HotelDetail mHotelDetail;
 	private SaleTime mSaleTime;
 
@@ -75,7 +75,7 @@ public class HotelDetailActivity extends BaseActivity implements OnClickListener
 
 			mCurrentImage = mHotelDetailLayout.getCurrentImage();
 			mCurrentImage++;
-			
+
 			mHotelDetailLayout.setCurrentImage(mCurrentImage);
 			sendEmptyMessageDelayed(0, DURATION_HOTEL_IMAGE_SHOW);
 		}
@@ -88,12 +88,18 @@ public class HotelDetailActivity extends BaseActivity implements OnClickListener
 		public void hideActionBar();
 
 		public void onClickImage(HotelDetail hotelDetail);
-		
+
 		public void startAutoSlide();
-		
+
 		public void stopAutoSlide();
-		
+
 		public void onSelectedImagePosition(int position);
+
+		public void doBooking();
+
+		public void doKakaotalkConsult();
+		
+		public void viewMoreInfomation();
 	};
 
 	@Override
@@ -163,44 +169,24 @@ public class HotelDetailActivity extends BaseActivity implements OnClickListener
 		String params = String.format("?hotel_idx=%d&sday=%s", mHotelDetail.getHotel().getIdx(), mSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
 
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_DETAIL).append(params).toString(), null, mHotelDetailJsonResponseListener, this));
-		
+
 		super.onResume();
 	}
-	
+
 	@Override
 	protected void onPause()
 	{
 		mOnUserActionListener.stopAutoSlide();
-		
+
 		super.onPause();
 	}
-	
+
 	@Override
 	protected void onDestroy()
 	{
 		mOnUserActionListener.stopAutoSlide();
-		
+
 		super.onDestroy();
-	}
-
-	@Override
-	public void onClick(View v)
-	{
-		if (v.getId() == mBookingButton.getId())
-		{
-			if (isLockUiComponent(true) == true)
-			{
-				return;
-			}
-
-			lockUI();
-
-			chgClickable(mBookingButton, false); // 7.2 난타 방지
-
-			mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, this));
-
-			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestBooking", mHotelDetail.getHotel().getName(), (long) mHotelIdx);
-		}
 	}
 
 	@Override
@@ -208,26 +194,36 @@ public class HotelDetailActivity extends BaseActivity implements OnClickListener
 	{
 		releaseUiComponent();
 
-		chgClickable(mBookingButton, true); // 7.2 난타 방지
-		if (requestCode == CODE_REQUEST_ACTIVITY_BOOKING)
+		switch (requestCode)
 		{
-			setResult(resultCode);
-
-			if (resultCode == RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_SALES_CLOSED || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_NOT_ONSALE)
+			case CODE_REQUEST_ACTIVITY_BOOKING:
 			{
-				finish();
+				setResult(resultCode);
+
+				if (resultCode == RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_SALES_CLOSED || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_NOT_ONSALE)
+				{
+					finish();
+				}
+				break;
 			}
-		} else if (requestCode == CODE_REQUEST_ACTIVITY_LOGIN)
-		{
-			if (resultCode == RESULT_OK)
-				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, this));
+
+			case CODE_REQUEST_ACTIVITY_LOGIN:
+			case CODE_REQUEST_ACTIVITY_USERINFO_UPDATE:
+			{
+				if (resultCode == RESULT_OK)
+				{
+					mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, this));
+				}
+				break;
+			}
 		}
 
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
-	// 예약화면으로 넘어가기 전에 로그인이 필요함.
-	// 로그인 화면을 띄움.
+	/**
+	 * 예약화면으로 넘어가기 전에 로그인이 필요함. 로그인 화면을 띄움.
+	 */
 	private void loadLoginProcess()
 	{
 		DailyToast.showToast(this, R.string.toast_msg_please_login, Toast.LENGTH_LONG);
@@ -236,6 +232,43 @@ public class HotelDetailActivity extends BaseActivity implements OnClickListener
 		startActivityForResult(i, CODE_REQUEST_ACTIVITY_LOGIN);
 
 		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+	}
+
+	private void moveToBooking()
+	{
+		Intent i = new Intent(HotelDetailActivity.this, BookingActivity.class);
+		i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELDETAIL, mHotelDetail);
+		i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, mHotelIdx);
+		i.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mSaleTime);
+
+		startActivityForResult(i, CODE_REQUEST_ACTIVITY_BOOKING);
+		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+	}
+
+	private void moveToUserInfoUpdate(Customer user)
+	{
+		Intent i = new Intent(HotelDetailActivity.this, SignupActivity.class);
+		i.putExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER, user);
+
+		startActivityForResult(i, CODE_REQUEST_ACTIVITY_USERINFO_UPDATE);
+		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+	}
+
+	private boolean isEmptyTextField(String... fieldText)
+	{
+
+		for (int i = 0; i < fieldText.length; i++)
+		{
+			if (isEmptyTextField(fieldText[i]) == true)
+				return true;
+		}
+
+		return false;
+	}
+
+	private boolean isEmptyTextField(String fieldText)
+	{
+		return (TextUtils.isEmpty(fieldText) == true || fieldText.equals("null") == true || fieldText.trim().length() == 0);
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -289,6 +322,58 @@ public class HotelDetailActivity extends BaseActivity implements OnClickListener
 		public void onSelectedImagePosition(int position)
 		{
 			mCurrentImage = position;
+		}
+
+		@Override
+		public void doBooking()
+		{
+			if (isLockUiComponent(true) == true)
+			{
+				return;
+			}
+
+			lockUI();
+
+			mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, HotelDetailActivity.this));
+
+			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestBooking", mHotelDetail.getHotel().getName(), (long) mHotelIdx);
+		}
+
+		@Override
+		public void doKakaotalkConsult()
+		{
+			if (isLockUiComponent() == true || isFinishing() == true)
+			{
+				return;
+			}
+
+			lockUiComponent();
+
+			try
+			{
+				startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/@%EB%8D%B0%EC%9D%BC%EB%A6%AC%ED%98%B8%ED%85%94")));
+			} catch (ActivityNotFoundException e)
+			{
+				try
+				{
+					startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
+				} catch (ActivityNotFoundException e1)
+				{
+					Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+					marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
+					startActivity(marketLaunch);
+				}
+			}
+		}
+
+		@Override
+		public void viewMoreInfomation()
+		{
+			Intent intent = new Intent(HotelDetailActivity.this, HotelDetailInfoActivity.class);
+			intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELDETAIL, mHotelDetail);
+			startActivity(intent);
+			
+			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 		}
 	};
 
@@ -381,7 +466,7 @@ public class HotelDetailActivity extends BaseActivity implements OnClickListener
 
 				int saleIdx = jsonData.getInt("idx");
 				mHotelDetail.setSaleIdx(saleIdx);
-				
+
 				mHotelDetail.isOverseas = jsonData.getInt("is_overseas");
 
 				if (mHotelDetailLayout != null)
@@ -460,19 +545,14 @@ public class HotelDetailActivity extends BaseActivity implements OnClickListener
 			}
 
 			if ("alive".equalsIgnoreCase(result) == true)
-			{ // session alive
-
-				Intent i = new Intent(HotelDetailActivity.this, BookingActivity.class);
-				i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELDETAIL, mHotelDetail);
-				i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, mHotelIdx);
-				i.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mSaleTime);
-
-				startActivityForResult(i, CODE_REQUEST_ACTIVITY_BOOKING);
-				overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+			{
+				// session alive
+				// 사용자 정보 요청.
+				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, HotelDetailActivity.this));
 
 			} else if ("dead".equalsIgnoreCase(result) == true)
-			{ // session dead
-
+			{
+				// session dead
 				// 재로그인
 				if (sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false))
 				{
@@ -501,6 +581,48 @@ public class HotelDetailActivity extends BaseActivity implements OnClickListener
 			} else
 			{
 				onError();
+			}
+		}
+	};
+
+	private DailyHotelJsonResponseListener mUserInfoJsonResponseListener = new DailyHotelJsonResponseListener()
+	{
+
+		@Override
+		public void onResponse(String url, JSONObject response)
+		{
+			try
+			{
+				if (response == null)
+				{
+					throw new NullPointerException("response == null");
+				}
+
+				Customer user = new Customer();
+				user.setEmail(response.getString("email"));
+				user.setName(response.getString("name"));
+				user.setPhone(response.getString("phone"));
+				user.setAccessToken(response.getString("accessToken"));
+				user.setUserIdx(response.getString("idx"));
+
+				// 페이스북 유저
+				if (isEmptyTextField(user.getAccessToken()) == false)
+				{
+					if (isEmptyTextField(new String[] { user.getEmail(), user.getPhone(), user.getName() }) == false)
+					{
+						moveToBooking();
+					} else
+					{
+						// 정보 업데이트 화면으로 이동.
+						moveToUserInfoUpdate(user);
+					}
+				} else
+				{
+					moveToBooking();
+				}
+			} catch (Exception e)
+			{
+				onError(e);
 			}
 		}
 	};

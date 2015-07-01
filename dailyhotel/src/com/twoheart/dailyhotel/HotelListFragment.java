@@ -62,7 +62,6 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListe
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
-import com.twoheart.dailyhotel.widget.DailyFloatingActionButton;
 import com.twoheart.dailyhotel.widget.DailyHotelHeaderTransformer;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView;
 

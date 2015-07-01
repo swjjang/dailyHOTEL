@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="5dp"
             android:src="@drawable/info_ic_text_dot" />
 
         <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
@@ -43,7 +43,7 @@
             android:freezesText="true"
             android:text="체크인: 15:00 | 체크아웃: 12:00"
             android:textColor="@color/hoteldetail_contents_text_color"
-            android:textSize="12dp" />
+            android:textSize="13dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -57,7 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="5dp"
             android:src="@drawable/info_ic_text_dot" />
 
         <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
@@ -67,7 +67,7 @@
             android:freezesText="true"
             android:text="객실 내 기본 Bath Amenity 구비(칫솔 및 치약 제외)"
             android:textColor="@color/hoteldetail_contents_text_color"
-            android:textSize="12dp" />
+            android:textSize="13dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -81,7 +81,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="5dp"
             android:src="@drawable/info_ic_text_dot" />
 
         <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
@@ -91,7 +91,7 @@
             android:freezesText="true"
             android:text="휘트니스센터 및 대수영장 무료 이용"
             android:textColor="@color/hoteldetail_contents_text_color"
-            android:textSize="12dp" />
+            android:textSize="13dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -105,7 +105,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="5dp"
             android:src="@drawable/info_ic_text_dot" />
 
         <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
@@ -115,17 +115,18 @@
             android:freezesText="true"
             android:text="그랜드 사우나 50% 할인"
             android:textColor="@color/hoteldetail_contents_text_color"
-            android:textSize="12dp" />
+            android:textSize="13dp" />
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/imageView1"
+        android:id="@+id/moreInfoView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="10dp"
         android:src="@drawable/info_btn_more" />
 
 </LinearLayout>
