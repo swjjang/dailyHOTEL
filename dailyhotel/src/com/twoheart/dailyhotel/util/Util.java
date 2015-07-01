@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.util;
 import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -19,6 +20,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.provider.Settings.Secure;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
@@ -191,5 +193,17 @@ public class Util implements Constants
 		DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
 
 		return displayMetrics.heightPixels;
+	}
+
+	public static boolean isNameCharacter(String text)
+	{
+		boolean result = false;
+
+		if (TextUtils.isEmpty(text) == false)
+		{
+			result = Pattern.matches("^[a-zA-Z\\s.'-]+$", text);
+		}
+
+		return result;
 	}
 }

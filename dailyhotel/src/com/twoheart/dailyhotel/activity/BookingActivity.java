@@ -38,6 +38,7 @@ import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
 import android.text.Html;
 import android.text.InputFilter;
+import android.text.InputType;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -82,6 +83,7 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.StringFilter;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
@@ -159,6 +161,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			mHotelIdx = bundle.getInt(NAME_INTENT_EXTRA_DATA_HOTELIDX);
 			mSaleTime = bundle.getParcelable(NAME_INTENT_EXTRA_DATA_SALETIME);
 		}
+
+		//		mPay.getHotelDetail().isOverseas = 1;
 
 		mIsChangedPay = false;
 
@@ -347,9 +351,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			}
 
 			Guest guest = mPay.getGuest();
-			guest.name = etReserverName.getText().toString();
-			guest.phone = etReserverNumber.getText().toString();
-			guest.email = etReserverEmail.getText().toString();
+			guest.name = etReserverName.getText().toString().trim();
+			guest.phone = etReserverNumber.getText().toString().trim();
+			guest.email = etReserverEmail.getText().toString().trim();
 
 			if (mIsEditMode == true)
 			{
@@ -376,19 +380,15 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					DailyToast.showToast(BookingActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
 					return;
 				}
-				//				else
-				//				{ //
-				//					Map<String, String> updateParams = new HashMap<String, String>();
-				//					updateParams.put("user_email", buyer.getEmail());
-				//					updateParams.put("user_name", buyer.getName());
-				//					updateParams.put("user_phone", buyer.getPhone());
-				//
-				//					ExLog.e("FACEBOOK UPDATE : " + updateParams.toString());
-				//
-				//					lockUI();
-				//
-				//					mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_UPDATE_FACEBOOK).toString(), updateParams, mUserUpdateFacebookJsonResponseListener, this));
-				//				}
+
+				if (mPay.getHotelDetail().isOverseas == 1)
+				{
+					Editor editor = sharedPreference.edit();
+					editor.putString(KEY_PREFERENCE_OVERSEAS_NAME, guest.name);
+					editor.putString(KEY_PREFERENCE_OVERSEAS_PHONE, guest.phone);
+					editor.putString(KEY_PREFERENCE_OVERSEAS_EMAIL, guest.email);
+					editor.commit();
+				}
 			}
 
 			//호텔 가격이 xx 이하인 이벤트 호텔에서는 적립금 사용을 못하게 막음. 
@@ -1234,6 +1234,27 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		}).show();
 	}
 
+	//	private void showRequestEnglishName()
+	//	{
+	//		if (isFinishing() == true)
+	//		{
+	//			return;
+	//		}
+	//
+	//		String title = getString(R.string.dialog_notice2);
+	//		String msg = getString(R.string.dialog_msg_request_english_name);
+	//		String positive = getString(R.string.dialog_btn_text_confirm);
+	//
+	//		SimpleAlertDialog.build(BookingActivity.this, title, msg, positive, new DialogInterface.OnClickListener()
+	//		{
+	//			@Override
+	//			public void onClick(DialogInterface dialog, int which)
+	//			{
+	//				etReserverName.requestFocus();
+	//			}
+	//		}).show();
+	//	}
+
 	private void writeLogPaid(Pay pay)
 	{
 		try
@@ -1344,30 +1365,43 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			mIsEditMode = true;
 			view.setVisibility(View.INVISIBLE);
 
-			Guest guest = mPay.getGuest();
-
 			// 이름.
-			etReserverName.setEnabled(true);
-			etReserverName.setText(guest.name);
-
-			// 회원 가입시 이름 필터 적용.
-			StringFilter stringFilter = new StringFilter(BookingActivity.this);
-			InputFilter[] allowAlphanumericHangul = new InputFilter[1];
-			allowAlphanumericHangul[0] = stringFilter.allowAlphanumericHangul;
-
-			etReserverName.setFilters(allowAlphanumericHangul);
-
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+			if (etReserverName.isEnabled() == false)
 			{
-				etReserverName.setBackground(mEditTextBackground[0]);
-			} else
-			{
-				etReserverName.setBackgroundDrawable(mEditTextBackground[0]);
+				etReserverName.setEnabled(true);
+
+				if (mPay.getHotelDetail().isOverseas == 1)
+				{
+					// 회원 가입시 이름 필터 적용.
+					StringFilter stringFilter = new StringFilter(BookingActivity.this);
+					InputFilter[] allowAlphanumericName = new InputFilter[1];
+					allowAlphanumericName[0] = stringFilter.allowAlphanumericName;
+
+					etReserverName.setFilters(allowAlphanumericName);
+				} else
+				{
+					etReserverName.setEnabled(true);
+
+					// 회원 가입시 이름 필터 적용.
+					StringFilter stringFilter = new StringFilter(BookingActivity.this);
+					InputFilter[] allowAlphanumericHangul = new InputFilter[1];
+					allowAlphanumericHangul[0] = stringFilter.allowAlphanumericHangul;
+
+					etReserverName.setFilters(allowAlphanumericHangul);
+					etReserverName.setInputType(InputType.TYPE_CLASS_TEXT);
+				}
+
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+				{
+					etReserverName.setBackground(mEditTextBackground[0]);
+				} else
+				{
+					etReserverName.setBackgroundDrawable(mEditTextBackground[0]);
+				}
 			}
 
 			// 전화번호.
 			etReserverNumber.setEnabled(true);
-			etReserverNumber.setText(guest.phone);
 
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
 			{
@@ -1380,7 +1414,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			// 이메일.
 
 			etReserverEmail.setEnabled(true);
-			etReserverEmail.setText(guest.email);
 
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
 			{
@@ -1477,124 +1510,52 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				mPay.setCustomer(buyer);
 				mPay.setGuest(guest);
 
-				/**
-				 * 텍스트 필드가 하나라도 비어있으면 해당 정보를 입력 받도록 함.
-				 */
-				//				if (isEmptyTextField(new String[] { buyer.getEmail(), buyer.getPhone(), buyer.getName() }) == false)
-				//				{
-				//					etReserverName.setEnabled(false);
-				//					etReserverNumber.setEnabled(false);
-				//					etReserverEmail.setEnabled(false);
-				//
-				//					etReserverName.setBackgroundResource(0);
-				//					etReserverNumber.setBackgroundResource(0);
-				//					etReserverEmail.setBackgroundResource(0);
+				// 해외 호텔인 경우.
+				if (mPay.getHotelDetail().isOverseas == 1)
+				{
+					String overseasName = sharedPreference.getString(KEY_PREFERENCE_OVERSEAS_NAME, guest.name);
+					String overseasPhone = sharedPreference.getString(KEY_PREFERENCE_OVERSEAS_PHONE, guest.phone);
+					String overseasEmail = sharedPreference.getString(KEY_PREFERENCE_OVERSEAS_EMAIL, guest.email);
 
-				etReserverName.setText(guest.name);
-				etReserverNumber.setText(guest.phone);
-				etReserverEmail.setText(guest.email);
+					guest.name = overseasName;
+					guest.phone = overseasPhone;
+					guest.email = overseasEmail;
 
-				//					mIsEditMode = false;
-				//				} 
-				//				else
-				//				{
-				//					ExLog.e("buyer :" + buyer.getName() + " / " + buyer.getPhone() + " / " + buyer.getEmail());
-				//
-				//					if (isEmptyTextField(buyer.getName()) == false)
-				//					{
-				//						etReserverName.setEnabled(false);
-				//						etReserverName.setBackgroundResource(0);
-				//						etReserverName.setText(buyer.getName());
-				//					} else
-				//					{
-				//						etReserverName.setEnabled(true);
-				//
-				//						// 회원 가입시 이름 필터 적용.
-				//						StringFilter stringFilter = new StringFilter(BookingActivity.this);
-				//						InputFilter[] allowAlphanumericHangul = new InputFilter[1];
-				//						allowAlphanumericHangul[0] = stringFilter.allowAlphanumericHangul;
-				//
-				//						etReserverName.setFilters(allowAlphanumericHangul);
-				//
-				//						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-				//						{
-				//							etReserverName.setBackground(mEditTextBackground[0]);
-				//						} else
-				//						{
-				//							etReserverName.setBackgroundDrawable(mEditTextBackground[0]);
-				//						}
-				//
-				//						etReserverName.setText(buyer.getName());
-				//
-				//						mIsEditMode = true;
-				//					}
-				//
-				//					if (isEmptyTextField(buyer.getPhone()) == false)
-				//					{
-				//						etReserverNumber.setEnabled(false);
-				//						etReserverNumber.setBackgroundResource(0);
-				//						etReserverNumber.setText(buyer.getPhone());
-				//					} else
-				//					{
-				//						TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
-				//
-				//						etReserverNumber.setText(telephonyManager.getLine1Number());
-				//
-				//						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-				//						{
-				//							etReserverNumber.setBackground(mEditTextBackground[1]);
-				//						} else
-				//						{
-				//							etReserverNumber.setBackgroundDrawable(mEditTextBackground[1]);
-				//						}
-				//
-				//						etReserverNumber.setEnabled(true);
-				//
-				//						mIsEditMode = true;
-				//					}
-				//
-				//					if (isEmptyTextField(buyer.getEmail()) == false)
-				//					{
-				//						etReserverEmail.setEnabled(false);
-				//						etReserverEmail.setBackgroundResource(0);
-				//						etReserverEmail.setText(buyer.getEmail());
-				//					} else
-				//					{
-				//						etReserverEmail.setEnabled(true);
-				//
-				//						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-				//						{
-				//							etReserverEmail.setBackground(mEditTextBackground[2]);
-				//						} else
-				//						{
-				//							etReserverEmail.setBackgroundDrawable(mEditTextBackground[2]);
-				//						}
-				//
-				//						etReserverEmail.setText(buyer.getEmail());
-				//
-				//						etReserverEmail.setOnEditorActionListener(new OnEditorActionListener()
-				//						{
-				//
-				//							@Override
-				//							public boolean onEditorAction(TextView textView, int actionId, KeyEvent event)
-				//							{
-				//								if (actionId == EditorInfo.IME_ACTION_DONE)
-				//								{
-				//									textView.clearFocus();
-				//
-				//									InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-				//									imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
-				//									return true;
-				//								} else
-				//								{
-				//									return false;
-				//								}
-				//							}
-				//						});
-				//
-				//						mIsEditMode = true;
-				//					}
-				//				}
+					if (Util.isNameCharacter(overseasName) == false)
+					{
+						mIsEditMode = true;
+
+						guest.name = "";
+						etReserverName.setText("");
+						etReserverName.setEnabled(true);
+
+						// 회원 가입시 이름 필터 적용.
+						StringFilter stringFilter = new StringFilter(BookingActivity.this);
+						InputFilter[] allowAlphanumericName = new InputFilter[1];
+						allowAlphanumericName[0] = stringFilter.allowAlphanumericName;
+
+						etReserverName.setFilters(allowAlphanumericName);
+
+						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+						{
+							etReserverName.setBackground(mEditTextBackground[0]);
+						} else
+						{
+							etReserverName.setBackgroundDrawable(mEditTextBackground[0]);
+						}
+					} else
+					{
+						etReserverName.setText(overseasName);
+					}
+
+					etReserverNumber.setText(overseasPhone);
+					etReserverEmail.setText(overseasEmail);
+				} else
+				{
+					etReserverName.setText(guest.name);
+					etReserverNumber.setText(guest.phone);
+					etReserverEmail.setText(guest.email);
+				}
 
 				// SailIndex가 0인 경우에 서버에 이슈가 발생할수 있다.
 				// 0인 경우 아마도 메모리에서 정보가 삭제되어 발생한듯 하다.
@@ -1605,7 +1566,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				} else
 				{
 					// 체크인 정보 요청
-					//				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_CHECKIN).append('/').append(mPay.getHotelDetail().getSaleIdx()).toString(), null, mReserveCheckInJsonResponseListener, BookingActivity.this));
 					mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_CHECKINOUT).append('/').append(mPay.getHotelDetail().getSaleIdx()).toString(), null, mReserveCheckInJsonResponseListener, BookingActivity.this));
 				}
 			} catch (Exception e)
