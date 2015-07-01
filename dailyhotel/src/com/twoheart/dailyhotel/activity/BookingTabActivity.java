@@ -66,8 +66,8 @@ public class BookingTabActivity extends BaseActivity
 		{
 			booking = (Booking) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_BOOKING);
 		}
-		
-		if(booking == null)
+
+		if (booking == null)
 		{
 			Util.restartApp(this);
 			return;
@@ -241,7 +241,7 @@ public class BookingTabActivity extends BaseActivity
 					{
 						case 100:
 						{
-							String msg = response.getString("");
+							String msg = response.getString("msg");
 							DailyToast.showToast(BookingTabActivity.this, msg, Toast.LENGTH_SHORT);
 							break;
 						}
@@ -253,7 +253,7 @@ public class BookingTabActivity extends BaseActivity
 								return;
 							}
 
-							String msg = response.getString("");
+							String msg = response.getString("msg");
 							AlertDialog alertDlg = SimpleAlertDialog.build(BookingTabActivity.this, null, msg, getString(R.string.dialog_btn_text_confirm), null, null, null).create();
 							alertDlg.show();
 							break;
@@ -298,7 +298,7 @@ public class BookingTabActivity extends BaseActivity
 
 				int saleIdx = jsonObject.getInt("idx");
 				mHotelDetail.setSaleIdx(saleIdx);
-				
+
 				loadFragments();
 			} catch (Exception e)
 			{

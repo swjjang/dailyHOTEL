@@ -265,7 +265,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 				} else
 				{
 					viewHolder.img.setImageBitmap(cachedImg);
-//					aquery.id(viewHolder.img).image(cachedImg).animate(R.anim.fade_in);
+					//					aquery.id(viewHolder.img).image(cachedImg).animate(R.anim.fade_in);
 				}
 
 				// 객실이 1~2 개일때 label 표시

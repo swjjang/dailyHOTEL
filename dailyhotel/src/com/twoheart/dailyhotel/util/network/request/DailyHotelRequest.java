@@ -52,14 +52,14 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
 	{
 		return mParameters;
 	}
-	
+
 	@Override
 	public Map<String, String> getHeaders() throws AuthFailureError
 	{
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("ostype", "android");
 		map.put("version", VERSION);
-		
+
 		return map;
 	}
 
@@ -193,14 +193,15 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
 		return decodeUrl;
 	}
 
-	//			public static void makeUrlEncoder()
-	//			{
-	//				String test = null;
+	//		public static void makeUrlEncoder()
+	//		{
+	//			String test = null;
+	//	
+	//			test = DailyHotelRequest.getUrlEncoder("api/user/session/update/fb_user");
 	//				
 	//				test = DailyHotelRequest.getUrlEncoder("api/hotel/detail");
 	//				test = DailyHotelRequest.getUrlEncoder("api/abtest/testcase");
 	//				test = DailyHotelRequest.getUrlEncoder("api/abtest/kakao/consult/feedback");
-
 	//
 	//		test = DailyHotelRequest.getUrlEncoder("api/abtest/kakao/consult");
 	//
@@ -282,5 +283,5 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
 	//		test = DailyHotelRequest.getUrlEncoder("http://policies.dailyhotel.co.kr/terms/");
 	//		test = DailyHotelRequest.getUrlEncoder("http://policies.dailyhotel.co.kr/about/");
 	//		
-	//			}
+	//		}
 }

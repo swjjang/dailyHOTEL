@@ -194,7 +194,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 		super.onResume();
 	}
-	
+
 	@Override
 	public void onDestroyView()
 	{
@@ -207,7 +207,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 		showActionBar(baseActivity);
 		setActionBarAnimationLock(true);
-		
+
 		super.onDestroyView();
 	}
 
@@ -222,8 +222,8 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		}
 
 		position -= mHotelListView.getHeaderViewsCount();
-		
-		if(position < 0)
+
+		if (position < 0)
 		{
 			refreshHotelList(mSelectedProvince, true);
 			return;

@@ -39,7 +39,7 @@ public class Province implements Parcelable
 		{
 			saleWeek = 1;
 		}
-		
+
 		isOverseas = jsonObject.getBoolean("is_overseas");
 	}
 
@@ -60,7 +60,7 @@ public class Province implements Parcelable
 		dest.writeString(name);
 		dest.writeInt(sequence);
 		dest.writeInt(saleWeek);
-		dest.writeInt(isOverseas ? 1: 0);
+		dest.writeInt(isOverseas ? 1 : 0);
 	}
 
 	@Override

@@ -36,7 +36,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
-import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.text.InputFilter;
 import android.text.SpannableStringBuilder;

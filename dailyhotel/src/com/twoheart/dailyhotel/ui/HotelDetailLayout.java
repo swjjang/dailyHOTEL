@@ -365,11 +365,11 @@ public class HotelDetailLayout
 				mStatusBarHeight = rect.top;
 			}
 
-			if(mHotelTitleLaout == null)
+			if (mHotelTitleLaout == null)
 			{
 				return;
 			}
-			
+
 			Rect rect = new Rect();
 			mHotelTitleLaout.getGlobalVisibleRect(rect);
 
@@ -392,8 +392,8 @@ public class HotelDetailLayout
 					}
 				}
 			}
-			
-			if(mHotelGradeTextView == null)
+
+			if (mHotelGradeTextView == null)
 			{
 				return;
 			}
