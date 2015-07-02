@@ -152,6 +152,11 @@ public class WebViewActivity extends BaseActivity implements OnLongClickListener
 		@Override
 		public boolean onJsAlert(WebView view, String url, String message, final android.webkit.JsResult result)
 		{
+			if (isFinishing() == true)
+			{
+				return true;
+			}
+
 			new AlertDialog.Builder(view.getContext()).setTitle(getString(R.string.dialog_notice2)).setMessage(message).setPositiveButton(android.R.string.ok, new AlertDialog.OnClickListener()
 			{
 				public void onClick(DialogInterface dialog, int which)
