@@ -78,7 +78,6 @@
             android:layout_marginTop="10dp"
             android:hint="@string/act_signup_code"
             android:inputType="number"
-            android:maxLength="7"
             android:paddingLeft="10dp"
             android:singleLine="true"
             android:textColorHint="@color/textView_textColor_disabled" />
