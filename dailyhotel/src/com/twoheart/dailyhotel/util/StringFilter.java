@@ -22,6 +22,7 @@ public class StringFilter
 	private static final int ALLOW_ALPHANUMERIC = 0;
 	private static final int ALLOW_ALPHANUMERIC_HANGUL = 1;
 	private static final int ALLOW_ALPHANUMERIC_NAME = 2;
+	private static final int ALLOW_NUMERIC = 3;
 
 	private BaseActivity mActivity;
 
@@ -58,6 +59,14 @@ public class StringFilter
 		}
 	};
 
+	public InputFilter allowNumeric = new InputFilter()
+	{
+		public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend)
+		{
+			return filteredString(source, start, end, ALLOW_NUMERIC);
+		}
+	};
+
 	// Returns the string result which is filtered by the given mode
 	private CharSequence filteredString(CharSequence source, int start, int end, int mode)
 	{
@@ -75,6 +84,10 @@ public class StringFilter
 
 			case ALLOW_ALPHANUMERIC_NAME:
 				pattern = Pattern.compile("^[a-zA-Z\\s.'-]+$");
+				break;
+
+			case ALLOW_NUMERIC:
+				pattern = Pattern.compile("^[0-9]+$");
 				break;
 		}
 
@@ -101,6 +114,10 @@ public class StringFilter
 
 					case ALLOW_ALPHANUMERIC_NAME:
 						DailyToast.showToast(mActivity, mActivity.getString(R.string.toast_msg_input_error_alphanum_name), Toast.LENGTH_SHORT);
+						break;
+
+					case ALLOW_NUMERIC:
+						DailyToast.showToast(mActivity, mActivity.getString(R.string.toast_msg_input_error_numeric), Toast.LENGTH_SHORT);
 						break;
 				}
 

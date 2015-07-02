@@ -93,6 +93,7 @@
     <string name="toast_msg_input_error_alphanum">영문, 숫자만 입력 가능합니다.</string>
     <string name="toast_msg_input_error_alphanumeric_hangul">영문, 숫자, 한글만 입력 가능합니다.</string>
     <string name="toast_msg_input_error_alphanum_name">해외 호텔 체크인시에는 영문으로만 입력 가능합니다.</string>
+    <string name="toast_msg_input_error_numeric">숫자만 입력 가능합니다.</string>
 
     <!-- Dialog Messages -->
 
@@ -368,6 +369,8 @@
 
     <!-- HotelTab Activity -->
     <string name="act_hotel_tab_btn">예약하기</string>
+    <string name="act_hotel_search_room">객실찾기</string>
+    <string name="act_hotel_booking">예약진행</string>
 
     <!-- Error Fragment -->
     <string name="frag_error_network_unavail">네트워크 연결이 끊어졌습니다.</string>

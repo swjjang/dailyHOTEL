@@ -109,6 +109,13 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
 		etName.setFilters(allowAlphanumericHangul);
 
+		// 추천인 코드 필터 적용
+		StringFilter numberFilter = new StringFilter(SignupActivity.this);
+		InputFilter[] allowNumeric = new InputFilter[1];
+		allowNumeric[0] = numberFilter.allowNumeric;
+
+		etRecommender.setFilters(allowNumeric);
+
 		etPhone = (EditText) findViewById(R.id.et_signup_phone);
 		tvTerm = (TextView) findViewById(R.id.tv_signup_agreement);
 		tvPrivacy = (TextView) findViewById(R.id.tv_signup_personal_info);

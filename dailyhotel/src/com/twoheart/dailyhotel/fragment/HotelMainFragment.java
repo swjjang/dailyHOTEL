@@ -90,6 +90,8 @@ public class HotelMainFragment extends BaseFragment
 
 		public void selectDay(HotelListFragment fragment, boolean isListSelectionTop);
 
+		public void onChangedDay(HotelListFragment fragment);
+
 		public void toggleViewType();
 
 		public void onClickActionBarArea();
@@ -939,7 +941,7 @@ public class HotelMainFragment extends BaseFragment
 			{
 				return;
 			}
-			
+
 			lockUiComponent();
 			baseActivity.lockUiComponent();
 
@@ -956,8 +958,8 @@ public class HotelMainFragment extends BaseFragment
 			{
 				case HotelListViewItem.TYPE_ENTRY:
 				{
-					Intent intent = new Intent(baseActivity, HotelTabActivity.class);
-//					Intent intent = new Intent(baseActivity, HotelDetailActivity.class);
+					//					Intent intent = new Intent(baseActivity, HotelTabActivity.class);
+					Intent intent = new Intent(baseActivity, HotelDetailActivity.class);
 
 					String region = baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
 
@@ -1058,6 +1060,22 @@ public class HotelMainFragment extends BaseFragment
 			intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, mSelectedProvince);
 			intent.putParcelableArrayListExtra(NAME_INTENT_EXTRA_DATA_AREAITEMLIST, mAreaItemList);
 			startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SELECT_AREA);
+		}
+
+		@Override
+		public void onChangedDay(HotelListFragment fragment)
+		{
+			if (fragment == null)
+			{
+				return;
+			}
+
+			// 선택탭의 이름을 수정한다.
+			SaleTime saleTime = fragment.getSaleTime();
+			String day = getString(R.string.label_format_tabday, saleTime.getDailyDay(), saleTime.getDailyDayOftheWeek());
+
+			mTabIndicator.setSubTextEnable(2, true);
+			mTabIndicator.setSubText(2, day);
 		}
 	};
 

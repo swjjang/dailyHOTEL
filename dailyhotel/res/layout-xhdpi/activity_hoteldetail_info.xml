@@ -253,6 +253,7 @@
                 android:layout_marginLeft="33dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
                 android:freezesText="true"
                 android:lineSpacingExtra="10dp"
                 android:text="전 객실 금연입니다.\n객실 내 반려동물 동반 불가합니다.\n타 할인 및 카드제휴 할인 등 중복할인 불가합니다."

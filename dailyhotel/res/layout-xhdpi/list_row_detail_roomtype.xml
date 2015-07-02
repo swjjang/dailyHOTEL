@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="92dp" >
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/selectarea_underline" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:orientation="vertical"
+        android:paddingLeft="5dp"
+        android:paddingRight="12dp" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp" >
+
+            <com.twoheart.dailyhotel.widget.DailyCustomFontRadioButton
+                android:id="@+id/radioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:button="@drawable/abc_btn_radio_material"
+                android:buttonTint="@color/dh_theme_color"
+                android:clickable="false"
+                android:duplicateParentState="true" />
+
+            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                android:id="@+id/hotelNameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="7dp"
+                android:layout_toRightOf="@id/radioButton"
+                android:text="비치뷰 더블"
+                android:textColor="@color/black"
+                android:textSize="15dp"
+                android:textStyle="bold" />
+
+            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                android:id="@+id/priceTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="99,000원"
+                android:textColor="@color/dh_theme_color"
+                android:textSize="15dp"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="44dp"
+            android:layout_marginTop="4dp"
+            android:orientation="vertical" >
+
+            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                android:id="@+id/simpleInfoTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/hotelNameTextView"
+                android:ellipsize="end"
+                android:lines="1"
+                android:singleLine="true"
+                android:text="더블베드1 / 10평 / 2인기준 / 인원추가불가 / 흡연실 / 취사불가"
+                android:textColor="@color/hoteldetail_contents_text_color"
+                android:textSize="12dp" />
+
+            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                android:id="@+id/specialTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/simpleInfoTextView"
+                android:layout_marginTop="6dp"
+                android:text="14층 Executive Lounge 2인 혜택"
+                android:textColor="@color/dh_theme_color"
+                android:textSize="12dp"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp" >
+
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                    android:id="@+id/optionTextView01"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="7dp"
+                    android:background="@drawable/ic_room_view_tag"
+                    android:text="오션뷰"
+                    android:textColor="@color/white"
+                    android:textSize="11dp" />
+
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                    android:id="@+id/optionTextView02"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="7dp"
+                    android:background="@drawable/ic_room_view_tag"
+                    android:text="조식2인"
+                    android:textColor="@color/white"
+                    android:textSize="11dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

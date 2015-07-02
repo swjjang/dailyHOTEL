@@ -163,7 +163,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 			line2Layout.setVisibility(View.GONE);
 			daysMiddleLine.setVisibility(View.GONE);
 
-			for (int i = 0; i < DEFAULT_LINE_COUNT; i++)
+			for (int i = 0; i < DAY_OF_TOTALCOUNT; i++)
 			{
 				if (visibleCount > i)
 				{
@@ -192,9 +192,15 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 			}
 		}
 
-		if (mSelectedView == null)
+		if (mSelectedView == null || mSelectedView.getVisibility() != View.VISIBLE)
 		{
 			setSelectedDays(mDaysView[0]);
+			mSaleTime = (SaleTime) mDaysView[0].getTag();
+
+			if (mUserActionListener != null)
+			{
+				mUserActionListener.onChangedDay(this);
+			}
 		} else
 		{
 			setSelectedDays(mSelectedView);

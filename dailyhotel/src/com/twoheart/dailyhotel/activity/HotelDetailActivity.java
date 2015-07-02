@@ -26,8 +26,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
@@ -56,8 +54,6 @@ public class HotelDetailActivity extends BaseActivity
 	private HotelDetail mHotelDetail;
 	private SaleTime mSaleTime;
 
-	private Button mSoldOutButton;
-	private TextView mBookingButton;
 	private String mRegion;
 	private int mHotelIdx;
 	private int mCurrentImage;
@@ -98,8 +94,12 @@ public class HotelDetailActivity extends BaseActivity
 		public void doBooking();
 
 		public void doKakaotalkConsult();
-		
+
 		public void viewMoreInfomation();
+
+		public void showRoomType();
+
+		public void hideRoomType();
 	};
 
 	@Override
@@ -139,7 +139,6 @@ public class HotelDetailActivity extends BaseActivity
 			setContentView(mHotelDetailLayout.getView());
 
 			setActionBar(hotel.getName());
-
 			mOnUserActionListener.hideActionBar();
 
 			//			btnSoldOut = (Button) findViewById(R.id.tv_hotel_tab_soldout);
@@ -187,6 +186,23 @@ public class HotelDetailActivity extends BaseActivity
 		mOnUserActionListener.stopAutoSlide();
 
 		super.onDestroy();
+	}
+
+	@Override
+	public void onBackPressed()
+	{
+		if (mHotelDetailLayout != null)
+		{
+			switch (mHotelDetailLayout.getBookingStatus())
+			{
+				case HotelDetailLayout.STATUS_BOOKING:
+				case HotelDetailLayout.STATUS_NONE:
+					mOnUserActionListener.hideRoomType();
+					return;
+			}
+		}
+
+		super.onBackPressed();
 	}
 
 	@Override
@@ -372,8 +388,26 @@ public class HotelDetailActivity extends BaseActivity
 			Intent intent = new Intent(HotelDetailActivity.this, HotelDetailInfoActivity.class);
 			intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELDETAIL, mHotelDetail);
 			startActivity(intent);
-			
+
 			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+		}
+
+		@Override
+		public void showRoomType()
+		{
+			if (mHotelDetailLayout != null)
+			{
+				mHotelDetailLayout.showAnimationRoomType();
+			}
+		}
+
+		@Override
+		public void hideRoomType()
+		{
+			if (mHotelDetailLayout != null)
+			{
+				mHotelDetailLayout.hideAnimationRoomType();
+			}
 		}
 	};
 
