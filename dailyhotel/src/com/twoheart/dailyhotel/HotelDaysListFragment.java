@@ -192,14 +192,19 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 			}
 		}
 
-		if (mSelectedView == null || mSelectedView.getVisibility() != View.VISIBLE)
+		if (mSelectedView == null)
 		{
 			setSelectedDays(mDaysView[0]);
-			mSaleTime = (SaleTime) mDaysView[0].getTag();
+			
+		} else if(mSelectedView.getVisibility() != View.VISIBLE)
+		{
+			setSelectedDays(mDaysView[0]);
+			
+			super.setSaleTime((SaleTime) mSelectedView.getTag());
 
 			if (mUserActionListener != null)
 			{
-				mUserActionListener.onChangedDay(this);
+				mUserActionListener.selectDay(this, true);
 			}
 		} else
 		{

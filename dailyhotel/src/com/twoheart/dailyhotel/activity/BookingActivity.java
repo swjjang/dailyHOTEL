@@ -162,8 +162,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			mSaleTime = bundle.getParcelable(NAME_INTENT_EXTRA_DATA_SALETIME);
 		}
 
-		//		mPay.getHotelDetail().isOverseas = 1;
-
 		mIsChangedPay = false;
 
 		setActionBar(mPay.getHotelDetail().getHotel().getName());
@@ -207,7 +205,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		rbPaymentAccount = (RadioButton) findViewById(R.id.rb_payment_account);
 		rbPaymentCard = (RadioButton) findViewById(R.id.rb_payment_card);
 		rbPaymentHp = (RadioButton) findViewById(R.id.rb_payment_hp);
-
 		mCardManagerButton = findViewById(R.id.cardManagerButton);
 		mCardManagerButton.setOnClickListener(this);
 

@@ -124,6 +124,8 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 		etRecommender.setFilters(fArray);
 
 		etPhone = (EditText) findViewById(R.id.et_signup_phone);
+		etPhone.setFilters(allowNumeric);
+		
 		tvTerm = (TextView) findViewById(R.id.tv_signup_agreement);
 		tvPrivacy = (TextView) findViewById(R.id.tv_signup_personal_info);
 		btnSignUp = (TextView) findViewById(R.id.btn_signup);
@@ -132,21 +134,21 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 		{
 			mUserIdx = user.getUserIdx();
 
-			if (TextUtils.isEmpty(user.getPhone()) == false)
+			if (isEmptyTextField(user.getPhone()) == false)
 			{
 				etPhone.setText(user.getPhone());
 				etPhone.setEnabled(false);
 				etPhone.setFocusable(false);
 			}
 
-			if (TextUtils.isEmpty(user.getEmail()) == false)
+			if (isEmptyTextField(user.getEmail()) == false)
 			{
 				etEmail.setText(user.getEmail());
 				etEmail.setEnabled(false);
 				etEmail.setFocusable(false);
 			}
 
-			if (TextUtils.isEmpty(user.getName()) == false)
+			if (isEmptyTextField(user.getName()) == false)
 			{
 				etName.setText(user.getName());
 				etName.setEnabled(false);
@@ -155,13 +157,14 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
 			etPwd.setVisibility(View.GONE);
 			btnSignUp.setText(R.string.act_signup_btn_update);
+		} else
+		{
+			getPhoneNumber();
 		}
 
 		tvTerm.setOnClickListener(this);
 		tvPrivacy.setOnClickListener(this);
 		btnSignUp.setOnClickListener(this);
-
-		getPhoneNumber();
 
 		mMixpanel = MixpanelAPI.getInstance(this, "791b366dadafcd37803f6cd7d8358373");
 	}
@@ -360,6 +363,11 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 	{
 		mMixpanel.flush();
 		super.onDestroy();
+	}
+	
+	private boolean isEmptyTextField(String fieldText)
+	{
+		return (TextUtils.isEmpty(fieldText) == true || fieldText.equals("null") == true || fieldText.trim().length() == 0);
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////

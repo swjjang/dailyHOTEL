@@ -15,15 +15,20 @@ public class HotelImageFragmentPagerAdapter extends FragmentPagerAdapter
 
 	private HotelTabActivity.OnUserActionListener mOnUserActionListener;
 
-	public HotelImageFragmentPagerAdapter(FragmentManager fm, HotelDetail mHotelDetail)
+	public HotelImageFragmentPagerAdapter(FragmentManager fm, HotelDetail hotelDetail)
 	{
 		super(fm);
-		this.mHotelDetail = mHotelDetail;
+		this.mHotelDetail = hotelDetail;
 	}
 
 	public void setOnUserActionListener(HotelTabActivity.OnUserActionListener listener)
 	{
 		mOnUserActionListener = listener;
+	}
+	
+	public void setHotelDetail(HotelDetail hotelDetail)
+	{
+		mHotelDetail = hotelDetail;
 	}
 
 	@Override

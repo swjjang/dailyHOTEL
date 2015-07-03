@@ -301,7 +301,6 @@ public class HotelListMapFragment extends
 
 		mGoogleMap.clear();
 		mSelectedMarker = null;
-		mViewPager.setVisibility(View.INVISIBLE);
 
 		if (mSelectedMarker == null)
 		{
@@ -434,6 +433,8 @@ public class HotelListMapFragment extends
 			{
 				mLoadingDialog.hide();
 			}
+			
+			mViewPager.setVisibility(View.INVISIBLE);
 		}
 
 		if (mMyLocationMarker != null)
