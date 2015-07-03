@@ -125,7 +125,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
 		etPhone = (EditText) findViewById(R.id.et_signup_phone);
 		etPhone.setFilters(allowNumeric);
-		
+
 		tvTerm = (TextView) findViewById(R.id.tv_signup_agreement);
 		tvPrivacy = (TextView) findViewById(R.id.tv_signup_personal_info);
 		btnSignUp = (TextView) findViewById(R.id.btn_signup);
@@ -364,7 +364,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 		mMixpanel.flush();
 		super.onDestroy();
 	}
-	
+
 	private boolean isEmptyTextField(String fieldText)
 	{
 		return (TextUtils.isEmpty(fieldText) == true || fieldText.equals("null") == true || fieldText.trim().length() == 0);

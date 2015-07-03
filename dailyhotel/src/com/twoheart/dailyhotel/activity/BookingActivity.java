@@ -359,7 +359,14 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				if (isEmptyTextField(guest.name) == true)
 				{
 					etReserverName.requestFocus();
-					DailyToast.showToast(this, R.string.toast_msg_please_input_guest, Toast.LENGTH_SHORT);
+
+					if (mPay.getHotelDetail().isOverseas == 1)
+					{
+						DailyToast.showToast(this, R.string.toast_msg_please_input_guest_typeoverseas, Toast.LENGTH_SHORT);
+					} else
+					{
+						DailyToast.showToast(this, R.string.toast_msg_please_input_guest, Toast.LENGTH_SHORT);
+					}
 					return;
 				} else if (isEmptyTextField(guest.phone) == true)
 				{
@@ -1375,6 +1382,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					allowAlphanumericName[0] = stringFilter.allowAlphanumericName;
 
 					etReserverName.setFilters(allowAlphanumericName);
+					etReserverName.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS | etReserverName.getInputType());
 				} else
 				{
 					etReserverName.setEnabled(true);
@@ -1532,6 +1540,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 						allowAlphanumericName[0] = stringFilter.allowAlphanumericName;
 
 						etReserverName.setFilters(allowAlphanumericName);
+						etReserverName.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS | etReserverName.getInputType());
 
 						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
 						{

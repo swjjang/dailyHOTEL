@@ -195,11 +195,11 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		if (mSelectedView == null)
 		{
 			setSelectedDays(mDaysView[0]);
-			
-		} else if(mSelectedView.getVisibility() != View.VISIBLE)
+
+		} else if (mSelectedView.getVisibility() != View.VISIBLE)
 		{
 			setSelectedDays(mDaysView[0]);
-			
+
 			super.setSaleTime((SaleTime) mSelectedView.getTag());
 
 			if (mUserActionListener != null)

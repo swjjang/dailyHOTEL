@@ -433,7 +433,7 @@ public class HotelListMapFragment extends
 			{
 				mLoadingDialog.hide();
 			}
-			
+
 			mViewPager.setVisibility(View.INVISIBLE);
 		}
 

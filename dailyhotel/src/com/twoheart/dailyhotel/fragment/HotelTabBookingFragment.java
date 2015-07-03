@@ -131,7 +131,7 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 			mAdapter = new HotelImageFragmentPagerAdapter(getChildFragmentManager(), mHotelDetail);
 			mAdapter.setOnUserActionListener(mOnUserActionListener);
 		}
-		
+
 		mViewPager.setAdapter(mAdapter);
 
 		mCurrentPage = mHotelDetail.getImageUrl().size();
@@ -287,7 +287,7 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 			tvPrice.setVisibility(View.INVISIBLE);
 			tvPrice.setText(null);
 		}
-		
+
 		if (mAdapter != null)
 		{
 			mAdapter.setHotelDetail(hotelDetail);

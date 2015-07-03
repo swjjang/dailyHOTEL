@@ -25,7 +25,7 @@ public class HotelImageFragmentPagerAdapter extends FragmentPagerAdapter
 	{
 		mOnUserActionListener = listener;
 	}
-	
+
 	public void setHotelDetail(HotelDetail hotelDetail)
 	{
 		mHotelDetail = hotelDetail;
