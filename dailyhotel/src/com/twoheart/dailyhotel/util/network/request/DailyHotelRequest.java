@@ -57,8 +57,8 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
 	public Map<String, String> getHeaders() throws AuthFailureError
 	{
 		HashMap<String, String> map = new HashMap<String, String>();
-		map.put("ostype", "android");
-		map.put("version", VERSION);
+		map.put("os-type", "android");
+		map.put("app-version", VERSION);
 
 		return map;
 	}

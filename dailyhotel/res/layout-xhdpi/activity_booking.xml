@@ -296,12 +296,14 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.7"
                         android:gravity="right|center_vertical"
+                        android:inputType="textEmailAddress"
                         android:lines="1"
                         android:maxLength="50"
                         android:maxLines="1"
                         android:singleLine="true"
                         android:textColor="@drawable/selector_textview_textcolor"
                         android:textSize="15dp" />
+
                 </LinearLayout>
             </LinearLayout>
 

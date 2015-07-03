@@ -1146,6 +1146,11 @@ public class HotelDetailLayout
 							@Override
 							public boolean onMarkerClick(Marker marker)
 							{
+								if (mOnUserActionListener != null)
+								{
+									mOnUserActionListener.showMap();
+								}
+								
 								return true;
 							}
 						});
