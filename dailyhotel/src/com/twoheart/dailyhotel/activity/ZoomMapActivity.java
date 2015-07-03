@@ -6,6 +6,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -48,7 +49,9 @@ public class ZoomMapActivity extends BaseActivity
 	{
 		if (googleMap != null)
 		{
-			googleMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title(hotel_name)).showInfoWindow();
+			Marker marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title(hotel_name));
+			marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.info_ic_map_large));
+			marker.showInfoWindow();
 
 			LatLng address = new LatLng(lat, lng);
 			CameraPosition cp = new CameraPosition.Builder().target((address)).zoom(15).build();

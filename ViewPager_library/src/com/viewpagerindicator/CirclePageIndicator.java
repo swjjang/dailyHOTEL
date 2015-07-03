@@ -315,9 +315,13 @@ public class CirclePageIndicator extends View implements PageIndicator {
 
                 if (mIsDragging) {
                     mLastMotionX = x;
-                    if (mViewPager.isFakeDragging() || mViewPager.beginFakeDrag()) {
-                        mViewPager.fakeDragBy(deltaX);
-                    }
+                    
+                    try
+                    {
+                        if (mViewPager.isFakeDragging() || mViewPager.beginFakeDrag()) {
+                            mViewPager.fakeDragBy(deltaX);
+                        }
+                    }catch(Exception e){}
                 }
 
                 break;

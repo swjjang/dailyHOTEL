@@ -207,7 +207,7 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 		lockUI();
 		// 호텔 정보를 가져온다.
 
-		String params = String.format("?hotel_idx=%d&sday=%s", hotelDetail.getHotel().getIdx(), mSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
+		String params = String.format("?hotel_idx=%d&sday=%s&sale_idx=%d", hotelDetail.getHotel().getIdx(), mSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), hotelDetail.getHotel().saleIndex);
 
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_DETAIL).append(params).toString(), null, mHotelDetailJsonResponseListener, this));
 	}

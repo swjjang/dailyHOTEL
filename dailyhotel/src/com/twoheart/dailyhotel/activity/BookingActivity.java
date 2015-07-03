@@ -274,7 +274,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		{
 			lockUI();
 
-			String params = String.format("?hotel_idx=%d&sday=%s", mPay.getHotelDetail().getHotel().getIdx(), mSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
+			String params = String.format("?hotel_idx=%d&sday=%s&sale_idx=%d", mPay.getHotelDetail().getHotel().getIdx(), mSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), mPay.getHotelDetail().getSaleIdx());
 
 			mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_DETAIL).append(params).toString(), null, mHotelDetailJsonResponseListener, this));
 		}
@@ -1616,7 +1616,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 					lockUI();
 
-					String params = String.format("?hotel_idx=%d&sday=%s", mPay.getHotelDetail().getHotel().getIdx(), mSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
+					String params = String.format("?hotel_idx=%d&sday=%s&sale_idx=%d", mPay.getHotelDetail().getHotel().getIdx(), mSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), mPay.getHotelDetail().getSaleIdx());
 
 					// 호텔 디테일 정보 재 요청
 					mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_DETAIL).append(params).toString(), null, mFinalCheckPayJsonResponseListener, BookingActivity.this));
@@ -2286,7 +2286,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 							lockUI();
 
 							// 호텔 디테일 정보 재 요청
-							String params = String.format("?hotel_idx=%d&sday=%s", mPay.getHotelDetail().getHotel().getIdx(), mSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
+							String params = String.format("?hotel_idx=%d&sday=%s&sale_idx=%d", mPay.getHotelDetail().getHotel().getIdx(), mSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), mPay.getHotelDetail().getSaleIdx());
 
 							mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_DETAIL).append(params).toString(), null, mHotelDetailJsonResponseListener, BookingActivity.this));
 						}

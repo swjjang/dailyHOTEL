@@ -43,7 +43,6 @@ import com.twoheart.dailyhotel.HotelListFragment;
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.WaitTimerFragment;
-import com.twoheart.dailyhotel.activity.HotelDetailActivity;
 import com.twoheart.dailyhotel.activity.HotelTabActivity;
 import com.twoheart.dailyhotel.activity.SelectAreaActivity;
 import com.twoheart.dailyhotel.model.Area;
@@ -958,8 +957,8 @@ public class HotelMainFragment extends BaseFragment
 			{
 				case HotelListViewItem.TYPE_ENTRY:
 				{
-					//					Intent intent = new Intent(baseActivity, HotelTabActivity.class);
-					Intent intent = new Intent(baseActivity, HotelDetailActivity.class);
+					Intent intent = new Intent(baseActivity, HotelTabActivity.class);
+					//					Intent intent = new Intent(baseActivity, HotelDetailActivity.class);
 
 					String region = baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
 

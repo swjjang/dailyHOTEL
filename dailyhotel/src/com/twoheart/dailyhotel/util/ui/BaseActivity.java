@@ -104,7 +104,18 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 				}
 			}
 		};
+	}
 
+	@Override
+	protected void onSaveInstanceState(Bundle outState)
+	{
+		try
+		{
+			super.onSaveInstanceState(outState);
+		} catch (Exception e)
+		{
+			ExLog.d(e.toString());
+		}
 	}
 
 	@Override

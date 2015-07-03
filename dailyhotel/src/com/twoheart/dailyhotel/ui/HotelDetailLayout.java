@@ -10,7 +10,6 @@ import android.os.Build;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.text.TextUtils.TruncateAt;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -29,6 +28,8 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -274,20 +275,20 @@ public class HotelDetailLayout
 
 	private void selectRoomType(View view)
 	{
-		for (View roomView : mRoomTypeView)
-		{
-			TextView textView = (TextView) roomView.findViewById(R.id.simpleInfoTextView);
-
-			if (roomView == view)
-			{
-				roomView.setSelected(true);
-				textView.setEllipsize(TruncateAt.MARQUEE);
-			} else
-			{
-				roomView.setSelected(false);
-				textView.setEllipsize(TruncateAt.END);
-			}
-		}
+		//		for (View roomView : mRoomTypeView)
+		//		{
+		//			TextView textView = (TextView) roomView.findViewById(R.id.simpleInfoTextView);
+		//
+		//			if (roomView == view)
+		//			{
+		//				roomView.setSelected(true);
+		//				textView.setEllipsize(TruncateAt.MARQUEE);
+		//			} else
+		//			{
+		//				roomView.setSelected(false);
+		//				textView.setEllipsize(TruncateAt.END);
+		//			}
+		//		}
 	}
 
 	private void setBookingStatus(int status)
@@ -985,6 +986,7 @@ public class HotelDetailLayout
 	private class HotelDetailListAdapter extends BaseAdapter
 	{
 		private FragmentActivity mFragmentActivity;
+		private GoogleMap mGoogleMap;
 
 		public HotelDetailListAdapter(FragmentActivity activity)
 		{
@@ -1110,7 +1112,7 @@ public class HotelDetailLayout
 			return view;
 		}
 
-		private View getDetail02View(View view, HotelDetail hotelDetail)
+		private View getDetail02View(final View view, HotelDetail hotelDetail)
 		{
 			// 주소지
 			TextView hotelAddressTextView = (TextView) view.findViewById(R.id.hotelAddressTextView);
@@ -1122,20 +1124,56 @@ public class HotelDetailLayout
 			// 맵
 			SupportMapFragment mapFragment = (SupportMapFragment) mFragmentActivity.getSupportFragmentManager().findFragmentById(R.id.googleMapFragment);
 
-			mapFragment.getMapAsync(new OnMapReadyCallback()
+			if (mGoogleMap == null)
 			{
-				@Override
-				public void onMapReady(GoogleMap googleMap)
+				mapFragment.getMapAsync(new OnMapReadyCallback()
 				{
-					LatLng latlng = new LatLng(mHotelDetail.getLatitude(), mHotelDetail.getLongitude());
+					@Override
+					public void onMapReady(GoogleMap googleMap)
+					{
+						mGoogleMap = googleMap;
 
-					Marker marker = googleMap.addMarker(new MarkerOptions().position(latlng));
-					marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.info_ic_map_large));
+						final LatLng latlng = new LatLng(mHotelDetail.getLatitude(), mHotelDetail.getLongitude());
 
-					CameraPosition cameraPosition = new CameraPosition.Builder().target(latlng).zoom(15).build();
-					googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-				}
-			});
+						Marker marker = googleMap.addMarker(new MarkerOptions().position(latlng));
+						marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.info_ic_map_large));
+
+						CameraPosition cameraPosition = new CameraPosition.Builder().target(latlng).zoom(15).build();
+						googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+						mGoogleMap.setOnMarkerClickListener(new OnMarkerClickListener()
+						{
+							@Override
+							public boolean onMarkerClick(Marker marker)
+							{
+								return true;
+							}
+						});
+
+						mGoogleMap.getUiSettings().setAllGesturesEnabled(false);
+						mGoogleMap.setOnMapClickListener(new OnMapClickListener()
+						{
+							@Override
+							public void onMapClick(LatLng latlng)
+							{
+								if (mOnUserActionListener != null)
+								{
+									mOnUserActionListener.showMap();
+								}
+							}
+						});
+					}
+				});
+			} else
+			{
+				LatLng latlng = new LatLng(mHotelDetail.getLatitude(), mHotelDetail.getLongitude());
+
+				Marker marker = mGoogleMap.addMarker(new MarkerOptions().position(latlng));
+				marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.info_ic_map_large));
+
+				CameraPosition cameraPosition = new CameraPosition.Builder().target(latlng).zoom(15).build();
+				mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+			}
 
 			return view;
 		}

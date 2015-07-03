@@ -100,6 +100,8 @@ public class HotelDetailActivity extends BaseActivity
 		public void showRoomType();
 
 		public void hideRoomType();
+
+		public void showMap();
 	};
 
 	@Override
@@ -165,7 +167,7 @@ public class HotelDetailActivity extends BaseActivity
 		lockUI();
 
 		// 호텔 정보를 가져온다.
-		String params = String.format("?hotel_idx=%d&sday=%s", mHotelDetail.getHotel().getIdx(), mSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
+		String params = String.format("?hotel_idx=%d&sday=%s&sale_idx=%d", mHotelDetail.getHotel().getIdx(), mSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), mHotelDetail.getHotel().saleIndex);
 
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_DETAIL).append(params).toString(), null, mHotelDetailJsonResponseListener, this));
 
@@ -385,6 +387,13 @@ public class HotelDetailActivity extends BaseActivity
 		@Override
 		public void viewMoreInfomation()
 		{
+			if (isLockUiComponent() == true || isFinishing() == true)
+			{
+				return;
+			}
+
+			lockUiComponent();
+
 			Intent intent = new Intent(HotelDetailActivity.this, HotelDetailInfoActivity.class);
 			intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELDETAIL, mHotelDetail);
 			startActivity(intent);
@@ -395,19 +404,53 @@ public class HotelDetailActivity extends BaseActivity
 		@Override
 		public void showRoomType()
 		{
+			if (isLockUiComponent() == true || isFinishing() == true)
+			{
+				return;
+			}
+
+			lockUiComponent();
+
 			if (mHotelDetailLayout != null)
 			{
 				mHotelDetailLayout.showAnimationRoomType();
 			}
+
+			releaseUiComponent();
 		}
 
 		@Override
 		public void hideRoomType()
 		{
+			if (isLockUiComponent() == true || isFinishing() == true)
+			{
+				return;
+			}
+
+			lockUiComponent();
+
 			if (mHotelDetailLayout != null)
 			{
 				mHotelDetailLayout.hideAnimationRoomType();
 			}
+
+			releaseUiComponent();
+		}
+
+		@Override
+		public void showMap()
+		{
+			if (isLockUiComponent() == true || isFinishing() == true)
+			{
+				return;
+			}
+
+			lockUiComponent();
+
+			Intent intent = new Intent(HotelDetailActivity.this, ZoomMapActivity.class);
+			intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELDETAIL, mHotelDetail);
+
+			startActivity(intent);
 		}
 	};
 
