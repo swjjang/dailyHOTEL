@@ -64,16 +64,41 @@ public class HotelDetailActivity extends BaseActivity
 	{
 		public void handleMessage(Message msg)
 		{
-			if (isFinishing() == true)
+			if (isFinishing() == true || mHotelDetailLayout == null)
 			{
 				return;
 			}
 
+			int direction = msg.arg1;
+
 			mCurrentImage = mHotelDetailLayout.getCurrentImage();
-			mCurrentImage++;
+
+			if (direction > 0)
+			{
+				mCurrentImage++;
+
+				//				if (mCurrentImage >= mHotelDetailLayout.getTotalImage())
+				//				{
+				//					mCurrentImage = 0;
+				//				}
+			} else if (direction < 0)
+			{
+				mCurrentImage--;
+
+				//				if (mCurrentImage < 0)
+				//				{
+				//					mCurrentImage = mHotelDetailLayout.getTotalImage() - 1;
+				//				}
+			}
 
 			mHotelDetailLayout.setCurrentImage(mCurrentImage);
-			sendEmptyMessageDelayed(0, DURATION_HOTEL_IMAGE_SHOW);
+
+			int autoSlide = msg.arg2;
+
+			if (autoSlide == 1)
+			{
+				sendEmptyMessageDelayed(0, DURATION_HOTEL_IMAGE_SHOW);
+			}
 		}
 	};
 
@@ -88,6 +113,10 @@ public class HotelDetailActivity extends BaseActivity
 		public void startAutoSlide();
 
 		public void stopAutoSlide();
+
+		public void nextSlide();
+
+		public void prevSlide();
 
 		public void onSelectedImagePosition(int position);
 
@@ -317,6 +346,8 @@ public class HotelDetailActivity extends BaseActivity
 
 			lockUiComponent();
 
+			stopAutoSlide();
+
 			Intent intent = new Intent(HotelDetailActivity.this, ImageDetailListActivity.class);
 			intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELDETAIL, hotelDetail);
 			intent.putExtra(NAME_INTENT_EXTRA_DATA_SELECTED_POSOTION, mCurrentImage);
@@ -326,14 +357,67 @@ public class HotelDetailActivity extends BaseActivity
 		@Override
 		public void startAutoSlide()
 		{
-			mImageHandler.removeMessages(0);
-			mImageHandler.sendEmptyMessageDelayed(0, DURATION_HOTEL_IMAGE_SHOW);
+			if (Util.isOverAPI11() == false)
+			{
+				Message message = mImageHandler.obtainMessage();
+				message.what = 0;
+				message.arg1 = 1; // 오른쪽으로 이동.
+				message.arg2 = 1; // 자동 
+
+				mImageHandler.removeMessages(0);
+				mImageHandler.sendMessageDelayed(message, DURATION_HOTEL_IMAGE_SHOW);
+			} else
+			{
+				mImageHandler.removeMessages(0);
+				mHotelDetailLayout.startAnimationImageView();
+			}
 		}
 
 		@Override
 		public void stopAutoSlide()
 		{
-			mImageHandler.removeMessages(0);
+			if (Util.isOverAPI11() == false)
+			{
+				mImageHandler.removeMessages(0);
+			} else
+			{
+				mImageHandler.removeMessages(0);
+				mHotelDetailLayout.stopAnimationImageView();
+			}
+		}
+
+		@Override
+		public void nextSlide()
+		{
+			ExLog.d("nextSlide");
+
+			if (Util.isOverAPI11() == true)
+			{
+				Message message = mImageHandler.obtainMessage();
+				message.what = 0;
+				message.arg1 = 1; // 오른쪽으로 이동.
+				message.arg2 = 0; // 수동
+
+				mImageHandler.removeMessages(0);
+				mImageHandler.sendMessage(message);
+			}
+		}
+
+		@Override
+		public void prevSlide()
+		{
+			ExLog.d("prevSlide");
+
+			if (Util.isOverAPI11() == true)
+			{
+				Message message = mImageHandler.obtainMessage();
+				message.what = 0;
+				message.arg1 = -1; // 왼쪽으로 이동.
+				message.arg2 = 0; // 수동
+
+				mImageHandler.removeMessages(0);
+				mImageHandler.sendMessage(message);
+			}
 		}
 
 		@Override

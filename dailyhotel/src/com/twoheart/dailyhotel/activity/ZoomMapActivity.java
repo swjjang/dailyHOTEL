@@ -34,13 +34,13 @@ public class ZoomMapActivity extends BaseActivity
 		{
 			mHotelDetail = bundle.getParcelable(NAME_INTENT_EXTRA_DATA_HOTELDETAIL);
 		}
-		
-		if(mHotelDetail == null)
+
+		if (mHotelDetail == null)
 		{
 			finish();
 			return;
 		}
-		
+
 		setActionBar(mHotelDetail.getHotel().getName());
 
 		googleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.frag_full_map)).getMap();

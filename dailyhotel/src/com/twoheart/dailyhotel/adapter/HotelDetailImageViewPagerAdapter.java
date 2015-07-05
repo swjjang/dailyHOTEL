@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,9 @@ import android.widget.ImageView.ScaleType;
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.androidquery.callback.BitmapAjaxCallback;
+import com.twoheart.dailyhotel.activity.HotelDetailActivity;
+import com.twoheart.dailyhotel.ui.AnimationImageView;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.VolleyImageLoader;
 
@@ -22,6 +26,8 @@ public class HotelDetailImageViewPagerAdapter extends PagerAdapter
 	private Context mContext;
 	private List<String> mImageUrlList;
 	private AQuery mAQuery;
+
+	private HotelDetailActivity.OnUserActionListener mOnUserActionListener;
 
 	public HotelDetailImageViewPagerAdapter(Context context)
 	{
@@ -36,13 +42,28 @@ public class HotelDetailImageViewPagerAdapter extends PagerAdapter
 	@Override
 	public Object instantiateItem(ViewGroup container, int position)
 	{
+		ExLog.d("instantiateItem : " + position);
+
 		if (mImageUrlList == null)
 		{
 			return null;
 		}
 
-		ImageView imageView = new ImageView(mContext);
-		imageView.setScaleType(ScaleType.CENTER_CROP);
+		ImageView imageView = null;
+
+		int width = Util.getLCDWidth(mContext);
+
+		if (isOverAPI11() == true)
+		{
+			imageView = new AnimationImageView(mContext, width, width);
+			((AnimationImageView) imageView).setOnAnimationListener(mOnUserActionListener);
+		} else
+		{
+			imageView = new ImageView(mContext);
+			imageView.setScaleType(ScaleType.CENTER_CROP);
+		}
+
+		imageView.setTag(position);
 
 		String url = mImageUrlList.get(position);
 
@@ -61,7 +82,9 @@ public class HotelDetailImageViewPagerAdapter extends PagerAdapter
 				protected void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status)
 				{
 					VolleyImageLoader.putCache(url, bm);
-					super.callback(url, iv, bm, status);
+					iv.setImageBitmap(bm);
+
+					//					super.callback(url, iv, bm, status);
 				}
 			};
 
@@ -69,10 +92,8 @@ public class HotelDetailImageViewPagerAdapter extends PagerAdapter
 			mAQuery.id(imageView).image(cb);
 		} else
 		{
-			mAQuery.id(imageView).image(cachedImg);
+			imageView.setImageBitmap(cachedImg);
 		}
-
-		int width = Util.getLCDWidth(mContext);
 
 		LayoutParams layoutParams = new LayoutParams(width, width);
 		container.addView(imageView, 0, layoutParams);
@@ -114,5 +135,15 @@ public class HotelDetailImageViewPagerAdapter extends PagerAdapter
 	public void destroyItem(ViewGroup container, int position, Object object)
 	{
 		container.removeView((View) object);
+	}
+
+	private boolean isOverAPI11()
+	{
+		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
+	}
+
+	public void setOnAnimationListener(HotelDetailActivity.OnUserActionListener listener)
+	{
+		mOnUserActionListener = listener;
 	}
 }

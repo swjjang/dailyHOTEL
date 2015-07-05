@@ -10,6 +10,7 @@ import android.os.Build;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v4.view.ViewPager.PageTransformer;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -41,6 +42,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.HotelDetailActivity;
 import com.twoheart.dailyhotel.adapter.HotelDetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.model.HotelDetail;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 /**
@@ -62,7 +64,7 @@ public class HotelDetailLayout
 	private HotelDetail mHotelDetail;
 	private Activity mActivity;
 	private View mViewRoot;
-	private ViewPager mViewPager;
+	private LoopViewPager mViewPager;
 	private View mHotelTitleLaout;
 	private TextView mHotelGradeTextView;
 	private TextView mActionBarTextView;
@@ -118,8 +120,9 @@ public class HotelDetailLayout
 		mListView.setOnScrollListener(mOnScrollListener);
 
 		// 이미지 ViewPage 넣기.
-		mViewPager = (ViewPager) mViewRoot.findViewById(R.id.defaultHotelImageView);
+		mViewPager = (LoopViewPager) mViewRoot.findViewById(R.id.defaultHotelImageView);
 		mViewPager.setOnPageChangeListener(mOnPageChangeListener);
+		mViewPager.setScrollDurationFactor(4);
 
 		mImageHeight = Util.getLCDWidth(context);
 		LayoutParams layoutParams = (LayoutParams) mViewPager.getLayoutParams();
@@ -169,6 +172,7 @@ public class HotelDetailLayout
 		if (mImageAdapter == null)
 		{
 			mImageAdapter = new HotelDetailImageViewPagerAdapter(mActivity);
+			mImageAdapter.setOnAnimationListener(mOnUserActionListener);
 		}
 
 		mImageAdapter.setData(hotelDetail.getImageUrl());
@@ -353,10 +357,17 @@ public class HotelDetailLayout
 
 	public void setCurrentImage(int position)
 	{
-		if (mViewPager != null)
+		if (mImageAdapter == null || mViewPager == null)
 		{
-			mViewPager.setCurrentItem(position, true);
+			return;
 		}
+
+		//		if (position < 0 || position >= mImageAdapter.getCount())
+		//		{
+		//			return;
+		//		}
+
+		mViewPager.setCurrentItem(position, true);
 	}
 
 	public int getCurrentImage()
@@ -369,9 +380,14 @@ public class HotelDetailLayout
 		return 0;
 	}
 
-	private boolean isOverAPI11()
+	public int getTotalImage()
 	{
-		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
+		if (mImageAdapter != null)
+		{
+			return mImageAdapter.getCount();
+		}
+
+		return 0;
 	}
 
 	public void setUserActionListener(HotelDetailActivity.OnUserActionListener listener)
@@ -402,6 +418,29 @@ public class HotelDetailLayout
 		}
 
 		mRoomTypeBackgroundView.setEnabled(enabled);
+	}
+
+	public void startAnimationImageView()
+	{
+		int position = mViewPager.getCurrentItem();
+
+		AnimationImageView imageView = (AnimationImageView) mViewPager.findViewWithTag(position);
+
+		if (imageView != null)
+		{
+			imageView.startAnimation();
+		}
+	}
+
+	public void stopAnimationImageView()
+	{
+		int count = mViewPager.getChildCount();
+
+		for (int i = 0; i < count; i++)
+		{
+			AnimationImageView imageView = (AnimationImageView) mViewPager.getChildAt(i);
+			imageView.stopAnimation();
+		}
 	}
 
 	private void hideRoomType()
@@ -762,34 +801,158 @@ public class HotelDetailLayout
 
 	private OnPageChangeListener mOnPageChangeListener = new OnPageChangeListener()
 	{
+		private int mSelectedPosition = -1;
+		private boolean mIsRefresh;
+		private int mDirection;
+		private int mScrollState = -1;
+		private int mScrollPosition = -1;
+
 		@Override
 		public void onPageSelected(int position)
 		{
+			ExLog.d("onPageSelected : " + position);
+			mIsRefresh = false;
+			mSelectedPosition = position;
+
 			if (mOnUserActionListener != null)
 			{
 				mOnUserActionListener.onSelectedImagePosition(position);
 			}
+
+			if (mScrollState == -1)
+			{
+				AnimationImageView imageView = (AnimationImageView) mViewPager.findViewWithTag(position);
+
+				if (imageView != null)
+				{
+					imageView.startAnimation();
+				}
+			}
 		}
 
 		@Override
-		public void onPageScrolled(int position, float arg1, int arg2)
+		public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
 		{
+			if (mScrollState == -1)
+			{
+				return;
+			}
+
+			ExLog.d("onPageScrolled : " + position + ", arg1 : " + positionOffset + ", " + positionOffsetPixels);
+
+			if (mScrollPosition == -1)
+			{
+				mScrollPosition = position;
+			}
+
+			if (mIsRefresh == false && mImageAdapter != null)
+			{
+				if (mDirection == 0)
+				{
+					mDirection = Float.compare(positionOffset, 0.5f) <= 0 ? 1 : -1;
+				}
+
+				int nextPosition;
+
+				if (mDirection >= 0)
+				{
+					nextPosition = mScrollPosition + 1;
+
+					if (nextPosition >= mImageAdapter.getCount())
+					{
+						nextPosition = 0;
+					}
+				} else
+				{
+					nextPosition = mScrollPosition;
+				}
+
+				AnimationImageView nextImageView = (AnimationImageView) mViewPager.findViewWithTag(nextPosition);
+
+				// 방향에 따라서 초기화가 달라야한다.
+				if (nextImageView != null)
+				{
+					nextImageView.initAnimation(mDirection > 0);
+					nextImageView.invalidate();
+				}
+			}
 		}
 
 		@Override
-		public void onPageScrollStateChanged(int position)
+		public void onPageScrollStateChanged(int state)
 		{
+			ExLog.d("onPageScrollStateChanged : " + state);
+
+			mScrollState = state;
+
+			switch (state)
+			{
+				case ViewPager.SCROLL_STATE_IDLE:
+				{
+					stopAnimationImageView();
+
+					AnimationImageView imageView = (AnimationImageView) mViewPager.findViewWithTag(mSelectedPosition);
+
+					if (imageView != null)
+					{
+						imageView.startAnimation();
+					}
+
+					mDirection = 0;
+					mScrollPosition = -1;
+					break;
+				}
+
+				case ViewPager.SCROLL_STATE_DRAGGING:
+					stopAnimationImageView();
+					break;
+
+				case ViewPager.SCROLL_STATE_SETTLING:
+					break;
+			}
+
+			//			{
+			//				
+			//			}
 		}
 	};
 
 	private OnScrollListener mOnScrollListener = new OnScrollListener()
 	{
+		//		private int mDirection;
+		//		private int mScrollState;
+		//		private float mAlphaFactor;
 
 		@Override
 		public void onScrollStateChanged(AbsListView view, int scrollState)
 		{
-			// TODO Auto-generated method stub
-
+			//			mScrollState = scrollState;
+			//			
+			//			ExLog.d("scrollState : " + scrollState);
+			//			
+			//			if(scrollState == OnScrollListener.SCROLL_STATE_IDLE)
+			//			{
+			//				if(mListView.getFirstVisiblePosition() == 0)
+			//				{
+			//					switch(mDirection)
+			//					{
+			//						case MotionEvent.ACTION_UP:
+			//							
+			//							if(Float.compare(mAlphaFactor, 0.5f) <= 0)
+			//							{
+			//								mListView.smoothScrollToPosition(1);
+			//							}
+			//							break;
+			//							
+			//						case MotionEvent.ACTION_DOWN:
+			//							if(Float.compare(mAlphaFactor, 0.4f) >= 0)
+			//							{
+			//								mListView.smoothScrollToPosition(0);
+			//							}
+			//							break;
+			//					}
+			//				}
+			//			}
 		}
 
 		@Override
@@ -807,10 +970,10 @@ public class HotelDetailLayout
 					mActionBarTextView.setVisibility(View.VISIBLE);
 				}
 
-				//				if (mOnUserActionListener != null)
-				//				{
-				//					mOnUserActionListener.showActionBar();
-				//				}
+				if (mOnUserActionListener != null)
+				{
+					mOnUserActionListener.stopAutoSlide();
+				}
 				return;
 			}
 
@@ -847,6 +1010,11 @@ public class HotelDetailLayout
 					{
 						mActionBarTextView.setVisibility(View.INVISIBLE);
 					}
+
+					if (mOnUserActionListener != null)
+					{
+						mOnUserActionListener.startAutoSlide();
+					}
 				}
 			}
 
@@ -859,7 +1027,7 @@ public class HotelDetailLayout
 			float max = mImageHeight - Util.dpToPx(mActivity, 56);
 			float alphaFactor = offset / max;
 
-			if (isOverAPI11() == true)
+			if (Util.isOverAPI11() == true)
 			{
 				if (Float.compare(alphaFactor, 0.0f) <= 0)
 				{
@@ -878,6 +1046,19 @@ public class HotelDetailLayout
 					mHotelGradeTextView.setVisibility(View.VISIBLE);
 				}
 			}
+
+			//			if (mScrollState != OnScrollListener.SCROLL_STATE_FLING)
+			//			{
+			//				if (Float.compare(mAlphaFactor, alphaFactor) < 0)
+			//				{
+			//					mDirection = MotionEvent.ACTION_DOWN;
+			//				} else if (Float.compare(mAlphaFactor, alphaFactor) > 0)
+			//				{
+			//					mDirection = MotionEvent.ACTION_UP;
+			//				}
+			//			}
+			//
+			//			mAlphaFactor = alphaFactor;
 		}
 	};
 
@@ -1150,7 +1331,7 @@ public class HotelDetailLayout
 								{
 									mOnUserActionListener.showMap();
 								}
-								
+
 								return true;
 							}
 						});
