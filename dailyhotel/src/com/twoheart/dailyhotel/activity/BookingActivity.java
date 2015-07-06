@@ -604,6 +604,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	private void moveToPayStep()
 	{
 		unLockUI();
+		
+		Guest guest = mPay.getGuest();
+		guest.name = etReserverName.getText().toString().trim();
+		guest.phone = etReserverNumber.getText().toString().trim();
+		guest.email = etReserverEmail.getText().toString().trim();
 
 		if (mPay.getType() == Pay.Type.EASY_CARD)
 		{
@@ -647,8 +652,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				}
 			}
 
-			Guest guest = mPay.getGuest();
-
 			Map<String, String> params = new HashMap<String, String>();
 
 			params.put("saleIdx", String.valueOf(mPay.getHotelDetail().getSaleIdx()));
@@ -657,7 +660,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			params.put("guest_name", guest.name);
 			params.put("guest_phone", guest.phone);
 			params.put("guest_email", guest.email);
-
+			
 			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_SESSION_BILLING_PAYMENT).toString(), params, mUserSessionBillingPayment, BookingActivity.this));
 		} else
 		{
@@ -1540,41 +1543,50 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					guest.phone = overseasPhone;
 					guest.email = overseasEmail;
 
-					if (Util.isNameCharacter(overseasName) == false)
+					if (mIsEditMode == false)
 					{
-						mIsEditMode = true;
-
-						guest.name = "";
-						etReserverName.setText("");
-						etReserverName.setEnabled(true);
-
-						// 회원 가입시 이름 필터 적용.
-						StringFilter stringFilter = new StringFilter(BookingActivity.this);
-						InputFilter[] allowAlphanumericName = new InputFilter[1];
-						allowAlphanumericName[0] = stringFilter.allowAlphanumericName;
-
-						etReserverName.setFilters(allowAlphanumericName);
-						etReserverName.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS | etReserverName.getInputType());
-
-						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+						if (Util.isNameCharacter(overseasName) == false)
 						{
-							etReserverName.setBackground(mEditTextBackground[0]);
+							if (mIsEditMode == false)
+							{
+								mIsEditMode = true;
+
+								guest.name = "";
+								etReserverName.setText("");
+								etReserverName.setEnabled(true);
+
+								// 회원 가입시 이름 필터 적용.
+								StringFilter stringFilter = new StringFilter(BookingActivity.this);
+								InputFilter[] allowAlphanumericName = new InputFilter[1];
+								allowAlphanumericName[0] = stringFilter.allowAlphanumericName;
+
+								etReserverName.setFilters(allowAlphanumericName);
+								etReserverName.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS | etReserverName.getInputType());
+
+								if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+								{
+									etReserverName.setBackground(mEditTextBackground[0]);
+								} else
+								{
+									etReserverName.setBackgroundDrawable(mEditTextBackground[0]);
+								}
+							}
 						} else
 						{
-							etReserverName.setBackgroundDrawable(mEditTextBackground[0]);
+							etReserverName.setText(overseasName);
 						}
-					} else
-					{
-						etReserverName.setText(overseasName);
-					}
 
-					etReserverNumber.setText(overseasPhone);
-					etReserverEmail.setText(overseasEmail);
+						etReserverNumber.setText(overseasPhone);
+						etReserverEmail.setText(overseasEmail);
+					}
 				} else
 				{
-					etReserverName.setText(guest.name);
-					etReserverNumber.setText(guest.phone);
-					etReserverEmail.setText(guest.email);
+					if (mIsEditMode == false)
+					{
+						etReserverName.setText(guest.name);
+						etReserverNumber.setText(guest.phone);
+						etReserverEmail.setText(guest.email);
+					}
 				}
 
 				// SailIndex가 0인 경우에 서버에 이슈가 발생할수 있다.
