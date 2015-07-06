@@ -92,6 +92,8 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 				finish();
 				return;
 			}
+
+			SimpleAlertDialog.build(SignupActivity.this, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_facebook_update), getString(R.string.dialog_btn_text_confirm), null, null, null).show();
 		} else
 		{
 			mMode = MODE_SIGNUP;

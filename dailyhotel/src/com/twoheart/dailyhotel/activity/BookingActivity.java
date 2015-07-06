@@ -846,7 +846,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				default:
 					return;
 			}
-			
+
 			SimpleAlertDialog.build(this, title, msg, posTitle, posListener).show();
 
 			//		} else if (requestCode == CODE_REQUEST_ACTIVITY_LOGIN)
