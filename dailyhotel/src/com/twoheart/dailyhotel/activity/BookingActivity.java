@@ -846,7 +846,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				default:
 					return;
 			}
-
+			
 			SimpleAlertDialog.build(this, title, msg, posTitle, posListener).show();
 
 			//		} else if (requestCode == CODE_REQUEST_ACTIVITY_LOGIN)
@@ -1017,8 +1017,15 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 						releaseUiComponent();
 
 						RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "callHotel", mPay.getHotelDetail().getHotel().getName(), (long) mHotelIdx);
-						Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
-						startActivity(i);
+
+						if (Util.isTelephonyEnabled(BookingActivity.this) == true)
+						{
+							Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
+							startActivity(i);
+						} else
+						{
+							DailyToast.showToast(BookingActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
+						}
 					}
 				});
 
@@ -1339,8 +1346,15 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					releaseUiComponent();
 
 					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "callHotel", mPay.getHotelDetail().getHotel().getName(), (long) mHotelIdx);
-					Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
-					startActivity(i);
+
+					if (Util.isTelephonyEnabled(BookingActivity.this) == true)
+					{
+						Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
+						startActivity(i);
+					} else
+					{
+						DailyToast.showToast(BookingActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
+					}
 				}
 			});
 
