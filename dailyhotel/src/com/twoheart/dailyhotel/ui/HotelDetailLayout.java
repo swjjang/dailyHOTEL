@@ -821,6 +821,8 @@ public class HotelDetailLayout
 
 			if (mScrollState == -1)
 			{
+				stopAnimationImageView(true);
+				
 				AnimationImageView imageView = (AnimationImageView) mViewPager.findViewWithTag(position);
 
 				if (imageView != null)
@@ -833,11 +835,11 @@ public class HotelDetailLayout
 		@Override
 		public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
 		{
-			if (mScrollState == -1)
+			if (mScrollState == -1 || Float.compare(positionOffset, 0.0f) == 0 || positionOffsetPixels == 0)
 			{
 				return;
 			}
-
+			
 			stopAnimationImageView(true);
 
 			ExLog.d("onPageScrolled : " + position + ", arg1 : " + positionOffset + ", " + positionOffsetPixels);
