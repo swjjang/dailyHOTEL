@@ -63,25 +63,25 @@
         android:layout_marginBottom="55dp"
         android:background="@color/white"
         android:orientation="vertical"
-        android:visibility="invisible" >
+        android:visibility="gone" >
 
         <include
             android:id="@+id/roomType01View"
             android:layout_width="match_parent"
             android:layout_height="92dp"
-            layout="@layout/list_row_detail_roomtype" />
+            layout="@layout/list_row_detail_roomtype04" />
 
         <include
             android:id="@+id/roomType02View"
             android:layout_width="match_parent"
             android:layout_height="92dp"
-            layout="@layout/list_row_detail_roomtype" />
+            layout="@layout/list_row_detail_roomtype06" />
 
         <include
             android:id="@+id/roomType03View"
             android:layout_width="match_parent"
             android:layout_height="92dp"
-            layout="@layout/list_row_detail_roomtype" />
+            layout="@layout/list_row_detail_roomtype07" />
     </LinearLayout>
 
     <RelativeLayout

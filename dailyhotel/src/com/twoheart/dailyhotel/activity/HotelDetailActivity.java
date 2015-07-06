@@ -382,7 +382,7 @@ public class HotelDetailActivity extends BaseActivity
 			} else
 			{
 				mImageHandler.removeMessages(0);
-				mHotelDetailLayout.stopAnimationImageView();
+				mHotelDetailLayout.stopAnimationImageView(false);
 			}
 		}
 

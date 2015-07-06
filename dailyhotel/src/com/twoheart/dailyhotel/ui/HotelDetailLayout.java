@@ -432,14 +432,14 @@ public class HotelDetailLayout
 		}
 	}
 
-	public void stopAnimationImageView()
+	public void stopAnimationImageView(boolean initDuration)
 	{
 		int count = mViewPager.getChildCount();
 
 		for (int i = 0; i < count; i++)
 		{
 			AnimationImageView imageView = (AnimationImageView) mViewPager.getChildAt(i);
-			imageView.stopAnimation();
+			imageView.stopAnimation(initDuration);
 		}
 	}
 
@@ -838,6 +838,8 @@ public class HotelDetailLayout
 				return;
 			}
 
+			stopAnimationImageView(true);
+
 			ExLog.d("onPageScrolled : " + position + ", arg1 : " + positionOffset + ", " + positionOffsetPixels);
 
 			if (mScrollPosition == -1)
@@ -889,7 +891,7 @@ public class HotelDetailLayout
 			{
 				case ViewPager.SCROLL_STATE_IDLE:
 				{
-					stopAnimationImageView();
+					stopAnimationImageView(true);
 
 					AnimationImageView imageView = (AnimationImageView) mViewPager.findViewWithTag(mSelectedPosition);
 
@@ -904,7 +906,7 @@ public class HotelDetailLayout
 				}
 
 				case ViewPager.SCROLL_STATE_DRAGGING:
-					stopAnimationImageView();
+					stopAnimationImageView(true);
 					break;
 
 				case ViewPager.SCROLL_STATE_SETTLING:

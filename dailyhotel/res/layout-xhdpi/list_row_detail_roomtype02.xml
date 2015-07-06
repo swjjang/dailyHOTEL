@@ -37,7 +37,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="7dp"
                 android:layout_toRightOf="@id/radioButton"
-                android:text="스탠다드 더블"
+                android:text="디럭스 싱글 + 싱글"
                 android:textColor="@color/black"
                 android:textSize="15dp"
                 android:textStyle="bold" />
@@ -70,7 +70,7 @@
                 android:ellipsize="end"
                 android:lines="1"
                 android:singleLine="true"
-                android:text="5평 / 2인기준"
+                android:text="10평 / 2인기준"
                 android:textColor="@color/hoteldetail_contents_text_color"
                 android:textSize="12dp" />
 
@@ -88,7 +88,18 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp" >
+                android:layout_marginTop="6dp"
+                android:visibility="gone" >
+
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                    android:id="@+id/optionTextView01"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="7dp"
+                    android:background="@drawable/ic_room_view_tag"
+                    android:text="오션뷰"
+                    android:textColor="@color/white"
+                    android:textSize="11dp" />
 
                 <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                     android:id="@+id/optionTextView02"

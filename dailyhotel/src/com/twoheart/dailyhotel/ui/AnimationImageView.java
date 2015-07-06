@@ -63,12 +63,17 @@ public class AnimationImageView extends ImageView
 				mValueAnimator = ValueAnimator.ofInt(mTranslateDistance, moveDistance);
 			} else
 			{
-				stopAnimation();
+				stopAnimation(true);
 			}
 
-			ExLog.d("moveDistance : " + moveDistance);
-
 			mAnimationPlayTime = ANIMATION_DURATION - mAnimationPlayTime;
+
+			ExLog.d("moveDistance : " + moveDistance + ", mAnimationPlayTime : " + mAnimationPlayTime);
+
+			if (mAnimationPlayTime <= 0)
+			{
+				mAnimationPlayTime = ANIMATION_DURATION;
+			}
 
 			mValueAnimator.setDuration(mAnimationPlayTime).addUpdateListener(new AnimatorUpdateListener()
 			{
@@ -138,6 +143,8 @@ public class AnimationImageView extends ImageView
 
 					if (mIsCancel == false)
 					{
+						mAnimationPlayTime = 0;
+
 						// 다음 이미지를 호출한다.
 						if (mOnUserActionListener != null)
 						{
@@ -230,7 +237,7 @@ public class AnimationImageView extends ImageView
 		}
 	}
 
-	public void startAnimation()
+	public synchronized void startAnimation()
 	{
 		if (mScaledWidth == 0 && mScaledHeight == 0)
 		{
@@ -255,8 +262,14 @@ public class AnimationImageView extends ImageView
 		mAnimationHandler.sendMessageDelayed(message, 1000);
 	}
 
-	public void stopAnimation()
+	public synchronized void stopAnimation(boolean initDuration)
 	{
+		if (initDuration == true)
+		{
+			mAnimationPlayTime = 0;
+			mTranslateDistance = 0;
+		}
+
 		mReservationAnimation = false;
 		mAnimationHandler.removeMessages(0);
 
