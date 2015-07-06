@@ -512,7 +512,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
 				JSONObject jsonObject = response.getJSONObject("data");
 
-				boolean result = jsonObject.getBoolean("isSuccess");
+				boolean result = jsonObject.getBoolean("is_success");
 				int msgCode = response.getInt("msg_code");
 
 				if (result == true)
