@@ -43,7 +43,6 @@ import com.twoheart.dailyhotel.HotelListFragment;
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.WaitTimerFragment;
-import com.twoheart.dailyhotel.activity.HotelDetailActivity;
 import com.twoheart.dailyhotel.activity.HotelTabActivity;
 import com.twoheart.dailyhotel.activity.SelectAreaActivity;
 import com.twoheart.dailyhotel.model.Area;
@@ -270,12 +269,17 @@ public class HotelMainFragment extends BaseFragment
 
 			case R.id.action_map:
 			{
-				if (mOnUserActionListener != null)
-				{
-					mOnUserActionListener.toggleViewType();
-				}
+				int isInstalledGooglePlayServices = installGooglePlayService(getActivity());
 
-				baseActivity.invalidateOptionsMenu();
+				if (isInstalledGooglePlayServices == 1)
+				{
+					if (mOnUserActionListener != null)
+					{
+						mOnUserActionListener.toggleViewType();
+					}
+
+					baseActivity.invalidateOptionsMenu();
+				}
 				return true;
 			}
 

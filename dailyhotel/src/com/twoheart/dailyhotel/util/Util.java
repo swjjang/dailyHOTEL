@@ -11,6 +11,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -211,5 +212,10 @@ public class Util implements Constants
 	public static boolean isOverAPI11()
 	{
 		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
+	}
+
+	public static boolean isTelephonyEnabled(Context context)
+	{
+		return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
 	}
 }
