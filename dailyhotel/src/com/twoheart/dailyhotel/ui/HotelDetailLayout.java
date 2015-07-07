@@ -184,58 +184,9 @@ public class HotelDetailLayout
 			mNeedRefreshData[i] = true;
 		}
 
-		if (TextUtils.isEmpty(mHotelDetail.hotelBenefit) == false)
+		if (mDeatilView == null)
 		{
-			if (mDeatilView == null)
-			{
-				mDeatilView = new View[NUMBER_OF_ROWSLIST];
-			} else
-			{
-				if (mDeatilView.length != NUMBER_OF_ROWSLIST)
-				{
-					View[] view = new View[NUMBER_OF_ROWSLIST];
-
-					//					System.arraycopy(mDeatilView, 0, view, 0, 3);
-					//					System.arraycopy(mDeatilView, 3, view, 4, 4);
-
-					view[0] = mDeatilView[0];
-					view[1] = mDeatilView[1];
-					view[2] = mDeatilView[2];
-					view[3] = null;
-					view[4] = mDeatilView[3];
-					view[5] = mDeatilView[4];
-					view[6] = mDeatilView[5];
-					view[7] = mDeatilView[6];
-
-					mDeatilView = view;
-				}
-			}
-		} else
-		{
-			if (mDeatilView == null)
-			{
-				mDeatilView = new View[NUMBER_OF_ROWSLIST - 1];
-			} else
-			{
-				if (mDeatilView.length != NUMBER_OF_ROWSLIST - 1)
-				{
-					View[] view = new View[NUMBER_OF_ROWSLIST - 1];
-
-					//					System.arraycopy(mDeatilView, 0, view, 0, 3);
-					//					System.arraycopy(mDeatilView, 4, view, 3, 4);
-
-					view[0] = mDeatilView[0];
-					view[1] = mDeatilView[1];
-					view[2] = mDeatilView[2];
-					view[3] = mDeatilView[4];
-					view[4] = mDeatilView[5];
-					view[5] = mDeatilView[6];
-					view[6] = mDeatilView[7];
-					view[7] = null;
-
-					mDeatilView = view;
-				}
-			}
+			mDeatilView = new View[NUMBER_OF_ROWSLIST];
 		}
 
 		mActionBarTextView.setText(hotelDetail.hotelName);
@@ -1292,13 +1243,21 @@ public class HotelDetailLayout
 				return 0;
 			} else
 			{
-				return mDeatilView.length;
+				if (TextUtils.isEmpty(mHotelDetail.hotelBenefit) == false)
+				{
+					return NUMBER_OF_ROWSLIST;
+				} else
+				{
+					return NUMBER_OF_ROWSLIST - 1;
+				}
 			}
 		}
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent)
 		{
+			View view = null;
+
 			LayoutInflater layoutInflater = (LayoutInflater) mFragmentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 			switch (position)
@@ -1316,6 +1275,8 @@ public class HotelDetailLayout
 
 						getDetail00View(mDeatilView[0]);
 					}
+
+					view = mDeatilView[0];
 					break;
 
 				// 호텔 등급과 이름.
@@ -1331,6 +1292,8 @@ public class HotelDetailLayout
 
 						getDetail01View(mDeatilView[1], mHotelDetail);
 					}
+
+					view = mDeatilView[1];
 					break;
 
 				// 주소 및 맵 
@@ -1346,6 +1309,8 @@ public class HotelDetailLayout
 
 						getDetail02View(mDeatilView[2], mHotelDetail);
 					}
+
+					view = mDeatilView[2];
 					break;
 
 				// Benefit or 데일리 추천이유
@@ -1364,19 +1329,23 @@ public class HotelDetailLayout
 
 							getDetailBenefitView(mDeatilView[3], mHotelDetail);
 						}
+
+						view = mDeatilView[3];
 					} else
 					{
-						if (mDeatilView[3] == null)
+						if (mDeatilView[4] == null)
 						{
-							mDeatilView[3] = layoutInflater.inflate(R.layout.list_row_detail04, parent, false);
+							mDeatilView[4] = layoutInflater.inflate(R.layout.list_row_detail04, parent, false);
 						}
 
-						if (mNeedRefreshData[3] == true)
+						if (mNeedRefreshData[4] == true)
 						{
-							mNeedRefreshData[3] = false;
+							mNeedRefreshData[4] = false;
 
-							getDetail03View(layoutInflater, (ViewGroup) mDeatilView[3], mHotelDetail);
+							getDetail04View(layoutInflater, (ViewGroup) mDeatilView[4], mHotelDetail);
 						}
+
+						view = mDeatilView[4];
 					}
 					break;
 
@@ -1393,21 +1362,25 @@ public class HotelDetailLayout
 						{
 							mNeedRefreshData[4] = false;
 
-							getDetail03View(layoutInflater, (ViewGroup) mDeatilView[4], mHotelDetail);
+							getDetail04View(layoutInflater, (ViewGroup) mDeatilView[4], mHotelDetail);
 						}
+
+						view = mDeatilView[4];
 					} else
 					{
-						if (mDeatilView[4] == null)
+						if (mDeatilView[5] == null)
 						{
-							mDeatilView[4] = layoutInflater.inflate(R.layout.list_row_detail05, parent, false);
+							mDeatilView[5] = layoutInflater.inflate(R.layout.list_row_detail05, parent, false);
 						}
 
-						if (mNeedRefreshData[4] == true)
+						if (mNeedRefreshData[5] == true)
 						{
-							mNeedRefreshData[4] = false;
+							mNeedRefreshData[5] = false;
 
-							getDeatil04View(layoutInflater, (ViewGroup) mDeatilView[4], mHotelDetail);
+							getDeatil05View(layoutInflater, (ViewGroup) mDeatilView[5], mHotelDetail);
 						}
+
+						view = mDeatilView[5];
 					}
 					break;
 
@@ -1424,21 +1397,25 @@ public class HotelDetailLayout
 						{
 							mNeedRefreshData[5] = false;
 
-							getDeatil04View(layoutInflater, (ViewGroup) mDeatilView[5], mHotelDetail);
-						}
-					} else
-					{
-						if (mDeatilView[5] == null)
-						{
-							mDeatilView[5] = layoutInflater.inflate(R.layout.list_row_detail06, parent, false);
-						}
-
-						if (mNeedRefreshData[5] == true)
-						{
-							mNeedRefreshData[5] = false;
-
 							getDeatil05View(layoutInflater, (ViewGroup) mDeatilView[5], mHotelDetail);
 						}
+
+						view = mDeatilView[5];
+					} else
+					{
+						if (mDeatilView[6] == null)
+						{
+							mDeatilView[6] = layoutInflater.inflate(R.layout.list_row_detail06, parent, false);
+						}
+
+						if (mNeedRefreshData[6] == true)
+						{
+							mNeedRefreshData[6] = false;
+
+							getDeatil06View(layoutInflater, (ViewGroup) mDeatilView[6], mHotelDetail);
+						}
+
+						view = mDeatilView[6];
 					}
 					break;
 
@@ -1455,47 +1432,47 @@ public class HotelDetailLayout
 						{
 							mNeedRefreshData[6] = false;
 
-							getDeatil05View(layoutInflater, (ViewGroup) mDeatilView[6], mHotelDetail);
+							getDeatil06View(layoutInflater, (ViewGroup) mDeatilView[6], mHotelDetail);
 						}
+
+						view = mDeatilView[6];
 					} else
-					{
-						if (mDeatilView[6] == null)
-						{
-							mDeatilView[6] = layoutInflater.inflate(R.layout.list_row_detail07, null, false);
-						}
-
-						if (mNeedRefreshData[6] == true)
-						{
-							mNeedRefreshData[6] = false;
-
-							getDeatil06View(mDeatilView[6]);
-						}
-					}
-					break;
-
-				// 카카오톡 문의
-				case 7:
-					if (TextUtils.isEmpty(mHotelDetail.hotelBenefit) == false)
 					{
 						if (mDeatilView[7] == null)
 						{
-							mDeatilView[7] = layoutInflater.inflate(R.layout.list_row_detail07, parent, false);
+							mDeatilView[7] = layoutInflater.inflate(R.layout.list_row_detail07, null, false);
 						}
 
 						if (mNeedRefreshData[7] == true)
 						{
 							mNeedRefreshData[7] = false;
 
-							getDeatil06View(mDeatilView[7]);
+							getDeatil07View(mDeatilView[7]);
 						}
-					} else
-					{
-						mDeatilView[7] = null;
+
+						view = mDeatilView[7];
 					}
+					break;
+
+				// 카카오톡 문의
+				case 7:
+					if (mDeatilView[7] == null)
+					{
+						mDeatilView[7] = layoutInflater.inflate(R.layout.list_row_detail07, parent, false);
+					}
+
+					if (mNeedRefreshData[7] == true)
+					{
+						mNeedRefreshData[7] = false;
+
+						getDeatil07View(mDeatilView[7]);
+					}
+
+					view = mDeatilView[7];
 					break;
 			}
 
-			return mDeatilView[position];
+			return view;
 		}
 
 		/**
@@ -1637,7 +1614,7 @@ public class HotelDetailLayout
 		 * @param view
 		 * @return
 		 */
-		private View getDetail03View(LayoutInflater layoutInflater, ViewGroup viewGroup, HotelDetailEx hotelDetail)
+		private View getDetail04View(LayoutInflater layoutInflater, ViewGroup viewGroup, HotelDetailEx hotelDetail)
 		{
 			ArrayList<DetailInformation> arrayList = hotelDetail.getInformation();
 
@@ -1657,7 +1634,7 @@ public class HotelDetailLayout
 		 * @param view
 		 * @return
 		 */
-		private View getDeatil04View(LayoutInflater layoutInflater, ViewGroup viewGroup, HotelDetailEx hotelDetail)
+		private View getDeatil05View(LayoutInflater layoutInflater, ViewGroup viewGroup, HotelDetailEx hotelDetail)
 		{
 			ArrayList<DetailInformation> arrayList = hotelDetail.getInformation();
 
@@ -1699,7 +1676,7 @@ public class HotelDetailLayout
 		 * @param view
 		 * @return
 		 */
-		private View getDeatil05View(LayoutInflater layoutInflater, ViewGroup viewGroup, HotelDetailEx hotelDetail)
+		private View getDeatil06View(LayoutInflater layoutInflater, ViewGroup viewGroup, HotelDetailEx hotelDetail)
 		{
 			ArrayList<DetailInformation> arrayList = hotelDetail.getInformation();
 
@@ -1713,7 +1690,7 @@ public class HotelDetailLayout
 			return viewGroup;
 		}
 
-		private View getDeatil06View(View view)
+		private View getDeatil07View(View view)
 		{
 			// 카톡 1:1 실시간 상담
 			View consultKakaoView = view.findViewById(R.id.kakaoImageView);
