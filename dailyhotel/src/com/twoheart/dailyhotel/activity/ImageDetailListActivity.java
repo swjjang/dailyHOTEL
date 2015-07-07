@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.activity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -18,7 +19,6 @@ import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.androidquery.callback.BitmapAjaxCallback;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.VolleyImageLoader;
@@ -26,7 +26,6 @@ import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 public class ImageDetailListActivity extends BaseActivity implements Constants
 {
-	private HotelDetail mHotelDetail;
 	private ImageDetailListAdapter mAdapter;
 	private ListView mListView;
 
@@ -39,13 +38,15 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
 		int position = 0;
 
 		Bundle bundle = getIntent().getExtras();
+		ArrayList<String> arrayList = null;
+
 		if (bundle != null)
 		{
-			mHotelDetail = (HotelDetail) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_HOTELDETAIL);
+			arrayList = bundle.getStringArrayList(NAME_INTENT_EXTRA_DATA_HOTELDETAIL);
 			position = bundle.getInt(NAME_INTENT_EXTRA_DATA_SELECTED_POSOTION);
 		}
 
-		if (mHotelDetail == null)
+		if (arrayList == null)
 		{
 			finish();
 			return;
@@ -53,7 +54,7 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
 
 		mListView = (ListView) findViewById(R.id.listView);
 
-		mAdapter = new ImageDetailListAdapter(this, 0, mHotelDetail.getImageUrl());
+		mAdapter = new ImageDetailListAdapter(this, 0, arrayList);
 		mListView.setAdapter(mAdapter);
 
 		mListView.setSelection(position);

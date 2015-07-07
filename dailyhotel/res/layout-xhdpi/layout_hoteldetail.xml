@@ -69,19 +69,19 @@
             android:id="@+id/roomType01View"
             android:layout_width="match_parent"
             android:layout_height="92dp"
-            layout="@layout/list_row_detail_roomtype04" />
+            layout="@layout/list_row_detail_roomtype" />
 
         <include
             android:id="@+id/roomType02View"
             android:layout_width="match_parent"
             android:layout_height="92dp"
-            layout="@layout/list_row_detail_roomtype06" />
+            layout="@layout/list_row_detail_roomtype" />
 
         <include
             android:id="@+id/roomType03View"
             android:layout_width="match_parent"
             android:layout_height="92dp"
-            layout="@layout/list_row_detail_roomtype07" />
+            layout="@layout/list_row_detail_roomtype" />
     </LinearLayout>
 
     <RelativeLayout

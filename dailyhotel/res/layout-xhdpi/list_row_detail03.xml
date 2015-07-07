@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/hotelTitleLaout"
     android:layout_width="match_parent"
     android:layout_height="256dp"
     android:background="@color/white"
@@ -24,7 +23,6 @@
         android:ellipsize="end"
         android:freezesText="true"
         android:singleLine="true"
-        android:text="부산광역시 해운대구해변로 217"
         android:textColor="@color/hoteldetail_contents_text_color"
         android:textSize="13dp" />
 
@@ -40,7 +38,6 @@
         android:ellipsize="end"
         android:freezesText="true"
         android:singleLine="true"
-        android:text="부2호선 해운대역 7번출구 도보 12분"
         android:textColor="@color/hoteldetail_contents_text_color"
         android:textSize="13dp" />
 

@@ -604,7 +604,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	private void moveToPayStep()
 	{
 		unLockUI();
-		
+
 		Guest guest = mPay.getGuest();
 		guest.name = etReserverName.getText().toString().trim();
 		guest.phone = etReserverNumber.getText().toString().trim();
@@ -660,7 +660,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			params.put("guest_name", guest.name);
 			params.put("guest_phone", guest.phone);
 			params.put("guest_email", guest.email);
-			
+
 			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_SESSION_BILLING_PAYMENT).toString(), params, mUserSessionBillingPayment, BookingActivity.this));
 		} else
 		{

@@ -31,13 +31,12 @@
                 android:duplicateParentState="true" />
 
             <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-                android:id="@+id/hotelNameTextView"
+                android:id="@+id/roomTypeTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="7dp"
                 android:layout_toRightOf="@id/radioButton"
-                android:text="스탠다드 더블"
                 android:textColor="@color/black"
                 android:textSize="15dp"
                 android:textStyle="bold" />
@@ -48,58 +47,39 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:text="99,000원"
-                android:textColor="@color/dh_theme_color"
+                android:textColor="@color/black"
                 android:textSize="15dp"
                 android:textStyle="bold" />
-
         </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="44dp"
+            android:layout_marginLeft="38dp"
             android:layout_marginTop="4dp"
             android:orientation="vertical" >
 
             <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-                android:id="@+id/simpleInfoTextView"
+                android:id="@+id/optionTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/hotelNameTextView"
-                android:ellipsize="end"
-                android:lines="1"
-                android:singleLine="true"
-                android:text="5평 / 2인기준"
-                android:textColor="@color/hoteldetail_contents_text_color"
-                android:textSize="12dp" />
+                android:layout_marginLeft="5dp"
+                android:freezesText="true"
+                android:textColor="@color/hoteldetail_room_simpleinfo_text"
+                android:textSize="12dp"
+                android:textStyle="bold" />
 
             <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-                android:id="@+id/specialTextView"
+                android:id="@+id/benefitTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/simpleInfoTextView"
+                android:layout_marginLeft="5dp"
                 android:layout_marginTop="6dp"
-                android:text="14층 Executive Lounge 2인 혜택"
+                android:freezesText="true"
                 android:textColor="@color/dh_theme_color"
                 android:textSize="12dp"
-                android:visibility="gone" />
+                android:textStyle="bold" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp" >
-
-                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-                    android:id="@+id/optionTextView02"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="7dp"
-                    android:background="@drawable/ic_room_view_tag"
-                    android:text="조식2인"
-                    android:textColor="@color/white"
-                    android:textSize="11dp" />
-            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 

@@ -1,5 +1,9 @@
 package com.twoheart.dailyhotel.ui;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
+
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.ObjectAnimator;
@@ -10,7 +14,8 @@ import android.os.Build;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.support.v4.view.ViewPager.PageTransformer;
+import android.text.TextUtils;
+import android.text.TextUtils.TruncateAt;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,6 +30,7 @@ import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -41,7 +47,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.HotelDetailActivity;
 import com.twoheart.dailyhotel.adapter.HotelDetailImageViewPagerAdapter;
-import com.twoheart.dailyhotel.model.HotelDetail;
+import com.twoheart.dailyhotel.model.DetailInformation;
+import com.twoheart.dailyhotel.model.HotelDetailEx;
+import com.twoheart.dailyhotel.model.SaleRoomInformation;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -58,10 +66,10 @@ public class HotelDetailLayout
 	public static final int STATUS_BOOKING = 2;
 	public static final int STATUS_SOLD_OUT = 3;
 
-	private static final int NUMBER_OF_ROWSLIST = 7;
+	private static final int NUMBER_OF_ROWSLIST = 8;
 	private static final int MAX_OF_ROOMTYPE = 3;
 
-	private HotelDetail mHotelDetail;
+	private HotelDetailEx mHotelDetail;
 	private Activity mActivity;
 	private View mViewRoot;
 	private LoopViewPager mViewPager;
@@ -86,6 +94,7 @@ public class HotelDetailLayout
 	private int mImageHeight;
 
 	private View[] mDeatilView;
+	private boolean[] mNeedRefreshData;
 
 	private int mBookingStatus; // 예약 진행 상태로 객실 찾기, 없음, 예약 진행
 
@@ -146,9 +155,6 @@ public class HotelDetailLayout
 			}
 		});
 
-		// 호텔 상세 정보를 얻어와서 리스트 개수가 몇개 필요한지 검색한다.
-		mDeatilView = new View[NUMBER_OF_ROWSLIST];
-
 		setBookingStatus(STATUS_NONE);
 		hideRoomType();
 	}
@@ -158,7 +164,7 @@ public class HotelDetailLayout
 		return mViewRoot;
 	}
 
-	public void setHotelDetail(HotelDetail hotelDetail, int imagePosition)
+	public void setHotelDetail(HotelDetailEx hotelDetail, int imagePosition)
 	{
 		if (hotelDetail == null)
 		{
@@ -167,7 +173,72 @@ public class HotelDetailLayout
 
 		mHotelDetail = hotelDetail;
 
-		mActionBarTextView.setText(hotelDetail.getHotel().getName());
+		// 호텔 상세 정보를 얻어와서 리스트 개수가 몇개 필요한지 검색한다.
+		if (mNeedRefreshData == null)
+		{
+			mNeedRefreshData = new boolean[NUMBER_OF_ROWSLIST];
+		}
+
+		for (int i = 0; i < NUMBER_OF_ROWSLIST; i++)
+		{
+			mNeedRefreshData[i] = true;
+		}
+
+		if (TextUtils.isEmpty(mHotelDetail.hotelBenefit) == false)
+		{
+			if (mDeatilView == null)
+			{
+				mDeatilView = new View[NUMBER_OF_ROWSLIST];
+			} else
+			{
+				if (mDeatilView.length != NUMBER_OF_ROWSLIST)
+				{
+					View[] view = new View[NUMBER_OF_ROWSLIST];
+
+					//					System.arraycopy(mDeatilView, 0, view, 0, 3);
+					//					System.arraycopy(mDeatilView, 3, view, 4, 4);
+
+					view[0] = mDeatilView[0];
+					view[1] = mDeatilView[1];
+					view[2] = mDeatilView[2];
+					view[3] = null;
+					view[4] = mDeatilView[3];
+					view[5] = mDeatilView[4];
+					view[6] = mDeatilView[5];
+					view[7] = mDeatilView[6];
+
+					mDeatilView = view;
+				}
+			}
+		} else
+		{
+			if (mDeatilView == null)
+			{
+				mDeatilView = new View[NUMBER_OF_ROWSLIST - 1];
+			} else
+			{
+				if (mDeatilView.length != NUMBER_OF_ROWSLIST - 1)
+				{
+					View[] view = new View[NUMBER_OF_ROWSLIST - 1];
+
+					//					System.arraycopy(mDeatilView, 0, view, 0, 3);
+					//					System.arraycopy(mDeatilView, 4, view, 3, 4);
+
+					view[0] = mDeatilView[0];
+					view[1] = mDeatilView[1];
+					view[2] = mDeatilView[2];
+					view[3] = mDeatilView[4];
+					view[4] = mDeatilView[5];
+					view[5] = mDeatilView[6];
+					view[6] = mDeatilView[7];
+					view[7] = null;
+
+					mDeatilView = view;
+				}
+			}
+		}
+
+		mActionBarTextView.setText(hotelDetail.hotelName);
 
 		if (mImageAdapter == null)
 		{
@@ -175,7 +246,7 @@ public class HotelDetailLayout
 			mImageAdapter.setOnAnimationListener(mOnUserActionListener);
 		}
 
-		mImageAdapter.setData(hotelDetail.getImageUrl());
+		mImageAdapter.setData(hotelDetail.getImageUrlList());
 		mViewPager.setAdapter(mImageAdapter);
 
 		if (mListAdapter == null)
@@ -197,10 +268,15 @@ public class HotelDetailLayout
 		View bookingView = mViewRoot.findViewById(R.id.bookingTextView);
 		View soldoutView = mViewRoot.findViewById(R.id.soldoutTextView);
 
-		if (hotelDetail.getHotel().getAvailableRoom() == 0)
+		// SOLD OUT 판단 조건.
+		ArrayList<SaleRoomInformation> saleRoomList = hotelDetail.getSaleRoomList();
+
+		if (saleRoomList == null || saleRoomList.size() == 0)
 		{
 			bookingView.setVisibility(View.GONE);
 			soldoutView.setVisibility(View.VISIBLE);
+
+			setBookingStatus(STATUS_SOLD_OUT);
 		} else
 		{
 			bookingView.setVisibility(View.VISIBLE);
@@ -230,69 +306,85 @@ public class HotelDetailLayout
 			});
 
 			soldoutView.setVisibility(View.GONE);
-		}
 
+			setBookingStatus(STATUS_SEARCH_ROOM);
+
+			initRoomTypeLayout(saleRoomList);
+		}
+	}
+
+	private void initRoomTypeLayout(ArrayList<SaleRoomInformation> saleRoomList)
+	{
 		// 객실 타입 세팅
 		mRoomTypeView[0] = mViewRoot.findViewById(R.id.roomType01View);
 		mRoomTypeView[1] = mViewRoot.findViewById(R.id.roomType02View);
 		mRoomTypeView[2] = mViewRoot.findViewById(R.id.roomType03View);
 
-		selectRoomType(mRoomTypeView[0]);
-		mRoomTypeView[0].setOnClickListener(new View.OnClickListener()
+		int size = saleRoomList.size();
+
+		for (int i = 0; i < MAX_OF_ROOMTYPE; i++)
 		{
-			@Override
-			public void onClick(View v)
+			if (i < size)
 			{
-				selectRoomType(v);
-
-			}
-		});
-
-		mRoomTypeView[1].setOnClickListener(new View.OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
+				mRoomTypeView[i].setVisibility(View.VISIBLE);
+				makeRoomTypeLayout(mRoomTypeView[i], saleRoomList.get(i));
+			} else
 			{
-				selectRoomType(v);
-
+				mRoomTypeView[i].setVisibility(View.GONE);
 			}
-		});
 
-		mRoomTypeView[2].setOnClickListener(new View.OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
+			mRoomTypeView[i].setOnClickListener(new View.OnClickListener()
 			{
-				selectRoomType(v);
+				@Override
+				public void onClick(View v)
+				{
+					selectRoomType(v);
 
-			}
-		});
-
-		if (hotelDetail.getHotel().getAvailableRoom() == 0)
-		{
-			setBookingStatus(STATUS_SOLD_OUT);
-		} else
-		{
-			setBookingStatus(STATUS_SEARCH_ROOM);
+				}
+			});
 		}
+
+		selectRoomType(mRoomTypeView[0]);
+	}
+
+	private void makeRoomTypeLayout(View view, SaleRoomInformation information)
+	{
+		if (view == null || information == null)
+		{
+			return;
+		}
+
+		TextView roomTypeTextView = (TextView) view.findViewById(R.id.roomTypeTextView);
+		TextView priceTextView = (TextView) view.findViewById(R.id.priceTextView);
+		TextView optionTextView = (TextView) view.findViewById(R.id.optionTextView);
+		TextView benefitTextView = (TextView) view.findViewById(R.id.benefitTextView);
+
+		roomTypeTextView.setText(information.roomName);
+
+		DecimalFormat comma = new DecimalFormat("###,##0");
+		String price = comma.format(information.discount);
+
+		priceTextView.setText(price);
+		optionTextView.setText(information.option);
+		benefitTextView.setText(information.roomBenefit);
 	}
 
 	private void selectRoomType(View view)
 	{
-		//		for (View roomView : mRoomTypeView)
-		//		{
-		//			TextView textView = (TextView) roomView.findViewById(R.id.simpleInfoTextView);
-		//
-		//			if (roomView == view)
-		//			{
-		//				roomView.setSelected(true);
-		//				textView.setEllipsize(TruncateAt.MARQUEE);
-		//			} else
-		//			{
-		//				roomView.setSelected(false);
-		//				textView.setEllipsize(TruncateAt.END);
-		//			}
-		//		}
+		for (View roomView : mRoomTypeView)
+		{
+			TextView textView = (TextView) roomView.findViewById(R.id.optionTextView);
+
+			if (roomView == view)
+			{
+				roomView.setSelected(true);
+				textView.setEllipsize(TruncateAt.MARQUEE);
+			} else
+			{
+				roomView.setSelected(false);
+				textView.setEllipsize(TruncateAt.END);
+			}
+		}
 	}
 
 	private void setBookingStatus(int status)
@@ -822,7 +914,7 @@ public class HotelDetailLayout
 			if (mScrollState == -1)
 			{
 				stopAnimationImageView(true);
-				
+
 				AnimationImageView imageView = (AnimationImageView) mViewPager.findViewWithTag(position);
 
 				if (imageView != null)
@@ -839,7 +931,7 @@ public class HotelDetailLayout
 			{
 				return;
 			}
-			
+
 			stopAnimationImageView(true);
 
 			ExLog.d("onPageScrolled : " + position + ", arg1 : " + positionOffset + ", " + positionOffsetPixels);
@@ -1195,7 +1287,13 @@ public class HotelDetailLayout
 		@Override
 		public int getCount()
 		{
-			return NUMBER_OF_ROWSLIST;
+			if (mDeatilView == null)
+			{
+				return 0;
+			} else
+			{
+				return mDeatilView.length;
+			}
 		}
 
 		@Override
@@ -1210,6 +1308,11 @@ public class HotelDetailLayout
 					if (mDeatilView[0] == null)
 					{
 						mDeatilView[0] = layoutInflater.inflate(R.layout.list_row_detail01, parent, false);
+					}
+
+					if (mNeedRefreshData[0] == true)
+					{
+						mNeedRefreshData[0] = false;
 
 						getDetail00View(mDeatilView[0]);
 					}
@@ -1220,48 +1323,174 @@ public class HotelDetailLayout
 					if (mDeatilView[1] == null)
 					{
 						mDeatilView[1] = layoutInflater.inflate(R.layout.list_row_detail02, parent, false);
-						getDetail01View(mDeatilView[1], mHotelDetail);
 					}
 
+					if (mNeedRefreshData[1] == true)
+					{
+						mNeedRefreshData[1] = false;
+
+						getDetail01View(mDeatilView[1], mHotelDetail);
+					}
 					break;
 
+				// 주소 및 맵 
 				case 2:
 					if (mDeatilView[2] == null)
 					{
 						mDeatilView[2] = layoutInflater.inflate(R.layout.list_row_detail03, parent, false);
+					}
+
+					if (mNeedRefreshData[2] == true)
+					{
+						mNeedRefreshData[2] = false;
 
 						getDetail02View(mDeatilView[2], mHotelDetail);
 					}
 					break;
 
+				// Benefit or 데일리 추천이유
 				case 3:
-					if (mDeatilView[3] == null)
+					if (TextUtils.isEmpty(mHotelDetail.hotelBenefit) == false)
 					{
-						mDeatilView[3] = layoutInflater.inflate(R.layout.list_row_detail04, parent, false);
+						if (mDeatilView[3] == null)
+						{
+							mDeatilView[3] = layoutInflater.inflate(R.layout.list_row_detail_benefit, parent, false);
+							getDetailBenefitView(mDeatilView[3], mHotelDetail);
+						}
+
+						if (mNeedRefreshData[3] == true)
+						{
+							mNeedRefreshData[3] = false;
+
+							getDetailBenefitView(mDeatilView[3], mHotelDetail);
+						}
+					} else
+					{
+						if (mDeatilView[3] == null)
+						{
+							mDeatilView[3] = layoutInflater.inflate(R.layout.list_row_detail04, parent, false);
+						}
+
+						if (mNeedRefreshData[3] == true)
+						{
+							mNeedRefreshData[3] = false;
+
+							getDetail03View(layoutInflater, (ViewGroup) mDeatilView[3], mHotelDetail);
+						}
 					}
 					break;
 
+				// 데일리 추천이유 or 호텔 정보
 				case 4:
-					if (mDeatilView[4] == null)
+					if (TextUtils.isEmpty(mHotelDetail.hotelBenefit) == false)
 					{
-						mDeatilView[4] = layoutInflater.inflate(R.layout.list_row_detail05, parent, false);
-						getDeatil04View(mDeatilView[4]);
+						if (mDeatilView[4] == null)
+						{
+							mDeatilView[4] = layoutInflater.inflate(R.layout.list_row_detail04, parent, false);
+						}
+
+						if (mNeedRefreshData[4] == true)
+						{
+							mNeedRefreshData[4] = false;
+
+							getDetail03View(layoutInflater, (ViewGroup) mDeatilView[4], mHotelDetail);
+						}
+					} else
+					{
+						if (mDeatilView[4] == null)
+						{
+							mDeatilView[4] = layoutInflater.inflate(R.layout.list_row_detail05, parent, false);
+						}
+
+						if (mNeedRefreshData[4] == true)
+						{
+							mNeedRefreshData[4] = false;
+
+							getDeatil04View(layoutInflater, (ViewGroup) mDeatilView[4], mHotelDetail);
+						}
 					}
 					break;
 
+				// 호텔 정보 or 확인 사항
 				case 5:
-					if (mDeatilView[5] == null)
+					if (TextUtils.isEmpty(mHotelDetail.hotelBenefit) == false)
 					{
-						mDeatilView[5] = layoutInflater.inflate(R.layout.list_row_detail06, parent, false);
+						if (mDeatilView[5] == null)
+						{
+							mDeatilView[5] = layoutInflater.inflate(R.layout.list_row_detail05, parent, false);
+						}
 
+						if (mNeedRefreshData[5] == true)
+						{
+							mNeedRefreshData[5] = false;
+
+							getDeatil04View(layoutInflater, (ViewGroup) mDeatilView[5], mHotelDetail);
+						}
+					} else
+					{
+						if (mDeatilView[5] == null)
+						{
+							mDeatilView[5] = layoutInflater.inflate(R.layout.list_row_detail06, parent, false);
+						}
+
+						if (mNeedRefreshData[5] == true)
+						{
+							mNeedRefreshData[5] = false;
+
+							getDeatil05View(layoutInflater, (ViewGroup) mDeatilView[5], mHotelDetail);
+						}
 					}
 					break;
 
+				// 확인 사항 or 카카오톡 문의
 				case 6:
-					if (mDeatilView[6] == null)
+					if (TextUtils.isEmpty(mHotelDetail.hotelBenefit) == false)
 					{
-						mDeatilView[6] = layoutInflater.inflate(R.layout.list_row_detail07, parent, false);
-						getDeatil06View(mDeatilView[6]);
+						if (mDeatilView[6] == null)
+						{
+							mDeatilView[6] = layoutInflater.inflate(R.layout.list_row_detail06, parent, false);
+						}
+
+						if (mNeedRefreshData[6] == true)
+						{
+							mNeedRefreshData[6] = false;
+
+							getDeatil05View(layoutInflater, (ViewGroup) mDeatilView[6], mHotelDetail);
+						}
+					} else
+					{
+						if (mDeatilView[6] == null)
+						{
+							mDeatilView[6] = layoutInflater.inflate(R.layout.list_row_detail07, null, false);
+						}
+
+						if (mNeedRefreshData[6] == true)
+						{
+							mNeedRefreshData[6] = false;
+
+							getDeatil06View(mDeatilView[6]);
+						}
+					}
+					break;
+
+				// 카카오톡 문의
+				case 7:
+					if (TextUtils.isEmpty(mHotelDetail.hotelBenefit) == false)
+					{
+						if (mDeatilView[7] == null)
+						{
+							mDeatilView[7] = layoutInflater.inflate(R.layout.list_row_detail07, parent, false);
+						}
+
+						if (mNeedRefreshData[7] == true)
+						{
+							mNeedRefreshData[7] = false;
+
+							getDeatil06View(mDeatilView[7]);
+						}
+					} else
+					{
+						mDeatilView[7] = null;
 					}
 					break;
 			}
@@ -1269,6 +1498,12 @@ public class HotelDetailLayout
 			return mDeatilView[position];
 		}
 
+		/**
+		 * 빈화면
+		 * 
+		 * @param view
+		 * @return
+		 */
 		private View getDetail00View(View view)
 		{
 			View emptyView = view.findViewById(R.id.imageEmptyHeight);
@@ -1280,9 +1515,16 @@ public class HotelDetailLayout
 			return view;
 		}
 
-		private View getDetail01View(View view, HotelDetail hotelDetail)
+		/**
+		 * 호텔 등급 및 이름
+		 * 
+		 * @param view
+		 * @param hotelDetail
+		 * @return
+		 */
+		private View getDetail01View(View view, HotelDetailEx hotelDetail)
 		{
-			mHotelTitleLaout = view.findViewById(R.id.hotelTitleLaout);
+			mHotelTitleLaout = view.findViewById(R.id.hotelTitleLayout);
 
 			// 등급
 			mHotelGradeTextView = (TextView) view.findViewById(R.id.hotelGradeTextView);
@@ -1297,14 +1539,21 @@ public class HotelDetailLayout
 			return view;
 		}
 
-		private View getDetail02View(final View view, HotelDetail hotelDetail)
+		/**
+		 * 호텔 주소 및 맵
+		 * 
+		 * @param view
+		 * @param hotelDetail
+		 * @return
+		 */
+		private View getDetail02View(final View view, HotelDetailEx hotelDetail)
 		{
 			// 주소지
 			TextView hotelAddressTextView = (TextView) view.findViewById(R.id.hotelAddressTextView);
 			TextView hotelSimpleLocationTextView = (TextView) view.findViewById(R.id.hotelSimpleLocationTextView);
 
-			hotelAddressTextView.setText(hotelDetail.getHotel().getAddress());
-			hotelSimpleLocationTextView.setText(hotelDetail.getHotel().getAddress());
+			hotelAddressTextView.setText(hotelDetail.address);
+			hotelSimpleLocationTextView.setText(hotelDetail.addressNatural);
 
 			// 맵
 			SupportMapFragment mapFragment = (SupportMapFragment) mFragmentActivity.getSupportFragmentManager().findFragmentById(R.id.googleMapFragment);
@@ -1318,7 +1567,7 @@ public class HotelDetailLayout
 					{
 						mGoogleMap = googleMap;
 
-						final LatLng latlng = new LatLng(mHotelDetail.getLatitude(), mHotelDetail.getLongitude());
+						final LatLng latlng = new LatLng(mHotelDetail.latitude, mHotelDetail.longitude);
 
 						Marker marker = googleMap.addMarker(new MarkerOptions().position(latlng));
 						marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.info_ic_map_large));
@@ -1356,7 +1605,7 @@ public class HotelDetailLayout
 				});
 			} else
 			{
-				LatLng latlng = new LatLng(mHotelDetail.getLatitude(), mHotelDetail.getLongitude());
+				LatLng latlng = new LatLng(mHotelDetail.latitude, mHotelDetail.longitude);
 
 				Marker marker = mGoogleMap.addMarker(new MarkerOptions().position(latlng));
 				marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.info_ic_map_large));
@@ -1368,33 +1617,100 @@ public class HotelDetailLayout
 			return view;
 		}
 
-		private View getDeatil03View(View view)
+		/**
+		 * 호텔 Benefit
+		 * 
+		 * @param view
+		 * @return
+		 */
+		private View getDetailBenefitView(View view, HotelDetailEx hotelDetail)
 		{
+			TextView textView = (TextView) view.findViewById(R.id.benefitTextView);
+			textView.setText(hotelDetail.hotelBenefit);
 
 			return view;
 		}
 
-		private View getDeatil04View(View view)
+		/**
+		 * 데일리 추천 이유
+		 * 
+		 * @param view
+		 * @return
+		 */
+		private View getDetail03View(LayoutInflater layoutInflater, ViewGroup viewGroup, HotelDetailEx hotelDetail)
 		{
-			View moreInfoView = view.findViewById(R.id.moreInfoView);
-			moreInfoView.setOnClickListener(new View.OnClickListener()
+			ArrayList<DetailInformation> arrayList = hotelDetail.getInformation();
+
+			if (arrayList != null)
 			{
-				@Override
-				public void onClick(View v)
-				{
-					if (mOnUserActionListener != null)
-					{
-						mOnUserActionListener.viewMoreInfomation();
-					}
-				}
-			});
+				DetailInformation information = arrayList.get(0);
 
-			return view;
+				makeInformationLayout(layoutInflater, viewGroup, information);
+			}
+
+			return viewGroup;
 		}
 
-		private View getDeatil05View(View view)
+		/**
+		 * 호텔 정보
+		 * 
+		 * @param view
+		 * @return
+		 */
+		private View getDeatil04View(LayoutInflater layoutInflater, ViewGroup viewGroup, HotelDetailEx hotelDetail)
 		{
-			return view;
+			ArrayList<DetailInformation> arrayList = hotelDetail.getInformation();
+
+			if (arrayList != null)
+			{
+				View moreInfoView = viewGroup.findViewById(R.id.moreInfoView);
+
+				DetailInformation information = arrayList.get(1);
+
+				if (information == null)
+				{
+					moreInfoView.setVisibility(View.GONE);
+				} else
+				{
+					moreInfoView.setVisibility(View.VISIBLE);
+
+					makeInformationLayout(layoutInflater, viewGroup, information);
+
+					moreInfoView.setOnClickListener(new View.OnClickListener()
+					{
+						@Override
+						public void onClick(View v)
+						{
+							if (mOnUserActionListener != null)
+							{
+								mOnUserActionListener.moreViewInfomation();
+							}
+						}
+					});
+				}
+			}
+
+			return viewGroup;
+		}
+
+		/**
+		 * 확인 사항
+		 * 
+		 * @param view
+		 * @return
+		 */
+		private View getDeatil05View(LayoutInflater layoutInflater, ViewGroup viewGroup, HotelDetailEx hotelDetail)
+		{
+			ArrayList<DetailInformation> arrayList = hotelDetail.getInformation();
+
+			if (arrayList != null)
+			{
+				DetailInformation information = arrayList.get(2);
+
+				makeInformationLayout(layoutInflater, viewGroup, information);
+			}
+
+			return viewGroup;
 		}
 
 		private View getDeatil06View(View view)
@@ -1414,6 +1730,35 @@ public class HotelDetailLayout
 			});
 
 			return view;
+		}
+
+		private void makeInformationLayout(LayoutInflater layoutInflater, ViewGroup viewGroup, DetailInformation information)
+		{
+			if (information == null)
+			{
+				return;
+			}
+
+			LinearLayout contentsLayout = (LinearLayout) viewGroup.findViewById(R.id.contentsList);
+
+			TextView titleTextView = (TextView) viewGroup.findViewById(R.id.titleTextView);
+			titleTextView.setText(information.title);
+
+			List<String> contentsList = information.getContentsList();
+
+			if (contentsList != null)
+			{
+				int size = contentsList.size();
+
+				for (int i = 0; i < size; i++)
+				{
+					View textLayout = layoutInflater.inflate(R.layout.list_row_detail_text, null, false);
+					TextView textView = (TextView) textLayout.findViewById(R.id.textView);
+					textView.setText(contentsList.get(i));
+
+					contentsLayout.addView(textLayout);
+				}
+			}
 		}
 	}
 }

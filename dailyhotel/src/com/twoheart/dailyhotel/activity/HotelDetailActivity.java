@@ -9,12 +9,10 @@
  */
 package com.twoheart.dailyhotel.activity;
 
-import java.util.ArrayList;
+import java.io.InputStream;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,8 +30,8 @@ import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Hotel;
-import com.twoheart.dailyhotel.model.Hotel.HotelGrade;
 import com.twoheart.dailyhotel.model.HotelDetail;
+import com.twoheart.dailyhotel.model.HotelDetailEx;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.ui.HotelDetailLayout;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -51,7 +49,7 @@ public class HotelDetailActivity extends BaseActivity
 {
 	private static final int DURATION_HOTEL_IMAGE_SHOW = 4000;
 
-	private HotelDetail mHotelDetail;
+	private HotelDetailEx mHotelDetail;
 	private SaleTime mSaleTime;
 
 	private String mRegion;
@@ -108,7 +106,7 @@ public class HotelDetailActivity extends BaseActivity
 
 		public void hideActionBar();
 
-		public void onClickImage(HotelDetail hotelDetail);
+		public void onClickImage(HotelDetailEx hotelDetail);
 
 		public void startAutoSlide();
 
@@ -124,7 +122,7 @@ public class HotelDetailActivity extends BaseActivity
 
 		public void doKakaotalkConsult();
 
-		public void viewMoreInfomation();
+		public void moreViewInfomation();
 
 		public void showRoomType();
 
@@ -138,29 +136,29 @@ public class HotelDetailActivity extends BaseActivity
 	{
 		super.onCreate(savedInstanceState);
 
-		mHotelDetail = new HotelDetail();
 		Intent intent = getIntent();
+		Hotel hotel = null;
 
 		if (intent != null)
 		{
-			mHotelDetail.setHotel((Hotel) intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_HOTEL));
+			hotel = (Hotel) intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_HOTEL);
+			mHotelDetail = new HotelDetailEx(hotel);
+
 			mSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
 			mRegion = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_REGION);
 			mHotelIdx = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, -1);
 		}
 
-		Hotel hotel = mHotelDetail.getHotel();
-
-		if (hotel == null || mSaleTime == null || mRegion == null || mHotelIdx == -1)
+		if (mHotelDetail == null || mSaleTime == null || mRegion == null || mHotelIdx == -1 || hotel == null)
 		{
 			Util.restartApp(this);
 			return;
 		}
 
-		initLayout(hotel);
+		initLayout(hotel.getName());
 	}
 
-	private void initLayout(Hotel hotel)
+	private void initLayout(String hotelName)
 	{
 		try
 		{
@@ -169,21 +167,8 @@ public class HotelDetailActivity extends BaseActivity
 
 			setContentView(mHotelDetailLayout.getView());
 
-			setActionBar(hotel.getName());
+			setActionBar(hotelName);
 			mOnUserActionListener.hideActionBar();
-
-			//			btnSoldOut = (Button) findViewById(R.id.tv_hotel_tab_soldout);
-			//			btnBooking = (TextView) findViewById(R.id.btn_hotel_tab_booking);
-			//
-			//			btnBooking.setOnClickListener(this);
-			//
-			//			// 호텔 sold out시
-			//			if (hotel.getAvailableRoom() == 0)
-			//			{
-			//				btnBooking.setVisibility(View.GONE);
-			//				btnSoldOut.setVisibility(View.VISIBLE);
-			//			}
-
 		} catch (Exception e)
 		{
 			Util.restartApp(this);
@@ -196,9 +181,9 @@ public class HotelDetailActivity extends BaseActivity
 		lockUI();
 
 		// 호텔 정보를 가져온다.
-		String params = String.format("?hotel_idx=%d&sday=%s&sale_idx=%d", mHotelDetail.getHotel().getIdx(), mSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), mHotelDetail.getHotel().saleIndex);
+		String params = String.format("?hotel_idx=%d&sday=%s", mHotelDetail.getHotel().getIdx(), mSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
 
-		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_DETAIL).append(params).toString(), null, mHotelDetailJsonResponseListener, this));
+		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_HOTEL_INFO).append(params).toString(), null, mHotelDetailJsonResponseListener, this));
 
 		super.onResume();
 	}
@@ -283,13 +268,13 @@ public class HotelDetailActivity extends BaseActivity
 
 	private void moveToBooking()
 	{
-		Intent i = new Intent(HotelDetailActivity.this, BookingActivity.class);
-		i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELDETAIL, mHotelDetail);
-		i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, mHotelIdx);
-		i.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mSaleTime);
-
-		startActivityForResult(i, CODE_REQUEST_ACTIVITY_BOOKING);
-		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+		//		Intent i = new Intent(HotelDetailActivity.this, BookingActivity.class);
+		//		i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELDETAIL, mHotelDetail);
+		//		i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, mHotelIdx);
+		//		i.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mSaleTime);
+		//
+		//		startActivityForResult(i, CODE_REQUEST_ACTIVITY_BOOKING);
+		//		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 	}
 
 	private void moveToUserInfoUpdate(Customer user)
@@ -337,7 +322,7 @@ public class HotelDetailActivity extends BaseActivity
 		}
 
 		@Override
-		public void onClickImage(HotelDetail hotelDetail)
+		public void onClickImage(HotelDetailEx hotelDetail)
 		{
 			if (isLockUiComponent() == true)
 			{
@@ -349,7 +334,7 @@ public class HotelDetailActivity extends BaseActivity
 			stopAutoSlide();
 
 			Intent intent = new Intent(HotelDetailActivity.this, ImageDetailListActivity.class);
-			intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELDETAIL, hotelDetail);
+			intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURLLIST, hotelDetail.getImageUrlList());
 			intent.putExtra(NAME_INTENT_EXTRA_DATA_SELECTED_POSOTION, mCurrentImage);
 			startActivity(intent);
 		}
@@ -469,8 +454,13 @@ public class HotelDetailActivity extends BaseActivity
 		}
 
 		@Override
-		public void viewMoreInfomation()
+		public void moreViewInfomation()
 		{
+			if (mHotelDetail.getMoreInformation() == null)
+			{
+				return;
+			}
+
 			if (isLockUiComponent() == true || isFinishing() == true)
 			{
 				return;
@@ -479,7 +469,7 @@ public class HotelDetailActivity extends BaseActivity
 			lockUiComponent();
 
 			Intent intent = new Intent(HotelDetailActivity.this, HotelDetailInfoActivity.class);
-			intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELDETAIL, mHotelDetail);
+			intent.putParcelableArrayListExtra(NAME_INTENT_EXTRA_DATA_MOREINFORMATION, mHotelDetail.getMoreInformation());
 			startActivity(intent);
 
 			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
@@ -524,17 +514,19 @@ public class HotelDetailActivity extends BaseActivity
 		@Override
 		public void showMap()
 		{
-			if (isLockUiComponent() == true || isFinishing() == true)
-			{
-				return;
-			}
-
-			lockUiComponent();
-
-			Intent intent = new Intent(HotelDetailActivity.this, ZoomMapActivity.class);
-			intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELDETAIL, mHotelDetail);
-
-			startActivity(intent);
+			//			if (isLockUiComponent() == true || isFinishing() == true)
+			//			{
+			//				return;
+			//			}
+			//
+			//			lockUiComponent();
+			//
+			//			Intent intent = new Intent(HotelDetailActivity.this, ZoomMapActivity.class);
+			//			intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME, mHotelDetail.hotelName);
+			//			intent.putExtra(NAME_INTENT_EXTRA_DATA_LATITUDE, mHotelDetail.latitude);
+			//			intent.putExtra(NAME_INTENT_EXTRA_DATA_LONGITUDE, mHotelDetail.longitude);
+			//
+			//			startActivity(intent);
 		}
 	};
 
@@ -572,63 +564,9 @@ public class HotelDetailActivity extends BaseActivity
 					}
 				}
 
-				JSONObject jsonData = response.getJSONObject("data");
+				JSONObject dataJSONObject = response.getJSONObject("data");
 
-				int discount = Integer.parseInt(jsonData.getString("discount"));
-				int price = Integer.parseInt(jsonData.getString("price"));
-
-				if (mHotelDetail.getHotel() == null)
-				{
-					mHotelDetail.setHotel(new Hotel());
-				}
-
-				Hotel hotelBasic = mHotelDetail.getHotel();
-
-				hotelBasic.setAddress(jsonData.getString("address"));
-				hotelBasic.setName(jsonData.getString("hotel_name"));
-				hotelBasic.setDiscount(discount);
-				hotelBasic.setPrice(price);
-
-				if (jsonData.has("sday") == true)
-				{
-					hotelBasic.mSaleDay = jsonData.getString("sday");
-				}
-
-				try
-				{
-					hotelBasic.setCategory(jsonData.getString("cat"));
-				} catch (Exception e)
-				{
-					hotelBasic.setCategory(HotelGrade.etc.name());
-				}
-
-				hotelBasic.setBedType(jsonData.getString("bed_type"));
-
-				mHotelDetail.setHotel(hotelBasic);
-
-				JSONArray imgArr = jsonData.getJSONArray("img");
-				List<String> imageList = new ArrayList<String>(imgArr.length());
-
-				for (int i = 0; i < imgArr.length(); i++)
-				{
-					imageList.add(imgArr.getString(i));
-				}
-
-				mHotelDetail.setImageUrl(imageList);
-
-				JSONArray specArr = jsonData.getJSONArray("spec");
-				mHotelDetail.setSpecification(specArr);
-
-				double latitude = jsonData.getDouble("lat");
-				double longitude = jsonData.getDouble("lng");
-
-				mHotelDetail.setLatitude(latitude);
-				mHotelDetail.setLongitude(longitude);
-
-				int saleIdx = jsonData.getInt("idx");
-				mHotelDetail.setSaleIdx(saleIdx);
-
-				mHotelDetail.isOverseas = jsonData.getInt("is_overseas");
+				mHotelDetail.setData(dataJSONObject);
 
 				if (mHotelDetailLayout != null)
 				{

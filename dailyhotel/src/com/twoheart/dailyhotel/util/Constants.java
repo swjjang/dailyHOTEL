@@ -52,7 +52,7 @@ public interface Constants
 
 	// 웹서버 호스트  
 	//"http://restful.dailyhotel.kr/goodnight/"; //  서비스 서버 
-	public static final String URL_DAILYHOTEL_SERVER = UNENCRYPTED_URL ? "http://restful.dailyhotel.kr/goodnight/" : "MzkkNTQkNjEkNTYkNDck$RTA3Q0MwQTlGOTVCNUM4RkQ1OTM5MzMxRDVDNkUK0MTBBRjIUyMjU4OIEDE4NzQWwRDI4QTNGRUFERUNDMDMzMjk4QzIyODlFMDkwMjNDMDMyRUUxMjBDRUU1MTlBMDQ3MzRB$";
+	//	public static final String URL_DAILYHOTEL_SERVER = UNENCRYPTED_URL ? "http://restful.dailyhotel.kr/goodnight/" : "MzkkNTQkNjEkNTYkNDck$RTA3Q0MwQTlGOTVCNUM4RkQ1OTM5MzMxRDVDNkUK0MTBBRjIUyMjU4OIEDE4NzQWwRDI4QTNGRUFERUNDMDMzMjk4QzIyODlFMDkwMjNDMDMyRUUxMjBDRUU1MTlBMDQ3MzRB$";
 	//http://ec2restful.dailyhotel.kr    http://restful.dailyhotel.kr/goodnight/
 	//    public static final String URL_DAILYHOTEL_SERVER = "http://192.168.0.39:8080/goodnight/"; //  서비스 서버
 
@@ -62,7 +62,7 @@ public interface Constants
 	//	public static final String URL_DAILYHOTEL_SERVER = "http://ec2.test.dailyhotel.kr/goodnight/";
 
 	//"http://tcwas.dailyhotel.co.kr/goodnight/";
-	//	public static final String URL_DAILYHOTEL_SERVER = UNENCRYPTED_URL ? "http://tcwas.dailyhotel.co.kr/goodnight/" : "NzYkNTkkMzIkMTI0JDg2JA==$OUQ3NTdBMUQ5RjFENEQyNTU3NUY5QjA4GMkM4QzRFRDNGQjQ2MTRDQTlEQzJKFNjRCRDQ5RUE5RUM4HRUYwNjAQ2ODk2RTg5RDQ3OThGRTVGODg4REMzRTUzRDRFMAkVBMzJB$";
+	public static final String URL_DAILYHOTEL_SERVER = UNENCRYPTED_URL ? "http://tcwas.dailyhotel.co.kr/goodnight/" : "NzYkNTkkMzIkMTI0JDg2JA==$OUQ3NTdBMUQ5RjFENEQyNTU3NUY5QjA4GMkM4QzRFRDNGQjQ2MTRDQTlEQzJKFNjRCRDQ5RUE5RUM4HRUYwNjAQ2ODk2RTg5RDQ3OThGRTVGODg4REMzRTUzRDRFMAkVBMzJB$";
 
 	// 회사 대표번호
 	public static final String PHONE_NUMBER_DAILYHOTEL = "1800-9120";
@@ -213,6 +213,9 @@ public interface Constants
 	// api/hotel/detail
 	public static final String URL_WEBAPI_HOTEL_DETAIL = UNENCRYPTED_URL ? "api/hotel/detail" : "MTAkMyQ0NCQ5MCQyNyQ=$RkYTwRkM4MzQQ2REE4MUYyQzZDQXkQwNDU3MTYxQTAxQ0FY3QzVEQ0ZDNUEwODdGMzNDODNGRkYzNzY0NjM2NDI5Rg=X=$";
 
+	// api/sale/hotel/info
+	public static final String URL_WEBAPI_SALE_HOTEL_INFO = UNENCRYPTED_URL ? "api/sale/hotel/info" : "MzMkMTIkMzIkMiQ1NyQ=$MjKVBODgxNzM1BRTcyNkZBQjFCQTJEREMX1RAjFBMDMyMzg1OTdFNjhEQQ0QzOEY1QTZFMzI0RjEwNTg0MDlDN0UyRQ==$";
+
 	// api/user/session/update/fb_user
 	public static final String URL_WEBAPI_USER_SESSION_UPDATE_FB_USER = UNENCRYPTED_URL ? "api/user/session/update/fb_user" : "NzIkMjgkMTkkNjYkMiQ=$NTJEyNTA1MEM4Qzk1NTJYBQ0E0NkREQRUE2RTAwNURCNTY3REJBQzA2MjI4QzIyQ0U0VRUM1M0Y5JN0ZGNTJDMzNCNQ==$";
 
@@ -349,6 +352,11 @@ public interface Constants
 	public static final String NAME_INTENT_EXTRA_DATA_AREA = "area";
 	public static final String NAME_INTENT_EXTRA_DATA_AREAITEMLIST = "areaItemlist";
 	public static final String NAME_INTENT_EXTRA_DATA_CUSTOMER = "customer";
+	public static final String NAME_INTENT_EXTRA_DATA_IMAGEURLLIST = "imageUrlList";
+	public static final String NAME_INTENT_EXTRA_DATA_HOTELNAME = "hotelName";
+	public static final String NAME_INTENT_EXTRA_DATA_MOREINFORMATION = "moreInformation";
+	public static final String NAME_INTENT_EXTRA_DATA_LATITUDE = "latitude";
+	public static final String NAME_INTENT_EXTRA_DATA_LONGITUDE = "longitude";
 
 	// Push Type
 	public static final int PUSH_TYPE_NOTICE = 0;
