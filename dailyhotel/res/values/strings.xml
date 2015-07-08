@@ -340,8 +340,8 @@
     <string name="frag_booking_tab_chkin_info">체크인 정보</string>
     <string name="frag_booking_tab_chkin">체크인</string>
     <string name="frag_booking_tab_chkout">체크아웃</string>
-    <string name="frag_booking_tab_name">예약자명</string>
-    <string name="frag_booking_tab_mobile">예약자 전화번호</string>
+    <string name="frag_booking_tab_name">투숙자명</string>
+    <string name="frag_booking_tab_mobile">투숙자 전화번호</string>
     <string name="frag_hotel_tab_add">주소</string>
     <string name="frag_hotel_tab_bed_type">베드타입</string>
     <string name="frag_hotel_tab_price">가격(세금&amp;봉사료 포함)</string>
