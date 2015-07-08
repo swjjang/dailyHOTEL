@@ -101,6 +101,7 @@
 	<!-- New Hotel Detail -->
 	<color name="hoteldetail_contents_text_color">#1c1c1c</color>
 	<color name="hoteldetail_room_simpleinfo_text">#989898</color>
+	<color name="hoteldetail_soldout_background">#e2e2e2</color>
 	
 	
 </resources>	

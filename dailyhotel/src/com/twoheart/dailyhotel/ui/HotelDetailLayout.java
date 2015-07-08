@@ -75,6 +75,7 @@ public class HotelDetailLayout
 	private LoopViewPager mViewPager;
 	private View mHotelTitleLaout;
 	private TextView mHotelGradeTextView;
+	private TextView mHotelNameTextView;
 	private TextView mActionBarTextView;
 	private HotelDetailListView mListView;
 	private HotelDetailImageViewPagerAdapter mImageAdapter;
@@ -1070,8 +1071,12 @@ public class HotelDetailLayout
 				return;
 			}
 
-			float offset = rect.top - mStatusBarHeight - Util.dpToPx(mActivity, 56);
-			float max = mImageHeight - Util.dpToPx(mActivity, 56);
+			//			float offset = rect.top - mStatusBarHeight - Util.dpToPx(mActivity, 56);
+			//			float max = mImageHeight - Util.dpToPx(mActivity, 56);
+			//			float alphaFactor = offset / max;
+
+			float max = (mImageHeight - Util.dpToPx(mActivity, 56)) / 2;
+			float offset = rect.top - mStatusBarHeight - Util.dpToPx(mActivity, 56) - max;
 			float alphaFactor = offset / max;
 
 			if (Util.isOverAPI11() == true)
@@ -1094,18 +1099,29 @@ public class HotelDetailLayout
 				}
 			}
 
-			//			if (mScrollState != OnScrollListener.SCROLL_STATE_FLING)
-			//			{
-			//				if (Float.compare(mAlphaFactor, alphaFactor) < 0)
-			//				{
-			//					mDirection = MotionEvent.ACTION_DOWN;
-			//				} else if (Float.compare(mAlphaFactor, alphaFactor) > 0)
-			//				{
-			//					mDirection = MotionEvent.ACTION_UP;
-			//				}
-			//			}
-			//
-			//			mAlphaFactor = alphaFactor;
+			Rect firstRect = (Rect) mHotelNameTextView.getTag();
+
+			if (firstRect != null)
+			{
+				if (Util.isOverAPI11() == true)
+				{
+					float gradeOffset = rect.top - mStatusBarHeight - Util.dpToPx(mActivity, 56);
+					float gradeMax = mImageHeight - Util.dpToPx(mActivity, 56);
+					float xFactor = gradeOffset / gradeMax;
+
+					if (Float.compare(xFactor, 0.0f) >= 0)
+					{
+						Rect moveRect = new Rect();
+						mHotelNameTextView.getGlobalVisibleRect(moveRect);
+
+						float nameMax = firstRect.left - Util.dpToPx(mActivity, 55);
+						mHotelNameTextView.setTranslationX(-nameMax * (1.0f - xFactor));
+					}
+				} else
+				{
+
+				}
+			}
 		}
 	};
 
@@ -1510,9 +1526,27 @@ public class HotelDetailLayout
 			mHotelGradeTextView.setBackgroundResource(hotelDetail.getHotel().getCategory().getColorResId());
 
 			// 호텔명
-			TextView hotelNameTextView = (TextView) view.findViewById(R.id.hotelNameTextView);
-			hotelNameTextView.setText(hotelDetail.getHotel().getName());
+			mHotelNameTextView = (TextView) view.findViewById(R.id.hotelNameTextView);
+			mHotelNameTextView.setText(hotelDetail.hotelName);
 
+			mHotelNameTextView.post(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					Rect rect = new Rect();
+					mHotelNameTextView.getGlobalVisibleRect(rect);
+					mHotelNameTextView.setTag(rect);
+
+					Rect rect01 = new Rect();
+					mActionBarTextView.getGlobalVisibleRect(rect01);
+
+					int actionBarWidth = rect01.width() - mActionBarTextView.getPaddingLeft();
+					int paddingRight = actionBarWidth - rect.width();
+
+					mActionBarTextView.setPadding(mActionBarTextView.getPaddingLeft(), 0, paddingRight, 0);
+				}
+			});
 			return view;
 		}
 

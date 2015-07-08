@@ -28,7 +28,8 @@
         android:ellipsize="end"
         android:freezesText="true"
         android:gravity="center_vertical"
-        android:paddingLeft="60dp"
+        android:paddingLeft="55dp"
+        android:paddingRight="15dp"
         android:singleLine="true"
         android:textColor="@android:color/black"
         android:textSize="20dp"
@@ -96,7 +97,6 @@
             android:layout_height="match_parent"
             android:background="@color/actionbar_hamburger"
             android:gravity="center"
-            android:text="객실선택"
             android:textColor="@android:color/white"
             android:textSize="20dp"
             android:visibility="gone" />
@@ -105,11 +105,10 @@
             android:id="@+id/soldoutTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/dh_btn_soldout"
-            android:gravity="center_vertical|center"
-            android:padding="0dp"
+            android:background="@color/hoteldetail_soldout_background"
+            android:gravity="center"
+            android:text="@string/act_hotel_soldout"
+            android:textColor="@color/hoteldetail_room_simpleinfo_text"
             android:visibility="gone" />
     </RelativeLayout>
 

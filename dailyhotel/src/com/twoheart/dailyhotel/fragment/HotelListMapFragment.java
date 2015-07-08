@@ -771,7 +771,7 @@ public class HotelListMapFragment extends
 		@Override
 		public void onPageSelected(int page)
 		{
-			if (mHotelArrangeArrayList == null || mHotelArrangeArrayList.size() < page)
+			if (mHotelArrangeArrayList == null || mHotelArrangeArrayList.size() <= page)
 			{
 				return;
 			}

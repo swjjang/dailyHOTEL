@@ -374,6 +374,7 @@
     <string name="act_hotel_tab_btn">예약하기</string>
     <string name="act_hotel_search_room">객실선택</string>
     <string name="act_hotel_booking">예약진행</string>
+	<string name="act_hotel_soldout">판매완료</string>
 
     <!-- Error Fragment -->
     <string name="frag_error_network_unavail">네트워크 연결이 끊어졌습니다.</string>
