@@ -42,7 +42,7 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
 
 		if (bundle != null)
 		{
-			arrayList = bundle.getStringArrayList(NAME_INTENT_EXTRA_DATA_HOTELDETAIL);
+			arrayList = bundle.getStringArrayList(NAME_INTENT_EXTRA_DATA_IMAGEURLLIST);
 			position = bundle.getInt(NAME_INTENT_EXTRA_DATA_SELECTED_POSOTION);
 		}
 
@@ -88,6 +88,7 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
 			}
 
 			ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
+			imageView.setBackgroundResource(R.drawable.background_hoteldetail_viewpager);
 			Bitmap cachedImg = VolleyImageLoader.getCache(url);
 
 			if (cachedImg == null)
@@ -97,11 +98,12 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
 					@Override
 					protected void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status)
 					{
-						VolleyImageLoader.putCache(url, bm);
-
+						if(bm != null)
+						{
+							VolleyImageLoader.putCache(url, bm);
+						}
+						
 						setImageViewHeight(iv, bm);
-
-						super.callback(url, iv, bm, status);
 					}
 				};
 
@@ -118,7 +120,7 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
 
 		private void setImageViewHeight(ImageView imageView, Bitmap bitmap)
 		{
-			if (bitmap.getWidth() >= bitmap.getHeight())
+			if (bitmap == null || bitmap.getWidth() >= bitmap.getHeight())
 			{
 				RelativeLayout.LayoutParams layoutParms = (android.widget.RelativeLayout.LayoutParams) imageView.getLayoutParams();
 

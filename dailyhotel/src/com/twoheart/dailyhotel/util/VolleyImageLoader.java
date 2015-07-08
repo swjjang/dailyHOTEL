@@ -40,7 +40,7 @@ public class VolleyImageLoader
 
 	public static void putCache(String url, Bitmap bitmap)
 	{
-		if (mBitmapLruCache != null)
+		if (mBitmapLruCache != null && bitmap != null)
 		{
 			mBitmapLruCache.putBitmap(url, bitmap);
 		}

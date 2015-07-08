@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
@@ -314,9 +315,10 @@ public class HotelDetailLayout
 		roomTypeTextView.setText(information.roomName);
 
 		DecimalFormat comma = new DecimalFormat("###,##0");
+		String currency = mActivity.getString(R.string.currency);
 		String price = comma.format(information.discount);
 
-		priceTextView.setText(price);
+		priceTextView.setText(price + currency);
 		optionTextView.setText(information.option);
 		benefitTextView.setText(information.roomBenefit);
 	}
@@ -466,24 +468,30 @@ public class HotelDetailLayout
 
 	public void startAnimationImageView()
 	{
-		int position = mViewPager.getCurrentItem();
-
-		AnimationImageView imageView = (AnimationImageView) mViewPager.findViewWithTag(position);
-
-		if (imageView != null)
+		if (Util.isOverAPI11() == true)
 		{
-			imageView.startAnimation();
+			int position = mViewPager.getCurrentItem();
+
+			AnimationImageView imageView = (AnimationImageView) mViewPager.findViewWithTag(position);
+
+			if (imageView != null)
+			{
+				imageView.startAnimation();
+			}
 		}
 	}
 
 	public void stopAnimationImageView(boolean initDuration)
 	{
-		int count = mViewPager.getChildCount();
-
-		for (int i = 0; i < count; i++)
+		if (Util.isOverAPI11() == true)
 		{
-			AnimationImageView imageView = (AnimationImageView) mViewPager.getChildAt(i);
-			imageView.stopAnimation(initDuration);
+			int count = mViewPager.getChildCount();
+
+			for (int i = 0; i < count; i++)
+			{
+				AnimationImageView imageView = (AnimationImageView) mViewPager.getChildAt(i);
+				imageView.stopAnimation(initDuration);
+			}
 		}
 	}
 
@@ -854,7 +862,6 @@ public class HotelDetailLayout
 		@Override
 		public void onPageSelected(int position)
 		{
-			ExLog.d("onPageSelected : " + position);
 			mIsRefresh = false;
 			mSelectedPosition = position;
 
@@ -863,7 +870,7 @@ public class HotelDetailLayout
 				mOnUserActionListener.onSelectedImagePosition(position);
 			}
 
-			if (mScrollState == -1)
+			if (mScrollState == -1 && Util.isOverAPI11() == true)
 			{
 				stopAnimationImageView(true);
 
@@ -884,9 +891,10 @@ public class HotelDetailLayout
 				return;
 			}
 
-			stopAnimationImageView(true);
-
-			ExLog.d("onPageScrolled : " + position + ", arg1 : " + positionOffset + ", " + positionOffsetPixels);
+			if (Util.isOverAPI11() == true)
+			{
+				stopAnimationImageView(true);
+			}
 
 			if (mScrollPosition == -1)
 			{
@@ -914,14 +922,19 @@ public class HotelDetailLayout
 				{
 					nextPosition = mScrollPosition;
 				}
-
-				AnimationImageView nextImageView = (AnimationImageView) mViewPager.findViewWithTag(nextPosition);
-
-				// 방향에 따라서 초기화가 달라야한다.
-				if (nextImageView != null)
+				
+				if (Util.isOverAPI11() == true)
 				{
-					nextImageView.initAnimation(mDirection > 0);
-					nextImageView.invalidate();
+					mImageAdapter.setDirection(mDirection);
+					
+					AnimationImageView nextImageView = (AnimationImageView) mViewPager.findViewWithTag(nextPosition);
+
+					// 방향에 따라서 초기화가 달라야한다.
+					if (nextImageView != null)
+					{
+						nextImageView.initAnimation(mDirection < 0);
+						nextImageView.invalidate();
+					}
 				}
 			}
 		}
@@ -929,21 +942,22 @@ public class HotelDetailLayout
 		@Override
 		public void onPageScrollStateChanged(int state)
 		{
-			ExLog.d("onPageScrollStateChanged : " + state);
-
 			mScrollState = state;
 
 			switch (state)
 			{
 				case ViewPager.SCROLL_STATE_IDLE:
 				{
-					stopAnimationImageView(true);
-
-					AnimationImageView imageView = (AnimationImageView) mViewPager.findViewWithTag(mSelectedPosition);
-
-					if (imageView != null)
+					if (Util.isOverAPI11() == true)
 					{
-						imageView.startAnimation();
+						stopAnimationImageView(true);
+
+						AnimationImageView imageView = (AnimationImageView) mViewPager.findViewWithTag(mSelectedPosition);
+
+						if (imageView != null)
+						{
+							imageView.startAnimation();
+						}
 					}
 
 					mDirection = 0;
@@ -952,7 +966,10 @@ public class HotelDetailLayout
 				}
 
 				case ViewPager.SCROLL_STATE_DRAGGING:
-					stopAnimationImageView(true);
+					if (Util.isOverAPI11() == true)
+					{
+						stopAnimationImageView(true);
+					}
 					break;
 
 				case ViewPager.SCROLL_STATE_SETTLING:
@@ -1103,12 +1120,12 @@ public class HotelDetailLayout
 
 			if (firstRect != null)
 			{
+				float gradeOffset = rect.top - mStatusBarHeight - Util.dpToPx(mActivity, 56);
+				float gradeMax = mImageHeight - Util.dpToPx(mActivity, 56);
+				float xFactor = gradeOffset / gradeMax;
+
 				if (Util.isOverAPI11() == true)
 				{
-					float gradeOffset = rect.top - mStatusBarHeight - Util.dpToPx(mActivity, 56);
-					float gradeMax = mImageHeight - Util.dpToPx(mActivity, 56);
-					float xFactor = gradeOffset / gradeMax;
-
 					if (Float.compare(xFactor, 0.0f) >= 0)
 					{
 						Rect moveRect = new Rect();
@@ -1119,11 +1136,23 @@ public class HotelDetailLayout
 					}
 				} else
 				{
+					if (Float.compare(xFactor, 0.0f) >= 0)
+					{
+						float nameMax = firstRect.left - Util.dpToPx(mActivity, 55);
 
+						TranslateAnimation anim = new TranslateAnimation(mLastFactor, -nameMax * (1.0f - xFactor), 0.0f, 0.0f);
+						anim.setDuration(0);
+						anim.setFillAfter(true);
+						mHotelNameTextView.startAnimation(anim);
+
+						mLastFactor = -nameMax * (1.0f - xFactor);
+					}
 				}
 			}
 		}
 	};
+
+	private float mLastFactor;
 
 	private View.OnTouchListener mEmptyViewOnTouchListener = new View.OnTouchListener()
 	{

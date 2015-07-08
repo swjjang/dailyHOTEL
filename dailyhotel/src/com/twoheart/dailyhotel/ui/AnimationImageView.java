@@ -27,7 +27,8 @@ public class AnimationImageView extends ImageView
 	private int mTranslateDistance;
 	private long mAnimationPlayTime;
 	private boolean mReservationAnimation;
-	private boolean mIsLeftAnimation;
+	private boolean mIsRightAnimation;
+	private boolean mIsImageNone;
 
 	private Matrix mMatrix;
 
@@ -68,8 +69,6 @@ public class AnimationImageView extends ImageView
 
 			mAnimationPlayTime = ANIMATION_DURATION - mAnimationPlayTime;
 
-			ExLog.d("moveDistance : " + moveDistance + ", mAnimationPlayTime : " + mAnimationPlayTime);
-
 			if (mAnimationPlayTime <= 0)
 			{
 				mAnimationPlayTime = ANIMATION_DURATION;
@@ -95,7 +94,7 @@ public class AnimationImageView extends ImageView
 
 					mTranslateDistance = value;
 
-					if (mIsLeftAnimation == true)
+					if (mIsRightAnimation == false)
 					{
 						if (isVerticalTranslate == true)
 						{
@@ -127,43 +126,25 @@ public class AnimationImageView extends ImageView
 				@Override
 				public void onAnimationStart(Animator animation)
 				{
-					ExLog.d("onAnimationStart");
 				}
 
 				@Override
 				public void onAnimationRepeat(Animator animation)
 				{
-					ExLog.d("onAnimationRepeat");
 				}
 
 				@Override
 				public void onAnimationEnd(Animator animation)
 				{
-					ExLog.d("onAnimationEnd");
-
 					if (mIsCancel == false)
 					{
-						mAnimationPlayTime = 0;
-
-						// 다음 이미지를 호출한다.
-						if (mOnUserActionListener != null)
-						{
-							if (mIsLeftAnimation == true)
-							{
-								mOnUserActionListener.nextSlide();
-							} else
-							{
-								mOnUserActionListener.prevSlide();
-							}
-						}
+						requestNextImage();
 					}
 				}
 
 				@Override
 				public void onAnimationCancel(Animator animation)
 				{
-					ExLog.d("onAnimationCancel");
-
 					mIsCancel = true;
 				}
 			});
@@ -172,12 +153,13 @@ public class AnimationImageView extends ImageView
 		}
 	};
 
-	public AnimationImageView(Context context, int height, int width)
+	public AnimationImageView(Context context, int height, int width, boolean isRightAnimation)
 	{
 		super(context);
 
 		mHeight = height;
 		mWidth = width;
+		mIsRightAnimation = isRightAnimation;
 
 		initLayout(context);
 	}
@@ -205,7 +187,6 @@ public class AnimationImageView extends ImageView
 		setScaleType(ScaleType.MATRIX);
 
 		mReservationAnimation = false;
-		mIsLeftAnimation = true;
 	}
 
 	@Override
@@ -215,8 +196,11 @@ public class AnimationImageView extends ImageView
 
 		if (bm == null)
 		{
+			mIsImageNone = true;
 			return;
 		}
+
+		mIsImageNone = false;
 
 		float xScale = ((float) mWidth) / bm.getWidth();
 		float yScale = ((float) mHeight) / bm.getHeight();
@@ -227,7 +211,7 @@ public class AnimationImageView extends ImageView
 
 		mTranslateDistance = 0;
 
-		initAnimation(mIsLeftAnimation);
+		initAnimation(mIsRightAnimation);
 
 		if (mReservationAnimation == true)
 		{
@@ -241,11 +225,17 @@ public class AnimationImageView extends ImageView
 	{
 		if (mScaledWidth == 0 && mScaledHeight == 0)
 		{
-			mReservationAnimation = true;
+			if (mIsImageNone == true)
+			{
+				requestNextImage();
+			} else
+			{
+				mReservationAnimation = true;
+			}
 			return;
 		}
 
-		if (mValueAnimator != null)
+		if (mValueAnimator != null || mAnimationHandler.hasMessages(0))
 		{
 			return;
 		}
@@ -282,11 +272,26 @@ public class AnimationImageView extends ImageView
 		mValueAnimator = null;
 	}
 
-	public void initAnimation(boolean isLeftAnimation)
+	private void requestNextImage()
 	{
-		mIsLeftAnimation = isLeftAnimation;
+		mAnimationPlayTime = 0;
 
-		ExLog.d("isLeftAnimation : " + isLeftAnimation);
+		// 다음 이미지를 호출한다.
+		if (mOnUserActionListener != null)
+		{
+			if (mIsRightAnimation == false)
+			{
+				mOnUserActionListener.nextSlide();
+			} else
+			{
+				mOnUserActionListener.prevSlide();
+			}
+		}
+	}
+
+	public void initAnimation(boolean isRightAnimation)
+	{
+		mIsRightAnimation = isRightAnimation;
 
 		mTranslateDistance = 0;
 
@@ -294,7 +299,7 @@ public class AnimationImageView extends ImageView
 		mMatrix.reset();
 		mMatrix.postScale(mScale, mScale);
 
-		if (isLeftAnimation == true)
+		if (isRightAnimation == false)
 		{
 			mMatrix.postTranslate(0.0f, 0.0f);
 		} else

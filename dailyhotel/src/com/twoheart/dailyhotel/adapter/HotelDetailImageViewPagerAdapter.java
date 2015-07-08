@@ -26,6 +26,7 @@ public class HotelDetailImageViewPagerAdapter extends PagerAdapter
 	private Context mContext;
 	private List<String> mImageUrlList;
 	private AQuery mAQuery;
+	private int mDirection;
 
 	private HotelDetailActivity.OnUserActionListener mOnUserActionListener;
 
@@ -37,6 +38,11 @@ public class HotelDetailImageViewPagerAdapter extends PagerAdapter
 	public void setData(List<String> list)
 	{
 		mImageUrlList = list;
+	}
+	
+	public void setDirection(int direction)
+	{
+		mDirection = direction;
 	}
 
 	@Override
@@ -53,9 +59,9 @@ public class HotelDetailImageViewPagerAdapter extends PagerAdapter
 
 		int width = Util.getLCDWidth(mContext);
 
-		if (isOverAPI11() == true)
+		if (Util.isOverAPI11() == true)
 		{
-			imageView = new AnimationImageView(mContext, width, width);
+			imageView = new AnimationImageView(mContext, width, width, mDirection < 0);
 			((AnimationImageView) imageView).setOnAnimationListener(mOnUserActionListener);
 		} else
 		{
@@ -81,10 +87,12 @@ public class HotelDetailImageViewPagerAdapter extends PagerAdapter
 				@Override
 				protected void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status)
 				{
-					VolleyImageLoader.putCache(url, bm);
+					if(bm != null)
+					{
+						VolleyImageLoader.putCache(url, bm);
+					}
+					
 					iv.setImageBitmap(bm);
-
-					//					super.callback(url, iv, bm, status);
 				}
 			};
 
@@ -135,11 +143,6 @@ public class HotelDetailImageViewPagerAdapter extends PagerAdapter
 	public void destroyItem(ViewGroup container, int position, Object object)
 	{
 		container.removeView((View) object);
-	}
-
-	private boolean isOverAPI11()
-	{
-		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
 	}
 
 	public void setOnAnimationListener(HotelDetailActivity.OnUserActionListener listener)

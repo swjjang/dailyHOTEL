@@ -346,10 +346,10 @@
                 android:paddingRight="11dp" >
 
                 <ImageView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:background="@drawable/receipt_bg_bottom_dot" />
+                    android:background="@drawable/tile_receipt_bottom_underline" />
 
                 <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                     android:id="@+id/textView41"

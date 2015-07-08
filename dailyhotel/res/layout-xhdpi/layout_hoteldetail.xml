@@ -6,7 +6,8 @@
     <com.twoheart.dailyhotel.ui.LoopViewPager
         android:id="@+id/defaultHotelImageView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_hoteldetail_viewpager" />
 
     <com.twoheart.dailyhotel.ui.HotelDetailListView
         android:id="@+id/hotelListView"
