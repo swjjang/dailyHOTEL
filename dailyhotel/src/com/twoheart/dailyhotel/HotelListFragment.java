@@ -454,7 +454,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	{
 		if (saleTime == null)
 		{
-			ExLog.e("saleTime == null");
 			return;
 		}
 
@@ -689,8 +688,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 			{
 				return;
 			}
-
-			ExLog.d("isLockUiComponent() : " + isLockUiComponent() + ", baseActivity.isLockUiComponent() : " + baseActivity.isLockUiComponent());
 
 			if (isLockUiComponent() == true || baseActivity.isLockUiComponent() == true)
 			{
