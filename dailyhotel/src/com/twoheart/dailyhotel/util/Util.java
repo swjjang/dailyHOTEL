@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.util;
 import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -10,6 +11,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -17,8 +19,10 @@ import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.provider.Settings.Secure;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
@@ -167,5 +171,51 @@ public class Util implements Constants
 		{
 			return null;
 		}
+	}
+
+	public static int getLCDWidth(Context context)
+	{
+		if (context == null)
+		{
+			return 0;
+		}
+
+		DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+
+		return displayMetrics.widthPixels;
+	}
+
+	public static int getLCDHeight(Context context)
+	{
+		if (context == null)
+		{
+			return 0;
+		}
+
+		DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+
+		return displayMetrics.heightPixels;
+	}
+
+	public static boolean isNameCharacter(String text)
+	{
+		boolean result = false;
+
+		if (TextUtils.isEmpty(text) == false)
+		{
+			result = Pattern.matches("^[a-zA-Z\\s.'-]+$", text);
+		}
+
+		return result;
+	}
+
+	public static boolean isOverAPI11()
+	{
+		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
+	}
+
+	public static boolean isTelephonyEnabled(Context context)
+	{
+		return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
 	}
 }

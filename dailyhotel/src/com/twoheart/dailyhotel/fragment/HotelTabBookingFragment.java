@@ -31,7 +31,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.HotelTabActivity;
 import com.twoheart.dailyhotel.adapter.HotelImageFragmentPagerAdapter;
 import com.twoheart.dailyhotel.model.HotelDetail;
-import com.twoheart.dailyhotel.util.ABTestPreferences;
+import com.twoheart.dailyhotel.util.ABTestPreference;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
@@ -130,9 +130,9 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 		{
 			mAdapter = new HotelImageFragmentPagerAdapter(getChildFragmentManager(), mHotelDetail);
 			mAdapter.setOnUserActionListener(mOnUserActionListener);
-
-			mViewPager.setAdapter(mAdapter);
 		}
+
+		mViewPager.setAdapter(mAdapter);
 
 		mCurrentPage = mHotelDetail.getImageUrl().size();
 
@@ -169,7 +169,7 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 		}
 
 		// 문의 하기 기능.
-		int state = ABTestPreferences.getInstance(getActivity()).getKakaotalkConsult();
+		int state = ABTestPreference.getInstance(getActivity()).getKakaotalkConsult();
 
 		setKakaotalkConsultVisible(view, state == 1);
 
@@ -287,6 +287,12 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 			tvPrice.setVisibility(View.INVISIBLE);
 			tvPrice.setText(null);
 		}
+
+		if (mAdapter != null)
+		{
+			mAdapter.setHotelDetail(hotelDetail);
+			mAdapter.notifyDataSetChanged();
+		}
 	}
 
 	private void setKakaotalkConsultVisible(View view, boolean visible)
@@ -323,7 +329,7 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 					}
 
 					// ABTest
-					ABTestPreferences.getInstance(baseActivity).feedbackKakaotalkConsult(baseActivity, mQueue, null);
+					ABTestPreference.getInstance(baseActivity).feedbackKakaotalkConsult(baseActivity, mQueue, null);
 
 					try
 					{

@@ -16,13 +16,13 @@ import com.twoheart.dailyhotel.util.ExLog;
 
 public class HotelDetail implements Parcelable
 {
-
 	private Hotel mHotel;
 	private double mLatitude;
 	private double mLongitude;
 	private Map<String, List<String>> mSpecification = new HashMap<String, List<String>>();
 	private List<String> mImageUrl = new ArrayList<String>();
 	private int mSaleIdx;
+	public int isOverseas; // 0 : 국내 , 1 : 해외 
 
 	public HotelDetail()
 	{
@@ -42,6 +42,7 @@ public class HotelDetail implements Parcelable
 		dest.writeMap(mSpecification);
 		dest.writeList(mImageUrl);
 		dest.writeInt(mSaleIdx);
+		dest.writeInt(isOverseas);
 
 	}
 
@@ -53,6 +54,7 @@ public class HotelDetail implements Parcelable
 		in.readMap(mSpecification, Map.class.getClassLoader());
 		in.readList(mImageUrl, List.class.getClassLoader());
 		mSaleIdx = in.readInt();
+		isOverseas = in.readInt();
 	}
 
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()

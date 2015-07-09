@@ -43,6 +43,7 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListe
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class BookingTabBookingFragment extends BaseFragment implements Constants
 {
@@ -204,7 +205,7 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 		}
 	};
 
-	private DailyHotelJsonResponseListener mUserInfoJsonResponseListener = new DailyHotelJsonResponseListener()
+	private DailyHotelJsonResponseListener mGuestInfoJsonResponseListener = new DailyHotelJsonResponseListener()
 	{
 
 		@Override
@@ -224,10 +225,28 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 					throw new NullPointerException("response == null");
 				}
 
-				String name = response.getString("name");
-				String phone = response.getString("phone");
-				tvCustomerName.setText(name);
-				tvCustomerPhone.setText(phone);
+				int msg_code = response.getInt("msg_code");
+
+				if (msg_code != 0)
+				{
+					if (response.has("msg") == true)
+					{
+						String msg = response.getString("msg");
+
+						DailyToast.showToast(baseActivity, msg, Toast.LENGTH_SHORT);
+						baseActivity.finish();
+						return;
+					} else
+					{
+						throw new NullPointerException("response == null");
+					}
+				}
+
+				JSONObject jsonData = response.getJSONObject("data");
+
+				//				jsonData.get("guest_email");
+				tvCustomerName.setText(jsonData.getString("guest_name"));
+				tvCustomerPhone.setText(jsonData.getString("guest_phone"));
 
 				// SailIndex가 0인 경우에 서버에 이슈가 발생할수 있다.
 				// 0인 경우 아마도 메모리에서 정보가 삭제되어 발생한듯 하다.
@@ -320,8 +339,11 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 
 			if ("alive".equalsIgnoreCase(result) == true)
 			{ // session alive
-				// 사용자 정보 요청.
-				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, baseActivity));
+				// 투숙객 정보 요청.
+
+				String params = String.format("?reservation_idx=%d", mBooking.index);
+
+				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_GUEST_INFO).append(params).toString(), null, mGuestInfoJsonResponseListener, baseActivity));
 
 			} else if ("dead".equalsIgnoreCase(result) == true)
 			{ // session dead

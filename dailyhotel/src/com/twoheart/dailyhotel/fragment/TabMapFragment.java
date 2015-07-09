@@ -22,6 +22,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -173,6 +174,7 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
 		if (googleMap != null)
 		{
 			mMarker = googleMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title(hotel_name));
+			mMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.info_ic_map_large));
 			mMarker.showInfoWindow();
 
 			LatLng address = new LatLng(lat, lng);

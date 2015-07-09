@@ -6,6 +6,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -26,7 +27,6 @@ public class ZoomMapActivity extends BaseActivity
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_zoom_map);
-		setActionBar(R.string.actionbar_title_zoom_map_activity);
 
 		Bundle bundle = getIntent().getExtras();
 
@@ -34,6 +34,14 @@ public class ZoomMapActivity extends BaseActivity
 		{
 			mHotelDetail = bundle.getParcelable(NAME_INTENT_EXTRA_DATA_HOTELDETAIL);
 		}
+
+		if (mHotelDetail == null)
+		{
+			finish();
+			return;
+		}
+
+		setActionBar(mHotelDetail.getHotel().getName());
 
 		googleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.frag_full_map)).getMap();
 
@@ -48,7 +56,9 @@ public class ZoomMapActivity extends BaseActivity
 	{
 		if (googleMap != null)
 		{
-			googleMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title(hotel_name)).showInfoWindow();
+			Marker marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title(hotel_name));
+			marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.info_ic_map_large));
+			marker.showInfoWindow();
 
 			LatLng address = new LatLng(lat, lng);
 			CameraPosition cp = new CameraPosition.Builder().target((address)).zoom(15).build();

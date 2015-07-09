@@ -22,6 +22,7 @@ public interface Constants
 	// 디버그 빌드 여부 BuildConfig는 배포시에 자동으로 false가 된다고 한다. 테스트 해보고 싶음.
 	public static final boolean DEBUG = BuildConfig.DEBUG;
 	public static final boolean UNENCRYPTED_URL = false;
+	public static final String VERSION = "1.6.2";
 
 	// 스토어 선택.
 	public enum Stores
@@ -41,7 +42,7 @@ public interface Constants
 		}
 	};
 
-	public static final Stores RELEASE_STORE = Stores.T_STORE;
+	public static final Stores RELEASE_STORE = Stores.PLAY_STORE;
 
 	// 항상 열리게 셋팅 여부
 	public static final boolean ALWAYS_OPEN = false;
@@ -70,7 +71,7 @@ public interface Constants
 	/**
 	 * TODO :TEST JUDGE
 	 */
-	public static final int REQUEST_EXPIRE_JUDGE = 30000;
+	public static final int REQUEST_EXPIRE_JUDGE = 60000;
 
 	// 구글플레이 서비스 상태 확인 타임아웃
 	public static final int PLAY_SERVICES_RESOLUTION_REQUEST = 15000;
@@ -209,8 +210,17 @@ public interface Constants
 	// api/reserv/receipt
 	public static final String URL_WEBAPI_RESERV_RECEIPT = UNENCRYPTED_URL ? "api/reserv/receipt" : "OCQ3NiQ3OSQyNSQ2NyQ=$MDgxRDE5WRDExNDUzRjAzNTg1KNDIyMEVCQTlGMDE5NjE5RjVEMjYxMEFBRTRCQzQ4RRTFBMDU0NjFADNCEUxMkI4Qg==$";
 
+	// api/reserv/guest/info
+	public static final String URL_WEBAPI_RESERV_GUEST_INFO = UNENCRYPTED_URL ? "api/reserv/guest/info" : "MjMkMjQkNTMkMCQ3OSQ=$CMDA1OTMyRjg5MDRCRTc5OTgWH3QTI1ODEyNUYwRjk5MDU5Mjg0N0JSBNEIxQTRBMTJDNTA3NjI4MkUK1MkE5NkIxQg==$";
+
 	// api/hotel/detail
 	public static final String URL_WEBAPI_HOTEL_DETAIL = UNENCRYPTED_URL ? "api/hotel/detail" : "MTAkMyQ0NCQ5MCQyNyQ=$RkYTwRkM4MzQQ2REE4MUYyQzZDQXkQwNDU3MTYxQTAxQ0FY3QzVEQ0ZDNUEwODdGMzNDODNGRkYzNzY0NjM2NDI5Rg=X=$";
+
+	// api/sale/hotel/info
+	public static final String URL_WEBAPI_SALE_HOTEL_INFO = UNENCRYPTED_URL ? "api/sale/hotel/info" : "MzMkMTIkMzIkMiQ1NyQ=$MjKVBODgxNzM1BRTcyNkZBQjFCQTJEREMX1RAjFBMDMyMzg1OTdFNjhEQQ0QzOEY1QTZFMzI0RjEwNTg0MDlDN0UyRQ==$";
+
+	// api/user/session/update/fb_user
+	public static final String URL_WEBAPI_USER_SESSION_UPDATE_FB_USER = UNENCRYPTED_URL ? "api/user/session/update/fb_user" : "NzIkMjgkMTkkNjYkMiQ=$NTJEyNTA1MEM4Qzk1NTJYBQ0E0NkREQRUE2RTAwNURCNTY3REJBQzA2MjI4QzIyQ0U0VRUM1M0Y5JN0ZGNTJDMzNCNQ==$";
 
 	// Register Credit Card
 	// api/user/session/billing/card/info
@@ -289,6 +299,10 @@ public interface Constants
 	public static final String KEY_PREFERENCE_USER_ACCESS_TOKEN = "USER_ACCESSTOKEN";
 	public static final String KEY_PREFERENCE_GCM_ID = "PUSH_ID";
 
+	public static final String KEY_PREFERENCE_OVERSEAS_NAME = "OVERSEAS_NAME";
+	public static final String KEY_PREFERENCE_OVERSEAS_PHONE = "OVERSEAS_PHONE";
+	public static final String KEY_PREFERENCE_OVERSEAS_EMAIL = "OVERSEAS_EMAIL";
+
 	// version
 	public static final String KEY_PREFERENCE_CURRENT_VERSION_NAME = "CURRENT_VERSION_NAME";
 	public static final String KEY_PREFERENCE_MIN_VERSION_NAME = "MIN_VERSION_NAME";
@@ -330,6 +344,7 @@ public interface Constants
 	public static final String NAME_INTENT_EXTRA_DATA_BOOKINGIDX = "bookingIdx";
 	public static final String NAME_INTENT_EXTRA_DATA_PAY = "pay";
 	public static final String NAME_INTENT_EXTRA_DATA_SELECTED_IMAGE_URL = "sel_image_url";
+	public static final String NAME_INTENT_EXTRA_DATA_SELECTED_POSOTION = "selectedPosition";
 	//	public static final String NAME_INTENT_EXTRA_DATA_IS_INTENT_FROM_PUSH = "is_intent_from_push";
 	public static final String NAME_INTENT_EXTRA_DATA_PUSH_TYPE = "push_type";
 	public static final String NAME_INTENT_EXTRA_DATA_PUSH_MSG = "push_msg";
@@ -339,6 +354,12 @@ public interface Constants
 	public static final String NAME_INTENT_EXTRA_DATA_PROVINCE = "province";
 	public static final String NAME_INTENT_EXTRA_DATA_AREA = "area";
 	public static final String NAME_INTENT_EXTRA_DATA_AREAITEMLIST = "areaItemlist";
+	public static final String NAME_INTENT_EXTRA_DATA_CUSTOMER = "customer";
+	public static final String NAME_INTENT_EXTRA_DATA_IMAGEURLLIST = "imageUrlList";
+	public static final String NAME_INTENT_EXTRA_DATA_HOTELNAME = "hotelName";
+	public static final String NAME_INTENT_EXTRA_DATA_MOREINFORMATION = "moreInformation";
+	public static final String NAME_INTENT_EXTRA_DATA_LATITUDE = "latitude";
+	public static final String NAME_INTENT_EXTRA_DATA_LONGITUDE = "longitude";
 
 	// Push Type
 	public static final int PUSH_TYPE_NOTICE = 0;
@@ -359,6 +380,7 @@ public interface Constants
 	public static final int CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD = 12;
 	public static final int CODE_REQUEST_ACTIVITY_CREDITCARD_MANAGER = 13;
 	public static final int CODE_REQUEST_ACTIVITY_SELECT_AREA = 14;
+	public static final int CODE_REQUEST_ACTIVITY_USERINFO_UPDATE = 15;
 
 	// Android Activity의 Result Code들이다.
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_FAIL = 100;

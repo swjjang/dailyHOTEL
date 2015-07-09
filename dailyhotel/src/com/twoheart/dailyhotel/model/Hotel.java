@@ -27,6 +27,7 @@ public class Hotel implements Parcelable
 	public double mLongitude;
 	public String mSaleDay; //현재 호텔이 팔리고 있는 날짜. 디버그에서만 사용.
 	public boolean isDailyChoice;
+	public int saleIndex;
 
 	public enum HotelGrade
 	{
@@ -132,6 +133,7 @@ public class Hotel implements Parcelable
 		dest.writeDouble(mLatitude);
 		dest.writeDouble(mLongitude);
 		dest.writeInt(isDailyChoice ? 1 : 0);
+		dest.writeInt(saleIndex);
 	}
 
 	private void readFromParcel(Parcel in)
@@ -149,6 +151,7 @@ public class Hotel implements Parcelable
 		mLatitude = in.readDouble();
 		mLongitude = in.readDouble();
 		isDailyChoice = in.readInt() == 1 ? true : false;
+		saleIndex = in.readInt();
 	}
 
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
@@ -324,6 +327,12 @@ public class Hotel implements Parcelable
 			{
 				isDailyChoice = jsonObject.getBoolean("is_dailychoice");
 			}
+
+			if (jsonObject.has("sale_idx") == true)
+			{
+				saleIndex = jsonObject.getInt("sale_idx");
+			}
+
 		} catch (JSONException e)
 		{
 			ExLog.d(e.toString());

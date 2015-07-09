@@ -49,6 +49,7 @@ import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Guest;
 import com.twoheart.dailyhotel.model.Pay;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -220,29 +221,36 @@ public class PaymentActivity extends BaseActivity implements Constants
 			ProgressDialog.show(PaymentActivity.this, null, getString(R.string.dialog_msg_processing_payment), true).setCancelable(false);
 		} else
 		{
-			// 기본 결제 방식
-			String url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERVE_PAYMENT)).append('/').append(mPay.getType().name()).append("/").append(mPay.getHotelDetail().getSaleIdx()).toString();
+			Guest guest = mPay.getGuest();
 
 			if (mPay.getPayPrice() == 0)
 			{
-				ExLog.e("GETPAAA : " + mPay.getPayPrice());
 				// 적립금으로만 결제하기 포스트
-				url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)).append('/').append(mPay.getHotelDetail().getSaleIdx()).toString();
+				String url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)).append('/').append(mPay.getHotelDetail().getSaleIdx()).toString();
 
 				// 적립금으로만 결제하는 경우 결제창할 필요 없음
-				ArrayList<String> postParameterKey = new ArrayList<String>(Arrays.asList("saleIdx", "email", "name", "phone", "accessToken"));
-				ArrayList<String> postParameterValue = new ArrayList<String>(Arrays.asList(mPay.getHotelDetail().getSaleIdx() + "", mPay.getCustomer().getEmail(), mPay.getCustomer().getName(), mPay.getCustomer().getPhone(), mPay.getCustomer().getAccessToken()));
+				ArrayList<String> postParameterKey = new ArrayList<String>(Arrays.asList("saleIdx", "email", "name", "phone", "accessToken", "guest_name", "guest_phone", "guest_email"));
+				ArrayList<String> postParameterValue = new ArrayList<String>(Arrays.asList(mPay.getHotelDetail().getSaleIdx() + "", mPay.getCustomer().getEmail(), mPay.getCustomer().getName(), mPay.getCustomer().getPhone(), mPay.getCustomer().getAccessToken(), guest.name, guest.phone, guest.email));
 
 				webView.postUrl(url, parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]), postParameterValue.toArray(new String[postParameterValue.size()])));
-				return;
 			} else if (mPay.isSaleCredit() == true)
 			{
 				// 적립금 일부 사용
-				url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)).append('/').append(mPay.getType().name()).append("/").append(mPay.getHotelDetail().getSaleIdx()).append("/").append(mPay.getCredit().getBonus()).toString();
-			}
+				String url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)).append('/').append(mPay.getType().name()).append("/").append(mPay.getHotelDetail().getSaleIdx()).append("/").append(mPay.getCredit().getBonus()).toString();
 
-			ExLog.e("GET_URL : " + url); // "http://ec2global.dailyhotel.kr/goodnight/reserv/session/req/CARD/92074";
-			webView.loadUrl(url);
+				ArrayList<String> postParameterKey = new ArrayList<String>(Arrays.asList("guest_name", "guest_phone", "guest_email"));
+				ArrayList<String> postParameterValue = new ArrayList<String>(Arrays.asList(guest.name, guest.phone, guest.email));
+
+				webView.postUrl(url, parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]), postParameterValue.toArray(new String[postParameterValue.size()])));
+			} else
+			{
+				String url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERVE_PAYMENT)).append('/').append(mPay.getType().name()).append("/").append(mPay.getHotelDetail().getSaleIdx()).toString();
+
+				ArrayList<String> postParameterKey = new ArrayList<String>(Arrays.asList("guest_name", "guest_phone", "guest_email"));
+				ArrayList<String> postParameterValue = new ArrayList<String>(Arrays.asList(guest.name, guest.phone, guest.email));
+
+				webView.postUrl(url, parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]), postParameterValue.toArray(new String[postParameterValue.size()])));
+			}
 		}
 	}
 

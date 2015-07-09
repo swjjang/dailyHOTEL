@@ -433,6 +433,8 @@ public class HotelListMapFragment extends
 			{
 				mLoadingDialog.hide();
 			}
+
+			mViewPager.setVisibility(View.INVISIBLE);
 		}
 
 		if (mMyLocationMarker != null)
@@ -769,7 +771,7 @@ public class HotelListMapFragment extends
 		@Override
 		public void onPageSelected(int page)
 		{
-			if (mHotelArrangeArrayList == null || mHotelArrangeArrayList.size() < page)
+			if (mHotelArrangeArrayList == null || mHotelArrangeArrayList.size() <= page)
 			{
 				return;
 			}

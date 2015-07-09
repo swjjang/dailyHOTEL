@@ -29,6 +29,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.TranslateAnimation;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.model.SaleTime;
@@ -39,7 +40,9 @@ import com.twoheart.dailyhotel.util.ui.BaseActivity;
 public class HotelDaysListFragment extends HotelListFragment implements OnClickListener
 {
 	private static final int HANDLER_MESSAGE_SHOWDAYSLIST = 1;
-	private static final int DAY_OF_COUNT = 5;
+	private static final int DAY_OF_TOTALCOUNT = 12;
+	public static final int DEFAULT_DAY_OF_COUNT = 5;
+	private static final int DEFAULT_LINE_COUNT = 6;
 
 	// 날짜가 나오는 탭의 높이이다. 마진이 있는 경우 고려해서 넣을것.px 로 넣어야 함.
 	private int DAYSLIST_HEIGHT;
@@ -102,8 +105,6 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		mDaysBackgroundView = view.findViewById(R.id.daysBackgroundView);
 		mDaysLayout = view.findViewById(R.id.daysLayout);
 
-		DAYSLIST_HEIGHT = Util.dpToPx(baseActivity, 110);
-
 		mDaysBackgroundView.setOnClickListener(new OnClickListener()
 		{
 			@Override
@@ -120,33 +121,91 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 
 	private void initDaysLayout()
 	{
-		if (mDaysView != null)
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
 		{
 			return;
 		}
 
-		mDaysView = new View[DAY_OF_COUNT];
+		if (mDaysView == null)
+		{
+			mDaysView = new View[DAY_OF_TOTALCOUNT];
 
-		// 날짜를 어떻게 받을 것인지 필요.
-		mDaysView[0] = mDaysLayout.findViewById(R.id.item01);
-		mDaysView[1] = mDaysLayout.findViewById(R.id.item02);
-		mDaysView[2] = mDaysLayout.findViewById(R.id.item03);
-		mDaysView[3] = mDaysLayout.findViewById(R.id.item04);
-		mDaysView[4] = mDaysLayout.findViewById(R.id.item05);
-		//		mDaysView[5] = mDaysLayout.findViewById(R.id.item06);
-		//		mDaysView[6] = mDaysLayout.findViewById(R.id.item07);
+			View line1Layout = mDaysLayout.findViewById(R.id.daysLine1Layout);
+			View line2Layout = mDaysLayout.findViewById(R.id.daysLine2Layout);
 
-		initLayoutDays(mDaysView[0], mSaleTime.getClone(2));
-		initLayoutDays(mDaysView[1], mSaleTime.getClone(3));
-		initLayoutDays(mDaysView[2], mSaleTime.getClone(4));
-		initLayoutDays(mDaysView[3], mSaleTime.getClone(5));
-		initLayoutDays(mDaysView[4], mSaleTime.getClone(6));
-		//		initLayoutDays(mDaysView[5], mSaleTime.getClone(3));
-		//		initLayoutDays(mDaysView[6], mSaleTime.getClone(4));
+			for (int i = 0; i < DEFAULT_LINE_COUNT; i++)
+			{
+				mDaysView[i] = line1Layout.findViewById(R.id.item01 + i);
+			}
+
+			for (int i = 0; i < DEFAULT_LINE_COUNT; i++)
+			{
+				mDaysView[i + DEFAULT_LINE_COUNT] = line2Layout.findViewById(R.id.item07 + i);
+			}
+		}
+
+		int visibleCount = DEFAULT_DAY_OF_COUNT;
+
+		if (mSelectedProvince != null)
+		{
+			visibleCount = mSelectedProvince.getSaleWeek() == 1 ? DEFAULT_DAY_OF_COUNT : DAY_OF_TOTALCOUNT;
+		}
+
+		DAYSLIST_HEIGHT = visibleCount <= DEFAULT_LINE_COUNT ? Util.dpToPx(baseActivity, 100) : Util.dpToPx(baseActivity, 200);
+
+		View line2Layout = mDaysLayout.findViewById(R.id.daysLine2Layout);
+		View daysMiddleLine = mDaysLayout.findViewById(R.id.daysMiddleLine);
+
+		if (visibleCount <= DEFAULT_LINE_COUNT)
+		{
+			line2Layout.setVisibility(View.GONE);
+			daysMiddleLine.setVisibility(View.GONE);
+
+			for (int i = 0; i < DAY_OF_TOTALCOUNT; i++)
+			{
+				if (visibleCount > i)
+				{
+					mDaysView[i].setVisibility(View.VISIBLE);
+					initLayoutDays(mDaysView[i], mSaleTime.getClone(2 + i));
+				} else
+				{
+					mDaysView[i].setVisibility(View.GONE);
+				}
+			}
+		} else
+		{
+			line2Layout.setVisibility(View.VISIBLE);
+			daysMiddleLine.setVisibility(View.VISIBLE);
+
+			for (int i = 0; i < DAY_OF_TOTALCOUNT; i++)
+			{
+				if (visibleCount > i)
+				{
+					mDaysView[i].setVisibility(View.VISIBLE);
+					initLayoutDays(mDaysView[i], mSaleTime.getClone(2 + i));
+				} else
+				{
+					mDaysView[i].setVisibility(View.INVISIBLE);
+				}
+			}
+		}
 
 		if (mSelectedView == null)
 		{
 			setSelectedDays(mDaysView[0]);
+
+		} else if (mSelectedView.getVisibility() != View.VISIBLE)
+		{
+			setSelectedDays(mDaysView[0]);
+
+			super.setSaleTime((SaleTime) mSelectedView.getTag());
+
+			if (mUserActionListener != null)
+			{
+				mUserActionListener.selectDay(this, true);
+			}
 		} else
 		{
 			setSelectedDays(mSelectedView);
@@ -236,6 +295,8 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 	{
 		super.onRefreshComplete();
 
+		initDaysLayout();
+
 		if (mIsShowDaysList == true && mAnimationStatus == ANIMATION_STATUS.HIDE_END)
 		{
 			mIsShowDaysList = false;
@@ -293,6 +354,11 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 
 		for (View view : mDaysView)
 		{
+			if (view == null)
+			{
+				break;
+			}
+
 			view.setEnabled(enabled);
 		}
 
@@ -310,6 +376,11 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 
 		for (View dayView : mDaysView)
 		{
+			if (dayView == null)
+			{
+				break;
+			}
+
 			TextView dayOfTheWeekTextView = (TextView) dayView.findViewById(R.id.textView1);
 			TextView dayTextView = (TextView) dayView.findViewById(R.id.textView2);
 
@@ -341,8 +412,12 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 
 		if (isUsedAnimatorApi() == true)
 		{
+			((RelativeLayout.LayoutParams) mDaysLayout.getLayoutParams()).topMargin = 0;
+
 			mDaysLayout.setVisibility(View.INVISIBLE);
 			mDaysLayout.setTranslationY(-DAYSLIST_HEIGHT);
+
+			setActionBarAnimationLock(false);
 		} else
 		{
 			mDaysLayout.setVisibility(View.GONE);
@@ -424,7 +499,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		{
 			View underlineView02 = baseActivity.findViewById(R.id.tabindicator_underLine);
 
-			TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, underlineView02.getBottom() - DAYSLIST_HEIGHT, underlineView02.getBottom());
+			TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, -DAYSLIST_HEIGHT, 0);
 			translateAnimation.setDuration(300);
 			translateAnimation.setFillBefore(true);
 			translateAnimation.setFillAfter(true);
@@ -536,9 +611,9 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 			mObjectAnimator.start();
 		} else
 		{
-			View underlineView02 = baseActivity.findViewById(R.id.tabindicator_underLine);
+			//			View underlineView02 = baseActivity.findViewById(R.id.tabindicator_underLine);
 
-			TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, underlineView02.getBottom(), underlineView02.getBottom() - DAYSLIST_HEIGHT);
+			TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, 0, -DAYSLIST_HEIGHT);
 			translateAnimation.setDuration(300);
 			translateAnimation.setFillBefore(true);
 			translateAnimation.setFillAfter(true);

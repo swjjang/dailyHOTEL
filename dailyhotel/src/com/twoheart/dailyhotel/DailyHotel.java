@@ -30,6 +30,7 @@ import com.google.analytics.tracking.android.GAServiceManager;
 import com.google.analytics.tracking.android.GoogleAnalytics;
 import com.google.analytics.tracking.android.Tracker;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.VolleyImageLoader;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 
@@ -102,8 +103,17 @@ public class DailyHotel extends Application implements Constants
 
 	private void initializeFont()
 	{
-		mTypeface = Typeface.createFromAsset(getAssets(), "NanumBarunGothic.ttf");
-		mBoldTypeface = Typeface.createFromAsset(getAssets(), "NanumBarunGothicBold.ttf");
+		try
+		{
+			mTypeface = Typeface.createFromAsset(getAssets(), "NanumBarunGothic.ttf");
+			mBoldTypeface = Typeface.createFromAsset(getAssets(), "NanumBarunGothicBold.ttf");
+		} catch (Exception e)
+		{
+			ExLog.d(e.toString());
+
+			mTypeface = Typeface.DEFAULT;
+			mBoldTypeface = Typeface.DEFAULT_BOLD;
+		}
 	}
 
 	public static Typeface getTypeface()
