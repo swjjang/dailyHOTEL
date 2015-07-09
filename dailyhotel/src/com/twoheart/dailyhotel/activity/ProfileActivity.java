@@ -293,7 +293,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 					mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGOUT).toString(), null, mUserLogoutStringResponseListener, ProfileActivity.this));
 				}
 			};
-
+			
 			SimpleAlertDialog.build(ProfileActivity.this, null, getString(R.string.dialog_msg_chk_wanna_login), getString(R.string.dialog_btn_text_logout), getString(R.string.dialog_btn_text_cancel), posListener, null).setCancelable(false).show();
 
 			releaseUiComponent();
@@ -427,11 +427,12 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 			VolleyHttpClient.destroyCookie();
 
 			SharedPreferences.Editor ed = sharedPreference.edit();
-			ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
-			ed.putString(KEY_PREFERENCE_USER_ID, null);
-			ed.putString(KEY_PREFERENCE_USER_PWD, null);
-			ed.putString(KEY_PREFERENCE_GCM_ID, null);
+//			ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
+//			ed.putString(KEY_PREFERENCE_USER_ID, null);
+//			ed.putString(KEY_PREFERENCE_USER_PWD, null);
+//			ed.putString(KEY_PREFERENCE_GCM_ID, null);
 
+			ed.clear();
 			ed.commit();
 
 			if (Session.getActiveSession() != null)
