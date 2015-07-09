@@ -71,7 +71,7 @@ public interface Constants
 	/**
 	 * TODO :TEST JUDGE
 	 */
-	public static final int REQUEST_EXPIRE_JUDGE = 30000;
+	public static final int REQUEST_EXPIRE_JUDGE = 60000;
 
 	// 구글플레이 서비스 상태 확인 타임아웃
 	public static final int PLAY_SERVICES_RESOLUTION_REQUEST = 15000;
