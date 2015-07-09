@@ -33,6 +33,7 @@ import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
@@ -64,6 +65,12 @@ public class BookingTabActivity extends BaseActivity
 		if (bundle != null)
 		{
 			booking = (Booking) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_BOOKING);
+		}
+
+		if (booking == null)
+		{
+			Util.restartApp(this);
+			return;
 		}
 
 		setContentView(R.layout.activity_booking_tab);
@@ -234,7 +241,7 @@ public class BookingTabActivity extends BaseActivity
 					{
 						case 100:
 						{
-							String msg = response.getString("");
+							String msg = response.getString("msg");
 							DailyToast.showToast(BookingTabActivity.this, msg, Toast.LENGTH_SHORT);
 							break;
 						}
@@ -246,7 +253,7 @@ public class BookingTabActivity extends BaseActivity
 								return;
 							}
 
-							String msg = response.getString("");
+							String msg = response.getString("msg");
 							AlertDialog alertDlg = SimpleAlertDialog.build(BookingTabActivity.this, null, msg, getString(R.string.dialog_btn_text_confirm), null, null, null).create();
 							alertDlg.show();
 							break;

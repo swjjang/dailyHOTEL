@@ -135,7 +135,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		//	com.twoheart.dailyhotel.util.network.request.DailyHotelRequest.makeUrlEncoder();
+		//		com.twoheart.dailyhotel.util.network.request.DailyHotelRequest.makeUrlEncoder();
 
 		// 사용자가 선택한 언어, but 만약 사용자가 한국인인데 일본어를 선택하면 jp가 됨.
 		// 영어인 경우 - English, 한글인 경우 - 한국어

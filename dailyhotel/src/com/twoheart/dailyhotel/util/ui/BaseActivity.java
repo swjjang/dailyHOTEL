@@ -104,7 +104,18 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 				}
 			}
 		};
+	}
 
+	@Override
+	protected void onSaveInstanceState(Bundle outState)
+	{
+		try
+		{
+			super.onSaveInstanceState(outState);
+		} catch (Exception e)
+		{
+			ExLog.d(e.toString());
+		}
 	}
 
 	@Override
@@ -160,7 +171,6 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 		if (isFinish == true)
 		{
 			mToolbar.setNavigationIcon(R.drawable.back);
-
 			mToolbar.setNavigationOnClickListener(new View.OnClickListener()
 			{
 				@Override
@@ -177,14 +187,44 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 		return mToolbar;
 	}
 
+	public void setActionBarBackgroundVisible(boolean visible)
+	{
+		if (mToolbar == null)
+		{
+			return;
+		}
+
+		View view = findViewById(R.id.toolbar_actionbarUnderLine);
+
+		if (visible == true)
+		{
+			if (view.getVisibility() != View.VISIBLE)
+			{
+				mToolbar.setTitleTextColor(getResources().getColor(R.color.actionbar_title));
+				mToolbar.setBackgroundColor(getResources().getColor(R.color.white));
+
+				view.setVisibility(View.VISIBLE);
+			}
+		} else
+		{
+			if (view.getVisibility() != View.INVISIBLE)
+			{
+				mToolbar.setTitleTextColor(android.R.color.transparent);
+				mToolbar.setBackgroundColor(android.R.color.transparent);
+
+				view.setVisibility(View.INVISIBLE);
+			}
+		}
+	}
+
 	public void setActionBar(int strId)
 	{
 		setActionBar(getString(strId), true);
 	}
 
-	public void setActionBar(String text)
+	public Toolbar setActionBar(String text)
 	{
-		setActionBar(text, true);
+		return setActionBar(text, true);
 	}
 
 	public void setActionBarRegionEnable(boolean isEnable)

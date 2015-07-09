@@ -158,7 +158,7 @@ public class SelectAreaActivity extends BaseActivity
 			{
 				AreaItem areaItem = arrayList.get(i);
 
-				if (selectedArea.provinceIndex == areaItem.getProvince().index)
+				if (selectedArea.getProvinceIndex() == areaItem.getProvince().getProvinceIndex())
 				{
 					if (areaItem.getAreaList().size() == 0)
 					{
@@ -193,7 +193,7 @@ public class SelectAreaActivity extends BaseActivity
 			{
 				AreaItem areaItem = arrayList.get(i);
 
-				if (province.index == areaItem.getProvince().index)
+				if (province.getProvinceIndex() == areaItem.getProvince().getProvinceIndex())
 				{
 					if (areaItem.getAreaList().size() == 0)
 					{
@@ -376,7 +376,7 @@ public class SelectAreaActivity extends BaseActivity
 				}
 			} else if (mSelectedProvince instanceof Province)
 			{
-				if (mSelectedProvince.index == area.provinceIndex && area.index == -1)
+				if (mSelectedProvince.getProvinceIndex() == ((Province) area).getProvinceIndex() && area.index == -1)
 				{
 					isSelected = true;
 				}

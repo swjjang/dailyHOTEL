@@ -16,6 +16,8 @@
 
 package com.twoheart.dailyhotel.ui;
 
+import java.lang.reflect.Field;
+
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -44,9 +46,11 @@ public class LoopViewPager extends ViewPager
 
 	private static final boolean DEFAULT_BOUNDARY_CASHING = false;
 
-	OnPageChangeListener mOuterPageChangeListener;
+	private OnPageChangeListener mOuterPageChangeListener;
 	private LoopPagerAdapterWrapper mAdapter;
 	private boolean mBoundaryCaching = DEFAULT_BOUNDARY_CASHING;
+
+	private ScrollerCustomDuration mScroller = null;
 
 	/**
 	 * helper function which may be used when implementing FragmentPagerAdapter
@@ -128,18 +132,52 @@ public class LoopViewPager extends ViewPager
 	public LoopViewPager(Context context)
 	{
 		super(context);
-		init();
+		init(context);
 	}
 
 	public LoopViewPager(Context context, AttributeSet attrs)
 	{
 		super(context, attrs);
-		init();
+		init(context);
 	}
 
-	private void init()
+	private void init(Context context)
 	{
 		super.setOnPageChangeListener(onPageChangeListener);
+
+		postInitViewPager();
+	}
+
+	/**
+	 * Override the Scroller instance with our own class so we can change the
+	 * duration
+	 */
+	private void postInitViewPager()
+	{
+		try
+		{
+			Class<?> viewpager = ViewPager.class;
+			Field scroller = viewpager.getDeclaredField("mScroller");
+			scroller.setAccessible(true);
+			Field interpolator = viewpager.getDeclaredField("sInterpolator");
+			interpolator.setAccessible(true);
+
+			mScroller = new ScrollerCustomDuration(getContext(), (android.view.animation.Interpolator) interpolator.get(null));
+			scroller.set(this, mScroller);
+		} catch (Exception e)
+		{
+		}
+	}
+
+	/**
+	 * Set the factor by which the duration will change
+	 */
+	public void setScrollDurationFactor(double scrollFactor)
+	{
+		if (mScroller != null)
+		{
+			mScroller.setScrollDurationFactor(scrollFactor);
+		}
 	}
 
 	private OnPageChangeListener onPageChangeListener = new OnPageChangeListener()
@@ -178,19 +216,19 @@ public class LoopViewPager extends ViewPager
 				mPreviousOffset = positionOffset;
 				if (mOuterPageChangeListener != null)
 				{
-					if (realPosition != mAdapter.getRealCount() - 1)
-					{
-						mOuterPageChangeListener.onPageScrolled(realPosition, positionOffset, positionOffsetPixels);
-					} else
-					{
-						if (positionOffset > .5)
-						{
-							mOuterPageChangeListener.onPageScrolled(0, 0, 0);
-						} else
-						{
-							mOuterPageChangeListener.onPageScrolled(realPosition, 0, 0);
-						}
-					}
+					//					if (realPosition != mAdapter.getRealCount() - 1)
+					//					{
+					mOuterPageChangeListener.onPageScrolled(realPosition, positionOffset, positionOffsetPixels);
+					//					} else
+					//					{
+					//						if (positionOffset > .5)
+					//						{
+					//							mOuterPageChangeListener.onPageScrolled(0, 0, 0);
+					//						} else
+					//						{
+					//							mOuterPageChangeListener.onPageScrolled(realPosition, 0, 0);
+					//						}
+					//					}
 				}
 			}
 		}
@@ -213,5 +251,4 @@ public class LoopViewPager extends ViewPager
 			}
 		}
 	};
-
 }

@@ -59,7 +59,6 @@ public class VolleyHttpClient implements Constants
 		sContext = context;
 		sRequestQueue = Volley.newRequestQueue(sContext, new HttpClientStack(sHttpClient));
 		// sRequestQueue = Volley.newRequestQueue(sContext);
-
 	}
 
 	public static RequestQueue getRequestQueue()

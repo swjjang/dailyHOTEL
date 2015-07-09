@@ -38,6 +38,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.HotelTabBookingFragment;
 import com.twoheart.dailyhotel.fragment.TabInfoFragment;
 import com.twoheart.dailyhotel.fragment.TabMapFragment;
+import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.Hotel.HotelGrade;
 import com.twoheart.dailyhotel.model.HotelDetail;
@@ -206,7 +207,7 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 		lockUI();
 		// 호텔 정보를 가져온다.
 
-		String params = String.format("?hotel_idx=%d&sday=%s", hotelDetail.getHotel().getIdx(), mSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
+		String params = String.format("?hotel_idx=%d&sday=%s&sale_idx=%d", hotelDetail.getHotel().getIdx(), mSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), hotelDetail.getHotel().saleIndex);
 
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_DETAIL).append(params).toString(), null, mHotelDetailJsonResponseListener, this));
 	}
@@ -237,35 +238,30 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 		releaseUiComponent();
 
 		chgClickable(btnBooking, true); // 7.2 난타 방지
-		if (requestCode == CODE_REQUEST_ACTIVITY_BOOKING)
-		{
-			setResult(resultCode);
 
-			if (resultCode == RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_SALES_CLOSED || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_NOT_ONSALE)
+		switch (requestCode)
+		{
+			case CODE_REQUEST_ACTIVITY_BOOKING:
 			{
-				finish();
-			}
-		} else if (requestCode == CODE_REQUEST_ACTIVITY_LOGIN)
-		{
-			if (resultCode == RESULT_OK)
-				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, this));
-		}
+				setResult(resultCode);
 
-		//		uiHelper.onActivityResult(requestCode, resultCode, data, new Callback()
-		//		{
-		//
-		//			@Override
-		//			public void onError(PendingCall pendingCall, Exception error, Bundle data)
-		//			{
-		//				HotelTabActivity.this.onError();
-		//			}
-		//
-		//			@Override
-		//			public void onComplete(PendingCall pendingCall, Bundle data)
-		//			{
-		//
-		//			}
-		//		});
+				if (resultCode == RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_SALES_CLOSED || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_NOT_ONSALE)
+				{
+					finish();
+				}
+				break;
+			}
+
+			case CODE_REQUEST_ACTIVITY_LOGIN:
+			case CODE_REQUEST_ACTIVITY_USERINFO_UPDATE:
+			{
+				if (resultCode == RESULT_OK)
+				{
+					mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, this));
+				}
+				break;
+			}
+		}
 
 		super.onActivityResult(requestCode, resultCode, data);
 	}
@@ -380,6 +376,43 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 	{
 		super.onDestroy();
 		//		uiHelper.onDestroy();
+	}
+
+	private void moveToBooking()
+	{
+		Intent i = new Intent(HotelTabActivity.this, BookingActivity.class);
+		i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELDETAIL, hotelDetail);
+		i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, mHotelIdx);
+		i.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mSaleTime);
+
+		startActivityForResult(i, CODE_REQUEST_ACTIVITY_BOOKING);
+		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+	}
+
+	private void moveToUserInfoUpdate(Customer user)
+	{
+		Intent i = new Intent(HotelTabActivity.this, SignupActivity.class);
+		i.putExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER, user);
+
+		startActivityForResult(i, CODE_REQUEST_ACTIVITY_USERINFO_UPDATE);
+		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+	}
+
+	private boolean isEmptyTextField(String... fieldText)
+	{
+
+		for (int i = 0; i < fieldText.length; i++)
+		{
+			if (isEmptyTextField(fieldText[i]) == true)
+				return true;
+		}
+
+		return false;
+	}
+
+	private boolean isEmptyTextField(String fieldText)
+	{
+		return (TextUtils.isEmpty(fieldText) == true || fieldText.equals("null") == true || fieldText.trim().length() == 0);
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -565,6 +598,8 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 				int saleIdx = jsonData.getInt("idx");
 				hotelDetail.setSaleIdx(saleIdx);
 
+				hotelDetail.isOverseas = jsonData.getInt("is_overseas");
+
 				loadFragments();
 			} catch (Exception e)
 			{
@@ -640,13 +675,8 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 			if ("alive".equalsIgnoreCase(result) == true)
 			{ // session alive
 
-				Intent i = new Intent(HotelTabActivity.this, BookingActivity.class);
-				i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELDETAIL, hotelDetail);
-				i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, mHotelIdx);
-				i.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mSaleTime);
-
-				startActivityForResult(i, CODE_REQUEST_ACTIVITY_BOOKING);
-				overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+				// 사용자 정보 요청.
+				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, HotelTabActivity.this));
 
 			} else if ("dead".equalsIgnoreCase(result) == true)
 			{ // session dead
@@ -679,6 +709,48 @@ public class HotelTabActivity extends BaseActivity implements OnClickListener
 			} else
 			{
 				onError();
+			}
+		}
+	};
+
+	private DailyHotelJsonResponseListener mUserInfoJsonResponseListener = new DailyHotelJsonResponseListener()
+	{
+
+		@Override
+		public void onResponse(String url, JSONObject response)
+		{
+			try
+			{
+				if (response == null)
+				{
+					throw new NullPointerException("response == null");
+				}
+
+				Customer user = new Customer();
+				user.setEmail(response.getString("email"));
+				user.setName(response.getString("name"));
+				user.setPhone(response.getString("phone"));
+				user.setAccessToken(response.getString("accessToken"));
+				user.setUserIdx(response.getString("idx"));
+
+				// 페이스북 유저
+				if (isEmptyTextField(user.getAccessToken()) == false)
+				{
+					if (isEmptyTextField(new String[] { user.getEmail(), user.getPhone(), user.getName() }) == false)
+					{
+						moveToBooking();
+					} else
+					{
+						// 정보 업데이트 화면으로 이동.
+						moveToUserInfoUpdate(user);
+					}
+				} else
+				{
+					moveToBooking();
+				}
+			} catch (Exception e)
+			{
+				onError(e);
 			}
 		}
 	};

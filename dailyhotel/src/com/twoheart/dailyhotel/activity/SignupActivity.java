@@ -22,7 +22,9 @@ import java.util.regex.Pattern;
 
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -38,9 +40,11 @@ import android.widget.Toast;
 import com.android.volley.Request.Method;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
+import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -50,13 +54,18 @@ import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class SignupActivity extends BaseActivity implements OnClickListener
 {
+	private static final int MAX_OF_RECOMMENDER = 7;
+
+	private static final int MODE_SIGNUP = 1;
+	private static final int MODE_USERINFO_UPDATE = 2;
 
 	private EditText etEmail, etName, etPhone, etPwd, etRecommender;
 	private TextView tvTerm, tvPrivacy;
 	private TextView btnSignUp;
+	private int mMode;
+	private String mUserIdx;
 
 	private Map<String, String> signupParams;
-
 	private MixpanelAPI mMixpanel;
 
 	@Override
@@ -65,7 +74,32 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_signup);
-		setActionBar(R.string.actionbar_title_signup_activity);
+
+		Intent intent = getIntent();
+
+		Customer user = null;
+
+		if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER) == true)
+		{
+			mMode = MODE_USERINFO_UPDATE;
+
+			user = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER);
+
+			setActionBar(R.string.actionbar_title_userinfo_update_activity);
+
+			if (user == null)
+			{
+				finish();
+				return;
+			}
+
+			SimpleAlertDialog.build(SignupActivity.this, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_facebook_update), getString(R.string.dialog_btn_text_confirm), null, null, null).show();
+		} else
+		{
+			mMode = MODE_SIGNUP;
+
+			setActionBar(R.string.actionbar_title_signup_activity);
+		}
 
 		etPwd = (EditText) findViewById(R.id.et_signup_pwd);
 		etEmail = (EditText) findViewById(R.id.et_signup_email);
@@ -79,16 +113,60 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
 		etName.setFilters(allowAlphanumericHangul);
 
+		// 추천인 코드 필터 적용
+		StringFilter numberFilter = new StringFilter(SignupActivity.this);
+		InputFilter[] allowNumeric = new InputFilter[1];
+		allowNumeric[0] = numberFilter.allowNumeric;
+
+		etRecommender.setFilters(allowNumeric);
+
+		// 추천코드 최대 길이
+		InputFilter[] fArray = new InputFilter[1];
+		fArray[0] = new InputFilter.LengthFilter(MAX_OF_RECOMMENDER);
+		etRecommender.setFilters(fArray);
+
 		etPhone = (EditText) findViewById(R.id.et_signup_phone);
+		etPhone.setFilters(allowNumeric);
+
 		tvTerm = (TextView) findViewById(R.id.tv_signup_agreement);
 		tvPrivacy = (TextView) findViewById(R.id.tv_signup_personal_info);
 		btnSignUp = (TextView) findViewById(R.id.btn_signup);
 
+		if (user != null)
+		{
+			mUserIdx = user.getUserIdx();
+
+			if (isEmptyTextField(user.getPhone()) == false)
+			{
+				etPhone.setText(user.getPhone());
+				etPhone.setEnabled(false);
+				etPhone.setFocusable(false);
+			}
+
+			if (isEmptyTextField(user.getEmail()) == false)
+			{
+				etEmail.setText(user.getEmail());
+				etEmail.setEnabled(false);
+				etEmail.setFocusable(false);
+			}
+
+			if (isEmptyTextField(user.getName()) == false)
+			{
+				etName.setText(user.getName());
+				etName.setEnabled(false);
+				etName.setFocusable(false);
+			}
+
+			etPwd.setVisibility(View.GONE);
+			btnSignUp.setText(R.string.act_signup_btn_update);
+		} else
+		{
+			getPhoneNumber();
+		}
+
 		tvTerm.setOnClickListener(this);
 		tvPrivacy.setOnClickListener(this);
 		btnSignUp.setOnClickListener(this);
-
-		getPhoneNumber();
 
 		mMixpanel = MixpanelAPI.getInstance(this, "791b366dadafcd37803f6cd7d8358373");
 	}
@@ -115,18 +193,24 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
 	}
 
-	public boolean checkInput()
+	public boolean checkInput(boolean checkPassword)
 	{
-		if (etEmail.getText().toString().equals(""))
+		if (etEmail.getText().toString().trim().equals("") == true)
+		{
 			return false;
-		else if (etName.getText().toString().equals(""))
+		} else if (etName.getText().toString().trim().equals("") == true)
+		{
 			return false;
-		else if (etPhone.getText().toString().equals(""))
+		} else if (etPhone.getText().toString().trim().equals("") == true)
+		{
 			return false;
-		else if (etPwd.getText().toString().equals(""))
+		} else if (checkPassword == true && etPwd.getText().toString().trim().equals("") == true)
+		{
 			return false;
-		else
+		} else
+		{
 			return true;
+		}
 	}
 
 	public boolean isValidPhone(String inputStr)
@@ -147,47 +231,96 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 	public void onClick(View v)
 	{
 		if (v.getId() == btnSignUp.getId())
-		{ // 회원가입
-
-			// 필수 입력 check
-			if (!checkInput())
+		{
+			if (mMode == MODE_SIGNUP)
 			{
-				DailyToast.showToast(SignupActivity.this, R.string.toast_msg_please_input_required_infos, Toast.LENGTH_SHORT);
-				return;
-			}
+				// 회원가입
+				// 필수 입력 check
+				if (checkInput(true) == false)
+				{
+					DailyToast.showToast(SignupActivity.this, R.string.toast_msg_please_input_required_infos, Toast.LENGTH_SHORT);
+					return;
+				}
 
-			// email check
-			if (android.util.Patterns.EMAIL_ADDRESS.matcher(etEmail.getText().toString()).matches() == false)
+				// email check
+				if (android.util.Patterns.EMAIL_ADDRESS.matcher(etEmail.getText().toString()).matches() == false)
+				{
+					DailyToast.showToast(SignupActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
+					return;
+				}
+
+				if (etPwd.length() < 4)
+				{
+					DailyToast.showToast(SignupActivity.this, R.string.toast_msg_please_input_password_more_than_4chars, Toast.LENGTH_SHORT);
+					return;
+				}
+
+				lockUI();
+
+				signupParams = new HashMap<String, String>();
+				signupParams.put("email", etEmail.getText().toString());
+				signupParams.put("pw", etPwd.getText().toString());
+				signupParams.put("name", etName.getText().toString());
+				signupParams.put("phone", etPhone.getText().toString());
+
+				TelephonyManager tManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+				signupParams.put("device", tManager.getDeviceId());
+				signupParams.put("marketType", RELEASE_STORE.getName());
+
+				String recommender = etRecommender.getText().toString().trim();
+				if (recommender.equals("") == false)
+				{
+					signupParams.put("recommender", recommender);
+				}
+
+				mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNUP).toString(), signupParams, mUserSignupJsonResponseListener, this));
+
+				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestSignup", null, null);
+			} else
 			{
-				DailyToast.showToast(SignupActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
-				return;
+				// 회원 정보 업데이트
+				// 필수 입력 check
+				if (checkInput(false) == false)
+				{
+					DailyToast.showToast(SignupActivity.this, R.string.toast_msg_please_input_required_infos, Toast.LENGTH_SHORT);
+					return;
+				}
+
+				// email check
+				if (android.util.Patterns.EMAIL_ADDRESS.matcher(etEmail.getText().toString()).matches() == false)
+				{
+					DailyToast.showToast(SignupActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
+					return;
+				}
+
+				lockUI();
+
+				Map<String, String> updateParams = new HashMap<String, String>();
+				updateParams.put("user_idx", mUserIdx);
+
+				if (etEmail.isEnabled() == true)
+				{
+					updateParams.put("user_email", etEmail.getText().toString().trim());
+				}
+
+				if (etName.isEnabled() == true)
+				{
+					updateParams.put("user_name", etName.getText().toString().trim());
+				}
+
+				if (etPhone.isEnabled() == true)
+				{
+					updateParams.put("user_phone", etPhone.getText().toString().trim());
+				}
+
+				String recommender = etRecommender.getText().toString().trim();
+				if (recommender.equals("") == false)
+				{
+					updateParams.put("recommendation_code", recommender);
+				}
+
+				mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_UPDATE_FB_USER).toString(), updateParams, mUserUpdateFacebookJsonResponseListener, this));
 			}
-
-			if (etPwd.length() < 4)
-			{
-				DailyToast.showToast(SignupActivity.this, R.string.toast_msg_please_input_password_more_than_4chars, Toast.LENGTH_SHORT);
-				return;
-			}
-			lockUI();
-
-			signupParams = new HashMap<String, String>();
-			signupParams.put("email", etEmail.getText().toString());
-			signupParams.put("pw", etPwd.getText().toString());
-			signupParams.put("name", etName.getText().toString());
-			signupParams.put("phone", etPhone.getText().toString());
-
-			TelephonyManager tManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-			signupParams.put("device", tManager.getDeviceId());
-			signupParams.put("marketType", RELEASE_STORE.getName());
-
-			String recommender = etRecommender.getText().toString().trim();
-			if (!recommender.equals(""))
-				signupParams.put("recommender", recommender);
-
-			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNUP).toString(), signupParams, mUserSignupJsonResponseListener, this));
-
-			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestSignup", null, null);
-
 		} else if (v.getId() == tvTerm.getId())
 		{ // 이용약관
 
@@ -232,6 +365,11 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 	{
 		mMixpanel.flush();
 		super.onDestroy();
+	}
+
+	private boolean isEmptyTextField(String fieldText)
+	{
+		return (TextUtils.isEmpty(fieldText) == true || fieldText.equals("null") == true || fieldText.trim().length() == 0);
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -352,84 +490,118 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 		}
 	};
 
-	//	@Override
-	//	public void onResponse(String url, JSONObject response) {
-	//		if (url.contains(URL_WEBAPI_USER_SIGNUP)) {
-	//			try {
-	//				JSONObject obj = response;
-	//
-	//				String result = obj.getString("join");
-	//				String msg = null;
-	//
-	//				ExLog.d(response.toString());
-	//				if (obj.length() > 1) msg = obj.getString("msg");
-	//
-	//				if (result.equals("true")) {
-	//					ExLog.d("result? " + result);
-	//					Map<String, String> loginParams = new HashMap<String, String>();
-	//					loginParams.put("email", signupParams.get("email"));
-	//					loginParams.put("pw", Crypto.encrypt(signupParams.get("pw")).replace("\n", ""));
-	//					ExLog.d("email : " + loginParams.get("email") + " pw : " + loginParams.get("pw"));
-	//					mQueue.add(new DailyHotelJsonRequest(
-	//							Method.POST, new StringBuilder(
-	//									URL_DAILYHOTEL_SERVER).append(
-	//									URL_WEBAPI_USER_LOGIN)
-	//									.toString(), loginParams,
-	//							this, this));
-	//				} else {
-	//					unLockUI();
-	//					showToast(msg, Toast.LENGTH_LONG, true);
-	//				}
-	//
-	//			} catch (Exception e) {
-	//				onError(e);
-	//			}
-	//		} else if (url.contains(URL_WEBAPI_USER_LOGIN)) {
-	//			
-	//			try {
-	//				ExLog.d(response.toString());
-	//				if (response.getBoolean("login")) {
-	//					VolleyHttpClient.createCookie();
-	//					unLockUI();
-	////					showToast(getString(R.string.toast_msg_success_to_signup), Toast.LENGTH_LONG, false);
-	//					
-	//					storeLoginInfo();
-	//					
-	//					lockUI();
-	//					mQueue.add(new DailyHotelJsonRequest(Method.POST,
-	//							new StringBuilder(URL_DAILYHOTEL_SERVER)
-	//					.append(URL_WEBAPI_USER_INFO).toString(), null, this, this));
-	//					
-	////					finish();
-	//				} 
-	//
-	//			} catch (JSONException e) {
-	//				onError(e);
-	//			} 
-	//		} else if (url.contains(URL_WEBAPI_USER_INFO)) {
-	//
-	//			try {
-	//				unLockUI();
-	//				int userIdx = response.getInt("idx");
-	//				String userIdxStr = String.format("%07d", userIdx);
-	//				
-	//				SimpleDateFormat dateFormat = new  SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.getDefault());
-	//				Date date = new Date();
-	//				String strDate = dateFormat.format(date);
-	//				
-	//				mMixpanel.getPeople().identify(userIdxStr);
-	//				
-	//				JSONObject props = new JSONObject();
-	//				props.put("userId", userIdxStr);
-	//				props.put("datetime", strDate);
-	//				props.put("method", "email");
-	//				mMixpanel.track("signup", props);
-	//				
-	//				showToast(getString(R.string.toast_msg_success_to_signup), Toast.LENGTH_LONG, false);
-	//				finish();
-	//			} catch (Exception e) {
-	//				onError(e);
-	//			}
-	//		}
-	//	}
+	private DailyHotelJsonResponseListener mUserUpdateFacebookJsonResponseListener = new DailyHotelJsonResponseListener()
+	{
+
+		@Override
+		public void onResponse(String url, JSONObject response)
+		{
+			if (isFinishing() == true)
+			{
+				return;
+			}
+
+			try
+			{
+				unLockUI();
+
+				if (response == null)
+				{
+					throw new NullPointerException("response == null");
+				}
+
+				JSONObject jsonObject = response.getJSONObject("data");
+
+				boolean result = jsonObject.getBoolean("is_success");
+				int msgCode = response.getInt("msg_code");
+
+				if (result == true)
+				{
+					String msg = null;
+
+					if (response.has("msg") == true)
+					{
+						msg = response.getString("msg");
+					}
+
+					switch (msgCode)
+					{
+						case 100:
+						{
+							if (msg != null)
+							{
+								DailyToast.showToast(SignupActivity.this, msg, Toast.LENGTH_SHORT);
+							}
+
+							setResult(RESULT_OK);
+							finish();
+							break;
+						}
+
+						case 200:
+						{
+							if (msg != null)
+							{
+								AlertDialog alertDlg = SimpleAlertDialog.build(SignupActivity.this, null, msg, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnClickListener()
+								{
+									@Override
+									public void onClick(DialogInterface dialog, int which)
+									{
+										setResult(RESULT_OK);
+										finish();
+									}
+								}, null).create();
+
+								alertDlg.show();
+							} else
+							{
+								setResult(RESULT_OK);
+								finish();
+							}
+							break;
+						}
+
+						default:
+							setResult(RESULT_OK);
+							finish();
+							break;
+					}
+
+				} else
+				{
+					String msg = null;
+
+					if (response.has("msg") == true)
+					{
+						msg = response.getString("msg");
+					}
+
+					switch (msgCode)
+					{
+						case 100:
+						{
+							if (msg != null)
+							{
+								DailyToast.showToast(SignupActivity.this, msg, Toast.LENGTH_SHORT);
+							}
+							break;
+						}
+
+						case 200:
+						{
+							if (msg != null)
+							{
+								AlertDialog alertDlg = SimpleAlertDialog.build(SignupActivity.this, null, msg, getString(R.string.dialog_btn_text_confirm), null, null, null).create();
+								alertDlg.show();
+							}
+							break;
+						}
+					}
+				}
+			} catch (Exception e)
+			{
+				onError(e);
+			}
+		}
+	};
 }

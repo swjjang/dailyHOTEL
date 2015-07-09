@@ -27,6 +27,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
@@ -39,12 +40,14 @@ import com.twoheart.dailyhotel.activity.ProfileActivity;
 import com.twoheart.dailyhotel.activity.VersionActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class SettingFragment extends BaseFragment implements Constants, OnClickListener
 {
@@ -178,8 +181,15 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 
 		} else if (id == tvCall.getId())
 		{
-			Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
-			startActivity(i);
+			if (Util.isTelephonyEnabled(mHostActivity) == true)
+			{
+				Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
+				startActivity(i);
+			} else
+			{
+				DailyToast.showToast(mHostActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
+			}
+
 			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "inquireCS", null, null);
 		} else if (id == tvAbout.getId())
 		{

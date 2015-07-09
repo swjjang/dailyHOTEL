@@ -269,12 +269,17 @@ public class HotelMainFragment extends BaseFragment
 
 			case R.id.action_map:
 			{
-				if (mOnUserActionListener != null)
-				{
-					mOnUserActionListener.toggleViewType();
-				}
+				int isInstalledGooglePlayServices = installGooglePlayService(getActivity());
 
-				baseActivity.invalidateOptionsMenu();
+				if (isInstalledGooglePlayServices == 1)
+				{
+					if (mOnUserActionListener != null)
+					{
+						mOnUserActionListener.toggleViewType();
+					}
+
+					baseActivity.invalidateOptionsMenu();
+				}
 				return true;
 			}
 
@@ -405,7 +410,7 @@ public class HotelMainFragment extends BaseFragment
 
 			for (Area area : areaList)
 			{
-				if (province.index == area.provinceIndex)
+				if (province.getProvinceIndex() == area.getProvinceIndex())
 				{
 					ArrayList<Area> areaArrayList = item.getAreaList();
 
@@ -415,13 +420,15 @@ public class HotelMainFragment extends BaseFragment
 
 						totalArea.index = -1;
 						totalArea.name = province.name + " 전체";
-						totalArea.provinceIndex = province.index;
+						totalArea.setProvince(province);
 						totalArea.sequence = -1;
 						totalArea.tag = totalArea.name;
+						totalArea.setProvinceIndex(province.getProvinceIndex());
 
 						areaArrayList.add(totalArea);
 					}
 
+					area.setProvince(province);
 					areaArrayList.add(area);
 				}
 			}
@@ -672,11 +679,11 @@ public class HotelMainFragment extends BaseFragment
 				// 마지막으로 지역이 Area로 되어있으면 Province로 바꾸어 준다.
 				if (mIsProvinceSetting == false && selectedProvince instanceof Area)
 				{
-					int provinceIndex = ((Area) selectedProvince).provinceIndex;
+					int provinceIndex = ((Area) selectedProvince).getProvinceIndex();
 
 					for (Province province : provinceList)
 					{
-						if (province.index == provinceIndex)
+						if (province.getProvinceIndex() == provinceIndex)
 						{
 							selectedProvince = province;
 							break;
@@ -954,6 +961,7 @@ public class HotelMainFragment extends BaseFragment
 				case HotelListViewItem.TYPE_ENTRY:
 				{
 					Intent intent = new Intent(baseActivity, HotelTabActivity.class);
+					//					Intent intent = new Intent(baseActivity, HotelDetailActivity.class);
 
 					String region = baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
 

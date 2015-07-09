@@ -11,6 +11,8 @@ public class Province implements Parcelable
 	public int index;
 	public String name;
 	public int sequence;
+	private int saleWeek = 1; // 1 : 1주일,  2 : 2주일
+	public boolean isOverseas;
 
 	public boolean isSelected;
 
@@ -29,6 +31,32 @@ public class Province implements Parcelable
 		index = jsonObject.getInt("idx");
 		name = jsonObject.getString("name");
 		sequence = jsonObject.getInt("seq");
+
+		if (jsonObject.has("sale_week") == true)
+		{
+			saleWeek = jsonObject.getInt("sale_week");
+		} else
+		{
+			saleWeek = 1;
+		}
+
+		if (jsonObject.has("is_overseas") == true)
+		{
+			isOverseas = jsonObject.getBoolean("is_overseas");
+		} else
+		{
+			isOverseas = false;
+		}
+	}
+
+	public int getProvinceIndex()
+	{
+		return index;
+	}
+
+	public int getSaleWeek()
+	{
+		return saleWeek;
 	}
 
 	@Override
@@ -37,6 +65,8 @@ public class Province implements Parcelable
 		dest.writeInt(index);
 		dest.writeString(name);
 		dest.writeInt(sequence);
+		dest.writeInt(saleWeek);
+		dest.writeInt(isOverseas ? 1 : 0);
 	}
 
 	@Override
@@ -47,9 +77,11 @@ public class Province implements Parcelable
 
 	protected void readFromParcel(Parcel in)
 	{
-		this.index = in.readInt();
-		this.name = in.readString();
-		this.sequence = in.readInt();
+		index = in.readInt();
+		name = in.readString();
+		sequence = in.readInt();
+		saleWeek = in.readInt();
+		isOverseas = in.readInt() == 1 ? true : false;
 	}
 
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()

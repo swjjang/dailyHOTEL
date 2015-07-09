@@ -40,8 +40,8 @@ import com.android.volley.Request.Method;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.ABTestPreferences;
-import com.twoheart.dailyhotel.util.ABTestPreferences.OnABTestListener;
+import com.twoheart.dailyhotel.util.ABTestPreference;
+import com.twoheart.dailyhotel.util.ABTestPreference.OnABTestListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
@@ -248,7 +248,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 	private void requestConfigurationABTest()
 	{
 		// ABTest
-		ABTestPreferences.getInstance(getApplicationContext()).requestConfiguration(getApplicationContext(), mQueue, new OnABTestListener()
+		ABTestPreference.getInstance(getApplicationContext()).requestConfiguration(getApplicationContext(), mQueue, new OnABTestListener()
 		{
 			@Override
 			public void onPostExecute()
