@@ -9,7 +9,6 @@
  */
 package com.twoheart.dailyhotel.activity;
 
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +29,6 @@ import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Hotel;
-import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.model.HotelDetailEx;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.ui.HotelDetailLayout;

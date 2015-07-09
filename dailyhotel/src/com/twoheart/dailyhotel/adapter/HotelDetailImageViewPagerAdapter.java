@@ -4,7 +4,6 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +38,7 @@ public class HotelDetailImageViewPagerAdapter extends PagerAdapter
 	{
 		mImageUrlList = list;
 	}
-	
+
 	public void setDirection(int direction)
 	{
 		mDirection = direction;
@@ -87,11 +86,11 @@ public class HotelDetailImageViewPagerAdapter extends PagerAdapter
 				@Override
 				protected void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status)
 				{
-					if(bm != null)
+					if (bm != null)
 					{
 						VolleyImageLoader.putCache(url, bm);
 					}
-					
+
 					iv.setImageBitmap(bm);
 				}
 			};

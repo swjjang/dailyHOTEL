@@ -25,7 +25,6 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.ScaleAnimation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
@@ -51,7 +50,6 @@ import com.twoheart.dailyhotel.adapter.HotelDetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.model.DetailInformation;
 import com.twoheart.dailyhotel.model.HotelDetailEx;
 import com.twoheart.dailyhotel.model.SaleRoomInformation;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 /**
@@ -922,11 +920,11 @@ public class HotelDetailLayout
 				{
 					nextPosition = mScrollPosition;
 				}
-				
+
 				if (Util.isOverAPI11() == true)
 				{
 					mImageAdapter.setDirection(mDirection);
-					
+
 					AnimationImageView nextImageView = (AnimationImageView) mViewPager.findViewWithTag(nextPosition);
 
 					// 방향에 따라서 초기화가 달라야한다.

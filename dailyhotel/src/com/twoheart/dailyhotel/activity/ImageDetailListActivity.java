@@ -98,11 +98,11 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
 					@Override
 					protected void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status)
 					{
-						if(bm != null)
+						if (bm != null)
 						{
 							VolleyImageLoader.putCache(url, bm);
 						}
-						
+
 						setImageViewHeight(iv, bm);
 					}
 				};

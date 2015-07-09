@@ -32,7 +32,6 @@ import android.widget.Toast;
 import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.twoheart.dailyhotel.activity.AboutActivity;
-import com.twoheart.dailyhotel.activity.BookingActivity;
 import com.twoheart.dailyhotel.activity.CreditCardListActivity;
 import com.twoheart.dailyhotel.activity.FAQActivity;
 import com.twoheart.dailyhotel.activity.LoginActivity;
