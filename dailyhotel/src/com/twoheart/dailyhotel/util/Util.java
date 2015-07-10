@@ -218,4 +218,9 @@ public class Util implements Constants
 	{
 		return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
 	}
+	
+	public static boolean isTextEmpty(String text)
+	{
+		return (TextUtils.isEmpty(text) == true || "null".equalsIgnoreCase(text) == true);
+	}
 }

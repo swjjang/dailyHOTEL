@@ -9,6 +9,7 @@
  */
 package com.twoheart.dailyhotel.activity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,6 +31,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.HotelDetailEx;
+import com.twoheart.dailyhotel.model.SaleRoomInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.ui.HotelDetailLayout;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -264,15 +266,29 @@ public class HotelDetailActivity extends BaseActivity
 		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 	}
 
-	private void moveToBooking()
+	private void moveToBooking(int selectedRoomType)
 	{
-		//		Intent i = new Intent(HotelDetailActivity.this, BookingActivity.class);
-		//		i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELDETAIL, mHotelDetail);
-		//		i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, mHotelIdx);
-		//		i.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mSaleTime);
-		//
-		//		startActivityForResult(i, CODE_REQUEST_ACTIVITY_BOOKING);
-		//		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+		ArrayList<SaleRoomInformation> arrayList = mHotelDetail.getSaleRoomList();
+
+		if (arrayList == null || arrayList.size() <= selectedRoomType || selectedRoomType < 0)
+		{
+			return;
+		}
+
+		SaleRoomInformation saleRoomInformation = mHotelDetail.getSaleRoomList().get(selectedRoomType);
+
+		if (saleRoomInformation == null)
+		{
+			return;
+		}
+
+		Intent intent = new Intent(HotelDetailActivity.this, BookingActivity.class);
+		intent.putExtra(NAME_INTENT_EXTRA_DATA_SALEROOMINFORMATION, saleRoomInformation);
+		intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, mHotelIdx);
+		intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mSaleTime);
+
+		startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING);
+		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 	}
 
 	private void moveToUserInfoUpdate(Customer user)
@@ -512,19 +528,19 @@ public class HotelDetailActivity extends BaseActivity
 		@Override
 		public void showMap()
 		{
-			//			if (isLockUiComponent() == true || isFinishing() == true)
-			//			{
-			//				return;
-			//			}
-			//
-			//			lockUiComponent();
-			//
-			//			Intent intent = new Intent(HotelDetailActivity.this, ZoomMapActivity.class);
-			//			intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME, mHotelDetail.hotelName);
-			//			intent.putExtra(NAME_INTENT_EXTRA_DATA_LATITUDE, mHotelDetail.latitude);
-			//			intent.putExtra(NAME_INTENT_EXTRA_DATA_LONGITUDE, mHotelDetail.longitude);
-			//
-			//			startActivity(intent);
+			if (isLockUiComponent() == true || isFinishing() == true)
+			{
+				return;
+			}
+
+			lockUiComponent();
+
+			Intent intent = new Intent(HotelDetailActivity.this, ZoomMapActivity.class);
+			intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME, mHotelDetail.hotelName);
+			intent.putExtra(NAME_INTENT_EXTRA_DATA_LATITUDE, mHotelDetail.latitude);
+			intent.putExtra(NAME_INTENT_EXTRA_DATA_LONGITUDE, mHotelDetail.longitude);
+
+			startActivity(intent);
 		}
 	};
 
@@ -707,7 +723,7 @@ public class HotelDetailActivity extends BaseActivity
 				{
 					if (isEmptyTextField(new String[] { user.getEmail(), user.getPhone(), user.getName() }) == false)
 					{
-						moveToBooking();
+						moveToBooking(mHotelDetailLayout.selectedRoomType());
 					} else
 					{
 						// 정보 업데이트 화면으로 이동.
@@ -715,7 +731,7 @@ public class HotelDetailActivity extends BaseActivity
 					}
 				} else
 				{
-					moveToBooking();
+					moveToBooking(mHotelDetailLayout.selectedRoomType());
 				}
 			} catch (Exception e)
 			{

@@ -349,6 +349,5 @@ public class HotelTabBookingFragment extends BaseFragment implements OnTouchList
 				}
 			});
 		}
-
 	}
 }

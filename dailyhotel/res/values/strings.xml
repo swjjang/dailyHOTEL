@@ -308,6 +308,8 @@
     <string name="label_booking_easypayment">신용카드 간편결제</string>
     <string name="label_booking_agree_term">위의 내용에 동의하시면 서명해 주세요.</string>
     <string name="label_booking_confirm_signature">서명 후 결제 완료</string>
+    <string name="label_booking_room_info">객실 정보</string>
+    <string name="label_booking_room_type">객실 타입</string>
     <string name="message_booking_easypayment">결제 완료 후 취소 및 환불 불가합니다.\n</string>
 
     <!-- Payment Activity -->
@@ -336,7 +338,7 @@
     <string name="frag_booking_tab_hour">시</string>
     <string name="frag_booking_tab_hotel_info">호텔 정보</string>
     <string name="frag_booking_tab_location">위치</string>
-    <string name="frag_booking_tab_bed_type">베드타입</string>
+    <string name="frag_booking_tab_bed_type">객실타입</string>
     <string name="frag_booking_tab_chkin_info">체크인 정보</string>
     <string name="frag_booking_tab_chkin">체크인</string>
     <string name="frag_booking_tab_chkout">체크아웃</string>

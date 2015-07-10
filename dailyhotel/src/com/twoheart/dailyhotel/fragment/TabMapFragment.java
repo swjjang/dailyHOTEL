@@ -28,6 +28,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.activity.HotelDetailActivity;
 import com.twoheart.dailyhotel.activity.ZoomMapActivity;
 import com.twoheart.dailyhotel.adapter.HotelNameInfoWindowAdapter;
 import com.twoheart.dailyhotel.model.HotelDetail;
@@ -97,9 +98,12 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
 			return;
 		}
 
-		Intent i = new Intent(baseActivity, ZoomMapActivity.class);
-		i.putExtra(NAME_INTENT_EXTRA_DATA_HOTELDETAIL, mHotelDetail);
-		startActivity(i);
+		Intent intent = new Intent(baseActivity, ZoomMapActivity.class);
+		intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME, mHotelDetail.getHotel().getName());
+		intent.putExtra(NAME_INTENT_EXTRA_DATA_LATITUDE, mHotelDetail.getLatitude());
+		intent.putExtra(NAME_INTENT_EXTRA_DATA_LONGITUDE, mHotelDetail.getLongitude());
+
+		startActivity(intent);
 	}
 
 	@Override
@@ -114,6 +118,8 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
 		{
 			googleMap.setOnMapClickListener(this);
 			googleMap.setMyLocationEnabled(false);
+
+			googleMap.getUiSettings().setAllGesturesEnabled(false);
 		}
 
 		addMarker(mHotelDetail.getLatitude(), mHotelDetail.getLongitude(), mHotelDetail.getHotel().getName());

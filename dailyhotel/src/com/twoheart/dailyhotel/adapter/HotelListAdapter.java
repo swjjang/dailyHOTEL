@@ -201,6 +201,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 					viewHolder.sold_out = (TextView) convertView.findViewById(R.id.tv_hotel_row_soldout);
 					viewHolder.address = (TextView) convertView.findViewById(R.id.tv_hotel_row_address);
 					viewHolder.grade = (TextView) convertView.findViewById(R.id.hv_hotel_grade);
+					viewHolder.dBenefit = convertView.findViewById(R.id.dBenefitImageView);
 
 					convertView.setTag(viewHolder);
 				}
@@ -286,12 +287,13 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 					viewHolder.sold_out.setVisibility(View.GONE);
 				}
 
-				// if(!items.get(position).isAvaliable()) {
-				// sold_out.setBackgroundResource(R.drawable.dh_sold_out);
-				// Drawable alpha1 = sold_out.getBackground();
-				// alpha1.setAlpha(200);
-				// }
-
+				if(element.isDBenefit == true)
+				{
+					viewHolder.dBenefit.setVisibility(View.VISIBLE);
+				} else
+				{
+					viewHolder.dBenefit.setVisibility(View.GONE);
+				}
 				break;
 			}
 		}
@@ -309,6 +311,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 		TextView sold_out;
 		TextView address;
 		TextView grade;
+		View dBenefit;
 	}
 
 	private class HeaderListViewHolder

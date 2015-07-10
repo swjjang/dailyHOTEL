@@ -62,7 +62,6 @@ public class HotelListMapFragment extends
 	private GoogleMap mGoogleMap;
 	private ArrayList<HotelListViewItem> mHotelArrayList; // 선택된 호텔을 위한 리스트
 	private ArrayList<HotelListViewItem> mHotelArrangeArrayList; // ViewPager을 위한 리스트
-	//	private HotelInfoWindowAdapter mHotelInfoWindowAdapter;
 	private LoadingDialog mLoadingDialog;
 	private MarkerOptions mMyLocationMarkerOptions;
 	private Marker mMyLocationMarker;

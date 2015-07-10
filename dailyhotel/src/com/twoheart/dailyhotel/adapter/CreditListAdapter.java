@@ -49,7 +49,7 @@ public class CreditListAdapter extends ArrayAdapter<Credit>
 			TextView expires = (TextView) v.findViewById(R.id.list_row_credit_expires);
 
 			DecimalFormat comma = new DecimalFormat("###,##0");
-			String strBonus = comma.format(Integer.parseInt(element.getBonus()));
+			String strBonus = comma.format(element.getBonus());
 
 			bonus.setText("₩" + strBonus);
 			content.setText(element.getContent());

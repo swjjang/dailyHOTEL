@@ -50,6 +50,7 @@ import com.twoheart.dailyhotel.adapter.HotelDetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.model.DetailInformation;
 import com.twoheart.dailyhotel.model.HotelDetailEx;
 import com.twoheart.dailyhotel.model.SaleRoomInformation;
+import com.twoheart.dailyhotel.util.ABTestPreference;
 import com.twoheart.dailyhotel.util.Util;
 
 /**
@@ -84,6 +85,7 @@ public class HotelDetailLayout
 	private View mBottomLayout;
 	private View mRoomTypeBackgroundView;
 	private View[] mRoomTypeView;
+	private View mSelectedRoomType;
 
 	private ANIMATION_STATUS mAnimationStatus = ANIMATION_STATUS.HIDE_END;
 	private ANIMATION_STATE mAnimationState = ANIMATION_STATE.END;
@@ -117,9 +119,9 @@ public class HotelDetailLayout
 		initLayout(activity);
 	}
 
-	private void initLayout(Context context)
+	private void initLayout(Activity activity)
 	{
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mViewRoot = inflater.inflate(R.layout.layout_hoteldetail, null, false);
 
 		mActionBarTextView = (TextView) mViewRoot.findViewById(R.id.actionBarTextView);
@@ -133,7 +135,7 @@ public class HotelDetailLayout
 		mViewPager.setOnPageChangeListener(mOnPageChangeListener);
 		mViewPager.setScrollDurationFactor(4);
 
-		mImageHeight = Util.getLCDWidth(context);
+		mImageHeight = Util.getLCDWidth(activity);
 		LayoutParams layoutParams = (LayoutParams) mViewPager.getLayoutParams();
 		layoutParams.height = mImageHeight;
 
@@ -164,6 +166,23 @@ public class HotelDetailLayout
 		return mViewRoot;
 	}
 
+	public int selectedRoomType()
+	{
+		if (mSelectedRoomType == null)
+		{
+			return -1;
+		}
+
+		Integer roomType = (Integer) mSelectedRoomType.getTag();
+
+		if (roomType == null)
+		{
+			return -1;
+		}
+
+		return roomType;
+	}
+
 	public void setHotelDetail(HotelDetailEx hotelDetail, int imagePosition)
 	{
 		if (hotelDetail == null)
@@ -172,6 +191,8 @@ public class HotelDetailLayout
 		}
 
 		mHotelDetail = hotelDetail;
+
+		mHotelDetail.hotelBenefit = "맥주가 몇잔이 무료야?";
 
 		// 호텔 상세 정보를 얻어와서 리스트 개수가 몇개 필요한지 검색한다.
 		if (mNeedRefreshData == null)
@@ -284,13 +305,13 @@ public class HotelDetailLayout
 				mRoomTypeView[i].setVisibility(View.GONE);
 			}
 
+			mRoomTypeView[i].setTag(i);
 			mRoomTypeView[i].setOnClickListener(new View.OnClickListener()
 			{
 				@Override
 				public void onClick(View v)
 				{
 					selectRoomType(v);
-
 				}
 			});
 		}
@@ -317,8 +338,24 @@ public class HotelDetailLayout
 		String price = comma.format(information.discount);
 
 		priceTextView.setText(price + currency);
-		optionTextView.setText(information.option);
-		benefitTextView.setText(information.roomBenefit);
+
+		if (Util.isTextEmpty(information.option) == true)
+		{
+			optionTextView.setVisibility(View.GONE);
+		} else
+		{
+			optionTextView.setVisibility(View.VISIBLE);
+			optionTextView.setText(information.option);
+		}
+
+		if (Util.isTextEmpty(information.option) == true)
+		{
+			benefitTextView.setVisibility(View.GONE);
+		} else
+		{
+			benefitTextView.setVisibility(View.VISIBLE);
+			benefitTextView.setText(information.roomBenefit);
+		}
 	}
 
 	private void selectRoomType(View view)
@@ -329,6 +366,8 @@ public class HotelDetailLayout
 
 			if (roomView == view)
 			{
+				mSelectedRoomType = view;
+
 				roomView.setSelected(true);
 				textView.setEllipsize(TruncateAt.MARQUEE);
 			} else
@@ -1286,13 +1325,22 @@ public class HotelDetailLayout
 				return 0;
 			} else
 			{
-				if (TextUtils.isEmpty(mHotelDetail.hotelBenefit) == false)
+				int count = NUMBER_OF_ROWSLIST;
+
+				// 문의 하기 기능.
+				int state = ABTestPreference.getInstance(mFragmentActivity).getKakaotalkConsult();
+
+				if (state != 1)
 				{
-					return NUMBER_OF_ROWSLIST;
-				} else
-				{
-					return NUMBER_OF_ROWSLIST - 1;
+					count--;
 				}
+
+				if (TextUtils.isEmpty(mHotelDetail.hotelBenefit) == true)
+				{
+					count--;
+				}
+
+				return count;
 			}
 		}
 

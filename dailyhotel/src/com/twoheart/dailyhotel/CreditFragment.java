@@ -298,7 +298,7 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 
 					String content = historyObj.getString("content");
 					String expires = historyObj.getString("expires");
-					String bonus = historyObj.getString("bonus");
+					int bonus = historyObj.getInt("bonus");
 
 					mCreditList.add(new Credit(content, bonus, expires));
 				}
