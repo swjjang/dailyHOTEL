@@ -54,7 +54,7 @@ import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class SignupActivity extends BaseActivity implements OnClickListener
 {
-	private static final int MAX_OF_RECOMMENDER = 7;
+	private static final int MAX_OF_RECOMMENDER = 45;
 
 	private static final int MODE_SIGNUP = 1;
 	private static final int MODE_USERINFO_UPDATE = 2;
@@ -113,20 +113,12 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
 		etName.setFilters(allowAlphanumericHangul);
 
-		// 추천인 코드 필터 적용
-		StringFilter numberFilter = new StringFilter(SignupActivity.this);
-		InputFilter[] allowNumeric = new InputFilter[1];
-		allowNumeric[0] = numberFilter.allowNumeric;
-
-		etRecommender.setFilters(allowNumeric);
-
 		// 추천코드 최대 길이
 		InputFilter[] fArray = new InputFilter[1];
 		fArray[0] = new InputFilter.LengthFilter(MAX_OF_RECOMMENDER);
 		etRecommender.setFilters(fArray);
 
 		etPhone = (EditText) findViewById(R.id.et_signup_phone);
-		etPhone.setFilters(allowNumeric);
 
 		tvTerm = (TextView) findViewById(R.id.tv_signup_agreement);
 		tvPrivacy = (TextView) findViewById(R.id.tv_signup_personal_info);
