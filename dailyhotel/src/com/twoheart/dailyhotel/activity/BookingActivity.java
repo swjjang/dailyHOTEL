@@ -831,6 +831,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					return;
 			}
 
+			if (isFinishing() == true)
+			{
+				return;
+			}
+
 			SimpleAlertDialog.build(this, title, msg, posTitle, posListener).show();
 
 			//		} else if (requestCode == CODE_REQUEST_ACTIVITY_LOGIN)
@@ -1898,6 +1903,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
+			if (isFinishing() == true)
+			{
+				return;
+			}
+
 			try
 			{
 				if (response == null)
@@ -2283,6 +2293,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					String title = getString(R.string.dialog_notice2);
 					String msg = getString(R.string.dialog_msg_changed_pay);
 					String positive = getString(R.string.dialog_btn_text_confirm);
+
+					if (isFinishing() == true)
+					{
+						return;
+					}
 
 					SimpleAlertDialog.build(BookingActivity.this, title, msg, positive, new DialogInterface.OnClickListener()
 					{

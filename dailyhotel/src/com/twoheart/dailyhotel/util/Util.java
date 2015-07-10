@@ -133,6 +133,11 @@ public class Util implements Constants
 
 	public static void finishOutOfMemory(Activity activity)
 	{
+		if (activity.isFinishing() == true)
+		{
+			return;
+		}
+
 		// 세션이 만료되어 재시작 요청.
 		SimpleAlertDialog.build(activity, activity.getString(R.string.dialog_notice2), activity.getString(R.string.dialog_msg_outofmemory), activity.getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnClickListener()
 		{

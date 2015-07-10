@@ -319,6 +319,11 @@ public class IssuingReceiptActivity extends BaseActivity
 					}
 				} else
 				{
+					if (isFinishing() == true)
+					{
+						return;
+					}
+
 					String msg = response.getString("msg");
 
 					AlertDialog alertDialog = SimpleAlertDialog.build(IssuingReceiptActivity.this, null, msg, getString(R.string.dialog_btn_text_confirm), null, null, null).create();

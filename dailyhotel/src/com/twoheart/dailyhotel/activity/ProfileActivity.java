@@ -274,6 +274,11 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 			}
 		} else if (v.getId() == R.id.btn_profile_logout)
 		{
+			if (isFinishing() == true)
+			{
+				return;
+			}
+
 			if (isLockUiComponent() == true)
 			{
 				return;

@@ -340,6 +340,11 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 
 	public void restartApp()
 	{
+		if (isFinishing() == true)
+		{
+			return;
+		}
+
 		// 세션이 만료되어 재시작 요청.
 		SimpleAlertDialog.build(BaseActivity.this, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_session_expired), getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnClickListener()
 		{

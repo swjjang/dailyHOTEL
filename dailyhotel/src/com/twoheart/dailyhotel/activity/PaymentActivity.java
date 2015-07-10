@@ -196,29 +196,8 @@ public class PaymentActivity extends BaseActivity implements Constants
 
 		if (mPay.getType() == Pay.Type.EASY_CARD)
 		{
-			StringBuilder url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERV_SESSION_BILLING)).append('/').append(mPay.getSaleRoomInformation().saleIndex);
-
-			ArrayList<String> postParameterKey = new ArrayList<String>(Arrays.asList("billkey", "mileage"));
-
-			String bonus = "0"; // 적립금
-
-			if (mPay.isSaleCredit() == true || mPay.getPayPrice() == 0)
-			{
-				// 적립금을 절대값으로 보냄..
-				try
-				{
-					bonus = String.valueOf(Math.abs(mPay.getCredit().getBonus()));
-				} catch (Exception e)
-				{
-					ExLog.e(e.toString());
-				}
-			}
-
-			ArrayList<String> postParameterValue = new ArrayList<String>(Arrays.asList(mPay.getCustomer().mBillingKey, bonus));
-
-			webView.postUrl(url.toString(), parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]), postParameterValue.toArray(new String[postParameterValue.size()])));
-
-			ProgressDialog.show(PaymentActivity.this, null, getString(R.string.dialog_msg_processing_payment), true).setCancelable(false);
+			finish();
+			return;
 		} else
 		{
 			Guest guest = mPay.getGuest();
@@ -717,6 +696,11 @@ public class PaymentActivity extends BaseActivity implements Constants
 		@JavascriptInterface
 		private void paypinConfim()
 		{
+			if (isFinishing() == true)
+			{
+				return;
+			}
+
 			OnClickListener posListener = new DialogInterface.OnClickListener()
 			{
 				@Override
@@ -771,6 +755,11 @@ public class PaymentActivity extends BaseActivity implements Constants
 		@JavascriptInterface
 		private void alertToNext()
 		{
+			if (isFinishing() == true)
+			{
+				return;
+			}
+
 			OnClickListener posListener = new DialogInterface.OnClickListener()
 			{
 				@Override
@@ -1016,6 +1005,11 @@ public class PaymentActivity extends BaseActivity implements Constants
 			return;
 		}
 
+		if (isFinishing() == true)
+		{
+			return;
+		}
+
 		OnClickListener posListener = new OnClickListener()
 		{
 			@Override
@@ -1024,6 +1018,7 @@ public class PaymentActivity extends BaseActivity implements Constants
 				finish();
 			}
 		};
+
 		SimpleAlertDialog.build(PaymentActivity.this, getString(R.string.dialog_title_payment), getString(R.string.dialog_msg_chk_cancel_payment), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null).show();
 	}
 

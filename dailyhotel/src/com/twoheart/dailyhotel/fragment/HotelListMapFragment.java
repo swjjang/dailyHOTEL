@@ -293,6 +293,13 @@ public class HotelListMapFragment extends
 
 	private void makeMarker(boolean isChangedRegion)
 	{
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null || baseActivity.isFinishing() == true)
+		{
+			return;
+		}
+
 		if (mGoogleMap == null)
 		{
 			return;
@@ -847,7 +854,7 @@ public class HotelListMapFragment extends
 				{
 					BaseActivity baseActivity = (BaseActivity) getActivity();
 
-					if (baseActivity == null)
+					if (baseActivity == null || baseActivity.isFinishing() == true)
 					{
 						return;
 					}

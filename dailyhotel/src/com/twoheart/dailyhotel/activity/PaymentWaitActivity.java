@@ -90,6 +90,11 @@ public class PaymentWaitActivity extends BaseActivity
 		switch (item.getItemId())
 		{
 			case R.id.action_call:
+				if (isFinishing() == true)
+				{
+					return super.onOptionsItemSelected(item);
+				}
+
 				String title = getString(R.string.dialog_notice2);
 				String message = getString(R.string.dialog_msg_call);
 				String positive = getString(R.string.dialog_btn_call);
