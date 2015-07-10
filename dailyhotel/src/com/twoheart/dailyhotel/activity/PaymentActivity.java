@@ -38,6 +38,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.webkit.CookieSyncManager;
@@ -201,6 +202,12 @@ public class PaymentActivity extends BaseActivity implements Constants
 		} else
 		{
 			Guest guest = mPay.getGuest();
+			
+			if(TextUtils.isEmpty(guest.name) == true || TextUtils.isEmpty(guest.phone) == true || TextUtils.isEmpty(guest.email) == true)
+			{
+				restartApp();
+				return;
+			}
 
 			if (mPay.getPayPrice() == 0)
 			{

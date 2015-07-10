@@ -104,6 +104,11 @@ public class Pay implements Parcelable
 
 	public Guest getGuest()
 	{
+		if(mGuest == null)
+		{
+			mGuest = new Guest();
+		}
+		
 		return mGuest;
 	}
 
