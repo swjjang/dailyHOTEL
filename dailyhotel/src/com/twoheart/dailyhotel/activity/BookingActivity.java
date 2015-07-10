@@ -316,6 +316,14 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	@Override
 	public void onClick(final View v)
 	{
+		Guest guest = mPay.getGuest();
+
+		if (guest == null)
+		{
+			restartApp();
+			return;
+		}
+
 		if (v.getId() == btnPay.getId())
 		{
 			if (isLockUiComponent(true) == true)
@@ -325,7 +333,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 			if (mIsEditMode == true)
 			{
-				Guest guest = mPay.getGuest();
 				guest.name = etReserverName.getText().toString().trim();
 				guest.phone = etReserverNumber.getText().toString().trim();
 				guest.email = etReserverEmail.getText().toString().trim();
@@ -426,11 +433,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			{
 				return;
 			}
-			
-			
+
 			if (mIsEditMode == true)
 			{
-				Guest guest = mPay.getGuest();
 				guest.name = etReserverName.getText().toString();
 				guest.phone = etReserverNumber.getText().toString();
 				guest.email = etReserverEmail.getText().toString();
@@ -588,9 +593,10 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	{
 		unLockUI();
 
-		if(mIsEditMode == true)
+		Guest guest = mPay.getGuest();
+
+		if (mIsEditMode == true)
 		{
-			Guest guest = mPay.getGuest();
 			guest.name = etReserverName.getText().toString().trim();
 			guest.phone = etReserverNumber.getText().toString().trim();
 			guest.email = etReserverEmail.getText().toString().trim();
