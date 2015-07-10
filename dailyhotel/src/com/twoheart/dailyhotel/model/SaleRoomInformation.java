@@ -34,7 +34,7 @@ public class SaleRoomInformation implements Parcelable
 		}
 
 		availableRooms = jsonObject.getInt("available_rooms");
-		
+
 		this.isOverseas = isOverseas;
 		this.hotelName = hotelName;
 	}

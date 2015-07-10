@@ -287,7 +287,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 					viewHolder.sold_out.setVisibility(View.GONE);
 				}
 
-				if(element.isDBenefit == true)
+				if (element.isDBenefit == true)
 				{
 					viewHolder.dBenefit.setVisibility(View.VISIBLE);
 				} else

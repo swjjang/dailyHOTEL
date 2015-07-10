@@ -192,8 +192,6 @@ public class HotelDetailLayout
 
 		mHotelDetail = hotelDetail;
 
-		mHotelDetail.hotelBenefit = "맥주가 몇잔이 무료야?";
-
 		// 호텔 상세 정보를 얻어와서 리스트 개수가 몇개 필요한지 검색한다.
 		if (mNeedRefreshData == null)
 		{
