@@ -202,8 +202,8 @@ public class PaymentActivity extends BaseActivity implements Constants
 		} else
 		{
 			Guest guest = mPay.getGuest();
-			
-			if(TextUtils.isEmpty(guest.name) == true || TextUtils.isEmpty(guest.phone) == true || TextUtils.isEmpty(guest.email) == true)
+
+			if (TextUtils.isEmpty(guest.name) == true || TextUtils.isEmpty(guest.phone) == true || TextUtils.isEmpty(guest.email) == true)
 			{
 				restartApp();
 				return;

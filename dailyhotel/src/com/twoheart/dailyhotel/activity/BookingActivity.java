@@ -256,7 +256,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	{
 		super.onResume();
 
-		// 호텔 디테일 정보 재 요청
 		if ("ACTIVITY_RESULT".equalsIgnoreCase(mAliveCallSource) == true && mReqCode == CODE_REQUEST_ACTIVITY_PAYMENT)
 		{
 
@@ -427,11 +426,15 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			{
 				return;
 			}
-
-			Guest guest = mPay.getGuest();
-			guest.name = etReserverName.getText().toString();
-			guest.phone = etReserverNumber.getText().toString();
-			guest.email = etReserverEmail.getText().toString();
+			
+			
+			if (mIsEditMode == true)
+			{
+				Guest guest = mPay.getGuest();
+				guest.name = etReserverName.getText().toString();
+				guest.phone = etReserverNumber.getText().toString();
+				guest.email = etReserverEmail.getText().toString();
+			}
 
 			Intent intent = new Intent(this, CreditCardListActivity.class);
 			intent.setAction(Intent.ACTION_PICK);
@@ -585,10 +588,13 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	{
 		unLockUI();
 
-		Guest guest = mPay.getGuest();
-		guest.name = etReserverName.getText().toString().trim();
-		guest.phone = etReserverNumber.getText().toString().trim();
-		guest.email = etReserverEmail.getText().toString().trim();
+		if(mIsEditMode == true)
+		{
+			Guest guest = mPay.getGuest();
+			guest.name = etReserverName.getText().toString().trim();
+			guest.phone = etReserverNumber.getText().toString().trim();
+			guest.email = etReserverEmail.getText().toString().trim();
+		}
 
 		if (mPay.getType() == Pay.Type.EASY_CARD)
 		{
