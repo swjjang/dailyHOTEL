@@ -722,6 +722,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 	private void activityResulted(int requestCode, int resultCode, Intent intent)
 	{
+		mAliveCallSource = "";
+
 		//결제가 끝난 뒤 호출됨. 
 		if (requestCode == CODE_REQUEST_ACTIVITY_PAYMENT)
 		{
@@ -1524,116 +1526,13 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				{
 					unLockUI();
 				}
-			} catch (JSONException e)
-			{
-				onError(e);
-				unLockUI();
-			}
-		}
-	};
-
-	private DailyHotelJsonResponseListener mUserInfoJsonResponseListener = new DailyHotelJsonResponseListener()
-	{
-
-		@Override
-		public void onResponse(String url, JSONObject response)
-		{
-			try
-			{
-				if (response == null)
-				{
-					throw new NullPointerException("response == null");
-				}
-
-				Customer buyer = new Customer();
-				buyer.setEmail(response.getString("email"));
-				buyer.setName(response.getString("name"));
-				buyer.setPhone(response.getString("phone"));
-				buyer.setAccessToken(response.getString("accessToken"));
-				buyer.setUserIdx(response.getString("idx"));
-
-				Guest guest = new Guest();
-
-				guest.name = buyer.getName();
-				guest.phone = buyer.getPhone();
-				guest.email = buyer.getEmail();
-
-				mPay.setCustomer(buyer);
-				mPay.setGuest(guest);
-
-				// 해외 호텔인 경우.
-				if (mPay.getSaleRoomInformation().isOverseas == true)
-				{
-					String overseasName = sharedPreference.getString(KEY_PREFERENCE_OVERSEAS_NAME, guest.name);
-					String overseasPhone = sharedPreference.getString(KEY_PREFERENCE_OVERSEAS_PHONE, guest.phone);
-					String overseasEmail = sharedPreference.getString(KEY_PREFERENCE_OVERSEAS_EMAIL, guest.email);
-
-					guest.name = overseasName;
-					guest.phone = overseasPhone;
-					guest.email = overseasEmail;
-
-					if (mIsEditMode == false)
-					{
-						if (Util.isNameCharacter(overseasName) == false)
-						{
-							if (mIsEditMode == false)
-							{
-								mIsEditMode = true;
-
-								guest.name = "";
-								etReserverName.setText("");
-								etReserverName.setEnabled(true);
-
-								// 회원 가입시 이름 필터 적용.
-								StringFilter stringFilter = new StringFilter(BookingActivity.this);
-								InputFilter[] allowAlphanumericName = new InputFilter[1];
-								allowAlphanumericName[0] = stringFilter.allowAlphanumericName;
-
-								etReserverName.setFilters(allowAlphanumericName);
-								etReserverName.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS | etReserverName.getInputType());
-
-								if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-								{
-									etReserverName.setBackground(mEditTextBackground[0]);
-								} else
-								{
-									etReserverName.setBackgroundDrawable(mEditTextBackground[0]);
-								}
-							}
-						} else
-						{
-							etReserverName.setText(overseasName);
-						}
-
-						etReserverNumber.setText(overseasPhone);
-						etReserverEmail.setText(overseasEmail);
-					}
-				} else
-				{
-					if (mIsEditMode == false)
-					{
-						etReserverName.setText(guest.name);
-						etReserverNumber.setText(guest.phone);
-						etReserverEmail.setText(guest.email);
-					}
-				}
-
-				// SailIndex가 0인 경우에 서버에 이슈가 발생할수 있다.
-				// 0인 경우 아마도 메모리에서 정보가 삭제되어 발생한듯 하다.
-				if (mPay.getSaleRoomInformation().saleIndex == 0)
-				{
-					// 세션이 만료되어 재시작 요청.
-					restartApp();
-				} else
-				{
-					// 체크인 정보 요청
-					mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_CHECKINOUT).append('/').append(mPay.getSaleRoomInformation().saleIndex).toString(), null, mReserveCheckInJsonResponseListener, BookingActivity.this));
-				}
 			} catch (Exception e)
 			{
 				onError(e);
-			}
+				unLockUI();
 
+				finish();
+			}
 		}
 	};
 
@@ -1687,65 +1586,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			{
 				onError(e);
 				unLockUI();
+
+				finish();
 			}
-		}
-	};
-
-	private DailyHotelJsonResponseListener mReserveCheckInJsonResponseListener = new DailyHotelJsonResponseListener()
-	{
-
-		@Override
-		public void onResponse(String url, JSONObject response)
-		{
-			long checkin = 0;
-			long checkout = 0;
-
-			try
-			{
-				checkin = Long.valueOf(response.getString("checkin"));
-				checkout = Long.valueOf(response.getString("checkout"));
-			} catch (Exception e)
-			{
-				ExLog.e(e.toString());
-
-				onError(e);
-				return;
-			}
-
-			if (checkin == 0 || checkout == 0)
-			{
-				onError();
-				return;
-			}
-
-			// Check In
-			Calendar calendarCheckin = DailyCalendar.getInstance();
-			calendarCheckin.setTimeInMillis(checkin);
-
-			SimpleDateFormat formatDay = new SimpleDateFormat("M월 d일 (EEE)", Locale.KOREA);
-			formatDay.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
-
-			SimpleDateFormat formatHour = new SimpleDateFormat("HH시", Locale.KOREA);
-			formatHour.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
-
-			mCheckinDayTextView.setText(formatDay.format(calendarCheckin.getTime()));
-			mCheckinTimeTextView.setText(formatHour.format(calendarCheckin.getTime()));
-
-			// CheckOut
-			Calendar calendarCheckout = DailyCalendar.getInstance();
-			calendarCheckout.setTimeInMillis(checkout);
-
-			SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd-hh", Locale.KOREA);
-			format.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
-			String formatCheckout = format.format(calendarCheckout.getTime());
-
-			mPay.setCheckOut(formatCheckout);
-
-			mCheckoutDayTextView.setText(formatDay.format(calendarCheckout.getTime()));
-			mCheckoutTimeTextView.setText(formatHour.format(calendarCheckout.getTime()));
-
-			// credit card 요청
-			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_INFO).toString(), null, mUserSessionBillingCardInfoJsonResponseListener, BookingActivity.this));
 		}
 	};
 
@@ -1973,6 +1816,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			} catch (Exception e)
 			{
 				onError(e);
+				finish();
 			} finally
 			{
 				unLockUI();
@@ -2070,6 +1914,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			{
 				// 해당 화면 에러시에는 일반 결제가 가능해야 한다.
 				ExLog.e(e.toString());
+				finish();
 			} finally
 			{
 				onCheckedChanged(swCredit, swCredit.isChecked());
@@ -2228,8 +2073,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				ExLog.e(e.toString());
 
 				unLockUI();
-
 				onError(e);
+
+				finish();
 			}
 		}
 	};
@@ -2335,6 +2181,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				ExLog.e(e.toString());
 
 				onError(e);
+				finish();
 			} finally
 			{
 				unLockUI();
