@@ -379,7 +379,7 @@ public class HotelDetailLayout
 	private void setBookingStatus(int status)
 	{
 		mBookingStatus = status;
-		
+
 		TextView bookingView = (TextView) mBottomLayout.findViewById(R.id.bookingTextView);
 		View soldoutView = mBottomLayout.findViewById(R.id.soldoutTextView);
 
@@ -395,7 +395,7 @@ public class HotelDetailLayout
 				bookingView.setVisibility(View.VISIBLE);
 				soldoutView.setVisibility(View.GONE);
 
-//				bookingView.setText("");
+				//				bookingView.setText("");
 				break;
 			}
 

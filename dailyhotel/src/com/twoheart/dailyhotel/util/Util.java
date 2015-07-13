@@ -11,7 +11,9 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -227,5 +229,20 @@ public class Util implements Constants
 	public static boolean isTextEmpty(String text)
 	{
 		return (TextUtils.isEmpty(text) == true || "null".equalsIgnoreCase(text) == true);
+	}
+
+	public static String getAppVersion(Context context)
+	{
+		String version = null;
+		try
+		{
+			PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+			version = packageInfo.versionName;
+		} catch (NameNotFoundException e)
+		{
+			ExLog.d(e.toString());
+		}
+
+		return version;
 	}
 }

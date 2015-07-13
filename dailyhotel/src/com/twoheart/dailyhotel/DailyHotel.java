@@ -31,11 +31,14 @@ import com.google.analytics.tracking.android.GoogleAnalytics;
 import com.google.analytics.tracking.android.Tracker;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.VolleyImageLoader;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 
 public class DailyHotel extends Application implements Constants
 {
+	public static String VERSION;
+
 	private static Typeface mTypeface;
 	private static Typeface mBoldTypeface;
 
@@ -45,6 +48,9 @@ public class DailyHotel extends Application implements Constants
 		super.onCreate();
 
 		Fabric.with(this, new Crashlytics());
+
+		// 버전 정보 얻기
+		DailyHotel.VERSION = Util.getAppVersion(getApplicationContext());
 
 		initializeVolley();
 		initializeGa();
