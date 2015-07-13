@@ -179,6 +179,12 @@ public class HotelListMapFragment extends
 			mLoadingDialog.close();
 		}
 
+		if (mGoogleMap != null)
+		{
+			mGoogleMap.stopAnimation();
+			mGoogleMap.clear();
+		}
+
 		super.onDestroyView();
 	}
 
