@@ -22,7 +22,7 @@ public interface Constants
 	// 디버그 빌드 여부 BuildConfig는 배포시에 자동으로 false가 된다고 한다. 테스트 해보고 싶음.
 	public static final boolean DEBUG = BuildConfig.DEBUG;
 	public static final boolean UNENCRYPTED_URL = false;
-	public static final String VERSION = "1.6.2";
+	public static final String VERSION = "1.6.3";
 
 	// 스토어 선택.
 	public enum Stores

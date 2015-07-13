@@ -341,7 +341,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	 */
 	public void selectMenuDrawer(DrawerMenu selectedMenu)
 	{
-		drawerList.performItemClick(drawerList.getAdapter().getView(mMenuImages.indexOf(selectedMenu), null, null), mMenuImages.indexOf(selectedMenu), mDrawerMenuListAdapter.getItemId(mMenuImages.indexOf(selectedMenu)));
+		drawerList.performItemClick(mDrawerMenuListAdapter.getView(mMenuImages.indexOf(selectedMenu), null, null), mMenuImages.indexOf(selectedMenu), mDrawerMenuListAdapter.getItemId(mMenuImages.indexOf(selectedMenu)));
 	}
 
 	/**
