@@ -235,8 +235,9 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			// 앱을 처음 설치한 경우 가이드를 띄움. 일단 화면 보이지 않도록 수정.
 			boolean showGuide = false;//sharedPreference.getBoolean(KEY_PREFERENCE_SHOW_GUIDE, true);
 			if (showGuide)
+			{
 				startActivityForResult(new Intent(this, IntroActivity.class), CODE_REQUEST_ACTIVITY_INTRO);
-			else
+			} else
 			{
 				// Intent가 Push로 부터 온경우
 				int pushType = getIntent().getIntExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, -1);
@@ -250,6 +251,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 						break;
 					default:
 						selectMenuDrawer(menuHotelListFragment);
+						break;
 				}
 
 				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, this));
@@ -341,7 +343,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	 */
 	public void selectMenuDrawer(DrawerMenu selectedMenu)
 	{
-		drawerList.performItemClick(drawerList.getAdapter().getView(mMenuImages.indexOf(selectedMenu), null, null), mMenuImages.indexOf(selectedMenu), mDrawerMenuListAdapter.getItemId(mMenuImages.indexOf(selectedMenu)));
+		drawerList.performItemClick(mDrawerMenuListAdapter.getView(mMenuImages.indexOf(selectedMenu), null, null), mMenuImages.indexOf(selectedMenu), mDrawerMenuListAdapter.getItemId(mMenuImages.indexOf(selectedMenu)));
 	}
 
 	/**
@@ -598,7 +600,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 					fragmentManager = getSupportFragmentManager();
 
-					if (fragmentManager != null)
+					if (fragmentManager != null && fragmentManager.getFragments() != null)
 					{
 						for (Fragment fragment : fragmentManager.getFragments())
 						{
@@ -615,7 +617,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 					fragmentManager = getSupportFragmentManager();
 
-					if (fragmentManager != null)
+					if (fragmentManager != null && fragmentManager.getFragments() != null)
 					{
 						for (Fragment fragment : fragmentManager.getFragments())
 						{
