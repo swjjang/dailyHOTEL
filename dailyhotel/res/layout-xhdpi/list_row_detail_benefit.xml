@@ -1,29 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="90dp"
-    android:background="@color/white"
-    android:gravity="center_vertical" >
+    android:background="@drawable/bg_d_benefit" >
 
-    <ImageView
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:src="@drawable/ic_d_benefit_small" />
-    
-    <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-        android:id="@+id/benefitTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="15dp"
-        android:freezesText="true"
-        android:gravity="center_vertical"
-        android:singleLine="true"
-        android:text="데일리 고객님에 한에 웰컵드링크 2잔"
-        android:textColor="@color/dh_theme_color"
-        android:textSize="12sp"
-        android:textStyle="bold" />
+        android:layout_height="90dp"
+        android:layout_centerInParent="true"
+        android:gravity="center_vertical" >
 
-</LinearLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:src="@drawable/ic_d_benefit_small" />
+
+        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            android:id="@+id/benefitTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="15dp"
+            android:freezesText="true"
+            android:gravity="center_vertical"
+            android:textColor="@color/white"
+            android:textSize="12dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</RelativeLayout>
