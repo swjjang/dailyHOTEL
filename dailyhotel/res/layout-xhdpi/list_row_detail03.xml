@@ -18,6 +18,7 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
         android:drawableLeft="@drawable/info_ic_map_small"
         android:drawablePadding="5dp"
         android:ellipsize="end"
@@ -26,7 +27,7 @@
         android:textColor="@color/hoteldetail_contents_text_color"
         android:textSize="13dp" />
 
-    <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+<!--     <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
         android:id="@+id/hotelSimpleLocationTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -39,7 +40,8 @@
         android:freezesText="true"
         android:singleLine="true"
         android:textColor="@color/hoteldetail_contents_text_color"
-        android:textSize="13dp" />
+        android:textSize="13dp"
+        android:visibility="gone" /> -->
 
     <fragment
         android:id="@+id/googleMapFragment"

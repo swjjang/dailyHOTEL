@@ -51,6 +51,7 @@ import com.twoheart.dailyhotel.model.DetailInformation;
 import com.twoheart.dailyhotel.model.HotelDetailEx;
 import com.twoheart.dailyhotel.model.SaleRoomInformation;
 import com.twoheart.dailyhotel.util.ABTestPreference;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 /**
@@ -1163,9 +1164,6 @@ public class HotelDetailLayout
 				{
 					if (Float.compare(xFactor, 0.0f) >= 0)
 					{
-						Rect moveRect = new Rect();
-						mHotelNameTextView.getGlobalVisibleRect(moveRect);
-
 						float nameMax = firstRect.left - Util.dpToPx(mActivity, 55);
 						mHotelNameTextView.setTranslationX(-nameMax * (1.0f - xFactor));
 					}
@@ -1602,24 +1600,27 @@ public class HotelDetailLayout
 			mHotelNameTextView = (TextView) view.findViewById(R.id.hotelNameTextView);
 			mHotelNameTextView.setText(hotelDetail.hotelName);
 
-			mHotelNameTextView.post(new Runnable()
+			if (mHotelNameTextView.getTag() == null)
 			{
-				@Override
-				public void run()
+				mHotelNameTextView.post(new Runnable()
 				{
-					Rect rect = new Rect();
-					mHotelNameTextView.getGlobalVisibleRect(rect);
-					mHotelNameTextView.setTag(rect);
+					@Override
+					public void run()
+					{
+						Rect rect = new Rect();
+						mHotelNameTextView.getGlobalVisibleRect(rect);
+						mHotelNameTextView.setTag(rect);
 
-					Rect rect01 = new Rect();
-					mActionBarTextView.getGlobalVisibleRect(rect01);
+						Rect rect01 = new Rect();
+						mActionBarTextView.getGlobalVisibleRect(rect01);
 
-					int actionBarWidth = rect01.width() - mActionBarTextView.getPaddingLeft();
-					int paddingRight = actionBarWidth - rect.width();
+						int actionBarWidth = rect01.width() - mActionBarTextView.getPaddingLeft();
+						int paddingRight = actionBarWidth - rect.width();
 
-					mActionBarTextView.setPadding(mActionBarTextView.getPaddingLeft(), 0, paddingRight, 0);
-				}
-			});
+						mActionBarTextView.setPadding(mActionBarTextView.getPaddingLeft(), 0, paddingRight, 0);
+					}
+				});
+			}
 			return view;
 		}
 
@@ -1634,10 +1635,10 @@ public class HotelDetailLayout
 		{
 			// 주소지
 			TextView hotelAddressTextView = (TextView) view.findViewById(R.id.hotelAddressTextView);
-			TextView hotelSimpleLocationTextView = (TextView) view.findViewById(R.id.hotelSimpleLocationTextView);
+			//			TextView hotelSimpleLocationTextView = (TextView) view.findViewById(R.id.hotelSimpleLocationTextView);
 
 			hotelAddressTextView.setText(hotelDetail.address);
-			hotelSimpleLocationTextView.setText(hotelDetail.addressNatural);
+			//			hotelSimpleLocationTextView.setText(hotelDetail.addressNatural);
 
 			// 맵
 			SupportMapFragment mapFragment = (SupportMapFragment) mFragmentActivity.getSupportFragmentManager().findFragmentById(R.id.googleMapFragment);
