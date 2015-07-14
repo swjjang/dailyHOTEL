@@ -31,6 +31,7 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -1430,7 +1431,7 @@ public class HotelDetailLayout
 					view = mDeatilView[2];
 					break;
 
-				// 데일리 추천이유
+				// 데일리's comment
 				case 3:
 					if (mDeatilView[3] == null)
 					{
@@ -1724,6 +1725,13 @@ public class HotelDetailLayout
 		{
 			TextView textView = (TextView) view.findViewById(R.id.benefitTextView);
 			textView.setText(hotelDetail.hotelBenefit);
+
+			if (Util.isOverAPI21() == true)
+			{
+				LinearLayout linearLayout = (LinearLayout) textView.getParent();
+				RelativeLayout.LayoutParams layoutParams = (android.widget.RelativeLayout.LayoutParams) linearLayout.getLayoutParams();
+				layoutParams.bottomMargin = Util.dpToPx(mFragmentActivity, 20);
+			}
 
 			return view;
 		}
