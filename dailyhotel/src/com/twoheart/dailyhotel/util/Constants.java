@@ -366,6 +366,7 @@ public interface Constants
 	public static final String NAME_INTENT_EXTRA_DATA_LATITUDE = "latitude";
 	public static final String NAME_INTENT_EXTRA_DATA_LONGITUDE = "longitude";
 	public static final String NAME_INTENT_EXTRA_DATA_SALEROOMINFORMATION = "saleRoomInformation";
+	public static final String NAME_INTENT_EXTRA_DATA_SALEINDEX = "saleIndex";
 
 	// Push Type
 	public static final int PUSH_TYPE_NOTICE = 0;

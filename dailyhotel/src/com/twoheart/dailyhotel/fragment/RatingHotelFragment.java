@@ -39,7 +39,6 @@ import com.android.volley.RequestQueue;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -57,22 +56,24 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 	private MainActivity mHostActivity;
 	private RequestQueue mQueue;
 
-	private Hotel mHotel;
+	private String mHotelName;
+	private int mSaleIndex;
 
 	private ImageView ivBtnClose;
 	private Button btnRecommend, btnCancel;
 	private TextView tvHotelName;
 
-	public static RatingHotelFragment newInstance(Hotel hotel)
+	public static RatingHotelFragment newInstance(String hotelName, int saleIndex)
 	{
 		RatingHotelFragment newFragment = new RatingHotelFragment();
 		Bundle arguments = new Bundle();
 
-		if (hotel != null)
+		if (hotelName != null)
 		{
-			arguments.putParcelable(NAME_INTENT_EXTRA_DATA_HOTEL, hotel);
+			arguments.putString(NAME_INTENT_EXTRA_DATA_HOTELNAME, hotelName);
+			arguments.putInt(NAME_INTENT_EXTRA_DATA_SALEINDEX, saleIndex);
 		}
-			
+
 		newFragment.setArguments(arguments);
 
 		return newFragment;
@@ -92,7 +93,8 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 		super.onCreate(savedInstanceState);
 
 		mQueue = VolleyHttpClient.getRequestQueue();
-		mHotel = getArguments().getParcelable(NAME_INTENT_EXTRA_DATA_HOTEL);
+		mHotelName = getArguments().getString(NAME_INTENT_EXTRA_DATA_HOTELNAME);
+		mSaleIndex = getArguments().getInt(NAME_INTENT_EXTRA_DATA_SALEINDEX);
 	}
 
 	@Override
@@ -113,7 +115,7 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 		btnCancel = (Button) view.findViewById(R.id.btn_rating_hotel_cancel);
 
 		StringBuilder hotelNameWithColon = new StringBuilder("'");
-		hotelNameWithColon.append(mHotel.getName()).append("'");
+		hotelNameWithColon.append(mHotelName).append("'");
 
 		tvHotelName.setText(hotelNameWithColon);
 
@@ -129,7 +131,6 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 		//		GlobalFont.apply((ViewGroup) view);
 
 		return view;
-
 	}
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
@@ -208,7 +209,7 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 			reviewResultParams.put("rating", reviewResult);
 
 			lockUI();
-			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_REVIEW).append('/').append(mHotel.saleIndex).toString(), reviewResultParams, mReserveReviewJsonResponseListener, mHostActivity));
+			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_REVIEW).append('/').append(mSaleIndex).toString(), reviewResultParams, mReserveReviewJsonResponseListener, mHostActivity));
 		}
 	}
 
