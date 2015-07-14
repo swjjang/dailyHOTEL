@@ -15,12 +15,9 @@
  */
 package com.twoheart.dailyhotel.util.ui;
 
-import java.util.Locale;
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
@@ -329,14 +326,14 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	//		}
 	//	}
 
-	private void setLocale(Locale locale)
-	{
-		Locale.setDefault(locale);
-		Configuration config = new Configuration();
-		config.locale = locale;
-		getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
-
-	}
+	//	private void setLocale(Locale locale)
+	//	{
+	//		Locale.setDefault(locale);
+	//		Configuration config = new Configuration();
+	//		config.locale = locale;
+	//		getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+	//
+	//	}
 
 	public void restartApp()
 	{

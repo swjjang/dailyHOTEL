@@ -27,9 +27,9 @@ import com.twoheart.dailyhotel.fragment.BookingTabBookingFragment;
 import com.twoheart.dailyhotel.fragment.TabInfoFragment;
 import com.twoheart.dailyhotel.fragment.TabMapFragment;
 import com.twoheart.dailyhotel.model.Booking;
+import com.twoheart.dailyhotel.model.BookingHotelDetail;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.Hotel.HotelGrade;
-import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
@@ -49,7 +49,7 @@ public class BookingTabActivity extends BaseActivity
 	private FragmentViewPager mFragmentViewPager;
 	private ArrayList<BaseFragment> mFragmentList;
 
-	public HotelDetail mHotelDetail;
+	public BookingHotelDetail mHotelDetail;
 	public Booking booking;
 	private int mPosition = 0;
 
@@ -58,7 +58,7 @@ public class BookingTabActivity extends BaseActivity
 	{
 		super.onCreate(savedInstanceState);
 
-		mHotelDetail = new HotelDetail();
+		mHotelDetail = new BookingHotelDetail();
 		booking = new Booking();
 		Bundle bundle = getIntent().getExtras();
 
@@ -298,6 +298,7 @@ public class BookingTabActivity extends BaseActivity
 
 				int saleIdx = jsonObject.getInt("idx");
 				mHotelDetail.setSaleIdx(saleIdx);
+				mHotelDetail.roomName = jsonObject.getString("room_name");
 
 				loadFragments();
 			} catch (Exception e)

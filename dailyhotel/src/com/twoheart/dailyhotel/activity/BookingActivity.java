@@ -646,7 +646,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			Map<String, String> params = new HashMap<String, String>();
 
 			params.put("saleIdx", String.valueOf(mPay.getSaleRoomInformation().saleIndex));
-			params.put("billkey", mPay.getCustomer().mBillingKey);
+			params.put("billkey", mSelectedCreditCard.billingkey);
 			params.put("mileage", mileage);
 			params.put("guest_name", guest.name);
 			params.put("guest_phone", guest.phone);

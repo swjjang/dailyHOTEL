@@ -279,7 +279,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 				}
 
 				// email check
-				if (android.util.Patterns.EMAIL_ADDRESS.matcher(etEmail.getText().toString()).matches() == false)
+				if (etEmail.isEnabled() == true && android.util.Patterns.EMAIL_ADDRESS.matcher(etEmail.getText().toString()).matches() == false)
 				{
 					DailyToast.showToast(SignupActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
 					return;

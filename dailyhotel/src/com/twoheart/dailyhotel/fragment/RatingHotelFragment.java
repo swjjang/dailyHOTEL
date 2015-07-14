@@ -39,7 +39,7 @@ import com.android.volley.RequestQueue;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.HotelDetail;
+import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -57,19 +57,22 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 	private MainActivity mHostActivity;
 	private RequestQueue mQueue;
 
-	private HotelDetail mHotelDetail;
+	private Hotel mHotel;
 
 	private ImageView ivBtnClose;
 	private Button btnRecommend, btnCancel;
 	private TextView tvHotelName;
 
-	public static RatingHotelFragment newInstance(HotelDetail hotelDetail)
+	public static RatingHotelFragment newInstance(Hotel hotel)
 	{
 		RatingHotelFragment newFragment = new RatingHotelFragment();
 		Bundle arguments = new Bundle();
 
-		if (hotelDetail != null)
-			arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL, hotelDetail);
+		if (hotel != null)
+		{
+			arguments.putParcelable(NAME_INTENT_EXTRA_DATA_HOTEL, hotel);
+		}
+			
 		newFragment.setArguments(arguments);
 
 		return newFragment;
@@ -89,7 +92,7 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 		super.onCreate(savedInstanceState);
 
 		mQueue = VolleyHttpClient.getRequestQueue();
-		mHotelDetail = getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL);
+		mHotel = getArguments().getParcelable(NAME_INTENT_EXTRA_DATA_HOTEL);
 	}
 
 	@Override
@@ -110,7 +113,7 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 		btnCancel = (Button) view.findViewById(R.id.btn_rating_hotel_cancel);
 
 		StringBuilder hotelNameWithColon = new StringBuilder("'");
-		hotelNameWithColon.append(mHotelDetail.getHotel().getName()).append("'");
+		hotelNameWithColon.append(mHotel.getName()).append("'");
 
 		tvHotelName.setText(hotelNameWithColon);
 
@@ -205,7 +208,7 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 			reviewResultParams.put("rating", reviewResult);
 
 			lockUI();
-			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_REVIEW).append('/').append(mHotelDetail.getSaleIdx()).toString(), reviewResultParams, mReserveReviewJsonResponseListener, mHostActivity));
+			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_REVIEW).append('/').append(mHotel.saleIndex).toString(), reviewResultParams, mReserveReviewJsonResponseListener, mHostActivity));
 		}
 	}
 

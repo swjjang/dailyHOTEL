@@ -23,19 +23,19 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.HotelDetail;
+import com.twoheart.dailyhotel.model.BookingHotelDetail;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
 public class TabInfoFragment extends BaseFragment
 {
 	private static final String KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL = "hotel_detail";
 
-	private HotelDetail mHotelDetail;
+	private BookingHotelDetail mHotelDetail;
 	private LinearLayout layout;
 
 	private int infoViewCount;
 
-	public static TabInfoFragment newInstance(HotelDetail hotelDetail, String title)
+	public static TabInfoFragment newInstance(BookingHotelDetail hotelDetail, String title)
 	{
 
 		TabInfoFragment newFragment = new TabInfoFragment();
@@ -54,7 +54,7 @@ public class TabInfoFragment extends BaseFragment
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		mHotelDetail = (HotelDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL);
+		mHotelDetail = (BookingHotelDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL);
 	}
 
 	@Override

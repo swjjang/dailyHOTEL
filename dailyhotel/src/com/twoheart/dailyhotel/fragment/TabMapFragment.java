@@ -30,7 +30,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.ZoomMapActivity;
 import com.twoheart.dailyhotel.adapter.HotelNameInfoWindowAdapter;
-import com.twoheart.dailyhotel.model.HotelDetail;
+import com.twoheart.dailyhotel.model.BookingHotelDetail;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
@@ -38,14 +38,14 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
 {
 	private static final String KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL = "hotel_detail";
 
-	private HotelDetail mHotelDetail;
+	private BookingHotelDetail mHotelDetail;
 	private SupportMapFragment mMapFragment;
 	private GoogleMap googleMap;
 	private TextView tvName, tvAddress;
 	private TextView hvGrade;
 	private Marker mMarker;
 
-	public static TabMapFragment newInstance(HotelDetail hotelDetail, String title)
+	public static TabMapFragment newInstance(BookingHotelDetail hotelDetail, String title)
 	{
 		TabMapFragment newFragment = new TabMapFragment();
 		Bundle arguments = new Bundle();
@@ -62,7 +62,7 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		mHotelDetail = (HotelDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL);
+		mHotelDetail = (BookingHotelDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL);
 	}
 
 	@Override

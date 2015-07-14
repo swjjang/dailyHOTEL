@@ -73,7 +73,6 @@ import com.twoheart.dailyhotel.activity.SplashActivity;
 import com.twoheart.dailyhotel.fragment.HotelMainFragment;
 import com.twoheart.dailyhotel.fragment.RatingHotelFragment;
 import com.twoheart.dailyhotel.model.Hotel;
-import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -1048,12 +1047,9 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 							{
 								Hotel purchasedHotel = new Hotel();
 								purchasedHotel.setName(purchasedHotelName);
+								purchasedHotel.saleIndex = purchasedHotelSaleIdx;
 
-								HotelDetail purchasedHotelInformation = new HotelDetail();
-								purchasedHotelInformation.setHotel(purchasedHotel);
-								purchasedHotelInformation.setSaleIdx(purchasedHotelSaleIdx);
-
-								RatingHotelFragment dialog = RatingHotelFragment.newInstance(purchasedHotelInformation);
+								RatingHotelFragment dialog = RatingHotelFragment.newInstance(purchasedHotel);
 								dialog.show(fragmentManager, TAG_FRAGMENT_RATING_HOTEL);
 							} else
 							{

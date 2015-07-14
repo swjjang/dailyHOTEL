@@ -14,7 +14,7 @@ import android.os.Parcelable;
 
 import com.twoheart.dailyhotel.util.ExLog;
 
-public class HotelDetail implements Parcelable
+public class BookingHotelDetail implements Parcelable
 {
 	private Hotel mHotel;
 	private double mLatitude;
@@ -23,12 +23,13 @@ public class HotelDetail implements Parcelable
 	private List<String> mImageUrl = new ArrayList<String>();
 	private int mSaleIdx;
 	public int isOverseas; // 0 : 국내 , 1 : 해외 
+	public String roomName;
 
-	public HotelDetail()
+	public BookingHotelDetail()
 	{
 	}
 
-	public HotelDetail(Parcel in)
+	public BookingHotelDetail(Parcel in)
 	{
 		readFromParcel(in);
 	}
@@ -43,7 +44,7 @@ public class HotelDetail implements Parcelable
 		dest.writeList(mImageUrl);
 		dest.writeInt(mSaleIdx);
 		dest.writeInt(isOverseas);
-
+		dest.writeString(roomName);
 	}
 
 	private void readFromParcel(Parcel in)
@@ -55,19 +56,20 @@ public class HotelDetail implements Parcelable
 		in.readList(mImageUrl, List.class.getClassLoader());
 		mSaleIdx = in.readInt();
 		isOverseas = in.readInt();
+		roomName = in.readString();
 	}
 
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
 	{
-		public HotelDetail createFromParcel(Parcel in)
+		public BookingHotelDetail createFromParcel(Parcel in)
 		{
-			return new HotelDetail(in);
+			return new BookingHotelDetail(in);
 		}
 
 		@Override
-		public HotelDetail[] newArray(int size)
+		public BookingHotelDetail[] newArray(int size)
 		{
-			return new HotelDetail[size];
+			return new BookingHotelDetail[size];
 		}
 
 	};

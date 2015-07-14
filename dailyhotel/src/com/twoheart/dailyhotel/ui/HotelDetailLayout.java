@@ -52,7 +52,6 @@ import com.twoheart.dailyhotel.model.DetailInformation;
 import com.twoheart.dailyhotel.model.HotelDetailEx;
 import com.twoheart.dailyhotel.model.SaleRoomInformation;
 import com.twoheart.dailyhotel.util.ABTestPreference;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 /**
