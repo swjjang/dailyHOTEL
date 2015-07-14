@@ -1160,12 +1160,11 @@ public class HotelDetailLayout
 				float gradeMax = mImageHeight - Util.dpToPx(mActivity, 56);
 				float xFactor = gradeOffset / gradeMax;
 				float nameMax = firstRect.left - Util.dpToPx(mActivity, 55);
-				
+
 				if (Util.isOverAPI11() == true)
 				{
 					if (Float.compare(xFactor, 0.0f) >= 0)
 					{
-						
 						mHotelNameTextView.setTranslationX(-nameMax * (1.0f - xFactor));
 					} else
 					{
@@ -1798,7 +1797,7 @@ public class HotelDetailLayout
 		{
 			ArrayList<DetailInformation> arrayList = hotelDetail.getInformation();
 
-			if (arrayList != null)
+			if (arrayList != null && arrayList.size() >= 3)
 			{
 				DetailInformation information = arrayList.get(2);
 
