@@ -1159,26 +1159,36 @@ public class HotelDetailLayout
 				float gradeOffset = rect.top - mStatusBarHeight - Util.dpToPx(mActivity, 56);
 				float gradeMax = mImageHeight - Util.dpToPx(mActivity, 56);
 				float xFactor = gradeOffset / gradeMax;
-
+				float nameMax = firstRect.left - Util.dpToPx(mActivity, 55);
+				
 				if (Util.isOverAPI11() == true)
 				{
 					if (Float.compare(xFactor, 0.0f) >= 0)
 					{
-						float nameMax = firstRect.left - Util.dpToPx(mActivity, 55);
+						
 						mHotelNameTextView.setTranslationX(-nameMax * (1.0f - xFactor));
+					} else
+					{
+						mHotelNameTextView.setTranslationX(-nameMax);
 					}
 				} else
 				{
 					if (Float.compare(xFactor, 0.0f) >= 0)
 					{
-						float nameMax = firstRect.left - Util.dpToPx(mActivity, 55);
-
 						TranslateAnimation anim = new TranslateAnimation(mLastFactor, -nameMax * (1.0f - xFactor), 0.0f, 0.0f);
 						anim.setDuration(0);
 						anim.setFillAfter(true);
 						mHotelNameTextView.startAnimation(anim);
 
 						mLastFactor = -nameMax * (1.0f - xFactor);
+					} else
+					{
+						TranslateAnimation anim = new TranslateAnimation(mLastFactor, -nameMax, 0.0f, 0.0f);
+						anim.setDuration(0);
+						anim.setFillAfter(true);
+						mHotelNameTextView.startAnimation(anim);
+
+						mLastFactor = -nameMax;
 					}
 				}
 			}
