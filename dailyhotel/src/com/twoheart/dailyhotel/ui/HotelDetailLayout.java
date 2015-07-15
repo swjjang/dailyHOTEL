@@ -32,7 +32,6 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -353,7 +352,7 @@ public class HotelDetailLayout
 			optionTextView.setText(information.option);
 		}
 
-		if (Util.isTextEmpty(information.option) == true)
+		if (Util.isTextEmpty(information.roomBenefit) == true)
 		{
 			benefitTextView.setVisibility(View.GONE);
 		} else
