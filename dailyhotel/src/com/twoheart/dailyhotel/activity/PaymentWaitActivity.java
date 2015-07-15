@@ -150,26 +150,12 @@ public class PaymentWaitActivity extends BaseActivity
 					tvName.setText(response.getString("name"));
 
 					DecimalFormat comma = new DecimalFormat("###,##0");
-					String locale = sharedPreference.getString(KEY_PREFERENCE_LOCALE, null);
-
-					if (locale.equals("한국어"))
-					{
-						tvPrice.setText(comma.format(response.getInt("amt")) + Html.fromHtml(getString(R.string.currency)));
-					} else
-					{
-						tvPrice.setText(Html.fromHtml(getString(R.string.currency)) + comma.format(response.getInt("amt")));
-					}
+					tvPrice.setText(comma.format(response.getInt("amt")) + Html.fromHtml(getString(R.string.currency)));
 
 					String[] dateSlice = response.getString("date").split("/");
 					String[] timeSlice = response.getString("time").split(":");
 
-					if (locale.equals("한국어"))
-					{
-						tvDeadline.setText(Integer.parseInt(dateSlice[1]) + "월 " + Integer.parseInt(dateSlice[2]) + "일 " + timeSlice[0] + ":" + timeSlice[1] + "까지");
-					} else
-					{
-						tvDeadline.setText("upto " + Integer.parseInt(dateSlice[1]) + "/ " + Integer.parseInt(dateSlice[2]) + " " + timeSlice[0] + ":" + timeSlice[1]);
-					}
+					tvDeadline.setText(Integer.parseInt(dateSlice[1]) + "월 " + Integer.parseInt(dateSlice[2]) + "일 " + timeSlice[0] + ":" + timeSlice[1] + "까지");
 
 					tvGuide1.setText(response.getString("msg1"));
 					tvGuide2.setText(response.getString("msg2"));
@@ -182,41 +168,4 @@ public class PaymentWaitActivity extends BaseActivity
 			}
 		}
 	};
-
-	//	@Override
-	//	public void onResponse(String url, JSONObject response) {
-	//		ExLog.e(" / RESPONSE : " + response.toString());
-	//		if (url.contains(URL_WEBAPI_RESERVE_MINE_DETAIL)) {
-	//			try {
-	//				if (!response.getBoolean("result")) {
-	//					Intent intent = new Intent();
-	//					intent.putExtra("msg", response.getString("msg"));
-	//					setResult(CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT, intent);
-	//					finish();
-	//				} else {
-	//					tvAccount.setText(response.getString("bank_name") +", "+ response.getString("account_num"));
-	//					tvName.setText(response.getString("name"));
-	//
-	//					DecimalFormat comma = new DecimalFormat("###,##0");
-	//					String locale = sharedPreference.getString(KEY_PREFERENCE_LOCALE, null);
-	//					
-	//					if (locale.equals("한국어"))	tvPrice.setText(comma.format(response.getInt("amt"))+Html.fromHtml(getString(R.string.currency)));
-	//					else	tvPrice.setText(Html.fromHtml(getString(R.string.currency))+comma.format(response.getInt("amt")));
-	//					
-	//					String[] dateSlice = response.getString("date").split("/");
-	//					String[] timeSlice = response.getString("time").split(":");
-	//					
-	//					if (locale.equals("한국어"))	tvDeadline.setText(Integer.parseInt(dateSlice[1])+"월 "+Integer.parseInt(dateSlice[2])+"일 "+timeSlice[0]+":"+timeSlice[1]+"까지");
-	//					else	tvDeadline.setText("upto " + Integer.parseInt(dateSlice[1])+"/ "+Integer.parseInt(dateSlice[2])+" "+timeSlice[0]+":"+timeSlice[1]);
-	//
-	//					tvGuide1.setText(response.getString("msg1"));
-	//					tvGuide2.setText(response.getString("msg2"));
-	//					unLockUI();
-	//				}
-	//				
-	//			} catch (JSONException e) {
-	//				ExLog.e(e.toString());
-	//			}
-	//		}
-	//	}
 }

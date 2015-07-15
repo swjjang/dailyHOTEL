@@ -71,12 +71,6 @@ public class IntroGuideFragment extends BaseFragment
 
 		llIntroGuide.setBackgroundResource(mBackground);
 
-		SharedPreferences sharedPreference = container.getContext().getSharedPreferences(NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
-		String locale = sharedPreference.getString(KEY_PREFERENCE_LOCALE, null);
-
-		if (locale.equals("English"))
-			tvTitle.setTextSize(26.5f);
-
 		tvTitle.setText(mTitle);
 		tvDesc.setText(mDesc);
 		ivImage.setImageResource(mImage);

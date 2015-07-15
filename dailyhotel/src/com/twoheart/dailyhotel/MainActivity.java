@@ -141,13 +141,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		//		Locale.setDefault(new Locale("한국어"));
 		Util.setLocale(this, "한국어");
 
-		String locale = "한국어"; // Locale.getDefault().getDisplayLanguage();
-		ExLog.e("locale? " + locale);
-
-		Editor editor = sharedPreference.edit();
-		editor.putString(KEY_PREFERENCE_LOCALE, locale);
-		editor.apply();
-
 		// Intent Scheme Parameter for KakaoLink
 		intentData = getIntent().getData();
 		if (intentData != null)
