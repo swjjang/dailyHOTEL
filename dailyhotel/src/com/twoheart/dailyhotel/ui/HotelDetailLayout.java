@@ -14,6 +14,7 @@ import android.os.Build;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.text.Layout;
 import android.text.TextUtils;
 import android.text.TextUtils.TruncateAt;
 import android.view.LayoutInflater;
@@ -52,6 +53,7 @@ import com.twoheart.dailyhotel.model.DetailInformation;
 import com.twoheart.dailyhotel.model.HotelDetailEx;
 import com.twoheart.dailyhotel.model.SaleRoomInformation;
 import com.twoheart.dailyhotel.util.ABTestPreference;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 /**
@@ -1132,8 +1134,12 @@ public class HotelDetailLayout
 			//			float max = mImageHeight - Util.dpToPx(mActivity, 56);
 			//			float alphaFactor = offset / max;
 
+			//			float max = (mImageHeight - Util.dpToPx(mActivity, 56)) / 2;
+			//			float offset = rect.top - mStatusBarHeight - Util.dpToPx(mActivity, 56) - max;
+			//			float alphaFactor = offset / max;
+
 			float max = (mImageHeight - Util.dpToPx(mActivity, 56)) / 2;
-			float offset = rect.top - mStatusBarHeight - Util.dpToPx(mActivity, 56) - max;
+			float offset = rect.top - mStatusBarHeight - Util.dpToPx(mActivity, 56);
 			float alphaFactor = offset / max;
 
 			if (TextUtils.isEmpty(mHotelDetail.hotelBenefit) == false)
@@ -1177,10 +1183,16 @@ public class HotelDetailLayout
 
 			if (firstRect != null)
 			{
+				float gradeMax = (mImageHeight - Util.dpToPx(mActivity, 56)) / 3;
 				float gradeOffset = rect.top - mStatusBarHeight - Util.dpToPx(mActivity, 56);
-				float gradeMax = mImageHeight - Util.dpToPx(mActivity, 56);
 				float xFactor = gradeOffset / gradeMax;
 				float nameMax = firstRect.left - Util.dpToPx(mActivity, 55);
+
+				if (Float.compare(xFactor, 1.0f) > 0)
+				{
+					mHotelNameTextView.setTranslationX(0);
+					return;
+				}
 
 				if (Util.isOverAPI11() == true)
 				{
@@ -1430,38 +1442,56 @@ public class HotelDetailLayout
 					view = mDeatilView[2];
 					break;
 
-				// 데일리's comment
+				// D Benefit or 데일리's comment
 				case 3:
-					if (mDeatilView[3] == null)
-					{
-						mDeatilView[3] = layoutInflater.inflate(R.layout.list_row_detail04, parent, false);
-					}
-
-					if (mNeedRefreshData[3] == true)
-					{
-						mNeedRefreshData[3] = false;
-
-						getDetail03View(layoutInflater, (ViewGroup) mDeatilView[3], mHotelDetail);
-					}
-
-					view = mDeatilView[3];
-					break;
-
-				// D Benefit or 호텔 정보
-				case 4:
 					if (TextUtils.isEmpty(mHotelDetail.hotelBenefit) == false)
+					{
+						if (mDeatilView[3] == null)
+						{
+							mDeatilView[3] = layoutInflater.inflate(R.layout.list_row_detail_benefit, parent, false);
+							getDetailBenefitView(mDeatilView[3], mHotelDetail);
+						}
+
+						if (mNeedRefreshData[3] == true)
+						{
+							mNeedRefreshData[3] = false;
+
+							getDetailBenefitView(mDeatilView[3], mHotelDetail);
+						}
+
+						view = mDeatilView[3];
+					} else
 					{
 						if (mDeatilView[4] == null)
 						{
-							mDeatilView[4] = layoutInflater.inflate(R.layout.list_row_detail_benefit, parent, false);
-							getDetailBenefitView(mDeatilView[4], mHotelDetail);
+							mDeatilView[4] = layoutInflater.inflate(R.layout.list_row_detail04, parent, false);
 						}
 
 						if (mNeedRefreshData[4] == true)
 						{
 							mNeedRefreshData[4] = false;
 
-							getDetailBenefitView(mDeatilView[4], mHotelDetail);
+							getDetail04View(layoutInflater, (ViewGroup) mDeatilView[4], mHotelDetail);
+						}
+
+						view = mDeatilView[4];
+					}
+					break;
+
+				// 데일리 추천이유 or 호텔 정보
+				case 4:
+					if (TextUtils.isEmpty(mHotelDetail.hotelBenefit) == false)
+					{
+						if (mDeatilView[4] == null)
+						{
+							mDeatilView[4] = layoutInflater.inflate(R.layout.list_row_detail04, parent, false);
+						}
+
+						if (mNeedRefreshData[4] == true)
+						{
+							mNeedRefreshData[4] = false;
+
+							getDetail04View(layoutInflater, (ViewGroup) mDeatilView[4], mHotelDetail);
 						}
 
 						view = mDeatilView[4];
@@ -1722,15 +1752,59 @@ public class HotelDetailLayout
 		 */
 		private View getDetailBenefitView(View view, HotelDetailEx hotelDetail)
 		{
-			TextView textView = (TextView) view.findViewById(R.id.benefitTextView);
-			textView.setText(hotelDetail.hotelBenefit);
+			final TextView textView1Line = (TextView) view.findViewById(R.id.benefit1LineTextView);
+			final TextView textView2Line = (TextView) view.findViewById(R.id.benefit2LineTextView);
 
-			if (Util.isOverAPI21() == true)
+			textView2Line.setText(null);
+			textView2Line.setVisibility(View.GONE);
+
+			final String benefit = hotelDetail.hotelBenefit;
+
+			textView1Line.setText(benefit);
+			textView1Line.post(new Runnable()
 			{
-				LinearLayout linearLayout = (LinearLayout) textView.getParent();
-				RelativeLayout.LayoutParams layoutParams = (android.widget.RelativeLayout.LayoutParams) linearLayout.getLayoutParams();
-				layoutParams.bottomMargin = Util.dpToPx(mFragmentActivity, 20);
-			}
+				@Override
+				public void run()
+				{
+					Layout layout = textView1Line.getLayout();
+
+					if (layout == null || TextUtils.isEmpty(benefit) == true)
+					{
+						return;
+					}
+
+					String[] lineString = new String[2];
+					int lineCount = layout.getLineCount();
+
+					// 한줄이상인 경우.
+					if (lineCount > 1)
+					{
+						int firstLineEnd = layout.getLineEnd(0);
+
+						try
+						{
+							if (firstLineEnd < benefit.length())
+							{
+								lineString[0] = benefit.substring(0, firstLineEnd);
+								lineString[1] = benefit.substring(firstLineEnd, benefit.length());
+
+								textView2Line.setVisibility(View.VISIBLE);
+								textView2Line.setText(lineString[1]);
+							}
+						} catch (Exception e)
+						{
+							ExLog.d(e.toString());
+						}
+					}
+				}
+			});
+
+			//			if (Util.isOverAPI21() == true)
+			//			{
+			//				LinearLayout linearLayout = (LinearLayout) textView.getParent();
+			//				RelativeLayout.LayoutParams layoutParams = (android.widget.RelativeLayout.LayoutParams) linearLayout.getLayoutParams();
+			//				layoutParams.bottomMargin = Util.dpToPx(mFragmentActivity, 10);
+			//			}
 
 			return view;
 		}
@@ -1741,7 +1815,7 @@ public class HotelDetailLayout
 		 * @param view
 		 * @return
 		 */
-		private View getDetail03View(LayoutInflater layoutInflater, ViewGroup viewGroup, HotelDetailEx hotelDetail)
+		private View getDetail04View(LayoutInflater layoutInflater, ViewGroup viewGroup, HotelDetailEx hotelDetail)
 		{
 			ArrayList<DetailInformation> arrayList = hotelDetail.getInformation();
 
@@ -1771,15 +1845,13 @@ public class HotelDetailLayout
 
 				DetailInformation information = arrayList.get(1);
 
-				if (information == null)
+				if (hotelDetail.getMoreInformation() == null || hotelDetail.getMoreInformation().size() == 0)
 				{
 					moreInfoView.setVisibility(View.GONE);
+					moreInfoView.setOnClickListener(null);
 				} else
 				{
 					moreInfoView.setVisibility(View.VISIBLE);
-
-					makeInformationLayout(layoutInflater, viewGroup, information);
-
 					moreInfoView.setOnClickListener(new View.OnClickListener()
 					{
 						@Override
@@ -1792,6 +1864,8 @@ public class HotelDetailLayout
 						}
 					});
 				}
+
+				makeInformationLayout(layoutInflater, viewGroup, information);
 			}
 
 			return viewGroup;
@@ -1844,6 +1918,7 @@ public class HotelDetailLayout
 			}
 
 			LinearLayout contentsLayout = (LinearLayout) viewGroup.findViewById(R.id.contentsList);
+			contentsLayout.removeAllViews();
 
 			TextView titleTextView = (TextView) viewGroup.findViewById(R.id.titleTextView);
 			titleTextView.setText(information.title);

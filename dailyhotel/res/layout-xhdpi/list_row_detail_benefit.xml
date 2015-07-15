@@ -3,13 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/hoteldetail_dbenefit_background"
-    android:minHeight="90dp" >
+    android:minHeight="77dp" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="20dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="20dp"
@@ -20,21 +20,33 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_hoteldetail_dbenefit"
-            android:textColor="@color/white"
+            android:textColor="@color/dh_theme_color"
             android:textSize="15dp"
             android:textStyle="bold" />
 
         <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-            android:id="@+id/benefitTextView"
+            android:id="@+id/benefit1LineTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:freezesText="true"
             android:gravity="center_horizontal"
-            android:lineSpacingExtra="10dp"
-            android:textColor="@color/white"
+            android:maxLines="1"
+            android:textColor="@color/dh_theme_color"
+            android:textSize="12dp" />
+
+        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            android:id="@+id/benefit2LineTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:freezesText="true"
+            android:gravity="center_horizontal"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColor="@color/dh_theme_color"
             android:textSize="12dp"
-            android:textStyle="bold" />
+            android:visibility="gone" />
     </LinearLayout>
 
 </RelativeLayout>

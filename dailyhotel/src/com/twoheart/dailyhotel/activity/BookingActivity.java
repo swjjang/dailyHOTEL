@@ -2168,7 +2168,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 							// 호텔 디테일 정보 재 요청
 							String params = String.format("?sale_idx=%d", mPay.getSaleRoomInformation().saleIndex);
 
-							mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_DETAIL).append(params).toString(), null, mSaleRoomPaymentJsonResponseListener, BookingActivity.this));
+							mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_ROOM_PAYMENT).append(params).toString(), null, mSaleRoomPaymentJsonResponseListener, BookingActivity.this));
 						}
 					}).show();
 				} else
