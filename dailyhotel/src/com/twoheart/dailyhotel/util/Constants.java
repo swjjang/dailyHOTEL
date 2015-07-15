@@ -209,6 +209,9 @@ public interface Constants
 	// api/reserv/saleDetailInfo
 	public static final String URL_WEBAPI_RESERV_SALEDETAILINFO = UNENCRYPTED_URL ? "api/reserv/saleDetailInfo" : "NDckNzgkNjckMTMkNDUk$NUQxNTg3ODA0QETFCMTQ1QTk5NjM5NTI5MkVBNEZGRUVGWNDdMGMDBFREM5QjBCMTE3M0EJCMDdBNDMzRETg0RDdGRQ==$";
 
+	// api/reserv/hotel/room/info
+	public static final String URL_WEBAPI_RESERV_HOTEL_ROOM_INFO = UNENCRYPTED_URL ? "api/reserv/hotel/room/info" : "NzMkNTIkMTQkMzckMjgk$ODhERjUwMTRFQjYFBNjFDQzIzQUVKCRUFEQTE0SM0IyOTRFMzJDQTUyONDBCQUQ2OTE1ODVCNjEzNWzg1MUY4QUU0Rg==$";
+
 	// api/reserv/session/billing/
 	public static final String URL_WEBAPI_RESERV_SESSION_BILLING = UNENCRYPTED_URL ? "api/reserv/session/billing" : "ODIkMjkkODEkODgkOTEk$NUQ1MDk3RTlCODI3NjE0QjZENENFMVjY0NjM2MDE5RDM1RTQ1RTRFOEM5NjE5QjU4RkNDMTBFMDc4NDNCUQjBk3RKg=E=$";
 

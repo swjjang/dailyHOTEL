@@ -10,8 +10,6 @@
 package com.twoheart.dailyhotel.activity;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -30,7 +28,6 @@ import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.BookingHotelDetail;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.Hotel.HotelGrade;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.Util;
@@ -86,26 +83,6 @@ public class BookingTabActivity extends BaseActivity
 		mTabIndicator.setOnTabSelectListener(mOnTabSelectedListener);
 	}
 
-	private void onPostSetCookie()
-	{
-		String[] date = booking.getSday().split("-");
-
-		ExLog.d("date", date);
-
-		//		String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_DETAIL).append('/').append(booking.getHotel_idx()).append("/").append(date[0]).append("/").append(date[1]).append("/").append(date[2]).toString();
-		String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_SALEDETAILINFO).toString();
-
-		ExLog.d(url);
-
-		lockUI();
-
-		// 호텔 정보를 가져온다.
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("saleIdx", String.valueOf(booking.saleIdx));
-
-		mQueue.add(new DailyHotelJsonRequest(Method.POST, url, params, mHotelDetailJsonResponseListener, this));
-	}
-
 	private void loadFragments()
 	{
 
@@ -146,7 +123,11 @@ public class BookingTabActivity extends BaseActivity
 	@Override
 	protected void onResume()
 	{
-		onPostSetCookie();
+		lockUI();
+
+		// 호텔 정보를 가져온다.
+		String params = String.format("?reservationIdx=%d", booking.index);
+		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_HOTEL_ROOM_INFO).append(params).toString(), null, mHotelDetailJsonResponseListener, this));
 
 		if (mPosition == 0)
 		{
