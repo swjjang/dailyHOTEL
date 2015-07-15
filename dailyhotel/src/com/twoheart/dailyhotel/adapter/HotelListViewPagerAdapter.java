@@ -88,11 +88,21 @@ public class HotelListViewPagerAdapter extends PagerAdapter
 		TextView address = (TextView) view.findViewById(R.id.tv_hotel_row_address);
 		TextView grade = (TextView) view.findViewById(R.id.hv_hotel_grade);
 		View closeView = view.findViewById(R.id.closeImageVIew);
+		View dBenefitImageView = view.findViewById(R.id.dBenefitImageView);
 
 		DecimalFormat comma = new DecimalFormat("###,##0");
 
 		address.setText(hotel.getAddress());
 		name.setText(hotel.getName());
+
+		// D.benefit
+		if (hotel.isDBenefit == true)
+		{
+			dBenefitImageView.setVisibility(View.VISIBLE);
+		} else
+		{
+			dBenefitImageView.setVisibility(View.GONE);
+		}
 
 		Spanned currency = Html.fromHtml(mContext.getResources().getString(R.string.currency));
 

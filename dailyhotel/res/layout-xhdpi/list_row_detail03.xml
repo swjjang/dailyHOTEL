@@ -15,10 +15,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:layout_marginBottom="20dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
         android:drawableLeft="@drawable/info_ic_map_small"
         android:drawablePadding="5dp"
         android:ellipsize="end"
@@ -27,7 +27,8 @@
         android:textColor="@color/hoteldetail_contents_text_color"
         android:textSize="13dp" />
 
-<!--     <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+    <!--
+         <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
         android:id="@+id/hotelSimpleLocationTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -41,12 +42,23 @@
         android:singleLine="true"
         android:textColor="@color/hoteldetail_contents_text_color"
         android:textSize="13dp"
-        android:visibility="gone" /> -->
+        android:visibility="gone" />
+    -->
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/selectarea_underline" />
 
     <fragment
         android:id="@+id/googleMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         class="com.google.android.gms.maps.SupportMapFragment" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/selectarea_underline" />
 
 </LinearLayout>
