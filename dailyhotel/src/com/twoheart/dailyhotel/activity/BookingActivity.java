@@ -1250,6 +1250,41 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		}).show();
 	}
 
+	private void showChangedBonusDialog()
+	{
+		// 적립금이 변동된 경우.
+		if (mFinalCheckDialog != null && mFinalCheckDialog.isShowing() == true)
+		{
+			mFinalCheckDialog.cancel();
+			mFinalCheckDialog = null;
+		}
+
+		String title = getString(R.string.dialog_notice2);
+		String msg = getString(R.string.dialog_msg_changed_bonus);
+		String positive = getString(R.string.dialog_btn_text_confirm);
+
+		if (isFinishing() == true)
+		{
+			return;
+		}
+
+		SimpleAlertDialog.build(BookingActivity.this, title, msg, positive, new DialogInterface.OnClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				lockUI();
+
+				mAliveCallSource = "";
+
+				// 호텔 디테일 정보 재 요청
+				String params = String.format("?sale_idx=%d", mPay.getSaleRoomInformation().saleIndex);
+
+				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_ROOM_PAYMENT).append(params).toString(), null, mSaleRoomPaymentJsonResponseListener, BookingActivity.this));
+			}
+		}).show();
+	}
+
 	//	private void showRequestEnglishName()
 	//	{
 	//		if (isFinishing() == true)
@@ -1628,6 +1663,15 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				{
 					if (isOnSession == true)
 					{
+						int bonus = jsonData.getInt("user_bonus");
+
+						if (mPay.isSaleCredit() == true && bonus != mPay.getCredit().getBonus())
+						{
+							mPay.getCredit().setBonus(bonus);
+							showChangedBonusDialog();
+							return;
+						}
+
 						// 2. 마지막 가격 및 기타 이상이 없는지 검사
 						String params = String.format("?sale_idx=%d", mPay.getSaleRoomInformation().saleIndex);
 
@@ -1659,6 +1703,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 						int bonus = jsonData.getInt("user_bonus");
 
 						mPay.setCredit(new Credit(null, bonus, null));
+
+						if (mPay.isSaleCredit() == true)
+						{
+							updatePayPrice(true);
+						}
 
 						int originalPrice = mPay.getSaleRoomInformation().discount;
 						DecimalFormat comma = new DecimalFormat("###,##0");

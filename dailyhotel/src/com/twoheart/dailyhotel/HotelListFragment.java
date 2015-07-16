@@ -756,8 +756,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 				mOldfirstVisibleItem = firstVisibleItem;
 			}
 
-			ExLog.d("mDirection : " + mDirection);
-
 			switch (mDirection)
 			{
 				case MotionEvent.ACTION_DOWN:
