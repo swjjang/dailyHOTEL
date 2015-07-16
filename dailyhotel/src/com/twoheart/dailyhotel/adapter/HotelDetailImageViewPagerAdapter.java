@@ -47,8 +47,6 @@ public class HotelDetailImageViewPagerAdapter extends PagerAdapter
 	@Override
 	public Object instantiateItem(ViewGroup container, int position)
 	{
-		ExLog.d("instantiateItem : " + position);
-
 		if (mImageUrlList == null)
 		{
 			return null;

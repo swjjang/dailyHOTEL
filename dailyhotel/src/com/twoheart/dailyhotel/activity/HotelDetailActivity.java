@@ -155,14 +155,14 @@ public class HotelDetailActivity extends BaseActivity
 			return;
 		}
 
-		initLayout(hotel.getName());
+		initLayout(hotel.getName(), hotel.getImage());
 	}
 
-	private void initLayout(String hotelName)
+	private void initLayout(String hotelName, String imageUrl)
 	{
 		try
 		{
-			mHotelDetailLayout = new HotelDetailLayout(this);
+			mHotelDetailLayout = new HotelDetailLayout(this, imageUrl);
 			mHotelDetailLayout.setUserActionListener(mOnUserActionListener);
 
 			setContentView(mHotelDetailLayout.getView());

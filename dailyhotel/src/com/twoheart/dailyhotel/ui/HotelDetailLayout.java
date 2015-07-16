@@ -9,7 +9,9 @@ import android.animation.Animator.AnimatorListener;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -54,6 +56,7 @@ import com.twoheart.dailyhotel.model.SaleRoomInformation;
 import com.twoheart.dailyhotel.util.ABTestPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.VolleyImageLoader;
 
 /**
  * 호텔 상세 정보 화면
@@ -115,14 +118,14 @@ public class HotelDetailLayout
 		SHOW, HIDE, SHOW_END, HIDE_END
 	};
 
-	public HotelDetailLayout(Activity activity)
+	public HotelDetailLayout(Activity activity, String defaultImageUrl)
 	{
 		mActivity = activity;
 
-		initLayout(activity);
+		initLayout(activity, defaultImageUrl);
 	}
 
-	private void initLayout(Activity activity)
+	private void initLayout(Activity activity, String defaultImageUrl)
 	{
 		LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mViewRoot = inflater.inflate(R.layout.layout_hoteldetail, null, false);
@@ -137,6 +140,21 @@ public class HotelDetailLayout
 		mViewPager = (LoopViewPager) mViewRoot.findViewById(R.id.defaultHotelImageView);
 		mViewPager.setOnPageChangeListener(mOnPageChangeListener);
 		mViewPager.setScrollDurationFactor(4);
+
+		if (defaultImageUrl != null)
+		{
+			if (mImageAdapter == null)
+			{
+				mImageAdapter = new HotelDetailImageViewPagerAdapter(mActivity);
+				mImageAdapter.setOnAnimationListener(mOnUserActionListener);
+			}
+
+			ArrayList<String> arrayList = new ArrayList<String>();
+			arrayList.add(defaultImageUrl);
+
+			mImageAdapter.setData(arrayList);
+			mViewPager.setAdapter(mImageAdapter);
+		}
 
 		mImageViewBlur = mViewRoot.findViewById(R.id.imageViewBlur);
 		mImageViewBlur.setVisibility(View.INVISIBLE);
