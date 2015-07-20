@@ -148,7 +148,7 @@
     <string name="dialog_msg_processing_payment">결제가 진행 중입니다. 잠시만 기다려 주십시오.</string>
     <string name="dialog_msg_delete_failed_creditcard">신용카드 삭제를 실패하였습니다.</string>
     <string name="dialog_msg_delete_booking">이용 완료한 내역을 삭제하시겠습니까?</string>
-    <string name="dialog_msg_changed_pay">객실 상황 변동으로 인하여 가격이 변경되었습니다.\n확인 뒤 결제해주세요.</string>
+    <string name="dialog_msg_changed_pay">객실 상황 변동으로 인하여&lt;br/&gt;가격 혹은 객실이 변경되었습니다.&lt;br/&gt;확인 뒤 결제해주세요.</string>
     <string name="dialog_msg_changed_bonus">적립금이 변동되었습니다.\n확인 뒤 결제해주세요.</string>
     <string name="dialog_title_used_gps">위치 서비스 사용</string>
     <string name="dialog_msg_used_gps">내 위치 정보를 사용하려면, 단말기의 설정에서 \'위치 서비스\' 사용을 허용해주세요.</string>

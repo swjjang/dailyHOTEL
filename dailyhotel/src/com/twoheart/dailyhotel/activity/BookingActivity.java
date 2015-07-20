@@ -105,6 +105,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	private static final int DIALOG_CONFIRM_CALL = 4;
 	private static final int DIALOG_CONFIRM_PAYMENT_REGCARD = 5;
 	private static final int DIALOG_CONFIRM_STOP_ONSALE = 6;
+	private static final int DIALOG_CONFIRM_CHANGED_PAY = 7;
 
 	private TextView mCheckinDayTextView, mCheckinTimeTextView,
 			mCheckoutDayTextView, mCheckoutTimeTextView;
@@ -512,6 +513,16 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				buttonText = getString(R.string.dialog_btn_text_confirm);
 				break;
 
+			case DIALOG_CONFIRM_CHANGED_PAY:
+				dialog.setCancelable(false);
+
+				btnClose.setVisibility(View.INVISIBLE);
+				titleTextView.setText(R.string.dialog_notice2);
+
+				msg = getString(R.string.dialog_msg_changed_pay);
+				buttonText = getString(R.string.dialog_btn_text_confirm);
+				break;
+
 			//			case DIALOG_CONFIRM_PAYMENT_REGCARD:
 			//			case DIALOG_CONFIRM_PAYMENT_CARD:
 			//			case DIALOG_CONFIRM_PAYMENT_ACCOUNT:
@@ -913,6 +924,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 			if (msg != null)
 			{
+				if (isFinishing() == true)
+				{
+					return;
+				}
+
 				String title = getString(R.string.dialog_notice2);
 				String positive = getString(R.string.dialog_btn_text_confirm);
 
@@ -1244,7 +1260,25 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			@Override
 			public void onClick(View v)
 			{
-				setResult(CODE_RESULT_ACTIVITY_PAYMENT_NOT_ONSALE);
+				setResult(RESULT_CANCELED);
+				finish();
+			}
+		}).show();
+	}
+
+	private void showChangedPayDialog()
+	{
+		if (isFinishing() == true)
+		{
+			return;
+		}
+
+		getPaymentConfirmDialog(DIALOG_CONFIRM_CHANGED_PAY, new OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				setResult(RESULT_CANCELED);
 				finish();
 			}
 		}).show();
@@ -1945,18 +1979,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				// 호텔 가격 정보가 변경되었습니다.
 				if (mIsChangedPay == true)
 				{
-					if (isFinishing() == true)
-					{
-						return;
-					}
-
 					mIsChangedPay = false;
 
-					String title = getString(R.string.dialog_notice2);
-					String msg = getString(R.string.dialog_msg_changed_pay);
-					String positive = getString(R.string.dialog_btn_text_confirm);
-
-					SimpleAlertDialog.build(BookingActivity.this, title, msg, positive, (DialogInterface.OnClickListener) null).show();
+					showChangedPayDialog();
 				}
 			} catch (Exception e)
 			{
@@ -2196,30 +2221,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 						mFinalCheckDialog = null;
 					}
 
-					String title = getString(R.string.dialog_notice2);
-					String msg = getString(R.string.dialog_msg_changed_pay);
-					String positive = getString(R.string.dialog_btn_text_confirm);
-
-					if (isFinishing() == true)
-					{
-						return;
-					}
-
-					SimpleAlertDialog.build(BookingActivity.this, title, msg, positive, new DialogInterface.OnClickListener()
-					{
-						@Override
-						public void onClick(DialogInterface dialog, int which)
-						{
-							lockUI();
-
-							mAliveCallSource = "";
-
-							// 호텔 디테일 정보 재 요청
-							String params = String.format("?sale_idx=%d", mPay.getSaleRoomInformation().saleIndex);
-
-							mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_ROOM_PAYMENT).append(params).toString(), null, mSaleRoomPaymentJsonResponseListener, BookingActivity.this));
-						}
-					}).show();
+					showChangedPayDialog();
 				} else
 				{
 					moveToPayStep();
