@@ -139,7 +139,7 @@ public class Util implements Constants
 
 	public static void finishOutOfMemory(Activity activity)
 	{
-		if (activity != null && activity.isFinishing() == true)
+		if (activity == null || activity.isFinishing() == true)
 		{
 			return;
 		}
