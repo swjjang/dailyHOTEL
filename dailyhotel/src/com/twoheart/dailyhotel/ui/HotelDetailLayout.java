@@ -31,6 +31,7 @@ import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -1698,6 +1699,31 @@ public class HotelDetailLayout
 
 			// 맵
 			SupportMapFragment mapFragment = (SupportMapFragment) mFragmentActivity.getSupportFragmentManager().findFragmentById(R.id.googleMapFragment);
+
+			// 구글 플레이 서비스 업데이트 버튼이 연결이 잘 안되는 경우가 있다.
+			View viewGroup = mapFragment.getView();
+
+			if (viewGroup instanceof ViewGroup)
+			{
+				View viewLayout = ((ViewGroup) viewGroup).getChildAt(0);
+
+				if (viewLayout instanceof ViewGroup)
+				{
+					View viewButton = ((ViewGroup) viewLayout).getChildAt(1);
+
+					if (viewButton instanceof Button)
+					{
+						viewButton.setOnClickListener(new View.OnClickListener()
+						{
+							@Override
+							public void onClick(View v)
+							{
+								Util.installGooglePlayService(mFragmentActivity);
+							}
+						});
+					}
+				}
+			}
 
 			if (mGoogleMap == null)
 			{

@@ -7,10 +7,13 @@ import java.util.regex.Pattern;
 
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -21,6 +24,7 @@ import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings.Secure;
 import android.telephony.TelephonyManager;
@@ -249,5 +253,94 @@ public class Util implements Constants
 		}
 
 		return version;
+	}
+
+	public static int installGooglePlayService(final Activity activity)
+	{
+		if (activity == null || activity.isFinishing() == true)
+		{
+			return -1;
+		}
+
+		int state = -1;
+
+		try
+		{
+			PackageManager packageManager = activity.getPackageManager();
+
+			ApplicationInfo applicationInfo = packageManager.getApplicationInfo("com.google.android.gms", 0);
+			PackageInfo packageInfo = packageManager.getPackageInfo(applicationInfo.packageName, PackageManager.GET_SIGNATURES);
+
+			if (packageInfo.versionCode < 7500000)
+			{
+				state = 0;
+			} else
+			{
+				state = 1;
+			}
+		} catch (PackageManager.NameNotFoundException e)
+		{
+			state = -1;
+		}
+
+		if (state == 1)
+		{
+			return 1;
+		} else
+		{
+			if (activity.isFinishing() == true)
+			{
+				return -1;
+			}
+
+			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
+
+			// set dialog message
+			int messageId = state == -1 ? R.string.dialog_msg_install_googleplayservice : R.string.dialog_msg_update_googleplayservice;
+			int positiveId = state == -1 ? R.string.dialog_btn_install : R.string.dialog_btn_update;
+
+			AlertDialog alertDialog = alertDialogBuilder.setTitle(activity.getString(R.string.dialog_title_googleplayservice)).setMessage(activity.getString(messageId)).setCancelable(true).setPositiveButton(activity.getString(positiveId), new DialogInterface.OnClickListener()
+			{
+				public void onClick(DialogInterface dialog, int id)
+				{
+					dialog.dismiss();
+					// Try the new HTTP method (I assume that is the official way now given that google uses it).
+					try
+					{
+						Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.gms"));
+						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+						intent.setPackage("com.android.vending");
+						activity.startActivity(intent);
+					} catch (ActivityNotFoundException e)
+					{
+						// Ok that didn't work, try the market method.
+						try
+						{
+							Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.google.android.gms"));
+							intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+							intent.setPackage("com.android.vending");
+							activity.startActivity(intent);
+						} catch (ActivityNotFoundException f)
+						{
+							// Ok, weird. Maybe they don't have any market app. Just show the website.
+
+							Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.gms"));
+							intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+							activity.startActivity(intent);
+						}
+					}
+				}
+			}).setNegativeButton(activity.getString(R.string.dialog_btn_text_no), new DialogInterface.OnClickListener()
+			{
+				public void onClick(DialogInterface dialog, int id)
+				{
+					dialog.cancel();
+				}
+			}).create();
+
+			alertDialog.show();
+
+			return -1;
+		}
 	}
 }
