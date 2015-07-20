@@ -146,7 +146,6 @@ public class HotelDetailLayout
 			if (mImageAdapter == null)
 			{
 				mImageAdapter = new HotelDetailImageViewPagerAdapter(mActivity);
-				mImageAdapter.setOnAnimationListener(mOnUserActionListener);
 			}
 
 			ArrayList<String> arrayList = new ArrayList<String>();
@@ -237,8 +236,9 @@ public class HotelDetailLayout
 		if (mImageAdapter == null)
 		{
 			mImageAdapter = new HotelDetailImageViewPagerAdapter(mActivity);
-			mImageAdapter.setOnAnimationListener(mOnUserActionListener);
 		}
+
+		mImageAdapter.setOnAnimationListener(mOnUserActionListener);
 
 		mImageAdapter.setData(hotelDetail.getImageUrlList());
 		mViewPager.setAdapter(mImageAdapter);
