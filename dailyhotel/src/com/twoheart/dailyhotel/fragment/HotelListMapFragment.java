@@ -827,7 +827,7 @@ public class HotelListMapFragment extends
 	// Listener
 	////////////////////////////////////////////////////////////////////////////////
 
-	public View.OnClickListener mOnMyLocationClickListener = new View.OnClickListener()
+	private View.OnClickListener mOnMyLocationClickListener = new View.OnClickListener()
 	{
 		@Override
 		public void onClick(View v)

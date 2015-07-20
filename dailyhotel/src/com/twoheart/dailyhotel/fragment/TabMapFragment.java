@@ -42,9 +42,7 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
 
 	private BookingHotelDetail mHotelDetail;
 	private SupportMapFragment mMapFragment;
-	private GoogleMap googleMap;
-	private TextView tvName, tvAddress;
-	private TextView hvGrade;
+	private GoogleMap mGoogleMap;
 	private Marker mMarker;
 
 	public static TabMapFragment newInstance(BookingHotelDetail hotelDetail, String title)
@@ -72,19 +70,18 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
 	{
 		View view = inflater.inflate(R.layout.fragment_hotel_tab_map, container, false);
 
-		tvName = (TextView) view.findViewById(R.id.tv_hotel_tab_map_name);
-		tvAddress = (TextView) view.findViewById(R.id.tv_hotel_tab_map_address);
+		TextView hotelNameTextView = (TextView) view.findViewById(R.id.tv_hotel_tab_map_name);
+		TextView hotelAddressTextView = (TextView) view.findViewById(R.id.tv_hotel_tab_map_address);
 
-		tvName.setText(mHotelDetail.getHotel().getName());
-		tvName.setSelected(true);
-		tvAddress.setText(mHotelDetail.getHotel().getAddress());
-		tvAddress.setSelected(true);
+		hotelNameTextView.setText(mHotelDetail.getHotel().getName());
+		hotelNameTextView.setSelected(true);
+		hotelAddressTextView.setText(mHotelDetail.getHotel().getAddress());
+		hotelAddressTextView.setSelected(true);
 
-		hvGrade = (TextView) view.findViewById(R.id.hv_hotel_grade);
+		TextView hotelGradeTextView = (TextView) view.findViewById(R.id.hv_hotel_grade);
 
-		// grade
-		hvGrade.setText(mHotelDetail.getHotel().getCategory().getName(getActivity()));
-		hvGrade.setBackgroundResource(mHotelDetail.getHotel().getCategory().getColorResId());
+		hotelGradeTextView.setText(mHotelDetail.getHotel().getCategory().getName(getActivity()));
+		hotelGradeTextView.setBackgroundResource(mHotelDetail.getHotel().getCategory().getColorResId());
 
 		return view;
 	}
@@ -94,7 +91,7 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
 	{
 		BaseActivity baseActivity = (BaseActivity) getActivity();
 
-		if (baseActivity == null)
+		if (baseActivity == null || mGoogleMap == null)
 		{
 			return;
 		}
@@ -145,14 +142,14 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
 			}
 		}
 
-		googleMap = mMapFragment.getMap();
+		mGoogleMap = mMapFragment.getMap();
 
-		if (googleMap != null)
+		if (mGoogleMap != null)
 		{
-			googleMap.setOnMapClickListener(this);
-			googleMap.setMyLocationEnabled(false);
+			mGoogleMap.setOnMapClickListener(this);
+			mGoogleMap.setMyLocationEnabled(false);
 
-			googleMap.getUiSettings().setAllGesturesEnabled(false);
+			mGoogleMap.getUiSettings().setAllGesturesEnabled(false);
 		}
 
 		addMarker(mHotelDetail.getLatitude(), mHotelDetail.getLongitude(), mHotelDetail.getHotel().getName());
@@ -210,17 +207,17 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
 			return;
 		}
 
-		if (googleMap != null)
+		if (mGoogleMap != null)
 		{
-			mMarker = googleMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title(hotel_name));
+			mMarker = mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title(hotel_name));
 			mMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.info_ic_map_large));
 			mMarker.showInfoWindow();
 
 			LatLng address = new LatLng(lat, lng);
 			CameraPosition cp = new CameraPosition.Builder().target((address)).zoom(15).build();
-			googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
-			googleMap.setInfoWindowAdapter(new HotelNameInfoWindowAdapter(baseActivity));
-			googleMap.setOnMarkerClickListener(new OnMarkerClickListener()
+			mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
+			mGoogleMap.setInfoWindowAdapter(new HotelNameInfoWindowAdapter(baseActivity));
+			mGoogleMap.setOnMarkerClickListener(new OnMarkerClickListener()
 			{
 				@Override
 				public boolean onMarkerClick(Marker marker)

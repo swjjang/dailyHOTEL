@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.util.ui;
 
 import java.util.List;
 
+import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -90,6 +91,12 @@ public class LocationFactory
 					}
 					break;
 				}
+
+				case 4:
+				{
+					stopLocationMeasure();
+					break;
+				}
 			}
 		};
 	};
@@ -116,8 +123,13 @@ public class LocationFactory
 	{
 	}
 
-	public void startLocationMeasure(final Fragment fragment, View myLocation, LocationListener listener)
+	public void startLocationMeasure(Activity activity, View myLocation, LocationListener listener)
 	{
+		if (activity == null)
+		{
+			return;
+		}
+
 		if (mIsMeasuringLocation)
 		{
 			return;
@@ -125,7 +137,7 @@ public class LocationFactory
 
 		if (mLocationManager == null)
 		{
-			mLocationManager = (LocationManager) fragment.getActivity().getSystemService(Context.LOCATION_SERVICE);
+			mLocationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
 		}
 
 		if (mUpdatePendingIntent == null)
@@ -160,12 +172,13 @@ public class LocationFactory
 
 		Location location = getLastBestLocation(mBaseActivity, 10, TEN_MINUTES);
 
-		if (location != null)
+		boolean hasLastLocation = false;
+
+		if (location != null && mLocationListener != null)
 		{
-			if (mLocationListener != null)
-			{
-				mLocationListener.onLocationChanged(location);
-			}
+			hasLastLocation = true;
+
+			mLocationListener.onLocationChanged(location);
 		}
 
 		mHandler.sendEmptyMessageDelayed(1, 1000);
@@ -175,7 +188,19 @@ public class LocationFactory
 		mLocationManager.requestSingleUpdate(new Criteria(), mUpdatePendingIntent);
 
 		mHandler.removeMessages(0);
-		mHandler.sendEmptyMessageDelayed(0, 20 * 1000);
+
+		if (hasLastLocation == true)
+		{
+			mHandler.sendEmptyMessageDelayed(4, 20 * 1000);
+		} else
+		{
+			mHandler.sendEmptyMessageDelayed(0, 20 * 1000);
+		}
+	}
+
+	public void startLocationMeasure(Fragment fragment, View myLocation, LocationListener listener)
+	{
+		startLocationMeasure(fragment.getActivity(), myLocation, listener);
 	}
 
 	protected BroadcastReceiver mSingleUpdateReceiver = new BroadcastReceiver()
