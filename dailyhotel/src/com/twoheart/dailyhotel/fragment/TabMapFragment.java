@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -31,6 +32,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.ZoomMapActivity;
 import com.twoheart.dailyhotel.adapter.HotelNameInfoWindowAdapter;
 import com.twoheart.dailyhotel.model.BookingHotelDetail;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
@@ -111,6 +113,38 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
 		super.onActivityCreated(savedInstanceState);
 
 		mMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.frag_map);
+
+		View viewGroup = mMapFragment.getView();
+
+		if (viewGroup instanceof ViewGroup)
+		{
+			View viewLayout = ((ViewGroup) viewGroup).getChildAt(0);
+
+			if (viewLayout instanceof ViewGroup)
+			{
+				View viewButton = ((ViewGroup) viewLayout).getChildAt(1);
+
+				if (viewButton instanceof Button)
+				{
+					viewButton.setOnClickListener(new View.OnClickListener()
+					{
+						@Override
+						public void onClick(View v)
+						{
+							BaseActivity baseActivity = (BaseActivity) getActivity();
+
+							if (baseActivity == null || baseActivity.isFinishing() == true)
+							{
+								return;
+							}
+
+							Util.installGooglePlayService(baseActivity);
+						}
+					});
+				}
+			}
+		}
+
 		googleMap = mMapFragment.getMap();
 
 		if (googleMap != null)
