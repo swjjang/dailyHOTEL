@@ -972,16 +972,16 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 				mSaleTime.setCloseTime(response.getLong("closeDateTime"));
 				mSaleTime.setDailyTime(response.getLong("dailyDateTime"));
 
-				if (mSaleTime.isSaleTime() == false)
-				{
-					((MainActivity) baseActivity).replaceFragment(WaitTimerFragment.newInstance(mSaleTime));
-					unLockUI();
-				} else
+				if (mSaleTime.isSaleTime() == true)
 				{
 					if (mUserActionListener != null)
 					{
 						mUserActionListener.selectHotel(mSelectedHotelListViewItem, mSelectedHotelIndex, mSaleTime);
 					}
+				} else
+				{
+					((MainActivity) baseActivity).replaceFragment(WaitTimerFragment.newInstance(mSaleTime));
+					unLockUI();
 				}
 			} catch (Exception e)
 			{

@@ -566,14 +566,14 @@ public class HotelMainFragment extends BaseFragment
 				mTodaySaleTime.setCloseTime(response.getLong("closeDateTime"));
 				mTodaySaleTime.setDailyTime(response.getLong("dailyDateTime"));
 
-				if (mTodaySaleTime.isSaleTime() == false)
-				{
-					((MainActivity) baseActivity).replaceFragment(WaitTimerFragment.newInstance(mTodaySaleTime));
-					unLockUI();
-				} else
+				if (mTodaySaleTime.isSaleTime() == true)
 				{
 					// 지역 리스트를 가져온다
 					mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_HOTEL_ALL).toString(), null, mSaleHotelAllJsonResponseListener, baseActivity));
+				} else
+				{
+					((MainActivity) baseActivity).replaceFragment(WaitTimerFragment.newInstance(mTodaySaleTime));
+					unLockUI();
 				}
 			} catch (Exception e)
 			{

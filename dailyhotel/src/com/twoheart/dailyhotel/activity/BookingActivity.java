@@ -263,8 +263,13 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		{
 			lockUI();
 
-			// 1. 세션이 연결되어있는지 검사.
-			mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, this));
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("timeZone", "Asia/Seoul");
+
+			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, BookingActivity.this));
+
+			//			// 1. 세션이 연결되어있는지 검사.
+			//			mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, this));
 		}
 
 		String region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
@@ -1621,12 +1626,14 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					throw new NullPointerException("response == null");
 				}
 
-				mSaleTime.setCurrentTime(response.getLong("currentDateTime"));
-				mSaleTime.setOpenTime(response.getLong("openDateTime"));
-				mSaleTime.setCloseTime(response.getLong("closeDateTime"));
-				mSaleTime.setDailyTime(response.getLong("dailyDateTime"));
+				SaleTime saleTime = new SaleTime();
 
-				if (mSaleTime.isSaleTime() == true)
+				saleTime.setCurrentTime(response.getLong("currentDateTime"));
+				saleTime.setOpenTime(response.getLong("openDateTime"));
+				saleTime.setCloseTime(response.getLong("closeDateTime"));
+				saleTime.setDailyTime(response.getLong("dailyDateTime"));
+
+				if (saleTime.isSaleTime() == true)
 				{
 					lockUI();
 

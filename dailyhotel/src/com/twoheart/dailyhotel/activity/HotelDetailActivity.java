@@ -764,15 +764,15 @@ public class HotelDetailActivity extends BaseActivity
 				saleTime.setCloseTime(response.getLong("closeDateTime"));
 				saleTime.setDailyTime(response.getLong("dailyDateTime"));
 
-				if (saleTime.isSaleTime() == false)
-				{
-					finish();
-				} else
+				if (saleTime.isSaleTime() == true)
 				{
 					// 호텔 정보를 가져온다.
 					String params = String.format("?hotel_idx=%d&sday=%s", mHotelDetail.getHotel().getIdx(), mSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
 
 					mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_HOTEL_INFO).append(params).toString(), null, mHotelDetailJsonResponseListener, HotelDetailActivity.this));
+				} else
+				{
+					finish();
 				}
 			} catch (Exception e)
 			{
