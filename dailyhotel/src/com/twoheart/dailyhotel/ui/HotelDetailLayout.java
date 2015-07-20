@@ -1690,12 +1690,85 @@ public class HotelDetailLayout
 		 */
 		private View getDetail02View(final View view, HotelDetailEx hotelDetail)
 		{
-			// 주소지
-			TextView hotelAddressTextView = (TextView) view.findViewById(R.id.hotelAddressTextView);
 			//			TextView hotelSimpleLocationTextView = (TextView) view.findViewById(R.id.hotelSimpleLocationTextView);
-
-			hotelAddressTextView.setText(hotelDetail.address);
 			//			hotelSimpleLocationTextView.setText(hotelDetail.addressNatural);
+
+			// 주소지
+			final TextView hotelAddressTextView01 = (TextView) view.findViewById(R.id.hotelAddressTextView01);
+			final TextView hotelAddressTextView02 = (TextView) view.findViewById(R.id.hotelAddressTextView02);
+			final TextView hotelAddressTextView03 = (TextView) view.findViewById(R.id.hotelAddressTextView03);
+
+			hotelAddressTextView02.setText(null);
+			hotelAddressTextView02.setVisibility(View.GONE);
+
+			hotelAddressTextView03.setText(null);
+			hotelAddressTextView03.setVisibility(View.GONE);
+
+			final String address = hotelDetail.address;
+
+			hotelAddressTextView01.setText(address);
+			hotelAddressTextView01.post(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					Layout layout = hotelAddressTextView01.getLayout();
+
+					if (layout == null || TextUtils.isEmpty(address) == true)
+					{
+						return;
+					}
+
+					String[] lineString = new String[2];
+					int lineCount = layout.getLineCount();
+
+					// 한줄이상인 경우.
+					if (lineCount == 2)
+					{
+						int firstLineEnd = layout.getLineEnd(0);
+
+						try
+						{
+							if (firstLineEnd < address.length())
+							{
+								lineString[0] = address.substring(firstLineEnd, address.length());
+
+								hotelAddressTextView02.setVisibility(View.VISIBLE);
+								hotelAddressTextView02.setText(lineString[0]);
+							}
+						} catch (Exception e)
+						{
+							ExLog.d(e.toString());
+						}
+					} else if (lineCount > 2)
+					{
+						int firstLineEnd = layout.getLineEnd(0);
+						int secondLineEnd = layout.getLineEnd(1);
+
+						try
+						{
+							if (firstLineEnd < address.length())
+							{
+								lineString[0] = address.substring(firstLineEnd, secondLineEnd);
+
+								hotelAddressTextView02.setVisibility(View.VISIBLE);
+								hotelAddressTextView02.setText(lineString[0]);
+							}
+
+							if (secondLineEnd < address.length())
+							{
+								lineString[1] = address.substring(secondLineEnd, address.length());
+
+								hotelAddressTextView03.setVisibility(View.VISIBLE);
+								hotelAddressTextView03.setText(lineString[1]);
+							}
+						} catch (Exception e)
+						{
+							ExLog.d(e.toString());
+						}
+					}
+				}
+			});
 
 			// 맵
 			SupportMapFragment mapFragment = (SupportMapFragment) mFragmentActivity.getSupportFragmentManager().findFragmentById(R.id.googleMapFragment);
@@ -1813,7 +1886,7 @@ public class HotelDetailLayout
 						return;
 					}
 
-					String[] lineString = new String[2];
+					String[] lineString = new String[1];
 					int lineCount = layout.getLineCount();
 
 					// 한줄이상인 경우.
@@ -1825,11 +1898,10 @@ public class HotelDetailLayout
 						{
 							if (firstLineEnd < benefit.length())
 							{
-								lineString[0] = benefit.substring(0, firstLineEnd);
-								lineString[1] = benefit.substring(firstLineEnd, benefit.length());
+								lineString[0] = benefit.substring(firstLineEnd, benefit.length());
 
 								textView2Line.setVisibility(View.VISIBLE);
-								textView2Line.setText(lineString[1]);
+								textView2Line.setText(lineString[0]);
 							}
 						} catch (Exception e)
 						{
@@ -1838,13 +1910,6 @@ public class HotelDetailLayout
 					}
 				}
 			});
-
-			//			if (Util.isOverAPI21() == true)
-			//			{
-			//				LinearLayout linearLayout = (LinearLayout) textView.getParent();
-			//				RelativeLayout.LayoutParams layoutParams = (android.widget.RelativeLayout.LayoutParams) linearLayout.getLayoutParams();
-			//				layoutParams.bottomMargin = Util.dpToPx(mFragmentActivity, 10);
-			//			}
 
 			return view;
 		}
