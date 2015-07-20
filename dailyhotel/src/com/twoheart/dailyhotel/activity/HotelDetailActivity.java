@@ -180,10 +180,10 @@ public class HotelDetailActivity extends BaseActivity
 	{
 		lockUI();
 
-		// 호텔 정보를 가져온다.
-		String params = String.format("?hotel_idx=%d&sday=%s", mHotelDetail.getHotel().getIdx(), mSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("timeZone", "Asia/Seoul");
 
-		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_HOTEL_INFO).append(params).toString(), null, mHotelDetailJsonResponseListener, this));
+		mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, this));
 
 		super.onResume();
 	}
@@ -736,6 +736,50 @@ public class HotelDetailActivity extends BaseActivity
 			} catch (Exception e)
 			{
 				onError(e);
+			}
+		}
+	};
+
+	private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
+	{
+		@Override
+		public void onResponse(String url, JSONObject response)
+		{
+			if (isFinishing() == true)
+			{
+				return;
+			}
+
+			try
+			{
+				if (response == null)
+				{
+					throw new NullPointerException("response == null");
+				}
+
+				SaleTime saleTime = new SaleTime();
+
+				saleTime.setCurrentTime(response.getLong("currentDateTime"));
+				saleTime.setOpenTime(response.getLong("openDateTime"));
+				saleTime.setCloseTime(response.getLong("closeDateTime"));
+				saleTime.setDailyTime(response.getLong("dailyDateTime"));
+
+				if (saleTime.isSaleTime() == false)
+				{
+					finish();
+				} else
+				{
+					// 호텔 정보를 가져온다.
+					String params = String.format("?hotel_idx=%d&sday=%s", mHotelDetail.getHotel().getIdx(), mSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
+
+					mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_HOTEL_INFO).append(params).toString(), null, mHotelDetailJsonResponseListener, HotelDetailActivity.this));
+				}
+			} catch (Exception e)
+			{
+				onError(e);
+				unLockUI();
+
+				finish();
 			}
 		}
 	};
