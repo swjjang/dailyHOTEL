@@ -48,8 +48,6 @@ import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class RatingHotelFragment extends DialogFragment implements Constants, OnClickListener, OnLoadListener
 {
-
-	private static final String KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL = "hotel_detail";
 	private static final String RECOMMEND_THIS_HOTEL = "1";
 	private static final String NOT_RECOMMEND_THIS_HOTEL = "2";
 
@@ -131,6 +129,12 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 		//		GlobalFont.apply((ViewGroup) view);
 
 		return view;
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle bundle)
+	{
+		//		super.onSaveInstanceState(bundle);
 	}
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
@@ -239,14 +243,6 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 		}
 	}
 
-	private void onError(Exception e)
-	{
-		if (mHostActivity != null)
-		{
-			mHostActivity.onError(e);
-		}
-	}
-
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Listener
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -257,51 +253,10 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
+			unLockUI();
+			showToast(R.string.toast_msg_thanks_to_your_opinion, Toast.LENGTH_LONG);
 
-			try
-			{
-				//				if(response == null) {
-				//					throw new NullPointerException("response == null");
-				//				}
-				//				
-				//				String result = response.getString("success");
-				//
-				//				if (result.equals("true")) {
-				//					unLockUI();
-				//				} else {
-				//					unLockUI();
-				//				}
-
-				unLockUI();
-			} catch (Exception e)
-			{
-				onError(e);
-			} finally
-			{
-				showToast(R.string.toast_msg_thanks_to_your_opinion, Toast.LENGTH_LONG);
-				dismiss();
-			}
-
+			dismiss();
 		}
 	};
-
-	//	@Override
-	//	public void onResponse(String url, JSONObject response) {
-	//		if (url.contains(URL_WEBAPI_RESERVE_REVIEW)) {
-	//			try {
-	//				JSONObject obj = response;
-	//				String result = obj.getString("success");
-	//
-	//				if (result.equals("true")) unLockUI();
-	//				else unLockUI();
-	//
-	//
-	//			} catch (Exception e) {
-	//				onError(e);
-	//			} finally {
-	//				showToast(getString(R.string.toast_msg_thanks_to_your_opinion), Toast.LENGTH_LONG, false);
-	//				dismiss();
-	//			}
-	//		}
-	//	}
 }
