@@ -779,6 +779,8 @@ public class HotelDetailLayout
 			});
 
 			mObjectAnimator.start();
+
+			showAnimationFadeIn();
 		} else
 		{
 			setRoomTypeLayoutEnabled(false);
@@ -829,8 +831,6 @@ public class HotelDetailLayout
 			//				mRoomTypeLayout.startAnimation(translateAnimation);
 			//			}
 		}
-
-		showAnimationFadeIn();
 	}
 
 	/**
