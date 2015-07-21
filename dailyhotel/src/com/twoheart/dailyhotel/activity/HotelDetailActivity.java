@@ -9,7 +9,6 @@
  */
 package com.twoheart.dailyhotel.activity;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,6 +54,7 @@ public class HotelDetailActivity extends BaseActivity
 	private String mRegion;
 	private int mHotelIdx;
 	private int mCurrentImage;
+	private SaleRoomInformation mSelectedSaleRoomInformation;
 
 	private HotelDetailLayout mHotelDetailLayout;
 
@@ -118,7 +118,7 @@ public class HotelDetailActivity extends BaseActivity
 
 		public void onSelectedImagePosition(int position);
 
-		public void doBooking();
+		public void doBooking(SaleRoomInformation saleRoomInformation);
 
 		public void doKakaotalkConsult();
 
@@ -266,17 +266,8 @@ public class HotelDetailActivity extends BaseActivity
 		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 	}
 
-	private void moveToBooking(int selectedRoomType)
+	private void moveToBooking(SaleRoomInformation saleRoomInformation)
 	{
-		ArrayList<SaleRoomInformation> arrayList = mHotelDetail.getSaleRoomList();
-
-		if (arrayList == null || arrayList.size() <= selectedRoomType || selectedRoomType < 0)
-		{
-			return;
-		}
-
-		SaleRoomInformation saleRoomInformation = mHotelDetail.getSaleRoomList().get(selectedRoomType);
-
 		if (saleRoomInformation == null)
 		{
 			return;
@@ -426,12 +417,14 @@ public class HotelDetailActivity extends BaseActivity
 		}
 
 		@Override
-		public void doBooking()
+		public void doBooking(SaleRoomInformation saleRoomInformation)
 		{
 			if (isLockUiComponent(true) == true)
 			{
 				return;
 			}
+
+			mSelectedSaleRoomInformation = saleRoomInformation;
 
 			lockUI();
 
@@ -723,7 +716,7 @@ public class HotelDetailActivity extends BaseActivity
 				{
 					if (isEmptyTextField(new String[] { user.getEmail(), user.getPhone(), user.getName() }) == false)
 					{
-						moveToBooking(mHotelDetailLayout.selectedRoomType());
+						moveToBooking(mSelectedSaleRoomInformation);
 					} else
 					{
 						// 정보 업데이트 화면으로 이동.
@@ -731,7 +724,7 @@ public class HotelDetailActivity extends BaseActivity
 					}
 				} else
 				{
-					moveToBooking(mHotelDetailLayout.selectedRoomType());
+					moveToBooking(mSelectedSaleRoomInformation);
 				}
 			} catch (Exception e)
 			{

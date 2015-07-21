@@ -16,7 +16,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.Layout;
 import android.text.TextUtils;
-import android.text.TextUtils.TruncateAt;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -83,12 +82,12 @@ public class HotelDetailLayout
 	private HotelDetailListView mListView;
 	private HotelDetailImageViewPagerAdapter mImageAdapter;
 	private HotelDetailListAdapter mListAdapter;
+	private SaleRoomInformation mSelectedSaleRoomInformation;
 
 	private View mRoomTypeLayout;
 	private View mBottomLayout;
 	private View mRoomTypeBackgroundView;
 	private View[] mRoomTypeView;
-	private View mSelectedRoomType;
 	private View mImageViewBlur;
 
 	private ANIMATION_STATUS mAnimationStatus = ANIMATION_STATUS.HIDE_END;
@@ -187,23 +186,6 @@ public class HotelDetailLayout
 		return mViewRoot;
 	}
 
-	public int selectedRoomType()
-	{
-		if (mSelectedRoomType == null)
-		{
-			return -1;
-		}
-
-		Integer roomType = (Integer) mSelectedRoomType.getTag();
-
-		if (roomType == null)
-		{
-			return -1;
-		}
-
-		return roomType;
-	}
-
 	public void setHotelDetail(HotelDetailEx hotelDetail, int imagePosition)
 	{
 		if (hotelDetail == null)
@@ -282,12 +264,11 @@ public class HotelDetailLayout
 						case STATUS_BOOKING:
 							if (mOnUserActionListener != null)
 							{
-								mOnUserActionListener.doBooking();
+								mOnUserActionListener.doBooking(mSelectedSaleRoomInformation);
 							}
 							break;
 
 						case STATUS_SEARCH_ROOM:
-							//객실 애니매이션 시작.
 							if (mOnUserActionListener != null)
 							{
 								mOnUserActionListener.showRoomType();
@@ -307,6 +288,11 @@ public class HotelDetailLayout
 
 	private void initRoomTypeLayout(ArrayList<SaleRoomInformation> saleRoomList)
 	{
+		if (saleRoomList == null || saleRoomList.size() == 0)
+		{
+			return;
+		}
+
 		// 객실 타입 세팅
 		mRoomTypeView[0] = mViewRoot.findViewById(R.id.roomType01View);
 		mRoomTypeView[1] = mViewRoot.findViewById(R.id.roomType02View);
@@ -319,24 +305,25 @@ public class HotelDetailLayout
 			if (i < size)
 			{
 				mRoomTypeView[i].setVisibility(View.VISIBLE);
+				mRoomTypeView[i].setTag(saleRoomList.get(i));
 				makeRoomTypeLayout(mRoomTypeView[i], saleRoomList.get(i));
 			} else
 			{
 				mRoomTypeView[i].setVisibility(View.GONE);
+				mRoomTypeView[i].setTag(null);
 			}
 
-			mRoomTypeView[i].setTag(i);
 			mRoomTypeView[i].setOnClickListener(new View.OnClickListener()
 			{
 				@Override
 				public void onClick(View v)
 				{
-					selectRoomType(v);
+					selectRoomType(v, (SaleRoomInformation) v.getTag());
 				}
 			});
 		}
 
-		selectRoomType(mRoomTypeView[0]);
+		selectRoomType(mRoomTypeView[0], saleRoomList.get(0));
 	}
 
 	private void makeRoomTypeLayout(View view, SaleRoomInformation information)
@@ -378,22 +365,23 @@ public class HotelDetailLayout
 		}
 	}
 
-	private void selectRoomType(View view)
+	private void selectRoomType(View view, SaleRoomInformation saleRoomInformation)
 	{
+		if (view == null || saleRoomInformation == null)
+		{
+			return;
+		}
+
 		for (View roomView : mRoomTypeView)
 		{
-			TextView textView = (TextView) roomView.findViewById(R.id.optionTextView);
-
 			if (roomView == view)
 			{
-				mSelectedRoomType = view;
+				mSelectedSaleRoomInformation = saleRoomInformation;
 
 				roomView.setSelected(true);
-				textView.setEllipsize(TruncateAt.MARQUEE);
 			} else
 			{
 				roomView.setSelected(false);
-				textView.setEllipsize(TruncateAt.END);
 			}
 		}
 	}
