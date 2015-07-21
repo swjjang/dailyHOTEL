@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -43,15 +44,20 @@ public class ZoomMapActivity extends BaseActivity
 
 		Intent intent = getIntent();
 
-		String hotelName = null;
-		double latitude = 0;
-		double longitude = 0;
+		final String hotelName;
+		final double latitude;
+		final double longitude;
 
 		if (intent != null)
 		{
 			hotelName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME);
 			latitude = intent.getDoubleExtra(NAME_INTENT_EXTRA_DATA_LATITUDE, 0);
 			longitude = intent.getDoubleExtra(NAME_INTENT_EXTRA_DATA_LONGITUDE, 0);
+		} else
+		{
+			latitude = 0;
+			longitude = 0;
+			hotelName = null;
 		}
 
 		if (hotelName == null || latitude == 0 || longitude == 0)
@@ -62,23 +68,29 @@ public class ZoomMapActivity extends BaseActivity
 
 		setActionBar(hotelName);
 
-		mGoogleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.frag_full_map)).getMap();
+		SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.frag_full_map);
 
-		if (mGoogleMap != null)
+		mapFragment.getMapAsync(new OnMapReadyCallback()
 		{
-			mGoogleMap.getUiSettings().setCompassEnabled(false);
-			mGoogleMap.getUiSettings().setIndoorLevelPickerEnabled(false);
-			mGoogleMap.getUiSettings().setMapToolbarEnabled(false);
-			mGoogleMap.getUiSettings().setRotateGesturesEnabled(false);
-			mGoogleMap.getUiSettings().setTiltGesturesEnabled(false);
-			mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
+			@Override
+			public void onMapReady(GoogleMap googleMap)
+			{
+				mGoogleMap = googleMap;
 
-			mGoogleMap.setMyLocationEnabled(false);
+				mGoogleMap.getUiSettings().setCompassEnabled(false);
+				mGoogleMap.getUiSettings().setIndoorLevelPickerEnabled(false);
+				mGoogleMap.getUiSettings().setMapToolbarEnabled(false);
+				mGoogleMap.getUiSettings().setRotateGesturesEnabled(false);
+				mGoogleMap.getUiSettings().setTiltGesturesEnabled(false);
+				mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
 
-			relocationMyLocation();
-			relocationZoomControl();
-			addMarker(mGoogleMap, latitude, longitude, hotelName);
-		}
+				mGoogleMap.setMyLocationEnabled(false);
+
+				relocationMyLocation();
+				relocationZoomControl();
+				addMarker(mGoogleMap, latitude, longitude, hotelName);
+			}
+		});
 	}
 
 	private void relocationMyLocation()

@@ -22,6 +22,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -142,17 +143,19 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
 			}
 		}
 
-		mGoogleMap = mMapFragment.getMap();
-
-		if (mGoogleMap != null)
+		mMapFragment.getMapAsync(new OnMapReadyCallback()
 		{
-			mGoogleMap.setOnMapClickListener(this);
-			mGoogleMap.setMyLocationEnabled(false);
+			@Override
+			public void onMapReady(GoogleMap googleMap)
+			{
+				mGoogleMap = googleMap;
+				mGoogleMap.setOnMapClickListener(TabMapFragment.this);
+				mGoogleMap.setMyLocationEnabled(false);
+				mGoogleMap.getUiSettings().setAllGesturesEnabled(false);
 
-			mGoogleMap.getUiSettings().setAllGesturesEnabled(false);
-		}
-
-		addMarker(mHotelDetail.getLatitude(), mHotelDetail.getLongitude(), mHotelDetail.getHotel().getName());
+				addMarker(mHotelDetail.getLatitude(), mHotelDetail.getLongitude(), mHotelDetail.getHotel().getName());
+			}
+		});
 	}
 
 	@Override
