@@ -641,48 +641,74 @@ public class HotelDetailLayout
 			mObjectAnimator.start();
 		} else
 		{
-			TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, mRoomTypeLayout.getHeight(), 0);
-			translateAnimation.setDuration(300);
-			translateAnimation.setFillBefore(true);
-			translateAnimation.setFillAfter(true);
-			translateAnimation.setInterpolator(mActivity, android.R.anim.decelerate_interpolator);
-
-			translateAnimation.setAnimationListener(new AnimationListener()
+			if (mRoomTypeLayout != null && mRoomTypeLayout.getVisibility() != View.VISIBLE)
 			{
-				@Override
-				public void onAnimationStart(Animation animation)
-				{
-					if (mRoomTypeLayout.getVisibility() != View.VISIBLE)
-					{
-						mRoomTypeLayout.setVisibility(View.VISIBLE);
-					}
+				mRoomTypeLayout.setVisibility(View.VISIBLE);
 
-					mAnimationState = ANIMATION_STATE.START;
-					mAnimationStatus = ANIMATION_STATUS.SHOW;
-				}
+				mAnimationStatus = ANIMATION_STATUS.SHOW_END;
+				mAnimationState = ANIMATION_STATE.END;
 
-				@Override
-				public void onAnimationRepeat(Animation animation)
-				{
+				setRoomTypeLayoutEnabled(true);
 
-				}
-
-				@Override
-				public void onAnimationEnd(Animation animation)
-				{
-					mAnimationStatus = ANIMATION_STATUS.SHOW_END;
-					mAnimationState = ANIMATION_STATE.END;
-
-					setRoomTypeLayoutEnabled(true);
-
-					setBookingStatus(STATUS_BOOKING);
-				}
-			});
-
-			if (mRoomTypeLayout != null)
-			{
-				mRoomTypeLayout.startAnimation(translateAnimation);
+				setBookingStatus(STATUS_BOOKING);
 			}
+
+			//			ArrayList<SaleRoomInformation> arrayList = mHotelDetail.getSaleRoomList();
+			//			
+			//			if(arrayList == null || arrayList.size() == 0)
+			//			{
+			//				return;
+			//			}
+			//			
+			//			int height = arrayList.size() * Util.dpToPx(mActivity, 92);
+			//			
+			//			TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, height, 0);
+			//			translateAnimation.setDuration(300);
+			//			translateAnimation.setFillBefore(true);
+			//			translateAnimation.setFillAfter(true);
+			//			translateAnimation.setInterpolator(mActivity, android.R.anim.decelerate_interpolator);
+			//
+			//			translateAnimation.setAnimationListener(new AnimationListener()
+			//			{
+			//				@Override
+			//				public void onAnimationStart(Animation animation)
+			//				{
+			//					if (mRoomTypeLayout.getVisibility() != View.VISIBLE)
+			//					{
+			//						mRoomTypeLayout.setVisibility(View.VISIBLE);
+			//					}
+			//
+			//					mAnimationState = ANIMATION_STATE.START;
+			//					mAnimationStatus = ANIMATION_STATUS.SHOW;
+			//				}
+			//
+			//				@Override
+			//				public void onAnimationRepeat(Animation animation)
+			//				{
+			//
+			//				}
+			//
+			//				@Override
+			//				public void onAnimationEnd(Animation animation)
+			//				{
+			//					mAnimationStatus = ANIMATION_STATUS.SHOW_END;
+			//					mAnimationState = ANIMATION_STATE.END;
+			//					
+			//					if (mRoomTypeLayout != null)
+			//					{
+			//						mRoomTypeLayout.startAnimation(null);
+			//					}
+			//
+			//					setRoomTypeLayoutEnabled(true);
+			//
+			//					setBookingStatus(STATUS_BOOKING);
+			//				}
+			//			});
+			//
+			//			if (mRoomTypeLayout != null)
+			//			{
+			//				mRoomTypeLayout.startAnimation(translateAnimation);
+			//			}
 		}
 
 		showAnimationFadeOut();
@@ -755,46 +781,53 @@ public class HotelDetailLayout
 			mObjectAnimator.start();
 		} else
 		{
-			//			View underlineView02 = baseActivity.findViewById(R.id.tabindicator_underLine);
+			setRoomTypeLayoutEnabled(false);
 
-			TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, 0, mRoomTypeLayout.getHeight());
-			translateAnimation.setDuration(300);
-			translateAnimation.setFillBefore(true);
-			translateAnimation.setFillAfter(true);
-			translateAnimation.setInterpolator(mActivity, android.R.anim.decelerate_interpolator);
+			mAnimationStatus = ANIMATION_STATUS.HIDE_END;
+			mAnimationState = ANIMATION_STATE.END;
 
-			translateAnimation.setAnimationListener(new AnimationListener()
-			{
-				@Override
-				public void onAnimationStart(Animation animation)
-				{
-					mAnimationState = ANIMATION_STATE.START;
-					mAnimationStatus = ANIMATION_STATUS.HIDE;
+			hideRoomType();
 
-					setRoomTypeLayoutEnabled(false);
-				}
+			setBookingStatus(STATUS_SEARCH_ROOM);
 
-				@Override
-				public void onAnimationRepeat(Animation animation)
-				{
-				}
-
-				@Override
-				public void onAnimationEnd(Animation animation)
-				{
-					mAnimationStatus = ANIMATION_STATUS.HIDE_END;
-					mAnimationState = ANIMATION_STATE.END;
-
-					hideRoomType();
-
-					setBookingStatus(STATUS_SEARCH_ROOM);
-				}
-			});
-
-			if (mRoomTypeLayout != null)
-			{
-				mRoomTypeLayout.startAnimation(translateAnimation);
-			}
+			//			TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, 0, mRoomTypeLayout.getHeight());
+			//			translateAnimation.setDuration(300);
+			//			translateAnimation.setFillBefore(true);
+			//			translateAnimation.setFillAfter(true);
+			//			translateAnimation.setInterpolator(mActivity, android.R.anim.decelerate_interpolator);
+			//
+			//			translateAnimation.setAnimationListener(new AnimationListener()
+			//			{
+			//				@Override
+			//				public void onAnimationStart(Animation animation)
+			//				{
+			//					mAnimationState = ANIMATION_STATE.START;
+			//					mAnimationStatus = ANIMATION_STATUS.HIDE;
+			//
+			//					setRoomTypeLayoutEnabled(false);
+			//				}
+			//
+			//				@Override
+			//				public void onAnimationRepeat(Animation animation)
+			//				{
+			//				}
+			//
+			//				@Override
+			//				public void onAnimationEnd(Animation animation)
+			//				{
+			//					mAnimationStatus = ANIMATION_STATUS.HIDE_END;
+			//					mAnimationState = ANIMATION_STATE.END;
+			//
+			//					hideRoomType();
+			//
+			//					setBookingStatus(STATUS_SEARCH_ROOM);
+			//				}
+			//			});
+			//
+			//			if (mRoomTypeLayout != null)
+			//			{
+			//				mRoomTypeLayout.startAnimation(translateAnimation);
+			//			}
 		}
 
 		showAnimationFadeIn();
@@ -1068,7 +1101,7 @@ public class HotelDetailLayout
 		@Override
 		public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount)
 		{
-			if (view.getAdapter() == null)
+			if (view.getAdapter() == null || getBookingStatus() == STATUS_BOOKING)
 			{
 				return;
 			}
@@ -1173,7 +1206,7 @@ public class HotelDetailLayout
 				}
 			} else
 			{
-				if (Float.compare(alphaFactor, 0.0f) <= 0)
+				if (Float.compare(alphaFactor, 0.2f) <= 0)
 				{
 					mHotelGradeTextView.setVisibility(View.INVISIBLE);
 				} else
@@ -1193,7 +1226,10 @@ public class HotelDetailLayout
 
 				if (Float.compare(xFactor, 1.0f) > 0)
 				{
-					mHotelNameTextView.setTranslationX(0);
+					if (Util.isOverAPI11() == true)
+					{
+						mHotelNameTextView.setTranslationX(0);
+					}
 					return;
 				}
 
