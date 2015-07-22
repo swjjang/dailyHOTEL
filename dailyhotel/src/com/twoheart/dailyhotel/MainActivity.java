@@ -742,9 +742,15 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			return;
 		}
 
-		if (backButtonHandler.onBackPressed())
+		if (indexLastFragment == INDEX_HOTEL_LIST_FRAGMENT)
 		{
-			super.onBackPressed();
+			if (backButtonHandler.onBackPressed())
+			{
+				super.onBackPressed();
+			}
+		} else
+		{
+			selectMenuDrawer(menuHotelListFragment);
 		}
 	}
 
