@@ -544,6 +544,12 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 						// 실패 msg 출력
 
 						unLockUI();
+
+						if (isFinishing() == true)
+						{
+							return;
+						}
+
 						msg = response.getString("msg");
 						SimpleAlertDialog.build(LoginActivity.this, msg, getString(R.string.dialog_btn_text_confirm), null).show();
 					}

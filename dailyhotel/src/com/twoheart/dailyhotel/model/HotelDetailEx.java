@@ -88,7 +88,7 @@ public class HotelDetailEx
 
 		for (int i = 0; i < saleRoomLength; i++)
 		{
-			mSaleRoomList.add(new SaleRoomInformation(saleRoomJSONArray.getJSONObject(i)));
+			mSaleRoomList.add(new SaleRoomInformation(hotelName, saleRoomJSONArray.getJSONObject(i), isOverseas));
 		}
 	}
 

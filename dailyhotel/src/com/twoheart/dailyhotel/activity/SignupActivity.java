@@ -279,7 +279,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 				}
 
 				// email check
-				if (android.util.Patterns.EMAIL_ADDRESS.matcher(etEmail.getText().toString()).matches() == false)
+				if (etEmail.isEnabled() == true && android.util.Patterns.EMAIL_ADDRESS.matcher(etEmail.getText().toString()).matches() == false)
 				{
 					DailyToast.showToast(SignupActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
 					return;
@@ -534,6 +534,11 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 						{
 							if (msg != null)
 							{
+								if (isFinishing() == true)
+								{
+									return;
+								}
+
 								AlertDialog alertDlg = SimpleAlertDialog.build(SignupActivity.this, null, msg, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnClickListener()
 								{
 									@Override
@@ -583,6 +588,11 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 						{
 							if (msg != null)
 							{
+								if (isFinishing() == true)
+								{
+									return;
+								}
+
 								AlertDialog alertDlg = SimpleAlertDialog.build(SignupActivity.this, null, msg, getString(R.string.dialog_btn_text_confirm), null, null, null).create();
 								alertDlg.show();
 							}

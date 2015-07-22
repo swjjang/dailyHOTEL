@@ -1,5 +1,8 @@
 package com.twoheart.dailyhotel;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -19,11 +22,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
+import android.text.TextUtils;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
@@ -83,8 +90,16 @@ public class GcmIntentService extends IntentService implements Constants
 				// 중복 체크를 위한 값 
 				String collapseKey = intent.getStringExtra("collapse_key");
 
+				//				JSONObject jsonMsg = new JSONObject("{\"msg\":\"데일로 호텔 맥주 2단 이벤트\", \"image_url\":\"http://www.kccosd.org/files/testing_image.jpg\", \"type\":\"notice\"}");
 				JSONObject jsonMsg = new JSONObject(extras.getString("message"));
 				String msg = jsonMsg.getString("msg");
+				String imageUrl = null;
+
+				if (jsonMsg.has("image_url") == true)
+				{
+					imageUrl = jsonMsg.getString("image_url");
+				}
+
 				int type = -1;
 
 				if (jsonMsg.getString("type").equals("notice"))
@@ -115,7 +130,7 @@ public class GcmIntentService extends IntentService implements Constants
 							Editor editor = pref.edit();
 							editor.putString("collapseKey", collapseKey);
 							editor.apply();
-							sendPush(messageType, type, msg);
+							sendPush(messageType, type, msg, imageUrl);
 
 							SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmss", Locale.KOREA);
 							Date date = new Date();
@@ -172,7 +187,7 @@ public class GcmIntentService extends IntentService implements Constants
 							Editor editor = pref.edit();
 							editor.putString("collapseKey", collapseKey);
 							editor.apply();
-							sendPush(messageType, type, msg);
+							sendPush(messageType, type, msg, imageUrl);
 							break;
 						}
 				}
@@ -186,7 +201,7 @@ public class GcmIntentService extends IntentService implements Constants
 		GcmBroadcastReceiver.completeWakefulIntent(intent);
 	}
 
-	public void sendPush(String messageType, int type, String msg)
+	public void sendPush(String messageType, int type, String msg, String imageUrl)
 	{
 		if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType))
 		{
@@ -224,7 +239,7 @@ public class GcmIntentService extends IntentService implements Constants
 				this.startActivity(i);
 			}
 			// 노티피케이션은 케이스에 상관없이 항상 뜨도록함.
-			sendNotification(type, msg);
+			sendNotification(type, msg, imageUrl);
 		}
 	}
 
@@ -233,7 +248,7 @@ public class GcmIntentService extends IntentService implements Constants
 		return ((PowerManager) context.getSystemService(Context.POWER_SERVICE)).isScreenOn();
 	}
 
-	private void sendNotification(int type, String msg)
+	private void sendNotification(int type, String msg, String imageUrl)
 	{
 		mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -247,20 +262,24 @@ public class GcmIntentService extends IntentService implements Constants
 		}
 
 		// type은 notice 타입과 account_complete 타입이 존재함. reservation일 경우 예약확인 창으로 이동.
-
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
 		Uri uri = null;
 
 		if (mIsSound)
+		{
 			uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-		else
-			uri = null;
+		}
 
-		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.img_ic_appicon_feature).setContentTitle(getString(R.string.app_name)).setAutoCancel(true).setSound(uri).setContentText(msg);
-
-		mBuilder.setContentIntent(contentIntent);
-		mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+		if (TextUtils.isEmpty(imageUrl) == true)
+		{
+			NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+			builder.setSmallIcon(R.drawable.img_ic_appicon_feature).setContentTitle(getString(R.string.app_name)).setAutoCancel(true).setSound(uri).setContentText(msg);
+			builder.setContentIntent(contentIntent);
+			mNotificationManager.notify(NOTIFICATION_ID, builder.build());
+		} else
+		{
+			new ImageLoaderNotification(contentIntent, uri, msg).execute(imageUrl);
+		}
 	}
 
 	@Override
@@ -270,4 +289,64 @@ public class GcmIntentService extends IntentService implements Constants
 		super.onDestroy();
 	}
 
+	private class ImageLoaderNotification extends
+			AsyncTask<String, Void, Bitmap>
+	{
+		private String mMessage;
+		private PendingIntent mPendingIntent;
+		private Uri mUri;
+
+		public ImageLoaderNotification(PendingIntent contentIntent, Uri uri, String message)
+		{
+			super();
+
+			mPendingIntent = contentIntent;
+			mUri = uri;
+			mMessage = message;
+		}
+
+		@Override
+		protected Bitmap doInBackground(String... params)
+		{
+			InputStream inputStream;
+
+			try
+			{
+				URL url = new URL(params[0]);
+				HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+				connection.setDoInput(true);
+				connection.connect();
+				inputStream = connection.getInputStream();
+				Bitmap myBitmap = BitmapFactory.decodeStream(inputStream);
+				return myBitmap;
+
+			} catch (Exception e)
+			{
+				ExLog.d(e.toString());
+			}
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Bitmap bitmap)
+		{
+			NotificationCompat.Builder builder = new NotificationCompat.Builder(GcmIntentService.this);
+
+			builder.setContentTitle(getString(R.string.app_name)) //
+			.setContentText(mMessage) //
+			.setTicker(getResources().getString(R.string.app_name)) //
+			.setSound(mUri) //
+			.setAutoCancel(true) //
+			.setSmallIcon(R.drawable.img_ic_appicon_feature);
+
+			if (bitmap != null)
+			{
+				builder.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bitmap).setSummaryText(mMessage));
+			}
+
+			builder.setContentIntent(mPendingIntent);
+			mNotificationManager.notify(NOTIFICATION_ID, builder.build());
+		}
+	}
 }

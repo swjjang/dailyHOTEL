@@ -146,6 +146,11 @@ public class ForgotPwdActivity extends BaseActivity implements Constants, OnClic
 				{
 					unLockUI();
 
+					if (isFinishing() == true)
+					{
+						return;
+					}
+
 					String message = response.getString("msg");
 					SimpleAlertDialog.build(ForgotPwdActivity.this, message, getString(R.string.dialog_btn_text_confirm), null).show();
 				}
@@ -162,6 +167,11 @@ public class ForgotPwdActivity extends BaseActivity implements Constants, OnClic
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
+			if (isFinishing() == true)
+			{
+				return;
+			}
+
 			try
 			{
 				String result = null;

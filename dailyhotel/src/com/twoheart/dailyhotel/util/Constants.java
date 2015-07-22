@@ -22,7 +22,6 @@ public interface Constants
 	// 디버그 빌드 여부 BuildConfig는 배포시에 자동으로 false가 된다고 한다. 테스트 해보고 싶음.
 	public static final boolean DEBUG = BuildConfig.DEBUG;
 	public static final boolean UNENCRYPTED_URL = false;
-	public static final String VERSION = "1.6.3";
 
 	// 스토어 선택.
 	public enum Stores
@@ -128,6 +127,9 @@ public interface Constants
 	// user/change_pw
 	public static final String URL_WEBAPI_USER_CHANGE_PW = UNENCRYPTED_URL ? "user/change_pw" : "MjMkMzAkMyQxNCQzMiQ=$QzcB0MkU1RjExOATlDMjU5OTBKCMkU4NIK0IwMUVCNTZENjI=$";
 
+	// api/user/information
+	public static final String URL_WEBAPI_USER_INFORMATION = UNENCRYPTED_URL ? "api/user/information" : "MzIkNTEkNTkkMzEkMTkk$NkQ5N0RBQTA3NzQ5MUZZEMzQ3QUE0OTIRwEMDI2NjhCMDJBNTdFNERZDNzdBMKjlGNDkxMDYyRURBRTQ3QjBFNTRERg==$";
+
 	// DailyHOTEL Reservation Controller WebAPI URL
 	//"reserv/session/req";
 	public static final String URL_WEBAPI_RESERVE_PAYMENT = UNENCRYPTED_URL ? "reserv/session/req" : "MTkkMzgkMTYkMzUkNDAk$NjgwRkNCOUEwRUVBQNERADRDc5QjJGRDk1NMTdDRNATQ4MkYzRjRGQURGOTZDODE2NzU1Nzg5Qjc3RDhBQ0Q4RjY0Qw==$";
@@ -186,6 +188,9 @@ public interface Constants
 	// api/sale
 	public static final String URL_WEBAPI_SALE = UNENCRYPTED_URL ? "api/sale" : "MyQyJDM2JDM4JDMwJA==$QjDZJFQjY1MEEzQzI2ODJERkZDQUMxOQzhEM0LUYwNkY0OUU=$";
 
+	// api/sale/room/payment
+	public static final String URL_WEBAPI_SALE_ROOM_PAYMENT = UNENCRYPTED_URL ? "api/sale/room/payment" : "MTYkOCQ2MSQ2OCQ4OSQ=$MjlGMzUxVMEI3NTlGEMTg1RDlDOTg0QUFCOUQxRjNBQzZBRkVBOTZERTdCOTQE2MUI1MEEZDOENBNTVGQzJDRDI5MRQ==$";
+
 	// api/reserv/checkinout
 	public static final String URL_WEBAPI_RESERV_CHECKINOUT = UNENCRYPTED_URL ? "api/reserv/checkinout" : "NiQ0JDc0JDY3JDc4JA==$Q0Y4LQ0GVDNkFENEYyQUVDOTA2OUY1RjU3QUQ1NTUzRDg2Mjg2MDdGMzY1Q0YxNTZDQB0YyMUMzTMjBE1MThGMUFBNA==$";
 
@@ -203,6 +208,9 @@ public interface Constants
 
 	// api/reserv/saleDetailInfo
 	public static final String URL_WEBAPI_RESERV_SALEDETAILINFO = UNENCRYPTED_URL ? "api/reserv/saleDetailInfo" : "NDckNzgkNjckMTMkNDUk$NUQxNTg3ODA0QETFCMTQ1QTk5NjM5NTI5MkVBNEZGRUVGWNDdMGMDBFREM5QjBCMTE3M0EJCMDdBNDMzRETg0RDdGRQ==$";
+
+	// api/reserv/hotel/room/info
+	public static final String URL_WEBAPI_RESERV_HOTEL_ROOM_INFO = UNENCRYPTED_URL ? "api/reserv/hotel/room/info" : "NzMkNTIkMTQkMzckMjgk$ODhERjUwMTRFQjYFBNjFDQzIzQUVKCRUFEQTE0SM0IyOTRFMzJDQTUyONDBCQUQ2OTE1ODVCNjEzNWzg1MUY4QUU0Rg==$";
 
 	// api/reserv/session/billing/
 	public static final String URL_WEBAPI_RESERV_SESSION_BILLING = UNENCRYPTED_URL ? "api/reserv/session/billing" : "ODIkMjkkODEkODgkOTEk$NUQ1MDk3RTlCODI3NjE0QjZENENFMVjY0NjM2MDE5RDM1RTQ1RTRFOEM5NjE5QjU4RkNDMTBFMDc4NDNCUQjBk3RKg=E=$";
@@ -331,7 +339,7 @@ public interface Constants
 
 	public static final String KEY_PREFERENCE_ACCOUNT_READY_FLAG = "ACCOUNT_READY_FLAG"; //
 
-	public static final String KEY_PREFERENCE_LOCALE = "LOCALE"; //
+	//	public static final String KEY_PREFERENCE_LOCALE = "LOCALE"; //
 
 	// Android 컴포넌트 간에 데이터를 주고받을 때 사용되는 인텐트 이름(키)을 정의한 상수이다.
 	public static final String NAME_INTENT_EXTRA_DATA_HOTEL = "hotel";
@@ -360,6 +368,8 @@ public interface Constants
 	public static final String NAME_INTENT_EXTRA_DATA_MOREINFORMATION = "moreInformation";
 	public static final String NAME_INTENT_EXTRA_DATA_LATITUDE = "latitude";
 	public static final String NAME_INTENT_EXTRA_DATA_LONGITUDE = "longitude";
+	public static final String NAME_INTENT_EXTRA_DATA_SALEROOMINFORMATION = "saleRoomInformation";
+	public static final String NAME_INTENT_EXTRA_DATA_SALEINDEX = "saleIndex";
 
 	// Push Type
 	public static final int PUSH_TYPE_NOTICE = 0;

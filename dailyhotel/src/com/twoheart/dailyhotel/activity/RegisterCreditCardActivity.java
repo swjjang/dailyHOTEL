@@ -251,6 +251,11 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
 	@Override
 	public void onBackPressed()
 	{
+		if (isFinishing() == true)
+		{
+			return;
+		}
+
 		OnClickListener posListener = new OnClickListener()
 		{
 			@Override

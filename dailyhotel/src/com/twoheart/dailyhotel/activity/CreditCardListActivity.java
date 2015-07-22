@@ -131,6 +131,11 @@ public class CreditCardListActivity extends BaseActivity
 
 			if (msg != null)
 			{
+				if (isFinishing() == true)
+				{
+					return;
+				}
+
 				String title = getString(R.string.dialog_notice2);
 				String positive = getString(R.string.dialog_btn_text_confirm);
 
@@ -235,6 +240,11 @@ public class CreditCardListActivity extends BaseActivity
 								mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_DEL).toString(), params, mUserSessionBillingCardDelJsonResponseListener, CreditCardListActivity.this));
 							}
 						};
+
+						if (isFinishing() == true)
+						{
+							return;
+						}
 
 						SimpleAlertDialog.build(CreditCardListActivity.this, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_delete_register_creditcard), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null).show();
 					} else
@@ -487,6 +497,11 @@ public class CreditCardListActivity extends BaseActivity
 				} else
 				{
 					unLockUI();
+
+					if (isFinishing() == true)
+					{
+						return;
+					}
 
 					// 실패 
 					SimpleAlertDialog.build(CreditCardListActivity.this, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_delete_failed_creditcard), getString(R.string.dialog_btn_text_confirm), new DialogInterface.OnClickListener()

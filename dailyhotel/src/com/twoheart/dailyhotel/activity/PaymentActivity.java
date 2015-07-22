@@ -28,7 +28,6 @@ import org.apache.http.util.EncodingUtils;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -38,6 +37,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.webkit.CookieSyncManager;
@@ -187,7 +187,7 @@ public class PaymentActivity extends BaseActivity implements Constants
 			return;
 		}
 
-		if (mPay.getHotelDetail().getSaleIdx() == 0)
+		if (mPay.getSaleRoomInformation().saleIndex == 0)
 		{
 			// 세션이 만료되어 재시작 요청.
 			restartApp();
@@ -196,47 +196,32 @@ public class PaymentActivity extends BaseActivity implements Constants
 
 		if (mPay.getType() == Pay.Type.EASY_CARD)
 		{
-			StringBuilder url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERV_SESSION_BILLING)).append('/').append(mPay.getHotelDetail().getSaleIdx());
-
-			ArrayList<String> postParameterKey = new ArrayList<String>(Arrays.asList("billkey", "mileage"));
-
-			String bonus = "0"; // 적립금
-
-			if (mPay.isSaleCredit() == true || mPay.getPayPrice() == 0)
-			{
-				// 적립금을 절대값으로 보냄..
-				try
-				{
-					bonus = String.valueOf(Math.abs(Integer.parseInt(mPay.getCredit().getBonus())));
-				} catch (Exception e)
-				{
-					ExLog.e(e.toString());
-				}
-			}
-
-			ArrayList<String> postParameterValue = new ArrayList<String>(Arrays.asList(mPay.getCustomer().mBillingKey, bonus));
-
-			webView.postUrl(url.toString(), parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]), postParameterValue.toArray(new String[postParameterValue.size()])));
-
-			ProgressDialog.show(PaymentActivity.this, null, getString(R.string.dialog_msg_processing_payment), true).setCancelable(false);
+			finish();
+			return;
 		} else
 		{
 			Guest guest = mPay.getGuest();
 
+			if (TextUtils.isEmpty(guest.name) == true || TextUtils.isEmpty(guest.phone) == true || TextUtils.isEmpty(guest.email) == true)
+			{
+				restartApp();
+				return;
+			}
+
 			if (mPay.getPayPrice() == 0)
 			{
 				// 적립금으로만 결제하기 포스트
-				String url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)).append('/').append(mPay.getHotelDetail().getSaleIdx()).toString();
+				String url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)).append('/').append(mPay.getSaleRoomInformation().saleIndex).toString();
 
 				// 적립금으로만 결제하는 경우 결제창할 필요 없음
-				ArrayList<String> postParameterKey = new ArrayList<String>(Arrays.asList("saleIdx", "email", "name", "phone", "accessToken", "guest_name", "guest_phone", "guest_email"));
-				ArrayList<String> postParameterValue = new ArrayList<String>(Arrays.asList(mPay.getHotelDetail().getSaleIdx() + "", mPay.getCustomer().getEmail(), mPay.getCustomer().getName(), mPay.getCustomer().getPhone(), mPay.getCustomer().getAccessToken(), guest.name, guest.phone, guest.email));
+				ArrayList<String> postParameterKey = new ArrayList<String>(Arrays.asList("saleIdx", "email", "name", "phone", "guest_name", "guest_phone", "guest_email"));
+				ArrayList<String> postParameterValue = new ArrayList<String>(Arrays.asList(String.valueOf(mPay.getSaleRoomInformation().saleIndex), mPay.getCustomer().getEmail(), mPay.getCustomer().getName(), mPay.getCustomer().getPhone(), guest.name, guest.phone, guest.email));
 
 				webView.postUrl(url, parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]), postParameterValue.toArray(new String[postParameterValue.size()])));
 			} else if (mPay.isSaleCredit() == true)
 			{
 				// 적립금 일부 사용
-				String url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)).append('/').append(mPay.getType().name()).append("/").append(mPay.getHotelDetail().getSaleIdx()).append("/").append(mPay.getCredit().getBonus()).toString();
+				String url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)).append('/').append(mPay.getType().name()).append("/").append(mPay.getSaleRoomInformation().saleIndex).append("/").append(mPay.getCredit().getBonus()).toString();
 
 				ArrayList<String> postParameterKey = new ArrayList<String>(Arrays.asList("guest_name", "guest_phone", "guest_email"));
 				ArrayList<String> postParameterValue = new ArrayList<String>(Arrays.asList(guest.name, guest.phone, guest.email));
@@ -244,7 +229,7 @@ public class PaymentActivity extends BaseActivity implements Constants
 				webView.postUrl(url, parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]), postParameterValue.toArray(new String[postParameterValue.size()])));
 			} else
 			{
-				String url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERVE_PAYMENT)).append('/').append(mPay.getType().name()).append("/").append(mPay.getHotelDetail().getSaleIdx()).toString();
+				String url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERVE_PAYMENT)).append('/').append(mPay.getType().name()).append("/").append(mPay.getSaleRoomInformation().saleIndex).toString();
 
 				ArrayList<String> postParameterKey = new ArrayList<String>(Arrays.asList("guest_name", "guest_phone", "guest_email"));
 				ArrayList<String> postParameterValue = new ArrayList<String>(Arrays.asList(guest.name, guest.phone, guest.email));
@@ -717,6 +702,11 @@ public class PaymentActivity extends BaseActivity implements Constants
 		@JavascriptInterface
 		private void paypinConfim()
 		{
+			if (isFinishing() == true)
+			{
+				return;
+			}
+
 			OnClickListener posListener = new DialogInterface.OnClickListener()
 			{
 				@Override
@@ -771,6 +761,11 @@ public class PaymentActivity extends BaseActivity implements Constants
 		@JavascriptInterface
 		private void alertToNext()
 		{
+			if (isFinishing() == true)
+			{
+				return;
+			}
+
 			OnClickListener posListener = new DialogInterface.OnClickListener()
 			{
 				@Override
@@ -1016,6 +1011,11 @@ public class PaymentActivity extends BaseActivity implements Constants
 			return;
 		}
 
+		if (isFinishing() == true)
+		{
+			return;
+		}
+
 		OnClickListener posListener = new OnClickListener()
 		{
 			@Override
@@ -1024,6 +1024,7 @@ public class PaymentActivity extends BaseActivity implements Constants
 				finish();
 			}
 		};
+
 		SimpleAlertDialog.build(PaymentActivity.this, getString(R.string.dialog_title_payment), getString(R.string.dialog_msg_chk_cancel_payment), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null).show();
 	}
 

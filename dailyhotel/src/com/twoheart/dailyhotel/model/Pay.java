@@ -11,7 +11,7 @@ public class Pay implements Parcelable
 		//		PAYPAL
 	};
 
-	private HotelDetail mHotelDetail;
+	private SaleRoomInformation mSaleRoomInformation;
 	private Credit mCredit;
 	private Customer mCustomer;
 	private int mPayPrice;
@@ -33,7 +33,7 @@ public class Pay implements Parcelable
 	@Override
 	public void writeToParcel(Parcel dest, int flags)
 	{
-		dest.writeValue(mHotelDetail);
+		dest.writeValue(mSaleRoomInformation);
 		dest.writeValue(mCredit);
 		dest.writeValue(mCustomer);
 		dest.writeInt(mPayPrice);
@@ -46,7 +46,7 @@ public class Pay implements Parcelable
 
 	private void readFromParcel(Parcel in)
 	{
-		mHotelDetail = (HotelDetail) in.readValue(HotelDetail.class.getClassLoader());
+		mSaleRoomInformation = (SaleRoomInformation) in.readValue(SaleRoomInformation.class.getClassLoader());
 		mCredit = (Credit) in.readValue(Credit.class.getClassLoader());
 		mCustomer = (Customer) in.readValue(Customer.class.getClassLoader());
 		mPayPrice = in.readInt();
@@ -72,14 +72,14 @@ public class Pay implements Parcelable
 
 	};
 
-	public HotelDetail getHotelDetail()
+	public SaleRoomInformation getSaleRoomInformation()
 	{
-		return mHotelDetail;
+		return mSaleRoomInformation;
 	}
 
-	public void setHotelDetail(HotelDetail hotelDetail)
+	public void setSaleRoomInformation(SaleRoomInformation information)
 	{
-		this.mHotelDetail = hotelDetail;
+		mSaleRoomInformation = information;
 	}
 
 	public Credit getCredit()

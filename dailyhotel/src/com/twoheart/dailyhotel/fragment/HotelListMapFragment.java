@@ -62,7 +62,6 @@ public class HotelListMapFragment extends
 	private GoogleMap mGoogleMap;
 	private ArrayList<HotelListViewItem> mHotelArrayList; // 선택된 호텔을 위한 리스트
 	private ArrayList<HotelListViewItem> mHotelArrangeArrayList; // ViewPager을 위한 리스트
-	//	private HotelInfoWindowAdapter mHotelInfoWindowAdapter;
 	private LoadingDialog mLoadingDialog;
 	private MarkerOptions mMyLocationMarkerOptions;
 	private Marker mMyLocationMarker;
@@ -180,6 +179,12 @@ public class HotelListMapFragment extends
 			mLoadingDialog.close();
 		}
 
+		if (mGoogleMap != null)
+		{
+			mGoogleMap.stopAnimation();
+			mGoogleMap.clear();
+		}
+
 		super.onDestroyView();
 	}
 
@@ -294,6 +299,13 @@ public class HotelListMapFragment extends
 
 	private void makeMarker(boolean isChangedRegion)
 	{
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null || baseActivity.isFinishing() == true)
+		{
+			return;
+		}
+
 		if (mGoogleMap == null)
 		{
 			return;
@@ -815,7 +827,7 @@ public class HotelListMapFragment extends
 	// Listener
 	////////////////////////////////////////////////////////////////////////////////
 
-	public View.OnClickListener mOnMyLocationClickListener = new View.OnClickListener()
+	private View.OnClickListener mOnMyLocationClickListener = new View.OnClickListener()
 	{
 		@Override
 		public void onClick(View v)
@@ -848,7 +860,7 @@ public class HotelListMapFragment extends
 				{
 					BaseActivity baseActivity = (BaseActivity) getActivity();
 
-					if (baseActivity == null)
+					if (baseActivity == null || baseActivity.isFinishing() == true)
 					{
 						return;
 					}

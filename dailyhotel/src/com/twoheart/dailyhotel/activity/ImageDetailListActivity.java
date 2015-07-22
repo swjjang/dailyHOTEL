@@ -104,6 +104,7 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
 						}
 
 						setImageViewHeight(iv, bm);
+						iv.setImageBitmap(bm);
 					}
 				};
 
