@@ -12,6 +12,7 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -58,7 +59,7 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
 	{
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("os-type", "android");
-		map.put("app-version", VERSION);
+		map.put("app-version", DailyHotel.VERSION);
 
 		return map;
 	}
@@ -193,11 +194,13 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
 		return decodeUrl;
 	}
 
-	//			public static void makeUrlEncoder()
-	//			{
-	//				String test = null;
-	//		
-	//				test = DailyHotelRequest.getUrlEncoder("api/reserv/guest/info");
+	//	public static void makeUrlEncoder()
+	//	{
+	//		String test = null;
+	//
+	//		test = DailyHotelRequest.getUrlEncoder("api/reserv/hotel/room/info");
+	//		test = DailyHotelRequest.getUrlEncoder("api/sale/room/payment");
+
 	//				
 
 	//				test = DailyHotelRequest.getUrlEncoder("api/user/session/update/fb_user");
@@ -287,5 +290,5 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
 	//		test = DailyHotelRequest.getUrlEncoder("http://policies.dailyhotel.co.kr/terms/");
 	//		test = DailyHotelRequest.getUrlEncoder("http://policies.dailyhotel.co.kr/about/");
 	//		
-	//			}
+	//	}
 }

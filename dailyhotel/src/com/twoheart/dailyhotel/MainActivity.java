@@ -72,8 +72,6 @@ import com.twoheart.dailyhotel.activity.EventWebActivity;
 import com.twoheart.dailyhotel.activity.SplashActivity;
 import com.twoheart.dailyhotel.fragment.HotelMainFragment;
 import com.twoheart.dailyhotel.fragment.RatingHotelFragment;
-import com.twoheart.dailyhotel.model.Hotel;
-import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -142,13 +140,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 		//		Locale.setDefault(new Locale("한국어"));
 		Util.setLocale(this, "한국어");
-
-		String locale = "한국어"; // Locale.getDefault().getDisplayLanguage();
-		ExLog.e("locale? " + locale);
-
-		Editor editor = sharedPreference.edit();
-		editor.putString(KEY_PREFERENCE_LOCALE, locale);
-		editor.apply();
 
 		// Intent Scheme Parameter for KakaoLink
 		intentData = getIntent().getData();
@@ -235,8 +226,9 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			// 앱을 처음 설치한 경우 가이드를 띄움. 일단 화면 보이지 않도록 수정.
 			boolean showGuide = false;//sharedPreference.getBoolean(KEY_PREFERENCE_SHOW_GUIDE, true);
 			if (showGuide)
+			{
 				startActivityForResult(new Intent(this, IntroActivity.class), CODE_REQUEST_ACTIVITY_INTRO);
-			else
+			} else
 			{
 				// Intent가 Push로 부터 온경우
 				int pushType = getIntent().getIntExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, -1);
@@ -250,6 +242,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 						break;
 					default:
 						selectMenuDrawer(menuHotelListFragment);
+						break;
 				}
 
 				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, this));
@@ -598,7 +591,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 					fragmentManager = getSupportFragmentManager();
 
-					if (fragmentManager != null)
+					if (fragmentManager != null && fragmentManager.getFragments() != null)
 					{
 						for (Fragment fragment : fragmentManager.getFragments())
 						{
@@ -615,7 +608,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 					fragmentManager = getSupportFragmentManager();
 
-					if (fragmentManager != null)
+					if (fragmentManager != null && fragmentManager.getFragments() != null)
 					{
 						for (Fragment fragment : fragmentManager.getFragments())
 						{
@@ -1044,18 +1037,15 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 							if (today.compareTo(deadLineDay) < 0)
 							{
-								Hotel purchasedHotel = new Hotel();
-								purchasedHotel.setName(purchasedHotelName);
+								RatingHotelFragment dialog = RatingHotelFragment.newInstance(purchasedHotelName, purchasedHotelSaleIdx);
 
-								HotelDetail purchasedHotelInformation = new HotelDetail();
-								purchasedHotelInformation.setHotel(purchasedHotel);
-								purchasedHotelInformation.setSaleIdx(purchasedHotelSaleIdx);
-
-								RatingHotelFragment dialog = RatingHotelFragment.newInstance(purchasedHotelInformation);
-								dialog.show(fragmentManager, TAG_FRAGMENT_RATING_HOTEL);
+								if (dialog != null)
+								{
+									dialog.show(fragmentManager, TAG_FRAGMENT_RATING_HOTEL);
+								}
 							} else
 							{
-								RatingHotelFragment dialog = RatingHotelFragment.newInstance(null);
+								RatingHotelFragment dialog = RatingHotelFragment.newInstance(null, -1);
 								dialog.destroyRatingHotelFlag(MainActivity.this);
 							}
 						}

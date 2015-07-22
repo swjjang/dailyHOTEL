@@ -39,7 +39,6 @@ import com.android.volley.RequestQueue;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -49,27 +48,30 @@ import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class RatingHotelFragment extends DialogFragment implements Constants, OnClickListener, OnLoadListener
 {
-
-	private static final String KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL = "hotel_detail";
 	private static final String RECOMMEND_THIS_HOTEL = "1";
 	private static final String NOT_RECOMMEND_THIS_HOTEL = "2";
 
 	private MainActivity mHostActivity;
 	private RequestQueue mQueue;
 
-	private HotelDetail mHotelDetail;
+	private String mHotelName;
+	private int mSaleIndex;
 
 	private ImageView ivBtnClose;
 	private Button btnRecommend, btnCancel;
 	private TextView tvHotelName;
 
-	public static RatingHotelFragment newInstance(HotelDetail hotelDetail)
+	public static RatingHotelFragment newInstance(String hotelName, int saleIndex)
 	{
 		RatingHotelFragment newFragment = new RatingHotelFragment();
 		Bundle arguments = new Bundle();
 
-		if (hotelDetail != null)
-			arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL, hotelDetail);
+		if (hotelName != null)
+		{
+			arguments.putString(NAME_INTENT_EXTRA_DATA_HOTELNAME, hotelName);
+			arguments.putInt(NAME_INTENT_EXTRA_DATA_SALEINDEX, saleIndex);
+		}
+
 		newFragment.setArguments(arguments);
 
 		return newFragment;
@@ -89,7 +91,8 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 		super.onCreate(savedInstanceState);
 
 		mQueue = VolleyHttpClient.getRequestQueue();
-		mHotelDetail = getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL);
+		mHotelName = getArguments().getString(NAME_INTENT_EXTRA_DATA_HOTELNAME);
+		mSaleIndex = getArguments().getInt(NAME_INTENT_EXTRA_DATA_SALEINDEX);
 	}
 
 	@Override
@@ -110,7 +113,7 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 		btnCancel = (Button) view.findViewById(R.id.btn_rating_hotel_cancel);
 
 		StringBuilder hotelNameWithColon = new StringBuilder("'");
-		hotelNameWithColon.append(mHotelDetail.getHotel().getName()).append("'");
+		hotelNameWithColon.append(mHotelName).append("'");
 
 		tvHotelName.setText(hotelNameWithColon);
 
@@ -126,7 +129,12 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 		//		GlobalFont.apply((ViewGroup) view);
 
 		return view;
+	}
 
+	@Override
+	public void onSaveInstanceState(Bundle bundle)
+	{
+		//		super.onSaveInstanceState(bundle);
 	}
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
@@ -205,7 +213,7 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 			reviewResultParams.put("rating", reviewResult);
 
 			lockUI();
-			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_REVIEW).append('/').append(mHotelDetail.getSaleIdx()).toString(), reviewResultParams, mReserveReviewJsonResponseListener, mHostActivity));
+			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_REVIEW).append('/').append(mSaleIndex).toString(), reviewResultParams, mReserveReviewJsonResponseListener, mHostActivity));
 		}
 	}
 
@@ -235,14 +243,6 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 		}
 	}
 
-	private void onError(Exception e)
-	{
-		if (mHostActivity != null)
-		{
-			mHostActivity.onError(e);
-		}
-	}
-
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Listener
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -253,51 +253,10 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
+			unLockUI();
+			showToast(R.string.toast_msg_thanks_to_your_opinion, Toast.LENGTH_LONG);
 
-			try
-			{
-				//				if(response == null) {
-				//					throw new NullPointerException("response == null");
-				//				}
-				//				
-				//				String result = response.getString("success");
-				//
-				//				if (result.equals("true")) {
-				//					unLockUI();
-				//				} else {
-				//					unLockUI();
-				//				}
-
-				unLockUI();
-			} catch (Exception e)
-			{
-				onError(e);
-			} finally
-			{
-				showToast(R.string.toast_msg_thanks_to_your_opinion, Toast.LENGTH_LONG);
-				dismiss();
-			}
-
+			dismiss();
 		}
 	};
-
-	//	@Override
-	//	public void onResponse(String url, JSONObject response) {
-	//		if (url.contains(URL_WEBAPI_RESERVE_REVIEW)) {
-	//			try {
-	//				JSONObject obj = response;
-	//				String result = obj.getString("success");
-	//
-	//				if (result.equals("true")) unLockUI();
-	//				else unLockUI();
-	//
-	//
-	//			} catch (Exception e) {
-	//				onError(e);
-	//			} finally {
-	//				showToast(getString(R.string.toast_msg_thanks_to_your_opinion), Toast.LENGTH_LONG, false);
-	//				dismiss();
-	//			}
-	//		}
-	//	}
 }

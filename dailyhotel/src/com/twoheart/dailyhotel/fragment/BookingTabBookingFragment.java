@@ -33,7 +33,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.IssuingReceiptActivity;
 import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.model.Booking;
-import com.twoheart.dailyhotel.model.HotelDetail;
+import com.twoheart.dailyhotel.model.BookingHotelDetail;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
@@ -55,10 +55,10 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 	private TextView tvCheckIn, tvCheckOut;
 
 	private Booking mBooking;
-	private HotelDetail mHotelDetail;
+	private BookingHotelDetail mHotelDetail;
 	private static String[] mStrings;
 
-	public static BookingTabBookingFragment newInstance(HotelDetail hotelDetail, Booking booking, String[] strings)
+	public static BookingTabBookingFragment newInstance(BookingHotelDetail hotelDetail, Booking booking, String[] strings)
 	{
 		BookingTabBookingFragment newFragment = new BookingTabBookingFragment();
 
@@ -80,7 +80,7 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		mHotelDetail = (HotelDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL);
+		mHotelDetail = (BookingHotelDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL);
 		mBooking = (Booking) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_BOOKING);
 	}
 
@@ -105,7 +105,7 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 
 		tvHotelName.setText(mBooking.getHotel_name());
 		tvAddress.setText(mHotelDetail.getHotel().getAddress());
-		tvBedtype.setText(mBooking.getBedType());
+		tvBedtype.setText(mHotelDetail.roomName);
 
 		// Android Marquee bug...
 		tvCustomerName.setSelected(true);

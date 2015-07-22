@@ -13,13 +13,15 @@ public class SaleRoomInformation implements Parcelable
 	public String option;
 	public String roomBenefit;
 	public int availableRooms;
+	public boolean isOverseas;
+	public String hotelName;
 
 	public SaleRoomInformation(Parcel in)
 	{
 		readFromParcel(in);
 	}
 
-	public SaleRoomInformation(JSONObject jsonObject) throws Exception
+	public SaleRoomInformation(String hotelName, JSONObject jsonObject, boolean isOverseas) throws Exception
 	{
 		saleIndex = jsonObject.getInt("sale_idx");
 		discount = jsonObject.getInt("discount");
@@ -32,6 +34,9 @@ public class SaleRoomInformation implements Parcelable
 		}
 
 		availableRooms = jsonObject.getInt("available_rooms");
+
+		this.isOverseas = isOverseas;
+		this.hotelName = hotelName;
 	}
 
 	@Override
@@ -43,6 +48,8 @@ public class SaleRoomInformation implements Parcelable
 		dest.writeString(option);
 		dest.writeString(roomBenefit);
 		dest.writeInt(availableRooms);
+		dest.writeInt(isOverseas ? 1 : 0);
+		dest.writeString(hotelName);
 	}
 
 	protected void readFromParcel(Parcel in)
@@ -53,6 +60,8 @@ public class SaleRoomInformation implements Parcelable
 		option = in.readString();
 		roomBenefit = in.readString();
 		availableRooms = in.readInt();
+		isOverseas = in.readInt() == 1 ? true : false;
+		hotelName = in.readString();
 	}
 
 	@Override

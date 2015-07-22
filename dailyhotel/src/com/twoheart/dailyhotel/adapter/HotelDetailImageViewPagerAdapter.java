@@ -16,7 +16,6 @@ import com.androidquery.callback.AjaxStatus;
 import com.androidquery.callback.BitmapAjaxCallback;
 import com.twoheart.dailyhotel.activity.HotelDetailActivity;
 import com.twoheart.dailyhotel.ui.AnimationImageView;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.VolleyImageLoader;
 
@@ -47,8 +46,6 @@ public class HotelDetailImageViewPagerAdapter extends PagerAdapter
 	@Override
 	public Object instantiateItem(ViewGroup container, int position)
 	{
-		ExLog.d("instantiateItem : " + position);
-
 		if (mImageUrlList == null)
 		{
 			return null;

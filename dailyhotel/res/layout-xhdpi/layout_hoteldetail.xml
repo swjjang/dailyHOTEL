@@ -8,6 +8,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/background_hoteldetail_viewpager" />
+    
+    <View
+        android:id="@+id/imageViewBlur"
+        android:layout_width="match_parent"
+        android:layout_height="19dp"
+        android:layout_alignBottom="@id/defaultHotelImageView"
+        android:background="@drawable/blur"
+        android:visibility="invisible" />
 
     <com.twoheart.dailyhotel.ui.HotelDetailListView
         android:id="@+id/hotelListView"
@@ -110,6 +118,7 @@
             android:gravity="center"
             android:text="@string/act_hotel_soldout"
             android:textColor="@color/hoteldetail_room_simpleinfo_text"
+            android:textSize="20dp"
             android:visibility="gone" />
     </RelativeLayout>
 

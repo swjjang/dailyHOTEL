@@ -54,7 +54,6 @@ import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -756,8 +755,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 				mOldfirstVisibleItem = firstVisibleItem;
 			}
 
-			ExLog.d("mDirection : " + mDirection);
-
 			switch (mDirection)
 			{
 				case MotionEvent.ACTION_DOWN:
@@ -975,16 +972,16 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 				mSaleTime.setCloseTime(response.getLong("closeDateTime"));
 				mSaleTime.setDailyTime(response.getLong("dailyDateTime"));
 
-				if (mSaleTime.isSaleTime() == false)
-				{
-					((MainActivity) baseActivity).replaceFragment(WaitTimerFragment.newInstance(mSaleTime));
-					unLockUI();
-				} else
+				if (mSaleTime.isSaleTime() == true)
 				{
 					if (mUserActionListener != null)
 					{
 						mUserActionListener.selectHotel(mSelectedHotelListViewItem, mSelectedHotelIndex, mSaleTime);
 					}
+				} else
+				{
+					((MainActivity) baseActivity).replaceFragment(WaitTimerFragment.newInstance(mSaleTime));
+					unLockUI();
 				}
 			} catch (Exception e)
 			{

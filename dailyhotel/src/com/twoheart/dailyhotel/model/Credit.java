@@ -6,7 +6,7 @@ import android.os.Parcelable;
 public class Credit implements Parcelable
 {
 	private String content;
-	private String bonus;
+	private int bonus;
 	private String expires;
 
 	public Credit()
@@ -22,14 +22,14 @@ public class Credit implements Parcelable
 	public void writeToParcel(Parcel dest, int flags)
 	{
 		dest.writeString(content);
-		dest.writeString(bonus);
+		dest.writeInt(bonus);
 		dest.writeString(expires);
 	}
 
 	private void readFromParcel(Parcel in)
 	{
 		content = in.readString();
-		bonus = in.readString();
+		bonus = in.readInt();
 		expires = in.readString();
 	}
 
@@ -48,7 +48,7 @@ public class Credit implements Parcelable
 
 	};
 
-	public Credit(String content, String bonus, String expires)
+	public Credit(String content, int bonus, String expires)
 	{
 		this.content = content;
 		this.bonus = bonus;
@@ -65,12 +65,12 @@ public class Credit implements Parcelable
 		this.content = content;
 	}
 
-	public String getBonus()
+	public int getBonus()
 	{
 		return bonus;
 	}
 
-	public void setBonus(String bonus)
+	public void setBonus(int bonus)
 	{
 		this.bonus = bonus;
 	}

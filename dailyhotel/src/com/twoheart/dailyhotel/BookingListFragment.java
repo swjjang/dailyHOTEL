@@ -188,6 +188,13 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 			switch (resultCode)
 			{
 				case CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT:
+					BaseActivity baseActivity = (BaseActivity) getActivity();
+
+					if (baseActivity == null || baseActivity.isFinishing() == true)
+					{
+						return;
+					}
+
 					SimpleAlertDialog.build(getActivity(), getString(R.string.dialog_notice2), data.getStringExtra("msg"), getString(R.string.dialog_btn_text_confirm), null).show();
 					break;
 			}
@@ -241,6 +248,11 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
 					if (true == "alive".equalsIgnoreCase(result))
 					{
+						if (baseActivity.isFinishing() == true)
+						{
+							return;
+						}
+
 						DialogInterface.OnClickListener posListener = new DialogInterface.OnClickListener()
 						{
 							@Override
@@ -586,7 +598,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 		{
 			BaseActivity baseActivity = (BaseActivity) getActivity();
 
-			if (baseActivity == null)
+			if (baseActivity == null || baseActivity.isFinishing() == true)
 			{
 				return;
 			}

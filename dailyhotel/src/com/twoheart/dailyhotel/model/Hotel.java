@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -28,6 +29,7 @@ public class Hotel implements Parcelable
 	public String mSaleDay; //현재 호텔이 팔리고 있는 날짜. 디버그에서만 사용.
 	public boolean isDailyChoice;
 	public int saleIndex;
+	public boolean isDBenefit;
 
 	public enum HotelGrade
 	{
@@ -134,6 +136,7 @@ public class Hotel implements Parcelable
 		dest.writeDouble(mLongitude);
 		dest.writeInt(isDailyChoice ? 1 : 0);
 		dest.writeInt(saleIndex);
+		dest.writeInt(isDBenefit ? 1 : 0);
 	}
 
 	private void readFromParcel(Parcel in)
@@ -152,6 +155,7 @@ public class Hotel implements Parcelable
 		mLongitude = in.readDouble();
 		isDailyChoice = in.readInt() == 1 ? true : false;
 		saleIndex = in.readInt();
+		isDBenefit = in.readInt() == 1 ? true : false;
 	}
 
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
@@ -333,6 +337,18 @@ public class Hotel implements Parcelable
 				saleIndex = jsonObject.getInt("sale_idx");
 			}
 
+			if (jsonObject.has("hotel_benefit") == true)
+			{
+				String dBenefit = jsonObject.getString("hotel_benefit");
+
+				if (TextUtils.isEmpty(dBenefit) == true || "null".equalsIgnoreCase(dBenefit) == true)
+				{
+					isDBenefit = false;
+				} else
+				{
+					isDBenefit = true;
+				}
+			}
 		} catch (JSONException e)
 		{
 			ExLog.d(e.toString());

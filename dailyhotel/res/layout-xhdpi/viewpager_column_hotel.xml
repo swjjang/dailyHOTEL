@@ -155,4 +155,13 @@
         android:padding="12dp"
         android:src="@drawable/ic_delete" />
 
+    <ImageView
+        android:id="@+id/dBenefitImageView"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_d_benefit"
+        android:visibility="gone" />
+
 </RelativeLayout>

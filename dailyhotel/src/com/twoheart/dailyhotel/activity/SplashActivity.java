@@ -108,11 +108,6 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 
 	private void showDisabledNetworkPopup()
 	{
-		if (isFinishing() == true)
-		{
-			return;
-		}
-
 		if (alertDlg != null)
 		{
 			if (alertDlg.isShowing() == true)
@@ -121,6 +116,11 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 			}
 
 			alertDlg = null;
+		}
+
+		if (isFinishing() == true)
+		{
+			return;
 		}
 
 		OnClickListener posListener = new DialogInterface.OnClickListener()
@@ -351,6 +351,12 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 
 				if (minVersion > currentVersion)
 				{ // 강제 업데이트
+
+					if (isFinishing() == true)
+					{
+						return;
+					}
+
 					OnClickListener posListener = new DialogInterface.OnClickListener()
 					{
 						@Override
@@ -383,6 +389,10 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 
 				} else if ((maxVersion > currentVersion) && (skipMaxVersion != maxVersion))
 				{
+					if (isFinishing() == true)
+					{
+						return;
+					}
 
 					OnClickListener posListener = new DialogInterface.OnClickListener()
 					{

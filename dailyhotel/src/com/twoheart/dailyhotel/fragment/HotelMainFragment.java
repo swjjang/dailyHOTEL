@@ -43,7 +43,7 @@ import com.twoheart.dailyhotel.HotelListFragment;
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.WaitTimerFragment;
-import com.twoheart.dailyhotel.activity.HotelTabActivity;
+import com.twoheart.dailyhotel.activity.HotelDetailActivity;
 import com.twoheart.dailyhotel.activity.SelectAreaActivity;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.AreaItem;
@@ -67,8 +67,6 @@ public class HotelMainFragment extends BaseFragment
 	private ArrayList<HotelListFragment> mFragmentList;
 
 	private SaleTime mTodaySaleTime;
-	//	private ArrayList<Province> mProvinceList;
-	//	private ArrayList<Area> mAreaList;
 	private ArrayList<AreaItem> mAreaItemList;
 	private Province mSelectedProvince;
 
@@ -92,8 +90,6 @@ public class HotelMainFragment extends BaseFragment
 		public void toggleViewType();
 
 		public void onClickActionBarArea();
-
-		//		public void toggleViewType(String detailRegion);
 	};
 
 	public interface UserAnalyticsActionListener
@@ -570,14 +566,14 @@ public class HotelMainFragment extends BaseFragment
 				mTodaySaleTime.setCloseTime(response.getLong("closeDateTime"));
 				mTodaySaleTime.setDailyTime(response.getLong("dailyDateTime"));
 
-				if (mTodaySaleTime.isSaleTime() == false)
-				{
-					((MainActivity) baseActivity).replaceFragment(WaitTimerFragment.newInstance(mTodaySaleTime));
-					unLockUI();
-				} else
+				if (mTodaySaleTime.isSaleTime() == true)
 				{
 					// 지역 리스트를 가져온다
 					mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_HOTEL_ALL).toString(), null, mSaleHotelAllJsonResponseListener, baseActivity));
+				} else
+				{
+					((MainActivity) baseActivity).replaceFragment(WaitTimerFragment.newInstance(mTodaySaleTime));
+					unLockUI();
 				}
 			} catch (Exception e)
 			{
@@ -960,8 +956,8 @@ public class HotelMainFragment extends BaseFragment
 			{
 				case HotelListViewItem.TYPE_ENTRY:
 				{
-					Intent intent = new Intent(baseActivity, HotelTabActivity.class);
-					//					Intent intent = new Intent(baseActivity, HotelDetailActivity.class);
+					//					Intent intent = new Intent(baseActivity, HotelTabActivity.class);
+					Intent intent = new Intent(baseActivity, HotelDetailActivity.class);
 
 					String region = baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
 

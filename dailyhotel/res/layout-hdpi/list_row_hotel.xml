@@ -11,7 +11,7 @@
         android:layout_height="240dp"
         android:adjustViewBounds="true"
         android:background="@drawable/img_placeholder"
-        android:scaleType="centerCrop" />
+        android:scaleType="fitXY" />
 
     <RelativeLayout
         android:id="@+id/ll_hotel_row_content"

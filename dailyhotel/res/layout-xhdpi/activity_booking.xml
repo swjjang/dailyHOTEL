@@ -160,6 +160,55 @@
                 </RelativeLayout>
             </LinearLayout>
 
+            <!-- 객실 정보 -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_section_background"
+                android:orientation="horizontal"
+                android:paddingBottom="9dp"
+                android:paddingLeft="13dp"
+                android:paddingTop="20dp" >
+
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="@string/label_booking_room_info"
+                    android:textColor="@color/textView_textColor_section"
+                    android:textSize="12.5dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_margin="15dp"
+                android:gravity="center_vertical" >
+
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.3"
+                    android:text="@string/label_booking_room_type"
+                    android:textColor="@color/booking_subtext"
+                    android:textSize="15dp" />
+
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                    android:id="@+id/roomTypeTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.7"
+                    android:gravity="right|center_vertical"
+                    android:lines="1"
+                    android:maxLength="20"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColor="@color/textView_textColor_main"
+                    android:textSize="15dp" />
+            </LinearLayout>
+
             <!-- 예약자 정보 -->
 
             <RelativeLayout
@@ -170,14 +219,14 @@
                 android:focusableInTouchMode="true"
                 android:orientation="horizontal"
                 android:paddingBottom="9dp"
-                android:paddingLeft="13dp"
-                android:paddingTop="20dp" >
+                android:paddingLeft="13dp" >
 
                 <requestFocus />
 
                 <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_marginTop="20dp"
                     android:gravity="center_vertical"
                     android:text="@string/act_booking_reserver_info"
                     android:textColor="@color/textView_textColor_section"
@@ -187,10 +236,10 @@
                 <LinearLayout
                     android:id="@+id/editLinearLayout"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="20dp"
                     android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
                     android:paddingLeft="10dp"
-                    android:paddingTop="5dp"
                     android:paddingRight="13dp" >
 
                     <ImageView
@@ -246,7 +295,6 @@
                         android:singleLine="true"
                         android:textColor="@drawable/selector_textview_textcolor"
                         android:textSize="15dp" />
-
                 </LinearLayout>
 
                 <LinearLayout
@@ -303,7 +351,6 @@
                         android:singleLine="true"
                         android:textColor="@drawable/selector_textview_textcolor"
                         android:textSize="15dp" />
-
                 </LinearLayout>
             </LinearLayout>
 
