@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -64,6 +65,9 @@ public class HotelDetailInfoActivity extends BaseActivity
 		}
 
 		View textLayout = layoutInflater.inflate(R.layout.list_row_detailmore_text, null, false);
+		
+		LinearLayout contentsLayout = (LinearLayout) textLayout.findViewById(R.id.contentsList);
+		contentsLayout.removeAllViews();
 
 		TextView titleTextView = (TextView) textLayout.findViewById(R.id.titleTextView);
 		titleTextView.setText(information.title);
@@ -74,23 +78,25 @@ public class HotelDetailInfoActivity extends BaseActivity
 		{
 			int size = contentsList.size();
 
-			StringBuffer stringBuffer = new StringBuffer();
-
 			for (int i = 0; i < size; i++)
 			{
-				stringBuffer.append(contentsList.get(i));
+				View subTextLayout = layoutInflater.inflate(R.layout.list_row_detail_text, null, false);
+				TextView textView = (TextView) subTextLayout.findViewById(R.id.textView);
+				textView.setText(contentsList.get(i));
 
-				if (i != size - 1)
+				if (Util.isOverAPI21() == true)
 				{
-					stringBuffer.append("\n");
+					LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+					layoutParams.bottomMargin = Util.dpToPx(this, 5);
+					contentsLayout.addView(subTextLayout, layoutParams);
+				} else
+				{
+					contentsLayout.addView(subTextLayout);
 				}
 			}
-
-			TextView contentsTextView = (TextView) textLayout.findViewById(R.id.contentsTextView);
-			contentsTextView.setText(stringBuffer.toString());
-
-			viewGroup.addView(textLayout);
 		}
+		
+		viewGroup.addView(textLayout);
 	}
 
 	@Override
