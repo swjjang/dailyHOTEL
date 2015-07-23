@@ -12,6 +12,7 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.os.Build;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.Layout;
@@ -1276,7 +1277,7 @@ public class HotelDetailLayout
 		@Override
 		public boolean onTouch(View v, MotionEvent event)
 		{
-			switch (event.getAction())
+			switch (event.getAction() & MotionEventCompat.ACTION_MASK)
 			{
 				case MotionEvent.ACTION_DOWN:
 				{
@@ -1290,7 +1291,13 @@ public class HotelDetailLayout
 
 					mMoveState = 0;
 					mListView.setScrollEnabled(false);
-					mViewPager.onTouchEvent(event);
+
+					try
+					{
+						mViewPager.onTouchEvent(event);
+					} catch (Exception e)
+					{
+					}
 					break;
 				}
 
@@ -1311,7 +1318,17 @@ public class HotelDetailLayout
 							mOnUserActionListener.onClickImage(mHotelDetail);
 
 							mMoveState = 0;
-							mViewPager.onTouchEvent(event);
+
+							try
+							{
+								mViewPager.onTouchEvent(event);
+							} catch (Exception e)
+							{
+								event.setAction(MotionEvent.ACTION_CANCEL);
+								event.setLocation(mViewPager.getScrollX(), mViewPager.getScaleY());
+								mViewPager.onTouchEvent(event);
+							}
+
 							mListView.setScrollEnabled(true);
 							break;
 						}
@@ -1320,7 +1337,17 @@ public class HotelDetailLayout
 				case MotionEvent.ACTION_CANCEL:
 				{
 					mMoveState = 0;
-					mViewPager.onTouchEvent(event);
+
+					try
+					{
+						mViewPager.onTouchEvent(event);
+					} catch (Exception e)
+					{
+						event.setAction(MotionEvent.ACTION_CANCEL);
+						event.setLocation(mViewPager.getScrollX(), mViewPager.getScaleY());
+						mViewPager.onTouchEvent(event);
+					}
+
 					mListView.setScrollEnabled(true);
 
 					if (mOnUserActionListener != null)
@@ -1346,7 +1373,16 @@ public class HotelDetailLayout
 						{
 							// x 축으로 이동한 경우.
 							mMoveState = 100;
-							mViewPager.onTouchEvent(event);
+
+							try
+							{
+								mViewPager.onTouchEvent(event);
+							} catch (Exception e)
+							{
+								event.setAction(MotionEvent.ACTION_CANCEL);
+								event.setLocation(mViewPager.getScrollX(), mViewPager.getScaleY());
+								mViewPager.onTouchEvent(event);
+							}
 						} else
 						{
 							// y축으로 이동한 경우. 
@@ -1356,7 +1392,15 @@ public class HotelDetailLayout
 						}
 					} else if (mMoveState == 100)
 					{
-						mViewPager.onTouchEvent(event);
+						try
+						{
+							mViewPager.onTouchEvent(event);
+						} catch (Exception e)
+						{
+							event.setAction(MotionEvent.ACTION_CANCEL);
+							event.setLocation(mViewPager.getScrollX(), mViewPager.getScaleY());
+							mViewPager.onTouchEvent(event);
+						}
 					}
 					break;
 				}
@@ -2067,7 +2111,7 @@ public class HotelDetailLayout
 					if (Util.isOverAPI21() == true)
 					{
 						LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-						layoutParams.bottomMargin = Util.dpToPx(mFragmentActivity, 10);
+						layoutParams.bottomMargin = Util.dpToPx(mFragmentActivity, 5);
 						contentsLayout.addView(textLayout, layoutParams);
 					} else
 					{
