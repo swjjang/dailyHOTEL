@@ -201,11 +201,15 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 		String reviewResult = null;
 
 		if (v.getId() == btnRecommend.getId())
+		{
 			reviewResult = RECOMMEND_THIS_HOTEL;
-		else if (v.getId() == btnCancel.getId())
+		} else if (v.getId() == btnCancel.getId())
+		{
 			reviewResult = NOT_RECOMMEND_THIS_HOTEL;
-		else if (v.getId() == ivBtnClose.getId())
-			dismiss();
+		} else if (v.getId() == ivBtnClose.getId())
+		{
+			dismissAllowingStateLoss();
+		}
 
 		if (reviewResult != null)
 		{
@@ -256,7 +260,7 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 			unLockUI();
 			showToast(R.string.toast_msg_thanks_to_your_opinion, Toast.LENGTH_LONG);
 
-			dismiss();
+			dismissAllowingStateLoss();
 		}
 	};
 }
