@@ -701,8 +701,17 @@ public class HotelMainFragment extends BaseFragment
 				{
 					HotelListFragment hotelListFragment = mFragmentList.get(i);
 
-					SaleTime saleTime = mTodaySaleTime.getClone(i);
-					tabSaleTime[i] = saleTime;
+					SaleTime saleTime;
+					
+					if(i == 2)
+					{
+						saleTime = mTodaySaleTime.getClone(0);
+						tabSaleTime[i] = saleTime;
+					} else
+					{
+						saleTime = mTodaySaleTime.getClone(i);
+						tabSaleTime[i] = saleTime;
+					}
 
 					if (hotelListFragment.getSaleTime() == null)
 					{
