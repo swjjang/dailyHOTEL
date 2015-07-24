@@ -77,6 +77,11 @@
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp" >
 
+                    <com.twoheart.dailyhotel.widget.DailySignatureView
+                        android:id="@+id/signatureView"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp" />
+
                     <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                         android:id="@+id/agreeSinatureTextView"
                         android:layout_width="wrap_content"
@@ -84,12 +89,8 @@
                         android:layout_gravity="center"
                         android:gravity="center_horizontal"
                         android:text="@string/label_booking_agree_term"
+                        android:textColor="@color/black_a25"
                         android:textSize="13.5dp" />
-
-                    <com.twoheart.dailyhotel.widget.DailySignatureView
-                        android:id="@+id/signatureView"
-                        android:layout_width="match_parent"
-                        android:layout_height="200dp" />
                 </FrameLayout>
 
                 <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
