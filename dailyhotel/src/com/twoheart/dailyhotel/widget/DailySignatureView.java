@@ -111,7 +111,7 @@ public class DailySignatureView extends View
 			return;
 		}
 
-		canvas.drawColor(getContext().getResources().getColor(R.color.white_a50));
+		canvas.drawColor(getContext().getResources().getColor(R.color.white));
 
 		Paint paint = new Paint();
 		paint.setStrokeWidth(Util.dpToPx(getContext(), 1));
@@ -127,7 +127,7 @@ public class DailySignatureView extends View
 
 		if (mBitmap == null)
 		{
-			mBitmap = Bitmap.createBitmap(right - left, bottom - top, Bitmap.Config.ARGB_8888);
+			mBitmap = Bitmap.createBitmap(right - left, bottom - top, Bitmap.Config.RGB_565);
 			mCanvas = new Canvas(mBitmap);
 
 			clearCanvas(mCanvas);
