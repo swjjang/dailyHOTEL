@@ -65,7 +65,7 @@ public class HotelDetailInfoActivity extends BaseActivity
 		}
 
 		View textLayout = layoutInflater.inflate(R.layout.list_row_detailmore_text, null, false);
-		
+
 		LinearLayout contentsLayout = (LinearLayout) textLayout.findViewById(R.id.contentsList);
 		contentsLayout.removeAllViews();
 
@@ -95,7 +95,7 @@ public class HotelDetailInfoActivity extends BaseActivity
 				}
 			}
 		}
-		
+
 		viewGroup.addView(textLayout);
 	}
 

@@ -173,27 +173,19 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 					float width = daysLayout.getWidth() - Util.dpToPx(baseActivity, 40);
 					float marginRight = (width - mDaysView[0].getWidth() * DAY_OF_TOTALCOUNT / 2) / 6;
 
-					for (int i = 0; i < DAY_OF_TOTALCOUNT; i++)
+					for (View dayView : mDaysView)
 					{
-						((LinearLayout.LayoutParams) mDaysView[i].getLayoutParams()).rightMargin = (int) marginRight;
+						((LinearLayout.LayoutParams) dayView.getLayoutParams()).rightMargin = (int) marginRight;
 					}
 				}
 			});
 		}
 
-		int visibleCount = DAY_OF_TOTALCOUNT / 2;
-
 		DAYSLIST_HEIGHT = Util.dpToPx(baseActivity, 110);
 
 		for (int i = 0; i < DAY_OF_TOTALCOUNT; i++)
 		{
-			//			if (i < visibleCount)
-			//			{
 			mDaysView[i].setVisibility(View.VISIBLE);
-			//			} else
-			//			{
-			//				mDaysView[i].setVisibility(View.GONE);
-			//			}
 
 			initLayoutDays(mDaysView[i], mSaleTime.getClone(i));
 			mDaysView[i].setTag(mDaysView[i].getId(), i);
@@ -303,6 +295,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 
 				setSelectedCheckInDays(v);
 				setDaysLayoutEnabled(false);
+
 				showAnimationCheckIn(v, (Integer) v.getTag(v.getId()));
 				break;
 
@@ -310,8 +303,9 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 				mCheckStatus = CHECK_OUT_STATUS;
 
 				setSelectedCheckOutDays(v);
-
 				setDaysLayoutEnabled(false);
+
+				showAnimationCheckOut();
 				break;
 
 			case CHECK_OUT_STATUS:
@@ -323,247 +317,87 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 
 	private void showAnimationCheckOut()
 	{
+		mHandler.postDelayed(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				hideAnimationDaysList();
+			}
+		}, 500);
 
+		// 여기서 호텔 리스트를 다시 갱신해야 한다.
+		if (mUserActionListener != null)
+		{
+			mUserActionListener.selectDay((SaleTime) mSelectedCheckInView.getTag(), (SaleTime) mSelectedCheckOutView.getTag(), true);
+		}
 	}
 
 	private void showAnimationCheckIn(final View view, final int position)
 	{
-		ValueAnimator valueAnimator = ValueAnimator.ofInt(0, 100);
-		valueAnimator.setDuration(300).addUpdateListener(new AnimatorUpdateListener()
+		if (isUsedAnimatorApi() == true)
 		{
-			@Override
-			public void onAnimationUpdate(ValueAnimator animation)
+			ValueAnimator valueAnimator = ValueAnimator.ofInt(0, 100);
+			valueAnimator.setDuration(300).addUpdateListener(new AnimatorUpdateListener()
 			{
-				int value = (Integer) animation.getAnimatedValue();
-				float positionValue = 0.0f;
-
-				for (int i = 0; i <= position; i++)
+				@Override
+				public void onAnimationUpdate(ValueAnimator animation)
 				{
-					float translationX = value * (mDaysView[0].getX() - (mDaysView[i].getX() - mDaysView[i].getTranslationX())) / 100;
-					mDaysView[i].setTranslationX(translationX);
+					int value = (Integer) animation.getAnimatedValue();
+					float positionValue = 0.0f;
 
-					if (i != position)
+					for (int i = 0; i <= position; i++)
 					{
-						mDaysView[i].setAlpha((100.0f - value) / 100.0f);
-					} else
+						float translationX = value * (mDaysView[0].getX() - (mDaysView[i].getX() - mDaysView[i].getTranslationX())) / 100;
+						mDaysView[i].setTranslationX(translationX);
+
+						if (i != position)
+						{
+							mDaysView[i].setAlpha((100.0f - value) / 100.0f);
+						} else
+						{
+							positionValue = translationX;
+						}
+					}
+
+					for (int i = position + 1; i < DAY_OF_TOTALCOUNT; i++)
 					{
-						positionValue = translationX;
+						mDaysView[i].setTranslationX(positionValue);
 					}
 				}
+			});
 
-				for (int i = position + 1; i < DAY_OF_TOTALCOUNT; i++)
+			valueAnimator.addListener(new AnimatorListener()
+			{
+				@Override
+				public void onAnimationStart(Animator animation)
 				{
-					mDaysView[i].setTranslationX(positionValue);
+
 				}
-			}
-		});
 
-		valueAnimator.addListener(new AnimatorListener()
+				@Override
+				public void onAnimationRepeat(Animator animation)
+				{
+				}
+
+				@Override
+				public void onAnimationEnd(Animator animation)
+				{
+					setDaysLayoutEnabled(true);
+				}
+
+				@Override
+				public void onAnimationCancel(Animator animation)
+				{
+
+				}
+			});
+
+			valueAnimator.start();
+		} else
 		{
-			@Override
-			public void onAnimationStart(Animator animation)
-			{
 
-			}
-
-			@Override
-			public void onAnimationRepeat(Animator animation)
-			{
-			}
-
-			@Override
-			public void onAnimationEnd(Animator animation)
-			{
-
-			}
-
-			@Override
-			public void onAnimationCancel(Animator animation)
-			{
-
-			}
-		});
-
-		valueAnimator.start();
-
-		//		for(int i = 0; i < position; i++)
-		//		{
-		//			TranslateAnimation translateAnimation = new TranslateAnimation(0, mDaysView[0].getX() - mDaysView[i].getX() - mDaysView[0].getWidth(), 0.0f, 0.0f);
-		//			translateAnimation.setDuration(300);
-		//			translateAnimation.setFillAfter(true);
-		//			
-		//			final View dayView = mDaysView[i];
-		//			final int dayPosition = i;
-		//			
-		//			translateAnimation.setAnimationListener(new AnimationListener()
-		//			{
-		//				@Override
-		//				public void onAnimationStart(Animation animation)
-		//				{
-		//					// TODO Auto-generated method stub
-		//					
-		//				}
-		//				
-		//				@Override
-		//				public void onAnimationRepeat(Animation animation)
-		//				{
-		//					// TODO Auto-generated method stub
-		//					
-		//				}
-		//				
-		//				@Override
-		//				public void onAnimationEnd(Animation animation)
-		//				{
-		//					dayView.setAnimation(null);
-		//					dayView.setVisibility(View.GONE);
-		//					mDaysView[dayPosition + DAY_OF_TOTALCOUNT / 2].setVisibility(View.VISIBLE);
-		//				}
-		//			});
-		//			
-		//			dayView.startAnimation(translateAnimation);
-		//		}
-
-		//		ValueAnimator valueAnimator = ValueAnimator.ofInt(100, 0);
-		//		valueAnimator.setDuration(300).addUpdateListener(new AnimatorUpdateListener()
-		//		{
-		//			@Override
-		//			public void onAnimationUpdate(ValueAnimator animation)
-		//			{
-		//				int value = (Integer) animation.getAnimatedValue();
-		//				for (int i = 0; i < DAY_OF_TOTALCOUNT / 2; i++)
-		//				{
-		//					if (i != position)
-		//					{
-		//						mDaysView[i].setAlpha(value);
-		//					}
-		//				}
-		//			}
-		//		});
-		//		
-		//		valueAnimator.addListener(new AnimatorListener()
-		//		{
-		//			@Override
-		//			public void onAnimationStart(Animator animation)
-		//			{
-		//				
-		//			}
-		//			@Override
-		//			public void onAnimationRepeat(Animator animation)
-		//			{
-		//			}
-		//
-		//			@Override
-		//			public void onAnimationEnd(Animator animation)
-		//			{
-		//				// 2. 선택한것이 앞으로 오는 애니메이션
-		//
-		//				ValueAnimator valueAnimator = ValueAnimator.ofInt(0, mDaysView[0].getLeft() - view.getLeft());
-		//				valueAnimator.setDuration(300).addUpdateListener(new AnimatorUpdateListener()
-		//				{
-		//					@Override
-		//					public void onAnimationUpdate(ValueAnimator animation)
-		//					{
-		//						int value = (Integer) animation.getAnimatedValue();
-		//						view.setTranslationX(value);
-		//					}
-		//				});
-		//
-		//				valueAnimator.addListener(new AnimatorListener()
-		//				{
-		//					@Override
-		//					public void onAnimationStart(Animator animation)
-		//					{
-		//					}
-		//
-		//					@Override
-		//					public void onAnimationRepeat(Animator animation)
-		//					{
-		//					}
-		//
-		//					@Override
-		//					public void onAnimationEnd(Animator animation)
-		//					{
-		//						for (int i = 0, j = 0; i < DAY_OF_TOTALCOUNT; i++)
-		//						{
-		//							if (i < position)
-		//							{
-		//								mDaysView[i].setVisibility(View.GONE);
-		//							} else if (i > position)
-		//							{
-		//								if (++j < DAY_OF_TOTALCOUNT / 2)
-		//								{
-		//									mDaysView[i].setVisibility(View.VISIBLE);
-		//									mDaysView[i].setAlpha(0);
-		//								} else
-		//								{
-		//									mDaysView[i].setVisibility(View.GONE);
-		//								}
-		//							}
-		//						}
-		//
-		//						mDaysView[position].setTranslationX(0);
-		//
-		//						final int startIndex = position + 1;
-		//						final int endIndex = position + DAY_OF_TOTALCOUNT / 2;
-		//
-		//						ValueAnimator valueAnimator = ValueAnimator.ofInt(0, 100);
-		//						valueAnimator.setDuration(300).addUpdateListener(new AnimatorUpdateListener()
-		//						{
-		//							@Override
-		//							public void onAnimationUpdate(ValueAnimator animation)
-		//							{
-		//								int value = (Integer) animation.getAnimatedValue();
-		//
-		//								for (int i = startIndex; i < endIndex; i++)
-		//								{
-		//									mDaysView[i].setAlpha(value);
-		//								}
-		//							}
-		//						});
-		//
-		//						valueAnimator.addListener(new AnimatorListener()
-		//						{
-		//							@Override
-		//							public void onAnimationStart(Animator animation)
-		//							{
-		//							}
-		//
-		//							@Override
-		//							public void onAnimationEnd(Animator animation)
-		//							{
-		//								setDaysLayoutEnabled(true);
-		//							}
-		//
-		//							@Override
-		//							public void onAnimationCancel(Animator animation)
-		//							{
-		//							}
-		//
-		//							@Override
-		//							public void onAnimationRepeat(Animator animation)
-		//							{
-		//							}
-		//						});
-		//
-		//						valueAnimator.start();
-		//					}
-		//
-		//					@Override
-		//					public void onAnimationCancel(Animator animation)
-		//					{
-		//					}
-		//				});
-		//
-		//				valueAnimator.start();
-		//			}
-		//
-		//			@Override
-		//			public void onAnimationCancel(Animator animation)
-		//			{
-		//			}
-		//		});
-		//
-		//		valueAnimator.start();
+		}
 	}
 
 	private void initCheckDays()
@@ -573,22 +407,33 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 			return;
 		}
 
-		mSelectedCheckInView = null;
-		mSelectedCheckOutView = null;
+		mSelectedCheckInView = mDaysView[0];
+		mSelectedCheckOutView = mDaysView[1];
 
 		for (View dayView : mDaysView)
 		{
-			if (dayView == null)
-			{
-				break;
-			}
-
 			TextView dayOfTheWeekTextView = (TextView) dayView.findViewById(R.id.textView1);
 			TextView dayTextView = (TextView) dayView.findViewById(R.id.textView2);
 
 			dayOfTheWeekTextView.setSelected(false);
 			dayTextView.setSelected(false);
 			((View) dayTextView.getParent()).setSelected(false);
+		}
+
+		if (isUsedAnimatorApi() == true)
+		{
+			for (View dayView : mDaysView)
+			{
+				dayView.setAlpha(1.0f);
+				dayView.setVisibility(View.VISIBLE);
+				dayView.setTranslationX(0);
+			}
+		} else
+		{
+			for (View dayView : mDaysView)
+			{
+				dayView.setVisibility(View.VISIBLE);
+			}
 		}
 	}
 
@@ -606,7 +451,6 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		dayTextView.setText(saleTime.getDailyDay());
 
 		view.setOnClickListener(this);
-
 		view.setTag(saleTime);
 	}
 
@@ -619,11 +463,6 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 
 		for (View view : mDaysView)
 		{
-			if (view == null)
-			{
-				break;
-			}
-
 			view.setEnabled(enabled);
 		}
 
@@ -639,22 +478,12 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 
 		mSelectedCheckInView = view;
 
-		for (View dayView : mDaysView)
-		{
-			if (dayView == null)
-			{
-				break;
-			}
+		TextView dayOfTheWeekTextView = (TextView) view.findViewById(R.id.textView1);
+		TextView dayTextView = (TextView) view.findViewById(R.id.textView2);
 
-			TextView dayOfTheWeekTextView = (TextView) dayView.findViewById(R.id.textView1);
-			TextView dayTextView = (TextView) dayView.findViewById(R.id.textView2);
-
-			boolean selectedView = dayView == view;
-
-			dayOfTheWeekTextView.setSelected(selectedView);
-			dayTextView.setSelected(selectedView);
-			((View) dayTextView.getParent()).setSelected(selectedView);
-		}
+		dayOfTheWeekTextView.setSelected(true);
+		dayTextView.setSelected(true);
+		((View) dayTextView.getParent()).setSelected(true);
 	}
 
 	private void setSelectedCheckOutDays(View view)
@@ -666,22 +495,12 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 
 		mSelectedCheckOutView = view;
 
-		//		for (View dayView : mDaysView)
-		//		{
-		//			if (dayView == null)
-		//			{
-		//				break;
-		//			}
-		//
-		//			TextView dayOfTheWeekTextView = (TextView) dayView.findViewById(R.id.textView1);
-		//			TextView dayTextView = (TextView) dayView.findViewById(R.id.textView2);
-		//
-		//			boolean selectedView = dayView == view;
-		//
-		//			dayOfTheWeekTextView.setSelected(selectedView);
-		//			dayTextView.setSelected(selectedView);
-		//			((View) dayTextView.getParent()).setSelected(selectedView);
-		//		}
+		TextView dayOfTheWeekTextView = (TextView) view.findViewById(R.id.textView1);
+		TextView dayTextView = (TextView) view.findViewById(R.id.textView2);
+
+		dayOfTheWeekTextView.setSelected(true);
+		dayTextView.setSelected(true);
+		((View) dayTextView.getParent()).setSelected(true);
 	}
 
 	private void hideDaysList()
@@ -765,6 +584,8 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 					{
 						mDaysLayout.setVisibility(View.VISIBLE);
 					}
+
+					initCheckDays();
 
 					mAnimationState = ANIMATION_STATE.START;
 					mAnimationStatus = ANIMATION_STATUS.SHOW;

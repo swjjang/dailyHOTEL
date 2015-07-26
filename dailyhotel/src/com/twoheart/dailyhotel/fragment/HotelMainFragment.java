@@ -85,7 +85,7 @@ public class HotelMainFragment extends BaseFragment
 	{
 		public void selectHotel(HotelListViewItem hotelListViewItem, int hotelIndex, SaleTime saleTime);
 
-		public void selectDay(HotelListFragment fragment, boolean isListSelectionTop);
+		public void selectDay(SaleTime checkInSaleTime, SaleTime checkOutSaleTime, boolean isListSelectionTop);
 
 		public void toggleViewType();
 
@@ -702,8 +702,8 @@ public class HotelMainFragment extends BaseFragment
 					HotelListFragment hotelListFragment = mFragmentList.get(i);
 
 					SaleTime saleTime;
-					
-					if(i == 2)
+
+					if (i == 2)
 					{
 						saleTime = mTodaySaleTime.getClone(0);
 						tabSaleTime[i] = saleTime;
@@ -995,26 +995,23 @@ public class HotelMainFragment extends BaseFragment
 		}
 
 		@Override
-		public void selectDay(HotelListFragment fragment, boolean isListSelectionTop)
+		public void selectDay(SaleTime checkInSaleTime, SaleTime checkOutSaleTime, boolean isListSelectionTop)
 		{
-			if (isLockUiComponent() == true)
+			if (isLockUiComponent() == true || checkInSaleTime == null || checkOutSaleTime == null)
 			{
 				return;
 			}
 
 			lockUiComponent();
 
-			if (fragment != null)
-			{
-				// 선택탭의 이름을 수정한다.
-				SaleTime saleTime = fragment.getSaleTime();
-				String day = getString(R.string.label_format_tabday, saleTime.getDailyDay(), saleTime.getDailyDayOftheWeek());
+			// 선택탭의 이름을 수정한다.
+			String checkInDay = getString(R.string.label_format_tabday, checkInSaleTime.getDailyDay(), checkInSaleTime.getDailyDayOftheWeek());
+			String checkOutDay = getString(R.string.label_format_tabday, checkOutSaleTime.getDailyDay(), checkOutSaleTime.getDailyDayOftheWeek());
 
-				mTabIndicator.setSubTextEnable(2, true);
-				mTabIndicator.setSubText(2, day);
+			mTabIndicator.setSubTextEnable(2, true);
+			mTabIndicator.setSubText(2, checkInDay + "-" + checkOutDay);
 
-				fragment.refreshHotelList(mSelectedProvince, isListSelectionTop);
-			}
+			//			refreshHotelList(mSelectedProvince, isListSelectionTop);
 
 			releaseUiComponent();
 		}
