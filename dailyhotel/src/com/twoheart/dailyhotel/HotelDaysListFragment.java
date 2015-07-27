@@ -18,6 +18,8 @@ package com.twoheart.dailyhotel;
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
+import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -40,9 +42,13 @@ import com.twoheart.dailyhotel.util.ui.BaseActivity;
 public class HotelDaysListFragment extends HotelListFragment implements OnClickListener
 {
 	private static final int HANDLER_MESSAGE_SHOWDAYSLIST = 1;
-	private static final int DAY_OF_TOTALCOUNT = 12;
-	public static final int DEFAULT_DAY_OF_COUNT = 5;
-	private static final int DEFAULT_LINE_COUNT = 6;
+	private static final int CHECK_IN_DATE = 7;
+	private static final int CHECK_OUT_DATE = 5;
+
+	private static final int CHECK_NONE_STATUS = 0;
+	private static final int CHECK_IN_STATUS = 1;
+	private static final int CHECK_OUT_STATUS = 2;
+	private static final int CHECK_OK_STATUS = 3;
 
 	// 날짜가 나오는 탭의 높이이다. 마진이 있는 경우 고려해서 넣을것.px 로 넣어야 함.
 	private int DAYSLIST_HEIGHT;
@@ -55,9 +61,13 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 	private ObjectAnimator mObjectAnimator;
 	private AlphaAnimation mAlphaAnimation;
 
-	private View[] mDaysView;
-	private View mSelectedView = null;
+	private View[] mCheckInViews;
+	private View[] mCheckOutViews;
+
+	private View mSelectedCheckInView = null;
+	private View mSelectedCheckOutView = null;
 	private boolean mIsShowDaysList;
+	private int mCheckStatus;
 
 	private Handler mHandler = new Handler()
 	{
@@ -128,90 +138,87 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 			return;
 		}
 
-		if (mDaysView == null)
+		if (mCheckInViews == null)
 		{
-			mDaysView = new View[DAY_OF_TOTALCOUNT];
-
-			View line1Layout = mDaysLayout.findViewById(R.id.daysLine1Layout);
-			View line2Layout = mDaysLayout.findViewById(R.id.daysLine2Layout);
-
-			for (int i = 0; i < DEFAULT_LINE_COUNT; i++)
-			{
-				mDaysView[i] = line1Layout.findViewById(R.id.item01 + i);
-			}
-
-			for (int i = 0; i < DEFAULT_LINE_COUNT; i++)
-			{
-				mDaysView[i + DEFAULT_LINE_COUNT] = line2Layout.findViewById(R.id.item07 + i);
-			}
+			mCheckInViews = new View[CHECK_IN_DATE];
 		}
 
-		int visibleCount = DEFAULT_DAY_OF_COUNT;
-
-		if (mSelectedProvince != null)
+		if (mCheckOutViews == null)
 		{
-			visibleCount = mSelectedProvince.getSaleWeek() == 1 ? DEFAULT_DAY_OF_COUNT : DAY_OF_TOTALCOUNT;
+			mCheckOutViews = new View[CHECK_OUT_DATE];
 		}
 
-		DAYSLIST_HEIGHT = visibleCount <= DEFAULT_LINE_COUNT ? Util.dpToPx(baseActivity, 100) : Util.dpToPx(baseActivity, 200);
+		View daysLayout01 = mDaysLayout.findViewById(R.id.daysLayout01);
+		View daysLayout02 = mDaysLayout.findViewById(R.id.daysLayout02);
 
-		View line2Layout = mDaysLayout.findViewById(R.id.daysLine2Layout);
-		View daysMiddleLine = mDaysLayout.findViewById(R.id.daysMiddleLine);
+		daysLayout01.setVisibility(View.VISIBLE);
+		daysLayout02.setVisibility(View.GONE);
 
-		if (visibleCount <= DEFAULT_LINE_COUNT)
+		for (int i = 0; i < CHECK_IN_DATE; i++)
 		{
-			line2Layout.setVisibility(View.GONE);
-			daysMiddleLine.setVisibility(View.GONE);
-
-			for (int i = 0; i < DAY_OF_TOTALCOUNT; i++)
-			{
-				if (visibleCount > i)
-				{
-					mDaysView[i].setVisibility(View.VISIBLE);
-					initLayoutDays(mDaysView[i], mSaleTime.getClone(2 + i));
-				} else
-				{
-					mDaysView[i].setVisibility(View.GONE);
-				}
-			}
-		} else
-		{
-			line2Layout.setVisibility(View.VISIBLE);
-			daysMiddleLine.setVisibility(View.VISIBLE);
-
-			for (int i = 0; i < DAY_OF_TOTALCOUNT; i++)
-			{
-				if (visibleCount > i)
-				{
-					mDaysView[i].setVisibility(View.VISIBLE);
-					initLayoutDays(mDaysView[i], mSaleTime.getClone(2 + i));
-				} else
-				{
-					mDaysView[i].setVisibility(View.INVISIBLE);
-				}
-			}
+			mCheckInViews[i] = daysLayout01.findViewById(R.id.item01 + i);
 		}
 
-		if (mSelectedView == null)
+		for (int i = 0; i < CHECK_OUT_DATE; i++)
 		{
-			setSelectedDays(mDaysView[0]);
-
-		} else if (mSelectedView.getVisibility() != View.VISIBLE)
-		{
-			setSelectedDays(mDaysView[0]);
-
-			super.setSaleTime((SaleTime) mSelectedView.getTag());
-
-			if (mUserActionListener != null)
-			{
-				mUserActionListener.selectDay(this, true);
-			}
-		} else
-		{
-			setSelectedDays(mSelectedView);
-
-			super.setSaleTime((SaleTime) mSelectedView.getTag());
+			mCheckOutViews[i] = daysLayout02.findViewById(R.id.item08 + i);
 		}
+
+		DAYSLIST_HEIGHT = Util.dpToPx(baseActivity, 110);
+
+		initCheckInDateLayout(mSaleTime);
+	}
+
+	private void initCheckInDateLayout(SaleTime defaultSaleTime)
+	{
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
+		for (int i = 0; i < CHECK_IN_DATE; i++)
+		{
+			initLayoutDays(mCheckInViews[i], defaultSaleTime.getClone(i));
+			mCheckInViews[i].setTag(mCheckInViews[i].getId(), i);
+		}
+	}
+
+	private void initCheckOutDateLayout(SaleTime checkInSaleTime)
+	{
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
+		View daysLayout02 = mDaysLayout.findViewById(R.id.daysLayout02);
+		daysLayout02.setVisibility(View.GONE);
+
+		for (int i = 0; i < CHECK_OUT_DATE; i++)
+		{
+			initLayoutDays(mCheckOutViews[i], checkInSaleTime.getClone(checkInSaleTime.getOffsetDailyDay() + i + 1));
+			mCheckOutViews[i].setTag(mCheckOutViews[i].getId(), i);
+		}
+	}
+
+	private void initLayoutDays(View view, SaleTime saleTime)
+	{
+		if (view == null)
+		{
+			return;
+		}
+
+		TextView dayOfTheWeekTextView = (TextView) view.findViewById(R.id.textView1);
+		TextView dayTextView = (TextView) view.findViewById(R.id.textView2);
+
+		dayOfTheWeekTextView.setText(saleTime.getDailyDayOftheWeek());
+		dayTextView.setText(saleTime.getDailyDay());
+
+		view.setOnClickListener(this);
+		view.setTag(saleTime);
 	}
 
 	@Override
@@ -308,92 +315,159 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 	@Override
 	public void onClick(View v)
 	{
-		setSelectedDays(v);
-
-		mSaleTime = (SaleTime) v.getTag();
-
-		setDaysLayoutEnabled(false);
-
-		mUserActionListener.selectDay(this, true);
-
-		mHandler.postDelayed(new Runnable()
+		switch (mCheckStatus)
 		{
-			@Override
-			public void run()
-			{
-				hideAnimationDaysList();
-			}
+			case CHECK_NONE_STATUS:
+				mCheckStatus = CHECK_IN_STATUS;
 
-		}, 500);
+				setSelectedCheckInDays(v);
+				setDaysLayoutEnabled(false);
+
+				// 체크아웃 화면을 만들어야 한다.
+				initCheckOutDateLayout((SaleTime) v.getTag());
+
+				showAnimationCheckIn(v, (Integer) v.getTag(v.getId()));
+				break;
+
+			case CHECK_IN_STATUS:
+				mCheckStatus = CHECK_OUT_STATUS;
+
+				setSelectedCheckOutDays(v);
+				setDaysLayoutEnabled(false);
+
+				showAnimationCheckOut();
+				break;
+
+			case CHECK_OUT_STATUS:
+				mCheckStatus = CHECK_OK_STATUS;
+
+				break;
+		}
 	}
 
-	private void initLayoutDays(View view, SaleTime saleTime)
+	private void resetCheckDays()
 	{
-		if (view == null)
+		if (mCheckInViews == null || mCheckOutViews == null)
 		{
 			return;
 		}
 
-		TextView dayOfTheWeekTextView = (TextView) view.findViewById(R.id.textView1);
-		TextView dayTextView = (TextView) view.findViewById(R.id.textView2);
+		mSelectedCheckInView = mCheckInViews[0];
+		mSelectedCheckOutView = mCheckInViews[1];
 
-		dayOfTheWeekTextView.setText(saleTime.getDailyDayOftheWeek());
-		dayTextView.setText(saleTime.getDailyDay());
+		for (View dayView : mCheckInViews)
+		{
+			TextView dayOfTheWeekTextView = (TextView) dayView.findViewById(R.id.textView1);
+			TextView dayTextView = (TextView) dayView.findViewById(R.id.textView2);
 
-		view.setOnClickListener(this);
+			dayOfTheWeekTextView.setSelected(false);
+			dayTextView.setSelected(false);
+			((View) dayTextView.getParent()).setSelected(false);
+		}
 
-		view.setTag(saleTime);
+		for (View dayView : mCheckOutViews)
+		{
+			TextView dayOfTheWeekTextView = (TextView) dayView.findViewById(R.id.textView1);
+			TextView dayTextView = (TextView) dayView.findViewById(R.id.textView2);
+
+			dayOfTheWeekTextView.setSelected(false);
+			dayTextView.setSelected(false);
+			((View) dayTextView.getParent()).setSelected(false);
+		}
+
+		if (isUsedAnimatorApi() == true)
+		{
+			for (View dayView : mCheckInViews)
+			{
+				dayView.setAlpha(1.0f);
+				dayView.setVisibility(View.VISIBLE);
+				dayView.setTranslationX(0);
+			}
+
+			for (View dayView : mCheckOutViews)
+			{
+				dayView.setAlpha(1.0f);
+			}
+		} else
+		{
+			for (View dayView : mCheckInViews)
+			{
+				dayView.setVisibility(View.VISIBLE);
+			}
+		}
 	}
 
 	private void setDaysLayoutEnabled(boolean enabled)
 	{
-		if (mDaysView == null)
+		if (mCheckInViews == null)
 		{
 			return;
 		}
 
-		for (View view : mDaysView)
+		for (View view : mCheckInViews)
 		{
-			if (view == null)
-			{
-				break;
-			}
-
 			view.setEnabled(enabled);
+		}
+
+		if (mCheckOutViews != null)
+		{
+			for (View view : mCheckOutViews)
+			{
+				view.setEnabled(enabled);
+			}
 		}
 
 		mDaysBackgroundView.setEnabled(enabled);
 	}
 
-	private void setSelectedDays(View view)
+	private void setSelectedCheckInDays(View view)
 	{
-		if (view == null || mDaysView == null)
+		if (view == null || mCheckInViews == null)
 		{
 			return;
 		}
 
-		mSelectedView = view;
+		mSelectedCheckInView = view;
 
-		for (View dayView : mDaysView)
+		TextView dayOfTheWeekTextView = (TextView) view.findViewById(R.id.textView1);
+		TextView dayTextView = (TextView) view.findViewById(R.id.textView2);
+
+		dayOfTheWeekTextView.setSelected(true);
+		dayTextView.setSelected(true);
+		((View) dayTextView.getParent()).setSelected(true);
+	}
+
+	private void setSelectedCheckOutDays(View view)
+	{
+		if (view == null || mCheckOutViews == null)
 		{
-			if (dayView == null)
-			{
-				break;
-			}
+			return;
+		}
 
+		mSelectedCheckOutView = view;
+
+		for (View dayView : mCheckOutViews)
+		{
 			TextView dayOfTheWeekTextView = (TextView) dayView.findViewById(R.id.textView1);
 			TextView dayTextView = (TextView) dayView.findViewById(R.id.textView2);
 
-			boolean selectedView = dayView == view;
+			boolean selected = view == dayView ? true : false;
 
-			dayOfTheWeekTextView.setSelected(selectedView);
-			dayTextView.setSelected(selectedView);
-			((View) dayTextView.getParent()).setSelected(selectedView);
+			dayOfTheWeekTextView.setSelected(selected);
+			dayTextView.setSelected(selected);
+			((View) dayTextView.getParent()).setSelected(selected);
 		}
 	}
 
 	private void hideDaysList()
 	{
+		if (mCheckStatus != CHECK_OK_STATUS)
+		{
+			mCheckStatus = CHECK_NONE_STATUS;
+
+			resetCheckDays();
+		}
+
 		if (mObjectAnimator != null)
 		{
 			if (mObjectAnimator.isRunning() == true)
@@ -426,6 +500,99 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		mAnimationStatus = ANIMATION_STATUS.HIDE_END;
 	}
 
+	private void showAnimationCheckIn(final View view, final int position)
+	{
+		if (isUsedAnimatorApi() == true)
+		{
+			final View daysLayout02 = mDaysLayout.findViewById(R.id.daysLayout02);
+			daysLayout02.setVisibility(View.GONE);
+
+			ValueAnimator valueAnimator = ValueAnimator.ofInt(0, 100);
+			valueAnimator.setDuration(300).addUpdateListener(new AnimatorUpdateListener()
+			{
+				@Override
+				public void onAnimationUpdate(ValueAnimator animation)
+				{
+					int value = (Integer) animation.getAnimatedValue();
+
+					for (int i = 0; i < CHECK_IN_DATE; i++)
+					{
+						float translationX = value * (mCheckInViews[0].getX() - (mCheckInViews[i].getX() - mCheckInViews[i].getTranslationX())) / 100;
+						mCheckInViews[i].setTranslationX(translationX);
+
+						if (i != position)
+						{
+							mCheckInViews[i].setAlpha((100.0f - value) / 100.0f);
+						}
+					}
+
+					daysLayout02.setAlpha(value / 100.0f);
+				}
+			});
+
+			valueAnimator.addListener(new AnimatorListener()
+			{
+				@Override
+				public void onAnimationStart(Animator animation)
+				{
+					daysLayout02.setVisibility(View.VISIBLE);
+				}
+
+				@Override
+				public void onAnimationRepeat(Animator animation)
+				{
+				}
+
+				@Override
+				public void onAnimationEnd(Animator animation)
+				{
+					setDaysLayoutEnabled(true);
+
+					for (int i = 0; i < CHECK_IN_DATE; i++)
+					{
+						if (i != position)
+						{
+							mCheckInViews[i].setVisibility(View.INVISIBLE);
+						}
+					}
+
+					setSelectedCheckOutDays(mCheckOutViews[0]);
+
+					animation.removeAllListeners();
+				}
+
+				@Override
+				public void onAnimationCancel(Animator animation)
+				{
+
+				}
+			});
+
+			valueAnimator.start();
+		} else
+		{
+
+		}
+	}
+
+	private void showAnimationCheckOut()
+	{
+		mHandler.postDelayed(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				hideAnimationDaysList();
+			}
+		}, 500);
+
+		// 여기서 호텔 리스트를 다시 갱신해야 한다.
+		if (mUserActionListener != null)
+		{
+			mUserActionListener.selectDay((SaleTime) mSelectedCheckInView.getTag(), (SaleTime) mSelectedCheckOutView.getTag(), true);
+		}
+	}
+
 	private void showAnimationDaysList()
 	{
 		BaseActivity baseActivity = (BaseActivity) getActivity();
@@ -434,6 +601,8 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		{
 			return;
 		}
+
+		mCheckStatus = CHECK_NONE_STATUS;
 
 		if (isUsedAnimatorApi() == true)
 		{
@@ -464,6 +633,8 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 					{
 						mDaysLayout.setVisibility(View.VISIBLE);
 					}
+
+					resetCheckDays();
 
 					mAnimationState = ANIMATION_STATE.START;
 					mAnimationStatus = ANIMATION_STATUS.SHOW;
@@ -497,8 +668,6 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 			mObjectAnimator.start();
 		} else
 		{
-			View underlineView02 = baseActivity.findViewById(R.id.tabindicator_underLine);
-
 			TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, -DAYSLIST_HEIGHT, 0);
 			translateAnimation.setDuration(300);
 			translateAnimation.setFillBefore(true);

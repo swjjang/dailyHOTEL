@@ -133,6 +133,17 @@ public class SaleTime implements Constants, Parcelable
 	{
 		return mCloseTime.getTime();
 	}
+	
+	public Long getDailyTime()
+	{
+		return mDailyTime.getTime();
+	}
+	
+	public int getOffsetDailyDay()
+	{
+		return mDayOfDays;
+	}
+
 
 	public boolean isSaleTime()
 	{
