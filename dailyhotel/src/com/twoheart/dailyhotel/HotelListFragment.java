@@ -128,7 +128,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 			mHotelListView.setOnScrollListener(mOnScrollListener);
 		} else
 		{
-			mHotelListView.setPadding(0, Util.dpToPx(baseActivity, 110), 0, 0);
+			mHotelListView.setPadding(0, Util.dpToPx(baseActivity, 116), 0, 0);
 		}
 
 		// 이벤트를 마지막에 넣는다.
@@ -140,7 +140,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		mEmptyView = view.findViewById(R.id.emptyView);
 
 		mMapLayout = (FrameLayout) view.findViewById(R.id.hotelMapLayout);
-		mMapLayout.setPadding(0, Util.dpToPx(baseActivity, 109) + 2, 0, 0);
+		mMapLayout.setPadding(0, Util.dpToPx(baseActivity, 116) + 2, 0, 0);
 
 		//		mHotelListMapFragment = (HotelListMapFragment) getChildFragmentManager().findFragmentById(R.id.hotelMapFragment);
 

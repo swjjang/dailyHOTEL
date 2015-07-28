@@ -15,7 +15,7 @@
         android:id="@+id/emptyView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="109dp"
+        android:layout_marginTop="116dp"
         layout="@layout/view_empty_list"
         android:visibility="gone" />
 
@@ -58,17 +58,29 @@
     <RelativeLayout
         android:id="@+id/daysLayout"
         android:layout_width="match_parent"
-        android:layout_height="110dp"
+        android:layout_height="135dp"
         android:layout_marginTop="110dp"
         android:background="@color/white"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:visibility="gone" >
 
+        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            android:id="@+id/checkInOutTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingBottom="10dp"
+            android:paddingTop="15dp"
+            android:text="@string/frag_hotel_list_checkin"
+            android:textColor="@color/dh_theme_color"
+            android:textSize="22dp" />
+
         <LinearLayout
             android:id="@+id/daysLayout01"
             android:layout_width="match_parent"
-            android:layout_height="110dp"
+            android:layout_height="105dp"
+            android:layout_below="@id/checkInOutTextView"
             android:baselineAligned="false"
             android:visibility="gone" >
 
@@ -125,7 +137,8 @@
         <LinearLayout
             android:id="@+id/daysLayout02"
             android:layout_width="match_parent"
-            android:layout_height="110dp"
+            android:layout_height="105dp"
+            android:layout_below="@id/checkInOutTextView"
             android:baselineAligned="false"
             android:visibility="gone" >
 

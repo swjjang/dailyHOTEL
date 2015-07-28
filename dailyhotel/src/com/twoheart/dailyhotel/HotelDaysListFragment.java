@@ -68,6 +68,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 
 	private View mSelectedCheckInView = null;
 	private View mSelectedCheckOutView = null;
+	private TextView mCheckInOutTextView;
 	private boolean mIsShowDaysList;
 	private int mCheckStatus;
 
@@ -152,6 +153,8 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 
 		View daysLayout01 = mDaysLayout.findViewById(R.id.daysLayout01);
 		View daysLayout02 = mDaysLayout.findViewById(R.id.daysLayout02);
+		
+		mCheckInOutTextView = (TextView)mDaysLayout.findViewById(R.id.checkInOutTextView);
 
 		daysLayout01.setVisibility(View.VISIBLE);
 		daysLayout02.setVisibility(View.GONE);
@@ -166,7 +169,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 			mCheckOutViews[i] = daysLayout02.findViewById(R.id.item08 + i);
 		}
 
-		DAYSLIST_HEIGHT = Util.dpToPx(baseActivity, 110);
+		DAYSLIST_HEIGHT = Util.dpToPx(baseActivity, 135);
 
 		initCheckInDateLayout(mSaleTime);
 	}
@@ -358,6 +361,8 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		mSelectedCheckInView = mCheckInViews[0];
 		mSelectedCheckOutView = mCheckInViews[1];
 
+		mCheckInOutTextView.setText(R.string.frag_hotel_list_checkin);
+		
 		for (View dayView : mCheckInViews)
 		{
 			TextView dayOfTheWeekTextView = (TextView) dayView.findViewById(R.id.textView1);
@@ -608,6 +613,8 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 						}
 					}
 
+					mCheckInOutTextView.setText(R.string.frag_hotel_list_checkout);
+					
 					animation.removeAllListeners();
 				}
 
@@ -658,6 +665,8 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 					mCheckInViews[position].setAnimation(null);
 					setDaysLayoutEnabled(true);
 					setCheckInLayoutEnabled(false);
+					
+					mCheckInOutTextView.setText(R.string.frag_hotel_list_checkout);
 
 					for (int i = 0; i < CHECK_IN_DATE; i++)
 					{

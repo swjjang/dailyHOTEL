@@ -61,7 +61,7 @@
     <string name="actionbar_title_zoom_map_activity">지도 확대</string>
     <string name="actionbar_title_payment_wait_activity">입금 대기</string>
     <string name="actionbar_title_creditcard_activity">신용카드 관리</string>
-	<string name="actionbar_title_hoteldetailinfo_activity">호텔 정보</string>
+    <string name="actionbar_title_hoteldetailinfo_activity">호텔 정보</string>
 
     <!-- Toast Messages -->
     <string name="toast_msg_network_status_bad">인터넷 연결을 할 수 없습니다.\n설정에서 확인해주세요.</string>
@@ -158,7 +158,7 @@
     <string name="dialog_msg_update_googleplayservice">맵을 사용하기 위한 Google Play Services의 업데이트가 필요합니다.</string>
     <string name="dialog_msg_outofmemory">앱 실행에 필요한 메모리가 부족하여 종료됩니다. 메모리 정리 후에 재 실행 부탁드립니다.</string>
     <string name="dialog_msg_facebook_update">예약 진행을 위해서 회원정보 수정이 필요합니다.</string>
-    
+
     <!-- Main Drawer Menu Titles -->
     <string name="drawer_menu_pin_title_resrvation">예약</string>
     <string name="drawer_menu_item_title_todays_hotel">오늘의 호텔</string>
@@ -213,9 +213,6 @@
     <string name="act_current_version">현재 버전: </string>
     <string name="act_new_version">최신 버전: </string>
     <string name="act_btn_update">최신 버전 업데이트 하기</string>
-
-    <!-- Splash Activity -->
-    <string name="act_anybody">누구나 즐기는 호텔 라이프</string>
 
     <!-- Login Activity -->
     <string name="act_login_email">이메일</string>
@@ -377,8 +374,8 @@
     <string name="act_hotel_tab_btn">예약하기</string>
     <string name="act_hotel_search_room">객실선택</string>
     <string name="act_hotel_booking">예약진행</string>
-	<string name="act_hotel_soldout">판매완료</string>
-	<string name="label_hoteldetail_dbenefit">D. benefit</string>
+    <string name="act_hotel_soldout">판매완료</string>
+    <string name="label_hoteldetail_dbenefit">D. benefit</string>
 
     <!-- Error Fragment -->
     <string name="frag_error_network_unavail">네트워크 연결이 끊어졌습니다.</string>
@@ -392,6 +389,8 @@
     <string name="frag_hotel_list_no_hotels">호텔을 준비하고 있습니다.</string>
     <string name="frag_hotel_list_line">멋진 호텔에서\n하루를 보내는게 어때요?</string>
     <string name="frag_hotel_list_no_line">멋진 호텔을 원하시나요?\n1800-9120으로 전화주세요.</string>
+    <string name="frag_hotel_list_checkin">CHECK IN</string>
+    <string name="frag_hotel_list_checkout">CHECK OUT</string>
 
     <!-- PopUp Event Fragment -->
     <string name="frag_popup_event_title">이벤트 안내</string>
@@ -482,7 +481,8 @@
     <string name="label_receipt_address">주소 |</string>
     <string name="label_receipt_phone">전화번호 | %1$s</string>
     <string name="label_receipt_fax">팩스 | %1$s</string>
-    
+
     <!-- Area -->
-	<string name="label_selectarea_area">지역</string>
+    <string name="label_selectarea_area">지역</string>
+
 </resources>
