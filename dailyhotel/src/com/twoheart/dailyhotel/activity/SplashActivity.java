@@ -31,6 +31,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.provider.Settings;
 import android.view.KeyEvent;
 import android.view.View;
@@ -54,16 +55,37 @@ import com.twoheart.dailyhotel.util.ui.BaseActivity;
 public class SplashActivity extends BaseActivity implements Constants, ErrorListener
 {
 	private static final int PROGRESS_CIRCLE_COUNT = 3;
-
-	private static final int VALUE_WEB_API_RESPONSE_NEW_EVENT_NOTIFY = 1;
-	private static final int VALUE_WEB_API_RESPONSE_NEW_EVENT_NONE = 0;
 	private static final int DURING_SPLASH_ACTIVITY_SHOW = 1000;
 
 	private Dialog alertDlg;
 	protected HashMap<String, String> regPushParams;
 
+	private View mProgressView;
 	private View[] mCircleViewList;
-	private Handler mHandler = new Handler();
+	private boolean mIsRequestLogin;
+
+	private Handler mHandler = new Handler()
+	{
+		@Override
+		public void handleMessage(Message msg)
+		{
+			switch (msg.what)
+			{
+				case 0:
+					moveToLoginStep();
+					break;
+
+				case 1:
+					if (mProgressView.getVisibility() != View.VISIBLE)
+					{
+						mProgressView.setVisibility(View.VISIBLE);
+
+						startSplashLoad();
+					}
+					break;
+			}
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -72,9 +94,17 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 
 		setContentView(R.layout.activity_splash);
 
+		// 세션 초기화.
+		VolleyHttpClient.destroyCookie();
+
+		mIsRequestLogin = false;
+
 		SharedPreferences.Editor editor = sharedPreference.edit();
 		editor.putBoolean(KEY_PREFERENCE_REGION_SETTING, false);
 		editor.commit();
+
+		mProgressView = findViewById(R.id.progressLayout);
+		mProgressView.setVisibility(View.INVISIBLE);
 
 		mCircleViewList = new View[PROGRESS_CIRCLE_COUNT];
 
@@ -91,8 +121,6 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 		// 비행기 모드
 		boolean isAirplainMode = Settings.System.getInt(getContentResolver(), Settings.System.AIRPLANE_MODE_ON, 0) == 1 ? true : false;
 		boolean isNetworkAvailable = VolleyHttpClient.isAvailableNetwork();
-		ExLog.d(" / onResume : isAirplainMode = " + isAirplainMode + " / isNetworkAvailable = " + isNetworkAvailable);
-		startSplashLoad();
 
 		if (isAirplainMode && !isNetworkAvailable)
 		{
@@ -102,8 +130,27 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 			showDisabledNetworkPopup();
 		} else
 		{
-			moveToLoginStep();
+			if (mIsRequestLogin == false)
+			{
+				mIsRequestLogin = true;
+
+				mHandler.sendEmptyMessageDelayed(0, 3000);
+			}
+
+			if (mProgressView.getVisibility() != View.VISIBLE)
+			{
+				mHandler.removeMessages(1);
+				mHandler.sendEmptyMessageDelayed(1, 2000);
+			}
 		}
+	}
+
+	@Override
+	protected void onPause()
+	{
+		super.onPause();
+
+		mHandler.removeMessages(1);
 	}
 
 	private void showDisabledNetworkPopup()
@@ -178,7 +225,6 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 
 	private void startSplashLoad()
 	{
-
 		for (int i = 0; i < PROGRESS_CIRCLE_COUNT; i++)
 		{
 			final int idx = i;
@@ -206,9 +252,12 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 			Map<String, String> loginParams = new HashMap<String, String>();
 
 			if (accessToken != null)
+			{
 				loginParams.put("accessToken", accessToken);
-			else
+			} else
+			{
 				loginParams.put("email", id);
+			}
 
 			loginParams.put("pw", pw);
 
@@ -221,14 +270,8 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 	private void showMainActivity()
 	{
 		// sleep 2 second
-		mHandler.postDelayed(new Runnable()
-		{
-			public void run()
-			{
-				setResult(RESULT_OK);
-				finish();//MainActivity로 finish 
-			}
-		}, DURING_SPLASH_ACTIVITY_SHOW);
+		setResult(RESULT_OK);
+		finish();//MainActivity로 finish 
 	}
 
 	@Override
