@@ -68,12 +68,12 @@ public class BottomCropImageView extends ImageView
 		{
 			scale = (float) viewWidth / (float) drawableWidth;
 		}
-		
-	    //Define the rect to take image portion from
-	    RectF drawableRect = new RectF(0, drawableHeight - (viewHeight / scale), drawableWidth, drawableHeight);
-	    RectF viewRect = new RectF(0, 0, viewWidth, viewHeight);
-	    matrix.setRectToRect(drawableRect, viewRect, Matrix.ScaleToFit.FILL);
-		
+
+		//Define the rect to take image portion from
+		RectF drawableRect = new RectF(0, drawableHeight - (viewHeight / scale), drawableWidth, drawableHeight);
+		RectF viewRect = new RectF(0, 0, viewWidth, viewHeight);
+		matrix.setRectToRect(drawableRect, viewRect, Matrix.ScaleToFit.FILL);
+
 		setImageMatrix(matrix);
 	}
 }
