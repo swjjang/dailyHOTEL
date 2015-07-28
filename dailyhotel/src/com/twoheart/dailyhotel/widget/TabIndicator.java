@@ -193,8 +193,8 @@ public class TabIndicator extends HorizontalScrollView implements OnClickListene
 
 			layoutParams = new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT);
 			layoutParams.weight = 1;
-			
-			if(hasSubText == true && i == size - 1)
+
+			if (hasSubText == true && i == size - 1)
 			{
 				layoutParams.weight = 1.2f;
 			}

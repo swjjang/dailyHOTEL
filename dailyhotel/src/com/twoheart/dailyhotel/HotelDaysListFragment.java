@@ -153,8 +153,8 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 
 		View daysLayout01 = mDaysLayout.findViewById(R.id.daysLayout01);
 		View daysLayout02 = mDaysLayout.findViewById(R.id.daysLayout02);
-		
-		mCheckInOutTextView = (TextView)mDaysLayout.findViewById(R.id.checkInOutTextView);
+
+		mCheckInOutTextView = (TextView) mDaysLayout.findViewById(R.id.checkInOutTextView);
 
 		daysLayout01.setVisibility(View.VISIBLE);
 		daysLayout02.setVisibility(View.GONE);
@@ -362,7 +362,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		mSelectedCheckOutView = mCheckInViews[1];
 
 		mCheckInOutTextView.setText(R.string.frag_hotel_list_checkin);
-		
+
 		for (View dayView : mCheckInViews)
 		{
 			TextView dayOfTheWeekTextView = (TextView) dayView.findViewById(R.id.textView1);
@@ -614,7 +614,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 					}
 
 					mCheckInOutTextView.setText(R.string.frag_hotel_list_checkout);
-					
+
 					animation.removeAllListeners();
 				}
 
@@ -665,7 +665,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 					mCheckInViews[position].setAnimation(null);
 					setDaysLayoutEnabled(true);
 					setCheckInLayoutEnabled(false);
-					
+
 					mCheckInOutTextView.setText(R.string.frag_hotel_list_checkout);
 
 					for (int i = 0; i < CHECK_IN_DATE; i++)
