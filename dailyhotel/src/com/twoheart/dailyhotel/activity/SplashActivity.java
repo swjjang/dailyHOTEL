@@ -62,17 +62,27 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 
 	private View mProgressView;
 	private View[] mCircleViewList;
+	private boolean mIsRequestLogin;
 
 	private Handler mHandler = new Handler()
 	{
 		@Override
 		public void handleMessage(Message msg)
 		{
-			if (mProgressView.getVisibility() != View.VISIBLE)
+			switch (msg.what)
 			{
-				mProgressView.setVisibility(View.VISIBLE);
+				case 0:
+					moveToLoginStep();
+					break;
 
-				startSplashLoad();
+				case 1:
+					if (mProgressView.getVisibility() != View.VISIBLE)
+					{
+						mProgressView.setVisibility(View.VISIBLE);
+
+						startSplashLoad();
+					}
+					break;
 			}
 		}
 	};
@@ -86,6 +96,8 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 
 		// 세션 초기화.
 		VolleyHttpClient.destroyCookie();
+
+		mIsRequestLogin = false;
 
 		SharedPreferences.Editor editor = sharedPreference.edit();
 		editor.putBoolean(KEY_PREFERENCE_REGION_SETTING, false);
@@ -118,13 +130,18 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 			showDisabledNetworkPopup();
 		} else
 		{
-			moveToLoginStep();
-		}
+			if (mIsRequestLogin == false)
+			{
+				mIsRequestLogin = true;
 
-		if (mProgressView.getVisibility() != View.VISIBLE)
-		{
-			mHandler.removeMessages(0);
-			mHandler.sendEmptyMessageDelayed(0, 3000);
+				mHandler.sendEmptyMessageDelayed(0, 3000);
+			}
+
+			if (mProgressView.getVisibility() != View.VISIBLE)
+			{
+				mHandler.removeMessages(1);
+				mHandler.sendEmptyMessageDelayed(1, 2000);
+			}
 		}
 	}
 
@@ -133,7 +150,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 	{
 		super.onPause();
 
-		mHandler.removeMessages(0);
+		mHandler.removeMessages(1);
 	}
 
 	private void showDisabledNetworkPopup()
@@ -253,14 +270,8 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 	private void showMainActivity()
 	{
 		// sleep 2 second
-		mHandler.postDelayed(new Runnable()
-		{
-			public void run()
-			{
-				setResult(RESULT_OK);
-				finish();//MainActivity로 finish 
-			}
-		}, DURING_SPLASH_ACTIVITY_SHOW);
+		setResult(RESULT_OK);
+		finish();//MainActivity로 finish 
 	}
 
 	@Override
