@@ -31,6 +31,8 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.TranslateAnimation;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -325,6 +327,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 
 				// 체크아웃 화면을 만들어야 한다.
 				initCheckOutDateLayout((SaleTime) v.getTag());
+				setSelectedCheckOutDays(mCheckOutViews[0]);
 
 				showAnimationCheckIn(v, (Integer) v.getTag(v.getId()));
 				break;
@@ -392,6 +395,10 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		{
 			for (View dayView : mCheckInViews)
 			{
+				LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) dayView.getLayoutParams();
+				layoutParams.weight = 1;
+				layoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT;
+
 				dayView.setVisibility(View.VISIBLE);
 			}
 		}
@@ -404,20 +411,36 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 			return;
 		}
 
+		setCheckInLayoutEnabled(enabled);
+		setCheckOutLayoutEnabled(enabled);
+
+		mDaysBackgroundView.setEnabled(enabled);
+	}
+
+	private void setCheckInLayoutEnabled(boolean enabled)
+	{
+		if (mCheckInViews == null)
+		{
+			return;
+		}
+
 		for (View view : mCheckInViews)
 		{
 			view.setEnabled(enabled);
 		}
+	}
 
-		if (mCheckOutViews != null)
+	private void setCheckOutLayoutEnabled(boolean enabled)
+	{
+		if (mCheckOutViews == null)
 		{
-			for (View view : mCheckOutViews)
-			{
-				view.setEnabled(enabled);
-			}
+			return;
 		}
 
-		mDaysBackgroundView.setEnabled(enabled);
+		for (View view : mCheckOutViews)
+		{
+			view.setEnabled(enabled);
+		}
 	}
 
 	private void setSelectedCheckInDays(View view)
@@ -502,13 +525,21 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 
 	private void showAnimationCheckIn(final View view, final int position)
 	{
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
 		if (isUsedAnimatorApi() == true)
 		{
 			final View daysLayout02 = mDaysLayout.findViewById(R.id.daysLayout02);
-			daysLayout02.setVisibility(View.GONE);
+			final View toTextView = daysLayout02.findViewById(R.id.toTextView);
+			daysLayout02.setVisibility(View.INVISIBLE);
 
 			ValueAnimator valueAnimator = ValueAnimator.ofInt(0, 100);
-			valueAnimator.setDuration(300).addUpdateListener(new AnimatorUpdateListener()
+			valueAnimator.setDuration(400).addUpdateListener(new AnimatorUpdateListener()
 			{
 				@Override
 				public void onAnimationUpdate(ValueAnimator animation)
@@ -518,6 +549,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 					for (int i = 0; i < CHECK_IN_DATE; i++)
 					{
 						float translationX = value * (mCheckInViews[0].getX() - (mCheckInViews[i].getX() - mCheckInViews[i].getTranslationX())) / 100;
+
 						mCheckInViews[i].setTranslationX(translationX);
 
 						if (i != position)
@@ -526,7 +558,17 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 						}
 					}
 
-					daysLayout02.setAlpha(value / 100.0f);
+					float toX = mCheckOutViews[CHECK_OUT_DATE - 1].getX() - (toTextView.getX() - toTextView.getTranslationX());
+					toTextView.setTranslationX(toX - value * toX / 100.0f);
+
+					for (int i = 0; i < CHECK_OUT_DATE; i++)
+					{
+						float x1 = mCheckOutViews[CHECK_OUT_DATE - 1].getX() - (mCheckOutViews[i].getX() - mCheckOutViews[i].getTranslationX());
+						float translationX = x1 - value * x1 / 100.0f;
+						mCheckOutViews[i].setTranslationX(translationX);
+
+						daysLayout02.setAlpha(value / 100.0f);
+					}
 				}
 			});
 
@@ -536,6 +578,15 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 				public void onAnimationStart(Animator animation)
 				{
 					daysLayout02.setVisibility(View.VISIBLE);
+
+					// 체크아웃 카드를 오른쪽으로 정렬시킨다.
+					toTextView.setTranslationX(mCheckInViews[CHECK_IN_DATE - 1].getX() - mCheckInViews[1].getX());
+
+					for (int i = 0; i < CHECK_OUT_DATE; i++)
+					{
+						float translationX = mCheckInViews[CHECK_IN_DATE - 1].getX() - mCheckInViews[i + 2].getX();
+						mCheckOutViews[i].setTranslationX(translationX);
+					}
 				}
 
 				@Override
@@ -547,6 +598,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 				public void onAnimationEnd(Animator animation)
 				{
 					setDaysLayoutEnabled(true);
+					setCheckInLayoutEnabled(false);
 
 					for (int i = 0; i < CHECK_IN_DATE; i++)
 					{
@@ -555,8 +607,6 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 							mCheckInViews[i].setVisibility(View.INVISIBLE);
 						}
 					}
-
-					setSelectedCheckOutDays(mCheckOutViews[0]);
 
 					animation.removeAllListeners();
 				}
@@ -571,7 +621,62 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 			valueAnimator.start();
 		} else
 		{
+			for (int i = 0; i < CHECK_IN_DATE; i++)
+			{
+				if (i != position)
+				{
+					mCheckInViews[i].setVisibility(View.INVISIBLE);
+				}
+			}
 
+			TranslateAnimation translateAnimation = new TranslateAnimation(0, mCheckInViews[0].getLeft() - mCheckInViews[position].getLeft(), 0, 0);
+			translateAnimation.setDuration(300);
+			translateAnimation.setFillBefore(true);
+			translateAnimation.setFillAfter(true);
+			translateAnimation.setInterpolator(baseActivity, android.R.anim.decelerate_interpolator);
+
+			translateAnimation.setAnimationListener(new AnimationListener()
+			{
+
+				@Override
+				public void onAnimationStart(Animation animation)
+				{
+					// TODO Auto-generated method stub
+
+				}
+
+				@Override
+				public void onAnimationRepeat(Animation animation)
+				{
+					// TODO Auto-generated method stub
+
+				}
+
+				@Override
+				public void onAnimationEnd(Animation animation)
+				{
+					mCheckInViews[position].setAnimation(null);
+					setDaysLayoutEnabled(true);
+					setCheckInLayoutEnabled(false);
+
+					for (int i = 0; i < CHECK_IN_DATE; i++)
+					{
+						if (i == position)
+						{
+							((LinearLayout.LayoutParams) (mCheckInViews[i].getLayoutParams())).weight = 0;
+							((LinearLayout.LayoutParams) (mCheckInViews[i].getLayoutParams())).width = LinearLayout.LayoutParams.WRAP_CONTENT;
+						} else
+						{
+							mCheckInViews[i].setVisibility(View.GONE);
+						}
+					}
+
+					View daysLayout02 = mDaysLayout.findViewById(R.id.daysLayout02);
+					daysLayout02.setVisibility(View.VISIBLE);
+				}
+			});
+
+			mCheckInViews[position].startAnimation(translateAnimation);
 		}
 	}
 

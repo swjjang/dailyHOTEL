@@ -135,11 +135,12 @@
                 android:layout_weight="1" />
 
             <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                android:id="@+id/toTextView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="To"
+                android:text="to"
                 android:textColor="@drawable/selector_daytab_daycolor"
                 android:textSize="22dp" />
 
