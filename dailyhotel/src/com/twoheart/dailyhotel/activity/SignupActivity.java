@@ -12,6 +12,7 @@
  */
 package com.twoheart.dailyhotel.activity;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -27,6 +28,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.text.InputFilter;
@@ -38,7 +41,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.VolleyError;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.util.Crypto;
@@ -66,6 +75,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 	private String mUserIdx;
 
 	private Map<String, String> signupParams;
+	private HashMap<String, String> regPushParams;
 	private MixpanelAPI mMixpanel;
 
 	@Override
@@ -332,7 +342,6 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
 	public void storeLoginInfo()
 	{
-
 		String id = etEmail.getText().toString();
 		String pwd = Crypto.encrypt(etPwd.getText().toString()).replace("\n", "");
 
@@ -359,9 +368,85 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 		super.onDestroy();
 	}
 
+	private void signUpAndFinish()
+	{
+		unLockUI();
+
+		DailyToast.showToast(SignupActivity.this, R.string.toast_msg_success_to_signup, Toast.LENGTH_LONG);
+		finish();
+	}
+
 	private boolean isEmptyTextField(String fieldText)
 	{
 		return (TextUtils.isEmpty(fieldText) == true || fieldText.equals("null") == true || fieldText.trim().length() == 0);
+	}
+
+	private Boolean isGoogleServiceAvailable()
+	{
+		int resCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+
+		if (resCode != ConnectionResult.SUCCESS)
+		{
+			return false;
+		} else
+		{
+			return true;
+		}
+	}
+
+	private void regGcmId(final String idx)
+	{
+		if (isGoogleServiceAvailable() == false)
+		{
+			signUpAndFinish();
+			return;
+		}
+
+		new AsyncTask<Void, Void, String>()
+		{
+			@Override
+			protected String doInBackground(Void... params)
+			{
+				GoogleCloudMessaging instance = GoogleCloudMessaging.getInstance(SignupActivity.this);
+				String regId = "";
+
+				try
+				{
+					regId = instance.register(GCM_PROJECT_NUMBER);
+				} catch (IOException e)
+				{
+					ExLog.e(e.toString());
+				}
+
+				return regId;
+			}
+
+			@Override
+			protected void onPostExecute(String regId)
+			{
+				// gcm id가 없을 경우 스킵.
+				if (TextUtils.isEmpty(regId) == true)
+				{
+					signUpAndFinish();
+					return;
+				}
+
+				// 이 값을 서버에 등록하기.
+				regPushParams = new HashMap<String, String>();
+				regPushParams.put("user_idx", idx);
+				regPushParams.put("notification_id", regId);
+				regPushParams.put("device_type", GCM_DEVICE_TYPE_ANDROID);
+
+				mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_GCM_REGISTER).toString(), regPushParams, mGcmRegisterJsonResponseListener, new ErrorListener()
+				{
+					@Override
+					public void onErrorResponse(VolleyError arg0)
+					{
+						signUpAndFinish();
+					}
+				}));
+			}
+		}.execute();
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -374,7 +459,6 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-
 			try
 			{
 				if (response == null)
@@ -407,9 +491,9 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
 			} catch (Exception e)
 			{
+				unLockUI();
 				onError(e);
 			}
-
 		}
 	};
 
@@ -429,21 +513,16 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 				if (response.getBoolean("login") == true)
 				{
 					VolleyHttpClient.createCookie();
-					unLockUI();
-					//					showToast(getString(R.string.toast_msg_success_to_signup), Toast.LENGTH_LONG, false);
-
 					storeLoginInfo();
 
 					lockUI();
 					mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, SignupActivity.this));
-
-					//					finish();
 				}
 			} catch (Exception e)
 			{
+				unLockUI();
 				onError(e);
 			}
-
 		}
 	};
 
@@ -453,9 +532,6 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-
-			unLockUI();
-
 			try
 			{
 				int userIdx = response.getInt("idx");
@@ -473,10 +549,10 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 				props.put("method", "email");
 				mMixpanel.track("signup", props);
 
-				DailyToast.showToast(SignupActivity.this, R.string.toast_msg_success_to_signup, Toast.LENGTH_LONG);
-				finish();
+				regGcmId(userIdxStr);
 			} catch (Exception e)
 			{
+				unLockUI();
 				onError(e);
 			}
 		}
@@ -603,6 +679,38 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 			} catch (Exception e)
 			{
 				onError(e);
+			}
+		}
+	};
+
+	private DailyHotelJsonResponseListener mGcmRegisterJsonResponseListener = new DailyHotelJsonResponseListener()
+	{
+		@Override
+		public void onResponse(String url, JSONObject response)
+		{
+			unLockUI();
+
+			// 로그인 성공 - 유저 정보(인덱스) 가져오기 - 유저의 GCM키 등록 완료 한 경우 프리퍼런스에 키 등록후 종료
+			try
+			{
+				String result = null;
+
+				if (null != response)
+				{
+					result = response.getString("result");
+				}
+
+				if (true == "true".equalsIgnoreCase(result))
+				{
+					Editor editor = sharedPreference.edit();
+					editor.putString(KEY_PREFERENCE_GCM_ID, regPushParams.get("notification_id").toString());
+					editor.apply();
+				}
+			} catch (Exception e)
+			{
+			} finally
+			{
+				signUpAndFinish();
 			}
 		}
 	};
