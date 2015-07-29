@@ -9,7 +9,9 @@ import android.animation.Animator.AnimatorListener;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.MotionEventCompat;
@@ -38,7 +40,9 @@ import android.widget.TextView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMapLoadedCallback;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
+import com.google.android.gms.maps.GoogleMap.SnapshotReadyCallback;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -1839,7 +1843,7 @@ public class HotelDetailLayout
 			});
 
 			// 맵
-			SupportMapFragment mapFragment = (SupportMapFragment) mFragmentActivity.getSupportFragmentManager().findFragmentById(R.id.googleMapFragment);
+			final SupportMapFragment mapFragment = (SupportMapFragment) mFragmentActivity.getSupportFragmentManager().findFragmentById(R.id.googleMapFragment);
 
 			// 구글 플레이 서비스 업데이트 버튼이 연결이 잘 안되는 경우가 있다.
 			View viewGroup = mapFragment.getView();
@@ -1907,6 +1911,23 @@ public class HotelDetailLayout
 								{
 									mOnUserActionListener.showMap();
 								}
+							}
+						});
+
+						mGoogleMap.setOnMapLoadedCallback(new OnMapLoadedCallback()
+						{
+							@Override
+							public void onMapLoaded()
+							{
+								mGoogleMap.snapshot(new SnapshotReadyCallback()
+								{
+									@Override
+									public void onSnapshotReady(Bitmap bitmap)
+									{
+										View googleMapLayout = view.findViewById(R.id.googleMapLayout);
+										googleMapLayout.setBackgroundDrawable(new BitmapDrawable(mFragmentActivity.getResources(), bitmap));
+									}
+								});
 							}
 						});
 					}
