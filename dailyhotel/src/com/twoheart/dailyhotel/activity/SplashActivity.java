@@ -26,6 +26,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnKeyListener;
+import android.content.SharedPreferences.Editor;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -101,7 +102,9 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 
 		SharedPreferences.Editor editor = sharedPreference.edit();
 		editor.putBoolean(KEY_PREFERENCE_REGION_SETTING, false);
+		editor.remove(KEY_PREFERENCE_GCM_ID);
 		editor.commit();
+		editor.apply();
 
 		mProgressView = findViewById(R.id.progressLayout);
 		mProgressView.setVisibility(View.INVISIBLE);

@@ -38,9 +38,8 @@ public class KakaoLinkManager implements Constants
 		try
 		{
 			kkMsgBuilder.addText(text);
-			kkMsgBuilder.addAppButton(mContext.getString(R.string.kakao_btn_move));
+			kkMsgBuilder.addAppButton(mContext.getString(R.string.kakao_btn_invited_friend));
 			kkLink.sendMessage(kkMsgBuilder.build(), mContext);
-			ExLog.e(" / " + "sendInviteMsgKakaoLink : text = " + text);
 		} catch (KakaoParameterException e)
 		{
 			ExLog.e(e.toString());
