@@ -73,6 +73,7 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 	private TextView tvCredit;
 	private String mRecommendCode;
 	private ArrayList<Credit> mCreditList;
+	private String mUserName;
 
 	private MixpanelAPI mMixpanel;
 	private String idx;
@@ -170,7 +171,9 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 				props.put("datetime", strDate);
 				mMixpanel.track("kakaoInvitation", props);
 
-				String msg = getString(R.string.kakaolink_msg_prefix) + mRecommendCode + getString(R.string.kakaolink_msg_suffix);
+//				String msg = getString(R.string.kakaolink_msg_prefix) + mRecommendCode + getString(R.string.kakaolink_msg_suffix);
+				String msg = getString(R.string.kakaolink_msg_invited_friend, mUserName, mUserName, mRecommendCode);
+				
 				KakaoLinkManager.newInstance(getActivity()).sendInviteMsgKakaoLink(msg);
 			} catch (Exception e)
 			{
@@ -250,6 +253,7 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 
 				mRecommendCode = response.getString("rndnum");
 				tvRecommenderCode.setText(response.getString("rndnum"));
+				mUserName = response.getString("name");
 
 				idx = response.getString("idx");
 
