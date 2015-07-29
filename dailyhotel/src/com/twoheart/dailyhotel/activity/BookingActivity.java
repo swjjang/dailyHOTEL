@@ -1706,6 +1706,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					{
 						int bonus = jsonData.getInt("user_bonus");
 
+						if (bonus < 0)
+						{
+							bonus = 0;
+						}
+
 						if (mPay.isSaleCredit() == true && bonus != mPay.getCredit().getBonus())
 						{
 							mPay.getCredit().setBonus(bonus);
@@ -1742,6 +1747,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 						String email = jsonData.getString("user_email");
 						String userIndex = jsonData.getString("user_idx");
 						int bonus = jsonData.getInt("user_bonus");
+
+						if (bonus < 0)
+						{
+							bonus = 0;
+						}
 
 						mPay.setCredit(new Credit(null, bonus, null));
 
