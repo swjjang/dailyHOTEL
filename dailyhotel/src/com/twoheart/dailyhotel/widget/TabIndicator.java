@@ -194,11 +194,6 @@ public class TabIndicator extends HorizontalScrollView implements OnClickListene
 			layoutParams = new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT);
 			layoutParams.weight = 1;
 
-			if (hasSubText == true && i == size - 1)
-			{
-				layoutParams.weight = 1.2f;
-			}
-
 			mLinearLayout.addView(tabIndicatorItem, layoutParams);
 		}
 
@@ -557,9 +552,19 @@ public class TabIndicator extends HorizontalScrollView implements OnClickListene
 			if (selected == true)
 			{
 				mTitleTextView.setTypeface(mTitleTextView.getTypeface(), Typeface.BOLD);
+
+				if (mHasSubText == true)
+				{
+					mDayTextView.setTypeface(mDayTextView.getTypeface(), Typeface.BOLD);
+				}
 			} else
 			{
 				mTitleTextView.setTypeface(mTitleTextView.getTypeface(), Typeface.NORMAL);
+
+				if (mHasSubText == true)
+				{
+					mDayTextView.setTypeface(mDayTextView.getTypeface(), Typeface.NORMAL);
+				}
 			}
 
 			mTitleTextView.setSelected(selected);

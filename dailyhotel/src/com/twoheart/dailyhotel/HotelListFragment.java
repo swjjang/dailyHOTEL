@@ -32,7 +32,6 @@ import android.animation.Animator.AnimatorListener;
 import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -122,13 +121,13 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 		mHotelListView = (PinnedSectionListView) view.findViewById(R.id.listview_hotel_list);
 
-		if (isCanActionBarAnimation() == true)
+		if (Util.isOverAPI12() == true)
 		{
 			mHotelListView.addHeaderView(inflater.inflate(R.layout.list_header_empty, null, true));
 			mHotelListView.setOnScrollListener(mOnScrollListener);
 		} else
 		{
-			mHotelListView.setPadding(0, Util.dpToPx(baseActivity, 116), 0, 0);
+			mHotelListView.setPadding(0, Util.dpToPx(baseActivity, 119), 0, 0);
 		}
 
 		// 이벤트를 마지막에 넣는다.
@@ -140,7 +139,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		mEmptyView = view.findViewById(R.id.emptyView);
 
 		mMapLayout = (FrameLayout) view.findViewById(R.id.hotelMapLayout);
-		mMapLayout.setPadding(0, Util.dpToPx(baseActivity, 116) + 2, 0, 0);
+		mMapLayout.setPadding(0, Util.dpToPx(baseActivity, 119) + 2, 0, 0);
 
 		//		mHotelListMapFragment = (HotelListMapFragment) getChildFragmentManager().findFragmentById(R.id.hotelMapFragment);
 
@@ -389,16 +388,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		setVisibility(type, true);
 	}
 
-	protected boolean isCanActionBarAnimation()
-	{
-		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1;
-	}
-
-	protected boolean isUsedAnimatorApi()
-	{
-		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1;
-	}
-
 	public void setSaleTime(SaleTime saleTime)
 	{
 		mSaleTime = saleTime;
@@ -507,7 +496,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 	private void showActionBar(BaseActivity baseActivity)
 	{
-		if (isCanActionBarAnimation() == false)
+		if (Util.isOverAPI12() == false)
 		{
 			return;
 		}
@@ -536,7 +525,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 	public void showActionBarAnimatoin(BaseActivity baseActivity)
 	{
-		if (isCanActionBarAnimation() == false || mIsClosedActionBar == false || mLockActionBar == true)
+		if (Util.isOverAPI12() == false || mIsClosedActionBar == false || mLockActionBar == true)
 		{
 			return;
 		}
@@ -605,7 +594,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 	private void hideActionbarAnimation(BaseActivity baseActivity)
 	{
-		if (isCanActionBarAnimation() == false || mIsClosedActionBar == true || mLockActionBar == true)
+		if (Util.isOverAPI12() == false || mIsClosedActionBar == true || mLockActionBar == true)
 		{
 			return;
 		}

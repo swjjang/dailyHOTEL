@@ -50,11 +50,11 @@
 	<color name="black_a25">#40000000</color>
 	<color name="black_a80">#cc000000</color>
 	
-	<color name="tab_text">#a6000000</color>
+	<color name="tab_text">#1c1c1c</color>
 	<color name="tab_subtext_selected">#ccff7a7a</color>
 	<color name="tab_underline">#d6d6d6</color>
 	
-	<color name="daytab_text">#9a9a9a</color>
+	<color name="daytab_text">#1c1c1c</color>
 	<color name="booking_vline">#c2c2c2</color>
 	<color name="booking_hline">#e0e0e0</color>
 	<color name="booking_hline01">#d4d4d4</color>

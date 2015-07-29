@@ -15,7 +15,7 @@
         android:id="@+id/emptyView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="116dp"
+        android:layout_marginTop="119dp"
         layout="@layout/view_empty_list"
         android:visibility="gone" />
 
@@ -58,78 +58,94 @@
     <RelativeLayout
         android:id="@+id/daysLayout"
         android:layout_width="match_parent"
-        android:layout_height="135dp"
+        android:layout_height="131dp"
         android:layout_marginTop="110dp"
         android:background="@color/white"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
+        android:paddingLeft="13dp"
+        android:paddingRight="13dp"
         android:visibility="gone" >
 
-        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-            android:id="@+id/checkInOutTextView"
+        <LinearLayout
+            android:id="@+id/checkInOutLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingBottom="10dp"
-            android:paddingTop="15dp"
-            android:text="@string/frag_hotel_list_checkin"
-            android:textColor="@color/dh_theme_color"
-            android:textSize="22dp" />
+            android:paddingBottom="24dp"
+            android:paddingTop="24dp" >
+
+            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right|center_vertical"
+                android:text="@string/frag_hotel_list_check"
+                android:textColor="@color/dh_theme_color"
+                android:textSize="16dp" />
+
+            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                android:id="@+id/checkInOutTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left|center_vertical"
+                android:text="@string/frag_hotel_list_checkin"
+                android:textColor="@color/dh_theme_color"
+                android:textSize="16dp" />
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/daysLayout01"
             android:layout_width="match_parent"
-            android:layout_height="105dp"
-            android:layout_below="@id/checkInOutTextView"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/checkInOutLayout"
             android:baselineAligned="false"
             android:visibility="gone" >
 
             <include
                 android:id="@+id/item01"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 layout="@layout/view_selectday_item" />
 
             <include
                 android:id="@+id/item02"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 layout="@layout/view_selectday_item" />
 
             <include
                 android:id="@+id/item03"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 layout="@layout/view_selectday_item" />
 
             <include
                 android:id="@+id/item04"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 layout="@layout/view_selectday_item" />
 
             <include
                 android:id="@+id/item05"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 layout="@layout/view_selectday_item" />
 
             <include
                 android:id="@+id/item06"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 layout="@layout/view_selectday_item" />
 
             <include
                 android:id="@+id/item07"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 layout="@layout/view_selectday_item" />
         </LinearLayout>
@@ -137,58 +153,59 @@
         <LinearLayout
             android:id="@+id/daysLayout02"
             android:layout_width="match_parent"
-            android:layout_height="105dp"
-            android:layout_below="@id/checkInOutTextView"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/checkInOutLayout"
             android:baselineAligned="false"
             android:visibility="gone" >
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
             <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                 android:id="@+id/toTextView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="27dp"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:text="to"
-                android:textColor="@drawable/selector_daytab_daycolor"
-                android:textSize="22dp" />
+                android:gravity="center_horizontal"
+                android:text="@string/frag_hotel_days_tab_to"
+                android:textColor="@color/daytab_text"
+                android:textSize="12dp" />
 
             <include
                 android:id="@+id/item08"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 layout="@layout/view_selectday_item" />
 
             <include
                 android:id="@+id/item09"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 layout="@layout/view_selectday_item" />
 
             <include
                 android:id="@+id/item10"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 layout="@layout/view_selectday_item" />
 
             <include
                 android:id="@+id/item11"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 layout="@layout/view_selectday_item" />
 
             <include
                 android:id="@+id/item12"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 layout="@layout/view_selectday_item" />
         </LinearLayout>

@@ -230,6 +230,11 @@ public class Util implements Constants
 		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
 	}
 
+	public static boolean isOverAPI12()
+	{
+		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1;
+	}
+
 	public static boolean isTelephonyEnabled(Context context)
 	{
 		return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
