@@ -1913,13 +1913,16 @@ public class HotelDetailLayout
 				});
 			} else
 			{
-				LatLng latlng = new LatLng(mHotelDetail.latitude, mHotelDetail.longitude);
-
-				Marker marker = mGoogleMap.addMarker(new MarkerOptions().position(latlng));
-				marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.info_ic_map_large));
-
-				CameraPosition cameraPosition = new CameraPosition.Builder().target(latlng).zoom(15).build();
-				mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+				//				LatLng latlng = new LatLng(mHotelDetail.latitude, mHotelDetail.longitude);
+				//				
+				//				if(mMarker == null)
+				//				{
+				//					mMarker = mGoogleMap.addMarker(new MarkerOptions().position(latlng));
+				//					mMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.info_ic_map_large));
+				//				}
+				//
+				//				CameraPosition cameraPosition = new CameraPosition.Builder().target(latlng).zoom(15).build();
+				//				mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 			}
 
 			return view;
