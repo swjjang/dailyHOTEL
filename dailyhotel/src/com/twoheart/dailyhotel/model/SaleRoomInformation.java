@@ -7,24 +7,24 @@ import android.os.Parcelable;
 
 public class SaleRoomInformation implements Parcelable
 {
-	public int saleIndex;
-	public int discount;
+	public int roomIndex;
 	public String roomName;
 	public String option;
 	public String roomBenefit;
-	public int availableRooms;
 	public boolean isOverseas;
 	public String hotelName;
+	public int averageDiscount;
+	public int nights;
 
 	public SaleRoomInformation(Parcel in)
 	{
 		readFromParcel(in);
 	}
 
-	public SaleRoomInformation(String hotelName, JSONObject jsonObject, boolean isOverseas) throws Exception
+	public SaleRoomInformation(String hotelName, JSONObject jsonObject, boolean isOverseas, int nights) throws Exception
 	{
-		saleIndex = jsonObject.getInt("sale_idx");
-		discount = jsonObject.getInt("discount");
+		roomIndex = jsonObject.getInt("room_idx");
+		averageDiscount = jsonObject.getInt("discount_avg");
 		roomName = jsonObject.getString("room_name");
 		option = jsonObject.getString("option");
 
@@ -33,35 +33,34 @@ public class SaleRoomInformation implements Parcelable
 			roomBenefit = jsonObject.getString("room_benefit");
 		}
 
-		availableRooms = jsonObject.getInt("available_rooms");
-
 		this.isOverseas = isOverseas;
 		this.hotelName = hotelName;
+		this.nights = nights;
 	}
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags)
 	{
-		dest.writeInt(saleIndex);
-		dest.writeInt(discount);
+		dest.writeInt(roomIndex);
+		dest.writeInt(averageDiscount);
 		dest.writeString(roomName);
 		dest.writeString(option);
 		dest.writeString(roomBenefit);
-		dest.writeInt(availableRooms);
 		dest.writeInt(isOverseas ? 1 : 0);
 		dest.writeString(hotelName);
+		dest.writeInt(nights);
 	}
 
 	protected void readFromParcel(Parcel in)
 	{
-		saleIndex = in.readInt();
-		discount = in.readInt();
+		roomIndex = in.readInt();
+		averageDiscount = in.readInt();
 		roomName = in.readString();
 		option = in.readString();
 		roomBenefit = in.readString();
-		availableRooms = in.readInt();
 		isOverseas = in.readInt() == 1 ? true : false;
 		hotelName = in.readString();
+		nights = in.readInt();
 	}
 
 	@Override

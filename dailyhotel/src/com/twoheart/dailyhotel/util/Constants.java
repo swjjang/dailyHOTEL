@@ -378,6 +378,7 @@ public interface Constants
 	public static final String NAME_INTENT_EXTRA_DATA_DAILYTIME = "dailyTime";
 	public static final String NAME_INTENT_EXTRA_DATA_DAYOFDAYS = "dayOfDays";
 	public static final String NAME_INTENT_EXTRA_DATA_TYPE = "type";
+	public static final String NAME_INTENT_EXTRA_DATA_ROOMINDEX = "roomIndex";
 
 	// Push Type
 	public static final int PUSH_TYPE_NOTICE = 0;

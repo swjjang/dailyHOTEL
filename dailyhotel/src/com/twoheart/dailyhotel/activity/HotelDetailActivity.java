@@ -51,7 +51,7 @@ public class HotelDetailActivity extends BaseActivity
 	private static final int DURATION_HOTEL_IMAGE_SHOW = 4000;
 
 	private HotelDetailEx mHotelDetail;
-	private SaleTime mSaleTime;
+	private SaleTime mCheckInSaleTime;
 
 	private int mCurrentImage;
 	private SaleRoomInformation mSelectedSaleRoomInformation;
@@ -142,10 +142,10 @@ public class HotelDetailActivity extends BaseActivity
 			long dailyTime = intent.getLongExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME, 0);
 			int dayOfDays = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_DAYOFDAYS, -1);
 
-			mSaleTime = new SaleTime();
+			mCheckInSaleTime = new SaleTime();
 
-			mSaleTime.setDailyTime(dailyTime);
-			mSaleTime.setOffsetDailyDay(dayOfDays);
+			mCheckInSaleTime.setDailyTime(dailyTime);
+			mCheckInSaleTime.setOffsetDailyDay(dayOfDays);
 
 			int hotelIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, -1);
 			int nights = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 0);
@@ -157,7 +157,7 @@ public class HotelDetailActivity extends BaseActivity
 		{
 			mIsStartByShare = false;
 
-			mSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
+			mCheckInSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
 
 			int hotelIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, -1);
 			int nights = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 0);
@@ -167,7 +167,7 @@ public class HotelDetailActivity extends BaseActivity
 			String hotelName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME);
 			String hotelImageUrl = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL);
 
-			if (mSaleTime == null || hotelIndex == -1 || hotelName == null || nights <= 0)
+			if (mCheckInSaleTime == null || hotelIndex == -1 || hotelName == null || nights <= 0)
 			{
 				Util.restartApp(this);
 				return;
@@ -304,7 +304,7 @@ public class HotelDetailActivity extends BaseActivity
 		Intent intent = new Intent(HotelDetailActivity.this, BookingActivity.class);
 		intent.putExtra(NAME_INTENT_EXTRA_DATA_SALEROOMINFORMATION, saleRoomInformation);
 		intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, mHotelDetail.hotelIndex);
-		intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mSaleTime);
+		intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mCheckInSaleTime);
 
 		startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING);
 		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
@@ -781,11 +781,11 @@ public class HotelDetailActivity extends BaseActivity
 
 				if (mIsStartByShare == true)
 				{
-					mSaleTime.setCurrentTime(response.getLong("currentDateTime"));
-					mSaleTime.setOpenTime(response.getLong("openDateTime"));
-					mSaleTime.setCloseTime(response.getLong("closeDateTime"));
+					mCheckInSaleTime.setCurrentTime(response.getLong("currentDateTime"));
+					mCheckInSaleTime.setOpenTime(response.getLong("openDateTime"));
+					mCheckInSaleTime.setCloseTime(response.getLong("closeDateTime"));
 
-					long shareDailyTime = mSaleTime.getDayOfDaysHotelDate().getTime();
+					long shareDailyTime = mCheckInSaleTime.getDayOfDaysHotelDate().getTime();
 					long todayDailyTime = response.getLong("dailyDateTime");
 
 					SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMdd", Locale.KOREA);
@@ -802,10 +802,10 @@ public class HotelDetailActivity extends BaseActivity
 						return;
 					}
 
-					if (mSaleTime.isSaleTime() == true)
+					if (mCheckInSaleTime.isSaleTime() == true)
 					{
 						// 호텔 정보를 가져온다.
-						String params = String.format("?hotel_idx=%d&checkin_date=%s&length_stay=%d", mHotelDetail.hotelIndex, mSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), mHotelDetail.nights);
+						String params = String.format("?hotel_idx=%d&checkin_date=%s&length_stay=%d", mHotelDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), mHotelDetail.nights);
 						mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_HOTEL_INFO).append(params).toString(), null, mHotelDetailJsonResponseListener, HotelDetailActivity.this));
 					} else
 					{
@@ -823,7 +823,7 @@ public class HotelDetailActivity extends BaseActivity
 					if (saleTime.isSaleTime() == true)
 					{
 						// 호텔 정보를 가져온다.
-						String params = String.format("?hotel_idx=%d&checkin_date=%s&length_stay=%d", mHotelDetail.hotelIndex, mSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), mHotelDetail.nights);
+						String params = String.format("?hotel_idx=%d&checkin_date=%s&length_stay=%d", mHotelDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), mHotelDetail.nights);
 						mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_HOTEL_INFO).append(params).toString(), null, mHotelDetailJsonResponseListener, HotelDetailActivity.this));
 					} else
 					{

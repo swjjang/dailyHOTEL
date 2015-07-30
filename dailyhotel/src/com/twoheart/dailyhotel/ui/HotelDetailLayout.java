@@ -348,7 +348,7 @@ public class HotelDetailLayout
 
 		DecimalFormat comma = new DecimalFormat("###,##0");
 		String currency = mActivity.getString(R.string.currency);
-		String price = comma.format(information.discount);
+		String price = comma.format(information.averageDiscount);
 
 		if (nights > 1)
 		{

@@ -123,7 +123,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 	private Pay mPay;
 	private CreditCard mSelectedCreditCard;
-	private SaleTime mSaleTime;
 	private boolean mIsChangedPay; // 가격이 변경된 경우.
 
 	private int mReqCode;
@@ -135,6 +134,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 	//	private String locale;
 	private int mHotelIdx;
+	private SaleTime mCheckInSaleTime;
 	private boolean mIsEditMode;
 
 	private MixpanelAPI mMixpanel;
@@ -158,8 +158,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		if (bundle != null)
 		{
 			mPay.setSaleRoomInformation((SaleRoomInformation) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_SALEROOMINFORMATION));
-			mHotelIdx = bundle.getInt(NAME_INTENT_EXTRA_DATA_HOTELIDX);
-			mSaleTime = bundle.getParcelable(NAME_INTENT_EXTRA_DATA_SALETIME);
+			mCheckInSaleTime = bundle.getParcelable(NAME_INTENT_EXTRA_DATA_SALETIME);
 		}
 
 		if (mPay.getSaleRoomInformation() == null)
@@ -283,7 +282,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 	private void updatePayPrice(boolean applyCredit)
 	{
-		int originalPrice = mPay.getSaleRoomInformation().discount;
+		int originalPrice = mPay.getSaleRoomInformation().averageDiscount;
 		int credit = mPay.getCredit().getBonus();
 
 		DecimalFormat comma = new DecimalFormat("###,##0");
@@ -479,7 +478,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 		// 해당 호텔이 결제하기를 못하는 경우를 처리한다.
 		Map<String, String> updateParams = new HashMap<String, String>();
-		updateParams.put("saleIdx", String.valueOf(mPay.getSaleRoomInformation().saleIndex));
+		updateParams.put("room_idx", String.valueOf(mPay.getSaleRoomInformation().roomIndex));
 
 		mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_VALIDATE).toString(), updateParams, mReservValidateJsonResponseListener, BookingActivity.this));
 
@@ -696,7 +695,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 			Map<String, String> params = new HashMap<String, String>();
 
-			params.put("saleIdx", String.valueOf(mPay.getSaleRoomInformation().saleIndex));
+			params.put("room_idx", String.valueOf(mPay.getSaleRoomInformation().roomIndex));
 			params.put("billkey", mSelectedCreditCard.billingkey);
 			params.put("mileage", mileage);
 			params.put("guest_name", guest.name);
@@ -793,7 +792,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 						Editor editor = sharedPreference.edit();
 						editor.putString(KEY_PREFERENCE_HOTEL_NAME, mPay.getSaleRoomInformation().hotelName);
-						editor.putInt(KEY_PREFERENCE_HOTEL_SALE_IDX, payData.getSaleRoomInformation().saleIndex);
+						editor.putInt(KEY_PREFERENCE_HOTEL_SALE_IDX, payData.getSaleRoomInformation().roomIndex);
 						editor.putString(KEY_PREFERENCE_HOTEL_CHECKOUT, payData.getCheckOut());
 						editor.putString(KEY_PREFERENCE_USER_IDX, payData.getCustomer().getUserIdx());
 						editor.commit();
@@ -901,16 +900,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			}
 
 			SimpleAlertDialog.build(this, title, msg, posTitle, posListener).show();
-
-			//		} else if (requestCode == CODE_REQUEST_ACTIVITY_LOGIN)
-			//		{
-			//			if (resultCode == RESULT_OK)
-			//			{
-			//				lockUI();
-			//				
-			//				// 호텔 디테일 정보 재 요청
-			//				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_HOTEL_DETAIL).append('/').append(mPay.getHotelDetail().getHotel().getIdx()).append("/").append(mSaleTime.getRequestHotelDateFormat("yy/MM/dd")).toString(), null, mFinalCheckPayJsonResponseListener, this));
-			//			}
 		} else if (requestCode == CODE_REQUEST_ACTIVITY_CREDITCARD_MANAGER)
 		{
 			// 신용카드 간편 결제 선택후
@@ -1352,7 +1341,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				mAliveCallSource = "";
 
 				// 호텔 디테일 정보 재 요청
-				String params = String.format("?sale_idx=%d", mPay.getSaleRoomInformation().saleIndex);
+				String params = String.format("?room_idx=%d&checkin_date=%s&length_stay=%d", mPay.getSaleRoomInformation().roomIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), mPay.getSaleRoomInformation().nights);
 
 				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_ROOM_PAYMENT).append(params).toString(), null, mSaleRoomPaymentJsonResponseListener, BookingActivity.this));
 			}
@@ -1754,7 +1743,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 						}
 
 						// 2. 마지막 가격 및 기타 이상이 없는지 검사
-						String params = String.format("?sale_idx=%d", mPay.getSaleRoomInformation().saleIndex);
+						String params = String.format("?room_idx=%d&checkin_date=%s&length_stay=%d", mPay.getSaleRoomInformation().roomIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), mPay.getSaleRoomInformation().nights);
 
 						mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_ROOM_PAYMENT).append(params).toString(), null, mFinalCheckPayJsonResponseListener, BookingActivity.this));
 
@@ -1795,7 +1784,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 							updatePayPrice(true);
 						}
 
-						int originalPrice = mPay.getSaleRoomInformation().discount;
+						int originalPrice = mPay.getSaleRoomInformation().averageDiscount;
 						DecimalFormat comma = new DecimalFormat("###,##0");
 
 						tvOriginalPriceValue.setText(comma.format(originalPrice) + Html.fromHtml(getString(R.string.currency)));
@@ -1871,7 +1860,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 							}
 						}
 
-						String params = String.format("?sale_idx=%d", mPay.getSaleRoomInformation().saleIndex);
+						String params = String.format("?room_idx=%d&checkin_date=%s&length_stay=%d", mPay.getSaleRoomInformation().roomIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), mPay.getSaleRoomInformation().nights);
 
 						// 2. 화면 정보 얻기
 						mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_ROOM_PAYMENT).append(params).toString(), null, mSaleRoomPaymentJsonResponseListener, BookingActivity.this));
@@ -2144,12 +2133,12 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				SaleRoomInformation saleRoomInformation = mPay.getSaleRoomInformation();
 
 				// 가격이 변동 되었다.
-				if (saleRoomInformation.discount != discount)
+				if (saleRoomInformation.averageDiscount != discount)
 				{
 					mIsChangedPay = true;
 				}
 
-				saleRoomInformation.discount = discount;
+				saleRoomInformation.averageDiscount = discount;
 
 				// Check In
 				Calendar calendarCheckin = DailyCalendar.getInstance();
@@ -2246,12 +2235,12 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				SaleRoomInformation saleRoomInformation = mPay.getSaleRoomInformation();
 
 				// 가격이 변동 되었다.
-				if (saleRoomInformation.discount != discount)
+				if (saleRoomInformation.averageDiscount != discount)
 				{
 					mIsChangedPay = true;
 				}
 
-				saleRoomInformation.discount = discount;
+				saleRoomInformation.averageDiscount = discount;
 
 				// 판매 중지 상품으로 호텔 리스트로 복귀 시킨다.
 				if (isOnSale == false || availableRooms == 0)
