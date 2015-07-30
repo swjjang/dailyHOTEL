@@ -54,6 +54,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.HotelDetailActivity;
 import com.twoheart.dailyhotel.adapter.HotelDetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.model.DetailInformation;
+import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.HotelDetailEx;
 import com.twoheart.dailyhotel.model.SaleRoomInformation;
 import com.twoheart.dailyhotel.util.ABTestPreference;
@@ -287,11 +288,11 @@ public class HotelDetailLayout
 
 			setBookingStatus(STATUS_SEARCH_ROOM);
 
-			initRoomTypeLayout(saleRoomList);
+			initRoomTypeLayout(hotelDetail.nights, saleRoomList);
 		}
 	}
 
-	private void initRoomTypeLayout(ArrayList<SaleRoomInformation> saleRoomList)
+	private void initRoomTypeLayout(int nights, ArrayList<SaleRoomInformation> saleRoomList)
 	{
 		if (saleRoomList == null || saleRoomList.size() == 0)
 		{
@@ -311,7 +312,7 @@ public class HotelDetailLayout
 			{
 				mRoomTypeView[i].setVisibility(View.VISIBLE);
 				mRoomTypeView[i].setTag(saleRoomList.get(i));
-				makeRoomTypeLayout(mRoomTypeView[i], saleRoomList.get(i));
+				makeRoomTypeLayout(mRoomTypeView[i], saleRoomList.get(i), nights);
 			} else
 			{
 				mRoomTypeView[i].setVisibility(View.GONE);
@@ -331,9 +332,9 @@ public class HotelDetailLayout
 		selectRoomType(mRoomTypeView[0], saleRoomList.get(0));
 	}
 
-	private void makeRoomTypeLayout(View view, SaleRoomInformation information)
+	private void makeRoomTypeLayout(View view, SaleRoomInformation information, int nights)
 	{
-		if (view == null || information == null)
+		if (view == null || information == null || nights <= 0)
 		{
 			return;
 		}
@@ -349,7 +350,14 @@ public class HotelDetailLayout
 		String currency = mActivity.getString(R.string.currency);
 		String price = comma.format(information.discount);
 
-		priceTextView.setText(price + currency);
+		if (nights > 1)
+		{
+			String text = mActivity.getString(R.string.label_hotel_list_extendedstay_discount, price, currency);
+			priceTextView.setText(text);
+		} else
+		{
+			priceTextView.setText(price + currency);
+		}
 
 		if (Util.isTextEmpty(information.option) == true)
 		{
@@ -1723,8 +1731,10 @@ public class HotelDetailLayout
 			// 등급
 			mHotelGradeTextView = (TextView) view.findViewById(R.id.hotelGradeTextView);
 			mHotelGradeTextView.setVisibility(View.VISIBLE);
-			mHotelGradeTextView.setText(hotelDetail.getHotel().getCategory().getName(mFragmentActivity));
-			mHotelGradeTextView.setBackgroundResource(hotelDetail.getHotel().getCategory().getColorResId());
+
+			Hotel.HotelGrade hotelGrade = Hotel.HotelGrade.valueOf(hotelDetail.grade);
+			mHotelGradeTextView.setText(hotelGrade.getName(mFragmentActivity));
+			mHotelGradeTextView.setBackgroundResource(hotelGrade.getColorResId());
 
 			// 호텔명
 			mHotelNameTextView = (TextView) view.findViewById(R.id.hotelNameTextView);

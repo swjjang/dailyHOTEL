@@ -7,8 +7,8 @@ import org.json.JSONObject;
 
 public class HotelDetailEx
 {
-	private Hotel mHotel;
-
+	public int hotelIndex;
+	public int nights;
 	public String grade;
 	public String hotelName;
 	public String address;
@@ -22,9 +22,10 @@ public class HotelDetailEx
 	private ArrayList<DetailInformation> mMoreInformationList;
 	private ArrayList<SaleRoomInformation> mSaleRoomList;
 
-	public HotelDetailEx(Hotel hotel)
+	public HotelDetailEx(int hotelIndex, int nights)
 	{
-		mHotel = hotel;
+		this.hotelIndex = hotelIndex;
+		this.nights = nights;
 	}
 
 	public void setData(JSONObject jsonObject) throws Exception
@@ -90,11 +91,6 @@ public class HotelDetailEx
 		{
 			mSaleRoomList.add(new SaleRoomInformation(hotelName, saleRoomJSONArray.getJSONObject(i), isOverseas));
 		}
-	}
-
-	public Hotel getHotel()
-	{
-		return mHotel;
 	}
 
 	public ArrayList<String> getImageUrlList()

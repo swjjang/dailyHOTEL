@@ -47,6 +47,7 @@ import com.twoheart.dailyhotel.activity.HotelDetailActivity;
 import com.twoheart.dailyhotel.activity.SelectAreaActivity;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.AreaItem;
+import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -539,6 +540,147 @@ public class HotelMainFragment extends BaseFragment
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// UserActionListener
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	private OnUserActionListener mOnUserActionListener = new OnUserActionListener()
+	{
+
+		@Override
+		public void selectHotel(HotelListViewItem hotelListViewItem, int hotelIndex, SaleTime saleTime)
+		{
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null)
+			{
+				return;
+			}
+
+			if (isLockUiComponent() == true || baseActivity.isLockUiComponent() == true)
+			{
+				return;
+			}
+
+			lockUiComponent();
+			baseActivity.lockUiComponent();
+
+			if (hotelListViewItem == null || hotelIndex < 0)
+			{
+				ExLog.d("hotelListViewItem == null || hotelIndex < 0");
+
+				releaseUiComponent();
+				baseActivity.releaseUiComponent();
+				return;
+			}
+
+			switch (hotelListViewItem.getType())
+			{
+				case HotelListViewItem.TYPE_ENTRY:
+				{
+					Hotel hotel = hotelListViewItem.getItem();
+
+					String region = baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
+					SharedPreferences.Editor editor = baseActivity.sharedPreference.edit();
+					editor.putString(KEY_PREFERENCE_REGION_SELECT_GA, region);
+					editor.putString(KEY_PREFERENCE_HOTEL_NAME_GA, hotel.getName());
+					editor.commit();
+
+					Intent intent = new Intent(baseActivity, HotelDetailActivity.class);
+					intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
+					intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, hotelIndex);
+					intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, hotel.nights);
+
+					intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME, hotel.getName());
+					intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, hotel.getImage());
+
+					startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTELTAB);
+
+					mUserAnalyticsActionListener.selectHotel(hotelListViewItem.getItem().getName(), hotelIndex);
+					break;
+				}
+
+				case HotelListViewItem.TYPE_SECTION:
+				default:
+					releaseUiComponent();
+					baseActivity.releaseUiComponent();
+					break;
+			}
+		}
+
+		@Override
+		public void selectDay(SaleTime checkInSaleTime, SaleTime checkOutSaleTime, boolean isListSelectionTop)
+		{
+			if (isLockUiComponent() == true || checkInSaleTime == null || checkOutSaleTime == null)
+			{
+				return;
+			}
+
+			lockUiComponent();
+
+			// 선택탭의 이름을 수정한다.
+			String checkInDay = getString(R.string.label_format_tabday, checkInSaleTime.getDailyDay(), checkInSaleTime.getDailyDayOftheWeek());
+			String checkOutDay = getString(R.string.label_format_tabday, checkOutSaleTime.getDailyDay(), checkOutSaleTime.getDailyDayOftheWeek());
+
+			mTabIndicator.setSubTextEnable(2, true);
+			mTabIndicator.setSubText(2, checkInDay + "-" + checkOutDay);
+
+			refreshHotelList(mSelectedProvince, isListSelectionTop);
+
+			releaseUiComponent();
+		}
+
+		@Override
+		public void toggleViewType()
+		{
+			if (isLockUiComponent() == true)
+			{
+				return;
+			}
+
+			lockUI();
+
+			switch (mHotelViewType)
+			{
+				case LIST:
+					mHotelViewType = HOTEL_VIEW_TYPE.MAP;
+					break;
+
+				case MAP:
+					mHotelViewType = HOTEL_VIEW_TYPE.LIST;
+					break;
+			}
+
+			// 현재 페이지 선택 상태를 Fragment에게 알려준다.
+			HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
+
+			for (HotelListFragment hotelListFragment : mFragmentList)
+			{
+				boolean isCurrentFragment = hotelListFragment == currentFragment;
+
+				hotelListFragment.setHotelViewType(mHotelViewType, isCurrentFragment);
+			}
+
+			unLockUI();
+		}
+
+		@Override
+		public void onClickActionBarArea()
+		{
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null)
+			{
+				return;
+			}
+
+			Intent intent = new Intent(baseActivity, SelectAreaActivity.class);
+			intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, mSelectedProvince);
+			intent.putParcelableArrayListExtra(NAME_INTENT_EXTRA_DATA_AREAITEMLIST, mAreaItemList);
+			startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SELECT_AREA);
+		}
+	};
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// NetworkActionListener
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -938,142 +1080,6 @@ public class HotelMainFragment extends BaseFragment
 		@Override
 		public void onPageScrolled(int arg0, float arg1, int arg2)
 		{
-		}
-	};
-
-	private OnUserActionListener mOnUserActionListener = new OnUserActionListener()
-	{
-
-		@Override
-		public void selectHotel(HotelListViewItem hotelListViewItem, int hotelIndex, SaleTime saleTime)
-		{
-			BaseActivity baseActivity = (BaseActivity) getActivity();
-
-			if (baseActivity == null)
-			{
-				return;
-			}
-
-			if (isLockUiComponent() == true || baseActivity.isLockUiComponent() == true)
-			{
-				return;
-			}
-
-			lockUiComponent();
-			baseActivity.lockUiComponent();
-
-			if (hotelListViewItem == null || hotelIndex < 0)
-			{
-				ExLog.d("hotelListViewItem == null || hotelIndex < 0");
-
-				releaseUiComponent();
-				baseActivity.releaseUiComponent();
-				return;
-			}
-
-			switch (hotelListViewItem.getType())
-			{
-				case HotelListViewItem.TYPE_ENTRY:
-				{
-					//					Intent intent = new Intent(baseActivity, HotelTabActivity.class);
-					Intent intent = new Intent(baseActivity, HotelDetailActivity.class);
-
-					String region = baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
-
-					SharedPreferences.Editor editor = baseActivity.sharedPreference.edit();
-					editor.putString(KEY_PREFERENCE_REGION_SELECT_GA, region);
-					editor.putString(KEY_PREFERENCE_HOTEL_NAME_GA, hotelListViewItem.getItem().getName());
-					editor.commit();
-
-					intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTEL, hotelListViewItem.getItem());
-					intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
-					intent.putExtra(NAME_INTENT_EXTRA_DATA_REGION, region);
-					intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, hotelIndex);
-
-					startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTELTAB);
-
-					mUserAnalyticsActionListener.selectHotel(hotelListViewItem.getItem().getName(), hotelIndex);
-					break;
-				}
-
-				case HotelListViewItem.TYPE_SECTION:
-				default:
-					releaseUiComponent();
-					baseActivity.releaseUiComponent();
-					break;
-			}
-		}
-
-		@Override
-		public void selectDay(SaleTime checkInSaleTime, SaleTime checkOutSaleTime, boolean isListSelectionTop)
-		{
-			if (isLockUiComponent() == true || checkInSaleTime == null || checkOutSaleTime == null)
-			{
-				return;
-			}
-
-			lockUiComponent();
-
-			// 선택탭의 이름을 수정한다.
-			String checkInDay = getString(R.string.label_format_tabday, checkInSaleTime.getDailyDay(), checkInSaleTime.getDailyDayOftheWeek());
-			String checkOutDay = getString(R.string.label_format_tabday, checkOutSaleTime.getDailyDay(), checkOutSaleTime.getDailyDayOftheWeek());
-
-			mTabIndicator.setSubTextEnable(2, true);
-			mTabIndicator.setSubText(2, checkInDay + "-" + checkOutDay);
-
-			refreshHotelList(mSelectedProvince, isListSelectionTop);
-
-			releaseUiComponent();
-		}
-
-		@Override
-		public void toggleViewType()
-		{
-			if (isLockUiComponent() == true)
-			{
-				return;
-			}
-
-			lockUI();
-
-			switch (mHotelViewType)
-			{
-				case LIST:
-					mHotelViewType = HOTEL_VIEW_TYPE.MAP;
-					break;
-
-				case MAP:
-					mHotelViewType = HOTEL_VIEW_TYPE.LIST;
-					break;
-			}
-
-			// 현재 페이지 선택 상태를 Fragment에게 알려준다.
-			HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
-
-			for (HotelListFragment hotelListFragment : mFragmentList)
-			{
-				boolean isCurrentFragment = hotelListFragment == currentFragment;
-
-				hotelListFragment.setHotelViewType(mHotelViewType, isCurrentFragment);
-			}
-
-			unLockUI();
-		}
-
-		@Override
-		public void onClickActionBarArea()
-		{
-			BaseActivity baseActivity = (BaseActivity) getActivity();
-
-			if (baseActivity == null)
-			{
-				return;
-			}
-
-			Intent intent = new Intent(baseActivity, SelectAreaActivity.class);
-			intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, mSelectedProvince);
-			intent.putParcelableArrayListExtra(NAME_INTENT_EXTRA_DATA_AREAITEMLIST, mAreaItemList);
-			startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SELECT_AREA);
 		}
 	};
 

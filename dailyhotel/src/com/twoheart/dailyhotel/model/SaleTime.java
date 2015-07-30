@@ -74,6 +74,11 @@ public class SaleTime implements Constants, Parcelable
 		mDailyTime = new Date(dailyTime);
 	}
 
+	public void setOffsetDailyDay(int dayOfDays)
+	{
+		mDayOfDays = dayOfDays;
+	}
+
 	public String getDailyDayOftheWeek()
 	{
 		return getTimezonedDateFormat("EEE").format(getDayOfDaysHotelDate());

@@ -214,7 +214,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 				viewHolder.address.setText(element.getAddress());
 				viewHolder.name.setText(element.getName());
 
-				Spanned currency = Html.fromHtml(getContext().getResources().getString(R.string.currency));
+				Spanned currency = Html.fromHtml(context.getResources().getString(R.string.currency));
 
 				if (price <= 0)
 				{
@@ -230,7 +230,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 
 				if (element.nights > 1)
 				{
-					String text = String.format("%s%s/1박", strDiscount, currency);
+					String text = context.getString(R.string.label_hotel_list_extendedstay_discount, strDiscount, currency);
 					viewHolder.discount.setText(text);
 				} else
 				{
@@ -248,7 +248,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 				}
 
 				// grade
-				viewHolder.grade.setText(element.getCategory().getName(getContext()));
+				viewHolder.grade.setText(element.getCategory().getName(context));
 				viewHolder.grade.setBackgroundResource(element.getCategory().getColorResId());
 
 				// AQuery사용시 

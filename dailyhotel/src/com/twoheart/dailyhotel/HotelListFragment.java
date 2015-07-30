@@ -31,7 +31,6 @@ import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -46,7 +45,6 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
-import com.twoheart.dailyhotel.activity.BookingActivity;
 import com.twoheart.dailyhotel.adapter.HotelListAdapter;
 import com.twoheart.dailyhotel.fragment.HotelListMapFragment;
 import com.twoheart.dailyhotel.fragment.HotelMainFragment;
