@@ -413,24 +413,36 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				releaseUiComponent();
 			} else
 			{
-				lockUI();
-
-				// 해당 호텔이 결제하기를 못하는 경우를 처리한다.
-				Map<String, String> updateParams = new HashMap<String, String>();
-				updateParams.put("saleIdx", String.valueOf(mPay.getSaleRoomInformation().saleIndex));
-
 				mClickView = v;
 
-				mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_VALIDATE).toString(), updateParams, mReservValidateJsonResponseListener, BookingActivity.this));
+				String gcmId = sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "");
 
-				v.setClickable(false);
-				v.setEnabled(false);
+				if (mPay.getType() == Pay.Type.VBANK && TextUtils.isEmpty(gcmId) == true)
+				{
+					// 가상계좌 결제시 푸쉬를 받지 못하는 경우
+					String title = getString(R.string.dialog_notice2);
+					String positive = getString(R.string.dialog_btn_text_confirm);
+					String msg = getString(R.string.dialog_msg_none_gcmid);
 
-				String region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
-				String hotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
-
-				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("paymentAgreement", "/todays-hotels/" + region + "/" + hotelName + "/booking-detail/payment-agreement");
-				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestPayment", mPay.getSaleRoomInformation().hotelName, (long) mHotelIdx);
+					SimpleAlertDialog.build(this, title, msg, positive, new DialogInterface.OnClickListener()
+					{
+						@Override
+						public void onClick(DialogInterface dialog, int which)
+						{
+							onClickPayment();
+						}
+					}).show().setOnCancelListener(new DialogInterface.OnCancelListener()
+					{
+						@Override
+						public void onCancel(DialogInterface dialog)
+						{
+							unLockUI();
+						}
+					});
+				} else
+				{
+					onClickPayment();
+				}
 			}
 		} else if (v.getId() == mCardManagerButton.getId())
 		{
@@ -453,6 +465,26 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CREDITCARD_MANAGER);
 			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 		}
+	}
+
+	private void onClickPayment()
+	{
+		lockUI();
+
+		mClickView.setClickable(false);
+		mClickView.setEnabled(false);
+
+		// 해당 호텔이 결제하기를 못하는 경우를 처리한다.
+		Map<String, String> updateParams = new HashMap<String, String>();
+		updateParams.put("saleIdx", String.valueOf(mPay.getSaleRoomInformation().saleIndex));
+
+		mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_VALIDATE).toString(), updateParams, mReservValidateJsonResponseListener, BookingActivity.this));
+
+		String region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
+		String hotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
+
+		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("paymentAgreement", "/todays-hotels/" + region + "/" + hotelName + "/booking-detail/payment-agreement");
+		RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestPayment", mPay.getSaleRoomInformation().hotelName, (long) mHotelIdx);
 	}
 
 	/**
