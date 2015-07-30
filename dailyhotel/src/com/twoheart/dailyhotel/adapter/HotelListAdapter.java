@@ -28,7 +28,6 @@ import com.androidquery.callback.AjaxStatus;
 import com.androidquery.callback.BitmapAjaxCallback;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Hotel;
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.VolleyImageLoader;
 import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView.PinnedSectionListAdapter;

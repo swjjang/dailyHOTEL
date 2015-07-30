@@ -145,6 +145,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+
+		System.gc();
+
 		setContentView(R.layout.activity_booking);
 
 		mMixpanel = MixpanelAPI.getInstance(this, "791b366dadafcd37803f6cd7d8358373"); // 상수 등록 요망

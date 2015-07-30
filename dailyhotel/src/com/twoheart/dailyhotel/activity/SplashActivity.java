@@ -94,9 +94,6 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 
 		setContentView(R.layout.activity_splash);
 
-		// 세션 초기화.
-		VolleyHttpClient.destroyCookie();
-
 		mIsRequestLogin = false;
 
 		SharedPreferences.Editor editor = sharedPreference.edit();
