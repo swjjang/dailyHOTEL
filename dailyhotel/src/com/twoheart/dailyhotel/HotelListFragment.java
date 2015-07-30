@@ -31,6 +31,7 @@ import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -45,6 +46,7 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
+import com.twoheart.dailyhotel.activity.BookingActivity;
 import com.twoheart.dailyhotel.adapter.HotelListAdapter;
 import com.twoheart.dailyhotel.fragment.HotelListMapFragment;
 import com.twoheart.dailyhotel.fragment.HotelMainFragment;
@@ -55,6 +57,7 @@ import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
+import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
@@ -482,7 +485,12 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 			params = String.format("?province_idx=%d&checkin_date=%s&length_stay=%d", province.getProvinceIndex(), checkInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), stayDays);
 		}
 
-		// 호텔 리스트를 가져온다. 
+		if (DEBUG == true)
+		{
+			SimpleAlertDialog.build(baseActivity, null, params, getString(R.string.dialog_btn_text_confirm), null).show();
+		}
+
+		// 호텔 리스트를 가져온다.
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_HOTEL_LIST).append(params).toString(), null, mHotelJsonResponseListener, baseActivity));
 
 		RenewalGaManager.getInstance(baseActivity.getApplicationContext()).recordScreen("hotelList", "/todays-hotels/" + province.name);

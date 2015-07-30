@@ -735,6 +735,9 @@ public class HotelMainFragment extends BaseFragment
 
 					String checkInOutDate = checkInDay + "-" + checkOutDay;
 					dayList.add(checkInOutDate);
+
+					HotelDaysListFragment fragment = (HotelDaysListFragment) mFragmentList.get(2);
+					fragment.initSelectedCheckInOutDate(checkInSaleTime, checkOutSaleTime);
 				} else
 				{
 					dayList.add(mTabIndicator.getSubText(2));
@@ -1018,7 +1021,7 @@ public class HotelMainFragment extends BaseFragment
 			mTabIndicator.setSubTextEnable(2, true);
 			mTabIndicator.setSubText(2, checkInDay + "-" + checkOutDay);
 
-			//			refreshHotelList(mSelectedProvince, isListSelectionTop);
+			refreshHotelList(mSelectedProvince, isListSelectionTop);
 
 			releaseUiComponent();
 		}

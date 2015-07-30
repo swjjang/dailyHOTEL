@@ -228,7 +228,15 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 					viewHolder.price.setPaintFlags(viewHolder.price.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 				}
 
-				viewHolder.discount.setText(strDiscount + currency);
+				if (element.nights > 1)
+				{
+					String text = String.format("%s%s/1박", strDiscount, currency);
+					viewHolder.discount.setText(text);
+				} else
+				{
+					viewHolder.discount.setText(strDiscount + currency);
+				}
+
 				viewHolder.name.setSelected(true); // Android TextView marquee bug
 
 				if (Util.isOverAPI16() == true)

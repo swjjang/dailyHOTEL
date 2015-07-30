@@ -29,6 +29,7 @@ public class Hotel implements Parcelable
 	public boolean isDailyChoice;
 	public int saleIndex;
 	public boolean isDBenefit;
+	public int nights;
 
 	public enum HotelGrade
 	{
@@ -341,6 +342,11 @@ public class Hotel implements Parcelable
 				{
 					isDBenefit = true;
 				}
+			}
+			
+			if(jsonObject.has("nights") == true)
+			{
+				nights = jsonObject.getInt("nights");
 			}
 		} catch (JSONException e)
 		{
