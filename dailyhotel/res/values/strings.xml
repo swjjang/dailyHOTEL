@@ -10,6 +10,7 @@
     <string name="label_map">지도</string>
     <string name="label_list">목록</string>
     <string name="label_dailychoice">데일리초이스</string>
+    <string name="label_google_map">Google Map</string>
 
     <!-- Hotel Grade -->
     <string name="grade_special">특급</string>

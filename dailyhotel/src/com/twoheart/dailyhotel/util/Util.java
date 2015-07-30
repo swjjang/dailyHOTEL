@@ -234,6 +234,11 @@ public class Util implements Constants
 	{
 		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1;
 	}
+	
+	public static boolean isOverAPI16()
+	{
+		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
+	}
 
 	public static boolean isTelephonyEnabled(Context context)
 	{
@@ -258,6 +263,32 @@ public class Util implements Constants
 		}
 
 		return version;
+	}
+
+	public static boolean isInstallGooglePlayService(Activity activity)
+	{
+		boolean isInstalled = false;
+
+		try
+		{
+			PackageManager packageManager = activity.getPackageManager();
+
+			ApplicationInfo applicationInfo = packageManager.getApplicationInfo("com.google.android.gms", 0);
+			PackageInfo packageInfo = packageManager.getPackageInfo(applicationInfo.packageName, PackageManager.GET_SIGNATURES);
+
+			if (packageInfo.versionCode < 7500000)
+			{
+				isInstalled = false;
+			} else
+			{
+				isInstalled = true;
+			}
+		} catch (PackageManager.NameNotFoundException e)
+		{
+			isInstalled = false;
+		}
+
+		return isInstalled;
 	}
 
 	public static int installGooglePlayService(final Activity activity)

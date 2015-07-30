@@ -91,11 +91,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <fragment
-            android:id="@+id/googleMapFragment"
+        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            class="com.google.android.gms.maps.SupportMapFragment" />
+            android:gravity="center"
+            android:text="@string/label_google_map"
+            android:textColor="@color/booking_subtext"
+            android:textSize="20sp" />
+
     </FrameLayout>
 
     <View
