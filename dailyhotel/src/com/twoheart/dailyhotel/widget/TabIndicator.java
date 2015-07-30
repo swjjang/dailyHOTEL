@@ -552,9 +552,19 @@ public class TabIndicator extends HorizontalScrollView implements OnClickListene
 			if (selected == true)
 			{
 				mTitleTextView.setTypeface(mTitleTextView.getTypeface(), Typeface.BOLD);
+
+				if (mHasSubText == true)
+				{
+					mDayTextView.setTypeface(mDayTextView.getTypeface(), Typeface.BOLD);
+				}
 			} else
 			{
 				mTitleTextView.setTypeface(mTitleTextView.getTypeface(), Typeface.NORMAL);
+
+				if (mHasSubText == true)
+				{
+					mDayTextView.setTypeface(mDayTextView.getTypeface(), Typeface.NORMAL);
+				}
 			}
 
 			mTitleTextView.setSelected(selected);

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:layout_centerInParent="true"
-    android:layout_marginBottom="4dp"
+    android:layout_marginTop="13dp"
     android:gravity="center_horizontal"
     android:orientation="vertical" >
 
@@ -13,15 +13,17 @@
         android:layout_height="wrap_content"
         android:duplicateParentState="true"
         android:textColor="@drawable/selector_tab_text_defaultcolor"
-        android:textSize="17dp" />
+        android:textSize="16dp" />
 
     <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
         android:id="@+id/tab_indicator_sub_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="7dp"
+        android:layout_marginTop="8dp"
         android:duplicateParentState="true"
+        android:ellipsize="end"
+        android:singleLine="true"
         android:textColor="@drawable/selector_tab_subtext_defaultcolor"
-        android:textSize="11dp" />
+        android:textSize="12dp" />
 
 </LinearLayout>

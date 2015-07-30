@@ -215,9 +215,6 @@
     <string name="act_new_version">최신 버전: </string>
     <string name="act_btn_update">최신 버전 업데이트 하기</string>
 
-    <!-- Splash Activity -->
-    <string name="act_anybody">누구나 즐기는 호텔 라이프</string>
-
     <!-- Login Activity -->
     <string name="act_login_email">이메일</string>
     <string name="act_login_pwd">비밀번호</string>
@@ -394,6 +391,10 @@
     <string name="frag_hotel_list_no_hotels">호텔을 준비하고 있습니다.</string>
     <string name="frag_hotel_list_line">멋진 호텔에서\n하루를 보내는게 어때요?</string>
     <string name="frag_hotel_list_no_line">멋진 호텔을 원하시나요?\n1800-9120으로 전화주세요.</string>
+    <string name="frag_hotel_list_check">CHEC</string>
+    <string name="frag_hotel_list_checkin">K - IN</string>
+    <string name="frag_hotel_list_checkout">K - OUT</string>
+    <string name="frag_hotel_days_tab_to">TO</string>
 
     <!-- PopUp Event Fragment -->
     <string name="frag_popup_event_title">이벤트 안내</string>

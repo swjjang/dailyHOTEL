@@ -727,7 +727,14 @@ public class HotelMainFragment extends BaseFragment
 
 				if (TextUtils.isEmpty(mTabIndicator.getSubText(2)) == true)
 				{
-					dayList.add(getString(R.string.label_format_tabday, tabSaleTime[2].getDailyDay(), tabSaleTime[2].getDailyDayOftheWeek()));
+					SaleTime checkInSaleTime = tabSaleTime[0].getClone(2);
+					SaleTime checkOutSaleTime = tabSaleTime[0].getClone(3);
+
+					String checkInDay = getString(R.string.label_format_tabday, checkInSaleTime.getDailyDay(), checkInSaleTime.getDailyDayOftheWeek());
+					String checkOutDay = getString(R.string.label_format_tabday, checkOutSaleTime.getDailyDay(), checkOutSaleTime.getDailyDayOftheWeek());
+
+					String checkInOutDate = checkInDay + "-" + checkOutDay;
+					dayList.add(checkInOutDate);
 				} else
 				{
 					dayList.add(mTabIndicator.getSubText(2));
