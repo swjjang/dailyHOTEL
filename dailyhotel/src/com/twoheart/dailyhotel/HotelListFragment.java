@@ -31,6 +31,7 @@ import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -42,8 +43,10 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.android.volley.Request.Method;
+import com.twoheart.dailyhotel.activity.BookingActivity;
 import com.twoheart.dailyhotel.adapter.HotelListAdapter;
 import com.twoheart.dailyhotel.fragment.HotelListMapFragment;
 import com.twoheart.dailyhotel.fragment.HotelMainFragment;
@@ -54,6 +57,7 @@ import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
+import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
@@ -61,6 +65,7 @@ import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
 import com.twoheart.dailyhotel.widget.DailyHotelHeaderTransformer;
+import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView;
 
 public class HotelListFragment extends BaseFragment implements Constants, OnItemClickListener, OnRefreshListener
@@ -70,11 +75,8 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	private HotelListAdapter mHotelListAdapter;
 
 	protected SaleTime mSaleTime;
-
-	//	private boolean event;
 	protected boolean mIsSelectionTop;
 	private View mEmptyView;
-	//	private View mFooterView; // FooterView
 
 	private FrameLayout mMapLayout;
 	private HotelListMapFragment mHotelListMapFragment;
@@ -95,7 +97,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	private static ValueAnimator mValueAnimator = null;
 	private static boolean mLockActionBar = false;
 	private static int mAnchorY = Integer.MAX_VALUE;
-	private int mScrollState;
 	private ActionbarViewHolder mActionbarViewHolder;
 
 	private class ActionbarViewHolder
@@ -430,7 +431,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		mSelectedProvince = province;
 		mIsSelectionTop = isSelectionTop;
 
-		fetchHotelList(province, mSaleTime);
+		fetchHotelList(province, mSaleTime, null);
 	}
 
 	/**
@@ -438,9 +439,9 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	 * 
 	 * @param position
 	 */
-	private void fetchHotelList(Province province, SaleTime saleTime)
+	protected void fetchHotelList(Province province, SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
 	{
-		if (saleTime == null)
+		if (checkInSaleTime == null)
 		{
 			return;
 		}
@@ -454,19 +455,42 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 		lockUI();
 
+		int stayDays = 0;
+
+		if (checkOutSaleTime == null)
+		{
+			// 오늘, 내일인 경우
+			stayDays = 1;
+		} else
+		{
+			// 연박인 경우
+			stayDays = checkOutSaleTime.getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay();
+		}
+
+		if (stayDays <= 0)
+		{
+			unLockUI();
+			return;
+		}
+
 		String params = null;
 
 		if (province instanceof Area)
 		{
 			Area area = (Area) province;
 
-			params = String.format("?province_idx=%d&area_idx=%d&date=%s", area.getProvinceIndex(), area.index, saleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
+			params = String.format("?province_idx=%d&area_idx=%d&checkin_date=%s&length_stay=%d", area.getProvinceIndex(), area.index, checkInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), stayDays);
 		} else
 		{
-			params = String.format("?province_idx=%d&date=%s", province.getProvinceIndex(), saleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
+			params = String.format("?province_idx=%d&checkin_date=%s&length_stay=%d", province.getProvinceIndex(), checkInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), stayDays);
 		}
 
-		// 호텔 리스트를 가져온다. 
+		if (DEBUG == true)
+		{
+			SimpleAlertDialog.build(baseActivity, null, params, getString(R.string.dialog_btn_text_confirm), null).show();
+		}
+
+		// 호텔 리스트를 가져온다.
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_HOTEL_LIST).append(params).toString(), null, mHotelJsonResponseListener, baseActivity));
 
 		RenewalGaManager.getInstance(baseActivity.getApplicationContext()).recordScreen("hotelList", "/todays-hotels/" + province.name);
@@ -664,7 +688,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		@Override
 		public void onScrollStateChanged(AbsListView view, int scrollState)
 		{
-			mScrollState = scrollState;
 		}
 
 		@Override
@@ -714,30 +737,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 				} else if (mOldfirstVisibleItem < firstVisibleItem)
 				{
 					mDirection = MotionEvent.ACTION_UP;
-				} else
-				{
-					//					if (mScrollState != OnScrollListener.SCROLL_STATE_FLING)
-					//					{
-					//						if (mOldY > y)
-					//						{
-					//							if (mDirection == MotionEvent.ACTION_DOWN)
-					//							{
-					//								mDirection = MotionEvent.ACTION_CANCEL;
-					//							} else
-					//							{
-					//								mDirection = MotionEvent.ACTION_UP;
-					//							}
-					//						} else if (mOldY < y)
-					//						{
-					//							if (mDirection == MotionEvent.ACTION_UP)
-					//							{
-					//								mDirection = MotionEvent.ACTION_CANCEL;
-					//							} else
-					//							{
-					//								mDirection = MotionEvent.ACTION_DOWN;
-					//							}
-					//						}
-					//					}
 				}
 
 				mOldY = y;
@@ -856,6 +855,12 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 				if (msg_code != 0)
 				{
+					if (response.has("msg") == true)
+					{
+						String msg = response.getString("msg");
+						DailyToast.showToast(baseActivity, msg, Toast.LENGTH_SHORT);
+					}
+
 					throw new NullPointerException("response == null");
 				}
 

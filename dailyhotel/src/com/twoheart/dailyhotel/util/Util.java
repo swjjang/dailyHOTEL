@@ -234,7 +234,7 @@ public class Util implements Constants
 	{
 		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1;
 	}
-	
+
 	public static boolean isOverAPI16()
 	{
 		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;

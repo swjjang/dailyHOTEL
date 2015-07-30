@@ -596,8 +596,8 @@ public class HotelListMapFragment extends
 
 				if (item01.mLatitude == item02.mLatitude && item01.mLongitude == item02.mLongitude)
 				{
-					int item01DisCount = item01.getDiscount();
-					int item02DisCount = item02.getDiscount();
+					int item01DisCount = item01.averageDiscount;
+					int item02DisCount = item02.averageDiscount;
 
 					if (item01DisCount >= item02DisCount)
 					{

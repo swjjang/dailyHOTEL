@@ -36,6 +36,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -66,8 +67,8 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 	private View[] mCheckInViews;
 	private View[] mCheckOutViews;
 
-	private View mSelectedCheckInView = null;
-	private View mSelectedCheckOutView = null;
+	private SaleTime mSelectedCheckInSaleTime;
+	private SaleTime mSelectedCheckOutSaleTime;
 	private TextView mCheckInOutTextView;
 	private boolean mIsShowDaysList;
 	private int mCheckStatus;
@@ -132,7 +133,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 						// 여기서 호텔 리스트를 다시 갱신해야 한다.
 						if (mUserActionListener != null)
 						{
-							mUserActionListener.selectDay((SaleTime) mSelectedCheckInView.getTag(), (SaleTime) mSelectedCheckOutView.getTag(), true);
+							mUserActionListener.selectDay(mSelectedCheckInSaleTime, mSelectedCheckOutSaleTime, true);
 						}
 						break;
 
@@ -189,6 +190,12 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		DAYSLIST_HEIGHT = Util.dpToPx(baseActivity, 131);
 
 		initCheckInDateLayout(mSaleTime);
+	}
+
+	public void initSelectedCheckInOutDate(SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
+	{
+		mSelectedCheckInSaleTime = checkInSaleTime;
+		mSelectedCheckOutSaleTime = checkOutSaleTime;
 	}
 
 	private void initCheckInDateLayout(SaleTime defaultSaleTime)
@@ -378,8 +385,8 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 			return;
 		}
 
-		mSelectedCheckInView = mCheckInViews[0];
-		mSelectedCheckOutView = mCheckInViews[1];
+		//		mSelectedCheckInSaleTime = (SaleTime) mCheckInViews[0].getTag();
+		//		mSelectedCheckOutSaleTime = (SaleTime) mCheckInViews[1].getTag();
 
 		mCheckInOutTextView.setText(R.string.frag_hotel_list_checkin);
 
@@ -475,7 +482,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 			return;
 		}
 
-		mSelectedCheckInView = view;
+		mSelectedCheckInSaleTime = (SaleTime) view.getTag();
 
 		TextView dayOfTheWeekTextView = (TextView) view.findViewById(R.id.textView1);
 		TextView dayTextView = (TextView) view.findViewById(R.id.textView2);
@@ -495,7 +502,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 			return;
 		}
 
-		mSelectedCheckOutView = view;
+		mSelectedCheckOutSaleTime = (SaleTime) view.getTag();
 
 		for (View dayView : mCheckOutViews)
 		{
@@ -559,6 +566,15 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		}
 
 		mAnimationStatus = ANIMATION_STATUS.HIDE_END;
+	}
+
+	@Override
+	public void refreshHotelList(Province province, boolean isSelectionTop)
+	{
+		mSelectedProvince = province;
+		mIsSelectionTop = isSelectionTop;
+
+		fetchHotelList(province, mSelectedCheckInSaleTime, mSelectedCheckOutSaleTime);
 	}
 
 	private void showAnimationCheckIn(final View view, final int position)
@@ -736,7 +752,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		// 여기서 호텔 리스트를 다시 갱신해야 한다.
 		if (mUserActionListener != null)
 		{
-			mUserActionListener.selectDay((SaleTime) mSelectedCheckInView.getTag(), (SaleTime) mSelectedCheckOutView.getTag(), true);
+			mUserActionListener.selectDay(mSelectedCheckInSaleTime, mSelectedCheckOutSaleTime, true);
 		}
 	}
 

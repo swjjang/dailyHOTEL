@@ -28,7 +28,7 @@ import com.androidquery.callback.AjaxStatus;
 import com.androidquery.callback.BitmapAjaxCallback;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Hotel;
-import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.VolleyImageLoader;
 import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView.PinnedSectionListAdapter;
@@ -38,7 +38,6 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 	private Context context;
 	private int resourceId;
 	private LayoutInflater inflater;
-	//	private LruCache<String, Bitmap> mLruCache;
 	private ArrayList<HotelListViewItem> mHoteList;
 	private PaintDrawable mPaintDrawable;
 
@@ -210,16 +209,9 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 				int price = element.getPrice();
 
 				String strPrice = comma.format(price);
-				String strDiscount = comma.format(element.getDiscount());
+				String strDiscount = comma.format(element.averageDiscount);
 
-				if (Constants.DEBUG == true)
-				{
-					viewHolder.address.setText(element.getAddress() + ": " + element.mSaleDay);
-				} else
-				{
-					viewHolder.address.setText(element.getAddress());
-				}
-
+				viewHolder.address.setText(element.getAddress());
 				viewHolder.name.setText(element.getName());
 
 				Spanned currency = Html.fromHtml(getContext().getResources().getString(R.string.currency));
@@ -236,10 +228,24 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 					viewHolder.price.setPaintFlags(viewHolder.price.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 				}
 
-				viewHolder.discount.setText(strDiscount + currency);
+				if (element.nights > 1)
+				{
+					String text = String.format("%s%s/1박", strDiscount, currency);
+					viewHolder.discount.setText(text);
+				} else
+				{
+					viewHolder.discount.setText(strDiscount + currency);
+				}
+
 				viewHolder.name.setSelected(true); // Android TextView marquee bug
 
-				viewHolder.llHotelRowContent.setBackgroundDrawable(mPaintDrawable);
+				if (Util.isOverAPI16() == true)
+				{
+					viewHolder.llHotelRowContent.setBackground(mPaintDrawable);
+				} else
+				{
+					viewHolder.llHotelRowContent.setBackgroundDrawable(mPaintDrawable);
+				}
 
 				// grade
 				viewHolder.grade.setText(element.getCategory().getName(getContext()));
@@ -250,7 +256,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 				Bitmap cachedImg = VolleyImageLoader.getCache(element.getImage());
 
 				if (cachedImg == null)
-				{ // 힛인 밸류가 없다면 이미지를 불러온 후 캐시에 세이브
+				{
 					BitmapAjaxCallback cb = new BitmapAjaxCallback()
 					{
 						@Override
@@ -266,20 +272,12 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 				} else
 				{
 					viewHolder.img.setImageBitmap(cachedImg);
-					//					aquery.id(viewHolder.img).image(cachedImg).animate(R.anim.fade_in);
 				}
 
-				// 객실이 1~2 개일때 label 표시
-				int avail_cnt = element.getAvailableRoom();
-				// if(avail_cnt > 0 && avail_cnt < 3) {
-				// label.setText(avail_cnt + " 객실 남음");
-				// label.setVisibility(View.VISIBLE);
-				// }
-				// else
-				// label.setVisibility(View.GONE);
+				int availableRoomCount = element.getAvailableRoom();
 
 				// SOLD OUT 표시
-				if (avail_cnt == 0)
+				if (availableRoomCount == 0)
 				{
 					viewHolder.sold_out.setVisibility(View.VISIBLE);
 				} else

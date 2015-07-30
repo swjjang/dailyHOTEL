@@ -34,12 +34,6 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
 		setTag(listener);
 
 		setRetryPolicy(new DefaultRetryPolicy(REQUEST_EXPIRE_JUDGE, REQUEST_MAX_RETRY, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-		// 네트워크가 연결 안되어이 있는경우 cancel을 하게 되면 에러가 발생하지 않아 문제가 될수 있다.
-		//		if (VolleyHttpClient.hasActiveNetwork() == false)
-		//		{
-		//			cancel();
-		//		}
 	}
 
 	@Override
@@ -197,6 +191,11 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
 	//	public static void makeUrlEncoder()
 	//	{
 	//		String test = null;
+	//
+	//		test = DailyHotelRequest.getUrlEncoder("api/sale/hotel_list");
+	//		test = DailyHotelRequest.getUrlEncoder("api/sale/hotel_info");
+	//		test = DailyHotelRequest.getUrlEncoder("api/sale/room_payment");
+
 	//
 	//		test = DailyHotelRequest.getUrlEncoder("api/reserv/hotel/room/info");
 	//		test = DailyHotelRequest.getUrlEncoder("api/sale/room/payment");
