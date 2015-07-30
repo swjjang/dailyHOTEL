@@ -379,8 +379,6 @@ public class HotelDetailActivity extends BaseActivity
 		@Override
 		public void nextSlide()
 		{
-			ExLog.d("nextSlide");
-
 			if (Util.isOverAPI11() == true)
 			{
 				Message message = mImageHandler.obtainMessage();
@@ -396,8 +394,6 @@ public class HotelDetailActivity extends BaseActivity
 		@Override
 		public void prevSlide()
 		{
-			ExLog.d("prevSlide");
-
 			if (Util.isOverAPI11() == true)
 			{
 				Message message = mImageHandler.obtainMessage();

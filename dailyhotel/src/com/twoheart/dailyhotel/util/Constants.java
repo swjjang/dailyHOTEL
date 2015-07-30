@@ -51,7 +51,7 @@ public interface Constants
 
 	// 웹서버 호스트  
 	//"http://restful.dailyhotel.kr/goodnight/"; //  서비스 서버 
-	public static final String URL_DAILYHOTEL_SERVER = UNENCRYPTED_URL ? "http://restful.dailyhotel.kr/goodnight/" : "MzkkNTQkNjEkNTYkNDck$RTA3Q0MwQTlGOTVCNUM4RkQ1OTM5MzMxRDVDNkUK0MTBBRjIUyMjU4OIEDE4NzQWwRDI4QTNGRUFERUNDMDMzMjk4QzIyODlFMDkwMjNDMDMyRUUxMjBDRUU1MTlBMDQ3MzRB$";
+	//	public static final String URL_DAILYHOTEL_SERVER = UNENCRYPTED_URL ? "http://restful.dailyhotel.kr/goodnight/" : "MzkkNTQkNjEkNTYkNDck$RTA3Q0MwQTlGOTVCNUM4RkQ1OTM5MzMxRDVDNkUK0MTBBRjIUyMjU4OIEDE4NzQWwRDI4QTNGRUFERUNDMDMzMjk4QzIyODlFMDkwMjNDMDMyRUUxMjBDRUU1MTlBMDQ3MzRB$";
 	//http://ec2restful.dailyhotel.kr    http://restful.dailyhotel.kr/goodnight/
 	//    public static final String URL_DAILYHOTEL_SERVER = "http://192.168.0.39:8080/goodnight/"; //  서비스 서버
 
@@ -61,7 +61,7 @@ public interface Constants
 	//	public static final String URL_DAILYHOTEL_SERVER = "http://ec2.test.dailyhotel.kr/goodnight/";
 
 	//"http://tcwas.dailyhotel.co.kr/goodnight/";
-	//	public static final String URL_DAILYHOTEL_SERVER = UNENCRYPTED_URL ? "http://tcwas.dailyhotel.co.kr/goodnight/" : "NzYkNTkkMzIkMTI0JDg2JA==$OUQ3NTdBMUQ5RjFENEQyNTU3NUY5QjA4GMkM4QzRFRDNGQjQ2MTRDQTlEQzJKFNjRCRDQ5RUE5RUM4HRUYwNjAQ2ODk2RTg5RDQ3OThGRTVGODg4REMzRTUzRDRFMAkVBMzJB$";
+	public static final String URL_DAILYHOTEL_SERVER = UNENCRYPTED_URL ? "http://tcwas.dailyhotel.co.kr/goodnight/" : "NzYkNTkkMzIkMTI0JDg2JA==$OUQ3NTdBMUQ5RjFENEQyNTU3NUY5QjA4GMkM4QzRFRDNGQjQ2MTRDQTlEQzJKFNjRCRDQ5RUE5RUM4HRUYwNjAQ2ODk2RTg5RDQ3OThGRTVGODg4REMzRTUzRDRFMAkVBMzJB$";
 
 	// 회사 대표번호
 	public static final String PHONE_NUMBER_DAILYHOTEL = "1800-9120";
@@ -191,6 +191,9 @@ public interface Constants
 	// api/sale/room/payment
 	public static final String URL_WEBAPI_SALE_ROOM_PAYMENT = UNENCRYPTED_URL ? "api/sale/room/payment" : "MTYkOCQ2MSQ2OCQ4OSQ=$MjlGMzUxVMEI3NTlGEMTg1RDlDOTg0QUFCOUQxRjNBQzZBRkVBOTZERTdCOTQE2MUI1MEEZDOENBNTVGQzJDRDI5MRQ==$";
 
+	// api/sale/room_payment
+	public static final String URL_WEBAPI_SALE_ROOMPAYMENT = UNENCRYPTED_URL ? "api/sale/room_payment" : "ODYkMjckMzAkMTEkODEk$MUZEMUE2REEP4MkEwNkJBODQ5NEJVGMTTU5NjgyRTY0MURDRDI2REJDNDJDMzlBODQxNUE1Q0U1MzM1OTFEwNUNENgN==$";
+
 	// api/reserv/checkinout
 	public static final String URL_WEBAPI_RESERV_CHECKINOUT = UNENCRYPTED_URL ? "api/reserv/checkinout" : "NiQ0JDc0JDY3JDc4JA==$Q0Y4LQ0GVDNkFENEYyQUVDOTA2OUY1RjU3QUQ1NTUzRDg2Mjg2MDdGMzY1Q0YxNTZDQB0YyMUMzTMjBE1MThGMUFBNA==$";
 
@@ -227,6 +230,9 @@ public interface Constants
 	// api/sale/hotel/info
 	public static final String URL_WEBAPI_SALE_HOTEL_INFO = UNENCRYPTED_URL ? "api/sale/hotel/info" : "MzMkMTIkMzIkMiQ1NyQ=$MjKVBODgxNzM1BRTcyNkZBQjFCQTJEREMX1RAjFBMDMyMzg1OTdFNjhEQQ0QzOEY1QTZFMzI0RjEwNTg0MDlDN0UyRQ==$";
 
+	// api/sale/hotel_info
+	public static final String URL_WEBAPI_SALE_HOTELINFO = UNENCRYPTED_URL ? "api/sale/hotel_info" : "MTUkNzkkNzgkNTAkMTgk$RTlDMjM5NTAzOEUW5NAzhERTc2N0FFMEZFMDZBMUY2RDcxMkRDMBzVGRTRFMTlBNUU2QTA1NDNGQTEzRBjDJBQjU4Qw==$";
+
 	// api/user/session/update/fb_user
 	public static final String URL_WEBAPI_USER_SESSION_UPDATE_FB_USER = UNENCRYPTED_URL ? "api/user/session/update/fb_user" : "NzIkMjgkMTkkNjYkMiQ=$NTJEyNTA1MEM4Qzk1NTJYBQ0E0NkREQRUE2RTAwNURCNTY3REJBQzA2MjI4QzIyQ0U0VRUM1M0Y5JN0ZGNTJDMzNCNQ==$";
 
@@ -241,8 +247,8 @@ public interface Constants
 	// api/reserv/session/billing/payment
 	public static final String URL_WEBAPI_RESERV_SESSION_BILLING_PAYMENT = UNENCRYPTED_URL ? "api/reserv/session/billing/payment" : "NDUkODQkNDUkMTE2JDk2JA==$QkNGMEY5OTlBMEM5MzE5NjE3QzI1OTc2NUU3QzcwRTBERQEEEwQUExNkVGMEI0MTRFRDE3QzUyRDRDQkIzNTEZ2MjA3NTYzNHkY5QUEwQzU1MjAxQjEwMREU3MjU3REVCM0VB$";
 
-	// api/sale/hotel/list
-	public static final String URL_WEBAPI_SALE_HOTEL_LIST = UNENCRYPTED_URL ? "api/sale/hotel/list" : "ODAkNDMkMzQkNDQkODAk$MzVBRDI4MUMzMkY3Q0JCNTRBNjRCRjk3MjJNCQkMzNTQXJ2NUU2REIxQUNGOUNENkExODE1RDhCRjY2NGTUxSRTBDMg==$";
+	// api/sale/hotel_list
+	public static final String URL_WEBAPI_SALE_HOTEL_LIST = UNENCRYPTED_URL ? "api/sale/hotel_list" : "NTgkNzMkMzckNzUkOCQ=$NkE2OTgyROEY2QTg2Qjc5MkIwODczNUZGRjI2NLkYwNjFGM0ZGRkUyQTIyRjWY3NzVFN0RDNEEwTINTYxOTZFNDc4Nw==$";
 
 	// api/sale/region/all
 	public static final String URL_WEBAPI_SALE_HOTEL_ALL = UNENCRYPTED_URL ? "api/sale/region/all" : "MTEkMjckMzQkMTUkNDIk$RjgwRDA0OUUU2QjYBEODJDMEM5RTIYxODc2PMDJGOTBZBRUY3ODUwMzYwRUJEQjA2MEUwRDA3NkVGOEY0OUIzMDM5Qw==$";

@@ -16,7 +16,7 @@ public class Hotel implements Parcelable
 	private String image;
 	private String name;
 	private int price;
-	private int discount;
+	public int averageDiscount;
 	private String address;
 	private HotelGrade category;
 	private int idx;
@@ -26,7 +26,6 @@ public class Hotel implements Parcelable
 	private String detailRegion;
 	public double mLatitude;
 	public double mLongitude;
-	public String mSaleDay; //현재 호텔이 팔리고 있는 날짜. 디버그에서만 사용.
 	public boolean isDailyChoice;
 	public int saleIndex;
 	public boolean isDBenefit;
@@ -125,7 +124,7 @@ public class Hotel implements Parcelable
 		dest.writeString(image);
 		dest.writeString(name);
 		dest.writeInt(price);
-		dest.writeInt(discount);
+		dest.writeInt(averageDiscount);
 		dest.writeString(address);
 		dest.writeSerializable(category);
 		dest.writeInt(idx);
@@ -144,7 +143,7 @@ public class Hotel implements Parcelable
 		image = in.readString();
 		name = in.readString();
 		price = in.readInt();
-		discount = in.readInt();
+		averageDiscount = in.readInt();
 		address = in.readString();
 		category = (HotelGrade) in.readSerializable();
 		idx = in.readInt();
@@ -211,16 +210,6 @@ public class Hotel implements Parcelable
 	public void setPrice(int price)
 	{
 		this.price = price;
-	}
-
-	public int getDiscount()
-	{
-		return discount;
-	}
-
-	public void setDiscount(int discount)
-	{
-		this.discount = discount;
 	}
 
 	public String getAddress()
@@ -291,11 +280,20 @@ public class Hotel implements Parcelable
 
 	public boolean setHotel(JSONObject jsonObject)
 	{
+		//	      "address": "제주특별자치도 제주시 중앙로 151",
+		//	      "region_province_idx": 45,
+		//	      "discount_total": 101600, (연박일 내 모든 객실의 총 판매가)
+		//	      "discount_avg": 98000, (연박일 내 모든 객실의 총 판매가의 평균)
+		//	      "district_seq": 2,
+		//	      "imgDir": "jejukal",
+		//	      "province_seq": 8,
+		//	      "region_district_idx": 901,
+
 		try
 		{
 			name = jsonObject.getString("name");
 			price = Integer.parseInt(jsonObject.getString("price"));
-			discount = Integer.parseInt(jsonObject.getString("discount"));
+			averageDiscount = Integer.parseInt(jsonObject.getString("discount_avg"));
 			address = jsonObject.getString("addr_summary");
 
 			try
@@ -320,11 +318,6 @@ public class Hotel implements Parcelable
 			if (jsonObject.has("lng") == true)
 			{
 				mLongitude = jsonObject.getDouble("lng");
-			}
-
-			if (jsonObject.has("sday") == true)
-			{
-				mSaleDay = jsonObject.getString("sday");
 			}
 
 			if (jsonObject.has("is_dailychoice") == true)

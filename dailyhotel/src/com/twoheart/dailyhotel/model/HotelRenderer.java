@@ -23,7 +23,7 @@ public class HotelRenderer
 
 		DecimalFormat comma = new DecimalFormat("###,##0");
 
-		mPrice = "₩" + comma.format(hotel.getDiscount());
+		mPrice = "₩" + comma.format(hotel.averageDiscount);
 
 		mMarkerResId = hotel.getCategory().getMarkerResId();
 

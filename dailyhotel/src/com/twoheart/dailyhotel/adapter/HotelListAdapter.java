@@ -210,16 +210,9 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 				int price = element.getPrice();
 
 				String strPrice = comma.format(price);
-				String strDiscount = comma.format(element.getDiscount());
+				String strDiscount = comma.format(element.averageDiscount);
 
-				if (Constants.DEBUG == true)
-				{
-					viewHolder.address.setText(element.getAddress() + ": " + element.mSaleDay);
-				} else
-				{
-					viewHolder.address.setText(element.getAddress());
-				}
-
+				viewHolder.address.setText(element.getAddress());
 				viewHolder.name.setText(element.getName());
 
 				Spanned currency = Html.fromHtml(getContext().getResources().getString(R.string.currency));

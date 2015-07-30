@@ -36,6 +36,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -559,6 +560,15 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		}
 
 		mAnimationStatus = ANIMATION_STATUS.HIDE_END;
+	}
+
+	@Override
+	public void refreshHotelList(Province province, boolean isSelectionTop)
+	{
+		mSelectedProvince = province;
+		mIsSelectionTop = isSelectionTop;
+
+		fetchHotelList(province, (SaleTime) mSelectedCheckInView.getTag(), (SaleTime) mSelectedCheckOutView.getTag());
 	}
 
 	private void showAnimationCheckIn(final View view, final int position)

@@ -430,7 +430,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		mSelectedProvince = province;
 		mIsSelectionTop = isSelectionTop;
 
-		fetchHotelList(province, mSaleTime);
+		fetchHotelList(province, mSaleTime, null);
 	}
 
 	/**
@@ -438,9 +438,9 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	 * 
 	 * @param position
 	 */
-	private void fetchHotelList(Province province, SaleTime saleTime)
+	protected void fetchHotelList(Province province, SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
 	{
-		if (saleTime == null)
+		if (checkInSaleTime == null)
 		{
 			return;
 		}
@@ -454,16 +454,34 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 		lockUI();
 
+		int stayDays = 0;
+
+		if (checkOutSaleTime == null)
+		{
+			// 오늘, 내일인 경우
+			stayDays = 1;
+		} else
+		{
+			// 연박인 경우
+			stayDays = checkOutSaleTime.getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay();
+		}
+
+		if (stayDays <= 0)
+		{
+			unLockUI();
+			return;
+		}
+
 		String params = null;
 
 		if (province instanceof Area)
 		{
 			Area area = (Area) province;
 
-			params = String.format("?province_idx=%d&area_idx=%d&date=%s", area.getProvinceIndex(), area.index, saleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
+			params = String.format("?province_idx=%d&area_idx=%d&checkin_date=%s&length_stay=%d", area.getProvinceIndex(), area.index, checkInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), stayDays);
 		} else
 		{
-			params = String.format("?province_idx=%d&date=%s", province.getProvinceIndex(), saleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
+			params = String.format("?province_idx=%d&checkin_date=%s&length_stay=%d", province.getProvinceIndex(), checkInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), stayDays);
 		}
 
 		// 호텔 리스트를 가져온다. 
