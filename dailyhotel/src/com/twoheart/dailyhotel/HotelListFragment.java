@@ -42,6 +42,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.adapter.HotelListAdapter;
@@ -61,6 +62,7 @@ import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
 import com.twoheart.dailyhotel.widget.DailyHotelHeaderTransformer;
+import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView;
 
 public class HotelListFragment extends BaseFragment implements Constants, OnItemClickListener, OnRefreshListener
@@ -70,11 +72,8 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	private HotelListAdapter mHotelListAdapter;
 
 	protected SaleTime mSaleTime;
-
-	//	private boolean event;
 	protected boolean mIsSelectionTop;
 	private View mEmptyView;
-	//	private View mFooterView; // FooterView
 
 	private FrameLayout mMapLayout;
 	private HotelListMapFragment mHotelListMapFragment;
@@ -95,7 +94,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	private static ValueAnimator mValueAnimator = null;
 	private static boolean mLockActionBar = false;
 	private static int mAnchorY = Integer.MAX_VALUE;
-	private int mScrollState;
 	private ActionbarViewHolder mActionbarViewHolder;
 
 	private class ActionbarViewHolder
@@ -682,7 +680,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		@Override
 		public void onScrollStateChanged(AbsListView view, int scrollState)
 		{
-			mScrollState = scrollState;
 		}
 
 		@Override
@@ -732,30 +729,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 				} else if (mOldfirstVisibleItem < firstVisibleItem)
 				{
 					mDirection = MotionEvent.ACTION_UP;
-				} else
-				{
-					//					if (mScrollState != OnScrollListener.SCROLL_STATE_FLING)
-					//					{
-					//						if (mOldY > y)
-					//						{
-					//							if (mDirection == MotionEvent.ACTION_DOWN)
-					//							{
-					//								mDirection = MotionEvent.ACTION_CANCEL;
-					//							} else
-					//							{
-					//								mDirection = MotionEvent.ACTION_UP;
-					//							}
-					//						} else if (mOldY < y)
-					//						{
-					//							if (mDirection == MotionEvent.ACTION_UP)
-					//							{
-					//								mDirection = MotionEvent.ACTION_CANCEL;
-					//							} else
-					//							{
-					//								mDirection = MotionEvent.ACTION_DOWN;
-					//							}
-					//						}
-					//					}
 				}
 
 				mOldY = y;
@@ -874,6 +847,12 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 				if (msg_code != 0)
 				{
+					if (response.has("msg") == true)
+					{
+						String msg = response.getString("msg");
+						DailyToast.showToast(baseActivity, msg, Toast.LENGTH_SHORT);
+					}
+
 					throw new NullPointerException("response == null");
 				}
 
