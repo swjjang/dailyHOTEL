@@ -69,17 +69,18 @@ public class KakaoLinkManager implements Constants
 			String schemeParams = jsonObject.toString();
 
 			kkMsgBuilder.addAppButton(mContext.getString(R.string.kakao_btn_go_hotel), new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build()).addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
-			kkMsgBuilder.addImage(imageUrl, 300, 200);
 
-			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM.dd", Locale.KOREA);
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd", Locale.KOREA);
 			simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
 			Date checkInDate = new Date(dailyTime + SaleTime.SECONDS_IN_A_DAY * dailyDayOfDays * 1000);
 			Date chekcOutDate = new Date(dailyTime + SaleTime.SECONDS_IN_A_DAY * (dailyDayOfDays + nights) * 1000);
 
-			String text = String.format("%s\n날짜 : %s - %s", hotelName, simpleDateFormat.format(checkInDate), simpleDateFormat.format(chekcOutDate));
+			String text = mContext.getString(R.string.kakao_btn_share_hotel, hotelName, simpleDateFormat.format(checkInDate), simpleDateFormat.format(chekcOutDate), nights, nights + 1);
 
+			kkMsgBuilder.addImage(imageUrl, 300, 200);
 			kkMsgBuilder.addText(text);
+
 			kkLink.sendMessage(kkMsgBuilder.build(), mContext);
 		} catch (Exception e)
 		{

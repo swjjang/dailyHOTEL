@@ -796,7 +796,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			if (backButtonHandler.onBackPressed())
 			{
 				ExitActivity.exitApplication(this);
-				
+
 				super.onBackPressed();
 			}
 		} else
