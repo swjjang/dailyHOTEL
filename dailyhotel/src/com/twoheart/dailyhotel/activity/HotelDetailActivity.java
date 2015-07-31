@@ -27,6 +27,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
@@ -36,6 +38,7 @@ import com.twoheart.dailyhotel.model.HotelDetailEx;
 import com.twoheart.dailyhotel.model.SaleRoomInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.ui.HotelDetailLayout;
+import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.Util;
@@ -279,6 +282,30 @@ public class HotelDetailActivity extends BaseActivity
 		super.onError();
 
 		finish();
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		getMenuInflater().inflate(R.menu.share_actions, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch (item.getItemId())
+		{
+			case R.id.action_share:
+				KakaoLinkManager.newInstance(this).shareHotel(mHotelDetail.hotelName, mHotelDetail.hotelIndex, //
+				mHotelDetail.getImageUrlList().get(0), //
+				mCheckInSaleTime.getDailyTime(), //
+				mCheckInSaleTime.getOffsetDailyDay(), mHotelDetail.nights);
+				return true;
+
+			default:
+				return super.onOptionsItemSelected(item);
+		}
 	}
 
 	/**
@@ -788,7 +815,7 @@ public class HotelDetailActivity extends BaseActivity
 					long shareDailyTime = mCheckInSaleTime.getDayOfDaysHotelDate().getTime();
 					long todayDailyTime = response.getLong("dailyDateTime");
 
-					SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMdd", Locale.KOREA);
+					SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
 					simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
 					int shareDailyDay = Integer.parseInt(simpleDateFormat.format(new Date(shareDailyTime)));

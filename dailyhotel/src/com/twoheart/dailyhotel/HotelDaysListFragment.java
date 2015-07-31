@@ -15,6 +15,11 @@
  */
 package com.twoheart.dailyhotel;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.json.JSONObject;
+
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.ObjectAnimator;
@@ -32,14 +37,18 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.TranslateAnimation;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
+import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 public class HotelDaysListFragment extends HotelListFragment implements OnClickListener
@@ -376,6 +385,32 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 
 				break;
 		}
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parentView, View childView, int position, long id)
+	{
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
+		position -= mHotelListView.getHeaderViewsCount();
+
+		if (position < 0)
+		{
+			refreshHotelList(mSelectedProvince, true);
+			return;
+		}
+
+		mSelectedHotelListViewItem = mHotelListAdapter.getItem(position);
+
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("timeZone", "Asia/Seoul");
+
+		mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, baseActivity));
 	}
 
 	private void resetCheckDays()
@@ -1077,4 +1112,52 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 			mDaysBackgroundView.startAnimation(mAlphaAnimation);
 		}
 	}
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Listener
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
+	{
+		@Override
+		public void onResponse(String url, JSONObject response)
+		{
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null)
+			{
+				return;
+			}
+
+			try
+			{
+				if (response == null)
+				{
+					throw new NullPointerException("response == null");
+				}
+
+				SaleTime saleTime = new SaleTime();
+				saleTime.setCurrentTime(response.getLong("currentDateTime"));
+				saleTime.setOpenTime(response.getLong("openDateTime"));
+				saleTime.setCloseTime(response.getLong("closeDateTime"));
+				saleTime.setDailyTime(response.getLong("dailyDateTime"));
+
+				if (saleTime.isSaleTime() == true)
+				{
+					if (mUserActionListener != null)
+					{
+						mUserActionListener.selectHotel(mSelectedHotelListViewItem, mSelectedCheckInSaleTime);
+					}
+				} else
+				{
+					((MainActivity) baseActivity).replaceFragment(WaitTimerFragment.newInstance(mSaleTime));
+					unLockUI();
+				}
+			} catch (Exception e)
+			{
+				onError(e);
+				unLockUI();
+			}
+		}
+	};
 }
