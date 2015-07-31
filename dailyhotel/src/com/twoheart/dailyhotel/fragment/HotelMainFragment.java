@@ -595,7 +595,7 @@ public class HotelMainFragment extends BaseFragment
 
 					startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTELTAB);
 
-					mUserAnalyticsActionListener.selectHotel(hotelListViewItem.getItem().getName(), hotel.getIdx());
+					//					mUserAnalyticsActionListener.selectHotel(hotelListViewItem.getItem().getName(), hotel.getIdx());
 					break;
 				}
 
