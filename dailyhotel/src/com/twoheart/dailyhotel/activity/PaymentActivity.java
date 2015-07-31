@@ -723,7 +723,7 @@ public class PaymentActivity extends BaseActivity implements Constants
 
 					String argUrl = arg;
 
-					if (!arg.equals("Install") && !ps.getPackageDownloadInstallState("kvp.jjy.MispAndroid320"))
+					if (!arg.equals("Install") && !ps.getPackageDownloadInstallState("kvp.jjy.MispAndroid"))
 					{
 						argUrl = "Install";
 					}
