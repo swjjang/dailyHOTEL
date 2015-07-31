@@ -159,43 +159,17 @@ public class HotelMainFragment extends BaseFragment
 			return;
 		}
 
-		if (baseActivity.sharedPreference.contains(KEY_PREFERENCE_BY_SHARE) == true)
+		if (mDontReloadAtOnResume == true)
 		{
-			String param = baseActivity.sharedPreference.getString(KEY_PREFERENCE_BY_SHARE, null);
-			baseActivity.sharedPreference.edit().remove(KEY_PREFERENCE_BY_SHARE).apply();
-
-			if (param != null)
-			{
-				try
-				{
-					JSONObject jsonObject = new JSONObject(param);
-
-					int hotelIndex = jsonObject.getInt("hotelIndex");
-					long dailyTime = Long.valueOf(jsonObject.getLong("dailyTime"));
-					int dailyDayOfDays = jsonObject.getInt("dailyDayOfDays");
-					int nights = jsonObject.getInt("nights");
-
-					mOnUserActionListener.selectHotel(hotelIndex, dailyTime, dailyDayOfDays, nights);
-				} catch (Exception e)
-				{
-					ExLog.d(e.toString());
-				}
-			}
-
+			mDontReloadAtOnResume = false;
 		} else
 		{
-			if (mDontReloadAtOnResume == true)
-			{
-				mDontReloadAtOnResume = false;
-			} else
-			{
-				lockUI();
+			lockUI();
 
-				Map<String, String> params = new HashMap<String, String>();
-				params.put("timeZone", "Asia/Seoul");
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("timeZone", "Asia/Seoul");
 
-				mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, baseActivity));
-			}
+			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, baseActivity));
 		}
 
 		super.onResume();
@@ -767,8 +741,36 @@ public class HotelMainFragment extends BaseFragment
 
 				if (mTodaySaleTime.isSaleTime() == true)
 				{
-					// 지역 리스트를 가져온다
-					mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_HOTEL_ALL).toString(), null, mSaleHotelAllJsonResponseListener, baseActivity));
+					if (baseActivity.sharedPreference.contains(KEY_PREFERENCE_BY_SHARE) == true)
+					{
+						String param = baseActivity.sharedPreference.getString(KEY_PREFERENCE_BY_SHARE, null);
+						baseActivity.sharedPreference.edit().remove(KEY_PREFERENCE_BY_SHARE).apply();
+
+						if (param != null)
+						{
+							try
+							{
+								JSONObject jsonObject = new JSONObject(param);
+
+								int hotelIndex = jsonObject.getInt("hotelIndex");
+								long dailyTime = Long.valueOf(jsonObject.getLong("dailyTime"));
+								int dailyDayOfDays = jsonObject.getInt("dailyDayOfDays");
+								int nights = jsonObject.getInt("nights");
+
+								mOnUserActionListener.selectHotel(hotelIndex, dailyTime, dailyDayOfDays, nights);
+							} catch (Exception e)
+							{
+								ExLog.d(e.toString());
+								
+								// 지역 리스트를 가져온다
+								mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_HOTEL_ALL).toString(), null, mSaleHotelAllJsonResponseListener, baseActivity));
+							}
+						}
+					} else
+					{
+						// 지역 리스트를 가져온다
+						mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_HOTEL_ALL).toString(), null, mSaleHotelAllJsonResponseListener, baseActivity));
+					}
 				} else
 				{
 					((MainActivity) baseActivity).replaceFragment(WaitTimerFragment.newInstance(mTodaySaleTime));
