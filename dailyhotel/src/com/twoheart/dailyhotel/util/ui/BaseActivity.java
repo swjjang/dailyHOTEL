@@ -37,6 +37,7 @@ import com.android.volley.RequestQueue.RequestFilter;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.activity.ExitActivity;
 import com.twoheart.dailyhotel.fragment.HotelMainFragment;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -118,13 +119,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	@Override
 	public void onBackPressed()
 	{
-		try
-		{
-			super.onBackPressed();
-		} catch (Exception e)
-		{
-			finish();
-		}
+		super.onBackPressed();
 
 		// RequestQueue에 등록된 모든 Request들을 취소한다.
 		if (mQueue != null)

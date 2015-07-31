@@ -38,7 +38,7 @@
         android:freezesText="true"
         android:gravity="center_vertical"
         android:paddingLeft="55dp"
-        android:paddingRight="15dp"
+        android:paddingRight="40dp"
         android:singleLine="true"
         android:textColor="@android:color/black"
         android:textSize="20dp"

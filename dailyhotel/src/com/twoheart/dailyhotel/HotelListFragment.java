@@ -68,9 +68,9 @@ import com.twoheart.dailyhotel.widget.PinnedSectionListView;
 
 public class HotelListFragment extends BaseFragment implements Constants, OnItemClickListener, OnRefreshListener
 {
-	private PinnedSectionListView mHotelListView;
+	protected PinnedSectionListView mHotelListView;
 	private PullToRefreshLayout mPullToRefreshLayout;
-	private HotelListAdapter mHotelListAdapter;
+	protected HotelListAdapter mHotelListAdapter;
 
 	protected SaleTime mSaleTime;
 	protected boolean mIsSelectionTop;
@@ -83,7 +83,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 	//	private DailyFloatingActionButton mDailyFloatingActionButton;
 
-	private HotelListViewItem mSelectedHotelListViewItem;
+	protected HotelListViewItem mSelectedHotelListViewItem;
 
 	protected HotelMainFragment.OnUserActionListener mUserActionListener;
 

@@ -341,8 +341,7 @@ public interface Constants
 	public static final String KEY_PREFERENCE_USER_IDX = "USER_IDX"; // 예약 성공했을때 예약 사용함, 이름과 용도가 맞지 않음 -> 기존 코드
 
 	public static final String KEY_PREFERENCE_ACCOUNT_READY_FLAG = "ACCOUNT_READY_FLAG"; //
-
-	//	public static final String KEY_PREFERENCE_LOCALE = "LOCALE"; //
+	public static final String KEY_PREFERENCE_BY_SHARE = "BY_SHARE";
 
 	// Android 컴포넌트 간에 데이터를 주고받을 때 사용되는 인텐트 이름(키)을 정의한 상수이다.
 	public static final String NAME_INTENT_EXTRA_DATA_HOTEL = "hotel";

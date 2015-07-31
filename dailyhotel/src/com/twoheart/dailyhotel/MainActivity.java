@@ -69,6 +69,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.twoheart.dailyhotel.activity.EventWebActivity;
+import com.twoheart.dailyhotel.activity.ExitActivity;
 import com.twoheart.dailyhotel.activity.SplashActivity;
 import com.twoheart.dailyhotel.fragment.HotelMainFragment;
 import com.twoheart.dailyhotel.fragment.RatingHotelFragment;
@@ -125,8 +126,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	private CloseOnBackPressed backButtonHandler;
 
 	protected HashMap<String, String> regPushParams;
-
-	public Uri intentData;
 	private Handler mHandler = new Handler();
 
 	@Override
@@ -137,19 +136,25 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 		// 사용자가 선택한 언어, but 만약 사용자가 한국인인데 일본어를 선택하면 jp가 됨.
 		// 영어인 경우 - English, 한글인 경우 - 한국어
-
-		//		Locale.setDefault(new Locale("한국어"));
 		Util.setLocale(this, "한국어");
 
-		// Intent Scheme Parameter for KakaoLink
-		intentData = getIntent().getData();
+		Editor editor = sharedPreference.edit();
+		editor.remove(KEY_PREFERENCE_BY_SHARE);
+		editor.apply();
+
+		Uri intentData = getIntent().getData();
+
 		if (intentData != null)
 		{
-			/**
-			 * TODO : IF(intentData!=null) url from shared link
-			 */
-
 			ExLog.e("intentData : " + intentData.toString());
+
+			String link = intentData.toString();
+
+			// KAKAOlink로 들어온 경우.
+			if (link.indexOf("kakaolink") >= 0)
+			{
+				writeKakaoLinkPreference(link);
+			}
 		}
 
 		// 쿠키 동기화를 초기화한다. 로그인, 로그아웃 세션 쿠키는 MainActivity의 생명주기와 동기화한다.
@@ -187,6 +192,32 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		if (DEBUG)
 		{
 			printPackageHashKey();
+		}
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent)
+	{
+		super.onNewIntent(intent);
+
+		Editor editor = sharedPreference.edit();
+		editor.remove(KEY_PREFERENCE_BY_SHARE);
+		editor.apply();
+
+		Uri intentData = intent.getData();
+		if (intentData != null)
+		{
+			ExLog.e("intentData : " + intentData.toString());
+
+			String link = intentData.toString();
+
+			// KAKAOlink로 들어온 경우.
+			if (link.indexOf("kakaolink") >= 0)
+			{
+				writeKakaoLinkPreference(link);
+			}
+
+			selectMenuDrawer(menuHotelListFragment);
 		}
 	}
 
@@ -230,26 +261,29 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 				startActivityForResult(new Intent(this, IntroActivity.class), CODE_REQUEST_ACTIVITY_INTRO);
 			} else
 			{
-				// Intent가 Push로 부터 온경우
-				int pushType = getIntent().getIntExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, -1);
-				switch (pushType)
+				if (sharedPreference.contains(KEY_PREFERENCE_BY_SHARE) == true)
 				{
-					case PUSH_TYPE_NOTICE:
-						selectMenuDrawer(menuHotelListFragment);
-						break;
-					case PUSH_TYPE_ACCOUNT_COMPLETE:
-						selectMenuDrawer(menuBookingListFragment);
-						break;
-					default:
-						selectMenuDrawer(menuHotelListFragment);
-						break;
+					selectMenuDrawer(menuHotelListFragment);
+				} else
+				{
+					// Intent가 Push로 부터 온경우
+					int pushType = getIntent().getIntExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, -1);
+					switch (pushType)
+					{
+						case PUSH_TYPE_NOTICE:
+							selectMenuDrawer(menuHotelListFragment);
+							break;
+						case PUSH_TYPE_ACCOUNT_COMPLETE:
+							selectMenuDrawer(menuBookingListFragment);
+							break;
+						default:
+							selectMenuDrawer(menuHotelListFragment);
+							break;
+					}
+
+					mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, this));
 				}
-
-				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, this));
 			}
-
-			// 호텔평가를 위한 현재 로그인 여부 체크
-
 		} else if (requestCode == CODE_REQUEST_ACTIVITY_INTRO)
 		{
 			selectMenuDrawer(menuHotelListFragment);
@@ -258,7 +292,22 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			//					new StringBuilder(URL_DAILYHOTEL_SERVER).append(
 			//							URL_WEBAPI_USER_ALIVE).toString(), null, this, this));
 		}
+	}
 
+	private void writeKakaoLinkPreference(String link)
+	{
+		if (TextUtils.isEmpty(link) == true)
+		{
+			return;
+		}
+
+		int startIndex = link.indexOf("?") + 1;
+		String param = link.substring(startIndex);
+
+		// param 저장하기
+		Editor editor = sharedPreference.edit();
+		editor.putString(KEY_PREFERENCE_BY_SHARE, param);
+		editor.apply();
 	}
 
 	private String getGcmId()
@@ -746,6 +795,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		{
 			if (backButtonHandler.onBackPressed())
 			{
+				ExitActivity.exitApplication(this);
+
 				super.onBackPressed();
 			}
 		} else

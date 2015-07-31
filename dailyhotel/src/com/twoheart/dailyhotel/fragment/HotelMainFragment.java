@@ -84,7 +84,9 @@ public class HotelMainFragment extends BaseFragment
 
 	public interface OnUserActionListener
 	{
-		public void selectHotel(HotelListViewItem hotelListViewItem, SaleTime saleTime);
+		public void selectHotel(HotelListViewItem hotelListViewItem, SaleTime checkSaleTime);
+
+		public void selectHotel(int hotelIndex, long dailyTime, int dailyDayOfDays, int nights);
 
 		public void selectDay(SaleTime checkInSaleTime, SaleTime checkOutSaleTime, boolean isListSelectionTop);
 
@@ -157,17 +159,43 @@ public class HotelMainFragment extends BaseFragment
 			return;
 		}
 
-		if (mDontReloadAtOnResume == true)
+		if (baseActivity.sharedPreference.contains(KEY_PREFERENCE_BY_SHARE) == true)
 		{
-			mDontReloadAtOnResume = false;
+			String param = baseActivity.sharedPreference.getString(KEY_PREFERENCE_BY_SHARE, null);
+			baseActivity.sharedPreference.edit().remove(KEY_PREFERENCE_BY_SHARE).apply();
+
+			if (param != null)
+			{
+				try
+				{
+					JSONObject jsonObject = new JSONObject(param);
+
+					int hotelIndex = jsonObject.getInt("hotelIndex");
+					long dailyTime = Long.valueOf(jsonObject.getLong("dailyTime"));
+					int dailyDayOfDays = jsonObject.getInt("dailyDayOfDays");
+					int nights = jsonObject.getInt("nights");
+
+					mOnUserActionListener.selectHotel(hotelIndex, dailyTime, dailyDayOfDays, nights);
+				} catch (Exception e)
+				{
+					ExLog.d(e.toString());
+				}
+			}
+
 		} else
 		{
-			lockUI();
+			if (mDontReloadAtOnResume == true)
+			{
+				mDontReloadAtOnResume = false;
+			} else
+			{
+				lockUI();
 
-			Map<String, String> params = new HashMap<String, String>();
-			params.put("timeZone", "Asia/Seoul");
+				Map<String, String> params = new HashMap<String, String>();
+				params.put("timeZone", "Asia/Seoul");
 
-			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, baseActivity));
+				mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, baseActivity));
+			}
 		}
 
 		super.onResume();
@@ -547,7 +575,7 @@ public class HotelMainFragment extends BaseFragment
 	{
 
 		@Override
-		public void selectHotel(HotelListViewItem hotelListViewItem, SaleTime saleTime)
+		public void selectHotel(HotelListViewItem hotelListViewItem, SaleTime checkSaleTime)
 		{
 			BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -586,7 +614,7 @@ public class HotelMainFragment extends BaseFragment
 					editor.commit();
 
 					Intent intent = new Intent(baseActivity, HotelDetailActivity.class);
-					intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
+					intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkSaleTime);
 					intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, hotel.getIdx());
 					intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, hotel.nights);
 
@@ -605,6 +633,35 @@ public class HotelMainFragment extends BaseFragment
 					baseActivity.releaseUiComponent();
 					break;
 			}
+		}
+
+		@Override
+		public void selectHotel(int hotelIndex, long dailyTime, int dailyDayOfDays, int nights)
+		{
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null || hotelIndex < 0)
+			{
+				return;
+			}
+
+			if (isLockUiComponent() == true || baseActivity.isLockUiComponent() == true)
+			{
+				return;
+			}
+
+			lockUiComponent();
+			baseActivity.lockUiComponent();
+
+			Intent intent = new Intent(baseActivity, HotelDetailActivity.class);
+
+			intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
+			intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, hotelIndex);
+			intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME, dailyTime);
+			intent.putExtra(NAME_INTENT_EXTRA_DATA_DAYOFDAYS, dailyDayOfDays);
+			intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
+
+			startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTELTAB);
 		}
 
 		@Override
