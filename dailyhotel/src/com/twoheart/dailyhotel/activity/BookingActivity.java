@@ -282,7 +282,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 	private void updatePayPrice(boolean applyCredit)
 	{
-		int originalPrice = mPay.getSaleRoomInformation().averageDiscount;
+		int originalPrice = mPay.getSaleRoomInformation().totalDiscount;
 		int credit = mPay.getCredit().getBonus();
 
 		DecimalFormat comma = new DecimalFormat("###,##0");
@@ -1784,7 +1784,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 							updatePayPrice(true);
 						}
 
-						int originalPrice = mPay.getSaleRoomInformation().averageDiscount;
+						int originalPrice = mPay.getSaleRoomInformation().totalDiscount;
 						DecimalFormat comma = new DecimalFormat("###,##0");
 
 						tvOriginalPriceValue.setText(comma.format(originalPrice) + Html.fromHtml(getString(R.string.currency)));
@@ -1861,6 +1861,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 						}
 
 						String params = String.format("?room_idx=%d&checkin_date=%s&length_stay=%d", mPay.getSaleRoomInformation().roomIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), mPay.getSaleRoomInformation().nights);
+
+						if (DEBUG == true)
+						{
+							SimpleAlertDialog.build(BookingActivity.this, null, params, getString(R.string.dialog_btn_text_confirm), null).show();
+						}
 
 						// 2. 화면 정보 얻기
 						mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_ROOM_PAYMENT).append(params).toString(), null, mSaleRoomPaymentJsonResponseListener, BookingActivity.this));
@@ -2126,19 +2131,19 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 				long checkInDate = jsonData.getLong("check_in_date");
 				long checkOutDate = jsonData.getLong("check_out_date");
-				int discount = jsonData.getInt("discount");
+				int discount = jsonData.getInt("discount_total");
 				boolean isOnSale = jsonData.getBoolean("on_sale");
 				int availableRooms = jsonData.getInt("available_rooms");
 
 				SaleRoomInformation saleRoomInformation = mPay.getSaleRoomInformation();
 
 				// 가격이 변동 되었다.
-				if (saleRoomInformation.averageDiscount != discount)
+				if (saleRoomInformation.totalDiscount != discount)
 				{
 					mIsChangedPay = true;
 				}
 
-				saleRoomInformation.averageDiscount = discount;
+				saleRoomInformation.totalDiscount = discount;
 
 				// Check In
 				Calendar calendarCheckin = DailyCalendar.getInstance();
@@ -2228,19 +2233,19 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 				long checkInDate = jsonData.getLong("check_in_date");
 				long checkOutDate = jsonData.getLong("check_out_date");
-				int discount = jsonData.getInt("discount");
+				int discount = jsonData.getInt("discount_total");
 				boolean isOnSale = jsonData.getBoolean("on_sale");
 				int availableRooms = jsonData.getInt("available_rooms");
 
 				SaleRoomInformation saleRoomInformation = mPay.getSaleRoomInformation();
 
 				// 가격이 변동 되었다.
-				if (saleRoomInformation.averageDiscount != discount)
+				if (saleRoomInformation.totalDiscount != discount)
 				{
 					mIsChangedPay = true;
 				}
 
-				saleRoomInformation.averageDiscount = discount;
+				saleRoomInformation.totalDiscount = discount;
 
 				// 판매 중지 상품으로 호텔 리스트로 복귀 시킨다.
 				if (isOnSale == false || availableRooms == 0)
