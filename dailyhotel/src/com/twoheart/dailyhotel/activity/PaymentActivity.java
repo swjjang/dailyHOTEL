@@ -56,6 +56,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
@@ -722,7 +723,7 @@ public class PaymentActivity extends BaseActivity implements Constants
 
 					String argUrl = arg;
 
-					if (!arg.equals("Install") && !ps.getPackageDownloadInstallState("kvp.jjy.MispAndroid"))
+					if (!arg.equals("Install") && !ps.getPackageDownloadInstallState("kvp.jjy.MispAndroid320"))
 					{
 						argUrl = "Install";
 					}
@@ -732,7 +733,15 @@ public class PaymentActivity extends BaseActivity implements Constants
 					Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(strUrl));
 
 					m_nStat = PROGRESS_STAT_IN;
-					startActivity(intent);
+
+					try
+					{
+						startActivity(intent);
+					} catch (Exception e)
+					{
+						intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=kvp.jjy.MispAndroid320"));
+						startActivity(intent);
+					}
 				}
 			});
 		}

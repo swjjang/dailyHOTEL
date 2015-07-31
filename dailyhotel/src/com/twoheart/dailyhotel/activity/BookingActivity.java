@@ -473,8 +473,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	{
 		lockUI();
 
-		mClickView.setClickable(false);
-		mClickView.setEnabled(false);
+		if (mClickView != null)
+		{
+			mClickView.setClickable(false);
+			mClickView.setEnabled(false);
+		}
 
 		// 해당 호텔이 결제하기를 못하는 경우를 처리한다.
 		Map<String, String> updateParams = new HashMap<String, String>();
@@ -1166,8 +1169,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				{
 					releaseUiComponent();
 
-					mClickView.setClickable(true);
-					mClickView.setEnabled(true);
+					if (mClickView != null)
+					{
+						mClickView.setClickable(true);
+						mClickView.setEnabled(true);
+					}
 				}
 			});
 
@@ -1269,8 +1275,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			{
 				releaseUiComponent();
 
-				mClickView.setClickable(true);
-				mClickView.setEnabled(true);
+				if (mClickView != null)
+				{
+					mClickView.setClickable(true);
+					mClickView.setEnabled(true);
+				}
 			}
 		});
 
