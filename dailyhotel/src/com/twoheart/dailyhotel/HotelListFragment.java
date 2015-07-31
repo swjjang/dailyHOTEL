@@ -84,7 +84,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	//	private DailyFloatingActionButton mDailyFloatingActionButton;
 
 	private HotelListViewItem mSelectedHotelListViewItem;
-	private int mSelectedHotelIndex;
 
 	protected HotelMainFragment.OnUserActionListener mUserActionListener;
 
@@ -226,17 +225,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		}
 
 		mSelectedHotelListViewItem = mHotelListAdapter.getItem(position);
-
-		int count = 0;
-		for (int i = 0; i < position; i++)
-		{
-			if (mHotelListAdapter.getItem(i).getType() == HotelListViewItem.TYPE_SECTION)
-			{
-				count++;
-			}
-		}
-
-		mSelectedHotelIndex = position - count;
 
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("timeZone", "Asia/Seoul");
@@ -968,7 +956,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 				{
 					if (mUserActionListener != null)
 					{
-						mUserActionListener.selectHotel(mSelectedHotelListViewItem, mSelectedHotelIndex, mSaleTime);
+						mUserActionListener.selectHotel(mSelectedHotelListViewItem, mSaleTime);
 					}
 				} else
 				{

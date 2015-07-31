@@ -201,6 +201,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 					viewHolder.address = (TextView) convertView.findViewById(R.id.tv_hotel_row_address);
 					viewHolder.grade = (TextView) convertView.findViewById(R.id.hv_hotel_grade);
 					viewHolder.dBenefit = convertView.findViewById(R.id.dBenefitImageView);
+					viewHolder.average = convertView.findViewById(R.id.averageTextView);
 
 					convertView.setTag(viewHolder);
 				}
@@ -230,13 +231,13 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 
 				if (element.nights > 1)
 				{
-					String text = context.getString(R.string.label_hotel_list_extendedstay_discount, strDiscount, currency);
-					viewHolder.discount.setText(text);
+					viewHolder.average.setVisibility(View.VISIBLE);
 				} else
 				{
-					viewHolder.discount.setText(strDiscount + currency);
+					viewHolder.average.setVisibility(View.GONE);
 				}
 
+				viewHolder.discount.setText(strDiscount + currency);
 				viewHolder.name.setSelected(true); // Android TextView marquee bug
 
 				if (Util.isOverAPI16() == true)
@@ -309,6 +310,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 		TextView sold_out;
 		TextView address;
 		TextView grade;
+		View average;
 		View dBenefit;
 	}
 

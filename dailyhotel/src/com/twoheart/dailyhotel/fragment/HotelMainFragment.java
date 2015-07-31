@@ -84,7 +84,7 @@ public class HotelMainFragment extends BaseFragment
 
 	public interface OnUserActionListener
 	{
-		public void selectHotel(HotelListViewItem hotelListViewItem, int hotelIndex, SaleTime saleTime);
+		public void selectHotel(HotelListViewItem hotelListViewItem, SaleTime saleTime);
 
 		public void selectDay(SaleTime checkInSaleTime, SaleTime checkOutSaleTime, boolean isListSelectionTop);
 
@@ -547,7 +547,7 @@ public class HotelMainFragment extends BaseFragment
 	{
 
 		@Override
-		public void selectHotel(HotelListViewItem hotelListViewItem, int hotelIndex, SaleTime saleTime)
+		public void selectHotel(HotelListViewItem hotelListViewItem, SaleTime saleTime)
 		{
 			BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -564,9 +564,9 @@ public class HotelMainFragment extends BaseFragment
 			lockUiComponent();
 			baseActivity.lockUiComponent();
 
-			if (hotelListViewItem == null || hotelIndex < 0)
+			if (hotelListViewItem == null)
 			{
-				ExLog.d("hotelListViewItem == null || hotelIndex < 0");
+				ExLog.d("hotelListViewItem == null");
 
 				releaseUiComponent();
 				baseActivity.releaseUiComponent();
@@ -587,7 +587,7 @@ public class HotelMainFragment extends BaseFragment
 
 					Intent intent = new Intent(baseActivity, HotelDetailActivity.class);
 					intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
-					intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, hotelIndex);
+					intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, hotel.getIdx());
 					intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, hotel.nights);
 
 					intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME, hotel.getName());
@@ -595,7 +595,7 @@ public class HotelMainFragment extends BaseFragment
 
 					startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTELTAB);
 
-					mUserAnalyticsActionListener.selectHotel(hotelListViewItem.getItem().getName(), hotelIndex);
+					mUserAnalyticsActionListener.selectHotel(hotelListViewItem.getItem().getName(), hotel.getIdx());
 					break;
 				}
 

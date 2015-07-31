@@ -964,8 +964,6 @@ public class HotelListMapFragment extends
 
 			if (mUserActionListener != null)
 			{
-				int index = 0;
-
 				for (HotelListViewItem hotelListViewItem : mHotelArrayList)
 				{
 					if (hotelListViewItem.getType() == HotelListViewItem.TYPE_SECTION)
@@ -978,11 +976,9 @@ public class HotelListMapFragment extends
 					if (hotel.equals(selectedHotel) == true)
 					{
 						mSelectedHotelListViewItem = hotelListViewItem;
-						mUserActionListener.selectHotel(hotelListViewItem, index, mSaleTime);
+						mUserActionListener.selectHotel(hotelListViewItem, mSaleTime);
 						break;
 					}
-
-					index++;
 				}
 			}
 		}

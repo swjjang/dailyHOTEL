@@ -28,17 +28,29 @@
 
         <!-- board -->
 
-        <RelativeLayout
-            android:id="@+id/rl_hotel_under"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:padding="8dp" >
+            android:orientation="vertical"
+            android:paddingBottom="8dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp" >
+
+            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                android:id="@+id/averageTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:text="@string/label_hotel_list_extendedstay_average"
+                android:textColor="@android:color/white"
+                android:textSize="11dp"
+                android:visibility="gone" />
 
             <RelativeLayout
-                android:id="@+id/ll_hotel_under_upper"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp" >
 
                 <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                     android:id="@+id/hv_hotel_grade"
@@ -127,7 +139,7 @@
                     android:textColor="#cecece"
                     android:textSize="13.5dp" />
             </RelativeLayout>
-        </RelativeLayout>
+        </LinearLayout>
     </RelativeLayout>
 
     <com.twoheart.dailyhotel.widget.DailyCustomFontTextView

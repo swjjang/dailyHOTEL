@@ -350,14 +350,7 @@ public class HotelDetailLayout
 		String currency = mActivity.getString(R.string.currency);
 		String price = comma.format(information.averageDiscount);
 
-		if (nights > 1)
-		{
-			String text = mActivity.getString(R.string.label_hotel_list_extendedstay_discount, price, currency);
-			priceTextView.setText(text);
-		} else
-		{
-			priceTextView.setText(price + currency);
-		}
+		priceTextView.setText(price + currency);
 
 		if (Util.isTextEmpty(information.option) == true)
 		{

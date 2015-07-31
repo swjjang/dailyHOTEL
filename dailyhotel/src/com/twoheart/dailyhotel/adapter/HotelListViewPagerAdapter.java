@@ -121,6 +121,16 @@ public class HotelListViewPagerAdapter extends PagerAdapter
 			priceTextView.setPaintFlags(priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 		}
 
+		View averageTextView = view.findViewById(R.id.averageTextView);
+
+		if (hotel.nights > 1)
+		{
+			averageTextView.setVisibility(View.VISIBLE);
+		} else
+		{
+			averageTextView.setVisibility(View.GONE);
+		}
+
 		discountTextView.setText(comma.format(hotel.averageDiscount) + currency);
 
 		name.setSelected(true); // Android TextView marquee bug
