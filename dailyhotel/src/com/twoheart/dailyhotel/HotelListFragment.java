@@ -31,7 +31,6 @@ import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -46,7 +45,6 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
-import com.twoheart.dailyhotel.activity.BookingActivity;
 import com.twoheart.dailyhotel.adapter.HotelListAdapter;
 import com.twoheart.dailyhotel.fragment.HotelListMapFragment;
 import com.twoheart.dailyhotel.fragment.HotelMainFragment;
@@ -86,7 +84,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	//	private DailyFloatingActionButton mDailyFloatingActionButton;
 
 	private HotelListViewItem mSelectedHotelListViewItem;
-	private int mSelectedHotelIndex;
 
 	protected HotelMainFragment.OnUserActionListener mUserActionListener;
 
@@ -228,17 +225,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		}
 
 		mSelectedHotelListViewItem = mHotelListAdapter.getItem(position);
-
-		int count = 0;
-		for (int i = 0; i < position; i++)
-		{
-			if (mHotelListAdapter.getItem(i).getType() == HotelListViewItem.TYPE_SECTION)
-			{
-				count++;
-			}
-		}
-
-		mSelectedHotelIndex = position - count;
 
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("timeZone", "Asia/Seoul");
@@ -970,7 +956,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 				{
 					if (mUserActionListener != null)
 					{
-						mUserActionListener.selectHotel(mSelectedHotelListViewItem, mSelectedHotelIndex, mSaleTime);
+						mUserActionListener.selectHotel(mSelectedHotelListViewItem, mSaleTime);
 					}
 				} else
 				{

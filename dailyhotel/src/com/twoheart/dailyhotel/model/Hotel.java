@@ -343,8 +343,8 @@ public class Hotel implements Parcelable
 					isDBenefit = true;
 				}
 			}
-			
-			if(jsonObject.has("nights") == true)
+
+			if (jsonObject.has("nights") == true)
 			{
 				nights = jsonObject.getInt("nights");
 			}

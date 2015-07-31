@@ -201,6 +201,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 					viewHolder.address = (TextView) convertView.findViewById(R.id.tv_hotel_row_address);
 					viewHolder.grade = (TextView) convertView.findViewById(R.id.hv_hotel_grade);
 					viewHolder.dBenefit = convertView.findViewById(R.id.dBenefitImageView);
+					viewHolder.average = convertView.findViewById(R.id.averageTextView);
 
 					convertView.setTag(viewHolder);
 				}
@@ -214,7 +215,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 				viewHolder.address.setText(element.getAddress());
 				viewHolder.name.setText(element.getName());
 
-				Spanned currency = Html.fromHtml(getContext().getResources().getString(R.string.currency));
+				Spanned currency = Html.fromHtml(context.getResources().getString(R.string.currency));
 
 				if (price <= 0)
 				{
@@ -230,13 +231,13 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 
 				if (element.nights > 1)
 				{
-					String text = String.format("%s%s/1박", strDiscount, currency);
-					viewHolder.discount.setText(text);
+					viewHolder.average.setVisibility(View.VISIBLE);
 				} else
 				{
-					viewHolder.discount.setText(strDiscount + currency);
+					viewHolder.average.setVisibility(View.GONE);
 				}
 
+				viewHolder.discount.setText(strDiscount + currency);
 				viewHolder.name.setSelected(true); // Android TextView marquee bug
 
 				if (Util.isOverAPI16() == true)
@@ -248,7 +249,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 				}
 
 				// grade
-				viewHolder.grade.setText(element.getCategory().getName(getContext()));
+				viewHolder.grade.setText(element.getCategory().getName(context));
 				viewHolder.grade.setBackgroundResource(element.getCategory().getColorResId());
 
 				// AQuery사용시 
@@ -309,6 +310,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 		TextView sold_out;
 		TextView address;
 		TextView grade;
+		View average;
 		View dBenefit;
 	}
 

@@ -97,6 +97,7 @@
     <string name="toast_msg_input_error_alphanum_name">해외 호텔 예약시에는 영문 성함만 입력 가능합니다.</string>
     <string name="toast_msg_input_error_numeric">숫자만 입력 가능합니다.</string>
     <string name="toast_msg_no_call">전화 기능이 없는 단말입니다.\n고객센터 전화번호는 1800-9210입니다.</string>
+    <string name="toast_msg_dont_past_hotelinfo">호텔 정보를 조회 할 수 없습니다.</string>
 
     <!-- Dialog Messages -->
 
@@ -397,6 +398,7 @@
     <string name="frag_hotel_list_checkin">K - IN</string>
     <string name="frag_hotel_list_checkout">K - OUT</string>
     <string name="frag_hotel_days_tab_to">TO</string>
+	<string name="label_hotel_list_extendedstay_average">평균/1박</string>
 
     <!-- PopUp Event Fragment -->
     <string name="frag_popup_event_title">이벤트 안내</string>

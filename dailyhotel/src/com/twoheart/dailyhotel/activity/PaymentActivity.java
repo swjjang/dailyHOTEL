@@ -94,7 +94,7 @@ public class PaymentActivity extends BaseActivity implements Constants
 			return;
 		}
 
-		if (mPay.getSaleRoomInformation().saleIndex == 0)
+		if (mPay.getSaleRoomInformation().roomIndex == 0)
 		{
 			// 세션이 만료되어 재시작 요청.
 			restartApp();
@@ -161,17 +161,17 @@ public class PaymentActivity extends BaseActivity implements Constants
 			if (mPay.getPayPrice() == 0)
 			{
 				// 적립금으로만 결제하기 포스트
-				String url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)).append('/').append(mPay.getSaleRoomInformation().saleIndex).toString();
+				String url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)).append('/').append(mPay.getSaleRoomInformation().roomIndex).toString();
 
 				// 적립금으로만 결제하는 경우 결제창할 필요 없음
-				ArrayList<String> postParameterKey = new ArrayList<String>(Arrays.asList("saleIdx", "email", "name", "phone", "guest_name", "guest_phone", "guest_email"));
-				ArrayList<String> postParameterValue = new ArrayList<String>(Arrays.asList(String.valueOf(mPay.getSaleRoomInformation().saleIndex), mPay.getCustomer().getEmail(), mPay.getCustomer().getName(), mPay.getCustomer().getPhone(), guest.name, guest.phone, guest.email));
+				ArrayList<String> postParameterKey = new ArrayList<String>(Arrays.asList("room_idx", "email", "name", "phone", "guest_name", "guest_phone", "guest_email"));
+				ArrayList<String> postParameterValue = new ArrayList<String>(Arrays.asList(String.valueOf(mPay.getSaleRoomInformation().roomIndex), mPay.getCustomer().getEmail(), mPay.getCustomer().getName(), mPay.getCustomer().getPhone(), guest.name, guest.phone, guest.email));
 
 				mWebView.postUrl(url, parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]), postParameterValue.toArray(new String[postParameterValue.size()])));
 			} else if (mPay.isSaleCredit() == true)
 			{
 				// 적립금 일부 사용
-				String url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)).append('/').append(mPay.getType().name()).append("/").append(mPay.getSaleRoomInformation().saleIndex).append("/").append(mPay.getCredit().getBonus()).toString();
+				String url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERVE_PAYMENT_DISCOUNT)).append('/').append(mPay.getType().name()).append("/").append(mPay.getSaleRoomInformation().roomIndex).append("/").append(mPay.getCredit().getBonus()).toString();
 
 				ArrayList<String> postParameterKey = new ArrayList<String>(Arrays.asList("guest_name", "guest_phone", "guest_email"));
 				ArrayList<String> postParameterValue = new ArrayList<String>(Arrays.asList(guest.name, guest.phone, guest.email));
@@ -179,7 +179,7 @@ public class PaymentActivity extends BaseActivity implements Constants
 				mWebView.postUrl(url, parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]), postParameterValue.toArray(new String[postParameterValue.size()])));
 			} else
 			{
-				String url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERVE_PAYMENT)).append('/').append(mPay.getType().name()).append("/").append(mPay.getSaleRoomInformation().saleIndex).toString();
+				String url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_RESERVE_PAYMENT)).append('/').append(mPay.getType().name()).append("/").append(mPay.getSaleRoomInformation().roomIndex).toString();
 
 				ArrayList<String> postParameterKey = new ArrayList<String>(Arrays.asList("guest_name", "guest_phone", "guest_email"));
 				ArrayList<String> postParameterValue = new ArrayList<String>(Arrays.asList(guest.name, guest.phone, guest.email));

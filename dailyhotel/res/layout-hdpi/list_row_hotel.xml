@@ -18,48 +18,29 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <RelativeLayout
-            android:id="@+id/rl_hotel_upper"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="160dp"
-            android:layout_alignParentTop="true" >
-        </RelativeLayout>
-
-        <!-- board -->
-
-        <RelativeLayout
-            android:id="@+id/rl_hotel_under"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/rl_hotel_upper"
-            android:gravity="bottom"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
             android:orientation="vertical"
-            android:padding="13dp" >
+            android:paddingBottom="13dp"
+            android:paddingLeft="13dp"
+            android:paddingRight="13dp" >
+
+            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                android:id="@+id/averageTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:text="@string/label_hotel_list_extendedstay_average"
+                android:textColor="@android:color/white"
+                android:textSize="11dp"
+                android:visibility="gone" />
 
             <RelativeLayout
-                android:id="@+id/ll_hotel_under_upper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal" >
-
-                <!-- <FrameLayout -->
-                <!-- android:id="@+id/fl_hotel_row_grade" -->
-                <!-- android:layout_width="wrap_content" -->
-                <!-- android:layout_height="wrap_content" -->
-                <!-- android:layout_centerVertical="true" -->
-                <!-- android:layout_alignParentLeft="true" > -->
-
-
-                <!-- <com.twoheart.dailyhotel.widget.NanumBarunTextView -->
-                <!-- android:id="@+id/tv_hotel_row_grade" -->
-                <!-- android:layout_width="wrap_content" -->
-                <!-- android:layout_height="wrap_content" -->
-                <!-- android:gravity="center" -->
-                <!-- android:singleLine="true" -->
-                <!-- android:text="특급" -->
-                <!-- android:textColor="@android:color/white" -->
-                <!-- android:textSize="11.5dp" /> -->
-                <!-- </FrameLayout> -->
+                android:layout_marginTop="5dp" >
 
                 <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                     android:id="@+id/hv_hotel_grade"
@@ -149,7 +130,7 @@
                     android:textColor="#cecece"
                     android:textSize="13.5dp" />
             </RelativeLayout>
-        </RelativeLayout>
+        </LinearLayout>
     </RelativeLayout>
 
     <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
@@ -162,7 +143,7 @@
         android:textColor="@android:color/darker_gray"
         android:textSize="40dp"
         android:visibility="gone" />
-    
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
