@@ -47,6 +47,8 @@ public class VolleyHttpClient implements Constants
 	private static Context sContext;
 	private static HttpClient sHttpClient;
 
+	private static CookieSyncManager mCookieSyncManager;
+
 	public static void init(Context context)
 	{
 
@@ -105,6 +107,8 @@ public class VolleyHttpClient implements Constants
 		//		if (CookieManager.getInstance().getCookie(URL_DAILYHOTEL_SERVER) != null)
 		//			Log.e("Common: " + CookieManager.getInstance().getCookie(URL_DAILYHOTEL_SERVER));
 
+		cookieManagerCreate();
+
 		List<Cookie> cookies = ((DefaultHttpClient) sHttpClient).getCookieStore().getCookies();
 
 		if (cookies != null)
@@ -121,17 +125,45 @@ public class VolleyHttpClient implements Constants
 
 					CookieManager.getInstance().setCookie(newCookie.getDomain(), cookieString.toString());
 
-					CookieSyncManager.getInstance().sync();
+					cookieManagerSync();
 				}
 			}
 		}
+	}
+
+	private static void cookieManagerCreate()
+	{
+		if (mCookieSyncManager == null)
+		{
+			mCookieSyncManager = CookieSyncManager.createInstance(sContext);
+		}
+	}
+
+	public static void cookieManagerSync()
+	{
+		cookieManagerCreate();
+
+		mCookieSyncManager.sync();
+	}
+
+	public static void cookieManagerStopSync()
+	{
+		cookieManagerCreate();
+
+		mCookieSyncManager.stopSync();
+	}
+
+	public static void cookieManagerStartSync()
+	{
+		cookieManagerCreate();
+
+		mCookieSyncManager.startSync();
 	}
 
 	// 로그아웃 시 반드시 이 메서드를 사용해야 함.
 	public static void destroyCookie()
 	{
 		CookieManager.getInstance().removeAllCookie();
-		CookieSyncManager.getInstance().sync();
+		cookieManagerSync();
 	}
-
 }

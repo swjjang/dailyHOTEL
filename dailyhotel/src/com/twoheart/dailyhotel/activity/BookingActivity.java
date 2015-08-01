@@ -421,6 +421,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 				if (mPay.getType() == Pay.Type.VBANK && TextUtils.isEmpty(gcmId) == true)
 				{
+					if (isFinishing() == true)
+					{
+						return;
+					}
+
 					// 가상계좌 결제시 푸쉬를 받지 못하는 경우
 					String title = getString(R.string.dialog_notice2);
 					String positive = getString(R.string.dialog_btn_text_confirm);
@@ -1283,6 +1288,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			}
 		});
 
+		if (isFinishing() == true)
+		{
+			return;
+		}
+
 		mFinalCheckDialog.show();
 	}
 
@@ -1356,27 +1366,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			}
 		}).show();
 	}
-
-	//	private void showRequestEnglishName()
-	//	{
-	//		if (isFinishing() == true)
-	//		{
-	//			return;
-	//		}
-	//
-	//		String title = getString(R.string.dialog_notice2);
-	//		String msg = getString(R.string.dialog_msg_request_english_name);
-	//		String positive = getString(R.string.dialog_btn_text_confirm);
-	//
-	//		SimpleAlertDialog.build(BookingActivity.this, title, msg, positive, new DialogInterface.OnClickListener()
-	//		{
-	//			@Override
-	//			public void onClick(DialogInterface dialog, int which)
-	//			{
-	//				etReserverName.requestFocus();
-	//			}
-	//		}).show();
-	//	}
 
 	private void writeLogPaid(Pay pay)
 	{

@@ -92,8 +92,15 @@ public class HotelDetailImageViewPagerAdapter extends PagerAdapter
 				}
 			};
 
-			cb.url(url).animation(AQuery.FADE_IN);
-			mAQuery.id(imageView).image(cb);
+			if (Util.getLCDWidth(mContext) < 720)
+			{
+				cb.url(url).animation(AQuery.FADE_IN);
+				mAQuery.id(imageView).image(url, false, false, 240, 0, cb);
+			} else
+			{
+				cb.url(url).animation(AQuery.FADE_IN);
+				mAQuery.id(imageView).image(cb);
+			}
 		} else
 		{
 			imageView.setImageBitmap(cachedImg);

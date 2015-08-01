@@ -1330,7 +1330,7 @@ public class HotelDetailLayout
 							} catch (Exception e)
 							{
 								event.setAction(MotionEvent.ACTION_CANCEL);
-								event.setLocation(mViewPager.getScrollX(), mViewPager.getScaleY());
+								event.setLocation(mViewPager.getScrollX(), mViewPager.getScrollY());
 								mViewPager.onTouchEvent(event);
 							}
 
@@ -1349,7 +1349,7 @@ public class HotelDetailLayout
 					} catch (Exception e)
 					{
 						event.setAction(MotionEvent.ACTION_CANCEL);
-						event.setLocation(mViewPager.getScrollX(), mViewPager.getScaleY());
+						event.setLocation(mViewPager.getScrollX(), mViewPager.getScrollY());
 						mViewPager.onTouchEvent(event);
 					}
 
@@ -1385,7 +1385,7 @@ public class HotelDetailLayout
 							} catch (Exception e)
 							{
 								event.setAction(MotionEvent.ACTION_CANCEL);
-								event.setLocation(mViewPager.getScrollX(), mViewPager.getScaleY());
+								event.setLocation(mViewPager.getScrollX(), mViewPager.getScrollY());
 								mViewPager.onTouchEvent(event);
 							}
 						} else
@@ -1403,7 +1403,7 @@ public class HotelDetailLayout
 						} catch (Exception e)
 						{
 							event.setAction(MotionEvent.ACTION_CANCEL);
-							event.setLocation(mViewPager.getScrollX(), mViewPager.getScaleY());
+							event.setLocation(mViewPager.getScrollX(), mViewPager.getScrollY());
 							mViewPager.onTouchEvent(event);
 						}
 					}

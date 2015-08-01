@@ -24,6 +24,7 @@ import com.twoheart.dailyhotel.BookingListFragment;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.VolleyImageLoader;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView.PinnedSectionListAdapter;
 
@@ -195,8 +196,15 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
 				}
 			};
 
-			cb.url(booking.hotelImageUrl);
-			aquery.id(hotelImageView).image(cb).animate(R.anim.fade_in);
+			if (Util.getLCDWidth(mContext) < 720)
+			{
+				cb.url(booking.hotelImageUrl).animation(R.anim.fade_in);
+				aquery.id(hotelImageView).image(booking.hotelImageUrl, false, false, 240, 0, cb);
+			} else
+			{
+				cb.url(booking.hotelImageUrl);
+				aquery.id(hotelImageView).image(cb).animate(R.anim.fade_in);
+			}
 		} else
 		{
 			hotelImageView.setImageBitmap(cachedImg);

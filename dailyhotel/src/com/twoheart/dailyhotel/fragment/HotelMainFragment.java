@@ -761,7 +761,7 @@ public class HotelMainFragment extends BaseFragment
 							} catch (Exception e)
 							{
 								ExLog.d(e.toString());
-								
+
 								// 지역 리스트를 가져온다
 								mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_HOTEL_ALL).toString(), null, mSaleHotelAllJsonResponseListener, baseActivity));
 							}
