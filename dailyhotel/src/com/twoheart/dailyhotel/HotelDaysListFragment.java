@@ -616,7 +616,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 	{
 		BaseActivity baseActivity = (BaseActivity) getActivity();
 
-		if (baseActivity == null)
+		if (baseActivity == null || baseActivity.isFinishing() == true)
 		{
 			return;
 		}
@@ -781,21 +781,21 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 			public void run()
 			{
 				hideAnimationDaysList();
-			}
-		}, 500);
 
-		// 여기서 호텔 리스트를 다시 갱신해야 한다.
-		if (mUserActionListener != null)
-		{
-			mUserActionListener.selectDay(mSelectedCheckInSaleTime, mSelectedCheckOutSaleTime, true);
-		}
+				// 여기서 호텔 리스트를 다시 갱신해야 한다.
+				if (mUserActionListener != null)
+				{
+					mUserActionListener.selectDay(mSelectedCheckInSaleTime, mSelectedCheckOutSaleTime, true);
+				}
+			}
+		}, 300);
 	}
 
 	private void showAnimationDaysList()
 	{
 		BaseActivity baseActivity = (BaseActivity) getActivity();
 
-		if (baseActivity == null)
+		if (baseActivity == null || baseActivity.isFinishing() == true)
 		{
 			return;
 		}
@@ -915,7 +915,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 	{
 		BaseActivity baseActivity = (BaseActivity) getActivity();
 
-		if (baseActivity == null)
+		if (baseActivity == null || baseActivity.isFinishing() == true)
 		{
 			return;
 		}

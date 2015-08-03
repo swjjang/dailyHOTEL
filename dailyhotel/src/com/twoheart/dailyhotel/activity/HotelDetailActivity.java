@@ -585,6 +585,11 @@ public class HotelDetailActivity extends BaseActivity
 			intent.putExtra(NAME_INTENT_EXTRA_DATA_LONGITUDE, mHotelDetail.longitude);
 
 			startActivity(intent);
+
+			// 호텔 공유하기 로그 추가
+			SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + mHotelDetail.nights);
+			String label = String.format("%s (%s-%s)", mHotelDetail.hotelName, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), checkOutSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
+			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "hotelDetailShare", label, (long) mHotelDetail.hotelIndex);
 		}
 	};
 
