@@ -299,7 +299,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				payPrice = 0;
 				credit = originalPrice;
 			}
-			
+
 			tvCreditValue.setText("-" + comma.format(credit) + Html.fromHtml(getString(R.string.currency)));
 		} else
 		{
@@ -709,6 +709,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		{
 			Intent intent = new Intent(this, com.twoheart.dailyhotel.activity.PaymentActivity.class);
 			intent.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
+			intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mCheckInSaleTime);
 
 			startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PAYMENT);
 
