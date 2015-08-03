@@ -289,7 +289,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 		tvOriginalPriceValue.setText(comma.format(originalPrice) + Html.fromHtml(getString(R.string.currency)));
 
-		if (applyCredit)
+		if (applyCredit && credit <= 0)
 		{
 			if (credit < originalPrice)
 			{
@@ -299,9 +299,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				payPrice = 0;
 				credit = originalPrice;
 			}
-
+			
 			tvCreditValue.setText("-" + comma.format(credit) + Html.fromHtml(getString(R.string.currency)));
-
 		} else
 		{
 			tvCreditValue.setText("0" + Html.fromHtml(getString(R.string.currency)));
@@ -685,11 +684,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			mProgressDialog.setCancelable(false);
 			mProgressDialog.show();
 
-			String mileage = "0"; // 적립금
+			String bonus = "0"; // 적립금
 
 			if (mPay.isSaleCredit() == true)
 			{
-				mileage = String.valueOf(mPay.credit);
+				bonus = String.valueOf(mPay.credit);
 			}
 
 			Map<String, String> params = new HashMap<String, String>();
@@ -700,12 +699,12 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			params.put("checkin_date", mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
 			params.put("length_stay", String.valueOf(saleRoomInformation.nights));
 			params.put("billkey", mSelectedCreditCard.billingkey);
-			params.put("mileage", mileage);
+			params.put("bonus", bonus);
 			params.put("guest_name", guest.name);
 			params.put("guest_phone", guest.phone);
 			params.put("guest_email", guest.email);
 
-			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_SESSION_BILLING_PAYMENT).toString(), params, mUserSessionBillingPayment, BookingActivity.this));
+			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_SESSION_EASY_PAYMENT).toString(), params, mUserSessionBillingPayment, BookingActivity.this));
 		} else
 		{
 			Intent intent = new Intent(this, com.twoheart.dailyhotel.activity.PaymentActivity.class);

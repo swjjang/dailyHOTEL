@@ -164,7 +164,7 @@ public class VolleyHttpClient implements Constants
 	public static void destroyCookie()
 	{
 		cookieManagerCreate();
-		
+
 		CookieManager.getInstance().removeAllCookie();
 		cookieManagerSync();
 	}
