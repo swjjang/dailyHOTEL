@@ -27,7 +27,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.CookieSyncManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +36,6 @@ import com.android.volley.RequestQueue.RequestFilter;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.activity.ExitActivity;
 import com.twoheart.dailyhotel.fragment.HotelMainFragment;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -369,16 +367,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	@Override
 	protected void onPause()
 	{
-		try
-		{
-			CookieSyncManager.getInstance().stopSync();
-
-		} catch (Exception e)
-		{
-			CookieSyncManager.createInstance(getApplicationContext());
-			CookieSyncManager.getInstance().stopSync();
-
-		}
+		VolleyHttpClient.cookieManagerStopSync();
 
 		unLockUI();
 
@@ -395,14 +384,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 
 		super.onResume();
 
-		try
-		{
-			CookieSyncManager.getInstance().startSync();
-		} catch (Exception e)
-		{
-			CookieSyncManager.createInstance(getApplicationContext());
-			CookieSyncManager.getInstance().startSync();
-		}
+		VolleyHttpClient.cookieManagerStartSync();
 
 		com.facebook.AppEventsLogger.activateApp(this, getString(R.string.app_id));
 

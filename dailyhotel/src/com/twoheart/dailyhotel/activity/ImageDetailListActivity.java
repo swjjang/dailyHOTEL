@@ -108,8 +108,15 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
 					}
 				};
 
-				cb.url(url).animation(AQuery.FADE_IN);
-				mAquery.id(imageView).image(cb);
+				if (Util.getLCDWidth(ImageDetailListActivity.this) < 720)
+				{
+					cb.url(url).animation(AQuery.FADE_IN);
+					mAquery.id(imageView).image(url, false, false, 240, 0, cb);
+				} else
+				{
+					cb.url(url).animation(AQuery.FADE_IN);
+					mAquery.id(imageView).image(cb);
+				}
 			} else
 			{
 				setImageViewHeight(imageView, cachedImg);

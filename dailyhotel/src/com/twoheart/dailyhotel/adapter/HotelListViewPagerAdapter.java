@@ -29,6 +29,7 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.HotelListMapFragment;
 import com.twoheart.dailyhotel.model.Hotel;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.VolleyImageLoader;
 import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
 
@@ -176,8 +177,15 @@ public class HotelListViewPagerAdapter extends PagerAdapter
 				}
 			};
 
-			cb.url(hotel.getImage()).animation(AQuery.FADE_IN);
-			aquery.id(img).image(cb);
+			if (Util.getLCDWidth(mContext) < 720)
+			{
+				cb.url(hotel.getImage()).animation(AQuery.FADE_IN);
+				aquery.id(img).image(hotel.getImage(), false, false, 240, 0, cb);
+			} else
+			{
+				cb.url(hotel.getImage()).animation(AQuery.FADE_IN);
+				aquery.id(img).image(cb);
+			}
 		} else
 		{
 			aquery.id(img).image(cachedImg);

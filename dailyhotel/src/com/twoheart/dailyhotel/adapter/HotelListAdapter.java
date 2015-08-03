@@ -268,8 +268,15 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 						}
 					};
 
-					cb.url(element.getImage()).animation(AQuery.FADE_IN);
-					aquery.id(viewHolder.img).image(cb);
+					if (Util.getLCDWidth(context) < 720)
+					{
+						cb.url(element.getImage()).animation(AQuery.FADE_IN);
+						aquery.id(viewHolder.img).image(element.getImage(), false, false, 240, 0, cb);
+					} else
+					{
+						cb.url(element.getImage()).animation(AQuery.FADE_IN);
+						aquery.id(viewHolder.img).image(cb);
+					}
 				} else
 				{
 					viewHolder.img.setImageBitmap(cachedImg);

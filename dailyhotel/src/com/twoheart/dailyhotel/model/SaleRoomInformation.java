@@ -14,6 +14,7 @@ public class SaleRoomInformation implements Parcelable
 	public boolean isOverseas;
 	public String hotelName;
 	public int averageDiscount;
+	public int totalDiscount;
 	public int nights;
 
 	public SaleRoomInformation(Parcel in)
@@ -25,6 +26,7 @@ public class SaleRoomInformation implements Parcelable
 	{
 		roomIndex = jsonObject.getInt("room_idx");
 		averageDiscount = jsonObject.getInt("discount_avg");
+		totalDiscount = jsonObject.getInt("discount_total");
 		roomName = jsonObject.getString("room_name");
 		option = jsonObject.getString("option");
 
@@ -43,6 +45,7 @@ public class SaleRoomInformation implements Parcelable
 	{
 		dest.writeInt(roomIndex);
 		dest.writeInt(averageDiscount);
+		dest.writeInt(totalDiscount);
 		dest.writeString(roomName);
 		dest.writeString(option);
 		dest.writeString(roomBenefit);
@@ -55,6 +58,7 @@ public class SaleRoomInformation implements Parcelable
 	{
 		roomIndex = in.readInt();
 		averageDiscount = in.readInt();
+		totalDiscount = in.readInt();
 		roomName = in.readString();
 		option = in.readString();
 		roomBenefit = in.readString();

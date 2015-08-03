@@ -698,6 +698,11 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 						{
 							unLockUI();
 
+							if (baseActivity.isFinishing() == true)
+							{
+								return;
+							}
+
 							SimpleAlertDialog.build(baseActivity, getString(R.string.dialog_notice2), message, getString(R.string.dialog_btn_text_confirm), onClickListener).show();
 						} else
 						{

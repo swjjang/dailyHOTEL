@@ -200,17 +200,4 @@ public class ForgotPwdActivity extends BaseActivity implements Constants, OnClic
 
 		}
 	};
-
-	//	@Override
-	//	public void onResponse(String url, String response) {
-	//		if (url.contains(URL_WEBAPI_USER_FORGOTPWD)) {
-	//
-	//			if (response.trim().equals("done")) {
-	//				unLockUI();
-	//				SimpleAlertDialog.build(this, getString(R.string.dialog_msg_sent_email), getString(R.string.dialog_btn_text_confirm), null).show();
-	//				etForgot.setText("");
-	//			}
-	//		}
-	//	}
-
 }

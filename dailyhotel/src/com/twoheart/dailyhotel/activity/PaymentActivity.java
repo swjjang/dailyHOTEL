@@ -41,7 +41,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
-import android.webkit.CookieSyncManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -532,9 +531,12 @@ public class PaymentActivity extends BaseActivity implements Constants
 			//				view.loadUrl("javascript:(function(){" + "var payImg = (document.getElementsByClassName('space_h_auto'))[0];" + "payImg.style.cssText = payImg.style.cssText + ';background-image: url(https://www.paypalobjects.com/webstatic/en_KR/mktg/Logo/pp_cc_mark_74x46.jpg);' +" + "'background-size: 150px;' +" + "'background-repeat: no-repeat;' +" + "'background-position: center;';" + "})();");
 			//			}
 
-			CookieSyncManager.getInstance().sync();
+			VolleyHttpClient.cookieManagerSync();
+
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+			{
 				setSupportProgressBarIndeterminateVisibility(false);
+			}
 		}
 
 	}
@@ -732,7 +734,15 @@ public class PaymentActivity extends BaseActivity implements Constants
 					Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(strUrl));
 
 					m_nStat = PROGRESS_STAT_IN;
-					startActivity(intent);
+
+					try
+					{
+						startActivity(intent);
+					} catch (Exception e)
+					{
+						intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=kvp.jjy.MispAndroid320"));
+						startActivity(intent);
+					}
 				}
 			});
 		}
