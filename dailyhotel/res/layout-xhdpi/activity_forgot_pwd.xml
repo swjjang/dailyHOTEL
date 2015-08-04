@@ -30,7 +30,6 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/edit_text_holo_light"
             android:ems="10"
             android:hint="@string/act_forgot_pwd_email"
             android:imeActionId="@+id/btn_forgot_pwd"
