@@ -477,7 +477,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			mClickView.setClickable(false);
 			mClickView.setEnabled(false);
 		}
-		
+
 		// 해당 호텔이 결제하기를 못하는 경우를 처리한다.
 		Map<String, String> updateParams = new HashMap<String, String>();
 		updateParams.put("room_idx", String.valueOf(mPay.getSaleRoomInformation().roomIndex));
@@ -700,8 +700,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			params.put("guest_name", guest.name);
 			params.put("guest_phone", guest.phone);
 			params.put("guest_email", guest.email);
-			
-			if(DEBUG == true)
+
+			if (DEBUG == true)
 			{
 				SimpleAlertDialog.build(BookingActivity.this, null, params.toString(), getString(R.string.dialog_btn_text_confirm), null).show();
 			}

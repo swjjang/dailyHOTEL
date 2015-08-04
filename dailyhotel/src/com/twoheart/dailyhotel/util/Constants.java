@@ -52,6 +52,8 @@ public interface Constants
 	// 웹서버 호스트  
 	//"http://restful.dailyhotel.kr/goodnight/"; //  서비스 서버 
 	//	public static final String URL_DAILYHOTEL_SERVER = UNENCRYPTED_URL ? "http://restful.dailyhotel.kr/goodnight/" : "MzkkNTQkNjEkNTYkNDck$RTA3Q0MwQTlGOTVCNUM4RkQ1OTM5MzMxRDVDNkUK0MTBBRjIUyMjU4OIEDE4NzQWwRDI4QTNGRUFERUNDMDMzMjk4QzIyODlFMDkwMjNDMDMyRUUxMjBDRUU1MTlBMDQ3MzRB$";
+	//	public static final String URL_DAILYHOTEL_LB_SERVER = UNENCRYPTED_URL ? "http://lb.dailyhotel.kr/" : "NDEkNDgkNzIkNDAkODYk$NkQyNjAyODM3MUFBQzQ0RTYyMEVBQjU5NjE2MTAyJQQTMwMThLBNEFGQTM5NDVCQjc4RDdCNzFg3QkIxRjkzMkYFCQg==$";
+
 	//http://ec2restful.dailyhotel.kr    http://restful.dailyhotel.kr/goodnight/
 	//    public static final String URL_DAILYHOTEL_SERVER = "http://192.168.0.39:8080/goodnight/"; //  서비스 서버
 
@@ -62,6 +64,7 @@ public interface Constants
 
 	//"http://tcwas.dailyhotel.co.kr/goodnight/";
 	public static final String URL_DAILYHOTEL_SERVER = UNENCRYPTED_URL ? "http://tcwas.dailyhotel.co.kr/goodnight/" : "NzYkNTkkMzIkMTI0JDg2JA==$OUQ3NTdBMUQ5RjFENEQyNTU3NUY5QjA4GMkM4QzRFRDNGQjQ2MTRDQTlEQzJKFNjRCRDQ5RUE5RUM4HRUYwNjAQ2ODk2RTg5RDQ3OThGRTVGODg4REMzRTUzRDRFMAkVBMzJB$";
+	public static final String URL_DAILYHOTEL_LB_SERVER = UNENCRYPTED_URL ? "http://tcwas.dailyhotel.co.kr/goodnight/" : "NzYkNTkkMzIkMTI0JDg2JA==$OUQ3NTdBMUQ5RjFENEQyNTU3NUY5QjA4GMkM4QzRFRDNGQjQ2MTRDQTlEQzJKFNjRCRDQ5RUE5RUM4HRUYwNjAQ2ODk2RTg5RDQ3OThGRTVGODg4REMzRTUzRDRFMAkVBMzJB$";
 
 	// 회사 대표번호
 	public static final String PHONE_NUMBER_DAILYHOTEL = "1800-9120";

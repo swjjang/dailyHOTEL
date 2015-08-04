@@ -125,10 +125,10 @@ public class IntroActivity extends BaseActivity implements OnClickListener, OnPa
 		mGuideDesces = new ArrayList<String>();
 		mGuideImages = new ArrayList<Integer>();
 
-//		mGuideBackgrounds.add(R.drawable.img_bg_guide1);
-//		mGuideBackgrounds.add(R.drawable.img_bg_guide2);
-//		mGuideBackgrounds.add(R.drawable.img_bg_guide3);
-//		mGuideBackgrounds.add(R.drawable.img_bg_guide4);
+		//		mGuideBackgrounds.add(R.drawable.img_bg_guide1);
+		//		mGuideBackgrounds.add(R.drawable.img_bg_guide2);
+		//		mGuideBackgrounds.add(R.drawable.img_bg_guide3);
+		//		mGuideBackgrounds.add(R.drawable.img_bg_guide4);
 
 		mGuideTitles.add(getString(R.string.guide_title_1));
 		mGuideTitles.add(getString(R.string.guide_title_2));
