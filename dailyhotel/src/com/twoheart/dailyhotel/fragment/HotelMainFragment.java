@@ -748,6 +748,8 @@ public class HotelMainFragment extends BaseFragment
 
 						if (param != null)
 						{
+							unLockUI();
+
 							try
 							{
 								JSONObject jsonObject = new JSONObject(param);

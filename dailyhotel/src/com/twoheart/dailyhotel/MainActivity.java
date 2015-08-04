@@ -137,6 +137,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		// 영어인 경우 - English, 한글인 경우 - 한국어
 		Util.setLocale(this, "한국어");
 
+		VolleyHttpClient.cookieManagerCreate();
+
 		Editor editor = sharedPreference.edit();
 		editor.remove(KEY_PREFERENCE_BY_SHARE);
 		editor.apply();

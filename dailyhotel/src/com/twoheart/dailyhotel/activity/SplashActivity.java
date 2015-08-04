@@ -55,7 +55,6 @@ import com.twoheart.dailyhotel.util.ui.BaseActivity;
 public class SplashActivity extends BaseActivity implements Constants, ErrorListener
 {
 	private static final int PROGRESS_CIRCLE_COUNT = 3;
-	private static final int DURING_SPLASH_ACTIVITY_SHOW = 1000;
 
 	private Dialog alertDlg;
 	protected HashMap<String, String> regPushParams;
@@ -133,13 +132,13 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 			{
 				mIsRequestLogin = true;
 
-				mHandler.sendEmptyMessageDelayed(0, 3000);
+				mHandler.sendEmptyMessageDelayed(0, 1500);
 			}
 
 			if (mProgressView.getVisibility() != View.VISIBLE)
 			{
 				mHandler.removeMessages(1);
-				mHandler.sendEmptyMessageDelayed(1, 2000);
+				mHandler.sendEmptyMessageDelayed(1, 3000);
 			}
 		}
 	}

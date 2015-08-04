@@ -131,7 +131,7 @@ public class VolleyHttpClient implements Constants
 		}
 	}
 
-	private static void cookieManagerCreate()
+	public static void cookieManagerCreate()
 	{
 		if (mCookieSyncManager == null)
 		{
@@ -163,6 +163,8 @@ public class VolleyHttpClient implements Constants
 	// 로그아웃 시 반드시 이 메서드를 사용해야 함.
 	public static void destroyCookie()
 	{
+		cookieManagerCreate();
+
 		CookieManager.getInstance().removeAllCookie();
 		cookieManagerSync();
 	}

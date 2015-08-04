@@ -67,7 +67,6 @@ import android.widget.Toast;
 import com.android.volley.Request.Method;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Credit;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Guest;
@@ -269,9 +268,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			params.put("timeZone", "Asia/Seoul");
 
 			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, BookingActivity.this));
-
-			//			// 1. 세션이 연결되어있는지 검사.
-			//			mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, this));
 		}
 
 		String region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
@@ -283,33 +279,31 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	private void updatePayPrice(boolean applyCredit)
 	{
 		int originalPrice = mPay.getSaleRoomInformation().totalDiscount;
-		int credit = mPay.getCredit().getBonus();
+		int payPrice = originalPrice;
+		int credit = mPay.credit;
 
 		DecimalFormat comma = new DecimalFormat("###,##0");
 
 		tvOriginalPriceValue.setText(comma.format(originalPrice) + Html.fromHtml(getString(R.string.currency)));
 
-		if (applyCredit)
+		if (applyCredit && credit <= 0)
 		{
-			int payPrice = originalPrice - credit;
-			payPrice = payPrice < 0 ? 0 : payPrice;
-			mPay.setPayPrice(payPrice);
-			mPay.setOriginalPrice(originalPrice);
-
-			if (credit >= originalPrice)
+			if (credit < originalPrice)
 			{
+				payPrice = originalPrice - credit;
+			} else
+			{
+				payPrice = 0;
 				credit = originalPrice;
 			}
 
 			tvCreditValue.setText("-" + comma.format(credit) + Html.fromHtml(getString(R.string.currency)));
-
 		} else
 		{
 			tvCreditValue.setText("0" + Html.fromHtml(getString(R.string.currency)));
-			mPay.setPayPrice(originalPrice);
 		}
 
-		tvPrice.setText(comma.format(mPay.getPayPrice()) + Html.fromHtml(getString(R.string.currency)));
+		tvPrice.setText(comma.format(payPrice) + Html.fromHtml(getString(R.string.currency)));
 	}
 
 	@Override
@@ -386,7 +380,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			}
 
 			//호텔 가격이 xx 이하인 이벤트 호텔에서는 적립금 사용을 못하게 막음. 
-			if (mPay.isSaleCredit() && (mPay.getOriginalPrice() <= DEFAULT_AVAILABLE_RESERVES) && mPay.getCredit().getBonus() != 0)
+			if (mPay.isSaleCredit() && (mPay.getOriginalPrice() <= DEFAULT_AVAILABLE_RESERVES) && mPay.credit != 0)
 			{
 				if (isFinishing() == true)
 				{
@@ -483,7 +477,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			mClickView.setClickable(false);
 			mClickView.setEnabled(false);
 		}
-
+		
 		// 해당 호텔이 결제하기를 못하는 경우를 처리한다.
 		Map<String, String> updateParams = new HashMap<String, String>();
 		updateParams.put("room_idx", String.valueOf(mPay.getSaleRoomInformation().roomIndex));
@@ -687,34 +681,37 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			mProgressDialog.setCancelable(false);
 			mProgressDialog.show();
 
-			String mileage = "0"; // 적립금
+			String bonus = "0"; // 적립금
 
 			if (mPay.isSaleCredit() == true)
 			{
-				// 적립금을 절대값으로 보냄..
-				try
-				{
-					mileage = String.valueOf(Math.abs(mPay.getCredit().getBonus()));
-				} catch (Exception e)
-				{
-					ExLog.e(e.toString());
-				}
+				bonus = String.valueOf(mPay.credit);
 			}
 
 			Map<String, String> params = new HashMap<String, String>();
 
-			params.put("room_idx", String.valueOf(mPay.getSaleRoomInformation().roomIndex));
+			SaleRoomInformation saleRoomInformation = mPay.getSaleRoomInformation();
+
+			params.put("room_idx", String.valueOf(saleRoomInformation.roomIndex));
+			params.put("checkin_date", mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
+			params.put("length_stay", String.valueOf(saleRoomInformation.nights));
 			params.put("billkey", mSelectedCreditCard.billingkey);
-			params.put("mileage", mileage);
+			params.put("bonus", bonus);
 			params.put("guest_name", guest.name);
 			params.put("guest_phone", guest.phone);
 			params.put("guest_email", guest.email);
+			
+			if(DEBUG == true)
+			{
+				SimpleAlertDialog.build(BookingActivity.this, null, params.toString(), getString(R.string.dialog_btn_text_confirm), null).show();
+			}
 
-			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_SESSION_BILLING_PAYMENT).toString(), params, mUserSessionBillingPayment, BookingActivity.this));
+			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_SESSION_EASY_PAYMENT).toString(), params, mUserSessionBillingPayment, BookingActivity.this));
 		} else
 		{
 			Intent intent = new Intent(this, com.twoheart.dailyhotel.activity.PaymentActivity.class);
 			intent.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
+			intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mCheckInSaleTime);
 
 			startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PAYMENT);
 
@@ -1256,7 +1253,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 							mFinalCheckDialog.dismiss();
 
-							RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "agreePayment", mPay.getSaleRoomInformation().hotelName, (long) mHotelIdx);
+							RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "agreePayment", mPay.getSaleRoomInformation().hotelName, (long) mPay.getSaleRoomInformation().roomIndex);
 						}
 					}
 				});
@@ -1381,7 +1378,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			String userIdxStr = String.format("%07d", userIdx);
 			String transId = strDate + userIdxStr;
 
-			RenewalGaManager.getInstance(getApplicationContext()).purchaseComplete(transId, pay.getSaleRoomInformation().hotelName, pay.getSaleRoomInformation().roomName, (double) pay.getPayPrice());
+			double price = pay.getOriginalPrice() - (pay.isSaleCredit() ? pay.credit : 0);
+
+			RenewalGaManager.getInstance(getApplicationContext()).purchaseComplete(transId, pay.getSaleRoomInformation().hotelName, pay.getSaleRoomInformation().roomName, price);
 
 			SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
 			strDate = dateFormat2.format(date);
@@ -1392,12 +1391,12 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			properties.put("hotelName", pay.getSaleRoomInformation().hotelName);
 			properties.put("datetime", strDate); // 거래 시간 = 연-월-일T시:분:초
 
-			mMixpanel.getPeople().trackCharge(pay.getPayPrice(), properties); // price = 결제 금액
+			mMixpanel.getPeople().trackCharge(price, properties); // price = 결제 금액
 
 			JSONObject props = new JSONObject();
 			props.put("hotelName", pay.getSaleRoomInformation().hotelName);
 			props.put("roomType", pay.getSaleRoomInformation().roomName);
-			props.put("price", pay.getPayPrice());
+			props.put("price", price);
 			props.put("datetime", strDate);
 			props.put("userId", userIdxStr);
 			props.put("tranId", transId);
@@ -1733,9 +1732,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 							bonus = 0;
 						}
 
-						if (mPay.isSaleCredit() == true && bonus != mPay.getCredit().getBonus())
+						if (mPay.isSaleCredit() == true && bonus != mPay.credit)
 						{
-							mPay.getCredit().setBonus(bonus);
+							mPay.credit = bonus;
 							showChangedBonusDialog();
 							return;
 						}
@@ -1775,7 +1774,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 							bonus = 0;
 						}
 
-						mPay.setCredit(new Credit(null, bonus, null));
+						mPay.credit = bonus;
 
 						if (mPay.isSaleCredit() == true)
 						{
@@ -1788,7 +1787,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 						tvOriginalPriceValue.setText(comma.format(originalPrice) + Html.fromHtml(getString(R.string.currency)));
 						tvPrice.setText(comma.format(originalPrice) + Html.fromHtml(getString(R.string.currency)));
 
-						mPay.setPayPrice(originalPrice);
+						mPay.setOriginalPrice(originalPrice);
 
 						Customer buyer = new Customer();
 						buyer.setEmail(email);
