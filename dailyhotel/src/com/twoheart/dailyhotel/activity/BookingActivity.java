@@ -268,9 +268,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			params.put("timeZone", "Asia/Seoul");
 
 			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, BookingActivity.this));
-
-			//			// 1. 세션이 연결되어있는지 검사.
-			//			mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, this));
 		}
 
 		String region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
@@ -480,7 +477,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			mClickView.setClickable(false);
 			mClickView.setEnabled(false);
 		}
-
+		
 		// 해당 호텔이 결제하기를 못하는 경우를 처리한다.
 		Map<String, String> updateParams = new HashMap<String, String>();
 		updateParams.put("room_idx", String.valueOf(mPay.getSaleRoomInformation().roomIndex));
@@ -703,6 +700,11 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			params.put("guest_name", guest.name);
 			params.put("guest_phone", guest.phone);
 			params.put("guest_email", guest.email);
+			
+			if(DEBUG == true)
+			{
+				SimpleAlertDialog.build(BookingActivity.this, null, params.toString(), getString(R.string.dialog_btn_text_confirm), null).show();
+			}
 
 			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_SESSION_EASY_PAYMENT).toString(), params, mUserSessionBillingPayment, BookingActivity.this));
 		} else
@@ -1251,7 +1253,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 							mFinalCheckDialog.dismiss();
 
-							RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "agreePayment", mPay.getSaleRoomInformation().hotelName, (long) mHotelIdx);
+							RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "agreePayment", mPay.getSaleRoomInformation().hotelName, (long) mPay.getSaleRoomInformation().roomIndex);
 						}
 					}
 				});

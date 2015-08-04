@@ -576,9 +576,9 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 			if (mObjectAnimator.isRunning() == true)
 			{
 				mObjectAnimator.cancel();
-				mObjectAnimator.removeAllListeners();
 			}
 
+			mObjectAnimator.removeAllListeners();
 			mObjectAnimator = null;
 		}
 
@@ -811,9 +811,9 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 				if (mObjectAnimator.isRunning() == true)
 				{
 					mObjectAnimator.cancel();
-					mObjectAnimator.removeAllListeners();
 				}
 
+				mObjectAnimator.removeAllListeners();
 				mObjectAnimator = null;
 			}
 
@@ -929,9 +929,9 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 				if (mObjectAnimator.isRunning() == true)
 				{
 					mObjectAnimator.cancel();
-					mObjectAnimator.removeAllListeners();
 				}
 
+				mObjectAnimator.removeAllListeners();
 				mObjectAnimator = null;
 			}
 
