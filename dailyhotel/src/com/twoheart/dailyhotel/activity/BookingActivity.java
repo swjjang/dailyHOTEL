@@ -65,7 +65,6 @@ import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
-import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.Customer;
@@ -74,9 +73,12 @@ import com.twoheart.dailyhotel.model.Pay;
 import com.twoheart.dailyhotel.model.SaleRoomInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.ui.FinalCheckLayout;
+import com.twoheart.dailyhotel.util.AnalyticsManager;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
@@ -136,8 +138,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	private SaleTime mCheckInSaleTime;
 	private boolean mIsEditMode;
 
-	private MixpanelAPI mMixpanel;
-
 	private View mClickView;
 
 	@Override
@@ -148,8 +148,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		System.gc();
 
 		setContentView(R.layout.activity_booking);
-
-		mMixpanel = MixpanelAPI.getInstance(this, "791b366dadafcd37803f6cd7d8358373"); // 상수 등록 요망
 
 		mPay = new Pay();
 
@@ -272,8 +270,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 		String region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
 		String hotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
-
-		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("bookingDetail", "/todays-hotels/" + region + "/" + hotelName + "/booking-detail");
 	}
 
 	private void updatePayPrice(boolean applyCredit)
@@ -286,7 +282,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 		tvOriginalPriceValue.setText(comma.format(originalPrice) + Html.fromHtml(getString(R.string.currency)));
 
-		if (applyCredit && credit <= 0)
+		if (applyCredit && credit > 0)
 		{
 			if (credit < originalPrice)
 			{
@@ -470,7 +466,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 	private void onClickPayment()
 	{
-		lockUI();
+		unLockUI();
 
 		if (mClickView != null)
 		{
@@ -478,17 +474,38 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			mClickView.setEnabled(false);
 		}
 
-		// 해당 호텔이 결제하기를 못하는 경우를 처리한다.
-		Map<String, String> updateParams = new HashMap<String, String>();
-		updateParams.put("room_idx", String.valueOf(mPay.getSaleRoomInformation().roomIndex));
+		// 간편 결제를 시도하였으나 결제할 카드가 없는 경우.
+		if (mPay.getType() == Pay.Type.EASY_CARD)
+		{
+			if (mSelectedCreditCard == null)
+			{
+				if (mClickView != null)
+				{
+					mClickView.setClickable(true);
+					mClickView.setEnabled(true);
+				}
 
-		mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_VALIDATE).toString(), updateParams, mReservValidateJsonResponseListener, BookingActivity.this));
+				Intent intent = new Intent(BookingActivity.this, RegisterCreditCardActivity.class);
+				startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD);
+				overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+			} else
+			{
+				showFinalCheckDialog();
+			}
+		} else
+		{
+			showAgreeTermDialog(mPay.getType());
+		}
 
 		String region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
-		String hotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
 
-		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("paymentAgreement", "/todays-hotels/" + region + "/" + hotelName + "/booking-detail/payment-agreement");
-		RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestPayment", mPay.getSaleRoomInformation().hotelName, (long) mHotelIdx);
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put(Label.HOTEL_ROOM_INDEX, String.valueOf(mPay.getSaleRoomInformation().roomIndex));
+		params.put(Label.HOTEL_ROOM_NAME, mPay.getSaleRoomInformation().roomName);
+		params.put(Label.HOTEL_NAME, mPay.getSaleRoomInformation().hotelName);
+		params.put(Label.AREA, region);
+
+		AnalyticsManager.getInstance(this).recordEvent(Screen.BOOKING, Action.CLICK, Label.PAYMENT, params);
 	}
 
 	/**
@@ -598,7 +615,12 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 						mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, BookingActivity.this));
 						dialog.dismiss();
 
-						RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "agreePayment", mPay.getSaleRoomInformation().hotelName, (long) mHotelIdx);
+						HashMap<String, String> params = new HashMap<String, String>();
+						params.put(Label.HOTEL_ROOM_INDEX, String.valueOf(mPay.getSaleRoomInformation().roomIndex));
+						params.put(Label.HOTEL_ROOM_NAME, mPay.getSaleRoomInformation().roomName);
+						params.put(Label.HOTEL_NAME, mPay.getSaleRoomInformation().hotelName);
+
+						AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.PAYMENT_AGREE_POPUP, Action.CLICK, mPay.getType().name(), params);
 					}
 				}
 			};
@@ -797,8 +819,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 						Editor editor = sharedPreference.edit();
 						editor.putString(KEY_PREFERENCE_HOTEL_NAME, mPay.getSaleRoomInformation().hotelName);
-						editor.putInt(KEY_PREFERENCE_HOTEL_SALE_IDX, payData.getSaleRoomInformation().roomIndex);
-						editor.putString(KEY_PREFERENCE_HOTEL_CHECKOUT, payData.getCheckOut());
+						editor.putInt(KEY_PREFERENCE_HOTEL_ROOM_IDX, payData.getSaleRoomInformation().roomIndex);
+						editor.putString(KEY_PREFERENCE_HOTEL_CHECKOUT, payData.checkOutTime);
+						editor.putString(KEY_PREFERENCE_HOTEL_CHECKIN, payData.checkInTime);
 						editor.putString(KEY_PREFERENCE_USER_IDX, payData.getCustomer().getUserIdx());
 						editor.commit();
 					}
@@ -811,14 +834,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 						public void onClick(DialogInterface dialog, int which)
 						{
 							dialog.dismiss(); // 닫기
-
-							try
-							{
-								RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "confirmPayment", mPay.getSaleRoomInformation().hotelName, (long) mHotelIdx);
-							} catch (Exception e)
-							{
-								ExLog.e(e.toString());
-							}
 
 							setResult(RESULT_OK);
 							finish();
@@ -1008,8 +1023,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					tvCredit.setEnabled(false);
 					tvOriginalPriceValue.setEnabled(false);
 					tvCreditValue.setEnabled(false);
-					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("toggle action", "applyCredit", "off", null);
 
+					AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Label.USED_CREDIT, Action.CLICK, Label.ON, 0L);
 				} else
 				{
 					// 사용함으로 변경
@@ -1017,7 +1032,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					tvCredit.setEnabled(true);
 					tvOriginalPriceValue.setEnabled(true);
 					tvCreditValue.setEnabled(true);
-					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("toggle action", "applyCredit", "on", null);
+
+					AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Label.USED_CREDIT, Action.CLICK, Label.OFF, 0L);
 				}
 
 				mPay.setSaleCredit(isChecked);
@@ -1034,6 +1050,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	@Override
 	protected void onStart()
 	{
+		AnalyticsManager.getInstance(this).recordScreen(Screen.BOOKING);
 		super.onStart();
 	}
 
@@ -1068,8 +1085,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					{
 						releaseUiComponent();
 
-						RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "callHotel", mPay.getSaleRoomInformation().hotelName, (long) mHotelIdx);
-
 						if (Util.isTelephonyEnabled(BookingActivity.this) == true)
 						{
 							Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
@@ -1078,6 +1093,13 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 						{
 							DailyToast.showToast(BookingActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
 						}
+
+						HashMap<String, String> params = new HashMap<String, String>();
+						params.put(Label.HOTEL_ROOM_INDEX, String.valueOf(mPay.getSaleRoomInformation().roomIndex));
+						params.put(Label.HOTEL_ROOM_NAME, mPay.getSaleRoomInformation().roomName);
+						params.put(Label.HOTEL_NAME, mPay.getSaleRoomInformation().hotelName);
+
+						AnalyticsManager.getInstance(BookingActivity.this).recordEvent(Screen.BOOKING, Action.CLICK, Label.CALL_CS, params);
 					}
 				});
 
@@ -1102,8 +1124,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	@Override
 	protected void onDestroy()
 	{
-		mMixpanel.flush();
-
 		if (mFinalCheckDialog != null && mFinalCheckDialog.isShowing() == true)
 		{
 			mFinalCheckDialog.dismiss();
@@ -1135,27 +1155,25 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			case EASY_CARD:
 				// 나머지의 경우에는 등록된 신용 카드인 경우.
 				mFinalCheckDialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_REGCARD, null);
-				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("radio", "choosePaymentWay", "등록된신용카드", (long) 4);
 				break;
 
 			case CARD:
 				// 신용카드를 선택했을 경우
 				mFinalCheckDialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_CARD, null);
-				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("radio", "choosePaymentWay", "신용카드", (long) 1);
 				break;
 
 			case PHONE_PAY:
 				// 핸드폰을 선택했을 경우
 				mFinalCheckDialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_HP, null);
-				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("radio", "choosePaymentWay", "휴대폰", (long) 2);
 				break;
 
 			case VBANK:
 				// 가상계좌 입금을 선택했을 경우
 				mFinalCheckDialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_ACCOUNT, null);
-				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("radio", "choosePaymentWay", "계좌이체", (long) 3);
 				break;
 		}
+
+		AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.BOOKING, Action.CLICK, type.name(), 0L);
 
 		if (null != mFinalCheckDialog)
 		{
@@ -1253,7 +1271,12 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 							mFinalCheckDialog.dismiss();
 
-							RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "agreePayment", mPay.getSaleRoomInformation().hotelName, (long) mPay.getSaleRoomInformation().roomIndex);
+							HashMap<String, String> params = new HashMap<String, String>();
+							params.put(Label.HOTEL_ROOM_INDEX, String.valueOf(mPay.getSaleRoomInformation().roomIndex));
+							params.put(Label.HOTEL_ROOM_NAME, mPay.getSaleRoomInformation().roomName);
+							params.put(Label.HOTEL_NAME, mPay.getSaleRoomInformation().hotelName);
+
+							AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.PAYMENT_AGREE_POPUP, Action.CLICK, mPay.getType().name(), params);
 						}
 					}
 				});
@@ -1368,42 +1391,26 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	{
 		try
 		{
-			String region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
-			String hotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
-
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmss", Locale.KOREA);
 			Date date = new Date();
 			String strDate = dateFormat.format(date);
-			int userIdx = Integer.parseInt(pay.getCustomer().getUserIdx());
-			String userIdxStr = String.format("%07d", userIdx);
-			String transId = strDate + userIdxStr;
+			String userIndex = pay.getCustomer().getUserIdx();
+			String transId = strDate + userIndex;
 
 			double price = pay.getOriginalPrice() - (pay.isSaleCredit() ? pay.credit : 0);
 
-			RenewalGaManager.getInstance(getApplicationContext()).purchaseComplete(transId, pay.getSaleRoomInformation().hotelName, pay.getSaleRoomInformation().roomName, price);
+			if (price < 0)
+			{
+				price = 0;
+			}
+
+			SaleRoomInformation saleRoomInformation = pay.getSaleRoomInformation();
 
 			SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
 			strDate = dateFormat2.format(date);
 
-			mMixpanel.getPeople().identify(userIdxStr);
-
-			JSONObject properties = new JSONObject();
-			properties.put("hotelName", pay.getSaleRoomInformation().hotelName);
-			properties.put("datetime", strDate); // 거래 시간 = 연-월-일T시:분:초
-
-			mMixpanel.getPeople().trackCharge(price, properties); // price = 결제 금액
-
-			JSONObject props = new JSONObject();
-			props.put("hotelName", pay.getSaleRoomInformation().hotelName);
-			props.put("roomType", pay.getSaleRoomInformation().roomName);
-			props.put("price", price);
-			props.put("datetime", strDate);
-			props.put("userId", userIdxStr);
-			props.put("tranId", transId);
-
-			mMixpanel.track("transaction", props);
-
-			RenewalGaManager.getInstance(getApplicationContext()).recordScreen("paymentConfirmation", "/todays-hotels/" + region + "/" + hotelName + "/booking-detail/payment-confirm");
+			AnalyticsManager.getInstance(getApplicationContext()).purchaseComplete(transId, userIndex, String.valueOf(saleRoomInformation.roomIndex), //
+			saleRoomInformation.hotelName, Label.PAYMENT, pay.checkInTime, pay.checkOutTime, pay.getType().name(), strDate, price);
 		} catch (Exception e)
 		{
 			ExLog.e(e.toString());
@@ -1473,8 +1480,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				{
 					releaseUiComponent();
 
-					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "callHotel", mPay.getSaleRoomInformation().hotelName, (long) mHotelIdx);
-
 					if (Util.isTelephonyEnabled(BookingActivity.this) == true)
 					{
 						Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
@@ -1483,6 +1488,13 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					{
 						DailyToast.showToast(BookingActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
 					}
+
+					HashMap<String, String> params = new HashMap<String, String>();
+					params.put(Label.HOTEL_ROOM_INDEX, String.valueOf(mPay.getSaleRoomInformation().roomIndex));
+					params.put(Label.HOTEL_ROOM_NAME, mPay.getSaleRoomInformation().roomName);
+					params.put(Label.HOTEL_NAME, mPay.getSaleRoomInformation().hotelName);
+
+					AnalyticsManager.getInstance(BookingActivity.this).recordEvent(Screen.BOOKING, Action.CLICK, Label.CALL_CS, params);
 				}
 			});
 
@@ -1878,77 +1890,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		}
 	};
 
-	private DailyHotelJsonResponseListener mReservValidateJsonResponseListener = new DailyHotelJsonResponseListener()
-	{
-		@Override
-		public void onResponse(String url, JSONObject response)
-		{
-			if (isFinishing() == true)
-			{
-				return;
-			}
-
-			try
-			{
-				if (response == null)
-				{
-					throw new NullPointerException("response == null");
-				}
-
-				int msg_code = response.getInt("msg_code");
-				boolean result = response.getBoolean("data");
-
-				if (result == true)
-				{
-					// 간편 결제를 시도하였으나 결제할 카드가 없는 경우.
-					if (mPay.getType() == Pay.Type.EASY_CARD)
-					{
-						if (mSelectedCreditCard == null)
-						{
-							if (mClickView != null)
-							{
-								mClickView.setClickable(true);
-								mClickView.setEnabled(true);
-							}
-
-							Intent intent = new Intent(BookingActivity.this, RegisterCreditCardActivity.class);
-							startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD);
-							overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-						} else
-						{
-							showFinalCheckDialog();
-						}
-					} else
-					{
-						showAgreeTermDialog(mPay.getType());
-					}
-				} else
-				{
-					String msg = response.getString("msg");
-					String title = getString(R.string.dialog_notice2);
-					String positive = getString(R.string.dialog_btn_text_confirm);
-
-					SimpleAlertDialog.build(BookingActivity.this, title, msg, positive, new DialogInterface.OnClickListener()
-					{
-
-						@Override
-						public void onClick(DialogInterface dialog, int which)
-						{
-							finish();
-						}
-					}).show();
-				}
-			} catch (Exception e)
-			{
-				onError(e);
-				finish();
-			} finally
-			{
-				unLockUI();
-			}
-		}
-	};
-
 	private DailyHotelJsonResponseListener mUserSessionBillingCardInfoJsonResponseListener = new DailyHotelJsonResponseListener()
 	{
 		@Override
@@ -2163,9 +2104,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 				SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd-hh", Locale.KOREA);
 				format.setTimeZone(TimeZone.getTimeZone("GMT"));
-				String formatCheckout = format.format(calendarCheckout.getTime());
 
-				mPay.setCheckOut(formatCheckout);
+				mPay.checkInTime = format.format(calendarCheckin.getTime());
+				mPay.checkOutTime = format.format(calendarCheckout.getTime());
 
 				mCheckoutDayTextView.setText(formatDay.format(calendarCheckout.getTime()));
 				mCheckoutTimeTextView.setText(formatHour.format(calendarCheckout.getTime()));

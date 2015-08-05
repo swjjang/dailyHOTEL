@@ -16,7 +16,8 @@ public class Pay implements Parcelable
 	private Customer mCustomer;
 	private int mOriginalPrice;
 	private boolean isSaleCredit;
-	private String mCheckOut;
+	public String checkInTime;
+	public String checkOutTime;
 	private Type mType;
 	private Guest mGuest;
 
@@ -33,11 +34,12 @@ public class Pay implements Parcelable
 	public void writeToParcel(Parcel dest, int flags)
 	{
 		dest.writeValue(mSaleRoomInformation);
-		dest.writeValue(credit);
+		dest.writeInt(credit);
 		dest.writeValue(mCustomer);
 		dest.writeInt(mOriginalPrice);
 		dest.writeByte((byte) (isSaleCredit ? 1 : 0));
-		dest.writeString(mCheckOut);
+		dest.writeString(checkInTime);
+		dest.writeString(checkOutTime);
 		dest.writeSerializable(mType);
 		dest.writeValue(mGuest);
 	}
@@ -49,7 +51,8 @@ public class Pay implements Parcelable
 		mCustomer = (Customer) in.readValue(Customer.class.getClassLoader());
 		mOriginalPrice = in.readInt();
 		isSaleCredit = in.readByte() != 0;
-		mCheckOut = in.readString();
+		checkInTime = in.readString();
+		checkOutTime = in.readString();
 		mType = (Type) in.readSerializable();
 		mGuest = (Guest) in.readValue(Guest.class.getClassLoader());
 	}
@@ -117,16 +120,6 @@ public class Pay implements Parcelable
 	public void setSaleCredit(boolean isSaleCredit)
 	{
 		this.isSaleCredit = isSaleCredit;
-	}
-
-	public String getCheckOut()
-	{
-		return mCheckOut;
-	}
-
-	public void setCheckOut(String checkOut)
-	{
-		mCheckOut = checkOut;
 	}
 
 	public Type getType()

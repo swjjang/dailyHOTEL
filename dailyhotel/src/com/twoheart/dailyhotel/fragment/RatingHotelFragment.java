@@ -188,7 +188,7 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 		Editor editor = sharedPreference.edit();
 
 		editor.putString(KEY_PREFERENCE_HOTEL_NAME, VALUE_PREFERENCE_HOTEL_NAME_DEFAULT);
-		editor.putInt(KEY_PREFERENCE_HOTEL_SALE_IDX, VALUE_PREFERENCE_HOTEL_SALE_IDX_DEFAULT);
+		editor.putInt(KEY_PREFERENCE_HOTEL_ROOM_IDX, VALUE_PREFERENCE_HOTEL_ROOM_IDX_DEFAULT);
 		editor.putString(KEY_PREFERENCE_HOTEL_CHECKOUT, VALUE_PREFERENCE_HOTEL_CHECKOUT_DEFAULT);
 		editor.remove(KEY_PREFERENCE_USER_IDX);
 

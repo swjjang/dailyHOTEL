@@ -9,7 +9,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.RenewalGaManager;
+import com.twoheart.dailyhotel.util.AnalyticsManager;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.widget.DailyToast;
@@ -34,6 +35,13 @@ public class VersionActivity extends BaseActivity implements OnClickListener
 
 		getVersionInfo();
 
+	}
+
+	@Override
+	protected void onStart()
+	{
+		AnalyticsManager.getInstance(VersionActivity.this).recordScreen(Screen.VERSION);
+		super.onStart();
 	}
 
 	public void getVersionInfo()
@@ -67,9 +75,6 @@ public class VersionActivity extends BaseActivity implements OnClickListener
 				{
 					DailyToast.showToast(VersionActivity.this, R.string.toast_msg_already_latest_version, Toast.LENGTH_SHORT);
 				}
-
-				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestVersionUpdate", this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName, null);
-
 			} catch (Exception e)
 			{
 				onError(e);
@@ -83,12 +88,5 @@ public class VersionActivity extends BaseActivity implements OnClickListener
 	{
 		super.finish();
 		overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
-	}
-
-	@Override
-	protected void onResume()
-	{
-		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("versionInfo", "/settings/version-info");
-		super.onResume();
 	}
 }

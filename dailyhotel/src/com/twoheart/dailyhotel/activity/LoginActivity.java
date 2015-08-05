@@ -55,13 +55,15 @@ import com.facebook.widget.LoginButton;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.AnalyticsManager;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.GlobalFont;
-import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
@@ -73,7 +75,6 @@ import com.twoheart.dailyhotel.widget.DailyToast;
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class LoginActivity extends BaseActivity implements Constants, OnClickListener, ErrorListener
 {
-
 	private EditText etId, etPwd;
 	private SwitchCompat cbxAutoLogin;
 	private TextView btnLogin;
@@ -85,8 +86,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 	private Map<String, String> regPushParams;
 
 	public Session fbSession;
-
-	private MixpanelAPI mMixpanel;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -133,12 +132,16 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 		});
 
 		if (Session.getActiveSession() != null)
+		{
 			Session.getActiveSession().closeAndClearTokenInformation();
+		}
+	}
 
-		mMixpanel = MixpanelAPI.getInstance(this, "791b366dadafcd37803f6cd7d8358373");
-
-		// pinkred_font
-		//		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
+	@Override
+	protected void onStart()
+	{
+		AnalyticsManager.getInstance(LoginActivity.this).recordScreen(Screen.LOGIN);
+		super.onStart();
 	}
 
 	private void makeMeRequest(final Session session)
@@ -232,6 +235,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 			startActivity(i);
 			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
+			AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.LOGIN, Action.CLICK, Label.FORGOT_PASSWORD, 0L);
 		} else if (v.getId() == tvSignUp.getId())
 		{
 			// 회원가입
@@ -239,6 +243,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 			startActivityForResult(i, CODE_REQEUST_ACTIVITY_SIGNUP);
 			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
+			AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.LOGIN, Action.CLICK, Label.SIGNUP, 0L);
 		} else if (v.getId() == btnLogin.getId())
 		{
 			// 로그인
@@ -257,8 +262,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
 			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(), loginParams, mUserLoginJsonResponseListener, this));
 
-			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestLogin", null, null);
-
+			AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.LOGIN, Action.CLICK, Label.LOGIN, 0L);
 		} else if (v.getId() == facebookLogin.getId())
 		{
 			//			fbSession = new Session.Builder(this).setTokenCachingStrategy(new SharedPreferencesTokenCachingStrategy(this)).setApplicationId(getString(R.string.app_id)).build();
@@ -279,7 +283,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
 			Session.setActiveSession(fbSession);
 
-			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestFacebookLogin", null, null);
+			AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.LOGIN, Action.CLICK, Label.LOGIN_FACEBOOK, 0L);
 		}
 	}
 
@@ -416,7 +420,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 		}
 	}
 
-	private void regGcmId(final int idx)
+	private void regGcmId(final String userIndex)
 	{
 		if (isGoogleServiceAvailable() == false)
 		{
@@ -461,7 +465,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
 				regPushParams = new HashMap<String, String>();
 
-				regPushParams.put("user_idx", idx + "");
+				regPushParams.put("user_idx", userIndex);
 				regPushParams.put("notification_id", regId);
 				regPushParams.put("device_type", GCM_DEVICE_TYPE_ANDROID);
 
@@ -470,20 +474,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 				mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_GCM_REGISTER).toString(), regPushParams, mGcmRegisterJsonResponseListener, LoginActivity.this));
 			}
 		}.execute();
-	}
-
-	@Override
-	protected void onResume()
-	{
-		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("profileWithLogoff", "/todays-hotels/profile-with-logoff");
-		super.onResume();
-	}
-
-	@Override
-	protected void onDestroy()
-	{
-		mMixpanel.flush();
-		super.onDestroy();
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -567,7 +557,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-			int userIdx = 0;
+			String userIndex = null;
 
 			try
 			{
@@ -579,26 +569,22 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 				// GCM 아이디를 등록한다.
 				if (sharedPreference.getBoolean("Facebook SignUp", false) == true)
 				{
-					userIdx = response.getInt("idx");
-					String userIdxStr = String.format("%07d", userIdx);
-
-					SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
-					Date date = new Date();
-					String strDate = dateFormat.format(date);
-
-					mMixpanel.getPeople().identify(userIdxStr);
-
-					JSONObject props = new JSONObject();
-					props.put("userId", userIdxStr);
-					props.put("datetime", strDate);
-					props.put("method", "facebook");
-					mMixpanel.track("signup", props);
+					userIndex = String.valueOf(response.getInt("idx"));
 
 					Editor editor = sharedPreference.edit();
 					editor.putBoolean("Facebook SignUp", false);
 					editor.commit();
 
 					ExLog.d("facebook signup is completed.");
+
+					SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
+
+					HashMap<String, String> params = new HashMap<String, String>();
+					params.put(Label.CURRENT_TIME, dateFormat.format(new Date()));
+					params.put(Label.USER_INDEX, userIndex);
+					params.put(Label.TYPE, "facebook");
+
+					AnalyticsManager.getInstance(LoginActivity.this).recordEvent(Screen.LOGIN, Action.NETWORK, Label.SIGNUP, params);
 
 					// Facebook은 한번에 처리하기 위해서.
 					//					if (getGcmId().isEmpty() == false)
@@ -618,7 +604,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 				onError(e);
 			} finally
 			{
-				regGcmId(userIdx);
+				regGcmId(userIndex);
 			}
 		}
 	};

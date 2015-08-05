@@ -296,6 +296,16 @@ public class TabIndicator extends HorizontalScrollView implements OnClickListene
 		}
 	}
 
+	public String getMainText(int index)
+	{
+		if (index > -1 && index < mTabArrray.size())
+		{
+			return mTabArrray.get(index).getMainText();
+		}
+
+		return null;
+	}
+
 	public String getSubText(int index)
 	{
 		if (index > -1 && index < mTabArrray.size())
@@ -532,6 +542,11 @@ public class TabIndicator extends HorizontalScrollView implements OnClickListene
 		public void setMainText(String text)
 		{
 			mTitleTextView.setText(text);
+		}
+
+		public String getMainText()
+		{
+			return mTitleTextView.getText().toString();
 		}
 
 		public void setSubText(String text)

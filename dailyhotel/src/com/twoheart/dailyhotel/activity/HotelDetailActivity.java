@@ -1,8 +1,6 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
  *
- * HotelTabActivity (호텔 예약, 정보, 지도탭을 보여주는 화면)
- * 
  * 호텔 리스트에서 호텔 선택 시 호텔의 정보들을 보여주는 화면이다.
  * 예약, 정보, 지도 프래그먼트를 담고 있는 액티비티이다.
  * 
@@ -38,8 +36,11 @@ import com.twoheart.dailyhotel.model.HotelDetailEx;
 import com.twoheart.dailyhotel.model.SaleRoomInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.ui.HotelDetailLayout;
+import com.twoheart.dailyhotel.util.AnalyticsManager;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
-import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
@@ -199,6 +200,13 @@ public class HotelDetailActivity extends BaseActivity
 	}
 
 	@Override
+	protected void onStart()
+	{
+		AnalyticsManager.getInstance(HotelDetailActivity.this).recordScreen(Screen.HOTEL_DETAIL);
+		super.onStart();
+	}
+
+	@Override
 	protected void onResume()
 	{
 		lockUI();
@@ -301,6 +309,20 @@ public class HotelDetailActivity extends BaseActivity
 				mHotelDetail.getImageUrlList().get(0), //
 				mCheckInSaleTime.getDailyTime(), //
 				mCheckInSaleTime.getOffsetDailyDay(), mHotelDetail.nights);
+
+				// 호텔 공유하기 로그 추가
+				SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + mHotelDetail.nights);
+
+				HashMap<String, String> params = new HashMap<String, String>();
+				params.put(Label.HOTEL_NAME, mHotelDetail.hotelName);
+				params.put(Label.CHECK_IN, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
+				params.put(Label.CHECK_OUT, checkOutSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
+
+				SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
+				params.put(Label.CURRENT_TIME, dateFormat2.format(new Date()));
+
+				AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.HOTEL_DETAIL, Action.CLICK, Label.SHARE, params);
+
 				return true;
 
 			default:
@@ -481,7 +503,12 @@ public class HotelDetailActivity extends BaseActivity
 
 			mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, HotelDetailActivity.this));
 
-			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestBooking", mHotelDetail.hotelName, (long) mHotelDetail.hotelIndex);
+			HashMap<String, String> params = new HashMap<String, String>();
+			params.put(Label.HOTEL_ROOM_NAME, saleRoomInformation.roomName);
+			params.put(Label.HOTEL_ROOM_INDEX, String.valueOf(saleRoomInformation.roomIndex));
+			params.put(Label.HOTEL_INDEX, String.valueOf(mHotelDetail.hotelIndex));
+
+			AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Label.BOOKING, Action.CLICK, mHotelDetail.hotelName, params);
 		}
 
 		@Override
@@ -589,7 +616,8 @@ public class HotelDetailActivity extends BaseActivity
 			// 호텔 공유하기 로그 추가
 			SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + mHotelDetail.nights);
 			String label = String.format("%s (%s-%s)", mHotelDetail.hotelName, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), checkOutSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
-			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "hotelDetailShare", label, (long) mHotelDetail.hotelIndex);
+
+			AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.HOTEL_DETAIL, Action.CLICK, label, (long) mHotelDetail.hotelIndex);
 		}
 	};
 

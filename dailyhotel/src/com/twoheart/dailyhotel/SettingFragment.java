@@ -38,8 +38,11 @@ import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.activity.NoticeActivity;
 import com.twoheart.dailyhotel.activity.ProfileActivity;
 import com.twoheart.dailyhotel.activity.VersionActivity;
+import com.twoheart.dailyhotel.util.AnalyticsManager;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -108,6 +111,13 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 	}
 
 	@Override
+	public void onStart()
+	{
+		AnalyticsManager.getInstance(mHostActivity).recordScreen(Screen.SETTING);
+		super.onStart();
+	}
+
+	@Override
 	public void onResume()
 	{
 		super.onResume();
@@ -118,8 +128,6 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 
 		lockUI();
 		mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, mHostActivity));
-
-		RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordScreen("setting", "/settings/");
 	}
 
 	@Override
@@ -140,18 +148,21 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 			startActivity(i);
 			mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
+			AnalyticsManager.getInstance(mHostActivity).recordEvent(Screen.SETTING, Action.CLICK, Label.NOTICE, 0L);
 		} else if (id == llVersion.getId())
 		{
 			Intent i = new Intent(mHostActivity, VersionActivity.class);
 			startActivity(i);
 			mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
+			AnalyticsManager.getInstance(mHostActivity).recordEvent(Screen.SETTING, Action.CLICK, Label.VERSION, 0L);
 		} else if (id == tvHelp.getId())
 		{
 			Intent i = new Intent(mHostActivity, FAQActivity.class);
 			startActivity(i);
 			mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
+			AnalyticsManager.getInstance(mHostActivity).recordEvent(Screen.SETTING, Action.CLICK, Label.FAQ, 0L);
 		} else if (id == tvMail.getId())
 		{
 			Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:help@dailyhotel.co.kr"));
@@ -160,7 +171,8 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 			intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NEW_TASK);
 
 			startActivity(Intent.createChooser(intent, getString(R.string.mail_text_dialog_title)));
-			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "mailCS", null, null);
+
+			AnalyticsManager.getInstance(mHostActivity).recordEvent(Screen.SETTING, Action.CLICK, Label.MAIL_CS, 0L);
 		} else if (id == llLogin.getId())
 		{
 			if (tvLogin.getText().equals(getString(R.string.frag_profile)))
@@ -170,6 +182,7 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 				startActivity(i);
 				mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
+				AnalyticsManager.getInstance(mHostActivity).recordEvent(Screen.SETTING, Action.CLICK, Label.PROFILE, 0L);
 			} else
 			{
 				// 로그아웃 상태
@@ -177,6 +190,8 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 				Intent i = new Intent(mHostActivity, LoginActivity.class);
 				startActivityForResult(i, CODE_REQUEST_ACTIVITY_LOGIN);
 				mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+
+				AnalyticsManager.getInstance(mHostActivity).recordEvent(Screen.SETTING, Action.CLICK, Label.LOGIN, 0L);
 			}
 
 		} else if (id == tvCall.getId())
@@ -190,17 +205,21 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 				DailyToast.showToast(mHostActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
 			}
 
-			RenewalGaManager.getInstance(mHostActivity.getApplicationContext()).recordEvent("click", "inquireCS", null, null);
+			AnalyticsManager.getInstance(mHostActivity).recordEvent(Screen.SETTING, Action.CLICK, Label.CALL_CS, 0L);
 		} else if (id == tvAbout.getId())
 		{
 			Intent i = new Intent(mHostActivity, AboutActivity.class);
 			startActivity(i);
 			mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+
+			AnalyticsManager.getInstance(mHostActivity).recordEvent(Screen.SETTING, Action.CLICK, Label.ABOUT, 0L);
 		} else if (id == mSettingCardTextView.getId())
 		{
 			Intent i = new Intent(mHostActivity, CreditCardListActivity.class);
 			startActivity(i);
 			mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+
+			AnalyticsManager.getInstance(mHostActivity).recordEvent(Screen.SETTING, Action.CLICK, Label.CREDITCARD, 0L);
 		} else
 		{
 			releaseUiComponent();

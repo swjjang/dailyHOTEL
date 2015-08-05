@@ -19,7 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.fragment.IntroGuideFragment;
-import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.viewpagerindicator.CirclePageIndicator;
 
@@ -90,8 +89,8 @@ public class IntroActivity extends BaseActivity implements OnClickListener, OnPa
 		llIntroStart.setOnClickListener(this);
 		tvSkip.setOnClickListener(this);
 
-		if (mPosition == 0)
-			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("scroll", "landing", (mPosition + 1) + "", (long) (mPosition + 1));
+		//		if (mPosition == 0)
+		//			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("scroll", "landing", (mPosition + 1) + "", (long) (mPosition + 1));
 
 	}
 
@@ -104,10 +103,10 @@ public class IntroActivity extends BaseActivity implements OnClickListener, OnPa
 			finish();
 		}
 
-		if (view.getId() == llIntroStart.getId())
-			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "startDailyHotel", null, null);
-		if (view.getId() == tvSkip.getId())
-			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "skipLanding", (mPosition + 1) + "", (long) (mPosition + 1));
+		//		if (view.getId() == llIntroStart.getId())
+		//			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "startDailyHotel", null, null);
+		//		if (view.getId() == tvSkip.getId())
+		//			RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "skipLanding", (mPosition + 1) + "", (long) (mPosition + 1));
 	}
 
 	@Override
@@ -176,7 +175,7 @@ public class IntroActivity extends BaseActivity implements OnClickListener, OnPa
 			tvSkip.setVisibility(View.VISIBLE);
 		}
 
-		RenewalGaManager.getInstance(getApplicationContext()).recordEvent("scroll", "landing", (position + 1) + "", (long) (position + 1));
+		//		RenewalGaManager.getInstance(getApplicationContext()).recordEvent("scroll", "landing", (position + 1) + "", (long) (position + 1));
 	}
 
 	private void disableShowGuide()
@@ -196,7 +195,7 @@ public class IntroActivity extends BaseActivity implements OnClickListener, OnPa
 	@Override
 	protected void onResume()
 	{
-		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("landing", "/landing");
+		//		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("landing", "/landing");
 
 		super.onResume();
 	}

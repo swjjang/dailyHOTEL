@@ -32,7 +32,6 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.CreditCardListActivity;
 import com.twoheart.dailyhotel.model.CreditCard;
-import com.twoheart.dailyhotel.util.RenewalGaManager;
 
 /**
  * 신용카드 등록하기.
@@ -154,11 +153,9 @@ public class CreditCardLayout extends FrameLayout
 		if (isLogin)
 		{
 			mLogingLayout.setVisibility(View.VISIBLE);
-			RenewalGaManager.getInstance(getContext()).recordScreen("creditWithLogon", "/credit-with-logon/");
 		} else
 		{
 			mLogingLayout.setVisibility(View.GONE);
-			RenewalGaManager.getInstance(getContext()).recordScreen("creditWithLogoff", "/credit-with-logoff/");
 		}
 	}
 

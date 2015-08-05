@@ -6,14 +6,13 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.AnalyticsManager;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.ui.WebViewActivity;
 
 public class EventWebActivity extends WebViewActivity implements Constants
 {
-
-	private static final String TAG = "EventWebActivity";
 	private String URL_WEBAPI_EVENT; //= "http://event.dailyhotel.co.kr";
 	private WebView web;
 
@@ -37,6 +36,13 @@ public class EventWebActivity extends WebViewActivity implements Constants
 	}
 
 	@Override
+	protected void onStart()
+	{
+		AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(Screen.EVENT_WEB);
+		super.onStart();
+	}
+
+	@Override
 	protected void onResume()
 	{
 		super.onResume();
@@ -46,7 +52,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
 		web.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
 
 		setWebView(URL_WEBAPI_EVENT);
-		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("event", "/todays-hotels/event");
 	}
 
 	@Override

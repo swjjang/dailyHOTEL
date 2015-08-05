@@ -7,7 +7,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -33,12 +32,13 @@ import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.twoheart.dailyhotel.activity.PushLockDialogActivity;
 import com.twoheart.dailyhotel.activity.ScreenOnPushDialogActivity;
+import com.twoheart.dailyhotel.model.Pay;
+import com.twoheart.dailyhotel.util.AnalyticsManager;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.WakeLock;
 
 /**
@@ -53,12 +53,10 @@ import com.twoheart.dailyhotel.util.WakeLock;
  */
 public class GcmIntentService extends IntentService implements Constants
 {
-
 	public static final int NOTIFICATION_ID = 1;
 	private NotificationManager mNotificationManager;
 	private boolean mIsBadge;
 	private boolean mIsSound;
-	private MixpanelAPI mMixpanel;
 
 	public GcmIntentService()
 	{
@@ -68,7 +66,6 @@ public class GcmIntentService extends IntentService implements Constants
 	@Override
 	public void onCreate()
 	{
-		mMixpanel = MixpanelAPI.getInstance(getApplicationContext(), "791b366dadafcd37803f6cd7d8358373");
 		super.onCreate();
 	}
 
@@ -116,15 +113,12 @@ public class GcmIntentService extends IntentService implements Constants
 				switch (type)
 				{
 					case PUSH_TYPE_ACCOUNT_COMPLETE:
-						//					sendPush(messageType, type, msg, "", "");
-						//					break;
 						String tid = jsonMsg.getString("TID");
 						String hotelName = jsonMsg.getString("hotelName");
 						String paidPrice = jsonMsg.getString("paidPrice");
 
 						if (collapseKey.equals(pref.getString("collapseKey", "")))
 						{
-							break;
 						} else
 						{
 							Editor editor = pref.edit();
@@ -135,46 +129,18 @@ public class GcmIntentService extends IntentService implements Constants
 							SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmss", Locale.KOREA);
 							Date date = new Date();
 							String strDate = dateFormat.format(date);
-							int userIdx = Integer.parseInt(pref.getString(KEY_PREFERENCE_USER_IDX, "0"));
-							String userIdxStr = String.format("%07d", userIdx);
+							String userIdxStr = pref.getString(KEY_PREFERENCE_USER_IDX, "0");
+							String roomIdx = pref.getString(KEY_PREFERENCE_HOTEL_ROOM_IDX, "0");
+							String checkInTime = pref.getString(KEY_PREFERENCE_HOTEL_CHECKIN, "0");
+							String checkOutTime = pref.getString(KEY_PREFERENCE_HOTEL_CHECKOUT, "0");
 							String transId = strDate + userIdxStr; //기타 결제수단은 이걸 transaction ID로 사용하고 계좌이체의 경우 넘겨받는 tid값을 사용함. 
-
-							RenewalGaManager.getInstance(getApplicationContext()).purchaseComplete(tid, hotelName, "unidentified", Double.parseDouble(paidPrice));
 
 							SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
 							strDate = dateFormat2.format(date);
 
-							mMixpanel.getPeople().identify(userIdxStr);
-
-							JSONObject properties = new JSONObject();
-							try
-							{
-								properties.put("hotelName", hotelName);
-								properties.put("datetime", strDate); // 거래 시간 = 연-월-일T시:분:초
-							} catch (JSONException e)
-							{
-								ExLog.e(e.toString());
-							}
-
-							mMixpanel.getPeople().trackCharge(Double.parseDouble(paidPrice), properties); // price = 결제 금액
-
-							JSONObject props = new JSONObject();
-							try
-							{
-								props.put("hotelName", hotelName);
-								props.put("price", Double.parseDouble(paidPrice));
-								props.put("datetime", strDate);
-								props.put("userId", userIdxStr);
-								props.put("tranId", tid);
-							} catch (JSONException e)
-							{
-								ExLog.e(e.toString());
-							}
-
-							mMixpanel.track("transaction", props);
-							break;
+							AnalyticsManager.getInstance(getApplicationContext()).purchaseComplete(tid, transId, roomIdx, hotelName, Screen.GCMSERVICE, checkInTime, checkOutTime, strDate, Pay.Type.VBANK.name(), Double.parseDouble(paidPrice));
 						}
-						//					Log.d("GcmIntentService", "purchase complete!!!");
+						break;
 
 					case PUSH_TYPE_NOTICE:
 						ExLog.d("GcmIntentService = notice complete!!!");
@@ -280,13 +246,6 @@ public class GcmIntentService extends IntentService implements Constants
 		{
 			new ImageLoaderNotification(contentIntent, uri, msg).execute(imageUrl);
 		}
-	}
-
-	@Override
-	public void onDestroy()
-	{
-		mMixpanel.flush();
-		super.onDestroy();
 	}
 
 	private class ImageLoaderNotification extends

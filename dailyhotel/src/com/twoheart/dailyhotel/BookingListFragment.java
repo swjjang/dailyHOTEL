@@ -42,8 +42,11 @@ import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.activity.PaymentWaitActivity;
 import com.twoheart.dailyhotel.adapter.BookingListAdapter;
 import com.twoheart.dailyhotel.model.Booking;
+import com.twoheart.dailyhotel.util.AnalyticsManager;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
@@ -93,6 +96,14 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 	}
 
 	@Override
+	public void onStart()
+	{
+		AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOLKING_LIST);
+
+		super.onStart();
+	}
+
+	@Override
 	public void onResume()
 	{
 		super.onResume();
@@ -108,8 +119,6 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
 		lockUI();
 		mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, baseActivity));
-
-		RenewalGaManager.getInstance(baseActivity.getApplicationContext()).recordScreen("bookingList", "/bookings/");
 	}
 
 	@Override
@@ -127,6 +136,8 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 			Intent i = new Intent(baseActivity, LoginActivity.class);
 			startActivity(i);
 			baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+
+			AnalyticsManager.getInstance(getActivity()).recordEvent(Screen.BOOLKING_LIST, Action.CLICK, Label.LOGIN, 0L);
 		}
 	}
 
@@ -156,8 +167,6 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 			return;
 		}
 
-		RenewalGaManager.getInstance(baseActivity.getApplicationContext()).recordEvent("click", "selectBookingConfirmation", item.getHotel_name(), null);
-
 		Intent intent = null;
 
 		if (item.getPayType() == CODE_PAY_TYPE_CARD_COMPLETE || item.getPayType() == CODE_PAY_TYPE_ACCOUNT_COMPLETE)
@@ -176,6 +185,8 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 		{
 			releaseUiComponent();
 		}
+
+		AnalyticsManager.getInstance(getActivity()).recordEvent(String.format("payType_%d&Used_%s", item.getPayType(), item.isUsed ? "true" : "false"), Action.CLICK, item.getHotel_name(), (long) item.saleIdx);
 	}
 
 	@Override

@@ -13,7 +13,9 @@ import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.adapter.BoardListAdapter;
 import com.twoheart.dailyhotel.model.Board;
-import com.twoheart.dailyhotel.util.RenewalGaManager;
+import com.twoheart.dailyhotel.util.AnalyticsManager;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
@@ -46,9 +48,17 @@ public class NoticeActivity extends BaseActivity
 				}
 				mExpandedChildPos = groupPosition;
 				mListView.setSelectionFromTop(mExpandedChildPos, 0);
-				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectNotice", mList.get(groupPosition).getSubject(), (long) (groupPosition + 1));
+
+				AnalyticsManager.getInstance(NoticeActivity.this).recordEvent(Screen.NOTICE, Action.CLICK, mList.get(groupPosition).getSubject(), (long) (groupPosition + 1));
 			}
 		});
+	}
+
+	@Override
+	protected void onStart()
+	{
+		AnalyticsManager.getInstance(NoticeActivity.this).recordScreen(Screen.NOTICE);
+		super.onStart();
 	}
 
 	@Override
@@ -58,8 +68,6 @@ public class NoticeActivity extends BaseActivity
 
 		lockUI();
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_BOARD_NOTICE).toString(), null, mBoardNoticeResponseListener, this));
-
-		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("noticeList", "/settings/notice");
 	}
 
 	@Override

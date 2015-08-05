@@ -14,7 +14,6 @@
  */
 package com.twoheart.dailyhotel.util;
 
-import com.google.analytics.tracking.android.Logger.LogLevel;
 import com.twoheart.dailyhotel.BuildConfig;
 
 public interface Constants
@@ -330,12 +329,13 @@ public interface Constants
 	public static final String KEY_PREFERENCE_SHOW_GUIDE = "SHOW_GUIDE";
 
 	public static final String KEY_PREFERENCE_HOTEL_NAME = "HOTEL_NAME";
-	public static final String KEY_PREFERENCE_HOTEL_SALE_IDX = "HOTEL_SALE_IDX";
 	public static final String KEY_PREFERENCE_HOTEL_CHECKOUT = "HOTEL_CHECKOUT";
+	public static final String KEY_PREFERENCE_HOTEL_CHECKIN = "HOTEL_CHECKIN";
 	public static final String VALUE_PREFERENCE_HOTEL_NAME_DEFAULT = "none";
-	public static final int VALUE_PREFERENCE_HOTEL_SALE_IDX_DEFAULT = 1;
+	public static final int VALUE_PREFERENCE_HOTEL_ROOM_IDX_DEFAULT = 1;
 	public static final String VALUE_PREFERENCE_HOTEL_CHECKOUT_DEFAULT = "14-04-30-20";
 	public static final String KEY_PREFERENCE_USER_IDX = "USER_IDX"; // 예약 성공했을때 예약 사용함, 이름과 용도가 맞지 않음 -> 기존 코드
+	public static final String KEY_PREFERENCE_HOTEL_ROOM_IDX = "HOTEL_ROOM_IDX";
 
 	public static final String KEY_PREFERENCE_ACCOUNT_READY_FLAG = "ACCOUNT_READY_FLAG"; //
 	public static final String KEY_PREFERENCE_BY_SHARE = "BY_SHARE";
@@ -427,18 +427,6 @@ public interface Constants
 	public static final int CODE_PAY_TYPE_CARD_COMPLETE = 10;
 	public static final int CODE_PAY_TYPE_ACCOUNT_WAIT = 20;
 	public static final int CODE_PAY_TYPE_ACCOUNT_COMPLETE = 21;
-
-	// Android Google Analytics 정보들.
-	public static final String GA_PROPERTY_ID = "UA-43721645-6";
-
-	// Dispatch period in seconds.
-	public static final int GA_DISPATCH_PERIOD = 60;
-
-	// Prevent hits from being sent to reports, i.e. during testing.
-	public static final boolean GA_IS_DRY_RUN = false;
-
-	// GA Logger verbosity.
-	public static final LogLevel GA_LOG_VERBOSITY = LogLevel.INFO;
 
 	// Key used to store a user's tracking preferences in SharedPreferences.
 	public static final String TRACKING_PREF_KEY = "trackingPreference";

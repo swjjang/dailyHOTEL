@@ -51,7 +51,7 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
 		TabMapFragment newFragment = new TabMapFragment();
 		Bundle arguments = new Bundle();
 
-		//관련 정보들은 HotelTabActivity, BookingTabActivity에서 넘겨받음. 
+		//관련 정보들은 BookingTabActivity에서 넘겨받음. 
 		arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL, hotelDetail);
 		newFragment.setArguments(arguments);
 		newFragment.setTitle(title);

@@ -53,9 +53,10 @@ import com.twoheart.dailyhotel.model.Guest;
 import com.twoheart.dailyhotel.model.Pay;
 import com.twoheart.dailyhotel.model.SaleRoomInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.util.AnalyticsManager;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
@@ -208,14 +209,10 @@ public class PaymentActivity extends BaseActivity implements Constants
 	}
 
 	@Override
-	protected void onResume()
+	protected void onStart()
 	{
-		String region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
-		String hotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
-
-		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("paymentWeb", "/todays-hotels/" + region + "/" + hotelName + "/booking-detail/payment-web");
-
-		super.onResume();
+		AnalyticsManager.getInstance(PaymentActivity.this).recordScreen(Screen.PAYMENT);
+		super.onStart();
 	}
 
 	private byte[] parsePostParameter(String[] key, String[] value)

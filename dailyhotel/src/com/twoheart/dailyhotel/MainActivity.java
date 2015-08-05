@@ -73,10 +73,13 @@ import com.twoheart.dailyhotel.activity.SplashActivity;
 import com.twoheart.dailyhotel.fragment.HotelMainFragment;
 import com.twoheart.dailyhotel.fragment.RatingHotelFragment;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.util.AnalyticsManager;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -511,22 +514,22 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		{
 			case R.drawable.selector_drawermenu_todayshotel:
 				indexLastFragment = INDEX_HOTEL_LIST_FRAGMENT;
-				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectMenu", getString(R.string.actionbar_title_hotel_list_frag), (long) position);
+				AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.MENU, Action.CLICK, getString(R.string.actionbar_title_hotel_list_frag), (long) position);
 				break;
 
 			case R.drawable.selector_drawermenu_reservation:
 				indexLastFragment = INDEX_BOOKING_LIST_FRAGMENT;
-				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectMenu", getString(R.string.actionbar_title_booking_list_frag), (long) position);
+				AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.MENU, Action.CLICK, getString(R.string.actionbar_title_booking_list_frag), (long) position);
 				break;
 
 			case R.drawable.selector_drawermenu_saving:
 				indexLastFragment = INDEX_CREDIT_FRAGMENT;
-				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectMenu", getString(R.string.actionbar_title_credit_frag), (long) position);
+				AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.MENU, Action.CLICK, getString(R.string.actionbar_title_credit_frag), (long) position);
 				break;
 
 			case R.drawable.selector_drawermenu_setting:
 				indexLastFragment = INDEX_SETTING_FRAGMENT;
-				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "selectMenu", getString(R.string.actionbar_title_setting_frag), (long) position);
+				AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.MENU, Action.CLICK, getString(R.string.actionbar_title_setting_frag), (long) position);
 				break;
 		}
 
@@ -594,11 +597,9 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 				super.onDrawerOpened(drawerView);
 
 				supportInvalidateOptionsMenu();
-
 				releaseUiComponent();
 
-				RenewalGaManager.getInstance(getApplicationContext()).recordScreen("menu", "/menu");
-				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestMenuBar", null, null);
+				AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.MENU, Action.CLICK, Label.MENU_OPENED, 0L);
 			}
 
 			@Override
@@ -1074,7 +1075,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 				if (true == loginuser_idx.equalsIgnoreCase(buyerIdx))
 				{
 					String purchasedHotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME, VALUE_PREFERENCE_HOTEL_NAME_DEFAULT);
-					int purchasedHotelSaleIdx = sharedPreference.getInt(KEY_PREFERENCE_HOTEL_SALE_IDX, VALUE_PREFERENCE_HOTEL_SALE_IDX_DEFAULT);
+					int purchasedHotelRoomIdx = sharedPreference.getInt(KEY_PREFERENCE_HOTEL_ROOM_IDX, VALUE_PREFERENCE_HOTEL_ROOM_IDX_DEFAULT);
 					String purchasedHotelCheckOut = sharedPreference.getString(KEY_PREFERENCE_HOTEL_CHECKOUT, VALUE_PREFERENCE_HOTEL_CHECKOUT_DEFAULT);
 
 					Calendar calendar = DailyCalendar.getInstance();
@@ -1092,7 +1093,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 							if (today.compareTo(deadLineDay) < 0)
 							{
-								RatingHotelFragment dialog = RatingHotelFragment.newInstance(purchasedHotelName, purchasedHotelSaleIdx);
+								RatingHotelFragment dialog = RatingHotelFragment.newInstance(purchasedHotelName, purchasedHotelRoomIdx);
 
 								if (dialog != null)
 								{

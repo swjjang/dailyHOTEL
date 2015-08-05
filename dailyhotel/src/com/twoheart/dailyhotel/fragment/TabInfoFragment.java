@@ -41,7 +41,7 @@ public class TabInfoFragment extends BaseFragment
 		TabInfoFragment newFragment = new TabInfoFragment();
 		Bundle arguments = new Bundle();
 
-		//호텔의 정보는 HotelTabActivity, BookingTabActivity에서 넘겨받음. 
+		//호텔의 정보는 BookingTabActivity에서 넘겨받음. 
 		arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL, hotelDetail);
 		newFragment.setArguments(arguments);
 		newFragment.setTitle(title);

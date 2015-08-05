@@ -8,7 +8,6 @@ import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 
 public class VolleyImageLoader
 {
-
 	private static RequestQueue sRequestQueue;
 	private static ImageLoader sImageLoader;
 	private static BitmapLruCache mBitmapLruCache;
@@ -24,14 +23,11 @@ public class VolleyImageLoader
 
 	public static ImageLoader getImageLoader()
 	{
-		if (sImageLoader == null)
+		synchronized (VolleyImageLoader.class)
 		{
-			synchronized (VolleyImageLoader.class)
+			if (sImageLoader == null)
 			{
-				if (sImageLoader == null)
-				{
-					init();
-				}
+				init();
 			}
 		}
 

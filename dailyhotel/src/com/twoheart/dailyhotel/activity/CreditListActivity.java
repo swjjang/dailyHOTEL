@@ -21,7 +21,8 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.adapter.CreditListAdapter;
 import com.twoheart.dailyhotel.model.Credit;
-import com.twoheart.dailyhotel.util.RenewalGaManager;
+import com.twoheart.dailyhotel.util.AnalyticsManager;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 /**
@@ -67,9 +68,15 @@ public class CreditListActivity extends BaseActivity
 	}
 
 	@Override
+	protected void onStart()
+	{
+		AnalyticsManager.getInstance(CreditListActivity.this).recordScreen(Screen.CREDIT_LIST);
+		super.onStart();
+	}
+
+	@Override
 	public void onResume()
 	{
-		RenewalGaManager.getInstance(CreditListActivity.this).recordScreen("creditHistory", "/credit-with-logon/history");
 		super.onResume();
 	}
 

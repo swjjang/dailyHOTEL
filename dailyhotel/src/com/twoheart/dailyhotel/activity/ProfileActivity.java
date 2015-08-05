@@ -38,7 +38,10 @@ import com.android.volley.Request.Method;
 import com.androidquery.AQuery;
 import com.facebook.Session;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.RenewalGaManager;
+import com.twoheart.dailyhotel.util.AnalyticsManager;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
@@ -110,11 +113,17 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 	}
 
 	@Override
+	protected void onStart()
+	{
+		AnalyticsManager.getInstance(ProfileActivity.this).recordScreen(Screen.PROFILE);
+		super.onStart();
+	}
+
+	@Override
 	public void onResume()
 	{
 		super.onResume();
 		updateTextField();
-		RenewalGaManager.getInstance(getApplicationContext()).recordScreen("profileWithLogon", "/todays-hotels/profile-with-logon");
 	}
 
 	@Override
@@ -289,8 +298,8 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 				@Override
 				public void onClick(DialogInterface dialog, int which)
 				{
-					RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestLogout", null, null);
 					mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGOUT).toString(), null, mUserLogoutStringResponseListener, ProfileActivity.this));
+					AnalyticsManager.getInstance(ProfileActivity.this).recordEvent(Screen.PROFILE, Action.CLICK, Label.LOGOUT, 0L);
 				}
 			};
 

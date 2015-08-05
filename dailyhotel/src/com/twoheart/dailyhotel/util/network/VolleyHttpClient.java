@@ -37,7 +37,6 @@ import com.twoheart.dailyhotel.util.Constants;
 
 public class VolleyHttpClient implements Constants
 {
-
 	private static final String KEY_DAILYHOTEL_COOKIE = "JSESSIONID";
 
 	public static final int TIME_OUT = 5000;
@@ -51,7 +50,6 @@ public class VolleyHttpClient implements Constants
 
 	public static void init(Context context)
 	{
-
 		HttpParams params = new BasicHttpParams();
 		SchemeRegistry registry = new SchemeRegistry();
 		registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
@@ -60,15 +58,19 @@ public class VolleyHttpClient implements Constants
 
 		sContext = context;
 		sRequestQueue = Volley.newRequestQueue(sContext, new HttpClientStack(sHttpClient));
-		// sRequestQueue = Volley.newRequestQueue(sContext);
 	}
 
 	public static RequestQueue getRequestQueue()
 	{
-		if (sRequestQueue == null)
-			init(sContext);
-		return sRequestQueue;
+		synchronized (VolleyHttpClient.class)
+		{
+			if (sRequestQueue == null)
+			{
+				init(sContext);
+			}
+		}
 
+		return sRequestQueue;
 	}
 
 	public static Boolean isAvailableNetwork()
@@ -99,14 +101,12 @@ public class VolleyHttpClient implements Constants
 		return AvailableNetwork.getInstance().hasActiveNetwork(sContext);
 	}
 
-	// 서버 response로부터 cookie를 가져와 기억함.
-	// 로그인 요청 후 성공적으로 응답을 받았을 경우 반드시 이 메서드를 사용해야 함.
+	/**
+	 * 서버 response로부터 cookie를 가져와 기억함. 로그인 요청 후 성공적으로 응답을 받았을 경우 반드시 이 메서드를 사용해야
+	 * 함.
+	 */
 	public static void createCookie()
 	{
-
-		//		if (CookieManager.getInstance().getCookie(URL_DAILYHOTEL_SERVER) != null)
-		//			Log.e("Common: " + CookieManager.getInstance().getCookie(URL_DAILYHOTEL_SERVER));
-
 		cookieManagerCreate();
 
 		List<Cookie> cookies = ((DefaultHttpClient) sHttpClient).getCookieStore().getCookies();

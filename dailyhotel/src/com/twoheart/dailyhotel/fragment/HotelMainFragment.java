@@ -50,8 +50,10 @@ import com.twoheart.dailyhotel.model.AreaItem;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.util.AnalyticsManager;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
@@ -1156,7 +1158,13 @@ public class HotelMainFragment extends BaseFragment
 				return;
 			}
 
-			RenewalGaManager.getInstance(baseActivity.getApplicationContext()).recordEvent("click", "selectHotel", hotelName, hotelIndex);
+			String text = mTabIndicator.getMainText(mFragmentViewPager.getCurrentItem());
+
+			HashMap<String, String> params = new HashMap<String, String>();
+			params.put(Label.DATE_TAB, text);
+			params.put(Label.HOTEL_INDEX, String.valueOf(hotelIndex));
+
+			AnalyticsManager.getInstance(baseActivity.getApplicationContext()).recordEvent(mHotelViewType.name(), Action.CLICK, hotelName, params);
 		}
 
 		@Override
@@ -1169,7 +1177,12 @@ public class HotelMainFragment extends BaseFragment
 				return;
 			}
 
-			RenewalGaManager.getInstance(baseActivity.getApplicationContext()).recordEvent("click", "selectRegion", province.name, (long) province.index);
+			String text = mTabIndicator.getMainText(mFragmentViewPager.getCurrentItem());
+
+			HashMap<String, String> params = new HashMap<String, String>();
+			params.put(Label.DATE_TAB, text);
+
+			AnalyticsManager.getInstance(baseActivity.getApplicationContext()).recordEvent(mHotelViewType.name(), Action.CLICK, province.name, params);
 		}
 	};
 }

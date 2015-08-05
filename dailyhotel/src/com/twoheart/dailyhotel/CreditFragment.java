@@ -40,15 +40,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request.Method;
-import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.twoheart.dailyhotel.activity.CreditListActivity;
 import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.activity.SignupActivity;
 import com.twoheart.dailyhotel.model.Credit;
+import com.twoheart.dailyhotel.util.AnalyticsManager;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
-import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -74,8 +76,6 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 	private String mRecommendCode;
 	private ArrayList<Credit> mCreditList;
 	private String mUserName;
-
-	private MixpanelAPI mMixpanel;
 	private String idx;
 
 	@Override
@@ -109,6 +109,14 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 	}
 
 	@Override
+	public void onStart()
+	{
+		AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.CREDIT);
+
+		super.onStart();
+	}
+
+	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		BaseActivity baseActivity = (BaseActivity) getActivity();
@@ -117,8 +125,6 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 		{
 			return;
 		}
-
-		mMixpanel = MixpanelAPI.getInstance(baseActivity, "791b366dadafcd37803f6cd7d8358373");
 
 		super.onCreate(savedInstanceState);
 	}
@@ -156,51 +162,47 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 		{
 			try
 			{
-				RenewalGaManager.getInstance(baseActivity.getApplicationContext()).recordEvent("click", "inviteKakaoFriend", null, null);
-				int userIdx = Integer.parseInt(idx);
-				String userIdxStr = String.format("%07d", userIdx);
+				String userIdxStr = idx;
 
 				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
 				Date date = new Date();
 				String strDate = dateFormat.format(date);
 
-				mMixpanel.getPeople().identify(userIdxStr);
-
-				JSONObject props = new JSONObject();
-				props.put("userId", userIdxStr);
-				props.put("datetime", strDate);
-				mMixpanel.track("kakaoInvitation", props);
-
 				String msg = getString(R.string.kakaolink_msg_invited_friend, mUserName, mUserName, mRecommendCode);
 				KakaoLinkManager.newInstance(getActivity()).sendInviteMsgKakaoLink(msg);
+
+				HashMap<String, String> params = new HashMap<String, String>();
+				params.put("userId", userIdxStr);
+				params.put("datetime", strDate);
+
+				AnalyticsManager.getInstance(getActivity()).recordEvent(Screen.CREDIT, Action.CLICK, Label.INVITE_KAKAO_FRIEND, params);
 			} catch (Exception e)
 			{
-				ExLog.d("kakao link error " + e.toString());
+				ExLog.d(e.toString());
 			}
-
 		} else if (v.getId() == tvCredit.getId())
 		{
-			//			((MainActivity) baseActivity).addFragment(CreditListFragment.newInstance(mCreditList));
-			RenewalGaManager.getInstance(baseActivity.getApplicationContext()).recordEvent("click", "requestCreditHistory", null, null);
-
 			Intent i = new Intent(baseActivity, CreditListActivity.class);
 			i.putParcelableArrayListExtra(CreditListActivity.KEY_BUNDLE_ARGUMENTS_CREDITLIST, mCreditList);
 			startActivity(i);
 			baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
+			AnalyticsManager.getInstance(getActivity()).recordEvent(Screen.CREDIT, Action.CLICK, Label.VIEW_CREDIT_HISTORY, 0L);
 		} else if (v.getId() == btnLogin.getId())
 		{
 			Intent i = new Intent(baseActivity, LoginActivity.class);
 			startActivity(i);
 			baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
+			AnalyticsManager.getInstance(getActivity()).recordEvent(Screen.CREDIT, Action.CLICK, Label.LOGIN, 0L);
 		} else if (v.getId() == btnSignup.getId())
 		{
 			Intent i = new Intent(baseActivity, SignupActivity.class);
 			startActivity(i);
 			baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-		}
 
+			AnalyticsManager.getInstance(getActivity()).recordEvent(Screen.CREDIT, Action.CLICK, Label.SIGNUP, 0L);
+		}
 	}
 
 	private void loadLoginProcess(boolean loginSuccess)
@@ -216,12 +218,10 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 		{
 			rlCreditNotLoggedIn.setVisibility(View.GONE);
 			llCreditLoggedIn.setVisibility(View.VISIBLE);
-			RenewalGaManager.getInstance(baseActivity.getApplicationContext()).recordScreen("creditWithLogon", "/credit-with-logon/");
 		} else
 		{
 			rlCreditNotLoggedIn.setVisibility(View.VISIBLE);
 			llCreditLoggedIn.setVisibility(View.GONE);
-			RenewalGaManager.getInstance(baseActivity.getApplicationContext()).recordScreen("creditWithLogoff", "/credit-with-logoff/");
 		}
 	}
 

@@ -46,12 +46,14 @@ import com.android.volley.VolleyError;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
+import com.twoheart.dailyhotel.util.AnalyticsManager;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.RenewalGaManager;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
@@ -75,7 +77,6 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
 	private Map<String, String> signupParams;
 	private HashMap<String, String> regPushParams;
-	private MixpanelAPI mMixpanel;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -173,13 +174,12 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 		tvTerm.setOnClickListener(this);
 		tvPrivacy.setOnClickListener(this);
 		btnSignUp.setOnClickListener(this);
-
-		mMixpanel = MixpanelAPI.getInstance(this, "791b366dadafcd37803f6cd7d8358373");
 	}
 
 	@Override
 	protected void onStart()
 	{
+		AnalyticsManager.getInstance(SignupActivity.this).recordScreen(Screen.SIGNUP);
 		super.onStart();
 	}
 
@@ -281,7 +281,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
 				mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNUP).toString(), signupParams, mUserSignupJsonResponseListener, this));
 
-				RenewalGaManager.getInstance(getApplicationContext()).recordEvent("click", "requestSignup", null, null);
+				AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.SIGNUP, Action.CLICK, Label.SIGNUP, 0L);
 			} else
 			{
 				// 회원 정보 업데이트
@@ -368,7 +368,6 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 	@Override
 	protected void onDestroy()
 	{
-		mMixpanel.flush();
 		super.onDestroy();
 	}
 
@@ -532,28 +531,25 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
 	private DailyHotelJsonResponseListener mUserInfoJsonResponseListener = new DailyHotelJsonResponseListener()
 	{
-
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
 			try
 			{
-				int userIdx = response.getInt("idx");
-				String userIdxStr = String.format("%07d", userIdx);
+				String userIndex = String.valueOf(response.getInt("idx"));
+
+				regGcmId(userIndex);
 
 				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
 				Date date = new Date();
 				String strDate = dateFormat.format(date);
 
-				mMixpanel.getPeople().identify(userIdxStr);
+				HashMap<String, String> params = new HashMap<String, String>();
+				params.put(Label.CURRENT_TIME, strDate);
+				params.put(Label.USER_INDEX, userIndex);
+				params.put(Label.TYPE, "email");
 
-				JSONObject props = new JSONObject();
-				props.put("userId", userIdxStr);
-				props.put("datetime", strDate);
-				props.put("method", "email");
-				mMixpanel.track("signup", props);
-
-				regGcmId(userIdxStr);
+				AnalyticsManager.getInstance(SignupActivity.this).recordEvent(Screen.SIGNUP, Action.NETWORK, Label.SIGNUP, params);
 			} catch (Exception e)
 			{
 				unLockUI();
@@ -564,7 +560,6 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
 	private DailyHotelJsonResponseListener mUserUpdateFacebookJsonResponseListener = new DailyHotelJsonResponseListener()
 	{
-
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{

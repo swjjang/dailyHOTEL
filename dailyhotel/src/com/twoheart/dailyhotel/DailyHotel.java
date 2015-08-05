@@ -15,20 +15,12 @@
 package com.twoheart.dailyhotel;
 
 import io.fabric.sdk.android.Fabric;
-
-import java.lang.Thread.UncaughtExceptionHandler;
-
 import android.app.Application;
-import android.content.SharedPreferences;
 import android.graphics.Typeface;
-import android.preference.PreferenceManager;
 
 import com.androidquery.callback.BitmapAjaxCallback;
 import com.crashlytics.android.Crashlytics;
-import com.google.analytics.tracking.android.ExceptionReporter;
-import com.google.analytics.tracking.android.GAServiceManager;
-import com.google.analytics.tracking.android.GoogleAnalytics;
-import com.google.analytics.tracking.android.Tracker;
+import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -53,58 +45,19 @@ public class DailyHotel extends Application implements Constants
 		DailyHotel.VERSION = Util.getAppVersion(getApplicationContext());
 
 		initializeVolley();
-		initializeGa();
+		initializeAnalytics();
 		initializeFont();
 	}
 
-	private void initializeGa()
+	private void initializeAnalytics()
 	{
-		GoogleAnalytics mGa = GoogleAnalytics.getInstance(this);
-		Tracker mTracker = mGa.getTracker(GA_PROPERTY_ID);
-
-		// Set dispatch period.
-		GAServiceManager.getInstance().setLocalDispatchPeriod(GA_DISPATCH_PERIOD);
-
-		// Set dryRun flag.
-		mGa.setDryRun(GA_IS_DRY_RUN);
-
-		// Set Logger verbosity.
-		mGa.getLogger().setLogLevel(GA_LOG_VERBOSITY);
-
-		// Set the opt out flag when user updates a tracking preference.
-		SharedPreferences userPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-		userPrefs.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener()
-		{
-			@Override
-			public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key)
-			{
-				if (key.equals(TRACKING_PREF_KEY))
-				{
-					GoogleAnalytics.getInstance(getApplicationContext()).setAppOptOut(sharedPreferences.getBoolean(key, false));
-				}
-			}
-		});
-
-		UncaughtExceptionHandler myHandler = new ExceptionReporter(mTracker, // Tracker, may return
-		// null if not yet
-		// initialized.
-		GAServiceManager.getInstance(), // GAServiceManager singleton.
-		Thread.getDefaultUncaughtExceptionHandler(), this); // Current
-															// default
-															// uncaught
-															// exception
-															// handler.
-
-		// Make myHandler the new default uncaught exception handler.
-		Thread.setDefaultUncaughtExceptionHandler(myHandler);
-
-		VolleyImageLoader.init();
+		AnalyticsManager.getInstance(getApplicationContext());
 	}
 
 	private void initializeVolley()
 	{
 		VolleyHttpClient.init(this);
-
+		VolleyImageLoader.init();
 	}
 
 	private void initializeFont()
