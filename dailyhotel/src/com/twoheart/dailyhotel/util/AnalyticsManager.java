@@ -74,12 +74,24 @@ public class AnalyticsManager
 
 	public void recordEvent(String category, String action, String label, Long value)
 	{
-		mTracker.send(new HitBuilders.EventBuilder().setCategory(category).setAction(action).setLabel(label).setValue(value).build());
+		try
+		{
+			mTracker.send(new HitBuilders.EventBuilder().setCategory(category).setAction(action).setLabel(label).setValue(value).build());
+		} catch (Exception e)
+		{
+			ExLog.d(e.toString());
+		}
 	}
 
 	public void recordEvent(String category, String action, String label, Map<String, String> params)
 	{
-		mTracker.send(new HitBuilders.EventBuilder().setCategory(category).setAction(action).setLabel(label).setAll(params).build());
+		try
+		{
+			mTracker.send(new HitBuilders.EventBuilder().setCategory(category).setAction(action).setLabel(label).setAll(params).build());
+		} catch (Exception e)
+		{
+			ExLog.d(e.toString());
+		}
 	}
 
 	/**
@@ -98,13 +110,18 @@ public class AnalyticsManager
 
 	public void purchaseComplete(String transId, String userIndex, String roomIndex, String hotelName, String category, String checkInTime, String checkOutTime, String payType, String currentTime, double price)
 	{
-		Product product = new Product().setId(transId).setName(hotelName).setCategory(category).setBrand("dailyHOTEL").setCustomDimension(1, userIndex).setCustomDimension(2, checkInTime).setCustomDimension(3, checkOutTime).setCustomDimension(4, currentTime).setPrice(price).setQuantity(1);
-		ProductAction productAction = new ProductAction(ProductAction.ACTION_PURCHASE).setTransactionId(transId).setTransactionAffiliation("dailyHOTEL").setTransactionRevenue(price).setTransactionTax(0).setTransactionShipping(0).setTransactionCouponCode("KRW").setCheckoutOptions(payType);
+		try
+		{
+			Product product = new Product().setId(transId).setName(hotelName).setCategory(category).setBrand("dailyHOTEL").setCustomDimension(1, userIndex).setCustomDimension(2, checkInTime).setCustomDimension(3, checkOutTime).setCustomDimension(4, currentTime).setPrice(price).setQuantity(1);
+			ProductAction productAction = new ProductAction(ProductAction.ACTION_PURCHASE).setTransactionId(transId).setTransactionAffiliation("dailyHOTEL").setTransactionRevenue(price).setTransactionTax(0).setTransactionShipping(0).setTransactionCouponCode("KRW").setCheckoutOptions(payType);
 
-		HitBuilders.ScreenViewBuilder builder = new HitBuilders.ScreenViewBuilder().addProduct(product).setProductAction(productAction);
+			HitBuilders.ScreenViewBuilder builder = new HitBuilders.ScreenViewBuilder().addProduct(product).setProductAction(productAction);
 
-		mTracker.setScreenName("Payment Screen");
-		mTracker.send(builder.build());
+			mTracker.send(builder.build());
+		} catch (Exception e)
+		{
+			ExLog.d(e.toString());
+		}
 
 		//		
 		//		
@@ -119,7 +136,7 @@ public class AnalyticsManager
 	public static class Screen
 	{
 		public static final String SPLASH = "Splash Screen";
-
+		public static final String HOTEL_LIST = "HotelList Screen";
 		public static final String HOTEL_DETAIL = "HotelDetail Screen";
 		public static final String BOOKING = "Booking Screen";
 		public static final String BOOLKING_LIST = "BookingList Screen";
@@ -137,11 +154,10 @@ public class AnalyticsManager
 		public static final String SIGNUP = "Signup Screen";
 		public static final String LOGIN = "Login Screen";
 		public static final String PAYMENT = "Payment Screen";
-
 		public static final String GCMSERVICE = "Gcm Service";
 		public static final String MENU = "menu";
-
 		public static final String PAYMENT_AGREE_POPUP = "paymentAgreePopup";
+		public static final String WAIT_TIMER = "WaitTimer Screen";
 	}
 
 	public static class Action
@@ -162,7 +178,6 @@ public class AnalyticsManager
 		public static final String HOTEL_NAME = "hotelName";
 		public static final String MENU_OPENED = "menuOpened";
 		public static final String AREA = "area";
-
 		public static final String NOTICE = "notice";
 		public static final String VERSION = "version";
 		public static final String PROFILE = "profile";
@@ -171,17 +186,12 @@ public class AnalyticsManager
 		public static final String MAIL_CS = "mainCS";
 		public static final String FAQ = "faq";
 		public static final String ABOUT = "about";
-
 		public static final String PAYMENT = "payment";
-
 		public static final String ON = "on";
 		public static final String OFF = "off";
-
 		public static final String USED_CREDIT = "usedCredit";
-
 		public static final String INVITE_KAKAO_FRIEND = "inviteKakaoFriend";
 		public static final String VIEW_CREDIT_HISTORY = "viewCreditHistory";
-
 		public static final String BOOKING = "booking";
 		public static final String SHARE = "share";
 		public static final String CHECK_IN = "chekcInTime";
@@ -193,5 +203,10 @@ public class AnalyticsManager
 		public static final String LOGOUT = "logout";
 		public static final String LOGIN_FACEBOOK = "loginFacebook";
 		public static final String FORGOT_PASSWORD = "forgotPassword";
+		public static final String ISUSED = "isUsed";
+		public static final String RESERVATION_INDEX = "reservationIndex";
+		public static final String PROVINCE = "province";
+		public static final String NIGHTS = "ngihts";
+		public static final String EVENT = "event";
 	}
 }

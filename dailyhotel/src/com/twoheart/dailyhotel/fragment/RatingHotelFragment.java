@@ -55,13 +55,13 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 	private RequestQueue mQueue;
 
 	private String mHotelName;
-	private int mSaleIndex;
+	private int mRoomIndex;
 
 	private ImageView ivBtnClose;
 	private Button btnRecommend, btnCancel;
 	private TextView tvHotelName;
 
-	public static RatingHotelFragment newInstance(String hotelName, int saleIndex)
+	public static RatingHotelFragment newInstance(String hotelName, int roomIndex)
 	{
 		RatingHotelFragment newFragment = new RatingHotelFragment();
 		Bundle arguments = new Bundle();
@@ -69,7 +69,7 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 		if (hotelName != null)
 		{
 			arguments.putString(NAME_INTENT_EXTRA_DATA_HOTELNAME, hotelName);
-			arguments.putInt(NAME_INTENT_EXTRA_DATA_SALEINDEX, saleIndex);
+			arguments.putInt(NAME_INTENT_EXTRA_DATA_ROOMINDEX, roomIndex);
 		}
 
 		newFragment.setArguments(arguments);
@@ -92,7 +92,7 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 
 		mQueue = VolleyHttpClient.getRequestQueue();
 		mHotelName = getArguments().getString(NAME_INTENT_EXTRA_DATA_HOTELNAME);
-		mSaleIndex = getArguments().getInt(NAME_INTENT_EXTRA_DATA_SALEINDEX);
+		mRoomIndex = getArguments().getInt(NAME_INTENT_EXTRA_DATA_ROOMINDEX);
 	}
 
 	@Override
@@ -217,7 +217,7 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 			reviewResultParams.put("rating", reviewResult);
 
 			lockUI();
-			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_REVIEW).append('/').append(mSaleIndex).toString(), reviewResultParams, mReserveReviewJsonResponseListener, mHostActivity));
+			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_REVIEW).append('/').append(mRoomIndex).toString(), reviewResultParams, mReserveReviewJsonResponseListener, mHostActivity));
 		}
 	}
 

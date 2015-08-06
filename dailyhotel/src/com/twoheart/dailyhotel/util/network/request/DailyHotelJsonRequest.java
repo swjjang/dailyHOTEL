@@ -24,7 +24,6 @@ public class DailyHotelJsonRequest extends DailyHotelRequest<JSONObject>
 		super(method, url, parameters, errorListener);
 
 		this.mListener = listener;
-
 	}
 
 	@Override

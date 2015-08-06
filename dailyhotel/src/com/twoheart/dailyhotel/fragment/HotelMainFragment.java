@@ -99,7 +99,7 @@ public class HotelMainFragment extends BaseFragment
 
 	public interface UserAnalyticsActionListener
 	{
-		public void selectHotel(String hotelName, long hotelIndex);
+		public void selectHotel(String hotelName, long hotelIndex, String checkInTime, int nights);
 
 		public void selectRegion(Province province);
 	};
@@ -599,7 +599,7 @@ public class HotelMainFragment extends BaseFragment
 
 					startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTELTAB);
 
-					//					mUserAnalyticsActionListener.selectHotel(hotelListViewItem.getItem().getName(), hotel.getIdx());
+					mUserAnalyticsActionListener.selectHotel(hotelListViewItem.getItem().getName(), hotel.getIdx(), checkSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), hotel.nights);
 					break;
 				}
 
@@ -1102,6 +1102,12 @@ public class HotelMainFragment extends BaseFragment
 				}
 
 				refreshHotelList(mSelectedProvince, isSelectionTop);
+
+				HashMap<String, String> params = new HashMap<String, String>();
+				params.put(Label.PROVINCE, mSelectedProvince.name);
+				params.put(Label.DATE_TAB, mTabIndicator.getMainText(position));
+
+				AnalyticsManager.getInstance(baseActivity).recordEvent(mHotelViewType.name(), Action.CLICK, Label.DATE_TAB, params);
 			} catch (Exception e)
 			{
 				ExLog.e(e.toString());
@@ -1149,7 +1155,7 @@ public class HotelMainFragment extends BaseFragment
 	private UserAnalyticsActionListener mUserAnalyticsActionListener = new UserAnalyticsActionListener()
 	{
 		@Override
-		public void selectHotel(String hotelName, long hotelIndex)
+		public void selectHotel(String hotelName, long hotelIndex, String checkInTime, int nights)
 		{
 			BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -1163,6 +1169,8 @@ public class HotelMainFragment extends BaseFragment
 			HashMap<String, String> params = new HashMap<String, String>();
 			params.put(Label.DATE_TAB, text);
 			params.put(Label.HOTEL_INDEX, String.valueOf(hotelIndex));
+			params.put(Label.CHECK_IN, checkInTime);
+			params.put(Label.NIGHTS, String.valueOf(nights));
 
 			AnalyticsManager.getInstance(baseActivity.getApplicationContext()).recordEvent(mHotelViewType.name(), Action.CLICK, hotelName, params);
 		}

@@ -704,6 +704,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 					{
 						Intent i = new Intent(MainActivity.this, EventWebActivity.class);
 						startActivity(i);
+
+						AnalyticsManager.getInstance(MainActivity.this).recordEvent(Screen.MENU, Action.CLICK, Label.EVENT, 0L);
 					}
 				}, 300);
 			}

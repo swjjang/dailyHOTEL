@@ -38,6 +38,8 @@ import android.widget.Toast;
 
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.util.AnalyticsManager;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.WakeLock;
@@ -122,6 +124,13 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 		setTimer();
 
 		return view;
+	}
+
+	@Override
+	public void onStart()
+	{
+		AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.WAIT_TIMER);
+		super.onStart();
 	}
 
 	@Override
@@ -300,17 +309,4 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 			}
 		}
 	};
-
-	//	@Override
-	//	public void onResponse(String url, JSONObject response) {
-	//		if (url.contains(URL_WEBAPI_APP_VERSION)) {
-	//			try {
-	//				if (response.getString("new_event").equals("1")) {
-	////					if (ivNewEvent != null) ivNewEvent.setVisibility(View.VISIBLE);
-	//				}
-	//			} catch (Exception e) {
-	//				onError(e);
-	//			}
-	//		}
-	//	}
 }

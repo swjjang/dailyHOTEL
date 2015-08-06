@@ -53,6 +53,8 @@ import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.util.AnalyticsManager;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.Util;
@@ -171,6 +173,13 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		mActionbarViewHolder.mUnderlineView02 = baseActivity.findViewById(R.id.tabindicator_underLine);
 
 		return view;
+	}
+
+	@Override
+	public void onStart()
+	{
+		AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.HOTEL_LIST);
+		super.onStart();
 	}
 
 	@Override

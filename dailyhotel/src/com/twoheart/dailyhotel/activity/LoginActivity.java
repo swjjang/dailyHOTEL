@@ -464,12 +464,9 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 				}
 
 				regPushParams = new HashMap<String, String>();
-
 				regPushParams.put("user_idx", userIndex);
 				regPushParams.put("notification_id", regId);
 				regPushParams.put("device_type", GCM_DEVICE_TYPE_ANDROID);
-
-				ExLog.d("params for register push id : " + regPushParams.toString());
 
 				mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_GCM_REGISTER).toString(), regPushParams, mGcmRegisterJsonResponseListener, LoginActivity.this));
 			}
@@ -500,21 +497,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 					VolleyHttpClient.createCookie();
 					storeLoginInfo();
 
-					if (sharedPreference.getBoolean("Facebook SignUp", false) == true)
-					{
-						mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, LoginActivity.this));
-					} else
-					{
-						// 로그인에 성공하였으나 기기에 GCM을 등록하지 않은 유저의 경우 인덱스를 가져와 push_id를 업그레이드 하는 절차 시작.
-						mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, LoginActivity.this));
-
-						unLockUI();
-
-						// 로그인에 성공 하였고 GCM 코드 또한 이미 기기에 저장되어 있는 상태이면 종료. 
-						DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);
-						setResult(RESULT_OK);
-						finish();
-					}
+					mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, LoginActivity.this));
 
 					Editor editor = sharedPreference.edit();
 					editor.putString("collapseKey", "");
@@ -566,11 +549,12 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 					throw new NullPointerException("response == null.");
 				}
 
+				// GCM 등록을 위해 값이 필요한다.
+				userIndex = String.valueOf(response.getInt("idx"));
+
 				// GCM 아이디를 등록한다.
 				if (sharedPreference.getBoolean("Facebook SignUp", false) == true)
 				{
-					userIndex = String.valueOf(response.getInt("idx"));
-
 					Editor editor = sharedPreference.edit();
 					editor.putBoolean("Facebook SignUp", false);
 					editor.commit();
@@ -585,18 +569,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 					params.put(Label.TYPE, "facebook");
 
 					AnalyticsManager.getInstance(LoginActivity.this).recordEvent(Screen.LOGIN, Action.NETWORK, Label.SIGNUP, params);
-
-					// Facebook은 한번에 처리하기 위해서.
-					//					if (getGcmId().isEmpty() == false)
-					//					{
-					//						unLockUI();
-					//
-					//						// 로그인에 성공 하였고 GCM 코드 또한 이미 기기에 저장되어 있는 상태이면 종료. 
-					//						DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);
-					//						setResult(RESULT_OK);
-					//						finish();
-					//						return;
-					//					}
 				}
 			} catch (Exception e)
 			{

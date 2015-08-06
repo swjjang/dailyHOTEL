@@ -11,7 +11,6 @@ package com.twoheart.dailyhotel.activity;
 
 import java.util.ArrayList;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.AlertDialog;
@@ -26,8 +25,6 @@ import com.twoheart.dailyhotel.fragment.TabInfoFragment;
 import com.twoheart.dailyhotel.fragment.TabMapFragment;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.BookingHotelDetail;
-import com.twoheart.dailyhotel.model.Hotel;
-import com.twoheart.dailyhotel.model.Hotel.HotelGrade;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
@@ -50,7 +47,6 @@ public class BookingTabActivity extends BaseActivity
 
 	public BookingHotelDetail mHotelDetail;
 	public Booking booking;
-	private int mPosition = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -73,7 +69,7 @@ public class BookingTabActivity extends BaseActivity
 		}
 
 		setContentView(R.layout.activity_booking_tab);
-		setActionBar(booking.getHotel_name());
+		setActionBar(booking.getHotelName());
 
 		ArrayList<String> titleList = new ArrayList<String>();
 		titleList.add(getString(R.string.frag_booking_tab_title));
@@ -90,8 +86,6 @@ public class BookingTabActivity extends BaseActivity
 
 		if (mFragmentViewPager == null)
 		{
-			String[] strings = { getString(R.string.drawer_menu_pin_title_resrvation), getString(R.string.frag_booking_tab_year), getString(R.string.frag_booking_tab_month), getString(R.string.frag_booking_tab_day), getString(R.string.frag_booking_tab_hour) };
-
 			ArrayList<String> titleList = new ArrayList<String>();
 			titleList.add(getString(R.string.frag_booking_tab_title));
 			titleList.add(getString(R.string.frag_tab_info_title));
@@ -101,7 +95,7 @@ public class BookingTabActivity extends BaseActivity
 
 			mFragmentList = new ArrayList<BaseFragment>();
 
-			BaseFragment baseFragment01 = BookingTabBookingFragment.newInstance(mHotelDetail, booking, strings);
+			BaseFragment baseFragment01 = BookingTabBookingFragment.newInstance(mHotelDetail, booking, getString(R.string.drawer_menu_pin_title_resrvation));
 			mFragmentList.add(baseFragment01);
 
 			BaseFragment baseFragment02 = TabInfoFragment.newInstance(mHotelDetail, titleList.get(1));
@@ -131,8 +125,8 @@ public class BookingTabActivity extends BaseActivity
 		lockUI();
 
 		// 호텔 정보를 가져온다.
-		String params = String.format("?reservationIdx=%d", booking.index);
-		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_HOTEL_ROOM_INFO).append(params).toString(), null, mHotelDetailJsonResponseListener, this));
+		String params = String.format("?reservationIdx=%d", booking.reservationIndex);
+		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_DETAIL).append(params).toString(), null, mReservationBookingDetailJsonResponseListener, this));
 
 		super.onResume();
 	}
@@ -161,8 +155,6 @@ public class BookingTabActivity extends BaseActivity
 		{
 			mTabIndicator.setCurrentItem(position);
 
-			mPosition = position;
-
 			AnalyticsManager.getInstance(BookingTabActivity.this).recordEvent(Screen.BOOKING_DETAIL, Action.CLICK, mTabIndicator.getMainText(position), (long) position);
 		}
 
@@ -182,7 +174,7 @@ public class BookingTabActivity extends BaseActivity
 	// Listener
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	private DailyHotelJsonResponseListener mHotelDetailJsonResponseListener = new DailyHotelJsonResponseListener()
+	private DailyHotelJsonResponseListener mReservationBookingDetailJsonResponseListener = new DailyHotelJsonResponseListener()
 	{
 		@Override
 		public void onResponse(String url, JSONObject response)
@@ -228,44 +220,19 @@ public class BookingTabActivity extends BaseActivity
 
 				JSONObject jsonObject = response.getJSONObject("data");
 
-				if (mHotelDetail.getHotel() == null)
+				boolean result = mHotelDetail.setData(jsonObject);
+
+				if (result == true)
 				{
-					mHotelDetail.setHotel(new Hotel());
+					loadFragments();
+				} else
+				{
+					throw new NullPointerException("result == false");
 				}
-
-				Hotel hotelBasic = mHotelDetail.getHotel();
-
-				hotelBasic.setName(jsonObject.getString("hotel_name"));
-
-				try
-				{
-					hotelBasic.setCategory(jsonObject.getString("cat"));
-				} catch (Exception e)
-				{
-					hotelBasic.setCategory(HotelGrade.etc.name());
-				}
-
-				hotelBasic.setAddress(jsonObject.getString("address"));
-				mHotelDetail.setHotel(hotelBasic);
-
-				JSONObject wrapJSONObject = new JSONObject(jsonObject.getString("spec"));
-				JSONArray jsonArray = wrapJSONObject.getJSONArray("wrap");
-				mHotelDetail.setSpecification(jsonArray);
-
-				double latitude = jsonObject.getDouble("lat");
-				double longitude = jsonObject.getDouble("lng");
-
-				mHotelDetail.setLatitude(latitude);
-				mHotelDetail.setLongitude(longitude);
-
-				int saleIdx = jsonObject.getInt("idx");
-				mHotelDetail.setSaleIdx(saleIdx);
-				mHotelDetail.roomName = jsonObject.getString("room_name");
-
-				loadFragments();
 			} catch (Exception e)
 			{
 				onError(e);
+				finish();
 			} finally
 			{
 				unLockUI();

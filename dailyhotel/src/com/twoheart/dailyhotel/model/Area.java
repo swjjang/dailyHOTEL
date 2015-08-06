@@ -52,18 +52,6 @@ public class Area extends Province
 	}
 
 	@Override
-	public int getSaleWeek()
-	{
-		if (province == null)
-		{
-			return 1;
-		} else
-		{
-			return province.getSaleWeek();
-		}
-	}
-
-	@Override
 	public void writeToParcel(Parcel dest, int flags)
 	{
 		super.writeToParcel(dest, flags);

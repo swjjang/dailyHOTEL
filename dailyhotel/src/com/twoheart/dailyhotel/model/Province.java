@@ -32,10 +32,11 @@ public class Province implements Parcelable
 		name = jsonObject.getString("name");
 		sequence = jsonObject.getInt("seq");
 
-		if (jsonObject.has("sale_week") == true)
-		{
-			saleWeek = jsonObject.getInt("sale_week");
-		} else
+		// 2주는 당분간 하지 않음
+		//		if (jsonObject.has("sale_week") == true)
+		//		{
+		//			saleWeek = jsonObject.getInt("sale_week");
+		//		} else
 		{
 			saleWeek = 1;
 		}
@@ -52,11 +53,6 @@ public class Province implements Parcelable
 	public int getProvinceIndex()
 	{
 		return index;
-	}
-
-	public int getSaleWeek()
-	{
-		return saleWeek;
 	}
 
 	@Override

@@ -8,12 +8,8 @@
  */
 package com.twoheart.dailyhotel.fragment;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
-import java.util.TimeZone;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,7 +31,6 @@ import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.BookingHotelDetail;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
@@ -43,7 +38,6 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListe
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
-import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class BookingTabBookingFragment extends BaseFragment implements Constants
 {
@@ -56,9 +50,8 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 
 	private Booking mBooking;
 	private BookingHotelDetail mHotelDetail;
-	private static String[] mStrings;
 
-	public static BookingTabBookingFragment newInstance(BookingHotelDetail hotelDetail, Booking booking, String[] strings)
+	public static BookingTabBookingFragment newInstance(BookingHotelDetail hotelDetail, Booking booking, String title)
 	{
 		BookingTabBookingFragment newFragment = new BookingTabBookingFragment();
 
@@ -68,18 +61,16 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 		arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_BOOKING, booking);
 
 		newFragment.setArguments(arguments);
-		newFragment.setTitle(strings[0]);
-
-		mStrings = strings;
+		newFragment.setTitle(title);
 
 		return newFragment;
-
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+
 		mHotelDetail = (BookingHotelDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_HOTEL_DETAIL);
 		mBooking = (Booking) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_BOOKING);
 	}
@@ -103,9 +94,13 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 		tvCheckIn = (TextView) view.findViewById(R.id.tv_booking_tab_checkin);
 		tvCheckOut = (TextView) view.findViewById(R.id.tv_booking_tab_checkout);
 
-		tvHotelName.setText(mBooking.getHotel_name());
+		tvHotelName.setText(mBooking.getHotelName());
 		tvAddress.setText(mHotelDetail.getHotel().getAddress());
 		tvBedtype.setText(mHotelDetail.roomName);
+		tvCustomerName.setText(mHotelDetail.guestName);
+		tvCustomerPhone.setText(mHotelDetail.guestPhone);
+		tvCheckIn.setText(mHotelDetail.checkInDay);
+		tvCheckOut.setText(mHotelDetail.checkOutDay);
 
 		// Android Marquee bug...
 		tvCustomerName.setSelected(true);
@@ -139,7 +134,7 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 					}
 
 					Intent intent = new Intent(baseActivity, IssuingReceiptActivity.class);
-					intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, mBooking.index);
+					intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, mBooking.reservationIndex);
 					startActivity(intent);
 				}
 			});
@@ -205,118 +200,6 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 		}
 	};
 
-	private DailyHotelJsonResponseListener mGuestInfoJsonResponseListener = new DailyHotelJsonResponseListener()
-	{
-
-		@Override
-		public void onResponse(String url, JSONObject response)
-		{
-			BaseActivity baseActivity = (BaseActivity) getActivity();
-
-			if (baseActivity == null)
-			{
-				return;
-			}
-
-			try
-			{
-				if (response == null)
-				{
-					throw new NullPointerException("response == null");
-				}
-
-				int msg_code = response.getInt("msg_code");
-
-				if (msg_code != 0)
-				{
-					if (response.has("msg") == true)
-					{
-						String msg = response.getString("msg");
-
-						DailyToast.showToast(baseActivity, msg, Toast.LENGTH_SHORT);
-						baseActivity.finish();
-						return;
-					} else
-					{
-						throw new NullPointerException("response == null");
-					}
-				}
-
-				JSONObject jsonData = response.getJSONObject("data");
-
-				//				jsonData.get("guest_email");
-				tvCustomerName.setText(jsonData.getString("guest_name"));
-				tvCustomerPhone.setText(jsonData.getString("guest_phone"));
-
-				// SailIndex가 0인 경우에 서버에 이슈가 발생할수 있다.
-				// 0인 경우 아마도 메모리에서 정보가 삭제되어 발생한듯 하다.
-				if (mHotelDetail.getSaleIdx() == 0)
-				{
-					// 세션이 만료되어 재시작 요청.
-					baseActivity.restartApp();
-				} else
-				{
-					// 체크인 정보 요청.
-					//				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_CHECKIN).append('/').append(mHotelDetail.getSaleIdx()).toString(), null, mReserveCheckInJsonResponseListener, mHostActivity));
-					mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_CHECKINOUT).append('/').append(mHotelDetail.getSaleIdx()).toString(), null, mReserveCheckInJsonResponseListener, baseActivity));
-				}
-			} catch (Exception e)
-			{
-				onError(e);
-				unLockUI();
-			}
-		}
-	};
-
-	private DailyHotelJsonResponseListener mReserveCheckInJsonResponseListener = new DailyHotelJsonResponseListener()
-	{
-
-		@Override
-		public void onResponse(String url, JSONObject response)
-		{
-			if (getActivity() == null)
-			{
-				return;
-			}
-
-			try
-			{
-				if (response == null)
-				{
-					throw new NullPointerException("response == null");
-				}
-
-				long checkin = Long.valueOf(response.getString("checkin"));
-				long checkout = Long.valueOf(response.getString("checkout"));
-
-				SimpleDateFormat format = new SimpleDateFormat("yyyy년 MM월 dd일 HH시", Locale.KOREA);
-				format.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
-
-				// Check In
-				Calendar calendarCheckin = DailyCalendar.getInstance();
-				calendarCheckin.setTimeInMillis(checkin);
-
-				String checkInday = format.format(calendarCheckin.getTime());
-
-				tvCheckIn.setText(checkInday);
-
-				// Check Out
-				Calendar calendarCheckout = DailyCalendar.getInstance();
-				calendarCheckout.setTimeInMillis(checkout);
-
-				String checkOutday = format.format(calendarCheckout.getTime());
-
-				tvCheckOut.setText(checkOutday);
-			} catch (Exception e)
-			{
-				onError(e);
-			} finally
-			{
-				unLockUI();
-			}
-		}
-	};
-
 	private DailyHotelStringResponseListener mUserAliveStringResponseListener = new DailyHotelStringResponseListener()
 	{
 
@@ -338,13 +221,7 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 			}
 
 			if ("alive".equalsIgnoreCase(result) == true)
-			{ // session alive
-				// 투숙객 정보 요청.
-
-				String params = String.format("?reservation_idx=%d", mBooking.index);
-
-				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_GUEST_INFO).append(params).toString(), null, mGuestInfoJsonResponseListener, baseActivity));
-
+			{
 			} else if ("dead".equalsIgnoreCase(result) == true)
 			{ // session dead
 				// 재로그인
@@ -365,110 +242,4 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 			}
 		}
 	};
-
-	//	@Override
-	//	public void onResponse(String url, JSONObject response) {
-	//		if (url.contains(URL_WEBAPI_USER_LOGIN)) {
-	//			try {
-	//				if (!response.getString("login").equals("true")) {
-	//					// 로그인 실패
-	//					// data 초기화
-	//					SharedPreferences.Editor ed = mHostActivity.sharedPreference
-	//							.edit();
-	//					ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
-	//					ed.putString(KEY_PREFERENCE_USER_ID, null);
-	//					ed.putString(KEY_PREFERENCE_USER_PWD, null);
-	//					ed.commit();
-	//					
-	//					unLockUI();
-	//					showToast(getString(R.string.toast_msg_failed_to_login), Toast.LENGTH_SHORT, true);
-	//				} else
-	//					VolleyHttpClient.createCookie();
-	//				
-	//			} catch (JSONException e) {
-	//				onError(e);
-	//				unLockUI();
-	//			}
-	//
-	//		} else if (url.contains(URL_WEBAPI_USER_INFO)) {
-	//			try {
-	//				JSONObject obj = response;
-	//				String name = obj.getString("name");
-	//				String phone = obj.getString("phone");
-	//				tvCustomerName.setText(name);
-	//				tvCustomerPhone.setText(phone);
-	//				
-	//				// 체크인 정보 요청.
-	//				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(
-	//						URL_DAILYHOTEL_SERVER).append(
-	//						URL_WEBAPI_RESERVE_CHECKIN).append(mHotelDetail.getSaleIdx()).toString(), null, this,
-	//						mHostActivity));
-	//				ExLog.e("madsd : " + mHotelDetail.getSaleIdx()+"");
-	//			} catch (Exception e) {
-	//				onError(e);
-	//				unLockUI();
-	//			}
-	//
-	//		} else if (url.contains(URL_WEBAPI_RESERVE_CHECKIN)) {
-	//			try {
-	//				ExLog.e("url!QWEW : " + url);
-	//				JSONObject obj = response;
-	//				String checkin = obj.getString("checkin");
-	//				String checkout = obj.getString("checkout");
-	//				
-	//				String in[] = checkin.split("-");
-	//				ExLog.e("chkin : " + checkin);
-	//				ExLog.e("chkout : " + checkout);
-	//				
-	//				tvCheckIn.setText("20" + in[0] + mStrings[1] + in[1] + mStrings[2] + in[2] + mStrings[3] + in[3] + mStrings[4]);
-	//				
-	//				String out[] = checkout.split("-");
-	//				tvCheckOut.setText("20" + out[0] + mStrings[1] + out[1] + mStrings[2] + out[2] + mStrings[3] + out[3] + mStrings[4]);
-	//				
-	//				unLockUI();
-	//
-	//			} catch (Exception e) {
-	//				onError(e);
-	//				unLockUI();
-	//			}
-	//		}
-	//
-	//	}
-	//
-	//	@Override
-	//	public void onResponse(String url, String response) {
-	//		if (url.contains(URL_WEBAPI_USER_ALIVE)) {
-	//			String result = response.trim();
-	//			if (result.equals("alive")) { // session alive
-	//				// 사용자 정보 요청.
-	//				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(
-	//						URL_DAILYHOTEL_SERVER).append(
-	//						URL_WEBAPI_USER_INFO).toString(), null, this,
-	//						mHostActivity));
-	//
-	//			} else if (result.equals("dead")) { // session dead
-	//
-	//				// 재로그인
-	//				if (mHostActivity.sharedPreference.getBoolean(
-	//						KEY_PREFERENCE_AUTO_LOGIN, false)) {
-	//					Map<String, String> loginParams = new HashMap<String, String>();
-	//					loginParams.put("email", mHostActivity.sharedPreference
-	//							.getString(KEY_PREFERENCE_USER_ID, null));
-	//					loginParams.put("pw", mHostActivity.sharedPreference
-	//							.getString(KEY_PREFERENCE_USER_PWD, null));
-	//
-	//					mQueue.add(new DailyHotelJsonRequest(Method.POST,
-	//							new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-	//									URL_WEBAPI_USER_LOGIN).toString(),
-	//							loginParams, this, mHostActivity));
-	//				} else {
-	//					startActivity(new Intent(mHostActivity, LoginActivity.class));
-	//				}
-	//
-	//			} else {
-	//				unLockUI();
-	//			}
-	//
-	//		}
-	//	}
 }

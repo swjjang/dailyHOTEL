@@ -217,7 +217,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
 		TextView day = (TextView) view.findViewById(R.id.tv_booking_row_day);
 		View deleteView = view.findViewById(R.id.deleteView);
 
-		name.setText(booking.getHotel_name());
+		name.setText(booking.getHotelName());
 
 		Date checkinDate = new Date(booking.checkinTime);
 		Date checkOutDate = new Date(booking.checkoutTime);
@@ -280,7 +280,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
 
 		TextView sectionName = (TextView) view.findViewById(R.id.bookingSectionName);
 
-		sectionName.setText(booking.getHotel_name());
+		sectionName.setText(booking.getHotelName());
 
 		return view;
 	}

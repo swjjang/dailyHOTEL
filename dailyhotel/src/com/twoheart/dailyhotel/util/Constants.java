@@ -136,9 +136,6 @@ public interface Constants
 	// api/reserv/session/common_payment
 	public static final String URL_WEBAPI_RESERVE_SESSION_COMMON_PAYMENT = UNENCRYPTED_URL ? "api/reserv/session/common_payment" : "MzQkMjAkODMkOTMkMzMk$RDhCRUUwQUNFOUM4NkM0UNzJFQjFGQUVDCREOY1MDFBREM2RjE0QjcwRjI4NkEwRDMyQTRFQjlGNUE4MTYwQTTQyNjdGN0BY4MEQzMTlFODRGNzdDQkFERjZDMkFDMTQ0RTM5$";
 
-	//"reserv/mine";
-	public static final String URL_WEBAPI_RESERVE_MINE = UNENCRYPTED_URL ? "reserv/mine" : "MSQyNCQzMiQzJDE0JA==$RXTIcyQzM2OTY1DNDg2MDk5REQEzQTFGMjGAyREZCNzhGMDc=$";
-
 	//"reserv/mine/detail";
 	public static final String URL_WEBAPI_RESERVE_MINE_DETAIL = UNENCRYPTED_URL ? "reserv/mine/detail" : "NjQkNTIkNjAkNjEkODUk$NzdCMkYzMzAzRUIzRjg4MkM3ODBGRjIzQTkxNzYzMTFEMTZFQ0NDMN0RFMzgMR5M0FBHRjBCMjA5QjUxRkE1RUEI2Qg==$";
 
@@ -193,11 +190,14 @@ public interface Constants
 	// api/reserv/checkinout
 	public static final String URL_WEBAPI_RESERV_CHECKINOUT = UNENCRYPTED_URL ? "api/reserv/checkinout" : "NiQ0JDc0JDY3JDc4JA==$Q0Y4LQ0GVDNkFENEYyQUVDOTA2OUY1RjU3QUQ1NTUzRDg2Mjg2MDdGMzY1Q0YxNTZDQB0YyMUMzTMjBE1MThGMUFBNA==$";
 
+	// api/reserv/list
+	public static final String URL_WEBAPI_RESERV_LIST = UNENCRYPTED_URL ? "api/reserv/list" : "MiQxJDUkMTQkMTEk$MSjUMBwMzg3TMjcDxNTQ5RkZBNzdGRTFBMzYyMThGRkJCOTI=$";
+
+	// api/reserv/detail
+	public static final String URL_WEBAPI_RESERV_DETAIL = UNENCRYPTED_URL ? "api/reserv/detail" : "MSQ4MCQ1OSQ5JDYwJA==$NVDY2OTY3XM0FBODdEM0UxNDVDODlEQzhGM0RDRUZGMkYzRTRGQzczRjcyOTZQhBQzVDRDM0NDkxMDgxNkMZwRTkyRg==$";
+
 	// api/reserv/mine
 	public static final String URL_WEBAPI_RESERV_MINE = UNENCRYPTED_URL ? "api/reserv/mine" : "MjAkMzQkMTgkMSQyNiQ=$NAEM4QjIwQzc1NDdFNkII2HNjlUGMjIwRkVGNZjI3NjFDMEY=$";
-
-	// api/reserv/mine/all
-	public static final String URL_WEBAPI_RESERV_MINE_ALL = UNENCRYPTED_URL ? "api/reserv/mine/all" : "MjQkMzYkNTkkOCQ5MCQ=$Q0UyMzU1ERjgxNzE2RTM5Qjc5FMTM5OUFGRDAC2Q0Q2MkJGOEM1NTAxNTk0MOzlERTlBQjA2NUUxNDczQTE0RkFGMQJ==$";
 
 	// api/reserv/mine/hidden
 	public static final String URL_WEBAPI_RESERV_MINE_HIDDEN = UNENCRYPTED_URL ? "api/reserv/mine/hidden" : "NyQ1OCQzMiQyMyQzOCQ=$RkI3OTZDGQ0UzOEYzQ0U2RkZMzQ0ZFRTNDGRkQOxNERFMjc4NDYzMkQ0MEE1RFDI5Q0NDMDk5NjEzMTEyRkIyNUIzRQ==$";
@@ -207,9 +207,6 @@ public interface Constants
 
 	// api/reserv/saleDetailInfo
 	public static final String URL_WEBAPI_RESERV_SALEDETAILINFO = UNENCRYPTED_URL ? "api/reserv/saleDetailInfo" : "NDckNzgkNjckMTMkNDUk$NUQxNTg3ODA0QETFCMTQ1QTk5NjM5NTI5MkVBNEZGRUVGWNDdMGMDBFREM5QjBCMTE3M0EJCMDdBNDMzRETg0RDdGRQ==$";
-
-	// api/reserv/hotel/room/info
-	public static final String URL_WEBAPI_RESERV_HOTEL_ROOM_INFO = UNENCRYPTED_URL ? "api/reserv/hotel/room/info" : "NzMkNTIkMTQkMzckMjgk$ODhERjUwMTRFQjYFBNjFDQzIzQUVKCRUFEQTE0SM0IyOTRFMzJDQTUyONDBCQUQ2OTE1ODVCNjEzNWzg1MUY4QUU0Rg==$";
 
 	// api/reserv/session/billing/
 	public static final String URL_WEBAPI_RESERV_SESSION_BILLING = UNENCRYPTED_URL ? "api/reserv/session/billing" : "ODIkMjkkODEkODgkOTEk$NUQ1MDk3RTlCODI3NjE0QjZENENFMVjY0NjM2MDE5RDM1RTQ1RTRFOEM5NjE5QjU4RkNDMTBFMDc4NDNCUQjBk3RKg=E=$";
@@ -335,7 +332,7 @@ public interface Constants
 	public static final int VALUE_PREFERENCE_HOTEL_ROOM_IDX_DEFAULT = 1;
 	public static final String VALUE_PREFERENCE_HOTEL_CHECKOUT_DEFAULT = "14-04-30-20";
 	public static final String KEY_PREFERENCE_USER_IDX = "USER_IDX"; // 예약 성공했을때 예약 사용함, 이름과 용도가 맞지 않음 -> 기존 코드
-	public static final String KEY_PREFERENCE_HOTEL_ROOM_IDX = "HOTEL_ROOM_IDX";
+	public static final String KEY_PREFERENCE_HOTEL_ROOM_IDX = "HOTEL_RESERVATION_IDX";
 
 	public static final String KEY_PREFERENCE_ACCOUNT_READY_FLAG = "ACCOUNT_READY_FLAG"; //
 	public static final String KEY_PREFERENCE_BY_SHARE = "BY_SHARE";

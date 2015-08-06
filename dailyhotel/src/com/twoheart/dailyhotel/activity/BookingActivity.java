@@ -267,9 +267,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, BookingActivity.this));
 		}
-
-		String region = sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_GA, null);
-		String hotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME_GA, null);
 	}
 
 	private void updatePayPrice(boolean applyCredit)

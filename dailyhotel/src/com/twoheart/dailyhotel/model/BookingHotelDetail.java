@@ -1,10 +1,14 @@
 package com.twoheart.dailyhotel.model;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -12,6 +16,7 @@ import org.json.JSONObject;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.twoheart.dailyhotel.model.Hotel.HotelGrade;
 import com.twoheart.dailyhotel.util.ExLog;
 
 public class BookingHotelDetail implements Parcelable
@@ -21,9 +26,12 @@ public class BookingHotelDetail implements Parcelable
 	private double mLongitude;
 	private Map<String, List<String>> mSpecification = new HashMap<String, List<String>>();
 	private List<String> mImageUrl = new ArrayList<String>();
-	private int mSaleIdx;
 	public int isOverseas; // 0 : 국내 , 1 : 해외 
 	public String roomName;
+	public String guestName;
+	public String guestPhone;
+	public String checkInDay;
+	public String checkOutDay;
 
 	public BookingHotelDetail()
 	{
@@ -42,9 +50,66 @@ public class BookingHotelDetail implements Parcelable
 		dest.writeDouble(mLongitude);
 		dest.writeMap(mSpecification);
 		dest.writeList(mImageUrl);
-		dest.writeInt(mSaleIdx);
 		dest.writeInt(isOverseas);
 		dest.writeString(roomName);
+		dest.writeString(guestName);
+		dest.writeString(guestPhone);
+		dest.writeString(checkInDay);
+		dest.writeString(checkOutDay);
+	}
+
+	public boolean setData(JSONObject jsonObject)
+	{
+		// Hotel Setting
+		if (mHotel == null)
+		{
+			mHotel = new Hotel();
+		}
+
+		try
+		{
+			mHotel.setName(jsonObject.getString("hotel_name"));
+
+			try
+			{
+				mHotel.setCategory(jsonObject.getString("cat"));
+			} catch (Exception e)
+			{
+				mHotel.setCategory(HotelGrade.etc.name());
+			}
+
+			mHotel.setAddress(jsonObject.getString("address"));
+
+			//
+			JSONObject wrapJSONObject = new JSONObject(jsonObject.getString("spec"));
+			JSONArray jsonArray = wrapJSONObject.getJSONArray("wrap");
+
+			setSpecification(jsonArray);
+
+			mLatitude = jsonObject.getDouble("lat");
+			mLongitude = jsonObject.getDouble("lng");
+
+			roomName = jsonObject.getString("room_name");
+			guestPhone = jsonObject.getString("guest_phone");
+			guestName = jsonObject.getString("guest_name");
+
+			long checkin = jsonObject.getLong("checkin_date");
+			long checkout = jsonObject.getLong("checkout_date");
+
+			SimpleDateFormat format = new SimpleDateFormat("yyyy년 MM월 dd일 HH시", Locale.KOREA);
+			format.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+			// Check In
+			checkInDay = format.format(new Date(checkin));
+
+			// Check Out
+			checkOutDay = format.format(new Date(checkout));
+		} catch (Exception e)
+		{
+			return false;
+		}
+
+		return true;
 	}
 
 	private void readFromParcel(Parcel in)
@@ -54,9 +119,12 @@ public class BookingHotelDetail implements Parcelable
 		mLongitude = in.readDouble();
 		in.readMap(mSpecification, Map.class.getClassLoader());
 		in.readList(mImageUrl, List.class.getClassLoader());
-		mSaleIdx = in.readInt();
 		isOverseas = in.readInt();
 		roomName = in.readString();
+		guestName = in.readString();
+		guestPhone = in.readString();
+		checkInDay = in.readString();
+		checkOutDay = in.readString();
 	}
 
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
@@ -71,7 +139,6 @@ public class BookingHotelDetail implements Parcelable
 		{
 			return new BookingHotelDetail[size];
 		}
-
 	};
 
 	public List<String> getImageUrl()
@@ -170,16 +237,6 @@ public class BookingHotelDetail implements Parcelable
 	public void setSpecification(Map<String, List<String>> specification)
 	{
 		this.mSpecification = specification;
-	}
-
-	public int getSaleIdx()
-	{
-		return mSaleIdx;
-	}
-
-	public void setSaleIdx(int saleIdx)
-	{
-		this.mSaleIdx = saleIdx;
 	}
 
 	@Override

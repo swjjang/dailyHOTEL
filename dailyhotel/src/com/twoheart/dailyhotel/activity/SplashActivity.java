@@ -44,6 +44,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.ABTestPreference;
 import com.twoheart.dailyhotel.util.ABTestPreference.OnABTestListener;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
@@ -116,8 +117,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 	@Override
 	protected void onStart()
 	{
-		AnalyticsManager.getInstance(this).recordScreen("Splash Screen");
-
+		AnalyticsManager.getInstance(this).recordScreen(Screen.SPLASH);
 		super.onStart();
 	}
 

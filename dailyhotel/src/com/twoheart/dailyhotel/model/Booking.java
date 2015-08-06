@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.model;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.os.Parcel;
@@ -12,17 +13,12 @@ public class Booking implements Parcelable
 	public static final int TYPE_ENTRY = 0;
 	public static final int TYPE_SECTION = 1;
 
-	public int index; // 호텔 예약 고유 번호.
+	public int reservationIndex; // 호텔 예약 고유 번호.
 	public int type = TYPE_ENTRY;
-	private String sday;
-	private String hotel_idx;
-	private String hotel_name;
-	private String bedType;
+	private String hotelName;
 	private int payType;
 	private String tid;
 	public String ment;
-	public int saleIdx;
-
 	public long checkinTime;
 	public long checkoutTime;
 	public String hotelImageUrl;
@@ -34,7 +30,7 @@ public class Booking implements Parcelable
 
 	public Booking(String sectionName)
 	{
-		hotel_name = sectionName;
+		hotelName = sectionName;
 		type = TYPE_SECTION;
 	}
 
@@ -46,16 +42,12 @@ public class Booking implements Parcelable
 	@Override
 	public void writeToParcel(Parcel dest, int flags)
 	{
-		dest.writeInt(index);
+		dest.writeInt(reservationIndex);
 		dest.writeInt(type);
-		dest.writeString(sday);
-		dest.writeString(hotel_idx);
-		dest.writeString(hotel_name);
-		dest.writeString(bedType);
+		dest.writeString(hotelName);
 		dest.writeInt(payType);
 		dest.writeString(tid);
 		dest.writeString(ment);
-		dest.writeInt(saleIdx);
 
 		dest.writeLong(checkinTime);
 		dest.writeLong(checkoutTime);
@@ -65,16 +57,12 @@ public class Booking implements Parcelable
 
 	private void readFromParcel(Parcel in)
 	{
-		index = in.readInt();
+		reservationIndex = in.readInt();
 		type = in.readInt();
-		sday = in.readString();
-		hotel_idx = in.readString();
-		hotel_name = in.readString();
-		bedType = in.readString();
+		hotelName = in.readString();
 		payType = in.readInt();
 		tid = in.readString();
 		ment = in.readString();
-		saleIdx = in.readInt();
 
 		checkinTime = in.readLong();
 		checkoutTime = in.readLong();
@@ -100,71 +88,25 @@ public class Booking implements Parcelable
 	{
 		try
 		{
-			if (jsonObject.has("idx") == true)
-			{
-				index = jsonObject.getInt("idx");
-			}
-
-			hotel_name = jsonObject.getString("hotel_name");
-			sday = jsonObject.getString("sday");
-			hotel_idx = jsonObject.getString("hotel_idx");
-			bedType = jsonObject.getString("bed_type");
+			reservationIndex = jsonObject.getInt("reserv_idx");
+			hotelName = jsonObject.getString("hotel_name");
 			payType = jsonObject.getInt("pay_type");
-			tid = jsonObject.getString("tid");
 			ment = jsonObject.getString("comment");
-
-			if (jsonObject.has("saleidx") == true)
-			{
-				saleIdx = jsonObject.getInt("saleidx");
-			}
-
+			tid = jsonObject.getString("tid");
 			checkinTime = jsonObject.getLong("checkin_time");
 			checkoutTime = jsonObject.getLong("checkout_time");
-			hotelImageUrl = jsonObject.getString("path");
+
+			JSONArray jsonArray = jsonObject.getJSONArray("img");
+			hotelImageUrl = jsonArray.getJSONObject(0).getString("path");
 		} catch (Exception e)
 		{
 			ExLog.d(e.toString());
 		}
 	}
 
-	public String getSday()
+	public String getHotelName()
 	{
-		return sday;
-	}
-
-	public void setSday(String sday)
-	{
-		this.sday = sday;
-	}
-
-	public String getHotel_idx()
-	{
-		return hotel_idx;
-	}
-
-	public void setHotel_idx(String hotel_idx)
-	{
-		this.hotel_idx = hotel_idx;
-	}
-
-	public String getHotel_name()
-	{
-		return hotel_name;
-	}
-
-	public void setHotel_name(String hotel_name)
-	{
-		this.hotel_name = hotel_name;
-	}
-
-	public String getBedType()
-	{
-		return bedType;
-	}
-
-	public void setBedType(String bedType)
-	{
-		this.bedType = bedType;
+		return hotelName;
 	}
 
 	public int getPayType()
@@ -172,19 +114,9 @@ public class Booking implements Parcelable
 		return payType;
 	}
 
-	public void setPayType(int payType)
-	{
-		this.payType = payType;
-	}
-
 	public String getTid()
 	{
 		return tid;
-	}
-
-	public void setTid(String tid)
-	{
-		this.tid = tid;
 	}
 
 	@Override
@@ -192,5 +124,4 @@ public class Booking implements Parcelable
 	{
 		return 0;
 	}
-
 }
