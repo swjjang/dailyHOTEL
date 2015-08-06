@@ -22,7 +22,7 @@
                 android:layout_marginBottom="20dp"
                 android:layout_marginTop="55dp"
                 android:gravity="center"
-                 android:text="@string/label_creditcard_introduce"
+                android:text="@string/label_creditcard_introduce"
                 android:textColor="@color/textView_textColor_main"
                 android:textSize="20dp" />
         </LinearLayout>
@@ -30,27 +30,22 @@
         <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
             android:id="@+id/addCreditCardButton"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="55dp"
             android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/shape_button_common_background"
+            android:background="@color/dh_theme_color"
             android:gravity="center"
             android:text="@string/label_add_creditcard"
             android:textColor="@android:color/white"
-            android:textSize="17dp" />
+            android:textSize="20dp" />
 
         <ListView
             android:id="@+id/creditcardListView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@id/addCreditCardButton"
-            android:divider="@null"
             android:cacheColorHint="@android:color/transparent"
+            android:divider="@null"
             android:paddingBottom="10dp" />
-
     </RelativeLayout>
 
 </merge>

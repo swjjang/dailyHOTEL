@@ -117,7 +117,7 @@
             android:background="@color/hoteldetail_soldout_background"
             android:gravity="center"
             android:text="@string/act_hotel_soldout"
-            android:textColor="@color/hoteldetail_room_simpleinfo_text"
+            android:textColor="@color/hoteldetail_soldout_text"
             android:textSize="20dp"
             android:visibility="gone" />
     </RelativeLayout>

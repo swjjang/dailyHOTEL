@@ -118,8 +118,8 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 		if (mBooking.isUsed == true)
 		{
 			viewReceiptTextView.setTextColor(getResources().getColor(R.color.white));
-			viewReceiptTextView.setBackgroundResource(R.drawable.shape_button_common_background);
-			guideReceiptTextView.setText(R.string.message_can_issuing_receipt);
+			viewReceiptTextView.setBackgroundResource(R.color.dh_theme_color);
+			guideReceiptTextView.setVisibility(View.INVISIBLE);
 
 			viewReceiptTextView.setOnClickListener(new View.OnClickListener()
 			{
@@ -140,8 +140,8 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 			});
 		} else
 		{
-			viewReceiptTextView.setTextColor(getResources().getColor(R.color.black_a25));
-			viewReceiptTextView.setBackgroundResource(R.drawable.btn_confirm_normal);
+			viewReceiptTextView.setTextColor(getResources().getColor(R.color.hoteldetail_soldout_text));
+			viewReceiptTextView.setBackgroundResource(R.color.hoteldetail_soldout_background);
 			guideReceiptTextView.setText(R.string.message_cant_issuing_receipt);
 		}
 

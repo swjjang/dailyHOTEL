@@ -276,11 +276,11 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 							break;
 
 						case 200:
-							if(mHostActivity.isFinishing() == true)
+							if (mHostActivity.isFinishing() == true)
 							{
 								return;
 							}
-							
+
 							AlertDialog alertDlg = SimpleAlertDialog.build(mHostActivity, null, msg, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnClickListener()
 							{
 								@Override

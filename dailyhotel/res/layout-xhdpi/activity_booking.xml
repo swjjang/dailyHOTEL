@@ -595,16 +595,13 @@
             <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                 android:id="@+id/btn_hotel_payment"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginBottom="12dp"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="12dp"
+                android:layout_height="55dp"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/shape_button_common_background"
+                android:background="@color/dh_theme_color"
                 android:gravity="center"
                 android:text="@string/act_booking_btn_pay"
                 android:textColor="@android:color/white"
-                android:textSize="17dp" />
+                android:textSize="20dp" />
         </LinearLayout>
     </ScrollView>
 

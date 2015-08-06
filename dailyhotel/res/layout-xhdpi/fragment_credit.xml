@@ -304,25 +304,24 @@
             <LinearLayout
                 android:id="@+id/btn_credit_invite_frd"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_margin="22.5dp"
-                android:background="@drawable/shape_button_kakao_background"
+                android:layout_height="55dp"
+                android:background="@color/kakaotalk_background"
                 android:gravity="center"
                 android:orientation="horizontal" >
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="#0000"
                     android:clickable="false"
                     android:src="@drawable/img_ic_kakao" />
 
                 <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="#0000"
                     android:clickable="false"
-                    android:text="@string/act_credit_kakao" />
+                    android:text="@string/act_credit_kakao"
+                    android:textSize="15dp"
+                    android:textColor="@color/kakaotalk_textcolkr" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

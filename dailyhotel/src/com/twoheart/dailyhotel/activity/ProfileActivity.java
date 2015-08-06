@@ -54,11 +54,6 @@ import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class ProfileActivity extends BaseActivity implements OnClickListener
 {
-
-	// private TextView tvEmail, tvName, tvPhone, tvProfileEdit;
-	// private EditText etEmail, etName, etPhone;
-	// private LinearLayout llProfileEdit, llProfileInfoLabel,
-	// llProfileInfoEditable;
 	private final String INVALID_NULL = "null";
 
 	private AQuery mAq;

@@ -133,8 +133,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	private Dialog mFinalCheckDialog;
 	private ProgressDialog mProgressDialog;
 
-	//	private String locale;
-	private int mHotelIdx;
 	private SaleTime mCheckInSaleTime;
 	private boolean mIsEditMode;
 
