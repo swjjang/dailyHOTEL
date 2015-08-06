@@ -70,7 +70,7 @@ public class PaymentWaitActivity extends BaseActivity
 
 		tvHotelName.setText(booking.getHotelName());
 
-		String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_MINE_DETAIL).append('/').append(booking.getPayType()).append('/').append(booking.getTid()).toString();
+		String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_MINE_DETAIL).append('/').append(booking.getPayType()).append('/').append(booking.getTid()).toString();
 
 		lockUI();
 

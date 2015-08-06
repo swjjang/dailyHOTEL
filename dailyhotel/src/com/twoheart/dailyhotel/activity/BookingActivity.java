@@ -383,7 +383,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				v.setClickable(false);
 				v.setEnabled(false);
 
-				final Dialog dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_NO_RSERVE, null);
+				Dialog dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_NO_RSERVE, null);
 
 				dialog.setOnDismissListener(new OnDismissListener()
 				{
@@ -810,19 +810,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 			// 결제가 성공한 경우 GA와 믹스패널에 등록 
 				case CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE:
 				case CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS:
-					if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_DATA_PAY) == true)
-					{
-						Pay payData = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAY);
-
-						Editor editor = sharedPreference.edit();
-						editor.putString(KEY_PREFERENCE_HOTEL_NAME, mPay.getSaleRoomInformation().hotelName);
-						editor.putInt(KEY_PREFERENCE_HOTEL_ROOM_IDX, payData.getSaleRoomInformation().roomIndex);
-						editor.putString(KEY_PREFERENCE_HOTEL_CHECKOUT, payData.checkOutTime);
-						editor.putString(KEY_PREFERENCE_HOTEL_CHECKIN, payData.checkInTime);
-						editor.putString(KEY_PREFERENCE_USER_IDX, payData.getCustomer().getUserIdx());
-						editor.commit();
-					}
-
 					writeLogPaid(mPay);
 
 					posListener = new DialogInterface.OnClickListener()
@@ -839,28 +826,36 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 					msg = getString(R.string.act_toast_payment_success);
 					break;
+
 				case CODE_RESULT_ACTIVITY_PAYMENT_SOLD_OUT:
 					msg = getString(R.string.act_toast_payment_soldout);
 					break;
+
 				case CODE_RESULT_ACTIVITY_PAYMENT_NOT_AVAILABLE:
 					title = getString(R.string.dialog_notice2);
 					msg = getString(R.string.act_toast_payment_not_available);
 					break;
+
 				case CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR:
 					msg = getString(R.string.act_toast_payment_network_error);
 					break;
+
 				case CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION:
 					VolleyHttpClient.createCookie(); // 쿠키를 다시 생성 시도
 					return;
+
 				case CODE_RESULT_ACTIVITY_PAYMENT_INVALID_DATE:
 					msg = getString(R.string.act_toast_payment_invalid_date);
 					break;
+
 				case CODE_RESULT_ACTIVITY_PAYMENT_FAIL:
 					msg = getString(R.string.act_toast_payment_fail);
 					break;
+
 				case CODE_RESULT_ACTIVITY_PAYMENT_CANCELED:
 					msg = getString(R.string.act_toast_payment_canceled);
 					break;
+
 				case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY:
 					/**
 					 * 가상계좌선택시 해당 가상계좌 정보를 보기위해 화면 스택을 쌓으면서 들어가야함. 이를 위한 정보를 셋팅.
@@ -868,16 +863,17 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					 * 플로우) 예약 액티비티 => 호텔탭 액티비티 => 메인액티비티 => 예약 리스트 프래그먼트 => 예약
 					 * 리스트 갱신 후 최상단 아이템 인텐트
 					 */
-					if (intent != null)
+					if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_DATA_PAY) == true)
 					{
-						if (intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAY) != null)
-						{
-							Pay payData = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAY);
+						Pay payData = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAY);
 
-							Editor editor = sharedPreference.edit();
-							editor.putString(KEY_PREFERENCE_USER_IDX, payData.getCustomer().getUserIdx());
-							editor.commit();
-						}
+						Editor editor = sharedPreference.edit();
+						editor.putString(KEY_PREFERENCE_USER_IDX, payData.getCustomer().getUserIdx());
+						editor.putString(KEY_PREFERENCE_HOTEL_NAME, mPay.getSaleRoomInformation().hotelName);
+						editor.putInt(KEY_PREFERENCE_HOTEL_ROOM_IDX, payData.getSaleRoomInformation().roomIndex);
+						editor.putString(KEY_PREFERENCE_HOTEL_CHECKOUT, payData.checkOutTime);
+						editor.putString(KEY_PREFERENCE_HOTEL_CHECKIN, payData.checkInTime);
+						editor.commit();
 					}
 
 					Editor editor = sharedPreference.edit();
@@ -887,12 +883,15 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 					setResult(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
 					finish();
 					return;
+
 				case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_TIME_ERROR:
 					msg = getString(R.string.act_toast_payment_account_time_error);
 					break;
+
 				case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_DUPLICATE:
 					msg = getString(R.string.act_toast_payment_account_duplicate);
 					break;
+
 				case CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER:
 					msg = getString(R.string.act_toast_payment_account_timeover);
 					break;

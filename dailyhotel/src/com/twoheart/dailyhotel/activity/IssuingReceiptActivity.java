@@ -265,6 +265,11 @@ public class IssuingReceiptActivity extends BaseActivity
 				Map<String, String> params = new HashMap<String, String>();
 				params.put("reservation_idx", String.valueOf(mBookingIdx));
 
+				if (DEBUG == true)
+				{
+					SimpleAlertDialog.build(IssuingReceiptActivity.this, null, params.toString(), getString(R.string.dialog_btn_text_confirm), null).show();
+				}
+
 				mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_RECEIPT).toString(), params, mReservReceiptJsonResponseListener, IssuingReceiptActivity.this));
 			} else
 			{

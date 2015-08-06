@@ -354,8 +354,9 @@
 
     <!-- RatingHotel Fragment -->
     <string name="frag_rating_hotel_title">호텔 만족도 조사</string>
-    <string name="frag_rating_hotel_text1">지난 번 이용하신</string>
-    <string name="frag_rating_hotel_text2">은 어떠셨나요?</string>
+    <string name="frag_rating_hotel_text1">%1$s 에 이용하신</string>
+    <string name="frag_rating_hotel_text2">\'%1$s\'</string>
+    <string name="frag_rating_hotel_text3">은 어떠셨나요?</string>
     <string name="frag_rating_hotel_recomm">만족함</string>
     <string name="frag_rating_hotel_cancel">만족안함</string>
 

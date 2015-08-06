@@ -88,7 +88,11 @@ public class Booking implements Parcelable
 	{
 		try
 		{
-			reservationIndex = jsonObject.getInt("reserv_idx");
+			if (jsonObject.has("reserv_idx") == true)
+			{
+				reservationIndex = jsonObject.getInt("reserv_idx");
+			}
+
 			hotelName = jsonObject.getString("hotel_name");
 			payType = jsonObject.getInt("pay_type");
 			ment = jsonObject.getString("comment");

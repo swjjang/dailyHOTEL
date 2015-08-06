@@ -17,12 +17,9 @@ package com.twoheart.dailyhotel;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.TimeZone;
 
 import org.json.JSONObject;
 
@@ -72,13 +69,11 @@ import com.twoheart.dailyhotel.activity.ExitActivity;
 import com.twoheart.dailyhotel.activity.SplashActivity;
 import com.twoheart.dailyhotel.fragment.HotelMainFragment;
 import com.twoheart.dailyhotel.fragment.RatingHotelFragment;
-import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
@@ -250,10 +245,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 					super.finish(); // 어플리케이션(메인 화면)을 종료해버린다
 					return; // 메서드를 빠져나간다 - 호텔 평가를 수행하지 않음.
 			}
-
-			// 앱 시작시에 notification_id 값을 삭제한다.
-			editor.putString(KEY_PREFERENCE_GCM_ID, "");
-			editor.apply();
 
 			// 앱을 처음 설치한 경우 가이드를 띄움. 일단 화면 보이지 않도록 수정.
 			boolean showGuide = false;//sharedPreference.getBoolean(KEY_PREFERENCE_SHOW_GUIDE, true);
@@ -1051,7 +1042,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-
 			try
 			{
 				if (null == response)
@@ -1071,44 +1061,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 					regGcmId(loginuser_idx);
 				}
 
-				// 구매자 정보 확인 
-				String buyerIdx = sharedPreference.getString(KEY_PREFERENCE_USER_IDX, null);
-
-				if (true == loginuser_idx.equalsIgnoreCase(buyerIdx))
-				{
-					String purchasedHotelName = sharedPreference.getString(KEY_PREFERENCE_HOTEL_NAME, VALUE_PREFERENCE_HOTEL_NAME_DEFAULT);
-					int purchasedHotelRoomIdx = sharedPreference.getInt(KEY_PREFERENCE_HOTEL_ROOM_IDX, VALUE_PREFERENCE_HOTEL_ROOM_IDX_DEFAULT);
-					String purchasedHotelCheckOut = sharedPreference.getString(KEY_PREFERENCE_HOTEL_CHECKOUT, VALUE_PREFERENCE_HOTEL_CHECKOUT_DEFAULT);
-
-					Calendar calendar = DailyCalendar.getInstance();
-					calendar.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
-
-					Date today = calendar.getTime();
-					Date checkOut = SaleTime.stringToDate(Util.dailyHotelTimeConvert(purchasedHotelCheckOut));
-
-					//호텔 만족도 조사 
-					if (false == VALUE_PREFERENCE_HOTEL_NAME_DEFAULT.equalsIgnoreCase(purchasedHotelName))
-					{
-						if (today.compareTo(checkOut) >= 0)
-						{
-							Date deadLineDay = new Date(checkOut.getTime() + 7 * SaleTime.SECONDS_IN_A_DAY * 1000);
-
-							if (today.compareTo(deadLineDay) < 0)
-							{
-								RatingHotelFragment dialog = RatingHotelFragment.newInstance(purchasedHotelName, purchasedHotelRoomIdx);
-
-								if (dialog != null)
-								{
-									dialog.show(fragmentManager, TAG_FRAGMENT_RATING_HOTEL);
-								}
-							} else
-							{
-								RatingHotelFragment dialog = RatingHotelFragment.newInstance(null, -1);
-								dialog.destroyRatingHotelFlag(MainActivity.this);
-							}
-						}
-					}
-				}
+				// 호텔 평가요청
+				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_SATISFACTION_RATION_EXIST).toString(), null, mSatisfactionRatingExistJsonResponseListener, MainActivity.this));
 			} catch (Exception e)
 			{
 				onError(e);
@@ -1147,101 +1101,42 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		}
 	};
 
-	//	@Override
-	//	public void onResponse(String url, String response) {
-	//		if (url.contains(URL_WEBAPI_USER_ALIVE)) {
-	//			String result = response.trim();
-	//			Log.d(TAG, "URL_WEBAPI_USER_ALIVE");
-	//
-	//			if (result.equals("alive")) { // session alive
-	//				// 호텔 평가를 위한 사용자 정보 조회
-	//				mQueue.add(new DailyHotelJsonRequest(Method.GET,
-	//						new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-	//								URL_WEBAPI_USER_INFO).toString(), null, this,
-	//								this));
-	//
-	//			}
-	//		}
-	//	}
+	private DailyHotelJsonResponseListener mSatisfactionRatingExistJsonResponseListener = new DailyHotelJsonResponseListener()
+	{
+		@Override
+		public void onResponse(String url, JSONObject response)
+		{
+			try
+			{
+				if (response == null)
+				{
+					throw new NullPointerException("response == null");
+				}
 
-	//	@Override
-	//	public void onResponse(String url, JSONObject response) {
-	//		if (url.contains(URL_WEBAPI_USER_INFO)) {
-	//			try {
-	//				String loginuser_idx = response.getString("idx");
-	//
-	//				String gcmId=getGcmId();
-	//				// GCM 등록 시도
-	//				ExLog.e("NOTE : " + gcmId);
-	//				if (gcmId.isEmpty()) {
-	//					if (isGoogleServiceAvailable()) {
-	//						regGcmId(Integer.parseInt(loginuser_idx));
-	//					}
-	//				}
-	//
-	//				// 구매자 정보 확인 
-	//				String buyerIdx = sharedPreference.getString(KEY_PREFERENCE_USER_IDX, null);
-	//				if (buyerIdx != null) {
-	//					if (loginuser_idx.equals(buyerIdx)) {
-	//						String purchasedHotelName = sharedPreference.getString(
-	//								KEY_PREFERENCE_HOTEL_NAME,
-	//								VALUE_PREFERENCE_HOTEL_NAME_DEFAULT);
-	//						int purchasedHotelSaleIdx = sharedPreference.getInt(
-	//								KEY_PREFERENCE_HOTEL_SALE_IDX,
-	//								VALUE_PREFERENCE_HOTEL_SALE_IDX_DEFAULT);
-	//						String purchasedHotelCheckOut = sharedPreference.getString(
-	//								KEY_PREFERENCE_HOTEL_CHECKOUT,
-	//								VALUE_PREFERENCE_HOTEL_CHECKOUT_DEFAULT);
-	//
-	//						Date today = new Date();
-	//						Date checkOut = SaleTime.stringToDate(Util
-	//								.dailyHotelTimeConvert(purchasedHotelCheckOut));
-	//
-	//						//호텔 만족도 조사 
-	//						if (!purchasedHotelName.equals(VALUE_PREFERENCE_HOTEL_NAME_DEFAULT)) {
-	//							if (today.compareTo(checkOut) >= 0) {
-	//								Calendar calendar = Calendar.getInstance();
-	//								calendar.setTime(checkOut);
-	//								calendar.add(Calendar.DATE, DAYS_DISPLAY_RATING_HOTEL_DIALOG);
-	//								Date deadLineDay = calendar.getTime();
-	//
-	//								if (today.compareTo(deadLineDay) < 0) {
-	//									Hotel purchasedHotel = new Hotel();
-	//									purchasedHotel.setName(purchasedHotelName);
-	//
-	//									HotelDetail purchasedHotelInformation = new HotelDetail();
-	//									purchasedHotelInformation.setHotel(purchasedHotel);
-	//									purchasedHotelInformation.setSaleIdx(purchasedHotelSaleIdx);
-	//
-	//									RatingHotelFragment dialog = RatingHotelFragment
-	//											.newInstance(purchasedHotelInformation);
-	//									dialog.show(fragmentManager, TAG_FRAGMENT_RATING_HOTEL);
-	//								} else {
-	//									RatingHotelFragment dialog = RatingHotelFragment
-	//											.newInstance(null);
-	//									dialog.destroyRatingHotelFlag();
-	//								}
-	//							}
-	//						}
-	//					}
-	//				}
-	//
-	//			} catch (Exception e) {
-	//				onError(e);
-	//			}
-	//			unLockUI();
-	//		} else if (url.contains(URL_GCM_REGISTER)) {
-	//			// 로그인 성공 - 유저 정보(인덱스) 가져오기 - 유저의 GCM키 등록 완료 한 경우 프리퍼런스에 키 등록후 종료
-	//			try {
-	//				if (response.getString("result").equals("true")) {
-	//					Editor editor = sharedPreference.edit();
-	//					editor.putString(KEY_PREFERENCE_GCM_ID, regPushParams.get("notification_id").toString());
-	//					editor.apply();
-	//				}
-	//
-	//			} catch (Exception e) {
-	//				onError(e);
-	//			}
-	//		}
-	//	}
+				int msg_code = response.getInt("msg_code");
+
+				if (msg_code == 0)
+				{
+					JSONObject jsonObject = response.getJSONObject("data");
+
+					String guestName = jsonObject.getString("guest_name");
+					String roomName = jsonObject.getString("room_name");
+					long checkInDate = jsonObject.getLong("checkin_date");
+					long checkOutDate = jsonObject.getLong("checkout_date");
+					String hotelName = jsonObject.getString("hotel_name");
+					int reservationIndex = jsonObject.getInt("reserv_idx");
+
+					RatingHotelFragment dialog = RatingHotelFragment.newInstance(hotelName, reservationIndex, checkInDate, checkOutDate);
+
+					if (dialog != null)
+					{
+						dialog.show(fragmentManager, TAG_FRAGMENT_RATING_HOTEL);
+					}
+				}
+			} catch (Exception e)
+			{
+				onError(e);
+			}
+		}
+	};
 }

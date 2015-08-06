@@ -348,7 +348,7 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 					VolleyHttpClient.createCookie();
 
 					// credit 요청
-					mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_SAVED_MONEY).toString(), null, mReserveSavedMoneyStringResponseListener, baseActivity));
+					mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_SAVED_MONEY).toString(), null, mReserveSavedMoneyStringResponseListener, baseActivity));
 
 				}
 			} catch (JSONException e)
@@ -382,7 +382,7 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 			if (true == "alive".equalsIgnoreCase(result))
 			{ // session alive
 				// credit 요청
-				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERVE_SAVED_MONEY).toString(), null, mReserveSavedMoneyStringResponseListener, baseActivity));
+				mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_SAVED_MONEY).toString(), null, mReserveSavedMoneyStringResponseListener, baseActivity));
 
 			} else if (true == "dead".equalsIgnoreCase(result))
 			{ // session dead

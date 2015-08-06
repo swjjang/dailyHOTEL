@@ -86,8 +86,6 @@ public class GcmIntentService extends IntentService implements Constants
 			{
 				// 중복 체크를 위한 값 
 				String collapseKey = intent.getStringExtra("collapse_key");
-
-				//				JSONObject jsonMsg = new JSONObject("{\"msg\":\"데일로 호텔 맥주 2단 이벤트\", \"image_url\":\"http://www.kccosd.org/files/testing_image.jpg\", \"type\":\"notice\"}");
 				JSONObject jsonMsg = new JSONObject(extras.getString("message"));
 				String msg = jsonMsg.getString("msg");
 				String imageUrl = null;
@@ -100,14 +98,23 @@ public class GcmIntentService extends IntentService implements Constants
 				int type = -1;
 
 				if (jsonMsg.getString("type").equals("notice"))
+				{
 					type = PUSH_TYPE_NOTICE;
-				else if (jsonMsg.getString("type").equals("account_complete"))
+				} else if (jsonMsg.getString("type").equals("account_complete"))
+				{
 					type = PUSH_TYPE_ACCOUNT_COMPLETE;
+				}
 
 				if (!jsonMsg.isNull("badge"))
+				{
 					mIsBadge = jsonMsg.getBoolean("badge");
+				}
+
 				if (!jsonMsg.isNull("sound"))
+				{
 					mIsSound = jsonMsg.getBoolean("sound");
+				}
+
 				SharedPreferences pref = this.getSharedPreferences(NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
 
 				switch (type)
@@ -124,6 +131,7 @@ public class GcmIntentService extends IntentService implements Constants
 							Editor editor = pref.edit();
 							editor.putString("collapseKey", collapseKey);
 							editor.apply();
+
 							sendPush(messageType, type, msg, imageUrl);
 
 							SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmss", Locale.KOREA);
@@ -139,15 +147,20 @@ public class GcmIntentService extends IntentService implements Constants
 							strDate = dateFormat2.format(date);
 
 							AnalyticsManager.getInstance(getApplicationContext()).purchaseComplete(tid, transId, roomIdx, hotelName, Screen.GCMSERVICE, checkInTime, checkOutTime, strDate, Pay.Type.VBANK.name(), Double.parseDouble(paidPrice));
+
+							// 가상계좌 내용 정리
+							editor.remove(KEY_PREFERENCE_USER_IDX);
+							editor.remove(KEY_PREFERENCE_HOTEL_NAME);
+							editor.remove(KEY_PREFERENCE_HOTEL_ROOM_IDX);
+							editor.remove(KEY_PREFERENCE_HOTEL_CHECKOUT);
+							editor.remove(KEY_PREFERENCE_HOTEL_CHECKIN);
+							editor.commit();
 						}
 						break;
 
 					case PUSH_TYPE_NOTICE:
-						ExLog.d("GcmIntentService = notice complete!!!");
 						if (collapseKey.equals(pref.getString("collapseKey", "")))
 						{
-							break;
-
 						} else
 						{
 							Editor editor = pref.edit();
@@ -172,8 +185,8 @@ public class GcmIntentService extends IntentService implements Constants
 		if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType))
 		{
 			if (isScreenOn(this) && type != -1)
-			{ // 데일리호텔 앱이 켜져있는경우.
-
+			{
+				// 데일리호텔 앱이 켜져있는경우.
 				ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
 				ComponentName topActivity = am.getRunningTasks(1).get(0).topActivity;
 				String className = topActivity.getClassName();
@@ -182,17 +195,15 @@ public class GcmIntentService extends IntentService implements Constants
 
 				if (className.contains("dailyhotel") && !className.contains("GcmLockDialogActivity") && !mIsBadge)
 				{
-
 					Intent i = new Intent(this, ScreenOnPushDialogActivity.class);
 					i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, type);
 					i.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG, msg);
 					startActivity(i);
 				}
-
 			} else if (!isScreenOn(this) && !mIsBadge)
-			{ // 스크린 꺼져있는경우
-
+			{
+				// 스크린 꺼져있는경우
 				WakeLock.acquireWakeLock(this, PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP); // PushDialogActivity에서 release 해줌.
 				KeyguardManager manager = (KeyguardManager) getSystemService(Activity.KEYGUARD_SERVICE);
 				KeyguardLock lock = manager.newKeyguardLock(Context.KEYGUARD_SERVICE);
@@ -204,6 +215,7 @@ public class GcmIntentService extends IntentService implements Constants
 				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				this.startActivity(i);
 			}
+
 			// 노티피케이션은 케이스에 상관없이 항상 뜨도록함.
 			sendNotification(type, msg, imageUrl);
 		}

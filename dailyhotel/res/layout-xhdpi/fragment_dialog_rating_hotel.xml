@@ -64,29 +64,28 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:paddingTop="40dp" >
-                
-                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:text="@string/frag_rating_hotel_text1"
-                    android:textSize="16.5dp" />
 
                 <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-                    android:id="@+id/tv_rating_hotel_name"
+                    android:id="@+id/ratingPeriod"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:textStyle="bold"
                     android:textSize="16.5dp" />
+
+                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                    android:id="@+id/ratingHotelName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="16.5dp"
+                    android:textStyle="bold" />
 
                 <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:text="@string/frag_rating_hotel_text2"
+                    android:text="@string/frag_rating_hotel_text3"
+                    android:gravity="center"
                     android:textSize="16.5dp" />
-
             </LinearLayout>
 
             <LinearLayout

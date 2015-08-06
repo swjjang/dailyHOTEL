@@ -263,7 +263,7 @@ public class HotelDetailActivity extends BaseActivity
 			{
 				setResult(resultCode);
 
-				if (resultCode == RESULT_OK)
+				if (resultCode == RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
 				{
 					finish();
 				}

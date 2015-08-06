@@ -20,7 +20,7 @@ public interface Constants
 {
 	// 디버그 빌드 여부 BuildConfig는 배포시에 자동으로 false가 된다고 한다. 테스트 해보고 싶음.
 	public static final boolean DEBUG = BuildConfig.DEBUG;
-	public static final boolean UNENCRYPTED_URL = true;
+	public static final boolean UNENCRYPTED_URL = false;
 
 	// 스토어 선택.
 	public enum Stores
@@ -133,20 +133,23 @@ public interface Constants
 	public static final String URL_WEBAPI_USER_INFORMATION = UNENCRYPTED_URL ? "api/user/information" : "MzIkNTEkNTkkMzEkMTkk$NkQ5N0RBQTA3NzQ5MUZZEMzQ3QUE0OTIRwEMDI2NjhCMDJBNTdFNERZDNzdBMKjlGNDkxMDYyRURBRTQ3QjBFNTRERg==$";
 
 	// DailyHOTEL Reservation Controller WebAPI URL
-	// api/reserv/session/common_payment
-	public static final String URL_WEBAPI_RESERVE_SESSION_COMMON_PAYMENT = UNENCRYPTED_URL ? "api/payment/session/common_payment" : "MzQkMjAkODMkOTMkMzMk$RDhCRUUwQUNFOUM4NkM0UNzJFQjFGQUVDCREOY1MDFBREM2RjE0QjcwRjI4NkEwRDMyQTRFQjlGNUE4MTYwQTTQyNjdGN0BY4MEQzMTlFODRGNzdDQkFERjZDMkFDMTQ0RTM5$";
+	// api/payment/session/common_payment
+	public static final String URL_WEBAPI_PAYMENT_SESSION_COMMON_PAYMENT = UNENCRYPTED_URL ? "api/payment/session/common_payment" : "OTQkNjEkMzckMTAxJDc2JA==$ODlCMTUwRkZFNEY2ODFFNzNDMDIzMUZENjY4QBzYwQzlENjFBMzYwREM5OURFNPjY1NzM4N0E3QjNRGMzg1MUVCM0JEMjIzQkUFFRkHY5NTlGQzgxN0Q3Q0I5OUU3OTYzRjZE$";
 
 	//"reserv/mine/detail";
-	public static final String URL_WEBAPI_RESERVE_MINE_DETAIL = UNENCRYPTED_URL ? "reserv/mine/detail" : "NjQkNTIkNjAkNjEkODUk$NzdCMkYzMzAzRUIzRjg4MkM3ODBGRjIzQTkxNzYzMTFEMTZFQ0NDMN0RFMzgMR5M0FBHRjBCMjA5QjUxRkE1RUEI2Qg==$";
+	public static final String URL_WEBAPI_RESERV_MINE_DETAIL = UNENCRYPTED_URL ? "reserv/mine/detail" : "NjQkNTIkNjAkNjEkODUk$NzdCMkYzMzAzRUIzRjg4MkM3ODBGRjIzQTkxNzYzMTFEMTZFQ0NDMN0RFMzgMR5M0FBHRjBCMjA5QjUxRkE1RUEI2Qg==$";
 
 	//"reserv/bonus";
-	public static final String URL_WEBAPI_RESERVE_SAVED_MONEY = UNENCRYPTED_URL ? "reserv/bonus" : "MjYkMzIkMTYkMjckMjMk$MkM1NTUyNzJERjg5IQzgxOTLg1RUDVY0MTcJ3OUMzQ0U3NjI=$";
+	public static final String URL_WEBAPI_RESERV_SAVED_MONEY = UNENCRYPTED_URL ? "reserv/bonus" : "MjYkMzIkMTYkMjckMjMk$MkM1NTUyNzJERjg5IQzgxOTLg1RUDVY0MTcJ3OUMzQ0U3NjI=$";
 
 	//"reserv/checkinout";
-	public static final String URL_WEBAPI_RESERVE_CHECKIN = UNENCRYPTED_URL ? "reserv/checkinout" : "MTQkNDUkNTkkMzAkODQk$Mjg2NUExMDcyQjTY0MDAwQzlBQTY4RTDE4NzhENjVFQjYwHMzREODc5NEEyRRUQ4RjI1OTE5RDdEQzRDOENCPQjU3NA==$";
+	public static final String URL_WEBAPI_RESERV_CHECKIN = UNENCRYPTED_URL ? "reserv/checkinout" : "MTQkNDUkNTkkMzAkODQk$Mjg2NUExMDcyQjTY0MDAwQzlBQTY4RTDE4NzhENjVFQjYwHMzREODc5NEEyRRUQ4RjI1OTE5RDdEQzRDOENCPQjU3NA==$";
 
-	//"reserv/review";
-	public static final String URL_WEBAPI_RESERVE_REVIEW = UNENCRYPTED_URL ? "reserv/review" : "NDEkMTMkMiQxNSQ0MSQ=$RUTExODg5NTA5MEJTJEQkI2RTdDQUUwODFEMDgwNzIUyQCUU=$";
+	// api/reserv/satisfaction_rating/update
+	public static final String URL_WEBAPI_RESERV_SATISFACTION_RATING_UPDATE = UNENCRYPTED_URL ? "api/reserv/satisfaction_rating/update" : "MTExJDQ5JDIzJDU4JDg5JA==$NTg0NUMwNTE5QURGQzU1QTRJCRDIwN0UzODY3QTY0MjI3ODY1QCUI4QTk2DMTc2N0EyNzQzMTg4OTUxOTFFQ0Y2NzDQzNjdDOTlBMzYyMDYzNjE1NkFMDNkEzMDdFQ0NGQzg2$";
+
+	// api/reserv/satisfaction_rating/exist
+	public static final String URL_WEBAPI_RESERV_SATISFACTION_RATION_EXIST = UNENCRYPTED_URL ? "api/reserv/satisfaction_rating/exist" : "NTUkNjYkODMkMjAkMTE3JA==$QkI0RTFFRDgxODg5RDhEXMTIzOENBQzA5MTVDN0E0MTA4N0FEMTk1ODMQ1MDA4Nzk5MVjhDNDA0QUNCMDEwMZjY0RTQ4RDIzMjc5N0RCOEZENUE0M0M2NO0FFQkE2MTRGOTQw$";
 
 	// DailyHOTEL App Management Controller WebAPI URL
 	//"common/ver_dual";
@@ -372,6 +375,9 @@ public interface Constants
 	public static final String NAME_INTENT_EXTRA_DATA_DAYOFDAYS = "dayOfDays";
 	public static final String NAME_INTENT_EXTRA_DATA_TYPE = "type";
 	public static final String NAME_INTENT_EXTRA_DATA_ROOMINDEX = "roomIndex";
+	public static final String NAME_INTENT_EXTRA_DATA_RESERVATIONINDEX = "reservationIndex";
+	public static final String NAME_INTENT_EXTRA_DATA_CHECKINDATE = "checkInDate";
+	public static final String NAME_INTENT_EXTRA_DATA_CHECKOUTDATE = "checkOutDate";
 
 	// Push Type
 	public static final int PUSH_TYPE_NOTICE = 0;
