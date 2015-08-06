@@ -20,7 +20,7 @@ public interface Constants
 {
 	// 디버그 빌드 여부 BuildConfig는 배포시에 자동으로 false가 된다고 한다. 테스트 해보고 싶음.
 	public static final boolean DEBUG = BuildConfig.DEBUG;
-	public static final boolean UNENCRYPTED_URL = false;
+	public static final boolean UNENCRYPTED_URL = true;
 
 	// 스토어 선택.
 	public enum Stores
@@ -134,7 +134,7 @@ public interface Constants
 
 	// DailyHOTEL Reservation Controller WebAPI URL
 	// api/reserv/session/common_payment
-	public static final String URL_WEBAPI_RESERVE_SESSION_COMMON_PAYMENT = UNENCRYPTED_URL ? "api/reserv/session/common_payment" : "MzQkMjAkODMkOTMkMzMk$RDhCRUUwQUNFOUM4NkM0UNzJFQjFGQUVDCREOY1MDFBREM2RjE0QjcwRjI4NkEwRDMyQTRFQjlGNUE4MTYwQTTQyNjdGN0BY4MEQzMTlFODRGNzdDQkFERjZDMkFDMTQ0RTM5$";
+	public static final String URL_WEBAPI_RESERVE_SESSION_COMMON_PAYMENT = UNENCRYPTED_URL ? "api/payment/session/common_payment" : "MzQkMjAkODMkOTMkMzMk$RDhCRUUwQUNFOUM4NkM0UNzJFQjFGQUVDCREOY1MDFBREM2RjE0QjcwRjI4NkEwRDMyQTRFQjlGNUE4MTYwQTTQyNjdGN0BY4MEQzMTlFODRGNzdDQkFERjZDMkFDMTQ0RTM5$";
 
 	//"reserv/mine/detail";
 	public static final String URL_WEBAPI_RESERVE_MINE_DETAIL = UNENCRYPTED_URL ? "reserv/mine/detail" : "NjQkNTIkNjAkNjEkODUk$NzdCMkYzMzAzRUIzRjg4MkM3ODBGRjIzQTkxNzYzMTFEMTZFQ0NDMN0RFMzgMR5M0FBHRjBCMjA5QjUxRkE1RUEI2Qg==$";
