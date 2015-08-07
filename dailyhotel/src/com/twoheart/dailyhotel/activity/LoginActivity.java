@@ -46,6 +46,7 @@ import android.widget.Toast;
 
 import com.android.volley.Request.Method;
 import com.android.volley.Response.ErrorListener;
+import com.android.volley.VolleyError;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
@@ -468,7 +469,18 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 				regPushParams.put("notification_id", regId);
 				regPushParams.put("device_type", GCM_DEVICE_TYPE_ANDROID);
 
-				mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_GCM_REGISTER).toString(), regPushParams, mGcmRegisterJsonResponseListener, LoginActivity.this));
+				mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_GCM_REGISTER).toString(), regPushParams, mGcmRegisterJsonResponseListener, new ErrorListener()
+				{
+					@Override
+					public void onErrorResponse(VolleyError arg0)
+					{
+						unLockUI();
+
+						DailyToast.showToast(LoginActivity.this, R.string.toast_msg_logoined, Toast.LENGTH_SHORT);
+						setResult(RESULT_OK);
+						finish();
+					}
+				}));
 			}
 		}.execute();
 	}

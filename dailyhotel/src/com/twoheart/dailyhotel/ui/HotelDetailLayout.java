@@ -290,6 +290,11 @@ public class HotelDetailLayout
 
 			initRoomTypeLayout(hotelDetail.nights, saleRoomList);
 		}
+
+		if (mListAdapter != null)
+		{
+			mListAdapter.notifyDataSetChanged();
+		}
 	}
 
 	private void initRoomTypeLayout(int nights, ArrayList<SaleRoomInformation> saleRoomList)

@@ -133,6 +133,16 @@
         </LinearLayout>
     </RelativeLayout>
 
+    <ImageView
+        android:id="@+id/dBenefitImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/ic_d_benefit"
+        android:visibility="gone" />
+
     <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
         android:id="@+id/tv_hotel_row_soldout"
         android:layout_width="match_parent"
@@ -149,15 +159,5 @@
         android:layout_height="1px"
         android:layout_alignParentBottom="true"
         android:background="@color/hotel_list_item_underline" />
-
-    <ImageView
-        android:id="@+id/dBenefitImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="15dp"
-        android:src="@drawable/ic_d_benefit"
-        android:visibility="gone" />
 
 </RelativeLayout>

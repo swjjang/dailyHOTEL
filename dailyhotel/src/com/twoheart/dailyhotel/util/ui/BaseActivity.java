@@ -367,11 +367,17 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	@Override
 	protected void onPause()
 	{
-		VolleyHttpClient.cookieManagerStopSync();
+		try
+		{
+			VolleyHttpClient.cookieManagerStopSync();
 
-		unLockUI();
+			unLockUI();
 
-		super.onPause();
+			super.onPause();
+		} catch (Exception e)
+		{
+			ExLog.d(e.toString());
+		}
 	}
 
 	@Override

@@ -26,6 +26,7 @@ import kr.co.kcp.util.PackageState;
 import org.apache.http.util.EncodingUtils;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
@@ -106,7 +107,15 @@ public class PaymentActivity extends BaseActivity implements Constants
 		}
 
 		ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-		mWebView = new WebView(this);
+
+		// 앱에서 팝업이 띄어진 상태에서 Activity를 종료하면 발생하는 현상을 막기 위해서
+		Activity activity = this;
+		while (activity.getParent() != null)
+		{
+			activity = activity.getParent();
+		}
+
+		mWebView = new WebView(activity);
 
 		setContentView(mWebView, layoutParams);
 

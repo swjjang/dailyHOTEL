@@ -356,6 +356,13 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 	@Override
 	public void onClick(View v)
 	{
+		if (isLockUiComponent() == true)
+		{
+			return;
+		}
+
+		lockUiComponent();
+
 		switch (mCheckStatus)
 		{
 			case CHECK_NONE_STATUS:
@@ -382,7 +389,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 
 			case CHECK_OUT_STATUS:
 				mCheckStatus = CHECK_OK_STATUS;
-
+				releaseUiComponent();
 				break;
 		}
 	}
@@ -564,6 +571,8 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 
 	private void hideDaysList()
 	{
+		releaseUiComponent();
+
 		if (mCheckStatus != CHECK_OK_STATUS)
 		{
 			mCheckStatus = CHECK_NONE_STATUS;
@@ -700,6 +709,8 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 					mCheckInOutTextView.setText(R.string.frag_hotel_list_checkout);
 
 					animation.removeAllListeners();
+
+					releaseUiComponent();
 				}
 
 				@Override
@@ -766,6 +777,8 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 
 					View daysLayout02 = mDaysLayout.findViewById(R.id.daysLayout02);
 					daysLayout02.setVisibility(View.VISIBLE);
+
+					releaseUiComponent();
 				}
 			});
 
@@ -961,6 +974,8 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 
 						hideDaysList();
 					}
+
+					releaseUiComponent();
 				}
 
 				@Override
@@ -1009,6 +1024,8 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 					mAnimationState = ANIMATION_STATE.END;
 
 					hideDaysList();
+
+					releaseUiComponent();
 				}
 			});
 
