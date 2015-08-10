@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.adapter;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,9 +53,6 @@ public class BoardListAdapter extends BaseExpandableListAdapter
 		TextView tv_content = (TextView) v.findViewById(R.id.tv_board_content);
 		tv_content.setText(getChild(groupPosition, 0));
 
-		// pinkred_font
-		//		GlobalFont.apply((ViewGroup) v);
-
 		return v;
 	}
 
@@ -92,10 +90,16 @@ public class BoardListAdapter extends BaseExpandableListAdapter
 		TextView tv_subject = (TextView) v.findViewById(R.id.tv_board_subject);
 		TextView tv_regdate = (TextView) v.findViewById(R.id.tv_board_regdate);
 		tv_subject.setText((String) getGroup(groupPosition));
-		tv_regdate.setText(list.get(groupPosition).getRegdate());
 
-		// pinkred_font
-		//		GlobalFont.apply((ViewGroup) v);
+		if (TextUtils.isEmpty(list.get(groupPosition).getRegdate()) == true)
+		{
+			tv_regdate.setVisibility(View.GONE);
+		} else
+		{
+			tv_regdate.setVisibility(View.VISIBLE);
+			tv_regdate.setText(list.get(groupPosition).getRegdate());
+		}
+
 		return v;
 	}
 
