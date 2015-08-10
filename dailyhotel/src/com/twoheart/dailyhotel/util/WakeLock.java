@@ -5,26 +5,36 @@ import android.os.PowerManager;
 
 public class WakeLock
 {
-
 	private static PowerManager.WakeLock wakeLock;
 
 	public static void acquireWakeLock(Context context, int level)
 	{
-		PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-		wakeLock = pm.newWakeLock(level, context.getClass().getName());
+		try
+		{
+			PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+			wakeLock = pm.newWakeLock(level, context.getClass().getName());
 
-		if (wakeLock != null)
-			wakeLock.acquire();
+			if (wakeLock != null)
+			{
+				wakeLock.acquire();
+			}
+		} catch (Exception e)
+		{
 
+		}
 	}
 
 	public static void releaseWakeLock()
 	{
-		if (wakeLock != null)
+		try
 		{
-			wakeLock.release();
-			wakeLock = null;
+			if (wakeLock != null)
+			{
+				wakeLock.release();
+				wakeLock = null;
+			}
+		} catch (Exception e)
+		{
 		}
 	}
-
 }
