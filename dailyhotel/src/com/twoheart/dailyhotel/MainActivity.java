@@ -31,6 +31,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.content.res.Configuration;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -42,7 +43,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.style.StyleSpan;
 import android.util.Base64;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -565,9 +569,11 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	{
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-		// 이벤트 제거.
 		TextView eventTextView = (TextView) findViewById(R.id.titleTextView);
-		eventTextView.setText(Html.fromHtml(getString(R.string.label_event_title)));
+
+		SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(getString(R.string.label_event_title));
+		spannableStringBuilder.setSpan(new StyleSpan(Typeface.BOLD), 0, 3, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		eventTextView.setText(spannableStringBuilder);
 
 		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, 0, 0)
 		{

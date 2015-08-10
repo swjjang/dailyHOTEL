@@ -453,7 +453,7 @@
     <string name="label_format_tabday">%1$s일(%2$s)</string>
 
     <!-- Banner -->
-    <string name="label_event_title">&lt;b&gt;이벤트&lt;/b&gt; 참여하기</string>
+    <string name="label_event_title">이벤트 참여하기</string>
     <string name="label_event_subtitle">데일리호텔의 이벤트에 참여하세요.</string>
 
     <!-- Map -->
