@@ -102,7 +102,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 	private static final int DIALOG_CONFIRM_PAYMENT_CARD = 0;
 	private static final int DIALOG_CONFIRM_PAYMENT_HP = 1;
 	private static final int DIALOG_CONFIRM_PAYMENT_ACCOUNT = 2;
-	private static final int DIALOG_CONFIRM_PAYMENT_NO_RSERVE = 3;
 	private static final int DIALOG_CONFIRM_CALL = 4;
 	private static final int DIALOG_CONFIRM_PAYMENT_REGCARD = 5;
 	private static final int DIALOG_CONFIRM_STOP_ONSALE = 6;
@@ -381,9 +380,18 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				v.setClickable(false);
 				v.setEnabled(false);
 
-				Dialog dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_NO_RSERVE, null);
+				String title = getString(R.string.dialog_notice2);
+				String msg = getString(R.string.dialog_btn_payment_no_reserve);
+				String buttonText = getString(R.string.dialog_btn_payment_confirm);
 
-				dialog.setOnDismissListener(new OnDismissListener()
+				SimpleAlertDialog.build(this, title, msg, buttonText, new DialogInterface.OnClickListener()
+				{
+					@Override
+					public void onClick(DialogInterface dialog, int which)
+					{
+						swCredit.setChecked(false);
+					}
+				}).setOnDismissListener(new OnDismissListener()
 				{
 					@Override
 					public void onDismiss(DialogInterface dialog)
@@ -393,9 +401,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 						v.setClickable(true);
 						v.setEnabled(true);
 					}
-				});
-
-				dialog.show();
+				}).show();
 
 				releaseUiComponent();
 			} else
@@ -533,29 +539,26 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 		switch (type)
 		{
+		// 특가 상품 결제 동의 팝업
 			case DIALOG_CONFIRM_PAYMENT_HP:
 				msg = getString(R.string.dialog_msg_payment_confirm_hp);
 				buttonText = getString(R.string.dialog_btn_payment_confirm);
 				break;
 
-			case DIALOG_CONFIRM_PAYMENT_NO_RSERVE:
-				msg = getString(R.string.dialog_btn_payment_no_reserve);
-
-				btnProceed.setVisibility(View.GONE);
-				buttonText = getString(R.string.dialog_btn_payment_confirm);
-				break;
-
+			// 특가 상품 결제 동의 팝업
 			case DIALOG_CONFIRM_PAYMENT_ACCOUNT:
 				msg = getString(R.string.dialog_msg_payment_confirm_account);
 				buttonText = getString(R.string.dialog_btn_payment_confirm);
 				break;
 
+			// 전화 하기
 			case DIALOG_CONFIRM_CALL:
 				titleTextView.setText(R.string.dialog_notice2);
 				msg = getString(R.string.dialog_msg_call);
 				buttonText = getString(R.string.dialog_btn_call);
 				break;
 
+			// 호텔 판매 완료
 			case DIALOG_CONFIRM_STOP_ONSALE:
 				dialog.setCancelable(false);
 
@@ -566,6 +569,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				buttonText = getString(R.string.dialog_btn_text_confirm);
 				break;
 
+			// 가격 변동
 			case DIALOG_CONFIRM_CHANGED_PAY:
 				dialog.setCancelable(false);
 
@@ -576,6 +580,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 				buttonText = getString(R.string.dialog_btn_text_confirm);
 				break;
 
+			// 특가 상품 결제 동의 팝업
 			//			case DIALOG_CONFIRM_PAYMENT_REGCARD:
 			//			case DIALOG_CONFIRM_PAYMENT_CARD:
 			//			case DIALOG_CONFIRM_PAYMENT_ACCOUNT:
@@ -644,9 +649,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 		btnProceed.setOnClickListener(buttonOnClickListener);
 
 		dialog.setContentView(view);
-
-		// pinkred_font
-		//		GlobalFont.apply((ViewGroup) view);
 
 		return dialog;
 	}
