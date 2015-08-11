@@ -108,4 +108,7 @@
 	<color name="hoteldetail_viewpager_background">#c3c3c3</color>
 	<color name="hoteldetail_dbenefit_background">#ebFFFFFF</color>
 	
+	<!-- Wait Popup -->
+	<color name="popup_underline">#e1e1e1</color>
+	
 </resources>	

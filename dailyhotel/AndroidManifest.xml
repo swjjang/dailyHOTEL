@@ -195,7 +195,8 @@
         </activity>
         <activity
             android:name=".activity.PushDialogActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:theme="@style/TransDialog" >
         </activity>
         <activity
             android:name=".activity.PushLockDialogActivity"
