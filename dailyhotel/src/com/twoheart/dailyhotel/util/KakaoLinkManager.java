@@ -45,7 +45,7 @@ public class KakaoLinkManager implements Constants
 	{
 		try
 		{
-			kkMsgBuilder.addImage("https://s3-ap-northeast-1.amazonaws.com/weblogfile/kakao.png", 300, 200);
+			kkMsgBuilder.addImage("http://s3-ap-northeast-1.amazonaws.com/weblogfile/kakao.jpg", 300, 200);
 			kkMsgBuilder.addText(text);
 			kkMsgBuilder.addAppButton(mContext.getString(R.string.kakao_btn_invited_friend));
 			kkLink.sendMessage(kkMsgBuilder.build(), mContext);
