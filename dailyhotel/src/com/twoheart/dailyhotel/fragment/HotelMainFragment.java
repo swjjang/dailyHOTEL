@@ -754,12 +754,31 @@ public class HotelMainFragment extends BaseFragment
 
 							try
 							{
-								JSONObject jsonObject = new JSONObject(param);
+								String[] params = param.split("\\&|\\=");
 
-								int hotelIndex = jsonObject.getInt("hotelIndex");
-								long dailyTime = Long.valueOf(jsonObject.getLong("dailyTime"));
-								int dailyDayOfDays = jsonObject.getInt("dailyDayOfDays");
-								int nights = jsonObject.getInt("nights");
+								int hotelIndex = 0;
+								long dailyTime = 0;
+								int dailyDayOfDays = 0;
+								int nights = 0;
+
+								int length = params.length;
+
+								for (int i = 0; i < length; i++)
+								{
+									if ("hotelIndex".equalsIgnoreCase(params[i]) == true)
+									{
+										hotelIndex = Integer.valueOf(params[++i]);
+									} else if ("dailyTime".equalsIgnoreCase(params[i]) == true)
+									{
+										dailyTime = Long.valueOf(params[++i]);
+									} else if ("dailyDayOfDays".equalsIgnoreCase(params[i]) == true)
+									{
+										dailyDayOfDays = Integer.valueOf(params[++i]);
+									} else if ("nights".equalsIgnoreCase(params[i]) == true)
+									{
+										nights = Integer.valueOf(params[++i]);
+									}
+								}
 
 								mOnUserActionListener.selectHotel(hotelIndex, dailyTime, dailyDayOfDays, nights);
 							} catch (Exception e)
