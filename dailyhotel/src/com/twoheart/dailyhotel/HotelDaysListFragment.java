@@ -214,6 +214,11 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		mSelectedCheckOutSaleTime = checkOutSaleTime;
 	}
 
+	public SaleTime getSelectedCheckInSaleTime()
+	{
+		return mSelectedCheckInSaleTime;
+	}
+
 	private void initCheckInDateLayout(SaleTime defaultSaleTime)
 	{
 		BaseActivity baseActivity = (BaseActivity) getActivity();
