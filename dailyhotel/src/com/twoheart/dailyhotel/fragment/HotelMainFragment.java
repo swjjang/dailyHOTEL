@@ -706,6 +706,14 @@ public class HotelMainFragment extends BaseFragment
 				return;
 			}
 
+			// 연박이 열려있는 경우 지역 선택할 경우 처리
+			HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
+
+			if (currentFragment instanceof HotelDaysListFragment)
+			{
+				((HotelDaysListFragment) currentFragment).clickBackgroundView();
+			}
+
 			Intent intent = new Intent(baseActivity, SelectAreaActivity.class);
 			intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, mSelectedProvince);
 			intent.putParcelableArrayListExtra(NAME_INTENT_EXTRA_DATA_AREAITEMLIST, mAreaItemList);

@@ -139,11 +139,18 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 						break;
 
 					case CHECK_IN_STATUS:
-						// 여기서 호텔 리스트를 다시 갱신해야 한다.
-						if (mUserActionListener != null)
+						mHandler.postDelayed(new Runnable()
 						{
-							mUserActionListener.selectDay(mSelectedCheckInSaleTime, mSelectedCheckOutSaleTime, true);
-						}
+							@Override
+							public void run()
+							{
+								// 여기서 호텔 리스트를 다시 갱신해야 한다.
+								if (mUserActionListener != null)
+								{
+									mUserActionListener.selectDay(mSelectedCheckInSaleTime, mSelectedCheckOutSaleTime, true);
+								}
+							}
+						}, 200);
 						break;
 
 					case CHECK_OUT_STATUS:
@@ -621,6 +628,14 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		fetchHotelList(province, mSelectedCheckInSaleTime, mSelectedCheckOutSaleTime);
 	}
 
+	public void clickBackgroundView()
+	{
+		if (mDaysBackgroundView != null && mDaysBackgroundView.getVisibility() == View.VISIBLE)
+		{
+			mDaysBackgroundView.performClick();
+		}
+	}
+
 	private void showAnimationCheckIn(final View view, final int position)
 	{
 		BaseActivity baseActivity = (BaseActivity) getActivity();
@@ -795,11 +810,19 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 			{
 				hideAnimationDaysList();
 
-				// 여기서 호텔 리스트를 다시 갱신해야 한다.
-				if (mUserActionListener != null)
+				mHandler.postDelayed(new Runnable()
 				{
-					mUserActionListener.selectDay(mSelectedCheckInSaleTime, mSelectedCheckOutSaleTime, true);
-				}
+					@Override
+					public void run()
+					{
+						// 여기서 호텔 리스트를 다시 갱신해야 한다.
+						if (mUserActionListener != null)
+						{
+							mUserActionListener.selectDay(mSelectedCheckInSaleTime, mSelectedCheckOutSaleTime, true);
+						}
+					}
+
+				}, 200);
 			}
 		}, 300);
 	}
