@@ -50,28 +50,17 @@ public interface Constants
 
 	// 웹서버 호스트  
 	//"http://restful.dailyhotel.kr/goodnight/"; //  서비스 서버 
-	//	public static final String URL_DAILYHOTEL_SERVER = UNENCRYPTED_URL ? "http://restful.dailyhotel.kr/goodnight/" : "MzkkNTQkNjEkNTYkNDck$RTA3Q0MwQTlGOTVCNUM4RkQ1OTM5MzMxRDVDNkUK0MTBBRjIUyMjU4OIEDE4NzQWwRDI4QTNGRUFERUNDMDMzMjk4QzIyODlFMDkwMjNDMDMyRUUxMjBDRUU1MTlBMDQ3MzRB$";
-	//	public static final String URL_DAILYHOTEL_LB_SERVER = UNENCRYPTED_URL ? "http://lb.dailyhotel.kr/" : "NDEkNDgkNzIkNDAkODYk$NkQyNjAyODM3MUFBQzQ0RTYyMEVBQjU5NjE2MTAyJQQTMwMThLBNEFGQTM5NDVCQjc4RDdCNzFg3QkIxRjkzMkYFCQg==$";
-
-	//http://ec2restful.dailyhotel.kr    http://restful.dailyhotel.kr/goodnight/
-	//    public static final String URL_DAILYHOTEL_SERVER = "http://192.168.0.39:8080/goodnight/"; //  서비스 서버
-
-	//"http://ec2.global.dailyhotel.kr/goodnight/"; //  서비스 서버
-	//    public static final String 5URL_DAILYHOTEL_SERVER = "MTExJDEwNCQyOCQ3NyQyMiQ=$MzEzODJBMDEwMjk4NjhBNENE2MjQ3ZMjE5NkRCM0Q2MzJGQ0UwODQ3NjUzOUQwRjY5NEI1Qzg2NzY4NNDVEOTQ1NEY5OERCQ0M0RUNEOEJBOMUZGNjdADMTEzNTlDRTNBNkQz$";
-
-	//	public static final String URL_DAILYHOTEL_SERVER = "http://ec2.test.dailyhotel.kr/goodnight/";
+	public static final String URL_DAILYHOTEL_SERVER = UNENCRYPTED_URL ? "http://restful.dailyhotel.kr/goodnight/" : "MzkkNTQkNjEkNTYkNDck$RTA3Q0MwQTlGOTVCNUM4RkQ1OTM5MzMxRDVDNkUK0MTBBRjIUyMjU4OIEDE4NzQWwRDI4QTNGRUFERUNDMDMzMjk4QzIyODlFMDkwMjNDMDMyRUUxMjBDRUU1MTlBMDQ3MzRB$";
+	public static final String URL_DAILYHOTEL_LB_SERVER = UNENCRYPTED_URL ? "http://lb.dailyhotel.kr/goodnight/" : "MTEyJDEwMyQ0NCQzNSQ5MCQ=$RkE1MTczODQ3QzdBQUEwMUQ0MDExMEFGNTQC5NjRBMDQ3ARURFRDBGMDUwMzEwOTU5M0VDNEFERjJCMDc5MzQwNjdEWOUZENzc5MUM0RDADxNDlEODk0RNzBERkVBOTY3NDg1$";
 
 	//"http://tcwas.dailyhotel.co.kr/goodnight/";
-	public static final String URL_DAILYHOTEL_SERVER = UNENCRYPTED_URL ? "http://tcwas.dailyhotel.co.kr/goodnight/" : "NzYkNTkkMzIkMTI0JDg2JA==$OUQ3NTdBMUQ5RjFENEQyNTU3NUY5QjA4GMkM4QzRFRDNGQjQ2MTRDQTlEQzJKFNjRCRDQ5RUE5RUM4HRUYwNjAQ2ODk2RTg5RDQ3OThGRTVGODg4REMzRTUzRDRFMAkVBMzJB$";
-	public static final String URL_DAILYHOTEL_LB_SERVER = UNENCRYPTED_URL ? "http://tcwas.dailyhotel.co.kr/goodnight/" : "NzYkNTkkMzIkMTI0JDg2JA==$OUQ3NTdBMUQ5RjFENEQyNTU3NUY5QjA4GMkM4QzRFRDNGQjQ2MTRDQTlEQzJKFNjRCRDQ5RUE5RUM4HRUYwNjAQ2ODk2RTg5RDQ3OThGRTVGODg4REMzRTUzRDRFMAkVBMzJB$";
+	//	public static final String URL_DAILYHOTEL_SERVER = UNENCRYPTED_URL ? "http://tcwas.dailyhotel.co.kr/goodnight/" : "NzYkNTkkMzIkMTI0JDg2JA==$OUQ3NTdBMUQ5RjFENEQyNTU3NUY5QjA4GMkM4QzRFRDNGQjQ2MTRDQTlEQzJKFNjRCRDQ5RUE5RUM4HRUYwNjAQ2ODk2RTg5RDQ3OThGRTVGODg4REMzRTUzRDRFMAkVBMzJB$";
+	//	public static final String URL_DAILYHOTEL_LB_SERVER = UNENCRYPTED_URL ? "http://tcwas.dailyhotel.co.kr/goodnight/" : "NzYkNTkkMzIkMTI0JDg2JA==$OUQ3NTdBMUQ5RjFENEQyNTU3NUY5QjA4GMkM4QzRFRDNGQjQ2MTRDQTlEQzJKFNjRCRDQ5RUE5RUM4HRUYwNjAQ2ODk2RTg5RDQ3OThGRTVGODg4REMzRTUzRDRFMAkVBMzJB$";
 
 	// 회사 대표번호
 	public static final String PHONE_NUMBER_DAILYHOTEL = "1800-9120";
 
 	// uiLock을 띄우고 API를 콜하였는데 제한 시간 안에 리턴을 받지 못한경우. error 발생.
-	/**
-	 * TODO :TEST JUDGE
-	 */
 	public static final int REQUEST_EXPIRE_JUDGE = 60000;
 
 	// 구글플레이 서비스 상태 확인 타임아웃

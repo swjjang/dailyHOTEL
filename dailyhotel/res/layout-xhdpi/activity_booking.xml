@@ -519,7 +519,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_alignParentTop="true"
                     android:layout_marginRight="15dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="13dp"
                     android:src="@drawable/img_ic_creditcard_manager" />
 
                 <!-- 결제 종류 선택 -->

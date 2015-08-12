@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.ui.HotelIconGenerator;
 
 public class HotelRenderer
@@ -35,12 +36,18 @@ public class HotelRenderer
 	{
 		Bitmap icon = null;
 
-		if (isSelected == false)
+		try
 		{
-			icon = mIconGenerator.makeIcon(mPrice, mMarkerResId);
-		} else
+			if (isSelected == false)
+			{
+				icon = mIconGenerator.makeIcon(mPrice, mMarkerResId);
+			} else
+			{
+				icon = mIconGenerator.makeSelectedIcon(mPrice, mMarkerResId);
+			}
+		} catch (OutOfMemoryError e)
 		{
-			icon = mIconGenerator.makeSelectedIcon(mPrice, mMarkerResId);
+			ExLog.d(e.toString());
 		}
 
 		if (icon == null)

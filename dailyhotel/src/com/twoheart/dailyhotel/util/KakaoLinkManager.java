@@ -5,8 +5,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import org.json.JSONObject;
-
 import android.content.Context;
 
 import com.kakao.AppActionBuilder;
@@ -47,6 +45,7 @@ public class KakaoLinkManager implements Constants
 	{
 		try
 		{
+			kkMsgBuilder.addImage("http://s3-ap-northeast-1.amazonaws.com/weblogfile/kakao.jpg", 300, 200);
 			kkMsgBuilder.addText(text);
 			kkMsgBuilder.addAppButton(mContext.getString(R.string.kakao_btn_invited_friend));
 			kkLink.sendMessage(kkMsgBuilder.build(), mContext);
@@ -60,13 +59,7 @@ public class KakaoLinkManager implements Constants
 	{
 		try
 		{
-			JSONObject jsonObject = new JSONObject();
-			jsonObject.put("hotelIndex", hotelIndex);
-			jsonObject.put("dailyTime", String.valueOf(dailyTime));
-			jsonObject.put("dailyDayOfDays", dailyDayOfDays);
-			jsonObject.put("nights", nights);
-
-			String schemeParams = jsonObject.toString();
+			String schemeParams = String.format("hotelIndex=%d&dailyTime=%d&dailyDayOfDays=%d&nights=%d", hotelIndex, dailyTime, dailyDayOfDays, nights);
 
 			kkMsgBuilder.addAppButton(mContext.getString(R.string.kakao_btn_go_hotel), new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build()).addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
 

@@ -318,7 +318,13 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
 						if (isCurrentPage == true && mHotelListAdapter != null)
 						{
-							mHotelListMapFragment.setHotelList(mHotelListAdapter.getData(), mSaleTime, false);
+							if (HotelListFragment.this instanceof HotelDaysListFragment)
+							{
+								mHotelListMapFragment.setHotelList(mHotelListAdapter.getData(), ((HotelDaysListFragment) HotelListFragment.this).getSelectedCheckInSaleTime(), false);
+							} else
+							{
+								mHotelListMapFragment.setHotelList(mHotelListAdapter.getData(), mSaleTime, false);
+							}
 						}
 					}
 					break;
@@ -902,7 +908,14 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 					if (mHotelViewType == HOTEL_VIEW_TYPE.MAP)
 					{
 						mHotelListMapFragment.setUserActionListener(mUserActionListener);
-						mHotelListMapFragment.setHotelList(hotelListViewItemList, mSaleTime, mIsSelectionTop);
+
+						if (HotelListFragment.this instanceof HotelDaysListFragment)
+						{
+							mHotelListMapFragment.setHotelList(hotelListViewItemList, ((HotelDaysListFragment) HotelListFragment.this).getSelectedCheckInSaleTime(), mIsSelectionTop);
+						} else
+						{
+							mHotelListMapFragment.setHotelList(hotelListViewItemList, mSaleTime, mIsSelectionTop);
+						}
 					}
 
 					mHotelListAdapter.clear();

@@ -139,11 +139,18 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 						break;
 
 					case CHECK_IN_STATUS:
-						// 여기서 호텔 리스트를 다시 갱신해야 한다.
-						if (mUserActionListener != null)
+						mHandler.postDelayed(new Runnable()
 						{
-							mUserActionListener.selectDay(mSelectedCheckInSaleTime, mSelectedCheckOutSaleTime, true);
-						}
+							@Override
+							public void run()
+							{
+								// 여기서 호텔 리스트를 다시 갱신해야 한다.
+								if (mUserActionListener != null)
+								{
+									mUserActionListener.selectDay(mSelectedCheckInSaleTime, mSelectedCheckOutSaleTime, true);
+								}
+							}
+						}, 200);
 						break;
 
 					case CHECK_OUT_STATUS:
@@ -205,6 +212,11 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 	{
 		mSelectedCheckInSaleTime = checkInSaleTime;
 		mSelectedCheckOutSaleTime = checkOutSaleTime;
+	}
+
+	public SaleTime getSelectedCheckInSaleTime()
+	{
+		return mSelectedCheckInSaleTime;
 	}
 
 	private void initCheckInDateLayout(SaleTime defaultSaleTime)
@@ -356,6 +368,13 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 	@Override
 	public void onClick(View v)
 	{
+		if (isLockUiComponent() == true)
+		{
+			return;
+		}
+
+		lockUiComponent();
+
 		switch (mCheckStatus)
 		{
 			case CHECK_NONE_STATUS:
@@ -382,7 +401,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 
 			case CHECK_OUT_STATUS:
 				mCheckStatus = CHECK_OK_STATUS;
-
+				releaseUiComponent();
 				break;
 		}
 	}
@@ -564,6 +583,8 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 
 	private void hideDaysList()
 	{
+		releaseUiComponent();
+
 		if (mCheckStatus != CHECK_OK_STATUS)
 		{
 			mCheckStatus = CHECK_NONE_STATUS;
@@ -610,6 +631,14 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 		mIsSelectionTop = isSelectionTop;
 
 		fetchHotelList(province, mSelectedCheckInSaleTime, mSelectedCheckOutSaleTime);
+	}
+
+	public void clickBackgroundView()
+	{
+		if (mDaysBackgroundView != null && mDaysBackgroundView.getVisibility() == View.VISIBLE)
+		{
+			mDaysBackgroundView.performClick();
+		}
 	}
 
 	private void showAnimationCheckIn(final View view, final int position)
@@ -700,6 +729,8 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 					mCheckInOutTextView.setText(R.string.frag_hotel_list_checkout);
 
 					animation.removeAllListeners();
+
+					releaseUiComponent();
 				}
 
 				@Override
@@ -766,6 +797,8 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 
 					View daysLayout02 = mDaysLayout.findViewById(R.id.daysLayout02);
 					daysLayout02.setVisibility(View.VISIBLE);
+
+					releaseUiComponent();
 				}
 			});
 
@@ -782,11 +815,19 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 			{
 				hideAnimationDaysList();
 
-				// 여기서 호텔 리스트를 다시 갱신해야 한다.
-				if (mUserActionListener != null)
+				mHandler.postDelayed(new Runnable()
 				{
-					mUserActionListener.selectDay(mSelectedCheckInSaleTime, mSelectedCheckOutSaleTime, true);
-				}
+					@Override
+					public void run()
+					{
+						// 여기서 호텔 리스트를 다시 갱신해야 한다.
+						if (mUserActionListener != null)
+						{
+							mUserActionListener.selectDay(mSelectedCheckInSaleTime, mSelectedCheckOutSaleTime, true);
+						}
+					}
+
+				}, 200);
 			}
 		}, 300);
 	}
@@ -961,6 +1002,8 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 
 						hideDaysList();
 					}
+
+					releaseUiComponent();
 				}
 
 				@Override
@@ -1009,6 +1052,8 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
 					mAnimationState = ANIMATION_STATE.END;
 
 					hideDaysList();
+
+					releaseUiComponent();
 				}
 			});
 

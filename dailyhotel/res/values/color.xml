@@ -22,6 +22,7 @@
     <color name="textView_textColor_reg_date">#c6c6c6</color>
     <color name="textView_textColor_shadow">#7F000000</color>
     <color name="textView_textColor_shadow_soldout">#AF000000</color>
+    <color name="drawer_entry_title">#737373</color>
     
     <color name="kakaotalk_textcolkr">#3c1e1e</color>
     <color name="kakaotalk_background">#f9ed00</color>
@@ -106,5 +107,8 @@
 	<color name="hoteldetail_soldout_text">#8c8c8c</color>
 	<color name="hoteldetail_viewpager_background">#c3c3c3</color>
 	<color name="hoteldetail_dbenefit_background">#ebFFFFFF</color>
+	
+	<!-- Wait Popup -->
+	<color name="popup_underline">#e1e1e1</color>
 	
 </resources>	

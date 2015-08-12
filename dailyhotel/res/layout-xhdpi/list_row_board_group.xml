@@ -3,14 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/bg_board_group_item"
+    android:gravity="center_vertical"
     android:minHeight="50dp"
     android:orientation="horizontal"
-    android:gravity="center_vertical"
-    android:paddingTop="12dp"
+    android:paddingBottom="7dp"
     android:paddingLeft="12dp"
     android:paddingRight="12dp"
-    android:paddingBottom="7dp"
-     >
+    android:paddingTop="12dp" >
 
     <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
         android:id="@+id/tv_board_subject"
@@ -23,8 +22,8 @@
         android:marqueeRepeatLimit="marquee_forever"
         android:scrollHorizontally="true"
         android:singleLine="true"
-        android:textSize="16.5dp"
-        android:textColor="@color/textView_textColor_main" />
+        android:textColor="@color/textView_textColor_main"
+        android:textSize="16.5dp" />
 
     <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
         android:id="@+id/tv_board_regdate"
@@ -32,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_board_subject"
         android:layout_marginTop="2dp"
-        android:textSize="14.5dp"
-        android:textColor="@color/textView_textColor_reg_date" />
+        android:textColor="@color/textView_textColor_reg_date"
+        android:textSize="14.5dp" />
 
 </RelativeLayout>

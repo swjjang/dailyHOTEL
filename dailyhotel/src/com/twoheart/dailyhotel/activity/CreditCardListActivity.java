@@ -64,7 +64,7 @@ public class CreditCardListActivity extends BaseActivity
 
 		Intent intent = getIntent();
 
-		if (intent != null && intent.getAction() == Intent.ACTION_PICK)
+		if (intent != null && Intent.ACTION_PICK.equalsIgnoreCase(intent.getAction()) == true)
 		{
 			mIsPickMode = true;
 			mSelectedCreditCard = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CREDITCARD);

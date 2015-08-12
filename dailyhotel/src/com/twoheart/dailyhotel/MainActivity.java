@@ -31,6 +31,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.content.res.Configuration;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -41,8 +42,10 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.style.StyleSpan;
 import android.util.Base64;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -279,10 +282,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		} else if (requestCode == CODE_REQUEST_ACTIVITY_INTRO)
 		{
 			selectMenuDrawer(menuHotelListFragment);
-
-			//			mQueue.add(new DailyHotelStringRequest(Method.GET,
-			//					new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-			//							URL_WEBAPI_USER_ALIVE).toString(), null, this, this));
 		}
 	}
 
@@ -352,15 +351,15 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			{
 				// gcm id가 없을 경우 스킵.
 				if (regId == null || regId.isEmpty())
+				{
 					return;
+				}
 
 				// 이 값을 서버에 등록하기.
 				regPushParams = new HashMap<String, String>();
 				regPushParams.put("user_idx", idx);
 				regPushParams.put("notification_id", regId);
 				regPushParams.put("device_type", GCM_DEVICE_TYPE_ANDROID);
-
-				ExLog.d("params for register push id : " + regPushParams.toString());
 
 				mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_GCM_REGISTER).toString(), regPushParams, mGcmRegisterJsonResponseListener, MainActivity.this));
 			}
@@ -569,9 +568,11 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	{
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-		// 이벤트 제거.
 		TextView eventTextView = (TextView) findViewById(R.id.titleTextView);
-		eventTextView.setText(Html.fromHtml(getString(R.string.label_event_title)));
+
+		SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(getString(R.string.label_event_title));
+		spannableStringBuilder.setSpan(new StyleSpan(Typeface.BOLD), 0, 3, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		eventTextView.setText(spannableStringBuilder);
 
 		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, 0, 0)
 		{
@@ -718,7 +719,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		mMenuImages.add(menuCreditFragment);
 		mMenuImages.add(menuSettingFragment);
 
-		mDrawerMenuListAdapter = new DrawerMenuListAdapter(this, R.layout.list_row_drawer_entry, mMenuImages);
+		mDrawerMenuListAdapter = new DrawerMenuListAdapter(this, mMenuImages);
 
 		drawerList.setAdapter(mDrawerMenuListAdapter);
 		drawerList.setOnItemClickListener(this);
@@ -828,12 +829,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		private int type;
 		private boolean mSelected;
 
-		public DrawerMenu(int type)
-		{
-			super();
-			this.type = type;
-		}
-
 		public DrawerMenu(String title, int type)
 		{
 			super();
@@ -854,29 +849,14 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			return type;
 		}
 
-		public void setType(int type)
-		{
-			this.type = type;
-		}
-
 		public String getTitle()
 		{
 			return title;
 		}
 
-		public void setTitle(String title)
-		{
-			this.title = title;
-		}
-
 		public int getIcon()
 		{
 			return icon;
-		}
-
-		public void setIcon(int icon)
-		{
-			this.icon = icon;
 		}
 
 		public void setSelected(boolean selected)
@@ -895,12 +875,10 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		private List<DrawerMenu> list;
 		private LayoutInflater inflater;
 		private Context context;
-		private int layout;
 
-		public DrawerMenuListAdapter(Context context, int layout, List<DrawerMenu> list)
+		public DrawerMenuListAdapter(Context context, List<DrawerMenu> list)
 		{
 			this.context = context;
-			this.layout = layout;
 			this.inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			this.list = list;
 		}
@@ -1115,12 +1093,12 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 				int msg_code = response.getInt("msg_code");
 
-				if (msg_code == 0)
+				if (msg_code == 0 && response.has("data") == true)
 				{
 					JSONObject jsonObject = response.getJSONObject("data");
 
-					String guestName = jsonObject.getString("guest_name");
-					String roomName = jsonObject.getString("room_name");
+					//					String guestName = jsonObject.getString("guest_name");
+					//					String roomName = jsonObject.getString("room_name");
 					long checkInDate = jsonObject.getLong("checkin_date");
 					long checkOutDate = jsonObject.getLong("checkout_date");
 					String hotelName = jsonObject.getString("hotel_name");
@@ -1128,7 +1106,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 					RatingHotelFragment dialog = RatingHotelFragment.newInstance(hotelName, reservationIndex, checkInDate, checkOutDate);
 
-					if (dialog != null)
+					if (dialog != null && isFinishing() == false)
 					{
 						dialog.show(fragmentManager, TAG_FRAGMENT_RATING_HOTEL);
 					}

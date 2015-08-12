@@ -103,13 +103,12 @@ public class FAQActivity extends BaseActivity
 
 				for (int i = 0; i < length; i++)
 				{
-
 					JSONObject obj = json.getJSONObject(i);
 					String subject = obj.getString("subject");
 					String content = obj.getString("content");
-					String regdate = obj.getString("regdate");
+					//					String regdate = obj.getString("regdate");
 
-					mList.add(new Board(subject, content, regdate));
+					mList.add(new Board(subject, content, null));
 				}
 
 				mListView.setAdapter(new BoardListAdapter(FAQActivity.this, mList));
@@ -122,32 +121,4 @@ public class FAQActivity extends BaseActivity
 			}
 		}
 	};
-
-	//	@Override
-	//	public void onResponse(String url, JSONObject response) {
-	//		if (url.contains(URL_WEBAPI_BOARD_FAQ)) {
-	//			mList = new ArrayList<Board>();
-	//
-	//			try {
-	//				JSONObject jsonObj = response;
-	//				JSONArray json = jsonObj.getJSONArray("articles");
-	//
-	//				for (int i = 0; i < json.length(); i++) {
-	//
-	//					JSONObject obj = json.getJSONObject(i);
-	//					String subject = obj.getString("subject");
-	//					String content = obj.getString("content");
-	//					String regdate = obj.getString("regdate");
-	//
-	//					mList.add(new Board(subject, content, regdate));
-	//				}
-	//				
-	//				mListView.setAdapter(new BoardListAdapter(this, mList));
-	//			} catch (Exception e) {
-	//				onError(e);
-	//			} finally {
-	//				unLockUI();
-	//			}
-	//		}
-	//	}
 }

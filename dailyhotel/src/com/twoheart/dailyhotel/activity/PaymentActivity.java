@@ -26,6 +26,7 @@ import kr.co.kcp.util.PackageState;
 import org.apache.http.util.EncodingUtils;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
@@ -41,6 +42,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
+import android.webkit.CookieManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -106,7 +108,15 @@ public class PaymentActivity extends BaseActivity implements Constants
 		}
 
 		ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-		mWebView = new WebView(this);
+
+		// 앱에서 팝업이 띄어진 상태에서 Activity를 종료하면 발생하는 현상을 막기 위해서
+		Activity activity = this;
+		while (activity.getParent() != null)
+		{
+			activity = activity.getParent();
+		}
+
+		mWebView = new WebView(activity);
 
 		setContentView(mWebView, layoutParams);
 
@@ -121,6 +131,10 @@ public class PaymentActivity extends BaseActivity implements Constants
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
 		{
 			mWebView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+
+			CookieManager cookieManager = CookieManager.getInstance();
+			cookieManager.setAcceptCookie(true);
+			cookieManager.setAcceptThirdPartyCookies(mWebView, true);
 		}
 
 		mWebView.addJavascriptInterface(new KCPPayBridge(), "KCPPayApp");

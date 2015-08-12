@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="19dp"
         android:gravity="left|center_vertical"
         android:text="@string/drawer_menu_pin_title_resrvation"
         android:textColor="@color/textView_textColor_section"
