@@ -190,6 +190,8 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
 
 	//	public static void makeUrlEncoder()
 	//	{
-	//		DailyHotelRequest.getUrlEncoder("http://lb.dailyhotel.kr/goodnight/");
+	//		DailyHotelRequest.getUrlEncoder("https://restful.dailyhotel.kr/goodnight/");
+	//		DailyHotelRequest.getUrlEncoder("https://tcwas.dailyhotel.kr/goodnight/");
+	//		DailyHotelRequest.getUrlEncoder("https://lb.dailyhotel.kr/goodnight/");
 	//	}
 }
