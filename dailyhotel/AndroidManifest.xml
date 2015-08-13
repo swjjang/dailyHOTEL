@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.twoheart.dailyhotel"
-    android:versionCode="65"
-    android:versionName="1.6.5" >
+    android:versionCode="66"
+    android:versionName="1.6.6" >
 
     <uses-sdk
         android:minSdkVersion="9"
@@ -236,23 +236,6 @@
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="@string/kakao_app_key" />
-
-        <!--
-         Optionally, register AnalyticsReceiver and AnalyticsService to support background
-         dispatching on non-Google Play devices
-        -->
-        <receiver
-            android:name="com.google.android.gms.analytics.AnalyticsReceiver"
-            android:enabled="true" >
-            <intent-filter>
-                <action android:name="com.google.android.gms.analytics.ANALYTICS_DISPATCH" />
-            </intent-filter>
-        </receiver>
-
-        <service
-            android:name="com.google.android.gms.analytics.AnalyticsService"
-            android:enabled="true"
-            android:exported="false" />
 
         <!--
          Optionally, register CampaignTrackingReceiver and CampaignTrackingService to enable
