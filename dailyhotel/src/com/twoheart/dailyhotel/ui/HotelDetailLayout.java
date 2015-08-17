@@ -1934,6 +1934,11 @@ public class HotelDetailLayout
 						@Override
 						public void onMapLoaded()
 						{
+							if (mGoogleMap == null)
+							{
+								return;
+							}
+
 							mGoogleMap.snapshot(new SnapshotReadyCallback()
 							{
 								@Override

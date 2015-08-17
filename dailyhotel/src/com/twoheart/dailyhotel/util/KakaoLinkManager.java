@@ -71,7 +71,11 @@ public class KakaoLinkManager implements Constants
 
 			String text = mContext.getString(R.string.kakao_btn_share_hotel, hotelName, simpleDateFormat.format(checkInDate), simpleDateFormat.format(chekcOutDate), nights, nights + 1);
 
-			kkMsgBuilder.addImage(imageUrl, 300, 200);
+			if (Util.isTextEmpty(imageUrl) == false)
+			{
+				kkMsgBuilder.addImage(imageUrl, 300, 200);
+			}
+
 			kkMsgBuilder.addText(text);
 
 			kkLink.sendMessage(kkMsgBuilder.build(), mContext);

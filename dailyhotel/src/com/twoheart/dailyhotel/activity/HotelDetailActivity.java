@@ -61,6 +61,7 @@ public class HotelDetailActivity extends BaseActivity
 	private int mCurrentImage;
 	private SaleRoomInformation mSelectedSaleRoomInformation;
 	private boolean mIsStartByShare;
+	private String mDefaultImageUrl;
 
 	private HotelDetailLayout mHotelDetailLayout;
 
@@ -170,6 +171,7 @@ public class HotelDetailActivity extends BaseActivity
 
 			String hotelName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME);
 			String hotelImageUrl = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL);
+			mDefaultImageUrl = hotelImageUrl;
 
 			if (mCheckInSaleTime == null || hotelIndex == -1 || hotelName == null || nights <= 0)
 			{
@@ -305,8 +307,16 @@ public class HotelDetailActivity extends BaseActivity
 		switch (item.getItemId())
 		{
 			case R.id.action_share:
+				if (mDefaultImageUrl == null)
+				{
+					if (mHotelDetail.getImageUrlList() != null && mHotelDetail.getImageUrlList().size() > 0)
+					{
+						mDefaultImageUrl = mHotelDetail.getImageUrlList().get(0);
+					}
+				}
+
 				KakaoLinkManager.newInstance(this).shareHotel(mHotelDetail.hotelName, mHotelDetail.hotelIndex, //
-				mHotelDetail.getImageUrlList().get(0), //
+				mDefaultImageUrl, //
 				mCheckInSaleTime.getDailyTime(), //
 				mCheckInSaleTime.getOffsetDailyDay(), mHotelDetail.nights);
 
@@ -322,7 +332,6 @@ public class HotelDetailActivity extends BaseActivity
 				params.put(Label.CURRENT_TIME, dateFormat2.format(new Date()));
 
 				AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.HOTEL_DETAIL, Action.CLICK, Label.SHARE, params);
-
 				return true;
 
 			default:

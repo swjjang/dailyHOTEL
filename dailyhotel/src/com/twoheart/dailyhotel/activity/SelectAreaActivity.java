@@ -27,6 +27,7 @@ import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.ui.DailyAnimatedExpandableListView;
 import com.twoheart.dailyhotel.ui.DailyAnimatedExpandableListView.AnimatedExpandableListAdapter;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 public class SelectAreaActivity extends BaseActivity
@@ -59,6 +60,12 @@ public class SelectAreaActivity extends BaseActivity
 
 		Province province = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
 		ArrayList<AreaItem> arrayList = intent.getParcelableArrayListExtra(NAME_INTENT_EXTRA_DATA_AREAITEMLIST);
+
+		if (province == null || arrayList == null)
+		{
+			Util.restartApp(getApplicationContext());
+			return;
+		}
 
 		initLayout(province, arrayList);
 
