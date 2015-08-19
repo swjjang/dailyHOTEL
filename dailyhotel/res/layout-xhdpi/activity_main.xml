@@ -15,68 +15,59 @@
             android:layout_height="match_parent" />
 
         <RelativeLayout
-            android:id="@+id/left_drawer"
-            android:layout_width="240dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:layout_marginTop="56dp" >
+            android:id="@+id/actionbarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
 
-            <RelativeLayout
-                android:id="@+id/bannerView"
+            <include
+                android:id="@+id/toolbar_actionbar"
                 android:layout_width="match_parent"
-                android:layout_height="74dp"
-                android:layout_alignParentBottom="true"
-                android:background="@drawable/banner"
-                android:gravity="center_vertical"
-                android:paddingLeft="17dp" >
+                android:layout_height="56dp"
+                layout="@layout/toolbar_default" />
 
-                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-                    android:id="@+id/titleTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="left|center_vertical"
-                    android:textColor="@color/white"
-                    android:textSize="20dp" />
+            <ImageView
+                android:id="@+id/newEventView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="27dp"
+                android:layout_marginTop="12dp"
+                android:src="@drawable/event_ic_n" />
 
-                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-                    android:id="@+id/subTitleTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/titleTextView"
-                    android:layout_marginTop="5dp"
-                    android:gravity="left|center_vertical"
-                    android:text="@string/label_event_subtitle"
-                    android:textColor="@color/white"
-                    android:textSize="14dp" />
-            </RelativeLayout>
+            <View
+                android:id="@+id/toolbar_actionbar_underline"
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_alignBaseline="@id/toolbar_actionbar"
+                android:layout_alignBottom="@id/toolbar_actionbar"
+                android:background="@color/actionbar_underline" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/left_drawer"
+            android:layout_width="304dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:background="@drawable/bg_ic_event" >
+
+            <ImageView
+                android:id="@+id/topImageView"
+                android:layout_width="300dp"
+                android:layout_height="165dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/menu_image_morning" />
 
             <ListView
                 android:id="@+id/drawListView"
-                android:layout_width="match_parent"
+                android:layout_width="300dp"
                 android:layout_height="match_parent"
-                android:layout_above="@+id/bannerView"
+                android:layout_below="@+id/topImageView"
                 android:layout_gravity="center_vertical"
-                android:background="@android:color/white"
                 android:choiceMode="singleChoice"
-                android:divider="@color/leftdrawer_divider"
-                android:dividerHeight="0.5dp"
-                android:listSelector="@android:color/transparent" />
+                android:divider="@null"
+                android:listSelector="@android:color/transparent"
+                android:paddingTop="20dp" />
         </RelativeLayout>
     </android.support.v4.widget.DrawerLayout>
-
-    <include
-        android:id="@+id/toolbar_actionbar"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        layout="@layout/toolbar_default" />
-
-    <View
-        android:id="@+id/toolbar_actionbar_underline"
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_alignBaseline="@id/toolbar_actionbar"
-        android:layout_alignBottom="@id/toolbar_actionbar"
-        android:background="@color/actionbar_underline" />
 
     <View
         android:id="@+id/anchorAnimation"

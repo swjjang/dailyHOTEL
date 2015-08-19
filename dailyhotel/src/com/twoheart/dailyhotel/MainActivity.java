@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.json.JSONObject;
@@ -31,7 +30,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.content.res.Configuration;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -42,10 +40,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
-import android.text.style.StyleSpan;
 import android.util.Base64;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -67,7 +62,6 @@ import com.androidquery.util.AQUtility;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.twoheart.dailyhotel.activity.EventWebActivity;
 import com.twoheart.dailyhotel.activity.ExitActivity;
 import com.twoheart.dailyhotel.activity.SplashActivity;
 import com.twoheart.dailyhotel.fragment.HotelMainFragment;
@@ -92,7 +86,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	public static final int INDEX_HOTEL_LIST_FRAGMENT = 0;
 	public static final int INDEX_BOOKING_LIST_FRAGMENT = 1;
 	public static final int INDEX_CREDIT_FRAGMENT = 2;
-	public static final int INDEX_SETTING_FRAGMENT = 3;
+	public static final int INDEX_EVENT_FRAGMENT = 3;
+	public static final int INDEX_SETTING_FRAGMENT = 4;
 
 	public static final String KEY_HOTEL_LIST_FRAGMENT = "hotel_list";
 	public static final String KEY_BOOKING_LIST_FRAGMENT = "booking_list";
@@ -105,6 +100,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	private View drawerView;
 	public DrawerLayout drawerLayout;
 	private FrameLayout mContentFrame;
+	private View mNewEventView;
 	public Dialog popUpDialog;
 
 	public ActionBarDrawerToggle drawerToggle;
@@ -120,6 +116,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	public DrawerMenu menuHotelListFragment;
 	public DrawerMenu menuBookingListFragment;
 	public DrawerMenu menuCreditFragment;
+	public DrawerMenu menuEventListFragment;
 	public DrawerMenu menuSettingFragment;
 
 	// Back 버튼을 두 번 눌러 핸들러 멤버 변수
@@ -145,19 +142,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		editor.apply();
 
 		Uri intentData = getIntent().getData();
-
-		if (intentData != null)
-		{
-			ExLog.e("intentData : " + intentData.toString());
-
-			String link = intentData.toString();
-
-			// KAKAOlink로 들어온 경우.
-			if (link.indexOf("kakaolink") >= 0)
-			{
-				writeKakaoLinkPreference(link);
-			}
-		}
+		checkExternalLink(intentData);
 
 		// 이전의 비정상 종료에 의한 만료된 쿠키들이 있을 수 있으므로, SplashActivity에서 자동 로그인을
 		// 처리하기 이전에 미리 이미 저장되어 있는 쿠키들을 정리한다.
@@ -177,10 +162,18 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 		startActivityForResult(new Intent(this, SplashActivity.class), CODE_REQUEST_ACTIVITY_SPLASH);
 
+		initLayout();
+	}
+
+	private void initLayout()
+	{
 		setContentView(R.layout.activity_main);
 
 		Toolbar toolbar = setActionBar(getString(R.string.actionbar_title_hotel_list_frag), false);
 		setNavigationDrawer(toolbar);
+
+		mNewEventView = findViewById(R.id.newEventView);
+		//		hideNewEvent();
 
 		mContentFrame = (FrameLayout) findViewById(R.id.content_frame);
 
@@ -204,20 +197,29 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		editor.apply();
 
 		Uri intentData = intent.getData();
-		if (intentData != null)
+		checkExternalLink(intentData);
+	}
+
+	private void checkExternalLink(Uri uri)
+	{
+		if (uri == null)
 		{
-			ExLog.e("intentData : " + intentData.toString());
-
-			String link = intentData.toString();
-
-			// KAKAOlink로 들어온 경우.
-			if (link.indexOf("kakaolink") >= 0)
-			{
-				writeKakaoLinkPreference(link);
-			}
-
-			selectMenuDrawer(menuHotelListFragment);
+			return;
 		}
+
+		final String KAKAOLINK = "kakaolink";
+		final String DAILYHOTEL = "dailyhotel";
+
+		ExLog.e("intentData : " + uri.toString());
+
+		String link = uri.toString();
+
+		if (link.indexOf(KAKAOLINK) >= 0 || link.indexOf(DAILYHOTEL) >= 0)
+		{
+			writeKakaoLinkPreference(link);
+		}
+
+		selectMenuDrawer(menuHotelListFragment);
 	}
 
 	@Override
@@ -378,26 +380,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	}
 
 	/**
-	 * 드로어 메뉴 클릭시 새로고침을 하는 기능을 위해서 동적으로 프래그먼트를 생성하므로 미리 초기화 하는 해당 메서드는 필요가 없음.
-	 */
-	@Deprecated
-	private void initializeFragments()
-	{
-		if (mFragments != null)
-		{
-			mFragments.clear();
-		} else
-		{
-			mFragments = new LinkedList<Fragment>();
-		}
-
-		mFragments.add(new HotelMainFragment());
-		mFragments.add(new BookingListFragment());
-		mFragments.add(new CreditFragment());
-		mFragments.add(new SettingFragment());
-	}
-
-	/**
 	 * 네비게이션 드로워 메뉴에서 선택할 수 있는 Fragment를 반환하는 메서드이다.
 	 * 
 	 * @param index
@@ -414,6 +396,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 				return new BookingListFragment();
 			case INDEX_CREDIT_FRAGMENT:
 				return new CreditFragment();
+			case INDEX_EVENT_FRAGMENT:
+				return new EventListFragment();
 			case INDEX_SETTING_FRAGMENT:
 				return new SettingFragment();
 		}
@@ -517,6 +501,16 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 				AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.MENU, Action.CLICK, getString(R.string.actionbar_title_credit_frag), (long) position);
 				break;
 
+			case R.drawable.selector_drawermenu_eventlist:
+				indexLastFragment = INDEX_EVENT_FRAGMENT;
+
+				Editor editor = sharedPreference.edit();
+				editor.putBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false);
+				editor.apply();
+
+				AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.MENU, Action.CLICK, getString(R.string.actionbar_title_event_list_frag), (long) position);
+				break;
+
 			case R.drawable.selector_drawermenu_setting:
 				indexLastFragment = INDEX_SETTING_FRAGMENT;
 				AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.MENU, Action.CLICK, getString(R.string.actionbar_title_setting_frag), (long) position);
@@ -527,6 +521,10 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		menuHotelListFragment.setSelected(false);
 		menuBookingListFragment.setSelected(false);
 		menuCreditFragment.setSelected(false);
+		menuEventListFragment.setSelected(false);
+
+		menuEventListFragment.hasEvent = true;
+
 		menuSettingFragment.setSelected(false);
 
 		selectedDrawMenu.setSelected(true);
@@ -567,12 +565,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	public void setNavigationDrawer(Toolbar toolbar)
 	{
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-
-		TextView eventTextView = (TextView) findViewById(R.id.titleTextView);
-
-		SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(getString(R.string.label_event_title));
-		spannableStringBuilder.setSpan(new StyleSpan(Typeface.BOLD), 0, 3, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		eventTextView.setText(spannableStringBuilder);
 
 		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, 0, 0)
 		{
@@ -679,44 +671,18 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		drawerView = findViewById(R.id.left_drawer);
 		drawerList = (ListView) findViewById(R.id.drawListView);
 
-		// 이벤트 제거.
-		View bannerView = findViewById(R.id.bannerView);
-
-		bannerView.setOnClickListener(new View.OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
-			{
-				drawerLayout.closeDrawer(drawerView);
-
-				mHandler.postDelayed(new Runnable()
-				{
-					@Override
-					public void run()
-					{
-						Intent i = new Intent(MainActivity.this, EventWebActivity.class);
-						startActivity(i);
-
-						AnalyticsManager.getInstance(MainActivity.this).recordEvent(Screen.MENU, Action.CLICK, Label.EVENT, 0L);
-					}
-				}, 300);
-			}
-		});
-
 		menuHotelListFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_todays_hotel), R.drawable.selector_drawermenu_todayshotel, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
 		menuBookingListFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_chk_reservation), R.drawable.selector_drawermenu_reservation, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
 		menuCreditFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_credit), R.drawable.selector_drawermenu_saving, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
+		menuEventListFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_event), R.drawable.selector_drawermenu_eventlist, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
 		menuSettingFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_setting), R.drawable.selector_drawermenu_setting, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
 
 		mMenuImages = new ArrayList<DrawerMenu>();
-
-		//		mMenuImages.add(new DrawerMenu(DrawerMenu.DRAWER_MENU_LIST_TYPE_LOGO));
-		mMenuImages.add(new DrawerMenu(getString(R.string.drawer_menu_pin_title_resrvation), DrawerMenu.DRAWER_MENU_LIST_TYPE_SECTION));
 		mMenuImages.add(menuHotelListFragment);
 		mMenuImages.add(menuBookingListFragment);
-
-		mMenuImages.add(new DrawerMenu(getString(R.string.drawer_menu_pin_title_account), DrawerMenu.DRAWER_MENU_LIST_TYPE_SECTION));
+		mMenuImages.add(new DrawerMenu(null, DrawerMenu.DRAWER_MENU_LIST_TYPE_SECTION));
 		mMenuImages.add(menuCreditFragment);
+		mMenuImages.add(menuEventListFragment);
 		mMenuImages.add(menuSettingFragment);
 
 		mDrawerMenuListAdapter = new DrawerMenuListAdapter(this, mMenuImages);
@@ -817,9 +783,28 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		}
 	}
 
+	public void showNewEvent()
+	{
+		if (mNewEventView == null)
+		{
+			return;
+		}
+
+		mNewEventView.setVisibility(View.VISIBLE);
+	}
+
+	public void hideNewEvent()
+	{
+		if (mNewEventView == null)
+		{
+			return;
+		}
+
+		mNewEventView.setVisibility(View.GONE);
+	}
+
 	private class DrawerMenu
 	{
-
 		public static final int DRAWER_MENU_LIST_TYPE_LOGO = 0;
 		public static final int DRAWER_MENU_LIST_TYPE_SECTION = 1;
 		public static final int DRAWER_MENU_LIST_TYPE_ENTRY = 2;
@@ -828,6 +813,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		private int icon;
 		private int type;
 		private boolean mSelected;
+		public boolean hasEvent;
 
 		public DrawerMenu(String title, int type)
 		{
@@ -923,10 +909,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 				case DrawerMenu.DRAWER_MENU_LIST_TYPE_SECTION:
 				{
 					convertView = inflater.inflate(R.layout.list_row_drawer_section, null);
-
-					TextView drawerMenuItemTitle = (TextView) convertView.findViewById(R.id.drawerMenuItemTitle);
-
-					drawerMenuItemTitle.setText(item.getTitle());
 					break;
 				}
 
@@ -936,6 +918,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 					ImageView drawerMenuItemIcon = (ImageView) convertView.findViewById(R.id.drawerMenuItemIcon);
 					TextView drawerMenuItemText = (TextView) convertView.findViewById(R.id.drawerMenuItemTitle);
+					View eventIconView = convertView.findViewById(R.id.newEventIcon);
 
 					drawerMenuItemIcon.setImageResource(item.getIcon());
 					drawerMenuItemText.setText(item.getTitle());
@@ -948,6 +931,14 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 					{
 						drawerMenuItemIcon.setSelected(false);
 						drawerMenuItemText.setSelected(false);
+					}
+
+					if (item.hasEvent)
+					{
+						eventIconView.setVisibility(View.VISIBLE);
+					} else
+					{
+						eventIconView.setVisibility(View.GONE);
 					}
 
 					break;

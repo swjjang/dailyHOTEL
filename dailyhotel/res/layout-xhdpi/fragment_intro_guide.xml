@@ -16,12 +16,13 @@
             android:id="@+id/tv_guide_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
-            android:textSize="28.5dp"
-            android:textColor="@color/dh_theme_color"
+            android:layout_centerHorizontal="true"
             android:layout_marginBottom="64.5dp"
-            android:text="@string/guide_title_2" />
+            android:text="@string/guide_title_2"
+            android:textColor="@color/dh_theme_color"
+            android:textSize="28.5dp"
+            android:textStyle="bold" />
 
     </RelativeLayout>
 

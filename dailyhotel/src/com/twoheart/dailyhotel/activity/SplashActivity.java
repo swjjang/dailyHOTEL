@@ -303,9 +303,41 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 			@Override
 			public void onPostExecute()
 			{
-				showMainActivity();
+				requestEvent();
 			}
 		});
+	}
+
+	private void requestEvent()
+	{
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("timeZone", "Asia/Seoul");
+
+		mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, new DailyHotelJsonResponseListener()
+		{
+			@Override
+			public void onResponse(String url, JSONObject response)
+			{
+				try
+				{
+					long currentDateTime = response.getLong("currentDateTime");
+
+					// 이벤트 있는지 조사하기
+					showMainActivity();
+				} catch (Exception e)
+				{
+					showMainActivity();
+				}
+			}
+		}, new ErrorListener()
+		{
+			@Override
+			public void onErrorResponse(VolleyError error)
+			{
+				showMainActivity();
+			}
+		}));
+
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -395,13 +427,11 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 				int currentVersion = Integer.parseInt(getPackageManager().getPackageInfo(getPackageName(), 0).versionName.replace(".", ""));
 				int skipMaxVersion = Integer.parseInt(sharedPreference.getString(KEY_PREFERENCE_SKIP_MAX_VERSION, "1.0.0").replace(".", ""));
 
-				final int newEventFlag = Integer.parseInt(response.getString("new_event"));
-
 				ExLog.e("MIN / MAX / CUR / SKIP : " + minVersion + " / " + maxVersion + " / " + currentVersion + " / " + skipMaxVersion);
 
 				if (minVersion > currentVersion)
-				{ // 강제 업데이트
-
+				{
+					// 강제 업데이트
 					if (isFinishing() == true)
 					{
 						return;

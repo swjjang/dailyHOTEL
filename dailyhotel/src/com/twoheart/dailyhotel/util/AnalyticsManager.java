@@ -142,6 +142,7 @@ public class AnalyticsManager
 		public static final String BOOLKING_LIST = "BookingList Screen";
 		public static final String BOOKING_DETAIL = "BookingDetail Screen";
 		public static final String CREDIT = "Credit Screen";
+		public static final String EVENT = "Event Screen";
 		public static final String CREDIT_LIST = "CreditList Screen";
 		public static final String SETTING = "Setting Screen";
 		public static final String ABOUT = "About Screen";

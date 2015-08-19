@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android" >
     <item android:state_pressed="true" android:color="@color/dh_theme_color"/>
-<!--     <item android:state_pressed="false" android:color="#5c5c5c"/> -->
     <item android:state_selected="true" android:color="@color/dh_theme_color"/>
-    <item android:state_activated="false" android:color="@color/textView_textColor_main"/>
-    <item android:color="@color/textView_textColor_main"/>
+    <item android:color="@color/menu_text"/>
 </selector>

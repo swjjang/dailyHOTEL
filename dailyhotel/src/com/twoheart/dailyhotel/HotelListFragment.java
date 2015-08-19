@@ -100,9 +100,8 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	private class ActionbarViewHolder
 	{
 		public View mAnchorView;
-		public View mActionbarView;
+		public View mActionbarLayout;
 		public View mTabindicatorView;
-		public View mUnderlineView01;
 		public View mUnderlineView02;
 	}
 
@@ -167,9 +166,8 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		mActionbarViewHolder = new ActionbarViewHolder();
 
 		mActionbarViewHolder.mAnchorView = baseActivity.findViewById(R.id.anchorAnimation);
-		mActionbarViewHolder.mActionbarView = baseActivity.findViewById(R.id.toolbar_actionbar);
+		mActionbarViewHolder.mActionbarLayout = baseActivity.findViewById(R.id.actionbarLayout);
 		mActionbarViewHolder.mTabindicatorView = baseActivity.findViewById(R.id.tabindicator);
-		mActionbarViewHolder.mUnderlineView01 = baseActivity.findViewById(R.id.toolbar_actionbar_underline);
 		mActionbarViewHolder.mUnderlineView02 = baseActivity.findViewById(R.id.tabindicator_underLine);
 
 		return view;
@@ -537,8 +535,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		mAnchorY = 0;
 
 		mActionbarViewHolder.mAnchorView.setTranslationY(0);
-		mActionbarViewHolder.mActionbarView.setTranslationY(0);
-		mActionbarViewHolder.mUnderlineView01.setTranslationY(0);
+		mActionbarViewHolder.mActionbarLayout.setTranslationY(0);
 		mActionbarViewHolder.mTabindicatorView.setTranslationY(0);
 		mActionbarViewHolder.mUnderlineView02.setTranslationY(0);
 
@@ -579,8 +576,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 				mAnchorY = value;
 
 				mActionbarViewHolder.mAnchorView.setTranslationY(value);
-				mActionbarViewHolder.mActionbarView.setTranslationY(value);
-				mActionbarViewHolder.mUnderlineView01.setTranslationY(value);
+				mActionbarViewHolder.mActionbarLayout.setTranslationY(value);
 				mActionbarViewHolder.mTabindicatorView.setTranslationY(value);
 				mActionbarViewHolder.mUnderlineView02.setTranslationY(value);
 			}
@@ -648,8 +644,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 				mAnchorY = value;
 
 				mActionbarViewHolder.mAnchorView.setTranslationY(value);
-				mActionbarViewHolder.mActionbarView.setTranslationY(value);
-				mActionbarViewHolder.mUnderlineView01.setTranslationY(value);
+				mActionbarViewHolder.mActionbarLayout.setTranslationY(value);
 				mActionbarViewHolder.mTabindicatorView.setTranslationY(value);
 				mActionbarViewHolder.mUnderlineView02.setTranslationY(value);
 			}
