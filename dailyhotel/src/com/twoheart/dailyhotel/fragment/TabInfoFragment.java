@@ -21,7 +21,6 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
-import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.BookingHotelDetail;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
@@ -103,9 +102,6 @@ public class TabInfoFragment extends BaseFragment
 		//			else if (subject.equals("확인사항")) tv_subject.setText("Confirmation Items");
 		//		} else tv_subject.setText(subject);
 		tv_subject.setText(subject);
-
-		tv_subject.setTypeface(DailyHotel.getBoldTypeface());
-
 		LinearLayout content_view = (LinearLayout) layout_view.findViewById(R.id.layout_hotel_tab_info_content);
 		LinearLayout content_listview = (LinearLayout) layout_view.findViewById(R.id.layout_hotel_tab_info_content_list);
 

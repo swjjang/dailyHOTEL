@@ -59,7 +59,6 @@ public class IntroGuideFragment extends BaseFragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
-
 		View view = inflater.inflate(R.layout.fragment_intro_guide, container, false);
 
 		llIntroGuide = (LinearLayout) view.findViewById(R.id.ll_intro_guide);
@@ -72,8 +71,6 @@ public class IntroGuideFragment extends BaseFragment
 		tvTitle.setText(mTitle);
 		tvDesc.setText(mDesc);
 		ivImage.setImageResource(mImage);
-
-		tvTitle.setTypeface(DailyHotel.getBoldTypeface());
 
 		return view;
 	}

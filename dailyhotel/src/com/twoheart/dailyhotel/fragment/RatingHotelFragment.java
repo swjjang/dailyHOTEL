@@ -39,7 +39,6 @@ import android.widget.Toast;
 
 import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
-import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
@@ -133,9 +132,6 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
 
 		ratingPeriod.setText(getString(R.string.frag_rating_hotel_text1, periodDate));
 		ratingHotelName.setText(getString(R.string.frag_rating_hotel_text2, mHotelName));
-
-		btnRecommend.setTypeface(DailyHotel.getBoldTypeface());
-		btnCancel.setTypeface(DailyHotel.getBoldTypeface());
 
 		ivBtnClose.setOnClickListener(this);
 		btnRecommend.setOnClickListener(this);

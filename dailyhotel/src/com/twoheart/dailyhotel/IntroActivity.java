@@ -60,7 +60,6 @@ public class IntroActivity extends BaseActivity implements OnClickListener, OnPa
 		llIntroStart = (LinearLayout) findViewById(R.id.ll_intro_start);
 		tvSkip = (TextView) findViewById(R.id.tv_skip);
 		tvStart = (TextView) findViewById(R.id.tv_start);
-		tvStart.setTypeface(DailyHotel.getBoldTypeface());
 
 		initializeGuideContents();
 

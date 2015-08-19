@@ -64,7 +64,6 @@ import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
@@ -72,6 +71,7 @@ import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.widget.DailyToast;
+import com.twoheart.dailyhotel.widget.FontManager;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class LoginActivity extends BaseActivity implements Constants, OnClickListener, ErrorListener
@@ -104,7 +104,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 		btnLogin = (TextView) findViewById(R.id.btn_login);
 		facebookLogin = (LoginButton) findViewById(R.id.authButton);
 
-		GlobalFont.apply(facebookLogin);
+		FontManager.apply(facebookLogin, FontManager.getInstance(getApplicationContext()).getRegularTypeface());
 
 		//		cbxAutoLogin.setSwitchMinWidth(Util.dpToPx(LoginActivity.this, 60));
 		cbxAutoLogin.setChecked(true);

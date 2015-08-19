@@ -29,6 +29,7 @@ import com.twoheart.dailyhotel.ui.DailyAnimatedExpandableListView.AnimatedExpand
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
+import com.twoheart.dailyhotel.widget.FontManager;
 
 public class SelectAreaActivity extends BaseActivity
 {
@@ -407,7 +408,7 @@ public class SelectAreaActivity extends BaseActivity
 
 				textView.setBackgroundResource(R.drawable.selector_background_area);
 			}
-
+			
 			return convertView;
 		}
 
