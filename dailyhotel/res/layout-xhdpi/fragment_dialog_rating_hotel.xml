@@ -100,7 +100,8 @@
                     android:background="@drawable/selector_background_btn_rating_hotel"
                     android:text="@string/frag_rating_hotel_recomm"
                     android:textColor="@drawable/selector_textcolor_btn_rating_hotel"
-                    android:textSize="17dp" />
+                    android:textSize="17dp"
+                    android:textStyle="bold" />
 
                 <com.twoheart.dailyhotel.widget.DailyCustomFontButton
                     android:id="@+id/btn_rating_hotel_cancel"
@@ -110,7 +111,9 @@
                     android:background="@drawable/selector_background_btn_rating_hotel"
                     android:text="@string/frag_rating_hotel_cancel"
                     android:textColor="@drawable/selector_textcolor_btn_rating_hotel"
-                    android:textSize="17dp" />
+                    android:textSize="17dp"
+                    android:textStyle="bold" />
+
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

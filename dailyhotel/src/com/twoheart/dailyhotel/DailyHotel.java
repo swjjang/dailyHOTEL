@@ -16,23 +16,19 @@ package com.twoheart.dailyhotel;
 
 import io.fabric.sdk.android.Fabric;
 import android.app.Application;
-import android.graphics.Typeface;
 
 import com.androidquery.callback.BitmapAjaxCallback;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.VolleyImageLoader;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
+import com.twoheart.dailyhotel.widget.FontManager;
 
 public class DailyHotel extends Application implements Constants
 {
 	public static String VERSION;
-
-	private static Typeface mTypeface;
-	private static Typeface mBoldTypeface;
 
 	@Override
 	public void onCreate()
@@ -46,7 +42,8 @@ public class DailyHotel extends Application implements Constants
 
 		initializeVolley();
 		initializeAnalytics();
-		initializeFont();
+
+		FontManager.getInstance(getApplicationContext());
 	}
 
 	private void initializeAnalytics()
@@ -58,31 +55,6 @@ public class DailyHotel extends Application implements Constants
 	{
 		VolleyHttpClient.init(this);
 		VolleyImageLoader.init();
-	}
-
-	private void initializeFont()
-	{
-		try
-		{
-			mTypeface = Typeface.createFromAsset(getAssets(), "NanumBarunGothic.ttf");
-			mBoldTypeface = Typeface.createFromAsset(getAssets(), "NanumBarunGothicBold.ttf");
-		} catch (Exception e)
-		{
-			ExLog.d(e.toString());
-
-			mTypeface = Typeface.DEFAULT;
-			mBoldTypeface = Typeface.DEFAULT_BOLD;
-		}
-	}
-
-	public static Typeface getTypeface()
-	{
-		return mTypeface;
-	}
-
-	public static Typeface getBoldTypeface()
-	{
-		return mBoldTypeface;
 	}
 
 	@Override

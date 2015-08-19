@@ -111,4 +111,9 @@
 	<!-- Wait Popup -->
 	<color name="popup_underline">#e1e1e1</color>
 	
+	
+	<!-- Menu -->
+	<color name="menu_underline">#d7d9db</color>
+	<color name="menu_text">#4d4d4d</color>
+	
 </resources>	

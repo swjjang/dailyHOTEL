@@ -25,7 +25,6 @@ import android.widget.TextView;
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.androidquery.callback.BitmapAjaxCallback;
-import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.HotelListMapFragment;
 import com.twoheart.dailyhotel.model.Hotel;
@@ -157,9 +156,6 @@ public class HotelListViewPagerAdapter extends PagerAdapter
 		// grade
 		grade.setText(hotel.getCategory().getName(mContext));
 		grade.setBackgroundResource(hotel.getCategory().getColorResId());
-
-		name.setTypeface(DailyHotel.getBoldTypeface());
-		discountTextView.setTypeface(DailyHotel.getBoldTypeface());
 
 		// Used AQuery
 		AQuery aquery = new AQuery(view);

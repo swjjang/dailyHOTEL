@@ -60,6 +60,7 @@ import com.twoheart.dailyhotel.model.SaleRoomInformation;
 import com.twoheart.dailyhotel.util.ABTestPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.widget.FontManager;
 
 /**
  * 호텔 상세 정보 화면
@@ -2159,6 +2160,7 @@ public class HotelDetailLayout
 					View textLayout = layoutInflater.inflate(R.layout.list_row_detail_text, null, false);
 					TextView textView = (TextView) textLayout.findViewById(R.id.textView);
 					textView.setText(contentsList.get(i));
+					textView.setTypeface(FontManager.getInstance(mFragmentActivity).getDemiLightTypeface());
 
 					if (Util.isOverAPI21() == true)
 					{

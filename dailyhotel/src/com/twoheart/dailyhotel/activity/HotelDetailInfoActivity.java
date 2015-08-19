@@ -17,6 +17,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DetailInformation;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
+import com.twoheart.dailyhotel.widget.FontManager;
 
 public class HotelDetailInfoActivity extends BaseActivity
 {
@@ -83,6 +84,7 @@ public class HotelDetailInfoActivity extends BaseActivity
 				View subTextLayout = layoutInflater.inflate(R.layout.list_row_detail_text, null, false);
 				TextView textView = (TextView) subTextLayout.findViewById(R.id.textView);
 				textView.setText(contentsList.get(i));
+				textView.setTypeface(FontManager.getInstance(HotelDetailInfoActivity.this).getDemiLightTypeface());
 
 				if (Util.isOverAPI21() == true)
 				{

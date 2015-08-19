@@ -39,11 +39,11 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.HotelMainFragment;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.GlobalFont;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.widget.DailyToast;
+import com.twoheart.dailyhotel.widget.FontManager;
 
 public class BaseActivity extends ActionBarActivity implements Constants, OnLoadListener, ErrorListener
 {
@@ -117,12 +117,21 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 	@Override
 	public void onBackPressed()
 	{
-		super.onBackPressed();
-
-		// RequestQueue에 등록된 모든 Request들을 취소한다.
-		if (mQueue != null)
+		try
 		{
-			mQueue.cancelAll(cancelAllRequestFilter);
+			super.onBackPressed();
+		} catch (Exception e)
+		{
+			ExLog.d(e.toString());
+
+			finish();
+		} finally
+		{
+			// RequestQueue에 등록된 모든 Request들을 취소한다.
+			if (mQueue != null)
+			{
+				mQueue.cancelAll(cancelAllRequestFilter);
+			}
 		}
 	}
 
@@ -158,7 +167,7 @@ public class BaseActivity extends ActionBarActivity implements Constants, OnLoad
 			mToolbar.setBackgroundColor(getResources().getColor(R.color.white));
 		}
 
-		GlobalFont.apply(mToolbar);
+		FontManager.apply(mToolbar, FontManager.getInstance(getApplicationContext()).getRegularTypeface());
 
 		setActionBarAreaEnabled(false);
 		//		mToolbar.setTitle(title);
