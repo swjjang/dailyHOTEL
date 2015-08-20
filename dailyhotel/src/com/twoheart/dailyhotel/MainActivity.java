@@ -19,6 +19,7 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONObject;
 
@@ -57,12 +58,15 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.android.volley.Request.Method;
+import com.android.volley.Response.ErrorListener;
 import com.androidquery.util.AQUtility;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.twoheart.dailyhotel.activity.ExitActivity;
+import com.twoheart.dailyhotel.activity.PushDialogActivity;
 import com.twoheart.dailyhotel.activity.SplashActivity;
 import com.twoheart.dailyhotel.fragment.HotelMainFragment;
 import com.twoheart.dailyhotel.fragment.RatingHotelFragment;
@@ -129,7 +133,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		//		com.twoheart.dailyhotel.util.network.request.DailyHotelRequest.makeUrlEncoder();
+//		com.twoheart.dailyhotel.util.network.request.DailyHotelRequest.makeUrlEncoder();
 
 		// 사용자가 선택한 언어, but 만약 사용자가 한국인인데 일본어를 선택하면 jp가 됨.
 		// 영어인 경우 - English, 한글인 경우 - 한국어
@@ -173,7 +177,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		setNavigationDrawer(toolbar);
 
 		mNewEventView = findViewById(R.id.newEventView);
-		//		hideNewEvent();
+		hideNewEvent();
 
 		mContentFrame = (FrameLayout) findViewById(R.id.content_frame);
 
@@ -198,6 +202,14 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 		Uri intentData = intent.getData();
 		checkExternalLink(intentData);
+	}
+	
+	@Override
+	protected void onResume()
+	{
+		super.onResume();
+		
+		requestEvent();
 	}
 
 	private void checkExternalLink(Uri uri)
@@ -227,25 +239,14 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 	{
 		super.onActivityResult(requestCode, resultCode, data);
 
-		Editor editor = sharedPreference.edit();
-
 		if (requestCode == CODE_REQUEST_ACTIVITY_SPLASH)
 		{
 			switch (resultCode)
 			{
 			// 스플래시 화면이 정상적으로 종료되었을 경우
-			// ver_dual의 new_event값이 0인 경우
 				case RESULT_OK:
-					editor.putBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false);
-					editor.apply();
 					break;
 
-				// 스플래시가 정상적으로 종료되었는데 새로운 이벤트 알림이 있는 경우
-				// ver_dual의 new_event값이 1인 경우 
-				case CODE_RESULT_ACTIVITY_SPLASH_NEW_EVENT:
-					editor.putBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, true);
-					editor.apply();
-					break;
 				default: // 스플래시가 비정상적으로 종료되었을 경우
 					super.finish(); // 어플리케이션(메인 화면)을 종료해버린다
 					return; // 메서드를 빠져나간다 - 호텔 평가를 수행하지 않음.
@@ -504,9 +505,15 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			case R.drawable.selector_drawermenu_eventlist:
 				indexLastFragment = INDEX_EVENT_FRAGMENT;
 
+				// 이벤트 진입시에 이벤트 new를 제거한다.
 				Editor editor = sharedPreference.edit();
 				editor.putBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false);
+				
+				long currentDateTime = sharedPreference.getLong(KEY_PREFERENCE_LOOKUP_EVENT_TIME, 0);
+				editor.putLong(KEY_PREFERENCE_NEW_EVENT_TIME, currentDateTime);
 				editor.apply();
+
+				hideNewEvent();
 
 				AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.MENU, Action.CLICK, getString(R.string.actionbar_title_event_list_frag), (long) position);
 				break;
@@ -522,9 +529,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		menuBookingListFragment.setSelected(false);
 		menuCreditFragment.setSelected(false);
 		menuEventListFragment.setSelected(false);
-
-		menuEventListFragment.hasEvent = true;
-
 		menuSettingFragment.setSelected(false);
 
 		selectedDrawMenu.setSelected(true);
@@ -685,6 +689,14 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 		mMenuImages.add(menuEventListFragment);
 		mMenuImages.add(menuSettingFragment);
 
+		if (sharedPreference.getBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false))
+		{
+			menuEventListFragment.hasEvent = true;
+		} else
+		{
+			menuEventListFragment.hasEvent = false;
+		}
+
 		mDrawerMenuListAdapter = new DrawerMenuListAdapter(this, mMenuImages);
 
 		drawerList.setAdapter(mDrawerMenuListAdapter);
@@ -785,22 +797,57 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
 	public void showNewEvent()
 	{
-		if (mNewEventView == null)
+		if (mNewEventView != null)
 		{
-			return;
+			mNewEventView.setVisibility(View.VISIBLE);
 		}
 
-		mNewEventView.setVisibility(View.VISIBLE);
+		if (menuEventListFragment != null)
+		{
+			menuEventListFragment.hasEvent = true;
+		}
 	}
 
 	public void hideNewEvent()
 	{
-		if (mNewEventView == null)
+		if (mNewEventView != null)
 		{
-			return;
+			mNewEventView.setVisibility(View.GONE);
 		}
 
-		mNewEventView.setVisibility(View.GONE);
+		if (menuEventListFragment != null)
+		{
+			menuEventListFragment.hasEvent = false;
+		}
+	}
+	
+	private void requestEvent()
+	{
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("timeZone", "Asia/Seoul");
+
+		mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, new DailyHotelJsonResponseListener()
+		{
+			@Override
+			public void onResponse(String url, JSONObject response)
+			{
+				try
+				{
+					long currentDateTime = response.getLong("currentDateTime");
+					long lastLookupDateTime = sharedPreference.getLong(KEY_PREFERENCE_NEW_EVENT_TIME, 0);
+
+					Editor editor = sharedPreference.edit();
+					editor.putLong(KEY_PREFERENCE_LOOKUP_EVENT_TIME, currentDateTime);
+					editor.apply();
+					
+					String params = String.format("?date_time=%d", lastLookupDateTime);
+					mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_DAILY_EVENT_COUNT).append(params).toString(), null, mDailyEventCountJsonResponseListener, null));
+				} catch (Exception e)
+				{
+					ExLog.d(e.toString());
+				}
+			}
+		}, null));
 	}
 
 	private class DrawerMenu
@@ -1105,6 +1152,56 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 			} catch (Exception e)
 			{
 				onError(e);
+			}
+		}
+	};
+	
+	private DailyHotelJsonResponseListener mDailyEventCountJsonResponseListener = new DailyHotelJsonResponseListener()
+	{
+
+		@Override
+		public void onResponse(String url, JSONObject response)
+		{
+			Editor editor = sharedPreference.edit();
+
+			try
+			{
+				if (response == null)
+				{
+					throw new NullPointerException("response == null");
+				}
+
+				int msg_code = response.getInt("msg_code");
+
+				if (msg_code != 0)
+				{
+					throw new NullPointerException("msg_code != 0");
+				}
+
+				JSONObject jsonObject = response.getJSONObject("data");
+
+				int count = jsonObject.getInt("count");
+
+				if (count > 0)
+				{
+					editor.putBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, true);
+					
+					showNewEvent();
+				} else
+				{
+					editor.putBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false);
+					
+					long currentDateTime = sharedPreference.getLong(KEY_PREFERENCE_LOOKUP_EVENT_TIME, 0);
+					editor.putLong(KEY_PREFERENCE_NEW_EVENT_TIME, currentDateTime);
+					
+					hideNewEvent();
+				}
+
+				editor.apply();
+
+			} catch (Exception e)
+			{
+				ExLog.d(e.toString());
 			}
 		}
 	};

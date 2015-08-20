@@ -1,12 +1,19 @@
 package com.twoheart.dailyhotel.model;
 
+import org.json.JSONObject;
+
+import com.twoheart.dailyhotel.util.ExLog;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Event implements Parcelable
 {
 	public int index;
+	public boolean isJoin;
 	public String imageUrl;
+	public String tStoreUrl;
+	public String googleStoreUrl;
 
 	public Event()
 	{
@@ -17,10 +24,20 @@ public class Event implements Parcelable
 		readFromParcel(in);
 	}
 
-	public Event(int index, String imageUrl)
+	public Event(JSONObject jsonObject)
 	{
-		this.index = index;
-		this.imageUrl = imageUrl;
+		try
+		{
+			index = jsonObject.getInt("idx");
+			imageUrl = jsonObject.getString("img_url");
+			isJoin = jsonObject.getInt("is_event_join") == 0 ? false : true;
+			tStoreUrl = jsonObject.getString("t_store_url");
+			googleStoreUrl = jsonObject.getString("google_store_url");
+
+		} catch (Exception e)
+		{
+			ExLog.e(e.toString());
+		}
 	}
 
 	@Override
@@ -28,12 +45,18 @@ public class Event implements Parcelable
 	{
 		dest.writeInt(index);
 		dest.writeString(imageUrl);
+		dest.writeInt(isJoin ? 1 : 0);
+		dest.writeString(tStoreUrl);
+		dest.writeString(googleStoreUrl);
 	}
 
 	private void readFromParcel(Parcel in)
 	{
 		index = in.readInt();
 		imageUrl = in.readString();
+		isJoin = in.readInt() == 0 ? false : true;
+		tStoreUrl = in.readString();
+		googleStoreUrl = in.readString();
 	}
 
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()

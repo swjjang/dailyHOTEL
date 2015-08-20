@@ -50,20 +50,19 @@ public class EventListLayout implements OnItemClickListener
 
 	public void setData(ArrayList<Event> list)
 	{
-		if (list == null)
-		{
-			return;
-		}
-
 		if (mEventListAdapter == null)
 		{
 			mEventListAdapter = new EventListAdapter(mContext, 0, new ArrayList<Event>());
 		}
 
 		mEventListAdapter.clear();
-		mEventListAdapter.addAll(list);
-		mListView.setAdapter(mEventListAdapter);
-		mEventListAdapter.notifyDataSetChanged();
+
+		if (list != null)
+		{
+			mEventListAdapter.addAll(list);
+			mListView.setAdapter(mEventListAdapter);
+			mEventListAdapter.notifyDataSetChanged();
+		}
 	}
 
 	public void setOnUserActionListener(EventListFragment.OnUserActionListener listener)

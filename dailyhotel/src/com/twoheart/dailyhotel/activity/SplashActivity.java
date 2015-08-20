@@ -276,9 +276,8 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 
 	private void showMainActivity()
 	{
-		// sleep 2 second
 		setResult(RESULT_OK);
-		finish();//MainActivity로 finish 
+		finish();
 	}
 
 	@Override
@@ -303,41 +302,9 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 			@Override
 			public void onPostExecute()
 			{
-				requestEvent();
-			}
-		});
-	}
-
-	private void requestEvent()
-	{
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("timeZone", "Asia/Seoul");
-
-		mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, new DailyHotelJsonResponseListener()
-		{
-			@Override
-			public void onResponse(String url, JSONObject response)
-			{
-				try
-				{
-					long currentDateTime = response.getLong("currentDateTime");
-
-					// 이벤트 있는지 조사하기
-					showMainActivity();
-				} catch (Exception e)
-				{
-					showMainActivity();
-				}
-			}
-		}, new ErrorListener()
-		{
-			@Override
-			public void onErrorResponse(VolleyError error)
-			{
 				showMainActivity();
 			}
-		}));
-
+		});
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -430,8 +397,8 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 				ExLog.e("MIN / MAX / CUR / SKIP : " + minVersion + " / " + maxVersion + " / " + currentVersion + " / " + skipMaxVersion);
 
 				if (minVersion > currentVersion)
-				{
-					// 강제 업데이트
+				{ // 강제 업데이트
+
 					if (isFinishing() == true)
 					{
 						return;

@@ -50,13 +50,13 @@ public interface Constants
 
 	// 웹서버 호스트  
 	//"http://restful.dailyhotel.kr/goodnight/"; //  서비스 서버 
-	public static final String URL_DAILYHOTEL_SERVER = UNENCRYPTED_URL ? "https://restful.dailyhotel.kr/goodnight/" : "NjgkMTIyJDQxJDQkNjAk$MDQxKMEUxQkZBNzMwNUMzRTg4NDA2RjVEMzgzNTg2OOEE2OEE2RDc5M0E0NjLRENDc2NUREDOUMzOTQ3RjczNzE2MEE1QTRDMkU3OTFDOUU5Mjc1NUNFQjhDRTBGMDzYwMUQ3$";
-	public static final String URL_DAILYHOTEL_LB_SERVER = UNENCRYPTED_URL ? "http://lb.dailyhotel.kr/goodnight/" : "MTEyJDEwMyQ0NCQzNSQ5MCQ=$RkE1MTczODQ3QzdBQUEwMUQ0MDExMEFGNTQC5NjRBMDQ3ARURFRDBGMDUwMzEwOTU5M0VDNEFERjJCMDc5MzQwNjdEWOUZENzc5MUM0RDADxNDlEODk0RNzBERkVBOTY3NDg1$";
+	//	public static final String URL_DAILYHOTEL_SERVER = UNENCRYPTED_URL ? "https://restful.dailyhotel.kr/goodnight/" : "NjgkMTIyJDQxJDQkNjAk$MDQxKMEUxQkZBNzMwNUMzRTg4NDA2RjVEMzgzNTg2OOEE2OEE2RDc5M0E0NjLRENDc2NUREDOUMzOTQ3RjczNzE2MEE1QTRDMkU3OTFDOUU5Mjc1NUNFQjhDRTBGMDzYwMUQ3$";
+	//	public static final String URL_DAILYHOTEL_LB_SERVER = UNENCRYPTED_URL ? "http://lb.dailyhotel.kr/goodnight/" : "MTEyJDEwMyQ0NCQzNSQ5MCQ=$RkE1MTczODQ3QzdBQUEwMUQ0MDExMEFGNTQC5NjRBMDQ3ARURFRDBGMDUwMzEwOTU5M0VDNEFERjJCMDc5MzQwNjdEWOUZENzc5MUM0RDADxNDlEODk0RNzBERkVBOTY3NDg1$";
 	//	public static final String URL_DAILYHOTEL_LB_SERVER = UNENCRYPTED_URL ? "https://lb.dailyhotel.kr/goodnight/" : "NTIkMTIwJDU1JDExNyQxMTck$REZBN0I5QkFEMDIwQkQ4MzgwMzcwOERBMUQ3ODE0MzgzMzk0QkFGFOEPQ4RUNDQzM5NjE2NDhDNjJBQTc0REU1NzBBQzVBMTBDQzIwOEY0NzE3RTU1QkFNTGNjgGyQUJGM0I5$";
 
 	//"http://tcwas.dailyhotel.co.kr/goodnight/";
-	//	public static final String URL_DAILYHOTEL_SERVER = UNENCRYPTED_URL ? "https://tcwas.dailyhotel.kr/goodnight/" : "MTI2JDY4JDEyOCQ4JDU4JA==$QUU4ODE5LOThDNkQ4MjVGNDNDODEzMjcyNTE1NEJCODM3NkQxNjM1QkY1NYzIyNjk0RTE1BQ0Y4RTQ3RDREOTg0MjkwOUI0RTc0MEY1Nzg4MzU2QzUyMUUxQURGMDA1RUWNM4$";
-	//	public static final String URL_DAILYHOTEL_LB_SERVER = UNENCRYPTED_URL ? "https://tcwas.dailyhotel.kr/goodnight/" : "MTI2JDY4JDEyOCQ4JDU4JA==$QUU4ODE5LOThDNkQ4MjVGNDNDODEzMjcyNTE1NEJCODM3NkQxNjM1QkY1NYzIyNjk0RTE1BQ0Y4RTQ3RDREOTg0MjkwOUI0RTc0MEY1Nzg4MzU2QzUyMUUxQURGMDA1RUWNM4$";
+	public static final String URL_DAILYHOTEL_SERVER = UNENCRYPTED_URL ? "https://tcwas.dailyhotel.kr/goodnight/" : "MTI2JDY4JDEyOCQ4JDU4JA==$QUU4ODE5LOThDNkQ4MjVGNDNDODEzMjcyNTE1NEJCODM3NkQxNjM1QkY1NYzIyNjk0RTE1BQ0Y4RTQ3RDREOTg0MjkwOUI0RTc0MEY1Nzg4MzU2QzUyMUUxQURGMDA1RUWNM4$";
+	public static final String URL_DAILYHOTEL_LB_SERVER = UNENCRYPTED_URL ? "https://tcwas.dailyhotel.kr/goodnight/" : "MTI2JDY4JDEyOCQ4JDU4JA==$QUU4ODE5LOThDNkQ4MjVGNDNDODEzMjcyNTE1NEJCODM3NkQxNjM1QkY1NYzIyNjk0RTE1BQ0Y4RTQ3RDREOTg0MjkwOUI0RTc0MEY1Nzg4MzU2QzUyMUUxQURGMDA1RUWNM4$";
 
 	// 회사 대표번호
 	public static final String PHONE_NUMBER_DAILYHOTEL = "1800-9120";
@@ -247,6 +247,10 @@ public interface Constants
 	// api/abtest/testcase
 	public static final String URL_WEBAPI_ABTEST_TESTCASE = UNENCRYPTED_URL ? "api/abtest/testcase" : "NTYkMzgkOSQ3NyQ4MSQ=$QTc1QzU3QP0VBMkUyQ0RDMjA4RUZFQUEwRjBCOEOY1MkYwNzg4OEI4MEZDBMzAwRjExRkM4N0VBRUFRGMHDYxMkM3QQ==$";
 
+	// Event
+	public static final String URL_WEBAPI_DAILY_EVENT_LIST = UNENCRYPTED_URL ? "api/daily/event/list" : "NDYkMTEkNzkkNzAkNjck$NkUyMEQyRjZTDMjMzNUZFRDJERkVBQUYzRTFGQTgxMzY2MUHY1NDA5MTUyRTAxRjk0MJEZCPMzUzMUZDMD0IzMDREQw==$";
+	public static final String URL_WEBAPI_DAILY_EVENT_COUNT = UNENCRYPTED_URL ? "api/daily/event/count" : "NDQkNDIkNjMkODYkMzYk$Mjg4QzY4OEFERDc1RjAzMzE5MDQwNDVGNjVDQNzcyNETI3EMkJDNEIxRTZDMEM1RGDFCNTIxNDczRTc4OTlDNEFIFOA==$";
+
 	// api/abtest/kakao/consult/feedback
 	public static final String URL_WEBAPI_ABTEST_KAKAO_CONSULT_FEEDBACK = UNENCRYPTED_URL ? "api/abtest/kakao/consult/feedback" : "NTEkMjgkMTEwJDQ3JDQ0JA==$QTUxRjgwNzIyNDY1MjQ2ODJGMTdDIMUU4QTRCOTc3QTEP3MDTc5OTMG4RTc1M0NGRUIzNkNBOUJBQUJCOTg4OTU5MjBCNzg4MEZFODk5M0VFRTgxZODMyMDU3NjlGQUYxMzkw$";
 
@@ -326,9 +330,13 @@ public interface Constants
 	public static final String VALUE_PREFERENCE_HOTEL_CHECKOUT_DEFAULT = "14-04-30-20";
 	public static final String KEY_PREFERENCE_USER_IDX = "USER_IDX"; // 예약 성공했을때 예약 사용함, 이름과 용도가 맞지 않음 -> 기존 코드
 	public static final String KEY_PREFERENCE_HOTEL_ROOM_IDX = "HOTEL_RESERVATION_IDX";
-
+	
 	public static final String KEY_PREFERENCE_ACCOUNT_READY_FLAG = "ACCOUNT_READY_FLAG"; //
 	public static final String KEY_PREFERENCE_BY_SHARE = "BY_SHARE";
+	
+	// Event
+	public static final String KEY_PREFERENCE_LOOKUP_EVENT_TIME = "LOOKUP_EVENT_TIME";
+	public static final String KEY_PREFERENCE_NEW_EVENT_TIME = "NEW_EVENT_TIME";
 
 	// Android 컴포넌트 간에 데이터를 주고받을 때 사용되는 인텐트 이름(키)을 정의한 상수이다.
 	public static final String NAME_INTENT_EXTRA_DATA_HOTEL = "hotel";
@@ -368,7 +376,7 @@ public interface Constants
 	public static final String NAME_INTENT_EXTRA_DATA_RESERVATIONINDEX = "reservationIndex";
 	public static final String NAME_INTENT_EXTRA_DATA_CHECKINDATE = "checkInDate";
 	public static final String NAME_INTENT_EXTRA_DATA_CHECKOUTDATE = "checkOutDate";
-	public static final String NAME_INTENT_EXTRA_DATA_URL = "url";
+	public static final String NAME_INTENT_EXTRA_DATA_EVENT = "event";
 
 	// Push Type
 	public static final int PUSH_TYPE_NOTICE = 0;

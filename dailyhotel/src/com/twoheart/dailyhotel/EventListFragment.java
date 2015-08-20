@@ -17,17 +17,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.activity.EventWebActivity;
@@ -44,6 +47,7 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListe
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class EventListFragment extends BaseFragment implements Constants
 {
@@ -146,13 +150,6 @@ public class EventListFragment extends BaseFragment implements Constants
 		} else
 		{
 		}
-
-		ArrayList<Event> arrayList = new ArrayList<Event>();
-		arrayList.add(new Event(1, "http://s3.dailyhotel.kr/resources/images/dir_ramadajr/00_1.jpg"));
-		arrayList.add(new Event(2, "http://s3.dailyhotel.kr/resources/images/dir_ramadajr/00_1.jpg"));
-		arrayList.add(new Event(3, "http://s3.dailyhotel.kr/resources/images/dir_ramadajr/00_1.jpg"));
-
-		mEventListLayout.setData(arrayList);
 	}
 
 	private void showEvent(Event event)
@@ -165,7 +162,7 @@ public class EventListFragment extends BaseFragment implements Constants
 		}
 
 		Intent intent = new Intent(baseActivity, EventWebActivity.class);
-		intent.putExtra(NAME_INTENT_EXTRA_DATA_URL, event.imageUrl);
+		intent.putExtra(NAME_INTENT_EXTRA_DATA_EVENT, event);
 		startActivity(intent);
 	}
 
@@ -227,10 +224,83 @@ public class EventListFragment extends BaseFragment implements Constants
 				}
 
 				// 이벤트 요청 화면으로 이동
+				String params = String.format("?user_idx=%d", response.getInt("idx"));
+				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_DAILY_EVENT_LIST).append(params).toString(), null, mDailyEventListJsonResponseListener, baseActivity));
 
 			} catch (Exception e)
 			{
 				onError(e);
+				unLockUI();
+			}
+		}
+	};
+
+	private DailyHotelJsonResponseListener mDailyEventListJsonResponseListener = new DailyHotelJsonResponseListener()
+	{
+
+		@Override
+		public void onResponse(String url, JSONObject response)
+		{
+			unLockUI();
+
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null)
+			{
+				return;
+			}
+
+			try
+			{
+				if (null == response)
+				{
+					throw new NullPointerException("response is null.");
+				}
+
+				int msg_code = response.getInt("msg_code");
+
+				if (msg_code != 0)
+				{
+					if (response.has("msg") == true)
+					{
+						String msg = response.getString("msg");
+						DailyToast.showToast(baseActivity, msg, Toast.LENGTH_SHORT);
+					}
+
+					// 이벤트가 없는 화면.
+				} else
+				{
+					JSONArray eventJSONArray = response.getJSONArray("data");
+
+					if (eventJSONArray == null)
+					{
+						// 이벤트가 없는 화면.
+					} else
+					{
+						int length = eventJSONArray.length();
+
+						if (length == 0)
+						{
+							// 이벤트가 없는 화면.
+
+							mEventListLayout.setData(null);
+						} else
+						{
+							ArrayList<Event> eventList = new ArrayList<Event>(length);
+
+							for (int i = 0; i < length; i++)
+							{
+								eventList.add(new Event(eventJSONArray.getJSONObject(i)));
+							}
+
+							mEventListLayout.setData(eventList);
+						}
+					}
+				}
+			} catch (Exception e)
+			{
+				onError(e);
+				unLockUI();
 			}
 		}
 	};
@@ -330,6 +400,8 @@ public class EventListFragment extends BaseFragment implements Constants
 					loadLoginProcess(false);
 
 					// 이벤트 리스트 얻어오기
+					// 이벤트 요청 화면으로 이동
+					mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_DAILY_EVENT_LIST).toString(), null, mDailyEventListJsonResponseListener, baseActivity));
 				}
 			} else
 			{
