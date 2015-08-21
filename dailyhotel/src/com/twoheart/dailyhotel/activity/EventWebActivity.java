@@ -62,6 +62,10 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
 		// 추가
 		mWebView.addJavascriptInterface(new JavaScriptExtention(), "android");
+		mWebView.clearCache(true);
+		mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+
+		setWebView(URL_WEBAPI_EVENT);
 	}
 
 	@Override
@@ -69,16 +73,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
 	{
 		AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(Screen.EVENT_WEB);
 		super.onStart();
-	}
-
-	@Override
-	protected void onResume()
-	{
-		super.onResume();
-
-		mWebView.clearCache(true);
-		mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-		setWebView(URL_WEBAPI_EVENT);
 	}
 
 	/**
