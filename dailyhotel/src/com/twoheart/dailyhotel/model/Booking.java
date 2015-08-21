@@ -3,10 +3,10 @@ package com.twoheart.dailyhotel.model;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.twoheart.dailyhotel.util.ExLog;
+
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import com.twoheart.dailyhotel.util.ExLog;
 
 public class Booking implements Parcelable
 {

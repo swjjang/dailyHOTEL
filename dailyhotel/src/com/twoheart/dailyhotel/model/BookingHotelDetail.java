@@ -13,11 +13,11 @@ import java.util.TimeZone;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.twoheart.dailyhotel.model.Hotel.HotelGrade;
 import com.twoheart.dailyhotel.util.ExLog;
+
+import android.os.Parcel;
+import android.os.Parcelable;
 
 public class BookingHotelDetail implements Parcelable
 {

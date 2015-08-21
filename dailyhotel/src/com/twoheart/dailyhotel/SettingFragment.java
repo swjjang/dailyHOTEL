@@ -15,20 +15,6 @@ package com.twoheart.dailyhotel;
 
 import org.json.JSONObject;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.net.Uri;
-import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.twoheart.dailyhotel.activity.AboutActivity;
@@ -52,7 +38,22 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseLis
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
-public class SettingFragment extends BaseFragment implements Constants, OnClickListener
+import android.app.Activity;
+import android.content.Intent;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.Uri;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class SettingFragment
+		extends BaseFragment implements Constants, OnClickListener
 {
 
 	private MainActivity mHostActivity;

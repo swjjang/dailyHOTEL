@@ -14,6 +14,10 @@ package com.twoheart.dailyhotel.util.ui;
 
 import java.net.URISyntaxException;
 
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.widget.DailyToast;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -30,10 +34,6 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
-
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class WebViewActivity extends BaseActivity implements OnLongClickListener
 {
@@ -117,6 +117,8 @@ public class WebViewActivity extends BaseActivity implements OnLongClickListener
 						ExLog.e(e1.toString());
 					}
 				}
+			} else if (url.contains("call://"))
+			{
 
 			} else
 			{

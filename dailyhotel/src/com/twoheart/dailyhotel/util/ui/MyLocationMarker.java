@@ -1,14 +1,14 @@
 package com.twoheart.dailyhotel.util.ui;
 
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.twoheart.dailyhotel.util.Util;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.twoheart.dailyhotel.util.Util;
 
 public class MyLocationMarker
 {

@@ -17,6 +17,19 @@ import java.util.TimeZone;
 
 import org.json.JSONObject;
 
+import com.android.volley.Request.Method;
+import com.android.volley.RequestQueue;
+import com.twoheart.dailyhotel.MainActivity;
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.SimpleAlertDialog;
+import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
+import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.util.ui.OnLoadListener;
+import com.twoheart.dailyhotel.widget.DailyToast;
+
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -37,20 +50,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request.Method;
-import com.android.volley.RequestQueue;
-import com.twoheart.dailyhotel.MainActivity;
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.SimpleAlertDialog;
-import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
-import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.ui.OnLoadListener;
-import com.twoheart.dailyhotel.widget.DailyToast;
-
-public class RatingHotelFragment extends DialogFragment implements Constants, OnClickListener, OnLoadListener
+public class RatingHotelFragment extends
+		DialogFragment implements Constants, OnClickListener, OnLoadListener
 {
 	private static final String NOT_RATE_THIS_HOTEL = "0";
 	private static final String RECOMMEND_THIS_HOTEL = "1";

@@ -3,6 +3,15 @@ package com.twoheart.dailyhotel.activity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.androidquery.AQuery;
+import com.androidquery.callback.AjaxStatus;
+import com.androidquery.callback.BitmapAjaxCallback;
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.VolleyImageLoader;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -14,15 +23,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-
-import com.androidquery.AQuery;
-import com.androidquery.callback.AjaxStatus;
-import com.androidquery.callback.BitmapAjaxCallback;
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.VolleyImageLoader;
-import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 public class ImageDetailListActivity extends BaseActivity implements Constants
 {

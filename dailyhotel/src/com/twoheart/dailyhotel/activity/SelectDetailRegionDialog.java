@@ -1,14 +1,15 @@
 package com.twoheart.dailyhotel.activity;
 
+import com.twoheart.dailyhotel.R;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.twoheart.dailyhotel.R;
-
-public class SelectDetailRegionDialog extends Dialog implements com.twoheart.dailyhotel.util.Constants, View.OnClickListener
+public class SelectDetailRegionDialog extends
+		Dialog implements com.twoheart.dailyhotel.util.Constants, View.OnClickListener
 {
 	private OnSelectedDetailRegionListener mOnSelectedDetailRegionListener;
 

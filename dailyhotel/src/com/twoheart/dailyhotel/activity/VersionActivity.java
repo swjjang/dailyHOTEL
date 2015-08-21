@@ -1,5 +1,12 @@
 package com.twoheart.dailyhotel.activity;
 
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.AnalyticsManager;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
+import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
+import com.twoheart.dailyhotel.widget.DailyToast;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -7,13 +14,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.AnalyticsManager;
-import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
-import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.ui.BaseActivity;
-import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class VersionActivity extends BaseActivity implements OnClickListener
 {

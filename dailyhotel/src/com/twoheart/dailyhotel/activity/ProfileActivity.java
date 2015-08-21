@@ -14,6 +14,24 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
+import com.android.volley.Request.Method;
+import com.androidquery.AQuery;
+import com.facebook.Session;
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.AnalyticsManager;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
+import com.twoheart.dailyhotel.util.SimpleAlertDialog;
+import com.twoheart.dailyhotel.util.StringFilter;
+import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
+import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
+import com.twoheart.dailyhotel.widget.DailyToast;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -33,24 +51,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
-
-import com.android.volley.Request.Method;
-import com.androidquery.AQuery;
-import com.facebook.Session;
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.AnalyticsManager;
-import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
-import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
-import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
-import com.twoheart.dailyhotel.util.SimpleAlertDialog;
-import com.twoheart.dailyhotel.util.StringFilter;
-import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
-import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
-import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
-import com.twoheart.dailyhotel.util.ui.BaseActivity;
-import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class ProfileActivity extends BaseActivity implements OnClickListener
 {

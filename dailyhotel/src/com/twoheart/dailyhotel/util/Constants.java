@@ -250,6 +250,7 @@ public interface Constants
 	// Event
 	public static final String URL_WEBAPI_DAILY_EVENT_LIST = UNENCRYPTED_URL ? "api/daily/event/list" : "NDYkMTEkNzkkNzAkNjck$NkUyMEQyRjZTDMjMzNUZFRDJERkVBQUYzRTFGQTgxMzY2MUHY1NDA5MTUyRTAxRjk0MJEZCPMzUzMUZDMD0IzMDREQw==$";
 	public static final String URL_WEBAPI_DAILY_EVENT_COUNT = UNENCRYPTED_URL ? "api/daily/event/count" : "NDQkNDIkNjMkODYkMzYk$Mjg4QzY4OEFERDc1RjAzMzE5MDQwNDVGNjVDQNzcyNETI3EMkJDNEIxRTZDMEM1RGDFCNTIxNDczRTc4OTlDNEFIFOA==$";
+	public static final String URL_WEBAPI_DAILY_EVENT_PAGE = UNENCRYPTED_URL ? "api/daily/event/page" : "MyQzNCQ3NyQyOSQ5MCQ=$MURDFQ0UwQkFGRDJCOTBFMDhDRTg0DMjhGOVTdBQzhERTVBQjU2Q0EyMkQ0M0NBODBGNEU1MTQ4RkUM2M0QxQzFBQwT==$";
 
 	// api/abtest/kakao/consult/feedback
 	public static final String URL_WEBAPI_ABTEST_KAKAO_CONSULT_FEEDBACK = UNENCRYPTED_URL ? "api/abtest/kakao/consult/feedback" : "NTEkMjgkMTEwJDQ3JDQ0JA==$QTUxRjgwNzIyNDY1MjQ2ODJGMTdDIMUU4QTRCOTc3QTEP3MDTc5OTMG4RTc1M0NGRUIzNkNBOUJBQUJCOTg4OTU5MjBCNzg4MEZFODk5M0VFRTgxZODMyMDU3NjlGQUYxMzkw$";
@@ -330,10 +331,10 @@ public interface Constants
 	public static final String VALUE_PREFERENCE_HOTEL_CHECKOUT_DEFAULT = "14-04-30-20";
 	public static final String KEY_PREFERENCE_USER_IDX = "USER_IDX"; // 예약 성공했을때 예약 사용함, 이름과 용도가 맞지 않음 -> 기존 코드
 	public static final String KEY_PREFERENCE_HOTEL_ROOM_IDX = "HOTEL_RESERVATION_IDX";
-	
+
 	public static final String KEY_PREFERENCE_ACCOUNT_READY_FLAG = "ACCOUNT_READY_FLAG"; //
 	public static final String KEY_PREFERENCE_BY_SHARE = "BY_SHARE";
-	
+
 	// Event
 	public static final String KEY_PREFERENCE_LOOKUP_EVENT_TIME = "LOOKUP_EVENT_TIME";
 	public static final String KEY_PREFERENCE_NEW_EVENT_TIME = "NEW_EVENT_TIME";
@@ -377,6 +378,7 @@ public interface Constants
 	public static final String NAME_INTENT_EXTRA_DATA_CHECKINDATE = "checkInDate";
 	public static final String NAME_INTENT_EXTRA_DATA_CHECKOUTDATE = "checkOutDate";
 	public static final String NAME_INTENT_EXTRA_DATA_EVENT = "event";
+	public static final String NAME_INTENT_EXTRA_DATA_USERINDEX = "userIndex";
 
 	// Push Type
 	public static final int PUSH_TYPE_NOTICE = 0;

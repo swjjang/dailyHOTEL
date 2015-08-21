@@ -2,6 +2,9 @@ package com.twoheart.dailyhotel.adapter;
 
 import java.util.ArrayList;
 
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Board;
+
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -9,9 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
-
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Board;
 
 public class BoardListAdapter extends BaseExpandableListAdapter
 {

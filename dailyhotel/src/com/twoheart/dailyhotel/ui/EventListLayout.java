@@ -3,6 +3,15 @@ package com.twoheart.dailyhotel.ui;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.androidquery.AQuery;
+import com.androidquery.callback.AjaxStatus;
+import com.androidquery.callback.BitmapAjaxCallback;
+import com.twoheart.dailyhotel.EventListFragment;
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Event;
+import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.VolleyImageLoader;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -14,15 +23,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-
-import com.androidquery.AQuery;
-import com.androidquery.callback.AjaxStatus;
-import com.androidquery.callback.BitmapAjaxCallback;
-import com.twoheart.dailyhotel.EventListFragment;
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Event;
-import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.VolleyImageLoader;
 
 public class EventListLayout implements OnItemClickListener
 {

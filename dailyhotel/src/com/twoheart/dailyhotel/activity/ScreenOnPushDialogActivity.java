@@ -1,5 +1,8 @@
 package com.twoheart.dailyhotel.activity;
 
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.Constants;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
@@ -8,9 +11,6 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.Constants;
-
 /**
  * 
  * 푸시가 왔는데 현재 단말이 켜진 상태일 경우 인텐트하는 다이얼로그형 액티비티
@@ -18,7 +18,8 @@ import com.twoheart.dailyhotel.util.Constants;
  * @author jangjunho
  *
  */
-public class ScreenOnPushDialogActivity extends Activity implements OnClickListener, Constants
+public class ScreenOnPushDialogActivity
+		extends Activity implements OnClickListener, Constants
 {
 
 	private TextView tvMsg;

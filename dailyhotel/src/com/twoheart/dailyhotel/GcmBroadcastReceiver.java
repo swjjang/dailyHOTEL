@@ -1,12 +1,12 @@
 package com.twoheart.dailyhotel;
 
+import com.twoheart.dailyhotel.util.Constants;
+
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.WakefulBroadcastReceiver;
-
-import com.twoheart.dailyhotel.util.Constants;
 
 /**
  * GCM 메시지가 올 경우 이를 받아 실제로 처리하는 GcmItentService 로 전달함.
@@ -14,7 +14,8 @@ import com.twoheart.dailyhotel.util.Constants;
  * @author jangjunho
  *
  */
-public class GcmBroadcastReceiver extends WakefulBroadcastReceiver implements Constants
+public class GcmBroadcastReceiver
+		extends WakefulBroadcastReceiver implements Constants
 {
 	@Override
 	public void onReceive(Context context, Intent intent)

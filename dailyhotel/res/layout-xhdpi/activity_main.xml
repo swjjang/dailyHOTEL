@@ -15,59 +15,46 @@
             android:layout_height="match_parent" />
 
         <RelativeLayout
-            android:id="@+id/actionbarLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-            <include
-                android:id="@+id/toolbar_actionbar"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                layout="@layout/toolbar_default" />
-
-            <ImageView
-                android:id="@+id/newEventView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="27dp"
-                android:layout_marginTop="12dp"
-                android:src="@drawable/event_ic_n" />
-
-            <View
-                android:id="@+id/toolbar_actionbar_underline"
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:layout_alignBaseline="@id/toolbar_actionbar"
-                android:layout_alignBottom="@id/toolbar_actionbar"
-                android:background="@color/actionbar_underline" />
-        </RelativeLayout>
-
-        <RelativeLayout
             android:id="@+id/left_drawer"
-            android:layout_width="304dp"
+            android:layout_width="240dp"
             android:layout_height="match_parent"
-            android:layout_gravity="left"
-            android:background="@drawable/bg_ic_event" >
-
-            <ImageView
-                android:id="@+id/topImageView"
-                android:layout_width="300dp"
-                android:layout_height="165dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/menu_image_morning" />
+            android:layout_gravity="start"
+            android:layout_marginTop="56dp" >
 
             <ListView
                 android:id="@+id/drawListView"
-                android:layout_width="300dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/topImageView"
                 android:layout_gravity="center_vertical"
+                android:background="@android:color/white"
                 android:choiceMode="singleChoice"
-                android:divider="@null"
-                android:listSelector="@android:color/transparent"
-                android:paddingTop="20dp" />
+                android:divider="@color/leftdrawer_divider"
+                android:dividerHeight="0.5dp"
+                android:listSelector="@android:color/transparent" />
         </RelativeLayout>
     </android.support.v4.widget.DrawerLayout>
+
+    <include
+        android:id="@+id/toolbar_actionbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        layout="@layout/toolbar_default" />
+
+    <ImageView
+        android:id="@+id/newEventView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="27dp"
+        android:layout_marginTop="12dp"
+        android:src="@drawable/event_ic_n" />
+
+    <View
+        android:id="@+id/toolbar_actionbar_underline"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignBaseline="@id/toolbar_actionbar"
+        android:layout_alignBottom="@id/toolbar_actionbar"
+        android:background="@color/actionbar_underline" />
 
     <View
         android:id="@+id/anchorAnimation"

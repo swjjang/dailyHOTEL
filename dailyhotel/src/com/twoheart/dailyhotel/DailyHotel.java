@@ -14,9 +14,6 @@
  */
 package com.twoheart.dailyhotel;
 
-import io.fabric.sdk.android.Fabric;
-import android.app.Application;
-
 import com.androidquery.callback.BitmapAjaxCallback;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
@@ -25,6 +22,9 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.VolleyImageLoader;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.widget.FontManager;
+
+import android.app.Application;
+import io.fabric.sdk.android.Fabric;
 
 public class DailyHotel extends Application implements Constants
 {

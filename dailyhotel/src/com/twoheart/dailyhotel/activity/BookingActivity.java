@@ -20,6 +20,31 @@ import java.util.TimeZone;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.android.volley.Request.Method;
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.CreditCard;
+import com.twoheart.dailyhotel.model.Customer;
+import com.twoheart.dailyhotel.model.Guest;
+import com.twoheart.dailyhotel.model.Pay;
+import com.twoheart.dailyhotel.model.SaleRoomInformation;
+import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.ui.FinalCheckLayout;
+import com.twoheart.dailyhotel.util.AnalyticsManager;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
+import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.SimpleAlertDialog;
+import com.twoheart.dailyhotel.util.StringFilter;
+import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
+import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
+import com.twoheart.dailyhotel.widget.DailySignatureView;
+import com.twoheart.dailyhotel.widget.DailyToast;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
@@ -64,38 +89,14 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
-import com.android.volley.Request.Method;
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.CreditCard;
-import com.twoheart.dailyhotel.model.Customer;
-import com.twoheart.dailyhotel.model.Guest;
-import com.twoheart.dailyhotel.model.Pay;
-import com.twoheart.dailyhotel.model.SaleRoomInformation;
-import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.ui.FinalCheckLayout;
-import com.twoheart.dailyhotel.util.AnalyticsManager;
-import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
-import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
-import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
-import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.SimpleAlertDialog;
-import com.twoheart.dailyhotel.util.StringFilter;
-import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
-import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.ui.BaseActivity;
-import com.twoheart.dailyhotel.widget.DailySignatureView;
-import com.twoheart.dailyhotel.widget.DailyToast;
-
 /**
  * 
  * @author jangjunho
  *
  */
 @SuppressLint({ "NewApi", "ResourceAsColor" })
-public class BookingActivity extends BaseActivity implements OnClickListener, OnCheckedChangeListener, android.widget.CompoundButton.OnCheckedChangeListener
+public class BookingActivity extends
+		BaseActivity implements OnClickListener, OnCheckedChangeListener, android.widget.CompoundButton.OnCheckedChangeListener
 {
 	private static final int DEFAULT_AVAILABLE_RESERVES = 20000;
 
@@ -539,7 +540,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 		switch (type)
 		{
-		// 특가 상품 결제 동의 팝업
+			// 특가 상품 결제 동의 팝업
 			case DIALOG_CONFIRM_PAYMENT_HP:
 				msg = getString(R.string.dialog_msg_payment_confirm_hp);
 				buttonText = getString(R.string.dialog_btn_payment_confirm);
@@ -807,7 +808,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
 			switch (resultCode)
 			{
-			// 결제가 성공한 경우 GA와 믹스패널에 등록 
+				// 결제가 성공한 경우 GA와 믹스패널에 등록 
 				case CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE:
 				case CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS:
 					writeLogPaid(mPay);

@@ -12,6 +12,11 @@
  */
 package com.twoheart.dailyhotel;
 
+import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
+import com.twoheart.dailyhotel.util.ui.BaseFragment;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,11 +24,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.util.ui.BaseActivity;
-import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
 public class ErrorFragment extends BaseFragment implements OnClickListener
 {

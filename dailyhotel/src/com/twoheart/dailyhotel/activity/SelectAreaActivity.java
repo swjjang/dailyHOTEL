@@ -3,6 +3,16 @@ package com.twoheart.dailyhotel.activity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Area;
+import com.twoheart.dailyhotel.model.AreaItem;
+import com.twoheart.dailyhotel.model.Province;
+import com.twoheart.dailyhotel.ui.DailyAnimatedExpandableListView;
+import com.twoheart.dailyhotel.ui.DailyAnimatedExpandableListView.AnimatedExpandableListAdapter;
+import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -19,16 +29,6 @@ import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Area;
-import com.twoheart.dailyhotel.model.AreaItem;
-import com.twoheart.dailyhotel.model.Province;
-import com.twoheart.dailyhotel.ui.DailyAnimatedExpandableListView;
-import com.twoheart.dailyhotel.ui.DailyAnimatedExpandableListView.AnimatedExpandableListAdapter;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 public class SelectAreaActivity extends BaseActivity
 {
@@ -320,8 +320,8 @@ public class SelectAreaActivity extends BaseActivity
 
 	};
 
-	private class AreaAnimatedExpandableListAdapter extends
-			AnimatedExpandableListAdapter
+	private class AreaAnimatedExpandableListAdapter
+			extends AnimatedExpandableListAdapter
 	{
 		private LayoutInflater inflater;
 		private Province mSelectedProvince;

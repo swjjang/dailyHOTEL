@@ -27,8 +27,8 @@ import android.util.AttributeSet;
  * A ViewPager subclass enabling infinte scrolling of the viewPager elements
  * 
  * When used for paginating views (in opposite to fragments), no code changes
- * should be needed only change xml's from <android.support.v4.view.ViewPager>
- * to <com.imbryk.viewPager.LoopViewPager>
+ * should be needed only change xml's from
+ * <android.support.v4.view.ViewPager> to <com.imbryk.viewPager.LoopViewPager>
  * 
  * If "blinking" can be seen when paginating to first or last view, simply call
  * seBoundaryCaching( true ), or change DEFAULT_BOUNDARY_CASHING to true

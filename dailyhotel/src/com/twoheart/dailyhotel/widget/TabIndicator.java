@@ -5,6 +5,9 @@ package com.twoheart.dailyhotel.widget;
 
 import java.util.ArrayList;
 
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.Util;
+
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -27,10 +30,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.Util;
-
-public class TabIndicator extends HorizontalScrollView implements OnClickListener
+public class TabIndicator
+		extends HorizontalScrollView implements OnClickListener
 {
 	private SparseArray<TabIndicatorItem> mTabArrray;
 	private boolean mTabEnable;

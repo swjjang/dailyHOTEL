@@ -14,6 +14,14 @@
  */
 package com.twoheart.dailyhotel.activity;
 
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.SimpleAlertDialog;
+import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
+
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -30,16 +38,9 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.SimpleAlertDialog;
-import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
-import com.twoheart.dailyhotel.util.ui.BaseActivity;
-
 @SuppressLint("NewApi")
-public class RegisterCreditCardActivity extends BaseActivity implements Constants
+public class RegisterCreditCardActivity
+		extends BaseActivity implements Constants
 {
 	public static final int PROGRESS_STAT_NOT_START = 1;
 	public static final int PROGRESS_STAT_IN = 2;

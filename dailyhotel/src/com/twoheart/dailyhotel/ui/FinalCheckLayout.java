@@ -13,14 +13,14 @@
  */
 package com.twoheart.dailyhotel.ui;
 
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.widget.DailySignatureView;
+
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
-
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.widget.DailySignatureView;
 
 /**
  * 신용카드 Final Check

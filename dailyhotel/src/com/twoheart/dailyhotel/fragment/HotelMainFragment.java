@@ -16,27 +16,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Bundle;
-import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.HotelDaysListFragment;
 import com.twoheart.dailyhotel.HotelListFragment;
@@ -62,6 +41,27 @@ import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
 import com.twoheart.dailyhotel.widget.FragmentViewPager;
 import com.twoheart.dailyhotel.widget.TabIndicator;
 import com.twoheart.dailyhotel.widget.TabIndicator.OnTabSelectedListener;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Bundle;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
 public class HotelMainFragment extends BaseFragment
 {
@@ -323,7 +323,7 @@ public class HotelMainFragment extends BaseFragment
 				break;
 			}
 
-			// 지역을 선택한 후에 되돌아 온경우.
+				// 지역을 선택한 후에 되돌아 온경우.
 			case CODE_REQUEST_ACTIVITY_SELECT_AREA:
 			{
 				mDontReloadAtOnResume = true;

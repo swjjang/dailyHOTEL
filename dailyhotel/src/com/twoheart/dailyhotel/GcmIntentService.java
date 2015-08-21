@@ -9,6 +9,16 @@ import java.util.Locale;
 
 import org.json.JSONObject;
 
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.twoheart.dailyhotel.activity.PushLockDialogActivity;
+import com.twoheart.dailyhotel.activity.ScreenOnPushDialogActivity;
+import com.twoheart.dailyhotel.model.Pay;
+import com.twoheart.dailyhotel.util.AnalyticsManager;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.WakeLock;
+
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.IntentService;
@@ -30,16 +40,6 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
-
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.twoheart.dailyhotel.activity.PushLockDialogActivity;
-import com.twoheart.dailyhotel.activity.ScreenOnPushDialogActivity;
-import com.twoheart.dailyhotel.model.Pay;
-import com.twoheart.dailyhotel.util.AnalyticsManager;
-import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
-import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.WakeLock;
 
 /**
  * GCM 메시지가 올 경우 실제로 처리하는 클래스, 스마트폰이 꺼져있는 경우 잠금을 뚫고 다이얼로그를 띄움. 스마트폰이 켜져있으며 우리 앱을
@@ -260,8 +260,8 @@ public class GcmIntentService extends IntentService implements Constants
 		}
 	}
 
-	private class ImageLoaderNotification extends
-			AsyncTask<String, Void, Bitmap>
+	private class ImageLoaderNotification
+			extends AsyncTask<String, Void, Bitmap>
 	{
 		private String mMessage;
 		private PendingIntent mPendingIntent;

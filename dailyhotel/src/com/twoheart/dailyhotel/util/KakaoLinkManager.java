@@ -5,8 +5,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import android.content.Context;
-
 import com.kakao.AppActionBuilder;
 import com.kakao.AppActionInfoBuilder;
 import com.kakao.KakaoLink;
@@ -14,6 +12,8 @@ import com.kakao.KakaoParameterException;
 import com.kakao.KakaoTalkLinkMessageBuilder;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.SaleTime;
+
+import android.content.Context;
 
 public class KakaoLinkManager implements Constants
 {

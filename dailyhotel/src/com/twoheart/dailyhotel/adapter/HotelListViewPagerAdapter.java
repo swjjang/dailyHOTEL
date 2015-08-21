@@ -3,6 +3,16 @@ package com.twoheart.dailyhotel.adapter;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+import com.androidquery.AQuery;
+import com.androidquery.callback.AjaxStatus;
+import com.androidquery.callback.BitmapAjaxCallback;
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.fragment.HotelListMapFragment;
+import com.twoheart.dailyhotel.model.Hotel;
+import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.VolleyImageLoader;
+import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -21,16 +31,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.androidquery.AQuery;
-import com.androidquery.callback.AjaxStatus;
-import com.androidquery.callback.BitmapAjaxCallback;
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.fragment.HotelListMapFragment;
-import com.twoheart.dailyhotel.model.Hotel;
-import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.VolleyImageLoader;
-import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
 
 public class HotelListViewPagerAdapter extends PagerAdapter
 {

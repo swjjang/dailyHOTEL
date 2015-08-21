@@ -1,12 +1,12 @@
 package com.twoheart.dailyhotel.widget;
 
+import com.twoheart.dailyhotel.R;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.twoheart.dailyhotel.R;
 
 public class DailyToast extends Toast
 {

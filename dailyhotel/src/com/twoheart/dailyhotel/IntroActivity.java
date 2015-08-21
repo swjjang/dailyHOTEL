@@ -3,6 +3,10 @@ package com.twoheart.dailyhotel;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.twoheart.dailyhotel.fragment.IntroGuideFragment;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
+import com.viewpagerindicator.CirclePageIndicator;
+
 import android.content.SharedPreferences.Editor;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,11 +22,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.twoheart.dailyhotel.fragment.IntroGuideFragment;
-import com.twoheart.dailyhotel.util.ui.BaseActivity;
-import com.viewpagerindicator.CirclePageIndicator;
-
-public class IntroActivity extends BaseActivity implements OnClickListener, OnPageChangeListener
+public class IntroActivity
+		extends BaseActivity implements OnClickListener, OnPageChangeListener
 {
 
 	private FragmentPagerAdapter mAdapter;

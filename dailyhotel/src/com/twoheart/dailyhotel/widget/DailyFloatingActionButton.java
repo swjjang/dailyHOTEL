@@ -1,5 +1,7 @@
 package com.twoheart.dailyhotel.widget;
 
+import com.twoheart.dailyhotel.R;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -26,8 +28,6 @@ import android.view.animation.Interpolator;
 import android.view.animation.ScaleAnimation;
 import android.widget.AbsListView;
 import android.widget.ImageButton;
-
-import com.twoheart.dailyhotel.R;
 
 public class DailyFloatingActionButton extends ImageButton
 {

@@ -21,6 +21,18 @@ import java.util.TimeZone;
 
 import org.json.JSONObject;
 
+import com.android.volley.Request.Method;
+import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.util.AnalyticsManager;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.WakeLock;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
+import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
+import com.twoheart.dailyhotel.util.ui.BaseFragment;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -36,19 +48,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request.Method;
-import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.util.AnalyticsManager;
-import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
-import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.WakeLock;
-import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
-import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.ui.BaseActivity;
-import com.twoheart.dailyhotel.util.ui.BaseFragment;
-
-public class WaitTimerFragment extends BaseFragment implements OnClickListener, Constants
+public class WaitTimerFragment
+		extends BaseFragment implements OnClickListener, Constants
 {
 	private final static String KEY_BUNDLE_ARGUMENTS_SALETIME = "saletime";
 	public static boolean isEnabledNotify;

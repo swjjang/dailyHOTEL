@@ -13,11 +13,11 @@
  */
 package com.twoheart.dailyhotel.util.ui;
 
-import android.widget.Toast;
-
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.widget.DailyToast;
+
+import android.widget.Toast;
 
 public class CloseOnBackPressed
 {

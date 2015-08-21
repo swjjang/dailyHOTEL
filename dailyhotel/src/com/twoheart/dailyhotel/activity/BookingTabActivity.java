@@ -13,11 +13,6 @@ import java.util.ArrayList;
 
 import org.json.JSONObject;
 
-import android.app.AlertDialog;
-import android.os.Bundle;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.widget.Toast;
-
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.BookingTabBookingFragment;
@@ -38,6 +33,11 @@ import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.FragmentViewPager;
 import com.twoheart.dailyhotel.widget.TabIndicator;
 import com.twoheart.dailyhotel.widget.TabIndicator.OnTabSelectedListener;
+
+import android.app.AlertDialog;
+import android.os.Bundle;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.widget.Toast;
 
 public class BookingTabActivity extends BaseActivity
 {

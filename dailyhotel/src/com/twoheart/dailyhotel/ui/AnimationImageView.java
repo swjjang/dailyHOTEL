@@ -1,5 +1,7 @@
 package com.twoheart.dailyhotel.ui;
 
+import com.twoheart.dailyhotel.activity.HotelDetailActivity;
+
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.ValueAnimator;
@@ -10,8 +12,6 @@ import android.graphics.Matrix;
 import android.os.Handler;
 import android.os.Message;
 import android.widget.ImageView;
-
-import com.twoheart.dailyhotel.activity.HotelDetailActivity;
 
 public class AnimationImageView extends ImageView
 {

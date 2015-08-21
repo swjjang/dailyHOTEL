@@ -21,17 +21,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.activity.EventWebActivity;
 import com.twoheart.dailyhotel.activity.LoginActivity;
@@ -49,10 +38,21 @@ import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
+
 public class EventListFragment extends BaseFragment implements Constants
 {
 	private EventListLayout mEventListLayout;
 	private Event mSelectedEvent;
+	private int mUserIndex;
 
 	public interface OnUserActionListener
 	{
@@ -127,7 +127,7 @@ public class EventListFragment extends BaseFragment implements Constants
 			{
 				if (resultCode == Activity.RESULT_OK)
 				{
-					showEvent(mSelectedEvent);
+					showEvent(mSelectedEvent, mUserIndex);
 				}
 				break;
 			}
@@ -152,7 +152,7 @@ public class EventListFragment extends BaseFragment implements Constants
 		}
 	}
 
-	private void showEvent(Event event)
+	private void showEvent(Event event, int hotelIndex)
 	{
 		BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -163,6 +163,7 @@ public class EventListFragment extends BaseFragment implements Constants
 
 		Intent intent = new Intent(baseActivity, EventWebActivity.class);
 		intent.putExtra(NAME_INTENT_EXTRA_DATA_EVENT, event);
+		intent.putExtra(NAME_INTENT_EXTRA_DATA_USERINDEX, hotelIndex);
 		startActivity(intent);
 	}
 
@@ -187,7 +188,7 @@ public class EventListFragment extends BaseFragment implements Constants
 			// 로그인 상태 체크.
 			if (baseActivity.sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false))
 			{
-				showEvent(mSelectedEvent);
+				showEvent(mSelectedEvent, mUserIndex);
 			} else
 			{
 				// 로그인이 되어있지 않으면 회원 가입으로 이동
@@ -224,7 +225,9 @@ public class EventListFragment extends BaseFragment implements Constants
 				}
 
 				// 이벤트 요청 화면으로 이동
-				String params = String.format("?user_idx=%d", response.getInt("idx"));
+				mUserIndex = response.getInt("idx");
+
+				String params = String.format("?user_idx=%d", mUserIndex);
 				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_DAILY_EVENT_LIST).append(params).toString(), null, mDailyEventListJsonResponseListener, baseActivity));
 
 			} catch (Exception e)

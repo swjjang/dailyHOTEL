@@ -2,15 +2,15 @@ package com.twoheart.dailyhotel.util;
 
 import java.util.regex.Pattern;
 
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
+import com.twoheart.dailyhotel.widget.DailyToast;
+
 import android.text.InputFilter;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.widget.Toast;
-
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.ui.BaseActivity;
-import com.twoheart.dailyhotel.widget.DailyToast;
 
 /**
  * @description : Inputfilter class to constrain the EditText changes

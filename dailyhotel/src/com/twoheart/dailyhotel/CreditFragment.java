@@ -25,20 +25,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Paint;
-import android.os.Bundle;
-import android.text.Html;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.activity.CreditListActivity;
 import com.twoheart.dailyhotel.activity.LoginActivity;
@@ -60,13 +46,28 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseLis
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Paint;
+import android.os.Bundle;
+import android.text.Html;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
 /**
  * 적립금 확인 페이지.
  * 
  * @author jangjunho
  *
  */
-public class CreditFragment extends BaseFragment implements Constants, OnClickListener
+public class CreditFragment
+		extends BaseFragment implements Constants, OnClickListener
 {
 	private RelativeLayout rlCreditNotLoggedIn;
 	private LinearLayout llCreditLoggedIn, btnInvite;

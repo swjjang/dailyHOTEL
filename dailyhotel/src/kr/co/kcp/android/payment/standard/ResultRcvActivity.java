@@ -1,11 +1,11 @@
 package kr.co.kcp.android.payment.standard;
 
+import com.twoheart.dailyhotel.util.ExLog;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
-import com.twoheart.dailyhotel.util.ExLog;
 
 public class ResultRcvActivity extends Activity
 {

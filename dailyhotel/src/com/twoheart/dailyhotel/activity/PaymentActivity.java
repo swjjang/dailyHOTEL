@@ -20,10 +20,22 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import kr.co.kcp.android.payment.standard.ResultRcvActivity;
-import kr.co.kcp.util.PackageState;
-
 import org.apache.http.util.EncodingUtils;
+
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Guest;
+import com.twoheart.dailyhotel.model.Pay;
+import com.twoheart.dailyhotel.model.SaleRoomInformation;
+import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.util.AnalyticsManager;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.SimpleAlertDialog;
+import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -49,21 +61,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
-
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Guest;
-import com.twoheart.dailyhotel.model.Pay;
-import com.twoheart.dailyhotel.model.SaleRoomInformation;
-import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.util.AnalyticsManager;
-import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
-import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.SimpleAlertDialog;
-import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
-import com.twoheart.dailyhotel.util.ui.BaseActivity;
-import com.twoheart.dailyhotel.widget.DailyToast;
+import kr.co.kcp.android.payment.standard.ResultRcvActivity;
+import kr.co.kcp.util.PackageState;
 
 @SuppressLint("NewApi")
 public class PaymentActivity extends BaseActivity implements Constants
@@ -182,10 +181,10 @@ public class PaymentActivity extends BaseActivity implements Constants
 
 			ArrayList<String> postParameterKey = new ArrayList<String>(Arrays.asList("room_idx", "payment_type", "checkin_date", "length_stay", "bonus", "guest_name", "guest_phone", "guest_email"));
 			ArrayList<String> postParameterValue = new ArrayList<String>(Arrays.asList(String.valueOf(saleRoomInformation.roomIndex), //
-					mPay.getType().name(), //
-					mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), //
-					String.valueOf(saleRoomInformation.nights), //
-					String.valueOf(mPay.isSaleCredit() ? mPay.credit : 0), guest.name, guest.phone, guest.email));
+			mPay.getType().name(), //
+			mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), //
+			String.valueOf(saleRoomInformation.nights), //
+			String.valueOf(mPay.isSaleCredit() ? mPay.credit : 0), guest.name, guest.phone, guest.email));
 
 			byte[] postParameter = parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]), postParameterValue.toArray(new String[postParameterValue.size()]));
 

@@ -3,13 +3,13 @@ package com.twoheart.dailyhotel.model;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.ExLog;
+
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
-
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.ExLog;
 
 public class Hotel implements Parcelable
 {
@@ -41,10 +41,7 @@ public class Hotel implements Parcelable
 				R.string.grade_hostel,
 				R.color.grade_hotel,
 				R.drawable.bg_hotel_price_055870), //
-		grade1(
-				R.string.grade_1,
-				R.color.grade_hotel,
-				R.drawable.bg_hotel_price_055870),
+		grade1(R.string.grade_1, R.color.grade_hotel, R.drawable.bg_hotel_price_055870),
 		grade2(
 				R.string.grade_2,
 				R.color.grade_hotel,

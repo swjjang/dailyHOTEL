@@ -2,6 +2,9 @@ package com.twoheart.dailyhotel.widget;
 
 import java.util.ArrayList;
 
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.Util;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -14,9 +17,6 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.Util;
 
 public class DailySignatureView extends View
 {
@@ -266,8 +266,8 @@ public class DailySignatureView extends View
 		}
 	}
 
-	public class BCurveTask extends
-			AsyncTask<ArrayList<Point>, Integer, ArrayList<Point>>
+	public class BCurveTask
+			extends AsyncTask<ArrayList<Point>, Integer, ArrayList<Point>>
 	{
 
 		@Override

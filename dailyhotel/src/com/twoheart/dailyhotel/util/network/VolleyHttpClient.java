@@ -43,15 +43,15 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 
-import android.content.Context;
-import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
-
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.Volley;
 import com.twoheart.dailyhotel.util.AvailableNetwork;
 import com.twoheart.dailyhotel.util.Constants;
+
+import android.content.Context;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 
 public class VolleyHttpClient implements Constants
 {
