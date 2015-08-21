@@ -20,6 +20,15 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
+import com.android.volley.Request.Method;
+import com.twoheart.dailyhotel.model.Province;
+import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
+import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
+
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.ObjectAnimator;
@@ -42,16 +51,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.Request.Method;
-import com.twoheart.dailyhotel.model.Province;
-import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
-import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.ui.BaseActivity;
-
-public class HotelDaysListFragment extends HotelListFragment implements OnClickListener
+public class HotelDaysListFragment
+		extends HotelListFragment implements OnClickListener
 {
 	private static final int HANDLER_MESSAGE_SHOWDAYSLIST = 1;
 	private static final int CHECK_IN_DATE = 7;

@@ -18,6 +18,8 @@ package com.twoheart.dailyhotel.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.twoheart.dailyhotel.activity.SelectAreaActivity;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -34,8 +36,6 @@ import android.widget.AbsListView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
-
-import com.twoheart.dailyhotel.activity.SelectAreaActivity;
 
 public class DailyAnimatedExpandableListView extends ExpandableListView
 {
@@ -214,8 +214,8 @@ public class DailyAnimatedExpandableListView extends ExpandableListView
 	 * A specialized adapter for use with the AnimatedExpandableListView. All
 	 * adapters used with AnimatedExpandableListView MUST extend this class.
 	 */
-	public static abstract class AnimatedExpandableListAdapter extends
-			BaseExpandableListAdapter
+	public static abstract class AnimatedExpandableListAdapter
+			extends BaseExpandableListAdapter
 	{
 		private SparseArray<GroupInfo> groupInfo = new SparseArray<GroupInfo>();
 		private DailyAnimatedExpandableListView parent;

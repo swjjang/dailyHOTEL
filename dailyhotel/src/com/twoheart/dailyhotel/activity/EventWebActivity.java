@@ -1,5 +1,16 @@
 package com.twoheart.dailyhotel.activity;
 
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.AnalyticsManager;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.SimpleAlertDialog;
+import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.ui.WebViewActivity;
+
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -9,16 +20,9 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.AnalyticsManager;
-import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
-import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.ui.WebViewActivity;
-
 public class EventWebActivity extends WebViewActivity implements Constants
 {
-	private String URL_WEBAPI_EVENT; //= "http://event.dailyhotel.co.kr";
+	private String URL_WEBAPI_EVENT;
 	private WebView mWebView;
 
 	@JavascriptInterface
@@ -29,15 +33,15 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
 		Intent intent = getIntent();
 
-		String url = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_URL);
+		String url = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_URL);
 
-		if (RELEASE_STORE == Stores.PLAY_STORE || RELEASE_STORE == Stores.N_STORE)
+		if (Util.isTextEmpty(url) == true)
 		{
-			URL_WEBAPI_EVENT = "http://event.dailyhotel.co.kr";
-		} else
-		{
-			URL_WEBAPI_EVENT = "http://eventts.dailyhotel.co.kr"; //tStore
+			finish();
+			return;
 		}
+
+		URL_WEBAPI_EVENT = url;
 
 		setContentView(R.layout.activity_event_web);
 		setActionBar(R.string.actionbar_title_event_list_frag);
@@ -58,21 +62,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
 		// 추가
 		mWebView.addJavascriptInterface(new JavaScriptExtention(), "android");
-	}
-
-	@Override
-	protected void onStart()
-	{
-		AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(Screen.EVENT_WEB);
-		super.onStart();
-	}
-
-	@Override
-	protected void onResume()
-	{
-		super.onResume();
-		// 탭의 정보를 변경하는 경우 바로 적용될 수 있도록
-		// 웹뷰의 캐시 삭제 설정 
 		mWebView.clearCache(true);
 		mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
 
@@ -80,11 +69,10 @@ public class EventWebActivity extends WebViewActivity implements Constants
 	}
 
 	@Override
-	public void finish()
+	protected void onStart()
 	{
-		super.finish();
-		overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
-
+		AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(Screen.EVENT_WEB);
+		super.onStart();
 	}
 
 	/**
@@ -95,10 +83,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
 	 */
 	private class JavaScriptExtention
 	{
-		@JavascriptInterface
-		public void log(String index, String params)
-		{
-		}
 
 		@JavascriptInterface
 		public void externalLink(String packageName, String uri)
@@ -130,9 +114,22 @@ public class EventWebActivity extends WebViewActivity implements Constants
 		}
 
 		@JavascriptInterface
-		public void finishPopup(String message)
+		public void feed(String message)
 		{
+			if (isFinishing() == true)
+			{
+				return;
+			}
 
+			ExLog.d("message : " + message);
+			SimpleAlertDialog.build(EventWebActivity.this, getString(R.string.dialog_notice2), message, getString(R.string.dialog_btn_text_confirm), new OnClickListener()
+			{
+				@Override
+				public void onClick(DialogInterface dialog, int which)
+				{
+					finish();
+				}
+			}).show();
 		}
 	}
 }

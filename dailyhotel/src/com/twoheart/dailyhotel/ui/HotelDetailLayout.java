@@ -4,6 +4,31 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMapLoadedCallback;
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
+import com.google.android.gms.maps.GoogleMap.SnapshotReadyCallback;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.activity.HotelDetailActivity;
+import com.twoheart.dailyhotel.adapter.HotelDetailImageViewPagerAdapter;
+import com.twoheart.dailyhotel.model.DetailInformation;
+import com.twoheart.dailyhotel.model.Hotel;
+import com.twoheart.dailyhotel.model.HotelDetailEx;
+import com.twoheart.dailyhotel.model.SaleRoomInformation;
+import com.twoheart.dailyhotel.util.ABTestPreference;
+import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.widget.FontManager;
+
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.ObjectAnimator;
@@ -36,31 +61,6 @@ import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
-import com.google.android.gms.maps.GoogleMap.OnMapLoadedCallback;
-import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
-import com.google.android.gms.maps.GoogleMap.SnapshotReadyCallback;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.activity.HotelDetailActivity;
-import com.twoheart.dailyhotel.adapter.HotelDetailImageViewPagerAdapter;
-import com.twoheart.dailyhotel.model.DetailInformation;
-import com.twoheart.dailyhotel.model.Hotel;
-import com.twoheart.dailyhotel.model.HotelDetailEx;
-import com.twoheart.dailyhotel.model.SaleRoomInformation;
-import com.twoheart.dailyhotel.util.ABTestPreference;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.FontManager;
 
 /**
  * 호텔 상세 정보 화면
@@ -1486,7 +1486,7 @@ public class HotelDetailLayout
 
 			switch (position)
 			{
-			// 빈화면
+				// 빈화면
 				case 0:
 					if (mDeatilView[0] == null)
 					{

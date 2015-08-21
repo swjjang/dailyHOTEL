@@ -6,10 +6,10 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import com.twoheart.dailyhotel.util.Constants;
+
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import com.twoheart.dailyhotel.util.Constants;
 
 public class SaleTime implements Constants, Parcelable
 {

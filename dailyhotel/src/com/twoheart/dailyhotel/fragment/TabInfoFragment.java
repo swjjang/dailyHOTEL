@@ -10,6 +10,10 @@ package com.twoheart.dailyhotel.fragment;
 
 import java.util.List;
 
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.BookingHotelDetail;
+import com.twoheart.dailyhotel.util.ui.BaseFragment;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -20,10 +24,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
-
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.BookingHotelDetail;
-import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
 public class TabInfoFragment extends BaseFragment
 {

@@ -1,11 +1,11 @@
 package com.twoheart.dailyhotel.activity;
 
+import com.twoheart.dailyhotel.util.Util;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
-import com.twoheart.dailyhotel.util.Util;
 
 public class ExitActivity extends Activity
 {

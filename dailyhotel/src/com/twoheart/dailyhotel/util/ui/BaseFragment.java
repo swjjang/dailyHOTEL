@@ -1,18 +1,19 @@
 package com.twoheart.dailyhotel.util.ui;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.View;
-import android.widget.Toast;
-
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 
-public abstract class BaseFragment extends Fragment implements Constants, OnLoadListener, ErrorListener
+import android.app.Activity;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.View;
+import android.widget.Toast;
+
+public abstract class BaseFragment
+		extends Fragment implements Constants, OnLoadListener, ErrorListener
 {
 	protected RequestQueue mQueue;
 	protected Toast mToast;

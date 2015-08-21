@@ -16,6 +16,8 @@
 
 package com.twoheart.dailyhotel.util.ui;
 
+import com.twoheart.dailyhotel.R;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -25,8 +27,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.twoheart.dailyhotel.R;
 
 public class HotelIconGenerator
 {

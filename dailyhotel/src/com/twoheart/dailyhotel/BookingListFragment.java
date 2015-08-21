@@ -21,23 +21,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.activity.BookingTabActivity;
 import com.twoheart.dailyhotel.activity.LoginActivity;
@@ -61,13 +44,31 @@ import com.twoheart.dailyhotel.util.ui.BaseFragment;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
 /**
  * 예약한 호텔의 리스트들을 출력.
  * 
  * @author jangjunho
  *
  */
-public class BookingListFragment extends BaseFragment implements Constants, OnItemClickListener, OnClickListener
+public class BookingListFragment extends
+		BaseFragment implements Constants, OnItemClickListener, OnClickListener
 {
 	private BookingListAdapter mAdapter;
 	private RelativeLayout mEmptyLayout;
@@ -711,7 +712,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 						break;
 					}
 
-					// Popup
+						// Popup
 					case 200:
 					{
 						message = response.getString("msg");

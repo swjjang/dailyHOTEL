@@ -13,14 +13,14 @@
  */
 package com.twoheart.dailyhotel.util.ui;
 
+import com.twoheart.dailyhotel.R;
+
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Message;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ProgressBar;
-
-import com.twoheart.dailyhotel.R;
 
 public class LoadingDialog
 {

@@ -1,13 +1,13 @@
 package com.twoheart.dailyhotel.widget;
 
+import com.twoheart.dailyhotel.ui.LoopViewPager;
+
 import android.content.Context;
 import android.os.Build;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-
-import com.twoheart.dailyhotel.ui.LoopViewPager;
 
 public class HotelViewPager extends LoopViewPager
 {

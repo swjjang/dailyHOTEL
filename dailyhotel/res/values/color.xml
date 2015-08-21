@@ -111,9 +111,13 @@
 	<!-- Wait Popup -->
 	<color name="popup_underline">#e1e1e1</color>
 	
-	
 	<!-- Menu -->
 	<color name="menu_underline">#d7d9db</color>
 	<color name="menu_text">#4d4d4d</color>
+	
+	<!-- Wait Fragment -->
+	<color name="waitfragment_number">#252325</color>
+	<color name="waitfragment_maintext">#443d3d</color>
+	<color name="waitfragment_subtext">#433d3c</color>
 	
 </resources>	

@@ -1,13 +1,13 @@
 package com.twoheart.dailyhotel.adapter;
 
+import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
+import com.google.android.gms.maps.model.Marker;
+import com.twoheart.dailyhotel.R;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
-
-import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
-import com.google.android.gms.maps.model.Marker;
-import com.twoheart.dailyhotel.R;
 
 public class HotelNameInfoWindowAdapter implements InfoWindowAdapter
 {

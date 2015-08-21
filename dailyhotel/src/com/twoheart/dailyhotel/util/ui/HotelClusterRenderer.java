@@ -1,7 +1,5 @@
 package com.twoheart.dailyhotel.util.ui;
 
-import android.content.Context;
-
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.LatLng;
@@ -13,8 +11,10 @@ import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.twoheart.dailyhotel.model.HotelRegionRenderer;
 import com.twoheart.dailyhotel.model.HotelRenderer;
 
-public class HotelClusterRenderer extends
-		DefaultClusterRenderer<HotelClusterItem>
+import android.content.Context;
+
+public class HotelClusterRenderer
+		extends DefaultClusterRenderer<HotelClusterItem>
 {
 	public enum Renderer
 	{

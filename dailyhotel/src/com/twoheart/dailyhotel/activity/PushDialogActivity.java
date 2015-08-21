@@ -1,5 +1,9 @@
 package com.twoheart.dailyhotel.activity;
 
+import com.twoheart.dailyhotel.MainActivity;
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.WakeLock;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,10 +12,6 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
-
-import com.twoheart.dailyhotel.MainActivity;
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.WakeLock;
 
 /**
  * 새벽 2시가 지났을때 호텔 리스트가 아닌 타이머 화면이 나오는데 거기서 타이머를 설정할 경우 시간이되면 이 다이얼로그형 엑티비티가

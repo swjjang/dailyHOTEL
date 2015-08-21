@@ -3,6 +3,12 @@ package com.twoheart.dailyhotel.activity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.DetailInformation;
+import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
+import com.twoheart.dailyhotel.widget.FontManager;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,12 +18,6 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.DetailInformation;
-import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.ui.BaseActivity;
-import com.twoheart.dailyhotel.widget.FontManager;
 
 public class HotelDetailInfoActivity extends BaseActivity
 {

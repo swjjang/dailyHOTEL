@@ -1,13 +1,13 @@
 package com.twoheart.dailyhotel.widget;
 
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.Util;
+
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.Util;
 
 public class HotelGradeView extends FrameLayout
 {

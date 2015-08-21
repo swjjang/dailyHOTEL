@@ -1,14 +1,5 @@
 package com.twoheart.dailyhotel.activity;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.location.Location;
-import android.location.LocationListener;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.RelativeLayout;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
@@ -26,6 +17,15 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.LocationFactory;
 import com.twoheart.dailyhotel.util.ui.MyLocationMarker;
+
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.RelativeLayout;
 
 public class ZoomMapActivity extends BaseActivity
 {

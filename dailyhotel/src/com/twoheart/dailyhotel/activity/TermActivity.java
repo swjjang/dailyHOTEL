@@ -1,10 +1,10 @@
 package com.twoheart.dailyhotel.activity;
 
-import android.os.Bundle;
-
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.util.ui.WebViewActivity;
+
+import android.os.Bundle;
 
 public class TermActivity extends WebViewActivity
 {

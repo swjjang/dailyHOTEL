@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import android.util.Base64;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
@@ -17,7 +15,10 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.ExLog;
 
-public abstract class DailyHotelRequest<T> extends Request<T> implements Constants
+import android.util.Base64;
+
+public abstract class DailyHotelRequest<T>
+		extends Request<T>implements Constants
 {
 	private Map<String, String> mParameters;
 
@@ -190,8 +191,6 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
 
 	//	public static void makeUrlEncoder()
 	//	{
-	//		DailyHotelRequest.getUrlEncoder("https://restful.dailyhotel.kr/goodnight/");
-	//		DailyHotelRequest.getUrlEncoder("https://tcwas.dailyhotel.kr/goodnight/");
-	//		DailyHotelRequest.getUrlEncoder("https://lb.dailyhotel.kr/goodnight/");
+	//		DailyHotelRequest.getUrlEncoder("api/daily/event/page");
 	//	}
 }

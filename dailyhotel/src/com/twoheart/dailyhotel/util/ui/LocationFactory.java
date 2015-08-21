@@ -2,6 +2,10 @@ package com.twoheart.dailyhotel.util.ui;
 
 import java.util.List;
 
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.widget.DailyToast;
+
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -17,10 +21,6 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.Toast;
-
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class LocationFactory
 {
@@ -264,7 +264,7 @@ public class LocationFactory
 
 		mHandler.sendEmptyMessage(3);
 
-		if (mLocationManager != null)// && mOnLocationListener != null)
+		if (mLocationManager != null) // && mOnLocationListener != null)
 		{
 			//			mLocationManager.removeUpdates(mOnLocationListener);
 			mLocationManager.removeUpdates(mUpdatePendingIntent);

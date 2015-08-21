@@ -3,23 +3,25 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:orientation="horizontal" >
+    android:orientation="horizontal"
+    android:paddingBottom="26dp"
+    android:paddingLeft="17dp"
+    android:paddingTop="26.5dp" >
 
     <ImageView
         android:id="@+id/drawerMenuItemIcon"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="28dp" />
+        android:layout_height="wrap_content" />
 
     <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
         android:id="@+id/drawerMenuItemTitle"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_marginLeft="28dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="11dp"
         android:gravity="left|center_vertical"
+        android:text="@string/actionbar_title_hotel_list_frag"
         android:textColor="@drawable/selector_color_drawermenu"
-        android:textSize="15dp"
-        android:textStyle="bold" />
+        android:textSize="18dp" />
 
     <ImageView
         android:id="@+id/newEventIcon"

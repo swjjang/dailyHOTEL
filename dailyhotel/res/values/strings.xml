@@ -179,7 +179,7 @@
     <string name="mail_text_desc">데일리호텔의 안드로이드 어플리케이션에 관한 문의입니다.</string>
 
     <!-- Prefix Text -->
-    <string name="prefix_wait_timer_frag_todays_hotel_open">시 오늘의 호텔이 공개됩니다.</string>
+    <string name="prefix_wait_timer_frag_todays_hotel_open">시, 오늘의 호텔이 공개됩니다.</string>
     <string name="prefix_expire_time">유효기간</string>
 
     <!-- KaKaoLink Message -->
@@ -273,7 +273,7 @@
 
     <!-- WaitTimer Fragment -->
     <string name="frag_wait_timer_off">알람 끄기</string>
-    <string name="frag_wait_timer_on">알람 켜기</string>
+    <string name="frag_wait_timer_on">알람 받기</string>
     <string name="frag_wait_timer_set">알람이 설정되었습니다</string>
     <string name="frag_wait_timer_cancel">알람이 취소되었습니다</string>
 
@@ -410,9 +410,7 @@
     <string name="frag_popup_event_title">이벤트 안내</string>
 
     <!-- Timer Wait Fragment -->
-    <string name="frag_wait_timer_title">이벤트 참여하기</string>
-    <string name="frag_wait_timer_alarm">알람 켜기</string>
-    <string name="frag_wait_timer_msg">놀라운 가격으로 당신을 찾아갈\n호텔이 기다리고 있어요.</string>
+    <string name="frag_wait_timer_msg">잊지못할 하루를 위한\n특별한 호텔이 기다리고 있어요</string>
 
     <!-- Hotel List Header -->
     <string name="header_title1">데일리호텔 </string>
@@ -498,5 +496,9 @@
 
     <!-- Area -->
     <string name="label_selectarea_area">지역</string>
+    
+    <!-- EventFragment -->
+    <string name="eventfragment_emptylist_maintext">현재 진행중인 이벤트가 없습니다.</string>
+    <string name="eventfragment_emptylist_subtext">더욱 특별한 이벤트를\n준비 중이니 기대해주세요!</string>
 
 </resources>

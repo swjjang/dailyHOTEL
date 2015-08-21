@@ -22,28 +22,6 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.Options;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
-import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.AbsListViewDelegate;
-import android.animation.Animator;
-import android.animation.Animator.AnimatorListener;
-import android.animation.ValueAnimator;
-import android.animation.ValueAnimator.AnimatorUpdateListener;
-import android.content.Intent;
-import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.FrameLayout;
-import android.widget.Toast;
-
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.adapter.HotelListAdapter;
 import com.twoheart.dailyhotel.fragment.HotelListMapFragment;
@@ -67,7 +45,30 @@ import com.twoheart.dailyhotel.widget.DailyHotelHeaderTransformer;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView;
 
-public class HotelListFragment extends BaseFragment implements Constants, OnItemClickListener, OnRefreshListener
+import android.animation.Animator;
+import android.animation.Animator.AnimatorListener;
+import android.animation.ValueAnimator;
+import android.animation.ValueAnimator.AnimatorUpdateListener;
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.FrameLayout;
+import android.widget.Toast;
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.Options;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.AbsListViewDelegate;
+
+public class HotelListFragment extends
+		BaseFragment implements Constants, OnItemClickListener, OnRefreshListener
 {
 	protected PinnedSectionListView mHotelListView;
 	private PullToRefreshLayout mPullToRefreshLayout;
@@ -100,8 +101,9 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 	private class ActionbarViewHolder
 	{
 		public View mAnchorView;
-		public View mActionbarLayout;
+		public View mActionbarView;
 		public View mTabindicatorView;
+		public View mUnderlineView01;
 		public View mUnderlineView02;
 	}
 
@@ -166,8 +168,9 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		mActionbarViewHolder = new ActionbarViewHolder();
 
 		mActionbarViewHolder.mAnchorView = baseActivity.findViewById(R.id.anchorAnimation);
-		mActionbarViewHolder.mActionbarLayout = baseActivity.findViewById(R.id.actionbarLayout);
+		mActionbarViewHolder.mActionbarView = baseActivity.findViewById(R.id.toolbar_actionbar);
 		mActionbarViewHolder.mTabindicatorView = baseActivity.findViewById(R.id.tabindicator);
+		mActionbarViewHolder.mUnderlineView01 = baseActivity.findViewById(R.id.toolbar_actionbar_underline);
 		mActionbarViewHolder.mUnderlineView02 = baseActivity.findViewById(R.id.tabindicator_underLine);
 
 		return view;
@@ -535,7 +538,8 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 		mAnchorY = 0;
 
 		mActionbarViewHolder.mAnchorView.setTranslationY(0);
-		mActionbarViewHolder.mActionbarLayout.setTranslationY(0);
+		mActionbarViewHolder.mActionbarView.setTranslationY(0);
+		mActionbarViewHolder.mUnderlineView01.setTranslationY(0);
 		mActionbarViewHolder.mTabindicatorView.setTranslationY(0);
 		mActionbarViewHolder.mUnderlineView02.setTranslationY(0);
 
@@ -576,7 +580,8 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 				mAnchorY = value;
 
 				mActionbarViewHolder.mAnchorView.setTranslationY(value);
-				mActionbarViewHolder.mActionbarLayout.setTranslationY(value);
+				mActionbarViewHolder.mActionbarView.setTranslationY(value);
+				mActionbarViewHolder.mUnderlineView01.setTranslationY(value);
 				mActionbarViewHolder.mTabindicatorView.setTranslationY(value);
 				mActionbarViewHolder.mUnderlineView02.setTranslationY(value);
 			}
@@ -644,7 +649,8 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 				mAnchorY = value;
 
 				mActionbarViewHolder.mAnchorView.setTranslationY(value);
-				mActionbarViewHolder.mActionbarLayout.setTranslationY(value);
+				mActionbarViewHolder.mActionbarView.setTranslationY(value);
+				mActionbarViewHolder.mUnderlineView01.setTranslationY(value);
 				mActionbarViewHolder.mTabindicatorView.setTranslationY(value);
 				mActionbarViewHolder.mUnderlineView02.setTranslationY(value);
 			}

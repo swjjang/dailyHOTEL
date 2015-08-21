@@ -4,6 +4,16 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.androidquery.AQuery;
+import com.androidquery.callback.AjaxStatus;
+import com.androidquery.callback.BitmapAjaxCallback;
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Hotel;
+import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.VolleyImageLoader;
+import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
+import com.twoheart.dailyhotel.widget.PinnedSectionListView.PinnedSectionListAdapter;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -23,17 +33,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.androidquery.AQuery;
-import com.androidquery.callback.AjaxStatus;
-import com.androidquery.callback.BitmapAjaxCallback;
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Hotel;
-import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.VolleyImageLoader;
-import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
-import com.twoheart.dailyhotel.widget.PinnedSectionListView.PinnedSectionListAdapter;
-
-public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements PinnedSectionListAdapter
+public class HotelListAdapter extends
+		ArrayAdapter<HotelListViewItem>implements PinnedSectionListAdapter
 {
 	private Context context;
 	private int resourceId;

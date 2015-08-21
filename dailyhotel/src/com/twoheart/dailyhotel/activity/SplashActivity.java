@@ -21,22 +21,6 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
-import android.content.DialogInterface.OnClickListener;
-import android.content.DialogInterface.OnKeyListener;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.provider.Settings;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.animation.AnimationUtils;
-
 import com.android.volley.Request.Method;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
@@ -54,7 +38,24 @@ import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
-public class SplashActivity extends BaseActivity implements Constants, ErrorListener
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnClickListener;
+import android.content.DialogInterface.OnKeyListener;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.provider.Settings;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.animation.AnimationUtils;
+
+public class SplashActivity
+		extends BaseActivity implements Constants, ErrorListener
 {
 	private static final int PROGRESS_CIRCLE_COUNT = 3;
 
@@ -276,9 +277,8 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 
 	private void showMainActivity()
 	{
-		// sleep 2 second
 		setResult(RESULT_OK);
-		finish();//MainActivity로 finish 
+		finish();
 	}
 
 	@Override
@@ -303,41 +303,9 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 			@Override
 			public void onPostExecute()
 			{
-				requestEvent();
-			}
-		});
-	}
-
-	private void requestEvent()
-	{
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("timeZone", "Asia/Seoul");
-
-		mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, new DailyHotelJsonResponseListener()
-		{
-			@Override
-			public void onResponse(String url, JSONObject response)
-			{
-				try
-				{
-					long currentDateTime = response.getLong("currentDateTime");
-
-					// 이벤트 있는지 조사하기
-					showMainActivity();
-				} catch (Exception e)
-				{
-					showMainActivity();
-				}
-			}
-		}, new ErrorListener()
-		{
-			@Override
-			public void onErrorResponse(VolleyError error)
-			{
 				showMainActivity();
 			}
-		}));
-
+		});
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -430,8 +398,8 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 				ExLog.e("MIN / MAX / CUR / SKIP : " + minVersion + " / " + maxVersion + " / " + currentVersion + " / " + skipMaxVersion);
 
 				if (minVersion > currentVersion)
-				{
-					// 강제 업데이트
+				{ // 강제 업데이트
+
 					if (isFinishing() == true)
 					{
 						return;
