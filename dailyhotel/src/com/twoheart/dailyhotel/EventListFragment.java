@@ -29,6 +29,8 @@ import com.twoheart.dailyhotel.ui.EventListLayout;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
@@ -118,6 +120,7 @@ public class EventListFragment extends BaseFragment implements Constants
 			return;
 		}
 
+		unLockUI();
 		releaseUiComponent();
 		baseActivity.releaseUiComponent();
 
@@ -127,7 +130,10 @@ public class EventListFragment extends BaseFragment implements Constants
 			{
 				if (resultCode == Activity.RESULT_OK)
 				{
-					showEvent(mSelectedEvent, mUserIndex);
+
+				} else
+				{
+					mSelectedEvent = null;
 				}
 				break;
 			}
@@ -152,19 +158,28 @@ public class EventListFragment extends BaseFragment implements Constants
 		}
 	}
 
-	private void showEvent(Event event, int hotelIndex)
+	private void requestEvent(Event event, int userIndex)
 	{
 		BaseActivity baseActivity = (BaseActivity) getActivity();
 
-		if (baseActivity == null)
+		if (baseActivity == null || baseActivity.isFinishing())
 		{
 			return;
 		}
 
-		Intent intent = new Intent(baseActivity, EventWebActivity.class);
-		intent.putExtra(NAME_INTENT_EXTRA_DATA_EVENT, event);
-		intent.putExtra(NAME_INTENT_EXTRA_DATA_USERINDEX, hotelIndex);
-		startActivity(intent);
+		unLockUI();
+
+		String params;
+
+		if (RELEASE_STORE == Stores.PLAY_STORE || RELEASE_STORE == Stores.N_STORE)
+		{
+			params = String.format("?user_idx=%d&daily_event_idx=%d&store_type=%s", userIndex, event.index, "google");
+		} else
+		{
+			params = String.format("?user_idx=%d&daily_event_idx=%d&store_type=%s", userIndex, event.index, "skt");
+		}
+
+		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_DAILY_EVENT_PAGE).append(params).toString(), null, mDailyEventPageJsonResponseListener, baseActivity));
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -188,11 +203,11 @@ public class EventListFragment extends BaseFragment implements Constants
 			// 로그인 상태 체크.
 			if (baseActivity.sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false))
 			{
-				showEvent(mSelectedEvent, mUserIndex);
+				requestEvent(mSelectedEvent, mUserIndex);
+				mSelectedEvent = null;
 			} else
 			{
 				// 로그인이 되어있지 않으면 회원 가입으로 이동
-
 				Intent intent = new Intent(baseActivity, LoginActivity.class);
 				startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
 				baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
@@ -224,12 +239,19 @@ public class EventListFragment extends BaseFragment implements Constants
 					throw new NullPointerException("response is null.");
 				}
 
-				// 이벤트 요청 화면으로 이동
-				mUserIndex = response.getInt("idx");
+				if (mSelectedEvent == null)
+				{
+					// 이벤트 요청 화면으로 이동
+					mUserIndex = response.getInt("idx");
 
-				String params = String.format("?user_idx=%d", mUserIndex);
-				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_DAILY_EVENT_LIST).append(params).toString(), null, mDailyEventListJsonResponseListener, baseActivity));
+					String params = String.format("?user_idx=%d", mUserIndex);
+					mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_DAILY_EVENT_LIST).append(params).toString(), null, mDailyEventListJsonResponseListener, baseActivity));
 
+				} else
+				{
+					requestEvent(mSelectedEvent, mUserIndex);
+					mSelectedEvent = null;
+				}
 			} catch (Exception e)
 			{
 				onError(e);
@@ -270,22 +292,20 @@ public class EventListFragment extends BaseFragment implements Constants
 						DailyToast.showToast(baseActivity, msg, Toast.LENGTH_SHORT);
 					}
 
-					// 이벤트가 없는 화면.
+					mEventListLayout.setData(null);
 				} else
 				{
 					JSONArray eventJSONArray = response.getJSONArray("data");
 
 					if (eventJSONArray == null)
 					{
-						// 이벤트가 없는 화면.
+						mEventListLayout.setData(null);
 					} else
 					{
 						int length = eventJSONArray.length();
 
 						if (length == 0)
 						{
-							// 이벤트가 없는 화면.
-
 							mEventListLayout.setData(null);
 						} else
 						{
@@ -302,8 +322,8 @@ public class EventListFragment extends BaseFragment implements Constants
 				}
 			} catch (Exception e)
 			{
-				onError(e);
-				unLockUI();
+				ExLog.d(e.toString());
+				mEventListLayout.setData(null);
 			}
 		}
 	};
@@ -409,6 +429,53 @@ public class EventListFragment extends BaseFragment implements Constants
 			} else
 			{
 				onError();
+			}
+		}
+	};
+
+	private DailyHotelJsonResponseListener mDailyEventPageJsonResponseListener = new DailyHotelJsonResponseListener()
+	{
+
+		@Override
+		public void onResponse(String url, JSONObject response)
+		{
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null || baseActivity.isFinishing() == true)
+			{
+				return;
+			}
+
+			unLockUI();
+
+			try
+			{
+				if (null == response)
+				{
+					throw new NullPointerException("response is null.");
+				}
+
+				int msg_code = response.getInt("msg_code");
+
+				if (msg_code != 0)
+				{
+					if (response.has("msg") == true)
+					{
+						String message = response.getString("msg");
+						SimpleAlertDialog.build(baseActivity, getString(R.string.dialog_notice2), message, getString(R.string.dialog_btn_text_confirm), null).show();
+					}
+				} else
+				{
+					String eventUrl = response.getJSONObject("data").getString("url");
+
+					Intent intent = new Intent(baseActivity, EventWebActivity.class);
+					intent.putExtra(NAME_INTENT_EXTRA_DATA_URL, eventUrl);
+					startActivity(intent);
+				}
+			} catch (Exception e)
+			{
+				onError(e);
+				unLockUI();
 			}
 		}
 	};

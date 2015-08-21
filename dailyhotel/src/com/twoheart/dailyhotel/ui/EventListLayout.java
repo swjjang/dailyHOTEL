@@ -28,6 +28,7 @@ public class EventListLayout implements OnItemClickListener
 {
 	private Context mContext;
 	private View mRootView;
+	private View mEmptyView;
 	private ListView mListView;
 	private EventListAdapter mEventListAdapter;
 	private EventListFragment.OnUserActionListener mOnUserActionListener;
@@ -41,6 +42,8 @@ public class EventListLayout implements OnItemClickListener
 	{
 		mRootView = inflater.inflate(R.layout.layout_eventlist, container, false);
 		mRootView.setPadding(0, Util.dpToPx(container.getContext(), 56) + 1, 0, 0);
+
+		mEmptyView = mRootView.findViewById(R.id.emptyLayout);
 
 		mListView = (ListView) mRootView.findViewById(R.id.listView);
 		mListView.setOnItemClickListener(this);
@@ -57,8 +60,15 @@ public class EventListLayout implements OnItemClickListener
 
 		mEventListAdapter.clear();
 
-		if (list != null)
+		if (list == null)
 		{
+			mListView.setVisibility(View.GONE);
+			mEmptyView.setVisibility(View.VISIBLE);
+		} else
+		{
+			mListView.setVisibility(View.VISIBLE);
+			mEmptyView.setVisibility(View.GONE);
+
 			mEventListAdapter.addAll(list);
 			mListView.setAdapter(mEventListAdapter);
 			mEventListAdapter.notifyDataSetChanged();
@@ -157,8 +167,6 @@ public class EventListLayout implements OnItemClickListener
 			}
 
 			ImageView imageView = (ImageView) view.findViewById(R.id.eventImageView);
-			imageView.setBackgroundColor(0xff123453 + position * 10000);
-
 			Event event = getItem(position);
 
 			// AQuery사용시 

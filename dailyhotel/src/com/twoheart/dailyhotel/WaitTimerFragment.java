@@ -32,6 +32,7 @@ import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.BaseFragment;
+import com.twoheart.dailyhotel.widget.FontManager;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -45,6 +46,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,16 +58,15 @@ public class WaitTimerFragment
 
 	private static Handler sHandler;
 	private TextView tvTimer, tvTitle;
-	private TextView btnNotify;
+	private TextView mAlarmTextView;
+	private ImageView mAlarmImageView;
+	private View alarmTimerLayout;
 
 	private AlarmManager alarmManager;
 	private PendingIntent pender;
 	private Intent intent;
 	private SaleTime mSaleTime;
 	private long remainingTime;
-
-	//	private ImageView ivNewEvent;
-	//	private LinearLayout btnEvent;
 
 	public static WaitTimerFragment newInstance(SaleTime saleTime)
 	{
@@ -107,12 +108,15 @@ public class WaitTimerFragment
 
 		tvTimer = (TextView) view.findViewById(R.id.tv_timer);
 		tvTitle = (TextView) view.findViewById(R.id.tv_wait_timer_main);
-		btnNotify = (TextView) view.findViewById(R.id.btn_wait_timer_alram);
-		//		ivNewEvent = (ImageView) view.findViewById(R.id.iv_new_event);
-		//		btnEvent = (LinearLayout) view.findViewById(R.id.btn_event);
+		alarmTimerLayout = view.findViewById(R.id.alarmTimerLayout);
 
-		btnNotify.setOnClickListener(this);
-		//		btnEvent.setOnClickListener(this);
+		mAlarmTextView = (TextView) view.findViewById(R.id.alarmTextView);
+		mAlarmImageView = (ImageView) view.findViewById(R.id.alarmImageView);
+
+		mAlarmTextView.setTypeface(FontManager.getInstance(baseActivity).getMediumTypeface());
+		tvTimer.setTypeface(FontManager.getInstance(baseActivity).getThinTypeface());
+
+		alarmTimerLayout.setOnClickListener(this);
 
 		baseActivity.setActionBar(getString(R.string.actionbar_title_wait_timer_frag), false);
 
@@ -154,30 +158,18 @@ public class WaitTimerFragment
 	@Override
 	public void onClick(View v)
 	{
-		if (v.getId() == btnNotify.getId())
+		if (v.getId() == alarmTimerLayout.getId())
 		{
 			setNotify(!isEnabledNotify);
 		}
-		//		else if (v.getId() == btnEvent.getId())
-		//		{
-		//			BaseActivity baseActivity = (BaseActivity) getActivity();
-		//
-		//			if (baseActivity == null)
-		//			{
-		//				return;
-		//			}
-		//
-		//			Intent i = new Intent(baseActivity, EventWebActivity.class);
-		//			baseActivity.startActivity(i);
-		//			baseActivity.overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
-		//		}
 	}
 
 	private void setNotify(boolean enable)
 	{
 		if (enable)
 		{
-			btnNotify.setText(getString(R.string.frag_wait_timer_off));
+			mAlarmTextView.setText(getString(R.string.frag_wait_timer_off));
+			mAlarmImageView.setImageResource(R.drawable.open_stanby_ic_alert_off);
 
 			if (enable != isEnabledNotify)
 			{
@@ -188,7 +180,8 @@ public class WaitTimerFragment
 
 		} else
 		{
-			btnNotify.setText(getString(R.string.frag_wait_timer_on));
+			mAlarmTextView.setText(getString(R.string.frag_wait_timer_on));
+			mAlarmImageView.setImageResource(R.drawable.open_stanby_ic_alert);
 
 			if (enable != isEnabledNotify)
 			{

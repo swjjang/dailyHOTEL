@@ -9,6 +9,53 @@
         android:layout_height="match_parent"
         android:cacheColorHint="@android:color/transparent"
         android:divider="@color/hotel_list_item_underline"
-        android:dividerHeight="1px" />
+        android:dividerHeight="1px"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/emptyLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/no_event_bg"
+        android:visibility="visible" >
+
+        <LinearLayout
+            android:id="@+id/textLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                android:id="@+id/tv_wait_timer_main"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/eventfragment_emptylist_maintext"
+                android:textColor="@color/white"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                android:id="@+id/tv_wait_timer_sub"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:gravity="center"
+                android:lineSpacingExtra="5dp"
+                android:text="@string/eventfragment_emptylist_subtext"
+                android:textColor="@color/white"
+                android:textSize="16dp" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_above="@id/textLayout"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:src="@drawable/no_event_ic" />
+    </RelativeLayout>
 
 </FrameLayout>

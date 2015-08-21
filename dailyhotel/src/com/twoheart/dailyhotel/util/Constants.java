@@ -377,8 +377,7 @@ public interface Constants
 	public static final String NAME_INTENT_EXTRA_DATA_RESERVATIONINDEX = "reservationIndex";
 	public static final String NAME_INTENT_EXTRA_DATA_CHECKINDATE = "checkInDate";
 	public static final String NAME_INTENT_EXTRA_DATA_CHECKOUTDATE = "checkOutDate";
-	public static final String NAME_INTENT_EXTRA_DATA_EVENT = "event";
-	public static final String NAME_INTENT_EXTRA_DATA_USERINDEX = "userIndex";
+	public static final String NAME_INTENT_EXTRA_DATA_URL = "url";
 
 	// Push Type
 	public static final int PUSH_TYPE_NOTICE = 0;

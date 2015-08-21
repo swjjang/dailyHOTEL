@@ -1,14 +1,12 @@
 package com.twoheart.dailyhotel.activity;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Event;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.util.ui.WebViewActivity;
 
 import android.content.DialogInterface;
@@ -35,25 +33,15 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
 		Intent intent = getIntent();
 
-		Event event = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_EVENT);
-		int userIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_USERINDEX, 0);
+		String url = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_URL);
 
-		if (event == null || userIndex == 0)
+		if (Util.isTextEmpty(url) == true)
 		{
+			finish();
 			return;
 		}
 
-		String params;
-
-		if (RELEASE_STORE == Stores.PLAY_STORE || RELEASE_STORE == Stores.N_STORE)
-		{
-			params = String.format("?user_idx=%d&daily_event_idx=%d&store_type=%s", userIndex, event.index, "google");
-		} else
-		{
-			params = String.format("?user_idx=%d&daily_event_idx=%d&store_type=%s", userIndex, event.index, "skt");
-		}
-
-		URL_WEBAPI_EVENT = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_DAILY_EVENT_PAGE)).append(params).toString();
+		URL_WEBAPI_EVENT = url;
 
 		setContentView(R.layout.activity_event_web);
 		setActionBar(R.string.actionbar_title_event_list_frag);
@@ -134,6 +122,11 @@ public class EventWebActivity extends WebViewActivity implements Constants
 		@JavascriptInterface
 		public void feed(String message)
 		{
+			if (isFinishing() == true)
+			{
+				return;
+			}
+
 			ExLog.d("message : " + message);
 			SimpleAlertDialog.build(EventWebActivity.this, getString(R.string.dialog_notice2), message, getString(R.string.dialog_btn_text_confirm), new OnClickListener()
 			{
