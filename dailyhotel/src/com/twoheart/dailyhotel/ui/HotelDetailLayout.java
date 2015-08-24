@@ -1772,9 +1772,6 @@ public class HotelDetailLayout
 		 */
 		private View getDetail02View(final View view, HotelDetailEx hotelDetail)
 		{
-			//			TextView hotelSimpleLocationTextView = (TextView) view.findViewById(R.id.hotelSimpleLocationTextView);
-			//			hotelSimpleLocationTextView.setText(hotelDetail.addressNatural);
-
 			// 주소지
 			final TextView hotelAddressTextView01 = (TextView) view.findViewById(R.id.hotelAddressTextView01);
 			final TextView hotelAddressTextView02 = (TextView) view.findViewById(R.id.hotelAddressTextView02);
@@ -1885,9 +1882,11 @@ public class HotelDetailLayout
 			googleMapLayout.setOnClickListener(null);
 			googleMapLayout.removeAllViews();
 
-			mMapFragment = new SupportMapFragment();
-			mFragmentActivity.getSupportFragmentManager().beginTransaction().add(googleMapLayout.getId(), mMapFragment).commitAllowingStateLoss();
+			LayoutInflater layoutInflater = (LayoutInflater) mFragmentActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			ViewGroup viewGroup = (ViewGroup) layoutInflater.inflate(R.layout.view_map, null, false);
+			googleMapLayout.addView(viewGroup);
 
+			mMapFragment = (SupportMapFragment) mFragmentActivity.getSupportFragmentManager().findFragmentById(R.id.mapFragment);
 			mMapFragment.getMapAsync(new OnMapReadyCallback()
 			{
 				@Override

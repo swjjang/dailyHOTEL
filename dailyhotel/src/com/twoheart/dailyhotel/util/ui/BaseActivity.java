@@ -42,6 +42,9 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -547,6 +550,8 @@ public class BaseActivity extends
 			mLockUI.close();
 		}
 
+		recursiveRecycle(getWindow().getDecorView());
+
 		super.onDestroy();
 	}
 
@@ -641,4 +646,43 @@ public class BaseActivity extends
 		v.setClickable(isClickable);
 	}
 
+	private void recursiveRecycle(View root)
+	{
+		if (root == null)
+		{
+			return;
+		}
+
+		if (Util.isOverAPI16())
+		{
+			root.setBackground(null);
+		} else
+		{
+			root.setBackgroundDrawable(null);
+		}
+
+		if (root instanceof ViewGroup)
+		{
+			ViewGroup group = (ViewGroup) root;
+			int count = group.getChildCount();
+
+			for (int i = 0; i < count; i++)
+			{
+				recursiveRecycle(group.getChildAt(i));
+			}
+
+			if (!(root instanceof AdapterView))
+			{
+				group.removeAllViews();
+			}
+		}
+
+		if (root instanceof ImageView)
+		{
+			((ImageView) root).setImageDrawable(null);
+		}
+
+		root = null;
+		return;
+	}
 }

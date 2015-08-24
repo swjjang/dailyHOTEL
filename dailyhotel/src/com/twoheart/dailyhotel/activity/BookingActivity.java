@@ -1588,6 +1588,11 @@ public class BookingActivity extends
 					{
 						textView.clearFocus();
 
+						if (getWindow() == null || getWindow().getDecorView() == null || getWindow().getDecorView().getWindowToken() == null)
+						{
+							return false;
+						}
+
 						InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 						imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
 						return true;

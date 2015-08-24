@@ -193,6 +193,11 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 
 	private void toggleKeyboard(boolean show)
 	{
+		if (getWindow() == null || getWindow().getDecorView() == null || getWindow().getDecorView().getWindowToken() == null)
+		{
+			return;
+		}
+
 		if (show)
 		{
 			mAq.id(R.id.et_profile_name).getEditText().requestFocus();
