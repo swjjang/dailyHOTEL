@@ -449,14 +449,6 @@
                     android:textColor="@color/dh_theme_color"
                     android:textSize="10dp" />
             </RelativeLayout>
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/providerInfoLayout"
-                android:layout_centerHorizontal="true"
-                android:alpha="0.1"
-                android:src="@drawable/img_ic_guide_logo" />
         </RelativeLayout>
     </ScrollView>
 

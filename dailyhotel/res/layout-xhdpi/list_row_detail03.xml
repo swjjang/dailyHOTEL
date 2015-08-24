@@ -63,24 +63,6 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!--
-         <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-        android:id="@+id/hotelSimpleLocationTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="35dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="10dp"
-        android:ellipsize="end"
-        android:freezesText="true"
-        android:singleLine="true"
-        android:textColor="@color/hoteldetail_contents_text_color"
-        android:textSize="13dp"
-        android:visibility="gone" />
-    -->
-
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
@@ -98,7 +80,6 @@
             android:text="@string/label_google_map"
             android:textColor="@color/booking_subtext"
             android:textSize="20sp" />
-
     </FrameLayout>
 
     <View

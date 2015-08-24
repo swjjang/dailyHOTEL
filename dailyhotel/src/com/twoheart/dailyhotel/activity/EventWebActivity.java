@@ -33,7 +33,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
 		Intent intent = getIntent();
 
-		String url = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_URL);
+		String url = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_URL);
 
 		if (Util.isTextEmpty(url) == true)
 		{

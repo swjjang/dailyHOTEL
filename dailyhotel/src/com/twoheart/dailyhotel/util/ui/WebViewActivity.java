@@ -23,6 +23,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -142,9 +143,23 @@ public class WebViewActivity extends BaseActivity implements OnLongClickListener
 			super.onReceivedError(view, errorCode, description, failingUrl);
 			DailyToast.showToast(WebViewActivity.this, R.string.toast_msg_network_status_bad, Toast.LENGTH_LONG);
 			finish();
-
 		}
 
+		@Override
+		public void onPageStarted(WebView view, String url, Bitmap favicon)
+		{
+			lockUI();
+
+			super.onPageStarted(view, url, favicon);
+		}
+
+		@Override
+		public void onPageFinished(WebView view, String url)
+		{
+			unLockUI();
+
+			super.onPageFinished(view, url);
+		}
 	}
 
 	public class DailyHotelWebChromeClient extends WebChromeClient
@@ -173,7 +188,6 @@ public class WebViewActivity extends BaseActivity implements OnLongClickListener
 		{
 			WebViewActivity.this.setProgress(progress * 100);
 		}
-
 	}
 
 	@Override
