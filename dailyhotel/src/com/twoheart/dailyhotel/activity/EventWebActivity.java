@@ -88,7 +88,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 		public void externalLink(String packageName, String uri)
 		{
 			Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
-			marketLaunch.setData(Uri.parse(Util.storeReleaseAddress()));
+			marketLaunch.setData(Uri.parse(uri));
 
 			if (marketLaunch.resolveActivity(getPackageManager()) == null)
 			{

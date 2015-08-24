@@ -66,6 +66,7 @@ import android.view.ViewGroup;
 public class HotelMainFragment extends BaseFragment
 {
 	private TabIndicator mTabIndicator;
+	private View mUnderLineView;
 	private FragmentViewPager mFragmentViewPager;
 	private ArrayList<HotelListFragment> mFragmentList;
 
@@ -117,6 +118,8 @@ public class HotelMainFragment extends BaseFragment
 		mHotelViewType = HOTEL_VIEW_TYPE.LIST;
 
 		mTabIndicator = (TabIndicator) view.findViewById(R.id.tabindicator);
+		mUnderLineView = view.findViewById(R.id.tabindicator_underLine);
+
 		//		mTabIndicator.setData(titleList, dayList, true);
 		mTabIndicator.setData(titleList, true);
 		mTabIndicator.setOnTabSelectListener(mOnTabSelectedListener);
@@ -146,9 +149,26 @@ public class HotelMainFragment extends BaseFragment
 		mTabIndicator.setOnPageChangeListener(mOnPageChangeListener);
 
 		setHasOptionsMenu(true);//프래그먼트 내에서 옵션메뉴를 지정하기 위해 
-		mMenuEnabled = true;
+
+		initHide();
 
 		return view;
+	}
+
+	private void initHide()
+	{
+		mTabIndicator.setVisibility(View.INVISIBLE);
+		mUnderLineView.setVisibility(View.INVISIBLE);
+
+		setMenuEnabled(false);
+	}
+
+	private void initShow()
+	{
+		mTabIndicator.setVisibility(View.VISIBLE);
+		mUnderLineView.setVisibility(View.VISIBLE);
+
+		setMenuEnabled(true);
 	}
 
 	@Override
@@ -208,7 +228,7 @@ public class HotelMainFragment extends BaseFragment
 
 	public void setMenuEnabled(boolean enabled)
 	{
-		if (mMenuEnabled == enabled)
+		if (mMenuEnabled == enabled || mTodaySaleTime.isSaleTime() == false)
 		{
 			return;
 		}
@@ -751,6 +771,11 @@ public class HotelMainFragment extends BaseFragment
 
 				if (mTodaySaleTime.isSaleTime() == true)
 				{
+					if (mTabIndicator.getVisibility() != View.VISIBLE)
+					{
+						initShow();
+					}
+
 					if (baseActivity.sharedPreference.contains(KEY_PREFERENCE_BY_SHARE) == true)
 					{
 						String param = baseActivity.sharedPreference.getString(KEY_PREFERENCE_BY_SHARE, null);
@@ -804,6 +829,8 @@ public class HotelMainFragment extends BaseFragment
 					}
 				} else
 				{
+					initHide();
+
 					((MainActivity) baseActivity).replaceFragment(WaitTimerFragment.newInstance(mTodaySaleTime));
 					unLockUI();
 				}

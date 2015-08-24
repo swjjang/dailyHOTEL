@@ -645,7 +645,7 @@ public class MainActivity
 
 					if (sharedPreference.getBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false))
 					{
-						showNewEvent();
+						showNewEvent(true);
 					}
 
 					fragmentManager = getSupportFragmentManager();
@@ -800,9 +800,9 @@ public class MainActivity
 		}
 	}
 
-	public void showNewEvent()
+	public void showNewEvent(boolean isShowAuctionBar)
 	{
-		if (mNewEventView != null)
+		if (mNewEventView != null && isShowAuctionBar == true)
 		{
 			mNewEventView.setVisibility(View.VISIBLE);
 		}
@@ -1193,7 +1193,13 @@ public class MainActivity
 				{
 					editor.putBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, true);
 
-					showNewEvent();
+					if (drawerLayout.isDrawerOpen(drawerView) == true)
+					{
+						showNewEvent(false);
+					} else
+					{
+						showNewEvent(true);
+					}
 				} else
 				{
 					editor.putBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false);

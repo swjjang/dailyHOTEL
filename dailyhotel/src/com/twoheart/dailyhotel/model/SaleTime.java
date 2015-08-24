@@ -167,7 +167,7 @@ public class SaleTime implements Constants, Parcelable
 			}
 		} else
 		{
-			throw new IllegalStateException("Current time, open time and close time must be set.");
+			return false;
 		}
 	}
 
