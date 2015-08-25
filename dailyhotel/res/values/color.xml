@@ -120,4 +120,7 @@
 	<color name="waitfragment_maintext">#443d3d</color>
 	<color name="waitfragment_subtext">#433d3c</color>
 	
+	<!-- Setting Fragment -->
+	<color name="setting_business_license">#b3858585</color>
+	
 </resources>	

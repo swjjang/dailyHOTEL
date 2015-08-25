@@ -141,22 +141,6 @@ public class EventListFragment extends BaseFragment implements Constants
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
-	private void loadLoginProcess(boolean loginSuccess)
-	{
-		BaseActivity baseActivity = (BaseActivity) getActivity();
-
-		if (baseActivity == null)
-		{
-			return;
-		}
-
-		if (loginSuccess)
-		{
-		} else
-		{
-		}
-	}
-
 	private void requestEvent(Event event, int userIndex)
 	{
 		BaseActivity baseActivity = (BaseActivity) getActivity();
@@ -166,7 +150,7 @@ public class EventListFragment extends BaseFragment implements Constants
 			return;
 		}
 
-		unLockUI();
+		lockUI();
 
 		String params;
 
@@ -353,8 +337,6 @@ public class EventListFragment extends BaseFragment implements Constants
 					ed.commit();
 
 					unLockUI();
-					loadLoginProcess(false);
-
 				} else
 				{
 					VolleyHttpClient.createCookie();
@@ -419,7 +401,6 @@ public class EventListFragment extends BaseFragment implements Constants
 				} else
 				{
 					unLockUI();
-					loadLoginProcess(false);
 
 					// 이벤트 리스트 얻어오기
 					// 이벤트 요청 화면으로 이동
