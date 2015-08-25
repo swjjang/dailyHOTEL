@@ -6,6 +6,7 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -137,7 +138,7 @@ public class Util implements Constants
 		System.exit(0);
 	}
 
-	public static void finishOutOfMemory(Activity activity)
+	public static void finishOutOfMemory(BaseActivity activity)
 	{
 		if (activity == null || activity.isFinishing() == true)
 		{
@@ -145,14 +146,14 @@ public class Util implements Constants
 		}
 
 		// 세션이 만료되어 재시작 요청.
-		SimpleAlertDialog.build(activity, activity.getString(R.string.dialog_notice2), activity.getString(R.string.dialog_msg_outofmemory), activity.getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnClickListener()
+		activity.showSimpleDialog(activity.getString(R.string.dialog_notice2), activity.getString(R.string.dialog_msg_outofmemory), activity.getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnClickListener()
 		{
 			@Override
 			public void onClick(DialogInterface dialog, int which)
 			{
 				System.exit(0);
 			}
-		}, null).setCancelable(false).show();
+		}, null, false);
 	}
 
 	public static String getDeviceUUID(final Context context)

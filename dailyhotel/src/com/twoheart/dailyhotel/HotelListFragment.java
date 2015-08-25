@@ -34,7 +34,6 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
@@ -488,7 +487,7 @@ public class HotelListFragment extends
 
 		if (DEBUG == true)
 		{
-			SimpleAlertDialog.build(baseActivity, null, params, getString(R.string.dialog_btn_text_confirm), null).show();
+			baseActivity.showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
 		}
 
 		// 호텔 리스트를 가져온다.

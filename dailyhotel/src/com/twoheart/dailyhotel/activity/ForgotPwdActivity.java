@@ -9,7 +9,6 @@ import org.json.JSONObject;
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
@@ -153,7 +152,7 @@ public class ForgotPwdActivity
 					}
 
 					String message = response.getString("msg");
-					SimpleAlertDialog.build(ForgotPwdActivity.this, message, getString(R.string.dialog_btn_text_confirm), null).show();
+					showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
 				}
 			} catch (JSONException e)
 			{
@@ -184,12 +183,12 @@ public class ForgotPwdActivity
 
 				if ("true".equalsIgnoreCase(result) == true)
 				{
-					SimpleAlertDialog.build(ForgotPwdActivity.this, getString(R.string.dialog_msg_sent_email), getString(R.string.dialog_btn_text_confirm), null).show();
+					showSimpleDialog(null, getString(R.string.dialog_msg_sent_email), getString(R.string.dialog_btn_text_confirm), null);
 					etForgot.setText("");
 				} else
 				{
 					String message = response.getString("msg");
-					SimpleAlertDialog.build(ForgotPwdActivity.this, message, getString(R.string.dialog_btn_text_confirm), null).show();
+					showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
 				}
 			} catch (JSONException e)
 			{

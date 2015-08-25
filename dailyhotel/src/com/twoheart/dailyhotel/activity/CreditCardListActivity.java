@@ -27,7 +27,6 @@ import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.ui.CreditCardLayout;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
@@ -139,7 +138,7 @@ public class CreditCardListActivity extends BaseActivity
 				String title = getString(R.string.dialog_notice2);
 				String positive = getString(R.string.dialog_btn_text_confirm);
 
-				SimpleAlertDialog.build(CreditCardListActivity.this, title, msg, positive, (DialogInterface.OnClickListener) null).show();
+				showSimpleDialog(title, msg, positive, (DialogInterface.OnClickListener) null);
 			}
 		}
 	}
@@ -246,7 +245,7 @@ public class CreditCardListActivity extends BaseActivity
 							return;
 						}
 
-						SimpleAlertDialog.build(CreditCardListActivity.this, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_delete_register_creditcard), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null).show();
+						showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_delete_register_creditcard), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null);
 					} else
 					{
 						restartApp();
@@ -504,7 +503,7 @@ public class CreditCardListActivity extends BaseActivity
 					}
 
 					// 실패 
-					SimpleAlertDialog.build(CreditCardListActivity.this, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_delete_failed_creditcard), getString(R.string.dialog_btn_text_confirm), new DialogInterface.OnClickListener()
+					showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_delete_failed_creditcard), getString(R.string.dialog_btn_text_confirm), new DialogInterface.OnClickListener()
 					{
 						@Override
 						public void onClick(DialogInterface dialog, int which)
@@ -515,7 +514,7 @@ public class CreditCardListActivity extends BaseActivity
 							mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_INFO).toString(), null, mUserSessionBillingCardInfoJsonResponseListener, CreditCardListActivity.this));
 						}
 
-					}).show();
+					});
 				}
 			} catch (Exception e)
 			{

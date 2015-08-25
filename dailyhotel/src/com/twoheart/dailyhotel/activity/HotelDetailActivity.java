@@ -29,7 +29,6 @@ import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
-import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -878,7 +877,7 @@ public class HotelDetailActivity extends BaseActivity
 
 						if (DEBUG == true)
 						{
-							SimpleAlertDialog.build(HotelDetailActivity.this, null, params, getString(R.string.dialog_btn_text_confirm), null).show();
+							showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
 						}
 
 						mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_HOTEL_INFO).append(params).toString(), null, mHotelDetailJsonResponseListener, HotelDetailActivity.this));
@@ -902,7 +901,7 @@ public class HotelDetailActivity extends BaseActivity
 
 						if (DEBUG == true)
 						{
-							SimpleAlertDialog.build(HotelDetailActivity.this, null, params, getString(R.string.dialog_btn_text_confirm), null).show();
+							showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
 						}
 
 						mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_HOTEL_INFO).append(params).toString(), null, mHotelDetailJsonResponseListener, HotelDetailActivity.this));

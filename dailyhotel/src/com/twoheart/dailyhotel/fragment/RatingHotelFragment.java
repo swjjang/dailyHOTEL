@@ -23,7 +23,6 @@ import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
@@ -32,7 +31,6 @@ import com.twoheart.dailyhotel.widget.DailyToast;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Point;
 import android.os.Build;
@@ -278,16 +276,7 @@ public class RatingHotelFragment extends
 								return;
 							}
 
-							AlertDialog alertDlg = SimpleAlertDialog.build(mHostActivity, null, msg, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnClickListener()
-							{
-								@Override
-								public void onClick(DialogInterface dialog, int which)
-								{
-
-								}
-							}, null).create();
-
-							alertDlg.show();
+							mHostActivity.showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, null, null);
 							break;
 					}
 				}

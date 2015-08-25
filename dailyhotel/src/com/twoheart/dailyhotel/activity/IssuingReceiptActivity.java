@@ -8,14 +8,12 @@ import org.json.JSONObject;
 
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -267,7 +265,7 @@ public class IssuingReceiptActivity extends BaseActivity
 
 				if (DEBUG == true)
 				{
-					SimpleAlertDialog.build(IssuingReceiptActivity.this, null, params.toString(), getString(R.string.dialog_btn_text_confirm), null).show();
+					showSimpleDialog(null, params.toString(), getString(R.string.dialog_btn_text_confirm), null);
 				}
 
 				mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_RECEIPT).toString(), params, mReservReceiptJsonResponseListener, IssuingReceiptActivity.this));
@@ -331,8 +329,7 @@ public class IssuingReceiptActivity extends BaseActivity
 
 					String msg = response.getString("msg");
 
-					AlertDialog alertDialog = SimpleAlertDialog.build(IssuingReceiptActivity.this, null, msg, getString(R.string.dialog_btn_text_confirm), null, null, null).create();
-					alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener()
+					showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
 					{
 						@Override
 						public void onDismiss(DialogInterface dialog)
@@ -340,8 +337,6 @@ public class IssuingReceiptActivity extends BaseActivity
 							finish();
 						}
 					});
-
-					alertDialog.show();
 				}
 			} catch (Exception e)
 			{

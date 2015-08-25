@@ -45,7 +45,6 @@ import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -537,7 +536,7 @@ public class LoginActivity extends
 						}
 
 						msg = response.getString("msg");
-						SimpleAlertDialog.build(LoginActivity.this, msg, getString(R.string.dialog_btn_text_confirm), null).show();
+						showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null);
 					}
 				}
 			} catch (Exception e)

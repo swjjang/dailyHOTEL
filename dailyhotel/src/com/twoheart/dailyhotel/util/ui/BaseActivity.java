@@ -24,12 +24,12 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.HotelMainFragment;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.FontManager;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -53,6 +53,7 @@ public class BaseActivity extends
 {
 	private Toolbar mToolbar;
 	public SharedPreferences sharedPreference;
+	private AlertDialog mAlertDialog;
 
 	protected RequestQueue mQueue;
 
@@ -355,14 +356,14 @@ public class BaseActivity extends
 		}
 
 		// 세션이 만료되어 재시작 요청.
-		SimpleAlertDialog.build(BaseActivity.this, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_session_expired), getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnClickListener()
+		showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_session_expired), getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnClickListener()
 		{
 			@Override
 			public void onClick(DialogInterface dialog, int which)
 			{
 				Util.restartApp(BaseActivity.this);
 			}
-		}, null).setCancelable(false).show();
+		}, null, false);
 	}
 
 	// 메뉴 버튼을 막아버림.
@@ -414,7 +415,7 @@ public class BaseActivity extends
 	{
 		// 현재 Activity에 등록된 Request를 취소한다. 
 		if (mQueue != null)
-
+		{
 			mQueue.cancelAll(new RequestQueue.RequestFilter()
 			{
 				@Override
@@ -433,6 +434,13 @@ public class BaseActivity extends
 					return false;
 				}
 			});
+		}
+
+		if (mAlertDialog != null && mAlertDialog.isShowing())
+		{
+			mAlertDialog.dismiss();
+			mAlertDialog = null;
+		}
 
 		super.onStop();
 	}
@@ -684,5 +692,112 @@ public class BaseActivity extends
 
 		root = null;
 		return;
+	}
+
+	public AlertDialog createSimpleDialog(String title, String msg, String positive, String negative, DialogInterface.OnClickListener positiveListener, DialogInterface.OnClickListener negativeListener)
+	{
+		if (mAlertDialog != null)
+		{
+			if (mAlertDialog.isShowing())
+			{
+				mAlertDialog.dismiss();
+			}
+
+			mAlertDialog = null;
+		}
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this).setMessage(msg).setPositiveButton(positive, positiveListener);
+
+		if (Util.isTextEmpty(negative) == false)
+		{
+			builder.setNegativeButton(negative, negativeListener);
+		}
+
+		if (Util.isTextEmpty(title) == false)
+		{
+			builder.setTitle(title);
+		}
+
+		mAlertDialog = builder.create();
+
+		return mAlertDialog;
+	}
+
+	public void showSimpleDialog(String title, String msg, String positive, DialogInterface.OnClickListener positiveListener)
+	{
+		showSimpleDialog(title, msg, positive, null, positiveListener, null);
+	}
+
+	public void showSimpleDialog(String title, String msg, String positive, DialogInterface.OnClickListener positiveListener, DialogInterface.OnCancelListener cancelListener)
+	{
+		showSimpleDialog(title, msg, positive, null, positiveListener, null, cancelListener, null, true);
+	}
+
+	public void showSimpleDialog(String title, String msg, String positive, DialogInterface.OnClickListener positiveListener, DialogInterface.OnDismissListener dismissListener)
+	{
+		showSimpleDialog(title, msg, positive, null, positiveListener, null, null, dismissListener, true);
+	}
+
+	public void showSimpleDialog(String title, String msg, String positive, String negative, DialogInterface.OnClickListener positiveListener, DialogInterface.OnClickListener negativeListener)
+	{
+		showSimpleDialog(title, msg, positive, negative, positiveListener, negativeListener, null, null, true);
+	}
+
+	public void showSimpleDialog(String title, String msg, String positive, String negative, DialogInterface.OnClickListener positiveListener, DialogInterface.OnClickListener negativeListener, boolean isCancelable)
+	{
+		showSimpleDialog(title, msg, positive, negative, positiveListener, negativeListener, null, null, isCancelable);
+	}
+
+	public void showSimpleDialog(String title, String msg, String positive, String negative, DialogInterface.OnClickListener positiveListener, //
+	DialogInterface.OnClickListener negativeListener, //
+	DialogInterface.OnCancelListener cancelListener, //
+	DialogInterface.OnDismissListener dismissListener, boolean isCancelable)
+	{
+		if (isFinishing())
+		{
+			return;
+		}
+
+		if (mAlertDialog != null)
+		{
+			if (mAlertDialog.isShowing())
+			{
+				mAlertDialog.dismiss();
+			}
+
+			mAlertDialog = null;
+		}
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this).setMessage(msg).setPositiveButton(positive, positiveListener);
+
+		if (Util.isTextEmpty(negative) == false)
+		{
+			builder.setNegativeButton(negative, negativeListener);
+		}
+
+		if (Util.isTextEmpty(title) == false)
+		{
+			builder.setTitle(title);
+		}
+
+		if (cancelListener != null)
+		{
+			builder.setOnCancelListener(cancelListener);
+		}
+
+		if (dismissListener != null)
+		{
+			builder.setOnDismissListener(dismissListener);
+		}
+
+		builder.setCancelable(isCancelable);
+
+		try
+		{
+			mAlertDialog = builder.show();
+		} catch (Exception e)
+		{
+			ExLog.d(e.toString());
+		}
 	}
 }

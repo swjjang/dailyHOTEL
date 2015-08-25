@@ -35,7 +35,6 @@ import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
@@ -385,14 +384,14 @@ public class BookingActivity extends
 				String msg = getString(R.string.dialog_btn_payment_no_reserve);
 				String buttonText = getString(R.string.dialog_btn_payment_confirm);
 
-				SimpleAlertDialog.build(this, title, msg, buttonText, new DialogInterface.OnClickListener()
+				showSimpleDialog(title, msg, buttonText, new DialogInterface.OnClickListener()
 				{
 					@Override
 					public void onClick(DialogInterface dialog, int which)
 					{
 						swCredit.setChecked(false);
 					}
-				}).setOnDismissListener(new OnDismissListener()
+				}, new OnDismissListener()
 				{
 					@Override
 					public void onDismiss(DialogInterface dialog)
@@ -402,7 +401,7 @@ public class BookingActivity extends
 						v.setClickable(true);
 						v.setEnabled(true);
 					}
-				}).show();
+				});
 
 				releaseUiComponent();
 			} else
@@ -423,14 +422,14 @@ public class BookingActivity extends
 					String positive = getString(R.string.dialog_btn_text_confirm);
 					String msg = getString(R.string.dialog_msg_none_gcmid);
 
-					SimpleAlertDialog.build(this, title, msg, positive, new DialogInterface.OnClickListener()
+					showSimpleDialog(title, msg, positive, new DialogInterface.OnClickListener()
 					{
 						@Override
 						public void onClick(DialogInterface dialog, int which)
 						{
 							onClickPayment();
 						}
-					}).show().setOnCancelListener(new DialogInterface.OnCancelListener()
+					}, new DialogInterface.OnCancelListener()
 					{
 						@Override
 						public void onCancel(DialogInterface dialog)
@@ -723,7 +722,7 @@ public class BookingActivity extends
 
 			if (DEBUG == true)
 			{
-				SimpleAlertDialog.build(BookingActivity.this, null, params.toString(), getString(R.string.dialog_btn_text_confirm), null).show();
+				showSimpleDialog(null, params.toString(), getString(R.string.dialog_btn_text_confirm), null);
 			}
 
 			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_SESSION_EASY_PAYMENT).toString(), params, mUserSessionBillingPayment, BookingActivity.this));
@@ -916,7 +915,7 @@ public class BookingActivity extends
 				return;
 			}
 
-			SimpleAlertDialog.build(this, title, msg, posTitle, posListener).show();
+			showSimpleDialog(title, msg, posTitle, posListener);
 		} else if (requestCode == CODE_REQUEST_ACTIVITY_CREDITCARD_MANAGER)
 		{
 			// 신용카드 간편 결제 선택후
@@ -978,7 +977,7 @@ public class BookingActivity extends
 				String title = getString(R.string.dialog_notice2);
 				String positive = getString(R.string.dialog_btn_text_confirm);
 
-				SimpleAlertDialog.build(BookingActivity.this, title, msg, positive, (DialogInterface.OnClickListener) null).show();
+				showSimpleDialog(title, msg, positive, (DialogInterface.OnClickListener) null);
 			}
 		}
 	}
@@ -1367,7 +1366,7 @@ public class BookingActivity extends
 			return;
 		}
 
-		SimpleAlertDialog.build(BookingActivity.this, title, msg, positive, new DialogInterface.OnClickListener()
+		showSimpleDialog(title, msg, positive, new DialogInterface.OnClickListener()
 		{
 			@Override
 			public void onClick(DialogInterface dialog, int which)
@@ -1381,7 +1380,7 @@ public class BookingActivity extends
 
 				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_ROOM_PAYMENT).append(params).toString(), null, mSaleRoomPaymentJsonResponseListener, BookingActivity.this));
 			}
-		}).show();
+		});
 	}
 
 	private void writeLogPaid(Pay pay)
@@ -1689,7 +1688,7 @@ public class BookingActivity extends
 						}
 					};
 
-					SimpleAlertDialog.build(BookingActivity.this, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_sales_closed), getString(R.string.dialog_btn_text_confirm), posListener).show();
+					showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_sales_closed), getString(R.string.dialog_btn_text_confirm), posListener);
 				}
 
 			} catch (Exception e)
@@ -1875,7 +1874,7 @@ public class BookingActivity extends
 
 						if (DEBUG == true)
 						{
-							SimpleAlertDialog.build(BookingActivity.this, null, params, getString(R.string.dialog_btn_text_confirm), null).show();
+							showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
 						}
 
 						// 2. 화면 정보 얻기

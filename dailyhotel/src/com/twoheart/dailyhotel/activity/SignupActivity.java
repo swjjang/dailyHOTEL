@@ -37,7 +37,6 @@ import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
@@ -45,7 +44,6 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListe
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -108,7 +106,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 				return;
 			}
 
-			SimpleAlertDialog.build(SignupActivity.this, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_facebook_update), getString(R.string.dialog_btn_text_confirm), null, null, null).show();
+			showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_facebook_update), getString(R.string.dialog_btn_text_confirm), null, null, null);
 		} else
 		{
 			mMode = MODE_SIGNUP;
@@ -614,7 +612,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 									return;
 								}
 
-								AlertDialog alertDlg = SimpleAlertDialog.build(SignupActivity.this, null, msg, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnClickListener()
+								showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnClickListener()
 								{
 									@Override
 									public void onClick(DialogInterface dialog, int which)
@@ -622,9 +620,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 										setResult(RESULT_OK);
 										finish();
 									}
-								}, null).create();
-
-								alertDlg.show();
+								}, null);
 							} else
 							{
 								setResult(RESULT_OK);
@@ -668,8 +664,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 									return;
 								}
 
-								AlertDialog alertDlg = SimpleAlertDialog.build(SignupActivity.this, null, msg, getString(R.string.dialog_btn_text_confirm), null, null, null).create();
-								alertDlg.show();
+								showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, null, null);
 							}
 							break;
 						}

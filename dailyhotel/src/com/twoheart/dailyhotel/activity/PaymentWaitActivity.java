@@ -18,7 +18,6 @@ import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.SimpleAlertDialog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
@@ -99,7 +98,7 @@ public class PaymentWaitActivity extends BaseActivity
 				String message = getString(R.string.dialog_msg_call);
 				String positive = getString(R.string.dialog_btn_call);
 
-				SimpleAlertDialog.build(this, title, message, positive, new DialogInterface.OnClickListener()
+				showSimpleDialog(title, message, positive, new DialogInterface.OnClickListener()
 				{
 					@Override
 					public void onClick(DialogInterface dialog, int which)
@@ -113,7 +112,7 @@ public class PaymentWaitActivity extends BaseActivity
 							DailyToast.showToast(PaymentWaitActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
 						}
 					}
-				}).show();
+				});
 				return true;
 
 			default:
