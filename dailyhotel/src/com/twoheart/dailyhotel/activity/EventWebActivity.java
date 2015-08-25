@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.activity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
+import com.twoheart.dailyhotel.util.Constants.Stores;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.SimpleAlertDialog;
@@ -92,8 +93,13 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
 			if (marketLaunch.resolveActivity(getPackageManager()) == null)
 			{
-				String marketUrl = String.format("https://play.google.com/store/apps/details?id=%s", packageName);
-				marketLaunch.setData(Uri.parse(marketUrl));
+				String marketUrl;
+				
+				if (RELEASE_STORE == Stores.PLAY_STORE || RELEASE_STORE == Stores.N_STORE)
+				{
+					marketUrl = String.format("https://play.google.com/store/apps/details?id=%s", packageName);
+					marketLaunch.setData(Uri.parse(marketUrl));
+				}
 			}
 
 			startActivity(marketLaunch);

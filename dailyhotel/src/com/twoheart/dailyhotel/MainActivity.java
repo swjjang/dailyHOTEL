@@ -851,6 +851,11 @@ public class MainActivity
 				{
 					ExLog.d(e.toString());
 				}
+				
+				if (mDrawerMenuListAdapter != null)
+				{
+					mDrawerMenuListAdapter.notifyDataSetChanged();
+				}
 			}
 		}, null));
 	}
