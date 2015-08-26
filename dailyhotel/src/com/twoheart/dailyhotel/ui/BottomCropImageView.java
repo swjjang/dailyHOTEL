@@ -53,6 +53,11 @@ public class BottomCropImageView extends ImageView
 
 	private void recomputeImgMatrix()
 	{
+		if (getDrawable() == null)
+		{
+			return;
+		}
+
 		final Matrix matrix = getImageMatrix();
 
 		float scale;

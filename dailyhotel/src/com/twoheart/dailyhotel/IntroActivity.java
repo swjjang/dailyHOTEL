@@ -27,7 +27,7 @@ public class IntroActivity
 
 	private FragmentPagerAdapter mAdapter;
 	private ViewPager mPager;
-//	private CirclePageIndicator mIndicator;
+	//	private CirclePageIndicator mIndicator;
 	private LinearLayout llIntroStart;
 	private TextView tvSkip;
 	private TextView tvStart;
@@ -56,7 +56,7 @@ public class IntroActivity
 		setContentView(R.layout.activity_intro);
 
 		mPager = (ViewPager) findViewById(R.id.intro_pager);
-//		mIndicator = (CirclePageIndicator) findViewById(R.id.intro_indicator);
+		//		mIndicator = (CirclePageIndicator) findViewById(R.id.intro_indicator);
 		llIntroStart = (LinearLayout) findViewById(R.id.ll_intro_start);
 		tvSkip = (TextView) findViewById(R.id.tv_skip);
 		tvStart = (TextView) findViewById(R.id.tv_start);
@@ -81,9 +81,9 @@ public class IntroActivity
 		};
 
 		mPager.setAdapter(mAdapter);
-//		mIndicator.setViewPager(mPager);
-//		mIndicator.setSnap(true);
-//		mIndicator.setOnPageChangeListener(this);
+		//		mIndicator.setViewPager(mPager);
+		//		mIndicator.setSnap(true);
+		//		mIndicator.setOnPageChangeListener(this);
 
 		llIntroStart.setOnClickListener(this);
 		tvSkip.setOnClickListener(this);

@@ -186,6 +186,12 @@ public class SplashActivity
 
 				if (VolleyHttpClient.isAvailableNetwork())
 				{
+					if (mProgressView.getVisibility() != View.VISIBLE)
+					{
+						mHandler.removeMessages(1);
+						mHandler.sendEmptyMessageDelayed(1, 1000);
+					}
+
 					moveToLoginStep();
 				} else
 				{

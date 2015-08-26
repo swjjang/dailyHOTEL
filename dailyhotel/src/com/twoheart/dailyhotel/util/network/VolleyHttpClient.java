@@ -68,12 +68,6 @@ public class VolleyHttpClient implements Constants
 
 	public static void init(Context context)
 	{
-		//		HttpParams params = new BasicHttpParams();
-		//		SchemeRegistry registry = new SchemeRegistry();
-		//		registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-		//		ClientConnectionManager cm = new ThreadSafeClientConnManager(params, registry);
-		//		sHttpClient = new DefaultHttpClient(cm, params);
-
 		sHttpClient = getHttpClient();
 
 		sContext = context;
@@ -155,7 +149,13 @@ public class VolleyHttpClient implements Constants
 	{
 		if (mCookieSyncManager == null)
 		{
-			mCookieSyncManager = CookieSyncManager.createInstance(sContext);
+			synchronized (VolleyHttpClient.class)
+			{
+				if (mCookieSyncManager == null)
+				{
+					mCookieSyncManager = CookieSyncManager.createInstance(sContext);
+				}
+			}
 		}
 	}
 

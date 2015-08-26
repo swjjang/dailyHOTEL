@@ -34,27 +34,33 @@
         </RelativeLayout>
     </android.support.v4.widget.DrawerLayout>
 
-    <include
-        android:id="@+id/toolbar_actionbar"
+    <RelativeLayout
+        android:id="@+id/actionBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        layout="@layout/toolbar_default" />
+        android:layout_height="wrap_content" >
 
-    <ImageView
-        android:id="@+id/newEventView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="27dp"
-        android:layout_marginTop="12dp"
-        android:src="@drawable/event_ic_n" />
+        <include
+            android:id="@+id/toolbar_actionbar"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            layout="@layout/toolbar_default" />
 
-    <View
-        android:id="@+id/toolbar_actionbar_underline"
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_alignBaseline="@id/toolbar_actionbar"
-        android:layout_alignBottom="@id/toolbar_actionbar"
-        android:background="@color/actionbar_underline" />
+        <ImageView
+            android:id="@+id/newEventView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="27dp"
+            android:layout_marginTop="12dp"
+            android:src="@drawable/event_ic_n" />
+
+        <View
+            android:id="@+id/toolbar_actionbar_underline"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignBaseline="@id/toolbar_actionbar"
+            android:layout_alignBottom="@id/toolbar_actionbar"
+            android:background="@color/actionbar_underline" />
+    </RelativeLayout>
 
     <View
         android:id="@+id/anchorAnimation"

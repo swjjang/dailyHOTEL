@@ -319,6 +319,7 @@ public class HotelMainFragment extends BaseFragment
 			return;
 		}
 
+		unLockUI();
 		releaseUiComponent();
 		baseActivity.releaseUiComponent();
 
@@ -601,6 +602,8 @@ public class HotelMainFragment extends BaseFragment
 			{
 				case HotelListViewItem.TYPE_ENTRY:
 				{
+					lockUI();
+
 					Hotel hotel = hotelListViewItem.getItem();
 
 					String region = baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
@@ -646,6 +649,7 @@ public class HotelMainFragment extends BaseFragment
 				return;
 			}
 
+			lockUI();
 			lockUiComponent();
 			baseActivity.lockUiComponent();
 
