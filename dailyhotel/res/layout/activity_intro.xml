@@ -33,7 +33,7 @@
             android:textColor="@android:color/black"
             android:textSize="18dp" />
 
-        <com.viewpagerindicator.CirclePageIndicator
+<!--         <com.viewpagerindicator.CirclePageIndicator
             android:id="@+id/intro_indicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
             vpi:fillColor="@color/vpi_fillcolor"
             vpi:pageColor="@color/vpi_pagecolor"
             vpi:radius="3dp"
-            vpi:strokeColor="@android:color/transparent" />
+            vpi:strokeColor="@android:color/transparent" /> -->
 
         <LinearLayout
             android:id="@+id/ll_intro_start"
