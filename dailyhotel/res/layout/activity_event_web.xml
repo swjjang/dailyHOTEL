@@ -3,6 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
+    <WebView
+        android:id="@+id/webView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <include
         android:id="@+id/toolbar_actionbar"
         android:layout_width="match_parent"
@@ -10,16 +15,11 @@
         layout="@layout/toolbar_default" />
 
     <View
+        android:id="@+id/toolbar_actionbarUnderLine"
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:layout_alignBaseline="@id/toolbar_actionbar"
         android:layout_alignBottom="@id/toolbar_actionbar"
         android:background="@color/actionbar_underline" />
-
-    <WebView
-        android:id="@+id/webView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar_actionbar" />
 
 </RelativeLayout>

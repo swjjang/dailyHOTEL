@@ -44,6 +44,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
 		setContentView(R.layout.activity_event_web);
 		setActionBar(R.string.actionbar_title_event_list_frag);
+		setActionBarBackgroundVisible(false);
 
 		mWebView = (WebView) findViewById(R.id.webView);
 		mWebView.getSettings().setAppCacheEnabled(false); // 7.4 캐시 정책 비활성화.
