@@ -2011,6 +2011,11 @@ public class HotelDetailLayout
 		 */
 		private View getDetailBenefitView(View view, HotelDetailEx hotelDetail)
 		{
+			if (view == null || hotelDetail == null)
+			{
+				return view;
+			}
+
 			final TextView textView1Line = (TextView) view.findViewById(R.id.benefit1LineTextView);
 			final TextView textView2Line = (TextView) view.findViewById(R.id.benefit2LineTextView);
 
@@ -2068,6 +2073,11 @@ public class HotelDetailLayout
 		 */
 		private View getDetail04View(LayoutInflater layoutInflater, ViewGroup viewGroup, HotelDetailEx hotelDetail)
 		{
+			if (layoutInflater == null || viewGroup == null || hotelDetail == null)
+			{
+				return viewGroup;
+			}
+
 			ArrayList<DetailInformation> arrayList = hotelDetail.getInformation();
 
 			if (arrayList != null)
@@ -2088,6 +2098,11 @@ public class HotelDetailLayout
 		 */
 		private View getDeatil05View(LayoutInflater layoutInflater, ViewGroup viewGroup, HotelDetailEx hotelDetail)
 		{
+			if (layoutInflater == null || viewGroup == null || hotelDetail == null)
+			{
+				return viewGroup;
+			}
+
 			ArrayList<DetailInformation> arrayList = hotelDetail.getInformation();
 
 			if (arrayList != null)
@@ -2108,10 +2123,17 @@ public class HotelDetailLayout
 		 */
 		private View getDeatil06View(LayoutInflater layoutInflater, ViewGroup viewGroup, HotelDetailEx hotelDetail)
 		{
+			if (layoutInflater == null || viewGroup == null || hotelDetail == null)
+			{
+				return viewGroup;
+			}
+
 			ArrayList<DetailInformation> arrayList = hotelDetail.getMoreInformation();
 
 			if (arrayList != null)
 			{
+				viewGroup.removeAllViews();
+
 				for (DetailInformation information : arrayList)
 				{
 					ViewGroup childGroup = (ViewGroup) layoutInflater.inflate(R.layout.list_row_detail05, viewGroup, false);
@@ -2133,6 +2155,11 @@ public class HotelDetailLayout
 		 */
 		private View getDeatil07View(LayoutInflater layoutInflater, ViewGroup viewGroup, HotelDetailEx hotelDetail)
 		{
+			if (layoutInflater == null || viewGroup == null || hotelDetail == null)
+			{
+				return viewGroup;
+			}
+
 			ArrayList<DetailInformation> arrayList = hotelDetail.getInformation();
 
 			if (arrayList != null && arrayList.size() >= 3)
@@ -2153,6 +2180,11 @@ public class HotelDetailLayout
 		 */
 		private View getDeatil08View(View view)
 		{
+			if (view == null)
+			{
+				return view;
+			}
+
 			// 카톡 1:1 실시간 상담
 			View consultKakaoView = view.findViewById(R.id.kakaoImageView);
 			consultKakaoView.setOnClickListener(new View.OnClickListener()
@@ -2172,7 +2204,7 @@ public class HotelDetailLayout
 
 		private void makeInformationLayout(LayoutInflater layoutInflater, ViewGroup viewGroup, DetailInformation information)
 		{
-			if (information == null)
+			if (layoutInflater == null || viewGroup == null || information == null)
 			{
 				return;
 			}
