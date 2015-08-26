@@ -118,8 +118,6 @@ public class HotelDetailActivity extends BaseActivity
 
 		public void doKakaotalkConsult();
 
-		public void moreViewInfomation();
-
 		public void showRoomType();
 
 		public void hideRoomType();
@@ -544,28 +542,6 @@ public class HotelDetailActivity extends BaseActivity
 					startActivity(marketLaunch);
 				}
 			}
-		}
-
-		@Override
-		public void moreViewInfomation()
-		{
-			if (mHotelDetail.getMoreInformation() == null)
-			{
-				return;
-			}
-
-			if (isLockUiComponent() == true || isFinishing() == true)
-			{
-				return;
-			}
-
-			lockUiComponent();
-
-			Intent intent = new Intent(HotelDetailActivity.this, HotelDetailInfoActivity.class);
-			intent.putParcelableArrayListExtra(NAME_INTENT_EXTRA_DATA_MOREINFORMATION, mHotelDetail.getMoreInformation());
-			startActivity(intent);
-
-			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 		}
 
 		@Override
