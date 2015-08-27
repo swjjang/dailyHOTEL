@@ -24,12 +24,15 @@ import org.json.JSONObject;
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.activity.EventWebActivity;
 import com.twoheart.dailyhotel.activity.LoginActivity;
+import com.twoheart.dailyhotel.activity.SignupActivity;
+import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Event;
 import com.twoheart.dailyhotel.ui.EventListLayout;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
@@ -53,7 +56,7 @@ public class EventListFragment extends BaseFragment implements Constants
 {
 	private EventListLayout mEventListLayout;
 	private Event mSelectedEvent;
-	private int mUserIndex;
+	private Customer mUser;
 
 	public interface OnUserActionListener
 	{
@@ -65,6 +68,8 @@ public class EventListFragment extends BaseFragment implements Constants
 	{
 		mEventListLayout = new EventListLayout(getActivity());
 		mEventListLayout.setOnUserActionListener(mOnUserActionListener);
+
+		mUser = new Customer();
 
 		return mEventListLayout.createView(inflater, container, savedInstanceState);
 	}
@@ -126,6 +131,7 @@ public class EventListFragment extends BaseFragment implements Constants
 		switch (requestCode)
 		{
 			case CODE_REQUEST_ACTIVITY_LOGIN:
+			case CODE_REQUEST_ACTIVITY_USERINFO_UPDATE:
 			{
 				if (resultCode == Activity.RESULT_OK)
 				{
@@ -141,7 +147,7 @@ public class EventListFragment extends BaseFragment implements Constants
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
-	private void requestEvent(Event event, int userIndex)
+	private void requestEvent(Event event, String userIndex)
 	{
 		BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -156,10 +162,10 @@ public class EventListFragment extends BaseFragment implements Constants
 
 		if (RELEASE_STORE == Stores.PLAY_STORE || RELEASE_STORE == Stores.N_STORE)
 		{
-			params = String.format("?user_idx=%d&daily_event_idx=%d&store_type=%s", userIndex, event.index, "google");
+			params = String.format("?user_idx=%s&daily_event_idx=%d&store_type=%s", userIndex, event.index, "google");
 		} else
 		{
-			params = String.format("?user_idx=%d&daily_event_idx=%d&store_type=%s", userIndex, event.index, "skt");
+			params = String.format("?user_idx=%s&daily_event_idx=%d&store_type=%s", userIndex, event.index, "skt");
 		}
 
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_DAILY_EVENT_PAGE).append(params).toString(), null, mDailyEventPageJsonResponseListener, baseActivity));
@@ -181,13 +187,31 @@ public class EventListFragment extends BaseFragment implements Constants
 				return;
 			}
 
+			if (isLockUiComponent() == true)
+			{
+				return;
+			}
+
+			lockUI();
+
 			mSelectedEvent = event;
 
 			// 로그인 상태 체크.
-			if (baseActivity.sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false))
+			if (baseActivity.sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false) && mUser != null)
 			{
-				requestEvent(mSelectedEvent, mUserIndex);
-				mSelectedEvent = null;
+				if (Util.isTextEmpty(mUser.getAccessToken()) == false //
+				&& (Util.isTextEmpty(mUser.getEmail()) == true || Util.isTextEmpty(mUser.getName()) == true || Util.isTextEmpty(mUser.getPhone()) == true))
+				{
+					Intent intent = new Intent(baseActivity, SignupActivity.class);
+					intent.putExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER, mUser);
+
+					startActivityForResult(intent, CODE_REQUEST_ACTIVITY_USERINFO_UPDATE);
+					baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+				} else
+				{
+					requestEvent(mSelectedEvent, mUser.getUserIdx());
+					mSelectedEvent = null;
+				}
 			} else
 			{
 				// 로그인이 되어있지 않으면 회원 가입으로 이동
@@ -222,18 +246,32 @@ public class EventListFragment extends BaseFragment implements Constants
 					throw new NullPointerException("response is null.");
 				}
 
+				mUser.setEmail(response.getString("email"));
+				mUser.setName(response.getString("name"));
+				mUser.setPhone(response.getString("phone"));
+				mUser.setAccessToken(response.getString("accessToken"));
+				mUser.setUserIdx(response.getString("idx"));
+
 				if (mSelectedEvent == null)
 				{
-					// 이벤트 요청 화면으로 이동
-					mUserIndex = response.getInt("idx");
-
-					String params = String.format("?user_idx=%d", mUserIndex);
+					String params = String.format("?user_idx=%s", mUser.getUserIdx());
 					mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_DAILY_EVENT_LIST).append(params).toString(), null, mDailyEventListJsonResponseListener, baseActivity));
 
 				} else
 				{
-					requestEvent(mSelectedEvent, mUserIndex);
-					mSelectedEvent = null;
+					if (Util.isTextEmpty(mUser.getAccessToken()) == false //
+					&& (Util.isTextEmpty(mUser.getEmail()) == true || Util.isTextEmpty(mUser.getName()) == true || Util.isTextEmpty(mUser.getPhone()) == true))
+					{
+						Intent intent = new Intent(baseActivity, SignupActivity.class);
+						intent.putExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER, mUser);
+
+						startActivityForResult(intent, CODE_REQUEST_ACTIVITY_USERINFO_UPDATE);
+						baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+					} else
+					{
+						requestEvent(mSelectedEvent, mUser.getUserIdx());
+						mSelectedEvent = null;
+					}
 				}
 			} catch (Exception e)
 			{

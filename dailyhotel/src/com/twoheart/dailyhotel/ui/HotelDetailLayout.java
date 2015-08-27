@@ -1909,6 +1909,13 @@ public class HotelDetailLayout
 
 			googleMapLayout.setOnClickListener(null);
 			googleMapLayout.removeAllViews();
+
+			if (mGoogleMapLayout == null)
+			{
+				LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				mGoogleMapLayout = (ViewGroup) inflater.inflate(R.layout.view_map, null, false);
+			}
+
 			googleMapLayout.addView(mGoogleMapLayout);
 
 			mMapFragment = (SupportMapFragment) mFragmentActivity.getSupportFragmentManager().findFragmentById(R.id.mapFragment);

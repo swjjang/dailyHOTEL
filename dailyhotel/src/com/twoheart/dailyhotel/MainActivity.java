@@ -814,7 +814,7 @@ public class MainActivity
 
 	public void hideNewEvent(boolean isHideMenuList)
 	{
-		if (mNewEventView != null)
+		if (mNewEventView != null && mNewEventView.getVisibility() != View.GONE)
 		{
 			mNewEventView.setVisibility(View.GONE);
 		}
@@ -849,11 +849,6 @@ public class MainActivity
 				} catch (Exception e)
 				{
 					ExLog.d(e.toString());
-				}
-
-				if (mDrawerMenuListAdapter != null)
-				{
-					mDrawerMenuListAdapter.notifyDataSetChanged();
 				}
 			}
 		}, null));
@@ -1214,7 +1209,12 @@ public class MainActivity
 					hideNewEvent(true);
 				}
 
-				editor.apply();
+				editor.commit();
+
+				if (mDrawerMenuListAdapter != null)
+				{
+					mDrawerMenuListAdapter.notifyDataSetChanged();
+				}
 
 			} catch (Exception e)
 			{
