@@ -89,10 +89,6 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.ImageDetailActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".activity.ImageDetailListActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
