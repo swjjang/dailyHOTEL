@@ -795,8 +795,6 @@ public class BookingActivity extends
 
 	private void activityResulted(int requestCode, int resultCode, Intent intent)
 	{
-		mAliveCallSource = "";
-
 		//결제가 끝난 뒤 호출됨. 
 		if (requestCode == CODE_REQUEST_ACTIVITY_PAYMENT)
 		{
@@ -804,6 +802,11 @@ public class BookingActivity extends
 			String msg = "";
 			String posTitle = getString(R.string.dialog_btn_text_confirm);
 			android.content.DialogInterface.OnClickListener posListener = null;
+
+			if (resultCode != CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE && resultCode != CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS)
+			{
+				mAliveCallSource = "";
+			}
 
 			switch (resultCode)
 			{
@@ -817,6 +820,8 @@ public class BookingActivity extends
 						@Override
 						public void onClick(DialogInterface dialog, int which)
 						{
+							mAliveCallSource = "";
+
 							dialog.dismiss(); // 닫기
 
 							setResult(RESULT_OK);
@@ -918,6 +923,8 @@ public class BookingActivity extends
 			showSimpleDialog(title, msg, posTitle, posListener);
 		} else if (requestCode == CODE_REQUEST_ACTIVITY_CREDITCARD_MANAGER)
 		{
+			mAliveCallSource = "";
+
 			// 신용카드 간편 결제 선택후
 			switch (resultCode)
 			{
@@ -938,6 +945,8 @@ public class BookingActivity extends
 			}
 		} else if (requestCode == CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD)
 		{
+			mAliveCallSource = "";
+
 			// 간편 결제 실행후 카드가 없어 등록후에 돌아온경우.
 			String msg = null;
 
@@ -979,6 +988,9 @@ public class BookingActivity extends
 
 				showSimpleDialog(title, msg, positive, (DialogInterface.OnClickListener) null);
 			}
+		} else
+		{
+			mAliveCallSource = "";
 		}
 	}
 
