@@ -24,13 +24,13 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListe
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -98,10 +98,10 @@ public class PaymentWaitActivity extends BaseActivity
 				String message = getString(R.string.dialog_msg_call);
 				String positive = getString(R.string.dialog_btn_call);
 
-				showSimpleDialog(title, message, positive, new DialogInterface.OnClickListener()
+				showSimpleDialog(0, title, message, positive, new View.OnClickListener()
 				{
 					@Override
-					public void onClick(DialogInterface dialog, int which)
+					public void onClick(View view)
 					{
 						if (Util.isTelephonyEnabled(PaymentWaitActivity.this) == true)
 						{

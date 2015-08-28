@@ -384,10 +384,10 @@ public class BookingActivity extends
 				String msg = getString(R.string.dialog_btn_payment_no_reserve);
 				String buttonText = getString(R.string.dialog_btn_payment_confirm);
 
-				showSimpleDialog(title, msg, buttonText, new DialogInterface.OnClickListener()
+				showSimpleDialog(0, title, msg, buttonText, new View.OnClickListener()
 				{
 					@Override
-					public void onClick(DialogInterface dialog, int which)
+					public void onClick(View view)
 					{
 						swCredit.setChecked(false);
 					}
@@ -422,10 +422,10 @@ public class BookingActivity extends
 					String positive = getString(R.string.dialog_btn_text_confirm);
 					String msg = getString(R.string.dialog_msg_none_gcmid);
 
-					showSimpleDialog(title, msg, positive, new DialogInterface.OnClickListener()
+					showSimpleDialog(0, title, msg, positive, new View.OnClickListener()
 					{
 						@Override
-						public void onClick(DialogInterface dialog, int which)
+						public void onClick(View view)
 						{
 							onClickPayment();
 						}
@@ -722,7 +722,7 @@ public class BookingActivity extends
 
 			if (DEBUG == true)
 			{
-				showSimpleDialog(null, params.toString(), getString(R.string.dialog_btn_text_confirm), null);
+				showSimpleDialog(0, null, params.toString(), getString(R.string.dialog_btn_text_confirm), null);
 			}
 
 			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_SESSION_EASY_PAYMENT).toString(), params, mUserSessionBillingPayment, BookingActivity.this));
@@ -801,7 +801,7 @@ public class BookingActivity extends
 			String title = getString(R.string.dialog_title_payment);
 			String msg = "";
 			String posTitle = getString(R.string.dialog_btn_text_confirm);
-			android.content.DialogInterface.OnClickListener posListener = null;
+			View.OnClickListener posListener = null;
 
 			if (resultCode != CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE && resultCode != CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS)
 			{
@@ -815,14 +815,12 @@ public class BookingActivity extends
 				case CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS:
 					writeLogPaid(mPay);
 
-					posListener = new DialogInterface.OnClickListener()
+					posListener = new View.OnClickListener()
 					{
 						@Override
-						public void onClick(DialogInterface dialog, int which)
+						public void onClick(View view)
 						{
 							mAliveCallSource = "";
-
-							dialog.dismiss(); // 닫기
 
 							setResult(RESULT_OK);
 							finish();
@@ -920,7 +918,7 @@ public class BookingActivity extends
 				return;
 			}
 
-			showSimpleDialog(title, msg, posTitle, posListener);
+			showSimpleDialog(0, title, msg, posTitle, posListener);
 		} else if (requestCode == CODE_REQUEST_ACTIVITY_CREDITCARD_MANAGER)
 		{
 			mAliveCallSource = "";
@@ -986,7 +984,7 @@ public class BookingActivity extends
 				String title = getString(R.string.dialog_notice2);
 				String positive = getString(R.string.dialog_btn_text_confirm);
 
-				showSimpleDialog(title, msg, positive, (DialogInterface.OnClickListener) null);
+				showSimpleDialog(0, title, msg, positive, null);
 			}
 		} else
 		{
@@ -1378,10 +1376,10 @@ public class BookingActivity extends
 			return;
 		}
 
-		showSimpleDialog(title, msg, positive, new DialogInterface.OnClickListener()
+		showSimpleDialog(0, title, msg, positive, new View.OnClickListener()
 		{
 			@Override
-			public void onClick(DialogInterface dialog, int which)
+			public void onClick(View view)
 			{
 				lockUI();
 
@@ -1689,18 +1687,17 @@ public class BookingActivity extends
 				{
 					unLockUI();
 
-					android.content.DialogInterface.OnClickListener posListener = new DialogInterface.OnClickListener()
+					View.OnClickListener posListener = new View.OnClickListener()
 					{
 						@Override
-						public void onClick(DialogInterface dialog, int which)
+						public void onClick(View view)
 						{
-							dialog.dismiss();
 							setResult(CODE_RESULT_ACTIVITY_PAYMENT_SALES_CLOSED);
 							finish();
 						}
 					};
 
-					showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_sales_closed), getString(R.string.dialog_btn_text_confirm), posListener);
+					showSimpleDialog(0, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_sales_closed), getString(R.string.dialog_btn_text_confirm), posListener);
 				}
 
 			} catch (Exception e)
@@ -1886,7 +1883,7 @@ public class BookingActivity extends
 
 						if (DEBUG == true)
 						{
-							showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
+							showSimpleDialog(0, null, params, getString(R.string.dialog_btn_text_confirm), null);
 						}
 
 						// 2. 화면 정보 얻기

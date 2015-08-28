@@ -146,10 +146,10 @@ public class Util implements Constants
 		}
 
 		// 세션이 만료되어 재시작 요청.
-		activity.showSimpleDialog(activity.getString(R.string.dialog_notice2), activity.getString(R.string.dialog_msg_outofmemory), activity.getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnClickListener()
+		activity.showSimpleDialog(0, activity.getString(R.string.dialog_notice2), activity.getString(R.string.dialog_msg_outofmemory), activity.getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
 		{
 			@Override
-			public void onClick(DialogInterface dialog, int which)
+			public void onClick(View view)
 			{
 				System.exit(0);
 			}

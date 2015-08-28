@@ -251,11 +251,11 @@ public class MainActivity
 			}
 
 			// 앱을 처음 설치한 경우 가이드를 띄움. 일단 화면 보이지 않도록 수정.
-			boolean showGuide = false;//sharedPreference.getBoolean(KEY_PREFERENCE_SHOW_GUIDE, true);
-			if (showGuide)
-			{
-				startActivityForResult(new Intent(this, IntroActivity.class), CODE_REQUEST_ACTIVITY_INTRO);
-			} else
+			//			boolean showGuide = false;//sharedPreference.getBoolean(KEY_PREFERENCE_SHOW_GUIDE, true);
+			//			if (showGuide)
+			//			{
+			//				startActivityForResult(new Intent(this, IntroActivity.class), CODE_REQUEST_ACTIVITY_INTRO);
+			//			} else
 			{
 				if (sharedPreference.contains(KEY_PREFERENCE_BY_SHARE) == true)
 				{

@@ -40,7 +40,6 @@ import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
-import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -177,10 +176,10 @@ public class SplashActivity
 			return;
 		}
 
-		OnClickListener posListener = new DialogInterface.OnClickListener()
+		View.OnClickListener posListener = new View.OnClickListener()
 		{
 			@Override
-			public void onClick(DialogInterface dialog, int which)
+			public void onClick(View view)
 			{
 				alertDlg.dismiss();
 
@@ -207,10 +206,10 @@ public class SplashActivity
 			}
 		};
 
-		OnClickListener negaListener = new DialogInterface.OnClickListener()
+		View.OnClickListener negaListener = new View.OnClickListener()
 		{
 			@Override
-			public void onClick(DialogInterface dialog, int which)
+			public void onClick(View view)
 			{
 				startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
 				alertDlg.dismiss();
@@ -232,7 +231,7 @@ public class SplashActivity
 			}
 		};
 
-		alertDlg = createSimpleDialog(getString(R.string.dialog_btn_text_waiting), getString(R.string.dialog_msg_network_unstable_retry_or_set_wifi), getString(R.string.dialog_btn_text_retry), getString(R.string.dialog_btn_text_setting), posListener, negaListener);
+		alertDlg = createSimpleDialog(0, getString(R.string.dialog_btn_text_waiting), 0, getString(R.string.dialog_msg_network_unstable_retry_or_set_wifi), getString(R.string.dialog_btn_text_retry), getString(R.string.dialog_btn_text_setting), posListener, negaListener);
 		alertDlg.setOnKeyListener(keyListener);
 		alertDlg.show();
 	}
@@ -411,10 +410,10 @@ public class SplashActivity
 						return;
 					}
 
-					OnClickListener posListener = new DialogInterface.OnClickListener()
+					View.OnClickListener posListener = new View.OnClickListener()
 					{
 						@Override
-						public void onClick(DialogInterface dialog, int which)
+						public void onClick(View view)
 						{
 							Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
 							marketLaunch.setData(Uri.parse(Util.storeReleaseAddress()));
@@ -439,7 +438,7 @@ public class SplashActivity
 						}
 					};
 
-					showSimpleDialog(getString(R.string.dialog_title_notice), getString(R.string.dialog_msg_please_update_new_version), getString(R.string.dialog_btn_text_update), posListener, cancelListener);
+					showSimpleDialog(0, getString(R.string.dialog_title_notice), getString(R.string.dialog_msg_please_update_new_version), getString(R.string.dialog_btn_text_update), posListener, cancelListener);
 
 				} else if ((maxVersion > currentVersion) && (skipMaxVersion != maxVersion))
 				{
@@ -448,10 +447,10 @@ public class SplashActivity
 						return;
 					}
 
-					OnClickListener posListener = new DialogInterface.OnClickListener()
+					View.OnClickListener posListener = new View.OnClickListener()
 					{
 						@Override
-						public void onClick(DialogInterface dialog, int which)
+						public void onClick(View view)
 						{
 							Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
 							marketLaunch.setData(Uri.parse(Util.storeReleaseAddress()));
@@ -466,16 +465,7 @@ public class SplashActivity
 						}
 					};
 
-					OnClickListener negListener = new DialogInterface.OnClickListener()
-					{
-						@Override
-						public void onClick(DialogInterface dialog, int which)
-						{
-							dialog.cancel();
-						}
-					};
-
-					OnCancelListener cancelListener = new OnCancelListener()
+					final OnCancelListener cancelListener = new OnCancelListener()
 					{
 						@Override
 						public void onCancel(DialogInterface dialog)
@@ -488,7 +478,16 @@ public class SplashActivity
 						}
 					};
 
-					showSimpleDialog(getString(R.string.dialog_title_notice), getString(R.string.dialog_msg_update_now), getString(R.string.dialog_btn_text_update), getString(R.string.dialog_btn_text_cancel), posListener, negListener, cancelListener, null, false);
+					View.OnClickListener negListener = new View.OnClickListener()
+					{
+						@Override
+						public void onClick(View view)
+						{
+							cancelListener.onCancel(null);
+						}
+					};
+
+					showSimpleDialog(0, getString(R.string.dialog_title_notice), 0, getString(R.string.dialog_msg_update_now), getString(R.string.dialog_btn_text_update), getString(R.string.dialog_btn_text_cancel), posListener, negListener, cancelListener, null, false);
 				} else
 				{
 					requestConfigurationABTest();

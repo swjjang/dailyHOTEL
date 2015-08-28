@@ -32,7 +32,6 @@ import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -292,17 +291,17 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 			/**
 			 * 로그 아웃시 내부 저장한 유저정보 초기화
 			 */
-			android.content.DialogInterface.OnClickListener posListener = new DialogInterface.OnClickListener()
+			View.OnClickListener posListener = new View.OnClickListener()
 			{
 				@Override
-				public void onClick(DialogInterface dialog, int which)
+				public void onClick(View view)
 				{
 					mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGOUT).toString(), null, mUserLogoutStringResponseListener, ProfileActivity.this));
 					AnalyticsManager.getInstance(ProfileActivity.this).recordEvent(Screen.PROFILE, Action.CLICK, Label.LOGOUT, 0L);
 				}
 			};
 
-			showSimpleDialog(null, getString(R.string.dialog_msg_chk_wanna_login), getString(R.string.dialog_btn_text_logout), getString(R.string.dialog_btn_text_cancel), posListener, null, false);
+			showSimpleDialog(0, null, getString(R.string.dialog_msg_chk_wanna_login), getString(R.string.dialog_btn_text_logout), getString(R.string.dialog_btn_text_cancel), posListener, null, false);
 
 			releaseUiComponent();
 		}

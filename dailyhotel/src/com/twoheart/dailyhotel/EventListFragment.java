@@ -480,7 +480,7 @@ public class EventListFragment extends BaseFragment implements Constants
 					if (response.has("msg") == true)
 					{
 						String message = response.getString("msg");
-						baseActivity.showSimpleDialog(getString(R.string.dialog_notice2), message, getString(R.string.dialog_btn_text_confirm), null);
+						baseActivity.showSimpleDialog(0, getString(R.string.dialog_notice2), message, getString(R.string.dialog_btn_text_confirm), null);
 					}
 				} else
 				{

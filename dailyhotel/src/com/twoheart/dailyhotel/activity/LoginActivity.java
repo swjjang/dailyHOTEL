@@ -536,7 +536,7 @@ public class LoginActivity extends
 						}
 
 						msg = response.getString("msg");
-						showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null);
+						showSimpleDialog(0, null, msg, getString(R.string.dialog_btn_text_confirm), null);
 					}
 				}
 			} catch (Exception e)

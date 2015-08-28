@@ -44,7 +44,6 @@ import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -220,7 +219,7 @@ public class BookingListFragment extends
 						return;
 					}
 
-					baseActivity.showSimpleDialog(getString(R.string.dialog_notice2), data.getStringExtra("msg"), getString(R.string.dialog_btn_text_confirm), null);
+					baseActivity.showSimpleDialog(0, getString(R.string.dialog_notice2), data.getStringExtra("msg"), getString(R.string.dialog_btn_text_confirm), null);
 					break;
 			}
 		}
@@ -278,10 +277,10 @@ public class BookingListFragment extends
 							return;
 						}
 
-						DialogInterface.OnClickListener posListener = new DialogInterface.OnClickListener()
+						View.OnClickListener posListener = new View.OnClickListener()
 						{
 							@Override
-							public void onClick(DialogInterface dialog, int which)
+							public void onClick(View view)
 							{
 								BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -299,7 +298,7 @@ public class BookingListFragment extends
 							}
 						};
 
-						baseActivity.showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_delete_booking), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null);
+						baseActivity.showSimpleDialog(0, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_delete_booking), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null);
 					} else
 					{
 						baseActivity.restartApp();
@@ -649,14 +648,14 @@ public class BookingListFragment extends
 				}
 
 				// 성공 실패 여부는 팝업에서 리스너를 다르게 등록한다. 
-				DialogInterface.OnClickListener onClickListener;
+				View.OnClickListener onClickListener;
 
 				if (result == true)
 				{
-					onClickListener = new DialogInterface.OnClickListener()
+					onClickListener = new View.OnClickListener()
 					{
 						@Override
-						public void onClick(DialogInterface dialog, int which)
+						public void onClick(View view)
 						{
 							BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -672,10 +671,10 @@ public class BookingListFragment extends
 					};
 				} else
 				{
-					onClickListener = new DialogInterface.OnClickListener()
+					onClickListener = new View.OnClickListener()
 					{
 						@Override
-						public void onClick(DialogInterface dialog, int which)
+						public void onClick(View view)
 						{
 							BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -725,7 +724,7 @@ public class BookingListFragment extends
 								return;
 							}
 
-							baseActivity.showSimpleDialog(getString(R.string.dialog_notice2), message, getString(R.string.dialog_btn_text_confirm), onClickListener);
+							baseActivity.showSimpleDialog(0, getString(R.string.dialog_notice2), message, getString(R.string.dialog_btn_text_confirm), onClickListener);
 						} else
 						{
 							mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_LIST).toString(), null, mReservationListJsonResponseListener, baseActivity));

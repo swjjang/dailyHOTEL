@@ -276,7 +276,7 @@ public class RatingHotelFragment extends
 								return;
 							}
 
-							mHostActivity.showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, null, null);
+							mHostActivity.showSimpleDialog(0, null, msg, getString(R.string.dialog_btn_text_confirm), null, null, null);
 							break;
 					}
 				}

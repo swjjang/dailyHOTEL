@@ -265,7 +265,7 @@ public class IssuingReceiptActivity extends BaseActivity
 
 				if (DEBUG == true)
 				{
-					showSimpleDialog(null, params.toString(), getString(R.string.dialog_btn_text_confirm), null);
+					showSimpleDialog(0, null, params.toString(), getString(R.string.dialog_btn_text_confirm), null);
 				}
 
 				mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_RECEIPT).toString(), params, mReservReceiptJsonResponseListener, IssuingReceiptActivity.this));
@@ -329,7 +329,7 @@ public class IssuingReceiptActivity extends BaseActivity
 
 					String msg = response.getString("msg");
 
-					showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+					showSimpleDialog(0, null, msg, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
 					{
 						@Override
 						public void onDismiss(DialogInterface dialog)

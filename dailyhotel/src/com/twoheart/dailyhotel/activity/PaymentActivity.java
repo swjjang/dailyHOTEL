@@ -41,8 +41,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -632,13 +630,11 @@ public class PaymentActivity extends BaseActivity implements Constants
 				return;
 			}
 
-			OnClickListener posListener = new DialogInterface.OnClickListener()
+			View.OnClickListener posListener = new View.OnClickListener()
 			{
 				@Override
-				public void onClick(DialogInterface dialog, int which)
+				public void onClick(View view)
 				{
-					dialog.dismiss();
-
 					if (!url_scheme_intent(null, "tstore://PRODUCT_VIEW/0000284061/0"))
 					{
 						url_scheme_intent(null, "market://details?id=com.skp.android.paypin&feature=search_result#?t=W251bGwsMSwxLDEsImNvbS5za3AuYW5kcm9pZC5wYXlwaW4iXQ.k");
@@ -646,17 +642,16 @@ public class PaymentActivity extends BaseActivity implements Constants
 				}
 			};
 
-			OnClickListener negaListener = new DialogInterface.OnClickListener()
+			View.OnClickListener negaListener = new View.OnClickListener()
 			{
 				@Override
-				public void onClick(DialogInterface dialog, int which)
+				public void onClick(View view)
 				{
-					dialog.dismiss();
 					DailyToast.showToast(PaymentActivity.this, R.string.toast_msg_cancel_payment, Toast.LENGTH_SHORT);
 				}
 			};
 
-			showSimpleDialog(getString(R.string.dialog_btn_text_confirm), getString(R.string.dialog_msg_install_paypin), getString(R.string.dialog_btn_text_install), getString(R.string.dialog_btn_text_cancel), posListener, negaListener);
+			showSimpleDialog(0, getString(R.string.dialog_btn_text_confirm), getString(R.string.dialog_msg_install_paypin), getString(R.string.dialog_btn_text_install), getString(R.string.dialog_btn_text_cancel), posListener, negaListener);
 		}
 	}
 
@@ -691,13 +686,11 @@ public class PaymentActivity extends BaseActivity implements Constants
 				return;
 			}
 
-			OnClickListener posListener = new DialogInterface.OnClickListener()
+			View.OnClickListener posListener = new View.OnClickListener()
 			{
 				@Override
-				public void onClick(DialogInterface dialog, int which)
+				public void onClick(View view)
 				{
-					dialog.dismiss();
-
 					Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://cert.hanaskcard.com/Ansim/HanaSKPay.apk"));
 
 					m_nStat = PROGRESS_STAT_IN;
@@ -706,7 +699,7 @@ public class PaymentActivity extends BaseActivity implements Constants
 				}
 			};
 
-			showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_install_hana_sk), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null);
+			showSimpleDialog(0, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_install_hana_sk), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null);
 		}
 	}
 
@@ -843,17 +836,16 @@ public class PaymentActivity extends BaseActivity implements Constants
 	{
 		super.onCreateDialog(id);
 
-		OnClickListener posListener = new DialogInterface.OnClickListener()
+		View.OnClickListener posListener = new View.OnClickListener()
 		{
 			@Override
-			public void onClick(DialogInterface dialog, int which)
+			public void onClick(View view)
 			{
-				dialog.dismiss();
 				finishActivity(getString(R.string.act_payment_user_cancel));
 			}
 		};
 
-		AlertDialog alertDlg = createSimpleDialog(getString(R.string.dialog_btn_text_cancel), getString(R.string.dialog_msg_chk_cancel_payment_progress), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null);
+		AlertDialog alertDlg = createSimpleDialog(0, getString(R.string.dialog_btn_text_cancel), 0, getString(R.string.dialog_msg_chk_cancel_payment_progress), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null);
 
 		return alertDlg;
 	}
@@ -959,16 +951,16 @@ public class PaymentActivity extends BaseActivity implements Constants
 			return;
 		}
 
-		OnClickListener posListener = new OnClickListener()
+		View.OnClickListener posListener = new View.OnClickListener()
 		{
 			@Override
-			public void onClick(DialogInterface dialog, int which)
+			public void onClick(View view)
 			{
 				finish();
 			}
 		};
 
-		showSimpleDialog(getString(R.string.dialog_title_payment), getString(R.string.dialog_msg_chk_cancel_payment), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null);
+		showSimpleDialog(0, getString(R.string.dialog_title_payment), getString(R.string.dialog_msg_chk_cancel_payment), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null);
 	}
 
 }
