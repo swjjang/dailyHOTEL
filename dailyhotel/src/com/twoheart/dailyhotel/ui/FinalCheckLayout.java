@@ -14,6 +14,7 @@
 package com.twoheart.dailyhotel.ui;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailySignatureView;
 
 import android.content.Context;
@@ -21,6 +22,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 /**
  * 신용카드 Final Check
@@ -66,6 +68,18 @@ public class FinalCheckLayout extends FrameLayout
 		View view = inflater.inflate(R.layout.layout_finalcheck, this, true);
 
 		mDailySignatureView = (DailySignatureView) view.findViewById(R.id.signatureView);
+
+		if (Util.isOverAPI21() == true)
+		{
+			LinearLayout messageLayout2 = (LinearLayout) view.findViewById(R.id.messageLayout2);
+			LinearLayout messageLayout3 = (LinearLayout) view.findViewById(R.id.messageLayout3);
+
+			LinearLayout.LayoutParams layoutParams2 = (android.widget.LinearLayout.LayoutParams) messageLayout2.getLayoutParams();
+			layoutParams2.topMargin = Util.dpToPx(context, 17);
+
+			LinearLayout.LayoutParams layoutParams3 = (android.widget.LinearLayout.LayoutParams) messageLayout3.getLayoutParams();
+			layoutParams3.topMargin = Util.dpToPx(context, 17);
+		}
 	}
 
 	public void setOnUserActionListener(DailySignatureView.OnUserActionListener listener)
@@ -75,22 +89,4 @@ public class FinalCheckLayout extends FrameLayout
 			mDailySignatureView.setOnUserActionListener(listener);
 		}
 	}
-
-	//	public boolean isSignatureChecked()
-	//	{
-	//		if (mDailySignatureView == null)
-	//		{
-	//			return false;
-	//		}
-	//
-	//		return mDailySignatureView.isSignatureChecked();
-	//	}
-	//
-	//	public void clearSignature()
-	//	{
-	//		if (mDailySignatureView != null)
-	//		{
-	//			mDailySignatureView.clearSignature();
-	//		}
-	//	}
 }

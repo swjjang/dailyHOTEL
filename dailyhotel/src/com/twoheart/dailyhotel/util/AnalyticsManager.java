@@ -2,17 +2,12 @@ package com.twoheart.dailyhotel.util;
 
 import java.util.Map;
 
-import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Logger.LogLevel;
-import com.google.android.gms.analytics.Tracker;
-import com.google.android.gms.analytics.ecommerce.Product;
-import com.google.android.gms.analytics.ecommerce.ProductAction;
-import com.twoheart.dailyhotel.R;
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.GoogleAnalytics;
+import com.google.analytics.tracking.android.MapBuilder;
+import com.google.analytics.tracking.android.Tracker;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 public class AnalyticsManager
 {
@@ -28,24 +23,7 @@ public class AnalyticsManager
 	private void initAnalytics(final Context context)
 	{
 		mGoogleAnalytics = GoogleAnalytics.getInstance(context);
-		mTracker = mGoogleAnalytics.newTracker(R.xml.global_tracker);
-
-		// Set Logger verbosity.
-		mGoogleAnalytics.getLogger().setLogLevel(LogLevel.INFO);
-
-		// Set the opt out flag when user updates a tracking preference.
-		SharedPreferences userPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-		userPrefs.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener()
-		{
-			@Override
-			public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key)
-			{
-				if (key.equals(Constants.TRACKING_PREF_KEY))
-				{
-					mGoogleAnalytics.setAppOptOut(sharedPreferences.getBoolean(key, false));
-				}
-			}
-		});
+		mTracker = mGoogleAnalytics.getTracker(Constants.GA_PROPERTY_ID);
 	}
 
 	public static AnalyticsManager getInstance(Context context)
@@ -65,18 +43,28 @@ public class AnalyticsManager
 
 	public void recordScreen(String screenName)
 	{
-		// Set screen name.
-		mTracker.setScreenName(screenName);
+		try
+		{
+			MapBuilder mapBuilder = MapBuilder.createAppView();
 
-		// Send a screen view.
-		mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+			// Set screen name.
+			mapBuilder.set(Fields.SCREEN_NAME, screenName);
+
+			// Send a screen view.
+			mTracker.send(mapBuilder.build());
+		} catch (Exception e)
+		{
+			ExLog.d(e.toString());
+		}
 	}
 
 	public void recordEvent(String category, String action, String label, Long value)
 	{
 		try
 		{
-			mTracker.send(new HitBuilders.EventBuilder().setCategory(category).setAction(action).setLabel(label).setValue(value).build());
+			MapBuilder mapBuilder = MapBuilder.createEvent(category, action, label, value);
+
+			mTracker.send(mapBuilder.build());
 		} catch (Exception e)
 		{
 			ExLog.d(e.toString());
@@ -87,7 +75,10 @@ public class AnalyticsManager
 	{
 		try
 		{
-			mTracker.send(new HitBuilders.EventBuilder().setCategory(category).setAction(action).setLabel(label).setAll(params).build());
+			MapBuilder mapBuilder = MapBuilder.createEvent(category, action, label, 0L);
+			mapBuilder.setAll(params);
+
+			mTracker.send(mapBuilder.build());
 		} catch (Exception e)
 		{
 			ExLog.d(e.toString());
@@ -112,25 +103,13 @@ public class AnalyticsManager
 	{
 		try
 		{
-			Product product = new Product().setId(transId).setName(hotelName).setCategory(category).setBrand("dailyHOTEL").setCustomDimension(1, userIndex).setCustomDimension(2, checkInTime).setCustomDimension(3, checkOutTime).setCustomDimension(4, currentTime).setPrice(price).setQuantity(1);
-			ProductAction productAction = new ProductAction(ProductAction.ACTION_PURCHASE).setTransactionId(transId).setTransactionAffiliation("dailyHOTEL").setTransactionRevenue(price).setTransactionTax(0).setTransactionShipping(0).setTransactionCouponCode("KRW").setCheckoutOptions(payType);
-
-			HitBuilders.ScreenViewBuilder builder = new HitBuilders.ScreenViewBuilder().addProduct(product).setProductAction(productAction);
-
-			mTracker.send(builder.build());
+			mTracker.send(MapBuilder.createTransaction(transId, "DailyHOTEL", price, 0d, 0d, "KRW").set("payType", payType).build());
+			mTracker.send(MapBuilder.createItem(transId, hotelName, "1", category, price, 1L, "KRW").set("checkInTime", checkInTime).set("checkOutTime", checkOutTime).set("currentTime", currentTime).build());
+			mTracker.send(MapBuilder.createEvent("Purchase", "PurchaseComplete", "PurchaseComplete", 1L).build());
 		} catch (Exception e)
 		{
 			ExLog.d(e.toString());
 		}
-
-		//		
-		//		
-		//		
-		//		mTracker.send(MapBuilder.createTransaction(trasId, "DailyHOTEL", pPrice, 0d, 0d, "KRW").build());
-		//
-		//		mTracker.send(MapBuilder.createItem(trasId, pName, "1", pCategory, pPrice, 1L, "KRW").build());
-		//
-		//		mTracker.send(MapBuilder.createEvent("Purchase", "PurchaseComplete", "PurchaseComplete", 1L).build());
 	}
 
 	public static class Screen

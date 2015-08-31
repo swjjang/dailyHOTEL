@@ -45,7 +45,6 @@ import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -612,10 +611,10 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 									return;
 								}
 
-								showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnClickListener()
+								showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
 								{
 									@Override
-									public void onClick(DialogInterface dialog, int which)
+									public void onClick(View view)
 									{
 										setResult(RESULT_OK);
 										finish();

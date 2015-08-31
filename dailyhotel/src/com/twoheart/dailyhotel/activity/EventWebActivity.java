@@ -4,16 +4,14 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.ui.WebViewActivity;
 
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
@@ -126,11 +124,10 @@ public class EventWebActivity extends WebViewActivity implements Constants
 				return;
 			}
 
-			ExLog.d("message : " + message);
-			showSimpleDialog(getString(R.string.dialog_notice2), message, getString(R.string.dialog_btn_text_confirm), new OnClickListener()
+			showSimpleDialog(getString(R.string.dialog_notice2), message, getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
 			{
 				@Override
-				public void onClick(DialogInterface dialog, int which)
+				public void onClick(View view)
 				{
 					finish();
 				}

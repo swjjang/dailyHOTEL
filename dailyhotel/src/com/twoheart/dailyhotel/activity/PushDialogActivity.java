@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.activity;
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.WakeLock;
+import com.twoheart.dailyhotel.widget.FontManager;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -22,9 +23,8 @@ import android.widget.TextView;
  */
 public class PushDialogActivity extends Activity implements OnClickListener
 {
-
-	private TextView btnOkButton;
-	private TextView btnCancelButton;
+	private TextView mPositiveView;
+	private TextView mNegativeView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -33,11 +33,14 @@ public class PushDialogActivity extends Activity implements OnClickListener
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_push_dialog);
 
-		btnOkButton = (TextView) findViewById(R.id.btn_push_ok);
-		btnCancelButton = (TextView) findViewById(R.id.btn_push_cancle);
+		mPositiveView = (TextView) findViewById(R.id.positiveTextView);
+		mNegativeView = (TextView) findViewById(R.id.negativeTextView);
 
-		btnOkButton.setOnClickListener(this);
-		btnCancelButton.setOnClickListener(this);
+		TextView messageTextView = (TextView) findViewById(R.id.messageTextView);
+		messageTextView.setTypeface(FontManager.getInstance(this).getMediumTypeface());
+
+		mPositiveView.setOnClickListener(this);
+		mNegativeView.setOnClickListener(this);
 
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
@@ -47,7 +50,7 @@ public class PushDialogActivity extends Activity implements OnClickListener
 	@Override
 	public void onClick(View v)
 	{
-		if (v.getId() == btnOkButton.getId())
+		if (v.getId() == mPositiveView.getId())
 		{
 			Intent intent = new Intent();
 			intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -56,7 +59,7 @@ public class PushDialogActivity extends Activity implements OnClickListener
 			startActivity(intent);
 			finish();
 
-		} else if (v.getId() == btnCancelButton.getId())
+		} else if (v.getId() == mNegativeView.getId())
 		{
 			finish();
 		}

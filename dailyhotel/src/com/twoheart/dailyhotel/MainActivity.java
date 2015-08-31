@@ -29,6 +29,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.twoheart.dailyhotel.activity.ExitActivity;
+import com.twoheart.dailyhotel.activity.PushDialogActivity;
 import com.twoheart.dailyhotel.activity.SplashActivity;
 import com.twoheart.dailyhotel.fragment.HotelMainFragment;
 import com.twoheart.dailyhotel.fragment.RatingHotelFragment;
@@ -133,6 +134,10 @@ public class MainActivity
 	{
 		super.onCreate(savedInstanceState);
 		//		com.twoheart.dailyhotel.util.network.request.DailyHotelRequest.makeUrlEncoder();
+
+		Intent i = new Intent(this, PushDialogActivity.class);
+		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(i);
 
 		// 사용자가 선택한 언어, but 만약 사용자가 한국인인데 일본어를 선택하면 jp가 됨.
 		// 영어인 경우 - English, 한글인 경우 - 한국어
@@ -251,11 +256,11 @@ public class MainActivity
 			}
 
 			// 앱을 처음 설치한 경우 가이드를 띄움. 일단 화면 보이지 않도록 수정.
-			boolean showGuide = false;//sharedPreference.getBoolean(KEY_PREFERENCE_SHOW_GUIDE, true);
-			if (showGuide)
-			{
-				startActivityForResult(new Intent(this, IntroActivity.class), CODE_REQUEST_ACTIVITY_INTRO);
-			} else
+			//			boolean showGuide = false;//sharedPreference.getBoolean(KEY_PREFERENCE_SHOW_GUIDE, true);
+			//			if (showGuide)
+			//			{
+			//				startActivityForResult(new Intent(this, IntroActivity.class), CODE_REQUEST_ACTIVITY_INTRO);
+			//			} else
 			{
 				if (sharedPreference.contains(KEY_PREFERENCE_BY_SHARE) == true)
 				{

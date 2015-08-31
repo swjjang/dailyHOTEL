@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
@@ -21,11 +20,6 @@ import android.widget.TextView;
 public class ScreenOnPushDialogActivity
 		extends Activity implements OnClickListener, Constants
 {
-
-	private TextView tvMsg;
-	private ImageView btnClose;
-	private TextView tvTitle;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -38,15 +32,18 @@ public class ScreenOnPushDialogActivity
 		String msg = getIntent().getStringExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG);
 		int type = getIntent().getIntExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, -1);
 
-		tvMsg = (TextView) findViewById(R.id.tv_screen_on_push_dialog_msg);
+		TextView messageTextView = (TextView) findViewById(R.id.messageTextView);
 
 		// 타입별로 mMsg 표시 방식 설정
 		if (type == PUSH_TYPE_NOTICE)
-		{// 공지 푸시
-			tvMsg.setText(msg);
+		{
+			// 공지 푸시
+			messageTextView.setText(msg);
 		} else if (type == PUSH_TYPE_ACCOUNT_COMPLETE)
-		{// 계좌이체 결제 완료 푸시
+		{
+			// 계좌이체 결제 완료 푸시
 			String result = msg;
+
 			if (result.contains("]"))
 			{
 				// [호텔이름 [조식 포함]] 예약되었습니다. 과 같은 경우 마지막 ] 다음에서 개행하여 보기 좋도록 표시
@@ -54,11 +51,9 @@ public class ScreenOnPushDialogActivity
 				StringBuffer sb = new StringBuffer(msg);
 				result = sb.replace(index, index + 1, "]\n").toString();
 			}
-			tvMsg.setText(result);
-		}
 
-		btnClose = (ImageView) findViewById(R.id.iv_screen_on_push_dialog_close);
-		btnClose.setOnClickListener(this);
+			messageTextView.setText(result);
+		}
 
 		String title = null;
 		switch (type)
@@ -71,14 +66,16 @@ public class ScreenOnPushDialogActivity
 				break;
 		}
 
-		tvTitle = (TextView) findViewById(R.id.tv_screen_on_push_dialog_title);
-		tvTitle.setText(title);
+		TextView titleTextView = (TextView) findViewById(R.id.titleTextView);
+		titleTextView.setText(title);
+
+		View positiveTextView = findViewById(R.id.positiveTextView);
+		positiveTextView.setOnClickListener(this);
 	}
 
 	@Override
-	public void onClick(View v)
+	public void onClick(View view)
 	{
 		finish();
 	}
-
 }

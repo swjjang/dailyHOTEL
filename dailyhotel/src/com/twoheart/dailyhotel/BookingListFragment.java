@@ -44,7 +44,6 @@ import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -278,10 +277,10 @@ public class BookingListFragment extends
 							return;
 						}
 
-						DialogInterface.OnClickListener posListener = new DialogInterface.OnClickListener()
+						View.OnClickListener posListener = new View.OnClickListener()
 						{
 							@Override
-							public void onClick(DialogInterface dialog, int which)
+							public void onClick(View view)
 							{
 								BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -649,14 +648,14 @@ public class BookingListFragment extends
 				}
 
 				// 성공 실패 여부는 팝업에서 리스너를 다르게 등록한다. 
-				DialogInterface.OnClickListener onClickListener;
+				View.OnClickListener onClickListener;
 
 				if (result == true)
 				{
-					onClickListener = new DialogInterface.OnClickListener()
+					onClickListener = new View.OnClickListener()
 					{
 						@Override
-						public void onClick(DialogInterface dialog, int which)
+						public void onClick(View view)
 						{
 							BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -672,10 +671,10 @@ public class BookingListFragment extends
 					};
 				} else
 				{
-					onClickListener = new DialogInterface.OnClickListener()
+					onClickListener = new View.OnClickListener()
 					{
 						@Override
-						public void onClick(DialogInterface dialog, int which)
+						public void onClick(View view)
 						{
 							BaseActivity baseActivity = (BaseActivity) getActivity();
 

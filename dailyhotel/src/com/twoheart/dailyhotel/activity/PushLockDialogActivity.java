@@ -4,6 +4,7 @@ import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.WakeLock;
+import com.twoheart.dailyhotel.widget.FontManager;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -12,7 +13,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.TextView;
 
 /**
@@ -25,15 +25,11 @@ public class PushLockDialogActivity
 		extends Activity implements OnClickListener, Constants
 {
 
-	private Button btnOkButton;
-	private Button btnCancelButton;
-	private TextView tvMsg;
-	//	private TextView tvTitle;
+	private TextView mPositiveView;
+	private TextView mNegativeView;
 
-	private String mMsg;
 	private int mType;
 
-	//
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -41,48 +37,48 @@ public class PushLockDialogActivity
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_push_lock_dialog_gcm);
 
-		mMsg = getIntent().getStringExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG);
+		String message = getIntent().getStringExtra(NAME_INTENT_EXTRA_DATA_PUSH_MSG);
 		mType = getIntent().getIntExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, -1);
 
-		tvMsg = (TextView) findViewById(R.id.tv_push_lock_dialog_msg);
+		TextView messageTextView = (TextView) findViewById(R.id.messageTextView);
 
 		// 타입별로 mMsg 표시 방식 설정
 		if (mType == PUSH_TYPE_NOTICE)
-		{// 공지 푸시
-			tvMsg.setText(mMsg);
+		{
+			// 공지 푸시
+			messageTextView.setText(message);
 		} else if (mType == PUSH_TYPE_ACCOUNT_COMPLETE)
-		{// 계좌이체 결제 완료 푸시  
-			String result = mMsg;
-			if (mMsg.contains("]"))
+		{
+			// 계좌이체 결제 완료 푸시  
+			String result = message;
+			if (message.contains("]"))
 			{
 				// [호텔이름 [조식 포함]] 예약되었습니다. 과 같은 경우 마지막 ] 다음에서 개행하여 보기 좋도록 표시
-				int index = mMsg.lastIndexOf("]");
-				StringBuffer sb = new StringBuffer(mMsg);
+				int index = message.lastIndexOf("]");
+				StringBuffer sb = new StringBuffer(message);
 				result = sb.replace(index, index + 1, "]\n").toString();
 			}
 
-			tvMsg.setText(result);
+			messageTextView.setText(result);
 		}
 
-		btnOkButton = (Button) findViewById(R.id.btn_push_lock_dialog_show);
-		btnCancelButton = (Button) findViewById(R.id.btn_push_lock_dialog_close);
+		messageTextView.setTypeface(FontManager.getInstance(this).getMediumTypeface());
 
-		btnOkButton.setOnClickListener(this);
-		btnCancelButton.setOnClickListener(this);
+		mPositiveView = (TextView) findViewById(R.id.positiveTextView);
+		mNegativeView = (TextView) findViewById(R.id.negativeTextView);
+
+		mPositiveView.setOnClickListener(this);
+		mNegativeView.setOnClickListener(this);
 
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
 		WakeLock.releaseWakeLock();
-
-		// pinkred_font
-		//		GlobalFont.apply((ViewGroup) getWindow().getDecorView());
-
 	}
 
 	@Override
 	public void onClick(View v)
 	{
-		if (v.getId() == btnOkButton.getId())
+		if (v.getId() == mPositiveView.getId())
 		{
 			Intent intent = new Intent();
 			intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -92,7 +88,7 @@ public class PushLockDialogActivity
 			startActivity(intent);
 			finish();
 
-		} else if (v.getId() == btnCancelButton.getId())
+		} else if (v.getId() == mNegativeView.getId())
 		{
 			finish();
 		}

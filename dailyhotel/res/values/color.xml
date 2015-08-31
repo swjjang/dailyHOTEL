@@ -123,4 +123,9 @@
 	<!-- Setting Fragment -->
 	<color name="setting_business_license">#b3858585</color>
 	
+	<!-- Custom Popup -->
+	<color name="dialog_title_text">#ed384d</color>
+	<color name="dialog_message_text">#3a3a3a</color>
+	<color name="dialog_agree_text">#f28690</color>
+	
 </resources>	

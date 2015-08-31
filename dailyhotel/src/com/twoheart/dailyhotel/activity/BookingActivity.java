@@ -43,6 +43,7 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListe
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.widget.DailySignatureView;
 import com.twoheart.dailyhotel.widget.DailyToast;
+import com.twoheart.dailyhotel.widget.FontManager;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -80,7 +81,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
@@ -102,10 +103,6 @@ public class BookingActivity extends
 	private static final int DIALOG_CONFIRM_PAYMENT_CARD = 0;
 	private static final int DIALOG_CONFIRM_PAYMENT_HP = 1;
 	private static final int DIALOG_CONFIRM_PAYMENT_ACCOUNT = 2;
-	private static final int DIALOG_CONFIRM_CALL = 4;
-	private static final int DIALOG_CONFIRM_PAYMENT_REGCARD = 5;
-	private static final int DIALOG_CONFIRM_STOP_ONSALE = 6;
-	private static final int DIALOG_CONFIRM_CHANGED_PAY = 7;
 
 	private TextView mCheckinDayTextView, mCheckinTimeTextView,
 			mCheckoutDayTextView, mCheckoutTimeTextView;
@@ -330,7 +327,7 @@ public class BookingActivity extends
 
 				releaseUiComponent();
 
-				if (isEmptyTextField(guest.name) == true)
+				if (Util.isTextEmpty(guest.name) == true)
 				{
 					etReserverName.requestFocus();
 
@@ -342,12 +339,12 @@ public class BookingActivity extends
 						DailyToast.showToast(this, R.string.toast_msg_please_input_guest, Toast.LENGTH_SHORT);
 					}
 					return;
-				} else if (isEmptyTextField(guest.phone) == true)
+				} else if (Util.isTextEmpty(guest.phone) == true)
 				{
 					etReserverNumber.requestFocus();
 					DailyToast.showToast(this, R.string.toast_msg_please_input_contact, Toast.LENGTH_SHORT);
 					return;
-				} else if (isEmptyTextField(guest.email) == true)
+				} else if (Util.isTextEmpty(guest.email) == true)
 				{
 					etReserverEmail.requestFocus();
 					DailyToast.showToast(this, R.string.toast_msg_please_input_email, Toast.LENGTH_SHORT);
@@ -384,10 +381,10 @@ public class BookingActivity extends
 				String msg = getString(R.string.dialog_btn_payment_no_reserve);
 				String buttonText = getString(R.string.dialog_btn_payment_confirm);
 
-				showSimpleDialog(title, msg, buttonText, new DialogInterface.OnClickListener()
+				showSimpleDialog(title, msg, buttonText, new View.OnClickListener()
 				{
 					@Override
-					public void onClick(DialogInterface dialog, int which)
+					public void onClick(View view)
 					{
 						swCredit.setChecked(false);
 					}
@@ -422,10 +419,11 @@ public class BookingActivity extends
 					String positive = getString(R.string.dialog_btn_text_confirm);
 					String msg = getString(R.string.dialog_msg_none_gcmid);
 
-					showSimpleDialog(title, msg, positive, new DialogInterface.OnClickListener()
+					showSimpleDialog(title, msg, positive, new View.OnClickListener()
 					{
+
 						@Override
-						public void onClick(DialogInterface dialog, int which)
+						public void onClick(View view)
 						{
 							onClickPayment();
 						}
@@ -438,6 +436,7 @@ public class BookingActivity extends
 						}
 					});
 				} else
+
 				{
 					onClickPayment();
 				}
@@ -463,6 +462,7 @@ public class BookingActivity extends
 			startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CREDITCARD_MANAGER);
 			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 		}
+
 	}
 
 	private void onClickPayment()
@@ -517,7 +517,7 @@ public class BookingActivity extends
 	 * @return 타입에 맞는 결제 동의 다이얼로그 반환.
 	 */
 
-	private Dialog getPaymentConfirmDialog(int type, final View.OnClickListener onClickListener)
+	private Dialog getPaymentConfirmDialog(int type)
 	{
 		final Dialog dialog = new Dialog(this);
 
@@ -526,136 +526,85 @@ public class BookingActivity extends
 		dialog.setCanceledOnTouchOutside(false);
 
 		View view = LayoutInflater.from(this).inflate(R.layout.fragment_dialog_confirm_payment, null);
+		LinearLayout messageLayout2 = (LinearLayout) view.findViewById(R.id.messageLayout2);
+		LinearLayout messageLayout3 = (LinearLayout) view.findViewById(R.id.messageLayout3);
+		LinearLayout messageLayout4 = (LinearLayout) view.findViewById(R.id.messageLayout4);
+		TextView messageTextView4 = (TextView) messageLayout4.findViewById(R.id.messageTextView4);
 
-		TextView titleTextView = (TextView) view.findViewById(R.id.titleTextView);
-		TextView tvMsg = (TextView) view.findViewById(R.id.tv_confirm_payment_msg);
-		TextView btnProceed = (TextView) view.findViewById(R.id.btn_confirm_payment_proceed);
-		ImageView btnClose = (ImageView) view.findViewById(R.id.btn_confirm_payment_close);
+		if (Util.isOverAPI21() == true)
+		{
+			LinearLayout.LayoutParams layoutParams2 = (android.widget.LinearLayout.LayoutParams) messageLayout2.getLayoutParams();
+			layoutParams2.topMargin = Util.dpToPx(BookingActivity.this, 17);
 
-		String msg;
-		String buttonText;
+			LinearLayout.LayoutParams layoutParams3 = (android.widget.LinearLayout.LayoutParams) messageLayout3.getLayoutParams();
+			layoutParams3.topMargin = Util.dpToPx(BookingActivity.this, 17);
 
-		OnClickListener buttonOnClickListener = null;
+			LinearLayout.LayoutParams layoutParams4 = (android.widget.LinearLayout.LayoutParams) messageLayout4.getLayoutParams();
+			layoutParams4.topMargin = Util.dpToPx(BookingActivity.this, 17);
+		}
+
+		View agreeLayout = view.findViewById(R.id.agreeLayout);
 
 		switch (type)
 		{
-			// 특가 상품 결제 동의 팝업
+			// 핸드폰 결제
 			case DIALOG_CONFIRM_PAYMENT_HP:
-				msg = getString(R.string.dialog_msg_payment_confirm_hp);
-				buttonText = getString(R.string.dialog_btn_payment_confirm);
+				messageLayout4.setVisibility(View.VISIBLE);
+				messageTextView4.setText(R.string.dialog_msg_payment_message04);
 				break;
 
-			// 특가 상품 결제 동의 팝업
+			// 계좌 이체
 			case DIALOG_CONFIRM_PAYMENT_ACCOUNT:
-				msg = getString(R.string.dialog_msg_payment_confirm_account);
-				buttonText = getString(R.string.dialog_btn_payment_confirm);
+				messageLayout4.setVisibility(View.VISIBLE);
+				messageTextView4.setText(R.string.dialog_msg_payment_message05);
 				break;
 
-			// 전화 하기
-			case DIALOG_CONFIRM_CALL:
-				titleTextView.setText(R.string.dialog_notice2);
-				msg = getString(R.string.dialog_msg_call);
-				buttonText = getString(R.string.dialog_btn_call);
+			// 신용카드 일반 결제
+			case DIALOG_CONFIRM_PAYMENT_CARD:
+				messageLayout4.setVisibility(View.GONE);
 				break;
 
-			// 호텔 판매 완료
-			case DIALOG_CONFIRM_STOP_ONSALE:
-				dialog.setCancelable(false);
-
-				btnClose.setVisibility(View.INVISIBLE);
-				titleTextView.setText(R.string.dialog_notice2);
-
-				msg = getString(R.string.dialog_msg_stop_onsale);
-				buttonText = getString(R.string.dialog_btn_text_confirm);
-				break;
-
-			// 가격 변동
-			case DIALOG_CONFIRM_CHANGED_PAY:
-				dialog.setCancelable(false);
-
-				btnClose.setVisibility(View.INVISIBLE);
-				titleTextView.setText(R.string.dialog_notice2);
-
-				msg = getString(R.string.dialog_msg_changed_pay);
-				buttonText = getString(R.string.dialog_btn_text_confirm);
-				break;
-
-			// 특가 상품 결제 동의 팝업
-			//			case DIALOG_CONFIRM_PAYMENT_REGCARD:
-			//			case DIALOG_CONFIRM_PAYMENT_CARD:
-			//			case DIALOG_CONFIRM_PAYMENT_ACCOUNT:
 			default:
-				msg = getString(R.string.dialog_msg_payment_confirm);
-				buttonText = getString(R.string.dialog_btn_payment_confirm);
-				break;
+				return null;
 		}
 
-		tvMsg.setText(Html.fromHtml(msg));
-		btnProceed.setText(Html.fromHtml(buttonText));
-
-		if (onClickListener == null)
-		{
-			buttonOnClickListener = new OnClickListener()
-			{
-				@Override
-				public void onClick(View v)
-				{
-					synchronized (BookingActivity.this)
-					{
-						if (isLockUiComponent() == true)
-						{
-							return;
-						}
-
-						lockUI();
-
-						mAliveCallSource = "PAYMENT";
-
-						// 1. 세션이 살아있는지 검사 시작.
-						mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, BookingActivity.this));
-						dialog.dismiss();
-
-						HashMap<String, String> params = new HashMap<String, String>();
-						params.put(Label.HOTEL_ROOM_INDEX, String.valueOf(mPay.getSaleRoomInformation().roomIndex));
-						params.put(Label.HOTEL_ROOM_NAME, mPay.getSaleRoomInformation().roomName);
-						params.put(Label.HOTEL_NAME, mPay.getSaleRoomInformation().hotelName);
-
-						AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.PAYMENT_AGREE_POPUP, Action.CLICK, mPay.getType().name(), params);
-					}
-				}
-			};
-		} else
-		{
-			buttonOnClickListener = new OnClickListener()
-			{
-				@Override
-				public void onClick(View v)
-				{
-					dialog.dismiss();
-					onClickListener.onClick(v);
-				}
-			};
-		}
-
-		btnClose.setOnClickListener(new OnClickListener()
+		OnClickListener buttonOnClickListener = new OnClickListener()
 		{
 			@Override
 			public void onClick(View v)
 			{
-				dialog.cancel();
-			}
-		});
+				dialog.dismiss();
 
-		btnProceed.setOnClickListener(buttonOnClickListener);
+				synchronized (BookingActivity.this)
+				{
+					if (isLockUiComponent() == true)
+					{
+						return;
+					}
+
+					lockUI();
+
+					mAliveCallSource = "PAYMENT";
+
+					// 1. 세션이 살아있는지 검사 시작.
+					mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, BookingActivity.this));
+
+					HashMap<String, String> params = new HashMap<String, String>();
+					params.put(Label.HOTEL_ROOM_INDEX, String.valueOf(mPay.getSaleRoomInformation().roomIndex));
+					params.put(Label.HOTEL_ROOM_NAME, mPay.getSaleRoomInformation().roomName);
+					params.put(Label.HOTEL_NAME, mPay.getSaleRoomInformation().hotelName);
+
+					AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.PAYMENT_AGREE_POPUP, Action.CLICK, mPay.getType().name(), params);
+				}
+			}
+		};
+
+		agreeLayout.setOnClickListener(buttonOnClickListener);
 
 		dialog.setContentView(view);
 
 		return dialog;
-	}
 
-	private boolean isEmptyTextField(String fieldText)
-	{
-		return (TextUtils.isEmpty(fieldText) == true || fieldText.equals("null") == true || fieldText.trim().length() == 0);
 	}
 
 	// 결제 화면으로 이동 
@@ -801,7 +750,7 @@ public class BookingActivity extends
 			String title = getString(R.string.dialog_title_payment);
 			String msg = "";
 			String posTitle = getString(R.string.dialog_btn_text_confirm);
-			android.content.DialogInterface.OnClickListener posListener = null;
+			View.OnClickListener posListener = null;
 
 			if (resultCode != CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE && resultCode != CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS)
 			{
@@ -815,14 +764,12 @@ public class BookingActivity extends
 				case CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS:
 					writeLogPaid(mPay);
 
-					posListener = new DialogInterface.OnClickListener()
+					posListener = new View.OnClickListener()
 					{
 						@Override
-						public void onClick(DialogInterface dialog, int which)
+						public void onClick(View view)
 						{
 							mAliveCallSource = "";
-
-							dialog.dismiss(); // 닫기
 
 							setResult(RESULT_OK);
 							finish();
@@ -986,7 +933,7 @@ public class BookingActivity extends
 				String title = getString(R.string.dialog_notice2);
 				String positive = getString(R.string.dialog_btn_text_confirm);
 
-				showSimpleDialog(title, msg, positive, (DialogInterface.OnClickListener) null);
+				showSimpleDialog(title, msg, positive, null);
 			}
 		} else
 		{
@@ -1086,46 +1033,15 @@ public class BookingActivity extends
 					return super.onOptionsItemSelected(item);
 				}
 
-				Dialog dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_CALL, new View.OnClickListener()
-				{
-					@Override
-					public void onClick(View v)
-					{
-						releaseUiComponent();
+				showCallDialog();
 
-						if (Util.isTelephonyEnabled(BookingActivity.this) == true)
-						{
-							Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
-							startActivity(i);
-						} else
-						{
-							DailyToast.showToast(BookingActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
-						}
-
-						HashMap<String, String> params = new HashMap<String, String>();
-						params.put(Label.HOTEL_ROOM_INDEX, String.valueOf(mPay.getSaleRoomInformation().roomIndex));
-						params.put(Label.HOTEL_ROOM_NAME, mPay.getSaleRoomInformation().roomName);
-						params.put(Label.HOTEL_NAME, mPay.getSaleRoomInformation().hotelName);
-
-						AnalyticsManager.getInstance(BookingActivity.this).recordEvent(Screen.BOOKING, Action.CLICK, Label.CALL_CS, params);
-					}
-				});
-
-				dialog.setOnDismissListener(new OnDismissListener()
-				{
-					@Override
-					public void onDismiss(DialogInterface dialog)
-					{
-						releaseUiComponent();
-					}
-				});
-
-				dialog.show();
 				return true;
 			}
 
 			default:
+			{
 				return super.onOptionsItemSelected(item);
+			}
 		}
 	}
 
@@ -1160,25 +1076,23 @@ public class BookingActivity extends
 
 		switch (type)
 		{
-			case EASY_CARD:
-				// 나머지의 경우에는 등록된 신용 카드인 경우.
-				mFinalCheckDialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_REGCARD, null);
-				break;
-
 			case CARD:
 				// 신용카드를 선택했을 경우
-				mFinalCheckDialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_CARD, null);
+				mFinalCheckDialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_CARD);
 				break;
 
 			case PHONE_PAY:
 				// 핸드폰을 선택했을 경우
-				mFinalCheckDialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_HP, null);
+				mFinalCheckDialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_HP);
 				break;
 
 			case VBANK:
 				// 가상계좌 입금을 선택했을 경우
-				mFinalCheckDialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_ACCOUNT, null);
+				mFinalCheckDialog = getPaymentConfirmDialog(DIALOG_CONFIRM_PAYMENT_ACCOUNT);
 				break;
+
+			default:
+				return;
 		}
 
 		AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.BOOKING, Action.CLICK, type.name(), 0L);
@@ -1205,7 +1119,13 @@ public class BookingActivity extends
 				}
 			});
 
-			mFinalCheckDialog.show();
+			try
+			{
+				mFinalCheckDialog.show();
+			} catch (Exception e)
+			{
+				ExLog.d(e.toString());
+			}
 		}
 	}
 
@@ -1236,29 +1156,24 @@ public class BookingActivity extends
 		window.setAttributes(layoutParams);
 
 		final FinalCheckLayout finalCheckLayout = new FinalCheckLayout(BookingActivity.this);
-
-		TextView tvMsg = (TextView) finalCheckLayout.findViewById(R.id.tv_confirm_payment_msg);
-
 		final TextView agreeSinatureTextView = (TextView) finalCheckLayout.findViewById(R.id.agreeSinatureTextView);
-		final TextView btnProceed = (TextView) finalCheckLayout.findViewById(R.id.btn_confirm_payment_proceed);
-		ImageView btnClose = (ImageView) finalCheckLayout.findViewById(R.id.btn_confirm_payment_close);
+		final View agreeLayout = finalCheckLayout.findViewById(R.id.agreeLayout);
 
-		btnProceed.setEnabled(false);
+		agreeSinatureTextView.setTypeface(FontManager.getInstance(BookingActivity.this).getMediumTypeface());
 
-		tvMsg.setText(Html.fromHtml(getString(R.string.dialog_msg_payment_creditcard_confirm)));
+		agreeLayout.setEnabled(false);
 
 		finalCheckLayout.setOnUserActionListener(new DailySignatureView.OnUserActionListener()
 		{
 			@Override
 			public void onConfirmSignature()
 			{
-				btnProceed.setEnabled(true);
-				btnProceed.setBackgroundResource(R.drawable.shape_button_common_background);
-				btnProceed.setTextColor(getResources().getColor(R.color.white));
+				agreeLayout.setEnabled(true);
+				agreeLayout.setBackgroundResource(R.drawable.popup_btn_on);
 
 				agreeSinatureTextView.setVisibility(View.GONE);
 
-				btnProceed.setOnClickListener(new View.OnClickListener()
+				agreeLayout.setOnClickListener(new View.OnClickListener()
 				{
 					@Override
 					public void onClick(View v)
@@ -1291,15 +1206,6 @@ public class BookingActivity extends
 			}
 		});
 
-		btnClose.setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
-			{
-				mFinalCheckDialog.cancel();
-			}
-		});
-
 		mFinalCheckDialog.setContentView(finalCheckLayout);
 		mFinalCheckDialog.setOnDismissListener(new OnDismissListener()
 		{
@@ -1321,7 +1227,56 @@ public class BookingActivity extends
 			return;
 		}
 
-		mFinalCheckDialog.show();
+		try
+		{
+			mFinalCheckDialog.show();
+		} catch (Exception e)
+		{
+			ExLog.d(e.toString());
+		}
+	}
+
+	private void showCallDialog()
+	{
+		if (isFinishing() == true)
+		{
+			return;
+		}
+
+		View.OnClickListener positiveListener = new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				releaseUiComponent();
+
+				if (Util.isTelephonyEnabled(BookingActivity.this) == true)
+				{
+					Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
+					startActivity(i);
+				} else
+				{
+					DailyToast.showToast(BookingActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
+				}
+
+				HashMap<String, String> params = new HashMap<String, String>();
+				params.put(Label.HOTEL_ROOM_INDEX, String.valueOf(mPay.getSaleRoomInformation().roomIndex));
+				params.put(Label.HOTEL_ROOM_NAME, mPay.getSaleRoomInformation().roomName);
+				params.put(Label.HOTEL_NAME, mPay.getSaleRoomInformation().hotelName);
+
+				AnalyticsManager.getInstance(BookingActivity.this).recordEvent(Screen.BOOKING, Action.CLICK, Label.CALL_CS, params);
+			}
+		};
+
+		showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_call), getString(R.string.dialog_btn_call), null, positiveListener, null, null, new OnDismissListener()
+		{
+			@Override
+			public void onDismiss(DialogInterface dialog)
+			{
+				releaseUiComponent();
+			}
+		}, true);
+
 	}
 
 	private void showStopOnSaleDialog()
@@ -1331,7 +1286,7 @@ public class BookingActivity extends
 			return;
 		}
 
-		getPaymentConfirmDialog(DIALOG_CONFIRM_STOP_ONSALE, new OnClickListener()
+		View.OnClickListener positiveListener = new OnClickListener()
 		{
 			@Override
 			public void onClick(View v)
@@ -1339,7 +1294,9 @@ public class BookingActivity extends
 				setResult(RESULT_CANCELED);
 				finish();
 			}
-		}).show();
+		};
+
+		showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_stop_onsale), getString(R.string.dialog_btn_text_confirm), null, positiveListener, null, null, null, false);
 	}
 
 	private void showChangedPayDialog()
@@ -1349,7 +1306,7 @@ public class BookingActivity extends
 			return;
 		}
 
-		getPaymentConfirmDialog(DIALOG_CONFIRM_CHANGED_PAY, new OnClickListener()
+		View.OnClickListener positiveListener = new OnClickListener()
 		{
 			@Override
 			public void onClick(View v)
@@ -1357,7 +1314,9 @@ public class BookingActivity extends
 				setResult(RESULT_CANCELED);
 				finish();
 			}
-		}).show();
+		};
+
+		showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_changed_pay), getString(R.string.dialog_btn_text_confirm), null, positiveListener, null, null, null, false);
 	}
 
 	private void showChangedBonusDialog()
@@ -1378,10 +1337,10 @@ public class BookingActivity extends
 			return;
 		}
 
-		showSimpleDialog(title, msg, positive, new DialogInterface.OnClickListener()
+		showSimpleDialog(title, msg, positive, new View.OnClickListener()
 		{
 			@Override
-			public void onClick(DialogInterface dialog, int which)
+			public void onClick(View view)
 			{
 				lockUI();
 
@@ -1481,41 +1440,7 @@ public class BookingActivity extends
 				return;
 			}
 
-			Dialog dialog = getPaymentConfirmDialog(DIALOG_CONFIRM_CALL, new View.OnClickListener()
-			{
-				@Override
-				public void onClick(View v)
-				{
-					releaseUiComponent();
-
-					if (Util.isTelephonyEnabled(BookingActivity.this) == true)
-					{
-						Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
-						startActivity(i);
-					} else
-					{
-						DailyToast.showToast(BookingActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
-					}
-
-					HashMap<String, String> params = new HashMap<String, String>();
-					params.put(Label.HOTEL_ROOM_INDEX, String.valueOf(mPay.getSaleRoomInformation().roomIndex));
-					params.put(Label.HOTEL_ROOM_NAME, mPay.getSaleRoomInformation().roomName);
-					params.put(Label.HOTEL_NAME, mPay.getSaleRoomInformation().hotelName);
-
-					AnalyticsManager.getInstance(BookingActivity.this).recordEvent(Screen.BOOKING, Action.CLICK, Label.CALL_CS, params);
-				}
-			});
-
-			dialog.setOnDismissListener(new OnDismissListener()
-			{
-				@Override
-				public void onDismiss(DialogInterface dialog)
-				{
-					releaseUiComponent();
-				}
-			});
-
-			dialog.show();
+			showCallDialog();
 		}
 	}
 
@@ -1689,12 +1614,11 @@ public class BookingActivity extends
 				{
 					unLockUI();
 
-					android.content.DialogInterface.OnClickListener posListener = new DialogInterface.OnClickListener()
+					View.OnClickListener posListener = new View.OnClickListener()
 					{
 						@Override
-						public void onClick(DialogInterface dialog, int which)
+						public void onClick(View view)
 						{
-							dialog.dismiss();
 							setResult(CODE_RESULT_ACTIVITY_PAYMENT_SALES_CLOSED);
 							finish();
 						}

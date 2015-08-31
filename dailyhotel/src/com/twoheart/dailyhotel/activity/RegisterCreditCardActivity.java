@@ -22,8 +22,6 @@ import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
@@ -256,10 +254,10 @@ public class RegisterCreditCardActivity
 			return;
 		}
 
-		OnClickListener posListener = new OnClickListener()
+		View.OnClickListener posListener = new View.OnClickListener()
 		{
 			@Override
-			public void onClick(DialogInterface dialog, int which)
+			public void onClick(View view)
 			{
 				finish();
 			}

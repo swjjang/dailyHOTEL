@@ -28,6 +28,7 @@ import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ui.OnLoadListener;
 import com.twoheart.dailyhotel.widget.DailyToast;
+import com.twoheart.dailyhotel.widget.FontManager;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -44,7 +45,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,7 +63,6 @@ public class RatingHotelFragment extends
 	private Long mCheckInDate;
 	private Long mCheckOutDate;
 
-	private ImageView ivBtnClose;
 	private Button btnRecommend, btnCancel;
 
 	public static RatingHotelFragment newInstance(String hotelName, int reservationIndex, long checkInDate, long checkOutDate)
@@ -117,12 +116,15 @@ public class RatingHotelFragment extends
 
 		View view = inflater.inflate(R.layout.fragment_dialog_rating_hotel, parent, false);
 
-		TextView ratingPeriod = (TextView) view.findViewById(R.id.ratingPeriod);
-		TextView ratingHotelName = (TextView) view.findViewById(R.id.ratingHotelName);
+		TextView ratingPeriod = (TextView) view.findViewById(R.id.periodTextView);
+		TextView ratingHotelName = (TextView) view.findViewById(R.id.hotelNameTextView);
+		TextView messageTextView = (TextView) view.findViewById(R.id.messageTextView);
 
-		ivBtnClose = (ImageView) view.findViewById(R.id.btn_dialog_rating_hotel_close);
-		btnRecommend = (Button) view.findViewById(R.id.btn_rating_hotel_recommend);
-		btnCancel = (Button) view.findViewById(R.id.btn_rating_hotel_cancel);
+		ratingPeriod.setTypeface(FontManager.getInstance(mHostActivity).getMediumTypeface());
+		messageTextView.setTypeface(FontManager.getInstance(mHostActivity).getMediumTypeface());
+
+		btnRecommend = (Button) view.findViewById(R.id.positiveTextView);
+		btnCancel = (Button) view.findViewById(R.id.negativeTextView);
 
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd", Locale.KOREA);
 		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -132,7 +134,6 @@ public class RatingHotelFragment extends
 		ratingPeriod.setText(getString(R.string.frag_rating_hotel_text1, periodDate));
 		ratingHotelName.setText(getString(R.string.frag_rating_hotel_text2, mHotelName));
 
-		ivBtnClose.setOnClickListener(this);
 		btnRecommend.setOnClickListener(this);
 		btnCancel.setOnClickListener(this);
 
@@ -188,9 +189,6 @@ public class RatingHotelFragment extends
 		} else if (v.getId() == btnCancel.getId())
 		{
 			reviewResult = NOT_RECOMMEND_THIS_HOTEL;
-		} else if (v.getId() == ivBtnClose.getId())
-		{
-			reviewResult = NOT_RATE_THIS_HOTEL;
 		}
 
 		if (reviewResult != null)

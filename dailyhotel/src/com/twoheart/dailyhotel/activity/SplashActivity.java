@@ -40,7 +40,6 @@ import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
-import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -52,6 +51,8 @@ import android.provider.Settings;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import io.branch.referral.Branch;
+import io.branch.referral.BranchError;
 
 public class SplashActivity
 		extends BaseActivity implements Constants, ErrorListener
@@ -119,6 +120,17 @@ public class SplashActivity
 	{
 		AnalyticsManager.getInstance(this).recordScreen(Screen.SPLASH);
 		super.onStart();
+
+		Branch branch = Branch.getInstance();
+		branch.initSession(new Branch.BranchReferralInitListener()
+		{
+			@Override
+			public void onInitFinished(JSONObject referringParams, BranchError error)
+			{
+				// TODO Auto-generated method stub
+
+			}
+		}, this.getIntent().getData(), this);
 	}
 
 	@Override
@@ -177,10 +189,10 @@ public class SplashActivity
 			return;
 		}
 
-		OnClickListener posListener = new DialogInterface.OnClickListener()
+		View.OnClickListener posListener = new View.OnClickListener()
 		{
 			@Override
-			public void onClick(DialogInterface dialog, int which)
+			public void onClick(View view)
 			{
 				alertDlg.dismiss();
 
@@ -207,10 +219,10 @@ public class SplashActivity
 			}
 		};
 
-		OnClickListener negaListener = new DialogInterface.OnClickListener()
+		View.OnClickListener negaListener = new View.OnClickListener()
 		{
 			@Override
-			public void onClick(DialogInterface dialog, int which)
+			public void onClick(View view)
 			{
 				startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
 				alertDlg.dismiss();
@@ -411,10 +423,10 @@ public class SplashActivity
 						return;
 					}
 
-					OnClickListener posListener = new DialogInterface.OnClickListener()
+					View.OnClickListener posListener = new View.OnClickListener()
 					{
 						@Override
-						public void onClick(DialogInterface dialog, int which)
+						public void onClick(View view)
 						{
 							Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
 							marketLaunch.setData(Uri.parse(Util.storeReleaseAddress()));
@@ -448,10 +460,10 @@ public class SplashActivity
 						return;
 					}
 
-					OnClickListener posListener = new DialogInterface.OnClickListener()
+					View.OnClickListener posListener = new View.OnClickListener()
 					{
 						@Override
-						public void onClick(DialogInterface dialog, int which)
+						public void onClick(View view)
 						{
 							Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
 							marketLaunch.setData(Uri.parse(Util.storeReleaseAddress()));
@@ -466,16 +478,7 @@ public class SplashActivity
 						}
 					};
 
-					OnClickListener negListener = new DialogInterface.OnClickListener()
-					{
-						@Override
-						public void onClick(DialogInterface dialog, int which)
-						{
-							dialog.cancel();
-						}
-					};
-
-					OnCancelListener cancelListener = new OnCancelListener()
+					final OnCancelListener cancelListener = new OnCancelListener()
 					{
 						@Override
 						public void onCancel(DialogInterface dialog)
@@ -485,6 +488,15 @@ public class SplashActivity
 							editor.commit();
 
 							requestConfigurationABTest();
+						}
+					};
+
+					View.OnClickListener negListener = new View.OnClickListener()
+					{
+						@Override
+						public void onClick(View view)
+						{
+							cancelListener.onCancel(null);
 						}
 					};
 

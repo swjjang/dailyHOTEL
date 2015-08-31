@@ -35,12 +35,11 @@ import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseLis
 import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 import android.app.Activity;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 
 /**
  * 신용카드 등록하기.
@@ -138,7 +137,7 @@ public class CreditCardListActivity extends BaseActivity
 				String title = getString(R.string.dialog_notice2);
 				String positive = getString(R.string.dialog_btn_text_confirm);
 
-				showSimpleDialog(title, msg, positive, (DialogInterface.OnClickListener) null);
+				showSimpleDialog(title, msg, positive, null);
 			}
 		}
 	}
@@ -225,10 +224,10 @@ public class CreditCardListActivity extends BaseActivity
 					if (true == "alive".equalsIgnoreCase(result))
 					{
 						// 신용카드를 삭제하시겠습니까?
-						OnClickListener posListener = new OnClickListener()
+						View.OnClickListener posListener = new View.OnClickListener()
 						{
 							@Override
-							public void onClick(DialogInterface dialog, int which)
+							public void onClick(View view)
 							{
 								lockUI();
 
@@ -503,10 +502,10 @@ public class CreditCardListActivity extends BaseActivity
 					}
 
 					// 실패 
-					showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_delete_failed_creditcard), getString(R.string.dialog_btn_text_confirm), new DialogInterface.OnClickListener()
+					showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_delete_failed_creditcard), getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
 					{
 						@Override
-						public void onClick(DialogInterface dialog, int which)
+						public void onClick(View view)
 						{
 							lockUI();
 
