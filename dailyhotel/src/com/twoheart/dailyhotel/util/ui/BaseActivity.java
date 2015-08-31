@@ -731,6 +731,7 @@ public class BaseActivity extends
 		// 메시지
 		TextView messageTextView = (TextView) dialogView.findViewById(R.id.messageTextView);
 		messageTextView.setText(message);
+		messageTextView.setTypeface(FontManager.getInstance(this).getMediumTypeface());
 
 		// 버튼
 		View buttonLayout = dialogView.findViewById(R.id.buttonLayout);
@@ -878,6 +879,7 @@ public class BaseActivity extends
 		// 메시지
 		TextView messageTextView = (TextView) dialogView.findViewById(R.id.messageTextView);
 		messageTextView.setText(msg);
+		messageTextView.setTypeface(FontManager.getInstance(this).getMediumTypeface());
 
 		// 버튼
 		View buttonLayout = dialogView.findViewById(R.id.buttonLayout);

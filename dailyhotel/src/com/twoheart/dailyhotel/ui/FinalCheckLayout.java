@@ -16,13 +16,19 @@ package com.twoheart.dailyhotel.ui;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailySignatureView;
+import com.twoheart.dailyhotel.widget.FontManager;
 
 import android.content.Context;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 /**
  * 신용카드 Final Check
@@ -66,6 +72,29 @@ public class FinalCheckLayout extends FrameLayout
 	{
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View view = inflater.inflate(R.layout.layout_finalcheck, this, true);
+
+		TextView messageTextView1 = (TextView) view.findViewById(R.id.messageTextView1);
+		TextView messageTextView2 = (TextView) view.findViewById(R.id.messageTextView2);
+		TextView messageTextView3 = (TextView) view.findViewById(R.id.messageTextView3);
+
+		messageTextView1.setTypeface(FontManager.getInstance(context).getMediumTypeface());
+		String message1 = context.getString(R.string.dialog_msg_payment_message01);
+
+		SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(message1);
+
+		int startIndex = message1.indexOf("취소");
+		int length = "취소, 변경, 환불이 절대 불가".length();
+
+		//sp.setSpan(new ForegroundColorSpan(Color.rgb(255, 255, 255)), 0, 3, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		spannableStringBuilder.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.dialog_title_text)), //
+		startIndex, startIndex + length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		spannableStringBuilder.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), //
+		startIndex, startIndex + length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+		messageTextView1.setText(spannableStringBuilder);
+
+		messageTextView2.setTypeface(FontManager.getInstance(context).getMediumTypeface());
+		messageTextView3.setTypeface(FontManager.getInstance(context).getMediumTypeface());
 
 		mDailySignatureView = (DailySignatureView) view.findViewById(R.id.signatureView);
 

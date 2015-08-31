@@ -63,12 +63,15 @@ import android.support.v7.widget.SwitchCompat;
 import android.text.Html;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -526,10 +529,35 @@ public class BookingActivity extends
 		dialog.setCanceledOnTouchOutside(false);
 
 		View view = LayoutInflater.from(this).inflate(R.layout.fragment_dialog_confirm_payment, null);
+		LinearLayout messageLayout1 = (LinearLayout) view.findViewById(R.id.messageLayout1);
 		LinearLayout messageLayout2 = (LinearLayout) view.findViewById(R.id.messageLayout2);
 		LinearLayout messageLayout3 = (LinearLayout) view.findViewById(R.id.messageLayout3);
 		LinearLayout messageLayout4 = (LinearLayout) view.findViewById(R.id.messageLayout4);
+
+		TextView messageTextView1 = (TextView) messageLayout1.findViewById(R.id.messageTextView1);
+		TextView messageTextView2 = (TextView) messageLayout2.findViewById(R.id.messageTextView2);
+		TextView messageTextView3 = (TextView) messageLayout3.findViewById(R.id.messageTextView3);
 		TextView messageTextView4 = (TextView) messageLayout4.findViewById(R.id.messageTextView4);
+
+		messageTextView1.setTypeface(FontManager.getInstance(this).getMediumTypeface());
+		String message1 = getString(R.string.dialog_msg_payment_message01);
+
+		SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(message1);
+
+		int startIndex = message1.indexOf("취소");
+		int length = "취소, 변경, 환불이 절대 불가".length();
+
+		//sp.setSpan(new ForegroundColorSpan(Color.rgb(255, 255, 255)), 0, 3, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		spannableStringBuilder.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.dialog_title_text)), //
+		startIndex, startIndex + length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		spannableStringBuilder.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), //
+		startIndex, startIndex + length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+		messageTextView1.setText(spannableStringBuilder);
+
+		messageTextView2.setTypeface(FontManager.getInstance(this).getMediumTypeface());
+		messageTextView3.setTypeface(FontManager.getInstance(this).getMediumTypeface());
+		messageTextView4.setTypeface(FontManager.getInstance(this).getMediumTypeface());
 
 		if (Util.isOverAPI21() == true)
 		{
