@@ -152,7 +152,7 @@ public class ForgotPwdActivity
 					}
 
 					String message = response.getString("msg");
-					showSimpleDialog(0, null, message, getString(R.string.dialog_btn_text_confirm), null);
+					showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
 				}
 			} catch (JSONException e)
 			{
@@ -183,12 +183,12 @@ public class ForgotPwdActivity
 
 				if ("true".equalsIgnoreCase(result) == true)
 				{
-					showSimpleDialog(0, null, getString(R.string.dialog_msg_sent_email), getString(R.string.dialog_btn_text_confirm), null);
+					showSimpleDialog(null, getString(R.string.dialog_msg_sent_email), getString(R.string.dialog_btn_text_confirm), null);
 					etForgot.setText("");
 				} else
 				{
 					String message = response.getString("msg");
-					showSimpleDialog(0, null, message, getString(R.string.dialog_btn_text_confirm), null);
+					showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
 				}
 			} catch (JSONException e)
 			{

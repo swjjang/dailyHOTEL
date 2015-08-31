@@ -485,7 +485,7 @@ public class HotelListFragment extends
 
 		if (DEBUG == true)
 		{
-			baseActivity.showSimpleDialog(0, null, params, getString(R.string.dialog_btn_text_confirm), null);
+			baseActivity.showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
 		}
 
 		// 호텔 리스트를 가져온다.

@@ -263,6 +263,6 @@ public class RegisterCreditCardActivity
 			}
 		};
 
-		showSimpleDialog(0, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_register_creditcard_cancel), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null);
+		showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_register_creditcard_cancel), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null);
 	}
 }

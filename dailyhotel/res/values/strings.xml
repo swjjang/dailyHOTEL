@@ -115,9 +115,14 @@
     <string name="dialog_msg_please_update_new_version">dailyHOTEL의 새로운 버전이 출시되었습니다. 업데이트해주세요</string>
     <string name="dialog_msg_update_now">지금 업그레이드하여 가장 멋진 데일리호텔 앱을 다운받으세요</string>
     <string name="dialog_msg_sales_closed">오전 9시부터 오늘의 호텔이 공개됩니다.</string>
-    <string name="dialog_msg_payment_confirm">본 상품은 특가 예약 상품이므로&lt;br/&gt;결제 완료 후&lt;br/&gt;&lt;b&gt;취소나 교환 및 환불이 불가&lt;/b&gt;합니다.&lt;br/&gt;&lt;br/&gt;\'체크인 시 배정\'의 경우 더블,트윈 등의&lt;br/&gt;&lt;b&gt;베드 타입은 보장하지 않으며&lt;/b&gt;&lt;br/&gt;2인이 투숙할 수 있는 객실로 배정됩니다.&lt;br/&gt;&lt;br/&gt;미성년자는 보호자 동반시 투숙 가능합니다.&lt;br/&gt;&lt;br/&gt; 위 사항에 동의하시면 아래의&lt;br/&gt;버튼을 눌러 결제를 진행해 주세요.</string>
-    <string name="dialog_msg_payment_confirm_hp">본 상품은 특가 예약 상품이므로&lt;br/&gt;결제 완료 후&lt;br/&gt;&lt;b&gt;취소나 교환 및 환불이 불가&lt;/b&gt;합니다.&lt;br/&gt;&lt;br/&gt;\'체크인 시 배정\'의 경우 더블,트윈 등의&lt;br/&gt;&lt;b&gt;베드 타입은 보장하지 않으며&lt;/b&gt;&lt;br/&gt;2인이 투숙할 수 있는 객실로 배정됩니다.&lt;br/&gt;&lt;br/&gt;미성년자는 보호자 동반시 투숙 가능합니다.&lt;br/&gt;&lt;br/&gt;휴대폰 결제는 월 30만원이 한도입니다.&lt;br/&gt;&lt;br/&gt; 위 사항에 동의하시면 아래의&lt;br/&gt;버튼을 눌러 결제를 진행해 주세요.</string>
-    <string name="dialog_msg_payment_confirm_account">본 상품은 특가 예약 상품이므로&lt;br/&gt;결제 완료 후&lt;br/&gt;&lt;b&gt;취소나 교환 및 환불이 불가&lt;/b&gt;합니다.&lt;br/&gt;&lt;br/&gt;\'체크인 시 배정\'의 경우 더블, 트윈 등의&lt;br/&gt;&lt;b&gt;베드타입은 보장하지 않으며&lt;/b&gt;&lt;br/&gt;2인이 투숙할 수 있는 객실로 배정됩니다.&lt;br/&gt;&lt;br/&gt;미성년자는 보호자 동반시 투숙 가능합니다.&lt;br/&gt;&lt;br/&gt;계좌이체는 거래건 고유의 가상계좌가 발급되며 &lt;b&gt;10분안에 입금&lt;/b&gt;되지 않으면 &lt;br/&gt;자동으로 예약이 취소됩니다.&lt;br/&gt;&lt;br/&gt;위 사항에 동의하시면 아래의&lt;br/&gt;버튼을 눌러 결제를 진행해 주세요.</string>
+    <string name="dialog_msg_payment_message01">본 상품은 취소, 변경, 환불이 절대 불가한 특가 예약으로, 신중한 결정 부탁드립니다.</string>
+    <string name="dialog_msg_payment_message02">\'체크인 시 배정\'의 경우 베드 타입을 보장하지 않으며 2인이 투숙할 수 있는 객실로 배정됩니다.</string>
+    <string name="dialog_msg_payment_message03">미성년자는 보호자 동반시에만 투숙 가능합니다.</string>
+    <string name="dialog_msg_payment_message04">휴대폰 결제는 월 30만원이 한도입니다.</string>
+    <string name="dialog_msg_payment_message05">계좌이체는 거래건 고유의 가상계좌가 발급되며 10분안에 입금되지 않으면 자동으로 예약이 취소됩니다.</string>
+    <string name="dialog_msg_payment_message06">취소 불가 등 위 내용에\n동의하시면 서명해 주세요</string>
+    <string name="dialog_msg_payment_message07">취소 불가 등 위 내용에 동의하시면\n버튼을 눌러 결제를 진행해 주세요</string>
+    
     <string name="dialog_msg_call">데일리호텔 고객센터로 전화 연결합니다.</string>
     <string name="dialog_btn_call">전화 연결</string>
     <string name="dialog_btn_payment_confirm">동의하고 결제 진행</string>
@@ -146,7 +151,6 @@
     <string name="dialog_msg_register_creditcard_cancel">신용카드 등록을 취소하시겠습니까?</string>
     <string name="dialog_msg_delete_register_creditcard">등록된 신용카드를 삭제하시겠습니까?</string>
     <string name="dialog_msg_error_signature">서명 내용이 부족합니다. 다시 시도해 주십시오.</string>
-    <string name="dialog_msg_payment_creditcard_confirm">본 상품은 특가 예약 상품이므로&lt;br/&gt;결제 완료 후&lt;br/&gt;&lt;b&gt;취소나 교환 및 환불이 불가&lt;/b&gt;합니다.&lt;br/&gt;&lt;br/&gt;\'체크인 시 배정\'의 경우&lt;br/&gt;베드 타입을 보장하지 않으며&lt;/b&gt;&lt;br/&gt;2인이 투숙할 수 있는 객실로 배정됩니다.&lt;br/&gt;&lt;br/&gt;미성년자는 보호자 동반시 투숙 가능합니다.</string>
     <string name="dialog_msg_session_expired">세션이 만료되어 재시작합니다.</string>
     <string name="dialog_msg_processing_payment">결제가 진행 중입니다. 잠시만 기다려 주십시오.</string>
     <string name="dialog_msg_delete_failed_creditcard">신용카드 삭제를 실패하였습니다.</string>
@@ -361,9 +365,9 @@
 
     <!-- RatingHotel Fragment -->
     <string name="frag_rating_hotel_title">호텔 만족도 조사</string>
-    <string name="frag_rating_hotel_text1">%1$s 에 이용하신</string>
+    <string name="frag_rating_hotel_text1">%1$s에 이용하신</string>
     <string name="frag_rating_hotel_text2">\'%1$s\'</string>
-    <string name="frag_rating_hotel_text3">은 어떠셨나요?</string>
+     <string name="frag_rating_hotel_text3">은 어떠셨나요?</string>
     <string name="frag_rating_hotel_recomm">만족함</string>
     <string name="frag_rating_hotel_cancel">만족안함</string>
 

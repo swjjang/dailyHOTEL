@@ -853,7 +853,7 @@ public class HotelDetailActivity extends BaseActivity
 
 						if (DEBUG == true)
 						{
-							showSimpleDialog(0, null, params, getString(R.string.dialog_btn_text_confirm), null);
+							showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
 						}
 
 						mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_HOTEL_INFO).append(params).toString(), null, mHotelDetailJsonResponseListener, HotelDetailActivity.this));
@@ -877,7 +877,7 @@ public class HotelDetailActivity extends BaseActivity
 
 						if (DEBUG == true)
 						{
-							showSimpleDialog(0, null, params, getString(R.string.dialog_btn_text_confirm), null);
+							showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
 						}
 
 						mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_HOTEL_INFO).append(params).toString(), null, mHotelDetailJsonResponseListener, HotelDetailActivity.this));

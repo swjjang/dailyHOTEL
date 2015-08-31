@@ -137,7 +137,7 @@ public class CreditCardListActivity extends BaseActivity
 				String title = getString(R.string.dialog_notice2);
 				String positive = getString(R.string.dialog_btn_text_confirm);
 
-				showSimpleDialog(0, title, msg, positive, null);
+				showSimpleDialog(title, msg, positive, null);
 			}
 		}
 	}
@@ -244,7 +244,7 @@ public class CreditCardListActivity extends BaseActivity
 							return;
 						}
 
-						showSimpleDialog(0, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_delete_register_creditcard), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null);
+						showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_delete_register_creditcard), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null);
 					} else
 					{
 						restartApp();
@@ -502,7 +502,7 @@ public class CreditCardListActivity extends BaseActivity
 					}
 
 					// 실패 
-					showSimpleDialog(0, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_delete_failed_creditcard), getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
+					showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_delete_failed_creditcard), getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
 					{
 						@Override
 						public void onClick(View view)

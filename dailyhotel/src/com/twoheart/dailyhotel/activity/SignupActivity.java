@@ -105,7 +105,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 				return;
 			}
 
-			showSimpleDialog(0, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_facebook_update), getString(R.string.dialog_btn_text_confirm), null, null, null);
+			showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_facebook_update), getString(R.string.dialog_btn_text_confirm), null, null, null);
 		} else
 		{
 			mMode = MODE_SIGNUP;
@@ -611,7 +611,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 									return;
 								}
 
-								showSimpleDialog(0, null, msg, getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
+								showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
 								{
 									@Override
 									public void onClick(View view)
@@ -663,7 +663,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 									return;
 								}
 
-								showSimpleDialog(0, null, msg, getString(R.string.dialog_btn_text_confirm), null, null, null);
+								showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, null, null);
 							}
 							break;
 						}

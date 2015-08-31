@@ -98,7 +98,7 @@ public class PaymentWaitActivity extends BaseActivity
 				String message = getString(R.string.dialog_msg_call);
 				String positive = getString(R.string.dialog_btn_call);
 
-				showSimpleDialog(0, title, message, positive, new View.OnClickListener()
+				showSimpleDialog(title, message, positive, new View.OnClickListener()
 				{
 					@Override
 					public void onClick(View view)

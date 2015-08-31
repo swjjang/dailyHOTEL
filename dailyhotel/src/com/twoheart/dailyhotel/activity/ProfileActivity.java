@@ -301,7 +301,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 				}
 			};
 
-			showSimpleDialog(0, null, getString(R.string.dialog_msg_chk_wanna_login), getString(R.string.dialog_btn_text_logout), getString(R.string.dialog_btn_text_cancel), posListener, null, false);
+			showSimpleDialog(null, getString(R.string.dialog_msg_chk_wanna_login), getString(R.string.dialog_btn_text_logout), getString(R.string.dialog_btn_text_cancel), posListener, null, false);
 
 			releaseUiComponent();
 		}

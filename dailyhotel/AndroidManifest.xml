@@ -77,6 +77,16 @@
                     android:host="dailyhotel.kr"
                     android:scheme="dailyhotel" />
             </intent-filter>
+            <intent-filter>
+                <data
+                    android:host="open"
+                    android:scheme="@string/kakao_scheme" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".MainActivity"
@@ -207,7 +217,7 @@
         <activity
             android:name=".activity.PushDialogActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/TransDialog" >
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
         <activity
             android:name=".activity.PushLockDialogActivity"
@@ -219,7 +229,7 @@
         <activity
             android:name=".activity.ScreenOnPushDialogActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/TransDialog" >
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
         <activity android:name="com.facebook.LoginActivity" />
         <activity
@@ -246,14 +256,14 @@
          installation campaign reporting
         -->
         <receiver
-            android:name="com.google.android.gms.analytics.CampaignTrackingReceiver"
+            android:name="com.google.analytics.tracking.android.CampaignTrackingReceiver"
             android:exported="true" >
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
 
-        <service android:name="com.google.android.gms.analytics.CampaignTrackingService" />
+        <service android:name="com.google.analytics.tracking.android.CampaignTrackingService" />
 
         <receiver
             android:name=".AlarmBroadcastReceiver"
@@ -273,6 +283,24 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="bd223ac8e751f29e89aacd6487b47df88384f04e" />
+
+        <receiver
+            android:name="io.branch.referral.InstallListener"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+
+        <meta-data
+            android:name="io.branch.sdk.TestMode"
+            android:value="true" />
+        <meta-data
+            android:name="io.branch.sdk.BranchKey.test"
+            android:value="secret_test_DyrTus4b0EOQZGki1rOQrFyrxDSPiDIu" />
+        <meta-data
+            android:name="io.branch.sdk.BranchKey"
+            android:value="secret_live_DyrTus4b0EOQZGki1rOQrFyrxDSPiDIu" />
     </application>
 
 </manifest>

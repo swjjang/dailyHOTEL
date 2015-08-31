@@ -124,7 +124,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 				return;
 			}
 
-			showSimpleDialog(0, getString(R.string.dialog_notice2), message, getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
+			showSimpleDialog(getString(R.string.dialog_notice2), message, getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
 			{
 				@Override
 				public void onClick(View view)

@@ -29,10 +29,11 @@ import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.FontManager;
 
-import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
@@ -43,6 +44,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -53,7 +55,7 @@ public class BaseActivity extends
 {
 	private Toolbar mToolbar;
 	public SharedPreferences sharedPreference;
-	private AlertDialog mAlertDialog;
+	private Dialog mDialog;
 
 	protected RequestQueue mQueue;
 
@@ -356,7 +358,7 @@ public class BaseActivity extends
 		}
 
 		// 세션이 만료되어 재시작 요청.
-		showSimpleDialog(0, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_session_expired), getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
+		showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_session_expired), getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
 		{
 			@Override
 			public void onClick(View v)
@@ -436,10 +438,10 @@ public class BaseActivity extends
 			});
 		}
 
-		if (mAlertDialog != null && mAlertDialog.isShowing())
+		if (mDialog != null && mDialog.isShowing())
 		{
-			mAlertDialog.dismiss();
-			mAlertDialog = null;
+			mDialog.dismiss();
+			mDialog = null;
 		}
 
 		super.onStop();
@@ -694,54 +696,36 @@ public class BaseActivity extends
 		return;
 	}
 
-	public AlertDialog createSimpleDialog(int iconResourceId, String titleText, int imageTitleResourceId, String message, String positive, String negative, //
-	final View.OnClickListener positiveListener, final View.OnClickListener negativeListener)
+	public Dialog createSimpleDialog(String titleText, String message, String positive, String negative, final View.OnClickListener positiveListener, final View.OnClickListener negativeListener)
 	{
-		if (mAlertDialog != null)
+		if (mDialog != null)
 		{
-			if (mAlertDialog.isShowing())
+			if (mDialog.isShowing())
 			{
-				mAlertDialog.dismiss();
+				mDialog.dismiss();
 			}
 
-			mAlertDialog = null;
+			mDialog = null;
 		}
 
 		LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View dialogView = layoutInflater.inflate(R.layout.view_dialog_layout, null, false);
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(dialogView);
+		mDialog = new Dialog(this);
+		mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+		mDialog.setCanceledOnTouchOutside(false);
 
 		// 상단
-		ImageView icon = (ImageView) dialogView.findViewById(R.id.icon);
-		TextView textTitle = (TextView) dialogView.findViewById(R.id.textTitle);
-		ImageView imageTitle = (ImageView) dialogView.findViewById(R.id.imageTitle);
-
-		if (iconResourceId == 0)
-		{
-			// 기본 아이콘
-			icon.setImageResource(R.drawable.popup_ic_alert);
-		} else
-		{
-			icon.setImageResource(iconResourceId);
-		}
+		TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
+		titleTextView.setVisibility(View.VISIBLE);
 
 		if (Util.isTextEmpty(titleText) == true)
 		{
-			textTitle.setVisibility(View.GONE);
+			titleTextView.setText(getString(R.string.dialog_notice2));
 		} else
 		{
-			textTitle.setVisibility(View.VISIBLE);
-			textTitle.setText(titleText);
-		}
-
-		if (imageTitleResourceId == 0)
-		{
-			imageTitle.setVisibility(View.GONE);
-		} else
-		{
-			imageTitle.setVisibility(View.VISIBLE);
-			imageTitle.setImageResource(imageTitleResourceId);
+			titleTextView.setText(titleText);
 		}
 
 		// 메시지
@@ -767,9 +751,9 @@ public class BaseActivity extends
 				@Override
 				public void onClick(View v)
 				{
-					if (mAlertDialog != null && mAlertDialog.isShowing())
+					if (mDialog != null && mDialog.isShowing())
 					{
-						mAlertDialog.dismiss();
+						mDialog.dismiss();
 					}
 
 					if (negativeListener != null)
@@ -785,9 +769,9 @@ public class BaseActivity extends
 				@Override
 				public void onClick(View v)
 				{
-					if (mAlertDialog != null && mAlertDialog.isShowing())
+					if (mDialog != null && mDialog.isShowing())
 					{
-						mAlertDialog.dismiss();
+						mDialog.dismiss();
 					}
 
 					if (positiveListener != null)
@@ -809,9 +793,9 @@ public class BaseActivity extends
 				@Override
 				public void onClick(View v)
 				{
-					if (mAlertDialog != null && mAlertDialog.isShowing())
+					if (mDialog != null && mDialog.isShowing())
 					{
-						mAlertDialog.dismiss();
+						mDialog.dismiss();
 					}
 
 					if (positiveListener != null)
@@ -822,116 +806,73 @@ public class BaseActivity extends
 			});
 		}
 
-		mAlertDialog = builder.create();
+		mDialog.setContentView(dialogView);
 
-		return mAlertDialog;
+		return mDialog;
 	}
 
-	public void showSimpleDialog(int iconResourceId, String title, String msg, String positive, View.OnClickListener positiveListener)
+	public void showSimpleDialog(String title, String msg, String positive, View.OnClickListener positiveListener)
 	{
-		showSimpleDialog(iconResourceId, title, msg, positive, null, positiveListener, null);
+		showSimpleDialog(title, msg, positive, null, positiveListener, null);
 	}
 
-	public void showSimpleDialog(int iconResourceId, int imageTitleResourceId, String msg, String positive, View.OnClickListener positiveListener)
+	public void showSimpleDialog(String title, String msg, String positive, View.OnClickListener positiveListener, DialogInterface.OnCancelListener cancelListener)
 	{
-		showSimpleDialog(iconResourceId, imageTitleResourceId, msg, positive, null, positiveListener, null);
+		showSimpleDialog(title, msg, positive, null, positiveListener, null, cancelListener, null, true);
 	}
 
-	public void showSimpleDialog(int iconResourceId, String title, String msg, String positive, View.OnClickListener positiveListener, DialogInterface.OnCancelListener cancelListener)
+	public void showSimpleDialog(String title, String msg, String positive, View.OnClickListener positiveListener, DialogInterface.OnDismissListener dismissListener)
 	{
-		showSimpleDialog(iconResourceId, title, 0, msg, positive, null, positiveListener, null, cancelListener, null, true);
+		showSimpleDialog(title, msg, positive, null, positiveListener, null, null, dismissListener, true);
 	}
 
-	public void showSimpleDialog(int iconResourceId, int imageTitleResourceId, String msg, String positive, View.OnClickListener positiveListener, DialogInterface.OnCancelListener cancelListener)
+	public void showSimpleDialog(String title, String msg, String positive, String negative, View.OnClickListener positiveListener, View.OnClickListener negativeListener)
 	{
-		showSimpleDialog(iconResourceId, null, imageTitleResourceId, msg, positive, null, positiveListener, null, cancelListener, null, true);
+		showSimpleDialog(title, msg, positive, negative, positiveListener, negativeListener, null, null, true);
 	}
 
-	public void showSimpleDialog(int iconResourceId, String title, String msg, String positive, View.OnClickListener positiveListener, DialogInterface.OnDismissListener dismissListener)
+	public void showSimpleDialog(String title, String msg, String positive, String negative, View.OnClickListener positiveListener, View.OnClickListener negativeListener, boolean isCancelable)
 	{
-		showSimpleDialog(iconResourceId, title, 0, msg, positive, null, positiveListener, null, null, dismissListener, true);
+		showSimpleDialog(title, msg, positive, negative, positiveListener, negativeListener, null, null, isCancelable);
 	}
 
-	public void showSimpleDialog(int iconResourceId, int imageTitleResourceId, String msg, String positive, View.OnClickListener positiveListener, DialogInterface.OnDismissListener dismissListener)
-	{
-		showSimpleDialog(iconResourceId, null, imageTitleResourceId, msg, positive, null, positiveListener, null, null, dismissListener, true);
-	}
-
-	public void showSimpleDialog(int iconResourceId, String title, String msg, String positive, String negative, View.OnClickListener positiveListener, View.OnClickListener negativeListener)
-	{
-		showSimpleDialog(iconResourceId, title, 0, msg, positive, negative, positiveListener, negativeListener, null, null, true);
-	}
-
-	public void showSimpleDialog(int iconResourceId, int imageTitleResourceId, String msg, String positive, String negative, View.OnClickListener positiveListener, View.OnClickListener negativeListener)
-	{
-		showSimpleDialog(iconResourceId, null, imageTitleResourceId, msg, positive, negative, positiveListener, negativeListener, null, null, true);
-	}
-
-	public void showSimpleDialog(int iconResourceId, String title, String msg, String positive, String negative, View.OnClickListener positiveListener, View.OnClickListener negativeListener, boolean isCancelable)
-	{
-		showSimpleDialog(iconResourceId, title, 0, msg, positive, negative, positiveListener, negativeListener, null, null, isCancelable);
-	}
-
-	public void showSimpleDialog(int iconResourceId, int imageTitleResourceId, String msg, String positive, String negative, View.OnClickListener positiveListener, View.OnClickListener negativeListener, boolean isCancelable)
-	{
-		showSimpleDialog(iconResourceId, null, imageTitleResourceId, msg, positive, negative, positiveListener, negativeListener, null, null, isCancelable);
-	}
-
-	public void showSimpleDialog(int iconResourceId, String titleText, int imageTitleResourceId, String msg, String positive, String negative, final View.OnClickListener positiveListener, //
-	final View.OnClickListener negativeListener, //
-	DialogInterface.OnCancelListener cancelListener, //
-	DialogInterface.OnDismissListener dismissListener, boolean isCancelable)
+	public void showSimpleDialog(String titleText, String msg, String positive, String negative, final View.OnClickListener positiveListener, final View.OnClickListener negativeListener, DialogInterface.OnCancelListener cancelListener, //
+	DialogInterface.OnDismissListener dismissListener, //
+	boolean isCancelable)
 	{
 		if (isFinishing())
 		{
 			return;
 		}
 
-		if (mAlertDialog != null)
+		if (mDialog != null)
 		{
-			if (mAlertDialog.isShowing())
+			if (mDialog.isShowing())
 			{
-				mAlertDialog.dismiss();
+				mDialog.dismiss();
 			}
 
-			mAlertDialog = null;
+			mDialog = null;
 		}
 
 		LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View dialogView = layoutInflater.inflate(R.layout.view_dialog_layout, null, false);
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(dialogView);
+		mDialog = new Dialog(this);
+		mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+		mDialog.setCanceledOnTouchOutside(false);
 
 		// 상단
-		ImageView icon = (ImageView) dialogView.findViewById(R.id.icon);
-		TextView textTitle = (TextView) dialogView.findViewById(R.id.textTitle);
-		ImageView imageTitle = (ImageView) dialogView.findViewById(R.id.imageTitle);
-
-		if (iconResourceId == 0)
-		{
-			// 기본 아이콘
-			icon.setImageResource(R.drawable.popup_ic_alert);
-		} else
-		{
-			icon.setImageResource(iconResourceId);
-		}
+		TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
+		titleTextView.setVisibility(View.VISIBLE);
 
 		if (Util.isTextEmpty(titleText) == true)
 		{
-			textTitle.setVisibility(View.GONE);
+			titleTextView.setText(getString(R.string.dialog_notice2));
 		} else
 		{
-			textTitle.setVisibility(View.VISIBLE);
-			textTitle.setText(titleText);
-		}
-
-		if (imageTitleResourceId == 0)
-		{
-			imageTitle.setVisibility(View.GONE);
-		} else
-		{
-			imageTitle.setVisibility(View.VISIBLE);
-			imageTitle.setImageResource(imageTitleResourceId);
+			titleTextView.setText(titleText);
 		}
 
 		// 메시지
@@ -957,9 +898,9 @@ public class BaseActivity extends
 				@Override
 				public void onClick(View v)
 				{
-					if (mAlertDialog != null && mAlertDialog.isShowing())
+					if (mDialog != null && mDialog.isShowing())
 					{
-						mAlertDialog.dismiss();
+						mDialog.dismiss();
 					}
 
 					if (negativeListener != null)
@@ -975,9 +916,9 @@ public class BaseActivity extends
 				@Override
 				public void onClick(View v)
 				{
-					if (mAlertDialog != null && mAlertDialog.isShowing())
+					if (mDialog != null && mDialog.isShowing())
 					{
-						mAlertDialog.dismiss();
+						mDialog.dismiss();
 					}
 
 					if (positiveListener != null)
@@ -999,9 +940,9 @@ public class BaseActivity extends
 				@Override
 				public void onClick(View v)
 				{
-					if (mAlertDialog != null && mAlertDialog.isShowing())
+					if (mDialog != null && mDialog.isShowing())
 					{
-						mAlertDialog.dismiss();
+						mDialog.dismiss();
 					}
 
 					if (positiveListener != null)
@@ -1014,19 +955,20 @@ public class BaseActivity extends
 
 		if (cancelListener != null)
 		{
-			builder.setOnCancelListener(cancelListener);
+			mDialog.setOnCancelListener(cancelListener);
 		}
 
 		if (dismissListener != null)
 		{
-			builder.setOnDismissListener(dismissListener);
+			mDialog.setOnDismissListener(dismissListener);
 		}
 
-		builder.setCancelable(isCancelable);
+		mDialog.setCancelable(isCancelable);
 
 		try
 		{
-			mAlertDialog = builder.show();
+			mDialog.setContentView(dialogView);
+			mDialog.show();
 		} catch (Exception e)
 		{
 			ExLog.d(e.toString());

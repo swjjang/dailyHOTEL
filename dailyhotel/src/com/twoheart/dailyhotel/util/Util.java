@@ -146,7 +146,7 @@ public class Util implements Constants
 		}
 
 		// 세션이 만료되어 재시작 요청.
-		activity.showSimpleDialog(0, activity.getString(R.string.dialog_notice2), activity.getString(R.string.dialog_msg_outofmemory), activity.getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
+		activity.showSimpleDialog(activity.getString(R.string.dialog_notice2), activity.getString(R.string.dialog_msg_outofmemory), activity.getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
 		{
 			@Override
 			public void onClick(View view)
@@ -241,6 +241,11 @@ public class Util implements Constants
 		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
 	}
 
+	public static boolean isOverAPI14()
+	{
+		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;
+	}
+
 	public static boolean isTelephonyEnabled(Context context)
 	{
 		return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
@@ -248,7 +253,7 @@ public class Util implements Constants
 
 	public static boolean isTextEmpty(String text)
 	{
-		return (TextUtils.isEmpty(text) == true || "null".equalsIgnoreCase(text) == true);
+		return (TextUtils.isEmpty(text) == true || "null".equalsIgnoreCase(text) == true || text.trim().length() == 0);
 	}
 
 	public static String getAppVersion(Context context)

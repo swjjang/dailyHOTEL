@@ -219,7 +219,7 @@ public class BookingListFragment extends
 						return;
 					}
 
-					baseActivity.showSimpleDialog(0, getString(R.string.dialog_notice2), data.getStringExtra("msg"), getString(R.string.dialog_btn_text_confirm), null);
+					baseActivity.showSimpleDialog(getString(R.string.dialog_notice2), data.getStringExtra("msg"), getString(R.string.dialog_btn_text_confirm), null);
 					break;
 			}
 		}
@@ -298,7 +298,7 @@ public class BookingListFragment extends
 							}
 						};
 
-						baseActivity.showSimpleDialog(0, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_delete_booking), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null);
+						baseActivity.showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_delete_booking), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null);
 					} else
 					{
 						baseActivity.restartApp();
@@ -724,7 +724,7 @@ public class BookingListFragment extends
 								return;
 							}
 
-							baseActivity.showSimpleDialog(0, getString(R.string.dialog_notice2), message, getString(R.string.dialog_btn_text_confirm), onClickListener);
+							baseActivity.showSimpleDialog(getString(R.string.dialog_notice2), message, getString(R.string.dialog_btn_text_confirm), onClickListener);
 						} else
 						{
 							mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_LIST).toString(), null, mReservationListJsonResponseListener, baseActivity));

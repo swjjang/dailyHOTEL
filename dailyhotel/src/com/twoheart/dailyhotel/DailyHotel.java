@@ -15,7 +15,6 @@
 package com.twoheart.dailyhotel;
 
 import com.androidquery.callback.BitmapAjaxCallback;
-import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
@@ -24,7 +23,7 @@ import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.widget.FontManager;
 
 import android.app.Application;
-import io.fabric.sdk.android.Fabric;
+import io.branch.referral.Branch;
 
 public class DailyHotel extends Application implements Constants
 {
@@ -35,7 +34,13 @@ public class DailyHotel extends Application implements Constants
 	{
 		super.onCreate();
 
-//		Fabric.with(this, new Crashlytics());
+		//		Fabric.with(this, new Crashlytics());
+
+		// 
+		if (Util.isOverAPI14() == true)
+		{
+			Branch.getAutoInstance(this);
+		}
 
 		// 버전 정보 얻기
 		DailyHotel.VERSION = Util.getAppVersion(getApplicationContext());

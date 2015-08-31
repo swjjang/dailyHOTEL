@@ -51,6 +51,8 @@ import android.provider.Settings;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import io.branch.referral.Branch;
+import io.branch.referral.BranchError;
 
 public class SplashActivity
 		extends BaseActivity implements Constants, ErrorListener
@@ -118,6 +120,17 @@ public class SplashActivity
 	{
 		AnalyticsManager.getInstance(this).recordScreen(Screen.SPLASH);
 		super.onStart();
+
+		Branch branch = Branch.getInstance();
+		branch.initSession(new Branch.BranchReferralInitListener()
+		{
+			@Override
+			public void onInitFinished(JSONObject referringParams, BranchError error)
+			{
+				// TODO Auto-generated method stub
+
+			}
+		}, this.getIntent().getData(), this);
 	}
 
 	@Override
@@ -231,7 +244,7 @@ public class SplashActivity
 			}
 		};
 
-		alertDlg = createSimpleDialog(0, getString(R.string.dialog_btn_text_waiting), 0, getString(R.string.dialog_msg_network_unstable_retry_or_set_wifi), getString(R.string.dialog_btn_text_retry), getString(R.string.dialog_btn_text_setting), posListener, negaListener);
+		alertDlg = createSimpleDialog(getString(R.string.dialog_btn_text_waiting), getString(R.string.dialog_msg_network_unstable_retry_or_set_wifi), getString(R.string.dialog_btn_text_retry), getString(R.string.dialog_btn_text_setting), posListener, negaListener);
 		alertDlg.setOnKeyListener(keyListener);
 		alertDlg.show();
 	}
@@ -438,7 +451,7 @@ public class SplashActivity
 						}
 					};
 
-					showSimpleDialog(0, getString(R.string.dialog_title_notice), getString(R.string.dialog_msg_please_update_new_version), getString(R.string.dialog_btn_text_update), posListener, cancelListener);
+					showSimpleDialog(getString(R.string.dialog_title_notice), getString(R.string.dialog_msg_please_update_new_version), getString(R.string.dialog_btn_text_update), posListener, cancelListener);
 
 				} else if ((maxVersion > currentVersion) && (skipMaxVersion != maxVersion))
 				{
@@ -487,7 +500,7 @@ public class SplashActivity
 						}
 					};
 
-					showSimpleDialog(0, getString(R.string.dialog_title_notice), 0, getString(R.string.dialog_msg_update_now), getString(R.string.dialog_btn_text_update), getString(R.string.dialog_btn_text_cancel), posListener, negListener, cancelListener, null, false);
+					showSimpleDialog(getString(R.string.dialog_title_notice), getString(R.string.dialog_msg_update_now), getString(R.string.dialog_btn_text_update), getString(R.string.dialog_btn_text_cancel), posListener, negListener, cancelListener, null, false);
 				} else
 				{
 					requestConfigurationABTest();

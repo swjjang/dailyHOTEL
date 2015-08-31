@@ -38,7 +38,6 @@ import com.twoheart.dailyhotel.widget.DailyToast;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -651,7 +650,7 @@ public class PaymentActivity extends BaseActivity implements Constants
 				}
 			};
 
-			showSimpleDialog(0, getString(R.string.dialog_btn_text_confirm), getString(R.string.dialog_msg_install_paypin), getString(R.string.dialog_btn_text_install), getString(R.string.dialog_btn_text_cancel), posListener, negaListener);
+			showSimpleDialog(getString(R.string.dialog_btn_text_confirm), getString(R.string.dialog_msg_install_paypin), getString(R.string.dialog_btn_text_install), getString(R.string.dialog_btn_text_cancel), posListener, negaListener);
 		}
 	}
 
@@ -699,7 +698,7 @@ public class PaymentActivity extends BaseActivity implements Constants
 				}
 			};
 
-			showSimpleDialog(0, getString(R.string.dialog_notice2), getString(R.string.dialog_msg_install_hana_sk), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null);
+			showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_install_hana_sk), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null);
 		}
 	}
 
@@ -845,7 +844,7 @@ public class PaymentActivity extends BaseActivity implements Constants
 			}
 		};
 
-		AlertDialog alertDlg = createSimpleDialog(0, getString(R.string.dialog_btn_text_cancel), 0, getString(R.string.dialog_msg_chk_cancel_payment_progress), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null);
+		Dialog alertDlg = createSimpleDialog(getString(R.string.dialog_btn_text_cancel), getString(R.string.dialog_msg_chk_cancel_payment_progress), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null);
 
 		return alertDlg;
 	}
@@ -960,7 +959,7 @@ public class PaymentActivity extends BaseActivity implements Constants
 			}
 		};
 
-		showSimpleDialog(0, getString(R.string.dialog_title_payment), getString(R.string.dialog_msg_chk_cancel_payment), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null);
+		showSimpleDialog(getString(R.string.dialog_title_payment), getString(R.string.dialog_msg_chk_cancel_payment), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null);
 	}
 
 }
