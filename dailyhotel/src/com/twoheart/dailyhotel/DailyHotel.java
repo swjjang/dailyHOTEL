@@ -35,7 +35,7 @@ public class DailyHotel extends Application implements Constants
 	{
 		super.onCreate();
 
-		Fabric.with(this, new Crashlytics());
+//		Fabric.with(this, new Crashlytics());
 
 		// 버전 정보 얻기
 		DailyHotel.VERSION = Util.getAppVersion(getApplicationContext());
