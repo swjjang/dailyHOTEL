@@ -723,7 +723,7 @@ public class HotelMainFragment extends BaseFragment
 				{
 					initHide();
 
-					((MainActivity) baseActivity).replaceFragment(WaitTimerFragment.newInstance(mTodaySaleTime));
+					((MainActivity) baseActivity).replaceFragment(WaitTimerFragment.newInstance(mTodaySaleTime, TicketMainFragment.TICKET_TYPE.HOTEL));
 					unLockUI();
 				}
 			} catch (Exception e)

@@ -45,7 +45,7 @@ public class FnBTicketMainFragment extends TicketMainFragment
 	{
 		View view = inflater.inflate(R.layout.fragment_fnb_main, container, false);
 
-		mHeaderTextView = (TextView) view.findViewById(R.id.headerTextView);
+		mHeaderTextView = (TextView) view.findViewById(R.id.headerSectionBar);
 		mFragmentViewPager = (FragmentViewPager) view.findViewById(R.id.fragmentViewPager);
 		mFragmentList = new ArrayList<TicketListFragment>();
 
@@ -55,6 +55,8 @@ public class FnBTicketMainFragment extends TicketMainFragment
 
 		mFragmentViewPager.setData(mFragmentList);
 		mFragmentViewPager.setAdapter(getChildFragmentManager());
+		
+		setOnUserActionListener(mOnUserActionListener);
 
 		return view;
 	}
@@ -94,6 +96,9 @@ public class FnBTicketMainFragment extends TicketMainFragment
 		baseActivity.setActionBarAreaEnabled(true);
 		baseActivity.setActionBarArea(province.name, mOnUserActionListener);
 
+		boolean isShowSpinner = mAreaItemList != null && mAreaItemList.size() > 1 ? true : false;
+		baseActivity.setActionBarRegionEnable(isShowSpinner);
+
 		boolean isSelectionTop = false;
 
 		// 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
@@ -113,13 +118,6 @@ public class FnBTicketMainFragment extends TicketMainFragment
 		}
 
 		refreshList(province, isSelectionTop);
-	}
-
-	@Override
-	protected void requestTicketList(BaseActivity baseActivity)
-	{
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -181,7 +179,7 @@ public class FnBTicketMainFragment extends TicketMainFragment
 			//					intent.putExtra(NAME_INTENT_EXTRA_DATA_TITLE, ticketDto.name);
 			//					intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, ticketDto.image);
 			//
-			//					startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTELTAB);
+			//					startActivityForResult(intent, CODE_REQUEST_FRAGMENT_TICKET_MAIN);
 			//
 			//					mUserAnalyticsActionListener.selectedTicket(ticketDto.name, ticketDto.index, checkSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
 			//					break;
@@ -220,7 +218,7 @@ public class FnBTicketMainFragment extends TicketMainFragment
 			//			intent.putExtra(NAME_INTENT_EXTRA_DATA_DAYOFDAYS, dailyDayOfDays);
 			//			intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
 			//
-			//			startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTELTAB);
+			//			startActivityForResult(intent, CODE_REQUEST_FRAGMENT_TICKET_MAIN);
 		}
 
 		@Override
@@ -266,6 +264,18 @@ public class FnBTicketMainFragment extends TicketMainFragment
 			{
 				return;
 			}
+
+			if (mAreaItemList == null || mAreaItemList.size() == 1)
+			{
+				return;
+			}
+
+			if (isLockUiComponent() == true)
+			{
+				return;
+			}
+
+			lockUI();
 
 			Intent intent = new Intent(baseActivity, SelectAreaActivity.class);
 			intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, mSelectedProvince);

@@ -48,6 +48,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.Options;
@@ -68,40 +70,47 @@ public class FnBTicketListFragment extends TicketListFragment
 			return null;
 		}
 
-		View view = inflater.inflate(R.layout.fragment_hotel_list, container, false);
+		View view = inflater.inflate(R.layout.fragment_fnb_list, container, false);
 
 		mListView = (PinnedSectionListView) view.findViewById(R.id.listview_hotel_list);
 
 		if (Util.isOverAPI12() == true)
 		{
-			mListView.addHeaderView(inflater.inflate(R.layout.list_header_empty, null, true));
+			mListView.addHeaderView(inflater.inflate(R.layout.list_header_empty_109, null, true));
 			mListView.setOnScrollListener(mOnScrollListener);
 		} else
 		{
-			mListView.setPadding(0, Util.dpToPx(baseActivity, 119), 0, 0);
+			mListView.setPadding(0, Util.dpToPx(baseActivity, 109), 0, 0);
 		}
 
 		mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
 		mEmptyView = view.findViewById(R.id.emptyView);
 
+		ImageView imageView = (ImageView) mEmptyView.findViewById(R.id.backgroundImageView);
+		TextView messageTextView01 = (TextView) mEmptyView.findViewById(R.id.messageTextView01);
+		TextView messageTextView02 = (TextView) mEmptyView.findViewById(R.id.messageTextView02);
+
+		imageView.setImageResource(R.drawable.open_stanby_bg_fnb);
+		messageTextView01.setTextColor(getResources().getColor(R.color.white));
+		messageTextView01.setText(R.string.label_fnblistfragment_empty_text01);
+		messageTextView02.setTextColor(getResources().getColor(R.color.white));
+		messageTextView02.setText(R.string.label_fnblistfragment_empty_text02);
+
 		mMapLayout = (FrameLayout) view.findViewById(R.id.hotelMapLayout);
-		mMapLayout.setPadding(0, Util.dpToPx(baseActivity, 119) + 2, 0, 0);
+		mMapLayout.setPadding(0, Util.dpToPx(baseActivity, 109) + 2, 0, 0);
 
 		mViewType = VIEW_TYPE.LIST;
 
 		setVisibility(mViewType);
 
-		// Now find the PullToRefreshLayout and set it up
-		ActionBarPullToRefresh.from(baseActivity).options(Options.create().scrollDistance(.3f).headerTransformer(new DailyHotelHeaderTransformer()).build()).allChildrenArePullable().listener(this)
-		// Here we'll set a custom ViewDelegate
-		.useViewDelegate(AbsListView.class, new AbsListViewDelegate()).setup(mPullToRefreshLayout);
+		ActionBarPullToRefresh.from(baseActivity).options(Options.create().scrollDistance(.3f).headerTransformer(new DailyHotelHeaderTransformer()).build()).allChildrenArePullable().listener(this).useViewDelegate(AbsListView.class, new AbsListViewDelegate()).setup(mPullToRefreshLayout);
 
 		mListView.setShadowVisible(false);
 
 		mActionbarViewHolder = new ActionbarViewHolder();
 		mActionbarViewHolder.mAnchorView = baseActivity.findViewById(R.id.anchorAnimation);
 		mActionbarViewHolder.mActionbarLayout = baseActivity.findViewById(R.id.actionBarLayout);
-		mActionbarViewHolder.mTabindicatorView = baseActivity.findViewById(R.id.headerTextView);
+		mActionbarViewHolder.mTabindicatorView = baseActivity.findViewById(R.id.headerSectionBar);
 
 		return view;
 	}

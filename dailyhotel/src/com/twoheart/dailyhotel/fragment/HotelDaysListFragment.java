@@ -1199,7 +1199,7 @@ public class HotelDaysListFragment
 					}
 				} else
 				{
-					((MainActivity) baseActivity).replaceFragment(WaitTimerFragment.newInstance(mSaleTime));
+					((MainActivity) baseActivity).replaceFragment(WaitTimerFragment.newInstance(mSaleTime, TicketMainFragment.TICKET_TYPE.HOTEL));
 					unLockUI();
 				}
 			} catch (Exception e)

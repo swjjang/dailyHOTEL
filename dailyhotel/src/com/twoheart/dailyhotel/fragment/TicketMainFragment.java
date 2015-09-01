@@ -62,6 +62,11 @@ public abstract class TicketMainFragment extends BaseFragment
 		LIST, MAP, GONE, // 목록이 비어있는 경우.
 	};
 
+	public enum TICKET_TYPE
+	{
+		HOTEL, FNB,
+	};
+
 	public interface OnUserActionListener
 	{
 		public void selectedTicket(TicketViewItem baseListViewItem, SaleTime checkSaleTime);
@@ -88,10 +93,8 @@ public abstract class TicketMainFragment extends BaseFragment
 
 	protected abstract void onNavigationItemSelected(Province province);
 
-	protected abstract void requestTicketList(BaseActivity baseActivity);
-
 	protected abstract void requestProvinceList(BaseActivity baseActivity);
-
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
@@ -166,14 +169,20 @@ public abstract class TicketMainFragment extends BaseFragment
 
 	public void setMenuEnabled(boolean enabled)
 	{
-		if (mMenuEnabled == enabled || mTodaySaleTime.isSaleTime() == false)
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null)
 		{
 			return;
 		}
 
-		BaseActivity baseActivity = (BaseActivity) getActivity();
+		if (mAreaItemList != null && enabled == true)
+		{
+			boolean isShowSpinner = mAreaItemList != null && mAreaItemList.size() > 1 ? true : false;
+			baseActivity.setActionBarRegionEnable(isShowSpinner);
+		}
 
-		if (baseActivity == null)
+		if (mMenuEnabled == enabled || mTodaySaleTime.isSaleTime() == false)
 		{
 			return;
 		}
@@ -359,6 +368,11 @@ public abstract class TicketMainFragment extends BaseFragment
 
 		return arrayList;
 	}
+	
+	protected void setOnUserActionListener(OnUserActionListener listener)
+	{
+		mOnUserActionListener = listener;
+	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// UserActionListener
@@ -464,7 +478,7 @@ public abstract class TicketMainFragment extends BaseFragment
 				{
 					hideSlidingDrawer();
 
-					((MainActivity) baseActivity).replaceFragment(WaitTimerFragment.newInstance(mTodaySaleTime));
+					((MainActivity) baseActivity).replaceFragment(WaitTimerFragment.newInstance(mTodaySaleTime, TicketMainFragment.TICKET_TYPE.FNB));
 					unLockUI();
 				}
 			} catch (Exception e)

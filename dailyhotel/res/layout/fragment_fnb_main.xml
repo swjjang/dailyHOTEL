@@ -10,10 +10,17 @@
         android:layout_height="match_parent" />
 
     <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
-        android:id="@+id/headerTextView"
+        android:id="@+id/headerSectionBar"
         android:layout_width="match_parent"
         android:layout_height="53dp"
         android:layout_marginTop="56dp"
+        android:background="@color/headersectionbar"
+        android:gravity="center_vertical"
+        android:paddingLeft="15dp"
+        android:text="@string/label_headersectionbar_title"
+        android:textColor="@color/headersectionbar_text"
+        android:textSize="16dp"
+        android:textStyle="bold"
         android:visibility="invisible" />
 
 </RelativeLayout>

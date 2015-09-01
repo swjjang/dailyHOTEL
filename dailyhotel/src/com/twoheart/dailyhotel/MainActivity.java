@@ -33,6 +33,7 @@ import com.twoheart.dailyhotel.activity.SplashActivity;
 import com.twoheart.dailyhotel.fragment.FnBTicketMainFragment;
 import com.twoheart.dailyhotel.fragment.HotelMainFragment;
 import com.twoheart.dailyhotel.fragment.RatingHotelFragment;
+import com.twoheart.dailyhotel.fragment.TicketMainFragment;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
@@ -664,6 +665,10 @@ public class MainActivity
 							if (fragment != null && fragment.isVisible() && fragment instanceof HotelMainFragment)
 							{
 								((HotelMainFragment) fragment).setMenuEnabled(true);
+								break;
+							} else if (fragment != null && fragment.isVisible() && fragment instanceof TicketMainFragment)
+							{
+								((TicketMainFragment) fragment).setMenuEnabled(true);
 								break;
 							}
 						}

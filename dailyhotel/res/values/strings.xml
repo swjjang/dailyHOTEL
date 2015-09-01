@@ -186,6 +186,7 @@
 
     <!-- Prefix Text -->
     <string name="prefix_wait_timer_frag_todays_hotel_open">시, 오늘의 호텔이 공개됩니다.</string>
+    <string name="prefix_wait_timer_frag_todays_fnb_open">시, 오늘의 레스토랑을 공개됩니다.</string>
     <string name="prefix_expire_time">유효기간</string>
 
     <!-- KaKaoLink Message -->
@@ -421,8 +422,9 @@
     <string name="frag_popup_event_title">이벤트 안내</string>
 
     <!-- Timer Wait Fragment -->
-    <string name="frag_wait_timer_msg">잊지못할 하루를 위한\n특별한 호텔이 기다리고 있어요</string>
-
+    <string name="frag_wait_timer_hotel_msg">잊지못할 하루를 위한\n특별한 호텔이 기다리고 있어요</string>
+	<string name="frag_wait_timer_fnb_msg">잊지못할 하루를 위한\n특별한 레스토랑이 기다리고 있어요</string>
+	
     <!-- Hotel List Header -->
     <string name="header_title1">데일리호텔 </string>
     <string name="header_title2">이벤트 참여하기</string>
@@ -511,5 +513,9 @@
     <!-- EventFragment -->
     <string name="eventfragment_emptylist_maintext">현재 진행중인 이벤트가 없습니다.</string>
     <string name="eventfragment_emptylist_subtext">더욱 특별한 이벤트를\n준비 중이니 기대해주세요!</string>
-
+    
+    <!-- FNB ListFragment -->
+	<string name="label_headersectionbar_title">당일 판매 상품</string>
+	<string name="label_fnblistfragment_empty_text01">레스토랑을 준비하고 있습니다.</string>
+	<string name="label_fnblistfragment_empty_text02">멋진 레스토랑을 원하시나요?\n1800-9120으로 전화주세요.</string>
 </resources>
