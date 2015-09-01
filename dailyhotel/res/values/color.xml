@@ -128,4 +128,7 @@
 	<color name="dialog_message_text">#3a3a3a</color>
 	<color name="dialog_agree_text">#f28690</color>
 	
+	<!-- FNB ListFragment -->
+	<color name="headersectionbar">#222222</color>
+	<color name="headersectionbar_text">#bcaaa4</color>
 </resources>	

@@ -13,7 +13,7 @@
  * @version 1
  * @author Mike Han(mike@dailyhotel.co.kr)
  */
-package com.twoheart.dailyhotel;
+package com.twoheart.dailyhotel.fragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,9 +23,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.android.volley.Request.Method;
+import com.twoheart.dailyhotel.MainActivity;
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.WaitTimerFragment;
 import com.twoheart.dailyhotel.adapter.HotelListAdapter;
-import com.twoheart.dailyhotel.fragment.HotelListMapFragment;
-import com.twoheart.dailyhotel.fragment.HotelMainFragment;
 import com.twoheart.dailyhotel.fragment.HotelMainFragment.HOTEL_VIEW_TYPE;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Hotel;
@@ -59,6 +60,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.Options;
@@ -135,6 +137,9 @@ public class HotelListFragment extends
 
 		mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
 		mEmptyView = view.findViewById(R.id.emptyView);
+
+		ImageView imageView = (ImageView) mEmptyView.findViewById(R.id.backgroundImageView);
+		imageView.setImageResource(R.drawable.open_stanby_bg);
 
 		mMapLayout = (FrameLayout) view.findViewById(R.id.hotelMapLayout);
 		mMapLayout.setPadding(0, Util.dpToPx(baseActivity, 119) + 2, 0, 0);
@@ -974,7 +979,7 @@ public class HotelListFragment extends
 					}
 				} else
 				{
-					((MainActivity) baseActivity).replaceFragment(WaitTimerFragment.newInstance(mSaleTime));
+					((MainActivity) baseActivity).replaceFragment(WaitTimerFragment.newInstance(mSaleTime, TicketMainFragment.TICKET_TYPE.HOTEL));
 					unLockUI();
 				}
 			} catch (Exception e)

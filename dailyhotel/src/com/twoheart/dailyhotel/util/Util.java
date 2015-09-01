@@ -10,11 +10,9 @@ import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 import android.app.Activity;
 import android.app.AlarmManager;
-import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -297,7 +295,7 @@ public class Util implements Constants
 		return isInstalled;
 	}
 
-	public static int installGooglePlayService(final Activity activity)
+	public static int installGooglePlayService(final BaseActivity activity)
 	{
 		if (activity == null || activity.isFinishing() == true)
 		{
@@ -335,18 +333,17 @@ public class Util implements Constants
 				return -1;
 			}
 
-			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
-
 			// set dialog message
 			int messageId = state == -1 ? R.string.dialog_msg_install_googleplayservice : R.string.dialog_msg_update_googleplayservice;
 			int positiveId = state == -1 ? R.string.dialog_btn_install : R.string.dialog_btn_update;
 
-			AlertDialog alertDialog = alertDialogBuilder.setTitle(activity.getString(R.string.dialog_title_googleplayservice)).setMessage(activity.getString(messageId)).setCancelable(true).setPositiveButton(activity.getString(positiveId), new DialogInterface.OnClickListener()
+			activity.showSimpleDialog(activity.getString(R.string.dialog_title_googleplayservice), activity.getString(messageId), //
+			activity.getString(positiveId), activity.getString(R.string.dialog_btn_text_no), //
+			new View.OnClickListener()
 			{
-				public void onClick(DialogInterface dialog, int id)
+				@Override
+				public void onClick(View v)
 				{
-					dialog.dismiss();
-					// Try the new HTTP method (I assume that is the official way now given that google uses it).
 					try
 					{
 						Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.gms"));
@@ -372,15 +369,7 @@ public class Util implements Constants
 						}
 					}
 				}
-			}).setNegativeButton(activity.getString(R.string.dialog_btn_text_no), new DialogInterface.OnClickListener()
-			{
-				public void onClick(DialogInterface dialog, int id)
-				{
-					dialog.cancel();
-				}
-			}).create();
-
-			alertDialog.show();
+			}, null, true);
 
 			return -1;
 		}

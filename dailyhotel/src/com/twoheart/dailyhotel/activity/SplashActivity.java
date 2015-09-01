@@ -43,6 +43,7 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -121,16 +122,19 @@ public class SplashActivity
 		AnalyticsManager.getInstance(this).recordScreen(Screen.SPLASH);
 		super.onStart();
 
-		Branch branch = Branch.getInstance();
-		branch.initSession(new Branch.BranchReferralInitListener()
+		if (Util.isOverAPI16() == true)
 		{
-			@Override
-			public void onInitFinished(JSONObject referringParams, BranchError error)
+			Branch branch = Branch.getInstance();
+			branch.initSession(new Branch.BranchReferralInitListener()
 			{
-				// TODO Auto-generated method stub
+				@Override
+				public void onInitFinished(JSONObject referringParams, BranchError error)
+				{
+					// TODO Auto-generated method stub
 
-			}
-		}, this.getIntent().getData(), this);
+				}
+			}, this.getIntent().getData(), this);
+		}
 	}
 
 	@Override
@@ -268,6 +272,13 @@ public class SplashActivity
 
 	private void moveToLoginStep()
 	{
+		if (mStatusBarHeight == 0)
+		{
+			Rect rectgle = new Rect();
+			getWindow().getDecorView().getWindowVisibleDisplayFrame(rectgle);
+			mStatusBarHeight = rectgle.top;
+		}
+
 		if (sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false))
 		{
 

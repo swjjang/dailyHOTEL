@@ -117,6 +117,8 @@ public class AnalyticsManager
 		public static final String SPLASH = "Splash Screen";
 		public static final String HOTEL_LIST = "HotelList Screen";
 		public static final String HOTEL_DETAIL = "HotelDetail Screen";
+		public static final String FNB_LIST = "FnBList Screen";
+		public static final String FNB_DETAIL = "FnBDetail Screen";
 		public static final String BOOKING = "Booking Screen";
 		public static final String BOOLKING_LIST = "BookingList Screen";
 		public static final String BOOKING_DETAIL = "BookingDetail Screen";
@@ -188,5 +190,7 @@ public class AnalyticsManager
 		public static final String PROVINCE = "province";
 		public static final String NIGHTS = "ngihts";
 		public static final String EVENT = "event";
+		public static final String FNB_INDEX = "fnbIndex";
+		public static final String FNB_NAME = "fnbName";
 	}
 }

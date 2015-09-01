@@ -22,6 +22,7 @@ import java.util.TimeZone;
 import org.json.JSONObject;
 
 import com.android.volley.Request.Method;
+import com.twoheart.dailyhotel.fragment.TicketMainFragment.TICKET_TYPE;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
@@ -54,10 +55,12 @@ public class WaitTimerFragment
 		extends BaseFragment implements OnClickListener, Constants
 {
 	private final static String KEY_BUNDLE_ARGUMENTS_SALETIME = "saletime";
+	private final static String KEY_BUNDLE_ARGUMENTS_TYPE = "type";
+
 	public static boolean isEnabledNotify;
 
 	private static Handler sHandler;
-	private TextView tvTimer, tvTitle;
+	private TextView tvTimer;
 	private TextView mAlarmTextView;
 	private ImageView mAlarmImageView;
 	private View alarmTimerLayout;
@@ -68,12 +71,13 @@ public class WaitTimerFragment
 	private SaleTime mSaleTime;
 	private long remainingTime;
 
-	public static WaitTimerFragment newInstance(SaleTime saleTime)
+	public static WaitTimerFragment newInstance(SaleTime saleTime, TICKET_TYPE type)
 	{
 		WaitTimerFragment newFragment = new WaitTimerFragment();
 
 		Bundle arguments = new Bundle();
 		arguments.putParcelable(KEY_BUNDLE_ARGUMENTS_SALETIME, saleTime);
+		arguments.putString(KEY_BUNDLE_ARGUMENTS_TYPE, type.name());
 
 		newFragment.setArguments(arguments);
 
@@ -102,13 +106,38 @@ public class WaitTimerFragment
 		}
 
 		mSaleTime = (SaleTime) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_SALETIME);
+		TICKET_TYPE type = TICKET_TYPE.valueOf(getArguments().getString(KEY_BUNDLE_ARGUMENTS_TYPE));
+
 		alarmManager = (AlarmManager) baseActivity.getApplicationContext().getSystemService(Context.ALARM_SERVICE);
 		intent = new Intent(baseActivity.getApplicationContext(), AlarmBroadcastReceiver.class);
 		pender = PendingIntent.getBroadcast(baseActivity.getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+		ImageView imageView = (ImageView) view.findViewById(R.id.backgroundImageView);
 		tvTimer = (TextView) view.findViewById(R.id.tv_timer);
-		tvTitle = (TextView) view.findViewById(R.id.tv_wait_timer_main);
+		TextView titleMainTextView = (TextView) view.findViewById(R.id.tv_wait_timer_main);
+		TextView titleSubTextView = (TextView) view.findViewById(R.id.tv_wait_timer_sub);
+
 		alarmTimerLayout = view.findViewById(R.id.alarmTimerLayout);
+
+		switch (type)
+		{
+			case HOTEL:
+				imageView.setImageResource(R.drawable.open_stanby_bg);
+
+				titleMainTextView.setText(R.string.prefix_wait_timer_frag_todays_hotel_open);
+				titleSubTextView.setText(R.string.frag_wait_timer_hotel_msg);
+				break;
+
+			case FNB:
+				imageView.setImageResource(R.drawable.open_stanby_bg_fnb);
+
+				titleMainTextView.setTextColor(getResources().getColor(R.color.white));
+				titleMainTextView.setText(R.string.prefix_wait_timer_frag_todays_fnb_open);
+
+				titleSubTextView.setTextColor(getResources().getColor(R.color.white));
+				titleSubTextView.setText(R.string.frag_wait_timer_fnb_msg);
+				break;
+		}
 
 		mAlarmTextView = (TextView) view.findViewById(R.id.alarmTextView);
 		mAlarmImageView = (ImageView) view.findViewById(R.id.alarmImageView);
@@ -123,7 +152,7 @@ public class WaitTimerFragment
 		SimpleDateFormat sFormat = new SimpleDateFormat("aa H", Locale.KOREA);
 		sFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
-		tvTitle.setText(sFormat.format(mSaleTime.getOpenTime()) + getString(R.string.prefix_wait_timer_frag_todays_hotel_open));
+		titleMainTextView.setText(sFormat.format(mSaleTime.getOpenTime()) + getString(R.string.prefix_wait_timer_frag_todays_hotel_open));
 
 		isEnabledNotify = false;
 		setTimer();

@@ -30,7 +30,14 @@ public class Province implements Parcelable
 	{
 		index = jsonObject.getInt("idx");
 		name = jsonObject.getString("name");
-		sequence = jsonObject.getInt("seq");
+
+		if (jsonObject.has("seq") == true)
+		{
+			sequence = jsonObject.getInt("seq");
+		} else
+		{
+			sequence = 0;
+		}
 
 		// 2주는 당분간 하지 않음
 		//		if (jsonObject.has("sale_week") == true)
