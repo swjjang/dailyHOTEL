@@ -4,9 +4,7 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingBottom="26dp"
-    android:paddingLeft="17dp"
-    android:paddingTop="26.5dp" >
+    android:paddingLeft="15dp" >
 
     <ImageView
         android:id="@+id/drawerMenuItemIcon"
@@ -16,8 +14,8 @@
     <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
         android:id="@+id/drawerMenuItemTitle"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="11dp"
+        android:layout_height="90dp"
+        android:layout_marginLeft="15dp"
         android:gravity="left|center_vertical"
         android:text="@string/actionbar_title_hotel_list_frag"
         android:textColor="@drawable/selector_color_drawermenu"
@@ -27,7 +25,7 @@
         android:id="@+id/newEventIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="15dp"
         android:src="@drawable/event_ic_n"
         android:visibility="gone" />
 

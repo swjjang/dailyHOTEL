@@ -189,8 +189,12 @@ public abstract class DailyHotelRequest<T>
 		return decodeUrl;
 	}
 
-	//	public static void makeUrlEncoder()
-	//	{
-	//		DailyHotelRequest.getUrlEncoder("api/daily/event/page");
-	//	}
+	public static void makeUrlEncoder()
+	{
+		DailyHotelRequest.getUrlEncoder("api/fnb/sale/region/province/list");
+		DailyHotelRequest.getUrlEncoder("api/fnb/sale/list");
+		DailyHotelRequest.getUrlEncoder("api/fnb/sale/restaurant/info");
+		DailyHotelRequest.getUrlEncoder("api/fnb/sale/ticket/payment/info");
+		DailyHotelRequest.getUrlEncoder("api/fnb/sale/session/ticket/sell/check");
+	}
 }

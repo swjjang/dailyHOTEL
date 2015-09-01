@@ -30,6 +30,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.twoheart.dailyhotel.activity.ExitActivity;
 import com.twoheart.dailyhotel.activity.SplashActivity;
+import com.twoheart.dailyhotel.fragment.FnBTicketMainFragment;
 import com.twoheart.dailyhotel.fragment.HotelMainFragment;
 import com.twoheart.dailyhotel.fragment.RatingHotelFragment;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
@@ -75,6 +76,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
@@ -86,16 +88,14 @@ import android.widget.TextView;
 public class MainActivity
 		extends BaseActivity implements OnItemClickListener, Constants
 {
-	public static final int INDEX_HOTEL_LIST_FRAGMENT = 0;
-	public static final int INDEX_BOOKING_LIST_FRAGMENT = 1;
-	public static final int INDEX_CREDIT_FRAGMENT = 2;
-	public static final int INDEX_EVENT_FRAGMENT = 3;
-	public static final int INDEX_SETTING_FRAGMENT = 4;
+	private static final int DRAWERMENU_COUNT = 6;
 
-	public static final String KEY_HOTEL_LIST_FRAGMENT = "hotel_list";
-	public static final String KEY_BOOKING_LIST_FRAGMENT = "booking_list";
-	public static final String KEY_CREDIT_FRAGMENT = "credit";
-	public static final String KEY_SEETING_FRAGMENT = "setting";
+	public static final int INDEX_HOTEL_LIST_FRAGMENT = 0;
+	public static final int INDEX_FNB_LIST_FRAGMENT = 1;
+	public static final int INDEX_BOOKING_LIST_FRAGMENT = 2;
+	public static final int INDEX_CREDIT_FRAGMENT = 3;
+	public static final int INDEX_EVENT_FRAGMENT = 4;
+	public static final int INDEX_SETTING_FRAGMENT = 5;
 
 	private static final String TAG_FRAGMENT_RATING_HOTEL = "rating_hotel";
 
@@ -108,8 +108,7 @@ public class MainActivity
 
 	public ActionBarDrawerToggle drawerToggle;
 	protected FragmentManager fragmentManager;
-	protected List<DrawerMenu> mMenuImages;
-	protected List<Fragment> mFragments;
+	protected List<DrawerMenu> mDrawerMenuList;
 	private DrawerMenuListAdapter mDrawerMenuListAdapter;
 
 	// 마지막으로 머물렀던 Fragment의 index
@@ -117,6 +116,7 @@ public class MainActivity
 
 	// DrawerMenu 객체들
 	public DrawerMenu menuHotelListFragment;
+	public DrawerMenu menuFnBListFragment;
 	public DrawerMenu menuBookingListFragment;
 	public DrawerMenu menuCreditFragment;
 	public DrawerMenu menuEventListFragment;
@@ -132,7 +132,7 @@ public class MainActivity
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		//		com.twoheart.dailyhotel.util.network.request.DailyHotelRequest.makeUrlEncoder();
+		com.twoheart.dailyhotel.util.network.request.DailyHotelRequest.makeUrlEncoder();
 
 		// 사용자가 선택한 언어, but 만약 사용자가 한국인인데 일본어를 선택하면 jp가 됨.
 		// 영어인 경우 - English, 한글인 경우 - 한국어
@@ -375,7 +375,7 @@ public class MainActivity
 	 */
 	public void selectMenuDrawer(DrawerMenu selectedMenu)
 	{
-		drawerList.performItemClick(mDrawerMenuListAdapter.getView(mMenuImages.indexOf(selectedMenu), null, null), mMenuImages.indexOf(selectedMenu), mDrawerMenuListAdapter.getItemId(mMenuImages.indexOf(selectedMenu)));
+		drawerList.performItemClick(mDrawerMenuListAdapter.getView(mDrawerMenuList.indexOf(selectedMenu), null, null), mDrawerMenuList.indexOf(selectedMenu), mDrawerMenuListAdapter.getItemId(mDrawerMenuList.indexOf(selectedMenu)));
 	}
 
 	/**
@@ -391,6 +391,8 @@ public class MainActivity
 		{
 			case INDEX_HOTEL_LIST_FRAGMENT:
 				return new HotelMainFragment();
+			case INDEX_FNB_LIST_FRAGMENT:
+				return new FnBTicketMainFragment();
 			case INDEX_BOOKING_LIST_FRAGMENT:
 				return new BookingListFragment();
 			case INDEX_CREDIT_FRAGMENT:
@@ -490,6 +492,11 @@ public class MainActivity
 				AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.MENU, Action.CLICK, getString(R.string.actionbar_title_hotel_list_frag), (long) position);
 				break;
 
+			case R.drawable.selector_drawermenu_fnb:
+				indexLastFragment = INDEX_FNB_LIST_FRAGMENT;
+				AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.MENU, Action.CLICK, getString(R.string.actionbar_title_fnb_list_frag), (long) position);
+				break;
+
 			case R.drawable.selector_drawermenu_reservation:
 				indexLastFragment = INDEX_BOOKING_LIST_FRAGMENT;
 				AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.MENU, Action.CLICK, getString(R.string.actionbar_title_booking_list_frag), (long) position);
@@ -524,6 +531,7 @@ public class MainActivity
 
 		//
 		menuHotelListFragment.setSelected(false);
+		menuFnBListFragment.setSelected(false);
 		menuBookingListFragment.setSelected(false);
 		menuCreditFragment.setSelected(false);
 		menuEventListFragment.setSelected(false);
@@ -681,17 +689,19 @@ public class MainActivity
 		drawerList = (ListView) findViewById(R.id.drawListView);
 
 		menuHotelListFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_todays_hotel), R.drawable.selector_drawermenu_todayshotel, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
+		menuFnBListFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_todays_fnb), R.drawable.selector_drawermenu_fnb, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
 		menuBookingListFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_chk_reservation), R.drawable.selector_drawermenu_reservation, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
 		menuCreditFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_credit), R.drawable.selector_drawermenu_saving, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
 		menuEventListFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_event), R.drawable.selector_drawermenu_eventlist, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
 		menuSettingFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_setting), R.drawable.selector_drawermenu_setting, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
 
-		mMenuImages = new ArrayList<DrawerMenu>();
-		mMenuImages.add(menuHotelListFragment);
-		mMenuImages.add(menuBookingListFragment);
-		mMenuImages.add(menuCreditFragment);
-		mMenuImages.add(menuEventListFragment);
-		mMenuImages.add(menuSettingFragment);
+		mDrawerMenuList = new ArrayList<DrawerMenu>(DRAWERMENU_COUNT);
+		mDrawerMenuList.add(menuHotelListFragment);
+		mDrawerMenuList.add(menuFnBListFragment);
+		mDrawerMenuList.add(menuBookingListFragment);
+		mDrawerMenuList.add(menuCreditFragment);
+		mDrawerMenuList.add(menuEventListFragment);
+		mDrawerMenuList.add(menuSettingFragment);
 
 		if (sharedPreference.getBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false))
 		{
@@ -701,7 +711,7 @@ public class MainActivity
 			menuEventListFragment.hasEvent = false;
 		}
 
-		mDrawerMenuListAdapter = new DrawerMenuListAdapter(this, mMenuImages);
+		mDrawerMenuListAdapter = new DrawerMenuListAdapter(this, mDrawerMenuList);
 
 		drawerList.setAdapter(mDrawerMenuListAdapter);
 		drawerList.setOnItemClickListener(this);
@@ -965,7 +975,12 @@ public class MainActivity
 
 				case DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY:
 				{
+					int height = (Util.getLCDHeight(context) - mStatusBarHeight - Util.dpToPx(context, 58)) / DRAWERMENU_COUNT;
+
 					convertView = inflater.inflate(R.layout.list_row_drawer_entry, null);
+
+					AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height);
+					convertView.setLayoutParams(layoutParams);
 
 					ImageView drawerMenuItemIcon = (ImageView) convertView.findViewById(R.id.drawerMenuItemIcon);
 					TextView drawerMenuItemText = (TextView) convertView.findViewById(R.id.drawerMenuItemTitle);
@@ -973,17 +988,16 @@ public class MainActivity
 
 					drawerMenuItemIcon.setImageResource(item.getIcon());
 					drawerMenuItemText.setText(item.getTitle());
+					drawerMenuItemText.setTypeface(FontManager.getInstance(context).getMediumTypeface());
 
 					if (item.isSelected() == true)
 					{
 						drawerMenuItemIcon.setSelected(true);
 						drawerMenuItemText.setSelected(true);
-						drawerMenuItemText.setTypeface(FontManager.getInstance(context).getMediumTypeface());
 					} else
 					{
 						drawerMenuItemIcon.setSelected(false);
 						drawerMenuItemText.setSelected(false);
-						drawerMenuItemText.setTypeface(FontManager.getInstance(context).getRegularTypeface());
 					}
 
 					if (item.hasEvent)

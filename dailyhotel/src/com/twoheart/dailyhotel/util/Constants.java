@@ -255,6 +255,23 @@ public interface Constants
 	// api/abtest/kakao/consult/feedback
 	public static final String URL_WEBAPI_ABTEST_KAKAO_CONSULT_FEEDBACK = UNENCRYPTED_URL ? "api/abtest/kakao/consult/feedback" : "NTEkMjgkMTEwJDQ3JDQ0JA==$QTUxRjgwNzIyNDY1MjQ2ODJGMTdDIMUU4QTRCOTc3QTEP3MDTc5OTMG4RTc1M0NGRUIzNkNBOUJBQUJCOTg4OTU5MjBCNzg4MEZFODk5M0VFRTgxZODMyMDU3NjlGQUYxMzkw$";
 
+	//  FNB
+	// api/fnb/sale/region/province/list
+	public static final String URL_WEBAPI_FNB_SALE_REGION_PROVINCE_LIST = UNENCRYPTED_URL ? "api/fnb/sale/region/province/list" : "NjkkNDEkNjgkMzIkMTck$OTQ4RTJDNTMwQjhGRHkJDNTkzNUUyRUM5RREVDMkU1RXDE1ODk0M0MwREJGRkUyMUNEQUESyRPUEyOTk5MDY0NTVENzI1RDM5NDc0ODczNjg2ODJCNEI1NEI3RTA5N0I5NDM2$";
+
+	// api/fnb/sale/list
+	public static final String URL_WEBAPI_FNB_SALE_LIST = UNENCRYPTED_URL ? "api/fnb/sale/list" : "NDEkODUkNTckNDEkOTEk$QzZDMTM2NTc4MUExRjQ1NDg4OUExRDY4MkE5RjcxRAPjdEQkUwMjFEODNDKQjQzQzY3RTI2QzkxNUQxRTcyMTBEPQQ=L=$";
+
+	// api/fnb/sale/restaurant/info
+	public static final String URL_WEBAPI_FNB_SALE_RESTAURANT_INFO = UNENCRYPTED_URL ? "api/fnb/sale/restaurant/info" : "MjkkMzYkNDckMjUkODMk$M0FCMTY0Qjk2RDU1NTRFNTc1ROURDRVEFFOTEVyMUFDQTkwNJkExRTkwMzBGNUQ5MTgyQUI4MzJGNEQ2MTBUEOEY2OQ==$";
+
+	// api/fnb/sale/ticket/payment/info
+	public static final String URL_WEBAPI_FNB_SALE_TICKET_PAYMENT_INFO = UNENCRYPTED_URL ? "api/fnb/sale/ticket/payment/info" : "NTkkNDYkMTAzJDc1JDIk$NzDc3MjA1MTg5QjgwMTg5QkFCOENEMDFBRUY5NTlGNzY4QjTEzMUNCMTBGOUMD1NkM1MzRBOTZFMRjY4MjAwNjlDMDQ3OUNEREIyQTQyMEEZCQ0IwOTgxNkFGMzMwNUYyOTg0$";
+
+	// api/fnb/sale/session/ticket/sell/check
+	public static final String URL_WEBAPI_FNB_SALE_SESSION_TICKET_SELL_CHECK = UNENCRYPTED_URL ? "api/fnb/sale/session/ticket/sell/check" : "NzckMTA3JDYxJDEyNCQ0MyQ=$MjczMEVDNkQ2ODQzRDE3ODYzRjZCQzMwNzc0NjU0RkYYxMUY0RTYyOTA0QzkwQXTFGNTUxN0M2NjQwNCDQ3ODlCNEZEMEM5RkMwMjQ3OUM2NzJMyNkJCQUU1MTVFRSkZGODRE$";
+
+	//
 	public static final String URL_STORE_GOOGLE_DAILYHOTEL = "market://details?id=com.twoheart.dailyhotel";
 	public static final String URL_STORE_GOOGLE_KAKAOTALK = "market://details?id=com.kakao.talk";
 
@@ -316,6 +333,10 @@ public interface Constants
 	public static final String KEY_PREFERENCE_REGION_SELECT_BEFORE = "REGION_SELECT_BEFORE";
 	public static final String KEY_PREFERENCE_REGION_INDEX = "REGION_INDEX";
 	public static final String KEY_PREFERENCE_REGION_SETTING = "REGION_SETTING";
+	public static final String KEY_PREFERENCE_FNB_REGION_SETTING = "FNB_REGION_SETTING";
+
+	public static final String KEY_PREFERENCE_FNB_REGION_SELECT = "FNB_REGION_SELECT";
+	public static final String KEY_PREFERENCE_FNB_REGION_SELECT_BEFORE = "FNB_REGION_SELECT_BEFORE";
 
 	// ga
 	public static final String KEY_PREFERENCE_REGION_SELECT_GA = "REGION_SELECT_GA";
@@ -346,6 +367,7 @@ public interface Constants
 	public static final String NAME_INTENT_EXTRA_DATA_SALETIME = "saletime";
 	public static final String NAME_INTENT_EXTRA_DATA_REGION = "region";
 	public static final String NAME_INTENT_EXTRA_DATA_HOTELIDX = "hotelIdx";
+	public static final String NAME_INTENT_EXTRA_DATA_TICKETIDX = "ticketIdx";
 	public static final String NAME_INTENT_EXTRA_DATA_BOOKING = "booking";
 	public static final String NAME_INTENT_EXTRA_DATA_BOOKINGIDX = "bookingIdx";
 	public static final String NAME_INTENT_EXTRA_DATA_PAY = "pay";
@@ -378,6 +400,7 @@ public interface Constants
 	public static final String NAME_INTENT_EXTRA_DATA_CHECKINDATE = "checkInDate";
 	public static final String NAME_INTENT_EXTRA_DATA_CHECKOUTDATE = "checkOutDate";
 	public static final String NAME_INTENT_EXTRA_DATA_URL = "url";
+	public static final String NAME_INTENT_EXTRA_DATA_TITLE = "title";
 
 	// Push Type
 	public static final int PUSH_TYPE_NOTICE = 0;
@@ -399,6 +422,7 @@ public interface Constants
 	public static final int CODE_REQUEST_ACTIVITY_CREDITCARD_MANAGER = 13;
 	public static final int CODE_REQUEST_ACTIVITY_SELECT_AREA = 14;
 	public static final int CODE_REQUEST_ACTIVITY_USERINFO_UPDATE = 15;
+	public static final int CODE_REQUEST_FRAGMENT_TICKET_MAIN = 20;
 
 	// Android Activity의 Result Code들이다.
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_FAIL = 100;

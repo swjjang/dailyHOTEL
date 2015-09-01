@@ -13,7 +13,7 @@
  * @version 1
  * @author Mike Han(mike@dailyhotel.co.kr)
  */
-package com.twoheart.dailyhotel;
+package com.twoheart.dailyhotel.fragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,9 +23,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.android.volley.Request.Method;
+import com.twoheart.dailyhotel.MainActivity;
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.WaitTimerFragment;
 import com.twoheart.dailyhotel.adapter.HotelListAdapter;
-import com.twoheart.dailyhotel.fragment.HotelListMapFragment;
-import com.twoheart.dailyhotel.fragment.HotelMainFragment;
 import com.twoheart.dailyhotel.fragment.HotelMainFragment.HOTEL_VIEW_TYPE;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Hotel;

@@ -18,8 +18,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -174,13 +172,15 @@ public class WebViewActivity extends BaseActivity implements OnLongClickListener
 				return true;
 			}
 
-			new AlertDialog.Builder(view.getContext()).setTitle(getString(R.string.dialog_notice2)).setMessage(message).setPositiveButton(android.R.string.ok, new AlertDialog.OnClickListener()
+			showSimpleDialog(getString(R.string.dialog_notice2), message, getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
 			{
-				public void onClick(DialogInterface dialog, int which)
+				@Override
+				public void onClick(View v)
 				{
 					result.confirm();
 				}
-			}).setCancelable(false).show();
+			}, null, false);
+
 			return true;
 		};
 

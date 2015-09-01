@@ -22,6 +22,7 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.HotelMainFragment;
+import com.twoheart.dailyhotel.fragment.TicketMainFragment;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -53,6 +54,7 @@ import android.widget.Toast;
 public class BaseActivity extends
 		ActionBarActivity implements Constants, OnLoadListener, ErrorListener
 {
+	protected static int mStatusBarHeight;
 	private Toolbar mToolbar;
 	public SharedPreferences sharedPreference;
 	private Dialog mDialog;
@@ -294,6 +296,42 @@ public class BaseActivity extends
 	}
 
 	public void setActionBarArea(String title, final HotelMainFragment.OnUserActionListener listener)
+	{
+		if (mSpinnderIndex == -1)
+		{
+			return;
+		}
+
+		View view = mToolbar.getChildAt(mSpinnderIndex);
+
+		if (view != null)
+		{
+			TextView textView = (TextView) view.findViewById(R.id.titleTextView);
+			textView.setText(title);
+
+			view.setOnClickListener(new View.OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+					if (mActionBarRegionEnabled == false || isLockUiComponent() == true)
+					{
+						return;
+					}
+
+					lockUiComponent();
+
+					// 지역표시를 선택할 경우.
+					if (listener != null)
+					{
+						listener.onClickActionBarArea();
+					}
+				}
+			});
+		}
+	}
+
+	public void setActionBarArea(String title, final TicketMainFragment.OnUserActionListener listener)
 	{
 		if (mSpinnderIndex == -1)
 		{

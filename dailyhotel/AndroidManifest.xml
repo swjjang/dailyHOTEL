@@ -297,10 +297,10 @@
             android:value="true" />
         <meta-data
             android:name="io.branch.sdk.BranchKey.test"
-            android:value="secret_test_DyrTus4b0EOQZGki1rOQrFyrxDSPiDIu" />
+            android:value="key_test_lnoTvqmfh68gyZJ1Wp7PhgplrzbYXPnt" />
         <meta-data
             android:name="io.branch.sdk.BranchKey"
-            android:value="secret_live_DyrTus4b0EOQZGki1rOQrFyrxDSPiDIu" />
+            android:value="key_live_lnoTvqmfh68gyZJ1Wp7PhgplrzbYXPnt" />
     </application>
 
 </manifest>

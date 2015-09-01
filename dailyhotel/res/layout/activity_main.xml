@@ -27,9 +27,10 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:background="@android:color/white"
+                android:cacheColorHint="@android:color/transparent"
                 android:choiceMode="singleChoice"
                 android:divider="@color/leftdrawer_divider"
-                android:dividerHeight="0.5dp"
+                android:dividerHeight="1px"
                 android:listSelector="@android:color/transparent" />
         </RelativeLayout>
     </android.support.v4.widget.DrawerLayout>

@@ -27,6 +27,7 @@ import com.twoheart.dailyhotel.model.SaleRoomInformation;
 import com.twoheart.dailyhotel.util.ABTestPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.widget.FontManager;
 
 import android.animation.Animator;
@@ -1892,7 +1893,7 @@ public class HotelDetailLayout
 					@Override
 					public void onClick(View v)
 					{
-						Util.installGooglePlayService(mFragmentActivity);
+						Util.installGooglePlayService((BaseActivity) mFragmentActivity);
 					}
 				});
 			}

@@ -13,7 +13,7 @@
  * @version 1
  * @author Mike Han(mike@dailyhotel.co.kr)
  */
-package com.twoheart.dailyhotel;
+package com.twoheart.dailyhotel.fragment;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,6 +21,9 @@ import java.util.Map;
 import org.json.JSONObject;
 
 import com.android.volley.Request.Method;
+import com.twoheart.dailyhotel.MainActivity;
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.WaitTimerFragment;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.ExLog;
