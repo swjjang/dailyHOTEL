@@ -11,7 +11,6 @@ import com.twoheart.dailyhotel.ui.DailyAnimatedExpandableListView;
 import com.twoheart.dailyhotel.ui.DailyAnimatedExpandableListView.AnimatedExpandableListAdapter;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 import android.content.Context;
 import android.content.Intent;

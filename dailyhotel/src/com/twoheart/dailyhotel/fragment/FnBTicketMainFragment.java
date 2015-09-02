@@ -16,6 +16,7 @@ import org.json.JSONObject;
 
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.SelectAreaActivity;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
@@ -23,7 +24,6 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.TicketViewItem;
 import com.twoheart.dailyhotel.widget.FragmentViewPager;
 
@@ -55,7 +55,7 @@ public class FnBTicketMainFragment extends TicketMainFragment
 
 		mFragmentViewPager.setData(mFragmentList);
 		mFragmentViewPager.setAdapter(getChildFragmentManager());
-		
+
 		setOnUserActionListener(mOnUserActionListener);
 
 		return view;

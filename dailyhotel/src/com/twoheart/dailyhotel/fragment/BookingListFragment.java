@@ -9,7 +9,7 @@
  * @version 1
  * @author Mike Han(mike@dailyhotel.co.kr)
  */
-package com.twoheart.dailyhotel;
+package com.twoheart.dailyhotel.fragment;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,6 +22,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.android.volley.Request.Method;
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.BookingTabActivity;
 import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.activity.PaymentWaitActivity;
@@ -38,8 +40,6 @@ import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
-import com.twoheart.dailyhotel.util.ui.BaseActivity;
-import com.twoheart.dailyhotel.util.ui.BaseFragment;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView;
 

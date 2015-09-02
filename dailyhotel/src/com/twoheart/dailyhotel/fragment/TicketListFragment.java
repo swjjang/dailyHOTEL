@@ -23,7 +23,7 @@ import org.json.JSONObject;
 
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.MainActivity;
-import com.twoheart.dailyhotel.WaitTimerFragment;
+import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.fragment.TicketMainFragment.VIEW_TYPE;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
@@ -31,8 +31,6 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.ui.BaseActivity;
-import com.twoheart.dailyhotel.util.ui.BaseFragment;
 import com.twoheart.dailyhotel.util.ui.TicketViewItem;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView;
 

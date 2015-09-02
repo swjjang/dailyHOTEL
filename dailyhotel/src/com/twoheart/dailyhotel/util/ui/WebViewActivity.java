@@ -15,6 +15,7 @@ package com.twoheart.dailyhotel.util.ui;
 import java.net.URISyntaxException;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.widget.DailyToast;
 

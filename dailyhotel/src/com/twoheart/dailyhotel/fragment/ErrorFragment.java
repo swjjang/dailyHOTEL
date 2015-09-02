@@ -10,12 +10,13 @@
  * @version 1
  * @author Mike Han(mike@dailyhotel.co.kr)
  */
-package com.twoheart.dailyhotel;
+package com.twoheart.dailyhotel.fragment;
 
+import com.twoheart.dailyhotel.MainActivity;
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.util.ui.BaseActivity;
-import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

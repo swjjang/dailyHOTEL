@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.ui;
 
 import com.twoheart.dailyhotel.activity.HotelDetailActivity;
+import com.twoheart.dailyhotel.activity.PlaceDetailActivity;
 
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
@@ -32,6 +33,7 @@ public class AnimationImageView extends ImageView
 	private Matrix mMatrix;
 
 	private HotelDetailActivity.OnUserActionListener mOnUserActionListener;
+	private PlaceDetailActivity.OnImageActionListener mOnImageActionListener;
 
 	private Handler mAnimationHandler = new Handler()
 	{
@@ -286,6 +288,17 @@ public class AnimationImageView extends ImageView
 				mOnUserActionListener.prevSlide();
 			}
 		}
+
+		if (mOnImageActionListener != null)
+		{
+			if (mIsRightAnimation == false)
+			{
+				mOnImageActionListener.nextSlide();
+			} else
+			{
+				mOnImageActionListener.prevSlide();
+			}
+		}
 	}
 
 	public void initAnimation(boolean isRightAnimation)
@@ -323,5 +336,10 @@ public class AnimationImageView extends ImageView
 	public void setOnAnimationListener(HotelDetailActivity.OnUserActionListener listener)
 	{
 		mOnUserActionListener = listener;
+	}
+
+	public void setOnImageActionListener(PlaceDetailActivity.OnImageActionListener listener)
+	{
+		mOnImageActionListener = listener;
 	}
 }

@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel;
 
 import com.twoheart.dailyhotel.activity.PushDialogActivity;
+import com.twoheart.dailyhotel.fragment.WaitTimerFragment;
 import com.twoheart.dailyhotel.util.WakeLock;
 
 import android.app.Activity;

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.TicketListMapFragment;
-import com.twoheart.dailyhotel.model.BaseTicketDto;
+import com.twoheart.dailyhotel.model.TicketDto;
 import com.twoheart.dailyhotel.util.ui.TicketViewItem;
 
 import android.content.Context;
@@ -19,7 +19,7 @@ public abstract class TicketViewPagerAdapter extends PagerAdapter
 	private ArrayList<TicketViewItem> mTicketViewItemList;
 	protected TicketListMapFragment.OnUserActionListener mOnUserActionListener;
 
-	protected abstract void makeLayout(View view, final BaseTicketDto ticketDto);
+	protected abstract void makeLayout(View view, final TicketDto ticketDto);
 
 	public TicketViewPagerAdapter(Context context)
 	{

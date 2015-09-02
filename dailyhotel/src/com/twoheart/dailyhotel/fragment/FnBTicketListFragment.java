@@ -22,6 +22,7 @@ import org.json.JSONObject;
 
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.adapter.FnBTicketListAdapter;
 import com.twoheart.dailyhotel.adapter.TicketListAdapter;
 import com.twoheart.dailyhotel.fragment.TicketMainFragment.VIEW_TYPE;
@@ -34,7 +35,6 @@ import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.FnBTicketViewItem;
 import com.twoheart.dailyhotel.util.ui.TicketViewItem;
 import com.twoheart.dailyhotel.widget.DailyHotelHeaderTransformer;
@@ -319,7 +319,7 @@ public class FnBTicketListFragment extends TicketListFragment
 
 						FnBTicketDto newFnBTicketDto = new FnBTicketDto();
 
-						if (newFnBTicketDto.setTicket(jsonObject) == true)
+						if (newFnBTicketDto.setData(jsonObject) == true)
 						{
 							fnbTicketList.add(newFnBTicketDto); // 추가.
 						}

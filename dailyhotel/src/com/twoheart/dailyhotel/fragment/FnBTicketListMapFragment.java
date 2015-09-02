@@ -1,8 +1,8 @@
 package com.twoheart.dailyhotel.fragment;
 
+import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.adapter.FnBTicketViewPagerAdapter;
 import com.twoheart.dailyhotel.adapter.TicketViewPagerAdapter;
-import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 public class FnBTicketListMapFragment extends TicketListMapFragment
 {

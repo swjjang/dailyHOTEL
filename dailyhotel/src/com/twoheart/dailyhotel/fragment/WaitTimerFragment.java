@@ -12,7 +12,7 @@
  * @version 1
  * @author Mike Han(mike@dailyhotel.co.kr)
  */
-package com.twoheart.dailyhotel;
+package com.twoheart.dailyhotel.fragment;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,6 +22,10 @@ import java.util.TimeZone;
 import org.json.JSONObject;
 
 import com.android.volley.Request.Method;
+import com.twoheart.dailyhotel.AlarmBroadcastReceiver;
+import com.twoheart.dailyhotel.MainActivity;
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.fragment.TicketMainFragment.TICKET_TYPE;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
@@ -31,8 +35,6 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.WakeLock;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.ui.BaseActivity;
-import com.twoheart.dailyhotel.util.ui.BaseFragment;
 import com.twoheart.dailyhotel.widget.FontManager;
 
 import android.app.AlarmManager;
@@ -136,6 +138,8 @@ public class WaitTimerFragment
 
 				titleSubTextView.setTextColor(getResources().getColor(R.color.white));
 				titleSubTextView.setText(R.string.frag_wait_timer_fnb_msg);
+
+				tvTimer.setTextColor(getResources().getColor(R.color.white));
 				break;
 		}
 

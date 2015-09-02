@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.fragment;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

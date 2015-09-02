@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.fragment.BaseFragment;
 import com.twoheart.dailyhotel.fragment.BookingTabBookingFragment;
 import com.twoheart.dailyhotel.fragment.TabInfoFragment;
 import com.twoheart.dailyhotel.fragment.TabMapFragment;
@@ -26,8 +27,6 @@ import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.ui.BaseActivity;
-import com.twoheart.dailyhotel.util.ui.BaseFragment;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.FragmentViewPager;
 import com.twoheart.dailyhotel.widget.TabIndicator;

@@ -6,7 +6,7 @@ import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.androidquery.callback.BitmapAjaxCallback;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.BaseTicketDto;
+import com.twoheart.dailyhotel.model.TicketDto;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.VolleyImageLoader;
 
@@ -34,7 +34,7 @@ public class FnBTicketViewPagerAdapter extends TicketViewPagerAdapter
 	}
 
 	@Override
-	protected void makeLayout(View view, final BaseTicketDto ticketDto)
+	protected void makeLayout(View view, final TicketDto ticketDto)
 	{
 		RelativeLayout llHotelRowContent = (RelativeLayout) view.findViewById(R.id.ll_hotel_row_content);
 		final ImageView img = (ImageView) view.findViewById(R.id.iv_hotel_row_img);

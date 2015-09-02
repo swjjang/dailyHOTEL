@@ -14,6 +14,7 @@
 package com.twoheart.dailyhotel.util.ui;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.activity.BaseActivity;
 
 import android.app.Dialog;
 import android.content.DialogInterface;

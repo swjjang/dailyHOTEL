@@ -2,8 +2,7 @@ package com.twoheart.dailyhotel.fragment;
 
 import com.androidquery.AQuery;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.ui.BaseActivity;
-import com.twoheart.dailyhotel.util.ui.BaseFragment;
+import com.twoheart.dailyhotel.activity.BaseActivity;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

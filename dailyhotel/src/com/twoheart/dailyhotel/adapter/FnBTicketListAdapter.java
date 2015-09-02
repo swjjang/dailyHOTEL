@@ -7,7 +7,7 @@ import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.androidquery.callback.BitmapAjaxCallback;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.BaseTicketDto;
+import com.twoheart.dailyhotel.model.TicketDto;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.VolleyImageLoader;
 import com.twoheart.dailyhotel.util.ui.TicketViewItem;
@@ -66,7 +66,7 @@ public class FnBTicketListAdapter extends TicketListAdapter
 
 			case TicketViewItem.TYPE_ENTRY:
 			{
-				BaseTicketDto ticketDto = item.getTicketDto();
+				TicketDto ticketDto = item.getTicketDto();
 				TicketViewHolder viewHolder = null;
 
 				if (convertView != null)

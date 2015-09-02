@@ -1,6 +1,6 @@
 package com.twoheart.dailyhotel.util.ui;
 
-import com.twoheart.dailyhotel.model.BaseTicketDto;
+import com.twoheart.dailyhotel.model.TicketDto;
 
 public abstract class TicketViewItem
 {
@@ -21,5 +21,5 @@ public abstract class TicketViewItem
 		this.title = title;
 	}
 
-	public abstract BaseTicketDto getTicketDto();
+	public abstract TicketDto getTicketDto();
 }

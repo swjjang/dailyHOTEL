@@ -3,8 +3,8 @@ package com.twoheart.dailyhotel;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.fragment.IntroGuideFragment;
-import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 import android.content.SharedPreferences.Editor;
 import android.os.Build;

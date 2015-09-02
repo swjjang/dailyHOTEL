@@ -8,7 +8,7 @@ import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public abstract class BaseTicketDto implements Parcelable
+public abstract class TicketDto implements Parcelable
 {
 	public int index;
 	public String imageUrl;
@@ -98,12 +98,14 @@ public abstract class BaseTicketDto implements Parcelable
 		}
 	};
 
-	public BaseTicketDto()
+	public abstract boolean setData(JSONObject jsonObject);
+
+	public TicketDto()
 	{
 		super();
 	}
 
-	public BaseTicketDto(Parcel in)
+	public TicketDto(Parcel in)
 	{
 		readFromParcel(in);
 	}
@@ -138,6 +140,4 @@ public abstract class BaseTicketDto implements Parcelable
 		isDailyChoice = in.readInt() == 1 ? true : false;
 		isSoldOut = in.readInt() == 1 ? true : false;
 	}
-
-	public abstract boolean setTicket(JSONObject jsonObject);
 }

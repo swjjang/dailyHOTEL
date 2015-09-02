@@ -8,7 +8,7 @@ import com.twoheart.dailyhotel.util.ExLog;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class FnBTicketDto extends BaseTicketDto implements Parcelable
+public class FnBTicketDto extends TicketDto implements Parcelable
 {
 	public String saleDay;
 
@@ -37,28 +37,8 @@ public class FnBTicketDto extends BaseTicketDto implements Parcelable
 		saleDay = in.readString();
 	}
 
-	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
-	{
-		public FnBTicketDto createFromParcel(Parcel in)
-		{
-			return new FnBTicketDto(in);
-		}
-
-		@Override
-		public FnBTicketDto[] newArray(int size)
-		{
-			return new FnBTicketDto[size];
-		}
-	};
-
 	@Override
-	public int describeContents()
-	{
-		return 0;
-	}
-
-	@Override
-	public boolean setTicket(JSONObject jsonObject)
+	public boolean setData(JSONObject jsonObject)
 	{
 		try
 		{
@@ -95,5 +75,25 @@ public class FnBTicketDto extends BaseTicketDto implements Parcelable
 		}
 
 		return true;
+	}
+
+	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+	{
+		public FnBTicketDto createFromParcel(Parcel in)
+		{
+			return new FnBTicketDto(in);
+		}
+
+		@Override
+		public FnBTicketDto[] newArray(int size)
+		{
+			return new FnBTicketDto[size];
+		}
+	};
+
+	@Override
+	public int describeContents()
+	{
+		return 0;
 	}
 }

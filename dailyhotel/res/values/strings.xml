@@ -382,8 +382,10 @@
     <string name="kakao_btn_move">앱으로 이동</string>
     <string name="kakao_btn_invited_friend">데일리호텔 할인받기!</string>
     <string name="kakao_btn_go_hotel">호텔 보러 가기!</string>
+    <string name="kakao_btn_go_ticket">보러 가기!</string>
 	<string name="kakao_btn_share_hotel">친구의 추천호텔!\n%1$s에서의 근사한 하루!\n\n체크인 %2$s | 체크아웃 %3$s (%4$d박 %5$d일)\n\n맘에 드는 객실 확인하고 잊지 못할 하루를 예약하세요!</string>
-
+	<string name="kakao_btn_share_ticket">친구의 추천 레스토랑!\n%1$s에서의 근사한 하루!\n\n날짜 %2$s\n\n맘에 드는 레스토랑 확인하고 잊지 못할 하루를 예약하세요!</string>
+	
 
     <!-- Base Activity -->
     <string name="act_base_network_connect">인터넷 연결 상태가 불안정합니다.\n인터넷 연결을 확인하신 뒤 다시 시도해주세요.</string>

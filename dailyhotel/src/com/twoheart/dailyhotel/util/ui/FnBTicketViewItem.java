@@ -1,7 +1,7 @@
 package com.twoheart.dailyhotel.util.ui;
 
-import com.twoheart.dailyhotel.model.BaseTicketDto;
 import com.twoheart.dailyhotel.model.FnBTicketDto;
+import com.twoheart.dailyhotel.model.TicketDto;
 
 public class FnBTicketViewItem extends TicketViewItem
 {
@@ -20,7 +20,7 @@ public class FnBTicketViewItem extends TicketViewItem
 	}
 
 	@Override
-	public BaseTicketDto getTicketDto()
+	public TicketDto getTicketDto()
 	{
 		return mFnBDto;
 	}

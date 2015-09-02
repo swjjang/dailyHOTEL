@@ -389,6 +389,7 @@ public interface Constants
 	public static final String NAME_INTENT_EXTRA_DATA_LATITUDE = "latitude";
 	public static final String NAME_INTENT_EXTRA_DATA_LONGITUDE = "longitude";
 	public static final String NAME_INTENT_EXTRA_DATA_SALEROOMINFORMATION = "saleRoomInformation";
+	public static final String NAME_INTENT_EXTRA_DATA_TICKETINFORMATION = "ticketInformation";
 	public static final String NAME_INTENT_EXTRA_DATA_SALEINDEX = "saleIndex";
 	public static final String NAME_INTENT_EXTRA_DATA_IMAGEURL = "imageUrl";
 	public static final String NAME_INTENT_EXTRA_DATA_NIGHTS = "nights";
@@ -401,6 +402,7 @@ public interface Constants
 	public static final String NAME_INTENT_EXTRA_DATA_CHECKOUTDATE = "checkOutDate";
 	public static final String NAME_INTENT_EXTRA_DATA_URL = "url";
 	public static final String NAME_INTENT_EXTRA_DATA_TITLE = "title";
+	public static final String NAME_INTENT_EXTRA_DATA_PLACENAME = "placeName";
 
 	// Push Type
 	public static final int PUSH_TYPE_NOTICE = 0;

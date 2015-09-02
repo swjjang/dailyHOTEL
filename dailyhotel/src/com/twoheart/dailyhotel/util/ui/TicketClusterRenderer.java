@@ -8,8 +8,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
-import com.twoheart.dailyhotel.model.BaseTicketDto;
 import com.twoheart.dailyhotel.model.HotelRegionRenderer;
+import com.twoheart.dailyhotel.model.TicketDto;
 import com.twoheart.dailyhotel.model.TicketRenderer;
 
 import android.content.Context;
@@ -52,7 +52,7 @@ public class TicketClusterRenderer
 			mOnClusterRenderedListener.onClusterRenderedListener(Renderer.CLUSTER_ITEM);
 		}
 
-		BaseTicketDto ticketDto = item.getTicketDto();
+		TicketDto ticketDto = item.getTicketDto();
 
 		TicketRenderer ticketRenderer = new TicketRenderer(mContext, ticketDto.discountPrice, ticketDto.grade.getMarkerResId());
 

@@ -167,10 +167,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppBaseTheme" />
         <activity
-            android:name=".IntroActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".activity.PaymentWaitActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />

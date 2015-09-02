@@ -11,12 +11,14 @@
  * @version 1
  * @author Mike Han(mike@dailyhotel.co.kr)
  */
-package com.twoheart.dailyhotel;
+package com.twoheart.dailyhotel.fragment;
 
 import org.json.JSONObject;
 
 import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
+import com.twoheart.dailyhotel.MainActivity;
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.AboutActivity;
 import com.twoheart.dailyhotel.activity.CreditCardListActivity;
 import com.twoheart.dailyhotel.activity.FAQActivity;
@@ -35,7 +37,6 @@ import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
-import com.twoheart.dailyhotel.util.ui.BaseFragment;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
 import android.app.Activity;

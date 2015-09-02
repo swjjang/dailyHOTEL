@@ -2,14 +2,14 @@ package com.twoheart.dailyhotel.util.ui;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
-import com.twoheart.dailyhotel.model.BaseTicketDto;
+import com.twoheart.dailyhotel.model.TicketDto;
 
 public class TicketClusterItem implements ClusterItem
 {
-	private final BaseTicketDto mTicketDto;
+	private final TicketDto mTicketDto;
 	private final LatLng mPosition;
 
-	public TicketClusterItem(BaseTicketDto ticketDto)
+	public TicketClusterItem(TicketDto ticketDto)
 	{
 		mTicketDto = ticketDto;
 		mPosition = new LatLng(ticketDto.latitude, ticketDto.longitude);
@@ -21,7 +21,7 @@ public class TicketClusterItem implements ClusterItem
 		return mPosition;
 	}
 
-	public BaseTicketDto getTicketDto()
+	public TicketDto getTicketDto()
 	{
 		return mTicketDto;
 	}

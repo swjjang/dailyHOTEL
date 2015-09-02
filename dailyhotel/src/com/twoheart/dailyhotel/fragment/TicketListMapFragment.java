@@ -22,15 +22,15 @@ import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.adapter.TicketViewPagerAdapter;
-import com.twoheart.dailyhotel.model.BaseTicketDto;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.TicketDto;
 import com.twoheart.dailyhotel.model.TicketRenderer;
 import com.twoheart.dailyhotel.ui.LoopViewPager;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.ui.BaseActivity;
 import com.twoheart.dailyhotel.util.ui.LoadingDialog;
 import com.twoheart.dailyhotel.util.ui.LocationFactory;
 import com.twoheart.dailyhotel.util.ui.MyLocationMarker;
@@ -71,7 +71,7 @@ public abstract class TicketListMapFragment extends
 
 	private TicketViewItem mSelectedTicketViewItem;
 	private boolean mIsOpenMakrer; // 마커를 선택한 경우.
-	private HashMap<String, ArrayList<BaseTicketDto>> mDuplicateTicketDto;
+	private HashMap<String, ArrayList<TicketDto>> mDuplicateTicketDto;
 
 	private ClusterManager<TicketClusterItem> mClusterManager;
 	private TicketClusterRenderer mTicketClusterRenderer;
@@ -82,7 +82,7 @@ public abstract class TicketListMapFragment extends
 
 	public interface OnUserActionListener
 	{
-		public void onInfoWindowClickListener(BaseTicketDto selectedTicketDto);
+		public void onInfoWindowClickListener(TicketDto selectedTicketDto);
 
 		public void onCloseInfoWindowClickListener();
 	}
@@ -105,7 +105,7 @@ public abstract class TicketListMapFragment extends
 
 		if (mDuplicateTicketDto == null)
 		{
-			mDuplicateTicketDto = new HashMap<String, ArrayList<BaseTicketDto>>();
+			mDuplicateTicketDto = new HashMap<String, ArrayList<TicketDto>>();
 		}
 
 		getMapAsync(new OnMapReadyCallback()
@@ -361,7 +361,7 @@ public abstract class TicketListMapFragment extends
 
 		if (mDuplicateTicketDto == null)
 		{
-			mDuplicateTicketDto = new HashMap<String, ArrayList<BaseTicketDto>>();
+			mDuplicateTicketDto = new HashMap<String, ArrayList<TicketDto>>();
 		}
 
 		mDuplicateTicketDto.clear();
@@ -383,7 +383,7 @@ public abstract class TicketListMapFragment extends
 
 		for (TicketViewItem ticketViewItem : mTicketViewItemArrangeArrayList)
 		{
-			BaseTicketDto baseTicketDto = ticketViewItem.getTicketDto();
+			TicketDto baseTicketDto = ticketViewItem.getTicketDto();
 
 			count++;
 
@@ -535,7 +535,7 @@ public abstract class TicketListMapFragment extends
 	 * @param hashMap
 	 * @return
 	 */
-	private ArrayList<TicketViewItem> searchDuplicateLocateion(ArrayList<TicketViewItem> hotelArrayList, HashMap<String, ArrayList<BaseTicketDto>> hashMap)
+	private ArrayList<TicketViewItem> searchDuplicateLocateion(ArrayList<TicketViewItem> hotelArrayList, HashMap<String, ArrayList<TicketDto>> hashMap)
 	{
 		ArrayList<TicketViewItem> arrangeList = new ArrayList<TicketViewItem>(hotelArrayList);
 
@@ -566,8 +566,8 @@ public abstract class TicketListMapFragment extends
 
 			public int compare(TicketViewItem o1, TicketViewItem o2)
 			{
-				BaseTicketDto item01 = o1.getTicketDto();
-				BaseTicketDto item02 = o2.getTicketDto();
+				TicketDto item01 = o1.getTicketDto();
+				TicketDto item02 = o2.getTicketDto();
 
 				float[] results1 = new float[3];
 				Location.distanceBetween(latlng.latitude, latlng.longitude, item01.latitude, item01.longitude, results1);
@@ -586,8 +586,8 @@ public abstract class TicketListMapFragment extends
 		// 중복된 호텔들은 낮은 가격을 노출하도록 한다.
 		if (size > 1)
 		{
-			BaseTicketDto item01 = null;
-			BaseTicketDto item02 = null;
+			TicketDto item01 = null;
+			TicketDto item02 = null;
 
 			for (int i = size - 1; i > 0; i--)
 			{
@@ -611,7 +611,7 @@ public abstract class TicketListMapFragment extends
 
 					if (hashMap.containsKey(key) == true)
 					{
-						ArrayList<BaseTicketDto> dulicateArrayList = hashMap.get(key);
+						ArrayList<TicketDto> dulicateArrayList = hashMap.get(key);
 
 						if (dulicateArrayList.contains(item01) == false)
 						{
@@ -624,7 +624,7 @@ public abstract class TicketListMapFragment extends
 						}
 					} else
 					{
-						ArrayList<BaseTicketDto> dulicateArrayList = new ArrayList<BaseTicketDto>();
+						ArrayList<TicketDto> dulicateArrayList = new ArrayList<TicketDto>();
 
 						dulicateArrayList.add(item01);
 						dulicateArrayList.add(item02);
@@ -656,7 +656,7 @@ public abstract class TicketListMapFragment extends
 		for (int i = 0; i < size; i++)
 		{
 			TicketViewItem ticketViewItem = mTicketViewItemArrangeArrayList.get(i);
-			BaseTicketDto ticketDto = ticketViewItem.getTicketDto();
+			TicketDto ticketDto = ticketViewItem.getTicketDto();
 
 			if (latlng.latitude == ticketDto.latitude && latlng.longitude == ticketDto.longitude)
 			{
@@ -707,8 +707,8 @@ public abstract class TicketListMapFragment extends
 		{
 			public int compare(TicketViewItem o1, TicketViewItem o2)
 			{
-				BaseTicketDto item01 = o1.getTicketDto();
-				BaseTicketDto item02 = o2.getTicketDto();
+				TicketDto item01 = o1.getTicketDto();
+				TicketDto item02 = o2.getTicketDto();
 
 				float[] results1 = new float[3];
 				Location.distanceBetween(latlng.latitude, latlng.longitude, item01.latitude, item01.longitude, results1);
@@ -740,7 +740,7 @@ public abstract class TicketListMapFragment extends
 		for (int i = 0; i < size; i++)
 		{
 			TicketViewItem ticketViewItem = mTicketViewItemArrangeArrayList.get(i);
-			BaseTicketDto ticketDto = ticketViewItem.getTicketDto();
+			TicketDto ticketDto = ticketViewItem.getTicketDto();
 
 			if (latlng.latitude == ticketDto.latitude && latlng.longitude == ticketDto.longitude)
 			{
@@ -790,7 +790,7 @@ public abstract class TicketListMapFragment extends
 
 			TicketViewItem ticketViewItem = mTicketViewItemArrangeArrayList.get(page);
 
-			BaseTicketDto ticketDto = ticketViewItem.getTicketDto();
+			TicketDto ticketDto = ticketViewItem.getTicketDto();
 
 			if (ticketDto != null)
 			{
@@ -953,7 +953,7 @@ public abstract class TicketListMapFragment extends
 	private OnUserActionListener mOnInfoWindowUserActionListener = new OnUserActionListener()
 	{
 		@Override
-		public void onInfoWindowClickListener(BaseTicketDto selectedTicketDto)
+		public void onInfoWindowClickListener(TicketDto selectedTicketDto)
 		{
 			if (getActivity() == null)
 			{
@@ -969,7 +969,7 @@ public abstract class TicketListMapFragment extends
 						continue;
 					}
 
-					BaseTicketDto ticketDto = ticketViewItem.getTicketDto();
+					TicketDto ticketDto = ticketViewItem.getTicketDto();
 
 					if (ticketDto.equals(selectedTicketDto) == true)
 					{

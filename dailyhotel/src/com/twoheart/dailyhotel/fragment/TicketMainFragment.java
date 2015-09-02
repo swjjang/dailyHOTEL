@@ -17,7 +17,7 @@ import org.json.JSONObject;
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.WaitTimerFragment;
+import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.AreaItem;
 import com.twoheart.dailyhotel.model.Province;
@@ -26,8 +26,6 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.ui.BaseActivity;
-import com.twoheart.dailyhotel.util.ui.BaseFragment;
 import com.twoheart.dailyhotel.util.ui.TicketViewItem;
 import com.twoheart.dailyhotel.widget.FragmentViewPager;
 
@@ -94,7 +92,7 @@ public abstract class TicketMainFragment extends BaseFragment
 	protected abstract void onNavigationItemSelected(Province province);
 
 	protected abstract void requestProvinceList(BaseActivity baseActivity);
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
@@ -368,7 +366,7 @@ public abstract class TicketMainFragment extends BaseFragment
 
 		return arrayList;
 	}
-	
+
 	protected void setOnUserActionListener(OnUserActionListener listener)
 	{
 		mOnUserActionListener = listener;
