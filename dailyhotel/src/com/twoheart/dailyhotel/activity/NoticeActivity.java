@@ -9,11 +9,11 @@ import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.adapter.BoardListAdapter;
 import com.twoheart.dailyhotel.model.Board;
+import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
+import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
-import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
-import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
 
 import android.os.Bundle;
 import android.widget.ExpandableListView;

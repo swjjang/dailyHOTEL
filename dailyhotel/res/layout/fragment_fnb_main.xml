@@ -4,12 +4,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <com.twoheart.dailyhotel.widget.FragmentViewPager
+    <com.twoheart.dailyhotel.view.widget.FragmentViewPager
         android:id="@+id/fragmentViewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+    <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
         android:id="@+id/headerSectionBar"
         android:layout_width="match_parent"
         android:layout_height="53dp"

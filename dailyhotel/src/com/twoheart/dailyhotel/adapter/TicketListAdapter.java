@@ -3,9 +3,9 @@ package com.twoheart.dailyhotel.adapter;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
-import com.twoheart.dailyhotel.util.ui.TicketViewItem;
-import com.twoheart.dailyhotel.widget.PinnedSectionListView.PinnedSectionListAdapter;
+import com.twoheart.dailyhotel.view.HotelListViewItem;
+import com.twoheart.dailyhotel.view.TicketViewItem;
+import com.twoheart.dailyhotel.view.widget.PinnedSectionListView.PinnedSectionListAdapter;
 
 import android.content.Context;
 import android.graphics.Color;

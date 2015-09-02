@@ -27,18 +27,18 @@ import com.twoheart.dailyhotel.adapter.TicketViewPagerAdapter;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.TicketDto;
 import com.twoheart.dailyhotel.model.TicketRenderer;
-import com.twoheart.dailyhotel.ui.LoopViewPager;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.ui.LoadingDialog;
-import com.twoheart.dailyhotel.util.ui.LocationFactory;
-import com.twoheart.dailyhotel.util.ui.MyLocationMarker;
-import com.twoheart.dailyhotel.util.ui.TicketClusterItem;
-import com.twoheart.dailyhotel.util.ui.TicketClusterRenderer;
-import com.twoheart.dailyhotel.util.ui.TicketClusterRenderer.OnSelectedClusterItemListener;
-import com.twoheart.dailyhotel.util.ui.TicketClusterRenderer.Renderer;
-import com.twoheart.dailyhotel.util.ui.TicketViewItem;
+import com.twoheart.dailyhotel.view.LoadingDialog;
+import com.twoheart.dailyhotel.view.LocationFactory;
+import com.twoheart.dailyhotel.view.LoopViewPager;
+import com.twoheart.dailyhotel.view.MyLocationMarker;
+import com.twoheart.dailyhotel.view.TicketClusterItem;
+import com.twoheart.dailyhotel.view.TicketClusterRenderer;
+import com.twoheart.dailyhotel.view.TicketViewItem;
+import com.twoheart.dailyhotel.view.TicketClusterRenderer.OnSelectedClusterItemListener;
+import com.twoheart.dailyhotel.view.TicketClusterRenderer.Renderer;
 
 import android.content.Context;
 import android.content.Intent;
@@ -815,7 +815,7 @@ public abstract class TicketListMapFragment extends
 	private TicketClusterRenderer.OnClusterRenderedListener mOnClusterRenderedListener = new TicketClusterRenderer.OnClusterRenderedListener()
 	{
 		@Override
-		public void onClusterRenderedListener(com.twoheart.dailyhotel.util.ui.TicketClusterRenderer.Renderer renderer)
+		public void onClusterRenderedListener(com.twoheart.dailyhotel.view.TicketClusterRenderer.Renderer renderer)
 		{
 			if (renderer == Renderer.CLUSTER)
 			{

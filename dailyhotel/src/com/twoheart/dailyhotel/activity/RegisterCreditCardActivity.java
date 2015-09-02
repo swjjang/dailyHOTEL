@@ -15,10 +15,10 @@
 package com.twoheart.dailyhotel.activity;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.network.VolleyHttpClient;
+import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;

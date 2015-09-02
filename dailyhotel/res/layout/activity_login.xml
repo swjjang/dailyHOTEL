@@ -27,7 +27,7 @@
         android:paddingRight="10dp"
         android:paddingTop="10dp" >
 
-        <com.twoheart.dailyhotel.widget.DailyCustomFontEditText
+        <com.twoheart.dailyhotel.view.widget.DailyCustomFontEditText
             android:id="@+id/et_login_id"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -40,9 +40,9 @@
             android:textColorHint="@color/textView_textColor_disabled" >
 
             <requestFocus />
-        </com.twoheart.dailyhotel.widget.DailyCustomFontEditText>
+        </com.twoheart.dailyhotel.view.widget.DailyCustomFontEditText>
 
-        <com.twoheart.dailyhotel.widget.DailyCustomFontEditText
+        <com.twoheart.dailyhotel.view.widget.DailyCustomFontEditText
             android:id="@+id/et_login_pwd"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -56,7 +56,7 @@
             android:singleLine="true"
             android:textColorHint="@color/textView_textColor_disabled" />
 
-        <com.twoheart.dailyhotel.widget.DailyCustomFontSwitchCompat
+        <com.twoheart.dailyhotel.view.widget.DailyCustomFontSwitchCompat
             android:id="@+id/cb_login_auto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -72,7 +72,7 @@
             android:textOff=""
             android:textOn="" />
 
-        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+        <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
             android:id="@+id/btn_login"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -90,7 +90,7 @@
             android:gravity="center"
             android:orientation="horizontal" >
 
-            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                 android:id="@+id/tv_login_forgot"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -100,7 +100,7 @@
                 android:textColor="@color/textView_textColor_sub"
                 android:textSize="12dp" />
 
-            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -108,7 +108,7 @@
                 android:textColor="@color/textView_textColor_sub"
                 android:textSize="14.5dp" />
 
-            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                 android:id="@+id/tv_login_signup"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -126,7 +126,6 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="45dp"
             android:textSize="17dp" />
-
     </LinearLayout>
 
 </RelativeLayout>

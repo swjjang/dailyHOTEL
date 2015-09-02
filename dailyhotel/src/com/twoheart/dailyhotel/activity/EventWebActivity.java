@@ -5,7 +5,6 @@ import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.ui.WebViewActivity;
 
 import android.content.Intent;
 import android.net.Uri;

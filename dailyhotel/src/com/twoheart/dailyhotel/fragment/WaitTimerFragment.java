@@ -28,14 +28,14 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.fragment.TicketMainFragment.TICKET_TYPE;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
+import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
+import com.twoheart.dailyhotel.view.widget.FontManager;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.WakeLock;
-import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
-import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.widget.FontManager;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;

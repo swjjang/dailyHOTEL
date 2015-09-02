@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <com.twoheart.dailyhotel.ui.LoopViewPager
+    <com.twoheart.dailyhotel.view.LoopViewPager
         android:id="@+id/defaultHotelImageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,7 +17,7 @@
         android:background="@drawable/blur"
         android:visibility="invisible" />
 
-    <com.twoheart.dailyhotel.ui.HotelDetailListView
+    <com.twoheart.dailyhotel.view.HotelDetailListView
         android:id="@+id/hotelListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -29,7 +29,7 @@
         android:fadingEdgeLength="0dp"
         android:overScrollMode="never" />
 
-    <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+    <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
         android:id="@+id/actionBarTextView"
         android:layout_width="match_parent"
         android:layout_height="56dp"
@@ -100,7 +100,7 @@
         android:layout_height="55dp"
         android:layout_alignParentBottom="true" >
 
-        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+        <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
             android:id="@+id/bookingTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -110,7 +110,7 @@
             android:textSize="20dp"
             android:visibility="gone" />
 
-        <com.twoheart.dailyhotel.widget.DailyCustomFontButton
+        <com.twoheart.dailyhotel.view.widget.DailyCustomFontButton
             android:id="@+id/soldoutTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

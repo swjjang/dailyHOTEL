@@ -10,7 +10,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.TicketDto;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.VolleyImageLoader;
-import com.twoheart.dailyhotel.util.ui.TicketViewItem;
+import com.twoheart.dailyhotel.view.TicketViewItem;
 
 import android.content.Context;
 import android.graphics.Bitmap;

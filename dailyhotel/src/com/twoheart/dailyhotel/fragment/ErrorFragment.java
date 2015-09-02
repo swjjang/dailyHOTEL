@@ -15,8 +15,8 @@ package com.twoheart.dailyhotel.fragment;
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
+import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

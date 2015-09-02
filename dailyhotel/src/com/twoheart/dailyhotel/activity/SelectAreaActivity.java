@@ -7,10 +7,10 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.AreaItem;
 import com.twoheart.dailyhotel.model.Province;
-import com.twoheart.dailyhotel.ui.DailyAnimatedExpandableListView;
-import com.twoheart.dailyhotel.ui.DailyAnimatedExpandableListView.AnimatedExpandableListAdapter;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.view.DailyAnimatedExpandableListView;
+import com.twoheart.dailyhotel.view.DailyAnimatedExpandableListView.AnimatedExpandableListAdapter;
 
 import android.content.Context;
 import android.content.Intent;

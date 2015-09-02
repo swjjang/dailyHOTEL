@@ -27,12 +27,12 @@ import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.fragment.TicketMainFragment.VIEW_TYPE;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
+import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
-import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.ui.TicketViewItem;
-import com.twoheart.dailyhotel.widget.PinnedSectionListView;
+import com.twoheart.dailyhotel.view.TicketViewItem;
+import com.twoheart.dailyhotel.view.widget.PinnedSectionListView;
 
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;

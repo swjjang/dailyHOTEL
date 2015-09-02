@@ -24,7 +24,7 @@
         android:orientation="vertical"
         android:padding="10dp" >
 
-        <com.twoheart.dailyhotel.widget.DailyCustomFontEditText
+        <com.twoheart.dailyhotel.view.widget.DailyCustomFontEditText
             android:id="@+id/et_signup_phone"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -35,7 +35,7 @@
             android:singleLine="true"
             android:textColorHint="@color/textView_textColor_disabled" />
 
-        <com.twoheart.dailyhotel.widget.DailyCustomFontEditText
+        <com.twoheart.dailyhotel.view.widget.DailyCustomFontEditText
             android:id="@+id/et_signup_email"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -47,7 +47,7 @@
             android:singleLine="true"
             android:textColorHint="@color/textView_textColor_disabled" />
 
-        <com.twoheart.dailyhotel.widget.DailyCustomFontEditText
+        <com.twoheart.dailyhotel.view.widget.DailyCustomFontEditText
             android:id="@+id/et_signup_name"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -59,7 +59,7 @@
             android:singleLine="true"
             android:textColorHint="@color/textView_textColor_disabled" />
 
-        <com.twoheart.dailyhotel.widget.DailyCustomFontEditText
+        <com.twoheart.dailyhotel.view.widget.DailyCustomFontEditText
             android:id="@+id/et_signup_pwd"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -71,7 +71,7 @@
             android:singleLine="true"
             android:textColorHint="@color/textView_textColor_disabled" />
 
-        <com.twoheart.dailyhotel.widget.DailyCustomFontEditText
+        <com.twoheart.dailyhotel.view.widget.DailyCustomFontEditText
             android:id="@+id/et_signup_recommender"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -81,7 +81,7 @@
             android:singleLine="true"
             android:textColorHint="@color/textView_textColor_disabled" />
 
-        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+        <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
             android:id="@+id/btn_signup"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -99,7 +99,7 @@
             android:orientation="horizontal"
             android:weightSum="1" >
 
-            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                 android:id="@+id/tv_signup_agreement"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
@@ -108,7 +108,7 @@
                 android:text="@string/act_signup_terms"
                 android:textColor="@color/textView_textColor_sub" />
 
-            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                 android:id="@+id/tv_signup_personal_info"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"

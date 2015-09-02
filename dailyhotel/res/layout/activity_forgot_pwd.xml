@@ -25,7 +25,7 @@
         android:paddingRight="10dp"
         android:paddingTop="10dp" >
 
-        <com.twoheart.dailyhotel.widget.DailyCustomFontEditText
+        <com.twoheart.dailyhotel.view.widget.DailyCustomFontEditText
             android:id="@+id/et_forgot_pwd"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -40,9 +40,9 @@
             android:textColorHint="@color/textView_textColor_sub" >
 
             <requestFocus />
-        </com.twoheart.dailyhotel.widget.DailyCustomFontEditText>
+        </com.twoheart.dailyhotel.view.widget.DailyCustomFontEditText>
 
-        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+        <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -51,7 +51,7 @@
             android:textColor="@color/textView_textColor_sub"
             android:textSize="13.5dp" />
 
-        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+        <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
             android:id="@+id/btn_forgot_pwd"
             android:layout_width="match_parent"
             android:layout_height="50dp"

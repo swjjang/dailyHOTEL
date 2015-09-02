@@ -14,8 +14,8 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.adapter.HotelNameInfoWindowAdapter;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.ui.LocationFactory;
-import com.twoheart.dailyhotel.util.ui.MyLocationMarker;
+import com.twoheart.dailyhotel.view.LocationFactory;
+import com.twoheart.dailyhotel.view.MyLocationMarker;
 
 import android.content.Intent;
 import android.location.Location;

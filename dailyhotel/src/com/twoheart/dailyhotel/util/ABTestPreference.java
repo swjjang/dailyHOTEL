@@ -6,8 +6,8 @@ import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
-import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
-import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
+import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 
 import android.content.Context;
 import android.content.SharedPreferences;

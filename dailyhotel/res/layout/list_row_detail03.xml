@@ -29,7 +29,7 @@
             android:layout_marginLeft="5dp"
             android:orientation="vertical" >
 
-            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                 android:id="@+id/hotelAddressTextView01"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -38,7 +38,7 @@
                 android:textColor="@color/hoteldetail_contents_text_color"
                 android:textSize="13dp" />
 
-            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                 android:id="@+id/hotelAddressTextView02"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -49,7 +49,7 @@
                 android:textSize="13dp"
                 android:visibility="gone" />
 
-            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                 android:id="@+id/hotelAddressTextView03"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -73,7 +73,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+        <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"

@@ -21,12 +21,12 @@ import com.twoheart.dailyhotel.activity.IssuingReceiptActivity;
 import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.BookingHotelDetail;
+import com.twoheart.dailyhotel.network.VolleyHttpClient;
+import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
+import com.twoheart.dailyhotel.network.request.DailyHotelStringRequest;
+import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
-import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
-import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
 
 import android.content.Intent;
 import android.content.SharedPreferences;

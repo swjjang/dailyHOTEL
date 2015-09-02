@@ -21,11 +21,11 @@ import com.twoheart.dailyhotel.activity.SelectAreaActivity;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
+import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
-import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.ui.TicketViewItem;
-import com.twoheart.dailyhotel.widget.FragmentViewPager;
+import com.twoheart.dailyhotel.view.TicketViewItem;
+import com.twoheart.dailyhotel.view.widget.FragmentViewPager;
 
 import android.content.Intent;
 import android.content.SharedPreferences;

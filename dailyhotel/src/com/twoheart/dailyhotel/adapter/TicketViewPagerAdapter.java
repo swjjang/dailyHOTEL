@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.TicketListMapFragment;
 import com.twoheart.dailyhotel.model.TicketDto;
-import com.twoheart.dailyhotel.util.ui.TicketViewItem;
+import com.twoheart.dailyhotel.view.TicketViewItem;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;

@@ -4,9 +4,9 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.activity.BaseActivity;
+import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.util.ui.OnLoadListener;
+import com.twoheart.dailyhotel.view.OnLoadListener;
 
 import android.app.Activity;
 import android.os.Bundle;

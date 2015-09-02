@@ -40,20 +40,20 @@ import com.twoheart.dailyhotel.fragment.HotelMainFragment;
 import com.twoheart.dailyhotel.fragment.RatingHotelFragment;
 import com.twoheart.dailyhotel.fragment.SettingFragment;
 import com.twoheart.dailyhotel.fragment.TicketMainFragment;
+import com.twoheart.dailyhotel.network.VolleyHttpClient;
+import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
+import com.twoheart.dailyhotel.network.request.DailyHotelStringRequest;
+import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
+import com.twoheart.dailyhotel.view.CloseOnBackPressed;
+import com.twoheart.dailyhotel.view.widget.FontManager;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
-import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
-import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
-import com.twoheart.dailyhotel.util.ui.CloseOnBackPressed;
-import com.twoheart.dailyhotel.widget.FontManager;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -138,7 +138,7 @@ public class MainActivity
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		com.twoheart.dailyhotel.util.network.request.DailyHotelRequest.makeUrlEncoder();
+		com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
 
 		// 사용자가 선택한 언어, but 만약 사용자가 한국인인데 일본어를 선택하면 jp가 됨.
 		// 영어인 경우 - English, 한글인 경우 - 한국어
