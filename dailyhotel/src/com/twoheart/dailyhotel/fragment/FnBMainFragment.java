@@ -9,6 +9,7 @@
 package com.twoheart.dailyhotel.fragment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,14 +18,20 @@ import org.json.JSONObject;
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
+import com.twoheart.dailyhotel.activity.FnBDetailActivity;
 import com.twoheart.dailyhotel.activity.SelectAreaActivity;
 import com.twoheart.dailyhotel.model.Area;
+import com.twoheart.dailyhotel.model.AreaItem;
+import com.twoheart.dailyhotel.model.FnB;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.util.AnalyticsManager;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
+import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.view.TicketViewItem;
+import com.twoheart.dailyhotel.view.PlaceViewItem;
 import com.twoheart.dailyhotel.view.widget.FragmentViewPager;
 
 import android.content.Intent;
@@ -36,9 +43,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class FnBTicketMainFragment extends TicketMainFragment
+public class FnBMainFragment extends PlaceMainFragment
 {
+	private ArrayList<PlaceListFragment> mFragmentList;
+	private ArrayList<AreaItem> mAreaItemList;
+	private Province mSelectedProvince;
+
+	private FragmentViewPager mFragmentViewPager;
 	private TextView mHeaderTextView;
+
+	private interface OnUserAnalyticsActionListener
+	{
+		public void selectPlace(String name, long index, String checkInTime);
+
+		public void selectRegion(Province province);
+	};
 
 	@Override
 	public View createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -47,16 +66,16 @@ public class FnBTicketMainFragment extends TicketMainFragment
 
 		mHeaderTextView = (TextView) view.findViewById(R.id.headerSectionBar);
 		mFragmentViewPager = (FragmentViewPager) view.findViewById(R.id.fragmentViewPager);
-		mFragmentList = new ArrayList<TicketListFragment>();
+		mFragmentList = new ArrayList<PlaceListFragment>();
 
-		FnBTicketListFragment fnbListFragment = new FnBTicketListFragment();
-		fnbListFragment.setUserActionListener(mOnUserActionListener);
+		setOnUserActionListener(mOnFnBUserActionListener);
+
+		FnBListFragment fnbListFragment = new FnBListFragment();
+		fnbListFragment.setUserActionListener(mOnFnBUserActionListener);
 		mFragmentList.add(fnbListFragment);
 
 		mFragmentViewPager.setData(mFragmentList);
 		mFragmentViewPager.setAdapter(getChildFragmentManager());
-
-		setOnUserActionListener(mOnUserActionListener);
 
 		return view;
 	}
@@ -112,9 +131,9 @@ public class FnBTicketMainFragment extends TicketMainFragment
 			isSelectionTop = true;
 		}
 
-		if (mUserAnalyticsActionListener != null)
+		if (mOnUserAnalyticsActionListener != null)
 		{
-			mUserAnalyticsActionListener.selectRegion(province);
+			mOnUserAnalyticsActionListener.selectRegion(province);
 		}
 
 		refreshList(province, isSelectionTop);
@@ -127,98 +146,143 @@ public class FnBTicketMainFragment extends TicketMainFragment
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_SALE_REGION_PROVINCE_LIST).toString(), null, mProvinceListJsonResponseListener, baseActivity));
 	}
 
+	@Override
+	protected void refreshList(Province province, boolean isSelectionTop)
+	{
+		FnBListFragment fnbListFragment = (FnBListFragment) mFragmentViewPager.getCurrentFragment();
+		fnbListFragment.refreshList(province, isSelectionTop);
+	}
+
+	@Override
+	protected void activityResult(int requestCode, int resultCode, Intent data)
+	{
+		switch (requestCode)
+		{
+			case CODE_RESULT_ACTIVITY_SETTING_LOCATION:
+			{
+				PlaceListFragment currentFragment = (PlaceListFragment) mFragmentViewPager.getCurrentFragment();
+				currentFragment.onActivityResult(requestCode, resultCode, data);
+				break;
+			}
+		}
+	}
+
+	@Override
+	protected void setActionBarAnimationLock(boolean isLock)
+	{
+		PlaceListFragment currentFragment = (PlaceListFragment) mFragmentViewPager.getCurrentFragment();
+
+		if (currentFragment != null)
+		{
+			if (isLock == true)
+			{
+				currentFragment.setActionBarAnimationLock(false);
+			} else
+			{
+				currentFragment.showActionBarAnimatoin();
+				currentFragment.setActionBarAnimationLock(true);
+			}
+		}
+	}
+
+	@Override
+	protected boolean isEnabledRegionMenu()
+	{
+		if (mAreaItemList != null && mAreaItemList.size() > 1)
+		{
+			return true;
+		} else
+		{
+			return false;
+		}
+	}
+
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// UserActionListener
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	private OnUserActionListener mOnUserActionListener = new OnUserActionListener()
+	private OnUserActionListener mOnFnBUserActionListener = new OnUserActionListener()
 	{
-
 		@Override
-		public void selectedTicket(TicketViewItem baseListViewItem, SaleTime checkSaleTime)
+		public void selectPlace(PlaceViewItem baseListViewItem, SaleTime checkSaleTime)
 		{
-			//			BaseActivity baseActivity = (BaseActivity) getActivity();
-			//
-			//			if (baseActivity == null)
-			//			{
-			//				return;
-			//			}
-			//
-			//			if (isLockUiComponent() == true || baseActivity.isLockUiComponent() == true)
-			//			{
-			//				return;
-			//			}
-			//
-			//			lockUiComponent();
-			//			baseActivity.lockUiComponent();
-			//
-			//			if (baseListViewItem == null)
-			//			{
-			//				releaseUiComponent();
-			//				baseActivity.releaseUiComponent();
-			//				return;
-			//			}
-			//
-			//			switch (baseListViewItem.type)
-			//			{
-			//				case HotelListViewItem.TYPE_ENTRY:
-			//				{
-			//					lockUI();
-			//
-			//					FnBTicketDto ticketDto = (FnBTicketDto) baseListViewItem.getTicketDto();
-			//
-			//					String region = baseActivity.sharedPreference.getString(KEY_PREFERENCE_FNB_REGION_SELECT, "");
-			//					SharedPreferences.Editor editor = baseActivity.sharedPreference.edit();
-			//					editor.putString(KEY_PREFERENCE_REGION_SELECT_GA, region);
-			//					editor.putString(KEY_PREFERENCE_HOTEL_NAME_GA, ticketDto.name);
-			//					editor.commit();
-			//
-			//					Intent intent = new Intent(baseActivity, FnBTicketDetailActivity.class);
-			//					intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkSaleTime);
-			//					intent.putExtra(NAME_INTENT_EXTRA_DATA_TICKETIDX, ticketDto.index);
-			//					intent.putExtra(NAME_INTENT_EXTRA_DATA_TITLE, ticketDto.name);
-			//					intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, ticketDto.image);
-			//
-			//					startActivityForResult(intent, CODE_REQUEST_FRAGMENT_TICKET_MAIN);
-			//
-			//					mUserAnalyticsActionListener.selectedTicket(ticketDto.name, ticketDto.index, checkSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
-			//					break;
-			//				}
-			//
-			//				case HotelListViewItem.TYPE_SECTION:
-			//				default:
-			//					releaseUiComponent();
-			//					baseActivity.releaseUiComponent();
-			//					break;
-			//			}
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null)
+			{
+				return;
+			}
+
+			if (isLockUiComponent() == true || baseActivity.isLockUiComponent() == true)
+			{
+				return;
+			}
+
+			lockUI();
+
+			if (baseListViewItem == null)
+			{
+				unLockUI();
+				return;
+			}
+
+			switch (baseListViewItem.type)
+			{
+				case PlaceViewItem.TYPE_ENTRY:
+				{
+					FnB fnb = (FnB) baseListViewItem.getPlace();
+
+					String region = baseActivity.sharedPreference.getString(KEY_PREFERENCE_FNB_REGION_SELECT, "");
+					SharedPreferences.Editor editor = baseActivity.sharedPreference.edit();
+					editor.putString(KEY_PREFERENCE_REGION_SELECT_GA, region);
+					editor.putString(KEY_PREFERENCE_HOTEL_NAME_GA, fnb.name);
+					editor.commit();
+
+					Intent intent = new Intent(baseActivity, FnBDetailActivity.class);
+					intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkSaleTime);
+					intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, fnb.index);
+					intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, fnb.name);
+					intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, fnb.imageUrl);
+
+					startActivityForResult(intent, CODE_REQUEST_FRAGMENT_PLACE_MAIN);
+
+					mOnUserAnalyticsActionListener.selectPlace(fnb.name, fnb.index, checkSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
+					break;
+				}
+
+				case PlaceViewItem.TYPE_SECTION:
+				default:
+					unLockUI();
+					break;
+			}
 		}
 
 		@Override
-		public void selectedTicket(int index, long dailyTime, int dailyDayOfDays, int nights)
+		public void selectPlace(int index, long dailyTime, int dailyDayOfDays, int nights)
 		{
-			//			BaseActivity baseActivity = (BaseActivity) getActivity();
-			//
-			//			if (baseActivity == null || index < 0)
-			//			{
-			//				return;
-			//			}
-			//
-			//			if (isLockUiComponent() == true || baseActivity.isLockUiComponent() == true)
-			//			{
-			//				return;
-			//			}
-			//
-			//			lockUI();
-			//
-			//			Intent intent = new Intent(baseActivity, FnBTicketDetailActivity.class);
-			//
-			//			intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
-			//			intent.putExtra(NAME_INTENT_EXTRA_DATA_TICKETIDX, index);
-			//			intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME, dailyTime);
-			//			intent.putExtra(NAME_INTENT_EXTRA_DATA_DAYOFDAYS, dailyDayOfDays);
-			//			intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
-			//
-			//			startActivityForResult(intent, CODE_REQUEST_FRAGMENT_TICKET_MAIN);
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null || index < 0)
+			{
+				return;
+			}
+
+			if (isLockUiComponent() == true || baseActivity.isLockUiComponent() == true)
+			{
+				return;
+			}
+
+			lockUI();
+
+			Intent intent = new Intent(baseActivity, FnBDetailActivity.class);
+
+			intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
+			intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, index);
+			intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILYTIME, dailyTime);
+			intent.putExtra(NAME_INTENT_EXTRA_DATA_DAYOFDAYS, dailyDayOfDays);
+			intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
+
+			startActivityForResult(intent, CODE_REQUEST_FRAGMENT_PLACE_MAIN);
 		}
 
 		@Override
@@ -240,12 +304,15 @@ public class FnBTicketMainFragment extends TicketMainFragment
 				case MAP:
 					mViewType = VIEW_TYPE.LIST;
 					break;
+
+				default:
+					break;
 			}
 
 			// 현재 페이지 선택 상태를 Fragment에게 알려준다.
-			TicketListFragment currentFragment = (TicketListFragment) mFragmentViewPager.getCurrentFragment();
+			PlaceListFragment currentFragment = (PlaceListFragment) mFragmentViewPager.getCurrentFragment();
 
-			for (TicketListFragment fnbListFragment : mFragmentList)
+			for (PlaceListFragment fnbListFragment : mFragmentList)
 			{
 				boolean isCurrentFragment = fnbListFragment == currentFragment;
 
@@ -281,6 +348,41 @@ public class FnBTicketMainFragment extends TicketMainFragment
 			intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, mSelectedProvince);
 			intent.putParcelableArrayListExtra(NAME_INTENT_EXTRA_DATA_AREAITEMLIST, mAreaItemList);
 			startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SELECT_AREA);
+		}
+	};
+
+	private OnUserAnalyticsActionListener mOnUserAnalyticsActionListener = new OnUserAnalyticsActionListener()
+	{
+		@Override
+		public void selectPlace(String name, long index, String checkInTime)
+		{
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null)
+			{
+				return;
+			}
+
+			HashMap<String, String> params = new HashMap<String, String>();
+			params.put(Label.FNB_INDEX, String.valueOf(index));
+			params.put(Label.CHECK_IN, checkInTime);
+
+			AnalyticsManager.getInstance(baseActivity.getApplicationContext()).recordEvent(mViewType.name(), Action.CLICK, name, params);
+		}
+
+		@Override
+		public void selectRegion(Province province)
+		{
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null)
+			{
+				return;
+			}
+
+			HashMap<String, String> params = new HashMap<String, String>();
+
+			AnalyticsManager.getInstance(baseActivity.getApplicationContext()).recordEvent(mViewType.name(), Action.CLICK, province.name, params);
 		}
 	};
 
@@ -387,7 +489,7 @@ public class FnBTicketMainFragment extends TicketMainFragment
 
 				for (int i = 0; i < fragmentSize; i++)
 				{
-					TicketListFragment ticketListFragment = mFragmentList.get(i);
+					PlaceListFragment placeListFragment = mFragmentList.get(i);
 
 					SaleTime saleTime;
 
@@ -401,9 +503,9 @@ public class FnBTicketMainFragment extends TicketMainFragment
 						tabSaleTime[i] = saleTime;
 					}
 
-					if (ticketListFragment.getSaleTime() == null)
+					if (placeListFragment.getSaleTime() == null)
 					{
-						ticketListFragment.setSaleTime(saleTime);
+						placeListFragment.setSaleTime(saleTime);
 					}
 				}
 
@@ -478,9 +580,4 @@ public class FnBTicketMainFragment extends TicketMainFragment
 		}
 
 	};
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// UserActionListener
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////	
-
 }

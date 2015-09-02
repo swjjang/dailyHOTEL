@@ -23,23 +23,23 @@ import org.json.JSONObject;
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
-import com.twoheart.dailyhotel.adapter.FnBTicketListAdapter;
-import com.twoheart.dailyhotel.adapter.TicketListAdapter;
-import com.twoheart.dailyhotel.fragment.TicketMainFragment.VIEW_TYPE;
+import com.twoheart.dailyhotel.adapter.FnBListAdapter;
+import com.twoheart.dailyhotel.adapter.PlaceListAdapter;
+import com.twoheart.dailyhotel.fragment.PlaceMainFragment.VIEW_TYPE;
 import com.twoheart.dailyhotel.model.Area;
-import com.twoheart.dailyhotel.model.FnBTicketDto;
+import com.twoheart.dailyhotel.model.FnB;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
-import com.twoheart.dailyhotel.view.FnBTicketViewItem;
-import com.twoheart.dailyhotel.view.TicketViewItem;
+import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.view.FnBViewItem;
+import com.twoheart.dailyhotel.view.PlaceViewItem;
 import com.twoheart.dailyhotel.view.widget.DailyHotelHeaderTransformer;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.PinnedSectionListView;
-import com.twoheart.dailyhotel.util.Util;
 
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -56,9 +56,9 @@ import uk.co.senab.actionbarpulltorefresh.library.Options;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.AbsListViewDelegate;
 
-public class FnBTicketListFragment extends TicketListFragment
+public class FnBListFragment extends PlaceListFragment
 {
-	private TicketListAdapter mTicketListAdapter;
+	private PlaceListAdapter mPlaceListAdapter;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -107,10 +107,12 @@ public class FnBTicketListFragment extends TicketListFragment
 
 		mListView.setShadowVisible(false);
 
-		mActionbarViewHolder = new ActionbarViewHolder();
-		mActionbarViewHolder.mAnchorView = baseActivity.findViewById(R.id.anchorAnimation);
-		mActionbarViewHolder.mActionbarLayout = baseActivity.findViewById(R.id.actionBarLayout);
-		mActionbarViewHolder.mTabindicatorView = baseActivity.findViewById(R.id.headerSectionBar);
+		ActionbarViewHolder actionbarViewHolder = new ActionbarViewHolder();
+		actionbarViewHolder.mAnchorView = baseActivity.findViewById(R.id.anchorAnimation);
+		actionbarViewHolder.mActionbarLayout = baseActivity.findViewById(R.id.actionBarLayout);
+		actionbarViewHolder.mTabindicatorView = baseActivity.findViewById(R.id.headerSectionBar);
+
+		setActionbarViewHolder(actionbarViewHolder);
 
 		return view;
 	}
@@ -123,14 +125,14 @@ public class FnBTicketListFragment extends TicketListFragment
 	}
 
 	@Override
-	protected TicketViewItem getTicketViewItem(int position)
+	protected PlaceViewItem getPlaceViewItem(int position)
 	{
-		if (mTicketListAdapter == null)
+		if (mPlaceListAdapter == null)
 		{
 			return null;
 		}
 
-		return mTicketListAdapter.getItem(position);
+		return mPlaceListAdapter.getItem(position);
 	}
 
 	@Override
@@ -186,25 +188,20 @@ public class FnBTicketListFragment extends TicketListFragment
 	}
 
 	@Override
-	protected ArrayList<TicketViewItem> getTicketListData()
+	protected ArrayList<PlaceViewItem> getPlaceViewItemList()
 	{
-		if (mTicketListAdapter == null)
+		if (mPlaceListAdapter == null)
 		{
 			return null;
 		}
 
-		return mTicketListAdapter.getData();
+		return mPlaceListAdapter.getData();
 	}
 
 	@Override
-	protected TicketListMapFragment getTicketListMapFragment()
+	protected PlaceMapFragment createPlaceMapFragment()
 	{
-		if (mTicketListMapFragment == null)
-		{
-			mTicketListMapFragment = new FnBTicketListMapFragment();
-		}
-
-		return mTicketListMapFragment;
+		return new FnBMapFragment();
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -213,35 +210,35 @@ public class FnBTicketListFragment extends TicketListFragment
 
 	private DailyHotelJsonResponseListener mFnBListJsonResponseListener = new DailyHotelJsonResponseListener()
 	{
-		private ArrayList<TicketViewItem> makeSectionHotelList(ArrayList<FnBTicketDto> fnbList)
+		private ArrayList<PlaceViewItem> makeSectionHotelList(ArrayList<FnB> fnbList)
 		{
-			ArrayList<TicketViewItem> ticketViewItemList = new ArrayList<TicketViewItem>();
+			ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<PlaceViewItem>();
 
 			if (fnbList == null || fnbList.size() == 0)
 			{
-				return ticketViewItemList;
+				return placeViewItemList;
 			}
 
 			String area = null;
 			boolean hasDailyChoice = false;
 
-			for (FnBTicketDto fnbTicketDto : fnbList)
+			for (FnB fnb : fnbList)
 			{
-				String region = fnbTicketDto.districtName;
+				String region = fnb.districtName;
 
 				if (TextUtils.isEmpty(region) == true)
 				{
 					continue;
 				}
 
-				if (fnbTicketDto.isDailyChoice == true)
+				if (fnb.isDailyChoice == true)
 				{
 					if (hasDailyChoice == false)
 					{
 						hasDailyChoice = true;
 
-						FnBTicketViewItem section = new FnBTicketViewItem(getString(R.string.label_dailychoice));
-						ticketViewItemList.add(section);
+						FnBViewItem section = new FnBViewItem(getString(R.string.label_dailychoice));
+						placeViewItemList.add(section);
 					}
 				} else
 				{
@@ -249,15 +246,15 @@ public class FnBTicketListFragment extends TicketListFragment
 					{
 						area = region;
 
-						FnBTicketViewItem section = new FnBTicketViewItem(region);
-						ticketViewItemList.add(section);
+						FnBViewItem section = new FnBViewItem(region);
+						placeViewItemList.add(section);
 					}
 				}
 
-				ticketViewItemList.add(new FnBTicketViewItem(fnbTicketDto));
+				placeViewItemList.add(new FnBViewItem(fnb));
 			}
 
-			return ticketViewItemList;
+			return placeViewItemList;
 		}
 
 		@Override
@@ -295,15 +292,15 @@ public class FnBTicketListFragment extends TicketListFragment
 					throw new NullPointerException("response == null");
 				}
 
-				JSONArray ticketJSONArray = response.getJSONArray("data");
+				JSONArray jsonArray = response.getJSONArray("data");
 
-				int length = ticketJSONArray.length();
+				int length = jsonArray.length();
 
 				if (length == 0)
 				{
-					if (mTicketListAdapter != null)
+					if (mPlaceListAdapter != null)
 					{
-						mTicketListAdapter.clear();
+						mPlaceListAdapter.clear();
 					}
 
 					setVisibility(VIEW_TYPE.GONE);
@@ -311,41 +308,39 @@ public class FnBTicketListFragment extends TicketListFragment
 				{
 					JSONObject jsonObject;
 
-					ArrayList<FnBTicketDto> fnbTicketList = new ArrayList<FnBTicketDto>(length);
+					ArrayList<FnB> fnbList = new ArrayList<FnB>(length);
 
 					for (int i = 0; i < length; i++)
 					{
-						jsonObject = ticketJSONArray.getJSONObject(i);
+						jsonObject = jsonArray.getJSONObject(i);
 
-						FnBTicketDto newFnBTicketDto = new FnBTicketDto();
+						FnB newFnB = new FnB();
 
-						if (newFnBTicketDto.setData(jsonObject) == true)
+						if (newFnB.setData(jsonObject) == true)
 						{
-							fnbTicketList.add(newFnBTicketDto); // 추가.
+							fnbList.add(newFnB); // 추가.
 						}
 					}
 
-					ArrayList<TicketViewItem> ticketViewItemList = makeSectionHotelList(fnbTicketList);
+					ArrayList<PlaceViewItem> placeViewItemList = makeSectionHotelList(fnbList);
 
-					if (mTicketListAdapter == null)
+					if (mPlaceListAdapter == null)
 					{
-						mTicketListAdapter = new FnBTicketListAdapter(baseActivity, R.layout.list_row_hotel, new ArrayList<TicketViewItem>());
-						mListView.setAdapter(mTicketListAdapter);
-						mListView.setOnItemClickListener(FnBTicketListFragment.this);
+						mPlaceListAdapter = new FnBListAdapter(baseActivity, R.layout.list_row_hotel, new ArrayList<PlaceViewItem>());
+						mListView.setAdapter(mPlaceListAdapter);
+						mListView.setOnItemClickListener(FnBListFragment.this);
 					}
 
 					setVisibility(mViewType);
 
-					// 지역이 변경되면 다시 리스트를 받아오는데 어떻게 해야할지 의문.
 					if (mViewType == VIEW_TYPE.MAP)
 					{
-						mTicketListMapFragment.setUserActionListener(mUserActionListener);
-						mTicketListMapFragment.setTicketList(ticketViewItemList, mSaleTime, mIsSelectionTop);
+						setPlaceMapData(placeViewItemList);
 					}
 
-					mTicketListAdapter.clear();
-					mTicketListAdapter.addAll(ticketViewItemList);
-					mTicketListAdapter.notifyDataSetChanged();
+					mPlaceListAdapter.clear();
+					mPlaceListAdapter.addAll(placeViewItemList);
+					mPlaceListAdapter.notifyDataSetChanged();
 
 					if (mIsSelectionTop == true)
 					{

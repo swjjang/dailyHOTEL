@@ -32,13 +32,13 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.HotelClusterItem;
 import com.twoheart.dailyhotel.view.HotelClusterRenderer;
+import com.twoheart.dailyhotel.view.HotelClusterRenderer.OnSelectedClusterItemListener;
+import com.twoheart.dailyhotel.view.HotelClusterRenderer.Renderer;
 import com.twoheart.dailyhotel.view.HotelListViewItem;
 import com.twoheart.dailyhotel.view.LoadingDialog;
 import com.twoheart.dailyhotel.view.LocationFactory;
 import com.twoheart.dailyhotel.view.LoopViewPager;
 import com.twoheart.dailyhotel.view.MyLocationMarker;
-import com.twoheart.dailyhotel.view.HotelClusterRenderer.OnSelectedClusterItemListener;
-import com.twoheart.dailyhotel.view.HotelClusterRenderer.Renderer;
 
 import android.content.Context;
 import android.content.Intent;

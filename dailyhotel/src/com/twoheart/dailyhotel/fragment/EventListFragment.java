@@ -36,11 +36,11 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
-import com.twoheart.dailyhotel.view.EventListLayout;
-import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.view.EventListLayout;
+import com.twoheart.dailyhotel.view.widget.DailyToast;
 
 import android.app.Activity;
 import android.content.Intent;

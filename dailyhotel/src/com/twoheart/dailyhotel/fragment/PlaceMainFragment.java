@@ -1,11 +1,3 @@
-/**
- * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- *
- * HotelTabBookingFragment (호텔 예약 탭)
- * 
- * 호텔 탭 중 예약 탭 프래그먼트
- * 
- */
 package com.twoheart.dailyhotel.fragment;
 
 import java.util.ArrayList;
@@ -26,8 +18,7 @@ import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.view.TicketViewItem;
-import com.twoheart.dailyhotel.view.widget.FragmentViewPager;
+import com.twoheart.dailyhotel.view.PlaceViewItem;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -39,19 +30,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-public abstract class TicketMainFragment extends BaseFragment
+public abstract class PlaceMainFragment extends BaseFragment
 {
-	protected FragmentViewPager mFragmentViewPager;
-	protected ArrayList<TicketListFragment> mFragmentList;
-
 	protected SaleTime mTodaySaleTime;
-	protected ArrayList<AreaItem> mAreaItemList;
-	protected Province mSelectedProvince;
 
 	private boolean mMenuEnabled;
 	private boolean mDontReloadAtOnResume;
 	protected OnUserActionListener mOnUserActionListener;
-	protected UserAnalyticsActionListener mUserAnalyticsActionListener;
 
 	protected VIEW_TYPE mViewType = VIEW_TYPE.LIST;
 
@@ -60,30 +45,25 @@ public abstract class TicketMainFragment extends BaseFragment
 		LIST, MAP, GONE, // 목록이 비어있는 경우.
 	};
 
-	public enum TICKET_TYPE
+	public enum TYPE
 	{
-		HOTEL, FNB,
+		HOTEL, FNB, // Place Type
 	};
 
 	public interface OnUserActionListener
 	{
-		public void selectedTicket(TicketViewItem baseListViewItem, SaleTime checkSaleTime);
+		public void selectPlace(PlaceViewItem baseListViewItem, SaleTime checkSaleTime);
 
-		public void selectedTicket(int index, long dailyTime, int dailyDayOfDays, int nights);
+		public void selectPlace(int index, long dailyTime, int dailyDayOfDays, int nights);
 
 		public void toggleViewType();
 
 		public void onClickActionBarArea();
 	};
 
-	public interface UserAnalyticsActionListener
-	{
-		public void selectedTicket(String name, long index, String checkInTime);
-
-		public void selectRegion(Province province);
-	};
-
 	protected abstract View createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
+
+	protected abstract void activityResult(int requestCode, int resultCode, Intent data);
 
 	protected abstract void hideSlidingDrawer();
 
@@ -93,12 +73,17 @@ public abstract class TicketMainFragment extends BaseFragment
 
 	protected abstract void requestProvinceList(BaseActivity baseActivity);
 
+	protected abstract void refreshList(Province province, boolean isSelectionTop);
+
+	protected abstract void setActionBarAnimationLock(boolean enabled);
+
+	protected abstract boolean isEnabledRegionMenu();
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		mViewType = VIEW_TYPE.LIST;
 
-		mFragmentList = new ArrayList<TicketListFragment>();
 		mTodaySaleTime = new SaleTime();
 
 		View view = createView(inflater, container, savedInstanceState);
@@ -161,6 +146,9 @@ public abstract class TicketMainFragment extends BaseFragment
 				case MAP:
 					inflater.inflate(R.menu.actionbar_icon_list, menu);
 					break;
+
+				default:
+					break;
 			}
 		}
 	}
@@ -174,10 +162,9 @@ public abstract class TicketMainFragment extends BaseFragment
 			return;
 		}
 
-		if (mAreaItemList != null && enabled == true)
+		if (enabled == true)
 		{
-			boolean isShowSpinner = mAreaItemList != null && mAreaItemList.size() > 1 ? true : false;
-			baseActivity.setActionBarRegionEnable(isShowSpinner);
+			baseActivity.setActionBarRegionEnable(isEnabledRegionMenu());
 		}
 
 		if (mMenuEnabled == enabled || mTodaySaleTime.isSaleTime() == false)
@@ -190,19 +177,7 @@ public abstract class TicketMainFragment extends BaseFragment
 		baseActivity.invalidateOptionsMenu();
 
 		// 메뉴가 열리는 시점이다.
-		TicketListFragment currentFragment = (TicketListFragment) mFragmentViewPager.getCurrentFragment();
-
-		if (currentFragment != null)
-		{
-			if (enabled == true)
-			{
-				currentFragment.setActionBarAnimationLock(false);
-			} else
-			{
-				currentFragment.showActionBarAnimatoin(baseActivity);
-				currentFragment.setActionBarAnimationLock(true);
-			}
-		}
+		setActionBarAnimationLock(enabled);
 	}
 
 	@Override
@@ -268,7 +243,7 @@ public abstract class TicketMainFragment extends BaseFragment
 
 		switch (requestCode)
 		{
-			case CODE_REQUEST_FRAGMENT_TICKET_MAIN:
+			case CODE_REQUEST_FRAGMENT_PLACE_MAIN:
 			{
 				if (resultCode == Activity.RESULT_OK)
 				{
@@ -277,13 +252,6 @@ public abstract class TicketMainFragment extends BaseFragment
 				{
 					((MainActivity) baseActivity).selectMenuDrawer(((MainActivity) baseActivity).menuBookingListFragment);
 				}
-				break;
-			}
-
-			case CODE_RESULT_ACTIVITY_SETTING_LOCATION:
-			{
-				HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
-				currentFragment.onActivityResult(requestCode, resultCode, data);
 				break;
 			}
 
@@ -311,15 +279,15 @@ public abstract class TicketMainFragment extends BaseFragment
 				}
 				break;
 			}
+
+			default:
+			{
+				activityResult(requestCode, resultCode, data);
+				break;
+			}
 		}
 
 		super.onActivityResult(requestCode, resultCode, data);
-	}
-
-	protected void refreshList(Province province, boolean isSelectionTop)
-	{
-		FnBTicketListFragment fnbListFragment = (FnBTicketListFragment) mFragmentViewPager.getCurrentFragment();
-		fnbListFragment.refreshList(province, isSelectionTop);
 	}
 
 	protected ArrayList<AreaItem> makeAreaItemList(ArrayList<Province> provinceList, ArrayList<Area> areaList)
@@ -453,10 +421,10 @@ public abstract class TicketMainFragment extends BaseFragment
 								{
 									if (hotelIndex != 0)
 									{
-										mOnUserActionListener.selectedTicket(hotelIndex, dailyTime, dailyDayOfDays, nights);
+										mOnUserActionListener.selectPlace(hotelIndex, dailyTime, dailyDayOfDays, nights);
 									} else if (fnbIndex != 0)
 									{
-										mOnUserActionListener.selectedTicket(fnbIndex, dailyTime, dailyDayOfDays, nights);
+										mOnUserActionListener.selectPlace(fnbIndex, dailyTime, dailyDayOfDays, nights);
 									}
 								}
 							} catch (Exception e)
@@ -476,7 +444,7 @@ public abstract class TicketMainFragment extends BaseFragment
 				{
 					hideSlidingDrawer();
 
-					((MainActivity) baseActivity).replaceFragment(WaitTimerFragment.newInstance(mTodaySaleTime, TicketMainFragment.TICKET_TYPE.FNB));
+					((MainActivity) baseActivity).replaceFragment(WaitTimerFragment.newInstance(mTodaySaleTime, PlaceMainFragment.TYPE.FNB));
 					unLockUI();
 				}
 			} catch (Exception e)

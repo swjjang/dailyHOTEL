@@ -32,12 +32,12 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
+import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.HotelListViewItem;
 import com.twoheart.dailyhotel.view.widget.FragmentViewPager;
 import com.twoheart.dailyhotel.view.widget.TabIndicator;
 import com.twoheart.dailyhotel.view.widget.TabIndicator.OnTabSelectedListener;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -472,24 +472,18 @@ public class HotelMainFragment extends BaseFragment
 				return;
 			}
 
-			lockUiComponent();
-			baseActivity.lockUiComponent();
-
 			if (hotelListViewItem == null)
 			{
-				ExLog.d("hotelListViewItem == null");
-
-				releaseUiComponent();
-				baseActivity.releaseUiComponent();
+				unLockUI();
 				return;
 			}
+
+			lockUI();
 
 			switch (hotelListViewItem.getType())
 			{
 				case HotelListViewItem.TYPE_ENTRY:
 				{
-					lockUI();
-
 					Hotel hotel = hotelListViewItem.getItem();
 
 					String region = baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
@@ -514,8 +508,7 @@ public class HotelMainFragment extends BaseFragment
 
 				case HotelListViewItem.TYPE_SECTION:
 				default:
-					releaseUiComponent();
-					baseActivity.releaseUiComponent();
+					unLockUI();
 					break;
 			}
 		}
@@ -536,8 +529,6 @@ public class HotelMainFragment extends BaseFragment
 			}
 
 			lockUI();
-			lockUiComponent();
-			baseActivity.lockUiComponent();
 
 			Intent intent = new Intent(baseActivity, HotelDetailActivity.class);
 
@@ -721,7 +712,7 @@ public class HotelMainFragment extends BaseFragment
 				{
 					initHide();
 
-					((MainActivity) baseActivity).replaceFragment(WaitTimerFragment.newInstance(mTodaySaleTime, TicketMainFragment.TICKET_TYPE.HOTEL));
+					((MainActivity) baseActivity).replaceFragment(WaitTimerFragment.newInstance(mTodaySaleTime, PlaceMainFragment.TYPE.HOTEL));
 					unLockUI();
 				}
 			} catch (Exception e)

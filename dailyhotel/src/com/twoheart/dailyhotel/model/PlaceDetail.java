@@ -4,13 +4,12 @@ import java.util.ArrayList;
 
 import org.json.JSONObject;
 
-public abstract class TicketDetailDto
+public abstract class PlaceDetail
 {
 	public int index;
-	public String grade;
+	public Place.Grade grade;
 	public String name;
 	public String address;
-	public String addressDetail;
 	public String benefit;
 	public double latitude;
 	public double longitude;
@@ -20,7 +19,7 @@ public abstract class TicketDetailDto
 
 	public abstract void setData(JSONObject jsonObject) throws Exception;
 
-	public TicketDetailDto(int index)
+	public PlaceDetail(int index)
 	{
 		this.index = index;
 	}

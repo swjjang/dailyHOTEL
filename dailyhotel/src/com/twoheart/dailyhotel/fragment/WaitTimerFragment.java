@@ -26,16 +26,17 @@ import com.twoheart.dailyhotel.AlarmBroadcastReceiver;
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
-import com.twoheart.dailyhotel.fragment.TicketMainFragment.TICKET_TYPE;
+import com.twoheart.dailyhotel.fragment.PlaceMainFragment.TYPE;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
-import com.twoheart.dailyhotel.view.widget.FontManager;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyHotelPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.WakeLock;
+import com.twoheart.dailyhotel.view.widget.FontManager;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -59,8 +60,6 @@ public class WaitTimerFragment
 	private final static String KEY_BUNDLE_ARGUMENTS_SALETIME = "saletime";
 	private final static String KEY_BUNDLE_ARGUMENTS_TYPE = "type";
 
-	public static boolean isEnabledNotify;
-
 	private static Handler sHandler;
 	private TextView tvTimer;
 	private TextView mAlarmTextView;
@@ -68,12 +67,13 @@ public class WaitTimerFragment
 	private View alarmTimerLayout;
 
 	private AlarmManager alarmManager;
-	private PendingIntent pender;
-	private Intent intent;
+	private PendingIntent mPendingIntent;
 	private SaleTime mSaleTime;
 	private long remainingTime;
 
-	public static WaitTimerFragment newInstance(SaleTime saleTime, TICKET_TYPE type)
+	private TYPE mType;
+
+	public static WaitTimerFragment newInstance(SaleTime saleTime, TYPE type)
 	{
 		WaitTimerFragment newFragment = new WaitTimerFragment();
 
@@ -108,29 +108,42 @@ public class WaitTimerFragment
 		}
 
 		mSaleTime = (SaleTime) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_SALETIME);
-		TICKET_TYPE type = TICKET_TYPE.valueOf(getArguments().getString(KEY_BUNDLE_ARGUMENTS_TYPE));
+		mType = TYPE.valueOf(getArguments().getString(KEY_BUNDLE_ARGUMENTS_TYPE));
 
 		alarmManager = (AlarmManager) baseActivity.getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-		intent = new Intent(baseActivity.getApplicationContext(), AlarmBroadcastReceiver.class);
-		pender = PendingIntent.getBroadcast(baseActivity.getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+		Intent intent = new Intent(baseActivity.getApplicationContext(), AlarmBroadcastReceiver.class);
+		mPendingIntent = PendingIntent.getBroadcast(baseActivity.getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 		ImageView imageView = (ImageView) view.findViewById(R.id.backgroundImageView);
+
 		tvTimer = (TextView) view.findViewById(R.id.tv_timer);
+		tvTimer.setTypeface(FontManager.getInstance(baseActivity).getThinTypeface());
+
 		TextView titleMainTextView = (TextView) view.findViewById(R.id.tv_wait_timer_main);
 		TextView titleSubTextView = (TextView) view.findViewById(R.id.tv_wait_timer_sub);
 
 		alarmTimerLayout = view.findViewById(R.id.alarmTimerLayout);
+		alarmTimerLayout.setOnClickListener(this);
 
-		switch (type)
+		switch (mType)
 		{
 			case HOTEL:
+			{
 				imageView.setImageResource(R.drawable.open_stanby_bg);
 
 				titleMainTextView.setText(R.string.prefix_wait_timer_frag_todays_hotel_open);
 				titleSubTextView.setText(R.string.frag_wait_timer_hotel_msg);
+
+				// 알람 설정
+				boolean enabledHotelAlarm = DailyHotelPreference.getInstance(baseActivity).getEnabledHotelAlarm();
+
+				initAlarmLayout(baseActivity, alarmTimerLayout, enabledHotelAlarm);
 				break;
+			}
 
 			case FNB:
+			{
 				imageView.setImageResource(R.drawable.open_stanby_bg_fnb);
 
 				titleMainTextView.setTextColor(getResources().getColor(R.color.white));
@@ -140,16 +153,14 @@ public class WaitTimerFragment
 				titleSubTextView.setText(R.string.frag_wait_timer_fnb_msg);
 
 				tvTimer.setTextColor(getResources().getColor(R.color.white));
+
+				// 알람 설정 
+				boolean enabledFnBAlarm = DailyHotelPreference.getInstance(baseActivity).getEnabledFnBAlarm();
+
+				initAlarmLayout(baseActivity, alarmTimerLayout, enabledFnBAlarm);
 				break;
+			}
 		}
-
-		mAlarmTextView = (TextView) view.findViewById(R.id.alarmTextView);
-		mAlarmImageView = (ImageView) view.findViewById(R.id.alarmImageView);
-
-		mAlarmTextView.setTypeface(FontManager.getInstance(baseActivity).getMediumTypeface());
-		tvTimer.setTypeface(FontManager.getInstance(baseActivity).getThinTypeface());
-
-		alarmTimerLayout.setOnClickListener(this);
 
 		baseActivity.setActionBar(getString(R.string.actionbar_title_wait_timer_frag), false);
 
@@ -158,10 +169,29 @@ public class WaitTimerFragment
 
 		titleMainTextView.setText(sFormat.format(mSaleTime.getOpenTime()) + getString(R.string.prefix_wait_timer_frag_todays_hotel_open));
 
-		isEnabledNotify = false;
 		setTimer();
 
 		return view;
+	}
+
+	private void initAlarmLayout(BaseActivity activity, View view, boolean enable)
+	{
+		if (mAlarmTextView == null && view != null && activity != null)
+		{
+			mAlarmTextView = (TextView) view.findViewById(R.id.alarmTextView);
+			mAlarmImageView = (ImageView) view.findViewById(R.id.alarmImageView);
+			mAlarmTextView.setTypeface(FontManager.getInstance(activity).getMediumTypeface());
+		}
+
+		if (enable)
+		{
+			mAlarmTextView.setText(getString(R.string.frag_wait_timer_off));
+			mAlarmImageView.setImageResource(R.drawable.open_stanby_ic_alert_off);
+		} else
+		{
+			mAlarmTextView.setText(getString(R.string.frag_wait_timer_on));
+			mAlarmImageView.setImageResource(R.drawable.open_stanby_ic_alert);
+		}
 	}
 
 	@Override
@@ -175,7 +205,6 @@ public class WaitTimerFragment
 	public void onResume()
 	{
 		super.onResume();
-		setNotify(isEnabledNotify);
 
 		BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -193,40 +222,67 @@ public class WaitTimerFragment
 	{
 		if (v.getId() == alarmTimerLayout.getId())
 		{
-			setNotify(!isEnabledNotify);
+			BaseActivity baseActivity = (BaseActivity) getActivity();
+
+			if (baseActivity == null || baseActivity.isFinishing() == true)
+			{
+				return;
+			}
+
+			boolean enabledAlarm = false;
+
+			switch (mType)
+			{
+				case HOTEL:
+					enabledAlarm = DailyHotelPreference.getInstance(baseActivity).getEnabledHotelAlarm();
+					break;
+
+				case FNB:
+					enabledAlarm = DailyHotelPreference.getInstance(baseActivity).getEnabledFnBAlarm();
+					break;
+			}
+
+			setNotifyEnable(!enabledAlarm);
 		}
 	}
 
-	private void setNotify(boolean enable)
+	private void setNotifyEnable(boolean enable)
 	{
+		BaseActivity baseActivity = (BaseActivity) getActivity();
+
+		if (baseActivity == null || baseActivity.isFinishing() == true)
+		{
+			return;
+		}
+
+		switch (mType)
+		{
+			case HOTEL:
+				DailyHotelPreference.getInstance(baseActivity).setEnabledHotelAlarm(enable);
+				break;
+
+			case FNB:
+				DailyHotelPreference.getInstance(baseActivity).setEnabledFnBAlarm(enable);
+				break;
+		}
+
 		if (enable)
 		{
 			mAlarmTextView.setText(getString(R.string.frag_wait_timer_off));
 			mAlarmImageView.setImageResource(R.drawable.open_stanby_ic_alert_off);
 
-			if (enable != isEnabledNotify)
-			{
-				alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + remainingTime, pender);
+			alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + remainingTime, mPendingIntent);
 
-				showToast(getString(R.string.frag_wait_timer_set), Toast.LENGTH_SHORT, true);
-			}
-
+			showToast(getString(R.string.frag_wait_timer_set), Toast.LENGTH_SHORT, true);
 		} else
 		{
 			mAlarmTextView.setText(getString(R.string.frag_wait_timer_on));
 			mAlarmImageView.setImageResource(R.drawable.open_stanby_ic_alert);
 
-			if (enable != isEnabledNotify)
-			{
-				alarmManager.cancel(pender);
+			alarmManager.cancel(mPendingIntent);
 
-				showToast(getString(R.string.frag_wait_timer_cancel), Toast.LENGTH_SHORT, true);
-			}
-
+			showToast(getString(R.string.frag_wait_timer_cancel), Toast.LENGTH_SHORT, true);
 		}
-
-		isEnabledNotify = enable;
-
 	}
 
 	private void setTimer()

@@ -11,14 +11,14 @@ import android.R;
 import android.content.Context;
 import android.graphics.Bitmap;
 
-public class TicketRenderer
+public class PlaceRenderer
 {
 	private Context mContext;
 	private String mPrice;
 	private int mMarkerResId;
 	private HotelIconGenerator mIconGenerator;
 
-	public TicketRenderer(Context context, int price, int markerResId)
+	public PlaceRenderer(Context context, int price, int markerResId)
 	{
 		mContext = context;
 

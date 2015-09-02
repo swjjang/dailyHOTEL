@@ -6,7 +6,7 @@ import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.androidquery.callback.BitmapAjaxCallback;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.TicketDto;
+import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.VolleyImageLoader;
 
@@ -26,15 +26,15 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class FnBTicketViewPagerAdapter extends TicketViewPagerAdapter
+public class FnBViewPagerAdapter extends PlaceViewPagerAdapter
 {
-	public FnBTicketViewPagerAdapter(Context context)
+	public FnBViewPagerAdapter(Context context)
 	{
 		super(context);
 	}
 
 	@Override
-	protected void makeLayout(View view, final TicketDto ticketDto)
+	protected void makeLayout(View view, final Place place)
 	{
 		RelativeLayout llHotelRowContent = (RelativeLayout) view.findViewById(R.id.ll_hotel_row_content);
 		final ImageView img = (ImageView) view.findViewById(R.id.iv_hotel_row_img);
@@ -48,12 +48,12 @@ public class FnBTicketViewPagerAdapter extends TicketViewPagerAdapter
 
 		DecimalFormat comma = new DecimalFormat("###,##0");
 
-		address.setText(ticketDto.address);
-		name.setText(ticketDto.name);
+		address.setText(place.address);
+		name.setText(place.name);
 
 		Spanned currency = Html.fromHtml(mContext.getResources().getString(R.string.currency));
 
-		int price = ticketDto.price;
+		int price = place.price;
 
 		if (price <= 0)
 		{
@@ -68,7 +68,7 @@ public class FnBTicketViewPagerAdapter extends TicketViewPagerAdapter
 			priceTextView.setPaintFlags(priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 		}
 
-		discountTextView.setText(comma.format(ticketDto.discountPrice) + currency);
+		discountTextView.setText(comma.format(place.discountPrice) + currency);
 
 		name.setSelected(true); // Android TextView marquee bug
 
@@ -91,12 +91,12 @@ public class FnBTicketViewPagerAdapter extends TicketViewPagerAdapter
 		llHotelRowContent.setBackgroundDrawable(p);
 
 		// grade
-		grade.setText(ticketDto.grade.getName(mContext));
-		grade.setBackgroundResource(ticketDto.grade.getColorResId());
+		grade.setText(place.grade.getName(mContext));
+		grade.setBackgroundResource(place.grade.getColorResId());
 
 		// Used AQuery
 		AQuery aquery = new AQuery(view);
-		Bitmap cachedImg = VolleyImageLoader.getCache(ticketDto.imageUrl);
+		Bitmap cachedImg = VolleyImageLoader.getCache(place.imageUrl);
 
 		if (cachedImg == null)
 		{ // 힛인 밸류가 없다면 이미지를 불러온 후 캐시에 세이브
@@ -112,11 +112,11 @@ public class FnBTicketViewPagerAdapter extends TicketViewPagerAdapter
 
 			if (Util.getLCDWidth(mContext) < 720)
 			{
-				bitmapAjaxCallback.url(ticketDto.imageUrl).animation(AQuery.FADE_IN);
-				aquery.id(img).image(ticketDto.imageUrl, false, false, 240, 0, bitmapAjaxCallback);
+				bitmapAjaxCallback.url(place.imageUrl).animation(AQuery.FADE_IN);
+				aquery.id(img).image(place.imageUrl, false, false, 240, 0, bitmapAjaxCallback);
 			} else
 			{
-				bitmapAjaxCallback.url(ticketDto.imageUrl).animation(AQuery.FADE_IN);
+				bitmapAjaxCallback.url(place.imageUrl).animation(AQuery.FADE_IN);
 				aquery.id(img).image(bitmapAjaxCallback);
 			}
 		} else
@@ -125,7 +125,7 @@ public class FnBTicketViewPagerAdapter extends TicketViewPagerAdapter
 		}
 
 		// SOLD OUT 표시
-		if (ticketDto.isSoldOut == true)
+		if (place.isSoldOut == true)
 		{
 			sold_out.setVisibility(View.VISIBLE);
 		} else
@@ -153,7 +153,7 @@ public class FnBTicketViewPagerAdapter extends TicketViewPagerAdapter
 			{
 				if (mOnUserActionListener != null)
 				{
-					mOnUserActionListener.onInfoWindowClickListener(ticketDto);
+					mOnUserActionListener.onInfoWindowClickListener(place);
 				}
 			}
 		});

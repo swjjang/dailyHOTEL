@@ -41,29 +41,36 @@ public class ZoomMapActivity extends BaseActivity
 
 		Intent intent = getIntent();
 
-		final String hotelName;
+		final String placeName;
 		final double latitude;
 		final double longitude;
 
 		if (intent != null)
 		{
-			hotelName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME);
+			if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME) == true)
+			{
+				placeName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME);
+			} else
+			{
+				placeName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACENAME);
+			}
+
 			latitude = intent.getDoubleExtra(NAME_INTENT_EXTRA_DATA_LATITUDE, 0);
 			longitude = intent.getDoubleExtra(NAME_INTENT_EXTRA_DATA_LONGITUDE, 0);
 		} else
 		{
 			latitude = 0;
 			longitude = 0;
-			hotelName = null;
+			placeName = null;
 		}
 
-		if (hotelName == null || latitude == 0 || longitude == 0)
+		if (placeName == null || latitude == 0 || longitude == 0)
 		{
 			finish();
 			return;
 		}
 
-		setActionBar(hotelName);
+		setActionBar(placeName);
 
 		SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.frag_full_map);
 
@@ -85,7 +92,7 @@ public class ZoomMapActivity extends BaseActivity
 
 				relocationMyLocation();
 				relocationZoomControl();
-				addMarker(mGoogleMap, latitude, longitude, hotelName);
+				addMarker(mGoogleMap, latitude, longitude, placeName);
 			}
 		});
 	}

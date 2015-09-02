@@ -15,21 +15,17 @@
  */
 package com.twoheart.dailyhotel.fragment;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.json.JSONObject;
 
-import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.view.HotelListViewItem;
 
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
@@ -427,12 +423,11 @@ public class HotelDaysListFragment
 			return;
 		}
 
-		mSelectedHotelListViewItem = mHotelListAdapter.getItem(position);
-
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("timeZone", "Asia/Seoul");
-
-		mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, baseActivity));
+		if (mUserActionListener != null)
+		{
+			HotelListViewItem hotelListViewItem = mHotelListAdapter.getItem(position);
+			mUserActionListener.selectHotel(hotelListViewItem, mSelectedCheckInSaleTime);
+		}
 	}
 
 	private void resetCheckDays()
@@ -1192,13 +1187,10 @@ public class HotelDaysListFragment
 
 				if (saleTime.isSaleTime() == true)
 				{
-					if (mUserActionListener != null)
-					{
-						mUserActionListener.selectHotel(mSelectedHotelListViewItem, mSelectedCheckInSaleTime);
-					}
+
 				} else
 				{
-					((MainActivity) baseActivity).replaceFragment(WaitTimerFragment.newInstance(mSaleTime, TicketMainFragment.TICKET_TYPE.HOTEL));
+					((MainActivity) baseActivity).replaceFragment(WaitTimerFragment.newInstance(mSaleTime, PlaceMainFragment.TYPE.HOTEL));
 					unLockUI();
 				}
 			} catch (Exception e)

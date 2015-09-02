@@ -85,20 +85,20 @@ public class KakaoLinkManager implements Constants
 		}
 	}
 
-	public void shareTicket(String name, int index, String imageUrl, long dailyTime, int dailyDayOfDays)
+	public void shareFnB(String name, int index, String imageUrl, long dailyTime, int dailyDayOfDays)
 	{
 		try
 		{
 			String schemeParams = String.format("fnbIndex=%d&dailyTime=%d&dailyDayOfDays=%d&nights=%d", index, dailyTime, dailyDayOfDays, 0);
 
-			kkMsgBuilder.addAppButton(mContext.getString(R.string.kakao_btn_go_ticket), new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build()).addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
+			kkMsgBuilder.addAppButton(mContext.getString(R.string.kakao_btn_go_fnb), new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build()).addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
 
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd", Locale.KOREA);
 			simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
 			Date checkInDate = new Date(dailyTime + SaleTime.SECONDS_IN_A_DAY * dailyDayOfDays * 1000);
 
-			String text = mContext.getString(R.string.kakao_btn_share_ticket, name, simpleDateFormat.format(checkInDate));
+			String text = mContext.getString(R.string.kakao_btn_share_fnb, name, simpleDateFormat.format(checkInDate));
 
 			if (Util.isTextEmpty(imageUrl) == false)
 			{

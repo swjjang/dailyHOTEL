@@ -7,10 +7,10 @@ import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.androidquery.callback.BitmapAjaxCallback;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.TicketDto;
+import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.VolleyImageLoader;
-import com.twoheart.dailyhotel.view.TicketViewItem;
+import com.twoheart.dailyhotel.view.PlaceViewItem;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -23,9 +23,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class FnBTicketListAdapter extends TicketListAdapter
+public class FnBListAdapter extends PlaceListAdapter
 {
-	public FnBTicketListAdapter(Context context, int resourceId, ArrayList<TicketViewItem> arrayList)
+	public FnBListAdapter(Context context, int resourceId, ArrayList<PlaceViewItem> arrayList)
 	{
 		super(context, resourceId, arrayList);
 	}
@@ -33,11 +33,11 @@ public class FnBTicketListAdapter extends TicketListAdapter
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent)
 	{
-		TicketViewItem item = getItem(position);
+		PlaceViewItem item = getItem(position);
 
 		switch (item.type)
 		{
-			case TicketViewItem.TYPE_SECTION:
+			case PlaceViewItem.TYPE_SECTION:
 			{
 				HeaderListViewHolder headerViewHolder = null;
 
@@ -64,18 +64,18 @@ public class FnBTicketListAdapter extends TicketListAdapter
 				break;
 			}
 
-			case TicketViewItem.TYPE_ENTRY:
+			case PlaceViewItem.TYPE_ENTRY:
 			{
-				TicketDto ticketDto = item.getTicketDto();
-				TicketViewHolder viewHolder = null;
+				Place place = item.getPlace();
+				PlaceViewHolder viewHolder = null;
 
 				if (convertView != null)
 				{
 					Object tag = convertView.getTag();
 
-					if (tag != null && tag instanceof TicketViewHolder)
+					if (tag != null && tag instanceof PlaceViewHolder)
 					{
-						viewHolder = (TicketViewHolder) convertView.getTag();
+						viewHolder = (PlaceViewHolder) convertView.getTag();
 					}
 				}
 
@@ -83,7 +83,7 @@ public class FnBTicketListAdapter extends TicketListAdapter
 				{
 					convertView = inflater.inflate(resourceId, parent, false);
 
-					viewHolder = new TicketViewHolder();
+					viewHolder = new PlaceViewHolder();
 					viewHolder.llHotelRowContent = (RelativeLayout) convertView.findViewById(R.id.ll_hotel_row_content);
 					viewHolder.img = (ImageView) convertView.findViewById(R.id.iv_hotel_row_img);
 					viewHolder.name = (TextView) convertView.findViewById(R.id.tv_hotel_row_name);
@@ -97,13 +97,13 @@ public class FnBTicketListAdapter extends TicketListAdapter
 				}
 
 				DecimalFormat comma = new DecimalFormat("###,##0");
-				int price = ticketDto.price;
+				int price = place.price;
 
 				String strPrice = comma.format(price);
-				String strDiscount = comma.format(ticketDto.discountPrice);
+				String strDiscount = comma.format(place.discountPrice);
 
-				viewHolder.address.setText(ticketDto.address);
-				viewHolder.name.setText(ticketDto.name);
+				viewHolder.address.setText(place.address);
+				viewHolder.name.setText(place.name);
 
 				Spanned currency = Html.fromHtml(context.getResources().getString(R.string.currency));
 
@@ -131,12 +131,12 @@ public class FnBTicketListAdapter extends TicketListAdapter
 				}
 
 				// grade
-				viewHolder.grade.setText(ticketDto.grade.getName(context));
-				viewHolder.grade.setBackgroundResource(ticketDto.grade.getColorResId());
+				viewHolder.grade.setText(place.grade.getName(context));
+				viewHolder.grade.setBackgroundResource(place.grade.getColorResId());
 
 				// AQuery사용시 
 				AQuery aquery = new AQuery(convertView);
-				Bitmap cachedImg = VolleyImageLoader.getCache(ticketDto.imageUrl);
+				Bitmap cachedImg = VolleyImageLoader.getCache(place.imageUrl);
 
 				if (cachedImg == null)
 				{
@@ -152,11 +152,11 @@ public class FnBTicketListAdapter extends TicketListAdapter
 
 					if (Util.getLCDWidth(context) < 720)
 					{
-						bitmapAjaxCallback.url(ticketDto.imageUrl).animation(AQuery.FADE_IN);
-						aquery.id(viewHolder.img).image(ticketDto.imageUrl, false, false, 240, 0, bitmapAjaxCallback);
+						bitmapAjaxCallback.url(place.imageUrl).animation(AQuery.FADE_IN);
+						aquery.id(viewHolder.img).image(place.imageUrl, false, false, 240, 0, bitmapAjaxCallback);
 					} else
 					{
-						bitmapAjaxCallback.url(ticketDto.imageUrl).animation(AQuery.FADE_IN);
+						bitmapAjaxCallback.url(place.imageUrl).animation(AQuery.FADE_IN);
 						aquery.id(viewHolder.img).image(bitmapAjaxCallback);
 					}
 				} else
@@ -165,7 +165,7 @@ public class FnBTicketListAdapter extends TicketListAdapter
 				}
 
 				// SOLD OUT 표시
-				if (ticketDto.isSoldOut)
+				if (place.isSoldOut)
 				{
 					viewHolder.sold_out.setVisibility(View.VISIBLE);
 				} else
@@ -179,7 +179,7 @@ public class FnBTicketListAdapter extends TicketListAdapter
 		return convertView;
 	}
 
-	private class TicketViewHolder
+	private class PlaceViewHolder
 	{
 		RelativeLayout llHotelRowContent;
 		ImageView img;

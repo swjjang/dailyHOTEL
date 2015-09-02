@@ -16,8 +16,6 @@
 package com.twoheart.dailyhotel.fragment;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -36,12 +34,12 @@ import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.HotelListViewItem;
 import com.twoheart.dailyhotel.view.widget.DailyHotelHeaderTransformer;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.PinnedSectionListView;
-import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.Util;
 
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
@@ -81,10 +79,6 @@ public class HotelListFragment extends
 	private HotelListMapFragment mHotelListMapFragment;
 	private HOTEL_VIEW_TYPE mHotelViewType;
 	protected Province mSelectedProvince;
-
-	//	private DailyFloatingActionButton mDailyFloatingActionButton;
-
-	protected HotelListViewItem mSelectedHotelListViewItem;
 
 	protected HotelMainFragment.OnUserActionListener mUserActionListener;
 
@@ -233,12 +227,11 @@ public class HotelListFragment extends
 			return;
 		}
 
-		mSelectedHotelListViewItem = mHotelListAdapter.getItem(position);
-
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("timeZone", "Asia/Seoul");
-
-		mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, baseActivity));
+		if (mUserActionListener != null)
+		{
+			HotelListViewItem hotelListViewItem = mHotelListAdapter.getItem(position);
+			mUserActionListener.selectHotel(hotelListViewItem, mSaleTime);
+		}
 	}
 
 	@Override
@@ -950,6 +943,8 @@ public class HotelListFragment extends
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
+			unLockUI();
+
 			BaseActivity baseActivity = (BaseActivity) getActivity();
 
 			if (baseActivity == null)
@@ -971,19 +966,14 @@ public class HotelListFragment extends
 
 				if (mSaleTime.isSaleTime() == true)
 				{
-					if (mUserActionListener != null)
-					{
-						mUserActionListener.selectHotel(mSelectedHotelListViewItem, mSaleTime);
-					}
+
 				} else
 				{
-					((MainActivity) baseActivity).replaceFragment(WaitTimerFragment.newInstance(mSaleTime, TicketMainFragment.TICKET_TYPE.HOTEL));
-					unLockUI();
+					((MainActivity) baseActivity).replaceFragment(WaitTimerFragment.newInstance(mSaleTime, PlaceMainFragment.TYPE.HOTEL));
 				}
 			} catch (Exception e)
 			{
 				onError(e);
-				unLockUI();
 			}
 		}
 	};

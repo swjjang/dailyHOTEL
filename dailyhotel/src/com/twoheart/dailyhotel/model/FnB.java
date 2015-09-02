@@ -8,16 +8,16 @@ import com.twoheart.dailyhotel.util.ExLog;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class FnBTicketDto extends TicketDto implements Parcelable
+public class FnB extends Place implements Parcelable
 {
 	public String saleDay;
 
-	public FnBTicketDto()
+	public FnB()
 	{
 		super();
 	}
 
-	public FnBTicketDto(Parcel in)
+	public FnB(Parcel in)
 	{
 		readFromParcel(in);
 	}
@@ -51,10 +51,10 @@ public class FnBTicketDto extends TicketDto implements Parcelable
 
 			try
 			{
-				grade = HotelGrade.valueOf(jsonObject.getString("grade"));
+				grade = Grade.valueOf(jsonObject.getString("grade"));
 			} catch (Exception e)
 			{
-				grade = HotelGrade.etc;
+				grade = Grade.etc;
 			}
 
 			districtName = jsonObject.getString("district_name");
@@ -79,15 +79,15 @@ public class FnBTicketDto extends TicketDto implements Parcelable
 
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
 	{
-		public FnBTicketDto createFromParcel(Parcel in)
+		public FnB createFromParcel(Parcel in)
 		{
-			return new FnBTicketDto(in);
+			return new FnB(in);
 		}
 
 		@Override
-		public FnBTicketDto[] newArray(int size)
+		public FnB[] newArray(int size)
 		{
-			return new FnBTicketDto[size];
+			return new FnB[size];
 		}
 	};
 

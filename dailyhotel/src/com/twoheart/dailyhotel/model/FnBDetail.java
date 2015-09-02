@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class FnBTicketDetailDto extends TicketDetailDto
+public class FnBDetail extends PlaceDetail
 {
-	public FnBTicketDetailDto(int index)
+	public FnBDetail(int index)
 	{
 		super(index);
 	}
@@ -15,10 +15,9 @@ public class FnBTicketDetailDto extends TicketDetailDto
 	@Override
 	public void setData(JSONObject jsonObject) throws Exception
 	{
-		grade = jsonObject.getString("grade");
+		grade = Place.Grade.valueOf(jsonObject.getString("grade"));
 		name = jsonObject.getString("restaurant_name");
 		address = jsonObject.getString("address");
-		addressDetail = jsonObject.getString("address_natural");
 
 		longitude = jsonObject.getDouble("longitude");
 		latitude = jsonObject.getDouble("latitude");
@@ -45,7 +44,7 @@ public class FnBTicketDetailDto extends TicketDetailDto
 			mInformationList.add(new DetailInformation(detailJSONArray.getJSONObject(i)));
 		}
 
-		// Room Sale Info
+		// Ticket Information
 		JSONArray ticketInformationJSONArray = jsonObject.getJSONArray("ticket_info");
 		int ticketInformationLength = ticketInformationJSONArray.length();
 

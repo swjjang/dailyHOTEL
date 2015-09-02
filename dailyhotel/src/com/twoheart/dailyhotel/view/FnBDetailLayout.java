@@ -20,8 +20,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.adapter.HotelDetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.model.DetailInformation;
-import com.twoheart.dailyhotel.model.Hotel;
-import com.twoheart.dailyhotel.model.TicketDetailDto;
+import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.util.ABTestPreference;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -44,20 +43,14 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-/**
- * 호텔 상세 정보 화면
- * 
- * @author sheldon
- *
- */
-public class FoodnBeverageDetailLayout extends PlaceDetailLayout
+public class FnBDetailLayout extends PlaceDetailLayout
 {
 	private static final int NUMBER_OF_ROWSLIST = 6;
 
-	private FoodnBeverageDetailListAdapter mListAdapter;
+	private FnBDetailListAdapter mListAdapter;
 	private View mGoogleMapLayout;
 
-	public FoodnBeverageDetailLayout(BaseActivity activity, String defaultImageUrl)
+	public FnBDetailLayout(BaseActivity activity, String defaultImageUrl)
 	{
 		super(activity, defaultImageUrl);
 	}
@@ -69,14 +62,14 @@ public class FoodnBeverageDetailLayout extends PlaceDetailLayout
 	}
 
 	@Override
-	protected void setDetailDto(TicketDetailDto ticketDetailDto, int imagePosition)
+	public void setDetail(PlaceDetail placeDetail, int imagePosition)
 	{
-		if (ticketDetailDto == null)
+		if (placeDetail == null)
 		{
 			return;
 		}
 
-		mTicketDetailDto = ticketDetailDto;
+		mPlaceDetail = placeDetail;
 
 		// 호텔 상세 정보를 얻어와서 리스트 개수가 몇개 필요한지 검색한다.
 		if (mNeedRefreshData == null)
@@ -94,7 +87,7 @@ public class FoodnBeverageDetailLayout extends PlaceDetailLayout
 			mDeatilViews = new View[NUMBER_OF_ROWSLIST];
 		}
 
-		mActionBarTextView.setText(ticketDetailDto.name);
+		mActionBarTextView.setText(placeDetail.name);
 
 		if (mImageAdapter == null)
 		{
@@ -103,12 +96,12 @@ public class FoodnBeverageDetailLayout extends PlaceDetailLayout
 
 		mImageAdapter.setOnImageActionListener(mOnImageActionListener);
 
-		mImageAdapter.setData(ticketDetailDto.getImageUrlList());
+		mImageAdapter.setData(placeDetail.getImageUrlList());
 		mViewPager.setAdapter(mImageAdapter);
 
 		if (mListAdapter == null)
 		{
-			mListAdapter = new FoodnBeverageDetailListAdapter((FragmentActivity) mActivity);
+			mListAdapter = new FnBDetailListAdapter((FragmentActivity) mActivity);
 			mListView.setAdapter(mListAdapter);
 		}
 
@@ -126,7 +119,7 @@ public class FoodnBeverageDetailLayout extends PlaceDetailLayout
 		View soldoutView = mViewGroupRoot.findViewById(R.id.soldoutTextView);
 
 		// SOLD OUT 판단 조건.
-		ArrayList<TicketInformation> ticketInformationList = ticketDetailDto.getTicketInformation();
+		ArrayList<TicketInformation> ticketInformationList = placeDetail.getTicketInformation();
 
 		if (ticketInformationList == null || ticketInformationList.size() == 0)
 		{
@@ -178,13 +171,13 @@ public class FoodnBeverageDetailLayout extends PlaceDetailLayout
 	// Adapter
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	private class FoodnBeverageDetailListAdapter extends BaseAdapter
+	private class FnBDetailListAdapter extends BaseAdapter
 	{
 		private FragmentActivity mFragmentActivity;
 		private GoogleMap mGoogleMap;
 		private SupportMapFragment mMapFragment;
 
-		public FoodnBeverageDetailListAdapter(FragmentActivity activity)
+		public FnBDetailListAdapter(FragmentActivity activity)
 		{
 			mFragmentActivity = activity;
 		}
@@ -221,7 +214,7 @@ public class FoodnBeverageDetailLayout extends PlaceDetailLayout
 					count--;
 				}
 
-				if (TextUtils.isEmpty(mTicketDetailDto.benefit) == true)
+				if (TextUtils.isEmpty(mPlaceDetail.benefit) == true)
 				{
 					count--;
 				}
@@ -267,7 +260,7 @@ public class FoodnBeverageDetailLayout extends PlaceDetailLayout
 					{
 						mNeedRefreshData[1] = false;
 
-						getTitleView(mDeatilViews[1], mTicketDetailDto);
+						getTitleView(mDeatilViews[1], mPlaceDetail);
 					}
 
 					view = mDeatilViews[1];
@@ -284,7 +277,7 @@ public class FoodnBeverageDetailLayout extends PlaceDetailLayout
 					{
 						mNeedRefreshData[2] = false;
 
-						getAddressView(mDeatilViews[2], mTicketDetailDto);
+						getAddressView(mDeatilViews[2], mPlaceDetail);
 					}
 
 					view = mDeatilViews[2];
@@ -292,19 +285,19 @@ public class FoodnBeverageDetailLayout extends PlaceDetailLayout
 
 				// D Benefit or 호텔 정보
 				case 3:
-					if (TextUtils.isEmpty(mTicketDetailDto.benefit) == false)
+					if (TextUtils.isEmpty(mPlaceDetail.benefit) == false)
 					{
 						if (mDeatilViews[3] == null)
 						{
 							mDeatilViews[3] = layoutInflater.inflate(R.layout.list_row_detail_benefit, parent, false);
-							getBenefitView(mDeatilViews[3], mTicketDetailDto);
+							getBenefitView(mDeatilViews[3], mPlaceDetail);
 						}
 
 						if (mNeedRefreshData[3] == true)
 						{
 							mNeedRefreshData[3] = false;
 
-							getBenefitView(mDeatilViews[3], mTicketDetailDto);
+							getBenefitView(mDeatilViews[3], mPlaceDetail);
 						}
 
 						view = mDeatilViews[3];
@@ -316,7 +309,7 @@ public class FoodnBeverageDetailLayout extends PlaceDetailLayout
 
 				// 호텔 정보 or 카카오톡 문의
 				case 4:
-					if (TextUtils.isEmpty(mTicketDetailDto.benefit) == false)
+					if (TextUtils.isEmpty(mPlaceDetail.benefit) == false)
 					{
 						view = makeInformationView(layoutInflater, parent);
 					} else
@@ -350,7 +343,7 @@ public class FoodnBeverageDetailLayout extends PlaceDetailLayout
 			{
 				mNeedRefreshData[4] = false;
 
-				getInformationView(layoutInflater, (ViewGroup) mDeatilViews[4], mTicketDetailDto);
+				getInformationView(layoutInflater, (ViewGroup) mDeatilViews[4], mPlaceDetail);
 			}
 
 			return mDeatilViews[4];
@@ -402,7 +395,7 @@ public class FoodnBeverageDetailLayout extends PlaceDetailLayout
 		 * @param hotelDetail
 		 * @return
 		 */
-		private View getTitleView(View view, TicketDetailDto ticketDetailDto)
+		private View getTitleView(View view, PlaceDetail placeDetail)
 		{
 			mTitleLaout = view.findViewById(R.id.hotelTitleLayout);
 
@@ -410,13 +403,12 @@ public class FoodnBeverageDetailLayout extends PlaceDetailLayout
 			mGradeTextView = (TextView) view.findViewById(R.id.hotelGradeTextView);
 			mGradeTextView.setVisibility(View.VISIBLE);
 
-			Hotel.HotelGrade hotelGrade = Hotel.HotelGrade.valueOf(ticketDetailDto.grade);
-			mGradeTextView.setText(hotelGrade.getName(mFragmentActivity));
-			mGradeTextView.setBackgroundResource(hotelGrade.getColorResId());
+			mGradeTextView.setText(placeDetail.grade.getName(mFragmentActivity));
+			mGradeTextView.setBackgroundResource(placeDetail.grade.getColorResId());
 
 			// 호텔명
 			mNameTextView = (TextView) view.findViewById(R.id.hotelNameTextView);
-			mNameTextView.setText(ticketDetailDto.name);
+			mNameTextView.setText(placeDetail.name);
 
 			if (mNameTextView.getTag() == null)
 			{
@@ -449,7 +441,7 @@ public class FoodnBeverageDetailLayout extends PlaceDetailLayout
 		 * @param hotelDetail
 		 * @return
 		 */
-		private View getAddressView(final View view, TicketDetailDto ticketDetailDto)
+		private View getAddressView(final View view, PlaceDetail placeDetail)
 		{
 			// 주소지
 			final TextView hotelAddressTextView01 = (TextView) view.findViewById(R.id.hotelAddressTextView01);
@@ -462,7 +454,7 @@ public class FoodnBeverageDetailLayout extends PlaceDetailLayout
 			hotelAddressTextView03.setText(null);
 			hotelAddressTextView03.setVisibility(View.GONE);
 
-			final String address = ticketDetailDto.address;
+			final String address = placeDetail.address;
 
 			hotelAddressTextView01.setText(address);
 			hotelAddressTextView01.post(new Runnable()
@@ -577,7 +569,7 @@ public class FoodnBeverageDetailLayout extends PlaceDetailLayout
 				{
 					mGoogleMap = googleMap;
 
-					final LatLng latlng = new LatLng(mTicketDetailDto.latitude, mTicketDetailDto.longitude);
+					final LatLng latlng = new LatLng(mPlaceDetail.latitude, mPlaceDetail.longitude);
 
 					Marker marker = googleMap.addMarker(new MarkerOptions().position(latlng));
 					marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.info_ic_map_large));
@@ -667,9 +659,9 @@ public class FoodnBeverageDetailLayout extends PlaceDetailLayout
 		 * @param view
 		 * @return
 		 */
-		private View getBenefitView(View view, TicketDetailDto ticketDetailDto)
+		private View getBenefitView(View view, PlaceDetail placeDetail)
 		{
-			if (view == null || ticketDetailDto == null)
+			if (view == null || placeDetail == null)
 			{
 				return view;
 			}
@@ -680,7 +672,7 @@ public class FoodnBeverageDetailLayout extends PlaceDetailLayout
 			textView2Line.setText(null);
 			textView2Line.setVisibility(View.GONE);
 
-			final String benefit = ticketDetailDto.benefit;
+			final String benefit = placeDetail.benefit;
 
 			textView1Line.setText(benefit);
 			textView1Line.post(new Runnable()
@@ -729,14 +721,14 @@ public class FoodnBeverageDetailLayout extends PlaceDetailLayout
 		 * @param view
 		 * @return
 		 */
-		private View getInformationView(LayoutInflater layoutInflater, ViewGroup viewGroup, TicketDetailDto ticketDetailDto)
+		private View getInformationView(LayoutInflater layoutInflater, ViewGroup viewGroup, PlaceDetail placeDetail)
 		{
-			if (layoutInflater == null || viewGroup == null || ticketDetailDto == null)
+			if (layoutInflater == null || viewGroup == null || placeDetail == null)
 			{
 				return viewGroup;
 			}
 
-			ArrayList<DetailInformation> arrayList = ticketDetailDto.getInformation();
+			ArrayList<DetailInformation> arrayList = placeDetail.getInformation();
 
 			if (arrayList != null)
 			{

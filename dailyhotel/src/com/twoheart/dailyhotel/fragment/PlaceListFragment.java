@@ -16,22 +16,14 @@
 package com.twoheart.dailyhotel.fragment;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
-import org.json.JSONObject;
-
-import com.android.volley.Request.Method;
-import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.activity.BaseActivity;
-import com.twoheart.dailyhotel.fragment.TicketMainFragment.VIEW_TYPE;
+import com.twoheart.dailyhotel.fragment.PlaceMainFragment.VIEW_TYPE;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.view.TicketViewItem;
+import com.twoheart.dailyhotel.view.PlaceViewItem;
 import com.twoheart.dailyhotel.view.widget.PinnedSectionListView;
 
 import android.animation.Animator;
@@ -48,23 +40,21 @@ import android.widget.FrameLayout;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
-public abstract class TicketListFragment extends
+public abstract class PlaceListFragment extends
 		BaseFragment implements Constants, OnItemClickListener, OnRefreshListener
 {
 	protected PinnedSectionListView mListView;
 	protected PullToRefreshLayout mPullToRefreshLayout;
-
-	protected SaleTime mSaleTime;
-	protected boolean mIsSelectionTop;
+	protected FrameLayout mMapLayout;
 	protected View mEmptyView;
 
-	protected FrameLayout mMapLayout;
+	private SaleTime mSaleTime;
+	protected boolean mIsSelectionTop;
 	protected VIEW_TYPE mViewType;
 	private Province mSelectedProvince;
 
-	protected TicketViewItem mSelectedTicketViewItem;
-	protected TicketListMapFragment mTicketListMapFragment;
-	protected TicketMainFragment.OnUserActionListener mUserActionListener;
+	private PlaceMapFragment mPlaceMapFragment;
+	protected PlaceMainFragment.OnUserActionListener mOnUserActionListener;
 
 	private float mOldY;
 	private int mOldfirstVisibleItem;
@@ -73,7 +63,7 @@ public abstract class TicketListFragment extends
 	private static ValueAnimator mValueAnimator = null;
 	private static boolean mLockActionBar = false;
 	private static int mAnchorY = Integer.MAX_VALUE;
-	protected ActionbarViewHolder mActionbarViewHolder;
+	private ActionbarViewHolder mActionbarViewHolder;
 
 	protected class ActionbarViewHolder
 	{
@@ -85,23 +75,16 @@ public abstract class TicketListFragment extends
 
 	protected abstract void fetchHotelList(Province province, SaleTime checkInSaleTime, SaleTime checkOutSaleTime);
 
-	protected abstract TicketViewItem getTicketViewItem(int position);
+	protected abstract PlaceViewItem getPlaceViewItem(int position);
 
-	protected abstract ArrayList<TicketViewItem> getTicketListData();
+	protected abstract ArrayList<PlaceViewItem> getPlaceViewItemList();
 
-	protected abstract TicketListMapFragment getTicketListMapFragment();
+	protected abstract PlaceMapFragment createPlaceMapFragment();
 
 	@Override
 	public void onResume()
 	{
-		BaseActivity baseActivity = (BaseActivity) getActivity();
-
-		if (baseActivity == null)
-		{
-			return;
-		}
-
-		showActionBar(baseActivity);
+		showActionBar();
 		setActionBarAnimationLock(false);
 
 		super.onResume();
@@ -110,17 +93,19 @@ public abstract class TicketListFragment extends
 	@Override
 	public void onDestroyView()
 	{
-		BaseActivity baseActivity = (BaseActivity) getActivity();
-
-		if (baseActivity == null)
-		{
-			return;
-		}
-
-		showActionBar(baseActivity);
+		showActionBar();
 		setActionBarAnimationLock(true);
 
 		super.onDestroyView();
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		if (mPlaceMapFragment != null)
+		{
+			mPlaceMapFragment.onActivityResult(requestCode, resultCode, data);
+		}
 	}
 
 	@Override
@@ -141,20 +126,10 @@ public abstract class TicketListFragment extends
 			return;
 		}
 
-		mSelectedTicketViewItem = getTicketViewItem(position);
-
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("timeZone", "Asia/Seoul");
-
-		mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, baseActivity));
-	}
-
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data)
-	{
-		if (mTicketListMapFragment != null)
+		if (mOnUserActionListener != null)
 		{
-			mTicketListMapFragment.onActivityResult(requestCode, resultCode, data);
+			PlaceViewItem placeViewItem = getPlaceViewItem(position);
+			mOnUserActionListener.selectPlace(placeViewItem, mSaleTime);
 		}
 	}
 
@@ -181,7 +156,7 @@ public abstract class TicketListFragment extends
 			return;
 		}
 
-		showActionBarAnimatoin(baseActivity);
+		showActionBarAnimatoin();
 		setActionBarAnimationLock(true);
 
 		mDirection = MotionEvent.ACTION_CANCEL;
@@ -220,17 +195,17 @@ public abstract class TicketListFragment extends
 				case MAP:
 					setVisibility(VIEW_TYPE.MAP, isCurrentPage);
 
-					if (mTicketListMapFragment != null)
+					if (mPlaceMapFragment != null)
 					{
-						mTicketListMapFragment.setUserActionListener(mUserActionListener);
+						mPlaceMapFragment.setUserActionListener(mOnUserActionListener);
 
 						if (isCurrentPage == true)
 						{
-							ArrayList<TicketViewItem> arrayList = getTicketListData();
+							ArrayList<PlaceViewItem> arrayList = getPlaceViewItemList();
 
 							if (arrayList != null)
 							{
-								mTicketListMapFragment.setTicketList(arrayList, mSaleTime, false);
+								mPlaceMapFragment.setPlaceViewItemList(arrayList, mSaleTime, false);
 							}
 						}
 					}
@@ -250,11 +225,11 @@ public abstract class TicketListFragment extends
 				mEmptyView.setVisibility(View.GONE);
 				mMapLayout.setVisibility(View.GONE);
 
-				if (mTicketListMapFragment != null)
+				if (mPlaceMapFragment != null)
 				{
-					getChildFragmentManager().beginTransaction().remove(mTicketListMapFragment).commitAllowingStateLoss();
+					getChildFragmentManager().beginTransaction().remove(mPlaceMapFragment).commitAllowingStateLoss();
 					mMapLayout.removeAllViews();
-					mTicketListMapFragment = null;
+					mPlaceMapFragment = null;
 				}
 
 				mPullToRefreshLayout.setVisibility(View.VISIBLE);
@@ -266,10 +241,10 @@ public abstract class TicketListFragment extends
 
 				if (isCurrentPage == true)
 				{
-					if (mTicketListMapFragment == null)
+					if (mPlaceMapFragment == null)
 					{
-						mTicketListMapFragment = getTicketListMapFragment();
-						getChildFragmentManager().beginTransaction().add(mMapLayout.getId(), mTicketListMapFragment).commitAllowingStateLoss();
+						mPlaceMapFragment = createPlaceMapFragment();
+						getChildFragmentManager().beginTransaction().add(mMapLayout.getId(), mPlaceMapFragment).commitAllowingStateLoss();
 					}
 				}
 
@@ -300,9 +275,23 @@ public abstract class TicketListFragment extends
 		return mSaleTime;
 	}
 
-	public void setUserActionListener(TicketMainFragment.OnUserActionListener userActionLister)
+	protected void setPlaceMapData(ArrayList<PlaceViewItem> placeViewItemList)
 	{
-		mUserActionListener = userActionLister;
+		if (mViewType == VIEW_TYPE.MAP && mPlaceMapFragment != null)
+		{
+			mPlaceMapFragment.setUserActionListener(mOnUserActionListener);
+			mPlaceMapFragment.setPlaceViewItemList(placeViewItemList, mSaleTime, mIsSelectionTop);
+		}
+	}
+
+	public void setUserActionListener(PlaceMainFragment.OnUserActionListener userActionLister)
+	{
+		mOnUserActionListener = userActionLister;
+	}
+
+	public void setActionbarViewHolder(ActionbarViewHolder actionbarViewHolder)
+	{
+		mActionbarViewHolder = actionbarViewHolder;
 	}
 
 	public void refreshList(Province province, boolean isSelectionTop)
@@ -328,16 +317,16 @@ public abstract class TicketListFragment extends
 	// ScrollListener
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public void setActionBarAnimationLock(boolean lock)
+	public void setActionBarAnimationLock(boolean isLock)
 	{
-		mLockActionBar = lock;
+		mLockActionBar = isLock;
 
 		mDirection = MotionEvent.ACTION_CANCEL;
 	}
 
-	private void showActionBar(BaseActivity baseActivity)
+	private void showActionBar()
 	{
-		if (Util.isOverAPI12() == false)
+		if (Util.isOverAPI12() == false || mActionbarViewHolder == null)
 		{
 			return;
 		}
@@ -351,10 +340,9 @@ public abstract class TicketListFragment extends
 			mValueAnimator = null;
 		}
 
-		mActionbarViewHolder.mAnchorView.setVisibility(View.VISIBLE);
-
 		mAnchorY = 0;
 
+		mActionbarViewHolder.mAnchorView.setVisibility(View.VISIBLE);
 		mActionbarViewHolder.mAnchorView.setTranslationY(0);
 		mActionbarViewHolder.mActionbarLayout.setTranslationY(0);
 		mActionbarViewHolder.mTabindicatorView.setTranslationY(0);
@@ -367,9 +355,9 @@ public abstract class TicketListFragment extends
 		mActionbarViewHolder.mAnchorView.setVisibility(View.INVISIBLE);
 	}
 
-	public void showActionBarAnimatoin(BaseActivity baseActivity)
+	protected void showActionBarAnimatoin()
 	{
-		if (Util.isOverAPI12() == false || mIsClosedActionBar == false || mLockActionBar == true)
+		if (Util.isOverAPI12() == false || mIsClosedActionBar == false || mLockActionBar == true || mActionbarViewHolder == null)
 		{
 			return;
 		}
@@ -439,9 +427,9 @@ public abstract class TicketListFragment extends
 
 	}
 
-	private void hideActionbarAnimation(BaseActivity baseActivity)
+	private void hideActionbarAnimation()
 	{
-		if (Util.isOverAPI12() == false || mIsClosedActionBar == true || mLockActionBar == true)
+		if (Util.isOverAPI12() == false || mIsClosedActionBar == true || mLockActionBar == true || mActionbarViewHolder == null)
 		{
 			return;
 		}
@@ -573,7 +561,7 @@ public abstract class TicketListFragment extends
 			{
 				case MotionEvent.ACTION_DOWN:
 				{
-					showActionBarAnimatoin(baseActivity);
+					showActionBarAnimatoin();
 					break;
 				}
 
@@ -582,57 +570,10 @@ public abstract class TicketListFragment extends
 					// 전체 내용을 위로 올린다.
 					if (firstVisibleItem >= 1)
 					{
-						hideActionbarAnimation(baseActivity);
+						hideActionbarAnimation();
 					}
 					break;
 				}
-			}
-		}
-	};
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// Listener
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
-	{
-		@Override
-		public void onResponse(String url, JSONObject response)
-		{
-			BaseActivity baseActivity = (BaseActivity) getActivity();
-
-			if (baseActivity == null)
-			{
-				return;
-			}
-
-			try
-			{
-				if (response == null)
-				{
-					throw new NullPointerException("response == null");
-				}
-
-				mSaleTime.setCurrentTime(response.getLong("currentDateTime"));
-				mSaleTime.setOpenTime(response.getLong("openDateTime"));
-				mSaleTime.setCloseTime(response.getLong("closeDateTime"));
-				mSaleTime.setDailyTime(response.getLong("dailyDateTime"));
-
-				if (mSaleTime.isSaleTime() == true)
-				{
-					if (mUserActionListener != null)
-					{
-						mUserActionListener.selectedTicket(mSelectedTicketViewItem, mSaleTime);
-					}
-				} else
-				{
-					((MainActivity) baseActivity).replaceFragment(WaitTimerFragment.newInstance(mSaleTime, TicketMainFragment.TICKET_TYPE.FNB));
-					unLockUI();
-				}
-			} catch (Exception e)
-			{
-				onError(e);
-				unLockUI();
 			}
 		}
 	};

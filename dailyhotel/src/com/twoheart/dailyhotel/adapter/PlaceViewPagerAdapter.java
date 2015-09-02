@@ -3,9 +3,9 @@ package com.twoheart.dailyhotel.adapter;
 import java.util.ArrayList;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.fragment.TicketListMapFragment;
-import com.twoheart.dailyhotel.model.TicketDto;
-import com.twoheart.dailyhotel.view.TicketViewItem;
+import com.twoheart.dailyhotel.fragment.PlaceMapFragment;
+import com.twoheart.dailyhotel.model.Place;
+import com.twoheart.dailyhotel.view.PlaceViewItem;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
@@ -13,22 +13,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public abstract class TicketViewPagerAdapter extends PagerAdapter
+public abstract class PlaceViewPagerAdapter extends PagerAdapter
 {
 	protected Context mContext;
-	private ArrayList<TicketViewItem> mTicketViewItemList;
-	protected TicketListMapFragment.OnUserActionListener mOnUserActionListener;
+	private ArrayList<PlaceViewItem> mPlaceViewItemList;
+	protected PlaceMapFragment.OnUserActionListener mOnUserActionListener;
 
-	protected abstract void makeLayout(View view, final TicketDto ticketDto);
+	protected abstract void makeLayout(View view, final Place place);
 
-	public TicketViewPagerAdapter(Context context)
+	public PlaceViewPagerAdapter(Context context)
 	{
 		mContext = context;
 
-		mTicketViewItemList = new ArrayList<TicketViewItem>();
+		mPlaceViewItemList = new ArrayList<PlaceViewItem>();
 	}
 
-	public void setOnUserActionListener(TicketListMapFragment.OnUserActionListener listener)
+	public void setOnUserActionListener(PlaceMapFragment.OnUserActionListener listener)
 	{
 		mOnUserActionListener = listener;
 	}
@@ -36,7 +36,7 @@ public abstract class TicketViewPagerAdapter extends PagerAdapter
 	@Override
 	public Object instantiateItem(ViewGroup container, int position)
 	{
-		if (mTicketViewItemList == null || mTicketViewItemList.size() < position)
+		if (mPlaceViewItemList == null || mPlaceViewItemList.size() < position)
 		{
 			return null;
 		}
@@ -45,9 +45,9 @@ public abstract class TicketViewPagerAdapter extends PagerAdapter
 
 		View view = layoutInflater.inflate(R.layout.viewpager_column_hotel, null);
 
-		TicketViewItem item = mTicketViewItemList.get(position);
+		PlaceViewItem item = mPlaceViewItemList.get(position);
 
-		makeLayout(view, item.getTicketDto());
+		makeLayout(view, item.getPlace());
 
 		container.addView(view, 0);
 
@@ -63,9 +63,9 @@ public abstract class TicketViewPagerAdapter extends PagerAdapter
 	@Override
 	public int getCount()
 	{
-		if (mTicketViewItemList != null)
+		if (mPlaceViewItemList != null)
 		{
-			return mTicketViewItemList.size();
+			return mPlaceViewItemList.size();
 		} else
 		{
 			return 0;
@@ -84,18 +84,18 @@ public abstract class TicketViewPagerAdapter extends PagerAdapter
 		container.removeView((View) object);
 	}
 
-	public void setData(ArrayList<TicketViewItem> list)
+	public void setData(ArrayList<PlaceViewItem> list)
 	{
-		if (mTicketViewItemList == null)
+		if (mPlaceViewItemList == null)
 		{
-			mTicketViewItemList = new ArrayList<TicketViewItem>();
+			mPlaceViewItemList = new ArrayList<PlaceViewItem>();
 		}
 
-		mTicketViewItemList.clear();
+		mPlaceViewItemList.clear();
 
 		if (list != null)
 		{
-			mTicketViewItemList.addAll(list);
+			mPlaceViewItemList.addAll(list);
 		}
 	}
 }

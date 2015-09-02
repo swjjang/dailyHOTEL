@@ -22,7 +22,7 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.HotelMainFragment;
-import com.twoheart.dailyhotel.fragment.TicketMainFragment;
+import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -333,7 +333,7 @@ public class BaseActivity extends
 		}
 	}
 
-	public void setActionBarArea(String title, final TicketMainFragment.OnUserActionListener listener)
+	public void setActionBarArea(String title, final PlaceMainFragment.OnUserActionListener listener)
 	{
 		if (mSpinnderIndex == -1)
 		{

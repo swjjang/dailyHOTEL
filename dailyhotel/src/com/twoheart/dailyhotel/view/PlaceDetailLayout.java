@@ -7,7 +7,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.PlaceDetailActivity;
 import com.twoheart.dailyhotel.adapter.HotelDetailImageViewPagerAdapter;
-import com.twoheart.dailyhotel.model.TicketDetailDto;
+import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -44,7 +44,7 @@ public abstract class PlaceDetailLayout
 
 	private static final int MAX_OF_TICKETTYPE = 3;
 
-	protected TicketDetailDto mTicketDetailDto;
+	protected PlaceDetail mPlaceDetail;
 	protected BaseActivity mActivity;
 	protected ViewGroup mViewGroupRoot;
 	protected LoopViewPager mViewPager;
@@ -58,7 +58,7 @@ public abstract class PlaceDetailLayout
 	protected HotelDetailImageViewPagerAdapter mImageAdapter;
 
 	protected TicketInformation mSelectedTicketInformation;
-	private View mTicketTypeLayout;
+	private View mTicketInformationLayout;
 	private View mBottomLayout;
 	private View mTicketTypeBackgroundView;
 	private View[] mTicketInformationViews;
@@ -93,7 +93,7 @@ public abstract class PlaceDetailLayout
 
 	protected abstract void initLayout(LayoutInflater inflater, BaseActivity activity);
 
-	protected abstract void setDetailDto(TicketDetailDto ticketDetailDto, int imagePosition);
+	public abstract void setDetail(PlaceDetail placeDetail, int imagePosition);
 
 	public PlaceDetailLayout(BaseActivity activity, String defaultImageUrl)
 	{
@@ -139,8 +139,8 @@ public abstract class PlaceDetailLayout
 		LayoutParams layoutParams = (LayoutParams) mViewPager.getLayoutParams();
 		layoutParams.height = mImageHeight;
 
-		mTicketTypeLayout = mViewGroupRoot.findViewById(R.id.roomTypeLayout);
-		mTicketTypeLayout.setVisibility(View.INVISIBLE);
+		mTicketInformationLayout = mViewGroupRoot.findViewById(R.id.ticketInformationLayout);
+		mTicketInformationLayout.setVisibility(View.INVISIBLE);
 
 		mTicketInformationViews = new View[MAX_OF_TICKETTYPE];
 
@@ -369,7 +369,7 @@ public abstract class PlaceDetailLayout
 
 	private void setTicketInformationLayoutEnabled(boolean enabled)
 	{
-		if (mTicketTypeLayout == null || mTicketInformationViews == null)
+		if (mTicketInformationLayout == null || mTicketInformationViews == null)
 		{
 			return;
 		}
@@ -430,17 +430,17 @@ public abstract class PlaceDetailLayout
 		}
 
 		mTicketTypeBackgroundView.setAnimation(null);
-		mTicketTypeLayout.setAnimation(null);
+		mTicketInformationLayout.setAnimation(null);
 
 		mTicketTypeBackgroundView.setVisibility(View.GONE);
 
 		if (Util.isOverAPI12() == true)
 		{
-			mTicketTypeLayout.setVisibility(View.INVISIBLE);
-			mTicketTypeLayout.setTranslationY(Util.dpToPx(mActivity, 276));
+			mTicketInformationLayout.setVisibility(View.INVISIBLE);
+			mTicketInformationLayout.setTranslationY(Util.dpToPx(mActivity, 276));
 		} else
 		{
-			mTicketTypeLayout.setVisibility(View.GONE);
+			mTicketInformationLayout.setVisibility(View.GONE);
 		}
 
 		mAnimationStatus = ANIMATION_STATUS.HIDE_END;
@@ -470,7 +470,7 @@ public abstract class PlaceDetailLayout
 				mObjectAnimator = null;
 			}
 
-			mObjectAnimator = ObjectAnimator.ofFloat(mTicketTypeLayout, "y", y, mBottomLayout.getTop() - mTicketTypeLayout.getHeight());
+			mObjectAnimator = ObjectAnimator.ofFloat(mTicketInformationLayout, "y", y, mBottomLayout.getTop() - mTicketInformationLayout.getHeight());
 			mObjectAnimator.setDuration(300);
 
 			mObjectAnimator.addListener(new AnimatorListener()
@@ -478,9 +478,9 @@ public abstract class PlaceDetailLayout
 				@Override
 				public void onAnimationStart(Animator animation)
 				{
-					if (mTicketTypeLayout.getVisibility() != View.VISIBLE)
+					if (mTicketInformationLayout.getVisibility() != View.VISIBLE)
 					{
-						mTicketTypeLayout.setVisibility(View.VISIBLE);
+						mTicketInformationLayout.setVisibility(View.VISIBLE);
 					}
 
 					mAnimationState = ANIMATION_STATE.START;
@@ -517,9 +517,9 @@ public abstract class PlaceDetailLayout
 			mObjectAnimator.start();
 		} else
 		{
-			if (mTicketTypeLayout != null && mTicketTypeLayout.getVisibility() != View.VISIBLE)
+			if (mTicketInformationLayout != null && mTicketInformationLayout.getVisibility() != View.VISIBLE)
 			{
-				mTicketTypeLayout.setVisibility(View.VISIBLE);
+				mTicketInformationLayout.setVisibility(View.VISIBLE);
 
 				mAnimationStatus = ANIMATION_STATUS.SHOW_END;
 				mAnimationState = ANIMATION_STATE.END;
@@ -544,7 +544,7 @@ public abstract class PlaceDetailLayout
 
 		if (Util.isOverAPI12() == true)
 		{
-			final float y = mTicketTypeLayout.getY();
+			final float y = mTicketInformationLayout.getY();
 
 			if (mObjectAnimator != null)
 			{
@@ -557,7 +557,7 @@ public abstract class PlaceDetailLayout
 				mObjectAnimator = null;
 			}
 
-			mObjectAnimator = ObjectAnimator.ofFloat(mTicketTypeLayout, "y", y, mBottomLayout.getTop());
+			mObjectAnimator = ObjectAnimator.ofFloat(mTicketInformationLayout, "y", y, mBottomLayout.getTop());
 			mObjectAnimator.setDuration(300);
 
 			mObjectAnimator.addListener(new AnimatorListener()
@@ -923,7 +923,7 @@ public abstract class PlaceDetailLayout
 			float offset = rect.top - mStatusBarHeight - Util.dpToPx(mActivity, 56);
 			float alphaFactor = offset / max;
 
-			if (TextUtils.isEmpty(mTicketDetailDto.benefit) == false)
+			if (TextUtils.isEmpty(mPlaceDetail.benefit) == false)
 			{
 				if (Float.compare(alphaFactor, 0.0f) <= 0)
 				{
@@ -1057,7 +1057,7 @@ public abstract class PlaceDetailLayout
 						if (mOnUserActionListener != null)
 						{
 							mOnImageActionListener.stopAutoSlide();
-							mOnUserActionListener.onClickImage(mTicketDetailDto);
+							mOnUserActionListener.onClickImage(mPlaceDetail);
 
 							mMoveState = 0;
 

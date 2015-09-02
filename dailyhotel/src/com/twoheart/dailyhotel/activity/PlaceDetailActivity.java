@@ -20,8 +20,8 @@ import org.json.JSONObject;
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
+import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.model.TicketDetailDto;
 import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
@@ -32,12 +32,11 @@ import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
-import com.twoheart.dailyhotel.view.FoodnBeverageDetailLayout;
+import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.view.FnBDetailLayout;
 import com.twoheart.dailyhotel.view.HotelDetailLayout;
 import com.twoheart.dailyhotel.view.PlaceDetailLayout;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
-import com.twoheart.dailyhotel.util.KakaoLinkManager;
-import com.twoheart.dailyhotel.util.Util;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -55,13 +54,13 @@ public abstract class PlaceDetailActivity extends BaseActivity
 {
 	private static final int DURATION_HOTEL_IMAGE_SHOW = 4000;
 
-	private PlaceDetailLayout mPlaceDetailLayout;
-	private TicketDetailDto mTicketDetailDto;
+	protected PlaceDetailLayout mPlaceDetailLayout;
+	protected PlaceDetail mPlaceDetail;
 	private SaleTime mCheckInSaleTime;
 
-	private int mCurrentImage;
+	protected int mCurrentImage;
 	private TicketInformation mSelectedTicketInformation;
-	private boolean mIsStartByShare;
+	protected boolean mIsStartByShare;
 	private String mDefaultImageUrl;
 
 	private Handler mImageHandler = new Handler()
@@ -102,7 +101,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
 		public void hideActionBar();
 
-		public void onClickImage(TicketDetailDto ticketDetailDto);
+		public void onClickImage(PlaceDetail placeDetail);
 
 		public void onSelectedImagePosition(int position);
 
@@ -128,9 +127,11 @@ public abstract class PlaceDetailActivity extends BaseActivity
 		public void prevSlide();
 	}
 
-	protected abstract void requestPlaceDetailInformation();
+	protected abstract void requestPlaceDetailInformation(PlaceDetail placeDetail, SaleTime checkInSaleTime);
 
-	protected abstract TicketDetailDto createTicketDetailDto(Intent intent);
+	protected abstract PlaceDetail createPlaceDetail(Intent intent);
+
+	protected abstract void shareKakao(PlaceDetail placeDetail, String imageUrl, SaleTime checkInSaleTime, SaleTime checkOutSaleTime);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -156,10 +157,13 @@ public abstract class PlaceDetailActivity extends BaseActivity
 			mCheckInSaleTime.setDailyTime(dailyTime);
 			mCheckInSaleTime.setOffsetDailyDay(dayOfDays);
 
-			int ticketIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_TICKETIDX, -1);
-			int nights = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 0);
+			mPlaceDetail = createPlaceDetail(intent);
 
-			mTicketDetailDto = createTicketDetailDto(intent);
+			if (mPlaceDetail == null)
+			{
+				Util.restartApp(this);
+				return;
+			}
 
 			initLayout(null, null);
 		} else
@@ -168,16 +172,13 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
 			mCheckInSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
 
-			int ticketIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_TICKETIDX, -1);
-			int nights = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 0);
-
-			mTicketDetailDto = createTicketDetailDto(intent);
+			mPlaceDetail = createPlaceDetail(intent);
 
 			String placeName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACENAME);
 			String imageUrl = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL);
 			mDefaultImageUrl = imageUrl;
 
-			if (mCheckInSaleTime == null || ticketIndex == -1 || placeName == null || nights < 0)
+			if (mCheckInSaleTime == null || mPlaceDetail == null || placeName == null)
 			{
 				Util.restartApp(this);
 				return;
@@ -187,11 +188,11 @@ public abstract class PlaceDetailActivity extends BaseActivity
 		}
 	}
 
-	private void initLayout(String placeName, String imageUrl)
+	protected void initLayout(String placeName, String imageUrl)
 	{
 		if (mPlaceDetailLayout == null)
 		{
-			mPlaceDetailLayout = new FoodnBeverageDetailLayout(this, imageUrl);
+			mPlaceDetailLayout = new FnBDetailLayout(this, imageUrl);
 			mPlaceDetailLayout.setUserActionListener(mOnUserActionListener);
 			mPlaceDetailLayout.setImageActionListener(mOnImageActionListener);
 
@@ -314,20 +315,17 @@ public abstract class PlaceDetailActivity extends BaseActivity
 			case R.id.action_share:
 				if (mDefaultImageUrl == null)
 				{
-					if (mTicketDetailDto.getImageUrlList() != null && mTicketDetailDto.getImageUrlList().size() > 0)
+					if (mPlaceDetail.getImageUrlList() != null && mPlaceDetail.getImageUrlList().size() > 0)
 					{
-						mDefaultImageUrl = mTicketDetailDto.getImageUrlList().get(0);
+						mDefaultImageUrl = mPlaceDetail.getImageUrlList().get(0);
 					}
 				}
 
-				KakaoLinkManager.newInstance(this).shareTicket(mTicketDetailDto.name, mTicketDetailDto.index, //
-				mDefaultImageUrl, //
-				mCheckInSaleTime.getDailyTime(), //
-				mCheckInSaleTime.getOffsetDailyDay());
+				shareKakao(mPlaceDetail, mDefaultImageUrl, mCheckInSaleTime, null);
 
 				// 호텔 공유하기 로그 추가
 				HashMap<String, String> params = new HashMap<String, String>();
-				params.put(Label.HOTEL_NAME, mTicketDetailDto.name);
+				params.put(Label.HOTEL_NAME, mPlaceDetail.name);
 				params.put(Label.CHECK_IN, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
 
 				SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
@@ -363,7 +361,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
 		Intent intent = new Intent(PlaceDetailActivity.this, BookingActivity.class);
 		intent.putExtra(NAME_INTENT_EXTRA_DATA_TICKETINFORMATION, ticketInformation);
-		intent.putExtra(NAME_INTENT_EXTRA_DATA_TICKETIDX, mTicketDetailDto.index);
+		intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, mPlaceDetail.index);
 		intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mCheckInSaleTime);
 
 		startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING);
@@ -412,7 +410,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 		}
 
 		@Override
-		public void onClickImage(TicketDetailDto ticketDetailDto)
+		public void onClickImage(PlaceDetail ticketDetailDto)
 		{
 			if (isLockUiComponent() == true)
 			{
@@ -455,9 +453,9 @@ public abstract class PlaceDetailActivity extends BaseActivity
 			HashMap<String, String> params = new HashMap<String, String>();
 			params.put(Label.FNB_TICKET_NAME, ticketInformation.name);
 			params.put(Label.FNB_TICKET_INDEX, String.valueOf(ticketInformation.index));
-			params.put(Label.FNB_INDEX, String.valueOf(mTicketDetailDto.index));
+			params.put(Label.FNB_INDEX, String.valueOf(mPlaceDetail.index));
 
-			AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Label.BOOKING, Action.CLICK, mTicketDetailDto.name, params);
+			AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Label.BOOKING, Action.CLICK, mPlaceDetail.name, params);
 		}
 
 		@Override
@@ -534,17 +532,17 @@ public abstract class PlaceDetailActivity extends BaseActivity
 			lockUiComponent();
 
 			Intent intent = new Intent(PlaceDetailActivity.this, ZoomMapActivity.class);
-			intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, mTicketDetailDto.name);
-			intent.putExtra(NAME_INTENT_EXTRA_DATA_LATITUDE, mTicketDetailDto.latitude);
-			intent.putExtra(NAME_INTENT_EXTRA_DATA_LONGITUDE, mTicketDetailDto.longitude);
+			intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, mPlaceDetail.name);
+			intent.putExtra(NAME_INTENT_EXTRA_DATA_LATITUDE, mPlaceDetail.latitude);
+			intent.putExtra(NAME_INTENT_EXTRA_DATA_LONGITUDE, mPlaceDetail.longitude);
 
 			startActivity(intent);
 
 			// 호텔 공유하기 로그 추가
 			SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay());
-			String label = String.format("%s (%s-%s)", mTicketDetailDto.name, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), checkOutSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
+			String label = String.format("%s (%s-%s)", mPlaceDetail.name, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), checkOutSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
 
-			AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.HOTEL_DETAIL, Action.CLICK, label, (long) mTicketDetailDto.index);
+			AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.HOTEL_DETAIL, Action.CLICK, label, (long) mPlaceDetail.index);
 		}
 	};
 
@@ -801,7 +799,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
 					if (mCheckInSaleTime.isSaleTime() == true)
 					{
-						requestPlaceDetailInformation();
+						requestPlaceDetailInformation(mPlaceDetail, mCheckInSaleTime);
 					} else
 					{
 						finish();
@@ -817,7 +815,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
 					if (saleTime.isSaleTime() == true)
 					{
-						requestPlaceDetailInformation();
+						requestPlaceDetailInformation(mPlaceDetail, mCheckInSaleTime);
 					} else
 					{
 						finish();

@@ -3,8 +3,8 @@ package com.twoheart.dailyhotel.activity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
-import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.view.widget.DailyToast;
 
 import android.content.Intent;
 import android.net.Uri;

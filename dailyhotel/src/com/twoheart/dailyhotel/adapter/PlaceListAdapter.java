@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import com.twoheart.dailyhotel.view.HotelListViewItem;
-import com.twoheart.dailyhotel.view.TicketViewItem;
+import com.twoheart.dailyhotel.view.PlaceViewItem;
 import com.twoheart.dailyhotel.view.widget.PinnedSectionListView.PinnedSectionListAdapter;
 
 import android.content.Context;
@@ -19,29 +19,29 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
-public abstract class TicketListAdapter
-		extends ArrayAdapter<TicketViewItem>implements PinnedSectionListAdapter
+public abstract class PlaceListAdapter
+		extends ArrayAdapter<PlaceViewItem>implements PinnedSectionListAdapter
 {
 	protected Context context;
 	protected int resourceId;
 	protected LayoutInflater inflater;
-	private ArrayList<TicketViewItem> mTicketList;
+	private ArrayList<PlaceViewItem> mPlaceViewItemList;
 	protected PaintDrawable mPaintDrawable;
 
 	@Override
 	public abstract View getView(final int position, View convertView, ViewGroup parent);
 
-	public TicketListAdapter(Context context, int resourceId, ArrayList<TicketViewItem> arrayList)
+	public PlaceListAdapter(Context context, int resourceId, ArrayList<PlaceViewItem> arrayList)
 	{
 		super(context, resourceId, arrayList);
 
-		if (mTicketList == null)
+		if (mPlaceViewItemList == null)
 		{
-			mTicketList = new ArrayList<TicketViewItem>();
+			mPlaceViewItemList = new ArrayList<PlaceViewItem>();
 		}
 
-		mTicketList.clear();
-		mTicketList.addAll(arrayList);
+		mPlaceViewItemList.clear();
+		mPlaceViewItemList.addAll(arrayList);
 
 		this.context = context;
 		this.resourceId = resourceId;
@@ -75,57 +75,57 @@ public abstract class TicketListAdapter
 	@Override
 	public void clear()
 	{
-		if (mTicketList == null)
+		if (mPlaceViewItemList == null)
 		{
-			mTicketList = new ArrayList<TicketViewItem>();
+			mPlaceViewItemList = new ArrayList<PlaceViewItem>();
 		}
 
-		mTicketList.clear();
+		mPlaceViewItemList.clear();
 
 		super.clear();
 	}
 
 	@Override
-	public TicketViewItem getItem(int position)
+	public PlaceViewItem getItem(int position)
 	{
-		if (mTicketList == null)
+		if (mPlaceViewItemList == null)
 		{
 			return null;
 		}
 
-		return mTicketList.get(position);
+		return mPlaceViewItemList.get(position);
 	}
 
 	@Override
 	public int getCount()
 	{
-		if (mTicketList == null)
+		if (mPlaceViewItemList == null)
 		{
 			return 0;
 		}
 
-		return mTicketList.size();
+		return mPlaceViewItemList.size();
 	}
 
 	@Override
-	public void addAll(Collection<? extends TicketViewItem> collection)
+	public void addAll(Collection<? extends PlaceViewItem> collection)
 	{
 		if (collection == null)
 		{
 			return;
 		}
 
-		if (mTicketList == null)
+		if (mPlaceViewItemList == null)
 		{
-			mTicketList = new ArrayList<TicketViewItem>();
+			mPlaceViewItemList = new ArrayList<PlaceViewItem>();
 		}
 
-		mTicketList.addAll(collection);
+		mPlaceViewItemList.addAll(collection);
 	}
 
-	public ArrayList<TicketViewItem> getData()
+	public ArrayList<PlaceViewItem> getData()
 	{
-		return mTicketList;
+		return mPlaceViewItemList;
 	}
 
 	@Override

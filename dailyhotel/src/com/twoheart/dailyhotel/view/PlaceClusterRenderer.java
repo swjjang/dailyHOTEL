@@ -9,13 +9,13 @@ import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.twoheart.dailyhotel.model.HotelRegionRenderer;
-import com.twoheart.dailyhotel.model.TicketDto;
-import com.twoheart.dailyhotel.model.TicketRenderer;
+import com.twoheart.dailyhotel.model.Place;
+import com.twoheart.dailyhotel.model.PlaceRenderer;
 
 import android.content.Context;
 
-public class TicketClusterRenderer
-		extends DefaultClusterRenderer<TicketClusterItem>
+public class PlaceClusterRenderer
+		extends DefaultClusterRenderer<PlaceClusterItem>
 {
 	public enum Renderer
 	{
@@ -23,7 +23,7 @@ public class TicketClusterRenderer
 	}
 
 	private Context mContext;
-	private TicketClusterItem mSelectedTicketClusterItem;
+	private PlaceClusterItem mSelectedPlaceClusterItem;
 	private OnSelectedClusterItemListener mOnSelectedClusterItemListener;
 	private OnClusterRenderedListener mOnClusterRenderedListener;
 
@@ -37,7 +37,7 @@ public class TicketClusterRenderer
 		public void onClusterRenderedListener(Renderer renderer);
 	}
 
-	public TicketClusterRenderer(Context context, GoogleMap map, ClusterManager<TicketClusterItem> clusterManager)
+	public PlaceClusterRenderer(Context context, GoogleMap map, ClusterManager<PlaceClusterItem> clusterManager)
 	{
 		super(context, map, clusterManager);
 
@@ -45,18 +45,18 @@ public class TicketClusterRenderer
 	}
 
 	@Override
-	protected void onBeforeClusterItemRendered(TicketClusterItem item, MarkerOptions markerOptions)
+	protected void onBeforeClusterItemRendered(PlaceClusterItem item, MarkerOptions markerOptions)
 	{
 		if (mOnClusterRenderedListener != null)
 		{
 			mOnClusterRenderedListener.onClusterRenderedListener(Renderer.CLUSTER_ITEM);
 		}
 
-		TicketDto ticketDto = item.getTicketDto();
+		Place place = item.getPlace();
 
-		TicketRenderer ticketRenderer = new TicketRenderer(mContext, ticketDto.discountPrice, ticketDto.grade.getMarkerResId());
+		PlaceRenderer placeRenderer = new PlaceRenderer(mContext, place.discountPrice, place.grade.getMarkerResId());
 
-		BitmapDescriptor icon = ticketRenderer.getBitmap(false);
+		BitmapDescriptor icon = placeRenderer.getBitmap(false);
 
 		if (icon != null)
 		{
@@ -66,7 +66,7 @@ public class TicketClusterRenderer
 	}
 
 	@Override
-	protected void onBeforeClusterRendered(Cluster<TicketClusterItem> cluster, MarkerOptions markerOptions)
+	protected void onBeforeClusterRendered(Cluster<PlaceClusterItem> cluster, MarkerOptions markerOptions)
 	{
 		if (mOnClusterRenderedListener != null)
 		{
@@ -84,16 +84,16 @@ public class TicketClusterRenderer
 	}
 
 	@Override
-	protected void onClusterItemRendered(TicketClusterItem clusterItem, Marker marker)
+	protected void onClusterItemRendered(PlaceClusterItem clusterItem, Marker marker)
 	{
-		if (mSelectedTicketClusterItem != null)
+		if (mSelectedPlaceClusterItem != null)
 		{
-			LatLng selectedLatLng = mSelectedTicketClusterItem.getPosition();
+			LatLng selectedLatLng = mSelectedPlaceClusterItem.getPosition();
 			LatLng currentLatLng = clusterItem.getPosition();
 
 			if (selectedLatLng.latitude == currentLatLng.latitude && selectedLatLng.longitude == currentLatLng.longitude)
 			{
-				mSelectedTicketClusterItem = null;
+				mSelectedPlaceClusterItem = null;
 
 				if (mOnSelectedClusterItemListener != null)
 				{
@@ -109,7 +109,7 @@ public class TicketClusterRenderer
 	}
 
 	@Override
-	protected boolean shouldRenderAsCluster(Cluster<TicketClusterItem> cluster, float zoom)
+	protected boolean shouldRenderAsCluster(Cluster<PlaceClusterItem> cluster, float zoom)
 	{
 		if (Float.compare(zoom, 13.0f) >= 0)
 		{
@@ -120,9 +120,9 @@ public class TicketClusterRenderer
 		}
 	}
 
-	public void setSelectedClusterItem(TicketClusterItem ticketClusterItem)
+	public void setSelectedClusterItem(PlaceClusterItem placeClusterItem)
 	{
-		mSelectedTicketClusterItem = ticketClusterItem;
+		mSelectedPlaceClusterItem = placeClusterItem;
 	}
 
 	public void setSelectedClusterItemListener(OnSelectedClusterItemListener listener)

@@ -26,11 +26,11 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.FragmentViewPager;
 import com.twoheart.dailyhotel.view.widget.TabIndicator;
 import com.twoheart.dailyhotel.view.widget.TabIndicator.OnTabSelectedListener;
-import com.twoheart.dailyhotel.util.Util;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager.OnPageChangeListener;

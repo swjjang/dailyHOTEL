@@ -367,7 +367,6 @@ public interface Constants
 	public static final String NAME_INTENT_EXTRA_DATA_SALETIME = "saletime";
 	public static final String NAME_INTENT_EXTRA_DATA_REGION = "region";
 	public static final String NAME_INTENT_EXTRA_DATA_HOTELIDX = "hotelIdx";
-	public static final String NAME_INTENT_EXTRA_DATA_TICKETIDX = "ticketIdx";
 	public static final String NAME_INTENT_EXTRA_DATA_BOOKING = "booking";
 	public static final String NAME_INTENT_EXTRA_DATA_BOOKINGIDX = "bookingIdx";
 	public static final String NAME_INTENT_EXTRA_DATA_PAY = "pay";
@@ -401,7 +400,7 @@ public interface Constants
 	public static final String NAME_INTENT_EXTRA_DATA_CHECKINDATE = "checkInDate";
 	public static final String NAME_INTENT_EXTRA_DATA_CHECKOUTDATE = "checkOutDate";
 	public static final String NAME_INTENT_EXTRA_DATA_URL = "url";
-	public static final String NAME_INTENT_EXTRA_DATA_TITLE = "title";
+	public static final String NAME_INTENT_EXTRA_DATA_PLACEIDX = "placeIdx";
 	public static final String NAME_INTENT_EXTRA_DATA_PLACENAME = "placeName";
 
 	// Push Type
@@ -424,7 +423,7 @@ public interface Constants
 	public static final int CODE_REQUEST_ACTIVITY_CREDITCARD_MANAGER = 13;
 	public static final int CODE_REQUEST_ACTIVITY_SELECT_AREA = 14;
 	public static final int CODE_REQUEST_ACTIVITY_USERINFO_UPDATE = 15;
-	public static final int CODE_REQUEST_FRAGMENT_TICKET_MAIN = 20;
+	public static final int CODE_REQUEST_FRAGMENT_PLACE_MAIN = 20;
 
 	// Android Activity의 Result Code들이다.
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_FAIL = 100;

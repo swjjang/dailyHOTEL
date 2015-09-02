@@ -23,10 +23,10 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
-import com.twoheart.dailyhotel.adapter.TicketViewPagerAdapter;
+import com.twoheart.dailyhotel.adapter.PlaceViewPagerAdapter;
+import com.twoheart.dailyhotel.model.Place;
+import com.twoheart.dailyhotel.model.PlaceRenderer;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.model.TicketDto;
-import com.twoheart.dailyhotel.model.TicketRenderer;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -34,11 +34,11 @@ import com.twoheart.dailyhotel.view.LoadingDialog;
 import com.twoheart.dailyhotel.view.LocationFactory;
 import com.twoheart.dailyhotel.view.LoopViewPager;
 import com.twoheart.dailyhotel.view.MyLocationMarker;
-import com.twoheart.dailyhotel.view.TicketClusterItem;
-import com.twoheart.dailyhotel.view.TicketClusterRenderer;
-import com.twoheart.dailyhotel.view.TicketViewItem;
-import com.twoheart.dailyhotel.view.TicketClusterRenderer.OnSelectedClusterItemListener;
-import com.twoheart.dailyhotel.view.TicketClusterRenderer.Renderer;
+import com.twoheart.dailyhotel.view.PlaceClusterItem;
+import com.twoheart.dailyhotel.view.PlaceClusterRenderer;
+import com.twoheart.dailyhotel.view.PlaceClusterRenderer.OnSelectedClusterItemListener;
+import com.twoheart.dailyhotel.view.PlaceClusterRenderer.Renderer;
+import com.twoheart.dailyhotel.view.PlaceViewItem;
 
 import android.content.Context;
 import android.content.Intent;
@@ -54,42 +54,42 @@ import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.RelativeLayout;
 
-public abstract class TicketListMapFragment extends
-		com.google.android.gms.maps.SupportMapFragment implements ClusterManager.OnClusterClickListener<TicketClusterItem>, ClusterManager.OnClusterItemClickListener<TicketClusterItem>
+public abstract class PlaceMapFragment extends
+		com.google.android.gms.maps.SupportMapFragment implements ClusterManager.OnClusterClickListener<PlaceClusterItem>, ClusterManager.OnClusterItemClickListener<PlaceClusterItem>
 {
 	private GoogleMap mGoogleMap;
-	private ArrayList<TicketViewItem> mTicketViewItemArrayList; // 선택된 호텔을 위한 리스트
-	private ArrayList<TicketViewItem> mTicketViewItemArrangeArrayList; // ViewPager을 위한 리스트
+	private ArrayList<PlaceViewItem> mPlaceViewItemList; // 선택된 호텔을 위한 리스트
+	private ArrayList<PlaceViewItem> mPlaceViewItemViewPagerList; // ViewPager을 위한 리스트
 	private LoadingDialog mLoadingDialog;
 	private MarkerOptions mMyLocationMarkerOptions;
 	private Marker mMyLocationMarker;
 
-	protected TicketMainFragment.OnUserActionListener mUserActionListener;
+	protected PlaceMainFragment.OnUserActionListener mUserActionListener;
 	private SaleTime mSaleTime;
 	private boolean mIsCreateView = false;
 	private boolean mCallMakeMarker = false;
 
-	private TicketViewItem mSelectedTicketViewItem;
+	private PlaceViewItem mSelectedPlaceViewItem;
 	private boolean mIsOpenMakrer; // 마커를 선택한 경우.
-	private HashMap<String, ArrayList<TicketDto>> mDuplicateTicketDto;
+	private HashMap<String, ArrayList<Place>> mDuplicatePlace;
 
-	private ClusterManager<TicketClusterItem> mClusterManager;
-	private TicketClusterRenderer mTicketClusterRenderer;
+	private ClusterManager<PlaceClusterItem> mClusterManager;
+	private PlaceClusterRenderer mPlaceClusterRenderer;
 	private Marker mSelectedMarker;
 	private View mMyLocationView;
 	private ViewPager mViewPager;
-	private TicketViewPagerAdapter mTicketViewPagerAdapter;
+	private PlaceViewPagerAdapter mPlaceViewPagerAdapter;
 
 	public interface OnUserActionListener
 	{
-		public void onInfoWindowClickListener(TicketDto selectedTicketDto);
+		public void onInfoWindowClickListener(Place selectedPlace);
 
 		public void onCloseInfoWindowClickListener();
 	}
 
-	protected abstract TicketViewPagerAdapter getViewPagerAdapter(BaseActivity baseActivity);
+	protected abstract PlaceViewPagerAdapter createPlaceViewPagerAdapter(BaseActivity baseActivity);
 
-	public TicketListMapFragment()
+	public PlaceMapFragment()
 	{
 	}
 
@@ -103,9 +103,9 @@ public abstract class TicketListMapFragment extends
 			mLoadingDialog = new LoadingDialog((BaseActivity) getActivity());
 		}
 
-		if (mDuplicateTicketDto == null)
+		if (mDuplicatePlace == null)
 		{
-			mDuplicateTicketDto = new HashMap<String, ArrayList<TicketDto>>();
+			mDuplicatePlace = new HashMap<String, ArrayList<Place>>();
 		}
 
 		getMapAsync(new OnMapReadyCallback()
@@ -132,12 +132,12 @@ public abstract class TicketListMapFragment extends
 				relocationMyLocation();
 				relocationZoomControl();
 
-				mClusterManager = new ClusterManager<TicketClusterItem>(baseActivity, mGoogleMap);
-				mTicketClusterRenderer = new TicketClusterRenderer(baseActivity, mGoogleMap, mClusterManager);
-				mTicketClusterRenderer.setOnClusterRenderedListener(mOnClusterRenderedListener);
+				mClusterManager = new ClusterManager<PlaceClusterItem>(baseActivity, mGoogleMap);
+				mPlaceClusterRenderer = new PlaceClusterRenderer(baseActivity, mGoogleMap, mClusterManager);
+				mPlaceClusterRenderer.setOnClusterRenderedListener(mOnClusterRenderedListener);
 
-				mClusterManager.setRenderer(mTicketClusterRenderer);
-				mClusterManager.setAlgorithm(new NonHierarchicalDistanceBasedAlgorithm<TicketClusterItem>());
+				mClusterManager.setRenderer(mPlaceClusterRenderer);
+				mClusterManager.setAlgorithm(new NonHierarchicalDistanceBasedAlgorithm<PlaceClusterItem>());
 
 				mGoogleMap.setInfoWindowAdapter(new MapWindowAdapter(baseActivity));
 
@@ -189,7 +189,7 @@ public abstract class TicketListMapFragment extends
 	}
 
 	@Override
-	public boolean onClusterItemClick(TicketClusterItem item, Marker marker)
+	public boolean onClusterItemClick(PlaceClusterItem item, Marker marker)
 	{
 		if (getActivity() == null)
 		{
@@ -207,13 +207,13 @@ public abstract class TicketListMapFragment extends
 	}
 
 	@Override
-	public boolean onClusterClick(Cluster<TicketClusterItem> cluster)
+	public boolean onClusterClick(Cluster<PlaceClusterItem> cluster)
 	{
 		LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-		for (TicketClusterItem ticketClusterItem : cluster.getItems())
+		for (PlaceClusterItem placeClusterItem : cluster.getItems())
 		{
-			LatLng latlng = ticketClusterItem.getPosition();
+			LatLng latlng = placeClusterItem.getPosition();
 			builder.include(latlng);
 		}
 
@@ -233,14 +233,14 @@ public abstract class TicketListMapFragment extends
 		}
 	}
 
-	public void setUserActionListener(TicketMainFragment.OnUserActionListener userActionLister)
+	public void setUserActionListener(PlaceMainFragment.OnUserActionListener userActionLister)
 	{
 		mUserActionListener = userActionLister;
 	}
 
-	public void setTicketList(ArrayList<TicketViewItem> arrayList, SaleTime saleTime, boolean isChangedRegion)
+	public void setPlaceViewItemList(ArrayList<PlaceViewItem> arrayList, SaleTime saleTime, boolean isChangedRegion)
 	{
-		mTicketViewItemArrayList = arrayList;
+		mPlaceViewItemList = arrayList;
 		mSaleTime = saleTime;
 
 		// Marker 만들기.
@@ -319,7 +319,7 @@ public abstract class TicketListMapFragment extends
 			mSelectedMarker = mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).visible(false).anchor(0.0f, 1.0f));
 		}
 
-		if (mTicketViewItemArrayList == null || mTicketViewItemArrayList.size() == 0)
+		if (mPlaceViewItemList == null || mPlaceViewItemList.size() == 0)
 		{
 			return;
 		}
@@ -351,57 +351,57 @@ public abstract class TicketListMapFragment extends
 		int count = 0;
 		boolean isOpenMarker = false;
 
-		if (mIsOpenMakrer == true && mSelectedTicketViewItem != null)
+		if (mIsOpenMakrer == true && mSelectedPlaceViewItem != null)
 		{
-			latitude = mSelectedTicketViewItem.getTicketDto().latitude;
-			longitude = mSelectedTicketViewItem.getTicketDto().longitude;
+			latitude = mSelectedPlaceViewItem.getPlace().latitude;
+			longitude = mSelectedPlaceViewItem.getPlace().longitude;
 		}
 
 		LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-		if (mDuplicateTicketDto == null)
+		if (mDuplicatePlace == null)
 		{
-			mDuplicateTicketDto = new HashMap<String, ArrayList<TicketDto>>();
+			mDuplicatePlace = new HashMap<String, ArrayList<Place>>();
 		}
 
-		mDuplicateTicketDto.clear();
+		mDuplicatePlace.clear();
 
 		// 중복 지역을 찾아내기 위한 로직.
-		if (mTicketViewItemArrangeArrayList != null)
+		if (mPlaceViewItemViewPagerList != null)
 		{
-			mTicketViewItemArrangeArrayList.clear();
+			mPlaceViewItemViewPagerList.clear();
 		}
 
-		mTicketViewItemArrangeArrayList = null;
+		mPlaceViewItemViewPagerList = null;
 
-		mTicketViewItemArrangeArrayList = searchDuplicateLocateion(mTicketViewItemArrayList, mDuplicateTicketDto);
+		mPlaceViewItemViewPagerList = searchDuplicateLocateion(mPlaceViewItemList, mDuplicatePlace);
 
 		mClusterManager.clearItems();
 		mGoogleMap.setOnMarkerClickListener(mClusterManager);
-		mClusterManager.setOnClusterClickListener(TicketListMapFragment.this);
-		mClusterManager.setOnClusterItemClickListener(TicketListMapFragment.this);
+		mClusterManager.setOnClusterClickListener(PlaceMapFragment.this);
+		mClusterManager.setOnClusterItemClickListener(PlaceMapFragment.this);
 
-		for (TicketViewItem ticketViewItem : mTicketViewItemArrangeArrayList)
+		for (PlaceViewItem placeViewItem : mPlaceViewItemViewPagerList)
 		{
-			TicketDto baseTicketDto = ticketViewItem.getTicketDto();
+			Place place = placeViewItem.getPlace();
 
 			count++;
 
-			TicketClusterItem ticketClusterItem = new TicketClusterItem(baseTicketDto);
-			mClusterManager.addItem(ticketClusterItem);
+			PlaceClusterItem placelusterItem = new PlaceClusterItem(place);
+			mClusterManager.addItem(placelusterItem);
 
-			LatLng latlng = new LatLng(baseTicketDto.latitude, baseTicketDto.longitude);
+			LatLng latlng = new LatLng(place.latitude, place.longitude);
 			builder.include(latlng);
 
 			// 기존의 마커 정보 창을 보여준다.
 			if (mIsOpenMakrer == true)
 			{
-				if (latitude == baseTicketDto.latitude && longitude == baseTicketDto.longitude)
+				if (latitude == place.latitude && longitude == place.longitude)
 				{
 					isOpenMarker = true;
 
-					mTicketClusterRenderer.setSelectedClusterItem(ticketClusterItem);
-					mTicketClusterRenderer.setSelectedClusterItemListener(new OnSelectedClusterItemListener()
+					mPlaceClusterRenderer.setSelectedClusterItem(placelusterItem);
+					mPlaceClusterRenderer.setSelectedClusterItemListener(new OnSelectedClusterItemListener()
 					{
 						@Override
 						public void onSelectedClusterItemListener(Marker marker)
@@ -535,24 +535,24 @@ public abstract class TicketListMapFragment extends
 	 * @param hashMap
 	 * @return
 	 */
-	private ArrayList<TicketViewItem> searchDuplicateLocateion(ArrayList<TicketViewItem> hotelArrayList, HashMap<String, ArrayList<TicketDto>> hashMap)
+	private ArrayList<PlaceViewItem> searchDuplicateLocateion(ArrayList<PlaceViewItem> hotelArrayList, HashMap<String, ArrayList<Place>> hashMap)
 	{
-		ArrayList<TicketViewItem> arrangeList = new ArrayList<TicketViewItem>(hotelArrayList);
+		ArrayList<PlaceViewItem> arrangeList = new ArrayList<PlaceViewItem>(hotelArrayList);
 
 		int size = arrangeList.size();
-		TicketViewItem ticketViewItem = null;
+		PlaceViewItem placeViewItem = null;
 
 		// 섹션 정보와 솔드 아웃인 경우 목록에서 제거 시킨다.
 		for (int i = size - 1; i >= 0; i--)
 		{
-			ticketViewItem = arrangeList.get(i);
+			placeViewItem = arrangeList.get(i);
 
-			if (ticketViewItem.type == TicketViewItem.TYPE_SECTION)
+			if (placeViewItem.type == PlaceViewItem.TYPE_SECTION)
 			{
 				arrangeList.remove(i);
 			} else
 			{
-				if (ticketViewItem.getTicketDto().isSoldOut)
+				if (placeViewItem.getPlace().isSoldOut)
 				{
 					arrangeList.remove(i);
 				}
@@ -560,14 +560,14 @@ public abstract class TicketListMapFragment extends
 		}
 
 		// 중복된 위치에 있는 호텔들은 위해서 소팅한다.
-		Comparator<TicketViewItem> comparator = new Comparator<TicketViewItem>()
+		Comparator<PlaceViewItem> comparator = new Comparator<PlaceViewItem>()
 		{
 			final LatLng latlng = new LatLng(37.23945, 131.8689);
 
-			public int compare(TicketViewItem o1, TicketViewItem o2)
+			public int compare(PlaceViewItem o1, PlaceViewItem o2)
 			{
-				TicketDto item01 = o1.getTicketDto();
-				TicketDto item02 = o2.getTicketDto();
+				Place item01 = o1.getPlace();
+				Place item02 = o2.getPlace();
 
 				float[] results1 = new float[3];
 				Location.distanceBetween(latlng.latitude, latlng.longitude, item01.latitude, item01.longitude, results1);
@@ -586,13 +586,13 @@ public abstract class TicketListMapFragment extends
 		// 중복된 호텔들은 낮은 가격을 노출하도록 한다.
 		if (size > 1)
 		{
-			TicketDto item01 = null;
-			TicketDto item02 = null;
+			Place item01 = null;
+			Place item02 = null;
 
 			for (int i = size - 1; i > 0; i--)
 			{
-				item01 = arrangeList.get(i).getTicketDto();
-				item02 = arrangeList.get(i - 1).getTicketDto();
+				item01 = arrangeList.get(i).getPlace();
+				item02 = arrangeList.get(i - 1).getPlace();
 
 				if (item01.latitude == item02.latitude && item01.longitude == item02.longitude)
 				{
@@ -611,7 +611,7 @@ public abstract class TicketListMapFragment extends
 
 					if (hashMap.containsKey(key) == true)
 					{
-						ArrayList<TicketDto> dulicateArrayList = hashMap.get(key);
+						ArrayList<Place> dulicateArrayList = hashMap.get(key);
 
 						if (dulicateArrayList.contains(item01) == false)
 						{
@@ -624,7 +624,7 @@ public abstract class TicketListMapFragment extends
 						}
 					} else
 					{
-						ArrayList<TicketDto> dulicateArrayList = new ArrayList<TicketDto>();
+						ArrayList<Place> dulicateArrayList = new ArrayList<Place>();
 
 						dulicateArrayList.add(item01);
 						dulicateArrayList.add(item02);
@@ -651,19 +651,19 @@ public abstract class TicketListMapFragment extends
 		mIsOpenMakrer = true;
 
 		int position = -1;
-		int size = mTicketViewItemArrangeArrayList.size();
+		int size = mPlaceViewItemViewPagerList.size();
 
 		for (int i = 0; i < size; i++)
 		{
-			TicketViewItem ticketViewItem = mTicketViewItemArrangeArrayList.get(i);
-			TicketDto ticketDto = ticketViewItem.getTicketDto();
+			PlaceViewItem placeViewItem = mPlaceViewItemViewPagerList.get(i);
+			Place place = placeViewItem.getPlace();
 
-			if (latlng.latitude == ticketDto.latitude && latlng.longitude == ticketDto.longitude)
+			if (latlng.latitude == place.latitude && latlng.longitude == place.longitude)
 			{
 				position = i;
 
-				TicketRenderer ticketRenderer = new TicketRenderer(baseActivity, ticketDto.discountPrice, ticketDto.grade.getMarkerResId());
-				BitmapDescriptor icon = ticketRenderer.getBitmap(true);
+				PlaceRenderer placeRenderer = new PlaceRenderer(baseActivity, place.discountPrice, place.grade.getMarkerResId());
+				BitmapDescriptor icon = placeRenderer.getBitmap(true);
 
 				if (mSelectedMarker != null)
 				{
@@ -683,7 +683,7 @@ public abstract class TicketListMapFragment extends
 		if (position >= 0)
 		{
 			mViewPager.setCurrentItem(position);
-			mTicketViewPagerAdapter.notifyDataSetChanged();
+			mPlaceViewPagerAdapter.notifyDataSetChanged();
 
 			mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(mSelectedMarker.getPosition()));
 
@@ -703,12 +703,12 @@ public abstract class TicketListMapFragment extends
 		mViewPager.setVisibility(View.VISIBLE);
 		mViewPager.bringToFront();
 
-		Comparator<TicketViewItem> comparator = new Comparator<TicketViewItem>()
+		Comparator<PlaceViewItem> comparator = new Comparator<PlaceViewItem>()
 		{
-			public int compare(TicketViewItem o1, TicketViewItem o2)
+			public int compare(PlaceViewItem o1, PlaceViewItem o2)
 			{
-				TicketDto item01 = o1.getTicketDto();
-				TicketDto item02 = o2.getTicketDto();
+				Place item01 = o1.getPlace();
+				Place item02 = o2.getPlace();
 
 				float[] results1 = new float[3];
 				Location.distanceBetween(latlng.latitude, latlng.longitude, item01.latitude, item01.longitude, results1);
@@ -720,34 +720,34 @@ public abstract class TicketListMapFragment extends
 			}
 		};
 
-		Collections.sort(mTicketViewItemArrangeArrayList, comparator);
+		Collections.sort(mPlaceViewItemViewPagerList, comparator);
 
-		if (mTicketViewPagerAdapter == null)
+		if (mPlaceViewPagerAdapter == null)
 		{
-			mTicketViewPagerAdapter = getViewPagerAdapter(baseActivity);
-			mTicketViewPagerAdapter.setOnUserActionListener(mOnInfoWindowUserActionListener);
+			mPlaceViewPagerAdapter = createPlaceViewPagerAdapter(baseActivity);
+			mPlaceViewPagerAdapter.setOnUserActionListener(mOnInfoWindowUserActionListener);
 		}
 
-		mTicketViewPagerAdapter.setData(mTicketViewItemArrangeArrayList);
-		mViewPager.setAdapter(mTicketViewPagerAdapter);
-		mTicketViewPagerAdapter.notifyDataSetChanged();
+		mPlaceViewPagerAdapter.setData(mPlaceViewItemViewPagerList);
+		mViewPager.setAdapter(mPlaceViewPagerAdapter);
+		mPlaceViewPagerAdapter.notifyDataSetChanged();
 
 		mIsOpenMakrer = true;
 
 		int position = -1;
-		int size = mTicketViewItemArrangeArrayList.size();
+		int size = mPlaceViewItemViewPagerList.size();
 
 		for (int i = 0; i < size; i++)
 		{
-			TicketViewItem ticketViewItem = mTicketViewItemArrangeArrayList.get(i);
-			TicketDto ticketDto = ticketViewItem.getTicketDto();
+			PlaceViewItem placeViewItem = mPlaceViewItemViewPagerList.get(i);
+			Place place = placeViewItem.getPlace();
 
-			if (latlng.latitude == ticketDto.latitude && latlng.longitude == ticketDto.longitude)
+			if (latlng.latitude == place.latitude && latlng.longitude == place.longitude)
 			{
 				position = i;
 
-				TicketRenderer ticketRenderer = new TicketRenderer(baseActivity, ticketDto.discountPrice, ticketDto.grade.getMarkerResId());
-				BitmapDescriptor icon = ticketRenderer.getBitmap(true);
+				PlaceRenderer placeRenderer = new PlaceRenderer(baseActivity, place.discountPrice, place.grade.getMarkerResId());
+				BitmapDescriptor icon = placeRenderer.getBitmap(true);
 
 				if (mSelectedMarker != null)
 				{
@@ -783,19 +783,19 @@ public abstract class TicketListMapFragment extends
 		@Override
 		public void onPageSelected(int page)
 		{
-			if (mTicketViewItemArrangeArrayList == null || mTicketViewItemArrangeArrayList.size() <= page)
+			if (mPlaceViewItemViewPagerList == null || mPlaceViewItemViewPagerList.size() <= page)
 			{
 				return;
 			}
 
-			TicketViewItem ticketViewItem = mTicketViewItemArrangeArrayList.get(page);
+			PlaceViewItem placeViewItem = mPlaceViewItemViewPagerList.get(page);
 
-			TicketDto ticketDto = ticketViewItem.getTicketDto();
+			Place place = placeViewItem.getPlace();
 
-			if (ticketDto != null)
+			if (place != null)
 			{
-				TicketClusterItem hotelClusterItem = new TicketClusterItem(ticketDto);
-				mTicketClusterRenderer.setSelectedClusterItem(hotelClusterItem);
+				PlaceClusterItem hotelClusterItem = new PlaceClusterItem(place);
+				mPlaceClusterRenderer.setSelectedClusterItem(hotelClusterItem);
 
 				onMarkerTempClick(hotelClusterItem.getPosition());
 			}
@@ -812,10 +812,10 @@ public abstract class TicketListMapFragment extends
 		}
 	};
 
-	private TicketClusterRenderer.OnClusterRenderedListener mOnClusterRenderedListener = new TicketClusterRenderer.OnClusterRenderedListener()
+	private PlaceClusterRenderer.OnClusterRenderedListener mOnClusterRenderedListener = new PlaceClusterRenderer.OnClusterRenderedListener()
 	{
 		@Override
-		public void onClusterRenderedListener(com.twoheart.dailyhotel.view.TicketClusterRenderer.Renderer renderer)
+		public void onClusterRenderedListener(com.twoheart.dailyhotel.view.PlaceClusterRenderer.Renderer renderer)
 		{
 			if (renderer == Renderer.CLUSTER)
 			{
@@ -839,7 +839,7 @@ public abstract class TicketListMapFragment extends
 				return;
 			}
 
-			LocationFactory.getInstance(baseActivity).startLocationMeasure(TicketListMapFragment.this, mMyLocationView, new LocationListener()
+			LocationFactory.getInstance(baseActivity).startLocationMeasure(PlaceMapFragment.this, mMyLocationView, new LocationListener()
 			{
 				@Override
 				public void onStatusChanged(String provider, int status, Bundle extras)
@@ -930,7 +930,7 @@ public abstract class TicketListMapFragment extends
 			}
 
 			mIsOpenMakrer = false;
-			mSelectedTicketViewItem = null;
+			mSelectedPlaceViewItem = null;
 
 			if (mViewPager != null)
 			{
@@ -944,7 +944,7 @@ public abstract class TicketListMapFragment extends
 		@Override
 		public boolean onMarkerClick(Marker marker)
 		{
-			TicketListMapFragment.this.onMarkerClick(marker.getPosition());
+			PlaceMapFragment.this.onMarkerClick(marker.getPosition());
 
 			return true;
 		}
@@ -953,7 +953,7 @@ public abstract class TicketListMapFragment extends
 	private OnUserActionListener mOnInfoWindowUserActionListener = new OnUserActionListener()
 	{
 		@Override
-		public void onInfoWindowClickListener(TicketDto selectedTicketDto)
+		public void onInfoWindowClickListener(Place selectedPlace)
 		{
 			if (getActivity() == null)
 			{
@@ -962,19 +962,19 @@ public abstract class TicketListMapFragment extends
 
 			if (mUserActionListener != null)
 			{
-				for (TicketViewItem ticketViewItem : mTicketViewItemArrayList)
+				for (PlaceViewItem placeViewItem : mPlaceViewItemList)
 				{
-					if (ticketViewItem.type == TicketViewItem.TYPE_SECTION)
+					if (placeViewItem.type == PlaceViewItem.TYPE_SECTION)
 					{
 						continue;
 					}
 
-					TicketDto ticketDto = ticketViewItem.getTicketDto();
+					Place place = placeViewItem.getPlace();
 
-					if (ticketDto.equals(selectedTicketDto) == true)
+					if (place.equals(selectedPlace) == true)
 					{
-						mSelectedTicketViewItem = ticketViewItem;
-						mUserActionListener.selectedTicket(ticketViewItem, mSaleTime);
+						mSelectedPlaceViewItem = placeViewItem;
+						mUserActionListener.selectPlace(placeViewItem, mSaleTime);
 						break;
 					}
 				}

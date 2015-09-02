@@ -8,7 +8,7 @@ import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public abstract class TicketDto implements Parcelable
+public abstract class Place implements Parcelable
 {
 	public int index;
 	public String imageUrl;
@@ -16,14 +16,14 @@ public abstract class TicketDto implements Parcelable
 	public int price;
 	public int discountPrice;
 	public String address;
-	public HotelGrade grade;
+	public Grade grade;
 	public String districtName;
 	public double latitude;
 	public double longitude;
 	public boolean isDailyChoice;
 	public boolean isSoldOut;
 
-	public enum HotelGrade
+	public enum Grade
 	{
 		biz(
 				R.string.grade_biz,
@@ -75,7 +75,7 @@ public abstract class TicketDto implements Parcelable
 		private int mColorResId;
 		private int mMarkerResId;
 
-		private HotelGrade(int nameResId, int colorResId, int markerResId)
+		private Grade(int nameResId, int colorResId, int markerResId)
 		{
 			mNameResId = nameResId;
 			mColorResId = colorResId;
@@ -100,12 +100,12 @@ public abstract class TicketDto implements Parcelable
 
 	public abstract boolean setData(JSONObject jsonObject);
 
-	public TicketDto()
+	public Place()
 	{
 		super();
 	}
 
-	public TicketDto(Parcel in)
+	public Place(Parcel in)
 	{
 		readFromParcel(in);
 	}
@@ -133,7 +133,7 @@ public abstract class TicketDto implements Parcelable
 		price = in.readInt();
 		discountPrice = in.readInt();
 		address = in.readString();
-		grade = (HotelGrade) in.readSerializable();
+		grade = (Grade) in.readSerializable();
 		index = in.readInt();
 		latitude = in.readDouble();
 		longitude = in.readDouble();

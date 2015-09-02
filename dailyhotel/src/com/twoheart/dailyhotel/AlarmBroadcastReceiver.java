@@ -1,7 +1,7 @@
 package com.twoheart.dailyhotel;
 
 import com.twoheart.dailyhotel.activity.PushDialogActivity;
-import com.twoheart.dailyhotel.fragment.WaitTimerFragment;
+import com.twoheart.dailyhotel.util.DailyHotelPreference;
 import com.twoheart.dailyhotel.util.WakeLock;
 
 import android.app.Activity;
@@ -27,11 +27,29 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver
 	@Override
 	public void onReceive(Context context, Intent intent)
 	{
-		WaitTimerFragment.isEnabledNotify = false;
-
 		String title = context.getString(R.string.alarm_title);
-		String msg = context.getString(R.string.alarm_msg);
-		String ticker = context.getString(R.string.alarm_ticker);
+
+		boolean enabledHotelAlarm = DailyHotelPreference.getInstance(context).getEnabledHotelAlarm();
+		boolean enabledFnBAlarm = DailyHotelPreference.getInstance(context).getEnabledFnBAlarm();
+
+		String param = null;
+
+		if (enabledHotelAlarm == true && enabledFnBAlarm == true)
+		{
+			param = String.format("%s, %s", context.getString(R.string.label_hotel), context.getString(R.string.label_fnb));
+		} else if (enabledHotelAlarm == true)
+		{
+			param = context.getString(R.string.label_hotel);
+		} else if (enabledFnBAlarm == true)
+		{
+			param = context.getString(R.string.label_hotel);
+		} else
+		{
+			return;
+		}
+
+		String msg = context.getString(R.string.alarm_msg, param);
+		String ticker = context.getString(R.string.alarm_ticker, param);
 
 		PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
 
@@ -45,8 +63,9 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver
 			isScreenOn = pm.isInteractive();
 		}
 
-		if (!isScreenOn)
-		{ // 스크린 꺼져있음
+		if (isScreenOn == false)
+		{
+			// 스크린 꺼져있음
 			// PushDialogActivity에서 release해줌.
 			WakeLock.acquireWakeLock(context, PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP);
 			KeyguardManager manager = (KeyguardManager) context.getSystemService(Activity.KEYGUARD_SERVICE);

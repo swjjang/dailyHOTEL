@@ -192,7 +192,16 @@ public class ABTestPreference
 		if (mEditor != null)
 		{
 			mEditor.putInt(KAKAOTALK_CONSULT, state);
-			mEditor.apply();
+			mEditor.commit();
+		}
+	}
+
+	public void clear()
+	{
+		if (mEditor != null)
+		{
+			mEditor.clear();
+			mEditor.commit();
 		}
 	}
 }
