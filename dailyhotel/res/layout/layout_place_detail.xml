@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <com.twoheart.dailyhotel.view.LoopViewPager
+        android:id="@+id/defaultHotelImageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_hoteldetail_viewpager" />
+    
+    <View
+        android:id="@+id/imageViewBlur"
+        android:layout_width="match_parent"
+        android:layout_height="19dp"
+        android:layout_alignBottom="@id/defaultHotelImageView"
+        android:background="@drawable/blur"
+        android:visibility="invisible" />
+
+    <com.twoheart.dailyhotel.view.HotelDetailListView
+        android:id="@+id/hotelListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="55dp"
+        android:cacheColorHint="#00000000"
+        android:divider="@null"
+        android:fadingEdge="none"
+        android:fadingEdgeLength="0dp"
+        android:overScrollMode="never" />
+
+    <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+        android:id="@+id/actionBarTextView"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/white"
+        android:ellipsize="end"
+        android:freezesText="true"
+        android:gravity="center_vertical"
+        android:paddingLeft="55dp"
+        android:paddingRight="40dp"
+        android:singleLine="true"
+        android:textColor="@android:color/black"
+        android:textSize="20dp"
+        android:visibility="invisible" />
+
+    <include
+        android:id="@+id/toolbar_actionbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        layout="@layout/toolbar_default" />
+
+    <View
+        android:id="@+id/toolbar_actionbarUnderLine"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignBaseline="@id/toolbar_actionbar"
+        android:layout_alignBottom="@id/toolbar_actionbar"
+        android:background="@color/actionbar_underline" />
+
+    <View
+        android:id="@+id/roomTypeBackgroundView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/textView_textColor_shadow_soldout"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/ticketInformationLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="55dp"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <include
+            android:id="@+id/ticketType01View"
+            android:layout_width="match_parent"
+            android:layout_height="92dp"
+            layout="@layout/list_row_detail_roomtype" />
+
+        <include
+            android:id="@+id/ticketType02View"
+            android:layout_width="match_parent"
+            android:layout_height="92dp"
+            layout="@layout/list_row_detail_roomtype" />
+
+        <include
+            android:id="@+id/ticketType03View"
+            android:layout_width="match_parent"
+            android:layout_height="92dp"
+            layout="@layout/list_row_detail_roomtype" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/bottomLayout"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_alignParentBottom="true" >
+
+        <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+            android:id="@+id/bookingTextView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/actionbar_hamburger"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="20dp"
+            android:visibility="gone" />
+
+        <com.twoheart.dailyhotel.view.widget.DailyCustomFontButton
+            android:id="@+id/soldoutTextView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/hoteldetail_soldout_background"
+            android:gravity="center"
+            android:text="@string/act_hotel_soldout"
+            android:textColor="@color/hoteldetail_soldout_text"
+            android:textSize="20dp"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+</RelativeLayout>

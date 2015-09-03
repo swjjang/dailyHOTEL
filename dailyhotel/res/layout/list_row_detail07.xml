@@ -14,7 +14,7 @@
         android:layout_marginRight="15dp"
         android:layout_marginTop="14dp" >
 
-        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+        <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"

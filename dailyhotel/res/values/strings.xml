@@ -11,6 +11,8 @@
     <string name="label_list">목록</string>
     <string name="label_dailychoice">데일리초이스</string>
     <string name="label_google_map">Google Map</string>
+    <string name="label_hotel">호텔</string>
+    <string name="label_fnb">레스토랑</string>
 
     <!-- Hotel Grade -->
     <string name="grade_special">특급</string>
@@ -123,7 +125,6 @@
     <string name="dialog_msg_payment_message05">계좌이체는 거래건 고유의 가상계좌가 발급되며 10분안에 입금되지 않으면 자동으로 예약이 취소됩니다.</string>
     <string name="dialog_msg_payment_message06">취소 불가 등 위 내용에\n동의하시면 서명해 주세요</string>
     <string name="dialog_msg_payment_message07">취소 불가 등 위 내용에 동의하시면\n버튼을 눌러 결제를 진행해 주세요</string>
-    
     <string name="dialog_msg_call">데일리호텔 고객센터로 전화 연결합니다.</string>
     <string name="dialog_btn_call">전화 연결</string>
     <string name="dialog_btn_payment_confirm">동의하고 결제 진행</string>
@@ -196,8 +197,8 @@
 
     <!-- Alarm Message -->
     <string name="alarm_title">dailyHOTEL</string>
-    <string name="alarm_msg">오늘의 호텔이 도착했습니다.\n지금 데일리호텔에서 확인하세요!</string>
-    <string name="alarm_ticker">오늘의 호텔이 도착했습니다!</string>
+    <string name="alarm_msg">오늘의 %1$s이 도착했습니다.\n지금 데일리호텔에서 확인하세요!</string>
+    <string name="alarm_ticker">오늘의 %1$s이 도착했습니다!</string>
     <string name="alarm_btn_see">보기</string>
     <string name="alarm_btn_close">닫기</string>
     <string name="txt_payment_wait_confirm">입금 순서대로 예약이 확정되며,\\n객실 예약이 조기에 마감될 수 있습니다.\\n마감시 입금하신 계좌로 전액 환불됩니다.</string>
@@ -221,7 +222,6 @@
     <string name="frag_account">계정</string>
     <string name="frag_profile">프로필</string>
     <string name="frag_login">로그인</string>
-    
     <string name="frag_about_business_license01">(주)데일리</string>
     <string name="frag_about_business_license02">대표 : 신인식 | 사업자등록번호 : 144-81-15781</string>
     <string name="frag_about_business_license03">통신판매업 신고번호 : 제2014-경기성남-0215호</string>
@@ -370,7 +370,7 @@
     <string name="frag_rating_hotel_title">호텔 만족도 조사</string>
     <string name="frag_rating_hotel_text1">%1$s에 이용하신</string>
     <string name="frag_rating_hotel_text2">\'%1$s\'</string>
-     <string name="frag_rating_hotel_text3">은 어떠셨나요?</string>
+    <string name="frag_rating_hotel_text3">은 어떠셨나요?</string>
     <string name="frag_rating_hotel_recomm">만족함</string>
     <string name="frag_rating_hotel_cancel">만족안함</string>
 
@@ -382,8 +382,9 @@
     <string name="kakao_btn_move">앱으로 이동</string>
     <string name="kakao_btn_invited_friend">데일리호텔 할인받기!</string>
     <string name="kakao_btn_go_hotel">호텔 보러 가기!</string>
-	<string name="kakao_btn_share_hotel">친구의 추천호텔!\n%1$s에서의 근사한 하루!\n\n체크인 %2$s | 체크아웃 %3$s (%4$d박 %5$d일)\n\n맘에 드는 객실 확인하고 잊지 못할 하루를 예약하세요!</string>
-
+    <string name="kakao_btn_go_fnb">보러 가기!</string>
+    <string name="kakao_btn_share_hotel">친구의 추천호텔!\n%1$s에서의 근사한 하루!\n\n체크인 %2$s | 체크아웃 %3$s (%4$d박 %5$d일)\n\n맘에 드는 객실 확인하고 잊지 못할 하루를 예약하세요!</string>
+    <string name="kakao_btn_share_fnb">친구의 추천 레스토랑!\n%1$s에서의 근사한 하루!\n\n날짜 %2$s\n\n맘에 드는 레스토랑 확인하고 잊지 못할 하루를 예약하세요!</string>
 
     <!-- Base Activity -->
     <string name="act_base_network_connect">인터넷 연결 상태가 불안정합니다.\n인터넷 연결을 확인하신 뒤 다시 시도해주세요.</string>
@@ -423,8 +424,8 @@
 
     <!-- Timer Wait Fragment -->
     <string name="frag_wait_timer_hotel_msg">잊지못할 하루를 위한\n특별한 호텔이 기다리고 있어요</string>
-	<string name="frag_wait_timer_fnb_msg">잊지못할 하루를 위한\n특별한 레스토랑이 기다리고 있어요</string>
-	
+    <string name="frag_wait_timer_fnb_msg">잊지못할 하루를 위한\n특별한 레스토랑이 기다리고 있어요</string>
+
     <!-- Hotel List Header -->
     <string name="header_title1">데일리호텔 </string>
     <string name="header_title2">이벤트 참여하기</string>
@@ -509,13 +510,14 @@
 
     <!-- Area -->
     <string name="label_selectarea_area">지역</string>
-    
+
     <!-- EventFragment -->
     <string name="eventfragment_emptylist_maintext">현재 진행중인 이벤트가 없습니다.</string>
     <string name="eventfragment_emptylist_subtext">더욱 특별한 이벤트를\n준비 중이니 기대해주세요!</string>
-    
+
     <!-- FNB ListFragment -->
-	<string name="label_headersectionbar_title">당일 판매 상품</string>
-	<string name="label_fnblistfragment_empty_text01">레스토랑을 준비하고 있습니다.</string>
-	<string name="label_fnblistfragment_empty_text02">멋진 레스토랑을 원하시나요?\n1800-9120으로 전화주세요.</string>
+    <string name="label_headersectionbar_title">당일 판매 상품</string>
+    <string name="label_fnblistfragment_empty_text01">레스토랑을 준비하고 있습니다.</string>
+    <string name="label_fnblistfragment_empty_text02">멋진 레스토랑을 원하시나요?\n1800-9120으로 전화주세요.</string>
+
 </resources>

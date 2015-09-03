@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="50dp" >
 
-    <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+    <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
         android:id="@+id/areaTextView"
         android:layout_width="match_parent"
         android:layout_height="50dp"

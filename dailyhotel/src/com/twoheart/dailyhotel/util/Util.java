@@ -6,7 +6,7 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.ui.BaseActivity;
+import com.twoheart.dailyhotel.activity.BaseActivity;
 
 import android.app.Activity;
 import android.app.AlarmManager;

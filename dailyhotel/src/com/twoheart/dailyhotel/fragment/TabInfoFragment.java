@@ -12,7 +12,6 @@ import java.util.List;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.BookingHotelDetail;
-import com.twoheart.dailyhotel.util.ui.BaseFragment;
 
 import android.content.Context;
 import android.content.res.Resources;

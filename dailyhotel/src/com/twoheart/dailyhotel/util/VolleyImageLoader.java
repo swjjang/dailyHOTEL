@@ -2,7 +2,7 @@ package com.twoheart.dailyhotel.util;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
-import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
+import com.twoheart.dailyhotel.network.VolleyHttpClient;
 
 import android.graphics.Bitmap;
 

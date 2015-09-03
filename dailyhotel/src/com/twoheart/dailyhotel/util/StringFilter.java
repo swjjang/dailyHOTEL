@@ -3,8 +3,8 @@ package com.twoheart.dailyhotel.util;
 import java.util.regex.Pattern;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.ui.BaseActivity;
-import com.twoheart.dailyhotel.widget.DailyToast;
+import com.twoheart.dailyhotel.activity.BaseActivity;
+import com.twoheart.dailyhotel.view.widget.DailyToast;
 
 import android.text.InputFilter;
 import android.text.SpannableString;

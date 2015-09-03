@@ -5,7 +5,7 @@
     android:orientation="horizontal"
     android:weightSum="1" >
 
-    <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+    <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
         android:id="@+id/list_row_credit_bonus"
         android:layout_weight="0.25"
         android:layout_width="0dp"
@@ -29,7 +29,7 @@
         android:paddingBottom="3dp"
         android:weightSum="1" >
 
-        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+        <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
             android:id="@+id/list_row_credit_expires"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -38,7 +38,7 @@
             android:textColor="@color/textView_textColor_main"
             android:textSize="12dp" />
 
-        <com.twoheart.dailyhotel.widget.LineBreakByWordTextView
+        <com.twoheart.dailyhotel.view.widget.LineBreakByWordTextView
             android:id="@+id/list_row_credit_content"
             android:layout_width="match_parent"
             android:layout_height="0dp"

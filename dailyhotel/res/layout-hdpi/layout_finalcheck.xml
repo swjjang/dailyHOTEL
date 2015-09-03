@@ -29,7 +29,7 @@
                 android:adjustViewBounds="true"
                 android:src="@drawable/popup_ic_alert_signature" />
 
-            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                 android:id="@+id/titleTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
                 android:layout_marginTop="5dp"
                 android:src="@drawable/popup_ic_alert_dot" />
 
-            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                 android:id="@+id/messageTextView1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -76,7 +76,7 @@
                 android:layout_marginTop="5dp"
                 android:src="@drawable/popup_ic_alert_dot" />
 
-            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                 android:id="@+id/messageTextView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -100,7 +100,7 @@
                 android:layout_marginTop="5dp"
                 android:src="@drawable/popup_ic_alert_dot" />
 
-            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                 android:id="@+id/messageTextView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -117,12 +117,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp" >
 
-            <com.twoheart.dailyhotel.widget.DailySignatureView
+            <com.twoheart.dailyhotel.view.widget.DailySignatureView
                 android:id="@+id/signatureView"
                 android:layout_width="match_parent"
                 android:layout_height="160dp" />
 
-            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                 android:id="@+id/agreeSinatureTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -148,7 +148,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/popup_ic_signature_ok" />
 
-        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+        <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"

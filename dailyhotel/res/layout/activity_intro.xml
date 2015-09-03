@@ -21,7 +21,7 @@
         android:layout_alignParentBottom="true"
         android:background="@drawable/shape_intro_bottom_bar_border" >
 
-        <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+        <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
             android:id="@+id/tv_skip"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -54,7 +54,7 @@
             android:gravity="center_vertical"
             android:visibility="gone" >
 
-            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                 android:id="@+id/tv_start"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

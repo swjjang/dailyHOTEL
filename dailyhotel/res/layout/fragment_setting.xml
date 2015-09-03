@@ -17,7 +17,7 @@
 
             <!-- 계정 -->
 
-            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
                 android:layout_marginLeft="15dp"
@@ -38,7 +38,7 @@
                 android:orientation="horizontal"
                 android:paddingLeft="17dp" >
 
-                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/tv_setting_login"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -47,7 +47,7 @@
                     android:textColor="@color/textView_textColor_main"
                     android:textSize="16.5dp" />
 
-                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/tv_setting_email"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -66,7 +66,7 @@
                 android:orientation="vertical"
                 android:visibility="gone" >
 
-                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/settingCardTextView"
                     android:layout_width="match_parent"
                     android:layout_height="42dp"
@@ -79,7 +79,7 @@
 
             <!-- 고객센터 -->
 
-            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
                 android:layout_marginLeft="15dp"
@@ -93,7 +93,7 @@
                 android:layout_height="2px"
                 android:background="@color/setting_fragment_section_border" />
 
-            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                 android:id="@+id/tv_setting_call"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
@@ -103,7 +103,7 @@
                 android:textColor="@color/textView_textColor_main"
                 android:textSize="16.5dp" />
 
-            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                 android:id="@+id/tv_setting_mail"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
@@ -113,7 +113,7 @@
                 android:textColor="@color/textView_textColor_main"
                 android:textSize="16.5dp" />
 
-            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                 android:id="@+id/tv_setting_notice"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
@@ -123,7 +123,7 @@
                 android:textColor="@color/textView_textColor_main"
                 android:textSize="16.5dp" />
 
-            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                 android:id="@+id/tv_setting_help"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
@@ -135,7 +135,7 @@
 
             <!-- 소개 -->
 
-            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
                 android:layout_marginLeft="15dp"
@@ -149,7 +149,7 @@
                 android:layout_height="2px"
                 android:background="@color/setting_fragment_section_border" />
 
-            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                 android:id="@+id/tv_setting_introduction"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
@@ -161,7 +161,7 @@
 
             <!-- 앱 -->
 
-            <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
                 android:layout_marginLeft="15dp"
@@ -182,7 +182,7 @@
                 android:orientation="horizontal"
                 android:paddingLeft="17dp" >
 
-                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.7"
@@ -191,7 +191,7 @@
                     android:textColor="@color/textView_textColor_main"
                     android:textSize="16.5dp" />
 
-                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/tv_setting_version"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -214,7 +214,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal" >
 
-                    <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                    <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/frag_about_business_license01"
@@ -222,7 +222,7 @@
                         android:textSize="10dp"
                         android:textStyle="bold" />
 
-                    <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                    <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
@@ -231,7 +231,7 @@
                         android:textSize="10dp" />
                 </LinearLayout>
 
-                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
@@ -239,7 +239,7 @@
                     android:textColor="@color/setting_business_license"
                     android:textSize="10dp" />
 
-                <com.twoheart.dailyhotel.widget.DailyCustomFontTextView
+                <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"

@@ -8,11 +8,10 @@ import org.json.JSONObject;
 
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.network.request.DailyHotelJsonRequest;
-import com.twoheart.dailyhotel.util.network.request.DailyHotelStringRequest;
-import com.twoheart.dailyhotel.util.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.network.response.DailyHotelStringResponseListener;
-import com.twoheart.dailyhotel.util.ui.BaseActivity;
+import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
+import com.twoheart.dailyhotel.network.request.DailyHotelStringRequest;
+import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 
 import android.content.DialogInterface;
 import android.content.Intent;

@@ -3,7 +3,7 @@ package com.twoheart.dailyhotel.model;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.ui.RegionIconGenerator;
+import com.twoheart.dailyhotel.view.RegionIconGenerator;
 
 import android.content.Context;
 import android.graphics.Bitmap;

@@ -4,7 +4,7 @@ import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.WakeLock;
-import com.twoheart.dailyhotel.widget.FontManager;
+import com.twoheart.dailyhotel.view.widget.FontManager;
 
 import android.app.Activity;
 import android.content.Intent;

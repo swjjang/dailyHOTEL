@@ -1,10 +1,9 @@
 package com.twoheart.dailyhotel.activity;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
-import com.twoheart.dailyhotel.util.network.request.DailyHotelRequest;
-import com.twoheart.dailyhotel.util.ui.WebViewActivity;
 
 import android.os.Bundle;
 

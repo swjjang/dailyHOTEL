@@ -6,9 +6,10 @@ import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.androidquery.callback.BitmapAjaxCallback;
 import com.twoheart.dailyhotel.activity.HotelDetailActivity;
-import com.twoheart.dailyhotel.ui.AnimationImageView;
+import com.twoheart.dailyhotel.activity.PlaceDetailActivity;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.VolleyImageLoader;
+import com.twoheart.dailyhotel.view.AnimationImageView;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -27,6 +28,7 @@ public class HotelDetailImageViewPagerAdapter extends PagerAdapter
 	private int mDirection;
 
 	private HotelDetailActivity.OnUserActionListener mOnUserActionListener;
+	private PlaceDetailActivity.OnImageActionListener mOnImageActionListener;
 
 	public HotelDetailImageViewPagerAdapter(Context context)
 	{
@@ -59,6 +61,7 @@ public class HotelDetailImageViewPagerAdapter extends PagerAdapter
 		{
 			imageView = new AnimationImageView(mContext, width, width, mDirection < 0);
 			((AnimationImageView) imageView).setOnAnimationListener(mOnUserActionListener);
+			((AnimationImageView) imageView).setOnImageActionListener(mOnImageActionListener);
 		} else
 		{
 			imageView = new ImageView(mContext);
@@ -151,5 +154,10 @@ public class HotelDetailImageViewPagerAdapter extends PagerAdapter
 	public void setOnAnimationListener(HotelDetailActivity.OnUserActionListener listener)
 	{
 		mOnUserActionListener = listener;
+	}
+
+	public void setOnImageActionListener(PlaceDetailActivity.OnImageActionListener listener)
+	{
+		mOnImageActionListener = listener;
 	}
 }

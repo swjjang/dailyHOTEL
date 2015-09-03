@@ -18,7 +18,6 @@ import com.twoheart.dailyhotel.adapter.CreditListAdapter;
 import com.twoheart.dailyhotel.model.Credit;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
-import com.twoheart.dailyhotel.util.ui.BaseActivity;
 
 import android.content.Intent;
 import android.os.Bundle;

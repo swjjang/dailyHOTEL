@@ -11,8 +11,8 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.VolleyImageLoader;
-import com.twoheart.dailyhotel.util.ui.HotelListViewItem;
-import com.twoheart.dailyhotel.widget.PinnedSectionListView.PinnedSectionListAdapter;
+import com.twoheart.dailyhotel.view.HotelListViewItem;
+import com.twoheart.dailyhotel.view.widget.PinnedSectionListView.PinnedSectionListAdapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;

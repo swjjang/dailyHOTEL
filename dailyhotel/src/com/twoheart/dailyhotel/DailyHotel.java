@@ -15,12 +15,12 @@
 package com.twoheart.dailyhotel;
 
 import com.androidquery.callback.BitmapAjaxCallback;
+import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.VolleyImageLoader;
-import com.twoheart.dailyhotel.util.network.VolleyHttpClient;
-import com.twoheart.dailyhotel.widget.FontManager;
+import com.twoheart.dailyhotel.view.widget.FontManager;
 
 import android.app.Application;
 import io.branch.referral.Branch;
