@@ -7,7 +7,6 @@ import com.twoheart.dailyhotel.util.WakeLock;
 import android.app.Activity;
 import android.app.KeyguardManager;
 import android.app.KeyguardManager.KeyguardLock;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -15,6 +14,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.PowerManager;
+import android.support.v4.app.NotificationCompat;
 
 /**
  * 판매가 종료된 시간일때 오픈 알람받기를 설정 한 경우 호출되는 브로드캐스트 리시버
@@ -81,13 +81,12 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver
 
 		NotificationManager notificationManager = (NotificationManager) context.getSystemService(Activity.NOTIFICATION_SERVICE);
 
-		Notification notification = new Notification();
-		notification.icon = R.drawable.img_ic_appicon_feature;
-		notification.tickerText = ticker;
-		notification.when = System.currentTimeMillis();
-		notification.vibrate = new long[] { 100, 500, 100, 500 };
-		notification.flags = Notification.FLAG_AUTO_CANCEL;
-		notification.setLatestEventInfo(context, title, msg, pendingIntent);
-		notificationManager.notify(0, notification);
+		NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+		builder.setContentTitle(title) //
+		.setStyle(new NotificationCompat.BigTextStyle().bigText(msg)).setContentText(msg).setTicker(ticker) //
+		.setAutoCancel(true) //
+		.setSmallIcon(R.drawable.img_ic_appicon_feature).setVibrate(new long[] { 100, 500, 100, 500 }).setWhen(System.currentTimeMillis()).setContentIntent(pendingIntent);
+
+		notificationManager.notify(0, builder.build());
 	}
 }

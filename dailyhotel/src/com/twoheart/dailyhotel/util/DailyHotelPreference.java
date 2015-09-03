@@ -54,7 +54,7 @@ public class DailyHotelPreference
 		if (mEditor != null)
 		{
 			mEditor.putBoolean(KEY_ALARM_HOTEL, enable);
-			mEditor.apply();
+			mEditor.commit();
 		}
 	}
 
@@ -75,7 +75,7 @@ public class DailyHotelPreference
 		if (mEditor != null)
 		{
 			mEditor.putBoolean(KEY_ALARM_FNB, enable);
-			mEditor.apply();
+			mEditor.commit();
 		}
 	}
 }

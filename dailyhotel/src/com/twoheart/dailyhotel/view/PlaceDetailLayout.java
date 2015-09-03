@@ -211,7 +211,7 @@ public abstract class PlaceDetailLayout
 
 	private void makeTicketInformationLayout(View view, TicketInformation information, int nights)
 	{
-		if (view == null || information == null || nights <= 0)
+		if (view == null || information == null || nights < 0)
 		{
 			return;
 		}

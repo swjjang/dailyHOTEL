@@ -43,6 +43,9 @@ public class PushDialogActivity extends Activity implements OnClickListener
 		boolean enabledHotelAlarm = DailyHotelPreference.getInstance(this).getEnabledHotelAlarm();
 		boolean enabledFnBAlarm = DailyHotelPreference.getInstance(this).getEnabledFnBAlarm();
 
+		DailyHotelPreference.getInstance(this).setEnabledHotelAlarm(false);
+		DailyHotelPreference.getInstance(this).setEnabledFnBAlarm(false);
+
 		String param = null;
 
 		if (enabledHotelAlarm == true && enabledFnBAlarm == true)

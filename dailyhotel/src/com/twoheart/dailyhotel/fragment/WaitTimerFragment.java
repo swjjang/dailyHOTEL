@@ -266,12 +266,30 @@ public class WaitTimerFragment
 				break;
 		}
 
+		boolean hotelAlarm = DailyHotelPreference.getInstance(baseActivity).getEnabledHotelAlarm();
+		boolean fnbAlarm = DailyHotelPreference.getInstance(baseActivity).getEnabledFnBAlarm();
+
 		if (enable)
 		{
 			mAlarmTextView.setText(getString(R.string.frag_wait_timer_off));
 			mAlarmImageView.setImageResource(R.drawable.open_stanby_ic_alert_off);
 
-			alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + remainingTime, mPendingIntent);
+			switch (mType)
+			{
+				case HOTEL:
+					if (fnbAlarm == false)
+					{
+						alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + remainingTime, mPendingIntent);
+					}
+					break;
+
+				case FNB:
+					if (hotelAlarm == false)
+					{
+						alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + remainingTime, mPendingIntent);
+					}
+					break;
+			}
 
 			showToast(getString(R.string.frag_wait_timer_set), Toast.LENGTH_SHORT, true);
 		} else
@@ -279,7 +297,22 @@ public class WaitTimerFragment
 			mAlarmTextView.setText(getString(R.string.frag_wait_timer_on));
 			mAlarmImageView.setImageResource(R.drawable.open_stanby_ic_alert);
 
-			alarmManager.cancel(mPendingIntent);
+			switch (mType)
+			{
+				case HOTEL:
+					if (fnbAlarm == false)
+					{
+						alarmManager.cancel(mPendingIntent);
+					}
+					break;
+
+				case FNB:
+					if (hotelAlarm == false)
+					{
+						alarmManager.cancel(mPendingIntent);
+					}
+					break;
+			}
 
 			showToast(getString(R.string.frag_wait_timer_cancel), Toast.LENGTH_SHORT, true);
 		}

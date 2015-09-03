@@ -230,12 +230,22 @@ public class MainActivity
 
 		String link = uri.toString();
 
+		DrawerMenu selectMenuDrawer = menuHotelListFragment;
+
 		if (link.indexOf(KAKAOLINK) >= 0 || link.indexOf(DAILYHOTEL) >= 0)
 		{
 			writeKakaoLinkPreference(link);
+
+			if (link.contains("hotelIndex") == true)
+			{
+				selectMenuDrawer = menuHotelListFragment;
+			} else if (link.contains("fnbIndex") == true)
+			{
+				selectMenuDrawer = menuFnBListFragment;
+			}
 		}
 
-		selectMenuDrawer(menuHotelListFragment);
+		selectMenuDrawer(selectMenuDrawer);
 	}
 
 	@Override
@@ -786,7 +796,7 @@ public class MainActivity
 			return;
 		}
 
-		if (indexLastFragment == INDEX_HOTEL_LIST_FRAGMENT)
+		if (indexLastFragment == INDEX_HOTEL_LIST_FRAGMENT || indexLastFragment == INDEX_FNB_LIST_FRAGMENT)
 		{
 			if (backButtonHandler.onBackPressed())
 			{
