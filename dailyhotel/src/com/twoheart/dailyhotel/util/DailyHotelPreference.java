@@ -13,9 +13,10 @@ public class DailyHotelPreference
 
 	private static DailyHotelPreference mInstance;
 
-	// A/B Test 기능
-	private static final String KEY_ALARM_HOTEL = "1";
-	private static final String KEY_ALARM_FNB = "2";
+	private static final String KEY_ALARM_HOTEL = "1"; // 알람 호텔
+	private static final String KEY_ALARM_FNB = "2"; // 알람 FNB
+
+	private static final String KEY_NEW_EVENT_TODAY_FNB = "3"; // 앱 처음 실행시 FNB에  New 아이콘 넣기
 
 	public static synchronized DailyHotelPreference getInstance(Context context)
 	{
@@ -75,6 +76,27 @@ public class DailyHotelPreference
 		if (mEditor != null)
 		{
 			mEditor.putBoolean(KEY_ALARM_FNB, enable);
+			mEditor.commit();
+		}
+	}
+
+	public boolean isNewTodayFnB()
+	{
+		boolean result = false;
+
+		if (mPreferences != null)
+		{
+			result = mPreferences.getBoolean(KEY_NEW_EVENT_TODAY_FNB, true);
+		}
+
+		return result;
+	}
+
+	public void setNewTodayFnB(boolean isNew)
+	{
+		if (mEditor != null)
+		{
+			mEditor.putBoolean(KEY_NEW_EVENT_TODAY_FNB, isNew);
 			mEditor.commit();
 		}
 	}

@@ -24,6 +24,8 @@ import java.util.Map;
 import org.json.JSONObject;
 
 import com.android.volley.Request.Method;
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.VolleyError;
 import com.androidquery.util.AQUtility;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -50,6 +52,7 @@ import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyHotelPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.CloseOnBackPressed;
@@ -57,6 +60,8 @@ import com.twoheart.dailyhotel.view.widget.FontManager;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
@@ -176,11 +181,16 @@ public class MainActivity
 	{
 		setContentView(R.layout.activity_main);
 
+		//순서 중요 
+		// 1
 		Toolbar toolbar = setActionBar(getString(R.string.actionbar_title_hotel_list_frag), false);
-		setNavigationDrawer(toolbar);
 
+		// 2
 		mNewEventView = findViewById(R.id.newEventView);
-		hideNewEvent(true);
+		hideActionBarNewIcon(true);
+
+		// 3
+		setNavigationDrawer(toolbar);
 
 		mContentFrame = (FrameLayout) findViewById(R.id.content_frame);
 
@@ -508,6 +518,12 @@ public class MainActivity
 
 			case R.drawable.selector_drawermenu_fnb:
 				indexLastFragment = INDEX_FNB_LIST_FRAGMENT;
+
+				// 이벤트 진입시에 이벤트 new를 제거한다.
+				DailyHotelPreference.getInstance(this).setNewTodayFnB(false);
+
+				hideNewFnb(true);
+
 				AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.MENU, Action.CLICK, getString(R.string.actionbar_title_fnb_list_frag), (long) position);
 				break;
 
@@ -530,7 +546,7 @@ public class MainActivity
 
 				long currentDateTime = sharedPreference.getLong(KEY_PREFERENCE_LOOKUP_EVENT_TIME, 0);
 				editor.putLong(KEY_PREFERENCE_NEW_EVENT_TIME, currentDateTime);
-				editor.apply();
+				editor.commit();
 
 				hideNewEvent(true);
 
@@ -645,7 +661,15 @@ public class MainActivity
 				{
 					setActionBarRegionEnable(false);
 
-					hideNewEvent(false);
+					if (isShowActionBarNewIcon() == true)
+					{
+						hideActionBarNewIcon(true);
+
+						if (mDrawerMenuListAdapter != null)
+						{
+							mDrawerMenuListAdapter.notifyDataSetChanged();
+						}
+					}
 
 					fragmentManager = getSupportFragmentManager();
 
@@ -664,9 +688,10 @@ public class MainActivity
 				{
 					setActionBarRegionEnable(true);
 
-					if (sharedPreference.getBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false))
+					if (sharedPreference.getBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false) == true //
+					|| DailyHotelPreference.getInstance(MainActivity.this).isNewTodayFnB() == true)
 					{
-						showNewEvent(true);
+						showActionBarNewIcon();
 					}
 
 					fragmentManager = getSupportFragmentManager();
@@ -721,12 +746,23 @@ public class MainActivity
 		mDrawerMenuList.add(menuEventListFragment);
 		mDrawerMenuList.add(menuSettingFragment);
 
+		// New Icon
 		if (sharedPreference.getBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false))
 		{
 			menuEventListFragment.hasEvent = true;
 		} else
 		{
 			menuEventListFragment.hasEvent = false;
+		}
+
+		if (DailyHotelPreference.getInstance(this).isNewTodayFnB() == true)
+		{
+			menuFnBListFragment.hasEvent = true;
+
+			showNewFnB(true);
+		} else
+		{
+			menuFnBListFragment.hasEvent = false;
 		}
 
 		mDrawerMenuListAdapter = new DrawerMenuListAdapter(this, mDrawerMenuList);
@@ -827,11 +863,11 @@ public class MainActivity
 		}
 	}
 
-	public void showNewEvent(boolean isShowAuctionBar)
+	private void showNewEvent(boolean isShowAuctionBar)
 	{
-		if (mNewEventView != null && isShowAuctionBar == true)
+		if (isShowAuctionBar == true)
 		{
-			mNewEventView.setVisibility(View.VISIBLE);
+			showActionBarNewIcon();
 		}
 
 		if (menuEventListFragment != null)
@@ -840,16 +876,71 @@ public class MainActivity
 		}
 	}
 
-	public void hideNewEvent(boolean isHideMenuList)
+	private void showNewFnB(boolean isShowAuctionBar)
 	{
+		if (isShowAuctionBar == true)
+		{
+			showActionBarNewIcon();
+		}
+
+		if (menuFnBListFragment != null)
+		{
+			menuFnBListFragment.hasEvent = true;
+		}
+	}
+
+	private void showActionBarNewIcon()
+	{
+		if (mNewEventView != null)
+		{
+			mNewEventView.setVisibility(View.VISIBLE);
+		}
+	}
+
+	private void hideActionBarNewIcon(boolean isForce)
+	{
+		if (isForce == false)
+		{
+			if (sharedPreference.getBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false) == true || //
+			DailyHotelPreference.getInstance(this).isNewTodayFnB() == true)
+			{
+				return;
+			}
+		}
+
 		if (mNewEventView != null && mNewEventView.getVisibility() != View.GONE)
 		{
 			mNewEventView.setVisibility(View.GONE);
 		}
+	}
+
+	private boolean isShowActionBarNewIcon()
+	{
+		if (mNewEventView != null)
+		{
+			return mNewEventView.getVisibility() == View.VISIBLE ? true : false;
+		}
+
+		return false;
+	}
+
+	private void hideNewEvent(boolean isHideMenuList)
+	{
+		hideActionBarNewIcon(false);
 
 		if (menuEventListFragment != null && isHideMenuList == true)
 		{
 			menuEventListFragment.hasEvent = false;
+		}
+	}
+
+	private void hideNewFnb(boolean isHideMenuList)
+	{
+		hideActionBarNewIcon(false);
+
+		if (menuFnBListFragment != null && isHideMenuList == true)
+		{
+			menuFnBListFragment.hasEvent = false;
 		}
 	}
 
@@ -1116,7 +1207,16 @@ public class MainActivity
 				}
 
 				// 호텔 평가요청
-				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_SATISFACTION_RATION_EXIST).toString(), null, mSatisfactionRatingExistJsonResponseListener, MainActivity.this));
+				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_SATISFACTION_RATION_EXIST).toString(), null, //
+				mSatisfactionRatingExistJsonResponseListener, new ErrorListener()
+				{
+					@Override
+					public void onErrorResponse(VolleyError arg0)
+					{
+						// TODO Auto-generated method stub
+
+					}
+				}));
 			} catch (Exception e)
 			{
 				onError(e);
@@ -1185,7 +1285,31 @@ public class MainActivity
 					if (dialog != null && isFinishing() == false)
 					{
 						dialog.show(fragmentManager, TAG_FRAGMENT_RATING_HOTEL);
+
+						// 화면이 사라지면 FnB만족도 조사를 살펴본다.
+						dialog.setOnDismissListener(new OnDismissListener()
+						{
+							public void onDismiss(DialogInterface dialog)
+							{
+								mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_SESSION_RATING_EXIST).toString(), null, mFnBSatisfactionRatingExistJsonResponseListener, new ErrorListener()
+								{
+									public void onErrorResponse(VolleyError error)
+									{
+
+									}
+								}));
+							}
+						});
 					}
+				} else
+				{
+					mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_SESSION_RATING_EXIST).toString(), null, mFnBSatisfactionRatingExistJsonResponseListener, new ErrorListener()
+					{
+						public void onErrorResponse(VolleyError error)
+						{
+
+						}
+					}));
 				}
 			} catch (Exception e)
 			{
@@ -1223,6 +1347,7 @@ public class MainActivity
 				if (count > 0)
 				{
 					editor.putBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, true);
+					editor.commit();
 
 					if (drawerLayout.isDrawerOpen(drawerView) == true)
 					{
@@ -1237,17 +1362,47 @@ public class MainActivity
 
 					long currentDateTime = sharedPreference.getLong(KEY_PREFERENCE_LOOKUP_EVENT_TIME, 0);
 					editor.putLong(KEY_PREFERENCE_NEW_EVENT_TIME, currentDateTime);
+					editor.commit();
 
 					hideNewEvent(true);
 				}
+			} catch (Exception e)
+			{
+				ExLog.d(e.toString());
+			}
+		}
+	};
 
-				editor.commit();
+	private DailyHotelJsonResponseListener mFnBSatisfactionRatingExistJsonResponseListener = new DailyHotelJsonResponseListener()
+	{
 
-				if (mDrawerMenuListAdapter != null)
+		@Override
+		public void onResponse(String url, JSONObject response)
+		{
+			try
+			{
+				if (response == null)
 				{
-					mDrawerMenuListAdapter.notifyDataSetChanged();
+					throw new NullPointerException("response == null");
 				}
 
+				int msg_code = response.getInt("msg_code");
+
+				if (msg_code == 0 && response.has("data") == true)
+				{
+					JSONObject jsonObject = response.getJSONObject("data");
+
+					long checkInDate = jsonObject.getLong("sday");
+					String ticketName = jsonObject.getString("ticket_name");
+					int reservationIndex = jsonObject.getInt("reservation_rec_idx");
+
+					RatingHotelFragment dialog = RatingHotelFragment.newInstance(ticketName, reservationIndex, checkInDate);
+
+					if (dialog != null && isFinishing() == false)
+					{
+						dialog.show(fragmentManager, TAG_FRAGMENT_RATING_HOTEL);
+					}
+				}
 			} catch (Exception e)
 			{
 				ExLog.d(e.toString());

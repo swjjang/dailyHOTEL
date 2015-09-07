@@ -280,12 +280,26 @@ public class Util implements Constants
 			ApplicationInfo applicationInfo = packageManager.getApplicationInfo("com.google.android.gms", 0);
 			PackageInfo packageInfo = packageManager.getPackageInfo(applicationInfo.packageName, PackageManager.GET_SIGNATURES);
 
-			if (packageInfo.versionCode < 7500000)
+			if (isOverAPI11() == true)
 			{
-				isInstalled = false;
+				int version = activity.getResources().getInteger(com.google.android.gms.R.integer.google_play_services_version);
+
+				if (packageInfo.versionCode < version)
+				{
+					isInstalled = false;
+				} else
+				{
+					isInstalled = true;
+				}
 			} else
 			{
-				isInstalled = true;
+				if (packageInfo.versionCode < 7500000)
+				{
+					isInstalled = false;
+				} else
+				{
+					isInstalled = true;
+				}
 			}
 		} catch (PackageManager.NameNotFoundException e)
 		{

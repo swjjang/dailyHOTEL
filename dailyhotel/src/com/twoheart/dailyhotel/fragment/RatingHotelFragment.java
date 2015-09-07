@@ -32,6 +32,7 @@ import com.twoheart.dailyhotel.view.widget.FontManager;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Point;
 import android.os.Build;
@@ -41,15 +42,13 @@ import android.util.TypedValue;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class RatingHotelFragment extends
-		DialogFragment implements Constants, OnClickListener, OnLoadListener
+public class RatingHotelFragment
+		extends DialogFragment implements Constants, OnLoadListener
 {
 	private static final String NOT_RATE_THIS_HOTEL = "0";
 	private static final String RECOMMEND_THIS_HOTEL = "1";
@@ -58,12 +57,11 @@ public class RatingHotelFragment extends
 	private MainActivity mHostActivity;
 	private RequestQueue mQueue;
 
-	private String mHotelName;
+	private String mTicketName;
 	private int mReservationIndex;
 	private Long mCheckInDate;
 	private Long mCheckOutDate;
-
-	private Button btnRecommend, btnCancel;
+	private PlaceMainFragment.TYPE mPlaceType;
 
 	public static RatingHotelFragment newInstance(String hotelName, int reservationIndex, long checkInDate, long checkOutDate)
 	{
@@ -76,12 +74,30 @@ public class RatingHotelFragment extends
 			arguments.putInt(NAME_INTENT_EXTRA_DATA_RESERVATIONINDEX, reservationIndex);
 			arguments.putLong(NAME_INTENT_EXTRA_DATA_CHECKINDATE, checkInDate);
 			arguments.putLong(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE, checkOutDate);
+			arguments.putString(NAME_INTENT_EXTRA_DATA_TYPE, PlaceMainFragment.TYPE.HOTEL.name());
 		}
 
 		newFragment.setArguments(arguments);
 
 		return newFragment;
+	}
 
+	public static RatingHotelFragment newInstance(String placeName, int reservationIndex, long checkInDate)
+	{
+		RatingHotelFragment newFragment = new RatingHotelFragment();
+		Bundle arguments = new Bundle();
+
+		if (placeName != null)
+		{
+			arguments.putString(NAME_INTENT_EXTRA_DATA_PLACENAME, placeName);
+			arguments.putInt(NAME_INTENT_EXTRA_DATA_RESERVATIONINDEX, reservationIndex);
+			arguments.putLong(NAME_INTENT_EXTRA_DATA_CHECKINDATE, checkInDate);
+			arguments.putString(NAME_INTENT_EXTRA_DATA_TYPE, PlaceMainFragment.TYPE.FNB.name());
+		}
+
+		newFragment.setArguments(arguments);
+
+		return newFragment;
 	}
 
 	@Override
@@ -98,20 +114,39 @@ public class RatingHotelFragment extends
 
 		mQueue = VolleyHttpClient.getRequestQueue();
 
-		mHotelName = getArguments().getString(NAME_INTENT_EXTRA_DATA_HOTELNAME);
-		mReservationIndex = getArguments().getInt(NAME_INTENT_EXTRA_DATA_RESERVATIONINDEX);
-		mCheckInDate = getArguments().getLong(NAME_INTENT_EXTRA_DATA_CHECKINDATE);
-		mCheckOutDate = getArguments().getLong(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE);
+		mPlaceType = PlaceMainFragment.TYPE.valueOf(getArguments().getString(NAME_INTENT_EXTRA_DATA_TYPE));
+
+		switch (mPlaceType)
+		{
+			case HOTEL:
+			{
+				mTicketName = getArguments().getString(NAME_INTENT_EXTRA_DATA_HOTELNAME);
+				mReservationIndex = getArguments().getInt(NAME_INTENT_EXTRA_DATA_RESERVATIONINDEX);
+				mCheckInDate = getArguments().getLong(NAME_INTENT_EXTRA_DATA_CHECKINDATE);
+				mCheckOutDate = getArguments().getLong(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE);
+				break;
+			}
+
+			case FNB:
+			{
+				mTicketName = getArguments().getString(NAME_INTENT_EXTRA_DATA_PLACENAME);
+				mReservationIndex = getArguments().getInt(NAME_INTENT_EXTRA_DATA_RESERVATIONINDEX);
+				mCheckInDate = getArguments().getLong(NAME_INTENT_EXTRA_DATA_CHECKINDATE);
+				break;
+			}
+		}
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState)
 	{
-		if (getDialog() != null)
+		Dialog dialog = getDialog();
+
+		if (dialog != null)
 		{
-			getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-			getDialog().getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-			getDialog().setCanceledOnTouchOutside(false);
+			dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+			dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+			dialog.setCanceledOnTouchOutside(false);
 		}
 
 		View view = inflater.inflate(R.layout.fragment_dialog_rating_hotel, parent, false);
@@ -123,27 +158,53 @@ public class RatingHotelFragment extends
 		ratingPeriod.setTypeface(FontManager.getInstance(mHostActivity).getMediumTypeface());
 		messageTextView.setTypeface(FontManager.getInstance(mHostActivity).getMediumTypeface());
 
-		btnRecommend = (Button) view.findViewById(R.id.positiveTextView);
-		btnCancel = (Button) view.findViewById(R.id.negativeTextView);
+		TextView positiveTextView = (TextView) view.findViewById(R.id.positiveTextView);
+		TextView negativeTextView = (TextView) view.findViewById(R.id.negativeTextView);
 
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd", Locale.KOREA);
-		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+		switch (mPlaceType)
+		{
+			case HOTEL:
+			{
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd", Locale.KOREA);
+				simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
-		String periodDate = String.format("%s - %s", simpleDateFormat.format(new Date(mCheckInDate)), simpleDateFormat.format(new Date(mCheckOutDate)));
+				String periodDate = String.format("%s - %s", simpleDateFormat.format(new Date(mCheckInDate)), simpleDateFormat.format(new Date(mCheckOutDate)));
+				ratingPeriod.setText(getString(R.string.frag_rating_hotel_text1, periodDate));
+				break;
+			}
 
-		ratingPeriod.setText(getString(R.string.frag_rating_hotel_text1, periodDate));
-		ratingHotelName.setText(getString(R.string.frag_rating_hotel_text2, mHotelName));
+			case FNB:
+			{
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd(EEE)", Locale.KOREA);
+				simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
-		btnRecommend.setOnClickListener(this);
-		btnCancel.setOnClickListener(this);
+				String periodDate = simpleDateFormat.format(new Date(mCheckInDate));
+				ratingPeriod.setText(getString(R.string.frag_rating_hotel_text1, periodDate));
+				break;
+			}
+		}
+
+		ratingHotelName.setText(getString(R.string.frag_rating_hotel_text2, mTicketName));
+
+		positiveTextView.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				updateSatifactionRating(mPlaceType, mReservationIndex, RECOMMEND_THIS_HOTEL);
+			}
+		});
+
+		negativeTextView.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				updateSatifactionRating(mPlaceType, mReservationIndex, NOT_RECOMMEND_THIS_HOTEL);
+			}
+		});
 
 		return view;
-	}
-
-	@Override
-	public void onSaveInstanceState(Bundle bundle)
-	{
-		//		super.onSaveInstanceState(bundle);
 	}
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
@@ -151,11 +212,12 @@ public class RatingHotelFragment extends
 	public void onStart()
 	{
 		super.onStart();
-		// change dialog width
-		if (getDialog() != null)
-		{
 
-			int fullWidth = getDialog().getWindow().getAttributes().width;
+		Dialog dialog = getDialog();
+
+		if (dialog != null)
+		{
+			int fullWidth = dialog.getWindow().getAttributes().width;
 
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2)
 			{
@@ -172,34 +234,35 @@ public class RatingHotelFragment extends
 			final int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, getResources().getDisplayMetrics());
 
 			int w = fullWidth - padding;
-			int h = getDialog().getWindow().getAttributes().height;
+			int h = dialog.getWindow().getAttributes().height;
 
-			getDialog().getWindow().setLayout(w, h);
+			dialog.getWindow().setLayout(w, h);
 		}
 	}
 
-	@Override
-	public void onClick(View v)
+	private void updateSatifactionRating(PlaceMainFragment.TYPE type, int index, String result)
 	{
-		String reviewResult = null;
-
-		if (v.getId() == btnRecommend.getId())
+		if (result == null)
 		{
-			reviewResult = RECOMMEND_THIS_HOTEL;
-		} else if (v.getId() == btnCancel.getId())
-		{
-			reviewResult = NOT_RECOMMEND_THIS_HOTEL;
+			return;
 		}
 
-		if (reviewResult != null)
+		lockUI();
+
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("rating", result);
+
+		switch (type)
 		{
-			lockUI();
+			case HOTEL:
+				params.put("reserv_idx", String.valueOf(index));
+				mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_SATISFACTION_RATING_UPDATE).toString(), params, mReserveReviewJsonResponseListener, mHostActivity));
+				break;
 
-			Map<String, String> params = new HashMap<String, String>();
-			params.put("rating", reviewResult);
-			params.put("reserv_idx", String.valueOf(mReservationIndex));
-
-			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_SATISFACTION_RATING_UPDATE).toString(), params, mReserveReviewJsonResponseListener, mHostActivity));
+			case FNB:
+				params.put("reservation_rec_idx", String.valueOf(index));
+				mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_SESSION_RATING_UPDATE).toString(), params, mReserveReviewJsonResponseListener, mHostActivity));
+				break;
 		}
 	}
 
@@ -208,11 +271,7 @@ public class RatingHotelFragment extends
 	{
 		lockUI();
 
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("rating", NOT_RATE_THIS_HOTEL);
-		params.put("reserv_idx", String.valueOf(mReservationIndex));
-
-		mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_SATISFACTION_RATING_UPDATE).toString(), params, mReserveReviewJsonResponseListener, mHostActivity));
+		updateSatifactionRating(mPlaceType, mReservationIndex, NOT_RATE_THIS_HOTEL);
 
 		super.onCancel(dialog);
 	}
@@ -232,6 +291,14 @@ public class RatingHotelFragment extends
 		if (mHostActivity != null)
 		{
 			mHostActivity.unLockUI();
+		}
+	}
+
+	public void setOnDismissListener(DialogInterface.OnDismissListener listener)
+	{
+		if (getDialog() != null)
+		{
+			getDialog().setOnDismissListener(listener);
 		}
 	}
 
@@ -262,21 +329,7 @@ public class RatingHotelFragment extends
 				{
 					String msg = response.getString("msg");
 
-					switch (msgCode)
-					{
-						case 100:
-							DailyToast.showToast(mHostActivity, msg, Toast.LENGTH_LONG);
-							break;
-
-						case 200:
-							if (mHostActivity.isFinishing() == true)
-							{
-								return;
-							}
-
-							mHostActivity.showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, null, null);
-							break;
-					}
+					DailyToast.showToast(mHostActivity, msg, Toast.LENGTH_LONG);
 				}
 			} catch (Exception e)
 			{
