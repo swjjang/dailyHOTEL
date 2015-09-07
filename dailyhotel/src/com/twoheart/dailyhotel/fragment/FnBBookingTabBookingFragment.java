@@ -10,7 +10,7 @@ package com.twoheart.dailyhotel.fragment;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
-import com.twoheart.dailyhotel.activity.IssuingReceiptActivity;
+import com.twoheart.dailyhotel.activity.FnBReceiptActivity;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.FnBBookingDetail;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
@@ -112,7 +112,7 @@ public class FnBBookingTabBookingFragment
 						return;
 					}
 
-					Intent intent = new Intent(baseActivity, IssuingReceiptActivity.class);
+					Intent intent = new Intent(baseActivity, FnBReceiptActivity.class);
 					intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, mBooking.reservationIndex);
 					startActivity(intent);
 				}

@@ -1189,7 +1189,7 @@ public class MainActivity
 				}
 			} catch (Exception e)
 			{
-				onError(e);
+				ExLog.d(e.toString());
 			}
 		}
 	};

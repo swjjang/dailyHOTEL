@@ -81,7 +81,7 @@ public class PlaceTabMapFragment
 
 		TextView hotelGradeTextView = (TextView) view.findViewById(R.id.hv_hotel_grade);
 
-		hotelGradeTextView.setText(mPlaceBookingDetail.grade.name());
+		hotelGradeTextView.setText(mPlaceBookingDetail.grade.getName(getActivity()));
 		hotelGradeTextView.setBackgroundResource(mPlaceBookingDetail.grade.getColorResId());
 
 		return view;

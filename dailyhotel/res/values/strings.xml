@@ -497,7 +497,9 @@
     <string name="label_receipt_bookinginfo">예약 세부정보</string>
     <string name="label_receipt_reservation_index">예약 번호</string>
     <string name="label_receipt_hotelname">호텔명</string>
+    <string name="label_receipt_restaurantname">레스토랑명</string>
     <string name="label_receipt_hoteladdress">호텔주소</string>
+    <string name="label_receipt_placeaddress">주소</string>
     <string name="label_receipt_customerinfo">고객성명/번호</string>
     <string name="label_receipt_checkinout">체크인-아웃</string>
     <string name="label_receipt_nights_rooms">숙박 일수/객실수</string>
