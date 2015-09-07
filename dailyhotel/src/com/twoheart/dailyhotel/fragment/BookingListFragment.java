@@ -13,6 +13,7 @@ package com.twoheart.dailyhotel.fragment;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
@@ -25,6 +26,7 @@ import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.BookingTabActivity;
+import com.twoheart.dailyhotel.activity.FnBBookingTabActivity;
 import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.activity.PaymentWaitActivity;
 import com.twoheart.dailyhotel.adapter.BookingListAdapter;
@@ -56,7 +58,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -71,7 +72,7 @@ public class BookingListFragment extends
 	private BookingListAdapter mAdapter;
 	private RelativeLayout mEmptyLayout;
 	private PinnedSectionListView mListView;
-	private TextView btnLogin;
+	private View btnLogin;
 	private long mCurrentTime;
 
 	public interface OnUserActionListener
@@ -89,7 +90,7 @@ public class BookingListFragment extends
 		mListView.setShadowVisible(false);
 
 		mEmptyLayout = (RelativeLayout) view.findViewById(R.id.layout_booking_empty);
-		btnLogin = (TextView) view.findViewById(R.id.btn_booking_empty_login);
+		btnLogin = view.findViewById(R.id.btn_booking_empty_login);
 
 		btnLogin.setOnClickListener(this);
 
@@ -169,11 +170,22 @@ public class BookingListFragment extends
 
 		Intent intent = null;
 
-		if (item.getPayType() == CODE_PAY_TYPE_CARD_COMPLETE || item.getPayType() == CODE_PAY_TYPE_ACCOUNT_COMPLETE)
+		if (item.payType == CODE_PAY_TYPE_CARD_COMPLETE || item.payType == CODE_PAY_TYPE_ACCOUNT_COMPLETE)
 		{
 			// 카드결제 완료 || 가상계좌 완료
-			intent = new Intent(baseActivity, BookingTabActivity.class);
-		} else if (item.getPayType() == CODE_PAY_TYPE_ACCOUNT_WAIT)
+
+			switch (item.placeType)
+			{
+				case HOTEL:
+					intent = new Intent(baseActivity, BookingTabActivity.class);
+					break;
+
+				case FNB:
+					intent = new Intent(baseActivity, FnBBookingTabActivity.class);
+					break;
+			}
+
+		} else if (item.payType == CODE_PAY_TYPE_ACCOUNT_WAIT)
 		{
 			// 가상계좌 입금대기
 			intent = new Intent(baseActivity, PaymentWaitActivity.class);
@@ -189,7 +201,7 @@ public class BookingListFragment extends
 		}
 
 		HashMap<String, String> params = new HashMap<String, String>();
-		params.put(Label.TYPE, String.valueOf(item.getPayType()));
+		params.put(Label.TYPE, String.valueOf(item.payType));
 		params.put(Label.ISUSED, String.valueOf(item.isUsed));
 
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd");
@@ -199,7 +211,7 @@ public class BookingListFragment extends
 		params.put(Label.CHECK_OUT, simpleDateFormat.format(item.checkoutTime));
 		params.put(Label.RESERVATION_INDEX, String.valueOf(item.reservationIndex));
 
-		AnalyticsManager.getInstance(getActivity()).recordEvent(Screen.BOOLKING_LIST, Action.CLICK, item.getHotelName(), params);
+		AnalyticsManager.getInstance(getActivity()).recordEvent(Screen.BOOLKING_LIST, Action.CLICK, item.placeName, params);
 	}
 
 	@Override
@@ -456,7 +468,7 @@ public class BookingListFragment extends
 
 				mCurrentTime = response.getLong("currentDateTime");
 
-				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_LIST).toString(), null, mReservationListJsonResponseListener, baseActivity));
+				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_BOOKING_LIST).toString(), null, mReservationListJsonResponseListener, baseActivity));
 			} catch (Exception e)
 			{
 				onError(e);
@@ -524,11 +536,30 @@ public class BookingListFragment extends
 
 						Booking booking = new Booking(jsonObject);
 
-						switch (booking.getPayType())
+						switch (booking.payType)
 						{
 							case CODE_PAY_TYPE_CARD_COMPLETE:
 							case CODE_PAY_TYPE_ACCOUNT_COMPLETE:
-								boolean isUsed = booking.checkoutTime < mCurrentTime;
+								boolean isUsed = false;
+
+								switch (booking.placeType)
+								{
+									case HOTEL:
+										isUsed = booking.checkoutTime < mCurrentTime;
+										break;
+
+									case FNB:
+									{
+										Date checkinDate = new Date(booking.checkinTime);
+										SimpleDateFormat sFormat = new SimpleDateFormat("yyyyMMdd");
+										sFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+										int checkin = Integer.valueOf(sFormat.format(checkinDate));
+										int today = Integer.valueOf(sFormat.format(mCurrentTime));
+
+										isUsed = checkin < today ? true : false;
+										break;
+									}
+								}
 
 								booking.isUsed = isUsed;
 
@@ -666,7 +697,7 @@ public class BookingListFragment extends
 
 							lockUI();
 
-							mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_LIST).toString(), null, mReservationListJsonResponseListener, baseActivity));
+							mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_BOOKING_LIST).toString(), null, mReservationListJsonResponseListener, baseActivity));
 						}
 					};
 				} else
@@ -685,7 +716,7 @@ public class BookingListFragment extends
 
 							lockUI();
 
-							mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_LIST).toString(), null, mReservationListJsonResponseListener, baseActivity));
+							mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_BOOKING_LIST).toString(), null, mReservationListJsonResponseListener, baseActivity));
 						}
 					};
 				}
@@ -693,7 +724,7 @@ public class BookingListFragment extends
 				switch (msg_code)
 				{
 					case 0:
-						mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_LIST).toString(), null, mReservationListJsonResponseListener, baseActivity));
+						mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_BOOKING_LIST).toString(), null, mReservationListJsonResponseListener, baseActivity));
 						break;
 
 					// Toast
@@ -706,7 +737,7 @@ public class BookingListFragment extends
 							DailyToast.showToast(baseActivity, message, Toast.LENGTH_SHORT);
 						}
 
-						mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_LIST).toString(), null, mReservationListJsonResponseListener, baseActivity));
+						mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_BOOKING_LIST).toString(), null, mReservationListJsonResponseListener, baseActivity));
 						break;
 					}
 
@@ -727,7 +758,7 @@ public class BookingListFragment extends
 							baseActivity.showSimpleDialog(getString(R.string.dialog_notice2), message, getString(R.string.dialog_btn_text_confirm), onClickListener);
 						} else
 						{
-							mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_LIST).toString(), null, mReservationListJsonResponseListener, baseActivity));
+							mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_BOOKING_LIST).toString(), null, mReservationListJsonResponseListener, baseActivity));
 						}
 						break;
 					}
@@ -737,7 +768,7 @@ public class BookingListFragment extends
 				onError(e);
 
 				// credit card 요청
-				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_LIST).toString(), null, mReservationListJsonResponseListener, baseActivity));
+				mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_BOOKING_LIST).toString(), null, mReservationListJsonResponseListener, baseActivity));
 			}
 		}
 	};

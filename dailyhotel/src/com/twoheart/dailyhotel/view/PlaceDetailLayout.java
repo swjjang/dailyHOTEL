@@ -93,6 +93,8 @@ public abstract class PlaceDetailLayout
 
 	protected abstract void initLayout(LayoutInflater inflater, BaseActivity activity);
 
+	protected abstract int getSearchTicketName();
+
 	public abstract void setDetail(PlaceDetail placeDetail, int imagePosition);
 
 	public PlaceDetailLayout(BaseActivity activity, String defaultImageUrl)
@@ -153,7 +155,7 @@ public abstract class PlaceDetailLayout
 			@Override
 			public void onClick(View v)
 			{
-				hideAnimationRoomType();
+				hideAnimationTicketInformationLayout();
 			}
 		});
 
@@ -161,7 +163,7 @@ public abstract class PlaceDetailLayout
 		initLayout(inflater, activity);
 
 		setBookingStatus(STATUS_NONE);
-		hideRoomType();
+		hideTicketInformationLayout();
 	}
 
 	public ViewGroup getLayout()
@@ -216,12 +218,12 @@ public abstract class PlaceDetailLayout
 			return;
 		}
 
-		TextView roomTypeTextView = (TextView) view.findViewById(R.id.roomTypeTextView);
+		TextView nameTextView = (TextView) view.findViewById(R.id.roomTypeTextView);
 		TextView priceTextView = (TextView) view.findViewById(R.id.priceTextView);
 		TextView optionTextView = (TextView) view.findViewById(R.id.optionTextView);
 		TextView benefitTextView = (TextView) view.findViewById(R.id.benefitTextView);
 
-		roomTypeTextView.setText(information.name);
+		nameTextView.setText(information.name);
 
 		DecimalFormat comma = new DecimalFormat("###,##0");
 		String currency = mActivity.getString(R.string.currency);
@@ -255,16 +257,16 @@ public abstract class PlaceDetailLayout
 			return;
 		}
 
-		for (View roomView : mTicketInformationViews)
+		for (View ticketInformationView : mTicketInformationViews)
 		{
-			if (roomView == view)
+			if (ticketInformationView == view)
 			{
 				mSelectedTicketInformation = ticketInformation;
 
-				roomView.setSelected(true);
+				ticketInformationView.setSelected(true);
 			} else
 			{
-				roomView.setSelected(false);
+				ticketInformationView.setSelected(false);
 			}
 		}
 	}
@@ -300,7 +302,7 @@ public abstract class PlaceDetailLayout
 				bookingView.setVisibility(View.VISIBLE);
 				soldoutView.setVisibility(View.GONE);
 
-				bookingView.setText(R.string.act_hotel_search_room);
+				bookingView.setText(getSearchTicketName());
 				break;
 			}
 
@@ -416,7 +418,7 @@ public abstract class PlaceDetailLayout
 		}
 	}
 
-	protected void hideRoomType()
+	protected void hideTicketInformationLayout()
 	{
 		if (mObjectAnimator != null)
 		{
@@ -446,7 +448,7 @@ public abstract class PlaceDetailLayout
 		mAnimationStatus = ANIMATION_STATUS.HIDE_END;
 	}
 
-	public void showAnimationRoomType()
+	public void showAnimationTicketInformationLayout()
 	{
 		if (mAnimationState == ANIMATION_STATE.START && mAnimationStatus == ANIMATION_STATUS.SHOW)
 		{
@@ -533,7 +535,7 @@ public abstract class PlaceDetailLayout
 		showAnimationFadeOut();
 	}
 
-	public void hideAnimationRoomType()
+	public void hideAnimationTicketInformationLayout()
 	{
 		if (mAnimationState == ANIMATION_STATE.START && mAnimationStatus == ANIMATION_STATUS.HIDE)
 		{
@@ -579,7 +581,7 @@ public abstract class PlaceDetailLayout
 						mAnimationStatus = ANIMATION_STATUS.HIDE_END;
 						mAnimationState = ANIMATION_STATE.END;
 
-						hideRoomType();
+						hideTicketInformationLayout();
 
 						setBookingStatus(STATUS_SEARCH_TICKET);
 					}
@@ -607,7 +609,7 @@ public abstract class PlaceDetailLayout
 			mAnimationStatus = ANIMATION_STATUS.HIDE_END;
 			mAnimationState = ANIMATION_STATE.END;
 
-			hideRoomType();
+			hideTicketInformationLayout();
 
 			setBookingStatus(STATUS_SEARCH_TICKET);
 		}

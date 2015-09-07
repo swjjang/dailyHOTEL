@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.model;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.util.ExLog;
 
 import android.os.Parcel;
@@ -15,14 +16,15 @@ public class Booking implements Parcelable
 
 	public int reservationIndex; // 호텔 예약 고유 번호.
 	public int type = TYPE_ENTRY;
-	private String hotelName;
-	private int payType;
-	private String tid;
+	public String placeName;
+	public int payType;
+	public String tid;
 	public String ment;
 	public long checkinTime;
 	public long checkoutTime;
 	public String hotelImageUrl;
 	public boolean isUsed;
+	public PlaceMainFragment.TYPE placeType;
 
 	public Booking()
 	{
@@ -30,7 +32,7 @@ public class Booking implements Parcelable
 
 	public Booking(String sectionName)
 	{
-		hotelName = sectionName;
+		placeName = sectionName;
 		type = TYPE_SECTION;
 	}
 
@@ -39,12 +41,38 @@ public class Booking implements Parcelable
 		readFromParcel(in);
 	}
 
+	public Booking(JSONObject jsonObject)
+	{
+		try
+		{
+			if (jsonObject.has("reservation_rec_idx") == true)
+			{
+				reservationIndex = jsonObject.getInt("reservation_rec_idx");
+			}
+
+			placeName = jsonObject.getString("hotel_name");
+			payType = jsonObject.getInt("pay_type");
+			ment = jsonObject.getString("comment");
+			tid = jsonObject.getString("tid");
+			checkinTime = jsonObject.getLong("checkin_time");
+			checkoutTime = jsonObject.getLong("checkout_time");
+
+			JSONArray jsonArray = jsonObject.getJSONArray("img");
+			hotelImageUrl = jsonArray.getJSONObject(0).getString("path");
+
+			placeType = PlaceMainFragment.TYPE.valueOf(jsonObject.getString("type").toUpperCase());
+		} catch (Exception e)
+		{
+			ExLog.d(e.toString());
+		}
+	}
+
 	@Override
 	public void writeToParcel(Parcel dest, int flags)
 	{
 		dest.writeInt(reservationIndex);
 		dest.writeInt(type);
-		dest.writeString(hotelName);
+		dest.writeString(placeName);
 		dest.writeInt(payType);
 		dest.writeString(tid);
 		dest.writeString(ment);
@@ -53,13 +81,14 @@ public class Booking implements Parcelable
 		dest.writeLong(checkoutTime);
 		dest.writeString(hotelImageUrl);
 		dest.writeInt(isUsed ? 1 : 0);
+		dest.writeString(placeType.name());
 	}
 
 	private void readFromParcel(Parcel in)
 	{
 		reservationIndex = in.readInt();
 		type = in.readInt();
-		hotelName = in.readString();
+		placeName = in.readString();
 		payType = in.readInt();
 		tid = in.readString();
 		ment = in.readString();
@@ -68,6 +97,13 @@ public class Booking implements Parcelable
 		checkoutTime = in.readLong();
 		hotelImageUrl = in.readString();
 		isUsed = in.readInt() == 1;
+		placeType = PlaceMainFragment.TYPE.valueOf(in.readString());
+	}
+
+	@Override
+	public int describeContents()
+	{
+		return 0;
 	}
 
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
@@ -83,49 +119,4 @@ public class Booking implements Parcelable
 			return new Booking[size];
 		}
 	};
-
-	public Booking(JSONObject jsonObject)
-	{
-		try
-		{
-			if (jsonObject.has("reserv_idx") == true)
-			{
-				reservationIndex = jsonObject.getInt("reserv_idx");
-			}
-
-			hotelName = jsonObject.getString("hotel_name");
-			payType = jsonObject.getInt("pay_type");
-			ment = jsonObject.getString("comment");
-			tid = jsonObject.getString("tid");
-			checkinTime = jsonObject.getLong("checkin_time");
-			checkoutTime = jsonObject.getLong("checkout_time");
-
-			JSONArray jsonArray = jsonObject.getJSONArray("img");
-			hotelImageUrl = jsonArray.getJSONObject(0).getString("path");
-		} catch (Exception e)
-		{
-			ExLog.d(e.toString());
-		}
-	}
-
-	public String getHotelName()
-	{
-		return hotelName;
-	}
-
-	public int getPayType()
-	{
-		return payType;
-	}
-
-	public String getTid()
-	{
-		return tid;
-	}
-
-	@Override
-	public int describeContents()
-	{
-		return 0;
-	}
 }

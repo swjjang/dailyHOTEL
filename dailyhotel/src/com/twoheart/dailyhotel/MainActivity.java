@@ -74,7 +74,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -487,7 +486,6 @@ public class MainActivity
 			{
 				MessageDigest md = MessageDigest.getInstance("SHA");
 				md.update(signature.toByteArray());
-				ExLog.e("KeyHash: getPackageName()" + getPackageName() + ", " + Base64.encodeToString(md.digest(), Base64.DEFAULT));
 			}
 		} catch (Exception e)
 		{
@@ -1008,7 +1006,7 @@ public class MainActivity
 
 					drawerMenuItemIcon.setImageResource(item.getIcon());
 					drawerMenuItemText.setText(item.getTitle());
-					drawerMenuItemText.setTypeface(FontManager.getInstance(context).getMediumTypeface());
+					drawerMenuItemText.setTypeface(FontManager.getInstance(context).getDemiLightTypeface());
 
 					if (item.isSelected() == true)
 					{

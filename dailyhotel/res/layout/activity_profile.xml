@@ -114,13 +114,6 @@
                     android:paddingRight="13dp"
                     android:paddingTop="20dp" >
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:adjustViewBounds="true"
-                        android:src="@drawable/img_ic_edit" />
-
                     <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                         android:id="@+id/tv_profile_edit"
                         android:layout_width="wrap_content"

@@ -100,7 +100,7 @@
     <string name="toast_msg_input_error_alphanumeric_hangul">영문, 숫자, 한글만 입력 가능합니다.</string>
     <string name="toast_msg_input_error_alphanum_name">해외 호텔 예약시에는 영문 성함만 입력 가능합니다.</string>
     <string name="toast_msg_input_error_numeric">숫자만 입력 가능합니다.</string>
-    <string name="toast_msg_no_call">전화 기능이 없는 단말입니다.\n고객센터 전화번호는 1800-9210입니다.</string>
+    <string name="toast_msg_no_call">전화 기능이 없는 단말입니다.\n고객센터 전화번호는 1800-9120입니다.</string>
     <string name="toast_msg_dont_past_hotelinfo">이전 날짜의 호텔 정보는 조회 할 수 없습니다.</string>
 
     <!-- Dialog Messages -->
@@ -157,7 +157,7 @@
     <string name="dialog_msg_processing_payment">결제가 진행 중입니다. 잠시만 기다려 주십시오.</string>
     <string name="dialog_msg_delete_failed_creditcard">신용카드 삭제를 실패하였습니다.</string>
     <string name="dialog_msg_delete_booking">이용 완료한 내역을 삭제하시겠습니까?</string>
-    <string name="dialog_msg_changed_pay">객실 상황 변동으로 인하여&lt;br/&gt;가격 혹은 객실이 변경되었습니다.&lt;br/&gt;확인 뒤 결제해주세요.</string>
+    <string name="dialog_msg_changed_pay">객실 상황 변동으로 인하여 가격 혹은 객실이 변경되었습니다. 확인 뒤 결제해주세요.</string>
     <string name="dialog_msg_changed_bonus">적립금이 변동되었습니다.\n확인 뒤 결제해주세요.</string>
     <string name="dialog_title_used_gps">위치 서비스 사용</string>
     <string name="dialog_msg_used_gps">내 위치 정보를 사용하려면, 단말기의 설정에서 \'위치 서비스\' 사용을 허용해주세요.</string>
@@ -168,6 +168,8 @@
     <string name="dialog_msg_outofmemory">앱 실행에 필요한 메모리가 부족하여 종료됩니다. 메모리 정리 후에 재 실행 부탁드립니다.</string>
     <string name="dialog_msg_facebook_update">진행을 위해 회원정보 추가 입력이 필요합니다.</string>
     <string name="dialog_msg_none_gcmid">Google Play Service(업데이트 혹은 미설치)를 사용할 수 없어 결제는 이상 없으나 알림은 받지 못할 수도 있습니다.</string>
+    <string name="dialog_msg_internal_error">상품 준비 중에 문제가 발생하였습니다. 잠시 후 재시도 하십시오.\n계속적인 문제가 발생할 경우 고객센터 1800-9120 연락 부탁드립니다.</string>
+    <string name="dialog_msg_changed_price">상품 상황 변동으로 인하여 가격이 변경되었습니다. 확인 뒤 결제해주세요.</string>
 
     <!-- Main Drawer Menu Titles -->
     <string name="drawer_menu_pin_title_resrvation">예약</string>
@@ -242,11 +244,7 @@
 
     <!-- Credit Activity -->
     <string name="act_credit_recom">좋은 건 나눠야죠!</string>
-    <string name="act_credit_line1">친구가 내 추천코드를 넣고 회원가입을 하면</string>
-    <string name="act_credit_line2">친구는 5,000원을 선물받고!</string>
-    <string name="act_credit_line3">친구가 첫 결제를 하면 나도 5,000원 받고!</string>
-    <string name="act_credit_line1_4"></string>
-    <string name="act_credit_line5"></string>
+    <string name="act_credit_line1">친구가 내 추천코드를 넣고 회원가입을 하면\n친구는 5,000원을 선물받고!\n친구가 첫 결제를 하면 나도 5,000원 받고!</string>
     <string name="act_credit_btn_login">기존 회원 로그인</string>
     <string name="act_credit_sign_up">회원 가입하고 친구 초대하기</string>
     <string name="act_credit_view_credit">적립금</string>
@@ -261,7 +259,7 @@
     <string name="act_history_no_details">내역이 없습니다.</string>
 
     <!-- Booking List Fragment -->
-    <string name="frag_booking_no_hotels">예약된 호텔이 없습니다!</string>
+    <string name="frag_booking_no_hotels">예약된 내역이 없습니다!</string>
     <string name="frag_booking_line">오늘은 멋진 호텔에서\n하루를 보내는게 어때요?</string>
     <string name="frag_booking_btn_login">기존 회원 로그인</string>
     <string name="frag_booking_wait_account">입금 대기</string>
@@ -327,6 +325,12 @@
     <string name="label_booking_room_info">객실 정보</string>
     <string name="label_booking_room_type">객실 타입</string>
     <string name="message_booking_easypayment">결제 완료 후 취소 및 환불 불가합니다.\n</string>
+    <string name="label_booking_ticket_info">상품 정보</string>
+    <string name="label_booking_ticket_type">타입</string>
+    <string name="label_booking_select_ticket_count">수량선택</string>
+    <string name="label_booking_user_info">예약자 정보</string>
+    <string name="label_booking_user">예약자</string>
+    <string name="label_booking_count">%1$d개</string>
 
     <!-- Payment Activity -->
     <string name="act_payment_isp_error">ISP 결제 오류</string>
@@ -355,6 +359,7 @@
     <string name="frag_booking_tab_hotel_info">호텔 정보</string>
     <string name="frag_booking_tab_location">위치</string>
     <string name="frag_booking_tab_bed_type">객실타입</string>
+    <string name="frag_booking_tab_ticket_type">상품타입</string>
     <string name="frag_booking_tab_chkin_info">체크인 정보</string>
     <string name="frag_booking_tab_chkin">체크인</string>
     <string name="frag_booking_tab_chkout">체크아웃</string>
@@ -365,7 +370,9 @@
     <string name="frag_hotel_tab_price">가격(세금&amp;봉사료 포함)</string>
     <string name="label_consult_kakao">문의하기</string>
     <string name="message_consult_kakao">무엇을 도와드릴까요?</string>
-
+    <string name="label_booking_ticketcount">수량</string>
+    <string name="label_booking_date">날짜</string>
+    
     <!-- RatingHotel Fragment -->
     <string name="frag_rating_hotel_title">호텔 만족도 조사</string>
     <string name="frag_rating_hotel_text1">%1$s에 이용하신</string>
@@ -396,6 +403,7 @@
 
     <!-- HotelTab Activity -->
     <string name="act_hotel_tab_btn">예약하기</string>
+    <string name="act_hotel_search_ticket">상품선택</string>
     <string name="act_hotel_search_room">객실선택</string>
     <string name="act_hotel_booking">예약진행</string>
     <string name="act_hotel_soldout">판매완료</string>

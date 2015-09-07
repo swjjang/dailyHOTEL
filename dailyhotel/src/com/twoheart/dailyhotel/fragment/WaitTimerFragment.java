@@ -115,7 +115,7 @@ public class WaitTimerFragment
 		Intent intent = new Intent(baseActivity.getApplicationContext(), AlarmBroadcastReceiver.class);
 		mPendingIntent = PendingIntent.getBroadcast(baseActivity.getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-		ImageView imageView = (ImageView) view.findViewById(R.id.backgroundImageView);
+		ImageView imageView = (ImageView) view.findViewById(R.id.open_stanby_bg_fnb);
 
 		tvTimer = (TextView) view.findViewById(R.id.tv_timer);
 		tvTimer.setTypeface(FontManager.getInstance(baseActivity).getThinTypeface());

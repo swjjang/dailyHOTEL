@@ -234,8 +234,8 @@ public class FnBMainFragment extends PlaceMainFragment
 
 					String region = baseActivity.sharedPreference.getString(KEY_PREFERENCE_FNB_REGION_SELECT, "");
 					SharedPreferences.Editor editor = baseActivity.sharedPreference.edit();
-					editor.putString(KEY_PREFERENCE_REGION_SELECT_GA, region);
-					editor.putString(KEY_PREFERENCE_HOTEL_NAME_GA, fnb.name);
+					editor.putString(KEY_PREFERENCE_PLACE_REGION_SELECT_GA, region);
+					editor.putString(KEY_PREFERENCE_PLACE_NAME_GA, fnb.name);
 					editor.commit();
 
 					Intent intent = new Intent(baseActivity, FnBDetailActivity.class);

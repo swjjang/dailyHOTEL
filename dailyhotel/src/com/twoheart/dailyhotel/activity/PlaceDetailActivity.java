@@ -133,6 +133,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
 	protected abstract void shareKakao(PlaceDetail placeDetail, String imageUrl, SaleTime checkInSaleTime, SaleTime checkOutSaleTime);
 
+	protected abstract void processBooking(TicketInformation ticketInformation, SaleTime checkInSaleTime);
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -352,22 +354,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
 		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 	}
 
-	private void moveToBooking(TicketInformation ticketInformation)
-	{
-		if (ticketInformation == null)
-		{
-			return;
-		}
-
-		Intent intent = new Intent(PlaceDetailActivity.this, BookingActivity.class);
-		intent.putExtra(NAME_INTENT_EXTRA_DATA_TICKETINFORMATION, ticketInformation);
-		intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, mPlaceDetail.index);
-		intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mCheckInSaleTime);
-
-		startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING);
-		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-	}
-
 	private void moveToUserInfoUpdate(Customer user)
 	{
 		Intent i = new Intent(PlaceDetailActivity.this, SignupActivity.class);
@@ -497,7 +483,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
 			if (mPlaceDetailLayout != null)
 			{
-				mPlaceDetailLayout.showAnimationRoomType();
+				mPlaceDetailLayout.showAnimationTicketInformationLayout();
 			}
 
 			releaseUiComponent();
@@ -515,7 +501,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
 			if (mPlaceDetailLayout != null)
 			{
-				mPlaceDetailLayout.hideAnimationRoomType();
+				mPlaceDetailLayout.hideAnimationTicketInformationLayout();
 			}
 
 			releaseUiComponent();
@@ -740,7 +726,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 				{
 					if (isEmptyTextField(new String[] { user.getEmail(), user.getPhone(), user.getName() }) == false)
 					{
-						moveToBooking(mSelectedTicketInformation);
+						processBooking(mSelectedTicketInformation, mCheckInSaleTime);
 					} else
 					{
 						// 정보 업데이트 화면으로 이동.
@@ -748,7 +734,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 					}
 				} else
 				{
-					moveToBooking(mSelectedTicketInformation);
+					processBooking(mSelectedTicketInformation, mCheckInSaleTime);
 				}
 			} catch (Exception e)
 			{

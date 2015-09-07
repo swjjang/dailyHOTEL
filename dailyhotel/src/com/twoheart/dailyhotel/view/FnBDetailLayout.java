@@ -62,6 +62,12 @@ public class FnBDetailLayout extends PlaceDetailLayout
 	}
 
 	@Override
+	protected int getSearchTicketName()
+	{
+		return R.string.act_hotel_search_ticket;
+	}
+
+	@Override
 	public void setDetail(PlaceDetail placeDetail, int imagePosition)
 	{
 		if (placeDetail == null)
@@ -107,7 +113,7 @@ public class FnBDetailLayout extends PlaceDetailLayout
 
 		setCurrentImage(imagePosition);
 
-		hideRoomType();
+		hideTicketInformationLayout();
 
 		if (mOnImageActionListener != null)
 		{

@@ -4,14 +4,18 @@
     android:layout_height="match_parent" >
 
     <RelativeLayout
+        android:id="@+id/backgroundLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:background="@color/empty_background_hotel" >
 
         <ImageView
-            android:id="@+id/backgroundImageView"
+            android:id="@+id/open_stanby_bg_fnb"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop" />
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/booking_none_bg" />
 
         <LinearLayout
             android:id="@+id/textLayout"
@@ -26,7 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/frag_hotel_list_no_hotels"
-                android:textColor="@color/waitfragment_maintext"
+                android:textColor="@color/white"
                 android:textSize="18dp"
                 android:textStyle="bold" />
 
@@ -38,7 +42,7 @@
                 android:gravity="center"
                 android:lineSpacingExtra="5dp"
                 android:text="@string/frag_hotel_list_no_line"
-                android:textColor="@color/waitfragment_subtext"
+                android:textColor="@color/white"
                 android:textSize="16dp" />
         </LinearLayout>
 

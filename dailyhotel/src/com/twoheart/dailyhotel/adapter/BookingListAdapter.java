@@ -218,15 +218,31 @@ public class BookingListAdapter
 		TextView day = (TextView) view.findViewById(R.id.tv_booking_row_day);
 		View deleteView = view.findViewById(R.id.deleteView);
 
-		name.setText(booking.getHotelName());
+		name.setText(booking.placeName);
 
 		Date checkinDate = new Date(booking.checkinTime);
 		Date checkOutDate = new Date(booking.checkoutTime);
 
-		SimpleDateFormat sFormat = new SimpleDateFormat("yyyy.MM.dd");
-		sFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-		String period = String.format("%s - %s", sFormat.format(checkinDate), sFormat.format(checkOutDate));
-		day.setText(period);
+		switch (booking.placeType)
+		{
+			case HOTEL:
+			{
+				SimpleDateFormat sFormat = new SimpleDateFormat("yyyy.MM.dd");
+				sFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+				String period = String.format("%s - %s", sFormat.format(checkinDate), sFormat.format(checkOutDate));
+				day.setText(period);
+				break;
+			}
+
+			case FNB:
+			{
+				SimpleDateFormat sFormat = new SimpleDateFormat("yyyy.MM.dd");
+				sFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+				String period = sFormat.format(checkinDate);
+				day.setText(period);
+				break;
+			}
+		}
 
 		if (booking.isUsed == true)
 		{
@@ -255,7 +271,7 @@ public class BookingListAdapter
 
 			bookingIconImageView.setVisibility(View.VISIBLE);
 
-			if (booking.getPayType() == Constants.CODE_PAY_TYPE_ACCOUNT_WAIT)
+			if (booking.payType == Constants.CODE_PAY_TYPE_ACCOUNT_WAIT)
 			{
 				waitAccountTextView.setVisibility(View.VISIBLE);
 				waitAccountTextView.setText(booking.ment);
@@ -281,7 +297,7 @@ public class BookingListAdapter
 
 		TextView sectionName = (TextView) view.findViewById(R.id.bookingSectionName);
 
-		sectionName.setText(booking.getHotelName());
+		sectionName.setText(booking.placeName);
 
 		return view;
 	}

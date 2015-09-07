@@ -7,105 +7,94 @@
         android:id="@+id/rl_credit_not_logged_in"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/gradient_window_background"
-        android:orientation="vertical"
-        android:visibility="gone" >
+        android:background="@color/empty_background_event"
+        android:visibility="visible" >
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="50dp"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="5dp" >
-
-            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:gravity="center"
-                android:text="@string/act_credit_recom"
-                android:textColor="@color/textView_textColor_main"
-                android:textSize="20dp" />
-
-            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/act_credit_line1"
-                android:textColor="@color/textView_textColor_sub"
-                android:textSize="15dp" />
-
-            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
-                android:id="@+id/act_credit_line1_4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingTop="1dp"
-                android:text="@string/act_credit_line1_4"
-                android:textColor="@color/textView_textColor_sub"
-                android:textSize="15dp" />
-
-            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingTop="1dp"
-                android:text="@string/act_credit_line2"
-                android:textColor="@color/textView_textColor_sub"
-                android:textSize="15dp" />
-
-            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingTop="1dp"
-                android:text="@string/act_credit_line3"
-                android:textColor="@color/textView_textColor_sub"
-                android:textSize="15dp" />
-
-            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingTop="2dp"
-                android:text="@string/act_credit_line5"
-                android:textColor="@color/textView_textColor_sub"
-                android:textSize="15dp" />
-        </LinearLayout>
-
-        <LinearLayout
+        <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/no_event_bg" />
+
+        <LinearLayout
+            android:id="@+id/textLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center"
             android:orientation="vertical" >
 
             <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
-                android:id="@+id/btn_no_login_login"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:background="@drawable/shape_button_common_background"
-                android:gravity="center"
-                android:text="@string/act_credit_btn_login"
-                android:textColor="@android:color/white"
-                android:textSize="17dp" />
+                android:id="@+id/tv_wait_timer_main"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/act_credit_recom"
+                android:textColor="@color/white"
+                android:textSize="18dp"
+                android:textStyle="bold" />
 
             <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
-                android:id="@+id/btn_no_login_signup"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginBottom="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:background="@drawable/shape_button_common_background"
+                android:id="@+id/tv_wait_timer_sub"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:gravity="center"
+                android:lineSpacingExtra="5dp"
+                android:text="@string/act_credit_line1"
+                android:textColor="@color/white"
+                android:textSize="16dp" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_above="@id/textLayout"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:src="@drawable/ic_coin" />
+
+        <LinearLayout
+            android:id="@+id/btn_no_login_signup"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="25dp"
+            android:background="@drawable/open_stanby_btn_alert"
+            android:gravity="center_horizontal" >
+
+            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+                android:id="@+id/btn_booking_empty_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="11dp"
                 android:gravity="center"
                 android:text="@string/act_credit_sign_up"
                 android:textColor="@android:color/white"
-                android:textSize="17dp" />
+                android:textSize="18dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btn_no_login_login"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_above="@id/btn_no_login_signup"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:background="@drawable/open_stanby_btn_alert"
+            android:gravity="center_horizontal" >
+
+            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+                android:id="@+id/btn_booking_empty_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="11dp"
+                android:gravity="center"
+                android:text="@string/frag_booking_btn_login"
+                android:textColor="@android:color/white"
+                android:textSize="18dp" />
         </LinearLayout>
     </RelativeLayout>
 
@@ -320,8 +309,8 @@
                     android:layout_height="wrap_content"
                     android:clickable="false"
                     android:text="@string/act_credit_kakao"
-                    android:textSize="15dp"
-                    android:textColor="@color/kakaotalk_textcolkr" />
+                    android:textColor="@color/kakaotalk_textcolkr"
+                    android:textSize="15dp" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

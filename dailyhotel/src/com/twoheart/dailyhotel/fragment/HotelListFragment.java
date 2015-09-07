@@ -56,7 +56,6 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.Toast;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.Options;
@@ -129,9 +128,6 @@ public class HotelListFragment extends
 
 		mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
 		mEmptyView = view.findViewById(R.id.emptyView);
-
-		ImageView imageView = (ImageView) mEmptyView.findViewById(R.id.backgroundImageView);
-		imageView.setImageResource(R.drawable.open_stanby_bg);
 
 		mMapLayout = (FrameLayout) view.findViewById(R.id.hotelMapLayout);
 		mMapLayout.setPadding(0, Util.dpToPx(baseActivity, 119) + 2, 0, 0);

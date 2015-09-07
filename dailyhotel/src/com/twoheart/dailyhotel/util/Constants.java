@@ -184,7 +184,7 @@ public interface Constants
 	public static final String URL_WEBAPI_RESERV_CHECKINOUT = UNENCRYPTED_URL ? "api/reserv/checkinout" : "NiQ0JDc0JDY3JDc4JA==$Q0Y4LQ0GVDNkFENEYyQUVDOTA2OUY1RjU3QUQ1NTUzRDg2Mjg2MDdGMzY1Q0YxNTZDQB0YyMUMzTMjBE1MThGMUFBNA==$";
 
 	// api/reserv/list
-	public static final String URL_WEBAPI_RESERV_LIST = UNENCRYPTED_URL ? "api/reserv/list" : "MiQxJDUkMTQkMTEk$MSjUMBwMzg3TMjcDxNTQ5RkZBNzdGRTFBMzYyMThGRkJCOTI=$";
+	//	public static final String URL_WEBAPI_RESERV_LIST = UNENCRYPTED_URL ? "api/reserv/list" : "MiQxJDUkMTQkMTEk$MSjUMBwMzg3TMjcDxNTQ5RkZBNzdGRTFBMzYyMThGRkJCOTI=$";
 
 	// api/reserv/detail
 	public static final String URL_WEBAPI_RESERV_DETAIL = UNENCRYPTED_URL ? "api/reserv/detail" : "MSQ4MCQ1OSQ5JDYwJA==$NVDY2OTY3XM0FBODdEM0UxNDVDODlEQzhGM0RDRUZGMkYzRTRGQzczRjcyOTZQhBQzVDRDM0NDkxMDgxNkMZwRTkyRg==$";
@@ -271,6 +271,18 @@ public interface Constants
 	// api/fnb/sale/session/ticket/sell/check
 	public static final String URL_WEBAPI_FNB_SALE_SESSION_TICKET_SELL_CHECK = UNENCRYPTED_URL ? "api/fnb/sale/session/ticket/sell/check" : "NzckMTA3JDYxJDEyNCQ0MyQ=$MjczMEVDNkQ2ODQzRDE3ODYzRjZCQzMwNzc0NjU0RkYYxMUY0RTYyOTA0QzkwQXTFGNTUxN0M2NjQwNCDQ3ODlCNEZEMEM5RkMwMjQ3OUM2NzJMyNkJCQUU1MTVFRSkZGODRE$";
 
+	// api/fnb/payment/session/easy
+	public static final String URL_WEBAPI_FNB_PAYMENT_SESSION_EASY = UNENCRYPTED_URL ? "api/fnb/payment/session/easy" : "NTEkNDMkMTAkMjAkODYk$QzBFMTI4ODUlBMzAzRDYS3NzU3MEU3NDFEQ0VDQzY1NEJOGRjNDMUNTBNkMzQzkyRUM2RkI5ODVGNUNCRjU0OEWUzOA==$";
+
+	// api/fnb/reservation/booking/list
+	public static final String URL_WEBAPI_FNB_RESERVATION_BOOKING_LIST = UNENCRYPTED_URL ? "api/fnb/reservation/booking/list" : "NiQ5NCQ2NyQ5NSQ3MiQ=$Q0U0MjAc0OUM0RkY4RjU3NTVDNTBFQzJGQUNFMTVDRkJCQUJBOTI0MTI3MzU4RTIyMDVkzOTTlCQjAyNzdGMENFNUFCMDVFQSGTgwRUE0QTc1OTFCMTczNDQyMjlFNERCRDZB$";
+
+	// api/fnb/reservation/booking/detail
+	public static final String URL_WEBAPI_FNB_RESERVATION_BOOKING_DETAIL = UNENCRYPTED_URL ? "api/fnb/reservation/booking/detail" : "OTEkNDMkNjEkNCQ0NSQ=$Mzk1LREFENEREODg4Qzg1QzE2NDBDMDFGMTFEMERCRDgBLwMTdGOUJDQkU3RkFGWRTg4NjVFODQ3NkI5NzJDMzMzNTEzNjVJGMTNENUM2RTExMkI5NjNEREREOUZEMTg0REM0$";
+
+	// api/fnb/reservation/booking/receipt
+	public static final String URL_WEBAPI_FNB_RESERVATION_BOOKING_RECEIPT = UNENCRYPTED_URL ? "api/fnb/reservation/booking/receipt" : "MTA3JDk4JDUyJDc1JDc0JA==$NTdEMjBFRDA2Q0I0RDc0OTI2REMzNjYxRUU2RTdCOTFBNUUwRkY4ERTMxQTI0N0Y2MTExQ0I2QIzHYzMDUwRkE5OTkwQjVEMkNGREWY2ODhGNkQG2MzgwMzFGMUNDQThDMDdF$";
+
 	//
 	public static final String URL_STORE_GOOGLE_DAILYHOTEL = "market://details?id=com.twoheart.dailyhotel";
 	public static final String URL_STORE_GOOGLE_KAKAOTALK = "market://details?id=com.kakao.talk";
@@ -342,16 +354,23 @@ public interface Constants
 	public static final String KEY_PREFERENCE_REGION_SELECT_GA = "REGION_SELECT_GA";
 	public static final String KEY_PREFERENCE_HOTEL_NAME_GA = "HOTEL_NAME_GA";
 
+	public static final String KEY_PREFERENCE_PLACE_REGION_SELECT_GA = "PLACE_REGION_SELECT_GA";
+	public static final String KEY_PREFERENCE_PLACE_NAME_GA = "PLACE_NAME_GA";
+
 	public static final String KEY_PREFERENCE_SHOW_GUIDE = "SHOW_GUIDE";
 
 	public static final String KEY_PREFERENCE_HOTEL_NAME = "HOTEL_NAME";
+	public static final String KEY_PREFERENCE_PLACE_NAME = "PLACE_NAME";
 	public static final String KEY_PREFERENCE_HOTEL_CHECKOUT = "HOTEL_CHECKOUT";
 	public static final String KEY_PREFERENCE_HOTEL_CHECKIN = "HOTEL_CHECKIN";
+	public static final String KEY_PREFERENCE_PLACE_TICKET_CHECKOUT = "PLACE_TICKET_CHECKOUT";
+	public static final String KEY_PREFERENCE_PLACE_TICKET_CHECKIN = "PLACE_TICKET_CHECKIN";
 	public static final String VALUE_PREFERENCE_HOTEL_NAME_DEFAULT = "none";
 	public static final int VALUE_PREFERENCE_HOTEL_ROOM_IDX_DEFAULT = 1;
 	public static final String VALUE_PREFERENCE_HOTEL_CHECKOUT_DEFAULT = "14-04-30-20";
 	public static final String KEY_PREFERENCE_USER_IDX = "USER_IDX"; // 예약 성공했을때 예약 사용함, 이름과 용도가 맞지 않음 -> 기존 코드
 	public static final String KEY_PREFERENCE_HOTEL_ROOM_IDX = "HOTEL_RESERVATION_IDX";
+	public static final String KEY_PREFERENCE_PLACE_TICKET_IDX = "PLACE_TICKET_RESERVATION_IDX";
 
 	public static final String KEY_PREFERENCE_ACCOUNT_READY_FLAG = "ACCOUNT_READY_FLAG"; //
 	public static final String KEY_PREFERENCE_BY_SHARE = "BY_SHARE";
@@ -370,6 +389,7 @@ public interface Constants
 	public static final String NAME_INTENT_EXTRA_DATA_BOOKING = "booking";
 	public static final String NAME_INTENT_EXTRA_DATA_BOOKINGIDX = "bookingIdx";
 	public static final String NAME_INTENT_EXTRA_DATA_PAY = "pay";
+	public static final String NAME_INTENT_EXTRA_DATA_TICKETPAYMENT = "ticketPayment";
 	public static final String NAME_INTENT_EXTRA_DATA_SELECTED_IMAGE_URL = "sel_image_url";
 	public static final String NAME_INTENT_EXTRA_DATA_SELECTED_POSOTION = "selectedPosition";
 	//	public static final String NAME_INTENT_EXTRA_DATA_IS_INTENT_FROM_PUSH = "is_intent_from_push";

@@ -66,9 +66,9 @@ public class PaymentWaitActivity extends BaseActivity
 		tvGuide1 = (TextView) findViewById(R.id.tv_payment_wait_guide1);
 		tvGuide2 = (TextView) findViewById(R.id.tv_payment_wait_guide2);
 
-		tvHotelName.setText(booking.getHotelName());
+		tvHotelName.setText(booking.placeName);
 
-		String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_MINE_DETAIL).append('/').append(booking.getPayType()).append('/').append(booking.getTid()).toString();
+		String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_MINE_DETAIL).append('/').append(booking.payType).append('/').append(booking.tid).toString();
 
 		lockUI();
 

@@ -17,50 +17,79 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/gradient_window_background"
-        android:visibility="invisible" >
+        android:visibility="gone" >
 
-        <ImageView
-            android:id="@+id/iv_booking_empty"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:adjustViewBounds="true"
-            android:src="@drawable/img_ic_empty" />
-
-        <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
-            android:id="@+id/tv_booking_empty_desc"
+        <RelativeLayout
+            android:id="@+id/backgroundLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/iv_booking_empty"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="30dp"
-            android:gravity="center"
-            android:text="@string/frag_booking_line"
-            android:textColor="@color/textView_textColor_sub"
-            android:textSize="16.5dp" />
+            android:layout_height="match_parent"
+            android:background="@color/empty_background_hotel" >
 
-        <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
-            android:id="@+id/tv_booking_empty_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/tv_booking_empty_desc"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="10dp"
-            android:gravity="center"
-            android:text="@string/frag_booking_no_hotels"
-            android:textColor="@color/textView_textColor_main"
-            android:textSize="20dp" />
+            <ImageView
+                android:id="@+id/open_stanby_bg_fnb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/booking_none_bg" />
 
-        <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+            <LinearLayout
+                android:id="@+id/textLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:orientation="vertical" >
+
+                <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+                    android:id="@+id/messageTextView01"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/frag_booking_no_hotels"
+                    android:textColor="@color/white"
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
+
+                <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+                    android:id="@+id/messageTextView02"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:gravity="center"
+                    android:lineSpacingExtra="5dp"
+                    android:text="@string/frag_booking_line"
+                    android:textColor="@color/white"
+                    android:textSize="16dp" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_above="@id/textLayout"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:src="@drawable/no_event_ic" />
+        </RelativeLayout>
+
+        <LinearLayout
             android:id="@+id/btn_booking_empty_login"
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:layout_alignParentBottom="true"
-            android:background="@color/dh_theme_color"
-            android:gravity="center"
-            android:text="@string/frag_booking_btn_login"
-            android:textColor="@android:color/white"
-            android:textSize="20dp" />
+            android:layout_margin="25dp"
+            android:background="@drawable/open_stanby_btn_alert"
+            android:gravity="center_horizontal" >
+
+            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="11dp"
+                android:gravity="center"
+                android:text="@string/frag_booking_btn_login"
+                android:textColor="@android:color/white"
+                android:textSize="18dp" />
+        </LinearLayout>
     </RelativeLayout>
 
 </FrameLayout>

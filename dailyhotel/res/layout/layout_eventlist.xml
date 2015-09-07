@@ -16,8 +16,15 @@
         android:id="@+id/emptyLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/no_event_bg"
+        android:background="@color/empty_background_event"
         android:visibility="gone" >
+        
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/no_event_bg" />
 
         <LinearLayout
             android:id="@+id/textLayout"

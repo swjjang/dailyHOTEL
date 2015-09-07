@@ -109,5 +109,4 @@ public class Customer implements Parcelable
 	{
 		return 0;
 	}
-
 }

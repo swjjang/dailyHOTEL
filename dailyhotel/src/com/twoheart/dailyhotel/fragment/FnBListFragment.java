@@ -48,8 +48,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.Options;
@@ -85,16 +83,6 @@ public class FnBListFragment extends PlaceListFragment
 
 		mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
 		mEmptyView = view.findViewById(R.id.emptyView);
-
-		ImageView imageView = (ImageView) mEmptyView.findViewById(R.id.backgroundImageView);
-		TextView messageTextView01 = (TextView) mEmptyView.findViewById(R.id.messageTextView01);
-		TextView messageTextView02 = (TextView) mEmptyView.findViewById(R.id.messageTextView02);
-
-		imageView.setImageResource(R.drawable.open_stanby_bg_fnb);
-		messageTextView01.setTextColor(getResources().getColor(R.color.white));
-		messageTextView01.setText(R.string.label_fnblistfragment_empty_text01);
-		messageTextView02.setTextColor(getResources().getColor(R.color.white));
-		messageTextView02.setText(R.string.label_fnblistfragment_empty_text02);
 
 		mMapLayout = (FrameLayout) view.findViewById(R.id.hotelMapLayout);
 		mMapLayout.setPadding(0, Util.dpToPx(baseActivity, 109) + 2, 0, 0);

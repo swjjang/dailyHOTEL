@@ -648,37 +648,19 @@ public class BaseActivity extends
 	}
 
 	/**
-	 * Toast를 쉽게 표시해주는 메서드로서, 참조 Context로는 ApplicationContext를 사용한다. 삼성 단말기에서 삼성
-	 * 테마를 사용하기 위함이다.
-	 * 
-	 * @param message
-	 *            Toast에 표시할 내용
-	 * @param length
-	 *            Toast가 표시되는 시간. Toast.LENGTH_SHORT, Toast.LENGTH_LONG
-	 * @param isAttachToActivity
-	 *            현재 Activity가 종료되면 Toast도 제거할지를 결정한다
+	 * 기본적으로 내부오류가 발생하였을 경우 사용
 	 */
-	//	public void showToast(String message, int length, boolean isAttachToActivity)
-	//	{
-	//		try
-	//		{
-	//			if (mToast != null)
-	//				mToast.cancel();
-	//
-	//			if (isAttachToActivity)
-	//			{
-	//				mToast = Toast.makeText(getApplicationContext(), message, length);
-	//				mToast.show();
-	//
-	//			} else
-	//			{
-	//				Toast.makeText(getApplicationContext(), message, length).show();
-	//			}
-	//		} catch (Exception e)
-	//		{ // show Toast 도중 Stackoverflow가 자주 발생함. 이유를 알 수 없음. 이에따른 임시 방편 
-	//			ExLog.e(e.toString());
-	//		}
-	//	}
+	protected void onInternalError()
+	{
+		showSimpleDialog(null, getString(R.string.dialog_msg_internal_error), getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				finish();
+			}
+		}, null, false);
+	}
 
 	/**
 	 * 버튼 난타를 방지하기 위한 메서드, 버튼의 클릭 가능 여부를 반대로 변경.

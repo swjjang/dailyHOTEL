@@ -14,6 +14,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.FnBDetail;
 import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
@@ -58,6 +59,22 @@ public class FnBDetailActivity extends PlaceDetailActivity
 		}
 
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_SALE_RESTAURANT_INFO).append(params).toString(), null, mFnBDetailJsonResponseListener, this));
+	}
+
+	@Override
+	protected void processBooking(TicketInformation ticketInformation, SaleTime checkInSaleTime)
+	{
+		if (ticketInformation == null)
+		{
+			return;
+		}
+
+		Intent intent = new Intent(this, FnBBookingActivity.class);
+		intent.putExtra(NAME_INTENT_EXTRA_DATA_TICKETINFORMATION, ticketInformation);
+		intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);
+
+		startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING);
+		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -71,7 +71,7 @@ public class CreditFragment
 {
 	private RelativeLayout rlCreditNotLoggedIn;
 	private LinearLayout llCreditLoggedIn, btnInvite;
-	private TextView btnLogin, btnSignup;
+	private View btnLogin, btnSignup;
 	private TextView tvBonus, tvRecommenderCode;
 	private TextView tvCredit;
 	private String mRecommendCode;
@@ -92,17 +92,13 @@ public class CreditFragment
 		tvCredit = (TextView) view.findViewById(R.id.tv_credit_history);
 		tvRecommenderCode = (TextView) view.findViewById(R.id.tv_credit_recommender_code);
 		tvBonus = (TextView) view.findViewById(R.id.tv_credit_money);
-		btnLogin = (TextView) view.findViewById(R.id.btn_no_login_login);
-		btnSignup = (TextView) view.findViewById(R.id.btn_no_login_signup);
+		btnLogin = view.findViewById(R.id.btn_no_login_login);
+		btnSignup = view.findViewById(R.id.btn_no_login_signup);
 
 		btnLogin.setOnClickListener(this);
 		btnSignup.setOnClickListener(this);
 		btnInvite.setOnClickListener(this);
 		tvCredit.setOnClickListener(this);
-
-		//영어버전에서만 텍스트 사이의 패딩 값을 주기위해 새로운 텍스트뷰를 보여줌
-		TextView line1_4 = (TextView) view.findViewById(R.id.act_credit_line1_4);
-		line1_4.setVisibility(View.GONE);
 
 		tvCredit.setPaintFlags(tvCredit.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG); // underlining
 

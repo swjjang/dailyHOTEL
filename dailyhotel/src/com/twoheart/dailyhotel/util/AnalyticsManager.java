@@ -194,6 +194,9 @@ public class AnalyticsManager
 		public static final String FNB_NAME = "fnbName";
 		public static final String FNB_TICKET_NAME = "fnbTicketName";
 		public static final String FNB_TICKET_INDEX = "fnbTicketIndex";
+		public static final String PLACE_NAME = "placeName";
+		public static final String PLACE_TICKET_NAME = "placeTicketName";
+		public static final String PLACE_TICKET_INDEX = "placeTicketIndex";
 
 	}
 }

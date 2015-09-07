@@ -93,7 +93,7 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 		tvCheckIn = (TextView) view.findViewById(R.id.tv_booking_tab_checkin);
 		tvCheckOut = (TextView) view.findViewById(R.id.tv_booking_tab_checkout);
 
-		tvHotelName.setText(mBooking.getHotelName());
+		tvHotelName.setText(mBooking.placeName);
 		tvAddress.setText(mHotelDetail.getHotel().getAddress());
 		tvBedtype.setText(mHotelDetail.roomName);
 		tvCustomerName.setText(mHotelDetail.guestName);

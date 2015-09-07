@@ -18,7 +18,7 @@
         android:layout_marginLeft="15dp"
         android:gravity="left|center_vertical"
         android:text="@string/actionbar_title_hotel_list_frag"
-        android:textColor="@drawable/selector_color_drawermenu"
+        android:textColor="@color/menu_title_text"
         android:textSize="18dp" />
 
     <ImageView

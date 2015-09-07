@@ -119,6 +119,10 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".activity.FnBBookingTabActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.AboutActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
@@ -158,6 +162,11 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.BookingActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppBaseTheme" />
+        <activity
+            android:name=".activity.FnBBookingActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppBaseTheme" />
@@ -295,9 +304,6 @@
         <meta-data
             android:name="io.branch.sdk.TestMode"
             android:value="true" />
-        <meta-data
-            android:name="io.branch.sdk.BranchKey.test"
-            android:value="key_test_lnoTvqmfh68gyZJ1Wp7PhgplrzbYXPnt" />
         <meta-data
             android:name="io.branch.sdk.BranchKey"
             android:value="key_live_lnoTvqmfh68gyZJ1Wp7PhgplrzbYXPnt" />

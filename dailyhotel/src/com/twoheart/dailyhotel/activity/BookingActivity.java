@@ -21,6 +21,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.android.volley.Request.Method;
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.Customer;
@@ -127,7 +128,7 @@ public class BookingActivity extends
 	private int mReqCode;
 	private int mResCode;
 	private Intent mResIntent;
-	protected String mAliveCallSource;
+	protected String mAliveCallSource = "";
 	private Dialog mFinalCheckDialog;
 	private ProgressDialog mProgressDialog;
 
@@ -251,10 +252,11 @@ public class BookingActivity extends
 	{
 		super.onResume();
 
-		if ("ACTIVITY_RESULT".equalsIgnoreCase(mAliveCallSource) == true && mReqCode == CODE_REQUEST_ACTIVITY_PAYMENT)
-		{
-
-		} else
+		//		if (("ACTIVITY_RESULT".equalsIgnoreCase(mAliveCallSource) == true && mReqCode == CODE_REQUEST_ACTIVITY_PAYMENT) || "PAYMENT".equalsIgnoreCase(mAliveCallSource) == true)
+		//		{
+		//
+		//		} else
+		if ("".equalsIgnoreCase(mAliveCallSource) == true)
 		{
 			lockUI();
 
@@ -293,6 +295,14 @@ public class BookingActivity extends
 		}
 
 		tvPrice.setText(comma.format(payPrice) + Html.fromHtml(getString(R.string.currency)));
+	}
+
+	@Override
+	public void onErrorResponse(VolleyError error)
+	{
+		super.onErrorResponse(error);
+
+		hidePorgressDialog();
 	}
 
 	@Override
@@ -438,7 +448,6 @@ public class BookingActivity extends
 						}
 					});
 				} else
-
 				{
 					onClickPayment();
 				}
@@ -660,21 +669,7 @@ public class BookingActivity extends
 				mFinalCheckDialog.dismiss();
 			}
 
-			if (mProgressDialog != null)
-			{
-				if (mProgressDialog.isShowing() == true)
-				{
-					mProgressDialog.dismiss();
-				}
-
-				mProgressDialog = null;
-			}
-
-			mProgressDialog = new ProgressDialog(BookingActivity.this);
-			mProgressDialog.setMessage(getString(R.string.dialog_msg_processing_payment));
-			mProgressDialog.setIndeterminate(true);
-			mProgressDialog.setCancelable(false);
-			mProgressDialog.show();
+			showProgressDialog();
 
 			String bonus = "0"; // 적립금
 
@@ -1082,14 +1077,33 @@ public class BookingActivity extends
 
 		mFinalCheckDialog = null;
 
-		if (mProgressDialog != null && mProgressDialog.isShowing() == true)
-		{
-			mProgressDialog.dismiss();
-		}
-
-		mProgressDialog = null;
+		hidePorgressDialog();
 
 		super.onDestroy();
+	}
+
+	private void showProgressDialog()
+	{
+		hidePorgressDialog();
+
+		mProgressDialog = new ProgressDialog(this);
+		mProgressDialog.setMessage(getString(R.string.dialog_msg_processing_payment));
+		mProgressDialog.setIndeterminate(true);
+		mProgressDialog.setCancelable(false);
+		mProgressDialog.show();
+	}
+
+	private void hidePorgressDialog()
+	{
+		if (mProgressDialog != null)
+		{
+			if (mProgressDialog.isShowing() == true)
+			{
+				mProgressDialog.dismiss();
+			}
+
+			mProgressDialog = null;
+		}
 	}
 
 	private void showAgreeTermDialog(Pay.Type type)
@@ -2193,12 +2207,7 @@ public class BookingActivity extends
 		@Override
 		public void onResponse(String url, JSONObject response)
 		{
-			if (mProgressDialog != null && mProgressDialog.isShowing() == true)
-			{
-				mProgressDialog.dismiss();
-			}
-
-			mProgressDialog = null;
+			hidePorgressDialog();
 
 			try
 			{
