@@ -102,6 +102,7 @@
     <string name="toast_msg_input_error_numeric">숫자만 입력 가능합니다.</string>
     <string name="toast_msg_no_call">전화 기능이 없는 단말입니다.\n고객센터 전화번호는 1800-9120입니다.</string>
     <string name="toast_msg_dont_past_hotelinfo">이전 날짜의 호텔 정보는 조회 할 수 없습니다.</string>
+    <string name="toast_msg_maxcount_ticket">한번에 구매 가능한 최대 수량은 %1$d개 입니다.</string>
 
     <!-- Dialog Messages -->
 
@@ -374,7 +375,7 @@
     <string name="label_booking_date">날짜</string>
     
     <!-- RatingHotel Fragment -->
-    <string name="frag_rating_hotel_title">호텔 만족도 조사</string>
+    <string name="frag_rating_hotel_title">만족도 조사</string>
     <string name="frag_rating_hotel_text1">%1$s에 이용하신</string>
     <string name="frag_rating_hotel_text2">\'%1$s\'</string>
     <string name="frag_rating_hotel_text3">은 어떠셨나요?</string>

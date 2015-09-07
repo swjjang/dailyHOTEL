@@ -198,7 +198,7 @@ public class FnBBookingActivity extends PlaceBookingActivity
 
 			if (count >= maxCount)
 			{
-				// 더 이상 구매 불가하다. 
+				DailyToast.showToast(FnBBookingActivity.this, getString(R.string.toast_msg_maxcount_ticket, maxCount), Toast.LENGTH_SHORT);
 			} else
 			{
 				mTicketPayment.count = count + 1;
@@ -216,7 +216,6 @@ public class FnBBookingActivity extends PlaceBookingActivity
 
 			if (count <= 1)
 			{
-				// 최소 1장은 구매해야됨.
 			} else
 			{
 				mTicketPayment.count = count - 1;

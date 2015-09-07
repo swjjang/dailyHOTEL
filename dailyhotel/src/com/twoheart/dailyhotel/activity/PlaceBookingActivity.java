@@ -111,7 +111,10 @@ public abstract class PlaceBookingActivity extends BaseActivity
 	{
 		super.onResume();
 
-		if (mState == STATE_NONE)
+		if ((mState == STATE_ACTIVITY_RESULT == true && mReqCode == CODE_REQUEST_ACTIVITY_PAYMENT) || mState == STATE_PAYMENT)
+		{
+
+		} else
 		{
 			lockUI();
 

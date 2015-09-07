@@ -19,6 +19,8 @@ import org.json.JSONObject;
 
 import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
@@ -252,16 +254,39 @@ public class RatingHotelFragment
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("rating", result);
 
+		DailyHotelJsonResponseListener listener = mReserveReviewJsonResponseListener;
+
+		if (NOT_RATE_THIS_HOTEL.equalsIgnoreCase(result) == true)
+		{
+			listener = null;
+		}
+
 		switch (type)
 		{
 			case HOTEL:
 				params.put("reserv_idx", String.valueOf(index));
-				mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_SATISFACTION_RATING_UPDATE).toString(), params, mReserveReviewJsonResponseListener, mHostActivity));
+				mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_SATISFACTION_RATING_UPDATE).toString(), params, listener, new ErrorListener()
+				{
+					@Override
+					public void onErrorResponse(VolleyError arg0)
+					{
+						// TODO Auto-generated method stub
+
+					}
+				}));
 				break;
 
 			case FNB:
 				params.put("reservation_rec_idx", String.valueOf(index));
-				mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_SESSION_RATING_UPDATE).toString(), params, mReserveReviewJsonResponseListener, mHostActivity));
+				mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_SESSION_RATING_UPDATE).toString(), params, listener, new ErrorListener()
+				{
+					@Override
+					public void onErrorResponse(VolleyError arg0)
+					{
+						// TODO Auto-generated method stub
+
+					}
+				}));
 				break;
 		}
 	}

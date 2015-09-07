@@ -154,7 +154,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:adjustViewBounds="true"
-                            android:src="@drawable/img_ic_reservation_bedtype" />
+                            android:src="@drawable/img_ic_reservation_res" />
 
                         <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                             android:layout_width="wrap_content"
@@ -190,7 +190,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:adjustViewBounds="true"
-                            android:src="@drawable/img_ic_reservation_bedtype" />
+                            android:src="@drawable/img_ic_reservation_amount" />
 
                         <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                             android:layout_width="wrap_content"
@@ -226,7 +226,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:adjustViewBounds="true"
-                            android:src="@drawable/img_ic_reservation_bedtype" />
+                            android:src="@drawable/img_ic_reservation_date" />
 
                         <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                             android:layout_width="wrap_content"

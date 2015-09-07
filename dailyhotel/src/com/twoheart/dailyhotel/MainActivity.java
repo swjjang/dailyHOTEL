@@ -68,6 +68,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.content.res.Configuration;
+import android.media.MediaMuxer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -401,6 +402,36 @@ public class MainActivity
 	public void selectMenuDrawer(DrawerMenu selectedMenu)
 	{
 		drawerList.performItemClick(mDrawerMenuListAdapter.getView(mDrawerMenuList.indexOf(selectedMenu), null, null), mDrawerMenuList.indexOf(selectedMenu), mDrawerMenuListAdapter.getItemId(mDrawerMenuList.indexOf(selectedMenu)));
+	}
+
+	public void refreshMenuDrawer()
+	{
+		switch (indexLastFragment)
+		{
+			case INDEX_HOTEL_LIST_FRAGMENT:
+				selectMenuDrawer(menuHotelListFragment);
+				break;
+
+			case INDEX_FNB_LIST_FRAGMENT:
+				selectMenuDrawer(menuFnBListFragment);
+				break;
+
+			case INDEX_BOOKING_LIST_FRAGMENT:
+				selectMenuDrawer(menuBookingListFragment);
+				break;
+
+			case INDEX_CREDIT_FRAGMENT:
+				selectMenuDrawer(menuCreditFragment);
+				break;
+
+			case INDEX_EVENT_FRAGMENT:
+				selectMenuDrawer(menuEventListFragment);
+				break;
+
+			case INDEX_SETTING_FRAGMENT:
+				selectMenuDrawer(menuSettingFragment);
+				break;
+		}
 	}
 
 	/**

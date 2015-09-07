@@ -23,14 +23,16 @@ public class DailyHotelJsonRequest extends DailyHotelRequest<JSONObject>
 	{
 		super(method, url, parameters, errorListener);
 
-		this.mListener = listener;
+		mListener = listener;
 	}
 
 	@Override
 	protected void deliverResponse(JSONObject response)
 	{
 		if (mListener != null)
+		{
 			mListener.onResponse(getUrl(), response);
+		}
 	}
 
 	@Override

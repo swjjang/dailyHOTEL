@@ -252,11 +252,10 @@ public class BookingActivity extends
 	{
 		super.onResume();
 
-		//		if (("ACTIVITY_RESULT".equalsIgnoreCase(mAliveCallSource) == true && mReqCode == CODE_REQUEST_ACTIVITY_PAYMENT) || "PAYMENT".equalsIgnoreCase(mAliveCallSource) == true)
-		//		{
-		//
-		//		} else
-		if ("".equalsIgnoreCase(mAliveCallSource) == true)
+		if (("ACTIVITY_RESULT".equalsIgnoreCase(mAliveCallSource) == true && mReqCode == CODE_REQUEST_ACTIVITY_PAYMENT) || "PAYMENT".equalsIgnoreCase(mAliveCallSource) == true)
+		{
+
+		} else
 		{
 			lockUI();
 
