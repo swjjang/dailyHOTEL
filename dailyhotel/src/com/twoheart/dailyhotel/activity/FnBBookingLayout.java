@@ -16,7 +16,6 @@ import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Guest;
 import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.model.TicketPayment;
-import com.twoheart.dailyhotel.model.TicketPayment.Type;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -61,14 +60,14 @@ public class FnBBookingLayout implements OnCheckedChangeListener
 			mHpPaymentButton, mAccountPaymentButton;
 	private View mCardManagerButton;
 
-	private FnBBookingActivity.OnUserActionListener mOnUserActionListener;
+	private FnBPaymentActivity.OnUserActionListener mOnUserActionListener;
 
 	public enum UserInformationType
 	{
 		NAME, PHONE, EMAIL
 	}
 
-	public FnBBookingLayout(BaseActivity activity, FnBBookingActivity.OnUserActionListener listener)
+	public FnBBookingLayout(BaseActivity activity, FnBPaymentActivity.OnUserActionListener listener)
 	{
 		mActivity = activity;
 		mOnUserActionListener = listener;
@@ -216,7 +215,7 @@ public class FnBBookingLayout implements OnCheckedChangeListener
 		ticketDateTextView.setText(ticketPayment.checkInTime);
 
 		// 수량
-		mTicketCountTextView.setText(activity.getString(R.string.label_booking_count, ticketPayment.count));
+		mTicketCountTextView.setText(activity.getString(R.string.label_booking_count, ticketPayment.ticketCount));
 	}
 
 	private void initUserInformationLayout(BaseActivity activity, View viewRoot)
@@ -373,16 +372,16 @@ public class FnBBookingLayout implements OnCheckedChangeListener
 
 		if (checkedId == mEasyPaymentButton.getId())
 		{
-			mOnUserActionListener.setPaymentType(TicketPayment.Type.EASY_CARD);
+			mOnUserActionListener.setPaymentType(TicketPayment.PaymentType.EASY_CARD);
 		} else if (checkedId == mCardPaymentButton.getId())
 		{
-			mOnUserActionListener.setPaymentType(TicketPayment.Type.CARD);
+			mOnUserActionListener.setPaymentType(TicketPayment.PaymentType.CARD);
 		} else if (checkedId == mHpPaymentButton.getId())
 		{
-			mOnUserActionListener.setPaymentType(TicketPayment.Type.PHONE_PAY);
+			mOnUserActionListener.setPaymentType(TicketPayment.PaymentType.PHONE_PAY);
 		} else if (checkedId == mAccountPaymentButton.getId())
 		{
-			mOnUserActionListener.setPaymentType(TicketPayment.Type.VBANK);
+			mOnUserActionListener.setPaymentType(TicketPayment.PaymentType.VBANK);
 		}
 	}
 
@@ -499,7 +498,7 @@ public class FnBBookingLayout implements OnCheckedChangeListener
 		}
 	}
 
-	public void checkPaymentType(Type type)
+	public void checkPaymentType(TicketPayment.PaymentType type)
 	{
 		if (mPaymentGroup == null || type == null)
 		{
@@ -529,9 +528,9 @@ public class FnBBookingLayout implements OnCheckedChangeListener
 	private class TelophoneClickSpannable extends ClickableSpan
 	{
 		private Context mContext;
-		private FnBBookingActivity.OnUserActionListener mOnUserActionListener;
+		private FnBPaymentActivity.OnUserActionListener mOnUserActionListener;
 
-		public TelophoneClickSpannable(Context context, FnBBookingActivity.OnUserActionListener listener)
+		public TelophoneClickSpannable(Context context, FnBPaymentActivity.OnUserActionListener listener)
 		{
 			mContext = context;
 			mOnUserActionListener = listener;

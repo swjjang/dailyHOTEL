@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:scaleType="centerCrop"
-            android:src="@drawable/booking_none_bg" />
+            android:src="@drawable/hotel_none_bg" />
 
         <LinearLayout
             android:id="@+id/textLayout"

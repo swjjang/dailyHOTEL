@@ -16,7 +16,7 @@ import org.json.JSONObject;
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.BaseFragment;
-import com.twoheart.dailyhotel.fragment.FnBBookingTabBookingFragment;
+import com.twoheart.dailyhotel.fragment.FnBTabBookingFragment;
 import com.twoheart.dailyhotel.fragment.PlaceTabInfoFragment;
 import com.twoheart.dailyhotel.fragment.PlaceTabMapFragment;
 import com.twoheart.dailyhotel.model.FnBBookingDetail;
@@ -26,7 +26,7 @@ import com.twoheart.dailyhotel.view.widget.FragmentViewPager;
 
 import android.view.View;
 
-public class FnBBookingTabActivity extends PlaceBookingTabActivity
+public class FnBBookingDetailActivity extends PlaceBookingDetailActivity
 {
 	@Override
 	protected void loadFragments()
@@ -42,7 +42,7 @@ public class FnBBookingTabActivity extends PlaceBookingTabActivity
 
 			ArrayList<BaseFragment> mFragmentList = new ArrayList<BaseFragment>();
 
-			BaseFragment baseFragment01 = FnBBookingTabBookingFragment.newInstance(mPlaceBookingDetail, booking, getString(R.string.drawer_menu_pin_title_resrvation));
+			BaseFragment baseFragment01 = FnBTabBookingFragment.newInstance(mPlaceBookingDetail, booking, getString(R.string.drawer_menu_pin_title_resrvation));
 			mFragmentList.add(baseFragment01);
 
 			BaseFragment baseFragment02 = PlaceTabInfoFragment.newInstance(mPlaceBookingDetail, titleList.get(1));

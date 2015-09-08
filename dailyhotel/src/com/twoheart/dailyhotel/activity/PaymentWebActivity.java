@@ -24,9 +24,8 @@ import org.apache.http.util.EncodingUtils;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Guest;
-import com.twoheart.dailyhotel.model.Pay;
-import com.twoheart.dailyhotel.model.SaleRoomInformation;
-import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.TicketInformation;
+import com.twoheart.dailyhotel.model.TicketPayment;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
@@ -60,7 +59,7 @@ import kr.co.kcp.android.payment.standard.ResultRcvActivity;
 import kr.co.kcp.util.PackageState;
 
 @SuppressLint("NewApi")
-public class PaymentActivity extends BaseActivity implements Constants
+public class PaymentWebActivity extends BaseActivity implements Constants
 {
 	public static final int PROGRESS_STAT_NOT_START = 1;
 	public static final int PROGRESS_STAT_IN = 2;
@@ -70,8 +69,7 @@ public class PaymentActivity extends BaseActivity implements Constants
 	public int m_nStat = PROGRESS_STAT_NOT_START;
 
 	private WebView mWebView;
-	private Pay mPay;
-	private SaleTime mCheckInSaleTime;
+	private TicketPayment mTicketPayment;
 
 	private Handler handler = new Handler();
 
@@ -83,18 +81,17 @@ public class PaymentActivity extends BaseActivity implements Constants
 		Bundle bundle = getIntent().getExtras();
 		if (bundle != null)
 		{
-			mPay = (Pay) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_PAY);
-			mCheckInSaleTime = bundle.getParcelable(NAME_INTENT_EXTRA_DATA_SALETIME);
+			mTicketPayment = (TicketPayment) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_TICKETPAYMENT);
 		}
 
-		if (mPay == null)
+		if (mTicketPayment == null)
 		{
-			DailyToast.showToast(PaymentActivity.this, R.string.toast_msg_failed_to_get_payment_info, Toast.LENGTH_SHORT);
+			DailyToast.showToast(PaymentWebActivity.this, R.string.toast_msg_failed_to_get_payment_info, Toast.LENGTH_SHORT);
 			finish();
 			return;
 		}
 
-		if (mPay.getSaleRoomInformation().roomIndex == 0)
+		if (mTicketPayment.getTicketInformation().index == 0)
 		{
 			// 세션이 만료되어 재시작 요청.
 			restartApp();
@@ -156,13 +153,13 @@ public class PaymentActivity extends BaseActivity implements Constants
 			}
 		}); // 롱클릭 에러 방지.
 
-		if (mPay.getType() == Pay.Type.EASY_CARD)
+		if (mTicketPayment.paymentType == TicketPayment.PaymentType.EASY_CARD)
 		{
 			finish();
 			return;
 		} else
 		{
-			Guest guest = mPay.getGuest();
+			Guest guest = mTicketPayment.getGuest();
 
 			if (TextUtils.isEmpty(guest.name) == true || TextUtils.isEmpty(guest.phone) == true || TextUtils.isEmpty(guest.email) == true)
 			{
@@ -170,16 +167,12 @@ public class PaymentActivity extends BaseActivity implements Constants
 				return;
 			}
 
-			String url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_PAYMENT_SESSION_COMMON_PAYMENT)).toString();
+			String url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_FNB_PAYMENT_SESSION_COMMON)).toString();
 
-			SaleRoomInformation saleRoomInformation = mPay.getSaleRoomInformation();
+			TicketInformation ticketInformation = mTicketPayment.getTicketInformation();
 
-			ArrayList<String> postParameterKey = new ArrayList<String>(Arrays.asList("room_idx", "payment_type", "checkin_date", "length_stay", "bonus", "guest_name", "guest_phone", "guest_email"));
-			ArrayList<String> postParameterValue = new ArrayList<String>(Arrays.asList(String.valueOf(saleRoomInformation.roomIndex), //
-			mPay.getType().name(), //
-			mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), //
-			String.valueOf(saleRoomInformation.nights), //
-			String.valueOf(mPay.isSaleCredit() ? mPay.credit : 0), guest.name, guest.phone, guest.email));
+			ArrayList<String> postParameterKey = new ArrayList<String>(Arrays.asList("sale_reco_idx", "payment_type", "ticket_count", "customer_name", "customer_phone", "customer_email"));
+			ArrayList<String> postParameterValue = new ArrayList<String>(Arrays.asList(String.valueOf(ticketInformation.index), mTicketPayment.paymentType.name(), String.valueOf(mTicketPayment.ticketCount), guest.name, guest.phone, guest.email));
 
 			byte[] postParameter = parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]), postParameterValue.toArray(new String[postParameterValue.size()]));
 
@@ -190,7 +183,7 @@ public class PaymentActivity extends BaseActivity implements Constants
 	@Override
 	protected void onStart()
 	{
-		AnalyticsManager.getInstance(PaymentActivity.this).recordScreen(Screen.PAYMENT);
+		AnalyticsManager.getInstance(PaymentWebActivity.this).recordScreen(Screen.PAYMENT);
 		super.onStart();
 	}
 
@@ -352,7 +345,7 @@ public class PaymentActivity extends BaseActivity implements Constants
 			{
 				if (!new PackageState(this).getPackageDownloadInstallState(PACKAGE_NAME_MPOCKET))
 				{
-					DailyToast.showToast(PaymentActivity.this, R.string.toast_msg_retry_payment_after_install_app, Toast.LENGTH_LONG);
+					DailyToast.showToast(PaymentWebActivity.this, R.string.toast_msg_retry_payment_after_install_app, Toast.LENGTH_LONG);
 					startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_PAYMENT_MPOCKET)));
 					return true;
 				}
@@ -600,7 +593,7 @@ public class PaymentActivity extends BaseActivity implements Constants
 				{
 					//					ExLog.d("[PayDemoActivity] KCPPayPinInfoBridge=[getPaypinInfo]");
 
-					PackageState ps = new PackageState(PaymentActivity.this);
+					PackageState ps = new PackageState(PaymentWebActivity.this);
 
 					if (!ps.getPackageAllInstallState("com.skp.android.paypin"))
 						paypinConfim();
@@ -635,7 +628,7 @@ public class PaymentActivity extends BaseActivity implements Constants
 				@Override
 				public void onClick(View view)
 				{
-					DailyToast.showToast(PaymentActivity.this, R.string.toast_msg_cancel_payment, Toast.LENGTH_SHORT);
+					DailyToast.showToast(PaymentWebActivity.this, R.string.toast_msg_cancel_payment, Toast.LENGTH_SHORT);
 				}
 			};
 
@@ -658,7 +651,7 @@ public class PaymentActivity extends BaseActivity implements Constants
 					CARD_CD = card_cd;
 					QUOTA = quota;
 
-					PackageState ps = new PackageState(PaymentActivity.this);
+					PackageState ps = new PackageState(PaymentWebActivity.this);
 
 					if (!ps.getPackageDownloadInstallState("com.skt.at"))
 						alertToNext();
@@ -700,7 +693,7 @@ public class PaymentActivity extends BaseActivity implements Constants
 			{
 				public void run()
 				{
-					PackageState ps = new PackageState(PaymentActivity.this);
+					PackageState ps = new PackageState(PaymentWebActivity.this);
 
 					String argUrl = arg;
 
@@ -846,14 +839,18 @@ public class PaymentActivity extends BaseActivity implements Constants
 		if (p_strFinishMsg != null)
 		{
 			if (p_strFinishMsg.equals("NOT_AVAILABLE"))
+			{
 				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_NOT_AVAILABLE;
-			else if (p_strFinishMsg.contains(getString(R.string.act_payment_chk_contain)))
+			} else if (p_strFinishMsg.contains(getString(R.string.act_payment_chk_contain)))
+			{
 				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_CANCELED;// RESULT_CANCELED
+			}
 		}
-		Intent payData = new Intent();
-		payData.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
 
-		setResult(resultCode, payData);
+		Intent intent = new Intent();
+		intent.putExtra(NAME_INTENT_EXTRA_DATA_TICKETPAYMENT, mTicketPayment);
+
+		setResult(resultCode, intent);
 		finish();
 	}
 
@@ -877,51 +874,32 @@ public class PaymentActivity extends BaseActivity implements Constants
 		{
 			int resultCode = 0;
 			ExLog.e("FEED : " + msg);
+
+			Intent intent = new Intent();
+			intent.putExtra(NAME_INTENT_EXTRA_DATA_TICKETPAYMENT, mTicketPayment);
+
 			if (msg == null)
 			{
 				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
-			} else if (msg.equals("SUCCESS"))
-			{
-				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS;
-			} else if (msg.equals("INVALID_SESSION"))
-			{
-				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION;
-			} else if (msg.equals("SOLD_OUT"))
-			{
-				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_SOLD_OUT;
-			} else if (msg.equals("PAYMENT_COMPLETE"))
-			{
-				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE;
-			} else if (msg.equals("INVALID_DATE"))
-			{
-				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_INVALID_DATE;
-			} else if (msg.equals("PAYMENT_CANCELED"))
-			{
-				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_CANCELED;
-			} else if (msg.equals("ACCOUNT_READY"))
-			{
-				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY;
-			} else if (msg.equals("ACCOUNT_TIME_ERROR"))
-			{
-				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_TIME_ERROR;
-			} else if (msg.equals("ACCOUNT_DUPLICATE"))
-			{
-				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_DUPLICATE;
-			} else if (msg.equals("NOT_AVAILABLE"))
-			{
-				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_NOT_AVAILABLE;
-			} else if (msg.equals("PAYMENT_TIMEOVER"))
-			{
-				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER;
 			} else
 			{
-				resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
+				String[] result = msg.split("\\^");
+
+				if (result.length >= 1)
+				{
+					intent.putExtra(NAME_INTENT_EXTRA_DATA_RESULT, result[1]);
+				}
+
+				if ("SUCCESS".equalsIgnoreCase(result[0]) == true)
+				{
+					resultCode = CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS;
+				} else
+				{
+					resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
+				}
 			}
 
-			Intent payData = new Intent();
-			payData.putExtra(NAME_INTENT_EXTRA_DATA_PAY, mPay);
-
-			setResult(resultCode, payData);
+			setResult(resultCode, intent);
 			finish();
 		}
 	}

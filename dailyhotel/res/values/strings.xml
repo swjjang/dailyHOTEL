@@ -261,7 +261,7 @@
 
     <!-- Booking List Fragment -->
     <string name="frag_booking_no_hotels">예약된 내역이 없습니다!</string>
-    <string name="frag_booking_line">오늘은 멋진 호텔에서\n하루를 보내는게 어때요?</string>
+    <string name="frag_booking_line">당신의 파라다이스가\n기다리고 있어요.</string>
     <string name="frag_booking_btn_login">기존 회원 로그인</string>
     <string name="frag_booking_wait_account">입금 대기</string>
     <string name="frag_booking_complete_payment">결제 완료</string>

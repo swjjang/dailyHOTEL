@@ -13,7 +13,6 @@ package com.twoheart.dailyhotel.fragment;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
@@ -26,7 +25,7 @@ import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.BookingTabActivity;
-import com.twoheart.dailyhotel.activity.FnBBookingTabActivity;
+import com.twoheart.dailyhotel.activity.FnBBookingDetailActivity;
 import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.activity.PaymentWaitActivity;
 import com.twoheart.dailyhotel.adapter.BookingListAdapter;
@@ -181,7 +180,7 @@ public class BookingListFragment extends
 					break;
 
 				case FNB:
-					intent = new Intent(baseActivity, FnBBookingTabActivity.class);
+					intent = new Intent(baseActivity, FnBBookingDetailActivity.class);
 					break;
 			}
 
@@ -303,10 +302,25 @@ public class BookingListFragment extends
 
 								lockUI();
 
-								HashMap<String, String> params = new HashMap<String, String>();
-								params.put("idx", String.valueOf(booking.reservationIndex));
+								switch (booking.placeType)
+								{
+									case HOTEL:
+									{
+										HashMap<String, String> params = new HashMap<String, String>();
+										params.put("idx", String.valueOf(booking.reservationIndex));
 
-								mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_MINE_HIDDEN).toString(), params, mReservationHiddenJsonResponseListener, baseActivity));
+										mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_MINE_HIDDEN).toString(), params, mReservationHiddenJsonResponseListener, baseActivity));
+										break;
+									}
+
+									case FNB:
+										HashMap<String, String> params = new HashMap<String, String>();
+										params.put("reservation_rec_idx", String.valueOf(booking.reservationIndex));
+
+										mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_SESSION_HIDDEN).toString(), params, mReservationHiddenJsonResponseListener, baseActivity));
+										break;
+								}
+
 							}
 						};
 
@@ -540,30 +554,9 @@ public class BookingListFragment extends
 						{
 							case CODE_PAY_TYPE_CARD_COMPLETE:
 							case CODE_PAY_TYPE_ACCOUNT_COMPLETE:
-								boolean isUsed = false;
+								booking.isUsed = booking.checkoutTime < mCurrentTime;
 
-								switch (booking.placeType)
-								{
-									case HOTEL:
-										isUsed = booking.checkoutTime < mCurrentTime;
-										break;
-
-									case FNB:
-									{
-										Date checkinDate = new Date(booking.checkinTime);
-										SimpleDateFormat sFormat = new SimpleDateFormat("yyyyMMdd");
-										sFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-										int checkin = Integer.valueOf(sFormat.format(checkinDate));
-										int today = Integer.valueOf(sFormat.format(mCurrentTime));
-
-										isUsed = checkin < today ? true : false;
-										break;
-									}
-								}
-
-								booking.isUsed = isUsed;
-
-								if (isUsed)
+								if (booking.isUsed)
 								{
 									usedBookingList.add(booking);
 								} else
@@ -675,7 +668,13 @@ public class BookingListFragment extends
 
 				if (jsonObject != null)
 				{
-					result = jsonObject.getInt("isSuccess") == 1;
+					if (jsonObject.has("isSuccess") == true)
+					{
+						result = jsonObject.getInt("isSuccess") == 1;
+					} else if (jsonObject.has("is_success") == true)
+					{
+						result = jsonObject.getBoolean("is_success");
+					}
 				}
 
 				// 성공 실패 여부는 팝업에서 리스너를 다르게 등록한다. 

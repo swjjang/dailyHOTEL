@@ -56,7 +56,6 @@ import com.twoheart.dailyhotel.util.DailyHotelPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.CloseOnBackPressed;
-import com.twoheart.dailyhotel.view.widget.FontManager;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -68,7 +67,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.content.res.Configuration;
-import android.media.MediaMuxer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -1128,7 +1126,6 @@ public class MainActivity
 
 					drawerMenuItemIcon.setImageResource(item.getIcon());
 					drawerMenuItemText.setText(item.getTitle());
-					drawerMenuItemText.setTypeface(FontManager.getInstance(context).getDemiLightTypeface());
 
 					if (item.isSelected() == true)
 					{

@@ -25,7 +25,7 @@ import com.twoheart.dailyhotel.view.widget.TabIndicator.OnTabSelectedListener;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 
-public abstract class PlaceBookingTabActivity extends BaseActivity
+public abstract class PlaceBookingDetailActivity extends BaseActivity
 {
 	protected TabIndicator mTabIndicator;
 	protected FragmentViewPager mFragmentViewPager;
@@ -72,7 +72,7 @@ public abstract class PlaceBookingTabActivity extends BaseActivity
 	@Override
 	protected void onStart()
 	{
-		AnalyticsManager.getInstance(PlaceBookingTabActivity.this).recordScreen(Screen.BOOKING_DETAIL);
+		AnalyticsManager.getInstance(PlaceBookingDetailActivity.this).recordScreen(Screen.BOOKING_DETAIL);
 		super.onStart();
 	}
 
@@ -111,7 +111,7 @@ public abstract class PlaceBookingTabActivity extends BaseActivity
 		{
 			mTabIndicator.setCurrentItem(position);
 
-			AnalyticsManager.getInstance(PlaceBookingTabActivity.this).recordEvent(Screen.BOOKING_DETAIL, Action.CLICK, mTabIndicator.getMainText(position), (long) position);
+			AnalyticsManager.getInstance(PlaceBookingDetailActivity.this).recordEvent(Screen.BOOKING_DETAIL, Action.CLICK, mTabIndicator.getMainText(position), (long) position);
 		}
 
 		@Override

@@ -16,6 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.android.volley.Request.Method;
+import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.FnBDetailActivity;
@@ -195,6 +196,19 @@ public class FnBMainFragment extends PlaceMainFragment
 		{
 			return false;
 		}
+	}
+
+	@Override
+	protected void showClosedDaily(SaleTime saleTime)
+	{
+		MainActivity baseActivity = (MainActivity) getActivity();
+
+		if (baseActivity == null)
+		{
+			return;
+		}
+
+		baseActivity.replaceFragment(WaitTimerFragment.newInstance(saleTime, PlaceMainFragment.TYPE.FNB));
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////

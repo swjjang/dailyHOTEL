@@ -68,7 +68,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 @SuppressLint({ "NewApi", "ResourceAsColor" })
-public abstract class PlaceBookingActivity extends BaseActivity
+public abstract class TicketPaymentActivity extends BaseActivity
 {
 	protected static final int DEFAULT_AVAILABLE_RESERVES = 20000;
 
@@ -102,7 +102,7 @@ public abstract class PlaceBookingActivity extends BaseActivity
 
 	protected abstract void updatePaymentInformation(TicketPayment ticketPayment, CreditCard creditCard);
 
-	protected abstract void checkPaymentType(TicketPayment.Type type);
+	protected abstract void checkPaymentType(TicketPayment.PaymentType type);
 
 	protected abstract void updateLayout(TicketPayment ticketPayment, CreditCard creditCard);
 
@@ -121,7 +121,7 @@ public abstract class PlaceBookingActivity extends BaseActivity
 			Map<String, String> params = new HashMap<String, String>();
 			params.put("timeZone", "Asia/Seoul");
 
-			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, PlaceBookingActivity.this));
+			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, TicketPaymentActivity.this));
 		}
 	}
 
@@ -197,13 +197,13 @@ public abstract class PlaceBookingActivity extends BaseActivity
 		if (Util.isOverAPI21() == true)
 		{
 			LinearLayout.LayoutParams layoutParams2 = (android.widget.LinearLayout.LayoutParams) messageLayout2.getLayoutParams();
-			layoutParams2.topMargin = Util.dpToPx(PlaceBookingActivity.this, 17);
+			layoutParams2.topMargin = Util.dpToPx(TicketPaymentActivity.this, 17);
 
 			LinearLayout.LayoutParams layoutParams3 = (android.widget.LinearLayout.LayoutParams) messageLayout3.getLayoutParams();
-			layoutParams3.topMargin = Util.dpToPx(PlaceBookingActivity.this, 17);
+			layoutParams3.topMargin = Util.dpToPx(TicketPaymentActivity.this, 17);
 
 			LinearLayout.LayoutParams layoutParams4 = (android.widget.LinearLayout.LayoutParams) messageLayout4.getLayoutParams();
-			layoutParams4.topMargin = Util.dpToPx(PlaceBookingActivity.this, 17);
+			layoutParams4.topMargin = Util.dpToPx(TicketPaymentActivity.this, 17);
 		}
 
 		View agreeLayout = view.findViewById(R.id.agreeLayout);
@@ -238,7 +238,7 @@ public abstract class PlaceBookingActivity extends BaseActivity
 			{
 				dialog.dismiss();
 
-				synchronized (PlaceBookingActivity.this)
+				synchronized (TicketPaymentActivity.this)
 				{
 					if (isLockUiComponent() == true)
 					{
@@ -250,14 +250,14 @@ public abstract class PlaceBookingActivity extends BaseActivity
 					mState = STATE_PAYMENT;
 
 					// 1. 세션이 살아있는지 검사 시작.
-					mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, PlaceBookingActivity.this));
+					mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, TicketPaymentActivity.this));
 
 					HashMap<String, String> params = new HashMap<String, String>();
 					params.put(Label.PLACE_TICKET_INDEX, String.valueOf(mTicketPayment.getTicketInformation().index));
 					params.put(Label.PLACE_TICKET_NAME, mTicketPayment.getTicketInformation().name);
 					params.put(Label.PLACE_NAME, mTicketPayment.getTicketInformation().placeName);
 
-					AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.PAYMENT_AGREE_POPUP, Action.CLICK, mTicketPayment.type.name(), params);
+					AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.PAYMENT_AGREE_POPUP, Action.CLICK, mTicketPayment.paymentType.name(), params);
 				}
 			}
 		};
@@ -274,7 +274,7 @@ public abstract class PlaceBookingActivity extends BaseActivity
 	{
 		unLockUI();
 
-		if (mTicketPayment.type == TicketPayment.Type.EASY_CARD)
+		if (mTicketPayment.paymentType == TicketPayment.PaymentType.EASY_CARD)
 		{
 			if (isFinishing() == true)
 			{
@@ -291,7 +291,7 @@ public abstract class PlaceBookingActivity extends BaseActivity
 			requestPayEasyPayment(mTicketPayment, mCheckInSaleTime);
 		} else
 		{
-			Intent intent = new Intent(this, com.twoheart.dailyhotel.activity.PaymentActivity.class);
+			Intent intent = new Intent(this, com.twoheart.dailyhotel.activity.PaymentWebActivity.class);
 			intent.putExtra(NAME_INTENT_EXTRA_DATA_TICKETPAYMENT, mTicketPayment);
 			intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mCheckInSaleTime);
 
@@ -360,7 +360,13 @@ public abstract class PlaceBookingActivity extends BaseActivity
 						}
 					};
 
-					msg = getString(R.string.act_toast_payment_success);
+					if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_RESULT) == true)
+					{
+						msg = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_RESULT);
+					} else
+					{
+						msg = getString(R.string.act_toast_payment_success);
+					}
 					break;
 
 				case CODE_RESULT_ACTIVITY_PAYMENT_SOLD_OUT:
@@ -385,7 +391,22 @@ public abstract class PlaceBookingActivity extends BaseActivity
 					break;
 
 				case CODE_RESULT_ACTIVITY_PAYMENT_FAIL:
-					msg = getString(R.string.act_toast_payment_fail);
+					if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_RESULT) == true)
+					{
+						msg = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_RESULT);
+					} else
+					{
+						msg = getString(R.string.act_toast_payment_fail);
+					}
+
+					posListener = new View.OnClickListener()
+					{
+						@Override
+						public void onClick(View view)
+						{
+							finish();
+						}
+					};
 					break;
 
 				case CODE_RESULT_ACTIVITY_PAYMENT_CANCELED:
@@ -469,7 +490,7 @@ public abstract class PlaceBookingActivity extends BaseActivity
 							mSelectedCreditCard = creditCard;
 
 							// 간편 결제로 체크 하기
-							checkPaymentType(TicketPayment.Type.EASY_CARD);
+							checkPaymentType(TicketPayment.PaymentType.EASY_CARD);
 						}
 					}
 					break;
@@ -488,7 +509,7 @@ public abstract class PlaceBookingActivity extends BaseActivity
 					lockUI();
 
 					// credit card 요청
-					mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_INFO).toString(), null, mUserRegisterBillingCardInfoJsonResponseListener, PlaceBookingActivity.this));
+					mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_INFO).toString(), null, mUserRegisterBillingCardInfoJsonResponseListener, TicketPaymentActivity.this));
 					return;
 
 				case CODE_RESULT_PAYMENT_BILLING_DUPLICATE:
@@ -591,7 +612,7 @@ public abstract class PlaceBookingActivity extends BaseActivity
 	{
 		unLockUI();
 
-		if (mTicketPayment.type == TicketPayment.Type.EASY_CARD)
+		if (mTicketPayment.paymentType == TicketPayment.PaymentType.EASY_CARD)
 		{
 			// 간편 결제를 시도하였으나 결제할 카드가 없는 경우.
 			if (mSelectedCreditCard == null)
@@ -606,7 +627,7 @@ public abstract class PlaceBookingActivity extends BaseActivity
 		} else
 		{
 			// 일반 결제 시도
-			showAgreeTermDialog(mTicketPayment.type);
+			showAgreeTermDialog(mTicketPayment.paymentType);
 		}
 
 		String region = sharedPreference.getString(KEY_PREFERENCE_PLACE_REGION_SELECT_GA, null);
@@ -644,7 +665,7 @@ public abstract class PlaceBookingActivity extends BaseActivity
 		}
 	}
 
-	protected void showAgreeTermDialog(TicketPayment.Type type)
+	protected void showAgreeTermDialog(TicketPayment.PaymentType type)
 	{
 		if (type == null)
 		{
@@ -734,11 +755,11 @@ public abstract class PlaceBookingActivity extends BaseActivity
 		layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
 		window.setAttributes(layoutParams);
 
-		final FinalCheckLayout finalCheckLayout = new FinalCheckLayout(PlaceBookingActivity.this);
+		final FinalCheckLayout finalCheckLayout = new FinalCheckLayout(TicketPaymentActivity.this);
 		final TextView agreeSinatureTextView = (TextView) finalCheckLayout.findViewById(R.id.agreeSinatureTextView);
 		final View agreeLayout = finalCheckLayout.findViewById(R.id.agreeLayout);
 
-		agreeSinatureTextView.setTypeface(FontManager.getInstance(PlaceBookingActivity.this).getMediumTypeface());
+		agreeSinatureTextView.setTypeface(FontManager.getInstance(TicketPaymentActivity.this).getMediumTypeface());
 
 		agreeLayout.setEnabled(false);
 
@@ -757,7 +778,7 @@ public abstract class PlaceBookingActivity extends BaseActivity
 					@Override
 					public void onClick(View v)
 					{
-						synchronized (PlaceBookingActivity.this)
+						synchronized (TicketPaymentActivity.this)
 						{
 							if (isLockUiComponent() == true)
 							{
@@ -769,7 +790,7 @@ public abstract class PlaceBookingActivity extends BaseActivity
 							mState = STATE_PAYMENT;
 
 							// 1. 세션이 살아있는지 검사 시작.
-							mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, PlaceBookingActivity.this));
+							mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, TicketPaymentActivity.this));
 
 							mFinalCheckDialog.dismiss();
 
@@ -778,7 +799,7 @@ public abstract class PlaceBookingActivity extends BaseActivity
 							params.put(Label.PLACE_TICKET_NAME, mTicketPayment.getTicketInformation().name);
 							params.put(Label.PLACE_NAME, mTicketPayment.getTicketInformation().placeName);
 
-							AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.PAYMENT_AGREE_POPUP, Action.CLICK, mTicketPayment.type.name(), params);
+							AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.PAYMENT_AGREE_POPUP, Action.CLICK, mTicketPayment.paymentType.name(), params);
 						}
 					}
 				});
@@ -818,13 +839,13 @@ public abstract class PlaceBookingActivity extends BaseActivity
 			{
 				releaseUiComponent();
 
-				if (Util.isTelephonyEnabled(PlaceBookingActivity.this) == true)
+				if (Util.isTelephonyEnabled(TicketPaymentActivity.this) == true)
 				{
 					Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
 					startActivity(i);
 				} else
 				{
-					DailyToast.showToast(PlaceBookingActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
+					DailyToast.showToast(TicketPaymentActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
 				}
 
 				HashMap<String, String> params = new HashMap<String, String>();
@@ -832,7 +853,7 @@ public abstract class PlaceBookingActivity extends BaseActivity
 				params.put(Label.PLACE_TICKET_NAME, mTicketPayment.getTicketInformation().name);
 				params.put(Label.PLACE_NAME, mTicketPayment.getTicketInformation().placeName);
 
-				AnalyticsManager.getInstance(PlaceBookingActivity.this).recordEvent(Screen.BOOKING, Action.CLICK, Label.CALL_CS, params);
+				AnalyticsManager.getInstance(TicketPaymentActivity.this).recordEvent(Screen.BOOKING, Action.CLICK, Label.CALL_CS, params);
 			}
 		};
 
@@ -932,7 +953,7 @@ public abstract class PlaceBookingActivity extends BaseActivity
 			strDate = dateFormat2.format(date);
 
 			AnalyticsManager.getInstance(getApplicationContext()).purchaseComplete(transId, userIndex, String.valueOf(ticketInformation.index), //
-			ticketInformation.placeName, Label.PAYMENT, ticketPayment.checkInTime, ticketPayment.checkOutTime, ticketPayment.type.name(), strDate, price);
+			ticketInformation.placeName, Label.PAYMENT, ticketPayment.checkInTime, ticketPayment.checkOutTime, ticketPayment.paymentType.name(), strDate, price);
 		} catch (Exception e)
 		{
 			ExLog.e(e.toString());
@@ -960,7 +981,7 @@ public abstract class PlaceBookingActivity extends BaseActivity
 
 			loginParams.put("pw", pw);
 
-			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(), loginParams, mUserLoginJsonResponseListener, PlaceBookingActivity.this));
+			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(), loginParams, mUserLoginJsonResponseListener, TicketPaymentActivity.this));
 		} else
 		{
 			unLockUI();
@@ -1024,7 +1045,7 @@ public abstract class PlaceBookingActivity extends BaseActivity
 					Map<String, String> params = new HashMap<String, String>();
 					params.put("timeZone", "Asia/Seoul");
 
-					mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, PlaceBookingActivity.this));
+					mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, TicketPaymentActivity.this));
 				} else
 				{
 					unLockUI();
@@ -1106,7 +1127,7 @@ public abstract class PlaceBookingActivity extends BaseActivity
 					{
 						String msg = response.getString("msg");
 
-						DailyToast.showToast(PlaceBookingActivity.this, msg, Toast.LENGTH_SHORT);
+						DailyToast.showToast(TicketPaymentActivity.this, msg, Toast.LENGTH_SHORT);
 						finish();
 						return;
 					} else

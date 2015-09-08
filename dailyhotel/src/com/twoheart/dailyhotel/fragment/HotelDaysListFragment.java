@@ -15,14 +15,10 @@
  */
 package com.twoheart.dailyhotel.fragment;
 
-import org.json.JSONObject;
-
-import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.HotelListViewItem;
@@ -1155,49 +1151,4 @@ public class HotelDaysListFragment
 			mDaysBackgroundView.startAnimation(mAlphaAnimation);
 		}
 	}
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// Listener
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
-	{
-		@Override
-		public void onResponse(String url, JSONObject response)
-		{
-			BaseActivity baseActivity = (BaseActivity) getActivity();
-
-			if (baseActivity == null)
-			{
-				return;
-			}
-
-			try
-			{
-				if (response == null)
-				{
-					throw new NullPointerException("response == null");
-				}
-
-				SaleTime saleTime = new SaleTime();
-				saleTime.setCurrentTime(response.getLong("currentDateTime"));
-				saleTime.setOpenTime(response.getLong("openDateTime"));
-				saleTime.setCloseTime(response.getLong("closeDateTime"));
-				saleTime.setDailyTime(response.getLong("dailyDateTime"));
-
-				if (saleTime.isSaleTime() == true)
-				{
-
-				} else
-				{
-					((MainActivity) baseActivity).replaceFragment(WaitTimerFragment.newInstance(mSaleTime, PlaceMainFragment.TYPE.HOTEL));
-					unLockUI();
-				}
-			} catch (Exception e)
-			{
-				onError(e);
-				unLockUI();
-			}
-		}
-	};
 }

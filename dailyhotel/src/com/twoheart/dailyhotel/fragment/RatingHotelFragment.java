@@ -321,9 +321,11 @@ public class RatingHotelFragment
 
 	public void setOnDismissListener(DialogInterface.OnDismissListener listener)
 	{
-		if (getDialog() != null)
+		Dialog dialog = getDialog();
+
+		if (dialog != null)
 		{
-			getDialog().setOnDismissListener(listener);
+			dialog.setOnDismissListener(listener);
 		}
 	}
 

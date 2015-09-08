@@ -126,13 +126,16 @@ public class WaitTimerFragment
 		alarmTimerLayout = view.findViewById(R.id.alarmTimerLayout);
 		alarmTimerLayout.setOnClickListener(this);
 
+		SimpleDateFormat sFormat = new SimpleDateFormat("aa H", Locale.KOREA);
+		sFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+
 		switch (mType)
 		{
 			case HOTEL:
 			{
 				imageView.setImageResource(R.drawable.open_stanby_bg);
 
-				titleMainTextView.setText(R.string.prefix_wait_timer_frag_todays_hotel_open);
+				titleMainTextView.setText(sFormat.format(mSaleTime.getOpenTime()) + getString(R.string.prefix_wait_timer_frag_todays_hotel_open));
 				titleSubTextView.setText(R.string.frag_wait_timer_hotel_msg);
 
 				// 알람 설정
@@ -147,7 +150,7 @@ public class WaitTimerFragment
 				imageView.setImageResource(R.drawable.open_stanby_bg_fnb);
 
 				titleMainTextView.setTextColor(getResources().getColor(R.color.white));
-				titleMainTextView.setText(R.string.prefix_wait_timer_frag_todays_fnb_open);
+				titleMainTextView.setText(sFormat.format(mSaleTime.getOpenTime()) + getString(R.string.prefix_wait_timer_frag_todays_fnb_open));
 
 				titleSubTextView.setTextColor(getResources().getColor(R.color.white));
 				titleSubTextView.setText(R.string.frag_wait_timer_fnb_msg);
@@ -163,11 +166,6 @@ public class WaitTimerFragment
 		}
 
 		baseActivity.setActionBar(getString(R.string.actionbar_title_wait_timer_frag), false);
-
-		SimpleDateFormat sFormat = new SimpleDateFormat("aa H", Locale.KOREA);
-		sFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-		titleMainTextView.setText(sFormat.format(mSaleTime.getOpenTime()) + getString(R.string.prefix_wait_timer_frag_todays_hotel_open));
 
 		setTimer();
 

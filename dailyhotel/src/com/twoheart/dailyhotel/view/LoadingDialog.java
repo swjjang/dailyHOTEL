@@ -13,7 +13,6 @@
  */
 package com.twoheart.dailyhotel.view;
 
-import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 

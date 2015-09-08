@@ -196,8 +196,6 @@ public class GcmIntentService extends IntentService implements Constants
 				ComponentName topActivity = am.getRunningTasks(1).get(0).topActivity;
 				String className = topActivity.getClassName();
 
-				ExLog.e("CURRENT_ACTIVITY_PACKAGE = " + className + " / " + className);
-
 				if (className.contains("dailyhotel") && !className.contains("GcmLockDialogActivity") && !mIsBadge)
 				{
 					Intent i = new Intent(this, ScreenOnPushDialogActivity.class);

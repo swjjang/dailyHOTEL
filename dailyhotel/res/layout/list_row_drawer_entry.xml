@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:dailyFont="http://schemas.android.com/apk/res/com.twoheart.dailyhotel"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
@@ -19,7 +20,8 @@
         android:gravity="left|center_vertical"
         android:text="@string/actionbar_title_hotel_list_frag"
         android:textColor="@color/menu_title_text"
-        android:textSize="18dp" />
+        android:textSize="18dp"
+        dailyFont:style="DemiLight" />
 
     <ImageView
         android:id="@+id/newEventIcon"

@@ -18,7 +18,7 @@
     <declare-styleable name="TabWidget">
 
         <!-- Drawable used to draw the divider between tabs. -->
-<!--         <attr name="divider" format="reference"/> -->
+        <!-- <attr name="divider" format="reference"/> -->
         <!-- Determines whether the strip under the tab indicators is drawn or not. -->
         <attr name="tabStripEnabled" format="boolean" />
         <!-- Drawable used to draw the left part of the strip underneath the tabs. -->
@@ -55,6 +55,17 @@
         <attr name="fab_type" format="enum">
             <enum name="normal" value="0" />
             <enum name="mini" value="1" />
+        </attr>
+    </declare-styleable>
+    <declare-styleable name="dailyFont">
+        <attr name="style" format="enum">
+            <enum name="Black" value="0" />
+            <enum name="Bold" value="1" />
+            <enum name="DemiLight" value="2" />
+            <enum name="Light" value="3" />
+            <enum name="Medium" value="4" />
+            <enum name="Regular" value="5" />
+            <enum name="Thin" value="6" />
         </attr>
     </declare-styleable>
 

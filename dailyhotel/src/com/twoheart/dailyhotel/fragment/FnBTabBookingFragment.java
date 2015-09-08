@@ -23,18 +23,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class FnBBookingTabBookingFragment
-		extends BaseFragment implements Constants
+public class FnBTabBookingFragment extends BaseFragment implements Constants
 {
 	private static final String KEY_BUNDLE_ARGUMENTS_PLACEBOOKINGDETAIL = "placeBookingDetail";
 	private static final String KEY_BUNDLE_ARGUMENTS_BOOKING = "booking";
 
 	private Booking mBooking;
-	private FnBBookingDetail mFnBBookingDetail;
+	private FnBBookingDetail mFnBReservationDetail;
 
-	public static FnBBookingTabBookingFragment newInstance(PlaceBookingDetail placeBookingDetail, Booking booking, String title)
+	public static FnBTabBookingFragment newInstance(PlaceBookingDetail placeBookingDetail, Booking booking, String title)
 	{
-		FnBBookingTabBookingFragment newFragment = new FnBBookingTabBookingFragment();
+		FnBTabBookingFragment newFragment = new FnBTabBookingFragment();
 
 		//관련 정보는 BookingTabActivity에서 넘겨받음. 
 		Bundle arguments = new Bundle();
@@ -52,7 +51,7 @@ public class FnBBookingTabBookingFragment
 	{
 		super.onCreate(savedInstanceState);
 
-		mFnBBookingDetail = (FnBBookingDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_PLACEBOOKINGDETAIL);
+		mFnBReservationDetail = (FnBBookingDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_PLACEBOOKINGDETAIL);
 		mBooking = (Booking) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_BOOKING);
 	}
 
@@ -76,12 +75,12 @@ public class FnBBookingTabBookingFragment
 		TextView userPhoneTextView = (TextView) view.findViewById(R.id.userPhoneTextView);
 
 		ticketNameTextView.setText(mBooking.placeName);
-		addressTextView.setText(mFnBBookingDetail.address);
-		ticketTypeTextView.setText(mFnBBookingDetail.ticketName);
-		ticketCountTextView.setText(getString(R.string.label_booking_count, mFnBBookingDetail.ticketCount));
-		dateTextView.setText(mFnBBookingDetail.sday);
-		userNameTextView.setText(mFnBBookingDetail.guestName);
-		userPhoneTextView.setText(mFnBBookingDetail.guestPhone);
+		addressTextView.setText(mFnBReservationDetail.address);
+		ticketTypeTextView.setText(mFnBReservationDetail.ticketName);
+		ticketCountTextView.setText(getString(R.string.label_booking_count, mFnBReservationDetail.ticketCount));
+		dateTextView.setText(mFnBReservationDetail.sday);
+		userNameTextView.setText(mFnBReservationDetail.guestName);
+		userPhoneTextView.setText(mFnBReservationDetail.guestPhone);
 
 		// Android Marquee bug...
 		ticketNameTextView.setSelected(true);
@@ -93,6 +92,11 @@ public class FnBBookingTabBookingFragment
 		// 영수증 발급
 		TextView viewReceiptTextView = (TextView) view.findViewById(R.id.viewReceiptTextView);
 		TextView guideReceiptTextView = (TextView) view.findViewById(R.id.guideReceiptTextView);
+
+		if (DEBUG == true)
+		{
+			mBooking.isUsed = true;
+		}
 
 		if (mBooking.isUsed == true)
 		{
