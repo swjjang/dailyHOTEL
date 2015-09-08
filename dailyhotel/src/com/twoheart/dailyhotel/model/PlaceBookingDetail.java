@@ -11,7 +11,7 @@ import org.json.JSONObject;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public abstract class PlaceReservationDetail implements Parcelable
+public abstract class PlaceBookingDetail implements Parcelable
 {
 	public int index;
 	public String address;
@@ -27,7 +27,7 @@ public abstract class PlaceReservationDetail implements Parcelable
 
 	public abstract void setData(JSONObject jsonObject) throws Exception;
 
-	public PlaceReservationDetail()
+	public PlaceBookingDetail()
 	{
 	}
 

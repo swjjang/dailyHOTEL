@@ -114,6 +114,11 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 		TextView viewReceiptTextView = (TextView) view.findViewById(R.id.viewReceiptTextView);
 		TextView guideReceiptTextView = (TextView) view.findViewById(R.id.guideReceiptTextView);
 
+		if (DEBUG == true)
+		{
+			mBooking.isUsed = true;
+		}
+
 		if (mBooking.isUsed == true)
 		{
 			viewReceiptTextView.setTextColor(getResources().getColor(R.color.white));

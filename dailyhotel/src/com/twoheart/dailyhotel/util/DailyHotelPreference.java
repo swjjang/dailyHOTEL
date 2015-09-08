@@ -55,7 +55,7 @@ public class DailyHotelPreference
 		if (mEditor != null)
 		{
 			mEditor.putBoolean(KEY_ALARM_HOTEL, enable);
-			mEditor.commit();
+			mEditor.apply();
 		}
 	}
 
@@ -76,7 +76,7 @@ public class DailyHotelPreference
 		if (mEditor != null)
 		{
 			mEditor.putBoolean(KEY_ALARM_FNB, enable);
-			mEditor.commit();
+			mEditor.apply();
 		}
 	}
 
@@ -97,7 +97,7 @@ public class DailyHotelPreference
 		if (mEditor != null)
 		{
 			mEditor.putBoolean(KEY_NEW_EVENT_TODAY_FNB, isNew);
-			mEditor.commit();
+			mEditor.apply();
 		}
 	}
 
@@ -106,7 +106,7 @@ public class DailyHotelPreference
 		if (mEditor != null)
 		{
 			mEditor.clear();
-			mEditor.commit();
+			mEditor.apply();
 		}
 	}
 }

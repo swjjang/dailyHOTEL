@@ -60,14 +60,14 @@ public class FnBBookingLayout implements OnCheckedChangeListener
 			mHpPaymentButton, mAccountPaymentButton;
 	private View mCardManagerButton;
 
-	private FnBBookingActivity.OnUserActionListener mOnUserActionListener;
+	private FnBPaymentActivity.OnUserActionListener mOnUserActionListener;
 
 	public enum UserInformationType
 	{
 		NAME, PHONE, EMAIL
 	}
 
-	public FnBBookingLayout(BaseActivity activity, FnBBookingActivity.OnUserActionListener listener)
+	public FnBBookingLayout(BaseActivity activity, FnBPaymentActivity.OnUserActionListener listener)
 	{
 		mActivity = activity;
 		mOnUserActionListener = listener;
@@ -528,9 +528,9 @@ public class FnBBookingLayout implements OnCheckedChangeListener
 	private class TelophoneClickSpannable extends ClickableSpan
 	{
 		private Context mContext;
-		private FnBBookingActivity.OnUserActionListener mOnUserActionListener;
+		private FnBPaymentActivity.OnUserActionListener mOnUserActionListener;
 
-		public TelophoneClickSpannable(Context context, FnBBookingActivity.OnUserActionListener listener)
+		public TelophoneClickSpannable(Context context, FnBPaymentActivity.OnUserActionListener listener)
 		{
 			mContext = context;
 			mOnUserActionListener = listener;

@@ -12,8 +12,8 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.FnBReceiptActivity;
 import com.twoheart.dailyhotel.model.Booking;
-import com.twoheart.dailyhotel.model.FnBReservationDetail;
-import com.twoheart.dailyhotel.model.PlaceReservationDetail;
+import com.twoheart.dailyhotel.model.FnBBookingDetail;
+import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.util.Constants;
 
 import android.content.Intent;
@@ -23,17 +23,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class FnBTabReservationFragment extends BaseFragment implements Constants
+public class FnBTabBookingFragment extends BaseFragment implements Constants
 {
 	private static final String KEY_BUNDLE_ARGUMENTS_PLACEBOOKINGDETAIL = "placeBookingDetail";
 	private static final String KEY_BUNDLE_ARGUMENTS_BOOKING = "booking";
 
 	private Booking mBooking;
-	private FnBReservationDetail mFnBReservationDetail;
+	private FnBBookingDetail mFnBReservationDetail;
 
-	public static FnBTabReservationFragment newInstance(PlaceReservationDetail placeBookingDetail, Booking booking, String title)
+	public static FnBTabBookingFragment newInstance(PlaceBookingDetail placeBookingDetail, Booking booking, String title)
 	{
-		FnBTabReservationFragment newFragment = new FnBTabReservationFragment();
+		FnBTabBookingFragment newFragment = new FnBTabBookingFragment();
 
 		//관련 정보는 BookingTabActivity에서 넘겨받음. 
 		Bundle arguments = new Bundle();
@@ -51,7 +51,7 @@ public class FnBTabReservationFragment extends BaseFragment implements Constants
 	{
 		super.onCreate(savedInstanceState);
 
-		mFnBReservationDetail = (FnBReservationDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_PLACEBOOKINGDETAIL);
+		mFnBReservationDetail = (FnBBookingDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_PLACEBOOKINGDETAIL);
 		mBooking = (Booking) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_BOOKING);
 	}
 
@@ -92,6 +92,11 @@ public class FnBTabReservationFragment extends BaseFragment implements Constants
 		// 영수증 발급
 		TextView viewReceiptTextView = (TextView) view.findViewById(R.id.viewReceiptTextView);
 		TextView guideReceiptTextView = (TextView) view.findViewById(R.id.guideReceiptTextView);
+
+		if (DEBUG == true)
+		{
+			mBooking.isUsed = true;
+		}
 
 		if (mBooking.isUsed == true)
 		{

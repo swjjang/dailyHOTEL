@@ -40,7 +40,7 @@ import android.view.View;
 import android.widget.Toast;
 
 @SuppressLint({ "NewApi", "ResourceAsColor" })
-public class FnBBookingActivity extends PlaceBookingActivity
+public class FnBPaymentActivity extends TicketPaymentActivity
 {
 	private FnBBookingLayout mFnBBookingLayout;
 
@@ -197,14 +197,14 @@ public class FnBBookingActivity extends PlaceBookingActivity
 
 			if (count >= maxCount)
 			{
-				DailyToast.showToast(FnBBookingActivity.this, getString(R.string.toast_msg_maxcount_ticket, maxCount), Toast.LENGTH_SHORT);
+				DailyToast.showToast(FnBPaymentActivity.this, getString(R.string.toast_msg_maxcount_ticket, maxCount), Toast.LENGTH_SHORT);
 			} else
 			{
 				mTicketPayment.ticketCount = count + 1;
 				mFnBBookingLayout.setTicketCount(mTicketPayment.ticketCount);
 
 				// 결제 가격을 바꾸어야 한다.
-				mFnBBookingLayout.updatePaymentInformationLayout(FnBBookingActivity.this, mTicketPayment, mSelectedCreditCard);
+				mFnBBookingLayout.updatePaymentInformationLayout(FnBPaymentActivity.this, mTicketPayment, mSelectedCreditCard);
 			}
 		}
 
@@ -221,7 +221,7 @@ public class FnBBookingActivity extends PlaceBookingActivity
 				mFnBBookingLayout.setTicketCount(mTicketPayment.ticketCount);
 
 				// 결제 가격을 바꾸어야 한다.
-				mFnBBookingLayout.updatePaymentInformationLayout(FnBBookingActivity.this, mTicketPayment, mSelectedCreditCard);
+				mFnBBookingLayout.updatePaymentInformationLayout(FnBPaymentActivity.this, mTicketPayment, mSelectedCreditCard);
 			}
 		}
 
@@ -256,7 +256,7 @@ public class FnBBookingActivity extends PlaceBookingActivity
 				mTicketPayment.setGuest(editGuest);
 			}
 
-			Intent intent = new Intent(FnBBookingActivity.this, CreditCardListActivity.class);
+			Intent intent = new Intent(FnBPaymentActivity.this, CreditCardListActivity.class);
 			intent.setAction(Intent.ACTION_PICK);
 			intent.putExtra(NAME_INTENT_EXTRA_DATA_CREDITCARD, mSelectedCreditCard);
 
@@ -289,7 +289,7 @@ public class FnBBookingActivity extends PlaceBookingActivity
 
 					mFnBBookingLayout.requestUserInformationFocus(UserInformationType.NAME);
 
-					DailyToast.showToast(FnBBookingActivity.this, R.string.toast_msg_please_input_guest, Toast.LENGTH_SHORT);
+					DailyToast.showToast(FnBPaymentActivity.this, R.string.toast_msg_please_input_guest, Toast.LENGTH_SHORT);
 					return;
 				} else if (Util.isTextEmpty(guest.phone) == true)
 				{
@@ -297,7 +297,7 @@ public class FnBBookingActivity extends PlaceBookingActivity
 
 					mFnBBookingLayout.requestUserInformationFocus(UserInformationType.PHONE);
 
-					DailyToast.showToast(FnBBookingActivity.this, R.string.toast_msg_please_input_contact, Toast.LENGTH_SHORT);
+					DailyToast.showToast(FnBPaymentActivity.this, R.string.toast_msg_please_input_contact, Toast.LENGTH_SHORT);
 					return;
 				} else if (Util.isTextEmpty(guest.email) == true)
 				{
@@ -305,7 +305,7 @@ public class FnBBookingActivity extends PlaceBookingActivity
 
 					mFnBBookingLayout.requestUserInformationFocus(UserInformationType.EMAIL);
 
-					DailyToast.showToast(FnBBookingActivity.this, R.string.toast_msg_please_input_email, Toast.LENGTH_SHORT);
+					DailyToast.showToast(FnBPaymentActivity.this, R.string.toast_msg_please_input_email, Toast.LENGTH_SHORT);
 					return;
 				} else if (android.util.Patterns.EMAIL_ADDRESS.matcher(guest.email).matches() == false)
 				{
@@ -313,7 +313,7 @@ public class FnBBookingActivity extends PlaceBookingActivity
 
 					mFnBBookingLayout.requestUserInformationFocus(UserInformationType.EMAIL);
 
-					DailyToast.showToast(FnBBookingActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
+					DailyToast.showToast(FnBPaymentActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
 					return;
 				}
 			}
@@ -351,7 +351,7 @@ public class FnBBookingActivity extends PlaceBookingActivity
 		@Override
 		public void showCallDialog()
 		{
-			FnBBookingActivity.this.showCallDialog();
+			FnBPaymentActivity.this.showCallDialog();
 		}
 	};
 
@@ -380,7 +380,7 @@ public class FnBBookingActivity extends PlaceBookingActivity
 
 				if (isOnSale == true && msg_code == 0)
 				{
-					mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, FnBBookingActivity.this));
+					mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, FnBPaymentActivity.this));
 				} else
 				{
 					if (response.has("msg") == true)
@@ -457,7 +457,7 @@ public class FnBBookingActivity extends PlaceBookingActivity
 
 							mTicketPayment.checkInTime = formatDay.format(calendarCheckin.getTime());
 
-							mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_INFO).toString(), null, mUserSessionBillingCardInfoJsonResponseListener, FnBBookingActivity.this));
+							mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_INFO).toString(), null, mUserSessionBillingCardInfoJsonResponseListener, FnBPaymentActivity.this));
 							break;
 						}
 

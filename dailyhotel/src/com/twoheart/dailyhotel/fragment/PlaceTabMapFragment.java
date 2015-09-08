@@ -23,7 +23,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.ZoomMapActivity;
 import com.twoheart.dailyhotel.adapter.HotelNameInfoWindowAdapter;
-import com.twoheart.dailyhotel.model.PlaceReservationDetail;
+import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.util.Util;
 
 import android.annotation.TargetApi;
@@ -41,12 +41,12 @@ public class PlaceTabMapFragment
 {
 	private static final String KEY_BUNDLE_ARGUMENTS_PLACEBOOKINGDETAIL = "placeBookingDetail";
 
-	private PlaceReservationDetail mPlaceBookingDetail;
+	private PlaceBookingDetail mPlaceBookingDetail;
 	private SupportMapFragment mMapFragment;
 	private GoogleMap mGoogleMap;
 	private Marker mMarker;
 
-	public static PlaceTabMapFragment newInstance(PlaceReservationDetail placeBookingDetail, String title)
+	public static PlaceTabMapFragment newInstance(PlaceBookingDetail placeBookingDetail, String title)
 	{
 		PlaceTabMapFragment newFragment = new PlaceTabMapFragment();
 		Bundle arguments = new Bundle();
@@ -63,7 +63,7 @@ public class PlaceTabMapFragment
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		mPlaceBookingDetail = (PlaceReservationDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_PLACEBOOKINGDETAIL);
+		mPlaceBookingDetail = (PlaceBookingDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_PLACEBOOKINGDETAIL);
 	}
 
 	@Override

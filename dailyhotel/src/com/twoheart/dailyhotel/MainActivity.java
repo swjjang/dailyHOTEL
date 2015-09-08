@@ -33,6 +33,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.ExitActivity;
 import com.twoheart.dailyhotel.activity.SplashActivity;
+import com.twoheart.dailyhotel.fragment.BookingListFragment;
 import com.twoheart.dailyhotel.fragment.CreditFragment;
 import com.twoheart.dailyhotel.fragment.ErrorFragment;
 import com.twoheart.dailyhotel.fragment.EventListFragment;
@@ -40,7 +41,6 @@ import com.twoheart.dailyhotel.fragment.FnBMainFragment;
 import com.twoheart.dailyhotel.fragment.HotelMainFragment;
 import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.fragment.RatingHotelFragment;
-import com.twoheart.dailyhotel.fragment.ReservationListFragment;
 import com.twoheart.dailyhotel.fragment.SettingFragment;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
@@ -448,7 +448,7 @@ public class MainActivity
 			case INDEX_FNB_LIST_FRAGMENT:
 				return new FnBMainFragment();
 			case INDEX_BOOKING_LIST_FRAGMENT:
-				return new ReservationListFragment();
+				return new BookingListFragment();
 			case INDEX_CREDIT_FRAGMENT:
 				return new CreditFragment();
 			case INDEX_EVENT_FRAGMENT:

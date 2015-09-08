@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Booking;
-import com.twoheart.dailyhotel.model.PlaceReservationDetail;
+import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
@@ -25,12 +25,12 @@ import com.twoheart.dailyhotel.view.widget.TabIndicator.OnTabSelectedListener;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 
-public abstract class PlaceReservationActivity extends BaseActivity
+public abstract class PlaceBookingDetailActivity extends BaseActivity
 {
 	protected TabIndicator mTabIndicator;
 	protected FragmentViewPager mFragmentViewPager;
 
-	protected PlaceReservationDetail mPlaceReservationDetail;
+	protected PlaceBookingDetail mPlaceBookingDetail;
 	protected Booking booking;
 
 	protected abstract void loadFragments();
@@ -72,7 +72,7 @@ public abstract class PlaceReservationActivity extends BaseActivity
 	@Override
 	protected void onStart()
 	{
-		AnalyticsManager.getInstance(PlaceReservationActivity.this).recordScreen(Screen.BOOKING_DETAIL);
+		AnalyticsManager.getInstance(PlaceBookingDetailActivity.this).recordScreen(Screen.BOOKING_DETAIL);
 		super.onStart();
 	}
 
@@ -111,7 +111,7 @@ public abstract class PlaceReservationActivity extends BaseActivity
 		{
 			mTabIndicator.setCurrentItem(position);
 
-			AnalyticsManager.getInstance(PlaceReservationActivity.this).recordEvent(Screen.BOOKING_DETAIL, Action.CLICK, mTabIndicator.getMainText(position), (long) position);
+			AnalyticsManager.getInstance(PlaceBookingDetailActivity.this).recordEvent(Screen.BOOKING_DETAIL, Action.CLICK, mTabIndicator.getMainText(position), (long) position);
 		}
 
 		@Override

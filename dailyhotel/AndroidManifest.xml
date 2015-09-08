@@ -119,7 +119,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.FnBReservationDetailActivity"
+            android:name=".activity.FnBBookingDetailActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
@@ -166,7 +166,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppBaseTheme" />
         <activity
-            android:name=".activity.FnBBookingActivity"
+            android:name=".activity.FnBPaymentActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppBaseTheme" />
@@ -218,7 +218,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.TicketPaymentActivity"
+            android:name=".activity.PaymentWebActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" >
             <intent-filter>

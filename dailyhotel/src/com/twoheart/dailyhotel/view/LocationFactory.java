@@ -184,18 +184,26 @@ public class LocationFactory
 
 		mHandler.sendEmptyMessageDelayed(1, 1000);
 
-		IntentFilter locIntentFilter = new IntentFilter(SINGLE_LOCATION_UPDATE_ACTION);
-		mBaseActivity.registerReceiver(mSingleUpdateReceiver, locIntentFilter);
-		mLocationManager.requestSingleUpdate(new Criteria(), mUpdatePendingIntent);
-
-		mHandler.removeMessages(0);
-
-		if (hasLastLocation == true)
+		try
 		{
-			mHandler.sendEmptyMessageDelayed(4, 20 * 1000);
-		} else
+			IntentFilter locIntentFilter = new IntentFilter(SINGLE_LOCATION_UPDATE_ACTION);
+			mBaseActivity.registerReceiver(mSingleUpdateReceiver, locIntentFilter);
+			mLocationManager.requestSingleUpdate(new Criteria(), mUpdatePendingIntent);
+
+			mHandler.removeMessages(0);
+
+			if (hasLastLocation == true)
+			{
+				mHandler.sendEmptyMessageDelayed(4, 20 * 1000);
+			} else
+			{
+				mHandler.sendEmptyMessageDelayed(0, 20 * 1000);
+			}
+		} catch (Exception e)
 		{
-			mHandler.sendEmptyMessageDelayed(0, 20 * 1000);
+			ExLog.d(e.toString());
+
+			mHandler.sendEmptyMessage(4);
 		}
 	}
 

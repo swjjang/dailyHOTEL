@@ -69,7 +69,7 @@ public class FnBDetailActivity extends PlaceDetailActivity
 			return;
 		}
 
-		Intent intent = new Intent(this, FnBBookingActivity.class);
+		Intent intent = new Intent(this, FnBPaymentActivity.class);
 		intent.putExtra(NAME_INTENT_EXTRA_DATA_TICKETINFORMATION, ticketInformation);
 		intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);
 
