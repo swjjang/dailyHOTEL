@@ -12,8 +12,8 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.FnBReceiptActivity;
 import com.twoheart.dailyhotel.model.Booking;
-import com.twoheart.dailyhotel.model.FnBBookingDetail;
-import com.twoheart.dailyhotel.model.PlaceBookingDetail;
+import com.twoheart.dailyhotel.model.FnBReservationDetail;
+import com.twoheart.dailyhotel.model.PlaceReservationDetail;
 import com.twoheart.dailyhotel.util.Constants;
 
 import android.content.Intent;
@@ -23,18 +23,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class FnBBookingTabBookingFragment
-		extends BaseFragment implements Constants
+public class FnBTabReservationFragment extends BaseFragment implements Constants
 {
 	private static final String KEY_BUNDLE_ARGUMENTS_PLACEBOOKINGDETAIL = "placeBookingDetail";
 	private static final String KEY_BUNDLE_ARGUMENTS_BOOKING = "booking";
 
 	private Booking mBooking;
-	private FnBBookingDetail mFnBBookingDetail;
+	private FnBReservationDetail mFnBReservationDetail;
 
-	public static FnBBookingTabBookingFragment newInstance(PlaceBookingDetail placeBookingDetail, Booking booking, String title)
+	public static FnBTabReservationFragment newInstance(PlaceReservationDetail placeBookingDetail, Booking booking, String title)
 	{
-		FnBBookingTabBookingFragment newFragment = new FnBBookingTabBookingFragment();
+		FnBTabReservationFragment newFragment = new FnBTabReservationFragment();
 
 		//관련 정보는 BookingTabActivity에서 넘겨받음. 
 		Bundle arguments = new Bundle();
@@ -52,7 +51,7 @@ public class FnBBookingTabBookingFragment
 	{
 		super.onCreate(savedInstanceState);
 
-		mFnBBookingDetail = (FnBBookingDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_PLACEBOOKINGDETAIL);
+		mFnBReservationDetail = (FnBReservationDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_PLACEBOOKINGDETAIL);
 		mBooking = (Booking) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_BOOKING);
 	}
 
@@ -76,12 +75,12 @@ public class FnBBookingTabBookingFragment
 		TextView userPhoneTextView = (TextView) view.findViewById(R.id.userPhoneTextView);
 
 		ticketNameTextView.setText(mBooking.placeName);
-		addressTextView.setText(mFnBBookingDetail.address);
-		ticketTypeTextView.setText(mFnBBookingDetail.ticketName);
-		ticketCountTextView.setText(getString(R.string.label_booking_count, mFnBBookingDetail.ticketCount));
-		dateTextView.setText(mFnBBookingDetail.sday);
-		userNameTextView.setText(mFnBBookingDetail.guestName);
-		userPhoneTextView.setText(mFnBBookingDetail.guestPhone);
+		addressTextView.setText(mFnBReservationDetail.address);
+		ticketTypeTextView.setText(mFnBReservationDetail.ticketName);
+		ticketCountTextView.setText(getString(R.string.label_booking_count, mFnBReservationDetail.ticketCount));
+		dateTextView.setText(mFnBReservationDetail.sday);
+		userNameTextView.setText(mFnBReservationDetail.guestName);
+		userPhoneTextView.setText(mFnBReservationDetail.guestPhone);
 
 		// Android Marquee bug...
 		ticketNameTextView.setSelected(true);

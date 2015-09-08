@@ -79,6 +79,8 @@ public abstract class PlaceMainFragment extends BaseFragment
 
 	protected abstract boolean isEnabledRegionMenu();
 
+	protected abstract void showClosedDaily(SaleTime saleTime);
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
@@ -444,7 +446,7 @@ public abstract class PlaceMainFragment extends BaseFragment
 				{
 					hideSlidingDrawer();
 
-					((MainActivity) baseActivity).replaceFragment(WaitTimerFragment.newInstance(mTodaySaleTime, PlaceMainFragment.TYPE.FNB));
+					showClosedDaily(mTodaySaleTime);
 					unLockUI();
 				}
 			} catch (Exception e)

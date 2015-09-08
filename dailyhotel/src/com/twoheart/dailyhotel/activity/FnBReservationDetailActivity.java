@@ -16,17 +16,17 @@ import org.json.JSONObject;
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.BaseFragment;
-import com.twoheart.dailyhotel.fragment.FnBBookingTabBookingFragment;
+import com.twoheart.dailyhotel.fragment.FnBTabReservationFragment;
 import com.twoheart.dailyhotel.fragment.PlaceTabInfoFragment;
 import com.twoheart.dailyhotel.fragment.PlaceTabMapFragment;
-import com.twoheart.dailyhotel.model.FnBBookingDetail;
+import com.twoheart.dailyhotel.model.FnBReservationDetail;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.view.widget.FragmentViewPager;
 
 import android.view.View;
 
-public class FnBBookingTabActivity extends PlaceBookingTabActivity
+public class FnBReservationDetailActivity extends PlaceReservationActivity
 {
 	@Override
 	protected void loadFragments()
@@ -42,13 +42,13 @@ public class FnBBookingTabActivity extends PlaceBookingTabActivity
 
 			ArrayList<BaseFragment> mFragmentList = new ArrayList<BaseFragment>();
 
-			BaseFragment baseFragment01 = FnBBookingTabBookingFragment.newInstance(mPlaceBookingDetail, booking, getString(R.string.drawer_menu_pin_title_resrvation));
+			BaseFragment baseFragment01 = FnBTabReservationFragment.newInstance(mPlaceReservationDetail, booking, getString(R.string.drawer_menu_pin_title_resrvation));
 			mFragmentList.add(baseFragment01);
 
-			BaseFragment baseFragment02 = PlaceTabInfoFragment.newInstance(mPlaceBookingDetail, titleList.get(1));
+			BaseFragment baseFragment02 = PlaceTabInfoFragment.newInstance(mPlaceReservationDetail, titleList.get(1));
 			mFragmentList.add(baseFragment02);
 
-			BaseFragment baseFragment03 = PlaceTabMapFragment.newInstance(mPlaceBookingDetail, titleList.get(2));
+			BaseFragment baseFragment03 = PlaceTabMapFragment.newInstance(mPlaceReservationDetail, titleList.get(2));
 			mFragmentList.add(baseFragment03);
 
 			mFragmentViewPager.setData(mFragmentList);
@@ -91,12 +91,12 @@ public class FnBBookingTabActivity extends PlaceBookingTabActivity
 				{
 					JSONObject jsonObject = response.getJSONObject("data");
 
-					if (mPlaceBookingDetail == null)
+					if (mPlaceReservationDetail == null)
 					{
-						mPlaceBookingDetail = new FnBBookingDetail();
+						mPlaceReservationDetail = new FnBReservationDetail();
 					}
 
-					mPlaceBookingDetail.setData(jsonObject);
+					mPlaceReservationDetail.setData(jsonObject);
 
 					loadFragments();
 				} else

@@ -11,17 +11,17 @@ import org.json.JSONObject;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class FnBBookingDetail extends PlaceBookingDetail
+public class FnBReservationDetail extends PlaceReservationDetail
 {
 	public int ticketCount;
 	public String ticketName;
 	public String sday;
 
-	public FnBBookingDetail()
+	public FnBReservationDetail()
 	{
 	}
 
-	public FnBBookingDetail(Parcel in)
+	public FnBReservationDetail(Parcel in)
 	{
 		readFromParcel(in);
 	}
@@ -77,15 +77,15 @@ public class FnBBookingDetail extends PlaceBookingDetail
 
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
 	{
-		public FnBBookingDetail createFromParcel(Parcel in)
+		public FnBReservationDetail createFromParcel(Parcel in)
 		{
-			return new FnBBookingDetail(in);
+			return new FnBReservationDetail(in);
 		}
 
 		@Override
-		public FnBBookingDetail[] newArray(int size)
+		public FnBReservationDetail[] newArray(int size)
 		{
-			return new FnBBookingDetail[size];
+			return new FnBReservationDetail[size];
 		}
 	};
 }

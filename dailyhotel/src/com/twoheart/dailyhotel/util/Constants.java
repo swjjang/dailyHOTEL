@@ -289,6 +289,9 @@ public interface Constants
 	// api/fnb/reservation/session/rating/update
 	public static final String URL_WEBAPI_FNB_RESERVATION_SESSION_RATING_UPDATE = UNENCRYPTED_URL ? "api/fnb/reservation/session/rating/update" : "MTQkNzgkOTIkMTEzJDEwMCQ=$QzEzMzAwQ0VFMjZkxQzZDQkM2QjM0Q0QzRkJEQTNEMTY4MzA1MzFGRDdCMDQyOUNFMzlCNUIyRjQzNBEZCMzREMUMwMjGdGN0UzOPDAyQUNEQjZDRjGYxRDk2QkNFQzY1NzY1$";
 
+	// api/fnb/payment/session/common
+	public static final String URL_WEBAPI_FNB_PAYMENT_SESSION_COMMON = UNENCRYPTED_URL ? "api/fnb/payment/session/common" : "NzIkMTAkMzMkNDEkNTYk$NjlERDU2NDLQyQUZEQzczMEU0NUNDNjBCIRDdCNzYD0OTE5QkMwQTUxQUTVGNEE1RjE1REI2RUJBANzk2QjVFNDM1Ng==$";
+
 	//
 	public static final String URL_STORE_GOOGLE_DAILYHOTEL = "market://details?id=com.twoheart.dailyhotel";
 	public static final String URL_STORE_GOOGLE_KAKAOTALK = "market://details?id=com.kakao.talk";
@@ -428,6 +431,7 @@ public interface Constants
 	public static final String NAME_INTENT_EXTRA_DATA_URL = "url";
 	public static final String NAME_INTENT_EXTRA_DATA_PLACEIDX = "placeIdx";
 	public static final String NAME_INTENT_EXTRA_DATA_PLACENAME = "placeName";
+	public static final String NAME_INTENT_EXTRA_DATA_RESULT = "result";
 
 	// Push Type
 	public static final int PUSH_TYPE_NOTICE = 0;

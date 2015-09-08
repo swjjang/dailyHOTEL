@@ -5,10 +5,9 @@ import android.os.Parcelable;
 
 public class TicketPayment implements Parcelable
 {
-	public enum Type
+	public enum PaymentType
 	{
 		EASY_CARD, CARD, PHONE_PAY, VBANK,
-		//		PAYPAL
 	};
 
 	private TicketInformation mTicketInformation;
@@ -16,18 +15,18 @@ public class TicketPayment implements Parcelable
 	public boolean isEnabledBonus;
 	public String checkInTime;
 	public String checkOutTime;
-	public Type type;
+	public PaymentType paymentType;
 	private Customer mCustomer; // 로그인 유저 정보
 	private Guest mGuest; // 실제 예약 혹은 투숙하는 사람
-	public int count;
-	public int maxCount; // 최대 결제 가능한 티켓 개수
+	public int ticketCount;
+	public int ticketMaxCount; // 최대 결제 가능한 티켓 개수
 
 	public TicketPayment()
 	{
 		// Default Ticket count
-		count = 1;
-		maxCount = 1;
-		type = Type.EASY_CARD;
+		ticketCount = 1;
+		ticketMaxCount = 1;
+		paymentType = PaymentType.EASY_CARD;
 	}
 
 	public TicketPayment(Parcel in)
@@ -44,10 +43,10 @@ public class TicketPayment implements Parcelable
 		dest.writeByte((byte) (isEnabledBonus ? 1 : 0));
 		dest.writeString(checkInTime);
 		dest.writeString(checkOutTime);
-		dest.writeSerializable(type);
+		dest.writeSerializable(paymentType);
 		dest.writeValue(mGuest);
-		dest.writeInt(count);
-		dest.writeInt(maxCount);
+		dest.writeInt(ticketCount);
+		dest.writeInt(ticketMaxCount);
 	}
 
 	private void readFromParcel(Parcel in)
@@ -58,10 +57,10 @@ public class TicketPayment implements Parcelable
 		isEnabledBonus = in.readByte() != 0;
 		checkInTime = in.readString();
 		checkOutTime = in.readString();
-		type = (Type) in.readSerializable();
+		paymentType = (PaymentType) in.readSerializable();
 		mGuest = (Guest) in.readValue(Guest.class.getClassLoader());
-		count = in.readInt();
-		maxCount = in.readInt();
+		ticketCount = in.readInt();
+		ticketMaxCount = in.readInt();
 	}
 
 	public TicketInformation getTicketInformation()
@@ -101,7 +100,7 @@ public class TicketPayment implements Parcelable
 	 */
 	public int getPaymentToPay()
 	{
-		int price = (mTicketInformation.discountPrice * count) - (isEnabledBonus ? bonus : 0);
+		int price = (mTicketInformation.discountPrice * ticketCount) - (isEnabledBonus ? bonus : 0);
 
 		if (price < 0)
 		{

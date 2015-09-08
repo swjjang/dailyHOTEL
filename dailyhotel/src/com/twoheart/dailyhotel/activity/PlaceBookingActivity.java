@@ -102,7 +102,7 @@ public abstract class PlaceBookingActivity extends BaseActivity
 
 	protected abstract void updatePaymentInformation(TicketPayment ticketPayment, CreditCard creditCard);
 
-	protected abstract void checkPaymentType(TicketPayment.Type type);
+	protected abstract void checkPaymentType(TicketPayment.PaymentType type);
 
 	protected abstract void updateLayout(TicketPayment ticketPayment, CreditCard creditCard);
 
@@ -257,7 +257,7 @@ public abstract class PlaceBookingActivity extends BaseActivity
 					params.put(Label.PLACE_TICKET_NAME, mTicketPayment.getTicketInformation().name);
 					params.put(Label.PLACE_NAME, mTicketPayment.getTicketInformation().placeName);
 
-					AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.PAYMENT_AGREE_POPUP, Action.CLICK, mTicketPayment.type.name(), params);
+					AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.PAYMENT_AGREE_POPUP, Action.CLICK, mTicketPayment.paymentType.name(), params);
 				}
 			}
 		};
@@ -274,7 +274,7 @@ public abstract class PlaceBookingActivity extends BaseActivity
 	{
 		unLockUI();
 
-		if (mTicketPayment.type == TicketPayment.Type.EASY_CARD)
+		if (mTicketPayment.paymentType == TicketPayment.PaymentType.EASY_CARD)
 		{
 			if (isFinishing() == true)
 			{
@@ -291,7 +291,7 @@ public abstract class PlaceBookingActivity extends BaseActivity
 			requestPayEasyPayment(mTicketPayment, mCheckInSaleTime);
 		} else
 		{
-			Intent intent = new Intent(this, com.twoheart.dailyhotel.activity.PaymentActivity.class);
+			Intent intent = new Intent(this, com.twoheart.dailyhotel.activity.TicketPaymentActivity.class);
 			intent.putExtra(NAME_INTENT_EXTRA_DATA_TICKETPAYMENT, mTicketPayment);
 			intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mCheckInSaleTime);
 
@@ -360,7 +360,13 @@ public abstract class PlaceBookingActivity extends BaseActivity
 						}
 					};
 
-					msg = getString(R.string.act_toast_payment_success);
+					if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_RESULT) == true)
+					{
+						msg = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_RESULT);
+					} else
+					{
+						msg = getString(R.string.act_toast_payment_success);
+					}
 					break;
 
 				case CODE_RESULT_ACTIVITY_PAYMENT_SOLD_OUT:
@@ -385,7 +391,22 @@ public abstract class PlaceBookingActivity extends BaseActivity
 					break;
 
 				case CODE_RESULT_ACTIVITY_PAYMENT_FAIL:
-					msg = getString(R.string.act_toast_payment_fail);
+					if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_RESULT) == true)
+					{
+						msg = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_RESULT);
+					} else
+					{
+						msg = getString(R.string.act_toast_payment_fail);
+					}
+
+					posListener = new View.OnClickListener()
+					{
+						@Override
+						public void onClick(View view)
+						{
+							finish();
+						}
+					};
 					break;
 
 				case CODE_RESULT_ACTIVITY_PAYMENT_CANCELED:
@@ -469,7 +490,7 @@ public abstract class PlaceBookingActivity extends BaseActivity
 							mSelectedCreditCard = creditCard;
 
 							// 간편 결제로 체크 하기
-							checkPaymentType(TicketPayment.Type.EASY_CARD);
+							checkPaymentType(TicketPayment.PaymentType.EASY_CARD);
 						}
 					}
 					break;
@@ -591,7 +612,7 @@ public abstract class PlaceBookingActivity extends BaseActivity
 	{
 		unLockUI();
 
-		if (mTicketPayment.type == TicketPayment.Type.EASY_CARD)
+		if (mTicketPayment.paymentType == TicketPayment.PaymentType.EASY_CARD)
 		{
 			// 간편 결제를 시도하였으나 결제할 카드가 없는 경우.
 			if (mSelectedCreditCard == null)
@@ -606,7 +627,7 @@ public abstract class PlaceBookingActivity extends BaseActivity
 		} else
 		{
 			// 일반 결제 시도
-			showAgreeTermDialog(mTicketPayment.type);
+			showAgreeTermDialog(mTicketPayment.paymentType);
 		}
 
 		String region = sharedPreference.getString(KEY_PREFERENCE_PLACE_REGION_SELECT_GA, null);
@@ -644,7 +665,7 @@ public abstract class PlaceBookingActivity extends BaseActivity
 		}
 	}
 
-	protected void showAgreeTermDialog(TicketPayment.Type type)
+	protected void showAgreeTermDialog(TicketPayment.PaymentType type)
 	{
 		if (type == null)
 		{
@@ -778,7 +799,7 @@ public abstract class PlaceBookingActivity extends BaseActivity
 							params.put(Label.PLACE_TICKET_NAME, mTicketPayment.getTicketInformation().name);
 							params.put(Label.PLACE_NAME, mTicketPayment.getTicketInformation().placeName);
 
-							AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.PAYMENT_AGREE_POPUP, Action.CLICK, mTicketPayment.type.name(), params);
+							AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.PAYMENT_AGREE_POPUP, Action.CLICK, mTicketPayment.paymentType.name(), params);
 						}
 					}
 				});
@@ -932,7 +953,7 @@ public abstract class PlaceBookingActivity extends BaseActivity
 			strDate = dateFormat2.format(date);
 
 			AnalyticsManager.getInstance(getApplicationContext()).purchaseComplete(transId, userIndex, String.valueOf(ticketInformation.index), //
-			ticketInformation.placeName, Label.PAYMENT, ticketPayment.checkInTime, ticketPayment.checkOutTime, ticketPayment.type.name(), strDate, price);
+			ticketInformation.placeName, Label.PAYMENT, ticketPayment.checkInTime, ticketPayment.checkOutTime, ticketPayment.paymentType.name(), strDate, price);
 		} catch (Exception e)
 		{
 			ExLog.e(e.toString());

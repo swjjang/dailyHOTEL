@@ -191,7 +191,6 @@ public abstract class DailyHotelRequest<T>
 
 	//	public static void makeUrlEncoder()
 	//	{
-	//		DailyHotelRequest.getUrlEncoder("api/fnb/reservation/session/rating/exist");
-	//		DailyHotelRequest.getUrlEncoder("api/fnb/reservation/session/rating/update");
+	//		DailyHotelRequest.getUrlEncoder("api/fnb/payment/session/common");
 	//	}
 }

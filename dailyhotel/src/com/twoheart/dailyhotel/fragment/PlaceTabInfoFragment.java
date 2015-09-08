@@ -11,7 +11,7 @@ package com.twoheart.dailyhotel.fragment;
 import java.util.List;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.PlaceBookingDetail;
+import com.twoheart.dailyhotel.model.PlaceReservationDetail;
 import com.twoheart.dailyhotel.util.Util;
 
 import android.content.Context;
@@ -27,12 +27,12 @@ public class PlaceTabInfoFragment extends BaseFragment
 {
 	private static final String KEY_BUNDLE_ARGUMENTS_PLACEBOOKINGDETAIL = "placeBookingDetail";
 
-	private PlaceBookingDetail mPlaceBookingDetail;
+	private PlaceReservationDetail mPlaceBookingDetail;
 	private LinearLayout mLayout;
 
 	private int mInfoViewCount;
 
-	public static PlaceTabInfoFragment newInstance(PlaceBookingDetail placeBookingDetail, String title)
+	public static PlaceTabInfoFragment newInstance(PlaceReservationDetail placeBookingDetail, String title)
 	{
 		PlaceTabInfoFragment newFragment = new PlaceTabInfoFragment();
 		Bundle arguments = new Bundle();
@@ -49,7 +49,7 @@ public class PlaceTabInfoFragment extends BaseFragment
 	{
 		super.onCreate(savedInstanceState);
 
-		mPlaceBookingDetail = (PlaceBookingDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_PLACEBOOKINGDETAIL);
+		mPlaceBookingDetail = (PlaceReservationDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_PLACEBOOKINGDETAIL);
 	}
 
 	@Override

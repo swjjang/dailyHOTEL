@@ -10,7 +10,7 @@ import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.androidquery.callback.BitmapAjaxCallback;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.fragment.BookingListFragment;
+import com.twoheart.dailyhotel.fragment.ReservationListFragment;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
@@ -28,14 +28,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class BookingListAdapter
+public class ReservationListAdapter
 		extends ArrayAdapter<Booking>implements PinnedSectionListAdapter
 {
 	private ArrayList<Booking> mBookingList;
 	private Context mContext;
-	private BookingListFragment.OnUserActionListener mOnUserActionListener;
+	private ReservationListFragment.OnUserActionListener mOnUserActionListener;
 
-	public BookingListAdapter(Context context, int resourceId, ArrayList<Booking> items)
+	public ReservationListAdapter(Context context, int resourceId, ArrayList<Booking> items)
 	{
 		super(context, resourceId, items);
 
@@ -51,7 +51,7 @@ public class BookingListAdapter
 		this.mContext = context;
 	}
 
-	public void setOnUserActionListener(BookingListFragment.OnUserActionListener listener)
+	public void setOnUserActionListener(ReservationListFragment.OnUserActionListener listener)
 	{
 		mOnUserActionListener = listener;
 	}

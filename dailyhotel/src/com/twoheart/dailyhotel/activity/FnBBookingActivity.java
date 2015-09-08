@@ -25,7 +25,6 @@ import com.twoheart.dailyhotel.model.Guest;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.model.TicketPayment;
-import com.twoheart.dailyhotel.model.TicketPayment.Type;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -55,7 +54,7 @@ public class FnBBookingActivity extends PlaceBookingActivity
 
 		public void showCreditCardManager();
 
-		public void setPaymentType(TicketPayment.Type type);
+		public void setPaymentType(TicketPayment.PaymentType type);
 
 		public void pay();
 
@@ -101,7 +100,7 @@ public class FnBBookingActivity extends PlaceBookingActivity
 			return;
 		}
 
-		String params = String.format("?sale_reco_idx=%d&sday=%s&ticket_count=%d", ticketPayment.getTicketInformation().index, checkInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), ticketPayment.count);
+		String params = String.format("?sale_reco_idx=%d&sday=%s&ticket_count=%d", ticketPayment.getTicketInformation().index, checkInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), ticketPayment.ticketCount);
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_SALE_SESSION_TICKET_SELL_CHECK).append(params).toString(), null, mTicketSellCheckJsonResponseListener, this));
 	}
 
@@ -122,7 +121,7 @@ public class FnBBookingActivity extends PlaceBookingActivity
 
 		params.put("sale_reco_idx", String.valueOf(ticketInformation.index));
 		params.put("billkey", mSelectedCreditCard.billingkey);
-		params.put("ticket_count", String.valueOf(ticketPayment.count));
+		params.put("ticket_count", String.valueOf(ticketPayment.ticketCount));
 		params.put("customer_name", guest.name);
 		params.put("customer_phone", guest.phone);
 		params.put("customer_email", guest.email);
@@ -171,11 +170,11 @@ public class FnBBookingActivity extends PlaceBookingActivity
 	}
 
 	@Override
-	protected void checkPaymentType(Type type)
+	protected void checkPaymentType(TicketPayment.PaymentType type)
 	{
 		if (mTicketPayment != null)
 		{
-			mTicketPayment.type = type;
+			mTicketPayment.paymentType = type;
 		}
 
 		if (mFnBBookingLayout != null)
@@ -193,16 +192,16 @@ public class FnBBookingActivity extends PlaceBookingActivity
 		@Override
 		public void plusTicketCount()
 		{
-			int count = mTicketPayment.count;
-			int maxCount = mTicketPayment.maxCount;
+			int count = mTicketPayment.ticketCount;
+			int maxCount = mTicketPayment.ticketMaxCount;
 
 			if (count >= maxCount)
 			{
 				DailyToast.showToast(FnBBookingActivity.this, getString(R.string.toast_msg_maxcount_ticket, maxCount), Toast.LENGTH_SHORT);
 			} else
 			{
-				mTicketPayment.count = count + 1;
-				mFnBBookingLayout.setTicketCount(mTicketPayment.count);
+				mTicketPayment.ticketCount = count + 1;
+				mFnBBookingLayout.setTicketCount(mTicketPayment.ticketCount);
 
 				// 결제 가격을 바꾸어야 한다.
 				mFnBBookingLayout.updatePaymentInformationLayout(FnBBookingActivity.this, mTicketPayment, mSelectedCreditCard);
@@ -212,14 +211,14 @@ public class FnBBookingActivity extends PlaceBookingActivity
 		@Override
 		public void minusTicketCount()
 		{
-			int count = mTicketPayment.count;
+			int count = mTicketPayment.ticketCount;
 
 			if (count <= 1)
 			{
 			} else
 			{
-				mTicketPayment.count = count - 1;
-				mFnBBookingLayout.setTicketCount(mTicketPayment.count);
+				mTicketPayment.ticketCount = count - 1;
+				mFnBBookingLayout.setTicketCount(mTicketPayment.ticketCount);
 
 				// 결제 가격을 바꾸어야 한다.
 				mFnBBookingLayout.updatePaymentInformationLayout(FnBBookingActivity.this, mTicketPayment, mSelectedCreditCard);
@@ -266,7 +265,7 @@ public class FnBBookingActivity extends PlaceBookingActivity
 		}
 
 		@Override
-		public void setPaymentType(Type type)
+		public void setPaymentType(TicketPayment.PaymentType type)
 		{
 			checkPaymentType(type);
 		}
@@ -321,7 +320,7 @@ public class FnBBookingActivity extends PlaceBookingActivity
 
 			String gcmId = sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "");
 
-			if (mTicketPayment.type == TicketPayment.Type.VBANK && TextUtils.isEmpty(gcmId) == true)
+			if (mTicketPayment.paymentType == TicketPayment.PaymentType.VBANK && TextUtils.isEmpty(gcmId) == true)
 			{
 				// 가상계좌 결제시 푸쉬를 받지 못하는 경우
 				String title = getString(R.string.dialog_notice2);
@@ -447,7 +446,7 @@ public class FnBBookingActivity extends PlaceBookingActivity
 							}
 
 							mTicketPayment.getTicketInformation().discountPrice = discountPrice;
-							mTicketPayment.maxCount = maxCount;
+							mTicketPayment.ticketMaxCount = maxCount;
 
 							Calendar calendarCheckin = DailyCalendar.getInstance();
 							calendarCheckin.setTimeZone(TimeZone.getTimeZone("GMT"));

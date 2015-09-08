@@ -100,7 +100,7 @@ public class DailyHotelPreference
 			mEditor.commit();
 		}
 	}
-	
+
 	public void clear()
 	{
 		if (mEditor != null)

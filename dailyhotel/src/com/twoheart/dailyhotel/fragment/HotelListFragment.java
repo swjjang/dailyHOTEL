@@ -21,7 +21,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.android.volley.Request.Method;
-import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.adapter.HotelListAdapter;
@@ -930,46 +929,6 @@ public class HotelListFragment extends
 			} finally
 			{
 				unLockUI();
-			}
-		}
-	};
-
-	private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
-	{
-		@Override
-		public void onResponse(String url, JSONObject response)
-		{
-			unLockUI();
-
-			BaseActivity baseActivity = (BaseActivity) getActivity();
-
-			if (baseActivity == null)
-			{
-				return;
-			}
-
-			try
-			{
-				if (response == null)
-				{
-					throw new NullPointerException("response == null");
-				}
-
-				mSaleTime.setCurrentTime(response.getLong("currentDateTime"));
-				mSaleTime.setOpenTime(response.getLong("openDateTime"));
-				mSaleTime.setCloseTime(response.getLong("closeDateTime"));
-				mSaleTime.setDailyTime(response.getLong("dailyDateTime"));
-
-				if (mSaleTime.isSaleTime() == true)
-				{
-
-				} else
-				{
-					((MainActivity) baseActivity).replaceFragment(WaitTimerFragment.newInstance(mSaleTime, PlaceMainFragment.TYPE.HOTEL));
-				}
-			} catch (Exception e)
-			{
-				onError(e);
 			}
 		}
 	};

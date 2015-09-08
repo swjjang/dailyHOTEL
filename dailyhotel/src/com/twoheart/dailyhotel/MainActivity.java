@@ -33,7 +33,6 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.ExitActivity;
 import com.twoheart.dailyhotel.activity.SplashActivity;
-import com.twoheart.dailyhotel.fragment.BookingListFragment;
 import com.twoheart.dailyhotel.fragment.CreditFragment;
 import com.twoheart.dailyhotel.fragment.ErrorFragment;
 import com.twoheart.dailyhotel.fragment.EventListFragment;
@@ -41,6 +40,7 @@ import com.twoheart.dailyhotel.fragment.FnBMainFragment;
 import com.twoheart.dailyhotel.fragment.HotelMainFragment;
 import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.fragment.RatingHotelFragment;
+import com.twoheart.dailyhotel.fragment.ReservationListFragment;
 import com.twoheart.dailyhotel.fragment.SettingFragment;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
@@ -56,7 +56,6 @@ import com.twoheart.dailyhotel.util.DailyHotelPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.CloseOnBackPressed;
-import com.twoheart.dailyhotel.view.widget.FontManager;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -68,7 +67,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.content.res.Configuration;
-import android.media.MediaMuxer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -450,7 +448,7 @@ public class MainActivity
 			case INDEX_FNB_LIST_FRAGMENT:
 				return new FnBMainFragment();
 			case INDEX_BOOKING_LIST_FRAGMENT:
-				return new BookingListFragment();
+				return new ReservationListFragment();
 			case INDEX_CREDIT_FRAGMENT:
 				return new CreditFragment();
 			case INDEX_EVENT_FRAGMENT:
@@ -1128,7 +1126,6 @@ public class MainActivity
 
 					drawerMenuItemIcon.setImageResource(item.getIcon());
 					drawerMenuItemText.setText(item.getTitle());
-					drawerMenuItemText.setTypeface(FontManager.getInstance(context).getDemiLightTypeface());
 
 					if (item.isSelected() == true)
 					{

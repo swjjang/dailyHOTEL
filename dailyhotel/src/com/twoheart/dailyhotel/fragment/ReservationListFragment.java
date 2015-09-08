@@ -26,10 +26,10 @@ import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.BookingTabActivity;
-import com.twoheart.dailyhotel.activity.FnBBookingTabActivity;
+import com.twoheart.dailyhotel.activity.FnBReservationDetailActivity;
 import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.activity.PaymentWaitActivity;
-import com.twoheart.dailyhotel.adapter.BookingListAdapter;
+import com.twoheart.dailyhotel.adapter.ReservationListAdapter;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
@@ -66,10 +66,10 @@ import android.widget.Toast;
  * @author jangjunho
  *
  */
-public class BookingListFragment extends
+public class ReservationListFragment extends
 		BaseFragment implements Constants, OnItemClickListener, OnClickListener
 {
-	private BookingListAdapter mAdapter;
+	private ReservationListAdapter mAdapter;
 	private RelativeLayout mEmptyLayout;
 	private PinnedSectionListView mListView;
 	private View btnLogin;
@@ -181,7 +181,7 @@ public class BookingListFragment extends
 					break;
 
 				case FNB:
-					intent = new Intent(baseActivity, FnBBookingTabActivity.class);
+					intent = new Intent(baseActivity, FnBReservationDetailActivity.class);
 					break;
 			}
 
@@ -606,9 +606,9 @@ public class BookingListFragment extends
 
 					if (mAdapter == null)
 					{
-						mAdapter = new BookingListAdapter(baseActivity, R.layout.list_row_booking, new ArrayList<Booking>());
+						mAdapter = new ReservationListAdapter(baseActivity, R.layout.list_row_booking, new ArrayList<Booking>());
 						mAdapter.setOnUserActionListener(mOnUserActionListener);
-						mListView.setOnItemClickListener(BookingListFragment.this);
+						mListView.setOnItemClickListener(ReservationListFragment.this);
 						mListView.setAdapter(mAdapter);
 					}
 
