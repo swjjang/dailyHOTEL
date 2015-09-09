@@ -225,7 +225,7 @@ public class BookingListFragment extends
 				case CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT:
 					BaseActivity baseActivity = (BaseActivity) getActivity();
 
-					if (baseActivity == null || baseActivity.isFinishing() == true)
+					if (baseActivity == null)
 					{
 						return;
 					}

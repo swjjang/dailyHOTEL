@@ -26,6 +26,7 @@ import com.twoheart.dailyhotel.model.Guest;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.model.TicketPayment;
+import com.twoheart.dailyhotel.model.TicketPayment.PaymentType;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
@@ -326,7 +327,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, this));
 	}
 
-	private void activityResulted(int requestCode, int resultCode, Intent intent)
+	protected void activityResulted(int requestCode, int resultCode, Intent intent)
 	{
 		//결제가 끝난 뒤 호출됨. 
 		if (requestCode == CODE_REQUEST_ACTIVITY_PAYMENT)
@@ -346,26 +347,38 @@ public abstract class TicketPaymentActivity extends BaseActivity
 				// 결제가 성공한 경우 GA와 믹스패널에 등록 
 				case CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE:
 				case CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS:
-					writeLogPaid(mTicketPayment);
-
-					posListener = new View.OnClickListener()
+					// 가상계좌완료후에는 예약화면의 가상계좌 화면까지 이동한다.
+					if (mTicketPayment.paymentType == PaymentType.VBANK)
 					{
-						@Override
-						public void onClick(View view)
-						{
-							mState = STATE_NONE;
+						Editor editor = sharedPreference.edit();
+						editor.putInt(KEY_PREFERENCE_ACCOUNT_READY_FLAG, CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
+						editor.apply();
 
-							setResult(RESULT_OK);
-							finish();
-						}
-					};
-
-					if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_RESULT) == true)
-					{
-						msg = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_RESULT);
+						setResult(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
+						finish();
 					} else
 					{
-						msg = getString(R.string.act_toast_payment_success);
+						writeLogPaid(mTicketPayment);
+
+						posListener = new View.OnClickListener()
+						{
+							@Override
+							public void onClick(View view)
+							{
+								mState = STATE_NONE;
+
+								setResult(RESULT_OK);
+								finish();
+							}
+						};
+
+						if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_RESULT) == true)
+						{
+							msg = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_RESULT);
+						} else
+						{
+							msg = getString(R.string.act_toast_payment_success);
+						}
 					}
 					break;
 
@@ -463,13 +476,20 @@ public abstract class TicketPaymentActivity extends BaseActivity
 					}
 					break;
 
+				case CODE_RESULT_ACTIVITY_PAYMENT_CANCEL:
+				{
+					if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_RESULT) == true)
+					{
+						msg = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_RESULT);
+					} else
+					{
+						msg = getString(R.string.act_toast_payment_fail);
+					}
+					break;
+				}
+
 				default:
 					return;
-			}
-
-			if (isFinishing() == true)
-			{
-				return;
 			}
 
 			showSimpleDialog(title, msg, posTitle, posListener);
@@ -531,11 +551,6 @@ public abstract class TicketPaymentActivity extends BaseActivity
 
 			if (msg != null)
 			{
-				if (isFinishing() == true)
-				{
-					return;
-				}
-
 				String title = getString(R.string.dialog_notice2);
 				String positive = getString(R.string.dialog_btn_text_confirm);
 

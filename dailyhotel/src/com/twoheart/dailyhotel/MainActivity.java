@@ -1394,6 +1394,18 @@ public class MainActivity
 
 					hideNewEvent(true);
 				}
+
+				// 같이 이벤트 처리
+				if (DailyHotelPreference.getInstance(MainActivity.this).isNewTodayFnB() == true)
+				{
+					if (drawerLayout.isDrawerOpen(drawerView) == true)
+					{
+						showNewFnB(false);
+					} else
+					{
+						showNewFnB(true);
+					}
+				}
 			} catch (Exception e)
 			{
 				ExLog.d(e.toString());

@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/empty_background_event"
-        android:visibility="visible" >
+        android:visibility="gone" >
 
         <ImageView
             android:layout_width="match_parent"
@@ -64,7 +64,6 @@
             android:gravity="center_horizontal" >
 
             <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
-                android:id="@+id/btn_booking_empty_login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -86,7 +85,6 @@
             android:gravity="center_horizontal" >
 
             <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
-                android:id="@+id/btn_booking_empty_login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
