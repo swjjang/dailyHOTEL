@@ -554,23 +554,36 @@ public class FnBPaymentActivity extends TicketPaymentActivity
 					});
 				} else
 				{
-					if (response.has("msg") == true)
+					int resultCode = 0;
+					Intent intent = new Intent();
+
+					if (response.has("msg") == false)
+					{
+						resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
+					} else
 					{
 						String msg = response.getString("msg");
 
-						showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
+						String[] result = msg.split("\\^");
+
+						if (result.length >= 1)
 						{
-							@Override
-							public void onClick(View v)
-							{
-								finish();
-							}
-						}, null, false);
-						return;
-					} else
-					{
-						onInternalError();
+							intent.putExtra(NAME_INTENT_EXTRA_DATA_RESULT, result[1]);
+						}
+
+						if ("SUCCESS".equalsIgnoreCase(result[0]) == true)
+						{
+							resultCode = CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS;
+						} else if ("FAIL".equalsIgnoreCase(result[0]) == true)
+						{
+							resultCode = CODE_RESULT_ACTIVITY_PAYMENT_CANCEL;
+						} else
+						{
+							resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
+						}
 					}
+
+					activityResulted(CODE_REQUEST_ACTIVITY_PAYMENT, resultCode, intent);
 				}
 			} catch (Exception e)
 			{

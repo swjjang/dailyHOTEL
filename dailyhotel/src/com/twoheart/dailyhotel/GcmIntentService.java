@@ -139,6 +139,7 @@ public class GcmIntentService extends IntentService implements Constants
 
 							sendPush(messageType, type, msg, imageUrl);
 
+							// 로그 남기기 이슈
 							SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmss", Locale.KOREA);
 							Date date = new Date();
 							String strDate = dateFormat.format(date);

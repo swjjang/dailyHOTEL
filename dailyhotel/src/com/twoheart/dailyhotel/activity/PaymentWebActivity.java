@@ -893,6 +893,9 @@ public class PaymentWebActivity extends BaseActivity implements Constants
 				if ("SUCCESS".equalsIgnoreCase(result[0]) == true)
 				{
 					resultCode = CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS;
+				} else if ("FAIL".equalsIgnoreCase(result[0]) == true)
+				{
+					resultCode = CODE_RESULT_ACTIVITY_PAYMENT_CANCEL;
 				} else
 				{
 					resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
@@ -923,5 +926,4 @@ public class PaymentWebActivity extends BaseActivity implements Constants
 
 		showSimpleDialog(getString(R.string.dialog_title_payment), getString(R.string.dialog_msg_chk_cancel_payment), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null);
 	}
-
 }

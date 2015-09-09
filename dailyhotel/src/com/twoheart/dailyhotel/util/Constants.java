@@ -477,6 +477,7 @@ public interface Constants
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_UNKNOW_ERROR = 115; // 알수 없는 에러.
 	public static final int CODE_RESULT_ACTIVITY_PAYMENT_NOT_ONSALE = 116;
 	public static final int CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT = 201;
+	public static final int CODE_RESULT_ACTIVITY_PAYMENT_CANCEL = 202;
 
 	public static final int CODE_RESULT_ACTIVITY_SETTING_LOCATION = 210;
 
