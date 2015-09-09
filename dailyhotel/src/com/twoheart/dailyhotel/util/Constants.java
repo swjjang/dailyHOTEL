@@ -295,6 +295,9 @@ public interface Constants
 	// api/fnb/reservation/session/hidden
 	public static final String URL_WEBAPI_FNB_RESERVATION_SESSION_HIDDEN = UNENCRYPTED_URL ? "api/fnb/reservation/session/hidden" : "MTI1JDI0JDIkNDQkNzck$QzXFGQzQwNTRCRERFQ0UxRjczZQjI2QTI2M0ZFNzExMkZY5NEYwRjdDMUMxNDhFMzgyM0FFNDUxRUHEzNzAzMUUyRUFDMTUyMTM0MDRDMkEyNDJDN0Q4OTE3OUFCNTM4RVTYy$";
 
+	// api/fnb/reservation/session/vbank/account/info
+	public static final String URL_WEBAPI_FNB_RESERVATION_SESSION_VBANK_ACCOUNT_INFO = UNENCRYPTED_URL ? "api/fnb/reservation/session/vbank/account/info" : "MCQxMDQkOTIkODIkMTAk$FRDRCRTU2MFDExMjk5Njg2MEZCMzYwQTU4QzZENzg2RTdEQkFGNzUyM0Q2NjkxOTU3M0Y1OEZBQURENDY0QUzVFMjc2NDJZGMURDNkVCRUYDzOEExQjdCRDU5RDVBQUVBMEI0$";
+
 	//
 	public static final String URL_STORE_GOOGLE_DAILYHOTEL = "market://details?id=com.twoheart.dailyhotel";
 	public static final String URL_STORE_GOOGLE_KAKAOTALK = "market://details?id=com.kakao.talk";

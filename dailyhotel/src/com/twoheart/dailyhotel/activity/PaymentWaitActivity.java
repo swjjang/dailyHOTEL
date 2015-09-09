@@ -52,8 +52,11 @@ public class PaymentWaitActivity extends BaseActivity
 
 		booking = new Booking();
 		Bundle bundle = getIntent().getExtras();
+
 		if (bundle != null)
+		{
 			booking = (Booking) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_BOOKING);
+		}
 
 		setContentView(R.layout.activity_payment_wait);
 		setActionBar(getString(R.string.actionbar_title_payment_wait_activity));
@@ -68,11 +71,25 @@ public class PaymentWaitActivity extends BaseActivity
 
 		tvHotelName.setText(booking.placeName);
 
-		String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_MINE_DETAIL).append('/').append(booking.payType).append('/').append(booking.tid).toString();
-
 		lockUI();
 
-		mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null, mReserveMineDetailJsonResponseListener, this));
+		switch (booking.placeType)
+		{
+			case HOTEL:
+			{
+				String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_MINE_DETAIL).append('/').append(booking.payType).append('/').append(booking.tid).toString();
+				mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null, mHotelReservationJsonResponseListener, this));
+				break;
+			}
+
+			case FNB:
+			{
+				String params = String.format("?tid=%s", booking.tid);
+				String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_SESSION_VBANK_ACCOUNT_INFO).append(params).toString();
+				mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null, mFnBReservationJsonResponseListener, this));
+				break;
+			}
+		}
 	}
 
 	@Override
@@ -123,7 +140,7 @@ public class PaymentWaitActivity extends BaseActivity
 	// Listener
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	private DailyHotelJsonResponseListener mReserveMineDetailJsonResponseListener = new DailyHotelJsonResponseListener()
+	private DailyHotelJsonResponseListener mHotelReservationJsonResponseListener = new DailyHotelJsonResponseListener()
 	{
 
 		@Override
@@ -163,6 +180,56 @@ public class PaymentWaitActivity extends BaseActivity
 			} catch (JSONException e)
 			{
 				ExLog.e(e.toString());
+			}
+		}
+	};
+
+	private DailyHotelJsonResponseListener mFnBReservationJsonResponseListener = new DailyHotelJsonResponseListener()
+	{
+
+		@Override
+		public void onResponse(String url, JSONObject response)
+		{
+			try
+			{
+				if (response == null)
+				{
+					throw new NullPointerException("response == null");
+				}
+
+				int msg_code = response.getInt("msg_code");
+
+				if (msg_code == 0)
+				{
+					JSONObject jsonObject = response.getJSONObject("data");
+
+					tvAccount.setText(jsonObject.getString("bank_name") + ", " + jsonObject.getString("account_num"));
+					tvName.setText(jsonObject.getString("name"));
+
+					DecimalFormat comma = new DecimalFormat("###,##0");
+					tvPrice.setText(comma.format(jsonObject.getInt("amt")) + Html.fromHtml(getString(R.string.currency)));
+
+					String[] dateSlice = jsonObject.getString("date").split("/");
+					String[] timeSlice = jsonObject.getString("time").split(":");
+
+					tvDeadline.setText(Integer.parseInt(dateSlice[1]) + "월 " + Integer.parseInt(dateSlice[2]) + "일 " + timeSlice[0] + ":" + timeSlice[1] + "까지");
+
+					tvGuide1.setText(jsonObject.getString("msg1"));
+					tvGuide2.setText(jsonObject.getString("msg2"));
+				} else
+				{
+					Intent intent = new Intent();
+					intent.putExtra("msg", response.getString("msg"));
+					setResult(CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT, intent);
+					finish();
+				}
+			} catch (Exception e)
+			{
+				onError(e);
+				finish();
+			} finally
+			{
+				unLockUI();
 			}
 		}
 	};

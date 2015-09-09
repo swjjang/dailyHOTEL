@@ -191,6 +191,6 @@ public abstract class DailyHotelRequest<T>
 
 	//	public static void makeUrlEncoder()
 	//	{
-	//		DailyHotelRequest.getUrlEncoder("api/fnb/reservation/session/hidden");
+	//		DailyHotelRequest.getUrlEncoder("api/fnb/reservation/session/vbank/account/info");
 	//	}
 }
