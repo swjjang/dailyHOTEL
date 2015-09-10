@@ -85,7 +85,7 @@ public class FnBListFragment extends PlaceListFragment
 		mEmptyView = view.findViewById(R.id.emptyView);
 
 		mMapLayout = (FrameLayout) view.findViewById(R.id.hotelMapLayout);
-		mMapLayout.setPadding(0, Util.dpToPx(baseActivity, 109) + 2, 0, 0);
+		mMapLayout.setPadding(0, Util.dpToPx(baseActivity, 56), 0, 0);
 
 		mViewType = VIEW_TYPE.LIST;
 
@@ -103,6 +103,45 @@ public class FnBListFragment extends PlaceListFragment
 		setActionbarViewHolder(actionbarViewHolder);
 
 		return view;
+	}
+
+	@Override
+	protected void setVisibility(VIEW_TYPE type, boolean isCurrentPage)
+	{
+		switch (type)
+		{
+			case LIST:
+				if (mActionbarViewHolder != null && mActionbarViewHolder.mTabindicatorView != null)
+				{
+					if (mActionbarViewHolder.mTabindicatorView.getVisibility() == View.INVISIBLE)
+					{
+						mActionbarViewHolder.mTabindicatorView.setVisibility(View.VISIBLE);
+					}
+				}
+				break;
+
+			case MAP:
+				if (mActionbarViewHolder != null && mActionbarViewHolder.mTabindicatorView != null)
+				{
+					if (mActionbarViewHolder.mTabindicatorView.getVisibility() == View.VISIBLE)
+					{
+						mActionbarViewHolder.mTabindicatorView.setVisibility(View.INVISIBLE);
+					}
+				}
+				break;
+
+			case GONE:
+				if (mActionbarViewHolder != null && mActionbarViewHolder.mTabindicatorView != null)
+				{
+					if (mActionbarViewHolder.mTabindicatorView.getVisibility() == View.INVISIBLE)
+					{
+						mActionbarViewHolder.mTabindicatorView.setVisibility(View.VISIBLE);
+					}
+				}
+				break;
+		}
+
+		super.setVisibility(type, isCurrentPage);
 	}
 
 	@Override

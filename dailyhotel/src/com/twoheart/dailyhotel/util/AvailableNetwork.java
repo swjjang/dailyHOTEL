@@ -9,22 +9,34 @@ public class AvailableNetwork
 	public static final int NET_TYPE_NONE = 0x00;
 	public static final int NET_TYPE_WIFI = 0x01;
 	public static final int NET_TYPE_3G = 0x02;
-	private static AvailableNetwork current = null;
+	private static AvailableNetwork mInstance = null;
 
-	public static AvailableNetwork getInstance()
+	public synchronized static AvailableNetwork getInstance()
 	{
-		if (current == null)
-			current = new AvailableNetwork();
-		return current;
+		if (mInstance == null)
+		{
+			mInstance = new AvailableNetwork();
+		}
+
+		return mInstance;
 	}
 
 	private boolean getWifiState(Context context)
 	{
-		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo ni = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-		if (ni != null)
-			if (ni.isConnected())
+		try
+		{
+			ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+			NetworkInfo networkInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+			if (networkInfo != null && networkInfo.isConnected())
+			{
 				return true;
+			}
+		} catch (Exception e)
+		{
+			ExLog.d(e.toString());
+		}
+
 		return false;
 	}
 

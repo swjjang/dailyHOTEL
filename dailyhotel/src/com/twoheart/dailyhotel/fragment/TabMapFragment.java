@@ -26,9 +26,7 @@ import com.twoheart.dailyhotel.adapter.HotelNameInfoWindowAdapter;
 import com.twoheart.dailyhotel.model.BookingHotelDetail;
 import com.twoheart.dailyhotel.util.Util;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -166,37 +164,6 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
 		}
 
 		super.onResume();
-	}
-
-	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-	@Override
-	public void onDestroyView()
-	{
-		BaseActivity baseActivity = (BaseActivity) getActivity();
-
-		if (baseActivity == null)
-		{
-			return;
-		}
-
-		try
-		{
-			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1)
-			{
-				if (!baseActivity.isFinishing())
-					baseActivity.getSupportFragmentManager().beginTransaction().remove(mMapFragment).commitAllowingStateLoss();
-			} else
-			{
-				if (!baseActivity.isDestroyed())
-					baseActivity.getSupportFragmentManager().beginTransaction().remove(mMapFragment).commitAllowingStateLoss();
-			}
-
-		} catch (IllegalStateException e)
-		{
-			onError(e);
-		}
-
-		super.onDestroyView();
 	}
 
 	// 마커 추가

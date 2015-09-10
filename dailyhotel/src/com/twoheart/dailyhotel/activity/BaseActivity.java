@@ -146,6 +146,16 @@ public class BaseActivity extends
 		}
 	}
 
+	public void onProgressBackPressed()
+	{
+		onBackPressed();
+
+		if (isFinishing() == false)
+		{
+			finish();
+		}
+	}
+
 	@Override
 	public void setContentView(int layoutResID)
 	{

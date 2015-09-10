@@ -63,7 +63,7 @@ public abstract class PlaceListFragment extends
 	private static ValueAnimator mValueAnimator = null;
 	private static boolean mLockActionBar = false;
 	private static int mAnchorY = Integer.MAX_VALUE;
-	private ActionbarViewHolder mActionbarViewHolder;
+	protected ActionbarViewHolder mActionbarViewHolder;
 
 	protected class ActionbarViewHolder
 	{
@@ -217,13 +217,15 @@ public abstract class PlaceListFragment extends
 		}
 	}
 
-	private void setVisibility(VIEW_TYPE type, boolean isCurrentPage)
+	protected void setVisibility(VIEW_TYPE type, boolean isCurrentPage)
 	{
 		switch (type)
 		{
 			case LIST:
 				mEmptyView.setVisibility(View.GONE);
 				mMapLayout.setVisibility(View.GONE);
+
+				// 맵과 리스트에서 당일상품 탭 안보이도록 수정
 
 				if (mPlaceMapFragment != null)
 				{
@@ -238,6 +240,8 @@ public abstract class PlaceListFragment extends
 			case MAP:
 				mEmptyView.setVisibility(View.GONE);
 				mMapLayout.setVisibility(View.VISIBLE);
+
+				// 맵과 리스트에서 당일상품 탭 안보이도록 수정
 
 				if (isCurrentPage == true)
 				{

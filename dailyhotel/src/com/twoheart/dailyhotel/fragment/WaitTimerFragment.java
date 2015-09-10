@@ -129,6 +129,9 @@ public class WaitTimerFragment
 		SimpleDateFormat sFormat = new SimpleDateFormat("aa H", Locale.KOREA);
 		sFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
+		// 알람 설정
+		boolean enabledAlarm = DailyHotelPreference.getInstance(baseActivity).getEnabledOpeningAlarm();
+
 		switch (mType)
 		{
 			case HOTEL:
@@ -138,10 +141,7 @@ public class WaitTimerFragment
 				titleMainTextView.setText(sFormat.format(mSaleTime.getOpenTime()) + getString(R.string.prefix_wait_timer_frag_todays_hotel_open));
 				titleSubTextView.setText(R.string.frag_wait_timer_hotel_msg);
 
-				// 알람 설정
-				boolean enabledHotelAlarm = DailyHotelPreference.getInstance(baseActivity).getEnabledHotelAlarm();
-
-				initAlarmLayout(baseActivity, alarmTimerLayout, enabledHotelAlarm);
+				initAlarmLayout(baseActivity, alarmTimerLayout, enabledAlarm);
 				break;
 			}
 
@@ -157,10 +157,7 @@ public class WaitTimerFragment
 
 				tvTimer.setTextColor(getResources().getColor(R.color.white));
 
-				// 알람 설정 
-				boolean enabledFnBAlarm = DailyHotelPreference.getInstance(baseActivity).getEnabledFnBAlarm();
-
-				initAlarmLayout(baseActivity, alarmTimerLayout, enabledFnBAlarm);
+				initAlarmLayout(baseActivity, alarmTimerLayout, enabledAlarm);
 				break;
 			}
 		}
@@ -227,19 +224,7 @@ public class WaitTimerFragment
 				return;
 			}
 
-			boolean enabledAlarm = false;
-
-			switch (mType)
-			{
-				case HOTEL:
-					enabledAlarm = DailyHotelPreference.getInstance(baseActivity).getEnabledHotelAlarm();
-					break;
-
-				case FNB:
-					enabledAlarm = DailyHotelPreference.getInstance(baseActivity).getEnabledFnBAlarm();
-					break;
-			}
-
+			boolean enabledAlarm = DailyHotelPreference.getInstance(baseActivity).getEnabledOpeningAlarm();
 			setNotifyEnable(!enabledAlarm);
 		}
 	}
@@ -253,65 +238,21 @@ public class WaitTimerFragment
 			return;
 		}
 
-		switch (mType)
-		{
-			case HOTEL:
-				DailyHotelPreference.getInstance(baseActivity).setEnabledHotelAlarm(enable);
-				break;
-
-			case FNB:
-				DailyHotelPreference.getInstance(baseActivity).setEnabledFnBAlarm(enable);
-				break;
-		}
-
-		boolean hotelAlarm = DailyHotelPreference.getInstance(baseActivity).getEnabledHotelAlarm();
-		boolean fnbAlarm = DailyHotelPreference.getInstance(baseActivity).getEnabledFnBAlarm();
+		DailyHotelPreference.getInstance(baseActivity).setEnabledOpeningAlarm(enable);
 
 		if (enable)
 		{
 			mAlarmTextView.setText(getString(R.string.frag_wait_timer_off));
 			mAlarmImageView.setImageResource(R.drawable.open_stanby_ic_alert_off);
 
-			switch (mType)
-			{
-				case HOTEL:
-					if (fnbAlarm == false)
-					{
-						alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + remainingTime, mPendingIntent);
-					}
-					break;
-
-				case FNB:
-					if (hotelAlarm == false)
-					{
-						alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + remainingTime, mPendingIntent);
-					}
-					break;
-			}
-
+			alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + remainingTime, mPendingIntent);
 			showToast(getString(R.string.frag_wait_timer_set), Toast.LENGTH_SHORT, true);
 		} else
 		{
 			mAlarmTextView.setText(getString(R.string.frag_wait_timer_on));
 			mAlarmImageView.setImageResource(R.drawable.open_stanby_ic_alert);
 
-			switch (mType)
-			{
-				case HOTEL:
-					if (fnbAlarm == false)
-					{
-						alarmManager.cancel(mPendingIntent);
-					}
-					break;
-
-				case FNB:
-					if (hotelAlarm == false)
-					{
-						alarmManager.cancel(mPendingIntent);
-					}
-					break;
-			}
-
+			alarmManager.cancel(mPendingIntent);
 			showToast(getString(R.string.frag_wait_timer_cancel), Toast.LENGTH_SHORT, true);
 		}
 	}

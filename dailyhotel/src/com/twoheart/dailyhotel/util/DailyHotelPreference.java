@@ -13,10 +13,8 @@ public class DailyHotelPreference
 
 	private static DailyHotelPreference mInstance;
 
-	private static final String KEY_ALARM_HOTEL = "1"; // 알람 호텔
-	private static final String KEY_ALARM_FNB = "2"; // 알람 FNB
-
-	private static final String KEY_NEW_EVENT_TODAY_FNB = "3"; // 앱 처음 실행시 FNB에  New 아이콘 넣기
+	private static final String KEY_OPENING_ALARM = "1"; // 알람
+	private static final String KEY_NEW_EVENT_TODAY_FNB = "2"; // 앱 처음 실행시 FNB에  New 아이콘 넣기
 
 	public static synchronized DailyHotelPreference getInstance(Context context)
 	{
@@ -38,44 +36,23 @@ public class DailyHotelPreference
 	// Preference
 	/////////////////////////////////////////////////////////////////////////////////////////
 
-	public boolean getEnabledHotelAlarm()
+	public boolean getEnabledOpeningAlarm()
 	{
 		boolean result = false;
 
 		if (mPreferences != null)
 		{
-			result = mPreferences.getBoolean(KEY_ALARM_HOTEL, false);
+			result = mPreferences.getBoolean(KEY_OPENING_ALARM, false);
 		}
 
 		return result;
 	}
 
-	public void setEnabledHotelAlarm(boolean enable)
+	public void setEnabledOpeningAlarm(boolean enable)
 	{
 		if (mEditor != null)
 		{
-			mEditor.putBoolean(KEY_ALARM_HOTEL, enable);
-			mEditor.apply();
-		}
-	}
-
-	public boolean getEnabledFnBAlarm()
-	{
-		boolean result = false;
-
-		if (mPreferences != null)
-		{
-			result = mPreferences.getBoolean(KEY_ALARM_FNB, false);
-		}
-
-		return result;
-	}
-
-	public void setEnabledFnBAlarm(boolean enable)
-	{
-		if (mEditor != null)
-		{
-			mEditor.putBoolean(KEY_ALARM_FNB, enable);
+			mEditor.putBoolean(KEY_OPENING_ALARM, enable);
 			mEditor.apply();
 		}
 	}

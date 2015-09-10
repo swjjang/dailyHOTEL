@@ -41,8 +41,8 @@
     <string name="guide_btn_start">시작</string>
 
     <!-- Actionbar Titles -->
-    <string name="actionbar_title_hotel_list_frag">오늘의 호텔</string>
-    <string name="actionbar_title_fnb_list_frag">오늘의 레스토랑</string>
+    <string name="actionbar_title_hotel_list_frag">데일리호텔</string>
+    <string name="actionbar_title_fnb_list_frag">데일리고메</string>
     <string name="actionbar_title_booking_list_frag">예약 내역</string>
     <string name="actionbar_title_credit_frag">적립금</string>
     <string name="actionbar_title_reg_creditcard">신용카드 추가하기</string>
@@ -174,8 +174,8 @@
 
     <!-- Main Drawer Menu Titles -->
     <string name="drawer_menu_pin_title_resrvation">예약</string>
-    <string name="drawer_menu_item_title_todays_hotel">오늘의 호텔</string>
-    <string name="drawer_menu_item_title_todays_fnb">오늘의 레스토랑</string>
+    <string name="drawer_menu_item_title_todays_hotel">데일리호텔</string>
+    <string name="drawer_menu_item_title_todays_fnb">데일리고메</string>
     <string name="drawer_menu_item_title_chk_reservation">예약 내역</string>
     <string name="drawer_menu_pin_title_account">계정</string>
     <string name="drawer_menu_item_title_credit">적립금</string>
@@ -200,8 +200,8 @@
 
     <!-- Alarm Message -->
     <string name="alarm_title">dailyHOTEL</string>
-    <string name="alarm_msg">오늘의 %1$s이 도착했습니다.\n지금 데일리호텔에서 확인하세요!</string>
-    <string name="alarm_ticker">오늘의 %1$s이 도착했습니다!</string>
+    <string name="alarm_msg">당신의 파라다이스가 도착하였습니다.\n지금 데일리호텔에서 확인하세요!</string>
+    <string name="alarm_ticker">당신의 파라다이스 데일리호텔이 도착했습니다!</string>
     <string name="alarm_btn_see">보기</string>
     <string name="alarm_btn_close">닫기</string>
     <string name="txt_payment_wait_confirm">입금 순서대로 예약이 확정되며,\\n객실 예약이 조기에 마감될 수 있습니다.\\n마감시 입금하신 계좌로 전액 환불됩니다.</string>

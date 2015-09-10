@@ -53,6 +53,7 @@ public class LoadingDialog
 		LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		mDialog.addContentView(pb, params);
 		mDialog.setCancelable(true);
+
 		mDialog.setOnCancelListener(new DialogInterface.OnCancelListener()
 		{
 			@Override
@@ -60,7 +61,7 @@ public class LoadingDialog
 			{
 				hide();
 
-				mActivity.onBackPressed();
+				mActivity.onProgressBackPressed();
 			}
 		});
 	}

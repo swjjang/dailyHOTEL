@@ -29,7 +29,7 @@ public class FnBTabBookingFragment extends BaseFragment implements Constants
 	private static final String KEY_BUNDLE_ARGUMENTS_BOOKING = "booking";
 
 	private Booking mBooking;
-	private FnBBookingDetail mFnBReservationDetail;
+	private FnBBookingDetail mFnBBookingDetail;
 
 	public static FnBTabBookingFragment newInstance(PlaceBookingDetail placeBookingDetail, Booking booking, String title)
 	{
@@ -51,7 +51,7 @@ public class FnBTabBookingFragment extends BaseFragment implements Constants
 	{
 		super.onCreate(savedInstanceState);
 
-		mFnBReservationDetail = (FnBBookingDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_PLACEBOOKINGDETAIL);
+		mFnBBookingDetail = (FnBBookingDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_PLACEBOOKINGDETAIL);
 		mBooking = (Booking) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_BOOKING);
 	}
 
@@ -75,12 +75,12 @@ public class FnBTabBookingFragment extends BaseFragment implements Constants
 		TextView userPhoneTextView = (TextView) view.findViewById(R.id.userPhoneTextView);
 
 		ticketNameTextView.setText(mBooking.placeName);
-		addressTextView.setText(mFnBReservationDetail.address);
-		ticketTypeTextView.setText(mFnBReservationDetail.ticketName);
-		ticketCountTextView.setText(getString(R.string.label_booking_count, mFnBReservationDetail.ticketCount));
-		dateTextView.setText(mFnBReservationDetail.sday);
-		userNameTextView.setText(mFnBReservationDetail.guestName);
-		userPhoneTextView.setText(mFnBReservationDetail.guestPhone);
+		addressTextView.setText(mFnBBookingDetail.address);
+		ticketTypeTextView.setText(mFnBBookingDetail.ticketName);
+		ticketCountTextView.setText(getString(R.string.label_booking_count, mFnBBookingDetail.ticketCount));
+		dateTextView.setText(mFnBBookingDetail.sday);
+		userNameTextView.setText(mFnBBookingDetail.guestName);
+		userPhoneTextView.setText(mFnBBookingDetail.guestPhone);
 
 		// Android Marquee bug...
 		ticketNameTextView.setSelected(true);

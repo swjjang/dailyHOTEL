@@ -474,10 +474,10 @@ public class HotelListFragment extends
 			params = String.format("?province_idx=%d&checkin_date=%s&length_stay=%d", province.getProvinceIndex(), checkInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), stayDays);
 		}
 
-		if (DEBUG == true)
-		{
-			baseActivity.showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
-		}
+		//		if (DEBUG == true)
+		//		{
+		//			baseActivity.showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
+		//		}
 
 		// 호텔 리스트를 가져온다.
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_LB_SERVER).append(URL_WEBAPI_SALE_HOTEL_LIST).append(params).toString(), null, mHotelJsonResponseListener, baseActivity));

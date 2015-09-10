@@ -1884,7 +1884,22 @@ public class HotelDetailLayout
 			{
 				if (googleMapLayout.getBackground() == null)
 				{
-					googleMapSetting(googleMapLayout);
+					try
+					{
+						googleMapSetting(googleMapLayout);
+					} catch (Exception e)
+					{
+						ExLog.d(e.toString());
+
+						googleMapLayout.setOnClickListener(new View.OnClickListener()
+						{
+							@Override
+							public void onClick(View v)
+							{
+								Util.installGooglePlayService((BaseActivity) mFragmentActivity);
+							}
+						});
+					}
 				}
 			} else
 			{

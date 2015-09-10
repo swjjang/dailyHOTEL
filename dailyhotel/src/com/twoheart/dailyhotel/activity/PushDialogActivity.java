@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.activity;
 
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.DailyHotelPreference;
 import com.twoheart.dailyhotel.util.WakeLock;
 import com.twoheart.dailyhotel.view.widget.FontManager;
 
@@ -39,30 +38,7 @@ public class PushDialogActivity extends Activity implements OnClickListener
 
 		TextView messageTextView = (TextView) findViewById(R.id.messageTextView);
 		messageTextView.setTypeface(FontManager.getInstance(this).getMediumTypeface());
-
-		boolean enabledHotelAlarm = DailyHotelPreference.getInstance(this).getEnabledHotelAlarm();
-		boolean enabledFnBAlarm = DailyHotelPreference.getInstance(this).getEnabledFnBAlarm();
-
-		DailyHotelPreference.getInstance(this).setEnabledHotelAlarm(false);
-		DailyHotelPreference.getInstance(this).setEnabledFnBAlarm(false);
-
-		String param = null;
-
-		if (enabledHotelAlarm == true && enabledFnBAlarm == true)
-		{
-			param = String.format("%s, %s", getString(R.string.label_hotel), getString(R.string.label_fnb));
-		} else if (enabledHotelAlarm == true)
-		{
-			param = getString(R.string.label_hotel);
-		} else if (enabledFnBAlarm == true)
-		{
-			param = getString(R.string.label_hotel);
-		} else
-		{
-			return;
-		}
-
-		messageTextView.setText(getString(R.string.alarm_ticker, param));
+		messageTextView.setText(getString(R.string.alarm_msg));
 
 		mPositiveView.setOnClickListener(this);
 		mNegativeView.setOnClickListener(this);

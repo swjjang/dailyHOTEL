@@ -617,7 +617,9 @@ public class BookingListFragment extends
 					int flag = pref.getInt(KEY_PREFERENCE_ACCOUNT_READY_FLAG, -1);
 					if (flag == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
 					{
-						mListView.performItemClick(null, 0, 0);
+						unLockUI();
+
+						mListView.performItemClick(null, 1, 0);
 						Editor editor = pref.edit();
 						editor.remove(KEY_PREFERENCE_ACCOUNT_READY_FLAG);
 						editor.apply();

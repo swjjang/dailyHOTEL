@@ -850,10 +850,10 @@ public class HotelDetailActivity extends BaseActivity
 						// 호텔 정보를 가져온다.
 						String params = String.format("?hotel_idx=%d&checkin_date=%s&length_stay=%d", mHotelDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), mHotelDetail.nights);
 
-						if (DEBUG == true)
-						{
-							showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
-						}
+						//						if (DEBUG == true)
+						//						{
+						//							showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
+						//						}
 
 						mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_HOTEL_INFO).append(params).toString(), null, mHotelDetailJsonResponseListener, HotelDetailActivity.this));
 					} else
@@ -874,10 +874,10 @@ public class HotelDetailActivity extends BaseActivity
 						// 호텔 정보를 가져온다.
 						String params = String.format("?hotel_idx=%d&checkin_date=%s&length_stay=%d", mHotelDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), mHotelDetail.nights);
 
-						if (DEBUG == true)
-						{
-							showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
-						}
+						//						if (DEBUG == true)
+						//						{
+						//							showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
+						//						}
 
 						mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_HOTEL_INFO).append(params).toString(), null, mHotelDetailJsonResponseListener, HotelDetailActivity.this));
 					} else

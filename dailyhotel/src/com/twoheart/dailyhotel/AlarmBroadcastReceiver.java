@@ -28,28 +28,10 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver
 	public void onReceive(Context context, Intent intent)
 	{
 		String title = context.getString(R.string.alarm_title);
+		String msg = context.getString(R.string.alarm_msg);
+		String ticker = context.getString(R.string.alarm_ticker);
 
-		boolean enabledHotelAlarm = DailyHotelPreference.getInstance(context).getEnabledHotelAlarm();
-		boolean enabledFnBAlarm = DailyHotelPreference.getInstance(context).getEnabledFnBAlarm();
-
-		String param = null;
-
-		if (enabledHotelAlarm == true && enabledFnBAlarm == true)
-		{
-			param = String.format("%s, %s", context.getString(R.string.label_hotel), context.getString(R.string.label_fnb));
-		} else if (enabledHotelAlarm == true)
-		{
-			param = context.getString(R.string.label_hotel);
-		} else if (enabledFnBAlarm == true)
-		{
-			param = context.getString(R.string.label_hotel);
-		} else
-		{
-			return;
-		}
-
-		String msg = context.getString(R.string.alarm_msg, param);
-		String ticker = context.getString(R.string.alarm_ticker, param);
+		DailyHotelPreference.getInstance(context).setEnabledOpeningAlarm(false);
 
 		PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
 
@@ -77,7 +59,10 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver
 			context.startActivity(i);
 		}
 
-		PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
+		Intent callIntent = new Intent(context, MainActivity.class);
+		callIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+
+		PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, callIntent, 0);
 
 		NotificationManager notificationManager = (NotificationManager) context.getSystemService(Activity.NOTIFICATION_SERVICE);
 
