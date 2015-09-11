@@ -16,7 +16,7 @@ import org.json.JSONObject;
 
 import com.android.volley.Request.Method;
 import com.androidquery.AQuery;
-import com.facebook.Session;
+import com.facebook.login.LoginManager;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
@@ -28,6 +28,7 @@ import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.DailyHotelPreference;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 
@@ -444,14 +445,23 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 
 			DailyHotelPreference.getInstance(ProfileActivity.this).clear();
 
-			if (Session.getActiveSession() != null)
+			try
 			{
-				if (Session.getActiveSession().isOpened())
-				{
-					Session.getActiveSession().closeAndClearTokenInformation();
-					Session.setActiveSession(null);
-				}
+				LoginManager.getInstance().logOut();
+			} catch (Exception e)
+			{
+				ExLog.d(e.toString());
 			}
+
+			//			
+			//			if (Session.getActiveSession() != null)
+			//			{
+			//				if (Session.getActiveSession().isOpened())
+			//				{
+			//					Session.getActiveSession().closeAndClearTokenInformation();
+			//					Session.setActiveSession(null);
+			//				}
+			//			}
 
 			DailyToast.showToast(ProfileActivity.this, R.string.toast_msg_logouted, Toast.LENGTH_SHORT);
 			finish();

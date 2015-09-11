@@ -39,8 +39,8 @@ public class AbcDefaultHeaderTransformer extends DefaultHeaderTransformer {
         super.onViewCreated(activity, headerView);
 
         // Create animations for use later
-        mHeaderInAnimation = AnimationUtils.loadAnimation(activity, R.anim.fade_in);
-        mHeaderOutAnimation = AnimationUtils.loadAnimation(activity, R.anim.fade_out);
+        mHeaderInAnimation = AnimationUtils.loadAnimation(activity, android.R.anim.fade_in);
+        mHeaderOutAnimation = AnimationUtils.loadAnimation(activity, android.R.anim.fade_out);
 
         if (mHeaderOutAnimation != null || mHeaderInAnimation != null) {
             final AnimationCallback callback = new AnimationCallback();
@@ -58,13 +58,15 @@ public class AbcDefaultHeaderTransformer extends DefaultHeaderTransformer {
         }
 
         // Get action bar style values...
-        TypedArray abStyle = obtainStyledAttrsFromThemeAttr(context, R.attr.actionBarStyle,
-                R.styleable.ActionBar);
-        try {
-            return abStyle.getDrawable(R.styleable.ActionBar_background);
-        } finally {
-            abStyle.recycle();
-        }
+//        TypedArray abStyle = obtainStyledAttrsFromThemeAttr(context, R.attr.actionBarStyle,
+//                R.styleable .ActionBar);
+//        try {
+//            return abStyle.getDrawable(R.styleable.ActionBar_background);
+//        } finally {
+//            abStyle.recycle();
+//        }
+        
+        return null;
     }
 
     @Override
@@ -74,7 +76,7 @@ public class AbcDefaultHeaderTransformer extends DefaultHeaderTransformer {
             return super.getActionBarSize(context);
         }
 
-        int[] attrs = { R.attr.actionBarSize };
+        int[] attrs = { android.R.attr.actionBarSize };
         TypedArray values = context.obtainStyledAttributes(attrs);
         try {
             return values.getDimensionPixelSize(0, 0);
@@ -91,13 +93,14 @@ public class AbcDefaultHeaderTransformer extends DefaultHeaderTransformer {
         }
 
         // Get action bar style values...
-        TypedArray abStyle = obtainStyledAttrsFromThemeAttr(context, R.attr.actionBarStyle,
-                R.styleable.ActionBar);
-        try {
-            return abStyle.getResourceId(R.styleable.ActionBar_titleTextStyle, 0);
-        } finally {
-            abStyle.recycle();
-        }
+//        TypedArray abStyle = obtainStyledAttrsFromThemeAttr(context, android.R.attr.actionBarStyle,
+//                android.R.styleable.ActionBar);
+//        try {
+//            return abStyle.getResourceId(R.styleable.ActionBar_titleTextStyle, 0);
+//        } finally {
+//            abStyle.recycle();
+//        }
+        return 0;
     }
 
     @Override
@@ -157,7 +160,7 @@ public class AbcDefaultHeaderTransformer extends DefaultHeaderTransformer {
         View contentLayout = getHeaderView().findViewById(R.id.ptr_content);
         if (contentLayout != null) {
             contentLayout.startAnimation(AnimationUtils
-                    .loadAnimation(contentLayout.getContext(), R.anim.fade_out));
+                    .loadAnimation(contentLayout.getContext(), android.R.anim.fade_out));
             contentLayout.setVisibility(View.INVISIBLE);
         }
     }

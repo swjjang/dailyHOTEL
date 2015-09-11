@@ -108,9 +108,8 @@ public class MainActivity
 
 	private static final String TAG_FRAGMENT_RATING_HOTEL = "rating_hotel";
 
-	public ListView drawerList;
-	private View drawerView;
-	public DrawerLayout drawerLayout;
+	public ListView mDrawerList;
+	public DrawerLayout mDrawerLayout;
 	private FrameLayout mContentFrame;
 	private View mNewEventView;
 	public Dialog popUpDialog;
@@ -142,6 +141,24 @@ public class MainActivity
 	{
 		super.onCreate(savedInstanceState);
 		//		com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
+
+		//		ExLog.d("android.permission.GET_TASKS : "+ ContextCompat.checkSelfPermission(this, "android.permission.GET_TASKS"));
+		//		ExLog.d("android.permission.READ_PHONE_STATE : "+ ContextCompat.checkSelfPermission(this, "android.permission.READ_PHONE_STATE"));
+		//		ExLog.d("android.permission.WRITE_EXTERNAL_STORAGE : "+ ContextCompat.checkSelfPermission(this, "android.permission.WRITE_EXTERNAL_STORAGE"));
+		//		ExLog.d("android.permission.READ_EXTERNAL_STORAGE : "+ ContextCompat.checkSelfPermission(this, "android.permission.READ_EXTERNAL_STORAGE"));
+		//		ExLog.d("android.permission.GET_ACCOUNTS : "+ ContextCompat.checkSelfPermission(this, "android.permission.GET_ACCOUNTS"));
+		//		ExLog.d("com.twoheart.dailyhotel.permission.MAPS_RECEIVE : "+ ContextCompat.checkSelfPermission(this, "com.twoheart.dailyhotel.permission.MAPS_RECEIVE"));
+		//		ExLog.d("com.google.android.providers.gsf.permission.READ_GSERVICES : "+ ContextCompat.checkSelfPermission(this, "com.google.android.providers.gsf.permission.READ_GSERVICES"));
+		//		ExLog.d("android.permission.ACCESS_COARSE_LOCATION : "+ ContextCompat.checkSelfPermission(this, "android.permission.ACCESS_COARSE_LOCATION"));
+		//		ExLog.d("android.permission.ACCESS_FINE_LOCATION : "+ ContextCompat.checkSelfPermission(this, "android.permission.ACCESS_FINE_LOCATION"));
+		//		ExLog.d("com.google.android.c2dm.permission.RECEIVE : "+ ContextCompat.checkSelfPermission(this, "com.google.android.c2dm.permission.RECEIVE"));
+		//		ExLog.d("com.twoheart.dailyhotel.permission.C2D_MESSAGE : "+ ContextCompat.checkSelfPermission(this, "com.twoheart.dailyhotel.permission.C2D_MESSAGE"));
+		//		
+		//		{
+		//			shouldShowRequestPermissionRationale("android.permission.ACCESS_COARSE_LOCATION");
+		//			
+		//			requestPermissions(new String[]{"android.permission.ACCESS_COARSE_LOCATION"}, 0);
+		//		}
 
 		// 사용자가 선택한 언어, but 만약 사용자가 한국인인데 일본어를 선택하면 jp가 됨.
 		// 영어인 경우 - English, 한글인 경우 - 한국어
@@ -399,7 +416,7 @@ public class MainActivity
 	 */
 	public void selectMenuDrawer(DrawerMenu selectedMenu)
 	{
-		drawerList.performItemClick(mDrawerMenuListAdapter.getView(mDrawerMenuList.indexOf(selectedMenu), null, null), mDrawerMenuList.indexOf(selectedMenu), mDrawerMenuListAdapter.getItemId(mDrawerMenuList.indexOf(selectedMenu)));
+		mDrawerList.performItemClick(mDrawerMenuListAdapter.getView(mDrawerMenuList.indexOf(selectedMenu), null, null), mDrawerMenuList.indexOf(selectedMenu), mDrawerMenuListAdapter.getItemId(mDrawerMenuList.indexOf(selectedMenu)));
 	}
 
 	public void refreshMenuDrawer()
@@ -599,10 +616,10 @@ public class MainActivity
 		selectedDrawMenu.setSelected(true);
 		mDrawerMenuListAdapter.notifyDataSetChanged();
 
-		if (drawerLayout.isDrawerOpen(GravityCompat.START) == true)
+		if (mDrawerLayout.isDrawerOpen(GravityCompat.START) == true)
 		{
 			delayedReplace(indexLastFragment);
-			drawerLayout.closeDrawer(drawerView);
+			mDrawerLayout.closeDrawer(mDrawerList);
 		} else
 		{
 			replaceFragment(getFragment(indexLastFragment));
@@ -633,9 +650,9 @@ public class MainActivity
 	 */
 	public void setNavigationDrawer(Toolbar toolbar)
 	{
-		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, 0, 0)
+		drawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, 0, 0)
 		{
 			public void onDrawerClosed(View view)
 			{
@@ -662,11 +679,11 @@ public class MainActivity
 				{
 					case DrawerLayout.STATE_SETTLING:
 					{
-						if (drawerLayout.isDrawerOpen(drawerView) == false)
+						if (mDrawerLayout.isDrawerOpen(mDrawerList) == false)
 						{
 							if (isLockUiComponent() == true)
 							{
-								drawerLayout.closeDrawer(drawerView);
+								mDrawerLayout.closeDrawer(mDrawerList);
 								return;
 							}
 
@@ -746,7 +763,7 @@ public class MainActivity
 			}
 		};
 
-		drawerLayout.post(new Runnable()
+		mDrawerLayout.post(new Runnable()
 		{
 			@Override
 			public void run()
@@ -755,10 +772,8 @@ public class MainActivity
 			}
 		});
 
-		drawerLayout.setDrawerListener(drawerToggle);
-
-		drawerView = findViewById(R.id.left_drawer);
-		drawerList = (ListView) findViewById(R.id.drawListView);
+		mDrawerLayout.setDrawerListener(drawerToggle);
+		mDrawerList = (ListView) findViewById(R.id.drawListView);
 
 		menuHotelListFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_todays_hotel), R.drawable.selector_drawermenu_todayshotel, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
 		menuFnBListFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_todays_fnb), R.drawable.selector_drawermenu_fnb, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
@@ -796,8 +811,8 @@ public class MainActivity
 
 		mDrawerMenuListAdapter = new DrawerMenuListAdapter(this, mDrawerMenuList);
 
-		drawerList.setAdapter(mDrawerMenuListAdapter);
-		drawerList.setOnItemClickListener(this);
+		mDrawerList.setAdapter(mDrawerMenuListAdapter);
+		mDrawerList.setOnItemClickListener(this);
 	}
 
 	@Override
@@ -853,9 +868,9 @@ public class MainActivity
 	@Override
 	public void onBackPressed()
 	{
-		if (drawerLayout.isDrawerOpen(drawerView) == true)
+		if (mDrawerLayout.isDrawerOpen(mDrawerList) == true)
 		{
-			drawerLayout.closeDrawer(drawerView);
+			mDrawerLayout.closeDrawer(mDrawerList);
 			return;
 		}
 
@@ -875,19 +890,19 @@ public class MainActivity
 
 	public void toggleDrawer()
 	{
-		if (drawerLayout.isDrawerOpen(drawerView) == false)
-			drawerLayout.openDrawer(drawerView);
+		if (mDrawerLayout.isDrawerOpen(mDrawerList) == false)
+			mDrawerLayout.openDrawer(mDrawerList);
 		else
-			drawerLayout.closeDrawer(drawerView);
+			mDrawerLayout.closeDrawer(mDrawerList);
 	}
 
 	public void closeDrawer()
 	{
-		if (drawerLayout != null)
+		if (mDrawerLayout != null)
 		{
-			if (drawerLayout.isDrawerOpen(GravityCompat.START) == true)
+			if (mDrawerLayout.isDrawerOpen(GravityCompat.START) == true)
 			{
-				drawerLayout.closeDrawer(drawerView);
+				mDrawerLayout.closeDrawer(mDrawerList);
 			}
 		}
 	}
@@ -1377,7 +1392,7 @@ public class MainActivity
 					editor.putBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, true);
 					editor.commit();
 
-					if (drawerLayout.isDrawerOpen(drawerView) == true)
+					if (mDrawerLayout.isDrawerOpen(mDrawerList) == true)
 					{
 						showNewEvent(false);
 					} else
@@ -1398,7 +1413,7 @@ public class MainActivity
 				// 같이 이벤트 처리
 				if (DailyHotelPreference.getInstance(MainActivity.this).isNewTodayFnB() == true)
 				{
-					if (drawerLayout.isDrawerOpen(drawerView) == true)
+					if (mDrawerLayout.isDrawerOpen(mDrawerList) == true)
 					{
 						showNewFnB(false);
 					} else

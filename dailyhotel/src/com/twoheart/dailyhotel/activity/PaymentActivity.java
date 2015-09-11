@@ -311,7 +311,7 @@ public class PaymentActivity extends BaseActivity implements Constants
 
 					if (packagename != null)
 					{
-						startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://search?q=pname:" + packagename)));
+						startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + packagename)));
 						return true;
 					}
 				}

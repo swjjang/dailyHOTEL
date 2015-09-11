@@ -14,6 +14,8 @@
  */
 package com.twoheart.dailyhotel;
 
+import com.facebook.FacebookSdk;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -25,6 +27,8 @@ public class IntentActivity extends Activity
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+
+		FacebookSdk.sdkInitialize(getApplicationContext());
 
 		Intent intent = getIntent();
 

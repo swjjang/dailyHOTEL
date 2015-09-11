@@ -20,6 +20,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.RequestQueue.RequestFilter;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
+import com.facebook.FacebookSdk;
+import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.HotelMainFragment;
 import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
@@ -39,7 +41,7 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -54,7 +56,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class BaseActivity extends
-		ActionBarActivity implements Constants, OnLoadListener, ErrorListener
+		AppCompatActivity implements Constants, OnLoadListener, ErrorListener
 {
 	protected static int mStatusBarHeight;
 	private Toolbar mToolbar;
@@ -150,9 +152,12 @@ public class BaseActivity extends
 	{
 		onBackPressed();
 
-		if (isFinishing() == false)
+		if (this instanceof MainActivity == false)
 		{
-			finish();
+			if (isFinishing() == false)
+			{
+				finish();
+			}
 		}
 	}
 
@@ -457,9 +462,9 @@ public class BaseActivity extends
 		super.onResume();
 
 		VolleyHttpClient.cookieManagerStartSync();
+		com.facebook.appevents.AppEventsLogger.activateApp(this, getString(R.string.app_id));
 
-		com.facebook.AppEventsLogger.activateApp(this, getString(R.string.app_id));
-
+		FacebookSdk.sdkInitialize(getApplicationContext());
 	}
 
 	@Override

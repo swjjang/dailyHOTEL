@@ -3,10 +3,10 @@ package com.twoheart.dailyhotel.view.widget;
 import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.support.v7.internal.widget.TintCheckBox;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.util.AttributeSet;
 
-public class DailyCustomFontCheckBox extends TintCheckBox
+public class DailyCustomFontCheckBox extends AppCompatCheckBox
 {
 	public DailyCustomFontCheckBox(Context context)
 	{

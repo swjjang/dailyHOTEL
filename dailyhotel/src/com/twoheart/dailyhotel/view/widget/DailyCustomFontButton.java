@@ -3,10 +3,10 @@ package com.twoheart.dailyhotel.view.widget;
 import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.support.v7.internal.widget.TintButton;
+import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
 
-public class DailyCustomFontButton extends TintButton
+public class DailyCustomFontButton extends AppCompatButton
 {
 	public DailyCustomFontButton(Context context)
 	{

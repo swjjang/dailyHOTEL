@@ -15,11 +15,14 @@ package com.twoheart.dailyhotel.view;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
+import com.twoheart.dailyhotel.util.ExLog;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnKeyListener;
 import android.os.Handler;
 import android.os.Message;
+import android.view.KeyEvent;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ProgressBar;
 
@@ -52,7 +55,7 @@ public class LoadingDialog
 		ProgressBar pb = new ProgressBar(activity);
 		LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		mDialog.addContentView(pb, params);
-		mDialog.setCancelable(true);
+		mDialog.setCancelable(false);
 
 		mDialog.setOnCancelListener(new DialogInterface.OnCancelListener()
 		{
@@ -62,6 +65,20 @@ public class LoadingDialog
 				hide();
 
 				mActivity.onProgressBackPressed();
+			}
+		});
+
+		mDialog.setOnKeyListener(new OnKeyListener()
+		{
+			@Override
+			public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event)
+			{
+				if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP && !event.isCanceled())
+				{
+					mActivity.onProgressBackPressed();
+				}
+
+				return false;
 			}
 		});
 	}
@@ -87,7 +104,13 @@ public class LoadingDialog
 
 		if (mDialog != null && mDialog.isShowing() == false)
 		{
-			mDialog.show();
+			try
+			{
+				mDialog.show();
+			} catch (Exception e)
+			{
+				ExLog.d(e.toString());
+			}
 		}
 	}
 
@@ -95,9 +118,6 @@ public class LoadingDialog
 	{
 		mHandler.removeMessages(0);
 		mHandler.sendEmptyMessageDelayed(0, 500);
-
-		//		if (mDialog.isShowing())
-		//			mDialog.dismiss();
 	}
 
 	public void close()

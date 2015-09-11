@@ -28,12 +28,13 @@ import org.json.JSONObject;
 import com.android.volley.Request.Method;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
-import com.facebook.Request;
-import com.facebook.Response;
-import com.facebook.Session;
-import com.facebook.SessionState;
-import com.facebook.model.GraphUser;
-import com.facebook.widget.LoginButton;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -85,7 +86,7 @@ public class LoginActivity extends
 	private Map<String, String> snsSignupParams;
 	private Map<String, String> regPushParams;
 
-	public Session fbSession;
+	public CallbackManager mCallbackManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -102,6 +103,53 @@ public class LoginActivity extends
 		tvForgotPwd = (TextView) findViewById(R.id.tv_login_forgot);
 		btnLogin = (TextView) findViewById(R.id.btn_login);
 		facebookLogin = (LoginButton) findViewById(R.id.authButton);
+		facebookLogin.setReadPermissions(Arrays.asList("public_profile, email"));
+
+		mCallbackManager = CallbackManager.Factory.create();
+		facebookLogin.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>()
+		{
+			@Override
+			public void onSuccess(LoginResult result)
+			{
+				GraphRequest request = GraphRequest.newMeRequest(result.getAccessToken(), new GraphRequest.GraphJSONObjectCallback()
+				{
+					@Override
+					public void onCompleted(JSONObject jsonObject, GraphResponse response)
+					{
+						try
+						{
+							String email = jsonObject.getString("email");
+							String name = jsonObject.getString("name");
+							String id = jsonObject.getString("id");
+
+							registerFacebookUser(id, name, email);
+						} catch (Exception e)
+						{
+							ExLog.d(e.toString());
+						}
+					}
+				});
+
+				Bundle parameters = new Bundle();
+				parameters.putString("fields", "name, email");
+				request.setParameters(parameters);
+				request.executeAsync();
+			}
+
+			@Override
+			public void onCancel()
+			{
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onError(FacebookException error)
+			{
+				// TODO Auto-generated method stub
+
+			}
+		});
 
 		FontManager.apply(facebookLogin, FontManager.getInstance(getApplicationContext()).getRegularTypeface());
 
@@ -130,11 +178,6 @@ public class LoginActivity extends
 				return false;
 			}
 		});
-
-		if (Session.getActiveSession() != null)
-		{
-			Session.getActiveSession().closeAndClearTokenInformation();
-		}
 	}
 
 	@Override
@@ -144,85 +187,46 @@ public class LoginActivity extends
 		super.onStart();
 	}
 
-	private void makeMeRequest(final Session session)
+	private void registerFacebookUser(String id, String name, String email)
 	{
+		TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
 
-		Request request = Request.newMeRequest(session, new Request.GraphUserCallback()
+		String encryptedId = Crypto.encrypt(id).replace("\n", "");
+		String deviceId = telephonyManager.getDeviceId();
+
+		snsSignupParams = new HashMap<String, String>();
+		loginParams = new HashMap<String, String>();
+
+		if (Util.isTextEmpty(email) == false)
 		{
+			snsSignupParams.put("email", email);
+		}
 
-			@Override
-			public void onCompleted(GraphUser user, Response response)
-			{
-				if (user != null)
-				{
-					TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+		if (Util.isTextEmpty(id) == false)
+		{
+			snsSignupParams.put("accessToken", id);
+			loginParams.put("accessToken", id);
+		}
 
-					String userEmail = null;
+		if (encryptedId != null)
+		{
+			snsSignupParams.put("pw", id); // 회원가입
+			loginParams.put("pw", encryptedId);
+		}
 
-					try
-					{
-						if (user.getProperty("email") != null)
-						{
-							userEmail = user.getProperty("email").toString();
-						}
-					} catch (Exception e)
-					{
-						ExLog.e(e.toString());
-					}
+		if (Util.isTextEmpty(name) == false)
+		{
+			snsSignupParams.put("name", name);
+		}
 
-					String userId = user.getId();
-					String encryptedId = Crypto.encrypt(userId).replace("\n", "");
-					String userName = user.getName();
-					String deviceId = telephonyManager.getDeviceId();
+		if (deviceId != null)
+		{
+			snsSignupParams.put("device", deviceId);
+		}
 
-					snsSignupParams = new HashMap<String, String>();
-					loginParams = new HashMap<String, String>();
+		snsSignupParams.put("marketType", RELEASE_STORE.getName());
 
-					if (userEmail != null)
-					{
-						snsSignupParams.put("email", userEmail);
-					}
-
-					if (userId != null)
-					{
-						snsSignupParams.put("accessToken", userId);
-						loginParams.put("accessToken", userId);
-					}
-
-					if (encryptedId != null)
-					{
-						snsSignupParams.put("pw", userId); // 회원가입
-						// 시엔 서버
-						// 사이드에서
-						// 암호화
-						loginParams.put("pw", encryptedId);
-					}
-
-					if (userName != null)
-					{
-						snsSignupParams.put("name", userName);
-					}
-
-					if (deviceId != null)
-					{
-						snsSignupParams.put("device", deviceId);
-					}
-
-					snsSignupParams.put("marketType", RELEASE_STORE.getName());
-
-					mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(), loginParams, mUserLoginJsonResponseListener, LoginActivity.this));
-
-					if (fbSession != null)
-					{
-						fbSession.closeAndClearTokenInformation();
-					}
-				}
-			}
-		});
-
-		// 페이스북 연결 시작
-		lockUI();
-		request.executeAsync();
+		mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(), loginParams, mUserLoginJsonResponseListener, LoginActivity.this));
 	}
 
 	@Override
@@ -263,55 +267,56 @@ public class LoginActivity extends
 			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(), loginParams, mUserLoginJsonResponseListener, this));
 
 			AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.LOGIN, Action.CLICK, Label.LOGIN, 0L);
-		} else if (v.getId() == facebookLogin.getId())
-		{
-			//			fbSession = new Session.Builder(this).setTokenCachingStrategy(new SharedPreferencesTokenCachingStrategy(this)).setApplicationId(getString(R.string.app_id)).build();
-			//			Session.OpenRequest openRequest = new Session.OpenRequest(this);
-			//			openRequest.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO);
-			//			openRequest.setRequestCode(Session.DEFAULT_AUTHORIZE_ACTIVITY_CODE);
-			//			openRequest.setPermissions(Arrays.asList("email", "basic_info"));
-			//			openRequest.setCallback(statusCallback);
-			//			fbSession.openForRead(openRequest); 
-
-			fbSession = new Session.Builder(this).setApplicationId(getString(R.string.app_id)).build();
-			Session.OpenRequest or = new Session.OpenRequest(this); // 안드로이드 sdk를 사용하기 위해선 내 컴퓨터의 hash key를 페이스북 개발 설정페이지에서 추가하여야함.
-			//			or.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO); // 앱 호출이 아닌 웹뷰를 강제로 호출함.
-			or.setPermissions(Arrays.asList("email", "basic_info"));
-			or.setCallback(statusCallback);
-
-			fbSession.openForRead(or);
-
-			Session.setActiveSession(fbSession);
-
-			AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.LOGIN, Action.CLICK, Label.LOGIN_FACEBOOK, 0L);
 		}
+		//		else if (v.getId() == facebookLogin.getId())
+		//		{
+		//			//			fbSession = new Session.Builder(this).setTokenCachingStrategy(new SharedPreferencesTokenCachingStrategy(this)).setApplicationId(getString(R.string.app_id)).build();
+		//			//			Session.OpenRequest openRequest = new Session.OpenRequest(this);
+		//			//			openRequest.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO);
+		//			//			openRequest.setRequestCode(Session.DEFAULT_AUTHORIZE_ACTIVITY_CODE);
+		//			//			openRequest.setPermissions(Arrays.asList("email", "basic_info"));
+		//			//			openRequest.setCallback(statusCallback);
+		//			//			fbSession.openForRead(openRequest); 
+		//
+		//			fbSession = new Session.Builder(this).setApplicationId(getString(R.string.app_id)).build();
+		//			Session.OpenRequest or = new Session.OpenRequest(this); // 안드로이드 sdk를 사용하기 위해선 내 컴퓨터의 hash key를 페이스북 개발 설정페이지에서 추가하여야함.
+		//			//			or.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO); // 앱 호출이 아닌 웹뷰를 강제로 호출함.
+		//			or.setPermissions(Arrays.asList("email", "basic_info"));
+		//			or.setCallback(statusCallback);
+		//
+		//			fbSession.openForRead(or);
+		//
+		//			Session.setActiveSession(fbSession);
+		//
+		//			AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.LOGIN, Action.CLICK, Label.LOGIN_FACEBOOK, 0L);
+		//		}
 	}
 
-	private Session.StatusCallback statusCallback = new Session.StatusCallback()
-	{
-
-		@Override
-		public void call(Session session, SessionState state, Exception exception)
-		{
-			if (state.isOpened())
-			{
-				makeMeRequest(session);
-			} else if (state.isClosed())
-			{
-				session.closeAndClearTokenInformation();
-			} else
-			{
-				unLockUI();
-			}
-			// 사용자 취소 시
-			//			if (exception instanceof FacebookOperationCanceledException 
-			//					|| exception instanceof FacebookAuthorizationException) {
-			//				unLockUI();
-			//			}
-
-		}
-
-	};
+	//	private Session.StatusCallback statusCallback = new Session.StatusCallback()
+	//	{
+	//
+	//		@Override
+	//		public void call(Session session, SessionState state, Exception exception)
+	//		{
+	//			if (state.isOpened())
+	//			{
+	//				makeMeRequest(session);
+	//			} else if (state.isClosed())
+	//			{
+	//				session.closeAndClearTokenInformation();
+	//			} else
+	//			{
+	//				unLockUI();
+	//			}
+	//			// 사용자 취소 시
+	//			//			if (exception instanceof FacebookOperationCanceledException 
+	//			//					|| exception instanceof FacebookAuthorizationException) {
+	//			//				unLockUI();
+	//			//			}
+	//
+	//		}
+	//
+	//	};
 
 	public boolean isBlankFields()
 	{
@@ -372,9 +377,9 @@ public class LoginActivity extends
 			}
 		} else
 		{
-			if (fbSession != null)
+			if (mCallbackManager != null)
 			{
-				fbSession.onActivityResult(this, requestCode, resultCode, data);
+				mCallbackManager.onActivityResult(requestCode, resultCode, data);
 			}
 		}
 	}

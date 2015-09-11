@@ -5,10 +5,10 @@ import com.twoheart.dailyhotel.R;
 import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
-public class DailyCustomFontTextView extends TextView
+public class DailyCustomFontTextView extends AppCompatTextView
 {
 	private int mCurMaxLine = 0;
 
@@ -27,13 +27,6 @@ public class DailyCustomFontTextView extends TextView
 	public DailyCustomFontTextView(Context context, AttributeSet attrs, int defStyle)
 	{
 		super(context, attrs, defStyle);
-
-		setFontStyle(context, attrs);
-	}
-
-	public DailyCustomFontTextView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
-	{
-		super(context, attrs, defStyleAttr, defStyleRes);
 
 		setFontStyle(context, attrs);
 	}

@@ -3,10 +3,10 @@ package com.twoheart.dailyhotel.view.widget;
 import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.support.v7.internal.widget.TintRadioButton;
+import android.support.v7.widget.AppCompatRadioButton;
 import android.util.AttributeSet;
 
-public class DailyCustomFontRadioButton extends TintRadioButton
+public class DailyCustomFontRadioButton extends AppCompatRadioButton
 {
 	public DailyCustomFontRadioButton(Context context)
 	{

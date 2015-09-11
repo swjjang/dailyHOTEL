@@ -46,9 +46,12 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
@@ -159,6 +162,9 @@ public class CreditFragment
 		{
 			try
 			{
+				// 카카오톡 패키지 설치 여부
+				baseActivity.getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
+
 				String userIdxStr = idx;
 
 				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
@@ -176,6 +182,16 @@ public class CreditFragment
 			} catch (Exception e)
 			{
 				ExLog.d(e.toString());
+
+				try
+				{
+					startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
+				} catch (ActivityNotFoundException e1)
+				{
+					Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+					marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
+					startActivity(marketLaunch);
+				}
 			}
 		} else if (v.getId() == tvCredit.getId())
 		{

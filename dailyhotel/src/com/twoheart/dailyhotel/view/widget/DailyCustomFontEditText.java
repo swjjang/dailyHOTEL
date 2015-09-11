@@ -3,10 +3,10 @@ package com.twoheart.dailyhotel.view.widget;
 import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.support.v7.internal.widget.TintEditText;
+import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
 
-public class DailyCustomFontEditText extends TintEditText
+public class DailyCustomFontEditText extends AppCompatEditText
 {
 
 	public DailyCustomFontEditText(Context context)
