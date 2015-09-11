@@ -300,7 +300,15 @@ public class MainActivity
 			{
 				if (sharedPreference.contains(KEY_PREFERENCE_BY_SHARE) == true)
 				{
-					selectMenuDrawer(menuHotelListFragment);
+					String param = sharedPreference.getString(KEY_PREFERENCE_BY_SHARE, null);
+
+					if (param.contains("hotelIndex") == true)
+					{
+						selectMenuDrawer(menuHotelListFragment);
+					} else
+					{
+						selectMenuDrawer(menuFnBListFragment);
+					}
 				} else
 				{
 					// Intent가 Push로 부터 온경우
@@ -314,17 +322,25 @@ public class MainActivity
 							selectMenuDrawer(menuBookingListFragment);
 							break;
 						default:
-							selectMenuDrawer(menuHotelListFragment);
+
+							if (indexLastFragment == INDEX_FNB_LIST_FRAGMENT)
+							{
+								selectMenuDrawer(menuFnBListFragment);
+							} else
+							{
+								selectMenuDrawer(menuHotelListFragment);
+							}
 							break;
 					}
 
 					mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, this));
 				}
 			}
-		} else if (requestCode == CODE_REQUEST_ACTIVITY_INTRO)
-		{
-			selectMenuDrawer(menuHotelListFragment);
 		}
+		//		else if (requestCode == CODE_REQUEST_ACTIVITY_INTRO)
+		//		{
+		//			selectMenuDrawer(menuHotelListFragment);
+		//		}
 	}
 
 	private void writeKakaoLinkPreference(String link)

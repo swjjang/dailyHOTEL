@@ -111,6 +111,8 @@ public class LoginActivity extends
 			@Override
 			public void onSuccess(LoginResult result)
 			{
+				lockUI();
+
 				GraphRequest request = GraphRequest.newMeRequest(result.getAccessToken(), new GraphRequest.GraphJSONObjectCallback()
 				{
 					@Override

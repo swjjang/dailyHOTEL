@@ -29,39 +29,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:orientation="vertical"
         android:paddingBottom="15dp"
         android:paddingTop="15dp" >
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="78dp"
-            android:layout_marginRight="15dp" >
-
-            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/act_booking_price"
-                android:textColor="@color/booking_subtext"
-                android:textSize="15dp" />
-
-            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
-                android:id="@+id/ticketPriceTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:text="@string/act_booking_0won"
-                android:textColor="@color/booking_subtext"
-                android:textSize="15dp" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="78dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="15dp" >
+            android:layout_height="wrap_content" >
 
             <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                 android:layout_width="wrap_content"

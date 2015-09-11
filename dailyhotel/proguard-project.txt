@@ -67,4 +67,12 @@
 
 -keep class com.crashlytics.** { *; }
 
--dontwarn android.support.**,com.ning.http.client.**,org.jboss.netty.**, org.slf4j.**, com.fasterxml.jackson.databind.**, com.google.android.gms.**, com.crashlytics.**, com.google.**
+-keep class org.apache.http.** { *; }
+
+-keep class android.support.v4.** { *; }
+-keep interface android.support.v4.** { *; }
+
+-keep class android.support.v7.** { *; }
+-keep interface android.support.v7.** { *; }
+
+-dontwarn android.support.v4.**, android.support.v7.**, com.ning.http.client.**,org.jboss.netty.**, org.slf4j.**, com.fasterxml.jackson.databind.**, com.google.android.gms.**, com.crashlytics.**, com.google.**, org.apache.http.**, android.net.http.AndroidHttpClient, com.android.volley.**

@@ -54,7 +54,7 @@ public class FnBBookingLayout implements OnCheckedChangeListener
 	private EditText mUserNameEditText, mUserPhoneEditText, mUserEmailEditText;
 	private Drawable[] mEditTextBackgrounds;
 
-	private TextView mTicketPriceTextView, mTicketPaymentTextView;
+	private TextView mTicketPaymentTextView;
 	private RadioGroup mPaymentGroup;
 	private RadioButton mEasyPaymentButton, mCardPaymentButton,
 			mHpPaymentButton, mAccountPaymentButton;
@@ -293,9 +293,6 @@ public class FnBBookingLayout implements OnCheckedChangeListener
 			return;
 		}
 
-		// 비용
-		mTicketPriceTextView = (TextView) viewRoot.findViewById(R.id.ticketPriceTextView);
-
 		// 결제금액
 		mTicketPaymentTextView = (TextView) viewRoot.findViewById(R.id.ticketPaymentTextView);
 
@@ -336,9 +333,6 @@ public class FnBBookingLayout implements OnCheckedChangeListener
 
 		DecimalFormat comma = new DecimalFormat("###,##0");
 		String price = comma.format(ticketPayment.getPaymentToPay()) + Html.fromHtml(activity.getString(R.string.currency));
-
-		// 비용
-		mTicketPriceTextView.setText(price);
 
 		// 결제금액
 		mTicketPaymentTextView.setText(price);

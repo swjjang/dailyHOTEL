@@ -93,7 +93,7 @@ public class KakaoLinkManager implements Constants
 
 			kkMsgBuilder.addAppButton(mContext.getString(R.string.kakao_btn_go_fnb), new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build()).addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
 
-			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd", Locale.KOREA);
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd", Locale.KOREA);
 			simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
 			Date checkInDate = new Date(dailyTime + SaleTime.SECONDS_IN_A_DAY * dailyDayOfDays * 1000);

@@ -101,7 +101,7 @@
     <string name="toast_msg_input_error_alphanum_name">해외 호텔 예약시에는 영문 성함만 입력 가능합니다.</string>
     <string name="toast_msg_input_error_numeric">숫자만 입력 가능합니다.</string>
     <string name="toast_msg_no_call">전화 기능이 없는 단말입니다.\n고객센터 전화번호는 1800-9120입니다.</string>
-    <string name="toast_msg_dont_past_hotelinfo">이전 날짜의 호텔 정보는 조회 할 수 없습니다.</string>
+    <string name="toast_msg_dont_past_hotelinfo">이전 날짜의 정보는 조회 할 수 없습니다.</string>
     <string name="toast_msg_maxcount_ticket">한번에 구매 가능한 최대 수량은 %1$d개 입니다.</string>
 
     <!-- Dialog Messages -->
@@ -390,9 +390,9 @@
     <string name="kakao_btn_move">앱으로 이동</string>
     <string name="kakao_btn_invited_friend">데일리호텔 할인받기!</string>
     <string name="kakao_btn_go_hotel">호텔 보러 가기!</string>
-    <string name="kakao_btn_go_fnb">보러 가기!</string>
+    <string name="kakao_btn_go_fnb">오늘의 고메 확인하기</string>
     <string name="kakao_btn_share_hotel">친구의 추천호텔!\n%1$s에서의 근사한 하루!\n\n체크인 %2$s | 체크아웃 %3$s (%4$d박 %5$d일)\n\n맘에 드는 객실 확인하고 잊지 못할 하루를 예약하세요!</string>
-    <string name="kakao_btn_share_fnb">친구의 추천 레스토랑!\n%1$s에서의 근사한 하루!\n\n날짜 %2$s\n\n맘에 드는 레스토랑 확인하고 잊지 못할 하루를 예약하세요!</string>
+    <string name="kakao_btn_share_fnb">친구가 추천하는 오늘의 고메!\n데일리고메에서 최고의 맛을 예약하세요\n\n장소 : %1$s\n날짜 : %2$s\n\n매일 9시부터\n데일리고메의 엄선된 다이닝을 예약하세요!\n\n지금 데일리호텔 앱에서 이용시간을 확인하실 수 있어요!</string>
 
     <!-- Base Activity -->
     <string name="act_base_network_connect">인터넷 연결 상태가 불안정합니다.\n인터넷 연결을 확인하신 뒤 다시 시도해주세요.</string>
