@@ -100,7 +100,7 @@
                     android:id="@+id/ticketTimeMinus"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:src="@drawable/payment_ic_amount_left"/>
+                    android:src="@drawable/selector_payment_minus_button"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/ticketTimeTextView"
@@ -114,7 +114,7 @@
                     android:id="@+id/ticketTimePlus"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:src="@drawable/payment_ic_amount_right"/>
+                    android:src="@drawable/selector_payment_plus_button"/>
 
             </LinearLayout>
 
@@ -144,7 +144,7 @@
                     android:id="@+id/ticketCountMinus"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:src="@drawable/payment_ic_amount_left"/>
+                    android:src="@drawable/selector_payment_minus_button"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/ticketCountTextView"
@@ -159,7 +159,7 @@
                     android:id="@+id/ticketCountPlus"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:src="@drawable/payment_ic_amount_right"/>
+                    android:src="@drawable/selector_payment_plus_button"/>
 
             </LinearLayout>
 

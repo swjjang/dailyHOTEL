@@ -68,19 +68,22 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        android:layout_marginBottom="27dp">
 
         <!-- 카드 관리 버튼 -->
 
         <ImageView
             android:id="@+id/cardManagerButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:layout_marginRight="15dp"
-            android:layout_marginTop="20dp"
-            android:src="@drawable/payment_ic_card"/>
+            android:layout_marginTop="7dp"
+            android:src="@drawable/payment_ic_card"
+            android:paddingLeft="10dp"/>
 
         <!-- 결제 종류 선택 -->
 
@@ -88,17 +91,15 @@
             android:id="@+id/paymentRadioGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="27dp"
             android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="7dp"
             android:layout_toLeftOf="@id/cardManagerButton"
             android:orientation="vertical">
 
             <com.twoheart.dailyhotel.view.widget.DailyCustomFontRadioButton
                 android:id="@+id/easyPaymentRadioButton"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="40dp"
                 android:button="@drawable/abc_btn_radio_material"
                 android:buttonTint="@color/actionbar_hamburger"
                 android:text="@string/label_booking_easypayment"
@@ -108,7 +109,7 @@
             <com.twoheart.dailyhotel.view.widget.DailyCustomFontRadioButton
                 android:id="@+id/cardPaymentRadionButton"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="40dp"
                 android:button="@drawable/abc_btn_radio_material"
                 android:buttonTint="@color/actionbar_hamburger"
                 android:text="@string/act_booking_pay_card"
@@ -118,7 +119,7 @@
             <com.twoheart.dailyhotel.view.widget.DailyCustomFontRadioButton
                 android:id="@+id/hpPaymentRadioButton"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="40dp"
                 android:button="@drawable/abc_btn_radio_material"
                 android:buttonTint="@color/actionbar_hamburger"
                 android:text="@string/act_booking_pay_mobile"
@@ -128,7 +129,7 @@
             <com.twoheart.dailyhotel.view.widget.DailyCustomFontRadioButton
                 android:id="@+id/accountPaymentRadioButton"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="40dp"
                 android:button="@drawable/abc_btn_radio_material"
                 android:buttonTint="@color/actionbar_hamburger"
                 android:paddingRight="15dp"

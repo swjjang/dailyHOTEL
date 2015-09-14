@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
        android:orientation="vertical">
@@ -8,12 +8,11 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/shape_section_background"
+        android:layout_height="44dp"
+        android:background="@color/section_background"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingBottom="9dp"
-        android:paddingLeft="13dp"
-        android:paddingTop="20dp">
+        android:paddingLeft="15dp">
 
         <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
             android:layout_width="wrap_content"
@@ -21,7 +20,7 @@
             android:gravity="center_vertical"
             android:text="@string/act_booking_payment"
             android:textColor="@color/textView_textColor_section"
-            android:textSize="12.5dp"
+            android:textSize="13dp"
             android:textStyle="bold"/>
     </LinearLayout>
 
@@ -29,13 +28,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="15dp"
-        android:paddingTop="15dp">
+        android:paddingTop="7dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
+            android:layout_height="50dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp">
 
@@ -45,7 +42,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:text="@string/act_booking_credit_use"
-                android:textColor="@drawable/selector_textview_bookingcolor"
+                android:textColor="@color/textView_textColor_main"
                 android:textSize="15dp"/>
 
             <com.twoheart.dailyhotel.view.widget.DailyCustomFontSwitchCompat
@@ -56,22 +53,19 @@
                 android:background="@null"
                 android:checked="false"
                 android:gravity="center"
-                android:paddingRight="4dp"
+                android:paddingRight="0dp"
                 android:textOff=""
-                android:textOn=""/>
+                android:textOn=""
+                android:layout_centerVertical="true"/>
         </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/booking_hline"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="78dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:layout_marginTop="15dp">
+            android:layout_marginTop="7dp"
+            android:gravity="center_vertical">
 
             <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                 android:id="@+id/tv_hotel_payment_original_price"
@@ -93,11 +87,11 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:layout_marginLeft="78dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="7dp"
+            android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:layout_marginTop="15dp">
+            android:gravity="center_vertical">
 
             <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                 android:id="@+id/tv_hotel_payment_credit"
@@ -120,16 +114,18 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:layout_marginLeft="78dp"
+            android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:background="@color/booking_hline01"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="78dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:layout_marginTop="15dp">
+            android:layout_marginTop="7dp"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="7dp">
 
             <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                 android:layout_width="wrap_content"
@@ -165,12 +161,13 @@
         <ImageView
             android:id="@+id/cardManagerButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:layout_marginRight="15dp"
-            android:layout_marginTop="13dp"
-            android:src="@drawable/payment_ic_card"/>
+            android:layout_marginTop="7dp"
+            android:src="@drawable/payment_ic_card"
+            android:paddingLeft="10dp"/>
 
         <!-- 결제 종류 선택 -->
 
@@ -178,17 +175,16 @@
             android:id="@+id/rg_payment_method"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="27dp"
             android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="10dp"
             android:layout_toLeftOf="@id/cardManagerButton"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginTop="7dp">
 
             <com.twoheart.dailyhotel.view.widget.DailyCustomFontRadioButton
                 android:id="@+id/easyPaymentRadioButton"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="40dp"
                 android:button="@drawable/abc_btn_radio_material"
                 android:buttonTint="@color/actionbar_hamburger"
                 android:text="@string/label_booking_easypayment"
@@ -198,7 +194,7 @@
             <com.twoheart.dailyhotel.view.widget.DailyCustomFontRadioButton
                 android:id="@+id/rb_payment_card"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="40dp"
                 android:button="@drawable/abc_btn_radio_material"
                 android:buttonTint="@color/actionbar_hamburger"
                 android:text="@string/act_booking_pay_card"
@@ -208,7 +204,7 @@
             <com.twoheart.dailyhotel.view.widget.DailyCustomFontRadioButton
                 android:id="@+id/rb_payment_hp"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="40dp"
                 android:button="@drawable/abc_btn_radio_material"
                 android:buttonTint="@color/actionbar_hamburger"
                 android:text="@string/act_booking_pay_mobile"
@@ -218,7 +214,7 @@
             <com.twoheart.dailyhotel.view.widget.DailyCustomFontRadioButton
                 android:id="@+id/rb_payment_account"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="40dp"
                 android:button="@drawable/abc_btn_radio_material"
                 android:buttonTint="@color/actionbar_hamburger"
                 android:paddingRight="15dp"
@@ -228,4 +224,4 @@
         </RadioGroup>
     </RelativeLayout>
 
-</merge>
+</LinearLayout>

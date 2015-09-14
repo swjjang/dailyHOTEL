@@ -123,7 +123,6 @@ public abstract class PlaceListFragment extends
 
 		if (position < 0)
 		{
-			refreshList(mSelectedProvince, true);
 			return;
 		}
 

@@ -1,50 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:orientation="vertical">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
 
     <!-- 예약자 정보 -->
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/common_border"/>
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/shape_section_background"
+        android:layout_height="44dp"
+        android:background="@color/section_background"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:orientation="horizontal"
-        android:paddingBottom="9dp"
-        android:paddingLeft="13dp">
+        android:paddingLeft="15dp"
+        >
 
         <requestFocus/>
 
         <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:text="@string/act_booking_reserver_info"
             android:textColor="@color/textView_textColor_section"
-            android:textSize="12.5dp"
+            android:textSize="13dp"
             android:textStyle="bold"/>
 
         <LinearLayout
             android:id="@+id/editLinearLayout"
             android:layout_width="wrap_content"
-            android:layout_height="20dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:paddingLeft="10dp"
-            android:paddingRight="13dp">
+            android:paddingBottom="5dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="5dp">
 
-            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
-                android:id="@+id/tv_profile_edit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <View
+                android:layout_width="28dp"
+                android:layout_height="18dp"
                 android:layout_gravity="center_vertical"
-                android:text="@string/act_profile_modify"
-                android:textColor="@color/dh_theme_color"
-                android:textSize="12.5dp"/>
+                android:background="@drawable/payment_ic_edit"/>
         </LinearLayout>
     </RelativeLayout>
 
@@ -52,14 +54,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="15dp"
+        android:paddingBottom="27dp"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
-        android:paddingTop="15dp">
+        android:paddingTop="7dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
             android:gravity="center_vertical">
 
             <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
@@ -87,7 +89,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
             android:gravity="center_vertical">
 
             <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
@@ -115,7 +117,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
             android:gravity="center_vertical">
 
             <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
@@ -142,4 +144,4 @@
         </LinearLayout>
     </LinearLayout>
 
-</merge>
+</LinearLayout>
