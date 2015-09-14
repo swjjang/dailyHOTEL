@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView android:id="@+id/list_header_title"
+                                                             xmlns:android="http://schemas.android.com/apk/res/android"
+                                                             android:layout_width="fill_parent"
+                                                             android:layout_height="37dp"
+                                                             android:background="@drawable/shape_section_background"
+                                                             android:paddingLeft="15dp"
+                                                             android:paddingTop="13dp"
+                                                             android:textColor="@color/textView_textColor_section"
+                                                             android:textSize="14.0dp"/>

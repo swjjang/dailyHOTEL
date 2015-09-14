@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- From: file:/Users/sheldon/Development/Android/dH-Android-Domestic/dailyHOTEL/refresh_library/build/intermediates/exploded-aar/com.github.castorflex.smoothprogressbar/library/1.1.0/res/values-v21/values.xml -->
+    <eat-comment/>
+    <style name="SPB" parent="android:Widget.Material.ProgressBar.Horizontal">
+    </style>
+</resources>

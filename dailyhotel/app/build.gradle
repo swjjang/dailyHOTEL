@@ -1,0 +1,61 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
+apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
+    useLibrary 'org.apache.http.legacy'
+
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+
+    defaultConfig {
+        applicationId "com.twoheart.dailyhotel"
+        minSdkVersion 10
+        targetSdkVersion 23
+        versionCode 67
+        versionName "1.6.7"
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            debuggable false
+            zipAlignEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:support-v4:23.+'
+    compile 'com.android.support:appcompat-v7:23.+'
+    compile 'com.facebook.android:facebook-android-sdk:4.5.+'
+    compile 'com.google.android.gms:play-services-base:7.+'
+    compile 'com.google.android.gms:play-services-maps:7.+'
+    compile 'com.google.android.gms:play-services-location:7.+'
+    compile 'com.google.android.gms:play-services-gcm:7.+'
+    compile 'com.kakao.sdk:kakaolink:1.+'
+    compile project(':AndroidMapsUtils')
+    compile project(':refresh_library')
+    compile project(':refresh_library_extra')
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.2@aar') {
+        transitive = true;
+    }
+}

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+              android:gravity="center_vertical"
+              android:layout_height="wrap_content"
+              android:layout_width="match_parent"
+              android:orientation="horizontal"
+              android:paddingLeft="15dp">
+
+    <ImageView
+        android:id="@+id/drawerMenuItemIcon"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"/>
+
+    <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+        android:gravity="left|center_vertical"
+        android:id="@+id/drawerMenuItemTitle"
+        android:layout_height="90dp"
+        android:layout_marginLeft="15dp"
+        android:layout_width="wrap_content"
+        android:text="@string/actionbar_title_hotel_list_frag"
+        android:textColor="@color/menu_title_text"
+        android:textSize="18dp"
+        dailyFont:style="DemiLight"/>
+
+    <ImageView
+        android:id="@+id/newEventIcon"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_width="wrap_content"
+        android:src="@drawable/event_ic_n"
+        android:visibility="gone"/>
+
+</LinearLayout>

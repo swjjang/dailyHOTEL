@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/list_titme_title"
-    android:layout_width="fill_parent"
-    android:layout_height="50dp"
-    android:paddingLeft="20dp"
-    android:textColor="@color/textView_textColor_main"
-    android:textSize="17.0dp"
-    android:gravity="center_vertical" />

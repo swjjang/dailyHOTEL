@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- From: file:/Users/sheldon/Development/Android/dH-Android-Domestic/dailyHOTEL/refresh_library/build/intermediates/bundles/debug/res/values-ru/values-ru.xml -->
+    <eat-comment/>
+    <string name="pull_to_refresh_pull_label">потяните</string>
+    <string name="pull_to_refresh_refreshing_label">обновление</string>
+    <string name="pull_to_refresh_release_label">отпустите</string>
+</resources>
