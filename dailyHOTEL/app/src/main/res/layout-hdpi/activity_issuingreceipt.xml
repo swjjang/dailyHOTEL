@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <include
         android:id="@+id/toolbar_actionbar"
+        layout="@layout/toolbar_default"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        layout="@layout/toolbar_default" />
+        android:layout_height="56dp"/>
 
     <View
         android:id="@+id/toolbar_actionbarUnderLine"
@@ -15,20 +15,20 @@
         android:layout_height="1px"
         android:layout_alignBaseline="@id/toolbar_actionbar"
         android:layout_alignBottom="@id/toolbar_actionbar"
-        android:background="@color/actionbar_underline" />
+        android:background="@color/actionbar_underline"/>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar_actionbar"
-        android:background="@color/white" >
+        android:background="@color/white">
 
         <RelativeLayout
             android:id="@+id/receiptLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="7dp" >
+            android:padding="7dp">
 
             <!-- 예약 세부정보 -->
 
@@ -38,7 +38,7 @@
                 android:layout_height="140dp"
                 android:background="@drawable/receipt_bg_top"
                 android:paddingLeft="11dp"
-                android:paddingRight="11dp" >
+                android:paddingRight="11dp">
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/textView1"
@@ -48,7 +48,7 @@
                     android:text="@string/label_receipt_bookinginfo"
                     android:textColor="@color/black"
                     android:textSize="13dp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/textView12"
@@ -59,7 +59,7 @@
                     android:gravity="center_vertical"
                     android:text="@string/label_receipt_reservation_index"
                     android:textColor="@color/receipt_detail_text"
-                    android:textSize="10dp" />
+                    android:textSize="10dp"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/textView13"
@@ -71,7 +71,7 @@
                     android:layout_marginTop="@dimen/hdpi_issuingreceipt_linespacing"
                     android:gravity="right"
                     android:textColor="@color/black"
-                    android:textSize="11dp" />
+                    android:textSize="11dp"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/textView2"
@@ -82,7 +82,7 @@
                     android:gravity="center_vertical"
                     android:text="@string/label_receipt_hotelname"
                     android:textColor="@color/receipt_detail_text"
-                    android:textSize="10dp" />
+                    android:textSize="10dp"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/textView3"
@@ -95,7 +95,7 @@
                     android:layout_toRightOf="@id/textView2"
                     android:gravity="right"
                     android:textColor="@color/black"
-                    android:textSize="11dp" />
+                    android:textSize="11dp"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/textView4"
@@ -106,7 +106,7 @@
                     android:gravity="center_vertical"
                     android:text="@string/label_receipt_hoteladdress"
                     android:textColor="@color/receipt_detail_text"
-                    android:textSize="10dp" />
+                    android:textSize="10dp"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/textView5"
@@ -120,7 +120,7 @@
                     android:gravity="right"
                     android:maxLines="2"
                     android:textColor="@color/black"
-                    android:textSize="11dp" />
+                    android:textSize="11dp"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/textView6"
@@ -131,7 +131,7 @@
                     android:gravity="center_vertical"
                     android:text="@string/label_receipt_customerinfo"
                     android:textColor="@color/receipt_detail_text"
-                    android:textSize="10dp" />
+                    android:textSize="10dp"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/textView7"
@@ -141,7 +141,7 @@
                     android:layout_below="@id/textView5"
                     android:layout_marginTop="@dimen/hdpi_issuingreceipt_linespacing"
                     android:textColor="@color/black"
-                    android:textSize="11dp" />
+                    android:textSize="11dp"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/textView8"
@@ -152,7 +152,7 @@
                     android:gravity="center_vertical"
                     android:text="@string/label_receipt_checkinout"
                     android:textColor="@color/receipt_detail_text"
-                    android:textSize="10dp" />
+                    android:textSize="10dp"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/textView9"
@@ -162,7 +162,7 @@
                     android:layout_below="@id/textView6"
                     android:layout_marginTop="@dimen/hdpi_issuingreceipt_linespacing"
                     android:textColor="@color/black"
-                    android:textSize="11dp" />
+                    android:textSize="11dp"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/textVie10"
@@ -173,7 +173,7 @@
                     android:gravity="center_vertical"
                     android:text="@string/label_receipt_nights_rooms"
                     android:textColor="@color/receipt_detail_text"
-                    android:textSize="10dp" />
+                    android:textSize="10dp"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/textView11"
@@ -183,7 +183,7 @@
                     android:layout_below="@id/textView8"
                     android:layout_marginTop="@dimen/hdpi_issuingreceipt_linespacing"
                     android:textColor="@color/black"
-                    android:textSize="11dp" />
+                    android:textSize="11dp"/>
             </RelativeLayout>
 
             <!-- 결제 정보 -->
@@ -195,7 +195,7 @@
                 android:layout_below="@+id/bookingInfoLayout"
                 android:background="@drawable/receipt_bg_middle"
                 android:paddingLeft="11dp"
-                android:paddingRight="11dp" >
+                android:paddingRight="11dp">
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/textView21"
@@ -205,7 +205,7 @@
                     android:text="@string/label_receipt_paymentinfo"
                     android:textColor="@color/black"
                     android:textSize="13dp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/textView22"
@@ -216,7 +216,7 @@
                     android:gravity="center_vertical"
                     android:text="@string/label_receipt_paymentday"
                     android:textColor="@color/receipt_detail_text"
-                    android:textSize="10dp" />
+                    android:textSize="10dp"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/textView23"
@@ -226,7 +226,7 @@
                     android:layout_below="@id/textView21"
                     android:layout_marginTop="@dimen/hdpi_issuingreceipt_linespacing"
                     android:textColor="@color/black"
-                    android:textSize="11dp" />
+                    android:textSize="11dp"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/textView24"
@@ -237,7 +237,7 @@
                     android:gravity="center_vertical"
                     android:text="@string/label_receipt_supplyvalue"
                     android:textColor="@color/receipt_detail_text"
-                    android:textSize="10dp" />
+                    android:textSize="10dp"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/textView25"
@@ -247,7 +247,7 @@
                     android:layout_below="@id/textView22"
                     android:layout_marginTop="@dimen/hdpi_issuingreceipt_linespacing"
                     android:textColor="@color/black"
-                    android:textSize="11dp" />
+                    android:textSize="11dp"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/textView26"
@@ -258,7 +258,7 @@
                     android:gravity="center_vertical"
                     android:text="@string/label_receipt_vat"
                     android:textColor="@color/receipt_detail_text"
-                    android:textSize="10dp" />
+                    android:textSize="10dp"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/textView27"
@@ -268,7 +268,7 @@
                     android:layout_below="@id/textView24"
                     android:layout_marginTop="@dimen/hdpi_issuingreceipt_linespacing"
                     android:textColor="@color/black"
-                    android:textSize="11dp" />
+                    android:textSize="11dp"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/textView28"
@@ -279,7 +279,7 @@
                     android:gravity="center_vertical"
                     android:text="@string/label_receipt_discount"
                     android:textColor="@color/receipt_detail_text"
-                    android:textSize="10dp" />
+                    android:textSize="10dp"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/textView29"
@@ -289,7 +289,7 @@
                     android:layout_below="@id/textView26"
                     android:layout_marginTop="@dimen/hdpi_issuingreceipt_linespacing"
                     android:textColor="@color/black"
-                    android:textSize="11dp" />
+                    android:textSize="11dp"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/textView30"
@@ -300,7 +300,7 @@
                     android:gravity="center_vertical"
                     android:text="@string/label_receipt_payment"
                     android:textColor="@color/receipt_detail_text"
-                    android:textSize="10dp" />
+                    android:textSize="10dp"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/textView31"
@@ -310,7 +310,7 @@
                     android:layout_below="@id/textView28"
                     android:layout_marginTop="@dimen/hdpi_issuingreceipt_linespacing"
                     android:textColor="@color/black"
-                    android:textSize="11dp" />
+                    android:textSize="11dp"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/textView32"
@@ -321,7 +321,7 @@
                     android:gravity="center_vertical"
                     android:text="@string/label_receipt_paymenttype"
                     android:textColor="@color/receipt_detail_text"
-                    android:textSize="10dp" />
+                    android:textSize="10dp"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/textView33"
@@ -331,7 +331,7 @@
                     android:layout_below="@id/textView30"
                     android:layout_marginTop="@dimen/hdpi_issuingreceipt_linespacing"
                     android:textColor="@color/black"
-                    android:textSize="11dp" />
+                    android:textSize="11dp"/>
             </RelativeLayout>
 
             <!-- 공급자 -->
@@ -344,13 +344,13 @@
                 android:background="@drawable/receipt_bg_bottom"
                 android:paddingBottom="15dp"
                 android:paddingLeft="11dp"
-                android:paddingRight="11dp" >
+                android:paddingRight="11dp">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:background="@drawable/receipt_bg_bottom_dot" />
+                    android:background="@drawable/receipt_bg_bottom_dot"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/textView41"
@@ -360,7 +360,7 @@
                     android:text="@string/label_receipt_provider"
                     android:textColor="@color/black"
                     android:textSize="13dp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
 
                 <ImageView
                     android:id="@+id/imageView1"
@@ -368,7 +368,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_marginTop="15dp"
-                    android:src="@drawable/receipt_logo" />
+                    android:src="@drawable/receipt_logo"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/textView42"
@@ -377,7 +377,7 @@
                     android:layout_below="@id/imageView1"
                     android:layout_marginTop="@dimen/hdpi_issuingreceipt_linespacing"
                     android:textColor="@color/receipt_detail_text"
-                    android:textSize="10dp" />
+                    android:textSize="10dp"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/textView43"
@@ -387,7 +387,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="@dimen/hdpi_issuingreceipt_linespacing"
                     android:textColor="@color/receipt_detail_text"
-                    android:textSize="10dp" />
+                    android:textSize="10dp"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/textView44"
@@ -397,7 +397,7 @@
                     android:layout_below="@id/imageView1"
                     android:layout_marginTop="@dimen/hdpi_issuingreceipt_linespacing"
                     android:textColor="@color/receipt_detail_text"
-                    android:textSize="10dp" />
+                    android:textSize="10dp"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/textView45"
@@ -407,7 +407,7 @@
                     android:layout_marginTop="@dimen/hdpi_issuingreceipt_linespacing"
                     android:text="@string/label_receipt_address"
                     android:textColor="@color/receipt_detail_text"
-                    android:textSize="10dp" />
+                    android:textSize="10dp"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/textView46"
@@ -419,7 +419,7 @@
                     android:layout_toRightOf="@id/textView45"
                     android:lineSpacingExtra="@dimen/hdpi_issuingreceipt_linespacing"
                     android:textColor="@color/receipt_detail_text"
-                    android:textSize="10dp" />
+                    android:textSize="10dp"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/textView47"
@@ -427,7 +427,7 @@
                     android:layout_height="12dp"
                     android:layout_below="@+id/textView46"
                     android:textColor="@color/receipt_detail_text"
-                    android:textSize="10dp" />
+                    android:textSize="10dp"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/textView48"
@@ -436,7 +436,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_below="@id/textView46"
                     android:textColor="@color/receipt_detail_text"
-                    android:textSize="10dp" />
+                    android:textSize="10dp"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/textView49"
@@ -447,7 +447,7 @@
                     android:gravity="center_horizontal"
                     android:lineSpacingExtra="3dp"
                     android:textColor="@color/dh_theme_color"
-                    android:textSize="10dp" />
+                    android:textSize="10dp"/>
             </RelativeLayout>
         </RelativeLayout>
     </ScrollView>

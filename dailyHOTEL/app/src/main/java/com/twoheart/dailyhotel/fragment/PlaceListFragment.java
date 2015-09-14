@@ -380,7 +380,8 @@ public abstract class PlaceListFragment extends
 
 		if (mAnchorY == Integer.MAX_VALUE)
 		{
-			mAnchorY = -mActionbarViewHolder.mAnchorView.getHeight();
+			int moveHeight = mActionbarViewHolder.mActionbarLayout.getHeight() + mActionbarViewHolder.mTabindicatorView.getHeight() + 4;
+			mAnchorY = -moveHeight;
 		}
 
 		mValueAnimator = ValueAnimator.ofInt(mAnchorY, 0);
@@ -455,7 +456,9 @@ public abstract class PlaceListFragment extends
 			mAnchorY = 0;
 		}
 
-		mValueAnimator = ValueAnimator.ofInt(mAnchorY, -mActionbarViewHolder.mAnchorView.getHeight());
+		int moveHeight = mActionbarViewHolder.mActionbarLayout.getHeight() + mActionbarViewHolder.mTabindicatorView.getHeight() + 4;
+
+		mValueAnimator = ValueAnimator.ofInt(mAnchorY, -moveHeight);
 		mValueAnimator.setDuration(300).addUpdateListener(new AnimatorUpdateListener()
 		{
 			@Override

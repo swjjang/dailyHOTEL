@@ -36,7 +36,8 @@ public class DailyHotel extends Application implements Constants
 	public void onCreate()
 	{
 		super.onCreate();
-		Fabric.with(this, new Crashlytics());
+
+//		Fabric.with(this, new Crashlytics());
 
 		// 
 		if (Util.isOverAPI14() == true)

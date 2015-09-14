@@ -13,6 +13,7 @@
     <string name="label_google_map">Google Map</string>
     <string name="label_hotel">호텔</string>
     <string name="label_fnb">레스토랑</string>
+    <string name="label_dailygourmet">dailyGOURMET</string>
 
     <!-- Hotel Grade -->
     <string name="grade_special">특급</string>
@@ -171,6 +172,8 @@
     <string name="dialog_msg_none_gcmid">Google Play Service(업데이트 혹은 미설치)를 사용할 수 없어 결제는 이상 없으나 알림은 받지 못할 수도 있습니다.</string>
     <string name="dialog_msg_internal_error">알수없는 오류가 발생하였습니다. 종료 후 재시도 하십시오.\n계속적인 오류가 발생할 경우 고객센터 1800-9120 연락 부탁드립니다.</string>
     <string name="dialog_msg_changed_price">상품 상황 변동으로 인하여 가격이 변경되었습니다. 확인 뒤 결제해주세요.</string>
+    <string name="dialog_msg_changed_time">상품 상황 변동으로 인하여 시간이 변경되었습니다. 확인 뒤 결제해주세요.</string>
+    <string name="dialog_msg_changed_time_price">상품 상황 변동으로 인하여 가격, 시간이 변경되었습니다. 확인 뒤 결제해주세요.</string>
 
     <!-- Main Drawer Menu Titles -->
     <string name="drawer_menu_pin_title_resrvation">예약</string>
@@ -329,6 +332,7 @@
     <string name="label_booking_ticket_info">상품 정보</string>
     <string name="label_booking_ticket_type">타입</string>
     <string name="label_booking_select_ticket_count">수량선택</string>
+    <string name="label_booking_select_ticket_time">방문시간</string>
     <string name="label_booking_user_info">예약자 정보</string>
     <string name="label_booking_user">예약자</string>
     <string name="label_booking_count">%1$d개</string>
@@ -530,5 +534,6 @@
     <string name="label_headersectionbar_title">당일 판매 상품</string>
     <string name="label_fnblistfragment_empty_text01">레스토랑을 준비하고 있습니다.</string>
     <string name="label_fnblistfragment_empty_text02">멋진 레스토랑을 원하시나요?\n1800-9120으로 전화주세요.</string>
+    <string name="label_fnblistfragment_header_text">매일 오전 9시부터 쉐프들이 선보이는 특별한 만찬!\n데일리고메에서 오늘의 만찬을 예약하세요!</string>
 
 </resources>

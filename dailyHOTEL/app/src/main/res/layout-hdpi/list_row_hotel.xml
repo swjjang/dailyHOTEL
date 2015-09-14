@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="240dp" >
+                android:layout_width="match_parent"
+                android:layout_height="240dp">
 
     <!-- img -->
 
@@ -11,12 +11,12 @@
         android:layout_height="240dp"
         android:adjustViewBounds="true"
         android:background="@drawable/img_placeholder"
-        android:scaleType="fitXY" />
+        android:scaleType="fitXY"/>
 
     <RelativeLayout
         android:id="@+id/ll_hotel_row_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -25,7 +25,7 @@
             android:orientation="vertical"
             android:paddingBottom="13dp"
             android:paddingLeft="13dp"
-            android:paddingRight="13dp" >
+            android:paddingRight="13dp">
 
             <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                 android:id="@+id/averageTextView"
@@ -35,12 +35,12 @@
                 android:text="@string/label_hotel_list_extendedstay_average"
                 android:textColor="@android:color/white"
                 android:textSize="11dp"
-                android:visibility="gone" />
+                android:visibility="gone"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp" >
+                android:layout_marginTop="5dp">
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/hv_hotel_grade"
@@ -54,7 +54,7 @@
                     android:paddingRight="5.5dp"
                     android:paddingTop="2px"
                     android:textColor="@android:color/white"
-                    android:textSize="11.5dp" />
+                    android:textSize="11.5dp"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/tv_hotel_row_name"
@@ -77,7 +77,7 @@
                     android:singleLine="true"
                     android:textColor="@android:color/white"
                     android:textSize="18dp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/tv_hotel_row_discount"
@@ -92,7 +92,7 @@
                     android:shadowRadius="0.01"
                     android:textColor="@android:color/white"
                     android:textSize="18dp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -100,7 +100,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/ll_hotel_under_upper"
                 android:orientation="horizontal"
-                android:paddingTop="5dp" >
+                android:paddingTop="5dp">
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/tv_hotel_row_address"
@@ -115,7 +115,7 @@
                     android:shadowRadius="0.01"
                     android:singleLine="true"
                     android:textColor="#cecece"
-                    android:textSize="13.5dp" />
+                    android:textSize="13.5dp"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/tv_hotel_row_price"
@@ -128,7 +128,7 @@
                     android:shadowDy="2"
                     android:shadowRadius="0.01"
                     android:textColor="#cecece"
-                    android:textSize="13.5dp" />
+                    android:textSize="13.5dp"/>
             </RelativeLayout>
         </LinearLayout>
     </RelativeLayout>
@@ -141,7 +141,7 @@
         android:layout_marginRight="15dp"
         android:layout_marginTop="15dp"
         android:src="@drawable/ic_d_benefit"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
     <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
         android:id="@+id/tv_hotel_row_soldout"
@@ -152,12 +152,12 @@
         android:text="SOLD OUT"
         android:textColor="@android:color/darker_gray"
         android:textSize="40dp"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:layout_alignParentBottom="true"
-        android:background="@color/hotel_list_item_underline" />
+        android:background="@color/hotel_list_item_underline"/>
 
 </RelativeLayout>

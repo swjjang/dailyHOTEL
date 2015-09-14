@@ -59,6 +59,8 @@ public abstract class PlaceMainFragment extends BaseFragment
 		public void toggleViewType();
 
 		public void onClickActionBarArea();
+
+		public void setHeaderSectionVisible(boolean isVisible);
 	};
 
 	protected abstract View createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);

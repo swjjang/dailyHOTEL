@@ -172,8 +172,8 @@ public class PaymentWebActivity extends BaseActivity implements Constants
 
 			TicketInformation ticketInformation = mTicketPayment.getTicketInformation();
 
-			ArrayList<String> postParameterKey = new ArrayList<String>(Arrays.asList("sale_reco_idx", "payment_type", "ticket_count", "customer_name", "customer_phone", "customer_email"));
-			ArrayList<String> postParameterValue = new ArrayList<String>(Arrays.asList(String.valueOf(ticketInformation.index), mTicketPayment.paymentType.name(), String.valueOf(mTicketPayment.ticketCount), guest.name, guest.phone, guest.email));
+			ArrayList<String> postParameterKey = new ArrayList<String>(Arrays.asList("sale_reco_idx", "payment_type", "ticket_count", "customer_name", "customer_phone", "customer_email", "arrival_time"));
+			ArrayList<String> postParameterValue = new ArrayList<String>(Arrays.asList(String.valueOf(ticketInformation.index), mTicketPayment.paymentType.name(), String.valueOf(mTicketPayment.ticketCount), guest.name, guest.phone, guest.email, String.valueOf(mTicketPayment.ticketTime)));
 
 			byte[] postParameter = parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]), postParameterValue.toArray(new String[postParameterValue.size()]));
 

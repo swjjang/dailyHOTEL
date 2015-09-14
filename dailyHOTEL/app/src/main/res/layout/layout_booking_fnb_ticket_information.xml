@@ -6,20 +6,18 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/shape_section_background"
+        android:layout_height="44dp"
+        android:background="@color/section_background"
         android:orientation="horizontal"
-        android:paddingBottom="9dp"
-        android:paddingLeft="13dp"
-        android:paddingTop="20dp">
+        android:paddingLeft="15dp"
+        android:gravity="center_vertical">
 
         <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
             android:text="@string/label_booking_ticket_info"
             android:textColor="@color/textView_textColor_section"
-            android:textSize="12.5dp"
+            android:textSize="13dp"
             android:textStyle="bold"/>
     </LinearLayout>
 
@@ -27,14 +25,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="15dp"
+        android:paddingBottom="27dp"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
-        android:paddingTop="15dp">
+        android:paddingTop="7dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
             android:gravity="center_vertical">
 
             <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
@@ -58,7 +56,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
             android:gravity="center_vertical">
 
             <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
@@ -81,7 +79,51 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
+            android:gravity="center_vertical">
+
+            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:text="@string/label_booking_select_ticket_time"
+                android:textColor="@color/booking_subtext"
+                android:textSize="15dp"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.7"
+                android:gravity="right|center_vertical">
+
+                <ImageView
+                    android:id="@+id/ticketTimeMinus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/payment_ic_amount_left"/>
+
+                <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+                    android:id="@+id/ticketTimeTextView"
+                    android:layout_width="69dp"
+                    android:layout_height="29dp"
+                    android:textColor="@drawable/selector_textview_textcolor"
+                    android:textSize="15dp"
+                    android:gravity="center"/>
+
+                <ImageView
+                    android:id="@+id/ticketTimePlus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/payment_ic_amount_right"/>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
             android:gravity="center_vertical">
 
             <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
@@ -102,27 +144,26 @@
                     android:id="@+id/ticketCountMinus"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:paddingRight="40dp"
                     android:src="@drawable/payment_ic_amount_left"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/ticketCountTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
+                    android:layout_width="69dp"
+                    android:layout_height="29dp"
                     android:text="1개"
                     android:textColor="@drawable/selector_textview_textcolor"
-                    android:textSize="15dp"/>
+                    android:textSize="15dp"
+                    android:gravity="center"/>
 
                 <ImageView
                     android:id="@+id/ticketCountPlus"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:paddingLeft="40dp"
                     android:src="@drawable/payment_ic_amount_right"/>
 
             </LinearLayout>
+
+
         </LinearLayout>
     </LinearLayout>
 

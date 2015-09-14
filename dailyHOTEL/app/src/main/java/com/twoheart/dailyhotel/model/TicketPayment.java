@@ -3,6 +3,8 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+
 public class TicketPayment implements Parcelable
 {
 	public enum PaymentType
@@ -20,6 +22,8 @@ public class TicketPayment implements Parcelable
 	private Guest mGuest; // 실제 예약 혹은 투숙하는 사람
 	public int ticketCount;
 	public int ticketMaxCount; // 최대 결제 가능한 티켓 개수
+	public long ticketTime;
+	public long[] ticketTimes;
 
 	public TicketPayment()
 	{
@@ -47,6 +51,8 @@ public class TicketPayment implements Parcelable
 		dest.writeValue(mGuest);
 		dest.writeInt(ticketCount);
 		dest.writeInt(ticketMaxCount);
+		dest.writeLong(ticketTime);
+		dest.writeLongArray(ticketTimes);
 	}
 
 	private void readFromParcel(Parcel in)
@@ -61,6 +67,8 @@ public class TicketPayment implements Parcelable
 		mGuest = (Guest) in.readValue(Guest.class.getClassLoader());
 		ticketCount = in.readInt();
 		ticketMaxCount = in.readInt();
+		ticketTime = in.readLong();
+		ticketTimes = in.createLongArray();
 	}
 
 	public TicketInformation getTicketInformation()

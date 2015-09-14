@@ -51,7 +51,7 @@ public class FnBMainFragment extends PlaceMainFragment
 	private Province mSelectedProvince;
 
 	private FragmentViewPager mFragmentViewPager;
-	private TextView mHeaderTextView;
+	private View mHeaderTextView;
 
 	private interface OnUserAnalyticsActionListener
 	{
@@ -65,7 +65,7 @@ public class FnBMainFragment extends PlaceMainFragment
 	{
 		View view = inflater.inflate(R.layout.fragment_fnb_main, container, false);
 
-		mHeaderTextView = (TextView) view.findViewById(R.id.headerSectionBar);
+		mHeaderTextView = view.findViewById(R.id.headerSectionBar);
 		mFragmentViewPager = (FragmentViewPager) view.findViewById(R.id.fragmentViewPager);
 		mFragmentList = new ArrayList<PlaceListFragment>();
 
@@ -84,16 +84,12 @@ public class FnBMainFragment extends PlaceMainFragment
 	@Override
 	protected void showSlidingDrawer()
 	{
-		mHeaderTextView.setVisibility(View.VISIBLE);
-
 		setMenuEnabled(true);
 	}
 
 	@Override
 	protected void hideSlidingDrawer()
 	{
-		mHeaderTextView.setVisibility(View.INVISIBLE);
-
 		setMenuEnabled(false);
 	}
 
@@ -362,6 +358,29 @@ public class FnBMainFragment extends PlaceMainFragment
 			intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, mSelectedProvince);
 			intent.putParcelableArrayListExtra(NAME_INTENT_EXTRA_DATA_AREAITEMLIST, mAreaItemList);
 			startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SELECT_AREA);
+		}
+
+		@Override
+		public void setHeaderSectionVisible(boolean isVisible)
+		{
+			if(mHeaderTextView == null)
+			{
+				return;
+			}
+
+			if(isVisible == true)
+			{
+				if(mHeaderTextView.getVisibility() != View.VISIBLE)
+				{
+					mHeaderTextView.setVisibility(View.VISIBLE);
+				}
+			} else
+			{
+				if(mHeaderTextView.getVisibility() != View.INVISIBLE)
+				{
+					mHeaderTextView.setVisibility(View.INVISIBLE);
+				}
+			}
 		}
 	};
 

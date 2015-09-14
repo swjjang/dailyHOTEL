@@ -15,7 +15,7 @@
         layout="@layout/view_empty_fnb_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="109dp"
+        android:layout_marginTop="56dp"
         android:visibility="gone"/>
 
     <uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout

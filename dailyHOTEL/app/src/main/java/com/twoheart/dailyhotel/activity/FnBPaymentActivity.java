@@ -30,6 +30,7 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
@@ -43,9 +44,14 @@ import java.util.TimeZone;
 public class FnBPaymentActivity extends TicketPaymentActivity
 {
 	private FnBBookingLayout mFnBBookingLayout;
+	private boolean mIsChangedTime;
 
 	public interface OnUserActionListener
 	{
+		public void plusTicketTime();
+
+		public void minusTicketTime();
+
 		public void plusTicketCount();
 
 		public void minusTicketCount();
@@ -100,7 +106,8 @@ public class FnBPaymentActivity extends TicketPaymentActivity
 			return;
 		}
 
-		String params = String.format("?sale_reco_idx=%d&sday=%s&ticket_count=%d", ticketPayment.getTicketInformation().index, checkInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), ticketPayment.ticketCount);
+		String params = String.format("?sale_reco_idx=%d&sday=%s&ticket_count=%d&arrival_time=%s", //
+				ticketPayment.getTicketInformation().index, checkInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), ticketPayment.ticketCount, String.valueOf(ticketPayment.ticketTime));
 		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_SALE_SESSION_TICKET_SELL_CHECK).append(params).toString(), null, mTicketSellCheckJsonResponseListener, this));
 	}
 
@@ -125,6 +132,7 @@ public class FnBPaymentActivity extends TicketPaymentActivity
 		params.put("customer_name", guest.name);
 		params.put("customer_phone", guest.phone);
 		params.put("customer_email", guest.email);
+		params.put("arrival_time", String.valueOf(ticketPayment.ticketTime));
 
 		if (DEBUG == true)
 		{
@@ -183,12 +191,103 @@ public class FnBPaymentActivity extends TicketPaymentActivity
 		}
 	}
 
+	@Override
+	protected void checkLastChangedValue()
+	{
+		// 호텔 가격 정보가 변경되었습니다.
+		if (mIsChangedPrice == true && mIsChangedTime == true)
+		{
+			mIsChangedPrice = false;
+			mIsChangedTime = true;
+
+			showChangedValueDialog(R.string.dialog_msg_changed_time_price);
+		} else if(mIsChangedPrice == true)
+		{
+			mIsChangedPrice = false;
+
+			showChangedPayDialog();
+		} else if(mIsChangedTime == true)
+		{
+			mIsChangedTime = false;
+
+			showChangedTimeDialog();
+		}
+	}
+
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// User ActionListener
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	private OnUserActionListener mOnUserActionListener = new OnUserActionListener()
 	{
+		@Override
+		public void plusTicketTime()
+		{
+			if(mTicketPayment == null || mTicketPayment.ticketTimes == null)
+			{
+				return;
+			}
+
+			int position = 0;
+			int length = mTicketPayment.ticketTimes.length;
+
+			for(int i = 0; i < length; i++)
+			{
+				long selectedtime = mTicketPayment.ticketTimes[i];
+
+				if(Long.compare(selectedtime, mTicketPayment.ticketTime) == 0)
+				{
+					position = i;
+					break;
+				}
+			}
+
+			if (++position >= length)
+			{
+				mFnBBookingLayout.setTicketTimePlusButtonEnabled(false);
+			} else
+			{
+				mTicketPayment.ticketTime = mTicketPayment.ticketTimes[position];
+
+				mFnBBookingLayout.setTicketTimeMinusButtonEnabled(true);
+				mFnBBookingLayout.setTicketTime(mTicketPayment.ticketTime);
+			}
+		}
+
+		@Override
+		public void minusTicketTime()
+		{
+			if(mTicketPayment == null || mTicketPayment.ticketTimes == null)
+			{
+				return;
+			}
+
+			int position = 0;
+			int length = mTicketPayment.ticketTimes.length;
+
+			for(int i = 0; i < length; i++)
+			{
+				long selectedtime = mTicketPayment.ticketTimes[i];
+
+				if(Long.compare(selectedtime, mTicketPayment.ticketTime) == 0)
+				{
+					position = i;
+					break;
+				}
+			}
+
+			if (--position < 0)
+			{
+				mFnBBookingLayout.setTicketTimeMinusButtonEnabled(false);
+			} else
+			{
+				mTicketPayment.ticketTime = mTicketPayment.ticketTimes[position];
+
+				mFnBBookingLayout.setTicketTimePlusButtonEnabled(true);
+				mFnBBookingLayout.setTicketTime(mTicketPayment.ticketTime);
+			}
+		}
+
 		@Override
 		public void plusTicketCount()
 		{
@@ -197,11 +296,13 @@ public class FnBPaymentActivity extends TicketPaymentActivity
 
 			if (count >= maxCount)
 			{
-				DailyToast.showToast(FnBPaymentActivity.this, getString(R.string.toast_msg_maxcount_ticket, maxCount), Toast.LENGTH_SHORT);
+				mFnBBookingLayout.setTicketCountPlusButtonEnabled(false);
+//				DailyToast.showToast(FnBPaymentActivity.this, getString(R.string.toast_msg_maxcount_ticket, maxCount), Toast.LENGTH_SHORT);
 			} else
 			{
 				mTicketPayment.ticketCount = count + 1;
 				mFnBBookingLayout.setTicketCount(mTicketPayment.ticketCount);
+				mFnBBookingLayout.setTicketCountMinusButtonEnabled(true);
 
 				// 결제 가격을 바꾸어야 한다.
 				mFnBBookingLayout.updatePaymentInformationLayout(FnBPaymentActivity.this, mTicketPayment, mSelectedCreditCard);
@@ -215,10 +316,12 @@ public class FnBPaymentActivity extends TicketPaymentActivity
 
 			if (count <= 1)
 			{
+				mFnBBookingLayout.setTicketCountMinusButtonEnabled(false);
 			} else
 			{
 				mTicketPayment.ticketCount = count - 1;
 				mFnBBookingLayout.setTicketCount(mTicketPayment.ticketCount);
+				mFnBBookingLayout.setTicketCountPlusButtonEnabled(true);
 
 				// 결제 가격을 바꾸어야 한다.
 				mFnBBookingLayout.updatePaymentInformationLayout(FnBPaymentActivity.this, mTicketPayment, mSelectedCreditCard);
@@ -380,7 +483,7 @@ public class FnBPaymentActivity extends TicketPaymentActivity
 
 				if (isOnSale == true && msg_code == 0)
 				{
-					mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, FnBPaymentActivity.this));
+					mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_INFO).toString(), null, mUserSessionBillingCardInfoJsonResponseListener, FnBPaymentActivity.this));
 				} else
 				{
 					if (response.has("msg") == true)
@@ -435,6 +538,43 @@ public class FnBPaymentActivity extends TicketPaymentActivity
 					//					jsonObject.getInt("available_ticket_count");
 					int maxCount = jsonObject.getInt("max_sale_count");
 
+					JSONArray timeJSONArray = jsonObject.getJSONArray("eating_time_list");
+
+					int length = timeJSONArray.length();
+					long[] times = new long[length];
+
+					for(int i = 0; i < length; i++)
+					{
+						times[i] = timeJSONArray.getLong(i);
+					}
+
+					if(mTicketPayment.ticketTime == 0)
+					{
+						mTicketPayment.ticketTime = times[0];
+
+					} else
+					{
+						boolean isExistTime = false;
+
+						for(int i = 0; i < length; i++)
+						{
+							times[i] = timeJSONArray.getLong(i);
+
+							if (Long.compare(mTicketPayment.ticketTime, times[i]) == 0)
+							{
+								isExistTime = true;
+							}
+						}
+
+						// 시간 값이 없어진 경우
+						if(isExistTime == false)
+						{
+							mIsChangedTime = true;
+						}
+					}
+
+					mTicketPayment.ticketTimes = times;
+
 					switch (mState)
 					{
 						case STATE_NONE:
@@ -457,7 +597,7 @@ public class FnBPaymentActivity extends TicketPaymentActivity
 
 							mTicketPayment.checkInTime = formatDay.format(calendarCheckin.getTime());
 
-							mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_INFO).toString(), null, mUserSessionBillingCardInfoJsonResponseListener, FnBPaymentActivity.this));
+							requestValidateTicketPayment(mTicketPayment, mCheckInSaleTime);
 							break;
 						}
 
@@ -485,6 +625,18 @@ public class FnBPaymentActivity extends TicketPaymentActivity
 								}
 
 								showChangedPayDialog();
+							} else if(mIsChangedTime == true)
+							{
+								mIsChangedTime = false;
+
+								// 현재 있는 팝업을 없애도록 한다.
+								if (mFinalCheckDialog != null && mFinalCheckDialog.isShowing() == true)
+								{
+									mFinalCheckDialog.cancel();
+									mFinalCheckDialog = null;
+								}
+
+								showChangedTimeDialog();
 							} else
 							{
 								processPayment();

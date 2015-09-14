@@ -75,11 +75,11 @@ public class FnBListFragment extends PlaceListFragment
 
 		if (Util.isOverAPI12() == true)
 		{
-			mListView.addHeaderView(inflater.inflate(R.layout.list_header_empty_109, null, true));
+			mListView.addHeaderView(inflater.inflate(R.layout.list_header_empty_164, null, true));
 			mListView.setOnScrollListener(mOnScrollListener);
 		} else
 		{
-			mListView.setPadding(0, Util.dpToPx(baseActivity, 109), 0, 0);
+			mListView.setPadding(0, Util.dpToPx(baseActivity, 164), 0, 0);
 		}
 
 		mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
@@ -224,6 +224,26 @@ public class FnBListFragment extends PlaceListFragment
 		}
 
 		return mPlaceListAdapter.getData();
+	}
+
+	@Override
+	protected void setVisibility(VIEW_TYPE type)
+	{
+		super.setVisibility(type);
+
+		if(mOnUserActionListener != null)
+		{
+			switch(type)
+			{
+				case LIST:
+					mOnUserActionListener.setHeaderSectionVisible(true);
+					break;
+
+				default:
+					mOnUserActionListener.setHeaderSectionVisible(false);
+					break;
+			}
+		}
 	}
 
 	@Override

@@ -67,9 +67,9 @@ public class FnBBookingDetail extends PlaceBookingDetail
 
 		ticketCount = jsonObject.getInt("ticket_count");
 		ticketName = jsonObject.getString("ticket_name");
-		long day = jsonObject.getLong("sday");
+		long day = jsonObject.getLong("arrival_time");
 
-		SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd(EEE)", Locale.KOREA);
+		SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd(EEE) HH:mm", Locale.KOREA);
 		format.setTimeZone(TimeZone.getTimeZone("GMT"));
 
 		sday = format.format(new Date(day));
