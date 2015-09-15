@@ -33,6 +33,11 @@ public class DailyToast extends Toast
 	 */
 	public static void showToast(Context context, int resId, int duration)
 	{
+		if(context == null)
+		{
+			return;
+		}
+
 		synchronized (mLock)
 		{
 			if (mToast != null)
@@ -57,6 +62,11 @@ public class DailyToast extends Toast
 	 */
 	public static void showToast(Context context, String text, int duration)
 	{
+		if(context == null)
+		{
+			return;
+		}
+
 		synchronized (mLock)
 		{
 			if (mToast != null)

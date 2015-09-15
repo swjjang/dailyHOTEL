@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
@@ -22,6 +23,7 @@ import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.FnBBookingDetail;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.view.widget.DailyToast;
 
 public class FnBTabBookingFragment extends BaseFragment implements Constants
 {
@@ -91,7 +93,6 @@ public class FnBTabBookingFragment extends BaseFragment implements Constants
 
 		// 영수증 발급
 		TextView viewReceiptTextView = (TextView) view.findViewById(R.id.viewReceiptTextView);
-		TextView guideReceiptTextView = (TextView) view.findViewById(R.id.guideReceiptTextView);
 
 		if (DEBUG == true)
 		{
@@ -102,8 +103,6 @@ public class FnBTabBookingFragment extends BaseFragment implements Constants
 		{
 			viewReceiptTextView.setTextColor(getResources().getColor(R.color.white));
 			viewReceiptTextView.setBackgroundResource(R.color.dh_theme_color);
-			guideReceiptTextView.setVisibility(View.INVISIBLE);
-
 			viewReceiptTextView.setOnClickListener(new View.OnClickListener()
 			{
 				@Override
@@ -125,7 +124,14 @@ public class FnBTabBookingFragment extends BaseFragment implements Constants
 		{
 			viewReceiptTextView.setTextColor(getResources().getColor(R.color.hoteldetail_soldout_text));
 			viewReceiptTextView.setBackgroundResource(R.color.hoteldetail_soldout_background);
-			guideReceiptTextView.setText(R.string.message_cant_issuing_receipt);
+			viewReceiptTextView.setOnClickListener(new View.OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+					DailyToast.showToast(getActivity(), R.string.message_cant_issuing_ticketreceipt, Toast.LENGTH_SHORT);
+				}
+			});
 		}
 
 		return view;

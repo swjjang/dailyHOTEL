@@ -31,6 +31,7 @@ import com.twoheart.dailyhotel.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.view.widget.DailyToast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -112,7 +113,6 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 
 		// 영수증 발급
 		TextView viewReceiptTextView = (TextView) view.findViewById(R.id.viewReceiptTextView);
-		TextView guideReceiptTextView = (TextView) view.findViewById(R.id.guideReceiptTextView);
 
 		if (DEBUG == true)
 		{
@@ -123,8 +123,6 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 		{
 			viewReceiptTextView.setTextColor(getResources().getColor(R.color.white));
 			viewReceiptTextView.setBackgroundResource(R.color.dh_theme_color);
-			guideReceiptTextView.setVisibility(View.INVISIBLE);
-
 			viewReceiptTextView.setOnClickListener(new View.OnClickListener()
 			{
 				@Override
@@ -146,7 +144,14 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 		{
 			viewReceiptTextView.setTextColor(getResources().getColor(R.color.hoteldetail_soldout_text));
 			viewReceiptTextView.setBackgroundResource(R.color.hoteldetail_soldout_background);
-			guideReceiptTextView.setText(R.string.message_cant_issuing_receipt);
+			viewReceiptTextView.setOnClickListener(new View.OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+					DailyToast.showToast(getActivity(), R.string.message_cant_issuing_receipt, Toast.LENGTH_SHORT);
+				}
+			});
 		}
 
 		lockUI();

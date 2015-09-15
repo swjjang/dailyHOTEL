@@ -15,9 +15,8 @@
         android:layout_height="108dp"
         android:layout_marginTop="56dp"
         android:background="@color/headersectionbar"
-        android:gravity="center_horizontal"
+        android:gravity="center"
         android:orientation="vertical"
-        android:paddingTop="19dp"
         android:visibility="invisible">
 
         <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
@@ -41,7 +40,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="9dp"
             android:gravity="center_horizontal"
-            android:lineSpacingExtra="5dp"
             android:text="@string/label_fnblistfragment_header_text"
             android:textColor="@color/headersectionbar_text"
             android:textSize="13dp"

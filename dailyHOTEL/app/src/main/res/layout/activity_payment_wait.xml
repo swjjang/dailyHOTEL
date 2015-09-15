@@ -33,66 +33,60 @@
             <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                 android:id="@+id/tv_payment_wait_hotel_name"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/shape_section_background"
+                android:layout_height="56dp"
+                android:background="@color/section_background"
                 android:gravity="center"
                 android:padding="15dp"
                 android:text="데일리 슈퍼 프리미어 호텔"
-                android:textColor="@color/textView_textColor_section"
-                android:textSize="16dp"/>
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                android:textStyle="bold"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/common_border"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/shape_section_background"
-                    android:orientation="horizontal"
-                    android:paddingBottom="9dp"
-                    android:paddingLeft="13dp"
-                    android:paddingTop="20dp">
-
-                    <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical"
-                        android:text="@string/act_wait_payment_payinfo"
-                        android:textColor="@color/textView_textColor_section"
-                        android:textSize="15dp"/>
-                </LinearLayout>
+                    android:layout_height="44dp"
+                    android:background="@color/section_background"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:text="@string/act_wait_payment_payinfo"
+                    android:textColor="@color/textView_textColor_section"
+                    android:textSize="13dp"
+                    android:textStyle="bold"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingBottom="20dp"
+                    android:paddingBottom="27dp"
                     android:paddingLeft="13dp"
                     android:paddingRight="15dp"
-                    android:paddingTop="20dp">
+                    android:paddingTop="7dp"
+                    >
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_height="50dp"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal">
 
-                        <LinearLayout
+                        <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.3"
-                            android:orientation="horizontal">
-
-                            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:singleLine="true"
-                                android:text="@string/act_wait_payment_accounts_no"
-                                android:textColor="@color/textView_textColor_section"
-                                android:textSize="15dp"/>
-                        </LinearLayout>
+                            android:singleLine="true"
+                            android:text="@string/act_wait_payment_accounts_no"
+                            android:textColor="@color/textView_textColor_section"
+                            android:textSize="15dp"/>
 
                         <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                             android:id="@+id/tv_payment_wait_account"
@@ -111,24 +105,19 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="50dp"
                         android:layout_marginTop="10dp"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal">
 
-                        <LinearLayout
+                        <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.3"
-                            android:orientation="horizontal">
-
-                            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:singleLine="true"
-                                android:text="@string/act_wait_payment_name"
-                                android:textColor="@color/textView_textColor_section"
-                                android:textSize="15dp"/>
-                        </LinearLayout>
+                            android:singleLine="true"
+                            android:text="@string/act_wait_payment_name"
+                            android:textColor="@color/textView_textColor_section"
+                            android:textSize="15dp"/>
 
                         <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                             android:id="@+id/tv_payment_wait_name"
@@ -147,24 +136,19 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="50dp"
                         android:layout_marginTop="10dp"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal">
 
-                        <LinearLayout
+                        <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.3"
-                            android:orientation="horizontal">
-
-                            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:singleLine="true"
-                                android:text="@string/act_wait_payment_price"
-                                android:textColor="@color/textView_textColor_section"
-                                android:textSize="15dp"/>
-                        </LinearLayout>
+                            android:singleLine="true"
+                            android:text="@string/act_wait_payment_price"
+                            android:textColor="@color/textView_textColor_section"
+                            android:textSize="15dp"/>
 
                         <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                             android:id="@+id/tv_payment_wait_price"
@@ -183,24 +167,19 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="50dp"
                         android:layout_marginTop="10dp"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal">
 
-                        <LinearLayout
+                        <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.3"
-                            android:orientation="horizontal">
-
-                            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:singleLine="true"
-                                android:text="@string/act_wait_payment_limit"
-                                android:textColor="@color/textView_textColor_section"
-                                android:textSize="15dp"/>
-                        </LinearLayout>
+                            android:singleLine="true"
+                            android:text="@string/act_wait_payment_limit"
+                            android:textColor="@color/textView_textColor_section"
+                            android:textSize="15dp"/>
 
                         <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                             android:id="@+id/tv_payment_wait_deadline"
@@ -219,68 +198,72 @@
                 </LinearLayout>
             </LinearLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/common_border"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/shape_section_background"
-                    android:orientation="horizontal"
-                    android:paddingBottom="9dp"
-                    android:paddingLeft="13dp"
-                    android:paddingTop="20dp">
-
-                    <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical"
-                        android:text="@string/act_wait_payment_confirm"
-                        android:textColor="@color/textView_textColor_section"
-                        android:textSize="15dp"/>
-                </LinearLayout>
+                    android:layout_height="44dp"
+                    android:background="@color/section_background"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:text="@string/act_wait_payment_confirm"
+                    android:textColor="@color/textView_textColor_section"
+                    android:textSize="13dp"
+                    android:textStyle="bold"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/tv_payment_wait_guide1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="27dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="24dp"
                     android:gravity="center_horizontal"
                     android:lineSpacingExtra="2dp"
-                    android:padding="10dp"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
                     android:textSize="15dp"/>
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/common_border"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/shape_section_background"
-                    android:orientation="horizontal"
-                    android:paddingBottom="9dp"
-                    android:paddingLeft="13dp"
-                    android:paddingTop="20dp">
-
-                    <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical"
-                        android:text="@string/act_wait_payment_msg1"
-                        android:textColor="@color/textView_textColor_section"
-                        android:textSize="15dp"/>
-                </LinearLayout>
+                    android:layout_height="44dp"
+                    android:background="@color/section_background"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:text="@string/act_wait_payment_msg1"
+                    android:textColor="@color/textView_textColor_section"
+                    android:textSize="13dp"
+                    android:textStyle="bold"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                     android:id="@+id/tv_payment_wait_guide2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="27dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="24dp"
                     android:gravity="center_horizontal"
-                    android:padding="10dp"
                     android:textSize="15dp"/>
             </LinearLayout>
         </LinearLayout>

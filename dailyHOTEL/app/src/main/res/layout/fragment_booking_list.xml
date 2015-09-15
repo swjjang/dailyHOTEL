@@ -56,7 +56,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="18dp"
                     android:gravity="center"
-                    android:lineSpacingExtra="5dp"
                     android:text="@string/frag_booking_line"
                     android:textColor="@color/white"
                     android:textSize="16dp"/>
@@ -67,6 +66,7 @@
                 android:layout_height="match_parent"
                 android:layout_above="@id/textLayout"
                 android:layout_centerHorizontal="true"
+                android:layout_marginTop="15dp"
                 android:gravity="center"
                 android:src="@drawable/no_event_ic"/>
         </RelativeLayout>
