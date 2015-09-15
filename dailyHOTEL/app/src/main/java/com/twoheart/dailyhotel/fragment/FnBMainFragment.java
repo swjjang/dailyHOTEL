@@ -15,7 +15,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.MainActivity;
@@ -51,7 +50,7 @@ public class FnBMainFragment extends PlaceMainFragment
 	private Province mSelectedProvince;
 
 	private FragmentViewPager mFragmentViewPager;
-	private View mHeaderTextView;
+	private View mHeaderSectionLayout;
 
 	private interface OnUserAnalyticsActionListener
 	{
@@ -65,7 +64,16 @@ public class FnBMainFragment extends PlaceMainFragment
 	{
 		View view = inflater.inflate(R.layout.fragment_fnb_main, container, false);
 
-		mHeaderTextView = view.findViewById(R.id.headerSectionBar);
+		mHeaderSectionLayout = view.findViewById(R.id.headerSectionBar);
+		mHeaderSectionLayout.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+
+			}
+		});
+
 		mFragmentViewPager = (FragmentViewPager) view.findViewById(R.id.fragmentViewPager);
 		mFragmentList = new ArrayList<PlaceListFragment>();
 
@@ -363,22 +371,22 @@ public class FnBMainFragment extends PlaceMainFragment
 		@Override
 		public void setHeaderSectionVisible(boolean isVisible)
 		{
-			if(mHeaderTextView == null)
+			if(mHeaderSectionLayout == null)
 			{
 				return;
 			}
 
 			if(isVisible == true)
 			{
-				if(mHeaderTextView.getVisibility() != View.VISIBLE)
+				if(mHeaderSectionLayout.getVisibility() != View.VISIBLE)
 				{
-					mHeaderTextView.setVisibility(View.VISIBLE);
+					mHeaderSectionLayout.setVisibility(View.VISIBLE);
 				}
 			} else
 			{
-				if(mHeaderTextView.getVisibility() != View.INVISIBLE)
+				if(mHeaderSectionLayout.getVisibility() != View.INVISIBLE)
 				{
-					mHeaderTextView.setVisibility(View.INVISIBLE);
+					mHeaderSectionLayout.setVisibility(View.INVISIBLE);
 				}
 			}
 		}
