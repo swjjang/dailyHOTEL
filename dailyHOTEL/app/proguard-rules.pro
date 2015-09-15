@@ -71,4 +71,7 @@
 -keep class android.support.v7.** { *; }
 -keep interface android.support.v7.** { *; }
 
+-keep class com.google.android.** { *; }
+-keep interface com.google.android.** { *; }
+
 -dontwarn android.support.v4.**, android.support.v7.**, com.ning.http.client.**,org.jboss.netty.**, org.slf4j.**, com.fasterxml.jackson.databind.**, com.google.android.gms.**, com.crashlytics.**, com.google.**, org.apache.http.**, android.net.http.AndroidHttpClient, com.android.volley.**

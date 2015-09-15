@@ -403,7 +403,7 @@ public class FnBDetailLayout extends PlaceDetailLayout
 		 */
 		private View getTitleView(View view, PlaceDetail placeDetail)
 		{
-			mTitleLaout = view.findViewById(R.id.hotelTitleLayout);
+			mTitleLayout = view.findViewById(R.id.hotelTitleLayout);
 
 			// 등급
 			mGradeTextView = (TextView) view.findViewById(R.id.hotelGradeTextView);

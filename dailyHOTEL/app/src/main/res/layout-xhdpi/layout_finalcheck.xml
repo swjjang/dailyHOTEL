@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="10dp" >
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:padding="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,13 +13,13 @@
         android:paddingBottom="22dp"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
-        android:paddingTop="22dp" >
+        android:paddingTop="22dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="22dp"
-            android:gravity="center" >
+            android:gravity="center">
 
             <ImageView
                 android:id="@+id/logo"
@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:adjustViewBounds="true"
-                android:src="@drawable/popup_ic_alert_signature" />
+                android:src="@drawable/popup_ic_alert_signature"/>
 
             <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                 android:id="@+id/titleTextView"
@@ -38,19 +38,19 @@
                 android:text="@string/label_booking_confirm_signature"
                 android:textColor="@color/dialog_title_text"
                 android:textSize="17dp"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/messageLayout1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:src="@drawable/popup_ic_alert_dot" />
+                android:src="@drawable/popup_ic_alert_dot"/>
 
             <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                 android:id="@+id/messageTextView1"
@@ -61,20 +61,20 @@
                 android:lineSpacingExtra="3dp"
                 android:text="@string/dialog_msg_payment_message01"
                 android:textColor="@color/dialog_message_text"
-                android:textSize="13dp" />
+                android:textSize="13dp"/>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/messageLayout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp" >
+            android:layout_marginTop="12dp">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:src="@drawable/popup_ic_alert_dot" />
+                android:src="@drawable/popup_ic_alert_dot"/>
 
             <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                 android:id="@+id/messageTextView2"
@@ -85,20 +85,20 @@
                 android:lineSpacingExtra="3dp"
                 android:text="@string/dialog_msg_payment_message02"
                 android:textColor="@color/dialog_message_text"
-                android:textSize="13dp" />
+                android:textSize="13dp"/>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/messageLayout3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp" >
+            android:layout_marginTop="12dp">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:src="@drawable/popup_ic_alert_dot" />
+                android:src="@drawable/popup_ic_alert_dot"/>
 
             <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                 android:id="@+id/messageTextView3"
@@ -109,18 +109,18 @@
                 android:lineSpacingExtra="3dp"
                 android:text="@string/dialog_msg_payment_message03"
                 android:textColor="@color/dialog_message_text"
-                android:textSize="13dp" />
+                android:textSize="13dp"/>
         </LinearLayout>
 
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="22dp" >
+            android:layout_marginTop="22dp">
 
             <com.twoheart.dailyhotel.view.widget.DailySignatureView
                 android:id="@+id/signatureView"
                 android:layout_width="match_parent"
-                android:layout_height="160dp" />
+                android:layout_height="160dp"/>
 
             <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                 android:id="@+id/agreeSinatureTextView"
@@ -132,7 +132,7 @@
                 android:lineSpacingExtra="3dp"
                 android:text="@string/dialog_msg_payment_message07"
                 android:textColor="@color/dialog_agree_text"
-                android:textSize="13dp" />
+                android:textSize="13dp"/>
         </FrameLayout>
     </LinearLayout>
 
@@ -141,12 +141,12 @@
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:background="@drawable/popup_btn_off"
-        android:gravity="center" >
+        android:gravity="center">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/popup_ic_signature_ok" />
+            android:src="@drawable/popup_ic_signature_ok"/>
 
         <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
             android:layout_width="wrap_content"
@@ -156,7 +156,7 @@
             android:text="@string/dialog_btn_text_pay"
             android:textColor="@color/white"
             android:textSize="17dp"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
     </LinearLayout>
 
 </LinearLayout>

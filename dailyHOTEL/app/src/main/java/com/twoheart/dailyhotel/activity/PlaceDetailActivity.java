@@ -127,6 +127,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
 		public void prevSlide();
 	}
 
+	protected abstract PlaceDetailLayout getLayout(BaseActivity activity, String imageUrl);
+
 	protected abstract void requestPlaceDetailInformation(PlaceDetail placeDetail, SaleTime checkInSaleTime);
 
 	protected abstract PlaceDetail createPlaceDetail(Intent intent);
@@ -194,7 +196,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 	{
 		if (mPlaceDetailLayout == null)
 		{
-			mPlaceDetailLayout = new FnBDetailLayout(this, imageUrl);
+			mPlaceDetailLayout = getLayout(this, imageUrl);
 			mPlaceDetailLayout.setUserActionListener(mOnUserActionListener);
 			mPlaceDetailLayout.setImageActionListener(mOnImageActionListener);
 

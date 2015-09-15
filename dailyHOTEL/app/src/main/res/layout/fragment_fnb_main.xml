@@ -31,7 +31,7 @@
 
         <View
             android:layout_width="53dp"
-            android:layout_height="4px"
+            android:layout_height="2dp"
             android:layout_marginTop="9dp"
             android:background="@color/headersectionbar_text"
             android:gravity="center_vertical"/>
@@ -40,8 +40,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="9dp"
-            android:lineSpacingExtra="5dp"
             android:gravity="center_horizontal"
+            android:lineSpacingExtra="5dp"
             android:text="@string/label_fnblistfragment_header_text"
             android:textColor="@color/headersectionbar_text"
             android:textSize="13dp"

@@ -92,6 +92,12 @@ public class FnBListFragment extends PlaceListFragment
 
 		setVisibility(mViewType);
 
+		// 화면에 헤더바가 잠깐 나왔다가 사라지는 경우가 있어서
+		if(mOnUserActionListener != null)
+		{
+			mOnUserActionListener.setHeaderSectionVisible(false);
+		}
+
 		ActionBarPullToRefresh.from(baseActivity).options(Options.create().scrollDistance(.3f).headerTransformer(new DailyHotelHeaderTransformer()).build()).allChildrenArePullable().listener(this).useViewDelegate(AbsListView.class, new AbsListViewDelegate()).setup(mPullToRefreshLayout);
 
 		mListView.setShadowVisible(false);

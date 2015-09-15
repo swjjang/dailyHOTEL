@@ -49,7 +49,7 @@ public abstract class PlaceDetailLayout
 	protected ViewGroup mViewGroupRoot;
 	protected LoopViewPager mViewPager;
 
-	protected View mTitleLaout;
+	protected View mTitleLayout;
 	protected TextView mGradeTextView;
 	protected TextView mNameTextView;
 	protected TextView mActionBarTextView;
@@ -875,13 +875,13 @@ public abstract class PlaceDetailLayout
 				mStatusBarHeight = rect.top;
 			}
 
-			if (mTitleLaout == null)
+			if (mTitleLayout == null)
 			{
 				return;
 			}
 
 			Rect rect = new Rect();
-			mTitleLaout.getGlobalVisibleRect(rect);
+			mTitleLayout.getGlobalVisibleRect(rect);
 
 			if (rect.top == rect.right)
 			{

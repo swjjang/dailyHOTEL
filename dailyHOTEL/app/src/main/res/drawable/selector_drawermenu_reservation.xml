@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:state_pressed="true" android:drawable="@drawable/img_ic_reservation_normal" />
-    <item android:state_selected="true" android:drawable="@drawable/img_ic_reservation_normal" />
-    <item android:state_activated="false" android:drawable="@drawable/img_ic_reservation_normal" />
-    <item android:drawable="@drawable/img_ic_reservation_normal" />
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/img_ic_reservation_normal" android:state_pressed="true"/>
+    <item android:drawable="@drawable/img_ic_reservation_normal" android:state_selected="true"/>
+    <item android:drawable="@drawable/img_ic_reservation_normal" android:state_activated="false"/>
+    <item android:drawable="@drawable/img_ic_reservation_normal"/>
 
 </selector>

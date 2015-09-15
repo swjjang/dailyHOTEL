@@ -27,12 +27,12 @@ public class SaleRoomInformation implements Parcelable
 		roomIndex = jsonObject.getInt("room_idx");
 		averageDiscount = jsonObject.getInt("discount_avg");
 		totalDiscount = jsonObject.getInt("discount_total");
-		roomName = jsonObject.getString("room_name");
-		option = jsonObject.getString("option");
+		roomName = jsonObject.getString("room_name").trim();
+		option = jsonObject.getString("option").trim();
 
 		if (jsonObject.has("room_benefit") == true)
 		{
-			roomBenefit = jsonObject.getString("room_benefit");
+			roomBenefit = jsonObject.getString("room_benefit").trim();
 		}
 
 		this.isOverseas = isOverseas;

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape>
-            <solid android:color="@color/common_border" />
+            <solid android:color="@color/common_border"/>
         </shape>
     </item>
     <item
-        android:top="0.5dp"
-        android:bottom="0.5dp">
+        android:bottom="0.5dp"
+        android:top="0.5dp">
         <shape>
-            <solid android:color="@color/activity_background" />
+            <solid android:color="@color/activity_background"/>
         </shape>
     </item>
 

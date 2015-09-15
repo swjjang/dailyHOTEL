@@ -17,19 +17,20 @@
             android:layout_height="44dp"
             android:background="@color/section_background"
             android:gravity="center_vertical"
+            android:paddingLeft="15dp"
             android:text="@string/act_booking_chkin"
             android:textColor="@color/textView_textColor_section"
             android:textSize="13dp"
-            android:textStyle="bold"
-            android:paddingLeft="15dp"/>
+            android:textStyle="bold"/>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginBottom="7dp"
             android:layout_marginTop="7dp"
-            android:gravity="center_vertical"
-            android:paddingLeft="15dp">
+            android:gravity="center"
+            android:paddingLeft="15dp"
+            >
 
             <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                 android:id="@+id/checkinDayTextView"
@@ -43,9 +44,10 @@
                 android:id="@+id/checkinTimeTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/checkinDayTextView"
                 android:textColor="@color/dh_theme_color"
                 android:textSize="15dp"/>
-        </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
 
     <View
@@ -57,28 +59,27 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
             android:layout_width="match_parent"
             android:layout_height="44dp"
             android:background="@color/section_background"
             android:gravity="center_vertical"
+            android:paddingLeft="15dp"
             android:text="@string/act_booking_chkout"
             android:textColor="@color/textView_textColor_section"
             android:textSize="13dp"
-            android:textStyle="bold"
-            android:paddingLeft="15dp"/>
+            android:textStyle="bold"/>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="7dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
             android:layout_marginBottom="7dp"
+            android:layout_marginTop="7dp"
+            android:gravity="center"
+            android:orientation="horizontal"
             android:paddingLeft="15dp">
 
             <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
@@ -93,8 +94,9 @@
                 android:id="@+id/checkoutTimeTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/checkoutDayTextView"
                 android:textColor="@color/dh_theme_color"
                 android:textSize="15dp"/>
-        </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
 </LinearLayout>

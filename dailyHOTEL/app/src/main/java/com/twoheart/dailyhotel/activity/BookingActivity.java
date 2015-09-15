@@ -2068,7 +2068,7 @@ public class BookingActivity extends
 				SimpleDateFormat formatDay = new SimpleDateFormat("M월 d일 (EEE)", Locale.KOREA);
 				formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
 
-				SimpleDateFormat formatHour = new SimpleDateFormat("HH시", Locale.KOREA);
+				SimpleDateFormat formatHour = new SimpleDateFormat(" HH시", Locale.KOREA);
 				formatHour.setTimeZone(TimeZone.getTimeZone("GMT"));
 
 				mCheckinDayTextView.setText(formatDay.format(calendarCheckin.getTime()));

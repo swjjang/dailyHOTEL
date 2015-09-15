@@ -235,7 +235,7 @@ public class FnBPaymentActivity extends TicketPaymentActivity
 			{
 				long selectedtime = mTicketPayment.ticketTimes[i];
 
-				if(Long.compare(selectedtime, mTicketPayment.ticketTime) == 0)
+				if(selectedtime == mTicketPayment.ticketTime)
 				{
 					position = i;
 					break;
@@ -245,6 +245,7 @@ public class FnBPaymentActivity extends TicketPaymentActivity
 			if (++position >= length)
 			{
 				mFnBBookingLayout.setTicketTimePlusButtonEnabled(false);
+				DailyToast.showToast(FnBPaymentActivity.this, getString(R.string.toast_msg_none_reservationtime_ticket), Toast.LENGTH_SHORT);
 			} else
 			{
 				mTicketPayment.ticketTime = mTicketPayment.ticketTimes[position];
@@ -269,7 +270,7 @@ public class FnBPaymentActivity extends TicketPaymentActivity
 			{
 				long selectedtime = mTicketPayment.ticketTimes[i];
 
-				if(Long.compare(selectedtime, mTicketPayment.ticketTime) == 0)
+				if(selectedtime == mTicketPayment.ticketTime)
 				{
 					position = i;
 					break;
@@ -297,7 +298,7 @@ public class FnBPaymentActivity extends TicketPaymentActivity
 			if (count >= maxCount)
 			{
 				mFnBBookingLayout.setTicketCountPlusButtonEnabled(false);
-//				DailyToast.showToast(FnBPaymentActivity.this, getString(R.string.toast_msg_maxcount_ticket, maxCount), Toast.LENGTH_SHORT);
+				DailyToast.showToast(FnBPaymentActivity.this, getString(R.string.toast_msg_maxcount_ticket, maxCount), Toast.LENGTH_SHORT);
 			} else
 			{
 				mTicketPayment.ticketCount = count + 1;
@@ -560,7 +561,7 @@ public class FnBPaymentActivity extends TicketPaymentActivity
 						{
 							times[i] = timeJSONArray.getLong(i);
 
-							if (Long.compare(mTicketPayment.ticketTime, times[i]) == 0)
+							if (mTicketPayment.ticketTime == times[i])
 							{
 								isExistTime = true;
 							}

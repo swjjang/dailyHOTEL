@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
 
     <!-- 결제 -->
 
@@ -50,13 +50,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
                 android:background="@null"
                 android:checked="false"
                 android:gravity="center"
                 android:paddingRight="0dp"
                 android:textOff=""
-                android:textOn=""
-                android:layout_centerVertical="true"/>
+                android:textOn=""/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -114,18 +114,16 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
             android:background="@color/booking_hline01"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:layout_marginBottom="7dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_marginTop="7dp"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="7dp">
+            android:gravity="center_vertical">
 
             <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
                 android:layout_width="wrap_content"
@@ -166,8 +164,8 @@
             android:layout_alignParentTop="true"
             android:layout_marginRight="15dp"
             android:layout_marginTop="7dp"
-            android:src="@drawable/payment_ic_card"
-            android:paddingLeft="10dp"/>
+            android:paddingLeft="10dp"
+            android:src="@drawable/payment_ic_card"/>
 
         <!-- 결제 종류 선택 -->
 
@@ -177,9 +175,9 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="27dp"
             android:layout_marginLeft="15dp"
+            android:layout_marginTop="7dp"
             android:layout_toLeftOf="@id/cardManagerButton"
-            android:orientation="vertical"
-            android:layout_marginTop="7dp">
+            android:orientation="vertical">
 
             <com.twoheart.dailyhotel.view.widget.DailyCustomFontRadioButton
                 android:id="@+id/easyPaymentRadioButton"

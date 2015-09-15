@@ -24,11 +24,11 @@
         <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:text="@string/label_booking_user_info"
             android:textColor="@color/textView_textColor_section"
             android:textSize="13dp"
-            android:textStyle="bold"
-            android:layout_centerVertical="true"/>
+            android:textStyle="bold"/>
 
         <LinearLayout
             android:id="@+id/editLinearLayout"
@@ -36,10 +36,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:paddingBottom="5dp"
             android:paddingLeft="15dp"
-            android:paddingTop="5dp"
             android:paddingRight="15dp"
-            android:paddingBottom="5dp">
+            android:paddingTop="5dp">
 
             <View
                 android:layout_width="28dp"

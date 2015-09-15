@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.activity;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -80,7 +81,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
 	 */
 	private class JavaScriptExtention
 	{
-
 		@JavascriptInterface
 		public void externalLink(String packageName, String uri)
 		{
@@ -98,7 +98,13 @@ public class EventWebActivity extends WebViewActivity implements Constants
 				}
 			}
 
-			startActivity(marketLaunch);
+			try
+			{
+				startActivity(marketLaunch);
+			}catch(ActivityNotFoundException e)
+			{
+
+			}
 		}
 
 		@JavascriptInterface
@@ -111,8 +117,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
 			{
 				marketLaunch.setData(Uri.parse(Constants.URL_STORE_GOOGLE_DAILYHOTEL_WEB));
 			}
-
-			startActivity(marketLaunch);
 		}
 
 		@JavascriptInterface

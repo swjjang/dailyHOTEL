@@ -1,11 +1,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" >
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
 
     <item
         android:id="@+id/action_list"
-        android:orderInCategory="100"
         android:icon="@drawable/actionbar_ic_picture"
+        android:orderInCategory="100"
         android:title="@string/label_list"
         app:showAsAction="always"/>
 </menu>

@@ -19,12 +19,20 @@ import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
+import com.twoheart.dailyhotel.view.FnBDetailLayout;
+import com.twoheart.dailyhotel.view.PlaceDetailLayout;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 
 import org.json.JSONObject;
 
 public class FnBDetailActivity extends PlaceDetailActivity
 {
+	@Override
+	protected PlaceDetailLayout getLayout(BaseActivity activity, String imageUrl)
+	{
+		return new FnBDetailLayout(activity, imageUrl);
+	}
+
 	@Override
 	protected PlaceDetail createPlaceDetail(Intent intent)
 	{
