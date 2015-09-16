@@ -140,7 +140,7 @@
         android:id="@+id/agreeLayout"
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:background="@drawable/popup_btn_off"
+        android:background="@drawable/transition_color"
         android:gravity="center">
 
         <ImageView

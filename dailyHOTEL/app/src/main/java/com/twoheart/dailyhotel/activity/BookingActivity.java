@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.TransitionDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -43,6 +44,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
@@ -1209,9 +1212,36 @@ public class BookingActivity extends
 			public void onConfirmSignature()
 			{
 				agreeLayout.setEnabled(true);
-				agreeLayout.setBackgroundResource(R.drawable.popup_btn_on);
 
-				agreeSinatureTextView.setVisibility(View.GONE);
+				AlphaAnimation animation = new AlphaAnimation(1.0f, 0.0f);
+				animation.setDuration(500);
+				animation.setFillBefore(true);
+				animation.setFillAfter(true);
+
+				animation.setAnimationListener(new Animation.AnimationListener()
+				{
+					@Override
+					public void onAnimationStart(Animation animation)
+					{
+					}
+
+					@Override
+					public void onAnimationEnd(Animation animation)
+					{
+						agreeSinatureTextView.setAnimation(null);
+						agreeSinatureTextView.setVisibility(View.GONE);
+					}
+
+					@Override
+					public void onAnimationRepeat(Animation animation)
+					{
+					}
+				});
+
+				TransitionDrawable transition = (TransitionDrawable) agreeLayout.getBackground();
+				transition.startTransition(500);
+
+				agreeSinatureTextView.startAnimation(animation);
 
 				agreeLayout.setOnClickListener(new View.OnClickListener()
 				{

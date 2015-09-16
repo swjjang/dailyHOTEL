@@ -114,7 +114,7 @@ public class DailySignatureView extends View
 		canvas.drawColor(getContext().getResources().getColor(R.color.white));
 
 		Paint paint = new Paint();
-		paint.setStrokeWidth(Util.dpToPx(getContext(), 1));
+		paint.setStrokeWidth(1);
 		paint.setStyle(Paint.Style.STROKE);
 		paint.setColor(getResources().getColor(R.color.dialog_agree_text));
 		canvas.drawRect(0, 0, canvas.getWidth() - paint.getStrokeWidth(), canvas.getHeight() - paint.getStrokeWidth(), paint);
