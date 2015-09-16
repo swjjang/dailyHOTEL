@@ -85,12 +85,8 @@ public class LoadingDialog
 
 	public boolean isVisible()
 	{
-		if (mDialog == null)
-		{
-			return false;
-		}
+		return mDialog != null && mDialog.isShowing();
 
-		return mDialog.isShowing();
 	}
 
 	public void show()

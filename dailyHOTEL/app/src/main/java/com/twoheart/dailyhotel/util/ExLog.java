@@ -690,8 +690,7 @@ public class ExLog
 		// Class Shot Name
 		String className = el.getClassName();
 		className = className.substring(className.lastIndexOf('.') + 1);
-		String caller = className + "." + el.getMethodName() + "() Line " + el.getLineNumber();
 
-		return caller;
+		return className + "." + el.getMethodName() + "() Line " + el.getLineNumber();
 	}
 }

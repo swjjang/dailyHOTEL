@@ -65,7 +65,7 @@ public class IssuingReceiptActivity extends BaseActivity
 	{
 		if (mIsFullscreen == true)
 		{
-			mIsFullscreen = !mIsFullscreen;
+			mIsFullscreen = false;
 			updateFullscreenStatus(mIsFullscreen);
 		} else
 		{

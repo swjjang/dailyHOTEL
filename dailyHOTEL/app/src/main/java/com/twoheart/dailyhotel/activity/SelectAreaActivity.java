@@ -374,17 +374,20 @@ public class SelectAreaActivity extends BaseActivity
 
 			boolean isSelected = false;
 
-			if (mSelectedProvince instanceof Area)
+			if(mSelectedProvince != null)
 			{
-				if (mSelectedProvince.index == area.index && mSelectedProvince.name.equalsIgnoreCase(area.name) == true)
+				if (mSelectedProvince instanceof Area)
 				{
-					isSelected = true;
-				}
-			} else if (mSelectedProvince instanceof Province)
-			{
-				if (mSelectedProvince.getProvinceIndex() == ((Province) area).getProvinceIndex() && area.index == -1)
+					if (mSelectedProvince.index == area.index && mSelectedProvince.name.equalsIgnoreCase(area.name) == true)
+					{
+						isSelected = true;
+					}
+				} else
 				{
-					isSelected = true;
+					if (mSelectedProvince.getProvinceIndex() == ((Province) area).getProvinceIndex() && area.index == -1)
+					{
+						isSelected = true;
+					}
 				}
 			}
 

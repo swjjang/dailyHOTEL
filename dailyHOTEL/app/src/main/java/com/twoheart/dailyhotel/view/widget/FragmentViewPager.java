@@ -171,13 +171,7 @@ public class FragmentViewPager extends LinearLayout
 		@Override
 		public boolean onInterceptTouchEvent(MotionEvent event)
 		{
-			if (true == mEnable)
-			{
-				return super.onInterceptTouchEvent(event);
-			} else
-			{
-				return false;
-			}
+			return true == mEnable && super.onInterceptTouchEvent(event);
 		}
 
 		@Override

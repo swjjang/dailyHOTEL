@@ -123,8 +123,7 @@ public class TabInfoFragment extends BaseFragment
 	public int getPixels(int dipValue, Context context)
 	{
 		Resources r = context.getResources();
-		int px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, r.getDisplayMetrics());
-		return px;
+		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, r.getDisplayMetrics());
 	}
 
 }

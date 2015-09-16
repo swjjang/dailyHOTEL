@@ -436,7 +436,6 @@ public class CreditFragment
 
 	private DailyHotelStringResponseListener mReserveSavedMoneyStringResponseListener = new DailyHotelStringResponseListener()
 	{
-
 		@Override
 		public void onResponse(String url, String response)
 		{
@@ -457,7 +456,18 @@ public class CreditFragment
 				}
 
 				DecimalFormat comma = new DecimalFormat("###,##0");
-				String str = comma.format(Integer.parseInt(result));
+
+				int bonus = 0;
+
+				try
+				{
+					bonus = Integer.parseInt(result);
+				}catch(NumberFormatException e)
+				{
+					ExLog.d(e.toString());
+				}
+
+				String str = comma.format(bonus);
 
 				tvBonus.setText(new StringBuilder(str).append(Html.fromHtml(getString(R.string.currency))));
 

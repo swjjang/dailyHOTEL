@@ -48,8 +48,7 @@ public class Crypto
 			if (inputValue == null)
 				throw new Exception("Can't conver to Message Digest 5 String value!!");
 			byte[] ret = digest("MD5", inputValue.getBytes());
-			String result = Base64.encodeToString(ret, 0);
-			return result;
+			return Base64.encodeToString(ret, 0);
 		} catch (Exception e)
 		{
 			return null;
@@ -75,9 +74,8 @@ public class Crypto
 		byte[] rawKey = getRawKey(seed.getBytes());
 		byte[] result = encrypt(rawKey, text.getBytes());
 		String fromHex = toHex(result);
-		String base64 = new String(Base64.encodeToString(fromHex.getBytes(), Base64.NO_WRAP));
 
-		return base64;
+		return new String(Base64.encodeToString(fromHex.getBytes(), Base64.NO_WRAP));
 	}
 
 	public static String decrypt(String seed, String encrypted) throws Exception
@@ -126,9 +124,8 @@ public class Crypto
 		}
 
 		SecretKey skey = kgen.generateKey();
-		byte[] raw = skey.getEncoded();
 
-		return raw;
+		return skey.getEncoded();
 	}
 
 	private static byte[] encrypt(byte[] raw, byte[] clear) throws Exception
@@ -136,8 +133,7 @@ public class Crypto
 		SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
 		Cipher cipher = Cipher.getInstance("AES");
 		cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
-		byte[] encrypted = cipher.doFinal(clear);
-		return encrypted;
+		return cipher.doFinal(clear);
 	}
 
 	private static byte[] decrypt(byte[] raw, byte[] encrypted) throws Exception
@@ -145,8 +141,7 @@ public class Crypto
 		SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
 		Cipher cipher = Cipher.getInstance("AES");
 		cipher.init(Cipher.DECRYPT_MODE, skeySpec);
-		byte[] decrypted = cipher.doFinal(encrypted);
-		return decrypted;
+		return cipher.doFinal(encrypted);
 	}
 
 	private static byte[] toByte(String hexString)

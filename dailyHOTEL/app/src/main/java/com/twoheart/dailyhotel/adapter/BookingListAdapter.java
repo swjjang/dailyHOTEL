@@ -45,9 +45,8 @@ public class BookingListAdapter
 		}
 
 		mBookingList.clear();
-		mBookingList.addAll(mBookingList);
+		mBookingList.addAll(items);
 
-		this.mBookingList = items;
 		this.mContext = context;
 	}
 

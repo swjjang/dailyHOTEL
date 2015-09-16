@@ -49,23 +49,12 @@ public class HotelDetailListView extends ListView
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent ev)
 	{
-		if (mScrollable == false)
-		{
-			return false;
-		} else
-		{
-			return super.onInterceptTouchEvent(ev);
-		}
+		return mScrollable != false && super.onInterceptTouchEvent(ev);
 	}
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event)
 	{
-		if (mScrollable == false)
-		{
-			return false;
-		}
-
-		return super.onTouchEvent(event);
+		return mScrollable != false && super.onTouchEvent(event);
 	}
 }

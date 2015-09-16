@@ -323,11 +323,6 @@ public class FnBListFragment extends PlaceListFragment
 
 			try
 			{
-				if (getActivity() == null)
-				{
-					return;
-				}
-
 				if (response == null)
 				{
 					throw new NullPointerException("response == null");

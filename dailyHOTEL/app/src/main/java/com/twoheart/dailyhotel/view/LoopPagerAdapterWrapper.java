@@ -70,8 +70,7 @@ public class LoopPagerAdapterWrapper extends PagerAdapter
 
 	public int toInnerPosition(int realPosition)
 	{
-		int position = (realPosition + 1);
-		return position;
+		return (realPosition + 1);
 	}
 
 	private int getRealFirstPosition()

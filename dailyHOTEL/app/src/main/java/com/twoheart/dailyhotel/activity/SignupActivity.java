@@ -695,7 +695,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 				if (true == "true".equalsIgnoreCase(result))
 				{
 					Editor editor = sharedPreference.edit();
-					editor.putString(KEY_PREFERENCE_GCM_ID, regPushParams.get("notification_id").toString());
+					editor.putString(KEY_PREFERENCE_GCM_ID, regPushParams.get("notification_id"));
 					editor.apply();
 				}
 			} catch (Exception e)

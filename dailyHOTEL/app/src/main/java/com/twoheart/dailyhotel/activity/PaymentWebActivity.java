@@ -827,9 +827,7 @@ public class PaymentWebActivity extends BaseActivity implements Constants
 			}
 		};
 
-		Dialog alertDlg = createSimpleDialog(getString(R.string.dialog_btn_text_cancel), getString(R.string.dialog_msg_chk_cancel_payment_progress), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null);
-
-		return alertDlg;
+		return createSimpleDialog(getString(R.string.dialog_btn_text_cancel), getString(R.string.dialog_msg_chk_cancel_payment_progress), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null);
 	}
 
 	@JavascriptInterface

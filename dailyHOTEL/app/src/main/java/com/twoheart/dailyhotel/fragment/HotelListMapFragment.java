@@ -310,12 +310,7 @@ public class HotelListMapFragment extends
 		}
 
 		mGoogleMap.clear();
-		mSelectedMarker = null;
-
-		if (mSelectedMarker == null)
-		{
-			mSelectedMarker = mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).visible(false).anchor(0.0f, 1.0f));
-		}
+		mSelectedMarker = mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).visible(false).anchor(0.0f, 1.0f));
 
 		if (mHotelArrayList == null || mHotelArrayList.size() == 0)
 		{
@@ -668,7 +663,7 @@ public class HotelListMapFragment extends
 					mSelectedMarker.setVisible(false);
 				}
 
-				if (icon != null)
+				if (icon != null && mSelectedMarker != null)
 				{
 					mSelectedMarker.setVisible(true);
 					mSelectedMarker.setPosition(latlng);
@@ -752,7 +747,7 @@ public class HotelListMapFragment extends
 					mSelectedMarker.setVisible(false);
 				}
 
-				if (icon != null)
+				if (icon != null && mSelectedMarker != null)
 				{
 					mSelectedMarker.setVisible(true);
 					mSelectedMarker.setPosition(latlng);
@@ -1007,8 +1002,7 @@ public class HotelListMapFragment extends
 		public View getInfoWindow(Marker marker)
 		{
 			LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			View view = layoutInflater.inflate(R.layout.no_info_window, null);
-			return view;
+			return layoutInflater.inflate(R.layout.no_info_window, null);
 		}
 
 		@Override

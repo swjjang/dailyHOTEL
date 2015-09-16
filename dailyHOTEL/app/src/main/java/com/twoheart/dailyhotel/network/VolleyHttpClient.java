@@ -123,7 +123,7 @@ public class VolleyHttpClient implements Constants
 	{
 		cookieManagerCreate();
 
-		List<Cookie> cookies = ((DefaultHttpClient) sHttpClient).getCookieStore().getCookies();
+		List<Cookie> cookies = ((DefaultHttpClient)sHttpClient).getCookieStore().getCookies();
 
 		if (cookies != null)
 		{

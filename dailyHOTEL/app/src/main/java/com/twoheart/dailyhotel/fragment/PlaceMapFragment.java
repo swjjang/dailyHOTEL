@@ -312,12 +312,7 @@ public abstract class PlaceMapFragment extends
 		}
 
 		mGoogleMap.clear();
-		mSelectedMarker = null;
-
-		if (mSelectedMarker == null)
-		{
-			mSelectedMarker = mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).visible(false).anchor(0.0f, 1.0f));
-		}
+		mSelectedMarker = mSelectedMarker = mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).visible(false).anchor(0.0f, 1.0f));
 
 		if (mPlaceViewItemList == null || mPlaceViewItemList.size() == 0)
 		{
@@ -670,7 +665,7 @@ public abstract class PlaceMapFragment extends
 					mSelectedMarker.setVisible(false);
 				}
 
-				if (icon != null)
+				if (icon != null && mSelectedMarker != null)
 				{
 					mSelectedMarker.setVisible(true);
 					mSelectedMarker.setPosition(latlng);
@@ -754,7 +749,7 @@ public abstract class PlaceMapFragment extends
 					mSelectedMarker.setVisible(false);
 				}
 
-				if (icon != null)
+				if (icon != null && mSelectedMarker != null)
 				{
 					mSelectedMarker.setVisible(true);
 					mSelectedMarker.setPosition(latlng);
@@ -1009,8 +1004,7 @@ public abstract class PlaceMapFragment extends
 		public View getInfoWindow(Marker marker)
 		{
 			LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			View view = layoutInflater.inflate(R.layout.no_info_window, null);
-			return view;
+			return layoutInflater.inflate(R.layout.no_info_window, null);
 		}
 
 		@Override

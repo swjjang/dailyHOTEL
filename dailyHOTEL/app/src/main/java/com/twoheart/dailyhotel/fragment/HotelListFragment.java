@@ -826,11 +826,6 @@ public class HotelListFragment extends
 
 			try
 			{
-				if (getActivity() == null)
-				{
-					return;
-				}
-
 				if (response == null)
 				{
 					throw new NullPointerException("response == null");

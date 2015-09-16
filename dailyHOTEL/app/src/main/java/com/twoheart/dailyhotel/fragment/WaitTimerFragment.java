@@ -306,10 +306,7 @@ public class WaitTimerFragment
 			}
 		};
 
-		if (sHandler != null)
-		{
-			sHandler.sendEmptyMessageDelayed(0, 1000);
-		}
+		sHandler.sendEmptyMessageDelayed(0, 1000);
 	}
 
 	private void printCurrentRemaingTime(long remainingTime)

@@ -324,6 +324,7 @@ public class BaseActivity extends
 		{
 			TextView textView = (TextView) view.findViewById(R.id.titleTextView);
 			textView.setText(title);
+			textView.setTextColor(getResources().getColor(R.color.black));
 
 			view.setOnClickListener(new View.OnClickListener()
 			{
@@ -426,12 +427,7 @@ public class BaseActivity extends
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{
-		if (keyCode == KeyEvent.KEYCODE_MENU)
-		{
-			return true;
-		}
-
-		return super.onKeyDown(keyCode, event);
+		return keyCode == KeyEvent.KEYCODE_MENU || super.onKeyDown(keyCode, event);
 	}
 
 	@Override
@@ -573,7 +569,7 @@ public class BaseActivity extends
 				return true;
 			} else
 			{
-				mIsLockUiComponent = lock;
+				mIsLockUiComponent = true;
 				return false;
 			}
 		}
@@ -867,7 +863,7 @@ public class BaseActivity extends
 
 	public void showSimpleDialog(String title, String msg, String positive, String negative, View.OnClickListener positiveListener, View.OnClickListener negativeListener, boolean isCancelable)
 	{
-		showSimpleDialog(title, msg, positive, negative, positiveListener, negativeListener, null, null, isCancelable);
+		showSimpleDialog(title, msg, positive, negative, positiveListener, null, null, null, isCancelable);
 	}
 
 	public void showSimpleDialog(String titleText, String msg, String positive, String negative, final View.OnClickListener positiveListener, final View.OnClickListener negativeListener, DialogInterface.OnCancelListener cancelListener, //

@@ -145,7 +145,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                 if (true == "true".equalsIgnoreCase(result))
                 {
                     Editor editor = sharedPreference.edit();
-                    editor.putString(KEY_PREFERENCE_GCM_ID, regPushParams.get("notification_id").toString());
+                    editor.putString(KEY_PREFERENCE_GCM_ID, regPushParams.get("notification_id"));
                     editor.apply();
                 }
             } catch (Exception e)
@@ -558,12 +558,18 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                 {
                     String param = sharedPreference.getString(KEY_PREFERENCE_BY_SHARE, null);
 
-                    if (param.contains("hotelIndex") == true)
+                    if(param != null)
                     {
-                        selectMenuDrawer(menuHotelListFragment);
+                        if (param.contains("hotelIndex") == true)
+                        {
+                            selectMenuDrawer(menuHotelListFragment);
+                        } else
+                        {
+                            selectMenuDrawer(menuFnBListFragment);
+                        }
                     } else
                     {
-                        selectMenuDrawer(menuFnBListFragment);
+                        selectMenuDrawer(menuHotelListFragment);
                     }
                 } else
                 {
@@ -1119,13 +1125,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        if (drawerToggle.onOptionsItemSelected(item))
-        {
-            return true;
-        } else
-        {
-            return super.onOptionsItemSelected(item);
-        }
+        return drawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
     @Override

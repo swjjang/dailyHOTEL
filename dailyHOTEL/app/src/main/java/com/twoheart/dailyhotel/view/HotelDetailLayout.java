@@ -80,7 +80,7 @@ public class HotelDetailLayout
 	private static final int MAX_OF_ROOMTYPE = 3;
 
 	private HotelDetailEx mHotelDetail;
-	private Activity mActivity;
+	private BaseActivity mActivity;
 	private View mViewRoot;
 	private LoopViewPager mViewPager;
 	private View mHotelTitleLaout;
@@ -124,7 +124,7 @@ public class HotelDetailLayout
 		SHOW, HIDE, SHOW_END, HIDE_END
 	};
 
-	public HotelDetailLayout(Activity activity, String defaultImageUrl)
+	public HotelDetailLayout(BaseActivity activity, String defaultImageUrl)
 	{
 		mActivity = activity;
 
@@ -408,6 +408,12 @@ public class HotelDetailLayout
 
 		TextView bookingView = (TextView) mBottomLayout.findViewById(R.id.bookingTextView);
 		View soldoutView = mBottomLayout.findViewById(R.id.soldoutTextView);
+
+		if(bookingView == null || soldoutView == null)
+		{
+			mActivity.restartApp();
+			return;
+		}
 
 		switch (status)
 		{

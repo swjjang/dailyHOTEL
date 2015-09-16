@@ -10,7 +10,7 @@ import com.twoheart.dailyhotel.R;
 
 public class DailyToast extends Toast
 {
-	private static Object mLock = new Object();
+	private final static Object mLock = new Object();
 	private static DailyToast mToast;
 	private Context mContext;
 

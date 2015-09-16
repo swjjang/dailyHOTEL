@@ -44,7 +44,7 @@ public class AreaItem implements Parcelable
 	public void writeToParcel(Parcel dest, int flags)
 	{
 		province.writeToParcel(dest, flags);
-		dest.writeTypedList(areaList);
+		dest.writeList(areaList);
 	}
 
 	@Override
@@ -56,8 +56,7 @@ public class AreaItem implements Parcelable
 	private void readFromParcel(Parcel in)
 	{
 		province = new Province(in);
-		areaList = new ArrayList<Area>();
-		in.readTypedList(areaList, Area.CREATOR);
+		areaList = in.readArrayList(Area.class.getClassLoader());
 	}
 
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()

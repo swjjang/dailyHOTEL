@@ -67,6 +67,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -106,7 +107,7 @@ public class LoginActivity extends
 		tvForgotPwd = (TextView) findViewById(R.id.tv_login_forgot);
 		btnLogin = (TextView) findViewById(R.id.btn_login);
 		facebookLogin = (LoginButton) findViewById(R.id.authButton);
-		facebookLogin.setReadPermissions(Arrays.asList("public_profile, email"));
+		facebookLogin.setReadPermissions(Collections.singletonList("public_profile, email"));
 
 		mCallbackManager = CallbackManager.Factory.create();
 		facebookLogin.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>()
@@ -664,7 +665,7 @@ public class LoginActivity extends
 				if (response.getString("result").equals("true") == true)
 				{
 					Editor editor = sharedPreference.edit();
-					editor.putString(KEY_PREFERENCE_GCM_ID, regPushParams.get("notification_id").toString());
+					editor.putString(KEY_PREFERENCE_GCM_ID, regPushParams.get("notification_id"));
 					editor.apply();
 				}
 

@@ -89,7 +89,7 @@ public abstract class DailyHotelRequest<T>
 				seedLocationNumber.append(number).append('$');
 			}
 
-			String base64LocationNumber = new String(Base64.encodeToString(seedLocationNumber.toString().getBytes(), Base64.NO_WRAP));
+			String base64LocationNumber = Base64.encodeToString(seedLocationNumber.toString().getBytes(), Base64.NO_WRAP);
 			encodeUrl.insert(0, base64LocationNumber + "$");
 			encodeUrl.append('$');
 

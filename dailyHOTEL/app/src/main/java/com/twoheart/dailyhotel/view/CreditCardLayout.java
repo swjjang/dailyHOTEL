@@ -139,7 +139,7 @@ public class CreditCardLayout extends FrameLayout
 		} else
 		{
 			// 만일 선택된 카드가 없을 경우 첫번째 배열로 한다.
-			if (arrayList.size() > 0)
+			if (arrayList != null && arrayList.size() > 0)
 			{
 				mAdapter.setPickMode(isPickMode, arrayList.get(0));
 			}

@@ -290,8 +290,7 @@ public class GcmIntentService extends IntentService implements Constants
                 connection.setDoInput(true);
                 connection.connect();
                 inputStream = connection.getInputStream();
-                Bitmap myBitmap = BitmapFactory.decodeStream(inputStream);
-                return myBitmap;
+                return BitmapFactory.decodeStream(inputStream);
 
             } catch (Exception e)
             {
