@@ -204,7 +204,6 @@ public class FnBBookingLayout implements OnCheckedChangeListener
 
         // 수량
         mTicketCountTextView = (TextView) viewRoot.findViewById(R.id.ticketCountTextView);
-        mTicketCountTextView.setText(activity.getString(R.string.label_booking_count, 1));
 
         mTicketCountMinusButton = viewRoot.findViewById(R.id.ticketCountMinus);
         mTicketCountPlusButton = viewRoot.findViewById(R.id.ticketCountPlus);

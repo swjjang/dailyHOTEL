@@ -544,7 +544,7 @@ public class HotelMainFragment extends BaseFragment
 		@Override
 		public void selectDay(SaleTime checkInSaleTime, SaleTime checkOutSaleTime, boolean isListSelectionTop)
 		{
-			if (isLockUiComponent() == true || checkInSaleTime == null || checkOutSaleTime == null)
+			if (isLockUiComponent() == true || checkInSaleTime == null || checkOutSaleTime == null || isAdded() == false)
 			{
 				return;
 			}

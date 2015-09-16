@@ -361,6 +361,7 @@ public class BaseActivity extends
 		{
 			TextView textView = (TextView) view.findViewById(R.id.titleTextView);
 			textView.setText(title);
+			textView.setTextColor(getResources().getColor(R.color.black));
 
 			view.setOnClickListener(new View.OnClickListener()
 			{
@@ -383,27 +384,6 @@ public class BaseActivity extends
 			});
 		}
 	}
-
-	/**
-	 * 액션바에 ProgressBar를 표시할 수 있도록 셋팅한다.
-	 */
-	//	public void setActionBarProgressBar()
-	//	{
-	//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-	//		{
-	//			supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-	//			setSupportProgressBarIndeterminate(true);
-	//		}
-	//	}
-
-	//	private void setLocale(Locale locale)
-	//	{
-	//		Locale.setDefault(locale);
-	//		Configuration config = new Configuration();
-	//		config.locale = locale;
-	//		getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
-	//
-	//	}
 
 	public void restartApp()
 	{
