@@ -48,7 +48,7 @@ public class IntentActivity extends Activity
             if (link.indexOf(KAKAOLINK) >= 0 || link.indexOf(DAILYHOTEL) >= 0)
             {
                 newIntent.setData(uri);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                newIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             }
         }
 
