@@ -23,327 +23,325 @@ import java.util.Map;
 
 public class IssuingReceiptActivity extends BaseActivity
 {
-	private int mBookingIdx;
-	private boolean mIsFullscreen;
+    private int mBookingIdx;
+    private boolean mIsFullscreen;
+    private DailyHotelJsonResponseListener mReservReceiptJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            if (isFinishing() == true)
+            {
+                return;
+            }
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState)
-	{
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_issuingreceipt);
-		setActionBar(R.string.frag_issuing_receipt);
+            //			msg_code : 0
+            //			data :
+            //			- [String] user_name /* 유저 이름 */
+            //			- [String] user_phone /* 유저 번호 */
+            //			- [String] checkin /* 체크인 날짜(yyyy/mm/dd) */
+            //			- [String] checkout /* 체크아웃 날짜(yyyy/mm/dd) */
+            //			- [int] nights /* 연박 일수 */
+            //			- [int] rooms /* 객실수 */
+            //			- [String] hotel_name /* 호텔 명 */
+            //			- [String] hotel_address /* 호텔 주소 */
+            //			- [String] value_date(yyyy/mm/dd) /* 결제일 */
+            //			- [String] currency /* 화폐 단위 */
+            //			- [int] discount /* 결제 금액 */
+            //			- [int] vat /* 부가세 */
+            //			- [int] supply_value /* 공급가액 */
+            //			- [String] payment_name /* 결제수단 */
+            //			---------------------------------
 
-		Intent intent = getIntent();
+            try
+            {
+                if (response == null)
+                {
+                    throw new NullPointerException("response == null");
+                }
 
-		mBookingIdx = -1;
+                int msg_code = response.getInt("msg_code");
 
-		if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX) == true)
-		{
-			mBookingIdx = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, -1);
-		}
+                if (msg_code == 0)
+                {
+                    if (makeLayout(response.getJSONObject("data")) == false)
+                    {
+                        finish();
+                        return;
+                    }
+                } else
+                {
+                    if (isFinishing() == true)
+                    {
+                        return;
+                    }
 
-		if (mBookingIdx < 0)
-		{
-			finish();
-			return;
-		}
+                    String msg = response.getString("msg");
 
-		mIsFullscreen = false;
-	}
+                    showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                    {
+                        @Override
+                        public void onDismiss(DialogInterface dialog)
+                        {
+                            finish();
+                        }
+                    });
+                }
+            } catch (Exception e)
+            {
+                // 서버 정보를 파싱하다가 에러가 남.
+            } finally
+            {
+                unLockUI();
+            }
+        }
+    };
+    private DailyHotelStringResponseListener mUserAliveStringResponseListener = new DailyHotelStringResponseListener()
+    {
 
-	@Override
-	protected void onResume()
-	{
-		lockUI();
-		mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, this));
+        @Override
+        public void onResponse(String url, String response)
+        {
+            if (isFinishing() == true)
+            {
+                return;
+            }
 
-		super.onResume();
-	}
+            String result = null;
 
-	@Override
-	public void onBackPressed()
-	{
-		if (mIsFullscreen == true)
-		{
-			mIsFullscreen = false;
-			updateFullscreenStatus(mIsFullscreen);
-		} else
-		{
-			super.onBackPressed();
-		}
-	}
+            if (TextUtils.isEmpty(response) == false)
+            {
+                result = response.trim();
+            }
 
-	private boolean makeLayout(JSONObject jsonObject)
-	{
-		try
-		{
-			// 영숭증 
-			JSONObject receipt = jsonObject.getJSONObject("receipt");
+            if ("alive".equalsIgnoreCase(result) == true)
+            {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("reservation_idx", String.valueOf(mBookingIdx));
 
-			String reservationIndex = jsonObject.getString("reservation_idx");
-			String userName = receipt.getString("user_name");
-			String userPhone = receipt.getString("user_phone");
-			String checkin = receipt.getString("checkin");
-			String checkout = receipt.getString("checkout");
-			int nights = receipt.getInt("nights");
-			int rooms = receipt.getInt("rooms");
-			String hotelName = receipt.getString("hotel_name");
-			String hotelAddress = receipt.getString("hotel_address");
-			String valueDate = receipt.getString("value_date");
-			String currency = receipt.getString("currency");
-			int discount = receipt.getInt("discount");
-			int vat = receipt.getInt("vat");
-			int supoplyValue = receipt.getInt("supply_value");
-			String paymentName = receipt.getString("payment_name");
+                if (DEBUG == true)
+                {
+                    showSimpleDialog(null, params.toString(), getString(R.string.dialog_btn_text_confirm), null);
+                }
 
-			// **예약 세부 정보**
-			View bookingInfoLayout = findViewById(R.id.bookingInfoLayout);
+                mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_RECEIPT).toString(), params, mReservReceiptJsonResponseListener, IssuingReceiptActivity.this));
+            } else
+            {
+                finish();
+            }
+        }
+    };
 
-			// 예약 번호
-			TextView registerationTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView13);
-			registerationTextView.setText(reservationIndex);
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_issuingreceipt);
+        setActionBar(R.string.frag_issuing_receipt);
 
-			// 호텔명
-			TextView hotelNameTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView3);
-			hotelNameTextView.setText(hotelName);
+        Intent intent = getIntent();
 
-			// 호텔주소
-			TextView hotelAddressTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView5);
-			hotelAddressTextView.setText(hotelAddress);
+        mBookingIdx = -1;
 
-			// 고객성명/번호
-			TextView customerInfoTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView7);
-			customerInfoTextView.setText(userName + " / " + userPhone);
+        if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX) == true)
+        {
+            mBookingIdx = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, -1);
+        }
 
-			// 체크인/아웃
-			TextView chekcinoutTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView9);
-			chekcinoutTextView.setText(checkin + " - " + checkout);
+        if (mBookingIdx < 0)
+        {
+            finish();
+            return;
+        }
 
-			// 숙박 일수/객실수
-			TextView nightsRoomsTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView11);
-			nightsRoomsTextView.setText(nights + "일/" + rooms + "객실");
+        mIsFullscreen = false;
+    }
 
-			// **결제 정보**
-			View paymentInfoLayout = findViewById(R.id.paymentInfoLayout);
+    @Override
+    protected void onResume()
+    {
+        lockUI();
+        mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, this));
 
-			// 결제일
-			TextView paymentDayTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView23);
-			paymentDayTextView.setText(valueDate);
+        super.onResume();
+    }
 
-			DecimalFormat comma = new DecimalFormat("###,##0");
+    @Override
+    public void onBackPressed()
+    {
+        if (mIsFullscreen == true)
+        {
+            mIsFullscreen = false;
+            updateFullscreenStatus(mIsFullscreen);
+        } else
+        {
+            super.onBackPressed();
+        }
+    }
 
-			// 소계
-			TextView supplyValueTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView25);
-			supplyValueTextView.setText("₩ " + comma.format(supoplyValue));
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Listener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-			// 세금 및 수수료
-			TextView vatTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView27);
-			vatTextView.setText("₩ " + comma.format(vat));
+    private boolean makeLayout(JSONObject jsonObject)
+    {
+        try
+        {
+            // 영숭증
+            JSONObject receipt = jsonObject.getJSONObject("receipt");
 
-			// 총금액
-			TextView discountTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView29);
-			discountTextView.setText("₩ " + comma.format(discount));
+            String reservationIndex = jsonObject.getString("reservation_idx");
+            String userName = receipt.getString("user_name");
+            String userPhone = receipt.getString("user_phone");
+            String checkin = receipt.getString("checkin");
+            String checkout = receipt.getString("checkout");
+            int nights = receipt.getInt("nights");
+            int rooms = receipt.getInt("rooms");
+            String hotelName = receipt.getString("hotel_name");
+            String hotelAddress = receipt.getString("hotel_address");
+            String valueDate = receipt.getString("value_date");
+            String currency = receipt.getString("currency");
+            int discount = receipt.getInt("discount");
+            int vat = receipt.getInt("vat");
+            int supoplyValue = receipt.getInt("supply_value");
+            String paymentName = receipt.getString("payment_name");
 
-			// 지불 금액
-			TextView paymentTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView31);
-			paymentTextView.setText("₩ " + comma.format(discount));
+            // **예약 세부 정보**
+            View bookingInfoLayout = findViewById(R.id.bookingInfoLayout);
 
-			// 지불 방식
-			TextView paymentTypeTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView33);
-			paymentTypeTextView.setText(paymentName);
+            // 예약 번호
+            TextView registerationTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView13);
+            registerationTextView.setText(reservationIndex);
 
-			// **공급자**
+            // 호텔명
+            TextView hotelNameTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView3);
+            hotelNameTextView.setText(hotelName);
 
-			JSONObject provider = jsonObject.getJSONObject("provider");
+            // 호텔주소
+            TextView hotelAddressTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView5);
+            hotelAddressTextView.setText(hotelAddress);
 
-			String phone = provider.getString("phone");
-			String fax = provider.getString("fax");
-			String memo = provider.getString("memo");
-			String address = provider.getString("address");
-			String ceoName = provider.getString("ceoName");
-			String registrationNo = provider.getString("registrationNo");
-			String companyName = provider.getString("companyName");
+            // 고객성명/번호
+            TextView customerInfoTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView7);
+            customerInfoTextView.setText(userName + " / " + userPhone);
 
-			View providerInfoLayout = findViewById(R.id.providerInfoLayout);
+            // 체크인/아웃
+            TextView chekcinoutTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView9);
+            chekcinoutTextView.setText(checkin + " - " + checkout);
 
-			// 상호
-			TextView companyNameTextView = (TextView) providerInfoLayout.findViewById(R.id.textView42);
-			companyNameTextView.setText(getString(R.string.label_receipt_business_license, companyName));
+            // 숙박 일수/객실수
+            TextView nightsRoomsTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView11);
+            nightsRoomsTextView.setText(nights + "일/" + rooms + "객실");
 
-			// 등록번호
-			TextView registrationNoTextView = (TextView) providerInfoLayout.findViewById(R.id.textView43);
-			registrationNoTextView.setText(getString(R.string.label_receipt_registeration_number, registrationNo));
+            // **결제 정보**
+            View paymentInfoLayout = findViewById(R.id.paymentInfoLayout);
 
-			// 대표자
-			TextView ceoNameTextView = (TextView) providerInfoLayout.findViewById(R.id.textView44);
-			ceoNameTextView.setText(getString(R.string.label_receipt_ceo, ceoName));
+            // 결제일
+            TextView paymentDayTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView23);
+            paymentDayTextView.setText(valueDate);
 
-			// 주소
-			TextView addressTextView = (TextView) providerInfoLayout.findViewById(R.id.textView46);
-			addressTextView.setText(address);
+            DecimalFormat comma = new DecimalFormat("###,##0");
 
-			// 전화번호 
-			TextView phoneTextView = (TextView) providerInfoLayout.findViewById(R.id.textView47);
-			phoneTextView.setText(getString(R.string.label_receipt_phone, phone));
+            // 소계
+            TextView supplyValueTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView25);
+            supplyValueTextView.setText("₩ " + comma.format(supoplyValue));
 
-			// 팩스
-			TextView faxTextView = (TextView) providerInfoLayout.findViewById(R.id.textView48);
-			faxTextView.setText(getString(R.string.label_receipt_fax, fax));
+            // 세금 및 수수료
+            TextView vatTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView27);
+            vatTextView.setText("₩ " + comma.format(vat));
 
-			// 코멘트
-			TextView commentTextView = (TextView) providerInfoLayout.findViewById(R.id.textView49);
-			commentTextView.setText(memo);
+            // 총금액
+            TextView discountTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView29);
+            discountTextView.setText("₩ " + comma.format(discount));
 
-		} catch (Exception e)
-		{
-			return false;
-		}
+            // 지불 금액
+            TextView paymentTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView31);
+            paymentTextView.setText("₩ " + comma.format(discount));
 
-		View view = findViewById(R.id.receiptLayout);
-		view.setOnClickListener(new View.OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
-			{
-				mIsFullscreen = !mIsFullscreen;
-				updateFullscreenStatus(mIsFullscreen);
-			}
-		});
+            // 지불 방식
+            TextView paymentTypeTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView33);
+            paymentTypeTextView.setText(paymentName);
 
-		return true;
-	}
+            // **공급자**
 
-	private void updateFullscreenStatus(boolean bUseFullscreen)
-	{
-		View actionBar = findViewById(R.id.toolbar_actionbar);
-		View underLine = findViewById(R.id.toolbar_actionbarUnderLine);
+            JSONObject provider = jsonObject.getJSONObject("provider");
 
-		if (bUseFullscreen)
-		{
-			actionBar.setVisibility(View.INVISIBLE);
-			underLine.setVisibility(View.INVISIBLE);
+            String phone = provider.getString("phone");
+            String fax = provider.getString("fax");
+            String memo = provider.getString("memo");
+            String address = provider.getString("address");
+            String ceoName = provider.getString("ceoName");
+            String registrationNo = provider.getString("registrationNo");
+            String companyName = provider.getString("companyName");
 
-			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-		} else
-		{
-			actionBar.setVisibility(View.VISIBLE);
-			underLine.setVisibility(View.VISIBLE);
+            View providerInfoLayout = findViewById(R.id.providerInfoLayout);
 
-			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		}
-	}
+            // 상호
+            TextView companyNameTextView = (TextView) providerInfoLayout.findViewById(R.id.textView42);
+            companyNameTextView.setText(getString(R.string.label_receipt_business_license, companyName));
 
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// Listener
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            // 등록번호
+            TextView registrationNoTextView = (TextView) providerInfoLayout.findViewById(R.id.textView43);
+            registrationNoTextView.setText(getString(R.string.label_receipt_registeration_number, registrationNo));
 
-	private DailyHotelStringResponseListener mUserAliveStringResponseListener = new DailyHotelStringResponseListener()
-	{
+            // 대표자
+            TextView ceoNameTextView = (TextView) providerInfoLayout.findViewById(R.id.textView44);
+            ceoNameTextView.setText(getString(R.string.label_receipt_ceo, ceoName));
 
-		@Override
-		public void onResponse(String url, String response)
-		{
-			if (isFinishing() == true)
-			{
-				return;
-			}
+            // 주소
+            TextView addressTextView = (TextView) providerInfoLayout.findViewById(R.id.textView46);
+            addressTextView.setText(address);
 
-			String result = null;
+            // 전화번호
+            TextView phoneTextView = (TextView) providerInfoLayout.findViewById(R.id.textView47);
+            phoneTextView.setText(getString(R.string.label_receipt_phone, phone));
 
-			if (TextUtils.isEmpty(response) == false)
-			{
-				result = response.trim();
-			}
+            // 팩스
+            TextView faxTextView = (TextView) providerInfoLayout.findViewById(R.id.textView48);
+            faxTextView.setText(getString(R.string.label_receipt_fax, fax));
 
-			if ("alive".equalsIgnoreCase(result) == true)
-			{
-				Map<String, String> params = new HashMap<String, String>();
-				params.put("reservation_idx", String.valueOf(mBookingIdx));
+            // 코멘트
+            TextView commentTextView = (TextView) providerInfoLayout.findViewById(R.id.textView49);
+            commentTextView.setText(memo);
 
-				if (DEBUG == true)
-				{
-					showSimpleDialog(null, params.toString(), getString(R.string.dialog_btn_text_confirm), null);
-				}
+        } catch (Exception e)
+        {
+            return false;
+        }
 
-				mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_RECEIPT).toString(), params, mReservReceiptJsonResponseListener, IssuingReceiptActivity.this));
-			} else
-			{
-				finish();
-			}
-		}
-	};
+        View view = findViewById(R.id.receiptLayout);
+        view.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                mIsFullscreen = !mIsFullscreen;
+                updateFullscreenStatus(mIsFullscreen);
+            }
+        });
 
-	private DailyHotelJsonResponseListener mReservReceiptJsonResponseListener = new DailyHotelJsonResponseListener()
-	{
-		@Override
-		public void onResponse(String url, JSONObject response)
-		{
-			if (isFinishing() == true)
-			{
-				return;
-			}
+        return true;
+    }
 
-			//			msg_code : 0
-			//			data : 
-			//			- [String] user_name /* 유저 이름 */
-			//			- [String] user_phone /* 유저 번호 */
-			//			- [String] checkin /* 체크인 날짜(yyyy/mm/dd) */
-			//			- [String] checkout /* 체크아웃 날짜(yyyy/mm/dd) */
-			//			- [int] nights /* 연박 일수 */
-			//			- [int] rooms /* 객실수 */
-			//			- [String] hotel_name /* 호텔 명 */
-			//			- [String] hotel_address /* 호텔 주소 */
-			//			- [String] value_date(yyyy/mm/dd) /* 결제일 */
-			//			- [String] currency /* 화폐 단위 */
-			//			- [int] discount /* 결제 금액 */
-			//			- [int] vat /* 부가세 */
-			//			- [int] supply_value /* 공급가액 */
-			//			- [String] payment_name /* 결제수단 */
-			//			---------------------------------
+    private void updateFullscreenStatus(boolean bUseFullscreen)
+    {
+        View actionBar = findViewById(R.id.toolbar_actionbar);
+        View underLine = findViewById(R.id.toolbar_actionbarUnderLine);
 
-			try
-			{
-				if (response == null)
-				{
-					throw new NullPointerException("response == null");
-				}
+        if (bUseFullscreen)
+        {
+            actionBar.setVisibility(View.INVISIBLE);
+            underLine.setVisibility(View.INVISIBLE);
 
-				int msg_code = response.getInt("msg_code");
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+        } else
+        {
+            actionBar.setVisibility(View.VISIBLE);
+            underLine.setVisibility(View.VISIBLE);
 
-				if (msg_code == 0)
-				{
-					if (makeLayout(response.getJSONObject("data")) == false)
-					{
-						finish();
-						return;
-					}
-				} else
-				{
-					if (isFinishing() == true)
-					{
-						return;
-					}
-
-					String msg = response.getString("msg");
-
-					showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
-					{
-						@Override
-						public void onDismiss(DialogInterface dialog)
-						{
-							finish();
-						}
-					});
-				}
-			} catch (Exception e)
-			{
-				// 서버 정보를 파싱하다가 에러가 남.
-			} finally
-			{
-				unLockUI();
-			}
-		}
-	};
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }
+    }
 }

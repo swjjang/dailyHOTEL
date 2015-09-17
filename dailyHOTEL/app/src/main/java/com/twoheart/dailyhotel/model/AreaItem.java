@@ -7,71 +7,70 @@ import java.util.ArrayList;
 
 public class AreaItem implements Parcelable
 {
-	private Province province;
-	private ArrayList<Area> areaList;
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+    {
+        public AreaItem createFromParcel(Parcel in)
+        {
+            return new AreaItem(in);
+        }
 
-	public AreaItem()
-	{
-		super();
-	}
+        @Override
+        public AreaItem[] newArray(int size)
+        {
+            return new AreaItem[size];
+        }
 
-	public AreaItem(Parcel in)
-	{
-		readFromParcel(in);
-	}
+    };
+    private Province province;
+    private ArrayList<Area> areaList;
 
-	public ArrayList<Area> getAreaList()
-	{
-		return areaList;
-	}
+    public AreaItem()
+    {
+        super();
+    }
 
-	public void setAreaList(ArrayList<Area> areaList)
-	{
-		this.areaList = areaList;
-	}
+    public AreaItem(Parcel in)
+    {
+        readFromParcel(in);
+    }
 
-	public Province getProvince()
-	{
-		return province;
-	}
+    public ArrayList<Area> getAreaList()
+    {
+        return areaList;
+    }
 
-	public void setProvince(Province province)
-	{
-		this.province = province;
-	}
+    public void setAreaList(ArrayList<Area> areaList)
+    {
+        this.areaList = areaList;
+    }
 
-	@Override
-	public void writeToParcel(Parcel dest, int flags)
-	{
-		province.writeToParcel(dest, flags);
-		dest.writeList(areaList);
-	}
+    public Province getProvince()
+    {
+        return province;
+    }
 
-	@Override
-	public int describeContents()
-	{
-		return 0;
-	}
+    public void setProvince(Province province)
+    {
+        this.province = province;
+    }
 
-	private void readFromParcel(Parcel in)
-	{
-		province = new Province(in);
-		areaList = in.readArrayList(Area.class.getClassLoader());
-	}
+    @Override
+    public void writeToParcel(Parcel dest, int flags)
+    {
+        province.writeToParcel(dest, flags);
+        dest.writeList(areaList);
+    }
 
-	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
-	{
-		public AreaItem createFromParcel(Parcel in)
-		{
-			return new AreaItem(in);
-		}
+    @Override
+    public int describeContents()
+    {
+        return 0;
+    }
 
-		@Override
-		public AreaItem[] newArray(int size)
-		{
-			return new AreaItem[size];
-		}
-
-	};
+    private void readFromParcel(Parcel in)
+    {
+        province = new Province(in);
+        areaList = in.readArrayList(Area.class.getClassLoader());
+    }
 
 }

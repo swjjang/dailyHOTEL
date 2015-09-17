@@ -21,228 +21,227 @@ import java.util.TimeZone;
 
 public class BookingHotelDetail implements Parcelable
 {
-	private Hotel mHotel;
-	private double mLatitude;
-	private double mLongitude;
-	private Map<String, List<String>> mSpecification = new HashMap<String, List<String>>();
-	private List<String> mImageUrl = new ArrayList<String>();
-	public int isOverseas; // 0 : 국내 , 1 : 해외 
-	public String roomName;
-	public String guestName;
-	public String guestPhone;
-	public String checkInDay;
-	public String checkOutDay;
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+    {
+        public BookingHotelDetail createFromParcel(Parcel in)
+        {
+            return new BookingHotelDetail(in);
+        }
 
-	public BookingHotelDetail()
-	{
-	}
+        @Override
+        public BookingHotelDetail[] newArray(int size)
+        {
+            return new BookingHotelDetail[size];
+        }
+    };
+    public int isOverseas; // 0 : 국내 , 1 : 해외
+    public String roomName;
+    public String guestName;
+    public String guestPhone;
+    public String checkInDay;
+    public String checkOutDay;
+    private Hotel mHotel;
+    private double mLatitude;
+    private double mLongitude;
+    private Map<String, List<String>> mSpecification = new HashMap<String, List<String>>();
+    private List<String> mImageUrl = new ArrayList<String>();
 
-	public BookingHotelDetail(Parcel in)
-	{
-		readFromParcel(in);
-	}
+    public BookingHotelDetail()
+    {
+    }
 
-	@Override
-	public void writeToParcel(Parcel dest, int flags)
-	{
-		dest.writeValue(mHotel);
-		dest.writeDouble(mLatitude);
-		dest.writeDouble(mLongitude);
-		dest.writeMap(mSpecification);
-		dest.writeList(mImageUrl);
-		dest.writeInt(isOverseas);
-		dest.writeString(roomName);
-		dest.writeString(guestName);
-		dest.writeString(guestPhone);
-		dest.writeString(checkInDay);
-		dest.writeString(checkOutDay);
-	}
+    public BookingHotelDetail(Parcel in)
+    {
+        readFromParcel(in);
+    }
 
-	public boolean setData(JSONObject jsonObject)
-	{
-		// Hotel Setting
-		if (mHotel == null)
-		{
-			mHotel = new Hotel();
-		}
+    @Override
+    public void writeToParcel(Parcel dest, int flags)
+    {
+        dest.writeValue(mHotel);
+        dest.writeDouble(mLatitude);
+        dest.writeDouble(mLongitude);
+        dest.writeMap(mSpecification);
+        dest.writeList(mImageUrl);
+        dest.writeInt(isOverseas);
+        dest.writeString(roomName);
+        dest.writeString(guestName);
+        dest.writeString(guestPhone);
+        dest.writeString(checkInDay);
+        dest.writeString(checkOutDay);
+    }
 
-		try
-		{
-			mHotel.setName(jsonObject.getString("hotel_name"));
+    public boolean setData(JSONObject jsonObject)
+    {
+        // Hotel Setting
+        if (mHotel == null)
+        {
+            mHotel = new Hotel();
+        }
 
-			try
-			{
-				mHotel.setCategory(jsonObject.getString("cat"));
-			} catch (Exception e)
-			{
-				mHotel.setCategory(HotelGrade.etc.name());
-			}
+        try
+        {
+            mHotel.setName(jsonObject.getString("hotel_name"));
 
-			mHotel.setAddress(jsonObject.getString("address"));
+            try
+            {
+                mHotel.setCategory(jsonObject.getString("cat"));
+            } catch (Exception e)
+            {
+                mHotel.setCategory(HotelGrade.etc.name());
+            }
 
-			//
-			JSONObject wrapJSONObject = new JSONObject(jsonObject.getString("spec"));
-			JSONArray jsonArray = wrapJSONObject.getJSONArray("wrap");
+            mHotel.setAddress(jsonObject.getString("address"));
 
-			setSpecification(jsonArray);
+            //
+            JSONObject wrapJSONObject = new JSONObject(jsonObject.getString("spec"));
+            JSONArray jsonArray = wrapJSONObject.getJSONArray("wrap");
 
-			mLatitude = jsonObject.getDouble("lat");
-			mLongitude = jsonObject.getDouble("lng");
+            setSpecification(jsonArray);
 
-			roomName = jsonObject.getString("room_name");
-			guestPhone = jsonObject.getString("guest_phone");
-			guestName = jsonObject.getString("guest_name");
+            mLatitude = jsonObject.getDouble("lat");
+            mLongitude = jsonObject.getDouble("lng");
 
-			long checkin = jsonObject.getLong("checkin_date");
-			long checkout = jsonObject.getLong("checkout_date");
+            roomName = jsonObject.getString("room_name");
+            guestPhone = jsonObject.getString("guest_phone");
+            guestName = jsonObject.getString("guest_name");
 
-			SimpleDateFormat format = new SimpleDateFormat("yyyy년 MM월 dd일 HH시", Locale.KOREA);
-			format.setTimeZone(TimeZone.getTimeZone("GMT"));
+            long checkin = jsonObject.getLong("checkin_date");
+            long checkout = jsonObject.getLong("checkout_date");
 
-			// Check In
-			checkInDay = format.format(new Date(checkin));
+            SimpleDateFormat format = new SimpleDateFormat("yyyy년 MM월 dd일 HH시", Locale.KOREA);
+            format.setTimeZone(TimeZone.getTimeZone("GMT"));
 
-			// Check Out
-			checkOutDay = format.format(new Date(checkout));
-		} catch (Exception e)
-		{
-			return false;
-		}
+            // Check In
+            checkInDay = format.format(new Date(checkin));
 
-		return true;
-	}
+            // Check Out
+            checkOutDay = format.format(new Date(checkout));
+        } catch (Exception e)
+        {
+            return false;
+        }
 
-	private void readFromParcel(Parcel in)
-	{
-		mHotel = (Hotel) in.readValue(Hotel.class.getClassLoader());
-		mLatitude = in.readDouble();
-		mLongitude = in.readDouble();
-		in.readMap(mSpecification, Map.class.getClassLoader());
-		in.readList(mImageUrl, List.class.getClassLoader());
-		isOverseas = in.readInt();
-		roomName = in.readString();
-		guestName = in.readString();
-		guestPhone = in.readString();
-		checkInDay = in.readString();
-		checkOutDay = in.readString();
-	}
+        return true;
+    }
 
-	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
-	{
-		public BookingHotelDetail createFromParcel(Parcel in)
-		{
-			return new BookingHotelDetail(in);
-		}
+    private void readFromParcel(Parcel in)
+    {
+        mHotel = (Hotel) in.readValue(Hotel.class.getClassLoader());
+        mLatitude = in.readDouble();
+        mLongitude = in.readDouble();
+        in.readMap(mSpecification, Map.class.getClassLoader());
+        in.readList(mImageUrl, List.class.getClassLoader());
+        isOverseas = in.readInt();
+        roomName = in.readString();
+        guestName = in.readString();
+        guestPhone = in.readString();
+        checkInDay = in.readString();
+        checkOutDay = in.readString();
+    }
 
-		@Override
-		public BookingHotelDetail[] newArray(int size)
-		{
-			return new BookingHotelDetail[size];
-		}
-	};
+    public List<String> getImageUrl()
+    {
+        return mImageUrl;
+    }
 
-	public List<String> getImageUrl()
-	{
-		return mImageUrl;
-	}
+    public void setImageUrl(List<String> imageUrl)
+    {
+        this.mImageUrl = imageUrl;
+    }
 
-	public void setImageUrl(List<String> imageUrl)
-	{
-		this.mImageUrl = imageUrl;
-	}
+    public Hotel getHotel()
+    {
+        return mHotel;
+    }
 
-	public Hotel getHotel()
-	{
-		return mHotel;
-	}
+    public void setHotel(Hotel hotel)
+    {
+        this.mHotel = hotel;
+    }
 
-	public void setHotel(Hotel hotel)
-	{
-		this.mHotel = hotel;
-	}
+    public double getLatitude()
+    {
+        return mLatitude;
+    }
 
-	public double getLatitude()
-	{
-		return mLatitude;
-	}
+    public void setLatitude(double latitude)
+    {
+        this.mLatitude = latitude;
+    }
 
-	public void setLatitude(double latitude)
-	{
-		this.mLatitude = latitude;
-	}
+    public double getLongitude()
+    {
+        return mLongitude;
+    }
 
-	public double getLongitude()
-	{
-		return mLongitude;
-	}
+    public void setLongitude(double longitude)
+    {
+        this.mLongitude = longitude;
+    }
 
-	public void setLongitude(double longitude)
-	{
-		this.mLongitude = longitude;
-	}
+    public Map<String, List<String>> getSpecification()
+    {
+        return mSpecification;
+    }
 
-	public Map<String, List<String>> getSpecification()
-	{
-		return mSpecification;
-	}
+    public void setSpecification(Map<String, List<String>> specification)
+    {
+        this.mSpecification = specification;
+    }
 
-	public void setSpecification(JSONArray jsonArray)
-	{
-		if (jsonArray == null)
-		{
-			return;
-		}
+    public void setSpecification(JSONArray jsonArray)
+    {
+        if (jsonArray == null)
+        {
+            return;
+        }
 
-		try
-		{
-			int length = jsonArray.length();
+        try
+        {
+            int length = jsonArray.length();
 
-			Map<String, List<String>> contentList = new LinkedHashMap<String, List<String>>(length);
+            Map<String, List<String>> contentList = new LinkedHashMap<String, List<String>>(length);
 
-			for (int i = 0; i < length; i++)
-			{
-				JSONObject specObj = jsonArray.getJSONObject(i);
+            for (int i = 0; i < length; i++)
+            {
+                JSONObject specObj = jsonArray.getJSONObject(i);
 
-				if (specObj == null || specObj.has("key") == false || specObj.has("value") == false)
-				{
-					continue;
-				}
+                if (specObj == null || specObj.has("key") == false || specObj.has("value") == false)
+                {
+                    continue;
+                }
 
-				String key = specObj.getString("key");
-				JSONArray valueArr = specObj.getJSONArray("value");
-				List<String> valueList = new ArrayList<String>(valueArr.length());
+                String key = specObj.getString("key");
+                JSONArray valueArr = specObj.getJSONArray("value");
+                List<String> valueList = new ArrayList<String>(valueArr.length());
 
-				for (int j = 0; j < valueArr.length(); j++)
-				{
-					JSONObject valueObj = valueArr.getJSONObject(j);
+                for (int j = 0; j < valueArr.length(); j++)
+                {
+                    JSONObject valueObj = valueArr.getJSONObject(j);
 
-					if (valueObj == null || valueObj.has("value") == false)
-					{
-						continue;
-					}
+                    if (valueObj == null || valueObj.has("value") == false)
+                    {
+                        continue;
+                    }
 
-					String value = valueObj.getString("value");
-					valueList.add(value);
-				}
+                    String value = valueObj.getString("value");
+                    valueList.add(value);
+                }
 
-				contentList.put(key, valueList);
-				setSpecification(contentList);
-			}
-		} catch (Exception e)
-		{
-			ExLog.d(e.toString());
-		}
-	}
+                contentList.put(key, valueList);
+                setSpecification(contentList);
+            }
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
 
-	public void setSpecification(Map<String, List<String>> specification)
-	{
-		this.mSpecification = specification;
-	}
-
-	@Override
-	public int describeContents()
-	{
-		return 0;
-	}
+    @Override
+    public int describeContents()
+    {
+        return 0;
+    }
 
 }

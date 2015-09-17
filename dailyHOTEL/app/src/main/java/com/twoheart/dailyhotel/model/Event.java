@@ -9,66 +9,65 @@ import org.json.JSONObject;
 
 public class Event implements Parcelable
 {
-	public int index;
-	public boolean isJoin;
-	public String imageUrl;
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+    {
+        public Event createFromParcel(Parcel in)
+        {
+            return new Event(in);
+        }
 
-	public Event()
-	{
-	}
+        @Override
+        public Event[] newArray(int size)
+        {
+            return new Event[size];
+        }
 
-	public Event(Parcel in)
-	{
-		readFromParcel(in);
-	}
+    };
+    public int index;
+    public boolean isJoin;
+    public String imageUrl;
 
-	public Event(JSONObject jsonObject)
-	{
-		try
-		{
-			index = jsonObject.getInt("idx");
-			imageUrl = jsonObject.getString("img_url");
-			isJoin = jsonObject.getInt("is_event_join") == 0 ? false : true;
+    public Event()
+    {
+    }
 
-		} catch (Exception e)
-		{
-			ExLog.e(e.toString());
-		}
-	}
+    public Event(Parcel in)
+    {
+        readFromParcel(in);
+    }
 
-	@Override
-	public void writeToParcel(Parcel dest, int flags)
-	{
-		dest.writeInt(index);
-		dest.writeString(imageUrl);
-		dest.writeInt(isJoin ? 1 : 0);
-	}
+    public Event(JSONObject jsonObject)
+    {
+        try
+        {
+            index = jsonObject.getInt("idx");
+            imageUrl = jsonObject.getString("img_url");
+            isJoin = jsonObject.getInt("is_event_join") == 0 ? false : true;
 
-	private void readFromParcel(Parcel in)
-	{
-		index = in.readInt();
-		imageUrl = in.readString();
-		isJoin = in.readInt() == 0 ? false : true;
-	}
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
 
-	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
-	{
-		public Event createFromParcel(Parcel in)
-		{
-			return new Event(in);
-		}
+    @Override
+    public void writeToParcel(Parcel dest, int flags)
+    {
+        dest.writeInt(index);
+        dest.writeString(imageUrl);
+        dest.writeInt(isJoin ? 1 : 0);
+    }
 
-		@Override
-		public Event[] newArray(int size)
-		{
-			return new Event[size];
-		}
+    private void readFromParcel(Parcel in)
+    {
+        index = in.readInt();
+        imageUrl = in.readString();
+        isJoin = in.readInt() == 0 ? false : true;
+    }
 
-	};
-
-	@Override
-	public int describeContents()
-	{
-		return 0;
-	}
+    @Override
+    public int describeContents()
+    {
+        return 0;
+    }
 }

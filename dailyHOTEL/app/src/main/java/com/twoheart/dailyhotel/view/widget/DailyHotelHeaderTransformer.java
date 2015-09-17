@@ -10,21 +10,21 @@ import uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.AbcDefaultHeade
 
 public class DailyHotelHeaderTransformer extends AbcDefaultHeaderTransformer
 {
-	@Override
-	public void onReset()
-	{
-		super.onReset();
+    @Override
+    public void onReset()
+    {
+        super.onReset();
 
-		View view = getHeaderView();
+        View view = getHeaderView();
 
-		if (view != null)
-		{
-			view.setBackgroundColor(view.getResources().getColor(android.R.color.transparent));
-			TextView mHeaderTextView = (TextView) view.findViewById(R.id.ptr_text);
-			ViewGroup mContentLayout = (ViewGroup) view.findViewById(R.id.ptr_content);
+        if (view != null)
+        {
+            view.setBackgroundColor(view.getResources().getColor(android.R.color.transparent));
+            TextView mHeaderTextView = (TextView) view.findViewById(R.id.ptr_text);
+            ViewGroup mContentLayout = (ViewGroup) view.findViewById(R.id.ptr_content);
 
-			mHeaderTextView.setVisibility(View.INVISIBLE);
-			mContentLayout.setVisibility(View.INVISIBLE);
-		}
-	}
+            mHeaderTextView.setVisibility(View.INVISIBLE);
+            mContentLayout.setVisibility(View.INVISIBLE);
+        }
+    }
 }

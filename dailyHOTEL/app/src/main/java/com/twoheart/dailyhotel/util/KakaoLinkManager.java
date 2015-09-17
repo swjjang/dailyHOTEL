@@ -17,101 +17,99 @@ import java.util.TimeZone;
 
 public class KakaoLinkManager implements Constants
 {
-	private static final String TAG = "KakaloLinkManager";
+    private static final String TAG = "KakaloLinkManager";
+    private KakaoLink kkLink;
+    private KakaoTalkLinkMessageBuilder kkMsgBuilder;
+    private Context mContext;
+    private KakaoLinkManager(Context context)
+    {
+        try
+        {
+            mContext = context;
+            kkLink = KakaoLink.getKakaoLink(mContext);
+            kkMsgBuilder = kkLink.createKakaoTalkLinkMessageBuilder();
+        } catch (KakaoParameterException e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
 
-	public static KakaoLinkManager newInstance(Context context)
-	{
-		return new KakaoLinkManager(context);
-	}
+    public static KakaoLinkManager newInstance(Context context)
+    {
+        return new KakaoLinkManager(context);
+    }
 
-	private KakaoLink kkLink;
-	private KakaoTalkLinkMessageBuilder kkMsgBuilder;
-	private Context mContext;
+    public void sendInviteMsgKakaoLink(String text)
+    {
+        try
+        {
+            kkMsgBuilder.addImage("http://s3-ap-northeast-1.amazonaws.com/weblogfile/kakao.jpg", 300, 200);
+            kkMsgBuilder.addText(text);
+            kkMsgBuilder.addAppButton(mContext.getString(R.string.kakao_btn_invited_friend));
+            kkLink.sendMessage(kkMsgBuilder.build(), mContext);
+        } catch (KakaoParameterException e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
 
-	private KakaoLinkManager(Context context)
-	{
-		try
-		{
-			mContext = context;
-			kkLink = KakaoLink.getKakaoLink(mContext);
-			kkMsgBuilder = kkLink.createKakaoTalkLinkMessageBuilder();
-		} catch (KakaoParameterException e)
-		{
-			ExLog.e(e.toString());
-		}
-	}
+    public void shareHotel(String hotelName, int hotelIndex, String imageUrl, long dailyTime, int dailyDayOfDays, int nights)
+    {
+        try
+        {
+            String schemeParams = String.format("hotelIndex=%d&dailyTime=%d&dailyDayOfDays=%d&nights=%d", hotelIndex, dailyTime, dailyDayOfDays, nights);
 
-	public void sendInviteMsgKakaoLink(String text)
-	{
-		try
-		{
-			kkMsgBuilder.addImage("http://s3-ap-northeast-1.amazonaws.com/weblogfile/kakao.jpg", 300, 200);
-			kkMsgBuilder.addText(text);
-			kkMsgBuilder.addAppButton(mContext.getString(R.string.kakao_btn_invited_friend));
-			kkLink.sendMessage(kkMsgBuilder.build(), mContext);
-		} catch (KakaoParameterException e)
-		{
-			ExLog.e(e.toString());
-		}
-	}
+            kkMsgBuilder.addAppButton(mContext.getString(R.string.kakao_btn_go_hotel), new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build()).addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
 
-	public void shareHotel(String hotelName, int hotelIndex, String imageUrl, long dailyTime, int dailyDayOfDays, int nights)
-	{
-		try
-		{
-			String schemeParams = String.format("hotelIndex=%d&dailyTime=%d&dailyDayOfDays=%d&nights=%d", hotelIndex, dailyTime, dailyDayOfDays, nights);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd", Locale.KOREA);
+            simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
-			kkMsgBuilder.addAppButton(mContext.getString(R.string.kakao_btn_go_hotel), new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build()).addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
+            Date checkInDate = new Date(dailyTime + SaleTime.SECONDS_IN_A_DAY * dailyDayOfDays * 1000);
+            Date chekcOutDate = new Date(dailyTime + SaleTime.SECONDS_IN_A_DAY * (dailyDayOfDays + nights) * 1000);
 
-			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd", Locale.KOREA);
-			simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+            String text = mContext.getString(R.string.kakao_btn_share_hotel, hotelName, simpleDateFormat.format(checkInDate), simpleDateFormat.format(chekcOutDate), nights, nights + 1);
 
-			Date checkInDate = new Date(dailyTime + SaleTime.SECONDS_IN_A_DAY * dailyDayOfDays * 1000);
-			Date chekcOutDate = new Date(dailyTime + SaleTime.SECONDS_IN_A_DAY * (dailyDayOfDays + nights) * 1000);
+            if (Util.isTextEmpty(imageUrl) == false)
+            {
+                kkMsgBuilder.addImage(imageUrl, 300, 200);
+            }
 
-			String text = mContext.getString(R.string.kakao_btn_share_hotel, hotelName, simpleDateFormat.format(checkInDate), simpleDateFormat.format(chekcOutDate), nights, nights + 1);
+            kkMsgBuilder.addText(text);
 
-			if (Util.isTextEmpty(imageUrl) == false)
-			{
-				kkMsgBuilder.addImage(imageUrl, 300, 200);
-			}
+            kkLink.sendMessage(kkMsgBuilder.build(), mContext);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
 
-			kkMsgBuilder.addText(text);
+    public void shareFnB(String name, int index, String imageUrl, long dailyTime, int dailyDayOfDays)
+    {
+        try
+        {
+            String schemeParams = String.format("fnbIndex=%d&dailyTime=%d&dailyDayOfDays=%d&nights=%d", index, dailyTime, dailyDayOfDays, 0);
 
-			kkLink.sendMessage(kkMsgBuilder.build(), mContext);
-		} catch (Exception e)
-		{
-			ExLog.e(e.toString());
-		}
-	}
+            kkMsgBuilder.addAppButton(mContext.getString(R.string.kakao_btn_go_fnb), new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build()).addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
 
-	public void shareFnB(String name, int index, String imageUrl, long dailyTime, int dailyDayOfDays)
-	{
-		try
-		{
-			String schemeParams = String.format("fnbIndex=%d&dailyTime=%d&dailyDayOfDays=%d&nights=%d", index, dailyTime, dailyDayOfDays, 0);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd", Locale.KOREA);
+            simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
-			kkMsgBuilder.addAppButton(mContext.getString(R.string.kakao_btn_go_fnb), new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build()).addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
+            Date checkInDate = new Date(dailyTime + SaleTime.SECONDS_IN_A_DAY * dailyDayOfDays * 1000);
 
-			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd", Locale.KOREA);
-			simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+            String text = mContext.getString(R.string.kakao_btn_share_fnb, name, simpleDateFormat.format(checkInDate));
 
-			Date checkInDate = new Date(dailyTime + SaleTime.SECONDS_IN_A_DAY * dailyDayOfDays * 1000);
+            if (Util.isTextEmpty(imageUrl) == false)
+            {
+                kkMsgBuilder.addImage(imageUrl, 300, 200);
+            }
 
-			String text = mContext.getString(R.string.kakao_btn_share_fnb, name, simpleDateFormat.format(checkInDate));
+            kkMsgBuilder.addText(text);
 
-			if (Util.isTextEmpty(imageUrl) == false)
-			{
-				kkMsgBuilder.addImage(imageUrl, 300, 200);
-			}
-
-			kkMsgBuilder.addText(text);
-
-			kkLink.sendMessage(kkMsgBuilder.build(), mContext);
-		} catch (Exception e)
-		{
-			ExLog.e(e.toString());
-		}
-	}
+            kkLink.sendMessage(kkMsgBuilder.build(), mContext);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
 
 }

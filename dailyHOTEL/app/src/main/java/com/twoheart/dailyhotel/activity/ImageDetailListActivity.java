@@ -25,140 +25,140 @@ import java.util.List;
 
 public class ImageDetailListActivity extends BaseActivity implements Constants
 {
-	private ImageDetailListAdapter mAdapter;
-	private ListView mListView;
+    private ImageDetailListAdapter mAdapter;
+    private ListView mListView;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState)
-	{
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_image_detail_list);
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_image_detail_list);
 
-		int position = 0;
+        int position = 0;
 
-		Bundle bundle = getIntent().getExtras();
-		ArrayList<String> arrayList = null;
+        Bundle bundle = getIntent().getExtras();
+        ArrayList<String> arrayList = null;
 
-		if (bundle != null)
-		{
-			arrayList = bundle.getStringArrayList(NAME_INTENT_EXTRA_DATA_IMAGEURLLIST);
-			position = bundle.getInt(NAME_INTENT_EXTRA_DATA_SELECTED_POSOTION);
-		}
+        if (bundle != null)
+        {
+            arrayList = bundle.getStringArrayList(NAME_INTENT_EXTRA_DATA_IMAGEURLLIST);
+            position = bundle.getInt(NAME_INTENT_EXTRA_DATA_SELECTED_POSOTION);
+        }
 
-		if (arrayList == null)
-		{
-			finish();
-			return;
-		}
+        if (arrayList == null)
+        {
+            finish();
+            return;
+        }
 
-		mListView = (ListView) findViewById(R.id.listView);
+        mListView = (ListView) findViewById(R.id.listView);
 
-		mAdapter = new ImageDetailListAdapter(this, 0, arrayList);
-		mListView.setAdapter(mAdapter);
+        mAdapter = new ImageDetailListAdapter(this, 0, arrayList);
+        mListView.setAdapter(mAdapter);
 
-		mListView.setSelection(position);
-	}
+        mListView.setSelection(position);
+    }
 
-	private class ImageDetailListAdapter extends ArrayAdapter<String>
-	{
-		private AQuery mAquery;
+    private class ImageDetailListAdapter extends ArrayAdapter<String>
+    {
+        private AQuery mAquery;
 
-		public ImageDetailListAdapter(Context context, int resourceId, List<String> list)
-		{
-			super(context, resourceId, list);
+        public ImageDetailListAdapter(Context context, int resourceId, List<String> list)
+        {
+            super(context, resourceId, list);
 
-			mAquery = new AQuery(context);
-		}
+            mAquery = new AQuery(context);
+        }
 
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent)
-		{
-			View view = null;
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent)
+        {
+            View view = null;
 
-			String url = getItem(position);
+            String url = getItem(position);
 
-			if (convertView == null)
-			{
-				LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				view = layoutInflater.inflate(R.layout.list_row_image, parent, false);
-			} else
-			{
-				view = convertView;
-			}
+            if (convertView == null)
+            {
+                LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                view = layoutInflater.inflate(R.layout.list_row_image, parent, false);
+            } else
+            {
+                view = convertView;
+            }
 
-			ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
-			imageView.setBackgroundResource(R.drawable.background_hoteldetail_viewpager);
-			Bitmap cachedImg = VolleyImageLoader.getCache(url);
+            ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
+            imageView.setBackgroundResource(R.drawable.background_hoteldetail_viewpager);
+            Bitmap cachedImg = VolleyImageLoader.getCache(url);
 
-			if (cachedImg == null)
-			{
-				BitmapAjaxCallback cb = new BitmapAjaxCallback()
-				{
-					@Override
-					protected void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status)
-					{
-						if (bm != null)
-						{
-							VolleyImageLoader.putCache(url, bm);
-						}
+            if (cachedImg == null)
+            {
+                BitmapAjaxCallback cb = new BitmapAjaxCallback()
+                {
+                    @Override
+                    protected void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status)
+                    {
+                        if (bm != null)
+                        {
+                            VolleyImageLoader.putCache(url, bm);
+                        }
 
-						setImageViewHeight(iv, bm);
-						iv.setImageBitmap(bm);
-					}
-				};
+                        setImageViewHeight(iv, bm);
+                        iv.setImageBitmap(bm);
+                    }
+                };
 
-				if (Util.getLCDWidth(ImageDetailListActivity.this) < 720)
-				{
-					cb.url(url).animation(AQuery.FADE_IN);
-					mAquery.id(imageView).image(url, false, false, 240, 0, cb);
-				} else
-				{
-					cb.url(url).animation(AQuery.FADE_IN);
-					mAquery.id(imageView).image(cb);
-				}
-			} else
-			{
-				setImageViewHeight(imageView, cachedImg);
-				imageView.setImageBitmap(cachedImg);
-			}
+                if (Util.getLCDWidth(ImageDetailListActivity.this) < 720)
+                {
+                    cb.url(url).animation(AQuery.FADE_IN);
+                    mAquery.id(imageView).image(url, false, false, 240, 0, cb);
+                } else
+                {
+                    cb.url(url).animation(AQuery.FADE_IN);
+                    mAquery.id(imageView).image(cb);
+                }
+            } else
+            {
+                setImageViewHeight(imageView, cachedImg);
+                imageView.setImageBitmap(cachedImg);
+            }
 
-			return view;
-		}
+            return view;
+        }
 
-		private void setImageViewHeight(ImageView imageView, Bitmap bitmap)
-		{
-			if (bitmap == null || bitmap.getWidth() >= bitmap.getHeight())
-			{
-				RelativeLayout.LayoutParams layoutParms = (android.widget.RelativeLayout.LayoutParams) imageView.getLayoutParams();
+        private void setImageViewHeight(ImageView imageView, Bitmap bitmap)
+        {
+            if (bitmap == null || bitmap.getWidth() >= bitmap.getHeight())
+            {
+                RelativeLayout.LayoutParams layoutParms = (android.widget.RelativeLayout.LayoutParams) imageView.getLayoutParams();
 
-				int height = Util.getLCDWidth(getContext());
+                int height = Util.getLCDWidth(getContext());
 
-				if (layoutParms == null)
-				{
-					layoutParms = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, height);
-				} else
-				{
-					layoutParms.height = height;
-				}
+                if (layoutParms == null)
+                {
+                    layoutParms = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, height);
+                } else
+                {
+                    layoutParms.height = height;
+                }
 
-				imageView.setLayoutParams(layoutParms);
-			} else
-			{
-				RelativeLayout.LayoutParams layoutParms = (android.widget.RelativeLayout.LayoutParams) imageView.getLayoutParams();
+                imageView.setLayoutParams(layoutParms);
+            } else
+            {
+                RelativeLayout.LayoutParams layoutParms = (android.widget.RelativeLayout.LayoutParams) imageView.getLayoutParams();
 
-				float scale = (float) Util.getLCDWidth(getContext()) / bitmap.getWidth();
-				int height = (int) (scale * bitmap.getHeight());
+                float scale = (float) Util.getLCDWidth(getContext()) / bitmap.getWidth();
+                int height = (int) (scale * bitmap.getHeight());
 
-				if (layoutParms == null)
-				{
-					layoutParms = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, height);
-				} else
-				{
-					layoutParms.height = height;
-				}
+                if (layoutParms == null)
+                {
+                    layoutParms = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, height);
+                } else
+                {
+                    layoutParms.height = height;
+                }
 
-				imageView.setLayoutParams(layoutParms);
-			}
-		}
-	}
+                imageView.setLayoutParams(layoutParms);
+            }
+        }
+    }
 }

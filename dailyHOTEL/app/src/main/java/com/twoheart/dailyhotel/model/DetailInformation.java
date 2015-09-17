@@ -12,71 +12,70 @@ import java.util.List;
 
 public class DetailInformation implements Parcelable
 {
-	public String title;
-	private List<String> mContentsList;
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+    {
+        public DetailInformation createFromParcel(Parcel in)
+        {
+            return new DetailInformation(in);
+        }
 
-	public DetailInformation(Parcel in)
-	{
-		readFromParcel(in);
-	}
+        @Override
+        public DetailInformation[] newArray(int size)
+        {
+            return new DetailInformation[size];
+        }
 
-	public DetailInformation(JSONObject jsonObject) throws Exception
-	{
-		Iterator<String> iterator = jsonObject.keys();
-		if (iterator.hasNext() == true)
-		{
-			title = iterator.next();
+    };
+    public String title;
+    private List<String> mContentsList;
 
-			JSONArray jsonArray = jsonObject.getJSONArray(title);
-			int length = jsonArray.length();
+    public DetailInformation(Parcel in)
+    {
+        readFromParcel(in);
+    }
 
-			mContentsList = new ArrayList<String>(length);
+    public DetailInformation(JSONObject jsonObject) throws Exception
+    {
+        Iterator<String> iterator = jsonObject.keys();
+        if (iterator.hasNext() == true)
+        {
+            title = iterator.next();
 
-			for (int i = 0; i < length; i++)
-			{
-				mContentsList.add(jsonArray.getString(i));
-			}
-		}
-	}
+            JSONArray jsonArray = jsonObject.getJSONArray(title);
+            int length = jsonArray.length();
 
-	public List<String> getContentsList()
-	{
-		return mContentsList;
-	}
+            mContentsList = new ArrayList<String>(length);
 
-	@Override
-	public void writeToParcel(Parcel dest, int flags)
-	{
-		dest.writeString(title);
-		dest.writeList(mContentsList);
-	}
+            for (int i = 0; i < length; i++)
+            {
+                mContentsList.add(jsonArray.getString(i));
+            }
+        }
+    }
 
-	protected void readFromParcel(Parcel in)
-	{
-		mContentsList = new ArrayList<String>();
+    public List<String> getContentsList()
+    {
+        return mContentsList;
+    }
 
-		title = in.readString();
-		in.readList(mContentsList, List.class.getClassLoader());
-	}
+    @Override
+    public void writeToParcel(Parcel dest, int flags)
+    {
+        dest.writeString(title);
+        dest.writeList(mContentsList);
+    }
 
-	@Override
-	public int describeContents()
-	{
-		return 0;
-	}
+    protected void readFromParcel(Parcel in)
+    {
+        mContentsList = new ArrayList<String>();
 
-	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
-	{
-		public DetailInformation createFromParcel(Parcel in)
-		{
-			return new DetailInformation(in);
-		}
+        title = in.readString();
+        in.readList(mContentsList, List.class.getClassLoader());
+    }
 
-		@Override
-		public DetailInformation[] newArray(int size)
-		{
-			return new DetailInformation[size];
-		}
-
-	};
+    @Override
+    public int describeContents()
+    {
+        return 0;
+    }
 }

@@ -1,11 +1,10 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- *
+ * <p/>
  * BookingTabActivity (예약한 호텔의 예약, 정보, 지도탭을 보여주는 화면)
- * 
+ * <p/>
  * 예약한 호텔리스트에서 호텔 클릭 시 호텔의 정보들을 보여주는 화면이다.
  * 예약, 정보, 지도 프래그먼트를 담고 있는 액티비티이다.
- * 
  */
 package com.twoheart.dailyhotel.activity;
 
@@ -27,105 +26,103 @@ import java.util.ArrayList;
 
 public abstract class PlaceBookingDetailActivity extends BaseActivity
 {
-	protected TabIndicator mTabIndicator;
-	protected FragmentViewPager mFragmentViewPager;
+    protected TabIndicator mTabIndicator;
+    protected FragmentViewPager mFragmentViewPager;
 
-	protected PlaceBookingDetail mPlaceBookingDetail;
-	protected Booking booking;
+    protected PlaceBookingDetail mPlaceBookingDetail;
+    protected Booking booking;
+    protected OnPageChangeListener mOnPageChangeListener = new OnPageChangeListener()
+    {
+        @Override
+        public void onPageSelected(int position)
+        {
+            mTabIndicator.setCurrentItem(position);
 
-	protected abstract void loadFragments();
+            AnalyticsManager.getInstance(PlaceBookingDetailActivity.this).recordEvent(Screen.BOOKING_DETAIL, Action.CLICK, mTabIndicator.getMainText(position), (long) position);
+        }
 
-	protected abstract void requestPlaceBookingDetail();
+        @Override
+        public void onPageScrollStateChanged(int arg0)
+        {
+        }
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState)
-	{
-		super.onCreate(savedInstanceState);
+        @Override
+        public void onPageScrolled(int arg0, float arg1, int arg2)
+        {
+        }
+    };
+    private OnTabSelectedListener mOnTabSelectedListener = new OnTabSelectedListener()
+    {
+        @Override
+        public void onTabSelected(int position)
+        {
+            if (mFragmentViewPager == null)
+            {
+                return;
+            }
 
-		booking = new Booking();
-		Bundle bundle = getIntent().getExtras();
+            if (mFragmentViewPager.getCurrentItem() != position)
+            {
+                mFragmentViewPager.setCurrentItem(position);
+            }
+        }
+    };
 
-		if (bundle != null)
-		{
-			booking = (Booking) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_BOOKING);
-		}
+    protected abstract void loadFragments();
 
-		if (booking == null)
-		{
-			Util.restartApp(this);
-			return;
-		}
+    protected abstract void requestPlaceBookingDetail();
 
-		setContentView(R.layout.activity_booking_tab);
-		setActionBar(booking.placeName);
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
 
-		ArrayList<String> titleList = new ArrayList<String>();
-		titleList.add(getString(R.string.frag_booking_tab_title));
-		titleList.add(getString(R.string.frag_tab_info_title));
-		titleList.add(getString(R.string.frag_tab_map_title));
+        booking = new Booking();
+        Bundle bundle = getIntent().getExtras();
 
-		mTabIndicator = (TabIndicator) findViewById(R.id.tabindicator);
-		mTabIndicator.setData(titleList, false);
-		mTabIndicator.setOnTabSelectListener(mOnTabSelectedListener);
-	}
+        if (bundle != null)
+        {
+            booking = (Booking) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_BOOKING);
+        }
 
-	@Override
-	protected void onStart()
-	{
-		AnalyticsManager.getInstance(PlaceBookingDetailActivity.this).recordScreen(Screen.BOOKING_DETAIL);
-		super.onStart();
-	}
+        if (booking == null)
+        {
+            Util.restartApp(this);
+            return;
+        }
 
-	@Override
-	protected void onResume()
-	{
-		lockUI();
+        setContentView(R.layout.activity_booking_tab);
+        setActionBar(booking.placeName);
 
-		// 호텔 정보를 가져온다.
-		requestPlaceBookingDetail();
+        ArrayList<String> titleList = new ArrayList<String>();
+        titleList.add(getString(R.string.frag_booking_tab_title));
+        titleList.add(getString(R.string.frag_tab_info_title));
+        titleList.add(getString(R.string.frag_tab_map_title));
 
-		super.onResume();
-	}
+        mTabIndicator = (TabIndicator) findViewById(R.id.tabindicator);
+        mTabIndicator.setData(titleList, false);
+        mTabIndicator.setOnTabSelectListener(mOnTabSelectedListener);
+    }
 
-	private OnTabSelectedListener mOnTabSelectedListener = new OnTabSelectedListener()
-	{
-		@Override
-		public void onTabSelected(int position)
-		{
-			if (mFragmentViewPager == null)
-			{
-				return;
-			}
+    @Override
+    protected void onStart()
+    {
+        AnalyticsManager.getInstance(PlaceBookingDetailActivity.this).recordScreen(Screen.BOOKING_DETAIL);
+        super.onStart();
+    }
 
-			if (mFragmentViewPager.getCurrentItem() != position)
-			{
-				mFragmentViewPager.setCurrentItem(position);
-			}
-		}
-	};
+    @Override
+    protected void onResume()
+    {
+        lockUI();
 
-	protected OnPageChangeListener mOnPageChangeListener = new OnPageChangeListener()
-	{
-		@Override
-		public void onPageSelected(int position)
-		{
-			mTabIndicator.setCurrentItem(position);
+        // 호텔 정보를 가져온다.
+        requestPlaceBookingDetail();
 
-			AnalyticsManager.getInstance(PlaceBookingDetailActivity.this).recordEvent(Screen.BOOKING_DETAIL, Action.CLICK, mTabIndicator.getMainText(position), (long) position);
-		}
+        super.onResume();
+    }
 
-		@Override
-		public void onPageScrollStateChanged(int arg0)
-		{
-		}
-
-		@Override
-		public void onPageScrolled(int arg0, float arg1, int arg2)
-		{
-		}
-	};
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// Listener
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Listener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }

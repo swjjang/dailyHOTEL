@@ -8,51 +8,51 @@ import android.widget.TextView;
 
 public class DayView extends LinearLayout
 {
-	private TextView mDayTextView;
-	private TextView mWeekTextView;
+    private TextView mDayTextView;
+    private TextView mWeekTextView;
 
-	public DayView(Context context)
-	{
-		super(context);
+    public DayView(Context context)
+    {
+        super(context);
 
-		initLayout();
-	}
+        initLayout();
+    }
 
-	public DayView(Context context, AttributeSet attrs)
-	{
-		super(context, attrs);
+    public DayView(Context context, AttributeSet attrs)
+    {
+        super(context, attrs);
 
-		initLayout();
-	}
+        initLayout();
+    }
 
-	public DayView(Context context, AttributeSet attrs, int defStyleAttr)
-	{
-		super(context, attrs, defStyleAttr);
+    public DayView(Context context, AttributeSet attrs, int defStyleAttr)
+    {
+        super(context, attrs, defStyleAttr);
 
-		initLayout();
-	}
+        initLayout();
+    }
 
-	public DayView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
-	{
-		super(context, attrs, defStyleAttr, defStyleRes);
+    public DayView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
+    {
+        super(context, attrs, defStyleAttr, defStyleRes);
 
-		initLayout();
-	}
+        initLayout();
+    }
 
-	private void initLayout()
-	{
-		setOrientation(LinearLayout.VERTICAL);
-		setGravity(Gravity.CENTER_HORIZONTAL);
+    private void initLayout()
+    {
+        setOrientation(LinearLayout.VERTICAL);
+        setGravity(Gravity.CENTER_HORIZONTAL);
 
-		mDayTextView = new DailyCustomFontTextView(getContext());
-		mWeekTextView = new DailyCustomFontTextView(getContext());
+        mDayTextView = new DailyCustomFontTextView(getContext());
+        mWeekTextView = new DailyCustomFontTextView(getContext());
 
-		addView(mDayTextView);
-		addView(mWeekTextView);
-	}
+        addView(mDayTextView);
+        addView(mWeekTextView);
+    }
 
-	public void setSelected(boolean selected)
-	{
-		mDayTextView.setSelected(selected);
-	}
+    public void setSelected(boolean selected)
+    {
+        mDayTextView.setSelected(selected);
+    }
 }

@@ -67,13 +67,6 @@ public class FnBBookingLayout implements OnCheckedChangeListener
 
     private FnBPaymentActivity.OnUserActionListener mOnUserActionListener;
 
-    public enum UserInformationType
-    {
-        NAME,
-        PHONE,
-        EMAIL
-    }
-
     public FnBBookingLayout(BaseActivity activity, FnBPaymentActivity.OnUserActionListener listener)
     {
         mActivity = activity;
@@ -623,6 +616,13 @@ public class FnBBookingLayout implements OnCheckedChangeListener
                 mPaymentGroup.check(mAccountPaymentButton.getId());
                 break;
         }
+    }
+
+    public enum UserInformationType
+    {
+        NAME,
+        PHONE,
+        EMAIL
     }
 
     private class TelophoneClickSpannable extends ClickableSpan

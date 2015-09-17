@@ -11,28 +11,28 @@ import com.twoheart.dailyhotel.R;
 
 public class HotelNameInfoWindowAdapter implements InfoWindowAdapter
 {
-	private LayoutInflater mLayoutInflaterinflater = null;
+    private LayoutInflater mLayoutInflaterinflater = null;
 
-	public HotelNameInfoWindowAdapter(Context context)
-	{
-		mLayoutInflaterinflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	}
+    public HotelNameInfoWindowAdapter(Context context)
+    {
+        mLayoutInflaterinflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
 
-	@Override
-	public View getInfoWindow(Marker marker)
-	{
-		return (null);
-	}
+    @Override
+    public View getInfoWindow(Marker marker)
+    {
+        return (null);
+    }
 
-	@Override
-	public View getInfoContents(Marker marker)
-	{
-		View view = mLayoutInflaterinflater.inflate(R.layout.fragment_tabmap_popup, null);
+    @Override
+    public View getInfoContents(Marker marker)
+    {
+        View view = mLayoutInflaterinflater.inflate(R.layout.fragment_tabmap_popup, null);
 
-		TextView textView = (TextView) view.findViewById(R.id.titleTextView);
+        TextView textView = (TextView) view.findViewById(R.id.titleTextView);
 
-		textView.setText(marker.getTitle());
+        textView.setText(marker.getTitle());
 
-		return view;
-	}
+        return view;
+    }
 }

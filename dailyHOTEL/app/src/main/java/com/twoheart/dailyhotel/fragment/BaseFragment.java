@@ -14,186 +14,187 @@ import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.view.OnLoadListener;
 
-public abstract class BaseFragment
-		extends Fragment implements Constants, OnLoadListener, ErrorListener
+public abstract class BaseFragment extends Fragment implements Constants, OnLoadListener, ErrorListener
 {
-	protected RequestQueue mQueue;
-	protected Toast mToast;
+    protected RequestQueue mQueue;
+    protected Toast mToast;
 
-	private String mTitle;
+    private String mTitle;
 
-	/**
-	 * UI Component의 잠금 상태인지 확인하는 변수..
-	 */
-	private boolean mIsLockUiComponent = false;
+    /**
+     * UI Component의 잠금 상태인지 확인하는 변수..
+     */
+    private boolean mIsLockUiComponent = false;
 
-	public BaseFragment()
-	{
-	}
+    public BaseFragment()
+    {
+    }
 
-	@Override
-	public void onAttach(Activity activity)
-	{
-		super.onAttach(activity);
-	}
+    @Override
+    public void onAttach(Activity activity)
+    {
+        super.onAttach(activity);
+    }
 
-	@Override
-	public void onCreate(Bundle savedInstanceState)
-	{
-		super.onCreate(savedInstanceState);
-		mQueue = VolleyHttpClient.getRequestQueue();
-	}
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        mQueue = VolleyHttpClient.getRequestQueue();
+    }
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState)
-	{
-		super.onActivityCreated(savedInstanceState);
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState)
+    {
+        super.onActivityCreated(savedInstanceState);
 
-		// pinkred_font
-		//		GlobalFont.apply((ViewGroup) getView().getRootView());
-	}
+        // pinkred_font
+        //		GlobalFont.apply((ViewGroup) getView().getRootView());
+    }
 
-	@Override
-	public void onPause()
-	{
-		if (mToast != null)
-			mToast.cancel();
+    @Override
+    public void onPause()
+    {
+        if (mToast != null)
+        {
+            mToast.cancel();
+        }
 
-		super.onPause();
-	}
+        super.onPause();
+    }
 
-	public void showToast(String message, int length, boolean isAttachToFragment)
-	{
-		BaseActivity baseActivity = (BaseActivity) getActivity();
+    public void showToast(String message, int length, boolean isAttachToFragment)
+    {
+        BaseActivity baseActivity = (BaseActivity) getActivity();
 
-		if (baseActivity == null)
-		{
-			return;
-		}
+        if (baseActivity == null)
+        {
+            return;
+        }
 
-		if (isAttachToFragment)
-		{
-			mToast = Toast.makeText(baseActivity.getApplicationContext(), message, length);
-			mToast.show();
+        if (isAttachToFragment)
+        {
+            mToast = Toast.makeText(baseActivity.getApplicationContext(), message, length);
+            mToast.show();
 
-		} else
-		{
-			Toast.makeText(baseActivity.getApplicationContext(), message, length).show();
+        } else
+        {
+            Toast.makeText(baseActivity.getApplicationContext(), message, length).show();
 
-		}
-	}
+        }
+    }
 
-	public void onError(Exception error)
-	{
-		releaseUiComponent();
+    public void onError(Exception error)
+    {
+        releaseUiComponent();
 
-		BaseActivity baseActivity = (BaseActivity) getActivity();
+        BaseActivity baseActivity = (BaseActivity) getActivity();
 
-		if (baseActivity == null)
-		{
-			return;
-		}
+        if (baseActivity == null)
+        {
+            return;
+        }
 
-		baseActivity.onError(error);
-	}
+        baseActivity.onError(error);
+    }
 
-	public void onError()
-	{
-		releaseUiComponent();
+    public void onError()
+    {
+        releaseUiComponent();
 
-		BaseActivity baseActivity = (BaseActivity) getActivity();
+        BaseActivity baseActivity = (BaseActivity) getActivity();
 
-		if (baseActivity == null)
-		{
-			return;
-		}
+        if (baseActivity == null)
+        {
+            return;
+        }
 
-		baseActivity.onError();
-	}
+        baseActivity.onError();
+    }
 
-	@Override
-	public void onErrorResponse(VolleyError error)
-	{
-		releaseUiComponent();
+    @Override
+    public void onErrorResponse(VolleyError error)
+    {
+        releaseUiComponent();
 
-		BaseActivity baseActivity = (BaseActivity) getActivity();
+        BaseActivity baseActivity = (BaseActivity) getActivity();
 
-		if (baseActivity == null)
-		{
-			return;
-		}
+        if (baseActivity == null)
+        {
+            return;
+        }
 
-		baseActivity.onErrorResponse(error);
-	}
+        baseActivity.onErrorResponse(error);
+    }
 
-	@Override
-	public void lockUI()
-	{
-		BaseActivity baseActivity = (BaseActivity) getActivity();
+    @Override
+    public void lockUI()
+    {
+        BaseActivity baseActivity = (BaseActivity) getActivity();
 
-		if (baseActivity == null)
-		{
-			return;
-		}
+        if (baseActivity == null)
+        {
+            return;
+        }
 
-		lockUiComponent();
+        lockUiComponent();
 
-		baseActivity.lockUI();
-	}
+        baseActivity.lockUI();
+    }
 
-	@Override
-	public void unLockUI()
-	{
-		releaseUiComponent();
+    @Override
+    public void unLockUI()
+    {
+        releaseUiComponent();
 
-		BaseActivity baseActivity = (BaseActivity) getActivity();
+        BaseActivity baseActivity = (BaseActivity) getActivity();
 
-		if (baseActivity == null)
-		{
-			return;
-		}
+        if (baseActivity == null)
+        {
+            return;
+        }
 
-		baseActivity.unLockUI();
-	}
+        baseActivity.unLockUI();
+    }
 
-	/**
-	 * UI Component의 잠금 상태를 확인하는 변수..
-	 * 
-	 * @return
-	 */
-	protected boolean isLockUiComponent()
-	{
-		return mIsLockUiComponent;
-	}
+    /**
+     * UI Component의 잠금 상태를 확인하는 변수..
+     *
+     * @return
+     */
+    protected boolean isLockUiComponent()
+    {
+        return mIsLockUiComponent;
+    }
 
-	/**
-	 * UI Component를 잠금상태로 변경..
-	 */
-	protected void lockUiComponent()
-	{
-		mIsLockUiComponent = true;
-	}
+    /**
+     * UI Component를 잠금상태로 변경..
+     */
+    protected void lockUiComponent()
+    {
+        mIsLockUiComponent = true;
+    }
 
-	/**
-	 * UI Component를 잠금해제로 변경..
-	 */
-	protected void releaseUiComponent()
-	{
-		mIsLockUiComponent = false;
-	}
+    /**
+     * UI Component를 잠금해제로 변경..
+     */
+    protected void releaseUiComponent()
+    {
+        mIsLockUiComponent = false;
+    }
 
-	public String getTitle()
-	{
-		return mTitle;
-	}
+    public String getTitle()
+    {
+        return mTitle;
+    }
 
-	public void setTitle(String title)
-	{
-		this.mTitle = title;
-	}
+    public void setTitle(String title)
+    {
+        this.mTitle = title;
+    }
 
-	protected void chgClickable(View v)
-	{
-		v.setClickable(!v.isClickable());
-	}
+    protected void chgClickable(View v)
+    {
+        v.setClickable(!v.isClickable());
+    }
 }

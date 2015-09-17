@@ -8,97 +8,96 @@ import org.json.JSONObject;
 
 public class Province implements Parcelable
 {
-	public int index;
-	public String name;
-	public int sequence;
-	private int saleWeek = 1; // 1 : 1주일,  2 : 2주일
-	public boolean isOverseas;
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+    {
+        public Province createFromParcel(Parcel in)
+        {
+            return new Province(in);
+        }
 
-	public boolean isSelected;
+        @Override
+        public Province[] newArray(int size)
+        {
+            return new Province[size];
+        }
 
-	public Province()
-	{
-		super();
-	}
+    };
+    public int index;
+    public String name;
+    public int sequence;
+    public boolean isOverseas;
 
-	public Province(Parcel in)
-	{
-		readFromParcel(in);
-	}
+    public boolean isSelected;
+    private int saleWeek = 1; // 1 : 1주일,  2 : 2주일
 
-	public Province(JSONObject jsonObject) throws JSONException
-	{
-		index = jsonObject.getInt("idx");
-		name = jsonObject.getString("name");
+    public Province()
+    {
+        super();
+    }
 
-		if (jsonObject.has("seq") == true)
-		{
-			sequence = jsonObject.getInt("seq");
-		} else
-		{
-			sequence = 0;
-		}
+    public Province(Parcel in)
+    {
+        readFromParcel(in);
+    }
 
-		// 2주는 당분간 하지 않음
-		//		if (jsonObject.has("sale_week") == true)
-		//		{
-		//			saleWeek = jsonObject.getInt("sale_week");
-		//		} else
-		{
-			saleWeek = 1;
-		}
+    public Province(JSONObject jsonObject) throws JSONException
+    {
+        index = jsonObject.getInt("idx");
+        name = jsonObject.getString("name");
 
-		if (jsonObject.has("is_overseas") == true)
-		{
-			isOverseas = jsonObject.getBoolean("is_overseas");
-		} else
-		{
-			isOverseas = false;
-		}
-	}
+        if (jsonObject.has("seq") == true)
+        {
+            sequence = jsonObject.getInt("seq");
+        } else
+        {
+            sequence = 0;
+        }
 
-	public int getProvinceIndex()
-	{
-		return index;
-	}
+        // 2주는 당분간 하지 않음
+        //		if (jsonObject.has("sale_week") == true)
+        //		{
+        //			saleWeek = jsonObject.getInt("sale_week");
+        //		} else
+        {
+            saleWeek = 1;
+        }
 
-	@Override
-	public void writeToParcel(Parcel dest, int flags)
-	{
-		dest.writeInt(index);
-		dest.writeString(name);
-		dest.writeInt(sequence);
-		dest.writeInt(saleWeek);
-		dest.writeInt(isOverseas ? 1 : 0);
-	}
+        if (jsonObject.has("is_overseas") == true)
+        {
+            isOverseas = jsonObject.getBoolean("is_overseas");
+        } else
+        {
+            isOverseas = false;
+        }
+    }
 
-	@Override
-	public int describeContents()
-	{
-		return 0;
-	}
+    public int getProvinceIndex()
+    {
+        return index;
+    }
 
-	protected void readFromParcel(Parcel in)
-	{
-		index = in.readInt();
-		name = in.readString();
-		sequence = in.readInt();
-		saleWeek = in.readInt();
-		isOverseas = in.readInt() == 1 ? true : false;
-	}
+    @Override
+    public void writeToParcel(Parcel dest, int flags)
+    {
+        dest.writeInt(index);
+        dest.writeString(name);
+        dest.writeInt(sequence);
+        dest.writeInt(saleWeek);
+        dest.writeInt(isOverseas ? 1 : 0);
+    }
 
-	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
-	{
-		public Province createFromParcel(Parcel in)
-		{
-			return new Province(in);
-		}
+    @Override
+    public int describeContents()
+    {
+        return 0;
+    }
 
-		@Override
-		public Province[] newArray(int size)
-		{
-			return new Province[size];
-		}
-
-	};
+    protected void readFromParcel(Parcel in)
+    {
+        index = in.readInt();
+        name = in.readString();
+        sequence = in.readInt();
+        saleWeek = in.readInt();
+        isOverseas = in.readInt() == 1 ? true : false;
+    }
 }

@@ -22,130 +22,129 @@ import java.util.ArrayList;
 public class NoticeActivity extends BaseActivity
 {
 
-	private ArrayList<Board> mList;
-	private ExpandableListView mListView;
+    private ArrayList<Board> mList;
+    private ExpandableListView mListView;
+    private DailyHotelJsonResponseListener mBoardNoticeResponseListener = new DailyHotelJsonResponseListener()
+    {
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState)
-	{
-		super.onCreate(savedInstanceState);
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
 
-		setContentView(R.layout.activity_board);
-		setActionBar(R.string.actionbar_title_notice_activity);
+            mList = new ArrayList<Board>();
 
-		mListView = (ExpandableListView) findViewById(R.id.expandable_list_board);
-		mListView.setOnGroupExpandListener(new OnGroupExpandListener()
-		{
-			private int mExpandedChildPos = -1;
+            try
+            {
+                if (response == null)
+                {
+                    throw new NullPointerException("response == null");
+                }
 
-			@Override
-			public void onGroupExpand(int groupPosition)
-			{
-				if (mExpandedChildPos != -1 && groupPosition != mExpandedChildPos)
-				{
-					mListView.collapseGroup(mExpandedChildPos);
-				}
-				mExpandedChildPos = groupPosition;
-				mListView.setSelectionFromTop(mExpandedChildPos, 0);
+                JSONArray json = response.getJSONArray("articles");
 
-				AnalyticsManager.getInstance(NoticeActivity.this).recordEvent(Screen.NOTICE, Action.CLICK, mList.get(groupPosition).getSubject(), (long) (groupPosition + 1));
-			}
-		});
-	}
+                int length = json.length();
+                for (int i = 0; i < length; i++)
+                {
 
-	@Override
-	protected void onStart()
-	{
-		AnalyticsManager.getInstance(NoticeActivity.this).recordScreen(Screen.NOTICE);
-		super.onStart();
-	}
+                    JSONObject obj = json.getJSONObject(i);
+                    String subject = obj.getString("subject");
+                    String content = obj.getString("content");
+                    String regdate = obj.getString("regdate");
 
-	@Override
-	protected void onResume()
-	{
-		super.onResume();
+                    mList.add(new Board(subject, content, regdate));
+                }
 
-		lockUI();
-		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_BOARD_NOTICE).toString(), null, mBoardNoticeResponseListener, this));
-	}
+                mListView.setAdapter(new BoardListAdapter(NoticeActivity.this, mList));
+            } catch (Exception e)
+            {
+                onError(e);
+            } finally
+            {
+                unLockUI();
+            }
+        }
+    };
 
-	@Override
-	public void finish()
-	{
-		super.finish();
-		overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
-	}
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
 
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// Listener
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        setContentView(R.layout.activity_board);
+        setActionBar(R.string.actionbar_title_notice_activity);
 
-	private DailyHotelJsonResponseListener mBoardNoticeResponseListener = new DailyHotelJsonResponseListener()
-	{
+        mListView = (ExpandableListView) findViewById(R.id.expandable_list_board);
+        mListView.setOnGroupExpandListener(new OnGroupExpandListener()
+        {
+            private int mExpandedChildPos = -1;
 
-		@Override
-		public void onResponse(String url, JSONObject response)
-		{
+            @Override
+            public void onGroupExpand(int groupPosition)
+            {
+                if (mExpandedChildPos != -1 && groupPosition != mExpandedChildPos)
+                {
+                    mListView.collapseGroup(mExpandedChildPos);
+                }
+                mExpandedChildPos = groupPosition;
+                mListView.setSelectionFromTop(mExpandedChildPos, 0);
 
-			mList = new ArrayList<Board>();
+                AnalyticsManager.getInstance(NoticeActivity.this).recordEvent(Screen.NOTICE, Action.CLICK, mList.get(groupPosition).getSubject(), (long) (groupPosition + 1));
+            }
+        });
+    }
 
-			try
-			{
-				if (response == null)
-				{
-					throw new NullPointerException("response == null");
-				}
+    @Override
+    protected void onStart()
+    {
+        AnalyticsManager.getInstance(NoticeActivity.this).recordScreen(Screen.NOTICE);
+        super.onStart();
+    }
 
-				JSONArray json = response.getJSONArray("articles");
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
 
-				int length = json.length();
-				for (int i = 0; i < length; i++)
-				{
+        lockUI();
+        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_BOARD_NOTICE).toString(), null, mBoardNoticeResponseListener, this));
+    }
 
-					JSONObject obj = json.getJSONObject(i);
-					String subject = obj.getString("subject");
-					String content = obj.getString("content");
-					String regdate = obj.getString("regdate");
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Listener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-					mList.add(new Board(subject, content, regdate));
-				}
+    @Override
+    public void finish()
+    {
+        super.finish();
+        overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
+    }
 
-				mListView.setAdapter(new BoardListAdapter(NoticeActivity.this, mList));
-			} catch (Exception e)
-			{
-				onError(e);
-			} finally
-			{
-				unLockUI();
-			}
-		}
-	};
-
-	//	@Override
-	//	public void onResponse(String url, JSONObject response) {
-	//		if (url.contains(URL_WEBAPI_BOARD_NOTICE)) {
-	//			mList = new ArrayList<Board>();
-	//
-	//			try {
-	//				JSONObject jsonObj = response;
-	//				JSONArray json = jsonObj.getJSONArray("articles");
-	//
-	//				for (int i = 0; i < json.length(); i++) {
-	//
-	//					JSONObject obj = json.getJSONObject(i);
-	//					String subject = obj.getString("subject");
-	//					String content = obj.getString("content");
-	//					String regdate = obj.getString("regdate");
-	//
-	//					mList.add(new Board(subject, content, regdate));
-	//				}
-	//				
-	//				mListView.setAdapter(new BoardListAdapter(this, mList));
-	//			} catch (Exception e) {
-	//				onError(e);
-	//			} finally {
-	//				unLockUI();
-	//			}
-	//		}
-	//	}
+    //	@Override
+    //	public void onResponse(String url, JSONObject response) {
+    //		if (url.contains(URL_WEBAPI_BOARD_NOTICE)) {
+    //			mList = new ArrayList<Board>();
+    //
+    //			try {
+    //				JSONObject jsonObj = response;
+    //				JSONArray json = jsonObj.getJSONArray("articles");
+    //
+    //				for (int i = 0; i < json.length(); i++) {
+    //
+    //					JSONObject obj = json.getJSONObject(i);
+    //					String subject = obj.getString("subject");
+    //					String content = obj.getString("content");
+    //					String regdate = obj.getString("regdate");
+    //
+    //					mList.add(new Board(subject, content, regdate));
+    //				}
+    //
+    //				mListView.setAdapter(new BoardListAdapter(this, mList));
+    //			} catch (Exception e) {
+    //				onError(e);
+    //			} finally {
+    //				unLockUI();
+    //			}
+    //		}
+    //	}
 }

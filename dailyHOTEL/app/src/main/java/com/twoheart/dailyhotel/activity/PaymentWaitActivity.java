@@ -1,11 +1,10 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- *
+ * <p/>
  * PaymentWaitActivity (입금대기 화면)
- * 
+ * <p/>
  * 계좌이체 결제 선택 후 입금대기 상태 화면
  * 가상계좌 정보를 보여주는 화면이다.
- * 
  */
 package com.twoheart.dailyhotel.activity;
 
@@ -35,202 +34,200 @@ import java.text.DecimalFormat;
 
 public class PaymentWaitActivity extends BaseActivity
 {
-	private Booking booking;
+    private Booking booking;
 
-	private TextView tvHotelName;
-	private TextView tvAccount;
-	private TextView tvName;
-	private TextView tvPrice;
-	private TextView tvDeadline;
-	private TextView tvGuide1;
-	private TextView tvGuide2;
+    private TextView tvHotelName;
+    private TextView tvAccount;
+    private TextView tvName;
+    private TextView tvPrice;
+    private TextView tvDeadline;
+    private TextView tvGuide1;
+    private TextView tvGuide2;
+    private DailyHotelJsonResponseListener mHotelReservationJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState)
-	{
-		super.onCreate(savedInstanceState);
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                if (response == null)
+                {
+                    throw new NullPointerException("response == null");
+                }
 
-		booking = new Booking();
-		Bundle bundle = getIntent().getExtras();
+                if (response.getBoolean("result") == false)
+                {
+                    Intent intent = new Intent();
+                    intent.putExtra("msg", response.getString("msg"));
+                    setResult(CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT, intent);
+                    finish();
+                } else
+                {
+                    tvAccount.setText(response.getString("bank_name") + ", " + response.getString("account_num"));
+                    tvName.setText(response.getString("name"));
 
-		if (bundle != null)
-		{
-			booking = (Booking) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_BOOKING);
-		}
+                    DecimalFormat comma = new DecimalFormat("###,##0");
+                    tvPrice.setText(comma.format(response.getInt("amt")) + Html.fromHtml(getString(R.string.currency)));
 
-		setContentView(R.layout.activity_payment_wait);
-		setActionBar(getString(R.string.actionbar_title_payment_wait_activity));
+                    String[] dateSlice = response.getString("date").split("/");
+                    String[] timeSlice = response.getString("time").split(":");
 
-		tvHotelName = (TextView) findViewById(R.id.tv_payment_wait_hotel_name);
-		tvAccount = (TextView) findViewById(R.id.tv_payment_wait_account);
-		tvName = (TextView) findViewById(R.id.tv_payment_wait_name);
-		tvPrice = (TextView) findViewById(R.id.tv_payment_wait_price);
-		tvDeadline = (TextView) findViewById(R.id.tv_payment_wait_deadline);
-		tvGuide1 = (TextView) findViewById(R.id.tv_payment_wait_guide1);
-		tvGuide2 = (TextView) findViewById(R.id.tv_payment_wait_guide2);
+                    tvDeadline.setText(Integer.parseInt(dateSlice[1]) + "월 " + Integer.parseInt(dateSlice[2]) + "일 " + timeSlice[0] + ":" + timeSlice[1] + "까지");
 
-		tvHotelName.setText(booking.placeName);
+                    tvGuide1.setText(response.getString("msg1"));
+                    tvGuide2.setText(response.getString("msg2"));
+                    unLockUI();
+                }
 
-		lockUI();
+            } catch (JSONException e)
+            {
+                ExLog.e(e.toString());
+            }
+        }
+    };
+    private DailyHotelJsonResponseListener mFnBReservationJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
 
-		switch (booking.placeType)
-		{
-			case HOTEL:
-			{
-				String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_MINE_DETAIL).append('/').append(booking.payType).append('/').append(booking.tid).toString();
-				mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null, mHotelReservationJsonResponseListener, this));
-				break;
-			}
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                if (response == null)
+                {
+                    throw new NullPointerException("response == null");
+                }
 
-			case FNB:
-			{
-				String params = String.format("?tid=%s", booking.tid);
-				String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_SESSION_VBANK_ACCOUNT_INFO).append(params).toString();
-				mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null, mFnBReservationJsonResponseListener, this));
-				break;
-			}
-		}
-	}
+                int msg_code = response.getInt("msg_code");
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
-	{
-		getMenuInflater().inflate(R.menu.payment_wait_actions, menu);
-		return true;
-	}
+                if (msg_code == 0)
+                {
+                    JSONObject jsonObject = response.getJSONObject("data");
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item)
-	{
-		switch (item.getItemId())
-		{
-			case R.id.action_call:
-				if (isFinishing() == true)
-				{
-					return super.onOptionsItemSelected(item);
-				}
+                    tvAccount.setText(jsonObject.getString("bank_name") + ", " + jsonObject.getString("account_num"));
+                    tvName.setText(jsonObject.getString("name"));
 
-				String title = getString(R.string.dialog_notice2);
-				String message = getString(R.string.dialog_msg_call);
-				String positive = getString(R.string.dialog_btn_call);
+                    DecimalFormat comma = new DecimalFormat("###,##0");
+                    tvPrice.setText(comma.format(jsonObject.getInt("amt")) + Html.fromHtml(getString(R.string.currency)));
 
-				showSimpleDialog(title, message, positive, new View.OnClickListener()
-				{
-					@Override
-					public void onClick(View view)
-					{
-						if (Util.isTelephonyEnabled(PaymentWaitActivity.this) == true)
-						{
-							Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
-							startActivity(i);
-						} else
-						{
-							DailyToast.showToast(PaymentWaitActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
-						}
-					}
-				});
-				return true;
+                    String[] dateSlice = jsonObject.getString("date").split("/");
+                    String[] timeSlice = jsonObject.getString("time").split(":");
 
-			default:
-				return super.onOptionsItemSelected(item);
-		}
-	}
+                    tvDeadline.setText(Integer.parseInt(dateSlice[1]) + "월 " + Integer.parseInt(dateSlice[2]) + "일 " + timeSlice[0] + ":" + timeSlice[1] + "까지");
 
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// Listener
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                    tvGuide1.setText(jsonObject.getString("msg1"));
+                    tvGuide2.setText(jsonObject.getString("msg2"));
+                } else
+                {
+                    Intent intent = new Intent();
+                    intent.putExtra("msg", response.getString("msg"));
+                    setResult(CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT, intent);
+                    finish();
+                }
+            } catch (Exception e)
+            {
+                onError(e);
+                finish();
+            } finally
+            {
+                unLockUI();
+            }
+        }
+    };
 
-	private DailyHotelJsonResponseListener mHotelReservationJsonResponseListener = new DailyHotelJsonResponseListener()
-	{
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
 
-		@Override
-		public void onResponse(String url, JSONObject response)
-		{
-			try
-			{
-				if (response == null)
-				{
-					throw new NullPointerException("response == null");
-				}
+        booking = new Booking();
+        Bundle bundle = getIntent().getExtras();
 
-				if (response.getBoolean("result") == false)
-				{
-					Intent intent = new Intent();
-					intent.putExtra("msg", response.getString("msg"));
-					setResult(CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT, intent);
-					finish();
-				} else
-				{
-					tvAccount.setText(response.getString("bank_name") + ", " + response.getString("account_num"));
-					tvName.setText(response.getString("name"));
+        if (bundle != null)
+        {
+            booking = (Booking) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_BOOKING);
+        }
 
-					DecimalFormat comma = new DecimalFormat("###,##0");
-					tvPrice.setText(comma.format(response.getInt("amt")) + Html.fromHtml(getString(R.string.currency)));
+        setContentView(R.layout.activity_payment_wait);
+        setActionBar(getString(R.string.actionbar_title_payment_wait_activity));
 
-					String[] dateSlice = response.getString("date").split("/");
-					String[] timeSlice = response.getString("time").split(":");
+        tvHotelName = (TextView) findViewById(R.id.tv_payment_wait_hotel_name);
+        tvAccount = (TextView) findViewById(R.id.tv_payment_wait_account);
+        tvName = (TextView) findViewById(R.id.tv_payment_wait_name);
+        tvPrice = (TextView) findViewById(R.id.tv_payment_wait_price);
+        tvDeadline = (TextView) findViewById(R.id.tv_payment_wait_deadline);
+        tvGuide1 = (TextView) findViewById(R.id.tv_payment_wait_guide1);
+        tvGuide2 = (TextView) findViewById(R.id.tv_payment_wait_guide2);
 
-					tvDeadline.setText(Integer.parseInt(dateSlice[1]) + "월 " + Integer.parseInt(dateSlice[2]) + "일 " + timeSlice[0] + ":" + timeSlice[1] + "까지");
+        tvHotelName.setText(booking.placeName);
 
-					tvGuide1.setText(response.getString("msg1"));
-					tvGuide2.setText(response.getString("msg2"));
-					unLockUI();
-				}
+        lockUI();
 
-			} catch (JSONException e)
-			{
-				ExLog.e(e.toString());
-			}
-		}
-	};
+        switch (booking.placeType)
+        {
+            case HOTEL:
+            {
+                String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_MINE_DETAIL).append('/').append(booking.payType).append('/').append(booking.tid).toString();
+                mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null, mHotelReservationJsonResponseListener, this));
+                break;
+            }
 
-	private DailyHotelJsonResponseListener mFnBReservationJsonResponseListener = new DailyHotelJsonResponseListener()
-	{
+            case FNB:
+            {
+                String params = String.format("?tid=%s", booking.tid);
+                String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_SESSION_VBANK_ACCOUNT_INFO).append(params).toString();
+                mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null, mFnBReservationJsonResponseListener, this));
+                break;
+            }
+        }
+    }
 
-		@Override
-		public void onResponse(String url, JSONObject response)
-		{
-			try
-			{
-				if (response == null)
-				{
-					throw new NullPointerException("response == null");
-				}
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Listener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-				int msg_code = response.getInt("msg_code");
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        getMenuInflater().inflate(R.menu.payment_wait_actions, menu);
+        return true;
+    }
 
-				if (msg_code == 0)
-				{
-					JSONObject jsonObject = response.getJSONObject("data");
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case R.id.action_call:
+                if (isFinishing() == true)
+                {
+                    return super.onOptionsItemSelected(item);
+                }
 
-					tvAccount.setText(jsonObject.getString("bank_name") + ", " + jsonObject.getString("account_num"));
-					tvName.setText(jsonObject.getString("name"));
+                String title = getString(R.string.dialog_notice2);
+                String message = getString(R.string.dialog_msg_call);
+                String positive = getString(R.string.dialog_btn_call);
 
-					DecimalFormat comma = new DecimalFormat("###,##0");
-					tvPrice.setText(comma.format(jsonObject.getInt("amt")) + Html.fromHtml(getString(R.string.currency)));
+                showSimpleDialog(title, message, positive, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        if (Util.isTelephonyEnabled(PaymentWaitActivity.this) == true)
+                        {
+                            Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
+                            startActivity(i);
+                        } else
+                        {
+                            DailyToast.showToast(PaymentWaitActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
+                        }
+                    }
+                });
+                return true;
 
-					String[] dateSlice = jsonObject.getString("date").split("/");
-					String[] timeSlice = jsonObject.getString("time").split(":");
-
-					tvDeadline.setText(Integer.parseInt(dateSlice[1]) + "월 " + Integer.parseInt(dateSlice[2]) + "일 " + timeSlice[0] + ":" + timeSlice[1] + "까지");
-
-					tvGuide1.setText(jsonObject.getString("msg1"));
-					tvGuide2.setText(jsonObject.getString("msg2"));
-				} else
-				{
-					Intent intent = new Intent();
-					intent.putExtra("msg", response.getString("msg"));
-					setResult(CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT, intent);
-					finish();
-				}
-			} catch (Exception e)
-			{
-				onError(e);
-				finish();
-			} finally
-			{
-				unLockUI();
-			}
-		}
-	};
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }

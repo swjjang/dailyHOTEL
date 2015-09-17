@@ -10,27 +10,27 @@ import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 public class AboutActivity extends WebViewActivity
 {
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState)
-	{
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_about);
-		setActionBar(R.string.actionbar_title_about_activity);
-	}
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_about);
+        setActionBar(R.string.actionbar_title_about_activity);
+    }
 
-	@Override
-	protected void onStart()
-	{
-		AnalyticsManager.getInstance(this).recordScreen(Screen.ABOUT);
+    @Override
+    protected void onStart()
+    {
+        AnalyticsManager.getInstance(this).recordScreen(Screen.ABOUT);
 
-		super.onStart();
-	}
+        super.onStart();
+    }
 
-	@Override
-	protected void onResume()
-	{
-		super.onResume();
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
 
-		setWebView(DailyHotelRequest.getUrlDecoderEx(URL_WEB_ABOUT));
-	}
+        setWebView(DailyHotelRequest.getUrlDecoderEx(URL_WEB_ABOUT));
+    }
 }

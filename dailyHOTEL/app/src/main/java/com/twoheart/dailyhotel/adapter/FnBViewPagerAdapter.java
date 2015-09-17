@@ -28,134 +28,134 @@ import java.text.DecimalFormat;
 
 public class FnBViewPagerAdapter extends PlaceViewPagerAdapter
 {
-	public FnBViewPagerAdapter(Context context)
-	{
-		super(context);
-	}
+    public FnBViewPagerAdapter(Context context)
+    {
+        super(context);
+    }
 
-	@Override
-	protected void makeLayout(View view, final Place place)
-	{
-		RelativeLayout llHotelRowContent = (RelativeLayout) view.findViewById(R.id.ll_hotel_row_content);
-		final ImageView img = (ImageView) view.findViewById(R.id.iv_hotel_row_img);
-		TextView name = (TextView) view.findViewById(R.id.tv_hotel_row_name);
-		TextView priceTextView = (TextView) view.findViewById(R.id.tv_hotel_row_price);
-		TextView discountTextView = (TextView) view.findViewById(R.id.tv_hotel_row_discount);
-		TextView sold_out = (TextView) view.findViewById(R.id.tv_hotel_row_soldout);
-		TextView address = (TextView) view.findViewById(R.id.tv_hotel_row_address);
-		TextView grade = (TextView) view.findViewById(R.id.hv_hotel_grade);
-		View closeView = view.findViewById(R.id.closeImageVIew);
+    @Override
+    protected void makeLayout(View view, final Place place)
+    {
+        RelativeLayout llHotelRowContent = (RelativeLayout) view.findViewById(R.id.ll_hotel_row_content);
+        final ImageView img = (ImageView) view.findViewById(R.id.iv_hotel_row_img);
+        TextView name = (TextView) view.findViewById(R.id.tv_hotel_row_name);
+        TextView priceTextView = (TextView) view.findViewById(R.id.tv_hotel_row_price);
+        TextView discountTextView = (TextView) view.findViewById(R.id.tv_hotel_row_discount);
+        TextView sold_out = (TextView) view.findViewById(R.id.tv_hotel_row_soldout);
+        TextView address = (TextView) view.findViewById(R.id.tv_hotel_row_address);
+        TextView grade = (TextView) view.findViewById(R.id.hv_hotel_grade);
+        View closeView = view.findViewById(R.id.closeImageVIew);
 
-		DecimalFormat comma = new DecimalFormat("###,##0");
+        DecimalFormat comma = new DecimalFormat("###,##0");
 
-		address.setText(place.address);
-		name.setText(place.name);
+        address.setText(place.address);
+        name.setText(place.name);
 
-		Spanned currency = Html.fromHtml(mContext.getResources().getString(R.string.currency));
+        Spanned currency = Html.fromHtml(mContext.getResources().getString(R.string.currency));
 
-		int price = place.price;
+        int price = place.price;
 
-		if (price <= 0)
-		{
-			priceTextView.setVisibility(View.INVISIBLE);
+        if (price <= 0)
+        {
+            priceTextView.setVisibility(View.INVISIBLE);
 
-			priceTextView.setText(null);
-		} else
-		{
-			priceTextView.setVisibility(View.VISIBLE);
+            priceTextView.setText(null);
+        } else
+        {
+            priceTextView.setVisibility(View.VISIBLE);
 
-			priceTextView.setText(comma.format(price) + currency);
-			priceTextView.setPaintFlags(priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-		}
+            priceTextView.setText(comma.format(price) + currency);
+            priceTextView.setPaintFlags(priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        }
 
-		discountTextView.setText(comma.format(place.discountPrice) + currency);
+        discountTextView.setText(comma.format(place.discountPrice) + currency);
 
-		name.setSelected(true); // Android TextView marquee bug
+        name.setSelected(true); // Android TextView marquee bug
 
-		final int colors[] = { Color.parseColor("#ED000000"), Color.parseColor("#E8000000"), Color.parseColor("#E2000000"), Color.parseColor("#66000000"), Color.parseColor("#00000000") };
-		final float positions[] = { 0.0f, 0.01f, 0.02f, 0.17f, 0.38f };
+        final int colors[] = {Color.parseColor("#ED000000"), Color.parseColor("#E8000000"), Color.parseColor("#E2000000"), Color.parseColor("#66000000"), Color.parseColor("#00000000")};
+        final float positions[] = {0.0f, 0.01f, 0.02f, 0.17f, 0.38f};
 
-		PaintDrawable p = new PaintDrawable();
-		p.setShape(new RectShape());
+        PaintDrawable p = new PaintDrawable();
+        p.setShape(new RectShape());
 
-		ShapeDrawable.ShaderFactory sf = new ShapeDrawable.ShaderFactory()
-		{
-			@Override
-			public Shader resize(int width, int height)
-			{
-				return new LinearGradient(0, height, 0, 0, colors, positions, Shader.TileMode.CLAMP);
-			}
-		};
+        ShapeDrawable.ShaderFactory sf = new ShapeDrawable.ShaderFactory()
+        {
+            @Override
+            public Shader resize(int width, int height)
+            {
+                return new LinearGradient(0, height, 0, 0, colors, positions, Shader.TileMode.CLAMP);
+            }
+        };
 
-		p.setShaderFactory(sf);
-		llHotelRowContent.setBackgroundDrawable(p);
+        p.setShaderFactory(sf);
+        llHotelRowContent.setBackgroundDrawable(p);
 
-		// grade
-		grade.setText(place.grade.getName(mContext));
-		grade.setBackgroundResource(place.grade.getColorResId());
+        // grade
+        grade.setText(place.grade.getName(mContext));
+        grade.setBackgroundResource(place.grade.getColorResId());
 
-		// Used AQuery
-		AQuery aquery = new AQuery(view);
-		Bitmap cachedImg = VolleyImageLoader.getCache(place.imageUrl);
+        // Used AQuery
+        AQuery aquery = new AQuery(view);
+        Bitmap cachedImg = VolleyImageLoader.getCache(place.imageUrl);
 
-		if (cachedImg == null)
-		{ // 힛인 밸류가 없다면 이미지를 불러온 후 캐시에 세이브
-			BitmapAjaxCallback bitmapAjaxCallback = new BitmapAjaxCallback()
-			{
-				@Override
-				protected void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status)
-				{
-					VolleyImageLoader.putCache(url, bm);
-					super.callback(url, iv, bm, status);
-				}
-			};
+        if (cachedImg == null)
+        { // 힛인 밸류가 없다면 이미지를 불러온 후 캐시에 세이브
+            BitmapAjaxCallback bitmapAjaxCallback = new BitmapAjaxCallback()
+            {
+                @Override
+                protected void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status)
+                {
+                    VolleyImageLoader.putCache(url, bm);
+                    super.callback(url, iv, bm, status);
+                }
+            };
 
-			if (Util.getLCDWidth(mContext) < 720)
-			{
-				bitmapAjaxCallback.url(place.imageUrl).animation(AQuery.FADE_IN);
-				aquery.id(img).image(place.imageUrl, false, false, 240, 0, bitmapAjaxCallback);
-			} else
-			{
-				bitmapAjaxCallback.url(place.imageUrl).animation(AQuery.FADE_IN);
-				aquery.id(img).image(bitmapAjaxCallback);
-			}
-		} else
-		{
-			aquery.id(img).image(cachedImg);
-		}
+            if (Util.getLCDWidth(mContext) < 720)
+            {
+                bitmapAjaxCallback.url(place.imageUrl).animation(AQuery.FADE_IN);
+                aquery.id(img).image(place.imageUrl, false, false, 240, 0, bitmapAjaxCallback);
+            } else
+            {
+                bitmapAjaxCallback.url(place.imageUrl).animation(AQuery.FADE_IN);
+                aquery.id(img).image(bitmapAjaxCallback);
+            }
+        } else
+        {
+            aquery.id(img).image(cachedImg);
+        }
 
-		// SOLD OUT 표시
-		if (place.isSoldOut == true)
-		{
-			sold_out.setVisibility(View.VISIBLE);
-		} else
-		{
-			sold_out.setVisibility(View.GONE);
-		}
+        // SOLD OUT 표시
+        if (place.isSoldOut == true)
+        {
+            sold_out.setVisibility(View.VISIBLE);
+        } else
+        {
+            sold_out.setVisibility(View.GONE);
+        }
 
-		closeView.setOnClickListener(new View.OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
-			{
-				if (mOnUserActionListener != null)
-				{
-					mOnUserActionListener.onCloseInfoWindowClickListener();
-				}
-			}
-		});
+        closeView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (mOnUserActionListener != null)
+                {
+                    mOnUserActionListener.onCloseInfoWindowClickListener();
+                }
+            }
+        });
 
-		llHotelRowContent.setOnClickListener(new View.OnClickListener()
-		{
+        llHotelRowContent.setOnClickListener(new View.OnClickListener()
+        {
 
-			@Override
-			public void onClick(View v)
-			{
-				if (mOnUserActionListener != null)
-				{
-					mOnUserActionListener.onInfoWindowClickListener(place);
-				}
-			}
-		});
-	}
+            @Override
+            public void onClick(View v)
+            {
+                if (mOnUserActionListener != null)
+                {
+                    mOnUserActionListener.onInfoWindowClickListener(place);
+                }
+            }
+        });
+    }
 }

@@ -13,48 +13,48 @@ import java.text.DecimalFormat;
 
 public class HotelRenderer
 {
-	private Context mContext;
-	private String mPrice;
-	private int mMarkerResId;
-	private HotelIconGenerator mIconGenerator;
+    private Context mContext;
+    private String mPrice;
+    private int mMarkerResId;
+    private HotelIconGenerator mIconGenerator;
 
-	public HotelRenderer(Context context, Hotel hotel)
-	{
-		mContext = context;
+    public HotelRenderer(Context context, Hotel hotel)
+    {
+        mContext = context;
 
-		DecimalFormat comma = new DecimalFormat("###,##0");
+        DecimalFormat comma = new DecimalFormat("###,##0");
 
-		mPrice = "₩" + comma.format(hotel.averageDiscount);
+        mPrice = "₩" + comma.format(hotel.averageDiscount);
 
-		mMarkerResId = hotel.getCategory().getMarkerResId();
+        mMarkerResId = hotel.getCategory().getMarkerResId();
 
-		mIconGenerator = new HotelIconGenerator(mContext);
-		mIconGenerator.setTextColor(mContext.getResources().getColor(R.color.white));
-	}
+        mIconGenerator = new HotelIconGenerator(mContext);
+        mIconGenerator.setTextColor(mContext.getResources().getColor(R.color.white));
+    }
 
-	public BitmapDescriptor getBitmap(boolean isSelected)
-	{
-		Bitmap icon = null;
+    public BitmapDescriptor getBitmap(boolean isSelected)
+    {
+        Bitmap icon = null;
 
-		try
-		{
-			if (isSelected == false)
-			{
-				icon = mIconGenerator.makeIcon(mPrice, mMarkerResId);
-			} else
-			{
-				icon = mIconGenerator.makeSelectedIcon(mPrice, mMarkerResId);
-			}
-		} catch (OutOfMemoryError e)
-		{
-			ExLog.d(e.toString());
-		}
+        try
+        {
+            if (isSelected == false)
+            {
+                icon = mIconGenerator.makeIcon(mPrice, mMarkerResId);
+            } else
+            {
+                icon = mIconGenerator.makeSelectedIcon(mPrice, mMarkerResId);
+            }
+        } catch (OutOfMemoryError e)
+        {
+            ExLog.d(e.toString());
+        }
 
-		if (icon == null)
-		{
-			return null;
-		}
+        if (icon == null)
+        {
+            return null;
+        }
 
-		return BitmapDescriptorFactory.fromBitmap(icon);
-	}
+        return BitmapDescriptorFactory.fromBitmap(icon);
+    }
 }

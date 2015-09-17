@@ -11,50 +11,56 @@ import com.twoheart.dailyhotel.view.LoopViewPager;
 
 public class HotelViewPager extends LoopViewPager
 {
-	public HotelViewPager(Context context)
-	{
-		super(context);
-	}
+    public HotelViewPager(Context context)
+    {
+        super(context);
+    }
 
-	public HotelViewPager(Context context, AttributeSet attrs)
-	{
-		super(context, attrs);
-	}
+    public HotelViewPager(Context context, AttributeSet attrs)
+    {
+        super(context, attrs);
+    }
 
-	@Override
-	protected boolean canScroll(View v, boolean checkV, int dx, int x, int y)
-	{
-		if (v != null)
-			if (v.getClass() != null)
-				if (v.getClass().getPackage() != null)
-					if (v.getClass().getPackage().getName().startsWith("maps."))
-					{
-						return true;
-					} else if (v != this && v instanceof ViewPager)
-					{
-						return true;
-					}
+    @Override
+    protected boolean canScroll(View v, boolean checkV, int dx, int x, int y)
+    {
+        if (v != null)
+        {
+            if (v.getClass() != null)
+            {
+                if (v.getClass().getPackage() != null)
+                {
+                    if (v.getClass().getPackage().getName().startsWith("maps."))
+                    {
+                        return true;
+                    } else if (v != this && v instanceof ViewPager)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
 
-		return super.canScroll(v, checkV, dx, x, y);
-	}
+        return super.canScroll(v, checkV, dx, x, y);
+    }
 
-	@Override
-	public boolean onInterceptTouchEvent(MotionEvent event)
-	{
-		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1)
-		{
-			if (event.getAction() == MotionEvent.ACTION_MOVE)
-			{
-				this.getParent().requestDisallowInterceptTouchEvent(true);
-				return true;
-			} else
-			{
-				return super.onInterceptTouchEvent(event);
-			}
-		} else
-		{
-			return super.onInterceptTouchEvent(event);
-		}
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent event)
+    {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1)
+        {
+            if (event.getAction() == MotionEvent.ACTION_MOVE)
+            {
+                this.getParent().requestDisallowInterceptTouchEvent(true);
+                return true;
+            } else
+            {
+                return super.onInterceptTouchEvent(event);
+            }
+        } else
+        {
+            return super.onInterceptTouchEvent(event);
+        }
 
-	}
+    }
 }

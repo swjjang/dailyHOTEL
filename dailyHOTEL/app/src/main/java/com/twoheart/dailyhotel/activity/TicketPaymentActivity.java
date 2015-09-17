@@ -15,23 +15,13 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
 import android.text.TextPaint;
 import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
@@ -53,10 +43,7 @@ import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.view.FinalCheckLayout;
-import com.twoheart.dailyhotel.view.widget.DailySignatureView;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
-import com.twoheart.dailyhotel.view.widget.FontManager;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -72,9 +59,9 @@ public abstract class TicketPaymentActivity extends BaseActivity
 {
     protected static final int DEFAULT_AVAILABLE_RESERVES = 20000;
 
-    private static final int DIALOG_CONFIRM_PAYMENT_CARD = 0;
-    private static final int DIALOG_CONFIRM_PAYMENT_HP = 1;
-    private static final int DIALOG_CONFIRM_PAYMENT_ACCOUNT = 2;
+    protected static final int DIALOG_CONFIRM_PAYMENT_CARD = 0;
+    protected static final int DIALOG_CONFIRM_PAYMENT_HP = 1;
+    protected static final int DIALOG_CONFIRM_PAYMENT_ACCOUNT = 2;
 
     protected static final int STATE_NONE = 0;
     protected static final int STATE_ACTIVITY_RESULT = 1;
@@ -83,16 +70,335 @@ public abstract class TicketPaymentActivity extends BaseActivity
     protected TicketPayment mTicketPayment;
     protected CreditCard mSelectedCreditCard;
     protected boolean mIsChangedPrice; // 가격이 변경된 경우.
+    protected int mState;
+    protected Dialog mFinalCheckDialog;
+    protected SaleTime mCheckInSaleTime;
+    protected boolean mIsEditMode;
+    protected DailyHotelJsonResponseListener mUserSessionBillingCardInfoJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                if (response == null)
+                {
+                    onInternalError();
+                    return;
+                }
 
+                // 해당 화면은 메시지를 넣지 않는다.
+                int msg_code = response.getInt("msg_code");
+
+                if (msg_code != 0)
+                {
+                    ExLog.d("msg_code : " + msg_code);
+                }
+
+                JSONArray jsonArray = response.getJSONArray("data");
+                int length = jsonArray.length();
+
+                if (length == 0)
+                {
+                    mSelectedCreditCard = null;
+                } else
+                {
+                    if (mSelectedCreditCard == null)
+                    {
+                        JSONObject jsonObject = jsonArray.getJSONObject(0);
+                        mSelectedCreditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"), jsonObject.getString("cardcd"));
+                    } else
+                    {
+                        boolean hasCreditCard = false;
+
+                        for (int i = 0; i < length; i++)
+                        {
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                            if (mSelectedCreditCard.billingkey.equals(jsonObject.getString("billkey")) == true)
+                            {
+                                hasCreditCard = true;
+                                break;
+                            }
+                        }
+
+                        // 기존에 선택한 카드를 지우고 돌아온 경우.
+                        if (hasCreditCard == false)
+                        {
+                            JSONObject jsonObject = jsonArray.getJSONObject(0);
+
+                            mSelectedCreditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"), jsonObject.getString("cardcd"));
+                        }
+                    }
+                }
+
+                checkLastChangedValue();
+
+                updateLayout(mTicketPayment, mSelectedCreditCard);
+
+                unLockUI();
+            } catch (Exception e)
+            {
+                onInternalError();
+            }
+        }
+    };
     private int mReqCode;
     private int mResCode;
     private Intent mResIntent;
-    protected int mState;
-    protected Dialog mFinalCheckDialog;
     private ProgressDialog mProgressDialog;
+    private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                if (response == null)
+                {
+                    onInternalError();
+                    return;
+                }
 
-    protected SaleTime mCheckInSaleTime;
-    protected boolean mIsEditMode;
+                SaleTime saleTime = new SaleTime();
+
+                saleTime.setCurrentTime(response.getLong("currentDateTime"));
+                saleTime.setOpenTime(response.getLong("openDateTime"));
+                saleTime.setCloseTime(response.getLong("closeDateTime"));
+                saleTime.setDailyTime(response.getLong("dailyDateTime"));
+
+                if (saleTime.isSaleTime() == true)
+                {
+                    lockUI();
+
+                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, TicketPaymentActivity.this));
+                } else
+                {
+                    unLockUI();
+
+                    View.OnClickListener posListener = new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View view)
+                        {
+                            setResult(CODE_RESULT_ACTIVITY_PAYMENT_SALES_CLOSED);
+                            finish();
+                        }
+                    };
+
+                    showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_sales_closed), getString(R.string.dialog_btn_text_confirm), posListener);
+                }
+
+            } catch (Exception e)
+            {
+                onInternalError();
+            }
+        }
+    };
+    private DailyHotelJsonResponseListener mUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                if (response == null)
+                {
+                    onInternalError();
+                    return;
+                }
+
+                if (response.getBoolean("login") == true)
+                {
+                    VolleyHttpClient.createCookie();
+
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("timeZone", "Asia/Seoul");
+
+                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, TicketPaymentActivity.this));
+                } else
+                {
+                    unLockUI();
+                }
+            } catch (Exception e)
+            {
+                onInternalError();
+            }
+        }
+    };
+    private DailyHotelJsonResponseListener mUserRegisterBillingCardInfoJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            int msg_code = -1;
+
+            try
+            {
+                if (response == null)
+                {
+                    throw new NullPointerException("response == null");
+                }
+
+                // 해당 화면은 메시지를 넣지 않는다.
+                msg_code = response.getInt("msg_code");
+
+                if (msg_code != 0)
+                {
+                    ExLog.d("msg_code : " + msg_code);
+                }
+
+                JSONArray jsonArray = response.getJSONArray("data");
+                int length = jsonArray.length();
+
+                if (length == 0)
+                {
+                    mSelectedCreditCard = null;
+                } else
+                {
+                    JSONObject jsonObject = jsonArray.getJSONObject(0);
+
+                    mSelectedCreditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"), jsonObject.getString("cardcd"));
+
+                    updatePaymentInformation(mTicketPayment, mSelectedCreditCard);
+
+                    // final check 결제 화면을 보여준다.
+                    showFinalCheckDialog();
+                }
+            } catch (Exception e)
+            {
+                // 해당 화면 에러시에는 일반 결제가 가능해야 한다.
+                ExLog.e(e.toString());
+            } finally
+            {
+                unLockUI();
+            }
+        }
+    };
+    protected DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                if (response == null)
+                {
+                    onInternalError();
+                    return;
+                }
+
+                int msg_code = response.getInt("msg_code");
+
+                if (msg_code != 0)
+                {
+                    if (response.has("msg") == true)
+                    {
+                        String msg = response.getString("msg");
+
+                        DailyToast.showToast(TicketPaymentActivity.this, msg, Toast.LENGTH_SHORT);
+                        finish();
+                        return;
+                    } else
+                    {
+                        throw new NullPointerException("response == null");
+                    }
+                }
+
+                JSONObject jsonData = response.getJSONObject("data");
+
+                boolean isOnSession = jsonData.getBoolean("on_session");
+
+                switch (mState)
+                {
+                    case STATE_NONE:
+                    {
+                        if (isOnSession == true)
+                        {
+                            String name = jsonData.getString("user_name");
+                            String phone = jsonData.getString("user_phone");
+                            String email = jsonData.getString("user_email");
+                            String userIndex = jsonData.getString("user_idx");
+                            int bonus = jsonData.getInt("user_bonus");
+
+                            if (bonus < 0)
+                            {
+                                bonus = 0;
+                            }
+
+                            mTicketPayment.bonus = bonus;
+
+                            Customer buyer = new Customer();
+                            buyer.setEmail(email);
+                            buyer.setName(name);
+                            buyer.setPhone(phone);
+                            buyer.setUserIdx(userIndex);
+
+                            Guest guest = new Guest();
+                            guest.name = name;
+                            guest.phone = phone;
+                            guest.email = email;
+
+                            mTicketPayment.setCustomer(buyer);
+                            mTicketPayment.setGuest(guest);
+
+                            // 2. 화면 정보 얻기
+                            requestTicketPaymentInfomation(mTicketPayment.getTicketInformation().index);
+                        } else
+                        {
+                            requestLogin();
+                        }
+                        break;
+                    }
+
+                    case STATE_ACTIVITY_RESULT:
+                    {
+                        unLockUI();
+
+                        if (isOnSession == true)
+                        {
+                            activityResulted(mReqCode, mResCode, mResIntent);
+                        } else
+                        {
+                            requestLogin();
+                        }
+                        break;
+                    }
+
+                    case STATE_PAYMENT:
+                    {
+                        if (isOnSession == true)
+                        {
+                            int bonus = jsonData.getInt("user_bonus");
+
+                            if (bonus < 0)
+                            {
+                                bonus = 0;
+                            }
+
+                            if (mTicketPayment.isEnabledBonus == true && bonus != mTicketPayment.bonus)
+                            {
+                                // 보너스 값이 변경된 경우
+                                mTicketPayment.bonus = bonus;
+                                showChangedBonusDialog();
+                                return;
+                            }
+
+                            requestTicketPaymentInfomation(mTicketPayment.getTicketInformation().index);
+                        } else
+                        {
+                            requestLogin();
+                        }
+                        break;
+                    }
+                }
+            } catch (Exception e)
+            {
+                onInternalError();
+            }
+        }
+    };
 
     protected abstract void requestPayEasyPayment(TicketPayment ticketPayment, SaleTime checkInSaleTime);
 
@@ -107,6 +413,10 @@ public abstract class TicketPaymentActivity extends BaseActivity
     protected abstract void updateLayout(TicketPayment ticketPayment, CreditCard creditCard);
 
     protected abstract void checkLastChangedValue();
+
+    protected abstract void showFinalCheckDialog();
+
+    protected abstract Dialog getPaymentConfirmDialog(int type);
 
     @Override
     protected void onResume()
@@ -148,128 +458,6 @@ public abstract class TicketPaymentActivity extends BaseActivity
                 finish();
             }
         }, null, false);
-    }
-
-    /**
-     * 결제 수단에 알맞은 결제 동의 확인 다이얼로그를 만든다.
-     *
-     * @param type
-     *            CARD, ACCOUNT, HP 세가지 타입 존재.
-     * @return 타입에 맞는 결제 동의 다이얼로그 반환.
-     */
-
-    private Dialog getPaymentConfirmDialog(int type)
-    {
-        final Dialog dialog = new Dialog(this);
-
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        dialog.setCanceledOnTouchOutside(false);
-
-        View view = LayoutInflater.from(this).inflate(R.layout.fragment_dialog_confirm_payment, null);
-        LinearLayout messageLayout1 = (LinearLayout) view.findViewById(R.id.messageLayout1);
-        LinearLayout messageLayout2 = (LinearLayout) view.findViewById(R.id.messageLayout2);
-        LinearLayout messageLayout3 = (LinearLayout) view.findViewById(R.id.messageLayout3);
-        LinearLayout messageLayout4 = (LinearLayout) view.findViewById(R.id.messageLayout4);
-
-        TextView messageTextView1 = (TextView) messageLayout1.findViewById(R.id.messageTextView1);
-        TextView messageTextView2 = (TextView) messageLayout2.findViewById(R.id.messageTextView2);
-        TextView messageTextView3 = (TextView) messageLayout3.findViewById(R.id.messageTextView3);
-        TextView messageTextView4 = (TextView) messageLayout4.findViewById(R.id.messageTextView4);
-
-        messageTextView1.setTypeface(FontManager.getInstance(this).getMediumTypeface());
-        String message1 = getString(R.string.dialog_msg_payment_message01);
-
-        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(message1);
-
-        int startIndex = message1.indexOf("취소");
-        int length = "취소, 변경, 환불이 절대 불가".length();
-
-        spannableStringBuilder.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.dialog_title_text)), //
-                startIndex, startIndex + length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannableStringBuilder.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), //
-                startIndex, startIndex + length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        messageTextView1.setText(spannableStringBuilder);
-
-        messageTextView2.setTypeface(FontManager.getInstance(this).getMediumTypeface());
-        messageTextView3.setTypeface(FontManager.getInstance(this).getMediumTypeface());
-        messageTextView4.setTypeface(FontManager.getInstance(this).getMediumTypeface());
-
-        if (Util.isOverAPI21() == true)
-        {
-            LinearLayout.LayoutParams layoutParams2 = (android.widget.LinearLayout.LayoutParams) messageLayout2.getLayoutParams();
-            layoutParams2.topMargin = Util.dpToPx(TicketPaymentActivity.this, 17);
-
-            LinearLayout.LayoutParams layoutParams3 = (android.widget.LinearLayout.LayoutParams) messageLayout3.getLayoutParams();
-            layoutParams3.topMargin = Util.dpToPx(TicketPaymentActivity.this, 17);
-
-            LinearLayout.LayoutParams layoutParams4 = (android.widget.LinearLayout.LayoutParams) messageLayout4.getLayoutParams();
-            layoutParams4.topMargin = Util.dpToPx(TicketPaymentActivity.this, 17);
-        }
-
-        View agreeLayout = view.findViewById(R.id.agreeLayout);
-
-        switch (type)
-        {
-            // 핸드폰 결제
-            case DIALOG_CONFIRM_PAYMENT_HP:
-                messageLayout4.setVisibility(View.VISIBLE);
-                messageTextView4.setText(R.string.dialog_msg_payment_message04);
-                break;
-
-            // 계좌 이체
-            case DIALOG_CONFIRM_PAYMENT_ACCOUNT:
-                messageLayout4.setVisibility(View.VISIBLE);
-                messageTextView4.setText(R.string.dialog_msg_payment_message05);
-                break;
-
-            // 신용카드 일반 결제
-            case DIALOG_CONFIRM_PAYMENT_CARD:
-                messageLayout4.setVisibility(View.GONE);
-                break;
-
-            default:
-                return null;
-        }
-
-        OnClickListener buttonOnClickListener = new OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                dialog.dismiss();
-
-                synchronized (TicketPaymentActivity.this)
-                {
-                    if (isLockUiComponent() == true)
-                    {
-                        return;
-                    }
-
-                    lockUI();
-
-                    mState = STATE_PAYMENT;
-
-                    // 1. 세션이 살아있는지 검사 시작.
-                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, TicketPaymentActivity.this));
-
-                    HashMap<String, String> params = new HashMap<String, String>();
-                    params.put(Label.PLACE_TICKET_INDEX, String.valueOf(mTicketPayment.getTicketInformation().index));
-                    params.put(Label.PLACE_TICKET_NAME, mTicketPayment.getTicketInformation().name);
-                    params.put(Label.PLACE_NAME, mTicketPayment.getTicketInformation().placeName);
-
-                    AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.PAYMENT_AGREE_POPUP, Action.CLICK, mTicketPayment.paymentType.name(), params);
-                }
-            }
-        };
-
-        agreeLayout.setOnClickListener(buttonOnClickListener);
-
-        dialog.setContentView(view);
-
-        return dialog;
-
     }
 
     protected void processPayment()
@@ -744,103 +932,6 @@ public abstract class TicketPaymentActivity extends BaseActivity
         }
     }
 
-    protected void showFinalCheckDialog()
-    {
-        if (isFinishing() == true)
-        {
-            return;
-        }
-
-        if (mFinalCheckDialog != null)
-        {
-            mFinalCheckDialog.cancel();
-            mFinalCheckDialog = null;
-        }
-
-        mFinalCheckDialog = new Dialog(this);
-
-        mFinalCheckDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        mFinalCheckDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        mFinalCheckDialog.setCanceledOnTouchOutside(false);
-
-        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
-        Window window = mFinalCheckDialog.getWindow();
-        layoutParams.copyFrom(window.getAttributes());
-
-        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        window.setAttributes(layoutParams);
-
-        final FinalCheckLayout finalCheckLayout = new FinalCheckLayout(TicketPaymentActivity.this);
-        final TextView agreeSinatureTextView = (TextView) finalCheckLayout.findViewById(R.id.agreeSinatureTextView);
-        final View agreeLayout = finalCheckLayout.findViewById(R.id.agreeLayout);
-
-        agreeSinatureTextView.setTypeface(FontManager.getInstance(TicketPaymentActivity.this).getMediumTypeface());
-
-        agreeLayout.setEnabled(false);
-
-        finalCheckLayout.setOnUserActionListener(new DailySignatureView.OnUserActionListener()
-        {
-            @Override
-            public void onConfirmSignature()
-            {
-                agreeLayout.setEnabled(true);
-                agreeLayout.setBackgroundResource(R.drawable.popup_btn_on);
-
-                agreeSinatureTextView.setVisibility(View.GONE);
-
-                agreeLayout.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        synchronized (TicketPaymentActivity.this)
-                        {
-                            if (isLockUiComponent() == true)
-                            {
-                                return;
-                            }
-
-                            lockUI();
-
-                            mState = STATE_PAYMENT;
-
-                            // 1. 세션이 살아있는지 검사 시작.
-                            mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, TicketPaymentActivity.this));
-
-                            mFinalCheckDialog.dismiss();
-
-                            HashMap<String, String> params = new HashMap<String, String>();
-                            params.put(Label.PLACE_TICKET_INDEX, String.valueOf(mTicketPayment.getTicketInformation().index));
-                            params.put(Label.PLACE_TICKET_NAME, mTicketPayment.getTicketInformation().name);
-                            params.put(Label.PLACE_NAME, mTicketPayment.getTicketInformation().placeName);
-
-                            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.PAYMENT_AGREE_POPUP, Action.CLICK, mTicketPayment.paymentType.name(), params);
-                        }
-                    }
-                });
-            }
-        });
-
-        mFinalCheckDialog.setContentView(finalCheckLayout);
-        mFinalCheckDialog.setOnDismissListener(new OnDismissListener()
-        {
-            @Override
-            public void onDismiss(DialogInterface dialog)
-            {
-                releaseUiComponent();
-            }
-        });
-
-        try
-        {
-            mFinalCheckDialog.show();
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
-    }
-
     protected void showCallDialog()
     {
         if (isFinishing() == true)
@@ -913,6 +1004,10 @@ public abstract class TicketPaymentActivity extends BaseActivity
     {
         showChangedValueDialog(R.string.dialog_msg_changed_time);
     }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Network Listener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     protected void showChangedValueDialog(int messageResId)
     {
@@ -1045,334 +1140,4 @@ public abstract class TicketPaymentActivity extends BaseActivity
             showCallDialog();
         }
     }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Network Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private DailyHotelJsonResponseListener mUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                if (response == null)
-                {
-                    onInternalError();
-                    return;
-                }
-
-                if (response.getBoolean("login") == true)
-                {
-                    VolleyHttpClient.createCookie();
-
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("timeZone", "Asia/Seoul");
-
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, TicketPaymentActivity.this));
-                } else
-                {
-                    unLockUI();
-                }
-            } catch (Exception e)
-            {
-                onInternalError();
-            }
-        }
-    };
-
-    private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                if (response == null)
-                {
-                    onInternalError();
-                    return;
-                }
-
-                SaleTime saleTime = new SaleTime();
-
-                saleTime.setCurrentTime(response.getLong("currentDateTime"));
-                saleTime.setOpenTime(response.getLong("openDateTime"));
-                saleTime.setCloseTime(response.getLong("closeDateTime"));
-                saleTime.setDailyTime(response.getLong("dailyDateTime"));
-
-                if (saleTime.isSaleTime() == true)
-                {
-                    lockUI();
-
-                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, TicketPaymentActivity.this));
-                } else
-                {
-                    unLockUI();
-
-                    View.OnClickListener posListener = new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View view)
-                        {
-                            setResult(CODE_RESULT_ACTIVITY_PAYMENT_SALES_CLOSED);
-                            finish();
-                        }
-                    };
-
-                    showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_sales_closed), getString(R.string.dialog_btn_text_confirm), posListener);
-                }
-
-            } catch (Exception e)
-            {
-                onInternalError();
-            }
-        }
-    };
-
-    protected DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                if (response == null)
-                {
-                    onInternalError();
-                    return;
-                }
-
-                int msg_code = response.getInt("msg_code");
-
-                if (msg_code != 0)
-                {
-                    if (response.has("msg") == true)
-                    {
-                        String msg = response.getString("msg");
-
-                        DailyToast.showToast(TicketPaymentActivity.this, msg, Toast.LENGTH_SHORT);
-                        finish();
-                        return;
-                    } else
-                    {
-                        throw new NullPointerException("response == null");
-                    }
-                }
-
-                JSONObject jsonData = response.getJSONObject("data");
-
-                boolean isOnSession = jsonData.getBoolean("on_session");
-
-                switch (mState)
-                {
-                    case STATE_NONE:
-                    {
-                        if (isOnSession == true)
-                        {
-                            String name = jsonData.getString("user_name");
-                            String phone = jsonData.getString("user_phone");
-                            String email = jsonData.getString("user_email");
-                            String userIndex = jsonData.getString("user_idx");
-                            int bonus = jsonData.getInt("user_bonus");
-
-                            if (bonus < 0)
-                            {
-                                bonus = 0;
-                            }
-
-                            mTicketPayment.bonus = bonus;
-
-                            Customer buyer = new Customer();
-                            buyer.setEmail(email);
-                            buyer.setName(name);
-                            buyer.setPhone(phone);
-                            buyer.setUserIdx(userIndex);
-
-                            Guest guest = new Guest();
-                            guest.name = name;
-                            guest.phone = phone;
-                            guest.email = email;
-
-                            mTicketPayment.setCustomer(buyer);
-                            mTicketPayment.setGuest(guest);
-
-                            // 2. 화면 정보 얻기
-                            requestTicketPaymentInfomation(mTicketPayment.getTicketInformation().index);
-                        } else
-                        {
-                            requestLogin();
-                        }
-                        break;
-                    }
-
-                    case STATE_ACTIVITY_RESULT:
-                    {
-                        unLockUI();
-
-                        if (isOnSession == true)
-                        {
-                            activityResulted(mReqCode, mResCode, mResIntent);
-                        } else
-                        {
-                            requestLogin();
-                        }
-                        break;
-                    }
-
-                    case STATE_PAYMENT:
-                    {
-                        if (isOnSession == true)
-                        {
-                            int bonus = jsonData.getInt("user_bonus");
-
-                            if (bonus < 0)
-                            {
-                                bonus = 0;
-                            }
-
-                            if (mTicketPayment.isEnabledBonus == true && bonus != mTicketPayment.bonus)
-                            {
-                                // 보너스 값이 변경된 경우
-                                mTicketPayment.bonus = bonus;
-                                showChangedBonusDialog();
-                                return;
-                            }
-
-                            requestTicketPaymentInfomation(mTicketPayment.getTicketInformation().index);
-                        } else
-                        {
-                            requestLogin();
-                        }
-                        break;
-                    }
-                }
-            } catch (Exception e)
-            {
-                onInternalError();
-            }
-        }
-    };
-
-    protected DailyHotelJsonResponseListener mUserSessionBillingCardInfoJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                if (response == null)
-                {
-                    onInternalError();
-                    return;
-                }
-
-                // 해당 화면은 메시지를 넣지 않는다.
-                int msg_code = response.getInt("msg_code");
-
-                if (msg_code != 0)
-                {
-                    ExLog.d("msg_code : " + msg_code);
-                }
-
-                JSONArray jsonArray = response.getJSONArray("data");
-                int length = jsonArray.length();
-
-                if (length == 0)
-                {
-                    mSelectedCreditCard = null;
-                } else
-                {
-                    if (mSelectedCreditCard == null)
-                    {
-                        JSONObject jsonObject = jsonArray.getJSONObject(0);
-                        mSelectedCreditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"), jsonObject.getString("cardcd"));
-                    } else
-                    {
-                        boolean hasCreditCard = false;
-
-                        for (int i = 0; i < length; i++)
-                        {
-                            JSONObject jsonObject = jsonArray.getJSONObject(i);
-
-                            if (mSelectedCreditCard.billingkey.equals(jsonObject.getString("billkey")) == true)
-                            {
-                                hasCreditCard = true;
-                                break;
-                            }
-                        }
-
-                        // 기존에 선택한 카드를 지우고 돌아온 경우.
-                        if (hasCreditCard == false)
-                        {
-                            JSONObject jsonObject = jsonArray.getJSONObject(0);
-
-                            mSelectedCreditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"), jsonObject.getString("cardcd"));
-                        }
-                    }
-                }
-
-                checkLastChangedValue();
-
-                updateLayout(mTicketPayment, mSelectedCreditCard);
-
-                unLockUI();
-            } catch (Exception e)
-            {
-                onInternalError();
-            }
-        }
-    };
-
-    private DailyHotelJsonResponseListener mUserRegisterBillingCardInfoJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            int msg_code = -1;
-
-            try
-            {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
-                // 해당 화면은 메시지를 넣지 않는다.
-                msg_code = response.getInt("msg_code");
-
-                if (msg_code != 0)
-                {
-                    ExLog.d("msg_code : " + msg_code);
-                }
-
-                JSONArray jsonArray = response.getJSONArray("data");
-                int length = jsonArray.length();
-
-                if (length == 0)
-                {
-                    mSelectedCreditCard = null;
-                } else
-                {
-                    JSONObject jsonObject = jsonArray.getJSONObject(0);
-
-                    mSelectedCreditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"), jsonObject.getString("cardcd"));
-
-                    updatePaymentInformation(mTicketPayment, mSelectedCreditCard);
-
-                    // final check 결제 화면을 보여준다.
-                    showFinalCheckDialog();
-                }
-            } catch (Exception e)
-            {
-                // 해당 화면 에러시에는 일반 결제가 가능해야 한다.
-                ExLog.e(e.toString());
-            } finally
-            {
-                unLockUI();
-            }
-        }
-    };
 }

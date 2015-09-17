@@ -14,119 +14,118 @@ import com.twoheart.dailyhotel.model.HotelRegionRenderer;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceRenderer;
 
-public class PlaceClusterRenderer
-		extends DefaultClusterRenderer<PlaceClusterItem>
+public class PlaceClusterRenderer extends DefaultClusterRenderer<PlaceClusterItem>
 {
-	public enum Renderer
-	{
-		CLUSTER, CLUSTER_ITEM,
-	}
+    private Context mContext;
+    private PlaceClusterItem mSelectedPlaceClusterItem;
+    private OnSelectedClusterItemListener mOnSelectedClusterItemListener;
+    private OnClusterRenderedListener mOnClusterRenderedListener;
+    public PlaceClusterRenderer(Context context, GoogleMap map, ClusterManager<PlaceClusterItem> clusterManager)
+    {
+        super(context, map, clusterManager);
 
-	private Context mContext;
-	private PlaceClusterItem mSelectedPlaceClusterItem;
-	private OnSelectedClusterItemListener mOnSelectedClusterItemListener;
-	private OnClusterRenderedListener mOnClusterRenderedListener;
+        mContext = context;
+    }
 
-	public interface OnSelectedClusterItemListener
-	{
-		public void onSelectedClusterItemListener(Marker marker);
-	}
+    @Override
+    protected void onBeforeClusterItemRendered(PlaceClusterItem item, MarkerOptions markerOptions)
+    {
+        if (mOnClusterRenderedListener != null)
+        {
+            mOnClusterRenderedListener.onClusterRenderedListener(Renderer.CLUSTER_ITEM);
+        }
 
-	public interface OnClusterRenderedListener
-	{
-		public void onClusterRenderedListener(Renderer renderer);
-	}
+        Place place = item.getPlace();
 
-	public PlaceClusterRenderer(Context context, GoogleMap map, ClusterManager<PlaceClusterItem> clusterManager)
-	{
-		super(context, map, clusterManager);
+        PlaceRenderer placeRenderer = new PlaceRenderer(mContext, place.discountPrice, place.grade.getMarkerResId());
 
-		mContext = context;
-	}
+        BitmapDescriptor icon = placeRenderer.getBitmap(false);
 
-	@Override
-	protected void onBeforeClusterItemRendered(PlaceClusterItem item, MarkerOptions markerOptions)
-	{
-		if (mOnClusterRenderedListener != null)
-		{
-			mOnClusterRenderedListener.onClusterRenderedListener(Renderer.CLUSTER_ITEM);
-		}
+        if (icon != null)
+        {
+            markerOptions.icon(icon);
+            markerOptions.anchor(0.0f, 1.0f);
+        }
+    }
 
-		Place place = item.getPlace();
+    @Override
+    protected void onBeforeClusterRendered(Cluster<PlaceClusterItem> cluster, MarkerOptions markerOptions)
+    {
+        if (mOnClusterRenderedListener != null)
+        {
+            mOnClusterRenderedListener.onClusterRenderedListener(Renderer.CLUSTER);
+        }
 
-		PlaceRenderer placeRenderer = new PlaceRenderer(mContext, place.discountPrice, place.grade.getMarkerResId());
+        HotelRegionRenderer hotelRegionRenderer = new HotelRegionRenderer(mContext, cluster.getSize());
 
-		BitmapDescriptor icon = placeRenderer.getBitmap(false);
+        BitmapDescriptor icon = hotelRegionRenderer.getBitmap();
 
-		if (icon != null)
-		{
-			markerOptions.icon(icon);
-			markerOptions.anchor(0.0f, 1.0f);
-		}
-	}
+        if (icon != null)
+        {
+            markerOptions.icon(icon).anchor(0.5f, 0.5f);
+        }
+    }
 
-	@Override
-	protected void onBeforeClusterRendered(Cluster<PlaceClusterItem> cluster, MarkerOptions markerOptions)
-	{
-		if (mOnClusterRenderedListener != null)
-		{
-			mOnClusterRenderedListener.onClusterRenderedListener(Renderer.CLUSTER);
-		}
+    @Override
+    protected void onClusterItemRendered(PlaceClusterItem clusterItem, Marker marker)
+    {
+        if (mSelectedPlaceClusterItem != null)
+        {
+            LatLng selectedLatLng = mSelectedPlaceClusterItem.getPosition();
+            LatLng currentLatLng = clusterItem.getPosition();
 
-		HotelRegionRenderer hotelRegionRenderer = new HotelRegionRenderer(mContext, cluster.getSize());
+            if (selectedLatLng.latitude == currentLatLng.latitude && selectedLatLng.longitude == currentLatLng.longitude)
+            {
+                mSelectedPlaceClusterItem = null;
 
-		BitmapDescriptor icon = hotelRegionRenderer.getBitmap();
+                if (mOnSelectedClusterItemListener != null)
+                {
+                    mOnSelectedClusterItemListener.onSelectedClusterItemListener(marker);
+                }
+            }
+        }
+    }
 
-		if (icon != null)
-		{
-			markerOptions.icon(icon).anchor(0.5f, 0.5f);
-		}
-	}
+    public void setOnClusterRenderedListener(OnClusterRenderedListener listener)
+    {
+        mOnClusterRenderedListener = listener;
+    }
 
-	@Override
-	protected void onClusterItemRendered(PlaceClusterItem clusterItem, Marker marker)
-	{
-		if (mSelectedPlaceClusterItem != null)
-		{
-			LatLng selectedLatLng = mSelectedPlaceClusterItem.getPosition();
-			LatLng currentLatLng = clusterItem.getPosition();
+    @Override
+    protected boolean shouldRenderAsCluster(Cluster<PlaceClusterItem> cluster, float zoom)
+    {
+        if (Float.compare(zoom, 13.0f) >= 0)
+        {
+            return false;
+        } else
+        {
+            return true;
+        }
+    }
 
-			if (selectedLatLng.latitude == currentLatLng.latitude && selectedLatLng.longitude == currentLatLng.longitude)
-			{
-				mSelectedPlaceClusterItem = null;
+    public void setSelectedClusterItem(PlaceClusterItem placeClusterItem)
+    {
+        mSelectedPlaceClusterItem = placeClusterItem;
+    }
 
-				if (mOnSelectedClusterItemListener != null)
-				{
-					mOnSelectedClusterItemListener.onSelectedClusterItemListener(marker);
-				}
-			}
-		}
-	}
+    public void setSelectedClusterItemListener(OnSelectedClusterItemListener listener)
+    {
+        mOnSelectedClusterItemListener = listener;
+    }
 
-	public void setOnClusterRenderedListener(OnClusterRenderedListener listener)
-	{
-		mOnClusterRenderedListener = listener;
-	}
+    public enum Renderer
+    {
+        CLUSTER,
+        CLUSTER_ITEM,
+    }
 
-	@Override
-	protected boolean shouldRenderAsCluster(Cluster<PlaceClusterItem> cluster, float zoom)
-	{
-		if (Float.compare(zoom, 13.0f) >= 0)
-		{
-			return false;
-		} else
-		{
-			return true;
-		}
-	}
+    public interface OnSelectedClusterItemListener
+    {
+        public void onSelectedClusterItemListener(Marker marker);
+    }
 
-	public void setSelectedClusterItem(PlaceClusterItem placeClusterItem)
-	{
-		mSelectedPlaceClusterItem = placeClusterItem;
-	}
-
-	public void setSelectedClusterItemListener(OnSelectedClusterItemListener listener)
-	{
-		mOnSelectedClusterItemListener = listener;
-	}
+    public interface OnClusterRenderedListener
+    {
+        public void onClusterRenderedListener(Renderer renderer);
+    }
 }

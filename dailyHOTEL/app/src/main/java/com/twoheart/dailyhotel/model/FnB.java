@@ -10,90 +10,89 @@ import org.json.JSONObject;
 
 public class FnB extends Place implements Parcelable
 {
-	public String saleDay;
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+    {
+        public FnB createFromParcel(Parcel in)
+        {
+            return new FnB(in);
+        }
 
-	public FnB()
-	{
-		super();
-	}
+        @Override
+        public FnB[] newArray(int size)
+        {
+            return new FnB[size];
+        }
+    };
+    public String saleDay;
 
-	public FnB(Parcel in)
-	{
-		readFromParcel(in);
-	}
+    public FnB()
+    {
+        super();
+    }
 
-	@Override
-	public void writeToParcel(Parcel dest, int flags)
-	{
-		super.writeToParcel(dest, flags);
+    public FnB(Parcel in)
+    {
+        readFromParcel(in);
+    }
 
-		dest.writeString(saleDay);
-	}
+    @Override
+    public void writeToParcel(Parcel dest, int flags)
+    {
+        super.writeToParcel(dest, flags);
 
-	protected void readFromParcel(Parcel in)
-	{
-		super.readFromParcel(in);
+        dest.writeString(saleDay);
+    }
 
-		saleDay = in.readString();
-	}
+    protected void readFromParcel(Parcel in)
+    {
+        super.readFromParcel(in);
 
-	@Override
-	public boolean setData(JSONObject jsonObject)
-	{
-		try
-		{
-			index = jsonObject.getInt("restaurant_idx");
-			name = jsonObject.getString("restaurant_name");
+        saleDay = in.readString();
+    }
 
-			price = jsonObject.getInt("price");
-			discountPrice = jsonObject.getInt("discount");
-			address = jsonObject.getString("addr_summary");
+    @Override
+    public boolean setData(JSONObject jsonObject)
+    {
+        try
+        {
+            index = jsonObject.getInt("restaurant_idx");
+            name = jsonObject.getString("restaurant_name");
 
-			try
-			{
-				grade = Grade.valueOf(jsonObject.getString("grade"));
-			} catch (Exception e)
-			{
-				grade = Grade.etc;
-			}
+            price = jsonObject.getInt("price");
+            discountPrice = jsonObject.getInt("discount");
+            address = jsonObject.getString("addr_summary");
 
-			districtName = jsonObject.getString("district_name");
-			imageUrl = jsonObject.getString("img");
+            try
+            {
+                grade = Grade.valueOf(jsonObject.getString("grade"));
+            } catch (Exception e)
+            {
+                grade = Grade.etc;
+            }
 
-			latitude = jsonObject.getDouble("latitude");
-			longitude = jsonObject.getDouble("longitude");
-			isDailyChoice = "Y".equalsIgnoreCase(jsonObject.getString("is_dailychoice"));
-			isSoldOut = "Y".equalsIgnoreCase(jsonObject.getString("is_soldout"));
+            districtName = jsonObject.getString("district_name");
+            imageUrl = jsonObject.getString("img");
 
-			saleDay = jsonObject.getString("sday");
+            latitude = jsonObject.getDouble("latitude");
+            longitude = jsonObject.getDouble("longitude");
+            isDailyChoice = "Y".equalsIgnoreCase(jsonObject.getString("is_dailychoice"));
+            isSoldOut = "Y".equalsIgnoreCase(jsonObject.getString("is_soldout"));
 
-		} catch (JSONException e)
-		{
-			ExLog.d(e.toString());
+            saleDay = jsonObject.getString("sday");
 
-			return false;
-		}
+        } catch (JSONException e)
+        {
+            ExLog.d(e.toString());
 
-		return true;
-	}
+            return false;
+        }
 
-	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
-	{
-		public FnB createFromParcel(Parcel in)
-		{
-			return new FnB(in);
-		}
+        return true;
+    }
 
-		@Override
-		public FnB[] newArray(int size)
-		{
-			return new FnB[size];
-		}
-	};
-
-	@Override
-	public int describeContents()
-	{
-		return 0;
-	}
+    @Override
+    public int describeContents()
+    {
+        return 0;
+    }
 }

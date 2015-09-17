@@ -7,54 +7,54 @@ import android.widget.ListView;
 
 public class HotelDetailListView extends ListView
 {
-	private boolean mScrollable = true;
+    private boolean mScrollable = true;
 
-	public HotelDetailListView(Context context)
-	{
-		super(context);
+    public HotelDetailListView(Context context)
+    {
+        super(context);
 
-		initLayout(context);
-	}
+        initLayout(context);
+    }
 
-	public HotelDetailListView(Context context, AttributeSet attrs)
-	{
-		super(context, attrs);
+    public HotelDetailListView(Context context, AttributeSet attrs)
+    {
+        super(context, attrs);
 
-		initLayout(context);
-	}
+        initLayout(context);
+    }
 
-	public HotelDetailListView(Context context, AttributeSet attrs, int defStyleAttr)
-	{
-		super(context, attrs, defStyleAttr);
+    public HotelDetailListView(Context context, AttributeSet attrs, int defStyleAttr)
+    {
+        super(context, attrs, defStyleAttr);
 
-		initLayout(context);
-	}
+        initLayout(context);
+    }
 
-	public HotelDetailListView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
-	{
-		super(context, attrs, defStyleAttr, defStyleRes);
+    public HotelDetailListView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
+    {
+        super(context, attrs, defStyleAttr, defStyleRes);
 
-		initLayout(context);
-	}
+        initLayout(context);
+    }
 
-	private void initLayout(Context context)
-	{
-	}
+    private void initLayout(Context context)
+    {
+    }
 
-	public void setScrollEnabled(boolean enable)
-	{
-		mScrollable = enable;
-	}
+    public void setScrollEnabled(boolean enable)
+    {
+        mScrollable = enable;
+    }
 
-	@Override
-	public boolean onInterceptTouchEvent(MotionEvent ev)
-	{
-		return mScrollable != false && super.onInterceptTouchEvent(ev);
-	}
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev)
+    {
+        return mScrollable != false && super.onInterceptTouchEvent(ev);
+    }
 
-	@Override
-	public boolean onTouchEvent(MotionEvent event)
-	{
-		return mScrollable != false && super.onTouchEvent(event);
-	}
+    @Override
+    public boolean onTouchEvent(MotionEvent event)
+    {
+        return mScrollable != false && super.onTouchEvent(event);
+    }
 }

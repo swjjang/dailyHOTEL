@@ -25,373 +25,369 @@ import java.util.List;
 
 public class LocationFactory
 {
-	protected static String SINGLE_LOCATION_UPDATE_ACTION = "com.twoheart.dailyhotel.places.SINGLE_LOCATION_UPDATE_ACTION";
+    private static final int TWO_MINUTES = 1000 * 60 * 2;
+    private static final int TEN_MINUTES = 1000 * 60 * 10;
+    protected static String SINGLE_LOCATION_UPDATE_ACTION = "com.twoheart.dailyhotel.places.SINGLE_LOCATION_UPDATE_ACTION";
+    private static LocationFactory mInstance;
+    protected PendingIntent mUpdatePendingIntent;
+    private LocationManager mLocationManager = null;
+    private Location mLocation = null;
+    private boolean mIsMeasuringLocation = false;
+    private LocationListener mLocationListener;
+    private View mMyLocationView;
+    private Drawable mMyLocationDrawable;
+    private BaseActivity mBaseActivity;
+    private Handler mHandler = new Handler()
+    {
+        public void handleMessage(android.os.Message msg)
+        {
+            if (mBaseActivity == null || mBaseActivity.isFinishing() == true)
+            {
+                return;
+            }
 
-	private static final int TWO_MINUTES = 1000 * 60 * 2;
-	private static final int TEN_MINUTES = 1000 * 60 * 10;
+            switch (msg.what)
+            {
+                case 0:
+                    stopLocationMeasure();
 
-	private static LocationFactory mInstance;
+                    if (mBaseActivity != null)
+                    {
+                        DailyToast.showToast(mBaseActivity, R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
+                    }
+                    break;
 
-	private LocationManager mLocationManager = null;
-	private Location mLocation = null;
-	private boolean mIsMeasuringLocation = false;
-	private LocationListener mLocationListener;
-	private View mMyLocationView;
-	private Drawable mMyLocationDrawable;
-	private BaseActivity mBaseActivity;
+                case 1:
+                {
+                    if (mMyLocationView != null)
+                    {
+                        mMyLocationView.setBackgroundColor(mBaseActivity.getResources().getColor(R.color.dh_theme_color));
+                    }
 
-	protected PendingIntent mUpdatePendingIntent;
+                    sendEmptyMessageDelayed(2, 1000);
+                    break;
+                }
 
-	private Handler mHandler = new Handler()
-	{
-		public void handleMessage(android.os.Message msg)
-		{
-			if (mBaseActivity == null || mBaseActivity.isFinishing() == true)
-			{
-				return;
-			}
+                case 2:
+                {
+                    if (mMyLocationView != null)
+                    {
+                        mMyLocationView.setBackgroundDrawable(mMyLocationDrawable);
+                    }
 
-			switch (msg.what)
-			{
-				case 0:
-					stopLocationMeasure();
+                    sendEmptyMessageDelayed(1, 1000);
+                    break;
+                }
 
-					if (mBaseActivity != null)
-					{
-						DailyToast.showToast(mBaseActivity, R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
-					}
-					break;
+                case 3:
+                {
+                    if (mMyLocationView != null)
+                    {
+                        mMyLocationView.setBackgroundDrawable(mMyLocationDrawable);
+                    }
+                    break;
+                }
 
-				case 1:
-				{
-					if (mMyLocationView != null)
-					{
-						mMyLocationView.setBackgroundColor(mBaseActivity.getResources().getColor(R.color.dh_theme_color));
-					}
+                case 4:
+                {
+                    stopLocationMeasure();
+                    break;
+                }
+            }
+        }
 
-					sendEmptyMessageDelayed(2, 1000);
-					break;
-				}
+        ;
+    };
+    protected BroadcastReceiver mSingleUpdateReceiver = new BroadcastReceiver()
+    {
+        @Override
+        public void onReceive(Context context, Intent intent)
+        {
+            String key = LocationManager.KEY_LOCATION_CHANGED;
+            Location location = (Location) intent.getExtras().get(key);
 
-				case 2:
-				{
-					if (mMyLocationView != null)
-					{
-						mMyLocationView.setBackgroundDrawable(mMyLocationDrawable);
-					}
+            mLocation = location;
 
-					sendEmptyMessageDelayed(1, 1000);
-					break;
-				}
+            if (mLocationListener != null && location != null)
+            {
+                mLocationListener.onLocationChanged(location);
+            }
 
-				case 3:
-				{
-					if (mMyLocationView != null)
-					{
-						mMyLocationView.setBackgroundDrawable(mMyLocationDrawable);
-					}
-					break;
-				}
+            stopLocationMeasure();
+        }
+    };
 
-				case 4:
-				{
-					stopLocationMeasure();
-					break;
-				}
-			}
-		};
-	};
+    private LocationFactory()
+    {
+    }
 
-	public static LocationFactory getInstance(BaseActivity activity)
-	{
-		if (mInstance == null)
-		{
-			synchronized (LocationFactory.class)
-			{
-				if (mInstance == null)
-				{
-					mInstance = new LocationFactory();
-				}
-			}
-		}
+    public static LocationFactory getInstance(BaseActivity activity)
+    {
+        if (mInstance == null)
+        {
+            synchronized (LocationFactory.class)
+            {
+                if (mInstance == null)
+                {
+                    mInstance = new LocationFactory();
+                }
+            }
+        }
 
-		mInstance.mBaseActivity = activity;
+        mInstance.mBaseActivity = activity;
 
-		return mInstance;
-	}
+        return mInstance;
+    }
 
-	private LocationFactory()
-	{
-	}
+    public void startLocationMeasure(Activity activity, View myLocation, LocationListener listener)
+    {
+        if (activity == null)
+        {
+            return;
+        }
 
-	public void startLocationMeasure(Activity activity, View myLocation, LocationListener listener)
-	{
-		if (activity == null)
-		{
-			return;
-		}
+        if (mIsMeasuringLocation)
+        {
+            return;
+        }
 
-		if (mIsMeasuringLocation)
-		{
-			return;
-		}
+        if (mLocationManager == null)
+        {
+            mLocationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
+        }
 
-		if (mLocationManager == null)
-		{
-			mLocationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
-		}
+        if (mUpdatePendingIntent == null)
+        {
+            Intent updateIntent = new Intent(SINGLE_LOCATION_UPDATE_ACTION);
+            mUpdatePendingIntent = PendingIntent.getBroadcast(mBaseActivity, 0, updateIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        }
 
-		if (mUpdatePendingIntent == null)
-		{
-			Intent updateIntent = new Intent(SINGLE_LOCATION_UPDATE_ACTION);
-			mUpdatePendingIntent = PendingIntent.getBroadcast(mBaseActivity, 0, updateIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-		}
+        mLocationListener = listener;
+        mMyLocationView = myLocation;
 
-		mLocationListener = listener;
-		mMyLocationView = myLocation;
+        if (mMyLocationView != null)
+        {
+            mMyLocationDrawable = mMyLocationView.getBackground();
+        }
 
-		if (mMyLocationView != null)
-		{
-			mMyLocationDrawable = mMyLocationView.getBackground();
-		}
+        mLocation = null;
 
-		mLocation = null;
+        boolean isGpsProviderEnabled = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        boolean isNetworkProviderEnabled = mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
-		boolean isGpsProviderEnabled = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-		boolean isNetworkProviderEnabled = mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        if (isGpsProviderEnabled == false && isNetworkProviderEnabled == false)
+        {
+            if (mLocationListener != null)
+            {
+                mLocationListener.onProviderDisabled(null);
+            }
+            return;
+        }
 
-		if (isGpsProviderEnabled == false && isNetworkProviderEnabled == false)
-		{
-			if (mLocationListener != null)
-			{
-				mLocationListener.onProviderDisabled(null);
-			}
-			return;
-		}
+        mIsMeasuringLocation = true;
 
-		mIsMeasuringLocation = true;
+        Location location = getLastBestLocation(mBaseActivity, 10, TEN_MINUTES);
 
-		Location location = getLastBestLocation(mBaseActivity, 10, TEN_MINUTES);
+        boolean hasLastLocation = false;
 
-		boolean hasLastLocation = false;
+        if (location != null && mLocationListener != null)
+        {
+            hasLastLocation = true;
 
-		if (location != null && mLocationListener != null)
-		{
-			hasLastLocation = true;
+            mLocationListener.onLocationChanged(location);
+        }
 
-			mLocationListener.onLocationChanged(location);
-		}
+        mHandler.sendEmptyMessageDelayed(1, 1000);
 
-		mHandler.sendEmptyMessageDelayed(1, 1000);
+        try
+        {
+            IntentFilter locIntentFilter = new IntentFilter(SINGLE_LOCATION_UPDATE_ACTION);
+            mBaseActivity.registerReceiver(mSingleUpdateReceiver, locIntentFilter);
+            mLocationManager.requestSingleUpdate(new Criteria(), mUpdatePendingIntent);
 
-		try
-		{
-			IntentFilter locIntentFilter = new IntentFilter(SINGLE_LOCATION_UPDATE_ACTION);
-			mBaseActivity.registerReceiver(mSingleUpdateReceiver, locIntentFilter);
-			mLocationManager.requestSingleUpdate(new Criteria(), mUpdatePendingIntent);
+            mHandler.removeMessages(0);
 
-			mHandler.removeMessages(0);
+            if (hasLastLocation == true)
+            {
+                mHandler.sendEmptyMessageDelayed(4, 20 * 1000);
+            } else
+            {
+                mHandler.sendEmptyMessageDelayed(0, 20 * 1000);
+            }
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
 
-			if (hasLastLocation == true)
-			{
-				mHandler.sendEmptyMessageDelayed(4, 20 * 1000);
-			} else
-			{
-				mHandler.sendEmptyMessageDelayed(0, 20 * 1000);
-			}
-		} catch (Exception e)
-		{
-			ExLog.d(e.toString());
+            mHandler.sendEmptyMessage(4);
+        }
+    }
 
-			mHandler.sendEmptyMessage(4);
-		}
-	}
+    public void startLocationMeasure(Fragment fragment, View myLocation, LocationListener listener)
+    {
+        startLocationMeasure(fragment.getActivity(), myLocation, listener);
+    }
 
-	public void startLocationMeasure(Fragment fragment, View myLocation, LocationListener listener)
-	{
-		startLocationMeasure(fragment.getActivity(), myLocation, listener);
-	}
+    public Location getLastBestLocation(Context context, int minDistance, long minTime)
+    {
+        Location bestResult = null;
+        float bestAccuracy = Float.MAX_VALUE;
+        long bestTime = Long.MIN_VALUE;
 
-	protected BroadcastReceiver mSingleUpdateReceiver = new BroadcastReceiver()
-	{
-		@Override
-		public void onReceive(Context context, Intent intent)
-		{
-			String key = LocationManager.KEY_LOCATION_CHANGED;
-			Location location = (Location) intent.getExtras().get(key);
+        // Iterate through all the providers on the system, keeping
+        // note of the most accurate result within the acceptable time limit.
+        // If no result is found within maxTime, return the newest Location.
+        List<String> matchingProviders = mLocationManager.getAllProviders();
+        for (String provider : matchingProviders)
+        {
+            Location location = mLocationManager.getLastKnownLocation(provider);
+            if (location != null)
+            {
+                float accuracy = location.getAccuracy();
+                long time = location.getTime();
 
-			mLocation = location;
+                if ((time > minTime && accuracy < bestAccuracy))
+                {
+                    bestResult = location;
+                    bestAccuracy = accuracy;
+                    bestTime = time;
+                } else if (time < minTime && bestAccuracy == Float.MAX_VALUE && time > bestTime)
+                {
+                    bestResult = location;
+                    bestTime = time;
+                }
+            }
+        }
 
-			if (mLocationListener != null && location != null)
-			{
-				mLocationListener.onLocationChanged(location);
-			}
+        return bestResult;
+    }
 
-			stopLocationMeasure();
-		}
-	};
+    public void stopLocationMeasure()
+    {
+        mHandler.removeMessages(0);
+        mHandler.removeMessages(1);
+        mHandler.removeMessages(2);
 
-	public Location getLastBestLocation(Context context, int minDistance, long minTime)
-	{
-		Location bestResult = null;
-		float bestAccuracy = Float.MAX_VALUE;
-		long bestTime = Long.MIN_VALUE;
+        mHandler.sendEmptyMessage(3);
 
-		// Iterate through all the providers on the system, keeping
-		// note of the most accurate result within the acceptable time limit.
-		// If no result is found within maxTime, return the newest Location.
-		List<String> matchingProviders = mLocationManager.getAllProviders();
-		for (String provider : matchingProviders)
-		{
-			Location location = mLocationManager.getLastKnownLocation(provider);
-			if (location != null)
-			{
-				float accuracy = location.getAccuracy();
-				long time = location.getTime();
+        if (mLocationManager != null) // && mOnLocationListener != null)
+        {
+            //			mLocationManager.removeUpdates(mOnLocationListener);
+            mLocationManager.removeUpdates(mUpdatePendingIntent);
+        }
 
-				if ((time > minTime && accuracy < bestAccuracy))
-				{
-					bestResult = location;
-					bestAccuracy = accuracy;
-					bestTime = time;
-				} else if (time < minTime && bestAccuracy == Float.MAX_VALUE && time > bestTime)
-				{
-					bestResult = location;
-					bestTime = time;
-				}
-			}
-		}
+        if (mBaseActivity != null)
+        {
+            try
+            {
+                mBaseActivity.unregisterReceiver(mSingleUpdateReceiver);
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+        }
 
-		return bestResult;
-	}
+        mIsMeasuringLocation = false;
+    }
 
-	public void stopLocationMeasure()
-	{
-		mHandler.removeMessages(0);
-		mHandler.removeMessages(1);
-		mHandler.removeMessages(2);
+    private boolean isBetterLocation(Location location, Location currentBestLocation)
+    {
+        if (currentBestLocation == null)
+        {
+            return true;
+        }
 
-		mHandler.sendEmptyMessage(3);
+        long timeDelta = location.getTime() - currentBestLocation.getTime();
+        boolean isSignificantlyNewer = timeDelta > TWO_MINUTES;
+        boolean isSignificantlyOlder = timeDelta < -TWO_MINUTES;
+        boolean isNewer = timeDelta > 0;
 
-		if (mLocationManager != null) // && mOnLocationListener != null)
-		{
-			//			mLocationManager.removeUpdates(mOnLocationListener);
-			mLocationManager.removeUpdates(mUpdatePendingIntent);
-		}
+        if (isSignificantlyNewer)
+        {
+            return true;
+        } else if (isSignificantlyOlder)
+        {
+            return false;
+        }
 
-		if (mBaseActivity != null)
-		{
-			try
-			{
-				mBaseActivity.unregisterReceiver(mSingleUpdateReceiver);
-			} catch (Exception e)
-			{
-				ExLog.d(e.toString());
-			}
-		}
+        int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
+        boolean isLessAccurate = accuracyDelta > 0;
+        boolean isMoreAccurate = accuracyDelta < 0;
+        boolean isSignificantlyLessAccurate = accuracyDelta > 200;
 
-		mIsMeasuringLocation = false;
-	}
+        boolean isFromSameProvider = isSameProvider(location.getProvider(), currentBestLocation.getProvider());
 
-	private boolean isBetterLocation(Location location, Location currentBestLocation)
-	{
-		if (currentBestLocation == null)
-		{
-			return true;
-		}
+        if (isMoreAccurate)
+        {
+            return true;
+        } else if (isNewer && !isLessAccurate)
+        {
+            return true;
+        } else if (isNewer && !isSignificantlyLessAccurate && isFromSameProvider)
+        {
+            return true;
+        }
 
-		long timeDelta = location.getTime() - currentBestLocation.getTime();
-		boolean isSignificantlyNewer = timeDelta > TWO_MINUTES;
-		boolean isSignificantlyOlder = timeDelta < -TWO_MINUTES;
-		boolean isNewer = timeDelta > 0;
+        return false;
+    }
 
-		if (isSignificantlyNewer)
-		{
-			return true;
-		} else if (isSignificantlyOlder)
-		{
-			return false;
-		}
+    private boolean isSameProvider(String provider1, String provider2)
+    {
+        if (provider1 == null)
+        {
+            return provider2 == null;
+        }
+        return provider1.equals(provider2);
+    }
 
-		int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
-		boolean isLessAccurate = accuracyDelta > 0;
-		boolean isMoreAccurate = accuracyDelta < 0;
-		boolean isSignificantlyLessAccurate = accuracyDelta > 200;
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Listener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		boolean isFromSameProvider = isSameProvider(location.getProvider(), currentBestLocation.getProvider());
-
-		if (isMoreAccurate)
-		{
-			return true;
-		} else if (isNewer && !isLessAccurate)
-		{
-			return true;
-		} else if (isNewer && !isSignificantlyLessAccurate && isFromSameProvider)
-		{
-			return true;
-		}
-
-		return false;
-	}
-
-	private boolean isSameProvider(String provider1, String provider2)
-	{
-		if (provider1 == null)
-		{
-			return provider2 == null;
-		}
-		return provider1.equals(provider2);
-	}
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// Listener
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	//	private LocationListener mOnLocationListener = new LocationListener()
-	//	{
-	//		@Override
-	//		public void onStatusChanged(String provider, int status, Bundle extras)
-	//		{
-	//			if (mLocationListener != null)
-	//			{
-	//				mLocationListener.onStatusChanged(provider, status, extras);
-	//			}
-	//		}
-	//
-	//		@Override
-	//		public void onProviderEnabled(String provider)
-	//		{
-	//			if (mLocationListener != null)
-	//			{
-	//				mLocationListener.onProviderEnabled(provider);
-	//			}
-	//		}
-	//
-	//		@Override
-	//		public void onProviderDisabled(String provider)
-	//		{
-	//			mIsMeasuringLocation = false;
-	//
-	//			if (mLocationListener != null)
-	//			{
-	//				mLocationListener.onProviderDisabled(provider);
-	//			}
-	//		}
-	//
-	//		@Override
-	//		public void onLocationChanged(Location location)
-	//		{
-	//			if (isBetterLocation(location, mLocation))
-	//			{
-	//				mLocation = location;
-	//			}
-	//
-	//			mIsMeasuringLocation = false;
-	//
-	//			if (mLocationListener != null)
-	//			{
-	//				mLocationListener.onLocationChanged(mLocation);
-	//			}
-	//		}
-	//	};
+    //	private LocationListener mOnLocationListener = new LocationListener()
+    //	{
+    //		@Override
+    //		public void onStatusChanged(String provider, int status, Bundle extras)
+    //		{
+    //			if (mLocationListener != null)
+    //			{
+    //				mLocationListener.onStatusChanged(provider, status, extras);
+    //			}
+    //		}
+    //
+    //		@Override
+    //		public void onProviderEnabled(String provider)
+    //		{
+    //			if (mLocationListener != null)
+    //			{
+    //				mLocationListener.onProviderEnabled(provider);
+    //			}
+    //		}
+    //
+    //		@Override
+    //		public void onProviderDisabled(String provider)
+    //		{
+    //			mIsMeasuringLocation = false;
+    //
+    //			if (mLocationListener != null)
+    //			{
+    //				mLocationListener.onProviderDisabled(provider);
+    //			}
+    //		}
+    //
+    //		@Override
+    //		public void onLocationChanged(Location location)
+    //		{
+    //			if (isBetterLocation(location, mLocation))
+    //			{
+    //				mLocation = location;
+    //			}
+    //
+    //			mIsMeasuringLocation = false;
+    //
+    //			if (mLocationListener != null)
+    //			{
+    //				mLocationListener.onLocationChanged(mLocation);
+    //			}
+    //		}
+    //	};
 }

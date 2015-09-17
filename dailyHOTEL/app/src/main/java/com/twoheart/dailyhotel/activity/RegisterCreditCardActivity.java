@@ -1,16 +1,16 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- *
+ * <p/>
  * PaymentActivity (결제화면)
- * 
+ * <p/>
  * 웹서버에서 이용하는 KCP 결제 모듈을 이용하는 화면이다. WebView를 이용
  * 해서 KCP 결제를 진행하는 웹서버 API에 POST 방식으로 요청한다. 요청 시
  * 요청 파라미터에 사용자 정보를 담는다. 이는 서버 사이드에서 Facbook 계정
  * 임인지를 확인하기 위해서이다.
  *
- * @since 2014-02-24
  * @version 1
  * @author Mike Han(mike@dailyhotel.co.kr)
+ * @since 2014-02-24
  */
 package com.twoheart.dailyhotel.activity;
 
@@ -35,233 +35,239 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 
 @SuppressLint("NewApi")
-public class RegisterCreditCardActivity
-		extends BaseActivity implements Constants
+public class RegisterCreditCardActivity extends BaseActivity implements Constants
 {
-	public static final int PROGRESS_STAT_NOT_START = 1;
-	public static final int PROGRESS_STAT_IN = 2;
-	public static final int PROGRESS_DONE = 3;
-	public static String CARD_CD = "";
-	public static String QUOTA = "";
-	public int m_nStat = PROGRESS_STAT_NOT_START;
+    public static final int PROGRESS_STAT_NOT_START = 1;
+    public static final int PROGRESS_STAT_IN = 2;
+    public static final int PROGRESS_DONE = 3;
+    public static String CARD_CD = "";
+    public static String QUOTA = "";
+    public int m_nStat = PROGRESS_STAT_NOT_START;
 
-	private WebView webView;
+    private WebView webView;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState)
-	{
-		super.onCreate(savedInstanceState);
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_regcreditcard);
-		setActionBar(R.string.actionbar_title_reg_creditcard);
+        setContentView(R.layout.activity_regcreditcard);
+        setActionBar(R.string.actionbar_title_reg_creditcard);
 
-		webView = (WebView) findViewById(R.id.webView);
+        webView = (WebView) findViewById(R.id.webView);
 
-		// TODO  setWebContentsDebuggingEnabled
-		//		WebView.setWebContentsDebuggingEnabled(true);
+        // TODO  setWebContentsDebuggingEnabled
+        //		WebView.setWebContentsDebuggingEnabled(true);
 
-		webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-		webView.getSettings().setSaveFormData(false);
-		webView.getSettings().setAppCacheEnabled(false); // 7.4 캐시 정책 비활성화.
-		webView.getSettings().setJavaScriptEnabled(true);
-		webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+        webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+        webView.getSettings().setSaveFormData(false);
+        webView.getSettings().setAppCacheEnabled(false); // 7.4 캐시 정책 비활성화.
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-		{
-			webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-		}
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        {
+            webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        }
 
-		webView.addJavascriptInterface(new JavaScriptExtention(), "android");
+        webView.addJavascriptInterface(new JavaScriptExtention(), "android");
 
-		webView.setWebChromeClient(new mWebChromeClient());
-		webView.setWebViewClient(new mWebViewClient());
+        webView.setWebChromeClient(new mWebChromeClient());
+        webView.setWebViewClient(new mWebViewClient());
 
-		webView.setOnLongClickListener(new OnLongClickListener()
-		{
-			@Override
-			public boolean onLongClick(View v)
-			{
-				return true;
-			}
-		}); // 롱클릭 에러 방지.
+        webView.setOnLongClickListener(new OnLongClickListener()
+        {
+            @Override
+            public boolean onLongClick(View v)
+            {
+                return true;
+            }
+        }); // 롱클릭 에러 방지.
 
-		String url = DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER) + DailyHotelRequest.getUrlDecoderEx(Constants.URL_REGISTER_CREDIT_CARD);
+        String url = DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER) + DailyHotelRequest.getUrlDecoderEx(Constants.URL_REGISTER_CREDIT_CARD);
 
-		webView.postUrl(url, null);
-	}
+        webView.postUrl(url, null);
+    }
 
-	@Override
-	protected void onResume()
-	{
-		super.onResume();
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
 
-	}
+    }
 
-	@Override
-	public void finish()
-	{
-		super.finish();
+    @Override
+    public void finish()
+    {
+        super.finish();
 
-		overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
-	}
+        overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
+    }
 
-	private class mWebChromeClient extends WebChromeClient
-	{
+    @Override
+    public void onBackPressed()
+    {
+        if (isFinishing() == true)
+        {
+            return;
+        }
 
-		boolean isActionBarProgressBarShowing = false;
+        View.OnClickListener posListener = new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                finish();
+            }
+        };
 
-		@Override
-		public void onProgressChanged(WebView view, int newProgress)
-		{
-			super.onProgressChanged(view, newProgress);
+        showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_register_creditcard_cancel), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null);
+    }
 
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-			{
-				if (newProgress != 100)
-					setActionBarProgressBar(true);
-				else
-					setActionBarProgressBar(false);
-			}
-		}
+    private class mWebChromeClient extends WebChromeClient
+    {
 
-		void setActionBarProgressBar(boolean show)
-		{
-			if (show != isActionBarProgressBarShowing)
-			{
-				setSupportProgressBarIndeterminateVisibility(show);
-				isActionBarProgressBarShowing = show;
-			}
-		}
-	}
+        boolean isActionBarProgressBarShowing = false;
 
-	private class mWebViewClient extends WebViewClient
-	{
+        @Override
+        public void onProgressChanged(WebView view, int newProgress)
+        {
+            super.onProgressChanged(view, newProgress);
 
-		@Override
-		public boolean shouldOverrideUrlLoading(WebView view, String url)
-		{
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+            {
+                if (newProgress != 100)
+                {
+                    setActionBarProgressBar(true);
+                } else
+                {
+                    setActionBarProgressBar(false);
+                }
+            }
+        }
 
-			return true;
-		}
+        void setActionBarProgressBar(boolean show)
+        {
+            if (show != isActionBarProgressBarShowing)
+            {
+                setSupportProgressBarIndeterminateVisibility(show);
+                isActionBarProgressBarShowing = show;
+            }
+        }
+    }
 
-		// error 처리
-		@Override
-		public void onReceivedError(WebView view, int errorCode, String description, String failingUrl)
-		{
-			super.onReceivedError(view, errorCode, description, failingUrl);
+    private class mWebViewClient extends WebViewClient
+    {
 
-			webView.loadUrl("about:blank");
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url)
+        {
 
-			if (VolleyHttpClient.isAvailableNetwork())
-			{
-				setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);
-			} else
-			{
-				setResult(CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR);
-			}
+            return true;
+        }
 
-			finish();
-		}
+        // error 처리
+        @Override
+        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl)
+        {
+            super.onReceivedError(view, errorCode, description, failingUrl);
 
-		@Override
-		public void onPageStarted(WebView view, String url, Bitmap favicon)
-		{
-			super.onPageStarted(view, url, favicon);
+            webView.loadUrl("about:blank");
 
-			lockUI();
-			//			handler.removeCallbacks(networkCheckRunner); // 결제 완료시 항상 네트워크
-			// 불안정뜨므로, 네트워크 체크는
-			// 제거하도록 함.
+            if (VolleyHttpClient.isAvailableNetwork())
+            {
+                setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);
+            } else
+            {
+                setResult(CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR);
+            }
 
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-				setSupportProgressBarIndeterminateVisibility(true);
-		}
+            finish();
+        }
 
-		@Override
-		public void onPageFinished(WebView view, String url)
-		{
-			super.onPageFinished(view, url);
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon)
+        {
+            super.onPageStarted(view, url, favicon);
 
-			unLockUI();
+            lockUI();
+            //			handler.removeCallbacks(networkCheckRunner); // 결제 완료시 항상 네트워크
+            // 불안정뜨므로, 네트워크 체크는
+            // 제거하도록 함.
 
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-				setSupportProgressBarIndeterminateVisibility(false);
-		}
-	}
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+            {
+                setSupportProgressBarIndeterminateVisibility(true);
+            }
+        }
 
-	/**
-	 * 종종 에러 발생.
-	 * 
-	 * @author jangjunho
-	 *
-	 */
-	@Deprecated
-	private class HtmlObserver
-	{
-		@JavascriptInterface
-		public void showHTML(String html)
-		{
-			ExLog.e("WEB_VIEW : " + html);
-		}
-	}
+        @Override
+        public void onPageFinished(WebView view, String url)
+        {
+            super.onPageFinished(view, url);
 
-	private class JavaScriptExtention
-	{
+            unLockUI();
 
-		public JavaScriptExtention()
-		{
-		}
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+            {
+                setSupportProgressBarIndeterminateVisibility(false);
+            }
+        }
+    }
 
-		@JavascriptInterface
-		public void feed(String msg)
-		{
-			int resultCode = 0;
-			Intent payData = new Intent();
+    /**
+     * 종종 에러 발생.
+     *
+     * @author jangjunho
+     *
+     */
+    @Deprecated
+    private class HtmlObserver
+    {
+        @JavascriptInterface
+        public void showHTML(String html)
+        {
+            ExLog.e("WEB_VIEW : " + html);
+        }
+    }
 
-			if ("PAYMENT_BILLING_SUCCSESS".equals(msg) == true)
-			{
-				resultCode = CODE_RESULT_PAYMENT_BILLING_SUCCSESS;
-			} else if ("PAYMENT_BILLING_DUPLICATE".equals(msg) == true)
-			{
-				resultCode = CODE_RESULT_PAYMENT_BILLING_DUPLICATE;
-			} else
-			// else if ("PAYMENT_BILLING_FAIL".equals(msg) == true)
-			{
-				resultCode = CODE_RESULT_PAYMENT_BILLING_FAIL;
+    private class JavaScriptExtention
+    {
 
-				String[] splits = msg.split("\\^");
+        public JavaScriptExtention()
+        {
+        }
 
-				if (splits.length > 1)
-				{
-					if (TextUtils.isEmpty(splits[1]) == false)
-					{
-						payData.putExtra(NAME_INTENT_EXTRA_DATA_MESSAGE, splits[1]);
-					}
-				}
-			}
+        @JavascriptInterface
+        public void feed(String msg)
+        {
+            int resultCode = 0;
+            Intent payData = new Intent();
 
-			setResult(resultCode, payData);
-			finish();
-		}
-	}
+            if ("PAYMENT_BILLING_SUCCSESS".equals(msg) == true)
+            {
+                resultCode = CODE_RESULT_PAYMENT_BILLING_SUCCSESS;
+            } else if ("PAYMENT_BILLING_DUPLICATE".equals(msg) == true)
+            {
+                resultCode = CODE_RESULT_PAYMENT_BILLING_DUPLICATE;
+            } else
+            // else if ("PAYMENT_BILLING_FAIL".equals(msg) == true)
+            {
+                resultCode = CODE_RESULT_PAYMENT_BILLING_FAIL;
 
-	@Override
-	public void onBackPressed()
-	{
-		if (isFinishing() == true)
-		{
-			return;
-		}
+                String[] splits = msg.split("\\^");
 
-		View.OnClickListener posListener = new View.OnClickListener()
-		{
-			@Override
-			public void onClick(View view)
-			{
-				finish();
-			}
-		};
+                if (splits.length > 1)
+                {
+                    if (TextUtils.isEmpty(splits[1]) == false)
+                    {
+                        payData.putExtra(NAME_INTENT_EXTRA_DATA_MESSAGE, splits[1]);
+                    }
+                }
+            }
 
-		showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_register_creditcard_cancel), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null);
-	}
+            setResult(resultCode, payData);
+            finish();
+        }
+    }
 }

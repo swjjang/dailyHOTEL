@@ -6,13 +6,13 @@ import com.twoheart.dailyhotel.adapter.PlaceViewPagerAdapter;
 
 public class FnBMapFragment extends PlaceMapFragment
 {
-	public FnBMapFragment()
-	{
-		super();
-	}
+    public FnBMapFragment()
+    {
+        super();
+    }
 
-	protected PlaceViewPagerAdapter createPlaceViewPagerAdapter(BaseActivity baseActivity)
-	{
-		return new FnBViewPagerAdapter(baseActivity);
-	}
+    protected PlaceViewPagerAdapter createPlaceViewPagerAdapter(BaseActivity baseActivity)
+    {
+        return new FnBViewPagerAdapter(baseActivity);
+    }
 }

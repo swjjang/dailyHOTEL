@@ -5,52 +5,51 @@ import android.os.Parcelable;
 
 public class Guest implements Parcelable
 {
-	public String email;
-	public String name;
-	public String phone;
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+    {
+        public Guest createFromParcel(Parcel in)
+        {
+            return new Guest(in);
+        }
 
-	public Guest()
-	{
-	}
+        @Override
+        public Guest[] newArray(int size)
+        {
+            return new Guest[size];
+        }
 
-	public Guest(Parcel in)
-	{
-		readFromParcel(in);
-	}
+    };
+    public String email;
+    public String name;
+    public String phone;
 
-	@Override
-	public void writeToParcel(Parcel dest, int flags)
-	{
-		dest.writeString(email);
-		dest.writeString(name);
-		dest.writeString(phone);
-	}
+    public Guest()
+    {
+    }
 
-	private void readFromParcel(Parcel in)
-	{
-		email = in.readString();
-		name = in.readString();
-		phone = in.readString();
-	}
+    public Guest(Parcel in)
+    {
+        readFromParcel(in);
+    }
 
-	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
-	{
-		public Guest createFromParcel(Parcel in)
-		{
-			return new Guest(in);
-		}
+    @Override
+    public void writeToParcel(Parcel dest, int flags)
+    {
+        dest.writeString(email);
+        dest.writeString(name);
+        dest.writeString(phone);
+    }
 
-		@Override
-		public Guest[] newArray(int size)
-		{
-			return new Guest[size];
-		}
+    private void readFromParcel(Parcel in)
+    {
+        email = in.readString();
+        name = in.readString();
+        phone = in.readString();
+    }
 
-	};
-
-	@Override
-	public int describeContents()
-	{
-		return 0;
-	}
+    @Override
+    public int describeContents()
+    {
+        return 0;
+    }
 }

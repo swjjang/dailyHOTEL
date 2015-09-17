@@ -14,51 +14,51 @@ import com.twoheart.dailyhotel.activity.BaseActivity;
 public class ImageDetailFragment extends BaseFragment
 {
 
-	private static final String KEY_BUNDLE_ARGUMENTS_IMAGEURL = "image_url";
+    private static final String KEY_BUNDLE_ARGUMENTS_IMAGEURL = "image_url";
 
-	private String mImageUrl;
-	//	private ImageLoader mImageLoader;
-	private AQuery mAq;
-	private ImageView mImageView;
-	private ProgressBar mProgressBar;
+    private String mImageUrl;
+    //	private ImageLoader mImageLoader;
+    private AQuery mAq;
+    private ImageView mImageView;
+    private ProgressBar mProgressBar;
 
-	public static ImageDetailFragment newInstance(String imageUrl)
-	{
-		ImageDetailFragment newFragment = new ImageDetailFragment();
+    public static ImageDetailFragment newInstance(String imageUrl)
+    {
+        ImageDetailFragment newFragment = new ImageDetailFragment();
 
-		Bundle arguments = new Bundle();
-		arguments.putString(KEY_BUNDLE_ARGUMENTS_IMAGEURL, imageUrl);
-		newFragment.setArguments(arguments);
+        Bundle arguments = new Bundle();
+        arguments.putString(KEY_BUNDLE_ARGUMENTS_IMAGEURL, imageUrl);
+        newFragment.setArguments(arguments);
 
-		return newFragment;
-	}
+        return newFragment;
+    }
 
-	@Override
-	public void onCreate(Bundle savedInstanceState)
-	{
-		super.onCreate(savedInstanceState);
-		mImageUrl = getArguments().getString(KEY_BUNDLE_ARGUMENTS_IMAGEURL);
-	}
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        mImageUrl = getArguments().getString(KEY_BUNDLE_ARGUMENTS_IMAGEURL);
+    }
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-	{
-		BaseActivity baseActivity = (BaseActivity) getActivity();
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
+        BaseActivity baseActivity = (BaseActivity) getActivity();
 
-		if (baseActivity == null)
-		{
-			return null;
-		}
+        if (baseActivity == null)
+        {
+            return null;
+        }
 
-		View view = inflater.inflate(R.layout.fragment_image_detail, container, false);
+        View view = inflater.inflate(R.layout.fragment_image_detail, container, false);
 
-		mImageView = (ImageView) view.findViewById(R.id.iv_image_detail);
-		mProgressBar = (ProgressBar) view.findViewById(R.id.pb_image_detail);
+        mImageView = (ImageView) view.findViewById(R.id.iv_image_detail);
+        mProgressBar = (ProgressBar) view.findViewById(R.id.pb_image_detail);
 
-		mAq = new AQuery(baseActivity, view);
-		mAq.id(mImageView).progress(mProgressBar).image(mImageUrl, true, true, 0, R.drawable.img_placeholder, null, AQuery.FADE_IN);
+        mAq = new AQuery(baseActivity, view);
+        mAq.id(mImageView).progress(mProgressBar).image(mImageUrl, true, true, 0, R.drawable.img_placeholder, null, AQuery.FADE_IN);
 
-		return view;
-	}
+        return view;
+    }
 
 }

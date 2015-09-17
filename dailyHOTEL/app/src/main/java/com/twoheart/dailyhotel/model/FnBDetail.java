@@ -7,52 +7,52 @@ import java.util.ArrayList;
 
 public class FnBDetail extends PlaceDetail
 {
-	public FnBDetail(int index)
-	{
-		super(index);
-	}
+    public FnBDetail(int index)
+    {
+        super(index);
+    }
 
-	@Override
-	public void setData(JSONObject jsonObject) throws Exception
-	{
-		grade = Place.Grade.valueOf(jsonObject.getString("grade"));
-		name = jsonObject.getString("restaurant_name");
-		address = jsonObject.getString("address");
+    @Override
+    public void setData(JSONObject jsonObject) throws Exception
+    {
+        grade = Place.Grade.valueOf(jsonObject.getString("grade"));
+        name = jsonObject.getString("restaurant_name");
+        address = jsonObject.getString("address");
 
-		longitude = jsonObject.getDouble("longitude");
-		latitude = jsonObject.getDouble("latitude");
+        longitude = jsonObject.getDouble("longitude");
+        latitude = jsonObject.getDouble("latitude");
 
-		// Image Url
-		JSONArray imageJsonArray = jsonObject.getJSONArray("img_url");
-		int imageLength = imageJsonArray.length();
+        // Image Url
+        JSONArray imageJsonArray = jsonObject.getJSONArray("img_url");
+        int imageLength = imageJsonArray.length();
 
-		mImageUrlList = new ArrayList<String>(imageLength);
+        mImageUrlList = new ArrayList<String>(imageLength);
 
-		for (int i = 0; i < imageLength; i++)
-		{
-			mImageUrlList.add(imageJsonArray.getString(i));
-		}
+        for (int i = 0; i < imageLength; i++)
+        {
+            mImageUrlList.add(imageJsonArray.getString(i));
+        }
 
-		// Detail
-		JSONArray detailJSONArray = jsonObject.getJSONArray("detail");
-		int detailLength = detailJSONArray.length();
+        // Detail
+        JSONArray detailJSONArray = jsonObject.getJSONArray("detail");
+        int detailLength = detailJSONArray.length();
 
-		mInformationList = new ArrayList<DetailInformation>(detailLength);
+        mInformationList = new ArrayList<DetailInformation>(detailLength);
 
-		for (int i = 0; i < detailLength; i++)
-		{
-			mInformationList.add(new DetailInformation(detailJSONArray.getJSONObject(i)));
-		}
+        for (int i = 0; i < detailLength; i++)
+        {
+            mInformationList.add(new DetailInformation(detailJSONArray.getJSONObject(i)));
+        }
 
-		// Ticket Information
-		JSONArray ticketInformationJSONArray = jsonObject.getJSONArray("ticket_info");
-		int ticketInformationLength = ticketInformationJSONArray.length();
+        // Ticket Information
+        JSONArray ticketInformationJSONArray = jsonObject.getJSONArray("ticket_info");
+        int ticketInformationLength = ticketInformationJSONArray.length();
 
-		mTicketInformationList = new ArrayList<TicketInformation>(ticketInformationLength);
+        mTicketInformationList = new ArrayList<TicketInformation>(ticketInformationLength);
 
-		for (int i = 0; i < ticketInformationLength; i++)
-		{
-			mTicketInformationList.add(new TicketInformation(name, ticketInformationJSONArray.getJSONObject(i)));
-		}
-	}
+        for (int i = 0; i < ticketInformationLength; i++)
+        {
+            mTicketInformationList.add(new TicketInformation(name, ticketInformationJSONArray.getJSONObject(i)));
+        }
+    }
 }

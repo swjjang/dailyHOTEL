@@ -19,130 +19,129 @@ import com.twoheart.dailyhotel.view.widget.PinnedSectionListView.PinnedSectionLi
 import java.util.ArrayList;
 import java.util.Collection;
 
-public abstract class PlaceListAdapter
-		extends ArrayAdapter<PlaceViewItem>implements PinnedSectionListAdapter
+public abstract class PlaceListAdapter extends ArrayAdapter<PlaceViewItem> implements PinnedSectionListAdapter
 {
-	protected Context context;
-	protected int resourceId;
-	protected LayoutInflater inflater;
-	private ArrayList<PlaceViewItem> mPlaceViewItemList;
-	protected PaintDrawable mPaintDrawable;
+    protected Context context;
+    protected int resourceId;
+    protected LayoutInflater inflater;
+    protected PaintDrawable mPaintDrawable;
+    private ArrayList<PlaceViewItem> mPlaceViewItemList;
 
-	@Override
-	public abstract View getView(final int position, View convertView, ViewGroup parent);
+    public PlaceListAdapter(Context context, int resourceId, ArrayList<PlaceViewItem> arrayList)
+    {
+        super(context, resourceId, arrayList);
 
-	public PlaceListAdapter(Context context, int resourceId, ArrayList<PlaceViewItem> arrayList)
-	{
-		super(context, resourceId, arrayList);
+        if (mPlaceViewItemList == null)
+        {
+            mPlaceViewItemList = new ArrayList<PlaceViewItem>();
+        }
 
-		if (mPlaceViewItemList == null)
-		{
-			mPlaceViewItemList = new ArrayList<PlaceViewItem>();
-		}
+        mPlaceViewItemList.clear();
+        mPlaceViewItemList.addAll(arrayList);
 
-		mPlaceViewItemList.clear();
-		mPlaceViewItemList.addAll(arrayList);
+        this.context = context;
+        this.resourceId = resourceId;
 
-		this.context = context;
-		this.resourceId = resourceId;
+        this.inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		this.inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        makeShaderFactory();
+    }
 
-		makeShaderFactory();
-	}
+    @Override
+    public abstract View getView(final int position, View convertView, ViewGroup parent);
 
-	private void makeShaderFactory()
-	{
-		// 그라디에이션 만들기.
-		final int colors[] = { Color.parseColor("#ED000000"), Color.parseColor("#E8000000"), Color.parseColor("#E2000000"), Color.parseColor("#66000000"), Color.parseColor("#00000000") };
-		final float positions[] = { 0.0f, 0.01f, 0.02f, 0.17f, 0.38f };
+    private void makeShaderFactory()
+    {
+        // 그라디에이션 만들기.
+        final int colors[] = {Color.parseColor("#ED000000"), Color.parseColor("#E8000000"), Color.parseColor("#E2000000"), Color.parseColor("#66000000"), Color.parseColor("#00000000")};
+        final float positions[] = {0.0f, 0.01f, 0.02f, 0.17f, 0.38f};
 
-		mPaintDrawable = new PaintDrawable();
-		mPaintDrawable.setShape(new RectShape());
+        mPaintDrawable = new PaintDrawable();
+        mPaintDrawable.setShape(new RectShape());
 
-		ShapeDrawable.ShaderFactory sf = new ShapeDrawable.ShaderFactory()
-		{
-			@Override
-			public Shader resize(int width, int height)
-			{
-				return new LinearGradient(0, height, 0, 0, colors, positions, Shader.TileMode.CLAMP);
-			}
-		};
+        ShapeDrawable.ShaderFactory sf = new ShapeDrawable.ShaderFactory()
+        {
+            @Override
+            public Shader resize(int width, int height)
+            {
+                return new LinearGradient(0, height, 0, 0, colors, positions, Shader.TileMode.CLAMP);
+            }
+        };
 
-		mPaintDrawable.setShaderFactory(sf);
-	}
+        mPaintDrawable.setShaderFactory(sf);
+    }
 
-	@Override
-	public void clear()
-	{
-		if (mPlaceViewItemList == null)
-		{
-			mPlaceViewItemList = new ArrayList<PlaceViewItem>();
-		}
+    @Override
+    public void clear()
+    {
+        if (mPlaceViewItemList == null)
+        {
+            mPlaceViewItemList = new ArrayList<PlaceViewItem>();
+        }
 
-		mPlaceViewItemList.clear();
+        mPlaceViewItemList.clear();
 
-		super.clear();
-	}
+        super.clear();
+    }
 
-	@Override
-	public PlaceViewItem getItem(int position)
-	{
-		if (mPlaceViewItemList == null)
-		{
-			return null;
-		}
+    @Override
+    public PlaceViewItem getItem(int position)
+    {
+        if (mPlaceViewItemList == null)
+        {
+            return null;
+        }
 
-		return mPlaceViewItemList.get(position);
-	}
+        return mPlaceViewItemList.get(position);
+    }
 
-	@Override
-	public int getCount()
-	{
-		if (mPlaceViewItemList == null)
-		{
-			return 0;
-		}
+    @Override
+    public int getCount()
+    {
+        if (mPlaceViewItemList == null)
+        {
+            return 0;
+        }
 
-		return mPlaceViewItemList.size();
-	}
+        return mPlaceViewItemList.size();
+    }
 
-	@Override
-	public void addAll(Collection<? extends PlaceViewItem> collection)
-	{
-		if (collection == null)
-		{
-			return;
-		}
+    @Override
+    public void addAll(Collection<? extends PlaceViewItem> collection)
+    {
+        if (collection == null)
+        {
+            return;
+        }
 
-		if (mPlaceViewItemList == null)
-		{
-			mPlaceViewItemList = new ArrayList<PlaceViewItem>();
-		}
+        if (mPlaceViewItemList == null)
+        {
+            mPlaceViewItemList = new ArrayList<PlaceViewItem>();
+        }
 
-		mPlaceViewItemList.addAll(collection);
-	}
+        mPlaceViewItemList.addAll(collection);
+    }
 
-	public ArrayList<PlaceViewItem> getData()
-	{
-		return mPlaceViewItemList;
-	}
+    public ArrayList<PlaceViewItem> getData()
+    {
+        return mPlaceViewItemList;
+    }
 
-	@Override
-	public boolean isItemViewTypePinned(int viewType)
-	{
-		return viewType == HotelListViewItem.TYPE_SECTION;
-	}
+    @Override
+    public boolean isItemViewTypePinned(int viewType)
+    {
+        return viewType == HotelListViewItem.TYPE_SECTION;
+    }
 
-	@Override
-	public int getViewTypeCount()
-	{
-		return 2;
-	}
+    @Override
+    public int getViewTypeCount()
+    {
+        return 2;
+    }
 
-	@Override
-	public int getItemViewType(int position)
-	{
-		return getItem(position).type;
-	}
+    @Override
+    public int getItemViewType(int position)
+    {
+        return getItem(position).type;
+    }
 }

@@ -13,79 +13,78 @@ import java.util.TimeZone;
 
 public class FnBBookingDetail extends PlaceBookingDetail
 {
-	public int ticketCount;
-	public String ticketName;
-	public String sday;
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+    {
+        public FnBBookingDetail createFromParcel(Parcel in)
+        {
+            return new FnBBookingDetail(in);
+        }
 
-	public FnBBookingDetail()
-	{
-	}
+        @Override
+        public FnBBookingDetail[] newArray(int size)
+        {
+            return new FnBBookingDetail[size];
+        }
+    };
+    public int ticketCount;
+    public String ticketName;
+    public String sday;
 
-	public FnBBookingDetail(Parcel in)
-	{
-		readFromParcel(in);
-	}
+    public FnBBookingDetail()
+    {
+    }
 
-	@Override
-	public void writeToParcel(Parcel dest, int flags)
-	{
-		super.writeToParcel(dest, flags);
+    public FnBBookingDetail(Parcel in)
+    {
+        readFromParcel(in);
+    }
 
-		dest.writeInt(ticketCount);
-		dest.writeString(ticketName);
-		dest.writeString(sday);
-	}
+    @Override
+    public void writeToParcel(Parcel dest, int flags)
+    {
+        super.writeToParcel(dest, flags);
 
-	protected void readFromParcel(Parcel in)
-	{
-		super.readFromParcel(in);
+        dest.writeInt(ticketCount);
+        dest.writeString(ticketName);
+        dest.writeString(sday);
+    }
 
-		ticketCount = in.readInt();
-		ticketName = in.readString();
-		sday = in.readString();
-	}
+    protected void readFromParcel(Parcel in)
+    {
+        super.readFromParcel(in);
 
-	public void setData(JSONObject jsonObject) throws Exception
-	{
-		index = jsonObject.getInt("idx");
-		address = jsonObject.getString("address");
-		latitude = jsonObject.getDouble("latitude");
-		longitude = jsonObject.getDouble("longitude");
-		placeName = jsonObject.getString("restaurant_name");
+        ticketCount = in.readInt();
+        ticketName = in.readString();
+        sday = in.readString();
+    }
 
-		grade = Place.Grade.valueOf(jsonObject.getString("grade"));
-		guestName = jsonObject.getString("customer_name");
-		guestPhone = jsonObject.getString("customer_phone");
-		guestEmail = jsonObject.getString("customer_email");
-		addressSummary = jsonObject.getString("customer_email");
+    public void setData(JSONObject jsonObject) throws Exception
+    {
+        index = jsonObject.getInt("idx");
+        address = jsonObject.getString("address");
+        latitude = jsonObject.getDouble("latitude");
+        longitude = jsonObject.getDouble("longitude");
+        placeName = jsonObject.getString("restaurant_name");
 
-		//
-		JSONObject wrapJSONObject = new JSONObject(jsonObject.getString("description"));
-		JSONArray jsonArray = wrapJSONObject.getJSONArray("wrap");
+        grade = Place.Grade.valueOf(jsonObject.getString("grade"));
+        guestName = jsonObject.getString("customer_name");
+        guestPhone = jsonObject.getString("customer_phone");
+        guestEmail = jsonObject.getString("customer_email");
+        addressSummary = jsonObject.getString("customer_email");
 
-		setSpecification(jsonArray);
+        //
+        JSONObject wrapJSONObject = new JSONObject(jsonObject.getString("description"));
+        JSONArray jsonArray = wrapJSONObject.getJSONArray("wrap");
 
-		ticketCount = jsonObject.getInt("ticket_count");
-		ticketName = jsonObject.getString("ticket_name");
-		long day = jsonObject.getLong("arrival_time");
+        setSpecification(jsonArray);
 
-		SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd(EEE) HH:mm", Locale.KOREA);
-		format.setTimeZone(TimeZone.getTimeZone("GMT"));
+        ticketCount = jsonObject.getInt("ticket_count");
+        ticketName = jsonObject.getString("ticket_name");
+        long day = jsonObject.getLong("arrival_time");
 
-		sday = format.format(new Date(day));
-	}
+        SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd(EEE) HH:mm", Locale.KOREA);
+        format.setTimeZone(TimeZone.getTimeZone("GMT"));
 
-	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
-	{
-		public FnBBookingDetail createFromParcel(Parcel in)
-		{
-			return new FnBBookingDetail(in);
-		}
-
-		@Override
-		public FnBBookingDetail[] newArray(int size)
-		{
-			return new FnBBookingDetail[size];
-		}
-	};
+        sday = format.format(new Date(day));
+    }
 }

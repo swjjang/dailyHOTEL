@@ -5,23 +5,23 @@ import com.twoheart.dailyhotel.model.Place;
 
 public class FnBViewItem extends PlaceViewItem
 {
-	private FnB mFnB;
+    private FnB mFnB;
 
-	public FnBViewItem(String title)
-	{
-		super(title);
-	}
+    public FnBViewItem(String title)
+    {
+        super(title);
+    }
 
-	public FnBViewItem(FnB fnb)
-	{
-		super();
+    public FnBViewItem(FnB fnb)
+    {
+        super();
 
-		mFnB = fnb;
-	}
+        mFnB = fnb;
+    }
 
-	@Override
-	public Place getPlace()
-	{
-		return mFnB;
-	}
+    @Override
+    public Place getPlace()
+    {
+        return mFnB;
+    }
 }

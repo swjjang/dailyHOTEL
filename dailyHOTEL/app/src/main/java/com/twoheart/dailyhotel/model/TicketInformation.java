@@ -7,67 +7,66 @@ import org.json.JSONObject;
 
 public class TicketInformation implements Parcelable
 {
-	public int index;
-	public String name;
-	public String option;
-	public String benefit;
-	public int discountPrice;
-	public String placeName;
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+    {
+        public TicketInformation createFromParcel(Parcel in)
+        {
+            return new TicketInformation(in);
+        }
 
-	public TicketInformation(Parcel in)
-	{
-		readFromParcel(in);
-	}
+        @Override
+        public TicketInformation[] newArray(int size)
+        {
+            return new TicketInformation[size];
+        }
+    };
+    public int index;
+    public String name;
+    public String option;
+    public String benefit;
+    public int discountPrice;
+    public String placeName;
 
-	public TicketInformation(String placeName, JSONObject jsonObject) throws Exception
-	{
-		index = jsonObject.getInt("sale_reco_idx");
-		name = jsonObject.getString("ticket_name").trim();
-		option = jsonObject.getString("option").trim();
-		benefit = jsonObject.getString("ticket_benefit").trim();
-		discountPrice = jsonObject.getInt("discount");
+    public TicketInformation(Parcel in)
+    {
+        readFromParcel(in);
+    }
 
-		this.placeName = placeName;
-	}
+    public TicketInformation(String placeName, JSONObject jsonObject) throws Exception
+    {
+        index = jsonObject.getInt("sale_reco_idx");
+        name = jsonObject.getString("ticket_name").trim();
+        option = jsonObject.getString("option").trim();
+        benefit = jsonObject.getString("ticket_benefit").trim();
+        discountPrice = jsonObject.getInt("discount");
 
-	@Override
-	public void writeToParcel(Parcel dest, int flags)
-	{
-		dest.writeInt(index);
-		dest.writeString(name);
-		dest.writeString(option);
-		dest.writeString(benefit);
-		dest.writeInt(discountPrice);
-		dest.writeString(placeName);
-	}
+        this.placeName = placeName;
+    }
 
-	protected void readFromParcel(Parcel in)
-	{
-		index = in.readInt();
-		name = in.readString();
-		option = in.readString();
-		benefit = in.readString();
-		discountPrice = in.readInt();
-		placeName = in.readString();
-	}
+    @Override
+    public void writeToParcel(Parcel dest, int flags)
+    {
+        dest.writeInt(index);
+        dest.writeString(name);
+        dest.writeString(option);
+        dest.writeString(benefit);
+        dest.writeInt(discountPrice);
+        dest.writeString(placeName);
+    }
 
-	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
-	{
-		public TicketInformation createFromParcel(Parcel in)
-		{
-			return new TicketInformation(in);
-		}
+    protected void readFromParcel(Parcel in)
+    {
+        index = in.readInt();
+        name = in.readString();
+        option = in.readString();
+        benefit = in.readString();
+        discountPrice = in.readInt();
+        placeName = in.readString();
+    }
 
-		@Override
-		public TicketInformation[] newArray(int size)
-		{
-			return new TicketInformation[size];
-		}
-	};
-
-	@Override
-	public int describeContents()
-	{
-		return 0;
-	}
+    @Override
+    public int describeContents()
+    {
+        return 0;
+    }
 }

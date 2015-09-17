@@ -24,179 +24,174 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ForgotPwdActivity
-		extends BaseActivity implements Constants, OnClickListener
+public class ForgotPwdActivity extends BaseActivity implements Constants, OnClickListener
 {
 
-	private TextView btnForgot;
-	private EditText etForgot;
+    private TextView btnForgot;
+    private EditText etForgot;
 
-	private String mEmail;
+    private String mEmail;
+    private DailyHotelJsonResponseListener mUserChangePwJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            if (isFinishing() == true)
+            {
+                return;
+            }
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState)
-	{
-		super.onCreate(savedInstanceState);
+            try
+            {
+                String result = null;
 
-		setContentView(R.layout.activity_forgot_pwd);
-		setActionBar(R.string.actionbar_title_forgot_pwd_activity);
+                if (response != null)
+                {
+                    result = response.getString("isSuccess");
+                }
 
-		etForgot = (EditText) findViewById(R.id.et_forgot_pwd);
-		btnForgot = (TextView) findViewById(R.id.btn_forgot_pwd);
-		btnForgot.setOnClickListener(this);
-		etForgot.setId(EditorInfo.IME_ACTION_DONE);
-		etForgot.setOnEditorActionListener(new OnEditorActionListener()
-		{
+                if ("true".equalsIgnoreCase(result) == true)
+                {
+                    showSimpleDialog(null, getString(R.string.dialog_msg_sent_email), getString(R.string.dialog_btn_text_confirm), null);
+                    etForgot.setText("");
+                } else
+                {
+                    String message = response.getString("msg");
+                    showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
+                }
+            } catch (JSONException e)
+            {
+                onError(e);
+            } finally
+            {
+                unLockUI();
+            }
 
-			@Override
-			public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
-			{
-				switch (actionId)
-				{
-					case EditorInfo.IME_ACTION_DONE:
-						btnForgot.performClick();
-						break;
-				}
-				return false;
-			}
-		});
+        }
+    };
+    private DailyHotelJsonResponseListener mUserCheckEmailJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                String result = null;
 
-	}
+                if (response != null)
+                {
+                    result = response.getString("isSuccess");
+                }
 
-	// Jason | Fix send email api
-	@Override
-	public void onClick(View v)
-	{
-		if (v.getId() == btnForgot.getId())
-		{
-			if (isLockUiComponent() == true)
-			{
-				return;
-			}
+                if ("true".equalsIgnoreCase(result) == true)
+                {
+                    if (TextUtils.isEmpty(mEmail) == true)
+                    {
+                        DailyToast.showToast(ForgotPwdActivity.this, R.string.toast_msg_please_input_email_address, Toast.LENGTH_SHORT);
+                    } else
+                    {
+                        Map<String, String> params = new HashMap<String, String>();
+                        params.put("userEmail", mEmail);
 
-			lockUiComponent();
+                        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_CHANGE_PW).toString(), params, mUserChangePwJsonResponseListener, ForgotPwdActivity.this));
+                    }
+                } else
+                {
+                    unLockUI();
 
-			mEmail = etForgot.getText().toString().trim();
+                    if (isFinishing() == true)
+                    {
+                        return;
+                    }
 
-			if (mEmail.equals(""))
-			{
-				releaseUiComponent();
+                    String message = response.getString("msg");
+                    showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
+                }
+            } catch (JSONException e)
+            {
+                onError(e);
+                unLockUI();
+            }
+        }
+    };
 
-				DailyToast.showToast(this, R.string.toast_msg_please_input_email_address, Toast.LENGTH_SHORT);
-				return;
-			}
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
 
-			else if (android.util.Patterns.EMAIL_ADDRESS.matcher(mEmail).matches() == false)
-			{
-				releaseUiComponent();
+        setContentView(R.layout.activity_forgot_pwd);
+        setActionBar(R.string.actionbar_title_forgot_pwd_activity);
 
-				DailyToast.showToast(this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
-				return;
-			}
+        etForgot = (EditText) findViewById(R.id.et_forgot_pwd);
+        btnForgot = (TextView) findViewById(R.id.btn_forgot_pwd);
+        btnForgot.setOnClickListener(this);
+        etForgot.setId(EditorInfo.IME_ACTION_DONE);
+        etForgot.setOnEditorActionListener(new OnEditorActionListener()
+        {
 
-			lockUI();
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+            {
+                switch (actionId)
+                {
+                    case EditorInfo.IME_ACTION_DONE:
+                        btnForgot.performClick();
+                        break;
+                }
+                return false;
+            }
+        });
 
-			Map<String, String> params = new HashMap<String, String>();
+    }
 
-			params.put("userEmail", mEmail);
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Listener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-			mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_CHECK_EMAIL).toString(), params, mUserCheckEmailJsonResponseListener, this));
-		}
-	}
+    // Jason | Fix send email api
+    @Override
+    public void onClick(View v)
+    {
+        if (v.getId() == btnForgot.getId())
+        {
+            if (isLockUiComponent() == true)
+            {
+                return;
+            }
 
-	@Override
-	public void finish()
-	{
-		super.finish();
-		overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
-	}
+            lockUiComponent();
 
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// Listener
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            mEmail = etForgot.getText().toString().trim();
 
-	private DailyHotelJsonResponseListener mUserCheckEmailJsonResponseListener = new DailyHotelJsonResponseListener()
-	{
-		@Override
-		public void onResponse(String url, JSONObject response)
-		{
-			try
-			{
-				String result = null;
+            if (mEmail.equals(""))
+            {
+                releaseUiComponent();
 
-				if (response != null)
-				{
-					result = response.getString("isSuccess");
-				}
+                DailyToast.showToast(this, R.string.toast_msg_please_input_email_address, Toast.LENGTH_SHORT);
+                return;
+            } else if (android.util.Patterns.EMAIL_ADDRESS.matcher(mEmail).matches() == false)
+            {
+                releaseUiComponent();
 
-				if ("true".equalsIgnoreCase(result) == true)
-				{
-					if (TextUtils.isEmpty(mEmail) == true)
-					{
-						DailyToast.showToast(ForgotPwdActivity.this, R.string.toast_msg_please_input_email_address, Toast.LENGTH_SHORT);
-					} else
-					{
-						Map<String, String> params = new HashMap<String, String>();
-						params.put("userEmail", mEmail);
+                DailyToast.showToast(this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
+                return;
+            }
 
-						mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_CHANGE_PW).toString(), params, mUserChangePwJsonResponseListener, ForgotPwdActivity.this));
-					}
-				} else
-				{
-					unLockUI();
+            lockUI();
 
-					if (isFinishing() == true)
-					{
-						return;
-					}
+            Map<String, String> params = new HashMap<String, String>();
 
-					String message = response.getString("msg");
-					showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
-				}
-			} catch (JSONException e)
-			{
-				onError(e);
-				unLockUI();
-			}
-		}
-	};
+            params.put("userEmail", mEmail);
 
-	private DailyHotelJsonResponseListener mUserChangePwJsonResponseListener = new DailyHotelJsonResponseListener()
-	{
-		@Override
-		public void onResponse(String url, JSONObject response)
-		{
-			if (isFinishing() == true)
-			{
-				return;
-			}
+            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_CHECK_EMAIL).toString(), params, mUserCheckEmailJsonResponseListener, this));
+        }
+    }
 
-			try
-			{
-				String result = null;
-
-				if (response != null)
-				{
-					result = response.getString("isSuccess");
-				}
-
-				if ("true".equalsIgnoreCase(result) == true)
-				{
-					showSimpleDialog(null, getString(R.string.dialog_msg_sent_email), getString(R.string.dialog_btn_text_confirm), null);
-					etForgot.setText("");
-				} else
-				{
-					String message = response.getString("msg");
-					showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
-				}
-			} catch (JSONException e)
-			{
-				onError(e);
-			} finally
-			{
-				unLockUI();
-			}
-
-		}
-	};
+    @Override
+    public void finish()
+    {
+        super.finish();
+        overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
+    }
 }

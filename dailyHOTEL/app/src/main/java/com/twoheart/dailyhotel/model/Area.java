@@ -8,81 +8,80 @@ import org.json.JSONObject;
 
 public class Area extends Province
 {
-	public Province province;
-	private int provinceIndex;
-	public String tag;
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+    {
+        public Province createFromParcel(Parcel in)
+        {
+            return new Area(in);
+        }
 
-	public Area()
-	{
-		super();
-	}
+        @Override
+        public Province[] newArray(int size)
+        {
+            return new Area[size];
+        }
+    };
+    public Province province;
+    public String tag;
+    private int provinceIndex;
 
-	public Area(Parcel in)
-	{
-		readFromParcel(in);
-	}
+    public Area()
+    {
+        super();
+    }
 
-	public Area(JSONObject jsonObject) throws JSONException
-	{
-		super(jsonObject);
+    public Area(Parcel in)
+    {
+        readFromParcel(in);
+    }
 
-		provinceIndex = jsonObject.getInt("province_idx");
-		tag = jsonObject.getString("tag");
-	}
+    public Area(JSONObject jsonObject) throws JSONException
+    {
+        super(jsonObject);
 
-	public Province getProvince()
-	{
-		return province;
-	}
+        provinceIndex = jsonObject.getInt("province_idx");
+        tag = jsonObject.getString("tag");
+    }
 
-	public void setProvince(Province province)
-	{
-		this.province = province;
-	}
+    public Province getProvince()
+    {
+        return province;
+    }
 
-	public void setProvinceIndex(int provinceIndex)
-	{
-		this.provinceIndex = provinceIndex;
-	}
+    public void setProvince(Province province)
+    {
+        this.province = province;
+    }
 
-	@Override
-	public int getProvinceIndex()
-	{
-		return provinceIndex;
-	}
+    @Override
+    public int getProvinceIndex()
+    {
+        return provinceIndex;
+    }
 
-	@Override
-	public void writeToParcel(Parcel dest, int flags)
-	{
-		super.writeToParcel(dest, flags);
+    public void setProvinceIndex(int provinceIndex)
+    {
+        this.provinceIndex = provinceIndex;
+    }
 
-		dest.writeInt(provinceIndex);
-		dest.writeString(tag);
+    @Override
+    public void writeToParcel(Parcel dest, int flags)
+    {
+        super.writeToParcel(dest, flags);
 
-		province.writeToParcel(dest, flags);
-	}
+        dest.writeInt(provinceIndex);
+        dest.writeString(tag);
 
-	protected void readFromParcel(Parcel in)
-	{
-		super.readFromParcel(in);
+        province.writeToParcel(dest, flags);
+    }
 
-		provinceIndex = in.readInt();
-		tag = in.readString();
+    protected void readFromParcel(Parcel in)
+    {
+        super.readFromParcel(in);
 
-		province = new Province(in);
-	}
+        provinceIndex = in.readInt();
+        tag = in.readString();
 
-	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
-	{
-		public Province createFromParcel(Parcel in)
-		{
-			return new Area(in);
-		}
-
-		@Override
-		public Province[] newArray(int size)
-		{
-			return new Area[size];
-		}
-	};
+        province = new Province(in);
+    }
 }

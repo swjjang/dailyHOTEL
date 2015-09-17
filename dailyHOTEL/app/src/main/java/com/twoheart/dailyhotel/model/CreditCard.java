@@ -5,64 +5,63 @@ import android.os.Parcelable;
 
 public class CreditCard implements Parcelable
 {
-	public String name;
-	public String number;
-	public String billingkey;
-	public String cardcd;
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+    {
+        public CreditCard createFromParcel(Parcel in)
+        {
+            return new CreditCard(in);
+        }
 
-	public CreditCard()
-	{
+        @Override
+        public CreditCard[] newArray(int size)
+        {
+            return new CreditCard[size];
+        }
 
-	}
+    };
+    public String name;
+    public String number;
+    public String billingkey;
+    public String cardcd;
 
-	public CreditCard(Parcel in)
-	{
-		readFromParcel(in);
-	}
+    public CreditCard()
+    {
 
-	public CreditCard(String name, String number, String billkey, String cardcd)
-	{
-		this.name = name;
-		this.number = number;
-		this.billingkey = billkey;
-		this.cardcd = cardcd;
-	}
+    }
 
-	@Override
-	public void writeToParcel(Parcel dest, int flags)
-	{
-		dest.writeString(name);
-		dest.writeString(number);
-		dest.writeString(billingkey);
-		dest.writeString(cardcd);
-	}
+    public CreditCard(Parcel in)
+    {
+        readFromParcel(in);
+    }
 
-	private void readFromParcel(Parcel in)
-	{
-		name = in.readString();
-		number = in.readString();
-		billingkey = in.readString();
-		cardcd = in.readString();
-	}
+    public CreditCard(String name, String number, String billkey, String cardcd)
+    {
+        this.name = name;
+        this.number = number;
+        this.billingkey = billkey;
+        this.cardcd = cardcd;
+    }
 
-	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
-	{
-		public CreditCard createFromParcel(Parcel in)
-		{
-			return new CreditCard(in);
-		}
+    @Override
+    public void writeToParcel(Parcel dest, int flags)
+    {
+        dest.writeString(name);
+        dest.writeString(number);
+        dest.writeString(billingkey);
+        dest.writeString(cardcd);
+    }
 
-		@Override
-		public CreditCard[] newArray(int size)
-		{
-			return new CreditCard[size];
-		}
+    private void readFromParcel(Parcel in)
+    {
+        name = in.readString();
+        number = in.readString();
+        billingkey = in.readString();
+        cardcd = in.readString();
+    }
 
-	};
-
-	@Override
-	public int describeContents()
-	{
-		return 0;
-	}
+    @Override
+    public int describeContents()
+    {
+        return 0;
+    }
 }

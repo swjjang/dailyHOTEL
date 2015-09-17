@@ -39,134 +39,127 @@ import com.twoheart.dailyhotel.R;
  */
 public class RegionIconGenerator
 {
-	private final Context mContext;
+    private final Context mContext;
 
-	private ViewGroup mContainer;
-	private TextView mTextView;
-	private View mContentView;
+    private ViewGroup mContainer;
+    private TextView mTextView;
+    private View mContentView;
 
-	/**
-	 * Creates a new IconGenerator with the default style.
-	 */
-	public RegionIconGenerator(Context context)
-	{
-		mContext = context;
-		mContainer = (ViewGroup) LayoutInflater.from(mContext).inflate(R.layout.marker_region, null);
-		mContentView = mTextView = (TextView) mContainer.findViewById(R.id.text);
-	}
+    /**
+     * Creates a new IconGenerator with the default style.
+     */
+    public RegionIconGenerator(Context context)
+    {
+        mContext = context;
+        mContainer = (ViewGroup) LayoutInflater.from(mContext).inflate(R.layout.marker_region, null);
+        mContentView = mTextView = (TextView) mContainer.findViewById(R.id.text);
+    }
 
-	/**
-	 * Sets the text content, then creates an icon with the current style.
-	 *
-	 * @param text
-	 *            the text content to display inside the icon.
-	 */
-	public Bitmap makeIcon(String text)
-	{
-		if (mTextView != null)
-		{
-			mTextView.setText(text);
-		}
+    /**
+     * Sets the text content, then creates an icon with the current style.
+     *
+     * @param text the text content to display inside the icon.
+     */
+    public Bitmap makeIcon(String text)
+    {
+        if (mTextView != null)
+        {
+            mTextView.setText(text);
+        }
 
-		return makeIcon();
-	}
+        return makeIcon();
+    }
 
-	/**
-	 * Creates an icon with the current content and style.
-	 * <p/>
-	 * This method is useful if a custom view has previously been set, or if
-	 * text content is not applicable.
-	 */
-	public Bitmap makeIcon()
-	{
-		int measureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-		mContainer.measure(measureSpec, measureSpec);
+    /**
+     * Creates an icon with the current content and style.
+     * <p/>
+     * This method is useful if a custom view has previously been set, or if
+     * text content is not applicable.
+     */
+    public Bitmap makeIcon()
+    {
+        int measureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        mContainer.measure(measureSpec, measureSpec);
 
-		int measuredWidth = mContainer.getMeasuredWidth();
-		int measuredHeight = mContainer.getMeasuredHeight();
+        int measuredWidth = mContainer.getMeasuredWidth();
+        int measuredHeight = mContainer.getMeasuredHeight();
 
-		if (measuredWidth > measuredHeight)
-		{
-			measuredWidth = measuredHeight;
-		} else
-		{
-			//			measuredWidth = measuredHeight;
-		}
+        if (measuredWidth > measuredHeight)
+        {
+            measuredWidth = measuredHeight;
+        } else
+        {
+            //			measuredWidth = measuredHeight;
+        }
 
-		mContainer.layout(0, 0, measuredWidth, measuredWidth);
+        mContainer.layout(0, 0, measuredWidth, measuredWidth);
 
-		int left = (measuredWidth - mTextView.getMeasuredWidth()) / 2 + mTextView.getPaddingLeft();
-		int top = (measuredWidth - mTextView.getMeasuredHeight()) / 2 + mTextView.getPaddingTop();
+        int left = (measuredWidth - mTextView.getMeasuredWidth()) / 2 + mTextView.getPaddingLeft();
+        int top = (measuredWidth - mTextView.getMeasuredHeight()) / 2 + mTextView.getPaddingTop();
 
-		mTextView.setPadding(left, top, 0, 0);
+        mTextView.setPadding(left, top, 0, 0);
 
-		Bitmap r = Bitmap.createBitmap(measuredWidth, measuredWidth, Bitmap.Config.ARGB_8888);
-		r.eraseColor(Color.TRANSPARENT);
+        Bitmap r = Bitmap.createBitmap(measuredWidth, measuredWidth, Bitmap.Config.ARGB_8888);
+        r.eraseColor(Color.TRANSPARENT);
 
-		Canvas canvas = new Canvas(r);
+        Canvas canvas = new Canvas(r);
 
-		mContainer.draw(canvas);
-		return r;
-	}
+        mContainer.draw(canvas);
+        return r;
+    }
 
-	/**
-	 * Sets the text color, size, style, hint color, and highlight color from
-	 * the specified <code>TextAppearance</code> resource.
-	 *
-	 * @param resid
-	 *            the identifier of the resource.
-	 */
-	public void setTextAppearance(Context context, int resid)
-	{
-		if (mTextView != null)
-		{
-			mTextView.setTextAppearance(context, resid);
-		}
-	}
+    /**
+     * Sets the text color, size, style, hint color, and highlight color from
+     * the specified <code>TextAppearance</code> resource.
+     *
+     * @param resid the identifier of the resource.
+     */
+    public void setTextAppearance(Context context, int resid)
+    {
+        if (mTextView != null)
+        {
+            mTextView.setTextAppearance(context, resid);
+        }
+    }
 
-	public void setTextColor(int resid)
-	{
-		if (mTextView != null)
-		{
-			mTextView.setTextColor(resid);
-		}
-	}
+    public void setTextColor(int resid)
+    {
+        if (mTextView != null)
+        {
+            mTextView.setTextColor(resid);
+        }
+    }
 
-	public void setTextPadding(int value)
-	{
-		if (mTextView != null)
-		{
-			mTextView.setPadding(value, value, value, value);
-		}
-	}
+    public void setTextPadding(int value)
+    {
+        if (mTextView != null)
+        {
+            mTextView.setPadding(value, value, value, value);
+        }
+    }
 
-	/**
-	 * Sets the text color, size, style, hint color, and highlight color from
-	 * the specified <code>TextAppearance</code> resource.
-	 *
-	 * @param resid
-	 *            the identifier of the resource.
-	 */
-	public void setTextAppearance(int resid)
-	{
-		setTextAppearance(mContext, resid);
-	}
+    /**
+     * Sets the text color, size, style, hint color, and highlight color from
+     * the specified <code>TextAppearance</code> resource.
+     *
+     * @param resid the identifier of the resource.
+     */
+    public void setTextAppearance(int resid)
+    {
+        setTextAppearance(mContext, resid);
+    }
 
-	/**
-	 * Sets the padding of the content view. The default padding of the content
-	 * view (i.e. text view) is 5dp top/bottom and 10dp left/right.
-	 *
-	 * @param left
-	 *            the left padding in pixels.
-	 * @param top
-	 *            the top padding in pixels.
-	 * @param right
-	 *            the right padding in pixels.
-	 * @param bottom
-	 *            the bottom padding in pixels.
-	 */
-	public void setContentPadding(int left, int top, int right, int bottom)
-	{
-		mContentView.setPadding(left, top, right, bottom);
-	}
+    /**
+     * Sets the padding of the content view. The default padding of the content
+     * view (i.e. text view) is 5dp top/bottom and 10dp left/right.
+     *
+     * @param left   the left padding in pixels.
+     * @param top    the top padding in pixels.
+     * @param right  the right padding in pixels.
+     * @param bottom the bottom padding in pixels.
+     */
+    public void setContentPadding(int left, int top, int right, int bottom)
+    {
+        mContentView.setPadding(left, top, right, bottom);
+    }
 }

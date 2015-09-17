@@ -10,38 +10,38 @@ import com.twoheart.dailyhotel.view.RegionIconGenerator;
 
 public class HotelRegionRenderer
 {
-	private int mCount;
-	private RegionIconGenerator mRegionIconGenerator;
+    private int mCount;
+    private RegionIconGenerator mRegionIconGenerator;
 
-	public HotelRegionRenderer(Context context, int count)
-	{
-		mCount = count;
-		mRegionIconGenerator = new RegionIconGenerator(context);
+    public HotelRegionRenderer(Context context, int count)
+    {
+        mCount = count;
+        mRegionIconGenerator = new RegionIconGenerator(context);
 
-		if (count < 4)
-		{
-			mRegionIconGenerator.setTextPadding(Util.dpToPx(context, 10));
-		} else if (count >= 4 && count < 10)
-		{
-			mRegionIconGenerator.setTextPadding(Util.dpToPx(context, 15));
-		} else if (count >= 10 && count < 21)
-		{
-			mRegionIconGenerator.setTextPadding(Util.dpToPx(context, 18));
-		} else
-		{
-			mRegionIconGenerator.setTextPadding(Util.dpToPx(context, 25));
-		}
-	}
+        if (count < 4)
+        {
+            mRegionIconGenerator.setTextPadding(Util.dpToPx(context, 10));
+        } else if (count >= 4 && count < 10)
+        {
+            mRegionIconGenerator.setTextPadding(Util.dpToPx(context, 15));
+        } else if (count >= 10 && count < 21)
+        {
+            mRegionIconGenerator.setTextPadding(Util.dpToPx(context, 18));
+        } else
+        {
+            mRegionIconGenerator.setTextPadding(Util.dpToPx(context, 25));
+        }
+    }
 
-	public BitmapDescriptor getBitmap()
-	{
-		Bitmap icon = mRegionIconGenerator.makeIcon(String.valueOf(mCount));
+    public BitmapDescriptor getBitmap()
+    {
+        Bitmap icon = mRegionIconGenerator.makeIcon(String.valueOf(mCount));
 
-		if (icon == null)
-		{
-			return null;
-		}
+        if (icon == null)
+        {
+            return null;
+        }
 
-		return BitmapDescriptorFactory.fromBitmap(icon);
-	}
+        return BitmapDescriptorFactory.fromBitmap(icon);
+    }
 }

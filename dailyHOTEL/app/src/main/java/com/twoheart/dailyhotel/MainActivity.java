@@ -558,7 +558,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                 {
                     String param = sharedPreference.getString(KEY_PREFERENCE_BY_SHARE, null);
 
-                    if(param != null)
+                    if (param != null)
                     {
                         if (param.contains("hotelIndex") == true)
                         {
@@ -689,8 +689,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
     /**
      * 네비게이션 드로워에서 메뉴를 선택하는 효과를 내주는 메서드
      *
-     * @param selectedMenu
-     *            DrawerMenu 객체를 받는다.
+     * @param selectedMenu DrawerMenu 객체를 받는다.
      */
     public void selectMenuDrawer(DrawerMenu selectedMenu)
     {
@@ -730,8 +729,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
     /**
      * 네비게이션 드로워 메뉴에서 선택할 수 있는 Fragment를 반환하는 메서드이다.
      *
-     * @param index
-     *            Fragment 리스트에 해당하는 index를 받는다.
+     * @param index Fragment 리스트에 해당하는 index를 받는다.
      * @return 요청한 index에 해당하는 Fragment를 반환한다. => 기능 변경, 누를때마다 리프레시
      */
     public Fragment getFragment(int index)
@@ -758,8 +756,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
     /**
      * Fragment 컨테이너에서 해당 Fragment로 변경하여 표시한다.
      *
-     * @param fragment
-     *            Fragment 리스트에 보관된 Fragement들을 받는 것이 좋다.
+     * @param fragment Fragment 리스트에 보관된 Fragement들을 받는 것이 좋다.
      */
     public void replaceFragment(Fragment fragment)
     {
@@ -781,8 +778,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
     /**
      * Fragment 컨테이너에서 해당 Fragement를 쌓아올린다.
      *
-     * @param fragment
-     *            Fragment 리스트에 보관된 Fragment들을 받는 것이 좋다.
+     * @param fragment Fragment 리스트에 보관된 Fragment들을 받는 것이 좋다.
      */
     public void addFragment(Fragment fragment)
     {
@@ -908,8 +904,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
      * 드로어 레이아웃이 닫히는데 애니메이션이 부하가 큼. 프래그먼트 전환까지 추가한다면 닫힐때 버벅거리는 현상이 발생. 따라서 0.3초
      * 지연하여 자연스러운 애니메이션을 보여줌.
      *
-     * @param index
-     *            프래그먼트 인덱스.
+     * @param index 프래그먼트 인덱스.
      */
     public void delayedReplace(final int index)
     {

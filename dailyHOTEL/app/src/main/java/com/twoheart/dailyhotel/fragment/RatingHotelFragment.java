@@ -1,10 +1,9 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- *
+ * <p/>
  * RatingHotelFragment (호텔 만족도 조사 화면)
- * 
+ * <p/>
  * 호텔 만족도 조사를 위한 화면
- * 
  */
 package com.twoheart.dailyhotel.fragment;
 
@@ -49,322 +48,320 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
-public class RatingHotelFragment
-		extends DialogFragment implements Constants, OnLoadListener
+public class RatingHotelFragment extends DialogFragment implements Constants, OnLoadListener
 {
-	private static final String NOT_RATE_THIS_HOTEL = "0";
-	private static final String RECOMMEND_THIS_HOTEL = "1";
-	private static final String NOT_RECOMMEND_THIS_HOTEL = "2";
+    private static final String NOT_RATE_THIS_HOTEL = "0";
+    private static final String RECOMMEND_THIS_HOTEL = "1";
+    private static final String NOT_RECOMMEND_THIS_HOTEL = "2";
 
-	private MainActivity mHostActivity;
-	private RequestQueue mQueue;
+    private MainActivity mHostActivity;
+    private RequestQueue mQueue;
 
-	private String mTicketName;
-	private int mReservationIndex;
-	private Long mCheckInDate;
-	private Long mCheckOutDate;
-	private PlaceMainFragment.TYPE mPlaceType;
+    private String mTicketName;
+    private int mReservationIndex;
+    private Long mCheckInDate;
+    private Long mCheckOutDate;
+    private PlaceMainFragment.TYPE mPlaceType;
+    private DailyHotelJsonResponseListener mReserveReviewJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
 
-	public static RatingHotelFragment newInstance(String hotelName, int reservationIndex, long checkInDate, long checkOutDate)
-	{
-		RatingHotelFragment newFragment = new RatingHotelFragment();
-		Bundle arguments = new Bundle();
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            unLockUI();
+            try
+            {
+                if (response == null)
+                {
+                    throw new NullPointerException("response == null");
+                }
 
-		if (hotelName != null)
-		{
-			arguments.putString(NAME_INTENT_EXTRA_DATA_HOTELNAME, hotelName);
-			arguments.putInt(NAME_INTENT_EXTRA_DATA_RESERVATIONINDEX, reservationIndex);
-			arguments.putLong(NAME_INTENT_EXTRA_DATA_CHECKINDATE, checkInDate);
-			arguments.putLong(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE, checkOutDate);
-			arguments.putString(NAME_INTENT_EXTRA_DATA_TYPE, PlaceMainFragment.TYPE.HOTEL.name());
-		}
+                JSONObject jsonObject = response.getJSONObject("data");
 
-		newFragment.setArguments(arguments);
+                boolean result = jsonObject.getBoolean("is_success");
+                int msgCode = response.getInt("msg_code");
 
-		return newFragment;
-	}
+                if (response.has("msg") == true)
+                {
+                    String msg = response.getString("msg");
 
-	public static RatingHotelFragment newInstance(String placeName, int reservationIndex, long checkInDate)
-	{
-		RatingHotelFragment newFragment = new RatingHotelFragment();
-		Bundle arguments = new Bundle();
+                    DailyToast.showToast(mHostActivity, msg, Toast.LENGTH_LONG);
+                }
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            } finally
+            {
+                dismissAllowingStateLoss();
+            }
+        }
+    };
 
-		if (placeName != null)
-		{
-			arguments.putString(NAME_INTENT_EXTRA_DATA_PLACENAME, placeName);
-			arguments.putInt(NAME_INTENT_EXTRA_DATA_RESERVATIONINDEX, reservationIndex);
-			arguments.putLong(NAME_INTENT_EXTRA_DATA_CHECKINDATE, checkInDate);
-			arguments.putString(NAME_INTENT_EXTRA_DATA_TYPE, PlaceMainFragment.TYPE.FNB.name());
-		}
+    public static RatingHotelFragment newInstance(String hotelName, int reservationIndex, long checkInDate, long checkOutDate)
+    {
+        RatingHotelFragment newFragment = new RatingHotelFragment();
+        Bundle arguments = new Bundle();
 
-		newFragment.setArguments(arguments);
+        if (hotelName != null)
+        {
+            arguments.putString(NAME_INTENT_EXTRA_DATA_HOTELNAME, hotelName);
+            arguments.putInt(NAME_INTENT_EXTRA_DATA_RESERVATIONINDEX, reservationIndex);
+            arguments.putLong(NAME_INTENT_EXTRA_DATA_CHECKINDATE, checkInDate);
+            arguments.putLong(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE, checkOutDate);
+            arguments.putString(NAME_INTENT_EXTRA_DATA_TYPE, PlaceMainFragment.TYPE.HOTEL.name());
+        }
 
-		return newFragment;
-	}
+        newFragment.setArguments(arguments);
 
-	@Override
-	public void onAttach(Activity activity)
-	{
-		super.onAttach(activity);
-		mHostActivity = (MainActivity) activity;
-	}
+        return newFragment;
+    }
 
-	@Override
-	public void onCreate(Bundle savedInstanceState)
-	{
-		super.onCreate(savedInstanceState);
+    public static RatingHotelFragment newInstance(String placeName, int reservationIndex, long checkInDate)
+    {
+        RatingHotelFragment newFragment = new RatingHotelFragment();
+        Bundle arguments = new Bundle();
 
-		mQueue = VolleyHttpClient.getRequestQueue();
+        if (placeName != null)
+        {
+            arguments.putString(NAME_INTENT_EXTRA_DATA_PLACENAME, placeName);
+            arguments.putInt(NAME_INTENT_EXTRA_DATA_RESERVATIONINDEX, reservationIndex);
+            arguments.putLong(NAME_INTENT_EXTRA_DATA_CHECKINDATE, checkInDate);
+            arguments.putString(NAME_INTENT_EXTRA_DATA_TYPE, PlaceMainFragment.TYPE.FNB.name());
+        }
 
-		mPlaceType = PlaceMainFragment.TYPE.valueOf(getArguments().getString(NAME_INTENT_EXTRA_DATA_TYPE));
+        newFragment.setArguments(arguments);
 
-		switch (mPlaceType)
-		{
-			case HOTEL:
-			{
-				mTicketName = getArguments().getString(NAME_INTENT_EXTRA_DATA_HOTELNAME);
-				mReservationIndex = getArguments().getInt(NAME_INTENT_EXTRA_DATA_RESERVATIONINDEX);
-				mCheckInDate = getArguments().getLong(NAME_INTENT_EXTRA_DATA_CHECKINDATE);
-				mCheckOutDate = getArguments().getLong(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE);
-				break;
-			}
+        return newFragment;
+    }
 
-			case FNB:
-			{
-				mTicketName = getArguments().getString(NAME_INTENT_EXTRA_DATA_PLACENAME);
-				mReservationIndex = getArguments().getInt(NAME_INTENT_EXTRA_DATA_RESERVATIONINDEX);
-				mCheckInDate = getArguments().getLong(NAME_INTENT_EXTRA_DATA_CHECKINDATE);
-				break;
-			}
-		}
-	}
+    @Override
+    public void onAttach(Activity activity)
+    {
+        super.onAttach(activity);
+        mHostActivity = (MainActivity) activity;
+    }
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState)
-	{
-		Dialog dialog = getDialog();
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
 
-		if (dialog != null)
-		{
-			dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-			dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-			dialog.setCanceledOnTouchOutside(false);
-		}
+        mQueue = VolleyHttpClient.getRequestQueue();
 
-		View view = inflater.inflate(R.layout.fragment_dialog_rating_hotel, parent, false);
+        mPlaceType = PlaceMainFragment.TYPE.valueOf(getArguments().getString(NAME_INTENT_EXTRA_DATA_TYPE));
 
-		TextView ratingPeriod = (TextView) view.findViewById(R.id.periodTextView);
-		TextView ratingHotelName = (TextView) view.findViewById(R.id.hotelNameTextView);
-		TextView messageTextView = (TextView) view.findViewById(R.id.messageTextView);
+        switch (mPlaceType)
+        {
+            case HOTEL:
+            {
+                mTicketName = getArguments().getString(NAME_INTENT_EXTRA_DATA_HOTELNAME);
+                mReservationIndex = getArguments().getInt(NAME_INTENT_EXTRA_DATA_RESERVATIONINDEX);
+                mCheckInDate = getArguments().getLong(NAME_INTENT_EXTRA_DATA_CHECKINDATE);
+                mCheckOutDate = getArguments().getLong(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE);
+                break;
+            }
 
-		ratingPeriod.setTypeface(FontManager.getInstance(mHostActivity).getMediumTypeface());
-		messageTextView.setTypeface(FontManager.getInstance(mHostActivity).getMediumTypeface());
+            case FNB:
+            {
+                mTicketName = getArguments().getString(NAME_INTENT_EXTRA_DATA_PLACENAME);
+                mReservationIndex = getArguments().getInt(NAME_INTENT_EXTRA_DATA_RESERVATIONINDEX);
+                mCheckInDate = getArguments().getLong(NAME_INTENT_EXTRA_DATA_CHECKINDATE);
+                break;
+            }
+        }
+    }
 
-		TextView positiveTextView = (TextView) view.findViewById(R.id.positiveTextView);
-		TextView negativeTextView = (TextView) view.findViewById(R.id.negativeTextView);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState)
+    {
+        Dialog dialog = getDialog();
 
-		switch (mPlaceType)
-		{
-			case HOTEL:
-			{
-				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd", Locale.KOREA);
-				simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        if (dialog != null)
+        {
+            dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            dialog.setCanceledOnTouchOutside(false);
+        }
 
-				String periodDate = String.format("%s - %s", simpleDateFormat.format(new Date(mCheckInDate)), simpleDateFormat.format(new Date(mCheckOutDate)));
-				ratingPeriod.setText(getString(R.string.frag_rating_hotel_text1, periodDate));
-				break;
-			}
+        View view = inflater.inflate(R.layout.fragment_dialog_rating_hotel, parent, false);
 
-			case FNB:
-			{
-				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd(EEE)", Locale.KOREA);
-				simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        TextView ratingPeriod = (TextView) view.findViewById(R.id.periodTextView);
+        TextView ratingHotelName = (TextView) view.findViewById(R.id.hotelNameTextView);
+        TextView messageTextView = (TextView) view.findViewById(R.id.messageTextView);
 
-				String periodDate = simpleDateFormat.format(new Date(mCheckInDate));
-				ratingPeriod.setText(getString(R.string.frag_rating_hotel_text1, periodDate));
-				break;
-			}
-		}
+        ratingPeriod.setTypeface(FontManager.getInstance(mHostActivity).getMediumTypeface());
+        messageTextView.setTypeface(FontManager.getInstance(mHostActivity).getMediumTypeface());
 
-		ratingHotelName.setText(getString(R.string.frag_rating_hotel_text2, mTicketName));
+        TextView positiveTextView = (TextView) view.findViewById(R.id.positiveTextView);
+        TextView negativeTextView = (TextView) view.findViewById(R.id.negativeTextView);
 
-		positiveTextView.setOnClickListener(new View.OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
-			{
-				updateSatifactionRating(mPlaceType, mReservationIndex, RECOMMEND_THIS_HOTEL);
-			}
-		});
+        switch (mPlaceType)
+        {
+            case HOTEL:
+            {
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd", Locale.KOREA);
+                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
-		negativeTextView.setOnClickListener(new View.OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
-			{
-				updateSatifactionRating(mPlaceType, mReservationIndex, NOT_RECOMMEND_THIS_HOTEL);
-			}
-		});
+                String periodDate = String.format("%s - %s", simpleDateFormat.format(new Date(mCheckInDate)), simpleDateFormat.format(new Date(mCheckOutDate)));
+                ratingPeriod.setText(getString(R.string.frag_rating_hotel_text1, periodDate));
+                break;
+            }
 
-		return view;
-	}
+            case FNB:
+            {
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd(EEE)", Locale.KOREA);
+                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-	@Override
-	public void onStart()
-	{
-		super.onStart();
+                String periodDate = simpleDateFormat.format(new Date(mCheckInDate));
+                ratingPeriod.setText(getString(R.string.frag_rating_hotel_text1, periodDate));
+                break;
+            }
+        }
 
-		Dialog dialog = getDialog();
+        ratingHotelName.setText(getString(R.string.frag_rating_hotel_text2, mTicketName));
 
-		if (dialog != null)
-		{
-			int fullWidth = dialog.getWindow().getAttributes().width;
+        positiveTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                updateSatifactionRating(mPlaceType, mReservationIndex, RECOMMEND_THIS_HOTEL);
+            }
+        });
 
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2)
-			{
-				Display display = getActivity().getWindowManager().getDefaultDisplay();
-				Point size = new Point();
-				display.getSize(size);
-				fullWidth = size.x;
-			} else
-			{
-				Display display = getActivity().getWindowManager().getDefaultDisplay();
-				fullWidth = display.getWidth();
-			}
+        negativeTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                updateSatifactionRating(mPlaceType, mReservationIndex, NOT_RECOMMEND_THIS_HOTEL);
+            }
+        });
 
-			final int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, getResources().getDisplayMetrics());
+        return view;
+    }
 
-			int w = fullWidth - padding;
-			int h = dialog.getWindow().getAttributes().height;
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    @Override
+    public void onStart()
+    {
+        super.onStart();
 
-			dialog.getWindow().setLayout(w, h);
-		}
-	}
+        Dialog dialog = getDialog();
 
-	private void updateSatifactionRating(PlaceMainFragment.TYPE type, int index, String result)
-	{
-		if (result == null)
-		{
-			return;
-		}
+        if (dialog != null)
+        {
+            int fullWidth = dialog.getWindow().getAttributes().width;
 
-		lockUI();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2)
+            {
+                Display display = getActivity().getWindowManager().getDefaultDisplay();
+                Point size = new Point();
+                display.getSize(size);
+                fullWidth = size.x;
+            } else
+            {
+                Display display = getActivity().getWindowManager().getDefaultDisplay();
+                fullWidth = display.getWidth();
+            }
 
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("rating", result);
+            final int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, getResources().getDisplayMetrics());
 
-		DailyHotelJsonResponseListener listener = mReserveReviewJsonResponseListener;
+            int w = fullWidth - padding;
+            int h = dialog.getWindow().getAttributes().height;
 
-		if (NOT_RATE_THIS_HOTEL.equalsIgnoreCase(result) == true)
-		{
-			listener = null;
-		}
+            dialog.getWindow().setLayout(w, h);
+        }
+    }
 
-		switch (type)
-		{
-			case HOTEL:
-				params.put("reserv_idx", String.valueOf(index));
-				mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_SATISFACTION_RATING_UPDATE).toString(), params, listener, new ErrorListener()
-				{
-					@Override
-					public void onErrorResponse(VolleyError arg0)
-					{
-						// TODO Auto-generated method stub
+    private void updateSatifactionRating(PlaceMainFragment.TYPE type, int index, String result)
+    {
+        if (result == null)
+        {
+            return;
+        }
 
-					}
-				}));
-				break;
+        lockUI();
 
-			case FNB:
-				params.put("reservation_rec_idx", String.valueOf(index));
-				mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_SESSION_RATING_UPDATE).toString(), params, listener, new ErrorListener()
-				{
-					@Override
-					public void onErrorResponse(VolleyError arg0)
-					{
-						// TODO Auto-generated method stub
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("rating", result);
 
-					}
-				}));
-				break;
-		}
-	}
+        DailyHotelJsonResponseListener listener = mReserveReviewJsonResponseListener;
 
-	@Override
-	public void onCancel(DialogInterface dialog)
-	{
-		lockUI();
+        if (NOT_RATE_THIS_HOTEL.equalsIgnoreCase(result) == true)
+        {
+            listener = null;
+        }
 
-		updateSatifactionRating(mPlaceType, mReservationIndex, NOT_RATE_THIS_HOTEL);
+        switch (type)
+        {
+            case HOTEL:
+                params.put("reserv_idx", String.valueOf(index));
+                mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_SATISFACTION_RATING_UPDATE).toString(), params, listener, new ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError arg0)
+                    {
+                        // TODO Auto-generated method stub
 
-		super.onCancel(dialog);
-	}
+                    }
+                }));
+                break;
 
-	@Override
-	public void lockUI()
-	{
-		if (mHostActivity != null)
-		{
-			mHostActivity.lockUI();
-		}
-	}
+            case FNB:
+                params.put("reservation_rec_idx", String.valueOf(index));
+                mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_SESSION_RATING_UPDATE).toString(), params, listener, new ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError arg0)
+                    {
+                        // TODO Auto-generated method stub
 
-	@Override
-	public void unLockUI()
-	{
-		if (mHostActivity != null)
-		{
-			mHostActivity.unLockUI();
-		}
-	}
+                    }
+                }));
+                break;
+        }
+    }
 
-	public void setOnDismissListener(DialogInterface.OnDismissListener listener)
-	{
-		Dialog dialog = getDialog();
+    @Override
+    public void onCancel(DialogInterface dialog)
+    {
+        lockUI();
 
-		if (dialog != null)
-		{
-			dialog.setOnDismissListener(listener);
-		}
-	}
+        updateSatifactionRating(mPlaceType, mReservationIndex, NOT_RATE_THIS_HOTEL);
 
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// Listener
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        super.onCancel(dialog);
+    }
 
-	private DailyHotelJsonResponseListener mReserveReviewJsonResponseListener = new DailyHotelJsonResponseListener()
-	{
+    @Override
+    public void lockUI()
+    {
+        if (mHostActivity != null)
+        {
+            mHostActivity.lockUI();
+        }
+    }
 
-		@Override
-		public void onResponse(String url, JSONObject response)
-		{
-			unLockUI();
-			try
-			{
-				if (response == null)
-				{
-					throw new NullPointerException("response == null");
-				}
+    @Override
+    public void unLockUI()
+    {
+        if (mHostActivity != null)
+        {
+            mHostActivity.unLockUI();
+        }
+    }
 
-				JSONObject jsonObject = response.getJSONObject("data");
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Listener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-				boolean result = jsonObject.getBoolean("is_success");
-				int msgCode = response.getInt("msg_code");
+    public void setOnDismissListener(DialogInterface.OnDismissListener listener)
+    {
+        Dialog dialog = getDialog();
 
-				if (response.has("msg") == true)
-				{
-					String msg = response.getString("msg");
-
-					DailyToast.showToast(mHostActivity, msg, Toast.LENGTH_LONG);
-				}
-			} catch (Exception e)
-			{
-				ExLog.e(e.toString());
-			} finally
-			{
-				dismissAllowingStateLoss();
-			}
-		}
-	};
+        if (dialog != null)
+        {
+            dialog.setOnDismissListener(listener);
+        }
+    }
 }

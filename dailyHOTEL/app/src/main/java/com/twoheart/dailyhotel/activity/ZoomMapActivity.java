@@ -26,203 +26,202 @@ import com.twoheart.dailyhotel.view.MyLocationMarker;
 
 public class ZoomMapActivity extends BaseActivity
 {
-	private GoogleMap mGoogleMap;
+    private GoogleMap mGoogleMap;
 
-	private View mMyLocationView;
-	private MarkerOptions mMyLocationMarkerOptions;
-	private Marker mMyLocationMarker;
+    private View mMyLocationView;
+    private MarkerOptions mMyLocationMarkerOptions;
+    private Marker mMyLocationMarker;
+    private View.OnClickListener mOnMyLocationClickListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View v)
+        {
+            LocationFactory.getInstance(ZoomMapActivity.this).startLocationMeasure(ZoomMapActivity.this, mMyLocationView, new LocationListener()
+            {
+                @Override
+                public void onStatusChanged(String provider, int status, Bundle extras)
+                {
+                    // TODO Auto-generated method stub
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState)
-	{
-		super.onCreate(savedInstanceState);
+                }
 
-		setContentView(R.layout.activity_zoom_map);
+                @Override
+                public void onProviderEnabled(String provider)
+                {
+                    // TODO Auto-generated method stub
 
-		Intent intent = getIntent();
+                }
 
-		final String placeName;
-		final double latitude;
-		final double longitude;
+                @Override
+                public void onProviderDisabled(String provider)
+                {
+                    if (isFinishing() == true)
+                    {
+                        return;
+                    }
 
-		if (intent != null)
-		{
-			if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME) == true)
-			{
-				placeName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME);
-			} else
-			{
-				placeName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACENAME);
-			}
+                    // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
+                    LocationFactory.getInstance(ZoomMapActivity.this).stopLocationMeasure();
 
-			latitude = intent.getDoubleExtra(NAME_INTENT_EXTRA_DATA_LATITUDE, 0);
-			longitude = intent.getDoubleExtra(NAME_INTENT_EXTRA_DATA_LONGITUDE, 0);
-		} else
-		{
-			latitude = 0;
-			longitude = 0;
-			placeName = null;
-		}
+                    showSimpleDialog(getString(R.string.dialog_title_used_gps), getString(R.string.dialog_msg_used_gps), getString(R.string.dialog_btn_text_dosetting), getString(R.string.dialog_btn_text_cancel), new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
+                        }
+                    }, null, true);
+                }
 
-		if (placeName == null || latitude == 0 || longitude == 0)
-		{
-			finish();
-			return;
-		}
+                @Override
+                public void onLocationChanged(Location location)
+                {
+                    if (isFinishing() == true || mGoogleMap == null)
+                    {
+                        return;
+                    }
 
-		setActionBar(placeName);
+                    LocationFactory.getInstance(ZoomMapActivity.this).stopLocationMeasure();
 
-		SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.frag_full_map);
+                    if (mMyLocationMarkerOptions == null)
+                    {
+                        mMyLocationMarkerOptions = new MarkerOptions();
+                        mMyLocationMarkerOptions.icon(new MyLocationMarker(ZoomMapActivity.this).makeIcon());
+                        mMyLocationMarkerOptions.anchor(0.5f, 0.5f);
+                    }
 
-		mapFragment.getMapAsync(new OnMapReadyCallback()
-		{
-			@Override
-			public void onMapReady(GoogleMap googleMap)
-			{
-				mGoogleMap = googleMap;
+                    if (mMyLocationMarker != null)
+                    {
+                        mMyLocationMarker.remove();
+                    }
 
-				mGoogleMap.getUiSettings().setCompassEnabled(false);
-				mGoogleMap.getUiSettings().setIndoorLevelPickerEnabled(false);
-				mGoogleMap.getUiSettings().setMapToolbarEnabled(false);
-				mGoogleMap.getUiSettings().setRotateGesturesEnabled(false);
-				mGoogleMap.getUiSettings().setTiltGesturesEnabled(false);
-				mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
+                    mMyLocationMarkerOptions.position(new LatLng(location.getLatitude(), location.getLongitude()));
+                    mMyLocationMarker = mGoogleMap.addMarker(mMyLocationMarkerOptions);
 
-				mGoogleMap.setMyLocationEnabled(false);
+                    CameraPosition cameraPosition = new CameraPosition.Builder().target(mMyLocationMarkerOptions.getPosition()).zoom(13f).build();
+                    mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                }
+            });
+        }
+    };
 
-				relocationMyLocation();
-				relocationZoomControl();
-				addMarker(mGoogleMap, latitude, longitude, placeName);
-			}
-		});
-	}
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
 
-	private void relocationMyLocation()
-	{
-		mMyLocationView = findViewById(0x2);
+        setContentView(R.layout.activity_zoom_map);
 
-		if (mMyLocationView != null)
-		{
-			mMyLocationView.setVisibility(View.VISIBLE);
-			mMyLocationView.setOnClickListener(mOnMyLocationClickListener);
-		}
-	}
+        Intent intent = getIntent();
 
-	private void relocationZoomControl()
-	{
-		View zoomControl = findViewById(0x1);
+        final String placeName;
+        final double latitude;
+        final double longitude;
 
-		if (zoomControl != null && zoomControl.getLayoutParams() instanceof RelativeLayout.LayoutParams)
-		{
-			RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) zoomControl.getLayoutParams();
-			params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-			params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        if (intent != null)
+        {
+            if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME) == true)
+            {
+                placeName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME);
+            } else
+            {
+                placeName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACENAME);
+            }
 
-			params.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0);
-			params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
+            latitude = intent.getDoubleExtra(NAME_INTENT_EXTRA_DATA_LATITUDE, 0);
+            longitude = intent.getDoubleExtra(NAME_INTENT_EXTRA_DATA_LONGITUDE, 0);
+        } else
+        {
+            latitude = 0;
+            longitude = 0;
+            placeName = null;
+        }
 
-			zoomControl.setPadding(zoomControl.getPaddingLeft(), Util.dpToPx(this, 50), zoomControl.getPaddingRight(), zoomControl.getPaddingBottom());
-			zoomControl.setLayoutParams(params);
-		}
-	}
+        if (placeName == null || latitude == 0 || longitude == 0)
+        {
+            finish();
+            return;
+        }
 
-	private void addMarker(GoogleMap googleMap, Double lat, Double lng, String hotel_name)
-	{
-		if (googleMap != null)
-		{
-			Marker marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title(hotel_name));
-			marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.info_ic_map_large));
-			marker.showInfoWindow();
+        setActionBar(placeName);
 
-			LatLng address = new LatLng(lat, lng);
-			CameraPosition cp = new CameraPosition.Builder().target((address)).zoom(15).build();
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.frag_full_map);
 
-			googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
-			googleMap.setInfoWindowAdapter(new HotelNameInfoWindowAdapter(this));
-			googleMap.setOnMarkerClickListener(new OnMarkerClickListener()
-			{
-				@Override
-				public boolean onMarkerClick(Marker marker)
-				{
-					marker.showInfoWindow();
-					return true;
-				}
-			});
-		}
-	}
+        mapFragment.getMapAsync(new OnMapReadyCallback()
+        {
+            @Override
+            public void onMapReady(GoogleMap googleMap)
+            {
+                mGoogleMap = googleMap;
 
-	private View.OnClickListener mOnMyLocationClickListener = new View.OnClickListener()
-	{
-		@Override
-		public void onClick(View v)
-		{
-			LocationFactory.getInstance(ZoomMapActivity.this).startLocationMeasure(ZoomMapActivity.this, mMyLocationView, new LocationListener()
-			{
-				@Override
-				public void onStatusChanged(String provider, int status, Bundle extras)
-				{
-					// TODO Auto-generated method stub
+                mGoogleMap.getUiSettings().setCompassEnabled(false);
+                mGoogleMap.getUiSettings().setIndoorLevelPickerEnabled(false);
+                mGoogleMap.getUiSettings().setMapToolbarEnabled(false);
+                mGoogleMap.getUiSettings().setRotateGesturesEnabled(false);
+                mGoogleMap.getUiSettings().setTiltGesturesEnabled(false);
+                mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
 
-				}
+                mGoogleMap.setMyLocationEnabled(false);
 
-				@Override
-				public void onProviderEnabled(String provider)
-				{
-					// TODO Auto-generated method stub
+                relocationMyLocation();
+                relocationZoomControl();
+                addMarker(mGoogleMap, latitude, longitude, placeName);
+            }
+        });
+    }
 
-				}
+    private void relocationMyLocation()
+    {
+        mMyLocationView = findViewById(0x2);
 
-				@Override
-				public void onProviderDisabled(String provider)
-				{
-					if (isFinishing() == true)
-					{
-						return;
-					}
+        if (mMyLocationView != null)
+        {
+            mMyLocationView.setVisibility(View.VISIBLE);
+            mMyLocationView.setOnClickListener(mOnMyLocationClickListener);
+        }
+    }
 
-					// 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
-					LocationFactory.getInstance(ZoomMapActivity.this).stopLocationMeasure();
+    private void relocationZoomControl()
+    {
+        View zoomControl = findViewById(0x1);
 
-					showSimpleDialog(getString(R.string.dialog_title_used_gps), getString(R.string.dialog_msg_used_gps), getString(R.string.dialog_btn_text_dosetting), getString(R.string.dialog_btn_text_cancel), new View.OnClickListener()
-					{
-						@Override
-						public void onClick(View v)
-						{
-							Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-							startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
-						}
-					}, null, true);
-				}
+        if (zoomControl != null && zoomControl.getLayoutParams() instanceof RelativeLayout.LayoutParams)
+        {
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) zoomControl.getLayoutParams();
+            params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+            params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 
-				@Override
-				public void onLocationChanged(Location location)
-				{
-					if (isFinishing() == true || mGoogleMap == null)
-					{
-						return;
-					}
+            params.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0);
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
 
-					LocationFactory.getInstance(ZoomMapActivity.this).stopLocationMeasure();
+            zoomControl.setPadding(zoomControl.getPaddingLeft(), Util.dpToPx(this, 50), zoomControl.getPaddingRight(), zoomControl.getPaddingBottom());
+            zoomControl.setLayoutParams(params);
+        }
+    }
 
-					if (mMyLocationMarkerOptions == null)
-					{
-						mMyLocationMarkerOptions = new MarkerOptions();
-						mMyLocationMarkerOptions.icon(new MyLocationMarker(ZoomMapActivity.this).makeIcon());
-						mMyLocationMarkerOptions.anchor(0.5f, 0.5f);
-					}
+    private void addMarker(GoogleMap googleMap, Double lat, Double lng, String hotel_name)
+    {
+        if (googleMap != null)
+        {
+            Marker marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title(hotel_name));
+            marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.info_ic_map_large));
+            marker.showInfoWindow();
 
-					if (mMyLocationMarker != null)
-					{
-						mMyLocationMarker.remove();
-					}
+            LatLng address = new LatLng(lat, lng);
+            CameraPosition cp = new CameraPosition.Builder().target((address)).zoom(15).build();
 
-					mMyLocationMarkerOptions.position(new LatLng(location.getLatitude(), location.getLongitude()));
-					mMyLocationMarker = mGoogleMap.addMarker(mMyLocationMarkerOptions);
-
-					CameraPosition cameraPosition = new CameraPosition.Builder().target(mMyLocationMarkerOptions.getPosition()).zoom(13f).build();
-					mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-				}
-			});
-		}
-	};
+            googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
+            googleMap.setInfoWindowAdapter(new HotelNameInfoWindowAdapter(this));
+            googleMap.setOnMarkerClickListener(new OnMarkerClickListener()
+            {
+                @Override
+                public boolean onMarkerClick(Marker marker)
+                {
+                    marker.showInfoWindow();
+                    return true;
+                }
+            });
+        }
+    }
 }

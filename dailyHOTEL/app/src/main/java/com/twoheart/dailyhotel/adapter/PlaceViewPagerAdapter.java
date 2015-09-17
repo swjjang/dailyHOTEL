@@ -15,87 +15,87 @@ import java.util.ArrayList;
 
 public abstract class PlaceViewPagerAdapter extends PagerAdapter
 {
-	protected Context mContext;
-	private ArrayList<PlaceViewItem> mPlaceViewItemList;
-	protected PlaceMapFragment.OnUserActionListener mOnUserActionListener;
+    protected Context mContext;
+    protected PlaceMapFragment.OnUserActionListener mOnUserActionListener;
+    private ArrayList<PlaceViewItem> mPlaceViewItemList;
 
-	protected abstract void makeLayout(View view, final Place place);
+    public PlaceViewPagerAdapter(Context context)
+    {
+        mContext = context;
 
-	public PlaceViewPagerAdapter(Context context)
-	{
-		mContext = context;
+        mPlaceViewItemList = new ArrayList<PlaceViewItem>();
+    }
 
-		mPlaceViewItemList = new ArrayList<PlaceViewItem>();
-	}
+    protected abstract void makeLayout(View view, final Place place);
 
-	public void setOnUserActionListener(PlaceMapFragment.OnUserActionListener listener)
-	{
-		mOnUserActionListener = listener;
-	}
+    public void setOnUserActionListener(PlaceMapFragment.OnUserActionListener listener)
+    {
+        mOnUserActionListener = listener;
+    }
 
-	@Override
-	public Object instantiateItem(ViewGroup container, int position)
-	{
-		if (mPlaceViewItemList == null || mPlaceViewItemList.size() < position)
-		{
-			return null;
-		}
+    @Override
+    public Object instantiateItem(ViewGroup container, int position)
+    {
+        if (mPlaceViewItemList == null || mPlaceViewItemList.size() < position)
+        {
+            return null;
+        }
 
-		LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		View view = layoutInflater.inflate(R.layout.viewpager_column_hotel, null);
+        View view = layoutInflater.inflate(R.layout.viewpager_column_hotel, null);
 
-		PlaceViewItem item = mPlaceViewItemList.get(position);
+        PlaceViewItem item = mPlaceViewItemList.get(position);
 
-		makeLayout(view, item.getPlace());
+        makeLayout(view, item.getPlace());
 
-		container.addView(view, 0);
+        container.addView(view, 0);
 
-		return view;
-	}
+        return view;
+    }
 
-	@Override
-	public int getItemPosition(Object object)
-	{
-		return POSITION_NONE;
-	}
+    @Override
+    public int getItemPosition(Object object)
+    {
+        return POSITION_NONE;
+    }
 
-	@Override
-	public int getCount()
-	{
-		if (mPlaceViewItemList != null)
-		{
-			return mPlaceViewItemList.size();
-		} else
-		{
-			return 0;
-		}
-	}
+    @Override
+    public int getCount()
+    {
+        if (mPlaceViewItemList != null)
+        {
+            return mPlaceViewItemList.size();
+        } else
+        {
+            return 0;
+        }
+    }
 
-	@Override
-	public boolean isViewFromObject(View view, Object object)
-	{
-		return view == object;
-	}
+    @Override
+    public boolean isViewFromObject(View view, Object object)
+    {
+        return view == object;
+    }
 
-	@Override
-	public void destroyItem(ViewGroup container, int position, Object object)
-	{
-		container.removeView((View) object);
-	}
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object object)
+    {
+        container.removeView((View) object);
+    }
 
-	public void setData(ArrayList<PlaceViewItem> list)
-	{
-		if (mPlaceViewItemList == null)
-		{
-			mPlaceViewItemList = new ArrayList<PlaceViewItem>();
-		}
+    public void setData(ArrayList<PlaceViewItem> list)
+    {
+        if (mPlaceViewItemList == null)
+        {
+            mPlaceViewItemList = new ArrayList<PlaceViewItem>();
+        }
 
-		mPlaceViewItemList.clear();
+        mPlaceViewItemList.clear();
 
-		if (list != null)
-		{
-			mPlaceViewItemList.addAll(list);
-		}
-	}
+        if (list != null)
+        {
+            mPlaceViewItemList.addAll(list);
+        }
+    }
 }

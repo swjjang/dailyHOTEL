@@ -19,189 +19,189 @@ import org.json.JSONObject;
  */
 public class ABTestPreference
 {
-	private SharedPreferences mPreferences;
-	private Editor mEditor;
+    // A/B Test 기능
+    private static final String KAKAOTALK_CONSULT = "1";
+    private static ABTestPreference mInstance;
+    private SharedPreferences mPreferences;
+    private Editor mEditor;
 
-	private static ABTestPreference mInstance;
+    private ABTestPreference(Context context)
+    {
+        mPreferences = context.getSharedPreferences("abTest", Context.MODE_PRIVATE);
+        mEditor = mPreferences.edit();
+    }
 
-	// A/B Test 기능
-	private static final String KAKAOTALK_CONSULT = "1";
+    ;
 
-	public interface OnABTestListener
-	{
-		public void onPostExecute();
-	};
+    public static ABTestPreference getInstance(Context context)
+    {
+        if (mInstance == null)
+        {
+            synchronized (ABTestPreference.class)
+            {
+                if (mInstance == null)
+                {
+                    mInstance = new ABTestPreference(context);
+                }
+            }
+        }
 
-	public static ABTestPreference getInstance(Context context)
-	{
-		if (mInstance == null)
-		{
-			synchronized (ABTestPreference.class)
-			{
-				if (mInstance == null)
-				{
-					mInstance = new ABTestPreference(context);
-				}
-			}
-		}
+        return mInstance;
+    }
 
-		return mInstance;
-	}
+    public void requestConfiguration(Context context, RequestQueue requestQueue, final OnABTestListener listener)
+    {
+        if (context == null || requestQueue == null)
+        {
+            if (listener != null)
+            {
+                listener.onPostExecute();
+            }
+            return;
+        }
 
-	private ABTestPreference(Context context)
-	{
-		mPreferences = context.getSharedPreferences("abTest", Context.MODE_PRIVATE);
-		mEditor = mPreferences.edit();
-	}
+        StringBuffer params = new StringBuffer();
 
-	public void requestConfiguration(Context context, RequestQueue requestQueue, final OnABTestListener listener)
-	{
-		if (context == null || requestQueue == null)
-		{
-			if (listener != null)
-			{
-				listener.onPostExecute();
-			}
-			return;
-		}
+        params.append("?code=1");
 
-		StringBuffer params = new StringBuffer();
+        params.append("&device_id=");
+        params.append(Util.getDeviceUUID(context));
 
-		params.append("?code=1");
+        params.append("&device_type=0");
 
-		params.append("&device_id=");
-		params.append(Util.getDeviceUUID(context));
+        params.append("&device_version=");
+        params.append(Build.VERSION.RELEASE);
 
-		params.append("&device_type=0");
+        params.append("&app_version=");
+        try
+        {
+            params.append(context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName);
+        } catch (NameNotFoundException e)
+        {
+        }
 
-		params.append("&device_version=");
-		params.append(Build.VERSION.RELEASE);
+        requestQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(Constants.URL_DAILYHOTEL_SERVER).append(Constants.URL_WEBAPI_ABTEST_TESTCASE).append(params).toString(), null, new DailyHotelJsonResponseListener()
+        {
+            @Override
+            public void onResponse(String url, JSONObject response)
+            {
+                setConfiguration(response);
 
-		params.append("&app_version=");
-		try
-		{
-			params.append(context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName);
-		} catch (NameNotFoundException e)
-		{
-		}
+                if (listener != null)
+                {
+                    listener.onPostExecute();
+                }
+            }
+        }, new ErrorListener()
+        {
+            @Override
+            public void onErrorResponse(VolleyError arg0)
+            {
+                if (listener != null)
+                {
+                    listener.onPostExecute();
+                }
+            }
+        }));
+    }
 
-		requestQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(Constants.URL_DAILYHOTEL_SERVER).append(Constants.URL_WEBAPI_ABTEST_TESTCASE).append(params).toString(), null, new DailyHotelJsonResponseListener()
-		{
-			@Override
-			public void onResponse(String url, JSONObject response)
-			{
-				setConfiguration(response);
+    private void setConfiguration(JSONObject jsonObject)
+    {
+        try
+        {
+            if (jsonObject == null)
+            {
+                throw new Exception("response == null");
+            }
 
-				if (listener != null)
-				{
-					listener.onPostExecute();
-				}
-			}
-		}, new ErrorListener()
-		{
-			@Override
-			public void onErrorResponse(VolleyError arg0)
-			{
-				if (listener != null)
-				{
-					listener.onPostExecute();
-				}
-			}
-		}));
-	}
+            int msg_code = jsonObject.getInt("msg_code");
 
-	private void setConfiguration(JSONObject jsonObject)
-	{
-		try
-		{
-			if (jsonObject == null)
-			{
-				throw new Exception("response == null");
-			}
+            if (msg_code != 0)
+            {
+                throw new Exception("response == null");
+            }
 
-			int msg_code = jsonObject.getInt("msg_code");
+            JSONObject data = jsonObject.getJSONObject("data");
+            boolean isTester = data.getBoolean("is_tester");
 
-			if (msg_code != 0)
-			{
-				throw new Exception("response == null");
-			}
+            setKakaotalkConsult(isTester ? 1 : 0);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
 
-			JSONObject data = jsonObject.getJSONObject("data");
-			boolean isTester = data.getBoolean("is_tester");
+    public void feedbackKakaotalkConsult(Context context, RequestQueue requestQueue, final OnABTestListener listener)
+    {
+        if (context == null || requestQueue == null)
+        {
+            return;
+        }
 
-			setKakaotalkConsult(isTester ? 1 : 0);
-		} catch (Exception e)
-		{
-			ExLog.d(e.toString());
-		}
-	}
+        StringBuffer params = new StringBuffer();
+        params.append("?device_id=");
+        params.append(Util.getDeviceUUID(context));
 
-	public void feedbackKakaotalkConsult(Context context, RequestQueue requestQueue, final OnABTestListener listener)
-	{
-		if (context == null || requestQueue == null)
-		{
-			return;
-		}
+        requestQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(Constants.URL_DAILYHOTEL_SERVER).append(Constants.URL_WEBAPI_ABTEST_KAKAO_CONSULT_FEEDBACK).append(params).toString(), null, new DailyHotelJsonResponseListener()
+        {
+            @Override
+            public void onResponse(String url, JSONObject response)
+            {
+                if (listener != null)
+                {
+                    listener.onPostExecute();
+                }
+            }
+        }, new ErrorListener()
+        {
+            @Override
+            public void onErrorResponse(VolleyError arg0)
+            {
+                if (listener != null)
+                {
+                    listener.onPostExecute();
+                }
+            }
+        }));
 
-		StringBuffer params = new StringBuffer();
-		params.append("?device_id=");
-		params.append(Util.getDeviceUUID(context));
+    }
 
-		requestQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(Constants.URL_DAILYHOTEL_SERVER).append(Constants.URL_WEBAPI_ABTEST_KAKAO_CONSULT_FEEDBACK).append(params).toString(), null, new DailyHotelJsonResponseListener()
-		{
-			@Override
-			public void onResponse(String url, JSONObject response)
-			{
-				if (listener != null)
-				{
-					listener.onPostExecute();
-				}
-			}
-		}, new ErrorListener()
-		{
-			@Override
-			public void onErrorResponse(VolleyError arg0)
-			{
-				if (listener != null)
-				{
-					listener.onPostExecute();
-				}
-			}
-		}));
+    public int getKakaotalkConsult()
+    {
+        int state = 0;
 
-	}
+        if (mPreferences != null)
+        {
+            state = mPreferences.getInt(KAKAOTALK_CONSULT, 0);
+        }
 
-	/////////////////////////////////////////////////////////////////////////////////////////
-	// Preference
-	/////////////////////////////////////////////////////////////////////////////////////////
+        return state;
+    }
 
-	public int getKakaotalkConsult()
-	{
-		int state = 0;
+    /////////////////////////////////////////////////////////////////////////////////////////
+    // Preference
+    /////////////////////////////////////////////////////////////////////////////////////////
 
-		if (mPreferences != null)
-		{
-			state = mPreferences.getInt(KAKAOTALK_CONSULT, 0);
-		}
+    public void setKakaotalkConsult(int state)
+    {
+        if (mEditor != null)
+        {
+            mEditor.putInt(KAKAOTALK_CONSULT, state);
+            mEditor.commit();
+        }
+    }
 
-		return state;
-	}
+    public void clear()
+    {
+        if (mEditor != null)
+        {
+            mEditor.clear();
+            mEditor.commit();
+        }
+    }
 
-	public void setKakaotalkConsult(int state)
-	{
-		if (mEditor != null)
-		{
-			mEditor.putInt(KAKAOTALK_CONSULT, state);
-			mEditor.commit();
-		}
-	}
-
-	public void clear()
-	{
-		if (mEditor != null)
-		{
-			mEditor.clear();
-			mEditor.commit();
-		}
-	}
+    public interface OnABTestListener
+    {
+        public void onPostExecute();
+    }
 }

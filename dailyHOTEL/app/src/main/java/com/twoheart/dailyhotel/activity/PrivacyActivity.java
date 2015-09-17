@@ -8,19 +8,19 @@ import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 public class PrivacyActivity extends WebViewActivity
 {
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState)
-	{
-		super.onCreate(savedInstanceState);
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_term);
-		setActionBar(R.string.actionbar_title_privacy_activity);
-	}
+        setContentView(R.layout.activity_term);
+        setActionBar(R.string.actionbar_title_privacy_activity);
+    }
 
-	@Override
-	protected void onResume()
-	{
-		super.onResume();
-		setWebView(DailyHotelRequest.getUrlDecoderEx(URL_WEB_PRIVACY));
-	}
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        setWebView(DailyHotelRequest.getUrlDecoderEx(URL_WEB_PRIVACY));
+    }
 }

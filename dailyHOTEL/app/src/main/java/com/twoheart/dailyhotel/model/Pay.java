@@ -5,136 +5,140 @@ import android.os.Parcelable;
 
 public class Pay implements Parcelable
 {
-	public enum Type
-	{
-		EASY_CARD, CARD, PHONE_PAY, VBANK,
-		//		PAYPAL
-	};
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+    {
+        public Pay createFromParcel(Parcel in)
+        {
+            return new Pay(in);
+        }
 
-	private SaleRoomInformation mSaleRoomInformation;
-	public int credit;
-	private Customer mCustomer;
-	private int mOriginalPrice;
-	private boolean isSaleCredit;
-	public String checkInTime;
-	public String checkOutTime;
-	private Type mType;
-	private Guest mGuest;
+        @Override
+        public Pay[] newArray(int size)
+        {
+            return new Pay[size];
+        }
 
-	public Pay()
-	{
-	}
+    };
 
-	public Pay(Parcel in)
-	{
-		readFromParcel(in);
-	}
+    ;
+    public int credit;
+    public String checkInTime;
+    public String checkOutTime;
+    private SaleRoomInformation mSaleRoomInformation;
+    private Customer mCustomer;
+    private int mOriginalPrice;
+    private boolean isSaleCredit;
+    private Type mType;
+    private Guest mGuest;
 
-	@Override
-	public void writeToParcel(Parcel dest, int flags)
-	{
-		dest.writeValue(mSaleRoomInformation);
-		dest.writeInt(credit);
-		dest.writeValue(mCustomer);
-		dest.writeInt(mOriginalPrice);
-		dest.writeByte((byte) (isSaleCredit ? 1 : 0));
-		dest.writeString(checkInTime);
-		dest.writeString(checkOutTime);
-		dest.writeSerializable(mType);
-		dest.writeValue(mGuest);
-	}
+    public Pay()
+    {
+    }
 
-	private void readFromParcel(Parcel in)
-	{
-		mSaleRoomInformation = (SaleRoomInformation) in.readValue(SaleRoomInformation.class.getClassLoader());
-		credit = in.readInt();
-		mCustomer = (Customer) in.readValue(Customer.class.getClassLoader());
-		mOriginalPrice = in.readInt();
-		isSaleCredit = in.readByte() != 0;
-		checkInTime = in.readString();
-		checkOutTime = in.readString();
-		mType = (Type) in.readSerializable();
-		mGuest = (Guest) in.readValue(Guest.class.getClassLoader());
-	}
+    public Pay(Parcel in)
+    {
+        readFromParcel(in);
+    }
 
-	public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
-	{
-		public Pay createFromParcel(Parcel in)
-		{
-			return new Pay(in);
-		}
+    @Override
+    public void writeToParcel(Parcel dest, int flags)
+    {
+        dest.writeValue(mSaleRoomInformation);
+        dest.writeInt(credit);
+        dest.writeValue(mCustomer);
+        dest.writeInt(mOriginalPrice);
+        dest.writeByte((byte) (isSaleCredit ? 1 : 0));
+        dest.writeString(checkInTime);
+        dest.writeString(checkOutTime);
+        dest.writeSerializable(mType);
+        dest.writeValue(mGuest);
+    }
 
-		@Override
-		public Pay[] newArray(int size)
-		{
-			return new Pay[size];
-		}
+    private void readFromParcel(Parcel in)
+    {
+        mSaleRoomInformation = (SaleRoomInformation) in.readValue(SaleRoomInformation.class.getClassLoader());
+        credit = in.readInt();
+        mCustomer = (Customer) in.readValue(Customer.class.getClassLoader());
+        mOriginalPrice = in.readInt();
+        isSaleCredit = in.readByte() != 0;
+        checkInTime = in.readString();
+        checkOutTime = in.readString();
+        mType = (Type) in.readSerializable();
+        mGuest = (Guest) in.readValue(Guest.class.getClassLoader());
+    }
 
-	};
+    public SaleRoomInformation getSaleRoomInformation()
+    {
+        return mSaleRoomInformation;
+    }
 
-	public SaleRoomInformation getSaleRoomInformation()
-	{
-		return mSaleRoomInformation;
-	}
+    public void setSaleRoomInformation(SaleRoomInformation information)
+    {
+        mSaleRoomInformation = information;
+    }
 
-	public void setSaleRoomInformation(SaleRoomInformation information)
-	{
-		mSaleRoomInformation = information;
-	}
+    public Customer getCustomer()
+    {
+        return mCustomer;
+    }
 
-	public Customer getCustomer()
-	{
-		return mCustomer;
-	}
+    public void setCustomer(Customer customer)
+    {
+        this.mCustomer = customer;
+    }
 
-	public void setCustomer(Customer customer)
-	{
-		this.mCustomer = customer;
-	}
+    public Guest getGuest()
+    {
+        return mGuest;
+    }
 
-	public Guest getGuest()
-	{
-		return mGuest;
-	}
+    public void setGuest(Guest guest)
+    {
+        mGuest = guest;
+    }
 
-	public void setGuest(Guest guest)
-	{
-		mGuest = guest;
-	}
+    public int getOriginalPrice()
+    {
+        return mOriginalPrice;
+    }
 
-	public int getOriginalPrice()
-	{
-		return mOriginalPrice;
-	}
+    public void setOriginalPrice(int originalPrice)
+    {
+        mOriginalPrice = originalPrice;
+    }
 
-	public void setOriginalPrice(int originalPrice)
-	{
-		mOriginalPrice = originalPrice;
-	}
+    public boolean isSaleCredit()
+    {
+        return isSaleCredit;
+    }
 
-	public boolean isSaleCredit()
-	{
-		return isSaleCredit;
-	}
+    public void setSaleCredit(boolean isSaleCredit)
+    {
+        this.isSaleCredit = isSaleCredit;
+    }
 
-	public void setSaleCredit(boolean isSaleCredit)
-	{
-		this.isSaleCredit = isSaleCredit;
-	}
+    public Type getType()
+    {
+        return mType;
+    }
 
-	public Type getType()
-	{
-		return mType;
-	}
+    public void setType(Type type)
+    {
+        mType = type;
+    }
 
-	public void setType(Type type)
-	{
-		mType = type;
-	}
+    @Override
+    public int describeContents()
+    {
+        return 0;
+    }
 
-	@Override
-	public int describeContents()
-	{
-		return 0;
-	}
+    public enum Type
+    {
+        EASY_CARD,
+        CARD,
+        PHONE_PAY,
+        VBANK,
+        //		PAYPAL
+    }
 }

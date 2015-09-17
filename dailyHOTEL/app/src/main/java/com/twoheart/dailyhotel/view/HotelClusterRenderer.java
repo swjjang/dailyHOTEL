@@ -13,117 +13,116 @@ import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.twoheart.dailyhotel.model.HotelRegionRenderer;
 import com.twoheart.dailyhotel.model.HotelRenderer;
 
-public class HotelClusterRenderer
-		extends DefaultClusterRenderer<HotelClusterItem>
+public class HotelClusterRenderer extends DefaultClusterRenderer<HotelClusterItem>
 {
-	public enum Renderer
-	{
-		CLUSTER, CLUSTER_ITEM,
-	}
+    private Context mContext;
+    private HotelClusterItem mSelectedHotelClusterItem;
+    private OnSelectedClusterItemListener mOnSelectedClusterItemListener;
+    private OnClusterRenderedListener mOnClusterRenderedListener;
+    public HotelClusterRenderer(Context context, GoogleMap map, ClusterManager<HotelClusterItem> clusterManager)
+    {
+        super(context, map, clusterManager);
 
-	private Context mContext;
-	private HotelClusterItem mSelectedHotelClusterItem;
-	private OnSelectedClusterItemListener mOnSelectedClusterItemListener;
-	private OnClusterRenderedListener mOnClusterRenderedListener;
+        mContext = context;
+    }
 
-	public interface OnSelectedClusterItemListener
-	{
-		public void onSelectedClusterItemListener(Marker marker);
-	}
+    @Override
+    protected void onBeforeClusterItemRendered(HotelClusterItem item, MarkerOptions markerOptions)
+    {
+        if (mOnClusterRenderedListener != null)
+        {
+            mOnClusterRenderedListener.onClusterRenderedListener(Renderer.CLUSTER_ITEM);
+        }
 
-	public interface OnClusterRenderedListener
-	{
-		public void onClusterRenderedListener(Renderer renderer);
-	}
+        HotelRenderer hotelRenderer = new HotelRenderer(mContext, item.getHotel());
 
-	public HotelClusterRenderer(Context context, GoogleMap map, ClusterManager<HotelClusterItem> clusterManager)
-	{
-		super(context, map, clusterManager);
+        BitmapDescriptor icon = hotelRenderer.getBitmap(false);
 
-		mContext = context;
-	}
+        if (icon != null)
+        {
+            markerOptions.icon(icon);
+            markerOptions.anchor(0.0f, 1.0f);
+        }
+    }
 
-	@Override
-	protected void onBeforeClusterItemRendered(HotelClusterItem item, MarkerOptions markerOptions)
-	{
-		if (mOnClusterRenderedListener != null)
-		{
-			mOnClusterRenderedListener.onClusterRenderedListener(Renderer.CLUSTER_ITEM);
-		}
+    @Override
+    protected void onBeforeClusterRendered(Cluster<HotelClusterItem> cluster, MarkerOptions markerOptions)
+    {
+        if (mOnClusterRenderedListener != null)
+        {
+            mOnClusterRenderedListener.onClusterRenderedListener(Renderer.CLUSTER);
+        }
 
-		HotelRenderer hotelRenderer = new HotelRenderer(mContext, item.getHotel());
+        HotelRegionRenderer hotelRegionRenderer = new HotelRegionRenderer(mContext, cluster.getSize());
 
-		BitmapDescriptor icon = hotelRenderer.getBitmap(false);
+        BitmapDescriptor icon = hotelRegionRenderer.getBitmap();
 
-		if (icon != null)
-		{
-			markerOptions.icon(icon);
-			markerOptions.anchor(0.0f, 1.0f);
-		}
-	}
+        if (icon != null)
+        {
+            markerOptions.icon(icon).anchor(0.5f, 0.5f);
+        }
+    }
 
-	@Override
-	protected void onBeforeClusterRendered(Cluster<HotelClusterItem> cluster, MarkerOptions markerOptions)
-	{
-		if (mOnClusterRenderedListener != null)
-		{
-			mOnClusterRenderedListener.onClusterRenderedListener(Renderer.CLUSTER);
-		}
+    @Override
+    protected void onClusterItemRendered(HotelClusterItem clusterItem, Marker marker)
+    {
+        if (mSelectedHotelClusterItem != null)
+        {
+            LatLng selectedLatLng = mSelectedHotelClusterItem.getPosition();
+            LatLng currentLatLng = clusterItem.getPosition();
 
-		HotelRegionRenderer hotelRegionRenderer = new HotelRegionRenderer(mContext, cluster.getSize());
+            if (selectedLatLng.latitude == currentLatLng.latitude && selectedLatLng.longitude == currentLatLng.longitude)
+            {
+                mSelectedHotelClusterItem = null;
 
-		BitmapDescriptor icon = hotelRegionRenderer.getBitmap();
+                if (mOnSelectedClusterItemListener != null)
+                {
+                    mOnSelectedClusterItemListener.onSelectedClusterItemListener(marker);
+                }
+            }
+        }
+    }
 
-		if (icon != null)
-		{
-			markerOptions.icon(icon).anchor(0.5f, 0.5f);
-		}
-	}
+    public void setOnClusterRenderedListener(OnClusterRenderedListener listener)
+    {
+        mOnClusterRenderedListener = listener;
+    }
 
-	@Override
-	protected void onClusterItemRendered(HotelClusterItem clusterItem, Marker marker)
-	{
-		if (mSelectedHotelClusterItem != null)
-		{
-			LatLng selectedLatLng = mSelectedHotelClusterItem.getPosition();
-			LatLng currentLatLng = clusterItem.getPosition();
+    @Override
+    protected boolean shouldRenderAsCluster(Cluster<HotelClusterItem> cluster, float zoom)
+    {
+        if (Float.compare(zoom, 13.0f) >= 0)
+        {
+            return false;
+        } else
+        {
+            return true;
+        }
+    }
 
-			if (selectedLatLng.latitude == currentLatLng.latitude && selectedLatLng.longitude == currentLatLng.longitude)
-			{
-				mSelectedHotelClusterItem = null;
+    public void setSelectedClusterItem(HotelClusterItem hotelClusterItem)
+    {
+        mSelectedHotelClusterItem = hotelClusterItem;
+    }
 
-				if (mOnSelectedClusterItemListener != null)
-				{
-					mOnSelectedClusterItemListener.onSelectedClusterItemListener(marker);
-				}
-			}
-		}
-	}
+    public void setSelectedClusterItemListener(OnSelectedClusterItemListener listener)
+    {
+        mOnSelectedClusterItemListener = listener;
+    }
 
-	public void setOnClusterRenderedListener(OnClusterRenderedListener listener)
-	{
-		mOnClusterRenderedListener = listener;
-	}
+    public enum Renderer
+    {
+        CLUSTER,
+        CLUSTER_ITEM,
+    }
 
-	@Override
-	protected boolean shouldRenderAsCluster(Cluster<HotelClusterItem> cluster, float zoom)
-	{
-		if (Float.compare(zoom, 13.0f) >= 0)
-		{
-			return false;
-		} else
-		{
-			return true;
-		}
-	}
+    public interface OnSelectedClusterItemListener
+    {
+        public void onSelectedClusterItemListener(Marker marker);
+    }
 
-	public void setSelectedClusterItem(HotelClusterItem hotelClusterItem)
-	{
-		mSelectedHotelClusterItem = hotelClusterItem;
-	}
-
-	public void setSelectedClusterItemListener(OnSelectedClusterItemListener listener)
-	{
-		mOnSelectedClusterItemListener = listener;
-	}
+    public interface OnClusterRenderedListener
+    {
+        public void onClusterRenderedListener(Renderer renderer);
+    }
 }

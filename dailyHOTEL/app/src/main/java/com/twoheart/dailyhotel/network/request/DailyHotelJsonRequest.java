@@ -17,49 +17,49 @@ import java.util.Map;
 public class DailyHotelJsonRequest extends DailyHotelRequest<JSONObject>
 {
 
-	private DailyHotelJsonResponseListener mListener;
+    private DailyHotelJsonResponseListener mListener;
 
-	public DailyHotelJsonRequest(int method, String url, Map<String, String> parameters, DailyHotelJsonResponseListener listener, ErrorListener errorListener)
-	{
-		super(method, url, parameters, errorListener);
+    public DailyHotelJsonRequest(int method, String url, Map<String, String> parameters, DailyHotelJsonResponseListener listener, ErrorListener errorListener)
+    {
+        super(method, url, parameters, errorListener);
 
-		mListener = listener;
-	}
+        mListener = listener;
+    }
 
-	@Override
-	protected void deliverResponse(JSONObject response)
-	{
-		if (mListener != null)
-		{
-			mListener.onResponse(getUrl(), response);
-		}
-	}
+    @Override
+    protected void deliverResponse(JSONObject response)
+    {
+        if (mListener != null)
+        {
+            mListener.onResponse(getUrl(), response);
+        }
+    }
 
-	@Override
-	protected Response<JSONObject> parseNetworkResponse(NetworkResponse response)
-	{
+    @Override
+    protected Response<JSONObject> parseNetworkResponse(NetworkResponse response)
+    {
 
-		String parsed;
-		try
-		{
-			parsed = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-		} catch (UnsupportedEncodingException e)
-		{
-			parsed = new String(response.data);
-		}
+        String parsed;
+        try
+        {
+            parsed = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+        } catch (UnsupportedEncodingException e)
+        {
+            parsed = new String(response.data);
+        }
 
-		try
-		{
-			String jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-			return Response.success(new JSONObject(jsonString), HttpHeaderParser.parseCacheHeaders(response));
-		} catch (UnsupportedEncodingException e)
-		{
-			return Response.error(new ParseError(e));
-		} catch (JSONException je)
-		{
-			ExLog.e(parsed);
-			return Response.error(new ParseError(je));
-		}
-	}
+        try
+        {
+            String jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+            return Response.success(new JSONObject(jsonString), HttpHeaderParser.parseCacheHeaders(response));
+        } catch (UnsupportedEncodingException e)
+        {
+            return Response.error(new ParseError(e));
+        } catch (JSONException je)
+        {
+            ExLog.e(parsed);
+            return Response.error(new ParseError(je));
+        }
+    }
 
 }

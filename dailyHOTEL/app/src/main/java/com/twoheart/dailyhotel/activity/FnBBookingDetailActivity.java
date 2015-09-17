@@ -1,11 +1,10 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
- *
+ * <p/>
  * BookingTabActivity (예약한 호텔의 예약, 정보, 지도탭을 보여주는 화면)
- * 
+ * <p/>
  * 예약한 호텔리스트에서 호텔 클릭 시 호텔의 정보들을 보여주는 화면이다.
  * 예약, 정보, 지도 프래그먼트를 담고 있는 액티비티이다.
- * 
  */
 package com.twoheart.dailyhotel.activity;
 
@@ -28,105 +27,105 @@ import java.util.ArrayList;
 
 public class FnBBookingDetailActivity extends PlaceBookingDetailActivity
 {
-	@Override
-	protected void loadFragments()
-	{
-		if (mFragmentViewPager == null)
-		{
-			ArrayList<String> titleList = new ArrayList<String>();
-			titleList.add(getString(R.string.frag_booking_tab_title));
-			titleList.add(getString(R.string.frag_tab_info_title));
-			titleList.add(getString(R.string.frag_tab_map_title));
+    private DailyHotelJsonResponseListener mReservationBookingDetailJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                if (response == null)
+                {
+                    throw new NullPointerException("response == null");
+                }
 
-			mFragmentViewPager = (FragmentViewPager) findViewById(R.id.fragmentViewPager);
+                int msg_code = response.getInt("msg_code");
 
-			ArrayList<BaseFragment> mFragmentList = new ArrayList<BaseFragment>();
+                if (msg_code == 0)
+                {
+                    JSONObject jsonObject = response.getJSONObject("data");
 
-			BaseFragment baseFragment01 = FnBTabBookingFragment.newInstance(mPlaceBookingDetail, booking, getString(R.string.drawer_menu_pin_title_resrvation));
-			mFragmentList.add(baseFragment01);
+                    if (mPlaceBookingDetail == null)
+                    {
+                        mPlaceBookingDetail = new FnBBookingDetail();
+                    }
 
-			BaseFragment baseFragment02 = PlaceTabInfoFragment.newInstance(mPlaceBookingDetail, titleList.get(1));
-			mFragmentList.add(baseFragment02);
+                    mPlaceBookingDetail.setData(jsonObject);
 
-			BaseFragment baseFragment03 = PlaceTabMapFragment.newInstance(mPlaceBookingDetail, titleList.get(2));
-			mFragmentList.add(baseFragment03);
+                    loadFragments();
+                } else
+                {
+                    if (response.has("msg") == true)
+                    {
+                        String msg = response.getString("msg");
 
-			mFragmentViewPager.setData(mFragmentList);
-			mFragmentViewPager.setAdapter(getSupportFragmentManager());
+                        showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                finish();
+                            }
+                        }, null, false);
+                        return;
+                    } else
+                    {
+                        onInternalError();
+                    }
+                }
+            } catch (Exception e)
+            {
+                onInternalError();
+            } finally
+            {
+                unLockUI();
+            }
+        }
+    };
 
-			mTabIndicator.setViewPager(mFragmentViewPager.getViewPager());
-			mTabIndicator.setOnPageChangeListener(mOnPageChangeListener);
-		}
-	}
+    @Override
+    protected void loadFragments()
+    {
+        if (mFragmentViewPager == null)
+        {
+            ArrayList<String> titleList = new ArrayList<String>();
+            titleList.add(getString(R.string.frag_booking_tab_title));
+            titleList.add(getString(R.string.frag_tab_info_title));
+            titleList.add(getString(R.string.frag_tab_map_title));
 
-	@Override
-	protected void requestPlaceBookingDetail()
-	{
-		lockUI();
+            mFragmentViewPager = (FragmentViewPager) findViewById(R.id.fragmentViewPager);
 
-		String params = String.format("?reservation_rec_idx=%d", booking.reservationIndex);
+            ArrayList<BaseFragment> mFragmentList = new ArrayList<BaseFragment>();
 
-		mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_BOOKING_DETAIL).append(params).toString(), null, mReservationBookingDetailJsonResponseListener, this));
-	}
+            BaseFragment baseFragment01 = FnBTabBookingFragment.newInstance(mPlaceBookingDetail, booking, getString(R.string.drawer_menu_pin_title_resrvation));
+            mFragmentList.add(baseFragment01);
 
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// Listener
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            BaseFragment baseFragment02 = PlaceTabInfoFragment.newInstance(mPlaceBookingDetail, titleList.get(1));
+            mFragmentList.add(baseFragment02);
 
-	private DailyHotelJsonResponseListener mReservationBookingDetailJsonResponseListener = new DailyHotelJsonResponseListener()
-	{
-		@Override
-		public void onResponse(String url, JSONObject response)
-		{
-			try
-			{
-				if (response == null)
-				{
-					throw new NullPointerException("response == null");
-				}
+            BaseFragment baseFragment03 = PlaceTabMapFragment.newInstance(mPlaceBookingDetail, titleList.get(2));
+            mFragmentList.add(baseFragment03);
 
-				int msg_code = response.getInt("msg_code");
+            mFragmentViewPager.setData(mFragmentList);
+            mFragmentViewPager.setAdapter(getSupportFragmentManager());
 
-				if (msg_code == 0)
-				{
-					JSONObject jsonObject = response.getJSONObject("data");
+            mTabIndicator.setViewPager(mFragmentViewPager.getViewPager());
+            mTabIndicator.setOnPageChangeListener(mOnPageChangeListener);
+        }
+    }
 
-					if (mPlaceBookingDetail == null)
-					{
-						mPlaceBookingDetail = new FnBBookingDetail();
-					}
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Listener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-					mPlaceBookingDetail.setData(jsonObject);
+    @Override
+    protected void requestPlaceBookingDetail()
+    {
+        lockUI();
 
-					loadFragments();
-				} else
-				{
-					if (response.has("msg") == true)
-					{
-						String msg = response.getString("msg");
+        String params = String.format("?reservation_rec_idx=%d", booking.reservationIndex);
 
-						showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
-						{
-							@Override
-							public void onClick(View v)
-							{
-								finish();
-							}
-						}, null, false);
-						return;
-					} else
-					{
-						onInternalError();
-					}
-				}
-			} catch (Exception e)
-			{
-				onInternalError();
-			} finally
-			{
-				unLockUI();
-			}
-		}
-	};
+        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_BOOKING_DETAIL).append(params).toString(), null, mReservationBookingDetailJsonResponseListener, this));
+    }
 
 }

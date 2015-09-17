@@ -22,142 +22,142 @@ import java.util.List;
 
 public class HotelDetailImageViewPagerAdapter extends PagerAdapter
 {
-	private Context mContext;
-	private List<String> mImageUrlList;
-	private AQuery mAQuery;
-	private int mDirection;
+    private Context mContext;
+    private List<String> mImageUrlList;
+    private AQuery mAQuery;
+    private int mDirection;
 
-	private HotelDetailActivity.OnUserActionListener mOnUserActionListener;
-	private PlaceDetailActivity.OnImageActionListener mOnImageActionListener;
+    private HotelDetailActivity.OnUserActionListener mOnUserActionListener;
+    private PlaceDetailActivity.OnImageActionListener mOnImageActionListener;
 
-	public HotelDetailImageViewPagerAdapter(Context context)
-	{
-		mContext = context;
-	}
+    public HotelDetailImageViewPagerAdapter(Context context)
+    {
+        mContext = context;
+    }
 
-	public void setData(List<String> list)
-	{
-		mImageUrlList = list;
-	}
+    public void setData(List<String> list)
+    {
+        mImageUrlList = list;
+    }
 
-	public void setDirection(int direction)
-	{
-		mDirection = direction;
-	}
+    public void setDirection(int direction)
+    {
+        mDirection = direction;
+    }
 
-	@Override
-	public Object instantiateItem(ViewGroup container, int position)
-	{
-		if (mImageUrlList == null)
-		{
-			return null;
-		}
+    @Override
+    public Object instantiateItem(ViewGroup container, int position)
+    {
+        if (mImageUrlList == null)
+        {
+            return null;
+        }
 
-		ImageView imageView = null;
+        ImageView imageView = null;
 
-		int width = Util.getLCDWidth(mContext);
+        int width = Util.getLCDWidth(mContext);
 
-		if (Util.isOverAPI11() == true)
-		{
-			imageView = new AnimationImageView(mContext, width, width, mDirection < 0);
-			((AnimationImageView) imageView).setOnAnimationListener(mOnUserActionListener);
-			((AnimationImageView) imageView).setOnImageActionListener(mOnImageActionListener);
-		} else
-		{
-			imageView = new ImageView(mContext);
-			imageView.setScaleType(ScaleType.CENTER_CROP);
-		}
+        if (Util.isOverAPI11() == true)
+        {
+            imageView = new AnimationImageView(mContext, width, width, mDirection < 0);
+            ((AnimationImageView) imageView).setOnAnimationListener(mOnUserActionListener);
+            ((AnimationImageView) imageView).setOnImageActionListener(mOnImageActionListener);
+        } else
+        {
+            imageView = new ImageView(mContext);
+            imageView.setScaleType(ScaleType.CENTER_CROP);
+        }
 
-		imageView.setTag(position);
+        imageView.setTag(position);
 
-		String url = mImageUrlList.get(position);
+        String url = mImageUrlList.get(position);
 
-		if (mAQuery == null)
-		{
-			mAQuery = new AQuery(mContext);
-		}
+        if (mAQuery == null)
+        {
+            mAQuery = new AQuery(mContext);
+        }
 
-		Bitmap cachedImg = VolleyImageLoader.getCache(url);
+        Bitmap cachedImg = VolleyImageLoader.getCache(url);
 
-		if (cachedImg == null)
-		{ // 힛인 밸류가 없다면 이미지를 불러온 후 캐시에 세이브
-			BitmapAjaxCallback cb = new BitmapAjaxCallback()
-			{
-				@Override
-				protected void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status)
-				{
-					if (bm != null)
-					{
-						VolleyImageLoader.putCache(url, bm);
-					}
+        if (cachedImg == null)
+        { // 힛인 밸류가 없다면 이미지를 불러온 후 캐시에 세이브
+            BitmapAjaxCallback cb = new BitmapAjaxCallback()
+            {
+                @Override
+                protected void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status)
+                {
+                    if (bm != null)
+                    {
+                        VolleyImageLoader.putCache(url, bm);
+                    }
 
-					iv.setImageBitmap(bm);
-				}
-			};
+                    iv.setImageBitmap(bm);
+                }
+            };
 
-			if (Util.getLCDWidth(mContext) < 720)
-			{
-				cb.url(url).animation(AQuery.FADE_IN);
-				mAQuery.id(imageView).image(url, false, false, 240, 0, cb);
-			} else
-			{
-				cb.url(url).animation(AQuery.FADE_IN);
-				mAQuery.id(imageView).image(cb);
-			}
-		} else
-		{
-			imageView.setImageBitmap(cachedImg);
-		}
+            if (Util.getLCDWidth(mContext) < 720)
+            {
+                cb.url(url).animation(AQuery.FADE_IN);
+                mAQuery.id(imageView).image(url, false, false, 240, 0, cb);
+            } else
+            {
+                cb.url(url).animation(AQuery.FADE_IN);
+                mAQuery.id(imageView).image(cb);
+            }
+        } else
+        {
+            imageView.setImageBitmap(cachedImg);
+        }
 
-		LayoutParams layoutParams = new LayoutParams(width, width);
-		container.addView(imageView, 0, layoutParams);
+        LayoutParams layoutParams = new LayoutParams(width, width);
+        container.addView(imageView, 0, layoutParams);
 
-		return imageView;
-	}
+        return imageView;
+    }
 
-	@Override
-	public int getItemPosition(Object object)
-	{
-		return POSITION_NONE;
-	}
+    @Override
+    public int getItemPosition(Object object)
+    {
+        return POSITION_NONE;
+    }
 
-	@Override
-	public int getCount()
-	{
-		if (mImageUrlList != null)
-		{
-			if (mImageUrlList.size() == 0)
-			{
-				return 1;
-			} else
-			{
-				return mImageUrlList.size();
-			}
-		} else
-		{
-			return 1;
-		}
-	}
+    @Override
+    public int getCount()
+    {
+        if (mImageUrlList != null)
+        {
+            if (mImageUrlList.size() == 0)
+            {
+                return 1;
+            } else
+            {
+                return mImageUrlList.size();
+            }
+        } else
+        {
+            return 1;
+        }
+    }
 
-	@Override
-	public boolean isViewFromObject(View view, Object object)
-	{
-		return view == object;
-	}
+    @Override
+    public boolean isViewFromObject(View view, Object object)
+    {
+        return view == object;
+    }
 
-	@Override
-	public void destroyItem(ViewGroup container, int position, Object object)
-	{
-		container.removeView((View) object);
-	}
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object object)
+    {
+        container.removeView((View) object);
+    }
 
-	public void setOnAnimationListener(HotelDetailActivity.OnUserActionListener listener)
-	{
-		mOnUserActionListener = listener;
-	}
+    public void setOnAnimationListener(HotelDetailActivity.OnUserActionListener listener)
+    {
+        mOnUserActionListener = listener;
+    }
 
-	public void setOnImageActionListener(PlaceDetailActivity.OnImageActionListener listener)
-	{
-		mOnImageActionListener = listener;
-	}
+    public void setOnImageActionListener(PlaceDetailActivity.OnImageActionListener listener)
+    {
+        mOnImageActionListener = listener;
+    }
 }

@@ -17,180 +17,179 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-public abstract class DailyHotelRequest<T>
-		extends Request<T>implements Constants
+public abstract class DailyHotelRequest<T> extends Request<T> implements Constants
 {
-	private Map<String, String> mParameters;
+    private Map<String, String> mParameters;
 
-	public DailyHotelRequest(int method, String url, Map<String, String> parameters, ErrorListener errorListener)
-	{
-		this(method, url, errorListener);
+    public DailyHotelRequest(int method, String url, Map<String, String> parameters, ErrorListener errorListener)
+    {
+        this(method, url, errorListener);
 
-		mParameters = parameters;
-	}
+        mParameters = parameters;
+    }
 
-	private DailyHotelRequest(int method, String url, ErrorListener listener)
-	{
-		super(method, getUrlDecoderEx(url), listener);
-		setTag(listener);
+    private DailyHotelRequest(int method, String url, ErrorListener listener)
+    {
+        super(method, getUrlDecoderEx(url), listener);
+        setTag(listener);
 
-		setRetryPolicy(new DefaultRetryPolicy(REQUEST_EXPIRE_JUDGE, REQUEST_MAX_RETRY, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-	}
+        setRetryPolicy(new DefaultRetryPolicy(REQUEST_EXPIRE_JUDGE, REQUEST_MAX_RETRY, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+    }
 
-	@Override
-	protected abstract Response<T> parseNetworkResponse(NetworkResponse response);
+    public static String getUrlEncoder(final String url)
+    {
+        final int SEED_LENGTH = 5;
+        StringBuilder encodeUrl = new StringBuilder();
+        StringBuilder seedLocationNumber = new StringBuilder();
 
-	@Override
-	protected abstract void deliverResponse(T response);
+        try
+        {
+            String alphas = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-	@Override
-	protected Map<String, String> getParams()
-	{
-		return mParameters;
-	}
+            Random random = new Random(System.currentTimeMillis());
+            StringBuilder seed = new StringBuilder();
 
-	@Override
-	public Map<String, String> getHeaders() throws AuthFailureError
-	{
-		HashMap<String, String> map = new HashMap<String, String>();
-		map.put("os-type", "android");
-		map.put("app-version", DailyHotel.VERSION);
+            for (int i = 0; i < SEED_LENGTH; i++)
+            {
+                int number = random.nextInt(alphas.length());
+                seed.append(alphas.charAt(number));
+            }
 
-		return map;
-	}
+            String firstUrl = Crypto.encrypt(seed.toString(), url);
+            encodeUrl.append(firstUrl);
 
-	public static String getUrlEncoder(final String url)
-	{
-		final int SEED_LENGTH = 5;
-		StringBuilder encodeUrl = new StringBuilder();
-		StringBuilder seedLocationNumber = new StringBuilder();
+            for (int i = 0; i < SEED_LENGTH; i++)
+            {
+                int number = random.nextInt(encodeUrl.length());
 
-		try
-		{
-			String alphas = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                encodeUrl.insert(number, seed.charAt(i));
+                seedLocationNumber.append(number).append('$');
+            }
 
-			Random random = new Random(System.currentTimeMillis());
-			StringBuilder seed = new StringBuilder();
+            String base64LocationNumber = Base64.encodeToString(seedLocationNumber.toString().getBytes(), Base64.NO_WRAP);
+            encodeUrl.insert(0, base64LocationNumber + "$");
+            encodeUrl.append('$');
 
-			for (int i = 0; i < SEED_LENGTH; i++)
-			{
-				int number = random.nextInt(alphas.length());
-				seed.append(alphas.charAt(number));
-			}
+            ExLog.d("encoderUrl : " + encodeUrl.toString());
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
 
-			String firstUrl = Crypto.encrypt(seed.toString(), url);
-			encodeUrl.append(firstUrl);
+        return encodeUrl.toString();
+    }
 
-			for (int i = 0; i < SEED_LENGTH; i++)
-			{
-				int number = random.nextInt(encodeUrl.length());
+    public static String getUrlDecoderEx(String url)
+    {
+        if (Constants.UNENCRYPTED_URL == true)
+        {
+            return url;
+        }
 
-				encodeUrl.insert(number, seed.charAt(i));
-				seedLocationNumber.append(number).append('$');
-			}
+        String param = null;
+        String encoderUrl = null;
 
-			String base64LocationNumber = Base64.encodeToString(seedLocationNumber.toString().getBytes(), Base64.NO_WRAP);
-			encodeUrl.insert(0, base64LocationNumber + "$");
-			encodeUrl.append('$');
+        if (url.contains("/") == true)
+        {
+            int index = url.indexOf('/');
+            param = url.substring(index);
+            encoderUrl = url.substring(0, index);
+        } else if (url.contains("?") == true)
+        {
+            int index = url.indexOf('?');
+            param = url.substring(index);
+            encoderUrl = url.substring(0, index);
+        } else
+        {
+            encoderUrl = url;
+        }
 
-			ExLog.d("encoderUrl : " + encodeUrl.toString());
-		} catch (Exception e)
-		{
-			ExLog.d(e.toString());
-		}
+        StringBuilder decodeUrl = new StringBuilder();
+        String[] seperateUrl = encoderUrl.split("\\$");
 
-		return encodeUrl.toString();
-	}
+        int count = seperateUrl.length / 2;
 
-	public static String getUrlDecoderEx(String url)
-	{
-		if (Constants.UNENCRYPTED_URL == true)
-		{
-			return url;
-		}
+        // 앞의것 2개는 Url, 뒤의것 2개는 API
+        for (int i = 0; i < count; i++)
+        {
+            String locatinoNumber = new String(Base64.decode(seperateUrl[i * 2], Base64.NO_WRAP));
+            StringBuilder encodeUrl = new StringBuilder(locatinoNumber);
+            encodeUrl.append(seperateUrl[i * 2 + 1]);
 
-		String param = null;
-		String encoderUrl = null;
+            decodeUrl.append(getUrlDecoder(encodeUrl.toString()));
+        }
 
-		if (url.contains("/") == true)
-		{
-			int index = url.indexOf('/');
-			param = url.substring(index);
-			encoderUrl = url.substring(0, index);
-		} else if (url.contains("?") == true)
-		{
-			int index = url.indexOf('?');
-			param = url.substring(index);
-			encoderUrl = url.substring(0, index);
-		} else
-		{
-			encoderUrl = url;
-		}
+        if (param != null)
+        {
+            decodeUrl.append(param);
+        }
 
-		StringBuilder decodeUrl = new StringBuilder();
-		String[] seperateUrl = encoderUrl.split("\\$");
+        return decodeUrl.toString();
+    }
 
-		int count = seperateUrl.length / 2;
+    private static String getUrlDecoder(String url)
+    {
+        final int SEED_LENGTH = 5;
 
-		// 앞의것 2개는 Url, 뒤의것 2개는 API
-		for (int i = 0; i < count; i++)
-		{
-			String locatinoNumber = new String(Base64.decode(seperateUrl[i * 2], Base64.NO_WRAP));
-			StringBuilder encodeUrl = new StringBuilder(locatinoNumber);
-			encodeUrl.append(seperateUrl[i * 2 + 1]);
+        String decodeUrl = null;
+        String[] text = url.split("\\$");
 
-			decodeUrl.append(getUrlDecoder(encodeUrl.toString()));
-		}
+        // 앞의 5개가 위치키이다.
+        StringBuilder seed = new StringBuilder();
+        StringBuilder base64Url = new StringBuilder(text[SEED_LENGTH]);
+        char[] alpha = new char[1];
 
-		if (param != null)
-		{
-			decodeUrl.append(param);
-		}
+        for (int i = SEED_LENGTH - 1; i >= 0; i--)
+        {
+            try
+            {
+                int location = Integer.parseInt(text[i]);
 
-		return decodeUrl.toString();
-	}
+                base64Url.getChars(location, location + 1, alpha, 0);
+                base64Url.delete(location, location + 1);
 
-	private static String getUrlDecoder(String url)
-	{
-		final int SEED_LENGTH = 5;
+                seed.insert(0, alpha);
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+        }
 
-		String decodeUrl = null;
-		String[] text = url.split("\\$");
+        try
+        {
+            decodeUrl = Crypto.decrypt(seed.toString(), base64Url.toString());
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
 
-		// 앞의 5개가 위치키이다.
-		StringBuilder seed = new StringBuilder();
-		StringBuilder base64Url = new StringBuilder(text[SEED_LENGTH]);
-		char[] alpha = new char[1];
+        return decodeUrl;
+    }
 
-		for (int i = SEED_LENGTH - 1; i >= 0; i--)
-		{
-			try
-			{
-				int location = Integer.parseInt(text[i]);
+    @Override
+    protected abstract Response<T> parseNetworkResponse(NetworkResponse response);
 
-				base64Url.getChars(location, location + 1, alpha, 0);
-				base64Url.delete(location, location + 1);
+    @Override
+    protected abstract void deliverResponse(T response);
 
-				seed.insert(0, alpha);
-			} catch (Exception e)
-			{
-				ExLog.d(e.toString());
-			}
-		}
+    @Override
+    protected Map<String, String> getParams()
+    {
+        return mParameters;
+    }
 
-		try
-		{
-			decodeUrl = Crypto.decrypt(seed.toString(), base64Url.toString());
-		} catch (Exception e)
-		{
-			ExLog.d(e.toString());
-		}
+    @Override
+    public Map<String, String> getHeaders() throws AuthFailureError
+    {
+        HashMap<String, String> map = new HashMap<String, String>();
+        map.put("os-type", "android");
+        map.put("app-version", DailyHotel.VERSION);
 
-		return decodeUrl;
-	}
+        return map;
+    }
 
-	//	public static void makeUrlEncoder()
-	//	{
-	//		DailyHotelRequest.getUrlEncoder("api/fnb/reservation/session/vbank/account/info");
-	//	}
+    //	public static void makeUrlEncoder()
+    //	{
+    //		DailyHotelRequest.getUrlEncoder("api/fnb/reservation/session/vbank/account/info");
+    //	}
 }

@@ -35,106 +35,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:paddingRight="16dp"
-                android:text="@string/act_wait_payment_confirm"
+                android:text="@string/label_booking_confirm_signature"
                 android:textColor="@color/dialog_title_text"
                 android:textSize="17dp"
                 android:textStyle="bold"/>
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/messageLayout1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:src="@drawable/popup_ic_alert_dot"/>
-
-            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
-                android:id="@+id/messageTextView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:freezesText="true"
-                android:lineSpacingExtra="3dp"
-                android:text="@string/dialog_msg_payment_message01"
-                android:textColor="@color/dialog_message_text"
-                android:textSize="13dp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/messageLayout2"
+            android:id="@+id/messageLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:src="@drawable/popup_ic_alert_dot"/>
-
-            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
-                android:id="@+id/messageTextView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:freezesText="true"
-                android:lineSpacingExtra="3dp"
-                android:text="@string/dialog_msg_payment_message02"
-                android:textColor="@color/dialog_message_text"
-                android:textSize="13dp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/messageLayout3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:src="@drawable/popup_ic_alert_dot"/>
-
-            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
-                android:id="@+id/messageTextView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:freezesText="true"
-                android:lineSpacingExtra="3dp"
-                android:text="@string/dialog_msg_payment_message03"
-                android:textColor="@color/dialog_message_text"
-                android:textSize="13dp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/messageLayout4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:visibility="gone">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:src="@drawable/popup_ic_alert_dot"/>
-
-            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
-                android:id="@+id/messageTextView4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:freezesText="true"
-                android:lineSpacingExtra="3dp"
-                android:textColor="@color/dialog_message_text"
-                android:textSize="13dp"/>
-        </LinearLayout>
+            android:orientation="vertical"/>
 
         <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
             android:layout_width="match_parent"
@@ -142,8 +53,8 @@
             android:layout_marginTop="22dp"
             android:freezesText="true"
             android:gravity="center"
-            android:lineSpacingExtra="3dp"
-            android:text="@string/dialog_msg_payment_message07"
+            android:lineSpacingExtra="-2dp"
+            android:text="@string/dialog_msg_hotel_payment_message06"
             android:textColor="@color/dialog_agree_text"
             android:textSize="13dp"/>
     </LinearLayout>
