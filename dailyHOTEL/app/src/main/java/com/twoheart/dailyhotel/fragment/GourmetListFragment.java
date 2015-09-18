@@ -27,11 +27,11 @@ import android.widget.Toast;
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
-import com.twoheart.dailyhotel.adapter.FnBListAdapter;
+import com.twoheart.dailyhotel.adapter.GourmetListAdapter;
 import com.twoheart.dailyhotel.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.fragment.PlaceMainFragment.VIEW_TYPE;
 import com.twoheart.dailyhotel.model.Area;
-import com.twoheart.dailyhotel.model.FnB;
+import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
@@ -39,7 +39,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.view.FnBViewItem;
+import com.twoheart.dailyhotel.view.GourmetViewItem;
 import com.twoheart.dailyhotel.view.PlaceViewItem;
 import com.twoheart.dailyhotel.view.widget.DailyHotelHeaderTransformer;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
@@ -55,12 +55,12 @@ import uk.co.senab.actionbarpulltorefresh.library.Options;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.AbsListViewDelegate;
 
-public class FnBListFragment extends PlaceListFragment
+public class GourmetListFragment extends PlaceListFragment
 {
     private PlaceListAdapter mPlaceListAdapter;
     private DailyHotelJsonResponseListener mFnBListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        private ArrayList<PlaceViewItem> makeSectionHotelList(ArrayList<FnB> fnbList)
+        private ArrayList<PlaceViewItem> makeSectionHotelList(ArrayList<Gourmet> fnbList)
         {
             ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<PlaceViewItem>();
 
@@ -72,7 +72,7 @@ public class FnBListFragment extends PlaceListFragment
             String area = null;
             boolean hasDailyChoice = false;
 
-            for (FnB fnb : fnbList)
+            for (Gourmet fnb : fnbList)
             {
                 String region = fnb.districtName;
 
@@ -87,7 +87,7 @@ public class FnBListFragment extends PlaceListFragment
                     {
                         hasDailyChoice = true;
 
-                        FnBViewItem section = new FnBViewItem(getString(R.string.label_dailychoice));
+                        GourmetViewItem section = new GourmetViewItem(getString(R.string.label_dailychoice));
                         placeViewItemList.add(section);
                     }
                 } else
@@ -96,12 +96,12 @@ public class FnBListFragment extends PlaceListFragment
                     {
                         area = region;
 
-                        FnBViewItem section = new FnBViewItem(region);
+                        GourmetViewItem section = new GourmetViewItem(region);
                         placeViewItemList.add(section);
                     }
                 }
 
-                placeViewItemList.add(new FnBViewItem(fnb));
+                placeViewItemList.add(new GourmetViewItem(fnb));
             }
 
             return placeViewItemList;
@@ -153,17 +153,17 @@ public class FnBListFragment extends PlaceListFragment
                 {
                     JSONObject jsonObject;
 
-                    ArrayList<FnB> fnbList = new ArrayList<FnB>(length);
+                    ArrayList<Gourmet> fnbList = new ArrayList<Gourmet>(length);
 
                     for (int i = 0; i < length; i++)
                     {
                         jsonObject = jsonArray.getJSONObject(i);
 
-                        FnB newFnB = new FnB();
+                        Gourmet newGourmet = new Gourmet();
 
-                        if (newFnB.setData(jsonObject) == true)
+                        if (newGourmet.setData(jsonObject) == true)
                         {
-                            fnbList.add(newFnB); // 추가.
+                            fnbList.add(newGourmet); // 추가.
                         }
                     }
 
@@ -171,9 +171,9 @@ public class FnBListFragment extends PlaceListFragment
 
                     if (mPlaceListAdapter == null)
                     {
-                        mPlaceListAdapter = new FnBListAdapter(baseActivity, R.layout.list_row_hotel, new ArrayList<PlaceViewItem>());
+                        mPlaceListAdapter = new GourmetListAdapter(baseActivity, R.layout.list_row_hotel, new ArrayList<PlaceViewItem>());
                         mListView.setAdapter(mPlaceListAdapter);
-                        mListView.setOnItemClickListener(FnBListFragment.this);
+                        mListView.setOnItemClickListener(GourmetListFragment.this);
                     }
 
                     setVisibility(mViewType);
@@ -220,7 +220,7 @@ public class FnBListFragment extends PlaceListFragment
             return null;
         }
 
-        View view = inflater.inflate(R.layout.fragment_fnb_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_gourmet_list, container, false);
 
         mListView = (PinnedSectionListView) view.findViewById(R.id.listview_hotel_list);
 
@@ -305,7 +305,7 @@ public class FnBListFragment extends PlaceListFragment
     @Override
     public void onStart()
     {
-        AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.FNB_LIST);
+        AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.GOURMET_LIST);
         super.onStart();
     }
 
@@ -410,6 +410,6 @@ public class FnBListFragment extends PlaceListFragment
     @Override
     protected PlaceMapFragment createPlaceMapFragment()
     {
-        return new FnBMapFragment();
+        return new GourmetMapFragment();
     }
 }

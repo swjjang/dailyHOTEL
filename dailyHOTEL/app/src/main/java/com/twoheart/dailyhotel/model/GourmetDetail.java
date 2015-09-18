@@ -5,9 +5,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class FnBDetail extends PlaceDetail
+public class GourmetDetail extends PlaceDetail
 {
-    public FnBDetail(int index)
+    public GourmetDetail(int index)
     {
         super(index);
     }

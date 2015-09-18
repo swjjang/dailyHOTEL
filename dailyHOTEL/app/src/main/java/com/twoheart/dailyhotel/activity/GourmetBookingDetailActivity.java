@@ -13,10 +13,10 @@ import android.view.View;
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.BaseFragment;
-import com.twoheart.dailyhotel.fragment.FnBTabBookingFragment;
+import com.twoheart.dailyhotel.fragment.GourmetTabBookingFragment;
 import com.twoheart.dailyhotel.fragment.PlaceTabInfoFragment;
 import com.twoheart.dailyhotel.fragment.PlaceTabMapFragment;
-import com.twoheart.dailyhotel.model.FnBBookingDetail;
+import com.twoheart.dailyhotel.model.GourmetBookingDetail;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.view.widget.FragmentViewPager;
@@ -25,7 +25,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class FnBBookingDetailActivity extends PlaceBookingDetailActivity
+public class GourmetBookingDetailActivity extends PlaceBookingDetailActivity
 {
     private DailyHotelJsonResponseListener mReservationBookingDetailJsonResponseListener = new DailyHotelJsonResponseListener()
     {
@@ -47,7 +47,7 @@ public class FnBBookingDetailActivity extends PlaceBookingDetailActivity
 
                     if (mPlaceBookingDetail == null)
                     {
-                        mPlaceBookingDetail = new FnBBookingDetail();
+                        mPlaceBookingDetail = new GourmetBookingDetail();
                     }
 
                     mPlaceBookingDetail.setData(jsonObject);
@@ -97,7 +97,7 @@ public class FnBBookingDetailActivity extends PlaceBookingDetailActivity
 
             ArrayList<BaseFragment> mFragmentList = new ArrayList<BaseFragment>();
 
-            BaseFragment baseFragment01 = FnBTabBookingFragment.newInstance(mPlaceBookingDetail, booking, getString(R.string.drawer_menu_pin_title_resrvation));
+            BaseFragment baseFragment01 = GourmetTabBookingFragment.newInstance(mPlaceBookingDetail, booking, getString(R.string.drawer_menu_pin_title_resrvation));
             mFragmentList.add(baseFragment01);
 
             BaseFragment baseFragment02 = PlaceTabInfoFragment.newInstance(mPlaceBookingDetail, titleList.get(1));

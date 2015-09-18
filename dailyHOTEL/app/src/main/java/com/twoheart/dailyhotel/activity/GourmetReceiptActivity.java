@@ -16,7 +16,7 @@ import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 
-public class FnBReceiptActivity extends PlaceReceiptActivity
+public class GourmetReceiptActivity extends PlaceReceiptActivity
 {
     private DailyHotelJsonResponseListener mReservReceiptJsonResponseListener = new DailyHotelJsonResponseListener()
     {
@@ -206,7 +206,7 @@ public class FnBReceiptActivity extends PlaceReceiptActivity
 
         LinearLayout receiptLayout = (LinearLayout) viewGroup.findViewById(R.id.receiptLayout);
 
-        View reservationInfoLayout = inflater.inflate(R.layout.layout_fnb_reservationinfo_receipt, null, false);
+        View reservationInfoLayout = inflater.inflate(R.layout.layout_gourmet_reservationinfo_receipt, null, false);
 
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, Util.dpToPx(this, 165));
         receiptLayout.addView(reservationInfoLayout, 0, layoutParams);

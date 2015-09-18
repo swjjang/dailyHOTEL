@@ -11,20 +11,20 @@ import android.widget.Toast;
 
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.FnBDetail;
+import com.twoheart.dailyhotel.model.GourmetDetail;
 import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
-import com.twoheart.dailyhotel.view.FnBDetailLayout;
+import com.twoheart.dailyhotel.view.GourmetDetailLayout;
 import com.twoheart.dailyhotel.view.PlaceDetailLayout;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 
 import org.json.JSONObject;
 
-public class FnBDetailActivity extends PlaceDetailActivity
+public class GourmetDetailActivity extends PlaceDetailActivity
 {
     private DailyHotelJsonResponseListener mFnBDetailJsonResponseListener = new DailyHotelJsonResponseListener()
     {
@@ -46,7 +46,7 @@ public class FnBDetailActivity extends PlaceDetailActivity
                     {
                         String msg = response.getString("msg");
 
-                        DailyToast.showToast(FnBDetailActivity.this, msg, Toast.LENGTH_SHORT);
+                        DailyToast.showToast(GourmetDetailActivity.this, msg, Toast.LENGTH_SHORT);
                         finish();
                         return;
                     } else
@@ -83,7 +83,7 @@ public class FnBDetailActivity extends PlaceDetailActivity
     @Override
     protected PlaceDetailLayout getLayout(BaseActivity activity, String imageUrl)
     {
-        return new FnBDetailLayout(activity, imageUrl);
+        return new GourmetDetailLayout(activity, imageUrl);
     }
 
     @Override
@@ -96,7 +96,7 @@ public class FnBDetailActivity extends PlaceDetailActivity
 
         int index = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, -1);
 
-        return new FnBDetail(index);
+        return new GourmetDetail(index);
     }
 
     @Override
@@ -134,7 +134,7 @@ public class FnBDetailActivity extends PlaceDetailActivity
             return;
         }
 
-        Intent intent = new Intent(this, FnBPaymentActivity.class);
+        Intent intent = new Intent(this, GourmetPaymentActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TICKETINFORMATION, ticketInformation);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);
 

@@ -8,29 +8,29 @@ import com.twoheart.dailyhotel.util.ExLog;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class FnB extends Place implements Parcelable
+public class Gourmet extends Place implements Parcelable
 {
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
     {
-        public FnB createFromParcel(Parcel in)
+        public Gourmet createFromParcel(Parcel in)
         {
-            return new FnB(in);
+            return new Gourmet(in);
         }
 
         @Override
-        public FnB[] newArray(int size)
+        public Gourmet[] newArray(int size)
         {
-            return new FnB[size];
+            return new Gourmet[size];
         }
     };
     public String saleDay;
 
-    public FnB()
+    public Gourmet()
     {
         super();
     }
 
-    public FnB(Parcel in)
+    public Gourmet(Parcel in)
     {
         readFromParcel(in);
     }

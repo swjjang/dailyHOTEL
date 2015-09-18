@@ -26,9 +26,9 @@ import com.twoheart.dailyhotel.util.VolleyImageLoader;
 
 import java.text.DecimalFormat;
 
-public class FnBViewPagerAdapter extends PlaceViewPagerAdapter
+public class GourmetViewPagerAdapter extends PlaceViewPagerAdapter
 {
-    public FnBViewPagerAdapter(Context context)
+    public GourmetViewPagerAdapter(Context context)
     {
         super(context);
     }

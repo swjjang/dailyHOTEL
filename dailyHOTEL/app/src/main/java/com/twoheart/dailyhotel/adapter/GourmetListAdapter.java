@@ -23,9 +23,9 @@ import com.twoheart.dailyhotel.view.PlaceViewItem;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-public class FnBListAdapter extends PlaceListAdapter
+public class GourmetListAdapter extends PlaceListAdapter
 {
-    public FnBListAdapter(Context context, int resourceId, ArrayList<PlaceViewItem> arrayList)
+    public GourmetListAdapter(Context context, int resourceId, ArrayList<PlaceViewItem> arrayList)
     {
         super(context, resourceId, arrayList);
     }

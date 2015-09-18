@@ -30,7 +30,7 @@ import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.BookingTabActivity;
-import com.twoheart.dailyhotel.activity.FnBBookingDetailActivity;
+import com.twoheart.dailyhotel.activity.GourmetBookingDetailActivity;
 import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.activity.PaymentWaitActivity;
 import com.twoheart.dailyhotel.adapter.BookingListAdapter;
@@ -708,7 +708,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                     break;
 
                 case FNB:
-                    intent = new Intent(baseActivity, FnBBookingDetailActivity.class);
+                    intent = new Intent(baseActivity, GourmetBookingDetailActivity.class);
                     break;
             }
 

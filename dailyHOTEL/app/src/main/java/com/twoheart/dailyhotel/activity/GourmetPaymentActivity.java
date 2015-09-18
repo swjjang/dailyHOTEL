@@ -24,7 +24,7 @@ import android.widget.Toast;
 
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.activity.FnBBookingLayout.UserInformationType;
+import com.twoheart.dailyhotel.activity.GourmetBookingLayout.UserInformationType;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.Guest;
 import com.twoheart.dailyhotel.model.SaleTime;
@@ -51,9 +51,9 @@ import java.util.Map;
 import java.util.TimeZone;
 
 @SuppressLint({"NewApi", "ResourceAsColor"})
-public class FnBPaymentActivity extends TicketPaymentActivity
+public class GourmetPaymentActivity extends TicketPaymentActivity
 {
-    private FnBBookingLayout mFnBBookingLayout;
+    private GourmetBookingLayout mGourmetBookingLayout;
     private boolean mIsChangedTime;
     private OnUserActionListener mOnUserActionListener = new OnUserActionListener()
     {
@@ -81,14 +81,14 @@ public class FnBPaymentActivity extends TicketPaymentActivity
 
             if (++position >= length)
             {
-                mFnBBookingLayout.setTicketTimePlusButtonEnabled(false);
-                DailyToast.showToast(FnBPaymentActivity.this, getString(R.string.toast_msg_none_reservationtime_ticket), Toast.LENGTH_SHORT);
+                mGourmetBookingLayout.setTicketTimePlusButtonEnabled(false);
+                DailyToast.showToast(GourmetPaymentActivity.this, getString(R.string.toast_msg_none_reservationtime_ticket), Toast.LENGTH_SHORT);
             } else
             {
                 mTicketPayment.ticketTime = mTicketPayment.ticketTimes[position];
 
-                mFnBBookingLayout.setTicketTimeMinusButtonEnabled(true);
-                mFnBBookingLayout.setTicketTime(mTicketPayment.ticketTime);
+                mGourmetBookingLayout.setTicketTimeMinusButtonEnabled(true);
+                mGourmetBookingLayout.setTicketTime(mTicketPayment.ticketTime);
             }
         }
 
@@ -116,13 +116,13 @@ public class FnBPaymentActivity extends TicketPaymentActivity
 
             if (--position < 0)
             {
-                mFnBBookingLayout.setTicketTimeMinusButtonEnabled(false);
+                mGourmetBookingLayout.setTicketTimeMinusButtonEnabled(false);
             } else
             {
                 mTicketPayment.ticketTime = mTicketPayment.ticketTimes[position];
 
-                mFnBBookingLayout.setTicketTimePlusButtonEnabled(true);
-                mFnBBookingLayout.setTicketTime(mTicketPayment.ticketTime);
+                mGourmetBookingLayout.setTicketTimePlusButtonEnabled(true);
+                mGourmetBookingLayout.setTicketTime(mTicketPayment.ticketTime);
             }
         }
 
@@ -134,16 +134,16 @@ public class FnBPaymentActivity extends TicketPaymentActivity
 
             if (count >= maxCount)
             {
-                mFnBBookingLayout.setTicketCountPlusButtonEnabled(false);
-                DailyToast.showToast(FnBPaymentActivity.this, getString(R.string.toast_msg_maxcount_ticket, maxCount), Toast.LENGTH_SHORT);
+                mGourmetBookingLayout.setTicketCountPlusButtonEnabled(false);
+                DailyToast.showToast(GourmetPaymentActivity.this, getString(R.string.toast_msg_maxcount_ticket, maxCount), Toast.LENGTH_SHORT);
             } else
             {
                 mTicketPayment.ticketCount = count + 1;
-                mFnBBookingLayout.setTicketCount(mTicketPayment.ticketCount);
-                mFnBBookingLayout.setTicketCountMinusButtonEnabled(true);
+                mGourmetBookingLayout.setTicketCount(mTicketPayment.ticketCount);
+                mGourmetBookingLayout.setTicketCountMinusButtonEnabled(true);
 
                 // 결제 가격을 바꾸어야 한다.
-                mFnBBookingLayout.updatePaymentInformationLayout(FnBPaymentActivity.this, mTicketPayment, mSelectedCreditCard);
+                mGourmetBookingLayout.updatePaymentInformationLayout(GourmetPaymentActivity.this, mTicketPayment, mSelectedCreditCard);
             }
         }
 
@@ -154,15 +154,15 @@ public class FnBPaymentActivity extends TicketPaymentActivity
 
             if (count <= 1)
             {
-                mFnBBookingLayout.setTicketCountMinusButtonEnabled(false);
+                mGourmetBookingLayout.setTicketCountMinusButtonEnabled(false);
             } else
             {
                 mTicketPayment.ticketCount = count - 1;
-                mFnBBookingLayout.setTicketCount(mTicketPayment.ticketCount);
-                mFnBBookingLayout.setTicketCountPlusButtonEnabled(true);
+                mGourmetBookingLayout.setTicketCount(mTicketPayment.ticketCount);
+                mGourmetBookingLayout.setTicketCountPlusButtonEnabled(true);
 
                 // 결제 가격을 바꾸어야 한다.
-                mFnBBookingLayout.updatePaymentInformationLayout(FnBPaymentActivity.this, mTicketPayment, mSelectedCreditCard);
+                mGourmetBookingLayout.updatePaymentInformationLayout(GourmetPaymentActivity.this, mTicketPayment, mSelectedCreditCard);
             }
         }
 
@@ -176,9 +176,9 @@ public class FnBPaymentActivity extends TicketPaymentActivity
 
             mIsEditMode = true;
 
-            if (mFnBBookingLayout != null)
+            if (mGourmetBookingLayout != null)
             {
-                mFnBBookingLayout.enabledEditUserInformation();
+                mGourmetBookingLayout.enabledEditUserInformation();
             }
         }
 
@@ -193,11 +193,11 @@ public class FnBPaymentActivity extends TicketPaymentActivity
             if (mIsEditMode == true)
             {
                 // 현재 수정 사항을 기억한다.
-                Guest editGuest = mFnBBookingLayout.getGuest();
+                Guest editGuest = mGourmetBookingLayout.getGuest();
                 mTicketPayment.setGuest(editGuest);
             }
 
-            Intent intent = new Intent(FnBPaymentActivity.this, CreditCardListActivity.class);
+            Intent intent = new Intent(GourmetPaymentActivity.this, CreditCardListActivity.class);
             intent.setAction(Intent.ACTION_PICK);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_CREDITCARD, mSelectedCreditCard);
 
@@ -222,39 +222,39 @@ public class FnBPaymentActivity extends TicketPaymentActivity
             // 수정 모드인 경우 데이터를 다시 받아와야 한다.
             if (mIsEditMode == true)
             {
-                Guest guest = mFnBBookingLayout.getGuest();
+                Guest guest = mGourmetBookingLayout.getGuest();
 
                 if (Util.isTextEmpty(guest.name) == true)
                 {
                     releaseUiComponent();
 
-                    mFnBBookingLayout.requestUserInformationFocus(UserInformationType.NAME);
+                    mGourmetBookingLayout.requestUserInformationFocus(UserInformationType.NAME);
 
-                    DailyToast.showToast(FnBPaymentActivity.this, R.string.toast_msg_please_input_guest, Toast.LENGTH_SHORT);
+                    DailyToast.showToast(GourmetPaymentActivity.this, R.string.toast_msg_please_input_guest, Toast.LENGTH_SHORT);
                     return;
                 } else if (Util.isTextEmpty(guest.phone) == true)
                 {
                     releaseUiComponent();
 
-                    mFnBBookingLayout.requestUserInformationFocus(UserInformationType.PHONE);
+                    mGourmetBookingLayout.requestUserInformationFocus(UserInformationType.PHONE);
 
-                    DailyToast.showToast(FnBPaymentActivity.this, R.string.toast_msg_please_input_contact, Toast.LENGTH_SHORT);
+                    DailyToast.showToast(GourmetPaymentActivity.this, R.string.toast_msg_please_input_contact, Toast.LENGTH_SHORT);
                     return;
                 } else if (Util.isTextEmpty(guest.email) == true)
                 {
                     releaseUiComponent();
 
-                    mFnBBookingLayout.requestUserInformationFocus(UserInformationType.EMAIL);
+                    mGourmetBookingLayout.requestUserInformationFocus(UserInformationType.EMAIL);
 
-                    DailyToast.showToast(FnBPaymentActivity.this, R.string.toast_msg_please_input_email, Toast.LENGTH_SHORT);
+                    DailyToast.showToast(GourmetPaymentActivity.this, R.string.toast_msg_please_input_email, Toast.LENGTH_SHORT);
                     return;
                 } else if (android.util.Patterns.EMAIL_ADDRESS.matcher(guest.email).matches() == false)
                 {
                     releaseUiComponent();
 
-                    mFnBBookingLayout.requestUserInformationFocus(UserInformationType.EMAIL);
+                    mGourmetBookingLayout.requestUserInformationFocus(UserInformationType.EMAIL);
 
-                    DailyToast.showToast(FnBPaymentActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
+                    DailyToast.showToast(GourmetPaymentActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
                     return;
                 }
             }
@@ -292,7 +292,7 @@ public class FnBPaymentActivity extends TicketPaymentActivity
         @Override
         public void showCallDialog()
         {
-            FnBPaymentActivity.this.showCallDialog();
+            GourmetPaymentActivity.this.showCallDialog();
         }
     };
 
@@ -318,7 +318,7 @@ public class FnBPaymentActivity extends TicketPaymentActivity
 
                 if (isOnSale == true && msg_code == 0)
                 {
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_INFO).toString(), null, mUserSessionBillingCardInfoJsonResponseListener, FnBPaymentActivity.this));
+                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_INFO).toString(), null, mUserSessionBillingCardInfoJsonResponseListener, GourmetPaymentActivity.this));
                 } else
                 {
                     if (response.has("msg") == true)
@@ -585,9 +585,9 @@ public class FnBPaymentActivity extends TicketPaymentActivity
         System.gc();
 
         mTicketPayment = new TicketPayment();
-        mFnBBookingLayout = new FnBBookingLayout(this, mOnUserActionListener);
+        mGourmetBookingLayout = new GourmetBookingLayout(this, mOnUserActionListener);
 
-        setContentView(mFnBBookingLayout.getLayout());
+        setContentView(mGourmetBookingLayout.getLayout());
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null)
@@ -668,23 +668,23 @@ public class FnBPaymentActivity extends TicketPaymentActivity
     @Override
     protected void updateLayout(TicketPayment ticketPayment, CreditCard creditCard)
     {
-        if (mFnBBookingLayout == null || ticketPayment == null)
+        if (mGourmetBookingLayout == null || ticketPayment == null)
         {
             return;
         }
 
-        mFnBBookingLayout.setTicketPayment(ticketPayment, creditCard);
+        mGourmetBookingLayout.setTicketPayment(ticketPayment, creditCard);
     }
 
     @Override
     protected void updatePaymentInformation(TicketPayment ticketPayment, CreditCard creditCard)
     {
-        if (mFnBBookingLayout == null || ticketPayment == null)
+        if (mGourmetBookingLayout == null || ticketPayment == null)
         {
             return;
         }
 
-        mFnBBookingLayout.updatePaymentInformationLayout(this, ticketPayment, creditCard);
+        mGourmetBookingLayout.updatePaymentInformationLayout(this, ticketPayment, creditCard);
     }
 
     @Override
@@ -695,9 +695,9 @@ public class FnBPaymentActivity extends TicketPaymentActivity
             mTicketPayment.paymentType = type;
         }
 
-        if (mFnBBookingLayout != null)
+        if (mGourmetBookingLayout != null)
         {
-            mFnBBookingLayout.checkPaymentType(type);
+            mGourmetBookingLayout.checkPaymentType(type);
         }
     }
 
@@ -762,7 +762,7 @@ public class FnBPaymentActivity extends TicketPaymentActivity
 
         int[] messageResIds = {R.string.dialog_msg_gourmet_payment_message01, R.string.dialog_msg_gourmet_payment_message02, R.string.dialog_msg_gourmet_payment_message03};
 
-        final FinalCheckLayout finalCheckLayout = new FinalCheckLayout(FnBPaymentActivity.this, messageResIds);
+        final FinalCheckLayout finalCheckLayout = new FinalCheckLayout(GourmetPaymentActivity.this, messageResIds);
         final TextView agreeSinatureTextView = (TextView) finalCheckLayout.findViewById(R.id.agreeSinatureTextView);
         final View agreeLayout = finalCheckLayout.findViewById(R.id.agreeLayout);
 
@@ -810,7 +810,7 @@ public class FnBPaymentActivity extends TicketPaymentActivity
                     @Override
                     public void onClick(View v)
                     {
-                        synchronized (FnBPaymentActivity.this)
+                        synchronized (GourmetPaymentActivity.this)
                         {
                             if (isLockUiComponent() == true)
                             {
@@ -822,7 +822,7 @@ public class FnBPaymentActivity extends TicketPaymentActivity
                             mState = STATE_PAYMENT;
 
                             // 1. 세션이 살아있는지 검사 시작.
-                            mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, FnBPaymentActivity.this));
+                            mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, GourmetPaymentActivity.this));
 
                             mFinalCheckDialog.dismiss();
 
@@ -946,7 +946,7 @@ public class FnBPaymentActivity extends TicketPaymentActivity
             {
                 dialog.dismiss();
 
-                synchronized (FnBPaymentActivity.this)
+                synchronized (GourmetPaymentActivity.this)
                 {
                     if (isLockUiComponent() == true)
                     {
@@ -958,7 +958,7 @@ public class FnBPaymentActivity extends TicketPaymentActivity
                     mState = STATE_PAYMENT;
 
                     // 1. 세션이 살아있는지 검사 시작.
-                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, FnBPaymentActivity.this));
+                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, GourmetPaymentActivity.this));
 
                     HashMap<String, String> params = new HashMap<String, String>();
                     params.put(AnalyticsManager.Label.PLACE_TICKET_INDEX, String.valueOf(mTicketPayment.getTicketInformation().index));

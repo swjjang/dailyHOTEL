@@ -12,7 +12,7 @@
 
     <include
         android:id="@+id/emptyView"
-        layout="@layout/view_empty_fnb_list"
+        layout="@layout/view_empty_gourmet_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="56dp"

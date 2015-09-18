@@ -19,11 +19,11 @@ import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
-import com.twoheart.dailyhotel.activity.FnBDetailActivity;
+import com.twoheart.dailyhotel.activity.GourmetDetailActivity;
 import com.twoheart.dailyhotel.activity.SelectAreaActivity;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.AreaItem;
-import com.twoheart.dailyhotel.model.FnB;
+import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
@@ -42,7 +42,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class FnBMainFragment extends PlaceMainFragment
+public class GourmetMainFragment extends PlaceMainFragment
 {
     private ArrayList<PlaceListFragment> mFragmentList;
     private ArrayList<AreaItem> mAreaItemList;
@@ -115,7 +115,7 @@ public class FnBMainFragment extends PlaceMainFragment
             {
                 case PlaceViewItem.TYPE_ENTRY:
                 {
-                    FnB fnb = (FnB) baseListViewItem.getPlace();
+                    Gourmet fnb = (Gourmet) baseListViewItem.getPlace();
 
                     String region = baseActivity.sharedPreference.getString(KEY_PREFERENCE_FNB_REGION_SELECT, "");
                     SharedPreferences.Editor editor = baseActivity.sharedPreference.edit();
@@ -123,7 +123,7 @@ public class FnBMainFragment extends PlaceMainFragment
                     editor.putString(KEY_PREFERENCE_PLACE_NAME_GA, fnb.name);
                     editor.commit();
 
-                    Intent intent = new Intent(baseActivity, FnBDetailActivity.class);
+                    Intent intent = new Intent(baseActivity, GourmetDetailActivity.class);
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkSaleTime);
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, fnb.index);
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, fnb.name);
@@ -159,7 +159,7 @@ public class FnBMainFragment extends PlaceMainFragment
 
             lockUI();
 
-            Intent intent = new Intent(baseActivity, FnBDetailActivity.class);
+            Intent intent = new Intent(baseActivity, GourmetDetailActivity.class);
 
             intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
             intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, index);
@@ -452,7 +452,7 @@ public class FnBMainFragment extends PlaceMainFragment
     @Override
     public View createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.fragment_fnb_main, container, false);
+        View view = inflater.inflate(R.layout.fragment_gourmet_main, container, false);
 
         mHeaderSectionLayout = view.findViewById(R.id.headerSectionBar);
         mHeaderSectionLayout.setOnClickListener(new View.OnClickListener()
@@ -469,7 +469,7 @@ public class FnBMainFragment extends PlaceMainFragment
 
         setOnUserActionListener(mOnFnBUserActionListener);
 
-        FnBListFragment fnbListFragment = new FnBListFragment();
+        GourmetListFragment fnbListFragment = new GourmetListFragment();
         fnbListFragment.setUserActionListener(mOnFnBUserActionListener);
         mFragmentList.add(fnbListFragment);
 
@@ -544,7 +544,7 @@ public class FnBMainFragment extends PlaceMainFragment
     @Override
     protected void refreshList(Province province, boolean isSelectionTop)
     {
-        FnBListFragment fnbListFragment = (FnBListFragment) mFragmentViewPager.getCurrentFragment();
+        GourmetListFragment fnbListFragment = (GourmetListFragment) mFragmentViewPager.getCurrentFragment();
         fnbListFragment.refreshList(province, isSelectionTop);
     }
 

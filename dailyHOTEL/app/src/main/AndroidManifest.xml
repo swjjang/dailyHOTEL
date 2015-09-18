@@ -102,7 +102,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.FnBDetailActivity"
+            android:name=".activity.GourmetDetailActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
@@ -118,7 +118,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.FnBBookingDetailActivity"
+            android:name=".activity.GourmetBookingDetailActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
@@ -165,7 +165,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppBaseTheme"/>
         <activity
-            android:name=".activity.FnBPaymentActivity"
+            android:name=".activity.GourmetPaymentActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppBaseTheme"/>
@@ -195,7 +195,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.FnBReceiptActivity"
+            android:name=".activity.GourmetReceiptActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity

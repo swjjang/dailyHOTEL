@@ -46,7 +46,7 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class FnBBookingLayout implements OnCheckedChangeListener
+public class GourmetBookingLayout implements OnCheckedChangeListener
 {
     private BaseActivity mActivity;
 
@@ -65,9 +65,9 @@ public class FnBBookingLayout implements OnCheckedChangeListener
     private View mTicketCountMinusButton, mTicketCountPlusButton;
     private View mTicketTimeMinusButton, mTicketTimePlusButton;
 
-    private FnBPaymentActivity.OnUserActionListener mOnUserActionListener;
+    private GourmetPaymentActivity.OnUserActionListener mOnUserActionListener;
 
-    public FnBBookingLayout(BaseActivity activity, FnBPaymentActivity.OnUserActionListener listener)
+    public GourmetBookingLayout(BaseActivity activity, GourmetPaymentActivity.OnUserActionListener listener)
     {
         mActivity = activity;
         mOnUserActionListener = listener;
@@ -83,19 +83,19 @@ public class FnBBookingLayout implements OnCheckedChangeListener
         ViewGroup bookingLayout = (ViewGroup) mViewGroupRoot.findViewById(R.id.bookingLayout);
 
         // 결제 정보 넣기
-        mPaymentInformation = inflater.inflate(R.layout.layout_booking_fnb_payment_information, null, false);
+        mPaymentInformation = inflater.inflate(R.layout.layout_booking_gourmet_payment_information, null, false);
         bookingLayout.addView(mPaymentInformation, 0);
 
         initPaymentInformationLayout(activity, mPaymentInformation);
 
         // 예약자 정보 넣기
-        mUserInformation = inflater.inflate(R.layout.layout_booking_fnb_user_information, null, false);
+        mUserInformation = inflater.inflate(R.layout.layout_booking_gourmet_user_information, null, false);
         bookingLayout.addView(mUserInformation, 0);
 
         initUserInformationLayout(activity, mUserInformation);
 
         // 상품 정보 넣기
-        mTicketInformation = inflater.inflate(R.layout.layout_booking_fnb_ticket_information, null, false);
+        mTicketInformation = inflater.inflate(R.layout.layout_booking_gourmet_ticket_information, null, false);
         bookingLayout.addView(mTicketInformation, 0);
 
         initTicketInformationLayout(activity, mTicketInformation);
@@ -628,9 +628,9 @@ public class FnBBookingLayout implements OnCheckedChangeListener
     private class TelophoneClickSpannable extends ClickableSpan
     {
         private Context mContext;
-        private FnBPaymentActivity.OnUserActionListener mOnUserActionListener;
+        private GourmetPaymentActivity.OnUserActionListener mOnUserActionListener;
 
-        public TelophoneClickSpannable(Context context, FnBPaymentActivity.OnUserActionListener listener)
+        public TelophoneClickSpannable(Context context, GourmetPaymentActivity.OnUserActionListener listener)
         {
             mContext = context;
             mOnUserActionListener = listener;

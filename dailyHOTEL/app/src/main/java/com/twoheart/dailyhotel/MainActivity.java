@@ -65,7 +65,7 @@ import com.twoheart.dailyhotel.fragment.BookingListFragment;
 import com.twoheart.dailyhotel.fragment.CreditFragment;
 import com.twoheart.dailyhotel.fragment.ErrorFragment;
 import com.twoheart.dailyhotel.fragment.EventListFragment;
-import com.twoheart.dailyhotel.fragment.FnBMainFragment;
+import com.twoheart.dailyhotel.fragment.GourmetMainFragment;
 import com.twoheart.dailyhotel.fragment.HotelMainFragment;
 import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.fragment.RatingHotelFragment;
@@ -739,7 +739,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
             case INDEX_HOTEL_LIST_FRAGMENT:
                 return new HotelMainFragment();
             case INDEX_FNB_LIST_FRAGMENT:
-                return new FnBMainFragment();
+                return new GourmetMainFragment();
             case INDEX_BOOKING_LIST_FRAGMENT:
                 return new BookingListFragment();
             case INDEX_CREDIT_FRAGMENT:
@@ -836,7 +836,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                 AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.MENU, Action.CLICK, getString(R.string.actionbar_title_hotel_list_frag), (long) position);
                 break;
 
-            case R.drawable.selector_drawermenu_fnb:
+            case R.drawable.selector_drawermenu_gourmet:
                 indexLastFragment = INDEX_FNB_LIST_FRAGMENT;
 
                 // 이벤트 진입시에 이벤트 new를 제거한다.
@@ -1049,7 +1049,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
         mDrawerList = (ListView) findViewById(R.id.drawListView);
 
         menuHotelListFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_todays_hotel), R.drawable.selector_drawermenu_todayshotel, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
-        menuFnBListFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_todays_fnb), R.drawable.selector_drawermenu_fnb, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
+        menuFnBListFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_todays_fnb), R.drawable.selector_drawermenu_gourmet, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
         menuBookingListFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_chk_reservation), R.drawable.selector_drawermenu_reservation, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
         menuCreditFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_credit), R.drawable.selector_drawermenu_saving, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
         menuEventListFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_event), R.drawable.selector_drawermenu_eventlist, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);

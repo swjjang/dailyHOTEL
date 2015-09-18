@@ -11,30 +11,30 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class FnBBookingDetail extends PlaceBookingDetail
+public class GourmetBookingDetail extends PlaceBookingDetail
 {
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
     {
-        public FnBBookingDetail createFromParcel(Parcel in)
+        public GourmetBookingDetail createFromParcel(Parcel in)
         {
-            return new FnBBookingDetail(in);
+            return new GourmetBookingDetail(in);
         }
 
         @Override
-        public FnBBookingDetail[] newArray(int size)
+        public GourmetBookingDetail[] newArray(int size)
         {
-            return new FnBBookingDetail[size];
+            return new GourmetBookingDetail[size];
         }
     };
     public int ticketCount;
     public String ticketName;
     public String sday;
 
-    public FnBBookingDetail()
+    public GourmetBookingDetail()
     {
     }
 
-    public FnBBookingDetail(Parcel in)
+    public GourmetBookingDetail(Parcel in)
     {
         readFromParcel(in);
     }

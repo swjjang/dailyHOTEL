@@ -43,14 +43,14 @@ import com.twoheart.dailyhotel.view.widget.FontManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FnBDetailLayout extends PlaceDetailLayout
+public class GourmetDetailLayout extends PlaceDetailLayout
 {
     private static final int NUMBER_OF_ROWSLIST = 6;
 
-    private FnBDetailListAdapter mListAdapter;
+    private GourmetDetailListAdapter mListAdapter;
     private View mGoogleMapLayout;
 
-    public FnBDetailLayout(BaseActivity activity, String defaultImageUrl)
+    public GourmetDetailLayout(BaseActivity activity, String defaultImageUrl)
     {
         super(activity, defaultImageUrl);
     }
@@ -107,7 +107,7 @@ public class FnBDetailLayout extends PlaceDetailLayout
 
         if (mListAdapter == null)
         {
-            mListAdapter = new FnBDetailListAdapter((FragmentActivity) mActivity);
+            mListAdapter = new GourmetDetailListAdapter((FragmentActivity) mActivity);
             mListView.setAdapter(mListAdapter);
         }
 
@@ -177,13 +177,13 @@ public class FnBDetailLayout extends PlaceDetailLayout
     // Adapter
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private class FnBDetailListAdapter extends BaseAdapter
+    private class GourmetDetailListAdapter extends BaseAdapter
     {
         private FragmentActivity mFragmentActivity;
         private GoogleMap mGoogleMap;
         private SupportMapFragment mMapFragment;
 
-        public FnBDetailListAdapter(FragmentActivity activity)
+        public GourmetDetailListAdapter(FragmentActivity activity)
         {
             mFragmentActivity = activity;
         }

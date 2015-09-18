@@ -17,24 +17,24 @@ import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
-import com.twoheart.dailyhotel.activity.FnBReceiptActivity;
+import com.twoheart.dailyhotel.activity.GourmetReceiptActivity;
 import com.twoheart.dailyhotel.model.Booking;
-import com.twoheart.dailyhotel.model.FnBBookingDetail;
+import com.twoheart.dailyhotel.model.GourmetBookingDetail;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 
-public class FnBTabBookingFragment extends BaseFragment implements Constants
+public class GourmetTabBookingFragment extends BaseFragment implements Constants
 {
     private static final String KEY_BUNDLE_ARGUMENTS_PLACEBOOKINGDETAIL = "placeBookingDetail";
     private static final String KEY_BUNDLE_ARGUMENTS_BOOKING = "booking";
 
     private Booking mBooking;
-    private FnBBookingDetail mFnBBookingDetail;
+    private GourmetBookingDetail mGourmetBookingDetail;
 
-    public static FnBTabBookingFragment newInstance(PlaceBookingDetail placeBookingDetail, Booking booking, String title)
+    public static GourmetTabBookingFragment newInstance(PlaceBookingDetail placeBookingDetail, Booking booking, String title)
     {
-        FnBTabBookingFragment newFragment = new FnBTabBookingFragment();
+        GourmetTabBookingFragment newFragment = new GourmetTabBookingFragment();
 
         //관련 정보는 BookingTabActivity에서 넘겨받음.
         Bundle arguments = new Bundle();
@@ -52,7 +52,7 @@ public class FnBTabBookingFragment extends BaseFragment implements Constants
     {
         super.onCreate(savedInstanceState);
 
-        mFnBBookingDetail = (FnBBookingDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_PLACEBOOKINGDETAIL);
+        mGourmetBookingDetail = (GourmetBookingDetail) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_PLACEBOOKINGDETAIL);
         mBooking = (Booking) getArguments().getParcelable(KEY_BUNDLE_ARGUMENTS_BOOKING);
     }
 
@@ -66,7 +66,7 @@ public class FnBTabBookingFragment extends BaseFragment implements Constants
             return null;
         }
 
-        View view = inflater.inflate(R.layout.fragment_fnbbooking_tab_booking, container, false);
+        View view = inflater.inflate(R.layout.fragment_courmetbooking_tab_booking, container, false);
         TextView ticketNameTextView = (TextView) view.findViewById(R.id.ticketNameTextView);
         TextView addressTextView = (TextView) view.findViewById(R.id.addressTextView);
         TextView ticketTypeTextView = (TextView) view.findViewById(R.id.ticketTypeTextView);
@@ -76,12 +76,12 @@ public class FnBTabBookingFragment extends BaseFragment implements Constants
         TextView userPhoneTextView = (TextView) view.findViewById(R.id.userPhoneTextView);
 
         ticketNameTextView.setText(mBooking.placeName);
-        addressTextView.setText(mFnBBookingDetail.address);
-        ticketTypeTextView.setText(mFnBBookingDetail.ticketName);
-        ticketCountTextView.setText(getString(R.string.label_booking_count, mFnBBookingDetail.ticketCount));
-        dateTextView.setText(mFnBBookingDetail.sday);
-        userNameTextView.setText(mFnBBookingDetail.guestName);
-        userPhoneTextView.setText(mFnBBookingDetail.guestPhone);
+        addressTextView.setText(mGourmetBookingDetail.address);
+        ticketTypeTextView.setText(mGourmetBookingDetail.ticketName);
+        ticketCountTextView.setText(getString(R.string.label_booking_count, mGourmetBookingDetail.ticketCount));
+        dateTextView.setText(mGourmetBookingDetail.sday);
+        userNameTextView.setText(mGourmetBookingDetail.guestName);
+        userPhoneTextView.setText(mGourmetBookingDetail.guestPhone);
 
         // Android Marquee bug...
         ticketNameTextView.setSelected(true);
@@ -114,7 +114,7 @@ public class FnBTabBookingFragment extends BaseFragment implements Constants
                         return;
                     }
 
-                    Intent intent = new Intent(baseActivity, FnBReceiptActivity.class);
+                    Intent intent = new Intent(baseActivity, GourmetReceiptActivity.class);
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, mBooking.reservationIndex);
                     startActivity(intent);
                 }
