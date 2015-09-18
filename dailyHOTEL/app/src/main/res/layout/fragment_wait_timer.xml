@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="56dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/open_stanby_bg_fnb"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"/>
+
+        <LinearLayout
+            android:id="@+id/textLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+                android:id="@+id/tv_wait_timer_main"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/prefix_wait_timer_frag_todays_hotel_open"
+                android:textColor="@color/waitfragment_maintext"
+                android:textSize="18dp"
+                android:textStyle="bold"/>
+
+            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+                android:id="@+id/tv_wait_timer_sub"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:gravity="center"
+                android:lineSpacingExtra="2dp"
+                android:text="@string/frag_wait_timer_hotel_msg"
+                android:textColor="@color/waitfragment_subtext"
+                android:textSize="16dp"/>
+        </LinearLayout>
+
+        <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+            android:id="@+id/tv_timer"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_above="@id/textLayout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+            android:gravity="center"
+            android:textColor="@color/waitfragment_number"
+            android:textSize="60dp"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/alarmTimerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="25dp"
+        android:background="@drawable/open_stanby_btn_alert"
+        android:gravity="center_horizontal">
+
+        <ImageView
+            android:id="@+id/alarmImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/open_stanby_ic_alert"/>
+
+        <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+            android:id="@+id/alarmTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="11dp"
+            android:gravity="center"
+            android:text="@string/frag_wait_timer_on"
+            android:textColor="@android:color/white"
+            android:textSize="18dp"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

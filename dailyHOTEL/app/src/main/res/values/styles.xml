@@ -1,0 +1,106 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Generated with http://android-holo-colors.com -->
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/actionbar_background</item>
+        <item name="colorAccent">@color/actionbar_hamburger</item>
+        <item name="colorButtonNormal">@color/actionbar_hamburger</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="android:windowContentTransitions">true</item>
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+        <item name="android:progressBarStyleHorizontal">@style/ProgressBarDH_Theme</item>
+        <item name="android:listViewStyle">@style/ListViewDH_Theme</item>
+        <item name="android:listViewWhiteStyle">@style/ListViewDH_Theme.White</item>
+        <item name="android:spinnerItemStyle">@style/SpinnerItemDH_Theme</item>
+        <item name="android:windowBackground">@color/activity_background</item>
+        <item name="ptrHeaderBackground">@android:color/white</item>
+        <item name="ptrProgressBarColor">@color/dh_theme_color</item>
+    </style>
+
+    <style name="Theme.AppCompat.Translucent" parent="AppBaseTheme">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+    </style>
+
+    <style name="TransDialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowAnimationStyle">@style/TransDialog.Animations</item>
+    </style>
+
+    <style name="TransDialog.Animations">
+        <item name="android:windowEnterAnimation">@anim/fade_in</item>
+        <item name="android:windowExitAnimation">@anim/fade_out</item>
+    </style>
+
+    <style name="ProgressBarDH_Theme" parent="android:Widget.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/progress_horizontal_holo_light</item>
+        <item name="android:indeterminateDrawable">
+            @drawable/progress_indeterminate_horizontal_holo_light
+        </item>
+        <item name="android:minHeight">16dip</item>
+        <item name="android:maxHeight">16dip</item>
+    </style>
+
+    <style name="ListViewDH_Theme" parent="android:Widget.ListView">
+        <item name="android:listSelector">@android:color/transparent</item>
+    </style>
+
+    <style name="DropDownDH_Theme.ActionBar" parent="@style/Widget.AppCompat.Light.ListView.DropDown">
+        <item name="android:listSelector">@drawable/selectable_background</item>
+    </style>
+
+    <style name="ListViewDH_Theme.White" parent="android:Widget.ListView.White">
+        <item name="android:listSelector">@android:color/transparent</item>
+    </style>
+
+    <style name="SpinnerItemDH_Theme" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
+        <item name="android:textColor">#000000</item>
+    </style>
+
+    <style name="actionbarMenuTextAppearance">
+        <item name="android:textSize">18dp</item>
+    </style>
+
+    <style name="TextAppearance">
+        <item name="textColor">?android:attr/textColorPrimary</item>
+        <item name="textColorHighlight">?android:attr/textColorHighlight</item>
+        <item name="textColorHint">?android:attr/textColorHint</item>
+        <item name="textColorLink">?android:attr/textColorLink</item>
+        <item name="textSize">16sp</item>
+    </style>
+
+    <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">@color/actionbar_hamburger</item>
+    </style>
+
+    <style name="ToolBarStyle" parent="">
+        <item name="android:elevation">0dp</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+    </style>
+
+    <style name="Bubble.TextAppearance.Dark" parent="android:TextAppearance.Medium">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#ff7f7f7f</item>
+    </style>
+
+    <style name="Bubble.TextAppearance.Light" parent="Bubble.TextAppearance.Dark">
+        <item name="android:textColor">#ffeeeeee</item>
+    </style>
+
+</resources>

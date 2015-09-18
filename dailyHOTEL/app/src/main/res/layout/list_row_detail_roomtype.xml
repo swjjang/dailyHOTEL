@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="92dp">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/selectarea_underline"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:orientation="vertical"
+        android:paddingLeft="5dp"
+        android:paddingRight="12dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp">
+
+            <com.twoheart.dailyhotel.view.widget.DailyCustomFontButton
+                android:id="@+id/radioButton"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/selector_rooomtype_radio"
+                android:clickable="false"
+                android:duplicateParentState="true"/>
+
+            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+                android:id="@+id/priceTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:textColor="@color/black"
+                android:textSize="15dp"
+                android:textStyle="bold"/>
+
+            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+                android:id="@+id/roomTypeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="7dp"
+                android:layout_marginRight="5dp"
+                android:layout_toLeftOf="@id/priceTextView"
+                android:layout_toRightOf="@id/radioButton"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="15dp"
+                android:textStyle="bold"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="32dp"
+            android:layout_marginTop="4dp"
+            android:orientation="vertical">
+
+            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+                android:id="@+id/optionTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:freezesText="true"
+                android:maxLines="2"
+                android:textColor="@color/hoteldetail_room_simpleinfo_text"
+                android:textSize="12dp"/>
+
+            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+                android:id="@+id/benefitTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:freezesText="true"
+                android:maxLines="1"
+                android:textColor="@color/dh_theme_color"
+                android:textSize="12dp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

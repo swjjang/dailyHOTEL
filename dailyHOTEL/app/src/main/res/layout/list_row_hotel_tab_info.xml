@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal"
+              android:paddingBottom="19dp"
+              android:paddingLeft="11.5dp"
+              android:paddingTop="22.5dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iv_list_row_hotel_tab_info_ribbon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/img_ic_ribbon"/>
+
+            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+                android:id="@+id/tv_list_row_hotel_tab_info_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="2dp"
+                android:text="1"
+                android:textColor="@android:color/white"
+                android:textSize="10dp"
+                android:textStyle="bold"/>
+
+        </FrameLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_hotel_tab_info_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+            android:id="@+id/tv_hotel_tab_info_subject"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12.5dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="11dp"
+            android:textColor="@color/textView_textColor_main"/>
+
+        <LinearLayout
+            android:id="@+id/layout_hotel_tab_info_content_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

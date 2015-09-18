@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/hotelTitleLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:background="@color/white"
+    android:gravity="center_vertical">
+
+    <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+        android:id="@+id/hotelGradeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="15dp"
+        android:background="@color/black"
+        android:gravity="center"
+        android:paddingBottom="1px"
+        android:paddingLeft="5.5dp"
+        android:paddingRight="5.5dp"
+        android:paddingTop="2px"
+        android:textColor="@android:color/white"
+        android:textSize="11.5dp"
+        android:visibility="invisible"/>
+
+    <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+        android:id="@+id/hotelNameTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="40dp"
+        android:ellipsize="end"
+        android:freezesText="true"
+        android:gravity="center_vertical"
+        android:singleLine="true"
+        android:textColor="@android:color/black"
+        android:textSize="20dp"/>
+
+</LinearLayout>

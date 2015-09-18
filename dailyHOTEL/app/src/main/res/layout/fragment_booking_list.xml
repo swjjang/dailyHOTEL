@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:background="@drawable/gradient_window_background">
+
+    <com.twoheart.dailyhotel.view.widget.PinnedSectionListView
+        android:id="@+id/listview_booking"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:cacheColorHint="@android:color/transparent"
+        android:divider="@null"
+        android:fadingEdge="none"/>
+
+    <RelativeLayout
+        android:id="@+id/layout_booking_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/gradient_window_background"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:id="@+id/backgroundLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/empty_background_bookings">
+
+            <ImageView
+                android:id="@+id/open_stanby_bg_fnb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/booking_none_bg"/>
+
+            <LinearLayout
+                android:id="@+id/textLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+                    android:id="@+id/messageTextView01"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/frag_booking_no_hotels"
+                    android:textColor="@color/white"
+                    android:textSize="18dp"
+                    android:textStyle="bold"/>
+
+                <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+                    android:id="@+id/messageTextView02"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:gravity="center"
+                    android:text="@string/frag_booking_line"
+                    android:textColor="@color/white"
+                    android:textSize="16dp"/>
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_above="@id/textLayout"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="15dp"
+                android:gravity="center"
+                android:src="@drawable/no_event_ic"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/btn_booking_empty_login"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="25dp"
+            android:background="@drawable/open_stanby_btn_alert"
+            android:gravity="center_horizontal">
+
+            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="11dp"
+                android:gravity="center"
+                android:text="@string/frag_booking_btn_login"
+                android:textColor="@android:color/white"
+                android:textSize="18dp"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+</FrameLayout>

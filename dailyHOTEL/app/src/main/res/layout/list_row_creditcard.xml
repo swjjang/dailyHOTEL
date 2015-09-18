@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/cardLayout"
+        android:layout_width="match_parent"
+        android:layout_height="190dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/card_bg">
+
+        <ImageView
+            android:id="@+id/logoImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="15dp"/>
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="18dp"
+            android:layout_marginRight="16dp"
+            android:src="@drawable/card_daily"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/logoImageView"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="12dp"
+            android:src="@drawable/card_chip"/>
+
+        <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+            android:id="@+id/numberTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/imageView1"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="6dp"
+            android:layout_marginRight="16dp"
+            android:textColor="@color/creditcard_number_text"
+            android:textSize="16dp"/>
+
+        <ImageView
+            android:id="@+id/deleteImageView"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="15dp"
+            android:src="@drawable/card_btn_x_off"/>
+
+        <ImageView
+            android:id="@+id/checkedImageView"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_marginRight="9dp"
+            android:layout_marginTop="15dp"
+            android:layout_toLeftOf="@id/deleteImageView"
+            android:src="@drawable/card_btn_v_off"
+            android:visibility="gone"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

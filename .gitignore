@@ -36,3 +36,11 @@ gen/
 gen
 .metadata/
 .metadata
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+*/.DS_Store
+*/build
+/captures

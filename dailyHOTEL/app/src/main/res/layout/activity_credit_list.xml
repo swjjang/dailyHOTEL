@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/activity_background">
+
+    <include
+        android:id="@+id/toolbar_actionbar"
+        layout="@layout/toolbar_default"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignBaseline="@id/toolbar_actionbar"
+        android:layout_alignBottom="@id/toolbar_actionbar"
+        android:background="@color/actionbar_underline"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar_actionbar">
+
+        <ListView
+            android:id="@+id/listview_credit"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:cacheColorHint="@android:color/transparent"
+            android:fadingEdge="none"
+            android:listSelector="@android:color/transparent"
+            android:scrollbars="vertical">
+        </ListView>
+
+        <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+            android:id="@+id/empty_listview_credit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/act_history_no_details"
+            android:visibility="gone"/>
+    </FrameLayout>
+
+</RelativeLayout>
