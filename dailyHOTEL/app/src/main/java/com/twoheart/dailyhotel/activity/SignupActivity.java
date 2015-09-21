@@ -73,256 +73,6 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
     private Map<String, String> signupParams;
     private HashMap<String, String> regPushParams;
-    private DailyHotelJsonResponseListener mUserUpdateFacebookJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            if (isFinishing() == true)
-            {
-                return;
-            }
-
-            try
-            {
-                unLockUI();
-
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
-                JSONObject jsonObject = response.getJSONObject("data");
-
-                boolean result = jsonObject.getBoolean("is_success");
-                int msgCode = response.getInt("msg_code");
-
-                if (result == true)
-                {
-                    String msg = null;
-
-                    if (response.has("msg") == true)
-                    {
-                        msg = response.getString("msg");
-                    }
-
-                    switch (msgCode)
-                    {
-                        case 100:
-                        {
-                            if (msg != null)
-                            {
-                                DailyToast.showToast(SignupActivity.this, msg, Toast.LENGTH_SHORT);
-                            }
-
-                            setResult(RESULT_OK);
-                            finish();
-                            break;
-                        }
-
-                        case 200:
-                        {
-                            if (msg != null)
-                            {
-                                if (isFinishing() == true)
-                                {
-                                    return;
-                                }
-
-                                showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
-                                {
-                                    @Override
-                                    public void onClick(View view)
-                                    {
-                                        setResult(RESULT_OK);
-                                        finish();
-                                    }
-                                }, null);
-                            } else
-                            {
-                                setResult(RESULT_OK);
-                                finish();
-                            }
-                            break;
-                        }
-
-                        default:
-                            setResult(RESULT_OK);
-                            finish();
-                            break;
-                    }
-
-                } else
-                {
-                    String msg = null;
-
-                    if (response.has("msg") == true)
-                    {
-                        msg = response.getString("msg");
-                    }
-
-                    switch (msgCode)
-                    {
-                        case 100:
-                        {
-                            if (msg != null)
-                            {
-                                DailyToast.showToast(SignupActivity.this, msg, Toast.LENGTH_SHORT);
-                            }
-                            break;
-                        }
-
-                        case 200:
-                        {
-                            if (msg != null)
-                            {
-                                if (isFinishing() == true)
-                                {
-                                    return;
-                                }
-
-                                showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, null, null);
-                            }
-                            break;
-                        }
-                    }
-                }
-            } catch (Exception e)
-            {
-                onError(e);
-            }
-        }
-    };
-    private DailyHotelJsonResponseListener mGcmRegisterJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            unLockUI();
-
-            // 로그인 성공 - 유저 정보(인덱스) 가져오기 - 유저의 GCM키 등록 완료 한 경우 프리퍼런스에 키 등록후 종료
-            try
-            {
-                String result = null;
-
-                if (null != response)
-                {
-                    result = response.getString("result");
-                }
-
-                if (true == "true".equalsIgnoreCase(result))
-                {
-                    Editor editor = sharedPreference.edit();
-                    editor.putString(KEY_PREFERENCE_GCM_ID, regPushParams.get("notification_id"));
-                    editor.apply();
-                }
-            } catch (Exception e)
-            {
-            } finally
-            {
-                signUpAndFinish();
-            }
-        }
-    };
-    private DailyHotelJsonResponseListener mUserInfoJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                String userIndex = String.valueOf(response.getInt("idx"));
-
-                regGcmId(userIndex);
-
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
-                Date date = new Date();
-                String strDate = dateFormat.format(date);
-
-                HashMap<String, String> params = new HashMap<String, String>();
-                params.put(Label.CURRENT_TIME, strDate);
-                params.put(Label.USER_INDEX, userIndex);
-                params.put(Label.TYPE, "email");
-
-                AnalyticsManager.getInstance(SignupActivity.this).recordEvent(Screen.SIGNUP, Action.NETWORK, Label.SIGNUP, params);
-            } catch (Exception e)
-            {
-                unLockUI();
-                onError(e);
-            }
-        }
-    };
-    private DailyHotelJsonResponseListener mUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
-                if (response.getBoolean("login") == true)
-                {
-                    VolleyHttpClient.createCookie();
-                    storeLoginInfo();
-
-                    lockUI();
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, SignupActivity.this));
-                }
-            } catch (Exception e)
-            {
-                unLockUI();
-                onError(e);
-            }
-        }
-    };
-    private DailyHotelJsonResponseListener mUserSignupJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
-                String result = response.getString("join");
-                String msg = null;
-
-                if (response.length() > 1)
-                {
-                    msg = response.getString("msg");
-                }
-
-                if (result.equals("true") == true)
-                {
-                    Map<String, String> loginParams = new HashMap<String, String>();
-                    loginParams.put("email", signupParams.get("email"));
-                    loginParams.put("pw", Crypto.encrypt(signupParams.get("pw")).replace("\n", ""));
-
-                    ExLog.d("email : " + loginParams.get("email") + " pw : " + loginParams.get("pw"));
-
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(), loginParams, mUserLoginJsonResponseListener, SignupActivity.this));
-                } else
-                {
-                    unLockUI();
-                    DailyToast.showToast(SignupActivity.this, msg, Toast.LENGTH_LONG);
-                }
-
-            } catch (Exception e)
-            {
-                unLockUI();
-                onError(e);
-            }
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -611,9 +361,6 @@ public class SignupActivity extends BaseActivity implements OnClickListener
         overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     protected void onDestroy()
@@ -701,4 +448,259 @@ public class SignupActivity extends BaseActivity implements OnClickListener
             }
         }.execute();
     }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Listener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private DailyHotelJsonResponseListener mUserUpdateFacebookJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            if (isFinishing() == true)
+            {
+                return;
+            }
+
+            try
+            {
+                unLockUI();
+
+                if (response == null)
+                {
+                    throw new NullPointerException("response == null");
+                }
+
+                JSONObject jsonObject = response.getJSONObject("data");
+
+                boolean result = jsonObject.getBoolean("is_success");
+                int msgCode = response.getInt("msg_code");
+
+                if (result == true)
+                {
+                    String msg = null;
+
+                    if (response.has("msg") == true)
+                    {
+                        msg = response.getString("msg");
+                    }
+
+                    switch (msgCode)
+                    {
+                        case 100:
+                        {
+                            if (msg != null)
+                            {
+                                DailyToast.showToast(SignupActivity.this, msg, Toast.LENGTH_SHORT);
+                            }
+
+                            setResult(RESULT_OK);
+                            finish();
+                            break;
+                        }
+
+                        case 200:
+                        {
+                            if (msg != null)
+                            {
+                                if (isFinishing() == true)
+                                {
+                                    return;
+                                }
+
+                                showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
+                                {
+                                    @Override
+                                    public void onClick(View view)
+                                    {
+                                        setResult(RESULT_OK);
+                                        finish();
+                                    }
+                                }, null);
+                            } else
+                            {
+                                setResult(RESULT_OK);
+                                finish();
+                            }
+                            break;
+                        }
+
+                        default:
+                            setResult(RESULT_OK);
+                            finish();
+                            break;
+                    }
+
+                } else
+                {
+                    String msg = null;
+
+                    if (response.has("msg") == true)
+                    {
+                        msg = response.getString("msg");
+                    }
+
+                    switch (msgCode)
+                    {
+                        case 100:
+                        {
+                            if (msg != null)
+                            {
+                                DailyToast.showToast(SignupActivity.this, msg, Toast.LENGTH_SHORT);
+                            }
+                            break;
+                        }
+
+                        case 200:
+                        {
+                            if (msg != null)
+                            {
+                                if (isFinishing() == true)
+                                {
+                                    return;
+                                }
+
+                                showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, null, null);
+                            }
+                            break;
+                        }
+                    }
+                }
+            } catch (Exception e)
+            {
+                onError(e);
+            }
+        }
+    };
+    private DailyHotelJsonResponseListener mGcmRegisterJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            unLockUI();
+
+            // 로그인 성공 - 유저 정보(인덱스) 가져오기 - 유저의 GCM키 등록 완료 한 경우 프리퍼런스에 키 등록후 종료
+            try
+            {
+                String result = null;
+
+                if (null != response)
+                {
+                    result = response.getString("result");
+                }
+
+                if (true == "true".equalsIgnoreCase(result))
+                {
+                    Editor editor = sharedPreference.edit();
+                    editor.putString(KEY_PREFERENCE_GCM_ID, regPushParams.get("notification_id"));
+                    editor.apply();
+                }
+            } catch (Exception e)
+            {
+            } finally
+            {
+                signUpAndFinish();
+            }
+        }
+    };
+    private DailyHotelJsonResponseListener mUserInfoJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                String userIndex = String.valueOf(response.getInt("idx"));
+
+                regGcmId(userIndex);
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
+                Date date = new Date();
+                String strDate = dateFormat.format(date);
+
+                HashMap<String, String> params = new HashMap<String, String>();
+                params.put(Label.CURRENT_TIME, strDate);
+                params.put(Label.USER_INDEX, userIndex);
+                params.put(Label.TYPE, "email");
+
+                AnalyticsManager.getInstance(SignupActivity.this).recordEvent(Screen.SIGNUP, Action.NETWORK, Label.SIGNUP, params);
+            } catch (Exception e)
+            {
+                unLockUI();
+                onError(e);
+            }
+        }
+    };
+    private DailyHotelJsonResponseListener mUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                if (response == null)
+                {
+                    throw new NullPointerException("response == null");
+                }
+
+                if (response.getBoolean("login") == true)
+                {
+                    VolleyHttpClient.createCookie();
+                    storeLoginInfo();
+
+                    lockUI();
+                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, SignupActivity.this));
+                }
+            } catch (Exception e)
+            {
+                unLockUI();
+                onError(e);
+            }
+        }
+    };
+    private DailyHotelJsonResponseListener mUserSignupJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                if (response == null)
+                {
+                    throw new NullPointerException("response == null");
+                }
+
+                String result = response.getString("join");
+                String msg = null;
+
+                if (response.length() > 1)
+                {
+                    msg = response.getString("msg");
+                }
+
+                if (result.equals("true") == true)
+                {
+                    Map<String, String> loginParams = new HashMap<String, String>();
+                    loginParams.put("email", signupParams.get("email"));
+                    loginParams.put("pw", Crypto.encrypt(signupParams.get("pw")).replace("\n", ""));
+
+                    ExLog.d("email : " + loginParams.get("email") + " pw : " + loginParams.get("pw"));
+
+                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(), loginParams, mUserLoginJsonResponseListener, SignupActivity.this));
+                } else
+                {
+                    unLockUI();
+                    DailyToast.showToast(SignupActivity.this, msg, Toast.LENGTH_LONG);
+                }
+
+            } catch (Exception e)
+            {
+                unLockUI();
+                onError(e);
+            }
+        }
+    };
 }

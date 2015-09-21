@@ -89,6 +89,7 @@
     <string name="toast_msg_logouted">로그아웃되었습니다.</string>
     <string name="toast_msg_logoined">로그인되었습니다.</string>
     <string name="toast_msg_please_input_id">아이디를 입력해주세요.</string>
+    <string name="toast_msg_please_input_phone">전화번호를 입력해주세요.</string>
     <string name="toast_msg_please_input_name">이름을 입력해주세요.</string>
     <string name="toast_msg_please_input_passwd">비밀번호를 입력해주세요.</string>
     <string name="toast_msg_please_input_required_infos">필수 입력사항은 모두 입력해주세요.</string>
@@ -255,6 +256,8 @@
     <string name="act_login_btn_login">로그인</string>
     <string name="act_login_forgot_pwd">비밀번호를 잊어버리셨어요?</string>
     <string name="act_login_signup">회원가입</string>
+    <string name="act_login_facebook">페이스북으로 로그인</string>
+    <string name="act_login_kakao">회원가입</string>
 
     <!-- Credit Activity -->
     <string name="act_credit_recom">좋은 건 나눠야죠!</string>
