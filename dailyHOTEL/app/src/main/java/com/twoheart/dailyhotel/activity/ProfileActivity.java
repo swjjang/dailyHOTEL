@@ -60,141 +60,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
     private InputMethodManager mInputMethodManager;
     private String prevName;
     private String prevPh;
-    private DailyHotelJsonResponseListener mUserLogInfoJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
-                String userEmail = response.getString("email");
-                String userName = response.getString("name");
-                String userPhone = response.getString("phone");
-
-                if (TextUtils.isEmpty(userEmail) == true || INVALID_NULL.equalsIgnoreCase(userEmail) == true)
-                {
-                    userEmail = getString(R.string.act_profile_input_email);
-                }
-
-                if (TextUtils.isEmpty(userName) == true)
-                {
-                    userName = getString(R.string.act_profile_input_name);
-                    prevName = "";
-                } else
-                {
-                    prevName = userName;
-                }
-
-                if (TextUtils.isEmpty(userPhone) == true || INVALID_NULL.equalsIgnoreCase(userPhone) == true)
-                {
-                    userPhone = getString(R.string.act_profile_input_contact);
-                    prevPh = "";
-                } else
-                {
-                    prevPh = userPhone;
-                }
-
-                mAq.id(R.id.tv_profile_email).text(userEmail);
-                mAq.id(R.id.tv_profile_name).text(userName);
-                mAq.id(R.id.tv_profile_phone).text(userPhone);
-
-                mAq.id(R.id.et_profile_name).text(prevName);
-                mAq.id(R.id.et_profile_phone).text(prevPh);
-
-                mAq.id(R.id.ll_profile_info_editable).visibility(View.GONE);
-                mAq.id(R.id.ll_profile_info_label).visibility(View.VISIBLE);
-                mAq.id(R.id.ll_profile_info_label).getView().startAnimation(AnimationUtils.loadAnimation(ProfileActivity.this, R.anim.fade_in));
-                mAq.id(R.id.tv_profile_edit).text(getString(R.string.act_profile_modify));
-            } catch (Exception e)
-            {
-                onError(e);
-            } finally
-            {
-                unLockUI();
-            }
-        }
-    };
-    private DailyHotelJsonResponseListener mUserUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
-                String result = response.getString("success");
-                String msg = null;
-
-                if (response.length() > 1)
-                {
-                    msg = response.getString("msg");
-                }
-
-                if (result.equals("true") == true)
-                {
-                    unLockUI();
-                    DailyToast.showToast(ProfileActivity.this, R.string.toast_msg_profile_success_to_change, Toast.LENGTH_SHORT);
-                    updateTextField();
-                } else
-                {
-                    unLockUI();
-                    DailyToast.showToast(ProfileActivity.this, msg, Toast.LENGTH_LONG);
-                }
-            } catch (Exception e)
-            {
-                onError(e);
-            }
-        }
-    };
-    private DailyHotelStringResponseListener mUserLogoutStringResponseListener = new DailyHotelStringResponseListener()
-    {
-        @Override
-        public void onResponse(String url, String response)
-        {
-            VolleyHttpClient.destroyCookie();
-
-            SharedPreferences.Editor ed = sharedPreference.edit();
-            //			ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
-            //			ed.putString(KEY_PREFERENCE_USER_ID, null);
-            //			ed.putString(KEY_PREFERENCE_USER_PWD, null);
-            //			ed.putString(KEY_PREFERENCE_GCM_ID, null);
-
-            ed.clear();
-            ed.commit();
-
-            DailyHotelPreference.getInstance(ProfileActivity.this).clear();
-
-            try
-            {
-                LoginManager.getInstance().logOut();
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            }
-
-            try
-            {
-                UserManagement.requestLogout(null);
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            }
-
-            DailyToast.showToast(ProfileActivity.this, R.string.toast_msg_logouted, Toast.LENGTH_SHORT);
-            finish();
-        }
-    };
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -354,10 +219,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
         }
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     @Override
     public void onClick(View v)
     {
@@ -464,6 +325,145 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
     {
         super.finish();
         overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
-
     }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //Listener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private DailyHotelJsonResponseListener mUserLogInfoJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                if (response == null)
+                {
+                    throw new NullPointerException("response == null");
+                }
+
+                String userEmail = response.getString("email");
+                String userName = response.getString("name");
+                String userPhone = response.getString("phone");
+
+                if (TextUtils.isEmpty(userEmail) == true || INVALID_NULL.equalsIgnoreCase(userEmail) == true)
+                {
+                    userEmail = getString(R.string.act_profile_input_email);
+                }
+
+                if (TextUtils.isEmpty(userName) == true)
+                {
+                    userName = getString(R.string.act_profile_input_name);
+                    prevName = "";
+                } else
+                {
+                    prevName = userName;
+                }
+
+                if (TextUtils.isEmpty(userPhone) == true || INVALID_NULL.equalsIgnoreCase(userPhone) == true)
+                {
+                    userPhone = getString(R.string.act_profile_input_contact);
+                    prevPh = "";
+                } else
+                {
+                    prevPh = userPhone;
+                }
+
+                mAq.id(R.id.tv_profile_email).text(userEmail);
+                mAq.id(R.id.tv_profile_name).text(userName);
+                mAq.id(R.id.tv_profile_phone).text(userPhone);
+
+                mAq.id(R.id.et_profile_name).text(prevName);
+                mAq.id(R.id.et_profile_phone).text(prevPh);
+
+                mAq.id(R.id.ll_profile_info_editable).visibility(View.GONE);
+                mAq.id(R.id.ll_profile_info_label).visibility(View.VISIBLE);
+                mAq.id(R.id.ll_profile_info_label).getView().startAnimation(AnimationUtils.loadAnimation(ProfileActivity.this, R.anim.fade_in));
+                mAq.id(R.id.tv_profile_edit).text(getString(R.string.act_profile_modify));
+            } catch (Exception e)
+            {
+                onError(e);
+            } finally
+            {
+                unLockUI();
+            }
+        }
+    };
+    private DailyHotelJsonResponseListener mUserUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                if (response == null)
+                {
+                    throw new NullPointerException("response == null");
+                }
+
+                String result = response.getString("success");
+                String msg = null;
+
+                if (response.length() > 1)
+                {
+                    msg = response.getString("msg");
+                }
+
+                if (result.equals("true") == true)
+                {
+                    unLockUI();
+                    DailyToast.showToast(ProfileActivity.this, R.string.toast_msg_profile_success_to_change, Toast.LENGTH_SHORT);
+                    updateTextField();
+                } else
+                {
+                    unLockUI();
+                    DailyToast.showToast(ProfileActivity.this, msg, Toast.LENGTH_LONG);
+                }
+            } catch (Exception e)
+            {
+                onError(e);
+            }
+        }
+    };
+    private DailyHotelStringResponseListener mUserLogoutStringResponseListener = new DailyHotelStringResponseListener()
+    {
+        @Override
+        public void onResponse(String url, String response)
+        {
+            VolleyHttpClient.destroyCookie();
+
+            SharedPreferences.Editor ed = sharedPreference.edit();
+            //			ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
+            //			ed.putString(KEY_PREFERENCE_USER_ID, null);
+            //			ed.putString(KEY_PREFERENCE_USER_PWD, null);
+            //			ed.putString(KEY_PREFERENCE_GCM_ID, null);
+
+            ed.clear();
+            ed.commit();
+
+            DailyHotelPreference.getInstance(ProfileActivity.this).clear();
+
+            try
+            {
+                LoginManager.getInstance().logOut();
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+
+            try
+            {
+                UserManagement.requestLogout(null);
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+
+            DailyToast.showToast(ProfileActivity.this, R.string.toast_msg_logouted, Toast.LENGTH_SHORT);
+            finish();
+        }
+    };
 }

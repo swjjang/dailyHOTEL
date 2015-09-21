@@ -31,80 +31,6 @@ public class ZoomMapActivity extends BaseActivity
     private View mMyLocationView;
     private MarkerOptions mMyLocationMarkerOptions;
     private Marker mMyLocationMarker;
-    private View.OnClickListener mOnMyLocationClickListener = new View.OnClickListener()
-    {
-        @Override
-        public void onClick(View v)
-        {
-            LocationFactory.getInstance(ZoomMapActivity.this).startLocationMeasure(ZoomMapActivity.this, mMyLocationView, new LocationListener()
-            {
-                @Override
-                public void onStatusChanged(String provider, int status, Bundle extras)
-                {
-                    // TODO Auto-generated method stub
-
-                }
-
-                @Override
-                public void onProviderEnabled(String provider)
-                {
-                    // TODO Auto-generated method stub
-
-                }
-
-                @Override
-                public void onProviderDisabled(String provider)
-                {
-                    if (isFinishing() == true)
-                    {
-                        return;
-                    }
-
-                    // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
-                    LocationFactory.getInstance(ZoomMapActivity.this).stopLocationMeasure();
-
-                    showSimpleDialog(getString(R.string.dialog_title_used_gps), getString(R.string.dialog_msg_used_gps), getString(R.string.dialog_btn_text_dosetting), getString(R.string.dialog_btn_text_cancel), new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View v)
-                        {
-                            Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                            startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
-                        }
-                    }, null, true);
-                }
-
-                @Override
-                public void onLocationChanged(Location location)
-                {
-                    if (isFinishing() == true || mGoogleMap == null)
-                    {
-                        return;
-                    }
-
-                    LocationFactory.getInstance(ZoomMapActivity.this).stopLocationMeasure();
-
-                    if (mMyLocationMarkerOptions == null)
-                    {
-                        mMyLocationMarkerOptions = new MarkerOptions();
-                        mMyLocationMarkerOptions.icon(new MyLocationMarker(ZoomMapActivity.this).makeIcon());
-                        mMyLocationMarkerOptions.anchor(0.5f, 0.5f);
-                    }
-
-                    if (mMyLocationMarker != null)
-                    {
-                        mMyLocationMarker.remove();
-                    }
-
-                    mMyLocationMarkerOptions.position(new LatLng(location.getLatitude(), location.getLongitude()));
-                    mMyLocationMarker = mGoogleMap.addMarker(mMyLocationMarkerOptions);
-
-                    CameraPosition cameraPosition = new CameraPosition.Builder().target(mMyLocationMarkerOptions.getPosition()).zoom(13f).build();
-                    mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                }
-            });
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -224,4 +150,80 @@ public class ZoomMapActivity extends BaseActivity
             });
         }
     }
+
+    private View.OnClickListener mOnMyLocationClickListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View v)
+        {
+            LocationFactory.getInstance(ZoomMapActivity.this).startLocationMeasure(ZoomMapActivity.this, mMyLocationView, new LocationListener()
+            {
+                @Override
+                public void onStatusChanged(String provider, int status, Bundle extras)
+                {
+                    // TODO Auto-generated method stub
+
+                }
+
+                @Override
+                public void onProviderEnabled(String provider)
+                {
+                    // TODO Auto-generated method stub
+
+                }
+
+                @Override
+                public void onProviderDisabled(String provider)
+                {
+                    if (isFinishing() == true)
+                    {
+                        return;
+                    }
+
+                    // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
+                    LocationFactory.getInstance(ZoomMapActivity.this).stopLocationMeasure();
+
+                    showSimpleDialog(getString(R.string.dialog_title_used_gps), getString(R.string.dialog_msg_used_gps), getString(R.string.dialog_btn_text_dosetting), getString(R.string.dialog_btn_text_cancel), new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
+                        }
+                    }, null, true);
+                }
+
+                @Override
+                public void onLocationChanged(Location location)
+                {
+                    if (isFinishing() == true || mGoogleMap == null)
+                    {
+                        return;
+                    }
+
+                    LocationFactory.getInstance(ZoomMapActivity.this).stopLocationMeasure();
+
+                    if (mMyLocationMarkerOptions == null)
+                    {
+                        mMyLocationMarkerOptions = new MarkerOptions();
+                        mMyLocationMarkerOptions.icon(new MyLocationMarker(ZoomMapActivity.this).makeIcon());
+                        mMyLocationMarkerOptions.anchor(0.5f, 0.5f);
+                    }
+
+                    if (mMyLocationMarker != null)
+                    {
+                        mMyLocationMarker.remove();
+                    }
+
+                    mMyLocationMarkerOptions.position(new LatLng(location.getLatitude(), location.getLongitude()));
+                    mMyLocationMarker = mGoogleMap.addMarker(mMyLocationMarkerOptions);
+
+                    CameraPosition cameraPosition = new CameraPosition.Builder().target(mMyLocationMarkerOptions.getPosition()).zoom(13f).build();
+                    mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                }
+            });
+        }
+    };
+
 }

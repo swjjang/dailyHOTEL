@@ -23,7 +23,26 @@ public interface Constants
     public static final boolean UNENCRYPTED_URL = false;
     public static final Stores RELEASE_STORE = Stores.PLAY_STORE;
 
-    ;
+    // 스토어 선택.
+    public enum Stores
+    {
+        PLAY_STORE("PlayStore"),
+        T_STORE("Tstore"),
+        N_STORE("Nstore");
+
+        private String mName;
+
+        private Stores(String name)
+        {
+            mName = name;
+        }
+
+        public String getName()
+        {
+            return mName;
+        }
+    }
+
     // 항상 열리게 셋팅 여부
     public static final boolean ALWAYS_OPEN = false;
     public static final String GCM_PROJECT_NUMBER = "1025681158000";
@@ -389,25 +408,4 @@ public interface Constants
     public static final String GA_PURCHASE_EVENT_ACTION = "PurchaseComplete";
     public static final String GA_PURCHASE_EVENT_LABEL = "PurchaseComplete";
     public static final Long GA_PURCHASE_EVENT_VALUE = 1L;
-
-    // 스토어 선택.
-    public enum Stores
-    {
-        PLAY_STORE("PlayStore"),
-        T_STORE("Tstore"),
-        N_STORE("Nstore");
-
-        private String mName;
-
-        private Stores(String name)
-        {
-            mName = name;
-        }
-
-        public String getName()
-        {
-            return mName;
-        }
-    }
-
 }

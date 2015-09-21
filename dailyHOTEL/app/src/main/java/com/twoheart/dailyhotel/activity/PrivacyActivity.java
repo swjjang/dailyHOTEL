@@ -7,7 +7,6 @@ import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 
 public class PrivacyActivity extends WebViewActivity
 {
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {

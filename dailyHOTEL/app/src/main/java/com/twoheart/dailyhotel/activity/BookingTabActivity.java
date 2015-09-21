@@ -42,6 +42,94 @@ public class BookingTabActivity extends BaseActivity
     private TabIndicator mTabIndicator;
     private FragmentViewPager mFragmentViewPager;
     private ArrayList<BaseFragment> mFragmentList;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+
+        mHotelDetail = new BookingHotelDetail();
+        booking = new Booking();
+        Bundle bundle = getIntent().getExtras();
+
+        if (bundle != null)
+        {
+            booking = (Booking) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_BOOKING);
+        }
+
+        if (booking == null)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
+        setContentView(R.layout.activity_booking_tab);
+        setActionBar(booking.placeName);
+
+        ArrayList<String> titleList = new ArrayList<String>();
+        titleList.add(getString(R.string.frag_booking_tab_title));
+        titleList.add(getString(R.string.frag_tab_info_title));
+        titleList.add(getString(R.string.frag_tab_map_title));
+
+        mTabIndicator = (TabIndicator) findViewById(R.id.tabindicator);
+        mTabIndicator.setData(titleList, false);
+        mTabIndicator.setOnTabSelectListener(mOnTabSelectedListener);
+    }
+
+    private void loadFragments()
+    {
+
+        if (mFragmentViewPager == null)
+        {
+            ArrayList<String> titleList = new ArrayList<String>();
+            titleList.add(getString(R.string.frag_booking_tab_title));
+            titleList.add(getString(R.string.frag_tab_info_title));
+            titleList.add(getString(R.string.frag_tab_map_title));
+
+            mFragmentViewPager = (FragmentViewPager) findViewById(R.id.fragmentViewPager);
+
+            mFragmentList = new ArrayList<BaseFragment>();
+
+            BaseFragment baseFragment01 = BookingTabBookingFragment.newInstance(mHotelDetail, booking, getString(R.string.drawer_menu_pin_title_resrvation));
+            mFragmentList.add(baseFragment01);
+
+            BaseFragment baseFragment02 = TabInfoFragment.newInstance(mHotelDetail, titleList.get(1));
+            mFragmentList.add(baseFragment02);
+
+            BaseFragment baseFragment03 = TabMapFragment.newInstance(mHotelDetail, titleList.get(2));
+            mFragmentList.add(baseFragment03);
+
+            mFragmentViewPager.setData(mFragmentList);
+            mFragmentViewPager.setAdapter(getSupportFragmentManager());
+
+            mTabIndicator.setViewPager(mFragmentViewPager.getViewPager());
+            mTabIndicator.setOnPageChangeListener(mOnPageChangeListener);
+        }
+    }
+
+    @Override
+    protected void onStart()
+    {
+        AnalyticsManager.getInstance(BookingTabActivity.this).recordScreen(Screen.BOOKING_DETAIL);
+        super.onStart();
+    }
+
+    @Override
+    protected void onResume()
+    {
+        lockUI();
+
+        // 호텔 정보를 가져온다.
+        String params = String.format("?reservationIdx=%d", booking.reservationIndex);
+        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_DETAIL).append(params).toString(), null, mReservationBookingDetailJsonResponseListener, this));
+
+        super.onResume();
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Listener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     private OnTabSelectedListener mOnTabSelectedListener = new OnTabSelectedListener()
     {
         @Override
@@ -143,91 +231,4 @@ public class BookingTabActivity extends BaseActivity
             }
         }
     };
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-
-        mHotelDetail = new BookingHotelDetail();
-        booking = new Booking();
-        Bundle bundle = getIntent().getExtras();
-
-        if (bundle != null)
-        {
-            booking = (Booking) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_BOOKING);
-        }
-
-        if (booking == null)
-        {
-            Util.restartApp(this);
-            return;
-        }
-
-        setContentView(R.layout.activity_booking_tab);
-        setActionBar(booking.placeName);
-
-        ArrayList<String> titleList = new ArrayList<String>();
-        titleList.add(getString(R.string.frag_booking_tab_title));
-        titleList.add(getString(R.string.frag_tab_info_title));
-        titleList.add(getString(R.string.frag_tab_map_title));
-
-        mTabIndicator = (TabIndicator) findViewById(R.id.tabindicator);
-        mTabIndicator.setData(titleList, false);
-        mTabIndicator.setOnTabSelectListener(mOnTabSelectedListener);
-    }
-
-    private void loadFragments()
-    {
-
-        if (mFragmentViewPager == null)
-        {
-            ArrayList<String> titleList = new ArrayList<String>();
-            titleList.add(getString(R.string.frag_booking_tab_title));
-            titleList.add(getString(R.string.frag_tab_info_title));
-            titleList.add(getString(R.string.frag_tab_map_title));
-
-            mFragmentViewPager = (FragmentViewPager) findViewById(R.id.fragmentViewPager);
-
-            mFragmentList = new ArrayList<BaseFragment>();
-
-            BaseFragment baseFragment01 = BookingTabBookingFragment.newInstance(mHotelDetail, booking, getString(R.string.drawer_menu_pin_title_resrvation));
-            mFragmentList.add(baseFragment01);
-
-            BaseFragment baseFragment02 = TabInfoFragment.newInstance(mHotelDetail, titleList.get(1));
-            mFragmentList.add(baseFragment02);
-
-            BaseFragment baseFragment03 = TabMapFragment.newInstance(mHotelDetail, titleList.get(2));
-            mFragmentList.add(baseFragment03);
-
-            mFragmentViewPager.setData(mFragmentList);
-            mFragmentViewPager.setAdapter(getSupportFragmentManager());
-
-            mTabIndicator.setViewPager(mFragmentViewPager.getViewPager());
-            mTabIndicator.setOnPageChangeListener(mOnPageChangeListener);
-        }
-    }
-
-    @Override
-    protected void onStart()
-    {
-        AnalyticsManager.getInstance(BookingTabActivity.this).recordScreen(Screen.BOOKING_DETAIL);
-        super.onStart();
-    }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    protected void onResume()
-    {
-        lockUI();
-
-        // 호텔 정보를 가져온다.
-        String params = String.format("?reservationIdx=%d", booking.reservationIndex);
-        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_DETAIL).append(params).toString(), null, mReservationBookingDetailJsonResponseListener, this));
-
-        super.onResume();
-    }
 }

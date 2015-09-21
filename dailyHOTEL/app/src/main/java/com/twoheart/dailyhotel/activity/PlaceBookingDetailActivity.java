@@ -31,42 +31,6 @@ public abstract class PlaceBookingDetailActivity extends BaseActivity
 
     protected PlaceBookingDetail mPlaceBookingDetail;
     protected Booking booking;
-    protected OnPageChangeListener mOnPageChangeListener = new OnPageChangeListener()
-    {
-        @Override
-        public void onPageSelected(int position)
-        {
-            mTabIndicator.setCurrentItem(position);
-
-            AnalyticsManager.getInstance(PlaceBookingDetailActivity.this).recordEvent(Screen.BOOKING_DETAIL, Action.CLICK, mTabIndicator.getMainText(position), (long) position);
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int arg0)
-        {
-        }
-
-        @Override
-        public void onPageScrolled(int arg0, float arg1, int arg2)
-        {
-        }
-    };
-    private OnTabSelectedListener mOnTabSelectedListener = new OnTabSelectedListener()
-    {
-        @Override
-        public void onTabSelected(int position)
-        {
-            if (mFragmentViewPager == null)
-            {
-                return;
-            }
-
-            if (mFragmentViewPager.getCurrentItem() != position)
-            {
-                mFragmentViewPager.setCurrentItem(position);
-            }
-        }
-    };
 
     protected abstract void loadFragments();
 
@@ -125,4 +89,41 @@ public abstract class PlaceBookingDetailActivity extends BaseActivity
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    protected OnPageChangeListener mOnPageChangeListener = new OnPageChangeListener()
+    {
+        @Override
+        public void onPageSelected(int position)
+        {
+            mTabIndicator.setCurrentItem(position);
+
+            AnalyticsManager.getInstance(PlaceBookingDetailActivity.this).recordEvent(Screen.BOOKING_DETAIL, Action.CLICK, mTabIndicator.getMainText(position), (long) position);
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int arg0)
+        {
+        }
+
+        @Override
+        public void onPageScrolled(int arg0, float arg1, int arg2)
+        {
+        }
+    };
+    private OnTabSelectedListener mOnTabSelectedListener = new OnTabSelectedListener()
+    {
+        @Override
+        public void onTabSelected(int position)
+        {
+            if (mFragmentViewPager == null)
+            {
+                return;
+            }
+
+            if (mFragmentViewPager.getCurrentItem() != position)
+            {
+                mFragmentViewPager.setCurrentItem(position);
+            }
+        }
+    };
 }

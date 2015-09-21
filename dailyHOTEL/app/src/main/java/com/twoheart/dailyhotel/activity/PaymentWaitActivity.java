@@ -43,6 +43,102 @@ public class PaymentWaitActivity extends BaseActivity
     private TextView tvDeadline;
     private TextView tvGuide1;
     private TextView tvGuide2;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+
+        booking = new Booking();
+        Bundle bundle = getIntent().getExtras();
+
+        if (bundle != null)
+        {
+            booking = (Booking) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_BOOKING);
+        }
+
+        setContentView(R.layout.activity_payment_wait);
+        setActionBar(getString(R.string.actionbar_title_payment_wait_activity));
+
+        tvHotelName = (TextView) findViewById(R.id.tv_payment_wait_hotel_name);
+        tvAccount = (TextView) findViewById(R.id.tv_payment_wait_account);
+        tvName = (TextView) findViewById(R.id.tv_payment_wait_name);
+        tvPrice = (TextView) findViewById(R.id.tv_payment_wait_price);
+        tvDeadline = (TextView) findViewById(R.id.tv_payment_wait_deadline);
+        tvGuide1 = (TextView) findViewById(R.id.tv_payment_wait_guide1);
+        tvGuide2 = (TextView) findViewById(R.id.tv_payment_wait_guide2);
+
+        tvHotelName.setText(booking.placeName);
+
+        lockUI();
+
+        switch (booking.placeType)
+        {
+            case HOTEL:
+            {
+                String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_MINE_DETAIL).append('/').append(booking.payType).append('/').append(booking.tid).toString();
+                mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null, mHotelReservationJsonResponseListener, this));
+                break;
+            }
+
+            case FNB:
+            {
+                String params = String.format("?tid=%s", booking.tid);
+                String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_SESSION_VBANK_ACCOUNT_INFO).append(params).toString();
+                mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null, mFnBReservationJsonResponseListener, this));
+                break;
+            }
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        getMenuInflater().inflate(R.menu.payment_wait_actions, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case R.id.action_call:
+                if (isFinishing() == true)
+                {
+                    return super.onOptionsItemSelected(item);
+                }
+
+                String title = getString(R.string.dialog_notice2);
+                String message = getString(R.string.dialog_msg_call);
+                String positive = getString(R.string.dialog_btn_call);
+
+                showSimpleDialog(title, message, positive, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        if (Util.isTelephonyEnabled(PaymentWaitActivity.this) == true)
+                        {
+                            Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
+                            startActivity(i);
+                        } else
+                        {
+                            DailyToast.showToast(PaymentWaitActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
+                        }
+                    }
+                });
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Listener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     private DailyHotelJsonResponseListener mHotelReservationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
 
@@ -135,99 +231,4 @@ public class PaymentWaitActivity extends BaseActivity
             }
         }
     };
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-
-        booking = new Booking();
-        Bundle bundle = getIntent().getExtras();
-
-        if (bundle != null)
-        {
-            booking = (Booking) bundle.getParcelable(NAME_INTENT_EXTRA_DATA_BOOKING);
-        }
-
-        setContentView(R.layout.activity_payment_wait);
-        setActionBar(getString(R.string.actionbar_title_payment_wait_activity));
-
-        tvHotelName = (TextView) findViewById(R.id.tv_payment_wait_hotel_name);
-        tvAccount = (TextView) findViewById(R.id.tv_payment_wait_account);
-        tvName = (TextView) findViewById(R.id.tv_payment_wait_name);
-        tvPrice = (TextView) findViewById(R.id.tv_payment_wait_price);
-        tvDeadline = (TextView) findViewById(R.id.tv_payment_wait_deadline);
-        tvGuide1 = (TextView) findViewById(R.id.tv_payment_wait_guide1);
-        tvGuide2 = (TextView) findViewById(R.id.tv_payment_wait_guide2);
-
-        tvHotelName.setText(booking.placeName);
-
-        lockUI();
-
-        switch (booking.placeType)
-        {
-            case HOTEL:
-            {
-                String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_MINE_DETAIL).append('/').append(booking.payType).append('/').append(booking.tid).toString();
-                mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null, mHotelReservationJsonResponseListener, this));
-                break;
-            }
-
-            case FNB:
-            {
-                String params = String.format("?tid=%s", booking.tid);
-                String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_SESSION_VBANK_ACCOUNT_INFO).append(params).toString();
-                mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null, mFnBReservationJsonResponseListener, this));
-                break;
-            }
-        }
-    }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        getMenuInflater().inflate(R.menu.payment_wait_actions, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch (item.getItemId())
-        {
-            case R.id.action_call:
-                if (isFinishing() == true)
-                {
-                    return super.onOptionsItemSelected(item);
-                }
-
-                String title = getString(R.string.dialog_notice2);
-                String message = getString(R.string.dialog_msg_call);
-                String positive = getString(R.string.dialog_btn_call);
-
-                showSimpleDialog(title, message, positive, new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View view)
-                    {
-                        if (Util.isTelephonyEnabled(PaymentWaitActivity.this) == true)
-                        {
-                            Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse(new StringBuilder("tel:").append(PHONE_NUMBER_DAILYHOTEL).toString()));
-                            startActivity(i);
-                        } else
-                        {
-                            DailyToast.showToast(PaymentWaitActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
-                        }
-                    }
-                });
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 }

@@ -23,46 +23,6 @@ public class FAQActivity extends BaseActivity
 {
     private ArrayList<Board> mList;
     private ExpandableListView mListView;
-    private DailyHotelJsonResponseListener mBoardFAQJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-
-            mList = new ArrayList<Board>();
-
-            try
-            {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
-                JSONArray json = response.getJSONArray("articles");
-
-                int length = json.length();
-
-                for (int i = 0; i < length; i++)
-                {
-                    JSONObject obj = json.getJSONObject(i);
-                    String subject = obj.getString("subject");
-                    String content = obj.getString("content");
-                    //					String regdate = obj.getString("regdate");
-
-                    mList.add(new Board(subject, content, null));
-                }
-
-                mListView.setAdapter(new BoardListAdapter(FAQActivity.this, mList));
-            } catch (Exception e)
-            {
-                onError(e);
-            } finally
-            {
-                unLockUI();
-            }
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -109,14 +69,55 @@ public class FAQActivity extends BaseActivity
         mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_BOARD_FAQ).toString(), null, mBoardFAQJsonResponseListener, this));
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     @Override
     public void finish()
     {
         super.finish();
         overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
     }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Listener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private DailyHotelJsonResponseListener mBoardFAQJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+
+            mList = new ArrayList<Board>();
+
+            try
+            {
+                if (response == null)
+                {
+                    throw new NullPointerException("response == null");
+                }
+
+                JSONArray json = response.getJSONArray("articles");
+
+                int length = json.length();
+
+                for (int i = 0; i < length; i++)
+                {
+                    JSONObject obj = json.getJSONObject(i);
+                    String subject = obj.getString("subject");
+                    String content = obj.getString("content");
+                    //					String regdate = obj.getString("regdate");
+
+                    mList.add(new Board(subject, content, null));
+                }
+
+                mListView.setAdapter(new BoardListAdapter(FAQActivity.this, mList));
+            } catch (Exception e)
+            {
+                onError(e);
+            } finally
+            {
+                unLockUI();
+            }
+        }
+    };
 }

@@ -127,98 +127,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
     private boolean mIsEditMode;
 
     private View mClickView;
-    private View.OnClickListener mOnEditInfoOnClickListener = new View.OnClickListener()
-    {
-        @Override
-        public void onClick(View view)
-        {
-            mIsEditMode = true;
-            view.setVisibility(View.INVISIBLE);
-
-            // 이름.
-            if (etReserverName.isEnabled() == false)
-            {
-                etReserverName.setEnabled(true);
-
-                if (mPay.getSaleRoomInformation().isOverseas == true)
-                {
-                    // 회원 가입시 이름 필터 적용.
-                    StringFilter stringFilter = new StringFilter(BookingActivity.this);
-                    InputFilter[] allowAlphanumericName = new InputFilter[1];
-                    allowAlphanumericName[0] = stringFilter.allowAlphanumericName;
-
-                    etReserverName.setFilters(allowAlphanumericName);
-                    etReserverName.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS | etReserverName.getInputType());
-                } else
-                {
-                    etReserverName.setEnabled(true);
-
-                    // 회원 가입시 이름 필터 적용.
-                    StringFilter stringFilter = new StringFilter(BookingActivity.this);
-                    InputFilter[] allowAlphanumericHangul = new InputFilter[1];
-                    allowAlphanumericHangul[0] = stringFilter.allowAlphanumericHangul;
-
-                    etReserverName.setFilters(allowAlphanumericHangul);
-                    etReserverName.setInputType(InputType.TYPE_CLASS_TEXT);
-                }
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-                {
-                    etReserverName.setBackground(mEditTextBackground[0]);
-                } else
-                {
-                    etReserverName.setBackgroundDrawable(mEditTextBackground[0]);
-                }
-            }
-
-            // 전화번호.
-            etReserverNumber.setEnabled(true);
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-            {
-                etReserverNumber.setBackground(mEditTextBackground[1]);
-            } else
-            {
-                etReserverNumber.setBackgroundDrawable(mEditTextBackground[1]);
-            }
-
-            // 이메일.
-
-            etReserverEmail.setEnabled(true);
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-            {
-                etReserverEmail.setBackground(mEditTextBackground[2]);
-            } else
-            {
-                etReserverEmail.setBackgroundDrawable(mEditTextBackground[2]);
-            }
-
-            etReserverEmail.setOnEditorActionListener(new OnEditorActionListener()
-            {
-                @Override
-                public boolean onEditorAction(TextView textView, int actionId, KeyEvent event)
-                {
-                    if (actionId == EditorInfo.IME_ACTION_DONE)
-                    {
-                        textView.clearFocus();
-
-                        if (getWindow() == null || getWindow().getDecorView() == null || getWindow().getDecorView().getWindowToken() == null)
-                        {
-                            return false;
-                        }
-
-                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
-                        return true;
-                    } else
-                    {
-                        return false;
-                    }
-                }
-            });
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -1157,10 +1065,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         }
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // UI Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     private void showAgreeTermDialog(Pay.Type type)
     {
         if (mFinalCheckDialog != null)
@@ -1566,6 +1470,103 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             showCallDialog();
         }
     }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // UI Listener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private View.OnClickListener mOnEditInfoOnClickListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View view)
+        {
+            mIsEditMode = true;
+            view.setVisibility(View.INVISIBLE);
+
+            // 이름.
+            if (etReserverName.isEnabled() == false)
+            {
+                etReserverName.setEnabled(true);
+
+                if (mPay.getSaleRoomInformation().isOverseas == true)
+                {
+                    // 회원 가입시 이름 필터 적용.
+                    StringFilter stringFilter = new StringFilter(BookingActivity.this);
+                    InputFilter[] allowAlphanumericName = new InputFilter[1];
+                    allowAlphanumericName[0] = stringFilter.allowAlphanumericName;
+
+                    etReserverName.setFilters(allowAlphanumericName);
+                    etReserverName.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS | etReserverName.getInputType());
+                } else
+                {
+                    etReserverName.setEnabled(true);
+
+                    // 회원 가입시 이름 필터 적용.
+                    StringFilter stringFilter = new StringFilter(BookingActivity.this);
+                    InputFilter[] allowAlphanumericHangul = new InputFilter[1];
+                    allowAlphanumericHangul[0] = stringFilter.allowAlphanumericHangul;
+
+                    etReserverName.setFilters(allowAlphanumericHangul);
+                    etReserverName.setInputType(InputType.TYPE_CLASS_TEXT);
+                }
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+                {
+                    etReserverName.setBackground(mEditTextBackground[0]);
+                } else
+                {
+                    etReserverName.setBackgroundDrawable(mEditTextBackground[0]);
+                }
+            }
+
+            // 전화번호.
+            etReserverNumber.setEnabled(true);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+            {
+                etReserverNumber.setBackground(mEditTextBackground[1]);
+            } else
+            {
+                etReserverNumber.setBackgroundDrawable(mEditTextBackground[1]);
+            }
+
+            // 이메일.
+
+            etReserverEmail.setEnabled(true);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+            {
+                etReserverEmail.setBackground(mEditTextBackground[2]);
+            } else
+            {
+                etReserverEmail.setBackgroundDrawable(mEditTextBackground[2]);
+            }
+
+            etReserverEmail.setOnEditorActionListener(new OnEditorActionListener()
+            {
+                @Override
+                public boolean onEditorAction(TextView textView, int actionId, KeyEvent event)
+                {
+                    if (actionId == EditorInfo.IME_ACTION_DONE)
+                    {
+                        textView.clearFocus();
+
+                        if (getWindow() == null || getWindow().getDecorView() == null || getWindow().getDecorView().getWindowToken() == null)
+                        {
+                            return false;
+                        }
+
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
+                        return true;
+                    } else
+                    {
+                        return false;
+                    }
+                }
+            });
+        }
+    };
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Network Listener
