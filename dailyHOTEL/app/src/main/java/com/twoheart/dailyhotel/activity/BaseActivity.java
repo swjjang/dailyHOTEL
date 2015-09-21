@@ -54,6 +54,8 @@ import com.twoheart.dailyhotel.view.OnLoadListener;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.FontManager;
 
+import io.branch.referral.Branch;
+
 public class BaseActivity extends AppCompatActivity implements Constants, OnLoadListener, ErrorListener
 {
     protected static int mStatusBarHeight;
@@ -106,6 +108,18 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
                 }
             }
         };
+    }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+
+        if (Util.isOverAPI14() == true)
+        {
+            Branch branch = Branch.getInstance();
+            branch.initSession(null, getIntent().getData(), this);
+        }
     }
 
     @Override
@@ -172,8 +186,7 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
     /**
      * 액션바를 설정하는 메서드로서, 어플리케이션 액션바 테마를 설정하고 제목을 지정한다.
      *
-     * @param title
-     *            액션바에 표시할 화면의 제목을 받는다.
+     * @param title 액션바에 표시할 화면의 제목을 받는다.
      */
     public Toolbar setActionBar(String title, boolean isFinish)
     {
@@ -583,6 +596,7 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
 
         recursiveRecycle(getWindow().getDecorView());
 
+
         super.onDestroy();
     }
 
@@ -646,8 +660,7 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
     /**
      * 버튼 난타를 방지하기 위한 메서드, 버튼의 클릭 가능 여부를 반대로 변경.
      *
-     * @param v
-     *            타겟 뷰
+     * @param v 타겟 뷰
      */
     protected void chgClickable(View v)
     {

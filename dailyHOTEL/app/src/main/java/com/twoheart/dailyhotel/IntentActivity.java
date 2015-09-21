@@ -19,6 +19,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.twoheart.dailyhotel.util.Util;
+
+import io.branch.referral.Branch;
+
 public class IntentActivity extends Activity
 {
     @Override
@@ -55,5 +59,17 @@ public class IntentActivity extends Activity
         startActivity(newIntent);
         overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out);
         finish();
+    }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+
+        if (Util.isOverAPI14() == true)
+        {
+            Branch branch = Branch.getInstance();
+            branch.initSession(null, getIntent().getData(), this);
+        }
     }
 }

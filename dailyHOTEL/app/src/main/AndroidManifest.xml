@@ -2,7 +2,6 @@
 <manifest package="com.twoheart.dailyhotel"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
-
     <uses-sdk
         android:minSdkVersion="9"
         android:targetSdkVersion="21"/>
@@ -80,6 +79,16 @@
                 <data
                     android:host="open"
                     android:scheme="@string/kakao_scheme"/>
+
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+            </intent-filter>
+            <intent-filter>
+                <data
+                    android:host="open"
+                    android:scheme="dailyhotel"/>
 
                 <action android:name="android.intent.action.VIEW"/>
 

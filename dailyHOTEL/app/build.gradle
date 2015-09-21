@@ -53,6 +53,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-gcm:7.+'
     compile 'com.kakao.sdk:kakaolink:1.+'
     compile 'com.kakao.sdk:kakaotalk:1.+'
+    compile 'io.branch.sdk.android:library:1.+'
     compile project(':AndroidMapsUtils')
     compile project(':refresh_library')
     compile project(':refresh_library_extra')
