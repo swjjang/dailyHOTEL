@@ -31,6 +31,7 @@ import com.android.volley.Request.Method;
 import com.androidquery.AQuery;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
+import com.kakao.usermgmt.UserManagement;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
@@ -182,15 +183,13 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
                 ExLog.d(e.toString());
             }
 
-            //
-            //			if (Session.getActiveSession() != null)
-            //			{
-            //				if (Session.getActiveSession().isOpened())
-            //				{
-            //					Session.getActiveSession().closeAndClearTokenInformation();
-            //					Session.setActiveSession(null);
-            //				}
-            //			}
+            try
+            {
+                UserManagement.requestLogout(null);
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
 
             DailyToast.showToast(ProfileActivity.this, R.string.toast_msg_logouted, Toast.LENGTH_SHORT);
             finish();
@@ -385,15 +384,16 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
                 String name = mAq.id(R.id.et_profile_name).getText().toString().trim();
                 String phone = mAq.id(R.id.et_profile_phone).getText().toString().trim();
 
-                // 전화번호는 필수 사항이 아니라서 필드만 초기화된다.
                 if (TextUtils.isEmpty(phone) == true)
                 {
-                    mAq.id(R.id.et_profile_phone).text("");
-                }
+                    // 전화번호는 필수 사항으로 한다.
+                    releaseUiComponent();
 
-                // 이름은 필수 사항으로 입력되어야 한다.
-                if (TextUtils.isEmpty(name) == true)
+                    mAq.id(R.id.et_profile_phone).text("");
+                    DailyToast.showToast(ProfileActivity.this, R.string.toast_msg_please_input_phone, Toast.LENGTH_SHORT);
+                } else if (TextUtils.isEmpty(name) == true)
                 {
+                    // 이름은 필수 사항으로 입력되어야 한다.
                     releaseUiComponent();
 
                     mAq.id(R.id.et_profile_name).text("");
