@@ -824,6 +824,11 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
                     }
 
                     setVisibility(HOTEL_VIEW_TYPE.GONE);
+
+                    if (mUserActionListener != null)
+                    {
+                        mUserActionListener.setMapViewVisible(false);
+                    }
                 } else
                 {
                     JSONObject jsonObject;
@@ -875,8 +880,11 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
                     if (mIsSelectionTop == true)
                     {
                         mHotelListView.setSelection(0);
-                        // mDailyFloatingActionButton
-                        //						mDailyFloatingActionButton.detachToListView(mHotelListView);
+                    }
+
+                    if (mUserActionListener != null)
+                    {
+                        mUserActionListener.setMapViewVisible(true);
                     }
                 }
 

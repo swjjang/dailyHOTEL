@@ -50,6 +50,174 @@ public class GourmetMainFragment extends PlaceMainFragment
 
     private FragmentViewPager mFragmentViewPager;
     private View mHeaderSectionLayout;
+
+    private interface OnUserAnalyticsActionListener
+    {
+        public void selectPlace(String name, long index, String checkInTime);
+
+        public void selectRegion(Province province);
+    }
+
+    @Override
+    public View createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
+        View view = inflater.inflate(R.layout.fragment_gourmet_main, container, false);
+
+        mHeaderSectionLayout = view.findViewById(R.id.headerSectionBar);
+        mHeaderSectionLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+
+            }
+        });
+
+        mFragmentViewPager = (FragmentViewPager) view.findViewById(R.id.fragmentViewPager);
+        mFragmentList = new ArrayList<PlaceListFragment>();
+
+        setOnUserActionListener(mOnFnBUserActionListener);
+
+        GourmetListFragment fnbListFragment = new GourmetListFragment();
+        fnbListFragment.setUserActionListener(mOnFnBUserActionListener);
+        mFragmentList.add(fnbListFragment);
+
+        mFragmentViewPager.setData(mFragmentList);
+        mFragmentViewPager.setAdapter(getChildFragmentManager());
+
+        return view;
+    }
+
+    @Override
+    protected void showSlidingDrawer()
+    {
+        setMenuEnabled(true);
+    }
+
+    @Override
+    protected void hideSlidingDrawer()
+    {
+        setMenuEnabled(false);
+    }
+
+    public void onNavigationItemSelected(Province province)
+    {
+        if (province == null)
+        {
+            return;
+        }
+
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null)
+        {
+            return;
+        }
+
+        mSelectedProvince = province;
+
+        baseActivity.setActionBarAreaEnabled(true);
+        baseActivity.setActionBarArea(province.name, mOnUserActionListener);
+
+        boolean isShowSpinner = mAreaItemList != null && mAreaItemList.size() > 1 ? true : false;
+        baseActivity.setActionBarRegionEnable(isShowSpinner);
+
+        boolean isSelectionTop = false;
+
+        // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
+        if (province.name.equalsIgnoreCase(baseActivity.sharedPreference.getString(KEY_PREFERENCE_FNB_REGION_SELECT, "")) == false)
+        {
+            SharedPreferences.Editor editor = baseActivity.sharedPreference.edit();
+            editor.putString(KEY_PREFERENCE_FNB_REGION_SELECT_BEFORE, baseActivity.sharedPreference.getString(KEY_PREFERENCE_FNB_REGION_SELECT, ""));
+            editor.putString(KEY_PREFERENCE_FNB_REGION_SELECT, province.name);
+            editor.commit();
+
+            isSelectionTop = true;
+        }
+
+        if (mOnUserAnalyticsActionListener != null)
+        {
+            mOnUserAnalyticsActionListener.selectRegion(province);
+        }
+
+        refreshList(province, isSelectionTop);
+    }
+
+    @Override
+    protected void requestProvinceList(BaseActivity baseActivity)
+    {
+        // 지역 리스트를 가져온다
+        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_SALE_REGION_PROVINCE_LIST).toString(), null, mProvinceListJsonResponseListener, baseActivity));
+    }
+
+    @Override
+    protected void refreshList(Province province, boolean isSelectionTop)
+    {
+        GourmetListFragment fnbListFragment = (GourmetListFragment) mFragmentViewPager.getCurrentFragment();
+        fnbListFragment.refreshList(province, isSelectionTop);
+    }
+
+    @Override
+    protected void activityResult(int requestCode, int resultCode, Intent data)
+    {
+        switch (requestCode)
+        {
+            case CODE_RESULT_ACTIVITY_SETTING_LOCATION:
+            {
+                PlaceListFragment currentFragment = (PlaceListFragment) mFragmentViewPager.getCurrentFragment();
+                currentFragment.onActivityResult(requestCode, resultCode, data);
+                break;
+            }
+        }
+    }
+
+    @Override
+    protected void setActionBarAnimationLock(boolean isLock)
+    {
+        PlaceListFragment currentFragment = (PlaceListFragment) mFragmentViewPager.getCurrentFragment();
+
+        if (currentFragment != null)
+        {
+            if (isLock == true)
+            {
+                currentFragment.setActionBarAnimationLock(false);
+            } else
+            {
+                currentFragment.showActionBarAnimatoin();
+                currentFragment.setActionBarAnimationLock(true);
+            }
+        }
+    }
+
+    @Override
+    protected boolean isEnabledRegionMenu()
+    {
+        if (mAreaItemList != null && mAreaItemList.size() > 1)
+        {
+            return true;
+        } else
+        {
+            return false;
+        }
+    }
+
+    @Override
+    protected void showClosedDaily(SaleTime saleTime)
+    {
+        MainActivity baseActivity = (MainActivity) getActivity();
+
+        if (baseActivity == null)
+        {
+            return;
+        }
+
+        baseActivity.replaceFragment(WaitTimerFragment.newInstance(saleTime, PlaceMainFragment.TYPE.GOURMET));
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // UserActionListener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     private OnUserAnalyticsActionListener mOnUserAnalyticsActionListener = new OnUserAnalyticsActionListener()
     {
         @Override
@@ -257,7 +425,18 @@ public class GourmetMainFragment extends PlaceMainFragment
                 }
             }
         }
+
+        @Override
+        public void setMapViewVisible(boolean isVisible)
+        {
+            setMenuEnabled(isVisible);
+        }
     };
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // NetworkActionListener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     private DailyHotelJsonResponseListener mProvinceListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
@@ -448,175 +627,4 @@ public class GourmetMainFragment extends PlaceMainFragment
         }
 
     };
-
-    @Override
-    public View createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
-        View view = inflater.inflate(R.layout.fragment_gourmet_main, container, false);
-
-        mHeaderSectionLayout = view.findViewById(R.id.headerSectionBar);
-        mHeaderSectionLayout.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-
-            }
-        });
-
-        mFragmentViewPager = (FragmentViewPager) view.findViewById(R.id.fragmentViewPager);
-        mFragmentList = new ArrayList<PlaceListFragment>();
-
-        setOnUserActionListener(mOnFnBUserActionListener);
-
-        GourmetListFragment fnbListFragment = new GourmetListFragment();
-        fnbListFragment.setUserActionListener(mOnFnBUserActionListener);
-        mFragmentList.add(fnbListFragment);
-
-        mFragmentViewPager.setData(mFragmentList);
-        mFragmentViewPager.setAdapter(getChildFragmentManager());
-
-        return view;
-    }
-
-    @Override
-    protected void showSlidingDrawer()
-    {
-        setMenuEnabled(true);
-    }
-
-    @Override
-    protected void hideSlidingDrawer()
-    {
-        setMenuEnabled(false);
-    }
-
-    public void onNavigationItemSelected(Province province)
-    {
-        if (province == null)
-        {
-            return;
-        }
-
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        if (baseActivity == null)
-        {
-            return;
-        }
-
-        mSelectedProvince = province;
-
-        baseActivity.setActionBarAreaEnabled(true);
-        baseActivity.setActionBarArea(province.name, mOnUserActionListener);
-
-        boolean isShowSpinner = mAreaItemList != null && mAreaItemList.size() > 1 ? true : false;
-        baseActivity.setActionBarRegionEnable(isShowSpinner);
-
-        boolean isSelectionTop = false;
-
-        // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
-        if (province.name.equalsIgnoreCase(baseActivity.sharedPreference.getString(KEY_PREFERENCE_FNB_REGION_SELECT, "")) == false)
-        {
-            SharedPreferences.Editor editor = baseActivity.sharedPreference.edit();
-            editor.putString(KEY_PREFERENCE_FNB_REGION_SELECT_BEFORE, baseActivity.sharedPreference.getString(KEY_PREFERENCE_FNB_REGION_SELECT, ""));
-            editor.putString(KEY_PREFERENCE_FNB_REGION_SELECT, province.name);
-            editor.commit();
-
-            isSelectionTop = true;
-        }
-
-        if (mOnUserAnalyticsActionListener != null)
-        {
-            mOnUserAnalyticsActionListener.selectRegion(province);
-        }
-
-        refreshList(province, isSelectionTop);
-    }
-
-    @Override
-    protected void requestProvinceList(BaseActivity baseActivity)
-    {
-        // 지역 리스트를 가져온다
-        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_SALE_REGION_PROVINCE_LIST).toString(), null, mProvinceListJsonResponseListener, baseActivity));
-    }
-
-    @Override
-    protected void refreshList(Province province, boolean isSelectionTop)
-    {
-        GourmetListFragment fnbListFragment = (GourmetListFragment) mFragmentViewPager.getCurrentFragment();
-        fnbListFragment.refreshList(province, isSelectionTop);
-    }
-
-    @Override
-    protected void activityResult(int requestCode, int resultCode, Intent data)
-    {
-        switch (requestCode)
-        {
-            case CODE_RESULT_ACTIVITY_SETTING_LOCATION:
-            {
-                PlaceListFragment currentFragment = (PlaceListFragment) mFragmentViewPager.getCurrentFragment();
-                currentFragment.onActivityResult(requestCode, resultCode, data);
-                break;
-            }
-        }
-    }
-
-    @Override
-    protected void setActionBarAnimationLock(boolean isLock)
-    {
-        PlaceListFragment currentFragment = (PlaceListFragment) mFragmentViewPager.getCurrentFragment();
-
-        if (currentFragment != null)
-        {
-            if (isLock == true)
-            {
-                currentFragment.setActionBarAnimationLock(false);
-            } else
-            {
-                currentFragment.showActionBarAnimatoin();
-                currentFragment.setActionBarAnimationLock(true);
-            }
-        }
-    }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // UserActionListener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    protected boolean isEnabledRegionMenu()
-    {
-        if (mAreaItemList != null && mAreaItemList.size() > 1)
-        {
-            return true;
-        } else
-        {
-            return false;
-        }
-    }
-
-    @Override
-    protected void showClosedDaily(SaleTime saleTime)
-    {
-        MainActivity baseActivity = (MainActivity) getActivity();
-
-        if (baseActivity == null)
-        {
-            return;
-        }
-
-        baseActivity.replaceFragment(WaitTimerFragment.newInstance(saleTime, PlaceMainFragment.TYPE.FNB));
-    }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // NetworkActionListener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private interface OnUserAnalyticsActionListener
-    {
-        public void selectPlace(String name, long index, String checkInTime);
-
-        public void selectRegion(Province province);
-    }
 }

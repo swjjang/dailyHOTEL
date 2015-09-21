@@ -48,7 +48,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     @Override
     protected void shareKakao(PlaceDetail placeDetail, String imageUrl, SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
     {
-        KakaoLinkManager.newInstance(this).shareFnB(placeDetail.name, placeDetail.index, //
+        KakaoLinkManager.newInstance(this).shareGourmet(placeDetail.name, placeDetail.index, //
                 imageUrl, //
                 checkInSaleTime.getDailyTime(), //
                 checkInSaleTime.getOffsetDailyDay());

@@ -86,6 +86,8 @@ public class HotelMainFragment extends BaseFragment
         public void toggleViewType();
 
         public void onClickActionBarArea();
+
+        public void setMapViewVisible(boolean isVisible);
     }
 
     public interface UserAnalyticsActionListener
@@ -785,6 +787,12 @@ public class HotelMainFragment extends BaseFragment
             intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, mSelectedProvince);
             intent.putParcelableArrayListExtra(NAME_INTENT_EXTRA_DATA_AREAITEMLIST, mAreaItemList);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SELECT_AREA);
+        }
+
+        @Override
+        public void setMapViewVisible(boolean isVisible)
+        {
+            setMenuEnabled(isVisible);
         }
     };
     private DailyHotelJsonResponseListener mSaleHotelAllJsonResponseListener = new DailyHotelJsonResponseListener()

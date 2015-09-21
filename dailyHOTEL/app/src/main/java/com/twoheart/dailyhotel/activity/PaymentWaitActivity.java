@@ -81,7 +81,7 @@ public class PaymentWaitActivity extends BaseActivity
                 break;
             }
 
-            case FNB:
+            case GOURMET:
             {
                 String params = String.format("?tid=%s", booking.tid);
                 String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_SESSION_VBANK_ACCOUNT_INFO).append(params).toString();

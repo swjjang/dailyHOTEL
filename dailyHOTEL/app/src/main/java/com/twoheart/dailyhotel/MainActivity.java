@@ -67,7 +67,6 @@ import com.twoheart.dailyhotel.fragment.ErrorFragment;
 import com.twoheart.dailyhotel.fragment.EventListFragment;
 import com.twoheart.dailyhotel.fragment.GourmetMainFragment;
 import com.twoheart.dailyhotel.fragment.HotelMainFragment;
-import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.fragment.RatingHotelFragment;
 import com.twoheart.dailyhotel.fragment.SettingFragment;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
@@ -994,10 +993,17 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                     {
                         for (Fragment fragment : fragmentManager.getFragments())
                         {
-                            if (fragment != null && fragment.isVisible() && fragment instanceof HotelMainFragment)
+                            if (fragment != null && fragment.isVisible())
                             {
-                                ((HotelMainFragment) fragment).setMenuEnabled(false);
-                                break;
+                                if (fragment instanceof HotelMainFragment)
+                                {
+                                    ((HotelMainFragment) fragment).setMenuEnabled(false);
+                                    break;
+                                } else if (fragment instanceof GourmetMainFragment)
+                                {
+                                    ((GourmetMainFragment) fragment).setMenuEnabled(false);
+                                    break;
+                                }
                             }
                         }
                     }
@@ -1017,13 +1023,13 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                     {
                         for (Fragment fragment : fragmentManager.getFragments())
                         {
-                            if (fragment != null && fragment.isVisible() && fragment instanceof HotelMainFragment)
+                            if (fragment instanceof HotelMainFragment)
                             {
                                 ((HotelMainFragment) fragment).setMenuEnabled(true);
                                 break;
-                            } else if (fragment != null && fragment.isVisible() && fragment instanceof PlaceMainFragment)
+                            } else if (fragment instanceof GourmetMainFragment)
                             {
-                                ((PlaceMainFragment) fragment).setMenuEnabled(true);
+                                ((GourmetMainFragment) fragment).setMenuEnabled(true);
                                 break;
                             }
                         }

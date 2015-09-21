@@ -548,6 +548,6 @@
     <string name="label_headersectionbar_title">당일 판매 상품</string>
     <string name="label_fnblistfragment_empty_text01">레스토랑을 준비하고 있습니다.</string>
     <string name="label_fnblistfragment_empty_text02">멋진 레스토랑을 원하시나요?\n1800-9120으로 전화주세요.</string>
-    <string name="label_fnblistfragment_header_text">매일 오전 9시부터 쉐프들이 선보이는 특별한 만찬!\n데일리고메에서 오늘의 만찬을 예약하세요!</string>
+    <string name="label_fnblistfragment_header_text">매일 오전 9시부터 쉐프들이 선보이는 특별한 만찬!\n\'데일리고메\'에서 오늘의 만찬을 예약하세요!</string>
 
 </resources>

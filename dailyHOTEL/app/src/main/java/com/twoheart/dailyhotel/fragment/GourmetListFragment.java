@@ -58,157 +58,6 @@ import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.AbsListViewDeleg
 public class GourmetListFragment extends PlaceListFragment
 {
     private PlaceListAdapter mPlaceListAdapter;
-    private DailyHotelJsonResponseListener mFnBListJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        private ArrayList<PlaceViewItem> makeSectionHotelList(ArrayList<Gourmet> fnbList)
-        {
-            ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<PlaceViewItem>();
-
-            if (fnbList == null || fnbList.size() == 0)
-            {
-                return placeViewItemList;
-            }
-
-            String area = null;
-            boolean hasDailyChoice = false;
-
-            for (Gourmet fnb : fnbList)
-            {
-                String region = fnb.districtName;
-
-                if (TextUtils.isEmpty(region) == true)
-                {
-                    continue;
-                }
-
-                if (fnb.isDailyChoice == true)
-                {
-                    if (hasDailyChoice == false)
-                    {
-                        hasDailyChoice = true;
-
-                        GourmetViewItem section = new GourmetViewItem(getString(R.string.label_dailychoice));
-                        placeViewItemList.add(section);
-                    }
-                } else
-                {
-                    if (TextUtils.isEmpty(area) == true || region.equalsIgnoreCase(area) == false)
-                    {
-                        area = region;
-
-                        GourmetViewItem section = new GourmetViewItem(region);
-                        placeViewItemList.add(section);
-                    }
-                }
-
-                placeViewItemList.add(new GourmetViewItem(fnb));
-            }
-
-            return placeViewItemList;
-        }
-
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            if (baseActivity == null)
-            {
-                return;
-            }
-
-            try
-            {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
-                int msg_code = response.getInt("msg_code");
-
-                if (msg_code != 0)
-                {
-                    if (response.has("msg") == true)
-                    {
-                        String msg = response.getString("msg");
-                        DailyToast.showToast(baseActivity, msg, Toast.LENGTH_SHORT);
-                    }
-
-                    throw new NullPointerException("response == null");
-                }
-
-                JSONArray jsonArray = response.getJSONArray("data");
-
-                int length = jsonArray.length();
-
-                if (length == 0)
-                {
-                    if (mPlaceListAdapter != null)
-                    {
-                        mPlaceListAdapter.clear();
-                    }
-
-                    setVisibility(VIEW_TYPE.GONE);
-                } else
-                {
-                    JSONObject jsonObject;
-
-                    ArrayList<Gourmet> fnbList = new ArrayList<Gourmet>(length);
-
-                    for (int i = 0; i < length; i++)
-                    {
-                        jsonObject = jsonArray.getJSONObject(i);
-
-                        Gourmet newGourmet = new Gourmet();
-
-                        if (newGourmet.setData(jsonObject) == true)
-                        {
-                            fnbList.add(newGourmet); // 추가.
-                        }
-                    }
-
-                    ArrayList<PlaceViewItem> placeViewItemList = makeSectionHotelList(fnbList);
-
-                    if (mPlaceListAdapter == null)
-                    {
-                        mPlaceListAdapter = new GourmetListAdapter(baseActivity, R.layout.list_row_hotel, new ArrayList<PlaceViewItem>());
-                        mListView.setAdapter(mPlaceListAdapter);
-                        mListView.setOnItemClickListener(GourmetListFragment.this);
-                    }
-
-                    setVisibility(mViewType);
-
-                    if (mViewType == VIEW_TYPE.MAP)
-                    {
-                        setPlaceMapData(placeViewItemList);
-                    }
-
-                    mPlaceListAdapter.clear();
-                    mPlaceListAdapter.addAll(placeViewItemList);
-                    mPlaceListAdapter.notifyDataSetChanged();
-
-                    if (mIsSelectionTop == true)
-                    {
-                        mListView.setSelection(0);
-                    }
-                }
-
-                // Notify PullToRefreshLayout that the refresh has finished
-                mPullToRefreshLayout.setRefreshComplete();
-
-                // 리스트 요청 완료후에 날짜 탭은 애니매이션을 진행하도록 한다.
-                onRefreshComplete();
-
-                setActionBarAnimationLock(false);
-            } catch (Exception e)
-            {
-                onError(e);
-            } finally
-            {
-                unLockUI();
-            }
-        }
-    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -369,7 +218,7 @@ public class GourmetListFragment extends PlaceListFragment
             baseActivity.showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
         }
 
-        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_SALE_LIST).append(params).toString(), null, mFnBListJsonResponseListener, baseActivity));
+        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_SALE_LIST).append(params).toString(), null, mGourmetListJsonResponseListener, baseActivity));
     }
 
     @Override
@@ -403,13 +252,176 @@ public class GourmetListFragment extends PlaceListFragment
         }
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     @Override
     protected PlaceMapFragment createPlaceMapFragment()
     {
         return new GourmetMapFragment();
     }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Listener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private DailyHotelJsonResponseListener mGourmetListJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        private ArrayList<PlaceViewItem> makeSectionHotelList(ArrayList<Gourmet> fnbList)
+        {
+            ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<PlaceViewItem>();
+
+            if (fnbList == null || fnbList.size() == 0)
+            {
+                return placeViewItemList;
+            }
+
+            String area = null;
+            boolean hasDailyChoice = false;
+
+            for (Gourmet fnb : fnbList)
+            {
+                String region = fnb.districtName;
+
+                if (TextUtils.isEmpty(region) == true)
+                {
+                    continue;
+                }
+
+                if (fnb.isDailyChoice == true)
+                {
+                    if (hasDailyChoice == false)
+                    {
+                        hasDailyChoice = true;
+
+                        GourmetViewItem section = new GourmetViewItem(getString(R.string.label_dailychoice));
+                        placeViewItemList.add(section);
+                    }
+                } else
+                {
+                    if (TextUtils.isEmpty(area) == true || region.equalsIgnoreCase(area) == false)
+                    {
+                        area = region;
+
+                        GourmetViewItem section = new GourmetViewItem(region);
+                        placeViewItemList.add(section);
+                    }
+                }
+
+                placeViewItemList.add(new GourmetViewItem(fnb));
+            }
+
+            return placeViewItemList;
+        }
+
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (baseActivity == null)
+            {
+                return;
+            }
+
+            try
+            {
+                if (response == null)
+                {
+                    throw new NullPointerException("response == null");
+                }
+
+                int msg_code = response.getInt("msg_code");
+
+                if (msg_code != 0)
+                {
+                    if (response.has("msg") == true)
+                    {
+                        String msg = response.getString("msg");
+                        DailyToast.showToast(baseActivity, msg, Toast.LENGTH_SHORT);
+                    }
+
+                    throw new NullPointerException("response == null");
+                }
+
+                JSONArray jsonArray = response.getJSONArray("data");
+
+                int length = jsonArray.length();
+
+                if (length == 0)
+                {
+                    if (mPlaceListAdapter != null)
+                    {
+                        mPlaceListAdapter.clear();
+                    }
+
+                    setVisibility(VIEW_TYPE.GONE);
+
+                    if (mOnUserActionListener != null)
+                    {
+                        mOnUserActionListener.setMapViewVisible(false);
+                    }
+                } else
+                {
+                    JSONObject jsonObject;
+
+                    ArrayList<Gourmet> fnbList = new ArrayList<Gourmet>(length);
+
+                    for (int i = 0; i < length; i++)
+                    {
+                        jsonObject = jsonArray.getJSONObject(i);
+
+                        Gourmet newGourmet = new Gourmet();
+
+                        if (newGourmet.setData(jsonObject) == true)
+                        {
+                            fnbList.add(newGourmet); // 추가.
+                        }
+                    }
+
+                    ArrayList<PlaceViewItem> placeViewItemList = makeSectionHotelList(fnbList);
+
+                    if (mPlaceListAdapter == null)
+                    {
+                        mPlaceListAdapter = new GourmetListAdapter(baseActivity, R.layout.list_row_hotel, new ArrayList<PlaceViewItem>());
+                        mListView.setAdapter(mPlaceListAdapter);
+                        mListView.setOnItemClickListener(GourmetListFragment.this);
+                    }
+
+                    setVisibility(mViewType);
+
+                    if (mViewType == VIEW_TYPE.MAP)
+                    {
+                        setPlaceMapData(placeViewItemList);
+                    }
+
+                    mPlaceListAdapter.clear();
+                    mPlaceListAdapter.addAll(placeViewItemList);
+                    mPlaceListAdapter.notifyDataSetChanged();
+
+                    if (mIsSelectionTop == true)
+                    {
+                        mListView.setSelection(0);
+                    }
+
+                    if (mOnUserActionListener != null)
+                    {
+                        mOnUserActionListener.setMapViewVisible(true);
+                    }
+                }
+
+                // Notify PullToRefreshLayout that the refresh has finished
+                mPullToRefreshLayout.setRefreshComplete();
+
+                // 리스트 요청 완료후에 날짜 탭은 애니매이션을 진행하도록 한다.
+                onRefreshComplete();
+
+                setActionBarAnimationLock(false);
+            } catch (Exception e)
+            {
+                onError(e);
+            } finally
+            {
+                unLockUI();
+            }
+        }
+    };
+
 }
