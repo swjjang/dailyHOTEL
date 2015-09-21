@@ -219,7 +219,6 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
      * 종종 에러 발생.
      *
      * @author jangjunho
-     *
      */
     @Deprecated
     private class HtmlObserver

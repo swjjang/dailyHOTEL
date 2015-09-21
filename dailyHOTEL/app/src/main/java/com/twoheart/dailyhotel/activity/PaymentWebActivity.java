@@ -689,14 +689,11 @@ public class PaymentWebActivity extends BaseActivity implements Constants
      * 다날 모바일 결제 관련 브릿지.
      *
      * @author jangjunho
-     *
      */
     private class TeleditBridge
     {
         /**
-         *
-         * @param val
-         *            휴대폰 결제 완료 후 결과값.
+         * @param val 휴대폰 결제 완료 후 결과값.
          */
         @JavascriptInterface
         public void Result(final String val)
@@ -720,7 +717,6 @@ public class PaymentWebActivity extends BaseActivity implements Constants
      * 종종 에러 발생.
      *
      * @author jangjunho
-     *
      */
     @Deprecated
     private class HtmlObserver

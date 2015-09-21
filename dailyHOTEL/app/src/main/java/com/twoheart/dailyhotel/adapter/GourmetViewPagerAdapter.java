@@ -147,7 +147,6 @@ public class GourmetViewPagerAdapter extends PlaceViewPagerAdapter
 
         llHotelRowContent.setOnClickListener(new View.OnClickListener()
         {
-
             @Override
             public void onClick(View v)
             {

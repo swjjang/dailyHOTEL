@@ -20,6 +20,7 @@ public class PlaceClusterRenderer extends DefaultClusterRenderer<PlaceClusterIte
     private PlaceClusterItem mSelectedPlaceClusterItem;
     private OnSelectedClusterItemListener mOnSelectedClusterItemListener;
     private OnClusterRenderedListener mOnClusterRenderedListener;
+
     public PlaceClusterRenderer(Context context, GoogleMap map, ClusterManager<PlaceClusterItem> clusterManager)
     {
         super(context, map, clusterManager);

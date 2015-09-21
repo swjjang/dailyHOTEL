@@ -28,7 +28,6 @@ import java.util.List;
  * 적립금 입출력 내역 확인.
  *
  * @author jangjunho
- *
  */
 public class CreditListActivity extends BaseActivity
 {

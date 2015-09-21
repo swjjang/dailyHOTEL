@@ -37,7 +37,6 @@ import java.util.Collection;
  * 신용카드 등록하기.
  *
  * @author sheldon
- *
  */
 public class CreditCardLayout extends FrameLayout
 {

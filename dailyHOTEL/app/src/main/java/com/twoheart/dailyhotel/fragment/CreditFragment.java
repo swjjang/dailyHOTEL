@@ -67,7 +67,6 @@ import java.util.Map;
  * 적립금 확인 페이지.
  *
  * @author jangjunho
- *
  */
 public class CreditFragment extends BaseFragment implements Constants, OnClickListener
 {

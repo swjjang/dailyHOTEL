@@ -389,6 +389,7 @@ public interface Constants
     public static final String GA_PURCHASE_EVENT_ACTION = "PurchaseComplete";
     public static final String GA_PURCHASE_EVENT_LABEL = "PurchaseComplete";
     public static final Long GA_PURCHASE_EVENT_VALUE = 1L;
+
     // 스토어 선택.
     public enum Stores
     {

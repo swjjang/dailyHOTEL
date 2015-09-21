@@ -63,7 +63,6 @@ import java.util.TimeZone;
  * 예약한 호텔의 리스트들을 출력.
  *
  * @author jangjunho
- *
  */
 public class BookingListFragment extends BaseFragment implements Constants, OnItemClickListener, OnClickListener
 {

@@ -31,7 +31,6 @@ import com.twoheart.dailyhotel.view.widget.DailySignatureView;
  * 신용카드 Final Check
  *
  * @author sheldon
- *
  */
 public class FinalCheckLayout extends FrameLayout
 {

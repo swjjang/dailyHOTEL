@@ -19,6 +19,7 @@ public class HotelClusterRenderer extends DefaultClusterRenderer<HotelClusterIte
     private HotelClusterItem mSelectedHotelClusterItem;
     private OnSelectedClusterItemListener mOnSelectedClusterItemListener;
     private OnClusterRenderedListener mOnClusterRenderedListener;
+
     public HotelClusterRenderer(Context context, GoogleMap map, ClusterManager<HotelClusterItem> clusterManager)
     {
         super(context, map, clusterManager);
