@@ -32,7 +32,6 @@ import android.view.ViewGroup;
  */
 public class LoopPagerAdapterWrapper extends PagerAdapter
 {
-
     private PagerAdapter mAdapter;
 
     private SparseArray<ToDestroy> mToDestroy = new SparseArray<ToDestroy>();
@@ -177,7 +176,7 @@ public class LoopPagerAdapterWrapper extends PagerAdapter
     }
 
 	/*
-	 * End delegation
+     * End delegation
 	 */
 
     /**

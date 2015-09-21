@@ -75,207 +75,9 @@ public class HotelListMapFragment extends com.google.android.gms.maps.SupportMap
     private HotelClusterRenderer mHotelClusterRenderer;
     private Marker mSelectedMarker;
     private View mMyLocationView;
-    private ViewPager mViewPager;
+    private LoopViewPager mViewPager;
     private HotelListViewPagerAdapter mHotelListViewPagerAdapter;
-    private ViewPager.OnPageChangeListener mOnPageChangeListener = new ViewPager.OnPageChangeListener()
-    {
-        @Override
-        public void onPageSelected(int page)
-        {
-            if (mHotelArrangeArrayList == null || mHotelArrangeArrayList.size() <= page)
-            {
-                return;
-            }
 
-            HotelListViewItem hotelListViewItem = mHotelArrangeArrayList.get(page);
-
-            Hotel hotel = hotelListViewItem.getItem();
-
-            if (hotel != null)
-            {
-                HotelClusterItem hotelClusterItem = new HotelClusterItem(hotel);
-                mHotelClusterRenderer.setSelectedClusterItem(hotelClusterItem);
-
-                onMarkerTempClick(hotelClusterItem.getPosition());
-            }
-        }
-
-        @Override
-        public void onPageScrolled(int arg0, float arg1, int arg2)
-        {
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int arg0)
-        {
-        }
-    };
-    private View.OnClickListener mOnMyLocationClickListener = new View.OnClickListener()
-    {
-        @Override
-        public void onClick(View v)
-        {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            if (baseActivity == null)
-            {
-                return;
-            }
-
-            LocationFactory.getInstance(baseActivity).startLocationMeasure(HotelListMapFragment.this, mMyLocationView, new LocationListener()
-            {
-                @Override
-                public void onStatusChanged(String provider, int status, Bundle extras)
-                {
-                    // TODO Auto-generated method stub
-
-                }
-
-                @Override
-                public void onProviderEnabled(String provider)
-                {
-                    // TODO Auto-generated method stub
-
-                }
-
-                @Override
-                public void onProviderDisabled(String provider)
-                {
-                    BaseActivity baseActivity = (BaseActivity) getActivity();
-
-                    if (baseActivity == null || baseActivity.isFinishing() == true)
-                    {
-                        return;
-                    }
-
-                    // Fragment가 added가 되지 않은 상태에서 터치가 될경우.
-                    if (isAdded() == false)
-                    {
-                        return;
-                    }
-
-                    // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
-                    LocationFactory.getInstance(baseActivity).stopLocationMeasure();
-
-                    baseActivity.showSimpleDialog(getString(R.string.dialog_title_used_gps), getString(R.string.dialog_msg_used_gps), getString(R.string.dialog_btn_text_dosetting), getString(R.string.dialog_btn_text_cancel), new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View v)
-                        {
-                            Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                            startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
-                        }
-                    }, null, true);
-                }
-
-                @Override
-                public void onLocationChanged(Location location)
-                {
-                    BaseActivity baseActivity = (BaseActivity) getActivity();
-
-                    if (baseActivity == null)
-                    {
-                        return;
-                    }
-
-                    LocationFactory.getInstance(baseActivity).stopLocationMeasure();
-
-                    if (mMyLocationMarkerOptions == null)
-                    {
-                        mMyLocationMarkerOptions = new MarkerOptions();
-                        mMyLocationMarkerOptions.icon(new MyLocationMarker(baseActivity).makeIcon());
-                        mMyLocationMarkerOptions.anchor(0.5f, 0.5f);
-                    }
-
-                    if (mMyLocationMarker != null)
-                    {
-                        mMyLocationMarker.remove();
-                    }
-
-                    mMyLocationMarkerOptions.position(new LatLng(location.getLatitude(), location.getLongitude()));
-                    mMyLocationMarker = mGoogleMap.addMarker(mMyLocationMarkerOptions);
-
-                    CameraPosition cameraPosition = new CameraPosition.Builder().target(mMyLocationMarkerOptions.getPosition()).zoom(13f).build();
-                    mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                }
-            });
-        }
-    };
-    private OnMapClickListener mOnMapClickListener = new OnMapClickListener()
-    {
-        @Override
-        public void onMapClick(LatLng arg0)
-        {
-            if (mSelectedMarker != null)
-            {
-                mSelectedMarker.setVisible(false);
-            }
-
-            mIsOpenMakrer = false;
-            mSelectedHotelListViewItem = null;
-
-            if (mViewPager != null)
-            {
-                mViewPager.setVisibility(View.INVISIBLE);
-            }
-        }
-    };
-    private HotelClusterRenderer.OnClusterRenderedListener mOnClusterRenderedListener = new HotelClusterRenderer.OnClusterRenderedListener()
-    {
-        @Override
-        public void onClusterRenderedListener(Renderer renderer)
-        {
-            if (renderer == Renderer.CLUSTER)
-            {
-                mOnMapClickListener.onMapClick(null);
-            }
-        }
-    };
-    private OnUserActionListener mOnInfoWindowUserActionListener = new OnUserActionListener()
-    {
-        @Override
-        public void onInfoWindowClickListener(Hotel selectedHotel)
-        {
-            if (getActivity() == null)
-            {
-                return;
-            }
-
-            if (mUserActionListener != null)
-            {
-                for (HotelListViewItem hotelListViewItem : mHotelArrayList)
-                {
-                    if (hotelListViewItem.getType() == HotelListViewItem.TYPE_SECTION)
-                    {
-                        continue;
-                    }
-
-                    Hotel hotel = hotelListViewItem.getItem();
-
-                    if (hotel.equals(selectedHotel) == true)
-                    {
-                        mSelectedHotelListViewItem = hotelListViewItem;
-                        mUserActionListener.selectHotel(hotelListViewItem, mSaleTime);
-                        break;
-                    }
-                }
-            }
-        }
-
-        @Override
-        public void onCloseInfoWindowClickListener()
-        {
-            if (getActivity() == null)
-            {
-                return;
-            }
-
-            if (mOnMapClickListener != null)
-            {
-                mOnMapClickListener.onMapClick(null);
-            }
-        }
-    };
     private OnMarkerClickListener mOnMarkerClickListener = new OnMarkerClickListener()
     {
         @Override
@@ -724,9 +526,6 @@ public class HotelListMapFragment extends com.google.android.gms.maps.SupportMap
 
         mClusterManager.cluster();
     }
-    /////////////////////////////////////////////////////////////////////////////////
-    // Listener
-    ////////////////////////////////////////////////////////////////////////////////
 
     /**
      * 같은 영역에 있는 호텔들을 찾아낸다.
@@ -840,7 +639,6 @@ public class HotelListMapFragment extends com.google.android.gms.maps.SupportMap
 
     private void onMarkerTempClick(final LatLng latlng)
     {
-
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
         if (baseActivity == null)
@@ -1003,4 +801,212 @@ public class HotelListMapFragment extends com.google.android.gms.maps.SupportMap
             return null;
         }
     }
+
+    /////////////////////////////////////////////////////////////////////////////////
+    // Listener
+    ////////////////////////////////////////////////////////////////////////////////
+
+    private ViewPager.OnPageChangeListener mOnPageChangeListener = new ViewPager.OnPageChangeListener()
+    {
+        @Override
+        public void onPageSelected(int page)
+        {
+            if (mHotelArrangeArrayList == null || mHotelArrangeArrayList.size() <= page)
+            {
+                return;
+            }
+
+            HotelListViewItem hotelListViewItem = mHotelArrangeArrayList.get(page);
+
+            Hotel hotel = hotelListViewItem.getItem();
+
+            if (hotel != null)
+            {
+                HotelClusterItem hotelClusterItem = new HotelClusterItem(hotel);
+                mHotelClusterRenderer.setSelectedClusterItem(hotelClusterItem);
+
+                onMarkerTempClick(hotelClusterItem.getPosition());
+            }
+        }
+
+        @Override
+        public void onPageScrolled(int arg0, float arg1, int arg2)
+        {
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int arg0)
+        {
+        }
+    };
+
+    private View.OnClickListener mOnMyLocationClickListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View v)
+        {
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (baseActivity == null)
+            {
+                return;
+            }
+
+            LocationFactory.getInstance(baseActivity).startLocationMeasure(HotelListMapFragment.this, mMyLocationView, new LocationListener()
+            {
+                @Override
+                public void onStatusChanged(String provider, int status, Bundle extras)
+                {
+                    // TODO Auto-generated method stub
+
+                }
+
+                @Override
+                public void onProviderEnabled(String provider)
+                {
+                    // TODO Auto-generated method stub
+
+                }
+
+                @Override
+                public void onProviderDisabled(String provider)
+                {
+                    BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                    if (baseActivity == null || baseActivity.isFinishing() == true)
+                    {
+                        return;
+                    }
+
+                    // Fragment가 added가 되지 않은 상태에서 터치가 될경우.
+                    if (isAdded() == false)
+                    {
+                        return;
+                    }
+
+                    // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
+                    LocationFactory.getInstance(baseActivity).stopLocationMeasure();
+
+                    baseActivity.showSimpleDialog(getString(R.string.dialog_title_used_gps), getString(R.string.dialog_msg_used_gps), getString(R.string.dialog_btn_text_dosetting), getString(R.string.dialog_btn_text_cancel), new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
+                        }
+                    }, null, true);
+                }
+
+                @Override
+                public void onLocationChanged(Location location)
+                {
+                    BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                    if (baseActivity == null)
+                    {
+                        return;
+                    }
+
+                    LocationFactory.getInstance(baseActivity).stopLocationMeasure();
+
+                    if (mMyLocationMarkerOptions == null)
+                    {
+                        mMyLocationMarkerOptions = new MarkerOptions();
+                        mMyLocationMarkerOptions.icon(new MyLocationMarker(baseActivity).makeIcon());
+                        mMyLocationMarkerOptions.anchor(0.5f, 0.5f);
+                    }
+
+                    if (mMyLocationMarker != null)
+                    {
+                        mMyLocationMarker.remove();
+                    }
+
+                    mMyLocationMarkerOptions.position(new LatLng(location.getLatitude(), location.getLongitude()));
+                    mMyLocationMarker = mGoogleMap.addMarker(mMyLocationMarkerOptions);
+
+                    CameraPosition cameraPosition = new CameraPosition.Builder().target(mMyLocationMarkerOptions.getPosition()).zoom(13f).build();
+                    mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                }
+            });
+        }
+    };
+
+    private OnMapClickListener mOnMapClickListener = new OnMapClickListener()
+    {
+        @Override
+        public void onMapClick(LatLng arg0)
+        {
+            if (mSelectedMarker != null)
+            {
+                mSelectedMarker.setVisible(false);
+            }
+
+            mIsOpenMakrer = false;
+            mSelectedHotelListViewItem = null;
+
+            if (mViewPager != null)
+            {
+                mViewPager.setVisibility(View.INVISIBLE);
+            }
+        }
+    };
+
+    private HotelClusterRenderer.OnClusterRenderedListener mOnClusterRenderedListener = new HotelClusterRenderer.OnClusterRenderedListener()
+    {
+        @Override
+        public void onClusterRenderedListener(Renderer renderer)
+        {
+            if (renderer == Renderer.CLUSTER)
+            {
+                mOnMapClickListener.onMapClick(null);
+            }
+        }
+    };
+
+    private OnUserActionListener mOnInfoWindowUserActionListener = new OnUserActionListener()
+    {
+        @Override
+        public void onInfoWindowClickListener(Hotel selectedHotel)
+        {
+            if (getActivity() == null)
+            {
+                return;
+            }
+
+            if (mUserActionListener != null)
+            {
+                for (HotelListViewItem hotelListViewItem : mHotelArrayList)
+                {
+                    if (hotelListViewItem.getType() == HotelListViewItem.TYPE_SECTION)
+                    {
+                        continue;
+                    }
+
+                    Hotel hotel = hotelListViewItem.getItem();
+
+                    if (hotel.equals(selectedHotel) == true)
+                    {
+                        mSelectedHotelListViewItem = hotelListViewItem;
+                        mUserActionListener.selectHotel(hotelListViewItem, mSaleTime);
+                        break;
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void onCloseInfoWindowClickListener()
+        {
+            if (getActivity() == null)
+            {
+                return;
+            }
+
+            if (mOnMapClickListener != null)
+            {
+                mOnMapClickListener.onMapClick(null);
+            }
+        }
+    };
 }

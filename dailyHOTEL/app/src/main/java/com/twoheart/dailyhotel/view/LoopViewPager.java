@@ -43,7 +43,6 @@ import java.lang.reflect.Field;
  */
 public class LoopViewPager extends ViewPager
 {
-
     private static final boolean DEFAULT_BOUNDARY_CASHING = false;
 
     private OnPageChangeListener mOuterPageChangeListener;
@@ -59,14 +58,29 @@ public class LoopViewPager extends ViewPager
         @Override
         public void onPageSelected(int position)
         {
-
-            int realPosition = mAdapter.toRealPosition(position);
-            if (mPreviousPosition != realPosition)
+            if (mAdapter != null)
             {
-                mPreviousPosition = realPosition;
-                if (mOuterPageChangeListener != null)
+                int realPosition = mAdapter.toRealPosition(position);
+
+                if (mPreviousPosition != realPosition)
                 {
-                    mOuterPageChangeListener.onPageSelected(realPosition);
+                    mPreviousPosition = realPosition;
+                    if (mOuterPageChangeListener != null)
+                    {
+                        mOuterPageChangeListener.onPageSelected(realPosition);
+                    }
+                }
+            } else
+            {
+                int realPosition = position;
+
+                if (mPreviousPosition != realPosition)
+                {
+                    mPreviousPosition = realPosition;
+                    if (mOuterPageChangeListener != null)
+                    {
+                        mOuterPageChangeListener.onPageSelected(realPosition);
+                    }
                 }
             }
         }
@@ -87,19 +101,13 @@ public class LoopViewPager extends ViewPager
                 mPreviousOffset = positionOffset;
                 if (mOuterPageChangeListener != null)
                 {
-                    //					if (realPosition != mAdapter.getRealCount() - 1)
-                    //					{
                     mOuterPageChangeListener.onPageScrolled(realPosition, positionOffset, positionOffsetPixels);
-                    //					} else
-                    //					{
-                    //						if (positionOffset > .5)
-                    //						{
-                    //							mOuterPageChangeListener.onPageScrolled(0, 0, 0);
-                    //						} else
-                    //						{
-                    //							mOuterPageChangeListener.onPageScrolled(realPosition, 0, 0);
-                    //						}
-                    //					}
+                }
+            } else
+            {
+                if (mOuterPageChangeListener != null)
+                {
+                    mOuterPageChangeListener.onPageScrolled(realPosition, positionOffset, positionOffsetPixels);
                 }
             }
         }
@@ -116,6 +124,7 @@ public class LoopViewPager extends ViewPager
                     setCurrentItem(realPosition, false);
                 }
             }
+
             if (mOuterPageChangeListener != null)
             {
                 mOuterPageChangeListener.onPageScrollStateChanged(state);
@@ -179,10 +188,17 @@ public class LoopViewPager extends ViewPager
     @Override
     public void setAdapter(PagerAdapter adapter)
     {
-        mAdapter = new LoopPagerAdapterWrapper(adapter);
-        mAdapter.setBoundaryCaching(mBoundaryCaching);
-        super.setAdapter(mAdapter);
-        setCurrentItem(0, false);
+        if (adapter != null && adapter.getCount() == 1)
+        {
+            mAdapter = null;
+            super.setAdapter(adapter);
+        } else
+        {
+            mAdapter = new LoopPagerAdapterWrapper(adapter);
+            mAdapter.setBoundaryCaching(mBoundaryCaching);
+            super.setAdapter(mAdapter);
+            setCurrentItem(0, false);
+        }
     }
 
     @Override
@@ -190,8 +206,6 @@ public class LoopViewPager extends ViewPager
     {
         return mAdapter != null ? mAdapter.toRealPosition(super.getCurrentItem()) : 0;
     }
-
-    ;
 
     @Override
     public void setCurrentItem(int item)
@@ -202,10 +216,17 @@ public class LoopViewPager extends ViewPager
         }
     }
 
+    @Override
     public void setCurrentItem(int item, boolean smoothScroll)
     {
-        int realItem = mAdapter.toInnerPosition(item);
-        super.setCurrentItem(realItem, smoothScroll);
+        if (mAdapter == null)
+        {
+            super.setCurrentItem(item, smoothScroll);
+        } else
+        {
+            int realItem = mAdapter.toInnerPosition(item);
+            super.setCurrentItem(realItem, smoothScroll);
+        }
     }
 
     @Override
