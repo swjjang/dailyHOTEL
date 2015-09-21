@@ -42,7 +42,6 @@ import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -89,12 +88,11 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     private SwitchCompat cbxAutoLogin;
     private TextView btnLogin;
     private TextView tvSignUp, tvForgotPwd;
-    private LoginButton facebookLogin;
+    private com.facebook.login.widget.LoginButton facebookLogin;
 
     private Map<String, String> loginParams;
     private Map<String, String> snsSignupParams;
     private Map<String, String> regPushParams;
-
 
     // 카카오톡
     private com.kakao.usermgmt.LoginButton mKakaoLoginButton;
@@ -118,74 +116,27 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         tvSignUp = (TextView) findViewById(R.id.tv_login_signup);
         tvForgotPwd = (TextView) findViewById(R.id.tv_login_forgot);
         btnLogin = (TextView) findViewById(R.id.btn_login);
-        facebookLogin = (LoginButton) findViewById(R.id.facebookLoginButton);
+
+        facebookLogin = (com.facebook.login.widget.LoginButton) findViewById(R.id.facebookLoginButton);
         facebookLogin.setReadPermissions(Collections.singletonList("public_profile, email"));
 
-        mCallbackManager = CallbackManager.Factory.create();
-        facebookLogin.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>()
+        View facebookLoginView = findViewById(R.id.facebookLoginView);
+        facebookLoginView.setOnClickListener(new View.OnClickListener()
         {
             @Override
-            public void onSuccess(LoginResult result)
+            public void onClick(View v)
             {
-                lockUI();
-
-                GraphRequest request = GraphRequest.newMeRequest(result.getAccessToken(), new GraphRequest.GraphJSONObjectCallback()
-                {
-                    @Override
-                    public void onCompleted(JSONObject jsonObject, GraphResponse response)
-                    {
-                        try
-                        {
-                            String email = null;
-
-                            if (jsonObject.has("email") == true)
-                            {
-                                email = jsonObject.getString("email");
-                            }
-
-                            String name = null;
-
-                            if (jsonObject.has("name") == true)
-                            {
-                                name = jsonObject.getString("name");
-                            }
-
-                            String id = jsonObject.getString("id");
-
-                            registerFacebookUser(id, name, email);
-                        } catch (Exception e)
-                        {
-                            ExLog.d(e.toString());
-                        }
-                    }
-                });
-
-                Bundle parameters = new Bundle();
-                parameters.putString("fields", "name, email");
-                request.setParameters(parameters);
-                request.executeAsync();
-            }
-
-            @Override
-            public void onCancel()
-            {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onError(FacebookException error)
-            {
-                // TODO Auto-generated method stub
-
+                facebookLogin.performClick();
             }
         });
+
+        mCallbackManager = CallbackManager.Factory.create();
+        facebookLogin.registerCallback(mCallbackManager, facebookCallback);
 
         FontManager.apply(facebookLogin, FontManager.getInstance(getApplicationContext()).getRegularTypeface());
 
         mKakaoLoginButton = (com.kakao.usermgmt.LoginButton) findViewById(R.id.kakaoLoginButton);
         View kakaoLoginView = findViewById(R.id.kakaoLoginView);
-
         kakaoLoginView.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -543,6 +494,62 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    private FacebookCallback facebookCallback = new FacebookCallback<LoginResult>()
+    {
+        @Override
+        public void onSuccess(LoginResult result)
+        {
+            lockUI();
+
+            GraphRequest request = GraphRequest.newMeRequest(result.getAccessToken(), new GraphRequest.GraphJSONObjectCallback()
+            {
+                @Override
+                public void onCompleted(JSONObject jsonObject, GraphResponse response)
+                {
+                    try
+                    {
+                        String email = null;
+
+                        if (jsonObject.has("email") == true)
+                        {
+                            email = jsonObject.getString("email");
+                        }
+
+                        String name = null;
+
+                        if (jsonObject.has("name") == true)
+                        {
+                            name = jsonObject.getString("name");
+                        }
+
+                        String id = jsonObject.getString("id");
+
+                        registerFacebookUser(id, name, email);
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.toString());
+                    }
+                }
+            });
+
+            Bundle parameters = new Bundle();
+            parameters.putString("fields", "name, email");
+            request.setParameters(parameters);
+            request.executeAsync();
+        }
+
+        @Override
+        public void onCancel()
+        {
+        }
+
+        @Override
+        public void onError(FacebookException error)
+        {
+        }
+    };
 
     private DailyHotelJsonResponseListener mUserSignupJsonResponseListener = new DailyHotelJsonResponseListener()
     {

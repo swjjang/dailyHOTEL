@@ -5,7 +5,7 @@
  * <p/>
  * 결제 화면으로 넘어가기 전 예약 정보를 보여주고 결제방식을 선택할 수 있는 화면
  */
-package com.twoheart.dailyhotel.activity;
+package com.twoheart.dailyhotel.view;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -31,6 +31,8 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.activity.BaseActivity;
+import com.twoheart.dailyhotel.activity.GourmetPaymentActivity;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Guest;
