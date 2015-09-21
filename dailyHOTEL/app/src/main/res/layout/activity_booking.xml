@@ -73,7 +73,7 @@
 
             <!-- 안내문구 -->
 
-            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+            <com.twoheart.dailyhotel.view.widget.DailyTextView
                 android:id="@+id/tv_card_notice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -85,7 +85,7 @@
 
             <!-- 결제 버튼 -->
 
-            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+            <com.twoheart.dailyhotel.view.widget.DailyTextView
                 android:id="@+id/btn_hotel_payment"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"

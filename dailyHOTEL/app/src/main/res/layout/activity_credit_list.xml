@@ -32,7 +32,7 @@
             android:scrollbars="vertical">
         </ListView>
 
-        <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
             android:id="@+id/empty_listview_credit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

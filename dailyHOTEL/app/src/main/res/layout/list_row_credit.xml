@@ -5,7 +5,7 @@
               android:orientation="horizontal"
               android:weightSum="1">
 
-    <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+    <com.twoheart.dailyhotel.view.widget.DailyTextView
         android:id="@+id/list_row_credit_bonus"
         android:layout_width="0dp"
         android:layout_height="match_parent"
@@ -29,7 +29,7 @@
         android:paddingTop="5dp"
         android:weightSum="1">
 
-        <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
             android:id="@+id/list_row_credit_expires"
             android:layout_width="match_parent"
             android:layout_height="0dp"

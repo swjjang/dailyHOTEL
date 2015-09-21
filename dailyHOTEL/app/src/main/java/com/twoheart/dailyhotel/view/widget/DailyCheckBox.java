@@ -6,19 +6,19 @@ import android.graphics.Typeface;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.util.AttributeSet;
 
-public class DailyCustomFontCheckBox extends AppCompatCheckBox
+public class DailyCheckBox extends AppCompatCheckBox
 {
-    public DailyCustomFontCheckBox(Context context)
+    public DailyCheckBox(Context context)
     {
         super(context);
     }
 
-    public DailyCustomFontCheckBox(Context context, AttributeSet attrs)
+    public DailyCheckBox(Context context, AttributeSet attrs)
     {
         super(context, attrs);
     }
 
-    public DailyCustomFontCheckBox(Context context, AttributeSet attrs, int defStyle)
+    public DailyCheckBox(Context context, AttributeSet attrs, int defStyle)
     {
         super(context, attrs, defStyle);
     }

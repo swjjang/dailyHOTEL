@@ -10,19 +10,6 @@ import org.json.JSONObject;
 
 public class Gourmet extends Place implements Parcelable
 {
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
-    {
-        public Gourmet createFromParcel(Parcel in)
-        {
-            return new Gourmet(in);
-        }
-
-        @Override
-        public Gourmet[] newArray(int size)
-        {
-            return new Gourmet[size];
-        }
-    };
     public String saleDay;
 
     public Gourmet()
@@ -95,4 +82,18 @@ public class Gourmet extends Place implements Parcelable
     {
         return 0;
     }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+    {
+        public Gourmet createFromParcel(Parcel in)
+        {
+            return new Gourmet(in);
+        }
+
+        @Override
+        public Gourmet[] newArray(int size)
+        {
+            return new Gourmet[size];
+        }
+    };
 }

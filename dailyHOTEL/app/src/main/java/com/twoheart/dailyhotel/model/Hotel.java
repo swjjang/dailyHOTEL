@@ -13,20 +13,6 @@ import org.json.JSONObject;
 
 public class Hotel implements Parcelable
 {
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
-    {
-        public Hotel createFromParcel(Parcel in)
-        {
-            return new Hotel(in);
-        }
-
-        @Override
-        public Hotel[] newArray(int size)
-        {
-            return new Hotel[size];
-        }
-
-    };
     public int averageDiscount;
     public double mLatitude;
     public double mLongitude;
@@ -44,8 +30,6 @@ public class Hotel implements Parcelable
     private int sequence;
     private String bedType;
     private String detailRegion;
-
-    ;
 
     public Hotel()
     {
@@ -204,15 +188,6 @@ public class Hotel implements Parcelable
 
     public boolean setHotel(JSONObject jsonObject)
     {
-        //	      "address": "제주특별자치도 제주시 중앙로 151",
-        //	      "region_province_idx": 45,
-        //	      "discount_total": 101600, (연박일 내 모든 객실의 총 판매가)
-        //	      "discount_avg": 98000, (연박일 내 모든 객실의 총 판매가의 평균)
-        //	      "district_seq": 2,
-        //	      "imgDir": "jejukal",
-        //	      "province_seq": 8,
-        //	      "region_district_idx": 901,
-
         try
         {
             name = jsonObject.getString("name");
@@ -324,4 +299,19 @@ public class Hotel implements Parcelable
             return mMarkerResId;
         }
     }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+    {
+        public Hotel createFromParcel(Parcel in)
+        {
+            return new Hotel(in);
+        }
+
+        @Override
+        public Hotel[] newArray(int size)
+        {
+            return new Hotel[size];
+        }
+
+    };
 }

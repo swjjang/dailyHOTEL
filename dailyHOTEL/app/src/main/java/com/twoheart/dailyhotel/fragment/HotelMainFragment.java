@@ -67,6 +67,402 @@ public class HotelMainFragment extends BaseFragment
     private boolean mDontReloadAtOnResume;
 
     private HOTEL_VIEW_TYPE mHotelViewType = HOTEL_VIEW_TYPE.LIST;
+
+    public enum HOTEL_VIEW_TYPE
+    {
+        LIST,
+        MAP,
+        GONE, // 목록이 비어있는 경우.
+    }
+
+    public interface OnUserActionListener
+    {
+        public void selectHotel(HotelListViewItem hotelListViewItem, SaleTime checkSaleTime);
+
+        public void selectHotel(int hotelIndex, long dailyTime, int dailyDayOfDays, int nights);
+
+        public void selectDay(SaleTime checkInSaleTime, SaleTime checkOutSaleTime, boolean isListSelectionTop);
+
+        public void toggleViewType();
+
+        public void onClickActionBarArea();
+    }
+
+    public interface UserAnalyticsActionListener
+    {
+        public void selectHotel(String hotelName, long hotelIndex, String checkInTime, int nights);
+
+        public void selectRegion(Province province);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
+        View view = inflater.inflate(R.layout.fragment_hotel_main, container, false);
+
+        ArrayList<String> titleList = new ArrayList<String>();
+        titleList.add(getString(R.string.label_today));
+        titleList.add(getString(R.string.label_tomorrow));
+        titleList.add(getString(R.string.label_selecteday));
+
+        mHotelViewType = HOTEL_VIEW_TYPE.LIST;
+
+        mTabIndicator = (TabIndicator) view.findViewById(R.id.tabindicator);
+        mUnderLineView = view.findViewById(R.id.tabindicator_underLine);
+
+        //		mTabIndicator.setData(titleList, dayList, true);
+        mTabIndicator.setData(titleList, true);
+        mTabIndicator.setOnTabSelectListener(mOnTabSelectedListener);
+
+        mFragmentViewPager = (FragmentViewPager) view.findViewById(R.id.fragmentViewPager);
+        //		mFragmentViewPager.setOnPageChangeListener(mOnPageChangeListener);
+
+        mFragmentList = new ArrayList<HotelListFragment>();
+        mTodaySaleTime = new SaleTime();
+
+        HotelListFragment hotelListFragment = new HotelListFragment();
+        hotelListFragment.setUserActionListener(mOnUserActionListener);
+        mFragmentList.add(hotelListFragment);
+
+        HotelListFragment hotelListFragment01 = new HotelListFragment();
+        hotelListFragment01.setUserActionListener(mOnUserActionListener);
+        mFragmentList.add(hotelListFragment01);
+
+        HotelDaysListFragment hotelListFragment02 = new HotelDaysListFragment();
+        hotelListFragment02.setUserActionListener(mOnUserActionListener);
+        mFragmentList.add(hotelListFragment02);
+
+        mFragmentViewPager.setData(mFragmentList);
+        mFragmentViewPager.setAdapter(getChildFragmentManager());
+
+        mTabIndicator.setViewPager(mFragmentViewPager.getViewPager());
+        mTabIndicator.setOnPageChangeListener(mOnPageChangeListener);
+
+        setHasOptionsMenu(true);//프래그먼트 내에서 옵션메뉴를 지정하기 위해
+
+        initHide();
+
+        return view;
+    }
+
+    private void initHide()
+    {
+        mTabIndicator.setVisibility(View.INVISIBLE);
+        mUnderLineView.setVisibility(View.INVISIBLE);
+
+        setMenuEnabled(false);
+    }
+
+    private void initShow()
+    {
+        mTabIndicator.setVisibility(View.VISIBLE);
+        mUnderLineView.setVisibility(View.VISIBLE);
+
+        setMenuEnabled(true);
+    }
+
+    @Override
+    public void onResume()
+    {
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null)
+        {
+            return;
+        }
+
+        if (mDontReloadAtOnResume == true)
+        {
+            mDontReloadAtOnResume = false;
+        } else
+        {
+            lockUI();
+
+            Map<String, String> params = new HashMap<String, String>();
+            params.put("timeZone", "Asia/Seoul");
+
+            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, baseActivity));
+        }
+
+        super.onResume();
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu)
+    {
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null)
+        {
+            return;
+        }
+
+        MenuInflater inflater = baseActivity.getMenuInflater();
+
+        menu.clear();
+
+        if (mMenuEnabled == true)
+        {
+            switch (mHotelViewType)
+            {
+                case LIST:
+                    inflater.inflate(R.menu.actionbar_icon_map, menu);
+                    break;
+
+                case MAP:
+                    inflater.inflate(R.menu.actionbar_icon_list, menu);
+                    break;
+            }
+        }
+    }
+
+    public void setMenuEnabled(boolean enabled)
+    {
+        if (mMenuEnabled == enabled || mTodaySaleTime.isSaleTime() == false)
+        {
+            return;
+        }
+
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null)
+        {
+            return;
+        }
+
+        mMenuEnabled = enabled;
+
+        baseActivity.invalidateOptionsMenu();
+
+        // 메뉴가 열리는 시점이다.
+        HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
+
+        if (currentFragment != null)
+        {
+            if (enabled == true)
+            {
+                currentFragment.setActionBarAnimationLock(false);
+            } else
+            {
+                currentFragment.showActionBarAnimatoin(baseActivity);
+                currentFragment.setActionBarAnimationLock(true);
+            }
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null)
+        {
+            return false;
+        }
+
+        switch (item.getItemId())
+        {
+            case R.id.action_list:
+            {
+                int isInstalledGooglePlayServices = Util.installGooglePlayService((BaseActivity) getActivity());
+
+                if (isInstalledGooglePlayServices == 1)
+                {
+                    if (mOnUserActionListener != null)
+                    {
+                        mOnUserActionListener.toggleViewType();
+                    }
+
+                    baseActivity.invalidateOptionsMenu();
+                }
+                return true;
+            }
+
+            case R.id.action_map:
+            {
+                int isInstalledGooglePlayServices = Util.installGooglePlayService((BaseActivity) getActivity());
+
+                if (isInstalledGooglePlayServices == 1)
+                {
+                    if (mOnUserActionListener != null)
+                    {
+                        mOnUserActionListener.toggleViewType();
+                    }
+
+                    baseActivity.invalidateOptionsMenu();
+                }
+                return true;
+            }
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null)
+        {
+            return;
+        }
+
+        unLockUI();
+        releaseUiComponent();
+        baseActivity.releaseUiComponent();
+
+        switch (requestCode)
+        {
+            case CODE_REQUEST_ACTIVITY_HOTELTAB:
+            {
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    ((MainActivity) baseActivity).selectMenuDrawer(((MainActivity) baseActivity).menuBookingListFragment);
+                } else if (resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
+                {
+                    ((MainActivity) baseActivity).selectMenuDrawer(((MainActivity) baseActivity).menuBookingListFragment);
+                }
+                break;
+            }
+
+            case CODE_RESULT_ACTIVITY_SETTING_LOCATION:
+            {
+                HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
+                currentFragment.onActivityResult(requestCode, resultCode, data);
+                break;
+            }
+
+            // 지역을 선택한 후에 되돌아 온경우.
+            case CODE_REQUEST_ACTIVITY_SELECT_AREA:
+            {
+                mDontReloadAtOnResume = true;
+
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    if (data != null)
+                    {
+                        if (data.hasExtra(NAME_INTENT_EXTRA_DATA_PROVINCE) == true)
+                        {
+                            Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
+
+                            onNavigationItemSelected(province);
+                        } else if (data.hasExtra(NAME_INTENT_EXTRA_DATA_AREA) == true)
+                        {
+                            Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_AREA);
+
+                            onNavigationItemSelected(province);
+                        }
+                    }
+                }
+                break;
+            }
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // UserActionListener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void onNavigationItemSelected(Province province)
+    {
+        if (province == null)
+        {
+            return;
+        }
+
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null)
+        {
+            return;
+        }
+
+        mSelectedProvince = province;
+
+        baseActivity.setActionBarAreaEnabled(true);
+        baseActivity.setActionBarArea(province.name, mOnUserActionListener);
+
+        boolean isSelectionTop = false;
+
+        // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
+        if (province.name.equalsIgnoreCase(baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "")) == false)
+        {
+            SharedPreferences.Editor editor = baseActivity.sharedPreference.edit();
+            editor.putString(KEY_PREFERENCE_REGION_SELECT_BEFORE, baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, ""));
+            editor.putString(KEY_PREFERENCE_REGION_SELECT, province.name);
+            editor.commit();
+
+            isSelectionTop = true;
+        }
+
+        if (mUserAnalyticsActionListener != null)
+        {
+            mUserAnalyticsActionListener.selectRegion(province);
+        }
+
+        refreshHotelList(province, isSelectionTop);
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // NetworkActionListener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void refreshHotelList(Province province, boolean isSelectionTop)
+    {
+        HotelListFragment hotelListFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
+        hotelListFragment.refreshHotelList(province, isSelectionTop);
+    }
+
+    private ArrayList<AreaItem> makeAreaItemList(ArrayList<Province> provinceList, ArrayList<Area> areaList)
+    {
+        ArrayList<AreaItem> arrayList = new ArrayList<AreaItem>(provinceList.size());
+
+        for (Province province : provinceList)
+        {
+            AreaItem item = new AreaItem();
+
+            item.setProvince(province);
+            item.setAreaList(new ArrayList<Area>());
+
+            for (Area area : areaList)
+            {
+                if (province.getProvinceIndex() == area.getProvinceIndex())
+                {
+                    ArrayList<Area> areaArrayList = item.getAreaList();
+
+                    if (areaArrayList.size() == 0)
+                    {
+                        Area totalArea = new Area();
+
+                        totalArea.index = -1;
+                        totalArea.name = province.name + " 전체";
+                        totalArea.setProvince(province);
+                        totalArea.sequence = -1;
+                        totalArea.tag = totalArea.name;
+                        totalArea.setProvinceIndex(province.getProvinceIndex());
+
+                        areaArrayList.add(totalArea);
+                    }
+
+                    area.setProvince(province);
+                    areaArrayList.add(area);
+                }
+            }
+
+            arrayList.add(item);
+        }
+
+        return arrayList;
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // UserActionListener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     private OnTabSelectedListener mOnTabSelectedListener = new OnTabSelectedListener()
     {
         @Override
@@ -735,398 +1131,4 @@ public class HotelMainFragment extends BaseFragment
         }
     };
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
-        View view = inflater.inflate(R.layout.fragment_hotel_main, container, false);
-
-        ArrayList<String> titleList = new ArrayList<String>();
-        titleList.add(getString(R.string.label_today));
-        titleList.add(getString(R.string.label_tomorrow));
-        titleList.add(getString(R.string.label_selecteday));
-
-        mHotelViewType = HOTEL_VIEW_TYPE.LIST;
-
-        mTabIndicator = (TabIndicator) view.findViewById(R.id.tabindicator);
-        mUnderLineView = view.findViewById(R.id.tabindicator_underLine);
-
-        //		mTabIndicator.setData(titleList, dayList, true);
-        mTabIndicator.setData(titleList, true);
-        mTabIndicator.setOnTabSelectListener(mOnTabSelectedListener);
-
-        mFragmentViewPager = (FragmentViewPager) view.findViewById(R.id.fragmentViewPager);
-        //		mFragmentViewPager.setOnPageChangeListener(mOnPageChangeListener);
-
-        mFragmentList = new ArrayList<HotelListFragment>();
-        mTodaySaleTime = new SaleTime();
-
-        HotelListFragment hotelListFragment = new HotelListFragment();
-        hotelListFragment.setUserActionListener(mOnUserActionListener);
-        mFragmentList.add(hotelListFragment);
-
-        HotelListFragment hotelListFragment01 = new HotelListFragment();
-        hotelListFragment01.setUserActionListener(mOnUserActionListener);
-        mFragmentList.add(hotelListFragment01);
-
-        HotelDaysListFragment hotelListFragment02 = new HotelDaysListFragment();
-        hotelListFragment02.setUserActionListener(mOnUserActionListener);
-        mFragmentList.add(hotelListFragment02);
-
-        mFragmentViewPager.setData(mFragmentList);
-        mFragmentViewPager.setAdapter(getChildFragmentManager());
-
-        mTabIndicator.setViewPager(mFragmentViewPager.getViewPager());
-        mTabIndicator.setOnPageChangeListener(mOnPageChangeListener);
-
-        setHasOptionsMenu(true);//프래그먼트 내에서 옵션메뉴를 지정하기 위해
-
-        initHide();
-
-        return view;
-    }
-
-    private void initHide()
-    {
-        mTabIndicator.setVisibility(View.INVISIBLE);
-        mUnderLineView.setVisibility(View.INVISIBLE);
-
-        setMenuEnabled(false);
-    }
-
-    private void initShow()
-    {
-        mTabIndicator.setVisibility(View.VISIBLE);
-        mUnderLineView.setVisibility(View.VISIBLE);
-
-        setMenuEnabled(true);
-    }
-
-    @Override
-    public void onResume()
-    {
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        if (baseActivity == null)
-        {
-            return;
-        }
-
-        if (mDontReloadAtOnResume == true)
-        {
-            mDontReloadAtOnResume = false;
-        } else
-        {
-            lockUI();
-
-            Map<String, String> params = new HashMap<String, String>();
-            params.put("timeZone", "Asia/Seoul");
-
-            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, baseActivity));
-        }
-
-        super.onResume();
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu)
-    {
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        if (baseActivity == null)
-        {
-            return;
-        }
-
-        MenuInflater inflater = baseActivity.getMenuInflater();
-
-        menu.clear();
-
-        if (mMenuEnabled == true)
-        {
-            switch (mHotelViewType)
-            {
-                case LIST:
-                    inflater.inflate(R.menu.actionbar_icon_map, menu);
-                    break;
-
-                case MAP:
-                    inflater.inflate(R.menu.actionbar_icon_list, menu);
-                    break;
-            }
-        }
-    }
-
-    public void setMenuEnabled(boolean enabled)
-    {
-        if (mMenuEnabled == enabled || mTodaySaleTime.isSaleTime() == false)
-        {
-            return;
-        }
-
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        if (baseActivity == null)
-        {
-            return;
-        }
-
-        mMenuEnabled = enabled;
-
-        baseActivity.invalidateOptionsMenu();
-
-        // 메뉴가 열리는 시점이다.
-        HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
-
-        if (currentFragment != null)
-        {
-            if (enabled == true)
-            {
-                currentFragment.setActionBarAnimationLock(false);
-            } else
-            {
-                currentFragment.showActionBarAnimatoin(baseActivity);
-                currentFragment.setActionBarAnimationLock(true);
-            }
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        if (baseActivity == null)
-        {
-            return false;
-        }
-
-        switch (item.getItemId())
-        {
-            case R.id.action_list:
-            {
-                int isInstalledGooglePlayServices = Util.installGooglePlayService((BaseActivity) getActivity());
-
-                if (isInstalledGooglePlayServices == 1)
-                {
-                    if (mOnUserActionListener != null)
-                    {
-                        mOnUserActionListener.toggleViewType();
-                    }
-
-                    baseActivity.invalidateOptionsMenu();
-                }
-                return true;
-            }
-
-            case R.id.action_map:
-            {
-                int isInstalledGooglePlayServices = Util.installGooglePlayService((BaseActivity) getActivity());
-
-                if (isInstalledGooglePlayServices == 1)
-                {
-                    if (mOnUserActionListener != null)
-                    {
-                        mOnUserActionListener.toggleViewType();
-                    }
-
-                    baseActivity.invalidateOptionsMenu();
-                }
-                return true;
-            }
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        if (baseActivity == null)
-        {
-            return;
-        }
-
-        unLockUI();
-        releaseUiComponent();
-        baseActivity.releaseUiComponent();
-
-        switch (requestCode)
-        {
-            case CODE_REQUEST_ACTIVITY_HOTELTAB:
-            {
-                if (resultCode == Activity.RESULT_OK)
-                {
-                    ((MainActivity) baseActivity).selectMenuDrawer(((MainActivity) baseActivity).menuBookingListFragment);
-                } else if (resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
-                {
-                    ((MainActivity) baseActivity).selectMenuDrawer(((MainActivity) baseActivity).menuBookingListFragment);
-                }
-                break;
-            }
-
-            case CODE_RESULT_ACTIVITY_SETTING_LOCATION:
-            {
-                HotelListFragment currentFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
-                currentFragment.onActivityResult(requestCode, resultCode, data);
-                break;
-            }
-
-            // 지역을 선택한 후에 되돌아 온경우.
-            case CODE_REQUEST_ACTIVITY_SELECT_AREA:
-            {
-                mDontReloadAtOnResume = true;
-
-                if (resultCode == Activity.RESULT_OK)
-                {
-                    if (data != null)
-                    {
-                        if (data.hasExtra(NAME_INTENT_EXTRA_DATA_PROVINCE) == true)
-                        {
-                            Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
-
-                            onNavigationItemSelected(province);
-                        } else if (data.hasExtra(NAME_INTENT_EXTRA_DATA_AREA) == true)
-                        {
-                            Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_AREA);
-
-                            onNavigationItemSelected(province);
-                        }
-                    }
-                }
-                break;
-            }
-        }
-
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // UserActionListener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public void onNavigationItemSelected(Province province)
-    {
-        if (province == null)
-        {
-            return;
-        }
-
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        if (baseActivity == null)
-        {
-            return;
-        }
-
-        mSelectedProvince = province;
-
-        baseActivity.setActionBarAreaEnabled(true);
-        baseActivity.setActionBarArea(province.name, mOnUserActionListener);
-
-        boolean isSelectionTop = false;
-
-        // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
-        if (province.name.equalsIgnoreCase(baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "")) == false)
-        {
-            SharedPreferences.Editor editor = baseActivity.sharedPreference.edit();
-            editor.putString(KEY_PREFERENCE_REGION_SELECT_BEFORE, baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, ""));
-            editor.putString(KEY_PREFERENCE_REGION_SELECT, province.name);
-            editor.commit();
-
-            isSelectionTop = true;
-        }
-
-        if (mUserAnalyticsActionListener != null)
-        {
-            mUserAnalyticsActionListener.selectRegion(province);
-        }
-
-        refreshHotelList(province, isSelectionTop);
-    }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // NetworkActionListener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private void refreshHotelList(Province province, boolean isSelectionTop)
-    {
-        HotelListFragment hotelListFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
-        hotelListFragment.refreshHotelList(province, isSelectionTop);
-    }
-
-    private ArrayList<AreaItem> makeAreaItemList(ArrayList<Province> provinceList, ArrayList<Area> areaList)
-    {
-        ArrayList<AreaItem> arrayList = new ArrayList<AreaItem>(provinceList.size());
-
-        for (Province province : provinceList)
-        {
-            AreaItem item = new AreaItem();
-
-            item.setProvince(province);
-            item.setAreaList(new ArrayList<Area>());
-
-            for (Area area : areaList)
-            {
-                if (province.getProvinceIndex() == area.getProvinceIndex())
-                {
-                    ArrayList<Area> areaArrayList = item.getAreaList();
-
-                    if (areaArrayList.size() == 0)
-                    {
-                        Area totalArea = new Area();
-
-                        totalArea.index = -1;
-                        totalArea.name = province.name + " 전체";
-                        totalArea.setProvince(province);
-                        totalArea.sequence = -1;
-                        totalArea.tag = totalArea.name;
-                        totalArea.setProvinceIndex(province.getProvinceIndex());
-
-                        areaArrayList.add(totalArea);
-                    }
-
-                    area.setProvince(province);
-                    areaArrayList.add(area);
-                }
-            }
-
-            arrayList.add(item);
-        }
-
-        return arrayList;
-    }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // UserActionListener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public enum HOTEL_VIEW_TYPE
-    {
-        LIST,
-        MAP,
-        GONE, // 목록이 비어있는 경우.
-    }
-
-    public interface OnUserActionListener
-    {
-        public void selectHotel(HotelListViewItem hotelListViewItem, SaleTime checkSaleTime);
-
-        public void selectHotel(int hotelIndex, long dailyTime, int dailyDayOfDays, int nights);
-
-        public void selectDay(SaleTime checkInSaleTime, SaleTime checkOutSaleTime, boolean isListSelectionTop);
-
-        public void toggleViewType();
-
-        public void onClickActionBarArea();
-    }
-
-    public interface UserAnalyticsActionListener
-    {
-        public void selectHotel(String hotelName, long hotelIndex, String checkInTime, int nights);
-
-        public void selectRegion(Province province);
-    }
 }

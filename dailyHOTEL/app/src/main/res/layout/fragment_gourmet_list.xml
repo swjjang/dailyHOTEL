@@ -56,7 +56,7 @@
             android:paddingBottom="24dp"
             android:paddingTop="24dp">
 
-            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+            <com.twoheart.dailyhotel.view.widget.DailyTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -65,7 +65,7 @@
                 android:textColor="@color/dh_theme_color"
                 android:textSize="16dp"/>
 
-            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+            <com.twoheart.dailyhotel.view.widget.DailyTextView
                 android:id="@+id/checkInOutTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -147,7 +147,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"/>
 
-            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+            <com.twoheart.dailyhotel.view.widget.DailyTextView
                 android:id="@+id/toTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -369,7 +369,7 @@ public class GourmetListFragment extends PlaceListFragment
             baseActivity.showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
         }
 
-        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_LB_SERVER).append(URL_WEBAPI_FNB_SALE_LIST).append(params).toString(), null, mFnBListJsonResponseListener, baseActivity));
+        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_SALE_LIST).append(params).toString(), null, mFnBListJsonResponseListener, baseActivity));
     }
 
     @Override

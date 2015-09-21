@@ -27,7 +27,7 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
             android:id="@+id/waitAccountTextView"
             android:layout_width="match_parent"
             android:layout_height="22dp"
@@ -46,7 +46,7 @@
             android:textSize="22dp"
             android:visibility="gone"/>
 
-        <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
             android:id="@+id/tv_booking_row_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
             android:textSize="20dp"
             android:textStyle="bold"/>
 
-        <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
             android:id="@+id/tv_booking_row_day"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

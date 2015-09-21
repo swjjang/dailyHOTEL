@@ -11,13 +11,13 @@
         android:paddingLeft="15dp"
         android:paddingRight="15dp">
 
-        <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="-"
             android:textColor="@color/textView_textColor_main"/>
 
-        <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
             android:id="@+id/tv_hotel_tab_info_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

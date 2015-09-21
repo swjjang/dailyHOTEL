@@ -7,7 +7,7 @@
     android:background="@color/white"
     android:gravity="center_vertical">
 
-    <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+    <com.twoheart.dailyhotel.view.widget.DailyTextView
         android:id="@+id/hotelGradeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -23,7 +23,7 @@
         android:textSize="11.5dp"
         android:visibility="invisible"/>
 
-    <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+    <com.twoheart.dailyhotel.view.widget.DailyTextView
         android:id="@+id/hotelNameTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

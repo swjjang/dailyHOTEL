@@ -8,23 +8,23 @@ import android.util.AttributeSet;
 
 import com.twoheart.dailyhotel.R;
 
-public class DailyCustomFontTextView extends AppCompatTextView
+public class DailyTextView extends AppCompatTextView
 {
     private int mCurMaxLine = 0;
 
-    public DailyCustomFontTextView(Context context)
+    public DailyTextView(Context context)
     {
         super(context);
     }
 
-    public DailyCustomFontTextView(Context context, AttributeSet attrs)
+    public DailyTextView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
 
         setFontStyle(context, attrs);
     }
 
-    public DailyCustomFontTextView(Context context, AttributeSet attrs, int defStyle)
+    public DailyTextView(Context context, AttributeSet attrs, int defStyle)
     {
         super(context, attrs, defStyle);
 
