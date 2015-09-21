@@ -21,6 +21,7 @@ public class KakaoLinkManager implements Constants
     private KakaoLink kkLink;
     private KakaoTalkLinkMessageBuilder kkMsgBuilder;
     private Context mContext;
+
     private KakaoLinkManager(Context context)
     {
         try

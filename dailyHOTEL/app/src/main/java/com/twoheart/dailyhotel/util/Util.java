@@ -112,10 +112,8 @@ public class Util implements Constants
         return correctTime;
     }
 
-    public static void setLocale(Context context, String lang)
+    public static void setLocale(Context context, Locale locale)
     {
-
-        Locale locale = new Locale(lang);
         Resources res = context.getResources();
         DisplayMetrics dm = res.getDisplayMetrics();
         Configuration conf = res.getConfiguration();

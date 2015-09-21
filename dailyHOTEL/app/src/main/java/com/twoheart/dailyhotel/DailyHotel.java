@@ -14,9 +14,17 @@
  */
 package com.twoheart.dailyhotel;
 
+import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 
 import com.androidquery.callback.BitmapAjaxCallback;
+import com.kakao.auth.ApprovalType;
+import com.kakao.auth.AuthType;
+import com.kakao.auth.IApplicationConfig;
+import com.kakao.auth.ISessionConfig;
+import com.kakao.auth.KakaoAdapter;
+import com.kakao.auth.KakaoSDK;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.Constants;
@@ -24,23 +32,30 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.VolleyImageLoader;
 import com.twoheart.dailyhotel.view.widget.FontManager;
 
+import java.util.Locale;
+
 import io.branch.referral.Branch;
 
 public class DailyHotel extends Application implements Constants
 {
+    private static volatile DailyHotel mInstance = null;
+    private static volatile Activity mCurrentActivity = null;
     public static String VERSION;
 
     @Override
     public void onCreate()
     {
         super.onCreate();
+        mInstance = this;
 
         //		Fabric.with(this, new Crashlytics());
+
+        Util.setLocale(this, Locale.KOREAN);
 
         //
         if (Util.isOverAPI14() == true)
         {
-            Branch.getAutoInstance(this);
+            Branch branch = Branch.getAutoInstance(this);
         }
 
         // 버전 정보 얻기
@@ -48,6 +63,8 @@ public class DailyHotel extends Application implements Constants
 
         initializeVolley();
         initializeAnalytics();
+
+        KakaoSDK.init(new KakaoSDKAdapter());
 
         FontManager.getInstance(getApplicationContext());
     }
@@ -70,4 +87,71 @@ public class DailyHotel extends Application implements Constants
         BitmapAjaxCallback.clearCache();
     }
 
+    public static DailyHotel getGlobalApplicationContext()
+    {
+        return mInstance;
+    }
+
+    public static void setCurrentActivity(Activity currentActivity)
+    {
+        DailyHotel.mCurrentActivity = currentActivity;
+    }
+
+    public static Activity getCurrentActivity()
+    {
+        return mCurrentActivity;
+    }
+
+    private static class KakaoSDKAdapter extends KakaoAdapter
+    {
+        /**
+         * Session Config에 대해서는 default값들이 존재한다.
+         * 필요한 상황에서만 override해서 사용하면 됨.
+         *
+         * @return Session의 설정값.
+         */
+        @Override
+        public ISessionConfig getSessionConfig()
+        {
+            return new ISessionConfig()
+            {
+                @Override
+                public AuthType[] getAuthTypes()
+                {
+                    return new AuthType[]{AuthType.KAKAO_TALK};
+                }
+
+                @Override
+                public boolean isUsingWebviewTimer()
+                {
+                    return false;
+                }
+
+                @Override
+                public ApprovalType getApprovalType()
+                {
+                    return ApprovalType.INDIVIDUAL;
+                }
+            };
+        }
+
+        @Override
+        public IApplicationConfig getApplicationConfig()
+        {
+            return new IApplicationConfig()
+            {
+                @Override
+                public Activity getTopActivity()
+                {
+                    return DailyHotel.getCurrentActivity();
+                }
+
+                @Override
+                public Context getApplicationContext()
+                {
+                    return DailyHotel.getGlobalApplicationContext();
+                }
+            };
+        }
+    }
 }
