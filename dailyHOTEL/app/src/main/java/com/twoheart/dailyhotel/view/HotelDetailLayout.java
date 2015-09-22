@@ -1799,6 +1799,11 @@ public class HotelDetailLayout
                     }
                 });
             }
+
+            // 만족도
+            TextView satisfactionView = (TextView) view.findViewById(R.id.satisfactionView);
+            satisfactionView.setText("98%(2275명 평가)");
+
             return view;
         }
 
