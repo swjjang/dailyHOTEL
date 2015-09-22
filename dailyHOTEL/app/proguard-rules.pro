@@ -63,8 +63,6 @@
 
 -keep class com.crashlytics.** { *; }
 
--keep class org.apache.http.** { *; }
-
 -keep class android.support.v4.** { *; }
 -keep interface android.support.v4.** { *; }
 
@@ -74,6 +72,13 @@
 -keep class com.google.android.** { *; }
 -keep interface com.google.android.** { *; }
 
+-keep class com.squareup.okhttp.** { *; }
+-keep interface com.squareup.okhttp.** { *; }
+
 -keep public class com.twoheart.dailyhotel.network.SerializableHttpCookie { *; }
 
--dontwarn android.support.v4.**, android.support.v7.**, com.ning.http.client.**,org.jboss.netty.**, org.slf4j.**, com.fasterxml.jackson.databind.**, com.google.android.gms.**, com.crashlytics.**, com.google.**, org.apache.http.**, android.net.http.AndroidHttpClient, com.android.volley.**
+-dontwarn com.squareup.**
+-dontwarn okio.**
+-dontwarn android.support.v4.**, android.support.v7.**, com.ning.http.client.**, org.jboss.netty.**
+-dontwarn org.slf4j.**, com.fasterxml.jackson.databind.**, com.google.android.gms.**, com.crashlytics.**
+-dontwarn com.google.**, android.net.http.AndroidHttpClient, com.android.volley.**

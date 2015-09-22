@@ -196,6 +196,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
                     viewHolder.img = (ImageView) convertView.findViewById(R.id.iv_hotel_row_img);
                     viewHolder.name = (TextView) convertView.findViewById(R.id.tv_hotel_row_name);
                     viewHolder.price = (TextView) convertView.findViewById(R.id.tv_hotel_row_price);
+                    viewHolder.likeView = (TextView) convertView.findViewById(R.id.likeView);
                     viewHolder.discount = (TextView) convertView.findViewById(R.id.tv_hotel_row_discount);
                     viewHolder.sold_out = (TextView) convertView.findViewById(R.id.tv_hotel_row_soldout);
                     viewHolder.address = (TextView) convertView.findViewById(R.id.tv_hotel_row_address);
@@ -228,6 +229,9 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
                     viewHolder.price.setText(strPrice + currency);
                     viewHolder.price.setPaintFlags(viewHolder.price.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 }
+
+                viewHolder.likeView.setText("98% | ");
+                viewHolder.likeView.setVisibility(View.VISIBLE);
 
                 if (element.nights > 1)
                 {
@@ -337,6 +341,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
         TextView grade;
         View average;
         View dBenefit;
+        TextView likeView;
     }
 
     private class HeaderListViewHolder

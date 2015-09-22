@@ -105,7 +105,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:layout_toLeftOf="@+id/hotelPrice"
+                    android:layout_toLeftOf="@+id/tv_hotel_row_price"
                     android:gravity="center_vertical"
                     android:shadowColor="@color/textView_textColor_shadow"
                     android:shadowDx="0"
@@ -115,34 +115,18 @@
                     android:textColor="#cecece"
                     android:textSize="13.5dp"/>
 
-                <LinearLayout
-                    android:id="@+id/hotelPrice"
-                    android:layout_alignParentRight="true"
+                <com.twoheart.dailyhotel.view.widget.DailyTextView
+                    android:id="@+id/tv_hotel_row_price"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <com.twoheart.dailyhotel.view.widget.DailyTextView
-                        android:id="@+id/likeView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="12dp"
-                        android:gravity="center_vertical"
-                        android:textColor="@android:color/white"
-                        android:textSize="11dp"
-                        android:visibility="gone"
-                        android:drawableLeft="@drawable/ic_search"/>
-
-                    <com.twoheart.dailyhotel.view.widget.DailyTextView
-                        android:id="@+id/tv_hotel_row_price"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:shadowColor="@color/textView_textColor_shadow"
-                        android:shadowDx="0"
-                        android:shadowDy="2"
-                        android:shadowRadius="0.01"
-                        android:textColor="#cecece"
-                        android:textSize="13.5dp"/>
-                </LinearLayout>
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center_vertical|right"
+                    android:shadowColor="@color/textView_textColor_shadow"
+                    android:shadowDx="0"
+                    android:shadowDy="2"
+                    android:shadowRadius="0.01"
+                    android:textColor="#cecece"
+                    android:textSize="13.5dp"/>
             </RelativeLayout>
         </LinearLayout>
     </RelativeLayout>
