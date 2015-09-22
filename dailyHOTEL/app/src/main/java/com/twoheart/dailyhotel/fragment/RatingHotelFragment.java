@@ -126,7 +126,7 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
             arguments.putString(NAME_INTENT_EXTRA_DATA_PLACENAME, placeName);
             arguments.putInt(NAME_INTENT_EXTRA_DATA_RESERVATIONINDEX, reservationIndex);
             arguments.putLong(NAME_INTENT_EXTRA_DATA_CHECKINDATE, checkInDate);
-            arguments.putString(NAME_INTENT_EXTRA_DATA_TYPE, PlaceMainFragment.TYPE.GOURMET.name());
+            arguments.putString(NAME_INTENT_EXTRA_DATA_TYPE, PlaceMainFragment.TYPE.FNB.name());
         }
 
         newFragment.setArguments(arguments);
@@ -161,7 +161,7 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
                 break;
             }
 
-            case GOURMET:
+            case FNB:
             {
                 mTicketName = getArguments().getString(NAME_INTENT_EXTRA_DATA_PLACENAME);
                 mReservationIndex = getArguments().getInt(NAME_INTENT_EXTRA_DATA_RESERVATIONINDEX);
@@ -207,7 +207,7 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
                 break;
             }
 
-            case GOURMET:
+            case FNB:
             {
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd(EEE)", Locale.KOREA);
                 simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -308,7 +308,7 @@ public class RatingHotelFragment extends DialogFragment implements Constants, On
                 }));
                 break;
 
-            case GOURMET:
+            case FNB:
                 params.put("reservation_rec_idx", String.valueOf(index));
                 mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_SESSION_RATING_UPDATE).toString(), params, listener, new ErrorListener()
                 {

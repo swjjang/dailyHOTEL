@@ -397,8 +397,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
                     throw new NullPointerException("response == null");
                 }
 
-                ExLog.e(" / onResponse : url = " + url + " / response = " + response.toString());
-                ExLog.e(" / onResponse : Stores = " + RELEASE_STORE);
+                ExLog.d(" / onResponse : Stores = " + RELEASE_STORE);
 
                 SharedPreferences.Editor editor = sharedPreference.edit();
 
@@ -428,7 +427,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
                 int currentVersion = Integer.parseInt(getPackageManager().getPackageInfo(getPackageName(), 0).versionName.replace(".", ""));
                 int skipMaxVersion = Integer.parseInt(sharedPreference.getString(KEY_PREFERENCE_SKIP_MAX_VERSION, "1.0.0").replace(".", ""));
 
-                ExLog.e("MIN / MAX / CUR / SKIP : " + minVersion + " / " + maxVersion + " / " + currentVersion + " / " + skipMaxVersion);
+                ExLog.d("MIN / MAX / CUR / SKIP : " + minVersion + " / " + maxVersion + " / " + currentVersion + " / " + skipMaxVersion);
 
                 if (minVersion > currentVersion)
                 { // 강제 업데이트

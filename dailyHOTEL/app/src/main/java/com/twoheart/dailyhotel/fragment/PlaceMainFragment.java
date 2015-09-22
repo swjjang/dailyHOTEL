@@ -48,9 +48,8 @@ public abstract class PlaceMainFragment extends BaseFragment
     public enum TYPE
     {
         HOTEL,
-        GOURMET,
+        FNB,
     }
-
 
     public interface OnUserActionListener
     {

@@ -48,8 +48,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 
-import org.apache.http.util.EncodingUtils;
-
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -200,7 +199,16 @@ public class PaymentWebActivity extends BaseActivity implements Constants
 
         for (int i = 0; i < key.length; i++)
         {
-            postParameters.put(key[i], EncodingUtils.getBytes(value[i], "BASE64"));
+            byte[] base64 = null;
+            try
+            {
+                base64 = value[i].getBytes("BASE64");
+            } catch (final UnsupportedEncodingException e)
+            {
+                base64 = value[i].getBytes();
+            }
+            postParameters.put(key[i], base64);
+            //            postParameters.put(key[i], EncodingUtils.getBytes(value[i], "BASE64"));
         }
 
         for (int i = 0; i < postParameters.size(); i++)

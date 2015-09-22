@@ -175,7 +175,7 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
                 break;
             }
 
-            case GOURMET:
+            case FNB:
             {
                 imageView.setImageResource(R.drawable.open_stanby_bg_fnb);
 

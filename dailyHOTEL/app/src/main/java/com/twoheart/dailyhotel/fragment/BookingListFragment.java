@@ -577,7 +577,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                                         break;
                                     }
 
-                                    case GOURMET:
+                                    case FNB:
                                         HashMap<String, String> params = new HashMap<String, String>();
                                         params.put("reservation_rec_idx", String.valueOf(booking.reservationIndex));
 
@@ -706,7 +706,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                     intent = new Intent(baseActivity, BookingTabActivity.class);
                     break;
 
-                case GOURMET:
+                case FNB:
                     intent = new Intent(baseActivity, GourmetBookingDetailActivity.class);
                     break;
             }

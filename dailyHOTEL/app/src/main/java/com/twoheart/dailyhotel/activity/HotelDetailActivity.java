@@ -510,7 +510,7 @@ public class HotelDetailActivity extends BaseActivity
 
         for (int i = 0; i < fieldText.length; i++)
         {
-            if (isEmptyTextField(fieldText[i]) == true)
+            if (Util.isTextEmpty(fieldText[i]) == true)
             {
                 return true;
             }

@@ -211,7 +211,7 @@ public class GourmetMainFragment extends PlaceMainFragment
             return;
         }
 
-        baseActivity.replaceFragment(WaitTimerFragment.newInstance(saleTime, PlaceMainFragment.TYPE.GOURMET));
+        baseActivity.replaceFragment(WaitTimerFragment.newInstance(saleTime, PlaceMainFragment.TYPE.FNB));
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
