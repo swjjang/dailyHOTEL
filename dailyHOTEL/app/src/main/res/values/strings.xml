@@ -269,7 +269,7 @@
     <string name="act_credit_history">적립금내역 보기</string>
     <string name="act_credit_recom_code">추천코드</string>
     <string name="act_credit_my_recom_code">나의 추천코드</string>
-    <string name="act_credit_line4">친구가 회원가입 할 때 내 추천코드를 넣으면\n친구는 5,000원 선물받고!\n친구가 처음 결제하면 나도 5,000원 선물받고!</string>
+    <string name="act_credit_line4">친구가 회원가입 할 때 내 추천코드를 넣으면\n친구는 5,000원 선물받고!\n친구가 처음 결제하면 나도 5,000원 선물받고!\n*최대 10만원까지 적립 가능</string>
     <string name="act_credit_kakao">카카오톡 친구 초대</string>
 
     <!-- Credit List Activity -->
