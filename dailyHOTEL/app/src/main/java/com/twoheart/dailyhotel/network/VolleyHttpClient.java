@@ -17,41 +17,23 @@ import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.HttpClientStack;
+import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.Volley;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.OkUrlFactory;
 import com.twoheart.dailyhotel.util.AvailableNetwork;
 import com.twoheart.dailyhotel.util.Constants;
 
-import org.apache.http.HttpVersion;
-import org.apache.http.client.HttpClient;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.scheme.PlainSocketFactory;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.cookie.Cookie;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
-import org.apache.http.protocol.HTTP;
-
 import java.io.IOException;
-import java.net.Socket;
-import java.net.UnknownHostException;
-import java.security.KeyManagementException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
+import java.net.CookiePolicy;
+import java.net.CookieStore;
+import java.net.HttpCookie;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.security.GeneralSecurityException;
 import java.util.List;
 
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 public class VolleyHttpClient implements Constants
 {
@@ -60,16 +42,15 @@ public class VolleyHttpClient implements Constants
     private static final String KEY_DAILYHOTEL_COOKIE = "JSESSIONID";
     private static RequestQueue sRequestQueue;
     private static Context sContext;
-    private static HttpClient sHttpClient;
+    private static OkHttpStack mOkHttpStack;
 
     private static CookieSyncManager mCookieSyncManager;
 
     public static void init(Context context)
     {
-        sHttpClient = getHttpClient();
-
         sContext = context;
-        sRequestQueue = Volley.newRequestQueue(sContext, new HttpClientStack(sHttpClient));
+        mOkHttpStack = new OkHttpStack();
+        sRequestQueue = Volley.newRequestQueue(sContext, mOkHttpStack);
     }
 
     public static RequestQueue getRequestQueue()
@@ -121,13 +102,13 @@ public class VolleyHttpClient implements Constants
     {
         cookieManagerCreate();
 
-        List<Cookie> cookies = ((DefaultHttpClient) sHttpClient).getCookieStore().getCookies();
+        List<HttpCookie> cookies = mOkHttpStack.getCookieStore().getCookies();
 
         if (cookies != null)
         {
             for (int i = 0; i < cookies.size(); i++)
             {
-                Cookie newCookie = cookies.get(i);
+                HttpCookie newCookie = cookies.get(i);
 
                 if (newCookie.getName().equals(KEY_DAILYHOTEL_COOKIE))
                 {
@@ -187,71 +168,60 @@ public class VolleyHttpClient implements Constants
         cookieManagerSync();
     }
 
-    private static HttpClient getHttpClient()
+    private static class OkHttpStack extends HurlStack
     {
-        try
+        private OkUrlFactory mOkUrlFactory;
+        private OkHttpClient mOkHttpClient;
+        private CookieStore mCookieStore;
+
+        public OkHttpStack()
         {
-            KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
-            trustStore.load(null, null);
+            mOkHttpClient = new OkHttpClient();
+            SSLContext sslContext;
 
-            SSLSocketFactory sslSocketFactory = new SFSSLSocketFactory(trustStore);
-            sslSocketFactory.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-
-            HttpParams params = new BasicHttpParams();
-            HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-            HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
-
-            SchemeRegistry registry = new SchemeRegistry();
-            registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-            registry.register(new Scheme("https", sslSocketFactory, 443));
-
-            ClientConnectionManager ccm = new ThreadSafeClientConnManager(params, registry);
-
-            return new DefaultHttpClient(ccm, params);
-        } catch (Exception e)
-        {
-            return new DefaultHttpClient();
-        }
-    }
-
-    static class SFSSLSocketFactory extends SSLSocketFactory
-    {
-        private SSLContext sslContext = SSLContext.getInstance("TLS");
-
-        public SFSSLSocketFactory(KeyStore truststore) throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException, UnrecoverableKeyException
-        {
-            super(truststore);
-
-            TrustManager trustManager = new X509TrustManager()
+            try
             {
-                public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException
-                {
-                }
+                sslContext = SSLContext.getInstance("TLS");
+                sslContext.init(null, null, null);
+            } catch (GeneralSecurityException e)
+            {
+                throw new AssertionError(); // 시스템이 TLS를 지원하지 않습니다
+            }
 
-                public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException
-                {
-                }
+            mOkHttpClient.setSslSocketFactory(sslContext.getSocketFactory());
 
-                public X509Certificate[] getAcceptedIssuers()
-                {
-                    return null;
-                }
+            java.net.CookieManager cookieManager = new java.net.CookieManager(new PersistentCookieStore(sContext.getApplicationContext()), CookiePolicy.ACCEPT_ALL);
 
-            };
+            mCookieStore = cookieManager.getCookieStore();
+            mOkHttpClient.setCookieHandler(cookieManager);
 
-            sslContext.init(null, new TrustManager[]{trustManager}, null);
+            setOkUrlFactory(new OkUrlFactory(mOkHttpClient));
+        }
+
+        public OkHttpClient getOkHttpClient()
+        {
+            return mOkHttpClient;
+        }
+
+        public CookieStore getCookieStore()
+        {
+            return mCookieStore;
+        }
+
+        public void setOkUrlFactory(OkUrlFactory okUrlFactory)
+        {
+            if (okUrlFactory == null)
+            {
+                throw new NullPointerException("Client must not be null.");
+            }
+
+            mOkUrlFactory = okUrlFactory;
         }
 
         @Override
-        public Socket createSocket(Socket socket, String host, int port, boolean autoClose) throws IOException, UnknownHostException
+        protected HttpURLConnection createConnection(URL url) throws IOException
         {
-            return sslContext.getSocketFactory().createSocket(socket, host, port, autoClose);
-        }
-
-        @Override
-        public Socket createSocket() throws IOException
-        {
-            return sslContext.getSocketFactory().createSocket();
+            return mOkUrlFactory.open(url);
         }
     }
 }
