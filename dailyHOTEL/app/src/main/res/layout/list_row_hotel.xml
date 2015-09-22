@@ -105,7 +105,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:layout_toLeftOf="@+id/tv_hotel_row_price"
+                    android:layout_toLeftOf="@+id/hotelPrice"
                     android:gravity="center_vertical"
                     android:shadowColor="@color/textView_textColor_shadow"
                     android:shadowDx="0"
@@ -113,20 +113,42 @@
                     android:shadowRadius="0.01"
                     android:singleLine="true"
                     android:textColor="#cecece"
-                    android:textSize="13.5dp"/>
+                    android:textSize="13dp"/>
 
-                <com.twoheart.dailyhotel.view.widget.DailyTextView
-                    android:id="@+id/tv_hotel_row_price"
+                <LinearLayout
+                    android:id="@+id/hotelPrice"
+                    android:layout_alignParentRight="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:gravity="center_vertical|right"
-                    android:shadowColor="@color/textView_textColor_shadow"
-                    android:shadowDx="0"
-                    android:shadowDy="2"
-                    android:shadowRadius="0.01"
-                    android:textColor="#cecece"
-                    android:textSize="13.5dp"/>
+                    android:gravity="center_vertical">
+
+                    <com.twoheart.dailyhotel.view.widget.DailyTextView
+                        android:id="@+id/satisfactionView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:shadowColor="@color/textView_textColor_shadow"
+                        android:shadowDx="0"
+                        android:shadowDy="2"
+                        android:shadowRadius="0.01"
+                        android:textColor="#cecece"
+                        android:visibility="gone"
+                        android:drawablePadding="3dp"
+                        android:textSize="13dp"
+                        android:drawableLeft="@drawable/main_ic_satisfaction"/>
+
+                    <com.twoheart.dailyhotel.view.widget.DailyTextView
+                        android:id="@+id/tv_hotel_row_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:shadowColor="@color/textView_textColor_shadow"
+                        android:shadowDx="0"
+                        android:shadowDy="2"
+                        android:shadowRadius="0.01"
+                        android:textColor="#cecece"
+                        android:textSize="13dp"/>
+                </LinearLayout>
             </RelativeLayout>
         </LinearLayout>
     </RelativeLayout>

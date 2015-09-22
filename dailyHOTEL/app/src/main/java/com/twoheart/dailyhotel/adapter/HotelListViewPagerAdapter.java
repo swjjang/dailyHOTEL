@@ -83,6 +83,7 @@ public class HotelListViewPagerAdapter extends PagerAdapter
         final ImageView img = (ImageView) view.findViewById(R.id.iv_hotel_row_img);
         TextView name = (TextView) view.findViewById(R.id.tv_hotel_row_name);
         TextView priceTextView = (TextView) view.findViewById(R.id.tv_hotel_row_price);
+        TextView satisfactionView = (TextView) view.findViewById(R.id.satisfactionView);
         TextView discountTextView = (TextView) view.findViewById(R.id.tv_hotel_row_discount);
         TextView sold_out = (TextView) view.findViewById(R.id.tv_hotel_row_soldout);
         TextView address = (TextView) view.findViewById(R.id.tv_hotel_row_address);
@@ -119,6 +120,23 @@ public class HotelListViewPagerAdapter extends PagerAdapter
 
             priceTextView.setText(comma.format(price) + currency);
             priceTextView.setPaintFlags(priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        }
+
+        // 만족도
+        if(hotel.satisfaction > 0)
+        {
+            satisfactionView.setVisibility(View.VISIBLE);
+
+            if (price <= 0)
+            {
+                satisfactionView.setText(hotel.satisfaction + "%");
+            } else
+            {
+                satisfactionView.setText(hotel.satisfaction + "%ㅣ");
+            }
+        } else
+        {
+            satisfactionView.setVisibility(View.GONE);
         }
 
         View averageTextView = view.findViewById(R.id.averageTextView);

@@ -30,6 +30,7 @@ public class Hotel implements Parcelable
     private int sequence;
     private String bedType;
     private String detailRegion;
+    public int satisfaction = 98;
 
     public Hotel()
     {
@@ -59,6 +60,7 @@ public class Hotel implements Parcelable
         dest.writeInt(isDailyChoice ? 1 : 0);
         dest.writeInt(saleIndex);
         dest.writeInt(isDBenefit ? 1 : 0);
+        dest.writeInt(satisfaction);
     }
 
     private void readFromParcel(Parcel in)
@@ -78,6 +80,7 @@ public class Hotel implements Parcelable
         isDailyChoice = in.readInt() == 1 ? true : false;
         saleIndex = in.readInt();
         isDBenefit = in.readInt() == 1 ? true : false;
+        satisfaction = in.readInt();
     }
 
     public HotelGrade getCategory()

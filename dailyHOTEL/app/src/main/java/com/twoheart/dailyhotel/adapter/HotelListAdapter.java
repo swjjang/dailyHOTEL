@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Shader;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PaintDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
@@ -196,7 +197,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
                     viewHolder.img = (ImageView) convertView.findViewById(R.id.iv_hotel_row_img);
                     viewHolder.name = (TextView) convertView.findViewById(R.id.tv_hotel_row_name);
                     viewHolder.price = (TextView) convertView.findViewById(R.id.tv_hotel_row_price);
-                    viewHolder.likeView = (TextView) convertView.findViewById(R.id.likeView);
+                    viewHolder.satisfactionView = (TextView) convertView.findViewById(R.id.satisfactionView);
                     viewHolder.discount = (TextView) convertView.findViewById(R.id.tv_hotel_row_discount);
                     viewHolder.sold_out = (TextView) convertView.findViewById(R.id.tv_hotel_row_soldout);
                     viewHolder.address = (TextView) convertView.findViewById(R.id.tv_hotel_row_address);
@@ -213,7 +214,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
                 String strPrice = comma.format(price);
                 String strDiscount = comma.format(element.averageDiscount);
 
-                viewHolder.address.setText(element.getAddress());
+                viewHolder.address.setText(element.getAddress().replace(" | ", "ㅣ"));
                 viewHolder.name.setText(element.getName());
 
                 Spanned currency = Html.fromHtml(context.getResources().getString(R.string.currency));
@@ -225,13 +226,26 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
                 } else
                 {
                     viewHolder.price.setVisibility(View.VISIBLE);
-
                     viewHolder.price.setText(strPrice + currency);
                     viewHolder.price.setPaintFlags(viewHolder.price.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 }
 
-                viewHolder.likeView.setText("98% | ");
-                viewHolder.likeView.setVisibility(View.VISIBLE);
+                // 만족도
+                if(element.satisfaction > 0)
+                {
+                    viewHolder.satisfactionView.setVisibility(View.VISIBLE);
+
+                    if (price <= 0)
+                    {
+                        viewHolder.satisfactionView.setText(element.satisfaction + "%");
+                    } else
+                    {
+                        viewHolder.satisfactionView.setText(element.satisfaction + "%ㅣ");
+                    }
+                } else
+                {
+                    viewHolder.satisfactionView.setVisibility(View.GONE);
+                }
 
                 if (element.nights > 1)
                 {
@@ -339,9 +353,9 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
         TextView sold_out;
         TextView address;
         TextView grade;
+        TextView satisfactionView;
         View average;
         View dBenefit;
-        TextView likeView;
     }
 
     private class HeaderListViewHolder

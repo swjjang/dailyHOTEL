@@ -88,6 +88,7 @@ public class GourmetListAdapter extends PlaceListAdapter
                     viewHolder.img = (ImageView) convertView.findViewById(R.id.iv_hotel_row_img);
                     viewHolder.name = (TextView) convertView.findViewById(R.id.tv_hotel_row_name);
                     viewHolder.price = (TextView) convertView.findViewById(R.id.tv_hotel_row_price);
+                    viewHolder.satisfactionView = (TextView) convertView.findViewById(R.id.satisfactionView);
                     viewHolder.discount = (TextView) convertView.findViewById(R.id.tv_hotel_row_discount);
                     viewHolder.sold_out = (TextView) convertView.findViewById(R.id.tv_hotel_row_soldout);
                     viewHolder.address = (TextView) convertView.findViewById(R.id.tv_hotel_row_address);
@@ -117,6 +118,23 @@ public class GourmetListAdapter extends PlaceListAdapter
 
                     viewHolder.price.setText(strPrice + currency);
                     viewHolder.price.setPaintFlags(viewHolder.price.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                }
+
+                // 만족도
+                if(place.satisfaction > 0)
+                {
+                    viewHolder.satisfactionView.setVisibility(View.VISIBLE);
+
+                    if (price <= 0)
+                    {
+                        viewHolder.satisfactionView.setText(place.satisfaction + "%");
+                    } else
+                    {
+                        viewHolder.satisfactionView.setText(place.satisfaction + "%ㅣ");
+                    }
+                } else
+                {
+                    viewHolder.satisfactionView.setVisibility(View.GONE);
                 }
 
                 viewHolder.discount.setText(strDiscount + currency);
@@ -189,6 +207,7 @@ public class GourmetListAdapter extends PlaceListAdapter
         TextView sold_out;
         TextView address;
         TextView grade;
+        TextView satisfactionView;
     }
 
     private class HeaderListViewHolder

@@ -22,13 +22,12 @@ public abstract class Place implements Parcelable
     public double longitude;
     public boolean isDailyChoice;
     public boolean isSoldOut;
+    public int satisfaction = 98;
 
     public Place()
     {
         super();
     }
-
-    ;
 
     public Place(Parcel in)
     {
@@ -51,6 +50,7 @@ public abstract class Place implements Parcelable
         dest.writeDouble(longitude);
         dest.writeInt(isDailyChoice ? 1 : 0);
         dest.writeInt(isSoldOut ? 1 : 0);
+        dest.writeInt(satisfaction);
     }
 
     protected void readFromParcel(Parcel in)
@@ -66,6 +66,7 @@ public abstract class Place implements Parcelable
         longitude = in.readDouble();
         isDailyChoice = in.readInt() == 1 ? true : false;
         isSoldOut = in.readInt() == 1 ? true : false;
+        satisfaction = in.readInt();
     }
 
     public enum Grade
