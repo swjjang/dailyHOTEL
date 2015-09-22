@@ -64,77 +64,7 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
     private View mSettingCardLayout;
     private LinearLayout llVersion, llLogin;
     private String profileStr, loginStr;
-    private DailyHotelJsonResponseListener mUserInfoJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
 
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            if (getActivity() == null)
-            {
-                return;
-            }
-
-            try
-            {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
-                String userEmail = response.getString("email");
-
-                if ((userEmail != null) && !(userEmail.equals("")) && !(userEmail.equals("null")))
-                {
-                    invalidateLoginButton(true, userEmail);
-                } else
-                {
-                    invalidateLoginButton(true, "");
-                }
-
-                mSettingCardLayout.setVisibility(View.VISIBLE);
-            } catch (Exception e)
-            {
-                onError(e);
-                invalidateLoginButton(true, "");
-            } finally
-            {
-                unLockUI();
-            }
-        }
-    };
-    private DailyHotelStringResponseListener mUserAliveStringResponseListener = new DailyHotelStringResponseListener()
-    {
-
-        @Override
-        public void onResponse(String url, String response)
-        {
-            if (getActivity() == null)
-            {
-                return;
-            }
-
-            String result = null;
-
-            if (TextUtils.isEmpty(response) == false)
-            {
-                result = response.trim();
-            }
-
-            if ("alive".equalsIgnoreCase(result) == true)
-            { // session alive
-                // 사용자 정보 요청.
-                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, mHostActivity));
-
-            } else
-            {
-                mSettingCardLayout.setVisibility(View.GONE);
-
-                invalidateLoginButton(false, "");
-                unLockUI();
-            }
-        }
-    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -297,10 +227,6 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
         }
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent)
     {
@@ -335,43 +261,79 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 
     }
 
-    //	@Override
-    //	public void onResponse(String url, String response) {
-    //		if (url.contains(URL_WEBAPI_USER_ALIVE)) {
-    //			String result = response.trim();
-    //
-    //			if (result.equals("alive")) { // session alive
-    //				// 사용자 정보 요청.
-    //				mQueue.add(new DailyHotelJsonRequest(Method.GET,
-    //						new StringBuilder(URL_DAILYHOTEL_SERVER).append(
-    //								URL_WEBAPI_USER_INFO).toString(), null, this,
-    //						mHostActivity));
-    //
-    //			} else {
-    //				invalidateLoginButton(false, "");
-    //				unLockUI();
-    //			}
-    //		}
-    //	}
-    //
-    //	@Override
-    //	public void onResponse(String url, JSONObject response) {
-    //		if (url.contains(URL_WEBAPI_USER_INFO)) {
-    //			try {
-    //				JSONObject obj = response;
-    //				String userEmail = obj.getString("email");
-    //
-    //				if ((userEmail != null) && !(userEmail.equals("")) && !(userEmail.equals("null"))) invalidateLoginButton(true, userEmail);
-    //				else invalidateLoginButton(true, "");
-    //
-    //				unLockUI();
-    //
-    //			} catch (Exception e) {
-    //				onError(e);
-    //				invalidateLoginButton(true, "");
-    //			}
-    //
-    //		}
-    //
-    //	}
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Listener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private DailyHotelJsonResponseListener mUserInfoJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            if (getActivity() == null)
+            {
+                return;
+            }
+
+            try
+            {
+                if (response == null)
+                {
+                    throw new NullPointerException("response == null");
+                }
+
+                String userEmail = response.getString("email");
+
+                if ((userEmail != null) && !(userEmail.equals("")) && !(userEmail.equals("null")))
+                {
+                    invalidateLoginButton(true, userEmail);
+                } else
+                {
+                    invalidateLoginButton(true, "");
+                }
+
+                mSettingCardLayout.setVisibility(View.VISIBLE);
+            } catch (Exception e)
+            {
+                onError(e);
+                invalidateLoginButton(true, "");
+            } finally
+            {
+                unLockUI();
+            }
+        }
+    };
+    private DailyHotelStringResponseListener mUserAliveStringResponseListener = new DailyHotelStringResponseListener()
+    {
+
+        @Override
+        public void onResponse(String url, String response)
+        {
+            if (getActivity() == null)
+            {
+                return;
+            }
+
+            String result = null;
+
+            if (TextUtils.isEmpty(response) == false)
+            {
+                result = response.trim();
+            }
+
+            if ("alive".equalsIgnoreCase(result) == true)
+            { // session alive
+                // 사용자 정보 요청.
+                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, mHostActivity));
+
+            } else
+            {
+                mSettingCardLayout.setVisibility(View.GONE);
+
+                invalidateLoginButton(false, "");
+                unLockUI();
+            }
+        }
+    };
 }

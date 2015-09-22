@@ -121,7 +121,8 @@
                 android:paddingLeft="17dp"
                 android:text="@string/frag_notice"
                 android:textColor="@color/textView_textColor_main"
-                android:textSize="16.5dp"/>
+                android:textSize="16.5dp"
+                android:visibility="gone"/>
 
             <com.twoheart.dailyhotel.view.widget.DailyTextView
                 android:id="@+id/tv_setting_help"
@@ -131,7 +132,8 @@
                 android:paddingLeft="17dp"
                 android:text="@string/frag_faqs"
                 android:textColor="@color/textView_textColor_main"
-                android:textSize="16.5dp"/>
+                android:textSize="16.5dp"
+                android:visibility="gone"/>
 
             <!-- 소개 -->
 
