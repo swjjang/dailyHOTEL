@@ -86,14 +86,24 @@ public class HotelListViewPagerAdapter extends PagerAdapter
         TextView satisfactionView = (TextView) view.findViewById(R.id.satisfactionView);
         TextView discountTextView = (TextView) view.findViewById(R.id.tv_hotel_row_discount);
         TextView sold_out = (TextView) view.findViewById(R.id.tv_hotel_row_soldout);
-        TextView address = (TextView) view.findViewById(R.id.tv_hotel_row_address);
+        TextView addressTextView = (TextView) view.findViewById(R.id.tv_hotel_row_address);
         TextView grade = (TextView) view.findViewById(R.id.hv_hotel_grade);
         View closeView = view.findViewById(R.id.closeImageVIew);
         View dBenefitImageView = view.findViewById(R.id.dBenefitImageView);
 
         DecimalFormat comma = new DecimalFormat("###,##0");
 
-        address.setText(hotel.getAddress());
+        String address = hotel.getAddress();
+
+        if(address.indexOf('|') >= 0)
+        {
+            address = address.replace(" | ", "ㅣ");
+        } else if(address.indexOf('l') >= 0)
+        {
+            address = address.replace(" l ", "ㅣ");
+        }
+
+        addressTextView.setText(address);
         name.setText(hotel.getName());
 
         // D.benefit
@@ -126,14 +136,7 @@ public class HotelListViewPagerAdapter extends PagerAdapter
         if(hotel.satisfaction > 0)
         {
             satisfactionView.setVisibility(View.VISIBLE);
-
-            if (price <= 0)
-            {
-                satisfactionView.setText(hotel.satisfaction + "%");
-            } else
-            {
-                satisfactionView.setText(hotel.satisfaction + "%ㅣ");
-            }
+            satisfactionView.setText(hotel.satisfaction + "%");
         } else
         {
             satisfactionView.setVisibility(View.GONE);

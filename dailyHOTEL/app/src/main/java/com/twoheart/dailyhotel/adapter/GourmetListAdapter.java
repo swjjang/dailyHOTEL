@@ -103,7 +103,17 @@ public class GourmetListAdapter extends PlaceListAdapter
                 String strPrice = comma.format(price);
                 String strDiscount = comma.format(place.discountPrice);
 
-                viewHolder.address.setText(place.address);
+                String address = place.address;
+
+                if(address.indexOf('|') >= 0)
+                {
+                    address = address.replace(" | ", "ㅣ");
+                } else if(address.indexOf('l') >= 0)
+                {
+                    address = address.replace(" l ", "ㅣ");
+                }
+
+                viewHolder.address.setText(address);
                 viewHolder.name.setText(place.name);
 
                 Spanned currency = Html.fromHtml(context.getResources().getString(R.string.currency));
@@ -124,14 +134,7 @@ public class GourmetListAdapter extends PlaceListAdapter
                 if(place.satisfaction > 0)
                 {
                     viewHolder.satisfactionView.setVisibility(View.VISIBLE);
-
-                    if (price <= 0)
-                    {
-                        viewHolder.satisfactionView.setText(place.satisfaction + "%");
-                    } else
-                    {
-                        viewHolder.satisfactionView.setText(place.satisfaction + "%ㅣ");
-                    }
+                    viewHolder.satisfactionView.setText(place.satisfaction + "%");
                 } else
                 {
                     viewHolder.satisfactionView.setVisibility(View.GONE);

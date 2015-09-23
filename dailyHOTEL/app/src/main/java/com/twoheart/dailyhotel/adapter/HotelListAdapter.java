@@ -214,7 +214,18 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
                 String strPrice = comma.format(price);
                 String strDiscount = comma.format(element.averageDiscount);
 
-                viewHolder.address.setText(element.getAddress().replace(" | ", "ㅣ"));
+                String address = element.getAddress();
+
+                int barIndex = address.indexOf('|');
+                if(barIndex >= 0)
+                {
+                    address = address.replace(" | ", "ㅣ");
+                } else if(address.indexOf('l') >= 0)
+                {
+                    address = address.replace(" l ", "ㅣ");
+                }
+
+                viewHolder.address.setText(address);
                 viewHolder.name.setText(element.getName());
 
                 Spanned currency = Html.fromHtml(context.getResources().getString(R.string.currency));
@@ -234,14 +245,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
                 if(element.satisfaction > 0)
                 {
                     viewHolder.satisfactionView.setVisibility(View.VISIBLE);
-
-                    if (price <= 0)
-                    {
-                        viewHolder.satisfactionView.setText(element.satisfaction + "%");
-                    } else
-                    {
-                        viewHolder.satisfactionView.setText(element.satisfaction + "%ㅣ");
-                    }
+                    viewHolder.satisfactionView.setText(element.satisfaction + "%");
                 } else
                 {
                     viewHolder.satisfactionView.setVisibility(View.GONE);
