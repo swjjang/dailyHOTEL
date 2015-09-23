@@ -37,7 +37,6 @@ import com.twoheart.dailyhotel.activity.FAQActivity;
 import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.activity.NoticeActivity;
 import com.twoheart.dailyhotel.activity.ProfileActivity;
-import com.twoheart.dailyhotel.activity.VersionActivity;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.request.DailyHotelStringRequest;
@@ -90,7 +89,7 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
         mSettingCardTextView = (TextView) view.findViewById(R.id.settingCardTextView);
 
         tvNotice.setOnClickListener(this);
-        llVersion.setOnClickListener(this);
+        //        llVersion.setOnClickListener(this);
         tvHelp.setOnClickListener(this);
         tvMail.setOnClickListener(this);
         llLogin.setOnClickListener(this);
@@ -150,13 +149,13 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
             mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
             AnalyticsManager.getInstance(mHostActivity).recordEvent(Screen.SETTING, Action.CLICK, Label.NOTICE, 0L);
-        } else if (id == llVersion.getId())
-        {
-            Intent i = new Intent(mHostActivity, VersionActivity.class);
-            startActivity(i);
-            mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-
-            AnalyticsManager.getInstance(mHostActivity).recordEvent(Screen.SETTING, Action.CLICK, Label.VERSION, 0L);
+            //        } else if (id == llVersion.getId())
+            //        {
+            //            Intent i = new Intent(mHostActivity, VersionActivity.class);
+            //            startActivity(i);
+            //            mHostActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+            //
+            //            AnalyticsManager.getInstance(mHostActivity).recordEvent(Screen.SETTING, Action.CLICK, Label.VERSION, 0L);
         } else if (id == tvHelp.getId())
         {
             Intent i = new Intent(mHostActivity, FAQActivity.class);

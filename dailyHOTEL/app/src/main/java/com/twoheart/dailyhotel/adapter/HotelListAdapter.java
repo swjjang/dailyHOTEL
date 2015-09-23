@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Shader;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PaintDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
@@ -217,10 +216,10 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
                 String address = element.getAddress();
 
                 int barIndex = address.indexOf('|');
-                if(barIndex >= 0)
+                if (barIndex >= 0)
                 {
                     address = address.replace(" | ", "ㅣ");
-                } else if(address.indexOf('l') >= 0)
+                } else if (address.indexOf('l') >= 0)
                 {
                     address = address.replace(" l ", "ㅣ");
                 }
@@ -242,7 +241,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
                 }
 
                 // 만족도
-                if(element.satisfaction > 0)
+                if (element.satisfaction > 0)
                 {
                     viewHolder.satisfactionView.setVisibility(View.VISIBLE);
                     viewHolder.satisfactionView.setText(element.satisfaction + "%");

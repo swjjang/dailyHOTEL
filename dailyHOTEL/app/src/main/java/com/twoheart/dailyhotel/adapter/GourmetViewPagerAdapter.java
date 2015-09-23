@@ -51,10 +51,10 @@ public class GourmetViewPagerAdapter extends PlaceViewPagerAdapter
 
         String address = place.address;
 
-        if(address.indexOf('|') >= 0)
+        if (address.indexOf('|') >= 0)
         {
             address = address.replace(" | ", "ㅣ");
-        } else if(address.indexOf('l') >= 0)
+        } else if (address.indexOf('l') >= 0)
         {
             address = address.replace(" l ", "ㅣ");
         }
@@ -80,7 +80,7 @@ public class GourmetViewPagerAdapter extends PlaceViewPagerAdapter
         }
 
         // 만족도
-        if(place.satisfaction > 0)
+        if (place.satisfaction > 0)
         {
             satisfactionView.setVisibility(View.VISIBLE);
             satisfactionView.setText(place.satisfaction + "%");
