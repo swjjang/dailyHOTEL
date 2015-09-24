@@ -30,7 +30,7 @@ public class Hotel implements Parcelable
     private int sequence;
     private String bedType;
     private String detailRegion;
-    public int satisfaction = 98;
+    public int satisfaction;
 
     public Hotel()
     {
@@ -248,6 +248,11 @@ public class Hotel implements Parcelable
             if (jsonObject.has("nights") == true)
             {
                 nights = jsonObject.getInt("nights");
+            }
+
+            if(jsonObject.has("rating_value") == true)
+            {
+                satisfaction = jsonObject.getInt("rating_value");
             }
         } catch (JSONException e)
         {

@@ -1801,8 +1801,11 @@ public class HotelDetailLayout
             }
 
             // 만족도
-            TextView satisfactionView = (TextView) view.findViewById(R.id.satisfactionView);
-            satisfactionView.setText("98%(2275명 평가)");
+            if(Util.isTextEmpty(hotelDetail.satisfaction) == false)
+            {
+                TextView satisfactionView = (TextView) view.findViewById(R.id.satisfactionView);
+                satisfactionView.setText(hotelDetail.satisfaction);
+            }
 
             return view;
         }

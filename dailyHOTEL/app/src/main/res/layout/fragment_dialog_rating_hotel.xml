@@ -87,7 +87,7 @@
         android:background="@drawable/popup_btn_off">
 
         <com.twoheart.dailyhotel.view.widget.DailyTextView
-            android:id="@+id/negativeTextView"
+            android:id="@+id/positiveTextView"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -102,7 +102,7 @@
             android:background="@color/white"/>
 
         <com.twoheart.dailyhotel.view.widget.DailyTextView
-            android:id="@+id/positiveTextView"
+            android:id="@+id/negativeTextView"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"

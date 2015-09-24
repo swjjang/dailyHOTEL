@@ -438,8 +438,12 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             }
 
             // 만족도
-            TextView satisfactionView = (TextView) view.findViewById(R.id.satisfactionView);
-            satisfactionView.setText("98%(2275명 평가)");
+            // 만족도
+            if(Util.isTextEmpty(placeDetail.satisfaction) == false)
+            {
+                TextView satisfactionView = (TextView) view.findViewById(R.id.satisfactionView);
+                satisfactionView.setText(placeDetail.satisfaction);
+            }
 
             return view;
         }
@@ -448,7 +452,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
          * 주소 및 맵
          *
          * @param view
-         * @param hotelDetail
+         * @param placeDetail
          * @return
          */
         private View getAddressView(final View view, PlaceDetail placeDetail)

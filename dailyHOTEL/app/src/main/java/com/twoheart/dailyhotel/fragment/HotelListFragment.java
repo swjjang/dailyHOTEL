@@ -403,8 +403,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
     /**
      * 호텔리스트를 보여준다.
-     *
-     * @param position
      */
     protected void fetchHotelList(Province province, SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
     {

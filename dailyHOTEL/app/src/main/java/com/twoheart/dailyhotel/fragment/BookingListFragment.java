@@ -71,6 +71,272 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
     private PinnedSectionListView mListView;
     private View btnLogin;
     private long mCurrentTime;
+
+    public interface OnUserActionListener
+    {
+        public void delete(Booking booking);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
+        View view = inflater.inflate(R.layout.fragment_booking_list, container, false);
+        view.setPadding(0, Util.dpToPx(container.getContext(), 56), 0, 0);
+
+        mListView = (PinnedSectionListView) view.findViewById(R.id.listview_booking);
+        mListView.setShadowVisible(false);
+
+        mEmptyLayout = (RelativeLayout) view.findViewById(R.id.layout_booking_empty);
+        btnLogin = view.findViewById(R.id.btn_booking_empty_login);
+
+        btnLogin.setOnClickListener(this);
+
+        return view;
+    }
+
+    @Override
+    public void onStart()
+    {
+        AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOLKING_LIST);
+
+        super.onStart();
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null)
+        {
+            return;
+        }
+
+        baseActivity.setActionBar(getString(R.string.actionbar_title_booking_list_frag), false);
+
+        lockUI();
+        mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, baseActivity));
+    }
+
+    @Override
+    public void onClick(View v)
+    {
+        if (v.getId() == btnLogin.getId())
+        {
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (baseActivity == null)
+            {
+                return;
+            }
+
+            Intent i = new Intent(baseActivity, LoginActivity.class);
+            startActivity(i);
+            baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+
+            AnalyticsManager.getInstance(getActivity()).recordEvent(Screen.BOOLKING_LIST, Action.CLICK, Label.LOGIN, 0L);
+        }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parentView, View childView, int position, long id)
+    {
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null)
+        {
+            return;
+        }
+
+        if (isLockUiComponent() == true)
+        {
+            return;
+        }
+
+        lockUiComponent();
+
+        Booking item = mAdapter.getItem(position);
+
+        if (item.type == Booking.TYPE_SECTION)
+        {
+            releaseUiComponent();
+            return;
+        }
+
+        Intent intent = null;
+
+        if (item.payType == CODE_PAY_TYPE_CARD_COMPLETE || item.payType == CODE_PAY_TYPE_ACCOUNT_COMPLETE)
+        {
+            // 카드결제 완료 || 가상계좌 완료
+
+            switch (item.placeType)
+            {
+                case HOTEL:
+                    intent = new Intent(baseActivity, BookingTabActivity.class);
+                    break;
+
+                case FNB:
+                    intent = new Intent(baseActivity, GourmetBookingDetailActivity.class);
+                    break;
+            }
+
+        } else if (item.payType == CODE_PAY_TYPE_ACCOUNT_WAIT)
+        {
+            // 가상계좌 입금대기
+            intent = new Intent(baseActivity, PaymentWaitActivity.class);
+        }
+
+        if (intent != null)
+        {
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKING, item);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING_DETAIL);
+        } else
+        {
+            releaseUiComponent();
+        }
+
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put(Label.TYPE, String.valueOf(item.payType));
+        params.put(Label.ISUSED, String.valueOf(item.isUsed));
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd");
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+        params.put(Label.CHECK_IN, simpleDateFormat.format(item.checkinTime));
+        params.put(Label.CHECK_OUT, simpleDateFormat.format(item.checkoutTime));
+        params.put(Label.RESERVATION_INDEX, String.valueOf(item.reservationIndex));
+
+        AnalyticsManager.getInstance(getActivity()).recordEvent(Screen.BOOLKING_LIST, Action.CLICK, item.placeName, params);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        releaseUiComponent();
+
+        if (requestCode == CODE_REQUEST_ACTIVITY_BOOKING_DETAIL)
+        {
+            switch (resultCode)
+            {
+                case CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT:
+                    BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                    if (baseActivity == null)
+                    {
+                        return;
+                    }
+
+                    baseActivity.showSimpleDialog(getString(R.string.dialog_notice2), data.getStringExtra("msg"), getString(R.string.dialog_btn_text_confirm), null);
+                    break;
+            }
+        }
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // UserActionListener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private OnUserActionListener mOnUserActionListener = new OnUserActionListener()
+    {
+        @Override
+        public void delete(final Booking booking)
+        {
+            if (isLockUiComponent() == true)
+            {
+                return;
+            }
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (baseActivity == null)
+            {
+                return;
+            }
+
+            lockUI();
+
+            // 세션 여부를 판단한다.
+            mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, new DailyHotelStringResponseListener()
+            {
+                @Override
+                public void onResponse(String url, String response)
+                {
+                    BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                    if (baseActivity == null)
+                    {
+                        return;
+                    }
+
+                    unLockUI();
+
+                    String result = null;
+
+                    if (false == TextUtils.isEmpty(response))
+                    {
+                        result = response.trim();
+                    }
+
+                    if (true == "alive".equalsIgnoreCase(result))
+                    {
+                        if (baseActivity.isFinishing() == true)
+                        {
+                            return;
+                        }
+
+                        View.OnClickListener posListener = new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View view)
+                            {
+                                BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                                if (baseActivity == null)
+                                {
+                                    return;
+                                }
+
+                                lockUI();
+
+                                switch (booking.placeType)
+                                {
+                                    case HOTEL:
+                                    {
+                                        HashMap<String, String> params = new HashMap<String, String>();
+                                        params.put("idx", String.valueOf(booking.reservationIndex));
+
+                                        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_MINE_HIDDEN).toString(), params, mReservationHiddenJsonResponseListener, baseActivity));
+                                        break;
+                                    }
+
+                                    case FNB:
+                                        HashMap<String, String> params = new HashMap<String, String>();
+                                        params.put("reservation_rec_idx", String.valueOf(booking.reservationIndex));
+
+                                        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_SESSION_HIDDEN).toString(), params, mReservationHiddenJsonResponseListener, baseActivity));
+                                        break;
+                                }
+
+                            }
+                        };
+
+                        baseActivity.showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_delete_booking), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null);
+                    } else
+                    {
+                        baseActivity.restartApp();
+                    }
+                }
+            }, baseActivity));
+        }
+    };
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Listener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
     private DailyHotelJsonResponseListener mUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
     {
 
@@ -504,267 +770,4 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
             }
         }
     };
-    private OnUserActionListener mOnUserActionListener = new OnUserActionListener()
-    {
-        @Override
-        public void delete(final Booking booking)
-        {
-            if (isLockUiComponent() == true)
-            {
-                return;
-            }
-
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            if (baseActivity == null)
-            {
-                return;
-            }
-
-            lockUI();
-
-            // 세션 여부를 판단한다.
-            mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, new DailyHotelStringResponseListener()
-            {
-                @Override
-                public void onResponse(String url, String response)
-                {
-                    BaseActivity baseActivity = (BaseActivity) getActivity();
-
-                    if (baseActivity == null)
-                    {
-                        return;
-                    }
-
-                    unLockUI();
-
-                    String result = null;
-
-                    if (false == TextUtils.isEmpty(response))
-                    {
-                        result = response.trim();
-                    }
-
-                    if (true == "alive".equalsIgnoreCase(result))
-                    {
-                        if (baseActivity.isFinishing() == true)
-                        {
-                            return;
-                        }
-
-                        View.OnClickListener posListener = new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View view)
-                            {
-                                BaseActivity baseActivity = (BaseActivity) getActivity();
-
-                                if (baseActivity == null)
-                                {
-                                    return;
-                                }
-
-                                lockUI();
-
-                                switch (booking.placeType)
-                                {
-                                    case HOTEL:
-                                    {
-                                        HashMap<String, String> params = new HashMap<String, String>();
-                                        params.put("idx", String.valueOf(booking.reservationIndex));
-
-                                        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_MINE_HIDDEN).toString(), params, mReservationHiddenJsonResponseListener, baseActivity));
-                                        break;
-                                    }
-
-                                    case FNB:
-                                        HashMap<String, String> params = new HashMap<String, String>();
-                                        params.put("reservation_rec_idx", String.valueOf(booking.reservationIndex));
-
-                                        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_SESSION_HIDDEN).toString(), params, mReservationHiddenJsonResponseListener, baseActivity));
-                                        break;
-                                }
-
-                            }
-                        };
-
-                        baseActivity.showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_delete_booking), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null);
-                    } else
-                    {
-                        baseActivity.restartApp();
-                    }
-                }
-            }, baseActivity));
-        }
-    };
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
-        View view = inflater.inflate(R.layout.fragment_booking_list, container, false);
-        view.setPadding(0, Util.dpToPx(container.getContext(), 56), 0, 0);
-
-        mListView = (PinnedSectionListView) view.findViewById(R.id.listview_booking);
-        mListView.setShadowVisible(false);
-
-        mEmptyLayout = (RelativeLayout) view.findViewById(R.id.layout_booking_empty);
-        btnLogin = view.findViewById(R.id.btn_booking_empty_login);
-
-        btnLogin.setOnClickListener(this);
-
-        return view;
-    }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // UserActionListener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    public void onStart()
-    {
-        AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOLKING_LIST);
-
-        super.onStart();
-    }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        if (baseActivity == null)
-        {
-            return;
-        }
-
-        baseActivity.setActionBar(getString(R.string.actionbar_title_booking_list_frag), false);
-
-        lockUI();
-        mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, baseActivity));
-    }
-
-    @Override
-    public void onClick(View v)
-    {
-        if (v.getId() == btnLogin.getId())
-        {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            if (baseActivity == null)
-            {
-                return;
-            }
-
-            Intent i = new Intent(baseActivity, LoginActivity.class);
-            startActivity(i);
-            baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-
-            AnalyticsManager.getInstance(getActivity()).recordEvent(Screen.BOOLKING_LIST, Action.CLICK, Label.LOGIN, 0L);
-        }
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parentView, View childView, int position, long id)
-    {
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        if (baseActivity == null)
-        {
-            return;
-        }
-
-        if (isLockUiComponent() == true)
-        {
-            return;
-        }
-
-        lockUiComponent();
-
-        Booking item = mAdapter.getItem(position);
-
-        if (item.type == Booking.TYPE_SECTION)
-        {
-            releaseUiComponent();
-            return;
-        }
-
-        Intent intent = null;
-
-        if (item.payType == CODE_PAY_TYPE_CARD_COMPLETE || item.payType == CODE_PAY_TYPE_ACCOUNT_COMPLETE)
-        {
-            // 카드결제 완료 || 가상계좌 완료
-
-            switch (item.placeType)
-            {
-                case HOTEL:
-                    intent = new Intent(baseActivity, BookingTabActivity.class);
-                    break;
-
-                case FNB:
-                    intent = new Intent(baseActivity, GourmetBookingDetailActivity.class);
-                    break;
-            }
-
-        } else if (item.payType == CODE_PAY_TYPE_ACCOUNT_WAIT)
-        {
-            // 가상계좌 입금대기
-            intent = new Intent(baseActivity, PaymentWaitActivity.class);
-        }
-
-        if (intent != null)
-        {
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKING, item);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING_DETAIL);
-        } else
-        {
-            releaseUiComponent();
-        }
-
-        HashMap<String, String> params = new HashMap<String, String>();
-        params.put(Label.TYPE, String.valueOf(item.payType));
-        params.put(Label.ISUSED, String.valueOf(item.isUsed));
-
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd");
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-        params.put(Label.CHECK_IN, simpleDateFormat.format(item.checkinTime));
-        params.put(Label.CHECK_OUT, simpleDateFormat.format(item.checkoutTime));
-        params.put(Label.RESERVATION_INDEX, String.valueOf(item.reservationIndex));
-
-        AnalyticsManager.getInstance(getActivity()).recordEvent(Screen.BOOLKING_LIST, Action.CLICK, item.placeName, params);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        releaseUiComponent();
-
-        if (requestCode == CODE_REQUEST_ACTIVITY_BOOKING_DETAIL)
-        {
-            switch (resultCode)
-            {
-                case CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT:
-                    BaseActivity baseActivity = (BaseActivity) getActivity();
-
-                    if (baseActivity == null)
-                    {
-                        return;
-                    }
-
-                    baseActivity.showSimpleDialog(getString(R.string.dialog_notice2), data.getStringExtra("msg"), getString(R.string.dialog_btn_text_confirm), null);
-                    break;
-            }
-        }
-    }
-
-    public interface OnUserActionListener
-    {
-        public void delete(Booking booking);
-    }
 }

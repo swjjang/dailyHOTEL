@@ -22,7 +22,7 @@ public abstract class Place implements Parcelable
     public double longitude;
     public boolean isDailyChoice;
     public boolean isSoldOut;
-    public int satisfaction = 98;
+    public int satisfaction;
 
     public Place()
     {

@@ -126,276 +126,13 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
     // Back 버튼을 두 번 눌러 핸들러 멤버 변수
     private CloseOnBackPressed backButtonHandler;
     private Handler mHandler = new Handler();
-    private DailyHotelJsonResponseListener mGcmRegisterJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            // 로그인 성공 - 유저 정보(인덱스) 가져오기 - 유저의 GCM키 등록 완료 한 경우 프리퍼런스에 키 등록후 종료
-            try
-            {
-                String result = null;
 
-                if (null != response)
-                {
-                    result = response.getString("result");
-                }
-
-                if (true == "true".equalsIgnoreCase(result))
-                {
-                    Editor editor = sharedPreference.edit();
-                    editor.putString(KEY_PREFERENCE_GCM_ID, regPushParams.get("notification_id"));
-                    editor.apply();
-                }
-            } catch (Exception e)
-            {
-                onError(e);
-            }
-        }
-    };
-    private DailyHotelJsonResponseListener mDailyEventCountJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            Editor editor = sharedPreference.edit();
-
-            try
-            {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
-                int msg_code = response.getInt("msg_code");
-
-                if (msg_code != 0)
-                {
-                    throw new NullPointerException("msg_code != 0");
-                }
-
-                JSONObject jsonObject = response.getJSONObject("data");
-
-                int count = jsonObject.getInt("count");
-
-                if (count > 0)
-                {
-                    editor.putBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, true);
-                    editor.commit();
-
-                    if (mDrawerLayout.isDrawerOpen(mDrawerList) == true)
-                    {
-                        showNewEvent(false);
-                    } else
-                    {
-                        showNewEvent(true);
-                    }
-                } else
-                {
-                    editor.putBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false);
-
-                    long currentDateTime = sharedPreference.getLong(KEY_PREFERENCE_LOOKUP_EVENT_TIME, 0);
-                    editor.putLong(KEY_PREFERENCE_NEW_EVENT_TIME, currentDateTime);
-                    editor.commit();
-
-                    hideNewEvent(true);
-                }
-
-                // 같이 이벤트 처리
-                if (DailyHotelPreference.getInstance(MainActivity.this).isNewTodayFnB() == true)
-                {
-                    if (mDrawerLayout.isDrawerOpen(mDrawerList) == true)
-                    {
-                        showNewFnB(false);
-                    } else
-                    {
-                        showNewFnB(true);
-                    }
-                }
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            }
-        }
-    };
-    private DailyHotelJsonResponseListener mFnBSatisfactionRatingExistJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
-                int msg_code = response.getInt("msg_code");
-
-                if (msg_code == 0 && response.has("data") == true)
-                {
-                    JSONObject jsonObject = response.getJSONObject("data");
-
-                    long checkInDate = jsonObject.getLong("sday");
-                    String ticketName = jsonObject.getString("ticket_name");
-                    int reservationIndex = jsonObject.getInt("reservation_rec_idx");
-
-                    RatingHotelFragment dialog = RatingHotelFragment.newInstance(ticketName, reservationIndex, checkInDate);
-
-                    if (dialog != null && isFinishing() == false)
-                    {
-                        dialog.show(fragmentManager, TAG_FRAGMENT_RATING_HOTEL);
-                    }
-                }
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            }
-        }
-    };
-    private DailyHotelJsonResponseListener mSatisfactionRatingExistJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
-                int msg_code = response.getInt("msg_code");
-
-                if (msg_code == 0 && response.has("data") == true)
-                {
-                    JSONObject jsonObject = response.getJSONObject("data");
-
-                    //					String guestName = jsonObject.getString("guest_name");
-                    //					String roomName = jsonObject.getString("room_name");
-                    long checkInDate = jsonObject.getLong("checkin_date");
-                    long checkOutDate = jsonObject.getLong("checkout_date");
-                    String hotelName = jsonObject.getString("hotel_name");
-                    int reservationIndex = jsonObject.getInt("reserv_idx");
-
-                    RatingHotelFragment dialog = RatingHotelFragment.newInstance(hotelName, reservationIndex, checkInDate, checkOutDate);
-
-                    if (dialog != null && isFinishing() == false)
-                    {
-                        dialog.show(fragmentManager, TAG_FRAGMENT_RATING_HOTEL);
-
-                        // 화면이 사라지면 FnB만족도 조사를 살펴본다.
-                        dialog.setOnDismissListener(new OnDismissListener()
-                        {
-                            public void onDismiss(DialogInterface dialog)
-                            {
-                                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_SESSION_RATING_EXIST).toString(), null, mFnBSatisfactionRatingExistJsonResponseListener, new ErrorListener()
-                                {
-                                    public void onErrorResponse(VolleyError error)
-                                    {
-
-                                    }
-                                }));
-                            }
-                        });
-                    }
-                } else
-                {
-                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_SESSION_RATING_EXIST).toString(), null, mFnBSatisfactionRatingExistJsonResponseListener, new ErrorListener()
-                    {
-                        public void onErrorResponse(VolleyError error)
-                        {
-
-                        }
-                    }));
-                }
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            }
-        }
-    };
-    private DailyHotelJsonResponseListener mUserInfoJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                if (null == response)
-                {
-                    throw new NullPointerException();
-                }
-
-                String loginuser_idx = response.getString("idx");
-
-                if (true == TextUtils.isEmpty(loginuser_idx))
-                {
-                    throw new NullPointerException("loginuser_idx is empty.");
-                }
-
-                if (getGcmId().isEmpty() == true)
-                {
-                    regGcmId(loginuser_idx);
-                }
-
-                // 호텔 평가요청
-                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_SATISFACTION_RATION_EXIST).toString(), null, //
-                        mSatisfactionRatingExistJsonResponseListener, new ErrorListener()
-                {
-                    @Override
-                    public void onErrorResponse(VolleyError arg0)
-                    {
-                        // TODO Auto-generated method stub
-
-                    }
-                }));
-            } catch (Exception e)
-            {
-                onError(e);
-            } finally
-            {
-                unLockUI();
-            }
-        }
-    };
-    private DailyHotelStringResponseListener mUserAliveStringResponseListener = new DailyHotelStringResponseListener()
-    {
-
-        @Override
-        public void onResponse(String url, String response)
-        {
-
-            String result = null;
-
-            if (false == TextUtils.isEmpty(response))
-            {
-                result = response.trim();
-            }
-
-            if (true == "alive".equalsIgnoreCase(result))
-            {
-                // session alive
-                // 호텔 평가를 위한 사용자 정보 조회
-                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, MainActivity.this));
-            } else
-            {
-                if (getGcmId().isEmpty() == true)
-                {
-                    regGcmId("-1");
-                }
-            }
-        }
-    };
 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        //		com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
+        com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
 
         //		ExLog.d("android.permission.GET_TASKS : "+ ContextCompat.checkSelfPermission(this, "android.permission.GET_TASKS"));
         //		ExLog.d("android.permission.READ_PHONE_STATE : "+ ContextCompat.checkSelfPermission(this, "android.permission.READ_PHONE_STATE"));
@@ -1256,10 +993,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
         }
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     private void hideNewFnb(boolean isHideMenuList)
     {
         hideActionBarNewIcon(false);
@@ -1471,4 +1204,273 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
             return convertView;
         }
     }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //Listener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private DailyHotelJsonResponseListener mGcmRegisterJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            // 로그인 성공 - 유저 정보(인덱스) 가져오기 - 유저의 GCM키 등록 완료 한 경우 프리퍼런스에 키 등록후 종료
+            try
+            {
+                String result = null;
+
+                if (null != response)
+                {
+                    result = response.getString("result");
+                }
+
+                if (true == "true".equalsIgnoreCase(result))
+                {
+                    Editor editor = sharedPreference.edit();
+                    editor.putString(KEY_PREFERENCE_GCM_ID, regPushParams.get("notification_id"));
+                    editor.apply();
+                }
+            } catch (Exception e)
+            {
+                onError(e);
+            }
+        }
+    };
+    private DailyHotelJsonResponseListener mDailyEventCountJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            Editor editor = sharedPreference.edit();
+
+            try
+            {
+                if (response == null)
+                {
+                    throw new NullPointerException("response == null");
+                }
+
+                int msg_code = response.getInt("msg_code");
+
+                if (msg_code != 0)
+                {
+                    throw new NullPointerException("msg_code != 0");
+                }
+
+                JSONObject jsonObject = response.getJSONObject("data");
+
+                int count = jsonObject.getInt("count");
+
+                if (count > 0)
+                {
+                    editor.putBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, true);
+                    editor.commit();
+
+                    if (mDrawerLayout.isDrawerOpen(mDrawerList) == true)
+                    {
+                        showNewEvent(false);
+                    } else
+                    {
+                        showNewEvent(true);
+                    }
+                } else
+                {
+                    editor.putBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false);
+
+                    long currentDateTime = sharedPreference.getLong(KEY_PREFERENCE_LOOKUP_EVENT_TIME, 0);
+                    editor.putLong(KEY_PREFERENCE_NEW_EVENT_TIME, currentDateTime);
+                    editor.commit();
+
+                    hideNewEvent(true);
+                }
+
+                // 같이 이벤트 처리
+                if (DailyHotelPreference.getInstance(MainActivity.this).isNewTodayFnB() == true)
+                {
+                    if (mDrawerLayout.isDrawerOpen(mDrawerList) == true)
+                    {
+                        showNewFnB(false);
+                    } else
+                    {
+                        showNewFnB(true);
+                    }
+                }
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+        }
+    };
+    private DailyHotelJsonResponseListener mFnBSatisfactionRatingExistJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                if (response == null)
+                {
+                    throw new NullPointerException("response == null");
+                }
+
+                int msg_code = response.getInt("msg_code");
+
+                if (msg_code == 0 && response.has("data") == true)
+                {
+                    JSONObject jsonObject = response.getJSONObject("data");
+
+                    long checkInDate = jsonObject.getLong("sday");
+                    String ticketName = jsonObject.getString("ticket_name");
+                    int reservationIndex = jsonObject.getInt("reservation_rec_idx");
+
+                    RatingHotelFragment dialog = RatingHotelFragment.newInstance(ticketName, reservationIndex, checkInDate);
+
+                    if (dialog != null && isFinishing() == false)
+                    {
+                        dialog.show(fragmentManager, TAG_FRAGMENT_RATING_HOTEL);
+                    }
+                }
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+        }
+    };
+    private DailyHotelJsonResponseListener mSatisfactionRatingExistJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                if (response == null)
+                {
+                    throw new NullPointerException("response == null");
+                }
+
+                int msg_code = response.getInt("msg_code");
+
+                if (msg_code == 0 && response.has("data") == true)
+                {
+                    JSONObject jsonObject = response.getJSONObject("data");
+
+                    //					String guestName = jsonObject.getString("guest_name");
+                    //					String roomName = jsonObject.getString("room_name");
+                    long checkInDate = jsonObject.getLong("checkin_date");
+                    long checkOutDate = jsonObject.getLong("checkout_date");
+                    String hotelName = jsonObject.getString("hotel_name");
+                    int reservationIndex = jsonObject.getInt("reserv_idx");
+
+                    RatingHotelFragment dialog = RatingHotelFragment.newInstance(hotelName, reservationIndex, checkInDate, checkOutDate);
+
+                    if (dialog != null && isFinishing() == false)
+                    {
+                        dialog.show(fragmentManager, TAG_FRAGMENT_RATING_HOTEL);
+
+                        // 화면이 사라지면 FnB만족도 조사를 살펴본다.
+                        dialog.setOnDismissListener(new OnDismissListener()
+                        {
+                            public void onDismiss(DialogInterface dialog)
+                            {
+                                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_SESSION_RATING_EXIST).toString(), null, mFnBSatisfactionRatingExistJsonResponseListener, new ErrorListener()
+                                {
+                                    public void onErrorResponse(VolleyError error)
+                                    {
+
+                                    }
+                                }));
+                            }
+                        });
+                    }
+                } else
+                {
+                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_SESSION_RATING_EXIST).toString(), null, mFnBSatisfactionRatingExistJsonResponseListener, new ErrorListener()
+                    {
+                        public void onErrorResponse(VolleyError error)
+                        {
+
+                        }
+                    }));
+                }
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+        }
+    };
+    private DailyHotelJsonResponseListener mUserInfoJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                if (null == response)
+                {
+                    throw new NullPointerException();
+                }
+
+                String loginuser_idx = response.getString("idx");
+
+                if (true == TextUtils.isEmpty(loginuser_idx))
+                {
+                    throw new NullPointerException("loginuser_idx is empty.");
+                }
+
+                if (getGcmId().isEmpty() == true)
+                {
+                    regGcmId(loginuser_idx);
+                }
+
+                // 호텔 평가요청
+                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_SATISFACTION_RATION_EXIST).toString(), null, //
+                        mSatisfactionRatingExistJsonResponseListener, new ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError arg0)
+                    {
+                        // TODO Auto-generated method stub
+
+                    }
+                }));
+            } catch (Exception e)
+            {
+                onError(e);
+            } finally
+            {
+                unLockUI();
+            }
+        }
+    };
+    private DailyHotelStringResponseListener mUserAliveStringResponseListener = new DailyHotelStringResponseListener()
+    {
+
+        @Override
+        public void onResponse(String url, String response)
+        {
+
+            String result = null;
+
+            if (false == TextUtils.isEmpty(response))
+            {
+                result = response.trim();
+            }
+
+            if (true == "alive".equalsIgnoreCase(result))
+            {
+                // session alive
+                // 호텔 평가를 위한 사용자 정보 조회
+                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, MainActivity.this));
+            } else
+            {
+                if (getGcmId().isEmpty() == true)
+                {
+                    regGcmId("-1");
+                }
+            }
+        }
+    };
 }

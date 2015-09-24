@@ -19,38 +19,37 @@ import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request.Method;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.PlaceMainFragment;
-import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.view.OnLoadListener;
+import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.FontManager;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
-public class SatisfactionActivity extends BaseActivity implements Constants, OnLoadListener
+public class SatisfactionActivity extends BaseActivity implements Constants, View.OnClickListener
 {
     private static final String NOT_RATE = "0";
     private static final String RECOMMEND = "1";
     private static final String NOT_RECOMMEND = "2";
-
-    private RequestQueue mQueue;
 
     private String mSatisfaction;
     private String mTicketName;
@@ -59,7 +58,15 @@ public class SatisfactionActivity extends BaseActivity implements Constants, OnL
     private Long mCheckOutDate;
     private PlaceMainFragment.TYPE mPlaceType;
     private Dialog mDialog;
+    private ArrayList<ReviewCode> mReviewCodeList;
+    private EditText mCommentsView;
 
+    private class ReviewCode
+    {
+        String name;
+        int index;
+        boolean isChecked;
+    }
 
     public static Intent newInstance(Context context, String hotelName, int reservationIndex, long checkInDate, long checkOutDate) throws IllegalArgumentException
     {
@@ -88,7 +95,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, OnL
 
         Intent intent = new Intent(context, SatisfactionActivity.class);
 
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME, placeName);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, placeName);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_RESERVATIONINDEX, reservationIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE, checkInDate);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, PlaceMainFragment.TYPE.FNB.name());
@@ -100,8 +107,6 @@ public class SatisfactionActivity extends BaseActivity implements Constants, OnL
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
-        mQueue = VolleyHttpClient.getRequestQueue();
 
         Intent intent = getIntent();
 
@@ -147,6 +152,26 @@ public class SatisfactionActivity extends BaseActivity implements Constants, OnL
         mDialog = null;
 
         super.onStop();
+    }
+
+    @Override
+    public void onClick(View v)
+    {
+        switch (v.getId())
+        {
+            case R.id.service01TextView:
+            case R.id.service02TextView:
+            case R.id.service03TextView:
+            case R.id.service04TextView:
+                ReviewCode reviewCode = (ReviewCode) v.getTag();
+
+                if (reviewCode != null)
+                {
+                    reviewCode.isChecked = !reviewCode.isChecked;
+                    v.setSelected(reviewCode.isChecked);
+                }
+                break;
+        }
     }
 
     private void showSatisfactionDialog()
@@ -228,11 +253,12 @@ public class SatisfactionActivity extends BaseActivity implements Constants, OnL
             }
         });
 
+        mDialog.setContentView(view);
         mDialog.show();
     }
 
 
-    private void showSatisfactionDetailDialog(String[] service)
+    private void showSatisfactionDetailDialog(final boolean isSatisfaction, ArrayList<ReviewCode> reviewCodeList)
     {
         if (mDialog != null && mDialog.isShowing() == true)
         {
@@ -260,9 +286,9 @@ public class SatisfactionActivity extends BaseActivity implements Constants, OnL
         TextView service04TextView = (TextView) view.findViewById(R.id.service04TextView);
 
         final TextView commentsHintView = (TextView) view.findViewById(R.id.commentsHintView);
-        final EditText commentsView = (EditText) view.findViewById(R.id.commentsView);
+        mCommentsView = (EditText) view.findViewById(R.id.commentsView);
 
-        commentsView.addTextChangedListener(new TextWatcher()
+        mCommentsView.addTextChangedListener(new TextWatcher()
         {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after)
@@ -273,7 +299,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, OnL
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count)
             {
-                if (commentsView.length() == 0)
+                if (mCommentsView.length() == 0)
                 {
                     commentsHintView.setVisibility(View.VISIBLE);
                 }
@@ -290,7 +316,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, OnL
         {
             case HOTEL:
             {
-                if (RECOMMEND.equalsIgnoreCase(mSatisfaction) == true)
+                if (isSatisfaction == true)
                 {
                     // 만족함
                     titleTextView.setText(R.string.satisfaction_recommend_title);
@@ -301,21 +327,33 @@ public class SatisfactionActivity extends BaseActivity implements Constants, OnL
 
                     commentsHintView.setText(R.string.satisfaction_hotel_comments_hint01);
 
-                } else if (NOT_RECOMMEND.equalsIgnoreCase(mSatisfaction) == true)
+                } else
                 {
                     // 만족안함
                     titleTextView.setText(R.string.satisfaction_not_recommend_title);
                     contentTextView.setText(R.string.satisfaction_not_recommend_detailtext);
 
-                    if (service != null && service.length == 4)
+                    if (reviewCodeList != null && reviewCodeList.size() == 5)
                     {
                         selectServiceTextView.setVisibility(View.VISIBLE);
                         selectServiceLayout.setVisibility(View.VISIBLE);
 
-                        service01TextView.setText(service[0]);
-                        service02TextView.setText(service[1]);
-                        service03TextView.setText(service[2]);
-                        service04TextView.setText(service[3]);
+                        service01TextView.setText(reviewCodeList.get(0).name);
+                        service01TextView.setTag(reviewCodeList.get(0));
+
+                        service02TextView.setText(reviewCodeList.get(1).name);
+                        service02TextView.setTag(reviewCodeList.get(1));
+
+                        service03TextView.setText(reviewCodeList.get(2).name);
+                        service03TextView.setTag(reviewCodeList.get(2));
+
+                        service04TextView.setText(reviewCodeList.get(3).name);
+                        service04TextView.setTag(reviewCodeList.get(3));
+
+                        service01TextView.setOnClickListener(this);
+                        service02TextView.setOnClickListener(this);
+                        service03TextView.setOnClickListener(this);
+                        service04TextView.setOnClickListener(this);
                     } else
                     {
                         selectServiceTextView.setVisibility(View.GONE);
@@ -329,7 +367,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, OnL
 
             case FNB:
             {
-                if (RECOMMEND.equalsIgnoreCase(mSatisfaction) == true)
+                if (isSatisfaction == true)
                 {
                     // 만족함
                     titleTextView.setText(R.string.satisfaction_recommend_title);
@@ -340,21 +378,33 @@ public class SatisfactionActivity extends BaseActivity implements Constants, OnL
 
                     commentsHintView.setText(R.string.satisfaction_gourmet_comments_hint01);
 
-                } else if (NOT_RECOMMEND.equalsIgnoreCase(mSatisfaction) == true)
+                } else
                 {
                     // 만족안함
                     titleTextView.setText(R.string.satisfaction_not_recommend_title);
                     contentTextView.setText(R.string.satisfaction_not_recommend_detailtext);
 
-                    if (service != null && service.length == 4)
+                    if (reviewCodeList != null && reviewCodeList.size() == 5)
                     {
                         selectServiceTextView.setVisibility(View.VISIBLE);
                         selectServiceLayout.setVisibility(View.VISIBLE);
 
-                        service01TextView.setText(service[0]);
-                        service02TextView.setText(service[1]);
-                        service03TextView.setText(service[2]);
-                        service04TextView.setText(service[3]);
+                        service01TextView.setText(reviewCodeList.get(0).name);
+                        service01TextView.setTag(reviewCodeList.get(0));
+
+                        service02TextView.setText(reviewCodeList.get(1).name);
+                        service02TextView.setTag(reviewCodeList.get(1));
+
+                        service03TextView.setText(reviewCodeList.get(2).name);
+                        service03TextView.setTag(reviewCodeList.get(2));
+
+                        service04TextView.setText(reviewCodeList.get(3).name);
+                        service04TextView.setTag(reviewCodeList.get(3));
+
+                        service01TextView.setOnClickListener(this);
+                        service02TextView.setOnClickListener(this);
+                        service03TextView.setOnClickListener(this);
+                        service04TextView.setOnClickListener(this);
                     } else
                     {
                         selectServiceTextView.setVisibility(View.GONE);
@@ -374,7 +424,71 @@ public class SatisfactionActivity extends BaseActivity implements Constants, OnL
             @Override
             public void onClick(View v)
             {
+                Map<String, String> params = new HashMap<String, String>();
 
+                if (isSatisfaction == true)
+                {
+
+                } else
+                {
+                    String rating_types = null;
+
+                    for (ReviewCode reviewCode : mReviewCodeList)
+                    {
+                        if (reviewCode.isChecked == true)
+                        {
+                            if (Util.isTextEmpty(rating_types) == true)
+                            {
+                                rating_types = String.valueOf(reviewCode.index);
+                            } else
+                            {
+                                rating_types += ("," + reviewCode.index);
+                            }
+                        }
+                    }
+
+                    if (Util.isTextEmpty(rating_types) == true)
+                    {
+                        rating_types = String.valueOf(mReviewCodeList.get(mReviewCodeList.size() - 1).index);
+                    }
+
+                    params.put("rating_types", rating_types);
+                }
+
+                params.put("msg", mCommentsView.getText().toString().trim());
+
+                switch (mPlaceType)
+                {
+                    case HOTEL:
+                    {
+                        params.put("reserv_idx", String.valueOf(mReservationIndex));
+
+                        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_SATISFACTIONRATING_MSG_UPDATE).toString(), params, mReservSatisfactionUpdateJsonResponseListener, new ErrorListener()
+                        {
+                            @Override
+                            public void onErrorResponse(VolleyError arg0)
+                            {
+                                finish();
+                            }
+                        }));
+                        break;
+                    }
+
+                    case FNB:
+                    {
+                        params.put("fnb_reservation_rec_idx", String.valueOf(mReservationIndex));
+
+                        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_SESSION_RATING_MSG_UPDATE).toString(), params, mReservSatisfactionUpdateJsonResponseListener, new ErrorListener()
+                        {
+                            @Override
+                            public void onErrorResponse(VolleyError arg0)
+                            {
+                                finish();
+                            }
+                        }));
+                        break;
+                    }
+                }
             }
         });
 
@@ -387,8 +501,10 @@ public class SatisfactionActivity extends BaseActivity implements Constants, OnL
                 return;
             }
         });
-    }
 
+        mDialog.setContentView(view);
+        mDialog.show();
+    }
 
     private void updateSatifactionRating(PlaceMainFragment.TYPE type, int index, String result)
     {
@@ -415,8 +531,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, OnL
                     @Override
                     public void onErrorResponse(VolleyError arg0)
                     {
-                        // TODO Auto-generated method stub
-
+                        finish();
                     }
                 }));
                 break;
@@ -428,8 +543,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, OnL
                     @Override
                     public void onErrorResponse(VolleyError arg0)
                     {
-                        // TODO Auto-generated method stub
-
+                        finish();
                     }
                 }));
                 break;
@@ -438,7 +552,6 @@ public class SatisfactionActivity extends BaseActivity implements Constants, OnL
 
     private DailyHotelJsonResponseListener mReserveReviewJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -473,13 +586,124 @@ public class SatisfactionActivity extends BaseActivity implements Constants, OnL
                 {
                     String msg = response.getString("msg");
 
-                    // 상세 만족도 정보 요청
+                    if (RECOMMEND.equalsIgnoreCase(mSatisfaction) == true)
+                    {
+                        // 만족함
+                        showSatisfactionDetailDialog(true, null);
+                    } else
+                    {
+                        // 만족안함
+                        String params = null;
 
-                    //                    DailyToast.showToast(mHostActivity, msg, Toast.LENGTH_LONG);
+                        switch (mPlaceType)
+                        {
+                            case HOTEL:
+                                params = "?type=HOTEL_DISSATISFACTION";
+                                break;
+
+                            case FNB:
+                                params = "?type=FNB_DISSATISFACTION";
+                                break;
+                        }
+
+                        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_CODE_REVIEW).append(params).toString(), null, mRequestServicesJsonResponseListener, new ErrorListener()
+                        {
+                            @Override
+                            public void onErrorResponse(VolleyError arg0)
+                            {
+                                finish();
+                            }
+                        }));
+                    }
                 }
             } catch (Exception e)
             {
                 ExLog.e(e.toString());
+            }
+        }
+    };
+
+    private DailyHotelJsonResponseListener mRequestServicesJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            unLockUI();
+
+            try
+            {
+                if (response == null)
+                {
+                    throw new NullPointerException("response == null");
+                }
+
+                int msgCode = response.getInt("msg_code");
+
+                if (msgCode == 0)
+                {
+                    JSONArray jsonArray = response.getJSONArray("data");
+
+                    if (mReviewCodeList == null)
+                    {
+                        mReviewCodeList = new ArrayList<ReviewCode>(5);
+                    }
+
+                    mReviewCodeList.clear();
+
+                    int length = jsonArray.length();
+
+                    for (int i = 0; i < length; i++)
+                    {
+                        JSONObject serviceJSONObject = jsonArray.getJSONObject(i);
+
+                        ReviewCode reviewCode = new ReviewCode();
+                        reviewCode.name = serviceJSONObject.getString("name");
+                        reviewCode.index = serviceJSONObject.getInt("idx");
+
+                        mReviewCodeList.add(reviewCode);
+                    }
+
+                    showSatisfactionDetailDialog(false, mReviewCodeList);
+                } else
+                {
+                    finish();
+                }
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
+        }
+    };
+
+
+    private DailyHotelJsonResponseListener mReservSatisfactionUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            unLockUI();
+
+            try
+            {
+                if (response == null)
+                {
+                    throw new NullPointerException("response == null");
+                }
+
+                int msgCode = response.getInt("msg_code");
+
+                if (msgCode == 0)
+                {
+                    String msg = response.getString("msg");
+
+                    DailyToast.showToast(SatisfactionActivity.this, msg, Toast.LENGTH_SHORT);
+                }
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            } finally
+            {
+                finish();
             }
         }
     };

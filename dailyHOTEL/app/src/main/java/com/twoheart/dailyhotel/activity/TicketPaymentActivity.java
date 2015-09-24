@@ -1017,7 +1017,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
                                 guest.name = name;
                                 guest.phone = phone;
                                 guest.email = email;
-                                
+
                                 mTicketPayment.setGuest(guest);
                             }
 

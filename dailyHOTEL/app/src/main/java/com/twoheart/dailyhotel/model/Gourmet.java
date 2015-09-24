@@ -67,6 +67,10 @@ public class Gourmet extends Place implements Parcelable
 
             saleDay = jsonObject.getString("sday");
 
+            if(jsonObject.has("rating_value") == true)
+            {
+                satisfaction = jsonObject.getInt("rating_value");
+            }
         } catch (JSONException e)
         {
             ExLog.d(e.toString());
