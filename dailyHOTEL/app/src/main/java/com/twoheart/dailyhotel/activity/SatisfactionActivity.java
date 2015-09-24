@@ -619,6 +619,8 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
             } catch (Exception e)
             {
                 ExLog.e(e.toString());
+
+                finish();
             }
         }
     };
@@ -671,6 +673,8 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
             } catch (Exception e)
             {
                 ExLog.e(e.toString());
+
+                finish();
             }
         }
     };
