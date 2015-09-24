@@ -31,9 +31,12 @@ import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.GeneralSecurityException;
+import java.security.cert.X509Certificate;
 import java.util.List;
 
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 public class VolleyHttpClient implements Constants
 {
@@ -174,6 +177,38 @@ public class VolleyHttpClient implements Constants
         private OkHttpClient mOkHttpClient;
         private CookieStore mCookieStore;
 
+        class HttpsTrustManager implements X509TrustManager
+        {
+            private TrustManager[] trustManagers;
+            private final X509Certificate[] x509Certificate = new X509Certificate[]{};
+
+            @Override
+            public void checkClientTrusted(java.security.cert.X509Certificate[] x509Certificates, String s) throws java.security.cert.CertificateException
+            {
+            }
+
+            @Override
+            public void checkServerTrusted(java.security.cert.X509Certificate[] x509Certificates, String s) throws java.security.cert.CertificateException
+            {
+            }
+
+            public boolean isClientTrusted(X509Certificate[] chain)
+            {
+                return true;
+            }
+
+            public boolean isServerTrusted(X509Certificate[] chain)
+            {
+                return true;
+            }
+
+            @Override
+            public X509Certificate[] getAcceptedIssuers()
+            {
+                return x509Certificate;
+            }
+        }
+
         public OkHttpStack()
         {
             mOkHttpClient = new OkHttpClient();
@@ -181,8 +216,10 @@ public class VolleyHttpClient implements Constants
 
             try
             {
+                TrustManager[] trustManagers = new TrustManager[]{new HttpsTrustManager()};
+
                 sslContext = SSLContext.getInstance("TLS");
-                sslContext.init(null, null, null);
+                sslContext.init(null, trustManagers, null);
             } catch (GeneralSecurityException e)
             {
                 throw new AssertionError(); // 시스템이 TLS를 지원하지 않습니다
