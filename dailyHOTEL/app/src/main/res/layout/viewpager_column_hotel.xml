@@ -51,7 +51,8 @@
                     android:paddingRight="5.5dp"
                     android:paddingTop="2px"
                     android:textColor="@color/white"
-                    android:textSize="11dp"/>
+                    android:textSize="11dp"
+                    android:layout_marginLeft="1dp"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyTextView
                     android:id="@+id/satisfactionView"

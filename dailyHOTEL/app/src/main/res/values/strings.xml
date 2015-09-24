@@ -393,12 +393,23 @@
     <string name="label_booking_date">날짜</string>
 
     <!-- RatingHotel Fragment -->
-    <string name="frag_rating_hotel_title">만족도 조사</string>
+    <string name="frag_rating_hotel_title">호텔은 만족스러우셨나요?</string>
+    <string name="frag_rating_gourmet_title">식사는 만족스러우셨나요?</string>
     <string name="frag_rating_hotel_text1">%1$s에 이용하신</string>
     <string name="frag_rating_hotel_text2">\'%1$s\'</string>
-    <string name="frag_rating_hotel_text3">은 어떠셨나요?</string>
+    <string name="frag_rating_hotel_text3">은/는 어떠셨나요?</string>
     <string name="frag_rating_hotel_recomm">만족함</string>
     <string name="frag_rating_hotel_cancel">만족안함</string>
+    <string name="satisfaction_recommend_detailtext">특별히 만족스러우셨던 부분을 말씀해주세요!\n고객님의 평가를 반영하여\n앞으로도 최상의 서비스를 제공해드리겠습니다.</string>
+    <string name="satisfaction_not_recommend_detailtext">고객님께 불편드려 죄송합니다.\n고객님의 불편사항을 말씀해주시면,\n더 나은 서비스를 제공할 수 있도록\n최대한 반영하겠습니다.</string>
+    <string name="satisfaction_selectservice_title">불편하셨던 점을 선택해주세요. (복수 선택 가능)</string>
+    <string name="satisfaction_hotel_comments_hint01">자유롭게 만족하신 부분을 말씀해주세요\n(ex. 객실이 너무 깔끔했어요 등)</string>
+    <string name="satisfaction_hotel_comments_hint02">자유롭게 불편사항을 입력해주세요.\n(ex. 시설이 좀 오래됐어요 등)</string>
+    <string name="satisfaction_gourmet_comments_hint01">자유롭게 만족하신 부분을 말씀해주세요\n(ex. 분위기가 너무 좋았어요 등)</string>
+    <string name="satisfaction_gourmet_comments_hint02">자유롭게 불편사항을 입력해주세요.\n(ex. 역에서 너무 멀었어요 등)</string>
+    <string name="label_send_your_comments">의견 보내기</string>
+    <string name="satisfaction_recommend_title">만족하셨다니 기쁘네요!</string>
+    <string name="satisfaction_not_recommend_title">어떤 점이 불편하셨나요?</string>
 
     <!-- TabInfo/TabMap Fragment -->
     <string name="frag_tab_info_title">정보</string>
@@ -548,6 +559,6 @@
     <string name="label_headersectionbar_title">당일 판매 상품</string>
     <string name="label_fnblistfragment_empty_text01">레스토랑을 준비하고 있습니다.</string>
     <string name="label_fnblistfragment_empty_text02">멋진 레스토랑을 원하시나요?\n1800-9120으로 전화주세요.</string>
-    <string name="label_fnblistfragment_header_text">매일 오전 9시부터 쉐프들이 선보이는 특별한 만찬!\n\'데일리고메\'에서 오늘의 만찬을 예약하세요!</string>
+    <string name="label_fnblistfragment_header_text">매일 오전 9시, 특별한 하루를 선물할 셰프의 만찬!\n\'데일리고메\'에서 오늘의 엄선된 다이닝을 할인 예약하세요!</string>
 
 </resources>
