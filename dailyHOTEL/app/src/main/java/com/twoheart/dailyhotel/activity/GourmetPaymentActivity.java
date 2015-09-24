@@ -145,10 +145,10 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
         params.put("customer_email", guest.email);
         params.put("arrival_time", String.valueOf(ticketPayment.ticketTime));
 
-        if (DEBUG == true)
-        {
-            showSimpleDialog(null, params.toString(), getString(R.string.dialog_btn_text_confirm), null);
-        }
+        //        if (DEBUG == true)
+        //        {
+        //            showSimpleDialog(null, params.toString(), getString(R.string.dialog_btn_text_confirm), null);
+        //        }
 
         mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_PAYMENT_SESSION_EASY).toString(), params, mPayEasyPaymentJsonResponseListener, this));
     }
@@ -174,7 +174,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
             return;
         }
 
-        mGourmetBookingLayout.setTicketPayment(ticketPayment, creditCard);
+        mGourmetBookingLayout.updateTicketPaymentInformation(ticketPayment, creditCard);
     }
 
     @Override
@@ -676,6 +676,8 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                     DailyToast.showToast(GourmetPaymentActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
                     return;
                 }
+
+                mTicketPayment.setGuest(guest);
             }
 
             String gcmId = sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "");

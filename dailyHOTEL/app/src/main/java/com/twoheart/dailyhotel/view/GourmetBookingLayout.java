@@ -34,7 +34,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.GourmetPaymentActivity;
 import com.twoheart.dailyhotel.model.CreditCard;
-import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Guest;
 import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.model.TicketPayment;
@@ -137,7 +136,7 @@ public class GourmetBookingLayout implements OnCheckedChangeListener
         return mViewGroupRoot;
     }
 
-    public void setTicketPayment(TicketPayment ticketPayment, CreditCard creditCard)
+    public void updateTicketPaymentInformation(TicketPayment ticketPayment, CreditCard creditCard)
     {
         // 상품정보
         updateTicketInformationLayout(mActivity, ticketPayment);
@@ -308,6 +307,8 @@ public class GourmetBookingLayout implements OnCheckedChangeListener
             @Override
             public void onClick(View v)
             {
+                v.setVisibility(View.INVISIBLE);
+
                 if (mOnUserActionListener != null)
                 {
                     mOnUserActionListener.editUserInformation();
@@ -323,21 +324,21 @@ public class GourmetBookingLayout implements OnCheckedChangeListener
             return;
         }
 
-        Customer customer = ticketPayment.getCustomer();
+        Guest guest = ticketPayment.getGuest();
 
-        if (customer == null)
+        if (guest == null)
         {
             return;
         }
 
         // 예약자
-        mUserNameEditText.setText(customer.getName());
+        mUserNameEditText.setText(guest.name);
 
         // 연락처
-        mUserPhoneEditText.setText(customer.getPhone());
+        mUserPhoneEditText.setText(guest.phone);
 
         // 이메일
-        mUserEmailEditText.setText(customer.getEmail());
+        mUserEmailEditText.setText(guest.email);
     }
 
     private void initPaymentInformationLayout(BaseActivity activity, View viewRoot)

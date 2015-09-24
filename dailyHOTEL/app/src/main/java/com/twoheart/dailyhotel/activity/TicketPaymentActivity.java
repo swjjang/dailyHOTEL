@@ -1009,13 +1009,17 @@ public abstract class TicketPaymentActivity extends BaseActivity
                             buyer.setPhone(phone);
                             buyer.setUserIdx(userIndex);
 
-                            Guest guest = new Guest();
-                            guest.name = name;
-                            guest.phone = phone;
-                            guest.email = email;
-
                             mTicketPayment.setCustomer(buyer);
-                            mTicketPayment.setGuest(guest);
+
+                            if (mIsEditMode == false)
+                            {
+                                Guest guest = new Guest();
+                                guest.name = name;
+                                guest.phone = phone;
+                                guest.email = email;
+                                
+                                mTicketPayment.setGuest(guest);
+                            }
 
                             // 2. 화면 정보 얻기
                             requestTicketPaymentInfomation(mTicketPayment.getTicketInformation().index);
