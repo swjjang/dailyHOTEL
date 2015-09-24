@@ -16,8 +16,6 @@ package com.twoheart.dailyhotel;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
@@ -60,6 +58,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.ExitActivity;
+import com.twoheart.dailyhotel.activity.SatisfactionActivity;
 import com.twoheart.dailyhotel.activity.SplashActivity;
 import com.twoheart.dailyhotel.fragment.BookingListFragment;
 import com.twoheart.dailyhotel.fragment.CreditFragment;
@@ -67,7 +66,6 @@ import com.twoheart.dailyhotel.fragment.ErrorFragment;
 import com.twoheart.dailyhotel.fragment.EventListFragment;
 import com.twoheart.dailyhotel.fragment.GourmetMainFragment;
 import com.twoheart.dailyhotel.fragment.HotelMainFragment;
-import com.twoheart.dailyhotel.fragment.RatingHotelFragment;
 import com.twoheart.dailyhotel.fragment.SettingFragment;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
@@ -332,6 +330,15 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                     mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, this));
                 }
             }
+        } else if (requestCode == CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL)
+        {
+            mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_SESSION_RATING_EXIST).toString(), null, mFnBSatisfactionRatingExistJsonResponseListener, new ErrorListener()
+            {
+                public void onErrorResponse(VolleyError error)
+                {
+
+                }
+            }));
         }
         //		else if (requestCode == CODE_REQUEST_ACTIVITY_INTRO)
         //		{
@@ -1325,12 +1332,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                     String ticketName = jsonObject.getString("ticket_name");
                     int reservationIndex = jsonObject.getInt("reservation_rec_idx");
 
-                    RatingHotelFragment dialog = RatingHotelFragment.newInstance(ticketName, reservationIndex, checkInDate);
-
-                    if (dialog != null && isFinishing() == false)
-                    {
-                        dialog.show(fragmentManager, TAG_FRAGMENT_RATING_HOTEL);
-                    }
+                    startActivityForResult(SatisfactionActivity.newInstance(MainActivity.this, ticketName, reservationIndex, checkInDate), CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET);
                 }
             } catch (Exception e)
             {
@@ -1363,27 +1365,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                     String hotelName = jsonObject.getString("hotel_name");
                     int reservationIndex = jsonObject.getInt("reserv_idx");
 
-                    RatingHotelFragment dialog = RatingHotelFragment.newInstance(hotelName, reservationIndex, checkInDate, checkOutDate);
-
-                    if (dialog != null && isFinishing() == false)
-                    {
-                        dialog.show(fragmentManager, TAG_FRAGMENT_RATING_HOTEL);
-
-                        // 화면이 사라지면 FnB만족도 조사를 살펴본다.
-                        dialog.setOnDismissListener(new OnDismissListener()
-                        {
-                            public void onDismiss(DialogInterface dialog)
-                            {
-                                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_SESSION_RATING_EXIST).toString(), null, mFnBSatisfactionRatingExistJsonResponseListener, new ErrorListener()
-                                {
-                                    public void onErrorResponse(VolleyError error)
-                                    {
-
-                                    }
-                                }));
-                            }
-                        });
-                    }
+                    startActivityForResult(SatisfactionActivity.newInstance(MainActivity.this, hotelName, reservationIndex, checkInDate, checkOutDate), CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL);
                 } else
                 {
                     mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_SESSION_RATING_EXIST).toString(), null, mFnBSatisfactionRatingExistJsonResponseListener, new ErrorListener()

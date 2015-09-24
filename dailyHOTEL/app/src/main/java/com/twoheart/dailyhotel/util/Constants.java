@@ -442,6 +442,9 @@ public interface Constants
     public static final int CODE_REQUEST_ACTIVITY_SELECT_AREA = 14;
     public static final int CODE_REQUEST_ACTIVITY_USERINFO_UPDATE = 15;
     public static final int CODE_REQUEST_FRAGMENT_PLACE_MAIN = 20;
+    public static final int CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL = 21;
+    public static final int CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET = 22;
+
     // Android Activity의 Result Code들이다.
     public static final int CODE_RESULT_ACTIVITY_PAYMENT_FAIL = 100;
     public static final int CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS = 101;
