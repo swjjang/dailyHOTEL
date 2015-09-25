@@ -14,10 +14,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
-import android.widget.EditText;
+import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +32,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.view.widget.DailyEditText;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.FontManager;
 
@@ -59,7 +61,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
     private PlaceMainFragment.TYPE mPlaceType;
     private Dialog mDialog;
     private ArrayList<ReviewCode> mReviewCodeList;
-    private EditText mCommentsView;
+    private DailyEditText mCommentsView;
 
     private class ReviewCode
     {
@@ -286,7 +288,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
         TextView service04TextView = (TextView) view.findViewById(R.id.service04TextView);
 
         final TextView commentsHintView = (TextView) view.findViewById(R.id.commentsHintView);
-        mCommentsView = (EditText) view.findViewById(R.id.commentsView);
+        mCommentsView = (DailyEditText) view.findViewById(R.id.commentsView);
 
         mCommentsView.addTextChangedListener(new TextWatcher()
         {
@@ -417,17 +419,45 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
             }
         }
 
-        TextView positiveTextView = (TextView) view.findViewById(R.id.positiveTextView);
+        final TextView positiveTextView = (TextView) view.findViewById(R.id.positiveTextView);
+
+        mCommentsView.setUsedImeActionSend(true);
+        mCommentsView.setImeOptions(EditorInfo.IME_ACTION_SEND);
+        mCommentsView.setOnEditorActionListener(new TextView.OnEditorActionListener()
+        {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+            {
+                if (actionId == EditorInfo.IME_ACTION_SEND)
+                {
+                    positiveTextView.performClick();
+                }
+                return false;
+            }
+        });
 
         positiveTextView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
+                if (lockUiComponentAndIsLockUiComponent() == true)
+                {
+                    return;
+                }
+
+                lockUI();
+
                 Map<String, String> params = new HashMap<String, String>();
 
                 if (isSatisfaction == true)
                 {
+                    // 아무내용이 없으면 보내지 않는다.
+                    if (Util.isTextEmpty(mCommentsView.getText().toString().trim()) == true)
+                    {
+                        finish();
+                        return;
+                    }
 
                 } else
                 {
@@ -445,6 +475,13 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                                 rating_types += ("," + reviewCode.index);
                             }
                         }
+                    }
+
+                    // 아무내용이 없으면 보내지 않는다.
+                    if (Util.isTextEmpty(mCommentsView.getText().toString().trim()) == true && Util.isTextEmpty(rating_types) == true)
+                    {
+                        finish();
+                        return;
                     }
 
                     if (Util.isTextEmpty(rating_types) == true)
@@ -513,6 +550,11 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
             return;
         }
 
+        if (lockUiComponentAndIsLockUiComponent() == true)
+        {
+            return;
+        }
+
         lockUI();
 
         mSatisfaction = result;
@@ -555,8 +597,6 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
         @Override
         public void onResponse(String url, JSONObject response)
         {
-            unLockUI();
-
             if (mDialog != null && mDialog.isShowing() == true)
             {
                 mDialog.dismiss();
@@ -566,6 +606,8 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
 
             if (NOT_RATE.equalsIgnoreCase(mSatisfaction) == true)
             {
+                unLockUI();
+
                 finish();
                 return;
             }
@@ -582,16 +624,20 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                 boolean result = jsonObject.getBoolean("is_success");
                 int msgCode = response.getInt("msg_code");
 
-                if (response.has("msg") == true)
+                if (result == true)
                 {
                     String msg = response.getString("msg");
 
                     if (RECOMMEND.equalsIgnoreCase(mSatisfaction) == true)
                     {
+                        unLockUI();
+
                         // 만족함
                         showSatisfactionDetailDialog(true, null);
                     } else
                     {
+                        lockUI();
+
                         // 만족안함
                         String params = null;
 
@@ -615,6 +661,9 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
                             }
                         }));
                     }
+                } else
+                {
+                    finish();
                 }
             } catch (Exception e)
             {
