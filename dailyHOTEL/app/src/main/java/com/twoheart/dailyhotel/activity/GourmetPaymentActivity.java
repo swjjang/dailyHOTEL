@@ -9,7 +9,6 @@ import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
-import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
@@ -680,7 +679,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
 
             String gcmId = sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "");
 
-            if (mTicketPayment.paymentType == TicketPayment.PaymentType.VBANK && TextUtils.isEmpty(gcmId) == true)
+            if (mTicketPayment.paymentType == TicketPayment.PaymentType.VBANK && Util.isTextEmpty(gcmId) == true)
             {
                 // 가상계좌 결제시 푸쉬를 받지 못하는 경우
                 String title = getString(R.string.dialog_notice2);

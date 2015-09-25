@@ -30,7 +30,6 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
-import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
@@ -407,7 +406,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
                 String gcmId = sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "");
 
-                if (mPay.getType() == Pay.Type.VBANK && TextUtils.isEmpty(gcmId) == true)
+                if (mPay.getType() == Pay.Type.VBANK && Util.isTextEmpty(gcmId) == true)
                 {
                     if (isFinishing() == true)
                     {
@@ -1868,7 +1867,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
                     int resultCode = 0;
 
-                    if (TextUtils.isEmpty(data) == true)
+                    if (Util.isTextEmpty(data) == true)
                     {
                         resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
                     } else if ("SOLD_OUT".equalsIgnoreCase(data) == true)

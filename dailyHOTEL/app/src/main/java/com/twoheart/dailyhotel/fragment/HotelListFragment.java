@@ -21,7 +21,6 @@ import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -749,7 +748,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
             {
                 String region = hotel.getDetailRegion();
 
-                if (TextUtils.isEmpty(region) == true)
+                if (Util.isTextEmpty(region) == true)
                 {
                     continue;
                 }
@@ -765,7 +764,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
                     }
                 } else
                 {
-                    if (TextUtils.isEmpty(area) == true || region.equalsIgnoreCase(area) == false)
+                    if (Util.isTextEmpty(area) == true || region.equalsIgnoreCase(area) == false)
                     {
                         area = region;
 

@@ -10,7 +10,6 @@ package com.twoheart.dailyhotel.fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +31,7 @@ import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.PlaceViewItem;
 import com.twoheart.dailyhotel.view.widget.FragmentViewPager;
 
@@ -470,13 +470,13 @@ public class GourmetMainFragment extends PlaceMainFragment
                 String regionName = baseActivity.sharedPreference.getString(KEY_PREFERENCE_FNB_REGION_SELECT, "");
                 Province selectedProvince = null;
 
-                if (TextUtils.isEmpty(regionName) == true)
+                if (Util.isTextEmpty(regionName) == true)
                 {
                     // 마지막으로 선택한 지역이 없는 경이 이전 지역을 가져온다.
                     regionName = baseActivity.sharedPreference.getString(KEY_PREFERENCE_FNB_REGION_SELECT_BEFORE, "");
 
                     // 해당 지역이 없는 경우 Province의 첫번째 지역으로 한다.
-                    if (TextUtils.isEmpty(regionName) == true)
+                    if (Util.isTextEmpty(regionName) == true)
                     {
                         selectedProvince = provinceList.get(0);
                         regionName = selectedProvince.name;

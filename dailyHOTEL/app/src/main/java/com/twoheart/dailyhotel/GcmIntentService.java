@@ -20,7 +20,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
-import android.text.TextUtils;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.twoheart.dailyhotel.activity.PushLockDialogActivity;
@@ -30,6 +29,7 @@ import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.WakeLock;
 
 import org.json.JSONObject;
@@ -251,7 +251,7 @@ public class GcmIntentService extends IntentService implements Constants
             uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         }
 
-        if (TextUtils.isEmpty(imageUrl) == true)
+        if (Util.isTextEmpty(imageUrl) == true)
         {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
             builder.setSmallIcon(R.drawable.img_ic_appicon_feature).setContentTitle(getString(R.string.app_name)).setAutoCancel(true).setSound(uri).setContentText(msg);

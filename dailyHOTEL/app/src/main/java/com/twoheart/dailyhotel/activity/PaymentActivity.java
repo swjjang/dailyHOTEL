@@ -24,7 +24,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
@@ -47,6 +46,7 @@ import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 
 import java.io.UnsupportedEncodingException;
@@ -164,7 +164,7 @@ public class PaymentActivity extends BaseActivity implements Constants
         {
             Guest guest = mPay.getGuest();
 
-            if (TextUtils.isEmpty(guest.name) == true || TextUtils.isEmpty(guest.phone) == true || TextUtils.isEmpty(guest.email) == true)
+            if (Util.isTextEmpty(guest.name) == true || Util.isTextEmpty(guest.phone) == true || Util.isTextEmpty(guest.email) == true)
             {
                 restartApp();
                 return;

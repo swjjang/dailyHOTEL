@@ -17,7 +17,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 
 import com.android.volley.Request.Method;
@@ -30,6 +29,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.CreditCardLayout;
 
 import org.json.JSONArray;
@@ -175,7 +175,7 @@ public class CreditCardListActivity extends BaseActivity
 
                     unLockUI();
 
-                    if (false == TextUtils.isEmpty(response))
+                    if (false == Util.isTextEmpty(response))
                     {
                         result = response.trim();
                     }
@@ -213,7 +213,7 @@ public class CreditCardListActivity extends BaseActivity
 
                     unLockUI();
 
-                    if (false == TextUtils.isEmpty(response))
+                    if (false == Util.isTextEmpty(response))
                     {
                         result = response.trim();
                     }
@@ -396,7 +396,7 @@ public class CreditCardListActivity extends BaseActivity
         {
             String result = null;
 
-            if (false == TextUtils.isEmpty(response))
+            if (false == Util.isTextEmpty(response))
             {
                 result = response.trim();
             }

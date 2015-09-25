@@ -3,10 +3,10 @@ package com.twoheart.dailyhotel.model;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.text.TextUtils;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -236,7 +236,7 @@ public class Hotel implements Parcelable
             {
                 String dBenefit = jsonObject.getString("hotel_benefit");
 
-                if (TextUtils.isEmpty(dBenefit) == true || "null".equalsIgnoreCase(dBenefit) == true)
+                if (Util.isTextEmpty(dBenefit) == true || "null".equalsIgnoreCase(dBenefit) == true)
                 {
                     isDBenefit = false;
                 } else

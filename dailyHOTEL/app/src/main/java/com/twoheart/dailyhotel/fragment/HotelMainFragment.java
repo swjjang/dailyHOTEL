@@ -13,7 +13,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -833,13 +832,13 @@ public class HotelMainFragment extends BaseFragment
                 String regionName = baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT, "");
                 Province selectedProvince = null;
 
-                if (TextUtils.isEmpty(regionName) == true)
+                if (Util.isTextEmpty(regionName) == true)
                 {
                     // 마지막으로 선택한 지역이 없는 경이 이전 지역을 가져온다.
                     regionName = baseActivity.sharedPreference.getString(KEY_PREFERENCE_REGION_SELECT_BEFORE, "");
 
                     // 해당 지역이 없는 경우 Province의 첫번째 지역으로 한다.
-                    if (TextUtils.isEmpty(regionName) == true)
+                    if (Util.isTextEmpty(regionName) == true)
                     {
                         selectedProvince = provinceList.get(0);
                         regionName = selectedProvince.name;
@@ -937,7 +936,7 @@ public class HotelMainFragment extends BaseFragment
                 dayList.add(getString(R.string.label_format_tabday, tabSaleTime[0].getDailyDay(), tabSaleTime[0].getDailyDayOftheWeek()));
                 dayList.add(getString(R.string.label_format_tabday, tabSaleTime[1].getDailyDay(), tabSaleTime[1].getDailyDayOftheWeek()));
 
-                if (TextUtils.isEmpty(mTabIndicator.getSubText(2)) == true)
+                if (Util.isTextEmpty(mTabIndicator.getSubText(2)) == true)
                 {
                     SaleTime checkInSaleTime = tabSaleTime[0].getClone(2);
                     SaleTime checkOutSaleTime = tabSaleTime[0].getClone(3);
@@ -961,7 +960,7 @@ public class HotelMainFragment extends BaseFragment
                 {
                     String day = dayList.get(i);
 
-                    if (TextUtils.isEmpty(day) == true)
+                    if (Util.isTextEmpty(day) == true)
                     {
                         mTabIndicator.setSubTextEnable(i, false);
                     } else

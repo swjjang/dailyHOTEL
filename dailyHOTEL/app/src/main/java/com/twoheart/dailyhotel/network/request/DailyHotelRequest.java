@@ -188,8 +188,8 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
         return map;
     }
 
-    public static void makeUrlEncoder()
-    {
-        DailyHotelRequest.getUrlEncoder("api/fnb/reservation/session/rating/msg/update");
-    }
+    //    public static void makeUrlEncoder()
+    //    {
+    //        DailyHotelRequest.getUrlEncoder("api/user/information/omission");
+    //    }
 }

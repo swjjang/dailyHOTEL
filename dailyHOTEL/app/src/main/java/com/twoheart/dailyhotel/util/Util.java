@@ -214,7 +214,7 @@ public class Util implements Constants
     {
         boolean result = false;
 
-        if (TextUtils.isEmpty(text) == false)
+        if (Util.isTextEmpty(text) == false)
         {
             result = Pattern.matches("^[a-zA-Z\\s.'-]+$", text);
         }

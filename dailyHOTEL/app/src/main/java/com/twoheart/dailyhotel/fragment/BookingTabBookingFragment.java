@@ -10,7 +10,6 @@ package com.twoheart.dailyhotel.fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +29,7 @@ import com.twoheart.dailyhotel.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 
 import org.json.JSONException;
@@ -107,7 +107,7 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 
             String result = null;
 
-            if (TextUtils.isEmpty(response) == false)
+            if (Util.isTextEmpty(response) == false)
             {
                 result = response.trim();
             }

@@ -8,7 +8,6 @@ import android.graphics.Rect;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -432,7 +431,7 @@ public abstract class PlaceDetailLayout
             float offset = rect.top - mStatusBarHeight - Util.dpToPx(mActivity, 56);
             float alphaFactor = offset / max;
 
-            if (TextUtils.isEmpty(mPlaceDetail.benefit) == false)
+            if (Util.isTextEmpty(mPlaceDetail.benefit) == false)
             {
                 if (Float.compare(alphaFactor, 0.0f) <= 0)
                 {

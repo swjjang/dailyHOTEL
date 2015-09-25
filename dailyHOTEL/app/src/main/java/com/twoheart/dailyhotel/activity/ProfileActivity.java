@@ -12,7 +12,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputFilter;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -45,6 +44,7 @@ import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.DailyHotelPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.StringFilter;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 
 import org.json.JSONObject;
@@ -245,14 +245,14 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
                 String name = mAq.id(R.id.et_profile_name).getText().toString().trim();
                 String phone = mAq.id(R.id.et_profile_phone).getText().toString().trim();
 
-                if (TextUtils.isEmpty(phone) == true)
+                if (Util.isTextEmpty(phone) == true)
                 {
                     // 전화번호는 필수 사항으로 한다.
                     releaseUiComponent();
 
                     mAq.id(R.id.et_profile_phone).text("");
                     DailyToast.showToast(ProfileActivity.this, R.string.toast_msg_please_input_phone, Toast.LENGTH_SHORT);
-                } else if (TextUtils.isEmpty(name) == true)
+                } else if (Util.isTextEmpty(name) == true)
                 {
                     // 이름은 필수 사항으로 입력되어야 한다.
                     releaseUiComponent();
@@ -348,12 +348,12 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
                 String userName = response.getString("name");
                 String userPhone = response.getString("phone");
 
-                if (TextUtils.isEmpty(userEmail) == true || INVALID_NULL.equalsIgnoreCase(userEmail) == true)
+                if (Util.isTextEmpty(userEmail) == true || INVALID_NULL.equalsIgnoreCase(userEmail) == true)
                 {
                     userEmail = getString(R.string.act_profile_input_email);
                 }
 
-                if (TextUtils.isEmpty(userName) == true)
+                if (Util.isTextEmpty(userName) == true)
                 {
                     userName = getString(R.string.act_profile_input_name);
                     prevName = "";
@@ -362,7 +362,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
                     prevName = userName;
                 }
 
-                if (TextUtils.isEmpty(userPhone) == true || INVALID_NULL.equalsIgnoreCase(userPhone) == true)
+                if (Util.isTextEmpty(userPhone) == true || INVALID_NULL.equalsIgnoreCase(userPhone) == true)
                 {
                     userPhone = getString(R.string.act_profile_input_contact);
                     prevPh = "";

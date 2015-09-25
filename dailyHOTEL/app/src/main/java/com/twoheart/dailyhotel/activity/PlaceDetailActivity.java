@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -353,12 +352,13 @@ public abstract class PlaceDetailActivity extends BaseActivity
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
     }
 
-    private void moveToUserInfoUpdate(Customer user)
+    private void moveToUserInfoUpdate(Customer user, int recommender)
     {
-        Intent i = new Intent(PlaceDetailActivity.this, SignupActivity.class);
-        i.putExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER, user);
+        Intent intent = new Intent(PlaceDetailActivity.this, SignupActivity.class);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER, user);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_RECOMMENDER, recommender);
 
-        startActivityForResult(i, CODE_REQUEST_ACTIVITY_USERINFO_UPDATE);
+        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_USERINFO_UPDATE);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
     }
 
@@ -601,7 +601,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
     //Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mUserInfoJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mUserFacebookInformationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
 
         @Override
@@ -614,27 +614,44 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     throw new NullPointerException("response == null");
                 }
 
-                Customer user = new Customer();
-                user.setEmail(response.getString("email"));
-                user.setName(response.getString("name"));
-                user.setPhone(response.getString("phone"));
-                user.setAccessToken(response.getString("accessToken"));
-                user.setUserIdx(response.getString("idx"));
+                int msg_code = response.getInt("msg_code");
 
-                // 페이스북 유저
-                if (isEmptyTextField(user.getAccessToken()) == false)
+                if (msg_code == 0)
                 {
-                    if (isEmptyTextField(new String[]{user.getEmail(), user.getPhone(), user.getName()}) == false)
+                    JSONObject jsonObject = response.getJSONObject("data");
+
+                    Customer user = new Customer();
+                    user.setEmail(jsonObject.getString("email"));
+                    user.setName(jsonObject.getString("name"));
+                    user.setPhone(jsonObject.getString("phone"));
+                    user.setUserIdx(jsonObject.getString("idx"));
+
+                    // 추천인
+                    int recommender = jsonObject.getInt("recommender_code");
+                    boolean isFacebookUser = jsonObject.getBoolean("isFbUser");
+
+                    // 페이스북 유저
+                    if (isFacebookUser == true)
                     {
-                        processBooking(mSelectedTicketInformation, mCheckInSaleTime);
+                        if (isEmptyTextField(new String[]{user.getEmail(), user.getPhone(), user.getName()}) == false)
+                        {
+                            processBooking(mSelectedTicketInformation, mCheckInSaleTime);
+                        } else
+                        {
+                            // 정보 업데이트 화면으로 이동.
+                            moveToUserInfoUpdate(user, recommender);
+                        }
                     } else
                     {
-                        // 정보 업데이트 화면으로 이동.
-                        moveToUserInfoUpdate(user);
+                        processBooking(mSelectedTicketInformation, mCheckInSaleTime);
                     }
                 } else
                 {
-                    processBooking(mSelectedTicketInformation, mCheckInSaleTime);
+                    unLockUI();
+
+                    String msg = response.getString("msg");
+
+                    DailyToast.showToast(PlaceDetailActivity.this, msg, Toast.LENGTH_SHORT);
                 }
             } catch (Exception e)
             {
@@ -653,7 +670,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
             String result = null;
 
-            if (TextUtils.isEmpty(response) == false)
+            if (Util.isTextEmpty(response) == false)
             {
                 result = response.trim();
             }
@@ -662,7 +679,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             {
                 // session alive
                 // 사용자 정보 요청.
-                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, PlaceDetailActivity.this));
+                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION_OMISSION).toString(), null, mUserFacebookInformationJsonResponseListener, PlaceDetailActivity.this));
 
             } else if ("dead".equalsIgnoreCase(result) == true)
             {

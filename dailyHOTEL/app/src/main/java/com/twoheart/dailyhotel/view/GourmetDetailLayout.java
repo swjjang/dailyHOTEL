@@ -6,7 +6,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.app.FragmentActivity;
 import android.text.Layout;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -220,7 +219,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
                     count--;
                 }
 
-                if (TextUtils.isEmpty(mPlaceDetail.benefit) == true)
+                if (Util.isTextEmpty(mPlaceDetail.benefit) == true)
                 {
                     count--;
                 }
@@ -291,7 +290,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
 
                 // D Benefit or 호텔 정보
                 case 3:
-                    if (TextUtils.isEmpty(mPlaceDetail.benefit) == false)
+                    if (Util.isTextEmpty(mPlaceDetail.benefit) == false)
                     {
                         if (mDeatilViews[3] == null)
                         {
@@ -315,7 +314,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
 
                 // 호텔 정보 or 카카오톡 문의
                 case 4:
-                    if (TextUtils.isEmpty(mPlaceDetail.benefit) == false)
+                    if (Util.isTextEmpty(mPlaceDetail.benefit) == false)
                     {
                         view = makeInformationView(layoutInflater, parent);
                     } else
@@ -482,7 +481,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
                 {
                     Layout layout = hotelAddressTextView01.getLayout();
 
-                    if (layout == null || TextUtils.isEmpty(address) == true)
+                    if (layout == null || Util.isTextEmpty(address) == true)
                     {
                         return;
                     }
@@ -700,7 +699,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
                 {
                     Layout layout = textView1Line.getLayout();
 
-                    if (layout == null || TextUtils.isEmpty(benefit) == true)
+                    if (layout == null || Util.isTextEmpty(benefit) == true)
                     {
                         return;
                     }

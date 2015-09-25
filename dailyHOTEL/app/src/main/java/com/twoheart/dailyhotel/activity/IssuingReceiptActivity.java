@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -14,6 +13,7 @@ import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
+import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;
 
@@ -324,7 +324,7 @@ public class IssuingReceiptActivity extends BaseActivity
 
             String result = null;
 
-            if (TextUtils.isEmpty(response) == false)
+            if (Util.isTextEmpty(response) == false)
             {
                 result = response.trim();
             }

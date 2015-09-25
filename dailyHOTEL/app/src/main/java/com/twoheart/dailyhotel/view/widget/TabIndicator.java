@@ -13,7 +13,6 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.Gravity;
@@ -258,7 +257,7 @@ public class TabIndicator extends HorizontalScrollView implements OnClickListene
 
             String subText = subList.get(i);
 
-            if (TextUtils.isEmpty(subText) == true)
+            if (Util.isTextEmpty(subText) == true)
             {
                 tabIndicatorItem.setSubTextEnable(false);
             } else

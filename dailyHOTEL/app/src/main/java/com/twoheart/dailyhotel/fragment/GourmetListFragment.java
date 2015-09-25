@@ -16,7 +16,6 @@
 package com.twoheart.dailyhotel.fragment;
 
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -280,7 +279,7 @@ public class GourmetListFragment extends PlaceListFragment
             {
                 String region = fnb.districtName;
 
-                if (TextUtils.isEmpty(region) == true)
+                if (Util.isTextEmpty(region) == true)
                 {
                     continue;
                 }
@@ -296,7 +295,7 @@ public class GourmetListFragment extends PlaceListFragment
                     }
                 } else
                 {
-                    if (TextUtils.isEmpty(area) == true || region.equalsIgnoreCase(area) == false)
+                    if (Util.isTextEmpty(area) == true || region.equalsIgnoreCase(area) == false)
                     {
                         area = region;
 

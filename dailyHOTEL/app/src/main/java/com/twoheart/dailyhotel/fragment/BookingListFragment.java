@@ -16,7 +16,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -274,7 +273,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
                     String result = null;
 
-                    if (false == TextUtils.isEmpty(response))
+                    if (false == Util.isTextEmpty(response))
                     {
                         result = response.trim();
                     }
@@ -580,7 +579,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
             String result = null;
 
-            if (TextUtils.isEmpty(response) == false)
+            if (Util.isTextEmpty(response) == false)
             {
                 result = response.trim();
             }
@@ -730,7 +729,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                     {
                         message = response.getString("msg");
 
-                        if (TextUtils.isEmpty(message) == false)
+                        if (Util.isTextEmpty(message) == false)
                         {
                             DailyToast.showToast(baseActivity, message, Toast.LENGTH_SHORT);
                         }
@@ -744,7 +743,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                     {
                         message = response.getString("msg");
 
-                        if (TextUtils.isEmpty(message) == false)
+                        if (Util.isTextEmpty(message) == false)
                         {
                             unLockUI();
 

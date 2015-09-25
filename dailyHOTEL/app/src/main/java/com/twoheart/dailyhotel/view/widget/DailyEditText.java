@@ -41,7 +41,7 @@ public class DailyEditText extends AppCompatEditText
     @Override
     public InputConnection onCreateInputConnection(EditorInfo outAttrs)
     {
-        if(mUsedImeActionSend == false)
+        if (mUsedImeActionSend == false)
         {
             return super.onCreateInputConnection(outAttrs);
         }

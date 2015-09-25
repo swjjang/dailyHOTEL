@@ -18,7 +18,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -37,6 +36,7 @@ import com.twoheart.dailyhotel.activity.FAQActivity;
 import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.activity.NoticeActivity;
 import com.twoheart.dailyhotel.activity.ProfileActivity;
+import com.twoheart.dailyhotel.activity.SatisfactionActivity;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.request.DailyHotelStringRequest;
@@ -108,14 +108,14 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
         }
 
         // 고메 만족도 테스트
-        //        llVersion.setOnClickListener(new OnClickListener()
-        //        {
-        //            @Override
-        //            public void onClick(View v)
-        //            {
-        //                startActivity(SatisfactionActivity.newInstance(mHostActivity, "엘본 더 테이블", 1, 1442880000000L));
-        //            }
-        //        });
+        llVersion.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                startActivity(SatisfactionActivity.newInstance(mHostActivity, "엘본 더 테이블", 1, 1442880000000L));
+            }
+        });
 
         // 호텔 만족도 테스트
         //        llVersion.setOnClickListener(new OnClickListener()
@@ -337,7 +337,7 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
 
             String result = null;
 
-            if (TextUtils.isEmpty(response) == false)
+            if (Util.isTextEmpty(response) == false)
             {
                 result = response.trim();
             }

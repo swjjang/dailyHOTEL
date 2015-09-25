@@ -32,7 +32,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -130,7 +129,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
+        //        com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
 
         //		ExLog.d("android.permission.GET_TASKS : "+ ContextCompat.checkSelfPermission(this, "android.permission.GET_TASKS"));
         //		ExLog.d("android.permission.READ_PHONE_STATE : "+ ContextCompat.checkSelfPermission(this, "android.permission.READ_PHONE_STATE"));
@@ -348,7 +347,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
     private void writeKakaoLinkPreference(String link)
     {
-        if (TextUtils.isEmpty(link) == true)
+        if (Util.isTextEmpty(link) == true)
         {
             return;
         }
@@ -1397,7 +1396,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
                 String loginuser_idx = response.getString("idx");
 
-                if (true == TextUtils.isEmpty(loginuser_idx))
+                if (true == Util.isTextEmpty(loginuser_idx))
                 {
                     throw new NullPointerException("loginuser_idx is empty.");
                 }
@@ -1436,7 +1435,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
             String result = null;
 
-            if (false == TextUtils.isEmpty(response))
+            if (false == Util.isTextEmpty(response))
             {
                 result = response.trim();
             }

@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.activity;
 
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,6 +15,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 
 import org.json.JSONException;
@@ -165,7 +165,7 @@ public class ForgotPwdActivity extends BaseActivity implements Constants, OnClic
 
                 if ("true".equalsIgnoreCase(result) == true)
                 {
-                    if (TextUtils.isEmpty(mEmail) == true)
+                    if (Util.isTextEmpty(mEmail) == true)
                     {
                         DailyToast.showToast(ForgotPwdActivity.this, R.string.toast_msg_please_input_email_address, Toast.LENGTH_SHORT);
                     } else
