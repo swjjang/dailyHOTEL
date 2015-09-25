@@ -63,187 +63,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
     private View mProgressView;
     private View[] mCircleViewList;
     private boolean mIsRequestLogin;
-    private DailyHotelJsonResponseListener mUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
 
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                String result = null;
-
-                if (response != null)
-                {
-                    result = response.getString("login");
-                }
-
-                if ("true".equalsIgnoreCase(result) == false)
-                {
-                    // 로그인 실패
-                    // data 초기화
-                    SharedPreferences.Editor ed = sharedPreference.edit();
-                    ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
-                    ed.putString(KEY_PREFERENCE_USER_ID, null);
-                    ed.putString(KEY_PREFERENCE_USER_PWD, null);
-                    ed.commit();
-
-                } else
-                {
-                    // 로그인 성공
-                    VolleyHttpClient.createCookie();
-                    // 로그인에 성공하였으나 GCM을 등록하지 않은 유저의 경우 인덱스를 가져와 push_id를 업그레이드 하는 절차 시작.
-                }
-
-            } catch (JSONException e)
-            {
-                onError(e);
-            }
-        }
-    };
-    private DailyHotelJsonResponseListener mAppVersionJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
-                ExLog.e(" / onResponse : url = " + url + " / response = " + response.toString());
-                ExLog.e(" / onResponse : Stores = " + RELEASE_STORE);
-
-                SharedPreferences.Editor editor = sharedPreference.edit();
-
-                if (RELEASE_STORE == Stores.PLAY_STORE)
-                {
-                    ExLog.d("RELEASE_PLAY_STORE : true");
-
-                    editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME, response.getString("play_max"));
-                    editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME, response.getString("play_min"));
-                } else if (RELEASE_STORE == Stores.T_STORE)
-                {
-                    ExLog.d("RELEASE_T_STORE : true");
-
-                    editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME, response.getString("tstore_max"));
-                    editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME, response.getString("tstore_min"));
-                } else if (RELEASE_STORE == Stores.N_STORE)
-                {
-                    ExLog.d("RELEASE_N_STORE : true");
-                    editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME, response.getString("nstore_max"));
-                    editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME, response.getString("nstore_min"));
-                }
-
-                editor.commit();
-
-                int maxVersion = Integer.parseInt(sharedPreference.getString(KEY_PREFERENCE_MAX_VERSION_NAME, "1.0.0").replace(".", ""));
-                int minVersion = Integer.parseInt(sharedPreference.getString(KEY_PREFERENCE_MIN_VERSION_NAME, "1.0.0").replace(".", ""));
-                int currentVersion = Integer.parseInt(getPackageManager().getPackageInfo(getPackageName(), 0).versionName.replace(".", ""));
-                int skipMaxVersion = Integer.parseInt(sharedPreference.getString(KEY_PREFERENCE_SKIP_MAX_VERSION, "1.0.0").replace(".", ""));
-
-                ExLog.e("MIN / MAX / CUR / SKIP : " + minVersion + " / " + maxVersion + " / " + currentVersion + " / " + skipMaxVersion);
-
-                if (minVersion > currentVersion)
-                { // 강제 업데이트
-
-                    if (isFinishing() == true)
-                    {
-                        return;
-                    }
-
-                    View.OnClickListener posListener = new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View view)
-                        {
-                            Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
-                            marketLaunch.setData(Uri.parse(Util.storeReleaseAddress()));
-
-                            if (marketLaunch.resolveActivity(getPackageManager()) == null)
-                            {
-                                marketLaunch.setData(Uri.parse(Constants.URL_STORE_GOOGLE_DAILYHOTEL_WEB));
-                            }
-
-                            startActivity(marketLaunch);
-                            finish();
-                        }
-                    };
-
-                    OnCancelListener cancelListener = new OnCancelListener()
-                    {
-                        @Override
-                        public void onCancel(DialogInterface dialog)
-                        {
-                            setResult(RESULT_CANCELED);
-                            finish();
-                        }
-                    };
-
-                    showSimpleDialog(getString(R.string.dialog_title_notice), getString(R.string.dialog_msg_please_update_new_version), getString(R.string.dialog_btn_text_update), posListener, cancelListener);
-
-                } else if ((maxVersion > currentVersion) && (skipMaxVersion != maxVersion))
-                {
-                    if (isFinishing() == true)
-                    {
-                        return;
-                    }
-
-                    View.OnClickListener posListener = new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View view)
-                        {
-                            Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
-                            marketLaunch.setData(Uri.parse(Util.storeReleaseAddress()));
-
-                            if (marketLaunch.resolveActivity(getPackageManager()) == null)
-                            {
-                                marketLaunch.setData(Uri.parse(Constants.URL_STORE_GOOGLE_DAILYHOTEL_WEB));
-                            }
-
-                            startActivity(marketLaunch);
-                            finish();
-                        }
-                    };
-
-                    final OnCancelListener cancelListener = new OnCancelListener()
-                    {
-                        @Override
-                        public void onCancel(DialogInterface dialog)
-                        {
-                            SharedPreferences.Editor editor = sharedPreference.edit();
-                            editor.putString(KEY_PREFERENCE_SKIP_MAX_VERSION, sharedPreference.getString(KEY_PREFERENCE_MAX_VERSION_NAME, "1.0.0"));
-                            editor.commit();
-
-                            requestConfigurationABTest();
-                        }
-                    };
-
-                    View.OnClickListener negListener = new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View view)
-                        {
-                            cancelListener.onCancel(null);
-                        }
-                    };
-
-                    showSimpleDialog(getString(R.string.dialog_title_notice), getString(R.string.dialog_msg_update_now), getString(R.string.dialog_btn_text_update), getString(R.string.dialog_btn_text_cancel), posListener, negListener, cancelListener, null, false);
-                } else
-                {
-                    requestConfigurationABTest();
-                }
-
-            } catch (Exception e)
-            {
-                onError(e);
-            }
-        }
-    };
     private Handler mHandler = new Handler()
     {
         @Override
@@ -501,10 +321,6 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
         finish();
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     @Override
     public void finish()
     {
@@ -524,4 +340,190 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
             }
         });
     }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Listener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    private DailyHotelJsonResponseListener mUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                String result = null;
+
+                if (response != null)
+                {
+                    result = response.getString("login");
+                }
+
+                if ("true".equalsIgnoreCase(result) == false)
+                {
+                    // 로그인 실패
+                    // data 초기화
+                    SharedPreferences.Editor ed = sharedPreference.edit();
+                    ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
+                    ed.putString(KEY_PREFERENCE_USER_ID, null);
+                    ed.putString(KEY_PREFERENCE_USER_PWD, null);
+                    ed.commit();
+
+                } else
+                {
+                    // 로그인 성공
+                    VolleyHttpClient.createCookie();
+                    // 로그인에 성공하였으나 GCM을 등록하지 않은 유저의 경우 인덱스를 가져와 push_id를 업그레이드 하는 절차 시작.
+                }
+
+            } catch (JSONException e)
+            {
+                onError(e);
+            }
+        }
+    };
+    private DailyHotelJsonResponseListener mAppVersionJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                if (response == null)
+                {
+                    throw new NullPointerException("response == null");
+                }
+
+                ExLog.d(" / onResponse : Stores = " + RELEASE_STORE);
+
+                SharedPreferences.Editor editor = sharedPreference.edit();
+
+                if (RELEASE_STORE == Stores.PLAY_STORE)
+                {
+                    ExLog.d("RELEASE_PLAY_STORE : true");
+
+                    editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME, response.getString("play_max"));
+                    editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME, response.getString("play_min"));
+                } else if (RELEASE_STORE == Stores.T_STORE)
+                {
+                    ExLog.d("RELEASE_T_STORE : true");
+
+                    editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME, response.getString("tstore_max"));
+                    editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME, response.getString("tstore_min"));
+                } else if (RELEASE_STORE == Stores.N_STORE)
+                {
+                    ExLog.d("RELEASE_N_STORE : true");
+                    editor.putString(KEY_PREFERENCE_MAX_VERSION_NAME, response.getString("nstore_max"));
+                    editor.putString(KEY_PREFERENCE_MIN_VERSION_NAME, response.getString("nstore_min"));
+                }
+
+                editor.commit();
+
+                int maxVersion = Integer.parseInt(sharedPreference.getString(KEY_PREFERENCE_MAX_VERSION_NAME, "1.0.0").replace(".", ""));
+                int minVersion = Integer.parseInt(sharedPreference.getString(KEY_PREFERENCE_MIN_VERSION_NAME, "1.0.0").replace(".", ""));
+                int currentVersion = Integer.parseInt(getPackageManager().getPackageInfo(getPackageName(), 0).versionName.replace(".", ""));
+                int skipMaxVersion = Integer.parseInt(sharedPreference.getString(KEY_PREFERENCE_SKIP_MAX_VERSION, "1.0.0").replace(".", ""));
+
+                ExLog.d("MIN / MAX / CUR / SKIP : " + minVersion + " / " + maxVersion + " / " + currentVersion + " / " + skipMaxVersion);
+
+                if (minVersion > currentVersion)
+                { // 강제 업데이트
+
+                    if (isFinishing() == true)
+                    {
+                        return;
+                    }
+
+                    View.OnClickListener posListener = new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View view)
+                        {
+                            Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+                            marketLaunch.setData(Uri.parse(Util.storeReleaseAddress()));
+
+                            if (marketLaunch.resolveActivity(getPackageManager()) == null)
+                            {
+                                marketLaunch.setData(Uri.parse(Constants.URL_STORE_GOOGLE_DAILYHOTEL_WEB));
+                            }
+
+                            startActivity(marketLaunch);
+                            finish();
+                        }
+                    };
+
+                    OnCancelListener cancelListener = new OnCancelListener()
+                    {
+                        @Override
+                        public void onCancel(DialogInterface dialog)
+                        {
+                            setResult(RESULT_CANCELED);
+                            finish();
+                        }
+                    };
+
+                    showSimpleDialog(getString(R.string.dialog_title_notice), getString(R.string.dialog_msg_please_update_new_version), getString(R.string.dialog_btn_text_update), posListener, cancelListener);
+
+                } else if ((maxVersion > currentVersion) && (skipMaxVersion != maxVersion))
+                {
+                    if (isFinishing() == true)
+                    {
+                        return;
+                    }
+
+                    View.OnClickListener posListener = new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View view)
+                        {
+                            Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+                            marketLaunch.setData(Uri.parse(Util.storeReleaseAddress()));
+
+                            if (marketLaunch.resolveActivity(getPackageManager()) == null)
+                            {
+                                marketLaunch.setData(Uri.parse(Constants.URL_STORE_GOOGLE_DAILYHOTEL_WEB));
+                            }
+
+                            startActivity(marketLaunch);
+                            finish();
+                        }
+                    };
+
+                    final OnCancelListener cancelListener = new OnCancelListener()
+                    {
+                        @Override
+                        public void onCancel(DialogInterface dialog)
+                        {
+                            SharedPreferences.Editor editor = sharedPreference.edit();
+                            editor.putString(KEY_PREFERENCE_SKIP_MAX_VERSION, sharedPreference.getString(KEY_PREFERENCE_MAX_VERSION_NAME, "1.0.0"));
+                            editor.commit();
+
+                            requestConfigurationABTest();
+                        }
+                    };
+
+                    View.OnClickListener negListener = new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View view)
+                        {
+                            cancelListener.onCancel(null);
+                        }
+                    };
+
+                    showSimpleDialog(getString(R.string.dialog_title_notice), getString(R.string.dialog_msg_update_now), getString(R.string.dialog_btn_text_update), getString(R.string.dialog_btn_text_cancel), posListener, negListener, cancelListener, null, false);
+                } else
+                {
+                    requestConfigurationABTest();
+                }
+
+            } catch (Exception e)
+            {
+                onError(e);
+            }
+        }
+    };
 }

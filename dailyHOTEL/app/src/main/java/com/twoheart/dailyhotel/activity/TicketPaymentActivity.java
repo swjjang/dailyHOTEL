@@ -74,331 +74,11 @@ public abstract class TicketPaymentActivity extends BaseActivity
     protected Dialog mFinalCheckDialog;
     protected SaleTime mCheckInSaleTime;
     protected boolean mIsEditMode;
-    protected DailyHotelJsonResponseListener mUserSessionBillingCardInfoJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                if (response == null)
-                {
-                    onInternalError();
-                    return;
-                }
 
-                // 해당 화면은 메시지를 넣지 않는다.
-                int msg_code = response.getInt("msg_code");
-
-                if (msg_code != 0)
-                {
-                    ExLog.d("msg_code : " + msg_code);
-                }
-
-                JSONArray jsonArray = response.getJSONArray("data");
-                int length = jsonArray.length();
-
-                if (length == 0)
-                {
-                    mSelectedCreditCard = null;
-                } else
-                {
-                    if (mSelectedCreditCard == null)
-                    {
-                        JSONObject jsonObject = jsonArray.getJSONObject(0);
-                        mSelectedCreditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"), jsonObject.getString("cardcd"));
-                    } else
-                    {
-                        boolean hasCreditCard = false;
-
-                        for (int i = 0; i < length; i++)
-                        {
-                            JSONObject jsonObject = jsonArray.getJSONObject(i);
-
-                            if (mSelectedCreditCard.billingkey.equals(jsonObject.getString("billkey")) == true)
-                            {
-                                hasCreditCard = true;
-                                break;
-                            }
-                        }
-
-                        // 기존에 선택한 카드를 지우고 돌아온 경우.
-                        if (hasCreditCard == false)
-                        {
-                            JSONObject jsonObject = jsonArray.getJSONObject(0);
-
-                            mSelectedCreditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"), jsonObject.getString("cardcd"));
-                        }
-                    }
-                }
-
-                checkLastChangedValue();
-
-                updateLayout(mTicketPayment, mSelectedCreditCard);
-
-                unLockUI();
-            } catch (Exception e)
-            {
-                onInternalError();
-            }
-        }
-    };
     private int mReqCode;
     private int mResCode;
     private Intent mResIntent;
     private ProgressDialog mProgressDialog;
-    private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                if (response == null)
-                {
-                    onInternalError();
-                    return;
-                }
-
-                SaleTime saleTime = new SaleTime();
-
-                saleTime.setCurrentTime(response.getLong("currentDateTime"));
-                saleTime.setOpenTime(response.getLong("openDateTime"));
-                saleTime.setCloseTime(response.getLong("closeDateTime"));
-                saleTime.setDailyTime(response.getLong("dailyDateTime"));
-
-                if (saleTime.isSaleTime() == true)
-                {
-                    lockUI();
-
-                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, TicketPaymentActivity.this));
-                } else
-                {
-                    unLockUI();
-
-                    View.OnClickListener posListener = new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View view)
-                        {
-                            setResult(CODE_RESULT_ACTIVITY_PAYMENT_SALES_CLOSED);
-                            finish();
-                        }
-                    };
-
-                    showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_sales_closed), getString(R.string.dialog_btn_text_confirm), posListener);
-                }
-
-            } catch (Exception e)
-            {
-                onInternalError();
-            }
-        }
-    };
-    private DailyHotelJsonResponseListener mUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                if (response == null)
-                {
-                    onInternalError();
-                    return;
-                }
-
-                if (response.getBoolean("login") == true)
-                {
-                    VolleyHttpClient.createCookie();
-
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("timeZone", "Asia/Seoul");
-
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, TicketPaymentActivity.this));
-                } else
-                {
-                    unLockUI();
-                }
-            } catch (Exception e)
-            {
-                onInternalError();
-            }
-        }
-    };
-    private DailyHotelJsonResponseListener mUserRegisterBillingCardInfoJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            int msg_code = -1;
-
-            try
-            {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
-                // 해당 화면은 메시지를 넣지 않는다.
-                msg_code = response.getInt("msg_code");
-
-                if (msg_code != 0)
-                {
-                    ExLog.d("msg_code : " + msg_code);
-                }
-
-                JSONArray jsonArray = response.getJSONArray("data");
-                int length = jsonArray.length();
-
-                if (length == 0)
-                {
-                    mSelectedCreditCard = null;
-                } else
-                {
-                    JSONObject jsonObject = jsonArray.getJSONObject(0);
-
-                    mSelectedCreditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"), jsonObject.getString("cardcd"));
-
-                    updatePaymentInformation(mTicketPayment, mSelectedCreditCard);
-
-                    // final check 결제 화면을 보여준다.
-                    showFinalCheckDialog();
-                }
-            } catch (Exception e)
-            {
-                // 해당 화면 에러시에는 일반 결제가 가능해야 한다.
-                ExLog.e(e.toString());
-            } finally
-            {
-                unLockUI();
-            }
-        }
-    };
-    protected DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                if (response == null)
-                {
-                    onInternalError();
-                    return;
-                }
-
-                int msg_code = response.getInt("msg_code");
-
-                if (msg_code != 0)
-                {
-                    if (response.has("msg") == true)
-                    {
-                        String msg = response.getString("msg");
-
-                        DailyToast.showToast(TicketPaymentActivity.this, msg, Toast.LENGTH_SHORT);
-                        finish();
-                        return;
-                    } else
-                    {
-                        throw new NullPointerException("response == null");
-                    }
-                }
-
-                JSONObject jsonData = response.getJSONObject("data");
-
-                boolean isOnSession = jsonData.getBoolean("on_session");
-
-                switch (mState)
-                {
-                    case STATE_NONE:
-                    {
-                        if (isOnSession == true)
-                        {
-                            String name = jsonData.getString("user_name");
-                            String phone = jsonData.getString("user_phone");
-                            String email = jsonData.getString("user_email");
-                            String userIndex = jsonData.getString("user_idx");
-                            int bonus = jsonData.getInt("user_bonus");
-
-                            if (bonus < 0)
-                            {
-                                bonus = 0;
-                            }
-
-                            mTicketPayment.bonus = bonus;
-
-                            Customer buyer = new Customer();
-                            buyer.setEmail(email);
-                            buyer.setName(name);
-                            buyer.setPhone(phone);
-                            buyer.setUserIdx(userIndex);
-
-                            Guest guest = new Guest();
-                            guest.name = name;
-                            guest.phone = phone;
-                            guest.email = email;
-
-                            mTicketPayment.setCustomer(buyer);
-                            mTicketPayment.setGuest(guest);
-
-                            // 2. 화면 정보 얻기
-                            requestTicketPaymentInfomation(mTicketPayment.getTicketInformation().index);
-                        } else
-                        {
-                            requestLogin();
-                        }
-                        break;
-                    }
-
-                    case STATE_ACTIVITY_RESULT:
-                    {
-                        unLockUI();
-
-                        if (isOnSession == true)
-                        {
-                            activityResulted(mReqCode, mResCode, mResIntent);
-                        } else
-                        {
-                            requestLogin();
-                        }
-                        break;
-                    }
-
-                    case STATE_PAYMENT:
-                    {
-                        if (isOnSession == true)
-                        {
-                            int bonus = jsonData.getInt("user_bonus");
-
-                            if (bonus < 0)
-                            {
-                                bonus = 0;
-                            }
-
-                            if (mTicketPayment.isEnabledBonus == true && bonus != mTicketPayment.bonus)
-                            {
-                                // 보너스 값이 변경된 경우
-                                mTicketPayment.bonus = bonus;
-                                showChangedBonusDialog();
-                                return;
-                            }
-
-                            requestTicketPaymentInfomation(mTicketPayment.getTicketInformation().index);
-                        } else
-                        {
-                            requestLogin();
-                        }
-                        break;
-                    }
-                }
-            } catch (Exception e)
-            {
-                onInternalError();
-            }
-        }
-    };
 
     protected abstract void requestPayEasyPayment(TicketPayment ticketPayment, SaleTime checkInSaleTime);
 
@@ -777,7 +457,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
                     return super.onOptionsItemSelected(item);
                 }
 
-                if (isLockUiComponent(true) == true)
+                if (lockUiComponentAndIsLockUiComponent() == true)
                 {
                     return super.onOptionsItemSelected(item);
                 }
@@ -1005,10 +685,6 @@ public abstract class TicketPaymentActivity extends BaseActivity
         showChangedValueDialog(R.string.dialog_msg_changed_time);
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Network Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     protected void showChangedValueDialog(int messageResId)
     {
         if (isFinishing() == true)
@@ -1132,7 +808,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
                 return;
             }
 
-            if (isLockUiComponent(true) == true)
+            if (lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;
             }
@@ -1140,4 +816,335 @@ public abstract class TicketPaymentActivity extends BaseActivity
             showCallDialog();
         }
     }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Network Listener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                if (response == null)
+                {
+                    onInternalError();
+                    return;
+                }
+
+                SaleTime saleTime = new SaleTime();
+
+                saleTime.setCurrentTime(response.getLong("currentDateTime"));
+                saleTime.setOpenTime(response.getLong("openDateTime"));
+                saleTime.setCloseTime(response.getLong("closeDateTime"));
+                saleTime.setDailyTime(response.getLong("dailyDateTime"));
+
+                if (saleTime.isSaleTime() == true)
+                {
+                    lockUI();
+
+                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, TicketPaymentActivity.this));
+                } else
+                {
+                    unLockUI();
+
+                    View.OnClickListener posListener = new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View view)
+                        {
+                            setResult(CODE_RESULT_ACTIVITY_PAYMENT_SALES_CLOSED);
+                            finish();
+                        }
+                    };
+
+                    showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_sales_closed), getString(R.string.dialog_btn_text_confirm), posListener);
+                }
+
+            } catch (Exception e)
+            {
+                onInternalError();
+            }
+        }
+    };
+    private DailyHotelJsonResponseListener mUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                if (response == null)
+                {
+                    onInternalError();
+                    return;
+                }
+
+                if (response.getBoolean("login") == true)
+                {
+                    VolleyHttpClient.createCookie();
+
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("timeZone", "Asia/Seoul");
+
+                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, TicketPaymentActivity.this));
+                } else
+                {
+                    unLockUI();
+                }
+            } catch (Exception e)
+            {
+                onInternalError();
+            }
+        }
+    };
+    private DailyHotelJsonResponseListener mUserRegisterBillingCardInfoJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            int msg_code = -1;
+
+            try
+            {
+                if (response == null)
+                {
+                    throw new NullPointerException("response == null");
+                }
+
+                // 해당 화면은 메시지를 넣지 않는다.
+                msg_code = response.getInt("msg_code");
+
+                if (msg_code != 0)
+                {
+                    ExLog.d("msg_code : " + msg_code);
+                }
+
+                JSONArray jsonArray = response.getJSONArray("data");
+                int length = jsonArray.length();
+
+                if (length == 0)
+                {
+                    mSelectedCreditCard = null;
+                } else
+                {
+                    JSONObject jsonObject = jsonArray.getJSONObject(0);
+
+                    mSelectedCreditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"), jsonObject.getString("cardcd"));
+
+                    updatePaymentInformation(mTicketPayment, mSelectedCreditCard);
+
+                    // final check 결제 화면을 보여준다.
+                    showFinalCheckDialog();
+                }
+            } catch (Exception e)
+            {
+                // 해당 화면 에러시에는 일반 결제가 가능해야 한다.
+                ExLog.e(e.toString());
+            } finally
+            {
+                unLockUI();
+            }
+        }
+    };
+    protected DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                if (response == null)
+                {
+                    onInternalError();
+                    return;
+                }
+
+                int msg_code = response.getInt("msg_code");
+
+                if (msg_code != 0)
+                {
+                    if (response.has("msg") == true)
+                    {
+                        String msg = response.getString("msg");
+
+                        DailyToast.showToast(TicketPaymentActivity.this, msg, Toast.LENGTH_SHORT);
+                        finish();
+                        return;
+                    } else
+                    {
+                        throw new NullPointerException("response == null");
+                    }
+                }
+
+                JSONObject jsonData = response.getJSONObject("data");
+
+                boolean isOnSession = jsonData.getBoolean("on_session");
+
+                switch (mState)
+                {
+                    case STATE_NONE:
+                    {
+                        if (isOnSession == true)
+                        {
+                            String name = jsonData.getString("user_name");
+                            String phone = jsonData.getString("user_phone");
+                            String email = jsonData.getString("user_email");
+                            String userIndex = jsonData.getString("user_idx");
+                            int bonus = jsonData.getInt("user_bonus");
+
+                            if (bonus < 0)
+                            {
+                                bonus = 0;
+                            }
+
+                            mTicketPayment.bonus = bonus;
+
+                            Customer buyer = new Customer();
+                            buyer.setEmail(email);
+                            buyer.setName(name);
+                            buyer.setPhone(phone);
+                            buyer.setUserIdx(userIndex);
+
+                            mTicketPayment.setCustomer(buyer);
+
+                            if (mIsEditMode == false)
+                            {
+                                Guest guest = new Guest();
+                                guest.name = name;
+                                guest.phone = phone;
+                                guest.email = email;
+
+                                mTicketPayment.setGuest(guest);
+                            }
+
+                            // 2. 화면 정보 얻기
+                            requestTicketPaymentInfomation(mTicketPayment.getTicketInformation().index);
+                        } else
+                        {
+                            requestLogin();
+                        }
+                        break;
+                    }
+
+                    case STATE_ACTIVITY_RESULT:
+                    {
+                        unLockUI();
+
+                        if (isOnSession == true)
+                        {
+                            activityResulted(mReqCode, mResCode, mResIntent);
+                        } else
+                        {
+                            requestLogin();
+                        }
+                        break;
+                    }
+
+                    case STATE_PAYMENT:
+                    {
+                        if (isOnSession == true)
+                        {
+                            int bonus = jsonData.getInt("user_bonus");
+
+                            if (bonus < 0)
+                            {
+                                bonus = 0;
+                            }
+
+                            if (mTicketPayment.isEnabledBonus == true && bonus != mTicketPayment.bonus)
+                            {
+                                // 보너스 값이 변경된 경우
+                                mTicketPayment.bonus = bonus;
+                                showChangedBonusDialog();
+                                return;
+                            }
+
+                            requestTicketPaymentInfomation(mTicketPayment.getTicketInformation().index);
+                        } else
+                        {
+                            requestLogin();
+                        }
+                        break;
+                    }
+                }
+            } catch (Exception e)
+            {
+                onInternalError();
+            }
+        }
+    };
+
+    protected DailyHotelJsonResponseListener mUserSessionBillingCardInfoJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                if (response == null)
+                {
+                    onInternalError();
+                    return;
+                }
+
+                // 해당 화면은 메시지를 넣지 않는다.
+                int msg_code = response.getInt("msg_code");
+
+                if (msg_code != 0)
+                {
+                    ExLog.d("msg_code : " + msg_code);
+                }
+
+                JSONArray jsonArray = response.getJSONArray("data");
+                int length = jsonArray.length();
+
+                if (length == 0)
+                {
+                    mSelectedCreditCard = null;
+                } else
+                {
+                    if (mSelectedCreditCard == null)
+                    {
+                        JSONObject jsonObject = jsonArray.getJSONObject(0);
+                        mSelectedCreditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"), jsonObject.getString("cardcd"));
+                    } else
+                    {
+                        boolean hasCreditCard = false;
+
+                        for (int i = 0; i < length; i++)
+                        {
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                            if (mSelectedCreditCard.billingkey.equals(jsonObject.getString("billkey")) == true)
+                            {
+                                hasCreditCard = true;
+                                break;
+                            }
+                        }
+
+                        // 기존에 선택한 카드를 지우고 돌아온 경우.
+                        if (hasCreditCard == false)
+                        {
+                            JSONObject jsonObject = jsonArray.getJSONObject(0);
+
+                            mSelectedCreditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"), jsonObject.getString("cardcd"));
+                        }
+                    }
+                }
+
+                checkLastChangedValue();
+
+                updateLayout(mTicketPayment, mSelectedCreditCard);
+
+                unLockUI();
+            } catch (Exception e)
+            {
+                onInternalError();
+            }
+        }
+    };
 }

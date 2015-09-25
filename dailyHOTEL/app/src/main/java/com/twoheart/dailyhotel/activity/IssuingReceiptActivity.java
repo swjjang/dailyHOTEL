@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -14,6 +13,7 @@ import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.request.DailyHotelStringRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
+import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;
 
@@ -25,112 +25,7 @@ public class IssuingReceiptActivity extends BaseActivity
 {
     private int mBookingIdx;
     private boolean mIsFullscreen;
-    private DailyHotelJsonResponseListener mReservReceiptJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            if (isFinishing() == true)
-            {
-                return;
-            }
 
-            //			msg_code : 0
-            //			data :
-            //			- [String] user_name /* 유저 이름 */
-            //			- [String] user_phone /* 유저 번호 */
-            //			- [String] checkin /* 체크인 날짜(yyyy/mm/dd) */
-            //			- [String] checkout /* 체크아웃 날짜(yyyy/mm/dd) */
-            //			- [int] nights /* 연박 일수 */
-            //			- [int] rooms /* 객실수 */
-            //			- [String] hotel_name /* 호텔 명 */
-            //			- [String] hotel_address /* 호텔 주소 */
-            //			- [String] value_date(yyyy/mm/dd) /* 결제일 */
-            //			- [String] currency /* 화폐 단위 */
-            //			- [int] discount /* 결제 금액 */
-            //			- [int] vat /* 부가세 */
-            //			- [int] supply_value /* 공급가액 */
-            //			- [String] payment_name /* 결제수단 */
-            //			---------------------------------
-
-            try
-            {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
-                int msg_code = response.getInt("msg_code");
-
-                if (msg_code == 0)
-                {
-                    if (makeLayout(response.getJSONObject("data")) == false)
-                    {
-                        finish();
-                        return;
-                    }
-                } else
-                {
-                    if (isFinishing() == true)
-                    {
-                        return;
-                    }
-
-                    String msg = response.getString("msg");
-
-                    showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
-                    {
-                        @Override
-                        public void onDismiss(DialogInterface dialog)
-                        {
-                            finish();
-                        }
-                    });
-                }
-            } catch (Exception e)
-            {
-                // 서버 정보를 파싱하다가 에러가 남.
-            } finally
-            {
-                unLockUI();
-            }
-        }
-    };
-    private DailyHotelStringResponseListener mUserAliveStringResponseListener = new DailyHotelStringResponseListener()
-    {
-
-        @Override
-        public void onResponse(String url, String response)
-        {
-            if (isFinishing() == true)
-            {
-                return;
-            }
-
-            String result = null;
-
-            if (TextUtils.isEmpty(response) == false)
-            {
-                result = response.trim();
-            }
-
-            if ("alive".equalsIgnoreCase(result) == true)
-            {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("reservation_idx", String.valueOf(mBookingIdx));
-
-                if (DEBUG == true)
-                {
-                    showSimpleDialog(null, params.toString(), getString(R.string.dialog_btn_text_confirm), null);
-                }
-
-                mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_RECEIPT).toString(), params, mReservReceiptJsonResponseListener, IssuingReceiptActivity.this));
-            } else
-            {
-                finish();
-            }
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -178,10 +73,6 @@ public class IssuingReceiptActivity extends BaseActivity
             super.onBackPressed();
         }
     }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private boolean makeLayout(JSONObject jsonObject)
     {
@@ -344,4 +235,115 @@ public class IssuingReceiptActivity extends BaseActivity
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
     }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Listener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private DailyHotelJsonResponseListener mReservReceiptJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            if (isFinishing() == true)
+            {
+                return;
+            }
+
+            //			msg_code : 0
+            //			data :
+            //			- [String] user_name /* 유저 이름 */
+            //			- [String] user_phone /* 유저 번호 */
+            //			- [String] checkin /* 체크인 날짜(yyyy/mm/dd) */
+            //			- [String] checkout /* 체크아웃 날짜(yyyy/mm/dd) */
+            //			- [int] nights /* 연박 일수 */
+            //			- [int] rooms /* 객실수 */
+            //			- [String] hotel_name /* 호텔 명 */
+            //			- [String] hotel_address /* 호텔 주소 */
+            //			- [String] value_date(yyyy/mm/dd) /* 결제일 */
+            //			- [String] currency /* 화폐 단위 */
+            //			- [int] discount /* 결제 금액 */
+            //			- [int] vat /* 부가세 */
+            //			- [int] supply_value /* 공급가액 */
+            //			- [String] payment_name /* 결제수단 */
+            //			---------------------------------
+
+            try
+            {
+                if (response == null)
+                {
+                    throw new NullPointerException("response == null");
+                }
+
+                int msg_code = response.getInt("msg_code");
+
+                if (msg_code == 0)
+                {
+                    if (makeLayout(response.getJSONObject("data")) == false)
+                    {
+                        finish();
+                        return;
+                    }
+                } else
+                {
+                    if (isFinishing() == true)
+                    {
+                        return;
+                    }
+
+                    String msg = response.getString("msg");
+
+                    showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                    {
+                        @Override
+                        public void onDismiss(DialogInterface dialog)
+                        {
+                            finish();
+                        }
+                    });
+                }
+            } catch (Exception e)
+            {
+                // 서버 정보를 파싱하다가 에러가 남.
+            } finally
+            {
+                unLockUI();
+            }
+        }
+    };
+    private DailyHotelStringResponseListener mUserAliveStringResponseListener = new DailyHotelStringResponseListener()
+    {
+
+        @Override
+        public void onResponse(String url, String response)
+        {
+            if (isFinishing() == true)
+            {
+                return;
+            }
+
+            String result = null;
+
+            if (Util.isTextEmpty(response) == false)
+            {
+                result = response.trim();
+            }
+
+            if ("alive".equalsIgnoreCase(result) == true)
+            {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("reservation_idx", String.valueOf(mBookingIdx));
+
+                if (DEBUG == true)
+                {
+                    showSimpleDialog(null, params.toString(), getString(R.string.dialog_btn_text_confirm), null);
+                }
+
+                mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_RECEIPT).toString(), params, mReservReceiptJsonResponseListener, IssuingReceiptActivity.this));
+            } else
+            {
+                finish();
+            }
+        }
+    };
 }

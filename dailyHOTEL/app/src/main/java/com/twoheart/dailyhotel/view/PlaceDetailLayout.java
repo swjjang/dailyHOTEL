@@ -8,7 +8,6 @@ import android.graphics.Rect;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -428,11 +427,11 @@ public abstract class PlaceDetailLayout
             //			float offset = rect.top - mStatusBarHeight - Util.dpToPx(mActivity, 56) - max;
             //			float alphaFactor = offset / max;
 
-            float max = (mImageHeight - Util.dpToPx(mActivity, 56)) / 2;
+            float max = ((float) mImageHeight - Util.dpToPx(mActivity, 56)) / 2;
             float offset = rect.top - mStatusBarHeight - Util.dpToPx(mActivity, 56);
             float alphaFactor = offset / max;
 
-            if (TextUtils.isEmpty(mPlaceDetail.benefit) == false)
+            if (Util.isTextEmpty(mPlaceDetail.benefit) == false)
             {
                 if (Float.compare(alphaFactor, 0.0f) <= 0)
                 {
@@ -473,7 +472,7 @@ public abstract class PlaceDetailLayout
 
             if (firstRect != null)
             {
-                float gradeMax = (mImageHeight - Util.dpToPx(mActivity, 56)) / 3;
+                float gradeMax = ((float) mImageHeight - Util.dpToPx(mActivity, 56)) / 3;
                 float gradeOffset = rect.top - mStatusBarHeight - Util.dpToPx(mActivity, 56);
                 float xFactor = gradeOffset / gradeMax;
                 float nameMax = firstRect.left - Util.dpToPx(mActivity, 55);

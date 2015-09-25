@@ -31,19 +31,11 @@ public class ABTestPreference
         mEditor = mPreferences.edit();
     }
 
-    ;
-
-    public static ABTestPreference getInstance(Context context)
+    public synchronized static ABTestPreference getInstance(Context context)
     {
         if (mInstance == null)
         {
-            synchronized (ABTestPreference.class)
-            {
-                if (mInstance == null)
-                {
-                    mInstance = new ABTestPreference(context);
-                }
-            }
+            mInstance = new ABTestPreference(context);
         }
 
         return mInstance;

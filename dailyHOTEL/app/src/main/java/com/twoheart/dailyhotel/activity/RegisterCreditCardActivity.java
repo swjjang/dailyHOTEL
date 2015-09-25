@@ -19,7 +19,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.webkit.JavascriptInterface;
@@ -33,6 +32,7 @@ import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 
 @SuppressLint("NewApi")
 public class RegisterCreditCardActivity extends BaseActivity implements Constants
@@ -219,7 +219,6 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
      * 종종 에러 발생.
      *
      * @author jangjunho
-     *
      */
     @Deprecated
     private class HtmlObserver
@@ -259,7 +258,7 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
 
                 if (splits.length > 1)
                 {
-                    if (TextUtils.isEmpty(splits[1]) == false)
+                    if (Util.isTextEmpty(splits[1]) == false)
                     {
                         payData.putExtra(NAME_INTENT_EXTRA_DATA_MESSAGE, splits[1]);
                     }

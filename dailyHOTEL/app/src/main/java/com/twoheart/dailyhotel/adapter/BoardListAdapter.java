@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.adapter;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +9,7 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Board;
+import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
 
@@ -97,7 +97,7 @@ public class BoardListAdapter extends BaseExpandableListAdapter
         TextView tv_regdate = (TextView) v.findViewById(R.id.tv_board_regdate);
         tv_subject.setText((String) getGroup(groupPosition));
 
-        if (TextUtils.isEmpty(list.get(groupPosition).getRegdate()) == true)
+        if (Util.isTextEmpty(list.get(groupPosition).getRegdate()) == true)
         {
             tv_regdate.setVisibility(View.GONE);
         } else

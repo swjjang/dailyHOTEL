@@ -26,6 +26,68 @@ import org.json.JSONObject;
 
 public class GourmetDetailActivity extends PlaceDetailActivity
 {
+    @Override
+    protected PlaceDetailLayout getLayout(BaseActivity activity, String imageUrl)
+    {
+        return new GourmetDetailLayout(activity, imageUrl);
+    }
+
+    @Override
+    protected PlaceDetail createPlaceDetail(Intent intent)
+    {
+        if (intent == null)
+        {
+            return null;
+        }
+
+        int index = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, -1);
+
+        return new GourmetDetail(index);
+    }
+
+    @Override
+    protected void shareKakao(PlaceDetail placeDetail, String imageUrl, SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
+    {
+        KakaoLinkManager.newInstance(this).shareGourmet(placeDetail.name, placeDetail.index, //
+                imageUrl, //
+                checkInSaleTime.getDailyTime(), //
+                checkInSaleTime.getOffsetDailyDay());
+    }
+
+    @Override
+    protected void requestPlaceDetailInformation(PlaceDetail placeDetail, SaleTime checkInSaleTime)
+    {
+        // 호텔 정보를 가져온다.
+        String params = String.format("?restaurant_idx=%d&sday=%s", placeDetail.index, checkInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
+
+        if (DEBUG == true)
+        {
+            showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
+        }
+
+        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_SALE_RESTAURANT_INFO).append(params).toString(), null, mFnBDetailJsonResponseListener, this));
+    }
+
+    @Override
+    protected void processBooking(TicketInformation ticketInformation, SaleTime checkInSaleTime)
+    {
+        if (ticketInformation == null)
+        {
+            return;
+        }
+
+        Intent intent = new Intent(this, GourmetPaymentActivity.class);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_TICKETINFORMATION, ticketInformation);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);
+
+        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //Listener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     private DailyHotelJsonResponseListener mFnBDetailJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
@@ -79,66 +141,4 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             }
         }
     };
-
-    @Override
-    protected PlaceDetailLayout getLayout(BaseActivity activity, String imageUrl)
-    {
-        return new GourmetDetailLayout(activity, imageUrl);
-    }
-
-    @Override
-    protected PlaceDetail createPlaceDetail(Intent intent)
-    {
-        if (intent == null)
-        {
-            return null;
-        }
-
-        int index = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, -1);
-
-        return new GourmetDetail(index);
-    }
-
-    @Override
-    protected void shareKakao(PlaceDetail placeDetail, String imageUrl, SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
-    {
-        KakaoLinkManager.newInstance(this).shareFnB(placeDetail.name, placeDetail.index, //
-                imageUrl, //
-                checkInSaleTime.getDailyTime(), //
-                checkInSaleTime.getOffsetDailyDay());
-    }
-
-    @Override
-    protected void requestPlaceDetailInformation(PlaceDetail placeDetail, SaleTime checkInSaleTime)
-    {
-        // 호텔 정보를 가져온다.
-        String params = String.format("?restaurant_idx=%d&sday=%s", placeDetail.index, checkInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
-
-        if (DEBUG == true)
-        {
-            showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
-        }
-
-        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_SALE_RESTAURANT_INFO).append(params).toString(), null, mFnBDetailJsonResponseListener, this));
-    }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    protected void processBooking(TicketInformation ticketInformation, SaleTime checkInSaleTime)
-    {
-        if (ticketInformation == null)
-        {
-            return;
-        }
-
-        Intent intent = new Intent(this, GourmetPaymentActivity.class);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_TICKETINFORMATION, ticketInformation);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);
-
-        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING);
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-    }
 }

@@ -24,7 +24,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
@@ -47,10 +46,10 @@ import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 
-import org.apache.http.util.EncodingUtils;
-
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -165,7 +164,7 @@ public class PaymentActivity extends BaseActivity implements Constants
         {
             Guest guest = mPay.getGuest();
 
-            if (TextUtils.isEmpty(guest.name) == true || TextUtils.isEmpty(guest.phone) == true || TextUtils.isEmpty(guest.email) == true)
+            if (Util.isTextEmpty(guest.name) == true || Util.isTextEmpty(guest.phone) == true || Util.isTextEmpty(guest.email) == true)
             {
                 restartApp();
                 return;
@@ -207,7 +206,16 @@ public class PaymentActivity extends BaseActivity implements Constants
 
         for (int i = 0; i < key.length; i++)
         {
-            postParameters.put(key[i], EncodingUtils.getBytes(value[i], "BASE64"));
+            byte[] base64 = null;
+            try
+            {
+                base64 = value[i].getBytes("BASE64");
+            } catch (final UnsupportedEncodingException e)
+            {
+                base64 = value[i].getBytes();
+            }
+            postParameters.put(key[i], base64);
+            //            postParameters.put(key[i], EncodingUtils.getBytes(value[i], "BASE64"));
         }
 
         for (int i = 0; i < postParameters.size(); i++)
@@ -695,14 +703,11 @@ public class PaymentActivity extends BaseActivity implements Constants
      * 다날 모바일 결제 관련 브릿지.
      *
      * @author jangjunho
-     *
      */
     private class TeleditBridge
     {
         /**
-         *
-         * @param val
-         *            휴대폰 결제 완료 후 결과값.
+         * @param val 휴대폰 결제 완료 후 결과값.
          */
         @JavascriptInterface
         public void Result(final String val)
@@ -726,7 +731,6 @@ public class PaymentActivity extends BaseActivity implements Constants
      * 종종 에러 발생.
      *
      * @author jangjunho
-     *
      */
     @Deprecated
     private class HtmlObserver

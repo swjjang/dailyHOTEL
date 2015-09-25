@@ -201,11 +201,15 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 
     private void initAlarmLayout(BaseActivity activity, View view, boolean enable)
     {
-        if (mAlarmTextView == null && view != null && activity != null)
+        if (mAlarmTextView == null)
         {
             mAlarmTextView = (TextView) view.findViewById(R.id.alarmTextView);
-            mAlarmImageView = (ImageView) view.findViewById(R.id.alarmImageView);
             mAlarmTextView.setTypeface(FontManager.getInstance(activity).getMediumTypeface());
+        }
+
+        if (mAlarmImageView == null)
+        {
+            mAlarmImageView = (ImageView) view.findViewById(R.id.alarmImageView);
         }
 
         if (enable)

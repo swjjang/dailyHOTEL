@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.activity;
 
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,6 +15,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 
 import org.json.JSONException;
@@ -31,6 +31,86 @@ public class ForgotPwdActivity extends BaseActivity implements Constants, OnClic
     private EditText etForgot;
 
     private String mEmail;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_forgot_pwd);
+        setActionBar(R.string.actionbar_title_forgot_pwd_activity);
+
+        etForgot = (EditText) findViewById(R.id.et_forgot_pwd);
+        btnForgot = (TextView) findViewById(R.id.btn_forgot_pwd);
+        btnForgot.setOnClickListener(this);
+        etForgot.setId(EditorInfo.IME_ACTION_DONE);
+        etForgot.setOnEditorActionListener(new OnEditorActionListener()
+        {
+
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+            {
+                switch (actionId)
+                {
+                    case EditorInfo.IME_ACTION_DONE:
+                        btnForgot.performClick();
+                        break;
+                }
+                return false;
+            }
+        });
+    }
+
+    // Jason | Fix send email api
+    @Override
+    public void onClick(View v)
+    {
+        if (v.getId() == btnForgot.getId())
+        {
+            if (isLockUiComponent() == true)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            mEmail = etForgot.getText().toString().trim();
+
+            if (mEmail.equals(""))
+            {
+                releaseUiComponent();
+
+                DailyToast.showToast(this, R.string.toast_msg_please_input_email_address, Toast.LENGTH_SHORT);
+                return;
+            } else if (android.util.Patterns.EMAIL_ADDRESS.matcher(mEmail).matches() == false)
+            {
+                releaseUiComponent();
+
+                DailyToast.showToast(this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
+                return;
+            }
+
+            lockUI();
+
+            Map<String, String> params = new HashMap<String, String>();
+
+            params.put("userEmail", mEmail);
+
+            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_CHECK_EMAIL).toString(), params, mUserCheckEmailJsonResponseListener, this));
+        }
+    }
+
+    @Override
+    public void finish()
+    {
+        super.finish();
+        overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Listener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     private DailyHotelJsonResponseListener mUserChangePwJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
@@ -85,7 +165,7 @@ public class ForgotPwdActivity extends BaseActivity implements Constants, OnClic
 
                 if ("true".equalsIgnoreCase(result) == true)
                 {
-                    if (TextUtils.isEmpty(mEmail) == true)
+                    if (Util.isTextEmpty(mEmail) == true)
                     {
                         DailyToast.showToast(ForgotPwdActivity.this, R.string.toast_msg_please_input_email_address, Toast.LENGTH_SHORT);
                     } else
@@ -114,84 +194,4 @@ public class ForgotPwdActivity extends BaseActivity implements Constants, OnClic
             }
         }
     };
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_forgot_pwd);
-        setActionBar(R.string.actionbar_title_forgot_pwd_activity);
-
-        etForgot = (EditText) findViewById(R.id.et_forgot_pwd);
-        btnForgot = (TextView) findViewById(R.id.btn_forgot_pwd);
-        btnForgot.setOnClickListener(this);
-        etForgot.setId(EditorInfo.IME_ACTION_DONE);
-        etForgot.setOnEditorActionListener(new OnEditorActionListener()
-        {
-
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
-            {
-                switch (actionId)
-                {
-                    case EditorInfo.IME_ACTION_DONE:
-                        btnForgot.performClick();
-                        break;
-                }
-                return false;
-            }
-        });
-
-    }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // Jason | Fix send email api
-    @Override
-    public void onClick(View v)
-    {
-        if (v.getId() == btnForgot.getId())
-        {
-            if (isLockUiComponent() == true)
-            {
-                return;
-            }
-
-            lockUiComponent();
-
-            mEmail = etForgot.getText().toString().trim();
-
-            if (mEmail.equals(""))
-            {
-                releaseUiComponent();
-
-                DailyToast.showToast(this, R.string.toast_msg_please_input_email_address, Toast.LENGTH_SHORT);
-                return;
-            } else if (android.util.Patterns.EMAIL_ADDRESS.matcher(mEmail).matches() == false)
-            {
-                releaseUiComponent();
-
-                DailyToast.showToast(this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
-                return;
-            }
-
-            lockUI();
-
-            Map<String, String> params = new HashMap<String, String>();
-
-            params.put("userEmail", mEmail);
-
-            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_CHECK_EMAIL).toString(), params, mUserCheckEmailJsonResponseListener, this));
-        }
-    }
-
-    @Override
-    public void finish()
-    {
-        super.finish();
-        overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
-    }
 }

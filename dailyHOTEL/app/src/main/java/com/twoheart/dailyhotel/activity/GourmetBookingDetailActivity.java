@@ -27,6 +27,51 @@ import java.util.ArrayList;
 
 public class GourmetBookingDetailActivity extends PlaceBookingDetailActivity
 {
+    @Override
+    protected void loadFragments()
+    {
+        if (mFragmentViewPager == null)
+        {
+            ArrayList<String> titleList = new ArrayList<String>();
+            titleList.add(getString(R.string.frag_booking_tab_title));
+            titleList.add(getString(R.string.frag_tab_info_title));
+            titleList.add(getString(R.string.frag_tab_map_title));
+
+            mFragmentViewPager = (FragmentViewPager) findViewById(R.id.fragmentViewPager);
+
+            ArrayList<BaseFragment> mFragmentList = new ArrayList<BaseFragment>();
+
+            BaseFragment baseFragment01 = GourmetTabBookingFragment.newInstance(mPlaceBookingDetail, booking, getString(R.string.drawer_menu_pin_title_resrvation));
+            mFragmentList.add(baseFragment01);
+
+            BaseFragment baseFragment02 = PlaceTabInfoFragment.newInstance(mPlaceBookingDetail, titleList.get(1));
+            mFragmentList.add(baseFragment02);
+
+            BaseFragment baseFragment03 = PlaceTabMapFragment.newInstance(mPlaceBookingDetail, titleList.get(2));
+            mFragmentList.add(baseFragment03);
+
+            mFragmentViewPager.setData(mFragmentList);
+            mFragmentViewPager.setAdapter(getSupportFragmentManager());
+
+            mTabIndicator.setViewPager(mFragmentViewPager.getViewPager());
+            mTabIndicator.setOnPageChangeListener(mOnPageChangeListener);
+        }
+    }
+
+    @Override
+    protected void requestPlaceBookingDetail()
+    {
+        lockUI();
+
+        String params = String.format("?reservation_rec_idx=%d", booking.reservationIndex);
+
+        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_BOOKING_DETAIL).append(params).toString(), null, mReservationBookingDetailJsonResponseListener, this));
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Listener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     private DailyHotelJsonResponseListener mReservationBookingDetailJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
@@ -82,50 +127,4 @@ public class GourmetBookingDetailActivity extends PlaceBookingDetailActivity
             }
         }
     };
-
-    @Override
-    protected void loadFragments()
-    {
-        if (mFragmentViewPager == null)
-        {
-            ArrayList<String> titleList = new ArrayList<String>();
-            titleList.add(getString(R.string.frag_booking_tab_title));
-            titleList.add(getString(R.string.frag_tab_info_title));
-            titleList.add(getString(R.string.frag_tab_map_title));
-
-            mFragmentViewPager = (FragmentViewPager) findViewById(R.id.fragmentViewPager);
-
-            ArrayList<BaseFragment> mFragmentList = new ArrayList<BaseFragment>();
-
-            BaseFragment baseFragment01 = GourmetTabBookingFragment.newInstance(mPlaceBookingDetail, booking, getString(R.string.drawer_menu_pin_title_resrvation));
-            mFragmentList.add(baseFragment01);
-
-            BaseFragment baseFragment02 = PlaceTabInfoFragment.newInstance(mPlaceBookingDetail, titleList.get(1));
-            mFragmentList.add(baseFragment02);
-
-            BaseFragment baseFragment03 = PlaceTabMapFragment.newInstance(mPlaceBookingDetail, titleList.get(2));
-            mFragmentList.add(baseFragment03);
-
-            mFragmentViewPager.setData(mFragmentList);
-            mFragmentViewPager.setAdapter(getSupportFragmentManager());
-
-            mTabIndicator.setViewPager(mFragmentViewPager.getViewPager());
-            mTabIndicator.setOnPageChangeListener(mOnPageChangeListener);
-        }
-    }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    protected void requestPlaceBookingDetail()
-    {
-        lockUI();
-
-        String params = String.format("?reservation_rec_idx=%d", booking.reservationIndex);
-
-        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_BOOKING_DETAIL).append(params).toString(), null, mReservationBookingDetailJsonResponseListener, this));
-    }
-
 }

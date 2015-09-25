@@ -24,46 +24,6 @@ public class NoticeActivity extends BaseActivity
 
     private ArrayList<Board> mList;
     private ExpandableListView mListView;
-    private DailyHotelJsonResponseListener mBoardNoticeResponseListener = new DailyHotelJsonResponseListener()
-    {
-
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-
-            mList = new ArrayList<Board>();
-
-            try
-            {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
-                JSONArray json = response.getJSONArray("articles");
-
-                int length = json.length();
-                for (int i = 0; i < length; i++)
-                {
-
-                    JSONObject obj = json.getJSONObject(i);
-                    String subject = obj.getString("subject");
-                    String content = obj.getString("content");
-                    String regdate = obj.getString("regdate");
-
-                    mList.add(new Board(subject, content, regdate));
-                }
-
-                mListView.setAdapter(new BoardListAdapter(NoticeActivity.this, mList));
-            } catch (Exception e)
-            {
-                onError(e);
-            } finally
-            {
-                unLockUI();
-            }
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -109,10 +69,6 @@ public class NoticeActivity extends BaseActivity
         mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_BOARD_NOTICE).toString(), null, mBoardNoticeResponseListener, this));
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     @Override
     public void finish()
     {
@@ -120,31 +76,49 @@ public class NoticeActivity extends BaseActivity
         overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
     }
 
-    //	@Override
-    //	public void onResponse(String url, JSONObject response) {
-    //		if (url.contains(URL_WEBAPI_BOARD_NOTICE)) {
-    //			mList = new ArrayList<Board>();
-    //
-    //			try {
-    //				JSONObject jsonObj = response;
-    //				JSONArray json = jsonObj.getJSONArray("articles");
-    //
-    //				for (int i = 0; i < json.length(); i++) {
-    //
-    //					JSONObject obj = json.getJSONObject(i);
-    //					String subject = obj.getString("subject");
-    //					String content = obj.getString("content");
-    //					String regdate = obj.getString("regdate");
-    //
-    //					mList.add(new Board(subject, content, regdate));
-    //				}
-    //
-    //				mListView.setAdapter(new BoardListAdapter(this, mList));
-    //			} catch (Exception e) {
-    //				onError(e);
-    //			} finally {
-    //				unLockUI();
-    //			}
-    //		}
-    //	}
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Listener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private DailyHotelJsonResponseListener mBoardNoticeResponseListener = new DailyHotelJsonResponseListener()
+    {
+
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+
+            mList = new ArrayList<Board>();
+
+            try
+            {
+                if (response == null)
+                {
+                    throw new NullPointerException("response == null");
+                }
+
+                JSONArray json = response.getJSONArray("articles");
+
+                int length = json.length();
+                for (int i = 0; i < length; i++)
+                {
+
+                    JSONObject obj = json.getJSONObject(i);
+                    String subject = obj.getString("subject");
+                    String content = obj.getString("content");
+                    String regdate = obj.getString("regdate");
+
+                    mList.add(new Board(subject, content, regdate));
+                }
+
+                mListView.setAdapter(new BoardListAdapter(NoticeActivity.this, mList));
+            } catch (Exception e)
+            {
+                onError(e);
+            } finally
+            {
+                unLockUI();
+            }
+        }
+    };
 }

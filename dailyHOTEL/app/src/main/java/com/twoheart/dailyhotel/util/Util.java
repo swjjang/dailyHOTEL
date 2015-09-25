@@ -112,10 +112,8 @@ public class Util implements Constants
         return correctTime;
     }
 
-    public static void setLocale(Context context, String lang)
+    public static void setLocale(Context context, Locale locale)
     {
-
-        Locale locale = new Locale(lang);
         Resources res = context.getResources();
         DisplayMetrics dm = res.getDisplayMetrics();
         Configuration conf = res.getConfiguration();
@@ -216,7 +214,7 @@ public class Util implements Constants
     {
         boolean result = false;
 
-        if (TextUtils.isEmpty(text) == false)
+        if (Util.isTextEmpty(text) == false)
         {
             result = Pattern.matches("^[a-zA-Z\\s.'-]+$", text);
         }

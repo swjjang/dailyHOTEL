@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+<com.twoheart.dailyhotel.view.widget.DailyTextView
     android:id="@+id/list_titme_title"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"

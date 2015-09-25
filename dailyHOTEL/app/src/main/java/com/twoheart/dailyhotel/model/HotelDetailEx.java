@@ -17,6 +17,7 @@ public class HotelDetailEx
     public double longitude;
     public boolean isOverseas; // 0 : 국내 , 1 : 해외
     public String hotelBenefit;
+    public String satisfaction;
     private ArrayList<String> mImageUrlList;
     private ArrayList<DetailInformation> mInformationList;
     private ArrayList<DetailInformation> mMoreInformationList;
@@ -39,6 +40,11 @@ public class HotelDetailEx
         latitude = jsonObject.getDouble("latitude");
 
         isOverseas = jsonObject.getBoolean("is_overseas");
+
+        if (jsonObject.has("rating") == true)
+        {
+            satisfaction = jsonObject.getString("rating");
+        }
 
         // Image Url
         JSONArray imageJsonArray = jsonObject.getJSONArray("img_url");

@@ -13,7 +13,6 @@
 package com.twoheart.dailyhotel.util;
 
 import android.os.Build;
-import android.text.TextUtils;
 import android.util.Base64;
 
 import java.security.MessageDigest;
@@ -67,7 +66,7 @@ public class Crypto
 
     public static String encrypt(String seed, String text) throws Exception
     {
-        if (TextUtils.isEmpty(text) == true)
+        if (Util.isTextEmpty(text) == true)
         {
             return null;
         }
@@ -76,12 +75,12 @@ public class Crypto
         byte[] result = encrypt(rawKey, text.getBytes());
         String fromHex = toHex(result);
 
-        return new String(Base64.encodeToString(fromHex.getBytes(), Base64.NO_WRAP));
+        return Base64.encodeToString(fromHex.getBytes(), Base64.NO_WRAP);
     }
 
     public static String decrypt(String seed, String encrypted) throws Exception
     {
-        if (TextUtils.isEmpty(encrypted) == true)
+        if (Util.isTextEmpty(encrypted) == true)
         {
             return null;
         }

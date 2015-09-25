@@ -6,7 +6,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.app.FragmentActivity;
 import android.text.Layout;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -220,7 +219,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
                     count--;
                 }
 
-                if (TextUtils.isEmpty(mPlaceDetail.benefit) == true)
+                if (Util.isTextEmpty(mPlaceDetail.benefit) == true)
                 {
                     count--;
                 }
@@ -291,7 +290,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
 
                 // D Benefit or 호텔 정보
                 case 3:
-                    if (TextUtils.isEmpty(mPlaceDetail.benefit) == false)
+                    if (Util.isTextEmpty(mPlaceDetail.benefit) == false)
                     {
                         if (mDeatilViews[3] == null)
                         {
@@ -315,7 +314,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
 
                 // 호텔 정보 or 카카오톡 문의
                 case 4:
-                    if (TextUtils.isEmpty(mPlaceDetail.benefit) == false)
+                    if (Util.isTextEmpty(mPlaceDetail.benefit) == false)
                     {
                         view = makeInformationView(layoutInflater, parent);
                     } else
@@ -398,7 +397,6 @@ public class GourmetDetailLayout extends PlaceDetailLayout
          * 등급 및 이름
          *
          * @param view
-         * @param hotelDetail
          * @return
          */
         private View getTitleView(View view, PlaceDetail placeDetail)
@@ -437,6 +435,19 @@ public class GourmetDetailLayout extends PlaceDetailLayout
                     }
                 });
             }
+
+            TextView satisfactionView = (TextView) view.findViewById(R.id.satisfactionView);
+
+            // 만족도
+            if (Util.isTextEmpty(placeDetail.satisfaction) == true)
+            {
+                satisfactionView.setVisibility(View.GONE);
+            } else
+            {
+                satisfactionView.setVisibility(View.VISIBLE);
+                satisfactionView.setText(placeDetail.satisfaction);
+            }
+
             return view;
         }
 
@@ -444,7 +455,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
          * 주소 및 맵
          *
          * @param view
-         * @param hotelDetail
+         * @param placeDetail
          * @return
          */
         private View getAddressView(final View view, PlaceDetail placeDetail)
@@ -470,7 +481,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
                 {
                     Layout layout = hotelAddressTextView01.getLayout();
 
-                    if (layout == null || TextUtils.isEmpty(address) == true)
+                    if (layout == null || Util.isTextEmpty(address) == true)
                     {
                         return;
                     }
@@ -688,7 +699,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
                 {
                     Layout layout = textView1Line.getLayout();
 
-                    if (layout == null || TextUtils.isEmpty(benefit) == true)
+                    if (layout == null || Util.isTextEmpty(benefit) == true)
                     {
                         return;
                     }

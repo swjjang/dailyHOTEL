@@ -25,7 +25,7 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+            <com.twoheart.dailyhotel.view.widget.DailyTextView
                 android:id="@+id/messageTextView01"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
                 android:textSize="18dp"
                 android:textStyle="bold"/>
 
-            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+            <com.twoheart.dailyhotel.view.widget.DailyTextView
                 android:id="@+id/messageTextView02"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

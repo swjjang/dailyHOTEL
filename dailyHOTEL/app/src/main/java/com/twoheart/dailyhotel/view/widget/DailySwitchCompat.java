@@ -3,23 +3,22 @@ package com.twoheart.dailyhotel.view.widget;
 import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.SwitchCompat;
 import android.util.AttributeSet;
 
-public class DailyCustomFontEditText extends AppCompatEditText
+public class DailySwitchCompat extends SwitchCompat
 {
-
-    public DailyCustomFontEditText(Context context)
+    public DailySwitchCompat(Context context)
     {
         super(context);
     }
 
-    public DailyCustomFontEditText(Context context, AttributeSet attrs)
+    public DailySwitchCompat(Context context, AttributeSet attrs)
     {
         super(context, attrs);
     }
 
-    public DailyCustomFontEditText(Context context, AttributeSet attrs, int defStyle)
+    public DailySwitchCompat(Context context, AttributeSet attrs, int defStyle)
     {
         super(context, attrs, defStyle);
     }

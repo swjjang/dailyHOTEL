@@ -43,14 +43,14 @@
                 android:orientation="horizontal"
                 android:paddingTop="5dp">
 
-                <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+                <com.twoheart.dailyhotel.view.widget.DailyTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/act_current_version"
                     android:textColor="@color/textView_textColor_sub"
                     android:textSize="20dp"/>
 
-                <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+                <com.twoheart.dailyhotel.view.widget.DailyTextView
                     android:id="@+id/tv_version_cur"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -67,14 +67,14 @@
                 android:paddingTop="5dp"
                 android:visibility="invisible">
 
-                <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+                <com.twoheart.dailyhotel.view.widget.DailyTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/act_new_version"
                     android:textColor="@color/textView_textColor_main"
                     android:textSize="16.5dp"/>
 
-                <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+                <com.twoheart.dailyhotel.view.widget.DailyTextView
                     android:id="@+id/tv_version_new"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -86,7 +86,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+    <com.twoheart.dailyhotel.view.widget.DailyTextView
         android:id="@+id/btn_version_update"
         android:layout_width="match_parent"
         android:layout_height="50dp"

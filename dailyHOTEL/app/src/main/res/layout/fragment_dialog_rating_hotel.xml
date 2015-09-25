@@ -14,11 +14,9 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="22dp"
+            android:layout_height="79dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:layout_marginTop="22dp"
             android:gravity="center">
 
             <ImageView
@@ -28,7 +26,7 @@
                 android:adjustViewBounds="true"
                 android:src="@drawable/popup_ic_alert_signature"/>
 
-            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+            <com.twoheart.dailyhotel.view.widget.DailyTextView
                 android:id="@+id/titleTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -40,7 +38,7 @@
                 android:textStyle="bold"/>
         </LinearLayout>
 
-        <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
             android:id="@+id/periodTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -59,7 +57,7 @@
             android:layout_marginTop="3dp"
             android:gravity="center">
 
-            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+            <com.twoheart.dailyhotel.view.widget.DailyTextView
                 android:id="@+id/hotelNameTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -69,7 +67,7 @@
                 android:textSize="13dp"
                 android:textStyle="bold"/>
 
-            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+            <com.twoheart.dailyhotel.view.widget.DailyTextView
                 android:id="@+id/messageTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -86,8 +84,8 @@
         android:layout_height="55dp"
         android:background="@drawable/popup_btn_off">
 
-        <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
-            android:id="@+id/negativeTextView"
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
+            android:id="@+id/positiveTextView"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -101,8 +99,8 @@
             android:layout_height="match_parent"
             android:background="@color/white"/>
 
-        <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
-            android:id="@+id/positiveTextView"
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
+            android:id="@+id/negativeTextView"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"

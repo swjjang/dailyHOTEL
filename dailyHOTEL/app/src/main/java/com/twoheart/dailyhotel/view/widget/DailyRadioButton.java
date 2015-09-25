@@ -3,24 +3,24 @@ package com.twoheart.dailyhotel.view.widget;
 import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatRadioButton;
 import android.util.AttributeSet;
 
-public class DailyCustomFontButton extends AppCompatButton
+public class DailyRadioButton extends AppCompatRadioButton
 {
-    public DailyCustomFontButton(Context context)
+    public DailyRadioButton(Context context)
     {
-        super(context);
+        super(context, null);
     }
 
-    public DailyCustomFontButton(Context context, AttributeSet attrs)
+    public DailyRadioButton(Context context, AttributeSet attrs)
     {
         super(context, attrs);
     }
 
-    public DailyCustomFontButton(Context context, AttributeSet attrs, int defStyle)
+    public DailyRadioButton(Context context, AttributeSet attrs, int defStyleAttr)
     {
-        super(context, attrs, defStyle);
+        super(context, attrs, defStyleAttr);
     }
 
     @Override

@@ -7,20 +7,6 @@ import org.json.JSONObject;
 
 public class SaleRoomInformation implements Parcelable
 {
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
-    {
-        public SaleRoomInformation createFromParcel(Parcel in)
-        {
-            return new SaleRoomInformation(in);
-        }
-
-        @Override
-        public SaleRoomInformation[] newArray(int size)
-        {
-            return new SaleRoomInformation[size];
-        }
-
-    };
     public int roomIndex;
     public String roomName;
     public String option;
@@ -86,4 +72,19 @@ public class SaleRoomInformation implements Parcelable
     {
         return 0;
     }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+    {
+        public SaleRoomInformation createFromParcel(Parcel in)
+        {
+            return new SaleRoomInformation(in);
+        }
+
+        @Override
+        public SaleRoomInformation[] newArray(int size)
+        {
+            return new SaleRoomInformation[size];
+        }
+
+    };
 }

@@ -18,58 +18,6 @@ import java.text.DecimalFormat;
 
 public class GourmetReceiptActivity extends PlaceReceiptActivity
 {
-    private DailyHotelJsonResponseListener mReservReceiptJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            if (isFinishing() == true)
-            {
-                return;
-            }
-
-            try
-            {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
-                int msg_code = response.getInt("msg_code");
-
-                if (msg_code == 0)
-                {
-                    makeLayout(response.getJSONObject("data"));
-                } else
-                {
-                    if (response.has("msg") == true)
-                    {
-                        String msg = response.getString("msg");
-
-                        showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View v)
-                            {
-                                finish();
-                            }
-                        }, null, false);
-                        return;
-                    } else
-                    {
-                        onInternalError();
-                    }
-                }
-            } catch (Exception e)
-            {
-                onInternalError();
-            } finally
-            {
-                unLockUI();
-            }
-        }
-    };
-
     private void makeLayout(JSONObject jsonObject) throws Exception
     {
         JSONObject receiptJSONObject = jsonObject.getJSONObject("receipt");
@@ -214,14 +162,67 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
         return viewGroup;
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     protected void requestReceiptDetail(int index)
     {
         String params = String.format("?reservation_rec_idx=%d", index);
 
         mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_BOOKING_RECEIPT).append(params).toString(), null, mReservReceiptJsonResponseListener, this));
     }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Listener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private DailyHotelJsonResponseListener mReservReceiptJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            if (isFinishing() == true)
+            {
+                return;
+            }
+
+            try
+            {
+                if (response == null)
+                {
+                    throw new NullPointerException("response == null");
+                }
+
+                int msg_code = response.getInt("msg_code");
+
+                if (msg_code == 0)
+                {
+                    makeLayout(response.getJSONObject("data"));
+                } else
+                {
+                    if (response.has("msg") == true)
+                    {
+                        String msg = response.getString("msg");
+
+                        showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                finish();
+                            }
+                        }, null, false);
+                        return;
+                    } else
+                    {
+                        onInternalError();
+                    }
+                }
+            } catch (Exception e)
+            {
+                onInternalError();
+            } finally
+            {
+                unLockUI();
+            }
+        }
+    };
+
 }

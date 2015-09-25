@@ -21,7 +21,6 @@ import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -84,261 +83,14 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
     private int mOldfirstVisibleItem;
     private int mDirection;
     private ActionbarViewHolder mActionbarViewHolder;
-    private AbsListView.OnScrollListener mOnScrollListener = new AbsListView.OnScrollListener()
+
+    private class ActionbarViewHolder
     {
-        @Override
-        public void onScrollStateChanged(AbsListView view, int scrollState)
-        {
-        }
-
-        @Override
-        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount)
-        {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            if (baseActivity == null)
-            {
-                return;
-            }
-
-            if (isLockUiComponent() == true || baseActivity.isLockUiComponent() == true)
-            {
-                return;
-            }
-
-            View firstView = view.getChildAt(0);
-
-            if (null == firstView)
-            {
-                return;
-            }
-
-            int[] lastViewRect = new int[2];
-            float y = Float.MAX_VALUE;
-
-            View lastView = view.getChildAt(view.getChildCount() - 1);
-
-            if (null != lastView)
-            {
-                lastView.getLocationOnScreen(lastViewRect);
-                y = lastViewRect[1];
-            }
-
-            if (Float.compare(mOldY, Float.MAX_VALUE) == 0)
-            {
-                mOldY = y;
-                mOldfirstVisibleItem = firstVisibleItem;
-            } else
-            {
-                // MotionEvent.ACTION_CANCEL을 사용하는 이유는 가끔씩 내리거나 올리면 갑자기 좌표가 튀는 경우가
-                // 있는데 해당 튀는 경우를 무시하기 위해서
-                if (mOldfirstVisibleItem > firstVisibleItem)
-                {
-                    mDirection = MotionEvent.ACTION_DOWN;
-                } else if (mOldfirstVisibleItem < firstVisibleItem)
-                {
-                    mDirection = MotionEvent.ACTION_UP;
-                }
-
-                mOldY = y;
-                mOldfirstVisibleItem = firstVisibleItem;
-            }
-
-            switch (mDirection)
-            {
-                case MotionEvent.ACTION_DOWN:
-                {
-                    showActionBarAnimatoin(baseActivity);
-                    break;
-                }
-
-                case MotionEvent.ACTION_UP:
-                {
-                    // 전체 내용을 위로 올린다.
-                    if (firstVisibleItem >= 1)
-                    {
-                        hideActionbarAnimation(baseActivity);
-                    }
-                    break;
-                }
-            }
-        }
-    };
-    /**
-     * Hotel List Listener
-     */
-    private DailyHotelJsonResponseListener mHotelJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        /**
-         *
-         * @param region
-         *            : in
-         * @param hotelList
-         *            : in & out
-         * @param hotelListViewList
-         *            : out
-         */
-        private ArrayList<HotelListViewItem> makeSectionHotelList(ArrayList<Hotel> hotelList)
-        {
-            ArrayList<HotelListViewItem> hotelListViewItemList = new ArrayList<HotelListViewItem>();
-
-            if (hotelList == null || hotelList.size() == 0)
-            {
-                return hotelListViewItemList;
-            }
-
-            String area = null;
-            boolean hasDailyChoice = false;
-
-            for (Hotel hotel : hotelList)
-            {
-                String region = hotel.getDetailRegion();
-
-                if (TextUtils.isEmpty(region) == true)
-                {
-                    continue;
-                }
-
-                if (hotel.isDailyChoice == true)
-                {
-                    if (hasDailyChoice == false)
-                    {
-                        hasDailyChoice = true;
-
-                        HotelListViewItem section = new HotelListViewItem(getString(R.string.label_dailychoice));
-                        hotelListViewItemList.add(section);
-                    }
-                } else
-                {
-                    if (TextUtils.isEmpty(area) == true || region.equalsIgnoreCase(area) == false)
-                    {
-                        area = region;
-
-                        HotelListViewItem section = new HotelListViewItem(region);
-                        hotelListViewItemList.add(section);
-                    }
-                }
-
-                hotelListViewItemList.add(new HotelListViewItem(hotel));
-            }
-
-            return hotelListViewItemList;
-        }
-
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            if (baseActivity == null)
-            {
-                return;
-            }
-
-            try
-            {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
-                int msg_code = response.getInt("msg_code");
-
-                if (msg_code != 0)
-                {
-                    if (response.has("msg") == true)
-                    {
-                        String msg = response.getString("msg");
-                        DailyToast.showToast(baseActivity, msg, Toast.LENGTH_SHORT);
-                    }
-
-                    throw new NullPointerException("response == null");
-                }
-
-                JSONArray hotelJSONArray = response.getJSONArray("data");
-
-                int length = hotelJSONArray.length();
-
-                if (length == 0)
-                {
-                    if (mHotelListAdapter != null)
-                    {
-                        mHotelListAdapter.clear();
-                    }
-
-                    setVisibility(HOTEL_VIEW_TYPE.GONE);
-                } else
-                {
-                    JSONObject jsonObject;
-
-                    ArrayList<Hotel> hotelList = new ArrayList<Hotel>(length);
-
-                    for (int i = 0; i < length; i++)
-                    {
-                        jsonObject = hotelJSONArray.getJSONObject(i);
-
-                        Hotel newHotel = new Hotel();
-
-                        if (newHotel.setHotel(jsonObject) == true)
-                        {
-                            hotelList.add(newHotel); // 추가.
-                        }
-                    }
-
-                    // section 및 HotelListViewItem 으로 바꾸어 주기.
-                    ArrayList<HotelListViewItem> hotelListViewItemList = makeSectionHotelList(hotelList);
-
-                    if (mHotelListAdapter == null)
-                    {
-                        mHotelListAdapter = new HotelListAdapter(baseActivity, R.layout.list_row_hotel, new ArrayList<HotelListViewItem>());
-                        mHotelListView.setAdapter(mHotelListAdapter);
-                        mHotelListView.setOnItemClickListener(HotelListFragment.this);
-                    }
-
-                    setVisibility(mHotelViewType);
-
-                    // 지역이 변경되면 다시 리스트를 받아오는데 어떻게 해야할지 의문.
-                    if (mHotelViewType == HOTEL_VIEW_TYPE.MAP)
-                    {
-                        mHotelListMapFragment.setUserActionListener(mUserActionListener);
-
-                        if (HotelListFragment.this instanceof HotelDaysListFragment)
-                        {
-                            mHotelListMapFragment.setHotelList(hotelListViewItemList, ((HotelDaysListFragment) HotelListFragment.this).getSelectedCheckInSaleTime(), mIsSelectionTop);
-                        } else
-                        {
-                            mHotelListMapFragment.setHotelList(hotelListViewItemList, mSaleTime, mIsSelectionTop);
-                        }
-                    }
-
-                    mHotelListAdapter.clear();
-                    mHotelListAdapter.addAll(hotelListViewItemList);
-                    mHotelListAdapter.notifyDataSetChanged();
-
-                    if (mIsSelectionTop == true)
-                    {
-                        mHotelListView.setSelection(0);
-                        // mDailyFloatingActionButton
-                        //						mDailyFloatingActionButton.detachToListView(mHotelListView);
-                    }
-                }
-
-                // Notify PullToRefreshLayout that the refresh has finished
-                mPullToRefreshLayout.setRefreshComplete();
-
-                // 리스트 요청 완료후에 날짜 탭은 애니매이션을 진행하도록 한다.
-                onRefreshComplete();
-
-                setActionBarAnimationLock(false);
-            } catch (Exception e)
-            {
-                onError(e);
-            } finally
-            {
-                unLockUI();
-            }
-        }
-    };
+        public View mAnchorView;
+        public View mActionbarLayout;
+        public View mTabindicatorView;
+        public View mUnderlineView02;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -363,29 +115,11 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
             mHotelListView.setPadding(0, Util.dpToPx(baseActivity, 119), 0, 0);
         }
 
-        // 이벤트를 마지막에 넣는다.
-        // FooterView
-        //		mFooterView = inflater.inflate(R.layout.list_row_hotel_event, null, true);
-        //		mHotelListView.addFooterView(mFooterView);
-
         mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
         mEmptyView = view.findViewById(R.id.emptyView);
 
         mMapLayout = (FrameLayout) view.findViewById(R.id.hotelMapLayout);
         mMapLayout.setPadding(0, Util.dpToPx(baseActivity, 119) + 2, 0, 0);
-
-        //		mHotelListMapFragment = (HotelListMapFragment) getChildFragmentManager().findFragmentById(R.id.hotelMapFragment);
-
-        //		mDailyFloatingActionButton = (DailyFloatingActionButton) view.findViewById(R.id.floatingActionButton);
-        //		mDailyFloatingActionButton.setOnClickListener(new View.OnClickListener()
-        //		{
-        //			@Override
-        //			public void onClick(View v)
-        //			{
-        //			}
-        //		});
-
-        //		mDailyFloatingActionButton.setVisibility(View.GONE);
 
         mHotelViewType = HOTEL_VIEW_TYPE.LIST;
 
@@ -668,8 +402,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
 
     /**
      * 호텔리스트를 보여준다.
-     *
-     * @param position
      */
     protected void fetchHotelList(Province province, SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
     {
@@ -910,15 +642,263 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
         mValueAnimator.start();
     }
 
+    private AbsListView.OnScrollListener mOnScrollListener = new AbsListView.OnScrollListener()
+    {
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState)
+        {
+        }
+
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount)
+        {
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (baseActivity == null)
+            {
+                return;
+            }
+
+            if (isLockUiComponent() == true || baseActivity.isLockUiComponent() == true)
+            {
+                return;
+            }
+
+            View firstView = view.getChildAt(0);
+
+            if (null == firstView)
+            {
+                return;
+            }
+
+            int[] lastViewRect = new int[2];
+            float y = Float.MAX_VALUE;
+
+            View lastView = view.getChildAt(view.getChildCount() - 1);
+
+            if (null != lastView)
+            {
+                lastView.getLocationOnScreen(lastViewRect);
+                y = lastViewRect[1];
+            }
+
+            if (Float.compare(mOldY, Float.MAX_VALUE) == 0)
+            {
+                mOldY = y;
+                mOldfirstVisibleItem = firstVisibleItem;
+            } else
+            {
+                // MotionEvent.ACTION_CANCEL을 사용하는 이유는 가끔씩 내리거나 올리면 갑자기 좌표가 튀는 경우가
+                // 있는데 해당 튀는 경우를 무시하기 위해서
+                if (mOldfirstVisibleItem > firstVisibleItem)
+                {
+                    mDirection = MotionEvent.ACTION_DOWN;
+                } else if (mOldfirstVisibleItem < firstVisibleItem)
+                {
+                    mDirection = MotionEvent.ACTION_UP;
+                }
+
+                mOldY = y;
+                mOldfirstVisibleItem = firstVisibleItem;
+            }
+
+            switch (mDirection)
+            {
+                case MotionEvent.ACTION_DOWN:
+                {
+                    showActionBarAnimatoin(baseActivity);
+                    break;
+                }
+
+                case MotionEvent.ACTION_UP:
+                {
+                    // 전체 내용을 위로 올린다.
+                    if (firstVisibleItem >= 1)
+                    {
+                        hideActionbarAnimation(baseActivity);
+                    }
+                    break;
+                }
+            }
+        }
+    };
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private class ActionbarViewHolder
+    /**
+     * Hotel List Listener
+     */
+    private DailyHotelJsonResponseListener mHotelJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        public View mAnchorView;
-        public View mActionbarLayout;
-        public View mTabindicatorView;
-        public View mUnderlineView02;
-    }
+        private ArrayList<HotelListViewItem> makeSectionHotelList(ArrayList<Hotel> hotelList)
+        {
+            ArrayList<HotelListViewItem> hotelListViewItemList = new ArrayList<HotelListViewItem>();
+
+            if (hotelList == null || hotelList.size() == 0)
+            {
+                return hotelListViewItemList;
+            }
+
+            String area = null;
+            boolean hasDailyChoice = false;
+
+            for (Hotel hotel : hotelList)
+            {
+                String region = hotel.getDetailRegion();
+
+                if (Util.isTextEmpty(region) == true)
+                {
+                    continue;
+                }
+
+                if (hotel.isDailyChoice == true)
+                {
+                    if (hasDailyChoice == false)
+                    {
+                        hasDailyChoice = true;
+
+                        HotelListViewItem section = new HotelListViewItem(getString(R.string.label_dailychoice));
+                        hotelListViewItemList.add(section);
+                    }
+                } else
+                {
+                    if (Util.isTextEmpty(area) == true || region.equalsIgnoreCase(area) == false)
+                    {
+                        area = region;
+
+                        HotelListViewItem section = new HotelListViewItem(region);
+                        hotelListViewItemList.add(section);
+                    }
+                }
+
+                hotelListViewItemList.add(new HotelListViewItem(hotel));
+            }
+
+            return hotelListViewItemList;
+        }
+
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (baseActivity == null)
+            {
+                return;
+            }
+
+            try
+            {
+                if (response == null)
+                {
+                    throw new NullPointerException("response == null");
+                }
+
+                int msg_code = response.getInt("msg_code");
+
+                if (msg_code != 0)
+                {
+                    if (response.has("msg") == true)
+                    {
+                        String msg = response.getString("msg");
+                        DailyToast.showToast(baseActivity, msg, Toast.LENGTH_SHORT);
+                    }
+
+                    throw new NullPointerException("response == null");
+                }
+
+                JSONArray hotelJSONArray = response.getJSONArray("data");
+
+                int length = hotelJSONArray.length();
+
+                if (length == 0)
+                {
+                    if (mHotelListAdapter != null)
+                    {
+                        mHotelListAdapter.clear();
+                    }
+
+                    setVisibility(HOTEL_VIEW_TYPE.GONE);
+
+                    if (mUserActionListener != null)
+                    {
+                        mUserActionListener.setMapViewVisible(false);
+                    }
+                } else
+                {
+                    JSONObject jsonObject;
+
+                    ArrayList<Hotel> hotelList = new ArrayList<Hotel>(length);
+
+                    for (int i = 0; i < length; i++)
+                    {
+                        jsonObject = hotelJSONArray.getJSONObject(i);
+
+                        Hotel newHotel = new Hotel();
+
+                        if (newHotel.setHotel(jsonObject) == true)
+                        {
+                            hotelList.add(newHotel); // 추가.
+                        }
+                    }
+
+                    // section 및 HotelListViewItem 으로 바꾸어 주기.
+                    ArrayList<HotelListViewItem> hotelListViewItemList = makeSectionHotelList(hotelList);
+
+                    if (mHotelListAdapter == null)
+                    {
+                        mHotelListAdapter = new HotelListAdapter(baseActivity, R.layout.list_row_hotel, new ArrayList<HotelListViewItem>());
+                        mHotelListView.setAdapter(mHotelListAdapter);
+                        mHotelListView.setOnItemClickListener(HotelListFragment.this);
+                    }
+
+                    setVisibility(mHotelViewType);
+
+                    // 지역이 변경되면 다시 리스트를 받아오는데 어떻게 해야할지 의문.
+                    if (mHotelViewType == HOTEL_VIEW_TYPE.MAP)
+                    {
+                        mHotelListMapFragment.setUserActionListener(mUserActionListener);
+
+                        if (HotelListFragment.this instanceof HotelDaysListFragment)
+                        {
+                            mHotelListMapFragment.setHotelList(hotelListViewItemList, ((HotelDaysListFragment) HotelListFragment.this).getSelectedCheckInSaleTime(), mIsSelectionTop);
+                        } else
+                        {
+                            mHotelListMapFragment.setHotelList(hotelListViewItemList, mSaleTime, mIsSelectionTop);
+                        }
+                    }
+
+                    mHotelListAdapter.clear();
+                    mHotelListAdapter.addAll(hotelListViewItemList);
+                    mHotelListAdapter.notifyDataSetChanged();
+
+                    if (mIsSelectionTop == true)
+                    {
+                        mHotelListView.setSelection(0);
+                    }
+
+                    if (mUserActionListener != null)
+                    {
+                        mUserActionListener.setMapViewVisible(true);
+                    }
+                }
+
+                // Notify PullToRefreshLayout that the refresh has finished
+                mPullToRefreshLayout.setRefreshComplete();
+
+                // 리스트 요청 완료후에 날짜 탭은 애니매이션을 진행하도록 한다.
+                onRefreshComplete();
+
+                setActionBarAnimationLock(false);
+            } catch (Exception e)
+            {
+                onError(e);
+            } finally
+            {
+                unLockUI();
+            }
+        }
+    };
 }

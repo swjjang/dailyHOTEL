@@ -7,7 +7,7 @@
                 android:paddingLeft="11dp"
                 android:paddingRight="11dp">
 
-    <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+    <com.twoheart.dailyhotel.view.widget.DailyTextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="15dp"
@@ -17,7 +17,7 @@
         android:textSize="13dp"
         android:textStyle="bold"/>
 
-    <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+    <com.twoheart.dailyhotel.view.widget.DailyTextView
         android:id="@+id/textView12"
         android:layout_width="wrap_content"
         android:layout_height="13dp"
@@ -28,7 +28,7 @@
         android:textColor="@color/receipt_detail_text"
         android:textSize="10dp"/>
 
-    <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+    <com.twoheart.dailyhotel.view.widget.DailyTextView
         android:id="@+id/textView13"
         android:layout_width="wrap_content"
         android:layout_height="13dp"
@@ -40,7 +40,7 @@
         android:textColor="@color/black"
         android:textSize="11dp"/>
 
-    <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+    <com.twoheart.dailyhotel.view.widget.DailyTextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="13dp"
@@ -51,7 +51,7 @@
         android:textColor="@color/receipt_detail_text"
         android:textSize="10dp"/>
 
-    <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+    <com.twoheart.dailyhotel.view.widget.DailyTextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="13dp"
@@ -64,7 +64,7 @@
         android:textColor="@color/black"
         android:textSize="11dp"/>
 
-    <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+    <com.twoheart.dailyhotel.view.widget.DailyTextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="13dp"
@@ -75,7 +75,7 @@
         android:textColor="@color/receipt_detail_text"
         android:textSize="10dp"/>
 
-    <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+    <com.twoheart.dailyhotel.view.widget.DailyTextView
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="13dp"
@@ -89,7 +89,7 @@
         android:textColor="@color/black"
         android:textSize="11dp"/>
 
-    <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+    <com.twoheart.dailyhotel.view.widget.DailyTextView
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="13dp"
@@ -100,7 +100,7 @@
         android:textColor="@color/receipt_detail_text"
         android:textSize="10dp"/>
 
-    <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+    <com.twoheart.dailyhotel.view.widget.DailyTextView
         android:id="@+id/textView7"
         android:layout_width="wrap_content"
         android:layout_height="13dp"
@@ -110,7 +110,7 @@
         android:textColor="@color/black"
         android:textSize="11dp"/>
 
-    <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+    <com.twoheart.dailyhotel.view.widget.DailyTextView
         android:id="@+id/textView8"
         android:layout_width="wrap_content"
         android:layout_height="13dp"
@@ -121,7 +121,7 @@
         android:textColor="@color/receipt_detail_text"
         android:textSize="10dp"/>
 
-    <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+    <com.twoheart.dailyhotel.view.widget.DailyTextView
         android:id="@+id/textView9"
         android:layout_width="wrap_content"
         android:layout_height="13dp"
@@ -131,7 +131,7 @@
         android:textColor="@color/black"
         android:textSize="11dp"/>
 
-    <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+    <com.twoheart.dailyhotel.view.widget.DailyTextView
         android:id="@+id/textVie10"
         android:layout_width="wrap_content"
         android:layout_height="13dp"
@@ -142,7 +142,7 @@
         android:textColor="@color/receipt_detail_text"
         android:textSize="10dp"/>
 
-    <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+    <com.twoheart.dailyhotel.view.widget.DailyTextView
         android:id="@+id/textView11"
         android:layout_width="wrap_content"
         android:layout_height="13dp"

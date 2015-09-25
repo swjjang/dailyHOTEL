@@ -37,122 +37,38 @@ public abstract class PlaceMainFragment extends BaseFragment
     protected VIEW_TYPE mViewType = VIEW_TYPE.LIST;
     private boolean mMenuEnabled;
     private boolean mDontReloadAtOnResume;
-    private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
+
+    public enum VIEW_TYPE
     {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
+        LIST,
+        MAP,
+        GONE, // 목록이 비어있는 경우.
+    }
 
-            if (baseActivity == null)
-            {
-                return;
-            }
+    public enum TYPE
+    {
+        HOTEL,
+        FNB,
+    }
 
-            try
-            {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
+    public interface OnUserActionListener
+    {
+        public void selectPlace(PlaceViewItem baseListViewItem, SaleTime checkSaleTime);
 
-                mTodaySaleTime.setCurrentTime(response.getLong("currentDateTime"));
-                mTodaySaleTime.setOpenTime(response.getLong("openDateTime"));
-                mTodaySaleTime.setCloseTime(response.getLong("closeDateTime"));
-                mTodaySaleTime.setDailyTime(response.getLong("dailyDateTime"));
+        public void selectPlace(int index, long dailyTime, int dailyDayOfDays, int nights);
 
-                if (mTodaySaleTime.isSaleTime() == true)
-                {
-                    showSlidingDrawer();
+        public void toggleViewType();
 
-                    if (baseActivity.sharedPreference.contains(KEY_PREFERENCE_BY_SHARE) == true)
-                    {
-                        String param = baseActivity.sharedPreference.getString(KEY_PREFERENCE_BY_SHARE, null);
-                        baseActivity.sharedPreference.edit().remove(KEY_PREFERENCE_BY_SHARE).apply();
+        public void onClickActionBarArea();
 
-                        if (param != null)
-                        {
-                            unLockUI();
+        public void setHeaderSectionVisible(boolean isVisible);
 
-                            try
-                            {
-                                String[] params = param.split("\\&|\\=");
-
-                                int hotelIndex = 0;
-                                int fnbIndex = 0;
-                                long dailyTime = 0;
-                                int dailyDayOfDays = 0;
-                                int nights = 0;
-
-                                int length = params.length;
-
-                                for (int i = 0; i < length; i++)
-                                {
-                                    if ("hotelIndex".equalsIgnoreCase(params[i]) == true)
-                                    {
-                                        hotelIndex = Integer.valueOf(params[++i]);
-                                    } else if ("fnbIndex".equalsIgnoreCase(params[i]) == true)
-                                    {
-                                        fnbIndex = Integer.valueOf(params[++i]);
-                                    } else if ("dailyTime".equalsIgnoreCase(params[i]) == true)
-                                    {
-                                        dailyTime = Long.valueOf(params[++i]);
-                                    } else if ("dailyDayOfDays".equalsIgnoreCase(params[i]) == true)
-                                    {
-                                        dailyDayOfDays = Integer.valueOf(params[++i]);
-                                    } else if ("nights".equalsIgnoreCase(params[i]) == true)
-                                    {
-                                        nights = Integer.valueOf(params[++i]);
-                                    }
-                                }
-
-                                if (mOnUserActionListener != null)
-                                {
-                                    if (hotelIndex != 0)
-                                    {
-                                        mOnUserActionListener.selectPlace(hotelIndex, dailyTime, dailyDayOfDays, nights);
-                                    } else if (fnbIndex != 0)
-                                    {
-                                        mOnUserActionListener.selectPlace(fnbIndex, dailyTime, dailyDayOfDays, nights);
-                                    }
-                                }
-                            } catch (Exception e)
-                            {
-                                ExLog.d(e.toString());
-
-                                // 지역 리스트를 가져온다
-                                requestProvinceList(baseActivity);
-                            }
-                        }
-                    } else
-                    {
-                        // 지역 리스트를 가져온다
-                        requestProvinceList(baseActivity);
-                    }
-                } else
-                {
-                    hideSlidingDrawer();
-
-                    showClosedDaily(mTodaySaleTime);
-                    unLockUI();
-                }
-            } catch (Exception e)
-            {
-                onError(e);
-                unLockUI();
-            }
-        }
-    };
-
-    ;
+        public void setMapViewVisible(boolean isVisible);
+    }
 
     protected abstract View createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
 
-    ;
-
     protected abstract void activityResult(int requestCode, int resultCode, Intent data);
-
-    ;
 
     protected abstract void hideSlidingDrawer();
 
@@ -431,19 +347,6 @@ public abstract class PlaceMainFragment extends BaseFragment
         mOnUserActionListener = listener;
     }
 
-    public enum VIEW_TYPE
-    {
-        LIST,
-        MAP,
-        GONE, // 목록이 비어있는 경우.
-    }
-
-    public enum TYPE
-    {
-        HOTEL,
-        FNB, // Place Type
-    }
-
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     // UserActionListener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -452,16 +355,110 @@ public abstract class PlaceMainFragment extends BaseFragment
     // NetworkActionListener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public interface OnUserActionListener
+    private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        public void selectPlace(PlaceViewItem baseListViewItem, SaleTime checkSaleTime);
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            BaseActivity baseActivity = (BaseActivity) getActivity();
 
-        public void selectPlace(int index, long dailyTime, int dailyDayOfDays, int nights);
+            if (baseActivity == null)
+            {
+                return;
+            }
 
-        public void toggleViewType();
+            try
+            {
+                if (response == null)
+                {
+                    throw new NullPointerException("response == null");
+                }
 
-        public void onClickActionBarArea();
+                mTodaySaleTime.setCurrentTime(response.getLong("currentDateTime"));
+                mTodaySaleTime.setOpenTime(response.getLong("openDateTime"));
+                mTodaySaleTime.setCloseTime(response.getLong("closeDateTime"));
+                mTodaySaleTime.setDailyTime(response.getLong("dailyDateTime"));
 
-        public void setHeaderSectionVisible(boolean isVisible);
-    }
+                if (mTodaySaleTime.isSaleTime() == true)
+                {
+                    showSlidingDrawer();
+
+                    if (baseActivity.sharedPreference.contains(KEY_PREFERENCE_BY_SHARE) == true)
+                    {
+                        String param = baseActivity.sharedPreference.getString(KEY_PREFERENCE_BY_SHARE, null);
+                        baseActivity.sharedPreference.edit().remove(KEY_PREFERENCE_BY_SHARE).apply();
+
+                        if (param != null)
+                        {
+                            unLockUI();
+
+                            try
+                            {
+                                String[] params = param.split("\\&|\\=");
+
+                                int hotelIndex = 0;
+                                int fnbIndex = 0;
+                                long dailyTime = 0;
+                                int dailyDayOfDays = 0;
+                                int nights = 0;
+
+                                int length = params.length;
+
+                                for (int i = 0; i < length; i++)
+                                {
+                                    if ("hotelIndex".equalsIgnoreCase(params[i]) == true)
+                                    {
+                                        hotelIndex = Integer.valueOf(params[++i]);
+                                    } else if ("fnbIndex".equalsIgnoreCase(params[i]) == true)
+                                    {
+                                        fnbIndex = Integer.valueOf(params[++i]);
+                                    } else if ("dailyTime".equalsIgnoreCase(params[i]) == true)
+                                    {
+                                        dailyTime = Long.valueOf(params[++i]);
+                                    } else if ("dailyDayOfDays".equalsIgnoreCase(params[i]) == true)
+                                    {
+                                        dailyDayOfDays = Integer.valueOf(params[++i]);
+                                    } else if ("nights".equalsIgnoreCase(params[i]) == true)
+                                    {
+                                        nights = Integer.valueOf(params[++i]);
+                                    }
+                                }
+
+                                if (mOnUserActionListener != null)
+                                {
+                                    if (hotelIndex != 0)
+                                    {
+                                        mOnUserActionListener.selectPlace(hotelIndex, dailyTime, dailyDayOfDays, nights);
+                                    } else if (fnbIndex != 0)
+                                    {
+                                        mOnUserActionListener.selectPlace(fnbIndex, dailyTime, dailyDayOfDays, nights);
+                                    }
+                                }
+                            } catch (Exception e)
+                            {
+                                ExLog.d(e.toString());
+
+                                // 지역 리스트를 가져온다
+                                requestProvinceList(baseActivity);
+                            }
+                        }
+                    } else
+                    {
+                        // 지역 리스트를 가져온다
+                        requestProvinceList(baseActivity);
+                    }
+                } else
+                {
+                    hideSlidingDrawer();
+
+                    showClosedDaily(mTodaySaleTime);
+                    unLockUI();
+                }
+            } catch (Exception e)
+            {
+                onError(e);
+                unLockUI();
+            }
+        }
+    };
 }

@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.util;
 import android.os.Debug;
 import android.util.Log;
 
-import org.apache.http.Header;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
@@ -251,85 +250,6 @@ public class ExLog
         // Class와
         // Method)
         print(TAG, message, Log.WARN, caller);
-    }
-
-    /**
-     * 해당 문자열을 화면이나 파일로 디버깅할수 있게 정보를 출력한다.<br>
-     * 출력 메세지에 호출한 Class 이름과 Method를 자동으로 추가해서 출력한다
-     *
-     * @param tag    Tag
-     * @param title  구분 문자열(REQ, RES)
-     * @param header 디버깅할 메시지
-     * @param method 메소드
-     * @param caller 호출자
-     */
-    private static void printHeader(String tag, String title, Header[] header, int method, String caller)
-    {
-        String str;
-        if (!DEBUG)
-        {
-            return;
-        }
-
-        if (header == null || header.length < 1)
-        {
-            return;
-        }
-
-        // Box는 120byte로 맞춤
-        print(tag, "▶" + title + " ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", method, caller);
-        // message = "▶▶▶" + title +
-        // " ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓" +
-        // "\n";
-
-        for (int i = 0; i < header.length; i++)
-        {
-            str = header[i].getName() + " : " + header[i].getValue();
-            print(tag, "▶" + title + " ┃" + str, method, caller);
-            // str = str + fillString(120 - str.getBytes().length - 4, " "); //
-            // 뒤에 Space
-            // 삽입
-            // print(tag, "▶" + title + " ┃" + str + "┃", method, caller);
-            // message += "▶▶▶" + title + " ┃" + str + "┃" + "\n";
-        }
-        print(tag, "▶" + title + " ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", method, caller);
-        // message += "▶▶▶" + title +
-        // " ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛" +
-        // "\n";
-
-        // DB에 저장(전체 Header의 내용을 한개의 row에 저장)
-        // writeDB(tag, message, Log.DEBUG, caller);
-    }
-
-    /**
-     * <PRE>
-     * Header Data를 Debug Print
-     * </PRE>
-     * <p/>
-     * jmkim9 2011. 10. 24. 오후 6:25:16
-     *
-     * @param title  타이틀
-     * @param header 헤더
-     */
-    public static void printHeader(String title, Header[] header)
-    {
-        printHeader(TAG, title, header, Log.DEBUG, getCallerInfo());
-    }
-
-    /**
-     * <PRE>
-     * printHeader
-     * </PRE>
-     * <p/>
-     * pinkred 2013. 4. 11. 오후 6:19:51
-     *
-     * @param title  타이틀
-     * @param header 헤더
-     * @param method 메소드
-     */
-    public static void printHeader(String title, Header[] header, int method)
-    {
-        printHeader(TAG, title, header, method, getCallerInfo());
     }
 
     /**

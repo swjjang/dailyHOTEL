@@ -20,17 +20,11 @@ public class AnalyticsManager
         initAnalytics(context);
     }
 
-    public static AnalyticsManager getInstance(Context context)
+    public synchronized static AnalyticsManager getInstance(Context context)
     {
         if (mInstance == null)
         {
-            synchronized (AnalyticsManager.class)
-            {
-                if (mInstance == null)
-                {
-                    mInstance = new AnalyticsManager(context);
-                }
-            }
+            mInstance = new AnalyticsManager(context);
         }
         return mInstance;
     }

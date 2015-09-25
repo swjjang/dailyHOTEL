@@ -64,6 +64,7 @@ public class Booking implements Parcelable
 
             placeName = jsonObject.getString("hotel_name");
             payType = jsonObject.getInt("pay_type");
+
             ment = jsonObject.getString("comment");
             tid = jsonObject.getString("tid");
             checkinTime = jsonObject.getLong("checkin_time");

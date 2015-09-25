@@ -192,16 +192,17 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
                     convertView = inflater.inflate(resourceId, parent, false);
 
                     viewHolder = new HotelListViewHolder();
-                    viewHolder.llHotelRowContent = (RelativeLayout) convertView.findViewById(R.id.ll_hotel_row_content);
-                    viewHolder.img = (ImageView) convertView.findViewById(R.id.iv_hotel_row_img);
-                    viewHolder.name = (TextView) convertView.findViewById(R.id.tv_hotel_row_name);
-                    viewHolder.price = (TextView) convertView.findViewById(R.id.tv_hotel_row_price);
-                    viewHolder.discount = (TextView) convertView.findViewById(R.id.tv_hotel_row_discount);
-                    viewHolder.sold_out = (TextView) convertView.findViewById(R.id.tv_hotel_row_soldout);
-                    viewHolder.address = (TextView) convertView.findViewById(R.id.tv_hotel_row_address);
-                    viewHolder.grade = (TextView) convertView.findViewById(R.id.hv_hotel_grade);
-                    viewHolder.dBenefit = convertView.findViewById(R.id.dBenefitImageView);
-                    viewHolder.average = convertView.findViewById(R.id.averageTextView);
+                    viewHolder.hotelLayout = (RelativeLayout) convertView.findViewById(R.id.ll_hotel_row_content);
+                    viewHolder.hotelImageView = (ImageView) convertView.findViewById(R.id.iv_hotel_row_img);
+                    viewHolder.hotelNameView = (TextView) convertView.findViewById(R.id.tv_hotel_row_name);
+                    viewHolder.hotelPriceView = (TextView) convertView.findViewById(R.id.tv_hotel_row_price);
+                    viewHolder.satisfactionView = (TextView) convertView.findViewById(R.id.satisfactionView);
+                    viewHolder.hotelDiscountView = (TextView) convertView.findViewById(R.id.tv_hotel_row_discount);
+                    viewHolder.hotelSoldOutView = (TextView) convertView.findViewById(R.id.tv_hotel_row_soldout);
+                    viewHolder.hotelAddressView = (TextView) convertView.findViewById(R.id.tv_hotel_row_address);
+                    viewHolder.hotelGradeView = (TextView) convertView.findViewById(R.id.hv_hotel_grade);
+                    viewHolder.dBenefitView = convertView.findViewById(R.id.dBenefitImageView);
+                    viewHolder.averageView = convertView.findViewById(R.id.averageTextView);
 
                     convertView.setTag(viewHolder);
                 }
@@ -212,45 +213,65 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
                 String strPrice = comma.format(price);
                 String strDiscount = comma.format(element.averageDiscount);
 
-                viewHolder.address.setText(element.getAddress());
-                viewHolder.name.setText(element.getName());
+                String address = element.getAddress();
+
+                int barIndex = address.indexOf('|');
+                if (barIndex >= 0)
+                {
+                    address = address.replace(" | ", "ㅣ");
+                } else if (address.indexOf('l') >= 0)
+                {
+                    address = address.replace(" l ", "ㅣ");
+                }
+
+                viewHolder.hotelAddressView.setText(address);
+                viewHolder.hotelNameView.setText(element.getName());
 
                 Spanned currency = Html.fromHtml(context.getResources().getString(R.string.currency));
 
                 if (price <= 0)
                 {
-                    viewHolder.price.setVisibility(View.INVISIBLE);
-                    viewHolder.price.setText(null);
+                    viewHolder.hotelPriceView.setVisibility(View.INVISIBLE);
+                    viewHolder.hotelPriceView.setText(null);
                 } else
                 {
-                    viewHolder.price.setVisibility(View.VISIBLE);
+                    viewHolder.hotelPriceView.setVisibility(View.VISIBLE);
+                    viewHolder.hotelPriceView.setText(strPrice + currency);
+                    viewHolder.hotelPriceView.setPaintFlags(viewHolder.hotelPriceView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                }
 
-                    viewHolder.price.setText(strPrice + currency);
-                    viewHolder.price.setPaintFlags(viewHolder.price.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                // 만족도
+                if (element.satisfaction > 0)
+                {
+                    viewHolder.satisfactionView.setVisibility(View.VISIBLE);
+                    viewHolder.satisfactionView.setText(element.satisfaction + "%");
+                } else
+                {
+                    viewHolder.satisfactionView.setVisibility(View.GONE);
                 }
 
                 if (element.nights > 1)
                 {
-                    viewHolder.average.setVisibility(View.VISIBLE);
+                    viewHolder.averageView.setVisibility(View.VISIBLE);
                 } else
                 {
-                    viewHolder.average.setVisibility(View.GONE);
+                    viewHolder.averageView.setVisibility(View.GONE);
                 }
 
-                viewHolder.discount.setText(strDiscount + currency);
-                viewHolder.name.setSelected(true); // Android TextView marquee bug
+                viewHolder.hotelDiscountView.setText(strDiscount + currency);
+                viewHolder.hotelNameView.setSelected(true); // Android TextView marquee bug
 
                 if (Util.isOverAPI16() == true)
                 {
-                    viewHolder.llHotelRowContent.setBackground(mPaintDrawable);
+                    viewHolder.hotelLayout.setBackground(mPaintDrawable);
                 } else
                 {
-                    viewHolder.llHotelRowContent.setBackgroundDrawable(mPaintDrawable);
+                    viewHolder.hotelLayout.setBackgroundDrawable(mPaintDrawable);
                 }
 
                 // grade
-                viewHolder.grade.setText(element.getCategory().getName(context));
-                viewHolder.grade.setBackgroundResource(element.getCategory().getColorResId());
+                viewHolder.hotelGradeView.setText(element.getCategory().getName(context));
+                viewHolder.hotelGradeView.setBackgroundResource(element.getCategory().getColorResId());
 
                 // AQuery사용시
                 AQuery aquery = new AQuery(convertView);
@@ -271,15 +292,15 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
                     if (Util.getLCDWidth(context) < 720)
                     {
                         cb.url(element.getImage()).animation(AQuery.FADE_IN);
-                        aquery.id(viewHolder.img).image(element.getImage(), false, false, 240, 0, cb);
+                        aquery.id(viewHolder.hotelImageView).image(element.getImage(), false, false, 240, 0, cb);
                     } else
                     {
                         cb.url(element.getImage()).animation(AQuery.FADE_IN);
-                        aquery.id(viewHolder.img).image(cb);
+                        aquery.id(viewHolder.hotelImageView).image(cb);
                     }
                 } else
                 {
-                    viewHolder.img.setImageBitmap(cachedImg);
+                    viewHolder.hotelImageView.setImageBitmap(cachedImg);
                 }
 
                 int availableRoomCount = element.getAvailableRoom();
@@ -287,18 +308,18 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
                 // SOLD OUT 표시
                 if (availableRoomCount == 0)
                 {
-                    viewHolder.sold_out.setVisibility(View.VISIBLE);
+                    viewHolder.hotelSoldOutView.setVisibility(View.VISIBLE);
                 } else
                 {
-                    viewHolder.sold_out.setVisibility(View.GONE);
+                    viewHolder.hotelSoldOutView.setVisibility(View.GONE);
                 }
 
                 if (element.isDBenefit == true)
                 {
-                    viewHolder.dBenefit.setVisibility(View.VISIBLE);
+                    viewHolder.dBenefitView.setVisibility(View.VISIBLE);
                 } else
                 {
-                    viewHolder.dBenefit.setVisibility(View.GONE);
+                    viewHolder.dBenefitView.setVisibility(View.GONE);
                 }
                 break;
             }
@@ -325,21 +346,22 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
         return getItem(position).getType();
     }
 
-    private class HotelListViewHolder
+    private static class HotelListViewHolder
     {
-        RelativeLayout llHotelRowContent;
-        ImageView img;
-        TextView name;
-        TextView price;
-        TextView discount;
-        TextView sold_out;
-        TextView address;
-        TextView grade;
-        View average;
-        View dBenefit;
+        RelativeLayout hotelLayout;
+        ImageView hotelImageView;
+        TextView hotelNameView;
+        TextView hotelPriceView;
+        TextView hotelDiscountView;
+        TextView hotelSoldOutView;
+        TextView hotelAddressView;
+        TextView hotelGradeView;
+        TextView satisfactionView;
+        View averageView;
+        View dBenefitView;
     }
 
-    private class HeaderListViewHolder
+    private static class HeaderListViewHolder
     {
         TextView regionDetailName;
     }

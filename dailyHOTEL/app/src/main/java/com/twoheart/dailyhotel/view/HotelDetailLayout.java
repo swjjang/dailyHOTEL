@@ -14,7 +14,6 @@ import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.Layout;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -361,11 +360,11 @@ public class HotelDetailLayout
             //			float offset = rect.top - mStatusBarHeight - Util.dpToPx(mActivity, 56) - max;
             //			float alphaFactor = offset / max;
 
-            float max = (mImageHeight - Util.dpToPx(mActivity, 56)) / 2;
+            float max = ((float) mImageHeight - Util.dpToPx(mActivity, 56)) / 2;
             float offset = rect.top - mStatusBarHeight - Util.dpToPx(mActivity, 56);
             float alphaFactor = offset / max;
 
-            if (TextUtils.isEmpty(mHotelDetail.hotelBenefit) == false)
+            if (Util.isTextEmpty(mHotelDetail.hotelBenefit) == false)
             {
                 if (Float.compare(alphaFactor, 0.0f) <= 0)
                 {
@@ -406,7 +405,7 @@ public class HotelDetailLayout
 
             if (firstRect != null)
             {
-                float gradeMax = (mImageHeight - Util.dpToPx(mActivity, 56)) / 3;
+                float gradeMax = ((float) mImageHeight - Util.dpToPx(mActivity, 56)) / 3;
                 float gradeOffset = rect.top - mStatusBarHeight - Util.dpToPx(mActivity, 56);
                 float xFactor = gradeOffset / gradeMax;
                 float nameMax = firstRect.left - Util.dpToPx(mActivity, 55);
@@ -1482,7 +1481,7 @@ public class HotelDetailLayout
                     count--;
                 }
 
-                if (TextUtils.isEmpty(mHotelDetail.hotelBenefit) == true)
+                if (Util.isTextEmpty(mHotelDetail.hotelBenefit) == true)
                 {
                     count--;
                 }
@@ -1553,7 +1552,7 @@ public class HotelDetailLayout
 
                 // D Benefit or 데일리's comment
                 case 3:
-                    if (TextUtils.isEmpty(mHotelDetail.hotelBenefit) == false)
+                    if (Util.isTextEmpty(mHotelDetail.hotelBenefit) == false)
                     {
                         if (mDeatilView[3] == null)
                         {
@@ -1577,7 +1576,7 @@ public class HotelDetailLayout
 
                 // 데일리 추천이유 or 호텔 정보
                 case 4:
-                    if (TextUtils.isEmpty(mHotelDetail.hotelBenefit) == false)
+                    if (Util.isTextEmpty(mHotelDetail.hotelBenefit) == false)
                     {
                         view = makeCommentView(layoutInflater, parent);
                     } else
@@ -1588,7 +1587,7 @@ public class HotelDetailLayout
 
                 // 호텔 정보 or 호텔 더보기 정보
                 case 5:
-                    if (TextUtils.isEmpty(mHotelDetail.hotelBenefit) == false)
+                    if (Util.isTextEmpty(mHotelDetail.hotelBenefit) == false)
                     {
                         view = makeHotelInfoView(layoutInflater, parent);
                     } else
@@ -1599,7 +1598,7 @@ public class HotelDetailLayout
 
                 // 호텔 더보기 정보 or 확인 사항
                 case 6:
-                    if (TextUtils.isEmpty(mHotelDetail.hotelBenefit) == false)
+                    if (Util.isTextEmpty(mHotelDetail.hotelBenefit) == false)
                     {
                         view = makeHotelMoreInfoView(layoutInflater, parent);
                     } else
@@ -1610,7 +1609,7 @@ public class HotelDetailLayout
 
                 // 확인 사항 or 카카오톡 문의
                 case 7:
-                    if (TextUtils.isEmpty(mHotelDetail.hotelBenefit) == false)
+                    if (Util.isTextEmpty(mHotelDetail.hotelBenefit) == false)
                     {
                         view = makeCheckListView(layoutInflater, parent);
                     } else
@@ -1799,6 +1798,19 @@ public class HotelDetailLayout
                     }
                 });
             }
+
+            TextView satisfactionView = (TextView) view.findViewById(R.id.satisfactionView);
+
+            // 만족도
+            if (Util.isTextEmpty(hotelDetail.satisfaction) == true)
+            {
+                satisfactionView.setVisibility(View.GONE);
+            } else
+            {
+                satisfactionView.setVisibility(View.VISIBLE);
+                satisfactionView.setText(hotelDetail.satisfaction);
+            }
+
             return view;
         }
 
@@ -1832,7 +1844,7 @@ public class HotelDetailLayout
                 {
                     Layout layout = hotelAddressTextView01.getLayout();
 
-                    if (layout == null || TextUtils.isEmpty(address) == true)
+                    if (layout == null || Util.isTextEmpty(address) == true)
                     {
                         return;
                     }
@@ -2065,7 +2077,7 @@ public class HotelDetailLayout
                 {
                     Layout layout = textView1Line.getLayout();
 
-                    if (layout == null || TextUtils.isEmpty(benefit) == true)
+                    if (layout == null || Util.isTextEmpty(benefit) == true)
                     {
                         return;
                     }

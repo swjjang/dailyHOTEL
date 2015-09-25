@@ -21,6 +21,7 @@ public class KakaoLinkManager implements Constants
     private KakaoLink kkLink;
     private KakaoTalkLinkMessageBuilder kkMsgBuilder;
     private Context mContext;
+
     private KakaoLinkManager(Context context)
     {
         try
@@ -83,7 +84,7 @@ public class KakaoLinkManager implements Constants
         }
     }
 
-    public void shareFnB(String name, int index, String imageUrl, long dailyTime, int dailyDayOfDays)
+    public void shareGourmet(String name, int index, String imageUrl, long dailyTime, int dailyDayOfDays)
     {
         try
         {

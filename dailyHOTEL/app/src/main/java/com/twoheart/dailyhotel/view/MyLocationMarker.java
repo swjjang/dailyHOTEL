@@ -30,10 +30,10 @@ public class MyLocationMarker
         paint.setColor(Color.WHITE);
         paint.setAntiAlias(true);
         paint.setStyle(Paint.Style.FILL);
-        canvas.drawCircle(mBitmap.getWidth() / 2, mBitmap.getHeight() / 2, mBitmap.getWidth() / 2, paint);
+        canvas.drawCircle((float) mBitmap.getWidth() / 2, (float) mBitmap.getHeight() / 2, (float) mBitmap.getWidth() / 2, paint);
 
         paint.setColor(0xff4285f4);
-        canvas.drawCircle(mBitmap.getWidth() / 2, mBitmap.getHeight() / 2, mBitmap.getWidth() / 2 - 4f, paint);
+        canvas.drawCircle((float) mBitmap.getWidth() / 2, (float) mBitmap.getHeight() / 2, (float) mBitmap.getWidth() / 2 - 4f, paint);
 
         return BitmapDescriptorFactory.fromBitmap(mBitmap);
     }

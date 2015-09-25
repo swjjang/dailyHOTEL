@@ -17,7 +17,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 
 import com.android.volley.Request.Method;
@@ -30,6 +29,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.network.response.DailyHotelStringResponseListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.CreditCardLayout;
 
 import org.json.JSONArray;
@@ -44,13 +44,236 @@ import java.util.Map;
  * 신용카드 등록하기.
  *
  * @author sheldon
- *
  */
 public class CreditCardListActivity extends BaseActivity
 {
     private CreditCardLayout mCreditCardLayout;
     private boolean mIsPickMode;
     private CreditCard mSelectedCreditCard;
+
+    public interface OnUserActionListener
+    {
+        public void addCreditCard();
+
+        public void deleteCreditCard(CreditCard card);
+
+        public void onItemClick(CreditCard card);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_creditcardlist);
+
+        Intent intent = getIntent();
+
+        if (intent != null && Intent.ACTION_PICK.equalsIgnoreCase(intent.getAction()) == true)
+        {
+            mIsPickMode = true;
+            mSelectedCreditCard = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CREDITCARD);
+        } else
+        {
+            mIsPickMode = false;
+        }
+
+        initLayout(mIsPickMode);
+    }
+
+    private void initLayout(boolean isPickMode)
+    {
+        setActionBar(R.string.actionbar_title_creditcard_activity);
+
+        mCreditCardLayout = (CreditCardLayout) findViewById(R.id.creditCardLayout);
+        mCreditCardLayout.setUserActionListener(mOnUserActionListener);
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        lockUI();
+        mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, this));
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if (requestCode == CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD)
+        {
+            String msg = null;
+
+            switch (resultCode)
+            {
+                case CODE_RESULT_PAYMENT_BILLING_SUCCSESS:
+                    msg = getString(R.string.message_billing_success);
+                    break;
+
+                case CODE_RESULT_PAYMENT_BILLING_DUPLICATE:
+                    msg = getString(R.string.message_billing_duplicate);
+                    break;
+
+                case CODE_RESULT_PAYMENT_BILLING_FAIL:
+                    if (data != null && data.hasExtra(NAME_INTENT_EXTRA_DATA_MESSAGE) == true)
+                    {
+                        msg = data.getStringExtra(NAME_INTENT_EXTRA_DATA_MESSAGE);
+                    } else
+                    {
+                        msg = getString(R.string.message_billing_fail);
+                    }
+                    break;
+
+                case CODE_RESULT_ACTIVITY_PAYMENT_FAIL:
+                    msg = getString(R.string.act_toast_payment_fail);
+                    break;
+
+                case CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR:
+                    msg = getString(R.string.act_toast_payment_network_error);
+                    break;
+            }
+
+            if (msg != null)
+            {
+                if (isFinishing() == true)
+                {
+                    return;
+                }
+
+                String title = getString(R.string.dialog_notice2);
+                String positive = getString(R.string.dialog_btn_text_confirm);
+
+                showSimpleDialog(title, msg, positive, null);
+            }
+        }
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // UI Listener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private OnUserActionListener mOnUserActionListener = new OnUserActionListener()
+    {
+
+        @Override
+        public void addCreditCard()
+        {
+            if (isLockUiComponent() == true)
+            {
+                return;
+            }
+
+            lockUI();
+
+            // 세션 여부를 판단한다.
+            mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, new DailyHotelStringResponseListener()
+            {
+                @Override
+                public void onResponse(String url, String response)
+                {
+                    String result = null;
+
+                    unLockUI();
+
+                    if (false == Util.isTextEmpty(response))
+                    {
+                        result = response.trim();
+                    }
+
+                    if (true == "alive".equalsIgnoreCase(result))
+                    {
+                        Intent intent = new Intent(CreditCardListActivity.this, RegisterCreditCardActivity.class);
+                        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD);
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+                    } else
+                    {
+                        restartApp();
+                    }
+                }
+            }, CreditCardListActivity.this));
+        }
+
+        @Override
+        public void deleteCreditCard(final CreditCard card)
+        {
+            if (isLockUiComponent() == true)
+            {
+                return;
+            }
+
+            lockUI();
+
+            // 세션 여부를 판단한다.
+            mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, new DailyHotelStringResponseListener()
+            {
+                @Override
+                public void onResponse(String url, String response)
+                {
+                    String result = null;
+
+                    unLockUI();
+
+                    if (false == Util.isTextEmpty(response))
+                    {
+                        result = response.trim();
+                    }
+
+                    if (true == "alive".equalsIgnoreCase(result))
+                    {
+                        // 신용카드를 삭제하시겠습니까?
+                        View.OnClickListener posListener = new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View view)
+                            {
+                                lockUI();
+
+                                // 등록된 카드 삭제.
+                                HashMap<String, String> params = new HashMap<String, String>();
+                                params.put("billkey", card.billingkey);
+
+                                mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_DEL).toString(), params, mUserSessionBillingCardDelJsonResponseListener, CreditCardListActivity.this));
+                            }
+                        };
+
+                        if (isFinishing() == true)
+                        {
+                            return;
+                        }
+
+                        showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_delete_register_creditcard), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null);
+                    } else
+                    {
+                        restartApp();
+                    }
+                }
+            }, CreditCardListActivity.this));
+        }
+
+        @Override
+        public void onItemClick(CreditCard card)
+        {
+            if (mIsPickMode == true)
+            {
+                if (isLockUiComponent() == true)
+                {
+                    return;
+                }
+
+                lockUI();
+
+                Intent intent = new Intent();
+                intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_CREDITCARD, card);
+                setResult(Activity.RESULT_OK, intent);
+                finish();
+            }
+        }
+    };
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Network Listener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     private DailyHotelJsonResponseListener mUserSessionBillingCardInfoJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
@@ -173,7 +396,7 @@ public class CreditCardListActivity extends BaseActivity
         {
             String result = null;
 
-            if (false == TextUtils.isEmpty(response))
+            if (false == Util.isTextEmpty(response))
             {
                 result = response.trim();
             }
@@ -297,227 +520,4 @@ public class CreditCardListActivity extends BaseActivity
             }
         }
     };
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // UI Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private OnUserActionListener mOnUserActionListener = new OnUserActionListener()
-    {
-
-        @Override
-        public void addCreditCard()
-        {
-            if (isLockUiComponent() == true)
-            {
-                return;
-            }
-
-            lockUI();
-
-            // 세션 여부를 판단한다.
-            mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, new DailyHotelStringResponseListener()
-            {
-                @Override
-                public void onResponse(String url, String response)
-                {
-                    String result = null;
-
-                    unLockUI();
-
-                    if (false == TextUtils.isEmpty(response))
-                    {
-                        result = response.trim();
-                    }
-
-                    if (true == "alive".equalsIgnoreCase(result))
-                    {
-                        Intent intent = new Intent(CreditCardListActivity.this, RegisterCreditCardActivity.class);
-                        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD);
-                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-                    } else
-                    {
-                        restartApp();
-                    }
-                }
-            }, CreditCardListActivity.this));
-        }
-
-        @Override
-        public void deleteCreditCard(final CreditCard card)
-        {
-            if (isLockUiComponent() == true)
-            {
-                return;
-            }
-
-            lockUI();
-
-            // 세션 여부를 판단한다.
-            mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, new DailyHotelStringResponseListener()
-            {
-                @Override
-                public void onResponse(String url, String response)
-                {
-                    String result = null;
-
-                    unLockUI();
-
-                    if (false == TextUtils.isEmpty(response))
-                    {
-                        result = response.trim();
-                    }
-
-                    if (true == "alive".equalsIgnoreCase(result))
-                    {
-                        // 신용카드를 삭제하시겠습니까?
-                        View.OnClickListener posListener = new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View view)
-                            {
-                                lockUI();
-
-                                // 등록된 카드 삭제.
-                                HashMap<String, String> params = new HashMap<String, String>();
-                                params.put("billkey", card.billingkey);
-
-                                mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_DEL).toString(), params, mUserSessionBillingCardDelJsonResponseListener, CreditCardListActivity.this));
-                            }
-                        };
-
-                        if (isFinishing() == true)
-                        {
-                            return;
-                        }
-
-                        showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_delete_register_creditcard), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), posListener, null);
-                    } else
-                    {
-                        restartApp();
-                    }
-                }
-            }, CreditCardListActivity.this));
-        }
-
-        @Override
-        public void onItemClick(CreditCard card)
-        {
-            if (mIsPickMode == true)
-            {
-                if (isLockUiComponent() == true)
-                {
-                    return;
-                }
-
-                lockUI();
-
-                Intent intent = new Intent();
-                intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_CREDITCARD, card);
-                setResult(Activity.RESULT_OK, intent);
-                finish();
-            }
-        }
-    };
-
-    @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_creditcardlist);
-
-        Intent intent = getIntent();
-
-        if (intent != null && Intent.ACTION_PICK.equalsIgnoreCase(intent.getAction()) == true)
-        {
-            mIsPickMode = true;
-            mSelectedCreditCard = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CREDITCARD);
-        } else
-        {
-            mIsPickMode = false;
-        }
-
-        initLayout(mIsPickMode);
-    }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Network Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private void initLayout(boolean isPickMode)
-    {
-        setActionBar(R.string.actionbar_title_creditcard_activity);
-
-        mCreditCardLayout = (CreditCardLayout) findViewById(R.id.creditCardLayout);
-        mCreditCardLayout.setUserActionListener(mOnUserActionListener);
-    }
-
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-
-        lockUI();
-        mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, this));
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        if (requestCode == CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD)
-        {
-            String msg = null;
-
-            switch (resultCode)
-            {
-                case CODE_RESULT_PAYMENT_BILLING_SUCCSESS:
-                    msg = getString(R.string.message_billing_success);
-                    break;
-
-                case CODE_RESULT_PAYMENT_BILLING_DUPLICATE:
-                    msg = getString(R.string.message_billing_duplicate);
-                    break;
-
-                case CODE_RESULT_PAYMENT_BILLING_FAIL:
-                    if (data != null && data.hasExtra(NAME_INTENT_EXTRA_DATA_MESSAGE) == true)
-                    {
-                        msg = data.getStringExtra(NAME_INTENT_EXTRA_DATA_MESSAGE);
-                    } else
-                    {
-                        msg = getString(R.string.message_billing_fail);
-                    }
-                    break;
-
-                case CODE_RESULT_ACTIVITY_PAYMENT_FAIL:
-                    msg = getString(R.string.act_toast_payment_fail);
-                    break;
-
-                case CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR:
-                    msg = getString(R.string.act_toast_payment_network_error);
-                    break;
-            }
-
-            if (msg != null)
-            {
-                if (isFinishing() == true)
-                {
-                    return;
-                }
-
-                String title = getString(R.string.dialog_notice2);
-                String positive = getString(R.string.dialog_btn_text_confirm);
-
-                showSimpleDialog(title, msg, positive, null);
-            }
-        }
-    }
-
-    public interface OnUserActionListener
-    {
-        public void addCreditCard();
-
-        public void deleteCreditCard(CreditCard card);
-
-        public void onItemClick(CreditCard card);
-    }
 }

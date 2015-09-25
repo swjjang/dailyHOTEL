@@ -84,14 +84,15 @@ public class GourmetListAdapter extends PlaceListAdapter
                     convertView = inflater.inflate(resourceId, parent, false);
 
                     viewHolder = new PlaceViewHolder();
-                    viewHolder.llHotelRowContent = (RelativeLayout) convertView.findViewById(R.id.ll_hotel_row_content);
-                    viewHolder.img = (ImageView) convertView.findViewById(R.id.iv_hotel_row_img);
-                    viewHolder.name = (TextView) convertView.findViewById(R.id.tv_hotel_row_name);
-                    viewHolder.price = (TextView) convertView.findViewById(R.id.tv_hotel_row_price);
-                    viewHolder.discount = (TextView) convertView.findViewById(R.id.tv_hotel_row_discount);
-                    viewHolder.sold_out = (TextView) convertView.findViewById(R.id.tv_hotel_row_soldout);
-                    viewHolder.address = (TextView) convertView.findViewById(R.id.tv_hotel_row_address);
-                    viewHolder.grade = (TextView) convertView.findViewById(R.id.hv_hotel_grade);
+                    viewHolder.hotelLayout = (RelativeLayout) convertView.findViewById(R.id.ll_hotel_row_content);
+                    viewHolder.hotelImageView = (ImageView) convertView.findViewById(R.id.iv_hotel_row_img);
+                    viewHolder.hotelNameView = (TextView) convertView.findViewById(R.id.tv_hotel_row_name);
+                    viewHolder.hotelPriceView = (TextView) convertView.findViewById(R.id.tv_hotel_row_price);
+                    viewHolder.satisfactionView = (TextView) convertView.findViewById(R.id.satisfactionView);
+                    viewHolder.hotelDiscountView = (TextView) convertView.findViewById(R.id.tv_hotel_row_discount);
+                    viewHolder.hotelSoldOutView = (TextView) convertView.findViewById(R.id.tv_hotel_row_soldout);
+                    viewHolder.hotelAddressView = (TextView) convertView.findViewById(R.id.tv_hotel_row_address);
+                    viewHolder.hotelGradeView = (TextView) convertView.findViewById(R.id.hv_hotel_grade);
 
                     convertView.setTag(viewHolder);
                 }
@@ -102,37 +103,57 @@ public class GourmetListAdapter extends PlaceListAdapter
                 String strPrice = comma.format(price);
                 String strDiscount = comma.format(place.discountPrice);
 
-                viewHolder.address.setText(place.address);
-                viewHolder.name.setText(place.name);
+                String address = place.address;
+
+                if (address.indexOf('|') >= 0)
+                {
+                    address = address.replace(" | ", "ㅣ");
+                } else if (address.indexOf('l') >= 0)
+                {
+                    address = address.replace(" l ", "ㅣ");
+                }
+
+                viewHolder.hotelAddressView.setText(address);
+                viewHolder.hotelNameView.setText(place.name);
 
                 Spanned currency = Html.fromHtml(context.getResources().getString(R.string.currency));
 
                 if (price <= 0)
                 {
-                    viewHolder.price.setVisibility(View.INVISIBLE);
-                    viewHolder.price.setText(null);
+                    viewHolder.hotelPriceView.setVisibility(View.INVISIBLE);
+                    viewHolder.hotelPriceView.setText(null);
                 } else
                 {
-                    viewHolder.price.setVisibility(View.VISIBLE);
+                    viewHolder.hotelPriceView.setVisibility(View.VISIBLE);
 
-                    viewHolder.price.setText(strPrice + currency);
-                    viewHolder.price.setPaintFlags(viewHolder.price.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                    viewHolder.hotelPriceView.setText(strPrice + currency);
+                    viewHolder.hotelPriceView.setPaintFlags(viewHolder.hotelPriceView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 }
 
-                viewHolder.discount.setText(strDiscount + currency);
-                viewHolder.name.setSelected(true); // Android TextView marquee bug
+                // 만족도
+                if (place.satisfaction > 0)
+                {
+                    viewHolder.satisfactionView.setVisibility(View.VISIBLE);
+                    viewHolder.satisfactionView.setText(place.satisfaction + "%");
+                } else
+                {
+                    viewHolder.satisfactionView.setVisibility(View.GONE);
+                }
+
+                viewHolder.hotelDiscountView.setText(strDiscount + currency);
+                viewHolder.hotelNameView.setSelected(true); // Android TextView marquee bug
 
                 if (Util.isOverAPI16() == true)
                 {
-                    viewHolder.llHotelRowContent.setBackground(mPaintDrawable);
+                    viewHolder.hotelLayout.setBackground(mPaintDrawable);
                 } else
                 {
-                    viewHolder.llHotelRowContent.setBackgroundDrawable(mPaintDrawable);
+                    viewHolder.hotelLayout.setBackgroundDrawable(mPaintDrawable);
                 }
 
                 // grade
-                viewHolder.grade.setText(place.grade.getName(context));
-                viewHolder.grade.setBackgroundResource(place.grade.getColorResId());
+                viewHolder.hotelGradeView.setText(place.grade.getName(context));
+                viewHolder.hotelGradeView.setBackgroundResource(place.grade.getColorResId());
 
                 // AQuery사용시
                 AQuery aquery = new AQuery(convertView);
@@ -153,24 +174,24 @@ public class GourmetListAdapter extends PlaceListAdapter
                     if (Util.getLCDWidth(context) < 720)
                     {
                         bitmapAjaxCallback.url(place.imageUrl).animation(AQuery.FADE_IN);
-                        aquery.id(viewHolder.img).image(place.imageUrl, false, false, 240, 0, bitmapAjaxCallback);
+                        aquery.id(viewHolder.hotelImageView).image(place.imageUrl, false, false, 240, 0, bitmapAjaxCallback);
                     } else
                     {
                         bitmapAjaxCallback.url(place.imageUrl).animation(AQuery.FADE_IN);
-                        aquery.id(viewHolder.img).image(bitmapAjaxCallback);
+                        aquery.id(viewHolder.hotelImageView).image(bitmapAjaxCallback);
                     }
                 } else
                 {
-                    viewHolder.img.setImageBitmap(cachedImg);
+                    viewHolder.hotelImageView.setImageBitmap(cachedImg);
                 }
 
                 // SOLD OUT 표시
                 if (place.isSoldOut)
                 {
-                    viewHolder.sold_out.setVisibility(View.VISIBLE);
+                    viewHolder.hotelSoldOutView.setVisibility(View.VISIBLE);
                 } else
                 {
-                    viewHolder.sold_out.setVisibility(View.GONE);
+                    viewHolder.hotelSoldOutView.setVisibility(View.GONE);
                 }
                 break;
             }
@@ -179,19 +200,20 @@ public class GourmetListAdapter extends PlaceListAdapter
         return convertView;
     }
 
-    private class PlaceViewHolder
+    private static class PlaceViewHolder
     {
-        RelativeLayout llHotelRowContent;
-        ImageView img;
-        TextView name;
-        TextView price;
-        TextView discount;
-        TextView sold_out;
-        TextView address;
-        TextView grade;
+        RelativeLayout hotelLayout;
+        ImageView hotelImageView;
+        TextView hotelNameView;
+        TextView hotelPriceView;
+        TextView hotelDiscountView;
+        TextView hotelSoldOutView;
+        TextView hotelAddressView;
+        TextView hotelGradeView;
+        TextView satisfactionView;
     }
 
-    private class HeaderListViewHolder
+    private static class HeaderListViewHolder
     {
         TextView titleTextView;
     }

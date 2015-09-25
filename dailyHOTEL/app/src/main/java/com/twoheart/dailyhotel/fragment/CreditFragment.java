@@ -21,7 +21,6 @@ import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -67,7 +66,6 @@ import java.util.Map;
  * 적립금 확인 페이지.
  *
  * @author jangjunho
- *
  */
 public class CreditFragment extends BaseFragment implements Constants, OnClickListener
 {
@@ -180,7 +178,7 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
             {
                 String result = null;
 
-                if (false == TextUtils.isEmpty(response))
+                if (false == Util.isTextEmpty(response))
                 {
                     result = response.trim();
                 }
@@ -269,7 +267,7 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
 
             String result = null;
 
-            if (false == TextUtils.isEmpty(response))
+            if (false == Util.isTextEmpty(response))
             {
                 result = response.trim();
             }

@@ -10,19 +10,6 @@ import org.json.JSONObject;
 
 public class Gourmet extends Place implements Parcelable
 {
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
-    {
-        public Gourmet createFromParcel(Parcel in)
-        {
-            return new Gourmet(in);
-        }
-
-        @Override
-        public Gourmet[] newArray(int size)
-        {
-            return new Gourmet[size];
-        }
-    };
     public String saleDay;
 
     public Gourmet()
@@ -80,6 +67,10 @@ public class Gourmet extends Place implements Parcelable
 
             saleDay = jsonObject.getString("sday");
 
+            if (jsonObject.has("rating_value") == true)
+            {
+                satisfaction = jsonObject.getInt("rating_value");
+            }
         } catch (JSONException e)
         {
             ExLog.d(e.toString());
@@ -95,4 +86,18 @@ public class Gourmet extends Place implements Parcelable
     {
         return 0;
     }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+    {
+        public Gourmet createFromParcel(Parcel in)
+        {
+            return new Gourmet(in);
+        }
+
+        @Override
+        public Gourmet[] newArray(int size)
+        {
+            return new Gourmet[size];
+        }
+    };
 }

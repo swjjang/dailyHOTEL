@@ -20,7 +20,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.text.InputFilter;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
@@ -45,6 +44,7 @@ import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.StringFilter;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 
 import org.json.JSONObject;
@@ -70,6 +70,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
     private TextView btnSignUp;
     private int mMode;
     private String mUserIdx;
+    private int mRecommender; // 추천인 코드
 
     private Map<String, String> signupParams;
     private HashMap<String, String> regPushParams;
@@ -90,6 +91,8 @@ public class SignupActivity extends BaseActivity implements OnClickListener
             mMode = MODE_USERINFO_UPDATE;
 
             user = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER);
+
+            mRecommender = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_RECOMMENDER, -1);
 
             setActionBar(R.string.actionbar_title_userinfo_update_activity);
 
@@ -139,21 +142,21 @@ public class SignupActivity extends BaseActivity implements OnClickListener
         {
             mUserIdx = user.getUserIdx();
 
-            if (isEmptyTextField(user.getPhone()) == false)
+            if (Util.isTextEmpty(user.getPhone()) == false)
             {
                 etPhone.setText(user.getPhone());
                 etPhone.setEnabled(false);
                 etPhone.setFocusable(false);
             }
 
-            if (isEmptyTextField(user.getEmail()) == false)
+            if (Util.isTextEmpty(user.getEmail()) == false)
             {
                 etEmail.setText(user.getEmail());
                 etEmail.setEnabled(false);
                 etEmail.setFocusable(false);
             }
 
-            if (isEmptyTextField(user.getName()) == false)
+            if (Util.isTextEmpty(user.getName()) == false)
             {
                 etName.setText(user.getName());
                 etName.setEnabled(false);
@@ -162,6 +165,13 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
             etPwd.setVisibility(View.GONE);
             btnSignUp.setText(R.string.act_signup_btn_update);
+
+            if (mRecommender >= 0)
+            {
+                etRecommender.setText(String.valueOf(mRecommender));
+                etRecommender.setEnabled(false);
+                etRecommender.setFocusable(false);
+            }
         } else
         {
             getPhoneNumber();
@@ -187,7 +197,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
         TelephonyManager telManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         String phoneNum = telManager.getLine1Number();
 
-        if (TextUtils.isEmpty(phoneNum) == false)
+        if (Util.isTextEmpty(phoneNum) == false)
         {
             etPhone.setText(phoneNum);
             etEmail.requestFocus();
@@ -376,11 +386,6 @@ public class SignupActivity extends BaseActivity implements OnClickListener
         finish();
     }
 
-    private boolean isEmptyTextField(String fieldText)
-    {
-        return (TextUtils.isEmpty(fieldText) == true || fieldText.equals("null") == true || fieldText.trim().length() == 0);
-    }
-
     private Boolean isGoogleServiceAvailable()
     {
         int resCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
@@ -425,7 +430,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
             protected void onPostExecute(String regId)
             {
                 // gcm id가 없을 경우 스킵.
-                if (TextUtils.isEmpty(regId) == true)
+                if (Util.isTextEmpty(regId) == true)
                 {
                     signUpAndFinish();
                     return;

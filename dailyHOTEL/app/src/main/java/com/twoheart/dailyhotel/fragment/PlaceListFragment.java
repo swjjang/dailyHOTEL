@@ -61,86 +61,14 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
     private float mOldY;
     private int mOldfirstVisibleItem;
     private int mDirection;
-    protected AbsListView.OnScrollListener mOnScrollListener = new AbsListView.OnScrollListener()
+
+    protected class ActionbarViewHolder
     {
-        @Override
-        public void onScrollStateChanged(AbsListView view, int scrollState)
-        {
-        }
-
-        @Override
-        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount)
-        {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            if (baseActivity == null)
-            {
-                return;
-            }
-
-            if (isLockUiComponent() == true || baseActivity.isLockUiComponent() == true)
-            {
-                return;
-            }
-
-            View firstView = view.getChildAt(0);
-
-            if (null == firstView)
-            {
-                return;
-            }
-
-            int[] lastViewRect = new int[2];
-            float y = Float.MAX_VALUE;
-
-            View lastView = view.getChildAt(view.getChildCount() - 1);
-
-            if (null != lastView)
-            {
-                lastView.getLocationOnScreen(lastViewRect);
-                y = lastViewRect[1];
-            }
-
-            if (Float.compare(mOldY, Float.MAX_VALUE) == 0)
-            {
-                mOldY = y;
-                mOldfirstVisibleItem = firstVisibleItem;
-            } else
-            {
-                // MotionEvent.ACTION_CANCEL을 사용하는 이유는 가끔씩 내리거나 올리면 갑자기 좌표가 튀는 경우가
-                // 있는데 해당 튀는 경우를 무시하기 위해서
-                if (mOldfirstVisibleItem > firstVisibleItem)
-                {
-                    mDirection = MotionEvent.ACTION_DOWN;
-                } else if (mOldfirstVisibleItem < firstVisibleItem)
-                {
-                    mDirection = MotionEvent.ACTION_UP;
-                }
-
-                mOldY = y;
-                mOldfirstVisibleItem = firstVisibleItem;
-            }
-
-            switch (mDirection)
-            {
-                case MotionEvent.ACTION_DOWN:
-                {
-                    showActionBarAnimatoin();
-                    break;
-                }
-
-                case MotionEvent.ACTION_UP:
-                {
-                    // 전체 내용을 위로 올린다.
-                    if (firstVisibleItem >= 1)
-                    {
-                        hideActionbarAnimation();
-                    }
-                    break;
-                }
-            }
-        }
-    };
+        public View mAnchorView;
+        public View mActionbarLayout;
+        public View mTabindicatorView;
+        public View mUnderlineView02;
+    }
 
     protected abstract void fetchHotelList(Province province, SaleTime checkInSaleTime, SaleTime checkOutSaleTime);
 
@@ -385,10 +313,6 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
         refreshList(mSelectedProvince, true);
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // ScrollListener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     public void setActionBarAnimationLock(boolean isLock)
     {
         mLockActionBar = isLock;
@@ -572,11 +496,88 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
         mValueAnimator.start();
     }
 
-    protected class ActionbarViewHolder
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // ScrollListener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    protected AbsListView.OnScrollListener mOnScrollListener = new AbsListView.OnScrollListener()
     {
-        public View mAnchorView;
-        public View mActionbarLayout;
-        public View mTabindicatorView;
-        public View mUnderlineView02;
-    }
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState)
+        {
+        }
+
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount)
+        {
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (baseActivity == null)
+            {
+                return;
+            }
+
+            if (isLockUiComponent() == true || baseActivity.isLockUiComponent() == true)
+            {
+                return;
+            }
+
+            View firstView = view.getChildAt(0);
+
+            if (null == firstView)
+            {
+                return;
+            }
+
+            int[] lastViewRect = new int[2];
+            float y = Float.MAX_VALUE;
+
+            View lastView = view.getChildAt(view.getChildCount() - 1);
+
+            if (null != lastView)
+            {
+                lastView.getLocationOnScreen(lastViewRect);
+                y = lastViewRect[1];
+            }
+
+            if (Float.compare(mOldY, Float.MAX_VALUE) == 0)
+            {
+                mOldY = y;
+                mOldfirstVisibleItem = firstVisibleItem;
+            } else
+            {
+                // MotionEvent.ACTION_CANCEL을 사용하는 이유는 가끔씩 내리거나 올리면 갑자기 좌표가 튀는 경우가
+                // 있는데 해당 튀는 경우를 무시하기 위해서
+                if (mOldfirstVisibleItem > firstVisibleItem)
+                {
+                    mDirection = MotionEvent.ACTION_DOWN;
+                } else if (mOldfirstVisibleItem < firstVisibleItem)
+                {
+                    mDirection = MotionEvent.ACTION_UP;
+                }
+
+                mOldY = y;
+                mOldfirstVisibleItem = firstVisibleItem;
+            }
+
+            switch (mDirection)
+            {
+                case MotionEvent.ACTION_DOWN:
+                {
+                    showActionBarAnimatoin();
+                    break;
+                }
+
+                case MotionEvent.ACTION_UP:
+                {
+                    // 전체 내용을 위로 올린다.
+                    if (firstVisibleItem >= 1)
+                    {
+                        hideActionbarAnimation();
+                    }
+                    break;
+                }
+            }
+        }
+    };
 }

@@ -16,7 +16,7 @@
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
-            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+            <com.twoheart.dailyhotel.view.widget.DailyTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
@@ -27,7 +27,7 @@
                 android:textSize="20dp"/>
         </LinearLayout>
 
-        <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
             android:id="@+id/addCreditCardButton"
             android:layout_width="match_parent"
             android:layout_height="55dp"

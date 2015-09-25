@@ -7,19 +7,6 @@ import org.json.JSONObject;
 
 public class TicketInformation implements Parcelable
 {
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
-    {
-        public TicketInformation createFromParcel(Parcel in)
-        {
-            return new TicketInformation(in);
-        }
-
-        @Override
-        public TicketInformation[] newArray(int size)
-        {
-            return new TicketInformation[size];
-        }
-    };
     public int index;
     public String name;
     public String option;
@@ -69,4 +56,18 @@ public class TicketInformation implements Parcelable
     {
         return 0;
     }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+    {
+        public TicketInformation createFromParcel(Parcel in)
+        {
+            return new TicketInformation(in);
+        }
+
+        @Override
+        public TicketInformation[] newArray(int size)
+        {
+            return new TicketInformation[size];
+        }
+    };
 }

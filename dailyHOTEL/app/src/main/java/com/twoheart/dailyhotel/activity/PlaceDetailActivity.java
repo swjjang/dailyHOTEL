@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -60,6 +59,38 @@ public abstract class PlaceDetailActivity extends BaseActivity
     private TicketInformation mSelectedTicketInformation;
     private String mDefaultImageUrl;
 
+    public interface OnUserActionListener
+    {
+        public void showActionBar();
+
+        public void hideActionBar();
+
+        public void onClickImage(PlaceDetail placeDetail);
+
+        public void onSelectedImagePosition(int position);
+
+        public void doBooking(TicketInformation ticketInformation);
+
+        public void doKakaotalkConsult();
+
+        public void showTicketInformationLayout();
+
+        public void hideTicketInformationLayout();
+
+        public void showMap();
+    }
+
+    public interface OnImageActionListener
+    {
+        public void startAutoSlide();
+
+        public void stopAutoSlide();
+
+        public void nextSlide();
+
+        public void prevSlide();
+    }
+
     private Handler mImageHandler = new Handler()
     {
         public void handleMessage(Message msg)
@@ -88,434 +119,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
             if (autoSlide == 1)
             {
                 sendEmptyMessageDelayed(0, DURATION_HOTEL_IMAGE_SHOW);
-            }
-        }
-    };
-    private OnImageActionListener mOnImageActionListener = new OnImageActionListener()
-    {
-        @Override
-        public void startAutoSlide()
-        {
-            if (Util.isOverAPI11() == false)
-            {
-                Message message = mImageHandler.obtainMessage();
-                message.what = 0;
-                message.arg1 = 1; // 오른쪽으로 이동.
-                message.arg2 = 1; // 자동
-
-                mImageHandler.removeMessages(0);
-                mImageHandler.sendMessageDelayed(message, DURATION_HOTEL_IMAGE_SHOW);
-            } else
-            {
-                mImageHandler.removeMessages(0);
-                mPlaceDetailLayout.startAnimationImageView();
-            }
-        }
-
-        @Override
-        public void stopAutoSlide()
-        {
-            if (Util.isOverAPI11() == false)
-            {
-                mImageHandler.removeMessages(0);
-            } else
-            {
-                mImageHandler.removeMessages(0);
-                mPlaceDetailLayout.stopAnimationImageView(false);
-            }
-        }
-
-        @Override
-        public void nextSlide()
-        {
-            if (Util.isOverAPI11() == true)
-            {
-                Message message = mImageHandler.obtainMessage();
-                message.what = 0;
-                message.arg1 = 1; // 오른쪽으로 이동.
-                message.arg2 = 0; // 수동
-
-                mImageHandler.removeMessages(0);
-                mImageHandler.sendMessage(message);
-            }
-        }
-
-        @Override
-        public void prevSlide()
-        {
-            if (Util.isOverAPI11() == true)
-            {
-                Message message = mImageHandler.obtainMessage();
-                message.what = 0;
-                message.arg1 = -1; // 왼쪽으로 이동.
-                message.arg2 = 0; // 수동
-
-                mImageHandler.removeMessages(0);
-                mImageHandler.sendMessage(message);
-            }
-        }
-    };
-
-    ;
-    private DailyHotelJsonResponseListener mUserInfoJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            try
-            {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
-                Customer user = new Customer();
-                user.setEmail(response.getString("email"));
-                user.setName(response.getString("name"));
-                user.setPhone(response.getString("phone"));
-                user.setAccessToken(response.getString("accessToken"));
-                user.setUserIdx(response.getString("idx"));
-
-                // 페이스북 유저
-                if (isEmptyTextField(user.getAccessToken()) == false)
-                {
-                    if (isEmptyTextField(new String[]{user.getEmail(), user.getPhone(), user.getName()}) == false)
-                    {
-                        processBooking(mSelectedTicketInformation, mCheckInSaleTime);
-                    } else
-                    {
-                        // 정보 업데이트 화면으로 이동.
-                        moveToUserInfoUpdate(user);
-                    }
-                } else
-                {
-                    processBooking(mSelectedTicketInformation, mCheckInSaleTime);
-                }
-            } catch (Exception e)
-            {
-                onError(e);
-            }
-        }
-    };
-    private DailyHotelStringResponseListener mUserAliveStringResponseListener = new DailyHotelStringResponseListener()
-    {
-
-        @Override
-        public void onResponse(String url, String response)
-        {
-
-            unLockUI();
-
-            String result = null;
-
-            if (TextUtils.isEmpty(response) == false)
-            {
-                result = response.trim();
-            }
-
-            if ("alive".equalsIgnoreCase(result) == true)
-            {
-                // session alive
-                // 사용자 정보 요청.
-                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, PlaceDetailActivity.this));
-
-            } else if ("dead".equalsIgnoreCase(result) == true)
-            {
-                // session dead
-                // 재로그인
-                if (sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false))
-                {
-                    String id = sharedPreference.getString(KEY_PREFERENCE_USER_ID, null);
-                    String accessToken = sharedPreference.getString(KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
-                    String pw = sharedPreference.getString(KEY_PREFERENCE_USER_PWD, null);
-
-                    Map<String, String> loginParams = new HashMap<String, String>();
-
-                    if (accessToken != null)
-                    {
-                        loginParams.put("accessToken", accessToken);
-                    } else
-                    {
-                        loginParams.put("email", id);
-                    }
-
-                    loginParams.put("pw", pw);
-
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(), loginParams, mUserLoginJsonResponseListener, PlaceDetailActivity.this));
-                } else
-                {
-                    loadLoginProcess();
-                }
-
-            } else
-            {
-                onError();
-            }
-        }
-    };
-    private OnUserActionListener mOnUserActionListener = new OnUserActionListener()
-    {
-        @Override
-        public void showActionBar()
-        {
-            setActionBarBackgroundVisible(true);
-        }
-
-        @Override
-        public void hideActionBar()
-        {
-            setActionBarBackgroundVisible(false);
-        }
-
-        @Override
-        public void onClickImage(PlaceDetail ticketDetailDto)
-        {
-            if (isLockUiComponent() == true)
-            {
-                return;
-            }
-
-            lockUiComponent();
-
-            if (mOnImageActionListener != null)
-            {
-                mOnImageActionListener.stopAutoSlide();
-            }
-
-            Intent intent = new Intent(PlaceDetailActivity.this, ImageDetailListActivity.class);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURLLIST, ticketDetailDto.getImageUrlList());
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_SELECTED_POSOTION, mCurrentImage);
-            startActivity(intent);
-        }
-
-        @Override
-        public void onSelectedImagePosition(int position)
-        {
-            mCurrentImage = position;
-        }
-
-        @Override
-        public void doBooking(TicketInformation ticketInformation)
-        {
-            if (isLockUiComponent(true) == true)
-            {
-                return;
-            }
-
-            mSelectedTicketInformation = ticketInformation;
-
-            lockUI();
-
-            mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, PlaceDetailActivity.this));
-
-            HashMap<String, String> params = new HashMap<String, String>();
-            params.put(Label.FNB_TICKET_NAME, ticketInformation.name);
-            params.put(Label.FNB_TICKET_INDEX, String.valueOf(ticketInformation.index));
-            params.put(Label.FNB_INDEX, String.valueOf(mPlaceDetail.index));
-
-            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Label.BOOKING, Action.CLICK, mPlaceDetail.name, params);
-        }
-
-        @Override
-        public void doKakaotalkConsult()
-        {
-            if (isLockUiComponent() == true || isFinishing() == true)
-            {
-                return;
-            }
-
-            lockUiComponent();
-
-            try
-            {
-                startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/@%EB%8D%B0%EC%9D%BC%EB%A6%AC%ED%98%B8%ED%85%94")));
-            } catch (ActivityNotFoundException e)
-            {
-                try
-                {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
-                } catch (ActivityNotFoundException e1)
-                {
-                    Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
-                    marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
-                    startActivity(marketLaunch);
-                }
-            }
-        }
-
-        @Override
-        public void showTicketInformationLayout()
-        {
-            if (isLockUiComponent() == true || isFinishing() == true)
-            {
-                return;
-            }
-
-            lockUiComponent();
-
-            if (mPlaceDetailLayout != null)
-            {
-                mPlaceDetailLayout.showAnimationTicketInformationLayout();
-            }
-
-            releaseUiComponent();
-        }
-
-        @Override
-        public void hideTicketInformationLayout()
-        {
-            if (isLockUiComponent() == true || isFinishing() == true)
-            {
-                return;
-            }
-
-            lockUiComponent();
-
-            if (mPlaceDetailLayout != null)
-            {
-                mPlaceDetailLayout.hideAnimationTicketInformationLayout();
-            }
-
-            releaseUiComponent();
-        }
-
-        @Override
-        public void showMap()
-        {
-            if (isLockUiComponent() == true || isFinishing() == true)
-            {
-                return;
-            }
-
-            lockUiComponent();
-
-            Intent intent = new Intent(PlaceDetailActivity.this, ZoomMapActivity.class);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, mPlaceDetail.name);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_LATITUDE, mPlaceDetail.latitude);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_LONGITUDE, mPlaceDetail.longitude);
-
-            startActivity(intent);
-
-            // 호텔 공유하기 로그 추가
-            SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay());
-            String label = String.format("%s (%s-%s)", mPlaceDetail.name, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), checkOutSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
-
-            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.HOTEL_DETAIL, Action.CLICK, label, (long) mPlaceDetail.index);
-        }
-    };
-    private DailyHotelJsonResponseListener mUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-
-            try
-            {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
-                if (response.getString("login").equals("true") == false)
-                {
-                    // 로그인 실패
-                    // data 초기화
-                    SharedPreferences.Editor ed = sharedPreference.edit();
-                    ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
-                    ed.putString(KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
-                    ed.putString(KEY_PREFERENCE_USER_ID, null);
-                    ed.putString(KEY_PREFERENCE_USER_PWD, null);
-                    ed.commit();
-
-                    unLockUI();
-                    loadLoginProcess();
-
-                } else
-                {
-                    //로그인 성공
-                    VolleyHttpClient.createCookie();
-
-                    mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, PlaceDetailActivity.this));
-                }
-            } catch (JSONException e)
-            {
-                onError(e);
-                unLockUI();
-            }
-        }
-    };
-    private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            if (isFinishing() == true)
-            {
-                return;
-            }
-
-            try
-            {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
-                if (mIsStartByShare == true)
-                {
-                    mCheckInSaleTime.setCurrentTime(response.getLong("currentDateTime"));
-                    mCheckInSaleTime.setOpenTime(response.getLong("openDateTime"));
-                    mCheckInSaleTime.setCloseTime(response.getLong("closeDateTime"));
-
-                    long shareDailyTime = mCheckInSaleTime.getDayOfDaysHotelDate().getTime();
-                    long todayDailyTime = response.getLong("dailyDateTime");
-
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
-                    simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-                    int shareDailyDay = Integer.parseInt(simpleDateFormat.format(new Date(shareDailyTime)));
-                    int todayDailyDay = Integer.parseInt(simpleDateFormat.format(new Date(todayDailyTime)));
-
-                    // 지난 날의 호텔인 경우.
-                    if (shareDailyDay < todayDailyDay)
-                    {
-                        DailyToast.showToast(PlaceDetailActivity.this, R.string.toast_msg_dont_past_hotelinfo, Toast.LENGTH_LONG);
-                        finish();
-                        return;
-                    }
-
-                    if (mCheckInSaleTime.isSaleTime() == true)
-                    {
-                        requestPlaceDetailInformation(mPlaceDetail, mCheckInSaleTime);
-                    } else
-                    {
-                        finish();
-                    }
-                } else
-                {
-                    SaleTime saleTime = new SaleTime();
-
-                    saleTime.setCurrentTime(response.getLong("currentDateTime"));
-                    saleTime.setOpenTime(response.getLong("openDateTime"));
-                    saleTime.setCloseTime(response.getLong("closeDateTime"));
-                    saleTime.setDailyTime(response.getLong("dailyDateTime"));
-
-                    if (saleTime.isSaleTime() == true)
-                    {
-                        requestPlaceDetailInformation(mPlaceDetail, mCheckInSaleTime);
-                    } else
-                    {
-                        finish();
-                    }
-                }
-            } catch (Exception e)
-            {
-                onError(e);
-                unLockUI();
-
-                finish();
             }
         }
     };
@@ -704,10 +307,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
         return true;
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // UserActionListener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
@@ -753,16 +352,13 @@ public abstract class PlaceDetailActivity extends BaseActivity
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private void moveToUserInfoUpdate(Customer user)
+    private void moveToUserInfoUpdate(Customer user, int recommender)
     {
-        Intent i = new Intent(PlaceDetailActivity.this, SignupActivity.class);
-        i.putExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER, user);
+        Intent intent = new Intent(PlaceDetailActivity.this, SignupActivity.class);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER, user);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_RECOMMENDER, recommender);
 
-        startActivityForResult(i, CODE_REQUEST_ACTIVITY_USERINFO_UPDATE);
+        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_USERINFO_UPDATE);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
     }
 
@@ -780,35 +376,459 @@ public abstract class PlaceDetailActivity extends BaseActivity
         return false;
     }
 
-    public interface OnUserActionListener
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // UserActionListener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private OnUserActionListener mOnUserActionListener = new OnUserActionListener()
     {
-        public void showActionBar();
+        @Override
+        public void showActionBar()
+        {
+            setActionBarBackgroundVisible(true);
+        }
 
-        public void hideActionBar();
+        @Override
+        public void hideActionBar()
+        {
+            setActionBarBackgroundVisible(false);
+        }
 
-        public void onClickImage(PlaceDetail placeDetail);
+        @Override
+        public void onClickImage(PlaceDetail ticketDetailDto)
+        {
+            if (isLockUiComponent() == true)
+            {
+                return;
+            }
 
-        public void onSelectedImagePosition(int position);
+            lockUiComponent();
 
-        public void doBooking(TicketInformation ticketInformation);
+            if (mOnImageActionListener != null)
+            {
+                mOnImageActionListener.stopAutoSlide();
+            }
 
-        public void doKakaotalkConsult();
+            Intent intent = new Intent(PlaceDetailActivity.this, ImageDetailListActivity.class);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURLLIST, ticketDetailDto.getImageUrlList());
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_SELECTED_POSOTION, mCurrentImage);
+            startActivity(intent);
+        }
 
-        public void showTicketInformationLayout();
+        @Override
+        public void onSelectedImagePosition(int position)
+        {
+            mCurrentImage = position;
+        }
 
-        public void hideTicketInformationLayout();
+        @Override
+        public void doBooking(TicketInformation ticketInformation)
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
 
-        public void showMap();
-    }
+            mSelectedTicketInformation = ticketInformation;
 
-    public interface OnImageActionListener
+            lockUI();
+
+            mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, PlaceDetailActivity.this));
+
+            HashMap<String, String> params = new HashMap<String, String>();
+            params.put(Label.FNB_TICKET_NAME, ticketInformation.name);
+            params.put(Label.FNB_TICKET_INDEX, String.valueOf(ticketInformation.index));
+            params.put(Label.FNB_INDEX, String.valueOf(mPlaceDetail.index));
+
+            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Label.BOOKING, Action.CLICK, mPlaceDetail.name, params);
+        }
+
+        @Override
+        public void doKakaotalkConsult()
+        {
+            if (isLockUiComponent() == true || isFinishing() == true)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            try
+            {
+                startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/@%EB%8D%B0%EC%9D%BC%EB%A6%AC%ED%98%B8%ED%85%94")));
+            } catch (ActivityNotFoundException e)
+            {
+                try
+                {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
+                } catch (ActivityNotFoundException e1)
+                {
+                    Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+                    marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
+                    startActivity(marketLaunch);
+                }
+            }
+        }
+
+        @Override
+        public void showTicketInformationLayout()
+        {
+            if (isLockUiComponent() == true || isFinishing() == true)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            if (mPlaceDetailLayout != null)
+            {
+                mPlaceDetailLayout.showAnimationTicketInformationLayout();
+            }
+
+            releaseUiComponent();
+        }
+
+        @Override
+        public void hideTicketInformationLayout()
+        {
+            if (isLockUiComponent() == true || isFinishing() == true)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            if (mPlaceDetailLayout != null)
+            {
+                mPlaceDetailLayout.hideAnimationTicketInformationLayout();
+            }
+
+            releaseUiComponent();
+        }
+
+        @Override
+        public void showMap()
+        {
+            if (isLockUiComponent() == true || isFinishing() == true)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            Intent intent = new Intent(PlaceDetailActivity.this, ZoomMapActivity.class);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, mPlaceDetail.name);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_LATITUDE, mPlaceDetail.latitude);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_LONGITUDE, mPlaceDetail.longitude);
+
+            startActivity(intent);
+
+            // 호텔 공유하기 로그 추가
+            SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay());
+            String label = String.format("%s (%s-%s)", mPlaceDetail.name, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), checkOutSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"));
+
+            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.HOTEL_DETAIL, Action.CLICK, label, (long) mPlaceDetail.index);
+        }
+    };
+
+    private OnImageActionListener mOnImageActionListener = new OnImageActionListener()
     {
-        public void startAutoSlide();
+        @Override
+        public void startAutoSlide()
+        {
+            if (Util.isOverAPI11() == false)
+            {
+                Message message = mImageHandler.obtainMessage();
+                message.what = 0;
+                message.arg1 = 1; // 오른쪽으로 이동.
+                message.arg2 = 1; // 자동
 
-        public void stopAutoSlide();
+                mImageHandler.removeMessages(0);
+                mImageHandler.sendMessageDelayed(message, DURATION_HOTEL_IMAGE_SHOW);
+            } else
+            {
+                mImageHandler.removeMessages(0);
+                mPlaceDetailLayout.startAnimationImageView();
+            }
+        }
 
-        public void nextSlide();
+        @Override
+        public void stopAutoSlide()
+        {
+            if (Util.isOverAPI11() == false)
+            {
+                mImageHandler.removeMessages(0);
+            } else
+            {
+                mImageHandler.removeMessages(0);
+                mPlaceDetailLayout.stopAnimationImageView(false);
+            }
+        }
 
-        public void prevSlide();
-    }
+        @Override
+        public void nextSlide()
+        {
+            if (Util.isOverAPI11() == true)
+            {
+                Message message = mImageHandler.obtainMessage();
+                message.what = 0;
+                message.arg1 = 1; // 오른쪽으로 이동.
+                message.arg2 = 0; // 수동
+
+                mImageHandler.removeMessages(0);
+                mImageHandler.sendMessage(message);
+            }
+        }
+
+        @Override
+        public void prevSlide()
+        {
+            if (Util.isOverAPI11() == true)
+            {
+                Message message = mImageHandler.obtainMessage();
+                message.what = 0;
+                message.arg1 = -1; // 왼쪽으로 이동.
+                message.arg2 = 0; // 수동
+
+                mImageHandler.removeMessages(0);
+                mImageHandler.sendMessage(message);
+            }
+        }
+    };
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //Listener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private DailyHotelJsonResponseListener mUserFacebookInformationJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                if (response == null)
+                {
+                    throw new NullPointerException("response == null");
+                }
+
+                int msg_code = response.getInt("msg_code");
+
+                if (msg_code == 0)
+                {
+                    JSONObject jsonObject = response.getJSONObject("data");
+
+                    Customer user = new Customer();
+                    user.setEmail(jsonObject.getString("email"));
+                    user.setName(jsonObject.getString("name"));
+                    user.setPhone(jsonObject.getString("phone"));
+                    user.setUserIdx(jsonObject.getString("idx"));
+
+                    // 추천인
+                    int recommender = jsonObject.getInt("recommender_code");
+                    boolean isFacebookUser = jsonObject.getBoolean("isFbUser");
+
+                    // 페이스북 유저
+                    if (isFacebookUser == true)
+                    {
+                        if (isEmptyTextField(new String[]{user.getEmail(), user.getPhone(), user.getName()}) == false)
+                        {
+                            processBooking(mSelectedTicketInformation, mCheckInSaleTime);
+                        } else
+                        {
+                            // 정보 업데이트 화면으로 이동.
+                            moveToUserInfoUpdate(user, recommender);
+                        }
+                    } else
+                    {
+                        processBooking(mSelectedTicketInformation, mCheckInSaleTime);
+                    }
+                } else
+                {
+                    unLockUI();
+
+                    String msg = response.getString("msg");
+
+                    DailyToast.showToast(PlaceDetailActivity.this, msg, Toast.LENGTH_SHORT);
+                }
+            } catch (Exception e)
+            {
+                onError(e);
+            }
+        }
+    };
+    private DailyHotelStringResponseListener mUserAliveStringResponseListener = new DailyHotelStringResponseListener()
+    {
+
+        @Override
+        public void onResponse(String url, String response)
+        {
+
+            unLockUI();
+
+            String result = null;
+
+            if (Util.isTextEmpty(response) == false)
+            {
+                result = response.trim();
+            }
+
+            if ("alive".equalsIgnoreCase(result) == true)
+            {
+                // session alive
+                // 사용자 정보 요청.
+                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION_OMISSION).toString(), null, mUserFacebookInformationJsonResponseListener, PlaceDetailActivity.this));
+
+            } else if ("dead".equalsIgnoreCase(result) == true)
+            {
+                // session dead
+                // 재로그인
+                if (sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false))
+                {
+                    String id = sharedPreference.getString(KEY_PREFERENCE_USER_ID, null);
+                    String accessToken = sharedPreference.getString(KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
+                    String pw = sharedPreference.getString(KEY_PREFERENCE_USER_PWD, null);
+
+                    Map<String, String> loginParams = new HashMap<String, String>();
+
+                    if (accessToken != null)
+                    {
+                        loginParams.put("accessToken", accessToken);
+                    } else
+                    {
+                        loginParams.put("email", id);
+                    }
+
+                    loginParams.put("pw", pw);
+
+                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(), loginParams, mUserLoginJsonResponseListener, PlaceDetailActivity.this));
+                } else
+                {
+                    loadLoginProcess();
+                }
+
+            } else
+            {
+                onError();
+            }
+        }
+    };
+
+    private DailyHotelJsonResponseListener mUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+
+            try
+            {
+                if (response == null)
+                {
+                    throw new NullPointerException("response == null");
+                }
+
+                if (response.getString("login").equals("true") == false)
+                {
+                    // 로그인 실패
+                    // data 초기화
+                    SharedPreferences.Editor ed = sharedPreference.edit();
+                    ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
+                    ed.putString(KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
+                    ed.putString(KEY_PREFERENCE_USER_ID, null);
+                    ed.putString(KEY_PREFERENCE_USER_PWD, null);
+                    ed.commit();
+
+                    unLockUI();
+                    loadLoginProcess();
+
+                } else
+                {
+                    //로그인 성공
+                    VolleyHttpClient.createCookie();
+
+                    mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, PlaceDetailActivity.this));
+                }
+            } catch (JSONException e)
+            {
+                onError(e);
+                unLockUI();
+            }
+        }
+    };
+    private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            if (isFinishing() == true)
+            {
+                return;
+            }
+
+            try
+            {
+                if (response == null)
+                {
+                    throw new NullPointerException("response == null");
+                }
+
+                if (mIsStartByShare == true)
+                {
+                    mCheckInSaleTime.setCurrentTime(response.getLong("currentDateTime"));
+                    mCheckInSaleTime.setOpenTime(response.getLong("openDateTime"));
+                    mCheckInSaleTime.setCloseTime(response.getLong("closeDateTime"));
+
+                    long shareDailyTime = mCheckInSaleTime.getDayOfDaysHotelDate().getTime();
+                    long todayDailyTime = response.getLong("dailyDateTime");
+
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
+                    simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+                    int shareDailyDay = Integer.parseInt(simpleDateFormat.format(new Date(shareDailyTime)));
+                    int todayDailyDay = Integer.parseInt(simpleDateFormat.format(new Date(todayDailyTime)));
+
+                    // 지난 날의 호텔인 경우.
+                    if (shareDailyDay < todayDailyDay)
+                    {
+                        DailyToast.showToast(PlaceDetailActivity.this, R.string.toast_msg_dont_past_hotelinfo, Toast.LENGTH_LONG);
+                        finish();
+                        return;
+                    }
+
+                    if (mCheckInSaleTime.isSaleTime() == true)
+                    {
+                        requestPlaceDetailInformation(mPlaceDetail, mCheckInSaleTime);
+                    } else
+                    {
+                        finish();
+                    }
+                } else
+                {
+                    SaleTime saleTime = new SaleTime();
+
+                    saleTime.setCurrentTime(response.getLong("currentDateTime"));
+                    saleTime.setOpenTime(response.getLong("openDateTime"));
+                    saleTime.setCloseTime(response.getLong("closeDateTime"));
+                    saleTime.setDailyTime(response.getLong("dailyDateTime"));
+
+                    if (saleTime.isSaleTime() == true)
+                    {
+                        requestPlaceDetailInformation(mPlaceDetail, mCheckInSaleTime);
+                    } else
+                    {
+                        finish();
+                    }
+                }
+            } catch (Exception e)
+            {
+                onError(e);
+                unLockUI();
+
+                finish();
+            }
+        }
+    };
 }

@@ -11,6 +11,7 @@ public abstract class PlaceDetail
     public String name;
     public String address;
     public String benefit;
+    public String satisfaction;
     public double latitude;
     public double longitude;
     protected ArrayList<String> mImageUrlList;

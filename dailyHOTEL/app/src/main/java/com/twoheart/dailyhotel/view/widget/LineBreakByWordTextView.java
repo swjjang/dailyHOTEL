@@ -8,7 +8,7 @@ import android.util.AttributeSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LineBreakByWordTextView extends DailyCustomFontTextView
+public class LineBreakByWordTextView extends DailyTextView
 {
     private int mAvailableWidth = 0;
     private Paint mPaint;

@@ -17,7 +17,7 @@
         android:orientation="horizontal"
         android:paddingLeft="15dp">
 
-        <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+        <com.twoheart.dailyhotel.view.widget.DailyTextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
@@ -41,7 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+            <com.twoheart.dailyhotel.view.widget.DailyTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
@@ -49,7 +49,7 @@
                 android:textColor="@drawable/selector_textview_textcolor"
                 android:textSize="15dp"/>
 
-            <com.twoheart.dailyhotel.view.widget.DailyCustomFontTextView
+            <com.twoheart.dailyhotel.view.widget.DailyTextView
                 android:id="@+id/ticketPaymentTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -96,7 +96,7 @@
             android:layout_toLeftOf="@id/cardManagerButton"
             android:orientation="vertical">
 
-            <com.twoheart.dailyhotel.view.widget.DailyCustomFontRadioButton
+            <com.twoheart.dailyhotel.view.widget.DailyRadioButton
                 android:id="@+id/easyPaymentRadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
@@ -106,7 +106,7 @@
                 android:textColor="@color/textView_textColor_main"
                 android:textSize="15dp"/>
 
-            <com.twoheart.dailyhotel.view.widget.DailyCustomFontRadioButton
+            <com.twoheart.dailyhotel.view.widget.DailyRadioButton
                 android:id="@+id/cardPaymentRadionButton"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
@@ -116,7 +116,7 @@
                 android:textColor="@color/textView_textColor_main"
                 android:textSize="15dp"/>
 
-            <com.twoheart.dailyhotel.view.widget.DailyCustomFontRadioButton
+            <com.twoheart.dailyhotel.view.widget.DailyRadioButton
                 android:id="@+id/hpPaymentRadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
@@ -126,7 +126,7 @@
                 android:textColor="@color/textView_textColor_main"
                 android:textSize="15dp"/>
 
-            <com.twoheart.dailyhotel.view.widget.DailyCustomFontRadioButton
+            <com.twoheart.dailyhotel.view.widget.DailyRadioButton
                 android:id="@+id/accountPaymentRadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"

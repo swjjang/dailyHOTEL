@@ -137,4 +137,8 @@
     <color name="empty_background_hotel">#313541</color>
     <color name="empty_background_event">#727D81</color>
     <color name="empty_background_bookings">#27549c</color>
+
+
+    <!-- -->
+    <color name="satisfaction_box_default">#c5c5c5</color>
 </resources>	

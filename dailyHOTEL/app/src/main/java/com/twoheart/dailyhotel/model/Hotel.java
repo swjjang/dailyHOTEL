@@ -3,30 +3,16 @@ package com.twoheart.dailyhotel.model;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.text.TextUtils;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Hotel implements Parcelable
 {
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
-    {
-        public Hotel createFromParcel(Parcel in)
-        {
-            return new Hotel(in);
-        }
-
-        @Override
-        public Hotel[] newArray(int size)
-        {
-            return new Hotel[size];
-        }
-
-    };
     public int averageDiscount;
     public double mLatitude;
     public double mLongitude;
@@ -44,8 +30,7 @@ public class Hotel implements Parcelable
     private int sequence;
     private String bedType;
     private String detailRegion;
-
-    ;
+    public int satisfaction;
 
     public Hotel()
     {
@@ -75,6 +60,7 @@ public class Hotel implements Parcelable
         dest.writeInt(isDailyChoice ? 1 : 0);
         dest.writeInt(saleIndex);
         dest.writeInt(isDBenefit ? 1 : 0);
+        dest.writeInt(satisfaction);
     }
 
     private void readFromParcel(Parcel in)
@@ -94,6 +80,7 @@ public class Hotel implements Parcelable
         isDailyChoice = in.readInt() == 1 ? true : false;
         saleIndex = in.readInt();
         isDBenefit = in.readInt() == 1 ? true : false;
+        satisfaction = in.readInt();
     }
 
     public HotelGrade getCategory()
@@ -204,15 +191,6 @@ public class Hotel implements Parcelable
 
     public boolean setHotel(JSONObject jsonObject)
     {
-        //	      "address": "제주특별자치도 제주시 중앙로 151",
-        //	      "region_province_idx": 45,
-        //	      "discount_total": 101600, (연박일 내 모든 객실의 총 판매가)
-        //	      "discount_avg": 98000, (연박일 내 모든 객실의 총 판매가의 평균)
-        //	      "district_seq": 2,
-        //	      "imgDir": "jejukal",
-        //	      "province_seq": 8,
-        //	      "region_district_idx": 901,
-
         try
         {
             name = jsonObject.getString("name");
@@ -258,7 +236,7 @@ public class Hotel implements Parcelable
             {
                 String dBenefit = jsonObject.getString("hotel_benefit");
 
-                if (TextUtils.isEmpty(dBenefit) == true || "null".equalsIgnoreCase(dBenefit) == true)
+                if (Util.isTextEmpty(dBenefit) == true || "null".equalsIgnoreCase(dBenefit) == true)
                 {
                     isDBenefit = false;
                 } else
@@ -270,6 +248,11 @@ public class Hotel implements Parcelable
             if (jsonObject.has("nights") == true)
             {
                 nights = jsonObject.getInt("nights");
+            }
+
+            if (jsonObject.has("rating_value") == true)
+            {
+                satisfaction = jsonObject.getInt("rating_value");
             }
         } catch (JSONException e)
         {
@@ -324,4 +307,19 @@ public class Hotel implements Parcelable
             return mMarkerResId;
         }
     }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+    {
+        public Hotel createFromParcel(Parcel in)
+        {
+            return new Hotel(in);
+        }
+
+        @Override
+        public Hotel[] newArray(int size)
+        {
+            return new Hotel[size];
+        }
+
+    };
 }
