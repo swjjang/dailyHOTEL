@@ -627,7 +627,7 @@ public class HotelDetailActivity extends BaseActivity
         @Override
         public void doBooking(SaleRoomInformation saleRoomInformation)
         {
-            if (isLockUiComponent(true) == true)
+            if (lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;
             }

@@ -314,7 +314,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
         if (v.getId() == btnPay.getId())
         {
-            if (isLockUiComponent(true) == true)
+            if (lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;
             }
@@ -442,7 +442,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             }
         } else if (v.getId() == mCardManagerButton.getId())
         {
-            if (isLockUiComponent(true) == true)
+            if (lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;
             }
@@ -1007,7 +1007,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                     return super.onOptionsItemSelected(item);
                 }
 
-                if (isLockUiComponent(true) == true)
+                if (lockUiComponentAndIsLockUiComponent() == true)
                 {
                     return super.onOptionsItemSelected(item);
                 }
@@ -1460,7 +1460,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 return;
             }
 
-            if (isLockUiComponent(true) == true)
+            if (lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;
             }

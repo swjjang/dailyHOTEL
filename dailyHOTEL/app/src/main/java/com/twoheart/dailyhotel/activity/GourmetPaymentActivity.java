@@ -602,7 +602,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
         @Override
         public void showCreditCardManager()
         {
-            if (isLockUiComponent(true) == true)
+            if (lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;
             }
@@ -631,7 +631,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
         @Override
         public void pay()
         {
-            if (isLockUiComponent(true) == true)
+            if (lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;
             }

@@ -457,7 +457,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
                     return super.onOptionsItemSelected(item);
                 }
 
-                if (isLockUiComponent(true) == true)
+                if (lockUiComponentAndIsLockUiComponent() == true)
                 {
                     return super.onOptionsItemSelected(item);
                 }
@@ -808,7 +808,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
                 return;
             }
 
-            if (isLockUiComponent(true) == true)
+            if (lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;
             }

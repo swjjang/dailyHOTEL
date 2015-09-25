@@ -547,7 +547,7 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
         }
     }
 
-    public boolean isLockUiComponent(boolean lock)
+    public boolean lockUiComponentAndIsLockUiComponent()
     {
         synchronized (this)
         {
