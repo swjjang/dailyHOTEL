@@ -83,8 +83,6 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
     {
         super.onCreate(savedInstanceState);
 
-        System.gc();
-
         mTicketPayment = new TicketPayment();
         mGourmetBookingLayout = new GourmetBookingLayout(this, mOnUserActionListener);
 

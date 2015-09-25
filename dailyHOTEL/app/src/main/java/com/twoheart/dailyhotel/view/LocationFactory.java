@@ -121,17 +121,11 @@ public class LocationFactory
     {
     }
 
-    public static LocationFactory getInstance(BaseActivity activity)
+    public synchronized static LocationFactory getInstance(BaseActivity activity)
     {
         if (mInstance == null)
         {
-            synchronized (LocationFactory.class)
-            {
-                if (mInstance == null)
-                {
-                    mInstance = new LocationFactory();
-                }
-            }
+            mInstance = new LocationFactory();
         }
 
         mInstance.mBaseActivity = activity;

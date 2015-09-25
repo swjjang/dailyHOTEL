@@ -428,7 +428,7 @@ public abstract class PlaceDetailLayout
             //			float offset = rect.top - mStatusBarHeight - Util.dpToPx(mActivity, 56) - max;
             //			float alphaFactor = offset / max;
 
-            float max = (mImageHeight - Util.dpToPx(mActivity, 56)) / 2;
+            float max = ((float) mImageHeight - Util.dpToPx(mActivity, 56)) / 2;
             float offset = rect.top - mStatusBarHeight - Util.dpToPx(mActivity, 56);
             float alphaFactor = offset / max;
 
@@ -473,7 +473,7 @@ public abstract class PlaceDetailLayout
 
             if (firstRect != null)
             {
-                float gradeMax = (mImageHeight - Util.dpToPx(mActivity, 56)) / 3;
+                float gradeMax = ((float) mImageHeight - Util.dpToPx(mActivity, 56)) / 3;
                 float gradeOffset = rect.top - mStatusBarHeight - Util.dpToPx(mActivity, 56);
                 float xFactor = gradeOffset / gradeMax;
                 float nameMax = firstRect.left - Util.dpToPx(mActivity, 55);

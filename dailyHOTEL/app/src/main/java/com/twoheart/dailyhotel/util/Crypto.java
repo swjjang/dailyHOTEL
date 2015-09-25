@@ -76,7 +76,7 @@ public class Crypto
         byte[] result = encrypt(rawKey, text.getBytes());
         String fromHex = toHex(result);
 
-        return new String(Base64.encodeToString(fromHex.getBytes(), Base64.NO_WRAP));
+        return Base64.encodeToString(fromHex.getBytes(), Base64.NO_WRAP);
     }
 
     public static String decrypt(String seed, String encrypted) throws Exception

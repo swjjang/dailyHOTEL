@@ -127,17 +127,11 @@ public class VolleyHttpClient implements Constants
         }
     }
 
-    public static void cookieManagerCreate()
+    public synchronized static void cookieManagerCreate()
     {
         if (mCookieSyncManager == null)
         {
-            synchronized (VolleyHttpClient.class)
-            {
-                if (mCookieSyncManager == null)
-                {
-                    mCookieSyncManager = CookieSyncManager.createInstance(sContext);
-                }
-            }
+            mCookieSyncManager = CookieSyncManager.createInstance(sContext);
         }
     }
 

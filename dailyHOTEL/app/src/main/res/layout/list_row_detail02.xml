@@ -57,5 +57,5 @@
         android:gravity="center_vertical"
         android:textColor="@color/black"
         android:textSize="13dp"
-        android:visibility="visible"/>
+        android:visibility="gone"/>
 </LinearLayout>

@@ -250,7 +250,7 @@ public class Hotel implements Parcelable
                 nights = jsonObject.getInt("nights");
             }
 
-            if(jsonObject.has("rating_value") == true)
+            if (jsonObject.has("rating_value") == true)
             {
                 satisfaction = jsonObject.getInt("rating_value");
             }

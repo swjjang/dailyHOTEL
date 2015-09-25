@@ -41,7 +41,7 @@ public class HotelDetailEx
 
         isOverseas = jsonObject.getBoolean("is_overseas");
 
-        if(jsonObject.has("rating") == true)
+        if (jsonObject.has("rating") == true)
         {
             satisfaction = jsonObject.getString("rating");
         }

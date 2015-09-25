@@ -133,8 +133,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
     {
         super.onCreate(savedInstanceState);
 
-        System.gc();
-
         setContentView(R.layout.activity_booking);
 
         mPay = new Pay();

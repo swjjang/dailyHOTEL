@@ -512,7 +512,7 @@ public abstract class PlaceMapFragment extends com.google.android.gms.maps.Suppo
         }
 
         mGoogleMap.clear();
-        mSelectedMarker = mSelectedMarker = mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).visible(false).anchor(0.0f, 1.0f));
+        mSelectedMarker = mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).visible(false).anchor(0.0f, 1.0f));
 
         if (mPlaceViewItemList == null || mPlaceViewItemList.size() == 0)
         {

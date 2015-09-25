@@ -437,11 +437,15 @@ public class GourmetDetailLayout extends PlaceDetailLayout
                 });
             }
 
+            TextView satisfactionView = (TextView) view.findViewById(R.id.satisfactionView);
+
             // 만족도
-            // 만족도
-            if(Util.isTextEmpty(placeDetail.satisfaction) == false)
+            if (Util.isTextEmpty(placeDetail.satisfaction) == true)
             {
-                TextView satisfactionView = (TextView) view.findViewById(R.id.satisfactionView);
+                satisfactionView.setVisibility(View.GONE);
+            } else
+            {
+                satisfactionView.setVisibility(View.VISIBLE);
                 satisfactionView.setText(placeDetail.satisfaction);
             }
 

@@ -361,7 +361,7 @@ public class HotelDetailLayout
             //			float offset = rect.top - mStatusBarHeight - Util.dpToPx(mActivity, 56) - max;
             //			float alphaFactor = offset / max;
 
-            float max = (mImageHeight - Util.dpToPx(mActivity, 56)) / 2;
+            float max = ((float) mImageHeight - Util.dpToPx(mActivity, 56)) / 2;
             float offset = rect.top - mStatusBarHeight - Util.dpToPx(mActivity, 56);
             float alphaFactor = offset / max;
 
@@ -406,7 +406,7 @@ public class HotelDetailLayout
 
             if (firstRect != null)
             {
-                float gradeMax = (mImageHeight - Util.dpToPx(mActivity, 56)) / 3;
+                float gradeMax = ((float) mImageHeight - Util.dpToPx(mActivity, 56)) / 3;
                 float gradeOffset = rect.top - mStatusBarHeight - Util.dpToPx(mActivity, 56);
                 float xFactor = gradeOffset / gradeMax;
                 float nameMax = firstRect.left - Util.dpToPx(mActivity, 55);
@@ -1800,10 +1800,15 @@ public class HotelDetailLayout
                 });
             }
 
+            TextView satisfactionView = (TextView) view.findViewById(R.id.satisfactionView);
+
             // 만족도
-            if(Util.isTextEmpty(hotelDetail.satisfaction) == false)
+            if (Util.isTextEmpty(hotelDetail.satisfaction) == true)
             {
-                TextView satisfactionView = (TextView) view.findViewById(R.id.satisfactionView);
+                satisfactionView.setVisibility(View.GONE);
+            } else
+            {
+                satisfactionView.setVisibility(View.VISIBLE);
                 satisfactionView.setText(hotelDetail.satisfaction);
             }
 

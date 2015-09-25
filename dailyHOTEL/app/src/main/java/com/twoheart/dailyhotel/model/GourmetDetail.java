@@ -22,7 +22,7 @@ public class GourmetDetail extends PlaceDetail
         longitude = jsonObject.getDouble("longitude");
         latitude = jsonObject.getDouble("latitude");
 
-        if(jsonObject.has("rating") == true)
+        if (jsonObject.has("rating") == true)
         {
             satisfaction = jsonObject.getString("rating");
         }
