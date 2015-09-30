@@ -48,7 +48,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.HotelDetailActivity;
-import com.twoheart.dailyhotel.adapter.HotelDetailImageViewPagerAdapter;
+import com.twoheart.dailyhotel.adapter.DetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.model.DetailInformation;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.HotelDetailEx;
@@ -86,7 +86,7 @@ public class HotelDetailLayout
     private TextView mHotelNameTextView;
     private TextView mActionBarTextView;
     private HotelDetailListView mListView;
-    private HotelDetailImageViewPagerAdapter mImageAdapter;
+    private DetailImageViewPagerAdapter mImageAdapter;
     private HotelDetailListAdapter mListAdapter;
     private SaleRoomInformation mSelectedSaleRoomInformation;
 
@@ -619,7 +619,7 @@ public class HotelDetailLayout
         {
             if (mImageAdapter == null)
             {
-                mImageAdapter = new HotelDetailImageViewPagerAdapter(mActivity);
+                mImageAdapter = new DetailImageViewPagerAdapter(mActivity);
             }
 
             ArrayList<String> arrayList = new ArrayList<String>();
@@ -694,7 +694,7 @@ public class HotelDetailLayout
 
         if (mImageAdapter == null)
         {
-            mImageAdapter = new HotelDetailImageViewPagerAdapter(mActivity);
+            mImageAdapter = new DetailImageViewPagerAdapter(mActivity);
         }
 
         mImageAdapter.setOnAnimationListener(mOnUserActionListener);

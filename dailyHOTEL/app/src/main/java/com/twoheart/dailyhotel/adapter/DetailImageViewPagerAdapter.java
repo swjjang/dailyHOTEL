@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
@@ -10,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.twoheart.dailyhotel.activity.HotelDetailActivity;
@@ -21,7 +21,7 @@ import com.twoheart.dailyhotel.view.AnimationImageView;
 
 import java.util.List;
 
-public class HotelDetailImageViewPagerAdapter extends PagerAdapter
+public class DetailImageViewPagerAdapter extends PagerAdapter
 {
     private Context mContext;
     private List<String> mImageUrlList;
@@ -30,7 +30,7 @@ public class HotelDetailImageViewPagerAdapter extends PagerAdapter
     private HotelDetailActivity.OnUserActionListener mOnUserActionListener;
     private PlaceDetailActivity.OnImageActionListener mOnImageActionListener;
 
-    public HotelDetailImageViewPagerAdapter(Context context)
+    public DetailImageViewPagerAdapter(Context context)
     {
         mContext = context;
     }
@@ -81,34 +81,34 @@ public class HotelDetailImageViewPagerAdapter extends PagerAdapter
         {
             if (Util.getLCDWidth(mContext) < 720)
             {
-                Glide.with(mContext).load(url).override(360, 240).listener(new RequestListener<String, GlideDrawable>()
+                Glide.with(mContext).load(url).asBitmap().override(360, 240).listener(new RequestListener<String, Bitmap>()
                 {
                     @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource)
+                    public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource)
                     {
                         imageView.setImageBitmap(null);
                         return false;
                     }
 
                     @Override
-                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource)
+                    public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource)
                     {
                         return false;
                     }
                 }).into(imageView);
             } else
             {
-                Glide.with(mContext).load(url).listener(new RequestListener<String, GlideDrawable>()
+                Glide.with(mContext).load(url).asBitmap().listener(new RequestListener<String, Bitmap>()
                 {
                     @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource)
+                    public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource)
                     {
                         imageView.setImageBitmap(null);
                         return false;
                     }
 
                     @Override
-                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource)
+                    public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource)
                     {
                         return false;
                     }

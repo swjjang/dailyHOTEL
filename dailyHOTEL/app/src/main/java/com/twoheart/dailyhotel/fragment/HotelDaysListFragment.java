@@ -196,8 +196,6 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
         initCheckInDateLayout(mSaleTime);
     }
 
-    ;
-
     public void initSelectedCheckInOutDate(SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
     {
         mSelectedCheckInSaleTime = checkInSaleTime;

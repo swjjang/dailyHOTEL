@@ -26,7 +26,7 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.PlaceDetailActivity;
-import com.twoheart.dailyhotel.adapter.HotelDetailImageViewPagerAdapter;
+import com.twoheart.dailyhotel.adapter.DetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.util.Util;
@@ -54,7 +54,7 @@ public abstract class PlaceDetailLayout
     protected TextView mActionBarTextView;
 
     protected HotelDetailListView mListView;
-    protected HotelDetailImageViewPagerAdapter mImageAdapter;
+    protected DetailImageViewPagerAdapter mImageAdapter;
 
     protected TicketInformation mSelectedTicketInformation;
     protected int mImageHeight;
@@ -552,7 +552,7 @@ public abstract class PlaceDetailLayout
         {
             if (mImageAdapter == null)
             {
-                mImageAdapter = new HotelDetailImageViewPagerAdapter(mActivity);
+                mImageAdapter = new DetailImageViewPagerAdapter(mActivity);
             }
 
             ArrayList<String> arrayList = new ArrayList<String>();

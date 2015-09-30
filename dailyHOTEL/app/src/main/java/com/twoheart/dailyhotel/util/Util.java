@@ -369,7 +369,6 @@ public class Util implements Constants
                                 activity.startActivity(intent);
                             } catch (ActivityNotFoundException e)
                             {
-                                // Ok that didn't work, try the market method.
                                 try
                                 {
                                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.google.android.gms"));
@@ -378,8 +377,6 @@ public class Util implements Constants
                                     activity.startActivity(intent);
                                 } catch (ActivityNotFoundException f)
                                 {
-                                    // Ok, weird. Maybe they don't have any market app. Just show the website.
-
                                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.gms"));
                                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
                                     activity.startActivity(intent);

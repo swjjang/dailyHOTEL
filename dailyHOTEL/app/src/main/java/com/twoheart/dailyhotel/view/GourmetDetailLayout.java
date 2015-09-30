@@ -30,7 +30,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
-import com.twoheart.dailyhotel.adapter.HotelDetailImageViewPagerAdapter;
+import com.twoheart.dailyhotel.adapter.DetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.model.DetailInformation;
 import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.TicketInformation;
@@ -96,7 +96,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
 
         if (mImageAdapter == null)
         {
-            mImageAdapter = new HotelDetailImageViewPagerAdapter(mActivity);
+            mImageAdapter = new DetailImageViewPagerAdapter(mActivity);
         }
 
         mImageAdapter.setOnImageActionListener(mOnImageActionListener);
