@@ -1,14 +1,9 @@
 package com.twoheart.dailyhotel.fragment;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.twoheart.dailyhotel.R;
 
 public class IntroGuideFragment extends BaseFragment
 {
@@ -54,23 +49,23 @@ public class IntroGuideFragment extends BaseFragment
 
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
-        View view = inflater.inflate(R.layout.fragment_intro_guide, container, false);
-
-        llIntroGuide = (LinearLayout) view.findViewById(R.id.ll_intro_guide);
-        tvTitle = (TextView) view.findViewById(R.id.tv_guide_title);
-        tvDesc = (TextView) view.findViewById(R.id.tv_guide_desc);
-        ivImage = (ImageView) view.findViewById(R.id.iv_guide_icon);
-
-        llIntroGuide.setBackgroundResource(mBackground);
-
-        tvTitle.setText(mTitle);
-        tvDesc.setText(mDesc);
-        ivImage.setImageResource(mImage);
-
-        return view;
-    }
+    //    @Override
+    //    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    //    {
+    //        View view = inflater.inflate(R.layout.fragment_intro_guide, container, false);
+    //
+    //        llIntroGuide = (LinearLayout) view.findViewById(R.id.ll_intro_guide);
+    //        tvTitle = (TextView) view.findViewById(R.id.tv_guide_title);
+    //        tvDesc = (TextView) view.findViewById(R.id.tv_guide_desc);
+    //        ivImage = (ImageView) view.findViewById(R.id.iv_guide_icon);
+    //
+    //        llIntroGuide.setBackgroundResource(mBackground);
+    //
+    //        tvTitle.setText(mTitle);
+    //        tvDesc.setText(mDesc);
+    //        ivImage.setImageResource(mImage);
+    //
+    //        return view;
+    //    }
 
 }

@@ -24,12 +24,12 @@ public class VersionActivity extends BaseActivity implements OnClickListener
     {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_version);
-        setActionBar(R.string.actionbar_title_version_activity);
-
-        tvCurrentVersion = (TextView) findViewById(R.id.tv_version_cur);
-        tvNewVersion = (TextView) findViewById(R.id.tv_version_new);
-        btnUpdate = (TextView) findViewById(R.id.btn_version_update);
+        //        setContentView(R.layout.activity_version);
+        //        setActionBar(R.string.actionbar_title_version_activity);
+        //
+        //        tvCurrentVersion = (TextView) findViewById(R.id.tv_version_cur);
+        //        tvNewVersion = (TextView) findViewById(R.id.tv_version_new);
+        //        btnUpdate = (TextView) findViewById(R.id.btn_version_update);
         //		btnUpdate.setOnClickListener(this);
 
         getVersionInfo();

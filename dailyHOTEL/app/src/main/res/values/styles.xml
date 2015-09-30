@@ -47,20 +47,12 @@
     </style>
 
     <style name="ProgressBarDH_Theme" parent="android:Widget.ProgressBar.Horizontal">
-        <item name="android:progressDrawable">@drawable/progress_horizontal_holo_light</item>
-        <item name="android:indeterminateDrawable">
-            @drawable/progress_indeterminate_horizontal_holo_light
-        </item>
         <item name="android:minHeight">16dip</item>
         <item name="android:maxHeight">16dip</item>
     </style>
 
     <style name="ListViewDH_Theme" parent="android:Widget.ListView">
         <item name="android:listSelector">@android:color/transparent</item>
-    </style>
-
-    <style name="DropDownDH_Theme.ActionBar" parent="@style/Widget.AppCompat.Light.ListView.DropDown">
-        <item name="android:listSelector">@drawable/selectable_background</item>
     </style>
 
     <style name="ListViewDH_Theme.White" parent="android:Widget.ListView.White">

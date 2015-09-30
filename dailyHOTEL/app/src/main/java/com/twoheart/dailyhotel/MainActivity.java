@@ -128,6 +128,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
         //        com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
 
         //		ExLog.d("android.permission.GET_TASKS : "+ ContextCompat.checkSelfPermission(this, "android.permission.GET_TASKS"));
@@ -1155,7 +1156,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
             {
                 case DrawerMenu.DRAWER_MENU_LIST_TYPE_LOGO:
                 {
-                    convertView = inflater.inflate(R.layout.list_row_drawer_logo, null);
+                    //                    convertView = inflater.inflate(R.layout.list_row_drawer_logo, null);
                     break;
                 }
 

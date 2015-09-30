@@ -137,10 +137,10 @@ public class IntroActivity extends BaseActivity implements OnClickListener, OnPa
         mGuideDesces.add(getString(R.string.guide_desc_3));
         mGuideDesces.add(getString(R.string.guide_desc_4));
 
-        mGuideImages.add(R.drawable.img_ic_guide_logo);
-        mGuideImages.add(R.drawable.img_ic_guide_curation);
-        mGuideImages.add(R.drawable.img_ic_guide_clock);
-        mGuideImages.add(R.drawable.img_ic_guide_surprise);
+        //        mGuideImages.add(R.drawable.img_ic_guide_logo);
+        //        mGuideImages.add(R.drawable.img_ic_guide_curation);
+        //        mGuideImages.add(R.drawable.img_ic_guide_clock);
+        //        mGuideImages.add(R.drawable.img_ic_guide_surprise);
 
     }
 
