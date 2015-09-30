@@ -1,11 +1,11 @@
 package com.twoheart.dailyhotel.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Shader;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PaintDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
@@ -16,13 +16,14 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.androidquery.AQuery;
-import com.androidquery.callback.AjaxStatus;
-import com.androidquery.callback.BitmapAjaxCallback;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
+import com.twoheart.dailyhotel.util.DrawableLruCache;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.VolleyImageLoader;
 
 import java.text.DecimalFormat;
 
@@ -37,7 +38,7 @@ public class GourmetViewPagerAdapter extends PlaceViewPagerAdapter
     protected void makeLayout(View view, final Place place)
     {
         RelativeLayout llHotelRowContent = (RelativeLayout) view.findViewById(R.id.ll_hotel_row_content);
-        final ImageView img = (ImageView) view.findViewById(R.id.iv_hotel_row_img);
+        final ImageView hotelImageView = (ImageView) view.findViewById(R.id.iv_hotel_row_img);
         TextView name = (TextView) view.findViewById(R.id.tv_hotel_row_name);
         TextView priceTextView = (TextView) view.findViewById(R.id.tv_hotel_row_price);
         TextView satisfactionView = (TextView) view.findViewById(R.id.satisfactionView);
@@ -115,34 +116,48 @@ public class GourmetViewPagerAdapter extends PlaceViewPagerAdapter
         grade.setText(place.grade.getName(mContext));
         grade.setBackgroundResource(place.grade.getColorResId());
 
-        // Used AQuery
-        AQuery aquery = new AQuery(view);
-        Bitmap cachedImg = VolleyImageLoader.getCache(place.imageUrl);
+        Drawable drawable = DrawableLruCache.getInstance().get(place.imageUrl);
 
-        if (cachedImg == null)
-        { // 힛인 밸류가 없다면 이미지를 불러온 후 캐시에 세이브
-            BitmapAjaxCallback bitmapAjaxCallback = new BitmapAjaxCallback()
-            {
-                @Override
-                protected void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status)
-                {
-                    VolleyImageLoader.putCache(url, bm);
-                    super.callback(url, iv, bm, status);
-                }
-            };
-
-            if (Util.getLCDWidth(mContext) < 720)
-            {
-                bitmapAjaxCallback.url(place.imageUrl).animation(AQuery.FADE_IN);
-                aquery.id(img).image(place.imageUrl, false, false, 240, 0, bitmapAjaxCallback);
-            } else
-            {
-                bitmapAjaxCallback.url(place.imageUrl).animation(AQuery.FADE_IN);
-                aquery.id(img).image(bitmapAjaxCallback);
-            }
+        if (drawable != null)
+        {
+            hotelImageView.setImageDrawable(drawable);
         } else
         {
-            aquery.id(img).image(cachedImg);
+            if (Util.getLCDWidth(mContext) < 720)
+            {
+                Glide.with(mContext).load(place.imageUrl).crossFade().override(360, 240).listener(new RequestListener<String, GlideDrawable>()
+                {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource)
+                    {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource)
+                    {
+                        DrawableLruCache.getInstance().put(model, resource);
+                        return false;
+                    }
+                }).into(hotelImageView);
+            } else
+            {
+                Glide.with(mContext).load(place.imageUrl).crossFade().listener(new RequestListener<String, GlideDrawable>()
+                {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource)
+                    {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource)
+                    {
+                        DrawableLruCache.getInstance().put(model, resource);
+                        return false;
+                    }
+                }).into(hotelImageView);
+            }
         }
 
         // SOLD OUT 표시

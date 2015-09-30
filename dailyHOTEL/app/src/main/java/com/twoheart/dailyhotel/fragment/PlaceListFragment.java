@@ -23,7 +23,6 @@ import android.content.Intent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.FrameLayout;
 
@@ -55,7 +54,7 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
     protected VIEW_TYPE mViewType;
     protected PlaceMainFragment.OnUserActionListener mOnUserActionListener;
     protected ActionbarViewHolder mActionbarViewHolder;
-    private SaleTime mSaleTime;
+    protected SaleTime mSaleTime;
     private Province mSelectedProvince;
     private PlaceMapFragment mPlaceMapFragment;
     private float mOldY;
@@ -102,30 +101,6 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
         if (mPlaceMapFragment != null)
         {
             mPlaceMapFragment.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parentView, View childView, int position, long id)
-    {
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        if (baseActivity == null)
-        {
-            return;
-        }
-
-        position -= mListView.getHeaderViewsCount();
-
-        if (position < 0)
-        {
-            return;
-        }
-
-        if (mOnUserActionListener != null)
-        {
-            PlaceViewItem placeViewItem = getPlaceViewItem(position);
-            mOnUserActionListener.selectPlace(placeViewItem, mSaleTime);
         }
     }
 

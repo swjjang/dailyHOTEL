@@ -336,6 +336,14 @@
         <meta-data
             android:name="io.branch.sdk.BranchKey"
             android:value="key_live_lnoTvqmfh68gyZJ1Wp7PhgplrzbYXPnt"/>
+
+        <meta-data
+            android:name="com.bumptech.glide.integration.okhttp.OkHttpGlideModule"
+            android:value="GlideModule" />
+
+        <meta-data
+            android:name="com.twoheart.dailyhotel.util.DailyGlideModule"
+            android:value="GlideModule" />
     </application>
 
 </manifest>

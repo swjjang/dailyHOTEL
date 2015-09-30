@@ -7,6 +7,7 @@ import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
 import android.widget.ImageView;
@@ -209,6 +210,37 @@ public class AnimationImageView extends ImageView
 
         mScaledWidth = (int) (mScale * bm.getWidth());
         mScaledHeight = (int) (mScale * bm.getHeight());
+
+        mTranslateDistance = 0;
+
+        initAnimation(mIsRightAnimation);
+
+        if (mReservationAnimation == true)
+        {
+            mReservationAnimation = false;
+
+            startAnimation();
+        }
+    }
+
+    @Override
+    public void setImageDrawable(Drawable drawable)
+    {
+        super.setImageDrawable(drawable);
+
+        if (drawable == null)
+        {
+            return;
+        }
+
+        mIsImageNone = false;
+
+        float xScale = ((float) mWidth) / drawable.getIntrinsicWidth();
+        float yScale = ((float) mHeight) / drawable.getIntrinsicHeight();
+        mScale = Math.max(xScale, yScale);
+
+        mScaledWidth = (int) (mScale * drawable.getIntrinsicWidth());
+        mScaledHeight = (int) (mScale * drawable.getIntrinsicHeight());
 
         mTranslateDistance = 0;
 

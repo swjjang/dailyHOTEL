@@ -12,13 +12,14 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
-import com.androidquery.AQuery;
-import com.androidquery.callback.AjaxStatus;
-import com.androidquery.callback.BitmapAjaxCallback;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.VolleyImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_detail_list);
 
-        int position = 0;
+        final int position;
 
         Bundle bundle = getIntent().getExtras();
         ArrayList<String> arrayList = null;
@@ -43,6 +44,9 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
         {
             arrayList = bundle.getStringArrayList(NAME_INTENT_EXTRA_DATA_IMAGEURLLIST);
             position = bundle.getInt(NAME_INTENT_EXTRA_DATA_SELECTED_POSOTION);
+        } else
+        {
+            return;
         }
 
         if (arrayList == null)
@@ -55,27 +59,29 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
 
         mAdapter = new ImageDetailListAdapter(this, 0, arrayList);
         mListView.setAdapter(mAdapter);
-
-        mListView.setSelection(position);
+        mListView.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                mListView.setSelection(position);
+            }
+        });
     }
 
     private class ImageDetailListAdapter extends ArrayAdapter<String>
     {
-        private AQuery mAquery;
-
         public ImageDetailListAdapter(Context context, int resourceId, List<String> list)
         {
             super(context, resourceId, list);
-
-            mAquery = new AQuery(context);
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent)
         {
-            View view = null;
+            View view;
 
-            String url = getItem(position);
+            final String url = getItem(position);
 
             if (convertView == null)
             {
@@ -86,59 +92,80 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
                 view = convertView;
             }
 
-            ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
-            imageView.setBackgroundResource(R.drawable.background_hoteldetail_viewpager);
-            Bitmap cachedImg = VolleyImageLoader.getCache(url);
+            final ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
 
-            if (cachedImg == null)
+            imageView.setImageBitmap(null);
+            setImageViewHeight(imageView, 1, 0);
+
+            if (Util.getLCDWidth(ImageDetailListActivity.this) < 720)
             {
-                BitmapAjaxCallback cb = new BitmapAjaxCallback()
+                Glide.with(ImageDetailListActivity.this).load(url).asBitmap().override(360, 240).listener(new RequestListener<String, Bitmap>()
                 {
                     @Override
-                    protected void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status)
+                    public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource)
                     {
-                        if (bm != null)
-                        {
-                            VolleyImageLoader.putCache(url, bm);
-                        }
-
-                        setImageViewHeight(iv, bm);
-                        iv.setImageBitmap(bm);
+                        imageView.setImageBitmap(null);
+                        return false;
                     }
-                };
 
-                if (Util.getLCDWidth(ImageDetailListActivity.this) < 720)
+                    @Override
+                    public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource)
+                    {
+                        return false;
+                    }
+                }).into(new SimpleTarget<Bitmap>()
                 {
-                    cb.url(url).animation(AQuery.FADE_IN);
-                    mAquery.id(imageView).image(url, false, false, 240, 0, cb);
-                } else
-                {
-                    cb.url(url).animation(AQuery.FADE_IN);
-                    mAquery.id(imageView).image(cb);
-                }
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation)
+                    {
+                        setImageViewHeight(imageView, resource.getWidth(), resource.getHeight());
+                        imageView.setImageBitmap(resource);
+                    }
+                });
             } else
             {
-                setImageViewHeight(imageView, cachedImg);
-                imageView.setImageBitmap(cachedImg);
+                Glide.with(ImageDetailListActivity.this).load(url).asBitmap().listener(new RequestListener<String, Bitmap>()
+                {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource)
+                    {
+                        imageView.setImageBitmap(null);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource)
+                    {
+                        return false;
+                    }
+                }).into(new SimpleTarget<Bitmap>()
+                {
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation)
+                    {
+                        setImageViewHeight(imageView, resource.getWidth(), resource.getHeight());
+                        imageView.setImageBitmap(resource);
+                    }
+                });
             }
 
             return view;
         }
 
-        private void setImageViewHeight(ImageView imageView, Bitmap bitmap)
+        private void setImageViewHeight(ImageView imageView, int width, int height)
         {
-            if (bitmap == null || bitmap.getWidth() >= bitmap.getHeight())
+            if (width >= height)
             {
                 RelativeLayout.LayoutParams layoutParms = (android.widget.RelativeLayout.LayoutParams) imageView.getLayoutParams();
 
-                int height = Util.getLCDWidth(getContext());
+                int viewheight = Util.getLCDWidth(getContext());
 
                 if (layoutParms == null)
                 {
-                    layoutParms = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, height);
+                    layoutParms = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, viewheight);
                 } else
                 {
-                    layoutParms.height = height;
+                    layoutParms.height = viewheight;
                 }
 
                 imageView.setLayoutParams(layoutParms);
@@ -146,15 +173,15 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
             {
                 RelativeLayout.LayoutParams layoutParms = (android.widget.RelativeLayout.LayoutParams) imageView.getLayoutParams();
 
-                float scale = (float) Util.getLCDWidth(getContext()) / bitmap.getWidth();
-                int height = (int) (scale * bitmap.getHeight());
+                float scale = (float) Util.getLCDWidth(getContext()) / width;
+                int viewheight = (int) (scale * height);
 
                 if (layoutParms == null)
                 {
-                    layoutParms = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, height);
+                    layoutParms = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, viewheight);
                 } else
                 {
-                    layoutParms.height = height;
+                    layoutParms.height = viewheight;
                 }
 
                 imageView.setLayoutParams(layoutParms);

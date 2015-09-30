@@ -1,7 +1,7 @@
 package com.twoheart.dailyhotel.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,13 +9,14 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
-import com.androidquery.AQuery;
-import com.androidquery.callback.AjaxStatus;
-import com.androidquery.callback.BitmapAjaxCallback;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.twoheart.dailyhotel.activity.HotelDetailActivity;
 import com.twoheart.dailyhotel.activity.PlaceDetailActivity;
+import com.twoheart.dailyhotel.util.DrawableLruCache;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.VolleyImageLoader;
 import com.twoheart.dailyhotel.view.AnimationImageView;
 
 import java.util.List;
@@ -24,7 +25,6 @@ public class HotelDetailImageViewPagerAdapter extends PagerAdapter
 {
     private Context mContext;
     private List<String> mImageUrlList;
-    private AQuery mAQuery;
     private int mDirection;
 
     private HotelDetailActivity.OnUserActionListener mOnUserActionListener;
@@ -53,7 +53,7 @@ public class HotelDetailImageViewPagerAdapter extends PagerAdapter
             return null;
         }
 
-        ImageView imageView = null;
+        final ImageView imageView;
 
         int width = Util.getLCDWidth(mContext);
 
@@ -68,45 +68,52 @@ public class HotelDetailImageViewPagerAdapter extends PagerAdapter
             imageView.setScaleType(ScaleType.CENTER_CROP);
         }
 
-        imageView.setTag(position);
+        imageView.setTag(imageView.getId(), position);
 
         String url = mImageUrlList.get(position);
 
-        if (mAQuery == null)
+        Drawable drawable = DrawableLruCache.getInstance().get(url);
+
+        if (drawable != null)
         {
-            mAQuery = new AQuery(mContext);
-        }
-
-        Bitmap cachedImg = VolleyImageLoader.getCache(url);
-
-        if (cachedImg == null)
-        { // 힛인 밸류가 없다면 이미지를 불러온 후 캐시에 세이브
-            BitmapAjaxCallback cb = new BitmapAjaxCallback()
-            {
-                @Override
-                protected void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status)
-                {
-                    if (bm != null)
-                    {
-                        VolleyImageLoader.putCache(url, bm);
-                    }
-
-                    iv.setImageBitmap(bm);
-                }
-            };
-
-            if (Util.getLCDWidth(mContext) < 720)
-            {
-                cb.url(url).animation(AQuery.FADE_IN);
-                mAQuery.id(imageView).image(url, false, false, 240, 0, cb);
-            } else
-            {
-                cb.url(url).animation(AQuery.FADE_IN);
-                mAQuery.id(imageView).image(cb);
-            }
+            imageView.setImageDrawable(drawable);
         } else
         {
-            imageView.setImageBitmap(cachedImg);
+            if (Util.getLCDWidth(mContext) < 720)
+            {
+                Glide.with(mContext).load(url).override(360, 240).listener(new RequestListener<String, GlideDrawable>()
+                {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource)
+                    {
+                        imageView.setImageBitmap(null);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource)
+                    {
+                        return false;
+                    }
+                }).into(imageView);
+            } else
+            {
+                Glide.with(mContext).load(url).listener(new RequestListener<String, GlideDrawable>()
+                {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource)
+                    {
+                        imageView.setImageBitmap(null);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource)
+                    {
+                        return false;
+                    }
+                }).into(imageView);
+            }
         }
 
         LayoutParams layoutParams = new LayoutParams(width, width);

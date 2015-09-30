@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.text.Html;
 import android.text.Spanned;
@@ -11,13 +10,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.androidquery.AQuery;
-import com.androidquery.callback.AjaxStatus;
-import com.androidquery.callback.BitmapAjaxCallback;
+import com.bumptech.glide.Glide;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.VolleyImageLoader;
 import com.twoheart.dailyhotel.view.PlaceViewItem;
 
 import java.text.DecimalFormat;
@@ -155,34 +151,14 @@ public class GourmetListAdapter extends PlaceListAdapter
                 viewHolder.hotelGradeView.setText(place.grade.getName(context));
                 viewHolder.hotelGradeView.setBackgroundResource(place.grade.getColorResId());
 
-                // AQuery사용시
-                AQuery aquery = new AQuery(convertView);
-                Bitmap cachedImg = VolleyImageLoader.getCache(place.imageUrl);
-
-                if (cachedImg == null)
+                if (Util.getLCDWidth(context) < 720)
                 {
-                    BitmapAjaxCallback bitmapAjaxCallback = new BitmapAjaxCallback()
-                    {
-                        @Override
-                        protected void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status)
-                        {
-                            VolleyImageLoader.putCache(url, bm);
-                            super.callback(url, iv, bm, status);
-                        }
-                    };
-
-                    if (Util.getLCDWidth(context) < 720)
-                    {
-                        bitmapAjaxCallback.url(place.imageUrl).animation(AQuery.FADE_IN);
-                        aquery.id(viewHolder.hotelImageView).image(place.imageUrl, false, false, 240, 0, bitmapAjaxCallback);
-                    } else
-                    {
-                        bitmapAjaxCallback.url(place.imageUrl).animation(AQuery.FADE_IN);
-                        aquery.id(viewHolder.hotelImageView).image(bitmapAjaxCallback);
-                    }
+                    Glide.with(context).load(place.imageUrl).placeholder(R.drawable.img_placeholder)//
+                            .crossFade().override(360, 240).into(viewHolder.hotelImageView);
                 } else
                 {
-                    viewHolder.hotelImageView.setImageBitmap(cachedImg);
+                    Glide.with(context).load(place.imageUrl).placeholder(R.drawable.img_placeholder)//
+                            .crossFade().into(viewHolder.hotelImageView);
                 }
 
                 // SOLD OUT 표시
