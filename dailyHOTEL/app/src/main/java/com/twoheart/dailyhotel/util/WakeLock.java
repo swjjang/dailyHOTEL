@@ -16,7 +16,7 @@ public class WakeLock
             wakeLock.acquire();
         } catch (Exception e)
         {
-
+            ExLog.d(e.toString());
         }
     }
 
@@ -31,6 +31,7 @@ public class WakeLock
             }
         } catch (Exception e)
         {
+            ExLog.d(e.toString());
         }
     }
 }

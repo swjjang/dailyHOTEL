@@ -357,7 +357,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         return sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "");
     }
 
-    private Boolean isGoogleServiceAvailable()
+    private boolean isGoogleServiceAvailable()
     {
         int resCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
 
@@ -478,7 +478,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 @Override
                 public void onSuccess(UserProfile userProfile)
                 {
-                    // id값은 특별함.
+                    // id값은 특별함. kakao login
                     userProfile.getId();
                 }
             });

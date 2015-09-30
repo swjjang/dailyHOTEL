@@ -255,7 +255,7 @@ public class DailySignatureView extends View
         public void onConfirmSignature();
     }
 
-    private class Point
+    private static class Point
     {
         public float x;
         public float y;

@@ -86,7 +86,7 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
     private int mDirection;
     private ActionbarViewHolder mActionbarViewHolder;
 
-    private class ActionbarViewHolder
+    private static class ActionbarViewHolder
     {
         public View mAnchorView;
         public View mActionbarLayout;

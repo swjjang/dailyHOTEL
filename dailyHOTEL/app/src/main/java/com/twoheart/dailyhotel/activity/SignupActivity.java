@@ -386,7 +386,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
         finish();
     }
 
-    private Boolean isGoogleServiceAvailable()
+    private boolean isGoogleServiceAvailable()
     {
         int resCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
 

@@ -69,7 +69,7 @@ public class VolleyHttpClient implements Constants
         return sRequestQueue;
     }
 
-    public static Boolean isAvailableNetwork()
+    public static boolean isAvailableNetwork()
     {
         boolean result = false;
 
