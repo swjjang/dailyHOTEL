@@ -179,7 +179,6 @@ public class GcmIntentService extends IntentService implements Constants
             {
                 ExLog.e(e.toString());
             }
-
         }
 
         GcmBroadcastReceiver.completeWakefulIntent(intent);

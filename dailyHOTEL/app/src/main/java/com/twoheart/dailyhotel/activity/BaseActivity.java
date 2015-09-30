@@ -61,7 +61,6 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
     protected static int mStatusBarHeight;
     public SharedPreferences sharedPreference;
     protected RequestQueue mQueue;
-    protected Runnable networkCheckRunner;
     private Toolbar mToolbar;
     private Dialog mDialog;
     private LoadingDialog mLockUI;
@@ -95,19 +94,6 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
         };
 
         handler = new Handler();
-        networkCheckRunner = new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                if (mLockUI.isVisible())
-                {
-                    mQueue.cancelAll(cancelAllRequestFilter);
-                    unLockUI();
-                    onError();
-                }
-            }
-        };
     }
 
     @Override
@@ -595,7 +581,6 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
         }
 
         recursiveRecycle(getWindow().getDecorView());
-
 
         super.onDestroy();
     }

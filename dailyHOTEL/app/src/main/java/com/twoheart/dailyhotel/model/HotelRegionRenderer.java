@@ -37,11 +37,6 @@ public class HotelRegionRenderer
     {
         Bitmap icon = mRegionIconGenerator.makeIcon(String.valueOf(mCount));
 
-        if (icon == null)
-        {
-            return null;
-        }
-
         return BitmapDescriptorFactory.fromBitmap(icon);
     }
 }

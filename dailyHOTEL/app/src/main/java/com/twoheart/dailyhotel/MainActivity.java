@@ -365,7 +365,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
         return sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "");
     }
 
-    private Boolean isGoogleServiceAvailable()
+    private boolean isGoogleServiceAvailable()
     {
         int resCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
 
@@ -1057,7 +1057,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
         replaceFragment(new ErrorFragment());
     }
 
-    private class DrawerMenu
+    private static class DrawerMenu
     {
         public static final int DRAWER_MENU_LIST_TYPE_LOGO = 0;
         public static final int DRAWER_MENU_LIST_TYPE_SECTION = 1;

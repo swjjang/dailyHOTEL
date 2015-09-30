@@ -56,7 +56,7 @@ public class DailyHotel extends Application implements Constants
         }
 
         // 버전 정보 얻기
-        DailyHotel.VERSION = Util.getAppVersion(getApplicationContext());
+        VERSION = Util.getAppVersion(getApplicationContext());
 
         initializeVolley();
         initializeAnalytics();

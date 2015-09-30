@@ -65,8 +65,8 @@ public class PaymentActivity extends BaseActivity implements Constants
     public static final int PROGRESS_STAT_NOT_START = 1;
     public static final int PROGRESS_STAT_IN = 2;
     public static final int PROGRESS_DONE = 3;
-    public static String CARD_CD = "";
-    public static String QUOTA = "";
+    private static String CARD_CD = "";
+    private static String QUOTA = "";
     public int m_nStat = PROGRESS_STAT_NOT_START;
 
     private WebView mWebView;

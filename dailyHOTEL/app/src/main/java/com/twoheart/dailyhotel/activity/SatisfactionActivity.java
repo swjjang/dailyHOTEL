@@ -56,14 +56,14 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
     private String mSatisfaction;
     private String mTicketName;
     private int mReservationIndex;
-    private Long mCheckInDate;
-    private Long mCheckOutDate;
+    private long mCheckInDate;
+    private long mCheckOutDate;
     private PlaceMainFragment.TYPE mPlaceType;
     private Dialog mDialog;
     private ArrayList<ReviewCode> mReviewCodeList;
     private DailyEditText mCommentsView;
 
-    private class ReviewCode
+    private static class ReviewCode
     {
         String name;
         int index;

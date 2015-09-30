@@ -126,7 +126,7 @@ public class ZoomMapActivity extends BaseActivity
         }
     }
 
-    private void addMarker(GoogleMap googleMap, Double lat, Double lng, String hotel_name)
+    private void addMarker(GoogleMap googleMap, double lat, double lng, String hotel_name)
     {
         if (googleMap != null)
         {

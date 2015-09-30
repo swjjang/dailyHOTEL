@@ -110,7 +110,7 @@ public class SaleTime implements Constants, Parcelable
         return sFormat;
     }
 
-    public Long getCurrentTime()
+    public long getCurrentTime()
     {
         return mCurrentTime.getTime();
     }
@@ -120,7 +120,7 @@ public class SaleTime implements Constants, Parcelable
         mCurrentTime = new Date(currentTime);
     }
 
-    public Long getOpenTime()
+    public long getOpenTime()
     {
         return mOpenTime.getTime();
     }
@@ -130,7 +130,7 @@ public class SaleTime implements Constants, Parcelable
         mOpenTime = new Date(openTime);
     }
 
-    public Long getCloseTime()
+    public long getCloseTime()
     {
         return mCloseTime.getTime();
     }
@@ -140,7 +140,7 @@ public class SaleTime implements Constants, Parcelable
         mCloseTime = new Date(closeTime);
     }
 
-    public Long getDailyTime()
+    public long getDailyTime()
     {
         return mDailyTime.getTime();
     }

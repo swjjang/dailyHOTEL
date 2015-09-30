@@ -166,7 +166,7 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
     }
 
     // 마커 추가
-    public void addMarker(Double lat, Double lng, String hotel_name)
+    public void addMarker(double lat, double lng, String hotel_name)
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
 

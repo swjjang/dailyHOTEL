@@ -61,7 +61,7 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
     private int mOldfirstVisibleItem;
     private int mDirection;
 
-    protected class ActionbarViewHolder
+    protected static class ActionbarViewHolder
     {
         public View mAnchorView;
         public View mActionbarLayout;
