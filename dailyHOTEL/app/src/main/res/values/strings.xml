@@ -105,7 +105,7 @@
     <string name="toast_msg_no_call">전화 기능이 없는 단말입니다.\n고객센터 전화번호는 1800-9120입니다.</string>
     <string name="toast_msg_dont_past_hotelinfo">이전 날짜의 정보는 조회 할 수 없습니다.</string>
     <string name="toast_msg_maxcount_ticket">한번에 구매 가능한 최대 수량은 %1$d개 입니다.</string>
-    <string name="toast_msg_none_reservationtime_ticket">예약 가능한 시간이 존재하지 않습니다.</string>
+    <string name="toast_msg_none_reservationtime_ticket">방문시간은 %1$s 사이로 선택해주세요.</string>
 
     <!-- Dialog Messages -->
 
