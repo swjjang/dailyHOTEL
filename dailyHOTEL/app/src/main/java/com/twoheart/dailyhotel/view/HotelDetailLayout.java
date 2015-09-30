@@ -134,7 +134,7 @@ public class HotelDetailLayout
             {
                 stopAnimationImageView(true);
 
-                AnimationImageView imageView = (AnimationImageView) mViewPager.findViewWithTag(position);
+                AnimationImageView imageView = (AnimationImageView) mViewPager.findViewWidthPosition(position);
 
                 if (imageView != null)
                 {
@@ -187,7 +187,7 @@ public class HotelDetailLayout
                 {
                     mImageAdapter.setDirection(mDirection);
 
-                    AnimationImageView nextImageView = (AnimationImageView) mViewPager.findViewWithTag(nextPosition);
+                    AnimationImageView nextImageView = (AnimationImageView) mViewPager.findViewWidthPosition(nextPosition);
 
                     // 방향에 따라서 초기화가 달라야한다.
                     if (nextImageView != null)
@@ -212,7 +212,7 @@ public class HotelDetailLayout
                     {
                         stopAnimationImageView(true);
 
-                        AnimationImageView imageView = (AnimationImageView) mViewPager.findViewWithTag(mSelectedPosition);
+                        AnimationImageView imageView = (AnimationImageView) mViewPager.findViewWidthPosition(mSelectedPosition);
 
                         if (imageView != null)
                         {
@@ -1007,7 +1007,7 @@ public class HotelDetailLayout
         {
             int position = mViewPager.getCurrentItem();
 
-            AnimationImageView imageView = (AnimationImageView) mViewPager.findViewWithTag(position);
+            AnimationImageView imageView = (AnimationImageView) mViewPager.findViewWidthPosition(position);
 
             if (imageView != null)
             {

@@ -20,6 +20,7 @@ import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.view.View;
 
 import java.lang.reflect.Field;
 
@@ -240,6 +241,25 @@ public class LoopViewPager extends ViewPager
         super.setOnPageChangeListener(onPageChangeListener);
 
         postInitViewPager();
+    }
+
+    public View findViewWidthPosition(int position)
+    {
+        int count = getChildCount();
+
+        for (int i = 0; i < count; i++)
+        {
+            View childView = getChildAt(i);
+
+            Integer value = (Integer) childView.getTag(childView.getId());
+
+            if (value != null && value.intValue() == position)
+            {
+                return childView;
+            }
+        }
+
+        return null;
     }
 
     /**

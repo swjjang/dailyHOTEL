@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.view.LayoutInflater;
@@ -11,15 +10,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.androidquery.AQuery;
-import com.androidquery.callback.AjaxStatus;
-import com.androidquery.callback.BitmapAjaxCallback;
+import com.bumptech.glide.Glide;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.BookingListFragment;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.VolleyImageLoader;
 import com.twoheart.dailyhotel.view.widget.PinnedSectionListView.PinnedSectionListAdapter;
 
 import java.text.SimpleDateFormat;
@@ -180,34 +176,12 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
         // 호텔 이미지
         ImageView hotelImageView = (ImageView) view.findViewById(R.id.hotelImage);
 
-        AQuery aquery = new AQuery(view);
-        Bitmap cachedImg = VolleyImageLoader.getCache(booking.hotelImageUrl);
-
-        if (cachedImg == null)
-        { // 힛인 밸류가 없다면 이미지를 불러온 후 캐시에 세이브
-            BitmapAjaxCallback cb = new BitmapAjaxCallback()
-            {
-                @Override
-                protected void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status)
-                {
-                    VolleyImageLoader.putCache(url, bm);
-                    super.callback(url, iv, bm, status);
-                }
-            };
-
-            if (Util.getLCDWidth(mContext) < 720)
-            {
-                cb.url(booking.hotelImageUrl).animation(R.anim.fade_in);
-                aquery.id(hotelImageView).image(booking.hotelImageUrl, false, false, 240, 0, cb);
-            } else
-            {
-                cb.url(booking.hotelImageUrl);
-                aquery.id(hotelImageView).image(cb).animate(R.anim.fade_in);
-            }
+        if (Util.getLCDWidth(mContext) < 720)
+        {
+            Glide.with(mContext).load(booking.hotelImageUrl).crossFade().override(360, 240).into(hotelImageView);
         } else
         {
-            hotelImageView.setImageBitmap(cachedImg);
-            //			aquery.id(hotelImageView).image(cachedImg).animate(R.anim.fade_in);
+            Glide.with(mContext).load(booking.hotelImageUrl).crossFade().into(hotelImageView);
         }
 
         TextView waitAccountTextView = (TextView) view.findViewById(R.id.waitAccountTextView);

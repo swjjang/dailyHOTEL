@@ -77,6 +77,15 @@
 
 -keep public class com.twoheart.dailyhotel.network.SerializableHttpCookie { *; }
 
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
+    **[] $VALUES;
+    public *;
+}
+
+-keep class com.bumptech.glide.integration.okhttp.OkHttpGlideModule
+
+
 -dontwarn com.squareup.**
 -dontwarn okio.**
 -dontwarn android.support.v4.**, android.support.v7.**, com.ning.http.client.**, org.jboss.netty.**

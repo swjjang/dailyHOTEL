@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.view;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,14 +11,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import com.androidquery.AQuery;
-import com.androidquery.callback.AjaxStatus;
-import com.androidquery.callback.BitmapAjaxCallback;
+import com.bumptech.glide.Glide;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.EventListFragment;
 import com.twoheart.dailyhotel.model.Event;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.VolleyImageLoader;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -169,34 +165,12 @@ public class EventListLayout implements OnItemClickListener
             ImageView imageView = (ImageView) view.findViewById(R.id.eventImageView);
             Event event = getItem(position);
 
-            // AQuery사용시
-            AQuery aquery = new AQuery(convertView);
-            Bitmap cachedImg = VolleyImageLoader.getCache(event.imageUrl);
-
-            if (cachedImg == null)
+            if (Util.getLCDWidth(mContext) < 720)
             {
-                BitmapAjaxCallback cb = new BitmapAjaxCallback()
-                {
-                    @Override
-                    protected void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status)
-                    {
-                        VolleyImageLoader.putCache(url, bm);
-                        super.callback(url, iv, bm, status);
-                    }
-                };
-
-                if (Util.getLCDWidth(mContext) < 720)
-                {
-                    cb.url(event.imageUrl).animation(AQuery.FADE_IN);
-                    aquery.id(imageView).image(event.imageUrl, false, false, 240, 0, cb);
-                } else
-                {
-                    cb.url(event.imageUrl).animation(AQuery.FADE_IN);
-                    aquery.id(imageView).image(cb);
-                }
+                Glide.with(mContext).load(event.imageUrl).crossFade().override(360, 240).into(imageView);
             } else
             {
-                imageView.setImageBitmap(cachedImg);
+                Glide.with(mContext).load(event.imageUrl).crossFade().into(imageView);
             }
 
             return view;

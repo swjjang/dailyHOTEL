@@ -51,7 +51,6 @@ import android.widget.TextView;
 import com.android.volley.Request.Method;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
-import com.androidquery.util.AQUtility;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -1045,9 +1044,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
         mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGOUT).toString(), null, null, null));
 
         VolleyHttpClient.destroyCookie();
-
-        // AQuery의 캐시들을 정리한다.
-        AQUtility.cleanCacheAsync(getApplicationContext());
 
         super.onDestroy();
     }

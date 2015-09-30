@@ -18,7 +18,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -27,7 +26,6 @@ import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
-import com.androidquery.AQuery;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.kakao.usermgmt.UserManagement;
@@ -56,10 +54,12 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 {
     private final String INVALID_NULL = "null";
 
-    private AQuery mAq;
     private InputMethodManager mInputMethodManager;
     private String prevName;
     private String prevPh;
+    private EditText mNameEditText, mPhoneEditText;
+    private View mEditProfileLayout, mInformationProfileLayout;
+    private TextView mEditButtonView;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -71,8 +71,15 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
         setContentView(R.layout.activity_profile);
         setActionBar(R.string.actionbar_title_profile_activity);
 
-        mAq = new AQuery(this);
         mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        initLayout();
+    }
+
+    private void initLayout()
+    {
+        View profileEditLayout = findViewById(R.id.ll_profile_edit);
+        mEditButtonView = (TextView) findViewById(R.id.tv_profile_edit);
 
         // 수정시에 인터페이스 편의를 위해 [사용자 정보] 바를 터치하면 완료되도록 수정.
         findViewById(R.id.profileSectionBarLayout).setOnTouchListener(new View.OnTouchListener()
@@ -80,9 +87,9 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
             @Override
             public boolean onTouch(View v, MotionEvent event)
             {
-                if (mAq.id(R.id.tv_profile_edit).getText().equals(getString(R.string.dialog_btn_text_confirm)))
+                if (mEditButtonView.getText().equals(getString(R.string.dialog_btn_text_confirm)))
                 {
-                    mAq.id(R.id.ll_profile_edit).click();
+                    mEditButtonView.performClick();
                     return true;
                 }
 
@@ -90,10 +97,14 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
             }
         });
 
-        mAq.id(R.id.ll_profile_edit).clicked(this);
-        mAq.id(R.id.btn_profile_logout).clicked(this);
+        profileEditLayout.setOnClickListener(this);
 
-        mAq.id(R.id.et_profile_phone).getEditText().setOnEditorActionListener(new OnEditorActionListener()
+        View logoutView = findViewById(R.id.btn_profile_logout);
+        logoutView.setOnClickListener(this);
+
+        mNameEditText = (EditText) findViewById(R.id.et_profile_name);
+        mPhoneEditText = (EditText) findViewById(R.id.et_profile_phone);
+        mPhoneEditText.setOnEditorActionListener(new OnEditorActionListener()
         {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
@@ -101,13 +112,20 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
                 switch (actionId)
                 {
                     case EditorInfo.IME_ACTION_DONE:
-                        mAq.id(R.id.ll_profile_edit).click();
+                        mEditButtonView.performClick();
                         break;
                 }
                 return true;
             }
         });
+
+
+        mEditProfileLayout = findViewById(R.id.ll_profile_info_editable);
+        mInformationProfileLayout = findViewById(R.id.ll_profile_info_label);
+
+
     }
+
 
     @Override
     protected void onStart()
@@ -137,16 +155,15 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
     @Override
     public void onBackPressed()
     {
-        if (mAq.id(R.id.tv_profile_edit).getText().equals(getString(R.string.dialog_btn_text_confirm)))
+        if (mEditButtonView.getText().equals(getString(R.string.dialog_btn_text_confirm)))
         {
 
-            mAq.id(R.id.ll_profile_info_editable).visibility(View.GONE);
-            mAq.id(R.id.ll_profile_info_label).visibility(View.VISIBLE);
-            mAq.id(R.id.ll_profile_info_label).getView().startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_in));
-            mAq.id(R.id.tv_profile_edit).text(getString(R.string.act_profile_modify));
+            mEditProfileLayout.setVisibility(View.GONE);
+            mInformationProfileLayout.setVisibility(View.VISIBLE);
+            mEditButtonView.setText(R.string.act_profile_modify);
 
-            mAq.id(R.id.et_profile_name).text(prevName);
-            mAq.id(R.id.et_profile_phone).text(prevPh);
+            mNameEditText.setText(prevName);
+            mPhoneEditText.setText(prevPh);
 
             toggleKeyboard(false);
         } else
@@ -158,7 +175,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 
     public void setupUI(View view)
     {
-
         if (view.getId() == R.id.ll_profile_edit)
         {
             return;
@@ -171,9 +187,9 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
             {
                 public boolean onTouch(View v, MotionEvent event)
                 {
-                    if (mAq.id(R.id.tv_profile_edit).getText().equals(getString(R.string.dialog_btn_text_confirm)))
+                    if (mEditButtonView.getText().equals(getString(R.string.dialog_btn_text_confirm)))
                     {
-                        mAq.id(R.id.ll_profile_edit).click();
+                        mEditButtonView.performClick();
                         return true;
                     }
                     return false;
@@ -202,19 +218,19 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 
         if (show)
         {
-            mAq.id(R.id.et_profile_name).getEditText().requestFocus();
+            mNameEditText.requestFocus();
 
             StringFilter stringFilter = new StringFilter(ProfileActivity.this);
             InputFilter[] allowAlphanumericHangul = new InputFilter[1];
             allowAlphanumericHangul[0] = stringFilter.allowAlphanumericHangul;
 
-            ((EditText) findViewById(R.id.et_profile_name)).setFilters(allowAlphanumericHangul);
+            mNameEditText.setFilters(allowAlphanumericHangul);
 
-            mInputMethodManager.showSoftInput(mAq.id(R.id.et_profile_name).getEditText(), InputMethodManager.SHOW_FORCED);
+            mInputMethodManager.showSoftInput(mNameEditText, InputMethodManager.SHOW_FORCED);
 
         } else
         {
-            mInputMethodManager.hideSoftInputFromWindow(mAq.id(R.id.et_profile_name).getEditText().getWindowToken(), 0);
+            mInputMethodManager.hideSoftInputFromWindow(mNameEditText.getWindowToken(), 0);
 
         }
     }
@@ -224,16 +240,15 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
     {
         if (v.getId() == R.id.ll_profile_edit)
         {
-            if (mAq.id(R.id.tv_profile_edit).getText().equals(getString(R.string.act_profile_modify)))
+            if (mEditButtonView.getText().equals(getString(R.string.act_profile_modify)))
             {
-                mAq.id(R.id.ll_profile_info_label).visibility(View.GONE);
-                mAq.id(R.id.ll_profile_info_editable).visibility(View.VISIBLE);
-                mAq.id(R.id.ll_profile_info_editable).getView().startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_in));
-                mAq.id(R.id.tv_profile_edit).text(getString(R.string.dialog_btn_text_confirm));
+                mInformationProfileLayout.setVisibility(View.GONE);
+                mEditProfileLayout.setVisibility(View.VISIBLE);
+                mEditButtonView.setText(R.string.dialog_btn_text_confirm);
 
                 toggleKeyboard(true);
 
-            } else if (mAq.id(R.id.tv_profile_edit).getText().equals(getString(R.string.dialog_btn_text_confirm)))
+            } else if (mEditButtonView.getText().equals(getString(R.string.dialog_btn_text_confirm)))
             {
                 if (isLockUiComponent() == true)
                 {
@@ -242,22 +257,22 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 
                 lockUiComponent();
 
-                String name = mAq.id(R.id.et_profile_name).getText().toString().trim();
-                String phone = mAq.id(R.id.et_profile_phone).getText().toString().trim();
+                String name = mNameEditText.getText().toString().trim();
+                String phone = mPhoneEditText.getText().toString().trim();
 
                 if (Util.isTextEmpty(phone) == true)
                 {
                     // 전화번호는 필수 사항으로 한다.
                     releaseUiComponent();
 
-                    mAq.id(R.id.et_profile_phone).text("");
+                    mPhoneEditText.setText("");
                     DailyToast.showToast(ProfileActivity.this, R.string.toast_msg_please_input_phone, Toast.LENGTH_SHORT);
                 } else if (Util.isTextEmpty(name) == true)
                 {
                     // 이름은 필수 사항으로 입력되어야 한다.
                     releaseUiComponent();
 
-                    mAq.id(R.id.et_profile_name).text("");
+                    mNameEditText.setText("");
                     DailyToast.showToast(ProfileActivity.this, R.string.toast_msg_please_input_name, Toast.LENGTH_SHORT);
                 } else if (name.equals(prevName) && phone.equals(prevPh))
                 {
@@ -266,10 +281,9 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
                     releaseUiComponent();
 
                     // 기존과 동일하여 서버에 요청할 필요가 없음.
-                    mAq.id(R.id.ll_profile_info_editable).visibility(View.GONE);
-                    mAq.id(R.id.ll_profile_info_label).visibility(View.VISIBLE);
-                    mAq.id(R.id.ll_profile_info_label).getView().startAnimation(AnimationUtils.loadAnimation(ProfileActivity.this, R.anim.fade_in));
-                    mAq.id(R.id.tv_profile_edit).text(getString(R.string.act_profile_modify));
+                    mEditProfileLayout.setVisibility(View.GONE);
+                    mInformationProfileLayout.setVisibility(View.VISIBLE);
+                    mEditButtonView.setText(R.string.act_profile_modify);
 
                     DailyToast.showToast(ProfileActivity.this, R.string.toast_msg_profile_not_changed, Toast.LENGTH_LONG);
                 } else
@@ -371,17 +385,21 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
                     prevPh = userPhone;
                 }
 
-                mAq.id(R.id.tv_profile_email).text(userEmail);
-                mAq.id(R.id.tv_profile_name).text(userName);
-                mAq.id(R.id.tv_profile_phone).text(userPhone);
+                TextView emailTextView = (TextView) findViewById(R.id.tv_profile_email);
+                emailTextView.setText(userEmail);
 
-                mAq.id(R.id.et_profile_name).text(prevName);
-                mAq.id(R.id.et_profile_phone).text(prevPh);
+                TextView nameTextView = (TextView) findViewById(R.id.tv_profile_name);
+                nameTextView.setText(userName);
 
-                mAq.id(R.id.ll_profile_info_editable).visibility(View.GONE);
-                mAq.id(R.id.ll_profile_info_label).visibility(View.VISIBLE);
-                mAq.id(R.id.ll_profile_info_label).getView().startAnimation(AnimationUtils.loadAnimation(ProfileActivity.this, R.anim.fade_in));
-                mAq.id(R.id.tv_profile_edit).text(getString(R.string.act_profile_modify));
+                TextView phoneTextView = (TextView) findViewById(R.id.tv_profile_phone);
+                phoneTextView.setText(userPhone);
+
+                mNameEditText.setText(prevName);
+                mPhoneEditText.setText(prevPh);
+
+                mEditProfileLayout.setVisibility(View.GONE);
+                mInformationProfileLayout.setVisibility(View.VISIBLE);
+                mEditButtonView.setText(R.string.act_profile_modify);
             } catch (Exception e)
             {
                 onError(e);

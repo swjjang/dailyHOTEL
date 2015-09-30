@@ -20,7 +20,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
@@ -37,6 +39,7 @@ import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
+import com.twoheart.dailyhotel.util.DrawableLruCache;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.GourmetViewItem;
 import com.twoheart.dailyhotel.view.PlaceViewItem;
@@ -109,6 +112,33 @@ public class GourmetListFragment extends PlaceListFragment
         setActionbarViewHolder(actionbarViewHolder);
 
         return view;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parentView, View childView, int position, long id)
+    {
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null)
+        {
+            return;
+        }
+
+        position -= mListView.getHeaderViewsCount();
+
+        if (position < 0)
+        {
+            return;
+        }
+
+        if (mOnUserActionListener != null)
+        {
+            GourmetViewItem gourmetViewItem = (GourmetViewItem) getPlaceViewItem(position);
+            mOnUserActionListener.selectPlace(gourmetViewItem, mSaleTime);
+
+            ImageView hotelImageView = (ImageView) childView.findViewById(R.id.iv_hotel_row_img);
+            DrawableLruCache.getInstance().put(gourmetViewItem.getPlace().imageUrl, hotelImageView.getDrawable());
+        }
     }
 
     @Override
