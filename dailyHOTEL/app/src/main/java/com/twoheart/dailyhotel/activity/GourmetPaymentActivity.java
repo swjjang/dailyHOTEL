@@ -497,13 +497,24 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
 
             if (++position >= length)
             {
-                mGourmetBookingLayout.setTicketTimePlusButtonEnabled(false);
-                DailyToast.showToast(GourmetPaymentActivity.this, getString(R.string.toast_msg_none_reservationtime_ticket), Toast.LENGTH_SHORT);
+                Calendar startTime = DailyCalendar.getInstance();
+                startTime.setTimeZone(TimeZone.getTimeZone("GMT"));
+                startTime.setTimeInMillis(mTicketPayment.startTicketTime);
+
+                Calendar endTime = DailyCalendar.getInstance();
+                endTime.setTimeZone(TimeZone.getTimeZone("GMT"));
+                endTime.setTimeInMillis(mTicketPayment.endTicketTime);
+
+                SimpleDateFormat formatDay = new SimpleDateFormat("HH:mm", Locale.KOREA);
+                formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+                String timePeriod = String.format("%s~%s", formatDay.format(startTime.getTime()), formatDay.format(endTime.getTime()));
+
+                DailyToast.showToast(GourmetPaymentActivity.this, getString(R.string.toast_msg_none_reservationtime_ticket, timePeriod), Toast.LENGTH_LONG);
             } else
             {
                 mTicketPayment.ticketTime = mTicketPayment.ticketTimes[position];
 
-                mGourmetBookingLayout.setTicketTimeMinusButtonEnabled(true);
                 mGourmetBookingLayout.setTicketTime(mTicketPayment.ticketTime);
             }
         }
@@ -532,12 +543,23 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
 
             if (--position < 0)
             {
-                mGourmetBookingLayout.setTicketTimeMinusButtonEnabled(false);
+                Calendar startTime = DailyCalendar.getInstance();
+                startTime.setTimeZone(TimeZone.getTimeZone("GMT"));
+                startTime.setTimeInMillis(mTicketPayment.startTicketTime);
+
+                Calendar endTime = DailyCalendar.getInstance();
+                endTime.setTimeZone(TimeZone.getTimeZone("GMT"));
+                endTime.setTimeInMillis(mTicketPayment.endTicketTime);
+
+                SimpleDateFormat formatDay = new SimpleDateFormat("HH:mm", Locale.KOREA);
+                formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+                String timePeriod = String.format("%s~%s", formatDay.format(startTime.getTime()), formatDay.format(endTime.getTime()));
+                DailyToast.showToast(GourmetPaymentActivity.this, getString(R.string.toast_msg_none_reservationtime_ticket, timePeriod), Toast.LENGTH_LONG);
             } else
             {
                 mTicketPayment.ticketTime = mTicketPayment.ticketTimes[position];
 
-                mGourmetBookingLayout.setTicketTimePlusButtonEnabled(true);
                 mGourmetBookingLayout.setTicketTime(mTicketPayment.ticketTime);
             }
         }
@@ -551,7 +573,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
             if (count >= maxCount)
             {
                 mGourmetBookingLayout.setTicketCountPlusButtonEnabled(false);
-                DailyToast.showToast(GourmetPaymentActivity.this, getString(R.string.toast_msg_maxcount_ticket, maxCount), Toast.LENGTH_SHORT);
+                DailyToast.showToast(GourmetPaymentActivity.this, getString(R.string.toast_msg_maxcount_ticket, maxCount), Toast.LENGTH_LONG);
             } else
             {
                 mTicketPayment.ticketCount = count + 1;
@@ -559,7 +581,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                 mGourmetBookingLayout.setTicketCountMinusButtonEnabled(true);
 
                 // 결제 가격을 바꾸어야 한다.
-                mGourmetBookingLayout.updatePaymentInformationLayout(GourmetPaymentActivity.this, mTicketPayment, mSelectedCreditCard);
+                mGourmetBookingLayout.updatePaymentInformationLayout(GourmetPaymentActivity.this, mTicketPayment);
             }
         }
 
@@ -578,7 +600,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                 mGourmetBookingLayout.setTicketCountPlusButtonEnabled(true);
 
                 // 결제 가격을 바꾸어야 한다.
-                mGourmetBookingLayout.updatePaymentInformationLayout(GourmetPaymentActivity.this, mTicketPayment, mSelectedCreditCard);
+                mGourmetBookingLayout.updatePaymentInformationLayout(GourmetPaymentActivity.this, mTicketPayment);
             }
         }
 
@@ -792,6 +814,9 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                     long sday = jsonObject.getLong("sday");
                     //					jsonObject.getInt("available_ticket_count");
                     int maxCount = jsonObject.getInt("max_sale_count");
+
+                    mTicketPayment.startTicketTime = jsonObject.getLong("start_eating_time");
+                    mTicketPayment.endTicketTime = jsonObject.getLong("end_eating_time");
 
                     JSONArray timeJSONArray = jsonObject.getJSONArray("eating_time_list");
 

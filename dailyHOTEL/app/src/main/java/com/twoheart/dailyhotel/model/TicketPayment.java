@@ -34,6 +34,9 @@ public class TicketPayment implements Parcelable
     private Customer mCustomer; // 로그인 유저 정보
     private Guest mGuest; // 실제 예약 혹은 투숙하는 사람
 
+    public long startTicketTime;
+    public long endTicketTime;
+
     public TicketPayment()
     {
         // Default Ticket count

@@ -169,9 +169,6 @@ public class GourmetBookingLayout implements OnCheckedChangeListener
         mTicketTimeMinusButton = viewRoot.findViewById(R.id.ticketTimeMinus);
         mTicketTimePlusButton = viewRoot.findViewById(R.id.ticketTimePlus);
 
-        setTicketTimeMinusButtonEnabled(false);
-        setTicketTimePlusButtonEnabled(true);
-
         mTicketTimeMinusButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -411,6 +408,20 @@ public class GourmetBookingLayout implements OnCheckedChangeListener
         }
     }
 
+    public void updatePaymentInformationLayout(BaseActivity activity, TicketPayment ticketPayment)
+    {
+        if (activity == null || ticketPayment == null)
+        {
+            return;
+        }
+
+        DecimalFormat comma = new DecimalFormat("###,##0");
+        String price = comma.format(ticketPayment.getPaymentToPay()) + Html.fromHtml(activity.getString(R.string.currency));
+
+        // 결제금액
+        mTicketPaymentTextView.setText(price);
+    }
+
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId)
     {
@@ -454,15 +465,15 @@ public class GourmetBookingLayout implements OnCheckedChangeListener
         setButtonVisibility(mTicketCountPlusButton, isEnabled);
     }
 
-    public void setTicketTimeMinusButtonEnabled(boolean isEnabled)
-    {
-        setButtonVisibility(mTicketTimeMinusButton, isEnabled);
-    }
-
-    public void setTicketTimePlusButtonEnabled(boolean isEnabled)
-    {
-        setButtonVisibility(mTicketTimePlusButton, isEnabled);
-    }
+    //    public void setTicketTimeMinusButtonEnabled(boolean isEnabled)
+    //    {
+    //        setButtonVisibility(mTicketTimeMinusButton, isEnabled);
+    //    }
+    //
+    //    public void setTicketTimePlusButtonEnabled(boolean isEnabled)
+    //    {
+    //        setButtonVisibility(mTicketTimePlusButton, isEnabled);
+    //    }
 
     private void setButtonVisibility(View view, boolean isEnabled)
     {
