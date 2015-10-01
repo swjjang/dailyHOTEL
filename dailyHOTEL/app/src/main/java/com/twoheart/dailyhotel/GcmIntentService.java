@@ -232,7 +232,7 @@ public class GcmIntentService extends IntentService implements Constants
     {
         mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, IntentActivity.class);
         if (type == PUSH_TYPE_ACCOUNT_COMPLETE)
         {
             intent.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, PUSH_TYPE_ACCOUNT_COMPLETE);

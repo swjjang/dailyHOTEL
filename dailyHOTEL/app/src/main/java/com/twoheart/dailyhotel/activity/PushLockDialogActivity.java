@@ -9,6 +9,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.twoheart.dailyhotel.IntentActivity;
 import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
@@ -80,7 +81,7 @@ public class PushLockDialogActivity extends Activity implements OnClickListener,
         {
             Intent intent = new Intent();
             intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            intent.setClass(this, MainActivity.class);
+            intent.setClass(this, IntentActivity.class);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_PUSH_TYPE, mType); // 메인엑티비티 -> 예약확인리스트 -> 최신 예약 클릭,
 
             startActivity(intent);
