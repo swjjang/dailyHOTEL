@@ -46,11 +46,9 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
@@ -285,24 +283,9 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 
         if (sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false))
         {
+            HashMap<String, String> params = Util.getLoginParams(sharedPreference);
 
-            String id = sharedPreference.getString(KEY_PREFERENCE_USER_ID, null);
-            String accessToken = sharedPreference.getString(KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
-            String pw = sharedPreference.getString(KEY_PREFERENCE_USER_PWD, null);
-
-            Map<String, String> loginParams = new HashMap<String, String>();
-
-            if (accessToken != null)
-            {
-                loginParams.put("accessToken", accessToken);
-            } else
-            {
-                loginParams.put("email", id);
-            }
-
-            loginParams.put("pw", pw);
-
-            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(), loginParams, mUserLoginJsonResponseListener, this));
+            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mUserLoginJsonResponseListener, this));
         }
 
         mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_APP_VERSION).toString(), null, mAppVersionJsonResponseListener, this));
@@ -348,37 +331,40 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 
     private DailyHotelJsonResponseListener mUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
             try
             {
-                String result = null;
-
-                if (response != null)
+                if (response == null)
                 {
-                    result = response.getString("login");
+                    throw new NullPointerException("response == null.");
                 }
 
-                if ("true".equalsIgnoreCase(result) == false)
-                {
-                    // 로그인 실패
-                    // data 초기화
-                    SharedPreferences.Editor ed = sharedPreference.edit();
-                    ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
-                    ed.putString(KEY_PREFERENCE_USER_ID, null);
-                    ed.putString(KEY_PREFERENCE_USER_PWD, null);
-                    ed.commit();
+                int msg_code = response.getInt("msg_code");
 
-                } else
+                if (msg_code == 0)
                 {
-                    // 로그인 성공
-                    VolleyHttpClient.createCookie();
-                    // 로그인에 성공하였으나 GCM을 등록하지 않은 유저의 경우 인덱스를 가져와 push_id를 업그레이드 하는 절차 시작.
+                    JSONObject jsonObject = response.getJSONObject("data");
+
+                    boolean isSignin = jsonObject.getBoolean("is_signin");
+
+                    if (isSignin == true)
+                    {
+                        VolleyHttpClient.createCookie();
+                        return;
+                    }
                 }
 
-            } catch (JSONException e)
+                // 로그인 실패
+                // data 초기화
+                SharedPreferences.Editor ed = sharedPreference.edit();
+                ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
+                ed.putString(KEY_PREFERENCE_USER_ID, null);
+                ed.putString(KEY_PREFERENCE_USER_PWD, null);
+                ed.putString(KEY_PREFERENCE_USER_TYPE, null);
+                ed.commit();
+            } catch (Exception e)
             {
                 onError(e);
             }

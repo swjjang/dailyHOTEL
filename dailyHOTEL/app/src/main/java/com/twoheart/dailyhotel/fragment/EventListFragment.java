@@ -49,7 +49,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public class EventListFragment extends BaseFragment implements Constants
 {
@@ -123,9 +122,9 @@ public class EventListFragment extends BaseFragment implements Constants
             }
         }
     };
+
     private DailyHotelJsonResponseListener mUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -138,27 +137,40 @@ public class EventListFragment extends BaseFragment implements Constants
 
             try
             {
-                if (!response.getBoolean("login"))
+                if (response == null)
                 {
-                    // 로그인 실패
-                    // data 초기화
-                    SharedPreferences.Editor ed = baseActivity.sharedPreference.edit();
-                    ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
-                    ed.putString(KEY_PREFERENCE_USER_ID, null);
-                    ed.putString(KEY_PREFERENCE_USER_PWD, null);
-                    ed.commit();
-
-                    unLockUI();
-                } else
-                {
-                    VolleyHttpClient.createCookie();
-
+                    throw new NullPointerException("response == null.");
                 }
+
+                int msg_code = response.getInt("msg_code");
+
+                if (msg_code == 0)
+                {
+                    JSONObject jsonObject = response.getJSONObject("data");
+
+                    boolean isSignin = jsonObject.getBoolean("is_signin");
+
+                    if (isSignin == true)
+                    {
+                        VolleyHttpClient.createCookie();
+                        return;
+                    }
+                }
+
+                // 로그인 실패
+                // data 초기화
+                SharedPreferences.Editor ed = baseActivity.sharedPreference.edit();
+                ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
+                ed.putString(KEY_PREFERENCE_USER_ID, null);
+                ed.putString(KEY_PREFERENCE_USER_PWD, null);
+                ed.putString(KEY_PREFERENCE_USER_TYPE, null);
+                ed.commit();
+
+                unLockUI();
             } catch (JSONException e)
             {
                 onError(e);
             }
-
         }
     };
     private DailyHotelStringResponseListener mUserAliveStringResponseListener = new DailyHotelStringResponseListener()
@@ -192,23 +204,9 @@ public class EventListFragment extends BaseFragment implements Constants
                 // 재로그인
                 if (baseActivity.sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false))
                 {
-                    String id = baseActivity.sharedPreference.getString(KEY_PREFERENCE_USER_ID, null);
-                    String accessToken = baseActivity.sharedPreference.getString(KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
-                    String pw = baseActivity.sharedPreference.getString(KEY_PREFERENCE_USER_PWD, null);
+                    HashMap<String, String> params = Util.getLoginParams(baseActivity.sharedPreference);
 
-                    Map<String, String> loginParams = new HashMap<String, String>();
-
-                    if (null != accessToken)
-                    {
-                        loginParams.put("accessToken", accessToken);
-                    } else
-                    {
-                        loginParams.put("email", id);
-                    }
-
-                    loginParams.put("pw", pw);
-
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(), loginParams, mUserLoginJsonResponseListener, baseActivity));
+                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mUserLoginJsonResponseListener, baseActivity));
                 } else
                 {
                     unLockUI();

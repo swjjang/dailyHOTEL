@@ -39,7 +39,7 @@ import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
-import com.twoheart.dailyhotel.util.DailyHotelPreference;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
@@ -462,7 +462,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
             ed.clear();
             ed.commit();
 
-            DailyHotelPreference.getInstance(ProfileActivity.this).clear();
+            DailyPreference.getInstance(ProfileActivity.this).clear();
 
             try
             {

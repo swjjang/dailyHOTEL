@@ -36,7 +36,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class BookingTabBookingFragment extends BaseFragment implements Constants
 {
@@ -48,92 +47,6 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 
     private Booking mBooking;
     private BookingHotelDetail mHotelDetail;
-    private DailyHotelJsonResponseListener mUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            if (baseActivity == null)
-            {
-                return;
-            }
-
-            try
-            {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
-                if (response.getString("login").equals("true") == false)
-                {
-                    // 로그인 실패
-                    // data 초기화
-                    SharedPreferences.Editor ed = baseActivity.sharedPreference.edit();
-                    ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
-                    ed.putString(KEY_PREFERENCE_USER_ID, null);
-                    ed.putString(KEY_PREFERENCE_USER_PWD, null);
-                    ed.commit();
-
-                    showToast(getString(R.string.toast_msg_failed_to_login), Toast.LENGTH_SHORT, true);
-                } else
-                {
-                    VolleyHttpClient.createCookie();
-                }
-            } catch (JSONException e)
-            {
-                onError(e);
-            } finally
-            {
-                unLockUI();
-            }
-        }
-    };
-    private DailyHotelStringResponseListener mUserAliveStringResponseListener = new DailyHotelStringResponseListener()
-    {
-
-        @Override
-        public void onResponse(String url, String response)
-        {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            if (baseActivity == null)
-            {
-                return;
-            }
-
-            String result = null;
-
-            if (Util.isTextEmpty(response) == false)
-            {
-                result = response.trim();
-            }
-
-            if ("alive".equalsIgnoreCase(result) == true)
-            {
-            } else if ("dead".equalsIgnoreCase(result) == true)
-            { // session dead
-                // 재로그인
-                if (baseActivity.sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false))
-                {
-                    Map<String, String> loginParams = new HashMap<String, String>();
-                    loginParams.put("email", baseActivity.sharedPreference.getString(KEY_PREFERENCE_USER_ID, null));
-                    loginParams.put("pw", baseActivity.sharedPreference.getString(KEY_PREFERENCE_USER_PWD, null));
-
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(), loginParams, mUserLoginJsonResponseListener, baseActivity));
-                } else
-                {
-                    startActivity(new Intent(baseActivity, LoginActivity.class));
-                }
-            } else
-            {
-                unLockUI();
-            }
-        }
-    };
 
     public static BookingTabBookingFragment newInstance(BookingHotelDetail hotelDetail, Booking booking, String title)
     {
@@ -149,10 +62,6 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 
         return newFragment;
     }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -247,4 +156,103 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
 
         return view;
     }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Listener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private DailyHotelJsonResponseListener mUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (baseActivity == null)
+            {
+                return;
+            }
+
+            try
+            {
+                if (response == null)
+                {
+                    throw new NullPointerException("response == null.");
+                }
+
+                int msg_code = response.getInt("msg_code");
+
+                if (msg_code == 0)
+                {
+                    JSONObject jsonObject = response.getJSONObject("data");
+
+                    boolean isSignin = jsonObject.getBoolean("is_signin");
+
+                    if (isSignin == true)
+                    {
+                        VolleyHttpClient.createCookie();
+                        return;
+                    }
+                }
+
+                // 로그인 실패
+                // data 초기화
+                SharedPreferences.Editor ed = baseActivity.sharedPreference.edit();
+                ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
+                ed.putString(KEY_PREFERENCE_USER_ID, null);
+                ed.putString(KEY_PREFERENCE_USER_PWD, null);
+                ed.putString(KEY_PREFERENCE_USER_TYPE, null);
+                ed.commit();
+
+                showToast(getString(R.string.toast_msg_failed_to_login), Toast.LENGTH_SHORT, true);
+            } catch (JSONException e)
+            {
+                onError(e);
+            } finally
+            {
+                unLockUI();
+            }
+        }
+    };
+
+    private DailyHotelStringResponseListener mUserAliveStringResponseListener = new DailyHotelStringResponseListener()
+    {
+
+        @Override
+        public void onResponse(String url, String response)
+        {
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (baseActivity == null)
+            {
+                return;
+            }
+
+            String result = null;
+
+            if (Util.isTextEmpty(response) == false)
+            {
+                result = response.trim();
+            }
+
+            if ("alive".equalsIgnoreCase(result) == true)
+            {
+            } else if ("dead".equalsIgnoreCase(result) == true)
+            { // session dead
+                // 재로그인
+                if (baseActivity.sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false))
+                {
+                    HashMap<String, String> params = Util.getLoginParams(baseActivity.sharedPreference);
+
+                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mUserLoginJsonResponseListener, baseActivity));
+                } else
+                {
+                    startActivity(new Intent(baseActivity, LoginActivity.class));
+                }
+            } else
+            {
+                unLockUI();
+            }
+        }
+    };
 }

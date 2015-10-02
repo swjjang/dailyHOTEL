@@ -1413,23 +1413,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         // 세션이 종료되어있으면 다시 로그인한다.
         if (sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false) == true)
         {
-            String id = sharedPreference.getString(KEY_PREFERENCE_USER_ID, null);
-            String accessToken = sharedPreference.getString(KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
-            String pw = sharedPreference.getString(KEY_PREFERENCE_USER_PWD, null);
+            HashMap<String, String> params = Util.getLoginParams(sharedPreference);
 
-            Map<String, String> loginParams = new HashMap<String, String>();
-
-            if (accessToken != null)
-            {
-                loginParams.put("accessToken", accessToken);
-            } else
-            {
-                loginParams.put("email", id);
-            }
-
-            loginParams.put("pw", pw);
-
-            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(), loginParams, mUserLoginJsonResponseListener, BookingActivity.this));
+            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mUserLoginJsonResponseListener, BookingActivity.this));
         } else
         {
             unLockUI();
@@ -2238,9 +2224,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             }
         }
     };
+
     private DailyHotelJsonResponseListener mUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -2251,18 +2237,30 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                     throw new NullPointerException("response == null");
                 }
 
-                if (response.getBoolean("login") == true)
-                {
-                    VolleyHttpClient.createCookie();
+                int msg_code = response.getInt("msg_code");
 
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("timeZone", "Asia/Seoul");
-
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, BookingActivity.this));
-                } else
+                if (msg_code == 0)
                 {
-                    unLockUI();
+                    JSONObject jsonObject = response.getJSONObject("data");
+
+                    boolean isSignin = jsonObject.getBoolean("is_signin");
+
+                    if (isSignin == true)
+                    {
+                        VolleyHttpClient.createCookie();
+
+                        Map<String, String> params = new HashMap<String, String>();
+                        params.put("timeZone", "Asia/Seoul");
+
+                        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, BookingActivity.this));
+
+                        return;
+                    }
                 }
+
+                // 로그인을 실패하면 재로그인을 시도한다
+                unLockUI();
+                startLoginActivity();
             } catch (Exception e)
             {
                 onError(e);

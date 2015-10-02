@@ -18,6 +18,7 @@ package com.twoheart.dailyhotel.activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -632,6 +633,8 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
      */
     protected void onInternalError()
     {
+        unLockUI();
+
         showSimpleDialog(null, getString(R.string.dialog_msg_internal_error), getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
         {
             @Override
@@ -976,5 +979,15 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
         {
             ExLog.d(e.toString());
         }
+    }
+
+    protected void startLoginActivity()
+    {
+        DailyToast.showToast(this, R.string.toast_msg_please_login, Toast.LENGTH_LONG);
+
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
+
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
     }
 }

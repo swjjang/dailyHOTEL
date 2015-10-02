@@ -123,138 +123,6 @@ public class HotelDetailActivity extends BaseActivity
     };
 
 
-    private DailyHotelJsonResponseListener mUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-
-            try
-            {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
-                if (response.getString("login").equals("true") == false)
-                {
-                    // 로그인 실패
-                    // data 초기화
-                    SharedPreferences.Editor ed = sharedPreference.edit();
-                    ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
-                    ed.putString(KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
-                    ed.putString(KEY_PREFERENCE_USER_ID, null);
-                    ed.putString(KEY_PREFERENCE_USER_PWD, null);
-                    ed.commit();
-
-                    unLockUI();
-                    loadLoginProcess();
-
-                } else
-                {
-                    //로그인 성공
-                    VolleyHttpClient.createCookie();
-
-                    mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, HotelDetailActivity.this));
-                }
-            } catch (JSONException e)
-            {
-                onError(e);
-                unLockUI();
-            }
-        }
-    };
-    private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, JSONObject response)
-        {
-            if (isFinishing() == true)
-            {
-                return;
-            }
-
-            try
-            {
-                if (response == null)
-                {
-                    throw new NullPointerException("response == null");
-                }
-
-                if (mIsStartByShare == true)
-                {
-                    mCheckInSaleTime.setCurrentTime(response.getLong("currentDateTime"));
-                    mCheckInSaleTime.setOpenTime(response.getLong("openDateTime"));
-                    mCheckInSaleTime.setCloseTime(response.getLong("closeDateTime"));
-
-                    long shareDailyTime = mCheckInSaleTime.getDayOfDaysHotelDate().getTime();
-                    long todayDailyTime = response.getLong("dailyDateTime");
-
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
-                    simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-                    int shareDailyDay = Integer.parseInt(simpleDateFormat.format(new Date(shareDailyTime)));
-                    int todayDailyDay = Integer.parseInt(simpleDateFormat.format(new Date(todayDailyTime)));
-
-                    // 지난 날의 호텔인 경우.
-                    if (shareDailyDay < todayDailyDay)
-                    {
-                        DailyToast.showToast(HotelDetailActivity.this, R.string.toast_msg_dont_past_hotelinfo, Toast.LENGTH_LONG);
-                        finish();
-                        return;
-                    }
-
-                    if (mCheckInSaleTime.isSaleTime() == true)
-                    {
-                        // 호텔 정보를 가져온다.
-                        String params = String.format("?hotel_idx=%d&checkin_date=%s&length_stay=%d", mHotelDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), mHotelDetail.nights);
-
-                        //						if (DEBUG == true)
-                        //						{
-                        //							showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
-                        //						}
-
-                        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_HOTEL_INFO).append(params).toString(), null, mHotelDetailJsonResponseListener, HotelDetailActivity.this));
-                    } else
-                    {
-                        finish();
-                    }
-                } else
-                {
-                    SaleTime saleTime = new SaleTime();
-
-                    saleTime.setCurrentTime(response.getLong("currentDateTime"));
-                    saleTime.setOpenTime(response.getLong("openDateTime"));
-                    saleTime.setCloseTime(response.getLong("closeDateTime"));
-                    saleTime.setDailyTime(response.getLong("dailyDateTime"));
-
-                    if (saleTime.isSaleTime() == true)
-                    {
-                        // 호텔 정보를 가져온다.
-                        String params = String.format("?hotel_idx=%d&checkin_date=%s&length_stay=%d", mHotelDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), mHotelDetail.nights);
-
-                        //						if (DEBUG == true)
-                        //						{
-                        //							showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
-                        //						}
-
-                        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_HOTEL_INFO).append(params).toString(), null, mHotelDetailJsonResponseListener, HotelDetailActivity.this));
-                    } else
-                    {
-                        finish();
-                    }
-                }
-            } catch (Exception e)
-            {
-                onError(e);
-                unLockUI();
-
-                finish();
-            }
-        }
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -464,19 +332,6 @@ public class HotelDetailActivity extends BaseActivity
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    /**
-     * 예약화면으로 넘어가기 전에 로그인이 필요함. 로그인 화면을 띄움.
-     */
-    private void loadLoginProcess()
-    {
-        DailyToast.showToast(this, R.string.toast_msg_please_login, Toast.LENGTH_LONG);
-        Intent i = new Intent(this, LoginActivity.class);
-        i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP); // 7.2 S2에서 예약버튼 난타할 경우 여러개의 엑티비티가 생성되는것을 막음
-        startActivityForResult(i, CODE_REQUEST_ACTIVITY_LOGIN);
-
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
     }
 
     private void moveToBooking(SaleRoomInformation saleRoomInformation)
@@ -880,31 +735,157 @@ public class HotelDetailActivity extends BaseActivity
                 // 재로그인
                 if (sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false))
                 {
-                    String id = sharedPreference.getString(KEY_PREFERENCE_USER_ID, null);
-                    String accessToken = sharedPreference.getString(KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
-                    String pw = sharedPreference.getString(KEY_PREFERENCE_USER_PWD, null);
+                    HashMap<String, String> params = Util.getLoginParams(sharedPreference);
 
-                    Map<String, String> loginParams = new HashMap<String, String>();
-
-                    if (accessToken != null)
-                    {
-                        loginParams.put("accessToken", accessToken);
-                    } else
-                    {
-                        loginParams.put("email", id);
-                    }
-
-                    loginParams.put("pw", pw);
-
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(), loginParams, mUserLoginJsonResponseListener, HotelDetailActivity.this));
+                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mUserLoginJsonResponseListener, HotelDetailActivity.this));
                 } else
                 {
-                    loadLoginProcess();
+                    startLoginActivity();
                 }
-
             } else
             {
                 onError();
+            }
+        }
+    };
+
+    private DailyHotelJsonResponseListener mUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                if (response == null)
+                {
+                    throw new NullPointerException("response == null.");
+                }
+
+                int msg_code = response.getInt("msg_code");
+
+                if (msg_code == 0)
+                {
+                    JSONObject jsonObject = response.getJSONObject("data");
+
+                    boolean isSignin = jsonObject.getBoolean("is_signin");
+
+                    if (isSignin == true)
+                    {
+                        //로그인 성공
+                        VolleyHttpClient.createCookie();
+
+                        mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, HotelDetailActivity.this));
+                        return;
+                    }
+                }
+
+                // 로그인 실패
+                // data 초기화
+                SharedPreferences.Editor ed = sharedPreference.edit();
+                ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
+                ed.putString(KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
+                ed.putString(KEY_PREFERENCE_USER_ID, null);
+                ed.putString(KEY_PREFERENCE_USER_PWD, null);
+                ed.commit();
+
+                unLockUI();
+                startLoginActivity();
+
+            } catch (JSONException e)
+            {
+                unLockUI();
+                onError(e);
+            }
+        }
+    };
+
+    private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            if (isFinishing() == true)
+            {
+                return;
+            }
+
+            try
+            {
+                if (response == null)
+                {
+                    throw new NullPointerException("response == null");
+                }
+
+                if (mIsStartByShare == true)
+                {
+                    mCheckInSaleTime.setCurrentTime(response.getLong("currentDateTime"));
+                    mCheckInSaleTime.setOpenTime(response.getLong("openDateTime"));
+                    mCheckInSaleTime.setCloseTime(response.getLong("closeDateTime"));
+
+                    long shareDailyTime = mCheckInSaleTime.getDayOfDaysHotelDate().getTime();
+                    long todayDailyTime = response.getLong("dailyDateTime");
+
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
+                    simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+                    int shareDailyDay = Integer.parseInt(simpleDateFormat.format(new Date(shareDailyTime)));
+                    int todayDailyDay = Integer.parseInt(simpleDateFormat.format(new Date(todayDailyTime)));
+
+                    // 지난 날의 호텔인 경우.
+                    if (shareDailyDay < todayDailyDay)
+                    {
+                        DailyToast.showToast(HotelDetailActivity.this, R.string.toast_msg_dont_past_hotelinfo, Toast.LENGTH_LONG);
+                        finish();
+                        return;
+                    }
+
+                    if (mCheckInSaleTime.isSaleTime() == true)
+                    {
+                        // 호텔 정보를 가져온다.
+                        String params = String.format("?hotel_idx=%d&checkin_date=%s&length_stay=%d", mHotelDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), mHotelDetail.nights);
+
+                        //						if (DEBUG == true)
+                        //						{
+                        //							showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
+                        //						}
+
+                        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_HOTEL_INFO).append(params).toString(), null, mHotelDetailJsonResponseListener, HotelDetailActivity.this));
+                    } else
+                    {
+                        finish();
+                    }
+                } else
+                {
+                    SaleTime saleTime = new SaleTime();
+
+                    saleTime.setCurrentTime(response.getLong("currentDateTime"));
+                    saleTime.setOpenTime(response.getLong("openDateTime"));
+                    saleTime.setCloseTime(response.getLong("closeDateTime"));
+                    saleTime.setDailyTime(response.getLong("dailyDateTime"));
+
+                    if (saleTime.isSaleTime() == true)
+                    {
+                        // 호텔 정보를 가져온다.
+                        String params = String.format("?hotel_idx=%d&checkin_date=%s&length_stay=%d", mHotelDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), mHotelDetail.nights);
+
+                        //						if (DEBUG == true)
+                        //						{
+                        //							showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
+                        //						}
+
+                        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_HOTEL_INFO).append(params).toString(), null, mHotelDetailJsonResponseListener, HotelDetailActivity.this));
+                    } else
+                    {
+                        finish();
+                    }
+                }
+            } catch (Exception e)
+            {
+                onError(e);
+                unLockUI();
+
+                finish();
             }
         }
     };
