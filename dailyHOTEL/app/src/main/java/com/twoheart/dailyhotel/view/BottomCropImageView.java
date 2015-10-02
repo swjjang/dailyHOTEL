@@ -26,12 +26,6 @@ public class BottomCropImageView extends ImageView
         initLayout(context);
     }
 
-    public BottomCropImageView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
-    {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        initLayout(context);
-    }
-
     private void initLayout(Context context)
     {
         setScaleType(ScaleType.MATRIX);
