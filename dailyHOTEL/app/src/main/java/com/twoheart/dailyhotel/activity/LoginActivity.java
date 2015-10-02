@@ -243,7 +243,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         mSocialParams.put("is_auto", "true");
         params.put("is_auto", "true");
 
-        mSocialParams.put("marketType", RELEASE_STORE.getName());
+        mSocialParams.put("market_type", RELEASE_STORE.getName());
         mSocialParams.put("user_type", "facebook");
         params.put("user_type", "facebook");
 
@@ -252,6 +252,8 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
     private void registerKakaokUser(long id)
     {
+        unLockUI();
+
         TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
 
         String index = String.valueOf(id);
@@ -286,7 +288,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         mSocialParams.put("is_auto", "true");
         params.put("is_auto", "true");
 
-        mSocialParams.put("marketType", RELEASE_STORE.getName());
+        mSocialParams.put("market_type", RELEASE_STORE.getName());
         mSocialParams.put("user_type", "kakao_talk");
         params.put("user_type", "kakao_talk");
 
@@ -401,10 +403,14 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             }
         } else
         {
+            lockUI();
+
             if (Session.getCurrentSession().handleActivityResult(requestCode, resultCode, data) == true)
             {
                 return;
             }
+
+            unLockUI();
 
             if (mCallbackManager != null)
             {
@@ -602,60 +608,73 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     throw new NullPointerException("response == null.");
                 }
 
-                String result = response.getString("join");
+                int msg_code = response.getInt("msg_code");
+
+                if (msg_code == 0)
+                {
+                    JSONObject jsonObject = response.getJSONObject("data");
+
+                    boolean isSignup = jsonObject.getBoolean("is_signup");
+
+                    if (isSignup == true)
+                    {
+                        // 회원가입에 성공하면 이제 로그인 절차
+                        Editor ed = sharedPreference.edit();
+                        ed.putBoolean("Social Signup", true);
+                        ed.commit();
+
+                        HashMap<String, String> params = new HashMap<String, String>();
+
+                        if (mSocialParams.containsKey("email") == true)
+                        {
+                            params.put("email", mSocialParams.get("email"));
+                        }
+
+                        if (mSocialParams.containsKey("pw") == true)
+                        {
+                            params.put("pw", mSocialParams.get("pw"));
+                        }
+
+                        if (mSocialParams.containsKey("social_id") == true)
+                        {
+                            params.put("social_id", mSocialParams.get("social_id"));
+                        }
+
+                        if (mSocialParams.containsKey("user_type") == true)
+                        {
+                            params.put("user_type", mSocialParams.get("user_type"));
+                        }
+
+                        if (mSocialParams.containsKey("is_auto") == true)
+                        {
+                            params.put("is_auto", mSocialParams.get("is_auto"));
+                        }
+
+                        mAutoLoginSwitch.setChecked(true);
+
+                        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mSocialUserLoginJsonResponseListener, LoginActivity.this));
+
+                        return;
+                    }
+                }
+
+                unLockUI();
+                mSocialParams.clear();
+
                 String msg = response.getString("msg");
 
-                if ("true".equalsIgnoreCase(result) == true)
+                if (Util.isTextEmpty(msg) == true)
                 {
-                    // 회원가입에 성공하면 이제 로그인 절차
-                    Editor ed = sharedPreference.edit();
-                    ed.putBoolean("Social Signup", true);
-                    ed.commit();
-
-                    HashMap<String, String> params = new HashMap<String, String>();
-
-                    if (mSocialParams.containsKey("email") == true)
-                    {
-                        params.put("email", mSocialParams.get("email"));
-                    }
-
-                    if (mSocialParams.containsKey("pw") == true)
-                    {
-                        params.put("pw", mSocialParams.get("pw"));
-                    }
-
-                    if (mSocialParams.containsKey("social_id") == true)
-                    {
-                        params.put("social_id", mSocialParams.get("social_id"));
-                    }
-
-                    if (mSocialParams.containsKey("user_type") == true)
-                    {
-                        params.put("user_type", mSocialParams.get("user_type"));
-                    }
-
-                    if (mSocialParams.containsKey("is_auto") == true)
-                    {
-                        params.put("is_auto", mSocialParams.get("is_auto"));
-                    }
-
-                    mAutoLoginSwitch.setChecked(true);
-
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mSocialUserLoginJsonResponseListener, LoginActivity.this));
-                } else
-                {
-                    unLockUI();
-
-                    mSocialParams.clear();
-                    DailyToast.showToast(LoginActivity.this, msg, Toast.LENGTH_LONG);
+                    msg = getString(R.string.toast_msg_failed_to_signup);
                 }
+
+                DailyToast.showToast(LoginActivity.this, msg, Toast.LENGTH_LONG);
 
             } catch (Exception e)
             {
                 unLockUI();
                 onError(e);
             }
-
         }
     };
 
@@ -805,45 +824,40 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 }
 
                 int msg_code = response.getInt("msg_code");
+                JSONObject jsonObject = response.getJSONObject("data");
+                boolean isSignin = jsonObject.getBoolean("is_signin");
 
-                if (msg_code == 0)
+                if (isSignin == true)
                 {
-                    JSONObject jsonObject = response.getJSONObject("data");
+                    VolleyHttpClient.createCookie();
+                    storeLoginInfo();
 
-                    boolean isSignin = jsonObject.getBoolean("is_signin");
+                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, LoginActivity.this));
 
-                    if (isSignin == true)
-                    {
-                        VolleyHttpClient.createCookie();
-                        storeLoginInfo();
-
-                        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, LoginActivity.this));
-
-                        Editor editor = sharedPreference.edit();
-                        editor.putString("collapseKey", "");
-                        editor.apply();
-
-                        unLockUI();
-                        return;
-                    } else
-                    {
-                        // 페이스북, 카카오톡 로그인 정보가 없는 경우 회원 가입으로 전환한다
-                        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNUP).toString(), mSocialParams, mUserSignupJsonResponseListener, LoginActivity.this));
-                    }
-                } else
-                {
-                    // 로그인이 실패한 경우
-                    String msg = response.getString("msg");
-
-                    if (Util.isTextEmpty(msg) == true)
-                    {
-                        msg = getString(R.string.toast_msg_failed_to_login);
-                    }
-
-                    DailyToast.showToast(LoginActivity.this, msg, Toast.LENGTH_LONG);
+                    Editor editor = sharedPreference.edit();
+                    editor.putString("collapseKey", "");
+                    editor.apply();
 
                     unLockUI();
+                } else
+                {
+                    // 페이스북, 카카오톡 로그인 정보가 없는 경우 회원 가입으로 전환한다
+                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNUP).toString(), mSocialParams, mUserSignupJsonResponseListener, LoginActivity.this));
                 }
+
+                //                {
+                //                    // 로그인이 실패한 경우
+                //                    String msg = response.getString("msg");
+                //
+                //                    if (Util.isTextEmpty(msg) == true)
+                //                    {
+                //                        msg = getString(R.string.toast_msg_failed_to_login);
+                //                    }
+                //
+                //                    DailyToast.showToast(LoginActivity.this, msg, Toast.LENGTH_LONG);
+                //
+                //                    unLockUI();
+                //                }
             } catch (Exception e)
             {
                 ExLog.d(e.toString());

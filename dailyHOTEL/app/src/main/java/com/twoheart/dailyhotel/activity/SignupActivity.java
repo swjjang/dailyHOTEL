@@ -275,7 +275,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
                 TelephonyManager tManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
                 mSignupParams.put("device", tManager.getDeviceId());
-                mSignupParams.put("marketType", RELEASE_STORE.getName());
+                mSignupParams.put("market_type", RELEASE_STORE.getName());
 
                 String recommender = mRecommenderEditText.getText().toString().trim();
                 if (Util.isTextEmpty(recommender) == false)
@@ -360,6 +360,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
         ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, true);
         ed.putString(KEY_PREFERENCE_USER_ID, id);
         ed.putString(KEY_PREFERENCE_USER_PWD, pwd);
+        ed.putString(KEY_PREFERENCE_USER_TYPE, "nomal");
         ed.commit();
 
         setResult(RESULT_OK);
@@ -686,33 +687,39 @@ public class SignupActivity extends BaseActivity implements OnClickListener
             {
                 if (response == null)
                 {
-                    throw new NullPointerException("response == null");
+                    throw new NullPointerException("response == null.");
                 }
 
-                String result = response.getString("join");
-                String msg = null;
+                int msg_code = response.getInt("msg_code");
 
-                if (response.length() > 1)
+                if (msg_code == 0)
                 {
-                    msg = response.getString("msg");
+                    JSONObject jsonObject = response.getJSONObject("data");
+
+                    boolean isSignup = jsonObject.getBoolean("is_signup");
+
+                    if (isSignup == true)
+                    {
+                        Map<String, String> params = new HashMap<String, String>();
+                        params.put("email", mSignupParams.get("email"));
+                        params.put("pw", Crypto.encrypt(mSignupParams.get("pw")).replace("\n", ""));
+                        params.put("social_id", "0");
+                        params.put("user_type", "nomal");
+                        params.put("is_auto", "true");
+
+                        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mUserLoginJsonResponseListener, SignupActivity.this));
+                        return;
+                    }
                 }
 
-                if (result.equals("true") == true)
-                {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("email", mSignupParams.get("email"));
-                    params.put("pw", Crypto.encrypt(mSignupParams.get("pw")).replace("\n", ""));
-                    params.put("social_id", "0");
-                    params.put("user_type", "nomal");
-                    params.put("is_auto", "true");
+                String msg = response.getString("msg");
 
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mUserLoginJsonResponseListener, SignupActivity.this));
-                } else
+                if (Util.isTextEmpty(msg) == true)
                 {
-                    unLockUI();
-                    DailyToast.showToast(SignupActivity.this, msg, Toast.LENGTH_LONG);
+                    msg = getString(R.string.toast_msg_failed_to_signup);
                 }
 
+                DailyToast.showToast(SignupActivity.this, msg, Toast.LENGTH_LONG);
             } catch (Exception e)
             {
                 unLockUI();

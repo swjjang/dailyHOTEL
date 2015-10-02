@@ -13,7 +13,7 @@ import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 
 import com.twoheart.dailyhotel.activity.PushDialogActivity;
-import com.twoheart.dailyhotel.util.DailyHotelPreference;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.WakeLock;
 
 /**
@@ -30,7 +30,7 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver
         String msg = context.getString(R.string.alarm_msg);
         String ticker = context.getString(R.string.alarm_ticker);
 
-        DailyHotelPreference.getInstance(context).setEnabledOpeningAlarm(false);
+        DailyPreference.getInstance(context).setEnabledOpeningAlarm(false);
 
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
 

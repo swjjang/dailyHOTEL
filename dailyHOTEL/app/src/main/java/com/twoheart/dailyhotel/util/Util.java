@@ -404,6 +404,8 @@ public class Util implements Constants
             }
         }
 
+        params.put("is_auto", sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false) ? "true" : "false");
+
         params.put("pw", pw);
 
         if (Util.isTextEmpty(type) == false)

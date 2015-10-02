@@ -6,25 +6,25 @@ import android.content.SharedPreferences.Editor;
 
 /**
  */
-public class DailyHotelPreference
+public class DailyPreference
 {
     private static final String KEY_OPENING_ALARM = "1"; // 알람
     private static final String KEY_NEW_EVENT_TODAY_FNB = "2"; // 앱 처음 실행시 FNB에  New 아이콘 넣기
-    private static DailyHotelPreference mInstance;
+    private static DailyPreference mInstance;
     private SharedPreferences mPreferences;
     private Editor mEditor;
 
-    private DailyHotelPreference(Context context)
+    private DailyPreference(Context context)
     {
         mPreferences = context.getSharedPreferences("dailyHOTEL_v1", Context.MODE_PRIVATE);
         mEditor = mPreferences.edit();
     }
 
-    public static synchronized DailyHotelPreference getInstance(Context context)
+    public static synchronized DailyPreference getInstance(Context context)
     {
         if (mInstance == null)
         {
-            mInstance = new DailyHotelPreference(context);
+            mInstance = new DailyPreference(context);
         }
 
         return mInstance;

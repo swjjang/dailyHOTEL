@@ -334,19 +334,6 @@ public class HotelDetailActivity extends BaseActivity
         }
     }
 
-    /**
-     * 예약화면으로 넘어가기 전에 로그인이 필요함. 로그인 화면을 띄움.
-     */
-    private void loadLoginProcess()
-    {
-        DailyToast.showToast(this, R.string.toast_msg_please_login, Toast.LENGTH_LONG);
-        Intent i = new Intent(this, LoginActivity.class);
-        i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP); // 7.2 S2에서 예약버튼 난타할 경우 여러개의 엑티비티가 생성되는것을 막음
-        startActivityForResult(i, CODE_REQUEST_ACTIVITY_LOGIN);
-
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-    }
-
     private void moveToBooking(SaleRoomInformation saleRoomInformation)
     {
         if (saleRoomInformation == null)
@@ -753,9 +740,8 @@ public class HotelDetailActivity extends BaseActivity
                     mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mUserLoginJsonResponseListener, HotelDetailActivity.this));
                 } else
                 {
-                    loadLoginProcess();
+                    startLoginActivity();
                 }
-
             } else
             {
                 onError();

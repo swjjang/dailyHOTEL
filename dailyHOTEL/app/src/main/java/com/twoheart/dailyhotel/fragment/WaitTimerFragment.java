@@ -42,7 +42,7 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyHotelPreference;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.WakeLock;
 import com.twoheart.dailyhotel.view.widget.FontManager;
@@ -160,7 +160,7 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
         sFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
         // 알람 설정
-        boolean enabledAlarm = DailyHotelPreference.getInstance(baseActivity).getEnabledOpeningAlarm();
+        boolean enabledAlarm = DailyPreference.getInstance(baseActivity).getEnabledOpeningAlarm();
 
         switch (mType)
         {
@@ -258,7 +258,7 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
                 return;
             }
 
-            boolean enabledAlarm = DailyHotelPreference.getInstance(baseActivity).getEnabledOpeningAlarm();
+            boolean enabledAlarm = DailyPreference.getInstance(baseActivity).getEnabledOpeningAlarm();
             setNotifyEnable(!enabledAlarm);
         }
     }
@@ -272,7 +272,7 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
             return;
         }
 
-        DailyHotelPreference.getInstance(baseActivity).setEnabledOpeningAlarm(enable);
+        DailyPreference.getInstance(baseActivity).setEnabledOpeningAlarm(enable);
 
         if (enable)
         {

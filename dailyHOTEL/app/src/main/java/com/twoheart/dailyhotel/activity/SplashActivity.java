@@ -331,7 +331,6 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
 
     private DailyHotelJsonResponseListener mUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-
         @Override
         public void onResponse(String url, JSONObject response)
         {

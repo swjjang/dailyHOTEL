@@ -73,7 +73,7 @@ import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyHotelPreference;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.CloseOnBackPressed;
@@ -96,14 +96,15 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
     public static final int INDEX_EVENT_FRAGMENT = 4;
     public static final int INDEX_SETTING_FRAGMENT = 5;
     private static final int DRAWERMENU_COUNT = 6;
-    private static final String TAG_FRAGMENT_RATING_HOTEL = "rating_hotel";
 
     public ListView mDrawerList;
     public DrawerLayout mDrawerLayout;
     public Dialog popUpDialog;
     public ActionBarDrawerToggle drawerToggle;
+
     // 마지막으로 머물렀던 Fragment의 index
     public int indexLastFragment; // Error Fragment에서 다시 돌아올 때 필요.
+
     // DrawerMenu 객체들
     public DrawerMenu menuHotelListFragment;
     public DrawerMenu menuFnBListFragment;
@@ -117,10 +118,10 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
     private FrameLayout mContentFrame;
     private View mNewEventView;
     private DrawerMenuListAdapter mDrawerMenuListAdapter;
+
     // Back 버튼을 두 번 눌러 핸들러 멤버 변수
     private CloseOnBackPressed backButtonHandler;
     private Handler mHandler = new Handler();
-
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -129,26 +130,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
         //        com.twoheart.dailyhotel.network.request.DailyHotelRequest.makeUrlEncoder();
 
-        //		ExLog.d("android.permission.GET_TASKS : "+ ContextCompat.checkSelfPermission(this, "android.permission.GET_TASKS"));
-        //		ExLog.d("android.permission.READ_PHONE_STATE : "+ ContextCompat.checkSelfPermission(this, "android.permission.READ_PHONE_STATE"));
-        //		ExLog.d("android.permission.WRITE_EXTERNAL_STORAGE : "+ ContextCompat.checkSelfPermission(this, "android.permission.WRITE_EXTERNAL_STORAGE"));
-        //		ExLog.d("android.permission.READ_EXTERNAL_STORAGE : "+ ContextCompat.checkSelfPermission(this, "android.permission.READ_EXTERNAL_STORAGE"));
-        //		ExLog.d("android.permission.GET_ACCOUNTS : "+ ContextCompat.checkSelfPermission(this, "android.permission.GET_ACCOUNTS"));
-        //		ExLog.d("com.twoheart.dailyhotel.permission.MAPS_RECEIVE : "+ ContextCompat.checkSelfPermission(this, "com.twoheart.dailyhotel.permission.MAPS_RECEIVE"));
-        //		ExLog.d("com.google.android.providers.gsf.permission.READ_GSERVICES : "+ ContextCompat.checkSelfPermission(this, "com.google.android.providers.gsf.permission.READ_GSERVICES"));
-        //		ExLog.d("android.permission.ACCESS_COARSE_LOCATION : "+ ContextCompat.checkSelfPermission(this, "android.permission.ACCESS_COARSE_LOCATION"));
-        //		ExLog.d("android.permission.ACCESS_FINE_LOCATION : "+ ContextCompat.checkSelfPermission(this, "android.permission.ACCESS_FINE_LOCATION"));
-        //		ExLog.d("com.google.android.c2dm.permission.RECEIVE : "+ ContextCompat.checkSelfPermission(this, "com.google.android.c2dm.permission.RECEIVE"));
-        //		ExLog.d("com.twoheart.dailyhotel.permission.C2D_MESSAGE : "+ ContextCompat.checkSelfPermission(this, "com.twoheart.dailyhotel.permission.C2D_MESSAGE"));
-        //
-        //		{
-        //			shouldShowRequestPermissionRationale("android.permission.ACCESS_COARSE_LOCATION");
-        //
-        //			requestPermissions(new String[]{"android.permission.ACCESS_COARSE_LOCATION"}, 0);
-        //		}
-
-        // 사용자가 선택한 언어, but 만약 사용자가 한국인인데 일본어를 선택하면 jp가 됨.
-        // 영어인 경우 - English, 한글인 경우 - 한국어
         VolleyHttpClient.cookieManagerCreate();
 
         Editor editor = sharedPreference.edit();
@@ -565,7 +546,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                 indexLastFragment = INDEX_FNB_LIST_FRAGMENT;
 
                 // 이벤트 진입시에 이벤트 new를 제거한다.
-                DailyHotelPreference.getInstance(this).setNewTodayFnB(false);
+                DailyPreference.getInstance(this).setNewTodayFnB(false);
 
                 hideNewFnb(true);
 
@@ -740,7 +721,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                     setActionBarRegionEnable(true);
 
                     if (sharedPreference.getBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false) == true //
-                            || DailyHotelPreference.getInstance(MainActivity.this).isNewTodayFnB() == true)
+                            || DailyPreference.getInstance(MainActivity.this).isNewTodayFnB() == true)
                     {
                         showActionBarNewIcon();
                     }
@@ -804,7 +785,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
             menuEventListFragment.hasEvent = false;
         }
 
-        if (DailyHotelPreference.getInstance(this).isNewTodayFnB() == true)
+        if (DailyPreference.getInstance(this).isNewTodayFnB() == true)
         {
             menuFnBListFragment.hasEvent = true;
 
@@ -952,7 +933,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
         if (isForce == false)
         {
             if (sharedPreference.getBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false) == true || //
-                    DailyHotelPreference.getInstance(this).isNewTodayFnB() == true)
+                    DailyPreference.getInstance(this).isNewTodayFnB() == true)
             {
                 return;
             }
@@ -1274,7 +1255,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                 }
 
                 // 같이 이벤트 처리
-                if (DailyHotelPreference.getInstance(MainActivity.this).isNewTodayFnB() == true)
+                if (DailyPreference.getInstance(MainActivity.this).isNewTodayFnB() == true)
                 {
                     if (mDrawerLayout.isDrawerOpen(mDrawerList) == true)
                     {

@@ -94,7 +94,8 @@
     <string name="toast_msg_please_input_passwd">비밀번호를 입력해주세요.</string>
     <string name="toast_msg_please_input_required_infos">필수 입력사항은 모두 입력해주세요.</string>
     <string name="toast_msg_please_input_password_more_than_4chars">비밀번호를 4글자 이상 입력해주세요.</string>
-    <string name="toast_msg_success_to_signup">회원가입이 완료되었습니다</string>
+    <string name="toast_msg_success_to_signup">회원가입이 완료되었습니다.</string>
+    <string name="toast_msg_failed_to_signup">회원가입을 실패하였습니다. 재시도 해주십시오</string>
     <string name="toast_msg_already_latest_version">이미 최신버전입니다</string>
     <string name="toast_msg_thanks_to_your_opinion">좋은 의견 감사합니다.</string>
     <string name="toast_msg_backpressed">\'뒤로\' 버튼을 한 번 더 누르시면 앱이 종료됩니다</string>
