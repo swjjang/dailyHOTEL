@@ -63,14 +63,14 @@ public class SignupActivity extends BaseActivity implements OnClickListener
     private static final int MODE_SIGNUP = 1;
     private static final int MODE_USERINFO_UPDATE = 2;
 
-    private EditText etEmail, etName, etPhone, etPwd, etRecommender;
-    private TextView tvTerm, tvPrivacy;
-    private TextView btnSignUp;
+    private EditText mEmailEditText, mNameEditText, mPhoneEditText, mPasswordEditText, mRecommenderEditText;
+    private TextView mTermTextView, mPrivacyTextView;
+    private TextView mSingupView;
     private int mMode;
     private String mUserIdx;
     private int mRecommender; // 추천인 코드
 
-    private Map<String, String> signupParams;
+    private Map<String, String> mSignupParams;
     private HashMap<String, String> regPushParams;
 
     @Override
@@ -113,28 +113,28 @@ public class SignupActivity extends BaseActivity implements OnClickListener
             setActionBar(R.string.actionbar_title_signup_activity);
         }
 
-        etPwd = (EditText) findViewById(R.id.et_signup_pwd);
-        etEmail = (EditText) findViewById(R.id.et_signup_email);
-        etRecommender = (EditText) findViewById(R.id.et_signup_recommender);
-        etName = (EditText) findViewById(R.id.et_signup_name);
+        mPasswordEditText = (EditText) findViewById(R.id.et_signup_pwd);
+        mEmailEditText = (EditText) findViewById(R.id.et_signup_email);
+        mRecommenderEditText = (EditText) findViewById(R.id.et_signup_recommender);
+        mNameEditText = (EditText) findViewById(R.id.et_signup_name);
 
         // 회원 가입시 이름 필터 적용.
         StringFilter stringFilter = new StringFilter(SignupActivity.this);
         InputFilter[] allowAlphanumericHangul = new InputFilter[1];
         allowAlphanumericHangul[0] = stringFilter.allowAlphanumericHangul;
 
-        etName.setFilters(allowAlphanumericHangul);
+        mNameEditText.setFilters(allowAlphanumericHangul);
 
         // 추천코드 최대 길이
         InputFilter[] fArray = new InputFilter[1];
         fArray[0] = new InputFilter.LengthFilter(MAX_OF_RECOMMENDER);
-        etRecommender.setFilters(fArray);
+        mRecommenderEditText.setFilters(fArray);
 
-        etPhone = (EditText) findViewById(R.id.et_signup_phone);
+        mPhoneEditText = (EditText) findViewById(R.id.et_signup_phone);
 
-        tvTerm = (TextView) findViewById(R.id.tv_signup_agreement);
-        tvPrivacy = (TextView) findViewById(R.id.tv_signup_personal_info);
-        btnSignUp = (TextView) findViewById(R.id.btn_signup);
+        mTermTextView = (TextView) findViewById(R.id.tv_signup_agreement);
+        mPrivacyTextView = (TextView) findViewById(R.id.tv_signup_personal_info);
+        mSingupView = (TextView) findViewById(R.id.btn_signup);
 
         if (user != null)
         {
@@ -142,42 +142,42 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
             if (Util.isTextEmpty(user.getPhone()) == false)
             {
-                etPhone.setText(user.getPhone());
-                etPhone.setEnabled(false);
-                etPhone.setFocusable(false);
+                mPhoneEditText.setText(user.getPhone());
+                mPhoneEditText.setEnabled(false);
+                mPhoneEditText.setFocusable(false);
             }
 
             if (Util.isTextEmpty(user.getEmail()) == false)
             {
-                etEmail.setText(user.getEmail());
-                etEmail.setEnabled(false);
-                etEmail.setFocusable(false);
+                mEmailEditText.setText(user.getEmail());
+                mEmailEditText.setEnabled(false);
+                mEmailEditText.setFocusable(false);
             }
 
             if (Util.isTextEmpty(user.getName()) == false)
             {
-                etName.setText(user.getName());
-                etName.setEnabled(false);
-                etName.setFocusable(false);
+                mNameEditText.setText(user.getName());
+                mNameEditText.setEnabled(false);
+                mNameEditText.setFocusable(false);
             }
 
-            etPwd.setVisibility(View.GONE);
-            btnSignUp.setText(R.string.act_signup_btn_update);
+            mPasswordEditText.setVisibility(View.GONE);
+            mSingupView.setText(R.string.act_signup_btn_update);
 
             if (mRecommender >= 0)
             {
-                etRecommender.setText(String.valueOf(mRecommender));
-                etRecommender.setEnabled(false);
-                etRecommender.setFocusable(false);
+                mRecommenderEditText.setText(String.valueOf(mRecommender));
+                mRecommenderEditText.setEnabled(false);
+                mRecommenderEditText.setFocusable(false);
             }
         } else
         {
             getPhoneNumber();
         }
 
-        tvTerm.setOnClickListener(this);
-        tvPrivacy.setOnClickListener(this);
-        btnSignUp.setOnClickListener(this);
+        mTermTextView.setOnClickListener(this);
+        mPrivacyTextView.setOnClickListener(this);
+        mSingupView.setOnClickListener(this);
     }
 
     @Override
@@ -197,24 +197,24 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
         if (Util.isTextEmpty(phoneNum) == false)
         {
-            etPhone.setText(phoneNum);
-            etEmail.requestFocus();
+            mPhoneEditText.setText(phoneNum);
+            mEmailEditText.requestFocus();
         }
 
     }
 
     public boolean checkInput(boolean checkPassword)
     {
-        if (etEmail.getText().toString().trim().equals("") == true)
+        if (mEmailEditText.getText().toString().trim().equals("") == true)
         {
             return false;
-        } else if (etName.getText().toString().trim().equals("") == true)
+        } else if (mNameEditText.getText().toString().trim().equals("") == true)
         {
             return false;
-        } else if (etPhone.getText().toString().trim().equals("") == true)
+        } else if (mPhoneEditText.getText().toString().trim().equals("") == true)
         {
             return false;
-        } else if (checkPassword == true && etPwd.getText().toString().trim().equals("") == true)
+        } else if (checkPassword == true && mPasswordEditText.getText().toString().trim().equals("") == true)
         {
             return false;
         } else
@@ -240,7 +240,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
     @Override
     public void onClick(View v)
     {
-        if (v.getId() == btnSignUp.getId())
+        if (v.getId() == mSingupView.getId())
         {
             if (mMode == MODE_SIGNUP)
             {
@@ -253,13 +253,13 @@ public class SignupActivity extends BaseActivity implements OnClickListener
                 }
 
                 // email check
-                if (android.util.Patterns.EMAIL_ADDRESS.matcher(etEmail.getText().toString()).matches() == false)
+                if (android.util.Patterns.EMAIL_ADDRESS.matcher(mEmailEditText.getText().toString()).matches() == false)
                 {
                     DailyToast.showToast(SignupActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
                     return;
                 }
 
-                if (etPwd.length() < 4)
+                if (mPasswordEditText.length() < 4)
                 {
                     DailyToast.showToast(SignupActivity.this, R.string.toast_msg_please_input_password_more_than_4chars, Toast.LENGTH_SHORT);
                     return;
@@ -267,23 +267,26 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
                 lockUI();
 
-                signupParams = new HashMap<String, String>();
-                signupParams.put("email", etEmail.getText().toString());
-                signupParams.put("pw", etPwd.getText().toString());
-                signupParams.put("name", etName.getText().toString());
-                signupParams.put("phone", etPhone.getText().toString());
+                mSignupParams = new HashMap<String, String>();
+                mSignupParams.put("email", mEmailEditText.getText().toString().trim());
+                mSignupParams.put("pw", mPasswordEditText.getText().toString().trim());
+                mSignupParams.put("name", mNameEditText.getText().toString().trim());
+                mSignupParams.put("phone", mPhoneEditText.getText().toString().trim());
 
                 TelephonyManager tManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-                signupParams.put("device", tManager.getDeviceId());
-                signupParams.put("marketType", RELEASE_STORE.getName());
+                mSignupParams.put("device", tManager.getDeviceId());
+                mSignupParams.put("marketType", RELEASE_STORE.getName());
 
-                String recommender = etRecommender.getText().toString().trim();
-                if (recommender.equals("") == false)
+                String recommender = mRecommenderEditText.getText().toString().trim();
+                if (Util.isTextEmpty(recommender) == false)
                 {
-                    signupParams.put("recommender", recommender);
+                    mSignupParams.put("recommender", recommender);
                 }
 
-                mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNUP).toString(), signupParams, mUserSignupJsonResponseListener, this));
+                mSignupParams.put("social_id", "0");
+                mSignupParams.put("user_type", "nomal");
+
+                mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNUP).toString(), mSignupParams, mUserSignupJsonResponseListener, this));
 
                 AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.SIGNUP, Action.CLICK, Label.SIGNUP, 0L);
             } else
@@ -297,7 +300,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
                 }
 
                 // email check
-                if (etEmail.isEnabled() == true && android.util.Patterns.EMAIL_ADDRESS.matcher(etEmail.getText().toString()).matches() == false)
+                if (mEmailEditText.isEnabled() == true && android.util.Patterns.EMAIL_ADDRESS.matcher(mEmailEditText.getText().toString()).matches() == false)
                 {
                     DailyToast.showToast(SignupActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
                     return;
@@ -308,22 +311,22 @@ public class SignupActivity extends BaseActivity implements OnClickListener
                 Map<String, String> updateParams = new HashMap<String, String>();
                 updateParams.put("user_idx", mUserIdx);
 
-                if (etEmail.isEnabled() == true)
+                if (mEmailEditText.isEnabled() == true)
                 {
-                    updateParams.put("user_email", etEmail.getText().toString().trim());
+                    updateParams.put("user_email", mEmailEditText.getText().toString().trim());
                 }
 
-                if (etName.isEnabled() == true)
+                if (mNameEditText.isEnabled() == true)
                 {
-                    updateParams.put("user_name", etName.getText().toString().trim());
+                    updateParams.put("user_name", mNameEditText.getText().toString().trim());
                 }
 
-                if (etPhone.isEnabled() == true)
+                if (mPhoneEditText.isEnabled() == true)
                 {
-                    updateParams.put("user_phone", etPhone.getText().toString().trim());
+                    updateParams.put("user_phone", mPhoneEditText.getText().toString().trim());
                 }
 
-                String recommender = etRecommender.getText().toString().trim();
+                String recommender = mRecommenderEditText.getText().toString().trim();
                 if (recommender.equals("") == false)
                 {
                     updateParams.put("recommendation_code", recommender);
@@ -331,14 +334,14 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
                 mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_UPDATE_FB_USER).toString(), updateParams, mUserUpdateFacebookJsonResponseListener, this));
             }
-        } else if (v.getId() == tvTerm.getId())
+        } else if (v.getId() == mTermTextView.getId())
         { // 이용약관
 
             Intent i = new Intent(this, TermActivity.class);
             startActivity(i);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
 
-        } else if (v.getId() == tvPrivacy.getId())
+        } else if (v.getId() == mPrivacyTextView.getId())
         { // 개인정보 취급
 
             Intent i = new Intent(this, PrivacyActivity.class);
@@ -350,8 +353,8 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
     public void storeLoginInfo()
     {
-        String id = etEmail.getText().toString();
-        String pwd = Crypto.encrypt(etPwd.getText().toString()).replace("\n", "");
+        String id = mEmailEditText.getText().toString();
+        String pwd = Crypto.encrypt(mPasswordEditText.getText().toString()).replace("\n", "");
 
         SharedPreferences.Editor ed = sharedPreference.edit();
         ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, true);
@@ -622,9 +625,9 @@ public class SignupActivity extends BaseActivity implements OnClickListener
             }
         }
     };
+
     private DailyHotelJsonResponseListener mUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -632,27 +635,50 @@ public class SignupActivity extends BaseActivity implements OnClickListener
             {
                 if (response == null)
                 {
-                    throw new NullPointerException("response == null");
+                    throw new NullPointerException("response == null.");
                 }
 
-                if (response.getBoolean("login") == true)
+                int msg_code = response.getInt("msg_code");
+
+                if (msg_code == 0)
                 {
-                    VolleyHttpClient.createCookie();
-                    storeLoginInfo();
+                    JSONObject jsonObject = response.getJSONObject("data");
 
-                    lockUI();
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, SignupActivity.this));
+                    boolean isSignin = jsonObject.getBoolean("is_signin");
+
+                    if (isSignin == true)
+                    {
+                        VolleyHttpClient.createCookie();
+                        storeLoginInfo();
+
+                        lockUI();
+                        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, SignupActivity.this));
+                        return;
+                    }
                 }
+
+                // 로그인이 실패한 경우
+                String msg = response.getString("msg");
+
+                if (Util.isTextEmpty(msg) == true)
+                {
+                    msg = getString(R.string.toast_msg_failed_to_login);
+                }
+
+                DailyToast.showToast(SignupActivity.this, msg, Toast.LENGTH_LONG);
+
+                unLockUI();
+                finish();
             } catch (Exception e)
             {
                 unLockUI();
-                onError(e);
+                onInternalError();
             }
         }
     };
+
     private DailyHotelJsonResponseListener mUserSignupJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -673,13 +699,14 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
                 if (result.equals("true") == true)
                 {
-                    Map<String, String> loginParams = new HashMap<String, String>();
-                    loginParams.put("email", signupParams.get("email"));
-                    loginParams.put("pw", Crypto.encrypt(signupParams.get("pw")).replace("\n", ""));
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("email", mSignupParams.get("email"));
+                    params.put("pw", Crypto.encrypt(mSignupParams.get("pw")).replace("\n", ""));
+                    params.put("social_id", "0");
+                    params.put("user_type", "nomal");
+                    params.put("is_auto", "true");
 
-                    ExLog.d("email : " + loginParams.get("email") + " pw : " + loginParams.get("pw"));
-
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(), loginParams, mUserLoginJsonResponseListener, SignupActivity.this));
+                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mUserLoginJsonResponseListener, SignupActivity.this));
                 } else
                 {
                     unLockUI();

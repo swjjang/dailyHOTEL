@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -32,6 +33,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -371,5 +373,44 @@ public class Util implements Constants
 
             return false;
         }
+    }
+
+    public static HashMap<String, String> getLoginParams(SharedPreferences sharedPreference)
+    {
+        String id = sharedPreference.getString(KEY_PREFERENCE_USER_ID, null);
+        String accessToken = sharedPreference.getString(KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
+        String pw = sharedPreference.getString(KEY_PREFERENCE_USER_PWD, null);
+        String type = sharedPreference.getString(KEY_PREFERENCE_USER_TYPE, null);
+
+        HashMap<String, String> params = new HashMap<String, String>();
+
+        if (Util.isTextEmpty(accessToken) == false)
+        {
+            params.put("social_id", accessToken);
+
+            // 기존 페이스북 유저를 위한 코드
+            if (Util.isTextEmpty(type) == true)
+            {
+                params.put("user_type", "facebook");
+            }
+        } else
+        {
+            params.put("email", id);
+
+            // 기존 데일리 유저를 위한 코드
+            if (Util.isTextEmpty(type) == true)
+            {
+                params.put("user_type", "nomal");
+            }
+        }
+
+        params.put("pw", pw);
+
+        if (Util.isTextEmpty(type) == false)
+        {
+            params.put("user_type", type);
+        }
+
+        return params;
     }
 }

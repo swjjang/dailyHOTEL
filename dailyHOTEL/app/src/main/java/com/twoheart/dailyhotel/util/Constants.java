@@ -74,8 +74,11 @@ public interface Constants
     //"user";
     public static final String URL_WEBAPI_USER = UNENCRYPTED_URL ? "user" : "NSQyOSQ0JDEwJDIxJA==$NTk4LQYzkwKRDQzMEVFOUCI5MEQ0OTRGEMjdFRERGRjdEQkQ=$";
 
+    // api/user/signin
+    public static final String URL_WEBAPI_USER_SIGNIN = UNENCRYPTED_URL ? "api/user/signin" : "MzIkMzQkMTYkMzAkNDEk$RkNGRTZDQzdGNjI3UNjlCQzExQzY5MNkEyFRGDUyMQDdGMUE=$";
+
     //"user/login/mobile";
-    public static final String URL_WEBAPI_USER_LOGIN = UNENCRYPTED_URL ? "user/login/mobile" : "NTMkMTUkMzUkODEkMzMk$MUVFQTg3NkUxRjVAEREU2QTMzRjUyNThELMDKIxQUZGMkUxMEJCMDBENFzA5N0RBRjQ3NTRGQTdCMjk0QzEA0MkU1RA==$";
+    //    public static final String URL_WEBAPI_USER_LOGIN = UNENCRYPTED_URL ? "user/login/mobile" : "NTMkMTUkMzUkODEkMzMk$MUVFQTg3NkUxRjVAEREU2QTMzRjUyNThELMDKIxQUZGMkUxMEJCMDBENFzA5N0RBRjQ3NTRGQTdCMjk0QzEA0MkU1RA==$";
 
     //"user/logout/mobile";
     public static final String URL_WEBAPI_USER_LOGOUT = UNENCRYPTED_URL ? "user/logout/mobile" : "MjgkNjIkMiQ4MSQzMyQ=$NjIU3RDBBQUEyRjIxMTZEQkFCQjY2NRkZCBRTZCM0RDOTM2M0EwNDhBNURBOTg1MQjYwODAzNkM4NjYwM0CRGRENEOQ==$";
@@ -98,8 +101,8 @@ public interface Constants
     //"user/session/facebook/update";
     public static final String URL_WEBAPI_USER_UPDATE_FACEBOOK = UNENCRYPTED_URL ? "user/session/facebook/update" : "MzgkNDYkMTQkNTckODQk$NjAzNjU1REI1ODGBERTlEMjE5REI1QTY3RTU5MTUFEQjk2NHUUyOTUwNTMBBQ0UyMDBENkIzREMzNzI4ODEzCREY3RQ==$";
 
-    //"user/join";
-    public static final String URL_WEBAPI_USER_SIGNUP = UNENCRYPTED_URL ? "user/join" : "MjAkMTAkNSQzOSQyNCQ=$NzI0MQjdDMTFNENDgyMzE5YRNUMwRUMyQ0REQTYxBM0M1QTE=$";
+    // api/user/signup
+    public static final String URL_WEBAPI_USER_SIGNUP = UNENCRYPTED_URL ? "api/user/signup " : "NCQzJDM3JDUkMzEk$MDBLCFWQUI1OTE5QjY2MzE3MDJGMkYzRM0U0ODII2MkZDN0M=$";
 
     //"user/alive";
     public static final String URL_WEBAPI_USER_ALIVE = UNENCRYPTED_URL ? "user/alive" : "MzAkMTQkMzckNDMkMTck$QzNENDQ1NTk0MzEg1GOURFOUYxQkM4MEIZFRjVBEQTU3BQjE=$";
@@ -340,6 +343,7 @@ public interface Constants
     public static final String KEY_PREFERENCE_AUTO_LOGIN = "AUTO_LOGIN";
     public static final String KEY_PREFERENCE_USER_ID = "USER_ID";
     public static final String KEY_PREFERENCE_USER_PWD = "USER_PWD";
+    public static final String KEY_PREFERENCE_USER_TYPE = "USER_TYPE";
     public static final String KEY_PREFERENCE_USER_ACCESS_TOKEN = "USER_ACCESSTOKEN";
     public static final String KEY_PREFERENCE_GCM_ID = "PUSH_ID";
     public static final String KEY_PREFERENCE_OVERSEAS_NAME = "OVERSEAS_NAME";

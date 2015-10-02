@@ -49,7 +49,6 @@ import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.PinnedSectionListView;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
@@ -351,27 +350,35 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
             try
             {
-                String result = null;
-
-                if (response != null)
+                if (response == null)
                 {
-                    result = response.getString("login");
+                    throw new NullPointerException("response == null.");
                 }
 
-                if ("true".equalsIgnoreCase(result) == false)
+                int msg_code = response.getInt("msg_code");
+
+                if (msg_code == 0)
                 {
-                    // 로그인 실패
-                    // data 초기화
-                    SharedPreferences.Editor ed = baseActivity.sharedPreference.edit();
-                    ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
-                    ed.putString(KEY_PREFERENCE_USER_ID, null);
-                    ed.putString(KEY_PREFERENCE_USER_PWD, null);
-                    ed.commit();
-                } else
-                {
-                    VolleyHttpClient.createCookie();
+                    JSONObject jsonObject = response.getJSONObject("data");
+
+                    boolean isSignin = jsonObject.getBoolean("is_signin");
+
+                    if (isSignin == true)
+                    {
+                        VolleyHttpClient.createCookie();
+                        return;
+                    }
                 }
-            } catch (JSONException e)
+
+                // 로그인 실패
+                // data 초기화
+                SharedPreferences.Editor ed = baseActivity.sharedPreference.edit();
+                ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
+                ed.putString(KEY_PREFERENCE_USER_ID, null);
+                ed.putString(KEY_PREFERENCE_USER_PWD, null);
+                ed.putString(KEY_PREFERENCE_USER_TYPE, null);
+                ed.commit();
+            } catch (Exception e)
             {
                 onError(e);
             } finally
@@ -596,24 +603,9 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                 // 재로그인
                 if (true == baseActivity.sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false))
                 {
+                    HashMap<String, String> params = Util.getLoginParams(baseActivity.sharedPreference);
 
-                    String id = baseActivity.sharedPreference.getString(KEY_PREFERENCE_USER_ID, null);
-                    String accessToken = baseActivity.sharedPreference.getString(KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
-                    String pw = baseActivity.sharedPreference.getString(KEY_PREFERENCE_USER_PWD, null);
-
-                    Map<String, String> loginParams = new HashMap<String, String>();
-
-                    if (null != accessToken)
-                    {
-                        loginParams.put("accessToken", accessToken);
-                    } else
-                    {
-                        loginParams.put("email", id);
-                    }
-
-                    loginParams.put("pw", pw);
-
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(), loginParams, mUserLoginJsonResponseListener, baseActivity));
+                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mUserLoginJsonResponseListener, baseActivity));
 
                     mListView.setVisibility(View.GONE);
                     mEmptyLayout.setVisibility(View.VISIBLE);

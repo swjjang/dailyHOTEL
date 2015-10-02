@@ -38,7 +38,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 신용카드 등록하기.
@@ -356,34 +355,49 @@ public class CreditCardListActivity extends BaseActivity
             }
         }
     };
+
     private DailyHotelJsonResponseListener mUserLoginJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
             try
             {
-                if (!response.getBoolean("login"))
+                if (response == null)
                 {
-                    // 로그인 실패
-                    // data 초기화
-                    SharedPreferences.Editor ed = sharedPreference.edit();
-                    ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
-                    ed.putString(KEY_PREFERENCE_USER_ID, null);
-                    ed.putString(KEY_PREFERENCE_USER_PWD, null);
-                    ed.commit();
-
-                    unLockUI();
-                    mCreditCardLayout.setViewLoginLayout(false);
-
-                } else
-                {
-                    // credit card 요청
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_INFO).toString(), null, mUserSessionBillingCardInfoJsonResponseListener, CreditCardListActivity.this));
+                    throw new NullPointerException("response == null.");
                 }
+
+                int msg_code = response.getInt("msg_code");
+
+                if (msg_code == 0)
+                {
+                    JSONObject jsonObject = response.getJSONObject("data");
+
+                    boolean isSignin = jsonObject.getBoolean("is_signin");
+
+                    if (isSignin == true)
+                    {
+                        // credit card 요청
+                        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_INFO).toString(), null, mUserSessionBillingCardInfoJsonResponseListener, CreditCardListActivity.this));
+                        return;
+                    }
+                }
+
+                // 로그인 실패
+                // data 초기화
+                SharedPreferences.Editor ed = sharedPreference.edit();
+                ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, false);
+                ed.putString(KEY_PREFERENCE_USER_ID, null);
+                ed.putString(KEY_PREFERENCE_USER_PWD, null);
+                ed.putString(KEY_PREFERENCE_USER_TYPE, null);
+                ed.commit();
+
+                unLockUI();
+                mCreditCardLayout.setViewLoginLayout(false);
             } catch (JSONException e)
             {
+                unLockUI();
                 onError(e);
             }
         }
@@ -419,23 +433,9 @@ public class CreditCardListActivity extends BaseActivity
 
                 if (true == sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false))
                 {
-                    String id = sharedPreference.getString(KEY_PREFERENCE_USER_ID, null);
-                    String accessToken = sharedPreference.getString(KEY_PREFERENCE_USER_ACCESS_TOKEN, null);
-                    String pw = sharedPreference.getString(KEY_PREFERENCE_USER_PWD, null);
+                    HashMap<String, String> params = Util.getLoginParams(sharedPreference);
 
-                    Map<String, String> loginParams = new HashMap<String, String>();
-
-                    if (null != accessToken)
-                    {
-                        loginParams.put("accessToken", accessToken);
-                    } else
-                    {
-                        loginParams.put("email", id);
-                    }
-
-                    loginParams.put("pw", pw);
-
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGIN).toString(), loginParams, mUserLoginJsonResponseListener, CreditCardListActivity.this));
+                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mUserLoginJsonResponseListener, CreditCardListActivity.this));
                 } else
                 {
                     unLockUI();
