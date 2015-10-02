@@ -201,9 +201,9 @@ public abstract class PlaceMainFragment extends BaseFragment
         {
             case R.id.action_list:
             {
-                int isInstalledGooglePlayServices = Util.installGooglePlayService(baseActivity);
+                boolean isInstalledGooglePlayServices = Util.installGooglePlayService(baseActivity);
 
-                if (isInstalledGooglePlayServices == 1)
+                if (isInstalledGooglePlayServices == true)
                 {
                     if (mOnUserActionListener != null)
                     {
@@ -217,9 +217,9 @@ public abstract class PlaceMainFragment extends BaseFragment
 
             case R.id.action_map:
             {
-                int isInstalledGooglePlayServices = Util.installGooglePlayService(baseActivity);
+                boolean isInstalledGooglePlayServices = Util.installGooglePlayService(baseActivity);
 
-                if (isInstalledGooglePlayServices == 1)
+                if (isInstalledGooglePlayServices == true)
                 {
                     if (mOnUserActionListener != null)
                     {

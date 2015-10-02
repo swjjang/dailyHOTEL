@@ -51,8 +51,6 @@ import android.widget.TextView;
 import com.android.volley.Request.Method;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.ExitActivity;
@@ -366,22 +364,9 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
         return sharedPreference.getString(KEY_PREFERENCE_GCM_ID, "");
     }
 
-    private boolean isGoogleServiceAvailable()
-    {
-        int resCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-
-        if (resCode != ConnectionResult.SUCCESS)
-        {
-            return false;
-        } else
-        {
-            return true;
-        }
-    }
-
     private void regGcmId(final String idx)
     {
-        if (isGoogleServiceAvailable() == false)
+        if (Util.isGooglePlayServicesAvailable(MainActivity.this) == false)
         {
             return;
         }

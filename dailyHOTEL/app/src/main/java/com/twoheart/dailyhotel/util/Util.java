@@ -26,6 +26,8 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 
@@ -247,6 +249,11 @@ public class Util implements Constants
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;
     }
 
+    public static boolean isOverAPI23()
+    {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
+    }
+
     public static boolean isTelephonyEnabled(Context context)
     {
         return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
@@ -272,8 +279,30 @@ public class Util implements Constants
         return version;
     }
 
+    public static boolean isGooglePlayServicesAvailable(Activity activity)
+    {
+        try
+        {
+            if (GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity) == ConnectionResult.SUCCESS)
+            {
+                return true;
+            } else
+            {
+                return false;
+            }
+        } catch (Exception e)
+        {
+            return false;
+        }
+    }
+
     public static boolean isInstallGooglePlayService(Activity activity)
     {
+        if (Util.isGooglePlayServicesAvailable(activity) == false)
+        {
+            return false;
+        }
+
         boolean isInstalled = false;
 
         try
@@ -283,26 +312,14 @@ public class Util implements Constants
             ApplicationInfo applicationInfo = packageManager.getApplicationInfo("com.google.android.gms", 0);
             PackageInfo packageInfo = packageManager.getPackageInfo(applicationInfo.packageName, PackageManager.GET_SIGNATURES);
 
-            if (isOverAPI11() == true)
-            {
-                int version = activity.getResources().getInteger(com.google.android.gms.R.integer.google_play_services_version);
+            int version = activity.getResources().getInteger(com.google.android.gms.R.integer.google_play_services_version);
 
-                if (packageInfo.versionCode < version)
-                {
-                    isInstalled = false;
-                } else
-                {
-                    isInstalled = true;
-                }
+            if (packageInfo.versionCode < version)
+            {
+                isInstalled = false;
             } else
             {
-                if (packageInfo.versionCode < 7500000)
-                {
-                    isInstalled = false;
-                } else
-                {
-                    isInstalled = true;
-                }
+                isInstalled = true;
             }
         } catch (PackageManager.NameNotFoundException e)
         {
@@ -312,50 +329,16 @@ public class Util implements Constants
         return isInstalled;
     }
 
-    public static int installGooglePlayService(final BaseActivity activity)
+    public static boolean installGooglePlayService(final BaseActivity activity)
     {
-        if (activity == null || activity.isFinishing() == true)
+        if (isInstallGooglePlayService(activity) == true)
         {
-            return -1;
-        }
-
-        int state = -1;
-
-        try
-        {
-            PackageManager packageManager = activity.getPackageManager();
-
-            ApplicationInfo applicationInfo = packageManager.getApplicationInfo("com.google.android.gms", 0);
-            PackageInfo packageInfo = packageManager.getPackageInfo(applicationInfo.packageName, PackageManager.GET_SIGNATURES);
-
-            if (packageInfo.versionCode < 7500000)
-            {
-                state = 0;
-            } else
-            {
-                state = 1;
-            }
-        } catch (PackageManager.NameNotFoundException e)
-        {
-            state = -1;
-        }
-
-        if (state == 1)
-        {
-            return 1;
+            return true;
         } else
         {
-            if (activity.isFinishing() == true)
-            {
-                return -1;
-            }
-
             // set dialog message
-            int messageId = state == -1 ? R.string.dialog_msg_install_googleplayservice : R.string.dialog_msg_update_googleplayservice;
-            int positiveId = state == -1 ? R.string.dialog_btn_install : R.string.dialog_btn_update;
-
-            activity.showSimpleDialog(activity.getString(R.string.dialog_title_googleplayservice), activity.getString(messageId), //
-                    activity.getString(positiveId), activity.getString(R.string.dialog_btn_text_no), //
+            activity.showSimpleDialog(activity.getString(R.string.dialog_title_googleplayservice), activity.getString(R.string.dialog_msg_install_update_googleplayservice), //
+                    activity.getString(R.string.dialog_btn_text_install), activity.getString(R.string.dialog_btn_text_cancel), //
                     new View.OnClickListener()
                     {
                         @Override
@@ -385,7 +368,8 @@ public class Util implements Constants
                         }
                     }, null, true);
 
-            return -1;
+
+            return false;
         }
     }
 }

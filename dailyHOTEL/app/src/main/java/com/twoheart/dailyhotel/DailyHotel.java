@@ -18,6 +18,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
+import com.crashlytics.android.Crashlytics;
 import com.kakao.auth.ApprovalType;
 import com.kakao.auth.AuthType;
 import com.kakao.auth.IApplicationConfig;
@@ -33,6 +34,7 @@ import com.twoheart.dailyhotel.view.widget.FontManager;
 import java.util.Locale;
 
 import io.branch.referral.Branch;
+import io.fabric.sdk.android.Fabric;
 
 public class DailyHotel extends Application implements Constants
 {
@@ -44,7 +46,9 @@ public class DailyHotel extends Application implements Constants
     public void onCreate()
     {
         super.onCreate();
-        //        Fabric.with(this, new Crashlytics());
+
+        Fabric.with(this, new Crashlytics());
+
         mInstance = this;
 
         Util.setLocale(this, Locale.KOREAN);

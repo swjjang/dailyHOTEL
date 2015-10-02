@@ -225,6 +225,98 @@ public class SelectAreaActivity extends BaseActivity
         public void onGroupCollapse(View view);
     }
 
+    private OnUserActionListener mOnUserActionListener = new OnUserActionListener()
+    {
+
+        @Override
+        public void onGroupExpand(View view)
+        {
+            if (view.getVisibility() != View.VISIBLE)
+            {
+                return;
+            }
+
+            final ImageView imageView = (ImageView) view.findViewById(R.id.updownArrowImageView);
+
+            RotateAnimation animation = new RotateAnimation(0.0f, -180.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            animation.setFillBefore(true);
+            animation.setFillAfter(true);
+            animation.setDuration(350);
+
+            imageView.setAnimation(animation);
+
+            animation.setAnimationListener(new AnimationListener()
+            {
+
+                @Override
+                public void onAnimationStart(Animation animation)
+                {
+                    // TODO Auto-generated method stub
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation)
+                {
+                    // TODO Auto-generated method stub
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation)
+                {
+                    releaseUiComponent();
+                    imageView.setAnimation(null);
+                    imageView.setImageResource(R.drawable.ic_details_menu_on);
+                }
+            });
+        }
+
+        @Override
+        public void onGroupCollapse(View view)
+        {
+            if (view.getVisibility() != View.VISIBLE)
+            {
+                return;
+            }
+
+            final ImageView imageView = (ImageView) view.findViewById(R.id.updownArrowImageView);
+
+            RotateAnimation animation = new RotateAnimation(0.0f, 180.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            animation.setFillBefore(true);
+            animation.setFillAfter(true);
+            animation.setDuration(350);
+
+            imageView.setAnimation(animation);
+            animation.setAnimationListener(new AnimationListener()
+            {
+
+                @Override
+                public void onAnimationStart(Animation animation)
+                {
+                    // TODO Auto-generated method stub
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation)
+                {
+                    // TODO Auto-generated method stub
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation)
+                {
+                    releaseUiComponent();
+
+                    imageView.setAnimation(null);
+                    imageView.setImageResource(R.drawable.ic_details_menu_off);
+                }
+            });
+        }
+    };
+
     private class AreaAnimatedExpandableListAdapter extends AnimatedExpandableListAdapter
     {
         private LayoutInflater inflater;
@@ -428,98 +520,4 @@ public class SelectAreaActivity extends BaseActivity
             return true;
         }
     }
-
-    private OnUserActionListener mOnUserActionListener = new OnUserActionListener()
-    {
-
-        @Override
-        public void onGroupExpand(View view)
-        {
-            if (view.getVisibility() != View.VISIBLE)
-            {
-                return;
-            }
-
-            final ImageView imageView = (ImageView) view.findViewById(R.id.updownArrowImageView);
-
-            RotateAnimation animation = new RotateAnimation(0.0f, -180.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-            animation.setFillBefore(true);
-            animation.setFillAfter(true);
-            animation.setDuration(350);
-
-            imageView.setAnimation(animation);
-
-            animation.setAnimationListener(new AnimationListener()
-            {
-
-                @Override
-                public void onAnimationStart(Animation animation)
-                {
-                    // TODO Auto-generated method stub
-
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation)
-                {
-                    // TODO Auto-generated method stub
-
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation)
-                {
-                    releaseUiComponent();
-                    imageView.setAnimation(null);
-                    imageView.setImageResource(R.drawable.ic_details_menu_on);
-                }
-            });
-
-        }
-
-        @Override
-        public void onGroupCollapse(View view)
-        {
-            if (view.getVisibility() != View.VISIBLE)
-            {
-                return;
-            }
-
-            final ImageView imageView = (ImageView) view.findViewById(R.id.updownArrowImageView);
-
-            RotateAnimation animation = new RotateAnimation(0.0f, 180.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-            animation.setFillBefore(true);
-            animation.setFillAfter(true);
-            animation.setDuration(350);
-
-            imageView.setAnimation(animation);
-            animation.setAnimationListener(new AnimationListener()
-            {
-
-                @Override
-                public void onAnimationStart(Animation animation)
-                {
-                    // TODO Auto-generated method stub
-
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation)
-                {
-                    // TODO Auto-generated method stub
-
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation)
-                {
-                    releaseUiComponent();
-
-                    imageView.setAnimation(null);
-                    imageView.setImageResource(R.drawable.ic_details_menu_off);
-                }
-            });
-        }
-
-    };
 }
