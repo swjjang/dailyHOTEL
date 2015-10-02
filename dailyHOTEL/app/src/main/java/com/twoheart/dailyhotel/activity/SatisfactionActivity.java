@@ -310,7 +310,6 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
             @Override
             public void afterTextChanged(Editable s)
             {
-
             }
         });
 

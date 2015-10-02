@@ -29,8 +29,6 @@ import android.widget.Toast;
 import com.android.volley.Request.Method;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
@@ -386,22 +384,9 @@ public class SignupActivity extends BaseActivity implements OnClickListener
         finish();
     }
 
-    private boolean isGoogleServiceAvailable()
-    {
-        int resCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-
-        if (resCode != ConnectionResult.SUCCESS)
-        {
-            return false;
-        } else
-        {
-            return true;
-        }
-    }
-
     private void regGcmId(final String idx)
     {
-        if (isGoogleServiceAvailable() == false)
+        if (Util.isGooglePlayServicesAvailable(this) == false)
         {
             signUpAndFinish();
             return;

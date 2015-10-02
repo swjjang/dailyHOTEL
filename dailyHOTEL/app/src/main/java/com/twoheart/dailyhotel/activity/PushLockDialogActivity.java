@@ -10,7 +10,6 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.IntentActivity;
-import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.WakeLock;

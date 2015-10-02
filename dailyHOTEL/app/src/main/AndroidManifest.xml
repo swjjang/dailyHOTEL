@@ -4,7 +4,7 @@
 
     <uses-sdk
         android:minSdkVersion="9"
-        android:targetSdkVersion="21"/>
+        android:targetSdkVersion="23"/>
 
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
@@ -12,11 +12,18 @@
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <!-- 혀용하지 않는 퍼미션 -->
+    <!-- CONTACTS -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+
     <uses-permission android:name="android.permission.GET_TASKS"/>
+    <!-- PHONE -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+
+    <!-- STORAGE -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+
+    <!-- LOCATION -->
     <uses-permission android:name="com.twoheart.dailyhotel.permission.MAPS_RECEIVE"/>
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>

@@ -265,9 +265,9 @@ public class HotelMainFragment extends BaseFragment
         {
             case R.id.action_list:
             {
-                int isInstalledGooglePlayServices = Util.installGooglePlayService((BaseActivity) getActivity());
+                boolean isInstalledGooglePlayServices = Util.installGooglePlayService((BaseActivity) getActivity());
 
-                if (isInstalledGooglePlayServices == 1)
+                if (isInstalledGooglePlayServices == true)
                 {
                     if (mOnUserActionListener != null)
                     {
@@ -281,9 +281,9 @@ public class HotelMainFragment extends BaseFragment
 
             case R.id.action_map:
             {
-                int isInstalledGooglePlayServices = Util.installGooglePlayService((BaseActivity) getActivity());
+                boolean isInstalledGooglePlayServices = Util.installGooglePlayService((BaseActivity) getActivity());
 
-                if (isInstalledGooglePlayServices == 1)
+                if (isInstalledGooglePlayServices == true)
                 {
                     if (mOnUserActionListener != null)
                     {
