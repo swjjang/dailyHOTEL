@@ -160,7 +160,8 @@
                 android:padding="5dp"
                 android:textColor="@color/dialog_message_text"
                 android:textSize="13dp"
-                android:maxLength="190"/>
+                android:maxLength="190"
+                android:maxLines="20"/>
 
         </FrameLayout>
 
