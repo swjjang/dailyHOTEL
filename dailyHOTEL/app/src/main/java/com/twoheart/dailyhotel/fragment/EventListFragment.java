@@ -170,6 +170,9 @@ public class EventListFragment extends BaseFragment implements Constants
             } catch (JSONException e)
             {
                 onError(e);
+            } finally
+            {
+                unLockUI();
             }
         }
     };

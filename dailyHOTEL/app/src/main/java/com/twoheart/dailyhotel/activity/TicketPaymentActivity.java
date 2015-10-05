@@ -884,7 +884,6 @@ public abstract class TicketPaymentActivity extends BaseActivity
                         params.put("timeZone", "Asia/Seoul");
 
                         mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, TicketPaymentActivity.this));
-
                         return;
                     }
                 }

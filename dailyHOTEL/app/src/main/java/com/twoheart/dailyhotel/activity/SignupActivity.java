@@ -712,6 +712,8 @@ public class SignupActivity extends BaseActivity implements OnClickListener
                     }
                 }
 
+                unLockUI();
+
                 String msg = response.getString("msg");
 
                 if (Util.isTextEmpty(msg) == true)
