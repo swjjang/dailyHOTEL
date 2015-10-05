@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -40,6 +39,7 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
     private BookingHotelDetail mHotelDetail;
     private SupportMapFragment mMapFragment;
     private GoogleMap mGoogleMap;
+    private View mPlaceholderMapView;
     private Marker mMarker;
 
     public static TabMapFragment newInstance(BookingHotelDetail hotelDetail, String title)
@@ -66,6 +66,8 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_hotel_tab_map, container, false);
+
+        mPlaceholderMapView = view.findViewById(R.id.placeholderMapView);
 
         TextView hotelNameTextView = (TextView) view.findViewById(R.id.tv_hotel_tab_map_name);
         TextView hotelAddressTextView = (TextView) view.findViewById(R.id.tv_hotel_tab_map_address);
@@ -108,50 +110,68 @@ public class TabMapFragment extends BaseFragment implements OnMapClickListener
 
         mMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.frag_map);
 
-        View viewGroup = mMapFragment.getView();
-
-        if (viewGroup instanceof ViewGroup)
+        if (Util.isGooglePlayServicesAvailable(getActivity()) == true)
         {
-            View viewLayout = ((ViewGroup) viewGroup).getChildAt(0);
+            mPlaceholderMapView.setVisibility(View.GONE);
 
-            if (viewLayout instanceof ViewGroup)
+            mMapFragment.getMapAsync(new OnMapReadyCallback()
             {
-                View viewButton = ((ViewGroup) viewLayout).getChildAt(1);
-
-                if (viewButton instanceof Button)
+                @Override
+                public void onMapReady(GoogleMap googleMap)
                 {
-                    viewButton.setOnClickListener(new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View v)
-                        {
-                            BaseActivity baseActivity = (BaseActivity) getActivity();
+                    mGoogleMap = googleMap;
+                    mGoogleMap.setOnMapClickListener(TabMapFragment.this);
+                    mGoogleMap.setMyLocationEnabled(false);
+                    mGoogleMap.getUiSettings().setAllGesturesEnabled(false);
 
-                            if (baseActivity == null || baseActivity.isFinishing() == true)
-                            {
-                                return;
-                            }
-
-                            Util.installGooglePlayService(baseActivity);
-                        }
-                    });
+                    addMarker(mHotelDetail.getLatitude(), mHotelDetail.getLongitude(), mHotelDetail.getHotel().getName());
                 }
-            }
+            });
+        } else
+        {
+            mPlaceholderMapView.setVisibility(View.VISIBLE);
+            mPlaceholderMapView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    Util.installGooglePlayService((BaseActivity) getActivity());
+                }
+            });
+
+            getChildFragmentManager().beginTransaction().remove(mMapFragment).commitAllowingStateLoss();
         }
 
-        mMapFragment.getMapAsync(new OnMapReadyCallback()
-        {
-            @Override
-            public void onMapReady(GoogleMap googleMap)
-            {
-                mGoogleMap = googleMap;
-                mGoogleMap.setOnMapClickListener(TabMapFragment.this);
-                mGoogleMap.setMyLocationEnabled(false);
-                mGoogleMap.getUiSettings().setAllGesturesEnabled(false);
-
-                addMarker(mHotelDetail.getLatitude(), mHotelDetail.getLongitude(), mHotelDetail.getHotel().getName());
-            }
-        });
+        //        View viewGroup = mMapFragment.getView();
+        //
+        //        if (viewGroup instanceof ViewGroup)
+        //        {
+        //            View viewLayout = ((ViewGroup) viewGroup).getChildAt(0);
+        //
+        //            if (viewLayout instanceof ViewGroup)
+        //            {
+        //                View viewButton = ((ViewGroup) viewLayout).getChildAt(1);
+        //
+        //                if (viewButton instanceof Button)
+        //                {
+        //                    viewButton.setOnClickListener(new View.OnClickListener()
+        //                    {
+        //                        @Override
+        //                        public void onClick(View v)
+        //                        {
+        //                            BaseActivity baseActivity = (BaseActivity) getActivity();
+        //
+        //                            if (baseActivity == null || baseActivity.isFinishing() == true)
+        //                            {
+        //                                return;
+        //                            }
+        //
+        //                            Util.installGooglePlayService(baseActivity);
+        //                        }
+        //                    });
+        //                }
+        //            }
+        //        }
     }
 
     @Override

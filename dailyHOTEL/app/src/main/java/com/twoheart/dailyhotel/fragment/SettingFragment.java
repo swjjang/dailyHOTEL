@@ -36,7 +36,6 @@ import com.twoheart.dailyhotel.activity.FAQActivity;
 import com.twoheart.dailyhotel.activity.LoginActivity;
 import com.twoheart.dailyhotel.activity.NoticeActivity;
 import com.twoheart.dailyhotel.activity.ProfileActivity;
-import com.twoheart.dailyhotel.activity.SatisfactionActivity;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.request.DailyHotelStringRequest;
@@ -108,14 +107,14 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
         }
 
         // 고메 만족도 테스트
-        llVersion.setOnClickListener(new OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                startActivity(SatisfactionActivity.newInstance(mHostActivity, "엘본 더 테이블", 1, 1442880000000L));
-            }
-        });
+        //        llVersion.setOnClickListener(new OnClickListener()
+        //        {
+        //            @Override
+        //            public void onClick(View v)
+        //            {
+        //                startActivity(SatisfactionActivity.newInstance(mHostActivity, "엘본 더 테이블", 1, 1442880000000L));
+        //            }
+        //        });
 
         // 호텔 만족도 테스트
         //        llVersion.setOnClickListener(new OnClickListener()
