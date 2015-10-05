@@ -801,6 +801,8 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     }
                 }
 
+                unLockUI();
+
                 // 로그인이 실패한 경우
                 String msg = response.getString("msg");
 
@@ -812,10 +814,8 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 DailyToast.showToast(LoginActivity.this, msg, Toast.LENGTH_LONG);
             } catch (Exception e)
             {
-                ExLog.d(e.toString());
-            } finally
-            {
                 unLockUI();
+                ExLog.d(e.toString());
             }
         }
     };
@@ -869,6 +869,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 //                }
             } catch (Exception e)
             {
+                unLockUI();
                 ExLog.d(e.toString());
             }
         }

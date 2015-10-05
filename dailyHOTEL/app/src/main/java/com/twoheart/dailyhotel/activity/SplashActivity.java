@@ -367,6 +367,9 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
             } catch (Exception e)
             {
                 onError(e);
+            } finally
+            {
+                unLockUI();
             }
         }
     };
