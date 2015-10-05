@@ -589,7 +589,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
     private DailyHotelJsonResponseListener mUserFacebookInformationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -614,10 +613,10 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
                     // 추천인
                     int recommender = jsonObject.getInt("recommender_code");
-                    boolean isFacebookUser = jsonObject.getBoolean("isFbUser");
+                    boolean isDailyUser = jsonObject.getBoolean("is_daily_user");
 
-                    // 페이스북 유저
-                    if (isFacebookUser == true)
+                    // 소셜 유저
+                    if (isDailyUser == false)
                     {
                         if (isEmptyTextField(new String[]{user.getEmail(), user.getPhone(), user.getName()}) == false)
                         {
