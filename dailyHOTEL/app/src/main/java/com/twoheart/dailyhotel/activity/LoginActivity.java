@@ -87,7 +87,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     private TextView mSignupView, mFindPasswordView;
     private com.facebook.login.widget.LoginButton mFacebookLoginView;
 
-    private Map<String, String> mSocialParams;
+    private Map<String, String> mStoreParams;
     private Map<String, String> mRegPushParams;
 
     // 카카오톡
@@ -204,47 +204,47 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         String encryptedId = Crypto.encrypt(id).replace("\n", "");
         String deviceId = telephonyManager.getDeviceId();
 
-        if (mSocialParams == null)
+        if (mStoreParams == null)
         {
-            mSocialParams = new HashMap<String, String>();
+            mStoreParams = new HashMap<String, String>();
         }
 
-        mSocialParams.clear();
+        mStoreParams.clear();
         HashMap<String, String> params = new HashMap<String, String>();
 
         if (Util.isTextEmpty(email) == false)
         {
-            mSocialParams.put("email", email);
+            mStoreParams.put("email", email);
             params.put("email", email);
         }
 
         if (Util.isTextEmpty(id) == false)
         {
-            mSocialParams.put("social_id", id);
+            mStoreParams.put("social_id", id);
             params.put("social_id", id);
         }
 
         if (encryptedId != null)
         {
-            mSocialParams.put("pw", encryptedId);
+            mStoreParams.put("pw", encryptedId);
             params.put("pw", encryptedId);
         }
 
         if (Util.isTextEmpty(name) == false)
         {
-            mSocialParams.put("name", name);
+            mStoreParams.put("name", name);
         }
 
         if (deviceId != null)
         {
-            mSocialParams.put("device", deviceId);
+            mStoreParams.put("device", deviceId);
         }
 
-        mSocialParams.put("is_auto", "true");
+        mStoreParams.put("is_auto", "true");
         params.put("is_auto", "true");
 
-        mSocialParams.put("market_type", RELEASE_STORE.getName());
-        mSocialParams.put("user_type", "facebook");
+        mStoreParams.put("market_type", RELEASE_STORE.getName());
+        mStoreParams.put("user_type", "facebook");
         params.put("user_type", "facebook");
 
         mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mSocialUserLoginJsonResponseListener, LoginActivity.this));
@@ -260,36 +260,36 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         String encryptedId = Crypto.encrypt(index).replace("\n", "");
         String deviceId = telephonyManager.getDeviceId();
 
-        if (mSocialParams == null)
+        if (mStoreParams == null)
         {
-            mSocialParams = new HashMap<String, String>();
+            mStoreParams = new HashMap<String, String>();
         }
 
-        mSocialParams.clear();
+        mStoreParams.clear();
         HashMap<String, String> params = new HashMap<String, String>();
 
         if (Util.isTextEmpty(index) == false)
         {
-            mSocialParams.put("social_id", index);
+            mStoreParams.put("social_id", index);
             params.put("social_id", index);
         }
 
         if (encryptedId != null)
         {
-            mSocialParams.put("pw", encryptedId);
+            mStoreParams.put("pw", encryptedId);
             params.put("pw", encryptedId);
         }
 
         if (deviceId != null)
         {
-            mSocialParams.put("device", deviceId);
+            mStoreParams.put("device", deviceId);
         }
 
-        mSocialParams.put("is_auto", "true");
+        mStoreParams.put("is_auto", "true");
         params.put("is_auto", "true");
 
-        mSocialParams.put("market_type", RELEASE_STORE.getName());
-        mSocialParams.put("user_type", "kakao_talk");
+        mStoreParams.put("market_type", RELEASE_STORE.getName());
+        mStoreParams.put("user_type", "kakao_talk");
         params.put("user_type", "kakao_talk");
 
         mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mSocialUserLoginJsonResponseListener, LoginActivity.this));
@@ -333,6 +333,17 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             params.put("user_type", "nomal");
             params.put("is_auto", mAutoLoginSwitch.isChecked() ? "true" : "false");
 
+            if (mStoreParams == null)
+            {
+                mStoreParams = new HashMap<String, String>();
+            }
+
+            mStoreParams.clear();
+            mStoreParams.put("email", mIdEditText.getText().toString().trim());
+            mStoreParams.put("pw", md5);
+            mStoreParams.put("social_id", "0");
+            mStoreParams.put("user_type", "nomal");
+
             mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mDailyUserLoginJsonResponseListener, this));
 
             AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.LOGIN, Action.CLICK, Label.LOGIN, 0L);
@@ -364,10 +375,10 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             return;
         }
 
-        String id = mSocialParams.get("email");
-        String pwd = mSocialParams.get("pw");
-        String accessToken = mSocialParams.get("social_id");
-        String type = mSocialParams.get("user_type");
+        String id = mStoreParams.get("email");
+        String pwd = mStoreParams.get("pw");
+        String accessToken = mStoreParams.get("social_id");
+        String type = mStoreParams.get("user_type");
 
         SharedPreferences.Editor ed = sharedPreference.edit();
         ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, true);
@@ -625,29 +636,29 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
                         HashMap<String, String> params = new HashMap<String, String>();
 
-                        if (mSocialParams.containsKey("email") == true)
+                        if (mStoreParams.containsKey("email") == true)
                         {
-                            params.put("email", mSocialParams.get("email"));
+                            params.put("email", mStoreParams.get("email"));
                         }
 
-                        if (mSocialParams.containsKey("pw") == true)
+                        if (mStoreParams.containsKey("pw") == true)
                         {
-                            params.put("pw", mSocialParams.get("pw"));
+                            params.put("pw", mStoreParams.get("pw"));
                         }
 
-                        if (mSocialParams.containsKey("social_id") == true)
+                        if (mStoreParams.containsKey("social_id") == true)
                         {
-                            params.put("social_id", mSocialParams.get("social_id"));
+                            params.put("social_id", mStoreParams.get("social_id"));
                         }
 
-                        if (mSocialParams.containsKey("user_type") == true)
+                        if (mStoreParams.containsKey("user_type") == true)
                         {
-                            params.put("user_type", mSocialParams.get("user_type"));
+                            params.put("user_type", mStoreParams.get("user_type"));
                         }
 
-                        if (mSocialParams.containsKey("is_auto") == true)
+                        if (mStoreParams.containsKey("is_auto") == true)
                         {
-                            params.put("is_auto", mSocialParams.get("is_auto"));
+                            params.put("is_auto", mStoreParams.get("is_auto"));
                         }
 
                         mAutoLoginSwitch.setChecked(true);
@@ -659,7 +670,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 }
 
                 unLockUI();
-                mSocialParams.clear();
+                mStoreParams.clear();
 
                 String msg = response.getString("msg");
 
@@ -736,14 +747,12 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     editor.putBoolean("Social Signup", false);
                     editor.commit();
 
-                    ExLog.d("facebook signup is completed.");
-
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
 
                     HashMap<String, String> params = new HashMap<String, String>();
                     params.put(Label.CURRENT_TIME, dateFormat.format(new Date()));
                     params.put(Label.USER_INDEX, userIndex);
-                    params.put(Label.TYPE, "facebook");
+                    params.put(Label.TYPE, "Social");
 
                     AnalyticsManager.getInstance(LoginActivity.this).recordEvent(Screen.LOGIN, Action.NETWORK, Label.SIGNUP, params);
                 }
@@ -842,7 +851,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 } else
                 {
                     // 페이스북, 카카오톡 로그인 정보가 없는 경우 회원 가입으로 전환한다
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNUP).toString(), mSocialParams, mUserSignupJsonResponseListener, LoginActivity.this));
+                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNUP).toString(), mStoreParams, mUserSignupJsonResponseListener, LoginActivity.this));
                 }
 
                 //                {
