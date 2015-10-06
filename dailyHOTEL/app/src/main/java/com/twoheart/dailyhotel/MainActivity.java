@@ -332,6 +332,12 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
         }
 
         int startIndex = link.indexOf("?") + 1;
+
+        if (startIndex <= 0)
+        {
+            return;
+        }
+
         String param = link.substring(startIndex);
 
         // param 저장하기
