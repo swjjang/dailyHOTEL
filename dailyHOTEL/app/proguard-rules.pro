@@ -56,6 +56,7 @@
 }
 
 -keep class com.kakao.** { *; }
+-keepattributes Signature
 -keepclassmembers class * {
   public static <fields>;
   public *;
