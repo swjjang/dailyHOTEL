@@ -713,8 +713,13 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                 switch (msg_code)
                 {
                     case 0:
+                    {
+                        message = response.getString("msg");
+                        DailyToast.showToast(baseActivity, message, Toast.LENGTH_SHORT);
+
                         mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_BOOKING_LIST).toString(), null, mReservationListJsonResponseListener, baseActivity));
                         break;
+                    }
 
                     // Toast
                     case 100:
