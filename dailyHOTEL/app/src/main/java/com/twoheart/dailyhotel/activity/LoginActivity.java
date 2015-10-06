@@ -122,11 +122,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             @Override
             public void onClick(View v)
             {
-                if (lockUiComponentAndIsLockUiComponent() == true)
-                {
-                    return;
-                }
-
                 mFacebookLoginView.performClick();
             }
         });
@@ -143,11 +138,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             @Override
             public void onClick(View v)
             {
-                if (lockUiComponentAndIsLockUiComponent() == true)
-                {
-                    return;
-                }
-
                 mKakaoLoginView.performClick();
             }
         });
@@ -252,8 +242,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
     private void registerKakaokUser(long id)
     {
-        unLockUI();
-
         TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
 
         String index = String.valueOf(id);
@@ -511,24 +499,29 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         @Override
         public void onSessionOpened()
         {
+            lockUI();
+
             UserManagement.requestMe(new MeResponseCallback()
             {
                 @Override
                 public void onSessionClosed(ErrorResult errorResult)
                 {
-
+                    unLockUI();
+                    ExLog.d(errorResult.toString());
                 }
 
                 @Override
                 public void onNotSignedUp()
                 {
-
+                    unLockUI();
+                    ExLog.d("onNotSignedUp");
                 }
 
                 @Override
                 public void onFailure(ErrorResult errorResult)
                 {
-
+                    unLockUI();
+                    ExLog.d(errorResult.toString());
                 }
 
                 @Override
@@ -846,8 +839,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     Editor editor = sharedPreference.edit();
                     editor.putString("collapseKey", "");
                     editor.apply();
-
-                    unLockUI();
                 } else
                 {
                     // 페이스북, 카카오톡 로그인 정보가 없는 경우 회원 가입으로 전환한다
