@@ -371,7 +371,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         SharedPreferences.Editor ed = sharedPreference.edit();
         ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, true);
 
-        if (accessToken != null)
+        if (Util.isTextEmpty(accessToken) == false && "0".equals(accessToken) == false)
         {
             ed.putString(KEY_PREFERENCE_USER_ACCESS_TOKEN, accessToken);
             ed.putString(KEY_PREFERENCE_USER_ID, null);
