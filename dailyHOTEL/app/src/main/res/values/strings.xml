@@ -88,7 +88,7 @@
     <string name="toast_msg_profile_success_to_change">성공적으로 변경되었습니다.</string>
     <string name="toast_msg_logouted">로그아웃되었습니다.</string>
     <string name="toast_msg_logoined">로그인되었습니다.</string>
-    <string name="toast_msg_please_input_id">아이디를 입력해주세요.</string>
+    <string name="toast_msg_please_input_id">이메일을 입력해주세요.</string>
     <string name="toast_msg_please_input_phone">전화번호를 입력해주세요.</string>
     <string name="toast_msg_please_input_name">이름을 입력해주세요.</string>
     <string name="toast_msg_please_input_passwd">비밀번호를 입력해주세요.</string>

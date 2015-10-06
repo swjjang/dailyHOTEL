@@ -204,6 +204,12 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
         if (mUserActionListener != null)
         {
             HotelListViewItem hotelListViewItem = mHotelListAdapter.getItem(position);
+
+            if(hotelListViewItem.getType() == HotelListViewItem.TYPE_SECTION)
+            {
+                return;
+            }
+
             mUserActionListener.selectHotel(hotelListViewItem, mSaleTime);
 
             ImageView imageView = (ImageView) childView.findViewById(R.id.iv_hotel_row_img);
