@@ -392,6 +392,8 @@ public class Util implements Constants
             if (Util.isTextEmpty(type) == true)
             {
                 params.put("user_type", "facebook");
+
+                sharedPreference.edit().putString("user_type", "facebook").apply();
             }
         } else
         {
@@ -401,6 +403,8 @@ public class Util implements Constants
             if (Util.isTextEmpty(type) == true)
             {
                 params.put("user_type", "nomal");
+
+                sharedPreference.edit().putString("user_type", "nomal").apply();
             }
         }
 
