@@ -42,6 +42,7 @@ import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.DrawableLruCache;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.GourmetViewItem;
+import com.twoheart.dailyhotel.view.HotelListViewItem;
 import com.twoheart.dailyhotel.view.PlaceViewItem;
 import com.twoheart.dailyhotel.view.widget.DailyHotelHeaderTransformer;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
@@ -134,6 +135,12 @@ public class GourmetListFragment extends PlaceListFragment
         if (mOnUserActionListener != null)
         {
             GourmetViewItem gourmetViewItem = (GourmetViewItem) getPlaceViewItem(position);
+
+            if(gourmetViewItem.type == PlaceViewItem.TYPE_SECTION)
+            {
+                return;
+            }
+
             mOnUserActionListener.selectPlace(gourmetViewItem, mSaleTime);
 
             ImageView hotelImageView = (ImageView) childView.findViewById(R.id.iv_hotel_row_img);
