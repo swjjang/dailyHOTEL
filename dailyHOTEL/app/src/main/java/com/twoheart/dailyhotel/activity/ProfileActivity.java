@@ -305,8 +305,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
                 return;
             }
 
-            lockUiComponent();
-
             /**
              * 로그 아웃시 내부 저장한 유저정보 초기화
              */
@@ -315,6 +313,8 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
                 @Override
                 public void onClick(View view)
                 {
+                    lockUI();
+
                     mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGOUT).toString(), null, mUserLogoutStringResponseListener, ProfileActivity.this));
                     AnalyticsManager.getInstance(ProfileActivity.this).recordEvent(Screen.PROFILE, Action.CLICK, Label.LOGOUT, 0L);
                 }
@@ -480,6 +480,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
                 ExLog.d(e.toString());
             }
 
+            unLockUI();
             DailyToast.showToast(ProfileActivity.this, R.string.toast_msg_logouted, Toast.LENGTH_SHORT);
             finish();
         }
