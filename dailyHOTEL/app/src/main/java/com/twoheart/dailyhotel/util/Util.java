@@ -384,7 +384,7 @@ public class Util implements Constants
 
         HashMap<String, String> params = new HashMap<String, String>();
 
-        if (Util.isTextEmpty(accessToken) == false)
+        if (Util.isTextEmpty(accessToken) == false && "0".equals(accessToken) == false)
         {
             params.put("social_id", accessToken);
 
