@@ -7,7 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,10 +23,11 @@ public abstract class PlaceBookingDetail implements Parcelable
     public String guestPhone;
     public String guestEmail;
     public String addressSummary;
-    private LinkedHashMap<String, List<String>> mSpecification;
+    private HashMap<String, List<String>> mSpecification;
 
     public PlaceBookingDetail()
     {
+        mSpecification = new HashMap<String, List<String>>();
     }
 
     public abstract void setData(JSONObject jsonObject) throws Exception;
@@ -53,7 +54,13 @@ public abstract class PlaceBookingDetail implements Parcelable
         address = in.readString();
         latitude = in.readDouble();
         longitude = in.readDouble();
-        in.readMap(mSpecification, Map.class.getClassLoader());
+
+        if (mSpecification == null)
+        {
+            mSpecification = new HashMap<String, List<String>>();
+        }
+
+        in.readMap(mSpecification, HashMap.class.getClassLoader());
         placeName = in.readString();
         grade = Place.Grade.valueOf(in.readString());
         guestName = in.readString();
@@ -76,7 +83,7 @@ public abstract class PlaceBookingDetail implements Parcelable
 
         int length = jsonArray.length();
 
-        mSpecification = new LinkedHashMap<String, List<String>>(length);
+        mSpecification.clear();
 
         for (int i = 0; i < length; i++)
         {
