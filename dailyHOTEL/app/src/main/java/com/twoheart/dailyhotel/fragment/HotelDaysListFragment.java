@@ -415,10 +415,22 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
         if (mUserActionListener != null)
         {
             HotelListViewItem hotelListViewItem = mHotelListAdapter.getItem(position);
+
+            if (hotelListViewItem.getType() == HotelListViewItem.TYPE_SECTION)
+            {
+                return;
+            }
+
             mUserActionListener.selectHotel(hotelListViewItem, mSelectedCheckInSaleTime);
 
-            ImageView imageView = (ImageView) childView.findViewById(R.id.iv_hotel_row_img);
-            DrawableLruCache.getInstance().put(hotelListViewItem.getItem().getImage(), imageView.getDrawable());
+            try
+            {
+                ImageView imageView = (ImageView) childView.findViewById(R.id.iv_hotel_row_img);
+                DrawableLruCache.getInstance().put(hotelListViewItem.getItem().getImage(), imageView.getDrawable());
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
         }
     }
 
