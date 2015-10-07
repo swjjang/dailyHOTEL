@@ -166,6 +166,8 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
         {
             case HOTEL:
             {
+                baseActivity.setActionBar(getString(R.string.actionbar_title_wait_timer_frag), false);
+
                 imageView.setImageResource(R.drawable.open_stanby_bg);
 
                 titleMainTextView.setText(sFormat.format(mSaleTime.getOpenTime()) + getString(R.string.prefix_wait_timer_frag_todays_hotel_open));
@@ -177,6 +179,8 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 
             case FNB:
             {
+                baseActivity.setActionBar(getString(R.string.label_dailygourmet), false);
+
                 imageView.setImageResource(R.drawable.open_stanby_bg_fnb);
 
                 titleMainTextView.setTextColor(getResources().getColor(R.color.white));
@@ -191,8 +195,6 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
                 break;
             }
         }
-
-        baseActivity.setActionBar(getString(R.string.actionbar_title_wait_timer_frag), false);
 
         setTimer();
 

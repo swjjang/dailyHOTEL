@@ -203,8 +203,8 @@
     <string name="mail_text_desc">데일리호텔의 안드로이드 어플리케이션에 관한 문의입니다.</string>
 
     <!-- Prefix Text -->
-    <string name="prefix_wait_timer_frag_todays_hotel_open">시, 오늘의 호텔이 공개됩니다.</string>
-    <string name="prefix_wait_timer_frag_todays_fnb_open">시, 오늘의 레스토랑을 공개됩니다.</string>
+    <string name="prefix_wait_timer_frag_todays_hotel_open">시, 오늘의 호텔을 공개합니다.</string>
+    <string name="prefix_wait_timer_frag_todays_fnb_open">시, 오늘의 레스토랑을 공개합니다.</string>
     <string name="prefix_expire_time">유효기간</string>
 
     <!-- KaKaoLink Message -->
