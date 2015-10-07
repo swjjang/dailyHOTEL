@@ -654,7 +654,13 @@ public class HotelDetailLayout
             }
         });
 
-        mGoogleMapLayout = (ViewGroup) inflater.inflate(R.layout.view_map, null, false);
+        try
+        {
+            mGoogleMapLayout = (ViewGroup) inflater.inflate(R.layout.view_map, null, false);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
 
         setBookingStatus(STATUS_NONE);
         hideRoomType();

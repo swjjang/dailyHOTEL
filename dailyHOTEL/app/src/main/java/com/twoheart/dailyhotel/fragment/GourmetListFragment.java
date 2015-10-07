@@ -40,9 +40,9 @@ import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.DrawableLruCache;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.GourmetViewItem;
-import com.twoheart.dailyhotel.view.HotelListViewItem;
 import com.twoheart.dailyhotel.view.PlaceViewItem;
 import com.twoheart.dailyhotel.view.widget.DailyHotelHeaderTransformer;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
@@ -136,15 +136,21 @@ public class GourmetListFragment extends PlaceListFragment
         {
             GourmetViewItem gourmetViewItem = (GourmetViewItem) getPlaceViewItem(position);
 
-            if(gourmetViewItem.type == PlaceViewItem.TYPE_SECTION)
+            if (gourmetViewItem.type == PlaceViewItem.TYPE_SECTION)
             {
                 return;
             }
 
             mOnUserActionListener.selectPlace(gourmetViewItem, mSaleTime);
 
-            ImageView hotelImageView = (ImageView) childView.findViewById(R.id.iv_hotel_row_img);
-            DrawableLruCache.getInstance().put(gourmetViewItem.getPlace().imageUrl, hotelImageView.getDrawable());
+            try
+            {
+                ImageView hotelImageView = (ImageView) childView.findViewById(R.id.iv_hotel_row_img);
+                DrawableLruCache.getInstance().put(gourmetViewItem.getPlace().imageUrl, hotelImageView.getDrawable());
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
         }
     }
 
