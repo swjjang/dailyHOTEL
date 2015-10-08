@@ -17,16 +17,13 @@
         android:background="@color/headersectionbar"
         android:gravity="center"
         android:orientation="vertical"
-        android:visibility="invisible">
+        android:visibility="visible">
 
-        <com.twoheart.dailyhotel.view.widget.DailyTextView
+        <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:text="@string/label_dailygourmet"
-            android:textColor="@color/headersectionbar_text"
-            android:textSize="17dp"
-            android:textStyle="bold"/>
+            android:src="@drawable/daily_gourmet"/>
 
         <View
             android:layout_width="53dp"

@@ -860,7 +860,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
                 mObjectAnimator = null;
             }
 
-            View underlineView02 = baseActivity.findViewById(R.id.tabindicator_underLine);
+            View underlineView02 = baseActivity.findViewById(R.id.tabindicator);
 
             mObjectAnimator = ObjectAnimator.ofFloat(mDaysLayout, "y", y, underlineView02.getBottom());
             mObjectAnimator.setDuration(300);
@@ -978,7 +978,7 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
                 mObjectAnimator = null;
             }
 
-            View underlineView02 = baseActivity.findViewById(R.id.tabindicator_underLine);
+            View underlineView02 = baseActivity.findViewById(R.id.tabindicator);
 
             mObjectAnimator = ObjectAnimator.ofFloat(mDaysLayout, "y", y, underlineView02.getBottom() - DAYSLIST_HEIGHT);
             mObjectAnimator.setDuration(300);

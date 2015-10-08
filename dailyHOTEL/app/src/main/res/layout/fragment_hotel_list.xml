@@ -44,14 +44,14 @@
         android:layout_height="131dp"
         android:layout_marginTop="110dp"
         android:background="@color/white"
-        android:paddingLeft="13dp"
-        android:paddingRight="13dp"
         android:visibility="gone">
 
         <LinearLayout
             android:id="@+id/checkInOutLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="13dp"
+            android:layout_marginRight="13dp"
             android:clickable="true"
             android:paddingBottom="24dp"
             android:paddingTop="24dp">
@@ -81,6 +81,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/checkInOutLayout"
+            android:layout_marginLeft="13dp"
+            android:layout_marginRight="13dp"
             android:baselineAligned="false"
             android:visibility="gone">
 
@@ -139,6 +141,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/checkInOutLayout"
+            android:layout_marginLeft="13dp"
+            android:layout_marginRight="13dp"
             android:baselineAligned="false"
             android:visibility="gone">
 
@@ -194,6 +198,11 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"/>
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/tab_underline"/>
     </RelativeLayout>
 
 </RelativeLayout>

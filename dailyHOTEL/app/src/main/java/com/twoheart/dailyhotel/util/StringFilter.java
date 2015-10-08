@@ -70,11 +70,11 @@ public class StringFilter
         {
             default:
             case ALLOW_ALPHANUMERIC:
-                pattern = Pattern.compile("^[a-zA-Z0-9|\\s]+$");
+                pattern = Pattern.compile("^[a-zA-Z0-9\\s]+$");
                 break;
 
             case ALLOW_ALPHANUMERIC_HANGUL:
-                pattern = Pattern.compile("^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ\\s|\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]+$");
+                pattern = Pattern.compile("^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ\\s\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]+$");
                 break;
 
             case ALLOW_ALPHANUMERIC_NAME:

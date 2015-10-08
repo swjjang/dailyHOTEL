@@ -17,11 +17,4 @@
         android:background="@color/white"
         android:visibility="invisible"/>
 
-    <View
-        android:id="@+id/tabindicator_underLine"
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_below="@id/tabindicator"
-        android:background="@color/tab_underline"/>
-
 </RelativeLayout>

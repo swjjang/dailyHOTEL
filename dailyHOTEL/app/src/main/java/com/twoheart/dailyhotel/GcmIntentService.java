@@ -253,7 +253,7 @@ public class GcmIntentService extends IntentService implements Constants
         if (Util.isTextEmpty(imageUrl) == true)
         {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-            builder.setSmallIcon(R.drawable.img_ic_appicon_feature).setContentTitle(getString(R.string.app_name)).setAutoCancel(true).setSound(uri).setContentText(msg);
+            builder.setSmallIcon(R.mipmap.ic_launcher).setContentTitle(getString(R.string.app_name)).setAutoCancel(true).setSound(uri).setContentText(msg);
             builder.setContentIntent(contentIntent);
             mNotificationManager.notify(NOTIFICATION_ID, builder.build());
         } else
@@ -309,7 +309,7 @@ public class GcmIntentService extends IntentService implements Constants
                     .setTicker(getResources().getString(R.string.app_name)) //
                     .setSound(mUri) //
                     .setAutoCancel(true) //
-                    .setSmallIcon(R.drawable.img_ic_appicon_feature);
+                    .setSmallIcon(R.mipmap.ic_launcher);
 
             if (bitmap != null)
             {
