@@ -92,7 +92,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
         public View mAnchorView;
         public View mActionbarLayout;
         public View mTabindicatorView;
-        public View mUnderlineView02;
     }
 
     @Override
@@ -140,7 +139,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
         mActionbarViewHolder.mAnchorView = baseActivity.findViewById(R.id.anchorAnimation);
         mActionbarViewHolder.mActionbarLayout = baseActivity.findViewById(R.id.actionBarLayout);
         mActionbarViewHolder.mTabindicatorView = baseActivity.findViewById(R.id.tabindicator);
-        mActionbarViewHolder.mUnderlineView02 = baseActivity.findViewById(R.id.tabindicator_underLine);
 
         return view;
     }
@@ -521,7 +519,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
         mActionbarViewHolder.mAnchorView.setTranslationY(0);
         mActionbarViewHolder.mActionbarLayout.setTranslationY(0);
         mActionbarViewHolder.mTabindicatorView.setTranslationY(0);
-        mActionbarViewHolder.mUnderlineView02.setTranslationY(0);
 
         mActionbarViewHolder.mAnchorView.setVisibility(View.INVISIBLE);
     }
@@ -562,7 +559,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
                 mActionbarViewHolder.mAnchorView.setTranslationY(value);
                 mActionbarViewHolder.mActionbarLayout.setTranslationY(value);
                 mActionbarViewHolder.mTabindicatorView.setTranslationY(value);
-                mActionbarViewHolder.mUnderlineView02.setTranslationY(value);
             }
         });
 
@@ -630,7 +626,6 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
                 mActionbarViewHolder.mAnchorView.setTranslationY(value);
                 mActionbarViewHolder.mActionbarLayout.setTranslationY(value);
                 mActionbarViewHolder.mTabindicatorView.setTranslationY(value);
-                mActionbarViewHolder.mUnderlineView02.setTranslationY(value);
             }
         });
 

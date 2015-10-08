@@ -54,7 +54,6 @@ import java.util.Map;
 public class HotelMainFragment extends BaseFragment
 {
     private TabIndicator mTabIndicator;
-    private View mUnderLineView;
     private FragmentViewPager mFragmentViewPager;
     private ArrayList<HotelListFragment> mFragmentList;
 
@@ -109,7 +108,6 @@ public class HotelMainFragment extends BaseFragment
         mHotelViewType = HOTEL_VIEW_TYPE.LIST;
 
         mTabIndicator = (TabIndicator) view.findViewById(R.id.tabindicator);
-        mUnderLineView = view.findViewById(R.id.tabindicator_underLine);
 
         //		mTabIndicator.setData(titleList, dayList, true);
         mTabIndicator.setData(titleList, true);
@@ -149,7 +147,6 @@ public class HotelMainFragment extends BaseFragment
     private void initHide()
     {
         mTabIndicator.setVisibility(View.INVISIBLE);
-        mUnderLineView.setVisibility(View.INVISIBLE);
 
         setMenuEnabled(false);
     }
@@ -157,7 +154,6 @@ public class HotelMainFragment extends BaseFragment
     private void initShow()
     {
         mTabIndicator.setVisibility(View.VISIBLE);
-        mUnderLineView.setVisibility(View.VISIBLE);
 
         setMenuEnabled(true);
     }
