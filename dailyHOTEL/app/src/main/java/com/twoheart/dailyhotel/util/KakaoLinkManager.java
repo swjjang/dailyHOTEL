@@ -47,7 +47,7 @@ public class KakaoLinkManager implements Constants
             kkMsgBuilder.addImage("http://s3-ap-northeast-1.amazonaws.com/weblogfile/kakao.jpg", 300, 200);
             kkMsgBuilder.addText(text);
             kkMsgBuilder.addAppButton(mContext.getString(R.string.kakao_btn_invited_friend));
-            kkLink.sendMessage(kkMsgBuilder.build(), mContext);
+            kkLink.sendMessage(kkMsgBuilder, mContext);
         } catch (KakaoParameterException e)
         {
             ExLog.e(e.toString());
@@ -77,7 +77,7 @@ public class KakaoLinkManager implements Constants
 
             kkMsgBuilder.addText(text);
 
-            kkLink.sendMessage(kkMsgBuilder.build(), mContext);
+            kkLink.sendMessage(kkMsgBuilder, mContext);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -106,7 +106,7 @@ public class KakaoLinkManager implements Constants
 
             kkMsgBuilder.addText(text);
 
-            kkLink.sendMessage(kkMsgBuilder.build(), mContext);
+            kkLink.sendMessage(kkMsgBuilder, mContext);
         } catch (Exception e)
         {
             ExLog.e(e.toString());

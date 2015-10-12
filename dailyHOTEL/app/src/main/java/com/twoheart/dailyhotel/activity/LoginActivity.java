@@ -43,9 +43,9 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.kakao.auth.ErrorResult;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
+import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
@@ -404,9 +404,15 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         {
             lockUI();
 
-            if (Session.getCurrentSession().handleActivityResult(requestCode, resultCode, data) == true)
+            try
             {
-                return;
+                if (Session.getCurrentSession().handleActivityResult(requestCode, resultCode, data) == true)
+                {
+                    return;
+                }
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
             }
 
             unLockUI();
@@ -504,31 +510,22 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             UserManagement.requestMe(new MeResponseCallback()
             {
                 @Override
+                public void onSuccess(UserProfile result)
+                {
+                    // id값은 특별함. kakao login
+                    registerKakaokUser(result.getId());
+                }
+
+                @Override
                 public void onSessionClosed(ErrorResult errorResult)
                 {
                     unLockUI();
-                    ExLog.d(errorResult.toString());
                 }
 
                 @Override
                 public void onNotSignedUp()
                 {
                     unLockUI();
-                    ExLog.d("onNotSignedUp");
-                }
-
-                @Override
-                public void onFailure(ErrorResult errorResult)
-                {
-                    unLockUI();
-                    ExLog.d(errorResult.toString());
-                }
-
-                @Override
-                public void onSuccess(UserProfile userProfile)
-                {
-                    // id값은 특별함. kakao login
-                    registerKakaokUser(userProfile.getId());
                 }
             });
         }
