@@ -65,7 +65,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
         }
 
-        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_SALE_RESTAURANT_INFO).append(params).toString(), null, mFnBDetailJsonResponseListener, this));
+        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_SALE_RESTAURANT_INFO).append(params).toString(), null, mGourmetDetailJsonResponseListener, this));
     }
 
     @Override
@@ -88,7 +88,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     //Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mFnBDetailJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mGourmetDetailJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
         public void onResponse(String url, JSONObject response)

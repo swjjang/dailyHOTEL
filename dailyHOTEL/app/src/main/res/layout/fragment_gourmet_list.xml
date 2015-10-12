@@ -5,7 +5,7 @@
                 android:background="@color/hotel_list_background">
 
     <FrameLayout
-        android:id="@+id/hotelMapLayout"
+        android:id="@+id/mapLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"/>
@@ -41,159 +41,57 @@
     <RelativeLayout
         android:id="@+id/daysLayout"
         android:layout_width="match_parent"
-        android:layout_height="131dp"
-        android:layout_marginTop="110dp"
-        android:background="@color/white"
-        android:paddingLeft="13dp"
-        android:paddingRight="13dp"
+        android:layout_height="wrap_content"
         android:visibility="gone">
 
         <LinearLayout
-            android:id="@+id/checkInOutLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:paddingBottom="24dp"
-            android:paddingTop="24dp">
-
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="right|center_vertical"
-                android:text="@string/frag_hotel_list_check"
-                android:textColor="@color/dh_theme_color"
-                android:textSize="16dp"/>
-
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
-                android:id="@+id/checkInOutTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="left|center_vertical"
-                android:text="@string/frag_hotel_list_checkin"
-                android:textColor="@color/dh_theme_color"
-                android:textSize="16dp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/daysLayout01"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/checkInOutLayout"
-            android:baselineAligned="false"
-            android:visibility="gone">
+            android:layout_height="85dp"
+            android:background="@color/white"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
 
             <include
                 android:id="@+id/item01"
                 layout="@layout/view_selectday_item"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"/>
 
             <include
                 android:id="@+id/item02"
                 layout="@layout/view_selectday_item"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"/>
 
             <include
                 android:id="@+id/item03"
                 layout="@layout/view_selectday_item"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"/>
 
             <include
                 android:id="@+id/item04"
                 layout="@layout/view_selectday_item"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"/>
 
             <include
                 android:id="@+id/item05"
                 layout="@layout/view_selectday_item"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"/>
-
-            <include
-                android:id="@+id/item06"
-                layout="@layout/view_selectday_item"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"/>
-
-            <include
-                android:id="@+id/item07"
-                layout="@layout/view_selectday_item"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"/>
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/daysLayout02"
+        <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/checkInOutLayout"
-            android:baselineAligned="false"
-            android:visibility="gone">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"/>
-
-            <com.twoheart.dailyhotel.view.widget.DailyTextView
-                android:id="@+id/toTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="27dp"
-                android:layout_weight="1"
-                android:clickable="true"
-                android:gravity="center_horizontal"
-                android:text="@string/frag_hotel_days_tab_to"
-                android:textColor="@color/daytab_text"
-                android:textSize="12dp"/>
-
-            <include
-                android:id="@+id/item08"
-                layout="@layout/view_selectday_item"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"/>
-
-            <include
-                android:id="@+id/item09"
-                layout="@layout/view_selectday_item"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"/>
-
-            <include
-                android:id="@+id/item10"
-                layout="@layout/view_selectday_item"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"/>
-
-            <include
-                android:id="@+id/item11"
-                layout="@layout/view_selectday_item"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"/>
-
-            <include
-                android:id="@+id/item12"
-                layout="@layout/view_selectday_item"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"/>
-        </LinearLayout>
+            android:layout_height="1px"
+            android:background="@color/tab_underline"/>
     </RelativeLayout>
+
 
 </RelativeLayout>

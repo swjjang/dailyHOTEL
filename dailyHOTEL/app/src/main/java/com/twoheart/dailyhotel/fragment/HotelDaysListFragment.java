@@ -78,6 +78,21 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
     private boolean mIsShowDaysList;
     private int mCheckStatus;
 
+    private enum ANIMATION_STATE
+    {
+        START,
+        END,
+        CANCEL
+    }
+
+    private enum ANIMATION_STATUS
+    {
+        SHOW,
+        HIDE,
+        SHOW_END,
+        HIDE_END
+    }
+
     private Handler mHandler = new Handler()
     {
         @Override
@@ -152,8 +167,6 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
         return view;
     }
 
-    ;
-
     private void initDaysLayout()
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
@@ -181,15 +194,19 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
         daysLayout01.setVisibility(View.VISIBLE);
         daysLayout02.setVisibility(View.GONE);
 
-        for (int i = 0; i < CHECK_IN_DATE; i++)
-        {
-            mCheckInViews[i] = daysLayout01.findViewById(R.id.item01 + i);
-        }
+        mCheckInViews[0] = daysLayout01.findViewById(R.id.item01);
+        mCheckInViews[1] = daysLayout01.findViewById(R.id.item02);
+        mCheckInViews[2] = daysLayout01.findViewById(R.id.item03);
+        mCheckInViews[3] = daysLayout01.findViewById(R.id.item04);
+        mCheckInViews[4] = daysLayout01.findViewById(R.id.item05);
+        mCheckInViews[5] = daysLayout01.findViewById(R.id.item06);
+        mCheckInViews[6] = daysLayout01.findViewById(R.id.item07);
 
-        for (int i = 0; i < CHECK_OUT_DATE; i++)
-        {
-            mCheckOutViews[i] = daysLayout02.findViewById(R.id.item08 + i);
-        }
+        mCheckOutViews[0] = daysLayout02.findViewById(R.id.item08);
+        mCheckOutViews[1] = daysLayout02.findViewById(R.id.item09);
+        mCheckOutViews[2] = daysLayout02.findViewById(R.id.item10);
+        mCheckOutViews[3] = daysLayout02.findViewById(R.id.item11);
+        mCheckOutViews[4] = daysLayout02.findViewById(R.id.item12);
 
         DAYSLIST_HEIGHT = Util.dpToPx(baseActivity, 131);
 
@@ -1158,20 +1175,5 @@ public class HotelDaysListFragment extends HotelListFragment implements OnClickL
         {
             mDaysBackgroundView.startAnimation(mAlphaAnimation);
         }
-    }
-
-    private enum ANIMATION_STATE
-    {
-        START,
-        END,
-        CANCEL
-    }
-
-    private enum ANIMATION_STATUS
-    {
-        SHOW,
-        HIDE,
-        SHOW_END,
-        HIDE_END
     }
 }

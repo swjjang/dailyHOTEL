@@ -152,7 +152,7 @@ public abstract class PlaceMapFragment extends com.google.android.gms.maps.Suppo
         mViewPager.setOffscreenPageLimit(1);
         mViewPager.setOnPageChangeListener(mOnPageChangeListener);
 
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, Util.dpToPx(view.getContext(), 133));
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, Util.dpToPx(view.getContext(), 132));
         layoutParams.gravity = Gravity.BOTTOM;
 
         container.addView(mViewPager, layoutParams);

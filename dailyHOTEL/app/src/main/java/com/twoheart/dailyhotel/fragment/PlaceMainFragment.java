@@ -57,11 +57,11 @@ public abstract class PlaceMainFragment extends BaseFragment
 
         public void selectPlace(int index, long dailyTime, int dailyDayOfDays, int nights);
 
+        public void selectDay(SaleTime checkInSaleTime, boolean isListSelectionTop);
+
         public void toggleViewType();
 
         public void onClickActionBarArea();
-
-        public void setHeaderSectionVisible(boolean isVisible);
 
         public void setMapViewVisible(boolean isVisible);
     }
