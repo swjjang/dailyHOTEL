@@ -284,7 +284,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
                 }
 
                 mSignupParams.put("social_id", "0");
-                mSignupParams.put("user_type", "nomal");
+                mSignupParams.put("user_type", "normal");
 
                 mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNUP).toString(), mSignupParams, mUserSignupJsonResponseListener, this));
 
@@ -360,7 +360,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
         ed.putBoolean(KEY_PREFERENCE_AUTO_LOGIN, true);
         ed.putString(KEY_PREFERENCE_USER_ID, id);
         ed.putString(KEY_PREFERENCE_USER_PWD, pwd);
-        ed.putString(KEY_PREFERENCE_USER_TYPE, "nomal");
+        ed.putString(KEY_PREFERENCE_USER_TYPE, "normal");
         ed.commit();
 
         setResult(RESULT_OK);
@@ -704,7 +704,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
                         params.put("email", mSignupParams.get("email"));
                         params.put("pw", Crypto.encrypt(mSignupParams.get("pw")).replace("\n", ""));
                         params.put("social_id", "0");
-                        params.put("user_type", "nomal");
+                        params.put("user_type", "normal");
                         params.put("is_auto", "true");
 
                         mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mUserLoginJsonResponseListener, SignupActivity.this));

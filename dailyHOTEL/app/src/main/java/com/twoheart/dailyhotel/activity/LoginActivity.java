@@ -318,7 +318,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             params.put("email", mIdEditText.getText().toString().trim());
             params.put("pw", md5);
             params.put("social_id", "0");
-            params.put("user_type", "nomal");
+            params.put("user_type", "normal");
             params.put("is_auto", mAutoLoginSwitch.isChecked() ? "true" : "false");
 
             if (mStoreParams == null)
@@ -330,7 +330,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             mStoreParams.put("email", mIdEditText.getText().toString().trim());
             mStoreParams.put("pw", md5);
             mStoreParams.put("social_id", "0");
-            mStoreParams.put("user_type", "nomal");
+            mStoreParams.put("user_type", "normal");
 
             mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mDailyUserLoginJsonResponseListener, this));
 
