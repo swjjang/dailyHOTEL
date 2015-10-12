@@ -132,6 +132,12 @@ public class DailyHotel extends Application implements Constants
                 {
                     return ApprovalType.INDIVIDUAL;
                 }
+
+                @Override
+                public boolean isSaveFormData()
+                {
+                    return false;
+                }
             };
         }
 

@@ -180,7 +180,14 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
         if (mToolbar == null)
         {
             mToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
-            setSupportActionBar(mToolbar);
+
+            try
+            {
+                setSupportActionBar(mToolbar);
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
 
             mToolbar.setTitleTextColor(getResources().getColor(R.color.actionbar_title));
             mToolbar.setBackgroundColor(getResources().getColor(R.color.white));

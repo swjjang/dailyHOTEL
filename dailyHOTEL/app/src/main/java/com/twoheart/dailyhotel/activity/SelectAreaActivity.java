@@ -287,33 +287,36 @@ public class SelectAreaActivity extends BaseActivity
             animation.setFillAfter(true);
             animation.setDuration(350);
 
-            imageView.setAnimation(animation);
-            animation.setAnimationListener(new AnimationListener()
+            if (imageView != null)
             {
-
-                @Override
-                public void onAnimationStart(Animation animation)
+                imageView.setAnimation(animation);
+                animation.setAnimationListener(new AnimationListener()
                 {
-                    // TODO Auto-generated method stub
 
-                }
+                    @Override
+                    public void onAnimationStart(Animation animation)
+                    {
+                        // TODO Auto-generated method stub
 
-                @Override
-                public void onAnimationRepeat(Animation animation)
-                {
-                    // TODO Auto-generated method stub
+                    }
 
-                }
+                    @Override
+                    public void onAnimationRepeat(Animation animation)
+                    {
+                        // TODO Auto-generated method stub
 
-                @Override
-                public void onAnimationEnd(Animation animation)
-                {
-                    releaseUiComponent();
+                    }
 
-                    imageView.setAnimation(null);
-                    imageView.setImageResource(R.drawable.ic_details_menu_off);
-                }
-            });
+                    @Override
+                    public void onAnimationEnd(Animation animation)
+                    {
+                        releaseUiComponent();
+
+                        imageView.setAnimation(null);
+                        imageView.setImageResource(R.drawable.ic_details_menu_off);
+                    }
+                });
+            }
         }
     };
 
