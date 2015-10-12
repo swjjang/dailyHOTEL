@@ -13,7 +13,7 @@
     <string name="label_google_map">Google Map</string>
     <string name="label_hotel">호텔</string>
     <string name="label_fnb">레스토랑</string>
-    <string name="label_dailygourmet">dailyGOURMET</string>
+    <string name="label_dailygourmet">DAILYGOURMET</string>
 
     <!-- Hotel Grade -->
     <string name="grade_special">특급</string>
@@ -48,8 +48,8 @@
     <string name="actionbar_title_credit_frag">적립금</string>
     <string name="actionbar_title_reg_creditcard">신용카드 추가하기</string>
     <string name="actionbar_title_setting_frag">설정</string>
-    <string name="actionbar_title_error_frag">dailyHOTEL</string>
-    <string name="actionbar_title_wait_timer_frag">dailyHOTEL</string>
+    <string name="actionbar_title_error_frag">DAILYHOTEL</string>
+    <string name="actionbar_title_wait_timer_frag">DAILYHOTEL</string>
     <string name="actionbar_title_about_activity">데일리호텔이란?</string>
     <string name="actionbar_title_booking_tab_activity">예약확인</string>
     <string name="actionbar_title_faq_activity">자주 묻는 질문</string>
@@ -120,7 +120,7 @@
     <string name="dialog_msg_not_installed_kakaotalk">카카오톡이 설치되어 있지 않습니다.</string>
     <string name="dialog_msg_network_please_off_airplain">에어플레인 모드를 끄거나 WIFI를 사용해주세요.</string>
     <string name="dialog_msg_network_unstable_retry_or_set_wifi">인터넷 연결을 할 수 없습니다.\n재시도 혹은 와이파이 설정을 확인해주세요.</string>
-    <string name="dialog_msg_please_update_new_version">dailyHOTEL의 새로운 버전이 출시되었습니다. 업데이트해주세요</string>
+    <string name="dialog_msg_please_update_new_version">DAILYHOTEL의 새로운 버전이 출시되었습니다. 업데이트해주세요</string>
     <string name="dialog_msg_update_now">지금 업그레이드하여 가장 멋진 데일리호텔 앱을 다운받으세요</string>
     <string name="dialog_msg_sales_closed">오전 9시부터 오늘의 호텔이 공개됩니다.</string>
     <string name="dialog_msg_hotel_payment_message01">예약 취소, 변경 및 환불 불가 상품이에요!</string>
@@ -213,7 +213,7 @@
     <string name="kakaolink_msg_invited_friend">%1$s님이 추천하는 여행&amp;휴가 필수 어플!\n[데일리호텔] 어플 설치하고, 전국의 특급호텔과 리조트를 반값에 예약하세요!\n\n%2$s님의 추천인 코드 %3$s를 회원가입 시 입력하면,\n바로 사용가능한 5000원의 적립금을 드려요!\n\n아래 링크를 누르고 [데일리호텔] 앱 설치한 후,\n추천인 코드 입력으로 5000원의 추가 할인도 받아가세요!</string>
 
     <!-- Alarm Message -->
-    <string name="alarm_title">dailyHOTEL</string>
+    <string name="alarm_title">DAILYHOTEL</string>
     <string name="alarm_msg">당신의 파라다이스가 도착하였습니다.\n지금 데일리호텔에서 확인하세요!</string>
     <string name="alarm_ticker">당신의 파라다이스 데일리호텔이 도착했습니다!</string>
     <string name="alarm_btn_see">보기</string>
