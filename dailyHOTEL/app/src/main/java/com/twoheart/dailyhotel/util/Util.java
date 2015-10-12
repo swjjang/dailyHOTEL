@@ -402,9 +402,9 @@ public class Util implements Constants
             // 기존 데일리 유저를 위한 코드
             if (Util.isTextEmpty(type) == true)
             {
-                params.put("user_type", "nomal");
+                params.put("user_type", "normal");
 
-                sharedPreference.edit().putString("user_type", "nomal").apply();
+                sharedPreference.edit().putString("user_type", "normal").apply();
             }
         }
 
