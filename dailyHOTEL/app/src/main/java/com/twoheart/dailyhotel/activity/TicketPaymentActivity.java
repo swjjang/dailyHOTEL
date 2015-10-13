@@ -74,6 +74,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
     protected Dialog mFinalCheckDialog;
     protected SaleTime mCheckInSaleTime;
     protected boolean mIsEditMode;
+    protected boolean mDoReload;
 
     private int mReqCode;
     private int mResCode;
@@ -103,10 +104,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
     {
         super.onResume();
 
-        if ((mState == STATE_ACTIVITY_RESULT == true && mReqCode == CODE_REQUEST_ACTIVITY_PAYMENT) || mState == STATE_PAYMENT)
-        {
-
-        } else
+        if (mDoReload == true)
         {
             lockUI();
 
@@ -143,6 +141,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
     protected void processPayment()
     {
         unLockUI();
+        mDoReload = false;
 
         if (mTicketPayment.paymentType == TicketPayment.PaymentType.EASY_CARD)
         {
@@ -219,12 +218,8 @@ public abstract class TicketPaymentActivity extends BaseActivity
                     // 가상계좌완료후에는 예약화면의 가상계좌 화면까지 이동한다.
                     if (mTicketPayment.paymentType == PaymentType.VBANK)
                     {
-                        Editor editor = sharedPreference.edit();
-                        editor.putInt(KEY_PREFERENCE_ACCOUNT_READY_FLAG, CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
-                        editor.apply();
-
-                        setResult(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
-                        finish();
+                        activityResulted(requestCode, CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY, intent);
+                        return;
                     } else
                     {
                         writeLogPaid(mTicketPayment);
@@ -235,6 +230,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
                             public void onClick(View view)
                             {
                                 mState = STATE_NONE;
+                                mDoReload = true;
 
                                 setResult(RESULT_OK);
                                 finish();
@@ -280,15 +276,6 @@ public abstract class TicketPaymentActivity extends BaseActivity
                     {
                         msg = getString(R.string.act_toast_payment_fail);
                     }
-
-                    posListener = new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View view)
-                        {
-                            finish();
-                        }
-                    };
                     break;
 
                 case CODE_RESULT_ACTIVITY_PAYMENT_CANCELED:
@@ -319,9 +306,26 @@ public abstract class TicketPaymentActivity extends BaseActivity
                     editor.putInt(KEY_PREFERENCE_ACCOUNT_READY_FLAG, CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
                     editor.apply();
 
-                    setResult(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
-                    finish();
-                    return;
+                    if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_RESULT) == true)
+                    {
+                        msg = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_RESULT);
+                    } else
+                    {
+                        msg = getString(R.string.dialog_msg_issuing_account);
+                    }
+
+                    posListener = new OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            mDoReload = true;
+
+                            setResult(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
+                            finish();
+                        }
+                    };
+                    break;
 
                 case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_TIME_ERROR:
                     msg = getString(R.string.act_toast_payment_account_time_error);
@@ -358,10 +362,24 @@ public abstract class TicketPaymentActivity extends BaseActivity
                 }
 
                 default:
+                    mDoReload = true;
                     return;
             }
 
-            showSimpleDialog(title, msg, posTitle, posListener);
+            if (posListener == null)
+            {
+                posListener = new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        mDoReload = true;
+                        finish();
+                    }
+                };
+            }
+
+            showSimpleDialog(title, msg, posTitle, null, posListener, null, false);
         } else if (requestCode == CODE_REQUEST_ACTIVITY_CREDITCARD_MANAGER)
         {
             mState = STATE_NONE;
@@ -687,16 +705,13 @@ public abstract class TicketPaymentActivity extends BaseActivity
 
     protected void showChangedValueDialog(int messageResId)
     {
-        if (isFinishing() == true)
-        {
-            return;
-        }
-
         View.OnClickListener positiveListener = new OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
+                mDoReload = true;
+
                 setResult(RESULT_CANCELED);
                 finish();
             }
@@ -718,7 +733,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
         String msg = getString(R.string.dialog_msg_changed_bonus);
         String positive = getString(R.string.dialog_btn_text_confirm);
 
-        showSimpleDialog(title, msg, positive, new View.OnClickListener()
+        showSimpleDialog(title, msg, positive, null, new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
@@ -726,10 +741,11 @@ public abstract class TicketPaymentActivity extends BaseActivity
                 lockUI();
 
                 mState = STATE_NONE;
+                mDoReload = true;
 
                 requestTicketPaymentInfomation(mTicketPayment.getTicketInformation().index);
             }
-        });
+        }, null, false);
     }
 
     protected void writeLogPaid(TicketPayment ticketPayment)
@@ -767,6 +783,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
             mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mUserLoginJsonResponseListener, TicketPaymentActivity.this));
         } else
         {
+            mDoReload = true;
             unLockUI();
             restartApp();
         }
@@ -841,6 +858,8 @@ public abstract class TicketPaymentActivity extends BaseActivity
                         @Override
                         public void onClick(View view)
                         {
+                            mDoReload = true;
+
                             setResult(CODE_RESULT_ACTIVITY_PAYMENT_SALES_CLOSED);
                             finish();
                         }
@@ -851,6 +870,8 @@ public abstract class TicketPaymentActivity extends BaseActivity
 
             } catch (Exception e)
             {
+                mDoReload = true;
+
                 onInternalError();
             }
         }
@@ -888,10 +909,13 @@ public abstract class TicketPaymentActivity extends BaseActivity
                     }
                 }
 
+                mDoReload = true;
+
                 unLockUI();
                 startLoginActivity();
             } catch (Exception e)
             {
+                mDoReload = true;
                 onInternalError();
             }
         }
@@ -962,6 +986,8 @@ public abstract class TicketPaymentActivity extends BaseActivity
 
                 if (msg_code != 0)
                 {
+                    mDoReload = true;
+
                     if (response.has("msg") == true)
                     {
                         String msg = response.getString("msg");
@@ -1068,6 +1094,8 @@ public abstract class TicketPaymentActivity extends BaseActivity
                 }
             } catch (Exception e)
             {
+                mDoReload = true;
+
                 onInternalError();
             }
         }

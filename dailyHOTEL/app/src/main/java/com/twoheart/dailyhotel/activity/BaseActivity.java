@@ -441,41 +441,6 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
     }
 
     @Override
-    protected void onStop()
-    {
-        // 현재 Activity에 등록된 Request를 취소한다.
-        if (mQueue != null)
-        {
-            mQueue.cancelAll(new RequestQueue.RequestFilter()
-            {
-                @Override
-                public boolean apply(Request<?> request)
-                {
-                    Request<?> cancelRequest = (Request<?>) request;
-
-                    if (cancelRequest != null && cancelRequest.getTag() != null)
-                    {
-                        if (cancelRequest.getTag().equals(this))
-                        {
-                            return true;
-                        }
-                    }
-
-                    return false;
-                }
-            });
-        }
-
-        if (mDialog != null && mDialog.isShowing())
-        {
-            mDialog.dismiss();
-            mDialog = null;
-        }
-
-        super.onStop();
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
         switch (item.getItemId())
@@ -517,15 +482,10 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
     {
         releaseUiComponent();
 
-        // pinkred_font
-        //		GlobalFont.apply((ViewGroup) findViewById(android.R.id.content).getRootView());
-
         if (isFinishing() == false && mLockUI != null)
         {
             mLockUI.hide();
         }
-
-        //		handler.removeCallbacks(networkCheckRunner);
     }
 
     /**
@@ -586,6 +546,35 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
         if (mLockUI != null)
         {
             mLockUI.close();
+        }
+
+        // 현재 Activity에 등록된 Request를 취소한다.
+        if (mQueue != null)
+        {
+            mQueue.cancelAll(new RequestQueue.RequestFilter()
+            {
+                @Override
+                public boolean apply(Request<?> request)
+                {
+                    Request<?> cancelRequest = (Request<?>) request;
+
+                    if (cancelRequest != null && cancelRequest.getTag() != null)
+                    {
+                        if (cancelRequest.getTag().equals(this))
+                        {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                }
+            });
+        }
+
+        if (mDialog != null && mDialog.isShowing())
+        {
+            mDialog.dismiss();
+            mDialog = null;
         }
 
         recursiveRecycle(getWindow().getDecorView());
