@@ -126,6 +126,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
     private boolean mIsEditMode;
 
     private View mClickView;
+    private boolean mDoReload;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -150,6 +151,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         }
 
         mIsChangedPay = false;
+        mDoReload = true;
 
         setActionBar(mPay.getSaleRoomInformation().hotelName);
 
@@ -240,10 +242,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
     {
         super.onResume();
 
-        if (("ACTIVITY_RESULT".equalsIgnoreCase(mAliveCallSource) == true && mReqCode == CODE_REQUEST_ACTIVITY_PAYMENT) || "PAYMENT".equalsIgnoreCase(mAliveCallSource) == true)
-        {
-
-        } else
+        if (mDoReload == true)
         {
             lockUI();
 
@@ -368,11 +367,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             //호텔 가격이 xx 이하인 이벤트 호텔에서는 적립금 사용을 못하게 막음.
             if (mPay.isSaleCredit() && (mPay.getOriginalPrice() <= DEFAULT_AVAILABLE_RESERVES) && mPay.credit != 0)
             {
-                if (isFinishing() == true)
-                {
-                    return;
-                }
-
                 v.setClickable(false);
                 v.setEnabled(false);
 
@@ -408,11 +402,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
                 if (mPay.getType() == Pay.Type.VBANK && Util.isTextEmpty(gcmId) == true)
                 {
-                    if (isFinishing() == true)
-                    {
-                        return;
-                    }
-
                     // 가상계좌 결제시 푸쉬를 받지 못하는 경우
                     String title = getString(R.string.dialog_notice2);
                     String positive = getString(R.string.dialog_btn_text_confirm);
@@ -466,6 +455,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
     private void onClickPayment()
     {
         unLockUI();
+        mDoReload = false;
 
         if (mClickView != null)
         {
@@ -478,6 +468,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         {
             if (mSelectedCreditCard == null)
             {
+                mDoReload = true;
+
                 if (mClickView != null)
                 {
                     mClickView.setClickable(true);
@@ -633,6 +625,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
     private void moveToPayStep()
     {
         unLockUI();
+        mDoReload = false;
 
         Guest guest = mPay.getGuest();
 
@@ -747,6 +740,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                         @Override
                         public void onClick(View view)
                         {
+                            mDoReload = true;
                             mAliveCallSource = "";
 
                             setResult(RESULT_OK);
@@ -810,9 +804,20 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                     editor.putInt(KEY_PREFERENCE_ACCOUNT_READY_FLAG, CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
                     editor.apply();
 
-                    setResult(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
-                    finish();
-                    return;
+                    msg = getString(R.string.dialog_msg_issuing_account);
+
+                    posListener = new OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            mDoReload = true;
+
+                            setResult(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
+                            finish();
+                        }
+                    };
+                    break;
 
                 case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_TIME_ERROR:
                     msg = getString(R.string.act_toast_payment_account_time_error);
@@ -837,15 +842,24 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                     break;
 
                 default:
+                    mDoReload = true;
                     return;
             }
 
-            if (isFinishing() == true)
+            if (posListener == null)
             {
-                return;
+                posListener = new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        mDoReload = true;
+                        finish();
+                    }
+                };
             }
 
-            showSimpleDialog(title, msg, posTitle, posListener);
+            showSimpleDialog(title, msg, posTitle, null, posListener, null, false);
         } else if (requestCode == CODE_REQUEST_ACTIVITY_CREDITCARD_MANAGER)
         {
             mAliveCallSource = "";
@@ -1051,15 +1065,12 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
     private void hidePorgressDialog()
     {
-        if (mProgressDialog != null)
+        if (mProgressDialog != null && mProgressDialog.isShowing() == true)
         {
-            if (mProgressDialog.isShowing() == true)
-            {
-                mProgressDialog.dismiss();
-            }
-
-            mProgressDialog = null;
+            mProgressDialog.dismiss();
         }
+
+        mProgressDialog = null;
     }
 
     private void showAgreeTermDialog(Pay.Type type)
@@ -1113,6 +1124,15 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                         mClickView.setClickable(true);
                         mClickView.setEnabled(true);
                     }
+                }
+            });
+
+            mFinalCheckDialog.setOnCancelListener(new DialogInterface.OnCancelListener()
+            {
+                @Override
+                public void onCancel(DialogInterface dialog)
+                {
+                    mDoReload = true;
                 }
             });
 
@@ -1246,10 +1266,14 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             }
         });
 
-        if (isFinishing() == true)
+        mFinalCheckDialog.setOnCancelListener(new DialogInterface.OnCancelListener()
         {
-            return;
-        }
+            @Override
+            public void onCancel(DialogInterface dialog)
+            {
+                mDoReload = true;
+            }
+        });
 
         try
         {
@@ -1305,42 +1329,36 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
     private void showStopOnSaleDialog()
     {
-        if (isFinishing() == true)
-        {
-            return;
-        }
-
         View.OnClickListener positiveListener = new OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
+                mDoReload = true;
                 setResult(RESULT_CANCELED);
                 finish();
             }
         };
 
-        showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_stop_onsale), getString(R.string.dialog_btn_text_confirm), null, positiveListener, null, null, null, false);
+        showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_stop_onsale)//
+                , getString(R.string.dialog_btn_text_confirm), null, positiveListener, null, false);
     }
 
     private void showChangedPayDialog()
     {
-        if (isFinishing() == true)
-        {
-            return;
-        }
-
         View.OnClickListener positiveListener = new OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
+                mDoReload = true;
                 setResult(RESULT_CANCELED);
                 finish();
             }
         };
 
-        showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_changed_pay), getString(R.string.dialog_btn_text_confirm), null, positiveListener, null, null, null, false);
+        showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_changed_pay) //
+                , getString(R.string.dialog_btn_text_confirm), null, positiveListener, null, false);
     }
 
     private void showChangedBonusDialog()
@@ -1356,12 +1374,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         String msg = getString(R.string.dialog_msg_changed_bonus);
         String positive = getString(R.string.dialog_btn_text_confirm);
 
-        if (isFinishing() == true)
-        {
-            return;
-        }
-
-        showSimpleDialog(title, msg, positive, new View.OnClickListener()
+        showSimpleDialog(title, msg, positive, null, new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
@@ -1369,13 +1382,14 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 lockUI();
 
                 mAliveCallSource = "";
+                mDoReload = true;
 
                 // 호텔 디테일 정보 재 요청
                 String params = String.format("?room_idx=%d&checkin_date=%s&length_stay=%d", mPay.getSaleRoomInformation().roomIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), mPay.getSaleRoomInformation().nights);
 
                 mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_ROOM_PAYMENT).append(params).toString(), null, mSaleRoomPaymentJsonResponseListener, BookingActivity.this));
             }
-        });
+        }, null, false);
     }
 
     private void writeLogPaid(Pay pay)
@@ -1418,6 +1432,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mUserLoginJsonResponseListener, BookingActivity.this));
         } else
         {
+            mDoReload = true;
             unLockUI();
             restartApp();
         }
@@ -1799,9 +1814,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             }
         }
     };
+
     private DailyHotelJsonResponseListener mUserSessionBillingPayment = new DailyHotelJsonResponseListener()
     {
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -1885,6 +1900,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 }
             } catch (Exception e)
             {
+                mDoReload = true;
                 ExLog.e(e.toString());
 
                 onError(e);
@@ -1894,9 +1910,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             }
         }
     };
+
     private DailyHotelJsonResponseListener mFinalCheckPayJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -1911,6 +1927,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
                 if (msg_code != 0)
                 {
+                    mDoReload = true;
+
                     if (response.has("msg") == true)
                     {
                         String msg = response.getString("msg");
@@ -1945,11 +1963,6 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 // 판매 중지 상품으로 호텔 리스트로 복귀 시킨다.
                 if (isOnSale == false || availableRooms == 0)
                 {
-                    if (isFinishing() == true)
-                    {
-                        return;
-                    }
-
                     showStopOnSaleDialog();
                 } else if (mIsChangedPay == true)
                 {
@@ -1969,6 +1982,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 }
             } catch (Exception e)
             {
+                mDoReload = true;
+
                 ExLog.e(e.toString());
 
                 onError(e);
@@ -2164,6 +2179,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 }
             } catch (Exception e)
             {
+                mDoReload = true;
                 onError(e);
             }
         }
@@ -2207,6 +2223,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                         @Override
                         public void onClick(View view)
                         {
+                            mDoReload = true;
+
                             setResult(CODE_RESULT_ACTIVITY_PAYMENT_SALES_CLOSED);
                             finish();
                         }
@@ -2217,6 +2235,8 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
             } catch (Exception e)
             {
+                mDoReload = true;
+
                 onError(e);
                 unLockUI();
 
@@ -2258,11 +2278,14 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                     }
                 }
 
+                mDoReload = true;
+
                 // 로그인을 실패하면 재로그인을 시도한다
                 unLockUI();
                 startLoginActivity();
             } catch (Exception e)
             {
+                mDoReload = true;
                 onError(e);
                 unLockUI();
 

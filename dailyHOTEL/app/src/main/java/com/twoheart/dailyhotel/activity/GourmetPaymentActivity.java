@@ -101,6 +101,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
         }
 
         mIsChangedPrice = false;
+        mDoReload = true;
 
         setActionBar(mTicketPayment.getTicketInformation().placeName);
     }
@@ -155,6 +156,8 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
     {
         if (index < 0)
         {
+            mDoReload = true;
+
             onInternalError();
             return;
         }
@@ -423,6 +426,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                     lockUI();
 
                     mState = STATE_PAYMENT;
+                    mDoReload = false;
 
                     // 1. 세션이 살아있는지 검사 시작.
                     mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, GourmetPaymentActivity.this));
@@ -788,6 +792,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
             }
         }
     };
+
     private DailyHotelJsonResponseListener mTicketPaymentInformationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
@@ -797,6 +802,8 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
             {
                 if (response == null)
                 {
+                    mDoReload = true;
+
                     onInternalError();
                     return;
                 }
@@ -946,10 +953,13 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                 }
             } catch (Exception e)
             {
+                mDoReload = true;
+
                 onInternalError();
             }
         }
     };
+
     private DailyHotelJsonResponseListener mPayEasyPaymentJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
@@ -959,6 +969,8 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
             {
                 if (response == null)
                 {
+                    mDoReload = true;
+
                     onInternalError();
                     return;
                 }
@@ -974,15 +986,17 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                     // 결제 관련 로그 남기기
                     writeLogPaid(mTicketPayment);
 
-                    showSimpleDialog(getString(R.string.dialog_title_payment), getString(R.string.act_toast_payment_success), getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
+                    showSimpleDialog(getString(R.string.dialog_title_payment), getString(R.string.act_toast_payment_success), getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
                     {
                         @Override
                         public void onClick(View v)
                         {
+                            mDoReload = true;
+
                             setResult(RESULT_OK);
                             finish();
                         }
-                    });
+                    }, null, false);
                 } else
                 {
                     int resultCode = 0;
@@ -1018,6 +1032,8 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                 }
             } catch (Exception e)
             {
+                mDoReload = true;
+
                 onInternalError();
             }
         }

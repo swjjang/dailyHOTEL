@@ -144,7 +144,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
     }
 
     @Override
-    protected void onStop()
+    protected void onDestroy()
     {
         if (mDialog != null && mDialog.isShowing())
         {
@@ -153,7 +153,7 @@ public class SatisfactionActivity extends BaseActivity implements Constants, Vie
 
         mDialog = null;
 
-        super.onStop();
+        super.onDestroy();
     }
 
     @Override
