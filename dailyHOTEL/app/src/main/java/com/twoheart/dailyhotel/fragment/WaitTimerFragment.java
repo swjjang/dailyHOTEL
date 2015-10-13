@@ -335,7 +335,7 @@ public class WaitTimerFragment extends BaseFragment implements OnClickListener, 
 
                     if (sHandler != null)
                     {
-                        ((MainActivity) baseActivity).replaceFragment(((MainActivity) baseActivity).getFragment(MainActivity.INDEX_HOTEL_LIST_FRAGMENT));
+                        ((MainActivity) baseActivity).replaceFragment(((MainActivity) baseActivity).getFragment(MainActivity.INDEX_HOTEL_LIST_FRAGMENT), String.valueOf(MainActivity.INDEX_HOTEL_LIST_FRAGMENT));
                         sHandler = null;
                     }
                 }

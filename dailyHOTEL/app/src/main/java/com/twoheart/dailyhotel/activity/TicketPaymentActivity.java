@@ -306,7 +306,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
                     editor.putInt(KEY_PREFERENCE_ACCOUNT_READY_FLAG, CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
                     editor.apply();
 
-                    if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_RESULT) == true)
+                    if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_DATA_RESULT) == true)
                     {
                         msg = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_RESULT);
                     } else

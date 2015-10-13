@@ -153,10 +153,10 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
 
         private void setImageViewHeight(ImageView imageView, int width, int height)
         {
+            RelativeLayout.LayoutParams layoutParms = (android.widget.RelativeLayout.LayoutParams) imageView.getLayoutParams();
+
             if (width >= height)
             {
-                RelativeLayout.LayoutParams layoutParms = (android.widget.RelativeLayout.LayoutParams) imageView.getLayoutParams();
-
                 float scale = (float) Util.getLCDWidth(getContext()) / width;
                 int viewheight = (int) (scale * height);
 
@@ -171,8 +171,6 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
                 imageView.setLayoutParams(layoutParms);
             } else
             {
-                RelativeLayout.LayoutParams layoutParms = (android.widget.RelativeLayout.LayoutParams) imageView.getLayoutParams();
-
                 float scale = (float) Util.getLCDWidth(getContext()) / width;
                 int viewheight = (int) (scale * height);
 

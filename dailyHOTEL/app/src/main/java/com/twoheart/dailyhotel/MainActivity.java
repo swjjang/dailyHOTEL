@@ -89,6 +89,8 @@ import java.util.Map;
 
 public class MainActivity extends BaseActivity implements OnItemClickListener, Constants
 {
+    public static final int ERROR_FRAGMENT = -1;
+    public static final int WAITTIMER_FRAGMENT = -2;
     public static final int INDEX_HOTEL_LIST_FRAGMENT = 0;
     public static final int INDEX_FNB_LIST_FRAGMENT = 1;
     public static final int INDEX_BOOKING_LIST_FRAGMENT = 2;
@@ -107,7 +109,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
     // DrawerMenu 객체들
     public DrawerMenu menuHotelListFragment;
-    public DrawerMenu menuFnBListFragment;
+    public DrawerMenu menuGourmetListFragment;
     public DrawerMenu menuBookingListFragment;
     public DrawerMenu menuCreditFragment;
     public DrawerMenu menuEventListFragment;
@@ -232,7 +234,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                 selectMenuDrawer = menuHotelListFragment;
             } else if (link.contains("fnbIndex") == true)
             {
-                selectMenuDrawer = menuFnBListFragment;
+                selectMenuDrawer = menuGourmetListFragment;
             }
         }
 
@@ -275,7 +277,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                             selectMenuDrawer(menuHotelListFragment);
                         } else
                         {
-                            selectMenuDrawer(menuFnBListFragment);
+                            selectMenuDrawer(menuGourmetListFragment);
                         }
                     } else
                     {
@@ -297,7 +299,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
                             if (indexLastFragment == INDEX_FNB_LIST_FRAGMENT)
                             {
-                                selectMenuDrawer(menuFnBListFragment);
+                                selectMenuDrawer(menuGourmetListFragment);
                             } else
                             {
                                 selectMenuDrawer(menuHotelListFragment);
@@ -322,6 +324,27 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
         //		{
         //			selectMenuDrawer(menuHotelListFragment);
         //		}
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
+    {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode)
+        {
+            case Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                {
+                    Fragment fragment = fragmentManager.findFragmentByTag(String.valueOf(indexLastFragment));
+
+                    if (fragment != null)
+                    {
+                        fragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+                    }
+                }
+                break;
+        }
     }
 
     private void writeKakaoLinkPreference(String link)
@@ -417,7 +440,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                 break;
 
             case INDEX_FNB_LIST_FRAGMENT:
-                selectMenuDrawer(menuFnBListFragment);
+                selectMenuDrawer(menuGourmetListFragment);
                 break;
 
             case INDEX_BOOKING_LIST_FRAGMENT:
@@ -470,13 +493,13 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
      *
      * @param fragment Fragment 리스트에 보관된 Fragement들을 받는 것이 좋다.
      */
-    public void replaceFragment(Fragment fragment)
+    public void replaceFragment(Fragment fragment, String tag)
     {
         try
         {
             clearFragmentBackStack();
 
-            fragmentManager.beginTransaction().replace(mContentFrame.getId(), fragment).commitAllowingStateLoss();
+            fragmentManager.beginTransaction().replace(mContentFrame.getId(), fragment, tag).commitAllowingStateLoss();
         } catch (IllegalStateException e)
         {
             // 에러가 나는 경우 앱을 재부팅 시킨다.
@@ -484,7 +507,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
         }
 
         // 액션바 위치를 다시 잡아준다.
-
     }
 
     /**
@@ -554,7 +576,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                 // 이벤트 진입시에 이벤트 new를 제거한다.
                 DailyPreference.getInstance(this).setNewTodayFnB(false);
 
-                hideNewFnb(true);
+                hideNewGourmet(true);
 
                 AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.MENU, Action.CLICK, getString(R.string.actionbar_title_fnb_list_frag), (long) position);
                 break;
@@ -593,7 +615,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
         //
         menuHotelListFragment.setSelected(false);
-        menuFnBListFragment.setSelected(false);
+        menuGourmetListFragment.setSelected(false);
         menuBookingListFragment.setSelected(false);
         menuCreditFragment.setSelected(false);
         menuEventListFragment.setSelected(false);
@@ -608,7 +630,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
             mDrawerLayout.closeDrawer(mDrawerList);
         } else
         {
-            replaceFragment(getFragment(indexLastFragment));
+            replaceFragment(getFragment(indexLastFragment), String.valueOf(indexLastFragment));
         }
     }
 
@@ -625,7 +647,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
             @Override
             public void run()
             {
-                replaceFragment(getFragment(index));
+                replaceFragment(getFragment(index), String.valueOf(index));
             }
         }, 300);
     }
@@ -768,7 +790,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
         mDrawerList = (ListView) findViewById(R.id.drawListView);
 
         menuHotelListFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_todays_hotel), R.drawable.selector_drawermenu_todayshotel, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
-        menuFnBListFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_todays_fnb), R.drawable.selector_drawermenu_gourmet, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
+        menuGourmetListFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_todays_fnb), R.drawable.selector_drawermenu_gourmet, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
         menuBookingListFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_chk_reservation), R.drawable.selector_drawermenu_reservation, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
         menuCreditFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_credit), R.drawable.selector_drawermenu_saving, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
         menuEventListFragment = new DrawerMenu(getString(R.string.drawer_menu_item_title_event), R.drawable.selector_drawermenu_eventlist, DrawerMenu.DRAWER_MENU_LIST_TYPE_ENTRY);
@@ -776,7 +798,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
         mDrawerMenuList = new ArrayList<DrawerMenu>(DRAWERMENU_COUNT);
         mDrawerMenuList.add(menuHotelListFragment);
-        mDrawerMenuList.add(menuFnBListFragment);
+        mDrawerMenuList.add(menuGourmetListFragment);
         mDrawerMenuList.add(menuBookingListFragment);
         mDrawerMenuList.add(menuCreditFragment);
         mDrawerMenuList.add(menuEventListFragment);
@@ -793,12 +815,12 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
         if (DailyPreference.getInstance(this).isNewTodayFnB() == true)
         {
-            menuFnBListFragment.hasEvent = true;
+            menuGourmetListFragment.hasEvent = true;
 
             showNewFnB(true);
         } else
         {
-            menuFnBListFragment.hasEvent = false;
+            menuGourmetListFragment.hasEvent = false;
         }
 
         mDrawerMenuListAdapter = new DrawerMenuListAdapter(this, mDrawerMenuList);
@@ -920,9 +942,9 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
             showActionBarNewIcon();
         }
 
-        if (menuFnBListFragment != null)
+        if (menuGourmetListFragment != null)
         {
-            menuFnBListFragment.hasEvent = true;
+            menuGourmetListFragment.hasEvent = true;
         }
     }
 
@@ -971,13 +993,13 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
         }
     }
 
-    private void hideNewFnb(boolean isHideMenuList)
+    private void hideNewGourmet(boolean isHideMenuList)
     {
         hideActionBarNewIcon(false);
 
-        if (menuFnBListFragment != null && isHideMenuList == true)
+        if (menuGourmetListFragment != null && isHideMenuList == true)
         {
-            menuFnBListFragment.hasEvent = false;
+            menuGourmetListFragment.hasEvent = false;
         }
     }
 
@@ -1027,7 +1049,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
         super.onError();
 
         // Error Fragment를 표시한다. -> stackoverflow가 발생하는 경우가 있음. 에러 원인 파악해야 함.
-        replaceFragment(new ErrorFragment());
+        replaceFragment(new ErrorFragment(), String.valueOf(ERROR_FRAGMENT));
     }
 
     private static class DrawerMenu
@@ -1211,6 +1233,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
             }
         }
     };
+
     private DailyHotelJsonResponseListener mDailyEventCountJsonResponseListener = new DailyHotelJsonResponseListener()
     {
 
@@ -1277,6 +1300,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
             }
         }
     };
+
     private DailyHotelJsonResponseListener mFnBSatisfactionRatingExistJsonResponseListener = new DailyHotelJsonResponseListener()
     {
 
@@ -1308,6 +1332,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
             }
         }
     };
+
     private DailyHotelJsonResponseListener mSatisfactionRatingExistJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
@@ -1350,6 +1375,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
             }
         }
     };
+
     private DailyHotelJsonResponseListener mUserInfoJsonResponseListener = new DailyHotelJsonResponseListener()
     {
 
@@ -1395,6 +1421,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
             }
         }
     };
+
     private DailyHotelStringResponseListener mUserAliveStringResponseListener = new DailyHotelStringResponseListener()
     {
 
