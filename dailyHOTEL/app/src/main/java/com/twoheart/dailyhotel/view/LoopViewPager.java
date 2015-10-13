@@ -21,8 +21,10 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 
 import java.lang.reflect.Field;
 
@@ -241,6 +243,16 @@ public class LoopViewPager extends ViewPager
     private void init(Context context)
     {
         super.setOnPageChangeListener(onPageChangeListener);
+
+        ViewGroup.LayoutParams layoutParams = getLayoutParams();
+
+        if (layoutParams == null)
+        {
+            layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getLCDWidth(context));
+        } else
+        {
+            layoutParams.height = Util.getLCDWidth(context);
+        }
 
         postInitViewPager();
     }

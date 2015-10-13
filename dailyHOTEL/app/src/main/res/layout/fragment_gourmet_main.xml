@@ -9,37 +9,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <LinearLayout
-        android:id="@+id/headerSectionBar"
+    <com.twoheart.dailyhotel.view.widget.TabIndicator
+        android:id="@+id/tabindicator"
         android:layout_width="match_parent"
-        android:layout_height="108dp"
+        android:layout_height="63dp"
         android:layout_marginTop="56dp"
-        android:background="@color/headersectionbar"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="visible">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:src="@drawable/daily_gourmet"/>
-
-        <View
-            android:layout_width="53dp"
-            android:layout_height="2dp"
-            android:layout_marginTop="9dp"
-            android:background="@color/headersectionbar_text"
-            android:gravity="center_vertical"/>
-
-        <com.twoheart.dailyhotel.view.widget.DailyTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="9dp"
-            android:gravity="center_horizontal"
-            android:text="@string/label_fnblistfragment_header_text"
-            android:textColor="@color/headersectionbar_text"
-            android:textSize="13dp"
-            />
-    </LinearLayout>
+        android:background="@color/white"
+        android:visibility="invisible"/>
 </RelativeLayout>

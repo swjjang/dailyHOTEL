@@ -10,6 +10,7 @@ package com.twoheart.dailyhotel.fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,7 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.PlaceViewItem;
 import com.twoheart.dailyhotel.view.widget.FragmentViewPager;
+import com.twoheart.dailyhotel.view.widget.TabIndicator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,12 +46,12 @@ import java.util.HashMap;
 
 public class GourmetMainFragment extends PlaceMainFragment
 {
+    private TabIndicator mTabIndicator;
     private ArrayList<PlaceListFragment> mFragmentList;
     private ArrayList<AreaItem> mAreaItemList;
     private Province mSelectedProvince;
 
     private FragmentViewPager mFragmentViewPager;
-    private View mHeaderSectionLayout;
 
     private interface OnUserAnalyticsActionListener
     {
@@ -63,27 +65,38 @@ public class GourmetMainFragment extends PlaceMainFragment
     {
         View view = inflater.inflate(R.layout.fragment_gourmet_main, container, false);
 
-        mHeaderSectionLayout = view.findViewById(R.id.headerSectionBar);
-        mHeaderSectionLayout.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
+        mTabIndicator = (TabIndicator) view.findViewById(R.id.tabindicator);
 
-            }
-        });
+        ArrayList<String> titleList = new ArrayList<String>();
+        titleList.add(getString(R.string.label_today));
+        titleList.add(getString(R.string.label_tomorrow));
+        titleList.add(getString(R.string.label_selecteday));
+
+        mTabIndicator.setData(titleList, true);
+        mTabIndicator.setOnTabSelectListener(mOnTabSelectedListener);
 
         mFragmentViewPager = (FragmentViewPager) view.findViewById(R.id.fragmentViewPager);
         mFragmentList = new ArrayList<PlaceListFragment>();
 
-        setOnUserActionListener(mOnFnBUserActionListener);
+        setOnUserActionListener(mOnGourmetUserActionListener);
 
-        GourmetListFragment fnbListFragment = new GourmetListFragment();
-        fnbListFragment.setUserActionListener(mOnFnBUserActionListener);
-        mFragmentList.add(fnbListFragment);
+        GourmetListFragment gourmetListFragment01 = new GourmetListFragment();
+        gourmetListFragment01.setUserActionListener(mOnGourmetUserActionListener);
+        mFragmentList.add(gourmetListFragment01);
+
+        GourmetListFragment gourmetListFragment02 = new GourmetListFragment();
+        gourmetListFragment02.setUserActionListener(mOnGourmetUserActionListener);
+        mFragmentList.add(gourmetListFragment02);
+
+        GourmetDaysListFragment gourmetListFragment03 = new GourmetDaysListFragment();
+        gourmetListFragment03.setUserActionListener(mOnGourmetUserActionListener);
+        mFragmentList.add(gourmetListFragment03);
 
         mFragmentViewPager.setData(mFragmentList);
         mFragmentViewPager.setAdapter(getChildFragmentManager());
+
+        mTabIndicator.setViewPager(mFragmentViewPager.getViewPager());
+        mTabIndicator.setOnPageChangeListener(mOnPageChangeListener);
 
         return view;
     }
@@ -91,12 +104,16 @@ public class GourmetMainFragment extends PlaceMainFragment
     @Override
     protected void showSlidingDrawer()
     {
+        mTabIndicator.setVisibility(View.VISIBLE);
+
         setMenuEnabled(true);
     }
 
     @Override
     protected void hideSlidingDrawer()
     {
+        mTabIndicator.setVisibility(View.INVISIBLE);
+
         setMenuEnabled(false);
     }
 
@@ -153,8 +170,8 @@ public class GourmetMainFragment extends PlaceMainFragment
     @Override
     protected void refreshList(Province province, boolean isSelectionTop)
     {
-        GourmetListFragment fnbListFragment = (GourmetListFragment) mFragmentViewPager.getCurrentFragment();
-        fnbListFragment.refreshList(province, isSelectionTop);
+        GourmetListFragment gourmetListFragment = (GourmetListFragment) mFragmentViewPager.getCurrentFragment();
+        gourmetListFragment.refreshList(province, isSelectionTop);
     }
 
     @Override
@@ -218,6 +235,118 @@ public class GourmetMainFragment extends PlaceMainFragment
     // UserActionListener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    private TabIndicator.OnTabSelectedListener mOnTabSelectedListener = new TabIndicator.OnTabSelectedListener()
+    {
+        @Override
+        public void onTabSelected(int position)
+        {
+            if (mFragmentViewPager == null)
+            {
+                return;
+            }
+
+            if (mFragmentViewPager.getCurrentItem() == position)
+            {
+                PlaceListFragment currentFragment = (PlaceListFragment) mFragmentViewPager.getCurrentFragment();
+                currentFragment.onPageSelected(false);
+            } else
+            {
+                mFragmentViewPager.setCurrentItem(position);
+            }
+        }
+    };
+
+    private ViewPager.OnPageChangeListener mOnPageChangeListener = new ViewPager.OnPageChangeListener()
+    {
+        @Override
+        public void onPageSelected(int position)
+        {
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (baseActivity == null)
+            {
+                return;
+            }
+
+            try
+            {
+                mTabIndicator.setCurrentItem(position);
+
+                // 현재 페이지 선택 상태를 Fragment에게 알려준다.
+                GourmetListFragment currentFragment = (GourmetListFragment) mFragmentViewPager.getCurrentFragment();
+
+                boolean isSelectionTop = false;
+                Province province = null;
+
+                for (PlaceListFragment placeListFragment : mFragmentList)
+                {
+                    if (placeListFragment == currentFragment)
+                    {
+                        province = placeListFragment.getProvince();
+
+                        if (province == null || mSelectedProvince.index != province.index || mSelectedProvince.name.equalsIgnoreCase(province.name) == false)
+                        {
+                            isSelectionTop = true;
+                        }
+
+                        placeListFragment.onPageSelected(true);
+                    } else
+                    {
+                        placeListFragment.onPageUnSelected();
+                    }
+                }
+
+                refreshList(mSelectedProvince, isSelectionTop);
+
+                HashMap<String, String> params = new HashMap<String, String>();
+                params.put(Label.PROVINCE, mSelectedProvince.name);
+                params.put(Label.DATE_TAB, mTabIndicator.getMainText(position));
+
+                AnalyticsManager.getInstance(baseActivity).recordEvent(mViewType.name(), Action.CLICK, Label.DATE_TAB, params);
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+
+                // 릴리즈 버전에서 메모리 해지에 문제가 생기는 경우가 있어 앱을 재 시작 시킨다.
+                if (DEBUG == false)
+                {
+                    baseActivity.restartApp();
+                }
+            }
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state)
+        {
+            switch (state)
+            {
+                case ViewPager.SCROLL_STATE_IDLE:
+                {
+                    //                    PlaceListFragment currentFragment = (PlaceListFragment) mFragmentViewPager.getCurrentFragment();
+                    //                    currentFragment.setFloatingActionButtonVisible(true);
+                    break;
+                }
+
+                case ViewPager.SCROLL_STATE_DRAGGING:
+                {
+                    //                    PlaceListFragment currentFragment = (PlaceListFragment) mFragmentViewPager.getCurrentFragment();
+                    //                    currentFragment.setFloatingActionButtonVisible(false);
+                    break;
+                }
+
+                case ViewPager.SCROLL_STATE_SETTLING:
+                {
+                    break;
+                }
+            }
+        }
+
+        @Override
+        public void onPageScrolled(int arg0, float arg1, int arg2)
+        {
+        }
+    };
+
     private OnUserAnalyticsActionListener mOnUserAnalyticsActionListener = new OnUserAnalyticsActionListener()
     {
         @Override
@@ -253,8 +382,7 @@ public class GourmetMainFragment extends PlaceMainFragment
         }
     };
 
-    ;
-    private OnUserActionListener mOnFnBUserActionListener = new OnUserActionListener()
+    private OnUserActionListener mOnGourmetUserActionListener = new OnUserActionListener()
     {
         @Override
         public void selectPlace(PlaceViewItem baseListViewItem, SaleTime checkSaleTime)
@@ -339,6 +467,27 @@ public class GourmetMainFragment extends PlaceMainFragment
         }
 
         @Override
+        public void selectDay(SaleTime checkInSaleTime, boolean isListSelectionTop)
+        {
+            if (isLockUiComponent() == true || checkInSaleTime == null || isAdded() == false)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            // 선택탭의 이름을 수정한다.
+            String day = getString(R.string.label_format_tabday, checkInSaleTime.getDailyDay(), checkInSaleTime.getDailyDayOftheWeek());
+
+            mTabIndicator.setSubTextEnable(2, true);
+            mTabIndicator.setSubText(2, day);
+
+            refreshList(mSelectedProvince, isListSelectionTop);
+
+            releaseUiComponent();
+        }
+
+        @Override
         public void toggleViewType()
         {
             if (isLockUiComponent() == true)
@@ -365,11 +514,11 @@ public class GourmetMainFragment extends PlaceMainFragment
             // 현재 페이지 선택 상태를 Fragment에게 알려준다.
             PlaceListFragment currentFragment = (PlaceListFragment) mFragmentViewPager.getCurrentFragment();
 
-            for (PlaceListFragment fnbListFragment : mFragmentList)
+            for (PlaceListFragment placeListFragment : mFragmentList)
             {
-                boolean isCurrentFragment = fnbListFragment == currentFragment;
+                boolean isCurrentFragment = placeListFragment == currentFragment;
 
-                fnbListFragment.setViewType(mViewType, isCurrentFragment);
+                placeListFragment.setViewType(mViewType, isCurrentFragment);
             }
 
             unLockUI();
@@ -401,29 +550,6 @@ public class GourmetMainFragment extends PlaceMainFragment
             intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, mSelectedProvince);
             intent.putParcelableArrayListExtra(NAME_INTENT_EXTRA_DATA_AREAITEMLIST, mAreaItemList);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SELECT_AREA);
-        }
-
-        @Override
-        public void setHeaderSectionVisible(boolean isVisible)
-        {
-            if (mHeaderSectionLayout == null)
-            {
-                return;
-            }
-
-            if (isVisible == true)
-            {
-                if (mHeaderSectionLayout.getVisibility() != View.VISIBLE)
-                {
-                    mHeaderSectionLayout.setVisibility(View.VISIBLE);
-                }
-            } else
-            {
-                if (mHeaderSectionLayout.getVisibility() != View.INVISIBLE)
-                {
-                    mHeaderSectionLayout.setVisibility(View.INVISIBLE);
-                }
-            }
         }
 
         @Override
@@ -538,21 +664,42 @@ public class GourmetMainFragment extends PlaceMainFragment
                 {
                     PlaceListFragment placeListFragment = mFragmentList.get(i);
 
-                    SaleTime saleTime;
-
-                    if (i == 2)
-                    {
-                        saleTime = mTodaySaleTime.getClone(0);
-                        tabSaleTime[i] = saleTime;
-                    } else
-                    {
-                        saleTime = mTodaySaleTime.getClone(i);
-                        tabSaleTime[i] = saleTime;
-                    }
+                    SaleTime saleTime = mTodaySaleTime.getClone(i);
+                    tabSaleTime[i] = saleTime;
 
                     if (placeListFragment.getSaleTime() == null)
                     {
                         placeListFragment.setSaleTime(saleTime);
+                    }
+                }
+
+                // 임시로 여기서 날짜를 넣는다.
+                ArrayList<String> dayList = new ArrayList<String>();
+
+                dayList.add(getString(R.string.label_format_tabday, tabSaleTime[0].getDailyDay(), tabSaleTime[0].getDailyDayOftheWeek()));
+                dayList.add(getString(R.string.label_format_tabday, tabSaleTime[1].getDailyDay(), tabSaleTime[1].getDailyDayOftheWeek()));
+
+                if (Util.isTextEmpty(mTabIndicator.getSubText(2)) == true)
+                {
+                    dayList.add(getString(R.string.label_format_tabday, tabSaleTime[2].getDailyDay(), tabSaleTime[2].getDailyDayOftheWeek()));
+                } else
+                {
+                    dayList.add(mTabIndicator.getSubText(2));
+                }
+
+                int tabSize = mTabIndicator.size();
+
+                for (int i = 0; i < tabSize; i++)
+                {
+                    String day = dayList.get(i);
+
+                    if (Util.isTextEmpty(day) == true)
+                    {
+                        mTabIndicator.setSubTextEnable(i, false);
+                    } else
+                    {
+                        mTabIndicator.setSubTextEnable(i, true);
+                        mTabIndicator.setSubText(i, day);
                     }
                 }
 

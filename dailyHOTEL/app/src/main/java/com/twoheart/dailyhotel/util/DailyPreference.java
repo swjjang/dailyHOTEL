@@ -61,7 +61,7 @@ public class DailyPreference
 
         if (mPreferences != null)
         {
-            result = mPreferences.getBoolean(KEY_NEW_EVENT_TODAY_FNB, true);
+            result = mPreferences.getBoolean(KEY_NEW_EVENT_TODAY_FNB, false);
         }
 
         return result;

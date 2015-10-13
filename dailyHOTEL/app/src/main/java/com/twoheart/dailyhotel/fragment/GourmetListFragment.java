@@ -78,28 +78,22 @@ public class GourmetListFragment extends PlaceListFragment
 
         if (Util.isOverAPI12() == true)
         {
-            mListView.addHeaderView(inflater.inflate(R.layout.list_header_empty_164, null, true));
+            mListView.addHeaderView(inflater.inflate(R.layout.list_header_empty, null, true));
             mListView.setOnScrollListener(mOnScrollListener);
         } else
         {
-            mListView.setPadding(0, Util.dpToPx(baseActivity, 164), 0, 0);
+            mListView.setPadding(0, Util.dpToPx(baseActivity, 119), 0, 0);
         }
 
         mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
         mEmptyView = view.findViewById(R.id.emptyView);
 
-        mMapLayout = (FrameLayout) view.findViewById(R.id.hotelMapLayout);
-        mMapLayout.setPadding(0, Util.dpToPx(baseActivity, 56), 0, 0);
+        mMapLayout = (FrameLayout) view.findViewById(R.id.mapLayout);
+        mMapLayout.setPadding(0, Util.dpToPx(baseActivity, 119) + 2, 0, 0);
 
         mViewType = VIEW_TYPE.LIST;
 
         setVisibility(mViewType);
-
-        // 화면에 헤더바가 잠깐 나왔다가 사라지는 경우가 있어서
-        if (mOnUserActionListener != null)
-        {
-            mOnUserActionListener.setHeaderSectionVisible(false);
-        }
 
         ActionBarPullToRefresh.from(baseActivity).options(Options.create().scrollDistance(.3f).headerTransformer(new DailyHotelHeaderTransformer()).build()).allChildrenArePullable().listener(this).useViewDelegate(AbsListView.class, new AbsListViewDelegate()).setup(mPullToRefreshLayout);
 
@@ -108,7 +102,7 @@ public class GourmetListFragment extends PlaceListFragment
         ActionbarViewHolder actionbarViewHolder = new ActionbarViewHolder();
         actionbarViewHolder.mAnchorView = baseActivity.findViewById(R.id.anchorAnimation);
         actionbarViewHolder.mActionbarLayout = baseActivity.findViewById(R.id.actionBarLayout);
-        actionbarViewHolder.mTabindicatorView = baseActivity.findViewById(R.id.headerSectionBar);
+        actionbarViewHolder.mTabindicatorView = baseActivity.findViewById(R.id.tabindicator);
 
         setActionbarViewHolder(actionbarViewHolder);
 
@@ -152,45 +146,6 @@ public class GourmetListFragment extends PlaceListFragment
                 ExLog.d(e.toString());
             }
         }
-    }
-
-    @Override
-    protected void setVisibility(VIEW_TYPE type, boolean isCurrentPage)
-    {
-        switch (type)
-        {
-            case LIST:
-                if (mActionbarViewHolder != null && mActionbarViewHolder.mTabindicatorView != null)
-                {
-                    if (mActionbarViewHolder.mTabindicatorView.getVisibility() == View.INVISIBLE)
-                    {
-                        mActionbarViewHolder.mTabindicatorView.setVisibility(View.VISIBLE);
-                    }
-                }
-                break;
-
-            case MAP:
-                if (mActionbarViewHolder != null && mActionbarViewHolder.mTabindicatorView != null)
-                {
-                    if (mActionbarViewHolder.mTabindicatorView.getVisibility() == View.VISIBLE)
-                    {
-                        mActionbarViewHolder.mTabindicatorView.setVisibility(View.INVISIBLE);
-                    }
-                }
-                break;
-
-            case GONE:
-                if (mActionbarViewHolder != null && mActionbarViewHolder.mTabindicatorView != null)
-                {
-                    if (mActionbarViewHolder.mTabindicatorView.getVisibility() == View.INVISIBLE)
-                    {
-                        mActionbarViewHolder.mTabindicatorView.setVisibility(View.VISIBLE);
-                    }
-                }
-                break;
-        }
-
-        super.setVisibility(type, isCurrentPage);
     }
 
     @Override
@@ -275,26 +230,6 @@ public class GourmetListFragment extends PlaceListFragment
     }
 
     @Override
-    protected void setVisibility(VIEW_TYPE type)
-    {
-        super.setVisibility(type);
-
-        if (mOnUserActionListener != null)
-        {
-            switch (type)
-            {
-                case LIST:
-                    mOnUserActionListener.setHeaderSectionVisible(true);
-                    break;
-
-                default:
-                    mOnUserActionListener.setHeaderSectionVisible(false);
-                    break;
-            }
-        }
-    }
-
-    @Override
     protected PlaceMapFragment createPlaceMapFragment()
     {
         return new GourmetMapFragment();
@@ -306,7 +241,7 @@ public class GourmetListFragment extends PlaceListFragment
 
     private DailyHotelJsonResponseListener mGourmetListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        private ArrayList<PlaceViewItem> makeSectionHotelList(ArrayList<Gourmet> fnbList)
+        private ArrayList<PlaceViewItem> makeSectionList(ArrayList<Gourmet> fnbList)
         {
             ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<PlaceViewItem>();
 
@@ -404,7 +339,7 @@ public class GourmetListFragment extends PlaceListFragment
                 {
                     JSONObject jsonObject;
 
-                    ArrayList<Gourmet> fnbList = new ArrayList<Gourmet>(length);
+                    ArrayList<Gourmet> gourmetList = new ArrayList<Gourmet>(length);
 
                     for (int i = 0; i < length; i++)
                     {
@@ -414,11 +349,11 @@ public class GourmetListFragment extends PlaceListFragment
 
                         if (newGourmet.setData(jsonObject) == true)
                         {
-                            fnbList.add(newGourmet); // 추가.
+                            gourmetList.add(newGourmet); // 추가.
                         }
                     }
 
-                    ArrayList<PlaceViewItem> placeViewItemList = makeSectionHotelList(fnbList);
+                    ArrayList<PlaceViewItem> placeViewItemList = makeSectionList(gourmetList);
 
                     if (mPlaceListAdapter == null)
                     {

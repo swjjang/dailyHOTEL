@@ -481,7 +481,6 @@ public class HotelMainFragment extends BaseFragment
         }
     };
 
-    ;
     private OnPageChangeListener mOnPageChangeListener = new OnPageChangeListener()
     {
         @Override
@@ -573,7 +572,6 @@ public class HotelMainFragment extends BaseFragment
         }
     };
 
-    ;
     private UserAnalyticsActionListener mUserAnalyticsActionListener = new UserAnalyticsActionListener()
     {
         @Override
