@@ -410,6 +410,12 @@ public interface Constants
     public static final int CODE_PAY_TYPE_CARD_COMPLETE = 10;
     public static final int CODE_PAY_TYPE_ACCOUNT_WAIT = 20;
     public static final int CODE_PAY_TYPE_ACCOUNT_COMPLETE = 21;
+
+
+    // Permission
+    public static final int REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION = 2000;
+
+
     // Android Google Analytics 정보들.
     public static final String GA_PROPERTY_ID = "UA-43721645-6";
     // Key used to store a user's tracking preferences in SharedPreferences.

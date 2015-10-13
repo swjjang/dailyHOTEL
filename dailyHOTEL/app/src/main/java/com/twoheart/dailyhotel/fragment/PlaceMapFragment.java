@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
@@ -221,6 +222,25 @@ public abstract class PlaceMapFragment extends com.google.android.gms.maps.Suppo
             case Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION:
                 mOnMyLocationClickListener.onClick(null);
                 break;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
+    {
+        if (requestCode == Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION)
+        {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            {
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                if (baseActivity == null)
+                {
+                    return;
+                }
+
+                searchMyLocation(baseActivity);
+            }
         }
     }
 
@@ -764,6 +784,87 @@ public abstract class PlaceMapFragment extends com.google.android.gms.maps.Suppo
         }
     }
 
+    private void searchMyLocation(BaseActivity baseActivity)
+    {
+        LocationFactory.getInstance(baseActivity).startLocationMeasure(PlaceMapFragment.this, mMyLocationView, new LocationListener()
+        {
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras)
+            {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider)
+            {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider)
+            {
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                if (baseActivity == null || baseActivity.isFinishing() == true)
+                {
+                    return;
+                }
+
+                // Fragment가 added가 되지 않은 상태에서 터치가 될경우.
+                if (isAdded() == false)
+                {
+                    return;
+                }
+
+                // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
+                LocationFactory.getInstance(baseActivity).stopLocationMeasure();
+
+                baseActivity.showSimpleDialog(getString(R.string.dialog_title_used_gps), getString(R.string.dialog_msg_used_gps), getString(R.string.dialog_btn_text_dosetting), getString(R.string.dialog_btn_text_cancel), new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
+                    }
+                }, null, true);
+            }
+
+            @Override
+            public void onLocationChanged(Location location)
+            {
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                if (baseActivity == null)
+                {
+                    return;
+                }
+
+                LocationFactory.getInstance(baseActivity).stopLocationMeasure();
+
+                if (mMyLocationMarkerOptions == null)
+                {
+                    mMyLocationMarkerOptions = new MarkerOptions();
+                    mMyLocationMarkerOptions.icon(new MyLocationMarker(baseActivity).makeIcon());
+                    mMyLocationMarkerOptions.anchor(0.5f, 0.5f);
+                }
+
+                if (mMyLocationMarker != null)
+                {
+                    mMyLocationMarker.remove();
+                }
+
+                mMyLocationMarkerOptions.position(new LatLng(location.getLatitude(), location.getLongitude()));
+                mMyLocationMarker = mGoogleMap.addMarker(mMyLocationMarkerOptions);
+
+                CameraPosition cameraPosition = new CameraPosition.Builder().target(mMyLocationMarkerOptions.getPosition()).zoom(13f).build();
+                mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            }
+        });
+    }
+
     /////////////////////////////////////////////////////////////////////////////////
     // Listener
     ////////////////////////////////////////////////////////////////////////////////
@@ -844,83 +945,19 @@ public abstract class PlaceMapFragment extends com.google.android.gms.maps.Suppo
                 return;
             }
 
-            LocationFactory.getInstance(baseActivity).startLocationMeasure(PlaceMapFragment.this, mMyLocationView, new LocationListener()
+            if (Util.isOverAPI23() == true)
             {
-                @Override
-                public void onStatusChanged(String provider, int status, Bundle extras)
+                // 퍼미션을 체크한다
+                int permission = baseActivity.checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION);
+
+                if (permission != PackageManager.PERMISSION_GRANTED)
                 {
-                    // TODO Auto-generated method stub
-
+                    baseActivity.requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
+                    return;
                 }
+            }
 
-                @Override
-                public void onProviderEnabled(String provider)
-                {
-                    // TODO Auto-generated method stub
-
-                }
-
-                @Override
-                public void onProviderDisabled(String provider)
-                {
-                    BaseActivity baseActivity = (BaseActivity) getActivity();
-
-                    if (baseActivity == null || baseActivity.isFinishing() == true)
-                    {
-                        return;
-                    }
-
-                    // Fragment가 added가 되지 않은 상태에서 터치가 될경우.
-                    if (isAdded() == false)
-                    {
-                        return;
-                    }
-
-                    // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
-                    LocationFactory.getInstance(baseActivity).stopLocationMeasure();
-
-                    baseActivity.showSimpleDialog(getString(R.string.dialog_title_used_gps), getString(R.string.dialog_msg_used_gps), getString(R.string.dialog_btn_text_dosetting), getString(R.string.dialog_btn_text_cancel), new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View v)
-                        {
-                            Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                            startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
-                        }
-                    }, null, true);
-                }
-
-                @Override
-                public void onLocationChanged(Location location)
-                {
-                    BaseActivity baseActivity = (BaseActivity) getActivity();
-
-                    if (baseActivity == null)
-                    {
-                        return;
-                    }
-
-                    LocationFactory.getInstance(baseActivity).stopLocationMeasure();
-
-                    if (mMyLocationMarkerOptions == null)
-                    {
-                        mMyLocationMarkerOptions = new MarkerOptions();
-                        mMyLocationMarkerOptions.icon(new MyLocationMarker(baseActivity).makeIcon());
-                        mMyLocationMarkerOptions.anchor(0.5f, 0.5f);
-                    }
-
-                    if (mMyLocationMarker != null)
-                    {
-                        mMyLocationMarker.remove();
-                    }
-
-                    mMyLocationMarkerOptions.position(new LatLng(location.getLatitude(), location.getLongitude()));
-                    mMyLocationMarker = mGoogleMap.addMarker(mMyLocationMarkerOptions);
-
-                    CameraPosition cameraPosition = new CameraPosition.Builder().target(mMyLocationMarkerOptions.getPosition()).zoom(13f).build();
-                    mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                }
-            });
+            searchMyLocation(baseActivity);
         }
     };
 

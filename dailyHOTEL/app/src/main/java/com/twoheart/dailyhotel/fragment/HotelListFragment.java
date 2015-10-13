@@ -231,6 +231,15 @@ public class HotelListFragment extends BaseFragment implements Constants, OnItem
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
+    {
+        if (mHotelListMapFragment != null)
+        {
+            mHotelListMapFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
     /**
      * 토글이 아닌 경우에만 진행하는 프로세스.
      *

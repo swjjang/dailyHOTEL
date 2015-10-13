@@ -360,6 +360,17 @@ public class HotelMainFragment extends BaseFragment
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
+    {
+        HotelListFragment hotelListFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
+
+        if (hotelListFragment != null)
+        {
+            hotelListFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     // UserActionListener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1121,7 +1132,7 @@ public class HotelMainFragment extends BaseFragment
                 {
                     initHide();
 
-                    ((MainActivity) baseActivity).replaceFragment(WaitTimerFragment.newInstance(mTodaySaleTime, PlaceMainFragment.TYPE.HOTEL));
+                    ((MainActivity) baseActivity).replaceFragment(WaitTimerFragment.newInstance(mTodaySaleTime, PlaceMainFragment.TYPE.HOTEL), String.valueOf(MainActivity.WAITTIMER_FRAGMENT));
                     unLockUI();
                 }
             } catch (Exception e)
