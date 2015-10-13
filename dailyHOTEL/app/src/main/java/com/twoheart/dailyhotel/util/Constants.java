@@ -50,14 +50,14 @@ public interface Constants
 
     // 웹서버 호스트
     //"http://restful.dailyhotel.kr/goodnight/"; //  서비스 서버
-    public static final String URL_DAILYHOTEL_SERVER = UNENCRYPTED_URL ? "https://restful.dailyhotel.kr/goodnight/" : "NjgkMTIyJDQxJDQkNjAk$MDQxKMEUxQkZBNzMwNUMzRTg4NDA2RjVEMzgzNTg2OOEE2OEE2RDc5M0E0NjLRENDc2NUREDOUMzOTQ3RjczNzE2MEE1QTRDMkU3OTFDOUU5Mjc1NUNFQjhDRTBGMDzYwMUQ3$";
+    //    public static final String URL_DAILYHOTEL_SERVER = UNENCRYPTED_URL ? "https://restful.dailyhotel.kr/goodnight/" : "NjgkMTIyJDQxJDQkNjAk$MDQxKMEUxQkZBNzMwNUMzRTg4NDA2RjVEMzgzNTg2OOEE2OEE2RDc5M0E0NjLRENDc2NUREDOUMzOTQ3RjczNzE2MEE1QTRDMkU3OTFDOUU5Mjc1NUNFQjhDRTBGMDzYwMUQ3$";
 
     //"http://tcwas.dailyhotel.co.kr/goodnight/";
-//    public static final String URL_DAILYHOTEL_SERVER = UNENCRYPTED_URL ? "https://tcwas.dailyhotel.kr/goodnight/" : "MTI2JDY4JDEyOCQ4JDU4JA==$QUU4ODE5LOThDNkQ4MjVGNDNDODEzMjcyNTE1NEJCODM3NkQxNjM1QkY1NYzIyNjk0RTE1BQ0Y4RTQ3RDREOTg0MjkwOUI0RTc0MEY1Nzg4MzU2QzUyMUUxQURGMDA1RUWNM4$";
+    public static final String URL_DAILYHOTEL_SERVER = UNENCRYPTED_URL ? "https://tcwas.dailyhotel.kr/goodnight/" : "MTI2JDY4JDEyOCQ4JDU4JA==$QUU4ODE5LOThDNkQ4MjVGNDNDODEzMjcyNTE1NEJCODM3NkQxNjM1QkY1NYzIyNjk0RTE1BQ0Y4RTQ3RDREOTg0MjkwOUI0RTc0MEY1Nzg4MzU2QzUyMUUxQURGMDA1RUWNM4$";
 
-    public static final String URL_DAILYHOTEL_LB_SERVER = UNENCRYPTED_URL ? "http://lb.dailyhotel.kr/goodnight/" : "MTEyJDEwMyQ0NCQzNSQ5MCQ=$RkE1MTczODQ3QzdBQUEwMUQ0MDExMEFGNTQC5NjRBMDQ3ARURFRDBGMDUwMzEwOTU5M0VDNEFERjJCMDc5MzQwNjdEWOUZENzc5MUM0RDADxNDlEODk0RNzBERkVBOTY3NDg1$";
+    //    public static final String URL_DAILYHOTEL_LB_SERVER = UNENCRYPTED_URL ? "http://lb.dailyhotel.kr/goodnight/" : "MTEyJDEwMyQ0NCQzNSQ5MCQ=$RkE1MTczODQ3QzdBQUEwMUQ0MDExMEFGNTQC5NjRBMDQ3ARURFRDBGMDUwMzEwOTU5M0VDNEFERjJCMDc5MzQwNjdEWOUZENzc5MUM0RDADxNDlEODk0RNzBERkVBOTY3NDg1$";
     //    public static final String URL_DAILYHOTEL_LB_SERVER = UNENCRYPTED_URL ? "https://lb.dailyhotel.kr/goodnight/" : "NTIkMTIwJDU1JDExNyQxMTck$REZBN0I5QkFEMDIwQkQ4MzgwMzcwOERBMUQ3ODE0MzgzMzk0QkFGFOEPQ4RUNDQzM5NjE2NDhDNjJBQTc0REU1NzBBQzVBMTBDQzIwOEY0NzE3RTU1QkFNTGNjgGyQUJGM0I5$";
-//    public static final String URL_DAILYHOTEL_LB_SERVER = UNENCRYPTED_URL ? "https://tcwas.dailyhotel.kr/goodnight/" : "MTI2JDY4JDEyOCQ4JDU4JA==$QUU4ODE5LOThDNkQ4MjVGNDNDODEzMjcyNTE1NEJCODM3NkQxNjM1QkY1NYzIyNjk0RTE1BQ0Y4RTQ3RDREOTg0MjkwOUI0RTc0MEY1Nzg4MzU2QzUyMUUxQURGMDA1RUWNM4$";
+    public static final String URL_DAILYHOTEL_LB_SERVER = UNENCRYPTED_URL ? "https://tcwas.dailyhotel.kr/goodnight/" : "MTI2JDY4JDEyOCQ4JDU4JA==$QUU4ODE5LOThDNkQ4MjVGNDNDODEzMjcyNTE1NEJCODM3NkQxNjM1QkY1NYzIyNjk0RTE1BQ0Y4RTQ3RDREOTg0MjkwOUI0RTc0MEY1Nzg4MzU2QzUyMUUxQURGMDA1RUWNM4$";
 
     // 회사 대표번호
     public static final String PHONE_NUMBER_DAILYHOTEL = "1800-9120";
@@ -69,6 +69,10 @@ public interface Constants
     public static final int REQUEST_MAX_RETRY = 0;
     // 호텔 평가를 표시할 최대 날짜
     public static final int DAYS_DISPLAY_RATING_HOTEL_DIALOG = 7;
+
+    // Service Status Alert
+    // http://status.dailyhotel.kr/status/health/check
+    public static final String URL_STATUS_HEALTH_CHECK = UNENCRYPTED_URL ? "http://status.dailyhotel.kr/status/health/check" : "NDYkMTE0JDU3JDQ5JDYxJA==$NkQ5QUVEMTQ3RjRBNjBGMURGNUMwQUE0RkE0QzkyRkQxNzSQxYRDM4MjM2UM0VMzNUUxMDc0QzVDQzVCRjQyQjBFQ0U1RkM2RTYyODMyMTEwODhEQzc2ODDdEQzI0OUJEMjkz$";
 
     // DailyHOTEL User Controller WebAPI URL
     // api/user/signin
