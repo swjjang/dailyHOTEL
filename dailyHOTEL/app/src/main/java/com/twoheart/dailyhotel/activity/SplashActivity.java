@@ -61,6 +61,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
     private View mProgressView;
     private View[] mCircleViewList;
     private boolean mIsRequestLogin;
+    private boolean mDoService;
 
     private Handler mHandler = new Handler()
     {
@@ -70,7 +71,10 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
             switch (msg.what)
             {
                 case 0:
-                    moveToLoginStep();
+                    if (mDoService == true)
+                    {
+                        moveToLoginStep();
+                    }
                     break;
 
                 case 1:
@@ -93,6 +97,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
         setContentView(R.layout.activity_splash);
 
         mIsRequestLogin = false;
+        mDoService = true;
 
         SharedPreferences.Editor editor = sharedPreference.edit();
         editor.putBoolean(KEY_PREFERENCE_REGION_SETTING, false);
@@ -130,6 +135,15 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
                 }
             }, this.getIntent().getData(), this);
         }
+
+        // 서버 상태 체크
+        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_STATUS_HEALTH_CHECK).toString(), null, mStatusHealthCheckJsonResponseListener, new ErrorListener()
+        {
+            @Override
+            public void onErrorResponse(VolleyError volleyError)
+            {
+            }
+        }));
     }
 
     @Override
@@ -373,6 +387,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
             }
         }
     };
+
     private DailyHotelJsonResponseListener mAppVersionJsonResponseListener = new DailyHotelJsonResponseListener()
     {
 
@@ -512,6 +527,51 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
             } catch (Exception e)
             {
                 onError(e);
+            }
+        }
+    };
+
+    private DailyHotelJsonResponseListener mStatusHealthCheckJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            try
+            {
+                if (response == null)
+                {
+                    throw new NullPointerException("response == null");
+                }
+
+                int msgCode = response.getInt("msg_code");
+
+                if (msgCode == 200)
+                {
+                    JSONObject jsonObject = response.getJSONObject("data");
+
+                    boolean isSuspend = jsonObject.getBoolean("isSuspend");
+
+                    if (isSuspend == true)
+                    {
+                        mDoService = false;
+
+                        String title = jsonObject.getString("messageTitle");
+                        String message = jsonObject.getString("messageBody");
+
+                        showSimpleDialog(title, message, getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                setResult(RESULT_CANCELED);
+                                finish();
+                            }
+                        }, null, false);
+                    }
+                }
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
             }
         }
     };
