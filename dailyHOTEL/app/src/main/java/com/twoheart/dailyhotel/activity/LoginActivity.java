@@ -533,6 +533,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         @Override
         public void onSessionOpenFailed(KakaoException exception)
         {
+            unLockUI();
         }
     }
 
