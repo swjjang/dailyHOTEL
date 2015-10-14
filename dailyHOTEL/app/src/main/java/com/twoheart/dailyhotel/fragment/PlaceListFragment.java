@@ -104,15 +104,6 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
-    {
-        if (mPlaceMapFragment != null)
-        {
-            mPlaceMapFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
-    }
-
     /**
      * 토글이 아닌 경우에만 진행하는 프로세스.
      *
