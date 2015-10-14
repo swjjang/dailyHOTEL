@@ -12,10 +12,12 @@
  */
 package com.twoheart.dailyhotel.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
@@ -39,6 +41,7 @@ import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.StringFilter;
@@ -178,6 +181,14 @@ public class SignupActivity extends BaseActivity implements OnClickListener
         mTermTextView.setOnClickListener(this);
         mPrivacyTextView.setOnClickListener(this);
         mSingupView.setOnClickListener(this);
+
+        if (Util.isOverAPI23() == true)
+        {
+            if (hasPermission() == false)
+            {
+                requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, Constants.REQUEST_CODE_PERMISSIONS_READ_PHONE_STATE);
+            }
+        }
     }
 
     @Override
@@ -185,6 +196,31 @@ public class SignupActivity extends BaseActivity implements OnClickListener
     {
         AnalyticsManager.getInstance(SignupActivity.this).recordScreen(Screen.SIGNUP);
         super.onStart();
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
+    {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode)
+        {
+            case Constants.REQUEST_CODE_PERMISSIONS_READ_PHONE_STATE:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                {
+                    if (hasPermission() == false)
+                    {
+                        finish();
+                    }
+                }
+                break;
+        }
     }
 
     /**
@@ -201,6 +237,22 @@ public class SignupActivity extends BaseActivity implements OnClickListener
             mEmailEditText.requestFocus();
         }
 
+    }
+
+    private boolean hasPermission()
+    {
+        if (Util.isOverAPI23() == true)
+        {
+            TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+            String deviceId = telephonyManager.getDeviceId();
+
+            if (deviceId == null)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public boolean checkInput(boolean checkPassword)

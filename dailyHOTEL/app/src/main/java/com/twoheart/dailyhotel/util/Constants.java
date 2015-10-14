@@ -413,6 +413,7 @@ public interface Constants
 
     // 퍼미션 관련
     public static final int REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION = 10;
+    public static final int REQUEST_CODE_PERMISSIONS_READ_PHONE_STATE = 11;
 
     // Android Google Analytics 정보들.
     public static final String GA_PROPERTY_ID = "UA-43721645-6";
