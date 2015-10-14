@@ -258,7 +258,7 @@
     <string name="act_login_forgot_pwd">비밀번호를 잊어버리셨어요?</string>
     <string name="act_login_signup">회원가입</string>
     <string name="act_login_facebook">페이스북으로 로그인</string>
-    <string name="act_login_kakao">회원가입</string>
+    <string name="act_login_kakao">카카오계정으로 로그인</string>
 
     <!-- Credit Activity -->
     <string name="act_credit_recom">좋은 건 나눠야죠!</string>

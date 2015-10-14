@@ -168,7 +168,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="0.7"
                 android:layout_height="match_parent"
-                android:text="@string/com_kakao_login_button"
+                android:text="@string/act_login_kakao"
                 android:textColor="@color/com_kakao_brown"
                 android:textSize="17dp"
                 android:gravity="left|center_vertical"
