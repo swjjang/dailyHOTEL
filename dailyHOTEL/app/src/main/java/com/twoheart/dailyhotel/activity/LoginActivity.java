@@ -13,11 +13,13 @@
  */
 package com.twoheart.dailyhotel.activity;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -170,6 +172,14 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 return false;
             }
         });
+
+        if (Util.isOverAPI23() == true)
+        {
+            if (hasPermission() == false)
+            {
+                requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, Constants.REQUEST_CODE_PERMISSIONS_READ_PHONE_STATE);
+            }
+        }
     }
 
     @Override
@@ -186,6 +196,42 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
         Session.getCurrentSession().removeCallback(mKakaoSessionCallback);
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
+    {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode)
+        {
+            case Constants.REQUEST_CODE_PERMISSIONS_READ_PHONE_STATE:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                {
+                    if (hasPermission() == false)
+                    {
+                        finish();
+                    }
+                }
+                break;
+        }
+    }
+
+    private boolean hasPermission()
+    {
+        if (Util.isOverAPI23() == true)
+        {
+            TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+            String deviceId = telephonyManager.getDeviceId();
+
+            if (deviceId == null)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 
     private void registerFacebookUser(String id, String name, String email)
     {
