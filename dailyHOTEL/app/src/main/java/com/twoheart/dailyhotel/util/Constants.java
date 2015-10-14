@@ -91,7 +91,7 @@ public interface Constants
     public static final String URL_WEBAPI_USER_BONUS_ALL = UNENCRYPTED_URL ? "user/session/bonus/all" : "NjEkODIkNTQkNjYkNjQk$NkE0NzIwMzJGNUIxNEM1MTYzODAxNkFCMkEzMkY1RDMzQzRFMjNBQTDk0RDNGMCTIIxHNDA2MUI0QkNEMDYxOUDJBRQ==$";
 
     // api/user/signup
-    public static final String URL_WEBAPI_USER_SIGNUP = UNENCRYPTED_URL ? "api/user/signup " : "NCQzJDM3JDUkMzEk$MDBLCFWQUI1OTE5QjY2MzE3MDJGMkYzRM0U0ODII2MkZDN0M=$";
+    public static final String URL_WEBAPI_USER_SIGNUP = UNENCRYPTED_URL ? "api/user/signup" : "NCQzJDM3JDUkMzEk$MDBLCFWQUI1OTE5QjY2MzE3MDJGMkYzRM0U0ODII2MkZDN0M=$";
 
     //"user/alive";
     public static final String URL_WEBAPI_USER_ALIVE = UNENCRYPTED_URL ? "user/alive" : "MzAkMTQkMzckNDMkMTck$QzNENDQ1NTk0MzEg1GOURFOUYxQkM4MEIZFRjVBEQTU3BQjE=$";
@@ -411,10 +411,8 @@ public interface Constants
     public static final int CODE_PAY_TYPE_ACCOUNT_WAIT = 20;
     public static final int CODE_PAY_TYPE_ACCOUNT_COMPLETE = 21;
 
-
-    // Permission
-    public static final int REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION = 2000;
-
+    // 퍼미션 관련
+    public static final int REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION = 10;
 
     // Android Google Analytics 정보들.
     public static final String GA_PROPERTY_ID = "UA-43721645-6";

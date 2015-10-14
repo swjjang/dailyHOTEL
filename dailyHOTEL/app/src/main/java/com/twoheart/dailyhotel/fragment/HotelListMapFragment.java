@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
@@ -185,6 +184,8 @@ public class HotelListMapFragment extends com.google.android.gms.maps.SupportMap
             mGoogleMap.clear();
         }
 
+        LocationFactory.getInstance((BaseActivity) getActivity()).clear();
+
         super.onDestroyView();
     }
 
@@ -230,6 +231,27 @@ public class HotelListMapFragment extends com.google.android.gms.maps.SupportMap
             case Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION:
                 mOnMyLocationClickListener.onClick(null);
                 break;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
+    {
+        if (requestCode == Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION)
+        {
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (baseActivity == null)
+            {
+                return;
+            }
+
+            boolean permission = LocationFactory.getInstance(baseActivity).hasPermission();
+
+            if (permission == true)
+            {
+                searchMyLocation(baseActivity);
+            }
         }
     }
 
@@ -774,8 +796,17 @@ public class HotelListMapFragment extends com.google.android.gms.maps.SupportMap
 
     private void searchMyLocation(BaseActivity baseActivity)
     {
-        LocationFactory.getInstance(baseActivity).startLocationMeasure(HotelListMapFragment.this, mMyLocationView, new LocationListener()
+        LocationFactory.getInstance(baseActivity).startLocationMeasure(HotelListMapFragment.this, mMyLocationView, new LocationFactory.LocationListenerEx()
         {
+            @Override
+            public void onRequirePermission()
+            {
+                if (Util.isOverAPI23() == true)
+                {
+                    requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION);
+                }
+            }
+
             @Override
             public void onStatusChanged(String provider, int status, Bundle extras)
             {
@@ -934,13 +965,7 @@ public class HotelListMapFragment extends com.google.android.gms.maps.SupportMap
                 return;
             }
 
-            if (Util.isOverAPI23() == true)
-            {
-                searchMyLocation(baseActivity);
-            } else
-            {
-                searchMyLocation(baseActivity);
-            }
+            searchMyLocation(baseActivity);
         }
     };
 

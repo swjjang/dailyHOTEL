@@ -253,8 +253,7 @@ public class Util implements Constants
 
     public static boolean isOverAPI23()
     {
-        return Build.VERSION.SDK_INT >= 23;
-        //        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
     }
 
     public static boolean isTelephonyEnabled(Context context)

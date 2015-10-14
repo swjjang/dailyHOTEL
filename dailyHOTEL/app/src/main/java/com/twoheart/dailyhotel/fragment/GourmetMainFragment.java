@@ -117,6 +117,17 @@ public class GourmetMainFragment extends PlaceMainFragment
         setMenuEnabled(false);
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
+    {
+        GourmetListFragment gourmetListFragment = (GourmetListFragment) mFragmentViewPager.getCurrentFragment();
+
+        if (gourmetListFragment != null)
+        {
+            gourmetListFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
     public void onNavigationItemSelected(Province province)
     {
         if (province == null)

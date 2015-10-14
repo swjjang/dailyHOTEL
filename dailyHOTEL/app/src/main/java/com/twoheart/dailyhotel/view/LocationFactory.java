@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 
 import java.util.List;
@@ -33,10 +34,11 @@ public class LocationFactory
     private LocationManager mLocationManager = null;
     private Location mLocation = null;
     private boolean mIsMeasuringLocation = false;
-    private LocationListener mLocationListener;
+    private LocationListenerEx mLocationListener;
     private View mMyLocationView;
     private Drawable mMyLocationDrawable;
     private BaseActivity mBaseActivity;
+
     private Handler mHandler = new Handler()
     {
         public void handleMessage(android.os.Message msg)
@@ -98,6 +100,7 @@ public class LocationFactory
 
         ;
     };
+
     protected BroadcastReceiver mSingleUpdateReceiver = new BroadcastReceiver()
     {
         @Override
@@ -117,6 +120,11 @@ public class LocationFactory
         }
     };
 
+    public interface LocationListenerEx extends LocationListener
+    {
+        void onRequirePermission();
+    }
+
     private LocationFactory()
     {
     }
@@ -133,7 +141,12 @@ public class LocationFactory
         return mInstance;
     }
 
-    public void startLocationMeasure(Activity activity, View myLocation, LocationListener listener)
+    public void clear()
+    {
+        mInstance = null;
+    }
+
+    public void startLocationMeasure(Activity activity, View myLocation, LocationListenerEx listener)
     {
         if (activity == null)
         {
@@ -178,6 +191,15 @@ public class LocationFactory
             return;
         }
 
+        if (hasPermission() == false)
+        {
+            if (mLocationListener != null)
+            {
+                mLocationListener.onRequirePermission();
+            }
+            return;
+        }
+
         mIsMeasuringLocation = true;
 
         Location location = getLastBestLocation(mBaseActivity, 10, TEN_MINUTES);
@@ -216,9 +238,36 @@ public class LocationFactory
         }
     }
 
-    public void startLocationMeasure(Fragment fragment, View myLocation, LocationListener listener)
+    public void startLocationMeasure(Fragment fragment, View myLocation, LocationListenerEx listener)
     {
         startLocationMeasure(fragment.getActivity(), myLocation, listener);
+    }
+
+    public boolean hasPermission()
+    {
+        if (Util.isOverAPI23() == false)
+        {
+            return true;
+        }
+
+        if (mLocationManager == null)
+        {
+            mLocationManager = (LocationManager) mBaseActivity.getSystemService(Context.LOCATION_SERVICE);
+        }
+
+        List<String> matchingProviders = mLocationManager.getAllProviders();
+
+        for (String provider : matchingProviders)
+        {
+            Location location = mLocationManager.getLastKnownLocation(provider);
+
+            if (location != null)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public Location getLastBestLocation(Context context, int minDistance, long minTime)
@@ -234,6 +283,7 @@ public class LocationFactory
         for (String provider : matchingProviders)
         {
             Location location = mLocationManager.getLastKnownLocation(provider);
+
             if (location != null)
             {
                 float accuracy = location.getAccuracy();
