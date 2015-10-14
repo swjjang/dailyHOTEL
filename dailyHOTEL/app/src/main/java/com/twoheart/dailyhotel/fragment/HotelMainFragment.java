@@ -360,6 +360,17 @@ public class HotelMainFragment extends BaseFragment
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
+    {
+        HotelListFragment hotelListFragment = (HotelListFragment) mFragmentViewPager.getCurrentFragment();
+
+        if (hotelListFragment != null)
+        {
+            hotelListFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     // UserActionListener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////

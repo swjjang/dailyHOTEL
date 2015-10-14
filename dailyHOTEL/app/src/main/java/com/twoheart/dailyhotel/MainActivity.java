@@ -326,6 +326,27 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
         //		}
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
+    {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode)
+        {
+            case Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                {
+                    Fragment fragment = fragmentManager.findFragmentByTag(String.valueOf(indexLastFragment));
+
+                    if (fragment != null)
+                    {
+                        fragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+                    }
+                }
+                break;
+        }
+    }
+
     private void writeKakaoLinkPreference(String link)
     {
         if (Util.isTextEmpty(link) == true)
