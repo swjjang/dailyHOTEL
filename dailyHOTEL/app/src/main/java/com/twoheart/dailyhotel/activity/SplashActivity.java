@@ -38,8 +38,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
-import com.twoheart.dailyhotel.util.ABTestPreference;
-import com.twoheart.dailyhotel.util.ABTestPreference.OnABTestListener;
 import com.twoheart.dailyhotel.util.AnalyticsManager;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
@@ -329,14 +327,16 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
     private void requestConfigurationABTest()
     {
         // ABTest
-        ABTestPreference.getInstance(getApplicationContext()).requestConfiguration(getApplicationContext(), mQueue, new OnABTestListener()
-        {
-            @Override
-            public void onPostExecute()
-            {
-                showMainActivity();
-            }
-        });
+        //        ABTestPreference.getInstance(getApplicationContext()).requestConfiguration(getApplicationContext(), mQueue, new OnABTestListener()
+        //        {
+        //            @Override
+        //            public void onPostExecute()
+        //            {
+        //                showMainActivity();
+        //            }
+        //        });
+
+        showMainActivity();
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

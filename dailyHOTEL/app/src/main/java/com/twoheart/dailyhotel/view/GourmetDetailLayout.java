@@ -34,7 +34,6 @@ import com.twoheart.dailyhotel.adapter.DetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.model.DetailInformation;
 import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.TicketInformation;
-import com.twoheart.dailyhotel.util.ABTestPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.FontManager;
@@ -210,14 +209,6 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             } else
             {
                 int count = NUMBER_OF_ROWSLIST;
-
-                // 문의 하기 기능.
-                int state = ABTestPreference.getInstance(mFragmentActivity).getKakaotalkConsult();
-
-                if (state != 1)
-                {
-                    count--;
-                }
 
                 if (Util.isTextEmpty(mPlaceDetail.benefit) == true)
                 {

@@ -174,7 +174,7 @@ public class ABTestPreference
     // Preference
     /////////////////////////////////////////////////////////////////////////////////////////
 
-    public void setKakaotalkConsult(int state)
+    private void setKakaotalkConsult(int state)
     {
         if (mEditor != null)
         {
