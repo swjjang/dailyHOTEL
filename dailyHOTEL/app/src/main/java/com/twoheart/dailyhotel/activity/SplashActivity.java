@@ -150,6 +150,7 @@ public class SplashActivity extends BaseActivity implements Constants, ErrorList
     protected void onResume()
     {
         super.onResume();
+
         // 비행기 모드
         boolean isAirplainMode = Settings.System.getInt(getContentResolver(), Settings.System.AIRPLANE_MODE_ON, 0) == 1 ? true : false;
         boolean isNetworkAvailable = VolleyHttpClient.isAvailableNetwork();
