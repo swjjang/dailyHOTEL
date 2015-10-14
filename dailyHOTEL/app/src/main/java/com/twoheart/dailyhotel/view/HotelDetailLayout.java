@@ -53,7 +53,6 @@ import com.twoheart.dailyhotel.model.DetailInformation;
 import com.twoheart.dailyhotel.model.Hotel;
 import com.twoheart.dailyhotel.model.HotelDetailEx;
 import com.twoheart.dailyhotel.model.SaleRoomInformation;
-import com.twoheart.dailyhotel.util.ABTestPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.FontManager;
@@ -1478,14 +1477,6 @@ public class HotelDetailLayout
             } else
             {
                 int count = NUMBER_OF_ROWSLIST;
-
-                // 문의 하기 기능.
-                int state = ABTestPreference.getInstance(mFragmentActivity).getKakaotalkConsult();
-
-                if (state != 1)
-                {
-                    count--;
-                }
 
                 if (Util.isTextEmpty(mHotelDetail.hotelBenefit) == true)
                 {
