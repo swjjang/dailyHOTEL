@@ -27,6 +27,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
@@ -64,7 +65,8 @@ public class GourmetBookingLayout implements OnCheckedChangeListener
     private RadioButton mEasyPaymentButton, mCardPaymentButton, mHpPaymentButton, mAccountPaymentButton;
     private View mCardManagerButton;
     private View mTicketCountMinusButton, mTicketCountPlusButton;
-    private View mTicketTimeMinusButton, mTicketTimePlusButton;
+
+    private ScrollView mScrollLayout;
 
     private GourmetPaymentActivity.OnUserActionListener mOnUserActionListener;
 
@@ -81,6 +83,7 @@ public class GourmetBookingLayout implements OnCheckedChangeListener
         LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mViewGroupRoot = (ViewGroup) inflater.inflate(R.layout.activity_booking_place, null, false);
 
+        mScrollLayout = (ScrollView) mViewGroupRoot.findViewById(R.id.scrollLayout);
         ViewGroup bookingLayout = (ViewGroup) mViewGroupRoot.findViewById(R.id.bookingLayout);
 
         // 결제 정보 넣기
@@ -164,31 +167,28 @@ public class GourmetBookingLayout implements OnCheckedChangeListener
 
         // 방문 시간
         mTicketTimeTextView = (TextView) viewRoot.findViewById(R.id.ticketTimeTextView);
-        mTicketTimeTextView.setText(null);
-
-        mTicketTimeMinusButton = viewRoot.findViewById(R.id.ticketTimeMinus);
-        mTicketTimePlusButton = viewRoot.findViewById(R.id.ticketTimePlus);
-
-        mTicketTimeMinusButton.setOnClickListener(new View.OnClickListener()
+        mTicketTimeTextView.setText(R.string.label_booking_select);
+        mTicketTimeTextView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
                 if (mOnUserActionListener != null)
                 {
-                    mOnUserActionListener.minusTicketTime();
+                    mOnUserActionListener.selectTicketTime();
                 }
             }
         });
 
-        mTicketTimePlusButton.setOnClickListener(new View.OnClickListener()
+        View ticketTimeTab = viewRoot.findViewById(R.id.ticketTimeTab);
+        ticketTimeTab.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
                 if (mOnUserActionListener != null)
                 {
-                    mOnUserActionListener.plusTicketTime();
+                    mOnUserActionListener.selectTicketTime();
                 }
             }
         });
@@ -249,20 +249,18 @@ public class GourmetBookingLayout implements OnCheckedChangeListener
         TextView ticketDateTextView = (TextView) mTicketInformation.findViewById(R.id.ticketDateTextView);
         ticketDateTextView.setText(ticketPayment.checkInTime);
 
-        if (ticketPayment.ticketTime == 0)
+        if (ticketPayment.ticketTime != 0)
         {
-            ticketPayment.ticketTime = ticketPayment.ticketTimes[0];
+            Calendar calendarTime = DailyCalendar.getInstance();
+            calendarTime.setTimeZone(TimeZone.getTimeZone("GMT"));
+            calendarTime.setTimeInMillis(ticketPayment.ticketTime);
+
+            SimpleDateFormat formatDay = new SimpleDateFormat("HH:mm", Locale.KOREA);
+            formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+            // 방문시간
+            mTicketTimeTextView.setText(formatDay.format(calendarTime.getTime()));
         }
-
-        Calendar calendarTime = DailyCalendar.getInstance();
-        calendarTime.setTimeZone(TimeZone.getTimeZone("GMT"));
-        calendarTime.setTimeInMillis(ticketPayment.ticketTime);
-
-        SimpleDateFormat formatDay = new SimpleDateFormat("HH:mm", Locale.KOREA);
-        formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-        // 방문시간
-        mTicketTimeTextView.setText(formatDay.format(calendarTime.getTime()));
 
         // 수량
         mTicketCountTextView.setText(activity.getString(R.string.label_booking_count, ticketPayment.ticketCount));
@@ -631,6 +629,17 @@ public class GourmetBookingLayout implements OnCheckedChangeListener
                 break;
         }
     }
+
+    public void scrollTop()
+    {
+        if (mScrollLayout == null)
+        {
+            return;
+        }
+
+        mScrollLayout.scrollTo(0, 0);
+    }
+
 
     public enum UserInformationType
     {

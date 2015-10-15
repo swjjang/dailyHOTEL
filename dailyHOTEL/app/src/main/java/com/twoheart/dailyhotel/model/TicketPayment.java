@@ -3,6 +3,13 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.twoheart.dailyhotel.util.DailyCalendar;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.TimeZone;
+
 public class TicketPayment implements Parcelable
 {
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
@@ -20,7 +27,6 @@ public class TicketPayment implements Parcelable
 
     };
 
-    ;
     public int bonus;
     public boolean isEnabledBonus;
     public String checkInTime;
@@ -112,6 +118,32 @@ public class TicketPayment implements Parcelable
     {
         mGuest = guest;
     }
+
+    public String[] getTicketTimes()
+    {
+        if (ticketTimes == null)
+        {
+            return null;
+        }
+
+        int length = ticketTimes.length;
+        String[] times = new String[length];
+
+        Calendar calendarTime = DailyCalendar.getInstance();
+        calendarTime.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+        SimpleDateFormat formatDay = new SimpleDateFormat("HH:mm", Locale.KOREA);
+        formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+        for (int i = 0; i < length; i++)
+        {
+            calendarTime.setTimeInMillis(ticketTimes[i]);
+            times[i] = formatDay.format(calendarTime.getTime());
+        }
+
+        return times;
+    }
+
 
     /**
      * 적립금이 반영된 가격
