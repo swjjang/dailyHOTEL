@@ -165,11 +165,12 @@
                     android:textSize="11dp"/>
 
                 <com.twoheart.dailyhotel.view.widget.DailyTextView
-                    android:id="@+id/textVie10"
+                    android:id="@+id/textView10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textView8"
                     android:layout_marginTop="@dimen/hdpi_issuingreceipt_linespacing"
+                    android:layout_marginBottom="@dimen/issuingreceipt_linespacing"
                     android:gravity="center_vertical"
                     android:text="@string/label_receipt_nights_rooms"
                     android:textColor="@color/receipt_detail_text"
