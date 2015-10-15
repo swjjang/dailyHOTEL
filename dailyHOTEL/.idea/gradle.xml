@@ -10,6 +10,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/AndroidMapsUtils" />
+            <option value="$PROJECT_DIR$/androidnumberpicker" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/refresh_library" />
             <option value="$PROJECT_DIR$/refresh_library_extra" />

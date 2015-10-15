@@ -17,6 +17,7 @@
         android:background="@color/actionbar_underline"/>
 
     <ScrollView
+        android:id="@+id/scrollLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar_actionbar"

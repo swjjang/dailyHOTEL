@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
@@ -39,6 +40,9 @@ import com.twoheart.dailyhotel.view.GourmetBookingLayout;
 import com.twoheart.dailyhotel.view.GourmetBookingLayout.UserInformationType;
 import com.twoheart.dailyhotel.view.widget.DailySignatureView;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
+import com.twoheart.dailyhotel.view.widget.FontManager;
+
+import net.simonvt.numberpicker.NumberPicker;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -58,9 +62,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
 
     public interface OnUserActionListener
     {
-        public void plusTicketTime();
-
-        public void minusTicketTime();
+        public void selectTicketTime();
 
         public void plusTicketCount();
 
@@ -448,6 +450,84 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
         return dialog;
     }
 
+    public void showDatePickerDialog(String titleText, final String[] values, String positive //
+            , final View.OnClickListener positiveListener)
+    {
+        final Dialog dialog = new Dialog(this);
+
+        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View dialogView = layoutInflater.inflate(R.layout.view_pickerdialog_layout, null, false);
+
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setCanceledOnTouchOutside(false);
+
+        // 상단
+        TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
+        titleTextView.setVisibility(View.VISIBLE);
+
+        if (Util.isTextEmpty(titleText) == true)
+        {
+            titleTextView.setText(getString(R.string.dialog_notice2));
+        } else
+        {
+            titleTextView.setText(titleText);
+        }
+
+        // 메시지
+        final NumberPicker numberPicker = (NumberPicker) dialogView.findViewById(R.id.numberPicker);
+        numberPicker.setMinValue(0);
+        numberPicker.setMaxValue(values.length - 1);
+        numberPicker.setFocusable(true);
+        numberPicker.setFocusableInTouchMode(true);
+        numberPicker.setDisplayedValues(values);
+        numberPicker.setTextTypeface(FontManager.getInstance(this).getRegularTypeface());
+
+        // 버튼
+        View buttonLayout = dialogView.findViewById(R.id.buttonLayout);
+        View twoButtonLayout = buttonLayout.findViewById(R.id.twoButtonLayout);
+        View oneButtonLayout = buttonLayout.findViewById(R.id.oneButtonLayout);
+
+        twoButtonLayout.setVisibility(View.GONE);
+        oneButtonLayout.setVisibility(View.VISIBLE);
+
+        TextView confirmTextView = (TextView) oneButtonLayout.findViewById(R.id.confirmTextView);
+
+        confirmTextView.setText(positive);
+        confirmTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (dialog != null && dialog.isShowing())
+                {
+                    dialog.dismiss();
+                }
+
+                if (positiveListener != null)
+                {
+                    v.setTag(numberPicker.getValue());
+                    positiveListener.onClick(v);
+                }
+            }
+        });
+
+        dialog.setContentView(dialogView);
+
+        if (isFinishing() == true)
+        {
+            return;
+        }
+
+        try
+        {
+            dialog.show();
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // User ActionListener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -478,94 +558,19 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
     private OnUserActionListener mOnUserActionListener = new OnUserActionListener()
     {
         @Override
-        public void plusTicketTime()
+        public void selectTicketTime()
         {
-            if (mTicketPayment == null || mTicketPayment.ticketTimes == null)
+            showDatePickerDialog(getString(R.string.label_booking_select_ticket_time), mTicketPayment.getTicketTimes(), getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
             {
-                return;
-            }
-
-            int position = 0;
-            int length = mTicketPayment.ticketTimes.length;
-
-            for (int i = 0; i < length; i++)
-            {
-                long selectedtime = mTicketPayment.ticketTimes[i];
-
-                if (selectedtime == mTicketPayment.ticketTime)
+                @Override
+                public void onClick(View v)
                 {
-                    position = i;
-                    break;
+                    int select = (Integer) v.getTag();
+
+                    mTicketPayment.ticketTime = mTicketPayment.ticketTimes[select];
+                    mGourmetBookingLayout.setTicketTime(mTicketPayment.ticketTime);
                 }
-            }
-
-            if (++position >= length)
-            {
-                Calendar startTime = DailyCalendar.getInstance();
-                startTime.setTimeZone(TimeZone.getTimeZone("GMT"));
-                startTime.setTimeInMillis(mTicketPayment.startTicketTime);
-
-                Calendar endTime = DailyCalendar.getInstance();
-                endTime.setTimeZone(TimeZone.getTimeZone("GMT"));
-                endTime.setTimeInMillis(mTicketPayment.endTicketTime);
-
-                SimpleDateFormat formatDay = new SimpleDateFormat("HH:mm", Locale.KOREA);
-                formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-                String timePeriod = String.format("%s~%s", formatDay.format(startTime.getTime()), formatDay.format(endTime.getTime()));
-
-                DailyToast.showToast(GourmetPaymentActivity.this, getString(R.string.toast_msg_none_reservationtime_ticket, timePeriod), Toast.LENGTH_LONG);
-            } else
-            {
-                mTicketPayment.ticketTime = mTicketPayment.ticketTimes[position];
-
-                mGourmetBookingLayout.setTicketTime(mTicketPayment.ticketTime);
-            }
-        }
-
-        @Override
-        public void minusTicketTime()
-        {
-            if (mTicketPayment == null || mTicketPayment.ticketTimes == null)
-            {
-                return;
-            }
-
-            int position = 0;
-            int length = mTicketPayment.ticketTimes.length;
-
-            for (int i = 0; i < length; i++)
-            {
-                long selectedtime = mTicketPayment.ticketTimes[i];
-
-                if (selectedtime == mTicketPayment.ticketTime)
-                {
-                    position = i;
-                    break;
-                }
-            }
-
-            if (--position < 0)
-            {
-                Calendar startTime = DailyCalendar.getInstance();
-                startTime.setTimeZone(TimeZone.getTimeZone("GMT"));
-                startTime.setTimeInMillis(mTicketPayment.startTicketTime);
-
-                Calendar endTime = DailyCalendar.getInstance();
-                endTime.setTimeZone(TimeZone.getTimeZone("GMT"));
-                endTime.setTimeInMillis(mTicketPayment.endTicketTime);
-
-                SimpleDateFormat formatDay = new SimpleDateFormat("HH:mm", Locale.KOREA);
-                formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-                String timePeriod = String.format("%s~%s", formatDay.format(startTime.getTime()), formatDay.format(endTime.getTime()));
-                DailyToast.showToast(GourmetPaymentActivity.this, getString(R.string.toast_msg_none_reservationtime_ticket, timePeriod), Toast.LENGTH_LONG);
-            } else
-            {
-                mTicketPayment.ticketTime = mTicketPayment.ticketTimes[position];
-
-                mGourmetBookingLayout.setTicketTime(mTicketPayment.ticketTime);
-            }
+            });
         }
 
         @Override
@@ -658,6 +663,15 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
         {
             if (lockUiComponentAndIsLockUiComponent() == true)
             {
+                return;
+            }
+
+            if (mTicketPayment.ticketTime == 0)
+            {
+                releaseUiComponent();
+                mGourmetBookingLayout.scrollTop();
+
+                DailyToast.showToast(GourmetPaymentActivity.this, R.string.toast_msg_please_select_reservationtime, Toast.LENGTH_SHORT);
                 return;
             }
 
@@ -837,7 +851,6 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
 
                     if (mTicketPayment.ticketTime == 0)
                     {
-                        mTicketPayment.ticketTime = times[0];
 
                     } else
                     {
@@ -884,7 +897,14 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
 
                             mTicketPayment.checkInTime = formatDay.format(calendarCheckin.getTime());
 
-                            requestValidateTicketPayment(mTicketPayment, mCheckInSaleTime);
+                            if (mTicketPayment.ticketTime == 0)
+                            {
+                                // 방문시간을 선택하지 않은 경우
+                                mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_INFO).toString(), null, mUserSessionBillingCardInfoJsonResponseListener, GourmetPaymentActivity.this));
+                            } else
+                            {
+                                requestValidateTicketPayment(mTicketPayment, mCheckInSaleTime);
+                            }
                             break;
                         }
 

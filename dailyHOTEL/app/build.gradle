@@ -61,6 +61,7 @@ dependencies {
     compile project(':AndroidMapsUtils')
     compile project(':refresh_library')
     compile project(':refresh_library_extra')
+    compile project(':androidnumberpicker')
     compile('com.crashlytics.sdk.android:crashlytics:2.5.2@aar') {
         transitive = true;
     }
