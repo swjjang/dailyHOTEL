@@ -235,6 +235,26 @@ public class GourmetListFragment extends PlaceListFragment
         return new GourmetMapFragment();
     }
 
+    @Override
+    protected boolean hasSalesPlace()
+    {
+        boolean hasPlace = false;
+
+        ArrayList<PlaceViewItem> arrayList = getPlaceViewItemList();
+
+        for(PlaceViewItem placeViewItem : arrayList)
+        {
+            if(placeViewItem.getPlace() != null && placeViewItem.getPlace().isSoldOut == false)
+            {
+                hasPlace = true;
+                break;
+            }
+        }
+
+        return hasPlace;
+    }
+
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

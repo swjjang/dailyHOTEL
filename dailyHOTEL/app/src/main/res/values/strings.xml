@@ -108,6 +108,7 @@
     <string name="toast_msg_maxcount_ticket">한번에 구매 가능한 최대 수량은 %1$d개 입니다.</string>
     <string name="toast_msg_none_reservationtime_ticket">방문시간은 %1$s 사이로 선택해주세요.</string>
     <string name="toast_msg_please_select_reservationtime">방문 시간을 선택하세요.</string>
+    <string name="toast_msg_solodout_area">판매 가능한 지역이 존재하지 않습니다.</string>
 
     <!-- Dialog Messages -->
 
