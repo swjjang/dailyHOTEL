@@ -527,7 +527,6 @@ public class PinnedSectionListView extends ListView
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev)
     {
-
         final float x = ev.getX();
         final float y = ev.getY();
         final int action = ev.getAction();
