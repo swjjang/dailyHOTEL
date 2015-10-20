@@ -10,6 +10,8 @@ public class DailyPreference
 {
     private static final String KEY_OPENING_ALARM = "1"; // 알람
     private static final String KEY_NEW_EVENT_TODAY_FNB = "2"; // 앱 처음 실행시 FNB에  New 아이콘 넣기
+    private static final String KEY_LAST_MENU = "3"; // 마지막 메뉴 리스트가 무엇인지
+
     private static DailyPreference mInstance;
     private SharedPreferences mPreferences;
     private Editor mEditor;
@@ -61,7 +63,7 @@ public class DailyPreference
 
         if (mPreferences != null)
         {
-            result = mPreferences.getBoolean(KEY_NEW_EVENT_TODAY_FNB, false);
+            result = mPreferences.getBoolean(KEY_NEW_EVENT_TODAY_FNB, true);
         }
 
         return result;
@@ -72,6 +74,27 @@ public class DailyPreference
         if (mEditor != null)
         {
             mEditor.putBoolean(KEY_NEW_EVENT_TODAY_FNB, isNew);
+            mEditor.apply();
+        }
+    }
+
+    public String getLastMenu()
+    {
+        String result = null;
+
+        if (mPreferences != null)
+        {
+            result = mPreferences.getString(KEY_LAST_MENU, null);
+        }
+
+        return result;
+    }
+
+    public void setLastMenu(String menu)
+    {
+        if (mEditor != null)
+        {
+            mEditor.putString(KEY_LAST_MENU, menu);
             mEditor.apply();
         }
     }

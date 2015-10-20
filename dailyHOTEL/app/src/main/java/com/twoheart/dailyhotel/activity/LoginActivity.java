@@ -411,7 +411,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             DailyToast.showToast(this, "8081(으)로 변경되었습니다.", Toast.LENGTH_LONG);
         }
 
-        if(isChanged == true)
+        if (isChanged == true)
         {
             mIdEditText.setText(null);
             mPasswordEditText.setText(null);

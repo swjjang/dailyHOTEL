@@ -167,7 +167,15 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
         //순서 중요
         // 1
-        Toolbar toolbar = setActionBar(getString(R.string.actionbar_title_hotel_list_frag), false);
+        Toolbar toolbar;
+
+        if (getString(R.string.label_dailygourmet).equalsIgnoreCase(DailyPreference.getInstance(this).getLastMenu()) == true)
+        {
+            toolbar = setActionBar(getString(R.string.actionbar_title_fnb_list_frag), false);
+        } else
+        {
+            toolbar = setActionBar(getString(R.string.actionbar_title_hotel_list_frag), false);
+        }
 
         // 2
         mNewEventView = findViewById(R.id.newEventView);
@@ -297,12 +305,21 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                             break;
                         default:
 
-                            if (indexLastFragment == INDEX_FNB_LIST_FRAGMENT)
+                            if (getString(R.string.label_dailygourmet).equalsIgnoreCase(DailyPreference.getInstance(this).getLastMenu()) == true)
                             {
                                 selectMenuDrawer(menuGourmetListFragment);
-                            } else
+                            } else if (getString(R.string.label_dailyhotel).equalsIgnoreCase(DailyPreference.getInstance(this).getLastMenu()) == true)
                             {
                                 selectMenuDrawer(menuHotelListFragment);
+                            } else
+                            {
+                                if (indexLastFragment == INDEX_FNB_LIST_FRAGMENT)
+                                {
+                                    selectMenuDrawer(menuGourmetListFragment);
+                                } else
+                                {
+                                    selectMenuDrawer(menuHotelListFragment);
+                                }
                             }
                             break;
                     }
@@ -567,6 +584,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
         {
             case R.drawable.selector_drawermenu_todayshotel:
                 indexLastFragment = INDEX_HOTEL_LIST_FRAGMENT;
+
+                DailyPreference.getInstance(this).setLastMenu(getString(R.string.label_dailyhotel));
                 AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.MENU, Action.CLICK, getString(R.string.actionbar_title_hotel_list_frag), (long) position);
                 break;
 
@@ -578,6 +597,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
                 hideNewGourmet(true);
 
+                DailyPreference.getInstance(this).setLastMenu(getString(R.string.label_dailygourmet));
                 AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.MENU, Action.CLICK, getString(R.string.actionbar_title_fnb_list_frag), (long) position);
                 break;
 
