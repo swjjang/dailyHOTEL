@@ -484,8 +484,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
             case INDEX_SETTING_FRAGMENT:
                 return new SettingFragment();
         }
-        return null;
 
+        return null;
     }
 
     /**
@@ -749,7 +749,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                     setActionBarRegionEnable(true);
 
                     if (sharedPreference.getBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false) == true //
-                            || DailyPreference.getInstance(MainActivity.this).isNewTodayFnB() == true)
+                        || DailyPreference.getInstance(MainActivity.this).isNewTodayFnB() == true)
                     {
                         showActionBarNewIcon();
                     }
@@ -961,7 +961,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
         if (isForce == false)
         {
             if (sharedPreference.getBoolean(RESULT_ACTIVITY_SPLASH_NEW_EVENT, false) == true || //
-                    DailyPreference.getInstance(this).isNewTodayFnB() == true)
+                DailyPreference.getInstance(this).isNewTodayFnB() == true)
             {
                 return;
             }
@@ -1403,7 +1403,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
 
                 // 호텔 평가요청
                 mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_SATISFACTION_RATION_EXIST).toString(), null, //
-                        mSatisfactionRatingExistJsonResponseListener, new ErrorListener()
+                    mSatisfactionRatingExistJsonResponseListener, new ErrorListener()
                 {
                     @Override
                     public void onErrorResponse(VolleyError arg0)

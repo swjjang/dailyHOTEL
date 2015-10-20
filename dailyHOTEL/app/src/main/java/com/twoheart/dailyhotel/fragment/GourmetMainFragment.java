@@ -14,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.MainActivity;
@@ -34,6 +35,7 @@ import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.PlaceViewItem;
+import com.twoheart.dailyhotel.view.widget.DailyToast;
 import com.twoheart.dailyhotel.view.widget.FragmentViewPager;
 import com.twoheart.dailyhotel.view.widget.TabIndicator;
 
@@ -508,6 +510,24 @@ public class GourmetMainFragment extends PlaceMainFragment
 
             lockUI();
 
+            // 현재 페이지 선택 상태를 Fragment에게 알려준다.
+            PlaceListFragment currentFragment = (PlaceListFragment) mFragmentViewPager.getCurrentFragment();
+
+            if(currentFragment.hasSalesPlace() == false)
+            {
+                unLockUI();
+
+                BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                if (baseActivity == null)
+                {
+                    return;
+                }
+
+                DailyToast.showToast(baseActivity, R.string.toast_msg_solodout_area, Toast.LENGTH_SHORT);
+                return;
+            }
+
             switch (mViewType)
             {
                 case LIST:
@@ -521,9 +541,6 @@ public class GourmetMainFragment extends PlaceMainFragment
                 default:
                     break;
             }
-
-            // 현재 페이지 선택 상태를 Fragment에게 알려준다.
-            PlaceListFragment currentFragment = (PlaceListFragment) mFragmentViewPager.getCurrentFragment();
 
             for (PlaceListFragment placeListFragment : mFragmentList)
             {

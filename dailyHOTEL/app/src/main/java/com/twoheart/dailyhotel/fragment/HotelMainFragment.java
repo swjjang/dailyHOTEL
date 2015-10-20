@@ -86,6 +86,8 @@ public class HotelMainFragment extends BaseFragment
         public void onClickActionBarArea();
 
         public void setMapViewVisible(boolean isVisible);
+
+        public void goGourmet();
     }
 
     public interface UserAnalyticsActionListener
@@ -797,6 +799,19 @@ public class HotelMainFragment extends BaseFragment
         public void setMapViewVisible(boolean isVisible)
         {
             setMenuEnabled(isVisible);
+        }
+
+        @Override
+        public void goGourmet()
+        {
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (baseActivity == null)
+            {
+                return;
+            }
+
+            ((MainActivity) baseActivity).selectMenuDrawer(((MainActivity) baseActivity).menuGourmetListFragment);
         }
     };
     private DailyHotelJsonResponseListener mSaleHotelAllJsonResponseListener = new DailyHotelJsonResponseListener()

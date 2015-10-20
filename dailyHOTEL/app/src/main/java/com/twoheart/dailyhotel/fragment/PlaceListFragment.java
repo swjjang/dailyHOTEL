@@ -77,6 +77,8 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
 
     protected abstract PlaceMapFragment createPlaceMapFragment();
 
+    protected abstract boolean hasSalesPlace();
+
     @Override
     public void onResume()
     {

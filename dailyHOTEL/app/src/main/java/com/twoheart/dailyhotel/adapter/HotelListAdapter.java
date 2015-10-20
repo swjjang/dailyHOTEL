@@ -170,133 +170,14 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
 
             case HotelListViewItem.TYPE_ENTRY:
             {
-                Hotel element = item.getItem();
-                HotelListViewHolder viewHolder = null;
+                convertView = makeEntryView(convertView, parent, item);
+                break;
+            }
 
-                if (convertView != null)
-                {
-                    Object tag = convertView.getTag();
-
-                    if (tag != null && tag instanceof HotelListViewHolder)
-                    {
-                        viewHolder = (HotelListViewHolder) convertView.getTag();
-                    }
-                }
-
-                if (viewHolder == null)
-                {
-                    convertView = inflater.inflate(resourceId, parent, false);
-
-                    viewHolder = new HotelListViewHolder();
-                    viewHolder.hotelLayout = (RelativeLayout) convertView.findViewById(R.id.ll_hotel_row_content);
-                    viewHolder.hotelImageView = (ImageView) convertView.findViewById(R.id.iv_hotel_row_img);
-                    viewHolder.hotelNameView = (TextView) convertView.findViewById(R.id.tv_hotel_row_name);
-                    viewHolder.hotelPriceView = (TextView) convertView.findViewById(R.id.tv_hotel_row_price);
-                    viewHolder.satisfactionView = (TextView) convertView.findViewById(R.id.satisfactionView);
-                    viewHolder.hotelDiscountView = (TextView) convertView.findViewById(R.id.tv_hotel_row_discount);
-                    viewHolder.hotelSoldOutView = (TextView) convertView.findViewById(R.id.tv_hotel_row_soldout);
-                    viewHolder.hotelAddressView = (TextView) convertView.findViewById(R.id.tv_hotel_row_address);
-                    viewHolder.hotelGradeView = (TextView) convertView.findViewById(R.id.hv_hotel_grade);
-                    viewHolder.dBenefitView = convertView.findViewById(R.id.dBenefitImageView);
-                    viewHolder.averageView = convertView.findViewById(R.id.averageTextView);
-
-                    convertView.setTag(viewHolder);
-                }
-
-                DecimalFormat comma = new DecimalFormat("###,##0");
-                int price = element.getPrice();
-
-                String strPrice = comma.format(price);
-                String strDiscount = comma.format(element.averageDiscount);
-
-                String address = element.getAddress();
-
-                int barIndex = address.indexOf('|');
-                if (barIndex >= 0)
-                {
-                    address = address.replace(" | ", "ㅣ");
-                } else if (address.indexOf('l') >= 0)
-                {
-                    address = address.replace(" l ", "ㅣ");
-                }
-
-                viewHolder.hotelAddressView.setText(address);
-                viewHolder.hotelNameView.setText(element.getName());
-
-                Spanned currency = Html.fromHtml(context.getResources().getString(R.string.currency));
-
-                if (price <= 0)
-                {
-                    viewHolder.hotelPriceView.setVisibility(View.INVISIBLE);
-                    viewHolder.hotelPriceView.setText(null);
-                } else
-                {
-                    viewHolder.hotelPriceView.setVisibility(View.VISIBLE);
-                    viewHolder.hotelPriceView.setText(strPrice + currency);
-                    viewHolder.hotelPriceView.setPaintFlags(viewHolder.hotelPriceView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                }
-
-                // 만족도
-                if (element.satisfaction > 0)
-                {
-                    viewHolder.satisfactionView.setVisibility(View.VISIBLE);
-                    viewHolder.satisfactionView.setText(element.satisfaction + "%");
-                } else
-                {
-                    viewHolder.satisfactionView.setVisibility(View.GONE);
-                }
-
-                if (element.nights > 1)
-                {
-                    viewHolder.averageView.setVisibility(View.VISIBLE);
-                } else
-                {
-                    viewHolder.averageView.setVisibility(View.GONE);
-                }
-
-                viewHolder.hotelDiscountView.setText(strDiscount + currency);
-                viewHolder.hotelNameView.setSelected(true); // Android TextView marquee bug
-
-                if (Util.isOverAPI16() == true)
-                {
-                    viewHolder.hotelLayout.setBackground(mPaintDrawable);
-                } else
-                {
-                    viewHolder.hotelLayout.setBackgroundDrawable(mPaintDrawable);
-                }
-
-                // grade
-                viewHolder.hotelGradeView.setText(element.getCategory().getName(context));
-                viewHolder.hotelGradeView.setBackgroundResource(element.getCategory().getColorResId());
-
-                if (Util.getLCDWidth(context) < 720)
-                {
-                    Glide.with(context).load(element.getImage()).placeholder(R.drawable.img_placeholder)//
-                            .crossFade().override(360, 240).into(viewHolder.hotelImageView);
-                } else
-                {
-                    Glide.with(context).load(element.getImage()).placeholder(R.drawable.img_placeholder)//
-                            .crossFade().into(viewHolder.hotelImageView);
-                }
-
-                int availableRoomCount = element.getAvailableRoom();
-
-                // SOLD OUT 표시
-                if (availableRoomCount == 0)
-                {
-                    viewHolder.hotelSoldOutView.setVisibility(View.VISIBLE);
-                } else
-                {
-                    viewHolder.hotelSoldOutView.setVisibility(View.GONE);
-                }
-
-                if (element.isDBenefit == true)
-                {
-                    viewHolder.dBenefitView.setVisibility(View.VISIBLE);
-                } else
-                {
-                    viewHolder.dBenefitView.setVisibility(View.GONE);
-                }
+            case HotelListViewItem.TYPE_EVENT:
+            {
+                convertView = inflater.inflate(item.eventLayotuResourceId, parent, false);
+                convertView.setTag(null);
                 break;
             }
         }
@@ -313,7 +194,7 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
     @Override
     public int getViewTypeCount()
     {
-        return 2;
+        return 3;
     }
 
     @Override
@@ -321,6 +202,140 @@ public class HotelListAdapter extends ArrayAdapter<HotelListViewItem> implements
     {
         return getItem(position).getType();
     }
+
+    private View makeEntryView(View convertView, ViewGroup parent, HotelListViewItem hotelListViewItem)
+    {
+        Hotel element = hotelListViewItem.getItem();
+        HotelListViewHolder viewHolder = null;
+
+        if (convertView != null)
+        {
+            Object tag = convertView.getTag();
+
+            if (tag != null && tag instanceof HotelListViewHolder)
+            {
+                viewHolder = (HotelListViewHolder) convertView.getTag();
+            }
+        }
+
+        if (viewHolder == null)
+        {
+            convertView = inflater.inflate(resourceId, parent, false);
+
+            viewHolder = new HotelListViewHolder();
+            viewHolder.hotelLayout = (RelativeLayout) convertView.findViewById(R.id.ll_hotel_row_content);
+            viewHolder.hotelImageView = (ImageView) convertView.findViewById(R.id.iv_hotel_row_img);
+            viewHolder.hotelNameView = (TextView) convertView.findViewById(R.id.tv_hotel_row_name);
+            viewHolder.hotelPriceView = (TextView) convertView.findViewById(R.id.tv_hotel_row_price);
+            viewHolder.satisfactionView = (TextView) convertView.findViewById(R.id.satisfactionView);
+            viewHolder.hotelDiscountView = (TextView) convertView.findViewById(R.id.tv_hotel_row_discount);
+            viewHolder.hotelSoldOutView = (TextView) convertView.findViewById(R.id.tv_hotel_row_soldout);
+            viewHolder.hotelAddressView = (TextView) convertView.findViewById(R.id.tv_hotel_row_address);
+            viewHolder.hotelGradeView = (TextView) convertView.findViewById(R.id.hv_hotel_grade);
+            viewHolder.dBenefitView = convertView.findViewById(R.id.dBenefitImageView);
+            viewHolder.averageView = convertView.findViewById(R.id.averageTextView);
+
+            convertView.setTag(viewHolder);
+        }
+
+        DecimalFormat comma = new DecimalFormat("###,##0");
+        int price = element.getPrice();
+
+        String strPrice = comma.format(price);
+        String strDiscount = comma.format(element.averageDiscount);
+
+        String address = element.getAddress();
+
+        int barIndex = address.indexOf('|');
+        if (barIndex >= 0)
+        {
+            address = address.replace(" | ", "ㅣ");
+        } else if (address.indexOf('l') >= 0)
+        {
+            address = address.replace(" l ", "ㅣ");
+        }
+
+        viewHolder.hotelAddressView.setText(address);
+        viewHolder.hotelNameView.setText(element.getName());
+
+        Spanned currency = Html.fromHtml(context.getResources().getString(R.string.currency));
+
+        if (price <= 0)
+        {
+            viewHolder.hotelPriceView.setVisibility(View.INVISIBLE);
+            viewHolder.hotelPriceView.setText(null);
+        } else
+        {
+            viewHolder.hotelPriceView.setVisibility(View.VISIBLE);
+            viewHolder.hotelPriceView.setText(strPrice + currency);
+            viewHolder.hotelPriceView.setPaintFlags(viewHolder.hotelPriceView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        }
+
+        // 만족도
+        if (element.satisfaction > 0)
+        {
+            viewHolder.satisfactionView.setVisibility(View.VISIBLE);
+            viewHolder.satisfactionView.setText(element.satisfaction + "%");
+        } else
+        {
+            viewHolder.satisfactionView.setVisibility(View.GONE);
+        }
+
+        if (element.nights > 1)
+        {
+            viewHolder.averageView.setVisibility(View.VISIBLE);
+        } else
+        {
+            viewHolder.averageView.setVisibility(View.GONE);
+        }
+
+        viewHolder.hotelDiscountView.setText(strDiscount + currency);
+        viewHolder.hotelNameView.setSelected(true); // Android TextView marquee bug
+
+        if (Util.isOverAPI16() == true)
+        {
+            viewHolder.hotelLayout.setBackground(mPaintDrawable);
+        } else
+        {
+            viewHolder.hotelLayout.setBackgroundDrawable(mPaintDrawable);
+        }
+
+        // grade
+        viewHolder.hotelGradeView.setText(element.getCategory().getName(context));
+        viewHolder.hotelGradeView.setBackgroundResource(element.getCategory().getColorResId());
+
+        if (Util.getLCDWidth(context) < 720)
+        {
+            Glide.with(context).load(element.getImage()).placeholder(R.drawable.img_placeholder)//
+                .crossFade().override(360, 240).into(viewHolder.hotelImageView);
+        } else
+        {
+            Glide.with(context).load(element.getImage()).placeholder(R.drawable.img_placeholder)//
+                .crossFade().into(viewHolder.hotelImageView);
+        }
+
+        int availableRoomCount = element.getAvailableRoom();
+
+        // SOLD OUT 표시
+        if (availableRoomCount == 0)
+        {
+            viewHolder.hotelSoldOutView.setVisibility(View.VISIBLE);
+        } else
+        {
+            viewHolder.hotelSoldOutView.setVisibility(View.GONE);
+        }
+
+        if (element.isDBenefit == true)
+        {
+            viewHolder.dBenefitView.setVisibility(View.VISIBLE);
+        } else
+        {
+            viewHolder.dBenefitView.setVisibility(View.GONE);
+        }
+
+        return convertView;
+    }
+
 
     private static class HotelListViewHolder
     {
