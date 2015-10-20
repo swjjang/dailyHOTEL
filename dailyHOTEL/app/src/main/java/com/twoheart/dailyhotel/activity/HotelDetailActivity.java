@@ -211,7 +211,7 @@ public class HotelDetailActivity extends BaseActivity
         Map<String, String> params = new HashMap<String, String>();
         params.put("timeZone", "Asia/Seoul");
 
-        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, this));
+        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, this));
 
         super.onResume();
     }
@@ -272,7 +272,7 @@ public class HotelDetailActivity extends BaseActivity
             {
                 if (resultCode == RESULT_OK)
                 {
-                    mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, this));
+                    mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, this));
                 }
                 break;
             }
@@ -311,9 +311,9 @@ public class HotelDetailActivity extends BaseActivity
                 }
 
                 KakaoLinkManager.newInstance(this).shareHotel(mHotelDetail.hotelName, mHotelDetail.hotelIndex, //
-                        mDefaultImageUrl, //
-                        mCheckInSaleTime.getDailyTime(), //
-                        mCheckInSaleTime.getOffsetDailyDay(), mHotelDetail.nights);
+                    mDefaultImageUrl, //
+                    mCheckInSaleTime.getDailyTime(), //
+                    mCheckInSaleTime.getOffsetDailyDay(), mHotelDetail.nights);
 
                 // 호텔 공유하기 로그 추가
                 SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + mHotelDetail.nights);
@@ -490,7 +490,7 @@ public class HotelDetailActivity extends BaseActivity
 
             lockUI();
 
-            mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, HotelDetailActivity.this));
+            mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, HotelDetailActivity.this));
 
             HashMap<String, String> params = new HashMap<String, String>();
             params.put(Label.HOTEL_ROOM_NAME, saleRoomInformation.roomName);
@@ -725,7 +725,7 @@ public class HotelDetailActivity extends BaseActivity
             {
                 // session alive
                 // 사용자 정보 요청.
-                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION_OMISSION).toString(), null, mUserInformationJsonResponseListener, HotelDetailActivity.this));
+                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION_OMISSION).toString(), null, mUserInformationJsonResponseListener, HotelDetailActivity.this));
 
             } else if ("dead".equalsIgnoreCase(result) == true)
             {
@@ -735,7 +735,7 @@ public class HotelDetailActivity extends BaseActivity
                 {
                     HashMap<String, String> params = Util.getLoginParams(sharedPreference);
 
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mUserLoginJsonResponseListener, HotelDetailActivity.this));
+                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mUserLoginJsonResponseListener, HotelDetailActivity.this));
                 } else
                 {
                     startLoginActivity();
@@ -773,7 +773,7 @@ public class HotelDetailActivity extends BaseActivity
                         //로그인 성공
                         VolleyHttpClient.createCookie();
 
-                        mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, HotelDetailActivity.this));
+                        mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, HotelDetailActivity.this));
                         return;
                     }
                 }
@@ -848,7 +848,7 @@ public class HotelDetailActivity extends BaseActivity
                         //							showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
                         //						}
 
-                        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_HOTEL_INFO).append(params).toString(), null, mHotelDetailJsonResponseListener, HotelDetailActivity.this));
+                        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_HOTEL_INFO).append(params).toString(), null, mHotelDetailJsonResponseListener, HotelDetailActivity.this));
                     } else
                     {
                         finish();
@@ -872,7 +872,7 @@ public class HotelDetailActivity extends BaseActivity
                         //							showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
                         //						}
 
-                        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_HOTEL_INFO).append(params).toString(), null, mHotelDetailJsonResponseListener, HotelDetailActivity.this));
+                        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_HOTEL_INFO).append(params).toString(), null, mHotelDetailJsonResponseListener, HotelDetailActivity.this));
                     } else
                     {
                         finish();

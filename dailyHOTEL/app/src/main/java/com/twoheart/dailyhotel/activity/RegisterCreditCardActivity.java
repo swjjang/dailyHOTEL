@@ -84,7 +84,7 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
             }
         }); // 롱클릭 에러 방지.
 
-        String url = DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER) + DailyHotelRequest.getUrlDecoderEx(Constants.URL_REGISTER_CREDIT_CARD);
+        String url = DailyHotelRequest.getUrlDecoderEx(VolleyHttpClient.URL_DAILYHOTEL_SERVER) + DailyHotelRequest.getUrlDecoderEx(Constants.URL_REGISTER_CREDIT_CARD);
 
         webView.postUrl(url, null);
     }

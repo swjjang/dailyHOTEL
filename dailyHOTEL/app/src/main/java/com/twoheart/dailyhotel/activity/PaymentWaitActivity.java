@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Booking;
+import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -76,7 +77,7 @@ public class PaymentWaitActivity extends BaseActivity
         {
             case HOTEL:
             {
-                String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_MINE_DETAIL).append('/').append(booking.payType).append('/').append(booking.tid).toString();
+                String url = new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_MINE_DETAIL).append('/').append(booking.payType).append('/').append(booking.tid).toString();
                 mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null, mHotelReservationJsonResponseListener, this));
                 break;
             }
@@ -84,7 +85,7 @@ public class PaymentWaitActivity extends BaseActivity
             case FNB:
             {
                 String params = String.format("?tid=%s", booking.tid);
-                String url = new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_SESSION_VBANK_ACCOUNT_INFO).append(params).toString();
+                String url = new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_SESSION_VBANK_ACCOUNT_INFO).append(params).toString();
                 mQueue.add(new DailyHotelJsonRequest(Method.GET, url, null, mFnBReservationJsonResponseListener, this));
                 break;
             }

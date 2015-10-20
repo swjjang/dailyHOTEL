@@ -143,7 +143,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
         // android.content.pm.PackageManager$NameNotFoundException: com.google.android.webview
         try
         {
-            if (CookieManager.getInstance().getCookie(URL_DAILYHOTEL_SERVER) != null)
+            if (CookieManager.getInstance().getCookie(VolleyHttpClient.URL_DAILYHOTEL_SERVER) != null)
             {
                 VolleyHttpClient.destroyCookie();
             }
@@ -307,12 +307,12 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                             break;
                     }
 
-                    mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, this));
+                    mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, this));
                 }
             }
         } else if (requestCode == CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL)
         {
-            mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_SESSION_RATING_EXIST).toString(), null, mFnBSatisfactionRatingExistJsonResponseListener, new ErrorListener()
+            mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_SESSION_RATING_EXIST).toString(), null, mFnBSatisfactionRatingExistJsonResponseListener, new ErrorListener()
             {
                 public void onErrorResponse(VolleyError error)
                 {
@@ -416,7 +416,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                 regPushParams.put("notification_id", regId);
                 regPushParams.put("device_type", GCM_DEVICE_TYPE_ANDROID);
 
-                mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_GCM_REGISTER).toString(), regPushParams, mGcmRegisterJsonResponseListener, MainActivity.this));
+                mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_GCM_REGISTER).toString(), regPushParams, mGcmRegisterJsonResponseListener, MainActivity.this));
             }
         }.execute();
     }
@@ -1008,7 +1008,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
         Map<String, String> params = new HashMap<String, String>();
         params.put("timeZone", "Asia/Seoul");
 
-        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, new DailyHotelJsonResponseListener()
+        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, new DailyHotelJsonResponseListener()
         {
             @Override
             public void onResponse(String url, JSONObject response)
@@ -1023,7 +1023,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                     editor.apply();
 
                     String params = String.format("?date_time=%d", lastLookupDateTime);
-                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_DAILY_EVENT_COUNT).append(params).toString(), null, mDailyEventCountJsonResponseListener, null));
+                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_DAILY_EVENT_COUNT).append(params).toString(), null, mDailyEventCountJsonResponseListener, null));
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());
@@ -1036,7 +1036,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
     protected void onDestroy()
     {
         // 쿠키 만료를 위한 서버에 로그아웃 리퀘스트
-        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGOUT).toString(), null, null, null));
+        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_LOGOUT).toString(), null, null, null));
 
         VolleyHttpClient.destroyCookie();
 
@@ -1361,7 +1361,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                     startActivityForResult(SatisfactionActivity.newInstance(MainActivity.this, hotelName, reservationIndex, checkInDate, checkOutDate), CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL);
                 } else
                 {
-                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_SESSION_RATING_EXIST).toString(), null, mFnBSatisfactionRatingExistJsonResponseListener, new ErrorListener()
+                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_SESSION_RATING_EXIST).toString(), null, mFnBSatisfactionRatingExistJsonResponseListener, new ErrorListener()
                     {
                         public void onErrorResponse(VolleyError error)
                         {
@@ -1402,7 +1402,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
                 }
 
                 // 호텔 평가요청
-                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_SATISFACTION_RATION_EXIST).toString(), null, //
+                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_SATISFACTION_RATION_EXIST).toString(), null, //
                     mSatisfactionRatingExistJsonResponseListener, new ErrorListener()
                 {
                     @Override
@@ -1440,7 +1440,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, C
             {
                 // session alive
                 // 호텔 평가를 위한 사용자 정보 조회
-                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, MainActivity.this));
+                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, MainActivity.this));
             } else
             {
                 if (getGcmId().isEmpty() == true)

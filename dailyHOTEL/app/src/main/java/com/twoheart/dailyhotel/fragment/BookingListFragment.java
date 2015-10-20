@@ -115,7 +115,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         baseActivity.setActionBar(getString(R.string.actionbar_title_booking_list_frag), false);
 
         lockUI();
-        mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, baseActivity));
+        mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, baseActivity));
     }
 
     @Override
@@ -256,7 +256,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
             lockUI();
 
             // 세션 여부를 판단한다.
-            mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, new DailyHotelStringResponseListener()
+            mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, new DailyHotelStringResponseListener()
             {
                 @Override
                 public void onResponse(String url, String response)
@@ -305,7 +305,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                                         HashMap<String, String> params = new HashMap<String, String>();
                                         params.put("idx", String.valueOf(booking.reservationIndex));
 
-                                        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_MINE_HIDDEN).toString(), params, mReservationHiddenJsonResponseListener, baseActivity));
+                                        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_MINE_HIDDEN).toString(), params, mReservationHiddenJsonResponseListener, baseActivity));
                                         break;
                                     }
 
@@ -313,7 +313,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                                         HashMap<String, String> params = new HashMap<String, String>();
                                         params.put("reservation_rec_idx", String.valueOf(booking.reservationIndex));
 
-                                        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_SESSION_HIDDEN).toString(), params, mReservationHiddenJsonResponseListener, baseActivity));
+                                        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_SESSION_HIDDEN).toString(), params, mReservationHiddenJsonResponseListener, baseActivity));
                                         break;
                                 }
 
@@ -563,7 +563,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
                 mCurrentTime = response.getLong("currentDateTime");
 
-                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_BOOKING_LIST).toString(), null, mReservationListJsonResponseListener, baseActivity));
+                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_BOOKING_LIST).toString(), null, mReservationListJsonResponseListener, baseActivity));
             } catch (Exception e)
             {
                 onError(e);
@@ -596,7 +596,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("timeZone", "Asia/Seoul");
 
-                mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, baseActivity));
+                mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, baseActivity));
 
             } else if ("dead".equalsIgnoreCase(result) == true)
             { // session dead
@@ -605,7 +605,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                 {
                     HashMap<String, String> params = Util.getLoginParams(baseActivity.sharedPreference);
 
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mUserLoginJsonResponseListener, baseActivity));
+                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mUserLoginJsonResponseListener, baseActivity));
 
                     mListView.setVisibility(View.GONE);
                     mEmptyLayout.setVisibility(View.VISIBLE);
@@ -686,7 +686,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
                             lockUI();
 
-                            mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_BOOKING_LIST).toString(), null, mReservationListJsonResponseListener, baseActivity));
+                            mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_BOOKING_LIST).toString(), null, mReservationListJsonResponseListener, baseActivity));
                         }
                     };
                 } else
@@ -705,7 +705,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
                             lockUI();
 
-                            mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_BOOKING_LIST).toString(), null, mReservationListJsonResponseListener, baseActivity));
+                            mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_BOOKING_LIST).toString(), null, mReservationListJsonResponseListener, baseActivity));
                         }
                     };
                 }
@@ -717,7 +717,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                         message = response.getString("msg");
                         DailyToast.showToast(baseActivity, message, Toast.LENGTH_SHORT);
 
-                        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_BOOKING_LIST).toString(), null, mReservationListJsonResponseListener, baseActivity));
+                        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_BOOKING_LIST).toString(), null, mReservationListJsonResponseListener, baseActivity));
                         break;
                     }
 
@@ -731,7 +731,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                             DailyToast.showToast(baseActivity, message, Toast.LENGTH_SHORT);
                         }
 
-                        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_BOOKING_LIST).toString(), null, mReservationListJsonResponseListener, baseActivity));
+                        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_BOOKING_LIST).toString(), null, mReservationListJsonResponseListener, baseActivity));
                         break;
                     }
 
@@ -752,7 +752,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                             baseActivity.showSimpleDialog(getString(R.string.dialog_notice2), message, getString(R.string.dialog_btn_text_confirm), onClickListener);
                         } else
                         {
-                            mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_BOOKING_LIST).toString(), null, mReservationListJsonResponseListener, baseActivity));
+                            mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_BOOKING_LIST).toString(), null, mReservationListJsonResponseListener, baseActivity));
                         }
                         break;
                     }
@@ -762,7 +762,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                 onError(e);
 
                 // credit card 요청
-                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_BOOKING_LIST).toString(), null, mReservationListJsonResponseListener, baseActivity));
+                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_BOOKING_LIST).toString(), null, mReservationListJsonResponseListener, baseActivity));
             }
         }
     };

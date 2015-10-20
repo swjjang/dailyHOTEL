@@ -17,6 +17,7 @@ import com.twoheart.dailyhotel.fragment.GourmetTabBookingFragment;
 import com.twoheart.dailyhotel.fragment.PlaceTabInfoFragment;
 import com.twoheart.dailyhotel.fragment.PlaceTabMapFragment;
 import com.twoheart.dailyhotel.model.GourmetBookingDetail;
+import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.view.widget.FragmentViewPager;
@@ -65,7 +66,7 @@ public class GourmetBookingDetailActivity extends PlaceBookingDetailActivity
 
         String params = String.format("?reservation_rec_idx=%d", booking.reservationIndex);
 
-        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_BOOKING_DETAIL).append(params).toString(), null, mReservationBookingDetailJsonResponseListener, this));
+        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_FNB_RESERVATION_BOOKING_DETAIL).append(params).toString(), null, mReservationBookingDetailJsonResponseListener, this));
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

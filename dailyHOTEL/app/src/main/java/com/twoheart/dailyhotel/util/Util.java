@@ -340,35 +340,35 @@ public class Util implements Constants
         {
             // set dialog message
             activity.showSimpleDialog(activity.getString(R.string.dialog_title_googleplayservice), activity.getString(R.string.dialog_msg_install_update_googleplayservice), //
-                    activity.getString(R.string.dialog_btn_text_install), activity.getString(R.string.dialog_btn_text_cancel), //
-                    new View.OnClickListener()
+                activity.getString(R.string.dialog_btn_text_install), activity.getString(R.string.dialog_btn_text_cancel), //
+                new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
                     {
-                        @Override
-                        public void onClick(View v)
+                        try
+                        {
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.gms"));
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+                            intent.setPackage("com.android.vending");
+                            activity.startActivity(intent);
+                        } catch (ActivityNotFoundException e)
                         {
                             try
                             {
-                                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.gms"));
+                                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.google.android.gms"));
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
                                 intent.setPackage("com.android.vending");
                                 activity.startActivity(intent);
-                            } catch (ActivityNotFoundException e)
+                            } catch (ActivityNotFoundException f)
                             {
-                                try
-                                {
-                                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.google.android.gms"));
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-                                    intent.setPackage("com.android.vending");
-                                    activity.startActivity(intent);
-                                } catch (ActivityNotFoundException f)
-                                {
-                                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.gms"));
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-                                    activity.startActivity(intent);
-                                }
+                                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.gms"));
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+                                activity.startActivity(intent);
                             }
                         }
-                    }, null, true);
+                    }
+                }, null, true);
 
 
             return false;

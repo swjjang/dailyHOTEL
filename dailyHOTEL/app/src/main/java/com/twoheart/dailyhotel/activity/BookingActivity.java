@@ -249,7 +249,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             Map<String, String> params = new HashMap<String, String>();
             params.put("timeZone", "Asia/Seoul");
 
-            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, BookingActivity.this));
+            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, BookingActivity.this));
         }
     }
 
@@ -524,24 +524,24 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             // 핸드폰 결제
             case DIALOG_CONFIRM_PAYMENT_HP:
                 textResIds = new int[]{R.string.dialog_msg_hotel_payment_message01//
-                        , R.string.dialog_msg_hotel_payment_message02//
-                        , R.string.dialog_msg_hotel_payment_message03//
-                        , R.string.dialog_msg_hotel_payment_message04};
+                    , R.string.dialog_msg_hotel_payment_message02//
+                    , R.string.dialog_msg_hotel_payment_message03//
+                    , R.string.dialog_msg_hotel_payment_message04};
                 break;
 
             // 계좌 이체
             case DIALOG_CONFIRM_PAYMENT_ACCOUNT:
                 textResIds = new int[]{R.string.dialog_msg_hotel_payment_message01//
-                        , R.string.dialog_msg_hotel_payment_message02//
-                        , R.string.dialog_msg_hotel_payment_message03//
-                        , R.string.dialog_msg_hotel_payment_message05};
+                    , R.string.dialog_msg_hotel_payment_message02//
+                    , R.string.dialog_msg_hotel_payment_message03//
+                    , R.string.dialog_msg_hotel_payment_message05};
                 break;
 
             // 신용카드 일반 결제
             case DIALOG_CONFIRM_PAYMENT_CARD:
                 textResIds = new int[]{R.string.dialog_msg_hotel_payment_message01//
-                        , R.string.dialog_msg_hotel_payment_message02//
-                        , R.string.dialog_msg_hotel_payment_message03};
+                    , R.string.dialog_msg_hotel_payment_message02//
+                    , R.string.dialog_msg_hotel_payment_message03};
                 break;
 
             default:
@@ -567,9 +567,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 int boldLength = "예약 취소, 변경 및 환불이 불가".length();
 
                 spannableStringBuilder.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.dialog_title_text)), //
-                        boldStartIndex, boldStartIndex + boldLength, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    boldStartIndex, boldStartIndex + boldLength, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 spannableStringBuilder.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), //
-                        boldStartIndex, boldStartIndex + boldLength, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    boldStartIndex, boldStartIndex + boldLength, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                 messageTextView.setText(spannableStringBuilder);
             } else
@@ -601,7 +601,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                     mAliveCallSource = "PAYMENT";
 
                     // 1. 세션이 살아있는지 검사 시작.
-                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, BookingActivity.this));
+                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, BookingActivity.this));
 
                     HashMap<String, String> params = new HashMap<String, String>();
                     params.put(Label.HOTEL_ROOM_INDEX, String.valueOf(mPay.getSaleRoomInformation().roomIndex));
@@ -675,7 +675,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 showSimpleDialog(null, params.toString(), getString(R.string.dialog_btn_text_confirm), null);
             }
 
-            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_SESSION_EASY_PAYMENT).toString(), params, mUserSessionBillingPayment, BookingActivity.this));
+            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_RESERV_SESSION_EASY_PAYMENT).toString(), params, mUserSessionBillingPayment, BookingActivity.this));
         } else
         {
             Intent intent = new Intent(this, com.twoheart.dailyhotel.activity.PaymentActivity.class);
@@ -710,7 +710,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         lockUI();
 
         // 1. 세션이 연결되어있는지 검사.
-        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, this));
+        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, this));
     }
 
     private void activityResulted(int requestCode, int resultCode, Intent intent)
@@ -895,7 +895,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                     lockUI();
 
                     // credit card 요청
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_INFO).toString(), null, mUserRegisterBillingCardInfoJsonResponseListener, BookingActivity.this));
+                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_INFO).toString(), null, mUserRegisterBillingCardInfoJsonResponseListener, BookingActivity.this));
                     return;
 
                 case CODE_RESULT_PAYMENT_BILLING_DUPLICATE:
@@ -1234,7 +1234,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                             mAliveCallSource = "PAYMENT";
 
                             // 1. 세션이 살아있는지 검사 시작.
-                            mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, BookingActivity.this));
+                            mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, BookingActivity.this));
 
                             mFinalCheckDialog.dismiss();
 
@@ -1341,7 +1341,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         };
 
         showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_stop_onsale)//
-                , getString(R.string.dialog_btn_text_confirm), null, positiveListener, null, false);
+            , getString(R.string.dialog_btn_text_confirm), null, positiveListener, null, false);
     }
 
     private void showChangedPayDialog()
@@ -1358,7 +1358,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         };
 
         showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_changed_pay) //
-                , getString(R.string.dialog_btn_text_confirm), null, positiveListener, null, false);
+            , getString(R.string.dialog_btn_text_confirm), null, positiveListener, null, false);
     }
 
     private void showChangedBonusDialog()
@@ -1387,7 +1387,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 // 호텔 디테일 정보 재 요청
                 String params = String.format("?room_idx=%d&checkin_date=%s&length_stay=%d", mPay.getSaleRoomInformation().roomIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), mPay.getSaleRoomInformation().nights);
 
-                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_ROOM_PAYMENT).append(params).toString(), null, mSaleRoomPaymentJsonResponseListener, BookingActivity.this));
+                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_ROOM_PAYMENT).append(params).toString(), null, mSaleRoomPaymentJsonResponseListener, BookingActivity.this));
             }
         }, null, false);
     }
@@ -1415,7 +1415,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             strDate = dateFormat2.format(date);
 
             AnalyticsManager.getInstance(getApplicationContext()).purchaseComplete(transId, userIndex, String.valueOf(saleRoomInformation.roomIndex), //
-                    saleRoomInformation.hotelName, Label.PAYMENT, pay.checkInTime, pay.checkOutTime, pay.getType().name(), strDate, price);
+                saleRoomInformation.hotelName, Label.PAYMENT, pay.checkInTime, pay.checkOutTime, pay.getType().name(), strDate, price);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -1429,7 +1429,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         {
             HashMap<String, String> params = Util.getLoginParams(sharedPreference);
 
-            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mUserLoginJsonResponseListener, BookingActivity.this));
+            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mUserLoginJsonResponseListener, BookingActivity.this));
         } else
         {
             mDoReload = true;
@@ -1801,7 +1801,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 } else
                 {
                     // 3. 간편결제 credit card 요청
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_INFO).toString(), null, mUserSessionBillingCardInfoJsonResponseListener, BookingActivity.this));
+                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_INFO).toString(), null, mUserSessionBillingCardInfoJsonResponseListener, BookingActivity.this));
                 }
             } catch (Exception e)
             {
@@ -2048,7 +2048,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                         // 2. 마지막 가격 및 기타 이상이 없는지 검사
                         String params = String.format("?room_idx=%d&checkin_date=%s&length_stay=%d", mPay.getSaleRoomInformation().roomIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), mPay.getSaleRoomInformation().nights);
 
-                        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_ROOM_PAYMENT).append(params).toString(), null, mFinalCheckPayJsonResponseListener, BookingActivity.this));
+                        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_ROOM_PAYMENT).append(params).toString(), null, mFinalCheckPayJsonResponseListener, BookingActivity.this));
 
                     } else
                     {
@@ -2171,7 +2171,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                         }
 
                         // 2. 화면 정보 얻기
-                        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_ROOM_PAYMENT).append(params).toString(), null, mSaleRoomPaymentJsonResponseListener, BookingActivity.this));
+                        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_ROOM_PAYMENT).append(params).toString(), null, mSaleRoomPaymentJsonResponseListener, BookingActivity.this));
                     } else
                     {
                         requestLogin();
@@ -2213,7 +2213,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                     lockUI();
 
                     // 1. 세션이 연결되어있는지 검사.
-                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, BookingActivity.this));
+                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, BookingActivity.this));
                 } else
                 {
                     unLockUI();
@@ -2272,7 +2272,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                         Map<String, String> params = new HashMap<String, String>();
                         params.put("timeZone", "Asia/Seoul");
 
-                        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, BookingActivity.this));
+                        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, BookingActivity.this));
 
                         return;
                     }

@@ -167,7 +167,7 @@ public class PaymentWebActivity extends BaseActivity implements Constants
                 return;
             }
 
-            String url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_FNB_PAYMENT_SESSION_COMMON)).toString();
+            String url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(VolleyHttpClient.URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_FNB_PAYMENT_SESSION_COMMON)).toString();
 
             TicketInformation ticketInformation = mTicketPayment.getTicketInformation();
 
