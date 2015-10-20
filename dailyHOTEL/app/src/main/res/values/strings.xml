@@ -14,6 +14,7 @@
     <string name="label_hotel">호텔</string>
     <string name="label_fnb">레스토랑</string>
     <string name="label_dailygourmet">DAILYGOURMET</string>
+    <string name="label_dailyhotel">DAILYHOTEL</string>
 
     <!-- Hotel Grade -->
     <string name="grade_special">특급</string>
