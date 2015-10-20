@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 import com.twoheart.dailyhotel.util.Constants;
@@ -96,7 +97,7 @@ public class ForgotPwdActivity extends BaseActivity implements Constants, OnClic
 
             params.put("userEmail", mEmail);
 
-            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_CHECK_EMAIL).toString(), params, mUserCheckEmailJsonResponseListener, this));
+            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_CHECK_EMAIL).toString(), params, mUserCheckEmailJsonResponseListener, this));
         }
     }
 
@@ -173,7 +174,7 @@ public class ForgotPwdActivity extends BaseActivity implements Constants, OnClic
                         Map<String, String> params = new HashMap<String, String>();
                         params.put("userEmail", mEmail);
 
-                        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_CHANGE_PW).toString(), params, mUserChangePwJsonResponseListener, ForgotPwdActivity.this));
+                        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_CHANGE_PW).toString(), params, mUserChangePwJsonResponseListener, ForgotPwdActivity.this));
                     }
                 } else
                 {

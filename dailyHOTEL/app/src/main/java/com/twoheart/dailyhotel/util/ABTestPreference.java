@@ -10,6 +10,7 @@ import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
+import com.twoheart.dailyhotel.network.VolleyHttpClient;
 import com.twoheart.dailyhotel.network.request.DailyHotelJsonRequest;
 import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
 
@@ -72,7 +73,7 @@ public class ABTestPreference
         {
         }
 
-        requestQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(Constants.URL_DAILYHOTEL_SERVER).append(Constants.URL_WEBAPI_ABTEST_TESTCASE).append(params).toString(), null, new DailyHotelJsonResponseListener()
+        requestQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(Constants.URL_WEBAPI_ABTEST_TESTCASE).append(params).toString(), null, new DailyHotelJsonResponseListener()
         {
             @Override
             public void onResponse(String url, JSONObject response)
@@ -134,7 +135,7 @@ public class ABTestPreference
         params.append("?device_id=");
         params.append(Util.getDeviceUUID(context));
 
-        requestQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(Constants.URL_DAILYHOTEL_SERVER).append(Constants.URL_WEBAPI_ABTEST_KAKAO_CONSULT_FEEDBACK).append(params).toString(), null, new DailyHotelJsonResponseListener()
+        requestQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(Constants.URL_WEBAPI_ABTEST_KAKAO_CONSULT_FEEDBACK).append(params).toString(), null, new DailyHotelJsonResponseListener()
         {
             @Override
             public void onResponse(String url, JSONObject response)

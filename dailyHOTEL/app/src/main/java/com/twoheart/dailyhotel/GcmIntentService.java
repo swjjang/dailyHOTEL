@@ -305,11 +305,11 @@ public class GcmIntentService extends IntentService implements Constants
             NotificationCompat.Builder builder = new NotificationCompat.Builder(GcmIntentService.this);
 
             builder.setContentTitle(getString(R.string.app_name)) //
-                    .setContentText(mMessage) //
-                    .setTicker(getResources().getString(R.string.app_name)) //
-                    .setSound(mUri) //
-                    .setAutoCancel(true) //
-                    .setSmallIcon(R.mipmap.ic_launcher);
+                .setContentText(mMessage) //
+                .setTicker(getResources().getString(R.string.app_name)) //
+                .setSound(mUri) //
+                .setAutoCancel(true) //
+                .setSmallIcon(R.mipmap.ic_launcher);
 
             if (bitmap != null)
             {

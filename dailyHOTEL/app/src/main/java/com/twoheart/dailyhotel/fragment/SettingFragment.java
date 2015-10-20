@@ -147,7 +147,7 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
         loginStr = getString(R.string.frag_login);
 
         lockUI();
-        mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, mHostActivity));
+        mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, mHostActivity));
     }
 
     @Override
@@ -344,7 +344,7 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
             if ("alive".equalsIgnoreCase(result) == true)
             { // session alive
                 // 사용자 정보 요청.
-                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, mHostActivity));
+                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, mHostActivity));
 
             } else
             {

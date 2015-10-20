@@ -67,9 +67,9 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setContentTitle(title) //
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(msg)).setContentText(msg).setTicker(ticker) //
-                .setAutoCancel(true) //
-                .setSmallIcon(R.mipmap.ic_launcher).setVibrate(new long[]{100, 500, 100, 500}).setWhen(System.currentTimeMillis()).setContentIntent(pendingIntent);
+            .setStyle(new NotificationCompat.BigTextStyle().bigText(msg)).setContentText(msg).setTicker(ticker) //
+            .setAutoCancel(true) //
+            .setSmallIcon(R.mipmap.ic_launcher).setVibrate(new long[]{100, 500, 100, 500}).setWhen(System.currentTimeMillis()).setContentIntent(pendingIntent);
 
         notificationManager.notify(0, builder.build());
     }

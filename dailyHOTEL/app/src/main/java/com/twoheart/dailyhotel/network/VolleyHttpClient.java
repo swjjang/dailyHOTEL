@@ -40,6 +40,8 @@ import javax.net.ssl.X509TrustManager;
 
 public class VolleyHttpClient implements Constants
 {
+    public static String URL_DAILYHOTEL_LB_SERVER = URL_DAILYHOTEL_LB_SERVER_DEFAULT;
+    public static String URL_DAILYHOTEL_SERVER = URL_DAILYHOTEL_SERVER_DEFAULT;
     public static final int TIME_OUT = 5000;
     public static final int MAX_RETRY = 2;
     private static final String KEY_DAILYHOTEL_COOKIE = "JSESSIONID";

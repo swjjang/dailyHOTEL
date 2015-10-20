@@ -235,8 +235,8 @@ public class PersistentCookieStore implements CookieStore
     private boolean checkPathsMatch(String cookiePath, String requestPath)
     {
         return requestPath.equals(cookiePath) ||
-                (requestPath.startsWith(cookiePath) && cookiePath.charAt(cookiePath.length() - 1) == '/') ||
-                (requestPath.startsWith(cookiePath) && requestPath.substring(cookiePath.length()).charAt(0) == '/');
+            (requestPath.startsWith(cookiePath) && cookiePath.charAt(cookiePath.length() - 1) == '/') ||
+            (requestPath.startsWith(cookiePath) && requestPath.substring(cookiePath.length()).charAt(0) == '/');
     }
 
     private void removeFromPersistence(URI uri, List<HttpCookie> cookiesToRemove)

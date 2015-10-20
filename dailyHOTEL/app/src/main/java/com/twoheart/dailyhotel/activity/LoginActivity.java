@@ -283,7 +283,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         mStoreParams.put("user_type", "facebook");
         params.put("user_type", "facebook");
 
-        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mSocialUserLoginJsonResponseListener, LoginActivity.this));
+        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mSocialUserLoginJsonResponseListener, LoginActivity.this));
     }
 
     private void registerKakaokUser(long id)
@@ -326,7 +326,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         mStoreParams.put("user_type", "kakao_talk");
         params.put("user_type", "kakao_talk");
 
-        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mSocialUserLoginJsonResponseListener, LoginActivity.this));
+        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mSocialUserLoginJsonResponseListener, LoginActivity.this));
     }
 
     @Override
@@ -356,6 +356,12 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 return;
             }
 
+            // 서버 포트 바꾸기
+            if (changeServerPort() == true)
+            {
+                return;
+            }
+
             lockUI();
 
             String md5 = Crypto.encrypt(mPasswordEditText.getText().toString().trim()).replace("\n", "");
@@ -378,10 +384,40 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             mStoreParams.put("social_id", "0");
             mStoreParams.put("user_type", "normal");
 
-            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mDailyUserLoginJsonResponseListener, this));
+            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mDailyUserLoginJsonResponseListener, this));
 
             AnalyticsManager.getInstance(getApplicationContext()).recordEvent(Screen.LOGIN, Action.CLICK, Label.LOGIN, 0L);
         }
+    }
+
+    private boolean changeServerPort()
+    {
+        boolean isChanged = false;
+
+        // 서버 포트 바꾸기
+        if ("dh.8080".equalsIgnoreCase(mIdEditText.getText().toString().trim()) == true || "dh.8080".equalsIgnoreCase(mPasswordEditText.getText().toString().trim()) == true)
+        {
+            isChanged = true;
+            VolleyHttpClient.URL_DAILYHOTEL_SERVER = URL_DAILYHOTEL_SERVER_8080;
+            VolleyHttpClient.URL_DAILYHOTEL_LB_SERVER = URL_DAILYHOTEL_SERVER_8080;
+
+            DailyToast.showToast(this, "8080(으)로 변경되었습니다.", Toast.LENGTH_LONG);
+        } else if ("dh.8081".equalsIgnoreCase(mIdEditText.getText().toString().trim()) == true || "dh.8081".equalsIgnoreCase(mPasswordEditText.getText().toString().trim()) == true)
+        {
+            isChanged = true;
+            VolleyHttpClient.URL_DAILYHOTEL_SERVER = URL_DAILYHOTEL_SERVER_8081;
+            VolleyHttpClient.URL_DAILYHOTEL_LB_SERVER = URL_DAILYHOTEL_SERVER_8081;
+
+            DailyToast.showToast(this, "8081(으)로 변경되었습니다.", Toast.LENGTH_LONG);
+        }
+
+        if(isChanged == true)
+        {
+            mIdEditText.setText(null);
+            mPasswordEditText.setText(null);
+        }
+
+        return isChanged;
     }
 
     public boolean isBlankFields()
@@ -530,7 +566,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 mRegPushParams.put("notification_id", regId);
                 mRegPushParams.put("device_type", GCM_DEVICE_TYPE_ANDROID);
 
-                mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_GCM_REGISTER).toString(), mRegPushParams, mGcmRegisterJsonResponseListener, new ErrorListener()
+                mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_GCM_REGISTER).toString(), mRegPushParams, mGcmRegisterJsonResponseListener, new ErrorListener()
                 {
                     @Override
                     public void onErrorResponse(VolleyError arg0)
@@ -700,7 +736,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
                         mAutoLoginSwitch.setChecked(true);
 
-                        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mSocialUserLoginJsonResponseListener, LoginActivity.this));
+                        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mSocialUserLoginJsonResponseListener, LoginActivity.this));
 
                         return;
                     }
@@ -829,7 +865,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                         VolleyHttpClient.createCookie();
                         storeLoginInfo();
 
-                        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, LoginActivity.this));
+                        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, LoginActivity.this));
 
                         Editor editor = sharedPreference.edit();
                         editor.putString("collapseKey", "");
@@ -878,7 +914,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     VolleyHttpClient.createCookie();
                     storeLoginInfo();
 
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, LoginActivity.this));
+                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, LoginActivity.this));
 
                     Editor editor = sharedPreference.edit();
                     editor.putString("collapseKey", "");
@@ -886,7 +922,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 } else
                 {
                     // 페이스북, 카카오톡 로그인 정보가 없는 경우 회원 가입으로 전환한다
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNUP).toString(), mStoreParams, mUserSignupJsonResponseListener, LoginActivity.this));
+                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNUP).toString(), mStoreParams, mUserSignupJsonResponseListener, LoginActivity.this));
                 }
 
                 //                {

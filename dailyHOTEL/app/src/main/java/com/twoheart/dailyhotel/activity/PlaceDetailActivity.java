@@ -221,7 +221,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
         Map<String, String> params = new HashMap<String, String>();
         params.put("timeZone", "Asia/Seoul");
 
-        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, this));
+        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, this));
 
         super.onResume();
     }
@@ -282,7 +282,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             {
                 if (resultCode == RESULT_OK)
                 {
-                    mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, this));
+                    mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, this));
                 }
                 break;
             }
@@ -420,7 +420,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
             lockUI();
 
-            mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, PlaceDetailActivity.this));
+            mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, PlaceDetailActivity.this));
 
             HashMap<String, String> params = new HashMap<String, String>();
             params.put(Label.FNB_TICKET_NAME, ticketInformation.name);
@@ -664,7 +664,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             {
                 // session alive
                 // 사용자 정보 요청.
-                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION_OMISSION).toString(), null, mUserFacebookInformationJsonResponseListener, PlaceDetailActivity.this));
+                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION_OMISSION).toString(), null, mUserFacebookInformationJsonResponseListener, PlaceDetailActivity.this));
 
             } else if ("dead".equalsIgnoreCase(result) == true)
             {
@@ -674,7 +674,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 {
                     HashMap<String, String> params = Util.getLoginParams(sharedPreference);
 
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mUserLoginJsonResponseListener, PlaceDetailActivity.this));
+                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mUserLoginJsonResponseListener, PlaceDetailActivity.this));
                 } else
                 {
                     startLoginActivity();
@@ -712,7 +712,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                         //로그인 성공
                         VolleyHttpClient.createCookie();
 
-                        mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, PlaceDetailActivity.this));
+                        mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, PlaceDetailActivity.this));
                         return;
                     }
                 }

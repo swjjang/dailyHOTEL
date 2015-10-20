@@ -67,9 +67,9 @@ public class FinalCheckLayout extends FrameLayout
                 int boldLength = "예약 취소, 변경 및 환불이 불가".length();
 
                 spannableStringBuilder.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.dialog_title_text)), //
-                        boldStartIndex, boldStartIndex + boldLength, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    boldStartIndex, boldStartIndex + boldLength, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 spannableStringBuilder.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), //
-                        boldStartIndex, boldStartIndex + boldLength, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    boldStartIndex, boldStartIndex + boldLength, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                 messageTextView.setText(spannableStringBuilder);
             } else

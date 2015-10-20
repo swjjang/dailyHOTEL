@@ -170,16 +170,16 @@ public class PaymentActivity extends BaseActivity implements Constants
                 return;
             }
 
-            String url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_PAYMENT_SESSION_COMMON_PAYMENT)).toString();
+            String url = new StringBuilder(DailyHotelRequest.getUrlDecoderEx(VolleyHttpClient.URL_DAILYHOTEL_SERVER)).append(DailyHotelRequest.getUrlDecoderEx(URL_WEBAPI_PAYMENT_SESSION_COMMON_PAYMENT)).toString();
 
             SaleRoomInformation saleRoomInformation = mPay.getSaleRoomInformation();
 
             ArrayList<String> postParameterKey = new ArrayList<String>(Arrays.asList("room_idx", "payment_type", "checkin_date", "length_stay", "bonus", "guest_name", "guest_phone", "guest_email"));
             ArrayList<String> postParameterValue = new ArrayList<String>(Arrays.asList(String.valueOf(saleRoomInformation.roomIndex), //
-                    mPay.getType().name(), //
-                    mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), //
-                    String.valueOf(saleRoomInformation.nights), //
-                    String.valueOf(mPay.isSaleCredit() ? mPay.credit : 0), guest.name, guest.phone, guest.email));
+                mPay.getType().name(), //
+                mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), //
+                String.valueOf(saleRoomInformation.nights), //
+                String.valueOf(mPay.isSaleCredit() ? mPay.credit : 0), guest.name, guest.phone, guest.email));
 
             byte[] postParameter = parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]), postParameterValue.toArray(new String[postParameterValue.size()]));
 

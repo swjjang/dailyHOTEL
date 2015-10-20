@@ -154,11 +154,11 @@ public class GourmetListAdapter extends PlaceListAdapter
                 if (Util.getLCDWidth(context) < 720)
                 {
                     Glide.with(context).load(place.imageUrl).placeholder(R.drawable.img_placeholder)//
-                            .crossFade().override(360, 240).into(viewHolder.hotelImageView);
+                        .crossFade().override(360, 240).into(viewHolder.hotelImageView);
                 } else
                 {
                     Glide.with(context).load(place.imageUrl).placeholder(R.drawable.img_placeholder)//
-                            .crossFade().into(viewHolder.hotelImageView);
+                        .crossFade().into(viewHolder.hotelImageView);
                 }
 
                 // SOLD OUT 표시

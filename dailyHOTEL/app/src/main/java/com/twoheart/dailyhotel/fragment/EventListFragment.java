@@ -200,7 +200,7 @@ public class EventListFragment extends BaseFragment implements Constants
             {
                 // session alive
                 // 사용자 정보 요청.
-                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, baseActivity));
+                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, baseActivity));
             } else if (true == "dead".equalsIgnoreCase(result))
             {
                 // session dead
@@ -209,14 +209,14 @@ public class EventListFragment extends BaseFragment implements Constants
                 {
                     HashMap<String, String> params = Util.getLoginParams(baseActivity.sharedPreference);
 
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mUserLoginJsonResponseListener, baseActivity));
+                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mUserLoginJsonResponseListener, baseActivity));
                 } else
                 {
                     unLockUI();
 
                     // 이벤트 리스트 얻어오기
                     // 이벤트 요청 화면으로 이동
-                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_DAILY_EVENT_LIST).toString(), null, mDailyEventListJsonResponseListener, baseActivity));
+                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_DAILY_EVENT_LIST).toString(), null, mDailyEventListJsonResponseListener, baseActivity));
                 }
             } else
             {
@@ -295,7 +295,7 @@ public class EventListFragment extends BaseFragment implements Constants
             if (baseActivity.sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false) && mUser != null)
             {
                 if (Util.isTextEmpty(mUser.getAccessToken()) == false //
-                        && (Util.isTextEmpty(mUser.getEmail()) == true || Util.isTextEmpty(mUser.getName()) == true || Util.isTextEmpty(mUser.getPhone()) == true))
+                    && (Util.isTextEmpty(mUser.getEmail()) == true || Util.isTextEmpty(mUser.getName()) == true || Util.isTextEmpty(mUser.getPhone()) == true))
                 {
                     Intent intent = new Intent(baseActivity, SignupActivity.class);
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER, mUser);
@@ -345,12 +345,12 @@ public class EventListFragment extends BaseFragment implements Constants
                 if (mSelectedEvent == null)
                 {
                     String params = String.format("?user_idx=%s", mUser.getUserIdx());
-                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_DAILY_EVENT_LIST).append(params).toString(), null, mDailyEventListJsonResponseListener, baseActivity));
+                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_DAILY_EVENT_LIST).append(params).toString(), null, mDailyEventListJsonResponseListener, baseActivity));
 
                 } else
                 {
                     if (Util.isTextEmpty(mUser.getAccessToken()) == false //
-                            && (Util.isTextEmpty(mUser.getEmail()) == true || Util.isTextEmpty(mUser.getName()) == true || Util.isTextEmpty(mUser.getPhone()) == true))
+                        && (Util.isTextEmpty(mUser.getEmail()) == true || Util.isTextEmpty(mUser.getName()) == true || Util.isTextEmpty(mUser.getPhone()) == true))
                     {
                         Intent intent = new Intent(baseActivity, SignupActivity.class);
                         intent.putExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER, mUser);
@@ -427,7 +427,7 @@ public class EventListFragment extends BaseFragment implements Constants
         baseActivity.setActionBar(getString(R.string.actionbar_title_event_list_frag), false);
 
         lockUI();
-        mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, baseActivity));
+        mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, baseActivity));
     }
 
     @Override
@@ -484,7 +484,7 @@ public class EventListFragment extends BaseFragment implements Constants
             params = String.format("?user_idx=%s&daily_event_idx=%d&store_type=%s", userIndex, event.index, "skt");
         }
 
-        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_DAILY_EVENT_PAGE).append(params).toString(), null, mDailyEventPageJsonResponseListener, baseActivity));
+        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_DAILY_EVENT_PAGE).append(params).toString(), null, mDailyEventPageJsonResponseListener, baseActivity));
     }
 
     public interface OnUserActionListener

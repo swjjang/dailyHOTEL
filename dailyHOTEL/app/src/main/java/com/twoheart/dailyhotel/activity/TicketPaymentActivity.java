@@ -111,7 +111,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
             Map<String, String> params = new HashMap<String, String>();
             params.put("timeZone", "Asia/Seoul");
 
-            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, TicketPaymentActivity.this));
+            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, TicketPaymentActivity.this));
         }
     }
 
@@ -192,7 +192,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
         lockUI();
 
         // 1. 세션이 연결되어있는지 검사.
-        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, this));
+        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, this));
     }
 
     protected void activityResulted(int requestCode, int resultCode, Intent intent)
@@ -416,7 +416,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
                     lockUI();
 
                     // credit card 요청
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_INFO).toString(), null, mUserRegisterBillingCardInfoJsonResponseListener, TicketPaymentActivity.this));
+                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_INFO).toString(), null, mUserRegisterBillingCardInfoJsonResponseListener, TicketPaymentActivity.this));
                     return;
 
                 case CODE_RESULT_PAYMENT_BILLING_DUPLICATE:
@@ -766,7 +766,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
             strDate = dateFormat2.format(date);
 
             AnalyticsManager.getInstance(getApplicationContext()).purchaseComplete(transId, userIndex, String.valueOf(ticketInformation.index), //
-                    ticketInformation.placeName, Label.PAYMENT, ticketPayment.checkInTime, ticketPayment.checkOutTime, ticketPayment.paymentType.name(), strDate, price);
+                ticketInformation.placeName, Label.PAYMENT, ticketPayment.checkInTime, ticketPayment.checkOutTime, ticketPayment.paymentType.name(), strDate, price);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -780,7 +780,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
         {
             HashMap<String, String> params = Util.getLoginParams(sharedPreference);
 
-            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mUserLoginJsonResponseListener, TicketPaymentActivity.this));
+            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SIGNIN).toString(), params, mUserLoginJsonResponseListener, TicketPaymentActivity.this));
         } else
         {
             mDoReload = true;
@@ -848,7 +848,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
                 {
                     lockUI();
 
-                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, TicketPaymentActivity.this));
+                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, TicketPaymentActivity.this));
                 } else
                 {
                     unLockUI();
@@ -904,7 +904,7 @@ public abstract class TicketPaymentActivity extends BaseActivity
                         Map<String, String> params = new HashMap<String, String>();
                         params.put("timeZone", "Asia/Seoul");
 
-                        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, TicketPaymentActivity.this));
+                        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_COMMON_DATETIME).toString(), params, mDateTimeJsonResponseListener, TicketPaymentActivity.this));
                         return;
                     }
                 }
