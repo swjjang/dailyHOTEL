@@ -214,7 +214,7 @@
     <!-- KaKaoLink Message -->
     <string name="kakaolink_msg_prefix">좋은 어플 추천해 드려요~\n오늘 남은 객실만 최대 70% 할인하는 데일리호텔이에요.추천인코드 : </string>
     <string name="kakaolink_msg_suffix">을 입력하면 5,000원 바로 할인!</string>
-    <string name="kakaolink_msg_invited_friend">%1$s님이 추천하는 여행&amp;휴가 필수 어플!\n[데일리호텔] 어플 설치하고, 전국의 특급호텔과 리조트를 반값에 예약하세요!\n\n%2$s님의 추천인 코드 %3$s를 회원가입 시 입력하면,\n바로 사용가능한 5000원의 적립금을 드려요!\n\n아래 링크를 누르고 [데일리호텔] 앱 설치한 후,\n추천인 코드 입력으로 5000원의 추가 할인도 받아가세요!</string>
+    <string name="kakaolink_msg_invited_friend">%1$s님이 추천하는 필수 어플!\n호텔, 레스토랑 할인 예약 앱 [데일리호텔] 설치하고,\n매일 엄선된 전국 특급호텔과 상위 %2$s 레스토랑을 예약하세요!\n\n%3$s님의 추천인코드 %4$s를 회원가입 시 입력하면,\n바로 사용가능한 5,000원의 적립금을 드려요!\n\n지금 [데일리호텔]에서\n하루를 특별하게 만들어줄\n특급호텔과 레스토랑을 만나보세요!</string>
 
     <!-- Alarm Message -->
     <string name="alarm_title">DAILYHOTEL</string>
@@ -422,7 +422,7 @@
 
     <!-- KaKaoLinkManager -->
     <string name="kakao_btn_move">앱으로 이동</string>
-    <string name="kakao_btn_invited_friend">데일리호텔 할인받기!</string>
+    <string name="kakao_btn_invited_friend">데일리호텔 보러가기</string>
     <string name="kakao_btn_go_hotel">호텔 보러 가기!</string>
     <string name="kakao_btn_go_fnb">오늘의 고메 확인하기</string>
     <string name="kakao_btn_share_hotel">친구의 추천호텔!\n%1$s에서의 근사한 하루!\n\n체크인 %2$s | 체크아웃 %3$s (%4$d박 %5$d일)\n\n맘에 드는 객실 확인하고 잊지 못할 하루를 예약하세요!</string>
