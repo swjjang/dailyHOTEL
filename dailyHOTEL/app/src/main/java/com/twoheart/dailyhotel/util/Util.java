@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.util;
 
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -17,6 +18,7 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -24,13 +26,18 @@ import android.provider.Settings.Secure;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
+import com.twoheart.dailyhotel.view.widget.FontManager;
+
+import net.simonvt.numberpicker.NumberPicker;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
@@ -418,5 +425,96 @@ public class Util implements Constants
         }
 
         return params;
+    }
+
+    public static Dialog showDatePickerDialog(BaseActivity baseActivity, String titleText, final String[] values, String selectValue, String positive //
+        , final View.OnClickListener positiveListener)
+    {
+        final Dialog dialog = new Dialog(baseActivity);
+
+        LayoutInflater layoutInflater = (LayoutInflater) baseActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View dialogView = layoutInflater.inflate(R.layout.view_pickerdialog_layout, null, false);
+
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setCanceledOnTouchOutside(false);
+
+        // 상단
+        TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
+        titleTextView.setVisibility(View.VISIBLE);
+
+        if (Util.isTextEmpty(titleText) == true)
+        {
+            titleTextView.setText(baseActivity.getString(R.string.dialog_notice2));
+        } else
+        {
+            titleTextView.setText(titleText);
+        }
+
+        // 메시지
+        final NumberPicker numberPicker = (NumberPicker) dialogView.findViewById(R.id.numberPicker);
+        numberPicker.setMinValue(0);
+        numberPicker.setMaxValue(values.length - 1);
+        numberPicker.setFocusable(true);
+        numberPicker.setFocusableInTouchMode(true);
+        numberPicker.setDisplayedValues(values);
+        numberPicker.setTextTypeface(FontManager.getInstance(baseActivity).getRegularTypeface());
+
+        for (int i = 0; i < values.length; i++)
+        {
+            if (values[i].equalsIgnoreCase(selectValue) == true)
+            {
+                numberPicker.setValue(i);
+                break;
+            }
+        }
+
+        // 버튼
+        View buttonLayout = dialogView.findViewById(R.id.buttonLayout);
+        View twoButtonLayout = buttonLayout.findViewById(R.id.twoButtonLayout);
+        View oneButtonLayout = buttonLayout.findViewById(R.id.oneButtonLayout);
+
+        twoButtonLayout.setVisibility(View.GONE);
+        oneButtonLayout.setVisibility(View.VISIBLE);
+
+        TextView confirmTextView = (TextView) oneButtonLayout.findViewById(R.id.confirmTextView);
+
+        confirmTextView.setText(positive);
+        confirmTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (dialog != null && dialog.isShowing())
+                {
+                    dialog.dismiss();
+                }
+
+                if (positiveListener != null)
+                {
+                    v.setTag(numberPicker.getValue());
+                    positiveListener.onClick(v);
+                }
+            }
+        });
+
+        dialog.setContentView(dialogView);
+
+        if (baseActivity.isFinishing() == true)
+        {
+            return null;
+        }
+
+        try
+        {
+            dialog.show();
+
+            return dialog;
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        return null;
     }
 }

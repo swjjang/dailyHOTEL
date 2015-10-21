@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
@@ -41,9 +40,6 @@ import com.twoheart.dailyhotel.view.GourmetBookingLayout;
 import com.twoheart.dailyhotel.view.GourmetBookingLayout.UserInformationType;
 import com.twoheart.dailyhotel.view.widget.DailySignatureView;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
-import com.twoheart.dailyhotel.view.widget.FontManager;
-
-import net.simonvt.numberpicker.NumberPicker;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -63,7 +59,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
 
     public interface OnUserActionListener
     {
-        public void selectTicketTime();
+        public void selectTicketTime(String selectedTime);
 
         public void plusTicketCount();
 
@@ -451,84 +447,6 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
         return dialog;
     }
 
-    public void showDatePickerDialog(String titleText, final String[] values, String positive //
-        , final View.OnClickListener positiveListener)
-    {
-        final Dialog dialog = new Dialog(this);
-
-        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View dialogView = layoutInflater.inflate(R.layout.view_pickerdialog_layout, null, false);
-
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        dialog.setCanceledOnTouchOutside(false);
-
-        // 상단
-        TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
-        titleTextView.setVisibility(View.VISIBLE);
-
-        if (Util.isTextEmpty(titleText) == true)
-        {
-            titleTextView.setText(getString(R.string.dialog_notice2));
-        } else
-        {
-            titleTextView.setText(titleText);
-        }
-
-        // 메시지
-        final NumberPicker numberPicker = (NumberPicker) dialogView.findViewById(R.id.numberPicker);
-        numberPicker.setMinValue(0);
-        numberPicker.setMaxValue(values.length - 1);
-        numberPicker.setFocusable(true);
-        numberPicker.setFocusableInTouchMode(true);
-        numberPicker.setDisplayedValues(values);
-        numberPicker.setTextTypeface(FontManager.getInstance(this).getRegularTypeface());
-
-        // 버튼
-        View buttonLayout = dialogView.findViewById(R.id.buttonLayout);
-        View twoButtonLayout = buttonLayout.findViewById(R.id.twoButtonLayout);
-        View oneButtonLayout = buttonLayout.findViewById(R.id.oneButtonLayout);
-
-        twoButtonLayout.setVisibility(View.GONE);
-        oneButtonLayout.setVisibility(View.VISIBLE);
-
-        TextView confirmTextView = (TextView) oneButtonLayout.findViewById(R.id.confirmTextView);
-
-        confirmTextView.setText(positive);
-        confirmTextView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (dialog != null && dialog.isShowing())
-                {
-                    dialog.dismiss();
-                }
-
-                if (positiveListener != null)
-                {
-                    v.setTag(numberPicker.getValue());
-                    positiveListener.onClick(v);
-                }
-            }
-        });
-
-        dialog.setContentView(dialogView);
-
-        if (isFinishing() == true)
-        {
-            return;
-        }
-
-        try
-        {
-            dialog.show();
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
-    }
-
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // User ActionListener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -559,9 +477,14 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
     private OnUserActionListener mOnUserActionListener = new OnUserActionListener()
     {
         @Override
-        public void selectTicketTime()
+        public void selectTicketTime(String selectedTime)
         {
-            showDatePickerDialog(getString(R.string.label_booking_select_ticket_time), mTicketPayment.getTicketTimes(), getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            Dialog dialog = Util.showDatePickerDialog(GourmetPaymentActivity.this, getString(R.string.label_booking_select_ticket_time), mTicketPayment.getTicketTimes(), selectedTime, getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
@@ -572,6 +495,18 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
                     mGourmetBookingLayout.setTicketTime(mTicketPayment.ticketTime);
                 }
             });
+
+            if (dialog != null)
+            {
+                dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
+                {
+                    @Override
+                    public void onDismiss(DialogInterface dialog)
+                    {
+                        releaseUiComponent();
+                    }
+                });
+            }
         }
 
         @Override

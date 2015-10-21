@@ -175,7 +175,7 @@ public class GourmetBookingLayout implements OnCheckedChangeListener
             {
                 if (mOnUserActionListener != null)
                 {
-                    mOnUserActionListener.selectTicketTime();
+                    mOnUserActionListener.selectTicketTime(mTicketTimeTextView.getText().toString());
                 }
             }
         });
@@ -186,10 +186,7 @@ public class GourmetBookingLayout implements OnCheckedChangeListener
             @Override
             public void onClick(View v)
             {
-                if (mOnUserActionListener != null)
-                {
-                    mOnUserActionListener.selectTicketTime();
-                }
+                mTicketTimeTextView.performClick();
             }
         });
 
