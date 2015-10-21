@@ -86,7 +86,7 @@ public abstract class BaseFragment extends Fragment implements Constants, OnLoad
 
     public void onError(Exception error)
     {
-        releaseUiComponent();
+        unLockUI();
 
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -100,7 +100,7 @@ public abstract class BaseFragment extends Fragment implements Constants, OnLoad
 
     public void onError()
     {
-        releaseUiComponent();
+        unLockUI();
 
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -115,7 +115,7 @@ public abstract class BaseFragment extends Fragment implements Constants, OnLoad
     @Override
     public void onErrorResponse(VolleyError error)
     {
-        releaseUiComponent();
+        unLockUI();
 
         BaseActivity baseActivity = (BaseActivity) getActivity();
 

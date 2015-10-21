@@ -11,6 +11,7 @@ public class DailyPreference
     private static final String KEY_OPENING_ALARM = "1"; // 알람
     private static final String KEY_NEW_EVENT_TODAY_FNB = "2"; // 앱 처음 실행시 FNB에  New 아이콘 넣기
     private static final String KEY_LAST_MENU = "3"; // 마지막 메뉴 리스트가 무엇인지
+    private static final String KEY_SHOW_GUIDE = "4"; // 가이드를 봤는지 여부
 
     private static DailyPreference mInstance;
     private SharedPreferences mPreferences;
@@ -30,6 +31,15 @@ public class DailyPreference
         }
 
         return mInstance;
+    }
+
+    public void clear()
+    {
+        if (mEditor != null)
+        {
+            mEditor.clear();
+            mEditor.apply();
+        }
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -99,11 +109,23 @@ public class DailyPreference
         }
     }
 
-    public void clear()
+    public boolean isShowGuide()
+    {
+        boolean result = false;
+
+        if (mPreferences != null)
+        {
+            result = mPreferences.getBoolean(KEY_SHOW_GUIDE, false);
+        }
+
+        return result;
+    }
+
+    public void setShowGuide(boolean isShow)
     {
         if (mEditor != null)
         {
-            mEditor.clear();
+            mEditor.putBoolean(KEY_SHOW_GUIDE, isShow);
             mEditor.apply();
         }
     }
