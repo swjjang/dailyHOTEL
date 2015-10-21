@@ -54,10 +54,187 @@ public class EventListFragment extends BaseFragment implements Constants
 {
     private EventListLayout mEventListLayout;
     private Event mSelectedEvent;
-    private Customer mUser;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
+        mEventListLayout = new EventListLayout(getActivity());
+        mEventListLayout.setOnUserActionListener(mOnUserActionListener);
+
+        return mEventListLayout.createView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    public void onStart()
+    {
+        AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.EVENT);
+
+        super.onStart();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null)
+        {
+            return;
+        }
+
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null)
+        {
+            return;
+        }
+
+        // ActionBar Setting
+        baseActivity.setActionBar(getString(R.string.actionbar_title_event_list_frag), false);
+
+        lockUI();
+
+        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_DAILY_EVENT_LIST).toString(), null, mDailyEventListJsonResponseListener, baseActivity));
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null)
+        {
+            return;
+        }
+
+        unLockUI();
+        releaseUiComponent();
+        baseActivity.releaseUiComponent();
+
+        switch (requestCode)
+        {
+            case CODE_REQUEST_ACTIVITY_LOGIN:
+            case CODE_REQUEST_ACTIVITY_USERINFO_UPDATE:
+            {
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    if (mOnUserActionListener != null)
+                    {
+                        mOnUserActionListener.onEventClick(mSelectedEvent);
+                    }
+                } else
+                {
+                    mSelectedEvent = null;
+                }
+                break;
+            }
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void requestEvent(Event event, String userIndex)
+    {
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null || baseActivity.isFinishing())
+        {
+            return;
+        }
+
+        lockUI();
+
+        String params;
+
+        if (RELEASE_STORE == Stores.PLAY_STORE || RELEASE_STORE == Stores.N_STORE)
+        {
+            params = String.format("?user_idx=%s&daily_event_idx=%d&store_type=%s", userIndex, event.index, "google");
+        } else
+        {
+            params = String.format("?user_idx=%s&daily_event_idx=%d&store_type=%s", userIndex, event.index, "skt");
+        }
+
+        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_DAILY_EVENT_PAGE).append(params).toString(), null, mDailyEventPageJsonResponseListener, baseActivity));
+    }
+
+    public interface OnUserActionListener
+    {
+        public void onEventClick(Event event);
+    }
+
+    private boolean isEmptyTextField(String... fieldText)
+    {
+        for (int i = 0; i < fieldText.length; i++)
+        {
+            if (Util.isTextEmpty(fieldText[i]) == true)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void moveToUserInfoUpdate(Customer user, int recommender)
+    {
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null || baseActivity.isFinishing())
+        {
+            return;
+        }
+
+        Intent intent = new Intent(baseActivity, SignupActivity.class);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER, user);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_RECOMMENDER, recommender);
+
+        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_USERINFO_UPDATE);
+        baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // User Action Listener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private EventListFragment.OnUserActionListener mOnUserActionListener = new EventListFragment.OnUserActionListener()
+    {
+        @Override
+        public void onEventClick(Event event)
+        {
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (baseActivity == null)
+            {
+                return;
+            }
+
+            if (isLockUiComponent() == true)
+            {
+                return;
+            }
+
+            lockUI();
+
+            mSelectedEvent = event;
+
+            mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, baseActivity));
+        }
+    };
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Listener
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     private DailyHotelJsonResponseListener mDailyEventListJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -153,6 +330,8 @@ public class EventListFragment extends BaseFragment implements Constants
                     if (isSignin == true)
                     {
                         VolleyHttpClient.createCookie();
+
+                        mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, baseActivity));
                         return;
                     }
                 }
@@ -167,18 +346,20 @@ public class EventListFragment extends BaseFragment implements Constants
                 ed.commit();
 
                 unLockUI();
+
+                // 로그인이 되어있지 않으면 회원 가입으로 이동
+                Intent intent = new Intent(baseActivity, LoginActivity.class);
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
+                baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
             } catch (JSONException e)
             {
                 onError(e);
-            } finally
-            {
-                unLockUI();
             }
         }
     };
+
     private DailyHotelStringResponseListener mUserAliveStringResponseListener = new DailyHotelStringResponseListener()
     {
-
         @Override
         public void onResponse(String url, String response)
         {
@@ -200,7 +381,7 @@ public class EventListFragment extends BaseFragment implements Constants
             {
                 // session alive
                 // 사용자 정보 요청.
-                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFO).toString(), null, mUserInfoJsonResponseListener, baseActivity));
+                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION_OMISSION).toString(), null, mUserInformationJsonResponseListener, baseActivity));
             } else if (true == "dead".equalsIgnoreCase(result))
             {
                 // session dead
@@ -214,9 +395,10 @@ public class EventListFragment extends BaseFragment implements Constants
                 {
                     unLockUI();
 
-                    // 이벤트 리스트 얻어오기
-                    // 이벤트 요청 화면으로 이동
-                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_DAILY_EVENT_LIST).toString(), null, mDailyEventListJsonResponseListener, baseActivity));
+                    // 로그인이 되어있지 않으면 회원 가입으로 이동
+                    Intent intent = new Intent(baseActivity, LoginActivity.class);
+                    startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
+                    baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
                 }
             } else
             {
@@ -224,9 +406,9 @@ public class EventListFragment extends BaseFragment implements Constants
             }
         }
     };
+
     private DailyHotelJsonResponseListener mDailyEventPageJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -270,55 +452,9 @@ public class EventListFragment extends BaseFragment implements Constants
             }
         }
     };
-    private EventListFragment.OnUserActionListener mOnUserActionListener = new EventListFragment.OnUserActionListener()
+
+    private DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-        @Override
-        public void onEventClick(Event event)
-        {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            if (baseActivity == null)
-            {
-                return;
-            }
-
-            if (isLockUiComponent() == true)
-            {
-                return;
-            }
-
-            lockUI();
-
-            mSelectedEvent = event;
-
-            // 로그인 상태 체크.
-            if (baseActivity.sharedPreference.getBoolean(KEY_PREFERENCE_AUTO_LOGIN, false) && mUser != null)
-            {
-                if (Util.isTextEmpty(mUser.getAccessToken()) == false //
-                    && (Util.isTextEmpty(mUser.getEmail()) == true || Util.isTextEmpty(mUser.getName()) == true || Util.isTextEmpty(mUser.getPhone()) == true))
-                {
-                    Intent intent = new Intent(baseActivity, SignupActivity.class);
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER, mUser);
-
-                    startActivityForResult(intent, CODE_REQUEST_ACTIVITY_USERINFO_UPDATE);
-                    baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-                } else
-                {
-                    requestEvent(mSelectedEvent, mUser.getUserIdx());
-                    mSelectedEvent = null;
-                }
-            } else
-            {
-                // 로그인이 되어있지 않으면 회원 가입으로 이동
-                Intent intent = new Intent(baseActivity, LoginActivity.class);
-                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
-                baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-            }
-        }
-    };
-    private DailyHotelJsonResponseListener mUserInfoJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -336,30 +472,37 @@ public class EventListFragment extends BaseFragment implements Constants
                     throw new NullPointerException("response is null.");
                 }
 
-                mUser.setEmail(response.getString("email"));
-                mUser.setName(response.getString("name"));
-                mUser.setPhone(response.getString("phone"));
-                mUser.setAccessToken(response.getString("accessToken"));
-                mUser.setUserIdx(response.getString("idx"));
+                JSONObject jsonObject = response.getJSONObject("data");
+
+                Customer user = new Customer();
+                user.setEmail(jsonObject.getString("email"));
+                user.setName(jsonObject.getString("name"));
+                user.setPhone(jsonObject.getString("phone"));
+                user.setUserIdx(jsonObject.getString("idx"));
+
+                // 추천인
+                int recommender = jsonObject.getInt("recommender_code");
+                boolean isDailyUser = jsonObject.getBoolean("is_daily_user");
 
                 if (mSelectedEvent == null)
                 {
-                    String params = String.format("?user_idx=%s", mUser.getUserIdx());
-                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_DAILY_EVENT_LIST).append(params).toString(), null, mDailyEventListJsonResponseListener, baseActivity));
-
+                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_DAILY_EVENT_LIST).toString(), null, mDailyEventListJsonResponseListener, baseActivity));
                 } else
                 {
-                    if (Util.isTextEmpty(mUser.getAccessToken()) == false //
-                        && (Util.isTextEmpty(mUser.getEmail()) == true || Util.isTextEmpty(mUser.getName()) == true || Util.isTextEmpty(mUser.getPhone()) == true))
+                    if (isDailyUser == false)
                     {
-                        Intent intent = new Intent(baseActivity, SignupActivity.class);
-                        intent.putExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER, mUser);
-
-                        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_USERINFO_UPDATE);
-                        baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+                        if (isEmptyTextField(new String[]{user.getEmail(), user.getPhone(), user.getName()}) == false)
+                        {
+                            requestEvent(mSelectedEvent, user.getUserIdx());
+                            mSelectedEvent = null;
+                        } else
+                        {
+                            // 정보 업데이트 화면으로 이동.
+                            moveToUserInfoUpdate(user, recommender);
+                        }
                     } else
                     {
-                        requestEvent(mSelectedEvent, mUser.getUserIdx());
+                        requestEvent(mSelectedEvent, user.getUserIdx());
                         mSelectedEvent = null;
                     }
                 }
@@ -370,125 +513,4 @@ public class EventListFragment extends BaseFragment implements Constants
             }
         }
     };
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
-        mEventListLayout = new EventListLayout(getActivity());
-        mEventListLayout.setOnUserActionListener(mOnUserActionListener);
-
-        mUser = new Customer();
-
-        return mEventListLayout.createView(inflater, container, savedInstanceState);
-    }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // User Action Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    public void onStart()
-    {
-        AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.CREDIT);
-
-        super.onStart();
-    }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        if (baseActivity == null)
-        {
-            return;
-        }
-
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        if (baseActivity == null)
-        {
-            return;
-        }
-
-        // ActionBar Setting
-        baseActivity.setActionBar(getString(R.string.actionbar_title_event_list_frag), false);
-
-        lockUI();
-        mQueue.add(new DailyHotelStringRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_ALIVE).toString(), null, mUserAliveStringResponseListener, baseActivity));
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        if (baseActivity == null)
-        {
-            return;
-        }
-
-        unLockUI();
-        releaseUiComponent();
-        baseActivity.releaseUiComponent();
-
-        switch (requestCode)
-        {
-            case CODE_REQUEST_ACTIVITY_LOGIN:
-            case CODE_REQUEST_ACTIVITY_USERINFO_UPDATE:
-            {
-                if (resultCode == Activity.RESULT_OK)
-                {
-
-                } else
-                {
-                    mSelectedEvent = null;
-                }
-                break;
-            }
-        }
-
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    private void requestEvent(Event event, String userIndex)
-    {
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        if (baseActivity == null || baseActivity.isFinishing())
-        {
-            return;
-        }
-
-        lockUI();
-
-        String params;
-
-        if (RELEASE_STORE == Stores.PLAY_STORE || RELEASE_STORE == Stores.N_STORE)
-        {
-            params = String.format("?user_idx=%s&daily_event_idx=%d&store_type=%s", userIndex, event.index, "google");
-        } else
-        {
-            params = String.format("?user_idx=%s&daily_event_idx=%d&store_type=%s", userIndex, event.index, "skt");
-        }
-
-        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_DAILY_EVENT_PAGE).append(params).toString(), null, mDailyEventPageJsonResponseListener, baseActivity));
-    }
-
-    public interface OnUserActionListener
-    {
-        public void onEventClick(Event event);
-    }
 }

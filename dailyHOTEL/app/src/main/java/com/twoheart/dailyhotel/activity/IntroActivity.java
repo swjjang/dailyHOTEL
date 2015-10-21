@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel;
+package com.twoheart.dailyhotel.activity;
 
 import android.content.SharedPreferences.Editor;
 import android.os.Build;
@@ -15,7 +15,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.twoheart.dailyhotel.activity.BaseActivity;
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.fragment.IntroGuideFragment;
 
 import java.util.ArrayList;

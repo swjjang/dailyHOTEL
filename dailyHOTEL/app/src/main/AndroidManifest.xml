@@ -224,6 +224,10 @@
             android:theme="@style/Theme.AppCompat.Translucent"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".activity.GuideActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".activity.ExitActivity"
             android:autoRemoveFromRecents="true"
             android:launchMode="singleTop"
