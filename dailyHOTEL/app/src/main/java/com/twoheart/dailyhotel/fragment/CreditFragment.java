@@ -404,7 +404,7 @@ public class CreditFragment extends BaseFragment implements Constants, OnClickLi
                 Date date = new Date();
                 String strDate = dateFormat.format(date);
 
-                String msg = getString(R.string.kakaolink_msg_invited_friend, mUserName, mUserName, mRecommendCode);
+                String msg = getString(R.string.kakaolink_msg_invited_friend, mUserName, "1%", mUserName, mRecommendCode);
                 KakaoLinkManager.newInstance(getActivity()).sendInviteMsgKakaoLink(msg);
 
                 HashMap<String, String> params = new HashMap<String, String>();
