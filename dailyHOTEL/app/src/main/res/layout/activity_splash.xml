@@ -69,7 +69,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:text="PARADISE IS WHERE WE ARE"
+        android:text="@string/label_paradise"
         android:textColor="@color/white_a30"
         android:textSize="15dp"
         android:gravity="center_horizontal"

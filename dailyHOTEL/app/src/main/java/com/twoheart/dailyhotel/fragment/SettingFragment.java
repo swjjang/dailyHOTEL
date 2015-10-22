@@ -53,7 +53,6 @@ import org.json.JSONObject;
 
 public class SettingFragment extends BaseFragment implements Constants, OnClickListener
 {
-
     private MainActivity mHostActivity;
     private RequestQueue mQueue;
 
@@ -106,25 +105,63 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
             onError(e);
         }
 
-        // 고메 만족도 테스트
-        //        llVersion.setOnClickListener(new OnClickListener()
-        //        {
-        //            @Override
-        //            public void onClick(View v)
-        //            {
-        //                startActivity(SatisfactionActivity.newInstance(mHostActivity, "엘본 더 테이블", 1, 1442880000000L));
-        //            }
-        //        });
+        View viewFacebook = view.findViewById(R.id.facebookLinkView);
+        View viewInstagram = view.findViewById(R.id.instagramLinkView);
+        View viewNaver = view.findViewById(R.id.naverLinkView);
 
-        // 호텔 만족도 테스트
-        //        llVersion.setOnClickListener(new OnClickListener()
-        //        {
-        //            @Override
-        //            public void onClick(View v)
-        //            {
-        //                startActivity(SatisfactionActivity.newInstance(mHostActivity, "유 수쿰윗 호텔 방콕", 343944, 1442930400000L, 1443009600000L));
-        //            }
-        //        });
+        viewFacebook.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("https://www.facebook.com/Dailyhotel"));
+                startActivity(intent);
+            }
+        });
+
+        viewInstagram.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("https://instagram.com/dailyhotel"));
+                startActivity(intent);
+            }
+        });
+
+        viewNaver.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("http://blog.naver.com/dailyhotels"));
+                startActivity(intent);
+            }
+        });
+
+
+            // 고메 만족도 테스트
+            //        llVersion.setOnClickListener(new OnClickListener()
+            //        {
+            //            @Override
+            //            public void onClick(View v)
+            //            {
+            //                startActivity(SatisfactionActivity.newInstance(mHostActivity, "엘본 더 테이블", 1, 1442880000000L));
+            //            }
+            //        });
+
+            // 호텔 만족도 테스트
+            //        llVersion.setOnClickListener(new OnClickListener()
+            //        {
+            //            @Override
+            //            public void onClick(View v)
+            //            {
+            //                startActivity(SatisfactionActivity.newInstance(mHostActivity, "유 수쿰윗 호텔 방콕", 343944, 1442930400000L, 1443009600000L));
+            //            }
+            //        });
 
 
         return view;
