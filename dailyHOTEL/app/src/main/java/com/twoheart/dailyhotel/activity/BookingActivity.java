@@ -778,6 +778,15 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
                 case CODE_RESULT_ACTIVITY_PAYMENT_CANCELED:
                     msg = getString(R.string.act_toast_payment_canceled);
+
+                    posListener = new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View view)
+                        {
+                            mDoReload = true;
+                        }
+                    };
                     break;
 
                 case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY:
