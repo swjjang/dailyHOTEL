@@ -280,6 +280,15 @@ public abstract class TicketPaymentActivity extends BaseActivity
 
                 case CODE_RESULT_ACTIVITY_PAYMENT_CANCELED:
                     msg = getString(R.string.act_toast_payment_canceled);
+
+                    posListener = new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View view)
+                        {
+                            mDoReload = true;
+                        }
+                    };
                     break;
 
                 case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY:
@@ -358,6 +367,15 @@ public abstract class TicketPaymentActivity extends BaseActivity
                     {
                         msg = getString(R.string.act_toast_payment_fail);
                     }
+
+                    posListener = new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View view)
+                        {
+                            mDoReload = true;
+                        }
+                    };
                     break;
                 }
 

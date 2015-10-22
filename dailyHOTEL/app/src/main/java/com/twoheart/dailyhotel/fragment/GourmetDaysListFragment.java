@@ -106,6 +106,11 @@ public class GourmetDaysListFragment extends GourmetListFragment implements View
         mDaysBackgroundView = view.findViewById(R.id.daysBackgroundView);
         mDaysLayout = view.findViewById(R.id.daysLayout);
 
+        if (Util.isOverAPI12() == false)
+        {
+            mDaysLayout.setPadding(0, Util.dpToPx(baseActivity, 5), 0, 0);
+        }
+
         mDaysBackgroundView.setOnClickListener(new View.OnClickListener()
         {
             @Override
