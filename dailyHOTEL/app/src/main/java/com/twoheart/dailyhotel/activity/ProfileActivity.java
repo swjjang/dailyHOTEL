@@ -16,8 +16,6 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
-import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -78,7 +76,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 
     private void initLayout()
     {
-        View profileEditLayout = findViewById(R.id.ll_profile_edit);
+        final View profileEditLayout = findViewById(R.id.ll_profile_edit);
         mEditButtonView = (TextView) findViewById(R.id.tv_profile_edit);
 
         // 수정시에 인터페이스 편의를 위해 [사용자 정보] 바를 터치하면 완료되도록 수정.
@@ -89,7 +87,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
             {
                 if (mEditButtonView.getText().equals(getString(R.string.dialog_btn_text_confirm)))
                 {
-                    mEditButtonView.performClick();
+                    profileEditLayout.performClick();
                     return true;
                 }
 
@@ -112,18 +110,15 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
                 switch (actionId)
                 {
                     case EditorInfo.IME_ACTION_DONE:
-                        mEditButtonView.performClick();
+                        profileEditLayout.performClick();
                         break;
                 }
                 return true;
             }
         });
 
-
         mEditProfileLayout = findViewById(R.id.ll_profile_info_editable);
         mInformationProfileLayout = findViewById(R.id.ll_profile_info_label);
-
-
     }
 
 
@@ -173,41 +168,41 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 
     }
 
-    public void setupUI(View view)
-    {
-        if (view.getId() == R.id.ll_profile_edit)
-        {
-            return;
-        }
-
-        // Set up touch listener for non-text box views to hide keyboard.
-        if (!(view instanceof EditText))
-        {
-            view.setOnTouchListener(new OnTouchListener()
-            {
-                public boolean onTouch(View v, MotionEvent event)
-                {
-                    if (mEditButtonView.getText().equals(getString(R.string.dialog_btn_text_confirm)))
-                    {
-                        mEditButtonView.performClick();
-                        return true;
-                    }
-                    return false;
-                }
-
-            });
-        }
-
-        // If a layout container, iterate over children and seed recursion.
-        if (view instanceof ViewGroup)
-        {
-            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++)
-            {
-                View innerView = ((ViewGroup) view).getChildAt(i);
-                setupUI(innerView);
-            }
-        }
-    }
+    //    public void setupUI(View view)
+    //    {
+    //        if (view.getId() == R.id.ll_profile_edit)
+    //        {
+    //            return;
+    //        }
+    //
+    //        // Set up touch listener for non-text box views to hide keyboard.
+    //        if (!(view instanceof EditText))
+    //        {
+    //            view.setOnTouchListener(new OnTouchListener()
+    //            {
+    //                public boolean onTouch(View v, MotionEvent event)
+    //                {
+    //                    if (mEditButtonView.getText().equals(getString(R.string.dialog_btn_text_confirm)))
+    //                    {
+    //                        profileEditLayout.performClick();
+    //                        return true;
+    //                    }
+    //                    return false;
+    //                }
+    //
+    //            });
+    //        }
+    //
+    //        // If a layout container, iterate over children and seed recursion.
+    //        if (view instanceof ViewGroup)
+    //        {
+    //            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++)
+    //            {
+    //                View innerView = ((ViewGroup) view).getChildAt(i);
+    //                setupUI(innerView);
+    //            }
+    //        }
+    //    }
 
     private void toggleKeyboard(boolean show)
     {
