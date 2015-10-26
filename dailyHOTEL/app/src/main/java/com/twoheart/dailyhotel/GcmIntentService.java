@@ -124,44 +124,38 @@ public class GcmIntentService extends IntentService implements Constants
                 switch (type)
                 {
                     case PUSH_TYPE_ACCOUNT_COMPLETE:
+                    {
                         String tid = jsonMsg.getString("TID");
                         String hotelName = jsonMsg.getString("hotelName");
                         String paidPrice = jsonMsg.getString("paidPrice");
 
-                        if (collapseKey.equals(pref.getString("collapseKey", "")))
-                        {
-                        } else
-                        {
-                            Editor editor = pref.edit();
-                            editor.putString("collapseKey", collapseKey);
-                            editor.apply();
+                        sendPush(messageType, type, msg, imageUrl);
 
-                            sendPush(messageType, type, msg, imageUrl);
+                        // 로그 남기기 이슈
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmss", Locale.KOREA);
+                        Date date = new Date();
+                        String strDate = dateFormat.format(date);
+                        String userIdxStr = pref.getString(KEY_PREFERENCE_USER_IDX, "0");
+                        String roomIdx = pref.getString(KEY_PREFERENCE_HOTEL_ROOM_IDX, "0");
+                        String checkInTime = pref.getString(KEY_PREFERENCE_HOTEL_CHECKIN, "0");
+                        String checkOutTime = pref.getString(KEY_PREFERENCE_HOTEL_CHECKOUT, "0");
+                        String transId = strDate + userIdxStr; //기타 결제수단은 이걸 transaction ID로 사용하고 계좌이체의 경우 넘겨받는 tid값을 사용함.
 
-                            // 로그 남기기 이슈
-                            SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmss", Locale.KOREA);
-                            Date date = new Date();
-                            String strDate = dateFormat.format(date);
-                            String userIdxStr = pref.getString(KEY_PREFERENCE_USER_IDX, "0");
-                            String roomIdx = pref.getString(KEY_PREFERENCE_HOTEL_ROOM_IDX, "0");
-                            String checkInTime = pref.getString(KEY_PREFERENCE_HOTEL_CHECKIN, "0");
-                            String checkOutTime = pref.getString(KEY_PREFERENCE_HOTEL_CHECKOUT, "0");
-                            String transId = strDate + userIdxStr; //기타 결제수단은 이걸 transaction ID로 사용하고 계좌이체의 경우 넘겨받는 tid값을 사용함.
+                        SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
+                        strDate = dateFormat2.format(date);
 
-                            SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.KOREA);
-                            strDate = dateFormat2.format(date);
+                        AnalyticsManager.getInstance(getApplicationContext()).purchaseComplete(tid, transId, roomIdx, hotelName, Screen.GCMSERVICE, checkInTime, checkOutTime, strDate, Pay.Type.VBANK.name(), Double.parseDouble(paidPrice));
 
-                            AnalyticsManager.getInstance(getApplicationContext()).purchaseComplete(tid, transId, roomIdx, hotelName, Screen.GCMSERVICE, checkInTime, checkOutTime, strDate, Pay.Type.VBANK.name(), Double.parseDouble(paidPrice));
-
-                            // 가상계좌 내용 정리
-                            editor.remove(KEY_PREFERENCE_USER_IDX);
-                            editor.remove(KEY_PREFERENCE_HOTEL_NAME);
-                            editor.remove(KEY_PREFERENCE_HOTEL_ROOM_IDX);
-                            editor.remove(KEY_PREFERENCE_HOTEL_CHECKOUT);
-                            editor.remove(KEY_PREFERENCE_HOTEL_CHECKIN);
-                            editor.commit();
-                        }
+                        // 가상계좌 내용 정리
+                        Editor editor = pref.edit();
+                        editor.remove(KEY_PREFERENCE_USER_IDX);
+                        editor.remove(KEY_PREFERENCE_HOTEL_NAME);
+                        editor.remove(KEY_PREFERENCE_HOTEL_ROOM_IDX);
+                        editor.remove(KEY_PREFERENCE_HOTEL_CHECKOUT);
+                        editor.remove(KEY_PREFERENCE_HOTEL_CHECKIN);
+                        editor.commit();
                         break;
+                    }
 
                     case PUSH_TYPE_NOTICE:
                         if (collapseKey.equals(pref.getString("collapseKey", "")))
@@ -309,7 +303,9 @@ public class GcmIntentService extends IntentService implements Constants
                 .setTicker(getResources().getString(R.string.app_name)) //
                 .setSound(mUri) //
                 .setAutoCancel(true) //
-                .setSmallIcon(R.mipmap.ic_launcher);
+                .setSmallIcon(R.drawable.icon_noti_small)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.icon_noti_big))
+                .setColor(getResources().getColor(R.color.dh_theme_color));
 
             if (bitmap != null)
             {
