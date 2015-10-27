@@ -13,17 +13,23 @@
 package com.twoheart.dailyhotel.activity;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.telephony.TelephonyManager;
 import android.text.InputFilter;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,6 +50,7 @@ import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.PhoneNumberKoreaFormattingTextWatcher;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
@@ -61,20 +68,27 @@ import java.util.regex.Pattern;
 
 public class SignupActivity extends BaseActivity implements OnClickListener
 {
+    private static int REQUEST_CODE_COUNTRYCODELISTACTIVITY = 1;
+
     private static final int MAX_OF_RECOMMENDER = 45;
 
     private static final int MODE_SIGNUP = 1;
     private static final int MODE_USERINFO_UPDATE = 2;
 
-    private EditText mEmailEditText, mNameEditText, mPhoneEditText, mPasswordEditText, mRecommenderEditText;
+    private EditText mPhoneTextView, mEmailEditText, mNameEditText, mPasswordEditText, mRecommenderEditText;
     private TextView mTermTextView, mPrivacyTextView;
     private TextView mSingupView;
     private int mMode;
     private String mUserIdx;
     private int mRecommender; // 추천인 코드
+    private boolean mIsDailyUser;
 
     private Map<String, String> mSignupParams;
     private HashMap<String, String> regPushParams;
+
+    private Dialog mMobileDialog;
+    private String mCountryCode;
+    private String mMobileNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -86,6 +100,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
         Intent intent = getIntent();
 
         Customer user = null;
+        String phoneNumber = null;
 
         if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER) == true)
         {
@@ -94,6 +109,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
             user = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER);
 
             mRecommender = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_RECOMMENDER, -1);
+            mIsDailyUser = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_ISDAILYUSER, true);
 
             setActionBar(R.string.actionbar_title_userinfo_update_activity);
 
@@ -108,14 +124,55 @@ public class SignupActivity extends BaseActivity implements OnClickListener
                 return;
             }
 
+            if (Util.isValidatePhoneNumber(user.getPhone()) == false)
+            {
+                user.setPhone(null);
+            } else
+            {
+                phoneNumber = user.getPhone();
+            }
+
             showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_facebook_update), getString(R.string.dialog_btn_text_confirm), null, null, null);
         } else
         {
             mMode = MODE_SIGNUP;
+            mIsDailyUser = true;
+
+            phoneNumber = Util.getLine1Number(this);
 
             setActionBar(R.string.actionbar_title_signup_activity);
         }
 
+        setMobileNumber(phoneNumber);
+
+        initLayout(user);
+    }
+
+    private void setMobileNumber(String number)
+    {
+        String[] countryMobile = null;
+
+        if (number == null)
+        {
+            countryMobile = Util.getValidatePhoneNumber(Util.getLine1Number(this));
+        } else
+        {
+            countryMobile = Util.getValidatePhoneNumber(number);
+        }
+
+        if (countryMobile == null)
+        {
+            mCountryCode = Util.DEFAULT_COUNTRY_CODE;
+            mMobileNumber = null;
+        } else
+        {
+            mCountryCode = countryMobile[0];
+            mMobileNumber = countryMobile[1];
+        }
+    }
+
+    private void initLayout(Customer user)
+    {
         mPasswordEditText = (EditText) findViewById(R.id.et_signup_pwd);
         mEmailEditText = (EditText) findViewById(R.id.et_signup_email);
         mRecommenderEditText = (EditText) findViewById(R.id.et_signup_recommender);
@@ -133,7 +190,41 @@ public class SignupActivity extends BaseActivity implements OnClickListener
         fArray[0] = new InputFilter.LengthFilter(MAX_OF_RECOMMENDER);
         mRecommenderEditText.setFilters(fArray);
 
-        mPhoneEditText = (EditText) findViewById(R.id.et_signup_phone);
+        mPhoneTextView = (EditText) findViewById(R.id.et_signup_phone);
+        mPhoneTextView.setCursorVisible(false);
+        mPhoneTextView.setOnFocusChangeListener(new View.OnFocusChangeListener()
+        {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus)
+            {
+                if (hasFocus == true)
+                {
+                    showInputMobileDialog(mCountryCode, mMobileNumber);
+                } else
+                {
+                    mPhoneTextView.setSelected(false);
+                }
+            }
+        });
+
+        View fakeMobileEditView = findViewById(R.id.fakeMobileEditView);
+
+        fakeMobileEditView.setFocusable(true);
+        fakeMobileEditView.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (mPhoneTextView.isSelected() == true)
+                {
+                    showInputMobileDialog(mCountryCode, mMobileNumber);
+                } else
+                {
+                    mPhoneTextView.requestFocus();
+                    mPhoneTextView.setSelected(true);
+                }
+            }
+        });
 
         mTermTextView = (TextView) findViewById(R.id.tv_signup_agreement);
         mPrivacyTextView = (TextView) findViewById(R.id.tv_signup_personal_info);
@@ -145,9 +236,9 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
             if (Util.isTextEmpty(user.getPhone()) == false)
             {
-                mPhoneEditText.setText(user.getPhone());
-                mPhoneEditText.setEnabled(false);
-                mPhoneEditText.setFocusable(false);
+                mPhoneTextView.setText(user.getPhone());
+                mPhoneTextView.setEnabled(false);
+                mPhoneTextView.setFocusable(false);
             }
 
             if (Util.isTextEmpty(user.getEmail()) == false)
@@ -173,10 +264,16 @@ public class SignupActivity extends BaseActivity implements OnClickListener
                 mRecommenderEditText.setEnabled(false);
                 mRecommenderEditText.setFocusable(false);
             }
-        } else
-        {
-            getPhoneNumber();
         }
+
+        mPhoneTextView.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                showInputMobileDialog(mCountryCode, mMobileNumber);
+            }
+        });
 
         mTermTextView.setOnClickListener(this);
         mPrivacyTextView.setOnClickListener(this);
@@ -223,22 +320,6 @@ public class SignupActivity extends BaseActivity implements OnClickListener
         }
     }
 
-    /**
-     * 기기의 번호를 받아옴
-     */
-    public void getPhoneNumber()
-    {
-        TelephonyManager telManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        String phoneNum = telManager.getLine1Number();
-
-        if (Util.isTextEmpty(phoneNum) == false)
-        {
-            mPhoneEditText.setText(phoneNum);
-            mEmailEditText.requestFocus();
-        }
-
-    }
-
     private boolean hasPermission()
     {
         if (Util.isOverAPI23() == true)
@@ -263,7 +344,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
         } else if (mNameEditText.getText().toString().trim().equals("") == true)
         {
             return false;
-        } else if (mPhoneEditText.getText().toString().trim().equals("") == true)
+        } else if (mPhoneTextView.getText().toString().trim().equals("") == true)
         {
             return false;
         } else if (checkPassword == true && mPasswordEditText.getText().toString().trim().equals("") == true)
@@ -323,7 +404,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
                 mSignupParams.put("email", mEmailEditText.getText().toString().trim());
                 mSignupParams.put("pw", mPasswordEditText.getText().toString().trim());
                 mSignupParams.put("name", mNameEditText.getText().toString().trim());
-                mSignupParams.put("phone", mPhoneEditText.getText().toString().trim());
+                mSignupParams.put("phone", mPhoneTextView.getText().toString().trim());
 
                 TelephonyManager tManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
                 mSignupParams.put("device", tManager.getDeviceId());
@@ -373,9 +454,9 @@ public class SignupActivity extends BaseActivity implements OnClickListener
                     updateParams.put("user_name", mNameEditText.getText().toString().trim());
                 }
 
-                if (mPhoneEditText.isEnabled() == true)
+                if (mPhoneTextView.isEnabled() == true)
                 {
-                    updateParams.put("user_phone", mPhoneEditText.getText().toString().trim());
+                    updateParams.put("user_phone", mPhoneTextView.getText().toString().trim());
                 }
 
                 String recommender = mRecommenderEditText.getText().toString().trim();
@@ -429,7 +510,35 @@ public class SignupActivity extends BaseActivity implements OnClickListener
     @Override
     protected void onDestroy()
     {
+        if (mMobileDialog != null)
+        {
+            if (mMobileDialog.isShowing() == true)
+            {
+                mMobileDialog.dismiss();
+            }
+
+            mMobileDialog = null;
+        }
+
         super.onDestroy();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        releaseUiComponent();
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE_COUNTRYCODELISTACTIVITY)
+        {
+            if (resultCode == RESULT_OK && data != null)
+            {
+                mCountryCode = data.getStringExtra(CountryCodeListActivity.INTENT_EXTRA_COUNTRY_CODE);
+            }
+
+            showInputMobileDialog(mCountryCode, mMobileNumber);
+        }
     }
 
     private void signUpAndFinish()
@@ -494,6 +603,110 @@ public class SignupActivity extends BaseActivity implements OnClickListener
             }
         }.execute();
     }
+
+    private void showInputMobileDialog(final String countryCode, String mobileNumber)
+    {
+        if (isFinishing() == true)
+        {
+            return;
+        }
+
+        if (mMobileDialog != null && mMobileDialog.isShowing() == true)
+        {
+            mMobileDialog.cancel();
+        }
+
+        mMobileDialog = null;
+        mMobileDialog = new Dialog(this);
+
+        mMobileDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mMobileDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        mMobileDialog.setCanceledOnTouchOutside(false);
+
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+        Window window = mMobileDialog.getWindow();
+        layoutParams.copyFrom(window.getAttributes());
+
+        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        window.setAttributes(layoutParams);
+
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.view_mobiledialog_layout, null, false);
+
+        final EditText mobileEditText = (EditText) view.findViewById(R.id.mobileTextView);
+
+        if (Util.DEFAULT_COUNTRY_CODE.equalsIgnoreCase(countryCode) == true)
+        {
+            mobileEditText.addTextChangedListener(new PhoneNumberKoreaFormattingTextWatcher(this));
+        } else
+        {
+            mobileEditText.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
+        }
+
+        if (Util.isTextEmpty(mobileNumber) == false)
+        {
+            mobileNumber = mobileNumber.replaceAll("\\(|\\)|-|\\s", "");
+        }
+
+        mobileEditText.setText(mobileNumber);
+        mobileEditText.setSelection(mobileEditText.length());
+
+        final TextView countryTextView = (TextView) view.findViewById(R.id.countryTextView);
+        countryTextView.setText(countryCode.substring(0, countryCode.indexOf('\n')));
+        countryTextView.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (lockUiComponentAndIsLockUiComponent() == true)
+                {
+                    return;
+                }
+
+                mMobileNumber = mobileEditText.getText().toString();
+
+                Intent intent = CountryCodeListActivity.newInstance(SignupActivity.this, countryCode);
+
+                startActivityForResult(intent, REQUEST_CODE_COUNTRYCODELISTACTIVITY);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
+            }
+        });
+
+        View button = view.findViewById(R.id.buttonLayout);
+        button.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                // 전화번호를 읽어서 넣기
+                String countryCode = mCountryCode.substring(mCountryCode.indexOf('\n') + 1);
+                mMobileNumber = mobileEditText.getText().toString();
+
+                String phoneNumber = String.format("%s %s", countryCode, mMobileNumber);
+
+                if (Util.isValidatePhoneNumber(phoneNumber) == true)
+                {
+                    mPhoneTextView.setText(String.format("%s %s", countryCode, mMobileNumber));
+                    mMobileDialog.dismiss();
+                } else
+                {
+                    DailyToast.showToast(SignupActivity.this, R.string.toast_msg_input_error_phonenumber, Toast.LENGTH_SHORT);
+                }
+            }
+        });
+
+        mMobileDialog.setContentView(view);
+
+        try
+        {
+            mMobileDialog.show();
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
+
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener

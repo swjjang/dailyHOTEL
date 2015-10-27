@@ -303,9 +303,7 @@ public class GcmIntentService extends IntentService implements Constants
                 .setTicker(getResources().getString(R.string.app_name)) //
                 .setSound(mUri) //
                 .setAutoCancel(true) //
-                .setSmallIcon(R.drawable.icon_noti_small)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.icon_noti_big))
-                .setColor(getResources().getColor(R.color.dh_theme_color));
+                .setSmallIcon(R.drawable.icon_noti_small).setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.icon_noti_big)).setColor(getResources().getColor(R.color.dh_theme_color));
 
             if (bitmap != null)
             {

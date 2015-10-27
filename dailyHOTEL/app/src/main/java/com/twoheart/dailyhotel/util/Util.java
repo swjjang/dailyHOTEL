@@ -427,6 +427,148 @@ public class Util implements Constants
         return params;
     }
 
+    private static String getValidateCountry(String code)
+    {
+        ContryCodeNumber contryCodeNumber = new ContryCodeNumber();
+
+        return contryCodeNumber.getCountry(code);
+    }
+
+    private static boolean isValidateCountryCode(String code)
+    {
+        ContryCodeNumber contryCodeNumber = new ContryCodeNumber();
+
+        return contryCodeNumber.hasCountryCode(code);
+    }
+
+    public static boolean isValidatePhoneNumber(String phonenumber)
+    {
+        if (Util.isTextEmpty(phonenumber) == true)
+        {
+            return false;
+        }
+
+        if (phonenumber.charAt(0) == '+')
+        {
+            String[] text = phonenumber.split("\\s");
+
+            if (text.length != 2)
+            {
+                return false;
+            }
+
+            // 국제 전화번호 존재 여부 확인
+            if (isValidateCountryCode(text[0]) == false)
+            {
+                return false;
+            }
+
+            text[1] = text[1].replace("-", "");
+
+            if ("+82".equalsIgnoreCase(text[0]) == true)
+            {
+                if (text[1].startsWith("(0)10") || text[1].startsWith("(0)11") || text[1].startsWith("(0)16") //
+                    || text[1].startsWith("(0)17") || text[1].startsWith("(0)18") || text[1].startsWith("(0)19"))
+                {
+                    if (TextUtils.isDigitsOnly(text[1].substring(5)) == true)
+                    {
+                        int length = text[1].length();
+                        if (length == 12 || length == 13)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            } else
+            {
+                // 국내가 아니면 숫자만 있는지 검증한다
+                if (TextUtils.isDigitsOnly(text[1]) == true)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public static String getLine1Number(Context context)
+    {
+        TelephonyManager telManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        return telManager.getLine1Number();
+    }
+
+    public static final String DEFAULT_COUNTRY_CODE = "대한민국\n+82";
+
+    public static String[] getValidatePhoneNumber(String phonenumber)
+    {
+        if (Util.isTextEmpty(phonenumber) == true)
+        {
+            return null;
+        }
+
+        if (phonenumber.charAt(0) == '+')
+        {
+            String[] text = phonenumber.split("\\s");
+
+            if (text.length != 2)
+            {
+                return null;
+            }
+
+            String countryCode = getValidateCountry(text[0]);
+
+            // 국제 전화번호 존재 여부 확인
+            if (isTextEmpty(countryCode) == false)
+            {
+                return null;
+            }
+
+            if ("+82".equalsIgnoreCase(text[0]) == true)
+            {
+                if (text[1].startsWith("(0)10") || text[1].startsWith("(0)11") || text[1].startsWith("(0)16") //
+                    || text[1].startsWith("(0)17") || text[1].startsWith("(0)18") || text[1].startsWith("(0)19"))
+                {
+                    if (TextUtils.isDigitsOnly(text[1].substring(5)) == true)
+                    {
+                        int length = text[1].length();
+                        if (length == 12 || length == 13)
+                        {
+                            text[0] = DEFAULT_COUNTRY_CODE;
+                            return text;
+                        }
+                    }
+                }
+            } else
+            {
+                // 국내가 아니면 숫자만 있는지 검증한다
+                if (TextUtils.isDigitsOnly(text[1]) == true)
+                {
+                    text[0] = countryCode + "\n" + text[0];
+                    return text;
+                }
+            }
+        } else
+        {
+            String text = phonenumber.replace("-", "").replace(" ", "");
+
+            if (text.startsWith("010") || text.startsWith("011") || text.startsWith("016") //
+                || text.startsWith("017") || text.startsWith("018") || text.startsWith("019"))
+            {
+                if (TextUtils.isDigitsOnly(text) == true)
+                {
+                    int length = text.length();
+                    if (length == 10 || length == 11)
+                    {
+                        return new String[]{DEFAULT_COUNTRY_CODE, text};
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
     public static Dialog showDatePickerDialog(BaseActivity baseActivity, String titleText, final String[] values, String selectValue, String positive //
         , final View.OnClickListener positiveListener)
     {

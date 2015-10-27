@@ -207,6 +207,10 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".activity.CountryCodeListActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".activity.IssuingReceiptActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>

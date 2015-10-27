@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="35dp"
+              android:background="@color/countrycode_section_background"
+              android:gravity="center_vertical">
+
+    <com.twoheart.dailyhotel.view.widget.DailyTextView
+        android:id="@+id/sectionTextView"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:textColor="@color/countrycode_section_text"
+        android:textSize="14dp"
+        android:paddingLeft="19dp"
+        android:paddingBottom="5dp"
+        android:gravity="bottom"/>
+
+</FrameLayout>
