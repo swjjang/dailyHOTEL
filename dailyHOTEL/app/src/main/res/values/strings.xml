@@ -87,7 +87,7 @@
     <string name="toast_msg_retry_payment_after_install_app">해당 어플을 설치 후 다시 시도해 주세요.</string>
     <string name="toast_msg_cancel_payment">결제를 취소하셨습니다</string>
     <string name="toast_msg_profile_not_changed">변경된 사항이 없습니다.</string>
-    <string name="toast_msg_profile_success_to_change">성공적으로 변경되었습니다.</string>
+    <string name="toast_msg_profile_success_to_change">업데이트를 완료하였습니다.</string>
     <string name="toast_msg_logouted">로그아웃되었습니다.</string>
     <string name="toast_msg_logoined">로그인되었습니다.</string>
     <string name="toast_msg_please_input_id">이메일을 입력해주세요.</string>

@@ -13,23 +13,17 @@
 package com.twoheart.dailyhotel.activity;
 
 import android.Manifest;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.telephony.TelephonyManager;
 import android.text.InputFilter;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,7 +44,6 @@ import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.PhoneNumberKoreaFormattingTextWatcher;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
@@ -68,7 +61,7 @@ import java.util.regex.Pattern;
 
 public class SignupActivity extends BaseActivity implements OnClickListener
 {
-    private static int REQUEST_CODE_COUNTRYCODELISTACTIVITY = 1;
+    private static int REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY = 1;
 
     private static final int MAX_OF_RECOMMENDER = 45;
 
@@ -86,9 +79,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
     private Map<String, String> mSignupParams;
     private HashMap<String, String> regPushParams;
 
-    private Dialog mMobileDialog;
-    private String mCountryCode;
-    private String mMobileNumber;
+    private boolean mFirstMobileNumberFocus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -101,6 +92,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
         Customer user = null;
         String phoneNumber = null;
+        mFirstMobileNumberFocus = true;
 
         if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER) == true)
         {
@@ -143,40 +135,20 @@ public class SignupActivity extends BaseActivity implements OnClickListener
             setActionBar(R.string.actionbar_title_signup_activity);
         }
 
-        setMobileNumber(phoneNumber);
-
-        initLayout(user);
+        initLayout(user, phoneNumber);
     }
 
-    private void setMobileNumber(String number)
-    {
-        String[] countryMobile = null;
-
-        if (number == null)
-        {
-            countryMobile = Util.getValidatePhoneNumber(Util.getLine1Number(this));
-        } else
-        {
-            countryMobile = Util.getValidatePhoneNumber(number);
-        }
-
-        if (countryMobile == null)
-        {
-            mCountryCode = Util.DEFAULT_COUNTRY_CODE;
-            mMobileNumber = null;
-        } else
-        {
-            mCountryCode = countryMobile[0];
-            mMobileNumber = countryMobile[1];
-        }
-    }
-
-    private void initLayout(Customer user)
+    private void initLayout(Customer user, final String mobileNumber)
     {
         mPasswordEditText = (EditText) findViewById(R.id.et_signup_pwd);
         mEmailEditText = (EditText) findViewById(R.id.et_signup_email);
         mRecommenderEditText = (EditText) findViewById(R.id.et_signup_recommender);
         mNameEditText = (EditText) findViewById(R.id.et_signup_name);
+
+        if (mMode == MODE_USERINFO_UPDATE && mIsDailyUser == true)
+        {
+            mRecommenderEditText.setVisibility(View.GONE);
+        }
 
         // 회원 가입시 이름 필터 적용.
         StringFilter stringFilter = new StringFilter(SignupActivity.this);
@@ -192,39 +164,6 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
         mPhoneTextView = (EditText) findViewById(R.id.et_signup_phone);
         mPhoneTextView.setCursorVisible(false);
-        mPhoneTextView.setOnFocusChangeListener(new View.OnFocusChangeListener()
-        {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus)
-            {
-                if (hasFocus == true)
-                {
-                    showInputMobileDialog(mCountryCode, mMobileNumber);
-                } else
-                {
-                    mPhoneTextView.setSelected(false);
-                }
-            }
-        });
-
-        View fakeMobileEditView = findViewById(R.id.fakeMobileEditView);
-
-        fakeMobileEditView.setFocusable(true);
-        fakeMobileEditView.setOnClickListener(new OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (mPhoneTextView.isSelected() == true)
-                {
-                    showInputMobileDialog(mCountryCode, mMobileNumber);
-                } else
-                {
-                    mPhoneTextView.requestFocus();
-                    mPhoneTextView.setSelected(true);
-                }
-            }
-        });
 
         mTermTextView = (TextView) findViewById(R.id.tv_signup_agreement);
         mPrivacyTextView = (TextView) findViewById(R.id.tv_signup_personal_info);
@@ -266,12 +205,44 @@ public class SignupActivity extends BaseActivity implements OnClickListener
             }
         }
 
-        mPhoneTextView.setOnClickListener(new OnClickListener()
+        mPhoneTextView.setOnFocusChangeListener(new View.OnFocusChangeListener()
+        {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus)
+            {
+                if (mFirstMobileNumberFocus == true)
+                {
+                    mPhoneTextView.setSelected(true);
+                    mFirstMobileNumberFocus = false;
+                    return;
+                }
+
+                if (hasFocus == true)
+                {
+                    showInputMobileNumberDialog(mobileNumber);
+                } else
+                {
+                    mPhoneTextView.setSelected(false);
+                }
+            }
+        });
+
+        View fakeMobileEditView = findViewById(R.id.fakeMobileEditView);
+
+        fakeMobileEditView.setFocusable(true);
+        fakeMobileEditView.setOnClickListener(new OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                showInputMobileDialog(mCountryCode, mMobileNumber);
+                if (mPhoneTextView.isSelected() == true)
+                {
+                    showInputMobileNumberDialog(mobileNumber);
+                } else
+                {
+                    mPhoneTextView.requestFocus();
+                    mPhoneTextView.setSelected(true);
+                }
             }
         });
 
@@ -404,7 +375,11 @@ public class SignupActivity extends BaseActivity implements OnClickListener
                 mSignupParams.put("email", mEmailEditText.getText().toString().trim());
                 mSignupParams.put("pw", mPasswordEditText.getText().toString().trim());
                 mSignupParams.put("name", mNameEditText.getText().toString().trim());
-                mSignupParams.put("phone", mPhoneTextView.getText().toString().trim());
+
+                String phoneNumber = mPhoneTextView.getText().toString().trim();
+                phoneNumber = phoneNumber.replaceAll("-", "");
+
+                mSignupParams.put("phone", phoneNumber);
 
                 TelephonyManager tManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
                 mSignupParams.put("device", tManager.getDeviceId());
@@ -441,31 +416,47 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
                 lockUI();
 
-                Map<String, String> updateParams = new HashMap<String, String>();
-                updateParams.put("user_idx", mUserIdx);
-
-                if (mEmailEditText.isEnabled() == true)
+                if (mIsDailyUser == true)
                 {
-                    updateParams.put("user_email", mEmailEditText.getText().toString().trim());
-                }
+                    Map<String, String> updateParams = new HashMap<String, String>();
+                    updateParams.put("name", mNameEditText.getText().toString().trim());
 
-                if (mNameEditText.isEnabled() == true)
+                    String phoneNumber = mPhoneTextView.getText().toString().trim();
+                    phoneNumber = phoneNumber.replaceAll("-", "");
+                    updateParams.put("phone", phoneNumber);
+
+                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_UPDATE).toString(), updateParams, mUserUpdateJsonResponseListener, this));
+                } else
                 {
-                    updateParams.put("user_name", mNameEditText.getText().toString().trim());
-                }
+                    Map<String, String> updateParams = new HashMap<String, String>();
+                    updateParams.put("user_idx", mUserIdx);
 
-                if (mPhoneTextView.isEnabled() == true)
-                {
-                    updateParams.put("user_phone", mPhoneTextView.getText().toString().trim());
-                }
+                    if (mEmailEditText.isEnabled() == true)
+                    {
+                        updateParams.put("user_email", mEmailEditText.getText().toString().trim());
+                    }
 
-                String recommender = mRecommenderEditText.getText().toString().trim();
-                if (recommender.equals("") == false)
-                {
-                    updateParams.put("recommendation_code", recommender);
-                }
+                    if (mNameEditText.isEnabled() == true)
+                    {
+                        updateParams.put("user_name", mNameEditText.getText().toString().trim());
+                    }
 
-                mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_UPDATE_FB_USER).toString(), updateParams, mUserUpdateFacebookJsonResponseListener, this));
+                    if (mPhoneTextView.isEnabled() == true)
+                    {
+                        String phoneNumber = mPhoneTextView.getText().toString().trim();
+                        phoneNumber = phoneNumber.replaceAll("-", "");
+
+                        updateParams.put("user_phone", phoneNumber);
+                    }
+
+                    String recommender = mRecommenderEditText.getText().toString().trim();
+                    if (recommender.equals("") == false)
+                    {
+                        updateParams.put("recommendation_code", recommender);
+                    }
+
+                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_UPDATE_FB_USER).toString(), updateParams, mUserUpdateFacebookJsonResponseListener, this));
+                }
             }
         } else if (v.getId() == mTermTextView.getId())
         { // 이용약관
@@ -506,23 +497,6 @@ public class SignupActivity extends BaseActivity implements OnClickListener
         overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
     }
 
-
-    @Override
-    protected void onDestroy()
-    {
-        if (mMobileDialog != null)
-        {
-            if (mMobileDialog.isShowing() == true)
-            {
-                mMobileDialog.dismiss();
-            }
-
-            mMobileDialog = null;
-        }
-
-        super.onDestroy();
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -530,14 +504,14 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == REQUEST_CODE_COUNTRYCODELISTACTIVITY)
+        if (requestCode == REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY)
         {
             if (resultCode == RESULT_OK && data != null)
             {
-                mCountryCode = data.getStringExtra(CountryCodeListActivity.INTENT_EXTRA_COUNTRY_CODE);
-            }
+                String mobileNumber = data.getStringExtra(InputMobileNumberDialogActivity.INTENT_EXTRA_MOBILE_NUMBER);
 
-            showInputMobileDialog(mCountryCode, mMobileNumber);
+                mPhoneTextView.setText(mobileNumber);
+            }
         }
     }
 
@@ -547,6 +521,19 @@ public class SignupActivity extends BaseActivity implements OnClickListener
 
         DailyToast.showToast(SignupActivity.this, R.string.toast_msg_success_to_signup, Toast.LENGTH_LONG);
         finish();
+    }
+
+    private void showInputMobileNumberDialog(String mobileNumber)
+    {
+        String internationalMobileNumber = mobileNumber;
+
+        if (mPhoneTextView.length() > 0)
+        {
+            internationalMobileNumber = mPhoneTextView.getText().toString();
+        }
+
+        Intent intent = InputMobileNumberDialogActivity.newInstance(SignupActivity.this, internationalMobileNumber);
+        startActivityForResult(intent, REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY);
     }
 
     private void regGcmId(final String idx)
@@ -603,110 +590,6 @@ public class SignupActivity extends BaseActivity implements OnClickListener
             }
         }.execute();
     }
-
-    private void showInputMobileDialog(final String countryCode, String mobileNumber)
-    {
-        if (isFinishing() == true)
-        {
-            return;
-        }
-
-        if (mMobileDialog != null && mMobileDialog.isShowing() == true)
-        {
-            mMobileDialog.cancel();
-        }
-
-        mMobileDialog = null;
-        mMobileDialog = new Dialog(this);
-
-        mMobileDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        mMobileDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        mMobileDialog.setCanceledOnTouchOutside(false);
-
-        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
-        Window window = mMobileDialog.getWindow();
-        layoutParams.copyFrom(window.getAttributes());
-
-        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        window.setAttributes(layoutParams);
-
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.view_mobiledialog_layout, null, false);
-
-        final EditText mobileEditText = (EditText) view.findViewById(R.id.mobileTextView);
-
-        if (Util.DEFAULT_COUNTRY_CODE.equalsIgnoreCase(countryCode) == true)
-        {
-            mobileEditText.addTextChangedListener(new PhoneNumberKoreaFormattingTextWatcher(this));
-        } else
-        {
-            mobileEditText.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
-        }
-
-        if (Util.isTextEmpty(mobileNumber) == false)
-        {
-            mobileNumber = mobileNumber.replaceAll("\\(|\\)|-|\\s", "");
-        }
-
-        mobileEditText.setText(mobileNumber);
-        mobileEditText.setSelection(mobileEditText.length());
-
-        final TextView countryTextView = (TextView) view.findViewById(R.id.countryTextView);
-        countryTextView.setText(countryCode.substring(0, countryCode.indexOf('\n')));
-        countryTextView.setOnClickListener(new OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (lockUiComponentAndIsLockUiComponent() == true)
-                {
-                    return;
-                }
-
-                mMobileNumber = mobileEditText.getText().toString();
-
-                Intent intent = CountryCodeListActivity.newInstance(SignupActivity.this, countryCode);
-
-                startActivityForResult(intent, REQUEST_CODE_COUNTRYCODELISTACTIVITY);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
-            }
-        });
-
-        View button = view.findViewById(R.id.buttonLayout);
-        button.setOnClickListener(new OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                // 전화번호를 읽어서 넣기
-                String countryCode = mCountryCode.substring(mCountryCode.indexOf('\n') + 1);
-                mMobileNumber = mobileEditText.getText().toString();
-
-                String phoneNumber = String.format("%s %s", countryCode, mMobileNumber);
-
-                if (Util.isValidatePhoneNumber(phoneNumber) == true)
-                {
-                    mPhoneTextView.setText(String.format("%s %s", countryCode, mMobileNumber));
-                    mMobileDialog.dismiss();
-                } else
-                {
-                    DailyToast.showToast(SignupActivity.this, R.string.toast_msg_input_error_phonenumber, Toast.LENGTH_SHORT);
-                }
-            }
-        });
-
-        mMobileDialog.setContentView(view);
-
-        try
-        {
-            mMobileDialog.show();
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
-    }
-
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
@@ -832,6 +715,46 @@ public class SignupActivity extends BaseActivity implements OnClickListener
             }
         }
     };
+
+    private DailyHotelJsonResponseListener mUserUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
+    {
+        @Override
+        public void onResponse(String url, JSONObject response)
+        {
+            unLockUI();
+
+            try
+            {
+                if (response == null)
+                {
+                    throw new NullPointerException("response == null");
+                }
+
+                String result = response.getString("success");
+                String msg = null;
+
+                if (response.length() > 1)
+                {
+                    msg = response.getString("msg");
+                }
+
+                if (result.equals("true") == true)
+                {
+                    DailyToast.showToast(SignupActivity.this, R.string.toast_msg_profile_success_to_change, Toast.LENGTH_SHORT);
+
+                    setResult(RESULT_OK);
+                    finish();
+                } else
+                {
+                    DailyToast.showToast(SignupActivity.this, msg, Toast.LENGTH_LONG);
+                }
+            } catch (Exception e)
+            {
+                onError(e);
+            }
+        }
+    };
+
     private DailyHotelJsonResponseListener mGcmRegisterJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
@@ -863,6 +786,7 @@ public class SignupActivity extends BaseActivity implements OnClickListener
             }
         }
     };
+
     private DailyHotelJsonResponseListener mUserInfoJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override

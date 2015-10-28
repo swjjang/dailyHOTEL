@@ -53,6 +53,11 @@ public class CountryCodeListAdapter extends ArrayAdapter<String[]> implements Pi
         mArrayList.addAll(collection);
     }
 
+    public void setSelected(int index)
+    {
+        mSelectedIndex = index;
+    }
+
     @Override
     public int getCount()
     {

@@ -519,7 +519,7 @@ public class Util implements Constants
             String countryCode = getValidateCountry(text[0]);
 
             // 국제 전화번호 존재 여부 확인
-            if (isTextEmpty(countryCode) == false)
+            if (isTextEmpty(countryCode) == true)
             {
                 return null;
             }

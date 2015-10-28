@@ -94,6 +94,9 @@ public class CountryCodeListLayout implements OnItemClickListener
             return;
         }
 
+        mCountryCodeListAdapter.setSelected(position);
+        mCountryCodeListAdapter.notifyDataSetChanged();
+
         if (mOnUserActionListener != null)
         {
             mOnUserActionListener.selectCountry(mCountryCodeListAdapter.getItem(position));

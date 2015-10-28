@@ -143,25 +143,25 @@ public class SettingFragment extends BaseFragment implements Constants, OnClickL
         });
 
 
-            // 고메 만족도 테스트
-            //        llVersion.setOnClickListener(new OnClickListener()
-            //        {
-            //            @Override
-            //            public void onClick(View v)
-            //            {
-            //                startActivity(SatisfactionActivity.newInstance(mHostActivity, "엘본 더 테이블", 1, 1442880000000L));
-            //            }
-            //        });
+        // 고메 만족도 테스트
+        //        llVersion.setOnClickListener(new OnClickListener()
+        //        {
+        //            @Override
+        //            public void onClick(View v)
+        //            {
+        //                startActivity(SatisfactionActivity.newInstance(mHostActivity, "엘본 더 테이블", 1, 1442880000000L));
+        //            }
+        //        });
 
-            // 호텔 만족도 테스트
-            //        llVersion.setOnClickListener(new OnClickListener()
-            //        {
-            //            @Override
-            //            public void onClick(View v)
-            //            {
-            //                startActivity(SatisfactionActivity.newInstance(mHostActivity, "유 수쿰윗 호텔 방콕", 343944, 1442930400000L, 1443009600000L));
-            //            }
-            //        });
+        // 호텔 만족도 테스트
+        //        llVersion.setOnClickListener(new OnClickListener()
+        //        {
+        //            @Override
+        //            public void onClick(View v)
+        //            {
+        //                startActivity(SatisfactionActivity.newInstance(mHostActivity, "유 수쿰윗 호텔 방콕", 343944, 1442930400000L, 1443009600000L));
+        //            }
+        //        });
 
 
         return view;
