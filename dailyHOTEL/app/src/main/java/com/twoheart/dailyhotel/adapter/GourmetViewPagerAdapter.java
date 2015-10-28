@@ -113,8 +113,9 @@ public class GourmetViewPagerAdapter extends PlaceViewPagerAdapter
         llHotelRowContent.setBackgroundDrawable(p);
 
         // grade
-        grade.setText(place.grade.getName(mContext));
-        grade.setBackgroundResource(place.grade.getColorResId());
+        grade.setVisibility(View.INVISIBLE);
+        //        grade.setText(place.grade.getName(mContext));
+        //        grade.setBackgroundResource(place.grade.getColorResId());
 
         Drawable drawable = DrawableLruCache.getInstance().get(place.imageUrl);
 

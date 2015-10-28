@@ -148,8 +148,9 @@ public class GourmetListAdapter extends PlaceListAdapter
                 }
 
                 // grade
-                viewHolder.hotelGradeView.setText(place.grade.getName(context));
-                viewHolder.hotelGradeView.setBackgroundResource(place.grade.getColorResId());
+                viewHolder.hotelGradeView.setVisibility(View.GONE);
+                //                viewHolder.hotelGradeView.setText(place.grade.getName(context));
+                //                viewHolder.hotelGradeView.setBackgroundResource(place.grade.getColorResId());
 
                 if (Util.getLCDWidth(context) < 720)
                 {

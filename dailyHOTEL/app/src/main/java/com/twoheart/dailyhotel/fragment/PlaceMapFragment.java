@@ -673,7 +673,8 @@ public abstract class PlaceMapFragment extends com.google.android.gms.maps.Suppo
             {
                 position = i;
 
-                PlaceRenderer placeRenderer = new PlaceRenderer(baseActivity, place.discountPrice, place.grade.getMarkerResId());
+                //                PlaceRenderer placeRenderer = new PlaceRenderer(baseActivity, place.discountPrice, place.grade.getMarkerResId());
+                PlaceRenderer placeRenderer = new PlaceRenderer(baseActivity, place.discountPrice, Place.Grade.special.getMarkerResId());
                 BitmapDescriptor icon = placeRenderer.getBitmap(true);
 
                 if (mSelectedMarker != null)
