@@ -50,7 +50,7 @@
         android:id="@+id/buttonLayout"
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:background="@drawable/popup_btn_off">
+        android:background="@drawable/popup_btn_on">
 
         <LinearLayout
             android:id="@+id/twoButtonLayout"
