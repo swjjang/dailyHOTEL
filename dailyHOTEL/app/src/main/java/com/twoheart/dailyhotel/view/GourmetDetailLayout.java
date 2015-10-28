@@ -396,14 +396,18 @@ public class GourmetDetailLayout extends PlaceDetailLayout
 
             // 등급
             mGradeTextView = (TextView) view.findViewById(R.id.hotelGradeTextView);
-            mGradeTextView.setVisibility(View.VISIBLE);
+            mGradeTextView.setVisibility(View.GONE);
 
-            mGradeTextView.setText(placeDetail.grade.getName(mFragmentActivity));
-            mGradeTextView.setBackgroundResource(placeDetail.grade.getColorResId());
+            //            mGradeTextView.setText(placeDetail.grade.getName(mFragmentActivity));
+            //            mGradeTextView.setBackgroundResource(placeDetail.grade.getColorResId());
 
             // 호텔명
             mNameTextView = (TextView) view.findViewById(R.id.hotelNameTextView);
             mNameTextView.setText(placeDetail.name);
+
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+            layoutParams.setMargins(Util.dpToPx(mActivity, 15), 0, Util.dpToPx(mActivity, 40), 0);
+            mNameTextView.setLayoutParams(layoutParams);
 
             if (mNameTextView.getTag() == null)
             {

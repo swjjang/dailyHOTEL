@@ -78,9 +78,11 @@ public class PlaceTabMapFragment extends BaseFragment implements OnMapClickListe
         hotelAddressTextView.setSelected(true);
 
         TextView hotelGradeTextView = (TextView) view.findViewById(R.id.hv_hotel_grade);
+        hotelGradeTextView.setVisibility(View.GONE);
+        hotelNameTextView.setPadding(0, 0, 0, 0);
 
-        hotelGradeTextView.setText(mPlaceBookingDetail.grade.getName(getActivity()));
-        hotelGradeTextView.setBackgroundResource(mPlaceBookingDetail.grade.getColorResId());
+        //        hotelGradeTextView.setText(mPlaceBookingDetail.grade.getName(getActivity()));
+        //        hotelGradeTextView.setBackgroundResource(mPlaceBookingDetail.grade.getColorResId());
 
         return view;
     }
