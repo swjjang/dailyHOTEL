@@ -55,7 +55,7 @@
         android:id="@+id/positiveTextView"
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:background="@drawable/popup_btn_off"
+        android:background="@drawable/popup_btn_on"
         android:gravity="center"
         android:text="@string/dialog_btn_text_confirm"
         android:textColor="@color/white"
