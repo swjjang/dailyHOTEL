@@ -94,6 +94,8 @@ public class SignupActivity extends BaseActivity implements OnClickListener
         String phoneNumber = null;
         mFirstMobileNumberFocus = true;
 
+        boolean isVisibleRecommender = true;
+
         if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER) == true)
         {
             mMode = MODE_USERINFO_UPDATE;
@@ -116,6 +118,18 @@ public class SignupActivity extends BaseActivity implements OnClickListener
                 return;
             }
 
+            if (mIsDailyUser == true)
+            {
+                isVisibleRecommender = false;
+            } else
+            {
+                // 3가지 정보가 전부 있는 경우에는 소셜 유저가 업데이트 하는 경우이다
+                if (Util.isTextEmpty(user.getName()) == false && Util.isTextEmpty(user.getEmail()) == false && Util.isTextEmpty(user.getPhone()) == false)
+                {
+                    isVisibleRecommender = false;
+                }
+            }
+
             if (Util.isValidatePhoneNumber(user.getPhone()) == false)
             {
                 user.setPhone(null);
@@ -135,17 +149,17 @@ public class SignupActivity extends BaseActivity implements OnClickListener
             setActionBar(R.string.actionbar_title_signup_activity);
         }
 
-        initLayout(user, phoneNumber);
+        initLayout(user, phoneNumber, isVisibleRecommender);
     }
 
-    private void initLayout(Customer user, final String mobileNumber)
+    private void initLayout(Customer user, final String mobileNumber, boolean isVisibleRecommender)
     {
         mPasswordEditText = (EditText) findViewById(R.id.et_signup_pwd);
         mEmailEditText = (EditText) findViewById(R.id.et_signup_email);
         mRecommenderEditText = (EditText) findViewById(R.id.et_signup_recommender);
         mNameEditText = (EditText) findViewById(R.id.et_signup_name);
 
-        if (mMode == MODE_USERINFO_UPDATE && mIsDailyUser == true)
+        if (isVisibleRecommender == false)
         {
             mRecommenderEditText.setVisibility(View.GONE);
         }
