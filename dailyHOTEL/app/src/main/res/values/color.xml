@@ -141,4 +141,15 @@
 
     <!-- -->
     <color name="satisfaction_box_default">#c5c5c5</color>
+
+    <color name="dialog_inputmobile_hint">#4d3a3a3a</color>
+    <color name="dialog_inputmobile_line">#dfdfdf</color>
+
+    <color name="countrycode_country_text_default">#272727</color>
+    <color name="countrycode_code_text_default">#636363</color>
+    <color name="countrycode_underline">#d9d9d9</color>
+
+    <!-- Country Code -->
+    <color name="countrycode_section_background">#f7f7f7</color>
+    <color name="countrycode_section_text">#4d272727</color>
 </resources>	

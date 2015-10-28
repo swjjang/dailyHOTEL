@@ -179,7 +179,7 @@ public class PaymentActivity extends BaseActivity implements Constants
                 mPay.getType().name(), //
                 mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), //
                 String.valueOf(saleRoomInformation.nights), //
-                String.valueOf(mPay.isSaleCredit() ? mPay.credit : 0), guest.name, guest.phone, guest.email));
+                String.valueOf(mPay.isSaleCredit() ? mPay.credit : 0), guest.name, guest.phone.replace("-", ""), guest.email));
 
             byte[] postParameter = parsePostParameter(postParameterKey.toArray(new String[postParameterKey.size()]), postParameterValue.toArray(new String[postParameterValue.size()]));
 

@@ -184,6 +184,8 @@
                         android:layout_weight="0.7"
                         android:gravity="right|center_vertical"
                         android:textColor="@drawable/selector_textview_textcolor"
+                        android:hint="@string/act_profile_input_contact"
+                        android:textColorHint="@color/textView_textColor_main"
                         android:textSize="15dp"/>
                 </LinearLayout>
             </LinearLayout>
@@ -237,18 +239,31 @@
                         android:textColor="@drawable/selector_textview_textcolor"
                         android:textSize="15dp"/>
 
-                    <com.twoheart.dailyhotel.view.widget.DailyEditText
-                        android:id="@+id/et_profile_phone"
+                    <FrameLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.7"
-                        android:gravity="right|center_vertical"
-                        android:hint="@string/act_profile_input_contact"
-                        android:inputType="phone"
-                        android:maxLength="20"
-                        android:singleLine="true"
-                        android:textColor="@drawable/selector_textview_textcolor"
-                        android:textSize="15dp"/>
+                        android:layout_weight="0.7">
+
+                        <com.twoheart.dailyhotel.view.widget.DailyEditText
+                            android:id="@+id/et_profile_phone"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="right|center_vertical"
+                            android:hint="@string/act_profile_input_contact"
+                            android:inputType="phone"
+                            android:maxLength="20"
+                            android:singleLine="true"
+                            android:textColor="@drawable/selector_textview_textcolor"
+                            android:textSize="15dp"/>
+
+                        <View
+                            android:id="@+id/fakeMobileEditView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"/>
+
+                    </FrameLayout>
+
+
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

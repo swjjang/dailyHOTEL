@@ -350,11 +350,12 @@ public class HotelDetailActivity extends BaseActivity
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
     }
 
-    private void moveToUserInfoUpdate(Customer user, int recommender)
+    private void moveToUserInfoUpdate(Customer user, int recommender, boolean isDailyUser)
     {
         Intent intent = new Intent(HotelDetailActivity.this, SignupActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER, user);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_RECOMMENDER, recommender);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ISDAILYUSER, isDailyUser);
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_USERINFO_UPDATE);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
@@ -676,20 +677,26 @@ public class HotelDetailActivity extends BaseActivity
                     int recommender = jsonObject.getInt("recommender_code");
                     boolean isDailyUser = jsonObject.getBoolean("is_daily_user");
 
-                    // 소셜유저
-                    if (isDailyUser == false)
+                    if (isDailyUser == true)
                     {
-                        if (isEmptyTextField(new String[]{user.getEmail(), user.getPhone(), user.getName()}) == false)
+                        if (Util.isValidatePhoneNumber(user.getPhone()) == true)
                         {
                             moveToBooking(mSelectedSaleRoomInformation);
                         } else
                         {
                             // 정보 업데이트 화면으로 이동.
-                            moveToUserInfoUpdate(user, recommender);
+                            moveToUserInfoUpdate(user, recommender, isDailyUser);
                         }
                     } else
                     {
-                        moveToBooking(mSelectedSaleRoomInformation);
+                        if (isEmptyTextField(new String[]{user.getEmail(), user.getPhone(), user.getName()}) == false && Util.isValidatePhoneNumber(user.getPhone()) == true)
+                        {
+                            moveToBooking(mSelectedSaleRoomInformation);
+                        } else
+                        {
+                            // 정보 업데이트 화면으로 이동.
+                            moveToUserInfoUpdate(user, recommender, isDailyUser);
+                        }
                     }
                 } else
                 {
@@ -864,6 +871,20 @@ public class HotelDetailActivity extends BaseActivity
 
                     if (saleTime.isSaleTime() == true)
                     {
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
+                        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+                        int hotelDailyDay = Integer.parseInt(simpleDateFormat.format(mCheckInSaleTime.getDayOfDaysHotelDate()));
+                        int todayDailyDay = Integer.parseInt(simpleDateFormat.format(new Date(saleTime.getDailyTime())));
+
+                        // 지난 날의 호텔인 경우.
+                        if (hotelDailyDay < todayDailyDay)
+                        {
+                            DailyToast.showToast(HotelDetailActivity.this, R.string.toast_msg_dont_past_hotelinfo, Toast.LENGTH_LONG);
+                            finish();
+                            return;
+                        }
+
                         // 호텔 정보를 가져온다.
                         String params = String.format("?hotel_idx=%d&checkin_date=%s&length_stay=%d", mHotelDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), mHotelDetail.nights);
 

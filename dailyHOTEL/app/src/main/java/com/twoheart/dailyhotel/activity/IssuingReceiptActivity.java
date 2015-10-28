@@ -115,7 +115,7 @@ public class IssuingReceiptActivity extends BaseActivity
 
             // 고객성명/번호
             TextView customerInfoTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView7);
-            customerInfoTextView.setText(userName + " / " + userPhone);
+            customerInfoTextView.setText(userName + " / " + Util.addHippenMobileNumber(IssuingReceiptActivity.this, userPhone));
 
             // 체크인/아웃
             TextView chekcinoutTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView9);

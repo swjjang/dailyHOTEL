@@ -98,6 +98,7 @@ import java.util.TimeZone;
 @SuppressLint({"NewApi", "ResourceAsColor"})
 public class BookingActivity extends BaseActivity implements OnClickListener, OnCheckedChangeListener, android.widget.CompoundButton.OnCheckedChangeListener
 {
+    private static int REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY = 10000;
     private static final int DEFAULT_AVAILABLE_RESERVES = 20000;
 
     private static final int DIALOG_CONFIRM_PAYMENT_CARD = 0;
@@ -667,7 +668,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             params.put("billkey", mSelectedCreditCard.billingkey);
             params.put("bonus", bonus);
             params.put("guest_name", guest.name);
-            params.put("guest_phone", guest.phone);
+            params.put("guest_phone", guest.phone.replace("-", ""));
             params.put("guest_email", guest.email);
 
             if (DEBUG == true)
@@ -700,6 +701,18 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
     {
         super.onActivityResult(requestCode, resultCode, intent);
         unLockUI();
+
+        if (requestCode == REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY)
+        {
+            if (resultCode == RESULT_OK && intent != null)
+            {
+                String mobileNumber = intent.getStringExtra(InputMobileNumberDialogActivity.INTENT_EXTRA_MOBILE_NUMBER);
+
+                etReserverNumber.setText(mobileNumber);
+            }
+
+            return;
+        }
 
         mReqCode = requestCode;
         mResCode = resultCode;
@@ -1401,6 +1414,12 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
         }, null, false);
     }
 
+    private void showInputMobileNumberDialog(String mobileNumber)
+    {
+        Intent intent = InputMobileNumberDialogActivity.newInstance(BookingActivity.this, mobileNumber);
+        startActivityForResult(intent, REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY);
+    }
+
     private void writeLogPaid(Pay pay)
     {
         try
@@ -1536,6 +1555,41 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             {
                 etReserverNumber.setBackgroundDrawable(mEditTextBackground[1]);
             }
+
+            etReserverNumber.setCursorVisible(false);
+            etReserverNumber.setOnFocusChangeListener(new View.OnFocusChangeListener()
+            {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus)
+                {
+                    if (hasFocus == true)
+                    {
+                        showInputMobileNumberDialog(etReserverNumber.getText().toString());
+                    } else
+                    {
+                        etReserverNumber.setSelected(false);
+                    }
+                }
+            });
+
+            View fakeMobileEditView = findViewById(R.id.fakeMobileEditView);
+
+            fakeMobileEditView.setFocusable(true);
+            fakeMobileEditView.setOnClickListener(new OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (etReserverNumber.isSelected() == true)
+                    {
+                        showInputMobileNumberDialog(etReserverNumber.getText().toString());
+                    } else
+                    {
+                        etReserverNumber.requestFocus();
+                        etReserverNumber.setSelected(true);
+                    }
+                }
+            });
 
             // 이메일.
 
@@ -2159,7 +2213,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                                     etReserverName.setText(overseasName);
                                 }
 
-                                etReserverNumber.setText(overseasPhone);
+                                etReserverNumber.setText(Util.addHippenMobileNumber(BookingActivity.this, overseasPhone));
                                 etReserverEmail.setText(overseasEmail);
                             }
                         } else
@@ -2167,7 +2221,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                             if (mIsEditMode == false)
                             {
                                 etReserverName.setText(guest.name);
-                                etReserverNumber.setText(guest.phone);
+                                etReserverNumber.setText(Util.addHippenMobileNumber(BookingActivity.this, guest.phone));
                                 etReserverEmail.setText(guest.email);
                             }
                         }

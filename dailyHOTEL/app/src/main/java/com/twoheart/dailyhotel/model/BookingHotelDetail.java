@@ -34,6 +34,7 @@ public class BookingHotelDetail implements Parcelable
             return new BookingHotelDetail[size];
         }
     };
+
     public int isOverseas; // 0 : 국내 , 1 : 해외
     public String roomName;
     public String guestName;

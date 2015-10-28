@@ -22,6 +22,7 @@ import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.GourmetBookingDetail;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
 
 public class GourmetTabBookingFragment extends BaseFragment implements Constants
@@ -81,7 +82,7 @@ public class GourmetTabBookingFragment extends BaseFragment implements Constants
         ticketCountTextView.setText(getString(R.string.label_booking_count, mGourmetBookingDetail.ticketCount));
         dateTextView.setText(mGourmetBookingDetail.sday);
         userNameTextView.setText(mGourmetBookingDetail.guestName);
-        userPhoneTextView.setText(mGourmetBookingDetail.guestPhone);
+        userPhoneTextView.setText(Util.addHippenMobileNumber(baseActivity, mGourmetBookingDetail.guestPhone));
 
         // Android Marquee bug...
         ticketNameTextView.setSelected(true);

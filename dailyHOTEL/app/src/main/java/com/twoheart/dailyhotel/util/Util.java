@@ -23,6 +23,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings.Secure;
+import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -427,6 +428,188 @@ public class Util implements Constants
         return params;
     }
 
+    private static String getValidateCountry(String code)
+    {
+        ContryCodeNumber contryCodeNumber = new ContryCodeNumber();
+
+        return contryCodeNumber.getCountry(code);
+    }
+
+    private static boolean isValidateCountryCode(String code)
+    {
+        ContryCodeNumber contryCodeNumber = new ContryCodeNumber();
+
+        return contryCodeNumber.hasCountryCode(code);
+    }
+
+    public static boolean isValidatePhoneNumber(String phonenumber)
+    {
+        if (Util.isTextEmpty(phonenumber) == true)
+        {
+            return false;
+        }
+
+        if (phonenumber.charAt(0) == '+')
+        {
+            String[] text = phonenumber.split("\\s");
+
+            if (text.length != 2)
+            {
+                return false;
+            }
+
+            // 국제 전화번호 존재 여부 확인
+            if (isValidateCountryCode(text[0]) == false)
+            {
+                return false;
+            }
+
+            text[1] = text[1].replace("-", "");
+
+            if ("+82".equalsIgnoreCase(text[0]) == true)
+            {
+                if (text[1].startsWith("(0)10") || text[1].startsWith("(0)11") || text[1].startsWith("(0)16") //
+                    || text[1].startsWith("(0)17") || text[1].startsWith("(0)18") || text[1].startsWith("(0)19"))
+                {
+                    if (TextUtils.isDigitsOnly(text[1].substring(5)) == true)
+                    {
+                        int length = text[1].length();
+                        if (length == 12 || length == 13)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            } else
+            {
+                // 국내가 아니면 숫자만 있는지 검증한다
+                if (TextUtils.isDigitsOnly(text[1]) == true)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * +82 (0)1012345678 (한국 핸드폰 전화번호만 가능)
+     *
+     * @param mobileNumber
+     * @return
+     */
+    public static boolean isExistMobileNumber(String mobileNumber)
+    {
+        if (Util.isTextEmpty(mobileNumber) == true || mobileNumber.startsWith("+82") == false)
+        {
+            return false;
+        }
+
+        String[] number = mobileNumber.split("\\s");
+
+        if (number.length != 2)
+        {
+            return false;
+        }
+
+        number[1] = number[1].replaceAll("\\(|\\)|-", "");
+
+        String mobile01 = number[1].substring(0, 3);
+
+        int middle = number[1].length() == 10 ? 6 : 7;
+        String mobile02 = number[1].substring(3, middle);
+        String mobile03 = number[1].substring(middle);
+
+        final String PATTERN = "(010|011|016|017|018|019){1,}";
+        final String PATTERN_3 = "111|222|333|444|555|666|777|888|999|000|012|123|234|345|456|567|678|789";
+        final String PATTENR_4 = "1111|2222|3333|4444|5555|6666|7777|8888|9999|0000|0123|1234|2345|3456|4567|5678|6789";
+
+        Pattern pattern01 = Pattern.compile(PATTERN);
+        Pattern pattern02 = Pattern.compile(String.format("(%s|%s){1,}", PATTERN_3, PATTENR_4));
+        Pattern pattern03 = Pattern.compile(String.format("(%s){1,}", PATTENR_4));
+
+        return pattern01.matcher(mobile01).matches() && pattern02.matcher(mobile02).matches() && pattern03.matcher(mobile03).matches();
+    }
+
+
+    public static String getLine1Number(Context context)
+    {
+        TelephonyManager telManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        return telManager.getLine1Number();
+    }
+
+    public static final String DEFAULT_COUNTRY_CODE = "대한민국\n+82";
+
+    public static String[] getValidatePhoneNumber(String phonenumber)
+    {
+        if (Util.isTextEmpty(phonenumber) == true)
+        {
+            return null;
+        }
+
+        if (phonenumber.charAt(0) == '+')
+        {
+            String[] text = phonenumber.split("\\s");
+
+            if (text.length != 2)
+            {
+                return null;
+            }
+
+            String countryCode = getValidateCountry(text[0]);
+
+            // 국제 전화번호 존재 여부 확인
+            if (isTextEmpty(countryCode) == true)
+            {
+                return null;
+            }
+
+            if ("+82".equalsIgnoreCase(text[0]) == true)
+            {
+                if (text[1].startsWith("(0)10") || text[1].startsWith("(0)11") || text[1].startsWith("(0)16") //
+                    || text[1].startsWith("(0)17") || text[1].startsWith("(0)18") || text[1].startsWith("(0)19"))
+                {
+                    if (TextUtils.isDigitsOnly(text[1].substring(5)) == true)
+                    {
+                        int length = text[1].length();
+                        if (length == 12 || length == 13)
+                        {
+                            text[0] = DEFAULT_COUNTRY_CODE;
+                            return text;
+                        }
+                    }
+                }
+            } else
+            {
+                // 국내가 아니면 숫자만 있는지 검증한다
+                if (TextUtils.isDigitsOnly(text[1]) == true)
+                {
+                    text[0] = countryCode + "\n" + text[0];
+                    return text;
+                }
+            }
+        } else
+        {
+            String text = phonenumber.replace("-", "").replace(" ", "");
+
+            if (text.startsWith("010") || text.startsWith("011") || text.startsWith("016") //
+                || text.startsWith("017") || text.startsWith("018") || text.startsWith("019"))
+            {
+                if (TextUtils.isDigitsOnly(text) == true)
+                {
+                    int length = text.length();
+                    if (length == 10 || length == 11)
+                    {
+                        return new String[]{DEFAULT_COUNTRY_CODE, text};
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
     public static Dialog showDatePickerDialog(BaseActivity baseActivity, String titleText, final String[] values, String selectValue, String positive //
         , final View.OnClickListener positiveListener)
     {
@@ -516,5 +699,37 @@ public class Util implements Constants
         }
 
         return null;
+    }
+
+    public static String addHippenMobileNumber(Context context, String mobileNumber)
+    {
+        if (Util.isTextEmpty(mobileNumber) == true)
+        {
+            return mobileNumber;
+        }
+
+        mobileNumber = mobileNumber.replace("-", "");
+
+        if (Util.isValidatePhoneNumber(mobileNumber) == true)
+        {
+            String[] countryCode = Util.getValidatePhoneNumber(mobileNumber);
+            String result;
+
+            TextView textView = new TextView(context);
+
+            if (Util.DEFAULT_COUNTRY_CODE.equals(countryCode[0]) == true)
+            {
+                textView.addTextChangedListener(new PhoneNumberKoreaFormattingTextWatcher(context));
+            } else
+            {
+                textView.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
+            }
+
+            textView.setText(countryCode[1].replaceAll("\\(|\\)|-", ""));
+            return countryCode[0].substring(countryCode[0].indexOf('\n') + 1) + " " + textView.getText().toString();
+        } else
+        {
+            return mobileNumber;
+        }
     }
 }

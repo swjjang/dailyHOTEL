@@ -9,18 +9,16 @@
 package com.twoheart.dailyhotel.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputFilter;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
@@ -50,7 +48,7 @@ import java.util.Map;
 
 public class ProfileActivity extends BaseActivity implements OnClickListener
 {
-    private final String INVALID_NULL = "null";
+    private static int REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY = 1;
 
     private InputMethodManager mInputMethodManager;
     private String prevName;
@@ -102,18 +100,39 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
 
         mNameEditText = (EditText) findViewById(R.id.et_profile_name);
         mPhoneEditText = (EditText) findViewById(R.id.et_profile_phone);
-        mPhoneEditText.setOnEditorActionListener(new OnEditorActionListener()
+
+        mPhoneEditText.setCursorVisible(false);
+        mPhoneEditText.setOnFocusChangeListener(new View.OnFocusChangeListener()
         {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+            public void onFocusChange(View v, boolean hasFocus)
             {
-                switch (actionId)
+                if (hasFocus == true)
                 {
-                    case EditorInfo.IME_ACTION_DONE:
-                        profileEditLayout.performClick();
-                        break;
+                    showInputMobileNumberDialog(mPhoneEditText.getText().toString());
+                } else
+                {
+                    mPhoneEditText.setSelected(false);
                 }
-                return true;
+            }
+        });
+
+        View fakeMobileEditView = findViewById(R.id.fakeMobileEditView);
+
+        fakeMobileEditView.setFocusable(true);
+        fakeMobileEditView.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (mPhoneEditText.isSelected() == true)
+                {
+                    showInputMobileNumberDialog(mPhoneEditText.getText().toString());
+                } else
+                {
+                    mPhoneEditText.requestFocus();
+                    mPhoneEditText.setSelected(true);
+                }
             }
         });
 
@@ -133,7 +152,12 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
     public void onResume()
     {
         super.onResume();
-        updateTextField();
+
+        // 수정 중에는 업데이트 하지 않음
+        if (mEditButtonView.getText().equals(getString(R.string.act_profile_modify)))
+        {
+            updateTextField();
+        }
     }
 
     @Override
@@ -165,44 +189,25 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
         {
             super.onBackPressed();
         }
-
     }
 
-    //    public void setupUI(View view)
-    //    {
-    //        if (view.getId() == R.id.ll_profile_edit)
-    //        {
-    //            return;
-    //        }
-    //
-    //        // Set up touch listener for non-text box views to hide keyboard.
-    //        if (!(view instanceof EditText))
-    //        {
-    //            view.setOnTouchListener(new OnTouchListener()
-    //            {
-    //                public boolean onTouch(View v, MotionEvent event)
-    //                {
-    //                    if (mEditButtonView.getText().equals(getString(R.string.dialog_btn_text_confirm)))
-    //                    {
-    //                        profileEditLayout.performClick();
-    //                        return true;
-    //                    }
-    //                    return false;
-    //                }
-    //
-    //            });
-    //        }
-    //
-    //        // If a layout container, iterate over children and seed recursion.
-    //        if (view instanceof ViewGroup)
-    //        {
-    //            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++)
-    //            {
-    //                View innerView = ((ViewGroup) view).getChildAt(i);
-    //                setupUI(innerView);
-    //            }
-    //        }
-    //    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        releaseUiComponent();
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY)
+        {
+            if (resultCode == RESULT_OK && data != null)
+            {
+                String mobileNumber = data.getStringExtra(InputMobileNumberDialogActivity.INTENT_EXTRA_MOBILE_NUMBER);
+
+                mPhoneEditText.setText(mobileNumber);
+            }
+        }
+    }
 
     private void toggleKeyboard(boolean show)
     {
@@ -222,11 +227,9 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
             mNameEditText.setFilters(allowAlphanumericHangul);
 
             mInputMethodManager.showSoftInput(mNameEditText, InputMethodManager.SHOW_FORCED);
-
         } else
         {
             mInputMethodManager.hideSoftInputFromWindow(mNameEditText.getWindowToken(), 0);
-
         }
     }
 
@@ -253,7 +256,9 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
                 lockUiComponent();
 
                 String name = mNameEditText.getText().toString().trim();
+
                 String phone = mPhoneEditText.getText().toString().trim();
+                phone = phone.replaceAll("-", "");
 
                 if (Util.isTextEmpty(phone) == true)
                 {
@@ -336,13 +341,18 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
         overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
     }
 
+    private void showInputMobileNumberDialog(String mobileNumber)
+    {
+        Intent intent = InputMobileNumberDialogActivity.newInstance(ProfileActivity.this, mobileNumber);
+        startActivityForResult(intent, REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY);
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private DailyHotelJsonResponseListener mUserLogInfoJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -357,7 +367,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
                 String userName = response.getString("name");
                 String userPhone = response.getString("phone");
 
-                if (Util.isTextEmpty(userEmail) == true || INVALID_NULL.equalsIgnoreCase(userEmail) == true)
+                if (Util.isTextEmpty(userEmail) == true)
                 {
                     userEmail = getString(R.string.act_profile_input_email);
                 }
@@ -371,13 +381,20 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
                     prevName = userName;
                 }
 
-                if (Util.isTextEmpty(userPhone) == true || INVALID_NULL.equalsIgnoreCase(userPhone) == true)
+                if (Util.isTextEmpty(userPhone) == true)
                 {
-                    userPhone = getString(R.string.act_profile_input_contact);
                     prevPh = "";
                 } else
                 {
                     prevPh = userPhone;
+                }
+
+                if (Util.isValidatePhoneNumber(prevPh) == false)
+                {
+                    prevPh = "";
+                } else
+                {
+                    prevPh = Util.addHippenMobileNumber(ProfileActivity.this, prevPh);
                 }
 
                 TextView emailTextView = (TextView) findViewById(R.id.tv_profile_email);
@@ -387,10 +404,10 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
                 nameTextView.setText(userName);
 
                 TextView phoneTextView = (TextView) findViewById(R.id.tv_profile_phone);
-                phoneTextView.setText(userPhone);
+                phoneTextView.setText(prevPh);
+                mPhoneEditText.setText(prevPh);
 
                 mNameEditText.setText(prevName);
-                mPhoneEditText.setText(prevPh);
 
                 mEditProfileLayout.setVisibility(View.GONE);
                 mInformationProfileLayout.setVisibility(View.VISIBLE);
@@ -404,9 +421,9 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
             }
         }
     };
+
     private DailyHotelJsonResponseListener mUserUpdateJsonResponseListener = new DailyHotelJsonResponseListener()
     {
-
         @Override
         public void onResponse(String url, JSONObject response)
         {
@@ -441,6 +458,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
             }
         }
     };
+
     private DailyHotelStringResponseListener mUserLogoutStringResponseListener = new DailyHotelStringResponseListener()
     {
         @Override

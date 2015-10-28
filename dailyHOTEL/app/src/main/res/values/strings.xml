@@ -87,7 +87,7 @@
     <string name="toast_msg_retry_payment_after_install_app">해당 어플을 설치 후 다시 시도해 주세요.</string>
     <string name="toast_msg_cancel_payment">결제를 취소하셨습니다</string>
     <string name="toast_msg_profile_not_changed">변경된 사항이 없습니다.</string>
-    <string name="toast_msg_profile_success_to_change">성공적으로 변경되었습니다.</string>
+    <string name="toast_msg_profile_success_to_change">업데이트를 완료하였습니다.</string>
     <string name="toast_msg_logouted">로그아웃되었습니다.</string>
     <string name="toast_msg_logoined">로그인되었습니다.</string>
     <string name="toast_msg_please_input_id">이메일을 입력해주세요.</string>
@@ -111,6 +111,8 @@
     <string name="toast_msg_none_reservationtime_ticket">방문시간은 %1$s 사이로 선택해주세요.</string>
     <string name="toast_msg_please_select_reservationtime">방문 시간을 선택하세요.</string>
     <string name="toast_msg_solodout_area">판매 가능한 지역이 존재하지 않습니다.</string>
+    <string name="toast_msg_input_error_phonenumber">휴대폰 번호 입력이 잘못되었습니다.</string>
+    <string name="toast_msg_confirm_mobilenumber">전화번호를 재확인 부탁드립니다.</string>
 
     <!-- Dialog Messages -->
 
@@ -365,15 +367,18 @@
     <string name="act_payment_chk_contain">취소</string>
 
     <!-- Signup Activity -->
-    <string name="act_signup_phone">[필수] 휴대폰 번호 (\'-\' 제외)</string>
+    <string name="act_signup_phone">[필수] 휴대폰 번호 (예약시 사용)</string>
     <string name="act_signup_email">[필수] 이메일</string>
-    <string name="act_signup_name">[필수] 이름 (체크인시 사용)</string>
+    <string name="act_signup_name">[필수] 이름 (예약시 사용)</string>
     <string name="act_signup_pwd">[필수] 비밀번호 (4자이상)</string>
     <string name="act_signup_code">[선택] 추천인 코드</string>
     <string name="act_signup_btn_signup">약관 동의하고 회원가입</string>
     <string name="act_signup_btn_update">회원정보 수정</string>
     <string name="act_signup_terms">이용약관</string>
     <string name="act_signup_privacy">개인정보 취급방침</string>
+    <string name="message_signup_inputmobile">신속한 예약확인 및 안내를 위해 고객님의\n정확한 연락처를 등록해주세요.</string>
+    <string name="label_inputmobile">휴대폰 번호 입력</string>
+    <string name="label_registeration_mobile">연락처 등록</string>
 
     <!-- BookingTab/HotelTabBooking Fragment -->
     <string name="frag_booking_tab_title">예약</string>
@@ -566,5 +571,9 @@
     <string name="label_fnblistfragment_empty_text01">레스토랑을 준비하고 있습니다.</string>
     <string name="label_fnblistfragment_empty_text02">멋진 레스토랑을 원하시나요?\n1800-9120으로 전화주세요.</string>
     <string name="label_fnblistfragment_header_text">매일 오전 9시, 특별한 하루를 선물할 셰프의 만찬!\n\'데일리고메\'에서 오늘의 엄선된 다이닝을 할인 예약하세요!</string>
+
+    <!-- Country Code List Activity -->
+    <string name="label_select_country">국가 선택</string>
+
 
 </resources>

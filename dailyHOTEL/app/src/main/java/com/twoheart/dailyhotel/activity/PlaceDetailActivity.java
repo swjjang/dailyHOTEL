@@ -338,11 +338,12 @@ public abstract class PlaceDetailActivity extends BaseActivity
         }
     }
 
-    private void moveToUserInfoUpdate(Customer user, int recommender)
+    private void moveToUserInfoUpdate(Customer user, int recommender, boolean isDailyUser)
     {
         Intent intent = new Intent(PlaceDetailActivity.this, SignupActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER, user);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_RECOMMENDER, recommender);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ISDAILYUSER, isDailyUser);
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_USERINFO_UPDATE);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
@@ -615,20 +616,26 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     int recommender = jsonObject.getInt("recommender_code");
                     boolean isDailyUser = jsonObject.getBoolean("is_daily_user");
 
-                    // 소셜 유저
-                    if (isDailyUser == false)
+                    if (isDailyUser == true)
                     {
-                        if (isEmptyTextField(new String[]{user.getEmail(), user.getPhone(), user.getName()}) == false)
+                        if (Util.isValidatePhoneNumber(user.getPhone()) == true)
                         {
                             processBooking(mSelectedTicketInformation, mCheckInSaleTime);
                         } else
                         {
                             // 정보 업데이트 화면으로 이동.
-                            moveToUserInfoUpdate(user, recommender);
+                            moveToUserInfoUpdate(user, recommender, isDailyUser);
                         }
                     } else
                     {
-                        processBooking(mSelectedTicketInformation, mCheckInSaleTime);
+                        if (isEmptyTextField(new String[]{user.getEmail(), user.getPhone(), user.getName()}) == false && Util.isValidatePhoneNumber(user.getPhone()) == true)
+                        {
+                            processBooking(mSelectedTicketInformation, mCheckInSaleTime);
+                        } else
+                        {
+                            // 정보 업데이트 화면으로 이동.
+                            moveToUserInfoUpdate(user, recommender, isDailyUser);
+                        }
                     }
                 } else
                 {
