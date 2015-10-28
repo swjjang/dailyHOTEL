@@ -23,6 +23,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings.Secure;
+import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -698,5 +699,37 @@ public class Util implements Constants
         }
 
         return null;
+    }
+
+    public static String addHippenMobileNumber(Context context, String mobileNumber)
+    {
+        if (Util.isTextEmpty(mobileNumber) == true)
+        {
+            return mobileNumber;
+        }
+
+        mobileNumber = mobileNumber.replace("-", "");
+
+        if (Util.isValidatePhoneNumber(mobileNumber) == true)
+        {
+            String[] countryCode = Util.getValidatePhoneNumber(mobileNumber);
+            String result;
+
+            TextView textView = new TextView(context);
+
+            if (Util.DEFAULT_COUNTRY_CODE.equals(countryCode[0]) == true)
+            {
+                textView.addTextChangedListener(new PhoneNumberKoreaFormattingTextWatcher(context));
+            } else
+            {
+                textView.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
+            }
+
+            textView.setText(countryCode[1].replaceAll("\\(|\\)|-", ""));
+            return countryCode[0].substring(countryCode[0].indexOf('\n') + 1) + " " + textView.getText().toString();
+        } else
+        {
+            return mobileNumber;
+        }
     }
 }

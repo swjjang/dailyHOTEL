@@ -95,7 +95,7 @@ public class BookingTabBookingFragment extends BaseFragment implements Constants
         tvAddress.setText(mHotelDetail.getHotel().getAddress());
         tvBedtype.setText(mHotelDetail.roomName);
         tvCustomerName.setText(mHotelDetail.guestName);
-        tvCustomerPhone.setText(mHotelDetail.guestPhone);
+        tvCustomerPhone.setText(Util.addHippenMobileNumber(baseActivity, mHotelDetail.guestPhone));
         tvCheckIn.setText(mHotelDetail.checkInDay);
         tvCheckOut.setText(mHotelDetail.checkOutDay);
 

@@ -12,7 +12,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.InputFilter;
 import android.view.MotionEvent;
 import android.view.View;
@@ -38,7 +37,6 @@ import com.twoheart.dailyhotel.util.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.PhoneNumberKoreaFormattingTextWatcher;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.view.widget.DailyToast;
@@ -396,21 +394,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener
                     prevPh = "";
                 } else
                 {
-                    String[] countryCode = Util.getValidatePhoneNumber(prevPh);
-
-                    TextView textView = new TextView(ProfileActivity.this);
-
-                    if (Util.DEFAULT_COUNTRY_CODE.equals(countryCode[0]) == true)
-                    {
-                        textView.addTextChangedListener(new PhoneNumberKoreaFormattingTextWatcher(ProfileActivity.this));
-                    } else
-                    {
-                        textView.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
-                    }
-
-                    textView.setText(countryCode[1].replaceAll("\\(|\\)", ""));
-
-                    prevPh = countryCode[0].substring(countryCode[0].indexOf('\n') + 1) + " " + textView.getText().toString();
+                    prevPh = Util.addHippenMobileNumber(ProfileActivity.this, prevPh);
                 }
 
                 TextView emailTextView = (TextView) findViewById(R.id.tv_profile_email);

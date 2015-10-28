@@ -329,15 +329,18 @@ public class GourmetBookingLayout implements OnCheckedChangeListener
         mUserNameEditText.setText(guest.name);
 
         // 연락처
-        mUserPhoneEditText.setText(guest.phone);
+        mUserPhoneEditText.setText(Util.addHippenMobileNumber(mActivity, guest.phone));
 
         // 이메일
         mUserEmailEditText.setText(guest.email);
     }
 
+    /**
+     * @param mobileNumber
+     */
     public void updateUserInformationLayout(String mobileNumber)
     {
-        mUserPhoneEditText.setText(mobileNumber);
+        mUserPhoneEditText.setText(Util.addHippenMobileNumber(mActivity, mobileNumber));
     }
 
     private void initPaymentInformationLayout(BaseActivity activity, View viewRoot)

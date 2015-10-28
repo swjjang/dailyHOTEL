@@ -668,7 +668,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             params.put("billkey", mSelectedCreditCard.billingkey);
             params.put("bonus", bonus);
             params.put("guest_name", guest.name);
-            params.put("guest_phone", guest.phone);
+            params.put("guest_phone", guest.phone.replace("-", ""));
             params.put("guest_email", guest.email);
 
             if (DEBUG == true)
@@ -2213,7 +2213,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                                     etReserverName.setText(overseasName);
                                 }
 
-                                etReserverNumber.setText(overseasPhone);
+                                etReserverNumber.setText(Util.addHippenMobileNumber(BookingActivity.this, overseasPhone));
                                 etReserverEmail.setText(overseasEmail);
                             }
                         } else
@@ -2221,7 +2221,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                             if (mIsEditMode == false)
                             {
                                 etReserverName.setText(guest.name);
-                                etReserverNumber.setText(guest.phone);
+                                etReserverNumber.setText(Util.addHippenMobileNumber(BookingActivity.this, guest.phone));
                                 etReserverEmail.setText(guest.email);
                             }
                         }

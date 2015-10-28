@@ -164,7 +164,7 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
         params.put("billkey", mSelectedCreditCard.billingkey);
         params.put("ticket_count", String.valueOf(ticketPayment.ticketCount));
         params.put("customer_name", guest.name);
-        params.put("customer_phone", guest.phone);
+        params.put("customer_phone", guest.phone.replace("-", ""));
         params.put("customer_email", guest.email);
         params.put("arrival_time", String.valueOf(ticketPayment.ticketTime));
 
