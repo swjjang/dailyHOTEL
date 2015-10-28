@@ -19,6 +19,7 @@ public class Guest implements Parcelable
         }
 
     };
+
     public String email;
     public String name;
     public String phone;

@@ -18,10 +18,12 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -205,7 +207,7 @@ public class InputMobileNumberDialogActivity extends BaseActivity
             }
         });
 
-        View button = view.findViewById(R.id.buttonLayout);
+        final View button = view.findViewById(R.id.buttonLayout);
         button.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -217,7 +219,7 @@ public class InputMobileNumberDialogActivity extends BaseActivity
 
                 String phoneNumber = String.format("%s %s", countryCode, mMobileNumber);
 
-                if (Util.isValidatePhoneNumber(phoneNumber) == true)
+                if (Util.isValidatePhoneNumber(phoneNumber) == true && Util.isExistMobileNumber(phoneNumber) == false)
                 {
                     Intent intent = new Intent();
                     intent.putExtra(INTENT_EXTRA_MOBILE_NUMBER, String.format("%s %s", countryCode, mMobileNumber));
@@ -228,6 +230,20 @@ public class InputMobileNumberDialogActivity extends BaseActivity
                 {
                     DailyToast.showToast(InputMobileNumberDialogActivity.this, R.string.toast_msg_input_error_phonenumber, Toast.LENGTH_SHORT);
                 }
+            }
+        });
+
+        mobileEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
+        {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+            {
+                if (actionId == EditorInfo.IME_ACTION_DONE)
+                {
+                    button.performClick();
+                }
+
+                return false;
             }
         });
 

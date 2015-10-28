@@ -54,6 +54,8 @@ import java.util.TimeZone;
 @SuppressLint({"NewApi", "ResourceAsColor"})
 public class GourmetPaymentActivity extends TicketPaymentActivity
 {
+    private static int REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY = 10000;
+
     private GourmetBookingLayout mGourmetBookingLayout;
     private boolean mIsChangedTime;
 
@@ -74,6 +76,8 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
         public void pay();
 
         public void showCallDialog();
+
+        public void showInputMobileNumberDialog(String mobileNumber);
     }
 
     @Override
@@ -103,6 +107,28 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
         mDoReload = true;
 
         setActionBar(mTicketPayment.getTicketInformation().placeName);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent)
+    {
+        unLockUI();
+
+        if (requestCode == REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY)
+        {
+            if (resultCode == RESULT_OK && intent != null)
+            {
+                String mobileNumber = intent.getStringExtra(InputMobileNumberDialogActivity.INTENT_EXTRA_MOBILE_NUMBER);
+
+                mTicketPayment.getGuest().phone = mobileNumber;
+
+                mGourmetBookingLayout.updateUserInformationLayout(mobileNumber);
+            }
+
+            return;
+        }
+
+        super.onActivityResult(requestCode, resultCode, intent);
     }
 
     @Override
@@ -687,6 +713,15 @@ public class GourmetPaymentActivity extends TicketPaymentActivity
         public void showCallDialog()
         {
             GourmetPaymentActivity.this.showCallDialog();
+        }
+
+        @Override
+        public void showInputMobileNumberDialog(String mobileNumber)
+        {
+            mTicketPayment.setGuest(mGourmetBookingLayout.getGuest());
+
+            Intent intent = InputMobileNumberDialogActivity.newInstance(GourmetPaymentActivity.this, mobileNumber);
+            startActivityForResult(intent, REQUEST_CODE_COUNTRYCODE_DIALOG_ACTIVITY);
         }
     };
 

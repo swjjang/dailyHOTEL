@@ -492,6 +492,46 @@ public class Util implements Constants
         return false;
     }
 
+    /**
+     * +82 (0)1012345678 (한국 핸드폰 전화번호만 가능)
+     *
+     * @param mobileNumber
+     * @return
+     */
+    public static boolean isExistMobileNumber(String mobileNumber)
+    {
+        if (Util.isTextEmpty(mobileNumber) == true || mobileNumber.startsWith("+82") == false)
+        {
+            return false;
+        }
+
+        String[] number = mobileNumber.split("\\s");
+
+        if (number.length != 2)
+        {
+            return false;
+        }
+
+        number[1] = number[1].replaceAll("\\(|\\)|-", "");
+
+        String mobile01 = number[1].substring(0, 3);
+
+        int middle = number[1].length() == 10 ? 6 : 7;
+        String mobile02 = number[1].substring(3, middle);
+        String mobile03 = number[1].substring(middle);
+
+        final String PATTERN = "(010|011|016|017|018|019){1,}";
+        final String PATTERN_3 = "111|222|333|444|555|666|777|888|999|000|012|123|234|345|456|567|678|789";
+        final String PATTENR_4 = "1111|2222|3333|4444|5555|6666|7777|8888|9999|0000|0123|1234|2345|3456|4567|5678|6789";
+
+        Pattern pattern01 = Pattern.compile(PATTERN);
+        Pattern pattern02 = Pattern.compile(String.format("(%s|%s){1,}", PATTERN_3, PATTENR_4));
+        Pattern pattern03 = Pattern.compile(String.format("(%s){1,}", PATTENR_4));
+
+        return pattern01.matcher(mobile01).matches() && pattern02.matcher(mobile02).matches() && pattern03.matcher(mobile03).matches();
+    }
+
+
     public static String getLine1Number(Context context)
     {
         TelephonyManager telManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);

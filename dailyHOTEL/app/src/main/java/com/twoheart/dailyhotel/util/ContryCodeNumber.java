@@ -17,16 +17,19 @@ public class ContryCodeNumber
 {
     private final String[][] CODE_NUMBER = new String[][]{{"", "", "", "주요국가"},//
         {"KR", "82", "KOREA, REPUBLIC OF", "대한민국"},//
-        {"CN", "86", "CHINA", "중국"},//
-        {"SG", "65", "SINGAPORE", "싱가폴"},//
-        {"HK", "852", "HONG KONG", "홍콩"},//
-        {"MO", "853", "MACAO", "마카오"},//
-        {"TH", "66", "THAILAND", "태국"},//
-        {"TW", "886", "TAIWAN, PROVINCE OF CHINA", "대만"},//
-        {"AU", "61", "AUSTRALIA", "호주"},//
-        {"NZ", "64", "NEW ZEALAND", "뉴질랜드"},//
         {"JP", "81", "JAPAN", "일본"},//
         {"US", "1", "UNITED STATES", "미국"},//
+        {"CN", "86", "CHINA", "중국"},//
+        {"AU", "61", "AUSTRALIA", "호주"},//
+        {"TH", "66", "THAILAND", "태국"},//
+        {"PH", "63", "PHLIPPINES", "필리핀"},//
+        {"HK", "852", "HONG KONG", "홍콩"},//
+        {"SG", "65", "SINGAPORE", "싱가폴"},//
+        {"VN", "84", "VIET NAM", "베트남"},//
+        {"CA", "1", "CANADA", "캐나다"},//
+        {"MO", "853", "MACAO", "마카오"},//
+        {"TW", "886", "TAIWAN, PROVINCE OF CHINA", "대만"},//
+        {"NZ", "64", "NEW ZEALAND", "뉴질랜드"},//
 
         {"", "", "", "ㄱ"},//
         {"GH", "233", "GHANA", "가나"},//
@@ -119,7 +122,6 @@ public class ContryCodeNumber
         {"VG", "1284", "VIRGIN ISLANDS, BRITISH", "버진 아일랜드 (영국령)"},//
         {"BM", "229", "BENIN", "베냉"},//
         {"VE", "58", "VENEZUELA", "베네수엘라"},//
-        {"VN", "84", "VIET NAM", "베트남"},//
         {"BE", "32", "BELGIUM", "벨기에"},//
         {"BY", "375", "BELARUS", "벨라루스"},//
         {"BJ", "501", "BELIZE", "벨리즈"},//
@@ -232,7 +234,6 @@ public class ContryCodeNumber
         {"KZ", "73", "KAZAKHSTAN", "카자흐스탄"},//
         {"QA", "974", "QATAR", "카타르"},//
         {"KH", "855", "CAMBODIA", "캄보디아"},//
-        {"CA", "1", "CANADA", "캐나다"},//
         {"KE", "255", "KENYA", "케냐"},//
         {"KY", "1345", "CAYMAN ISLAND", "케이만제도"},//
         {"CI", "225", "COTE D'IVOIRE", "코르디부아르"},//
@@ -281,7 +282,6 @@ public class ContryCodeNumber
         {"GF", "594", "FRENCH GUIANA", "프랑스령 기아나"},//
         {"FJ", "679", "FIJI", "피지"},//
         {"FI", "358", "FINLAND", "핀란드"},//
-        {"PH", "63", "PHLIPPINES", "필리핀"},//
 
         {"", "", "", "ㅎ"},//
         {"HU", "36", "HUNGARY", "헝가리"},//

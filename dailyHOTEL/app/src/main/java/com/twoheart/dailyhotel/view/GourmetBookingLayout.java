@@ -145,7 +145,7 @@ public class GourmetBookingLayout implements OnCheckedChangeListener
         updateTicketInformationLayout(mActivity, ticketPayment);
 
         // 예약자 정보
-        updateUserInformationLayout(mActivity, mUserInformation, ticketPayment);
+        updateUserInformationLayout(ticketPayment);
 
         // 결제 정보
         updatePaymentInformationLayout(mActivity, ticketPayment, creditCard);
@@ -292,6 +292,8 @@ public class GourmetBookingLayout implements OnCheckedChangeListener
         mUserPhoneEditText.setEnabled(false);
         mUserEmailEditText.setEnabled(false);
 
+        mUserPhoneEditText.setCursorVisible(false);
+
         // 수정
         View editLayout = viewRoot.findViewById(R.id.editLinearLayout);
         editLayout.setOnClickListener(new View.OnClickListener()
@@ -309,9 +311,9 @@ public class GourmetBookingLayout implements OnCheckedChangeListener
         });
     }
 
-    private void updateUserInformationLayout(BaseActivity activity, View viewRoot, TicketPayment ticketPayment)
+    private void updateUserInformationLayout(TicketPayment ticketPayment)
     {
-        if (activity == null || viewRoot == null || ticketPayment == null)
+        if (ticketPayment == null)
         {
             return;
         }
@@ -331,6 +333,11 @@ public class GourmetBookingLayout implements OnCheckedChangeListener
 
         // 이메일
         mUserEmailEditText.setText(guest.email);
+    }
+
+    public void updateUserInformationLayout(String mobileNumber)
+    {
+        mUserPhoneEditText.setText(mobileNumber);
     }
 
     private void initPaymentInformationLayout(BaseActivity activity, View viewRoot)
@@ -560,6 +567,46 @@ public class GourmetBookingLayout implements OnCheckedChangeListener
             {
                 mUserPhoneEditText.setBackgroundDrawable(mEditTextBackgrounds[1]);
             }
+
+            mUserPhoneEditText.setOnFocusChangeListener(new View.OnFocusChangeListener()
+            {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus)
+                {
+                    if (hasFocus == true)
+                    {
+                        if (mOnUserActionListener != null)
+                        {
+                            mOnUserActionListener.showInputMobileNumberDialog(mUserPhoneEditText.getText().toString());
+                        }
+                    } else
+                    {
+                        mUserPhoneEditText.setSelected(false);
+                    }
+                }
+            });
+
+            View fakeMobileEditView = mUserInformation.findViewById(R.id.fakeMobileEditView);
+
+            fakeMobileEditView.setFocusable(true);
+            fakeMobileEditView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (mUserPhoneEditText.isSelected() == true)
+                    {
+                        if (mOnUserActionListener != null)
+                        {
+                            mOnUserActionListener.showInputMobileNumberDialog(mUserPhoneEditText.getText().toString());
+                        }
+                    } else
+                    {
+                        mUserPhoneEditText.requestFocus();
+                        mUserPhoneEditText.setSelected(true);
+                    }
+                }
+            });
         }
 
         if (mUserEmailEditText != null && mUserEmailEditText.isEnabled() == false)

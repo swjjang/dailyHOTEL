@@ -80,6 +80,11 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
     {
         super.onCreate(savedInstanceState);
 
+        if (Util.isOverAPI14() == true)
+        {
+            Branch.getAutoInstance(getApplicationContext());
+        }
+
         sharedPreference = getSharedPreferences(NAME_DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
         mQueue = VolleyHttpClient.getRequestQueue();
 
@@ -95,18 +100,6 @@ public class BaseActivity extends AppCompatActivity implements Constants, OnLoad
         };
 
         handler = new Handler();
-    }
-
-    @Override
-    protected void onStart()
-    {
-        super.onStart();
-
-        if (Util.isOverAPI14() == true)
-        {
-            Branch branch = Branch.getInstance();
-            branch.initSession(null, getIntent().getData(), this);
-        }
     }
 
     @Override

@@ -99,19 +99,29 @@
                 android:textColor="@color/booking_subtext"
                 android:textSize="15dp"/>
 
-            <com.twoheart.dailyhotel.view.widget.DailyEditText
-                android:id="@+id/userPhoneEditText"
+            <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.7"
-                android:gravity="right|center_vertical"
-                android:inputType="phone"
-                android:lines="1"
-                android:maxLength="20"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:textColor="@drawable/selector_textview_textcolor"
-                android:textSize="15dp"/>
+                android:layout_weight="0.7">
+
+                <com.twoheart.dailyhotel.view.widget.DailyEditText
+                    android:id="@+id/userPhoneEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right|center_vertical"
+                    android:inputType="phone"
+                    android:lines="1"
+                    android:maxLength="20"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColor="@drawable/selector_textview_textcolor"
+                    android:textSize="15dp"/>
+
+                <View
+                    android:id="@+id/fakeMobileEditView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </FrameLayout>
         </LinearLayout>
 
         <LinearLayout

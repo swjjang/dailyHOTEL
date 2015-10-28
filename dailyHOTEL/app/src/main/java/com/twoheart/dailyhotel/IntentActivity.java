@@ -16,6 +16,11 @@ public class IntentActivity extends Activity
     {
         super.onCreate(savedInstanceState);
 
+        if (Util.isOverAPI14() == true)
+        {
+            Branch.getAutoInstance(getApplicationContext());
+        }
+
         Intent intent = getIntent();
 
         if (intent == null)
@@ -50,11 +55,5 @@ public class IntentActivity extends Activity
     protected void onStart()
     {
         super.onStart();
-
-        if (Util.isOverAPI14() == true)
-        {
-            Branch branch = Branch.getInstance();
-            branch.initSession(null, getIntent().getData(), this);
-        }
     }
 }
