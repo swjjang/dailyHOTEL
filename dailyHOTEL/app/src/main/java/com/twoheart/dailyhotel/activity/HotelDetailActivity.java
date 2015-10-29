@@ -7,6 +7,7 @@
 package com.twoheart.dailyhotel.activity;
 
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -20,7 +21,7 @@ import android.widget.Toast;
 import com.android.volley.Request.Method;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
-import com.twoheart.dailyhotel.model.HotelDetailEx;
+import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.model.SaleRoomInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.VolleyHttpClient;
@@ -51,7 +52,7 @@ public class HotelDetailActivity extends BaseActivity
 {
     private static final int DURATION_HOTEL_IMAGE_SHOW = 4000;
 
-    private HotelDetailEx mHotelDetail;
+    private HotelDetail mHotelDetail;
     private SaleTime mCheckInSaleTime;
 
     private int mCurrentImage;
@@ -67,7 +68,7 @@ public class HotelDetailActivity extends BaseActivity
 
         public void hideActionBar();
 
-        public void onClickImage(HotelDetailEx hotelDetail);
+        public void onClickImage(HotelDetail hotelDetail);
 
         public void startAutoSlide();
 
@@ -150,7 +151,7 @@ public class HotelDetailActivity extends BaseActivity
             int hotelIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, -1);
             int nights = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 0);
 
-            mHotelDetail = new HotelDetailEx(hotelIndex, nights);
+            mHotelDetail = new HotelDetail(hotelIndex, nights);
 
             initLayout(null, null);
         } else
@@ -162,7 +163,7 @@ public class HotelDetailActivity extends BaseActivity
             int hotelIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, -1);
             int nights = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 0);
 
-            mHotelDetail = new HotelDetailEx(hotelIndex, nights);
+            mHotelDetail = new HotelDetail(hotelIndex, nights);
 
             String hotelName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME);
             String hotelImageUrl = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL);
@@ -394,7 +395,7 @@ public class HotelDetailActivity extends BaseActivity
         }
 
         @Override
-        public void onClickImage(HotelDetailEx hotelDetail)
+        public void onClickImage(HotelDetail hotelDetail)
         {
             if (isLockUiComponent() == true)
             {
@@ -594,7 +595,7 @@ public class HotelDetailActivity extends BaseActivity
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    private DailyHotelJsonResponseListener mHotelDetailJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mHotelSaleDetailJsonResponseListener = new DailyHotelJsonResponseListener()
     {
 
         @Override
@@ -607,36 +608,68 @@ public class HotelDetailActivity extends BaseActivity
                     throw new NullPointerException("response == null");
                 }
 
-                int msg_code = response.getInt("msg_code");
+                int msgCode = response.getInt("msgCode");
 
-                if (msg_code != 0)
+                // 0	성공
+                // 4	데이터가 없을시
+                // 5	판매 마감시
+                switch (msgCode)
                 {
-                    if (response.has("msg") == true)
+                    case 0:
                     {
-                        String msg = response.getString("msg");
+                        JSONObject dataJSONObject = response.getJSONObject("data");
 
-                        DailyToast.showToast(HotelDetailActivity.this, msg, Toast.LENGTH_SHORT);
-                        finish();
-                        return;
-                    } else
-                    {
-                        throw new NullPointerException("response == null");
+                        mHotelDetail.setData(dataJSONObject);
+
+                        if (mIsStartByShare == true)
+                        {
+                            mIsStartByShare = false;
+                            initLayout(mHotelDetail.hotelName, null);
+                        }
+
+                        if (mHotelDetailLayout != null)
+                        {
+                            mHotelDetailLayout.setHotelDetail(mHotelDetail, mCurrentImage);
+                        }
+                        break;
                     }
-                }
 
-                JSONObject dataJSONObject = response.getJSONObject("data");
+                    case 5:
+                    {
+                        if (response.has("msg") == true)
+                        {
+                            String msg = response.getString("msg");
 
-                mHotelDetail.setData(dataJSONObject);
+                            showSimpleDialog(getString(R.string.dialog_notice2), msg, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                            {
+                                @Override
+                                public void onDismiss(DialogInterface dialog)
+                                {
+                                    finish();
+                                }
+                            });
+                        } else
+                        {
+                            throw new NullPointerException("response == null");
+                        }
+                        break;
+                    }
 
-                if (mIsStartByShare == true)
-                {
-                    mIsStartByShare = false;
-                    initLayout(mHotelDetail.hotelName, null);
-                }
+                    case 4:
+                    default:
+                    {
+                        if (response.has("msg") == true)
+                        {
+                            String msg = response.getString("msg");
 
-                if (mHotelDetailLayout != null)
-                {
-                    mHotelDetailLayout.setHotelDetail(mHotelDetail, mCurrentImage);
+                            DailyToast.showToast(HotelDetailActivity.this, msg, Toast.LENGTH_SHORT);
+                            finish();
+                        } else
+                        {
+                            throw new NullPointerException("response == null");
+                        }
+                        break;
+                    }
                 }
             } catch (Exception e)
             {
@@ -677,26 +710,13 @@ public class HotelDetailActivity extends BaseActivity
                     int recommender = jsonObject.getInt("recommender_code");
                     boolean isDailyUser = jsonObject.getBoolean("is_daily_user");
 
-                    if (isDailyUser == true)
+                    if (isEmptyTextField(new String[]{user.getEmail(), user.getPhone(), user.getName()}) == false && Util.isValidatePhoneNumber(user.getPhone()) == true)
                     {
-                        if (Util.isValidatePhoneNumber(user.getPhone()) == true)
-                        {
-                            moveToBooking(mSelectedSaleRoomInformation);
-                        } else
-                        {
-                            // 정보 업데이트 화면으로 이동.
-                            moveToUserInfoUpdate(user, recommender, isDailyUser);
-                        }
+                        moveToBooking(mSelectedSaleRoomInformation);
                     } else
                     {
-                        if (isEmptyTextField(new String[]{user.getEmail(), user.getPhone(), user.getName()}) == false && Util.isValidatePhoneNumber(user.getPhone()) == true)
-                        {
-                            moveToBooking(mSelectedSaleRoomInformation);
-                        } else
-                        {
-                            // 정보 업데이트 화면으로 이동.
-                            moveToUserInfoUpdate(user, recommender, isDailyUser);
-                        }
+                        // 정보 업데이트 화면으로 이동.
+                        moveToUserInfoUpdate(user, recommender, isDailyUser);
                     }
                 } else
                 {
@@ -848,14 +868,14 @@ public class HotelDetailActivity extends BaseActivity
                     if (mCheckInSaleTime.isSaleTime() == true)
                     {
                         // 호텔 정보를 가져온다.
-                        String params = String.format("?hotel_idx=%d&checkin_date=%s&length_stay=%d", mHotelDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), mHotelDetail.nights);
+                        String params = String.format("?hotel_idx=%d&checkin_date=%s&nights=%d", mHotelDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), mHotelDetail.nights);
 
                         //						if (DEBUG == true)
                         //						{
                         //							showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
                         //						}
 
-                        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_HOTEL_INFO).append(params).toString(), null, mHotelDetailJsonResponseListener, HotelDetailActivity.this));
+                        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_V1_HOTEL_SALE_DETAIL).append(params).toString(), null, mHotelSaleDetailJsonResponseListener, HotelDetailActivity.this));
                     } else
                     {
                         finish();
@@ -886,14 +906,14 @@ public class HotelDetailActivity extends BaseActivity
                         }
 
                         // 호텔 정보를 가져온다.
-                        String params = String.format("?hotel_idx=%d&checkin_date=%s&length_stay=%d", mHotelDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), mHotelDetail.nights);
+                        String params = String.format("?hotel_idx=%d&checkin_date=%s&nights=%d", mHotelDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyyyMMdd"), mHotelDetail.nights);
 
                         //						if (DEBUG == true)
                         //						{
                         //							showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
                         //						}
 
-                        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_HOTEL_INFO).append(params).toString(), null, mHotelDetailJsonResponseListener, HotelDetailActivity.this));
+                        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_V1_HOTEL_SALE_DETAIL).append(params).toString(), null, mHotelSaleDetailJsonResponseListener, HotelDetailActivity.this));
                     } else
                     {
                         finish();
