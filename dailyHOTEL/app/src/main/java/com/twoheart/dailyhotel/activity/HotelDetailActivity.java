@@ -261,7 +261,7 @@ public class HotelDetailActivity extends BaseActivity
             {
                 setResult(resultCode);
 
-                if (resultCode == RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
+                if (resultCode == RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER)
                 {
                     finish();
                 }
@@ -595,7 +595,7 @@ public class HotelDetailActivity extends BaseActivity
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    private DailyHotelJsonResponseListener mHotelSaleDetailJsonResponseListener = new DailyHotelJsonResponseListener()
+    private DailyHotelJsonResponseListener mSaleDetailJsonResponseListener = new DailyHotelJsonResponseListener()
     {
 
         @Override
@@ -845,8 +845,6 @@ public class HotelDetailActivity extends BaseActivity
                 if (mIsStartByShare == true)
                 {
                     mCheckInSaleTime.setCurrentTime(response.getLong("currentDateTime"));
-                    mCheckInSaleTime.setOpenTime(response.getLong("openDateTime"));
-                    mCheckInSaleTime.setCloseTime(response.getLong("closeDateTime"));
 
                     long shareDailyTime = mCheckInSaleTime.getDayOfDaysHotelDate().getTime();
                     long todayDailyTime = response.getLong("dailyDateTime");
@@ -865,59 +863,45 @@ public class HotelDetailActivity extends BaseActivity
                         return;
                     }
 
-                    if (mCheckInSaleTime.isSaleTime() == true)
-                    {
-                        // 호텔 정보를 가져온다.
-                        String params = String.format("?hotel_idx=%d&checkin_date=%s&nights=%d", mHotelDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), mHotelDetail.nights);
+                    // 호텔 정보를 가져온다.
+                    String params = String.format("?hotel_idx=%d&checkin_date=%s&nights=%d", mHotelDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), mHotelDetail.nights);
 
-                        //						if (DEBUG == true)
-                        //						{
-                        //							showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
-                        //						}
+                    //						if (DEBUG == true)
+                    //						{
+                    //							showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
+                    //						}
 
-                        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_V1_HOTEL_SALE_DETAIL).append(params).toString(), null, mHotelSaleDetailJsonResponseListener, HotelDetailActivity.this));
-                    } else
-                    {
-                        finish();
-                    }
+                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_V1_HOTEL_SALE_DETAIL).append(params).toString(), null, mSaleDetailJsonResponseListener, HotelDetailActivity.this));
                 } else
                 {
                     SaleTime saleTime = new SaleTime();
 
                     saleTime.setCurrentTime(response.getLong("currentDateTime"));
-                    saleTime.setOpenTime(response.getLong("openDateTime"));
-                    saleTime.setCloseTime(response.getLong("closeDateTime"));
                     saleTime.setDailyTime(response.getLong("dailyDateTime"));
 
-                    if (saleTime.isSaleTime() == true)
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
+                    simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+                    int hotelDailyDay = Integer.parseInt(simpleDateFormat.format(mCheckInSaleTime.getDayOfDaysHotelDate()));
+                    int todayDailyDay = Integer.parseInt(simpleDateFormat.format(new Date(saleTime.getDailyTime())));
+
+                    // 지난 날의 호텔인 경우.
+                    if (hotelDailyDay < todayDailyDay)
                     {
-                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
-                        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-                        int hotelDailyDay = Integer.parseInt(simpleDateFormat.format(mCheckInSaleTime.getDayOfDaysHotelDate()));
-                        int todayDailyDay = Integer.parseInt(simpleDateFormat.format(new Date(saleTime.getDailyTime())));
-
-                        // 지난 날의 호텔인 경우.
-                        if (hotelDailyDay < todayDailyDay)
-                        {
-                            DailyToast.showToast(HotelDetailActivity.this, R.string.toast_msg_dont_past_hotelinfo, Toast.LENGTH_LONG);
-                            finish();
-                            return;
-                        }
-
-                        // 호텔 정보를 가져온다.
-                        String params = String.format("?hotel_idx=%d&checkin_date=%s&nights=%d", mHotelDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyyyMMdd"), mHotelDetail.nights);
-
-                        //						if (DEBUG == true)
-                        //						{
-                        //							showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
-                        //						}
-
-                        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_V1_HOTEL_SALE_DETAIL).append(params).toString(), null, mHotelSaleDetailJsonResponseListener, HotelDetailActivity.this));
-                    } else
-                    {
+                        DailyToast.showToast(HotelDetailActivity.this, R.string.toast_msg_dont_past_hotelinfo, Toast.LENGTH_LONG);
                         finish();
+                        return;
                     }
+
+                    // 호텔 정보를 가져온다.
+                    String params = String.format("?hotel_idx=%d&checkin_date=%s&nights=%d", mHotelDetail.hotelIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyyyMMdd"), mHotelDetail.nights);
+
+                    //						if (DEBUG == true)
+                    //						{
+                    //							showSimpleDialog(null, params, getString(R.string.dialog_btn_text_confirm), null);
+                    //						}
+
+                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_V1_HOTEL_SALE_DETAIL).append(params).toString(), null, mSaleDetailJsonResponseListener, HotelDetailActivity.this));
                 }
             } catch (Exception e)
             {

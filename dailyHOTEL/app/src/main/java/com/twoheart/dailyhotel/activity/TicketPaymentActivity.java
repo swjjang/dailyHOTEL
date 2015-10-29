@@ -858,34 +858,11 @@ public abstract class TicketPaymentActivity extends BaseActivity
                 SaleTime saleTime = new SaleTime();
 
                 saleTime.setCurrentTime(response.getLong("currentDateTime"));
-                saleTime.setOpenTime(response.getLong("openDateTime"));
-                saleTime.setCloseTime(response.getLong("closeDateTime"));
                 saleTime.setDailyTime(response.getLong("dailyDateTime"));
 
-                if (saleTime.isSaleTime() == true)
-                {
-                    lockUI();
+                lockUI();
 
-                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, TicketPaymentActivity.this));
-                } else
-                {
-                    unLockUI();
-
-                    View.OnClickListener posListener = new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View view)
-                        {
-                            mDoReload = true;
-
-                            setResult(CODE_RESULT_ACTIVITY_PAYMENT_SALES_CLOSED);
-                            finish();
-                        }
-                    };
-
-                    showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_sales_closed), getString(R.string.dialog_btn_text_confirm), posListener);
-                }
-
+                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, TicketPaymentActivity.this));
             } catch (Exception e)
             {
                 mDoReload = true;

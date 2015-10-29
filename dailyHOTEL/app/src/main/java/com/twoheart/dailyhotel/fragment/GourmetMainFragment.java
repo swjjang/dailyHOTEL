@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
-import com.twoheart.dailyhotel.MainActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.activity.BaseActivity;
 import com.twoheart.dailyhotel.activity.GourmetDetailActivity;
@@ -230,19 +229,6 @@ public class GourmetMainFragment extends PlaceMainFragment
         {
             return false;
         }
-    }
-
-    @Override
-    protected void showClosedDaily(SaleTime saleTime)
-    {
-        MainActivity baseActivity = (MainActivity) getActivity();
-
-        if (baseActivity == null)
-        {
-            return;
-        }
-
-        baseActivity.replaceFragment(WaitTimerFragment.newInstance(saleTime, PlaceMainFragment.TYPE.FNB), String.valueOf(MainActivity.WAITTIMER_FRAGMENT));
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////

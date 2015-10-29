@@ -750,8 +750,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 if (mIsStartByShare == true)
                 {
                     mCheckInSaleTime.setCurrentTime(response.getLong("currentDateTime"));
-                    mCheckInSaleTime.setOpenTime(response.getLong("openDateTime"));
-                    mCheckInSaleTime.setCloseTime(response.getLong("closeDateTime"));
 
                     long shareDailyTime = mCheckInSaleTime.getDayOfDaysHotelDate().getTime();
                     long todayDailyTime = response.getLong("dailyDateTime");
@@ -770,29 +768,15 @@ public abstract class PlaceDetailActivity extends BaseActivity
                         return;
                     }
 
-                    if (mCheckInSaleTime.isSaleTime() == true)
-                    {
-                        requestPlaceDetailInformation(mPlaceDetail, mCheckInSaleTime);
-                    } else
-                    {
-                        finish();
-                    }
+                    requestPlaceDetailInformation(mPlaceDetail, mCheckInSaleTime);
                 } else
                 {
                     SaleTime saleTime = new SaleTime();
 
                     saleTime.setCurrentTime(response.getLong("currentDateTime"));
-                    saleTime.setOpenTime(response.getLong("openDateTime"));
-                    saleTime.setCloseTime(response.getLong("closeDateTime"));
                     saleTime.setDailyTime(response.getLong("dailyDateTime"));
 
-                    if (saleTime.isSaleTime() == true)
-                    {
-                        requestPlaceDetailInformation(mPlaceDetail, mCheckInSaleTime);
-                    } else
-                    {
-                        finish();
-                    }
+                    requestPlaceDetailInformation(mPlaceDetail, mCheckInSaleTime);
                 }
             } catch (Exception e)
             {

@@ -28,9 +28,10 @@ public class SaleTime implements Constants, Parcelable
         }
 
     };
+
     private static final SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd HH:mm:ss", Locale.KOREA);
-    private Date mOpenTime;
-    private Date mCloseTime;
+    //    private Date mOpenTime;
+    //    private Date mCloseTime;
     private Date mCurrentTime;
     private Date mDailyTime;
     private int mDayOfDays; // 데이즈 날짜. curentTime으로 부터 몇일.
@@ -95,8 +96,8 @@ public class SaleTime implements Constants, Parcelable
         SaleTime nextSaleTime = new SaleTime();
 
         nextSaleTime.mDayOfDays = nextDay;
-        nextSaleTime.mOpenTime = new Date(mOpenTime.getTime());
-        nextSaleTime.mCloseTime = new Date(mCloseTime.getTime());
+        //        nextSaleTime.mOpenTime = new Date(mOpenTime.getTime());
+        //        nextSaleTime.mCloseTime = new Date(mCloseTime.getTime());
         nextSaleTime.mCurrentTime = new Date(mCurrentTime.getTime());
         nextSaleTime.mDailyTime = new Date(mDailyTime.getTime());
 
@@ -120,25 +121,25 @@ public class SaleTime implements Constants, Parcelable
         mCurrentTime = new Date(currentTime);
     }
 
-    public long getOpenTime()
-    {
-        return mOpenTime.getTime();
-    }
-
-    public void setOpenTime(long openTime)
-    {
-        mOpenTime = new Date(openTime);
-    }
-
-    public long getCloseTime()
-    {
-        return mCloseTime.getTime();
-    }
-
-    public void setCloseTime(long closeTime)
-    {
-        mCloseTime = new Date(closeTime);
-    }
+    //    public long getOpenTime()
+    //    {
+    //        return mOpenTime.getTime();
+    //    }
+    //
+    //    public void setOpenTime(long openTime)
+    //    {
+    //        mOpenTime = new Date(openTime);
+    //    }
+    //
+    //    public long getCloseTime()
+    //    {
+    //        return mCloseTime.getTime();
+    //    }
+    //
+    //    public void setCloseTime(long closeTime)
+    //    {
+    //        mCloseTime = new Date(closeTime);
+    //    }
 
     public long getDailyTime()
     {
@@ -160,27 +161,27 @@ public class SaleTime implements Constants, Parcelable
         mDayOfDays = dayOfDays;
     }
 
-    public boolean isSaleTime()
-    {
-        if (ALWAYS_OPEN == true)
-        {
-            return true;
-        }
-
-        if ((mCurrentTime != null) && (mOpenTime != null) && (mCloseTime != null))
-        {
-            if ((mCurrentTime.compareTo(mOpenTime) >= 0) && (mCurrentTime.compareTo(mCloseTime) < 0))
-            {
-                return true;
-            } else
-            {
-                return false;
-            }
-        } else
-        {
-            return false;
-        }
-    }
+    //    public boolean isSaleTime()
+    //    {
+    //        if (ALWAYS_OPEN == true)
+    //        {
+    //            return true;
+    //        }
+    //
+    //        if ((mCurrentTime != null) && (mOpenTime != null) && (mCloseTime != null))
+    //        {
+    //            if ((mCurrentTime.compareTo(mOpenTime) >= 0) && (mCurrentTime.compareTo(mCloseTime) < 0))
+    //            {
+    //                return true;
+    //            } else
+    //            {
+    //                return false;
+    //            }
+    //        } else
+    //        {
+    //            return false;
+    //        }
+    //    }
 
     @Override
     public int describeContents()
@@ -191,8 +192,8 @@ public class SaleTime implements Constants, Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
-        dest.writeValue(mOpenTime);
-        dest.writeValue(mCloseTime);
+        //        dest.writeValue(mOpenTime);
+        //        dest.writeValue(mCloseTime);
         dest.writeValue(mCurrentTime);
         dest.writeValue(mDailyTime);
         dest.writeInt(mDayOfDays);
@@ -200,8 +201,8 @@ public class SaleTime implements Constants, Parcelable
 
     private void readFromParcel(Parcel in)
     {
-        mOpenTime = (Date) in.readValue(Date.class.getClassLoader());
-        mCloseTime = (Date) in.readValue(Date.class.getClassLoader());
+        //        mOpenTime = (Date) in.readValue(Date.class.getClassLoader());
+        //        mCloseTime = (Date) in.readValue(Date.class.getClassLoader());
         mCurrentTime = (Date) in.readValue(Date.class.getClassLoader());
         mDailyTime = (Date) in.readValue(Date.class.getClassLoader());
         mDayOfDays = in.readInt();
