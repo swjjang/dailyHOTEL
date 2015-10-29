@@ -521,13 +521,13 @@ public class Util implements Constants
         String mobile02 = number[1].substring(3, middle);
         String mobile03 = number[1].substring(middle);
 
-        final String PATTERN = "(010|011|016|017|018|019){1,}";
-        final String PATTERN_3 = "111|222|333|444|555|666|777|888|999|000|012|123|234|345|456|567|678|789";
-        final String PATTENR_4 = "1111|2222|3333|4444|5555|6666|7777|8888|9999|0000|0123|1234|2345|3456|4567|5678|6789";
+        final String PATTERN = "010|011|016|017|018|019{1}";
+        final String PATTERN_3 = "111|222|333|444|555|666|777|888|999|000|012|123|234|345|456|567|678|789|987|876|765|654|543|432|321|210{1}";
+        final String PATTENR_4 = "1111|2222|3333|4444|5555|6666|7777|8888|9999|0000|0123|1234|2345|3456|4567|5678|6789|9876|8765|7654|6543|5432|4321|3210{1}";
 
         Pattern pattern01 = Pattern.compile(PATTERN);
-        Pattern pattern02 = Pattern.compile(String.format("(%s|%s){1,}", PATTERN_3, PATTENR_4));
-        Pattern pattern03 = Pattern.compile(String.format("(%s){1,}", PATTENR_4));
+        Pattern pattern02 = mobile02.length() == 3 ? Pattern.compile(PATTERN_3) : Pattern.compile(PATTENR_4);
+        Pattern pattern03 = Pattern.compile(PATTENR_4);
 
         return pattern01.matcher(mobile01).matches() && pattern02.matcher(mobile02).matches() && pattern03.matcher(mobile03).matches();
     }
@@ -731,5 +731,38 @@ public class Util implements Constants
         {
             return mobileNumber;
         }
+    }
+
+    private static boolean isValidateNumberPattern(String number)
+    {
+        int targetLength = number.length();
+
+        StringBuffer recursivePattern = new StringBuffer(4);
+        StringBuffer orderedPattern = new StringBuffer(4);
+
+        for (int i = 0; i < 10; i++)
+        {
+            recursivePattern.setLength(0);
+            orderedPattern.setLength(0);
+
+            for (int j = i, k = (i + targetLength); j < k; j++)
+            {
+                if (k <= 10)
+                {
+                    orderedPattern = orderedPattern.append(j);
+                }
+
+                recursivePattern = recursivePattern.append(i);
+            }
+
+            StringBuffer reversedPattern = orderedPattern.reverse();
+
+            if (number.equals(recursivePattern) || number.equals(orderedPattern) || number.equals(reversedPattern))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

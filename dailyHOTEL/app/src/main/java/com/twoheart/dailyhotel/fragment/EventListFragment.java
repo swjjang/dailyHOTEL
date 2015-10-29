@@ -183,7 +183,7 @@ public class EventListFragment extends BaseFragment implements Constants
         return false;
     }
 
-    private void moveToUserInfoUpdate(Customer user, int recommender)
+    private void moveToUserInfoUpdate(Customer user, int recommender, boolean isDailyUser)
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -195,6 +195,7 @@ public class EventListFragment extends BaseFragment implements Constants
         Intent intent = new Intent(baseActivity, SignupActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER, user);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_RECOMMENDER, recommender);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ISDAILYUSER, isDailyUser);
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_USERINFO_UPDATE);
         baseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_left);
@@ -489,21 +490,14 @@ public class EventListFragment extends BaseFragment implements Constants
                     mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_DAILY_EVENT_LIST).toString(), null, mDailyEventListJsonResponseListener, baseActivity));
                 } else
                 {
-                    if (isDailyUser == false)
-                    {
-                        if (isEmptyTextField(new String[]{user.getEmail(), user.getPhone(), user.getName()}) == false)
-                        {
-                            requestEvent(mSelectedEvent, user.getUserIdx());
-                            mSelectedEvent = null;
-                        } else
-                        {
-                            // 정보 업데이트 화면으로 이동.
-                            moveToUserInfoUpdate(user, recommender);
-                        }
-                    } else
+                    if (isEmptyTextField(new String[]{user.getEmail(), user.getPhone(), user.getName()}) == false && Util.isValidatePhoneNumber(user.getPhone()) == true)
                     {
                         requestEvent(mSelectedEvent, user.getUserIdx());
                         mSelectedEvent = null;
+                    } else
+                    {
+                        // 정보 업데이트 화면으로 이동.
+                        moveToUserInfoUpdate(user, recommender, isDailyUser);
                     }
                 }
             } catch (Exception e)
