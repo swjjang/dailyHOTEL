@@ -160,8 +160,8 @@ public interface Constants
     // api/reserv/receipt
     public static final String URL_WEBAPI_RESERV_RECEIPT = UNENCRYPTED_URL ? "api/reserv/receipt" : "OCQ3NiQ3OSQyNSQ2NyQ=$MDgxRDE5WRDExNDUzRjAzNTg1KNDIyMEVCQTlGMDE5NjE5RjVEMjYxMEFBRTRCQzQ4RRTFBMDU0NjFADNCEUxMkI4Qg==$";
 
-    // api/sale/hotel_info
-    public static final String URL_WEBAPI_SALE_HOTEL_INFO = UNENCRYPTED_URL ? "api/sale/hotel_info" : "MTUkNzkkNzgkNTAkMTgk$RTlDMjM5NTAzOEUW5NAzhERTc2N0FFMEZFMDZBMUY2RDcxMkRDMBzVGRTRFMTlBNUU2QTA1NDNGQTEzRBjDJBQjU4Qw==$";
+    // api/v1/hotel/sale/detail
+    public static final String URL_WEBAPI_V1_HOTEL_SALE_DETAIL = UNENCRYPTED_URL ? "api/v1/hotel/sale/detail" : "MTIkNTIkMTQkNjYkNDgk$QzA0RjlFMzNFMNLjA4NEM3MUVEMUM2NDA1Njk5NzQ5OUU5NTCc2MTATxMkEyOEY3RDVSENkFGMzM2RDczNkUxRTQ1NA==$";
 
     // api/user/session/update/fb_user
     public static final String URL_WEBAPI_USER_SESSION_UPDATE_FB_USER = UNENCRYPTED_URL ? "api/user/session/update/fb_user" : "NzIkMjgkMTkkNjYkMiQ=$NTJEyNTA1MEM4Qzk1NTJYBQ0E0NkREQRUE2RTAwNURCNTY3REJBQzA2MjI4QzIyQ0U0VRUM1M0Y5JN0ZGNTJDMzNCNQ==$";

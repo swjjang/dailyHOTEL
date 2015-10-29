@@ -51,7 +51,7 @@ import com.twoheart.dailyhotel.activity.HotelDetailActivity;
 import com.twoheart.dailyhotel.adapter.DetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.model.DetailInformation;
 import com.twoheart.dailyhotel.model.Hotel;
-import com.twoheart.dailyhotel.model.HotelDetailEx;
+import com.twoheart.dailyhotel.model.HotelDetail;
 import com.twoheart.dailyhotel.model.SaleRoomInformation;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -76,7 +76,7 @@ public class HotelDetailLayout
     private static final int NUMBER_OF_ROWSLIST = 9;
     private static final int MAX_OF_ROOMTYPE = 3;
 
-    private HotelDetailEx mHotelDetail;
+    private HotelDetail mHotelDetail;
     private BaseActivity mActivity;
     private View mViewRoot;
     private LoopViewPager mViewPager;
@@ -670,7 +670,7 @@ public class HotelDetailLayout
         return mViewRoot;
     }
 
-    public void setHotelDetail(HotelDetailEx hotelDetail, int imagePosition)
+    public void setHotelDetail(HotelDetail hotelDetail, int imagePosition)
     {
         if (hotelDetail == null)
         {
@@ -1758,7 +1758,7 @@ public class HotelDetailLayout
          * @param hotelDetail
          * @return
          */
-        private View getDetail01View(View view, HotelDetailEx hotelDetail)
+        private View getDetail01View(View view, HotelDetail hotelDetail)
         {
             mHotelTitleLaout = view.findViewById(R.id.hotelTitleLayout);
 
@@ -1818,7 +1818,7 @@ public class HotelDetailLayout
          * @param hotelDetail
          * @return
          */
-        private View getDetail02View(final View view, HotelDetailEx hotelDetail)
+        private View getDetail02View(final View view, HotelDetail hotelDetail)
         {
             // 주소지
             final TextView hotelAddressTextView01 = (TextView) view.findViewById(R.id.hotelAddressTextView01);
@@ -2051,7 +2051,7 @@ public class HotelDetailLayout
          * @param view
          * @return
          */
-        private View getDetailBenefitView(View view, HotelDetailEx hotelDetail)
+        private View getDetailBenefitView(View view, HotelDetail hotelDetail)
         {
             if (view == null || hotelDetail == null)
             {
@@ -2113,7 +2113,7 @@ public class HotelDetailLayout
          * @param view
          * @return
          */
-        private View getDetail04View(LayoutInflater layoutInflater, ViewGroup viewGroup, HotelDetailEx hotelDetail)
+        private View getDetail04View(LayoutInflater layoutInflater, ViewGroup viewGroup, HotelDetail hotelDetail)
         {
             if (layoutInflater == null || viewGroup == null || hotelDetail == null)
             {
@@ -2138,7 +2138,7 @@ public class HotelDetailLayout
          * @param view
          * @return
          */
-        private View getDeatil05View(LayoutInflater layoutInflater, ViewGroup viewGroup, HotelDetailEx hotelDetail)
+        private View getDeatil05View(LayoutInflater layoutInflater, ViewGroup viewGroup, HotelDetail hotelDetail)
         {
             if (layoutInflater == null || viewGroup == null || hotelDetail == null)
             {
@@ -2163,7 +2163,7 @@ public class HotelDetailLayout
          * @param view
          * @return
          */
-        private View getDeatil06View(LayoutInflater layoutInflater, ViewGroup viewGroup, HotelDetailEx hotelDetail)
+        private View getDeatil06View(LayoutInflater layoutInflater, ViewGroup viewGroup, HotelDetail hotelDetail)
         {
             if (layoutInflater == null || viewGroup == null || hotelDetail == null)
             {
@@ -2195,7 +2195,7 @@ public class HotelDetailLayout
          * @param view
          * @return
          */
-        private View getDeatil07View(LayoutInflater layoutInflater, ViewGroup viewGroup, HotelDetailEx hotelDetail)
+        private View getDeatil07View(LayoutInflater layoutInflater, ViewGroup viewGroup, HotelDetail hotelDetail)
         {
             if (layoutInflater == null || viewGroup == null || hotelDetail == null)
             {

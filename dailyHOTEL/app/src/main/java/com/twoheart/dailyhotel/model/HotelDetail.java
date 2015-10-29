@@ -5,7 +5,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class HotelDetailEx
+public class HotelDetail
 {
     public int hotelIndex;
     public int nights;
@@ -23,7 +23,7 @@ public class HotelDetailEx
     private ArrayList<DetailInformation> mMoreInformationList;
     private ArrayList<SaleRoomInformation> mSaleRoomList;
 
-    public HotelDetailEx(int hotelIndex, int nights)
+    public HotelDetail(int hotelIndex, int nights)
     {
         this.hotelIndex = hotelIndex;
         this.nights = nights;
@@ -57,7 +57,10 @@ public class HotelDetailEx
             mImageUrlList.add(imageJsonArray.getString(i));
         }
 
-        hotelBenefit = jsonObject.getString("hotel_benefit");
+        if (jsonObject.has("hotel_benefit") == true)
+        {
+            hotelBenefit = jsonObject.getString("hotel_benefit");
+        }
 
         // Detail
         JSONArray detailJSONArray = jsonObject.getJSONArray("detail");
