@@ -182,14 +182,14 @@ public abstract class DailyHotelRequest<T> extends Request<T> implements Constan
     public Map<String, String> getHeaders() throws AuthFailureError
     {
         HashMap<String, String> map = new HashMap<String, String>();
-        map.put("os-type", "android");
-        map.put("app-version", DailyHotel.VERSION);
+        map.put("Os-Type", "android");
+        map.put("App-Version", DailyHotel.VERSION);
 
         return map;
     }
 
     //    public static void makeUrlEncoder()
     //    {
-    //        DailyHotelRequest.getUrlEncoder("api/v1/hotel/sale/detail");
+    //        DailyHotelRequest.getUrlEncoder("api/v1/hotel/sale/room/payment");
     //    }
 }

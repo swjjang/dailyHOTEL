@@ -218,7 +218,7 @@ public class HotelMainFragment extends BaseFragment
 
     public void setMenuEnabled(boolean enabled)
     {
-        if (mMenuEnabled == enabled || mTodaySaleTime.isSaleTime() == false)
+        if (mMenuEnabled == enabled)
         {
             return;
         }
@@ -1089,75 +1089,65 @@ public class HotelMainFragment extends BaseFragment
                 }
 
                 mTodaySaleTime.setCurrentTime(response.getLong("currentDateTime"));
-                mTodaySaleTime.setOpenTime(response.getLong("openDateTime"));
-                mTodaySaleTime.setCloseTime(response.getLong("closeDateTime"));
                 mTodaySaleTime.setDailyTime(response.getLong("dailyDateTime"));
 
-                if (mTodaySaleTime.isSaleTime() == true)
+                if (mTabIndicator.getVisibility() != View.VISIBLE)
                 {
-                    if (mTabIndicator.getVisibility() != View.VISIBLE)
-                    {
-                        initShow();
-                    }
+                    initShow();
+                }
 
-                    if (baseActivity.sharedPreference.contains(KEY_PREFERENCE_BY_SHARE) == true)
-                    {
-                        String param = baseActivity.sharedPreference.getString(KEY_PREFERENCE_BY_SHARE, null);
-                        baseActivity.sharedPreference.edit().remove(KEY_PREFERENCE_BY_SHARE).apply();
+                if (baseActivity.sharedPreference.contains(KEY_PREFERENCE_BY_SHARE) == true)
+                {
+                    String param = baseActivity.sharedPreference.getString(KEY_PREFERENCE_BY_SHARE, null);
+                    baseActivity.sharedPreference.edit().remove(KEY_PREFERENCE_BY_SHARE).apply();
 
-                        if (param != null)
+                    if (param != null)
+                    {
+                        unLockUI();
+
+                        try
                         {
-                            unLockUI();
+                            String[] params = param.split("\\&|\\=");
 
-                            try
+                            int hotelIndex = 0;
+                            long dailyTime = 0;
+                            int dailyDayOfDays = 0;
+                            int nights = 0;
+
+                            int length = params.length;
+
+                            for (int i = 0; i < length; i++)
                             {
-                                String[] params = param.split("\\&|\\=");
-
-                                int hotelIndex = 0;
-                                long dailyTime = 0;
-                                int dailyDayOfDays = 0;
-                                int nights = 0;
-
-                                int length = params.length;
-
-                                for (int i = 0; i < length; i++)
+                                if ("hotelIndex".equalsIgnoreCase(params[i]) == true)
                                 {
-                                    if ("hotelIndex".equalsIgnoreCase(params[i]) == true)
-                                    {
-                                        hotelIndex = Integer.valueOf(params[++i]);
-                                    } else if ("dailyTime".equalsIgnoreCase(params[i]) == true)
-                                    {
-                                        dailyTime = Long.valueOf(params[++i]);
-                                    } else if ("dailyDayOfDays".equalsIgnoreCase(params[i]) == true)
-                                    {
-                                        dailyDayOfDays = Integer.valueOf(params[++i]);
-                                    } else if ("nights".equalsIgnoreCase(params[i]) == true)
-                                    {
-                                        nights = Integer.valueOf(params[++i]);
-                                    }
+                                    hotelIndex = Integer.valueOf(params[++i]);
+                                } else if ("dailyTime".equalsIgnoreCase(params[i]) == true)
+                                {
+                                    dailyTime = Long.valueOf(params[++i]);
+                                } else if ("dailyDayOfDays".equalsIgnoreCase(params[i]) == true)
+                                {
+                                    dailyDayOfDays = Integer.valueOf(params[++i]);
+                                } else if ("nights".equalsIgnoreCase(params[i]) == true)
+                                {
+                                    nights = Integer.valueOf(params[++i]);
                                 }
-
-                                mOnUserActionListener.selectHotel(hotelIndex, dailyTime, dailyDayOfDays, nights);
-                            } catch (Exception e)
-                            {
-                                ExLog.d(e.toString());
-
-                                // 지역 리스트를 가져온다
-                                mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_LB_SERVER).append(URL_WEBAPI_SALE_HOTEL_ALL).toString(), null, mSaleHotelAllJsonResponseListener, baseActivity));
                             }
+
+                            mOnUserActionListener.selectHotel(hotelIndex, dailyTime, dailyDayOfDays, nights);
+                        } catch (Exception e)
+                        {
+                            ExLog.d(e.toString());
+
+                            // 지역 리스트를 가져온다
+                            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_LB_SERVER).append(URL_WEBAPI_SALE_HOTEL_ALL).toString(), null, mSaleHotelAllJsonResponseListener, baseActivity));
                         }
-                    } else
-                    {
-                        // 지역 리스트를 가져온다
-                        mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_HOTEL_ALL).toString(), null, mSaleHotelAllJsonResponseListener, baseActivity));
                     }
                 } else
                 {
-                    initHide();
-
-                    ((MainActivity) baseActivity).replaceFragment(WaitTimerFragment.newInstance(mTodaySaleTime, PlaceMainFragment.TYPE.HOTEL), String.valueOf(MainActivity.WAITTIMER_FRAGMENT));
-                    unLockUI();
+                    // 지역 리스트를 가져온다
+                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_HOTEL_ALL).toString(), null, mSaleHotelAllJsonResponseListener, baseActivity));
                 }
+
             } catch (Exception e)
             {
                 onError(e);

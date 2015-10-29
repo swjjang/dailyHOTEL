@@ -44,7 +44,6 @@ public interface Constants
     }
 
     // 항상 열리게 셋팅 여부
-    public static final boolean ALWAYS_OPEN = false;
     public static final String GCM_PROJECT_NUMBER = "1025681158000";
     public static final String GCM_DEVICE_TYPE_ANDROID = "0"; // GCM 등록을 할 때 API의 deviceType, 0은 안드로이드 1은 아이폰.
 
@@ -148,8 +147,8 @@ public interface Constants
     // api/common/datetime
     public static final String URL_WEBAPI_COMMON_DATETIME = UNENCRYPTED_URL ? "api/common/datetime" : "MTQkNzMkNzUkMSQzNyQ=$OCEY4MTlBNEY1NjHZFQ0FGNkFFQkNEOThEQkRODNTRFMTc1MzA5NTk5OTE4ODM2ODEzREEzREEzNRNjZDNTU1QTlBNw==$";
 
-    // api/sale/room_payment
-    public static final String URL_WEBAPI_SALE_ROOM_PAYMENT = UNENCRYPTED_URL ? "api/sale/room_payment" : "ODYkMjckMzAkMTEkODEk$MUZEMUE2REEP4MkEwNkJBODQ5NEJVGMTTU5NjgyRTY0MURDRDI2REJDNDJDMzlBODQxNUE1Q0U1MzM1OTFEwNUNENgN==$";
+    // api/v1/hotel/sale/room/payment
+    public static final String URL_WEBAPI_V1_HOTEL_SALE_ROOM_PAYMENT = UNENCRYPTED_URL ? "api/v1/hotel/sale/room/payment" : "MzgkMTYkNTIkNzckNDQk$NDI0OUUyRjIwNEM0WOTYyNTk4NDExM0ZBMjYwOTINFQUZUwNUMxQUPRENEFEQUMzRjE1QTc2NTA4MjEEyNjRCNEEyMg==$";
 
     // api/reserv/detail
     public static final String URL_WEBAPI_RESERV_DETAIL = UNENCRYPTED_URL ? "api/reserv/detail" : "MSQ4MCQ1OSQ5JDYwJA==$NVDY2OTY3XM0FBODdEM0UxNDVDODlEQzhGM0RDRUZGMkYzRTRGQzczRjcyOTZQhBQzVDRDM0NDkxMDgxNkMZwRTkyRg==$";
@@ -409,6 +408,7 @@ public interface Constants
     public static final int CODE_RESULT_PAYMENT_BILLING_SUCCSESS = 300;
     public static final int CODE_RESULT_PAYMENT_BILLING_FAIL = 301;
     public static final int CODE_RESULT_PAYMENT_BILLING_DUPLICATE = 302;
+
     // 예약 리스트에서
     public static final int CODE_PAY_TYPE_CARD_COMPLETE = 10;
     public static final int CODE_PAY_TYPE_ACCOUNT_WAIT = 20;

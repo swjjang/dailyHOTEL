@@ -104,6 +104,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
     private static final int DIALOG_CONFIRM_PAYMENT_CARD = 0;
     private static final int DIALOG_CONFIRM_PAYMENT_HP = 1;
     private static final int DIALOG_CONFIRM_PAYMENT_ACCOUNT = 2;
+
     protected String mAliveCallSource = "";
     private TextView mCheckinDayTextView, mCheckinTimeTextView, mCheckoutDayTextView, mCheckoutTimeTextView;
     private TextView tvOriginalPriceValue, tvCreditValue, tvOriginalPrice, tvCredit, tvPrice;
@@ -128,6 +129,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
     private View mClickView;
     private boolean mDoReload;
+    private String mWarningDialogMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -153,6 +155,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
 
         mIsChangedPay = false;
         mDoReload = true;
+        mWarningDialogMessage = null;
 
         setActionBar(mPay.getSaleRoomInformation().hotelName);
 
@@ -1407,9 +1410,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 mDoReload = true;
 
                 // 호텔 디테일 정보 재 요청
-                String params = String.format("?room_idx=%d&checkin_date=%s&length_stay=%d", mPay.getSaleRoomInformation().roomIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), mPay.getSaleRoomInformation().nights);
+                String params = String.format("?room_idx=%d&checkin_date=%s&nights=%d", mPay.getSaleRoomInformation().roomIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyyyMMdd"), mPay.getSaleRoomInformation().nights);
 
-                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_ROOM_PAYMENT).append(params).toString(), null, mSaleRoomPaymentJsonResponseListener, BookingActivity.this));
+                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_V1_HOTEL_SALE_ROOM_PAYMENT).append(params).toString(), null, mSaleRoomPaymentJsonResponseListener, BookingActivity.this));
             }
         }, null, false);
     }
@@ -1707,8 +1710,22 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 if (mIsChangedPay == true)
                 {
                     mIsChangedPay = false;
+                    mWarningDialogMessage = null;
 
                     showChangedPayDialog();
+                }
+
+
+                if (mWarningDialogMessage != null && mWarningDialogMessage.length() > 0)
+                {
+                    showSimpleDialog(getString(R.string.dialog_notice2), mWarningDialogMessage, getString(R.string.dialog_btn_text_confirm), null, new OnDismissListener()
+                    {
+                        @Override
+                        public void onDismiss(DialogInterface dialog)
+                        {
+                            mWarningDialogMessage = "";
+                        }
+                    });
                 }
             } catch (Exception e)
             {
@@ -1777,6 +1794,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             }
         }
     };
+
     private DailyHotelJsonResponseListener mSaleRoomPaymentJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
@@ -1789,82 +1807,125 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                     throw new NullPointerException("response == null");
                 }
 
-                int msg_code = response.getInt("msg_code");
+                int msgCode = response.getInt("msgCode");
 
-                if (msg_code != 0)
+                // 0	성공
+                // 4	데이터가 없을시
+                // 5	판매 마감시
+                // 6	현재 시간이 자정부터 서비스 종료 시간 사이일시
+                switch (msgCode)
                 {
-                    if (response.has("msg") == true)
+                    case 6:
+                    case 7:
+                        if (mWarningDialogMessage == null)
+                        {
+                            if (response.has("msg") == true)
+                            {
+                                mWarningDialogMessage = response.getString("msg");
+                            }
+                        }
+                    case 0:
                     {
-                        String msg = response.getString("msg");
+                        JSONObject jsonData = response.getJSONObject("data");
 
-                        DailyToast.showToast(BookingActivity.this, msg, Toast.LENGTH_SHORT);
-                        finish();
-                        return;
-                    } else
-                    {
-                        throw new NullPointerException("response == null");
+                        long checkInDate = jsonData.getLong("check_in_date");
+                        long checkOutDate = jsonData.getLong("check_out_date");
+                        int discount = jsonData.getInt("discount_total");
+                        boolean isOnSale = jsonData.getBoolean("on_sale");
+                        int availableRooms = jsonData.getInt("available_rooms");
+
+                        SaleRoomInformation saleRoomInformation = mPay.getSaleRoomInformation();
+
+                        // 가격이 변동 되었다.
+                        if (saleRoomInformation.totalDiscount != discount)
+                        {
+                            mIsChangedPay = true;
+                        }
+
+                        saleRoomInformation.totalDiscount = discount;
+
+                        // Check In
+                        Calendar calendarCheckin = DailyCalendar.getInstance();
+                        calendarCheckin.setTimeZone(TimeZone.getTimeZone("GMT"));
+                        calendarCheckin.setTimeInMillis(checkInDate);
+
+                        SimpleDateFormat formatDay = new SimpleDateFormat("M월 d일 (EEE)", Locale.KOREA);
+                        formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+                        SimpleDateFormat formatHour = new SimpleDateFormat(" HH시", Locale.KOREA);
+                        formatHour.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+                        mCheckinDayTextView.setText(formatDay.format(calendarCheckin.getTime()));
+                        mCheckinTimeTextView.setText(formatHour.format(calendarCheckin.getTime()));
+
+                        // CheckOut
+                        Calendar calendarCheckout = DailyCalendar.getInstance();
+                        calendarCheckout.setTimeZone(TimeZone.getTimeZone("GMT"));
+                        calendarCheckout.setTimeInMillis(checkOutDate);
+
+                        SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd-hh", Locale.KOREA);
+                        format.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+                        mPay.checkInTime = format.format(calendarCheckin.getTime());
+                        mPay.checkOutTime = format.format(calendarCheckout.getTime());
+
+                        mCheckoutDayTextView.setText(formatDay.format(calendarCheckout.getTime()));
+                        mCheckoutTimeTextView.setText(formatHour.format(calendarCheckout.getTime()));
+
+                        // 판매 중지 상품으로 호텔 리스트로 복귀 시킨다.
+                        if (isOnSale == false || availableRooms == 0)
+                        {
+                            mWarningDialogMessage = null;
+
+                            if (isFinishing() == true)
+                            {
+                                return;
+                            }
+
+                            showStopOnSaleDialog();
+                        } else
+                        {
+                            // 3. 간편결제 credit card 요청
+                            mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_INFO).toString(), null, mUserSessionBillingCardInfoJsonResponseListener, BookingActivity.this));
+                        }
+                        break;
                     }
-                }
 
-                JSONObject jsonData = response.getJSONObject("data");
-
-                long checkInDate = jsonData.getLong("check_in_date");
-                long checkOutDate = jsonData.getLong("check_out_date");
-                int discount = jsonData.getInt("discount_total");
-                boolean isOnSale = jsonData.getBoolean("on_sale");
-                int availableRooms = jsonData.getInt("available_rooms");
-
-                SaleRoomInformation saleRoomInformation = mPay.getSaleRoomInformation();
-
-                // 가격이 변동 되었다.
-                if (saleRoomInformation.totalDiscount != discount)
-                {
-                    mIsChangedPay = true;
-                }
-
-                saleRoomInformation.totalDiscount = discount;
-
-                // Check In
-                Calendar calendarCheckin = DailyCalendar.getInstance();
-                calendarCheckin.setTimeZone(TimeZone.getTimeZone("GMT"));
-                calendarCheckin.setTimeInMillis(checkInDate);
-
-                SimpleDateFormat formatDay = new SimpleDateFormat("M월 d일 (EEE)", Locale.KOREA);
-                formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-                SimpleDateFormat formatHour = new SimpleDateFormat(" HH시", Locale.KOREA);
-                formatHour.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-                mCheckinDayTextView.setText(formatDay.format(calendarCheckin.getTime()));
-                mCheckinTimeTextView.setText(formatHour.format(calendarCheckin.getTime()));
-
-                // CheckOut
-                Calendar calendarCheckout = DailyCalendar.getInstance();
-                calendarCheckout.setTimeZone(TimeZone.getTimeZone("GMT"));
-                calendarCheckout.setTimeInMillis(checkOutDate);
-
-                SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd-hh", Locale.KOREA);
-                format.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-                mPay.checkInTime = format.format(calendarCheckin.getTime());
-                mPay.checkOutTime = format.format(calendarCheckout.getTime());
-
-                mCheckoutDayTextView.setText(formatDay.format(calendarCheckout.getTime()));
-                mCheckoutTimeTextView.setText(formatHour.format(calendarCheckout.getTime()));
-
-                // 판매 중지 상품으로 호텔 리스트로 복귀 시킨다.
-                if (isOnSale == false || availableRooms == 0)
-                {
-                    if (isFinishing() == true)
+                    case 5:
                     {
-                        return;
+                        if (response.has("msg") == true)
+                        {
+                            String msg = response.getString("msg");
+
+                            showSimpleDialog(getString(R.string.dialog_notice2), msg, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                            {
+                                @Override
+                                public void onDismiss(DialogInterface dialog)
+                                {
+                                    setResult(CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER);
+                                    finish();
+                                }
+                            });
+                        } else
+                        {
+                            throw new NullPointerException("response == null");
+                        }
+                        break;
                     }
 
-                    showStopOnSaleDialog();
-                } else
-                {
-                    // 3. 간편결제 credit card 요청
-                    mQueue.add(new DailyHotelJsonRequest(Method.POST, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_SESSION_BILLING_CARD_INFO).toString(), null, mUserSessionBillingCardInfoJsonResponseListener, BookingActivity.this));
+                    case 4:
+                    default:
+                        if (response.has("msg") == true)
+                        {
+                            String msg = response.getString("msg");
+
+                            DailyToast.showToast(BookingActivity.this, msg, Toast.LENGTH_SHORT);
+                            finish();
+                        } else
+                        {
+                            throw new NullPointerException("response == null");
+                        }
+                        break;
                 }
             } catch (Exception e)
             {
@@ -2057,6 +2118,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             }
         }
     };
+
     private DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
@@ -2109,9 +2171,9 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                         }
 
                         // 2. 마지막 가격 및 기타 이상이 없는지 검사
-                        String params = String.format("?room_idx=%d&checkin_date=%s&length_stay=%d", mPay.getSaleRoomInformation().roomIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), mPay.getSaleRoomInformation().nights);
+                        String params = String.format("?room_idx=%d&checkin_date=%s&nights=%d", mPay.getSaleRoomInformation().roomIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyyyMMdd"), mPay.getSaleRoomInformation().nights);
 
-                        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_ROOM_PAYMENT).append(params).toString(), null, mFinalCheckPayJsonResponseListener, BookingActivity.this));
+                        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_V1_HOTEL_SALE_ROOM_PAYMENT).append(params).toString(), null, mFinalCheckPayJsonResponseListener, BookingActivity.this));
 
                     } else
                     {
@@ -2226,7 +2288,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                             }
                         }
 
-                        String params = String.format("?room_idx=%d&checkin_date=%s&length_stay=%d", mPay.getSaleRoomInformation().roomIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyMMdd"), mPay.getSaleRoomInformation().nights);
+                        String params = String.format("?room_idx=%d&checkin_date=%s&nights=%d", mPay.getSaleRoomInformation().roomIndex, mCheckInSaleTime.getDayOfDaysHotelDateFormat("yyyyMMdd"), mPay.getSaleRoomInformation().nights);
 
                         if (DEBUG == true)
                         {
@@ -2234,7 +2296,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                         }
 
                         // 2. 화면 정보 얻기
-                        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_SALE_ROOM_PAYMENT).append(params).toString(), null, mSaleRoomPaymentJsonResponseListener, BookingActivity.this));
+                        mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_V1_HOTEL_SALE_ROOM_PAYMENT).append(params).toString(), null, mSaleRoomPaymentJsonResponseListener, BookingActivity.this));
                     } else
                     {
                         requestLogin();
@@ -2247,6 +2309,7 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
             }
         }
     };
+
     private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
     {
         @Override
@@ -2267,35 +2330,12 @@ public class BookingActivity extends BaseActivity implements OnClickListener, On
                 SaleTime saleTime = new SaleTime();
 
                 saleTime.setCurrentTime(response.getLong("currentDateTime"));
-                saleTime.setOpenTime(response.getLong("openDateTime"));
-                saleTime.setCloseTime(response.getLong("closeDateTime"));
                 saleTime.setDailyTime(response.getLong("dailyDateTime"));
 
-                if (saleTime.isSaleTime() == true)
-                {
-                    lockUI();
+                lockUI();
 
-                    // 1. 세션이 연결되어있는지 검사.
-                    mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, BookingActivity.this));
-                } else
-                {
-                    unLockUI();
-
-                    View.OnClickListener posListener = new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View view)
-                        {
-                            mDoReload = true;
-
-                            setResult(CODE_RESULT_ACTIVITY_PAYMENT_SALES_CLOSED);
-                            finish();
-                        }
-                    };
-
-                    showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_sales_closed), getString(R.string.dialog_btn_text_confirm), posListener);
-                }
-
+                // 1. 세션이 연결되어있는지 검사.
+                mQueue.add(new DailyHotelJsonRequest(Method.GET, new StringBuilder(VolleyHttpClient.URL_DAILYHOTEL_SERVER).append(URL_WEBAPI_USER_INFORMATION).toString(), null, mUserInformationJsonResponseListener, BookingActivity.this));
             } catch (Exception e)
             {
                 mDoReload = true;
